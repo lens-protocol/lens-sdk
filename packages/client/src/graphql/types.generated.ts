@@ -1103,7 +1103,7 @@ export type ProfilesRequestWhere = {
   /** Pass in an array of handles to get the profile entities */
   handles?: InputMaybe<Array<Scalars['Handle']['input']>>;
   /** Pass in an array of evm address to get the profile entities they own */
-  ownedBy?: InputMaybe<Array<Scalars['ProfileId']['input']>>;
+  ownedBy?: InputMaybe<Array<Scalars['EvmAddress']['input']>>;
   /** Pass in an array of profile ids to get the profile entities */
   profileIds?: InputMaybe<Array<Scalars['ProfileId']['input']>>;
   /** Pass the publication id and get a list of the profiles who commented on it */
@@ -1397,6 +1397,10 @@ export type PublicationsWhere = {
   withOpenActions?: InputMaybe<Array<OpenActionFilter>>;
 };
 
+export type RateRequest = {
+  for: SupportedFiatType;
+};
+
 export type ReactionRequest = {
   for: Scalars['PublicationId']['input'];
   reaction: PublicationReactionType;
@@ -1539,6 +1543,12 @@ export type SpamReasonInput = {
   reason: PublicationReportingReason;
   subreason: PublicationReportingSpamSubreason;
 };
+
+export enum SupportedFiatType {
+  Eur = 'EUR',
+  Gpb = 'GPB',
+  Usd = 'USD',
+}
 
 export type SupportedModulesRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;

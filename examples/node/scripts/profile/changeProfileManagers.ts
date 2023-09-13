@@ -1,6 +1,7 @@
-import { ChangeProfileManagerActionType } from "@lens-protocol/client/src/graphql/types.generated";
-import { getAuthenticatedClientFromEthersWallet } from "../shared/getAuthenticatedClient";
-import { setupWallet } from "../shared/setupWallet";
+import { ChangeProfileManagerActionType, isRelaySuccess } from '@lens-protocol/client';
+
+import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
+import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
@@ -11,7 +12,7 @@ async function main() {
     changeManagers: [
       {
         action: ChangeProfileManagerActionType.Add,
-        address: "0x0000000000",
+        address: '0x0000000000',
       },
     ],
   });
@@ -22,24 +23,24 @@ async function main() {
   const signedTypedData = await wallet._signTypedData(
     typedData.domain,
     typedData.types,
-    typedData.value
+    typedData.value,
   );
 
   // broadcast onchain
-  const broadcastOnchainResult = await lensClient.transaction.broadcastOnChain({
+  const broadcastOnchainResult = await lensClient.transaction.broadcastOnchain({
     id,
     signature: signedTypedData,
   });
 
   const onchainRelayResult = broadcastOnchainResult.unwrap();
 
-  if (onchainRelayResult.__typename === "RelayError") {
-    console.log(`Something went wrong`);
+  if (!isRelaySuccess(onchainRelayResult)) {
+    console.log(`Something went wrong`, onchainRelayResult);
     return;
   }
 
   console.log(
-    `Successfully changed profile managers with transaction with id ${onchainRelayResult}, txHash: ${onchainRelayResult.txHash}`
+    `Successfully changed profile managers with transaction with id ${onchainRelayResult.txId}, txHash: ${onchainRelayResult.txHash}`,
   );
 }
 

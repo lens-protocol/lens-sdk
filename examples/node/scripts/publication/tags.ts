@@ -1,4 +1,4 @@
-import { LensClient, development } from "@lens-protocol/client";
+import { LensClient, development } from '@lens-protocol/client';
 
 async function main() {
   const client = new LensClient({

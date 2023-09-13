@@ -38,6 +38,7 @@ query Feed(
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
 ) {
   result: feed(request: $request) {
     items {
@@ -57,6 +58,7 @@ query FeedHighlights(
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
 ) {
   result: feedHighlights(request: $request) {
     items {
@@ -81,6 +83,7 @@ query ForYou(
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
 ) {
   result: forYou(request: $request) {
     items {

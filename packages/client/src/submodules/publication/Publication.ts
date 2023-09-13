@@ -295,7 +295,7 @@ export class Publication {
    *
    * @example
    * ```ts
-   * const result = await client.publication.postOnChain({
+   * const result = await client.publication.postOnchain({
    *   contentURI: 'ipfs://Qm...', // or arweave
    *   referenceModule: {
    *     followerOnlyReferenceModule: false, // anybody can comment or mirror
@@ -303,7 +303,7 @@ export class Publication {
    * });
    * ```
    */
-  async postOnChain(
+  async postOnchain(
     request: OnchainPostRequest,
   ): PromiseResult<
     RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
@@ -325,13 +325,13 @@ export class Publication {
    *
    * @example
    * ```ts
-   * const result = await client.publication.commentOnChain({
+   * const result = await client.publication.commentOnchain({
    *   commentOn: "0x123-0x456",
    *   contentURI: "ipfs://Qm...", // or arweave
    * });
    * ```
    */
-  async commentOnChain(
+  async commentOnchain(
     request: OnchainCommentRequest,
   ): PromiseResult<
     RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
@@ -353,12 +353,12 @@ export class Publication {
    *
    * @example
    * ```ts
-   * const result = await client.publication.mirrorOnChain({
+   * const result = await client.publication.mirrorOnchain({
    *   mirrorOn: "0x123-0x456",
    * });
    * ```
    */
-  async mirrorOnChain(
+  async mirrorOnchain(
     request: OnchainMirrorRequest,
   ): PromiseResult<
     RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
@@ -380,13 +380,13 @@ export class Publication {
    *
    * @example
    * ```ts
-   * const result = await client.publication.quoteOnChain({
+   * const result = await client.publication.quoteOnchain({
    *   quoteOn: "0x123-0x456",
    *   contentURI: "ipfs://Qm...", // or arweave
    * });
    * ```
    */
-  async quoteOnChain(
+  async quoteOnchain(
     request: OnchainQuoteRequest,
   ): PromiseResult<
     RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
@@ -464,7 +464,7 @@ export class Publication {
   /**
    * Create typed data for creating a post on chain.
    *
-   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnChain}.
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
    *
    * ⚠️ Requires authenticated LensClient.
    *
@@ -474,7 +474,7 @@ export class Publication {
    *
    * @example
    * ```ts
-   * const result = await client.publication.createOnChainPostTypedData({
+   * const result = await client.publication.createOnchainPostTypedData({
    *   contentURI: "ipfs://Qm...", // or arweave
    *   referenceModule: {
    *     followerOnlyReferenceModule: false, // anybody can comment or mirror
@@ -482,7 +482,7 @@ export class Publication {
    * });
    * ```
    */
-  async createOnChainPostTypedData(
+  async createOnchainPostTypedData(
     request: OnchainPostRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
@@ -502,7 +502,7 @@ export class Publication {
     });
   }
 
-  async createOnChainCommentTypedData(
+  async createOnchainCommentTypedData(
     request: OnchainCommentRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
@@ -522,7 +522,7 @@ export class Publication {
     });
   }
 
-  async createOnChainMirrorTypedData(
+  async createOnchainMirrorTypedData(
     request: OnchainMirrorRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
@@ -542,7 +542,7 @@ export class Publication {
     });
   }
 
-  async createOnChainQuoteTypedData(
+  async createOnchainQuoteTypedData(
     request: OnchainQuoteRequest,
     options?: TypedDataOptions,
   ): PromiseResult<

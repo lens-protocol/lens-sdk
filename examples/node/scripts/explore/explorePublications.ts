@@ -3,7 +3,7 @@ import {
   ExplorePublicationsOrderByType,
   LensClient,
   development,
-} from "@lens-protocol/client";
+} from '@lens-protocol/client';
 
 async function main() {
   const lensClient = new LensClient({
@@ -16,7 +16,6 @@ async function main() {
 
   const topCommented = await lensClient.explore.publications({
     orderBy: ExplorePublicationsOrderByType.TopCommented,
-    limit: 10,
   });
 
   const highestMirroredPosts = await lensClient.explore.publications({
@@ -28,12 +27,10 @@ async function main() {
 
   const topCollected = await lensClient.explore.publications({
     orderBy: ExplorePublicationsOrderByType.TopCollectedOpenAction,
-    limit: 10,
   });
 
   const curatedProfiles = await lensClient.explore.publications({
     orderBy: ExplorePublicationsOrderByType.LensCurated,
-    limit: 10,
   });
 
   console.log(JSON.stringify(latestPublications, null, 2));

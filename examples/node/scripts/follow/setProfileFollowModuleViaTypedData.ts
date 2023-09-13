@@ -1,6 +1,7 @@
-import { isRelaySuccess } from "@lens-protocol/client";
-import { getAuthenticatedClientFromEthersWallet } from "../shared/getAuthenticatedClient";
-import { setupWallet } from "../shared/setupWallet";
+import { isRelaySuccess } from '@lens-protocol/client';
+
+import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
+import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
@@ -44,10 +45,10 @@ async function main() {
   const signedTypedData = await wallet._signTypedData(
     data.typedData.domain,
     data.typedData.types,
-    data.typedData.value
+    data.typedData.value,
   );
 
-  const broadcastResult = await lensClient.transaction.broadcastOnChain({
+  const broadcastResult = await lensClient.transaction.broadcastOnchain({
     id: data.id,
     signature: signedTypedData,
   });
@@ -60,7 +61,7 @@ async function main() {
   }
 
   console.log(
-    `Profile follow module sucessfully set and successfully broadcasted with txId ${followBroadcastResultValue.txId}`
+    `Profile follow module sucessfully set and successfully broadcasted with txId ${followBroadcastResultValue.txId}`,
   );
 
   // wait for follow to be indexed

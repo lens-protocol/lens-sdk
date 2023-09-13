@@ -1,14 +1,15 @@
-import { isRelaySuccess } from "@lens-protocol/client";
-import { getAuthenticatedClientFromEthersWallet } from "../shared/getAuthenticatedClient";
-import { setupWallet } from "../shared/setupWallet";
+import { isRelaySuccess } from '@lens-protocol/client';
+
+import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
+import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
   const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const result = await client.publication.commentOnChain({
-    commentOn: "0x123-0x456",
-    contentURI: "ipfs://Qm...", // or arweave
+  const result = await client.publication.commentOnchain({
+    commentOn: '0x123-0x456',
+    contentURI: 'ipfs://Qm...', // or arweave
   });
 
   const resultValue = result.unwrap();

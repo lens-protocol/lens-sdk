@@ -1,11 +1,13 @@
 {
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es6",
+    "moduleResolution": "node"
+  },
+  "lib": ["es2015"],
+  "include": ["scripts"],
   "ts-node": {
     "transpileOnly": true
-  },
-  "compilerOptions": {
-    "module": "NodeNext",
-    "target": "ESNext",
-    "moduleResolution": "NodeNext"
-  },
-  "include": ["scripts"]
+  }
 }

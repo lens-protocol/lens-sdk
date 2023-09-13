@@ -4,7 +4,13 @@
   "private": true,
   "description": "",
   "scripts": {
-    "ts-node": "ts-node"
+    "ts-node": "ts-node",
+    "eslint:fix": "pnpm run eslint --fix",
+    "eslint": "eslint scripts",
+    "lint": "pnpm run prettier && pnpm run eslint",
+    "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix",
+    "prettier:fix": "prettier --write .",
+    "prettier": "prettier --check ."
   },
   "keywords": [],
   "author": "",
@@ -18,9 +24,13 @@
     "viem": "^1.0.0"
   },
   "devDependencies": {
+    "@lens-protocol/eslint-config": "workspace:*",
+    "@lens-protocol/prettier-config": "workspace:*",
     "@types/node": "^18.15.11",
     "@types/uuid": "^9.0.0",
+    "prettier": "^2.8.4",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
-  }
+  },
+  "prettier": "@lens-protocol/prettier-config"
 }

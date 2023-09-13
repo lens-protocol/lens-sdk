@@ -33,7 +33,7 @@ Validate metadata, create post, create comment, create mirror, quote.
 
 - onChain
 - onMomoka
-- with signed typedData and broadcastOnChain
+- with signed typedData and broadcastOnchain
 - with signed typedData and broadcastOnMomoka
 
 ## Publication operations

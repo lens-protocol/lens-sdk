@@ -1,14 +1,14 @@
-import { isRelaySuccess } from "@lens-protocol/client";
-import { getAuthenticatedClientFromEthersWallet } from "../shared/getAuthenticatedClient";
-import { setupWallet } from "../shared/setupWallet";
-import { LensTransactionStatusType } from "@lens-protocol/client/src/graphql/types.generated";
+import { isRelaySuccess } from '@lens-protocol/client';
+
+import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
+import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
   const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const typedDataResult = await lensClient.profile.createOnChainSetProfileMetadataTypedData({
-    metadataURI: "your-metadata-uri",
+  const typedDataResult = await lensClient.profile.createOnchainSetProfileMetadataTypedData({
+    metadataURI: 'your-metadata-uri',
   });
 
   // typedDataResult is a Result object
@@ -18,11 +18,11 @@ async function main() {
   const signedTypedData = await wallet._signTypedData(
     data.typedData.domain,
     data.typedData.types,
-    data.typedData.value
+    data.typedData.value,
   );
 
   // broadcast
-  const broadcastResult = await lensClient.transaction.broadcastOnChain({
+  const broadcastResult = await lensClient.transaction.broadcastOnchain({
     id: data.id,
     signature: signedTypedData,
   });

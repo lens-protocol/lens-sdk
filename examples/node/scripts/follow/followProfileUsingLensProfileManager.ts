@@ -1,12 +1,13 @@
-import { isRelaySuccess } from "@lens-protocol/client";
-import { getAuthenticatedClientFromEthersWallet } from "../shared/getAuthenticatedClient";
-import { setupWallet } from "../shared/setupWallet";
+import { isRelaySuccess } from '@lens-protocol/client';
+
+import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
+import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
   const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const recommendedProfiles = await lensClient.profile.recommendations({ for: "YOUR_PROFILE_ID" });
+  const recommendedProfiles = await lensClient.profile.recommendations({ for: 'YOUR_PROFILE_ID' });
 
   console.log(
     `First 3 recommended profiles`,
@@ -14,20 +15,20 @@ async function main() {
       id: p.id,
       handle: p.handle,
       isFollowedByMe: p.operations.isFollowedByMe,
-    }))
+    })),
   );
 
   const result = await lensClient.profile.follow({
     follow: [
       {
-        profileId: "PROFILE_TO_FOLLOW_ID",
+        profileId: 'PROFILE_TO_FOLLOW_ID',
       },
     ],
   });
 
   console.log(
-    `Follow of ${recommendedProfiles[0].id} triggered with through the Lens Profile Manager: `,
-    result.unwrap()
+    `Follow of ${recommendedProfiles.items[0].id} triggered with through the Lens Profile Manager: `,
+    result.unwrap(),
   );
 
   const followResultValue = result.unwrap();

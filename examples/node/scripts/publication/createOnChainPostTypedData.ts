@@ -1,4 +1,5 @@
 import { isRelaySuccess } from '@lens-protocol/client';
+
 import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
 import { setupWallet } from '../shared/setupWallet';
 
@@ -6,7 +7,7 @@ async function main() {
   const wallet = setupWallet();
   const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const resultTypedData = await client.publication.createOnChainPostTypedData({
+  const resultTypedData = await client.publication.createOnchainPostTypedData({
     contentURI: 'ipfs://Qm...', // or arweave
     referenceModule: {
       followerOnlyReferenceModule: false, // anybody can comment or mirror
@@ -15,7 +16,7 @@ async function main() {
 
   const { id, typedData } = resultTypedData.unwrap();
 
-  console.log(`createOnChainPostTypedData result: `, typedData);
+  console.log(`createOnchainPostTypedData result: `, typedData);
 
   // sign with the wallet
   const signedTypedData = await wallet._signTypedData(
@@ -24,9 +25,9 @@ async function main() {
     typedData.value,
   );
 
-  console.log(`Broadcasting signed createOnChainPostTypedData...`);
+  console.log(`Broadcasting signed createOnchainPostTypedData...`);
 
-  const broadcastResult = await client.transaction.broadcastOnChain({
+  const broadcastResult = await client.transaction.broadcastOnchain({
     id,
     signature: signedTypedData,
   });

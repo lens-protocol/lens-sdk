@@ -335,7 +335,7 @@ export class Profile {
     return result.data.result?.stats;
   }
 
-  async createOnChainSetProfileMetadataTypedData(
+  async createOnchainSetProfileMetadataTypedData(
     request: OnchainSetProfileMetadataRequest,
     options?: TypedDataOptions,
   ): PromiseResult<

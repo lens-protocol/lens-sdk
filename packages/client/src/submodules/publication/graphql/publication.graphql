@@ -32,6 +32,7 @@ query Publication(
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
 ) {
   result: publication(request: $request) {
     ... on Post {
@@ -87,6 +88,7 @@ query Publications(
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
 ) {
   result: publications(request: $request) {
     items {

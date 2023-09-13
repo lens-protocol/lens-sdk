@@ -32,6 +32,7 @@ query RevenueFromPublications(
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
 ) {
   result: revenueFromPublications(request: $request) {
     items {
@@ -51,13 +52,14 @@ query RevenueForPublication(
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
 ) {
   result: revenueForPublication(request: $request) {
     ...PublicationRevenue
   }
 }
 
-query FollowRevenues($request: FollowRevenueRequest!) {
+query FollowRevenues($request: FollowRevenueRequest!, $rateRequest: RateRequest = { for: USD }) {
   result: followRevenues(request: $request) {
     revenues {
       ...RevenueAggregate

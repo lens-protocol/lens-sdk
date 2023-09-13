@@ -1,6 +1,7 @@
-import { isRelaySuccess } from "@lens-protocol/client";
-import { getAuthenticatedClientFromEthersWallet } from "../shared/getAuthenticatedClient";
-import { setupWallet } from "../shared/setupWallet";
+import { isRelaySuccess } from '@lens-protocol/client';
+
+import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
+import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
@@ -42,7 +43,7 @@ async function main() {
   const followModuleResultValue = result.unwrap();
 
   if (!isRelaySuccess(followModuleResultValue)) {
-    throw new Error("Failed to set follow module");
+    throw new Error('Failed to set follow module');
   }
 
   await lensClient.transaction.waitUntilComplete({ txId: followModuleResultValue.txId });
