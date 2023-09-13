@@ -14,7 +14,7 @@ export async function signAndBroadcast<
     data.typedData.value,
   );
 
-  const broadcastResult = await client.transaction.broadcastOnChain({
+  const broadcastResult = await client.transaction.broadcastOnchain({
     id: data.id,
     signature: signedTypedData,
   });

@@ -7,7 +7,7 @@ async function main() {
   const wallet = setupWallet();
   const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const result = await client.publication.mirrorOnChain({
+  const result = await client.publication.mirrorOnchain({
     mirrorOn: '0x123-0x456',
   });
 

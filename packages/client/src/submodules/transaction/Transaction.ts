@@ -61,7 +61,7 @@ export class Transaction {
     return result.data.result;
   }
 
-  async broadcastOnChain(
+  async broadcastOnchain(
     request: BroadcastRequest,
   ): PromiseResult<
     RelaySuccessFragment | RelayErrorFragment,

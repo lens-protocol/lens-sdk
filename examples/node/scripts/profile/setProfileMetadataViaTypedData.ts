@@ -7,7 +7,7 @@ async function main() {
   const wallet = setupWallet();
   const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const typedDataResult = await lensClient.profile.createOnChainSetProfileMetadataTypedData({
+  const typedDataResult = await lensClient.profile.createOnchainSetProfileMetadataTypedData({
     metadataURI: 'your-metadata-uri',
   });
 
@@ -22,7 +22,7 @@ async function main() {
   );
 
   // broadcast
-  const broadcastResult = await lensClient.transaction.broadcastOnChain({
+  const broadcastResult = await lensClient.transaction.broadcastOnchain({
     id: data.id,
     signature: signedTypedData,
   });

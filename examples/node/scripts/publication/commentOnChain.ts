@@ -7,7 +7,7 @@ async function main() {
   const wallet = setupWallet();
   const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const result = await client.publication.commentOnChain({
+  const result = await client.publication.commentOnchain({
     commentOn: '0x123-0x456',
     contentURI: 'ipfs://Qm...', // or arweave
   });

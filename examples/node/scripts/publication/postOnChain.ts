@@ -7,7 +7,7 @@ async function main() {
   const wallet = setupWallet();
   const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const result = await client.publication.postOnChain({
+  const result = await client.publication.postOnchain({
     contentURI: 'ipfs://Qm...', // or arweave
     referenceModule: {
       followerOnlyReferenceModule: false, // anybody can comment or mirror
