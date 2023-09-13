@@ -89,7 +89,6 @@ fragment VideoSet on VideoSet {
   video {
     ...Video
   }
-  altTag
 }
 
 fragment Audio on Audio {
@@ -110,7 +109,6 @@ fragment ProfileCoverSet on ImageSet {
   image {
     ...Image
   }
-  altTag
   # TODO: uncomment on field resolver fix
   # transformed(input: $profileCoverTransform) {
   #   ...Image
@@ -122,7 +120,6 @@ fragment ProfilePictureSet on ImageSet {
   image {
     ...Image
   }
-  altTag
   # TODO: uncomment on field resolver fix
   # transformed(input: $profilePictureTransform) {
   #   ...Image
@@ -591,7 +588,6 @@ fragment PublicationImageSet on ImageSet {
   image {
     ...Image
   }
-  altTag
   # TODO: uncomment on field resolver fix
   # transformed(input: $publicationImageTransform) {
   #   ...Image
@@ -652,6 +648,33 @@ fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
   lyrics
 }
 
+fragment LegacyAudioItem on LegacyAudioItem {
+  item {
+    ...AudioSet
+  }
+  cover {
+    ...PublicationImageSet
+  }
+  altTag
+}
+
+fragment LegacyImageItem on LegacyImageItem {
+  item {
+    ...PublicationImageSet
+  }
+  altTag
+}
+
+fragment LegacyVideoItem on LegacyVideoItem {
+  item {
+    ...VideoSet
+  }
+  cover {
+    ...PublicationImageSet
+  }
+  altTag
+}
+
 fragment PublicationMetadataV2 on PublicationMetadataV2 {
   name
   description
@@ -660,14 +683,14 @@ fragment PublicationMetadataV2 on PublicationMetadataV2 {
     ...PublicationImageSet
   }
   media {
-    ... on VideoSet {
-      ...VideoSet
+    ... on LegacyAudioItem {
+      ...LegacyAudioItem
     }
-    ... on AudioSet {
-      ...AudioSet
+    ... on LegacyImageItem {
+      ...LegacyImageItem
     }
-    ... on ImageSet {
-      ...PublicationImageSet
+    ... on LegacyVideoItem {
+      ...LegacyVideoItem
     }
   }
   attributes {

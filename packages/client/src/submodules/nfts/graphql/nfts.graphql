@@ -21,7 +21,7 @@ fragment NftMetadata on NftMetadata {
 
 fragment Nft on Nft {
   tokenId
-  ownerInfo {
+  owner {
     ...Owner
   }
   contentURI
@@ -48,8 +48,8 @@ fragment NftGallery on NftGallery {
 }
 
 fragment NftOwnershipChallengeResult on NftOwnershipChallengeResult {
-  id
-  text
+  success
+  info
 }
 
 # queries

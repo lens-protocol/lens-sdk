@@ -42,23 +42,15 @@ export type ImageFragment = {
 
 export type VideoFragment = { url: string; videoMimeType: Types.VideoMimeType | null };
 
-export type VideoSetFragment = { rawURI: string; altTag: string | null; video: VideoFragment };
+export type VideoSetFragment = { rawURI: string; video: VideoFragment | null };
 
 export type AudioFragment = { url: string; audioMimeType: Types.AudioMimeType | null };
 
-export type AudioSetFragment = { rawURI: string; audio: AudioFragment };
+export type AudioSetFragment = { rawURI: string; audio: AudioFragment | null };
 
-export type ProfileCoverSetFragment = {
-  rawURI: string;
-  altTag: string | null;
-  image: ImageFragment;
-};
+export type ProfileCoverSetFragment = { rawURI: string; image: ImageFragment | null };
 
-export type ProfilePictureSetFragment = {
-  rawURI: string;
-  altTag: string | null;
-  image: ImageFragment;
-};
+export type ProfilePictureSetFragment = { rawURI: string; image: ImageFragment | null };
 
 export type ProfileStatsFragment = {
   id: string;
@@ -313,10 +305,7 @@ export type ProfileOwnershipConditionFragment = { profileId: string };
 
 export type FollowConditionFragment = { follow: string };
 
-export type CollectConditionFragment = {
-  publicationId: string | null;
-  thisPublication: boolean | null;
-};
+export type CollectConditionFragment = { publicationId: string; thisPublication: boolean };
 
 export type AndConditionFragment = {
   criteria: Array<
@@ -342,11 +331,7 @@ export type OrConditionFragment = {
   >;
 };
 
-export type PublicationImageSetFragment = {
-  rawURI: string;
-  altTag: string | null;
-  image: ImageFragment;
-};
+export type PublicationImageSetFragment = { rawURI: string; image: ImageFragment | null };
 
 export type PublicationMarketplaceMetadataAttributeFragment = {
   displayType: Types.PublicationMarketplaceMetadataAttributeDisplayType | null;
@@ -357,7 +342,7 @@ export type PublicationMarketplaceMetadataAttributeFragment = {
 export type MarketplaceMetadataFragment = {
   description: string | null;
   externalURL: string | null;
-  name: string;
+  name: string | null;
   image: string | null;
   animationUrl: string | null;
   attributes: Array<PublicationMarketplaceMetadataAttributeFragment> | null;
@@ -390,6 +375,20 @@ export type PublicationMetadataMediaAudioFragment = {
   cover: PublicationImageSetFragment | null;
 };
 
+export type LegacyAudioItemFragment = {
+  altTag: string | null;
+  item: AudioSetFragment;
+  cover: PublicationImageSetFragment | null;
+};
+
+export type LegacyImageItemFragment = { altTag: string | null; item: PublicationImageSetFragment };
+
+export type LegacyVideoItemFragment = {
+  altTag: string | null;
+  item: VideoSetFragment;
+  cover: PublicationImageSetFragment | null;
+};
+
 export type PublicationMetadataV2Fragment = {
   name: string | null;
   description: string | null;
@@ -400,7 +399,7 @@ export type PublicationMetadataV2Fragment = {
   optionalContent: string | null;
   v2mainContentFocus: Types.PublicationMetadataV2MainFocusType;
   v2image: PublicationImageSetFragment | null;
-  media: Array<AudioSetFragment | PublicationImageSetFragment | VideoSetFragment> | null;
+  media: Array<LegacyAudioItemFragment | LegacyImageItemFragment | LegacyVideoItemFragment> | null;
   attributes: Array<PublicationMarketplaceMetadataAttributeFragment> | null;
   encryptedWith: {
     encryptionKey: string;
@@ -940,7 +939,6 @@ export const ProfileCoverSetFragmentDoc = gql`
     image {
       ...Image
     }
-    altTag
   }
   ${ImageFragmentDoc}
 `;
@@ -950,7 +948,6 @@ export const ProfilePictureSetFragmentDoc = gql`
     image {
       ...Image
     }
-    altTag
   }
   ${ImageFragmentDoc}
 `;
@@ -1211,25 +1208,8 @@ export const PublicationImageSetFragmentDoc = gql`
     image {
       ...Image
     }
-    altTag
   }
   ${ImageFragmentDoc}
-`;
-export const VideoFragmentDoc = gql`
-  fragment Video on Video {
-    url
-    videoMimeType: mimeType
-  }
-`;
-export const VideoSetFragmentDoc = gql`
-  fragment VideoSet on VideoSet {
-    rawURI
-    video {
-      ...Video
-    }
-    altTag
-  }
-  ${VideoFragmentDoc}
 `;
 export const AudioFragmentDoc = gql`
   fragment Audio on Audio {
@@ -1245,6 +1225,56 @@ export const AudioSetFragmentDoc = gql`
     }
   }
   ${AudioFragmentDoc}
+`;
+export const LegacyAudioItemFragmentDoc = gql`
+  fragment LegacyAudioItem on LegacyAudioItem {
+    item {
+      ...AudioSet
+    }
+    cover {
+      ...PublicationImageSet
+    }
+    altTag
+  }
+  ${AudioSetFragmentDoc}
+  ${PublicationImageSetFragmentDoc}
+`;
+export const LegacyImageItemFragmentDoc = gql`
+  fragment LegacyImageItem on LegacyImageItem {
+    item {
+      ...PublicationImageSet
+    }
+    altTag
+  }
+  ${PublicationImageSetFragmentDoc}
+`;
+export const VideoFragmentDoc = gql`
+  fragment Video on Video {
+    url
+    videoMimeType: mimeType
+  }
+`;
+export const VideoSetFragmentDoc = gql`
+  fragment VideoSet on VideoSet {
+    rawURI
+    video {
+      ...Video
+    }
+  }
+  ${VideoFragmentDoc}
+`;
+export const LegacyVideoItemFragmentDoc = gql`
+  fragment LegacyVideoItem on LegacyVideoItem {
+    item {
+      ...VideoSet
+    }
+    cover {
+      ...PublicationImageSet
+    }
+    altTag
+  }
+  ${VideoSetFragmentDoc}
+  ${PublicationImageSetFragmentDoc}
 `;
 export const PublicationMarketplaceMetadataAttributeFragmentDoc = gql`
   fragment PublicationMarketplaceMetadataAttribute on PublicationMarketplaceMetadataAttribute {
@@ -1362,14 +1392,14 @@ export const PublicationMetadataV2FragmentDoc = gql`
       ...PublicationImageSet
     }
     media {
-      ... on VideoSet {
-        ...VideoSet
+      ... on LegacyAudioItem {
+        ...LegacyAudioItem
       }
-      ... on AudioSet {
-        ...AudioSet
+      ... on LegacyImageItem {
+        ...LegacyImageItem
       }
-      ... on ImageSet {
-        ...PublicationImageSet
+      ... on LegacyVideoItem {
+        ...LegacyVideoItem
       }
     }
     attributes {
@@ -1423,8 +1453,9 @@ export const PublicationMetadataV2FragmentDoc = gql`
     }
   }
   ${PublicationImageSetFragmentDoc}
-  ${VideoSetFragmentDoc}
-  ${AudioSetFragmentDoc}
+  ${LegacyAudioItemFragmentDoc}
+  ${LegacyImageItemFragmentDoc}
+  ${LegacyVideoItemFragmentDoc}
   ${PublicationMarketplaceMetadataAttributeFragmentDoc}
   ${NftOwnershipConditionFragmentDoc}
   ${Erc20OwnershipConditionFragmentDoc}
