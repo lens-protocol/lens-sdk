@@ -3,7 +3,7 @@ import {
   OpenActionCategoryType,
   PublicationType,
   development,
-} from "@lens-protocol/client";
+} from '@lens-protocol/client';
 
 async function main() {
   const lensClient = new LensClient({
@@ -11,7 +11,7 @@ async function main() {
   });
 
   const collectRevenue = await lensClient.revenue.fromPublications({
-    for: "PROFILE_ID",
+    for: 'PROFILE_ID',
     where: {
       fromCollects: true,
     },
@@ -20,13 +20,13 @@ async function main() {
   collectRevenue.items.map((item) => {
     console.log(
       `Collect revenue for publication with id: ${item.publication.id} - ${JSON.stringify(
-        item.revenue
-      )}`
+        item.revenue,
+      )}`,
     );
   });
 
   const revenueFromQuoteCollects = await lensClient.revenue.fromPublications({
-    for: "PROFILE_ID",
+    for: 'PROFILE_ID',
     where: {
       fromCollects: true,
       publicationTypes: [PublicationType.Quote],
@@ -36,18 +36,18 @@ async function main() {
   revenueFromQuoteCollects.items.map((item) => {
     console.log(
       `Collect revenue for quote publication with id: ${item.publication.id} - ${JSON.stringify(
-        item.revenue
-      )}`
+        item.revenue,
+      )}`,
     );
   });
 
   const revenueFromOpenAction = await lensClient.revenue.fromPublications({
-    for: "PROFILE_ID",
+    for: 'PROFILE_ID',
     where: {
       fromCollects: false,
       anyOf: [
         {
-          address: "0x000",
+          address: '0x000',
           category: OpenActionCategoryType.Collect,
         },
       ],
@@ -57,8 +57,8 @@ async function main() {
   revenueFromOpenAction.items.map((item) => {
     console.log(
       `Open action revenue for publication with id: ${item.publication.id} - ${JSON.stringify(
-        item.revenue
-      )}`
+        item.revenue,
+      )}`,
     );
   });
 }

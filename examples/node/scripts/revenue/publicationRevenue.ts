@@ -1,4 +1,4 @@
-import { LensClient, development } from "@lens-protocol/client";
+import { LensClient, development } from '@lens-protocol/client';
 
 async function main() {
   const lensClient = new LensClient({
@@ -6,13 +6,13 @@ async function main() {
   });
 
   const publicationRevenue = await lensClient.revenue.forPublication({
-    for: "PUBLICATION_ID",
+    for: 'PUBLICATION_ID',
   });
 
   console.log(
     `Publication revenue for publication with id: ${
       publicationRevenue.publication.id
-    } - ${JSON.stringify(publicationRevenue.revenue)}`
+    } - ${JSON.stringify(publicationRevenue.revenue)}`,
   );
 }
 
