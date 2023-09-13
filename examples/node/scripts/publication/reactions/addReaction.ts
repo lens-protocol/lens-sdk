@@ -22,7 +22,7 @@ async function main() {
   }
 
   // add reaction
-  await lensClient.reactions.add({
+  await lensClient.publication.reactions.add({
     for: "PUBLICATION_ID",
     reaction: PublicationReactionType.Upvote,
   });

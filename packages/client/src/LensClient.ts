@@ -14,7 +14,6 @@ import {
   Transaction,
   Wallet,
 } from './submodules';
-import { Reactions } from './submodules/publication/submodules';
 
 /**
  * The LensClient is the main entry point for the LensClient SDK.
@@ -108,10 +107,6 @@ export class LensClient {
    */
   get revenue(): Revenue {
     return new Revenue(this.config, this._authentication);
-  }
-
-  get reactions(): Reactions {
-    return new Reactions(this.config, this._authentication);
   }
 
   /**

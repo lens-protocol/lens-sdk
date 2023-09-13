@@ -207,11 +207,11 @@ export class Profile {
     });
   }
 
-  async createWithHandle(
+  async create(
     request: CreateProfileWithHandleRequest,
-  ): PromiseResult<RelaySuccessFragment | CreateProfileWithHandleErrorResultFragment, never> {
+  ): Promise<RelaySuccessFragment | CreateProfileWithHandleErrorResultFragment> {
     const result = await this.sdk.CreateProfileWithHandle({ request });
-    return success(result.data.result);
+    return result.data.result;
   }
 
   async addInterests(

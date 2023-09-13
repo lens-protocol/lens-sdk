@@ -11,7 +11,7 @@ async function main() {
 
   console.log(`Creating a new profile for ${address} with handle "${handle}"`);
 
-  const profileCreateResult = await lensClient.profile.createWithHandle({
+  const profileCreateResult = await lensClient.profile.create({
     handle: handle,
     to: "YOUR_EVM_ADDRESS",
   });

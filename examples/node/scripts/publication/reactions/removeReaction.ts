@@ -22,7 +22,7 @@ async function main() {
   }
 
   // add reaction
-  await lensClient.reactions.remove({
+  await lensClient.publication.reactions.remove({
     for: "PUBLICATION_ID",
     reaction: PublicationReactionType.Upvote,
   });

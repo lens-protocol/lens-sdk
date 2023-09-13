@@ -64,3 +64,6 @@ export type {
   // options
   TypedDataOptions,
 } from './graphql/types.generated';
+
+// enums
+export { PublicationReactionType } from './graphql/types.generated';
