@@ -1,4 +1,4 @@
-import { LensClient, development } from "@lens-protocol/client";
+import { LensClient, development, isPostPublication } from "@lens-protocol/client";
 
 async function main() {
   const client = new LensClient({
@@ -13,10 +13,24 @@ async function main() {
   });
 
   console.log(
-    `Publications from profileId ${profileId}: `,
+    `All publications from profileId ${profileId}: `,
     result.items.map((p) => ({
       id: p.id,
     }))
+  );
+
+  const posts = result.items.filter(isPostPublication);
+
+  console.log(
+    `Only posts: `,
+    JSON.stringify(
+      posts.map((i) => ({
+        id: i.id,
+        metadata: i.metadata,
+      })),
+      null,
+      2
+    )
   );
 }
 

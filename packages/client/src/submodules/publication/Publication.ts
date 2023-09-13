@@ -185,7 +185,15 @@ export class Publication {
   }
 
   /**
-   * TODO
+   * Fetch tags
+   *
+   * @param request - Request object for the query
+   * @returns {@link TagResultFragment} wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.tags({});
+   * ```
    */
   async tags(request: PublicationsTagsRequest): Promise<PaginatedResult<TagResultFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
@@ -222,6 +230,21 @@ export class Publication {
     return result.data.result;
   }
 
+  /**
+   * Hide a publication
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * await client.publication.hide({
+   *   for: '0x014e-0x0a',
+   * });
+   * ```
+   */
   async hide(
     request: HidePublicationRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
@@ -230,6 +253,30 @@ export class Publication {
     });
   }
 
+  /**
+   * Report a publication with a reason
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * import { PublicationReportingReason, PublicationReportingSpamSubreason } from "@lens-protocol/client";
+   *
+   * await client.publication.report({
+   *   for: '0x014e-0x0a',
+   *   reason: {
+   *     spamReason: {
+   *       reason: PublicationReportingReason.Spam,
+   *       subreason: PublicationReportingSpamSubreason.FakeEngagement,
+   *     },
+   *   },
+   *   additionalComments: 'comment',
+   * });
+   * ```
+   */
   async report(
     request: ReportPublicationRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
@@ -238,10 +285,28 @@ export class Publication {
     });
   }
 
-  async postOnchain(
+  /**
+   * Create a post on chain.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelaySuccessFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.postOnChain({
+   *   contentURI: 'ipfs://Qm...', // or arweave
+   *   referenceModule: {
+   *     followerOnlyReferenceModule: false, // anybody can comment or mirror
+   *   },
+   * });
+   * ```
+   */
+  async postOnChain(
     request: OnchainPostRequest,
   ): PromiseResult<
-    LensProfileManagerRelayErrorFragment | RelaySuccessFragment,
+    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -250,10 +315,26 @@ export class Publication {
     });
   }
 
-  async commentOnchain(
+  /**
+   * Create a comment on chain.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelaySuccessFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.commentOnChain({
+   *   commentOn: "0x123-0x456",
+   *   contentURI: "ipfs://Qm...", // or arweave
+   * });
+   * ```
+   */
+  async commentOnChain(
     request: OnchainCommentRequest,
   ): PromiseResult<
-    LensProfileManagerRelayErrorFragment | RelaySuccessFragment,
+    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -262,10 +343,25 @@ export class Publication {
     });
   }
 
-  async mirrorOnchain(
+  /**
+   * Create a mirror on chain.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelaySuccessFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.mirrorOnChain({
+   *   mirrorOn: "0x123-0x456",
+   * });
+   * ```
+   */
+  async mirrorOnChain(
     request: OnchainMirrorRequest,
   ): PromiseResult<
-    LensProfileManagerRelayErrorFragment | RelaySuccessFragment,
+    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -274,10 +370,26 @@ export class Publication {
     });
   }
 
-  async quoteOnchain(
+  /**
+   * Create a quote on chain.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelaySuccessFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.quoteOnChain({
+   *   quoteOn: "0x123-0x456",
+   *   contentURI: "ipfs://Qm...", // or arweave
+   * });
+   * ```
+   */
+  async quoteOnChain(
     request: OnchainQuoteRequest,
   ): PromiseResult<
-    LensProfileManagerRelayErrorFragment | RelaySuccessFragment,
+    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
@@ -286,6 +398,21 @@ export class Publication {
     });
   }
 
+  /**
+   * Create a post on Momoka.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link CreateMomokaPublicationResultFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.postOnMomoka({
+   *   contentURI: "ipfs://Qm...", // or arweave
+   * });
+   * ```
+   */
   async postOnMomoka(
     request: MomokaPostRequest,
   ): PromiseResult<
@@ -334,7 +461,28 @@ export class Publication {
     });
   }
 
-  async createOnchainPostTypedData(
+  /**
+   * Create typed data for creating a post on chain.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnChain}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for creating a post
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createOnChainPostTypedData({
+   *   contentURI: "ipfs://Qm...", // or arweave
+   *   referenceModule: {
+   *     followerOnlyReferenceModule: false, // anybody can comment or mirror
+   *   },
+   * });
+   * ```
+   */
+  async createOnChainPostTypedData(
     request: OnchainPostRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
@@ -354,7 +502,7 @@ export class Publication {
     });
   }
 
-  async createOnchainCommentTypedData(
+  async createOnChainCommentTypedData(
     request: OnchainCommentRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
@@ -374,7 +522,7 @@ export class Publication {
     });
   }
 
-  async createOnchainMirrorTypedData(
+  async createOnChainMirrorTypedData(
     request: OnchainMirrorRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
@@ -394,7 +542,7 @@ export class Publication {
     });
   }
 
-  async createOnchainQuoteTypedData(
+  async createOnChainQuoteTypedData(
     request: OnchainQuoteRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
@@ -414,6 +562,24 @@ export class Publication {
     });
   }
 
+  /**
+   * Create typed data for creating a post on Momoka.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnMomoka}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for creating a post
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createMomokaPostTypedData({
+   *   contentURI: "ipfs://Qm...", // or arweave
+   * });
+   * ```
+   */
   async createMomokaPostTypedData(
     request: MomokaPostRequest,
   ): PromiseResult<
@@ -489,7 +655,7 @@ export class Publication {
   async legacyCollect(
     request: LegacyCollectRequest,
   ): PromiseResult<
-    LensProfileManagerRelayErrorFragment | RelaySuccessFragment,
+    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {

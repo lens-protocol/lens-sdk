@@ -1,4 +1,4 @@
-import { isSuccessfulLensProfileManagerResponse } from "@lens-protocol/client";
+import { isRelaySuccess } from "@lens-protocol/client";
 import { getAuthenticatedClientFromEthersWallet } from "../shared/getAuthenticatedClient";
 import { setupWallet } from "../shared/setupWallet";
 
@@ -19,7 +19,7 @@ async function main() {
 
   const unfollowResultValue = result.unwrap();
 
-  if (!isSuccessfulLensProfileManagerResponse(unfollowResultValue)) {
+  if (!isRelaySuccess(unfollowResultValue)) {
     throw new Error(`Something went wrong`);
   }
 

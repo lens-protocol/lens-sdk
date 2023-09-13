@@ -1,4 +1,4 @@
-import { isSuccessfulLensProfileManagerResponse } from "@lens-protocol/client";
+import { isRelaySuccess } from "@lens-protocol/client";
 import { getAuthenticatedClientFromEthersWallet } from "../shared/getAuthenticatedClient";
 import { setupWallet } from "../shared/setupWallet";
 
@@ -41,7 +41,7 @@ async function main() {
 
   const followModuleResultValue = result.unwrap();
 
-  if (!isSuccessfulLensProfileManagerResponse(followModuleResultValue)) {
+  if (!isRelaySuccess(followModuleResultValue)) {
     throw new Error("Failed to set follow module");
   }
 
