@@ -1,6 +1,6 @@
-import { LensClient, development } from "@lens-protocol/client";
-import { Wallet } from "ethers";
-import { WalletClient } from "viem";
+import { LensClient, development } from '@lens-protocol/client';
+import { Wallet } from 'ethers';
+import { WalletClient } from 'viem';
 
 export async function getAuthenticatedClientFromEthersWallet(wallet: Wallet): Promise<LensClient> {
   const lensClient = new LensClient({
@@ -11,7 +11,7 @@ export async function getAuthenticatedClientFromEthersWallet(wallet: Wallet): Pr
 
   const { id, text } = await lensClient.authentication.generateChallenge({
     address,
-    profileId: "0x001",
+    profileId: '0x001',
   });
   const signature = await wallet.signMessage(text);
 
@@ -29,21 +29,11 @@ export async function getAuthenticatedClientFromViemWalletClient(walletClient: W
 
   const { id, text } = await lensClient.authentication.generateChallenge({
     address,
-    profileId: "0x001",
+    profileId: '0x001',
   });
   const signature = await walletClient.signMessage({ account: address, message: text });
 
   lensClient.authentication.authenticate({ id, signature });
 
   return lensClient;
-}
-
-export async function refreshJWT(accessToken: string) {
-  const lensClient = new LensClient({
-    environment: development,
-  });
-
-  const newAccessToken = await lensClient.authentication.getAccessToken();
-
-  return newAccessToken;
 }

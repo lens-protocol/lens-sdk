@@ -1,4 +1,4 @@
-import { LensClient, development } from "@lens-protocol/client";
+import { LensClient, development } from '@lens-protocol/client';
 
 async function main() {
   const client = new LensClient({
@@ -7,7 +7,7 @@ async function main() {
 
   const result = await client.publication.stats({
     request: {
-      for: "0x123",
+      for: '0x123',
     },
   });
 

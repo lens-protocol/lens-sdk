@@ -1,12 +1,11 @@
-import { LensClient, development } from "@lens-protocol/client";
-import { buildPublicationMetadata } from "../shared/buildPublicationMetadata";
+import { LensClient, development } from '@lens-protocol/client';
 
 async function main() {
   const client = new LensClient({
     environment: development,
   });
 
-  const metadata = buildPublicationMetadata();
+  const metadata = {};
 
   const result = await client.publication.validateMetadata(metadata);
 

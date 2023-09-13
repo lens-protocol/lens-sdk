@@ -1,15 +1,15 @@
-import { isRelaySuccess } from "@lens-protocol/client";
-import { getAuthenticatedClientFromEthersWallet } from "../shared/getAuthenticatedClient";
-import { setupWallet } from "../shared/setupWallet";
-import { signAndBroadcast } from "../shared/signAndBroadcast";
+import { isRelaySuccess } from '@lens-protocol/client';
+
+import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
+import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
   const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const following = await lensClient.profile.following({ for: "PROFILE_ID" });
+  const following = await lensClient.profile.following({ for: 'PROFILE_ID' });
 
-  const profileToUnfollowId = following[0].id;
+  const profileToUnfollowId = following.items[0].id;
 
   const followTypedDataResult = await lensClient.profile.createUnfollowTypedData({
     unfollow: [profileToUnfollowId],
@@ -20,7 +20,7 @@ async function main() {
   const signedTypedData = await wallet._signTypedData(
     data.typedData.domain,
     data.typedData.types,
-    data.typedData.value
+    data.typedData.value,
   );
 
   const broadcastResult = await lensClient.transaction.broadcastOnChain({
@@ -36,7 +36,7 @@ async function main() {
   }
 
   console.log(
-    `Transaction to follow ${profileToUnfollowId} was successfuly broadcasted with txId ${followBroadcastResultValue.txId}`
+    `Transaction to follow ${profileToUnfollowId} was successfuly broadcasted with txId ${followBroadcastResultValue.txId}`,
   );
 
   // wait for follow to be indexed
@@ -51,7 +51,7 @@ async function main() {
   console.log(`Just followed profile`, {
     id: justFollowedProfile.id,
     handle: justFollowedProfile.handle,
-    isFollowedByMe: justFollowedProfile.isFollowedByMe,
+    isFollowedByMe: justFollowedProfile.operations.isFollowedByMe,
   });
 }
 
