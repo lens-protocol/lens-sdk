@@ -7,11 +7,9 @@ async function main() {
   const wallet = setupWallet();
   const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const resultTypedData = await client.publication.createOnchainPostTypedData({
+  const resultTypedData = await client.publication.createOnchainCommentTypedData({
+    commentOn: '0x123-0x456',
     contentURI: 'ipfs://Qm...', // or arweave
-    referenceModule: {
-      followerOnlyReferenceModule: false, // anybody can comment or mirror
-    },
   });
 
   const { id, typedData } = resultTypedData.unwrap();

@@ -162,7 +162,7 @@ export class Publication {
    * ```ts
    * const result = await client.publication.stats({
    *   request: {
-   *     for: "0x123",
+   *     for: '0x123',
    *   },
    * });
    * ```
@@ -263,7 +263,7 @@ export class Publication {
    *
    * @example
    * ```ts
-   * import { PublicationReportingReason, PublicationReportingSpamSubreason } from "@lens-protocol/client";
+   * import { PublicationReportingReason, PublicationReportingSpamSubreason } from '@lens-protocol/client';
    *
    * await client.publication.report({
    *   for: '0x014e-0x0a',
@@ -286,7 +286,7 @@ export class Publication {
   }
 
   /**
-   * Create a post on chain.
+   * Create a post onchain.
    *
    * ⚠️ Requires authenticated LensClient.
    *
@@ -316,7 +316,7 @@ export class Publication {
   }
 
   /**
-   * Create a comment on chain.
+   * Create a comment onchain.
    *
    * ⚠️ Requires authenticated LensClient.
    *
@@ -326,8 +326,8 @@ export class Publication {
    * @example
    * ```ts
    * const result = await client.publication.commentOnchain({
-   *   commentOn: "0x123-0x456",
-   *   contentURI: "ipfs://Qm...", // or arweave
+   *   commentOn: '0x123-0x456',
+   *   contentURI: 'ipfs://Qm...', // or arweave
    * });
    * ```
    */
@@ -344,7 +344,7 @@ export class Publication {
   }
 
   /**
-   * Create a mirror on chain.
+   * Create a mirror onchain.
    *
    * ⚠️ Requires authenticated LensClient.
    *
@@ -354,7 +354,7 @@ export class Publication {
    * @example
    * ```ts
    * const result = await client.publication.mirrorOnchain({
-   *   mirrorOn: "0x123-0x456",
+   *   mirrorOn: '0x123-0x456',
    * });
    * ```
    */
@@ -371,7 +371,7 @@ export class Publication {
   }
 
   /**
-   * Create a quote on chain.
+   * Create a quote onchain.
    *
    * ⚠️ Requires authenticated LensClient.
    *
@@ -381,8 +381,8 @@ export class Publication {
    * @example
    * ```ts
    * const result = await client.publication.quoteOnchain({
-   *   quoteOn: "0x123-0x456",
-   *   contentURI: "ipfs://Qm...", // or arweave
+   *   quoteOn: '0x123-0x456',
+   *   contentURI: 'ipfs://Qm...', // or arweave
    * });
    * ```
    */
@@ -409,7 +409,7 @@ export class Publication {
    * @example
    * ```ts
    * const result = await client.publication.postOnMomoka({
-   *   contentURI: "ipfs://Qm...", // or arweave
+   *   contentURI: 'ipfs://Qm...', // or arweave
    * });
    * ```
    */
@@ -425,6 +425,22 @@ export class Publication {
     });
   }
 
+  /**
+   * Create a comment on Momoka.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link CreateMomokaPublicationResultFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.commentOnMomoka({
+   *   commentOn: '0x123-0x456',
+   *   contentURI: 'ipfs://Qm...', // or arweave
+   * });
+   * ```
+   */
   async commentOnMomoka(
     request: MomokaCommentRequest,
   ): PromiseResult<
@@ -437,6 +453,21 @@ export class Publication {
     });
   }
 
+  /**
+   * Create a mirror on Momoka.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link CreateMomokaPublicationResultFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.mirrorOnMomoka({
+   *   mirrorOf: '0x123-0x456',
+   * });
+   * ```
+   */
   async mirrorOnMomoka(
     request: MomokaMirrorRequest,
   ): PromiseResult<
@@ -449,6 +480,22 @@ export class Publication {
     });
   }
 
+  /**
+   * Create a quote on Momoka.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link CreateMomokaPublicationResultFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.quoteOnMomoka({
+   *   quoteOn: '0x123-0x456',
+   *   contentURI: 'ipfs://Qm...', // or arweave
+   * });
+   * ```
+   */
   async quoteOnMomoka(
     request: MomokaQuoteRequest,
   ): PromiseResult<
@@ -462,7 +509,7 @@ export class Publication {
   }
 
   /**
-   * Create typed data for creating a post on chain.
+   * Fetch typed data to create a post onchain.
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
    *
@@ -475,7 +522,7 @@ export class Publication {
    * @example
    * ```ts
    * const result = await client.publication.createOnchainPostTypedData({
-   *   contentURI: "ipfs://Qm...", // or arweave
+   *   contentURI: 'ipfs://Qm...', // or arweave
    *   referenceModule: {
    *     followerOnlyReferenceModule: false, // anybody can comment or mirror
    *   },
@@ -502,6 +549,25 @@ export class Publication {
     });
   }
 
+  /**
+   * Fetch typed data to create a comment onchain.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for creating a post
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createOnchainCommentTypedData({
+   *   commentOn: '0x123-0x456',
+   *   contentURI: 'ipfs://Qm...', // or arweave
+   * });
+   * ```
+   */
   async createOnchainCommentTypedData(
     request: OnchainCommentRequest,
     options?: TypedDataOptions,
@@ -522,6 +588,24 @@ export class Publication {
     });
   }
 
+  /**
+   * Fetch typed data to create a mirror onchain.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for creating a post
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createOnchainMirrorTypedData({
+   *   mirrorOn: '0x123-0x456',
+   * });
+   * ```
+   */
   async createOnchainMirrorTypedData(
     request: OnchainMirrorRequest,
     options?: TypedDataOptions,
@@ -542,6 +626,25 @@ export class Publication {
     });
   }
 
+  /**
+   * Fetch typed data to create a quote onchain.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for creating a post
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createOnchainQuoteTypedData({
+   *   quoteOn: '0x123-0x456',
+   *   contentURI: 'ipfs://Qm...', // or arweave
+   * });
+   * ```
+   */
   async createOnchainQuoteTypedData(
     request: OnchainQuoteRequest,
     options?: TypedDataOptions,
@@ -563,20 +666,19 @@ export class Publication {
   }
 
   /**
-   * Create typed data for creating a post on Momoka.
+   * Fetch typed data to create a post on Momoka.
    *
    * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnMomoka}.
    *
    * ⚠️ Requires authenticated LensClient.
    *
    * @param request - Request object for the mutation
-   * @param options - Configure returned typed data
    * @returns Typed data for creating a post
    *
    * @example
    * ```ts
    * const result = await client.publication.createMomokaPostTypedData({
-   *   contentURI: "ipfs://Qm...", // or arweave
+   *   contentURI: 'ipfs://Qm...', // or arweave
    * });
    * ```
    */
@@ -598,6 +700,24 @@ export class Publication {
     });
   }
 
+  /**
+   * Fetch typed data to create a comment on Momoka.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnMomoka}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns Typed data for creating a post
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createMomokaCommentTypedData({
+   *   commentOn: '0x123-0x456',
+   *   contentURI: 'ipfs://Qm...', // or arweave
+   * });
+   * ```
+   */
   async createMomokaCommentTypedData(
     request: MomokaCommentRequest,
   ): PromiseResult<
@@ -616,6 +736,23 @@ export class Publication {
     });
   }
 
+  /**
+   * Fetch typed data to create a mirror on Momoka.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnMomoka}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns Typed data for creating a post
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createMomokaMirrorTypedData({
+   *   mirrorOf: '0x123-0x456',
+   * });
+   * ```
+   */
   async createMomokaMirrorTypedData(
     request: MomokaMirrorRequest,
   ): PromiseResult<
@@ -634,6 +771,24 @@ export class Publication {
     });
   }
 
+  /**
+   * Fetch typed data to create a quote on Momoka.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnMomoka}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns Typed data for creating a post
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createMomokaQuoteTypedData({
+   *   quoteOn: '0x123-0x456',
+   *   contentURI: 'ipfs://Qm...', // or arweave
+   * });
+   * ```
+   */
   async createMomokaQuoteTypedData(
     request: MomokaQuoteRequest,
   ): PromiseResult<
@@ -652,6 +807,21 @@ export class Publication {
     });
   }
 
+  /**
+   * Collect a publication.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelaySuccessFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.legacyCollect({
+   *   on: '0x123-0x456',
+   * });
+   * ```
+   */
   async legacyCollect(
     request: LegacyCollectRequest,
   ): PromiseResult<
@@ -664,8 +834,27 @@ export class Publication {
     });
   }
 
+  /**
+   * Fetch typed data to collect a publication.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for collecting a publication
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.createLegacyCollectTypedData({
+   *   on: '0x123-0x456',
+   * });
+   * ```
+   */
   async createLegacyCollectTypedData(
     request: LegacyCollectRequest,
+    options?: TypedDataOptions,
   ): PromiseResult<
     CreateLegacyCollectBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
@@ -674,6 +863,7 @@ export class Publication {
       const result = await this.sdk.CreateLegacyCollectTypedData(
         {
           request,
+          options,
         },
         headers,
       );

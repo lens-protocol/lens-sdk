@@ -37,7 +37,7 @@ export class Bookmarks {
   }
 
   /**
-   * Fetch all publications bookmarked by a profile
+   * Fetch all publications bookmarked by authenticated profile.
    *
    * ⚠️ Requires authenticated LensClient.
    *
@@ -46,11 +46,11 @@ export class Bookmarks {
    *
    * @example
    * ```ts
-   * const result = await client.bookmarks.fetch();
+   * const result = await client.publication.bookmarks.fetch();
    * ```
    */
   async fetch(
-    request: ProfileBookmarksRequest,
+    request: ProfileBookmarksRequest = {},
   ): PromiseResult<
     PaginatedResult<AnyPublicationFragment>,
     CredentialsExpiredError | NotAuthenticatedError
@@ -72,12 +72,11 @@ export class Bookmarks {
 
   /**
    * Adds a publication to the profile's bookmarks.
-   * The profile must be owned by the authenticated wallet.
    *
    * ⚠️ Requires authenticated LensClient.
    *
    * @param request - Request object for the mutation
-   * @returns void
+   * @returns {@link PromiseResult} with void
    *
    * @example
    * ```ts
@@ -95,13 +94,12 @@ export class Bookmarks {
   }
 
   /**
-   * Removes a publication to the profile's bookmarks.
-   * The profile must be owned by the authenticated wallet.
+   * Removes a publication from the profile's bookmarks.
    *
    * ⚠️ Requires authenticated LensClient.
    *
    * @param request - Request object for the mutation
-   * @returns void
+   * @returns {@link PromiseResult} with void
    *
    * @example
    * ```ts

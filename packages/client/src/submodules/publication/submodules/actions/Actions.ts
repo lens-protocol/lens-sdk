@@ -8,7 +8,7 @@ import {
   LensProfileManagerRelayErrorFragment,
   RelaySuccessFragment,
 } from '../../../../graphql/fragments.generated';
-import type { ActOnOpenActionRequest } from '../../../../graphql/types.generated';
+import type { ActOnOpenActionRequest, TypedDataOptions } from '../../../../graphql/types.generated';
 import { requireAuthHeaders } from '../../../../helpers';
 import {
   CreateActOnOpenActionBroadcastItemResultFragment,
@@ -17,8 +17,6 @@ import {
 } from './graphql/actions.generated';
 
 /**
- * // TODO
- *
  * @group LensClient Modules
  */
 export class Actions {
@@ -32,7 +30,25 @@ export class Actions {
     this.authentication = authentication;
   }
 
-  async act(
+  /**
+   * Act on open action.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelaySuccessFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.actions.actOn({
+   *   actOn: {
+   *     simpleCollectOpenAction: true,
+   *   },
+   *   for: '0x123-0x456',
+   * });
+   * ```
+   */
+  async actOn(
     request: ActOnOpenActionRequest,
   ): PromiseResult<
     RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
@@ -44,14 +60,36 @@ export class Actions {
     });
   }
 
-  async createTypedData(
+  /**
+   * Fetch typed data to act on open action.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.actions.createActOnTypedData({
+   *   actOn: {
+   *     simpleCollectOpenAction: true,
+   *   },
+   *   for: '0x123-0x456',
+   * });
+   * ```
+   */
+  async createActOnTypedData(
     request: ActOnOpenActionRequest,
+    options?: TypedDataOptions,
   ): PromiseResult<
     CreateActOnOpenActionBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateActOnOpenActionTypedData({ request }, headers);
+      const result = await this.sdk.CreateActOnOpenActionTypedData({ request, options }, headers);
       return result.data.result;
     });
   }
