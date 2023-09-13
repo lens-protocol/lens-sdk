@@ -67,12 +67,14 @@ export type {
 
 // enums
 export {
-  LimitType,
   FeedEventItemType,
+  LimitType,
+  OpenActionCategoryType,
   PublicationReactionType,
   PublicationReportingFraudSubreason,
   PublicationReportingIllegalSubreason,
   PublicationReportingReason,
   PublicationReportingSensitiveSubreason,
   PublicationReportingSpamSubreason,
+  PublicationType,
 } from './graphql/types.generated';
