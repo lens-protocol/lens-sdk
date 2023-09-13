@@ -39,6 +39,7 @@ export type ProfileBookmarksQueryVariables = Types.Exact<{
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
   profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
+  rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
 export type ProfileBookmarksQuery = {
@@ -69,6 +70,7 @@ export const ProfileBookmarksDocument = gql`
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
     $profileStatsArg: ProfileStatsArg = {}
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+    $rateRequest: RateRequest = { for: USD }
   ) {
     result: profileBookmarks(request: $request) {
       items {

@@ -13,27 +13,27 @@ fragment Erc20 on Erc20 {
   }
 }
 
-# fragment FiatAmount on FiatAmount {
-#   asset {
-#     ...Fiat
-#   }
-#   value
-# }
+fragment FiatAmount on FiatAmount {
+  asset {
+    ...Fiat
+  }
+  value
+}
 
-# fragment Fiat on Fiat {
-#   name
-#   symbol
-#   decimals
-# }
+fragment Fiat on Fiat {
+  name
+  symbol
+  decimals
+}
 
 fragment Amount on Amount {
   asset {
     ...Erc20
   }
   value
-  # rate(currency: USD) {
-  #   ...FiatAmount
-  # }
+  rate(request: $rateRequest) {
+    ...FiatAmount
+  }
 }
 
 fragment FeeFollowModuleSettings on FeeFollowModuleSettings {

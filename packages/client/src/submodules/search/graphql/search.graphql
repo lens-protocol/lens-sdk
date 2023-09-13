@@ -6,6 +6,7 @@ query SearchPublications(
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
 ) {
   result: searchPublications(request: $request) {
     items {
@@ -31,6 +32,7 @@ query SearchProfiles(
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
 ) {
   result: searchProfiles(request: $request) {
     items {

@@ -26,6 +26,7 @@ export type ProfilesManagedQueryVariables = Types.Exact<{
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
   profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
+  rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
 export type ProfilesManagedQuery = {
@@ -73,6 +74,7 @@ export const ProfilesManagedDocument = gql`
     $profilePictureTransform: ImageTransform = {}
     $profileStatsArg: ProfileStatsArg = {}
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+    $rateRequest: RateRequest = { for: USD }
   ) {
     result: profilesManaged(request: $request) {
       items {

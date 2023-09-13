@@ -48,6 +48,7 @@ export type FeedQueryVariables = Types.Exact<{
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
   profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
+  rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
 export type FeedQuery = {
@@ -62,6 +63,7 @@ export type FeedHighlightsQueryVariables = Types.Exact<{
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
   profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
+  rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
 export type FeedHighlightsQuery = {
@@ -76,6 +78,7 @@ export type ForYouQueryVariables = Types.Exact<{
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
   profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
+  rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
 export type ForYouQuery = {
@@ -131,6 +134,7 @@ export const FeedDocument = gql`
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
     $profileStatsArg: ProfileStatsArg = {}
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+    $rateRequest: RateRequest = { for: USD }
   ) {
     result: feed(request: $request) {
       items {
@@ -153,6 +157,7 @@ export const FeedHighlightsDocument = gql`
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
     $profileStatsArg: ProfileStatsArg = {}
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+    $rateRequest: RateRequest = { for: USD }
   ) {
     result: feedHighlights(request: $request) {
       items {
@@ -181,6 +186,7 @@ export const ForYouDocument = gql`
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
     $profileStatsArg: ProfileStatsArg = {}
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+    $rateRequest: RateRequest = { for: USD }
   ) {
     result: forYou(request: $request) {
       items {

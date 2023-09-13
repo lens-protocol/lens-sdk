@@ -39,6 +39,7 @@ export type ExplorePublicationsQueryVariables = Types.Exact<{
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
   profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
+  rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
 export type ExplorePublicationsQuery = {
@@ -54,6 +55,7 @@ export type ExploreProfilesQueryVariables = Types.Exact<{
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
   profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
+  rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
 export type ExploreProfilesQuery = {
@@ -69,6 +71,7 @@ export const ExplorePublicationsDocument = gql`
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
     $profileStatsArg: ProfileStatsArg = {}
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+    $rateRequest: RateRequest = { for: USD }
   ) {
     result: explorePublications(request: $request) {
       items {
@@ -95,6 +98,7 @@ export const ExploreProfilesDocument = gql`
     $profilePictureTransform: ImageTransform = {}
     $profileStatsArg: ProfileStatsArg = {}
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+    $rateRequest: RateRequest = { for: USD }
   ) {
     result: exploreProfiles(request: $request) {
       items {

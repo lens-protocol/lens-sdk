@@ -120,6 +120,7 @@ query Notifications(
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
 ) {
   result: notifications(request: $request) {
     items {

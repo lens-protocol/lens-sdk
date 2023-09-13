@@ -48,6 +48,7 @@ export type RevenueFromPublicationsQueryVariables = Types.Exact<{
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
   profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
+  rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
 export type RevenueFromPublicationsQuery = {
@@ -62,12 +63,14 @@ export type RevenueForPublicationQueryVariables = Types.Exact<{
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
   profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
+  rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
 export type RevenueForPublicationQuery = { result: PublicationRevenueFragment };
 
 export type FollowRevenuesQueryVariables = Types.Exact<{
   request: Types.FollowRevenueRequest;
+  rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
 export type FollowRevenuesQuery = { result: { revenues: Array<RevenueAggregateFragment> } };
@@ -115,6 +118,7 @@ export const RevenueFromPublicationsDocument = gql`
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
     $profileStatsArg: ProfileStatsArg = {}
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+    $rateRequest: RateRequest = { for: USD }
   ) {
     result: revenueFromPublications(request: $request) {
       items {
@@ -137,6 +141,7 @@ export const RevenueForPublicationDocument = gql`
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
     $profileStatsArg: ProfileStatsArg = {}
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+    $rateRequest: RateRequest = { for: USD }
   ) {
     result: revenueForPublication(request: $request) {
       ...PublicationRevenue
@@ -145,7 +150,7 @@ export const RevenueForPublicationDocument = gql`
   ${PublicationRevenueFragmentDoc}
 `;
 export const FollowRevenuesDocument = gql`
-  query FollowRevenues($request: FollowRevenueRequest!) {
+  query FollowRevenues($request: FollowRevenueRequest!, $rateRequest: RateRequest = { for: USD }) {
     result: followRevenues(request: $request) {
       revenues {
         ...RevenueAggregate

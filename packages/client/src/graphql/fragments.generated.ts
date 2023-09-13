@@ -14,7 +14,15 @@ export type Erc20Fragment = {
   contract: NetworkAddressFragment;
 };
 
-export type AmountFragment = { value: string; asset: Erc20Fragment };
+export type FiatAmountFragment = { value: string; asset: FiatFragment };
+
+export type FiatFragment = { name: string; symbol: string; decimals: number };
+
+export type AmountFragment = {
+  value: string;
+  asset: Erc20Fragment;
+  rate: FiatAmountFragment | null;
+};
 
 export type FeeFollowModuleSettingsFragment = {
   recipient: string;
@@ -1004,14 +1012,34 @@ export const Erc20FragmentDoc = gql`
   }
   ${NetworkAddressFragmentDoc}
 `;
+export const FiatFragmentDoc = gql`
+  fragment Fiat on Fiat {
+    name
+    symbol
+    decimals
+  }
+`;
+export const FiatAmountFragmentDoc = gql`
+  fragment FiatAmount on FiatAmount {
+    asset {
+      ...Fiat
+    }
+    value
+  }
+  ${FiatFragmentDoc}
+`;
 export const AmountFragmentDoc = gql`
   fragment Amount on Amount {
     asset {
       ...Erc20
     }
     value
+    rate(request: $rateRequest) {
+      ...FiatAmount
+    }
   }
   ${Erc20FragmentDoc}
+  ${FiatAmountFragmentDoc}
 `;
 export const FeeFollowModuleSettingsFragmentDoc = gql`
   fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
