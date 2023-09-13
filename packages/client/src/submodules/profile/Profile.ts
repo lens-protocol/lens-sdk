@@ -209,14 +209,9 @@ export class Profile {
 
   async create(
     request: CreateProfileWithHandleRequest,
-  ): PromiseResult<
-    RelaySuccessFragment | CreateProfileWithHandleErrorResultFragment,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateProfileWithHandle({ request }, headers);
-      return result.data.result;
-    });
+  ): Promise<RelaySuccessFragment | CreateProfileWithHandleErrorResultFragment> {
+    const result = await this.sdk.CreateProfileWithHandle({ request });
+    return result.data.result;
   }
 
   async addInterests(
@@ -238,9 +233,7 @@ export class Profile {
   async setProfileMetadata(
     request: OnchainSetProfileMetadataRequest,
   ): PromiseResult<
-    | RelaySuccessFragment
-    | CreateBlockProfilesBroadcastItemResultFragment
-    | LensProfileManagerRelayErrorFragment,
+    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {

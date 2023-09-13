@@ -44,6 +44,8 @@ config:
     URL: string
     Void: string
     OnchainPublicationId: string
+    EncryptedPath: string
+    UUID: string
 
   avoidOptionals:
     field: true

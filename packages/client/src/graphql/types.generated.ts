@@ -26,6 +26,7 @@ export type Scalars = {
   CreateHandle: { input: string; output: string };
   Cursor: { input: string; output: string };
   DateTime: { input: string; output: string };
+  EncryptedPath: { input: string; output: string };
   EncryptedValue: { input: string; output: string };
   Ens: { input: string; output: string };
   EvmAddress: { input: string; output: string };
@@ -50,6 +51,7 @@ export type Scalars = {
   TxId: { input: string; output: string };
   URI: { input: string; output: string };
   URL: { input: string; output: string };
+  UUID: { input: string; output: string };
   UnixTimestamp: { input: string; output: string };
   Void: { input: string; output: string };
 };
@@ -83,7 +85,7 @@ export type ActOnOpenActionLensManagerRequest = {
 
 export type ActOnOpenActionRequest = {
   actOn: ActOnOpenActionInput;
-  for?: InputMaybe<Scalars['PublicationId']['input']>;
+  for: Scalars['PublicationId']['input'];
   referrers?: InputMaybe<Array<OnchainReferrer>>;
 };
 
@@ -117,7 +119,14 @@ export enum AttributeType {
 }
 
 export enum AudioMimeType {
+  Aac = 'AAC',
+  Flac = 'FLAC',
   Mp3 = 'MP3',
+  Mp4 = 'MP4',
+  Ogg = 'OGG',
+  Vnd = 'VND',
+  Wav = 'WAV',
+  Webm = 'WEBM',
 }
 
 export type BlockRequest = {
@@ -327,7 +336,6 @@ export type FeedHighlightsRequest = {
 
 export type FeedRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
   where?: InputMaybe<FeedWhere>;
 };
 
@@ -463,7 +471,15 @@ export type IllegalReasonInput = {
 };
 
 export enum ImageMimeType {
+  Bmp = 'BMP',
+  Gif = 'GIF',
+  Heic = 'HEIC',
+  Jpeg = 'JPEG',
+  Jpg = 'JPG',
   Png = 'PNG',
+  Svg = 'SVG',
+  Tiff = 'TIFF',
+  Webp = 'WEBP',
 }
 
 export type ImageTransform = {
@@ -493,6 +509,7 @@ export type InviteRequest = {
 
 export type LegacyCollectRequest = {
   on: Scalars['PublicationId']['input'];
+  referrer?: InputMaybe<Scalars['PublicationId']['input']>;
 };
 
 export enum LegacyPublicationMetadataVersions {
@@ -668,7 +685,7 @@ export type NftCollectionsRequest = {
   for?: InputMaybe<Scalars['ProfileId']['input']>;
   /** Filter by owner address */
   forAddress?: InputMaybe<Scalars['EvmAddress']['input']>;
-  limit?: InputMaybe<Scalars['Float']['input']>;
+  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
 };
 
 export enum NftContractType {
@@ -677,7 +694,9 @@ export enum NftContractType {
 }
 
 export type NftGalleriesRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
   for: Scalars['ProfileId']['input'];
+  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
 };
 
 export type NftGalleryCreateRequest = {
@@ -710,30 +729,9 @@ export type NftInput = {
   tokenId: Scalars['TokenId']['input'];
 };
 
-export type NftOwnershipChallenge = {
-  contract: NetworkAddressInput;
-  tokenId: Scalars['TokenId']['input'];
-};
-
 export type NftOwnershipChallengeRequest = {
   for: Scalars['EvmAddress']['input'];
-  nfts: Array<NftOwnershipChallenge>;
-};
-
-/** NFT search query */
-export type NftSearchRequest = {
-  /** Chain IDs to search. Supports Ethereum and Polygon. If omitted, it will search in both chains */
-  chainIds?: InputMaybe<Array<Scalars['ChainId']['input']>>;
-  cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  /** Exclude follower NFTs from the search */
-  excludeFollowers?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Ethereum address of the owner. If unknown you can also search by profile ID */
-  forAddress?: InputMaybe<Scalars['EvmAddress']['input']>;
-  /** Profile ID of the owner */
-  forProfileId?: InputMaybe<Scalars['ProfileId']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
-  /** Search query. Has to be part of a collection name */
-  query: Scalars['String']['input'];
+  nfts: Array<NftInput>;
 };
 
 export type NftUpdateItemOrder = {
@@ -749,10 +747,17 @@ export type NftsRequest = {
 };
 
 export type NftsRequestWhere = {
+  /** Chain IDs to search. Supports Ethereum and Polygon. If omitted, it will search in both chains */
   chainIds?: InputMaybe<Array<Scalars['ChainId']['input']>>;
   excludeCollections?: InputMaybe<Array<NetworkAddressInput>>;
-  for?: InputMaybe<Scalars['ProfileId']['input']>;
+  /** Exclude follower NFTs from the search */
+  excludeFollowers?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Ethereum address of the owner. If unknown you can also search by profile ID */
+  forAddress?: InputMaybe<Scalars['EvmAddress']['input']>;
+  /** Profile ID of the owner */
+  forProfileId?: InputMaybe<Scalars['ProfileId']['input']>;
   includeCollections?: InputMaybe<Array<NetworkAddressInput>>;
+  /** Search query. Has to be part of a collection name */
   query?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -768,7 +773,6 @@ export type NnvRequest = {
 
 export type NotificationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
   where?: InputMaybe<NotificationWhere>;
 };
 
@@ -777,12 +781,11 @@ export type NotificationSubscriptionRequest = {
 };
 
 export enum NotificationType {
-  CollectActed = 'COLLECT_ACTED',
+  Acted = 'ACTED',
   Commented = 'COMMENTED',
   Followed = 'FOLLOWED',
   Mentioned = 'MENTIONED',
   Mirrored = 'MIRRORED',
-  OtherActed = 'OTHER_ACTED',
   Quoted = 'QUOTED',
   Reacted = 'REACTED',
 }
@@ -878,7 +881,7 @@ export type PaginatedOffsetRequest = {
 };
 
 export type PoapEventQueryRequest = {
-  eventId: Scalars['Float']['input'];
+  eventId: Scalars['String']['input'];
 };
 
 export type PoapHoldersQueryRequest = {
@@ -916,6 +919,31 @@ export type PriRequest = {
   secret: Scalars['String']['input'];
 };
 
+export type ProfileActionHistoryRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+};
+
+/** Profile action history type */
+export enum ProfileActionHistoryType {
+  Acted = 'ACTED',
+  Blocked = 'BLOCKED',
+  Collected = 'COLLECTED',
+  Comment = 'COMMENT',
+  Follow = 'FOLLOW',
+  LinkHandle = 'LINK_HANDLE',
+  LoggedIn = 'LOGGED_IN',
+  Mirror = 'MIRROR',
+  Post = 'POST',
+  Quote = 'QUOTE',
+  RefreshAuthToken = 'REFRESH_AUTH_TOKEN',
+  SetProfileMetadata = 'SET_PROFILE_METADATA',
+  SetProfileModule = 'SET_PROFILE_MODULE',
+  Unblocked = 'UNBLOCKED',
+  Unfollow = 'UNFOLLOW',
+  UnlinkHandle = 'UNLINK_HANDLE',
+}
+
 export type ProfileBookmarksRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<Scalars['LimitScalar']['input']>;
@@ -929,7 +957,7 @@ export type ProfileBookmarksWhere = {
 };
 
 export type ProfileInterestsRequest = {
-  interests: Scalars['String']['input'];
+  interests: Array<Scalars['String']['input']>;
 };
 
 export type ProfileManagersRequest = {
@@ -1280,8 +1308,6 @@ export type PublicationsTagsRequest = {
 };
 
 export type PublicationsTagsWhere = {
-  cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
   publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
 };
 
@@ -1513,7 +1539,15 @@ export type VerifyRequest = {
 };
 
 export enum VideoMimeType {
+  Gtlfbin = 'GTLFBIN',
+  Gtlfjson = 'GTLFJSON',
+  M4V = 'M4V',
   Mp4 = 'MP4',
+  Mpg = 'MPG',
+  Ogg = 'OGG',
+  Ogv = 'OGV',
+  Quicktime = 'QUICKTIME',
+  Webm = 'WEBM',
 }
 
 export type WhoActedOnPublicationRequest = {

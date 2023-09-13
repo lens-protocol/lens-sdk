@@ -15,7 +15,7 @@ import {
   Erc20FragmentDoc,
   PaginatedResultInfoFragmentDoc,
 } from '../../../graphql/fragments.generated';
-export type OwnerFragment = { amount: number; address: string };
+export type OwnerFragment = { amount: string; address: string };
 
 export type NftCollectionFragment = {
   name: string;
@@ -25,13 +25,17 @@ export type NftCollectionFragment = {
   contract: NetworkAddressFragment;
 };
 
-export type NftMetadataFragment = { name: string; description: string; image: string };
+export type NftMetadataFragment = {
+  name: string | null;
+  description: string | null;
+  image: string | null;
+};
 
 export type NftFragment = {
   tokenId: string;
   contentURI: string;
   contractType: Types.NftContractType;
-  ownerInfo: OwnerFragment;
+  owner: OwnerFragment;
   contract: NetworkAddressFragment;
   collection: NftCollectionFragment;
   metadata: NftMetadataFragment;
@@ -45,7 +49,7 @@ export type NftGalleryFragment = {
   items: Array<NftFragment>;
 };
 
-export type NftOwnershipChallengeResultFragment = { id: string; text: string };
+export type NftOwnershipChallengeResultFragment = { success: boolean; info: string | null };
 
 export type NftsQueryVariables = Types.Exact<{
   request: Types.NftsRequest;
@@ -125,7 +129,7 @@ export const NftMetadataFragmentDoc = gql`
 export const NftFragmentDoc = gql`
   fragment Nft on Nft {
     tokenId
-    ownerInfo {
+    owner {
       ...Owner
     }
     contentURI
@@ -159,8 +163,8 @@ export const NftGalleryFragmentDoc = gql`
 `;
 export const NftOwnershipChallengeResultFragmentDoc = gql`
   fragment NftOwnershipChallengeResult on NftOwnershipChallengeResult {
-    id
-    text
+    success
+    info
   }
 `;
 export const NftsDocument = gql`
