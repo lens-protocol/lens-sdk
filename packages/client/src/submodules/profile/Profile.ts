@@ -1,4 +1,4 @@
-import { PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import type { Authentication } from '../../authentication';
 import type { LensConfig } from '../../consts/config';
