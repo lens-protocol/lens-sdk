@@ -168,13 +168,14 @@ export class Publication {
    * ```
    */
   async stats(vars: PublicationStatsVariables): Promise<PublicationStatsFragment | undefined> {
-    const { request, statsRequest = {}, reactionsRequest = {}, openActionsRequest = {} } = vars;
+    const { request, statsRequest = {}, openActionsRequest = { anyOf: [] } } = vars;
+
     const result = await this.sdk.PublicationStats({
       request,
       statsRequest,
-      reactionsRequest,
       openActionsRequest,
     });
+
     const data = result.data.result;
 
     if (data === null || isMirrorPublication(data)) {

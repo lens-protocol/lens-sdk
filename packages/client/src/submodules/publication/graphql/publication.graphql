@@ -18,7 +18,8 @@ fragment PublicationStats on PublicationStats {
   comments
   mirrors
   quotes
-  reactions(request: $reactionsRequest)
+  upvoteReactions: reactions(request: { type: UPVOTE })
+  downvoteReactions: reactions(request: { type: DOWNVOTE })
   countOpenActions(request: $openActionsRequest)
 }
 
@@ -51,7 +52,6 @@ query Publication(
 query PublicationStats(
   $request: PublicationRequest!
   $statsRequest: PublicationStatsInput!
-  $reactionsRequest: PublicationStatsReactionArgs!
   $openActionsRequest: PublicationStatsCountOpenActionArgs!
 ) {
   result: publication(request: $request) {

@@ -48,9 +48,31 @@ export type AudioFragment = { url: string; audioMimeType: Types.AudioMimeType | 
 
 export type AudioSetFragment = { rawURI: string; audio: AudioFragment | null };
 
-export type ProfileCoverSetFragment = { rawURI: string; image: ImageFragment | null };
+export type LegacyAudioItemFragment = {
+  altTag: string | null;
+  item: AudioSetFragment;
+  cover: PublicationImageSetFragment | null;
+};
 
-export type ProfilePictureSetFragment = { rawURI: string; image: ImageFragment | null };
+export type LegacyImageItemFragment = { altTag: string | null; item: PublicationImageSetFragment };
+
+export type LegacyVideoItemFragment = {
+  altTag: string | null;
+  item: VideoSetFragment;
+  cover: PublicationImageSetFragment | null;
+};
+
+export type ProfileCoverSetFragment = {
+  rawURI: string;
+  image: ImageFragment | null;
+  transformed: ImageFragment | null;
+};
+
+export type ProfilePictureSetFragment = {
+  rawURI: string;
+  image: ImageFragment | null;
+  transformed: ImageFragment | null;
+};
 
 export type ProfileStatsFragment = {
   id: string;
@@ -331,7 +353,11 @@ export type OrConditionFragment = {
   >;
 };
 
-export type PublicationImageSetFragment = { rawURI: string; image: ImageFragment | null };
+export type PublicationImageSetFragment = {
+  rawURI: string;
+  image: ImageFragment | null;
+  transformed: ImageFragment | null;
+};
 
 export type PublicationMarketplaceMetadataAttributeFragment = {
   displayType: Types.PublicationMarketplaceMetadataAttributeDisplayType | null;
@@ -372,20 +398,6 @@ export type PublicationMetadataMediaAudioFragment = {
   recordLabel: string | null;
   lyrics: string | null;
   item: AudioSetFragment;
-  cover: PublicationImageSetFragment | null;
-};
-
-export type LegacyAudioItemFragment = {
-  altTag: string | null;
-  item: AudioSetFragment;
-  cover: PublicationImageSetFragment | null;
-};
-
-export type LegacyImageItemFragment = { altTag: string | null; item: PublicationImageSetFragment };
-
-export type LegacyVideoItemFragment = {
-  altTag: string | null;
-  item: VideoSetFragment;
   cover: PublicationImageSetFragment | null;
 };
 
@@ -734,6 +746,7 @@ export type LiveStreamMetadataV3Fragment = {
 };
 
 export type PostFragment = {
+  __typename: 'Post';
   id: string;
   isHidden: boolean;
   isEncrypted: boolean;
@@ -783,6 +796,7 @@ export type PostFragment = {
 };
 
 export type CommentBaseFragment = {
+  __typename: 'Comment';
   id: string;
   isHidden: boolean;
   isEncrypted: boolean;
@@ -838,6 +852,7 @@ export type CommentFragment = {
 } & CommentBaseFragment;
 
 export type MirrorFragment = {
+  __typename: 'Mirror';
   id: string;
   isHidden: boolean;
   isEncrypted: boolean;
@@ -849,6 +864,7 @@ export type MirrorFragment = {
 };
 
 export type QuoteBaseFragment = {
+  __typename: 'Quote';
   id: string;
   isHidden: boolean;
   isEncrypted: boolean;
@@ -895,7 +911,6 @@ export type QuoteBaseFragment = {
     | FollowOnlyReferenceModuleSettingsFragment
     | UnknownReferenceModuleSettingsFragment
     | null;
-  quotedOn: CommentBaseFragment | PostFragment | {};
 };
 
 export type QuoteFragment = {
@@ -920,10 +935,16 @@ export type RelaySuccessFragment = {
 export type RelayErrorFragment = { __typename: 'RelayError'; reason: Types.RelayErrorReasonType };
 
 export type LensProfileManagerRelayErrorFragment = {
+  __typename: 'LensProfileManagerRelayError';
   reason: Types.LensProfileManagerRelayErrorReasonType;
 };
 
-export type CreateMomokaPublicationResultFragment = { id: string; proof: string; momokaId: string };
+export type CreateMomokaPublicationResultFragment = {
+  __typename: 'CreateMomokaPublicationResult';
+  id: string;
+  proof: string;
+  momokaId: string;
+};
 
 export const ImageFragmentDoc = gql`
   fragment Image on Image {
@@ -939,6 +960,9 @@ export const ProfileCoverSetFragmentDoc = gql`
     image {
       ...Image
     }
+    transformed(request: $profileCoverTransform) {
+      ...Image
+    }
   }
   ${ImageFragmentDoc}
 `;
@@ -946,6 +970,9 @@ export const ProfilePictureSetFragmentDoc = gql`
   fragment ProfilePictureSet on ImageSet {
     rawURI
     image {
+      ...Image
+    }
+    transformed(request: $profilePictureTransform) {
       ...Image
     }
   }
@@ -1025,15 +1052,15 @@ export const OptimisticStatusResultFragmentDoc = gql`
 export const ProfileStatsFragmentDoc = gql`
   fragment ProfileStats on ProfileStats {
     id
-    followers(request: $profileStatsArg)
-    following(request: $profileStatsArg)
-    comments(request: $profileStatsArg)
-    posts(request: $profileStatsArg)
-    mirrors(request: $profileStatsArg)
-    quotes(request: $profileStatsArg)
-    mirrors(request: $profileStatsArg)
-    quotes(request: $profileStatsArg)
-    publications(request: $profileStatsArg)
+    followers
+    following
+    comments
+    posts
+    mirrors
+    quotes
+    mirrors
+    quotes
+    publications
     upvoteReactions: reactions(request: { type: UPVOTE })
     downvoteReactions: reactions(request: { type: DOWNVOTE })
     countOpenActions(request: $profileStatsCountOpenActionArgs)
@@ -1206,6 +1233,9 @@ export const PublicationImageSetFragmentDoc = gql`
   fragment PublicationImageSet on ImageSet {
     rawURI
     image {
+      ...Image
+    }
+    transformed(request: $publicationImageTransform) {
       ...Image
     }
   }
@@ -2353,6 +2383,7 @@ export const UnknownReferenceModuleSettingsFragmentDoc = gql`
 `;
 export const PostFragmentDoc = gql`
   fragment Post on Post {
+    __typename
     id
     publishedOn {
       ...App
@@ -2508,6 +2539,7 @@ export const PostFragmentDoc = gql`
 `;
 export const CommentBaseFragmentDoc = gql`
   fragment CommentBase on Comment {
+    __typename
     id
     publishedOn {
       ...App
@@ -2663,6 +2695,7 @@ export const CommentBaseFragmentDoc = gql`
 `;
 export const QuoteBaseFragmentDoc = gql`
   fragment QuoteBase on Quote {
+    __typename
     id
     publishedOn {
       ...App
@@ -2779,14 +2812,6 @@ export const QuoteBaseFragmentDoc = gql`
         ...UnknownReferenceModuleSettings
       }
     }
-    quotedOn {
-      ... on Post {
-        ...Post
-      }
-      ... on Comment {
-        ...CommentBase
-      }
-    }
   }
   ${AppFragmentDoc}
   ${MomokaInfoFragmentDoc}
@@ -2823,8 +2848,6 @@ export const QuoteBaseFragmentDoc = gql`
   ${FollowOnlyReferenceModuleSettingsFragmentDoc}
   ${DegreesOfSeparationReferenceModuleSettingsFragmentDoc}
   ${UnknownReferenceModuleSettingsFragmentDoc}
-  ${PostFragmentDoc}
-  ${CommentBaseFragmentDoc}
 `;
 export const CommentFragmentDoc = gql`
   fragment Comment on Comment {
@@ -2872,6 +2895,7 @@ export const QuoteFragmentDoc = gql`
 `;
 export const MirrorFragmentDoc = gql`
   fragment Mirror on Mirror {
+    __typename
     id
     publishedOn {
       ...App
@@ -2930,11 +2954,13 @@ export const RelayErrorFragmentDoc = gql`
 `;
 export const LensProfileManagerRelayErrorFragmentDoc = gql`
   fragment LensProfileManagerRelayError on LensProfileManagerRelayError {
+    __typename
     reason
   }
 `;
 export const CreateMomokaPublicationResultFragmentDoc = gql`
   fragment CreateMomokaPublicationResult on CreateMomokaPublicationResult {
+    __typename
     id
     proof
     momokaId

@@ -42,12 +42,13 @@ export type PublicationStatsFragment = {
   comments: number;
   mirrors: number;
   quotes: number;
-  reactions: number;
   countOpenActions: number;
+  upvoteReactions: number;
+  downvoteReactions: number;
   additionalArgs: {
     forApps: Array<string> | null;
     customFilters: Array<Types.CustomFiltersType> | null;
-  };
+  } | null;
 };
 
 export type PublicationQueryVariables = Types.Exact<{
@@ -67,7 +68,6 @@ export type PublicationQuery = {
 export type PublicationStatsQueryVariables = Types.Exact<{
   request: Types.PublicationRequest;
   statsRequest: Types.PublicationStatsInput;
-  reactionsRequest: Types.PublicationStatsReactionArgs;
   openActionsRequest: Types.PublicationStatsCountOpenActionArgs;
 }>;
 
@@ -425,7 +425,8 @@ export const PublicationStatsFragmentDoc = gql`
     comments
     mirrors
     quotes
-    reactions(request: $reactionsRequest)
+    upvoteReactions: reactions(request: { type: UPVOTE })
+    downvoteReactions: reactions(request: { type: DOWNVOTE })
     countOpenActions(request: $openActionsRequest)
   }
 `;
@@ -715,7 +716,6 @@ export const PublicationStatsDocument = gql`
   query PublicationStats(
     $request: PublicationRequest!
     $statsRequest: PublicationStatsInput!
-    $reactionsRequest: PublicationStatsReactionArgs!
     $openActionsRequest: PublicationStatsCountOpenActionArgs!
   ) {
     result: publication(request: $request) {

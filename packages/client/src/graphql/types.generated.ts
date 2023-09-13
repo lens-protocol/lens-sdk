@@ -33,7 +33,6 @@ export type Scalars = {
   Handle: { input: string; output: string };
   ImageSizeTransform: { input: ImageSizeTransform; output: ImageSizeTransform };
   Jwt: { input: string; output: string };
-  LimitScalar: { input: number; output: number };
   Locale: { input: string; output: string };
   Markdown: { input: string; output: string };
   MimeType: { input: string; output: string };
@@ -265,7 +264,7 @@ export enum ExploreProfileOrderBy {
 
 export type ExploreProfilesRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   /** Order criteria for exploring profiles */
   orderBy: ExploreProfileOrderBy;
   /** Filtering criteria for exploring profiles */
@@ -281,7 +280,7 @@ export type ExploreProfilesWhere = {
 
 export type ExplorePublicationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   orderBy: ExplorePublicationsOrderByType;
   where?: InputMaybe<ExplorePublicationsWhere>;
 };
@@ -330,7 +329,7 @@ export type FeedHighlightWhere = {
 
 export type FeedHighlightsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   where?: InputMaybe<FeedHighlightWhere>;
 };
 
@@ -392,14 +391,14 @@ export type FollowRevenueRequest = {
 
 export type FollowersRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   of: Scalars['ProfileId']['input'];
 };
 
 export type FollowingRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   for: Scalars['ProfileId']['input'];
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
 };
 
 export type FraudReasonInput = {
@@ -544,6 +543,12 @@ export enum LensTransactionStatusType {
   Processing = 'PROCESSING',
 }
 
+export enum LimitType {
+  Fifty = 'Fifty',
+  Ten = 'Ten',
+  TwentyFive = 'TwentyFive',
+}
+
 export type ModuleCurrencyApproval = {
   followModule?: InputMaybe<FollowModuleType>;
   openActionModule?: InputMaybe<OpenActionModuleType>;
@@ -579,7 +584,7 @@ export type MomokaTransactionRequest = {
 export type MomokaTransactionsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   for?: InputMaybe<Scalars['ProfileId']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
 };
 
 export enum MomokaValidatorError {
@@ -624,7 +629,7 @@ export type MultirecipientFeeCollectModuleInput = {
 
 export type MutualFollowersRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   observer: Scalars['ProfileId']['input'];
   viewing: Scalars['ProfileId']['input'];
 };
@@ -632,7 +637,7 @@ export type MutualFollowersRequest = {
 /** Mutual NFT collections request */
 export type MutualNftCollectionsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   /** Profile id of the second user */
   viewingProfileId: Scalars['ProfileId']['input'];
   /** Profile id of the first user */
@@ -641,7 +646,7 @@ export type MutualNftCollectionsRequest = {
 
 export type MutualPoapsQueryRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   observer: Scalars['ProfileId']['input'];
   viewing: Scalars['ProfileId']['input'];
 };
@@ -670,7 +675,7 @@ export type NftCollectionOwnersRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   /** The profile id to use when ordering by followers */
   for?: InputMaybe<Scalars['ProfileId']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   /** The ordering of Nft collection owners */
   order?: InputMaybe<NftCollectionOwnersOrder>;
 };
@@ -685,7 +690,7 @@ export type NftCollectionsRequest = {
   for?: InputMaybe<Scalars['ProfileId']['input']>;
   /** Filter by owner address */
   forAddress?: InputMaybe<Scalars['EvmAddress']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
 };
 
 export enum NftContractType {
@@ -696,7 +701,7 @@ export enum NftContractType {
 export type NftGalleriesRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   for: Scalars['ProfileId']['input'];
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
 };
 
 export type NftGalleryCreateRequest = {
@@ -742,7 +747,7 @@ export type NftUpdateItemOrder = {
 
 export type NftsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   where?: InputMaybe<NftsRequestWhere>;
 };
 
@@ -871,13 +876,13 @@ export type OwnedHandlesRequest = {
   /** The Ethereum address for which to retrieve owned handles */
   address: Scalars['EvmAddress']['input'];
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
 };
 
 /** Pagination with Offset fields  */
 export type PaginatedOffsetRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
 };
 
 export type PoapEventQueryRequest = {
@@ -887,7 +892,7 @@ export type PoapEventQueryRequest = {
 export type PoapHoldersQueryRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   eventId: Scalars['Float']['input'];
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
 };
 
 export enum PoapTokenLayerType {
@@ -902,7 +907,7 @@ export type PopularNftCollectionsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   /** Exclude Lens Follower NFTs */
   excludeFollowers?: InputMaybe<Scalars['Boolean']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   /** Include only verified collections */
   onlyVerified?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -921,7 +926,7 @@ export type PriRequest = {
 
 export type ProfileActionHistoryRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
 };
 
 /** Profile action history type */
@@ -946,25 +951,93 @@ export enum ProfileActionHistoryType {
 
 export type ProfileBookmarksRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   where?: InputMaybe<ProfileBookmarksWhere>;
 };
 
 export type ProfileBookmarksWhere = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   metadata?: InputMaybe<PublicationMetadataFilters>;
 };
 
+/** Profile interests types */
+export enum ProfileInterestTypes {
+  ArtEntertainment = 'ART_ENTERTAINMENT',
+  ArtEntertainmentAnime = 'ART_ENTERTAINMENT__ANIME',
+  ArtEntertainmentArt = 'ART_ENTERTAINMENT__ART',
+  ArtEntertainmentBooks = 'ART_ENTERTAINMENT__BOOKS',
+  ArtEntertainmentDesign = 'ART_ENTERTAINMENT__DESIGN',
+  ArtEntertainmentFashion = 'ART_ENTERTAINMENT__FASHION',
+  ArtEntertainmentFilmTv = 'ART_ENTERTAINMENT__FILM_TV',
+  ArtEntertainmentMemes = 'ART_ENTERTAINMENT__MEMES',
+  ArtEntertainmentMusic = 'ART_ENTERTAINMENT__MUSIC',
+  ArtEntertainmentPhotography = 'ART_ENTERTAINMENT__PHOTOGRAPHY',
+  Business = 'BUSINESS',
+  BusinessCreatorEconomy = 'BUSINESS__CREATOR_ECONOMY',
+  BusinessFinance = 'BUSINESS__FINANCE',
+  BusinessMarketing = 'BUSINESS__MARKETING',
+  Career = 'CAREER',
+  Crypto = 'CRYPTO',
+  CryptoBitcoin = 'CRYPTO__BITCOIN',
+  CryptoDaos = 'CRYPTO__DAOS',
+  CryptoDefi = 'CRYPTO__DEFI',
+  CryptoEthereum = 'CRYPTO__ETHEREUM',
+  CryptoGm = 'CRYPTO__GM',
+  CryptoGovernance = 'CRYPTO__GOVERNANCE',
+  CryptoL1 = 'CRYPTO__L1',
+  CryptoL2 = 'CRYPTO__L2',
+  CryptoMetaverse = 'CRYPTO__METAVERSE',
+  CryptoNft = 'CRYPTO__NFT',
+  CryptoRekt = 'CRYPTO__REKT',
+  CryptoScaling = 'CRYPTO__SCALING',
+  CryptoWeb3 = 'CRYPTO__WEB3',
+  CryptoWeb3Social = 'CRYPTO__WEB3_SOCIAL',
+  Education = 'EDUCATION',
+  FamilyParenting = 'FAMILY_PARENTING',
+  FoodDrink = 'FOOD_DRINK',
+  FoodDrinkBeer = 'FOOD_DRINK__BEER',
+  FoodDrinkCocktails = 'FOOD_DRINK__COCKTAILS',
+  FoodDrinkCooking = 'FOOD_DRINK__COOKING',
+  FoodDrinkRestaurants = 'FOOD_DRINK__RESTAURANTS',
+  FoodDrinkWine = 'FOOD_DRINK__WINE',
+  HealthFitness = 'HEALTH_FITNESS',
+  HealthFitnessBiohacking = 'HEALTH_FITNESS__BIOHACKING',
+  HealthFitnessExercise = 'HEALTH_FITNESS__EXERCISE',
+  HobbiesInterests = 'HOBBIES_INTERESTS',
+  HobbiesInterestsArtsCrafts = 'HOBBIES_INTERESTS__ARTS_CRAFTS',
+  HobbiesInterestsCars = 'HOBBIES_INTERESTS__CARS',
+  HobbiesInterestsCollecting = 'HOBBIES_INTERESTS__COLLECTING',
+  HobbiesInterestsGaming = 'HOBBIES_INTERESTS__GAMING',
+  HobbiesInterestsSports = 'HOBBIES_INTERESTS__SPORTS',
+  HobbiesInterestsTravel = 'HOBBIES_INTERESTS__TRAVEL',
+  HomeGarden = 'HOME_GARDEN',
+  HomeGardenAnimals = 'HOME_GARDEN__ANIMALS',
+  HomeGardenGardening = 'HOME_GARDEN__GARDENING',
+  HomeGardenHomeImprovement = 'HOME_GARDEN__HOME_IMPROVEMENT',
+  HomeGardenNature = 'HOME_GARDEN__NATURE',
+  LawGovernmentPolitics = 'LAW_GOVERNMENT_POLITICS',
+  LawGovernmentPoliticsRegulation = 'LAW_GOVERNMENT_POLITICS__REGULATION',
+  Lens = 'LENS',
+  News = 'NEWS',
+  Nsfw = 'NSFW',
+  Technology = 'TECHNOLOGY',
+  TechnologyAiMl = 'TECHNOLOGY__AI_ML',
+  TechnologyBiotech = 'TECHNOLOGY__BIOTECH',
+  TechnologyProgramming = 'TECHNOLOGY__PROGRAMMING',
+  TechnologyScience = 'TECHNOLOGY__SCIENCE',
+  TechnologyTools = 'TECHNOLOGY__TOOLS',
+}
+
 export type ProfileInterestsRequest = {
-  interests: Array<Scalars['String']['input']>;
+  interests: Array<ProfileInterestTypes>;
 };
 
 export type ProfileManagersRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   /** The profile ID for which to retrieve managers */
   for: Scalars['ProfileId']['input'];
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
 };
 
 export type ProfileRecommendationsRequest = {
@@ -973,7 +1046,7 @@ export type ProfileRecommendationsRequest = {
   disableML?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter based on a specific profile ID */
   for: Scalars['ProfileId']['input'];
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   /** Shuffle the recommendations (default: false) */
   shuffle?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -987,7 +1060,7 @@ export type ProfileRequest = {
 
 export type ProfileSearchRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   /** Query for the profile search */
   query: Scalars['String']['input'];
   /** Filtering criteria for profile search */
@@ -1009,19 +1082,19 @@ export type ProfileStatsCountOpenActionArgs = {
 };
 
 export type ProfileStatsReactionArgs = {
-  type?: InputMaybe<PublicationReactionType>;
+  type: PublicationReactionType;
 };
 
 export type ProfilesManagedRequest = {
   /** The Ethereum address for which to retrieve managed profiles */
   address: Scalars['EvmAddress']['input'];
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
 };
 
 export type ProfilesRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   /** The where clause to use to filter on what you are looking for */
   where: ProfilesRequestWhere;
 };
@@ -1079,7 +1152,7 @@ export enum PublicationEventMetadataV3MainFocusType {
 export type PublicationForYouRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   for?: InputMaybe<Scalars['ProfileId']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
 };
 
 export enum PublicationImageMetadataV3MainFocusType {
@@ -1218,7 +1291,7 @@ export type PublicationRevenueRequest = {
 
 export type PublicationSearchRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   query: Scalars['String']['input'];
   where: PublicationSearchWhere;
 };
@@ -1234,7 +1307,7 @@ export enum PublicationSpaceMetadataV3MainFocusType {
 }
 
 export type PublicationStatsCountOpenActionArgs = {
-  anyOf?: InputMaybe<Array<OpenActionFilter>>;
+  anyOf: Array<OpenActionFilter>;
 };
 
 export type PublicationStatsInput = {
@@ -1243,7 +1316,7 @@ export type PublicationStatsInput = {
 };
 
 export type PublicationStatsReactionArgs = {
-  type?: InputMaybe<PublicationReactionType>;
+  type: PublicationReactionType;
 };
 
 export type PublicationStatsSubscriptionRequest = {
@@ -1295,14 +1368,14 @@ export enum PublicationsOrderByType {
 
 export type PublicationsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   orderBy?: InputMaybe<PublicationsOrderByType>;
   where: PublicationsWhere;
 };
 
 export type PublicationsTagsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   orderBy?: InputMaybe<TagSortCriteriaType>;
   where?: InputMaybe<PublicationsTagsWhere>;
 };
@@ -1426,7 +1499,7 @@ export type ReportingReasonInput = {
 export type RevenueFromPublicationsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   for: Scalars['ProfileId']['input'];
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   where: RevenueFromPublicationsWhere;
 };
 
@@ -1470,7 +1543,7 @@ export type SpamReasonInput = {
 export type SupportedModulesRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   includeUnknown?: InputMaybe<Scalars['Boolean']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
 };
 
 export enum TagSortCriteriaType {
@@ -1525,7 +1598,7 @@ export type UnknownReferenceModuleInput = {
 export type UserPoapsQueryRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   for: Scalars['ProfileId']['input'];
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
 };
 
 export type ValidatePublicationMetadataRequest = {
@@ -1552,7 +1625,7 @@ export enum VideoMimeType {
 
 export type WhoActedOnPublicationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   on: Scalars['PublicationId']['input'];
   where?: InputMaybe<WhoActedOnPublicationWhere>;
 };
@@ -1563,20 +1636,20 @@ export type WhoActedOnPublicationWhere = {
 
 export type WhoHaveBlockedRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
 };
 
 export type WhoReactedPublicationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   for: Scalars['PublicationId']['input'];
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
   where?: InputMaybe<WhoReactedPublicationWhere>;
 };
 
 export type WhoReactedPublicationWhere = {
   anyOf?: InputMaybe<Array<PublicationReactionType>>;
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<Scalars['LimitScalar']['input']>;
+  limit?: InputMaybe<LimitType>;
 };
 
 export enum WorldcoinPhoneVerifyType {

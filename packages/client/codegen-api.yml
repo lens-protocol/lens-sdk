@@ -16,14 +16,13 @@ config:
     CreateHandle: string
     Cursor: string
     DateTime: string
+    EncryptedPath: string
     EncryptedValue: string
     Ens: string
     EvmAddress: string
     Handle: string
     ImageSizeTransform: ImageSizeTransform
-    IpfsCid: string
     Jwt: string
-    # TODO: should 'Scalar' be appended here?
     LimitScalar: number
     Locale: string
     Markdown: string
@@ -33,6 +32,7 @@ config:
     NftGalleryId: string
     NftGalleryName: string
     Nonce: string
+    OnchainPublicationId: string
     ProfileId: string
     PublicationId: string
     Signature: string
@@ -42,10 +42,8 @@ config:
     UnixTimestamp: string
     URI: string
     URL: string
-    Void: string
-    OnchainPublicationId: string
-    EncryptedPath: string
     UUID: string
+    Void: string
 
   avoidOptionals:
     field: true

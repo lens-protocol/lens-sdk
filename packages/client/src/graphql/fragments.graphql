@@ -103,16 +103,42 @@ fragment AudioSet on AudioSet {
   }
 }
 
+fragment LegacyAudioItem on LegacyAudioItem {
+  item {
+    ...AudioSet
+  }
+  cover {
+    ...PublicationImageSet
+  }
+  altTag
+}
+
+fragment LegacyImageItem on LegacyImageItem {
+  item {
+    ...PublicationImageSet
+  }
+  altTag
+}
+
+fragment LegacyVideoItem on LegacyVideoItem {
+  item {
+    ...VideoSet
+  }
+  cover {
+    ...PublicationImageSet
+  }
+  altTag
+}
+
 # profile
 fragment ProfileCoverSet on ImageSet {
   rawURI
   image {
     ...Image
   }
-  # TODO: uncomment on field resolver fix
-  # transformed(input: $profileCoverTransform) {
-  #   ...Image
-  # }
+  transformed(request: $profileCoverTransform) {
+    ...Image
+  }
 }
 
 fragment ProfilePictureSet on ImageSet {
@@ -120,23 +146,22 @@ fragment ProfilePictureSet on ImageSet {
   image {
     ...Image
   }
-  # TODO: uncomment on field resolver fix
-  # transformed(input: $profilePictureTransform) {
-  #   ...Image
-  # }
+  transformed(request: $profilePictureTransform) {
+    ...Image
+  }
 }
 
 fragment ProfileStats on ProfileStats {
   id
-  followers(request: $profileStatsArg)
-  following(request: $profileStatsArg)
-  comments(request: $profileStatsArg)
-  posts(request: $profileStatsArg)
-  mirrors(request: $profileStatsArg)
-  quotes(request: $profileStatsArg)
-  mirrors(request: $profileStatsArg)
-  quotes(request: $profileStatsArg)
-  publications(request: $profileStatsArg)
+  followers
+  following
+  comments
+  posts
+  mirrors
+  quotes
+  mirrors
+  quotes
+  publications
   upvoteReactions: reactions(request: { type: UPVOTE })
   downvoteReactions: reactions(request: { type: DOWNVOTE })
   countOpenActions(request: $profileStatsCountOpenActionArgs)
@@ -582,16 +607,14 @@ fragment OrCondition on OrCondition {
 }
 
 # publication metadata
-
 fragment PublicationImageSet on ImageSet {
   rawURI
   image {
     ...Image
   }
-  # TODO: uncomment on field resolver fix
-  # transformed(input: $publicationImageTransform) {
-  #   ...Image
-  # }
+  transformed(request: $publicationImageTransform) {
+    ...Image
+  }
 }
 
 fragment PublicationMarketplaceMetadataAttribute on PublicationMarketplaceMetadataAttribute {
@@ -646,33 +669,6 @@ fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
   genre
   recordLabel
   lyrics
-}
-
-fragment LegacyAudioItem on LegacyAudioItem {
-  item {
-    ...AudioSet
-  }
-  cover {
-    ...PublicationImageSet
-  }
-  altTag
-}
-
-fragment LegacyImageItem on LegacyImageItem {
-  item {
-    ...PublicationImageSet
-  }
-  altTag
-}
-
-fragment LegacyVideoItem on LegacyVideoItem {
-  item {
-    ...VideoSet
-  }
-  cover {
-    ...PublicationImageSet
-  }
-  altTag
 }
 
 fragment PublicationMetadataV2 on PublicationMetadataV2 {
@@ -1225,6 +1221,7 @@ fragment LiveStreamMetadataV3 on LiveStreamMetadataV3 {
 
 # publication fragments
 fragment Post on Post {
+  __typename
   id
   publishedOn {
     ...App
@@ -1344,6 +1341,7 @@ fragment Post on Post {
 }
 
 fragment CommentBase on Comment {
+  __typename
   id
   publishedOn {
     ...App
@@ -1358,10 +1356,6 @@ fragment CommentBase on Comment {
   by {
     ...ProfileFields
   }
-  # TODO: stats
-  # stats {
-  #   ...PublicationStats
-  # }
   operations {
     ...PublicationOperations
   }
@@ -1488,6 +1482,7 @@ fragment Comment on Comment {
 }
 
 fragment Mirror on Mirror {
+  __typename
   id
   publishedOn {
     ...App
@@ -1513,6 +1508,7 @@ fragment Mirror on Mirror {
 }
 
 fragment QuoteBase on Quote {
+  __typename
   id
   publishedOn {
     ...App
@@ -1527,11 +1523,6 @@ fragment QuoteBase on Quote {
   by {
     ...ProfileFields
   }
-  # TODO: stats
-  # stats {
-  #   ...PublicationStats
-  # }
-
   operations {
     ...PublicationOperations
   }
@@ -1634,18 +1625,6 @@ fragment QuoteBase on Quote {
       ...UnknownReferenceModuleSettings
     }
   }
-  quotedOn {
-    ... on Post {
-      ...Post
-    }
-    ... on Comment {
-      ...CommentBase
-    }
-    # TODO: Cannot spread fragment "QuoteBase" within itself via "Quote".
-    # ... on Quote {
-    #   ...Quote
-    # }
-  }
 }
 
 fragment Quote on Quote {
@@ -1688,10 +1667,12 @@ fragment RelayError on RelayError {
 }
 
 fragment LensProfileManagerRelayError on LensProfileManagerRelayError {
+  __typename
   reason
 }
 
 fragment CreateMomokaPublicationResult on CreateMomokaPublicationResult {
+  __typename
   id
   proof
   momokaId
