@@ -1,11 +1,13 @@
-import { LensClient, PublicationReactionType, development } from '@lens-protocol/client';
+import { PublicationReactionType } from '@lens-protocol/client';
+
+import { getAuthenticatedClientFromEthersWallet } from '../../shared/getAuthenticatedClient';
+import { setupWallet } from '../../shared/setupWallet';
 
 async function main() {
-  const lensClient = new LensClient({
-    environment: development,
-  });
+  const wallet = setupWallet();
+  const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const feedResult = await lensClient.feed.fetch({
+  const feedResult = await client.feed.fetch({
     where: {
       for: 'PROFILE_ID',
     },
@@ -21,7 +23,7 @@ async function main() {
   }
 
   // add reaction
-  await lensClient.publication.reactions.remove({
+  await client.publication.reactions.remove({
     for: 'PUBLICATION_ID',
     reaction: PublicationReactionType.Upvote,
   });

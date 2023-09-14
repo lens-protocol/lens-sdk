@@ -47,11 +47,11 @@ export class Reactions {
    *
    * @example
    * ```ts
-   * import { ReactionTypes } from '@lens-protocol/client';
+   * import { PublicationReactionType } from '@lens-protocol/client';
    *
    * await client.publication.reactions.add({
    *   for: '0x02-0x01',
-   *   reaction: ReactionTypes.Upvote,
+   *   reaction: PublicationReactionType.Upvote,
    * });
    * ```
    */
@@ -74,11 +74,11 @@ export class Reactions {
    *
    * @example
    * ```ts
-   * import { ReactionTypes } from '@lens-protocol/client';
+   * import { PublicationReactionType } from '@lens-protocol/client';
    *
    * await client.publication.reactions.remove({
    *   for: '0x02-0x01',
-   *   reaction: ReactionTypes.Upvote,
+   *   reaction: PublicationReactionType.Upvote,
    * });
    * ```
    */

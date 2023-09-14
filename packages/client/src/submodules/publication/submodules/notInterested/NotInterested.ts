@@ -22,6 +22,21 @@ export class NotInterested {
     this.authentication = authentication;
   }
 
+  /**
+   * Mark a publication as "not interested".
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * await client.publication.notInterested.add({
+   *   on: '0x02-0x01',
+   * });
+   * ```
+   */
   async add(
     request: PublicationNotInterestedRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
@@ -30,6 +45,21 @@ export class NotInterested {
     });
   }
 
+  /**
+   * Undo marking a publication as "not interested".
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * await client.publication.notInterested.undo({
+   *  on: '0x02-0x01',
+   * });
+   * ```
+   */
   async undo(
     request: PublicationNotInterestedRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {

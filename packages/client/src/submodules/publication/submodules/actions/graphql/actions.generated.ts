@@ -63,6 +63,7 @@ export type CreateActOnOpenActionBroadcastItemResultFragment = {
 
 export type CreateActOnOpenActionTypedDataMutationVariables = Types.Exact<{
   request: Types.ActOnOpenActionRequest;
+  options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
 export type CreateActOnOpenActionTypedDataMutation = {
@@ -131,8 +132,11 @@ export const ActOnOpenActionDocument = gql`
   ${LensProfileManagerRelayErrorFragmentDoc}
 `;
 export const CreateActOnOpenActionTypedDataDocument = gql`
-  mutation CreateActOnOpenActionTypedData($request: ActOnOpenActionRequest!) {
-    result: createActOnOpenActionTypedData(request: $request) {
+  mutation CreateActOnOpenActionTypedData(
+    $request: ActOnOpenActionRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createActOnOpenActionTypedData(request: $request, options: $options) {
       ...CreateActOnOpenActionBroadcastItemResult
     }
   }

@@ -47,8 +47,11 @@ fragment CreateActOnOpenActionBroadcastItemResult on CreateActOnOpenActionBroadc
   }
 }
 
-mutation CreateActOnOpenActionTypedData($request: ActOnOpenActionRequest!) {
-  result: createActOnOpenActionTypedData(request: $request) {
+mutation CreateActOnOpenActionTypedData(
+  $request: ActOnOpenActionRequest!
+  $options: TypedDataOptions
+) {
+  result: createActOnOpenActionTypedData(request: $request, options: $options) {
     ...CreateActOnOpenActionBroadcastItemResult
   }
 }
