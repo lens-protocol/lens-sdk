@@ -53,13 +53,13 @@ export type AddPublicationBookmarkMutationVariables = Types.Exact<{
   request: Types.PublicationBookmarkRequest;
 }>;
 
-export type AddPublicationBookmarkMutation = { result: string };
+export type AddPublicationBookmarkMutation = { result: string | null };
 
 export type RemovePublicationBookmarkMutationVariables = Types.Exact<{
   request: Types.PublicationBookmarkRequest;
 }>;
 
-export type RemovePublicationBookmarkMutation = { result: string };
+export type RemovePublicationBookmarkMutation = { result: string | null };
 
 export const ProfileBookmarksDocument = gql`
   query ProfileBookmarks(

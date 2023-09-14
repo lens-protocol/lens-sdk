@@ -16,6 +16,11 @@ config:
     CreateHandle: string
     Cursor: string
     DateTime: string
+    EncryptableDateTime: string
+    EncryptableMarkdown: string
+    EncryptableString: string
+    EncryptableTxHash: string
+    EncryptableURI: string
     EncryptedPath: string
     EncryptedValue: string
     Ens: string

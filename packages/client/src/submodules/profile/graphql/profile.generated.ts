@@ -199,13 +199,13 @@ export type AddProfileInterestsMutationVariables = Types.Exact<{
   request: Types.ProfileInterestsRequest;
 }>;
 
-export type AddProfileInterestsMutation = { result: string };
+export type AddProfileInterestsMutation = { result: string | null };
 
 export type RemoveProfileInterestsMutationVariables = Types.Exact<{
   request: Types.ProfileInterestsRequest;
 }>;
 
-export type RemoveProfileInterestsMutation = { result: string };
+export type RemoveProfileInterestsMutation = { result: string | null };
 
 export type SetProfileMetadataMutationVariables = Types.Exact<{
   request: Types.OnchainSetProfileMetadataRequest;
@@ -249,7 +249,7 @@ export type DismissRecommendedProfilesMutationVariables = Types.Exact<{
   request: Types.DismissRecommendedProfilesRequest;
 }>;
 
-export type DismissRecommendedProfilesMutation = { result: string };
+export type DismissRecommendedProfilesMutation = { result: string | null };
 
 export type CreateOnchainSetProfileMetadataTypedDataMutationVariables = Types.Exact<{
   request: Types.OnchainSetProfileMetadataRequest;

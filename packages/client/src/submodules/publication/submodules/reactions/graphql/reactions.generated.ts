@@ -17,13 +17,13 @@ export type AddReactionMutationVariables = Types.Exact<{
   request: Types.ReactionRequest;
 }>;
 
-export type AddReactionMutation = { addReaction: string };
+export type AddReactionMutation = { addReaction: string | null };
 
 export type RemoveReactionMutationVariables = Types.Exact<{
   request: Types.ReactionRequest;
 }>;
 
-export type RemoveReactionMutation = { removeReaction: string };
+export type RemoveReactionMutation = { removeReaction: string | null };
 
 export type WhoReactedPublicationQueryVariables = Types.Exact<{
   request: Types.WhoReactedPublicationRequest;

@@ -91,12 +91,26 @@ fragment VideoSet on VideoSet {
   }
 }
 
+fragment EncryptableVideoSet on EncryptableVideoSet {
+  rawURI
+  video {
+    ...Video
+  }
+}
+
 fragment Audio on Audio {
   url
   audioMimeType: mimeType
 }
 
 fragment AudioSet on AudioSet {
+  rawURI
+  audio {
+    ...Audio
+  }
+}
+
+fragment EncryptableAudioSet on EncryptableAudioSet {
   rawURI
   audio {
     ...Audio
@@ -617,6 +631,13 @@ fragment PublicationImageSet on ImageSet {
   }
 }
 
+fragment PublicationEncryptableImageSet on EncryptableImageSet {
+  rawURI
+  image {
+    ...Image
+  }
+}
+
 fragment PublicationMarketplaceMetadataAttribute on PublicationMarketplaceMetadataAttribute {
   displayType
   traitType
@@ -637,10 +658,10 @@ fragment MarketplaceMetadata on MarketplaceMetadata {
 fragment PublicationMetadataMediaVideo on PublicationMetadataMediaVideo {
   videoMimeType: type
   videoItem: item {
-    ...VideoSet
+    ...EncryptableVideoSet
   }
   cover {
-    ...PublicationImageSet
+    ...PublicationEncryptableImageSet
   }
   duration
   license
@@ -649,7 +670,7 @@ fragment PublicationMetadataMediaVideo on PublicationMetadataMediaVideo {
 fragment PublicationMetadataMediaImage on PublicationMetadataMediaImage {
   imageMimeType: type
   imageItem: item {
-    ...PublicationImageSet
+    ...PublicationEncryptableImageSet
   }
   license
 }
@@ -657,10 +678,10 @@ fragment PublicationMetadataMediaImage on PublicationMetadataMediaImage {
 fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
   type
   item {
-    ...AudioSet
+    ...EncryptableAudioSet
   }
   cover {
-    ...PublicationImageSet
+    ...PublicationEncryptableImageSet
   }
   duration
   license
@@ -671,10 +692,24 @@ fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
   lyrics
 }
 
+fragment PublicationMetadataV1 on PublicationMetadataV1 {
+  version
+  metadata_id
+  appId
+  name
+  description
+  # content
+  # attributes
+  # image
+  # media
+  animationUrl
+  externalUrl
+}
+
 fragment PublicationMetadataV2 on PublicationMetadataV2 {
   name
   description
-  optionalContent: content
+  optionalV2Content: content
   v2image: image {
     ...PublicationImageSet
   }
@@ -1227,7 +1262,7 @@ fragment Post on Post {
     ...App
   }
   isHidden
-  isEncrypted
+  # isEncrypted
   momoka {
     ...MomokaInfo
   }
@@ -1240,6 +1275,9 @@ fragment Post on Post {
     ...PublicationOperations
   }
   metadata {
+    ... on PublicationMetadataV1 {
+      ...PublicationMetadataV1
+    }
     ... on PublicationMetadataV2 {
       ...PublicationMetadataV2
     }
@@ -1347,7 +1385,7 @@ fragment CommentBase on Comment {
     ...App
   }
   isHidden
-  isEncrypted
+  # isEncrypted
   momoka {
     ...MomokaInfo
   }
@@ -1360,6 +1398,9 @@ fragment CommentBase on Comment {
     ...PublicationOperations
   }
   metadata {
+    ... on PublicationMetadataV1 {
+      ...PublicationMetadataV1
+    }
     ... on PublicationMetadataV2 {
       ...PublicationMetadataV2
     }
@@ -1488,7 +1529,7 @@ fragment Mirror on Mirror {
     ...App
   }
   isHidden
-  isEncrypted
+  # isEncrypted
   momoka {
     ...MomokaInfo
   }
@@ -1514,7 +1555,7 @@ fragment QuoteBase on Quote {
     ...App
   }
   isHidden
-  isEncrypted
+  # isEncrypted
   momoka {
     ...MomokaInfo
   }
@@ -1527,6 +1568,9 @@ fragment QuoteBase on Quote {
     ...PublicationOperations
   }
   metadata {
+    ... on PublicationMetadataV1 {
+      ...PublicationMetadataV1
+    }
     ... on PublicationMetadataV2 {
       ...PublicationMetadataV2
     }

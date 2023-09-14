@@ -380,13 +380,13 @@ export type HidePublicationMutationVariables = Types.Exact<{
   request: Types.HidePublicationRequest;
 }>;
 
-export type HidePublicationMutation = { hidePublication: string };
+export type HidePublicationMutation = { hidePublication: string | null };
 
 export type ReportPublicationMutationVariables = Types.Exact<{
   request: Types.ReportPublicationRequest;
 }>;
 
-export type ReportPublicationMutation = { reportPublication: string };
+export type ReportPublicationMutation = { reportPublication: string | null };
 
 export type LegacyCollectPublicationMutationVariables = Types.Exact<{
   request: Types.LegacyCollectRequest;

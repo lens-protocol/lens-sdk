@@ -52,9 +52,13 @@ export type VideoFragment = { url: string; videoMimeType: Types.VideoMimeType | 
 
 export type VideoSetFragment = { rawURI: string; video: VideoFragment | null };
 
+export type EncryptableVideoSetFragment = { rawURI: string; video: VideoFragment | null };
+
 export type AudioFragment = { url: string; audioMimeType: Types.AudioMimeType | null };
 
 export type AudioSetFragment = { rawURI: string; audio: AudioFragment | null };
+
+export type EncryptableAudioSetFragment = { rawURI: string; audio: AudioFragment | null };
 
 export type LegacyAudioItemFragment = {
   altTag: string | null;
@@ -367,6 +371,11 @@ export type PublicationImageSetFragment = {
   transformed: ImageFragment | null;
 };
 
+export type PublicationEncryptableImageSetFragment = {
+  rawURI: string;
+  image: ImageFragment | null;
+};
+
 export type PublicationMarketplaceMetadataAttributeFragment = {
   displayType: Types.PublicationMarketplaceMetadataAttributeDisplayType | null;
   traitType: string | null;
@@ -386,14 +395,14 @@ export type PublicationMetadataMediaVideoFragment = {
   duration: number | null;
   license: Types.PublicationMetadataLicenseType | null;
   videoMimeType: Types.VideoMimeType;
-  videoItem: VideoSetFragment;
-  cover: PublicationImageSetFragment | null;
+  videoItem: EncryptableVideoSetFragment;
+  cover: PublicationEncryptableImageSetFragment | null;
 };
 
 export type PublicationMetadataMediaImageFragment = {
   license: Types.PublicationMetadataLicenseType | null;
   imageMimeType: Types.ImageMimeType;
-  imageItem: PublicationImageSetFragment;
+  imageItem: PublicationEncryptableImageSetFragment;
 };
 
 export type PublicationMetadataMediaAudioFragment = {
@@ -405,8 +414,18 @@ export type PublicationMetadataMediaAudioFragment = {
   genre: string | null;
   recordLabel: string | null;
   lyrics: string | null;
-  item: AudioSetFragment;
-  cover: PublicationImageSetFragment | null;
+  item: EncryptableAudioSetFragment;
+  cover: PublicationEncryptableImageSetFragment | null;
+};
+
+export type PublicationMetadataV1Fragment = {
+  version: Types.LegacyPublicationMetadataVersions;
+  metadata_id: string;
+  appId: string | null;
+  name: string | null;
+  description: string | null;
+  animationUrl: string | null;
+  externalUrl: string | null;
 };
 
 export type PublicationMetadataV2Fragment = {
@@ -416,7 +435,7 @@ export type PublicationMetadataV2Fragment = {
   tags: Array<string> | null;
   contentWarning: Types.PublicationContentWarningType | null;
   animationUrl: string | null;
-  optionalContent: string | null;
+  optionalV2Content: string | null;
   v2mainContentFocus: Types.PublicationMetadataV2MainFocusType;
   v2image: PublicationImageSetFragment | null;
   media: Array<LegacyAudioItemFragment | LegacyImageItemFragment | LegacyVideoItemFragment> | null;
@@ -757,8 +776,7 @@ export type PostFragment = {
   __typename: 'Post';
   id: string;
   isHidden: boolean;
-  isEncrypted: boolean;
-  txHash: string;
+  txHash: string | null;
   createdAt: string;
   publishedOn: AppFragment | null;
   momoka: MomokaInfoFragment | null;
@@ -773,6 +791,7 @@ export type PostFragment = {
     | LinkMetadataV3Fragment
     | LiveStreamMetadataV3Fragment
     | MintMetadataV3Fragment
+    | PublicationMetadataV1Fragment
     | PublicationMetadataV2Fragment
     | SpaceMetadataV3Fragment
     | StoryMetadataV3Fragment
@@ -807,8 +826,7 @@ export type CommentBaseFragment = {
   __typename: 'Comment';
   id: string;
   isHidden: boolean;
-  isEncrypted: boolean;
-  txHash: string;
+  txHash: string | null;
   createdAt: string;
   publishedOn: AppFragment | null;
   momoka: MomokaInfoFragment | null;
@@ -823,6 +841,7 @@ export type CommentBaseFragment = {
     | LinkMetadataV3Fragment
     | LiveStreamMetadataV3Fragment
     | MintMetadataV3Fragment
+    | PublicationMetadataV1Fragment
     | PublicationMetadataV2Fragment
     | SpaceMetadataV3Fragment
     | StoryMetadataV3Fragment
@@ -863,8 +882,7 @@ export type MirrorFragment = {
   __typename: 'Mirror';
   id: string;
   isHidden: boolean;
-  isEncrypted: boolean;
-  txHash: string;
+  txHash: string | null;
   createdAt: string;
   publishedOn: AppFragment | null;
   momoka: MomokaInfoFragment | null;
@@ -875,8 +893,7 @@ export type QuoteBaseFragment = {
   __typename: 'Quote';
   id: string;
   isHidden: boolean;
-  isEncrypted: boolean;
-  txHash: string;
+  txHash: string | null;
   createdAt: string;
   publishedOn: AppFragment | null;
   momoka: MomokaInfoFragment | null;
@@ -891,6 +908,7 @@ export type QuoteBaseFragment = {
     | LinkMetadataV3Fragment
     | LiveStreamMetadataV3Fragment
     | MintMetadataV3Fragment
+    | PublicationMetadataV1Fragment
     | PublicationMetadataV2Fragment
     | SpaceMetadataV3Fragment
     | StoryMetadataV3Fragment
@@ -1257,6 +1275,17 @@ export const PublicationOperationsFragmentDoc = gql`
   ${OpenActionResultFragmentDoc}
   ${CanDecryptResponseFragmentDoc}
 `;
+export const PublicationMetadataV1FragmentDoc = gql`
+  fragment PublicationMetadataV1 on PublicationMetadataV1 {
+    version
+    metadata_id
+    appId
+    name
+    description
+    animationUrl
+    externalUrl
+  }
+`;
 export const PublicationImageSetFragmentDoc = gql`
   fragment PublicationImageSet on ImageSet {
     rawURI
@@ -1445,7 +1474,7 @@ export const PublicationMetadataV2FragmentDoc = gql`
   fragment PublicationMetadataV2 on PublicationMetadataV2 {
     name
     description
-    optionalContent: content
+    optionalV2Content: content
     v2image: image {
       ...PublicationImageSet
     }
@@ -1576,39 +1605,66 @@ export const PublicationMetadataV3LitEncryptionFragmentDoc = gql`
   ${AndConditionFragmentDoc}
   ${OrConditionFragmentDoc}
 `;
+export const EncryptableVideoSetFragmentDoc = gql`
+  fragment EncryptableVideoSet on EncryptableVideoSet {
+    rawURI
+    video {
+      ...Video
+    }
+  }
+  ${VideoFragmentDoc}
+`;
+export const PublicationEncryptableImageSetFragmentDoc = gql`
+  fragment PublicationEncryptableImageSet on EncryptableImageSet {
+    rawURI
+    image {
+      ...Image
+    }
+  }
+  ${ImageFragmentDoc}
+`;
 export const PublicationMetadataMediaVideoFragmentDoc = gql`
   fragment PublicationMetadataMediaVideo on PublicationMetadataMediaVideo {
     videoMimeType: type
     videoItem: item {
-      ...VideoSet
+      ...EncryptableVideoSet
     }
     cover {
-      ...PublicationImageSet
+      ...PublicationEncryptableImageSet
     }
     duration
     license
   }
-  ${VideoSetFragmentDoc}
-  ${PublicationImageSetFragmentDoc}
+  ${EncryptableVideoSetFragmentDoc}
+  ${PublicationEncryptableImageSetFragmentDoc}
 `;
 export const PublicationMetadataMediaImageFragmentDoc = gql`
   fragment PublicationMetadataMediaImage on PublicationMetadataMediaImage {
     imageMimeType: type
     imageItem: item {
-      ...PublicationImageSet
+      ...PublicationEncryptableImageSet
     }
     license
   }
-  ${PublicationImageSetFragmentDoc}
+  ${PublicationEncryptableImageSetFragmentDoc}
+`;
+export const EncryptableAudioSetFragmentDoc = gql`
+  fragment EncryptableAudioSet on EncryptableAudioSet {
+    rawURI
+    audio {
+      ...Audio
+    }
+  }
+  ${AudioFragmentDoc}
 `;
 export const PublicationMetadataMediaAudioFragmentDoc = gql`
   fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
     type
     item {
-      ...AudioSet
+      ...EncryptableAudioSet
     }
     cover {
-      ...PublicationImageSet
+      ...PublicationEncryptableImageSet
     }
     duration
     license
@@ -1618,8 +1674,8 @@ export const PublicationMetadataMediaAudioFragmentDoc = gql`
     recordLabel
     lyrics
   }
-  ${AudioSetFragmentDoc}
-  ${PublicationImageSetFragmentDoc}
+  ${EncryptableAudioSetFragmentDoc}
+  ${PublicationEncryptableImageSetFragmentDoc}
 `;
 export const VideoMetadataV3FragmentDoc = gql`
   fragment VideoMetadataV3 on VideoMetadataV3 {
@@ -2417,7 +2473,6 @@ export const PostFragmentDoc = gql`
       ...App
     }
     isHidden
-    isEncrypted
     momoka {
       ...MomokaInfo
     }
@@ -2430,6 +2485,9 @@ export const PostFragmentDoc = gql`
       ...PublicationOperations
     }
     metadata {
+      ... on PublicationMetadataV1 {
+        ...PublicationMetadataV1
+      }
       ... on PublicationMetadataV2 {
         ...PublicationMetadataV2
       }
@@ -2533,6 +2591,7 @@ export const PostFragmentDoc = gql`
   ${MomokaInfoFragmentDoc}
   ${ProfileFieldsFragmentDoc}
   ${PublicationOperationsFragmentDoc}
+  ${PublicationMetadataV1FragmentDoc}
   ${PublicationMetadataV2FragmentDoc}
   ${VideoMetadataV3FragmentDoc}
   ${ImageMetadataV3FragmentDoc}
@@ -2573,7 +2632,6 @@ export const CommentBaseFragmentDoc = gql`
       ...App
     }
     isHidden
-    isEncrypted
     momoka {
       ...MomokaInfo
     }
@@ -2586,6 +2644,9 @@ export const CommentBaseFragmentDoc = gql`
       ...PublicationOperations
     }
     metadata {
+      ... on PublicationMetadataV1 {
+        ...PublicationMetadataV1
+      }
       ... on PublicationMetadataV2 {
         ...PublicationMetadataV2
       }
@@ -2689,6 +2750,7 @@ export const CommentBaseFragmentDoc = gql`
   ${MomokaInfoFragmentDoc}
   ${ProfileFieldsFragmentDoc}
   ${PublicationOperationsFragmentDoc}
+  ${PublicationMetadataV1FragmentDoc}
   ${PublicationMetadataV2FragmentDoc}
   ${VideoMetadataV3FragmentDoc}
   ${ImageMetadataV3FragmentDoc}
@@ -2729,7 +2791,6 @@ export const QuoteBaseFragmentDoc = gql`
       ...App
     }
     isHidden
-    isEncrypted
     momoka {
       ...MomokaInfo
     }
@@ -2742,6 +2803,9 @@ export const QuoteBaseFragmentDoc = gql`
       ...PublicationOperations
     }
     metadata {
+      ... on PublicationMetadataV1 {
+        ...PublicationMetadataV1
+      }
       ... on PublicationMetadataV2 {
         ...PublicationMetadataV2
       }
@@ -2845,6 +2909,7 @@ export const QuoteBaseFragmentDoc = gql`
   ${MomokaInfoFragmentDoc}
   ${ProfileFieldsFragmentDoc}
   ${PublicationOperationsFragmentDoc}
+  ${PublicationMetadataV1FragmentDoc}
   ${PublicationMetadataV2FragmentDoc}
   ${VideoMetadataV3FragmentDoc}
   ${ImageMetadataV3FragmentDoc}
@@ -2929,7 +2994,6 @@ export const MirrorFragmentDoc = gql`
       ...App
     }
     isHidden
-    isEncrypted
     momoka {
       ...MomokaInfo
     }

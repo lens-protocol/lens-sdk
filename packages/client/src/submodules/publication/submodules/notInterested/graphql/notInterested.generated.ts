@@ -9,13 +9,13 @@ export type AddPublicationNotInterestedMutationVariables = Types.Exact<{
   request: Types.PublicationNotInterestedRequest;
 }>;
 
-export type AddPublicationNotInterestedMutation = { addPublicationNotInterested: string };
+export type AddPublicationNotInterestedMutation = { addPublicationNotInterested: string | null };
 
 export type UndoPublicationNotInterestedMutationVariables = Types.Exact<{
   request: Types.PublicationNotInterestedRequest;
 }>;
 
-export type UndoPublicationNotInterestedMutation = { undoPublicationNotInterested: string };
+export type UndoPublicationNotInterestedMutation = { undoPublicationNotInterested: string | null };
 
 export const AddPublicationNotInterestedDocument = gql`
   mutation AddPublicationNotInterested($request: PublicationNotInterestedRequest!) {

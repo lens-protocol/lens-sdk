@@ -26,6 +26,11 @@ export type Scalars = {
   CreateHandle: { input: string; output: string };
   Cursor: { input: string; output: string };
   DateTime: { input: string; output: string };
+  EncryptableDateTime: { input: string; output: string };
+  EncryptableMarkdown: { input: string; output: string };
+  EncryptableString: { input: string; output: string };
+  EncryptableTxHash: { input: string; output: string };
+  EncryptableURI: { input: string; output: string };
   EncryptedPath: { input: string; output: string };
   EncryptedValue: { input: string; output: string };
   Ens: { input: string; output: string };
@@ -437,11 +442,11 @@ export type GenerateModuleCurrencyApprovalDataRequest = {
 };
 
 export type HandleLinkToProfileRequest = {
-  handleId: Scalars['TokenId']['input'];
+  handle: Scalars['Handle']['input'];
 };
 
 export type HandleUnlinkFromProfileRequest = {
-  handleId: Scalars['TokenId']['input'];
+  handle: Scalars['Handle']['input'];
 };
 
 export type HelRequest = {
@@ -1281,7 +1286,7 @@ export enum PublicationReportingSpamSubreason {
 }
 
 export type PublicationRequest = {
-  for?: InputMaybe<Scalars['PublicationId']['input']>;
+  id?: InputMaybe<Scalars['PublicationId']['input']>;
   txHash?: InputMaybe<Scalars['TxHash']['input']>;
 };
 
