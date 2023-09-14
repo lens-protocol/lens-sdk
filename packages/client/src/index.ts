@@ -67,8 +67,8 @@ export type {
 
 // enums
 export {
-  LimitType,
   FeedEventItemType,
+  LimitType,
   PublicationReactionType,
   PublicationReportingFraudSubreason,
   PublicationReportingIllegalSubreason,
@@ -82,4 +82,5 @@ export {
   CustomFiltersType,
   OpenActionCategoryType,
   OpenActionModuleType,
+  PublicationType,
 } from './graphql/types.generated';
