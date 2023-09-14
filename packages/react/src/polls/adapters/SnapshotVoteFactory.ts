@@ -8,8 +8,7 @@ import {
   SnapshotVotingSystem,
 } from '@lens-protocol/api-bindings';
 import { TypedData } from '@lens-protocol/blockchain-bindings';
-import { AppId, Wallet } from '@lens-protocol/domain/entities';
-import { IUnsignedVote, PollId } from '@lens-protocol/domain/src/entities/polls';
+import { AppId, Wallet, IUnsignedVote, PollId } from '@lens-protocol/domain/entities';
 import {
   CreateUnsignedVoteRequest,
   IUnsignedVoteFactory,
