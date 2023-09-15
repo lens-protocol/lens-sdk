@@ -1,5 +1,16 @@
 # @lens-protocol/react
 
+## 1.3.1-next.4
+
+### Patch Changes
+
+- 48dd0860: **Fixed** internal imports
+- Updated dependencies [48dd0860]
+  - @lens-protocol/domain@0.10.1-next.0
+  - @lens-protocol/api-bindings@0.10.1-next.3
+  - @lens-protocol/blockchain-bindings@0.9.2-next.0
+  - @lens-protocol/gated-content@0.3.3-next.4
+
 ## 1.3.1-next.3
 
 ### Patch Changes

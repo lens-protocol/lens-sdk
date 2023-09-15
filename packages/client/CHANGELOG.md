@@ -1,5 +1,11 @@
 # @lens-protocol/client
 
+## 1.3.1-next.0
+
+### Patch Changes
+
+- 48dd0860: **Fixed** internal imports
+
 ## 1.3.0
 
 ### Minor Changes
