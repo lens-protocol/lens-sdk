@@ -1,5 +1,17 @@
 # @lens-protocol/gated-content
 
+## 0.3.3
+
+### Patch Changes
+
+- ace02d32: **Fixes** support for ERC1155 gated content
+- Updated dependencies [5f251069]
+- Updated dependencies [dfb15e1a]
+- Updated dependencies [ebc2e7e5]
+- Updated dependencies [48dd0860]
+  - @lens-protocol/api-bindings@0.10.1
+  - @lens-protocol/domain@0.10.1
+
 ## 0.3.3-next.4
 
 ### Patch Changes

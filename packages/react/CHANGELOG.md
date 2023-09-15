@@ -1,5 +1,24 @@
 # @lens-protocol/react
 
+## 1.3.1
+
+### Patch Changes
+
+- ace02d32: **Fixes** support for ERC1155 gated content
+- 5f251069: **Fixed** `usePublications` to refetch on `publicationIds` change
+- dfb15e1a: **Fixed** 1.3.1-next.0 release packages bundles
+- ebc2e7e5: **Added** `publicationsId` to `usePublications` args
+- 48dd0860: **Fixed** internal imports
+- Updated dependencies [ace02d32]
+- Updated dependencies [5f251069]
+- Updated dependencies [dfb15e1a]
+- Updated dependencies [ebc2e7e5]
+- Updated dependencies [48dd0860]
+  - @lens-protocol/gated-content@0.3.3
+  - @lens-protocol/api-bindings@0.10.1
+  - @lens-protocol/domain@0.10.1
+  - @lens-protocol/blockchain-bindings@0.9.2
+
 ## 1.3.1-next.4
 
 ### Patch Changes

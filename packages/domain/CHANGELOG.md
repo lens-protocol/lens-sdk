@@ -1,5 +1,11 @@
 # @lens-protocol/domain
 
+## 0.10.1
+
+### Patch Changes
+
+- 48dd0860: **Fixed** internal imports
+
 ## 0.10.1-next.0
 
 ### Patch Changes
