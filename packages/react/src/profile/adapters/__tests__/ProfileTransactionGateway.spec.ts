@@ -11,7 +11,6 @@ import {
   mockNoFeeFollowConfig,
   mockCreateProfileRequest,
 } from '@lens-protocol/domain/mocks';
-import {} from '@lens-protocol/domain/src/use-cases/profile/__helpers__/mocks';
 import { DuplicatedHandleError, FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType } from '@lens-protocol/shared-kernel';

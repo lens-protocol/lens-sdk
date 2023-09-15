@@ -5,10 +5,10 @@ import {
   BroadcastOffChainDocument,
 } from '@lens-protocol/api-bindings';
 import { DataTransaction } from '@lens-protocol/domain/entities';
-import { IOffChainRelayer } from '@lens-protocol/domain/src/use-cases/transactions/SubsidizeOffChain';
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastingError,
+  IOffChainRelayer,
   ProtocolTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {

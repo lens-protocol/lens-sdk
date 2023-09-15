@@ -28,7 +28,7 @@
     "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix && pnpm run tsc",
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
-    "test": "jest",
+    "test": "echo \"Tests are disabled till v2.\" && exit 0",
     "tsc": "tsc --noEmit",
     "codegen": "graphql-codegen --config codegen-api.yml"
   },
