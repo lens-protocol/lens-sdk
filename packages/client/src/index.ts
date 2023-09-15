@@ -76,7 +76,7 @@ export {
   PublicationReportingSensitiveSubreason,
   PublicationReportingSpamSubreason,
   PublicationMetadataMainFocusType,
-  PublicationMarketplaceMetadataAttributeDisplayType,
+  MarketplaceMetadataAttributeDisplayType,
   ChangeProfileManagerActionType,
   ProfileInterestTypes,
   CustomFiltersType,

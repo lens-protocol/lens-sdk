@@ -14,6 +14,6 @@ export class Environment {
 
 export const production = new Environment('production', 'https://api.lens.dev');
 
-export const development = new Environment('development', 'https://api-mumbai.lens.dev');
+export const development = new Environment('development', 'https://api-v2-mumbai.lens.dev');
 
 export const sandbox = new Environment('sandbox', 'https://api-sandbox-mumbai.lens.dev');

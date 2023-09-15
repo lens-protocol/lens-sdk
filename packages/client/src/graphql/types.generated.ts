@@ -160,7 +160,7 @@ export enum ChangeProfileManagerActionType {
 }
 
 export type ChangeProfileManagersRequest = {
-  approveLensManager: Scalars['Boolean']['input'];
+  approveLensManager?: InputMaybe<Scalars['Boolean']['input']>;
   changeManagers?: InputMaybe<Array<ChangeProfileManager>>;
 };
 
@@ -253,6 +253,13 @@ export type DegreesOfSeparationReferenceModuleInput = {
 
 export type DismissRecommendedProfilesRequest = {
   dismiss: Array<Scalars['ProfileId']['input']>;
+};
+
+export type DoesFollowRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  followers: Array<Scalars['ProfileId']['input']>;
+  for: Scalars['ProfileId']['input'];
+  limit?: InputMaybe<LimitType>;
 };
 
 /** Possible sort criteria for exploring profiles */
@@ -516,9 +523,14 @@ export type LegacyCollectRequest = {
   referrer?: InputMaybe<Scalars['PublicationId']['input']>;
 };
 
-export enum LegacyPublicationMetadataVersions {
-  V1 = 'V1',
-  V2 = 'V2',
+export enum LegacyPublicationMetadataMainFocusType {
+  Article = 'ARTICLE',
+  Audio = 'AUDIO',
+  Embed = 'EMBED',
+  Image = 'IMAGE',
+  Link = 'LINK',
+  TextOnly = 'TEXT_ONLY',
+  Video = 'VIDEO',
 }
 
 export enum LensProfileManagerRelayErrorReasonType {
@@ -552,6 +564,12 @@ export enum LimitType {
   Fifty = 'Fifty',
   Ten = 'Ten',
   TwentyFive = 'TwentyFive',
+}
+
+export enum MarketplaceMetadataAttributeDisplayType {
+  Date = 'DATE',
+  Number = 'NUMBER',
+  String = 'STRING',
 }
 
 export type ModuleCurrencyApproval = {
@@ -1119,21 +1137,9 @@ export type ProfilesRequestWhere = {
   whoQuotedPublication?: InputMaybe<Scalars['PublicationId']['input']>;
 };
 
-export enum PublicationArticleMetadataV3MainFocusType {
-  Article = 'ARTICLE',
-}
-
-export enum PublicationAudioMetadataV3MainFocusType {
-  Audio = 'AUDIO',
-}
-
 export type PublicationBookmarkRequest = {
   on: Scalars['PublicationId']['input'];
 };
-
-export enum PublicationCheckingInMetadataV3MainFocusType {
-  CheckingIn = 'CHECKING_IN',
-}
 
 export type PublicationCommentOf = {
   commentsRankingFilter?: InputMaybe<CommentRankingFilterType>;
@@ -1146,37 +1152,11 @@ export enum PublicationContentWarningType {
   Spoiler = 'SPOILER',
 }
 
-export enum PublicationEmbedMetadataV3MainFocusType {
-  Embed = 'EMBED',
-}
-
-export enum PublicationEventMetadataV3MainFocusType {
-  Event = 'EVENT',
-}
-
 export type PublicationForYouRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   for?: InputMaybe<Scalars['ProfileId']['input']>;
   limit?: InputMaybe<LimitType>;
 };
-
-export enum PublicationImageMetadataV3MainFocusType {
-  Image = 'IMAGE',
-}
-
-export enum PublicationLinkMetadataV3MainFocusType {
-  Link = 'LINK',
-}
-
-export enum PublicationLiveStreamMetadataV3MainFocusType {
-  Livestream = 'LIVESTREAM',
-}
-
-export enum PublicationMarketplaceMetadataAttributeDisplayType {
-  Date = 'DATE',
-  Number = 'NUMBER',
-  String = 'STRING',
-}
 
 export type PublicationMetadataContentWarningFilter = {
   oneOf?: InputMaybe<Array<PublicationContentWarningType>>;
@@ -1205,7 +1185,7 @@ export enum PublicationMetadataMainFocusType {
   Livestream = 'LIVESTREAM',
   Mint = 'MINT',
   ShortVideo = 'SHORT_VIDEO',
-  Spaces = 'SPACES',
+  Space = 'SPACE',
   Story = 'STORY',
   TextOnly = 'TEXT_ONLY',
   ThreeD = 'THREE_D',
@@ -1217,20 +1197,6 @@ export type PublicationMetadataTagsFilter = {
   all?: InputMaybe<Array<Scalars['String']['input']>>;
   oneOf?: InputMaybe<Array<Scalars['String']['input']>>;
 };
-
-export enum PublicationMetadataV2MainFocusType {
-  Article = 'ARTICLE',
-  Audio = 'AUDIO',
-  Embed = 'EMBED',
-  Image = 'IMAGE',
-  Link = 'LINK',
-  TextOnly = 'TEXT_ONLY',
-  Video = 'VIDEO',
-}
-
-export enum PublicationMintMetadataV3MainFocusType {
-  Mint = 'MINT',
-}
 
 export type PublicationNotInterestedRequest = {
   on: Scalars['PublicationId']['input'];
@@ -1307,10 +1273,6 @@ export type PublicationSearchWhere = {
   publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
 };
 
-export enum PublicationSpaceMetadataV3MainFocusType {
-  Space = 'SPACE',
-}
-
 export type PublicationStatsCountOpenActionArgs = {
   anyOf: Array<OpenActionFilter>;
 };
@@ -1328,26 +1290,10 @@ export type PublicationStatsSubscriptionRequest = {
   for: Scalars['PublicationId']['input'];
 };
 
-export enum PublicationStoryMetadataV3MainFocusType {
-  Story = 'STORY',
-}
-
-export enum PublicationTextOnlyMetadataV3MainFocusType {
-  TextOnly = 'TEXT_ONLY',
-}
-
-export enum PublicationThreeDMetadataV3MainFocusType {
-  ThreeD = 'THREE_D',
-}
-
 export enum PublicationTransactionMetadataType {
   Erc20 = 'ERC20',
   Erc721 = 'ERC721',
   Other = 'OTHER',
-}
-
-export enum PublicationTransactionMetadataV3MainFocusType {
-  Transaction = 'TRANSACTION',
 }
 
 export enum PublicationType {
@@ -1355,11 +1301,6 @@ export enum PublicationType {
   Mirror = 'MIRROR',
   Post = 'POST',
   Quote = 'QUOTE',
-}
-
-export enum PublicationVideoMetadataV3MainFocusType {
-  ShortVideo = 'SHORT_VIDEO',
-  Video = 'VIDEO',
 }
 
 export enum PublicationsOrderByType {

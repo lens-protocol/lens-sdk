@@ -5,6 +5,7 @@ import {
   NetworkAddressFragment,
   Erc20Fragment,
   PaginatedResultInfoFragment,
+  ImageFragment,
 } from '../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
@@ -14,6 +15,7 @@ import {
   NetworkAddressFragmentDoc,
   Erc20FragmentDoc,
   PaginatedResultInfoFragmentDoc,
+  ImageFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type ModuleInfoFragment = { name: string; type: string };
 

@@ -16,7 +16,12 @@ fragment NftCollection on NftCollection {
 fragment NftMetadata on NftMetadata {
   name
   description
-  image
+  image {
+    rawURI
+    optimized {
+      ...Image
+    }
+  }
 }
 
 fragment Nft on Nft {

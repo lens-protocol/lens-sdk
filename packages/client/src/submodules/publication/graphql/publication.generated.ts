@@ -405,6 +405,14 @@ export type CreateLegacyCollectTypedDataMutation = {
   result: CreateLegacyCollectBroadcastItemResultFragment;
 };
 
+export type RefreshPublicationMetadataMutationVariables = Types.Exact<{
+  request: Types.RefreshPublicationMetadataRequest;
+}>;
+
+export type RefreshPublicationMetadataMutation = {
+  result: { result: Types.RefreshPublicationMetadataResultType };
+};
+
 export const TagResultFragmentDoc = gql`
   fragment TagResult on TagResult {
     tag
@@ -1023,6 +1031,13 @@ export const CreateLegacyCollectTypedDataDocument = gql`
   }
   ${CreateLegacyCollectBroadcastItemResultFragmentDoc}
 `;
+export const RefreshPublicationMetadataDocument = gql`
+  mutation RefreshPublicationMetadata($request: RefreshPublicationMetadataRequest!) {
+    result: refreshPublicationMetadata(request: $request) {
+      result
+    }
+  }
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -1056,6 +1071,7 @@ const HidePublicationDocumentString = print(HidePublicationDocument);
 const ReportPublicationDocumentString = print(ReportPublicationDocument);
 const LegacyCollectPublicationDocumentString = print(LegacyCollectPublicationDocument);
 const CreateLegacyCollectTypedDataDocumentString = print(CreateLegacyCollectTypedDataDocument);
+const RefreshPublicationMetadataDocumentString = print(RefreshPublicationMetadataDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Publication(
@@ -1536,6 +1552,26 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'CreateLegacyCollectTypedData',
+        'mutation',
+      );
+    },
+    RefreshPublicationMetadata(
+      variables: RefreshPublicationMetadataMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: RefreshPublicationMetadataMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<RefreshPublicationMetadataMutation>(
+            RefreshPublicationMetadataDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'RefreshPublicationMetadata',
         'mutation',
       );
     },

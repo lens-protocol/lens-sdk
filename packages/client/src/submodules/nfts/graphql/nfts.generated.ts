@@ -5,6 +5,7 @@ import {
   NetworkAddressFragment,
   Erc20Fragment,
   PaginatedResultInfoFragment,
+  ImageFragment,
 } from '../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
@@ -14,6 +15,7 @@ import {
   NetworkAddressFragmentDoc,
   Erc20FragmentDoc,
   PaginatedResultInfoFragmentDoc,
+  ImageFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type OwnerFragment = { amount: string; address: string };
 
@@ -28,7 +30,7 @@ export type NftCollectionFragment = {
 export type NftMetadataFragment = {
   name: string | null;
   description: string | null;
-  image: string | null;
+  image: { rawURI: string; optimized: ImageFragment | null } | null;
 };
 
 export type NftFragment = {
@@ -123,8 +125,14 @@ export const NftMetadataFragmentDoc = gql`
   fragment NftMetadata on NftMetadata {
     name
     description
-    image
+    image {
+      rawURI
+      optimized {
+        ...Image
+      }
+    }
   }
+  ${ImageFragmentDoc}
 `;
 export const NftFragmentDoc = gql`
   fragment Nft on Nft {

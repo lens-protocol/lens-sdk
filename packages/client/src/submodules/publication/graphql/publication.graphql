@@ -534,3 +534,9 @@ mutation CreateLegacyCollectTypedData($request: LegacyCollectRequest!, $options:
     ...CreateLegacyCollectBroadcastItemResult
   }
 }
+
+mutation RefreshPublicationMetadata($request: RefreshPublicationMetadataRequest!) {
+  result: refreshPublicationMetadata(request: $request) {
+    result
+  }
+}
