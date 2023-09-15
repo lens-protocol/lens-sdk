@@ -1,6 +1,8 @@
 import { AnyTransactionRequestModel, TransactionError } from '@lens-protocol/domain/entities';
-import { ITransactionResultPresenter } from '@lens-protocol/domain/src/use-cases/transactions/ITransactionResultPresenter';
-import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  ITransactionResultPresenter,
+  TransactionData,
+} from '@lens-protocol/domain/use-cases/transactions';
 import {
   Deferred,
   failure,

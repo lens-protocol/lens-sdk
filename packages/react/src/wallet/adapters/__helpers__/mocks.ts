@@ -1,6 +1,6 @@
 import { TransactionRequest } from '@ethersproject/providers';
 import { faker } from '@faker-js/faker';
-import { TypedData } from '@lens-protocol/blockchain-bindings/src/TypedData';
+import { TypedData } from '@lens-protocol/blockchain-bindings';
 import {
   ProtocolTransactionRequestModel,
   AnyTransactionRequestModel,

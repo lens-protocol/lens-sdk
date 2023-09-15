@@ -1,5 +1,22 @@
 # @lens-protocol/api-bindings
 
+## 0.10.1
+
+### Patch Changes
+
+- 5f251069: **Fixed** `usePublications` to refetch on `publicationIds` change
+- dfb15e1a: **Fixed** 1.3.1-next.0 release packages bundles
+- ebc2e7e5: **Added** `publicationsId` to `usePublications` args
+- Updated dependencies [48dd0860]
+  - @lens-protocol/domain@0.10.1
+
+## 0.10.1-next.3
+
+### Patch Changes
+
+- Updated dependencies [48dd0860]
+  - @lens-protocol/domain@0.10.1-next.0
+
 ## 0.10.1-next.2
 
 ### Patch Changes

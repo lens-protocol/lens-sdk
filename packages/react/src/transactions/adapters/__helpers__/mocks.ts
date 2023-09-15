@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { omitTypename, Profile } from '@lens-protocol/api-bindings';
-import { TypedData } from '@lens-protocol/blockchain-bindings/src/TypedData';
+import { TypedData } from '@lens-protocol/blockchain-bindings';
 import {
   ProtocolTransactionRequestModel,
   ProxyActionStatus,

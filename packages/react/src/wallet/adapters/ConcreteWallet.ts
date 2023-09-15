@@ -1,6 +1,6 @@
 import { TypedDataSigner } from '@ethersproject/abstract-signer';
 import { TransactionRequest } from '@ethersproject/providers';
-import { TypedData } from '@lens-protocol/blockchain-bindings/src/TypedData';
+import { TypedData } from '@lens-protocol/blockchain-bindings';
 import {
   InsufficientGasError,
   Wallet,
@@ -14,8 +14,9 @@ import {
   ProtocolTransactionRequestModel,
   AnyTransactionRequestModel,
   Signature,
+  ISignedVote,
+  PollId,
 } from '@lens-protocol/domain/entities';
-import { ISignedVote, PollId } from '@lens-protocol/domain/src/entities/polls';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import {
   ChainType,

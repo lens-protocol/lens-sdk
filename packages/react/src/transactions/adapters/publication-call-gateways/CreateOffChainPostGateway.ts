@@ -12,11 +12,11 @@ import {
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { DataTransaction } from '@lens-protocol/domain/entities';
-import { IOffChainProtocolCallGateway } from '@lens-protocol/domain/src/use-cases/transactions/SubsidizeOffChain';
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
+  IOffChainProtocolCallGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
