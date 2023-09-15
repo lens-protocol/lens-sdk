@@ -1,15 +1,13 @@
 # queries
-query ProfileBookmarks(
-  $request: ProfileBookmarksRequest!
+query PublicationBookmarks(
+  $request: PublicationBookmarksRequest!
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
-  result: profileBookmarks(request: $request) {
+  result: publicationBookmarks(request: $request) {
     items {
       ... on Post {
         ...Post

@@ -1,25 +1,25 @@
 import {
   CustomFiltersType,
+  LensClient,
   OpenActionCategoryType,
   OpenActionModuleType,
+  development,
 } from '@lens-protocol/client';
 
-import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
-import { setupWallet } from '../shared/setupWallet';
-
 async function main() {
-  const wallet = setupWallet();
-  const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
+  const lensClient = new LensClient({
+    environment: development,
+  });
 
   // stats across the whole protocol
-  const protocolWideStats = await lensClient.profile.stats({ profileId: 'PROFILE_ID' });
+  const protocolWideStats = await lensClient.profile.stats({ profileId: '0x20' });
 
   console.log('Result: ', protocolWideStats);
 
   // stats for a specified apps
   const statsForSpecifiedApps = await lensClient.profile.stats(
     {
-      profileId: 'PROFILE_ID',
+      profileId: '0x20',
     },
     { profileStatsArg: { forApps: ['APP_ID', 'ANOTHER_APP_ID'] } },
   );
@@ -29,7 +29,7 @@ async function main() {
   // filter open actions
   const filteredOpenActions = await lensClient.profile.stats(
     {
-      profileId: 'PROFILE_ID',
+      profileId: '0x20',
     },
     {
       profileStatsCountOpenActionArgs: {
@@ -49,7 +49,7 @@ async function main() {
   // stats for a specified app and with custom filters
   const customFilteredStats = await lensClient.profile.stats(
     {
-      profileId: 'PROFILE_ID',
+      profileId: '0x20',
     },
     {
       profileStatsArg: { forApps: ['APP_ID'], customFilters: [CustomFiltersType.Gardeners] },

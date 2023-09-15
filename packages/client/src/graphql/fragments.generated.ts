@@ -86,20 +86,6 @@ export type ProfilePictureSetFragment = {
   transformed: ImageFragment | null;
 };
 
-export type ProfileStatsFragment = {
-  id: string;
-  followers: number;
-  following: number;
-  comments: number;
-  posts: number;
-  mirrors: number;
-  quotes: number;
-  publications: number;
-  countOpenActions: number;
-  upvoteReactions: number;
-  downvoteReactions: number;
-};
-
 export type ProfileFieldsFragment = {
   __typename: 'Profile';
   id: string;
@@ -133,7 +119,6 @@ export type ProfileFieldsFragment = {
     isFollowingMe: OptimisticStatusResultFragment;
   };
   guardian: { protected: boolean; cooldownEndsOn: string | null } | null;
-  stats: ProfileStatsFragment;
 };
 
 export type ProfileFragment = { invitedBy: ProfileFieldsFragment | null } & ProfileFieldsFragment;
@@ -680,7 +665,7 @@ export type TransactionMetadataV3Fragment = {
   globalReach: boolean;
   appId: string | null;
   optionalContent: string | null;
-  type: Types.PublicationTransactionMetadataType;
+  type: Types.PublicationMetadataTransactionType;
   txHash: string;
   chainId: string;
   marketplace: MarketplaceMetadataFragment | null;
@@ -1083,23 +1068,6 @@ export const OptimisticStatusResultFragmentDoc = gql`
     isFinalisedOnchain
   }
 `;
-export const ProfileStatsFragmentDoc = gql`
-  fragment ProfileStats on ProfileStats {
-    id
-    followers
-    following
-    comments
-    posts
-    mirrors
-    quotes
-    mirrors
-    quotes
-    publications
-    upvoteReactions: reactions(request: { type: UPVOTE })
-    downvoteReactions: reactions(request: { type: DOWNVOTE })
-    countOpenActions(request: $profileStatsCountOpenActionArgs)
-  }
-`;
 export const ProfileFieldsFragmentDoc = gql`
   fragment ProfileFields on Profile {
     __typename
@@ -1167,9 +1135,6 @@ export const ProfileFieldsFragmentDoc = gql`
       protected
       cooldownEndsOn
     }
-    stats(request: $profileStatsArg) {
-      ...ProfileStats
-    }
     invitesLeft
     createdAt
   }
@@ -1179,7 +1144,6 @@ export const ProfileFieldsFragmentDoc = gql`
   ${RevertFollowModuleSettingsFragmentDoc}
   ${UnknownFollowModuleSettingsFragmentDoc}
   ${OptimisticStatusResultFragmentDoc}
-  ${ProfileStatsFragmentDoc}
 `;
 export const ProfileFragmentDoc = gql`
   fragment Profile on Profile {

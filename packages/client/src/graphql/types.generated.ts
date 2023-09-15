@@ -972,18 +972,6 @@ export enum ProfileActionHistoryType {
   UnlinkHandle = 'UNLINK_HANDLE',
 }
 
-export type ProfileBookmarksRequest = {
-  cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<LimitType>;
-  where?: InputMaybe<ProfileBookmarksWhere>;
-};
-
-export type ProfileBookmarksWhere = {
-  cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<LimitType>;
-  metadata?: InputMaybe<PublicationMetadataFilters>;
-};
-
 /** Profile interests types */
 export enum ProfileInterestTypes {
   ArtEntertainment = 'ART_ENTERTAINMENT',
@@ -1141,6 +1129,18 @@ export type PublicationBookmarkRequest = {
   on: Scalars['PublicationId']['input'];
 };
 
+export type PublicationBookmarksRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  limit?: InputMaybe<LimitType>;
+  where?: InputMaybe<PublicationBookmarksWhere>;
+};
+
+export type PublicationBookmarksWhere = {
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  limit?: InputMaybe<LimitType>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
+};
+
 export type PublicationCommentOf = {
   commentsRankingFilter?: InputMaybe<CommentRankingFilterType>;
   id: Scalars['PublicationId']['input'];
@@ -1171,7 +1171,42 @@ export type PublicationMetadataFilters = {
 };
 
 export enum PublicationMetadataLicenseType {
-  AllRightsReserved = 'ALL_RIGHTS_RESERVED',
+  Cco = 'CCO',
+  CcBy = 'CC_BY',
+  CcByNc = 'CC_BY_NC',
+  CcByNd = 'CC_BY_ND',
+  TbnlCDtsaNplLedger = 'TBNL_C_DTSA_NPL_Ledger',
+  TbnlCDtsaNplLegal = 'TBNL_C_DTSA_NPL_Legal',
+  TbnlCDtsaPlLedger = 'TBNL_C_DTSA_PL_Ledger',
+  TbnlCDtsaPlLegal = 'TBNL_C_DTSA_PL_Legal',
+  TbnlCDtNplLedger = 'TBNL_C_DT_NPL_Ledger',
+  TbnlCDtNplLegal = 'TBNL_C_DT_NPL_Legal',
+  TbnlCDtPlLedger = 'TBNL_C_DT_PL_Ledger',
+  TbnlCDtPlLegal = 'TBNL_C_DT_PL_Legal',
+  TbnlCDNplLedger = 'TBNL_C_D_NPL_Ledger',
+  TbnlCDNplLegal = 'TBNL_C_D_NPL_Legal',
+  TbnlCDPlLedger = 'TBNL_C_D_PL_Ledger',
+  TbnlCDPlLegal = 'TBNL_C_D_PL_Legal',
+  TbnlCNdNplLedger = 'TBNL_C_ND_NPL_Ledger',
+  TbnlCNdNplLegal = 'TBNL_C_ND_NPL_Legal',
+  TbnlCNdPlLedger = 'TBNL_C_ND_PL_Ledger',
+  TbnlCNdPlLegal = 'TBNL_C_ND_PL_Legal',
+  TbnlNcDtsaNplLedger = 'TBNL_NC_DTSA_NPL_Ledger',
+  TbnlNcDtsaNplLegal = 'TBNL_NC_DTSA_NPL_Legal',
+  TbnlNcDtsaPlLedger = 'TBNL_NC_DTSA_PL_Ledger',
+  TbnlNcDtsaPlLegal = 'TBNL_NC_DTSA_PL_Legal',
+  TbnlNcDtNplLedger = 'TBNL_NC_DT_NPL_Ledger',
+  TbnlNcDtNplLegal = 'TBNL_NC_DT_NPL_Legal',
+  TbnlNcDtPlLedger = 'TBNL_NC_DT_PL_Ledger',
+  TbnlNcDtPlLegal = 'TBNL_NC_DT_PL_Legal',
+  TbnlNcDNplLedger = 'TBNL_NC_D_NPL_Ledger',
+  TbnlNcDNplLegal = 'TBNL_NC_D_NPL_Legal',
+  TbnlNcDPlLedger = 'TBNL_NC_D_PL_Ledger',
+  TbnlNcDPlLegal = 'TBNL_NC_D_PL_Legal',
+  TbnlNcNdNplLedger = 'TBNL_NC_ND_NPL_Ledger',
+  TbnlNcNdNplLegal = 'TBNL_NC_ND_NPL_Legal',
+  TbnlNcNdPlLedger = 'TBNL_NC_ND_PL_Ledger',
+  TbnlNcNdPlLegal = 'TBNL_NC_ND_PL_Legal',
 }
 
 export enum PublicationMetadataMainFocusType {
@@ -1197,6 +1232,12 @@ export type PublicationMetadataTagsFilter = {
   all?: InputMaybe<Array<Scalars['String']['input']>>;
   oneOf?: InputMaybe<Array<Scalars['String']['input']>>;
 };
+
+export enum PublicationMetadataTransactionType {
+  Erc20 = 'ERC20',
+  Erc721 = 'ERC721',
+  Other = 'OTHER',
+}
 
 export type PublicationNotInterestedRequest = {
   on: Scalars['PublicationId']['input'];
@@ -1289,12 +1330,6 @@ export type PublicationStatsReactionArgs = {
 export type PublicationStatsSubscriptionRequest = {
   for: Scalars['PublicationId']['input'];
 };
-
-export enum PublicationTransactionMetadataType {
-  Erc20 = 'ERC20',
-  Erc721 = 'ERC721',
-  Other = 'OTHER',
-}
 
 export enum PublicationType {
   Comment = 'COMMENT',
