@@ -24,6 +24,8 @@ import type {
   PublicationRequest,
   PublicationsRequest,
   PublicationsTagsRequest,
+  RefreshPublicationMetadataRequest,
+  RefreshPublicationMetadataResultType,
   ReportPublicationRequest,
   TypedDataOptions,
   ValidatePublicationMetadataRequest,
@@ -228,6 +230,29 @@ export class Publication {
     });
 
     return result.data.result;
+  }
+
+  /**
+   * Refresh a publication's metadata stored by the API
+   *
+   * @param request - Request object for the mutation
+   * @returns Refresh mutation result
+   *
+   * @example
+   * ```ts
+   * const result = await client.publication.refreshMetadata({
+   *   for: '0x123-0x456',
+   * });
+   * ```
+   */
+  async refreshMetadata(
+    request: RefreshPublicationMetadataRequest,
+  ): Promise<RefreshPublicationMetadataResultType> {
+    const result = await this.sdk.RefreshPublicationMetadata({
+      request,
+    });
+
+    return result.data.result.result;
   }
 
   /**
