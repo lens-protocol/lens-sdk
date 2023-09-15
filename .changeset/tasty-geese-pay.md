@@ -4,4 +4,4 @@
 "@lens-protocol/react": patch
 ---
 
-Fixed internal imports
+**Fixed** internal imports
