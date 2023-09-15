@@ -94,7 +94,7 @@ export type ActOnOpenActionRequest = {
 };
 
 export type AlreadyInvitedCheckRequest = {
-  address: Scalars['EvmAddress']['input'];
+  for: Scalars['EvmAddress']['input'];
 };
 
 export type AmountInput = {
@@ -144,9 +144,9 @@ export type BroadcastRequest = {
 
 export type ChallengeRequest = {
   /** The profile ID to initiate a challenge */
-  address: Scalars['EvmAddress']['input'];
-  /** The profile ID to initiate a challenge */
-  profileId: Scalars['ProfileId']['input'];
+  for: Scalars['ProfileId']['input'];
+  /** The Ethereum address that will sign the challenge */
+  signedBy: Scalars['EvmAddress']['input'];
 };
 
 export type ChangeProfileManager = {
@@ -444,7 +444,7 @@ export type GdmRequest = {
 };
 
 export type GenerateModuleCurrencyApprovalDataRequest = {
-  allowance: Scalars['EvmAddress']['input'];
+  allowance: AmountInput;
   module: ModuleCurrencyApproval;
 };
 
@@ -548,9 +548,9 @@ export enum LensTransactionFailureType {
 
 export type LensTransactionStatusRequest = {
   /** Transaction hash for retrieving transaction status */
-  txHash?: InputMaybe<Scalars['TxHash']['input']>;
+  forTxHash?: InputMaybe<Scalars['TxHash']['input']>;
   /** Transaction ID for retrieving transaction status when using the broadcaster */
-  txId?: InputMaybe<Scalars['TxId']['input']>;
+  forTxId?: InputMaybe<Scalars['TxId']['input']>;
 };
 
 export enum LensTransactionStatusType {
@@ -601,7 +601,7 @@ export type MomokaQuoteRequest = {
 
 export type MomokaTransactionRequest = {
   /** The momoka transaction id or internal publication id */
-  id: Scalars['String']['input'];
+  for: Scalars['String']['input'];
 };
 
 export type MomokaTransactionsRequest = {
@@ -661,10 +661,10 @@ export type MutualFollowersRequest = {
 export type MutualNftCollectionsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<LimitType>;
-  /** Profile id of the second user */
-  viewingProfileId: Scalars['ProfileId']['input'];
   /** Profile id of the first user */
-  yourProfileId: Scalars['ProfileId']['input'];
+  observer: Scalars['ProfileId']['input'];
+  /** Profile id of the second user */
+  viewing: Scalars['ProfileId']['input'];
 };
 
 export type MutualPoapsQueryRequest = {
@@ -691,13 +691,13 @@ export enum NftCollectionOwnersOrder {
 
 /** NFT collection owners request */
 export type NftCollectionOwnersRequest = {
-  /** The contract address */
-  address: Scalars['EvmAddress']['input'];
+  /** The profile id to use when ordering by followers */
+  by?: InputMaybe<Scalars['ProfileId']['input']>;
   /** The chain id */
   chainId: Scalars['ChainId']['input'];
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  /** The profile id to use when ordering by followers */
-  for?: InputMaybe<Scalars['ProfileId']['input']>;
+  /** The contract address */
+  for: Scalars['EvmAddress']['input'];
   limit?: InputMaybe<LimitType>;
   /** The ordering of Nft collection owners */
   order?: InputMaybe<NftCollectionOwnersOrder>;
@@ -896,9 +896,9 @@ export enum OpenActionModuleType {
 }
 
 export type OwnedHandlesRequest = {
-  /** The Ethereum address for which to retrieve owned handles */
-  address: Scalars['EvmAddress']['input'];
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  /** The Ethereum address for which to retrieve owned handles */
+  for: Scalars['EvmAddress']['input'];
   limit?: InputMaybe<LimitType>;
 };
 
@@ -1064,9 +1064,9 @@ export type ProfileRecommendationsRequest = {
 
 export type ProfileRequest = {
   /** The handle for profile you want to fetch */
-  handle?: InputMaybe<Scalars['Handle']['input']>;
+  forHandle?: InputMaybe<Scalars['Handle']['input']>;
   /** The profile you want to fetch */
-  profileId?: InputMaybe<Scalars['ProfileId']['input']>;
+  forProfileId?: InputMaybe<Scalars['ProfileId']['input']>;
 };
 
 export type ProfileSearchRequest = {
@@ -1097,9 +1097,9 @@ export type ProfileStatsReactionArgs = {
 };
 
 export type ProfilesManagedRequest = {
-  /** The Ethereum address for which to retrieve managed profiles */
-  address: Scalars['EvmAddress']['input'];
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  /** The Ethereum address for which to retrieve managed profiles */
+  for: Scalars['EvmAddress']['input'];
   limit?: InputMaybe<LimitType>;
 };
 
@@ -1293,8 +1293,8 @@ export enum PublicationReportingSpamSubreason {
 }
 
 export type PublicationRequest = {
-  id?: InputMaybe<Scalars['PublicationId']['input']>;
-  txHash?: InputMaybe<Scalars['TxHash']['input']>;
+  forId?: InputMaybe<Scalars['PublicationId']['input']>;
+  forTxHash?: InputMaybe<Scalars['TxHash']['input']>;
 };
 
 export type PublicationRevenueRequest = {

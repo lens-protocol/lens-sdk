@@ -5,8 +5,8 @@ fragment LensTransactionResult on LensTransactionResult {
   extraInfo
 }
 
-query TxIdToTxHash($txId: TxId!) {
-  result: txIdToTxHash(txId: $txId)
+query TxIdToTxHash($for: TxId!) {
+  result: txIdToTxHash(for: $for)
 }
 
 query LensTransactionStatus($request: LensTransactionStatusRequest!) {

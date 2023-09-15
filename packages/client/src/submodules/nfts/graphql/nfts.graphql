@@ -52,6 +52,15 @@ fragment NftGallery on NftGallery {
   }
 }
 
+fragment PaginatedNftGalleriesResult on PaginatedNftGalleriesResult {
+  items {
+    ...NftGallery
+  }
+  pageInfo {
+    ...PaginatedResultInfo
+  }
+}
+
 fragment NftOwnershipChallengeResult on NftOwnershipChallengeResult {
   success
   info
@@ -71,7 +80,7 @@ query Nfts($request: NftsRequest!) {
 
 query ProfileGalleries($request: NftGalleriesRequest!) {
   result: nftGalleries(request: $request) {
-    ...NftGallery
+    ...PaginatedNftGalleriesResult
   }
 }
 

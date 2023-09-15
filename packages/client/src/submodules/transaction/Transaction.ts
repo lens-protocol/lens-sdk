@@ -57,7 +57,7 @@ export class Transaction {
   }
 
   async txIdToTxHash(txId: string): Promise<string | null> {
-    const result = await this.sdk.TxIdToTxHash({ txId });
+    const result = await this.sdk.TxIdToTxHash({ for: txId });
     return result.data.result;
   }
 
@@ -94,7 +94,7 @@ export class Transaction {
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return poll({
-      fn: () => this.status({ txId }),
+      fn: () => this.status({ forTxId: txId }),
       validate: (result: Awaited<ReturnType<typeof this.status>>) => {
         if (result.isSuccess()) {
           const value = result.value;

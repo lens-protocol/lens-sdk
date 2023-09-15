@@ -3,6 +3,7 @@ import * as Types from '../../../graphql/types.generated';
 
 import {
   NetworkAddressFragment,
+  AmountFragment,
   Erc20Fragment,
   PaginatedResultInfoFragment,
   ImageFragment,
@@ -13,6 +14,7 @@ import { print } from 'graphql';
 import gql from 'graphql-tag';
 import {
   NetworkAddressFragmentDoc,
+  AmountFragmentDoc,
   Erc20FragmentDoc,
   PaginatedResultInfoFragmentDoc,
   ImageFragmentDoc,
@@ -51,6 +53,11 @@ export type NftGalleryFragment = {
   items: Array<NftFragment>;
 };
 
+export type PaginatedNftGalleriesResultFragment = {
+  items: Array<NftGalleryFragment>;
+  pageInfo: PaginatedResultInfoFragment;
+};
+
 export type NftOwnershipChallengeResultFragment = { success: boolean; info: string | null };
 
 export type NftsQueryVariables = Types.Exact<{
@@ -65,7 +72,7 @@ export type ProfileGalleriesQueryVariables = Types.Exact<{
   request: Types.NftGalleriesRequest;
 }>;
 
-export type ProfileGalleriesQuery = { result: Array<NftGalleryFragment> };
+export type ProfileGalleriesQuery = { result: PaginatedNftGalleriesResultFragment };
 
 export type NftOwnershipChallengeMutationVariables = Types.Exact<{
   request: Types.NftOwnershipChallengeRequest;
@@ -169,6 +176,18 @@ export const NftGalleryFragmentDoc = gql`
   }
   ${NftFragmentDoc}
 `;
+export const PaginatedNftGalleriesResultFragmentDoc = gql`
+  fragment PaginatedNftGalleriesResult on PaginatedNftGalleriesResult {
+    items {
+      ...NftGallery
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+  ${NftGalleryFragmentDoc}
+  ${PaginatedResultInfoFragmentDoc}
+`;
 export const NftOwnershipChallengeResultFragmentDoc = gql`
   fragment NftOwnershipChallengeResult on NftOwnershipChallengeResult {
     success
@@ -192,10 +211,10 @@ export const NftsDocument = gql`
 export const ProfileGalleriesDocument = gql`
   query ProfileGalleries($request: NftGalleriesRequest!) {
     result: nftGalleries(request: $request) {
-      ...NftGallery
+      ...PaginatedNftGalleriesResult
     }
   }
-  ${NftGalleryFragmentDoc}
+  ${PaginatedNftGalleriesResultFragmentDoc}
 `;
 export const NftOwnershipChallengeDocument = gql`
   mutation NftOwnershipChallenge($request: NftOwnershipChallengeRequest!) {

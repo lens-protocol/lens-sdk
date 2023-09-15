@@ -22,10 +22,10 @@ import {
 } from '../../helpers';
 import {
   NftFragment,
-  NftGalleryFragment,
   NftOwnershipChallengeResultFragment,
   Sdk,
   getSdk,
+  PaginatedNftGalleriesResultFragment,
 } from './graphql/nfts.generated';
 
 /**
@@ -108,7 +108,7 @@ export class Nfts {
    * Fetch NFT galleries of a profile.
    *
    * @param request - Request object for the query
-   * @returns Array of {@link NftGalleryFragment}
+   * @returns Paginated array of {@link NftGalleryFragment}
    *
    * @example
    * ```ts
@@ -117,7 +117,7 @@ export class Nfts {
    * });
    * ```
    */
-  async fetchGalleries(request: NftGalleriesRequest): Promise<NftGalleryFragment[]> {
+  async fetchGalleries(request: NftGalleriesRequest): Promise<PaginatedNftGalleriesResultFragment> {
     const result = await this.sdk.ProfileGalleries({ request });
 
     return result.data.result;

@@ -33,7 +33,7 @@ export type LensTransactionResultFragment = {
 };
 
 export type TxIdToTxHashQueryVariables = Types.Exact<{
-  txId: Types.Scalars['TxId']['input'];
+  for: Types.Scalars['TxId']['input'];
 }>;
 
 export type TxIdToTxHashQuery = { result: string | null };
@@ -67,8 +67,8 @@ export const LensTransactionResultFragmentDoc = gql`
   }
 `;
 export const TxIdToTxHashDocument = gql`
-  query TxIdToTxHash($txId: TxId!) {
-    result: txIdToTxHash(txId: $txId)
+  query TxIdToTxHash($for: TxId!) {
+    result: txIdToTxHash(for: $for)
   }
 `;
 export const LensTransactionStatusDocument = gql`

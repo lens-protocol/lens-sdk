@@ -1,5 +1,5 @@
 fragment InvitedResult on InvitedResult {
-  invited
+  by
   profileMinted {
     ...Profile
   }
