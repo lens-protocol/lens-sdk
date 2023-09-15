@@ -3,6 +3,7 @@ import * as Types from '../../../graphql/types.generated';
 
 import {
   NetworkAddressFragment,
+  AmountFragment,
   Erc20Fragment,
   PaginatedResultInfoFragment,
   ImageFragment,
@@ -13,6 +14,7 @@ import { print } from 'graphql';
 import gql from 'graphql-tag';
 import {
   NetworkAddressFragmentDoc,
+  AmountFragmentDoc,
   Erc20FragmentDoc,
   PaginatedResultInfoFragmentDoc,
   ImageFragmentDoc,
@@ -34,8 +36,8 @@ export type UnknownSupportedModuleFragment = {
 
 export type ApprovedAllowanceAmountResultFragment = {
   moduleName: string;
-  allowance: string;
   moduleContract: NetworkAddressFragment;
+  allowance: AmountFragment;
 };
 
 export type GenerateModuleCurrencyApprovalResultFragment = {
@@ -54,6 +56,7 @@ export type CurrenciesQuery = {
 
 export type ApprovedModuleAllowanceAmountQueryVariables = Types.Exact<{
   request: Types.ApprovedModuleAllowanceAmountRequest;
+  rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
 export type ApprovedModuleAllowanceAmountQuery = {
@@ -152,9 +155,12 @@ export const ApprovedAllowanceAmountResultFragmentDoc = gql`
     moduleContract {
       ...NetworkAddress
     }
-    allowance
+    allowance {
+      ...Amount
+    }
   }
   ${NetworkAddressFragmentDoc}
+  ${AmountFragmentDoc}
 `;
 export const GenerateModuleCurrencyApprovalResultFragmentDoc = gql`
   fragment GenerateModuleCurrencyApprovalResult on GenerateModuleCurrencyApprovalResult {
@@ -178,7 +184,10 @@ export const CurrenciesDocument = gql`
   ${PaginatedResultInfoFragmentDoc}
 `;
 export const ApprovedModuleAllowanceAmountDocument = gql`
-  query ApprovedModuleAllowanceAmount($request: ApprovedModuleAllowanceAmountRequest!) {
+  query ApprovedModuleAllowanceAmount(
+    $request: ApprovedModuleAllowanceAmountRequest!
+    $rateRequest: RateRequest = { for: USD }
+  ) {
     result: approvedModuleAllowanceAmount(request: $request) {
       ... on ApprovedAllowanceAmountResult {
         ...ApprovedAllowanceAmountResult

@@ -11,7 +11,7 @@ import {
   PaginatedResultInfoFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type InvitedResultFragment = {
-  invited: string;
+  by: string;
   when: string;
   profileMinted: ProfileFragment | null;
 };
@@ -38,7 +38,7 @@ export type InviteProfileMutation = { inviteProfile: string | null };
 
 export const InvitedResultFragmentDoc = gql`
   fragment InvitedResult on InvitedResult {
-    invited
+    by
     profileMinted {
       ...Profile
     }

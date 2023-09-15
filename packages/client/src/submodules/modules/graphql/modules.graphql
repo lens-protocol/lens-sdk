@@ -31,7 +31,9 @@ fragment ApprovedAllowanceAmountResult on ApprovedAllowanceAmountResult {
   moduleContract {
     ...NetworkAddress
   }
-  allowance
+  allowance {
+    ...Amount
+  }
 }
 
 fragment GenerateModuleCurrencyApprovalResult on GenerateModuleCurrencyApprovalResult {
@@ -51,7 +53,10 @@ query Currencies($request: PaginatedOffsetRequest!) {
   }
 }
 
-query ApprovedModuleAllowanceAmount($request: ApprovedModuleAllowanceAmountRequest!) {
+query ApprovedModuleAllowanceAmount(
+  $request: ApprovedModuleAllowanceAmountRequest!
+  $rateRequest: RateRequest = { for: USD }
+) {
   result: approvedModuleAllowanceAmount(request: $request) {
     ... on ApprovedAllowanceAmountResult {
       ...ApprovedAllowanceAmountResult

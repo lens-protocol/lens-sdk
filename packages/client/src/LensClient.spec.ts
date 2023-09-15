@@ -18,8 +18,8 @@ describe(`Given storage and two ${LensClient.name} instances sharing the same st
       const wallet = Wallet.createRandom();
       const walletAddress = await wallet.getAddress();
       const { id, text } = await client1.authentication.generateChallenge({
-        address: walletAddress,
-        profileId: '1',
+        for: '1',
+        signedBy: walletAddress,
       });
       const signature = await wallet.signMessage(text);
 
