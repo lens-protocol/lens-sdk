@@ -1,5 +1,11 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.0
+
+### Major Changes
+
+- **Added** support for Lens API v2
+
 ## 1.3.1
 
 ### Patch Changes
