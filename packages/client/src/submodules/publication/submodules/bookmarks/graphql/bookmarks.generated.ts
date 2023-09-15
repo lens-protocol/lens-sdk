@@ -31,18 +31,16 @@ import {
   Eip712TypedDataFieldFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,
 } from '../../../../../graphql/fragments.generated';
-export type ProfileBookmarksQueryVariables = Types.Exact<{
-  request: Types.ProfileBookmarksRequest;
+export type PublicationBookmarksQueryVariables = Types.Exact<{
+  request: Types.PublicationBookmarksRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
-  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
-export type ProfileBookmarksQuery = {
+export type PublicationBookmarksQuery = {
   result: {
     items: Array<CommentFragment | MirrorFragment | PostFragment | QuoteFragment>;
     pageInfo: PaginatedResultInfoFragment;
@@ -61,18 +59,16 @@ export type RemovePublicationBookmarkMutationVariables = Types.Exact<{
 
 export type RemovePublicationBookmarkMutation = { result: string | null };
 
-export const ProfileBookmarksDocument = gql`
-  query ProfileBookmarks(
-    $request: ProfileBookmarksRequest!
+export const PublicationBookmarksDocument = gql`
+  query PublicationBookmarks(
+    $request: PublicationBookmarksRequest!
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
-    result: profileBookmarks(request: $request) {
+    result: publicationBookmarks(request: $request) {
       items {
         ... on Post {
           ...Post
@@ -116,27 +112,28 @@ export type SdkFunctionWrapper = <T>(
 ) => Promise<T>;
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
-const ProfileBookmarksDocumentString = print(ProfileBookmarksDocument);
+const PublicationBookmarksDocumentString = print(PublicationBookmarksDocument);
 const AddPublicationBookmarkDocumentString = print(AddPublicationBookmarkDocument);
 const RemovePublicationBookmarkDocumentString = print(RemovePublicationBookmarkDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    ProfileBookmarks(
-      variables: ProfileBookmarksQueryVariables,
+    PublicationBookmarks(
+      variables: PublicationBookmarksQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
     ): Promise<{
-      data: ProfileBookmarksQuery;
+      data: PublicationBookmarksQuery;
       extensions?: any;
       headers: Dom.Headers;
       status: number;
     }> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.rawRequest<ProfileBookmarksQuery>(ProfileBookmarksDocumentString, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'ProfileBookmarks',
+          client.rawRequest<PublicationBookmarksQuery>(
+            PublicationBookmarksDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'PublicationBookmarks',
         'query',
       );
     },

@@ -6,8 +6,8 @@ import type { CredentialsExpiredError, NotAuthenticatedError } from '../../../..
 import { FetchGraphQLClient } from '../../../../graphql/FetchGraphQLClient';
 import type { AnyPublicationFragment } from '../../../../graphql/types';
 import type {
-  ProfileBookmarksRequest,
   PublicationBookmarkRequest,
+  PublicationBookmarksRequest,
 } from '../../../../graphql/types.generated';
 import {
   buildImageTransformsFromConfig,
@@ -50,14 +50,14 @@ export class Bookmarks {
    * ```
    */
   async fetch(
-    request: ProfileBookmarksRequest = {},
+    request: PublicationBookmarksRequest = {},
   ): PromiseResult<
     PaginatedResult<AnyPublicationFragment>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.ProfileBookmarks(
+        const result = await this.sdk.PublicationBookmarks(
           {
             request: currRequest,
             ...buildImageTransformsFromConfig(this.config.mediaTransforms),

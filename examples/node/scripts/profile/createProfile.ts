@@ -1,20 +1,21 @@
-import { isRelaySuccess } from '@lens-protocol/client';
+import { LensClient, development, isRelaySuccess } from '@lens-protocol/client';
 
-import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
 import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
   const address = await wallet.getAddress();
-  const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
+  const client = new LensClient({
+    environment: development,
+  });
 
   const handle = Date.now().toString();
 
   console.log(`Creating a new profile for ${address} with handle "${handle}"`);
 
-  const profileCreateResult = await lensClient.profile.create({
+  const profileCreateResult = await client.profile.create({
     handle: handle,
-    to: 'YOUR_EVM_ADDRESS',
+    to: address,
   });
 
   if (!isRelaySuccess(profileCreateResult)) {
@@ -27,9 +28,9 @@ async function main() {
   );
 
   console.log(`Waiting for the transaction to be indexed...`);
-  await lensClient.transaction.waitUntilComplete({ txId: profileCreateResult.txId });
+  await client.transaction.waitUntilComplete({ txId: profileCreateResult.txId });
 
-  const allOwnedProfiles = await lensClient.profile.fetchAll({
+  const allOwnedProfiles = await client.profile.fetchAll({
     where: {
       ownedBy: [address],
     },

@@ -125,8 +125,6 @@ query MomokaTransaction(
   $request: MomokaTransactionRequest!
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: momokaTransaction(request: $request) {
@@ -149,8 +147,6 @@ query momokaTransactions(
   $request: MomokaTransactionsRequest!
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: momokaTransactions(request: $request) {

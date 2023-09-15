@@ -36,8 +36,6 @@ query Feed(
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: feed(request: $request) {
@@ -56,8 +54,6 @@ query FeedHighlights(
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: feedHighlights(request: $request) {
@@ -81,8 +77,6 @@ query ForYou(
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: forYou(request: $request) {

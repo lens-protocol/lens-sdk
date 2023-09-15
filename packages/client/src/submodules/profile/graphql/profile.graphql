@@ -146,13 +146,27 @@ fragment CreateSetFollowModuleBroadcastItemResult on CreateSetFollowModuleBroadc
   }
 }
 
+fragment ProfileStats on ProfileStats {
+  id
+  followers
+  following
+  comments
+  posts
+  mirrors
+  quotes
+  mirrors
+  quotes
+  publications
+  upvoteReactions: reactions(request: { type: UPVOTE })
+  downvoteReactions: reactions(request: { type: DOWNVOTE })
+  countOpenActions(request: $profileStatsCountOpenActionArgs)
+}
+
 # queries
 query Profile(
   $request: ProfileRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  # $profileCoverTransform: ImageTransform = {}
+  # $profilePictureTransform: ImageTransform = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: profile(request: $request) {
@@ -160,12 +174,22 @@ query Profile(
   }
 }
 
-query Profiles(
-  $request: ProfilesRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
+query ProfileStats(
+  $request: ProfileRequest!
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+) {
+  result: profile(request: $request) {
+    stats(request: $profileStatsArg) {
+      ...ProfileStats
+    }
+  }
+}
+
+query Profiles(
+  $request: ProfilesRequest!
+  # $profileCoverTransform: ImageTransform = {}
+  # $profilePictureTransform: ImageTransform = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: profiles(request: $request) {
@@ -193,8 +217,6 @@ query ProfileRecommendations(
   $request: ProfileRecommendationsRequest!
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: profileRecommendations(request: $request) {
@@ -211,8 +233,6 @@ query Following(
   $request: FollowingRequest!
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: following(request: $request) {
@@ -229,8 +249,6 @@ query Followers(
   $request: FollowersRequest!
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: followers(request: $request) {
@@ -247,8 +265,6 @@ query MutualFollowers(
   $request: MutualFollowersRequest!
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: mutualFollowers(request: $request) {
@@ -434,5 +450,3 @@ mutation HandleUnlinkFromProfile($request: HandleUnlinkFromProfileRequest!) {
     }
   }
 }
-
-# mutation CreateSetDispatcherTypedData($)

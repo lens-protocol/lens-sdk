@@ -46,8 +46,6 @@ export type RevenueFromPublicationsQueryVariables = Types.Exact<{
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
-  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
@@ -61,8 +59,6 @@ export type RevenueForPublicationQueryVariables = Types.Exact<{
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
-  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
@@ -116,8 +112,6 @@ export const RevenueFromPublicationsDocument = gql`
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
     result: revenueFromPublications(request: $request) {
@@ -139,8 +133,6 @@ export const RevenueForPublicationDocument = gql`
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
     result: revenueForPublication(request: $request) {

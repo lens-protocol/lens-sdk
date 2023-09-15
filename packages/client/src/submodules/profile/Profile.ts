@@ -7,7 +7,6 @@ import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import type {
   LensProfileManagerRelayErrorFragment,
   ProfileFragment,
-  ProfileStatsFragment,
   RelaySuccessFragment,
 } from '../../graphql/fragments.generated';
 import type {
@@ -52,6 +51,7 @@ import {
   CreateUnblockProfilesBroadcastItemResultFragment,
   CreateUnfollowBroadcastItemResultFragment,
   ProfileManagerFragment,
+  ProfileStatsFragment,
   Sdk,
   getSdk,
 } from './graphql/profile.generated';
@@ -77,34 +77,20 @@ export class Profile {
     });
   }
 
-  async fetch(
-    request: ProfileRequest,
-    options?: ProfileQueryOptions,
-  ): Promise<ProfileFragment | null> {
+  async fetch(request: ProfileRequest): Promise<ProfileFragment | null> {
     const result = await this.sdk.Profile({
       request,
       ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-      ...buildProfileQueryOptions({
-        config: this.config,
-        ...options,
-      }),
     });
 
     return result.data.result;
   }
 
-  async fetchAll(
-    request: ProfilesRequest,
-    options?: ProfileQueryOptions,
-  ): Promise<PaginatedResult<ProfileFragment>> {
+  async fetchAll(request: ProfilesRequest): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Profiles({
         request: currRequest,
         ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-        ...buildProfileQueryOptions({
-          config: this.config,
-          ...options,
-        }),
       });
 
       return result.data.result;
@@ -125,52 +111,33 @@ export class Profile {
 
   async recommendations(
     request: ProfileRecommendationsRequest,
-    options?: ProfileQueryOptions,
   ): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.ProfileRecommendations({
         request: currRequest,
         ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-        ...buildProfileQueryOptions({
-          config: this.config,
-          ...options,
-        }),
       });
 
       return result.data.result;
     }, request);
   }
 
-  async following(
-    request: FollowingRequest,
-    options?: ProfileQueryOptions,
-  ): Promise<PaginatedResult<ProfileFragment>> {
+  async following(request: FollowingRequest): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Following({
         request: currRequest,
         ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-        ...buildProfileQueryOptions({
-          config: this.config,
-          ...options,
-        }),
       });
 
       return result.data.result;
     }, request);
   }
 
-  async followers(
-    request: FollowersRequest,
-    options?: ProfileQueryOptions,
-  ): Promise<PaginatedResult<ProfileFragment>> {
+  async followers(request: FollowersRequest): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Followers({
         request: currRequest,
         ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-        ...buildProfileQueryOptions({
-          config: this.config,
-          ...options,
-        }),
       });
 
       return result.data.result;
@@ -179,16 +146,11 @@ export class Profile {
 
   async mutualFollowers(
     request: MutualFollowersRequest,
-    options?: ProfileQueryOptions,
   ): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.MutualFollowers({
         request: currRequest,
         ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-        ...buildProfileQueryOptions({
-          config: this.config,
-          ...options,
-        }),
       });
 
       return result.data.result;
@@ -326,9 +288,8 @@ export class Profile {
     request: ProfileRequest,
     options: ProfileQueryOptions = this.defaultOptions,
   ): Promise<ProfileStatsFragment | undefined> {
-    const result = await this.sdk.Profile({
+    const result = await this.sdk.ProfileStats({
       request,
-      ...buildImageTransformsFromConfig(this.config.mediaTransforms),
       ...options,
     });
 
