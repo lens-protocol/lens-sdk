@@ -13,8 +13,9 @@ async function main() {
   console.log(
     `Profiles who reacted to publication: `,
     profilesWhoReacted.items.map((item) => ({
-      profileId: item.id,
-      handle: item.handle,
+      profileId: item.profile.id,
+      handle: item.profile.handle,
+      reactions: item.reactions,
     })),
   );
 }

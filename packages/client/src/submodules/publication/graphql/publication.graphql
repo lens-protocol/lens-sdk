@@ -10,10 +10,6 @@ fragment PublicationValidateMetadataResult on PublicationValidateMetadataResult 
 }
 
 fragment PublicationStats on PublicationStats {
-  additionalArgs {
-    forApps
-    customFilters
-  }
   id
   comments
   mirrors

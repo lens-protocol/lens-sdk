@@ -5,11 +5,7 @@ import type { LensConfig } from '../../consts/config';
 import type { CredentialsExpiredError, NotAuthenticatedError } from '../../consts/errors';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import type { PostFragment, QuoteFragment } from '../../graphql/fragments.generated';
-import type {
-  FeedHighlightsRequest,
-  FeedRequest,
-  PublicationForYouRequest,
-} from '../../graphql/types.generated';
+import type { FeedHighlightsRequest, FeedRequest } from '../../graphql/types.generated';
 import {
   buildImageTransformsFromConfig,
   buildPaginatedQueryResult,
@@ -79,24 +75,25 @@ export class Feed {
     });
   }
 
-  async forYou(
-    request: PublicationForYouRequest,
-  ): PromiseResult<
-    PaginatedResult<PostFragment | QuoteFragment>,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.ForYou(
-          {
-            request: currRequest,
-            ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-          },
-          headers,
-        );
-
-        return result.data.result;
-      }, request);
-    });
-  }
+  // Not yet ready to be exposed on production
+  // async forYou(
+  //   request: PublicationForYouRequest,
+  // ): PromiseResult<
+  //   PaginatedResult<PostFragment | QuoteFragment>,
+  //   CredentialsExpiredError | NotAuthenticatedError
+  // > {
+  //   return requireAuthHeaders(this.authentication, async (headers) => {
+  //     return buildPaginatedQueryResult(async (currRequest) => {
+  //       const result = await this.sdk.ForYou(
+  //         {
+  //           request: currRequest,
+  //           ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+  //         },
+  //         headers,
+  //       );
+  //
+  //       return result.data.result;
+  //     }, request);
+  //   });
+  // }
 }

@@ -32,7 +32,7 @@ export type NftCollectionFragment = {
 export type NftMetadataFragment = {
   name: string | null;
   description: string | null;
-  image: { rawURI: string; optimized: ImageFragment | null } | null;
+  image: { raw: ImageFragment; optimized: ImageFragment | null } | null;
 };
 
 export type NftFragment = {
@@ -133,7 +133,9 @@ export const NftMetadataFragmentDoc = gql`
     name
     description
     image {
-      rawURI
+      raw {
+        ...Image
+      }
       optimized {
         ...Image
       }

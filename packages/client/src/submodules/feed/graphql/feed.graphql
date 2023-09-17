@@ -71,25 +71,26 @@ query FeedHighlights(
   }
 }
 
-query ForYou(
-  $request: PublicationForYouRequest!
-  $publicationImageTransform: ImageTransform = {}
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-  $rateRequest: RateRequest = { for: USD }
-) {
-  result: forYou(request: $request) {
-    items {
-      ... on Post {
-        ...Post
-      }
-      ... on Quote {
-        ...Quote
-      }
-    }
-    pageInfo {
-      ...PaginatedResultInfo
-    }
-  }
-}
+# Not yet ready for production use
+#query ForYou(
+#  $request: PublicationForYouRequest!
+#  $publicationImageTransform: ImageTransform = {}
+#  $profileCoverTransform: ImageTransform = {}
+#  $profilePictureTransform: ImageTransform = {}
+#  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+#  $rateRequest: RateRequest = { for: USD }
+#) {
+#  result: forYou(request: $request) {
+#    items {
+#      ... on Post {
+#        ...Post
+#      }
+#      ... on Quote {
+#        ...Quote
+#      }
+#    }
+#    pageInfo {
+#      ...PaginatedResultInfo
+#    }
+#  }
+#}

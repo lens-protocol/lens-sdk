@@ -6,6 +6,20 @@ mutation RemoveReaction($request: ReactionRequest!) {
   removeReaction(request: $request)
 }
 
+fragment ProfileReactionResult on ProfileReactionResult {
+  reaction
+  reactionAt
+}
+
+fragment ProfileWhoReactedResult on ProfileWhoReactedResult {
+  profile {
+    ...Profile
+  }
+  reactions {
+    ...ProfileReactionResult
+  }
+}
+
 query WhoReactedPublication(
   $request: WhoReactedPublicationRequest!
   $profileCoverTransform: ImageTransform = {}
@@ -14,7 +28,7 @@ query WhoReactedPublication(
 ) {
   result: whoReactedPublication(request: $request) {
     items {
-      ...Profile
+      ...ProfileWhoReactedResult
     }
     pageInfo {
       ...PaginatedResultInfo

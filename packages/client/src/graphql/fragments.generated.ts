@@ -42,23 +42,33 @@ export type GaslessFragment = { enabled: boolean; relay: NetworkAddressFragment 
 export type NetworkAddressFragment = { address: string; chainId: string };
 
 export type ImageFragment = {
-  url: string;
+  uri: string;
   width: number | null;
   height: number | null;
   imageMimeType: Types.ImageMimeType | null;
 };
 
-export type VideoFragment = { url: string; videoMimeType: Types.VideoMimeType | null };
+export type VideoFragment = { uri: string; videoMimeType: Types.VideoMimeType | null };
 
-export type VideoSetFragment = { rawURI: string; optimized: VideoFragment | null };
+export type VideoSetFragment = { raw: VideoFragment; optimized: VideoFragment | null };
 
-export type EncryptableVideoSetFragment = { rawURI: string; optimized: VideoFragment | null };
+export type EncryptableVideoFragment = { mimeType: Types.VideoMimeType | null; uri: string };
 
-export type AudioFragment = { url: string; audioMimeType: Types.AudioMimeType | null };
+export type EncryptableVideoSetFragment = {
+  raw: EncryptableVideoFragment;
+  optimized: VideoFragment | null;
+};
 
-export type AudioSetFragment = { rawURI: string; optimized: AudioFragment | null };
+export type AudioFragment = { uri: string; audioMimeType: Types.AudioMimeType | null };
 
-export type EncryptableAudioSetFragment = { rawURI: string; optimized: AudioFragment | null };
+export type AudioSetFragment = { raw: AudioFragment; optimized: AudioFragment | null };
+
+export type EncryptableAudioFragment = { mimeType: Types.AudioMimeType | null; uri: string };
+
+export type EncryptableAudioSetFragment = {
+  raw: EncryptableAudioFragment;
+  optimized: AudioFragment | null;
+};
 
 export type LegacyAudioItemFragment = {
   altTag: string | null;
@@ -75,13 +85,13 @@ export type LegacyVideoItemFragment = {
 };
 
 export type ProfileCoverSetFragment = {
-  rawURI: string;
+  raw: ImageFragment;
   optimized: ImageFragment | null;
   transformed: ImageFragment | null;
 };
 
 export type ProfilePictureSetFragment = {
-  rawURI: string;
+  raw: ImageFragment;
   optimized: ImageFragment | null;
   transformed: ImageFragment | null;
 };
@@ -276,7 +286,6 @@ export type CanDecryptResponseFragment = {
 };
 
 export type PublicationOperationsFragment = {
-  id: string;
   isNotInterested: boolean;
   hasBookmarked: boolean;
   hasReported: boolean;
@@ -351,13 +360,20 @@ export type OrConditionFragment = {
 };
 
 export type PublicationImageSetFragment = {
-  rawURI: string;
+  raw: ImageFragment;
   optimized: ImageFragment | null;
   transformed: ImageFragment | null;
 };
 
+export type EncryptableImageFragment = {
+  uri: string;
+  mimeType: Types.ImageMimeType | null;
+  width: number | null;
+  height: number | null;
+};
+
 export type PublicationEncryptableImageSetFragment = {
-  rawURI: string;
+  raw: EncryptableImageFragment;
   optimized: ImageFragment | null;
 };
 
@@ -380,14 +396,12 @@ export type PublicationMetadataMediaVideoFragment = {
   duration: number | null;
   license: Types.PublicationMetadataLicenseType | null;
   altTag: string | null;
-  videoMimeType: Types.VideoMimeType;
   video: EncryptableVideoSetFragment;
   cover: PublicationEncryptableImageSetFragment | null;
 };
 
 export type PublicationMetadataMediaImageFragment = {
   license: Types.PublicationMetadataLicenseType | null;
-  imageMimeType: Types.ImageMimeType;
   image: PublicationEncryptableImageSetFragment;
 };
 
@@ -399,7 +413,6 @@ export type PublicationMetadataMediaAudioFragment = {
   genre: string | null;
   recordLabel: string | null;
   lyrics: string | null;
-  audioMimeType: Types.AudioMimeType;
   audio: EncryptableAudioSetFragment;
   cover: PublicationEncryptableImageSetFragment | null;
 };
@@ -447,7 +460,6 @@ export type VideoMetadataV3Fragment = {
   tags: Array<string> | null;
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  globalReach: boolean;
   appId: string | null;
   isShortVideo: boolean;
   optionalContent: string | null;
@@ -470,7 +482,6 @@ export type ImageMetadataV3Fragment = {
   tags: Array<string> | null;
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  globalReach: boolean;
   appId: string | null;
   optionalContent: string | null;
   optionalTitle: string | null;
@@ -492,7 +503,6 @@ export type ArticleMetadataV3Fragment = {
   tags: Array<string> | null;
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  globalReach: boolean;
   appId: string | null;
   content: string;
   optionalTitle: string | null;
@@ -513,7 +523,6 @@ export type EventMetadataV3Fragment = {
   tags: Array<string> | null;
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  globalReach: boolean;
   appId: string | null;
   startsAt: string;
   endsAt: string;
@@ -537,7 +546,6 @@ export type LinkMetadataV3Fragment = {
   tags: Array<string> | null;
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  globalReach: boolean;
   appId: string | null;
   optionalContent: string | null;
   sharingLink: string;
@@ -558,7 +566,6 @@ export type EmbedMetadataV3Fragment = {
   tags: Array<string> | null;
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  globalReach: boolean;
   appId: string | null;
   optionalContent: string | null;
   embed: string;
@@ -579,7 +586,6 @@ export type CheckingInMetadataV3Fragment = {
   tags: Array<string> | null;
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  globalReach: boolean;
   appId: string | null;
   optionalContent: string | null;
   location: string;
@@ -601,7 +607,6 @@ export type TextOnlyMetadataV3Fragment = {
   tags: Array<string> | null;
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  globalReach: boolean;
   appId: string | null;
   content: string;
   marketplace: MarketplaceMetadataFragment | null;
@@ -616,7 +621,6 @@ export type ThreeDMetadataV3Fragment = {
   tags: Array<string> | null;
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  globalReach: boolean;
   appId: string | null;
   optionalContent: string | null;
   marketplace: MarketplaceMetadataFragment | null;
@@ -643,7 +647,6 @@ export type StoryMetadataV3Fragment = {
   tags: Array<string> | null;
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  globalReach: boolean;
   appId: string | null;
   optionalContent: string | null;
   marketplace: MarketplaceMetadataFragment | null;
@@ -662,7 +665,6 @@ export type TransactionMetadataV3Fragment = {
   tags: Array<string> | null;
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  globalReach: boolean;
   appId: string | null;
   optionalContent: string | null;
   type: Types.PublicationMetadataTransactionType;
@@ -685,7 +687,6 @@ export type MintMetadataV3Fragment = {
   tags: Array<string> | null;
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  globalReach: boolean;
   appId: string | null;
   optionalContent: string | null;
   mintLink: string;
@@ -706,7 +707,6 @@ export type SpaceMetadataV3Fragment = {
   tags: Array<string> | null;
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  globalReach: boolean;
   appId: string | null;
   optionalContent: string | null;
   title: string;
@@ -729,7 +729,6 @@ export type LiveStreamMetadataV3Fragment = {
   tags: Array<string> | null;
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  globalReach: boolean;
   appId: string | null;
   optionalContent: string | null;
   startsAt: string;
@@ -860,7 +859,7 @@ export type MirrorFragment = {
   createdAt: string;
   publishedOn: AppFragment | null;
   momoka: MomokaInfoFragment | null;
-  mirrorOf: CommentFragment | PostFragment | QuoteFragment;
+  mirrorOn: CommentFragment | PostFragment | QuoteFragment;
 };
 
 export type QuoteBaseFragment = {
@@ -913,7 +912,7 @@ export type QuoteBaseFragment = {
 };
 
 export type QuoteFragment = {
-  quotedOn: CommentBaseFragment | PostFragment | QuoteBaseFragment;
+  quoteOn: CommentBaseFragment | PostFragment | QuoteBaseFragment;
 } & QuoteBaseFragment;
 
 export type Eip712TypedDataDomainFragment = {
@@ -947,7 +946,7 @@ export type CreateMomokaPublicationResultFragment = {
 
 export const ImageFragmentDoc = gql`
   fragment Image on Image {
-    url
+    uri
     imageMimeType: mimeType
     width
     height
@@ -955,7 +954,9 @@ export const ImageFragmentDoc = gql`
 `;
 export const ProfileCoverSetFragmentDoc = gql`
   fragment ProfileCoverSet on ImageSet {
-    rawURI
+    raw {
+      ...Image
+    }
     optimized {
       ...Image
     }
@@ -967,7 +968,9 @@ export const ProfileCoverSetFragmentDoc = gql`
 `;
 export const ProfilePictureSetFragmentDoc = gql`
   fragment ProfilePictureSet on ImageSet {
-    rawURI
+    raw {
+      ...Image
+    }
     optimized {
       ...Image
     }
@@ -1203,7 +1206,6 @@ export const CanDecryptResponseFragmentDoc = gql`
 `;
 export const PublicationOperationsFragmentDoc = gql`
   fragment PublicationOperations on PublicationOperations {
-    id
     isNotInterested
     hasBookmarked
     hasReported
@@ -1229,13 +1231,15 @@ export const PublicationOperationsFragmentDoc = gql`
 `;
 export const AudioFragmentDoc = gql`
   fragment Audio on Audio {
-    url
+    uri
     audioMimeType: mimeType
   }
 `;
 export const AudioSetFragmentDoc = gql`
   fragment AudioSet on AudioSet {
-    rawURI
+    raw {
+      ...Audio
+    }
     optimized {
       ...Audio
     }
@@ -1244,7 +1248,9 @@ export const AudioSetFragmentDoc = gql`
 `;
 export const PublicationImageSetFragmentDoc = gql`
   fragment PublicationImageSet on ImageSet {
-    rawURI
+    raw {
+      ...Image
+    }
     optimized {
       ...Image
     }
@@ -1278,13 +1284,15 @@ export const LegacyImageItemFragmentDoc = gql`
 `;
 export const VideoFragmentDoc = gql`
   fragment Video on Video {
-    url
+    uri
     videoMimeType: mimeType
   }
 `;
 export const VideoSetFragmentDoc = gql`
   fragment VideoSet on VideoSet {
-    rawURI
+    raw {
+      ...Video
+    }
     optimized {
       ...Video
     }
@@ -1542,27 +1550,46 @@ export const PublicationMetadataEncryptionStrategyFragmentDoc = gql`
   ${AndConditionFragmentDoc}
   ${OrConditionFragmentDoc}
 `;
+export const EncryptableVideoFragmentDoc = gql`
+  fragment EncryptableVideo on EncryptableVideo {
+    mimeType
+    uri
+  }
+`;
 export const EncryptableVideoSetFragmentDoc = gql`
   fragment EncryptableVideoSet on EncryptableVideoSet {
-    rawURI
+    raw {
+      ...EncryptableVideo
+    }
     optimized {
       ...Video
     }
   }
+  ${EncryptableVideoFragmentDoc}
   ${VideoFragmentDoc}
+`;
+export const EncryptableImageFragmentDoc = gql`
+  fragment EncryptableImage on EncryptableImage {
+    uri
+    mimeType
+    width
+    height
+  }
 `;
 export const PublicationEncryptableImageSetFragmentDoc = gql`
   fragment PublicationEncryptableImageSet on EncryptableImageSet {
-    rawURI
+    raw {
+      ...EncryptableImage
+    }
     optimized {
       ...Image
     }
   }
+  ${EncryptableImageFragmentDoc}
   ${ImageFragmentDoc}
 `;
 export const PublicationMetadataMediaVideoFragmentDoc = gql`
   fragment PublicationMetadataMediaVideo on PublicationMetadataMediaVideo {
-    videoMimeType: type
     video {
       ...EncryptableVideoSet
     }
@@ -1578,7 +1605,6 @@ export const PublicationMetadataMediaVideoFragmentDoc = gql`
 `;
 export const PublicationMetadataMediaImageFragmentDoc = gql`
   fragment PublicationMetadataMediaImage on PublicationMetadataMediaImage {
-    imageMimeType: type
     image {
       ...PublicationEncryptableImageSet
     }
@@ -1586,18 +1612,26 @@ export const PublicationMetadataMediaImageFragmentDoc = gql`
   }
   ${PublicationEncryptableImageSetFragmentDoc}
 `;
+export const EncryptableAudioFragmentDoc = gql`
+  fragment EncryptableAudio on EncryptableAudio {
+    mimeType
+    uri
+  }
+`;
 export const EncryptableAudioSetFragmentDoc = gql`
   fragment EncryptableAudioSet on EncryptableAudioSet {
-    rawURI
+    raw {
+      ...EncryptableAudio
+    }
     optimized {
       ...Audio
     }
   }
+  ${EncryptableAudioFragmentDoc}
   ${AudioFragmentDoc}
 `;
 export const PublicationMetadataMediaAudioFragmentDoc = gql`
   fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
-    audioMimeType: type
     audio {
       ...EncryptableAudioSet
     }
@@ -1623,7 +1657,6 @@ export const VideoMetadataV3FragmentDoc = gql`
     tags
     contentWarning
     hideFromFeed
-    globalReach
     appId
     marketplace {
       ...MarketplaceMetadata
@@ -1669,7 +1702,6 @@ export const ImageMetadataV3FragmentDoc = gql`
     tags
     contentWarning
     hideFromFeed
-    globalReach
     appId
     marketplace {
       ...MarketplaceMetadata
@@ -1714,7 +1746,6 @@ export const ArticleMetadataV3FragmentDoc = gql`
     tags
     contentWarning
     hideFromFeed
-    globalReach
     appId
     marketplace {
       ...MarketplaceMetadata
@@ -1756,7 +1787,6 @@ export const EventMetadataV3FragmentDoc = gql`
     tags
     contentWarning
     hideFromFeed
-    globalReach
     appId
     marketplace {
       ...MarketplaceMetadata
@@ -1804,7 +1834,6 @@ export const LinkMetadataV3FragmentDoc = gql`
     tags
     contentWarning
     hideFromFeed
-    globalReach
     appId
     marketplace {
       ...MarketplaceMetadata
@@ -1846,7 +1875,6 @@ export const EmbedMetadataV3FragmentDoc = gql`
     tags
     contentWarning
     hideFromFeed
-    globalReach
     appId
     marketplace {
       ...MarketplaceMetadata
@@ -1888,7 +1916,6 @@ export const CheckingInMetadataV3FragmentDoc = gql`
     tags
     contentWarning
     hideFromFeed
-    globalReach
     appId
     marketplace {
       ...MarketplaceMetadata
@@ -1934,7 +1961,6 @@ export const TextOnlyMetadataV3FragmentDoc = gql`
     tags
     contentWarning
     hideFromFeed
-    globalReach
     appId
     marketplace {
       ...MarketplaceMetadata
@@ -1961,7 +1987,6 @@ export const ThreeDMetadataV3FragmentDoc = gql`
     tags
     contentWarning
     hideFromFeed
-    globalReach
     appId
     marketplace {
       ...MarketplaceMetadata
@@ -2009,7 +2034,6 @@ export const StoryMetadataV3FragmentDoc = gql`
     tags
     contentWarning
     hideFromFeed
-    globalReach
     appId
     marketplace {
       ...MarketplaceMetadata
@@ -2050,7 +2074,6 @@ export const TransactionMetadataV3FragmentDoc = gql`
     tags
     contentWarning
     hideFromFeed
-    globalReach
     appId
     marketplace {
       ...MarketplaceMetadata
@@ -2094,7 +2117,6 @@ export const MintMetadataV3FragmentDoc = gql`
     tags
     contentWarning
     hideFromFeed
-    globalReach
     appId
     marketplace {
       ...MarketplaceMetadata
@@ -2136,7 +2158,6 @@ export const SpaceMetadataV3FragmentDoc = gql`
     tags
     contentWarning
     hideFromFeed
-    globalReach
     appId
     marketplace {
       ...MarketplaceMetadata
@@ -2180,7 +2201,6 @@ export const LiveStreamMetadataV3FragmentDoc = gql`
     tags
     contentWarning
     hideFromFeed
-    globalReach
     appId
     marketplace {
       ...MarketplaceMetadata
@@ -2940,7 +2960,7 @@ export const CommentFragmentDoc = gql`
 export const QuoteFragmentDoc = gql`
   fragment Quote on Quote {
     ...QuoteBase
-    quotedOn {
+    quoteOn {
       ... on Post {
         ...Post
       }
@@ -2969,7 +2989,7 @@ export const MirrorFragmentDoc = gql`
     }
     txHash
     createdAt
-    mirrorOf {
+    mirrorOn {
       ... on Post {
         ...Post
       }
