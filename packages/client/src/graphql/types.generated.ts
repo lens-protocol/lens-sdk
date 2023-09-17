@@ -47,6 +47,7 @@ export type Scalars = {
   NftGalleryName: { input: string; output: string };
   Nonce: { input: string; output: string };
   OnchainPublicationId: { input: string; output: string };
+  PoapEventId: { input: string; output: string };
   ProfileId: { input: string; output: string };
   PublicationId: { input: string; output: string };
   Signature: { input: string; output: string };
@@ -126,11 +127,11 @@ export enum AudioMimeType {
   Aac = 'AAC',
   Flac = 'FLAC',
   Mp3 = 'MP3',
-  Mp4 = 'MP4',
-  Ogg = 'OGG',
-  Vnd = 'VND',
+  Mp4Audio = 'MP4_AUDIO',
+  OggAudio = 'OGG_AUDIO',
   Wav = 'WAV',
-  Webm = 'WEBM',
+  WavVnd = 'WAV_VND',
+  WebmAudio = 'WEBM_AUDIO',
 }
 
 export type BlockRequest = {
@@ -192,6 +193,8 @@ export enum CollectOpenActionModuleType {
   LegacyRevertCollectModule = 'LegacyRevertCollectModule',
   LegacySimpleCollectModule = 'LegacySimpleCollectModule',
   LegacyTimedFeeCollectModule = 'LegacyTimedFeeCollectModule',
+  MultirecipientFeeCollectOpenActionModule = 'MultirecipientFeeCollectOpenActionModule',
+  SimpleCollectOpenActionModule = 'SimpleCollectOpenActionModule',
   UnknownOpenActionModule = 'UnknownOpenActionModule',
 }
 
@@ -298,7 +301,6 @@ export type ExplorePublicationRequest = {
 };
 
 export enum ExplorePublicationType {
-  Comment = 'COMMENT',
   Post = 'POST',
   Quote = 'QUOTE',
 }
@@ -489,8 +491,10 @@ export enum ImageMimeType {
   Jpg = 'JPG',
   Png = 'PNG',
   Svg = 'SVG',
+  SvgXml = 'SVG_XML',
   Tiff = 'TIFF',
   Webp = 'WEBP',
+  XMsBmp = 'X_MS_BMP',
 }
 
 export type ImageTransform = {
@@ -587,7 +591,7 @@ export type MomokaCommentRequest = {
 };
 
 export type MomokaMirrorRequest = {
-  mirrorOf: Scalars['PublicationId']['input'];
+  mirrorOn: Scalars['PublicationId']['input'];
 };
 
 export type MomokaPostRequest = {
@@ -835,6 +839,8 @@ export type OnchainCommentRequest = {
 };
 
 export type OnchainMirrorRequest = {
+  /** You can add information like app on a mirror or tracking stuff */
+  metadataURI?: InputMaybe<Scalars['URI']['input']>;
   mirrorOn: Scalars['PublicationId']['input'];
   mirrorReferenceModuleData?: InputMaybe<Scalars['BlockchainData']['input']>;
   referrers?: InputMaybe<Array<OnchainReferrer>>;
@@ -909,18 +915,23 @@ export type PaginatedOffsetRequest = {
 };
 
 export type PoapEventQueryRequest = {
-  eventId: Scalars['String']['input'];
+  eventId: Scalars['PoapEventId']['input'];
 };
 
 export type PoapHoldersQueryRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  eventId: Scalars['Float']['input'];
+  eventId: Scalars['PoapEventId']['input'];
   limit?: InputMaybe<LimitType>;
 };
 
 export enum PoapTokenLayerType {
   Layer1 = 'Layer1',
   Layer2 = 'Layer2',
+}
+
+export enum PopularNftCollectionsOrder {
+  TotalLensProfileOwners = 'TotalLensProfileOwners',
+  TotalOwners = 'TotalOwners',
 }
 
 /** Popular NFT collections request */
@@ -933,6 +944,8 @@ export type PopularNftCollectionsRequest = {
   limit?: InputMaybe<LimitType>;
   /** Include only verified collections */
   onlyVerified?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The ordering of Nft collection owners. Defaults to Total Lens Profile owners */
+  orderBy?: InputMaybe<PopularNftCollectionsOrder>;
 };
 
 export type PrfRequest = {
@@ -1100,6 +1113,7 @@ export type ProfilesManagedRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   /** The Ethereum address for which to retrieve managed profiles */
   for: Scalars['EvmAddress']['input'];
+  includeOwned?: InputMaybe<Scalars['Boolean']['input']>;
   limit?: InputMaybe<LimitType>;
 };
 
@@ -1141,7 +1155,7 @@ export type PublicationBookmarksWhere = {
   metadata?: InputMaybe<PublicationMetadataFilters>;
 };
 
-export type PublicationCommentOf = {
+export type PublicationCommentOn = {
   commentsRankingFilter?: InputMaybe<CommentRankingFilterType>;
   id: Scalars['PublicationId']['input'];
 };
@@ -1152,14 +1166,8 @@ export enum PublicationContentWarningType {
   Spoiler = 'SPOILER',
 }
 
-export type PublicationForYouRequest = {
-  cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  for?: InputMaybe<Scalars['ProfileId']['input']>;
-  limit?: InputMaybe<LimitType>;
-};
-
 export type PublicationMetadataContentWarningFilter = {
-  oneOf?: InputMaybe<Array<PublicationContentWarningType>>;
+  oneOf: Array<PublicationContentWarningType>;
 };
 
 export type PublicationMetadataFilters = {
@@ -1310,8 +1318,7 @@ export type PublicationSearchRequest = {
 
 export type PublicationSearchWhere = {
   customFilters?: InputMaybe<Array<CustomFiltersType>>;
-  publicationTypes?: InputMaybe<Array<PublicationType>>;
-  publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
 };
 
 export type PublicationStatsCountOpenActionArgs = {
@@ -1320,7 +1327,7 @@ export type PublicationStatsCountOpenActionArgs = {
 
 export type PublicationStatsInput = {
   customFilters?: InputMaybe<Array<CustomFiltersType>>;
-  forApps?: InputMaybe<Array<Scalars['AppId']['input']>>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
 };
 
 export type PublicationStatsReactionArgs = {
@@ -1351,7 +1358,7 @@ export type PublicationsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<LimitType>;
   orderBy?: InputMaybe<PublicationsOrderByType>;
-  where: PublicationsWhere;
+  where?: InputMaybe<PublicationsWhere>;
 };
 
 export type PublicationsTagsRequest = {
@@ -1366,15 +1373,15 @@ export type PublicationsTagsWhere = {
 };
 
 export type PublicationsWhere = {
-  acted?: InputMaybe<Array<OpenActionFilter>>;
-  commentsOf?: InputMaybe<PublicationCommentOf>;
+  actedBy?: InputMaybe<Scalars['ProfileId']['input']>;
+  commentOn?: InputMaybe<PublicationCommentOn>;
   customFilters?: InputMaybe<Array<CustomFiltersType>>;
   from?: InputMaybe<Array<Scalars['ProfileId']['input']>>;
   metadata?: InputMaybe<PublicationMetadataFilters>;
-  mirrorOf?: InputMaybe<Scalars['PublicationId']['input']>;
+  mirrorOn?: InputMaybe<Scalars['PublicationId']['input']>;
   publicationIds?: InputMaybe<Array<Scalars['PublicationId']['input']>>;
   publicationTypes?: InputMaybe<Array<PublicationType>>;
-  quoteOf?: InputMaybe<Scalars['PublicationId']['input']>;
+  quoteOn?: InputMaybe<Scalars['PublicationId']['input']>;
   withOpenActions?: InputMaybe<Array<OpenActionFilter>>;
 };
 
@@ -1447,6 +1454,7 @@ export enum RelayRoleKey {
   LensManager_8 = 'LENS_MANAGER_8',
   LensManager_9 = 'LENS_MANAGER_9',
   LensManager_10 = 'LENS_MANAGER_10',
+  LensManager_11 = 'LENS_MANAGER_11',
   LensManager_12 = 'LENS_MANAGER_12',
   LensManager_13 = 'LENS_MANAGER_13',
   LensManager_14 = 'LENS_MANAGER_14',
@@ -1603,11 +1611,12 @@ export type VerifyRequest = {
 };
 
 export enum VideoMimeType {
-  Gtlfbin = 'GTLFBIN',
-  Gtlfjson = 'GTLFJSON',
+  Gltf = 'GLTF',
+  GltfBinary = 'GLTF_BINARY',
   M4V = 'M4V',
+  Mov = 'MOV',
   Mp4 = 'MP4',
-  Mpg = 'MPG',
+  Mpeg = 'MPEG',
   Ogg = 'OGG',
   Ogv = 'OGV',
   Quicktime = 'QUICKTIME',

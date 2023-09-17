@@ -25,6 +25,16 @@ export type RemoveReactionMutationVariables = Types.Exact<{
 
 export type RemoveReactionMutation = { removeReaction: string | null };
 
+export type ProfileReactionResultFragment = {
+  reaction: Types.PublicationReactionType;
+  reactionAt: string;
+};
+
+export type ProfileWhoReactedResultFragment = {
+  profile: ProfileFragment;
+  reactions: Array<ProfileReactionResultFragment>;
+};
+
 export type WhoReactedPublicationQueryVariables = Types.Exact<{
   request: Types.WhoReactedPublicationRequest;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
@@ -33,9 +43,27 @@ export type WhoReactedPublicationQueryVariables = Types.Exact<{
 }>;
 
 export type WhoReactedPublicationQuery = {
-  result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
+  result: { items: Array<ProfileWhoReactedResultFragment>; pageInfo: PaginatedResultInfoFragment };
 };
 
+export const ProfileReactionResultFragmentDoc = gql`
+  fragment ProfileReactionResult on ProfileReactionResult {
+    reaction
+    reactionAt
+  }
+`;
+export const ProfileWhoReactedResultFragmentDoc = gql`
+  fragment ProfileWhoReactedResult on ProfileWhoReactedResult {
+    profile {
+      ...Profile
+    }
+    reactions {
+      ...ProfileReactionResult
+    }
+  }
+  ${ProfileFragmentDoc}
+  ${ProfileReactionResultFragmentDoc}
+`;
 export const AddReactionDocument = gql`
   mutation AddReaction($request: ReactionRequest!) {
     addReaction(request: $request)
@@ -55,14 +83,14 @@ export const WhoReactedPublicationDocument = gql`
   ) {
     result: whoReactedPublication(request: $request) {
       items {
-        ...Profile
+        ...ProfileWhoReactedResult
       }
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }
-  ${ProfileFragmentDoc}
+  ${ProfileWhoReactedResultFragmentDoc}
   ${PaginatedResultInfoFragmentDoc}
 `;
 

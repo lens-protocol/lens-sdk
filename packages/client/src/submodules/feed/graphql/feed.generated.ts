@@ -66,19 +66,6 @@ export type FeedHighlightsQuery = {
   result: { items: Array<PostFragment | QuoteFragment>; pageInfo: PaginatedResultInfoFragment };
 };
 
-export type ForYouQueryVariables = Types.Exact<{
-  request: Types.PublicationForYouRequest;
-  publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
-  profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
-  profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
-  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
-  rateRequest?: Types.InputMaybe<Types.RateRequest>;
-}>;
-
-export type ForYouQuery = {
-  result: { items: Array<PostFragment | QuoteFragment>; pageInfo: PaginatedResultInfoFragment };
-};
-
 export const ReactionEventFragmentDoc = gql`
   fragment ReactionEvent on ReactionEvent {
     by {
@@ -167,33 +154,6 @@ export const FeedHighlightsDocument = gql`
   ${QuoteFragmentDoc}
   ${PaginatedResultInfoFragmentDoc}
 `;
-export const ForYouDocument = gql`
-  query ForYou(
-    $request: PublicationForYouRequest!
-    $publicationImageTransform: ImageTransform = {}
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-    $rateRequest: RateRequest = { for: USD }
-  ) {
-    result: forYou(request: $request) {
-      items {
-        ... on Post {
-          ...Post
-        }
-        ... on Quote {
-          ...Quote
-        }
-      }
-      pageInfo {
-        ...PaginatedResultInfo
-      }
-    }
-  }
-  ${PostFragmentDoc}
-  ${QuoteFragmentDoc}
-  ${PaginatedResultInfoFragmentDoc}
-`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -204,7 +164,6 @@ export type SdkFunctionWrapper = <T>(
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const FeedDocumentString = print(FeedDocument);
 const FeedHighlightsDocumentString = print(FeedHighlightsDocument);
-const ForYouDocumentString = print(ForYouDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Feed(
@@ -237,20 +196,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'FeedHighlights',
-        'query',
-      );
-    },
-    ForYou(
-      variables: ForYouQueryVariables,
-      requestHeaders?: GraphQLClientRequestHeaders,
-    ): Promise<{ data: ForYouQuery; extensions?: any; headers: Dom.Headers; status: number }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<ForYouQuery>(ForYouDocumentString, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'ForYou',
         'query',
       );
     },

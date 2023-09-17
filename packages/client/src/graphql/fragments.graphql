@@ -73,45 +73,63 @@ fragment NetworkAddress on NetworkAddress {
 
 # media
 fragment Image on Image {
-  url
+  uri
   imageMimeType: mimeType
   width
   height
 }
 
 fragment Video on Video {
-  url
+  uri
   videoMimeType: mimeType
 }
 
 fragment VideoSet on VideoSet {
-  rawURI
+  raw {
+    ...Video
+  }
   optimized {
     ...Video
   }
 }
 
+fragment EncryptableVideo on EncryptableVideo {
+  mimeType
+  uri
+}
+
 fragment EncryptableVideoSet on EncryptableVideoSet {
-  rawURI
+  raw {
+    ...EncryptableVideo
+  }
   optimized {
     ...Video
   }
 }
 
 fragment Audio on Audio {
-  url
+  uri
   audioMimeType: mimeType
 }
 
 fragment AudioSet on AudioSet {
-  rawURI
+  raw {
+    ...Audio
+  }
   optimized {
     ...Audio
   }
 }
 
+fragment EncryptableAudio on EncryptableAudio {
+  mimeType
+  uri
+}
+
 fragment EncryptableAudioSet on EncryptableAudioSet {
-  rawURI
+  raw {
+    ...EncryptableAudio
+  }
   optimized {
     ...Audio
   }
@@ -146,7 +164,9 @@ fragment LegacyVideoItem on LegacyVideoItem {
 
 # profile
 fragment ProfileCoverSet on ImageSet {
-  rawURI
+  raw {
+    ...Image
+  }
   optimized {
     ...Image
   }
@@ -156,7 +176,9 @@ fragment ProfileCoverSet on ImageSet {
 }
 
 fragment ProfilePictureSet on ImageSet {
-  rawURI
+  raw {
+    ...Image
+  }
   optimized {
     ...Image
   }
@@ -471,7 +493,6 @@ fragment CanDecryptResponse on CanDecryptResponse {
 }
 
 fragment PublicationOperations on PublicationOperations {
-  id
   isNotInterested
   hasBookmarked
   hasReported
@@ -603,7 +624,9 @@ fragment OrCondition on OrCondition {
 
 # publication metadata
 fragment PublicationImageSet on ImageSet {
-  rawURI
+  raw {
+    ...Image
+  }
   optimized {
     ...Image
   }
@@ -612,8 +635,17 @@ fragment PublicationImageSet on ImageSet {
   }
 }
 
+fragment EncryptableImage on EncryptableImage {
+  uri
+  mimeType
+  width
+  height
+}
+
 fragment PublicationEncryptableImageSet on EncryptableImageSet {
-  rawURI
+  raw {
+    ...EncryptableImage
+  }
   optimized {
     ...Image
   }
@@ -639,7 +671,6 @@ fragment MarketplaceMetadata on MarketplaceMetadata {
 }
 
 fragment PublicationMetadataMediaVideo on PublicationMetadataMediaVideo {
-  videoMimeType: type
   video {
     ...EncryptableVideoSet
   }
@@ -652,7 +683,6 @@ fragment PublicationMetadataMediaVideo on PublicationMetadataMediaVideo {
 }
 
 fragment PublicationMetadataMediaImage on PublicationMetadataMediaImage {
-  imageMimeType: type
   image {
     ...PublicationEncryptableImageSet
   }
@@ -660,7 +690,6 @@ fragment PublicationMetadataMediaImage on PublicationMetadataMediaImage {
 }
 
 fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
-  audioMimeType: type
   audio {
     ...EncryptableAudioSet
   }
@@ -746,7 +775,6 @@ fragment VideoMetadataV3 on VideoMetadataV3 {
   tags
   contentWarning
   hideFromFeed
-  globalReach
   appId
   marketplace {
     ...MarketplaceMetadata
@@ -786,7 +814,6 @@ fragment ImageMetadataV3 on ImageMetadataV3 {
   tags
   contentWarning
   hideFromFeed
-  globalReach
   appId
   marketplace {
     ...MarketplaceMetadata
@@ -825,7 +852,6 @@ fragment ArticleMetadataV3 on ArticleMetadataV3 {
   tags
   contentWarning
   hideFromFeed
-  globalReach
   appId
   marketplace {
     ...MarketplaceMetadata
@@ -861,7 +887,6 @@ fragment EventMetadataV3 on EventMetadataV3 {
   tags
   contentWarning
   hideFromFeed
-  globalReach
   appId
   marketplace {
     ...MarketplaceMetadata
@@ -903,7 +928,6 @@ fragment LinkMetadataV3 on LinkMetadataV3 {
   tags
   contentWarning
   hideFromFeed
-  globalReach
   appId
   marketplace {
     ...MarketplaceMetadata
@@ -939,7 +963,6 @@ fragment EmbedMetadataV3 on EmbedMetadataV3 {
   tags
   contentWarning
   hideFromFeed
-  globalReach
   appId
   marketplace {
     ...MarketplaceMetadata
@@ -975,7 +998,6 @@ fragment CheckingInMetadataV3 on CheckingInMetadataV3 {
   tags
   contentWarning
   hideFromFeed
-  globalReach
   appId
   marketplace {
     ...MarketplaceMetadata
@@ -1015,7 +1037,6 @@ fragment TextOnlyMetadataV3 on TextOnlyMetadataV3 {
   tags
   contentWarning
   hideFromFeed
-  globalReach
   appId
   marketplace {
     ...MarketplaceMetadata
@@ -1039,7 +1060,6 @@ fragment ThreeDMetadataV3 on ThreeDMetadataV3 {
   tags
   contentWarning
   hideFromFeed
-  globalReach
   appId
   marketplace {
     ...MarketplaceMetadata
@@ -1081,7 +1101,6 @@ fragment StoryMetadataV3 on StoryMetadataV3 {
   tags
   contentWarning
   hideFromFeed
-  globalReach
   appId
   marketplace {
     ...MarketplaceMetadata
@@ -1116,7 +1135,6 @@ fragment TransactionMetadataV3 on TransactionMetadataV3 {
   tags
   contentWarning
   hideFromFeed
-  globalReach
   appId
   marketplace {
     ...MarketplaceMetadata
@@ -1154,7 +1172,6 @@ fragment MintMetadataV3 on MintMetadataV3 {
   tags
   contentWarning
   hideFromFeed
-  globalReach
   appId
   marketplace {
     ...MarketplaceMetadata
@@ -1190,7 +1207,6 @@ fragment SpaceMetadataV3 on SpaceMetadataV3 {
   tags
   contentWarning
   hideFromFeed
-  globalReach
   appId
   marketplace {
     ...MarketplaceMetadata
@@ -1228,7 +1244,6 @@ fragment LiveStreamMetadataV3 on LiveStreamMetadataV3 {
   tags
   contentWarning
   hideFromFeed
-  globalReach
   appId
   marketplace {
     ...MarketplaceMetadata
@@ -1537,7 +1552,7 @@ fragment Mirror on Mirror {
   }
   txHash
   createdAt
-  mirrorOf {
+  mirrorOn {
     ... on Post {
       ...Post
     }
@@ -1672,7 +1687,7 @@ fragment QuoteBase on Quote {
 
 fragment Quote on Quote {
   ...QuoteBase
-  quotedOn {
+  quoteOn {
     ... on Post {
       ...Post
     }

@@ -38,6 +38,7 @@ config:
     NftGalleryName: string
     Nonce: string
     OnchainPublicationId: string
+    PoapEventId: string
     ProfileId: string
     PublicationId: string
     Signature: string

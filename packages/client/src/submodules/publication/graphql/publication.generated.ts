@@ -45,10 +45,6 @@ export type PublicationStatsFragment = {
   countOpenActions: number;
   upvoteReactions: number;
   downvoteReactions: number;
-  additionalArgs: {
-    forApps: Array<string> | null;
-    customFilters: Array<Types.CustomFiltersType> | null;
-  } | null;
 };
 
 export type PublicationQueryVariables = Types.Exact<{
@@ -423,10 +419,6 @@ export const PublicationValidateMetadataResultFragmentDoc = gql`
 `;
 export const PublicationStatsFragmentDoc = gql`
   fragment PublicationStats on PublicationStats {
-    additionalArgs {
-      forApps
-      customFilters
-    }
     id
     comments
     mirrors

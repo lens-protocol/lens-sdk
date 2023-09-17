@@ -17,7 +17,9 @@ fragment NftMetadata on NftMetadata {
   name
   description
   image {
-    rawURI
+    raw {
+      ...Image
+    }
     optimized {
       ...Image
     }
