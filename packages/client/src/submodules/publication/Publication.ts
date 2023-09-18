@@ -197,7 +197,7 @@ export class Publication {
    * const result = await client.publication.tags({});
    * ```
    */
-  async tags(request: PublicationsTagsRequest): Promise<PaginatedResult<TagResultFragment>> {
+  async tags(request: PublicationsTagsRequest = {}): Promise<PaginatedResult<TagResultFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.PublicationsTags({
         request: currRequest,

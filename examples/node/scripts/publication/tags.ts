@@ -5,7 +5,7 @@ async function main() {
     environment: development,
   });
 
-  const result = await client.publication.tags({});
+  const result = await client.publication.tags();
 
   console.log(`Result: `, result);
 }
