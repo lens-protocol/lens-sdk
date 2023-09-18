@@ -1,4 +1,4 @@
-import { CustomFiltersType, LensClient, PublicationType, development } from '@lens-protocol/client';
+import { CustomFiltersType, LensClient, development } from '@lens-protocol/client';
 
 async function main() {
   const client = new LensClient({
@@ -9,9 +9,7 @@ async function main() {
 
   const searchPostsForSearchTermResult = await client.search.publications({
     query: searchTerm,
-    where: {
-      publicationTypes: [PublicationType.Post],
-    },
+    where: {},
   });
 
   searchPostsForSearchTermResult.items.map((publication) => {
@@ -25,7 +23,6 @@ async function main() {
     query: searchTerm,
     where: {
       customFilters: [CustomFiltersType.Gardeners],
-      publishedOn: ['app-id'],
     },
   });
 

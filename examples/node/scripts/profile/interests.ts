@@ -12,7 +12,7 @@ async function main() {
 
   // fetch all interests
   const { interests } = await lensClient.profile.fetch({
-    profileId: 'PROFILE_ID',
+    forProfileId: 'PROFILE_ID',
   });
 
   console.log(`Profile interests`, interests);

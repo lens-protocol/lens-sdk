@@ -12,14 +12,14 @@ async function main() {
   });
 
   // stats across the whole protocol
-  const protocolWideStats = await lensClient.profile.stats({ profileId: '0x20' });
+  const protocolWideStats = await lensClient.profile.stats({ forProfileId: '0x20' });
 
   console.log('Result: ', protocolWideStats);
 
   // stats for a specified apps
   const statsForSpecifiedApps = await lensClient.profile.stats(
     {
-      profileId: '0x20',
+      forProfileId: '0x20',
     },
     { profileStatsArg: { forApps: ['APP_ID', 'ANOTHER_APP_ID'] } },
   );
@@ -29,7 +29,7 @@ async function main() {
   // filter open actions
   const filteredOpenActions = await lensClient.profile.stats(
     {
-      profileId: '0x20',
+      forProfileId: '0x20',
     },
     {
       profileStatsCountOpenActionArgs: {
@@ -49,7 +49,7 @@ async function main() {
   // stats for a specified app and with custom filters
   const customFilteredStats = await lensClient.profile.stats(
     {
-      profileId: '0x20',
+      forProfileId: '0x20',
     },
     {
       profileStatsArg: { forApps: ['APP_ID'], customFilters: [CustomFiltersType.Gardeners] },

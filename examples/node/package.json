@@ -7,10 +7,11 @@
     "ts-node": "ts-node",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint scripts",
-    "lint": "pnpm run prettier && pnpm run eslint",
-    "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix",
+    "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
+    "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix && pnpm run tsc",
     "prettier:fix": "prettier --write .",
-    "prettier": "prettier --check ."
+    "prettier": "prettier --check .",
+    "tsc": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",

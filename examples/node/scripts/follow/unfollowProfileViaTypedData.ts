@@ -45,7 +45,7 @@ async function main() {
 
   // check the isFollowedByMe property
   const justFollowedProfile = await lensClient.profile.fetch({
-    profileId: profileToUnfollowId,
+    forProfileId: profileToUnfollowId,
   });
 
   console.log(`Just followed profile`, {
