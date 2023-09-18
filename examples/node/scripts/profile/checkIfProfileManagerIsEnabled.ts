@@ -6,10 +6,10 @@ async function main() {
   const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
 
   const profile = await lensClient.profile.fetch({
-    profileId: 'your-profile-id',
+    forProfileId: 'your-profile-id',
   });
 
-  if (profile.gasless.enabled) {
+  if (profile.sponsor) {
     console.log('Profile manager is enabled');
   } else {
     console.log('Profile manager is disabled');
