@@ -59,13 +59,6 @@ fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
   followModuleReturnData
 }
 
-fragment Gasless on Gasless {
-  enabled
-  relay {
-    ...NetworkAddress
-  }
-}
-
 fragment NetworkAddress on NetworkAddress {
   address
   chainId
@@ -199,9 +192,8 @@ fragment ProfileFields on Profile {
   ownedBy {
     ...NetworkAddress
   }
-  gasless {
-    ...Gasless
-  }
+  sponsor
+  lensManager
   followModule {
     ... on FeeFollowModuleSettings {
       ...FeeFollowModuleSettings

@@ -37,8 +37,6 @@ export type UnknownFollowModuleSettingsFragment = {
   contract: NetworkAddressFragment;
 };
 
-export type GaslessFragment = { enabled: boolean; relay: NetworkAddressFragment | null };
-
 export type NetworkAddressFragment = { address: string; chainId: string };
 
 export type ImageFragment = {
@@ -100,12 +98,13 @@ export type ProfileFieldsFragment = {
   __typename: 'Profile';
   id: string;
   handle: string | null;
+  sponsor: boolean;
+  lensManager: boolean;
   interests: Array<string>;
   invitesLeft: number | null;
   createdAt: string;
   metadata: { rawURI: string; displayName: string | null; bio: string | null } | null;
   ownedBy: NetworkAddressFragment;
-  gasless: GaslessFragment;
   followModule:
     | FeeFollowModuleSettingsFragment
     | RevertFollowModuleSettingsFragment
@@ -986,15 +985,6 @@ export const NetworkAddressFragmentDoc = gql`
     chainId
   }
 `;
-export const GaslessFragmentDoc = gql`
-  fragment Gasless on Gasless {
-    enabled
-    relay {
-      ...NetworkAddress
-    }
-  }
-  ${NetworkAddressFragmentDoc}
-`;
 export const Erc20FragmentDoc = gql`
   fragment Erc20 on Erc20 {
     name
@@ -1084,9 +1074,8 @@ export const ProfileFieldsFragmentDoc = gql`
     ownedBy {
       ...NetworkAddress
     }
-    gasless {
-      ...Gasless
-    }
+    sponsor
+    lensManager
     followModule {
       ... on FeeFollowModuleSettings {
         ...FeeFollowModuleSettings
@@ -1142,7 +1131,6 @@ export const ProfileFieldsFragmentDoc = gql`
     createdAt
   }
   ${NetworkAddressFragmentDoc}
-  ${GaslessFragmentDoc}
   ${FeeFollowModuleSettingsFragmentDoc}
   ${RevertFollowModuleSettingsFragmentDoc}
   ${UnknownFollowModuleSettingsFragmentDoc}
