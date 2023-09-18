@@ -7,7 +7,9 @@ async function main() {
 
   const metadata = {};
 
-  const result = await client.publication.validateMetadata(metadata);
+  const result = await client.publication.validateMetadata({
+    json: JSON.stringify(metadata),
+  });
 
   if (!result.valid) {
     throw new Error(`Metadata is not valid because of ${result.reason}`);
