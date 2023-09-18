@@ -450,3 +450,28 @@ mutation HandleUnlinkFromProfile($request: HandleUnlinkFromProfileRequest!) {
     }
   }
 }
+
+mutation CreateHandleLinkToProfileTypedData($request: HandleLinkToProfileRequest!) {
+  result: createHandleLinkToProfileTypedData(request: $request) {
+    ... on CreateHandleLinkToProfileTypedDataResult {
+      id
+      expiresAt
+      typedData {
+        types {
+          Link {
+            ...EIP712TypedDataField
+          }
+        }
+        domain {
+          ...EIP712TypedDataDomain
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          handleId
+        }
+      }
+    }
+  }
+}

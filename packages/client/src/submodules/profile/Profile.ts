@@ -444,7 +444,15 @@ export class Profile {
     });
   }
 
-  async unlinkHandleFromProfile(
+  async createlinkHandleTypedData(
+    request: HandleLinkToProfileRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      await this.sdk.CreateLinkHandleTypedData({ request }, headers);
+    });
+  }
+
+  async unlinkHandle(
     request: HandleUnlinkFromProfileRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
