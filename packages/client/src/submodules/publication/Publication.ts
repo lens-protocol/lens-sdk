@@ -489,7 +489,7 @@ export class Publication {
    * @example
    * ```ts
    * const result = await client.publication.mirrorOnMomoka({
-   *   mirrorOf: '0x123-0x456',
+   *   mirrorOn: '0x123-0x456',
    * });
    * ```
    */
@@ -774,7 +774,7 @@ export class Publication {
    * @example
    * ```ts
    * const result = await client.publication.createMomokaMirrorTypedData({
-   *   mirrorOf: '0x123-0x456',
+   *   mirrorOn: '0x123-0x456',
    * });
    * ```
    */

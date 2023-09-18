@@ -8,7 +8,7 @@ async function main() {
   const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
   const result = await client.publication.mirrorOnMomoka({
-    mirrorOf: '0x123-0x456',
+    mirrorOn: '0x123-0x456',
   });
 
   const resultValue = result.unwrap();

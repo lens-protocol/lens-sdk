@@ -8,7 +8,7 @@ async function main() {
   const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
 
   const typedDataResult = await lensClient.publication.createMomokaMirrorTypedData({
-    mirrorOf: '0x123-0x456',
+    mirrorOn: '0x123-0x456',
   });
 
   const { id, typedData } = typedDataResult.unwrap();
