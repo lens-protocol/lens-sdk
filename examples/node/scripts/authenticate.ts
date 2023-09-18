@@ -17,8 +17,8 @@ async function main() {
   }
 
   const { id, text } = await client.authentication.generateChallenge({
-    profileId: ownedProfiles.items[0].id,
-    address,
+    signedBy: address,
+    for: ownedProfiles.items[0].id,
   });
 
   const signature = await wallet.signMessage(text);

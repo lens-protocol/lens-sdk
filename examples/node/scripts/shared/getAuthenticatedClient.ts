@@ -20,8 +20,8 @@ export async function getAuthenticatedClientFromEthersWallet(wallet: Wallet): Pr
   const profileId = await getOwnedProfileId(lensClient, address);
 
   const { id, text } = await lensClient.authentication.generateChallenge({
-    address,
-    profileId,
+    signedBy: address,
+    for: profileId,
   });
   const signature = await wallet.signMessage(text);
 
@@ -38,8 +38,8 @@ export async function getAuthenticatedClientFromViemWalletClient(walletClient: W
   const profileId = await getOwnedProfileId(lensClient, address);
 
   const { id, text } = await lensClient.authentication.generateChallenge({
-    address,
-    profileId,
+    signedBy: address,
+    for: profileId,
   });
   const signature = await walletClient.signMessage({ account: address, message: text });
 
