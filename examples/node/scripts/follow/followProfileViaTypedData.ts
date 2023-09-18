@@ -34,7 +34,7 @@ async function main() {
   }
 
   console.log(
-    `Transaction to follow ${following.items[1].id} was successfuly broadcasted with txId ${followBroadcastResultValue.txId}`,
+    `Transaction to follow ${following.items[1].id} was successfully broadcasted with txId ${followBroadcastResultValue.txId}`,
   );
 
   // wait for follow to be indexed

@@ -45,6 +45,8 @@ import {
   CreateBlockProfilesBroadcastItemResultFragment,
   CreateChangeProfileManagersBroadcastItemResultFragment,
   CreateFollowBroadcastItemResultFragment,
+  CreateHandleLinkToProfileBroadcastItemResultFragment,
+  CreateHandleUnlinkFromProfileBroadcastItemResultFragment,
   CreateOnchainSetProfileMetadataBroadcastItemResultFragment,
   CreateProfileWithHandleErrorResultFragment,
   CreateSetFollowModuleBroadcastItemResultFragment,
@@ -444,11 +446,37 @@ export class Profile {
     });
   }
 
-  async unlinkHandleFromProfile(
+  async createLinkHandleTypedData(
+    request: HandleLinkToProfileRequest,
+  ): PromiseResult<
+    CreateHandleLinkToProfileBroadcastItemResultFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateHandleLinkToProfileTypedData({ request }, headers);
+
+      return result.data.result;
+    });
+  }
+
+  async unlinkHandle(
     request: HandleUnlinkFromProfileRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.HandleUnlinkFromProfile({ request }, headers);
+    });
+  }
+
+  async createUnlinkHandleTypedData(
+    request: HandleUnlinkFromProfileRequest,
+  ): PromiseResult<
+    CreateHandleUnlinkFromProfileBroadcastItemResultFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateHandleUnlinkFromProfileTypedData({ request }, headers);
+
+      return result.data.result;
     });
   }
 }

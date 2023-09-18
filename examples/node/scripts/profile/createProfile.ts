@@ -24,7 +24,7 @@ async function main() {
   }
 
   console.log(
-    `Transaction to create a new profile with handle "${handle}" was successfuly broadcasted with txId ${profileCreateResult.txId}`,
+    `Transaction to create a new profile with handle "${handle}" was successfully broadcasted with txId ${profileCreateResult.txId}`,
   );
 
   console.log(`Waiting for the transaction to be indexed...`);

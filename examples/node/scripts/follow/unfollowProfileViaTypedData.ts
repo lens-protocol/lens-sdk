@@ -36,7 +36,7 @@ async function main() {
   }
 
   console.log(
-    `Transaction to follow ${profileToUnfollowId} was successfuly broadcasted with txId ${followBroadcastResultValue.txId}`,
+    `Transaction to follow ${profileToUnfollowId} was successfully broadcasted with txId ${followBroadcastResultValue.txId}`,
   );
 
   // wait for follow to be indexed
