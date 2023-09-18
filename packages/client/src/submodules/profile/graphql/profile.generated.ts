@@ -7,6 +7,7 @@ import {
   PaginatedResultInfoFragment,
   RelaySuccessFragment,
   LensProfileManagerRelayErrorFragment,
+  Eip712TypedDataFieldFragment,
 } from '../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
@@ -18,6 +19,7 @@ import {
   PaginatedResultInfoFragmentDoc,
   RelaySuccessFragmentDoc,
   LensProfileManagerRelayErrorFragmentDoc,
+  Eip712TypedDataFieldFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type ProfileManagerFragment = { address: string };
 
@@ -340,6 +342,42 @@ export type HandleUnlinkFromProfileMutation = {
   result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
 };
 
+export type CreateHandleLinkToProfileBroadcastItemResultFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { Link: Array<Eip712TypedDataFieldFragment> };
+    domain: Eip712TypedDataDomainFragment;
+    value: { nonce: string; deadline: string; profileId: string; handleId: string };
+  };
+};
+
+export type CreateHandleLinkToProfileTypedDataMutationVariables = Types.Exact<{
+  request: Types.HandleLinkToProfileRequest;
+}>;
+
+export type CreateHandleLinkToProfileTypedDataMutation = {
+  result: CreateHandleLinkToProfileBroadcastItemResultFragment;
+};
+
+export type CreateHandleUnlinkFromProfileBroadcastItemResultFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { Unlink: Array<Eip712TypedDataFieldFragment> };
+    domain: Eip712TypedDataDomainFragment;
+    value: { nonce: string; deadline: string; profileId: string; handleId: string };
+  };
+};
+
+export type CreateHandleUnlinkFromProfileTypedDataMutationVariables = Types.Exact<{
+  request: Types.HandleUnlinkFromProfileRequest;
+}>;
+
+export type CreateHandleUnlinkFromProfileTypedDataMutation = {
+  result: CreateHandleUnlinkFromProfileBroadcastItemResultFragment;
+};
+
 export const ProfileManagerFragmentDoc = gql`
   fragment ProfileManager on ProfilesManagedResult {
     address
@@ -520,6 +558,54 @@ export const ProfileStatsFragmentDoc = gql`
     downvoteReactions: reactions(request: { type: DOWNVOTE })
     countOpenActions(request: $profileStatsCountOpenActionArgs)
   }
+`;
+export const CreateHandleLinkToProfileBroadcastItemResultFragmentDoc = gql`
+  fragment CreateHandleLinkToProfileBroadcastItemResult on CreateHandleLinkToProfileBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        Link {
+          ...EIP712TypedDataField
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        handleId
+      }
+    }
+  }
+  ${Eip712TypedDataFieldFragmentDoc}
+  ${Eip712TypedDataDomainFragmentDoc}
+`;
+export const CreateHandleUnlinkFromProfileBroadcastItemResultFragmentDoc = gql`
+  fragment CreateHandleUnlinkFromProfileBroadcastItemResult on CreateHandleUnlinkFromProfileBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        Unlink {
+          ...EIP712TypedDataField
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        handleId
+      }
+    }
+  }
+  ${Eip712TypedDataFieldFragmentDoc}
+  ${Eip712TypedDataDomainFragmentDoc}
 `;
 export const ProfileDocument = gql`
   query Profile($request: ProfileRequest!, $rateRequest: RateRequest = { for: USD }) {
@@ -867,6 +953,22 @@ export const HandleUnlinkFromProfileDocument = gql`
   ${RelaySuccessFragmentDoc}
   ${LensProfileManagerRelayErrorFragmentDoc}
 `;
+export const CreateHandleLinkToProfileTypedDataDocument = gql`
+  mutation CreateHandleLinkToProfileTypedData($request: HandleLinkToProfileRequest!) {
+    result: createHandleLinkToProfileTypedData(request: $request) {
+      ...CreateHandleLinkToProfileBroadcastItemResult
+    }
+  }
+  ${CreateHandleLinkToProfileBroadcastItemResultFragmentDoc}
+`;
+export const CreateHandleUnlinkFromProfileTypedDataDocument = gql`
+  mutation CreateHandleUnlinkFromProfileTypedData($request: HandleUnlinkFromProfileRequest!) {
+    result: createHandleUnlinkFromProfileTypedData(request: $request) {
+      ...CreateHandleUnlinkFromProfileBroadcastItemResult
+    }
+  }
+  ${CreateHandleUnlinkFromProfileBroadcastItemResultFragmentDoc}
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -907,6 +1009,12 @@ const SetFollowModuleDocumentString = print(SetFollowModuleDocument);
 const CreateSetFollowModuleTypedDataDocumentString = print(CreateSetFollowModuleTypedDataDocument);
 const HandleLinkToProfileDocumentString = print(HandleLinkToProfileDocument);
 const HandleUnlinkFromProfileDocumentString = print(HandleUnlinkFromProfileDocument);
+const CreateHandleLinkToProfileTypedDataDocumentString = print(
+  CreateHandleLinkToProfileTypedDataDocument,
+);
+const CreateHandleUnlinkFromProfileTypedDataDocumentString = print(
+  CreateHandleUnlinkFromProfileTypedDataDocument,
+);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Profile(
@@ -1413,6 +1521,46 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'HandleUnlinkFromProfile',
+        'mutation',
+      );
+    },
+    CreateHandleLinkToProfileTypedData(
+      variables: CreateHandleLinkToProfileTypedDataMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: CreateHandleLinkToProfileTypedDataMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateHandleLinkToProfileTypedDataMutation>(
+            CreateHandleLinkToProfileTypedDataDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateHandleLinkToProfileTypedData',
+        'mutation',
+      );
+    },
+    CreateHandleUnlinkFromProfileTypedData(
+      variables: CreateHandleUnlinkFromProfileTypedDataMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: CreateHandleUnlinkFromProfileTypedDataMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateHandleUnlinkFromProfileTypedDataMutation>(
+            CreateHandleUnlinkFromProfileTypedDataDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateHandleUnlinkFromProfileTypedData',
         'mutation',
       );
     },

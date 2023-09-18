@@ -7,11 +7,11 @@ async function main() {
   const wallet = setupWallet();
   const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const linkHandleToProfileTypedData = await lensClient.profile.createLinkHandleTypedData({
-    handle: 'HANDLE',
+  const blockProfilesTypedData = await lensClient.profile.createBlockProfilesTypedData({
+    profiles: ['PROFILE_ID_TO_BLOCK'],
   });
 
-  const data = linkHandleToProfileTypedData.unwrap();
+  const data = blockProfilesTypedData.unwrap();
 
   const signedTypedData = await wallet._signTypedData(
     data.typedData.domain,

@@ -7,11 +7,11 @@ async function main() {
   const wallet = setupWallet();
   const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const linkHandleToProfileTypedData = await lensClient.profile.createLinkHandleTypedData({
+  const unlinkHandleFromProfileTypedData = await lensClient.profile.createUnlinkHandleTypedData({
     handle: 'HANDLE',
   });
 
-  const data = linkHandleToProfileTypedData.unwrap();
+  const data = unlinkHandleFromProfileTypedData.unwrap();
 
   const signedTypedData = await wallet._signTypedData(
     data.typedData.domain,
