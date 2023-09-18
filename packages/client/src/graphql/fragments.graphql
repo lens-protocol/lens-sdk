@@ -67,14 +67,14 @@ fragment NetworkAddress on NetworkAddress {
 # media
 fragment Image on Image {
   uri
-  imageMimeType: mimeType
+  mimeType
   width
   height
 }
 
 fragment Video on Video {
   uri
-  videoMimeType: mimeType
+  mimeType
 }
 
 fragment VideoSet on VideoSet {
@@ -102,7 +102,7 @@ fragment EncryptableVideoSet on EncryptableVideoSet {
 
 fragment Audio on Audio {
   uri
-  audioMimeType: mimeType
+  mimeType
 }
 
 fragment AudioSet on AudioSet {
@@ -795,7 +795,45 @@ fragment VideoMetadataV3 on VideoMetadataV3 {
     }
   }
   isShortVideo
-  optionalTitle: title
+  optionalTitle
+  optionalContent
+}
+
+fragment AudioMetadataV3 on AudioMetadataV3 {
+  id
+  rawURI
+  locale
+  tags
+  contentWarning
+  hideFromFeed
+  appId
+  marketplace {
+    ...MarketplaceMetadata
+  }
+  attributes {
+    key
+    value
+  }
+  encryptedWith {
+    ... on PublicationMetadataEncryptionStrategy {
+      ...PublicationMetadataEncryptionStrategy
+    }
+  }
+  audio {
+    ...PublicationMetadataMediaAudio
+  }
+  attachments {
+    ... on PublicationMetadataMediaVideo {
+      ...PublicationMetadataMediaVideo
+    }
+    ... on PublicationMetadataMediaImage {
+      ...PublicationMetadataMediaImage
+    }
+    ... on PublicationMetadataMediaAudio {
+      ...PublicationMetadataMediaAudio
+    }
+  }
+  optionalTitle
   optionalContent
 }
 
@@ -819,7 +857,7 @@ fragment ImageMetadataV3 on ImageMetadataV3 {
       ...PublicationMetadataEncryptionStrategy
     }
   }
-  optionalTitle: title
+  optionalTitle
   optionalContent
   image {
     ...PublicationMetadataMediaImage
@@ -857,8 +895,8 @@ fragment ArticleMetadataV3 on ArticleMetadataV3 {
       ...PublicationMetadataEncryptionStrategy
     }
   }
+  optionalTitle
   content
-  optionalTitle: title
   attachments {
     ... on PublicationMetadataMediaVideo {
       ...PublicationMetadataMediaVideo
@@ -1249,8 +1287,8 @@ fragment LiveStreamMetadataV3 on LiveStreamMetadataV3 {
       ...PublicationMetadataEncryptionStrategy
     }
   }
+  optionalTitle
   optionalContent
-  optionalTitle: title
   startsAt
   optionalEndsAt
   playbackURL
@@ -1292,6 +1330,9 @@ fragment Post on Post {
   metadata {
     ... on LegacyPublicationMetadata {
       ...LegacyPublicationMetadata
+    }
+    ... on AudioMetadataV3 {
+      ...AudioMetadataV3
     }
     ... on VideoMetadataV3 {
       ...VideoMetadataV3
@@ -1412,6 +1453,9 @@ fragment CommentBase on Comment {
   metadata {
     ... on LegacyPublicationMetadata {
       ...LegacyPublicationMetadata
+    }
+    ... on AudioMetadataV3 {
+      ...AudioMetadataV3
     }
     ... on VideoMetadataV3 {
       ...VideoMetadataV3
@@ -1579,6 +1623,9 @@ fragment QuoteBase on Quote {
   metadata {
     ... on LegacyPublicationMetadata {
       ...LegacyPublicationMetadata
+    }
+    ... on AudioMetadataV3 {
+      ...AudioMetadataV3
     }
     ... on VideoMetadataV3 {
       ...VideoMetadataV3
