@@ -490,7 +490,6 @@ export enum ImageMimeType {
   Jpeg = 'JPEG',
   Jpg = 'JPG',
   Png = 'PNG',
-  Svg = 'SVG',
   SvgXml = 'SVG_XML',
   Tiff = 'TIFF',
   Webp = 'WEBP',
