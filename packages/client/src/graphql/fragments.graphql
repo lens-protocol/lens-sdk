@@ -326,14 +326,14 @@ fragment SimpleCollectOpenActionSettings on SimpleCollectOpenActionSettings {
   contract {
     ...NetworkAddress
   }
-  amountOptional: amount {
+  amount {
     ...Amount
   }
   recipient
   referralFee
   followerOnly
-  collectLimitOptional: collectLimit
-  endTimestampOptional: endTimestamp
+  collectLimit
+  endsAt
 }
 
 fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectOpenActionSettings {
@@ -349,8 +349,8 @@ fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectO
   }
   referralFee
   followerOnly
-  collectLimitOptional: collectLimit
-  endTimestampOptional: endTimestamp
+  collectLimit
+  endsAt
 }
 
 fragment UnknownOpenActionModuleSettings on UnknownOpenActionModuleSettings {
@@ -438,22 +438,22 @@ fragment LegacyMultirecipientFeeCollectModuleSettings on LegacyMultirecipientFee
   }
   referralFee
   followerOnly
-  collectLimitOptional: collectLimit
-  endTimestampOptional: endTimestamp
+  collectLimit
+  endsAt
 }
 
 fragment LegacySimpleCollectModuleSettings on LegacySimpleCollectModuleSettings {
   contract {
     ...NetworkAddress
   }
-  amountOptional: amount {
+  amount {
     ...Amount
   }
   recipient
   referralFee
   followerOnly
-  collectLimitOptional: collectLimit
-  endTimestampOptional: endTimestamp
+  collectLimit
+  endsAt
 }
 
 fragment LegacyERC4626FeeCollectModuleSettings on LegacyERC4626FeeCollectModuleSettings {
@@ -469,8 +469,8 @@ fragment LegacyERC4626FeeCollectModuleSettings on LegacyERC4626FeeCollectModuleS
   recipient
   referralFee
   followerOnly
-  collectLimitOptional: collectLimit
-  endTimestampOptional: endTimestamp
+  collectLimit
+  endsAt
 }
 
 fragment LegacyAaveFeeCollectModuleSettings on LegacyAaveFeeCollectModuleSettings {
@@ -483,8 +483,8 @@ fragment LegacyAaveFeeCollectModuleSettings on LegacyAaveFeeCollectModuleSetting
   recipient
   referralFee
   followerOnly
-  collectLimitOptional: collectLimit
-  endTimestampOptional: endTimestamp
+  collectLimit
+  endsAt
 }
 
 fragment UnknownOpenActionResult on UnknownOpenActionResult {
@@ -1343,7 +1343,6 @@ fragment Post on Post {
     ...App
   }
   isHidden
-  # isEncrypted
   momoka {
     ...MomokaInfo
   }
@@ -1466,7 +1465,6 @@ fragment CommentBase on Comment {
     ...App
   }
   isHidden
-  # isEncrypted
   momoka {
     ...MomokaInfo
   }
@@ -1610,7 +1608,6 @@ fragment Mirror on Mirror {
     ...App
   }
   isHidden
-  # isEncrypted
   momoka {
     ...MomokaInfo
   }
@@ -1636,7 +1633,6 @@ fragment QuoteBase on Quote {
     ...App
   }
   isHidden
-  # isEncrypted
   momoka {
     ...MomokaInfo
   }

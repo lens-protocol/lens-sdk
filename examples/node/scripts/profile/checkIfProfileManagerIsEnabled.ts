@@ -13,7 +13,7 @@ async function main() {
     forProfileId: profileId,
   });
 
-  if (profile.sponsor) {
+  if (profile.lensManager) {
     console.log('Profile manager is enabled');
   } else {
     console.log('Profile manager is disabled');

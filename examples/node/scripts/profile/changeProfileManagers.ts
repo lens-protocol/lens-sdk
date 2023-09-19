@@ -1,4 +1,4 @@
-import { ChangeProfileManagerActionType, isRelaySuccess } from '@lens-protocol/client';
+import { isRelaySuccess } from '@lens-protocol/client';
 
 import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
 import { setupWallet } from '../shared/setupWallet';
@@ -9,12 +9,12 @@ async function main() {
 
   const typedDataResult = await lensClient.profile.createChangeProfileManagersTypedData({
     approveLensManager: true,
-    changeManagers: [
-      {
-        action: ChangeProfileManagerActionType.Add,
-        address: '0x0000000000',
-      },
-    ],
+    // changeManagers: [
+    //   {
+    //     action: ChangeProfileManagerActionType.Add,
+    //     address: '0x0000000000',
+    //   },
+    // ],
   });
 
   const { id, typedData } = typedDataResult.unwrap();

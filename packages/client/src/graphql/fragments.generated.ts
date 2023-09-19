@@ -41,27 +41,27 @@ export type NetworkAddressFragment = { address: string; chainId: string };
 
 export type ImageFragment = {
   uri: string;
-  mimeType: Types.ImageMimeType | null;
+  mimeType: string | null;
   width: number | null;
   height: number | null;
 };
 
-export type VideoFragment = { uri: string; mimeType: Types.VideoMimeType | null };
+export type VideoFragment = { uri: string; mimeType: string | null };
 
 export type VideoSetFragment = { raw: VideoFragment; optimized: VideoFragment | null };
 
-export type EncryptableVideoFragment = { mimeType: Types.VideoMimeType | null; uri: string };
+export type EncryptableVideoFragment = { mimeType: string | null; uri: string };
 
 export type EncryptableVideoSetFragment = {
   raw: EncryptableVideoFragment;
   optimized: VideoFragment | null;
 };
 
-export type AudioFragment = { uri: string; mimeType: Types.AudioMimeType | null };
+export type AudioFragment = { uri: string; mimeType: string | null };
 
 export type AudioSetFragment = { raw: AudioFragment; optimized: AudioFragment | null };
 
-export type EncryptableAudioFragment = { mimeType: Types.AudioMimeType | null; uri: string };
+export type EncryptableAudioFragment = { mimeType: string | null; uri: string };
 
 export type EncryptableAudioSetFragment = {
   raw: EncryptableAudioFragment;
@@ -171,17 +171,17 @@ export type SimpleCollectOpenActionSettingsFragment = {
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
-  collectLimitOptional: string | null;
-  endTimestampOptional: string | null;
+  collectLimit: string | null;
+  endsAt: string | null;
   contract: NetworkAddressFragment;
-  amountOptional: AmountFragment | null;
+  amount: AmountFragment;
 };
 
 export type MultirecipientFeeCollectOpenActionSettingsFragment = {
   referralFee: number;
   followerOnly: boolean;
-  collectLimitOptional: string | null;
-  endTimestampOptional: string | null;
+  collectLimit: string | null;
+  endsAt: string | null;
   contract: NetworkAddressFragment;
   amount: AmountFragment;
   recipients: Array<{ recipient: string; split: number }>;
@@ -206,7 +206,7 @@ export type LegacyFeeCollectModuleSettingsFragment = {
 };
 
 export type LegacyLimitedFeeCollectModuleSettingsFragment = {
-  collectLimit: string;
+  collectLimit: string | null;
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
@@ -215,7 +215,7 @@ export type LegacyLimitedFeeCollectModuleSettingsFragment = {
 };
 
 export type LegacyLimitedTimedFeeCollectModuleSettingsFragment = {
-  collectLimit: string;
+  collectLimit: string | null;
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
@@ -238,8 +238,8 @@ export type LegacyTimedFeeCollectModuleSettingsFragment = {
 export type LegacyMultirecipientFeeCollectModuleSettingsFragment = {
   referralFee: number;
   followerOnly: boolean;
-  collectLimitOptional: string | null;
-  endTimestampOptional: string | null;
+  collectLimit: string | null;
+  endsAt: string | null;
   contract: NetworkAddressFragment;
   amount: AmountFragment;
   recipients: Array<{ recipient: string; split: number }>;
@@ -249,18 +249,18 @@ export type LegacySimpleCollectModuleSettingsFragment = {
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
-  collectLimitOptional: string | null;
-  endTimestampOptional: string | null;
+  collectLimit: string | null;
+  endsAt: string | null;
   contract: NetworkAddressFragment;
-  amountOptional: AmountFragment | null;
+  amount: AmountFragment;
 };
 
 export type LegacyErc4626FeeCollectModuleSettingsFragment = {
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
-  collectLimitOptional: string | null;
-  endTimestampOptional: string | null;
+  collectLimit: string | null;
+  endsAt: string | null;
   contract: NetworkAddressFragment;
   vault: NetworkAddressFragment;
   amount: AmountFragment;
@@ -270,8 +270,8 @@ export type LegacyAaveFeeCollectModuleSettingsFragment = {
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
-  collectLimitOptional: string | null;
-  endTimestampOptional: string | null;
+  collectLimit: string | null;
+  endsAt: string | null;
   contract: NetworkAddressFragment;
   amount: AmountFragment;
 };
@@ -381,7 +381,7 @@ export type PublicationImageSetFragment = {
 
 export type EncryptableImageFragment = {
   uri: string;
-  mimeType: Types.ImageMimeType | null;
+  mimeType: string | null;
   width: number | null;
   height: number | null;
 };
@@ -2435,8 +2435,8 @@ export const LegacyMultirecipientFeeCollectModuleSettingsFragmentDoc = gql`
     }
     referralFee
     followerOnly
-    collectLimitOptional: collectLimit
-    endTimestampOptional: endTimestamp
+    collectLimit
+    endsAt
   }
   ${NetworkAddressFragmentDoc}
   ${AmountFragmentDoc}
@@ -2446,14 +2446,14 @@ export const LegacySimpleCollectModuleSettingsFragmentDoc = gql`
     contract {
       ...NetworkAddress
     }
-    amountOptional: amount {
+    amount {
       ...Amount
     }
     recipient
     referralFee
     followerOnly
-    collectLimitOptional: collectLimit
-    endTimestampOptional: endTimestamp
+    collectLimit
+    endsAt
   }
   ${NetworkAddressFragmentDoc}
   ${AmountFragmentDoc}
@@ -2472,8 +2472,8 @@ export const LegacyErc4626FeeCollectModuleSettingsFragmentDoc = gql`
     recipient
     referralFee
     followerOnly
-    collectLimitOptional: collectLimit
-    endTimestampOptional: endTimestamp
+    collectLimit
+    endsAt
   }
   ${NetworkAddressFragmentDoc}
   ${AmountFragmentDoc}
@@ -2489,8 +2489,8 @@ export const LegacyAaveFeeCollectModuleSettingsFragmentDoc = gql`
     recipient
     referralFee
     followerOnly
-    collectLimitOptional: collectLimit
-    endTimestampOptional: endTimestamp
+    collectLimit
+    endsAt
   }
   ${NetworkAddressFragmentDoc}
   ${AmountFragmentDoc}
@@ -2509,8 +2509,8 @@ export const MultirecipientFeeCollectOpenActionSettingsFragmentDoc = gql`
     }
     referralFee
     followerOnly
-    collectLimitOptional: collectLimit
-    endTimestampOptional: endTimestamp
+    collectLimit
+    endsAt
   }
   ${NetworkAddressFragmentDoc}
   ${AmountFragmentDoc}
@@ -2520,14 +2520,14 @@ export const SimpleCollectOpenActionSettingsFragmentDoc = gql`
     contract {
       ...NetworkAddress
     }
-    amountOptional: amount {
+    amount {
       ...Amount
     }
     recipient
     referralFee
     followerOnly
-    collectLimitOptional: collectLimit
-    endTimestampOptional: endTimestamp
+    collectLimit
+    endsAt
   }
   ${NetworkAddressFragmentDoc}
   ${AmountFragmentDoc}

@@ -7,8 +7,10 @@ async function main() {
   const wallet = setupWallet();
   const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
+  const contentURI = 'https://arweave.net/Ff8hn9iT0RXG3S_l0_AbYRb1OzY-4WS9QDRsEHBQpgw'; // await uploadWithBundlr(metadata);
+
   const resultTypedData = await client.publication.createOnchainPostTypedData({
-    contentURI: 'ipfs://Qm...', // or arweave
+    contentURI,
     referenceModule: {
       followerOnlyReferenceModule: false, // anybody can comment or mirror
     },

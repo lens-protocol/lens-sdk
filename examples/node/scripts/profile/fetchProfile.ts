@@ -7,14 +7,14 @@ async function main() {
 
   // by id
   const profileById = await lensClient.profile.fetch({
-    forProfileId: '0x0635',
+    forProfileId: '0x01',
   });
 
   console.log(`Profile fetched by id: `, { id: profileById.id, handle: profileById.handle });
 
   // by handle
   const profileByHandle = await lensClient.profile.fetch({
-    forHandle: 'lensprotocol.test',
+    forHandle: 'test/@firstprofile',
   });
 
   console.log(`Profile fetched by handle: `, {

@@ -114,17 +114,6 @@ export enum AttributeType {
   String = 'STRING',
 }
 
-export enum AudioMimeType {
-  Aac = 'AAC',
-  Flac = 'FLAC',
-  Mp3 = 'MP3',
-  Mp4Audio = 'MP4_AUDIO',
-  OggAudio = 'OGG_AUDIO',
-  Wav = 'WAV',
-  WavVnd = 'WAV_VND',
-  WebmAudio = 'WEBM_AUDIO',
-}
-
 export type BlockRequest = {
   profiles: Array<Scalars['ProfileId']['input']>;
 };
@@ -412,6 +401,13 @@ export type GenerateModuleCurrencyApprovalDataRequest = {
   module: ModuleCurrencyApproval;
 };
 
+export type GetProfileMetadataArgs = {
+  /** The app id to query the profile's metadata */
+  appId?: InputMaybe<Scalars['AppId']['input']>;
+  /** If true, will fallback to global profile metadata, if there is no metadata set for that specific app id */
+  useFallback?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export type HandleLinkToProfileRequest = {
   handle: Scalars['Handle']['input'];
 };
@@ -438,19 +434,6 @@ export type IllegalReasonInput = {
   reason: PublicationReportingReason;
   subreason: PublicationReportingIllegalSubreason;
 };
-
-export enum ImageMimeType {
-  Bmp = 'BMP',
-  Gif = 'GIF',
-  Heic = 'HEIC',
-  Jpeg = 'JPEG',
-  Jpg = 'JPG',
-  Png = 'PNG',
-  SvgXml = 'SVG_XML',
-  Tiff = 'TIFF',
-  Webp = 'WEBP',
-  XMsBmp = 'X_MS_BMP',
-}
 
 export type ImageTransform = {
   /** Set the transformed image's height */
@@ -1514,19 +1497,6 @@ export type VerifyRequest = {
   /** The access token to verify */
   accessToken: Scalars['Jwt']['input'];
 };
-
-export enum VideoMimeType {
-  Gltf = 'GLTF',
-  GltfBinary = 'GLTF_BINARY',
-  M4V = 'M4V',
-  Mov = 'MOV',
-  Mp4 = 'MP4',
-  Mpeg = 'MPEG',
-  Ogg = 'OGG',
-  Ogv = 'OGV',
-  Quicktime = 'QUICKTIME',
-  Webm = 'WEBM',
-}
 
 export type WhoActedOnPublicationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
