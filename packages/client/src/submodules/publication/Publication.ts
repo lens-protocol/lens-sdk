@@ -324,9 +324,6 @@ export class Publication {
    * ```ts
    * const result = await client.publication.postOnchain({
    *   contentURI: 'ipfs://Qm...', // or arweave
-   *   referenceModule: {
-   *     followerOnlyReferenceModule: false, // anybody can comment or mirror
-   *   },
    * });
    * ```
    */
@@ -550,9 +547,6 @@ export class Publication {
    * ```ts
    * const result = await client.publication.createOnchainPostTypedData({
    *   contentURI: 'ipfs://Qm...', // or arweave
-   *   referenceModule: {
-   *     followerOnlyReferenceModule: false, // anybody can comment or mirror
-   *   },
    * });
    * ```
    */

@@ -33,7 +33,7 @@ export type CreateOnchainSetProfileMetadataBroadcastItemResultFragment = {
   typedData: {
     types: { SetProfileMetadataURI: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string };
+    value: { nonce: string; deadline: string; profileId: string; metadataURI: string };
   };
 };
 
@@ -43,7 +43,15 @@ export type CreateChangeProfileManagersBroadcastItemResultFragment = {
   typedData: {
     types: { ChangeDelegatedExecutorsConfig: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string };
+    value: {
+      nonce: string;
+      deadline: string;
+      delegatorProfileId: string;
+      delegatedExecutors: Array<string>;
+      approvals: Array<boolean>;
+      configNumber: number;
+      switchToGivenConfig: boolean;
+    };
   };
 };
 
@@ -53,7 +61,13 @@ export type CreateBlockProfilesBroadcastItemResultFragment = {
   typedData: {
     types: { SetBlockStatus: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string };
+    value: {
+      nonce: string;
+      deadline: string;
+      byProfileId: string;
+      idsOfProfilesToSetBlockStatus: Array<string>;
+      blockStatus: Array<boolean>;
+    };
   };
 };
 
@@ -63,7 +77,13 @@ export type CreateUnblockProfilesBroadcastItemResultFragment = {
   typedData: {
     types: { SetBlockStatus: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string };
+    value: {
+      nonce: string;
+      deadline: string;
+      byProfileId: string;
+      idsOfProfilesToSetBlockStatus: Array<string>;
+      blockStatus: Array<boolean>;
+    };
   };
 };
 
@@ -73,7 +93,14 @@ export type CreateFollowBroadcastItemResultFragment = {
   typedData: {
     types: { Follow: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string };
+    value: {
+      nonce: string;
+      deadline: string;
+      followerProfileId: string;
+      idsOfProfilesToFollow: Array<string>;
+      followTokenIds: Array<string>;
+      datas: Array<string>;
+    };
   };
 };
 
@@ -83,7 +110,12 @@ export type CreateUnfollowBroadcastItemResultFragment = {
   typedData: {
     types: { Unfollow: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string };
+    value: {
+      nonce: string;
+      deadline: string;
+      unfollowerProfileId: string;
+      idsOfProfilesToUnfollow: Array<string>;
+    };
   };
 };
 
@@ -93,7 +125,13 @@ export type CreateSetFollowModuleBroadcastItemResultFragment = {
   typedData: {
     types: { SetFollowModule: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string };
+    value: {
+      nonce: string;
+      deadline: string;
+      profileId: string;
+      followModule: string;
+      followModuleInitData: string;
+    };
   };
 };
 
@@ -409,6 +447,8 @@ export const CreateOnchainSetProfileMetadataBroadcastItemResultFragmentDoc = gql
       value {
         nonce
         deadline
+        profileId
+        metadataURI
       }
     }
   }
@@ -431,6 +471,11 @@ export const CreateChangeProfileManagersBroadcastItemResultFragmentDoc = gql`
       value {
         nonce
         deadline
+        delegatorProfileId
+        delegatedExecutors
+        approvals
+        configNumber
+        switchToGivenConfig
       }
     }
   }
@@ -453,6 +498,9 @@ export const CreateBlockProfilesBroadcastItemResultFragmentDoc = gql`
       value {
         nonce
         deadline
+        byProfileId
+        idsOfProfilesToSetBlockStatus
+        blockStatus
       }
     }
   }
@@ -475,6 +523,9 @@ export const CreateUnblockProfilesBroadcastItemResultFragmentDoc = gql`
       value {
         nonce
         deadline
+        byProfileId
+        idsOfProfilesToSetBlockStatus
+        blockStatus
       }
     }
   }
@@ -497,6 +548,10 @@ export const CreateFollowBroadcastItemResultFragmentDoc = gql`
       value {
         nonce
         deadline
+        followerProfileId
+        idsOfProfilesToFollow
+        followTokenIds
+        datas
       }
     }
   }
@@ -519,6 +574,8 @@ export const CreateUnfollowBroadcastItemResultFragmentDoc = gql`
       value {
         nonce
         deadline
+        unfollowerProfileId
+        idsOfProfilesToUnfollow
       }
     }
   }
@@ -541,6 +598,9 @@ export const CreateSetFollowModuleBroadcastItemResultFragmentDoc = gql`
       value {
         nonce
         deadline
+        profileId
+        followModule
+        followModuleInitData
       }
     }
   }

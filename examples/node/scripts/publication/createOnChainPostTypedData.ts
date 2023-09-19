@@ -11,9 +11,6 @@ async function main() {
 
   const resultTypedData = await client.publication.createOnchainPostTypedData({
     contentURI,
-    referenceModule: {
-      followerOnlyReferenceModule: false, // anybody can comment or mirror
-    },
   });
 
   const { id, typedData } = resultTypedData.unwrap();

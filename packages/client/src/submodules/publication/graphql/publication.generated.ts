@@ -114,7 +114,16 @@ export type CreateOnchainPostBroadcastItemResultFragment = {
   typedData: {
     types: { Post: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string };
+    value: {
+      nonce: string;
+      deadline: string;
+      profileId: string;
+      contentURI: string;
+      actionModules: Array<string>;
+      actionModulesInitDatas: Array<string>;
+      referenceModule: string;
+      referenceModuleInitData: string;
+    };
   };
 };
 
@@ -124,29 +133,22 @@ export type CreateOnchainCommentBroadcastItemResultFragment = {
   typedData: {
     types: { Comment: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string };
+    value: {
+      nonce: string;
+      deadline: string;
+      profileId: string;
+      contentURI: string;
+      pointedProfileId: string;
+      pointedPubId: string;
+      referrerProfileIds: Array<string>;
+      referrerPubIds: Array<string>;
+      referenceModuleData: string;
+      actionModules: Array<string>;
+      actionModulesInitDatas: Array<string>;
+      referenceModule: string;
+      referenceModuleInitData: string;
+    };
   };
-};
-
-export type CreateOnchainMirrorEip712TypedDataValueFragment = {
-  nonce: string;
-  deadline: string;
-  profileId: string;
-  pointedProfileId: string;
-  pointedPubId: string;
-  referrerProfileIds: Array<string>;
-  referrerPubIds: Array<string>;
-  referenceModuleData: string;
-};
-
-export type CreateOnchainMirrorEip712TypedDataTypesFragment = {
-  Mirror: Array<Eip712TypedDataFieldFragment>;
-};
-
-export type CreateOnchainMirrorEip712TypedDataFragment = {
-  types: CreateOnchainMirrorEip712TypedDataTypesFragment;
-  domain: Eip712TypedDataDomainFragment;
-  value: CreateOnchainMirrorEip712TypedDataValueFragment;
 };
 
 export type CreateOnchainMirrorBroadcastItemResultFragment = {
@@ -155,40 +157,42 @@ export type CreateOnchainMirrorBroadcastItemResultFragment = {
   typedData: {
     types: { Mirror: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string };
+    value: {
+      nonce: string;
+      deadline: string;
+      profileId: string;
+      metadataURI: string;
+      pointedProfileId: string;
+      pointedPubId: string;
+      referrerProfileIds: Array<string>;
+      referrerPubIds: Array<string>;
+      referenceModuleData: string;
+    };
   };
-};
-
-export type CreateOnchainQuoteEip712TypedDataValueFragment = {
-  nonce: string;
-  deadline: string;
-  profileId: string;
-  contentURI: string;
-  pointedProfileId: string;
-  pointedPubId: string;
-  referrerProfileIds: Array<string>;
-  referrerPubIds: Array<string>;
-  referenceModuleData: string;
-  actionModules: Array<string>;
-  actionModulesInitDatas: Array<string>;
-  referenceModule: string;
-  referenceModuleInitData: string;
-};
-
-export type CreateOnchainQuoteEip712TypedDataTypesFragment = {
-  Quote: Array<Eip712TypedDataFieldFragment>;
-};
-
-export type CreateOnchainQuoteEip712TypedDataFragment = {
-  types: CreateOnchainQuoteEip712TypedDataTypesFragment;
-  domain: Eip712TypedDataDomainFragment;
-  value: CreateOnchainQuoteEip712TypedDataValueFragment;
 };
 
 export type CreateOnchainQuoteBroadcastItemResultFragment = {
   id: string;
   expiresAt: string;
-  typedData: CreateOnchainQuoteEip712TypedDataFragment;
+  typedData: {
+    types: { Quote: Array<Eip712TypedDataFieldFragment> };
+    domain: Eip712TypedDataDomainFragment;
+    value: {
+      nonce: string;
+      deadline: string;
+      profileId: string;
+      contentURI: string;
+      pointedProfileId: string;
+      pointedPubId: string;
+      referrerProfileIds: Array<string>;
+      referrerPubIds: Array<string>;
+      referenceModuleData: string;
+      actionModules: Array<string>;
+      actionModulesInitDatas: Array<string>;
+      referenceModule: string;
+      referenceModuleInitData: string;
+    };
+  };
 };
 
 export type CreateMomokaPostBroadcastItemResultFragment = {
@@ -197,7 +201,16 @@ export type CreateMomokaPostBroadcastItemResultFragment = {
   typedData: {
     types: { Post: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string };
+    value: {
+      nonce: string;
+      deadline: string;
+      profileId: string;
+      contentURI: string;
+      actionModules: Array<string>;
+      actionModulesInitDatas: Array<string>;
+      referenceModule: string;
+      referenceModuleInitData: string;
+    };
   };
 };
 
@@ -207,7 +220,21 @@ export type CreateMomokaCommentBroadcastItemResultFragment = {
   typedData: {
     types: { Comment: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string };
+    value: {
+      nonce: string;
+      deadline: string;
+      profileId: string;
+      contentURI: string;
+      pointedProfileId: string;
+      pointedPubId: string;
+      referrerProfileIds: Array<string>;
+      referrerPubIds: Array<string>;
+      referenceModuleData: string;
+      actionModules: Array<string>;
+      actionModulesInitDatas: Array<string>;
+      referenceModule: string;
+      referenceModuleInitData: string;
+    };
   };
 };
 
@@ -217,7 +244,17 @@ export type CreateMomokaMirrorBroadcastItemResultFragment = {
   typedData: {
     types: { Mirror: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string };
+    value: {
+      nonce: string;
+      deadline: string;
+      profileId: string;
+      metadataURI: string;
+      pointedProfileId: string;
+      pointedPubId: string;
+      referrerProfileIds: Array<string>;
+      referrerPubIds: Array<string>;
+      referenceModuleData: string;
+    };
   };
 };
 
@@ -227,7 +264,21 @@ export type CreateMomokaQuoteBroadcastItemResultFragment = {
   typedData: {
     types: { Quote: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string };
+    value: {
+      nonce: string;
+      deadline: string;
+      profileId: string;
+      contentURI: string;
+      pointedProfileId: string;
+      pointedPubId: string;
+      referrerProfileIds: Array<string>;
+      referrerPubIds: Array<string>;
+      referenceModuleData: string;
+      actionModules: Array<string>;
+      actionModulesInitDatas: Array<string>;
+      referenceModule: string;
+      referenceModuleInitData: string;
+    };
   };
 };
 
@@ -447,6 +498,12 @@ export const CreateOnchainPostBroadcastItemResultFragmentDoc = gql`
       value {
         nonce
         deadline
+        profileId
+        contentURI
+        actionModules
+        actionModulesInitDatas
+        referenceModule
+        referenceModuleInitData
       }
     }
   }
@@ -469,47 +526,21 @@ export const CreateOnchainCommentBroadcastItemResultFragmentDoc = gql`
       value {
         nonce
         deadline
+        profileId
+        contentURI
+        pointedProfileId
+        pointedPubId
+        referrerProfileIds
+        referrerPubIds
+        referenceModuleData
+        actionModules
+        actionModulesInitDatas
+        referenceModule
+        referenceModuleInitData
       }
     }
   }
   ${Eip712TypedDataDomainFragmentDoc}
-`;
-export const CreateOnchainMirrorEip712TypedDataTypesFragmentDoc = gql`
-  fragment CreateOnchainMirrorEIP712TypedDataTypes on CreateOnchainMirrorEIP712TypedDataTypes {
-    Mirror {
-      ...EIP712TypedDataField
-    }
-  }
-  ${Eip712TypedDataFieldFragmentDoc}
-`;
-export const CreateOnchainMirrorEip712TypedDataValueFragmentDoc = gql`
-  fragment CreateOnchainMirrorEIP712TypedDataValue on CreateOnchainMirrorEIP712TypedDataValue {
-    nonce
-    deadline
-    profileId
-    pointedProfileId
-    pointedPubId
-    referrerProfileIds
-    referrerProfileIds
-    referrerPubIds
-    referenceModuleData
-  }
-`;
-export const CreateOnchainMirrorEip712TypedDataFragmentDoc = gql`
-  fragment CreateOnchainMirrorEIP712TypedData on CreateOnchainMirrorEIP712TypedData {
-    types {
-      ...CreateOnchainMirrorEIP712TypedDataTypes
-    }
-    domain {
-      ...EIP712TypedDataDomain
-    }
-    value {
-      ...CreateOnchainMirrorEIP712TypedDataValue
-    }
-  }
-  ${CreateOnchainMirrorEip712TypedDataTypesFragmentDoc}
-  ${Eip712TypedDataDomainFragmentDoc}
-  ${CreateOnchainMirrorEip712TypedDataValueFragmentDoc}
 `;
 export const CreateOnchainMirrorBroadcastItemResultFragmentDoc = gql`
   fragment CreateOnchainMirrorBroadcastItemResult on CreateOnchainMirrorBroadcastItemResult {
@@ -528,61 +559,50 @@ export const CreateOnchainMirrorBroadcastItemResultFragmentDoc = gql`
       value {
         nonce
         deadline
+        profileId
+        metadataURI
+        pointedProfileId
+        pointedPubId
+        referrerProfileIds
+        referrerPubIds
+        referenceModuleData
       }
     }
   }
   ${Eip712TypedDataDomainFragmentDoc}
-`;
-export const CreateOnchainQuoteEip712TypedDataTypesFragmentDoc = gql`
-  fragment CreateOnchainQuoteEIP712TypedDataTypes on CreateOnchainQuoteEIP712TypedDataTypes {
-    Quote {
-      ...EIP712TypedDataField
-    }
-  }
-  ${Eip712TypedDataFieldFragmentDoc}
-`;
-export const CreateOnchainQuoteEip712TypedDataValueFragmentDoc = gql`
-  fragment CreateOnchainQuoteEIP712TypedDataValue on CreateOnchainQuoteEIP712TypedDataValue {
-    nonce
-    deadline
-    profileId
-    contentURI
-    pointedProfileId
-    pointedPubId
-    referrerProfileIds
-    referrerPubIds
-    referenceModuleData
-    actionModules
-    actionModulesInitDatas
-    referenceModule
-    referenceModuleInitData
-  }
-`;
-export const CreateOnchainQuoteEip712TypedDataFragmentDoc = gql`
-  fragment CreateOnchainQuoteEIP712TypedData on CreateOnchainQuoteEIP712TypedData {
-    types {
-      ...CreateOnchainQuoteEIP712TypedDataTypes
-    }
-    domain {
-      ...EIP712TypedDataDomain
-    }
-    value {
-      ...CreateOnchainQuoteEIP712TypedDataValue
-    }
-  }
-  ${CreateOnchainQuoteEip712TypedDataTypesFragmentDoc}
-  ${Eip712TypedDataDomainFragmentDoc}
-  ${CreateOnchainQuoteEip712TypedDataValueFragmentDoc}
 `;
 export const CreateOnchainQuoteBroadcastItemResultFragmentDoc = gql`
   fragment CreateOnchainQuoteBroadcastItemResult on CreateOnchainQuoteBroadcastItemResult {
     id
     expiresAt
     typedData {
-      ...CreateOnchainQuoteEIP712TypedData
+      types {
+        Quote {
+          ...EIP712TypedDataField
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        contentURI
+        pointedProfileId
+        pointedPubId
+        referrerProfileIds
+        referrerPubIds
+        referenceModuleData
+        actionModules
+        actionModulesInitDatas
+        referenceModule
+        referenceModuleInitData
+      }
     }
   }
-  ${CreateOnchainQuoteEip712TypedDataFragmentDoc}
+  ${Eip712TypedDataFieldFragmentDoc}
+  ${Eip712TypedDataDomainFragmentDoc}
 `;
 export const CreateMomokaPostBroadcastItemResultFragmentDoc = gql`
   fragment CreateMomokaPostBroadcastItemResult on CreateMomokaPostBroadcastItemResult {
@@ -601,6 +621,12 @@ export const CreateMomokaPostBroadcastItemResultFragmentDoc = gql`
       value {
         nonce
         deadline
+        profileId
+        contentURI
+        actionModules
+        actionModulesInitDatas
+        referenceModule
+        referenceModuleInitData
       }
     }
   }
@@ -623,6 +649,17 @@ export const CreateMomokaCommentBroadcastItemResultFragmentDoc = gql`
       value {
         nonce
         deadline
+        profileId
+        contentURI
+        pointedProfileId
+        pointedPubId
+        referrerProfileIds
+        referrerPubIds
+        referenceModuleData
+        actionModules
+        actionModulesInitDatas
+        referenceModule
+        referenceModuleInitData
       }
     }
   }
@@ -645,6 +682,13 @@ export const CreateMomokaMirrorBroadcastItemResultFragmentDoc = gql`
       value {
         nonce
         deadline
+        profileId
+        metadataURI
+        pointedProfileId
+        pointedPubId
+        referrerProfileIds
+        referrerPubIds
+        referenceModuleData
       }
     }
   }
@@ -667,6 +711,17 @@ export const CreateMomokaQuoteBroadcastItemResultFragmentDoc = gql`
       value {
         nonce
         deadline
+        profileId
+        contentURI
+        pointedProfileId
+        pointedPubId
+        referrerProfileIds
+        referrerPubIds
+        referenceModuleData
+        actionModules
+        actionModulesInitDatas
+        referenceModule
+        referenceModuleInitData
       }
     }
   }

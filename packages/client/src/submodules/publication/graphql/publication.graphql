@@ -138,12 +138,12 @@ fragment CreateOnchainPostBroadcastItemResult on CreateOnchainPostBroadcastItemR
     value {
       nonce
       deadline
-      # profileId
-      # contentURI
-      # collectModule
-      # collectModuleInitData
-      # referenceModule
-      # referenceModuleInitData
+      profileId
+      contentURI
+      actionModules
+      actionModulesInitDatas
+      referenceModule
+      referenceModuleInitData
     }
   }
 }
@@ -164,46 +164,18 @@ fragment CreateOnchainCommentBroadcastItemResult on CreateOnchainCommentBroadcas
     value {
       nonce
       deadline
-      # profileId
-      # contentURI
-      # profileIdPointed
-      # pubIdPointed
-      # collectModule
-      # collectModuleInitData
-      # referenceModuleData
-      # referenceModule
-      # referenceModuleInitData
+      profileId
+      contentURI
+      pointedProfileId
+      pointedPubId
+      referrerProfileIds
+      referrerPubIds
+      referenceModuleData
+      actionModules
+      actionModulesInitDatas
+      referenceModule
+      referenceModuleInitData
     }
-  }
-}
-
-fragment CreateOnchainMirrorEIP712TypedDataValue on CreateOnchainMirrorEIP712TypedDataValue {
-  nonce
-  deadline
-  profileId
-  pointedProfileId
-  pointedPubId
-  referrerProfileIds
-  referrerProfileIds
-  referrerPubIds
-  referenceModuleData
-}
-
-fragment CreateOnchainMirrorEIP712TypedDataTypes on CreateOnchainMirrorEIP712TypedDataTypes {
-  Mirror {
-    ...EIP712TypedDataField
-  }
-}
-
-fragment CreateOnchainMirrorEIP712TypedData on CreateOnchainMirrorEIP712TypedData {
-  types {
-    ...CreateOnchainMirrorEIP712TypedDataTypes
-  }
-  domain {
-    ...EIP712TypedDataDomain
-  }
-  value {
-    ...CreateOnchainMirrorEIP712TypedDataValue
   }
 }
 
@@ -223,47 +195,14 @@ fragment CreateOnchainMirrorBroadcastItemResult on CreateOnchainMirrorBroadcastI
     value {
       nonce
       deadline
-      # profileId
-      # profileIdPointed
-      # pubIdPointed
-      # referenceModuleData
-      # referenceModule
-      # referenceModuleInitData
+      profileId
+      metadataURI
+      pointedProfileId
+      pointedPubId
+      referrerProfileIds
+      referrerPubIds
+      referenceModuleData
     }
-  }
-}
-
-fragment CreateOnchainQuoteEIP712TypedDataValue on CreateOnchainQuoteEIP712TypedDataValue {
-  nonce
-  deadline
-  profileId
-  contentURI
-  pointedProfileId
-  pointedPubId
-  referrerProfileIds
-  referrerPubIds
-  referenceModuleData
-  actionModules
-  actionModulesInitDatas
-  referenceModule
-  referenceModuleInitData
-}
-
-fragment CreateOnchainQuoteEIP712TypedDataTypes on CreateOnchainQuoteEIP712TypedDataTypes {
-  Quote {
-    ...EIP712TypedDataField
-  }
-}
-
-fragment CreateOnchainQuoteEIP712TypedData on CreateOnchainQuoteEIP712TypedData {
-  types {
-    ...CreateOnchainQuoteEIP712TypedDataTypes
-  }
-  domain {
-    ...EIP712TypedDataDomain
-  }
-  value {
-    ...CreateOnchainQuoteEIP712TypedDataValue
   }
 }
 
@@ -271,7 +210,29 @@ fragment CreateOnchainQuoteBroadcastItemResult on CreateOnchainQuoteBroadcastIte
   id
   expiresAt
   typedData {
-    ...CreateOnchainQuoteEIP712TypedData
+    types {
+      Quote {
+        ...EIP712TypedDataField
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      contentURI
+      pointedProfileId
+      pointedPubId
+      referrerProfileIds
+      referrerPubIds
+      referenceModuleData
+      actionModules
+      actionModulesInitDatas
+      referenceModule
+      referenceModuleInitData
+    }
   }
 }
 
@@ -291,6 +252,12 @@ fragment CreateMomokaPostBroadcastItemResult on CreateMomokaPostBroadcastItemRes
     value {
       nonce
       deadline
+      profileId
+      contentURI
+      actionModules
+      actionModulesInitDatas
+      referenceModule
+      referenceModuleInitData
     }
   }
 }
@@ -311,6 +278,17 @@ fragment CreateMomokaCommentBroadcastItemResult on CreateMomokaCommentBroadcastI
     value {
       nonce
       deadline
+      profileId
+      contentURI
+      pointedProfileId
+      pointedPubId
+      referrerProfileIds
+      referrerPubIds
+      referenceModuleData
+      actionModules
+      actionModulesInitDatas
+      referenceModule
+      referenceModuleInitData
     }
   }
 }
@@ -331,6 +309,13 @@ fragment CreateMomokaMirrorBroadcastItemResult on CreateMomokaMirrorBroadcastIte
     value {
       nonce
       deadline
+      profileId
+      metadataURI
+      pointedProfileId
+      pointedPubId
+      referrerProfileIds
+      referrerPubIds
+      referenceModuleData
     }
   }
 }
@@ -351,6 +336,17 @@ fragment CreateMomokaQuoteBroadcastItemResult on CreateMomokaQuoteBroadcastItemR
     value {
       nonce
       deadline
+      profileId
+      contentURI
+      pointedProfileId
+      pointedPubId
+      referrerProfileIds
+      referrerPubIds
+      referenceModuleData
+      actionModules
+      actionModulesInitDatas
+      referenceModule
+      referenceModuleInitData
     }
   }
 }
