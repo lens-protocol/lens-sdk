@@ -1,5 +1,11 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.1
+
+### Patch Changes
+
+- **Updated** schema to the latest version of the API
+
 ## 2.0.0-alpha.0
 
 ### Major Changes
