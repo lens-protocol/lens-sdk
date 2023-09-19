@@ -113,6 +113,8 @@ export type ProfileStatsFragment = {
 
 export type ProfileQueryVariables = Types.Exact<{
   request: Types.ProfileRequest;
+  profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
@@ -128,6 +130,8 @@ export type ProfileStatsQuery = { result: { stats: ProfileStatsFragment } | null
 
 export type ProfilesQueryVariables = Types.Exact<{
   request: Types.ProfilesRequest;
+  profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
@@ -608,7 +612,12 @@ export const CreateHandleUnlinkFromProfileBroadcastItemResultFragmentDoc = gql`
   ${Eip712TypedDataDomainFragmentDoc}
 `;
 export const ProfileDocument = gql`
-  query Profile($request: ProfileRequest!, $rateRequest: RateRequest = { for: USD }) {
+  query Profile(
+    $request: ProfileRequest!
+    $profileCoverTransform: ImageTransform = {}
+    $profilePictureTransform: ImageTransform = {}
+    $rateRequest: RateRequest = { for: USD }
+  ) {
     result: profile(request: $request) {
       ...Profile
     }
@@ -630,7 +639,12 @@ export const ProfileStatsDocument = gql`
   ${ProfileStatsFragmentDoc}
 `;
 export const ProfilesDocument = gql`
-  query Profiles($request: ProfilesRequest!, $rateRequest: RateRequest = { for: USD }) {
+  query Profiles(
+    $request: ProfilesRequest!
+    $profileCoverTransform: ImageTransform = {}
+    $profilePictureTransform: ImageTransform = {}
+    $rateRequest: RateRequest = { for: USD }
+  ) {
     result: profiles(request: $request) {
       items {
         ...Profile

@@ -94,29 +94,24 @@ export type ProfilePictureSetFragment = {
   transformed: ImageFragment | null;
 };
 
+export type NftImageFragment = {
+  tokenId: string;
+  verified: boolean;
+  collection: NetworkAddressFragment;
+  image: ProfilePictureSetFragment;
+};
+
 export type ProfileFieldsFragment = {
   __typename: 'Profile';
   id: string;
+  txHash: string;
+  createdAt: string;
+  interests: Array<string>;
+  invitesLeft: number | null;
   handle: string | null;
   sponsor: boolean;
   lensManager: boolean;
-  interests: Array<string>;
-  invitesLeft: number | null;
-  createdAt: string;
-  metadata: { rawURI: string; displayName: string | null; bio: string | null } | null;
   ownedBy: NetworkAddressFragment;
-  followModule:
-    | FeeFollowModuleSettingsFragment
-    | RevertFollowModuleSettingsFragment
-    | UnknownFollowModuleSettingsFragment
-    | null;
-  followNftAddress: NetworkAddressFragment | null;
-  onchainIdentity: {
-    proofOfHumanity: boolean;
-    ens: { name: string | null } | null;
-    sybilDotOrg: { source: { twitter: { handle: string | null } } | null };
-    worldcoin: { isHuman: boolean };
-  };
   operations: {
     id: string;
     canBlock: boolean;
@@ -128,6 +123,26 @@ export type ProfileFieldsFragment = {
     isFollowingMe: OptimisticStatusResultFragment;
   };
   guardian: { protected: boolean; cooldownEndsOn: string | null } | null;
+  onchainIdentity: {
+    proofOfHumanity: boolean;
+    ens: { name: string | null } | null;
+    sybilDotOrg: { source: { twitter: { handle: string | null } } | null };
+    worldcoin: { isHuman: boolean };
+  };
+  followNftAddress: NetworkAddressFragment | null;
+  followModule:
+    | FeeFollowModuleSettingsFragment
+    | RevertFollowModuleSettingsFragment
+    | UnknownFollowModuleSettingsFragment
+    | null;
+  metadata: {
+    displayName: string | null;
+    bio: string | null;
+    rawURI: string;
+    picture: ProfilePictureSetFragment | NftImageFragment | null;
+    coverPicture: ProfileCoverSetFragment | null;
+    attributes: Array<{ type: Types.AttributeType; key: string; value: string }>;
+  } | null;
 };
 
 export type ProfileFragment = { invitedBy: ProfileFieldsFragment | null } & ProfileFieldsFragment;
@@ -964,46 +979,16 @@ export type CreateMomokaPublicationResultFragment = {
   momokaId: string;
 };
 
-export const ImageFragmentDoc = gql`
-  fragment Image on Image {
-    uri
-    mimeType
-    width
-    height
-  }
-`;
-export const ProfileCoverSetFragmentDoc = gql`
-  fragment ProfileCoverSet on ImageSet {
-    raw {
-      ...Image
-    }
-    optimized {
-      ...Image
-    }
-    transformed(request: $profileCoverTransform) {
-      ...Image
-    }
-  }
-  ${ImageFragmentDoc}
-`;
-export const ProfilePictureSetFragmentDoc = gql`
-  fragment ProfilePictureSet on ImageSet {
-    raw {
-      ...Image
-    }
-    optimized {
-      ...Image
-    }
-    transformed(request: $profilePictureTransform) {
-      ...Image
-    }
-  }
-  ${ImageFragmentDoc}
-`;
 export const NetworkAddressFragmentDoc = gql`
   fragment NetworkAddress on NetworkAddress {
     address
     chainId
+  }
+`;
+export const OptimisticStatusResultFragmentDoc = gql`
+  fragment OptimisticStatusResult on OptimisticStatusResult {
+    value
+    isFinalisedOnchain
   }
 `;
 export const Erc20FragmentDoc = gql`
@@ -1076,58 +1061,65 @@ export const UnknownFollowModuleSettingsFragmentDoc = gql`
   }
   ${NetworkAddressFragmentDoc}
 `;
-export const OptimisticStatusResultFragmentDoc = gql`
-  fragment OptimisticStatusResult on OptimisticStatusResult {
-    value
-    isFinalisedOnchain
+export const ImageFragmentDoc = gql`
+  fragment Image on Image {
+    uri
+    mimeType
+    width
+    height
   }
+`;
+export const ProfilePictureSetFragmentDoc = gql`
+  fragment ProfilePictureSet on ImageSet {
+    raw {
+      ...Image
+    }
+    optimized {
+      ...Image
+    }
+    transformed(request: $profilePictureTransform) {
+      ...Image
+    }
+  }
+  ${ImageFragmentDoc}
+`;
+export const NftImageFragmentDoc = gql`
+  fragment NftImage on NftImage {
+    collection {
+      ...NetworkAddress
+    }
+    tokenId
+    image {
+      ...ProfilePictureSet
+    }
+    verified
+  }
+  ${NetworkAddressFragmentDoc}
+  ${ProfilePictureSetFragmentDoc}
+`;
+export const ProfileCoverSetFragmentDoc = gql`
+  fragment ProfileCoverSet on ImageSet {
+    raw {
+      ...Image
+    }
+    optimized {
+      ...Image
+    }
+    transformed(request: $profileCoverTransform) {
+      ...Image
+    }
+  }
+  ${ImageFragmentDoc}
 `;
 export const ProfileFieldsFragmentDoc = gql`
   fragment ProfileFields on Profile {
     __typename
     id
-    metadata {
-      rawURI
-      displayName
-      bio
-    }
-    handle
     ownedBy {
       ...NetworkAddress
     }
-    sponsor
-    lensManager
-    followModule {
-      ... on FeeFollowModuleSettings {
-        ...FeeFollowModuleSettings
-      }
-      ... on RevertFollowModuleSettings {
-        ...RevertFollowModuleSettings
-      }
-      ... on UnknownFollowModuleSettings {
-        ...UnknownFollowModuleSettings
-      }
-    }
-    followNftAddress {
-      ...NetworkAddress
-    }
-    onchainIdentity {
-      proofOfHumanity
-      ens {
-        name
-      }
-      sybilDotOrg {
-        source {
-          twitter {
-            handle
-          }
-        }
-      }
-      worldcoin {
-        isHuman
-      }
-    }
-    interests
+    txHash
+    createdAt
     operations {
       id
       isBlockedByMe {
@@ -1144,18 +1136,75 @@ export const ProfileFieldsFragmentDoc = gql`
       canFollow
       canUnfollow
     }
+    interests
     guardian {
       protected
       cooldownEndsOn
     }
     invitesLeft
-    createdAt
+    onchainIdentity {
+      proofOfHumanity
+      ens {
+        name
+      }
+      sybilDotOrg {
+        source {
+          twitter {
+            handle
+          }
+        }
+      }
+      worldcoin {
+        isHuman
+      }
+    }
+    followNftAddress {
+      ...NetworkAddress
+    }
+    followModule {
+      ... on FeeFollowModuleSettings {
+        ...FeeFollowModuleSettings
+      }
+      ... on RevertFollowModuleSettings {
+        ...RevertFollowModuleSettings
+      }
+      ... on UnknownFollowModuleSettings {
+        ...UnknownFollowModuleSettings
+      }
+    }
+    metadata {
+      displayName
+      bio
+      rawURI
+      picture {
+        ... on ImageSet {
+          ...ProfilePictureSet
+        }
+        ... on NftImage {
+          ...NftImage
+        }
+      }
+      coverPicture {
+        ...ProfileCoverSet
+      }
+      attributes {
+        type
+        key
+        value
+      }
+    }
+    handle
+    sponsor
+    lensManager
   }
   ${NetworkAddressFragmentDoc}
+  ${OptimisticStatusResultFragmentDoc}
   ${FeeFollowModuleSettingsFragmentDoc}
   ${RevertFollowModuleSettingsFragmentDoc}
   ${UnknownFollowModuleSettingsFragmentDoc}
-  ${OptimisticStatusResultFragmentDoc}
+  ${ProfilePictureSetFragmentDoc}
+  ${NftImageFragmentDoc}
+  ${ProfileCoverSetFragmentDoc}
 `;
 export const ProfileFragmentDoc = gql`
   fragment Profile on Profile {

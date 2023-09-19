@@ -180,51 +180,25 @@ fragment ProfilePictureSet on ImageSet {
   }
 }
 
+fragment NftImage on NftImage {
+  collection {
+    ...NetworkAddress
+  }
+  tokenId
+  image {
+    ...ProfilePictureSet
+  }
+  verified
+}
+
 fragment ProfileFields on Profile {
   __typename
   id
-  metadata {
-    rawURI
-    displayName
-    bio
-  }
-  handle
   ownedBy {
     ...NetworkAddress
   }
-  sponsor
-  lensManager
-  followModule {
-    ... on FeeFollowModuleSettings {
-      ...FeeFollowModuleSettings
-    }
-    ... on RevertFollowModuleSettings {
-      ...RevertFollowModuleSettings
-    }
-    ... on UnknownFollowModuleSettings {
-      ...UnknownFollowModuleSettings
-    }
-  }
-  followNftAddress {
-    ...NetworkAddress
-  }
-  onchainIdentity {
-    proofOfHumanity
-    ens {
-      name
-    }
-    sybilDotOrg {
-      source {
-        twitter {
-          handle
-        }
-      }
-    }
-    worldcoin {
-      isHuman
-    }
-  }
-  interests
+  txHash
+  createdAt
   operations {
     id
     isBlockedByMe {
@@ -241,12 +215,66 @@ fragment ProfileFields on Profile {
     canFollow
     canUnfollow
   }
+  interests
   guardian {
     protected
     cooldownEndsOn
   }
   invitesLeft
-  createdAt
+  onchainIdentity {
+    proofOfHumanity
+    ens {
+      name
+    }
+    sybilDotOrg {
+      source {
+        twitter {
+          handle
+        }
+      }
+    }
+    worldcoin {
+      isHuman
+    }
+  }
+  followNftAddress {
+    ...NetworkAddress
+  }
+  followModule {
+    ... on FeeFollowModuleSettings {
+      ...FeeFollowModuleSettings
+    }
+    ... on RevertFollowModuleSettings {
+      ...RevertFollowModuleSettings
+    }
+    ... on UnknownFollowModuleSettings {
+      ...UnknownFollowModuleSettings
+    }
+  }
+  metadata {
+    displayName
+    bio
+    rawURI
+    picture {
+      ... on ImageSet {
+        ...ProfilePictureSet
+      }
+      ... on NftImage {
+        ...NftImage
+      }
+    }
+    coverPicture {
+      ...ProfileCoverSet
+    }
+    attributes {
+      type
+      key
+      value
+    }
+  }
+  handle
+  sponsor
+  lensManager
 }
 
 fragment Profile on Profile {

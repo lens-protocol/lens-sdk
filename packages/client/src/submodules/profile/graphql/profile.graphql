@@ -165,8 +165,8 @@ fragment ProfileStats on ProfileStats {
 # queries
 query Profile(
   $request: ProfileRequest!
-  # $profileCoverTransform: ImageTransform = {}
-  # $profilePictureTransform: ImageTransform = {}
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: profile(request: $request) {
@@ -188,8 +188,8 @@ query ProfileStats(
 
 query Profiles(
   $request: ProfilesRequest!
-  # $profileCoverTransform: ImageTransform = {}
-  # $profilePictureTransform: ImageTransform = {}
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: profiles(request: $request) {
