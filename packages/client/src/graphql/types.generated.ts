@@ -61,15 +61,6 @@ export type Scalars = {
   Void: { input: string; output: string };
 };
 
-export type AchRequest = {
-  address: Scalars['EvmAddress']['input'];
-  freeTextHandle: Scalars['Boolean']['input'];
-  handle: Scalars['CreateHandle']['input'];
-  overrideAlreadyClaimed: Scalars['Boolean']['input'];
-  overrideTradeMark: Scalars['Boolean']['input'];
-  secret: Scalars['String']['input'];
-};
-
 export type ActOnOpenActionInput = {
   multirecipientCollectOpenAction?: InputMaybe<Scalars['Boolean']['input']>;
   simpleCollectOpenAction?: InputMaybe<Scalars['Boolean']['input']>;
@@ -221,10 +212,6 @@ export type CreateProfileWithHandleRequest = {
   followModule?: InputMaybe<FollowModuleInput>;
   handle: Scalars['CreateHandle']['input'];
   to: Scalars['EvmAddress']['input'];
-};
-
-export type CurRequest = {
-  secret: Scalars['String']['input'];
 };
 
 export enum CustomFiltersType {
@@ -420,31 +407,6 @@ export type FraudReasonInput = {
   subreason: PublicationReportingFraudSubreason;
 };
 
-export type GciRequest = {
-  hhh: Scalars['String']['input'];
-  secret: Scalars['String']['input'];
-  ttt: Scalars['String']['input'];
-};
-
-export type GcrRequest = {
-  hhh: Scalars['String']['input'];
-  secret: Scalars['String']['input'];
-  ttt: Scalars['String']['input'];
-};
-
-export type GctRequest = {
-  secret: Scalars['String']['input'];
-};
-
-export type GddRequest = {
-  domain: Scalars['URL']['input'];
-  secret: Scalars['String']['input'];
-};
-
-export type GdmRequest = {
-  secret: Scalars['String']['input'];
-};
-
 export type GenerateModuleCurrencyApprovalDataRequest = {
   allowance: AmountInput;
   module: ModuleCurrencyApproval;
@@ -456,12 +418,6 @@ export type HandleLinkToProfileRequest = {
 
 export type HandleUnlinkFromProfileRequest = {
   handle: Scalars['Handle']['input'];
-};
-
-export type HelRequest = {
-  handle: Scalars['Handle']['input'];
-  remove: Scalars['Boolean']['input'];
-  secret: Scalars['String']['input'];
 };
 
 export type HidePublicationRequest = {
@@ -503,17 +459,6 @@ export type ImageTransform = {
   keepAspectRatio?: InputMaybe<Scalars['Boolean']['input']>;
   /** Set the transformed image's width */
   width?: InputMaybe<Scalars['ImageSizeTransform']['input']>;
-};
-
-export type InRequest = {
-  address: Scalars['EvmAddress']['input'];
-  numInvites: Scalars['Int']['input'];
-  secret: Scalars['String']['input'];
-};
-
-export type InTotalRequest = {
-  address: Scalars['EvmAddress']['input'];
-  secret: Scalars['String']['input'];
 };
 
 export type InviteRequest = {
@@ -682,11 +627,6 @@ export type NetworkAddressInput = {
   chainId: Scalars['ChainId']['input'];
 };
 
-export type Nfi = {
-  c: Scalars['EvmAddress']['input'];
-  i: Scalars['ChainId']['input'];
-};
-
 export enum NftCollectionOwnersOrder {
   FollowersFirst = 'FollowersFirst',
   None = 'None',
@@ -790,16 +730,6 @@ export type NftsRequestWhere = {
   includeCollections?: InputMaybe<Array<NetworkAddressInput>>;
   /** Search query. Has to be part of a collection name */
   query?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type NniRequest = {
-  n: Array<Nfi>;
-  secret: Scalars['String']['input'];
-};
-
-export type NnvRequest = {
-  n: Array<Nfi>;
-  secret: Scalars['String']['input'];
 };
 
 export type NotificationRequest = {
@@ -945,18 +875,6 @@ export type PopularNftCollectionsRequest = {
   onlyVerified?: InputMaybe<Scalars['Boolean']['input']>;
   /** The ordering of Nft collection owners. Defaults to Total Lens Profile owners */
   orderBy?: InputMaybe<PopularNftCollectionsOrder>;
-};
-
-export type PrfRequest = {
-  dd: Scalars['Boolean']['input'];
-  hhh: Scalars['String']['input'];
-  secret: Scalars['String']['input'];
-  ss: Scalars['Boolean']['input'];
-};
-
-export type PriRequest = {
-  hhh: Scalars['String']['input'];
-  secret: Scalars['String']['input'];
 };
 
 export type ProfileActionHistoryRequest = {
@@ -1428,11 +1346,6 @@ export type RefreshRequest = {
   refreshToken: Scalars['Jwt']['input'];
 };
 
-export type RelRequest = {
-  address: Scalars['EvmAddress']['input'];
-  secret: Scalars['String']['input'];
-};
-
 export enum RelayErrorReasonType {
   AppGaslessNotAllowed = 'APP_GASLESS_NOT_ALLOWED',
   Expired = 'EXPIRED',
@@ -1534,7 +1447,7 @@ export type SpamReasonInput = {
 
 export enum SupportedFiatType {
   Eur = 'EUR',
-  Gpb = 'GPB',
+  Gbp = 'GBP',
   Usd = 'USD',
 }
 

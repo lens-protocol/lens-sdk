@@ -2,7 +2,7 @@ import { LensClient, development } from '@lens-protocol/client';
 import { Wallet } from 'ethers';
 import { WalletClient } from 'viem';
 
-async function getOwnedProfileId(client: LensClient, address: string) {
+export async function getOwnedProfileId(client: LensClient, address: string) {
   const ownedProfiles = await client.profile.fetchAll({ where: { ownedBy: [address] } });
 
   if (ownedProfiles.items.length === 0) {

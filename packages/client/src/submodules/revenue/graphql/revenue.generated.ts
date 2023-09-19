@@ -53,7 +53,7 @@ export type RevenueFromPublicationsQuery = {
   result: { items: Array<PublicationRevenueFragment>; pageInfo: PaginatedResultInfoFragment };
 };
 
-export type RevenueForPublicationQueryVariables = Types.Exact<{
+export type RevenueFromPublicationQueryVariables = Types.Exact<{
   request: Types.PublicationRevenueRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
@@ -62,7 +62,7 @@ export type RevenueForPublicationQueryVariables = Types.Exact<{
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
-export type RevenueForPublicationQuery = { result: PublicationRevenueFragment };
+export type RevenueFromPublicationQuery = { result: PublicationRevenueFragment };
 
 export type FollowRevenuesQueryVariables = Types.Exact<{
   request: Types.FollowRevenueRequest;
@@ -126,8 +126,8 @@ export const RevenueFromPublicationsDocument = gql`
   ${PublicationRevenueFragmentDoc}
   ${PaginatedResultInfoFragmentDoc}
 `;
-export const RevenueForPublicationDocument = gql`
-  query RevenueForPublication(
+export const RevenueFromPublicationDocument = gql`
+  query RevenueFromPublication(
     $request: PublicationRevenueRequest!
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
@@ -135,7 +135,7 @@ export const RevenueForPublicationDocument = gql`
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
-    result: revenueForPublication(request: $request) {
+    result: revenueFromPublication(request: $request) {
       ...PublicationRevenue
     }
   }
@@ -160,7 +160,7 @@ export type SdkFunctionWrapper = <T>(
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const RevenueFromPublicationsDocumentString = print(RevenueFromPublicationsDocument);
-const RevenueForPublicationDocumentString = print(RevenueForPublicationDocument);
+const RevenueFromPublicationDocumentString = print(RevenueFromPublicationDocument);
 const FollowRevenuesDocumentString = print(FollowRevenuesDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
@@ -184,23 +184,23 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'query',
       );
     },
-    RevenueForPublication(
-      variables: RevenueForPublicationQueryVariables,
+    RevenueFromPublication(
+      variables: RevenueFromPublicationQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
     ): Promise<{
-      data: RevenueForPublicationQuery;
+      data: RevenueFromPublicationQuery;
       extensions?: any;
       headers: Dom.Headers;
       status: number;
     }> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.rawRequest<RevenueForPublicationQuery>(
-            RevenueForPublicationDocumentString,
+          client.rawRequest<RevenueFromPublicationQuery>(
+            RevenueFromPublicationDocumentString,
             variables,
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
-        'RevenueForPublication',
+        'RevenueFromPublication',
         'query',
       );
     },

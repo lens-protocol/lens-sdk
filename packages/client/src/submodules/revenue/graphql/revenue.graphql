@@ -42,7 +42,7 @@ query RevenueFromPublications(
   }
 }
 
-query RevenueForPublication(
+query RevenueFromPublication(
   $request: PublicationRevenueRequest!
   $publicationImageTransform: ImageTransform = {}
   $profileCoverTransform: ImageTransform = {}
@@ -50,7 +50,7 @@ query RevenueForPublication(
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
-  result: revenueForPublication(request: $request) {
+  result: revenueFromPublication(request: $request) {
     ...PublicationRevenue
   }
 }

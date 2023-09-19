@@ -56,10 +56,10 @@ export class Revenue {
     return result.data.result.revenues;
   }
 
-  async forPublication(
+  async fromPublication(
     request: PublicationRevenueRequest,
   ): Promise<PublicationRevenueFragment | null> {
-    const result = await this.sdk.RevenueForPublication({
+    const result = await this.sdk.RevenueFromPublication({
       request,
       ...buildImageTransformsFromConfig(this.config.mediaTransforms),
     });

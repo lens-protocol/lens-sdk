@@ -5,7 +5,7 @@ async function main() {
     environment: development,
   });
 
-  const publicationRevenue = await lensClient.revenue.forPublication({
+  const publicationRevenue = await lensClient.revenue.fromPublication({
     for: 'PUBLICATION_ID',
   });
 

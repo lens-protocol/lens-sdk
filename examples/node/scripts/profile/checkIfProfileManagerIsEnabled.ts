@@ -1,12 +1,16 @@
-import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
+import {
+  getAuthenticatedClientFromEthersWallet,
+  getOwnedProfileId,
+} from '../shared/getAuthenticatedClient';
 import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
   const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
+  const profileId = await getOwnedProfileId(lensClient, wallet.address);
 
   const profile = await lensClient.profile.fetch({
-    forProfileId: 'your-profile-id',
+    forProfileId: profileId,
   });
 
   if (profile.sponsor) {

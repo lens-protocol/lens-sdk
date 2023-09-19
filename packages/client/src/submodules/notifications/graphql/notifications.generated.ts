@@ -47,7 +47,7 @@ export type QuoteNotificationFragment = { id: string; quote: QuoteFragment };
 
 export type OpenActionProfileActedFragment = {
   actedAt: string;
-  profile: ProfileFieldsFragment;
+  by: ProfileFieldsFragment;
   action:
     | OpenActionResult_KnownCollectOpenActionResult_Fragment
     | OpenActionResult_UnknownOpenActionResult_Fragment;
@@ -166,7 +166,7 @@ export const QuoteNotificationFragmentDoc = gql`
 `;
 export const OpenActionProfileActedFragmentDoc = gql`
   fragment OpenActionProfileActed on OpenActionProfileActed {
-    profile {
+    by {
       ...ProfileFields
     }
     action {

@@ -59,7 +59,7 @@ fragment QuoteNotification on QuoteNotification {
 }
 
 fragment OpenActionProfileActed on OpenActionProfileActed {
-  profile {
+  by {
     ...ProfileFields
   }
   action {
