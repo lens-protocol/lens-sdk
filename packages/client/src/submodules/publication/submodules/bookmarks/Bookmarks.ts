@@ -14,6 +14,7 @@ import {
   buildPaginatedQueryResult,
   PaginatedResult,
   requireAuthHeaders,
+  sdkAuthHeaderWrapper,
 } from '../../../../helpers';
 import { getSdk, Sdk } from './graphql/bookmarks.generated';
 
@@ -32,7 +33,7 @@ export class Bookmarks {
   ) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
-    this.sdk = getSdk(client);
+    this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
   }
 

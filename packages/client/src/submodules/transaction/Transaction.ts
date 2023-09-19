@@ -14,7 +14,7 @@ import {
   type BroadcastRequest,
   type LensTransactionStatusRequest,
 } from '../../graphql/types.generated';
-import { poll, requireAuthHeaders } from '../../helpers';
+import { poll, requireAuthHeaders, sdkAuthHeaderWrapper } from '../../helpers';
 import { getSdk, LensTransactionResultFragment, Sdk } from './graphql/transaction.generated';
 
 export class TransactionPollingError extends Error {
@@ -40,20 +40,15 @@ export class Transaction {
   constructor(config: LensConfig, authentication: Authentication) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
-    this.sdk = getSdk(client);
+    this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
   }
 
   async status(
     request: LensTransactionStatusRequest,
-  ): PromiseResult<
-    LensTransactionResultFragment | null,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.LensTransactionStatus({ request }, headers);
-      return result.data.result;
-    });
+  ): Promise<LensTransactionResultFragment | null> {
+    const result = await this.sdk.LensTransactionStatus({ request });
+    return result.data.result;
   }
 
   async txIdToTxHash(txId: string): Promise<string | null> {
@@ -89,20 +84,11 @@ export class Transaction {
     txId,
   }: {
     txId: string;
-  }): PromiseResult<
-    LensTransactionResultFragment | null,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
+  }): Promise<LensTransactionResultFragment | null> {
     return poll({
       fn: () => this.status({ forTxId: txId }),
       validate: (result: Awaited<ReturnType<typeof this.status>>) => {
-        if (result.isSuccess()) {
-          const value = result.value;
-
-          return value?.status === LensTransactionStatusType.Complete;
-        }
-        // in any not positive scenario, return true to resolve the polling with the Result
-        return true;
+        return result?.status === LensTransactionStatusType.Complete;
       },
       onMaxAttempts: () => new TransactionPollingError(),
     });

@@ -11,7 +11,12 @@ import {
   PaginatedOffsetRequest,
   SupportedModulesRequest,
 } from '../../graphql/types.generated';
-import { PaginatedResult, buildPaginatedQueryResult, requireAuthHeaders } from '../../helpers';
+import {
+  PaginatedResult,
+  buildPaginatedQueryResult,
+  requireAuthHeaders,
+  sdkAuthHeaderWrapper,
+} from '../../helpers';
 import {
   ApprovedAllowanceAmountResultFragment,
   GenerateModuleCurrencyApprovalResultFragment,
@@ -31,7 +36,7 @@ export class Modules {
   constructor(config: LensConfig, authentication: Authentication) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
-    this.sdk = getSdk(client);
+    this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
   }
 

@@ -5,7 +5,11 @@ import { LensConfig } from '../../consts/config';
 import { CredentialsExpiredError, NotAuthenticatedError } from '../../consts/errors';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import { AlreadyInvitedCheckRequest, InviteRequest } from '../../graphql/types.generated';
-import { buildImageTransformsFromConfig, requireAuthHeaders } from '../../helpers';
+import {
+  buildImageTransformsFromConfig,
+  requireAuthHeaders,
+  sdkAuthHeaderWrapper,
+} from '../../helpers';
 import { InvitedResultFragment, Sdk, getSdk } from './graphql/invites.generated';
 
 /**
@@ -23,7 +27,7 @@ export class Invites {
   ) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
-    this.sdk = getSdk(client);
+    this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
   }
 

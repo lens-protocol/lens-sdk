@@ -11,6 +11,7 @@ import {
   buildImageTransformsFromConfig,
   buildPaginatedQueryResult,
   requireAuthHeaders,
+  sdkAuthHeaderWrapper,
 } from '../../helpers';
 import {
   getSdk,
@@ -32,7 +33,7 @@ export class Wallet {
   ) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
-    this.sdk = getSdk(client);
+    this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
   }
 

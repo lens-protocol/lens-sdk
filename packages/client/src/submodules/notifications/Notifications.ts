@@ -10,6 +10,7 @@ import {
   buildImageTransformsFromConfig,
   buildPaginatedQueryResult,
   requireAuthHeaders,
+  sdkAuthHeaderWrapper,
 } from '../../helpers';
 import {
   ActedNotificationFragment,
@@ -48,7 +49,7 @@ export class Notifications {
   ) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
-    this.sdk = getSdk(client);
+    this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
   }
 

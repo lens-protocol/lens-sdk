@@ -5,7 +5,7 @@ import type { LensConfig } from '../../../../consts/config';
 import type { CredentialsExpiredError, NotAuthenticatedError } from '../../../../consts/errors';
 import { FetchGraphQLClient } from '../../../../graphql/FetchGraphQLClient';
 import type { PublicationNotInterestedRequest } from '../../../../graphql/types.generated';
-import { requireAuthHeaders } from '../../../../helpers';
+import { requireAuthHeaders, sdkAuthHeaderWrapper } from '../../../../helpers';
 import { Sdk, getSdk } from './graphql/notInterested.generated';
 
 /**
@@ -18,7 +18,7 @@ export class NotInterested {
   constructor(config: LensConfig, authentication?: Authentication) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
-    this.sdk = getSdk(client);
+    this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
   }
 

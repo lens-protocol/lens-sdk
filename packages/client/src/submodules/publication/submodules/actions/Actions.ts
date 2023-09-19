@@ -9,7 +9,7 @@ import {
   RelaySuccessFragment,
 } from '../../../../graphql/fragments.generated';
 import type { ActOnOpenActionRequest, TypedDataOptions } from '../../../../graphql/types.generated';
-import { requireAuthHeaders } from '../../../../helpers';
+import { requireAuthHeaders, sdkAuthHeaderWrapper } from '../../../../helpers';
 import {
   CreateActOnOpenActionBroadcastItemResultFragment,
   Sdk,
@@ -26,7 +26,7 @@ export class Actions {
   constructor(config: LensConfig, authentication?: Authentication) {
     const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
 
-    this.sdk = getSdk(client);
+    this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
   }
 
