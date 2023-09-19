@@ -47,4 +47,11 @@ export interface IAuthentication {
    * @returns The access token
    */
   getAccessToken(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError>;
+
+  /**
+   * Get the profileId of authenticated profile.
+   *
+   * @returns The access token
+   */
+  getProfileId(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError>;
 }

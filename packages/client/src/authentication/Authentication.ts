@@ -83,6 +83,21 @@ export class Authentication implements IAuthentication {
     return failure(new CredentialsExpiredError());
   }
 
+  async getProfileId(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError> {
+    const credentials = await this.storage.get();
+
+    if (!credentials) {
+      return failure(new NotAuthenticatedError());
+    }
+
+    if (!credentials.canRefresh()) {
+      return failure(new CredentialsExpiredError());
+    }
+
+    return success(credentials.getProfileId());
+  }
+
+  // private methods
   async getRequestHeader(): PromiseResult<
     Record<string, string>,
     CredentialsExpiredError | NotAuthenticatedError

@@ -5,9 +5,12 @@ import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
-  const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
+  const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const typedDataResult = await lensClient.profile.createChangeProfileManagersTypedData({
+  const profileIdResult = await client.authentication.getProfileId();
+  const profileId = profileIdResult.unwrap();
+
+  const typedDataResult = await client.profile.createChangeProfileManagersTypedData({
     approveLensManager: true,
     // changeManagers: [
     //   {
@@ -27,7 +30,7 @@ async function main() {
   );
 
   // broadcast onchain
-  const broadcastOnchainResult = await lensClient.transaction.broadcastOnchain({
+  const broadcastOnchainResult = await client.transaction.broadcastOnchain({
     id,
     signature: signedTypedData,
   });
@@ -40,7 +43,8 @@ async function main() {
   }
 
   console.log(
-    `Successfully changed profile managers with transaction with id ${onchainRelayResult.txId}, txHash: ${onchainRelayResult.txHash}`,
+    `Successfully changed profile manager for profile ${profileId} with: `,
+    onchainRelayResult,
   );
 }
 
