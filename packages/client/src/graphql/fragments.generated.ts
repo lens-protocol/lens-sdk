@@ -188,7 +188,7 @@ export type MultirecipientFeeCollectOpenActionSettingsFragment = {
 };
 
 export type UnknownOpenActionModuleSettingsFragment = {
-  openActionModuleReturnData: string;
+  openActionModuleReturnData: string | null;
   contract: NetworkAddressFragment;
 };
 
@@ -279,7 +279,7 @@ export type LegacyAaveFeeCollectModuleSettingsFragment = {
 export type UnknownOpenActionResultFragment = {
   address: string;
   category: Types.OpenActionCategoryType | null;
-  initReturnData: string;
+  initReturnData: string | null;
 };
 
 export type KnownCollectOpenActionResultFragment = { type: Types.CollectOpenActionModuleType };
