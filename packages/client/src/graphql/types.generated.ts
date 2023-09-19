@@ -253,7 +253,7 @@ export type DoesFollowRequest = {
 };
 
 /** Possible sort criteria for exploring profiles */
-export enum ExploreProfileOrderBy {
+export enum ExploreProfilesOrderByType {
   CreatedOn = 'CREATED_ON',
   LatestCreated = 'LATEST_CREATED',
   MostCollects = 'MOST_COLLECTS',
@@ -268,7 +268,7 @@ export type ExploreProfilesRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<LimitType>;
   /** Order criteria for exploring profiles */
-  orderBy: ExploreProfileOrderBy;
+  orderBy: ExploreProfilesOrderByType;
   /** Filtering criteria for exploring profiles */
   where?: InputMaybe<ExploreProfilesWhere>;
 };
@@ -1222,10 +1222,6 @@ export type PublicationRequest = {
   forTxHash?: InputMaybe<Scalars['TxHash']['input']>;
 };
 
-export type PublicationRevenueRequest = {
-  for: Scalars['PublicationId']['input'];
-};
-
 export type PublicationSearchRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<LimitType>;
@@ -1244,6 +1240,7 @@ export type PublicationStatsCountOpenActionArgs = {
 
 export type PublicationStatsInput = {
   customFilters?: InputMaybe<Array<CustomFiltersType>>;
+  /** Filter the returned stats on apps and 1 of the following filters: tags, contentWarning, mainContentFocus, locale */
   metadata?: InputMaybe<PublicationMetadataFilters>;
 };
 
@@ -1401,18 +1398,14 @@ export type ReportingReasonInput = {
   spamReason?: InputMaybe<SpamReasonInput>;
 };
 
+export type RevenueFromPublicationRequest = {
+  for: Scalars['PublicationId']['input'];
+};
+
 export type RevenueFromPublicationsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   for: Scalars['ProfileId']['input'];
   limit?: InputMaybe<LimitType>;
-  where: RevenueFromPublicationsWhere;
-};
-
-export type RevenueFromPublicationsWhere = {
-  anyOf?: InputMaybe<Array<OpenActionFilter>>;
-  fromCollects: Scalars['Boolean']['input'];
-  metadata?: InputMaybe<PublicationMetadataFilters>;
-  publicationTypes?: InputMaybe<Array<PublicationType>>;
 };
 
 export type SensitiveReasonInput = {

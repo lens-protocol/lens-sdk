@@ -1,4 +1,4 @@
-import { ExploreProfileOrderBy, LensClient, development } from '@lens-protocol/client';
+import { ExploreProfilesOrderByType, LensClient, development } from '@lens-protocol/client';
 
 async function main() {
   const lensClient = new LensClient({
@@ -6,18 +6,18 @@ async function main() {
   });
 
   const mostFollowers = await lensClient.explore.profiles({
-    orderBy: ExploreProfileOrderBy.MostFollowers,
+    orderBy: ExploreProfilesOrderByType.MostFollowers,
   });
 
   const mostPostsThisYear = await lensClient.explore.profiles({
-    orderBy: ExploreProfileOrderBy.MostPosts,
+    orderBy: ExploreProfilesOrderByType.MostPosts,
     where: {
       since: '2023-01-01T00:00:00.000Z',
     },
   });
 
   const mostMirrored = await lensClient.explore.profiles({
-    orderBy: ExploreProfileOrderBy.MostMirrors,
+    orderBy: ExploreProfilesOrderByType.MostMirrors,
   });
 
   console.log(JSON.stringify(mostFollowers, null, 2));

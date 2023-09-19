@@ -54,7 +54,7 @@ export type RevenueFromPublicationsQuery = {
 };
 
 export type RevenueFromPublicationQueryVariables = Types.Exact<{
-  request: Types.PublicationRevenueRequest;
+  request: Types.RevenueFromPublicationRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
@@ -128,7 +128,7 @@ export const RevenueFromPublicationsDocument = gql`
 `;
 export const RevenueFromPublicationDocument = gql`
   query RevenueFromPublication(
-    $request: PublicationRevenueRequest!
+    $request: RevenueFromPublicationRequest!
     $publicationImageTransform: ImageTransform = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}

@@ -1,5 +1,5 @@
 export {
-  ExploreProfileOrderBy,
+  ExploreProfilesOrderByType,
   ExplorePublicationType,
   ExplorePublicationsOrderByType,
 } from '../../graphql/types.generated';

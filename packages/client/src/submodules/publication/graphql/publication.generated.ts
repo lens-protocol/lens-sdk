@@ -42,6 +42,7 @@ export type PublicationStatsFragment = {
   comments: number;
   mirrors: number;
   quotes: number;
+  bookmarks: number;
   countOpenActions: number;
   upvoteReactions: number;
   downvoteReactions: number;
@@ -423,6 +424,7 @@ export const PublicationStatsFragmentDoc = gql`
     comments
     mirrors
     quotes
+    bookmarks
     upvoteReactions: reactions(request: { type: UPVOTE })
     downvoteReactions: reactions(request: { type: DOWNVOTE })
     countOpenActions(request: $openActionsRequest)

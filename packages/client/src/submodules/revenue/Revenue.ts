@@ -3,7 +3,7 @@ import type { LensConfig } from '../../consts/config';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import type {
   FollowRevenueRequest,
-  PublicationRevenueRequest,
+  RevenueFromPublicationRequest,
   RevenueFromPublicationsRequest,
 } from '../../graphql/types.generated';
 import {
@@ -57,7 +57,7 @@ export class Revenue {
   }
 
   async fromPublication(
-    request: PublicationRevenueRequest,
+    request: RevenueFromPublicationRequest,
   ): Promise<PublicationRevenueFragment | null> {
     const result = await this.sdk.RevenueFromPublication({
       request,
