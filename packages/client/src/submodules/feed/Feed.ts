@@ -34,6 +34,23 @@ export class Feed {
     this.authentication = authentication;
   }
 
+  /**
+   * Fetch feed items.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the query
+   * @returns Array of {@link FeedItemFragment} wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.feed.fetch({
+   *   where: {
+   *     for: '0x123',
+   *   },
+   * });
+   * ```
+   */
   async fetch(
     request: FeedRequest,
   ): PromiseResult<
@@ -55,6 +72,23 @@ export class Feed {
     });
   }
 
+  /**
+   * Fetch feed highlights.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the query
+   * @returns Array of publications wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.feed.highlights({
+   *   where: {
+   *     for: '0x123',
+   *   },
+   * });
+   * ```
+   */
   async highlights(
     request: FeedHighlightsRequest,
   ): PromiseResult<

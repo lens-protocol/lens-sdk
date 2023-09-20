@@ -92,6 +92,8 @@ export type {
   LensTransactionStatusRequest,
   ExploreProfilesRequest,
   ExplorePublicationRequest,
+  FeedHighlightsRequest,
+  FeedRequest,
 
   // options
   TypedDataOptions,
