@@ -10,9 +10,9 @@ import {
   MirrorFragment,
   CommentFragment,
   Eip712TypedDataDomainFragment,
+  Eip712TypedDataFieldFragment,
   RelaySuccessFragment,
   LensProfileManagerRelayErrorFragment,
-  Eip712TypedDataFieldFragment,
   CreateMomokaPublicationResultFragment,
 } from '../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
@@ -28,9 +28,9 @@ import {
   MirrorFragmentDoc,
   CommentFragmentDoc,
   Eip712TypedDataDomainFragmentDoc,
+  Eip712TypedDataFieldFragmentDoc,
   RelaySuccessFragmentDoc,
   LensProfileManagerRelayErrorFragmentDoc,
-  Eip712TypedDataFieldFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type RevenueAggregateFragment = { total: AmountFragment };

@@ -3,11 +3,11 @@ import * as Types from '../../../graphql/types.generated';
 
 import {
   Eip712TypedDataDomainFragment,
+  Eip712TypedDataFieldFragment,
   ProfileFragment,
   PaginatedResultInfoFragment,
   RelaySuccessFragment,
   LensProfileManagerRelayErrorFragment,
-  Eip712TypedDataFieldFragment,
 } from '../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
@@ -15,11 +15,11 @@ import { print } from 'graphql';
 import gql from 'graphql-tag';
 import {
   Eip712TypedDataDomainFragmentDoc,
+  Eip712TypedDataFieldFragmentDoc,
   ProfileFragmentDoc,
   PaginatedResultInfoFragmentDoc,
   RelaySuccessFragmentDoc,
   LensProfileManagerRelayErrorFragmentDoc,
-  Eip712TypedDataFieldFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type ProfileManagerFragment = { address: string };
 
@@ -132,6 +132,26 @@ export type CreateSetFollowModuleBroadcastItemResultFragment = {
       followModule: string;
       followModuleInitData: string;
     };
+  };
+};
+
+export type CreateHandleLinkToProfileBroadcastItemResultFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { Link: Array<Eip712TypedDataFieldFragment> };
+    domain: Eip712TypedDataDomainFragment;
+    value: { nonce: string; deadline: string; profileId: string; handleId: string };
+  };
+};
+
+export type CreateHandleUnlinkFromProfileBroadcastItemResultFragment = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { Unlink: Array<Eip712TypedDataFieldFragment> };
+    domain: Eip712TypedDataDomainFragment;
+    value: { nonce: string; deadline: string; profileId: string; handleId: string };
   };
 };
 
@@ -384,32 +404,12 @@ export type HandleUnlinkFromProfileMutation = {
   result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
 };
 
-export type CreateHandleLinkToProfileBroadcastItemResultFragment = {
-  id: string;
-  expiresAt: string;
-  typedData: {
-    types: { Link: Array<Eip712TypedDataFieldFragment> };
-    domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string; profileId: string; handleId: string };
-  };
-};
-
 export type CreateHandleLinkToProfileTypedDataMutationVariables = Types.Exact<{
   request: Types.HandleLinkToProfileRequest;
 }>;
 
 export type CreateHandleLinkToProfileTypedDataMutation = {
   result: CreateHandleLinkToProfileBroadcastItemResultFragment;
-};
-
-export type CreateHandleUnlinkFromProfileBroadcastItemResultFragment = {
-  id: string;
-  expiresAt: string;
-  typedData: {
-    types: { Unlink: Array<Eip712TypedDataFieldFragment> };
-    domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string; profileId: string; handleId: string };
-  };
 };
 
 export type CreateHandleUnlinkFromProfileTypedDataMutationVariables = Types.Exact<{
@@ -606,23 +606,6 @@ export const CreateSetFollowModuleBroadcastItemResultFragmentDoc = gql`
   }
   ${Eip712TypedDataDomainFragmentDoc}
 `;
-export const ProfileStatsFragmentDoc = gql`
-  fragment ProfileStats on ProfileStats {
-    id
-    followers
-    following
-    comments
-    posts
-    mirrors
-    quotes
-    mirrors
-    quotes
-    publications
-    upvoteReactions: reactions(request: { type: UPVOTE })
-    downvoteReactions: reactions(request: { type: DOWNVOTE })
-    countOpenActions(request: $profileStatsCountOpenActionArgs)
-  }
-`;
 export const CreateHandleLinkToProfileBroadcastItemResultFragmentDoc = gql`
   fragment CreateHandleLinkToProfileBroadcastItemResult on CreateHandleLinkToProfileBroadcastItemResult {
     id
@@ -670,6 +653,23 @@ export const CreateHandleUnlinkFromProfileBroadcastItemResultFragmentDoc = gql`
   }
   ${Eip712TypedDataFieldFragmentDoc}
   ${Eip712TypedDataDomainFragmentDoc}
+`;
+export const ProfileStatsFragmentDoc = gql`
+  fragment ProfileStats on ProfileStats {
+    id
+    followers
+    following
+    comments
+    posts
+    mirrors
+    quotes
+    mirrors
+    quotes
+    publications
+    upvoteReactions: reactions(request: { type: UPVOTE })
+    downvoteReactions: reactions(request: { type: DOWNVOTE })
+    countOpenActions(request: $profileStatsCountOpenActionArgs)
+  }
 `;
 export const ProfileDocument = gql`
   query Profile(

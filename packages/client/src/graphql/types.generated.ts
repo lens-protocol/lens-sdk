@@ -1387,8 +1387,11 @@ export type RevenueFromPublicationRequest = {
 
 export type RevenueFromPublicationsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  /** The profile to get revenue for */
   for: Scalars['ProfileId']['input'];
   limit?: InputMaybe<LimitType>;
+  /** Will return revenue for publications made on any of the provided app ids. Will include all apps if omitted */
+  publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
 };
 
 export type SensitiveReasonInput = {

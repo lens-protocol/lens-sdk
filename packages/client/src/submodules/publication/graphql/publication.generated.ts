@@ -9,9 +9,9 @@ import {
   MirrorFragment,
   CommentFragment,
   Eip712TypedDataDomainFragment,
+  Eip712TypedDataFieldFragment,
   RelaySuccessFragment,
   LensProfileManagerRelayErrorFragment,
-  Eip712TypedDataFieldFragment,
   CreateMomokaPublicationResultFragment,
 } from '../../../graphql/fragments.generated';
 import { CreateActOnOpenActionEip712TypedDataFragment } from '../submodules/actions/graphql/actions.generated';
@@ -27,9 +27,9 @@ import {
   MirrorFragmentDoc,
   CommentFragmentDoc,
   Eip712TypedDataDomainFragmentDoc,
+  Eip712TypedDataFieldFragmentDoc,
   RelaySuccessFragmentDoc,
   LensProfileManagerRelayErrorFragmentDoc,
-  Eip712TypedDataFieldFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
 import { CreateActOnOpenActionEip712TypedDataFragmentDoc } from '../submodules/actions/graphql/actions.generated';
@@ -63,8 +63,8 @@ export type PublicationQuery = {
 
 export type PublicationStatsQueryVariables = Types.Exact<{
   request: Types.PublicationRequest;
-  statsRequest: Types.PublicationStatsInput;
-  openActionsRequest: Types.PublicationStatsCountOpenActionArgs;
+  statsRequest?: Types.PublicationStatsInput;
+  openActionsRequest?: Types.PublicationStatsCountOpenActionArgs;
 }>;
 
 export type PublicationStatsQuery = {
@@ -769,8 +769,8 @@ export const PublicationDocument = gql`
 export const PublicationStatsDocument = gql`
   query PublicationStats(
     $request: PublicationRequest!
-    $statsRequest: PublicationStatsInput!
-    $openActionsRequest: PublicationStatsCountOpenActionArgs!
+    $statsRequest: PublicationStatsInput! = {}
+    $openActionsRequest: PublicationStatsCountOpenActionArgs! = { anyOf: [] }
   ) {
     result: publication(request: $request) {
       ... on Post {

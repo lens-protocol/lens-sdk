@@ -47,8 +47,8 @@ query Publication(
 
 query PublicationStats(
   $request: PublicationRequest!
-  $statsRequest: PublicationStatsInput!
-  $openActionsRequest: PublicationStatsCountOpenActionArgs!
+  $statsRequest: PublicationStatsInput! = {}
+  $openActionsRequest: PublicationStatsCountOpenActionArgs! = { anyOf: [] }
 ) {
   result: publication(request: $request) {
     ... on Post {

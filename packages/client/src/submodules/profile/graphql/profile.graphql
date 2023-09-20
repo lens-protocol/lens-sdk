@@ -168,6 +168,48 @@ fragment CreateSetFollowModuleBroadcastItemResult on CreateSetFollowModuleBroadc
   }
 }
 
+fragment CreateHandleLinkToProfileBroadcastItemResult on CreateHandleLinkToProfileBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      Link {
+        ...EIP712TypedDataField
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      handleId
+    }
+  }
+}
+
+fragment CreateHandleUnlinkFromProfileBroadcastItemResult on CreateHandleUnlinkFromProfileBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      Unlink {
+        ...EIP712TypedDataField
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      handleId
+    }
+  }
+}
+
 fragment ProfileStats on ProfileStats {
   id
   followers
@@ -473,51 +515,9 @@ mutation HandleUnlinkFromProfile($request: HandleUnlinkFromProfileRequest!) {
   }
 }
 
-fragment CreateHandleLinkToProfileBroadcastItemResult on CreateHandleLinkToProfileBroadcastItemResult {
-  id
-  expiresAt
-  typedData {
-    types {
-      Link {
-        ...EIP712TypedDataField
-      }
-    }
-    domain {
-      ...EIP712TypedDataDomain
-    }
-    value {
-      nonce
-      deadline
-      profileId
-      handleId
-    }
-  }
-}
-
 mutation CreateHandleLinkToProfileTypedData($request: HandleLinkToProfileRequest!) {
   result: createHandleLinkToProfileTypedData(request: $request) {
     ...CreateHandleLinkToProfileBroadcastItemResult
-  }
-}
-
-fragment CreateHandleUnlinkFromProfileBroadcastItemResult on CreateHandleUnlinkFromProfileBroadcastItemResult {
-  id
-  expiresAt
-  typedData {
-    types {
-      Unlink {
-        ...EIP712TypedDataField
-      }
-    }
-    domain {
-      ...EIP712TypedDataDomain
-    }
-    value {
-      nonce
-      deadline
-      profileId
-      handleId
-    }
   }
 }
 

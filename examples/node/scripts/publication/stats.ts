@@ -7,7 +7,7 @@ async function main() {
 
   const result = await client.publication.stats({
     request: {
-      forId: '0x123',
+      forId: '0x04-0x0b',
     },
   });
 

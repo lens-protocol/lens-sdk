@@ -49,13 +49,13 @@ import {
   CreateOnchainQuoteBroadcastItemResultFragment,
   getSdk,
   PublicationStatsFragment,
+  PublicationStatsQueryVariables,
   PublicationValidateMetadataResultFragment,
   Sdk,
   TagResultFragment,
 } from './graphql/publication.generated';
 import { isMirrorPublication } from './helpers';
 import { Bookmarks, Reactions, NotInterested, Actions } from './submodules';
-import { PublicationStatsVariables } from './types';
 
 /**
  * Publications are the posts, comments, mirrors and quotes that a profile creates.
@@ -157,26 +157,22 @@ export class Publication {
   /**
    * Fetch a publication's stats
    *
-   * @param vars - Object defining all variables for the query
+   * @param variables - Object defining all variables for the query
    * @returns {@link PublicationStatsFragment} or undefined if not found or publication is a mirror
    *
    * @example
    * ```ts
    * const result = await client.publication.stats({
    *   request: {
-   *     forId: '0x123',
+   *     forId: '0x123-0x456',
    *   },
    * });
    * ```
    */
-  async stats(vars: PublicationStatsVariables): Promise<PublicationStatsFragment | undefined> {
-    const { request, statsRequest = {}, openActionsRequest = { anyOf: [] } } = vars;
-
-    const result = await this.sdk.PublicationStats({
-      request,
-      statsRequest,
-      openActionsRequest,
-    });
+  async stats(
+    variables: PublicationStatsQueryVariables,
+  ): Promise<PublicationStatsFragment | undefined> {
+    const result = await this.sdk.PublicationStats(variables);
 
     const data = result.data.result;
 

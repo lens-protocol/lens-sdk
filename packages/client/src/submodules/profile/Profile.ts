@@ -34,10 +34,8 @@ import type {
 } from '../../graphql/types.generated';
 import {
   PaginatedResult,
-  ProfileQueryOptions,
   buildImageTransformsFromConfig,
   buildPaginatedQueryResult,
-  buildProfileQueryOptions,
   requireAuthHeaders,
   sdkAuthHeaderWrapper,
 } from '../../helpers';
@@ -54,17 +52,19 @@ import {
   CreateUnfollowBroadcastItemResultFragment,
   ProfileManagerFragment,
   ProfileStatsFragment,
+  ProfileStatsQueryVariables,
   Sdk,
   getSdk,
 } from './graphql/profile.generated';
 
 /**
+ * Profiles are the accounts that create publications and are owned by wallets
+ *
  * @group LensClient Modules
  */
 export class Profile {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
-  private readonly defaultOptions: ProfileQueryOptions;
 
   constructor(
     private readonly config: LensConfig,
@@ -74,9 +74,6 @@ export class Profile {
 
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
-    this.defaultOptions = buildProfileQueryOptions({
-      config,
-    });
   }
 
   async fetch(request: ProfileRequest): Promise<ProfileFragment | null> {
@@ -97,6 +94,39 @@ export class Profile {
 
       return result.data.result;
     }, request);
+  }
+
+  /**
+   * Fetches a profile's stats
+   *
+   * @param variables - Object defining all variables for the query
+   * @returns {@link ProfileStatsFragment} or undefined if not found
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.stats({
+   *   request: {
+   *     forProfileId: '0x01',
+   *   },
+   * });
+   * ```
+   */
+  async stats(variables: ProfileStatsQueryVariables): Promise<ProfileStatsFragment | undefined> {
+    const {
+      request,
+      profileStatsArg = {
+        forApps: this.config.forApps,
+      },
+      profileStatsCountOpenActionArgs = { anyOf: [] },
+    } = variables;
+
+    const result = await this.sdk.ProfileStats({
+      request,
+      profileStatsArg,
+      profileStatsCountOpenActionArgs,
+    });
+
+    return result.data.result?.stats;
   }
 
   async managers(
@@ -284,18 +314,6 @@ export class Profile {
     return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.DismissRecommendedProfiles({ request }, headers);
     });
-  }
-
-  async stats(
-    request: ProfileRequest,
-    options: ProfileQueryOptions = this.defaultOptions,
-  ): Promise<ProfileStatsFragment | undefined> {
-    const result = await this.sdk.ProfileStats({
-      request,
-      ...options,
-    });
-
-    return result.data.result?.stats;
   }
 
   async createOnchainSetProfileMetadataTypedData(
