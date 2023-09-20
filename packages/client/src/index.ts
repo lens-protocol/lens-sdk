@@ -90,6 +90,8 @@ export type {
   ValidatePublicationMetadataRequest,
   BroadcastRequest,
   LensTransactionStatusRequest,
+  ExploreProfilesRequest,
+  ExplorePublicationRequest,
 
   // options
   TypedDataOptions,
@@ -115,4 +117,7 @@ export {
   PublicationReportingSpamSubreason,
   PublicationType,
   RefreshPublicationMetadataResultType,
+  ExploreProfilesOrderByType,
+  ExplorePublicationType,
+  ExplorePublicationsOrderByType,
 } from './graphql/types.generated';

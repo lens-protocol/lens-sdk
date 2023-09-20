@@ -72,7 +72,7 @@ export class Transaction {
    *
    * @example
    * ```ts
-   * const queues = await client.transaction.relayQueues();
+   * const result = await client.transaction.relayQueues();
    * ```
    */
   async relayQueues(): Promise<RelayQueueResultFragment[]> {
