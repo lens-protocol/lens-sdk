@@ -8,8 +8,6 @@ import {
   Eip712TypedDataDomainFragment,
   ProfileFragment,
   PaginatedResultInfoFragment,
-  RelayErrorFragment,
-  CreateMomokaPublicationResultFragment,
 } from '../../../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
@@ -22,8 +20,6 @@ import {
   Eip712TypedDataDomainFragmentDoc,
   ProfileFragmentDoc,
   PaginatedResultInfoFragmentDoc,
-  RelayErrorFragmentDoc,
-  CreateMomokaPublicationResultFragmentDoc,
 } from '../../../../../graphql/fragments.generated';
 export type ActOnOpenActionMutationVariables = Types.Exact<{
   request: Types.ActOnOpenActionLensManagerRequest;

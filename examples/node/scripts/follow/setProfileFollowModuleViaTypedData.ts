@@ -65,7 +65,7 @@ async function main() {
   );
 
   // wait for follow to be indexed
-  await lensClient.transaction.waitUntilComplete({ txId: followBroadcastResultValue.txId });
+  await lensClient.transaction.waitUntilComplete({ forTxId: followBroadcastResultValue.txId });
 }
 
 main();

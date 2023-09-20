@@ -41,7 +41,7 @@ async function main() {
 
   // wait in a loop
   console.log(`Waiting for the transaction to be indexed...`);
-  await client.transaction.waitUntilComplete({ txId: broadcastValue.txId });
+  await client.transaction.waitUntilComplete({ forTxId: broadcastValue.txId });
 }
 
 main();

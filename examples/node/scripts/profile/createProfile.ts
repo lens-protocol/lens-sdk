@@ -28,7 +28,7 @@ async function main() {
   );
 
   console.log(`Waiting for the transaction to be indexed...`);
-  await client.transaction.waitUntilComplete({ txId: profileCreateResult.txId });
+  await client.transaction.waitUntilComplete({ forTxId: profileCreateResult.txId });
 
   const allOwnedProfiles = await client.profile.fetchAll({
     where: {

@@ -11,11 +11,16 @@ import type {
 } from '../../graphql/fragments.generated';
 import {
   LensTransactionStatusType,
-  type BroadcastRequest,
-  type LensTransactionStatusRequest,
+  BroadcastRequest,
+  LensTransactionStatusRequest,
 } from '../../graphql/types.generated';
 import { poll, requireAuthHeaders, sdkAuthHeaderWrapper } from '../../helpers';
-import { getSdk, LensTransactionResultFragment, Sdk } from './graphql/transaction.generated';
+import {
+  getSdk,
+  LensTransactionResultFragment,
+  RelayQueueResultFragment,
+  Sdk,
+} from './graphql/transaction.generated';
 
 export class TransactionPollingError extends Error {
   name = 'TransactionPollingError' as const;
@@ -44,18 +49,53 @@ export class Transaction {
     this.authentication = authentication;
   }
 
-  async status(
-    request: LensTransactionStatusRequest,
-  ): Promise<LensTransactionResultFragment | null> {
-    const result = await this.sdk.LensTransactionStatus({ request });
-    return result.data.result;
-  }
-
+  /**
+   * Get the transaction hash for a transaction id.
+   * @param txId - The transaction id
+   * @returns The transaction hash
+   *
+   * @example
+   * ```ts
+   * const txHash = await client.transaction.txIdToTxHash(txId);
+   * ```
+   */
   async txIdToTxHash(txId: string): Promise<string | null> {
     const result = await this.sdk.TxIdToTxHash({ for: txId });
     return result.data.result;
   }
 
+  /**
+   * Use to see the size of relayers queue
+   * if there are delays in txs being submitted onchain.
+   *
+   * @returns The relay queues
+   *
+   * @example
+   * ```ts
+   * const queues = await client.transaction.relayQueues();
+   * ```
+   */
+  async relayQueues(): Promise<RelayQueueResultFragment[]> {
+    const result = await this.sdk.RelayQueues();
+    return result.data.result;
+  }
+
+  /**
+   * Broadcast a signed typed data for a gasless transaction onchain.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelaySuccessFragment} or {@link RelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.transaction.broadcastOnchain({
+   *   id: data.id,
+   *   signature: signedTypedData,
+   * });
+   * ```
+   */
   async broadcastOnchain(
     request: BroadcastRequest,
   ): PromiseResult<
@@ -68,6 +108,22 @@ export class Transaction {
     });
   }
 
+  /**
+   * Broadcast a signed typed data for a Momoka transaction.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link CreateMomokaPublicationResultFragment} or {@link RelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.transaction.broadcastOnMomoka({
+   *   id: data.id,
+   *   signature: signedTypedData,
+   * });
+   * ```
+   */
   async broadcastOnMomoka(
     request: BroadcastRequest,
   ): PromiseResult<
@@ -80,13 +136,44 @@ export class Transaction {
     });
   }
 
-  async waitUntilComplete({
-    txId,
-  }: {
-    txId: string;
-  }): Promise<LensTransactionResultFragment | null> {
+  /**
+   * Get the status of a transaction.
+   *
+   * @param request - Request object for the query
+   * @returns The transaction status
+   *
+   * @example
+   * ```ts
+   * const result = await client.transaction.status({
+   *   forTxId: txId
+   * });
+   * ```
+   */
+  async status(
+    request: LensTransactionStatusRequest,
+  ): Promise<LensTransactionResultFragment | null> {
+    const result = await this.sdk.LensTransactionStatus({ request });
+    return result.data.result;
+  }
+
+  /**
+   * Poll the transaction status until it has been completed.
+   *
+   * @param txId - transaction id
+   * @returns {@link PromiseResult} with {@link TransactionIndexedResultFragment} or {@link TransactionErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.transaction.waitUntilComplete({
+   *   forTxId: txId
+   * });
+   * ```
+   */
+  async waitUntilComplete(
+    request: LensTransactionStatusRequest,
+  ): Promise<LensTransactionResultFragment | null> {
     return poll({
-      fn: () => this.status({ forTxId: txId }),
+      fn: () => this.status(request),
       validate: (result: Awaited<ReturnType<typeof this.status>>) => {
         return result?.status === LensTransactionStatusType.Complete;
       },

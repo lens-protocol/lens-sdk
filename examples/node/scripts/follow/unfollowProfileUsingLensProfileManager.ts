@@ -24,7 +24,7 @@ async function main() {
     throw new Error(`Something went wrong`);
   }
 
-  await lensClient.transaction.waitUntilComplete({ txId: unfollowResultValue.txId });
+  await lensClient.transaction.waitUntilComplete({ forTxId: unfollowResultValue.txId });
 }
 
 main();

@@ -7,6 +7,13 @@ import {
   Erc20Fragment,
   PaginatedResultInfoFragment,
   ImageFragment,
+  RelaySuccessFragment,
+  LensProfileManagerRelayErrorFragment,
+  Eip712TypedDataFieldFragment,
+  Eip712TypedDataDomainFragment,
+  ProfileFragment,
+  RelayErrorFragment,
+  CreateMomokaPublicationResultFragment,
 } from '../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
@@ -18,6 +25,13 @@ import {
   Erc20FragmentDoc,
   PaginatedResultInfoFragmentDoc,
   ImageFragmentDoc,
+  RelaySuccessFragmentDoc,
+  LensProfileManagerRelayErrorFragmentDoc,
+  Eip712TypedDataFieldFragmentDoc,
+  Eip712TypedDataDomainFragmentDoc,
+  ProfileFragmentDoc,
+  RelayErrorFragmentDoc,
+  CreateMomokaPublicationResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type OwnerFragment = { amount: string; address: string };
 

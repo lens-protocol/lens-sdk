@@ -2,12 +2,16 @@
 import * as Types from '../../../graphql/types.generated';
 
 import {
+  NetworkAddressFragment,
+  AmountFragment,
+  Erc20Fragment,
+  PaginatedResultInfoFragment,
+  ImageFragment,
   RelaySuccessFragment,
   LensProfileManagerRelayErrorFragment,
   Eip712TypedDataFieldFragment,
   Eip712TypedDataDomainFragment,
   ProfileFragment,
-  PaginatedResultInfoFragment,
   RelayErrorFragment,
   CreateMomokaPublicationResultFragment,
 } from '../../../graphql/fragments.generated';
@@ -16,12 +20,16 @@ import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
 import {
+  NetworkAddressFragmentDoc,
+  AmountFragmentDoc,
+  Erc20FragmentDoc,
+  PaginatedResultInfoFragmentDoc,
+  ImageFragmentDoc,
   RelaySuccessFragmentDoc,
   LensProfileManagerRelayErrorFragmentDoc,
   Eip712TypedDataFieldFragmentDoc,
   Eip712TypedDataDomainFragmentDoc,
   ProfileFragmentDoc,
-  PaginatedResultInfoFragmentDoc,
   RelayErrorFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
@@ -37,6 +45,16 @@ export type TxIdToTxHashQueryVariables = Types.Exact<{
 }>;
 
 export type TxIdToTxHashQuery = { result: string | null };
+
+export type RelayQueueResultFragment = {
+  key: Types.RelayRoleKey;
+  queue: number;
+  relay: NetworkAddressFragment;
+};
+
+export type RelayQueuesQueryVariables = Types.Exact<{ [key: string]: never }>;
+
+export type RelayQueuesQuery = { result: Array<RelayQueueResultFragment> };
 
 export type LensTransactionStatusQueryVariables = Types.Exact<{
   request: Types.LensTransactionStatusRequest;
@@ -66,10 +84,28 @@ export const LensTransactionResultFragmentDoc = gql`
     extraInfo
   }
 `;
+export const RelayQueueResultFragmentDoc = gql`
+  fragment RelayQueueResult on RelayQueueResult {
+    key
+    relay {
+      ...NetworkAddress
+    }
+    queue
+  }
+  ${NetworkAddressFragmentDoc}
+`;
 export const TxIdToTxHashDocument = gql`
   query TxIdToTxHash($for: TxId!) {
     result: txIdToTxHash(for: $for)
   }
+`;
+export const RelayQueuesDocument = gql`
+  query RelayQueues {
+    result: relayQueues {
+      ...RelayQueueResult
+    }
+  }
+  ${RelayQueueResultFragmentDoc}
 `;
 export const LensTransactionStatusDocument = gql`
   query LensTransactionStatus($request: LensTransactionStatusRequest!) {
@@ -116,6 +152,7 @@ export type SdkFunctionWrapper = <T>(
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const TxIdToTxHashDocumentString = print(TxIdToTxHashDocument);
+const RelayQueuesDocumentString = print(RelayQueuesDocument);
 const LensTransactionStatusDocumentString = print(LensTransactionStatusDocument);
 const BroadcastOnchainDocumentString = print(BroadcastOnchainDocument);
 const BroadcastOnMomokaDocumentString = print(BroadcastOnMomokaDocument);
@@ -137,6 +174,20 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'TxIdToTxHash',
+        'query',
+      );
+    },
+    RelayQueues(
+      variables?: RelayQueuesQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: RelayQueuesQuery; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<RelayQueuesQuery>(RelayQueuesDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'RelayQueues',
         'query',
       );
     },

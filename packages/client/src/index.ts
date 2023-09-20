@@ -88,6 +88,8 @@ export type {
   UnblockRequest,
   UnfollowRequest,
   ValidatePublicationMetadataRequest,
+  BroadcastRequest,
+  LensTransactionStatusRequest,
 
   // options
   TypedDataOptions,

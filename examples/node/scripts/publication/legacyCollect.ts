@@ -22,7 +22,7 @@ async function main() {
 
   // wait in a loop
   console.log(`Waiting for the transaction to be indexed...`);
-  await client.transaction.waitUntilComplete({ txId: resultValue.txId });
+  await client.transaction.waitUntilComplete({ forTxId: resultValue.txId });
 }
 
 main();

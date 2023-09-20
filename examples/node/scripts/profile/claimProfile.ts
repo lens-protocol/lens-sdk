@@ -29,7 +29,7 @@ async function main() {
   );
 
   console.log(`Waiting for the transaction to be indexed...`);
-  await lensClient.transaction.waitUntilComplete({ txId: claimResultValue.txId });
+  await lensClient.transaction.waitUntilComplete({ forTxId: claimResultValue.txId });
 }
 
 main();

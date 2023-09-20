@@ -18,7 +18,7 @@ async function main() {
     return;
   }
 
-  await lensClient.transaction.waitUntilComplete({ txId: data.txId });
+  await lensClient.transaction.waitUntilComplete({ forTxId: data.txId });
 }
 
 main();

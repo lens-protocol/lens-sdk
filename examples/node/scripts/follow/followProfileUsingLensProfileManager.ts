@@ -37,7 +37,7 @@ async function main() {
     throw new Error(`Something went wrong`);
   }
 
-  await lensClient.transaction.waitUntilComplete({ txId: followResultValue.txId });
+  await lensClient.transaction.waitUntilComplete({ forTxId: followResultValue.txId });
 }
 
 main();

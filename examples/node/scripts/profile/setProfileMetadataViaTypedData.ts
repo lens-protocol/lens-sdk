@@ -36,7 +36,7 @@ async function main() {
   }
 
   // or wait till transaction is indexed
-  await lensClient.transaction.waitUntilComplete({ txId: broadcastResultValue.txId });
+  await lensClient.transaction.waitUntilComplete({ forTxId: broadcastResultValue.txId });
 
   console.log(`Transaction was successfully broadcasted with txId ${broadcastResultValue.txId}`);
 }

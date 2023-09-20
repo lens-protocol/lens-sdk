@@ -9,6 +9,20 @@ query TxIdToTxHash($for: TxId!) {
   result: txIdToTxHash(for: $for)
 }
 
+fragment RelayQueueResult on RelayQueueResult {
+  key
+  relay {
+    ...NetworkAddress
+  }
+  queue
+}
+
+query RelayQueues {
+  result: relayQueues {
+    ...RelayQueueResult
+  }
+}
+
 query LensTransactionStatus($request: LensTransactionStatusRequest!) {
   result: lensTransactionStatus(request: $request) {
     ...LensTransactionResult

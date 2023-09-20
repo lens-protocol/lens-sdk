@@ -46,7 +46,7 @@ async function main() {
     throw new Error('Failed to set follow module');
   }
 
-  await lensClient.transaction.waitUntilComplete({ txId: followModuleResultValue.txId });
+  await lensClient.transaction.waitUntilComplete({ forTxId: followModuleResultValue.txId });
 }
 
 main();
