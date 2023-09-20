@@ -1,6 +1,9 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": ["packages/react-web", "packages/client"],
+  "entryPoints": [
+    // "packages/react-web",
+    "packages/client"
+  ],
   "entryPointStrategy": "packages",
   "excludeExternals": false,
   "excludeInternal": false,
@@ -17,13 +20,13 @@
   "disableSources": true,
   "treatWarningsAsErrors": false,
   "intentionallyNotExported": [
-    "AnyTransactionRequestModel",
-    "SelfFundedProtocolTransactionRequest",
-    "ContentInsightMatcher",
-    "SnapshotPoll",
-    "Undetermined",
-    "EnvironmentConfig",
-    "ProfileIdentifier"
+    // "AnyTransactionRequestModel",
+    // "SelfFundedProtocolTransactionRequest",
+    // "ContentInsightMatcher",
+    // "SnapshotPoll",
+    // "Undetermined",
+    // "EnvironmentConfig",
+    // "ProfileIdentifier"
   ],
   "categoryOrder": ["Components", "Hooks", "Utils", "*"],
   "categorizeByGroup": true,
