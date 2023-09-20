@@ -1,19 +1,25 @@
 import { LensClient, development } from '@lens-protocol/client';
 
 async function main() {
-  const lensClient = new LensClient({
+  const client = new LensClient({
     environment: development,
   });
 
-  const publicationRevenue = await lensClient.revenue.fromPublication({
-    for: 'PUBLICATION_ID',
-  });
+  try {
+    const publications = await client.publication.fetchAll();
 
-  console.log(
-    `Publication revenue for publication with id: ${
-      publicationRevenue.publication.id
-    } - ${JSON.stringify(publicationRevenue.revenue)}`,
-  );
+    const firstPublication = publications.items[0];
+
+    const publicationRevenue = await client.revenue.fromPublication({
+      for: firstPublication.id,
+    });
+
+    console.log(`Revenue for publication with id: ${firstPublication.id}`, publicationRevenue);
+  } catch (e) {
+    if (e instanceof Error) {
+      console.log(e.message);
+    }
+  }
 }
 
 main();

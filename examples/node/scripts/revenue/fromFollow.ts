@@ -1,19 +1,17 @@
 import { LensClient, development } from '@lens-protocol/client';
 
 async function main() {
-  const lensClient = new LensClient({
+  const client = new LensClient({
     environment: development,
   });
 
-  const profileId = 'PROFILE_ID';
+  const profileId = '0x01';
 
-  const followRevenue = await lensClient.revenue.fromFollow({
-    for: 'PROFILE_ID',
+  const result = await client.revenue.fromFollow({
+    for: profileId,
   });
 
-  console.log(
-    `Follow revenue for profile with id: ${profileId} - ${JSON.stringify(followRevenue)}`,
-  );
+  console.log(`Follow revenue for profile with id: ${profileId}`, result);
 }
 
 main();
