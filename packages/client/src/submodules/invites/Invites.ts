@@ -62,35 +62,33 @@ export class Invites {
   /**
    * Check if a profile is already invited.
    *
-   * @param request - {@link AlreadyInvitedCheckRequest}
+   * @param request - Request object for the query
    * @returns boolean
    *
    * @example
    * ```
    * const result = await client.invites.profileAlreadyInvited({
-   *    address: '0x1234567890123456789012345678901234567890',
-   *  });
+   *   address: '0x1234567890123456789012345678901234567890',
+   * });
    * ```
    */
-  async profileAlreadyInvited(
-    request: AlreadyInvitedCheckRequest,
-  ): PromiseResult<boolean, CredentialsExpiredError | NotAuthenticatedError> {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.ProfileAlreadyInvited({ request }, headers);
-      return result.data.result;
-    });
+  async profileAlreadyInvited(request: AlreadyInvitedCheckRequest): Promise<boolean> {
+    const result = await this.sdk.ProfileAlreadyInvited({ request });
+    return result.data.result;
   }
 
   /**
    * Invite one or many wallet addresses to join Lens Protocol.
    *
-   * @param request - {@link InviteRequest}
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
    * @returns {@link PromiseResult} with void
    *
    * @example
    * ```ts
    * const result = await client.invites.inviteProfile({
-   *   addresses: ['0x1234567890123456789012345678901234567890'],
+   *   invites: ['0x1234567890123456789012345678901234567890'],
    *   secret: 'secret',
    * });
    * ```
