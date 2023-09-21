@@ -1,7 +1,16 @@
 // @ts-nocheck
 import * as Types from '../../../graphql/types.generated';
 
-import { PaginatedResultInfoFragment, ProfileFragment } from '../../../graphql/fragments.generated';
+import {
+  PaginatedResultInfoFragment,
+  ProfileFragment,
+  PostFragment,
+  QuoteFragment,
+  CommentFragment,
+  MirrorFragment,
+  OpenActionResult_KnownCollectOpenActionResult_Fragment,
+  OpenActionResult_UnknownOpenActionResult_Fragment,
+} from '../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
@@ -9,6 +18,11 @@ import gql from 'graphql-tag';
 import {
   PaginatedResultInfoFragmentDoc,
   ProfileFragmentDoc,
+  PostFragmentDoc,
+  QuoteFragmentDoc,
+  CommentFragmentDoc,
+  MirrorFragmentDoc,
+  OpenActionResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type HandleResultFragment = { handle: string };
 

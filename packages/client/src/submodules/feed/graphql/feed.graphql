@@ -1,6 +1,6 @@
 fragment ReactionEvent on ReactionEvent {
   by {
-    ...ProfileFields
+    ...Profile
   }
   reaction
   createdAt

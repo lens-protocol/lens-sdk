@@ -3,13 +3,15 @@ import * as Types from '../../../graphql/types.generated';
 
 import {
   PostFragment,
-  QuoteFragment,
   ProfileFragment,
+  QuoteFragment,
   PaginatedResultInfoFragment,
   MirrorFragment,
   CommentFragment,
   Eip712TypedDataDomainFragment,
   Eip712TypedDataFieldFragment,
+  OpenActionResult_KnownCollectOpenActionResult_Fragment,
+  OpenActionResult_UnknownOpenActionResult_Fragment,
   RelaySuccessFragment,
   LensProfileManagerRelayErrorFragment,
   CreateMomokaPublicationResultFragment,
@@ -20,13 +22,14 @@ import { print } from 'graphql';
 import gql from 'graphql-tag';
 import {
   PostFragmentDoc,
-  QuoteFragmentDoc,
   ProfileFragmentDoc,
+  QuoteFragmentDoc,
   PaginatedResultInfoFragmentDoc,
   MirrorFragmentDoc,
   CommentFragmentDoc,
   Eip712TypedDataDomainFragmentDoc,
   Eip712TypedDataFieldFragmentDoc,
+  OpenActionResultFragmentDoc,
   RelaySuccessFragmentDoc,
   LensProfileManagerRelayErrorFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,

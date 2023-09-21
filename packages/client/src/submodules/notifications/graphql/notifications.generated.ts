@@ -2,10 +2,9 @@
 import * as Types from '../../../graphql/types.generated';
 
 import {
-  ProfileFieldsFragment,
+  ProfileFragment,
   PostFragment,
   QuoteFragment,
-  ProfileFragment,
   PaginatedResultInfoFragment,
   CommentFragment,
   MirrorFragment,
@@ -17,10 +16,9 @@ import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
 import {
-  ProfileFieldsFragmentDoc,
+  ProfileFragmentDoc,
   PostFragmentDoc,
   QuoteFragmentDoc,
-  ProfileFragmentDoc,
   PaginatedResultInfoFragmentDoc,
   CommentFragmentDoc,
   MirrorFragmentDoc,
@@ -30,7 +28,7 @@ export type ReactionNotificationFragment = {
   __typename: 'ReactionNotification';
   id: string;
   reactions: Array<{
-    profile: ProfileFieldsFragment;
+    profile: ProfileFragment;
     reactions: Array<{ reaction: Types.PublicationReactionType; reactedAt: string }>;
   }>;
   publication: CommentFragment | PostFragment | QuoteFragment;
@@ -45,7 +43,7 @@ export type CommentNotificationFragment = {
 export type MirrorNotificationFragment = {
   __typename: 'MirrorNotification';
   id: string;
-  mirrors: Array<{ mirrorId: string; mirroredAt: string; profile: ProfileFieldsFragment }>;
+  mirrors: Array<{ mirrorId: string; mirroredAt: string; profile: ProfileFragment }>;
   publication: CommentFragment | PostFragment | QuoteFragment;
 };
 
@@ -57,7 +55,7 @@ export type QuoteNotificationFragment = {
 
 export type OpenActionProfileActedFragment = {
   actedAt: string;
-  by: ProfileFieldsFragment;
+  by: ProfileFragment;
   action:
     | OpenActionResult_KnownCollectOpenActionResult_Fragment
     | OpenActionResult_UnknownOpenActionResult_Fragment;
@@ -73,7 +71,7 @@ export type ActedNotificationFragment = {
 export type FollowNotificationFragment = {
   __typename: 'FollowNotification';
   id: string;
-  followers: Array<ProfileFieldsFragment>;
+  followers: Array<ProfileFragment>;
 };
 
 export type MentionNotificationFragment = {
@@ -112,7 +110,7 @@ export const ReactionNotificationFragmentDoc = gql`
     id
     reactions {
       profile {
-        ...ProfileFields
+        ...Profile
       }
       reactions {
         reaction
@@ -131,7 +129,7 @@ export const ReactionNotificationFragmentDoc = gql`
       }
     }
   }
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
   ${QuoteFragmentDoc}
@@ -154,7 +152,7 @@ export const MirrorNotificationFragmentDoc = gql`
       mirrorId
       mirroredAt
       profile {
-        ...ProfileFields
+        ...Profile
       }
     }
     publication {
@@ -169,7 +167,7 @@ export const MirrorNotificationFragmentDoc = gql`
       }
     }
   }
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
   ${QuoteFragmentDoc}
@@ -187,14 +185,14 @@ export const QuoteNotificationFragmentDoc = gql`
 export const OpenActionProfileActedFragmentDoc = gql`
   fragment OpenActionProfileActed on OpenActionProfileActed {
     by {
-      ...ProfileFields
+      ...Profile
     }
     action {
       ...OpenActionResult
     }
     actedAt
   }
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
   ${OpenActionResultFragmentDoc}
 `;
 export const ActedNotificationFragmentDoc = gql`
@@ -230,10 +228,10 @@ export const FollowNotificationFragmentDoc = gql`
     __typename
     id
     followers {
-      ...ProfileFields
+      ...Profile
     }
   }
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
 `;
 export const MentionNotificationFragmentDoc = gql`
   fragment MentionNotification on MentionNotification {

@@ -7,6 +7,7 @@ import {
   Momoka,
   Nfts,
   Notifications,
+  Poaps,
   Profile,
   Publication,
   Revenue,
@@ -86,6 +87,13 @@ export class LensClient {
    */
   get notifications(): Notifications {
     return new Notifications(this.config, this._authentication);
+  }
+
+  /**
+   * The Poaps module
+   */
+  get poaps(): Poaps {
+    return new Poaps(this.config, this._authentication);
   }
 
   /**

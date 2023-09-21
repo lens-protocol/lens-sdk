@@ -2,10 +2,9 @@
 import * as Types from '../../../graphql/types.generated';
 
 import {
-  ProfileFieldsFragment,
+  ProfileFragment,
   PostFragment,
   QuoteFragment,
-  ProfileFragment,
   PaginatedResultInfoFragment,
   CommentFragment,
   MirrorFragment,
@@ -17,10 +16,9 @@ import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
 import {
-  ProfileFieldsFragmentDoc,
+  ProfileFragmentDoc,
   PostFragmentDoc,
   QuoteFragmentDoc,
-  ProfileFragmentDoc,
   PaginatedResultInfoFragmentDoc,
   CommentFragmentDoc,
   MirrorFragmentDoc,
@@ -29,7 +27,7 @@ import {
 export type ReactionEventFragment = {
   reaction: Types.PublicationReactionType;
   createdAt: string;
-  by: ProfileFieldsFragment;
+  by: ProfileFragment;
 };
 
 export type FeedItemFragment = {
@@ -69,12 +67,12 @@ export type FeedHighlightsQuery = {
 export const ReactionEventFragmentDoc = gql`
   fragment ReactionEvent on ReactionEvent {
     by {
-      ...ProfileFields
+      ...Profile
     }
     reaction
     createdAt
   }
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
 `;
 export const FeedItemFragmentDoc = gql`
   fragment FeedItem on FeedItem {

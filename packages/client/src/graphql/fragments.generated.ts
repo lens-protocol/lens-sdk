@@ -101,7 +101,7 @@ export type NftImageFragment = {
   image: ProfilePictureSetFragment;
 };
 
-export type ProfileFieldsFragment = {
+export type ProfileFragment = {
   __typename: 'Profile';
   id: string;
   txHash: string;
@@ -143,9 +143,8 @@ export type ProfileFieldsFragment = {
     coverPicture: ProfileCoverSetFragment | null;
     attributes: Array<{ type: Types.AttributeType; key: string; value: string }>;
   } | null;
+  invitedBy: { id: string } | null;
 };
-
-export type ProfileFragment = { invitedBy: ProfileFieldsFragment | null } & ProfileFieldsFragment;
 
 export type PaginatedResultInfoFragment = { prev: string | null; next: string | null };
 
@@ -788,7 +787,7 @@ export type PostFragment = {
   createdAt: string;
   publishedOn: AppFragment | null;
   momoka: MomokaInfoFragment | null;
-  by: ProfileFieldsFragment;
+  by: ProfileFragment;
   operations: PublicationOperationsFragment;
   metadata:
     | ArticleMetadataV3Fragment
@@ -837,7 +836,7 @@ export type CommentBaseFragment = {
   createdAt: string;
   publishedOn: AppFragment | null;
   momoka: MomokaInfoFragment | null;
-  by: ProfileFieldsFragment;
+  by: ProfileFragment;
   operations: PublicationOperationsFragment;
   metadata:
     | ArticleMetadataV3Fragment
@@ -903,7 +902,7 @@ export type QuoteBaseFragment = {
   createdAt: string;
   publishedOn: AppFragment | null;
   momoka: MomokaInfoFragment | null;
-  by: ProfileFieldsFragment;
+  by: ProfileFragment;
   operations: PublicationOperationsFragment;
   metadata:
     | ArticleMetadataV3Fragment
@@ -977,6 +976,22 @@ export type CreateMomokaPublicationResultFragment = {
   momokaId: string;
 };
 
+export const PaginatedResultInfoFragmentDoc = gql`
+  fragment PaginatedResultInfo on PaginatedResultInfo {
+    prev
+    next
+  }
+`;
+export const AppFragmentDoc = gql`
+  fragment App on App {
+    id
+  }
+`;
+export const MomokaInfoFragmentDoc = gql`
+  fragment MomokaInfo on MomokaInfo {
+    proof
+  }
+`;
 export const NetworkAddressFragmentDoc = gql`
   fragment NetworkAddress on NetworkAddress {
     address
@@ -1109,8 +1124,8 @@ export const ProfileCoverSetFragmentDoc = gql`
   }
   ${ImageFragmentDoc}
 `;
-export const ProfileFieldsFragmentDoc = gql`
-  fragment ProfileFields on Profile {
+export const ProfileFragmentDoc = gql`
+  fragment Profile on Profile {
     __typename
     id
     ownedBy {
@@ -1194,6 +1209,9 @@ export const ProfileFieldsFragmentDoc = gql`
     handle
     sponsor
     lensManager
+    invitedBy {
+      id
+    }
   }
   ${NetworkAddressFragmentDoc}
   ${OptimisticStatusResultFragmentDoc}
@@ -1203,31 +1221,6 @@ export const ProfileFieldsFragmentDoc = gql`
   ${ProfilePictureSetFragmentDoc}
   ${NftImageFragmentDoc}
   ${ProfileCoverSetFragmentDoc}
-`;
-export const ProfileFragmentDoc = gql`
-  fragment Profile on Profile {
-    ...ProfileFields
-    invitedBy {
-      ...ProfileFields
-    }
-  }
-  ${ProfileFieldsFragmentDoc}
-`;
-export const PaginatedResultInfoFragmentDoc = gql`
-  fragment PaginatedResultInfo on PaginatedResultInfo {
-    prev
-    next
-  }
-`;
-export const AppFragmentDoc = gql`
-  fragment App on App {
-    id
-  }
-`;
-export const MomokaInfoFragmentDoc = gql`
-  fragment MomokaInfo on MomokaInfo {
-    proof
-  }
 `;
 export const KnownCollectOpenActionResultFragmentDoc = gql`
   fragment KnownCollectOpenActionResult on KnownCollectOpenActionResult {
@@ -2581,7 +2574,7 @@ export const PostFragmentDoc = gql`
     txHash
     createdAt
     by {
-      ...ProfileFields
+      ...Profile
     }
     operations {
       ...PublicationOperations
@@ -2691,7 +2684,7 @@ export const PostFragmentDoc = gql`
   }
   ${AppFragmentDoc}
   ${MomokaInfoFragmentDoc}
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
   ${PublicationOperationsFragmentDoc}
   ${LegacyPublicationMetadataFragmentDoc}
   ${AudioMetadataV3FragmentDoc}
@@ -2740,7 +2733,7 @@ export const CommentBaseFragmentDoc = gql`
     txHash
     createdAt
     by {
-      ...ProfileFields
+      ...Profile
     }
     operations {
       ...PublicationOperations
@@ -2850,7 +2843,7 @@ export const CommentBaseFragmentDoc = gql`
   }
   ${AppFragmentDoc}
   ${MomokaInfoFragmentDoc}
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
   ${PublicationOperationsFragmentDoc}
   ${LegacyPublicationMetadataFragmentDoc}
   ${AudioMetadataV3FragmentDoc}
@@ -2899,7 +2892,7 @@ export const QuoteBaseFragmentDoc = gql`
     txHash
     createdAt
     by {
-      ...ProfileFields
+      ...Profile
     }
     operations {
       ...PublicationOperations
@@ -3009,7 +3002,7 @@ export const QuoteBaseFragmentDoc = gql`
   }
   ${AppFragmentDoc}
   ${MomokaInfoFragmentDoc}
-  ${ProfileFieldsFragmentDoc}
+  ${ProfileFragmentDoc}
   ${PublicationOperationsFragmentDoc}
   ${LegacyPublicationMetadataFragmentDoc}
   ${AudioMetadataV3FragmentDoc}

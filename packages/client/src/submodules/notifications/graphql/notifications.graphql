@@ -3,7 +3,7 @@ fragment ReactionNotification on ReactionNotification {
   id
   reactions {
     profile {
-      ...ProfileFields
+      ...Profile
     }
     reactions {
       reaction
@@ -38,7 +38,7 @@ fragment MirrorNotification on MirrorNotification {
     mirrorId
     mirroredAt
     profile {
-      ...ProfileFields
+      ...Profile
     }
   }
   publication {
@@ -64,7 +64,7 @@ fragment QuoteNotification on QuoteNotification {
 
 fragment OpenActionProfileActed on OpenActionProfileActed {
   by {
-    ...ProfileFields
+    ...Profile
   }
   action {
     ...OpenActionResult
@@ -98,7 +98,7 @@ fragment FollowNotification on FollowNotification {
   __typename
   id
   followers {
-    ...ProfileFields
+    ...Profile
   }
 }
 

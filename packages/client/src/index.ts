@@ -37,7 +37,6 @@ export type {
   MirrorFragment,
   PostFragment,
   ProfileCoverSetFragment,
-  ProfileFieldsFragment,
   ProfileFragment,
   ProfilePictureSetFragment,
   QuoteFragment,
@@ -75,6 +74,7 @@ export type {
   MomokaPostRequest,
   MomokaQuoteRequest,
   MutualFollowersRequest,
+  MutualPoapsQueryRequest,
   NotificationRequest,
   OnchainCommentRequest,
   OnchainMirrorRequest,
@@ -82,6 +82,8 @@ export type {
   OnchainQuoteRequest,
   OnchainSetProfileMetadataRequest,
   OwnedHandlesRequest,
+  PoapEventQueryRequest,
+  PoapHoldersQueryRequest,
   ProfileInterestsRequest,
   ProfileManagersRequest,
   ProfileRecommendationsRequest,
@@ -100,6 +102,7 @@ export type {
   SetFollowModuleRequest,
   UnblockRequest,
   UnfollowRequest,
+  UserPoapsQueryRequest,
   ValidatePublicationMetadataRequest,
 
   // options

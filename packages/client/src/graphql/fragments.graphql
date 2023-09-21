@@ -191,7 +191,7 @@ fragment NftImage on NftImage {
   verified
 }
 
-fragment ProfileFields on Profile {
+fragment Profile on Profile {
   __typename
   id
   ownedBy {
@@ -275,13 +275,8 @@ fragment ProfileFields on Profile {
   handle
   sponsor
   lensManager
-}
-
-fragment Profile on Profile {
-  ...ProfileFields
-
   invitedBy {
-    ...ProfileFields
+    id
   }
 }
 
@@ -1349,7 +1344,7 @@ fragment Post on Post {
   txHash
   createdAt
   by {
-    ...ProfileFields
+    ...Profile
   }
   operations {
     ...PublicationOperations
@@ -1471,7 +1466,7 @@ fragment CommentBase on Comment {
   txHash
   createdAt
   by {
-    ...ProfileFields
+    ...Profile
   }
   operations {
     ...PublicationOperations
@@ -1639,7 +1634,7 @@ fragment QuoteBase on Quote {
   txHash
   createdAt
   by {
-    ...ProfileFields
+    ...Profile
   }
   operations {
     ...PublicationOperations

@@ -3,7 +3,13 @@ import * as Types from '../../../../../graphql/types.generated';
 
 import {
   ProfileFragment,
+  PostFragment,
+  QuoteFragment,
   PaginatedResultInfoFragment,
+  CommentFragment,
+  MirrorFragment,
+  OpenActionResult_KnownCollectOpenActionResult_Fragment,
+  OpenActionResult_UnknownOpenActionResult_Fragment,
 } from '../../../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
@@ -11,7 +17,12 @@ import { print } from 'graphql';
 import gql from 'graphql-tag';
 import {
   ProfileFragmentDoc,
+  PostFragmentDoc,
+  QuoteFragmentDoc,
   PaginatedResultInfoFragmentDoc,
+  CommentFragmentDoc,
+  MirrorFragmentDoc,
+  OpenActionResultFragmentDoc,
 } from '../../../../../graphql/fragments.generated';
 export type AddReactionMutationVariables = Types.Exact<{
   request: Types.ReactionRequest;
