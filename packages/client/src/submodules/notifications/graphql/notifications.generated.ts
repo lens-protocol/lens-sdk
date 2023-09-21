@@ -27,6 +27,7 @@ import {
   OpenActionResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type ReactionNotificationFragment = {
+  __typename: 'ReactionNotification';
   id: string;
   reactions: Array<{
     profile: ProfileFieldsFragment;
@@ -35,15 +36,24 @@ export type ReactionNotificationFragment = {
   publication: CommentFragment | PostFragment | QuoteFragment;
 };
 
-export type CommentNotificationFragment = { id: string; comment: CommentFragment };
+export type CommentNotificationFragment = {
+  __typename: 'CommentNotification';
+  id: string;
+  comment: CommentFragment;
+};
 
 export type MirrorNotificationFragment = {
+  __typename: 'MirrorNotification';
   id: string;
   mirrors: Array<{ mirrorId: string; mirroredAt: string; profile: ProfileFieldsFragment }>;
   publication: CommentFragment | PostFragment | QuoteFragment;
 };
 
-export type QuoteNotificationFragment = { id: string; quote: QuoteFragment };
+export type QuoteNotificationFragment = {
+  __typename: 'QuoteNotification';
+  id: string;
+  quote: QuoteFragment;
+};
 
 export type OpenActionProfileActedFragment = {
   actedAt: string;
@@ -54,14 +64,20 @@ export type OpenActionProfileActedFragment = {
 };
 
 export type ActedNotificationFragment = {
+  __typename: 'ActedNotification';
   id: string;
   actions: Array<OpenActionProfileActedFragment>;
   publication: CommentFragment | MirrorFragment | PostFragment | QuoteFragment;
 };
 
-export type FollowNotificationFragment = { id: string; followers: Array<ProfileFieldsFragment> };
+export type FollowNotificationFragment = {
+  __typename: 'FollowNotification';
+  id: string;
+  followers: Array<ProfileFieldsFragment>;
+};
 
 export type MentionNotificationFragment = {
+  __typename: 'MentionNotification';
   id: string;
   publication: CommentFragment | PostFragment | QuoteFragment;
 };
@@ -92,6 +108,7 @@ export type NotificationsQuery = {
 
 export const ReactionNotificationFragmentDoc = gql`
   fragment ReactionNotification on ReactionNotification {
+    __typename
     id
     reactions {
       profile {
@@ -121,6 +138,7 @@ export const ReactionNotificationFragmentDoc = gql`
 `;
 export const CommentNotificationFragmentDoc = gql`
   fragment CommentNotification on CommentNotification {
+    __typename
     id
     comment {
       ...Comment
@@ -130,6 +148,7 @@ export const CommentNotificationFragmentDoc = gql`
 `;
 export const MirrorNotificationFragmentDoc = gql`
   fragment MirrorNotification on MirrorNotification {
+    __typename
     id
     mirrors {
       mirrorId
@@ -157,6 +176,7 @@ export const MirrorNotificationFragmentDoc = gql`
 `;
 export const QuoteNotificationFragmentDoc = gql`
   fragment QuoteNotification on QuoteNotification {
+    __typename
     id
     quote {
       ...Quote
@@ -179,6 +199,7 @@ export const OpenActionProfileActedFragmentDoc = gql`
 `;
 export const ActedNotificationFragmentDoc = gql`
   fragment ActedNotification on ActedNotification {
+    __typename
     id
     actions {
       ...OpenActionProfileActed
@@ -206,6 +227,7 @@ export const ActedNotificationFragmentDoc = gql`
 `;
 export const FollowNotificationFragmentDoc = gql`
   fragment FollowNotification on FollowNotification {
+    __typename
     id
     followers {
       ...ProfileFields
@@ -215,6 +237,7 @@ export const FollowNotificationFragmentDoc = gql`
 `;
 export const MentionNotificationFragmentDoc = gql`
   fragment MentionNotification on MentionNotification {
+    __typename
     id
     publication {
       ... on Post {

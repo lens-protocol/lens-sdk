@@ -160,7 +160,7 @@ export class Transaction {
    * Poll the transaction status until it has been completed.
    *
    * @param txId - transaction id
-   * @returns {@link PromiseResult} with {@link TransactionIndexedResultFragment} or {@link TransactionErrorFragment}
+   * @returns The transaction status
    *
    * @example
    * ```ts

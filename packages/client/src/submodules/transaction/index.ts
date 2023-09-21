@@ -1,4 +1,7 @@
 export * from './Transaction';
 export * from './helpers';
 
-export type { LensTransactionResultFragment } from './graphql/transaction.generated';
+export type {
+  LensTransactionResultFragment,
+  RelayQueueResultFragment,
+} from './graphql/transaction.generated';

@@ -94,6 +94,11 @@ export type {
   ExplorePublicationRequest,
   FeedHighlightsRequest,
   FeedRequest,
+  NotificationRequest,
+  AlreadyInvitedCheckRequest,
+  InviteRequest,
+  OwnedHandlesRequest,
+  ProfilesManagedRequest,
 
   // options
   TypedDataOptions,

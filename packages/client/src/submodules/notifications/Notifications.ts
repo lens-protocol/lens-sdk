@@ -35,7 +35,7 @@ export type NotificationFragment =
   | Record<string, never>;
 
 /**
- * Notifications on activity for a profile including collects, comment, new followers, and mirrors.
+ * Notifications on many activities for a profile.
  *
  * @group LensClient Modules
  */
@@ -53,8 +53,21 @@ export class Notifications {
     this.authentication = authentication;
   }
 
+  /**
+   * Fetch notifications.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the query
+   * @returns Array of notifications wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.notifications.fetch();
+   * ```
+   */
   async fetch(
-    request: NotificationRequest,
+    request: NotificationRequest = {},
   ): PromiseResult<
     PaginatedResult<NotificationFragment>,
     CredentialsExpiredError | NotAuthenticatedError

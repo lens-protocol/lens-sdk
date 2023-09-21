@@ -76,6 +76,19 @@ export class Profile {
     this.authentication = authentication;
   }
 
+  /**
+   * Fetch a single profile.
+   *
+   * @param request - Request object for the query
+   * @returns Profile or null if not found
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.fetch({
+   *   forProfileId: '0x01',
+   * });
+   * ```
+   */
   async fetch(request: ProfileRequest): Promise<ProfileFragment | null> {
     const result = await this.sdk.Profile({
       request,
@@ -85,6 +98,21 @@ export class Profile {
     return result.data.result;
   }
 
+  /**
+   * Fetch all profiles by requested criteria
+   *
+   * @param request - Request object for the query
+   * @returns Profiles wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.fetchAll({
+   *   where: {
+   *     ownedBy: ['0xe3D871d389BF78c091E29deCe83200E9d6B2B0C2'],
+   *   },
+   * });
+   * ```
+   */
   async fetchAll(request: ProfilesRequest): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Profiles({
@@ -129,6 +157,19 @@ export class Profile {
     return result.data.result?.stats;
   }
 
+  /**
+   * Fetches addresses of profile's managers
+   *
+   * @param request - Request object for the query
+   * @returns Profile managers wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.managers({
+   *   for: '0x01',
+   * });
+   * ```
+   */
   async managers(
     request: ProfileManagersRequest,
   ): Promise<PaginatedResult<ProfileManagerFragment>> {
