@@ -37,45 +37,53 @@ export class Wallet {
     this.authentication = authentication;
   }
 
-  async ownedHandles(
-    request: OwnedHandlesRequest,
-  ): PromiseResult<
-    PaginatedResult<HandleResultFragment>,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.OwnedHandles(
-          {
-            request: currRequest,
-          },
-          headers,
-        );
+  /**
+   * Get all owned handles by a wallet address.
+   *
+   * @param request - Request object for the query
+   * @returns Handles wrapped with {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.wallet.ownedHandles({
+   *   for: '0xa5653e88D9c352387deDdC79bcf99f0ada62e9c6',
+   * });
+   * ```
+   */
+  async ownedHandles(request: OwnedHandlesRequest): Promise<PaginatedResult<HandleResultFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.OwnedHandles({
+        request: currRequest,
+      });
 
-        return result.data.result;
-      }, request);
-    });
+      return result.data.result;
+    }, request);
   }
 
+  /**
+   * Get all profiles managed by a wallet address.
+   *
+   * @param request - Request object for the query
+   * @returns Profiles wrapped with {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.wallet.profilesManaged({
+   *   for: '0xa5653e88D9c352387deDdC79bcf99f0ada62e9c6',
+   * });
+   * ```
+   */
   async profilesManaged(
     request: ProfilesManagedRequest,
-  ): PromiseResult<
-    PaginatedResult<ProfileFragment>,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.ProfilesManaged(
-          {
-            request: currRequest,
-            ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-          },
-          headers,
-        );
+  ): Promise<PaginatedResult<ProfileFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.ProfilesManaged({
+        request: currRequest,
+        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      });
 
-        return result.data.result;
-      }, request);
-    });
+      return result.data.result;
+    }, request);
   }
 
   /**
