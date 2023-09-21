@@ -2,4 +2,4 @@
 "@lens-protocol/client": patch
 ---
 
-**fix:** support for https://github.com/lens-protocol/lens-monorepo/pull/242
+**Updated** schema to the latest version of the API
