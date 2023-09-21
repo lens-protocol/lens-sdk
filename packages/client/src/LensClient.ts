@@ -63,7 +63,7 @@ export class LensClient {
   /**
    * The Invites module
    */
-  get invite(): Invites {
+  get invites(): Invites {
     return new Invites(this.config, this._authentication);
   }
 
