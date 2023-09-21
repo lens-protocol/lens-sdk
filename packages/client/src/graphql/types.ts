@@ -10,3 +10,5 @@ export type AnyPublicationFragment =
   | MirrorFragment
   | PostFragment
   | QuoteFragment;
+
+export type PrimaryPublicationFragment = PostFragment | CommentFragment | QuoteFragment;

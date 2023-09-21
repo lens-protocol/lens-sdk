@@ -7,7 +7,7 @@ async function main() {
 
   // by list of profile ids
   const profilesById = await client.profile.fetchAll({
-    where: { profileIds: ['0x0635'] },
+    where: { profileIds: ['0x01'] },
   });
 
   console.log(

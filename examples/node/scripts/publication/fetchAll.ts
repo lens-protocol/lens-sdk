@@ -5,7 +5,7 @@ async function main() {
     environment: development,
   });
 
-  const profileId = '0x0635';
+  const profileId = '0x04';
   const result = await client.publication.fetchAll({
     where: {
       from: [profileId],
@@ -23,14 +23,9 @@ async function main() {
 
   console.log(
     `Only posts: `,
-    JSON.stringify(
-      posts.map((i) => ({
-        id: i.id,
-        metadata: i.metadata,
-      })),
-      null,
-      2,
-    ),
+    posts.map((p) => ({
+      id: p.id,
+    })),
   );
 }
 

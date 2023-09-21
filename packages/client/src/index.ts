@@ -23,7 +23,7 @@ export type { Environment } from './consts/environments';
 export type { LensConfig, MediaTransformsConfig } from './consts/config';
 export type { TypedData, TypedDataResponse } from './consts/types';
 export type { Digit, Percentage, Pixel, ImageSizeTransform } from './graphql/ImageSizeTransform';
-export type { AnyPublicationFragment } from './graphql/types';
+export type { AnyPublicationFragment, PrimaryPublicationFragment } from './graphql/types';
 export type { PaginatedResult, PaginatedQueryData } from './helpers/buildPaginatedQueryResult';
 
 export type {
@@ -49,11 +49,17 @@ export type {
 
 export type {
   // requests
+  AlreadyInvitedCheckRequest,
   BlockRequest,
+  BroadcastRequest,
   ChangeProfileManagersRequest,
   ClaimProfileRequest,
   CreateProfileWithHandleRequest,
   DismissRecommendedProfilesRequest,
+  ExploreProfilesRequest,
+  ExplorePublicationRequest,
+  FeedHighlightsRequest,
+  FeedRequest,
   FollowersRequest,
   FollowingRequest,
   FollowRequest,
@@ -61,23 +67,30 @@ export type {
   HandleLinkToProfileRequest,
   HandleUnlinkFromProfileRequest,
   HidePublicationRequest,
+  InviteRequest,
   LegacyCollectRequest,
+  LensTransactionStatusRequest,
   MomokaCommentRequest,
   MomokaMirrorRequest,
   MomokaPostRequest,
   MomokaQuoteRequest,
   MutualFollowersRequest,
+  NotificationRequest,
   OnchainCommentRequest,
   OnchainMirrorRequest,
   OnchainPostRequest,
   OnchainQuoteRequest,
   OnchainSetProfileMetadataRequest,
+  OwnedHandlesRequest,
   ProfileInterestsRequest,
   ProfileManagersRequest,
   ProfileRecommendationsRequest,
   ProfileRequest,
+  ProfileSearchRequest,
+  ProfilesManagedRequest,
   ProfilesRequest,
   PublicationRequest,
+  PublicationSearchRequest,
   PublicationsRequest,
   PublicationsTagsRequest,
   RefreshPublicationMetadataRequest,
@@ -88,17 +101,6 @@ export type {
   UnblockRequest,
   UnfollowRequest,
   ValidatePublicationMetadataRequest,
-  BroadcastRequest,
-  LensTransactionStatusRequest,
-  ExploreProfilesRequest,
-  ExplorePublicationRequest,
-  FeedHighlightsRequest,
-  FeedRequest,
-  NotificationRequest,
-  AlreadyInvitedCheckRequest,
-  InviteRequest,
-  OwnedHandlesRequest,
-  ProfilesManagedRequest,
 
   // options
   TypedDataOptions,

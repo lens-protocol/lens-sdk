@@ -1,12 +1,8 @@
 import type { Authentication } from '../../authentication';
 import type { LensConfig } from '../../consts/config';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
-import type {
-  CommentFragment,
-  PostFragment,
-  ProfileFragment,
-  QuoteFragment,
-} from '../../graphql/fragments.generated';
+import type { ProfileFragment } from '../../graphql/fragments.generated';
+import { PrimaryPublicationFragment } from '../../graphql/types';
 import { ProfileSearchRequest, PublicationSearchRequest } from '../../graphql/types.generated';
 import {
   buildImageTransformsFromConfig,
@@ -32,6 +28,19 @@ export class Search {
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
   }
 
+  /**
+   * Search for profiles.
+   *
+   * @param request - Request object for the query
+   * @returns Array of profiles wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.search.profiles({
+   *   query: 'lens',
+   * });
+   * ```
+   */
   async profiles(request: ProfileSearchRequest): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const response = await this.sdk.SearchProfiles({
@@ -42,9 +51,22 @@ export class Search {
     }, request);
   }
 
+  /**
+   * Search for publications.
+   *
+   * @param request - Request object for the query
+   * @returns Array of publications wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.search.publications({
+   *  query: 'lens',
+   * });
+   * ```
+   */
   async publications(
     request: PublicationSearchRequest,
-  ): Promise<PaginatedResult<CommentFragment | PostFragment | QuoteFragment>> {
+  ): Promise<PaginatedResult<PrimaryPublicationFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const response = await this.sdk.SearchPublications({
         request: currRequest,

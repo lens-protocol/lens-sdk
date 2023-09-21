@@ -20,6 +20,10 @@ async function main() {
     result.items.map((item) => ({
       id: item.id,
       metadata: item.metadata,
+      by: {
+        id: item.by.id,
+        handle: item.by.handle,
+      },
     })),
   );
 }
