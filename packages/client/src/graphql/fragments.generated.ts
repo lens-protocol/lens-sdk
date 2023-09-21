@@ -432,14 +432,12 @@ export type PublicationMetadataMediaAudioFragment = {
 };
 
 export type LegacyPublicationMetadataFragment = {
-  conditionalContent: string | null;
+  content: string;
   locale: string;
   tags: Array<string> | null;
   contentWarning: Types.PublicationContentWarningType | null;
   mainContentFocus: Types.LegacyPublicationMetadataMainFocusType;
-  conditionalMedia: Array<
-    LegacyAudioItemFragment | LegacyImageItemFragment | LegacyVideoItemFragment
-  > | null;
+  media: Array<LegacyAudioItemFragment | LegacyImageItemFragment | LegacyVideoItemFragment> | null;
   marketplace: MarketplaceMetadataFragment | null;
   encryptedWith: {
     encryptionKey: string;
@@ -476,12 +474,12 @@ export type VideoMetadataV3Fragment = {
   hideFromFeed: boolean;
   appId: string | null;
   isShortVideo: boolean;
-  optionalTitle: string | null;
-  optionalContent: string | null;
+  title: string;
+  content: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<{ key: string; value: string }> | null;
   encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
-  video: PublicationMetadataMediaVideoFragment;
+  asset: PublicationMetadataMediaVideoFragment;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -497,12 +495,12 @@ export type AudioMetadataV3Fragment = {
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
   appId: string | null;
-  optionalTitle: string | null;
-  optionalContent: string | null;
+  title: string;
+  content: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<{ key: string; value: string }> | null;
   encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
-  audio: PublicationMetadataMediaAudioFragment;
+  asset: PublicationMetadataMediaAudioFragment;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -518,12 +516,12 @@ export type ImageMetadataV3Fragment = {
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
   appId: string | null;
-  optionalTitle: string | null;
-  optionalContent: string | null;
+  title: string;
+  content: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<{ key: string; value: string }> | null;
   encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
-  image: PublicationMetadataMediaImageFragment;
+  asset: PublicationMetadataMediaImageFragment;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -539,7 +537,7 @@ export type ArticleMetadataV3Fragment = {
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
   appId: string | null;
-  optionalTitle: string | null;
+  title: string;
   content: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<{ key: string; value: string }> | null;
@@ -582,7 +580,7 @@ export type LinkMetadataV3Fragment = {
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
   appId: string | null;
-  optionalContent: string | null;
+  content: string;
   sharingLink: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<{ key: string; value: string }> | null;
@@ -602,7 +600,7 @@ export type EmbedMetadataV3Fragment = {
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
   appId: string | null;
-  optionalContent: string | null;
+  content: string;
   embed: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<{ key: string; value: string }> | null;
@@ -622,7 +620,7 @@ export type CheckingInMetadataV3Fragment = {
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
   appId: string | null;
-  optionalContent: string | null;
+  content: string;
   location: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<{ key: string; value: string }> | null;
@@ -657,7 +655,7 @@ export type ThreeDMetadataV3Fragment = {
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
   appId: string | null;
-  optionalContent: string | null;
+  content: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<{ key: string; value: string }> | null;
   encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
@@ -683,7 +681,7 @@ export type StoryMetadataV3Fragment = {
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
   appId: string | null;
-  optionalContent: string | null;
+  content: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<{ key: string; value: string }> | null;
   encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
@@ -701,7 +699,7 @@ export type TransactionMetadataV3Fragment = {
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
   appId: string | null;
-  optionalContent: string | null;
+  content: string;
   type: Types.PublicationMetadataTransactionType;
   txHash: string;
   chainId: string;
@@ -723,7 +721,7 @@ export type MintMetadataV3Fragment = {
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
   appId: string | null;
-  optionalContent: string | null;
+  content: string;
   mintLink: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<{ key: string; value: string }> | null;
@@ -743,7 +741,7 @@ export type SpaceMetadataV3Fragment = {
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
   appId: string | null;
-  optionalContent: string | null;
+  content: string;
   title: string;
   link: string;
   startsAt: string;
@@ -765,10 +763,10 @@ export type LiveStreamMetadataV3Fragment = {
   contentWarning: Types.PublicationContentWarningType | null;
   hideFromFeed: boolean;
   appId: string | null;
-  optionalTitle: string | null;
-  optionalContent: string | null;
+  title: string;
+  content: string;
   startsAt: string;
-  optionalEndsAt: string | null;
+  endsAt: string;
   playbackURL: string;
   liveURL: string;
   checkLiveAPI: string | null;
@@ -1495,8 +1493,8 @@ export const OrConditionFragmentDoc = gql`
 `;
 export const LegacyPublicationMetadataFragmentDoc = gql`
   fragment LegacyPublicationMetadata on LegacyPublicationMetadata {
-    conditionalContent
-    conditionalMedia {
+    content
+    media {
       ... on LegacyAudioItem {
         ...LegacyAudioItem
       }
@@ -1728,7 +1726,7 @@ export const AudioMetadataV3FragmentDoc = gql`
         ...PublicationMetadataEncryptionStrategy
       }
     }
-    audio {
+    asset {
       ...PublicationMetadataMediaAudio
     }
     attachments {
@@ -1742,8 +1740,8 @@ export const AudioMetadataV3FragmentDoc = gql`
         ...PublicationMetadataMediaAudio
       }
     }
-    optionalTitle
-    optionalContent
+    title
+    content
   }
   ${MarketplaceMetadataFragmentDoc}
   ${PublicationMetadataEncryptionStrategyFragmentDoc}
@@ -1772,7 +1770,7 @@ export const VideoMetadataV3FragmentDoc = gql`
         ...PublicationMetadataEncryptionStrategy
       }
     }
-    video {
+    asset {
       ...PublicationMetadataMediaVideo
     }
     attachments {
@@ -1787,8 +1785,8 @@ export const VideoMetadataV3FragmentDoc = gql`
       }
     }
     isShortVideo
-    optionalTitle
-    optionalContent
+    title
+    content
   }
   ${MarketplaceMetadataFragmentDoc}
   ${PublicationMetadataEncryptionStrategyFragmentDoc}
@@ -1817,9 +1815,9 @@ export const ImageMetadataV3FragmentDoc = gql`
         ...PublicationMetadataEncryptionStrategy
       }
     }
-    optionalTitle
-    optionalContent
-    image {
+    title
+    content
+    asset {
       ...PublicationMetadataMediaImage
     }
     attachments {
@@ -1861,7 +1859,7 @@ export const ArticleMetadataV3FragmentDoc = gql`
         ...PublicationMetadataEncryptionStrategy
       }
     }
-    optionalTitle
+    title
     content
     attachments {
       ... on PublicationMetadataMediaVideo {
@@ -1949,7 +1947,7 @@ export const LinkMetadataV3FragmentDoc = gql`
         ...PublicationMetadataEncryptionStrategy
       }
     }
-    optionalContent
+    content
     sharingLink
     attachments {
       ... on PublicationMetadataMediaVideo {
@@ -1990,7 +1988,7 @@ export const EmbedMetadataV3FragmentDoc = gql`
         ...PublicationMetadataEncryptionStrategy
       }
     }
-    optionalContent
+    content
     embed
     attachments {
       ... on PublicationMetadataMediaVideo {
@@ -2031,7 +2029,7 @@ export const CheckingInMetadataV3FragmentDoc = gql`
         ...PublicationMetadataEncryptionStrategy
       }
     }
-    optionalContent
+    content
     location
     geographic {
       latitude
@@ -2102,7 +2100,7 @@ export const ThreeDMetadataV3FragmentDoc = gql`
         ...PublicationMetadataEncryptionStrategy
       }
     }
-    optionalContent
+    content
     assets {
       uri
       zipPath
@@ -2149,7 +2147,7 @@ export const StoryMetadataV3FragmentDoc = gql`
         ...PublicationMetadataEncryptionStrategy
       }
     }
-    optionalContent
+    content
     asset {
       ... on PublicationMetadataMediaVideo {
         ...PublicationMetadataMediaVideo
@@ -2189,7 +2187,7 @@ export const TransactionMetadataV3FragmentDoc = gql`
         ...PublicationMetadataEncryptionStrategy
       }
     }
-    optionalContent
+    content
     type
     txHash
     chainId
@@ -2232,7 +2230,7 @@ export const MintMetadataV3FragmentDoc = gql`
         ...PublicationMetadataEncryptionStrategy
       }
     }
-    optionalContent
+    content
     mintLink
     attachments {
       ... on PublicationMetadataMediaVideo {
@@ -2273,7 +2271,7 @@ export const SpaceMetadataV3FragmentDoc = gql`
         ...PublicationMetadataEncryptionStrategy
       }
     }
-    optionalContent
+    content
     title
     link
     startsAt
@@ -2316,10 +2314,10 @@ export const LiveStreamMetadataV3FragmentDoc = gql`
         ...PublicationMetadataEncryptionStrategy
       }
     }
-    optionalTitle
-    optionalContent
+    title
+    content
     startsAt
-    optionalEndsAt
+    endsAt
     playbackURL
     liveURL
     checkLiveAPI

@@ -726,8 +726,8 @@ fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
 }
 
 fragment LegacyPublicationMetadata on LegacyPublicationMetadata {
-  conditionalContent
-  conditionalMedia {
+  content
+  media {
     ... on LegacyAudioItem {
       ...LegacyAudioItem
     }
@@ -808,7 +808,7 @@ fragment VideoMetadataV3 on VideoMetadataV3 {
       ...PublicationMetadataEncryptionStrategy
     }
   }
-  video {
+  asset {
     ...PublicationMetadataMediaVideo
   }
   attachments {
@@ -823,8 +823,8 @@ fragment VideoMetadataV3 on VideoMetadataV3 {
     }
   }
   isShortVideo
-  optionalTitle
-  optionalContent
+  title
+  content
 }
 
 fragment AudioMetadataV3 on AudioMetadataV3 {
@@ -847,7 +847,7 @@ fragment AudioMetadataV3 on AudioMetadataV3 {
       ...PublicationMetadataEncryptionStrategy
     }
   }
-  audio {
+  asset {
     ...PublicationMetadataMediaAudio
   }
   attachments {
@@ -861,8 +861,8 @@ fragment AudioMetadataV3 on AudioMetadataV3 {
       ...PublicationMetadataMediaAudio
     }
   }
-  optionalTitle
-  optionalContent
+  title
+  content
 }
 
 fragment ImageMetadataV3 on ImageMetadataV3 {
@@ -885,9 +885,9 @@ fragment ImageMetadataV3 on ImageMetadataV3 {
       ...PublicationMetadataEncryptionStrategy
     }
   }
-  optionalTitle
-  optionalContent
-  image {
+  title
+  content
+  asset {
     ...PublicationMetadataMediaImage
   }
   attachments {
@@ -923,7 +923,7 @@ fragment ArticleMetadataV3 on ArticleMetadataV3 {
       ...PublicationMetadataEncryptionStrategy
     }
   }
-  optionalTitle
+  title
   content
   attachments {
     ... on PublicationMetadataMediaVideo {
@@ -999,7 +999,7 @@ fragment LinkMetadataV3 on LinkMetadataV3 {
       ...PublicationMetadataEncryptionStrategy
     }
   }
-  optionalContent
+  content
   sharingLink
   attachments {
     ... on PublicationMetadataMediaVideo {
@@ -1034,7 +1034,7 @@ fragment EmbedMetadataV3 on EmbedMetadataV3 {
       ...PublicationMetadataEncryptionStrategy
     }
   }
-  optionalContent
+  content
   embed
   attachments {
     ... on PublicationMetadataMediaVideo {
@@ -1069,7 +1069,7 @@ fragment CheckingInMetadataV3 on CheckingInMetadataV3 {
       ...PublicationMetadataEncryptionStrategy
     }
   }
-  optionalContent
+  content
   location
   geographic {
     latitude
@@ -1131,7 +1131,7 @@ fragment ThreeDMetadataV3 on ThreeDMetadataV3 {
       ...PublicationMetadataEncryptionStrategy
     }
   }
-  optionalContent
+  content
   assets {
     uri
     zipPath
@@ -1172,7 +1172,7 @@ fragment StoryMetadataV3 on StoryMetadataV3 {
       ...PublicationMetadataEncryptionStrategy
     }
   }
-  optionalContent
+  content
   asset {
     ... on PublicationMetadataMediaVideo {
       ...PublicationMetadataMediaVideo
@@ -1206,7 +1206,7 @@ fragment TransactionMetadataV3 on TransactionMetadataV3 {
       ...PublicationMetadataEncryptionStrategy
     }
   }
-  optionalContent
+  content
   type
   txHash
   chainId
@@ -1243,7 +1243,7 @@ fragment MintMetadataV3 on MintMetadataV3 {
       ...PublicationMetadataEncryptionStrategy
     }
   }
-  optionalContent
+  content
   mintLink
   attachments {
     ... on PublicationMetadataMediaVideo {
@@ -1278,7 +1278,7 @@ fragment SpaceMetadataV3 on SpaceMetadataV3 {
       ...PublicationMetadataEncryptionStrategy
     }
   }
-  optionalContent
+  content
   title
   link
   startsAt
@@ -1315,10 +1315,10 @@ fragment LiveStreamMetadataV3 on LiveStreamMetadataV3 {
       ...PublicationMetadataEncryptionStrategy
     }
   }
-  optionalTitle
-  optionalContent
+  title
+  content
   startsAt
-  optionalEndsAt
+  endsAt
   playbackURL
   liveURL
   checkLiveAPI
