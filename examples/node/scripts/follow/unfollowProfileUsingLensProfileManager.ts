@@ -5,11 +5,11 @@ import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
-  const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
+  const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const following = await lensClient.profile.following({ for: 'PROFILE_ID' });
+  const following = await client.profile.following({ for: 'PROFILE_ID' });
 
-  const result = await lensClient.profile.unfollow({
+  const result = await client.profile.unfollow({
     unfollow: [following.items[0].id],
   });
 
@@ -24,7 +24,7 @@ async function main() {
     throw new Error(`Something went wrong`);
   }
 
-  await lensClient.transaction.waitUntilComplete({ forTxId: unfollowResultValue.txId });
+  await client.transaction.waitUntilComplete({ forTxId: unfollowResultValue.txId });
 }
 
 main();

@@ -1,12 +1,12 @@
 import { LensClient, development } from '@lens-protocol/client';
 
 async function main() {
-  const lensClient = new LensClient({
+  const client = new LensClient({
     environment: development,
   });
 
   // by list of profile ids
-  const profilesById = await lensClient.profile.fetchAll({
+  const profilesById = await client.profile.fetchAll({
     where: { profileIds: ['0x0635'] },
   });
 
@@ -17,7 +17,7 @@ async function main() {
 
   // by wallet address profiles are owned by
   const address = '0xe3D871d389BF78c091E29deCe83200E9d6B2B0C2';
-  const allOwnedProfiles = await lensClient.profile.fetchAll({
+  const allOwnedProfiles = await client.profile.fetchAll({
     where: { ownedBy: [address] },
   });
 
@@ -27,7 +27,7 @@ async function main() {
   );
 
   // by a list of Lens handles
-  const profilesByHandle = await lensClient.profile.fetchAll({
+  const profilesByHandle = await client.profile.fetchAll({
     where: { handles: ['lensprotocol.test'] },
   });
 
@@ -37,7 +37,7 @@ async function main() {
   );
 
   // by which profiles have mirrored a publication
-  const profilesWhoMirroredPublicationId = await lensClient.profile.fetchAll({
+  const profilesWhoMirroredPublicationId = await client.profile.fetchAll({
     where: { whoMirroredPublication: '0x0635-0x0f' },
   });
 
@@ -47,7 +47,7 @@ async function main() {
   );
 
   // by which profiles have quoted a publication
-  const profilesWhoQuotedPublicationId = await lensClient.profile.fetchAll({
+  const profilesWhoQuotedPublicationId = await client.profile.fetchAll({
     where: { whoQuotedPublication: '0x0635-0x0f' },
   });
 
@@ -57,7 +57,7 @@ async function main() {
   );
 
   // by which profiles have commented on a publication
-  const profilesWhoCommentedPublicationId = await lensClient.profile.fetchAll({
+  const profilesWhoCommentedPublicationId = await client.profile.fetchAll({
     where: { whoCommentedOn: '0x0635-0x0f' },
   });
 

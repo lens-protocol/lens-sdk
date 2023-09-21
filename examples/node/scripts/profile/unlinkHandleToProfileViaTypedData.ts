@@ -5,9 +5,9 @@ import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
-  const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
+  const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const unlinkHandleFromProfileTypedData = await lensClient.profile.createUnlinkHandleTypedData({
+  const unlinkHandleFromProfileTypedData = await client.profile.createUnlinkHandleTypedData({
     handle: 'HANDLE',
   });
 
@@ -19,7 +19,7 @@ async function main() {
     data.typedData.value,
   );
 
-  const broadcastResult = await lensClient.transaction.broadcastOnchain({
+  const broadcastResult = await client.transaction.broadcastOnchain({
     id: data.id,
     signature: signedTypedData,
   });
@@ -31,7 +31,7 @@ async function main() {
     return;
   }
 
-  await lensClient.transaction.waitUntilComplete({ forTxId: broadcastResultValue.txId });
+  await client.transaction.waitUntilComplete({ forTxId: broadcastResultValue.txId });
 
   console.log(`Transaction was successfully broadcasted with txId ${broadcastResultValue.txId}`);
 }

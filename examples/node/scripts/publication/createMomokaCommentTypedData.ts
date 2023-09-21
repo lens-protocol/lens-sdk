@@ -5,9 +5,9 @@ import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
-  const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
+  const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const typedDataResult = await lensClient.publication.createMomokaCommentTypedData({
+  const typedDataResult = await client.publication.createMomokaCommentTypedData({
     commentOn: '0x123-0x456',
     contentURI: 'ipfs://Qm...', // or arweave
   });
@@ -21,7 +21,7 @@ async function main() {
     typedData.value,
   );
 
-  const broadcastResult = await lensClient.transaction.broadcastOnMomoka({
+  const broadcastResult = await client.transaction.broadcastOnMomoka({
     id,
     signature: signedTypedData,
   });

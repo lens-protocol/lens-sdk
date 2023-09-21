@@ -6,10 +6,10 @@ import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
-  const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
-  const profileId = await getOwnedProfileId(lensClient, wallet.address);
+  const client = await getAuthenticatedClientFromEthersWallet(wallet);
+  const profileId = await getOwnedProfileId(client, wallet.address);
 
-  const profile = await lensClient.profile.fetch({
+  const profile = await client.profile.fetch({
     forProfileId: profileId,
   });
 

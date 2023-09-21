@@ -6,13 +6,13 @@ import { setupWallet } from '../shared/setupWallet';
 async function main() {
   const wallet = setupWallet();
   const address = await wallet.getAddress();
-  const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
+  const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
   const handle = Date.now().toString();
 
   console.log(`Claiming a profile for ${address} with handle "${handle}"`);
 
-  const result = await lensClient.profile.claim({
+  const result = await client.profile.claim({
     id: 'ID',
     freeTextHandle: 'CHOSEN_HANDLE',
   });
@@ -29,7 +29,7 @@ async function main() {
   );
 
   console.log(`Waiting for the transaction to be indexed...`);
-  await lensClient.transaction.waitUntilComplete({ forTxId: claimResultValue.txId });
+  await client.transaction.waitUntilComplete({ forTxId: claimResultValue.txId });
 }
 
 main();

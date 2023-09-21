@@ -3,9 +3,9 @@ import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
-  const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
+  const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const result = await lensClient.profile.following({
+  const result = await client.profile.following({
     for: 'PROFILE_ID',
   });
 

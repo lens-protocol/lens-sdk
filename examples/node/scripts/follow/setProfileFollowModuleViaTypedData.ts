@@ -5,15 +5,15 @@ import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
-  const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
+  const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const setFollowModuleTypedDataResult = await lensClient.profile.createSetFollowModuleTypedData({
+  const setFollowModuleTypedDataResult = await client.profile.createSetFollowModuleTypedData({
     followModule: {
       freeFollowModule: true,
     },
   });
 
-  // const setFollowModuleTypedDataResult = await lensClient.profile.createSetFollowModuleTypedData({
+  // const setFollowModuleTypedDataResult = await client.profile.createSetFollowModuleTypedData({
   //   followModule: {
   //     feeFollowModule: {
   //       amount: {
@@ -25,13 +25,13 @@ async function main() {
   //   },
   // });
 
-  // const setFollowModuleTypedDataResult = await lensClient.profile.createSetFollowModuleTypedData({
+  // const setFollowModuleTypedDataResult = await client.profile.createSetFollowModuleTypedData({
   //   followModule: {
   //     revertFollowModule: true,
   //   },
   // });
 
-  // const setFollowModuleTypedDataResult = await lensClient.profile.createSetFollowModuleTypedData({
+  // const setFollowModuleTypedDataResult = await client.profile.createSetFollowModuleTypedData({
   //   followModule: {
   //     unknownFollowModule: {
   //       address: "0x0000000",
@@ -48,7 +48,7 @@ async function main() {
     data.typedData.value,
   );
 
-  const broadcastResult = await lensClient.transaction.broadcastOnchain({
+  const broadcastResult = await client.transaction.broadcastOnchain({
     id: data.id,
     signature: signedTypedData,
   });
@@ -65,7 +65,7 @@ async function main() {
   );
 
   // wait for follow to be indexed
-  await lensClient.transaction.waitUntilComplete({ forTxId: followBroadcastResultValue.txId });
+  await client.transaction.waitUntilComplete({ forTxId: followBroadcastResultValue.txId });
 }
 
 main();

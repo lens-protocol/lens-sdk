@@ -5,9 +5,9 @@ import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
-  const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
+  const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const result = await lensClient.profile.setProfileMetadata({
+  const result = await client.profile.setProfileMetadata({
     metadataURI: 'metadata-uri',
   });
 
@@ -18,7 +18,7 @@ async function main() {
     return;
   }
 
-  await lensClient.transaction.waitUntilComplete({ forTxId: data.txId });
+  await client.transaction.waitUntilComplete({ forTxId: data.txId });
 }
 
 main();

@@ -3,10 +3,10 @@ import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
-  const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
+  const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
   // fetch recommendations for a profile id
-  const recommendedProfiles = await lensClient.profile.recommendations({
+  const recommendedProfiles = await client.profile.recommendations({
     for: 'PROFILE_ID',
   });
 
@@ -19,10 +19,10 @@ async function main() {
   const recommendedProfileToDismiss = recommendedProfiles.items[0];
   console.log(`Dismissing recommendation of profile: ${recommendedProfileToDismiss.id}`);
 
-  await lensClient.profile.dismissRecommended({ dismiss: [recommendedProfileToDismiss.id] });
+  await client.profile.dismissRecommended({ dismiss: [recommendedProfileToDismiss.id] });
 
   // and fetch recommendations again
-  const newRecommendedProfiles = await lensClient.profile.recommendations({
+  const newRecommendedProfiles = await client.profile.recommendations({
     for: 'PROFILE_ID',
   });
 

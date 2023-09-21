@@ -5,9 +5,9 @@ import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
-  const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
+  const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const recommendedProfiles = await lensClient.profile.recommendations({ for: 'YOUR_PROFILE_ID' });
+  const recommendedProfiles = await client.profile.recommendations({ for: 'YOUR_PROFILE_ID' });
 
   console.log(
     `First 3 recommended profiles`,
@@ -18,7 +18,7 @@ async function main() {
     })),
   );
 
-  const result = await lensClient.profile.follow({
+  const result = await client.profile.follow({
     follow: [
       {
         profileId: 'PROFILE_TO_FOLLOW_ID',
@@ -37,7 +37,7 @@ async function main() {
     throw new Error(`Something went wrong`);
   }
 
-  await lensClient.transaction.waitUntilComplete({ forTxId: followResultValue.txId });
+  await client.transaction.waitUntilComplete({ forTxId: followResultValue.txId });
 }
 
 main();

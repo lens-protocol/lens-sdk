@@ -5,13 +5,13 @@ import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
-  const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
+  const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const following = await lensClient.profile.following({ for: 'PROFILE_ID' });
+  const following = await client.profile.following({ for: 'PROFILE_ID' });
 
   const profileToUnfollowId = following.items[0].id;
 
-  const followTypedDataResult = await lensClient.profile.createUnfollowTypedData({
+  const followTypedDataResult = await client.profile.createUnfollowTypedData({
     unfollow: [profileToUnfollowId],
   });
 
@@ -23,7 +23,7 @@ async function main() {
     data.typedData.value,
   );
 
-  const broadcastResult = await lensClient.transaction.broadcastOnchain({
+  const broadcastResult = await client.transaction.broadcastOnchain({
     id: data.id,
     signature: signedTypedData,
   });
@@ -41,10 +41,10 @@ async function main() {
 
   // wait for follow to be indexed
   console.log(`Waiting for the transaction to be indexed...`);
-  await lensClient.transaction.waitUntilComplete({ forTxId: followBroadcastResultValue.txId });
+  await client.transaction.waitUntilComplete({ forTxId: followBroadcastResultValue.txId });
 
   // check the isFollowedByMe property
-  const justFollowedProfile = await lensClient.profile.fetch({
+  const justFollowedProfile = await client.profile.fetch({
     forProfileId: profileToUnfollowId,
   });
 

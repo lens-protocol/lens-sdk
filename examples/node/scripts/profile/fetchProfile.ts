@@ -1,19 +1,19 @@
 import { LensClient, development } from '@lens-protocol/client';
 
 async function main() {
-  const lensClient = new LensClient({
+  const client = new LensClient({
     environment: development,
   });
 
   // by id
-  const profileById = await lensClient.profile.fetch({
+  const profileById = await client.profile.fetch({
     forProfileId: '0x01',
   });
 
   console.log(`Profile fetched by id: `, { id: profileById.id, handle: profileById.handle });
 
   // by handle
-  const profileByHandle = await lensClient.profile.fetch({
+  const profileByHandle = await client.profile.fetch({
     forHandle: 'test/@firstprofile',
   });
 

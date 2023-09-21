@@ -13,37 +13,37 @@ export async function getOwnedProfileId(client: LensClient, address: string) {
 }
 
 export async function getAuthenticatedClientFromEthersWallet(wallet: Wallet): Promise<LensClient> {
-  const lensClient = new LensClient({
+  const client = new LensClient({
     environment: development,
   });
   const address = await wallet.getAddress();
-  const profileId = await getOwnedProfileId(lensClient, address);
+  const profileId = await getOwnedProfileId(client, address);
 
-  const { id, text } = await lensClient.authentication.generateChallenge({
+  const { id, text } = await client.authentication.generateChallenge({
     signedBy: address,
     for: profileId,
   });
   const signature = await wallet.signMessage(text);
 
-  await lensClient.authentication.authenticate({ id, signature });
+  await client.authentication.authenticate({ id, signature });
 
-  return lensClient;
+  return client;
 }
 
 export async function getAuthenticatedClientFromViemWalletClient(walletClient: WalletClient) {
-  const lensClient = new LensClient({
+  const client = new LensClient({
     environment: development,
   });
   const address = walletClient.account.address;
-  const profileId = await getOwnedProfileId(lensClient, address);
+  const profileId = await getOwnedProfileId(client, address);
 
-  const { id, text } = await lensClient.authentication.generateChallenge({
+  const { id, text } = await client.authentication.generateChallenge({
     signedBy: address,
     for: profileId,
   });
   const signature = await walletClient.signMessage({ account: address, message: text });
 
-  lensClient.authentication.authenticate({ id, signature });
+  await client.authentication.authenticate({ id, signature });
 
-  return lensClient;
+  return client;
 }

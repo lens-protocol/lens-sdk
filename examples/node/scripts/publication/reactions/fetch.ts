@@ -1,11 +1,11 @@
 import { LensClient, LimitType, development } from '@lens-protocol/client';
 
 async function main() {
-  const lensClient = new LensClient({
+  const client = new LensClient({
     environment: development,
   });
 
-  const profilesWhoReacted = await lensClient.publication.reactions.fetch({
+  const profilesWhoReacted = await client.publication.reactions.fetch({
     for: 'PUBLICATION_ID',
     limit: LimitType.TwentyFive,
   });

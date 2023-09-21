@@ -5,15 +5,15 @@ import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
-  const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
+  const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const result = await lensClient.profile.setFollowModule({
+  const result = await client.profile.setFollowModule({
     followModule: {
       freeFollowModule: true,
     },
   });
 
-  // const result = await lensClient.profile.setFollowModule({
+  // const result = await client.profile.setFollowModule({
   //   followModule: {
   //     feeFollowModule: {
   //       amount: {
@@ -25,13 +25,13 @@ async function main() {
   //   },
   // });
 
-  // const result = await lensClient.profile.setFollowModule({
+  // const result = await client.profile.setFollowModule({
   //   followModule: {
   //     revertFollowModule: true,
   //   },
   // });
 
-  // const result = await lensClient.profile.setFollowModule({
+  // const result = await client.profile.setFollowModule({
   //   followModule: {
   //     unknownFollowModule: {
   //       address: "0x0000000",
@@ -46,7 +46,7 @@ async function main() {
     throw new Error('Failed to set follow module');
   }
 
-  await lensClient.transaction.waitUntilComplete({ forTxId: followModuleResultValue.txId });
+  await client.transaction.waitUntilComplete({ forTxId: followModuleResultValue.txId });
 }
 
 main();

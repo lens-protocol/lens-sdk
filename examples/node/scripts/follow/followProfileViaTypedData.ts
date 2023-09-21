@@ -5,11 +5,11 @@ import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
-  const lensClient = await getAuthenticatedClientFromEthersWallet(wallet);
+  const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const following = await lensClient.profile.following({ for: 'PROFILE_TO_UNFOLLOW_ID' });
+  const following = await client.profile.following({ for: 'PROFILE_TO_UNFOLLOW_ID' });
 
-  const result = await lensClient.profile.createUnfollowTypedData({
+  const result = await client.profile.createUnfollowTypedData({
     unfollow: [following.items[1].id],
   });
 
@@ -21,7 +21,7 @@ async function main() {
     data.typedData.value,
   );
 
-  const broadcastResult = await lensClient.transaction.broadcastOnchain({
+  const broadcastResult = await client.transaction.broadcastOnchain({
     id: data.id,
     signature: signedTypedData,
   });
@@ -39,7 +39,7 @@ async function main() {
 
   // wait for follow to be indexed
   console.log(`Waiting for the transaction to be indexed...`);
-  await lensClient.transaction.waitUntilComplete({ forTxId: followBroadcastResultValue.txId });
+  await client.transaction.waitUntilComplete({ forTxId: followBroadcastResultValue.txId });
 }
 
 main();
