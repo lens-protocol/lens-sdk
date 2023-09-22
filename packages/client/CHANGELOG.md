@@ -1,5 +1,11 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.3
+
+### Patch Changes
+
+- 414c4d81: **Added** poaps module, added whoActedOnPublication, more examples
+
 ## 2.0.0-alpha.2
 
 ### Patch Changes
