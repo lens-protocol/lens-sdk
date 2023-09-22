@@ -8,4 +8,5 @@ export type {
   MirrorNotificationFragment,
   QuoteNotificationFragment,
   ReactionNotificationFragment,
+  OpenActionProfileActedFragment,
 } from './graphql/notifications.generated';

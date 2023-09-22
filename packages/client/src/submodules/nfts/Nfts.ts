@@ -25,7 +25,7 @@ import {
   NftOwnershipChallengeResultFragment,
   Sdk,
   getSdk,
-  PaginatedNftGalleriesResultFragment,
+  NftGalleryFragment,
 } from './graphql/nfts.generated';
 
 /**
@@ -48,7 +48,7 @@ export class Nfts {
    * Fetch NFTs.
    *
    * @param request - Request object for the query
-   * @returns Array of {@link NftFragment} wrapped in {@link PaginatedResult}
+   * @returns Array of NFTs wrapped in {@link PaginatedResult}
    *
    * @example
    * ```ts
@@ -58,8 +58,6 @@ export class Nfts {
   async fetch(request: NftsRequest): Promise<PaginatedResult<NftFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Nfts({
-        // TODO: resolve why eslint classes this as assigning an 'any' value
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         request: currRequest,
       });
 
@@ -108,7 +106,7 @@ export class Nfts {
    * Fetch NFT galleries of a profile.
    *
    * @param request - Request object for the query
-   * @returns Paginated array of {@link NftGalleryFragment}
+   * @returns Array of NFT galleries wrapped in {@link PaginatedResult}
    *
    * @example
    * ```ts
@@ -117,10 +115,14 @@ export class Nfts {
    * });
    * ```
    */
-  async fetchGalleries(request: NftGalleriesRequest): Promise<PaginatedNftGalleriesResultFragment> {
-    const result = await this.sdk.ProfileGalleries({ request });
+  async fetchGalleries(request: NftGalleriesRequest): Promise<PaginatedResult<NftGalleryFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.ProfileGalleries({
+        request: currRequest,
+      });
 
-    return result.data.result;
+      return result.data.result;
+    }, request);
   }
 
   /**
