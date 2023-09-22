@@ -341,6 +341,22 @@ query MutualFollowers(
   }
 }
 
+query WhoActedOnPublication(
+  $request: WhoActedOnPublicationRequest!
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+  $rateRequest: RateRequest = { for: USD }
+) {
+  result: whoActedOnPublication(request: $request) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
 # mutations
 mutation ClaimProfile($request: ClaimProfileRequest!) {
   result: claimProfile(request: $request) {

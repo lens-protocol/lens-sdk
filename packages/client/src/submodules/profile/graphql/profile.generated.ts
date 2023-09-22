@@ -260,6 +260,17 @@ export type MutualFollowersQuery = {
   result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
 };
 
+export type WhoActedOnPublicationQueryVariables = Types.Exact<{
+  request: Types.WhoActedOnPublicationRequest;
+  profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  rateRequest?: Types.InputMaybe<Types.RateRequest>;
+}>;
+
+export type WhoActedOnPublicationQuery = {
+  result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
+};
+
 export type ClaimProfileMutationVariables = Types.Exact<{
   request: Types.ClaimProfileRequest;
 }>;
@@ -818,6 +829,25 @@ export const MutualFollowersDocument = gql`
   ${ProfileFragmentDoc}
   ${PaginatedResultInfoFragmentDoc}
 `;
+export const WhoActedOnPublicationDocument = gql`
+  query WhoActedOnPublication(
+    $request: WhoActedOnPublicationRequest!
+    $profileCoverTransform: ImageTransform = {}
+    $profilePictureTransform: ImageTransform = {}
+    $rateRequest: RateRequest = { for: USD }
+  ) {
+    result: whoActedOnPublication(request: $request) {
+      items {
+        ...Profile
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${ProfileFragmentDoc}
+  ${PaginatedResultInfoFragmentDoc}
+`;
 export const ClaimProfileDocument = gql`
   mutation ClaimProfile($request: ClaimProfileRequest!) {
     result: claimProfile(request: $request) {
@@ -1070,6 +1100,7 @@ const ProfileRecommendationsDocumentString = print(ProfileRecommendationsDocumen
 const FollowingDocumentString = print(FollowingDocument);
 const FollowersDocumentString = print(FollowersDocument);
 const MutualFollowersDocumentString = print(MutualFollowersDocument);
+const WhoActedOnPublicationDocumentString = print(WhoActedOnPublicationDocument);
 const ClaimProfileDocumentString = print(ClaimProfileDocument);
 const CreateProfileWithHandleDocumentString = print(CreateProfileWithHandleDocument);
 const AddProfileInterestsDocumentString = print(AddProfileInterestsDocument);
@@ -1232,6 +1263,26 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'MutualFollowers',
+        'query',
+      );
+    },
+    WhoActedOnPublication(
+      variables: WhoActedOnPublicationQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: WhoActedOnPublicationQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<WhoActedOnPublicationQuery>(
+            WhoActedOnPublicationDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'WhoActedOnPublication',
         'query',
       );
     },

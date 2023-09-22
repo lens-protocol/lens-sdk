@@ -31,6 +31,7 @@ import type {
   TypedDataOptions,
   UnblockRequest,
   UnfollowRequest,
+  WhoActedOnPublicationRequest,
 } from '../../graphql/types.generated';
 import {
   PaginatedResult,
@@ -230,6 +231,19 @@ export class Profile {
     }, request);
   }
 
+  async whoActedOnPublication(
+    request: WhoActedOnPublicationRequest,
+  ): Promise<PaginatedResult<ProfileFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.WhoActedOnPublication({
+        request: currRequest,
+        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      });
+
+      return result.data.result;
+    }, request);
+  }
+
   async claim(
     request: ClaimProfileRequest,
   ): PromiseResult<
@@ -277,86 +291,6 @@ export class Profile {
     });
   }
 
-  async setManager(
-    request: ChangeProfileManagersRequest,
-  ): PromiseResult<
-    CreateChangeProfileManagersBroadcastItemResultFragment | LensProfileManagerRelayErrorFragment,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateChangeProfileManagersTypedData({ request }, headers);
-      return result.data.result;
-    });
-  }
-
-  async setFollowModule(
-    request: SetFollowModuleRequest,
-  ): PromiseResult<
-    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.SetFollowModule({ request }, headers);
-      return result.data.result;
-    });
-  }
-
-  async block(
-    request: BlockRequest,
-  ): PromiseResult<
-    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.Block({ request }, headers);
-      return result.data.result;
-    });
-  }
-
-  async unblock(
-    request: UnblockRequest,
-  ): PromiseResult<
-    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.Unblock({ request }, headers);
-      return result.data.result;
-    });
-  }
-
-  async follow(
-    request: FollowRequest,
-  ): PromiseResult<
-    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.Follow({ request }, headers);
-      return result.data.result;
-    });
-  }
-
-  async unfollow(
-    request: UnfollowRequest,
-  ): PromiseResult<
-    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.Unfollow({ request }, headers);
-      return result.data.result;
-    });
-  }
-
-  async dismissRecommended(
-    request: DismissRecommendedProfilesRequest,
-  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      await this.sdk.DismissRecommendedProfiles({ request }, headers);
-    });
-  }
-
   async createOnchainSetProfileMetadataTypedData(
     request: OnchainSetProfileMetadataRequest,
     options?: TypedDataOptions,
@@ -373,6 +307,18 @@ export class Profile {
         headers,
       );
 
+      return result.data.result;
+    });
+  }
+
+  async changeProfileManagers(
+    request: ChangeProfileManagersRequest,
+  ): PromiseResult<
+    CreateChangeProfileManagersBroadcastItemResultFragment | LensProfileManagerRelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateChangeProfileManagersTypedData({ request }, headers);
       return result.data.result;
     });
   }
@@ -397,6 +343,50 @@ export class Profile {
     });
   }
 
+  async setFollowModule(
+    request: SetFollowModuleRequest,
+  ): PromiseResult<
+    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.SetFollowModule({ request }, headers);
+      return result.data.result;
+    });
+  }
+
+  async createSetFollowModuleTypedData(
+    request: SetFollowModuleRequest,
+    options?: TypedDataOptions,
+  ): PromiseResult<
+    CreateSetFollowModuleBroadcastItemResultFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.CreateSetFollowModuleTypedData(
+        {
+          request,
+          options,
+        },
+        headers,
+      );
+
+      return result.data.result;
+    });
+  }
+
+  async block(
+    request: BlockRequest,
+  ): PromiseResult<
+    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.Block({ request }, headers);
+      return result.data.result;
+    });
+  }
+
   async createBlockProfilesTypedData(
     request: BlockRequest,
     options?: TypedDataOptions,
@@ -413,6 +403,18 @@ export class Profile {
         headers,
       );
 
+      return result.data.result;
+    });
+  }
+
+  async unblock(
+    request: UnblockRequest,
+  ): PromiseResult<
+    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.Unblock({ request }, headers);
       return result.data.result;
     });
   }
@@ -437,6 +439,18 @@ export class Profile {
     });
   }
 
+  async follow(
+    request: FollowRequest,
+  ): PromiseResult<
+    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.Follow({ request }, headers);
+      return result.data.result;
+    });
+  }
+
   async createFollowTypedData(
     request: FollowRequest,
     options?: TypedDataOptions,
@@ -457,6 +471,18 @@ export class Profile {
     });
   }
 
+  async unfollow(
+    request: UnfollowRequest,
+  ): PromiseResult<
+    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      const result = await this.sdk.Unfollow({ request }, headers);
+      return result.data.result;
+    });
+  }
+
   async createUnfollowTypedData(
     request: UnfollowRequest,
     options?: TypedDataOptions,
@@ -466,26 +492,6 @@ export class Profile {
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.CreateUnfollowTypedData(
-        {
-          request,
-          options,
-        },
-        headers,
-      );
-
-      return result.data.result;
-    });
-  }
-
-  async createSetFollowModuleTypedData(
-    request: SetFollowModuleRequest,
-    options?: TypedDataOptions,
-  ): PromiseResult<
-    CreateSetFollowModuleBroadcastItemResultFragment,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateSetFollowModuleTypedData(
         {
           request,
           options,
@@ -536,6 +542,14 @@ export class Profile {
       const result = await this.sdk.CreateHandleUnlinkFromProfileTypedData({ request }, headers);
 
       return result.data.result;
+    });
+  }
+
+  async dismissRecommended(
+    request: DismissRecommendedProfilesRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      await this.sdk.DismissRecommendedProfiles({ request }, headers);
     });
   }
 }
