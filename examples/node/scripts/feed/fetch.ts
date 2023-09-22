@@ -1,7 +1,5 @@
-import {
-  getAuthenticatedClientFromEthersWallet,
-  getOwnedProfileId,
-} from '../shared/getAuthenticatedClient';
+import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
+import { getOwnedProfileId } from '../shared/getOwnedProfileId';
 import { setupWallet } from '../shared/setupWallet';
 
 async function main() {

@@ -129,7 +129,7 @@ export class Profile {
    * Fetches a profile's stats
    *
    * @param variables - Object defining all variables for the query
-   * @returns {@link ProfileStatsFragment} or undefined if not found
+   * @returns Profile stats or undefined if not found
    *
    * @example
    * ```ts
@@ -183,6 +183,19 @@ export class Profile {
     }, request);
   }
 
+  /**
+   * Fetch all recommended profiles
+   *
+   * @param request - Request object for the query
+   * @returns Array of recommended profiles wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.recommendations({
+   *   for: '0x01',
+   * });
+   * ```
+   */
   async recommendations(
     request: ProfileRecommendationsRequest,
   ): Promise<PaginatedResult<ProfileFragment>> {
@@ -194,6 +207,29 @@ export class Profile {
 
       return result.data.result;
     }, request);
+  }
+
+  /**
+   * Dismiss profiles from the recommended list
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.dismissRecommended({
+   *   dismiss: ['0x01', '0x02', '0x03'],
+   * });
+   * ```
+   */
+  async dismissRecommended(
+    request: DismissRecommendedProfilesRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      await this.sdk.DismissRecommendedProfiles({ request }, headers);
+    });
   }
 
   async following(request: FollowingRequest): Promise<PaginatedResult<ProfileFragment>> {
@@ -218,6 +254,20 @@ export class Profile {
     }, request);
   }
 
+  /**
+   * Fetch mutual followers between two profiles
+   *
+   * @param request - Request object for the query
+   * @returns Profiles wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.mutualFollowers({
+   *   observer: '0x01',
+   *   viewing: '0x02',
+   * });
+   * ```
+   */
   async mutualFollowers(
     request: MutualFollowersRequest,
   ): Promise<PaginatedResult<ProfileFragment>> {
@@ -231,6 +281,19 @@ export class Profile {
     }, request);
   }
 
+  /**
+   * Fetch profiles that acted on a publication
+   *
+   * @param request - Request object for the query
+   * @returns Profiles wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.whoActedOnPublication({
+   *  on: '0x0635-0x0f',
+   * });
+   * ```
+   */
   async whoActedOnPublication(
     request: WhoActedOnPublicationRequest,
   ): Promise<PaginatedResult<ProfileFragment>> {
@@ -244,39 +307,40 @@ export class Profile {
     }, request);
   }
 
-  async claim(
-    request: ClaimProfileRequest,
-  ): PromiseResult<
-    RelaySuccessFragment | CreateProfileWithHandleErrorResultFragment,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.ClaimProfile({ request }, headers);
-      return result.data.result;
-    });
-  }
+  /**
+   * NOT IMPLEMENTED ON THE API SIDE
+   */
+  // async claim(
+  //   request: ClaimProfileRequest,
+  // ): PromiseResult<
+  //   RelaySuccessFragment | CreateProfileWithHandleErrorResultFragment,
+  //   CredentialsExpiredError | NotAuthenticatedError
+  // > {
+  //   return requireAuthHeaders(this.authentication, async (headers) => {
+  //     const result = await this.sdk.ClaimProfile({ request }, headers);
+  //     return result.data.result;
+  //   });
+  // }
 
+  /**
+   * Create a new profile
+   *
+   * @param request - Request object for the mutation
+   * @returns Status of the transaction
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.create({
+   *  handle: 'handle',
+   *  to: '0x1234567890123456789012345678901234567890',
+   * });
+   * ```
+   */
   async create(
     request: CreateProfileWithHandleRequest,
   ): Promise<RelaySuccessFragment | CreateProfileWithHandleErrorResultFragment> {
     const result = await this.sdk.CreateProfileWithHandle({ request });
     return result.data.result;
-  }
-
-  async addInterests(
-    request: ProfileInterestsRequest,
-  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      await this.sdk.AddProfileInterests({ request }, headers);
-    });
-  }
-
-  async removeInterests(
-    request: ProfileInterestsRequest,
-  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      await this.sdk.RemoveProfileInterests({ request }, headers);
-    });
   }
 
   async setProfileMetadata(
@@ -545,11 +609,53 @@ export class Profile {
     });
   }
 
-  async dismissRecommended(
-    request: DismissRecommendedProfilesRequest,
+  /**
+   * Add interests to a profile.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * import { ProfileInterestTypes } from '@lens-protocol/client';
+   *
+   * await client.profile.addInterests({
+   *   interests: [ProfileInterestTypes.Technology],
+   * });
+   * ```
+   */
+  async addInterests(
+    request: ProfileInterestsRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      await this.sdk.DismissRecommendedProfiles({ request }, headers);
+      await this.sdk.AddProfileInterests({ request }, headers);
+    });
+  }
+
+  /**
+   * Remove interests from a profile.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * import { ProfileInterestTypes } from '@lens-protocol/client';
+   *
+   * await client.profile.removeInterests({
+   *   interests: [ProfileInterestTypes.Technology],
+   * });
+   * ```
+   */
+  async removeInterests(
+    request: ProfileInterestsRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      await this.sdk.RemoveProfileInterests({ request }, headers);
     });
   }
 }
