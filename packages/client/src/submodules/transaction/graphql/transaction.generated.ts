@@ -16,8 +16,7 @@ import {
   OpenActionResult_UnknownOpenActionResult_Fragment,
   RelaySuccessFragment,
   LensProfileManagerRelayErrorFragment,
-  Eip712TypedDataFieldFragment,
-  Eip712TypedDataDomainFragment,
+  CreateActOnOpenActionEip712TypedDataFragment,
   RelayErrorFragment,
   CreateMomokaPublicationResultFragment,
 } from '../../../graphql/fragments.generated';
@@ -39,8 +38,7 @@ import {
   OpenActionResultFragmentDoc,
   RelaySuccessFragmentDoc,
   LensProfileManagerRelayErrorFragmentDoc,
-  Eip712TypedDataFieldFragmentDoc,
-  Eip712TypedDataDomainFragmentDoc,
+  CreateActOnOpenActionEip712TypedDataFragmentDoc,
   RelayErrorFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,
 } from '../../../graphql/fragments.generated';

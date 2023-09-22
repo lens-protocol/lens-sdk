@@ -141,7 +141,7 @@ export type ProfileFragment = {
     rawURI: string;
     picture: ProfilePictureSetFragment | NftImageFragment | null;
     coverPicture: ProfileCoverSetFragment | null;
-    attributes: Array<{ type: Types.AttributeType; key: string; value: string }>;
+    attributes: Array<{ type: Types.AttributeType | null; key: string; value: string }>;
   } | null;
   invitedBy: { id: string } | null;
 };
@@ -955,6 +955,22 @@ export type Eip712TypedDataDomainFragment = {
 };
 
 export type Eip712TypedDataFieldFragment = { name: string; type: string };
+
+export type CreateActOnOpenActionEip712TypedDataFragment = {
+  types: { Act: Array<Eip712TypedDataFieldFragment> };
+  domain: Eip712TypedDataDomainFragment;
+  value: {
+    nonce: string;
+    deadline: string;
+    publicationActedProfileId: string;
+    publicationActedId: string;
+    actorProfileId: string;
+    referrerProfileIds: Array<string>;
+    referrerPubIds: Array<string>;
+    actionModuleAddress: string;
+    actionModuleData: string;
+  };
+};
 
 export type RelaySuccessFragment = {
   __typename: 'RelaySuccess';
@@ -3112,6 +3128,12 @@ export const MirrorFragmentDoc = gql`
   ${CommentFragmentDoc}
   ${QuoteFragmentDoc}
 `;
+export const Eip712TypedDataFieldFragmentDoc = gql`
+  fragment EIP712TypedDataField on EIP712TypedDataField {
+    name
+    type
+  }
+`;
 export const Eip712TypedDataDomainFragmentDoc = gql`
   fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
     name
@@ -3120,11 +3142,30 @@ export const Eip712TypedDataDomainFragmentDoc = gql`
     verifyingContract
   }
 `;
-export const Eip712TypedDataFieldFragmentDoc = gql`
-  fragment EIP712TypedDataField on EIP712TypedDataField {
-    name
-    type
+export const CreateActOnOpenActionEip712TypedDataFragmentDoc = gql`
+  fragment CreateActOnOpenActionEIP712TypedData on CreateActOnOpenActionEIP712TypedData {
+    types {
+      Act {
+        ...EIP712TypedDataField
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      publicationActedProfileId
+      publicationActedId
+      actorProfileId
+      referrerProfileIds
+      referrerPubIds
+      actionModuleAddress
+      actionModuleData
+    }
   }
+  ${Eip712TypedDataFieldFragmentDoc}
+  ${Eip712TypedDataDomainFragmentDoc}
 `;
 export const RelaySuccessFragmentDoc = gql`
   fragment RelaySuccess on RelaySuccess {

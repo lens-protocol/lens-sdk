@@ -14,6 +14,7 @@ import {
   OpenActionResult_UnknownOpenActionResult_Fragment,
   RelaySuccessFragment,
   LensProfileManagerRelayErrorFragment,
+  CreateActOnOpenActionEip712TypedDataFragment,
   CreateMomokaPublicationResultFragment,
 } from '../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
@@ -32,6 +33,7 @@ import {
   OpenActionResultFragmentDoc,
   RelaySuccessFragmentDoc,
   LensProfileManagerRelayErrorFragmentDoc,
+  CreateActOnOpenActionEip712TypedDataFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type SearchPublicationsQueryVariables = Types.Exact<{

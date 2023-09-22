@@ -5,7 +5,9 @@ async function main() {
     environment: development,
   });
 
-  const publications = await client.publication.fetchAll();
+  const publications = await client.publication.fetchAll({
+    where: {},
+  });
 
   const firstPublication = publications.items[0];
 

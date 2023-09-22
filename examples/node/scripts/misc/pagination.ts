@@ -11,6 +11,7 @@ async function main() {
 
   const pagination = await client.publication.fetchAll({
     limit: LimitType.Ten,
+    where: {},
   });
 
   const publications = pagination.items; // first page items

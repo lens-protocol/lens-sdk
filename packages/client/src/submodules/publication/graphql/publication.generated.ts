@@ -14,9 +14,9 @@ import {
   OpenActionResult_UnknownOpenActionResult_Fragment,
   RelaySuccessFragment,
   LensProfileManagerRelayErrorFragment,
+  CreateActOnOpenActionEip712TypedDataFragment,
   CreateMomokaPublicationResultFragment,
 } from '../../../graphql/fragments.generated';
-import { CreateActOnOpenActionEip712TypedDataFragment } from '../submodules/actions/graphql/actions.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
@@ -33,9 +33,9 @@ import {
   OpenActionResultFragmentDoc,
   RelaySuccessFragmentDoc,
   LensProfileManagerRelayErrorFragmentDoc,
+  CreateActOnOpenActionEip712TypedDataFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
-import { CreateActOnOpenActionEip712TypedDataFragmentDoc } from '../submodules/actions/graphql/actions.generated';
 export type TagResultFragment = { tag: string; total: number };
 
 export type PublicationValidateMetadataResultFragment = { valid: boolean; reason: string | null };

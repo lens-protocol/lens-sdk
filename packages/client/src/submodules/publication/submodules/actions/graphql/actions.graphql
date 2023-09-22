@@ -9,36 +9,6 @@ mutation ActOnOpenAction($request: ActOnOpenActionLensManagerRequest!) {
   }
 }
 
-fragment CreateActOnOpenActionEIP712TypedDataTypes on CreateActOnOpenActionEIP712TypedDataTypes {
-  Act {
-    ...EIP712TypedDataField
-  }
-}
-
-fragment CreateActOnOpenActionEIP712TypedDataValue on CreateActOnOpenActionEIP712TypedDataValue {
-  nonce
-  deadline
-  publicationActedProfileId
-  publicationActedId
-  actorProfileId
-  referrerProfileIds
-  referrerPubIds
-  actionModuleAddress
-  actionModuleData
-}
-
-fragment CreateActOnOpenActionEIP712TypedData on CreateActOnOpenActionEIP712TypedData {
-  types {
-    ...CreateActOnOpenActionEIP712TypedDataTypes
-  }
-  domain {
-    ...EIP712TypedDataDomain
-  }
-  value {
-    ...CreateActOnOpenActionEIP712TypedDataValue
-  }
-}
-
 fragment CreateActOnOpenActionBroadcastItemResult on CreateActOnOpenActionBroadcastItemResult {
   id
   expiresAt

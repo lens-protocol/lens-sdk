@@ -1209,7 +1209,7 @@ export type PublicationSearchRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<LimitType>;
   query: Scalars['String']['input'];
-  where: PublicationSearchWhere;
+  where?: InputMaybe<PublicationSearchWhere>;
 };
 
 export type PublicationSearchWhere = {
@@ -1255,7 +1255,7 @@ export type PublicationsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<LimitType>;
   orderBy?: InputMaybe<PublicationsOrderByType>;
-  where?: InputMaybe<PublicationsWhere>;
+  where: PublicationsWhere;
 };
 
 export type PublicationsTagsRequest = {
