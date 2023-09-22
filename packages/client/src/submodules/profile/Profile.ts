@@ -12,7 +12,6 @@ import type {
 import type {
   BlockRequest,
   ChangeProfileManagersRequest,
-  ClaimProfileRequest,
   CreateProfileWithHandleRequest,
   DismissRecommendedProfilesRequest,
   FollowRequest,
