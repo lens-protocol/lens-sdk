@@ -28,56 +28,84 @@ export type ReactionNotificationFragment = {
   __typename: 'ReactionNotification';
   id: string;
   reactions: Array<{
-    profile: ProfileFragment;
-    reactions: Array<{ reaction: Types.PublicationReactionType; reactedAt: string }>;
+    __typename: 'ProfileReactedResult';
+    profile: { __typename: 'Profile' } & ProfileFragment;
+    reactions: Array<{
+      __typename: 'ReactedResult';
+      reaction: Types.PublicationReactionType;
+      reactedAt: string;
+    }>;
   }>;
-  publication: CommentFragment | PostFragment | QuoteFragment;
+  publication:
+    | ({ __typename: 'Comment' } & CommentFragment)
+    | ({ __typename: 'Post' } & PostFragment)
+    | ({ __typename: 'Quote' } & QuoteFragment);
 };
 
 export type CommentNotificationFragment = {
   __typename: 'CommentNotification';
   id: string;
-  comment: CommentFragment;
+  comment: { __typename: 'Comment' } & CommentFragment;
 };
 
 export type MirrorNotificationFragment = {
   __typename: 'MirrorNotification';
   id: string;
-  mirrors: Array<{ mirrorId: string; mirroredAt: string; profile: ProfileFragment }>;
-  publication: CommentFragment | PostFragment | QuoteFragment;
+  mirrors: Array<{
+    __typename: 'ProfileMirrorResult';
+    mirrorId: string;
+    mirroredAt: string;
+    profile: { __typename: 'Profile' } & ProfileFragment;
+  }>;
+  publication:
+    | ({ __typename: 'Comment' } & CommentFragment)
+    | ({ __typename: 'Post' } & PostFragment)
+    | ({ __typename: 'Quote' } & QuoteFragment);
 };
 
 export type QuoteNotificationFragment = {
   __typename: 'QuoteNotification';
   id: string;
-  quote: QuoteFragment;
+  quote: { __typename: 'Quote' } & QuoteFragment;
 };
 
 export type OpenActionProfileActedFragment = {
+  __typename: 'OpenActionProfileActed';
   actedAt: string;
-  by: ProfileFragment;
+  by: { __typename: 'Profile' } & ProfileFragment;
   action:
-    | OpenActionResult_KnownCollectOpenActionResult_Fragment
-    | OpenActionResult_UnknownOpenActionResult_Fragment;
+    | ({
+        __typename: 'KnownCollectOpenActionResult';
+      } & OpenActionResult_KnownCollectOpenActionResult_Fragment)
+    | ({
+        __typename: 'UnknownOpenActionResult';
+      } & OpenActionResult_UnknownOpenActionResult_Fragment);
 };
 
 export type ActedNotificationFragment = {
   __typename: 'ActedNotification';
   id: string;
-  actions: Array<OpenActionProfileActedFragment>;
-  publication: CommentFragment | MirrorFragment | PostFragment | QuoteFragment;
+  actions: Array<{ __typename: 'OpenActionProfileActed' } & OpenActionProfileActedFragment>;
+  publication:
+    | ({ __typename: 'Comment' } & CommentFragment)
+    | ({ __typename: 'Mirror' } & MirrorFragment)
+    | ({ __typename: 'Post' } & PostFragment)
+    | ({ __typename: 'Quote' } & QuoteFragment);
 };
 
 export type FollowNotificationFragment = {
   __typename: 'FollowNotification';
   id: string;
-  followers: Array<ProfileFragment>;
+  followers: Array<{ __typename: 'Profile' } & ProfileFragment>;
 };
 
 export type MentionNotificationFragment = {
   __typename: 'MentionNotification';
   id: string;
-  publication: CommentFragment | PostFragment | QuoteFragment;
+  publication:
+    | ({ __typename: 'Comment' } & CommentFragment)
+    | ({ __typename: 'Post' } & PostFragment)
+    | ({ __typename: 'Quote' } & QuoteFragment);
 };
 
 export type NotificationsQueryVariables = Types.Exact<{
@@ -90,23 +118,24 @@ export type NotificationsQueryVariables = Types.Exact<{
 }>;
 
 export type NotificationsQuery = {
+  __typename: 'Query';
   result: {
+    __typename: 'PaginatedNotificationResult';
     items: Array<
-      | ActedNotificationFragment
-      | CommentNotificationFragment
-      | FollowNotificationFragment
-      | MentionNotificationFragment
-      | MirrorNotificationFragment
-      | QuoteNotificationFragment
-      | ReactionNotificationFragment
+      | ({ __typename: 'ActedNotification' } & ActedNotificationFragment)
+      | ({ __typename: 'CommentNotification' } & CommentNotificationFragment)
+      | ({ __typename: 'FollowNotification' } & FollowNotificationFragment)
+      | ({ __typename: 'MentionNotification' } & MentionNotificationFragment)
+      | ({ __typename: 'MirrorNotification' } & MirrorNotificationFragment)
+      | ({ __typename: 'QuoteNotification' } & QuoteNotificationFragment)
+      | ({ __typename: 'ReactionNotification' } & ReactionNotificationFragment)
     >;
-    pageInfo: PaginatedResultInfoFragment;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
   };
 };
 
 export const ReactionNotificationFragmentDoc = gql`
   fragment ReactionNotification on ReactionNotification {
-    __typename
     id
     reactions {
       profile {
@@ -136,7 +165,6 @@ export const ReactionNotificationFragmentDoc = gql`
 `;
 export const CommentNotificationFragmentDoc = gql`
   fragment CommentNotification on CommentNotification {
-    __typename
     id
     comment {
       ...Comment
@@ -146,7 +174,6 @@ export const CommentNotificationFragmentDoc = gql`
 `;
 export const MirrorNotificationFragmentDoc = gql`
   fragment MirrorNotification on MirrorNotification {
-    __typename
     id
     mirrors {
       mirrorId
@@ -174,7 +201,6 @@ export const MirrorNotificationFragmentDoc = gql`
 `;
 export const QuoteNotificationFragmentDoc = gql`
   fragment QuoteNotification on QuoteNotification {
-    __typename
     id
     quote {
       ...Quote
@@ -197,7 +223,6 @@ export const OpenActionProfileActedFragmentDoc = gql`
 `;
 export const ActedNotificationFragmentDoc = gql`
   fragment ActedNotification on ActedNotification {
-    __typename
     id
     actions {
       ...OpenActionProfileActed
@@ -225,7 +250,6 @@ export const ActedNotificationFragmentDoc = gql`
 `;
 export const FollowNotificationFragmentDoc = gql`
   fragment FollowNotification on FollowNotification {
-    __typename
     id
     followers {
       ...Profile
@@ -235,7 +259,6 @@ export const FollowNotificationFragmentDoc = gql`
 `;
 export const MentionNotificationFragmentDoc = gql`
   fragment MentionNotification on MentionNotification {
-    __typename
     id
     publication {
       ... on Post {

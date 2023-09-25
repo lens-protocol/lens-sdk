@@ -36,11 +36,16 @@ import {
   CreateActOnOpenActionEip712TypedDataFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
-export type TagResultFragment = { tag: string; total: number };
+export type TagResultFragment = { __typename: 'TagResult'; tag: string; total: number };
 
-export type PublicationValidateMetadataResultFragment = { valid: boolean; reason: string | null };
+export type PublicationValidateMetadataResultFragment = {
+  __typename: 'PublicationValidateMetadataResult';
+  valid: boolean;
+  reason: string | null;
+};
 
 export type PublicationStatsFragment = {
+  __typename: 'PublicationStats';
   id: string;
   comments: number;
   mirrors: number;
@@ -61,7 +66,13 @@ export type PublicationQueryVariables = Types.Exact<{
 }>;
 
 export type PublicationQuery = {
-  result: CommentFragment | MirrorFragment | PostFragment | QuoteFragment | null;
+  __typename: 'Query';
+  result:
+    | ({ __typename: 'Comment' } & CommentFragment)
+    | ({ __typename: 'Mirror' } & MirrorFragment)
+    | ({ __typename: 'Post' } & PostFragment)
+    | ({ __typename: 'Quote' } & QuoteFragment)
+    | null;
 };
 
 export type PublicationStatsQueryVariables = Types.Exact<{
@@ -71,11 +82,15 @@ export type PublicationStatsQueryVariables = Types.Exact<{
 }>;
 
 export type PublicationStatsQuery = {
+  __typename: 'Query';
   result:
-    | { __typename: 'Comment'; stats: PublicationStatsFragment }
+    | {
+        __typename: 'Comment';
+        stats: { __typename: 'PublicationStats' } & PublicationStatsFragment;
+      }
     | { __typename: 'Mirror' }
-    | { __typename: 'Post'; stats: PublicationStatsFragment }
-    | { __typename: 'Quote'; stats: PublicationStatsFragment }
+    | { __typename: 'Post'; stats: { __typename: 'PublicationStats' } & PublicationStatsFragment }
+    | { __typename: 'Quote'; stats: { __typename: 'PublicationStats' } & PublicationStatsFragment }
     | null;
 };
 
@@ -89,9 +104,16 @@ export type PublicationsQueryVariables = Types.Exact<{
 }>;
 
 export type PublicationsQuery = {
+  __typename: 'Query';
   result: {
-    items: Array<CommentFragment | MirrorFragment | PostFragment | QuoteFragment>;
-    pageInfo: PaginatedResultInfoFragment;
+    __typename: 'PaginatedPublicationsResult';
+    items: Array<
+      | ({ __typename: 'Comment' } & CommentFragment)
+      | ({ __typename: 'Mirror' } & MirrorFragment)
+      | ({ __typename: 'Post' } & PostFragment)
+      | ({ __typename: 'Quote' } & QuoteFragment)
+    >;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
   };
 };
 
@@ -100,7 +122,12 @@ export type PublicationsTagsQueryVariables = Types.Exact<{
 }>;
 
 export type PublicationsTagsQuery = {
-  result: { items: Array<TagResultFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedPublicationsTagsResult';
+    items: Array<{ __typename: 'TagResult' } & TagResultFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export type ValidatePublicationMetadataQueryVariables = Types.Exact<{
@@ -108,16 +135,25 @@ export type ValidatePublicationMetadataQueryVariables = Types.Exact<{
 }>;
 
 export type ValidatePublicationMetadataQuery = {
-  result: PublicationValidateMetadataResultFragment;
+  __typename: 'Query';
+  result: {
+    __typename: 'PublicationValidateMetadataResult';
+  } & PublicationValidateMetadataResultFragment;
 };
 
 export type CreateOnchainPostBroadcastItemResultFragment = {
+  __typename: 'CreateOnchainPostBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
-    types: { Post: Array<{ name: string; type: string }> };
-    domain: Eip712TypedDataDomainFragment;
+    __typename: 'CreateOnchainPostEIP712TypedData';
+    types: {
+      __typename: 'CreateOnchainPostEIP712TypedDataTypes';
+      Post: Array<{ __typename: 'EIP712TypedDataField'; name: string; type: string }>;
+    };
+    domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
     value: {
+      __typename: 'CreateOnchainPostEIP712TypedDataValue';
       nonce: string;
       deadline: string;
       profileId: string;
@@ -131,12 +167,18 @@ export type CreateOnchainPostBroadcastItemResultFragment = {
 };
 
 export type CreateOnchainCommentBroadcastItemResultFragment = {
+  __typename: 'CreateOnchainCommentBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
-    types: { Comment: Array<{ name: string; type: string }> };
-    domain: Eip712TypedDataDomainFragment;
+    __typename: 'CreateOnchainCommentEIP712TypedData';
+    types: {
+      __typename: 'CreateOnchainCommentEIP712TypedDataTypes';
+      Comment: Array<{ __typename: 'EIP712TypedDataField'; name: string; type: string }>;
+    };
+    domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
     value: {
+      __typename: 'CreateOnchainCommentEIP712TypedDataValue';
       nonce: string;
       deadline: string;
       profileId: string;
@@ -155,12 +197,18 @@ export type CreateOnchainCommentBroadcastItemResultFragment = {
 };
 
 export type CreateOnchainMirrorBroadcastItemResultFragment = {
+  __typename: 'CreateOnchainMirrorBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
-    types: { Mirror: Array<{ name: string; type: string }> };
-    domain: Eip712TypedDataDomainFragment;
+    __typename: 'CreateOnchainMirrorEIP712TypedData';
+    types: {
+      __typename: 'CreateOnchainMirrorEIP712TypedDataTypes';
+      Mirror: Array<{ __typename: 'EIP712TypedDataField'; name: string; type: string }>;
+    };
+    domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
     value: {
+      __typename: 'CreateOnchainMirrorEIP712TypedDataValue';
       nonce: string;
       deadline: string;
       profileId: string;
@@ -175,12 +223,18 @@ export type CreateOnchainMirrorBroadcastItemResultFragment = {
 };
 
 export type CreateOnchainQuoteBroadcastItemResultFragment = {
+  __typename: 'CreateOnchainQuoteBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
-    types: { Quote: Array<Eip712TypedDataFieldFragment> };
-    domain: Eip712TypedDataDomainFragment;
+    __typename: 'CreateOnchainQuoteEIP712TypedData';
+    types: {
+      __typename: 'CreateOnchainQuoteEIP712TypedDataTypes';
+      Quote: Array<{ __typename: 'EIP712TypedDataField' } & Eip712TypedDataFieldFragment>;
+    };
+    domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
     value: {
+      __typename: 'CreateOnchainQuoteEIP712TypedDataValue';
       nonce: string;
       deadline: string;
       profileId: string;
@@ -199,12 +253,18 @@ export type CreateOnchainQuoteBroadcastItemResultFragment = {
 };
 
 export type CreateMomokaPostBroadcastItemResultFragment = {
+  __typename: 'CreateMomokaPostBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
-    types: { Post: Array<{ name: string; type: string }> };
-    domain: Eip712TypedDataDomainFragment;
+    __typename: 'CreateMomokaPostEIP712TypedData';
+    types: {
+      __typename: 'CreateMomokaPostEIP712TypedDataTypes';
+      Post: Array<{ __typename: 'EIP712TypedDataField'; name: string; type: string }>;
+    };
+    domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
     value: {
+      __typename: 'CreateMomokaPostEIP712TypedDataValue';
       nonce: string;
       deadline: string;
       profileId: string;
@@ -218,12 +278,18 @@ export type CreateMomokaPostBroadcastItemResultFragment = {
 };
 
 export type CreateMomokaCommentBroadcastItemResultFragment = {
+  __typename: 'CreateMomokaCommentBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
-    types: { Comment: Array<{ name: string; type: string }> };
-    domain: Eip712TypedDataDomainFragment;
+    __typename: 'CreateMomokaCommentEIP712TypedData';
+    types: {
+      __typename: 'CreateMomokaCommentEIP712TypedDataTypes';
+      Comment: Array<{ __typename: 'EIP712TypedDataField'; name: string; type: string }>;
+    };
+    domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
     value: {
+      __typename: 'CreateMomokaCommentEIP712TypedDataValue';
       nonce: string;
       deadline: string;
       profileId: string;
@@ -242,12 +308,18 @@ export type CreateMomokaCommentBroadcastItemResultFragment = {
 };
 
 export type CreateMomokaMirrorBroadcastItemResultFragment = {
+  __typename: 'CreateMomokaMirrorBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
-    types: { Mirror: Array<{ name: string; type: string }> };
-    domain: Eip712TypedDataDomainFragment;
+    __typename: 'CreateMomokaMirrorEIP712TypedData';
+    types: {
+      __typename: 'CreateMomokaMirrorEIP712TypedDataTypes';
+      Mirror: Array<{ __typename: 'EIP712TypedDataField'; name: string; type: string }>;
+    };
+    domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
     value: {
+      __typename: 'CreateMomokaMirrorEIP712TypedDataValue';
       nonce: string;
       deadline: string;
       profileId: string;
@@ -262,12 +334,18 @@ export type CreateMomokaMirrorBroadcastItemResultFragment = {
 };
 
 export type CreateMomokaQuoteBroadcastItemResultFragment = {
+  __typename: 'CreateMomokaQuoteBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
-    types: { Quote: Array<{ name: string; type: string }> };
-    domain: Eip712TypedDataDomainFragment;
+    __typename: 'CreateMomokaQuoteEIP712TypedData';
+    types: {
+      __typename: 'CreateMomokaQuoteEIP712TypedDataTypes';
+      Quote: Array<{ __typename: 'EIP712TypedDataField'; name: string; type: string }>;
+    };
+    domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
     value: {
+      __typename: 'CreateMomokaQuoteEIP712TypedDataValue';
       nonce: string;
       deadline: string;
       profileId: string;
@@ -286,9 +364,12 @@ export type CreateMomokaQuoteBroadcastItemResultFragment = {
 };
 
 export type CreateLegacyCollectBroadcastItemResultFragment = {
+  __typename: 'CreateLegacyCollectBroadcastItemResult';
   id: string;
   expiresAt: string;
-  typedData: CreateActOnOpenActionEip712TypedDataFragment;
+  typedData: {
+    __typename: 'CreateActOnOpenActionEIP712TypedData';
+  } & CreateActOnOpenActionEip712TypedDataFragment;
 };
 
 export type CreateOnchainPostTypedDataMutationVariables = Types.Exact<{
@@ -297,7 +378,10 @@ export type CreateOnchainPostTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateOnchainPostTypedDataMutation = {
-  result: CreateOnchainPostBroadcastItemResultFragment;
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateOnchainPostBroadcastItemResult';
+  } & CreateOnchainPostBroadcastItemResultFragment;
 };
 
 export type CreateOnchainCommentTypedDataMutationVariables = Types.Exact<{
@@ -306,7 +390,10 @@ export type CreateOnchainCommentTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateOnchainCommentTypedDataMutation = {
-  result: CreateOnchainCommentBroadcastItemResultFragment;
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateOnchainCommentBroadcastItemResult';
+  } & CreateOnchainCommentBroadcastItemResultFragment;
 };
 
 export type CreateOnchainMirrorTypedDataMutationVariables = Types.Exact<{
@@ -315,7 +402,10 @@ export type CreateOnchainMirrorTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateOnchainMirrorTypedDataMutation = {
-  result: CreateOnchainMirrorBroadcastItemResultFragment;
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateOnchainMirrorBroadcastItemResult';
+  } & CreateOnchainMirrorBroadcastItemResultFragment;
 };
 
 export type CreateOnchainQuoteTypedDataMutationVariables = Types.Exact<{
@@ -324,7 +414,10 @@ export type CreateOnchainQuoteTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateOnchainQuoteTypedDataMutation = {
-  result: CreateOnchainQuoteBroadcastItemResultFragment;
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateOnchainQuoteBroadcastItemResult';
+  } & CreateOnchainQuoteBroadcastItemResultFragment;
 };
 
 export type CreateMomokaPostTypedDataMutationVariables = Types.Exact<{
@@ -332,7 +425,10 @@ export type CreateMomokaPostTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateMomokaPostTypedDataMutation = {
-  result: CreateMomokaPostBroadcastItemResultFragment;
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateMomokaPostBroadcastItemResult';
+  } & CreateMomokaPostBroadcastItemResultFragment;
 };
 
 export type CreateMomokaCommentTypedDataMutationVariables = Types.Exact<{
@@ -340,7 +436,10 @@ export type CreateMomokaCommentTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateMomokaCommentTypedDataMutation = {
-  result: CreateMomokaCommentBroadcastItemResultFragment;
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateMomokaCommentBroadcastItemResult';
+  } & CreateMomokaCommentBroadcastItemResultFragment;
 };
 
 export type CreateMomokaMirrorTypedDataMutationVariables = Types.Exact<{
@@ -348,7 +447,10 @@ export type CreateMomokaMirrorTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateMomokaMirrorTypedDataMutation = {
-  result: CreateMomokaMirrorBroadcastItemResultFragment;
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateMomokaMirrorBroadcastItemResult';
+  } & CreateMomokaMirrorBroadcastItemResultFragment;
 };
 
 export type CreateMomokaQuoteTypedDataMutationVariables = Types.Exact<{
@@ -356,7 +458,10 @@ export type CreateMomokaQuoteTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateMomokaQuoteTypedDataMutation = {
-  result: CreateMomokaQuoteBroadcastItemResultFragment;
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateMomokaQuoteBroadcastItemResult';
+  } & CreateMomokaQuoteBroadcastItemResultFragment;
 };
 
 export type PostOnchainMutationVariables = Types.Exact<{
@@ -364,7 +469,10 @@ export type PostOnchainMutationVariables = Types.Exact<{
 }>;
 
 export type PostOnchainMutation = {
-  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'LensProfileManagerRelayError' } & LensProfileManagerRelayErrorFragment)
+    | ({ __typename: 'RelaySuccess' } & RelaySuccessFragment);
 };
 
 export type CommentOnchainMutationVariables = Types.Exact<{
@@ -372,7 +480,10 @@ export type CommentOnchainMutationVariables = Types.Exact<{
 }>;
 
 export type CommentOnchainMutation = {
-  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'LensProfileManagerRelayError' } & LensProfileManagerRelayErrorFragment)
+    | ({ __typename: 'RelaySuccess' } & RelaySuccessFragment);
 };
 
 export type MirrorOnchainMutationVariables = Types.Exact<{
@@ -380,7 +491,10 @@ export type MirrorOnchainMutationVariables = Types.Exact<{
 }>;
 
 export type MirrorOnchainMutation = {
-  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'LensProfileManagerRelayError' } & LensProfileManagerRelayErrorFragment)
+    | ({ __typename: 'RelaySuccess' } & RelaySuccessFragment);
 };
 
 export type QuoteOnchainMutationVariables = Types.Exact<{
@@ -388,7 +502,10 @@ export type QuoteOnchainMutationVariables = Types.Exact<{
 }>;
 
 export type QuoteOnchainMutation = {
-  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'LensProfileManagerRelayError' } & LensProfileManagerRelayErrorFragment)
+    | ({ __typename: 'RelaySuccess' } & RelaySuccessFragment);
 };
 
 export type PostOnMomokaMutationVariables = Types.Exact<{
@@ -396,7 +513,10 @@ export type PostOnMomokaMutationVariables = Types.Exact<{
 }>;
 
 export type PostOnMomokaMutation = {
-  result: CreateMomokaPublicationResultFragment | LensProfileManagerRelayErrorFragment;
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'CreateMomokaPublicationResult' } & CreateMomokaPublicationResultFragment)
+    | ({ __typename: 'LensProfileManagerRelayError' } & LensProfileManagerRelayErrorFragment);
 };
 
 export type CommentOnMomokaMutationVariables = Types.Exact<{
@@ -404,7 +524,10 @@ export type CommentOnMomokaMutationVariables = Types.Exact<{
 }>;
 
 export type CommentOnMomokaMutation = {
-  result: CreateMomokaPublicationResultFragment | LensProfileManagerRelayErrorFragment;
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'CreateMomokaPublicationResult' } & CreateMomokaPublicationResultFragment)
+    | ({ __typename: 'LensProfileManagerRelayError' } & LensProfileManagerRelayErrorFragment);
 };
 
 export type MirrorOnMomokaMutationVariables = Types.Exact<{
@@ -412,7 +535,10 @@ export type MirrorOnMomokaMutationVariables = Types.Exact<{
 }>;
 
 export type MirrorOnMomokaMutation = {
-  result: CreateMomokaPublicationResultFragment | LensProfileManagerRelayErrorFragment;
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'CreateMomokaPublicationResult' } & CreateMomokaPublicationResultFragment)
+    | ({ __typename: 'LensProfileManagerRelayError' } & LensProfileManagerRelayErrorFragment);
 };
 
 export type QuoteOnMomokaMutationVariables = Types.Exact<{
@@ -420,27 +546,36 @@ export type QuoteOnMomokaMutationVariables = Types.Exact<{
 }>;
 
 export type QuoteOnMomokaMutation = {
-  result: CreateMomokaPublicationResultFragment | LensProfileManagerRelayErrorFragment;
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'CreateMomokaPublicationResult' } & CreateMomokaPublicationResultFragment)
+    | ({ __typename: 'LensProfileManagerRelayError' } & LensProfileManagerRelayErrorFragment);
 };
 
 export type HidePublicationMutationVariables = Types.Exact<{
   request: Types.HidePublicationRequest;
 }>;
 
-export type HidePublicationMutation = { hidePublication: string | null };
+export type HidePublicationMutation = { __typename: 'Mutation'; hidePublication: string | null };
 
 export type ReportPublicationMutationVariables = Types.Exact<{
   request: Types.ReportPublicationRequest;
 }>;
 
-export type ReportPublicationMutation = { reportPublication: string | null };
+export type ReportPublicationMutation = {
+  __typename: 'Mutation';
+  reportPublication: string | null;
+};
 
 export type LegacyCollectPublicationMutationVariables = Types.Exact<{
   request: Types.LegacyCollectRequest;
 }>;
 
 export type LegacyCollectPublicationMutation = {
-  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'LensProfileManagerRelayError' } & LensProfileManagerRelayErrorFragment)
+    | ({ __typename: 'RelaySuccess' } & RelaySuccessFragment);
 };
 
 export type CreateLegacyCollectTypedDataMutationVariables = Types.Exact<{
@@ -449,7 +584,10 @@ export type CreateLegacyCollectTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateLegacyCollectTypedDataMutation = {
-  result: CreateLegacyCollectBroadcastItemResultFragment;
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateLegacyCollectBroadcastItemResult';
+  } & CreateLegacyCollectBroadcastItemResultFragment;
 };
 
 export type RefreshPublicationMetadataMutationVariables = Types.Exact<{
@@ -457,7 +595,11 @@ export type RefreshPublicationMetadataMutationVariables = Types.Exact<{
 }>;
 
 export type RefreshPublicationMetadataMutation = {
-  result: { result: Types.RefreshPublicationMetadataResultType };
+  __typename: 'Mutation';
+  result: {
+    __typename: 'RefreshPublicationMetadataResult';
+    result: Types.RefreshPublicationMetadataResultType;
+  };
 };
 
 export const TagResultFragmentDoc = gql`
@@ -777,19 +919,16 @@ export const PublicationStatsDocument = gql`
   ) {
     result: publication(request: $request) {
       ... on Post {
-        __typename
         stats(request: $statsRequest) {
           ...PublicationStats
         }
       }
       ... on Comment {
-        __typename
         stats(request: $statsRequest) {
           ...PublicationStats
         }
       }
       ... on Quote {
-        __typename
         stats(request: $statsRequest) {
           ...PublicationStats
         }

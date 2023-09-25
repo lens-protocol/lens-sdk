@@ -5,31 +5,40 @@ import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
-export type AuthChallengeFragment = { id: string; text: string };
+export type AuthChallengeFragment = { __typename: 'AuthChallengeResult'; id: string; text: string };
 
 export type AuthChallengeQueryVariables = Types.Exact<{
   request: Types.ChallengeRequest;
 }>;
 
-export type AuthChallengeQuery = { result: AuthChallengeFragment };
+export type AuthChallengeQuery = {
+  __typename: 'Query';
+  result: { __typename: 'AuthChallengeResult' } & AuthChallengeFragment;
+};
 
 export type AuthVerifyQueryVariables = Types.Exact<{
   request: Types.VerifyRequest;
 }>;
 
-export type AuthVerifyQuery = { result: boolean };
+export type AuthVerifyQuery = { __typename: 'Query'; result: boolean };
 
 export type AuthAuthenticateMutationVariables = Types.Exact<{
   request: Types.SignedAuthChallenge;
 }>;
 
-export type AuthAuthenticateMutation = { result: { accessToken: string; refreshToken: string } };
+export type AuthAuthenticateMutation = {
+  __typename: 'Mutation';
+  result: { __typename: 'AuthenticationResult'; accessToken: string; refreshToken: string };
+};
 
 export type AuthRefreshMutationVariables = Types.Exact<{
   request: Types.RefreshRequest;
 }>;
 
-export type AuthRefreshMutation = { result: { accessToken: string; refreshToken: string } };
+export type AuthRefreshMutation = {
+  __typename: 'Mutation';
+  result: { __typename: 'AuthenticationResult'; accessToken: string; refreshToken: string };
+};
 
 export const AuthChallengeFragmentDoc = gql`
   fragment AuthChallenge on AuthChallengeResult {

@@ -46,9 +46,13 @@ export type ExplorePublicationsQueryVariables = Types.Exact<{
 }>;
 
 export type ExplorePublicationsQuery = {
+  __typename: 'Query';
   result: {
-    items: Array<PostFragment | QuoteFragment>;
-    pageInfo: { prev: string | null; next: string | null };
+    __typename: 'PaginatedExplorePublicationResult';
+    items: Array<
+      ({ __typename: 'Post' } & PostFragment) | ({ __typename: 'Quote' } & QuoteFragment)
+    >;
+    pageInfo: { __typename: 'PaginatedResultInfo'; prev: string | null; next: string | null };
   };
 };
 
@@ -60,7 +64,12 @@ export type ExploreProfilesQueryVariables = Types.Exact<{
 }>;
 
 export type ExploreProfilesQuery = {
-  result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedProfileResult';
+    items: Array<{ __typename: 'Profile' } & ProfileFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export const ExplorePublicationsDocument = gql`

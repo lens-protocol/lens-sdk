@@ -42,96 +42,129 @@ import {
   RelayErrorFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
-export type OwnerFragment = { amount: string; address: string };
+export type OwnerFragment = { __typename: 'Owner'; amount: string; address: string };
 
 export type NftCollectionFragment = {
+  __typename: 'NftCollection';
   name: string;
   symbol: string;
   baseUri: string | null;
   contractType: Types.NftContractType;
-  contract: NetworkAddressFragment;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
 };
 
 export type NftMetadataFragment = {
+  __typename: 'NftMetadata';
   name: string | null;
   description: string | null;
-  image: { raw: ImageFragment; optimized: ImageFragment | null } | null;
+  image: {
+    __typename: 'ImageSet';
+    raw: { __typename: 'Image' } & ImageFragment;
+    optimized: ({ __typename: 'Image' } & ImageFragment) | null;
+  } | null;
 };
 
 export type NftFragment = {
+  __typename: 'Nft';
   tokenId: string;
   contentURI: string;
   contractType: Types.NftContractType;
-  owner: OwnerFragment;
-  contract: NetworkAddressFragment;
-  collection: NftCollectionFragment;
-  metadata: NftMetadataFragment;
+  owner: { __typename: 'Owner' } & OwnerFragment;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
+  collection: { __typename: 'NftCollection' } & NftCollectionFragment;
+  metadata: { __typename: 'NftMetadata' } & NftMetadataFragment;
 };
 
 export type NftGalleryFragment = {
+  __typename: 'NftGallery';
   id: string;
   name: string;
   createdAt: string;
   updatedAt: string;
-  items: Array<NftFragment>;
+  items: Array<{ __typename: 'Nft' } & NftFragment>;
 };
 
 export type PaginatedNftGalleriesResultFragment = {
-  items: Array<NftGalleryFragment>;
-  pageInfo: PaginatedResultInfoFragment;
+  __typename: 'PaginatedNftGalleriesResult';
+  items: Array<{ __typename: 'NftGallery' } & NftGalleryFragment>;
+  pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
 };
 
-export type NftOwnershipChallengeResultFragment = { success: boolean; info: string | null };
+export type NftOwnershipChallengeResultFragment = {
+  __typename: 'NftOwnershipChallengeResult';
+  success: boolean;
+  info: string | null;
+};
 
 export type NftsQueryVariables = Types.Exact<{
   request: Types.NftsRequest;
 }>;
 
 export type NftsQuery = {
-  result: { items: Array<NftFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedNftsResult';
+    items: Array<{ __typename: 'Nft' } & NftFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export type ProfileGalleriesQueryVariables = Types.Exact<{
   request: Types.NftGalleriesRequest;
 }>;
 
-export type ProfileGalleriesQuery = { result: PaginatedNftGalleriesResultFragment };
+export type ProfileGalleriesQuery = {
+  __typename: 'Query';
+  result: { __typename: 'PaginatedNftGalleriesResult' } & PaginatedNftGalleriesResultFragment;
+};
 
 export type NftOwnershipChallengeMutationVariables = Types.Exact<{
   request: Types.NftOwnershipChallengeRequest;
 }>;
 
-export type NftOwnershipChallengeMutation = { result: NftOwnershipChallengeResultFragment };
+export type NftOwnershipChallengeMutation = {
+  __typename: 'Mutation';
+  result: { __typename: 'NftOwnershipChallengeResult' } & NftOwnershipChallengeResultFragment;
+};
 
 export type CreateNftGalleryMutationVariables = Types.Exact<{
   request: Types.NftGalleryCreateRequest;
 }>;
 
-export type CreateNftGalleryMutation = { result: string };
+export type CreateNftGalleryMutation = { __typename: 'Mutation'; result: string };
 
 export type UpdateNftGalleryInfoMutationVariables = Types.Exact<{
   request: Types.NftGalleryUpdateInfoRequest;
 }>;
 
-export type UpdateNftGalleryInfoMutation = { updateNftGalleryInfo: string | null };
+export type UpdateNftGalleryInfoMutation = {
+  __typename: 'Mutation';
+  updateNftGalleryInfo: string | null;
+};
 
 export type UpdateNftGalleryOrderMutationVariables = Types.Exact<{
   request: Types.NftGalleryUpdateItemOrderRequest;
 }>;
 
-export type UpdateNftGalleryOrderMutation = { updateNftGalleryOrder: string | null };
+export type UpdateNftGalleryOrderMutation = {
+  __typename: 'Mutation';
+  updateNftGalleryOrder: string | null;
+};
 
 export type UpdateNftGalleryItemsMutationVariables = Types.Exact<{
   request: Types.NftGalleryUpdateItemsRequest;
 }>;
 
-export type UpdateNftGalleryItemsMutation = { updateNftGalleryItems: string | null };
+export type UpdateNftGalleryItemsMutation = {
+  __typename: 'Mutation';
+  updateNftGalleryItems: string | null;
+};
 
 export type DeleteNftGalleryMutationVariables = Types.Exact<{
   request: Types.NftGalleryDeleteRequest;
 }>;
 
-export type DeleteNftGalleryMutation = { deleteNftGallery: string | null };
+export type DeleteNftGalleryMutation = { __typename: 'Mutation'; deleteNftGallery: string | null };
 
 export const OwnerFragmentDoc = gql`
   fragment Owner on Owner {

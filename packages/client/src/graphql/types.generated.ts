@@ -1379,6 +1379,8 @@ export type ReportingReasonInput = {
 
 export type RevenueFromPublicationRequest = {
   for: Scalars['PublicationId']['input'];
+  /** Will return revenue for publications made on any of the provided app ids. Will include all apps if omitted */
+  publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
 };
 
 export type RevenueFromPublicationsRequest = {

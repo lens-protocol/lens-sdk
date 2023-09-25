@@ -52,25 +52,22 @@ query PublicationStats(
 ) {
   result: publication(request: $request) {
     ... on Post {
-      __typename
       stats(request: $statsRequest) {
         ...PublicationStats
       }
     }
     ... on Comment {
-      __typename
       stats(request: $statsRequest) {
         ...PublicationStats
       }
     }
     ... on Quote {
-      __typename
       stats(request: $statsRequest) {
         ...PublicationStats
       }
     }
     ... on Mirror {
-      __typename
+      __typename # has to query something here
     }
   }
 }

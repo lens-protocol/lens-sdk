@@ -43,6 +43,7 @@ import {
   CreateMomokaPublicationResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type LensTransactionResultFragment = {
+  __typename: 'LensTransactionResult';
   status: Types.LensTransactionStatusType;
   txHash: string;
   reason: Types.LensTransactionFailureType | null;
@@ -53,36 +54,51 @@ export type TxIdToTxHashQueryVariables = Types.Exact<{
   for: Types.Scalars['TxId']['input'];
 }>;
 
-export type TxIdToTxHashQuery = { result: string | null };
+export type TxIdToTxHashQuery = { __typename: 'Query'; result: string | null };
 
 export type RelayQueueResultFragment = {
+  __typename: 'RelayQueueResult';
   key: Types.RelayRoleKey;
   queue: number;
-  relay: NetworkAddressFragment;
+  relay: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
 };
 
 export type RelayQueuesQueryVariables = Types.Exact<{ [key: string]: never }>;
 
-export type RelayQueuesQuery = { result: Array<RelayQueueResultFragment> };
+export type RelayQueuesQuery = {
+  __typename: 'Query';
+  result: Array<{ __typename: 'RelayQueueResult' } & RelayQueueResultFragment>;
+};
 
 export type LensTransactionStatusQueryVariables = Types.Exact<{
   request: Types.LensTransactionStatusRequest;
 }>;
 
-export type LensTransactionStatusQuery = { result: LensTransactionResultFragment | null };
+export type LensTransactionStatusQuery = {
+  __typename: 'Query';
+  result: ({ __typename: 'LensTransactionResult' } & LensTransactionResultFragment) | null;
+};
 
 export type BroadcastOnchainMutationVariables = Types.Exact<{
   request: Types.BroadcastRequest;
 }>;
 
-export type BroadcastOnchainMutation = { result: RelayErrorFragment | RelaySuccessFragment };
+export type BroadcastOnchainMutation = {
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'RelayError' } & RelayErrorFragment)
+    | ({ __typename: 'RelaySuccess' } & RelaySuccessFragment);
+};
 
 export type BroadcastOnMomokaMutationVariables = Types.Exact<{
   request: Types.BroadcastRequest;
 }>;
 
 export type BroadcastOnMomokaMutation = {
-  result: CreateMomokaPublicationResultFragment | RelayErrorFragment;
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'CreateMomokaPublicationResult' } & CreateMomokaPublicationResultFragment)
+    | ({ __typename: 'RelayError' } & RelayErrorFragment);
 };
 
 export const LensTransactionResultFragmentDoc = gql`

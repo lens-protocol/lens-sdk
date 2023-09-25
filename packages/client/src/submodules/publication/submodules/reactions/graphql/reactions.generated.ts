@@ -28,22 +28,24 @@ export type AddReactionMutationVariables = Types.Exact<{
   request: Types.ReactionRequest;
 }>;
 
-export type AddReactionMutation = { addReaction: string | null };
+export type AddReactionMutation = { __typename: 'Mutation'; addReaction: string | null };
 
 export type RemoveReactionMutationVariables = Types.Exact<{
   request: Types.ReactionRequest;
 }>;
 
-export type RemoveReactionMutation = { removeReaction: string | null };
+export type RemoveReactionMutation = { __typename: 'Mutation'; removeReaction: string | null };
 
 export type ProfileReactionResultFragment = {
+  __typename: 'ProfileReactionResult';
   reaction: Types.PublicationReactionType;
   reactionAt: string;
 };
 
 export type ProfileWhoReactedResultFragment = {
-  profile: ProfileFragment;
-  reactions: Array<ProfileReactionResultFragment>;
+  __typename: 'ProfileWhoReactedResult';
+  profile: { __typename: 'Profile' } & ProfileFragment;
+  reactions: Array<{ __typename: 'ProfileReactionResult' } & ProfileReactionResultFragment>;
 };
 
 export type WhoReactedPublicationQueryVariables = Types.Exact<{
@@ -54,7 +56,12 @@ export type WhoReactedPublicationQueryVariables = Types.Exact<{
 }>;
 
 export type WhoReactedPublicationQuery = {
-  result: { items: Array<ProfileWhoReactedResultFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedWhoReactedResult';
+    items: Array<{ __typename: 'ProfileWhoReactedResult' } & ProfileWhoReactedResultFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export const ProfileReactionResultFragmentDoc = gql`

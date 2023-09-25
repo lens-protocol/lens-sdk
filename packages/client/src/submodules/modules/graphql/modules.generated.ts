@@ -42,28 +42,32 @@ import {
   RelayErrorFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
-export type ModuleInfoFragment = { name: string; type: string };
+export type ModuleInfoFragment = { __typename: 'ModuleInfo'; name: string; type: string };
 
 export type KnownSupportedModuleFragment = {
+  __typename: 'KnownSupportedModule';
   moduleName: string;
-  contract: NetworkAddressFragment;
-  moduleInput: Array<ModuleInfoFragment>;
-  redeemInput: Array<ModuleInfoFragment>;
-  returnDataInput: Array<ModuleInfoFragment>;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
+  moduleInput: Array<{ __typename: 'ModuleInfo' } & ModuleInfoFragment>;
+  redeemInput: Array<{ __typename: 'ModuleInfo' } & ModuleInfoFragment>;
+  returnDataInput: Array<{ __typename: 'ModuleInfo' } & ModuleInfoFragment>;
 };
 
 export type UnknownSupportedModuleFragment = {
+  __typename: 'UnknownSupportedModule';
   moduleName: string;
-  contract: NetworkAddressFragment;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
 };
 
 export type ApprovedAllowanceAmountResultFragment = {
+  __typename: 'ApprovedAllowanceAmountResult';
   moduleName: string;
-  moduleContract: NetworkAddressFragment;
-  allowance: AmountFragment;
+  moduleContract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
+  allowance: { __typename: 'Amount' } & AmountFragment;
 };
 
 export type GenerateModuleCurrencyApprovalResultFragment = {
+  __typename: 'GenerateModuleCurrencyApprovalResult';
   to: string;
   from: string;
   data: string;
@@ -74,7 +78,12 @@ export type CurrenciesQueryVariables = Types.Exact<{
 }>;
 
 export type CurrenciesQuery = {
-  result: { items: Array<Erc20Fragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedCurrenciesResult';
+    items: Array<{ __typename: 'Erc20' } & Erc20Fragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export type ApprovedModuleAllowanceAmountQueryVariables = Types.Exact<{
@@ -83,7 +92,10 @@ export type ApprovedModuleAllowanceAmountQueryVariables = Types.Exact<{
 }>;
 
 export type ApprovedModuleAllowanceAmountQuery = {
-  result: Array<ApprovedAllowanceAmountResultFragment>;
+  __typename: 'Query';
+  result: Array<
+    { __typename: 'ApprovedAllowanceAmountResult' } & ApprovedAllowanceAmountResultFragment
+  >;
 };
 
 export type GenerateModuleCurrencyApprovalDataQueryVariables = Types.Exact<{
@@ -91,7 +103,10 @@ export type GenerateModuleCurrencyApprovalDataQueryVariables = Types.Exact<{
 }>;
 
 export type GenerateModuleCurrencyApprovalDataQuery = {
-  result: GenerateModuleCurrencyApprovalResultFragment;
+  __typename: 'Query';
+  result: {
+    __typename: 'GenerateModuleCurrencyApprovalResult';
+  } & GenerateModuleCurrencyApprovalResultFragment;
 };
 
 export type SupportedFollowModulesQueryVariables = Types.Exact<{
@@ -99,9 +114,14 @@ export type SupportedFollowModulesQueryVariables = Types.Exact<{
 }>;
 
 export type SupportedFollowModulesQuery = {
+  __typename: 'Query';
   result: {
-    items: Array<KnownSupportedModuleFragment | UnknownSupportedModuleFragment>;
-    pageInfo: PaginatedResultInfoFragment;
+    __typename: 'PaginatedSupportedModules';
+    items: Array<
+      | ({ __typename: 'KnownSupportedModule' } & KnownSupportedModuleFragment)
+      | ({ __typename: 'UnknownSupportedModule' } & UnknownSupportedModuleFragment)
+    >;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
   };
 };
 
@@ -110,9 +130,14 @@ export type SupportedReferenceModulesQueryVariables = Types.Exact<{
 }>;
 
 export type SupportedReferenceModulesQuery = {
+  __typename: 'Query';
   result: {
-    items: Array<KnownSupportedModuleFragment | UnknownSupportedModuleFragment>;
-    pageInfo: PaginatedResultInfoFragment;
+    __typename: 'PaginatedSupportedModules';
+    items: Array<
+      | ({ __typename: 'KnownSupportedModule' } & KnownSupportedModuleFragment)
+      | ({ __typename: 'UnknownSupportedModule' } & UnknownSupportedModuleFragment)
+    >;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
   };
 };
 
@@ -121,9 +146,14 @@ export type SupportedOpenActionModulesQueryVariables = Types.Exact<{
 }>;
 
 export type SupportedOpenActionModulesQuery = {
+  __typename: 'Query';
   result: {
-    items: Array<KnownSupportedModuleFragment | UnknownSupportedModuleFragment>;
-    pageInfo: PaginatedResultInfoFragment;
+    __typename: 'PaginatedSupportedModules';
+    items: Array<
+      | ({ __typename: 'KnownSupportedModule' } & KnownSupportedModuleFragment)
+      | ({ __typename: 'UnknownSupportedModule' } & UnknownSupportedModuleFragment)
+    >;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
   };
 };
 
@@ -132,9 +162,14 @@ export type SupportedOpenActionCollectModulesQueryVariables = Types.Exact<{
 }>;
 
 export type SupportedOpenActionCollectModulesQuery = {
+  __typename: 'Query';
   result: {
-    items: Array<KnownSupportedModuleFragment | UnknownSupportedModuleFragment>;
-    pageInfo: PaginatedResultInfoFragment;
+    __typename: 'PaginatedSupportedModules';
+    items: Array<
+      | ({ __typename: 'KnownSupportedModule' } & KnownSupportedModuleFragment)
+      | ({ __typename: 'UnknownSupportedModule' } & UnknownSupportedModuleFragment)
+    >;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
   };
 };
 

@@ -38,11 +38,19 @@ import {
   CreateActOnOpenActionEip712TypedDataFragmentDoc,
   CreateMomokaPublicationResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
-export type RevenueAggregateFragment = { total: AmountFragment };
+export type RevenueAggregateFragment = {
+  __typename: 'RevenueAggregate';
+  total: { __typename: 'Amount' } & AmountFragment;
+};
 
 export type PublicationRevenueFragment = {
-  publication: CommentFragment | MirrorFragment | PostFragment | QuoteFragment;
-  revenue: Array<RevenueAggregateFragment>;
+  __typename: 'PublicationRevenue';
+  publication:
+    | ({ __typename: 'Comment' } & CommentFragment)
+    | ({ __typename: 'Mirror' } & MirrorFragment)
+    | ({ __typename: 'Post' } & PostFragment)
+    | ({ __typename: 'Quote' } & QuoteFragment);
+  revenue: Array<{ __typename: 'RevenueAggregate' } & RevenueAggregateFragment>;
 };
 
 export type RevenueFromPublicationsQueryVariables = Types.Exact<{
@@ -55,7 +63,12 @@ export type RevenueFromPublicationsQueryVariables = Types.Exact<{
 }>;
 
 export type RevenueFromPublicationsQuery = {
-  result: { items: Array<PublicationRevenueFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedRevenueFromPublicationsResult';
+    items: Array<{ __typename: 'PublicationRevenue' } & PublicationRevenueFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export type RevenueFromPublicationQueryVariables = Types.Exact<{
@@ -67,14 +80,23 @@ export type RevenueFromPublicationQueryVariables = Types.Exact<{
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
-export type RevenueFromPublicationQuery = { result: PublicationRevenueFragment };
+export type RevenueFromPublicationQuery = {
+  __typename: 'Query';
+  result: { __typename: 'PublicationRevenue' } & PublicationRevenueFragment;
+};
 
 export type FollowRevenuesQueryVariables = Types.Exact<{
   request: Types.FollowRevenueRequest;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
-export type FollowRevenuesQuery = { result: { revenues: Array<RevenueAggregateFragment> } };
+export type FollowRevenuesQuery = {
+  __typename: 'Query';
+  result: {
+    __typename: 'FollowRevenueResult';
+    revenues: Array<{ __typename: 'RevenueAggregate' } & RevenueAggregateFragment>;
+  };
+};
 
 export const RevenueAggregateFragmentDoc = gql`
   fragment RevenueAggregate on RevenueAggregate {

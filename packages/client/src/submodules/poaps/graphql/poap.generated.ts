@@ -43,6 +43,7 @@ import {
   CreateMomokaPublicationResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type PoapEventFragment = {
+  __typename: 'PoapEvent';
   id: string;
   fancyId: string | null;
   name: string | null;
@@ -63,13 +64,14 @@ export type PoapEventFragment = {
 };
 
 export type PoapTokenFragment = {
+  __typename: 'PoapToken';
   tokenId: string;
   eventId: string;
   layer: Types.PoapTokenLayerType;
   created: string;
   migrated: string | null;
-  owner: NetworkAddressFragment;
-  event: PoapEventFragment;
+  owner: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
+  event: { __typename: 'PoapEvent' } & PoapEventFragment;
 };
 
 export type PoapsQueryVariables = Types.Exact<{
@@ -77,7 +79,12 @@ export type PoapsQueryVariables = Types.Exact<{
 }>;
 
 export type PoapsQuery = {
-  result: { items: Array<PoapTokenFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedPoapTokenResult';
+    items: Array<{ __typename: 'PoapToken' } & PoapTokenFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export type MutualPoapsQueryVariables = Types.Exact<{
@@ -85,7 +92,12 @@ export type MutualPoapsQueryVariables = Types.Exact<{
 }>;
 
 export type MutualPoapsQuery = {
-  result: { items: Array<PoapEventFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedPoapEventResult';
+    items: Array<{ __typename: 'PoapEvent' } & PoapEventFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export type PoapHoldersQueryVariables = Types.Exact<{
@@ -96,14 +108,22 @@ export type PoapHoldersQueryVariables = Types.Exact<{
 }>;
 
 export type PoapHoldersQuery = {
-  result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedProfileResult';
+    items: Array<{ __typename: 'Profile' } & ProfileFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export type PoapEventQueryVariables = Types.Exact<{
   request: Types.PoapEventQueryRequest;
 }>;
 
-export type PoapEventQuery = { result: PoapEventFragment | null };
+export type PoapEventQuery = {
+  __typename: 'Query';
+  result: ({ __typename: 'PoapEvent' } & PoapEventFragment) | null;
+};
 
 export const PoapEventFragmentDoc = gql`
   fragment PoapEvent on PoapEvent {

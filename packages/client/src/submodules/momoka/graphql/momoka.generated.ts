@@ -10,58 +10,78 @@ import {
   AppFragmentDoc,
   PaginatedResultInfoFragmentDoc,
 } from '../../../graphql/fragments.generated';
-export type MomokaVerificationStatusSuccessFragment = { verified: boolean };
+export type MomokaVerificationStatusSuccessFragment = {
+  __typename: 'MomokaVerificationStatusSuccess';
+  verified: boolean;
+};
 
-export type MomokaVerificationStatusFailureFragment = { status: Types.MomokaValidatorError };
+export type MomokaVerificationStatusFailureFragment = {
+  __typename: 'MomokaVerificationStatusFailure';
+  status: Types.MomokaValidatorError;
+};
 
 export type MomokaPostTransactionFragment = {
+  __typename: 'MomokaPostTransaction';
   transactionId: string;
   submitter: string;
   createdAt: string;
-  app: AppFragment | null;
-  publication: { id: string };
+  app: ({ __typename: 'App' } & AppFragment) | null;
+  publication: { __typename: 'Post'; id: string };
   verificationStatus:
-    | MomokaVerificationStatusFailureFragment
-    | MomokaVerificationStatusSuccessFragment;
+    | ({ __typename: 'MomokaVerificationStatusFailure' } & MomokaVerificationStatusFailureFragment)
+    | ({ __typename: 'MomokaVerificationStatusSuccess' } & MomokaVerificationStatusSuccessFragment);
 };
 
 export type MomokaCommentTransactionFragment = {
+  __typename: 'MomokaCommentTransaction';
   transactionId: string;
   submitter: string;
   createdAt: string;
-  app: AppFragment | null;
+  app: ({ __typename: 'App' } & AppFragment) | null;
   verificationStatus:
-    | MomokaVerificationStatusFailureFragment
-    | MomokaVerificationStatusSuccessFragment;
-  publication: { id: string };
-  commentOn: { id: string } | { id: string } | { id: string };
+    | ({ __typename: 'MomokaVerificationStatusFailure' } & MomokaVerificationStatusFailureFragment)
+    | ({ __typename: 'MomokaVerificationStatusSuccess' } & MomokaVerificationStatusSuccessFragment);
+  publication: { __typename: 'Comment'; id: string };
+  commentOn:
+    | { __typename: 'Comment'; id: string }
+    | { __typename: 'Post'; id: string }
+    | { __typename: 'Quote'; id: string };
 };
 
 export type MomokaMirrorTransactionFragment = {
+  __typename: 'MomokaMirrorTransaction';
   transactionId: string;
   submitter: string;
   createdAt: string;
-  app: AppFragment | null;
+  app: ({ __typename: 'App' } & AppFragment) | null;
   verificationStatus:
-    | MomokaVerificationStatusFailureFragment
-    | MomokaVerificationStatusSuccessFragment;
-  publication: { id: string };
-  mirrorOn: { id: string } | { id: string } | { id: string };
+    | ({ __typename: 'MomokaVerificationStatusFailure' } & MomokaVerificationStatusFailureFragment)
+    | ({ __typename: 'MomokaVerificationStatusSuccess' } & MomokaVerificationStatusSuccessFragment);
+  publication: { __typename: 'Mirror'; id: string };
+  mirrorOn:
+    | { __typename: 'Comment'; id: string }
+    | { __typename: 'Post'; id: string }
+    | { __typename: 'Quote'; id: string };
 };
 
 export type MomokaQuoteTransactionFragment = {
+  __typename: 'MomokaQuoteTransaction';
   transactionId: string;
   submitter: string;
   createdAt: string;
-  app: AppFragment | null;
+  app: ({ __typename: 'App' } & AppFragment) | null;
   verificationStatus:
-    | MomokaVerificationStatusFailureFragment
-    | MomokaVerificationStatusSuccessFragment;
-  publication: { id: string };
-  quoteOn: { id: string } | { id: string } | { id: string };
+    | ({ __typename: 'MomokaVerificationStatusFailure' } & MomokaVerificationStatusFailureFragment)
+    | ({ __typename: 'MomokaVerificationStatusSuccess' } & MomokaVerificationStatusSuccessFragment);
+  publication: { __typename: 'Quote'; id: string };
+  quoteOn:
+    | { __typename: 'Comment'; id: string }
+    | { __typename: 'Post'; id: string }
+    | { __typename: 'Quote'; id: string };
 };
 
 export type MomokaSubmitterResultFragment = {
+  __typename: 'MomokaSubmitterResult';
   address: string;
   name: string;
   totalTransactions: number;
@@ -70,12 +90,20 @@ export type MomokaSubmitterResultFragment = {
 export type MomokaSubmittersQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type MomokaSubmittersQuery = {
-  result: { items: Array<MomokaSubmitterResultFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'MomokaSubmittersResult';
+    items: Array<{ __typename: 'MomokaSubmitterResult' } & MomokaSubmitterResultFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export type MomokaSummaryQueryVariables = Types.Exact<{ [key: string]: never }>;
 
-export type MomokaSummaryQuery = { result: { totalTransactions: number } };
+export type MomokaSummaryQuery = {
+  __typename: 'Query';
+  result: { __typename: 'MomokaSummaryResult'; totalTransactions: number };
+};
 
 export type MomokaTransactionQueryVariables = Types.Exact<{
   request: Types.MomokaTransactionRequest;
@@ -85,11 +113,12 @@ export type MomokaTransactionQueryVariables = Types.Exact<{
 }>;
 
 export type MomokaTransactionQuery = {
+  __typename: 'Query';
   result:
-    | MomokaCommentTransactionFragment
-    | MomokaMirrorTransactionFragment
-    | MomokaPostTransactionFragment
-    | MomokaQuoteTransactionFragment
+    | ({ __typename: 'MomokaCommentTransaction' } & MomokaCommentTransactionFragment)
+    | ({ __typename: 'MomokaMirrorTransaction' } & MomokaMirrorTransactionFragment)
+    | ({ __typename: 'MomokaPostTransaction' } & MomokaPostTransactionFragment)
+    | ({ __typename: 'MomokaQuoteTransaction' } & MomokaQuoteTransactionFragment)
     | null;
 };
 
@@ -101,14 +130,16 @@ export type MomokaTransactionsQueryVariables = Types.Exact<{
 }>;
 
 export type MomokaTransactionsQuery = {
+  __typename: 'Query';
   result: {
+    __typename: 'MomokaTransactionsResult';
     items: Array<
-      | MomokaCommentTransactionFragment
-      | MomokaMirrorTransactionFragment
-      | MomokaPostTransactionFragment
-      | MomokaQuoteTransactionFragment
+      | ({ __typename: 'MomokaCommentTransaction' } & MomokaCommentTransactionFragment)
+      | ({ __typename: 'MomokaMirrorTransaction' } & MomokaMirrorTransactionFragment)
+      | ({ __typename: 'MomokaPostTransaction' } & MomokaPostTransactionFragment)
+      | ({ __typename: 'MomokaQuoteTransaction' } & MomokaQuoteTransactionFragment)
     >;
-    pageInfo: PaginatedResultInfoFragment;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
   };
 };
 

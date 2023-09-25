@@ -1,5 +1,4 @@
 fragment ReactionNotification on ReactionNotification {
-  __typename
   id
   reactions {
     profile {
@@ -24,7 +23,6 @@ fragment ReactionNotification on ReactionNotification {
 }
 
 fragment CommentNotification on CommentNotification {
-  __typename
   id
   comment {
     ...Comment
@@ -32,7 +30,6 @@ fragment CommentNotification on CommentNotification {
 }
 
 fragment MirrorNotification on MirrorNotification {
-  __typename
   id
   mirrors {
     mirrorId
@@ -55,7 +52,6 @@ fragment MirrorNotification on MirrorNotification {
 }
 
 fragment QuoteNotification on QuoteNotification {
-  __typename
   id
   quote {
     ...Quote
@@ -73,7 +69,6 @@ fragment OpenActionProfileActed on OpenActionProfileActed {
 }
 
 fragment ActedNotification on ActedNotification {
-  __typename
   id
   actions {
     ...OpenActionProfileActed
@@ -95,7 +90,6 @@ fragment ActedNotification on ActedNotification {
 }
 
 fragment FollowNotification on FollowNotification {
-  __typename
   id
   followers {
     ...Profile
@@ -103,7 +97,6 @@ fragment FollowNotification on FollowNotification {
 }
 
 fragment MentionNotification on MentionNotification {
-  __typename
   id
   publication {
     ... on Post {

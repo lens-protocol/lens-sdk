@@ -192,7 +192,6 @@ fragment NftImage on NftImage {
 }
 
 fragment Profile on Profile {
-  __typename
   id
   ownedBy {
     ...NetworkAddress
@@ -1332,7 +1331,6 @@ fragment LiveStreamMetadataV3 on LiveStreamMetadataV3 {
 
 # publication fragments
 fragment Post on Post {
-  __typename
   id
   publishedOn {
     ...App
@@ -1454,7 +1452,6 @@ fragment Post on Post {
 }
 
 fragment CommentBase on Comment {
-  __typename
   id
   publishedOn {
     ...App
@@ -1597,7 +1594,6 @@ fragment Comment on Comment {
 }
 
 fragment Mirror on Mirror {
-  __typename
   id
   publishedOn {
     ...App
@@ -1625,7 +1621,6 @@ fragment Mirror on Mirror {
 }
 
 fragment QuoteBase on Quote {
-  __typename
   id
   publishedOn {
     ...App
@@ -1797,23 +1792,19 @@ fragment CreateActOnOpenActionEIP712TypedData on CreateActOnOpenActionEIP712Type
 }
 
 fragment RelaySuccess on RelaySuccess {
-  __typename
   txHash
   txId
 }
 
 fragment RelayError on RelayError {
-  __typename
   reason
 }
 
 fragment LensProfileManagerRelayError on LensProfileManagerRelayError {
-  __typename
   reason
 }
 
 fragment CreateMomokaPublicationResult on CreateMomokaPublicationResult {
-  __typename
   id
   proof
   momokaId

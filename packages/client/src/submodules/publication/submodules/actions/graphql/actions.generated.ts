@@ -20,13 +20,19 @@ export type ActOnOpenActionMutationVariables = Types.Exact<{
 }>;
 
 export type ActOnOpenActionMutation = {
-  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'LensProfileManagerRelayError' } & LensProfileManagerRelayErrorFragment)
+    | ({ __typename: 'RelaySuccess' } & RelaySuccessFragment);
 };
 
 export type CreateActOnOpenActionBroadcastItemResultFragment = {
+  __typename: 'CreateActOnOpenActionBroadcastItemResult';
   id: string;
   expiresAt: string;
-  typedData: CreateActOnOpenActionEip712TypedDataFragment;
+  typedData: {
+    __typename: 'CreateActOnOpenActionEIP712TypedData';
+  } & CreateActOnOpenActionEip712TypedDataFragment;
 };
 
 export type CreateActOnOpenActionTypedDataMutationVariables = Types.Exact<{
@@ -35,7 +41,10 @@ export type CreateActOnOpenActionTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateActOnOpenActionTypedDataMutation = {
-  result: CreateActOnOpenActionBroadcastItemResultFragment;
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateActOnOpenActionBroadcastItemResult';
+  } & CreateActOnOpenActionBroadcastItemResultFragment;
 };
 
 export const CreateActOnOpenActionBroadcastItemResultFragmentDoc = gql`

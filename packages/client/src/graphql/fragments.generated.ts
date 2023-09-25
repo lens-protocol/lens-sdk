@@ -5,100 +5,147 @@ import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
-export type OptimisticStatusResultFragment = { value: boolean; isFinalisedOnchain: boolean };
+export type OptimisticStatusResultFragment = {
+  __typename: 'OptimisticStatusResult';
+  value: boolean;
+  isFinalisedOnchain: boolean;
+};
 
 export type Erc20Fragment = {
+  __typename: 'Erc20';
   name: string;
   symbol: string;
   decimals: number;
-  contract: NetworkAddressFragment;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
 };
 
-export type FiatAmountFragment = { value: string; asset: FiatFragment };
+export type FiatAmountFragment = {
+  __typename: 'FiatAmount';
+  value: string;
+  asset: { __typename: 'Fiat' } & FiatFragment;
+};
 
-export type FiatFragment = { name: string; symbol: string; decimals: number };
+export type FiatFragment = { __typename: 'Fiat'; name: string; symbol: string; decimals: number };
 
 export type AmountFragment = {
+  __typename: 'Amount';
   value: string;
-  asset: Erc20Fragment;
-  rate: FiatAmountFragment | null;
+  asset: { __typename: 'Erc20' } & Erc20Fragment;
+  rate: ({ __typename: 'FiatAmount' } & FiatAmountFragment) | null;
 };
 
 export type FeeFollowModuleSettingsFragment = {
+  __typename: 'FeeFollowModuleSettings';
   recipient: string;
-  amount: AmountFragment;
-  contract: NetworkAddressFragment;
+  amount: { __typename: 'Amount' } & AmountFragment;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
 };
 
-export type RevertFollowModuleSettingsFragment = { contract: NetworkAddressFragment };
+export type RevertFollowModuleSettingsFragment = {
+  __typename: 'RevertFollowModuleSettings';
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
+};
 
 export type UnknownFollowModuleSettingsFragment = {
+  __typename: 'UnknownFollowModuleSettings';
   followModuleReturnData: string;
-  contract: NetworkAddressFragment;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
 };
 
-export type NetworkAddressFragment = { address: string; chainId: string };
+export type NetworkAddressFragment = {
+  __typename: 'NetworkAddress';
+  address: string;
+  chainId: string;
+};
 
 export type ImageFragment = {
+  __typename: 'Image';
   uri: string;
   mimeType: string | null;
   width: number | null;
   height: number | null;
 };
 
-export type VideoFragment = { uri: string; mimeType: string | null };
+export type VideoFragment = { __typename: 'Video'; uri: string; mimeType: string | null };
 
-export type VideoSetFragment = { raw: VideoFragment; optimized: VideoFragment | null };
-
-export type EncryptableVideoFragment = { mimeType: string | null; uri: string };
-
-export type EncryptableVideoSetFragment = {
-  raw: EncryptableVideoFragment;
-  optimized: VideoFragment | null;
+export type VideoSetFragment = {
+  __typename: 'VideoSet';
+  raw: { __typename: 'Video' } & VideoFragment;
+  optimized: ({ __typename: 'Video' } & VideoFragment) | null;
 };
 
-export type AudioFragment = { uri: string; mimeType: string | null };
+export type EncryptableVideoFragment = {
+  __typename: 'EncryptableVideo';
+  mimeType: string | null;
+  uri: string;
+};
 
-export type AudioSetFragment = { raw: AudioFragment; optimized: AudioFragment | null };
+export type EncryptableVideoSetFragment = {
+  __typename: 'EncryptableVideoSet';
+  raw: { __typename: 'EncryptableVideo' } & EncryptableVideoFragment;
+  optimized: ({ __typename: 'Video' } & VideoFragment) | null;
+};
 
-export type EncryptableAudioFragment = { mimeType: string | null; uri: string };
+export type AudioFragment = { __typename: 'Audio'; uri: string; mimeType: string | null };
+
+export type AudioSetFragment = {
+  __typename: 'AudioSet';
+  raw: { __typename: 'Audio' } & AudioFragment;
+  optimized: ({ __typename: 'Audio' } & AudioFragment) | null;
+};
+
+export type EncryptableAudioFragment = {
+  __typename: 'EncryptableAudio';
+  mimeType: string | null;
+  uri: string;
+};
 
 export type EncryptableAudioSetFragment = {
-  raw: EncryptableAudioFragment;
-  optimized: AudioFragment | null;
+  __typename: 'EncryptableAudioSet';
+  raw: { __typename: 'EncryptableAudio' } & EncryptableAudioFragment;
+  optimized: ({ __typename: 'Audio' } & AudioFragment) | null;
 };
 
 export type LegacyAudioItemFragment = {
+  __typename: 'LegacyAudioItem';
   altTag: string | null;
-  audio: AudioSetFragment;
-  cover: PublicationImageSetFragment | null;
+  audio: { __typename: 'AudioSet' } & AudioSetFragment;
+  cover: ({ __typename: 'ImageSet' } & PublicationImageSetFragment) | null;
 };
 
-export type LegacyImageItemFragment = { altTag: string | null; image: PublicationImageSetFragment };
+export type LegacyImageItemFragment = {
+  __typename: 'LegacyImageItem';
+  altTag: string | null;
+  image: { __typename: 'ImageSet' } & PublicationImageSetFragment;
+};
 
 export type LegacyVideoItemFragment = {
+  __typename: 'LegacyVideoItem';
   altTag: string | null;
-  video: VideoSetFragment;
-  cover: PublicationImageSetFragment | null;
+  video: { __typename: 'VideoSet' } & VideoSetFragment;
+  cover: ({ __typename: 'ImageSet' } & PublicationImageSetFragment) | null;
 };
 
 export type ProfileCoverSetFragment = {
-  raw: ImageFragment;
-  optimized: ImageFragment | null;
-  transformed: ImageFragment | null;
+  __typename: 'ImageSet';
+  raw: { __typename: 'Image' } & ImageFragment;
+  optimized: ({ __typename: 'Image' } & ImageFragment) | null;
+  transformed: ({ __typename: 'Image' } & ImageFragment) | null;
 };
 
 export type ProfilePictureSetFragment = {
-  raw: ImageFragment;
-  optimized: ImageFragment | null;
-  transformed: ImageFragment | null;
+  __typename: 'ImageSet';
+  raw: { __typename: 'Image' } & ImageFragment;
+  optimized: ({ __typename: 'Image' } & ImageFragment) | null;
+  transformed: ({ __typename: 'Image' } & ImageFragment) | null;
 };
 
 export type NftImageFragment = {
+  __typename: 'NftImage';
   tokenId: string;
   verified: boolean;
-  collection: NetworkAddressFragment;
-  image: ProfilePictureSetFragment;
+  collection: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
+  image: { __typename: 'ImageSet' } & ProfilePictureSetFragment;
 };
 
 export type ProfileFragment = {
@@ -111,194 +158,248 @@ export type ProfileFragment = {
   handle: string | null;
   sponsor: boolean;
   lensManager: boolean;
-  ownedBy: NetworkAddressFragment;
+  ownedBy: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
   operations: {
+    __typename: 'ProfileOperations';
     id: string;
     canBlock: boolean;
     canUnblock: boolean;
     canFollow: Types.TriStateValue;
     canUnfollow: boolean;
-    isBlockedByMe: OptimisticStatusResultFragment;
-    isFollowedByMe: OptimisticStatusResultFragment;
-    isFollowingMe: OptimisticStatusResultFragment;
+    isBlockedByMe: { __typename: 'OptimisticStatusResult' } & OptimisticStatusResultFragment;
+    isFollowedByMe: { __typename: 'OptimisticStatusResult' } & OptimisticStatusResultFragment;
+    isFollowingMe: { __typename: 'OptimisticStatusResult' } & OptimisticStatusResultFragment;
   };
-  guardian: { protected: boolean; cooldownEndsOn: string | null } | null;
+  guardian: {
+    __typename: 'ProfileGuardianResult';
+    protected: boolean;
+    cooldownEndsOn: string | null;
+  } | null;
   onchainIdentity: {
+    __typename: 'ProfileOnchainIdentity';
     proofOfHumanity: boolean;
-    ens: { name: string | null } | null;
-    sybilDotOrg: { source: { twitter: { handle: string | null } } | null };
-    worldcoin: { isHuman: boolean };
+    ens: { __typename: 'EnsOnchainIdentity'; name: string | null } | null;
+    sybilDotOrg: {
+      __typename: 'SybilDotOrgIdentity';
+      source: {
+        __typename: 'SybilDotOrgIdentitySource';
+        twitter: { __typename: 'SybilDotOrgTwitterIdentity'; handle: string | null };
+      } | null;
+    };
+    worldcoin: { __typename: 'WorldcoinIdentity'; isHuman: boolean };
   };
-  followNftAddress: NetworkAddressFragment | null;
+  followNftAddress: ({ __typename: 'NetworkAddress' } & NetworkAddressFragment) | null;
   followModule:
-    | FeeFollowModuleSettingsFragment
-    | RevertFollowModuleSettingsFragment
-    | UnknownFollowModuleSettingsFragment
+    | ({ __typename: 'FeeFollowModuleSettings' } & FeeFollowModuleSettingsFragment)
+    | ({ __typename: 'RevertFollowModuleSettings' } & RevertFollowModuleSettingsFragment)
+    | ({ __typename: 'UnknownFollowModuleSettings' } & UnknownFollowModuleSettingsFragment)
     | null;
   metadata: {
+    __typename: 'ProfileMetadata';
     displayName: string | null;
     bio: string | null;
     rawURI: string;
-    picture: ProfilePictureSetFragment | NftImageFragment | null;
-    coverPicture: ProfileCoverSetFragment | null;
-    attributes: Array<{ type: Types.AttributeType | null; key: string; value: string }>;
+    picture:
+      | ({ __typename: 'ImageSet' } & ProfilePictureSetFragment)
+      | ({ __typename: 'NftImage' } & NftImageFragment)
+      | null;
+    coverPicture: ({ __typename: 'ImageSet' } & ProfileCoverSetFragment) | null;
+    attributes: Array<{
+      __typename: 'Attribute';
+      type: Types.AttributeType | null;
+      key: string;
+      value: string;
+    }>;
   } | null;
-  invitedBy: { id: string } | null;
+  invitedBy: { __typename: 'Profile'; id: string } | null;
 };
 
-export type PaginatedResultInfoFragment = { prev: string | null; next: string | null };
+export type PaginatedResultInfoFragment = {
+  __typename: 'PaginatedResultInfo';
+  prev: string | null;
+  next: string | null;
+};
 
-export type AppFragment = { id: string };
+export type AppFragment = { __typename: 'App'; id: string };
 
-export type MomokaInfoFragment = { proof: string };
+export type MomokaInfoFragment = { __typename: 'MomokaInfo'; proof: string };
 
-export type FollowOnlyReferenceModuleSettingsFragment = { contract: NetworkAddressFragment };
+export type FollowOnlyReferenceModuleSettingsFragment = {
+  __typename: 'FollowOnlyReferenceModuleSettings';
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
+};
 
 export type DegreesOfSeparationReferenceModuleSettingsFragment = {
+  __typename: 'DegreesOfSeparationReferenceModuleSettings';
   commentsRestricted: boolean;
   mirrorsRestricted: boolean;
   degreesOfSeparation: number;
-  contract: NetworkAddressFragment;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
 };
 
 export type UnknownReferenceModuleSettingsFragment = {
+  __typename: 'UnknownReferenceModuleSettings';
   referenceModuleReturnData: string;
-  contract: NetworkAddressFragment;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
 };
 
 export type SimpleCollectOpenActionSettingsFragment = {
+  __typename: 'SimpleCollectOpenActionSettings';
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
   endsAt: string | null;
-  contract: NetworkAddressFragment;
-  amount: AmountFragment;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
+  amount: { __typename: 'Amount' } & AmountFragment;
 };
 
 export type MultirecipientFeeCollectOpenActionSettingsFragment = {
+  __typename: 'MultirecipientFeeCollectOpenActionSettings';
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
   endsAt: string | null;
-  contract: NetworkAddressFragment;
-  amount: AmountFragment;
-  recipients: Array<{ recipient: string; split: number }>;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
+  amount: { __typename: 'Amount' } & AmountFragment;
+  recipients: Array<{ __typename: 'RecipientDataOutput'; recipient: string; split: number }>;
 };
 
 export type UnknownOpenActionModuleSettingsFragment = {
+  __typename: 'UnknownOpenActionModuleSettings';
   openActionModuleReturnData: string | null;
-  contract: NetworkAddressFragment;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
 };
 
 export type LegacyFreeCollectModuleSettingsFragment = {
+  __typename: 'LegacyFreeCollectModuleSettings';
   followerOnly: boolean;
-  contract: NetworkAddressFragment;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
 };
 
 export type LegacyFeeCollectModuleSettingsFragment = {
+  __typename: 'LegacyFeeCollectModuleSettings';
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
-  contract: NetworkAddressFragment;
-  amount: AmountFragment;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
+  amount: { __typename: 'Amount' } & AmountFragment;
 };
 
 export type LegacyLimitedFeeCollectModuleSettingsFragment = {
+  __typename: 'LegacyLimitedFeeCollectModuleSettings';
   collectLimit: string | null;
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
-  contract: NetworkAddressFragment;
-  amount: AmountFragment;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
+  amount: { __typename: 'Amount' } & AmountFragment;
 };
 
 export type LegacyLimitedTimedFeeCollectModuleSettingsFragment = {
+  __typename: 'LegacyLimitedTimedFeeCollectModuleSettings';
   collectLimit: string | null;
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
   endTimestamp: string;
-  contract: { address: string };
-  amount: AmountFragment;
+  contract: { __typename: 'NetworkAddress'; address: string };
+  amount: { __typename: 'Amount' } & AmountFragment;
 };
 
-export type LegacyRevertCollectModuleSettingsFragment = { contract: NetworkAddressFragment };
+export type LegacyRevertCollectModuleSettingsFragment = {
+  __typename: 'LegacyRevertCollectModuleSettings';
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
+};
 
 export type LegacyTimedFeeCollectModuleSettingsFragment = {
+  __typename: 'LegacyTimedFeeCollectModuleSettings';
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
   endTimestamp: string;
-  contract: NetworkAddressFragment;
-  amount: AmountFragment;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
+  amount: { __typename: 'Amount' } & AmountFragment;
 };
 
 export type LegacyMultirecipientFeeCollectModuleSettingsFragment = {
+  __typename: 'LegacyMultirecipientFeeCollectModuleSettings';
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
   endsAt: string | null;
-  contract: NetworkAddressFragment;
-  amount: AmountFragment;
-  recipients: Array<{ recipient: string; split: number }>;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
+  amount: { __typename: 'Amount' } & AmountFragment;
+  recipients: Array<{ __typename: 'RecipientDataOutput'; recipient: string; split: number }>;
 };
 
 export type LegacySimpleCollectModuleSettingsFragment = {
+  __typename: 'LegacySimpleCollectModuleSettings';
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
   endsAt: string | null;
-  contract: NetworkAddressFragment;
-  amount: AmountFragment;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
+  amount: { __typename: 'Amount' } & AmountFragment;
 };
 
 export type LegacyErc4626FeeCollectModuleSettingsFragment = {
+  __typename: 'LegacyERC4626FeeCollectModuleSettings';
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
   endsAt: string | null;
-  contract: NetworkAddressFragment;
-  vault: NetworkAddressFragment;
-  amount: AmountFragment;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
+  vault: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
+  amount: { __typename: 'Amount' } & AmountFragment;
 };
 
 export type LegacyAaveFeeCollectModuleSettingsFragment = {
+  __typename: 'LegacyAaveFeeCollectModuleSettings';
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
   endsAt: string | null;
-  contract: NetworkAddressFragment;
-  amount: AmountFragment;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
+  amount: { __typename: 'Amount' } & AmountFragment;
 };
 
 export type UnknownOpenActionResultFragment = {
+  __typename: 'UnknownOpenActionResult';
   address: string;
   category: Types.OpenActionCategoryType | null;
   initReturnData: string | null;
 };
 
-export type KnownCollectOpenActionResultFragment = { type: Types.CollectOpenActionModuleType };
+export type KnownCollectOpenActionResultFragment = {
+  __typename: 'KnownCollectOpenActionResult';
+  type: Types.CollectOpenActionModuleType;
+};
 
-export type OpenActionResult_KnownCollectOpenActionResult_Fragment =
-  KnownCollectOpenActionResultFragment;
+export type OpenActionResult_KnownCollectOpenActionResult_Fragment = {
+  __typename: 'KnownCollectOpenActionResult';
+} & KnownCollectOpenActionResultFragment;
 
-export type OpenActionResult_UnknownOpenActionResult_Fragment = UnknownOpenActionResultFragment;
+export type OpenActionResult_UnknownOpenActionResult_Fragment = {
+  __typename: 'UnknownOpenActionResult';
+} & UnknownOpenActionResultFragment;
 
 export type OpenActionResultFragment =
   | OpenActionResult_KnownCollectOpenActionResult_Fragment
   | OpenActionResult_UnknownOpenActionResult_Fragment;
 
 export type CanDecryptResponseFragment = {
+  __typename: 'CanDecryptResponse';
   result: boolean;
   reasons: Array<Types.DecryptFailReasonType> | null;
   extraDetails: string | null;
 };
 
 export type PublicationOperationsFragment = {
+  __typename: 'PublicationOperations';
   isNotInterested: boolean;
   hasBookmarked: boolean;
   hasReported: boolean;
@@ -308,77 +409,100 @@ export type PublicationOperationsFragment = {
   hasMirrored: boolean;
   hasUpvoted: boolean;
   hasDownvoted: boolean;
-  hasActed: OptimisticStatusResultFragment;
+  hasActed: { __typename: 'OptimisticStatusResult' } & OptimisticStatusResultFragment;
   actedOn: Array<
-    | OpenActionResult_KnownCollectOpenActionResult_Fragment
-    | OpenActionResult_UnknownOpenActionResult_Fragment
+    | ({
+        __typename: 'KnownCollectOpenActionResult';
+      } & OpenActionResult_KnownCollectOpenActionResult_Fragment)
+    | ({
+        __typename: 'UnknownOpenActionResult';
+      } & OpenActionResult_UnknownOpenActionResult_Fragment)
   >;
-  canDecrypt: CanDecryptResponseFragment;
+  canDecrypt: { __typename: 'CanDecryptResponse' } & CanDecryptResponseFragment;
 };
 
 export type PublicationMetadataEncryptionStrategyFragment = {
+  __typename: 'PublicationMetadataV3LitEncryption';
   encryptionKey: string;
   accessCondition:
-    | AndConditionFragment
-    | CollectConditionFragment
-    | EoaOwnershipConditionFragment
-    | Erc20OwnershipConditionFragment
-    | FollowConditionFragment
-    | NftOwnershipConditionFragment
-    | OrConditionFragment
-    | ProfileOwnershipConditionFragment;
+    | ({ __typename: 'AndCondition' } & AndConditionFragment)
+    | ({ __typename: 'CollectCondition' } & CollectConditionFragment)
+    | ({ __typename: 'EoaOwnershipCondition' } & EoaOwnershipConditionFragment)
+    | ({ __typename: 'Erc20OwnershipCondition' } & Erc20OwnershipConditionFragment)
+    | ({ __typename: 'FollowCondition' } & FollowConditionFragment)
+    | ({ __typename: 'NftOwnershipCondition' } & NftOwnershipConditionFragment)
+    | ({ __typename: 'OrCondition' } & OrConditionFragment)
+    | ({ __typename: 'ProfileOwnershipCondition' } & ProfileOwnershipConditionFragment);
 };
 
 export type NftOwnershipConditionFragment = {
+  __typename: 'NftOwnershipCondition';
   contractType: Types.NftContractType;
   tokenIds: Array<string> | null;
-  contract: NetworkAddressFragment;
+  contract: { __typename: 'NetworkAddress' } & NetworkAddressFragment;
 };
 
 export type Erc20OwnershipConditionFragment = {
+  __typename: 'Erc20OwnershipCondition';
   condition: Types.ComparisonOperatorConditionType;
-  amount: AmountFragment;
+  amount: { __typename: 'Amount' } & AmountFragment;
 };
 
-export type EoaOwnershipConditionFragment = { address: string };
+export type EoaOwnershipConditionFragment = {
+  __typename: 'EoaOwnershipCondition';
+  address: string;
+};
 
-export type ProfileOwnershipConditionFragment = { profileId: string };
+export type ProfileOwnershipConditionFragment = {
+  __typename: 'ProfileOwnershipCondition';
+  profileId: string;
+};
 
-export type FollowConditionFragment = { follow: string };
+export type FollowConditionFragment = { __typename: 'FollowCondition'; follow: string };
 
-export type CollectConditionFragment = { publicationId: string; thisPublication: boolean };
+export type CollectConditionFragment = {
+  __typename: 'CollectCondition';
+  publicationId: string;
+  thisPublication: boolean;
+};
 
 export type AndConditionFragment = {
+  __typename: 'AndCondition';
   criteria: Array<
-    | CollectConditionFragment
-    | EoaOwnershipConditionFragment
-    | Erc20OwnershipConditionFragment
-    | FollowConditionFragment
-    | NftOwnershipConditionFragment
-    | ProfileOwnershipConditionFragment
-    | {}
+    | { __typename: 'AndCondition' }
+    | ({ __typename: 'CollectCondition' } & CollectConditionFragment)
+    | ({ __typename: 'EoaOwnershipCondition' } & EoaOwnershipConditionFragment)
+    | ({ __typename: 'Erc20OwnershipCondition' } & Erc20OwnershipConditionFragment)
+    | ({ __typename: 'FollowCondition' } & FollowConditionFragment)
+    | ({ __typename: 'NftOwnershipCondition' } & NftOwnershipConditionFragment)
+    | { __typename: 'OrCondition' }
+    | ({ __typename: 'ProfileOwnershipCondition' } & ProfileOwnershipConditionFragment)
   >;
 };
 
 export type OrConditionFragment = {
+  __typename: 'OrCondition';
   criteria: Array<
-    | CollectConditionFragment
-    | EoaOwnershipConditionFragment
-    | Erc20OwnershipConditionFragment
-    | FollowConditionFragment
-    | NftOwnershipConditionFragment
-    | ProfileOwnershipConditionFragment
-    | {}
+    | { __typename: 'AndCondition' }
+    | ({ __typename: 'CollectCondition' } & CollectConditionFragment)
+    | ({ __typename: 'EoaOwnershipCondition' } & EoaOwnershipConditionFragment)
+    | ({ __typename: 'Erc20OwnershipCondition' } & Erc20OwnershipConditionFragment)
+    | ({ __typename: 'FollowCondition' } & FollowConditionFragment)
+    | ({ __typename: 'NftOwnershipCondition' } & NftOwnershipConditionFragment)
+    | { __typename: 'OrCondition' }
+    | ({ __typename: 'ProfileOwnershipCondition' } & ProfileOwnershipConditionFragment)
   >;
 };
 
 export type PublicationImageSetFragment = {
-  raw: ImageFragment;
-  optimized: ImageFragment | null;
-  transformed: ImageFragment | null;
+  __typename: 'ImageSet';
+  raw: { __typename: 'Image' } & ImageFragment;
+  optimized: ({ __typename: 'Image' } & ImageFragment) | null;
+  transformed: ({ __typename: 'Image' } & ImageFragment) | null;
 };
 
 export type EncryptableImageFragment = {
+  __typename: 'EncryptableImage';
   uri: string;
   mimeType: string | null;
   width: number | null;
@@ -386,39 +510,49 @@ export type EncryptableImageFragment = {
 };
 
 export type PublicationEncryptableImageSetFragment = {
-  raw: EncryptableImageFragment;
-  optimized: ImageFragment | null;
+  __typename: 'EncryptableImageSet';
+  raw: { __typename: 'EncryptableImage' } & EncryptableImageFragment;
+  optimized: ({ __typename: 'Image' } & ImageFragment) | null;
 };
 
 export type PublicationMarketplaceMetadataAttributeFragment = {
+  __typename: 'PublicationMarketplaceMetadataAttribute';
   displayType: Types.MarketplaceMetadataAttributeDisplayType | null;
   traitType: string | null;
   value: string | null;
 };
 
 export type MarketplaceMetadataFragment = {
+  __typename: 'MarketplaceMetadata';
   description: string | null;
   externalURL: string | null;
   name: string | null;
   animationUrl: string | null;
-  attributes: Array<PublicationMarketplaceMetadataAttributeFragment> | null;
-  image: PublicationImageSetFragment | null;
+  attributes: Array<
+    {
+      __typename: 'PublicationMarketplaceMetadataAttribute';
+    } & PublicationMarketplaceMetadataAttributeFragment
+  > | null;
+  image: ({ __typename: 'ImageSet' } & PublicationImageSetFragment) | null;
 };
 
 export type PublicationMetadataMediaVideoFragment = {
+  __typename: 'PublicationMetadataMediaVideo';
   duration: number | null;
   license: Types.PublicationMetadataLicenseType | null;
   altTag: string | null;
-  video: EncryptableVideoSetFragment;
-  cover: PublicationEncryptableImageSetFragment | null;
+  video: { __typename: 'EncryptableVideoSet' } & EncryptableVideoSetFragment;
+  cover: ({ __typename: 'EncryptableImageSet' } & PublicationEncryptableImageSetFragment) | null;
 };
 
 export type PublicationMetadataMediaImageFragment = {
+  __typename: 'PublicationMetadataMediaImage';
   license: Types.PublicationMetadataLicenseType | null;
-  image: PublicationEncryptableImageSetFragment;
+  image: { __typename: 'EncryptableImageSet' } & PublicationEncryptableImageSetFragment;
 };
 
 export type PublicationMetadataMediaAudioFragment = {
+  __typename: 'PublicationMetadataMediaAudio';
   duration: number | null;
   license: Types.PublicationMetadataLicenseType | null;
   credits: string | null;
@@ -426,26 +560,34 @@ export type PublicationMetadataMediaAudioFragment = {
   genre: string | null;
   recordLabel: string | null;
   lyrics: string | null;
-  audio: EncryptableAudioSetFragment;
-  cover: PublicationEncryptableImageSetFragment | null;
+  audio: { __typename: 'EncryptableAudioSet' } & EncryptableAudioSetFragment;
+  cover: ({ __typename: 'EncryptableImageSet' } & PublicationEncryptableImageSetFragment) | null;
 };
 
 export type LegacyPublicationMetadataFragment = {
+  __typename: 'LegacyPublicationMetadata';
   content: string;
   locale: string;
   tags: Array<string> | null;
   contentWarning: Types.PublicationContentWarningType | null;
   mainContentFocus: Types.LegacyPublicationMetadataMainFocusType;
-  media: Array<LegacyAudioItemFragment | LegacyImageItemFragment | LegacyVideoItemFragment> | null;
-  marketplace: MarketplaceMetadataFragment | null;
+  media: Array<
+    | ({ __typename: 'LegacyAudioItem' } & LegacyAudioItemFragment)
+    | ({ __typename: 'LegacyImageItem' } & LegacyImageItemFragment)
+    | ({ __typename: 'LegacyVideoItem' } & LegacyVideoItemFragment)
+  > | null;
+  marketplace: ({ __typename: 'MarketplaceMetadata' } & MarketplaceMetadataFragment) | null;
   encryptedWith: {
+    __typename: 'PublicationMetadataV2Encryption';
     encryptionKey: string;
     encryptedFields: {
+      __typename: 'PublicationMetadataV2EncryptedFields';
       content: string | null;
       image: string | null;
       animationUrl: string | null;
       externalUrl: string | null;
       media: Array<{
+        __typename: 'EncryptedMedia';
         uri: string;
         mimeType: string | null;
         altTag: string | null;
@@ -453,18 +595,19 @@ export type LegacyPublicationMetadataFragment = {
       }> | null;
     };
     accessCondition:
-      | AndConditionFragment
-      | CollectConditionFragment
-      | EoaOwnershipConditionFragment
-      | Erc20OwnershipConditionFragment
-      | FollowConditionFragment
-      | NftOwnershipConditionFragment
-      | OrConditionFragment
-      | ProfileOwnershipConditionFragment;
+      | ({ __typename: 'AndCondition' } & AndConditionFragment)
+      | ({ __typename: 'CollectCondition' } & CollectConditionFragment)
+      | ({ __typename: 'EoaOwnershipCondition' } & EoaOwnershipConditionFragment)
+      | ({ __typename: 'Erc20OwnershipCondition' } & Erc20OwnershipConditionFragment)
+      | ({ __typename: 'FollowCondition' } & FollowConditionFragment)
+      | ({ __typename: 'NftOwnershipCondition' } & NftOwnershipConditionFragment)
+      | ({ __typename: 'OrCondition' } & OrConditionFragment)
+      | ({ __typename: 'ProfileOwnershipCondition' } & ProfileOwnershipConditionFragment);
   } | null;
 };
 
 export type VideoMetadataV3Fragment = {
+  __typename: 'VideoMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -475,18 +618,27 @@ export type VideoMetadataV3Fragment = {
   isShortVideo: boolean;
   title: string;
   content: string;
-  marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
-  asset: PublicationMetadataMediaVideoFragment;
+  marketplace: ({ __typename: 'MarketplaceMetadata' } & MarketplaceMetadataFragment) | null;
+  attributes: Array<{
+    __typename: 'PublicationMetadataV3Attribute';
+    key: string;
+    value: string;
+  }> | null;
+  encryptedWith:
+    | ({
+        __typename: 'PublicationMetadataV3LitEncryption';
+      } & PublicationMetadataEncryptionStrategyFragment)
+    | null;
+  asset: { __typename: 'PublicationMetadataMediaVideo' } & PublicationMetadataMediaVideoFragment;
   attachments: Array<
-    | PublicationMetadataMediaAudioFragment
-    | PublicationMetadataMediaImageFragment
-    | PublicationMetadataMediaVideoFragment
+    | ({ __typename: 'PublicationMetadataMediaAudio' } & PublicationMetadataMediaAudioFragment)
+    | ({ __typename: 'PublicationMetadataMediaImage' } & PublicationMetadataMediaImageFragment)
+    | ({ __typename: 'PublicationMetadataMediaVideo' } & PublicationMetadataMediaVideoFragment)
   > | null;
 };
 
 export type AudioMetadataV3Fragment = {
+  __typename: 'AudioMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -496,18 +648,27 @@ export type AudioMetadataV3Fragment = {
   appId: string | null;
   title: string;
   content: string;
-  marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
-  asset: PublicationMetadataMediaAudioFragment;
+  marketplace: ({ __typename: 'MarketplaceMetadata' } & MarketplaceMetadataFragment) | null;
+  attributes: Array<{
+    __typename: 'PublicationMetadataV3Attribute';
+    key: string;
+    value: string;
+  }> | null;
+  encryptedWith:
+    | ({
+        __typename: 'PublicationMetadataV3LitEncryption';
+      } & PublicationMetadataEncryptionStrategyFragment)
+    | null;
+  asset: { __typename: 'PublicationMetadataMediaAudio' } & PublicationMetadataMediaAudioFragment;
   attachments: Array<
-    | PublicationMetadataMediaAudioFragment
-    | PublicationMetadataMediaImageFragment
-    | PublicationMetadataMediaVideoFragment
+    | ({ __typename: 'PublicationMetadataMediaAudio' } & PublicationMetadataMediaAudioFragment)
+    | ({ __typename: 'PublicationMetadataMediaImage' } & PublicationMetadataMediaImageFragment)
+    | ({ __typename: 'PublicationMetadataMediaVideo' } & PublicationMetadataMediaVideoFragment)
   > | null;
 };
 
 export type ImageMetadataV3Fragment = {
+  __typename: 'ImageMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -517,18 +678,27 @@ export type ImageMetadataV3Fragment = {
   appId: string | null;
   title: string;
   content: string;
-  marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
-  asset: PublicationMetadataMediaImageFragment;
+  marketplace: ({ __typename: 'MarketplaceMetadata' } & MarketplaceMetadataFragment) | null;
+  attributes: Array<{
+    __typename: 'PublicationMetadataV3Attribute';
+    key: string;
+    value: string;
+  }> | null;
+  encryptedWith:
+    | ({
+        __typename: 'PublicationMetadataV3LitEncryption';
+      } & PublicationMetadataEncryptionStrategyFragment)
+    | null;
+  asset: { __typename: 'PublicationMetadataMediaImage' } & PublicationMetadataMediaImageFragment;
   attachments: Array<
-    | PublicationMetadataMediaAudioFragment
-    | PublicationMetadataMediaImageFragment
-    | PublicationMetadataMediaVideoFragment
+    | ({ __typename: 'PublicationMetadataMediaAudio' } & PublicationMetadataMediaAudioFragment)
+    | ({ __typename: 'PublicationMetadataMediaImage' } & PublicationMetadataMediaImageFragment)
+    | ({ __typename: 'PublicationMetadataMediaVideo' } & PublicationMetadataMediaVideoFragment)
   > | null;
 };
 
 export type ArticleMetadataV3Fragment = {
+  __typename: 'ArticleMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -538,17 +708,26 @@ export type ArticleMetadataV3Fragment = {
   appId: string | null;
   title: string;
   content: string;
-  marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  marketplace: ({ __typename: 'MarketplaceMetadata' } & MarketplaceMetadataFragment) | null;
+  attributes: Array<{
+    __typename: 'PublicationMetadataV3Attribute';
+    key: string;
+    value: string;
+  }> | null;
+  encryptedWith:
+    | ({
+        __typename: 'PublicationMetadataV3LitEncryption';
+      } & PublicationMetadataEncryptionStrategyFragment)
+    | null;
   attachments: Array<
-    | PublicationMetadataMediaAudioFragment
-    | PublicationMetadataMediaImageFragment
-    | PublicationMetadataMediaVideoFragment
+    | ({ __typename: 'PublicationMetadataMediaAudio' } & PublicationMetadataMediaAudioFragment)
+    | ({ __typename: 'PublicationMetadataMediaImage' } & PublicationMetadataMediaImageFragment)
+    | ({ __typename: 'PublicationMetadataMediaVideo' } & PublicationMetadataMediaVideoFragment)
   > | null;
 };
 
 export type EventMetadataV3Fragment = {
+  __typename: 'EventMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -560,18 +739,31 @@ export type EventMetadataV3Fragment = {
   endsAt: string;
   links: Array<string> | null;
   location: string;
-  marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
-  geographic: { latitude: number | null; longitude: number | null } | null;
+  marketplace: ({ __typename: 'MarketplaceMetadata' } & MarketplaceMetadataFragment) | null;
+  attributes: Array<{
+    __typename: 'PublicationMetadataV3Attribute';
+    key: string;
+    value: string;
+  }> | null;
+  encryptedWith:
+    | ({
+        __typename: 'PublicationMetadataV3LitEncryption';
+      } & PublicationMetadataEncryptionStrategyFragment)
+    | null;
+  geographic: {
+    __typename: 'GeoLocation';
+    latitude: number | null;
+    longitude: number | null;
+  } | null;
   attachments: Array<
-    | PublicationMetadataMediaAudioFragment
-    | PublicationMetadataMediaImageFragment
-    | PublicationMetadataMediaVideoFragment
+    | ({ __typename: 'PublicationMetadataMediaAudio' } & PublicationMetadataMediaAudioFragment)
+    | ({ __typename: 'PublicationMetadataMediaImage' } & PublicationMetadataMediaImageFragment)
+    | ({ __typename: 'PublicationMetadataMediaVideo' } & PublicationMetadataMediaVideoFragment)
   > | null;
 };
 
 export type LinkMetadataV3Fragment = {
+  __typename: 'LinkMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -581,17 +773,26 @@ export type LinkMetadataV3Fragment = {
   appId: string | null;
   content: string;
   sharingLink: string;
-  marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  marketplace: ({ __typename: 'MarketplaceMetadata' } & MarketplaceMetadataFragment) | null;
+  attributes: Array<{
+    __typename: 'PublicationMetadataV3Attribute';
+    key: string;
+    value: string;
+  }> | null;
+  encryptedWith:
+    | ({
+        __typename: 'PublicationMetadataV3LitEncryption';
+      } & PublicationMetadataEncryptionStrategyFragment)
+    | null;
   attachments: Array<
-    | PublicationMetadataMediaAudioFragment
-    | PublicationMetadataMediaImageFragment
-    | PublicationMetadataMediaVideoFragment
+    | ({ __typename: 'PublicationMetadataMediaAudio' } & PublicationMetadataMediaAudioFragment)
+    | ({ __typename: 'PublicationMetadataMediaImage' } & PublicationMetadataMediaImageFragment)
+    | ({ __typename: 'PublicationMetadataMediaVideo' } & PublicationMetadataMediaVideoFragment)
   > | null;
 };
 
 export type EmbedMetadataV3Fragment = {
+  __typename: 'EmbedMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -601,17 +802,26 @@ export type EmbedMetadataV3Fragment = {
   appId: string | null;
   content: string;
   embed: string;
-  marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  marketplace: ({ __typename: 'MarketplaceMetadata' } & MarketplaceMetadataFragment) | null;
+  attributes: Array<{
+    __typename: 'PublicationMetadataV3Attribute';
+    key: string;
+    value: string;
+  }> | null;
+  encryptedWith:
+    | ({
+        __typename: 'PublicationMetadataV3LitEncryption';
+      } & PublicationMetadataEncryptionStrategyFragment)
+    | null;
   attachments: Array<
-    | PublicationMetadataMediaAudioFragment
-    | PublicationMetadataMediaImageFragment
-    | PublicationMetadataMediaVideoFragment
+    | ({ __typename: 'PublicationMetadataMediaAudio' } & PublicationMetadataMediaAudioFragment)
+    | ({ __typename: 'PublicationMetadataMediaImage' } & PublicationMetadataMediaImageFragment)
+    | ({ __typename: 'PublicationMetadataMediaVideo' } & PublicationMetadataMediaVideoFragment)
   > | null;
 };
 
 export type CheckingInMetadataV3Fragment = {
+  __typename: 'CheckingInMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -621,18 +831,31 @@ export type CheckingInMetadataV3Fragment = {
   appId: string | null;
   content: string;
   location: string;
-  marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
-  geographic: { latitude: number | null; longitude: number | null } | null;
+  marketplace: ({ __typename: 'MarketplaceMetadata' } & MarketplaceMetadataFragment) | null;
+  attributes: Array<{
+    __typename: 'PublicationMetadataV3Attribute';
+    key: string;
+    value: string;
+  }> | null;
+  encryptedWith:
+    | ({
+        __typename: 'PublicationMetadataV3LitEncryption';
+      } & PublicationMetadataEncryptionStrategyFragment)
+    | null;
+  geographic: {
+    __typename: 'GeoLocation';
+    latitude: number | null;
+    longitude: number | null;
+  } | null;
   attachments: Array<
-    | PublicationMetadataMediaAudioFragment
-    | PublicationMetadataMediaImageFragment
-    | PublicationMetadataMediaVideoFragment
+    | ({ __typename: 'PublicationMetadataMediaAudio' } & PublicationMetadataMediaAudioFragment)
+    | ({ __typename: 'PublicationMetadataMediaImage' } & PublicationMetadataMediaImageFragment)
+    | ({ __typename: 'PublicationMetadataMediaVideo' } & PublicationMetadataMediaVideoFragment)
   > | null;
 };
 
 export type TextOnlyMetadataV3Fragment = {
+  __typename: 'TextOnlyMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -641,12 +864,21 @@ export type TextOnlyMetadataV3Fragment = {
   hideFromFeed: boolean;
   appId: string | null;
   content: string;
-  marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  marketplace: ({ __typename: 'MarketplaceMetadata' } & MarketplaceMetadataFragment) | null;
+  attributes: Array<{
+    __typename: 'PublicationMetadataV3Attribute';
+    key: string;
+    value: string;
+  }> | null;
+  encryptedWith:
+    | ({
+        __typename: 'PublicationMetadataV3LitEncryption';
+      } & PublicationMetadataEncryptionStrategyFragment)
+    | null;
 };
 
 export type ThreeDMetadataV3Fragment = {
+  __typename: 'ThreeDMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -655,10 +887,19 @@ export type ThreeDMetadataV3Fragment = {
   hideFromFeed: boolean;
   appId: string | null;
   content: string;
-  marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  marketplace: ({ __typename: 'MarketplaceMetadata' } & MarketplaceMetadataFragment) | null;
+  attributes: Array<{
+    __typename: 'PublicationMetadataV3Attribute';
+    key: string;
+    value: string;
+  }> | null;
+  encryptedWith:
+    | ({
+        __typename: 'PublicationMetadataV3LitEncryption';
+      } & PublicationMetadataEncryptionStrategyFragment)
+    | null;
   assets: Array<{
+    __typename: 'ThreeDMetadataV3Asset';
     uri: string;
     zipPath: string | null;
     playerURL: string;
@@ -666,13 +907,14 @@ export type ThreeDMetadataV3Fragment = {
     license: Types.PublicationMetadataLicenseType | null;
   }>;
   attachments: Array<
-    | PublicationMetadataMediaAudioFragment
-    | PublicationMetadataMediaImageFragment
-    | PublicationMetadataMediaVideoFragment
+    | ({ __typename: 'PublicationMetadataMediaAudio' } & PublicationMetadataMediaAudioFragment)
+    | ({ __typename: 'PublicationMetadataMediaImage' } & PublicationMetadataMediaImageFragment)
+    | ({ __typename: 'PublicationMetadataMediaVideo' } & PublicationMetadataMediaVideoFragment)
   > | null;
 };
 
 export type StoryMetadataV3Fragment = {
+  __typename: 'StoryMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -681,16 +923,25 @@ export type StoryMetadataV3Fragment = {
   hideFromFeed: boolean;
   appId: string | null;
   content: string;
-  marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  marketplace: ({ __typename: 'MarketplaceMetadata' } & MarketplaceMetadataFragment) | null;
+  attributes: Array<{
+    __typename: 'PublicationMetadataV3Attribute';
+    key: string;
+    value: string;
+  }> | null;
+  encryptedWith:
+    | ({
+        __typename: 'PublicationMetadataV3LitEncryption';
+      } & PublicationMetadataEncryptionStrategyFragment)
+    | null;
   asset:
-    | PublicationMetadataMediaAudioFragment
-    | PublicationMetadataMediaImageFragment
-    | PublicationMetadataMediaVideoFragment;
+    | ({ __typename: 'PublicationMetadataMediaAudio' } & PublicationMetadataMediaAudioFragment)
+    | ({ __typename: 'PublicationMetadataMediaImage' } & PublicationMetadataMediaImageFragment)
+    | ({ __typename: 'PublicationMetadataMediaVideo' } & PublicationMetadataMediaVideoFragment);
 };
 
 export type TransactionMetadataV3Fragment = {
+  __typename: 'TransactionMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -702,17 +953,26 @@ export type TransactionMetadataV3Fragment = {
   type: Types.PublicationMetadataTransactionType;
   txHash: string;
   chainId: string;
-  marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  marketplace: ({ __typename: 'MarketplaceMetadata' } & MarketplaceMetadataFragment) | null;
+  attributes: Array<{
+    __typename: 'PublicationMetadataV3Attribute';
+    key: string;
+    value: string;
+  }> | null;
+  encryptedWith:
+    | ({
+        __typename: 'PublicationMetadataV3LitEncryption';
+      } & PublicationMetadataEncryptionStrategyFragment)
+    | null;
   attachments: Array<
-    | PublicationMetadataMediaAudioFragment
-    | PublicationMetadataMediaImageFragment
-    | PublicationMetadataMediaVideoFragment
+    | ({ __typename: 'PublicationMetadataMediaAudio' } & PublicationMetadataMediaAudioFragment)
+    | ({ __typename: 'PublicationMetadataMediaImage' } & PublicationMetadataMediaImageFragment)
+    | ({ __typename: 'PublicationMetadataMediaVideo' } & PublicationMetadataMediaVideoFragment)
   > | null;
 };
 
 export type MintMetadataV3Fragment = {
+  __typename: 'MintMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -722,17 +982,26 @@ export type MintMetadataV3Fragment = {
   appId: string | null;
   content: string;
   mintLink: string;
-  marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  marketplace: ({ __typename: 'MarketplaceMetadata' } & MarketplaceMetadataFragment) | null;
+  attributes: Array<{
+    __typename: 'PublicationMetadataV3Attribute';
+    key: string;
+    value: string;
+  }> | null;
+  encryptedWith:
+    | ({
+        __typename: 'PublicationMetadataV3LitEncryption';
+      } & PublicationMetadataEncryptionStrategyFragment)
+    | null;
   attachments: Array<
-    | PublicationMetadataMediaAudioFragment
-    | PublicationMetadataMediaImageFragment
-    | PublicationMetadataMediaVideoFragment
+    | ({ __typename: 'PublicationMetadataMediaAudio' } & PublicationMetadataMediaAudioFragment)
+    | ({ __typename: 'PublicationMetadataMediaImage' } & PublicationMetadataMediaImageFragment)
+    | ({ __typename: 'PublicationMetadataMediaVideo' } & PublicationMetadataMediaVideoFragment)
   > | null;
 };
 
 export type SpaceMetadataV3Fragment = {
+  __typename: 'SpaceMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -744,17 +1013,26 @@ export type SpaceMetadataV3Fragment = {
   title: string;
   link: string;
   startsAt: string;
-  marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  marketplace: ({ __typename: 'MarketplaceMetadata' } & MarketplaceMetadataFragment) | null;
+  attributes: Array<{
+    __typename: 'PublicationMetadataV3Attribute';
+    key: string;
+    value: string;
+  }> | null;
+  encryptedWith:
+    | ({
+        __typename: 'PublicationMetadataV3LitEncryption';
+      } & PublicationMetadataEncryptionStrategyFragment)
+    | null;
   attachments: Array<
-    | PublicationMetadataMediaAudioFragment
-    | PublicationMetadataMediaImageFragment
-    | PublicationMetadataMediaVideoFragment
+    | ({ __typename: 'PublicationMetadataMediaAudio' } & PublicationMetadataMediaAudioFragment)
+    | ({ __typename: 'PublicationMetadataMediaImage' } & PublicationMetadataMediaImageFragment)
+    | ({ __typename: 'PublicationMetadataMediaVideo' } & PublicationMetadataMediaVideoFragment)
   > | null;
 };
 
 export type LiveStreamMetadataV3Fragment = {
+  __typename: 'LiveStreamMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -769,13 +1047,21 @@ export type LiveStreamMetadataV3Fragment = {
   playbackURL: string;
   liveURL: string;
   checkLiveAPI: string | null;
-  marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  marketplace: ({ __typename: 'MarketplaceMetadata' } & MarketplaceMetadataFragment) | null;
+  attributes: Array<{
+    __typename: 'PublicationMetadataV3Attribute';
+    key: string;
+    value: string;
+  }> | null;
+  encryptedWith:
+    | ({
+        __typename: 'PublicationMetadataV3LitEncryption';
+      } & PublicationMetadataEncryptionStrategyFragment)
+    | null;
   attachments: Array<
-    | PublicationMetadataMediaAudioFragment
-    | PublicationMetadataMediaImageFragment
-    | PublicationMetadataMediaVideoFragment
+    | ({ __typename: 'PublicationMetadataMediaAudio' } & PublicationMetadataMediaAudioFragment)
+    | ({ __typename: 'PublicationMetadataMediaImage' } & PublicationMetadataMediaImageFragment)
+    | ({ __typename: 'PublicationMetadataMediaVideo' } & PublicationMetadataMediaVideoFragment)
   > | null;
 };
 
@@ -785,46 +1071,68 @@ export type PostFragment = {
   isHidden: boolean;
   txHash: string | null;
   createdAt: string;
-  publishedOn: AppFragment | null;
-  momoka: MomokaInfoFragment | null;
-  by: ProfileFragment;
-  operations: PublicationOperationsFragment;
+  publishedOn: ({ __typename: 'App' } & AppFragment) | null;
+  momoka: ({ __typename: 'MomokaInfo' } & MomokaInfoFragment) | null;
+  by: { __typename: 'Profile' } & ProfileFragment;
+  operations: { __typename: 'PublicationOperations' } & PublicationOperationsFragment;
   metadata:
-    | ArticleMetadataV3Fragment
-    | AudioMetadataV3Fragment
-    | CheckingInMetadataV3Fragment
-    | EmbedMetadataV3Fragment
-    | EventMetadataV3Fragment
-    | ImageMetadataV3Fragment
-    | LegacyPublicationMetadataFragment
-    | LinkMetadataV3Fragment
-    | LiveStreamMetadataV3Fragment
-    | MintMetadataV3Fragment
-    | SpaceMetadataV3Fragment
-    | StoryMetadataV3Fragment
-    | TextOnlyMetadataV3Fragment
-    | ThreeDMetadataV3Fragment
-    | TransactionMetadataV3Fragment
-    | VideoMetadataV3Fragment;
+    | ({ __typename: 'ArticleMetadataV3' } & ArticleMetadataV3Fragment)
+    | ({ __typename: 'AudioMetadataV3' } & AudioMetadataV3Fragment)
+    | ({ __typename: 'CheckingInMetadataV3' } & CheckingInMetadataV3Fragment)
+    | ({ __typename: 'EmbedMetadataV3' } & EmbedMetadataV3Fragment)
+    | ({ __typename: 'EventMetadataV3' } & EventMetadataV3Fragment)
+    | ({ __typename: 'ImageMetadataV3' } & ImageMetadataV3Fragment)
+    | ({ __typename: 'LegacyPublicationMetadata' } & LegacyPublicationMetadataFragment)
+    | ({ __typename: 'LinkMetadataV3' } & LinkMetadataV3Fragment)
+    | ({ __typename: 'LiveStreamMetadataV3' } & LiveStreamMetadataV3Fragment)
+    | ({ __typename: 'MintMetadataV3' } & MintMetadataV3Fragment)
+    | ({ __typename: 'SpaceMetadataV3' } & SpaceMetadataV3Fragment)
+    | ({ __typename: 'StoryMetadataV3' } & StoryMetadataV3Fragment)
+    | ({ __typename: 'TextOnlyMetadataV3' } & TextOnlyMetadataV3Fragment)
+    | ({ __typename: 'ThreeDMetadataV3' } & ThreeDMetadataV3Fragment)
+    | ({ __typename: 'TransactionMetadataV3' } & TransactionMetadataV3Fragment)
+    | ({ __typename: 'VideoMetadataV3' } & VideoMetadataV3Fragment);
   openActionModules: Array<
-    | LegacyAaveFeeCollectModuleSettingsFragment
-    | LegacyErc4626FeeCollectModuleSettingsFragment
-    | LegacyFeeCollectModuleSettingsFragment
-    | LegacyFreeCollectModuleSettingsFragment
-    | LegacyLimitedFeeCollectModuleSettingsFragment
-    | LegacyLimitedTimedFeeCollectModuleSettingsFragment
-    | LegacyMultirecipientFeeCollectModuleSettingsFragment
-    | LegacyRevertCollectModuleSettingsFragment
-    | LegacySimpleCollectModuleSettingsFragment
-    | LegacyTimedFeeCollectModuleSettingsFragment
-    | MultirecipientFeeCollectOpenActionSettingsFragment
-    | SimpleCollectOpenActionSettingsFragment
-    | UnknownOpenActionModuleSettingsFragment
+    | ({
+        __typename: 'LegacyAaveFeeCollectModuleSettings';
+      } & LegacyAaveFeeCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacyERC4626FeeCollectModuleSettings';
+      } & LegacyErc4626FeeCollectModuleSettingsFragment)
+    | ({ __typename: 'LegacyFeeCollectModuleSettings' } & LegacyFeeCollectModuleSettingsFragment)
+    | ({ __typename: 'LegacyFreeCollectModuleSettings' } & LegacyFreeCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacyLimitedFeeCollectModuleSettings';
+      } & LegacyLimitedFeeCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacyLimitedTimedFeeCollectModuleSettings';
+      } & LegacyLimitedTimedFeeCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacyMultirecipientFeeCollectModuleSettings';
+      } & LegacyMultirecipientFeeCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacyRevertCollectModuleSettings';
+      } & LegacyRevertCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacySimpleCollectModuleSettings';
+      } & LegacySimpleCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacyTimedFeeCollectModuleSettings';
+      } & LegacyTimedFeeCollectModuleSettingsFragment)
+    | ({
+        __typename: 'MultirecipientFeeCollectOpenActionSettings';
+      } & MultirecipientFeeCollectOpenActionSettingsFragment)
+    | ({ __typename: 'SimpleCollectOpenActionSettings' } & SimpleCollectOpenActionSettingsFragment)
+    | ({ __typename: 'UnknownOpenActionModuleSettings' } & UnknownOpenActionModuleSettingsFragment)
   > | null;
   referenceModule:
-    | DegreesOfSeparationReferenceModuleSettingsFragment
-    | FollowOnlyReferenceModuleSettingsFragment
-    | UnknownReferenceModuleSettingsFragment
+    | ({
+        __typename: 'DegreesOfSeparationReferenceModuleSettings';
+      } & DegreesOfSeparationReferenceModuleSettingsFragment)
+    | ({
+        __typename: 'FollowOnlyReferenceModuleSettings';
+      } & FollowOnlyReferenceModuleSettingsFragment)
+    | ({ __typename: 'UnknownReferenceModuleSettings' } & UnknownReferenceModuleSettingsFragment)
     | null;
 };
 
@@ -834,53 +1142,79 @@ export type CommentBaseFragment = {
   isHidden: boolean;
   txHash: string | null;
   createdAt: string;
-  publishedOn: AppFragment | null;
-  momoka: MomokaInfoFragment | null;
-  by: ProfileFragment;
-  operations: PublicationOperationsFragment;
+  publishedOn: ({ __typename: 'App' } & AppFragment) | null;
+  momoka: ({ __typename: 'MomokaInfo' } & MomokaInfoFragment) | null;
+  by: { __typename: 'Profile' } & ProfileFragment;
+  operations: { __typename: 'PublicationOperations' } & PublicationOperationsFragment;
   metadata:
-    | ArticleMetadataV3Fragment
-    | AudioMetadataV3Fragment
-    | CheckingInMetadataV3Fragment
-    | EmbedMetadataV3Fragment
-    | EventMetadataV3Fragment
-    | ImageMetadataV3Fragment
-    | LegacyPublicationMetadataFragment
-    | LinkMetadataV3Fragment
-    | LiveStreamMetadataV3Fragment
-    | MintMetadataV3Fragment
-    | SpaceMetadataV3Fragment
-    | StoryMetadataV3Fragment
-    | TextOnlyMetadataV3Fragment
-    | ThreeDMetadataV3Fragment
-    | TransactionMetadataV3Fragment
-    | VideoMetadataV3Fragment;
+    | ({ __typename: 'ArticleMetadataV3' } & ArticleMetadataV3Fragment)
+    | ({ __typename: 'AudioMetadataV3' } & AudioMetadataV3Fragment)
+    | ({ __typename: 'CheckingInMetadataV3' } & CheckingInMetadataV3Fragment)
+    | ({ __typename: 'EmbedMetadataV3' } & EmbedMetadataV3Fragment)
+    | ({ __typename: 'EventMetadataV3' } & EventMetadataV3Fragment)
+    | ({ __typename: 'ImageMetadataV3' } & ImageMetadataV3Fragment)
+    | ({ __typename: 'LegacyPublicationMetadata' } & LegacyPublicationMetadataFragment)
+    | ({ __typename: 'LinkMetadataV3' } & LinkMetadataV3Fragment)
+    | ({ __typename: 'LiveStreamMetadataV3' } & LiveStreamMetadataV3Fragment)
+    | ({ __typename: 'MintMetadataV3' } & MintMetadataV3Fragment)
+    | ({ __typename: 'SpaceMetadataV3' } & SpaceMetadataV3Fragment)
+    | ({ __typename: 'StoryMetadataV3' } & StoryMetadataV3Fragment)
+    | ({ __typename: 'TextOnlyMetadataV3' } & TextOnlyMetadataV3Fragment)
+    | ({ __typename: 'ThreeDMetadataV3' } & ThreeDMetadataV3Fragment)
+    | ({ __typename: 'TransactionMetadataV3' } & TransactionMetadataV3Fragment)
+    | ({ __typename: 'VideoMetadataV3' } & VideoMetadataV3Fragment);
   openActionModules: Array<
-    | LegacyAaveFeeCollectModuleSettingsFragment
-    | LegacyErc4626FeeCollectModuleSettingsFragment
-    | LegacyFeeCollectModuleSettingsFragment
-    | LegacyFreeCollectModuleSettingsFragment
-    | LegacyLimitedFeeCollectModuleSettingsFragment
-    | LegacyLimitedTimedFeeCollectModuleSettingsFragment
-    | LegacyMultirecipientFeeCollectModuleSettingsFragment
-    | LegacyRevertCollectModuleSettingsFragment
-    | LegacySimpleCollectModuleSettingsFragment
-    | LegacyTimedFeeCollectModuleSettingsFragment
-    | MultirecipientFeeCollectOpenActionSettingsFragment
-    | SimpleCollectOpenActionSettingsFragment
-    | UnknownOpenActionModuleSettingsFragment
+    | ({
+        __typename: 'LegacyAaveFeeCollectModuleSettings';
+      } & LegacyAaveFeeCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacyERC4626FeeCollectModuleSettings';
+      } & LegacyErc4626FeeCollectModuleSettingsFragment)
+    | ({ __typename: 'LegacyFeeCollectModuleSettings' } & LegacyFeeCollectModuleSettingsFragment)
+    | ({ __typename: 'LegacyFreeCollectModuleSettings' } & LegacyFreeCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacyLimitedFeeCollectModuleSettings';
+      } & LegacyLimitedFeeCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacyLimitedTimedFeeCollectModuleSettings';
+      } & LegacyLimitedTimedFeeCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacyMultirecipientFeeCollectModuleSettings';
+      } & LegacyMultirecipientFeeCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacyRevertCollectModuleSettings';
+      } & LegacyRevertCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacySimpleCollectModuleSettings';
+      } & LegacySimpleCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacyTimedFeeCollectModuleSettings';
+      } & LegacyTimedFeeCollectModuleSettingsFragment)
+    | ({
+        __typename: 'MultirecipientFeeCollectOpenActionSettings';
+      } & MultirecipientFeeCollectOpenActionSettingsFragment)
+    | ({ __typename: 'SimpleCollectOpenActionSettings' } & SimpleCollectOpenActionSettingsFragment)
+    | ({ __typename: 'UnknownOpenActionModuleSettings' } & UnknownOpenActionModuleSettingsFragment)
   > | null;
   referenceModule:
-    | DegreesOfSeparationReferenceModuleSettingsFragment
-    | FollowOnlyReferenceModuleSettingsFragment
-    | UnknownReferenceModuleSettingsFragment
+    | ({
+        __typename: 'DegreesOfSeparationReferenceModuleSettings';
+      } & DegreesOfSeparationReferenceModuleSettingsFragment)
+    | ({
+        __typename: 'FollowOnlyReferenceModuleSettings';
+      } & FollowOnlyReferenceModuleSettingsFragment)
+    | ({ __typename: 'UnknownReferenceModuleSettings' } & UnknownReferenceModuleSettingsFragment)
     | null;
 };
 
 export type CommentFragment = {
-  root: PostFragment;
-  commentOn: CommentBaseFragment | PostFragment | QuoteBaseFragment;
-  firstComment: CommentBaseFragment | null;
+  __typename: 'Comment';
+  root: { __typename: 'Post' } & PostFragment;
+  commentOn:
+    | ({ __typename: 'Comment' } & CommentBaseFragment)
+    | ({ __typename: 'Post' } & PostFragment)
+    | ({ __typename: 'Quote' } & QuoteBaseFragment);
+  firstComment: ({ __typename: 'Comment' } & CommentBaseFragment) | null;
 } & CommentBaseFragment;
 
 export type MirrorFragment = {
@@ -889,10 +1223,13 @@ export type MirrorFragment = {
   isHidden: boolean;
   txHash: string | null;
   createdAt: string;
-  publishedOn: AppFragment | null;
-  momoka: MomokaInfoFragment | null;
-  by: ProfileFragment;
-  mirrorOn: CommentFragment | PostFragment | QuoteFragment;
+  publishedOn: ({ __typename: 'App' } & AppFragment) | null;
+  momoka: ({ __typename: 'MomokaInfo' } & MomokaInfoFragment) | null;
+  by: { __typename: 'Profile' } & ProfileFragment;
+  mirrorOn:
+    | ({ __typename: 'Comment' } & CommentFragment)
+    | ({ __typename: 'Post' } & PostFragment)
+    | ({ __typename: 'Quote' } & QuoteFragment);
 };
 
 export type QuoteBaseFragment = {
@@ -901,66 +1238,102 @@ export type QuoteBaseFragment = {
   isHidden: boolean;
   txHash: string | null;
   createdAt: string;
-  publishedOn: AppFragment | null;
-  momoka: MomokaInfoFragment | null;
-  by: ProfileFragment;
-  operations: PublicationOperationsFragment;
+  publishedOn: ({ __typename: 'App' } & AppFragment) | null;
+  momoka: ({ __typename: 'MomokaInfo' } & MomokaInfoFragment) | null;
+  by: { __typename: 'Profile' } & ProfileFragment;
+  operations: { __typename: 'PublicationOperations' } & PublicationOperationsFragment;
   metadata:
-    | ArticleMetadataV3Fragment
-    | AudioMetadataV3Fragment
-    | CheckingInMetadataV3Fragment
-    | EmbedMetadataV3Fragment
-    | EventMetadataV3Fragment
-    | ImageMetadataV3Fragment
-    | LegacyPublicationMetadataFragment
-    | LinkMetadataV3Fragment
-    | LiveStreamMetadataV3Fragment
-    | MintMetadataV3Fragment
-    | SpaceMetadataV3Fragment
-    | StoryMetadataV3Fragment
-    | TextOnlyMetadataV3Fragment
-    | ThreeDMetadataV3Fragment
-    | TransactionMetadataV3Fragment
-    | VideoMetadataV3Fragment;
+    | ({ __typename: 'ArticleMetadataV3' } & ArticleMetadataV3Fragment)
+    | ({ __typename: 'AudioMetadataV3' } & AudioMetadataV3Fragment)
+    | ({ __typename: 'CheckingInMetadataV3' } & CheckingInMetadataV3Fragment)
+    | ({ __typename: 'EmbedMetadataV3' } & EmbedMetadataV3Fragment)
+    | ({ __typename: 'EventMetadataV3' } & EventMetadataV3Fragment)
+    | ({ __typename: 'ImageMetadataV3' } & ImageMetadataV3Fragment)
+    | ({ __typename: 'LegacyPublicationMetadata' } & LegacyPublicationMetadataFragment)
+    | ({ __typename: 'LinkMetadataV3' } & LinkMetadataV3Fragment)
+    | ({ __typename: 'LiveStreamMetadataV3' } & LiveStreamMetadataV3Fragment)
+    | ({ __typename: 'MintMetadataV3' } & MintMetadataV3Fragment)
+    | ({ __typename: 'SpaceMetadataV3' } & SpaceMetadataV3Fragment)
+    | ({ __typename: 'StoryMetadataV3' } & StoryMetadataV3Fragment)
+    | ({ __typename: 'TextOnlyMetadataV3' } & TextOnlyMetadataV3Fragment)
+    | ({ __typename: 'ThreeDMetadataV3' } & ThreeDMetadataV3Fragment)
+    | ({ __typename: 'TransactionMetadataV3' } & TransactionMetadataV3Fragment)
+    | ({ __typename: 'VideoMetadataV3' } & VideoMetadataV3Fragment);
   openActionModules: Array<
-    | LegacyAaveFeeCollectModuleSettingsFragment
-    | LegacyErc4626FeeCollectModuleSettingsFragment
-    | LegacyFeeCollectModuleSettingsFragment
-    | LegacyFreeCollectModuleSettingsFragment
-    | LegacyLimitedFeeCollectModuleSettingsFragment
-    | LegacyLimitedTimedFeeCollectModuleSettingsFragment
-    | LegacyMultirecipientFeeCollectModuleSettingsFragment
-    | LegacyRevertCollectModuleSettingsFragment
-    | LegacySimpleCollectModuleSettingsFragment
-    | LegacyTimedFeeCollectModuleSettingsFragment
-    | MultirecipientFeeCollectOpenActionSettingsFragment
-    | SimpleCollectOpenActionSettingsFragment
-    | UnknownOpenActionModuleSettingsFragment
+    | ({
+        __typename: 'LegacyAaveFeeCollectModuleSettings';
+      } & LegacyAaveFeeCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacyERC4626FeeCollectModuleSettings';
+      } & LegacyErc4626FeeCollectModuleSettingsFragment)
+    | ({ __typename: 'LegacyFeeCollectModuleSettings' } & LegacyFeeCollectModuleSettingsFragment)
+    | ({ __typename: 'LegacyFreeCollectModuleSettings' } & LegacyFreeCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacyLimitedFeeCollectModuleSettings';
+      } & LegacyLimitedFeeCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacyLimitedTimedFeeCollectModuleSettings';
+      } & LegacyLimitedTimedFeeCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacyMultirecipientFeeCollectModuleSettings';
+      } & LegacyMultirecipientFeeCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacyRevertCollectModuleSettings';
+      } & LegacyRevertCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacySimpleCollectModuleSettings';
+      } & LegacySimpleCollectModuleSettingsFragment)
+    | ({
+        __typename: 'LegacyTimedFeeCollectModuleSettings';
+      } & LegacyTimedFeeCollectModuleSettingsFragment)
+    | ({
+        __typename: 'MultirecipientFeeCollectOpenActionSettings';
+      } & MultirecipientFeeCollectOpenActionSettingsFragment)
+    | ({ __typename: 'SimpleCollectOpenActionSettings' } & SimpleCollectOpenActionSettingsFragment)
+    | ({ __typename: 'UnknownOpenActionModuleSettings' } & UnknownOpenActionModuleSettingsFragment)
   > | null;
   referenceModule:
-    | DegreesOfSeparationReferenceModuleSettingsFragment
-    | FollowOnlyReferenceModuleSettingsFragment
-    | UnknownReferenceModuleSettingsFragment
+    | ({
+        __typename: 'DegreesOfSeparationReferenceModuleSettings';
+      } & DegreesOfSeparationReferenceModuleSettingsFragment)
+    | ({
+        __typename: 'FollowOnlyReferenceModuleSettings';
+      } & FollowOnlyReferenceModuleSettingsFragment)
+    | ({ __typename: 'UnknownReferenceModuleSettings' } & UnknownReferenceModuleSettingsFragment)
     | null;
 };
 
 export type QuoteFragment = {
-  quoteOn: CommentBaseFragment | PostFragment | QuoteBaseFragment;
+  __typename: 'Quote';
+  quoteOn:
+    | ({ __typename: 'Comment' } & CommentBaseFragment)
+    | ({ __typename: 'Post' } & PostFragment)
+    | ({ __typename: 'Quote' } & QuoteBaseFragment);
 } & QuoteBaseFragment;
 
 export type Eip712TypedDataDomainFragment = {
+  __typename: 'EIP712TypedDataDomain';
   name: string;
   chainId: string;
   version: string;
   verifyingContract: string;
 };
 
-export type Eip712TypedDataFieldFragment = { name: string; type: string };
+export type Eip712TypedDataFieldFragment = {
+  __typename: 'EIP712TypedDataField';
+  name: string;
+  type: string;
+};
 
 export type CreateActOnOpenActionEip712TypedDataFragment = {
-  types: { Act: Array<Eip712TypedDataFieldFragment> };
-  domain: Eip712TypedDataDomainFragment;
+  __typename: 'CreateActOnOpenActionEIP712TypedData';
+  types: {
+    __typename: 'CreateActOnOpenActionEIP712TypedDataTypes';
+    Act: Array<{ __typename: 'EIP712TypedDataField' } & Eip712TypedDataFieldFragment>;
+  };
+  domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
   value: {
+    __typename: 'CreateActOnOpenActionEIP712TypedDataValue';
     nonce: string;
     deadline: string;
     publicationActedProfileId: string;
@@ -1143,7 +1516,6 @@ export const ProfileCoverSetFragmentDoc = gql`
 `;
 export const ProfileFragmentDoc = gql`
   fragment Profile on Profile {
-    __typename
     id
     ownedBy {
       ...NetworkAddress
@@ -2579,7 +2951,6 @@ export const UnknownReferenceModuleSettingsFragmentDoc = gql`
 `;
 export const PostFragmentDoc = gql`
   fragment Post on Post {
-    __typename
     id
     publishedOn {
       ...App
@@ -2738,7 +3109,6 @@ export const PostFragmentDoc = gql`
 `;
 export const CommentBaseFragmentDoc = gql`
   fragment CommentBase on Comment {
-    __typename
     id
     publishedOn {
       ...App
@@ -2897,7 +3267,6 @@ export const CommentBaseFragmentDoc = gql`
 `;
 export const QuoteBaseFragmentDoc = gql`
   fragment QuoteBase on Quote {
-    __typename
     id
     publishedOn {
       ...App
@@ -3100,7 +3469,6 @@ export const QuoteFragmentDoc = gql`
 `;
 export const MirrorFragmentDoc = gql`
   fragment Mirror on Mirror {
-    __typename
     id
     publishedOn {
       ...App
@@ -3174,26 +3542,22 @@ export const CreateActOnOpenActionEip712TypedDataFragmentDoc = gql`
 `;
 export const RelaySuccessFragmentDoc = gql`
   fragment RelaySuccess on RelaySuccess {
-    __typename
     txHash
     txId
   }
 `;
 export const RelayErrorFragmentDoc = gql`
   fragment RelayError on RelayError {
-    __typename
     reason
   }
 `;
 export const LensProfileManagerRelayErrorFragmentDoc = gql`
   fragment LensProfileManagerRelayError on LensProfileManagerRelayError {
-    __typename
     reason
   }
 `;
 export const CreateMomokaPublicationResultFragmentDoc = gql`
   fragment CreateMomokaPublicationResult on CreateMomokaPublicationResult {
-    __typename
     id
     proof
     momokaId

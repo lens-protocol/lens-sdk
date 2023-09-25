@@ -46,9 +46,15 @@ export type SearchPublicationsQueryVariables = Types.Exact<{
 }>;
 
 export type SearchPublicationsQuery = {
+  __typename: 'Query';
   result: {
-    items: Array<CommentFragment | PostFragment | QuoteFragment>;
-    pageInfo: PaginatedResultInfoFragment;
+    __typename: 'PaginatedPublicationPrimaryResult';
+    items: Array<
+      | ({ __typename: 'Comment' } & CommentFragment)
+      | ({ __typename: 'Post' } & PostFragment)
+      | ({ __typename: 'Quote' } & QuoteFragment)
+    >;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
   };
 };
 
@@ -60,7 +66,12 @@ export type SearchProfilesQueryVariables = Types.Exact<{
 }>;
 
 export type SearchProfilesQuery = {
-  result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedProfileResult';
+    items: Array<{ __typename: 'Profile' } & ProfileFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export const SearchPublicationsDocument = gql`

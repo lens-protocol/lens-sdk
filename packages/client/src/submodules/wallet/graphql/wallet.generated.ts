@@ -24,14 +24,19 @@ import {
   MirrorFragmentDoc,
   OpenActionResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
-export type HandleResultFragment = { handle: string };
+export type HandleResultFragment = { __typename: 'HandleResult'; handle: string };
 
 export type OwnedHandlesQueryVariables = Types.Exact<{
   request: Types.OwnedHandlesRequest;
 }>;
 
 export type OwnedHandlesQuery = {
-  result: { items: Array<HandleResultFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedHandlesResult';
+    items: Array<{ __typename: 'HandleResult' } & HandleResultFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export type ProfilesManagedQueryVariables = Types.Exact<{
@@ -42,17 +47,26 @@ export type ProfilesManagedQueryVariables = Types.Exact<{
 }>;
 
 export type ProfilesManagedQuery = {
-  result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedProfileResult';
+    items: Array<{ __typename: 'Profile' } & ProfileFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export type UserSigNoncesFragment = {
+  __typename: 'UserSigNonces';
   lensHubOnchainSigNonce: string;
   lensTokenHandleRegistryOnchainSigNonce: string;
 };
 
 export type UserSigNoncesQueryVariables = Types.Exact<{ [key: string]: never }>;
 
-export type UserSigNoncesQuery = { result: UserSigNoncesFragment };
+export type UserSigNoncesQuery = {
+  __typename: 'Query';
+  result: { __typename: 'UserSigNonces' } & UserSigNoncesFragment;
+};
 
 export const HandleResultFragmentDoc = gql`
   fragment HandleResult on HandleResult {

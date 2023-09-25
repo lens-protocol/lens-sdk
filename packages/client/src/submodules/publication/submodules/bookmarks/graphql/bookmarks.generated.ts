@@ -46,9 +46,16 @@ export type PublicationBookmarksQueryVariables = Types.Exact<{
 }>;
 
 export type PublicationBookmarksQuery = {
+  __typename: 'Query';
   result: {
-    items: Array<CommentFragment | MirrorFragment | PostFragment | QuoteFragment>;
-    pageInfo: PaginatedResultInfoFragment;
+    __typename: 'PaginatedPublicationsResult';
+    items: Array<
+      | ({ __typename: 'Comment' } & CommentFragment)
+      | ({ __typename: 'Mirror' } & MirrorFragment)
+      | ({ __typename: 'Post' } & PostFragment)
+      | ({ __typename: 'Quote' } & QuoteFragment)
+    >;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
   };
 };
 
@@ -56,13 +63,13 @@ export type AddPublicationBookmarkMutationVariables = Types.Exact<{
   request: Types.PublicationBookmarkRequest;
 }>;
 
-export type AddPublicationBookmarkMutation = { result: string | null };
+export type AddPublicationBookmarkMutation = { __typename: 'Mutation'; result: string | null };
 
 export type RemovePublicationBookmarkMutationVariables = Types.Exact<{
   request: Types.PublicationBookmarkRequest;
 }>;
 
-export type RemovePublicationBookmarkMutation = { result: string | null };
+export type RemovePublicationBookmarkMutation = { __typename: 'Mutation'; result: string | null };
 
 export const PublicationBookmarksDocument = gql`
   query PublicationBookmarks(

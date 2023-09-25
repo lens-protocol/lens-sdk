@@ -64,7 +64,6 @@ generates:
       - 'add':
           content: ["import type { ImageSizeTransform } from './ImageSizeTransform';"]
       - 'typescript':
-          nonOptionalTypename: true
           onlyOperationTypes: true # scalars and enums
   ./:
     preset: near-operation-file
@@ -77,10 +76,6 @@ generates:
       - 'typescript-operations':
           skipTypename: true
           inlineFragmentTypes: combine
-          # omitOperationSuffix: true
-          # operationResultSuffix: 'Data'
+          nonOptionalTypename: true
       - 'typescript-graphql-request':
           rawRequest: true
-          # omitOperationSuffix: true
-          # operationResultSuffix: 'Data'
-          # fragmentVariablePrefix: Fragment

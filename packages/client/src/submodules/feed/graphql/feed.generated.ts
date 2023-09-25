@@ -25,17 +25,22 @@ import {
   OpenActionResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type ReactionEventFragment = {
+  __typename: 'ReactionEvent';
   reaction: Types.PublicationReactionType;
   createdAt: string;
-  by: ProfileFragment;
+  by: { __typename: 'Profile' } & ProfileFragment;
 };
 
 export type FeedItemFragment = {
+  __typename: 'FeedItem';
   id: string;
-  root: CommentFragment | PostFragment | QuoteFragment;
-  mirrors: Array<MirrorFragment>;
-  reactions: Array<ReactionEventFragment>;
-  comments: Array<CommentFragment>;
+  root:
+    | ({ __typename: 'Comment' } & CommentFragment)
+    | ({ __typename: 'Post' } & PostFragment)
+    | ({ __typename: 'Quote' } & QuoteFragment);
+  mirrors: Array<{ __typename: 'Mirror' } & MirrorFragment>;
+  reactions: Array<{ __typename: 'ReactionEvent' } & ReactionEventFragment>;
+  comments: Array<{ __typename: 'Comment' } & CommentFragment>;
 };
 
 export type FeedQueryVariables = Types.Exact<{
@@ -48,7 +53,12 @@ export type FeedQueryVariables = Types.Exact<{
 }>;
 
 export type FeedQuery = {
-  result: { items: Array<FeedItemFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedFeedResult';
+    items: Array<{ __typename: 'FeedItem' } & FeedItemFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export type FeedHighlightsQueryVariables = Types.Exact<{
@@ -61,7 +71,14 @@ export type FeedHighlightsQueryVariables = Types.Exact<{
 }>;
 
 export type FeedHighlightsQuery = {
-  result: { items: Array<PostFragment | QuoteFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedFeedHighlightsResult';
+    items: Array<
+      ({ __typename: 'Post' } & PostFragment) | ({ __typename: 'Quote' } & QuoteFragment)
+    >;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export const ReactionEventFragmentDoc = gql`

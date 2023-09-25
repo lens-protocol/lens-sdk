@@ -32,29 +32,55 @@ import {
   RelaySuccessFragmentDoc,
   LensProfileManagerRelayErrorFragmentDoc,
 } from '../../../graphql/fragments.generated';
-export type ProfileManagerFragment = { address: string };
+export type ProfileManagerFragment = { __typename: 'ProfilesManagedResult'; address: string };
 
 export type CreateProfileWithHandleErrorResultFragment = {
+  __typename: 'CreateProfileWithHandleErrorResult';
   reason: Types.CreateProfileWithHandleErrorReasonType;
 };
 
 export type CreateOnchainSetProfileMetadataBroadcastItemResultFragment = {
+  __typename: 'CreateOnchainSetProfileMetadataBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
-    types: { SetProfileMetadataURI: Array<{ name: string; type: string }> };
-    domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string; profileId: string; metadataURI: string };
+    __typename: 'CreateOnchainSetProfileMetadataEIP712TypedData';
+    types: {
+      __typename: 'CreateOnchainSetProfileMetadataEIP712TypedDataTypes';
+      SetProfileMetadataURI: Array<{
+        __typename: 'EIP712TypedDataField';
+        name: string;
+        type: string;
+      }>;
+    };
+    domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
+    value: {
+      __typename: 'CreateOnchainSetProfileMetadataEIP712TypedDataValue';
+      nonce: string;
+      deadline: string;
+      profileId: string;
+      metadataURI: string;
+    };
   };
 };
 
 export type CreateChangeProfileManagersBroadcastItemResultFragment = {
+  __typename: 'CreateChangeProfileManagersBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
-    types: { ChangeDelegatedExecutorsConfig: Array<{ name: string; type: string }> };
-    domain: Eip712TypedDataDomainFragment;
+    __typename: 'CreateChangeProfileManagersEIP712TypedData';
+    types: {
+      __typename: 'CreateChangeProfileManagersEIP712TypedDataTypes';
+      ChangeDelegatedExecutorsConfig: Array<{
+        __typename: 'EIP712TypedDataField';
+        name: string;
+        type: string;
+      }>;
+    };
+    domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
     value: {
+      __typename: 'CreateChangeProfileManagersEIP712TypedDataValue';
       nonce: string;
       deadline: string;
       delegatorProfileId: string;
@@ -67,12 +93,18 @@ export type CreateChangeProfileManagersBroadcastItemResultFragment = {
 };
 
 export type CreateBlockProfilesBroadcastItemResultFragment = {
+  __typename: 'CreateBlockProfilesBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
-    types: { SetBlockStatus: Array<{ name: string; type: string }> };
-    domain: Eip712TypedDataDomainFragment;
+    __typename: 'CreateBlockProfilesEIP712TypedData';
+    types: {
+      __typename: 'CreateBlockProfilesEIP712TypedDataTypes';
+      SetBlockStatus: Array<{ __typename: 'EIP712TypedDataField'; name: string; type: string }>;
+    };
+    domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
     value: {
+      __typename: 'CreateBlockProfilesEIP712TypedDataValue';
       nonce: string;
       deadline: string;
       byProfileId: string;
@@ -83,12 +115,18 @@ export type CreateBlockProfilesBroadcastItemResultFragment = {
 };
 
 export type CreateUnblockProfilesBroadcastItemResultFragment = {
+  __typename: 'CreateUnblockProfilesBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
-    types: { SetBlockStatus: Array<{ name: string; type: string }> };
-    domain: Eip712TypedDataDomainFragment;
+    __typename: 'CreateUnblockProfilesEIP712TypedData';
+    types: {
+      __typename: 'CreateUnblockProfilesEIP712TypedDataTypes';
+      SetBlockStatus: Array<{ __typename: 'EIP712TypedDataField'; name: string; type: string }>;
+    };
+    domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
     value: {
+      __typename: 'CreateUnblockProfilesEIP712TypedDataValue';
       nonce: string;
       deadline: string;
       byProfileId: string;
@@ -99,12 +137,18 @@ export type CreateUnblockProfilesBroadcastItemResultFragment = {
 };
 
 export type CreateFollowBroadcastItemResultFragment = {
+  __typename: 'CreateFollowBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
-    types: { Follow: Array<{ name: string; type: string }> };
-    domain: Eip712TypedDataDomainFragment;
+    __typename: 'CreateFollowEIP712TypedData';
+    types: {
+      __typename: 'CreateFollowEIP712TypedDataTypes';
+      Follow: Array<{ __typename: 'EIP712TypedDataField'; name: string; type: string }>;
+    };
+    domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
     value: {
+      __typename: 'CreateFollowEIP712TypedDataValue';
       nonce: string;
       deadline: string;
       followerProfileId: string;
@@ -116,12 +160,18 @@ export type CreateFollowBroadcastItemResultFragment = {
 };
 
 export type CreateUnfollowBroadcastItemResultFragment = {
+  __typename: 'CreateUnfollowBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
-    types: { Unfollow: Array<{ name: string; type: string }> };
-    domain: Eip712TypedDataDomainFragment;
+    __typename: 'CreateUnfollowEIP712TypedData';
+    types: {
+      __typename: 'CreateUnfollowEIP712TypedDataTypes';
+      Unfollow: Array<{ __typename: 'EIP712TypedDataField'; name: string; type: string }>;
+    };
+    domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
     value: {
+      __typename: 'CreateUnfollowEIP712TypedDataValue';
       nonce: string;
       deadline: string;
       unfollowerProfileId: string;
@@ -131,12 +181,18 @@ export type CreateUnfollowBroadcastItemResultFragment = {
 };
 
 export type CreateSetFollowModuleBroadcastItemResultFragment = {
+  __typename: 'CreateSetFollowModuleBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
-    types: { SetFollowModule: Array<{ name: string; type: string }> };
-    domain: Eip712TypedDataDomainFragment;
+    __typename: 'CreateSetFollowModuleEIP712TypedData';
+    types: {
+      __typename: 'CreateSetFollowModuleEIP712TypedDataTypes';
+      SetFollowModule: Array<{ __typename: 'EIP712TypedDataField'; name: string; type: string }>;
+    };
+    domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
     value: {
+      __typename: 'CreateSetFollowModuleEIP712TypedDataValue';
       nonce: string;
       deadline: string;
       profileId: string;
@@ -147,26 +203,49 @@ export type CreateSetFollowModuleBroadcastItemResultFragment = {
 };
 
 export type CreateHandleLinkToProfileBroadcastItemResultFragment = {
+  __typename: 'CreateHandleLinkToProfileBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
-    types: { Link: Array<Eip712TypedDataFieldFragment> };
-    domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string; profileId: string; handleId: string };
+    __typename: 'CreateHandleLinkToProfileEIP712TypedData';
+    types: {
+      __typename: 'CreateHandleLinkToProfileEIP712TypedDataTypes';
+      Link: Array<{ __typename: 'EIP712TypedDataField' } & Eip712TypedDataFieldFragment>;
+    };
+    domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
+    value: {
+      __typename: 'CreateHandleLinkToProfileEIP712TypedDataValue';
+      nonce: string;
+      deadline: string;
+      profileId: string;
+      handleId: string;
+    };
   };
 };
 
 export type CreateHandleUnlinkFromProfileBroadcastItemResultFragment = {
+  __typename: 'CreateHandleUnlinkFromProfileBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
-    types: { Unlink: Array<Eip712TypedDataFieldFragment> };
-    domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string; profileId: string; handleId: string };
+    __typename: 'CreateHandleUnlinkFromProfileEIP712TypedData';
+    types: {
+      __typename: 'CreateHandleUnlinkFromProfileEIP712TypedDataTypes';
+      Unlink: Array<{ __typename: 'EIP712TypedDataField' } & Eip712TypedDataFieldFragment>;
+    };
+    domain: { __typename: 'EIP712TypedDataDomain' } & Eip712TypedDataDomainFragment;
+    value: {
+      __typename: 'CreateHandleUnlinkFromProfileEIP712TypedDataValue';
+      nonce: string;
+      deadline: string;
+      profileId: string;
+      handleId: string;
+    };
   };
 };
 
 export type ProfileStatsFragment = {
+  __typename: 'ProfileStats';
   id: string;
   followers: number;
   following: number;
@@ -187,7 +266,10 @@ export type ProfileQueryVariables = Types.Exact<{
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
-export type ProfileQuery = { result: ProfileFragment | null };
+export type ProfileQuery = {
+  __typename: 'Query';
+  result: ({ __typename: 'Profile' } & ProfileFragment) | null;
+};
 
 export type ProfileStatsQueryVariables = Types.Exact<{
   request: Types.ProfileRequest;
@@ -195,7 +277,13 @@ export type ProfileStatsQueryVariables = Types.Exact<{
   profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
 }>;
 
-export type ProfileStatsQuery = { result: { stats: ProfileStatsFragment } | null };
+export type ProfileStatsQuery = {
+  __typename: 'Query';
+  result: {
+    __typename: 'Profile';
+    stats: { __typename: 'ProfileStats' } & ProfileStatsFragment;
+  } | null;
+};
 
 export type ProfilesQueryVariables = Types.Exact<{
   request: Types.ProfilesRequest;
@@ -205,7 +293,12 @@ export type ProfilesQueryVariables = Types.Exact<{
 }>;
 
 export type ProfilesQuery = {
-  result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedProfileResult';
+    items: Array<{ __typename: 'Profile' } & ProfileFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export type ProfileManagersQueryVariables = Types.Exact<{
@@ -213,7 +306,12 @@ export type ProfileManagersQueryVariables = Types.Exact<{
 }>;
 
 export type ProfileManagersQuery = {
-  result: { items: Array<ProfileManagerFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedProfileManagersResult';
+    items: Array<{ __typename: 'ProfilesManagedResult' } & ProfileManagerFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export type ProfileRecommendationsQueryVariables = Types.Exact<{
@@ -224,7 +322,12 @@ export type ProfileRecommendationsQueryVariables = Types.Exact<{
 }>;
 
 export type ProfileRecommendationsQuery = {
-  result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedProfileResult';
+    items: Array<{ __typename: 'Profile' } & ProfileFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export type FollowingQueryVariables = Types.Exact<{
@@ -235,7 +338,12 @@ export type FollowingQueryVariables = Types.Exact<{
 }>;
 
 export type FollowingQuery = {
-  result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedProfileResult';
+    items: Array<{ __typename: 'Profile' } & ProfileFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export type FollowersQueryVariables = Types.Exact<{
@@ -246,7 +354,12 @@ export type FollowersQueryVariables = Types.Exact<{
 }>;
 
 export type FollowersQuery = {
-  result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedProfileResult';
+    items: Array<{ __typename: 'Profile' } & ProfileFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export type MutualFollowersQueryVariables = Types.Exact<{
@@ -257,7 +370,12 @@ export type MutualFollowersQueryVariables = Types.Exact<{
 }>;
 
 export type MutualFollowersQuery = {
-  result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedProfileResult';
+    items: Array<{ __typename: 'Profile' } & ProfileFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export type WhoActedOnPublicationQueryVariables = Types.Exact<{
@@ -268,7 +386,12 @@ export type WhoActedOnPublicationQueryVariables = Types.Exact<{
 }>;
 
 export type WhoActedOnPublicationQuery = {
-  result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
+  __typename: 'Query';
+  result: {
+    __typename: 'PaginatedProfileResult';
+    items: Array<{ __typename: 'Profile' } & ProfileFragment>;
+    pageInfo: { __typename: 'PaginatedResultInfo' } & PaginatedResultInfoFragment;
+  };
 };
 
 export type ClaimProfileMutationVariables = Types.Exact<{
@@ -276,7 +399,12 @@ export type ClaimProfileMutationVariables = Types.Exact<{
 }>;
 
 export type ClaimProfileMutation = {
-  result: CreateProfileWithHandleErrorResultFragment | RelaySuccessFragment;
+  __typename: 'Mutation';
+  result:
+    | ({
+        __typename: 'CreateProfileWithHandleErrorResult';
+      } & CreateProfileWithHandleErrorResultFragment)
+    | ({ __typename: 'RelaySuccess' } & RelaySuccessFragment);
 };
 
 export type CreateProfileWithHandleMutationVariables = Types.Exact<{
@@ -284,41 +412,57 @@ export type CreateProfileWithHandleMutationVariables = Types.Exact<{
 }>;
 
 export type CreateProfileWithHandleMutation = {
-  result: CreateProfileWithHandleErrorResultFragment | RelaySuccessFragment;
+  __typename: 'Mutation';
+  result:
+    | ({
+        __typename: 'CreateProfileWithHandleErrorResult';
+      } & CreateProfileWithHandleErrorResultFragment)
+    | ({ __typename: 'RelaySuccess' } & RelaySuccessFragment);
 };
 
 export type AddProfileInterestsMutationVariables = Types.Exact<{
   request: Types.ProfileInterestsRequest;
 }>;
 
-export type AddProfileInterestsMutation = { result: string | null };
+export type AddProfileInterestsMutation = { __typename: 'Mutation'; result: string | null };
 
 export type RemoveProfileInterestsMutationVariables = Types.Exact<{
   request: Types.ProfileInterestsRequest;
 }>;
 
-export type RemoveProfileInterestsMutation = { result: string | null };
+export type RemoveProfileInterestsMutation = { __typename: 'Mutation'; result: string | null };
 
 export type SetProfileMetadataMutationVariables = Types.Exact<{
   request: Types.OnchainSetProfileMetadataRequest;
 }>;
 
 export type SetProfileMetadataMutation = {
-  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'LensProfileManagerRelayError' } & LensProfileManagerRelayErrorFragment)
+    | ({ __typename: 'RelaySuccess' } & RelaySuccessFragment);
 };
 
 export type BlockMutationVariables = Types.Exact<{
   request: Types.BlockRequest;
 }>;
 
-export type BlockMutation = { result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment };
+export type BlockMutation = {
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'LensProfileManagerRelayError' } & LensProfileManagerRelayErrorFragment)
+    | ({ __typename: 'RelaySuccess' } & RelaySuccessFragment);
+};
 
 export type UnblockMutationVariables = Types.Exact<{
   request: Types.UnblockRequest;
 }>;
 
 export type UnblockMutation = {
-  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'LensProfileManagerRelayError' } & LensProfileManagerRelayErrorFragment)
+    | ({ __typename: 'RelaySuccess' } & RelaySuccessFragment);
 };
 
 export type FollowMutationVariables = Types.Exact<{
@@ -326,7 +470,10 @@ export type FollowMutationVariables = Types.Exact<{
 }>;
 
 export type FollowMutation = {
-  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'LensProfileManagerRelayError' } & LensProfileManagerRelayErrorFragment)
+    | ({ __typename: 'RelaySuccess' } & RelaySuccessFragment);
 };
 
 export type UnfollowMutationVariables = Types.Exact<{
@@ -334,14 +481,17 @@ export type UnfollowMutationVariables = Types.Exact<{
 }>;
 
 export type UnfollowMutation = {
-  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'LensProfileManagerRelayError' } & LensProfileManagerRelayErrorFragment)
+    | ({ __typename: 'RelaySuccess' } & RelaySuccessFragment);
 };
 
 export type DismissRecommendedProfilesMutationVariables = Types.Exact<{
   request: Types.DismissRecommendedProfilesRequest;
 }>;
 
-export type DismissRecommendedProfilesMutation = { result: string | null };
+export type DismissRecommendedProfilesMutation = { __typename: 'Mutation'; result: string | null };
 
 export type CreateOnchainSetProfileMetadataTypedDataMutationVariables = Types.Exact<{
   request: Types.OnchainSetProfileMetadataRequest;
@@ -349,7 +499,10 @@ export type CreateOnchainSetProfileMetadataTypedDataMutationVariables = Types.Ex
 }>;
 
 export type CreateOnchainSetProfileMetadataTypedDataMutation = {
-  result: CreateOnchainSetProfileMetadataBroadcastItemResultFragment;
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateOnchainSetProfileMetadataBroadcastItemResult';
+  } & CreateOnchainSetProfileMetadataBroadcastItemResultFragment;
 };
 
 export type CreateChangeProfileManagersTypedDataMutationVariables = Types.Exact<{
@@ -358,7 +511,10 @@ export type CreateChangeProfileManagersTypedDataMutationVariables = Types.Exact<
 }>;
 
 export type CreateChangeProfileManagersTypedDataMutation = {
-  result: CreateChangeProfileManagersBroadcastItemResultFragment;
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateChangeProfileManagersBroadcastItemResult';
+  } & CreateChangeProfileManagersBroadcastItemResultFragment;
 };
 
 export type CreateBlockProfilesTypedDataMutationVariables = Types.Exact<{
@@ -367,7 +523,10 @@ export type CreateBlockProfilesTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateBlockProfilesTypedDataMutation = {
-  result: CreateBlockProfilesBroadcastItemResultFragment;
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateBlockProfilesBroadcastItemResult';
+  } & CreateBlockProfilesBroadcastItemResultFragment;
 };
 
 export type CreateUnblockProfilesTypedDataMutationVariables = Types.Exact<{
@@ -376,7 +535,10 @@ export type CreateUnblockProfilesTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateUnblockProfilesTypedDataMutation = {
-  result: CreateUnblockProfilesBroadcastItemResultFragment;
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateUnblockProfilesBroadcastItemResult';
+  } & CreateUnblockProfilesBroadcastItemResultFragment;
 };
 
 export type CreateFollowTypedDataMutationVariables = Types.Exact<{
@@ -384,21 +546,34 @@ export type CreateFollowTypedDataMutationVariables = Types.Exact<{
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateFollowTypedDataMutation = { result: CreateFollowBroadcastItemResultFragment };
+export type CreateFollowTypedDataMutation = {
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateFollowBroadcastItemResult';
+  } & CreateFollowBroadcastItemResultFragment;
+};
 
 export type CreateUnfollowTypedDataMutationVariables = Types.Exact<{
   request: Types.UnfollowRequest;
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateUnfollowTypedDataMutation = { result: CreateUnfollowBroadcastItemResultFragment };
+export type CreateUnfollowTypedDataMutation = {
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateUnfollowBroadcastItemResult';
+  } & CreateUnfollowBroadcastItemResultFragment;
+};
 
 export type SetFollowModuleMutationVariables = Types.Exact<{
   request: Types.SetFollowModuleRequest;
 }>;
 
 export type SetFollowModuleMutation = {
-  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'LensProfileManagerRelayError' } & LensProfileManagerRelayErrorFragment)
+    | ({ __typename: 'RelaySuccess' } & RelaySuccessFragment);
 };
 
 export type CreateSetFollowModuleTypedDataMutationVariables = Types.Exact<{
@@ -407,7 +582,10 @@ export type CreateSetFollowModuleTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateSetFollowModuleTypedDataMutation = {
-  result: CreateSetFollowModuleBroadcastItemResultFragment;
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateSetFollowModuleBroadcastItemResult';
+  } & CreateSetFollowModuleBroadcastItemResultFragment;
 };
 
 export type HandleLinkToProfileMutationVariables = Types.Exact<{
@@ -415,7 +593,10 @@ export type HandleLinkToProfileMutationVariables = Types.Exact<{
 }>;
 
 export type HandleLinkToProfileMutation = {
-  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'LensProfileManagerRelayError' } & LensProfileManagerRelayErrorFragment)
+    | ({ __typename: 'RelaySuccess' } & RelaySuccessFragment);
 };
 
 export type HandleUnlinkFromProfileMutationVariables = Types.Exact<{
@@ -423,7 +604,10 @@ export type HandleUnlinkFromProfileMutationVariables = Types.Exact<{
 }>;
 
 export type HandleUnlinkFromProfileMutation = {
-  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
+  __typename: 'Mutation';
+  result:
+    | ({ __typename: 'LensProfileManagerRelayError' } & LensProfileManagerRelayErrorFragment)
+    | ({ __typename: 'RelaySuccess' } & RelaySuccessFragment);
 };
 
 export type CreateHandleLinkToProfileTypedDataMutationVariables = Types.Exact<{
@@ -431,7 +615,10 @@ export type CreateHandleLinkToProfileTypedDataMutationVariables = Types.Exact<{
 }>;
 
 export type CreateHandleLinkToProfileTypedDataMutation = {
-  result: CreateHandleLinkToProfileBroadcastItemResultFragment;
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateHandleLinkToProfileBroadcastItemResult';
+  } & CreateHandleLinkToProfileBroadcastItemResultFragment;
 };
 
 export type CreateHandleUnlinkFromProfileTypedDataMutationVariables = Types.Exact<{
@@ -439,7 +626,10 @@ export type CreateHandleUnlinkFromProfileTypedDataMutationVariables = Types.Exac
 }>;
 
 export type CreateHandleUnlinkFromProfileTypedDataMutation = {
-  result: CreateHandleUnlinkFromProfileBroadcastItemResultFragment;
+  __typename: 'Mutation';
+  result: {
+    __typename: 'CreateHandleUnlinkFromProfileBroadcastItemResult';
+  } & CreateHandleUnlinkFromProfileBroadcastItemResultFragment;
 };
 
 export const ProfileManagerFragmentDoc = gql`

@@ -25,9 +25,10 @@ import {
   OpenActionResultFragmentDoc,
 } from '../../../graphql/fragments.generated';
 export type InvitedResultFragment = {
+  __typename: 'InvitedResult';
   by: string;
   when: string;
-  profileMinted: ProfileFragment | null;
+  profileMinted: ({ __typename: 'Profile' } & ProfileFragment) | null;
 };
 
 export type InvitedProfilesQueryVariables = Types.Exact<{
@@ -36,19 +37,22 @@ export type InvitedProfilesQueryVariables = Types.Exact<{
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
-export type InvitedProfilesQuery = { invitedProfiles: Array<InvitedResultFragment> };
+export type InvitedProfilesQuery = {
+  __typename: 'Query';
+  invitedProfiles: Array<{ __typename: 'InvitedResult' } & InvitedResultFragment>;
+};
 
 export type ProfileAlreadyInvitedQueryVariables = Types.Exact<{
   request: Types.AlreadyInvitedCheckRequest;
 }>;
 
-export type ProfileAlreadyInvitedQuery = { result: boolean };
+export type ProfileAlreadyInvitedQuery = { __typename: 'Query'; result: boolean };
 
 export type InviteProfileMutationVariables = Types.Exact<{
   request: Types.InviteRequest;
 }>;
 
-export type InviteProfileMutation = { inviteProfile: string | null };
+export type InviteProfileMutation = { __typename: 'Mutation'; inviteProfile: string | null };
 
 export const InvitedResultFragmentDoc = gql`
   fragment InvitedResult on InvitedResult {
