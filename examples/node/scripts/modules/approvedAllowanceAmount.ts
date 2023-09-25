@@ -9,8 +9,12 @@ async function main() {
 
   const currencies = await client.modules.fetchCurrencies();
 
+  const currenciesForAllowanceCheck = currencies.items
+    .slice(0, 2) // max 3 currencies allowed by API
+    .map((currency) => currency.contract.address);
+
   const result = await client.modules.approvedAllowanceAmount({
-    currencies: currencies.items.map((currency) => currency.contract.address),
+    currencies: currenciesForAllowanceCheck,
     followModules: [FollowModuleType.FeeFollowModule],
   });
 
