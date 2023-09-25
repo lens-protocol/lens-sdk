@@ -1,6 +1,7 @@
 export * from './explore';
 export * from './feed';
 export * from './invites';
+export * from './modules';
 export * from './momoka';
 export * from './nfts';
 export * from './notifications';

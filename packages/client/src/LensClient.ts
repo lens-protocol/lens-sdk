@@ -4,6 +4,7 @@ import {
   Explore,
   Feed,
   Invites,
+  Modules,
   Momoka,
   Nfts,
   Notifications,
@@ -66,6 +67,13 @@ export class LensClient {
    */
   get invites(): Invites {
     return new Invites(this.config, this._authentication);
+  }
+
+  /**
+   * The Modules module
+   */
+  get modules(): Modules {
+    return new Modules(this.config, this._authentication);
   }
 
   /**
