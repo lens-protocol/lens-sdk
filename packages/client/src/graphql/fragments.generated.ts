@@ -141,7 +141,7 @@ export type ProfileFragment = {
     rawURI: string;
     picture: ProfilePictureSetFragment | NftImageFragment | null;
     coverPicture: ProfileCoverSetFragment | null;
-    attributes: Array<{ type: Types.AttributeType | null; key: string; value: string }>;
+    attributes: Array<{ type: Types.AttributeType; key: string; value: string }>;
   } | null;
   invitedBy: { id: string } | null;
 };
@@ -317,8 +317,70 @@ export type PublicationOperationsFragment = {
 };
 
 export type PublicationMetadataEncryptionStrategyFragment = {
+  __typename: 'PublicationMetadataV3LitEncryption';
   encryptionKey: string;
-  accessCondition:
+  encryptedPaths: Array<string>;
+  accessCondition: RootConditionFragment;
+};
+
+export type NftOwnershipConditionFragment = {
+  __typename: 'NftOwnershipCondition';
+  contractType: Types.NftContractType;
+  tokenIds: Array<string> | null;
+  contract: NetworkAddressFragment;
+};
+
+export type Erc20OwnershipConditionFragment = {
+  __typename: 'Erc20OwnershipCondition';
+  condition: Types.ComparisonOperatorConditionType;
+  amount: AmountFragment;
+};
+
+export type EoaOwnershipConditionFragment = {
+  __typename: 'EoaOwnershipCondition';
+  address: string;
+};
+
+export type ProfileOwnershipConditionFragment = {
+  __typename: 'ProfileOwnershipCondition';
+  profileId: string;
+};
+
+export type FollowConditionFragment = { __typename: 'FollowCondition'; follow: string };
+
+export type CollectConditionFragment = {
+  __typename: 'CollectCondition';
+  publicationId: string;
+  thisPublication: boolean;
+};
+
+export type AndConditionFragment = {
+  __typename: 'AndCondition';
+  criteria: Array<
+    | CollectConditionFragment
+    | EoaOwnershipConditionFragment
+    | Erc20OwnershipConditionFragment
+    | FollowConditionFragment
+    | NftOwnershipConditionFragment
+    | ProfileOwnershipConditionFragment
+  >;
+};
+
+export type OrConditionFragment = {
+  __typename: 'OrCondition';
+  criteria: Array<
+    | CollectConditionFragment
+    | EoaOwnershipConditionFragment
+    | Erc20OwnershipConditionFragment
+    | FollowConditionFragment
+    | NftOwnershipConditionFragment
+    | ProfileOwnershipConditionFragment
+  >;
+};
+
+export type RootConditionFragment = {
+  __typename: 'RootCondition';
+  criteria: Array<
     | AndConditionFragment
     | CollectConditionFragment
     | EoaOwnershipConditionFragment
@@ -326,49 +388,7 @@ export type PublicationMetadataEncryptionStrategyFragment = {
     | FollowConditionFragment
     | NftOwnershipConditionFragment
     | OrConditionFragment
-    | ProfileOwnershipConditionFragment;
-};
-
-export type NftOwnershipConditionFragment = {
-  contractType: Types.NftContractType;
-  tokenIds: Array<string> | null;
-  contract: NetworkAddressFragment;
-};
-
-export type Erc20OwnershipConditionFragment = {
-  condition: Types.ComparisonOperatorConditionType;
-  amount: AmountFragment;
-};
-
-export type EoaOwnershipConditionFragment = { address: string };
-
-export type ProfileOwnershipConditionFragment = { profileId: string };
-
-export type FollowConditionFragment = { follow: string };
-
-export type CollectConditionFragment = { publicationId: string; thisPublication: boolean };
-
-export type AndConditionFragment = {
-  criteria: Array<
-    | CollectConditionFragment
-    | EoaOwnershipConditionFragment
-    | Erc20OwnershipConditionFragment
-    | FollowConditionFragment
-    | NftOwnershipConditionFragment
     | ProfileOwnershipConditionFragment
-    | {}
-  >;
-};
-
-export type OrConditionFragment = {
-  criteria: Array<
-    | CollectConditionFragment
-    | EoaOwnershipConditionFragment
-    | Erc20OwnershipConditionFragment
-    | FollowConditionFragment
-    | NftOwnershipConditionFragment
-    | ProfileOwnershipConditionFragment
-    | {}
   >;
 };
 
@@ -452,15 +472,7 @@ export type LegacyPublicationMetadataFragment = {
         cover: string | null;
       }> | null;
     };
-    accessCondition:
-      | AndConditionFragment
-      | CollectConditionFragment
-      | EoaOwnershipConditionFragment
-      | Erc20OwnershipConditionFragment
-      | FollowConditionFragment
-      | NftOwnershipConditionFragment
-      | OrConditionFragment
-      | ProfileOwnershipConditionFragment;
+    accessCondition: RootConditionFragment;
   } | null;
 };
 
@@ -1403,6 +1415,7 @@ export const MarketplaceMetadataFragmentDoc = gql`
 `;
 export const NftOwnershipConditionFragmentDoc = gql`
   fragment NftOwnershipCondition on NftOwnershipCondition {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -1413,6 +1426,7 @@ export const NftOwnershipConditionFragmentDoc = gql`
 `;
 export const Erc20OwnershipConditionFragmentDoc = gql`
   fragment Erc20OwnershipCondition on Erc20OwnershipCondition {
+    __typename
     amount {
       ...Amount
     }
@@ -1422,27 +1436,32 @@ export const Erc20OwnershipConditionFragmentDoc = gql`
 `;
 export const EoaOwnershipConditionFragmentDoc = gql`
   fragment EoaOwnershipCondition on EoaOwnershipCondition {
+    __typename
     address
   }
 `;
 export const ProfileOwnershipConditionFragmentDoc = gql`
   fragment ProfileOwnershipCondition on ProfileOwnershipCondition {
+    __typename
     profileId
   }
 `;
 export const FollowConditionFragmentDoc = gql`
   fragment FollowCondition on FollowCondition {
+    __typename
     follow
   }
 `;
 export const CollectConditionFragmentDoc = gql`
   fragment CollectCondition on CollectCondition {
+    __typename
     publicationId
     thisPublication
   }
 `;
 export const AndConditionFragmentDoc = gql`
   fragment AndCondition on AndCondition {
+    __typename
     criteria {
       ... on NftOwnershipCondition {
         ...NftOwnershipCondition
@@ -1473,6 +1492,7 @@ export const AndConditionFragmentDoc = gql`
 `;
 export const OrConditionFragmentDoc = gql`
   fragment OrCondition on OrCondition {
+    __typename
     criteria {
       ... on NftOwnershipCondition {
         ...NftOwnershipCondition
@@ -1500,6 +1520,45 @@ export const OrConditionFragmentDoc = gql`
   ${ProfileOwnershipConditionFragmentDoc}
   ${FollowConditionFragmentDoc}
   ${CollectConditionFragmentDoc}
+`;
+export const RootConditionFragmentDoc = gql`
+  fragment RootCondition on RootCondition {
+    __typename
+    criteria {
+      ... on NftOwnershipCondition {
+        ...NftOwnershipCondition
+      }
+      ... on Erc20OwnershipCondition {
+        ...Erc20OwnershipCondition
+      }
+      ... on EoaOwnershipCondition {
+        ...EoaOwnershipCondition
+      }
+      ... on ProfileOwnershipCondition {
+        ...ProfileOwnershipCondition
+      }
+      ... on FollowCondition {
+        ...FollowCondition
+      }
+      ... on CollectCondition {
+        ...CollectCondition
+      }
+      ... on AndCondition {
+        ...AndCondition
+      }
+      ... on OrCondition {
+        ...OrCondition
+      }
+    }
+  }
+  ${NftOwnershipConditionFragmentDoc}
+  ${Erc20OwnershipConditionFragmentDoc}
+  ${EoaOwnershipConditionFragmentDoc}
+  ${ProfileOwnershipConditionFragmentDoc}
+  ${FollowConditionFragmentDoc}
+  ${CollectConditionFragmentDoc}
+  ${AndConditionFragmentDoc}
+  ${OrConditionFragmentDoc}
 `;
 export const LegacyPublicationMetadataFragmentDoc = gql`
   fragment LegacyPublicationMetadata on LegacyPublicationMetadata {
@@ -1537,30 +1596,7 @@ export const LegacyPublicationMetadataFragmentDoc = gql`
         externalUrl
       }
       accessCondition {
-        ... on NftOwnershipCondition {
-          ...NftOwnershipCondition
-        }
-        ... on Erc20OwnershipCondition {
-          ...Erc20OwnershipCondition
-        }
-        ... on EoaOwnershipCondition {
-          ...EoaOwnershipCondition
-        }
-        ... on ProfileOwnershipCondition {
-          ...ProfileOwnershipCondition
-        }
-        ... on FollowCondition {
-          ...FollowCondition
-        }
-        ... on CollectCondition {
-          ...CollectCondition
-        }
-        ... on AndCondition {
-          ...AndCondition
-        }
-        ... on OrCondition {
-          ...OrCondition
-        }
+        ...RootCondition
       }
     }
   }
@@ -1568,53 +1604,18 @@ export const LegacyPublicationMetadataFragmentDoc = gql`
   ${LegacyImageItemFragmentDoc}
   ${LegacyVideoItemFragmentDoc}
   ${MarketplaceMetadataFragmentDoc}
-  ${NftOwnershipConditionFragmentDoc}
-  ${Erc20OwnershipConditionFragmentDoc}
-  ${EoaOwnershipConditionFragmentDoc}
-  ${ProfileOwnershipConditionFragmentDoc}
-  ${FollowConditionFragmentDoc}
-  ${CollectConditionFragmentDoc}
-  ${AndConditionFragmentDoc}
-  ${OrConditionFragmentDoc}
+  ${RootConditionFragmentDoc}
 `;
 export const PublicationMetadataEncryptionStrategyFragmentDoc = gql`
   fragment PublicationMetadataEncryptionStrategy on PublicationMetadataV3LitEncryption {
+    __typename
     encryptionKey
     accessCondition {
-      ... on NftOwnershipCondition {
-        ...NftOwnershipCondition
-      }
-      ... on Erc20OwnershipCondition {
-        ...Erc20OwnershipCondition
-      }
-      ... on EoaOwnershipCondition {
-        ...EoaOwnershipCondition
-      }
-      ... on ProfileOwnershipCondition {
-        ...ProfileOwnershipCondition
-      }
-      ... on FollowCondition {
-        ...FollowCondition
-      }
-      ... on CollectCondition {
-        ...CollectCondition
-      }
-      ... on AndCondition {
-        ...AndCondition
-      }
-      ... on OrCondition {
-        ...OrCondition
-      }
+      ...RootCondition
     }
+    encryptedPaths
   }
-  ${NftOwnershipConditionFragmentDoc}
-  ${Erc20OwnershipConditionFragmentDoc}
-  ${EoaOwnershipConditionFragmentDoc}
-  ${ProfileOwnershipConditionFragmentDoc}
-  ${FollowConditionFragmentDoc}
-  ${CollectConditionFragmentDoc}
-  ${AndConditionFragmentDoc}
-  ${OrConditionFragmentDoc}
+  ${RootConditionFragmentDoc}
 `;
 export const EncryptableAudioFragmentDoc = gql`
   fragment EncryptableAudio on EncryptableAudio {
