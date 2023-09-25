@@ -7,10 +7,12 @@ async function main() {
   const wallet = setupWallet();
   const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const following = await client.profile.following({ for: 'PROFILE_TO_UNFOLLOW_ID' });
-
-  const result = await client.profile.createUnfollowTypedData({
-    unfollow: [following.items[1].id],
+  const result = await client.profile.createFollowTypedData({
+    follow: [
+      {
+        profileId: 'PROFILE_TO_FOLLOW_ID',
+      },
+    ],
   });
 
   const data = result.unwrap();
@@ -34,7 +36,7 @@ async function main() {
   }
 
   console.log(
-    `Transaction to follow ${following.items[1].id} was successfully broadcasted with txId ${followBroadcastResultValue.txId}`,
+    `Transaction to follow was successfully broadcasted with txId ${followBroadcastResultValue.txId}`,
   );
 
   // wait for follow to be indexed

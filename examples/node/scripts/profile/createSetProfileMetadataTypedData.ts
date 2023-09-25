@@ -7,7 +7,7 @@ async function main() {
   const wallet = setupWallet();
   const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const typedDataResult = await client.profile.createOnchainSetProfileMetadataTypedData({
+  const typedDataResult = await client.profile.createSetProfileMetadataTypedData({
     metadataURI: 'your-metadata-uri',
   });
 

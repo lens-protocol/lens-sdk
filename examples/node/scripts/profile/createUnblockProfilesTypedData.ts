@@ -7,7 +7,7 @@ async function main() {
   const wallet = setupWallet();
   const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const unblockProfilesTypedData = await client.profile.createUnblockProfileTypedData({
+  const unblockProfilesTypedData = await client.profile.createUnblockProfilesTypedData({
     profiles: ['PROFILE_ID_TO_BLOCK'],
   });
 

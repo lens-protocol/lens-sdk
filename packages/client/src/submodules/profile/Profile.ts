@@ -354,7 +354,7 @@ export class Profile {
     });
   }
 
-  async createOnchainSetProfileMetadataTypedData(
+  async createSetProfileMetadataTypedData(
     request: OnchainSetProfileMetadataRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
@@ -370,18 +370,6 @@ export class Profile {
         headers,
       );
 
-      return result.data.result;
-    });
-  }
-
-  async changeProfileManagers(
-    request: ChangeProfileManagersRequest,
-  ): PromiseResult<
-    CreateChangeProfileManagersBroadcastItemResultFragment | LensProfileManagerRelayErrorFragment,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateChangeProfileManagersTypedData({ request }, headers);
       return result.data.result;
     });
   }
@@ -482,7 +470,7 @@ export class Profile {
     });
   }
 
-  async createUnblockProfileTypedData(
+  async createUnblockProfilesTypedData(
     request: BlockRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
