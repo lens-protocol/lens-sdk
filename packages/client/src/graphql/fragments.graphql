@@ -1608,6 +1608,9 @@ fragment Mirror on Mirror {
   }
   txHash
   createdAt
+  by {
+    ...Profile
+  }
   mirrorOn {
     ... on Post {
       ...Post

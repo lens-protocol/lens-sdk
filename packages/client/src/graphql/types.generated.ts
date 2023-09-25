@@ -1245,10 +1245,6 @@ export enum PublicationType {
 export enum PublicationsOrderByType {
   CommentOfQueryRanking = 'COMMENT_OF_QUERY_RANKING',
   Latest = 'LATEST',
-  TopCollectedOpenAction = 'TOP_COLLECTED_OPEN_ACTION',
-  TopCommented = 'TOP_COMMENTED',
-  TopMirrored = 'TOP_MIRRORED',
-  TopQuoted = 'TOP_QUOTED',
 }
 
 export type PublicationsRequest = {

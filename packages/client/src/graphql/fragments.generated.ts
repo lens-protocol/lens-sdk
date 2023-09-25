@@ -891,6 +891,7 @@ export type MirrorFragment = {
   createdAt: string;
   publishedOn: AppFragment | null;
   momoka: MomokaInfoFragment | null;
+  by: ProfileFragment;
   mirrorOn: CommentFragment | PostFragment | QuoteFragment;
 };
 
@@ -3110,6 +3111,9 @@ export const MirrorFragmentDoc = gql`
     }
     txHash
     createdAt
+    by {
+      ...Profile
+    }
     mirrorOn {
       ... on Post {
         ...Post
@@ -3124,6 +3128,7 @@ export const MirrorFragmentDoc = gql`
   }
   ${AppFragmentDoc}
   ${MomokaInfoFragmentDoc}
+  ${ProfileFragmentDoc}
   ${PostFragmentDoc}
   ${CommentFragmentDoc}
   ${QuoteFragmentDoc}
