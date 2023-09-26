@@ -1,0 +1,3 @@
+dist
+*.cjs
+jest.config.ts
