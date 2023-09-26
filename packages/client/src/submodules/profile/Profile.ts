@@ -79,6 +79,7 @@ export class Profile {
    * Fetch a single profile.
    *
    * @param request - Request object for the query
+   * @param options - Additional options for the query
    * @returns Profile or null if not found
    *
    * @example
@@ -105,6 +106,7 @@ export class Profile {
    * Fetch all profiles by requested criteria
    *
    * @param request - Request object for the query
+   * @param options - Additional options for the query
    * @returns Profiles wrapped in {@link PaginatedResult}
    *
    * @example

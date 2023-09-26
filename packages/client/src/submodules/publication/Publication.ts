@@ -106,6 +106,7 @@ export class Publication {
    * Fetch a publication
    *
    * @param request - Request object for the query
+   * @param options - Additional options for the query
    * @returns {@link AnyPublicationFragment} or null if not found
    *
    * @example
@@ -132,6 +133,7 @@ export class Publication {
    * Fetch all publications by requested criteria
    *
    * @param request - Request object for the query
+   * @param options - Additional options for the query
    * @returns {@link AnyPublicationFragment} wrapped in {@link PaginatedResult}
    *
    * @example
