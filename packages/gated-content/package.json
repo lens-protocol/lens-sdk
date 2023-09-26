@@ -46,10 +46,10 @@
   "dependencies": {
     "@ethersproject/address": "^5.7.0",
     "@ethersproject/bignumber": "^5.7.0",
-    "@lens-protocol/api-bindings": "workspace:*",
-    "@lens-protocol/domain": "workspace:*",
-    "@lens-protocol/shared-kernel": "workspace:*",
-    "@lens-protocol/storage": "workspace:*",
+    "@lens-protocol/api-bindings": "0.10.1",
+    "@lens-protocol/domain": "0.10.1",
+    "@lens-protocol/shared-kernel": "0.10.0",
+    "@lens-protocol/storage": "0.7.4",
     "@lit-protocol/constants": "2.1.62",
     "@lit-protocol/crypto": "2.1.62",
     "@lit-protocol/encryption": "2.1.62",
@@ -83,7 +83,7 @@
     "ts-jest": "^29.0.5",
     "typescript": "^4.9.5",
     "wait-for-expect": "^3.0.2",
-    "zod": "^3.20.6"
+    "zod": "^3.22.0"
   },
   "peerDependencies": {
     "@ethersproject/contracts": "^5.7.0",
@@ -91,7 +91,7 @@
     "@ethersproject/providers": "^5.7.2",
     "@ethersproject/wallet": "^5.7.0",
     "ethers": "^5.7.2",
-    "zod": "^3.20.6"
+    "zod": "^3.22.0"
   },
   "prettier": "@lens-protocol/prettier-config",
   "babel": {
