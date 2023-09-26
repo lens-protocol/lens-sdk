@@ -123,6 +123,8 @@ query Notifications(
   $request: NotificationRequest!
   $publicationImageTransform: ImageTransform = {}
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $publicationStatsInput: PublicationStatsInput! = {}
+  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}

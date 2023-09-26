@@ -28,6 +28,8 @@ query RevenueFromPublications(
   $request: RevenueFromPublicationsRequest!
   $publicationImageTransform: ImageTransform = {}
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $publicationStatsInput: PublicationStatsInput! = {}
+  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
@@ -48,6 +50,8 @@ query RevenueFromPublication(
   $request: RevenueFromPublicationRequest!
   $publicationImageTransform: ImageTransform = {}
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $publicationStatsInput: PublicationStatsInput! = {}
+  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}

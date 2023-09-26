@@ -108,6 +108,7 @@ export type {
   PublicationMetadataMediaImageFragment,
   PublicationMetadataMediaVideoFragment,
   PublicationOperationsFragment,
+  PublicationStatsFragment,
   QuoteBaseFragment,
   QuoteFragment,
   RelayErrorFragment,

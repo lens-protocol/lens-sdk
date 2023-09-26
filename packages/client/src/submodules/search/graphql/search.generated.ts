@@ -40,6 +40,8 @@ export type SearchPublicationsQueryVariables = Types.Exact<{
   request: Types.PublicationSearchRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
+  publicationStatsInput?: Types.PublicationStatsInput;
+  publicationStatsCountOpenActionArgs?: Types.PublicationStatsCountOpenActionArgs;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
@@ -72,6 +74,8 @@ export const SearchPublicationsDocument = gql`
     $request: PublicationSearchRequest!
     $publicationImageTransform: ImageTransform = {}
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $publicationStatsInput: PublicationStatsInput! = {}
+    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
     $profileStatsArg: ProfileStatsArg = {}

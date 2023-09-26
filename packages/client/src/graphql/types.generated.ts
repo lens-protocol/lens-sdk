@@ -1219,7 +1219,7 @@ export type PublicationSearchWhere = {
 };
 
 export type PublicationStatsCountOpenActionArgs = {
-  anyOf: Array<OpenActionFilter>;
+  anyOf?: InputMaybe<Array<OpenActionFilter>>;
 };
 
 export type PublicationStatsInput = {

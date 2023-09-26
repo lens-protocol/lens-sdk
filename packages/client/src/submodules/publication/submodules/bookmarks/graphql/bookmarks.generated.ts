@@ -40,6 +40,8 @@ export type PublicationBookmarksQueryVariables = Types.Exact<{
   request: Types.PublicationBookmarksRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
+  publicationStatsInput?: Types.PublicationStatsInput;
+  publicationStatsCountOpenActionArgs?: Types.PublicationStatsCountOpenActionArgs;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
@@ -71,6 +73,8 @@ export const PublicationBookmarksDocument = gql`
     $request: PublicationBookmarksRequest!
     $publicationImageTransform: ImageTransform = {}
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $publicationStatsInput: PublicationStatsInput! = {}
+    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
     $profileStatsArg: ProfileStatsArg = {}

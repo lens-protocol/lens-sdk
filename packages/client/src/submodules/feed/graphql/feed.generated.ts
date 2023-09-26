@@ -42,6 +42,8 @@ export type FeedQueryVariables = Types.Exact<{
   request: Types.FeedRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
+  publicationStatsInput?: Types.PublicationStatsInput;
+  publicationStatsCountOpenActionArgs?: Types.PublicationStatsCountOpenActionArgs;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
@@ -57,6 +59,8 @@ export type FeedHighlightsQueryVariables = Types.Exact<{
   request: Types.FeedHighlightsRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
+  publicationStatsInput?: Types.PublicationStatsInput;
+  publicationStatsCountOpenActionArgs?: Types.PublicationStatsCountOpenActionArgs;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
@@ -113,6 +117,8 @@ export const FeedDocument = gql`
     $request: FeedRequest!
     $publicationImageTransform: ImageTransform = {}
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $publicationStatsInput: PublicationStatsInput! = {}
+    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
     $profileStatsArg: ProfileStatsArg = {}
@@ -136,6 +142,8 @@ export const FeedHighlightsDocument = gql`
     $request: FeedHighlightsRequest!
     $publicationImageTransform: ImageTransform = {}
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $publicationStatsInput: PublicationStatsInput! = {}
+    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
     $profileStatsArg: ProfileStatsArg = {}

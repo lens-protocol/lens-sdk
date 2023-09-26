@@ -2,6 +2,8 @@ query SearchPublications(
   $request: PublicationSearchRequest!
   $publicationImageTransform: ImageTransform = {}
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $publicationStatsInput: PublicationStatsInput! = {}
+  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}

@@ -95,7 +95,7 @@ export class Profile {
     const result = await this.sdk.Profile({
       request,
       ...buildRequestFromConfig(this.config),
-      profileStatsCountOpenActionArgs: options?.profileStatsCountOpenActionArgs,
+      ...options,
     });
 
     return result.data.result;
@@ -124,7 +124,7 @@ export class Profile {
       const result = await this.sdk.Profiles({
         request: currRequest,
         ...buildRequestFromConfig(this.config),
-        profileStatsCountOpenActionArgs: options?.profileStatsCountOpenActionArgs,
+        ...options,
       });
 
       return result.data.result;

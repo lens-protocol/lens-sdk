@@ -49,6 +49,8 @@ export type RevenueFromPublicationsQueryVariables = Types.Exact<{
   request: Types.RevenueFromPublicationsRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
+  publicationStatsInput?: Types.PublicationStatsInput;
+  publicationStatsCountOpenActionArgs?: Types.PublicationStatsCountOpenActionArgs;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
@@ -64,6 +66,8 @@ export type RevenueFromPublicationQueryVariables = Types.Exact<{
   request: Types.RevenueFromPublicationRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
+  publicationStatsInput?: Types.PublicationStatsInput;
+  publicationStatsCountOpenActionArgs?: Types.PublicationStatsCountOpenActionArgs;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
@@ -119,6 +123,8 @@ export const RevenueFromPublicationsDocument = gql`
     $request: RevenueFromPublicationsRequest!
     $publicationImageTransform: ImageTransform = {}
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $publicationStatsInput: PublicationStatsInput! = {}
+    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
     $profileStatsArg: ProfileStatsArg = {}
@@ -142,6 +148,8 @@ export const RevenueFromPublicationDocument = gql`
     $request: RevenueFromPublicationRequest!
     $publicationImageTransform: ImageTransform = {}
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $publicationStatsInput: PublicationStatsInput! = {}
+    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
     $profileStatsArg: ProfileStatsArg = {}
