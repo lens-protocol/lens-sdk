@@ -23,7 +23,9 @@
     "@lens-protocol/wagmi": "2.1.1"
   },
   "changesets": [
+    "brown-flies-pump",
     "heavy-dodos-raise",
+    "lemon-drinks-exercise",
     "long-carpets-marry",
     "shaggy-carrots-cry",
     "slow-cats-dance"

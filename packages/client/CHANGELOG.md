@@ -1,5 +1,14 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.4
+
+### Patch Changes
+
+- 43bb1af0: - renamed `profile.createOnchainSetProfileMetadataTypedData` to `profile.createSetProfileMetadataTypedData`
+  - removed duplicated method `profile.changeProfileManagers`, use `profile.createChangeProfileManagersTypedData` instead
+  - renamed `profile.createUnblockProfileTypedData` to `profile.createUnblockProfilesTypedData`
+- b49df26f: Added `client.modules` and required node version
+
 ## 2.0.0-alpha.3
 
 ### Patch Changes
