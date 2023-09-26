@@ -166,41 +166,23 @@ export type CreateHandleUnlinkFromProfileBroadcastItemResultFragment = {
   };
 };
 
-export type ProfileStatsFragment = {
-  id: string;
-  followers: number;
-  following: number;
-  comments: number;
-  posts: number;
-  mirrors: number;
-  quotes: number;
-  publications: number;
-  countOpenActions: number;
-  upvoteReactions: number;
-  downvoteReactions: number;
-};
-
 export type ProfileQueryVariables = Types.Exact<{
   request: Types.ProfileRequest;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
 export type ProfileQuery = { result: ProfileFragment | null };
 
-export type ProfileStatsQueryVariables = Types.Exact<{
-  request: Types.ProfileRequest;
-  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
-}>;
-
-export type ProfileStatsQuery = { result: { stats: ProfileStatsFragment } | null };
-
 export type ProfilesQueryVariables = Types.Exact<{
   request: Types.ProfilesRequest;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
@@ -220,6 +202,8 @@ export type ProfileRecommendationsQueryVariables = Types.Exact<{
   request: Types.ProfileRecommendationsRequest;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
@@ -231,6 +215,8 @@ export type FollowingQueryVariables = Types.Exact<{
   request: Types.FollowingRequest;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
@@ -242,6 +228,8 @@ export type FollowersQueryVariables = Types.Exact<{
   request: Types.FollowersRequest;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
@@ -253,6 +241,8 @@ export type MutualFollowersQueryVariables = Types.Exact<{
   request: Types.MutualFollowersRequest;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
@@ -264,6 +254,8 @@ export type WhoActedOnPublicationQueryVariables = Types.Exact<{
   request: Types.WhoActedOnPublicationRequest;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
@@ -676,28 +668,13 @@ export const CreateHandleUnlinkFromProfileBroadcastItemResultFragmentDoc = gql`
   ${Eip712TypedDataFieldFragmentDoc}
   ${Eip712TypedDataDomainFragmentDoc}
 `;
-export const ProfileStatsFragmentDoc = gql`
-  fragment ProfileStats on ProfileStats {
-    id
-    followers
-    following
-    comments
-    posts
-    mirrors
-    quotes
-    mirrors
-    quotes
-    publications
-    upvoteReactions: reactions(request: { type: UPVOTE })
-    downvoteReactions: reactions(request: { type: DOWNVOTE })
-    countOpenActions(request: $profileStatsCountOpenActionArgs)
-  }
-`;
 export const ProfileDocument = gql`
   query Profile(
     $request: ProfileRequest!
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
     result: profile(request: $request) {
@@ -706,25 +683,13 @@ export const ProfileDocument = gql`
   }
   ${ProfileFragmentDoc}
 `;
-export const ProfileStatsDocument = gql`
-  query ProfileStats(
-    $request: ProfileRequest!
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  ) {
-    result: profile(request: $request) {
-      stats(request: $profileStatsArg) {
-        ...ProfileStats
-      }
-    }
-  }
-  ${ProfileStatsFragmentDoc}
-`;
 export const ProfilesDocument = gql`
   query Profiles(
     $request: ProfilesRequest!
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
     result: profiles(request: $request) {
@@ -758,6 +723,8 @@ export const ProfileRecommendationsDocument = gql`
     $request: ProfileRecommendationsRequest!
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
     result: profileRecommendations(request: $request) {
@@ -777,6 +744,8 @@ export const FollowingDocument = gql`
     $request: FollowingRequest!
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
     result: following(request: $request) {
@@ -796,6 +765,8 @@ export const FollowersDocument = gql`
     $request: FollowersRequest!
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
     result: followers(request: $request) {
@@ -815,6 +786,8 @@ export const MutualFollowersDocument = gql`
     $request: MutualFollowersRequest!
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
     result: mutualFollowers(request: $request) {
@@ -834,6 +807,8 @@ export const WhoActedOnPublicationDocument = gql`
     $request: WhoActedOnPublicationRequest!
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
     result: whoActedOnPublication(request: $request) {
@@ -1093,7 +1068,6 @@ export type SdkFunctionWrapper = <T>(
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const ProfileDocumentString = print(ProfileDocument);
-const ProfileStatsDocumentString = print(ProfileStatsDocument);
 const ProfilesDocumentString = print(ProfilesDocument);
 const ProfileManagersDocumentString = print(ProfileManagersDocument);
 const ProfileRecommendationsDocumentString = print(ProfileRecommendationsDocument);
@@ -1144,25 +1118,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'Profile',
-        'query',
-      );
-    },
-    ProfileStats(
-      variables: ProfileStatsQueryVariables,
-      requestHeaders?: GraphQLClientRequestHeaders,
-    ): Promise<{
-      data: ProfileStatsQuery;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<ProfileStatsQuery>(ProfileStatsDocumentString, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'ProfileStats',
         'query',
       );
     },

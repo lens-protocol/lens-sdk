@@ -10,7 +10,7 @@ import type {
 } from '../../graphql/types.generated';
 import {
   PaginatedResult,
-  buildImageTransformsFromConfig,
+  buildRequestFromConfig,
   buildPaginatedQueryResult,
   sdkAuthHeaderWrapper,
 } from '../../helpers';
@@ -73,7 +73,7 @@ export class Poaps {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.PoapHolders({
         request: currRequest,
-        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        ...buildRequestFromConfig(this.config),
       });
 
       return result.data.result;

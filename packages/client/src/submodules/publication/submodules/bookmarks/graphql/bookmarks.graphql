@@ -2,9 +2,11 @@
 query PublicationBookmarks(
   $request: PublicationBookmarksRequest!
   $publicationImageTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
-  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: publicationBookmarks(request: $request) {

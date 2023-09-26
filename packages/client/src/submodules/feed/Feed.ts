@@ -7,7 +7,7 @@ import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import type { PostFragment, QuoteFragment } from '../../graphql/fragments.generated';
 import type { FeedHighlightsRequest, FeedRequest } from '../../graphql/types.generated';
 import {
-  buildImageTransformsFromConfig,
+  buildRequestFromConfig,
   buildPaginatedQueryResult,
   PaginatedResult,
   requireAuthHeaders,
@@ -62,7 +62,7 @@ export class Feed {
         const result = await this.sdk.Feed(
           {
             request: currRequest,
-            ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+            ...buildRequestFromConfig(this.config),
           },
           headers,
         );
@@ -100,7 +100,7 @@ export class Feed {
         const result = await this.sdk.FeedHighlights(
           {
             request: currRequest,
-            ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+            ...buildRequestFromConfig(this.config),
           },
           headers,
         );
@@ -122,7 +122,7 @@ export class Feed {
   //       const result = await this.sdk.ForYou(
   //         {
   //           request: currRequest,
-  //           ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+  //           ...buildRequestFromConfig(this.config),
   //         },
   //         headers,
   //       );

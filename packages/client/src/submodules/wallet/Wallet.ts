@@ -8,7 +8,7 @@ import type { ProfileFragment } from '../../graphql/fragments.generated';
 import type { OwnedHandlesRequest, ProfilesManagedRequest } from '../../graphql/types.generated';
 import {
   PaginatedResult,
-  buildImageTransformsFromConfig,
+  buildRequestFromConfig,
   buildPaginatedQueryResult,
   requireAuthHeaders,
   sdkAuthHeaderWrapper,
@@ -79,7 +79,7 @@ export class Wallet {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.ProfilesManaged({
         request: currRequest,
-        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        ...buildRequestFromConfig(this.config),
       });
 
       return result.data.result;

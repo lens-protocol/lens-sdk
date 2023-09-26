@@ -4,7 +4,7 @@ import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import { MomokaTransactionRequest, MomokaTransactionsRequest } from '../../graphql/types.generated';
 import {
   PaginatedResult,
-  buildImageTransformsFromConfig,
+  buildRequestFromConfig,
   buildPaginatedQueryResult,
   sdkAuthHeaderWrapper,
 } from '../../helpers';
@@ -62,7 +62,7 @@ export class Momoka {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.momokaTransactions({
         request: currRequest,
-        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        ...buildRequestFromConfig(this.config),
       });
       return result.data.result;
     }, request);

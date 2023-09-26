@@ -7,7 +7,7 @@ import type {
   RevenueFromPublicationsRequest,
 } from '../../graphql/types.generated';
 import {
-  buildImageTransformsFromConfig,
+  buildRequestFromConfig,
   buildPaginatedQueryResult,
   PaginatedResult,
   sdkAuthHeaderWrapper,
@@ -73,7 +73,7 @@ export class Revenue {
   ): Promise<PublicationRevenueFragment | null> {
     const result = await this.sdk.RevenueFromPublication({
       request,
-      ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      ...buildRequestFromConfig(this.config),
     });
 
     return result.data.result;
@@ -98,7 +98,7 @@ export class Revenue {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.RevenueFromPublications({
         request: currRequest,
-        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        ...buildRequestFromConfig(this.config),
       });
 
       return result.data.result;

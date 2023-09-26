@@ -31,7 +31,7 @@ import type {
   ValidatePublicationMetadataRequest,
 } from '../../graphql/types.generated';
 import {
-  buildImageTransformsFromConfig,
+  buildRequestFromConfig,
   buildPaginatedQueryResult,
   PaginatedResult,
   requireAuthHeaders,
@@ -120,7 +120,7 @@ export class Publication {
   async fetch(request: PublicationRequest): Promise<AnyPublicationFragment | null> {
     const result = await this.sdk.Publication({
       request,
-      ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      ...buildRequestFromConfig(this.config),
     });
 
     return result.data.result;
@@ -147,7 +147,7 @@ export class Publication {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Publications({
         request: currRequest,
-        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        ...buildRequestFromConfig(this.config),
       });
 
       return result.data.result;

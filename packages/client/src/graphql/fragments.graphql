@@ -191,6 +191,22 @@ fragment NftImage on NftImage {
   verified
 }
 
+fragment ProfileStats on ProfileStats {
+  id
+  followers
+  following
+  comments
+  posts
+  mirrors
+  quotes
+  publications
+  upvoteReactions: reactions(request: { type: UPVOTE })
+  downvoteReactions: reactions(request: { type: DOWNVOTE })
+  upvoteReacted: reacted(request: { type: UPVOTE })
+  downvoteReacted: reacted(request: { type: DOWNVOTE })
+  countOpenActions(request: $profileStatsCountOpenActionArgs)
+}
+
 fragment Profile on Profile {
   __typename
   id
@@ -277,6 +293,9 @@ fragment Profile on Profile {
   lensManager
   invitedBy {
     id
+  }
+  stats(request: $profileStatsArg) {
+    ...ProfileStats
   }
 }
 

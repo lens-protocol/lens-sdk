@@ -1,9 +1,11 @@
 query SearchPublications(
   $request: PublicationSearchRequest!
   $publicationImageTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
-  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: searchPublications(request: $request) {
@@ -28,6 +30,8 @@ query SearchProfiles(
   $request: ProfileSearchRequest!
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: searchProfiles(request: $request) {

@@ -54,9 +54,11 @@ export type PublicationStatsFragment = {
 export type PublicationQueryVariables = Types.Exact<{
   request: Types.PublicationRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
-  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
@@ -82,9 +84,11 @@ export type PublicationStatsQuery = {
 export type PublicationsQueryVariables = Types.Exact<{
   request: Types.PublicationsRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
-  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
@@ -744,9 +748,11 @@ export const PublicationDocument = gql`
   query Publication(
     $request: PublicationRequest!
     $publicationImageTransform: ImageTransform = {}
+    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
-    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
     result: publication(request: $request) {
@@ -805,9 +811,11 @@ export const PublicationsDocument = gql`
   query Publications(
     $request: PublicationsRequest!
     $publicationImageTransform: ImageTransform = {}
+    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
-    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
     result: publications(request: $request) {

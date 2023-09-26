@@ -24,9 +24,11 @@ fragment PublicationStats on PublicationStats {
 query Publication(
   $request: PublicationRequest!
   $publicationImageTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
-  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: publication(request: $request) {
@@ -78,9 +80,11 @@ query PublicationStats(
 query Publications(
   $request: PublicationsRequest!
   $publicationImageTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
-  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: publications(request: $request) {

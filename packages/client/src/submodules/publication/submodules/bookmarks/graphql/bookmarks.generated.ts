@@ -39,9 +39,11 @@ import {
 export type PublicationBookmarksQueryVariables = Types.Exact<{
   request: Types.PublicationBookmarksRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
-  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
@@ -68,9 +70,11 @@ export const PublicationBookmarksDocument = gql`
   query PublicationBookmarks(
     $request: PublicationBookmarksRequest!
     $publicationImageTransform: ImageTransform = {}
+    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
-    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
     result: publicationBookmarks(request: $request) {

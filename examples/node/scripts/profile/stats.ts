@@ -1,8 +1,7 @@
 import {
-  CustomFiltersType,
   LensClient,
   OpenActionCategoryType,
-  OpenActionModuleType,
+  OpenActionFilter,
   development,
 } from '@lens-protocol/client';
 
@@ -11,42 +10,29 @@ async function main() {
     environment: development,
   });
 
-  // stats across the whole protocol
-  const protocolWideStats = await client.profile.stats({ request: { forProfileId: '0x01' } });
+  const modules = await client.modules.supportedOpenActionModules();
 
-  console.log('Result: ', protocolWideStats);
-
-  // stats for a specified apps
-  const statsForSpecifiedApps = await client.profile.stats({
-    request: { forProfileId: '0x01' },
-    profileStatsArg: { forApps: ['APP_ID', 'ANOTHER_APP_ID'] },
-  });
-
-  console.log('Result: ', statsForSpecifiedApps);
-
-  // filter open actions
-  const filteredOpenActions = await client.profile.stats({
-    request: { forProfileId: '0x01' },
-    profileStatsCountOpenActionArgs: {
-      anyOf: [
-        {
-          address: '0x00',
-          type: OpenActionModuleType.SimpleCollectOpenActionModule,
-          category: OpenActionCategoryType.Collect,
-        },
-      ],
+  const result = await client.profile.fetch(
+    { forProfileId: '0x01' },
+    {
+      profileStatsCountOpenActionArgs: {
+        anyOf: [
+          {
+            address: modules.items[0].contract.address,
+          },
+          {
+            category: OpenActionCategoryType.Collect,
+          },
+        ] as OpenActionFilter[],
+      },
     },
+  );
+
+  console.log(`Result: `, {
+    id: result.id,
+    handle: result.handle,
+    stats: result.stats,
   });
-
-  console.log('Result: ', filteredOpenActions);
-
-  // stats for a specified app and with custom filters
-  const customFilteredStats = await client.profile.stats({
-    request: { forProfileId: '0x01' },
-    profileStatsArg: { forApps: ['APP_ID'], customFilters: [CustomFiltersType.Gardeners] },
-  });
-
-  console.log('Result: ', customFilteredStats);
 }
 
 main();

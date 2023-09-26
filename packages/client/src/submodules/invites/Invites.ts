@@ -5,11 +5,7 @@ import { LensConfig } from '../../consts/config';
 import { CredentialsExpiredError, NotAuthenticatedError } from '../../consts/errors';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import { AlreadyInvitedCheckRequest, InviteRequest } from '../../graphql/types.generated';
-import {
-  buildImageTransformsFromConfig,
-  requireAuthHeaders,
-  sdkAuthHeaderWrapper,
-} from '../../helpers';
+import { buildRequestFromConfig, requireAuthHeaders, sdkAuthHeaderWrapper } from '../../helpers';
 import { InvitedResultFragment, Sdk, getSdk } from './graphql/invites.generated';
 
 /**
@@ -48,12 +44,7 @@ export class Invites {
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.InvitedProfiles(
-        {
-          ...buildImageTransformsFromConfig(this.config.mediaTransforms),
-        },
-        headers,
-      );
+      const result = await this.sdk.InvitedProfiles(buildRequestFromConfig(this.config), headers);
 
       return result.data.invitedProfiles;
     });

@@ -27,9 +27,11 @@ fragment PublicationRevenue on PublicationRevenue {
 query RevenueFromPublications(
   $request: RevenueFromPublicationsRequest!
   $publicationImageTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
-  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: revenueFromPublications(request: $request) {
@@ -45,9 +47,11 @@ query RevenueFromPublications(
 query RevenueFromPublication(
   $request: RevenueFromPublicationRequest!
   $publicationImageTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
-  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: revenueFromPublication(request: $request) {

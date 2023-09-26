@@ -24,6 +24,8 @@ query WhoReactedPublication(
   $request: WhoReactedPublicationRequest!
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: whoReactedPublication(request: $request) {

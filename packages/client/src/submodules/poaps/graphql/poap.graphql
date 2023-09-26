@@ -58,6 +58,8 @@ query PoapHolders(
   $request: PoapHoldersQueryRequest!
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: poapHolders(request: $request) {

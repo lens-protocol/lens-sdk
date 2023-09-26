@@ -39,9 +39,11 @@ import {
 export type ExplorePublicationsQueryVariables = Types.Exact<{
   request: Types.ExplorePublicationRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
-  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
@@ -56,6 +58,8 @@ export type ExploreProfilesQueryVariables = Types.Exact<{
   request: Types.ExploreProfilesRequest;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
@@ -67,9 +71,11 @@ export const ExplorePublicationsDocument = gql`
   query ExplorePublications(
     $request: ExplorePublicationRequest!
     $publicationImageTransform: ImageTransform = {}
+    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
-    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
     result: explorePublications(request: $request) {
@@ -95,6 +101,8 @@ export const ExploreProfilesDocument = gql`
     $request: ExploreProfilesRequest!
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
     result: exploreProfiles(request: $request) {
