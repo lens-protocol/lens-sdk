@@ -1,5 +1,14 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.5
+
+### Patch Changes
+
+- 64f5625f: **feat:** support simplified AccessCondition schema
+- 2c2b8fa0:
+  **Removed** separate methods to query profile and publication stats.
+  **Added** stats field to all profile and publication query responses.
+
 ## 2.0.0-alpha.4
 
 ### Patch Changes
