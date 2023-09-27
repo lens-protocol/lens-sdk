@@ -1,6 +1,7 @@
 /** Code generated. DO NOT EDIT. */
 /* eslint-disable import/no-default-export */
 /* eslint-disable no-restricted-imports */
+/* eslint-disable tsdoc/syntax */
 import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
@@ -122,6 +123,12 @@ export type ProposalWhere = {
   title_contains?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<Scalars['String']>;
   type_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  updated?: InputMaybe<Scalars['Int']>;
+  updated_gt?: InputMaybe<Scalars['Int']>;
+  updated_gte?: InputMaybe<Scalars['Int']>;
+  updated_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  updated_lt?: InputMaybe<Scalars['Int']>;
+  updated_lte?: InputMaybe<Scalars['Int']>;
   validation?: InputMaybe<Scalars['String']>;
 };
 

@@ -35,7 +35,7 @@
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
     "tsc": "tsc --noEmit",
-    "gql-codegen": "graphql-codegen --config codegen-api.yml"
+    "codegen": "graphql-codegen --config codegen-api.yml"
   },
   "license": "MIT",
   "dependencies": {

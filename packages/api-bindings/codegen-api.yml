@@ -11,64 +11,57 @@ config:
     field: true
 
 generates:
-  src/lens/generated.ts:
+  src/lens/graphql/generated.ts:
     config:
-      defaultScalarType: unknown
+      strictScalars: true
       scalars:
-        Attach: string
-        BroadcastId: string
+        AppId: string
         BlockchainData: string
-        ChainId: number
-        ClientErc20Amount: ClientErc20Amount
-        CollectModuleData: string
-        CollectPolicy: CollectPolicy
-        ContentEncryptionKey: ContentEncryptionKey
-        ContentInsight: ContentInsight
-        ContractAddress: string
-        Cursor: Cursor
-        DataAvailabilityId: string
+        BroadcastId: string
+        ChainId: string
+        ChallengeId: string
+        ContentEncryptionKey: string
+        CreateHandle: string
+        Cursor: string
         DateTime: string
-        DecryptionCriteria: DecryptionCriteria
-        EncryptedValueScalar: string
-        EthereumAddress: EthereumAddress
-        FollowModuleData: string
-        FollowPolicy: FollowPolicy
-        FollowStatus: FollowStatus
+        EncryptableDateTime: string
+        EncryptableMarkdown: string
+        EncryptableString: string
+        EncryptableTxHash: string
+        EncryptableURI: string
+        EncryptedPath: string
+        EncryptedValue: string
+        Ens: string
+        EvmAddress: string
         Handle: string
         ImageSizeTransform: ImageSizeTransform
-        InternalPublicationId: PublicationId
         Jwt: string
         LimitScalar: number
         Locale: string
         Markdown: string
-        Media: string
         MimeType: string
-        NftOwnershipId: string
-        Nonce: number
-        NotificationId: string
-        PendingPublicationId: string
-        ProfileAttributes: ProfileAttributes
-        ProfileId: ProfileId
-        ProfileInterest: string
-        ProxyActionId: string
+        MomokaId: string
+        MomokaProof: string
+        NftGalleryId: string
+        NftGalleryName: string
+        Nonce: string
+        OnchainPublicationId: string
+        PoapEventId: string
+        ProfileId: string
         PublicationId: string
-        PublicationUrl: Url
-        ReferenceModuleData: string
-        ReferencePolicy: ReferencePolicy
-        Search: string
         Signature: string
-        Sources: AppId
-        String: string
         TokenId: string
         TxHash: string
         TxId: string
-        Url: Url
-        Void: void
+        UnixTimestamp: string
+        URI: string
+        URL: string
+        UUID: string
+        Void: string
     schema:
-      - https://api-mumbai.lens.dev/graphql
-      - src/lens/client.graphql
+      - https://api-v2-mumbai.lens.dev/graphql
     documents:
-      - src/lens/*.graphql
+      - src/lens/graphql/*.graphql
     plugins:
       - 'typescript':
           onlyOperationTypes: true # scalars and enums
@@ -81,17 +74,7 @@ generates:
               '/* eslint-disable @typescript-eslint/naming-convention */', # interface PossibleTypesResultData not starting with I
               '/* eslint-disable no-restricted-imports */', # import * from @apollo/client
               '/* eslint-disable tsdoc/syntax */',
-              "import type { AppId, DecryptionCriteria, ProfileId, PublicationId } from '@lens-protocol/domain/entities';",
-              "import type { CollectPolicy } from './CollectPolicy';",
-              "import type { ContentEncryptionKey } from './ContentEncryptionKey';",
-              "import type { ContentInsight } from './ContentInsight';",
-              "import type { Cursor } from './Cursor';",
-              "import type { Erc20Amount as ClientErc20Amount, EthereumAddress, Url } from '@lens-protocol/shared-kernel';",
-              "import type { FollowPolicy } from './FollowPolicy';",
-              "import type { FollowStatus } from './FollowStatus';",
-              "import type { ImageSizeTransform } from './ImageSizeTransform';",
-              "import type { ProfileAttributes } from './ProfileAttributes';",
-              "import type { ReferencePolicy } from './ReferencePolicy';",
+              "import type { ImageSizeTransform } from '../ImageSizeTransform';",
             ]
       - 'typescript-operations':
           skipTypename: true
@@ -123,6 +106,7 @@ generates:
               '/** Code generated. DO NOT EDIT. */',
               '/* eslint-disable import/no-default-export */', # generatedTypes default export
               '/* eslint-disable no-restricted-imports */', # import * from @apollo/client
+              '/* eslint-disable tsdoc/syntax */',
             ]
       - 'typescript-operations':
           skipTypename: true

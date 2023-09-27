@@ -25,7 +25,6 @@ export function createLensApolloClient({
   backendURL,
   logger,
   pollingInterval,
-  contentMatchers,
 }: ApolloClientConfig) {
   const uri = `${backendURL}/graphql`;
 
@@ -39,7 +38,7 @@ export function createLensApolloClient({
 
   return new SafeApolloClient({
     connectToDevTools: true,
-    cache: createLensCache({ contentMatchers }),
+    cache: createLensCache(),
     link: from([authLink, httpLink]),
     pollingInterval,
     version: LENS_API_MINIMAL_SUPPORTED_VERSION,
