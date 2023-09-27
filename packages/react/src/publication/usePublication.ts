@@ -1,10 +1,10 @@
 import {
   AnyPublication,
+  PublicationRequest,
   UnspecifiedError,
   usePublication as usePublicationHook,
 } from '@lens-protocol/api-bindings';
-import { PublicationId } from '@lens-protocol/domain/entities';
-import { XOR } from '@lens-protocol/shared-kernel';
+import { OneOf, invariant } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
 import {
@@ -14,35 +14,32 @@ import {
 } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
 
-export type UsePublicationByIdArgs = {
-  publicationId: PublicationId;
-};
-
-export type UsePublicationByTxHashArgs = {
-  txHash: string;
-};
-
 /**
  * {@link useProfile} hook arguments
  */
-export type UsePublicationArgs = XOR<UsePublicationByIdArgs, UsePublicationByTxHashArgs>;
+export type UsePublicationArgs = OneOf<PublicationRequest>;
 
 /**
  * @category Publications
  * @group Hooks
  */
 export function usePublication({
-  publicationId,
-  txHash,
+  forId,
+  forTxHash,
 }: UsePublicationArgs): ReadResult<AnyPublication, NotFoundError | UnspecifiedError> {
+  invariant(
+    forId === undefined || forTxHash === undefined,
+    "Only one of 'forId' or 'forTxHash' should be provided to 'usePublication' hook",
+  );
+
   const { data, error, loading } = useReadResult(
     usePublicationHook(
       useLensApolloClient({
         variables: useMediaTransformFromConfig(
           useProfileStatsArgFromConfig({
             request: {
-              forId: publicationId,
-              forTxHash: txHash,
+              forId,
+              forTxHash,
             },
           }),
         ),
@@ -71,7 +68,11 @@ export function usePublication({
   if (data === null) {
     return {
       data: undefined,
-      error: new NotFoundError(`Publication with id or txHash: ${publicationId ?? txHash}`),
+      error: new NotFoundError(
+        forId
+          ? `Publication with id: ${forId}`
+          : `Publication with txHash: ${forTxHash ? forTxHash : ''}`,
+      ),
       loading: false,
     };
   }

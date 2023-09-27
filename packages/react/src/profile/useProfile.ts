@@ -1,10 +1,10 @@
 import {
   Profile,
+  ProfileRequest,
   UnspecifiedError,
   useProfile as useProfileHook,
 } from '@lens-protocol/api-bindings';
-import { ProfileId } from '@lens-protocol/domain/entities';
-import { invariant, XOR } from '@lens-protocol/shared-kernel';
+import { invariant, OneOf } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
 import {
@@ -14,18 +14,10 @@ import {
 } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
 
-export type UseProfileByIdArgs = {
-  profileId: ProfileId;
-};
-
-export type UseProfileByHandleArgs = {
-  handle: string;
-};
-
 /**
  * {@link useProfile} hook arguments
  */
-export type UseProfileArgs = XOR<UseProfileByIdArgs, UseProfileByHandleArgs>;
+export type UseProfileArgs = OneOf<ProfileRequest>;
 
 /**
  * Get a profile by either a handle or profile Id.
@@ -36,12 +28,12 @@ export type UseProfileArgs = XOR<UseProfileByIdArgs, UseProfileByHandleArgs>;
  * @param args - {@link UseProfileArgs}
  */
 export function useProfile({
-  handle,
-  profileId,
+  forHandle,
+  forProfileId,
 }: UseProfileArgs): ReadResult<Profile, NotFoundError | UnspecifiedError> {
   invariant(
-    profileId === undefined || handle === undefined,
-    "Only one of 'id' or 'handle' should be provided to 'useProfile' hook",
+    forProfileId === undefined || forHandle === undefined,
+    "Only one of 'forProfileId' or 'forHandle' should be provided to 'useProfile' hook",
   );
 
   const { data, error, loading } = useReadResult(
@@ -50,8 +42,8 @@ export function useProfile({
         variables: useMediaTransformFromConfig(
           useProfileStatsArgFromConfig({
             request: {
-              forHandle: handle,
-              forProfileId: profileId,
+              forHandle,
+              forProfileId,
             },
           }),
         ),
@@ -80,7 +72,11 @@ export function useProfile({
   if (data === null) {
     return {
       data: undefined,
-      error: new NotFoundError(`Profile with id or handle: ${profileId ?? handle}`),
+      error: new NotFoundError(
+        forProfileId
+          ? `Profile with id: ${forProfileId}`
+          : `Profile with handle: ${forHandle ? forHandle : ''}`,
+      ),
       loading: false,
     };
   }
