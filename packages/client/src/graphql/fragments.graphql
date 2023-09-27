@@ -549,36 +549,16 @@ fragment PublicationOperations on PublicationOperations {
 
 # gated content
 fragment PublicationMetadataEncryptionStrategy on PublicationMetadataV3LitEncryption {
+  __typename
   encryptionKey
   accessCondition {
-    ... on NftOwnershipCondition {
-      ...NftOwnershipCondition
-    }
-    ... on Erc20OwnershipCondition {
-      ...Erc20OwnershipCondition
-    }
-    ... on EoaOwnershipCondition {
-      ...EoaOwnershipCondition
-    }
-    ... on ProfileOwnershipCondition {
-      ...ProfileOwnershipCondition
-    }
-    ... on FollowCondition {
-      ...FollowCondition
-    }
-    ... on CollectCondition {
-      ...CollectCondition
-    }
-    ... on AndCondition {
-      ...AndCondition
-    }
-    ... on OrCondition {
-      ...OrCondition
-    }
+    ...RootCondition
   }
+  encryptedPaths
 }
 
 fragment NftOwnershipCondition on NftOwnershipCondition {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -587,6 +567,7 @@ fragment NftOwnershipCondition on NftOwnershipCondition {
 }
 
 fragment Erc20OwnershipCondition on Erc20OwnershipCondition {
+  __typename
   amount {
     ...Amount
   }
@@ -594,23 +575,28 @@ fragment Erc20OwnershipCondition on Erc20OwnershipCondition {
 }
 
 fragment EoaOwnershipCondition on EoaOwnershipCondition {
+  __typename
   address
 }
 
 fragment ProfileOwnershipCondition on ProfileOwnershipCondition {
+  __typename
   profileId
 }
 
 fragment FollowCondition on FollowCondition {
+  __typename
   follow
 }
 
 fragment CollectCondition on CollectCondition {
+  __typename
   publicationId
   thisPublication
 }
 
 fragment AndCondition on AndCondition {
+  __typename
   criteria {
     ... on NftOwnershipCondition {
       ...NftOwnershipCondition
@@ -634,6 +620,7 @@ fragment AndCondition on AndCondition {
 }
 
 fragment OrCondition on OrCondition {
+  __typename
   criteria {
     ... on NftOwnershipCondition {
       ...NftOwnershipCondition
@@ -652,6 +639,36 @@ fragment OrCondition on OrCondition {
     }
     ... on CollectCondition {
       ...CollectCondition
+    }
+  }
+}
+
+fragment RootCondition on RootCondition {
+  __typename
+  criteria {
+    ... on NftOwnershipCondition {
+      ...NftOwnershipCondition
+    }
+    ... on Erc20OwnershipCondition {
+      ...Erc20OwnershipCondition
+    }
+    ... on EoaOwnershipCondition {
+      ...EoaOwnershipCondition
+    }
+    ... on ProfileOwnershipCondition {
+      ...ProfileOwnershipCondition
+    }
+    ... on FollowCondition {
+      ...FollowCondition
+    }
+    ... on CollectCondition {
+      ...CollectCondition
+    }
+    ... on AndCondition {
+      ...AndCondition
+    }
+    ... on OrCondition {
+      ...OrCondition
     }
   }
 }
@@ -774,30 +791,7 @@ fragment LegacyPublicationMetadata on LegacyPublicationMetadata {
       externalUrl
     }
     accessCondition {
-      ... on NftOwnershipCondition {
-        ...NftOwnershipCondition
-      }
-      ... on Erc20OwnershipCondition {
-        ...Erc20OwnershipCondition
-      }
-      ... on EoaOwnershipCondition {
-        ...EoaOwnershipCondition
-      }
-      ... on ProfileOwnershipCondition {
-        ...ProfileOwnershipCondition
-      }
-      ... on FollowCondition {
-        ...FollowCondition
-      }
-      ... on CollectCondition {
-        ...CollectCondition
-      }
-      ... on AndCondition {
-        ...AndCondition
-      }
-      ... on OrCondition {
-        ...OrCondition
-      }
+      ...RootCondition
     }
   }
 }
