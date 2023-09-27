@@ -1,5 +1,5 @@
 {
-  "name": "api-bindings-v1",
+  "name": "@lens-protocol/api-bindings",
   "version": "0.10.1",
   "description": "Graphql fragments, react hooks, typescript types of lens API.",
   "repository": {
@@ -26,16 +26,16 @@
     "mocks"
   ],
   "scripts": {
-    "build": "exit 0",
+    "build": "preconstruct build",
     "test": "jest",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
-    "lint": "exit 0",
+    "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
     "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix && pnpm run tsc",
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
     "tsc": "tsc --noEmit",
-    "gql-codegen": "graphql-codegen --config codegen-api.yml"
+    "codegen": "graphql-codegen --config codegen-api.yml"
   },
   "license": "MIT",
   "dependencies": {
