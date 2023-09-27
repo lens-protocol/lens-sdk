@@ -11,7 +11,7 @@ import type {
   ExplorePublicationRequest,
 } from '../../graphql/types.generated';
 import {
-  buildImageTransformsFromConfig,
+  buildRequestFromConfig,
   buildPaginatedQueryResult,
   PaginatedResult,
   sdkAuthHeaderWrapper,
@@ -55,7 +55,7 @@ export class Explore {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.ExplorePublications({
         request: currRequest,
-        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        ...buildRequestFromConfig(this.config),
       });
 
       return result.data.result;
@@ -81,7 +81,7 @@ export class Explore {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.ExploreProfiles({
         request: currRequest,
-        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        ...buildRequestFromConfig(this.config),
       });
 
       return result.data.result;

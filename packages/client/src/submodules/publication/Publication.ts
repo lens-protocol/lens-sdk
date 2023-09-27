@@ -31,7 +31,7 @@ import type {
   ValidatePublicationMetadataRequest,
 } from '../../graphql/types.generated';
 import {
-  buildImageTransformsFromConfig,
+  buildRequestFromConfig,
   buildPaginatedQueryResult,
   PaginatedResult,
   requireAuthHeaders,
@@ -48,14 +48,12 @@ import {
   CreateOnchainPostBroadcastItemResultFragment,
   CreateOnchainQuoteBroadcastItemResultFragment,
   getSdk,
-  PublicationStatsFragment,
-  PublicationStatsQueryVariables,
   PublicationValidateMetadataResultFragment,
   Sdk,
   TagResultFragment,
 } from './graphql/publication.generated';
-import { isMirrorPublication } from './helpers';
 import { Bookmarks, Reactions, NotInterested, Actions } from './submodules';
+import { FetchPublicationOptions } from './types';
 
 /**
  * Publications are the posts, comments, mirrors and quotes that a profile creates.
@@ -108,6 +106,7 @@ export class Publication {
    * Fetch a publication
    *
    * @param request - Request object for the query
+   * @param options - Additional options for the query
    * @returns {@link AnyPublicationFragment} or null if not found
    *
    * @example
@@ -117,10 +116,14 @@ export class Publication {
    * });
    * ```
    */
-  async fetch(request: PublicationRequest): Promise<AnyPublicationFragment | null> {
+  async fetch(
+    request: PublicationRequest,
+    options?: FetchPublicationOptions,
+  ): Promise<AnyPublicationFragment | null> {
     const result = await this.sdk.Publication({
       request,
-      ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      ...buildRequestFromConfig(this.config),
+      ...options,
     });
 
     return result.data.result;
@@ -130,6 +133,7 @@ export class Publication {
    * Fetch all publications by requested criteria
    *
    * @param request - Request object for the query
+   * @param options - Additional options for the query
    * @returns {@link AnyPublicationFragment} wrapped in {@link PaginatedResult}
    *
    * @example
@@ -143,43 +147,17 @@ export class Publication {
    */
   async fetchAll(
     request: PublicationsRequest,
+    options?: FetchPublicationOptions,
   ): Promise<PaginatedResult<AnyPublicationFragment | null>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Publications({
         request: currRequest,
-        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        ...buildRequestFromConfig(this.config),
+        ...options,
       });
 
       return result.data.result;
     }, request);
-  }
-
-  /**
-   * Fetch a publication's stats
-   *
-   * @param variables - Object defining all variables for the query
-   * @returns {@link PublicationStatsFragment} or undefined if not found or publication is a mirror
-   *
-   * @example
-   * ```ts
-   * const result = await client.publication.stats({
-   *   request: {
-   *     forId: '0x123-0x456',
-   *   },
-   * });
-   * ```
-   */
-  async stats(
-    variables: PublicationStatsQueryVariables,
-  ): Promise<PublicationStatsFragment | undefined> {
-    const result = await this.sdk.PublicationStats(variables);
-
-    const data = result.data.result;
-
-    if (data === null || isMirrorPublication(data)) {
-      return undefined;
-    }
-    return data.stats;
   }
 
   /**
@@ -846,7 +824,7 @@ export class Publication {
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.LegacyCollectPublication({ request }, headers);
+      const result = await this.sdk.LegacyCollect({ request }, headers);
       return result.data.result;
     });
   }

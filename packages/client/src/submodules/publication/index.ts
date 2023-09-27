@@ -1,6 +1,7 @@
 export * from './Publication';
 export * from './helpers';
 export * from './submodules';
+export * from './types';
 
 export type {
   CreateLegacyCollectBroadcastItemResultFragment,
@@ -12,8 +13,6 @@ export type {
   CreateOnchainMirrorBroadcastItemResultFragment,
   CreateOnchainPostBroadcastItemResultFragment,
   CreateOnchainQuoteBroadcastItemResultFragment,
-  PublicationStatsFragment,
-  PublicationStatsQueryVariables,
   PublicationValidateMetadataResultFragment,
   TagResultFragment,
 } from './graphql/publication.generated';

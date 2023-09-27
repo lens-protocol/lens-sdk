@@ -1,5 +1,6 @@
 export * from './Profile';
 export * from './helpers';
+export * from './types';
 
 export type {
   CreateBlockProfilesBroadcastItemResultFragment,
@@ -13,6 +14,4 @@ export type {
   CreateUnblockProfilesBroadcastItemResultFragment,
   CreateUnfollowBroadcastItemResultFragment,
   ProfileManagerFragment,
-  ProfileStatsFragment,
-  ProfileStatsQueryVariables,
 } from './graphql/profile.generated';

@@ -40,23 +40,16 @@ export type TagResultFragment = { tag: string; total: number };
 
 export type PublicationValidateMetadataResultFragment = { valid: boolean; reason: string | null };
 
-export type PublicationStatsFragment = {
-  id: string;
-  comments: number;
-  mirrors: number;
-  quotes: number;
-  bookmarks: number;
-  countOpenActions: number;
-  upvoteReactions: number;
-  downvoteReactions: number;
-};
-
 export type PublicationQueryVariables = Types.Exact<{
   request: Types.PublicationRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
+  publicationStatsInput?: Types.PublicationStatsInput;
+  publicationStatsCountOpenActionArgs?: Types.PublicationStatsCountOpenActionArgs;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
-  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
@@ -64,27 +57,16 @@ export type PublicationQuery = {
   result: CommentFragment | MirrorFragment | PostFragment | QuoteFragment | null;
 };
 
-export type PublicationStatsQueryVariables = Types.Exact<{
-  request: Types.PublicationRequest;
-  statsRequest?: Types.PublicationStatsInput;
-  openActionsRequest?: Types.PublicationStatsCountOpenActionArgs;
-}>;
-
-export type PublicationStatsQuery = {
-  result:
-    | { __typename: 'Comment'; stats: PublicationStatsFragment }
-    | { __typename: 'Mirror' }
-    | { __typename: 'Post'; stats: PublicationStatsFragment }
-    | { __typename: 'Quote'; stats: PublicationStatsFragment }
-    | null;
-};
-
 export type PublicationsQueryVariables = Types.Exact<{
   request: Types.PublicationsRequest;
   publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
+  publicationStatsInput?: Types.PublicationStatsInput;
+  publicationStatsCountOpenActionArgs?: Types.PublicationStatsCountOpenActionArgs;
   profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
   profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
-  publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
+  profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
@@ -435,11 +417,11 @@ export type ReportPublicationMutationVariables = Types.Exact<{
 
 export type ReportPublicationMutation = { reportPublication: string | null };
 
-export type LegacyCollectPublicationMutationVariables = Types.Exact<{
+export type LegacyCollectMutationVariables = Types.Exact<{
   request: Types.LegacyCollectRequest;
 }>;
 
-export type LegacyCollectPublicationMutation = {
+export type LegacyCollectMutation = {
   result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
 };
 
@@ -470,18 +452,6 @@ export const PublicationValidateMetadataResultFragmentDoc = gql`
   fragment PublicationValidateMetadataResult on PublicationValidateMetadataResult {
     valid
     reason
-  }
-`;
-export const PublicationStatsFragmentDoc = gql`
-  fragment PublicationStats on PublicationStats {
-    id
-    comments
-    mirrors
-    quotes
-    bookmarks
-    upvoteReactions: reactions(request: { type: UPVOTE })
-    downvoteReactions: reactions(request: { type: DOWNVOTE })
-    countOpenActions(request: $openActionsRequest)
   }
 `;
 export const CreateOnchainPostBroadcastItemResultFragmentDoc = gql`
@@ -744,9 +714,13 @@ export const PublicationDocument = gql`
   query Publication(
     $request: PublicationRequest!
     $publicationImageTransform: ImageTransform = {}
+    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $publicationStatsInput: PublicationStatsInput! = {}
+    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
-    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
     result: publication(request: $request) {
@@ -769,45 +743,17 @@ export const PublicationDocument = gql`
   ${CommentFragmentDoc}
   ${QuoteFragmentDoc}
 `;
-export const PublicationStatsDocument = gql`
-  query PublicationStats(
-    $request: PublicationRequest!
-    $statsRequest: PublicationStatsInput! = {}
-    $openActionsRequest: PublicationStatsCountOpenActionArgs! = { anyOf: [] }
-  ) {
-    result: publication(request: $request) {
-      ... on Post {
-        __typename
-        stats(request: $statsRequest) {
-          ...PublicationStats
-        }
-      }
-      ... on Comment {
-        __typename
-        stats(request: $statsRequest) {
-          ...PublicationStats
-        }
-      }
-      ... on Quote {
-        __typename
-        stats(request: $statsRequest) {
-          ...PublicationStats
-        }
-      }
-      ... on Mirror {
-        __typename
-      }
-    }
-  }
-  ${PublicationStatsFragmentDoc}
-`;
 export const PublicationsDocument = gql`
   query Publications(
     $request: PublicationsRequest!
     $publicationImageTransform: ImageTransform = {}
+    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $publicationStatsInput: PublicationStatsInput! = {}
+    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
-    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
     result: publications(request: $request) {
@@ -1050,8 +996,8 @@ export const ReportPublicationDocument = gql`
     reportPublication(request: $request)
   }
 `;
-export const LegacyCollectPublicationDocument = gql`
-  mutation LegacyCollectPublication($request: LegacyCollectRequest!) {
+export const LegacyCollectDocument = gql`
+  mutation LegacyCollect($request: LegacyCollectRequest!) {
     result: legacyCollect(request: $request) {
       ... on RelaySuccess {
         ...RelaySuccess
@@ -1091,7 +1037,6 @@ export type SdkFunctionWrapper = <T>(
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const PublicationDocumentString = print(PublicationDocument);
-const PublicationStatsDocumentString = print(PublicationStatsDocument);
 const PublicationsDocumentString = print(PublicationsDocument);
 const PublicationsTagsDocumentString = print(PublicationsTagsDocument);
 const ValidatePublicationMetadataDocumentString = print(ValidatePublicationMetadataDocument);
@@ -1113,7 +1058,7 @@ const MirrorOnMomokaDocumentString = print(MirrorOnMomokaDocument);
 const QuoteOnMomokaDocumentString = print(QuoteOnMomokaDocument);
 const HidePublicationDocumentString = print(HidePublicationDocument);
 const ReportPublicationDocumentString = print(ReportPublicationDocument);
-const LegacyCollectPublicationDocumentString = print(LegacyCollectPublicationDocument);
+const LegacyCollectDocumentString = print(LegacyCollectDocument);
 const CreateLegacyCollectTypedDataDocumentString = print(CreateLegacyCollectTypedDataDocument);
 const RefreshPublicationMetadataDocumentString = print(RefreshPublicationMetadataDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
@@ -1129,25 +1074,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'Publication',
-        'query',
-      );
-    },
-    PublicationStats(
-      variables: PublicationStatsQueryVariables,
-      requestHeaders?: GraphQLClientRequestHeaders,
-    ): Promise<{
-      data: PublicationStatsQuery;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<PublicationStatsQuery>(PublicationStatsDocumentString, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'PublicationStats',
         'query',
       );
     },
@@ -1559,23 +1485,22 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'mutation',
       );
     },
-    LegacyCollectPublication(
-      variables: LegacyCollectPublicationMutationVariables,
+    LegacyCollect(
+      variables: LegacyCollectMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
     ): Promise<{
-      data: LegacyCollectPublicationMutation;
+      data: LegacyCollectMutation;
       extensions?: any;
       headers: Dom.Headers;
       status: number;
     }> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.rawRequest<LegacyCollectPublicationMutation>(
-            LegacyCollectPublicationDocumentString,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'LegacyCollectPublication',
+          client.rawRequest<LegacyCollectMutation>(LegacyCollectDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'LegacyCollect',
         'mutation',
       );
     },

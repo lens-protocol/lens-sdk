@@ -1215,10 +1215,11 @@ export type PublicationSearchRequest = {
 export type PublicationSearchWhere = {
   customFilters?: InputMaybe<Array<CustomFiltersType>>;
   metadata?: InputMaybe<PublicationMetadataFilters>;
+  publicationTypes?: InputMaybe<Array<SearchPublicationType>>;
 };
 
 export type PublicationStatsCountOpenActionArgs = {
-  anyOf: Array<OpenActionFilter>;
+  anyOf?: InputMaybe<Array<OpenActionFilter>>;
 };
 
 export type PublicationStatsInput = {
@@ -1391,6 +1392,12 @@ export type RevenueFromPublicationsRequest = {
   /** Will return revenue for publications made on any of the provided app ids. Will include all apps if omitted */
   publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
 };
+
+export enum SearchPublicationType {
+  Comment = 'COMMENT',
+  Post = 'POST',
+  Quote = 'QUOTE',
+}
 
 export type SensitiveReasonInput = {
   reason: PublicationReportingReason;

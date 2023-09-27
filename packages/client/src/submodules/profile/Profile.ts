@@ -34,7 +34,7 @@ import type {
 } from '../../graphql/types.generated';
 import {
   PaginatedResult,
-  buildImageTransformsFromConfig,
+  buildRequestFromConfig,
   buildPaginatedQueryResult,
   requireAuthHeaders,
   sdkAuthHeaderWrapper,
@@ -51,11 +51,10 @@ import {
   CreateUnblockProfilesBroadcastItemResultFragment,
   CreateUnfollowBroadcastItemResultFragment,
   ProfileManagerFragment,
-  ProfileStatsFragment,
-  ProfileStatsQueryVariables,
   Sdk,
   getSdk,
 } from './graphql/profile.generated';
+import { FetchProfileOptions } from './types';
 
 /**
  * Profiles are the accounts that create publications and are owned by wallets
@@ -80,6 +79,7 @@ export class Profile {
    * Fetch a single profile.
    *
    * @param request - Request object for the query
+   * @param options - Additional options for the query
    * @returns Profile or null if not found
    *
    * @example
@@ -89,10 +89,14 @@ export class Profile {
    * });
    * ```
    */
-  async fetch(request: ProfileRequest): Promise<ProfileFragment | null> {
+  async fetch(
+    request: ProfileRequest,
+    options?: FetchProfileOptions,
+  ): Promise<ProfileFragment | null> {
     const result = await this.sdk.Profile({
       request,
-      ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+      ...buildRequestFromConfig(this.config),
+      ...options,
     });
 
     return result.data.result;
@@ -102,6 +106,7 @@ export class Profile {
    * Fetch all profiles by requested criteria
    *
    * @param request - Request object for the query
+   * @param options - Additional options for the query
    * @returns Profiles wrapped in {@link PaginatedResult}
    *
    * @example
@@ -113,48 +118,19 @@ export class Profile {
    * });
    * ```
    */
-  async fetchAll(request: ProfilesRequest): Promise<PaginatedResult<ProfileFragment>> {
+  async fetchAll(
+    request: ProfilesRequest,
+    options?: FetchProfileOptions,
+  ): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Profiles({
         request: currRequest,
-        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        ...buildRequestFromConfig(this.config),
+        ...options,
       });
 
       return result.data.result;
     }, request);
-  }
-
-  /**
-   * Fetches a profile's stats
-   *
-   * @param variables - Object defining all variables for the query
-   * @returns Profile stats or undefined if not found
-   *
-   * @example
-   * ```ts
-   * const result = await client.profile.stats({
-   *   request: {
-   *     forProfileId: '0x01',
-   *   },
-   * });
-   * ```
-   */
-  async stats(variables: ProfileStatsQueryVariables): Promise<ProfileStatsFragment | undefined> {
-    const {
-      request,
-      profileStatsArg = {
-        forApps: this.config.forApps,
-      },
-      profileStatsCountOpenActionArgs = { anyOf: [] },
-    } = variables;
-
-    const result = await this.sdk.ProfileStats({
-      request,
-      profileStatsArg,
-      profileStatsCountOpenActionArgs,
-    });
-
-    return result.data.result?.stats;
   }
 
   /**
@@ -201,7 +177,7 @@ export class Profile {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.ProfileRecommendations({
         request: currRequest,
-        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        ...buildRequestFromConfig(this.config),
       });
 
       return result.data.result;
@@ -235,7 +211,7 @@ export class Profile {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Following({
         request: currRequest,
-        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        ...buildRequestFromConfig(this.config),
       });
 
       return result.data.result;
@@ -246,7 +222,7 @@ export class Profile {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Followers({
         request: currRequest,
-        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        ...buildRequestFromConfig(this.config),
       });
 
       return result.data.result;
@@ -273,7 +249,7 @@ export class Profile {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.MutualFollowers({
         request: currRequest,
-        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        ...buildRequestFromConfig(this.config),
       });
 
       return result.data.result;
@@ -299,7 +275,7 @@ export class Profile {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.WhoActedOnPublication({
         request: currRequest,
-        ...buildImageTransformsFromConfig(this.config.mediaTransforms),
+        ...buildRequestFromConfig(this.config),
       });
 
       return result.data.result;

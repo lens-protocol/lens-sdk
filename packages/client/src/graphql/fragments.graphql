@@ -191,6 +191,22 @@ fragment NftImage on NftImage {
   verified
 }
 
+fragment ProfileStats on ProfileStats {
+  id
+  followers
+  following
+  comments
+  posts
+  mirrors
+  quotes
+  publications
+  upvoteReactions: reactions(request: { type: UPVOTE })
+  downvoteReactions: reactions(request: { type: DOWNVOTE })
+  upvoteReacted: reacted(request: { type: UPVOTE })
+  downvoteReacted: reacted(request: { type: DOWNVOTE })
+  countOpenActions(request: $profileStatsCountOpenActionArgs)
+}
+
 fragment Profile on Profile {
   __typename
   id
@@ -277,6 +293,9 @@ fragment Profile on Profile {
   lensManager
   invitedBy {
     id
+  }
+  stats(request: $profileStatsArg) {
+    ...ProfileStats
   }
 }
 
@@ -1331,6 +1350,17 @@ fragment LiveStreamMetadataV3 on LiveStreamMetadataV3 {
 }
 
 # publication fragments
+fragment PublicationStats on PublicationStats {
+  id
+  comments
+  mirrors
+  quotes
+  bookmarks
+  upvoteReactions: reactions(request: { type: UPVOTE })
+  downvoteReactions: reactions(request: { type: DOWNVOTE })
+  countOpenActions(request: $publicationStatsCountOpenActionArgs)
+}
+
 fragment Post on Post {
   __typename
   id
@@ -1450,6 +1480,9 @@ fragment Post on Post {
     ... on UnknownReferenceModuleSettings {
       ...UnknownReferenceModuleSettings
     }
+  }
+  stats(request: $publicationStatsInput) {
+    ...PublicationStats
   }
 }
 
@@ -1593,6 +1626,9 @@ fragment Comment on Comment {
   }
   firstComment {
     ...CommentBase
+  }
+  stats(request: $publicationStatsInput) {
+    ...PublicationStats
   }
 }
 
@@ -1758,6 +1794,9 @@ fragment Quote on Quote {
     ... on Quote {
       ...QuoteBase
     }
+  }
+  stats(request: $publicationStatsInput) {
+    ...PublicationStats
   }
 }
 

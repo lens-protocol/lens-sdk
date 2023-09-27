@@ -101,6 +101,22 @@ export type NftImageFragment = {
   image: ProfilePictureSetFragment;
 };
 
+export type ProfileStatsFragment = {
+  id: string;
+  followers: number;
+  following: number;
+  comments: number;
+  posts: number;
+  mirrors: number;
+  quotes: number;
+  publications: number;
+  countOpenActions: number;
+  upvoteReactions: number;
+  downvoteReactions: number;
+  upvoteReacted: number;
+  downvoteReacted: number;
+};
+
 export type ProfileFragment = {
   __typename: 'Profile';
   id: string;
@@ -144,6 +160,7 @@ export type ProfileFragment = {
     attributes: Array<{ type: Types.AttributeType | null; key: string; value: string }>;
   } | null;
   invitedBy: { id: string } | null;
+  stats: ProfileStatsFragment;
 };
 
 export type PaginatedResultInfoFragment = { prev: string | null; next: string | null };
@@ -779,6 +796,17 @@ export type LiveStreamMetadataV3Fragment = {
   > | null;
 };
 
+export type PublicationStatsFragment = {
+  id: string;
+  comments: number;
+  mirrors: number;
+  quotes: number;
+  bookmarks: number;
+  countOpenActions: number;
+  upvoteReactions: number;
+  downvoteReactions: number;
+};
+
 export type PostFragment = {
   __typename: 'Post';
   id: string;
@@ -826,6 +854,7 @@ export type PostFragment = {
     | FollowOnlyReferenceModuleSettingsFragment
     | UnknownReferenceModuleSettingsFragment
     | null;
+  stats: PublicationStatsFragment;
 };
 
 export type CommentBaseFragment = {
@@ -881,6 +910,7 @@ export type CommentFragment = {
   root: PostFragment;
   commentOn: CommentBaseFragment | PostFragment | QuoteBaseFragment;
   firstComment: CommentBaseFragment | null;
+  stats: PublicationStatsFragment;
 } & CommentBaseFragment;
 
 export type MirrorFragment = {
@@ -946,6 +976,7 @@ export type QuoteBaseFragment = {
 
 export type QuoteFragment = {
   quoteOn: CommentBaseFragment | PostFragment | QuoteBaseFragment;
+  stats: PublicationStatsFragment;
 } & QuoteBaseFragment;
 
 export type Eip712TypedDataDomainFragment = {
@@ -1141,6 +1172,23 @@ export const ProfileCoverSetFragmentDoc = gql`
   }
   ${ImageFragmentDoc}
 `;
+export const ProfileStatsFragmentDoc = gql`
+  fragment ProfileStats on ProfileStats {
+    id
+    followers
+    following
+    comments
+    posts
+    mirrors
+    quotes
+    publications
+    upvoteReactions: reactions(request: { type: UPVOTE })
+    downvoteReactions: reactions(request: { type: DOWNVOTE })
+    upvoteReacted: reacted(request: { type: UPVOTE })
+    downvoteReacted: reacted(request: { type: DOWNVOTE })
+    countOpenActions(request: $profileStatsCountOpenActionArgs)
+  }
+`;
 export const ProfileFragmentDoc = gql`
   fragment Profile on Profile {
     __typename
@@ -1229,6 +1277,9 @@ export const ProfileFragmentDoc = gql`
     invitedBy {
       id
     }
+    stats(request: $profileStatsArg) {
+      ...ProfileStats
+    }
   }
   ${NetworkAddressFragmentDoc}
   ${OptimisticStatusResultFragmentDoc}
@@ -1238,6 +1289,7 @@ export const ProfileFragmentDoc = gql`
   ${ProfilePictureSetFragmentDoc}
   ${NftImageFragmentDoc}
   ${ProfileCoverSetFragmentDoc}
+  ${ProfileStatsFragmentDoc}
 `;
 export const KnownCollectOpenActionResultFragmentDoc = gql`
   fragment KnownCollectOpenActionResult on KnownCollectOpenActionResult {
@@ -2577,6 +2629,18 @@ export const UnknownReferenceModuleSettingsFragmentDoc = gql`
   }
   ${NetworkAddressFragmentDoc}
 `;
+export const PublicationStatsFragmentDoc = gql`
+  fragment PublicationStats on PublicationStats {
+    id
+    comments
+    mirrors
+    quotes
+    bookmarks
+    upvoteReactions: reactions(request: { type: UPVOTE })
+    downvoteReactions: reactions(request: { type: DOWNVOTE })
+    countOpenActions(request: $publicationStatsCountOpenActionArgs)
+  }
+`;
 export const PostFragmentDoc = gql`
   fragment Post on Post {
     __typename
@@ -2698,6 +2762,9 @@ export const PostFragmentDoc = gql`
         ...UnknownReferenceModuleSettings
       }
     }
+    stats(request: $publicationStatsInput) {
+      ...PublicationStats
+    }
   }
   ${AppFragmentDoc}
   ${MomokaInfoFragmentDoc}
@@ -2735,6 +2802,7 @@ export const PostFragmentDoc = gql`
   ${FollowOnlyReferenceModuleSettingsFragmentDoc}
   ${DegreesOfSeparationReferenceModuleSettingsFragmentDoc}
   ${UnknownReferenceModuleSettingsFragmentDoc}
+  ${PublicationStatsFragmentDoc}
 `;
 export const CommentBaseFragmentDoc = gql`
   fragment CommentBase on Comment {
@@ -3074,10 +3142,14 @@ export const CommentFragmentDoc = gql`
     firstComment {
       ...CommentBase
     }
+    stats(request: $publicationStatsInput) {
+      ...PublicationStats
+    }
   }
   ${CommentBaseFragmentDoc}
   ${PostFragmentDoc}
   ${QuoteBaseFragmentDoc}
+  ${PublicationStatsFragmentDoc}
 `;
 export const QuoteFragmentDoc = gql`
   fragment Quote on Quote {
@@ -3093,10 +3165,14 @@ export const QuoteFragmentDoc = gql`
         ...QuoteBase
       }
     }
+    stats(request: $publicationStatsInput) {
+      ...PublicationStats
+    }
   }
   ${QuoteBaseFragmentDoc}
   ${PostFragmentDoc}
   ${CommentBaseFragmentDoc}
+  ${PublicationStatsFragmentDoc}
 `;
 export const MirrorFragmentDoc = gql`
   fragment Mirror on Mirror {
