@@ -9,24 +9,17 @@ fragment PublicationValidateMetadataResult on PublicationValidateMetadataResult 
   reason
 }
 
-fragment PublicationStats on PublicationStats {
-  id
-  comments
-  mirrors
-  quotes
-  bookmarks
-  upvoteReactions: reactions(request: { type: UPVOTE })
-  downvoteReactions: reactions(request: { type: DOWNVOTE })
-  countOpenActions(request: $openActionsRequest)
-}
-
 # queries
 query Publication(
   $request: PublicationRequest!
   $publicationImageTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $publicationStatsInput: PublicationStatsInput! = {}
+  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
-  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: publication(request: $request) {
@@ -45,42 +38,16 @@ query Publication(
   }
 }
 
-query PublicationStats(
-  $request: PublicationRequest!
-  $statsRequest: PublicationStatsInput! = {}
-  $openActionsRequest: PublicationStatsCountOpenActionArgs! = { anyOf: [] }
-) {
-  result: publication(request: $request) {
-    ... on Post {
-      __typename
-      stats(request: $statsRequest) {
-        ...PublicationStats
-      }
-    }
-    ... on Comment {
-      __typename
-      stats(request: $statsRequest) {
-        ...PublicationStats
-      }
-    }
-    ... on Quote {
-      __typename
-      stats(request: $statsRequest) {
-        ...PublicationStats
-      }
-    }
-    ... on Mirror {
-      __typename
-    }
-  }
-}
-
 query Publications(
   $request: PublicationsRequest!
   $publicationImageTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $publicationStatsInput: PublicationStatsInput! = {}
+  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
-  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: publications(request: $request) {
@@ -507,7 +474,7 @@ mutation ReportPublication($request: ReportPublicationRequest!) {
   reportPublication(request: $request)
 }
 
-mutation LegacyCollectPublication($request: LegacyCollectRequest!) {
+mutation LegacyCollect($request: LegacyCollectRequest!) {
   result: legacyCollect(request: $request) {
     ... on RelaySuccess {
       ...RelaySuccess

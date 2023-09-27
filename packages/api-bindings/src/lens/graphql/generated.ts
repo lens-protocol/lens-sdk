@@ -1221,10 +1221,11 @@ export type PublicationSearchRequest = {
 export type PublicationSearchWhere = {
   customFilters?: InputMaybe<Array<CustomFiltersType>>;
   metadata?: InputMaybe<PublicationMetadataFilters>;
+  publicationTypes?: InputMaybe<Array<SearchPublicationType>>;
 };
 
 export type PublicationStatsCountOpenActionArgs = {
-  anyOf: Array<OpenActionFilter>;
+  anyOf?: InputMaybe<Array<OpenActionFilter>>;
 };
 
 export type PublicationStatsInput = {
@@ -1397,6 +1398,12 @@ export type RevenueFromPublicationsRequest = {
   /** Will return revenue for publications made on any of the provided app ids. Will include all apps if omitted */
   publishedOn?: InputMaybe<Array<Scalars['AppId']>>;
 };
+
+export enum SearchPublicationType {
+  Comment = 'COMMENT',
+  Post = 'POST',
+  Quote = 'QUOTE',
+}
 
 export type SensitiveReasonInput = {
   reason: PublicationReportingReason;
@@ -1644,6 +1651,22 @@ export type NftImage = {
   image: ProfilePictureSet;
 };
 
+export type ProfileStats = {
+  id: string;
+  followers: number;
+  following: number;
+  comments: number;
+  posts: number;
+  mirrors: number;
+  quotes: number;
+  publications: number;
+  countOpenActions: number;
+  upvoteReactions: number;
+  downvoteReactions: number;
+  upvoteReacted: number;
+  downvoteReacted: number;
+};
+
 export type Profile = {
   __typename: 'Profile';
   id: string;
@@ -1684,9 +1707,10 @@ export type Profile = {
     rawURI: string;
     picture: ProfilePictureSet | NftImage | null;
     coverPicture: ProfileCoverSet | null;
-    attributes: Array<{ type: AttributeType | null; key: string; value: string }>;
+    attributes: Array<{ type: AttributeType; key: string; value: string }>;
   } | null;
   invitedBy: { id: string } | null;
+  stats: ProfileStats;
 };
 
 export type PaginatedResultInfo = {
@@ -1859,8 +1883,67 @@ export type PublicationOperations = {
 };
 
 export type PublicationMetadataEncryptionStrategy = {
+  __typename: 'PublicationMetadataV3LitEncryption';
   encryptionKey: string;
-  accessCondition:
+  encryptedPaths: Array<string>;
+  accessCondition: RootCondition;
+};
+
+export type NftOwnershipCondition = {
+  __typename: 'NftOwnershipCondition';
+  contractType: NftContractType;
+  tokenIds: Array<string> | null;
+  contract: NetworkAddress;
+};
+
+export type Erc20OwnershipCondition = {
+  __typename: 'Erc20OwnershipCondition';
+  condition: ComparisonOperatorConditionType;
+  amount: Amount;
+};
+
+export type EoaOwnershipCondition = { __typename: 'EoaOwnershipCondition'; address: string };
+
+export type ProfileOwnershipCondition = {
+  __typename: 'ProfileOwnershipCondition';
+  profileId: string;
+};
+
+export type FollowCondition = { __typename: 'FollowCondition'; follow: string };
+
+export type CollectCondition = {
+  __typename: 'CollectCondition';
+  publicationId: string;
+  thisPublication: boolean;
+};
+
+export type AndCondition = {
+  __typename: 'AndCondition';
+  criteria: Array<
+    | CollectCondition
+    | EoaOwnershipCondition
+    | Erc20OwnershipCondition
+    | FollowCondition
+    | NftOwnershipCondition
+    | ProfileOwnershipCondition
+  >;
+};
+
+export type OrCondition = {
+  __typename: 'OrCondition';
+  criteria: Array<
+    | CollectCondition
+    | EoaOwnershipCondition
+    | Erc20OwnershipCondition
+    | FollowCondition
+    | NftOwnershipCondition
+    | ProfileOwnershipCondition
+  >;
+};
+
+export type RootCondition = {
+  __typename: 'RootCondition';
+  criteria: Array<
     | AndCondition
     | CollectCondition
     | EoaOwnershipCondition
@@ -1868,49 +1951,7 @@ export type PublicationMetadataEncryptionStrategy = {
     | FollowCondition
     | NftOwnershipCondition
     | OrCondition
-    | ProfileOwnershipCondition;
-};
-
-export type NftOwnershipCondition = {
-  contractType: NftContractType;
-  tokenIds: Array<string> | null;
-  contract: NetworkAddress;
-};
-
-export type Erc20OwnershipCondition = {
-  condition: ComparisonOperatorConditionType;
-  amount: Amount;
-};
-
-export type EoaOwnershipCondition = { address: string };
-
-export type ProfileOwnershipCondition = { profileId: string };
-
-export type FollowCondition = { follow: string };
-
-export type CollectCondition = { publicationId: string; thisPublication: boolean };
-
-export type AndCondition = {
-  criteria: Array<
-    | CollectCondition
-    | EoaOwnershipCondition
-    | Erc20OwnershipCondition
-    | FollowCondition
-    | NftOwnershipCondition
     | ProfileOwnershipCondition
-    | {}
-  >;
-};
-
-export type OrCondition = {
-  criteria: Array<
-    | CollectCondition
-    | EoaOwnershipCondition
-    | Erc20OwnershipCondition
-    | FollowCondition
-    | NftOwnershipCondition
-    | ProfileOwnershipCondition
-    | {}
   >;
 };
 
@@ -1991,15 +2032,7 @@ export type LegacyPublicationMetadata = {
         cover: string | null;
       }> | null;
     };
-    accessCondition:
-      | AndCondition
-      | CollectCondition
-      | EoaOwnershipCondition
-      | Erc20OwnershipCondition
-      | FollowCondition
-      | NftOwnershipCondition
-      | OrCondition
-      | ProfileOwnershipCondition;
+    accessCondition: RootCondition;
   } | null;
 };
 
@@ -2292,6 +2325,17 @@ export type LiveStreamMetadataV3 = {
   > | null;
 };
 
+export type PublicationStats = {
+  id: string;
+  comments: number;
+  mirrors: number;
+  quotes: number;
+  bookmarks: number;
+  countOpenActions: number;
+  upvoteReactions: number;
+  downvoteReactions: number;
+};
+
 export type Post = {
   __typename: 'Post';
   id: string;
@@ -2339,6 +2383,7 @@ export type Post = {
     | FollowOnlyReferenceModuleSettings
     | UnknownReferenceModuleSettings
     | null;
+  stats: PublicationStats;
 };
 
 export type CommentBase = {
@@ -2394,6 +2439,7 @@ export type Comment = {
   root: Post;
   commentOn: CommentBase | Post | QuoteBase;
   firstComment: CommentBase | null;
+  stats: PublicationStats;
 } & CommentBase;
 
 export type Mirror = {
@@ -2404,8 +2450,8 @@ export type Mirror = {
   createdAt: string;
   publishedOn: App | null;
   momoka: MomokaInfo | null;
-  mirrorOn: Comment | Post | Quote;
   by: Profile;
+  mirrorOn: Comment | Post | Quote;
 };
 
 export type QuoteBase = {
@@ -2457,7 +2503,10 @@ export type QuoteBase = {
     | null;
 };
 
-export type Quote = { quoteOn: CommentBase | Post | QuoteBase } & QuoteBase;
+export type Quote = {
+  quoteOn: CommentBase | Post | QuoteBase;
+  stats: PublicationStats;
+} & QuoteBase;
 
 export type Eip712TypedDataDomain = {
   name: string;
@@ -2504,53 +2553,411 @@ export type CreateMomokaPublicationResult = {
   momokaId: string;
 };
 
+export type ProfileManager = { address: string };
+
+export type CreateProfileWithHandleErrorResult = { reason: CreateProfileWithHandleErrorReasonType };
+
+export type CreateOnchainSetProfileMetadataBroadcastItemResult = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { SetProfileMetadataURI: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomain;
+    value: { nonce: string; deadline: string; profileId: string; metadataURI: string };
+  };
+};
+
+export type CreateChangeProfileManagersBroadcastItemResult = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { ChangeDelegatedExecutorsConfig: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomain;
+    value: {
+      nonce: string;
+      deadline: string;
+      delegatorProfileId: string;
+      delegatedExecutors: Array<string>;
+      approvals: Array<boolean>;
+      configNumber: number;
+      switchToGivenConfig: boolean;
+    };
+  };
+};
+
+export type CreateBlockProfilesBroadcastItemResult = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { SetBlockStatus: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomain;
+    value: {
+      nonce: string;
+      deadline: string;
+      byProfileId: string;
+      idsOfProfilesToSetBlockStatus: Array<string>;
+      blockStatus: Array<boolean>;
+    };
+  };
+};
+
+export type CreateUnblockProfilesBroadcastItemResult = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { SetBlockStatus: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomain;
+    value: {
+      nonce: string;
+      deadline: string;
+      byProfileId: string;
+      idsOfProfilesToSetBlockStatus: Array<string>;
+      blockStatus: Array<boolean>;
+    };
+  };
+};
+
+export type CreateFollowBroadcastItemResult = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { Follow: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomain;
+    value: {
+      nonce: string;
+      deadline: string;
+      followerProfileId: string;
+      idsOfProfilesToFollow: Array<string>;
+      followTokenIds: Array<string>;
+      datas: Array<string>;
+    };
+  };
+};
+
+export type CreateUnfollowBroadcastItemResult = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { Unfollow: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomain;
+    value: {
+      nonce: string;
+      deadline: string;
+      unfollowerProfileId: string;
+      idsOfProfilesToUnfollow: Array<string>;
+    };
+  };
+};
+
+export type CreateSetFollowModuleBroadcastItemResult = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { SetFollowModule: Array<{ name: string; type: string }> };
+    domain: Eip712TypedDataDomain;
+    value: {
+      nonce: string;
+      deadline: string;
+      profileId: string;
+      followModule: string;
+      followModuleInitData: string;
+    };
+  };
+};
+
+export type CreateHandleLinkToProfileBroadcastItemResult = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { Link: Array<Eip712TypedDataField> };
+    domain: Eip712TypedDataDomain;
+    value: { nonce: string; deadline: string; profileId: string; handleId: string };
+  };
+};
+
+export type CreateHandleUnlinkFromProfileBroadcastItemResult = {
+  id: string;
+  expiresAt: string;
+  typedData: {
+    types: { Unlink: Array<Eip712TypedDataField> };
+    domain: Eip712TypedDataDomain;
+    value: { nonce: string; deadline: string; profileId: string; handleId: string };
+  };
+};
+
+export type ProfileVariables = Exact<{
+  request: ProfileRequest;
+  profileCoverTransform?: InputMaybe<ImageTransform>;
+  profilePictureTransform?: InputMaybe<ImageTransform>;
+  profileStatsArg?: InputMaybe<ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
+  rateRequest?: InputMaybe<RateRequest>;
+}>;
+
+export type ProfileData = { result: Profile | null };
+
+export type ProfilesVariables = Exact<{
+  request: ProfilesRequest;
+  profileCoverTransform?: InputMaybe<ImageTransform>;
+  profilePictureTransform?: InputMaybe<ImageTransform>;
+  profileStatsArg?: InputMaybe<ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
+  rateRequest?: InputMaybe<RateRequest>;
+}>;
+
+export type ProfilesData = { result: { items: Array<Profile>; pageInfo: PaginatedResultInfo } };
+
+export type ProfileManagersVariables = Exact<{
+  request: ProfileManagersRequest;
+}>;
+
+export type ProfileManagersData = {
+  result: { items: Array<ProfileManager>; pageInfo: PaginatedResultInfo };
+};
+
+export type ProfileRecommendationsVariables = Exact<{
+  request: ProfileRecommendationsRequest;
+  profileCoverTransform?: InputMaybe<ImageTransform>;
+  profilePictureTransform?: InputMaybe<ImageTransform>;
+  profileStatsArg?: InputMaybe<ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
+  rateRequest?: InputMaybe<RateRequest>;
+}>;
+
+export type ProfileRecommendationsData = {
+  result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
+};
+
+export type FollowingVariables = Exact<{
+  request: FollowingRequest;
+  profileCoverTransform?: InputMaybe<ImageTransform>;
+  profilePictureTransform?: InputMaybe<ImageTransform>;
+  profileStatsArg?: InputMaybe<ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
+  rateRequest?: InputMaybe<RateRequest>;
+}>;
+
+export type FollowingData = { result: { items: Array<Profile>; pageInfo: PaginatedResultInfo } };
+
+export type FollowersVariables = Exact<{
+  request: FollowersRequest;
+  profileCoverTransform?: InputMaybe<ImageTransform>;
+  profilePictureTransform?: InputMaybe<ImageTransform>;
+  profileStatsArg?: InputMaybe<ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
+  rateRequest?: InputMaybe<RateRequest>;
+}>;
+
+export type FollowersData = { result: { items: Array<Profile>; pageInfo: PaginatedResultInfo } };
+
+export type MutualFollowersVariables = Exact<{
+  request: MutualFollowersRequest;
+  profileCoverTransform?: InputMaybe<ImageTransform>;
+  profilePictureTransform?: InputMaybe<ImageTransform>;
+  profileStatsArg?: InputMaybe<ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
+  rateRequest?: InputMaybe<RateRequest>;
+}>;
+
+export type MutualFollowersData = {
+  result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
+};
+
+export type WhoActedOnPublicationVariables = Exact<{
+  request: WhoActedOnPublicationRequest;
+  profileCoverTransform?: InputMaybe<ImageTransform>;
+  profilePictureTransform?: InputMaybe<ImageTransform>;
+  profileStatsArg?: InputMaybe<ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
+  rateRequest?: InputMaybe<RateRequest>;
+}>;
+
+export type WhoActedOnPublicationData = {
+  result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
+};
+
+export type ClaimProfileVariables = Exact<{
+  request: ClaimProfileRequest;
+}>;
+
+export type ClaimProfileData = { result: CreateProfileWithHandleErrorResult | RelaySuccess };
+
+export type CreateProfileWithHandleVariables = Exact<{
+  request: CreateProfileWithHandleRequest;
+}>;
+
+export type CreateProfileWithHandleData = {
+  result: CreateProfileWithHandleErrorResult | RelaySuccess;
+};
+
+export type AddProfileInterestsVariables = Exact<{
+  request: ProfileInterestsRequest;
+}>;
+
+export type AddProfileInterestsData = { result: string | null };
+
+export type RemoveProfileInterestsVariables = Exact<{
+  request: ProfileInterestsRequest;
+}>;
+
+export type RemoveProfileInterestsData = { result: string | null };
+
+export type SetProfileMetadataVariables = Exact<{
+  request: OnchainSetProfileMetadataRequest;
+}>;
+
+export type SetProfileMetadataData = { result: LensProfileManagerRelayError | RelaySuccess };
+
+export type BlockVariables = Exact<{
+  request: BlockRequest;
+}>;
+
+export type BlockData = { result: LensProfileManagerRelayError | RelaySuccess };
+
+export type UnblockVariables = Exact<{
+  request: UnblockRequest;
+}>;
+
+export type UnblockData = { result: LensProfileManagerRelayError | RelaySuccess };
+
+export type FollowVariables = Exact<{
+  request: FollowLensManagerRequest;
+}>;
+
+export type FollowData = { result: LensProfileManagerRelayError | RelaySuccess };
+
+export type UnfollowVariables = Exact<{
+  request: UnfollowRequest;
+}>;
+
+export type UnfollowData = { result: LensProfileManagerRelayError | RelaySuccess };
+
+export type DismissRecommendedProfilesVariables = Exact<{
+  request: DismissRecommendedProfilesRequest;
+}>;
+
+export type DismissRecommendedProfilesData = { result: string | null };
+
+export type CreateOnchainSetProfileMetadataTypedDataVariables = Exact<{
+  request: OnchainSetProfileMetadataRequest;
+  options?: InputMaybe<TypedDataOptions>;
+}>;
+
+export type CreateOnchainSetProfileMetadataTypedDataData = {
+  result: CreateOnchainSetProfileMetadataBroadcastItemResult;
+};
+
+export type CreateChangeProfileManagersTypedDataVariables = Exact<{
+  request: ChangeProfileManagersRequest;
+  options?: InputMaybe<TypedDataOptions>;
+}>;
+
+export type CreateChangeProfileManagersTypedDataData = {
+  result: CreateChangeProfileManagersBroadcastItemResult;
+};
+
+export type CreateBlockProfilesTypedDataVariables = Exact<{
+  request: BlockRequest;
+  options?: InputMaybe<TypedDataOptions>;
+}>;
+
+export type CreateBlockProfilesTypedDataData = { result: CreateBlockProfilesBroadcastItemResult };
+
+export type CreateUnblockProfilesTypedDataVariables = Exact<{
+  request: UnblockRequest;
+  options?: InputMaybe<TypedDataOptions>;
+}>;
+
+export type CreateUnblockProfilesTypedDataData = {
+  result: CreateUnblockProfilesBroadcastItemResult;
+};
+
+export type CreateFollowTypedDataVariables = Exact<{
+  request: FollowRequest;
+  options?: InputMaybe<TypedDataOptions>;
+}>;
+
+export type CreateFollowTypedDataData = { result: CreateFollowBroadcastItemResult };
+
+export type CreateUnfollowTypedDataVariables = Exact<{
+  request: UnfollowRequest;
+  options?: InputMaybe<TypedDataOptions>;
+}>;
+
+export type CreateUnfollowTypedDataData = { result: CreateUnfollowBroadcastItemResult };
+
+export type SetFollowModuleVariables = Exact<{
+  request: SetFollowModuleRequest;
+}>;
+
+export type SetFollowModuleData = { result: LensProfileManagerRelayError | RelaySuccess };
+
+export type CreateSetFollowModuleTypedDataVariables = Exact<{
+  request: SetFollowModuleRequest;
+  options?: InputMaybe<TypedDataOptions>;
+}>;
+
+export type CreateSetFollowModuleTypedDataData = {
+  result: CreateSetFollowModuleBroadcastItemResult;
+};
+
+export type HandleLinkToProfileVariables = Exact<{
+  request: HandleLinkToProfileRequest;
+}>;
+
+export type HandleLinkToProfileData = { result: LensProfileManagerRelayError | RelaySuccess };
+
+export type HandleUnlinkFromProfileVariables = Exact<{
+  request: HandleUnlinkFromProfileRequest;
+}>;
+
+export type HandleUnlinkFromProfileData = { result: LensProfileManagerRelayError | RelaySuccess };
+
+export type CreateHandleLinkToProfileTypedDataVariables = Exact<{
+  request: HandleLinkToProfileRequest;
+}>;
+
+export type CreateHandleLinkToProfileTypedDataData = {
+  result: CreateHandleLinkToProfileBroadcastItemResult;
+};
+
+export type CreateHandleUnlinkFromProfileTypedDataVariables = Exact<{
+  request: HandleUnlinkFromProfileRequest;
+}>;
+
+export type CreateHandleUnlinkFromProfileTypedDataData = {
+  result: CreateHandleUnlinkFromProfileBroadcastItemResult;
+};
+
 export type TagResult = { tag: string; total: number };
 
 export type PublicationValidateMetadataResult = { valid: boolean; reason: string | null };
 
-export type PublicationStats = {
-  id: string;
-  comments: number;
-  mirrors: number;
-  quotes: number;
-  bookmarks: number;
-  countOpenActions: number;
-  upvoteReactions: number;
-  downvoteReactions: number;
-};
-
 export type PublicationVariables = Exact<{
   request: PublicationRequest;
   publicationImageTransform?: InputMaybe<ImageTransform>;
+  publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
+  publicationStatsInput?: PublicationStatsInput;
+  publicationStatsCountOpenActionArgs?: PublicationStatsCountOpenActionArgs;
   profileCoverTransform?: InputMaybe<ImageTransform>;
   profilePictureTransform?: InputMaybe<ImageTransform>;
-  publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
+  profileStatsArg?: InputMaybe<ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
   rateRequest?: InputMaybe<RateRequest>;
 }>;
 
 export type PublicationData = { result: Comment | Mirror | Post | Quote | null };
 
-export type PublicationStatsVariables = Exact<{
-  request: PublicationRequest;
-  statsRequest?: PublicationStatsInput;
-  openActionsRequest?: PublicationStatsCountOpenActionArgs;
-}>;
-
-export type PublicationStatsData = {
-  result:
-    | { __typename: 'Comment'; stats: PublicationStats }
-    | { __typename: 'Mirror' }
-    | { __typename: 'Post'; stats: PublicationStats }
-    | { __typename: 'Quote'; stats: PublicationStats }
-    | null;
-};
-
 export type PublicationsVariables = Exact<{
   request: PublicationsRequest;
   publicationImageTransform?: InputMaybe<ImageTransform>;
+  publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
+  publicationStatsInput?: PublicationStatsInput;
+  publicationStatsCountOpenActionArgs?: PublicationStatsCountOpenActionArgs;
   profileCoverTransform?: InputMaybe<ImageTransform>;
   profilePictureTransform?: InputMaybe<ImageTransform>;
-  publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
+  profileStatsArg?: InputMaybe<ProfileStatsArg>;
+  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
   rateRequest?: InputMaybe<RateRequest>;
 }>;
 
@@ -2872,11 +3279,11 @@ export type ReportPublicationVariables = Exact<{
 
 export type ReportPublicationData = { reportPublication: string | null };
 
-export type LegacyCollectPublicationVariables = Exact<{
+export type LegacyCollectVariables = Exact<{
   request: LegacyCollectRequest;
 }>;
 
-export type LegacyCollectPublicationData = { result: LensProfileManagerRelayError | RelaySuccess };
+export type LegacyCollectData = { result: LensProfileManagerRelayError | RelaySuccess };
 
 export type CreateLegacyCollectTypedDataVariables = Exact<{
   request: LegacyCollectRequest;
@@ -3048,6 +3455,23 @@ export const FragmentProfileCoverSet = /*#__PURE__*/ gql`
   }
   ${FragmentImage}
 `;
+export const FragmentProfileStats = /*#__PURE__*/ gql`
+  fragment ProfileStats on ProfileStats {
+    id
+    followers
+    following
+    comments
+    posts
+    mirrors
+    quotes
+    publications
+    upvoteReactions: reactions(request: { type: UPVOTE })
+    downvoteReactions: reactions(request: { type: DOWNVOTE })
+    upvoteReacted: reacted(request: { type: UPVOTE })
+    downvoteReacted: reacted(request: { type: DOWNVOTE })
+    countOpenActions(request: $profileStatsCountOpenActionArgs)
+  }
+`;
 export const FragmentProfile = /*#__PURE__*/ gql`
   fragment Profile on Profile {
     __typename
@@ -3136,6 +3560,9 @@ export const FragmentProfile = /*#__PURE__*/ gql`
     invitedBy {
       id
     }
+    stats(request: $profileStatsArg) {
+      ...ProfileStats
+    }
   }
   ${FragmentNetworkAddress}
   ${FragmentOptimisticStatusResult}
@@ -3145,6 +3572,7 @@ export const FragmentProfile = /*#__PURE__*/ gql`
   ${FragmentProfilePictureSet}
   ${FragmentNftImage}
   ${FragmentProfileCoverSet}
+  ${FragmentProfileStats}
 `;
 export const FragmentKnownCollectOpenActionResult = /*#__PURE__*/ gql`
   fragment KnownCollectOpenActionResult on KnownCollectOpenActionResult {
@@ -3310,6 +3738,7 @@ export const FragmentMarketplaceMetadata = /*#__PURE__*/ gql`
 `;
 export const FragmentNftOwnershipCondition = /*#__PURE__*/ gql`
   fragment NftOwnershipCondition on NftOwnershipCondition {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -3320,6 +3749,7 @@ export const FragmentNftOwnershipCondition = /*#__PURE__*/ gql`
 `;
 export const FragmentErc20OwnershipCondition = /*#__PURE__*/ gql`
   fragment Erc20OwnershipCondition on Erc20OwnershipCondition {
+    __typename
     amount {
       ...Amount
     }
@@ -3329,27 +3759,32 @@ export const FragmentErc20OwnershipCondition = /*#__PURE__*/ gql`
 `;
 export const FragmentEoaOwnershipCondition = /*#__PURE__*/ gql`
   fragment EoaOwnershipCondition on EoaOwnershipCondition {
+    __typename
     address
   }
 `;
 export const FragmentProfileOwnershipCondition = /*#__PURE__*/ gql`
   fragment ProfileOwnershipCondition on ProfileOwnershipCondition {
+    __typename
     profileId
   }
 `;
 export const FragmentFollowCondition = /*#__PURE__*/ gql`
   fragment FollowCondition on FollowCondition {
+    __typename
     follow
   }
 `;
 export const FragmentCollectCondition = /*#__PURE__*/ gql`
   fragment CollectCondition on CollectCondition {
+    __typename
     publicationId
     thisPublication
   }
 `;
 export const FragmentAndCondition = /*#__PURE__*/ gql`
   fragment AndCondition on AndCondition {
+    __typename
     criteria {
       ... on NftOwnershipCondition {
         ...NftOwnershipCondition
@@ -3380,6 +3815,7 @@ export const FragmentAndCondition = /*#__PURE__*/ gql`
 `;
 export const FragmentOrCondition = /*#__PURE__*/ gql`
   fragment OrCondition on OrCondition {
+    __typename
     criteria {
       ... on NftOwnershipCondition {
         ...NftOwnershipCondition
@@ -3407,6 +3843,45 @@ export const FragmentOrCondition = /*#__PURE__*/ gql`
   ${FragmentProfileOwnershipCondition}
   ${FragmentFollowCondition}
   ${FragmentCollectCondition}
+`;
+export const FragmentRootCondition = /*#__PURE__*/ gql`
+  fragment RootCondition on RootCondition {
+    __typename
+    criteria {
+      ... on NftOwnershipCondition {
+        ...NftOwnershipCondition
+      }
+      ... on Erc20OwnershipCondition {
+        ...Erc20OwnershipCondition
+      }
+      ... on EoaOwnershipCondition {
+        ...EoaOwnershipCondition
+      }
+      ... on ProfileOwnershipCondition {
+        ...ProfileOwnershipCondition
+      }
+      ... on FollowCondition {
+        ...FollowCondition
+      }
+      ... on CollectCondition {
+        ...CollectCondition
+      }
+      ... on AndCondition {
+        ...AndCondition
+      }
+      ... on OrCondition {
+        ...OrCondition
+      }
+    }
+  }
+  ${FragmentNftOwnershipCondition}
+  ${FragmentErc20OwnershipCondition}
+  ${FragmentEoaOwnershipCondition}
+  ${FragmentProfileOwnershipCondition}
+  ${FragmentFollowCondition}
+  ${FragmentCollectCondition}
+  ${FragmentAndCondition}
+  ${FragmentOrCondition}
 `;
 export const FragmentLegacyPublicationMetadata = /*#__PURE__*/ gql`
   fragment LegacyPublicationMetadata on LegacyPublicationMetadata {
@@ -3444,30 +3919,7 @@ export const FragmentLegacyPublicationMetadata = /*#__PURE__*/ gql`
         externalUrl
       }
       accessCondition {
-        ... on NftOwnershipCondition {
-          ...NftOwnershipCondition
-        }
-        ... on Erc20OwnershipCondition {
-          ...Erc20OwnershipCondition
-        }
-        ... on EoaOwnershipCondition {
-          ...EoaOwnershipCondition
-        }
-        ... on ProfileOwnershipCondition {
-          ...ProfileOwnershipCondition
-        }
-        ... on FollowCondition {
-          ...FollowCondition
-        }
-        ... on CollectCondition {
-          ...CollectCondition
-        }
-        ... on AndCondition {
-          ...AndCondition
-        }
-        ... on OrCondition {
-          ...OrCondition
-        }
+        ...RootCondition
       }
     }
   }
@@ -3475,53 +3927,18 @@ export const FragmentLegacyPublicationMetadata = /*#__PURE__*/ gql`
   ${FragmentLegacyImageItem}
   ${FragmentLegacyVideoItem}
   ${FragmentMarketplaceMetadata}
-  ${FragmentNftOwnershipCondition}
-  ${FragmentErc20OwnershipCondition}
-  ${FragmentEoaOwnershipCondition}
-  ${FragmentProfileOwnershipCondition}
-  ${FragmentFollowCondition}
-  ${FragmentCollectCondition}
-  ${FragmentAndCondition}
-  ${FragmentOrCondition}
+  ${FragmentRootCondition}
 `;
 export const FragmentPublicationMetadataEncryptionStrategy = /*#__PURE__*/ gql`
   fragment PublicationMetadataEncryptionStrategy on PublicationMetadataV3LitEncryption {
+    __typename
     encryptionKey
     accessCondition {
-      ... on NftOwnershipCondition {
-        ...NftOwnershipCondition
-      }
-      ... on Erc20OwnershipCondition {
-        ...Erc20OwnershipCondition
-      }
-      ... on EoaOwnershipCondition {
-        ...EoaOwnershipCondition
-      }
-      ... on ProfileOwnershipCondition {
-        ...ProfileOwnershipCondition
-      }
-      ... on FollowCondition {
-        ...FollowCondition
-      }
-      ... on CollectCondition {
-        ...CollectCondition
-      }
-      ... on AndCondition {
-        ...AndCondition
-      }
-      ... on OrCondition {
-        ...OrCondition
-      }
+      ...RootCondition
     }
+    encryptedPaths
   }
-  ${FragmentNftOwnershipCondition}
-  ${FragmentErc20OwnershipCondition}
-  ${FragmentEoaOwnershipCondition}
-  ${FragmentProfileOwnershipCondition}
-  ${FragmentFollowCondition}
-  ${FragmentCollectCondition}
-  ${FragmentAndCondition}
-  ${FragmentOrCondition}
+  ${FragmentRootCondition}
 `;
 export const FragmentEncryptableAudio = /*#__PURE__*/ gql`
   fragment EncryptableAudio on EncryptableAudio {
@@ -4484,6 +4901,18 @@ export const FragmentUnknownReferenceModuleSettings = /*#__PURE__*/ gql`
   }
   ${FragmentNetworkAddress}
 `;
+export const FragmentPublicationStats = /*#__PURE__*/ gql`
+  fragment PublicationStats on PublicationStats {
+    id
+    comments
+    mirrors
+    quotes
+    bookmarks
+    upvoteReactions: reactions(request: { type: UPVOTE })
+    downvoteReactions: reactions(request: { type: DOWNVOTE })
+    countOpenActions(request: $publicationStatsCountOpenActionArgs)
+  }
+`;
 export const FragmentPost = /*#__PURE__*/ gql`
   fragment Post on Post {
     __typename
@@ -4605,6 +5034,9 @@ export const FragmentPost = /*#__PURE__*/ gql`
         ...UnknownReferenceModuleSettings
       }
     }
+    stats(request: $publicationStatsInput) {
+      ...PublicationStats
+    }
   }
   ${FragmentApp}
   ${FragmentMomokaInfo}
@@ -4642,6 +5074,7 @@ export const FragmentPost = /*#__PURE__*/ gql`
   ${FragmentFollowOnlyReferenceModuleSettings}
   ${FragmentDegreesOfSeparationReferenceModuleSettings}
   ${FragmentUnknownReferenceModuleSettings}
+  ${FragmentPublicationStats}
 `;
 export const FragmentCommentBase = /*#__PURE__*/ gql`
   fragment CommentBase on Comment {
@@ -4981,10 +5414,14 @@ export const FragmentComment = /*#__PURE__*/ gql`
     firstComment {
       ...CommentBase
     }
+    stats(request: $publicationStatsInput) {
+      ...PublicationStats
+    }
   }
   ${FragmentCommentBase}
   ${FragmentPost}
   ${FragmentQuoteBase}
+  ${FragmentPublicationStats}
 `;
 export const FragmentQuote = /*#__PURE__*/ gql`
   fragment Quote on Quote {
@@ -5000,10 +5437,14 @@ export const FragmentQuote = /*#__PURE__*/ gql`
         ...QuoteBase
       }
     }
+    stats(request: $publicationStatsInput) {
+      ...PublicationStats
+    }
   }
   ${FragmentQuoteBase}
   ${FragmentPost}
   ${FragmentCommentBase}
+  ${FragmentPublicationStats}
 `;
 export const FragmentMirror = /*#__PURE__*/ gql`
   fragment Mirror on Mirror {
@@ -5018,6 +5459,9 @@ export const FragmentMirror = /*#__PURE__*/ gql`
     }
     txHash
     createdAt
+    by {
+      ...Profile
+    }
     mirrorOn {
       ... on Post {
         ...Post
@@ -5029,16 +5473,13 @@ export const FragmentMirror = /*#__PURE__*/ gql`
         ...Quote
       }
     }
-    by {
-      ...Profile
-    }
   }
   ${FragmentApp}
   ${FragmentMomokaInfo}
+  ${FragmentProfile}
   ${FragmentPost}
   ${FragmentComment}
   ${FragmentQuote}
-  ${FragmentProfile}
 `;
 export const FragmentRelaySuccess = /*#__PURE__*/ gql`
   fragment RelaySuccess on RelaySuccess {
@@ -5067,6 +5508,254 @@ export const FragmentCreateMomokaPublicationResult = /*#__PURE__*/ gql`
     momokaId
   }
 `;
+export const FragmentProfileManager = /*#__PURE__*/ gql`
+  fragment ProfileManager on ProfilesManagedResult {
+    address
+  }
+`;
+export const FragmentCreateProfileWithHandleErrorResult = /*#__PURE__*/ gql`
+  fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
+    reason
+  }
+`;
+export const FragmentEip712TypedDataDomain = /*#__PURE__*/ gql`
+  fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
+    name
+    chainId
+    version
+    verifyingContract
+  }
+`;
+export const FragmentCreateOnchainSetProfileMetadataBroadcastItemResult = /*#__PURE__*/ gql`
+  fragment CreateOnchainSetProfileMetadataBroadcastItemResult on CreateOnchainSetProfileMetadataBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetProfileMetadataURI {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        metadataURI
+      }
+    }
+  }
+  ${FragmentEip712TypedDataDomain}
+`;
+export const FragmentCreateChangeProfileManagersBroadcastItemResult = /*#__PURE__*/ gql`
+  fragment CreateChangeProfileManagersBroadcastItemResult on CreateChangeProfileManagersBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        ChangeDelegatedExecutorsConfig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        delegatorProfileId
+        delegatedExecutors
+        approvals
+        configNumber
+        switchToGivenConfig
+      }
+    }
+  }
+  ${FragmentEip712TypedDataDomain}
+`;
+export const FragmentCreateBlockProfilesBroadcastItemResult = /*#__PURE__*/ gql`
+  fragment CreateBlockProfilesBroadcastItemResult on CreateBlockProfilesBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetBlockStatus {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        byProfileId
+        idsOfProfilesToSetBlockStatus
+        blockStatus
+      }
+    }
+  }
+  ${FragmentEip712TypedDataDomain}
+`;
+export const FragmentCreateUnblockProfilesBroadcastItemResult = /*#__PURE__*/ gql`
+  fragment CreateUnblockProfilesBroadcastItemResult on CreateUnblockProfilesBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetBlockStatus {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        byProfileId
+        idsOfProfilesToSetBlockStatus
+        blockStatus
+      }
+    }
+  }
+  ${FragmentEip712TypedDataDomain}
+`;
+export const FragmentCreateFollowBroadcastItemResult = /*#__PURE__*/ gql`
+  fragment CreateFollowBroadcastItemResult on CreateFollowBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        Follow {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        followerProfileId
+        idsOfProfilesToFollow
+        followTokenIds
+        datas
+      }
+    }
+  }
+  ${FragmentEip712TypedDataDomain}
+`;
+export const FragmentCreateUnfollowBroadcastItemResult = /*#__PURE__*/ gql`
+  fragment CreateUnfollowBroadcastItemResult on CreateUnfollowBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        Unfollow {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        unfollowerProfileId
+        idsOfProfilesToUnfollow
+      }
+    }
+  }
+  ${FragmentEip712TypedDataDomain}
+`;
+export const FragmentCreateSetFollowModuleBroadcastItemResult = /*#__PURE__*/ gql`
+  fragment CreateSetFollowModuleBroadcastItemResult on CreateSetFollowModuleBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        SetFollowModule {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        followModule
+        followModuleInitData
+      }
+    }
+  }
+  ${FragmentEip712TypedDataDomain}
+`;
+export const FragmentEip712TypedDataField = /*#__PURE__*/ gql`
+  fragment EIP712TypedDataField on EIP712TypedDataField {
+    name
+    type
+  }
+`;
+export const FragmentCreateHandleLinkToProfileBroadcastItemResult = /*#__PURE__*/ gql`
+  fragment CreateHandleLinkToProfileBroadcastItemResult on CreateHandleLinkToProfileBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        Link {
+          ...EIP712TypedDataField
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        handleId
+      }
+    }
+  }
+  ${FragmentEip712TypedDataField}
+  ${FragmentEip712TypedDataDomain}
+`;
+export const FragmentCreateHandleUnlinkFromProfileBroadcastItemResult = /*#__PURE__*/ gql`
+  fragment CreateHandleUnlinkFromProfileBroadcastItemResult on CreateHandleUnlinkFromProfileBroadcastItemResult {
+    id
+    expiresAt
+    typedData {
+      types {
+        Unlink {
+          ...EIP712TypedDataField
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        handleId
+      }
+    }
+  }
+  ${FragmentEip712TypedDataField}
+  ${FragmentEip712TypedDataDomain}
+`;
 export const FragmentTagResult = /*#__PURE__*/ gql`
   fragment TagResult on TagResult {
     tag
@@ -5077,26 +5766,6 @@ export const FragmentPublicationValidateMetadataResult = /*#__PURE__*/ gql`
   fragment PublicationValidateMetadataResult on PublicationValidateMetadataResult {
     valid
     reason
-  }
-`;
-export const FragmentPublicationStats = /*#__PURE__*/ gql`
-  fragment PublicationStats on PublicationStats {
-    id
-    comments
-    mirrors
-    quotes
-    bookmarks
-    upvoteReactions: reactions(request: { type: UPVOTE })
-    downvoteReactions: reactions(request: { type: DOWNVOTE })
-    countOpenActions(request: $openActionsRequest)
-  }
-`;
-export const FragmentEip712TypedDataDomain = /*#__PURE__*/ gql`
-  fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
-    name
-    chainId
-    version
-    verifyingContract
   }
 `;
 export const FragmentCreateOnchainPostBroadcastItemResult = /*#__PURE__*/ gql`
@@ -5188,12 +5857,6 @@ export const FragmentCreateOnchainMirrorBroadcastItemResult = /*#__PURE__*/ gql`
     }
   }
   ${FragmentEip712TypedDataDomain}
-`;
-export const FragmentEip712TypedDataField = /*#__PURE__*/ gql`
-  fragment EIP712TypedDataField on EIP712TypedDataField {
-    name
-    type
-  }
 `;
 export const FragmentCreateOnchainQuoteBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateOnchainQuoteBroadcastItemResult on CreateOnchainQuoteBroadcastItemResult {
@@ -5553,13 +6216,1584 @@ export type AuthRefreshMutationOptions = Apollo.BaseMutationOptions<
   AuthRefreshData,
   AuthRefreshVariables
 >;
+export const ProfileDocument = /*#__PURE__*/ gql`
+  query Profile(
+    $request: ProfileRequest!
+    $profileCoverTransform: ImageTransform = {}
+    $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+    $rateRequest: RateRequest = { for: USD }
+  ) {
+    result: profile(request: $request) {
+      ...Profile
+    }
+  }
+  ${FragmentProfile}
+`;
+
+/**
+ * __useProfile__
+ *
+ * To run a query within a React component, call `useProfile` and pass it any options that fit your needs.
+ * When your component renders, `useProfile` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfile({
+ *   variables: {
+ *      request: // value for 'request'
+ *      profileCoverTransform: // value for 'profileCoverTransform'
+ *      profilePictureTransform: // value for 'profilePictureTransform'
+ *      profileStatsArg: // value for 'profileStatsArg'
+ *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
+ *      rateRequest: // value for 'rateRequest'
+ *   },
+ * });
+ */
+export function useProfile(baseOptions: Apollo.QueryHookOptions<ProfileData, ProfileVariables>) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfileData, ProfileVariables>(ProfileDocument, options);
+}
+export function useProfileLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<ProfileData, ProfileVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProfileData, ProfileVariables>(ProfileDocument, options);
+}
+export type ProfileHookResult = ReturnType<typeof useProfile>;
+export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>;
+export type ProfileQueryResult = Apollo.QueryResult<ProfileData, ProfileVariables>;
+export const ProfilesDocument = /*#__PURE__*/ gql`
+  query Profiles(
+    $request: ProfilesRequest!
+    $profileCoverTransform: ImageTransform = {}
+    $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+    $rateRequest: RateRequest = { for: USD }
+  ) {
+    result: profiles(request: $request) {
+      items {
+        ...Profile
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentProfile}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __useProfiles__
+ *
+ * To run a query within a React component, call `useProfiles` and pass it any options that fit your needs.
+ * When your component renders, `useProfiles` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfiles({
+ *   variables: {
+ *      request: // value for 'request'
+ *      profileCoverTransform: // value for 'profileCoverTransform'
+ *      profilePictureTransform: // value for 'profilePictureTransform'
+ *      profileStatsArg: // value for 'profileStatsArg'
+ *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
+ *      rateRequest: // value for 'rateRequest'
+ *   },
+ * });
+ */
+export function useProfiles(baseOptions: Apollo.QueryHookOptions<ProfilesData, ProfilesVariables>) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfilesData, ProfilesVariables>(ProfilesDocument, options);
+}
+export function useProfilesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<ProfilesData, ProfilesVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProfilesData, ProfilesVariables>(ProfilesDocument, options);
+}
+export type ProfilesHookResult = ReturnType<typeof useProfiles>;
+export type ProfilesLazyQueryHookResult = ReturnType<typeof useProfilesLazyQuery>;
+export type ProfilesQueryResult = Apollo.QueryResult<ProfilesData, ProfilesVariables>;
+export const ProfileManagersDocument = /*#__PURE__*/ gql`
+  query ProfileManagers($request: ProfileManagersRequest!) {
+    result: profileManagers(request: $request) {
+      items {
+        ...ProfileManager
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentProfileManager}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __useProfileManagers__
+ *
+ * To run a query within a React component, call `useProfileManagers` and pass it any options that fit your needs.
+ * When your component renders, `useProfileManagers` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfileManagers({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useProfileManagers(
+  baseOptions: Apollo.QueryHookOptions<ProfileManagersData, ProfileManagersVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfileManagersData, ProfileManagersVariables>(
+    ProfileManagersDocument,
+    options,
+  );
+}
+export function useProfileManagersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<ProfileManagersData, ProfileManagersVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProfileManagersData, ProfileManagersVariables>(
+    ProfileManagersDocument,
+    options,
+  );
+}
+export type ProfileManagersHookResult = ReturnType<typeof useProfileManagers>;
+export type ProfileManagersLazyQueryHookResult = ReturnType<typeof useProfileManagersLazyQuery>;
+export type ProfileManagersQueryResult = Apollo.QueryResult<
+  ProfileManagersData,
+  ProfileManagersVariables
+>;
+export const ProfileRecommendationsDocument = /*#__PURE__*/ gql`
+  query ProfileRecommendations(
+    $request: ProfileRecommendationsRequest!
+    $profileCoverTransform: ImageTransform = {}
+    $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+    $rateRequest: RateRequest = { for: USD }
+  ) {
+    result: profileRecommendations(request: $request) {
+      items {
+        ...Profile
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentProfile}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __useProfileRecommendations__
+ *
+ * To run a query within a React component, call `useProfileRecommendations` and pass it any options that fit your needs.
+ * When your component renders, `useProfileRecommendations` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfileRecommendations({
+ *   variables: {
+ *      request: // value for 'request'
+ *      profileCoverTransform: // value for 'profileCoverTransform'
+ *      profilePictureTransform: // value for 'profilePictureTransform'
+ *      profileStatsArg: // value for 'profileStatsArg'
+ *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
+ *      rateRequest: // value for 'rateRequest'
+ *   },
+ * });
+ */
+export function useProfileRecommendations(
+  baseOptions: Apollo.QueryHookOptions<ProfileRecommendationsData, ProfileRecommendationsVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfileRecommendationsData, ProfileRecommendationsVariables>(
+    ProfileRecommendationsDocument,
+    options,
+  );
+}
+export function useProfileRecommendationsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ProfileRecommendationsData,
+    ProfileRecommendationsVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProfileRecommendationsData, ProfileRecommendationsVariables>(
+    ProfileRecommendationsDocument,
+    options,
+  );
+}
+export type ProfileRecommendationsHookResult = ReturnType<typeof useProfileRecommendations>;
+export type ProfileRecommendationsLazyQueryHookResult = ReturnType<
+  typeof useProfileRecommendationsLazyQuery
+>;
+export type ProfileRecommendationsQueryResult = Apollo.QueryResult<
+  ProfileRecommendationsData,
+  ProfileRecommendationsVariables
+>;
+export const FollowingDocument = /*#__PURE__*/ gql`
+  query Following(
+    $request: FollowingRequest!
+    $profileCoverTransform: ImageTransform = {}
+    $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+    $rateRequest: RateRequest = { for: USD }
+  ) {
+    result: following(request: $request) {
+      items {
+        ...Profile
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentProfile}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __useFollowing__
+ *
+ * To run a query within a React component, call `useFollowing` and pass it any options that fit your needs.
+ * When your component renders, `useFollowing` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFollowing({
+ *   variables: {
+ *      request: // value for 'request'
+ *      profileCoverTransform: // value for 'profileCoverTransform'
+ *      profilePictureTransform: // value for 'profilePictureTransform'
+ *      profileStatsArg: // value for 'profileStatsArg'
+ *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
+ *      rateRequest: // value for 'rateRequest'
+ *   },
+ * });
+ */
+export function useFollowing(
+  baseOptions: Apollo.QueryHookOptions<FollowingData, FollowingVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<FollowingData, FollowingVariables>(FollowingDocument, options);
+}
+export function useFollowingLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<FollowingData, FollowingVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<FollowingData, FollowingVariables>(FollowingDocument, options);
+}
+export type FollowingHookResult = ReturnType<typeof useFollowing>;
+export type FollowingLazyQueryHookResult = ReturnType<typeof useFollowingLazyQuery>;
+export type FollowingQueryResult = Apollo.QueryResult<FollowingData, FollowingVariables>;
+export const FollowersDocument = /*#__PURE__*/ gql`
+  query Followers(
+    $request: FollowersRequest!
+    $profileCoverTransform: ImageTransform = {}
+    $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+    $rateRequest: RateRequest = { for: USD }
+  ) {
+    result: followers(request: $request) {
+      items {
+        ...Profile
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentProfile}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __useFollowers__
+ *
+ * To run a query within a React component, call `useFollowers` and pass it any options that fit your needs.
+ * When your component renders, `useFollowers` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFollowers({
+ *   variables: {
+ *      request: // value for 'request'
+ *      profileCoverTransform: // value for 'profileCoverTransform'
+ *      profilePictureTransform: // value for 'profilePictureTransform'
+ *      profileStatsArg: // value for 'profileStatsArg'
+ *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
+ *      rateRequest: // value for 'rateRequest'
+ *   },
+ * });
+ */
+export function useFollowers(
+  baseOptions: Apollo.QueryHookOptions<FollowersData, FollowersVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<FollowersData, FollowersVariables>(FollowersDocument, options);
+}
+export function useFollowersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<FollowersData, FollowersVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<FollowersData, FollowersVariables>(FollowersDocument, options);
+}
+export type FollowersHookResult = ReturnType<typeof useFollowers>;
+export type FollowersLazyQueryHookResult = ReturnType<typeof useFollowersLazyQuery>;
+export type FollowersQueryResult = Apollo.QueryResult<FollowersData, FollowersVariables>;
+export const MutualFollowersDocument = /*#__PURE__*/ gql`
+  query MutualFollowers(
+    $request: MutualFollowersRequest!
+    $profileCoverTransform: ImageTransform = {}
+    $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+    $rateRequest: RateRequest = { for: USD }
+  ) {
+    result: mutualFollowers(request: $request) {
+      items {
+        ...Profile
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentProfile}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __useMutualFollowers__
+ *
+ * To run a query within a React component, call `useMutualFollowers` and pass it any options that fit your needs.
+ * When your component renders, `useMutualFollowers` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMutualFollowers({
+ *   variables: {
+ *      request: // value for 'request'
+ *      profileCoverTransform: // value for 'profileCoverTransform'
+ *      profilePictureTransform: // value for 'profilePictureTransform'
+ *      profileStatsArg: // value for 'profileStatsArg'
+ *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
+ *      rateRequest: // value for 'rateRequest'
+ *   },
+ * });
+ */
+export function useMutualFollowers(
+  baseOptions: Apollo.QueryHookOptions<MutualFollowersData, MutualFollowersVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<MutualFollowersData, MutualFollowersVariables>(
+    MutualFollowersDocument,
+    options,
+  );
+}
+export function useMutualFollowersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<MutualFollowersData, MutualFollowersVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<MutualFollowersData, MutualFollowersVariables>(
+    MutualFollowersDocument,
+    options,
+  );
+}
+export type MutualFollowersHookResult = ReturnType<typeof useMutualFollowers>;
+export type MutualFollowersLazyQueryHookResult = ReturnType<typeof useMutualFollowersLazyQuery>;
+export type MutualFollowersQueryResult = Apollo.QueryResult<
+  MutualFollowersData,
+  MutualFollowersVariables
+>;
+export const WhoActedOnPublicationDocument = /*#__PURE__*/ gql`
+  query WhoActedOnPublication(
+    $request: WhoActedOnPublicationRequest!
+    $profileCoverTransform: ImageTransform = {}
+    $profilePictureTransform: ImageTransform = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+    $rateRequest: RateRequest = { for: USD }
+  ) {
+    result: whoActedOnPublication(request: $request) {
+      items {
+        ...Profile
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentProfile}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __useWhoActedOnPublication__
+ *
+ * To run a query within a React component, call `useWhoActedOnPublication` and pass it any options that fit your needs.
+ * When your component renders, `useWhoActedOnPublication` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useWhoActedOnPublication({
+ *   variables: {
+ *      request: // value for 'request'
+ *      profileCoverTransform: // value for 'profileCoverTransform'
+ *      profilePictureTransform: // value for 'profilePictureTransform'
+ *      profileStatsArg: // value for 'profileStatsArg'
+ *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
+ *      rateRequest: // value for 'rateRequest'
+ *   },
+ * });
+ */
+export function useWhoActedOnPublication(
+  baseOptions: Apollo.QueryHookOptions<WhoActedOnPublicationData, WhoActedOnPublicationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<WhoActedOnPublicationData, WhoActedOnPublicationVariables>(
+    WhoActedOnPublicationDocument,
+    options,
+  );
+}
+export function useWhoActedOnPublicationLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    WhoActedOnPublicationData,
+    WhoActedOnPublicationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<WhoActedOnPublicationData, WhoActedOnPublicationVariables>(
+    WhoActedOnPublicationDocument,
+    options,
+  );
+}
+export type WhoActedOnPublicationHookResult = ReturnType<typeof useWhoActedOnPublication>;
+export type WhoActedOnPublicationLazyQueryHookResult = ReturnType<
+  typeof useWhoActedOnPublicationLazyQuery
+>;
+export type WhoActedOnPublicationQueryResult = Apollo.QueryResult<
+  WhoActedOnPublicationData,
+  WhoActedOnPublicationVariables
+>;
+export const ClaimProfileDocument = /*#__PURE__*/ gql`
+  mutation ClaimProfile($request: ClaimProfileRequest!) {
+    result: claimProfile(request: $request) {
+      ... on RelaySuccess {
+        ...RelaySuccess
+      }
+      ... on CreateProfileWithHandleErrorResult {
+        ...CreateProfileWithHandleErrorResult
+      }
+    }
+  }
+  ${FragmentRelaySuccess}
+  ${FragmentCreateProfileWithHandleErrorResult}
+`;
+export type ClaimProfileMutationFn = Apollo.MutationFunction<
+  ClaimProfileData,
+  ClaimProfileVariables
+>;
+
+/**
+ * __useClaimProfile__
+ *
+ * To run a mutation, you first call `useClaimProfile` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useClaimProfile` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [claimProfile, { data, loading, error }] = useClaimProfile({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useClaimProfile(
+  baseOptions?: Apollo.MutationHookOptions<ClaimProfileData, ClaimProfileVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<ClaimProfileData, ClaimProfileVariables>(ClaimProfileDocument, options);
+}
+export type ClaimProfileHookResult = ReturnType<typeof useClaimProfile>;
+export type ClaimProfileMutationResult = Apollo.MutationResult<ClaimProfileData>;
+export type ClaimProfileMutationOptions = Apollo.BaseMutationOptions<
+  ClaimProfileData,
+  ClaimProfileVariables
+>;
+export const CreateProfileWithHandleDocument = /*#__PURE__*/ gql`
+  mutation CreateProfileWithHandle($request: CreateProfileWithHandleRequest!) {
+    result: createProfileWithHandle(request: $request) {
+      ... on RelaySuccess {
+        ...RelaySuccess
+      }
+      ... on CreateProfileWithHandleErrorResult {
+        ...CreateProfileWithHandleErrorResult
+      }
+    }
+  }
+  ${FragmentRelaySuccess}
+  ${FragmentCreateProfileWithHandleErrorResult}
+`;
+export type CreateProfileWithHandleMutationFn = Apollo.MutationFunction<
+  CreateProfileWithHandleData,
+  CreateProfileWithHandleVariables
+>;
+
+/**
+ * __useCreateProfileWithHandle__
+ *
+ * To run a mutation, you first call `useCreateProfileWithHandle` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProfileWithHandle` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProfileWithHandle, { data, loading, error }] = useCreateProfileWithHandle({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateProfileWithHandle(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateProfileWithHandleData,
+    CreateProfileWithHandleVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateProfileWithHandleData, CreateProfileWithHandleVariables>(
+    CreateProfileWithHandleDocument,
+    options,
+  );
+}
+export type CreateProfileWithHandleHookResult = ReturnType<typeof useCreateProfileWithHandle>;
+export type CreateProfileWithHandleMutationResult =
+  Apollo.MutationResult<CreateProfileWithHandleData>;
+export type CreateProfileWithHandleMutationOptions = Apollo.BaseMutationOptions<
+  CreateProfileWithHandleData,
+  CreateProfileWithHandleVariables
+>;
+export const AddProfileInterestsDocument = /*#__PURE__*/ gql`
+  mutation AddProfileInterests($request: ProfileInterestsRequest!) {
+    result: addProfileInterests(request: $request)
+  }
+`;
+export type AddProfileInterestsMutationFn = Apollo.MutationFunction<
+  AddProfileInterestsData,
+  AddProfileInterestsVariables
+>;
+
+/**
+ * __useAddProfileInterests__
+ *
+ * To run a mutation, you first call `useAddProfileInterests` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddProfileInterests` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addProfileInterests, { data, loading, error }] = useAddProfileInterests({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAddProfileInterests(
+  baseOptions?: Apollo.MutationHookOptions<AddProfileInterestsData, AddProfileInterestsVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddProfileInterestsData, AddProfileInterestsVariables>(
+    AddProfileInterestsDocument,
+    options,
+  );
+}
+export type AddProfileInterestsHookResult = ReturnType<typeof useAddProfileInterests>;
+export type AddProfileInterestsMutationResult = Apollo.MutationResult<AddProfileInterestsData>;
+export type AddProfileInterestsMutationOptions = Apollo.BaseMutationOptions<
+  AddProfileInterestsData,
+  AddProfileInterestsVariables
+>;
+export const RemoveProfileInterestsDocument = /*#__PURE__*/ gql`
+  mutation RemoveProfileInterests($request: ProfileInterestsRequest!) {
+    result: removeProfileInterests(request: $request)
+  }
+`;
+export type RemoveProfileInterestsMutationFn = Apollo.MutationFunction<
+  RemoveProfileInterestsData,
+  RemoveProfileInterestsVariables
+>;
+
+/**
+ * __useRemoveProfileInterests__
+ *
+ * To run a mutation, you first call `useRemoveProfileInterests` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveProfileInterests` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeProfileInterests, { data, loading, error }] = useRemoveProfileInterests({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useRemoveProfileInterests(
+  baseOptions?: Apollo.MutationHookOptions<
+    RemoveProfileInterestsData,
+    RemoveProfileInterestsVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RemoveProfileInterestsData, RemoveProfileInterestsVariables>(
+    RemoveProfileInterestsDocument,
+    options,
+  );
+}
+export type RemoveProfileInterestsHookResult = ReturnType<typeof useRemoveProfileInterests>;
+export type RemoveProfileInterestsMutationResult =
+  Apollo.MutationResult<RemoveProfileInterestsData>;
+export type RemoveProfileInterestsMutationOptions = Apollo.BaseMutationOptions<
+  RemoveProfileInterestsData,
+  RemoveProfileInterestsVariables
+>;
+export const SetProfileMetadataDocument = /*#__PURE__*/ gql`
+  mutation SetProfileMetadata($request: OnchainSetProfileMetadataRequest!) {
+    result: setProfileMetadata(request: $request) {
+      ... on RelaySuccess {
+        ...RelaySuccess
+      }
+      ... on LensProfileManagerRelayError {
+        ...LensProfileManagerRelayError
+      }
+    }
+  }
+  ${FragmentRelaySuccess}
+  ${FragmentLensProfileManagerRelayError}
+`;
+export type SetProfileMetadataMutationFn = Apollo.MutationFunction<
+  SetProfileMetadataData,
+  SetProfileMetadataVariables
+>;
+
+/**
+ * __useSetProfileMetadata__
+ *
+ * To run a mutation, you first call `useSetProfileMetadata` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetProfileMetadata` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setProfileMetadata, { data, loading, error }] = useSetProfileMetadata({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useSetProfileMetadata(
+  baseOptions?: Apollo.MutationHookOptions<SetProfileMetadataData, SetProfileMetadataVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<SetProfileMetadataData, SetProfileMetadataVariables>(
+    SetProfileMetadataDocument,
+    options,
+  );
+}
+export type SetProfileMetadataHookResult = ReturnType<typeof useSetProfileMetadata>;
+export type SetProfileMetadataMutationResult = Apollo.MutationResult<SetProfileMetadataData>;
+export type SetProfileMetadataMutationOptions = Apollo.BaseMutationOptions<
+  SetProfileMetadataData,
+  SetProfileMetadataVariables
+>;
+export const BlockDocument = /*#__PURE__*/ gql`
+  mutation Block($request: BlockRequest!) {
+    result: block(request: $request) {
+      ... on RelaySuccess {
+        ...RelaySuccess
+      }
+      ... on LensProfileManagerRelayError {
+        ...LensProfileManagerRelayError
+      }
+    }
+  }
+  ${FragmentRelaySuccess}
+  ${FragmentLensProfileManagerRelayError}
+`;
+export type BlockMutationFn = Apollo.MutationFunction<BlockData, BlockVariables>;
+
+/**
+ * __useBlock__
+ *
+ * To run a mutation, you first call `useBlock` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBlock` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [block, { data, loading, error }] = useBlock({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useBlock(baseOptions?: Apollo.MutationHookOptions<BlockData, BlockVariables>) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<BlockData, BlockVariables>(BlockDocument, options);
+}
+export type BlockHookResult = ReturnType<typeof useBlock>;
+export type BlockMutationResult = Apollo.MutationResult<BlockData>;
+export type BlockMutationOptions = Apollo.BaseMutationOptions<BlockData, BlockVariables>;
+export const UnblockDocument = /*#__PURE__*/ gql`
+  mutation Unblock($request: UnblockRequest!) {
+    result: unblock(request: $request) {
+      ... on RelaySuccess {
+        ...RelaySuccess
+      }
+      ... on LensProfileManagerRelayError {
+        ...LensProfileManagerRelayError
+      }
+    }
+  }
+  ${FragmentRelaySuccess}
+  ${FragmentLensProfileManagerRelayError}
+`;
+export type UnblockMutationFn = Apollo.MutationFunction<UnblockData, UnblockVariables>;
+
+/**
+ * __useUnblock__
+ *
+ * To run a mutation, you first call `useUnblock` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnblock` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unblock, { data, loading, error }] = useUnblock({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useUnblock(
+  baseOptions?: Apollo.MutationHookOptions<UnblockData, UnblockVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UnblockData, UnblockVariables>(UnblockDocument, options);
+}
+export type UnblockHookResult = ReturnType<typeof useUnblock>;
+export type UnblockMutationResult = Apollo.MutationResult<UnblockData>;
+export type UnblockMutationOptions = Apollo.BaseMutationOptions<UnblockData, UnblockVariables>;
+export const FollowDocument = /*#__PURE__*/ gql`
+  mutation Follow($request: FollowLensManagerRequest!) {
+    result: follow(request: $request) {
+      ... on RelaySuccess {
+        ...RelaySuccess
+      }
+      ... on LensProfileManagerRelayError {
+        ...LensProfileManagerRelayError
+      }
+    }
+  }
+  ${FragmentRelaySuccess}
+  ${FragmentLensProfileManagerRelayError}
+`;
+export type FollowMutationFn = Apollo.MutationFunction<FollowData, FollowVariables>;
+
+/**
+ * __useFollow__
+ *
+ * To run a mutation, you first call `useFollow` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useFollow` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [follow, { data, loading, error }] = useFollow({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useFollow(baseOptions?: Apollo.MutationHookOptions<FollowData, FollowVariables>) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<FollowData, FollowVariables>(FollowDocument, options);
+}
+export type FollowHookResult = ReturnType<typeof useFollow>;
+export type FollowMutationResult = Apollo.MutationResult<FollowData>;
+export type FollowMutationOptions = Apollo.BaseMutationOptions<FollowData, FollowVariables>;
+export const UnfollowDocument = /*#__PURE__*/ gql`
+  mutation Unfollow($request: UnfollowRequest!) {
+    result: unfollow(request: $request) {
+      ... on RelaySuccess {
+        ...RelaySuccess
+      }
+      ... on LensProfileManagerRelayError {
+        ...LensProfileManagerRelayError
+      }
+    }
+  }
+  ${FragmentRelaySuccess}
+  ${FragmentLensProfileManagerRelayError}
+`;
+export type UnfollowMutationFn = Apollo.MutationFunction<UnfollowData, UnfollowVariables>;
+
+/**
+ * __useUnfollow__
+ *
+ * To run a mutation, you first call `useUnfollow` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnfollow` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unfollow, { data, loading, error }] = useUnfollow({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useUnfollow(
+  baseOptions?: Apollo.MutationHookOptions<UnfollowData, UnfollowVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UnfollowData, UnfollowVariables>(UnfollowDocument, options);
+}
+export type UnfollowHookResult = ReturnType<typeof useUnfollow>;
+export type UnfollowMutationResult = Apollo.MutationResult<UnfollowData>;
+export type UnfollowMutationOptions = Apollo.BaseMutationOptions<UnfollowData, UnfollowVariables>;
+export const DismissRecommendedProfilesDocument = /*#__PURE__*/ gql`
+  mutation DismissRecommendedProfiles($request: DismissRecommendedProfilesRequest!) {
+    result: dismissRecommendedProfiles(request: $request)
+  }
+`;
+export type DismissRecommendedProfilesMutationFn = Apollo.MutationFunction<
+  DismissRecommendedProfilesData,
+  DismissRecommendedProfilesVariables
+>;
+
+/**
+ * __useDismissRecommendedProfiles__
+ *
+ * To run a mutation, you first call `useDismissRecommendedProfiles` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDismissRecommendedProfiles` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [dismissRecommendedProfiles, { data, loading, error }] = useDismissRecommendedProfiles({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useDismissRecommendedProfiles(
+  baseOptions?: Apollo.MutationHookOptions<
+    DismissRecommendedProfilesData,
+    DismissRecommendedProfilesVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DismissRecommendedProfilesData, DismissRecommendedProfilesVariables>(
+    DismissRecommendedProfilesDocument,
+    options,
+  );
+}
+export type DismissRecommendedProfilesHookResult = ReturnType<typeof useDismissRecommendedProfiles>;
+export type DismissRecommendedProfilesMutationResult =
+  Apollo.MutationResult<DismissRecommendedProfilesData>;
+export type DismissRecommendedProfilesMutationOptions = Apollo.BaseMutationOptions<
+  DismissRecommendedProfilesData,
+  DismissRecommendedProfilesVariables
+>;
+export const CreateOnchainSetProfileMetadataTypedDataDocument = /*#__PURE__*/ gql`
+  mutation CreateOnchainSetProfileMetadataTypedData(
+    $request: OnchainSetProfileMetadataRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createOnchainSetProfileMetadataTypedData(request: $request, options: $options) {
+      ...CreateOnchainSetProfileMetadataBroadcastItemResult
+    }
+  }
+  ${FragmentCreateOnchainSetProfileMetadataBroadcastItemResult}
+`;
+export type CreateOnchainSetProfileMetadataTypedDataMutationFn = Apollo.MutationFunction<
+  CreateOnchainSetProfileMetadataTypedDataData,
+  CreateOnchainSetProfileMetadataTypedDataVariables
+>;
+
+/**
+ * __useCreateOnchainSetProfileMetadataTypedData__
+ *
+ * To run a mutation, you first call `useCreateOnchainSetProfileMetadataTypedData` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOnchainSetProfileMetadataTypedData` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOnchainSetProfileMetadataTypedData, { data, loading, error }] = useCreateOnchainSetProfileMetadataTypedData({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateOnchainSetProfileMetadataTypedData(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateOnchainSetProfileMetadataTypedDataData,
+    CreateOnchainSetProfileMetadataTypedDataVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateOnchainSetProfileMetadataTypedDataData,
+    CreateOnchainSetProfileMetadataTypedDataVariables
+  >(CreateOnchainSetProfileMetadataTypedDataDocument, options);
+}
+export type CreateOnchainSetProfileMetadataTypedDataHookResult = ReturnType<
+  typeof useCreateOnchainSetProfileMetadataTypedData
+>;
+export type CreateOnchainSetProfileMetadataTypedDataMutationResult =
+  Apollo.MutationResult<CreateOnchainSetProfileMetadataTypedDataData>;
+export type CreateOnchainSetProfileMetadataTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateOnchainSetProfileMetadataTypedDataData,
+  CreateOnchainSetProfileMetadataTypedDataVariables
+>;
+export const CreateChangeProfileManagersTypedDataDocument = /*#__PURE__*/ gql`
+  mutation CreateChangeProfileManagersTypedData(
+    $request: ChangeProfileManagersRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createChangeProfileManagersTypedData(request: $request, options: $options) {
+      ...CreateChangeProfileManagersBroadcastItemResult
+    }
+  }
+  ${FragmentCreateChangeProfileManagersBroadcastItemResult}
+`;
+export type CreateChangeProfileManagersTypedDataMutationFn = Apollo.MutationFunction<
+  CreateChangeProfileManagersTypedDataData,
+  CreateChangeProfileManagersTypedDataVariables
+>;
+
+/**
+ * __useCreateChangeProfileManagersTypedData__
+ *
+ * To run a mutation, you first call `useCreateChangeProfileManagersTypedData` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateChangeProfileManagersTypedData` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createChangeProfileManagersTypedData, { data, loading, error }] = useCreateChangeProfileManagersTypedData({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateChangeProfileManagersTypedData(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateChangeProfileManagersTypedDataData,
+    CreateChangeProfileManagersTypedDataVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateChangeProfileManagersTypedDataData,
+    CreateChangeProfileManagersTypedDataVariables
+  >(CreateChangeProfileManagersTypedDataDocument, options);
+}
+export type CreateChangeProfileManagersTypedDataHookResult = ReturnType<
+  typeof useCreateChangeProfileManagersTypedData
+>;
+export type CreateChangeProfileManagersTypedDataMutationResult =
+  Apollo.MutationResult<CreateChangeProfileManagersTypedDataData>;
+export type CreateChangeProfileManagersTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateChangeProfileManagersTypedDataData,
+  CreateChangeProfileManagersTypedDataVariables
+>;
+export const CreateBlockProfilesTypedDataDocument = /*#__PURE__*/ gql`
+  mutation CreateBlockProfilesTypedData($request: BlockRequest!, $options: TypedDataOptions) {
+    result: createBlockProfilesTypedData(request: $request, options: $options) {
+      ...CreateBlockProfilesBroadcastItemResult
+    }
+  }
+  ${FragmentCreateBlockProfilesBroadcastItemResult}
+`;
+export type CreateBlockProfilesTypedDataMutationFn = Apollo.MutationFunction<
+  CreateBlockProfilesTypedDataData,
+  CreateBlockProfilesTypedDataVariables
+>;
+
+/**
+ * __useCreateBlockProfilesTypedData__
+ *
+ * To run a mutation, you first call `useCreateBlockProfilesTypedData` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBlockProfilesTypedData` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBlockProfilesTypedData, { data, loading, error }] = useCreateBlockProfilesTypedData({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateBlockProfilesTypedData(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateBlockProfilesTypedDataData,
+    CreateBlockProfilesTypedDataVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateBlockProfilesTypedDataData,
+    CreateBlockProfilesTypedDataVariables
+  >(CreateBlockProfilesTypedDataDocument, options);
+}
+export type CreateBlockProfilesTypedDataHookResult = ReturnType<
+  typeof useCreateBlockProfilesTypedData
+>;
+export type CreateBlockProfilesTypedDataMutationResult =
+  Apollo.MutationResult<CreateBlockProfilesTypedDataData>;
+export type CreateBlockProfilesTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateBlockProfilesTypedDataData,
+  CreateBlockProfilesTypedDataVariables
+>;
+export const CreateUnblockProfilesTypedDataDocument = /*#__PURE__*/ gql`
+  mutation CreateUnblockProfilesTypedData($request: UnblockRequest!, $options: TypedDataOptions) {
+    result: createUnblockProfilesTypedData(request: $request, options: $options) {
+      ...CreateUnblockProfilesBroadcastItemResult
+    }
+  }
+  ${FragmentCreateUnblockProfilesBroadcastItemResult}
+`;
+export type CreateUnblockProfilesTypedDataMutationFn = Apollo.MutationFunction<
+  CreateUnblockProfilesTypedDataData,
+  CreateUnblockProfilesTypedDataVariables
+>;
+
+/**
+ * __useCreateUnblockProfilesTypedData__
+ *
+ * To run a mutation, you first call `useCreateUnblockProfilesTypedData` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUnblockProfilesTypedData` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUnblockProfilesTypedData, { data, loading, error }] = useCreateUnblockProfilesTypedData({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateUnblockProfilesTypedData(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateUnblockProfilesTypedDataData,
+    CreateUnblockProfilesTypedDataVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateUnblockProfilesTypedDataData,
+    CreateUnblockProfilesTypedDataVariables
+  >(CreateUnblockProfilesTypedDataDocument, options);
+}
+export type CreateUnblockProfilesTypedDataHookResult = ReturnType<
+  typeof useCreateUnblockProfilesTypedData
+>;
+export type CreateUnblockProfilesTypedDataMutationResult =
+  Apollo.MutationResult<CreateUnblockProfilesTypedDataData>;
+export type CreateUnblockProfilesTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateUnblockProfilesTypedDataData,
+  CreateUnblockProfilesTypedDataVariables
+>;
+export const CreateFollowTypedDataDocument = /*#__PURE__*/ gql`
+  mutation CreateFollowTypedData($request: FollowRequest!, $options: TypedDataOptions) {
+    result: createFollowTypedData(request: $request, options: $options) {
+      ...CreateFollowBroadcastItemResult
+    }
+  }
+  ${FragmentCreateFollowBroadcastItemResult}
+`;
+export type CreateFollowTypedDataMutationFn = Apollo.MutationFunction<
+  CreateFollowTypedDataData,
+  CreateFollowTypedDataVariables
+>;
+
+/**
+ * __useCreateFollowTypedData__
+ *
+ * To run a mutation, you first call `useCreateFollowTypedData` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateFollowTypedData` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createFollowTypedData, { data, loading, error }] = useCreateFollowTypedData({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateFollowTypedData(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateFollowTypedDataData,
+    CreateFollowTypedDataVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateFollowTypedDataData, CreateFollowTypedDataVariables>(
+    CreateFollowTypedDataDocument,
+    options,
+  );
+}
+export type CreateFollowTypedDataHookResult = ReturnType<typeof useCreateFollowTypedData>;
+export type CreateFollowTypedDataMutationResult = Apollo.MutationResult<CreateFollowTypedDataData>;
+export type CreateFollowTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateFollowTypedDataData,
+  CreateFollowTypedDataVariables
+>;
+export const CreateUnfollowTypedDataDocument = /*#__PURE__*/ gql`
+  mutation CreateUnfollowTypedData($request: UnfollowRequest!, $options: TypedDataOptions) {
+    result: createUnfollowTypedData(request: $request, options: $options) {
+      ...CreateUnfollowBroadcastItemResult
+    }
+  }
+  ${FragmentCreateUnfollowBroadcastItemResult}
+`;
+export type CreateUnfollowTypedDataMutationFn = Apollo.MutationFunction<
+  CreateUnfollowTypedDataData,
+  CreateUnfollowTypedDataVariables
+>;
+
+/**
+ * __useCreateUnfollowTypedData__
+ *
+ * To run a mutation, you first call `useCreateUnfollowTypedData` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUnfollowTypedData` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUnfollowTypedData, { data, loading, error }] = useCreateUnfollowTypedData({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateUnfollowTypedData(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateUnfollowTypedDataData,
+    CreateUnfollowTypedDataVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateUnfollowTypedDataData, CreateUnfollowTypedDataVariables>(
+    CreateUnfollowTypedDataDocument,
+    options,
+  );
+}
+export type CreateUnfollowTypedDataHookResult = ReturnType<typeof useCreateUnfollowTypedData>;
+export type CreateUnfollowTypedDataMutationResult =
+  Apollo.MutationResult<CreateUnfollowTypedDataData>;
+export type CreateUnfollowTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateUnfollowTypedDataData,
+  CreateUnfollowTypedDataVariables
+>;
+export const SetFollowModuleDocument = /*#__PURE__*/ gql`
+  mutation SetFollowModule($request: SetFollowModuleRequest!) {
+    result: setFollowModule(request: $request) {
+      ... on RelaySuccess {
+        ...RelaySuccess
+      }
+      ... on LensProfileManagerRelayError {
+        ...LensProfileManagerRelayError
+      }
+    }
+  }
+  ${FragmentRelaySuccess}
+  ${FragmentLensProfileManagerRelayError}
+`;
+export type SetFollowModuleMutationFn = Apollo.MutationFunction<
+  SetFollowModuleData,
+  SetFollowModuleVariables
+>;
+
+/**
+ * __useSetFollowModule__
+ *
+ * To run a mutation, you first call `useSetFollowModule` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetFollowModule` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setFollowModule, { data, loading, error }] = useSetFollowModule({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useSetFollowModule(
+  baseOptions?: Apollo.MutationHookOptions<SetFollowModuleData, SetFollowModuleVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<SetFollowModuleData, SetFollowModuleVariables>(
+    SetFollowModuleDocument,
+    options,
+  );
+}
+export type SetFollowModuleHookResult = ReturnType<typeof useSetFollowModule>;
+export type SetFollowModuleMutationResult = Apollo.MutationResult<SetFollowModuleData>;
+export type SetFollowModuleMutationOptions = Apollo.BaseMutationOptions<
+  SetFollowModuleData,
+  SetFollowModuleVariables
+>;
+export const CreateSetFollowModuleTypedDataDocument = /*#__PURE__*/ gql`
+  mutation CreateSetFollowModuleTypedData(
+    $request: SetFollowModuleRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createSetFollowModuleTypedData(request: $request, options: $options) {
+      ...CreateSetFollowModuleBroadcastItemResult
+    }
+  }
+  ${FragmentCreateSetFollowModuleBroadcastItemResult}
+`;
+export type CreateSetFollowModuleTypedDataMutationFn = Apollo.MutationFunction<
+  CreateSetFollowModuleTypedDataData,
+  CreateSetFollowModuleTypedDataVariables
+>;
+
+/**
+ * __useCreateSetFollowModuleTypedData__
+ *
+ * To run a mutation, you first call `useCreateSetFollowModuleTypedData` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSetFollowModuleTypedData` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSetFollowModuleTypedData, { data, loading, error }] = useCreateSetFollowModuleTypedData({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateSetFollowModuleTypedData(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateSetFollowModuleTypedDataData,
+    CreateSetFollowModuleTypedDataVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateSetFollowModuleTypedDataData,
+    CreateSetFollowModuleTypedDataVariables
+  >(CreateSetFollowModuleTypedDataDocument, options);
+}
+export type CreateSetFollowModuleTypedDataHookResult = ReturnType<
+  typeof useCreateSetFollowModuleTypedData
+>;
+export type CreateSetFollowModuleTypedDataMutationResult =
+  Apollo.MutationResult<CreateSetFollowModuleTypedDataData>;
+export type CreateSetFollowModuleTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateSetFollowModuleTypedDataData,
+  CreateSetFollowModuleTypedDataVariables
+>;
+export const HandleLinkToProfileDocument = /*#__PURE__*/ gql`
+  mutation HandleLinkToProfile($request: HandleLinkToProfileRequest!) {
+    result: handleLinkToProfile(request: $request) {
+      ... on RelaySuccess {
+        ...RelaySuccess
+      }
+      ... on LensProfileManagerRelayError {
+        ...LensProfileManagerRelayError
+      }
+    }
+  }
+  ${FragmentRelaySuccess}
+  ${FragmentLensProfileManagerRelayError}
+`;
+export type HandleLinkToProfileMutationFn = Apollo.MutationFunction<
+  HandleLinkToProfileData,
+  HandleLinkToProfileVariables
+>;
+
+/**
+ * __useHandleLinkToProfile__
+ *
+ * To run a mutation, you first call `useHandleLinkToProfile` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useHandleLinkToProfile` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [handleLinkToProfile, { data, loading, error }] = useHandleLinkToProfile({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useHandleLinkToProfile(
+  baseOptions?: Apollo.MutationHookOptions<HandleLinkToProfileData, HandleLinkToProfileVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<HandleLinkToProfileData, HandleLinkToProfileVariables>(
+    HandleLinkToProfileDocument,
+    options,
+  );
+}
+export type HandleLinkToProfileHookResult = ReturnType<typeof useHandleLinkToProfile>;
+export type HandleLinkToProfileMutationResult = Apollo.MutationResult<HandleLinkToProfileData>;
+export type HandleLinkToProfileMutationOptions = Apollo.BaseMutationOptions<
+  HandleLinkToProfileData,
+  HandleLinkToProfileVariables
+>;
+export const HandleUnlinkFromProfileDocument = /*#__PURE__*/ gql`
+  mutation HandleUnlinkFromProfile($request: HandleUnlinkFromProfileRequest!) {
+    result: handleUnlinkFromProfile(request: $request) {
+      ... on RelaySuccess {
+        ...RelaySuccess
+      }
+      ... on LensProfileManagerRelayError {
+        ...LensProfileManagerRelayError
+      }
+    }
+  }
+  ${FragmentRelaySuccess}
+  ${FragmentLensProfileManagerRelayError}
+`;
+export type HandleUnlinkFromProfileMutationFn = Apollo.MutationFunction<
+  HandleUnlinkFromProfileData,
+  HandleUnlinkFromProfileVariables
+>;
+
+/**
+ * __useHandleUnlinkFromProfile__
+ *
+ * To run a mutation, you first call `useHandleUnlinkFromProfile` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useHandleUnlinkFromProfile` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [handleUnlinkFromProfile, { data, loading, error }] = useHandleUnlinkFromProfile({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useHandleUnlinkFromProfile(
+  baseOptions?: Apollo.MutationHookOptions<
+    HandleUnlinkFromProfileData,
+    HandleUnlinkFromProfileVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<HandleUnlinkFromProfileData, HandleUnlinkFromProfileVariables>(
+    HandleUnlinkFromProfileDocument,
+    options,
+  );
+}
+export type HandleUnlinkFromProfileHookResult = ReturnType<typeof useHandleUnlinkFromProfile>;
+export type HandleUnlinkFromProfileMutationResult =
+  Apollo.MutationResult<HandleUnlinkFromProfileData>;
+export type HandleUnlinkFromProfileMutationOptions = Apollo.BaseMutationOptions<
+  HandleUnlinkFromProfileData,
+  HandleUnlinkFromProfileVariables
+>;
+export const CreateHandleLinkToProfileTypedDataDocument = /*#__PURE__*/ gql`
+  mutation CreateHandleLinkToProfileTypedData($request: HandleLinkToProfileRequest!) {
+    result: createHandleLinkToProfileTypedData(request: $request) {
+      ...CreateHandleLinkToProfileBroadcastItemResult
+    }
+  }
+  ${FragmentCreateHandleLinkToProfileBroadcastItemResult}
+`;
+export type CreateHandleLinkToProfileTypedDataMutationFn = Apollo.MutationFunction<
+  CreateHandleLinkToProfileTypedDataData,
+  CreateHandleLinkToProfileTypedDataVariables
+>;
+
+/**
+ * __useCreateHandleLinkToProfileTypedData__
+ *
+ * To run a mutation, you first call `useCreateHandleLinkToProfileTypedData` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateHandleLinkToProfileTypedData` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createHandleLinkToProfileTypedData, { data, loading, error }] = useCreateHandleLinkToProfileTypedData({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateHandleLinkToProfileTypedData(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateHandleLinkToProfileTypedDataData,
+    CreateHandleLinkToProfileTypedDataVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateHandleLinkToProfileTypedDataData,
+    CreateHandleLinkToProfileTypedDataVariables
+  >(CreateHandleLinkToProfileTypedDataDocument, options);
+}
+export type CreateHandleLinkToProfileTypedDataHookResult = ReturnType<
+  typeof useCreateHandleLinkToProfileTypedData
+>;
+export type CreateHandleLinkToProfileTypedDataMutationResult =
+  Apollo.MutationResult<CreateHandleLinkToProfileTypedDataData>;
+export type CreateHandleLinkToProfileTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateHandleLinkToProfileTypedDataData,
+  CreateHandleLinkToProfileTypedDataVariables
+>;
+export const CreateHandleUnlinkFromProfileTypedDataDocument = /*#__PURE__*/ gql`
+  mutation CreateHandleUnlinkFromProfileTypedData($request: HandleUnlinkFromProfileRequest!) {
+    result: createHandleUnlinkFromProfileTypedData(request: $request) {
+      ...CreateHandleUnlinkFromProfileBroadcastItemResult
+    }
+  }
+  ${FragmentCreateHandleUnlinkFromProfileBroadcastItemResult}
+`;
+export type CreateHandleUnlinkFromProfileTypedDataMutationFn = Apollo.MutationFunction<
+  CreateHandleUnlinkFromProfileTypedDataData,
+  CreateHandleUnlinkFromProfileTypedDataVariables
+>;
+
+/**
+ * __useCreateHandleUnlinkFromProfileTypedData__
+ *
+ * To run a mutation, you first call `useCreateHandleUnlinkFromProfileTypedData` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateHandleUnlinkFromProfileTypedData` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createHandleUnlinkFromProfileTypedData, { data, loading, error }] = useCreateHandleUnlinkFromProfileTypedData({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useCreateHandleUnlinkFromProfileTypedData(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateHandleUnlinkFromProfileTypedDataData,
+    CreateHandleUnlinkFromProfileTypedDataVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateHandleUnlinkFromProfileTypedDataData,
+    CreateHandleUnlinkFromProfileTypedDataVariables
+  >(CreateHandleUnlinkFromProfileTypedDataDocument, options);
+}
+export type CreateHandleUnlinkFromProfileTypedDataHookResult = ReturnType<
+  typeof useCreateHandleUnlinkFromProfileTypedData
+>;
+export type CreateHandleUnlinkFromProfileTypedDataMutationResult =
+  Apollo.MutationResult<CreateHandleUnlinkFromProfileTypedDataData>;
+export type CreateHandleUnlinkFromProfileTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateHandleUnlinkFromProfileTypedDataData,
+  CreateHandleUnlinkFromProfileTypedDataVariables
+>;
 export const PublicationDocument = /*#__PURE__*/ gql`
   query Publication(
     $request: PublicationRequest!
     $publicationImageTransform: ImageTransform = {}
+    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $publicationStatsInput: PublicationStatsInput! = {}
+    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
-    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
     result: publication(request: $request) {
@@ -5597,9 +7831,13 @@ export const PublicationDocument = /*#__PURE__*/ gql`
  *   variables: {
  *      request: // value for 'request'
  *      publicationImageTransform: // value for 'publicationImageTransform'
+ *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
+ *      publicationStatsInput: // value for 'publicationStatsInput'
+ *      publicationStatsCountOpenActionArgs: // value for 'publicationStatsCountOpenActionArgs'
  *      profileCoverTransform: // value for 'profileCoverTransform'
  *      profilePictureTransform: // value for 'profilePictureTransform'
- *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
+ *      profileStatsArg: // value for 'profileStatsArg'
+ *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
  *      rateRequest: // value for 'rateRequest'
  *   },
  * });
@@ -5619,88 +7857,17 @@ export function usePublicationLazyQuery(
 export type PublicationHookResult = ReturnType<typeof usePublication>;
 export type PublicationLazyQueryHookResult = ReturnType<typeof usePublicationLazyQuery>;
 export type PublicationQueryResult = Apollo.QueryResult<PublicationData, PublicationVariables>;
-export const PublicationStatsDocument = /*#__PURE__*/ gql`
-  query PublicationStats(
-    $request: PublicationRequest!
-    $statsRequest: PublicationStatsInput! = {}
-    $openActionsRequest: PublicationStatsCountOpenActionArgs! = { anyOf: [] }
-  ) {
-    result: publication(request: $request) {
-      ... on Post {
-        __typename
-        stats(request: $statsRequest) {
-          ...PublicationStats
-        }
-      }
-      ... on Comment {
-        __typename
-        stats(request: $statsRequest) {
-          ...PublicationStats
-        }
-      }
-      ... on Quote {
-        __typename
-        stats(request: $statsRequest) {
-          ...PublicationStats
-        }
-      }
-      ... on Mirror {
-        __typename
-      }
-    }
-  }
-  ${FragmentPublicationStats}
-`;
-
-/**
- * __usePublicationStats__
- *
- * To run a query within a React component, call `usePublicationStats` and pass it any options that fit your needs.
- * When your component renders, `usePublicationStats` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePublicationStats({
- *   variables: {
- *      request: // value for 'request'
- *      statsRequest: // value for 'statsRequest'
- *      openActionsRequest: // value for 'openActionsRequest'
- *   },
- * });
- */
-export function usePublicationStats(
-  baseOptions: Apollo.QueryHookOptions<PublicationStatsData, PublicationStatsVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<PublicationStatsData, PublicationStatsVariables>(
-    PublicationStatsDocument,
-    options,
-  );
-}
-export function usePublicationStatsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<PublicationStatsData, PublicationStatsVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<PublicationStatsData, PublicationStatsVariables>(
-    PublicationStatsDocument,
-    options,
-  );
-}
-export type PublicationStatsHookResult = ReturnType<typeof usePublicationStats>;
-export type PublicationStatsLazyQueryHookResult = ReturnType<typeof usePublicationStatsLazyQuery>;
-export type PublicationStatsQueryResult = Apollo.QueryResult<
-  PublicationStatsData,
-  PublicationStatsVariables
->;
 export const PublicationsDocument = /*#__PURE__*/ gql`
   query Publications(
     $request: PublicationsRequest!
     $publicationImageTransform: ImageTransform = {}
+    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $publicationStatsInput: PublicationStatsInput! = {}
+    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
-    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+    $profileStatsArg: ProfileStatsArg = {}
+    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
     result: publications(request: $request) {
@@ -5744,9 +7911,13 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
  *   variables: {
  *      request: // value for 'request'
  *      publicationImageTransform: // value for 'publicationImageTransform'
+ *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
+ *      publicationStatsInput: // value for 'publicationStatsInput'
+ *      publicationStatsCountOpenActionArgs: // value for 'publicationStatsCountOpenActionArgs'
  *      profileCoverTransform: // value for 'profileCoverTransform'
  *      profilePictureTransform: // value for 'profilePictureTransform'
- *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
+ *      profileStatsArg: // value for 'profileStatsArg'
+ *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
  *      rateRequest: // value for 'rateRequest'
  *   },
  * });
@@ -6775,8 +8946,8 @@ export type ReportPublicationMutationOptions = Apollo.BaseMutationOptions<
   ReportPublicationData,
   ReportPublicationVariables
 >;
-export const LegacyCollectPublicationDocument = /*#__PURE__*/ gql`
-  mutation LegacyCollectPublication($request: LegacyCollectRequest!) {
+export const LegacyCollectDocument = /*#__PURE__*/ gql`
+  mutation LegacyCollect($request: LegacyCollectRequest!) {
     result: legacyCollect(request: $request) {
       ... on RelaySuccess {
         ...RelaySuccess
@@ -6789,46 +8960,42 @@ export const LegacyCollectPublicationDocument = /*#__PURE__*/ gql`
   ${FragmentRelaySuccess}
   ${FragmentLensProfileManagerRelayError}
 `;
-export type LegacyCollectPublicationMutationFn = Apollo.MutationFunction<
-  LegacyCollectPublicationData,
-  LegacyCollectPublicationVariables
+export type LegacyCollectMutationFn = Apollo.MutationFunction<
+  LegacyCollectData,
+  LegacyCollectVariables
 >;
 
 /**
- * __useLegacyCollectPublication__
+ * __useLegacyCollect__
  *
- * To run a mutation, you first call `useLegacyCollectPublication` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLegacyCollectPublication` returns a tuple that includes:
+ * To run a mutation, you first call `useLegacyCollect` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLegacyCollect` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [legacyCollectPublication, { data, loading, error }] = useLegacyCollectPublication({
+ * const [legacyCollect, { data, loading, error }] = useLegacyCollect({
  *   variables: {
  *      request: // value for 'request'
  *   },
  * });
  */
-export function useLegacyCollectPublication(
-  baseOptions?: Apollo.MutationHookOptions<
-    LegacyCollectPublicationData,
-    LegacyCollectPublicationVariables
-  >,
+export function useLegacyCollect(
+  baseOptions?: Apollo.MutationHookOptions<LegacyCollectData, LegacyCollectVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<LegacyCollectPublicationData, LegacyCollectPublicationVariables>(
-    LegacyCollectPublicationDocument,
+  return Apollo.useMutation<LegacyCollectData, LegacyCollectVariables>(
+    LegacyCollectDocument,
     options,
   );
 }
-export type LegacyCollectPublicationHookResult = ReturnType<typeof useLegacyCollectPublication>;
-export type LegacyCollectPublicationMutationResult =
-  Apollo.MutationResult<LegacyCollectPublicationData>;
-export type LegacyCollectPublicationMutationOptions = Apollo.BaseMutationOptions<
-  LegacyCollectPublicationData,
-  LegacyCollectPublicationVariables
+export type LegacyCollectHookResult = ReturnType<typeof useLegacyCollect>;
+export type LegacyCollectMutationResult = Apollo.MutationResult<LegacyCollectData>;
+export type LegacyCollectMutationOptions = Apollo.BaseMutationOptions<
+  LegacyCollectData,
+  LegacyCollectVariables
 >;
 export const CreateLegacyCollectTypedDataDocument = /*#__PURE__*/ gql`
   mutation CreateLegacyCollectTypedData(
@@ -10219,6 +12386,10 @@ export type RevertFollowModuleSettingsKeySpecifier = (
 export type RevertFollowModuleSettingsFieldPolicy = {
   contract?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type RootConditionKeySpecifier = ('criteria' | RootConditionKeySpecifier)[];
+export type RootConditionFieldPolicy = {
+  criteria?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type SimpleCollectOpenActionSettingsKeySpecifier = (
   | 'amount'
   | 'collectLimit'
@@ -12127,6 +14298,10 @@ export type StrictTypedTypePolicies = {
       | (() => undefined | RevertFollowModuleSettingsKeySpecifier);
     fields?: RevertFollowModuleSettingsFieldPolicy;
   };
+  RootCondition?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | RootConditionKeySpecifier | (() => undefined | RootConditionKeySpecifier);
+    fields?: RootConditionFieldPolicy;
+  };
   SimpleCollectOpenActionSettings?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
       | false
@@ -12276,16 +14451,6 @@ export interface PossibleTypesResultData {
 }
 const result: PossibleTypesResultData = {
   possibleTypes: {
-    AccessCondition: [
-      'AndCondition',
-      'CollectCondition',
-      'EoaOwnershipCondition',
-      'Erc20OwnershipCondition',
-      'FollowCondition',
-      'NftOwnershipCondition',
-      'OrCondition',
-      'ProfileOwnershipCondition',
-    ],
     AnyPublication: ['Comment', 'Mirror', 'Post', 'Quote'],
     Asset: ['Erc20'],
     BroadcastMomokaResult: ['CreateMomokaPublicationResult', 'RelayError'],
@@ -12368,7 +14533,25 @@ const result: PossibleTypesResultData = {
     ],
     RelayMomokaResult: ['CreateMomokaPublicationResult', 'LensProfileManagerRelayError'],
     RelayResult: ['RelayError', 'RelaySuccess'],
+    SecondTierCondition: [
+      'AndCondition',
+      'CollectCondition',
+      'EoaOwnershipCondition',
+      'Erc20OwnershipCondition',
+      'FollowCondition',
+      'NftOwnershipCondition',
+      'OrCondition',
+      'ProfileOwnershipCondition',
+    ],
     SupportedModule: ['KnownSupportedModule', 'UnknownSupportedModule'],
+    ThirdTierCondition: [
+      'CollectCondition',
+      'EoaOwnershipCondition',
+      'Erc20OwnershipCondition',
+      'FollowCondition',
+      'NftOwnershipCondition',
+      'ProfileOwnershipCondition',
+    ],
   },
 };
 export default result;

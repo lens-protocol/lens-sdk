@@ -191,6 +191,22 @@ fragment NftImage on NftImage {
   verified
 }
 
+fragment ProfileStats on ProfileStats {
+  id
+  followers
+  following
+  comments
+  posts
+  mirrors
+  quotes
+  publications
+  upvoteReactions: reactions(request: { type: UPVOTE })
+  downvoteReactions: reactions(request: { type: DOWNVOTE })
+  upvoteReacted: reacted(request: { type: UPVOTE })
+  downvoteReacted: reacted(request: { type: DOWNVOTE })
+  countOpenActions(request: $profileStatsCountOpenActionArgs)
+}
+
 fragment Profile on Profile {
   __typename
   id
@@ -277,6 +293,9 @@ fragment Profile on Profile {
   lensManager
   invitedBy {
     id
+  }
+  stats(request: $profileStatsArg) {
+    ...ProfileStats
   }
 }
 
@@ -531,36 +550,16 @@ fragment PublicationOperations on PublicationOperations {
 
 # gated content
 fragment PublicationMetadataEncryptionStrategy on PublicationMetadataV3LitEncryption {
+  __typename
   encryptionKey
   accessCondition {
-    ... on NftOwnershipCondition {
-      ...NftOwnershipCondition
-    }
-    ... on Erc20OwnershipCondition {
-      ...Erc20OwnershipCondition
-    }
-    ... on EoaOwnershipCondition {
-      ...EoaOwnershipCondition
-    }
-    ... on ProfileOwnershipCondition {
-      ...ProfileOwnershipCondition
-    }
-    ... on FollowCondition {
-      ...FollowCondition
-    }
-    ... on CollectCondition {
-      ...CollectCondition
-    }
-    ... on AndCondition {
-      ...AndCondition
-    }
-    ... on OrCondition {
-      ...OrCondition
-    }
+    ...RootCondition
   }
+  encryptedPaths
 }
 
 fragment NftOwnershipCondition on NftOwnershipCondition {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -569,6 +568,7 @@ fragment NftOwnershipCondition on NftOwnershipCondition {
 }
 
 fragment Erc20OwnershipCondition on Erc20OwnershipCondition {
+  __typename
   amount {
     ...Amount
   }
@@ -576,23 +576,28 @@ fragment Erc20OwnershipCondition on Erc20OwnershipCondition {
 }
 
 fragment EoaOwnershipCondition on EoaOwnershipCondition {
+  __typename
   address
 }
 
 fragment ProfileOwnershipCondition on ProfileOwnershipCondition {
+  __typename
   profileId
 }
 
 fragment FollowCondition on FollowCondition {
+  __typename
   follow
 }
 
 fragment CollectCondition on CollectCondition {
+  __typename
   publicationId
   thisPublication
 }
 
 fragment AndCondition on AndCondition {
+  __typename
   criteria {
     ... on NftOwnershipCondition {
       ...NftOwnershipCondition
@@ -616,6 +621,7 @@ fragment AndCondition on AndCondition {
 }
 
 fragment OrCondition on OrCondition {
+  __typename
   criteria {
     ... on NftOwnershipCondition {
       ...NftOwnershipCondition
@@ -634,6 +640,36 @@ fragment OrCondition on OrCondition {
     }
     ... on CollectCondition {
       ...CollectCondition
+    }
+  }
+}
+
+fragment RootCondition on RootCondition {
+  __typename
+  criteria {
+    ... on NftOwnershipCondition {
+      ...NftOwnershipCondition
+    }
+    ... on Erc20OwnershipCondition {
+      ...Erc20OwnershipCondition
+    }
+    ... on EoaOwnershipCondition {
+      ...EoaOwnershipCondition
+    }
+    ... on ProfileOwnershipCondition {
+      ...ProfileOwnershipCondition
+    }
+    ... on FollowCondition {
+      ...FollowCondition
+    }
+    ... on CollectCondition {
+      ...CollectCondition
+    }
+    ... on AndCondition {
+      ...AndCondition
+    }
+    ... on OrCondition {
+      ...OrCondition
     }
   }
 }
@@ -756,30 +792,7 @@ fragment LegacyPublicationMetadata on LegacyPublicationMetadata {
       externalUrl
     }
     accessCondition {
-      ... on NftOwnershipCondition {
-        ...NftOwnershipCondition
-      }
-      ... on Erc20OwnershipCondition {
-        ...Erc20OwnershipCondition
-      }
-      ... on EoaOwnershipCondition {
-        ...EoaOwnershipCondition
-      }
-      ... on ProfileOwnershipCondition {
-        ...ProfileOwnershipCondition
-      }
-      ... on FollowCondition {
-        ...FollowCondition
-      }
-      ... on CollectCondition {
-        ...CollectCondition
-      }
-      ... on AndCondition {
-        ...AndCondition
-      }
-      ... on OrCondition {
-        ...OrCondition
-      }
+      ...RootCondition
     }
   }
 }
@@ -1332,6 +1345,17 @@ fragment LiveStreamMetadataV3 on LiveStreamMetadataV3 {
 }
 
 # publication fragments
+fragment PublicationStats on PublicationStats {
+  id
+  comments
+  mirrors
+  quotes
+  bookmarks
+  upvoteReactions: reactions(request: { type: UPVOTE })
+  downvoteReactions: reactions(request: { type: DOWNVOTE })
+  countOpenActions(request: $publicationStatsCountOpenActionArgs)
+}
+
 fragment Post on Post {
   __typename
   id
@@ -1451,6 +1475,9 @@ fragment Post on Post {
     ... on UnknownReferenceModuleSettings {
       ...UnknownReferenceModuleSettings
     }
+  }
+  stats(request: $publicationStatsInput) {
+    ...PublicationStats
   }
 }
 
@@ -1595,6 +1622,9 @@ fragment Comment on Comment {
   firstComment {
     ...CommentBase
   }
+  stats(request: $publicationStatsInput) {
+    ...PublicationStats
+  }
 }
 
 fragment Mirror on Mirror {
@@ -1609,6 +1639,9 @@ fragment Mirror on Mirror {
   }
   txHash
   createdAt
+  by {
+    ...Profile
+  }
   mirrorOn {
     ... on Post {
       ...Post
@@ -1619,9 +1652,6 @@ fragment Mirror on Mirror {
     ... on Quote {
       ...Quote
     }
-  }
-  by {
-    ...Profile
   }
 }
 
@@ -1759,6 +1789,9 @@ fragment Quote on Quote {
     ... on Quote {
       ...QuoteBase
     }
+  }
+  stats(request: $publicationStatsInput) {
+    ...PublicationStats
   }
 }
 

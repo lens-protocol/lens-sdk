@@ -1,6 +1,7 @@
 {
   "name": "api-bindings-v1",
   "version": "0.10.1",
+  "private": true,
   "description": "Graphql fragments, react hooks, typescript types of lens API.",
   "repository": {
     "directory": "packages/api-bindings",
@@ -88,12 +89,5 @@
       "@babel/preset-env",
       "@babel/preset-typescript"
     ]
-  },
-  "preconstruct": {
-    "entrypoints": [
-      "index.ts",
-      "mocks.ts"
-    ],
-    "exports": true
   }
 }
