@@ -148,7 +148,7 @@ export class Publication {
   async fetchAll(
     request: PublicationsRequest,
     options?: FetchPublicationOptions,
-  ): Promise<PaginatedResult<AnyPublicationFragment | null>> {
+  ): Promise<PaginatedResult<AnyPublicationFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Publications({
         request: currRequest,
