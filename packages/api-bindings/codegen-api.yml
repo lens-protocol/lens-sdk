@@ -1,0 +1,121 @@
+overwrite: true
+hooks:
+  afterAllFileWrite:
+    - prettier --write
+    - eslint --fix
+
+watch: false
+config:
+  gqlImport: graphql-tag
+  avoidOptionals:
+    field: true
+
+generates:
+  src/lens/graphql/generated.ts:
+    config:
+      strictScalars: true
+      scalars:
+        AppId: string
+        BlockchainData: string
+        BroadcastId: string
+        ChainId: string
+        ChallengeId: string
+        ContentEncryptionKey: string
+        CreateHandle: string
+        Cursor: string
+        DateTime: string
+        EncryptableDateTime: string
+        EncryptableMarkdown: string
+        EncryptableString: string
+        EncryptableTxHash: string
+        EncryptableURI: string
+        EncryptedPath: string
+        EncryptedValue: string
+        Ens: string
+        EvmAddress: string
+        Handle: string
+        ImageSizeTransform: ImageSizeTransform
+        Jwt: string
+        LimitScalar: number
+        Locale: string
+        Markdown: string
+        MimeType: string
+        MomokaId: string
+        MomokaProof: string
+        NftGalleryId: string
+        NftGalleryName: string
+        Nonce: string
+        OnchainPublicationId: string
+        PoapEventId: string
+        ProfileId: string
+        PublicationId: string
+        Signature: string
+        TokenId: string
+        TxHash: string
+        TxId: string
+        UnixTimestamp: string
+        URI: string
+        URL: string
+        UUID: string
+        Void: string
+    schema:
+      - https://api-v2-mumbai.lens.dev/graphql
+    documents:
+      - src/lens/graphql/*.graphql
+    plugins:
+      - 'typescript':
+          onlyOperationTypes: true # scalars and enums
+      - add:
+          content: [
+              '/** Code generated. DO NOT EDIT. */',
+              '/* eslint-disable import/no-default-export */', # generatedTypes default export
+              '/* eslint-disable @typescript-eslint/ban-types */', # needed by unions with {}
+              '/* eslint-disable @typescript-eslint/no-explicit-any */', # see extensive use of FieldPolicy<any> | FieldReadFunction<any>
+              '/* eslint-disable @typescript-eslint/naming-convention */', # interface PossibleTypesResultData not starting with I
+              '/* eslint-disable no-restricted-imports */', # import * from @apollo/client
+              '/* eslint-disable tsdoc/syntax */',
+              "import type { ImageSizeTransform } from '../ImageSizeTransform';",
+            ]
+      - 'typescript-operations':
+          skipTypename: true
+          immutableTypes: false
+          inlineFragmentTypes: combine
+          omitOperationSuffix: true
+          operationResultSuffix: 'Data'
+      - 'typescript-react-apollo':
+          pureMagicComment: true # keep
+          omitOperationSuffix: true # MUST goes with typescript-operations.omitOperationSuffix
+          operationResultSuffix: 'Data' # goes with typescript-operations.operationResultSuffix
+          fragmentVariablePrefix: Fragment # because FragmentDoc suffix is removed by omitOperationSuffix we need to add a prefix to differentiate fragment types from fragment documents
+      - 'typescript-apollo-client-helpers'
+      - 'fragment-matcher'
+
+  src/snapshot/generated.ts:
+    config:
+      strictScalars: true
+      scalars:
+        Any: unknown
+    schema: https://hub.snapshot.org/graphql
+    documents:
+      - src/snapshot/*.graphql
+    plugins:
+      - 'typescript':
+          onlyOperationTypes: true # scalars and enums
+      - add:
+          content: [
+              '/** Code generated. DO NOT EDIT. */',
+              '/* eslint-disable import/no-default-export */', # generatedTypes default export
+              '/* eslint-disable no-restricted-imports */', # import * from @apollo/client
+              '/* eslint-disable tsdoc/syntax */',
+            ]
+      - 'typescript-operations':
+          skipTypename: true
+          immutableTypes: false
+          inlineFragmentTypes: combine
+          omitOperationSuffix: true
+          operationResultSuffix: 'Data'
+      - 'typescript-react-apollo':
+          pureMagicComment: true # keep
+          omitOperationSuffix: true # MUST goes with typescript-operations.omitOperationSuffix
+          operationResultSuffix: 'Data' # goes with typescript-operations.operationResultSuffix
+          fragmentVariablePrefix: Fragment # because FragmentDoc suffix is removed by omitOperationSuffix we need to add a prefix to differentiate fragment types from fragment documents

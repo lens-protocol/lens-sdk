@@ -1,0 +1,531 @@
+# query fragments
+fragment TagResult on TagResult {
+  tag
+  total
+}
+
+fragment PublicationValidateMetadataResult on PublicationValidateMetadataResult {
+  valid
+  reason
+}
+
+fragment PublicationStats on PublicationStats {
+  id
+  comments
+  mirrors
+  quotes
+  bookmarks
+  upvoteReactions: reactions(request: { type: UPVOTE })
+  downvoteReactions: reactions(request: { type: DOWNVOTE })
+  countOpenActions(request: $openActionsRequest)
+}
+
+# queries
+query Publication(
+  $request: PublicationRequest!
+  $publicationImageTransform: ImageTransform = {}
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $rateRequest: RateRequest = { for: USD }
+) {
+  result: publication(request: $request) {
+    ... on Post {
+      ...Post
+    }
+    ... on Mirror {
+      ...Mirror
+    }
+    ... on Comment {
+      ...Comment
+    }
+    ... on Quote {
+      ...Quote
+    }
+  }
+}
+
+query PublicationStats(
+  $request: PublicationRequest!
+  $statsRequest: PublicationStatsInput! = {}
+  $openActionsRequest: PublicationStatsCountOpenActionArgs! = { anyOf: [] }
+) {
+  result: publication(request: $request) {
+    ... on Post {
+      __typename
+      stats(request: $statsRequest) {
+        ...PublicationStats
+      }
+    }
+    ... on Comment {
+      __typename
+      stats(request: $statsRequest) {
+        ...PublicationStats
+      }
+    }
+    ... on Quote {
+      __typename
+      stats(request: $statsRequest) {
+        ...PublicationStats
+      }
+    }
+    ... on Mirror {
+      __typename
+    }
+  }
+}
+
+query Publications(
+  $request: PublicationsRequest!
+  $publicationImageTransform: ImageTransform = {}
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $rateRequest: RateRequest = { for: USD }
+) {
+  result: publications(request: $request) {
+    items {
+      ... on Post {
+        ...Post
+      }
+      ... on Mirror {
+        ...Mirror
+      }
+      ... on Comment {
+        ...Comment
+      }
+      ... on Quote {
+        ...Quote
+      }
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query PublicationsTags($request: PublicationsTagsRequest!) {
+  result: publicationsTags(request: $request) {
+    items {
+      ...TagResult
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query ValidatePublicationMetadata($request: ValidatePublicationMetadataRequest!) {
+  result: validatePublicationMetadata(request: $request) {
+    ...PublicationValidateMetadataResult
+  }
+}
+
+# mutation fragments
+fragment CreateOnchainPostBroadcastItemResult on CreateOnchainPostBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      Post {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      contentURI
+      actionModules
+      actionModulesInitDatas
+      referenceModule
+      referenceModuleInitData
+    }
+  }
+}
+
+fragment CreateOnchainCommentBroadcastItemResult on CreateOnchainCommentBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      Comment {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      contentURI
+      pointedProfileId
+      pointedPubId
+      referrerProfileIds
+      referrerPubIds
+      referenceModuleData
+      actionModules
+      actionModulesInitDatas
+      referenceModule
+      referenceModuleInitData
+    }
+  }
+}
+
+fragment CreateOnchainMirrorBroadcastItemResult on CreateOnchainMirrorBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      Mirror {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      metadataURI
+      pointedProfileId
+      pointedPubId
+      referrerProfileIds
+      referrerPubIds
+      referenceModuleData
+    }
+  }
+}
+
+fragment CreateOnchainQuoteBroadcastItemResult on CreateOnchainQuoteBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      Quote {
+        ...EIP712TypedDataField
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      contentURI
+      pointedProfileId
+      pointedPubId
+      referrerProfileIds
+      referrerPubIds
+      referenceModuleData
+      actionModules
+      actionModulesInitDatas
+      referenceModule
+      referenceModuleInitData
+    }
+  }
+}
+
+fragment CreateMomokaPostBroadcastItemResult on CreateMomokaPostBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      Post {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      contentURI
+      actionModules
+      actionModulesInitDatas
+      referenceModule
+      referenceModuleInitData
+    }
+  }
+}
+
+fragment CreateMomokaCommentBroadcastItemResult on CreateMomokaCommentBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      Comment {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      contentURI
+      pointedProfileId
+      pointedPubId
+      referrerProfileIds
+      referrerPubIds
+      referenceModuleData
+      actionModules
+      actionModulesInitDatas
+      referenceModule
+      referenceModuleInitData
+    }
+  }
+}
+
+fragment CreateMomokaMirrorBroadcastItemResult on CreateMomokaMirrorBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      Mirror {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      metadataURI
+      pointedProfileId
+      pointedPubId
+      referrerProfileIds
+      referrerPubIds
+      referenceModuleData
+    }
+  }
+}
+
+fragment CreateMomokaQuoteBroadcastItemResult on CreateMomokaQuoteBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    types {
+      Quote {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    value {
+      nonce
+      deadline
+      profileId
+      contentURI
+      pointedProfileId
+      pointedPubId
+      referrerProfileIds
+      referrerPubIds
+      referenceModuleData
+      actionModules
+      actionModulesInitDatas
+      referenceModule
+      referenceModuleInitData
+    }
+  }
+}
+
+fragment CreateLegacyCollectBroadcastItemResult on CreateLegacyCollectBroadcastItemResult {
+  id
+  expiresAt
+  typedData {
+    ...CreateActOnOpenActionEIP712TypedData
+  }
+}
+
+# mutations
+mutation CreateOnchainPostTypedData($request: OnchainPostRequest!, $options: TypedDataOptions) {
+  result: createOnchainPostTypedData(request: $request, options: $options) {
+    ...CreateOnchainPostBroadcastItemResult
+  }
+}
+
+mutation CreateOnchainCommentTypedData(
+  $request: OnchainCommentRequest!
+  $options: TypedDataOptions
+) {
+  result: createOnchainCommentTypedData(request: $request, options: $options) {
+    ...CreateOnchainCommentBroadcastItemResult
+  }
+}
+
+mutation CreateOnchainMirrorTypedData($request: OnchainMirrorRequest!, $options: TypedDataOptions) {
+  result: createOnchainMirrorTypedData(request: $request, options: $options) {
+    ...CreateOnchainMirrorBroadcastItemResult
+  }
+}
+
+mutation CreateOnchainQuoteTypedData($request: OnchainQuoteRequest!, $options: TypedDataOptions) {
+  result: createOnchainQuoteTypedData(request: $request, options: $options) {
+    ...CreateOnchainQuoteBroadcastItemResult
+  }
+}
+
+mutation CreateMomokaPostTypedData($request: MomokaPostRequest!) {
+  result: createMomokaPostTypedData(request: $request) {
+    ...CreateMomokaPostBroadcastItemResult
+  }
+}
+
+mutation CreateMomokaCommentTypedData($request: MomokaCommentRequest!) {
+  result: createMomokaCommentTypedData(request: $request) {
+    ...CreateMomokaCommentBroadcastItemResult
+  }
+}
+
+mutation CreateMomokaMirrorTypedData($request: MomokaMirrorRequest!) {
+  result: createMomokaMirrorTypedData(request: $request) {
+    ...CreateMomokaMirrorBroadcastItemResult
+  }
+}
+
+mutation CreateMomokaQuoteTypedData($request: MomokaQuoteRequest!) {
+  result: createMomokaQuoteTypedData(request: $request) {
+    ...CreateMomokaQuoteBroadcastItemResult
+  }
+}
+
+mutation PostOnchain($request: OnchainPostRequest!) {
+  result: postOnchain(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation CommentOnchain($request: OnchainCommentRequest!) {
+  result: commentOnchain(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation MirrorOnchain($request: OnchainMirrorRequest!) {
+  result: mirrorOnchain(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation QuoteOnchain($request: OnchainQuoteRequest!) {
+  result: quoteOnchain(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation PostOnMomoka($request: MomokaPostRequest!) {
+  result: postOnMomoka(request: $request) {
+    ... on CreateMomokaPublicationResult {
+      ...CreateMomokaPublicationResult
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation CommentOnMomoka($request: MomokaCommentRequest!) {
+  result: commentOnMomoka(request: $request) {
+    ... on CreateMomokaPublicationResult {
+      ...CreateMomokaPublicationResult
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation MirrorOnMomoka($request: MomokaMirrorRequest!) {
+  result: mirrorOnMomoka(request: $request) {
+    ... on CreateMomokaPublicationResult {
+      ...CreateMomokaPublicationResult
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation QuoteOnMomoka($request: MomokaQuoteRequest!) {
+  result: quoteOnMomoka(request: $request) {
+    ... on CreateMomokaPublicationResult {
+      ...CreateMomokaPublicationResult
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation HidePublication($request: HidePublicationRequest!) {
+  hidePublication(request: $request)
+}
+
+mutation ReportPublication($request: ReportPublicationRequest!) {
+  reportPublication(request: $request)
+}
+
+mutation LegacyCollectPublication($request: LegacyCollectRequest!) {
+  result: legacyCollect(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation CreateLegacyCollectTypedData($request: LegacyCollectRequest!, $options: TypedDataOptions) {
+  result: createLegacyCollectTypedData(request: $request, options: $options) {
+    ...CreateLegacyCollectBroadcastItemResult
+  }
+}
+
+mutation RefreshPublicationMetadata($request: RefreshPublicationMetadataRequest!) {
+  result: refreshPublicationMetadata(request: $request) {
+    result
+  }
+}
