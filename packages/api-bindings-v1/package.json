@@ -4,7 +4,7 @@
   "private": true,
   "description": "Graphql fragments, react hooks, typescript types of lens API.",
   "repository": {
-    "directory": "packages/api-bindings",
+    "directory": "packages/api-bindings-v1",
     "type": "git",
     "url": "git://github.com/lens-protocol/lens-sdk.git"
   },

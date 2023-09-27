@@ -799,7 +799,7 @@ importers:
         version: 5.7.2
       '@lens-protocol/api-bindings':
         specifier: workspace:*
-        version: link:../api-bindings-v1
+        version: link:../api-bindings
       '@lens-protocol/blockchain-bindings':
         specifier: workspace:*
         version: link:../blockchain-bindings
@@ -944,7 +944,7 @@ importers:
         version: 5.7.2
       '@lens-protocol/api-bindings':
         specifier: workspace:*
-        version: link:../api-bindings-v1
+        version: link:../api-bindings
       '@lens-protocol/blockchain-bindings':
         specifier: workspace:*
         version: link:../blockchain-bindings
