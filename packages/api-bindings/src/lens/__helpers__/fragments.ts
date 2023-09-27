@@ -8,7 +8,9 @@ import {
   PaginatedResultInfo,
   Post,
   Profile,
+  ProfileStats,
   PublicationOperations,
+  PublicationStats,
   TextOnlyMetadataV3,
   TriStateValue,
 } from '../graphql/generated';
@@ -62,6 +64,7 @@ export function mockProfileFragment(overrides?: Partial<Profile>): Profile {
     followModule: null,
     metadata: null,
     invitedBy: null,
+    stats: mockProfileStatsFragment(),
 
     ...overrides,
     __typename: 'Profile',
@@ -81,6 +84,7 @@ export function mockPostFragment(overrides?: Partial<Omit<Post, '__typename'>>):
     metadata: mockPublicationTextOnlyMetadata(),
     openActionModules: null,
     referenceModule: null,
+    stats: mockPublicationStatsFragment(),
 
     ...overrides,
     __typename: 'Post',
@@ -105,6 +109,7 @@ export function mockCommentFragment(overrides?: Partial<Omit<Comment, '__typenam
     root: mainPost,
     commentOn: mainPost,
     firstComment: null,
+    stats: mockPublicationStatsFragment(),
 
     ...overrides,
     __typename: 'Comment',
@@ -178,5 +183,42 @@ export function mockPaginatedResultInfo(
 
     ...overrides,
     __typename: 'PaginatedResultInfo',
+  };
+}
+
+export function mockPublicationStatsFragment(
+  overrides: Partial<PublicationStats> = {},
+): PublicationStats {
+  return {
+    id: mockPublicationId(),
+    comments: faker.datatype.number(),
+    mirrors: faker.datatype.number(),
+    quotes: faker.datatype.number(),
+    bookmarks: faker.datatype.number(),
+    countOpenActions: faker.datatype.number(),
+    upvoteReactions: faker.datatype.number(),
+    downvoteReactions: faker.datatype.number(),
+
+    ...overrides,
+  };
+}
+
+export function mockProfileStatsFragment(overrides: Partial<ProfileStats> = {}): ProfileStats {
+  return {
+    id: mockProfileId(),
+    followers: faker.datatype.number(),
+    following: faker.datatype.number(),
+    comments: faker.datatype.number(),
+    posts: faker.datatype.number(),
+    mirrors: faker.datatype.number(),
+    quotes: faker.datatype.number(),
+    publications: faker.datatype.number(),
+    countOpenActions: faker.datatype.number(),
+    upvoteReactions: faker.datatype.number(),
+    downvoteReactions: faker.datatype.number(),
+    upvoteReacted: faker.datatype.number(),
+    downvoteReacted: faker.datatype.number(),
+
+    ...overrides,
   };
 }
