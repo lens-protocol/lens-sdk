@@ -37,7 +37,6 @@ const config = createConfig({
 });
 
 const lensConfig: LensConfig = {
-  // bindings: wagmiBindings(),
   environment: development,
   storage: localStorage(),
 };

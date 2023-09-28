@@ -1,4 +1,4 @@
-# Lens SDK + wagmi + Bundlr
+# Lens SDK + ethers + wagmi + Bundlr
 
 This package is an example app showcasing the `@lens-protocol/react` capabilities as well as a possible integration with [wagmi](https://wagmi.sh/) and Aerwave via [Bundlr](https://github.com/Bundlr-Network).
 
