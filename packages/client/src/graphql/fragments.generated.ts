@@ -123,7 +123,7 @@ export type ProfileFragment = {
   txHash: string;
   createdAt: string;
   interests: Array<string>;
-  invitesLeft: number | null;
+  invitesLeft: number;
   handle: string | null;
   sponsor: boolean;
   lensManager: boolean;

@@ -79,9 +79,6 @@ export type MomokaSummaryQuery = { result: { totalTransactions: number } };
 
 export type MomokaTransactionQueryVariables = Types.Exact<{
   request: Types.MomokaTransactionRequest;
-  profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
-  profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
-  rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
 export type MomokaTransactionQuery = {
@@ -95,9 +92,6 @@ export type MomokaTransactionQuery = {
 
 export type MomokaTransactionsQueryVariables = Types.Exact<{
   request: Types.MomokaTransactionsRequest;
-  profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
-  profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
-  rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
 export type MomokaTransactionsQuery = {
@@ -280,12 +274,7 @@ export const MomokaSummaryDocument = gql`
   }
 `;
 export const MomokaTransactionDocument = gql`
-  query MomokaTransaction(
-    $request: MomokaTransactionRequest!
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $rateRequest: RateRequest = { for: USD }
-  ) {
+  query MomokaTransaction($request: MomokaTransactionRequest!) {
     result: momokaTransaction(request: $request) {
       ... on MomokaPostTransaction {
         ...MomokaPostTransaction
@@ -307,12 +296,7 @@ export const MomokaTransactionDocument = gql`
   ${MomokaQuoteTransactionFragmentDoc}
 `;
 export const MomokaTransactionsDocument = gql`
-  query momokaTransactions(
-    $request: MomokaTransactionsRequest!
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $rateRequest: RateRequest = { for: USD }
-  ) {
+  query momokaTransactions($request: MomokaTransactionsRequest!) {
     result: momokaTransactions(request: $request) {
       items {
         ... on MomokaPostTransaction {

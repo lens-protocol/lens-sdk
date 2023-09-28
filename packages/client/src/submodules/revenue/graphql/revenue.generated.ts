@@ -75,7 +75,7 @@ export type RevenueFromPublicationQueryVariables = Types.Exact<{
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
-export type RevenueFromPublicationQuery = { result: PublicationRevenueFragment };
+export type RevenueFromPublicationQuery = { result: PublicationRevenueFragment | null };
 
 export type FollowRevenuesQueryVariables = Types.Exact<{
   request: Types.FollowRevenueRequest;

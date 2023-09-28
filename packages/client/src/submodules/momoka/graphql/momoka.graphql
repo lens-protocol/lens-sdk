@@ -144,12 +144,7 @@ query MomokaSummary {
   }
 }
 
-query MomokaTransaction(
-  $request: MomokaTransactionRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $rateRequest: RateRequest = { for: USD }
-) {
+query MomokaTransaction($request: MomokaTransactionRequest!) {
   result: momokaTransaction(request: $request) {
     ... on MomokaPostTransaction {
       ...MomokaPostTransaction
@@ -166,12 +161,7 @@ query MomokaTransaction(
   }
 }
 
-query momokaTransactions(
-  $request: MomokaTransactionsRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $rateRequest: RateRequest = { for: USD }
-) {
+query momokaTransactions($request: MomokaTransactionsRequest!) {
   result: momokaTransactions(request: $request) {
     items {
       ... on MomokaPostTransaction {
