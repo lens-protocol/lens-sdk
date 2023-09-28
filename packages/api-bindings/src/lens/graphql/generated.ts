@@ -582,7 +582,7 @@ export type MultirecipientFeeCollectModuleInput = {
   amount: AmountInput;
   collectLimit?: InputMaybe<Scalars['String']>;
   endsAt?: InputMaybe<Scalars['DateTime']>;
-  followerOnly?: InputMaybe<Scalars['Boolean']>;
+  followerOnly: Scalars['Boolean'];
   recipients: Array<RecipientDataInput>;
   referralFee?: InputMaybe<Scalars['Float']>;
 };
@@ -1425,7 +1425,7 @@ export type SimpleCollectOpenActionModuleInput = {
   amount?: InputMaybe<AmountInput>;
   collectLimit?: InputMaybe<Scalars['String']>;
   endsAt?: InputMaybe<Scalars['DateTime']>;
-  followerOnly?: InputMaybe<Scalars['Boolean']>;
+  followerOnly: Scalars['Boolean'];
   recipient?: InputMaybe<Scalars['EvmAddress']>;
   referralFee?: InputMaybe<Scalars['Float']>;
 };
@@ -1642,9 +1642,15 @@ export type LegacyVideoItem = {
 
 export type ProfileCoverSet = { raw: Image; optimized: Image | null; transformed: Image | null };
 
-export type ProfilePictureSet = { raw: Image; optimized: Image | null; transformed: Image | null };
+export type ProfilePictureSet = {
+  __typename: 'ImageSet';
+  raw: Image;
+  optimized: Image | null;
+  transformed: Image | null;
+};
 
 export type NftImage = {
+  __typename: 'NftImage';
   tokenId: string;
   verified: boolean;
   collection: NetworkAddress;
@@ -1673,7 +1679,7 @@ export type Profile = {
   txHash: string;
   createdAt: string;
   interests: Array<string>;
-  invitesLeft: number | null;
+  invitesLeft: number;
   handle: string | null;
   sponsor: boolean;
   lensManager: boolean;
@@ -3415,6 +3421,7 @@ export const FragmentImage = /*#__PURE__*/ gql`
 `;
 export const FragmentProfilePictureSet = /*#__PURE__*/ gql`
   fragment ProfilePictureSet on ImageSet {
+    __typename
     raw {
       ...Image
     }
@@ -3429,6 +3436,7 @@ export const FragmentProfilePictureSet = /*#__PURE__*/ gql`
 `;
 export const FragmentNftImage = /*#__PURE__*/ gql`
   fragment NftImage on NftImage {
+    __typename
     collection {
       ...NetworkAddress
     }

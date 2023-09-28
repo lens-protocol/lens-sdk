@@ -25,7 +25,7 @@ export function mockProfileFragment(overrides?: Partial<Profile>): Profile {
     createdAt: faker.date.past().toISOString(),
     interests: [],
     handle: faker.internet.userName(firstName, lastName),
-    invitesLeft: null,
+    invitesLeft: 0,
     sponsor: false,
     lensManager: false,
     ownedBy: {

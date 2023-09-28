@@ -1,4 +1,7 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
+
+import { LensConfig, validateConfig } from './config';
+import { createSharedDependencies, SharedDependenciesProvider } from './shared';
 
 /**
  * <LensProvider> props
@@ -8,6 +11,10 @@ export type LensProviderProps = {
    * The children to render
    */
   children: ReactNode;
+  /**
+   * The configuration for the Lens SDK
+   */
+  config: LensConfig;
 };
 
 /**
@@ -17,8 +24,14 @@ export type LensProviderProps = {
  * @param props - {@link LensProviderProps}
  */
 export function LensProvider({ children, ...props }: LensProviderProps) {
-  // eslint-disable-next-line
-  console.log('LensProvider', props);
+  const [sharedDependencies] = useState(() => {
+    validateConfig(props.config);
+    return createSharedDependencies(props.config);
+  });
 
-  return children;
+  return (
+    <SharedDependenciesProvider dependencies={sharedDependencies}>
+      {children}
+    </SharedDependenciesProvider>
+  );
 }
