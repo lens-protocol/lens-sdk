@@ -8,7 +8,7 @@ export * from './consts/errors';
 // types
 export type {
   Cast,
-  EthereumAddress,
+  EvmAddress,
   Failure,
   IEquatableError,
   InvariantError,

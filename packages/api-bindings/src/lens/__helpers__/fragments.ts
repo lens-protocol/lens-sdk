@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { mockProfileId, mockPublicationId, mockTransactionHash } from '@lens-protocol/domain/mocks';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
+import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import {
   Comment,
@@ -29,11 +29,11 @@ export function mockProfileFragment(overrides?: Partial<Profile>): Profile {
     sponsor: false,
     lensManager: false,
     ownedBy: {
-      address: mockEthereumAddress(),
-      chainId: '1',
+      address: mockEvmAddress(),
+      chainId: 1,
     },
     operations: {
-      id: faker.helpers.unique(faker.datatype.uuid),
+      id: mockProfileId(),
       canBlock: false,
       canUnblock: false,
       canFollow: TriStateValue.Unknown,
@@ -58,8 +58,8 @@ export function mockProfileFragment(overrides?: Partial<Profile>): Profile {
       },
     },
     followNftAddress: {
-      address: mockEthereumAddress(),
-      chainId: '1',
+      address: mockEvmAddress(),
+      chainId: 1,
     },
     followModule: null,
     metadata: null,

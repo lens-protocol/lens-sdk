@@ -1,10 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { ChainType } from '@lens-protocol/shared-kernel';
-import {
-  mockDaiAmount,
-  mockEthereumAddress,
-  mockUsdcAmount,
-} from '@lens-protocol/shared-kernel/mocks';
+import { mockDaiAmount, mockEvmAddress, mockUsdcAmount } from '@lens-protocol/shared-kernel/mocks';
 
 import { ReportReason, TransactionKind } from '../../../entities';
 import { mockProfileId, mockPublicationId } from '../../../entities/__helpers__/mocks';
@@ -133,7 +129,7 @@ export function mockChargeCollectPolicyConfig(
       max: 100,
       precision: 0.01,
     }),
-    recipient: mockEthereumAddress(),
+    recipient: mockEvmAddress(),
     timeLimited: false,
     ...overrides,
   };
@@ -216,7 +212,7 @@ export function mockPaidCollectRequest(
     publicationId: mockPublicationId(),
     fee: {
       amount: mockDaiAmount(1, ChainType.POLYGON),
-      contractAddress: mockEthereumAddress(),
+      contractAddress: mockEvmAddress(),
     },
     ...overrides,
     kind: TransactionKind.COLLECT_PUBLICATION,

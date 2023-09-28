@@ -1,7 +1,7 @@
 import {
   Amount,
   Erc20,
-  EthereumAddress,
+  EvmAddress,
   failure,
   PromiseResult,
   success,
@@ -18,7 +18,7 @@ export interface ITokenGateway {
   getTransferAllowanceFor<T extends Erc20>(
     asset: T,
     owner: Wallet,
-    spender: EthereumAddress,
+    spender: EvmAddress,
   ): Promise<Amount<T>>;
 }
 
@@ -40,7 +40,7 @@ export class InsufficientFundsError extends Error {
 
 export type TokenAvailabilityRequest = {
   amount: Amount<Erc20>;
-  spender: EthereumAddress;
+  spender: EvmAddress;
 };
 
 export type TokenAvailabilityError = InsufficientAllowanceError | InsufficientFundsError;

@@ -7,8 +7,12 @@
 /* eslint-disable tsdoc/syntax */
 import * as Apollo from '@apollo/client';
 import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';
+import type { AppId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
+import type { EvmAddress, Url } from '@lens-protocol/shared-kernel';
 import gql from 'graphql-tag';
 
+import type { ContentEncryptionKey } from '../ContentEncryptionKey';
+import type { Cursor } from '../Cursor';
 import type { ImageSizeTransform } from '../ImageSizeTransform';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -23,14 +27,14 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  AppId: string;
+  AppId: AppId;
   BlockchainData: string;
   BroadcastId: string;
-  ChainId: string;
+  ChainId: number;
   ChallengeId: string;
-  ContentEncryptionKey: string;
+  ContentEncryptionKey: ContentEncryptionKey;
   CreateHandle: string;
-  Cursor: string;
+  Cursor: Cursor;
   DateTime: string;
   EncryptableDateTime: string;
   EncryptableMarkdown: string;
@@ -40,7 +44,7 @@ export type Scalars = {
   EncryptedPath: string;
   EncryptedValue: string;
   Ens: string;
-  EvmAddress: string;
+  EvmAddress: EvmAddress;
   Handle: string;
   ImageSizeTransform: ImageSizeTransform;
   Jwt: string;
@@ -51,20 +55,20 @@ export type Scalars = {
   MomokaProof: string;
   NftGalleryId: string;
   NftGalleryName: string;
-  Nonce: string;
+  Nonce: number;
   OnchainPublicationId: string;
   PoapEventId: string;
-  ProfileId: string;
-  PublicationId: string;
+  ProfileId: ProfileId;
+  PublicationId: PublicationId;
   Signature: string;
   TokenId: string;
   TxHash: string;
   TxId: string;
   URI: string;
-  URL: string;
+  URL: Url;
   UUID: string;
   UnixTimestamp: string;
-  Void: string;
+  Void: void;
 };
 
 export type ActOnOpenActionInput = {
@@ -1589,7 +1593,7 @@ export type Fiat = { name: string; symbol: string; decimals: number };
 export type Amount = { value: string; asset: Erc20; rate: FiatAmount | null };
 
 export type FeeFollowModuleSettings = {
-  recipient: string;
+  recipient: EvmAddress;
   amount: Amount;
   contract: NetworkAddress;
 };
@@ -1601,7 +1605,7 @@ export type UnknownFollowModuleSettings = {
   contract: NetworkAddress;
 };
 
-export type NetworkAddress = { address: string; chainId: string };
+export type NetworkAddress = { address: EvmAddress; chainId: number };
 
 export type Image = {
   uri: string;
@@ -1658,7 +1662,7 @@ export type NftImage = {
 };
 
 export type ProfileStats = {
-  id: string;
+  id: ProfileId;
   followers: number;
   following: number;
   comments: number;
@@ -1675,7 +1679,7 @@ export type ProfileStats = {
 
 export type Profile = {
   __typename: 'Profile';
-  id: string;
+  id: ProfileId;
   txHash: string;
   createdAt: string;
   interests: Array<string>;
@@ -1685,7 +1689,7 @@ export type Profile = {
   lensManager: boolean;
   ownedBy: NetworkAddress;
   operations: {
-    id: string;
+    id: ProfileId;
     canBlock: boolean;
     canUnblock: boolean;
     canFollow: TriStateValue;
@@ -1715,17 +1719,17 @@ export type Profile = {
     coverPicture: ProfileCoverSet | null;
     attributes: Array<{ type: AttributeType; key: string; value: string }>;
   } | null;
-  invitedBy: { id: string } | null;
+  invitedBy: { id: ProfileId } | null;
   stats: ProfileStats;
 };
 
 export type PaginatedResultInfo = {
   __typename: 'PaginatedResultInfo';
-  prev: string | null;
-  next: string | null;
+  prev: Cursor | null;
+  next: Cursor | null;
 };
 
-export type App = { id: string };
+export type App = { id: AppId };
 
 export type MomokaInfo = { proof: string };
 
@@ -1744,7 +1748,7 @@ export type UnknownReferenceModuleSettings = {
 };
 
 export type SimpleCollectOpenActionSettings = {
-  recipient: string;
+  recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
@@ -1760,7 +1764,7 @@ export type MultirecipientFeeCollectOpenActionSettings = {
   endsAt: string | null;
   contract: NetworkAddress;
   amount: Amount;
-  recipients: Array<{ recipient: string; split: number }>;
+  recipients: Array<{ recipient: EvmAddress; split: number }>;
 };
 
 export type UnknownOpenActionModuleSettings = {
@@ -1771,7 +1775,7 @@ export type UnknownOpenActionModuleSettings = {
 export type LegacyFreeCollectModuleSettings = { followerOnly: boolean; contract: NetworkAddress };
 
 export type LegacyFeeCollectModuleSettings = {
-  recipient: string;
+  recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
   contract: NetworkAddress;
@@ -1780,7 +1784,7 @@ export type LegacyFeeCollectModuleSettings = {
 
 export type LegacyLimitedFeeCollectModuleSettings = {
   collectLimit: string | null;
-  recipient: string;
+  recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
   contract: NetworkAddress;
@@ -1789,18 +1793,18 @@ export type LegacyLimitedFeeCollectModuleSettings = {
 
 export type LegacyLimitedTimedFeeCollectModuleSettings = {
   collectLimit: string | null;
-  recipient: string;
+  recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
   endTimestamp: string;
-  contract: { address: string };
+  contract: { address: EvmAddress };
   amount: Amount;
 };
 
 export type LegacyRevertCollectModuleSettings = { contract: NetworkAddress };
 
 export type LegacyTimedFeeCollectModuleSettings = {
-  recipient: string;
+  recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
   endTimestamp: string;
@@ -1815,11 +1819,11 @@ export type LegacyMultirecipientFeeCollectModuleSettings = {
   endsAt: string | null;
   contract: NetworkAddress;
   amount: Amount;
-  recipients: Array<{ recipient: string; split: number }>;
+  recipients: Array<{ recipient: EvmAddress; split: number }>;
 };
 
 export type LegacySimpleCollectModuleSettings = {
-  recipient: string;
+  recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
@@ -1829,7 +1833,7 @@ export type LegacySimpleCollectModuleSettings = {
 };
 
 export type LegacyErc4626FeeCollectModuleSettings = {
-  recipient: string;
+  recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
@@ -1840,7 +1844,7 @@ export type LegacyErc4626FeeCollectModuleSettings = {
 };
 
 export type LegacyAaveFeeCollectModuleSettings = {
-  recipient: string;
+  recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
@@ -1850,7 +1854,7 @@ export type LegacyAaveFeeCollectModuleSettings = {
 };
 
 export type UnknownOpenActionResult = {
-  address: string;
+  address: EvmAddress;
   category: OpenActionCategoryType | null;
   initReturnData: string | null;
 };
@@ -1890,7 +1894,7 @@ export type PublicationOperations = {
 
 export type PublicationMetadataEncryptionStrategy = {
   __typename: 'PublicationMetadataV3LitEncryption';
-  encryptionKey: string;
+  encryptionKey: ContentEncryptionKey;
   encryptedPaths: Array<string>;
   accessCondition: RootCondition;
 };
@@ -1908,18 +1912,18 @@ export type Erc20OwnershipCondition = {
   amount: Amount;
 };
 
-export type EoaOwnershipCondition = { __typename: 'EoaOwnershipCondition'; address: string };
+export type EoaOwnershipCondition = { __typename: 'EoaOwnershipCondition'; address: EvmAddress };
 
 export type ProfileOwnershipCondition = {
   __typename: 'ProfileOwnershipCondition';
-  profileId: string;
+  profileId: ProfileId;
 };
 
-export type FollowCondition = { __typename: 'FollowCondition'; follow: string };
+export type FollowCondition = { __typename: 'FollowCondition'; follow: ProfileId };
 
 export type CollectCondition = {
   __typename: 'CollectCondition';
-  publicationId: string;
+  publicationId: PublicationId;
   thisPublication: boolean;
 };
 
@@ -1984,7 +1988,7 @@ export type PublicationMarketplaceMetadataAttribute = {
 
 export type MarketplaceMetadata = {
   description: string | null;
-  externalURL: string | null;
+  externalURL: Url | null;
   name: string | null;
   animationUrl: string | null;
   attributes: Array<PublicationMarketplaceMetadataAttribute> | null;
@@ -2025,7 +2029,7 @@ export type LegacyPublicationMetadata = {
   media: Array<LegacyAudioItem | LegacyImageItem | LegacyVideoItem> | null;
   marketplace: MarketplaceMetadata | null;
   encryptedWith: {
-    encryptionKey: string;
+    encryptionKey: ContentEncryptionKey;
     encryptedFields: {
       content: string | null;
       image: string | null;
@@ -2049,7 +2053,7 @@ export type VideoMetadataV3 = {
   tags: Array<string> | null;
   contentWarning: PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  appId: string | null;
+  appId: AppId | null;
   isShortVideo: boolean;
   title: string;
   content: string;
@@ -2069,7 +2073,7 @@ export type AudioMetadataV3 = {
   tags: Array<string> | null;
   contentWarning: PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  appId: string | null;
+  appId: AppId | null;
   title: string;
   content: string;
   marketplace: MarketplaceMetadata | null;
@@ -2088,7 +2092,7 @@ export type ImageMetadataV3 = {
   tags: Array<string> | null;
   contentWarning: PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  appId: string | null;
+  appId: AppId | null;
   title: string;
   content: string;
   marketplace: MarketplaceMetadata | null;
@@ -2107,7 +2111,7 @@ export type ArticleMetadataV3 = {
   tags: Array<string> | null;
   contentWarning: PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  appId: string | null;
+  appId: AppId | null;
   title: string;
   content: string;
   marketplace: MarketplaceMetadata | null;
@@ -2125,7 +2129,7 @@ export type EventMetadataV3 = {
   tags: Array<string> | null;
   contentWarning: PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  appId: string | null;
+  appId: AppId | null;
   startsAt: string;
   endsAt: string;
   links: Array<string> | null;
@@ -2146,7 +2150,7 @@ export type LinkMetadataV3 = {
   tags: Array<string> | null;
   contentWarning: PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  appId: string | null;
+  appId: AppId | null;
   content: string;
   sharingLink: string;
   marketplace: MarketplaceMetadata | null;
@@ -2164,7 +2168,7 @@ export type EmbedMetadataV3 = {
   tags: Array<string> | null;
   contentWarning: PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  appId: string | null;
+  appId: AppId | null;
   content: string;
   embed: string;
   marketplace: MarketplaceMetadata | null;
@@ -2182,7 +2186,7 @@ export type CheckingInMetadataV3 = {
   tags: Array<string> | null;
   contentWarning: PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  appId: string | null;
+  appId: AppId | null;
   content: string;
   location: string;
   marketplace: MarketplaceMetadata | null;
@@ -2201,7 +2205,7 @@ export type TextOnlyMetadataV3 = {
   tags: Array<string> | null;
   contentWarning: PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  appId: string | null;
+  appId: AppId | null;
   content: string;
   marketplace: MarketplaceMetadata | null;
   attributes: Array<{ key: string; value: string }> | null;
@@ -2215,7 +2219,7 @@ export type ThreeDMetadataV3 = {
   tags: Array<string> | null;
   contentWarning: PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  appId: string | null;
+  appId: AppId | null;
   content: string;
   marketplace: MarketplaceMetadata | null;
   attributes: Array<{ key: string; value: string }> | null;
@@ -2239,7 +2243,7 @@ export type StoryMetadataV3 = {
   tags: Array<string> | null;
   contentWarning: PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  appId: string | null;
+  appId: AppId | null;
   content: string;
   marketplace: MarketplaceMetadata | null;
   attributes: Array<{ key: string; value: string }> | null;
@@ -2257,11 +2261,11 @@ export type TransactionMetadataV3 = {
   tags: Array<string> | null;
   contentWarning: PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  appId: string | null;
+  appId: AppId | null;
   content: string;
   type: PublicationMetadataTransactionType;
   txHash: string;
-  chainId: string;
+  chainId: number;
   marketplace: MarketplaceMetadata | null;
   attributes: Array<{ key: string; value: string }> | null;
   encryptedWith: PublicationMetadataEncryptionStrategy | null;
@@ -2277,7 +2281,7 @@ export type MintMetadataV3 = {
   tags: Array<string> | null;
   contentWarning: PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  appId: string | null;
+  appId: AppId | null;
   content: string;
   mintLink: string;
   marketplace: MarketplaceMetadata | null;
@@ -2295,7 +2299,7 @@ export type SpaceMetadataV3 = {
   tags: Array<string> | null;
   contentWarning: PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  appId: string | null;
+  appId: AppId | null;
   content: string;
   title: string;
   link: string;
@@ -2315,7 +2319,7 @@ export type LiveStreamMetadataV3 = {
   tags: Array<string> | null;
   contentWarning: PublicationContentWarningType | null;
   hideFromFeed: boolean;
-  appId: string | null;
+  appId: AppId | null;
   title: string;
   content: string;
   startsAt: string;
@@ -2332,7 +2336,7 @@ export type LiveStreamMetadataV3 = {
 };
 
 export type PublicationStats = {
-  id: string;
+  id: PublicationId;
   comments: number;
   mirrors: number;
   quotes: number;
@@ -2344,7 +2348,7 @@ export type PublicationStats = {
 
 export type Post = {
   __typename: 'Post';
-  id: string;
+  id: PublicationId;
   isHidden: boolean;
   txHash: string | null;
   createdAt: string;
@@ -2394,7 +2398,7 @@ export type Post = {
 
 export type CommentBase = {
   __typename: 'Comment';
-  id: string;
+  id: PublicationId;
   isHidden: boolean;
   txHash: string | null;
   createdAt: string;
@@ -2450,7 +2454,7 @@ export type Comment = {
 
 export type Mirror = {
   __typename: 'Mirror';
-  id: string;
+  id: PublicationId;
   isHidden: boolean;
   txHash: string | null;
   createdAt: string;
@@ -2462,7 +2466,7 @@ export type Mirror = {
 
 export type QuoteBase = {
   __typename: 'Quote';
-  id: string;
+  id: PublicationId;
   isHidden: boolean;
   txHash: string | null;
   createdAt: string;
@@ -2516,9 +2520,9 @@ export type Quote = {
 
 export type Eip712TypedDataDomain = {
   name: string;
-  chainId: string;
+  chainId: number;
   version: string;
-  verifyingContract: string;
+  verifyingContract: EvmAddress;
 };
 
 export type Eip712TypedDataField = { name: string; type: string };
@@ -2527,14 +2531,14 @@ export type CreateActOnOpenActionEip712TypedData = {
   types: { Act: Array<Eip712TypedDataField> };
   domain: Eip712TypedDataDomain;
   value: {
-    nonce: string;
+    nonce: number;
     deadline: string;
-    publicationActedProfileId: string;
+    publicationActedProfileId: ProfileId;
     publicationActedId: string;
-    actorProfileId: string;
-    referrerProfileIds: Array<string>;
+    actorProfileId: ProfileId;
+    referrerProfileIds: Array<ProfileId>;
     referrerPubIds: Array<string>;
-    actionModuleAddress: string;
+    actionModuleAddress: EvmAddress;
     actionModuleData: string;
   };
 };
@@ -2554,12 +2558,12 @@ export type LensProfileManagerRelayError = {
 
 export type CreateMomokaPublicationResult = {
   __typename: 'CreateMomokaPublicationResult';
-  id: string;
+  id: PublicationId;
   proof: string;
   momokaId: string;
 };
 
-export type ProfileManager = { address: string };
+export type ProfileManager = { address: EvmAddress };
 
 export type CreateProfileWithHandleErrorResult = { reason: CreateProfileWithHandleErrorReasonType };
 
@@ -2569,7 +2573,7 @@ export type CreateOnchainSetProfileMetadataBroadcastItemResult = {
   typedData: {
     types: { SetProfileMetadataURI: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
-    value: { nonce: string; deadline: string; profileId: string; metadataURI: string };
+    value: { nonce: number; deadline: string; profileId: ProfileId; metadataURI: string };
   };
 };
 
@@ -2580,10 +2584,10 @@ export type CreateChangeProfileManagersBroadcastItemResult = {
     types: { ChangeDelegatedExecutorsConfig: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
     value: {
-      nonce: string;
+      nonce: number;
       deadline: string;
-      delegatorProfileId: string;
-      delegatedExecutors: Array<string>;
+      delegatorProfileId: ProfileId;
+      delegatedExecutors: Array<EvmAddress>;
       approvals: Array<boolean>;
       configNumber: number;
       switchToGivenConfig: boolean;
@@ -2598,10 +2602,10 @@ export type CreateBlockProfilesBroadcastItemResult = {
     types: { SetBlockStatus: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
     value: {
-      nonce: string;
+      nonce: number;
       deadline: string;
-      byProfileId: string;
-      idsOfProfilesToSetBlockStatus: Array<string>;
+      byProfileId: ProfileId;
+      idsOfProfilesToSetBlockStatus: Array<ProfileId>;
       blockStatus: Array<boolean>;
     };
   };
@@ -2614,10 +2618,10 @@ export type CreateUnblockProfilesBroadcastItemResult = {
     types: { SetBlockStatus: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
     value: {
-      nonce: string;
+      nonce: number;
       deadline: string;
-      byProfileId: string;
-      idsOfProfilesToSetBlockStatus: Array<string>;
+      byProfileId: ProfileId;
+      idsOfProfilesToSetBlockStatus: Array<ProfileId>;
       blockStatus: Array<boolean>;
     };
   };
@@ -2630,10 +2634,10 @@ export type CreateFollowBroadcastItemResult = {
     types: { Follow: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
     value: {
-      nonce: string;
+      nonce: number;
       deadline: string;
-      followerProfileId: string;
-      idsOfProfilesToFollow: Array<string>;
+      followerProfileId: ProfileId;
+      idsOfProfilesToFollow: Array<ProfileId>;
       followTokenIds: Array<string>;
       datas: Array<string>;
     };
@@ -2647,10 +2651,10 @@ export type CreateUnfollowBroadcastItemResult = {
     types: { Unfollow: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
     value: {
-      nonce: string;
+      nonce: number;
       deadline: string;
-      unfollowerProfileId: string;
-      idsOfProfilesToUnfollow: Array<string>;
+      unfollowerProfileId: ProfileId;
+      idsOfProfilesToUnfollow: Array<ProfileId>;
     };
   };
 };
@@ -2662,10 +2666,10 @@ export type CreateSetFollowModuleBroadcastItemResult = {
     types: { SetFollowModule: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
     value: {
-      nonce: string;
+      nonce: number;
       deadline: string;
-      profileId: string;
-      followModule: string;
+      profileId: ProfileId;
+      followModule: EvmAddress;
       followModuleInitData: string;
     };
   };
@@ -2677,7 +2681,7 @@ export type CreateHandleLinkToProfileBroadcastItemResult = {
   typedData: {
     types: { Link: Array<Eip712TypedDataField> };
     domain: Eip712TypedDataDomain;
-    value: { nonce: string; deadline: string; profileId: string; handleId: string };
+    value: { nonce: number; deadline: string; profileId: ProfileId; handleId: string };
   };
 };
 
@@ -2687,7 +2691,7 @@ export type CreateHandleUnlinkFromProfileBroadcastItemResult = {
   typedData: {
     types: { Unlink: Array<Eip712TypedDataField> };
     domain: Eip712TypedDataDomain;
-    value: { nonce: string; deadline: string; profileId: string; handleId: string };
+    value: { nonce: number; deadline: string; profileId: ProfileId; handleId: string };
   };
 };
 
@@ -2800,13 +2804,13 @@ export type AddProfileInterestsVariables = Exact<{
   request: ProfileInterestsRequest;
 }>;
 
-export type AddProfileInterestsData = { result: string | null };
+export type AddProfileInterestsData = { result: void | null };
 
 export type RemoveProfileInterestsVariables = Exact<{
   request: ProfileInterestsRequest;
 }>;
 
-export type RemoveProfileInterestsData = { result: string | null };
+export type RemoveProfileInterestsData = { result: void | null };
 
 export type SetProfileMetadataVariables = Exact<{
   request: OnchainSetProfileMetadataRequest;
@@ -2842,7 +2846,7 @@ export type DismissRecommendedProfilesVariables = Exact<{
   request: DismissRecommendedProfilesRequest;
 }>;
 
-export type DismissRecommendedProfilesData = { result: string | null };
+export type DismissRecommendedProfilesData = { result: void | null };
 
 export type CreateOnchainSetProfileMetadataTypedDataVariables = Exact<{
   request: OnchainSetProfileMetadataRequest;
@@ -2992,13 +2996,13 @@ export type CreateOnchainPostBroadcastItemResult = {
     types: { Post: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
     value: {
-      nonce: string;
+      nonce: number;
       deadline: string;
-      profileId: string;
+      profileId: ProfileId;
       contentURI: string;
-      actionModules: Array<string>;
+      actionModules: Array<EvmAddress>;
       actionModulesInitDatas: Array<string>;
-      referenceModule: string;
+      referenceModule: EvmAddress;
       referenceModuleInitData: string;
     };
   };
@@ -3011,18 +3015,18 @@ export type CreateOnchainCommentBroadcastItemResult = {
     types: { Comment: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
     value: {
-      nonce: string;
+      nonce: number;
       deadline: string;
-      profileId: string;
+      profileId: ProfileId;
       contentURI: string;
-      pointedProfileId: string;
+      pointedProfileId: ProfileId;
       pointedPubId: string;
-      referrerProfileIds: Array<string>;
+      referrerProfileIds: Array<ProfileId>;
       referrerPubIds: Array<string>;
       referenceModuleData: string;
-      actionModules: Array<string>;
+      actionModules: Array<EvmAddress>;
       actionModulesInitDatas: Array<string>;
-      referenceModule: string;
+      referenceModule: EvmAddress;
       referenceModuleInitData: string;
     };
   };
@@ -3035,13 +3039,13 @@ export type CreateOnchainMirrorBroadcastItemResult = {
     types: { Mirror: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
     value: {
-      nonce: string;
+      nonce: number;
       deadline: string;
-      profileId: string;
+      profileId: ProfileId;
       metadataURI: string;
-      pointedProfileId: string;
+      pointedProfileId: ProfileId;
       pointedPubId: string;
-      referrerProfileIds: Array<string>;
+      referrerProfileIds: Array<ProfileId>;
       referrerPubIds: Array<string>;
       referenceModuleData: string;
     };
@@ -3055,18 +3059,18 @@ export type CreateOnchainQuoteBroadcastItemResult = {
     types: { Quote: Array<Eip712TypedDataField> };
     domain: Eip712TypedDataDomain;
     value: {
-      nonce: string;
+      nonce: number;
       deadline: string;
-      profileId: string;
+      profileId: ProfileId;
       contentURI: string;
-      pointedProfileId: string;
+      pointedProfileId: ProfileId;
       pointedPubId: string;
-      referrerProfileIds: Array<string>;
+      referrerProfileIds: Array<ProfileId>;
       referrerPubIds: Array<string>;
       referenceModuleData: string;
-      actionModules: Array<string>;
+      actionModules: Array<EvmAddress>;
       actionModulesInitDatas: Array<string>;
-      referenceModule: string;
+      referenceModule: EvmAddress;
       referenceModuleInitData: string;
     };
   };
@@ -3079,13 +3083,13 @@ export type CreateMomokaPostBroadcastItemResult = {
     types: { Post: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
     value: {
-      nonce: string;
+      nonce: number;
       deadline: string;
-      profileId: string;
+      profileId: ProfileId;
       contentURI: string;
-      actionModules: Array<string>;
+      actionModules: Array<EvmAddress>;
       actionModulesInitDatas: Array<string>;
-      referenceModule: string;
+      referenceModule: EvmAddress;
       referenceModuleInitData: string;
     };
   };
@@ -3098,18 +3102,18 @@ export type CreateMomokaCommentBroadcastItemResult = {
     types: { Comment: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
     value: {
-      nonce: string;
+      nonce: number;
       deadline: string;
-      profileId: string;
+      profileId: ProfileId;
       contentURI: string;
-      pointedProfileId: string;
+      pointedProfileId: ProfileId;
       pointedPubId: string;
-      referrerProfileIds: Array<string>;
+      referrerProfileIds: Array<ProfileId>;
       referrerPubIds: Array<string>;
       referenceModuleData: string;
-      actionModules: Array<string>;
+      actionModules: Array<EvmAddress>;
       actionModulesInitDatas: Array<string>;
-      referenceModule: string;
+      referenceModule: EvmAddress;
       referenceModuleInitData: string;
     };
   };
@@ -3122,13 +3126,13 @@ export type CreateMomokaMirrorBroadcastItemResult = {
     types: { Mirror: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
     value: {
-      nonce: string;
+      nonce: number;
       deadline: string;
-      profileId: string;
+      profileId: ProfileId;
       metadataURI: string;
-      pointedProfileId: string;
+      pointedProfileId: ProfileId;
       pointedPubId: string;
-      referrerProfileIds: Array<string>;
+      referrerProfileIds: Array<ProfileId>;
       referrerPubIds: Array<string>;
       referenceModuleData: string;
     };
@@ -3142,18 +3146,18 @@ export type CreateMomokaQuoteBroadcastItemResult = {
     types: { Quote: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
     value: {
-      nonce: string;
+      nonce: number;
       deadline: string;
-      profileId: string;
+      profileId: ProfileId;
       contentURI: string;
-      pointedProfileId: string;
+      pointedProfileId: ProfileId;
       pointedPubId: string;
-      referrerProfileIds: Array<string>;
+      referrerProfileIds: Array<ProfileId>;
       referrerPubIds: Array<string>;
       referenceModuleData: string;
-      actionModules: Array<string>;
+      actionModules: Array<EvmAddress>;
       actionModulesInitDatas: Array<string>;
-      referenceModule: string;
+      referenceModule: EvmAddress;
       referenceModuleInitData: string;
     };
   };
@@ -3277,13 +3281,13 @@ export type HidePublicationVariables = Exact<{
   request: HidePublicationRequest;
 }>;
 
-export type HidePublicationData = { hidePublication: string | null };
+export type HidePublicationData = { hidePublication: void | null };
 
 export type ReportPublicationVariables = Exact<{
   request: ReportPublicationRequest;
 }>;
 
-export type ReportPublicationData = { reportPublication: string | null };
+export type ReportPublicationData = { reportPublication: void | null };
 
 export type LegacyCollectVariables = Exact<{
   request: LegacyCollectRequest;

@@ -1,4 +1,4 @@
-import { Amount, Erc20, EthereumAddress, failure } from '@lens-protocol/shared-kernel';
+import { Amount, Erc20, EvmAddress, failure } from '@lens-protocol/shared-kernel';
 
 import {
   TransactionKind,
@@ -32,7 +32,7 @@ export type FreeCollectRequest = {
 
 export type CollectFee = {
   amount: Amount<Erc20>;
-  contractAddress: EthereumAddress;
+  contractAddress: EvmAddress;
 };
 
 export type PaidCollectRequest = {
