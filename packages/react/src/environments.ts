@@ -90,7 +90,7 @@ export const production: EnvironmentConfig = {
  */
 export const development: EnvironmentConfig = {
   name: 'development',
-  backend: 'https://api-mumbai.lens.dev',
+  backend: 'https://api-v2-mumbai.lens.dev',
   chains: {
     [ChainType.ETHEREUM]: goerli,
     [ChainType.POLYGON]: mumbai,
