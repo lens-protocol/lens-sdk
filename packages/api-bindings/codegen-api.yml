@@ -22,7 +22,7 @@ generates:
         ChallengeId: string
         ContentEncryptionKey: string
         CreateHandle: string
-        Cursor: string
+        Cursor: Cursor
         DateTime: string
         EncryptableDateTime: string
         EncryptableMarkdown: string
@@ -75,6 +75,7 @@ generates:
               '/* eslint-disable no-restricted-imports */', # import * from @apollo/client
               '/* eslint-disable tsdoc/syntax */',
               "import type { ImageSizeTransform } from '../ImageSizeTransform';",
+              "import type { Cursor} from '../Cursor'",
             ]
       - 'typescript-operations':
           skipTypename: true

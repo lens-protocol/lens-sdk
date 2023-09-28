@@ -9,6 +9,7 @@ import * as Apollo from '@apollo/client';
 import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';
 import gql from 'graphql-tag';
 
+import type { Cursor } from '../Cursor';
 import type { ImageSizeTransform } from '../ImageSizeTransform';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -30,7 +31,7 @@ export type Scalars = {
   ChallengeId: string;
   ContentEncryptionKey: string;
   CreateHandle: string;
-  Cursor: string;
+  Cursor: Cursor;
   DateTime: string;
   EncryptableDateTime: string;
   EncryptableMarkdown: string;
@@ -1715,8 +1716,8 @@ export type Profile = {
 
 export type PaginatedResultInfo = {
   __typename: 'PaginatedResultInfo';
-  prev: string | null;
-  next: string | null;
+  prev: Cursor | null;
+  next: Cursor | null;
 };
 
 export type App = { id: string };

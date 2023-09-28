@@ -1,5 +1,6 @@
 import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
+import { AppId } from '@lens-protocol/domain/entities';
 
 import { Cursor } from '../Cursor';
 import {
@@ -11,8 +12,12 @@ import {
   PublicationVariables,
   PaginatedResultInfo,
 } from '../graphql/generated';
-import { AnyPublication } from '../utils';
+import { AnyPublication, Sources } from '../utils';
 import { mockPaginatedResultInfo, mockPostFragment } from './fragments';
+
+export function mockSources(): Sources {
+  return ['foobar' as AppId];
+}
 
 export function mockCursor(): Cursor {
   return faker.random.alphaNumeric(10) as Cursor;
@@ -65,6 +70,31 @@ export function mockPublicationResponse({
     },
     result: {
       data: mockPublicationData(publication),
+    },
+  };
+}
+
+export function mockGetPublicationsResponse({
+  variables,
+  publications,
+  info = mockPaginatedResultInfo(),
+}: {
+  variables: PublicationsVariables;
+  publications: Array<AnyPublication>;
+  info?: PaginatedResultInfo;
+}): MockedResponse<PublicationsData> {
+  return {
+    request: {
+      query: PublicationsDocument,
+      variables: variables,
+    },
+    result: {
+      data: {
+        result: {
+          items: publications,
+          pageInfo: info,
+        },
+      },
     },
   };
 }
