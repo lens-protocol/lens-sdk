@@ -66,12 +66,14 @@ export type XOR<T extends UnknownObject, U extends UnknownObject> =
  * OneOf<RouteProps, "component" | "render" | "children">;
  * ```
  */
-export type OneOf<T, K extends keyof T = keyof T> = Omit<T, K> &
-  {
-    [k in K]: Pick<Required<T>, k> & {
-      [k1 in Exclude<K, k>]?: never;
-    };
-  }[K];
+export type OneOf<T, K extends keyof T = keyof T> = Prettify<
+  Omit<T, K> &
+    {
+      [k in K]: Pick<Required<T>, k> & {
+        [k1 in Exclude<K, k>]?: never;
+      };
+    }[K]
+>;
 
 /**
  * Ask TS to re-check that A1 extends A2. And if it fails, A2 will be enforced anyway.
