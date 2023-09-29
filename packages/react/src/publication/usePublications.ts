@@ -6,7 +6,7 @@ import {
   usePublications as usePublicationsBase,
 } from '@lens-protocol/api-bindings';
 
-import { useLensApolloClient } from '../helpers/arguments';
+import { useLensApolloClient, useMediaTransformFromConfig } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 
 /**
@@ -53,13 +53,13 @@ export function usePublications({
   return usePaginatedReadResult(
     usePublicationsBase(
       useLensApolloClient({
-        variables: {
+        variables: useMediaTransformFromConfig({
           request: {
             where,
             limit,
             orderBy,
           },
-        },
+        }),
       }),
     ),
   );

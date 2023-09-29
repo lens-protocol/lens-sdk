@@ -11,8 +11,11 @@ import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { RenderHookResult, waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { defaultMediaTransformsConfig } from '../../mediaTransforms';
-import { usePublications } from '../usePublications';
+import {
+  defaultMediaTransformsConfig,
+  mediaTransformConfigToQueryVariables,
+} from '../../mediaTransforms';
+import { UsePublicationsArgs, usePublications } from '../usePublications';
 
 const sources = mockSources();
 
@@ -51,22 +54,22 @@ describe(`Given the ${usePublications.name} hook`, () => {
             where: {
               actedBy: profileId,
             },
+
             orderBy: PublicationsOrderByType.Latest,
             limit: LimitType.Ten,
           },
+          ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
         },
         publications,
       }),
     ]);
 
     it('should settle with the publications', async () => {
-      const { result } = renderHook(() =>
-        usePublications({
-          where: {
-            actedBy: profileId,
-          },
-        }),
-      );
+      const args: UsePublicationsArgs = {
+        where: { actedBy: profileId },
+      };
+
+      const { result } = renderHook(() => usePublications(args));
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
       expect(result.current.data).toMatchObject(expectations);

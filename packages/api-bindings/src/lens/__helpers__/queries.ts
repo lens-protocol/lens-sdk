@@ -86,7 +86,18 @@ export function mockGetPublicationsResponse({
   return {
     request: {
       query: PublicationsDocument,
-      variables: variables,
+      variables: {
+        publicationImageTransform: {},
+        publicationOperationsActedArgs: {},
+        publicationStatsInput: {},
+        publicationStatsCountOpenActionArgs: {},
+        profileCoverTransform: {},
+        profilePictureTransform: {},
+        profileStatsArg: {},
+        profileStatsCountOpenActionArgs: {},
+        rateRequest: { for: 'USD' },
+        ...variables,
+      },
     },
     result: {
       data: {
