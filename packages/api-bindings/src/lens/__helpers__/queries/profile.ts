@@ -27,6 +27,24 @@ import {
 import { mockPaginatedResultInfo } from '../fragments';
 import { mockAnyPaginatedResponse, mockAnyResponse } from './mockAnyPaginatedResponse';
 
+export function mockProfileResponse({
+  variables,
+  result,
+}: {
+  variables: ProfileVariables;
+  result: Profile | null;
+}) {
+  return mockAnyResponse({
+    request: {
+      query: ProfileDocument,
+      variables,
+    },
+    result: {
+      data: { result },
+    },
+  });
+}
+
 export function mockProfilesResponse({
   variables,
   items,
@@ -185,23 +203,5 @@ export function mockWhoReactedToPublicationResponse({
     items,
     info,
     query: WhoReactedPublicationDocument,
-  });
-}
-
-export function mockProfileResponse({
-  variables,
-  result,
-}: {
-  variables: ProfileVariables;
-  result: Profile | null;
-}) {
-  return mockAnyResponse({
-    request: {
-      query: ProfileDocument,
-      variables,
-    },
-    result: {
-      data: { result },
-    },
   });
 }

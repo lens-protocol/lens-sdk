@@ -11,11 +11,13 @@ import {
   useWhoReactedToPublication,
 } from '../useWhoReactedToPublication';
 
-describe.skip(`Given the ${useWhoReactedToPublication.name} hook`, () => {
+describe(`Given the ${useWhoReactedToPublication.name} hook`, () => {
   const publicationId = mockPublicationId();
   const profileReactions = [mockProfileWhoReactedResultFragment()];
   const expectations = profileReactions.map(({ profile, reactions }) => ({
-    profileId: profile.id,
+    profile: {
+      id: profile.id,
+    },
     reactions,
   }));
 

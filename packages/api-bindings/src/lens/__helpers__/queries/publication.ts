@@ -1,6 +1,3 @@
-import { faker } from '@faker-js/faker';
-
-import { Cursor } from '../../Cursor';
 import {
   PaginatedResultInfo,
   PublicationDocument,
@@ -12,30 +9,24 @@ import {
 } from '../../graphql/generated';
 import { AnyPublication, PrimaryPublication } from '../../publication';
 import { mockPaginatedResultInfo } from '../fragments';
-import { mockAnyPaginatedResponse } from './mockAnyPaginatedResponse';
-
-export function mockCursor(): Cursor {
-  return faker.random.alphaNumeric(10) as Cursor;
-}
+import { mockAnyPaginatedResponse, mockAnyResponse } from './mockAnyPaginatedResponse';
 
 export function mockPublicationResponse({
   variables,
-  publication,
+  result,
 }: {
   variables: PublicationVariables;
-  publication: AnyPublication | null;
+  result: AnyPublication | null;
 }) {
-  return {
+  return mockAnyResponse({
     request: {
       query: PublicationDocument,
       variables,
     },
     result: {
-      data: {
-        result: publication,
-      },
+      data: { result },
     },
-  };
+  });
 }
 
 export function mockPublicationsResponse({
