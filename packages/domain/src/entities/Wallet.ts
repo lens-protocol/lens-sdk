@@ -1,4 +1,4 @@
-import { CryptoNativeAsset, EthereumAddress, PromiseResult } from '@lens-protocol/shared-kernel';
+import { CryptoNativeAsset, EvmAddress, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Signature } from './Signature';
 import {
@@ -49,7 +49,7 @@ export class UserRejectedError extends Error {
 }
 
 export abstract class Wallet {
-  constructor(readonly address: EthereumAddress) {}
+  constructor(readonly address: EvmAddress) {}
 
   abstract signProtocolCall<T extends ProtocolTransactionRequestModel>(
     unsignedCall: IUnsignedProtocolCall<T>,

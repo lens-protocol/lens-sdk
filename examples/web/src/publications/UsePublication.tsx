@@ -1,11 +1,15 @@
-import { usePublication } from '@lens-protocol/react';
+import { publicationId, usePublication } from '@lens-protocol/react';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { PublicationCard } from './components/PublicationCard';
 
 export function UsePublication() {
-  const { data: publication, error, loading } = usePublication({ forId: '0x04-0x0b' });
+  const {
+    data: publication,
+    error,
+    loading,
+  } = usePublication({ forId: publicationId('0x04-0x0b') });
 
   if (loading) return <Loading />;
 

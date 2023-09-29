@@ -1,4 +1,4 @@
-import { EthereumAddress, failure, success } from '@lens-protocol/shared-kernel';
+import { EvmAddress, failure, success } from '@lens-protocol/shared-kernel';
 
 import {
   NftOwnershipChallenge,
@@ -12,8 +12,8 @@ import { ActiveWallet } from '../wallets/ActiveWallet';
 
 export type ProveNftOwnershipRequest = {
   chainId: number;
-  contractAddress: EthereumAddress;
-  ownerAddress: EthereumAddress;
+  contractAddress: EvmAddress;
+  ownerAddress: EvmAddress;
   tokenId: string;
 };
 

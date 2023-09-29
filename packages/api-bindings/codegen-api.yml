@@ -15,14 +15,14 @@ generates:
     config:
       strictScalars: true
       scalars:
-        AppId: string
+        AppId: AppId
         BlockchainData: string
         BroadcastId: string
-        ChainId: string
+        ChainId: number
         ChallengeId: string
-        ContentEncryptionKey: string
+        ContentEncryptionKey: ContentEncryptionKey
         CreateHandle: string
-        Cursor: string
+        Cursor: Cursor
         DateTime: string
         EncryptableDateTime: string
         EncryptableMarkdown: string
@@ -32,7 +32,7 @@ generates:
         EncryptedPath: string
         EncryptedValue: string
         Ens: string
-        EvmAddress: string
+        EvmAddress: EvmAddress
         Handle: string
         ImageSizeTransform: ImageSizeTransform
         Jwt: string
@@ -44,20 +44,20 @@ generates:
         MomokaProof: string
         NftGalleryId: string
         NftGalleryName: string
-        Nonce: string
+        Nonce: number
         OnchainPublicationId: string
         PoapEventId: string
-        ProfileId: string
-        PublicationId: string
+        ProfileId: ProfileId
+        PublicationId: PublicationId
         Signature: string
         TokenId: string
         TxHash: string
         TxId: string
-        UnixTimestamp: string
+        UnixTimestamp: number
         URI: string
-        URL: string
+        URL: Url
         UUID: string
-        Void: string
+        Void: void
     schema:
       - https://api-v2-mumbai.lens.dev/graphql
     documents:
@@ -74,6 +74,10 @@ generates:
               '/* eslint-disable @typescript-eslint/naming-convention */', # interface PossibleTypesResultData not starting with I
               '/* eslint-disable no-restricted-imports */', # import * from @apollo/client
               '/* eslint-disable tsdoc/syntax */',
+              "import type { AppId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';",
+              "import type { EvmAddress, Url } from '@lens-protocol/shared-kernel';",
+              "import type { ContentEncryptionKey } from '../ContentEncryptionKey';",
+              "import type { Cursor } from '../Cursor';",
               "import type { ImageSizeTransform } from '../ImageSizeTransform';",
             ]
       - 'typescript-operations':

@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { Url } from '@lens-protocol/shared-kernel';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
+import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import { SnapshotProposalId, SnapshotSpaceId } from '../../lens';
 import { SnapshotProposal } from '../generated';
@@ -28,7 +28,7 @@ export function mockSnapshotPollUrl({
 export function mockSnapshotProposal(overrides?: Partial<SnapshotProposal>): SnapshotProposal {
   return {
     id: mockSnapshotProposalId(),
-    author: mockEthereumAddress(),
+    author: mockEvmAddress(),
     state: 'active',
     title: faker.lorem.sentence(),
     choices: ['yes', 'no'],

@@ -9,7 +9,7 @@ import {
 import { FollowRequest, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import { CollectRequest, CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
-import { DateUtils, EthereumAddress } from '@lens-protocol/shared-kernel';
+import { DateUtils, EvmAddress } from '@lens-protocol/shared-kernel';
 
 export enum TxStatus {
   /**
@@ -140,7 +140,7 @@ export function isFollowTransactionFor({
   followerAddress,
 }: {
   profileId: ProfileId;
-  followerAddress: EthereumAddress;
+  followerAddress: EvmAddress;
 }): TransactionStatusPredicate<FollowRequest> {
   return (transaction): transaction is TransactionState<FollowRequest> =>
     transaction.request.kind === TransactionKind.FOLLOW_PROFILES &&

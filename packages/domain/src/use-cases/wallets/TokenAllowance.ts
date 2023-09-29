@@ -1,4 +1,4 @@
-import { Amount, Erc20, EthereumAddress, failure, success } from '@lens-protocol/shared-kernel';
+import { Amount, Erc20, EvmAddress, failure, success } from '@lens-protocol/shared-kernel';
 
 import {
   UnsignedTransaction,
@@ -21,7 +21,7 @@ export enum TokenAllowanceLimit {
 
 export type TokenAllowanceRequest = {
   amount: Amount<Erc20>;
-  spender: EthereumAddress;
+  spender: EvmAddress;
   limit: TokenAllowanceLimit;
   kind: TransactionKind.APPROVE_MODULE;
 };

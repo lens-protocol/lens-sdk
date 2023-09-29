@@ -1,0 +1,162 @@
+fragment ReactionNotification on ReactionNotification {
+  __typename
+  id
+  reactions {
+    profile {
+      ...Profile
+    }
+    reactions {
+      reaction
+      reactedAt
+    }
+  }
+  publication {
+    ... on Post {
+      ...Post
+    }
+    ... on Comment {
+      ...Comment
+    }
+    ... on Quote {
+      ...Quote
+    }
+  }
+}
+
+fragment CommentNotification on CommentNotification {
+  __typename
+  id
+  comment {
+    ...Comment
+  }
+}
+
+fragment MirrorNotification on MirrorNotification {
+  __typename
+  id
+  mirrors {
+    mirrorId
+    mirroredAt
+    profile {
+      ...Profile
+    }
+  }
+  publication {
+    ... on Post {
+      ...Post
+    }
+    ... on Comment {
+      ...Comment
+    }
+    ... on Quote {
+      ...Quote
+    }
+  }
+}
+
+fragment QuoteNotification on QuoteNotification {
+  __typename
+  id
+  quote {
+    ...Quote
+  }
+}
+
+fragment OpenActionProfileActed on OpenActionProfileActed {
+  by {
+    ...Profile
+  }
+  action {
+    ...OpenActionResult
+  }
+  actedAt
+}
+
+fragment ActedNotification on ActedNotification {
+  __typename
+  id
+  actions {
+    ...OpenActionProfileActed
+  }
+  publication {
+    ... on Post {
+      ...Post
+    }
+    ... on Comment {
+      ...Comment
+    }
+    ... on Mirror {
+      ...Mirror
+    }
+    ... on Quote {
+      ...Quote
+    }
+  }
+}
+
+fragment FollowNotification on FollowNotification {
+  __typename
+  id
+  followers {
+    ...Profile
+  }
+}
+
+fragment MentionNotification on MentionNotification {
+  __typename
+  id
+  publication {
+    ... on Post {
+      ...Post
+    }
+    ... on Comment {
+      ...Comment
+    }
+    ... on Quote {
+      ...Quote
+    }
+  }
+}
+
+# queries
+query Notifications(
+  $request: NotificationRequest!
+  $publicationImageTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $publicationStatsInput: PublicationStatsInput! = {}
+  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
+) {
+  result: notifications(request: $request) {
+    items {
+      ... on ReactionNotification {
+        ...ReactionNotification
+      }
+      ... on CommentNotification {
+        ...CommentNotification
+      }
+      ... on MirrorNotification {
+        ...MirrorNotification
+      }
+      ... on QuoteNotification {
+        ...QuoteNotification
+      }
+      ... on ActedNotification {
+        ...ActedNotification
+      }
+      ... on FollowNotification {
+        ...FollowNotification
+      }
+      ... on MentionNotification {
+        ...MentionNotification
+      }
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}

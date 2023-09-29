@@ -1,4 +1,4 @@
-import { Amount, Brand, Erc20, EthereumAddress } from '@lens-protocol/shared-kernel';
+import { Amount, Brand, Erc20, EvmAddress } from '@lens-protocol/shared-kernel';
 
 import { NftContractType, NftId } from './Nft';
 import { ProfileId } from './Profile';
@@ -36,7 +36,7 @@ export type NftOwnershipCriterion = {
   /**
    * The NFT contract address
    */
-  contractAddress: EthereumAddress;
+  contractAddress: EvmAddress;
   /**
    * The chain Id where the NFT contract is deployed
    */
@@ -74,7 +74,7 @@ export type AddressOwnershipCriterion = {
   /**
    * The address
    */
-  address: EthereumAddress;
+  address: EvmAddress;
 };
 
 /**
