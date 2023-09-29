@@ -44,7 +44,7 @@ export type CreateOnchainSetProfileMetadataBroadcastItemResultFragment = {
   typedData: {
     types: { SetProfileMetadataURI: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string; profileId: string; metadataURI: string };
+    value: { nonce: number; deadline: number; profileId: string; metadataURI: string };
   };
 };
 
@@ -55,8 +55,8 @@ export type CreateChangeProfileManagersBroadcastItemResultFragment = {
     types: { ChangeDelegatedExecutorsConfig: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       delegatorProfileId: string;
       delegatedExecutors: Array<string>;
       approvals: Array<boolean>;
@@ -73,8 +73,8 @@ export type CreateBlockProfilesBroadcastItemResultFragment = {
     types: { SetBlockStatus: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       byProfileId: string;
       idsOfProfilesToSetBlockStatus: Array<string>;
       blockStatus: Array<boolean>;
@@ -89,8 +89,8 @@ export type CreateUnblockProfilesBroadcastItemResultFragment = {
     types: { SetBlockStatus: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       byProfileId: string;
       idsOfProfilesToSetBlockStatus: Array<string>;
       blockStatus: Array<boolean>;
@@ -105,8 +105,8 @@ export type CreateFollowBroadcastItemResultFragment = {
     types: { Follow: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       followerProfileId: string;
       idsOfProfilesToFollow: Array<string>;
       followTokenIds: Array<string>;
@@ -122,8 +122,8 @@ export type CreateUnfollowBroadcastItemResultFragment = {
     types: { Unfollow: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       unfollowerProfileId: string;
       idsOfProfilesToUnfollow: Array<string>;
     };
@@ -137,8 +137,8 @@ export type CreateSetFollowModuleBroadcastItemResultFragment = {
     types: { SetFollowModule: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       profileId: string;
       followModule: string;
       followModuleInitData: string;
@@ -152,7 +152,7 @@ export type CreateHandleLinkToProfileBroadcastItemResultFragment = {
   typedData: {
     types: { Link: Array<Eip712TypedDataFieldFragment> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string; profileId: string; handleId: string };
+    value: { nonce: number; deadline: number; profileId: string; handleId: string };
   };
 };
 
@@ -162,7 +162,7 @@ export type CreateHandleUnlinkFromProfileBroadcastItemResultFragment = {
   typedData: {
     types: { Unlink: Array<Eip712TypedDataFieldFragment> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string; profileId: string; handleId: string };
+    value: { nonce: number; deadline: number; profileId: string; handleId: string };
   };
 };
 

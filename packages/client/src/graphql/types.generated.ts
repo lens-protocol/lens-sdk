@@ -20,7 +20,7 @@ export type Scalars = {
   AppId: { input: string; output: string };
   BlockchainData: { input: string; output: string };
   BroadcastId: { input: string; output: string };
-  ChainId: { input: string; output: string };
+  ChainId: { input: number; output: number };
   ChallengeId: { input: string; output: string };
   ContentEncryptionKey: { input: string; output: string };
   CreateHandle: { input: string; output: string };
@@ -45,7 +45,7 @@ export type Scalars = {
   MomokaProof: { input: string; output: string };
   NftGalleryId: { input: string; output: string };
   NftGalleryName: { input: string; output: string };
-  Nonce: { input: string; output: string };
+  Nonce: { input: number; output: number };
   OnchainPublicationId: { input: string; output: string };
   PoapEventId: { input: string; output: string };
   ProfileId: { input: string; output: string };
@@ -57,7 +57,7 @@ export type Scalars = {
   URI: { input: string; output: string };
   URL: { input: string; output: string };
   UUID: { input: string; output: string };
-  UnixTimestamp: { input: string; output: string };
+  UnixTimestamp: { input: number; output: number };
   Void: { input: string; output: string };
 };
 

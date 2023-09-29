@@ -37,7 +37,7 @@ export type UnknownFollowModuleSettingsFragment = {
   contract: NetworkAddressFragment;
 };
 
-export type NetworkAddressFragment = { address: string; chainId: string };
+export type NetworkAddressFragment = { address: string; chainId: number };
 
 export type ImageFragment = {
   uri: string;
@@ -730,7 +730,7 @@ export type TransactionMetadataV3Fragment = {
   content: string;
   type: Types.PublicationMetadataTransactionType;
   txHash: string;
-  chainId: string;
+  chainId: number;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<{ key: string; value: string }> | null;
   encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
@@ -993,7 +993,7 @@ export type QuoteFragment = {
 
 export type Eip712TypedDataDomainFragment = {
   name: string;
-  chainId: string;
+  chainId: number;
   version: string;
   verifyingContract: string;
 };
@@ -1004,8 +1004,8 @@ export type CreateActOnOpenActionEip712TypedDataFragment = {
   types: { Act: Array<Eip712TypedDataFieldFragment> };
   domain: Eip712TypedDataDomainFragment;
   value: {
-    nonce: string;
-    deadline: string;
+    nonce: number;
+    deadline: number;
     publicationActedProfileId: string;
     publicationActedId: string;
     actorProfileId: string;

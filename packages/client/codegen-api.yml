@@ -10,7 +10,7 @@ config:
     AppId: string
     BlockchainData: string
     BroadcastId: string
-    ChainId: string
+    ChainId: number
     ChallengeId: string
     ContentEncryptionKey: string
     CreateHandle: string
@@ -28,7 +28,6 @@ config:
     Handle: string
     ImageSizeTransform: ImageSizeTransform
     Jwt: string
-    LimitScalar: number
     Locale: string
     Markdown: string
     MimeType: string
@@ -36,7 +35,7 @@ config:
     MomokaProof: string
     NftGalleryId: string
     NftGalleryName: string
-    Nonce: string
+    Nonce: number
     OnchainPublicationId: string
     PoapEventId: string
     ProfileId: string
@@ -45,7 +44,7 @@ config:
     TokenId: string
     TxHash: string
     TxId: string
-    UnixTimestamp: string
+    UnixTimestamp: number
     URI: string
     URL: string
     UUID: string
