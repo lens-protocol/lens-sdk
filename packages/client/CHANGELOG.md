@@ -1,5 +1,13 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.6
+
+### Patch Changes
+
+- 3a894449: Changed waitUntilComplete to timeout after 60s
+- Updated dependencies [731ff1d0]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.0
+
 ## 2.0.0-alpha.5
 
 ### Patch Changes

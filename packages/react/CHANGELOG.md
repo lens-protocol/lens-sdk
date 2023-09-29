@@ -1,5 +1,19 @@
 # @lens-protocol/react
 
+## 2.0.0-alpha.0
+
+### Major Changes
+
+- 731ff1d0: Added support for Lens Protocol v2
+
+### Patch Changes
+
+- Updated dependencies [731ff1d0]
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.0
+  - @lens-protocol/shared-kernel@0.11.0-alpha.0
+  - @lens-protocol/api-bindings@0.11.0-alpha.0
+  - @lens-protocol/domain@0.11.0-alpha.0
+
 ## 1.3.1
 
 ### Patch Changes
