@@ -89,12 +89,14 @@ export type ProfileCoverSetFragment = {
 };
 
 export type ProfilePictureSetFragment = {
+  __typename: 'ImageSet';
   raw: ImageFragment;
   optimized: ImageFragment | null;
   transformed: ImageFragment | null;
 };
 
 export type NftImageFragment = {
+  __typename: 'NftImage';
   tokenId: string;
   verified: boolean;
   collection: NetworkAddressFragment;
@@ -1144,6 +1146,7 @@ export const ImageFragmentDoc = gql`
 `;
 export const ProfilePictureSetFragmentDoc = gql`
   fragment ProfilePictureSet on ImageSet {
+    __typename
     raw {
       ...Image
     }
@@ -1158,6 +1161,7 @@ export const ProfilePictureSetFragmentDoc = gql`
 `;
 export const NftImageFragmentDoc = gql`
   fragment NftImage on NftImage {
+    __typename
     collection {
       ...NetworkAddress
     }

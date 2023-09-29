@@ -53,7 +53,7 @@ generates:
         TokenId: string
         TxHash: string
         TxId: string
-        UnixTimestamp: string
+        UnixTimestamp: number
         URI: string
         URL: Url
         UUID: string

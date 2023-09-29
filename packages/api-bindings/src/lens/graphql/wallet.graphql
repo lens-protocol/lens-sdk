@@ -1,0 +1,43 @@
+fragment HandleResult on HandleResult {
+  handle
+}
+
+query OwnedHandles($request: OwnedHandlesRequest!) {
+  result: ownedHandles(request: $request) {
+    items {
+      ...HandleResult
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query ProfilesManaged(
+  $request: ProfilesManagedRequest!
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
+) {
+  result: profilesManaged(request: $request) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+fragment UserSigNonces on UserSigNonces {
+  lensHubOnchainSigNonce
+  lensTokenHandleRegistryOnchainSigNonce
+}
+
+query UserSigNonces {
+  result: userSigNonces {
+    ...UserSigNonces
+  }
+}

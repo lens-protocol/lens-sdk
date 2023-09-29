@@ -13,7 +13,7 @@ export * from './publication';
  * Domain essentials
  */
 export type { AppId, NftId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
-export type { ChainType, EthereumAddress, Url } from '@lens-protocol/shared-kernel';
+export type { ChainType, EvmAddress, Url } from '@lens-protocol/shared-kernel';
 
 /**
  * Config
@@ -29,3 +29,8 @@ export type {
   Pixel,
 } from './mediaTransforms';
 export type { LensConfig } from './config';
+
+/**
+ * Helpers
+ */
+export * from './utils';
