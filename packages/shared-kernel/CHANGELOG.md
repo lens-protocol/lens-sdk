@@ -1,5 +1,11 @@
 # @lens-protocol/shared-kernel
 
+## 0.11.0-alpha.0
+
+### Minor Changes
+
+- 731ff1d0: Added support for Lens Protocol v2
+
 ## 0.10.0
 
 ### Minor Changes
