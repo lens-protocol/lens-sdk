@@ -420,6 +420,7 @@ export type HandleUnlinkFromProfileMutation = {
 
 export type CreateHandleLinkToProfileTypedDataMutationVariables = Types.Exact<{
   request: Types.HandleLinkToProfileRequest;
+  options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
 export type CreateHandleLinkToProfileTypedDataMutation = {
@@ -428,6 +429,7 @@ export type CreateHandleLinkToProfileTypedDataMutation = {
 
 export type CreateHandleUnlinkFromProfileTypedDataMutationVariables = Types.Exact<{
   request: Types.HandleUnlinkFromProfileRequest;
+  options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
 export type CreateHandleUnlinkFromProfileTypedDataMutation = {
@@ -1044,16 +1046,22 @@ export const HandleUnlinkFromProfileDocument = gql`
   ${LensProfileManagerRelayErrorFragmentDoc}
 `;
 export const CreateHandleLinkToProfileTypedDataDocument = gql`
-  mutation CreateHandleLinkToProfileTypedData($request: HandleLinkToProfileRequest!) {
-    result: createHandleLinkToProfileTypedData(request: $request) {
+  mutation CreateHandleLinkToProfileTypedData(
+    $request: HandleLinkToProfileRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createHandleLinkToProfileTypedData(request: $request, options: $options) {
       ...CreateHandleLinkToProfileBroadcastItemResult
     }
   }
   ${CreateHandleLinkToProfileBroadcastItemResultFragmentDoc}
 `;
 export const CreateHandleUnlinkFromProfileTypedDataDocument = gql`
-  mutation CreateHandleUnlinkFromProfileTypedData($request: HandleUnlinkFromProfileRequest!) {
-    result: createHandleUnlinkFromProfileTypedData(request: $request) {
+  mutation CreateHandleUnlinkFromProfileTypedData(
+    $request: HandleUnlinkFromProfileRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createHandleUnlinkFromProfileTypedData(request: $request, options: $options) {
       ...CreateHandleUnlinkFromProfileBroadcastItemResult
     }
   }
