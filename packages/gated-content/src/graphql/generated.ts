@@ -25,7 +25,6 @@ export type Scalars = {
   EncryptableTxHash: string;
   EncryptableURI: string;
   EncryptedPath: string;
-  EncryptedValue: string;
   Ens: string;
   EvmAddress: string;
   Handle: string;
@@ -142,7 +141,7 @@ export type ArticleMetadataV3 = {
   readonly __typename: 'ArticleMetadataV3';
   readonly appId?: Maybe<Scalars['AppId']>;
   readonly attachments?: Maybe<ReadonlyArray<PublicationMetadataMedia>>;
-  readonly attributes?: Maybe<ReadonlyArray<PublicationMetadataV3Attribute>>;
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   readonly content: Scalars['EncryptableMarkdown'];
   readonly contentWarning?: Maybe<PublicationContentWarningType>;
   readonly encryptedWith?: Maybe<PublicationMetadataEncryptionStrategy>;
@@ -158,24 +157,6 @@ export type ArticleMetadataV3 = {
 
 export type Asset = Erc20;
 
-export type Attribute = {
-  readonly __typename: 'Attribute';
-  /** Identifier of this attribute, used for updating */
-  readonly key: Scalars['String'];
-  /** The type of the attribute */
-  readonly type: AttributeType;
-  /** Value of the attribute */
-  readonly value: Scalars['String'];
-};
-
-export enum AttributeType {
-  Boolean = 'BOOLEAN',
-  Date = 'DATE',
-  Json = 'JSON',
-  Number = 'NUMBER',
-  String = 'STRING',
-}
-
 export type Audio = {
   readonly __typename: 'Audio';
   readonly mimeType?: Maybe<Scalars['MimeType']>;
@@ -187,7 +168,7 @@ export type AudioMetadataV3 = {
   readonly appId?: Maybe<Scalars['AppId']>;
   readonly asset: PublicationMetadataMediaAudio;
   readonly attachments?: Maybe<ReadonlyArray<PublicationMetadataMedia>>;
-  readonly attributes?: Maybe<ReadonlyArray<PublicationMetadataV3Attribute>>;
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   /** Optional content. Empty if not set. */
   readonly content: Scalars['EncryptableMarkdown'];
   readonly contentWarning?: Maybe<PublicationContentWarningType>;
@@ -200,12 +181,6 @@ export type AudioMetadataV3 = {
   readonly tags?: Maybe<ReadonlyArray<Scalars['String']>>;
   /** The title of the audio. Empty if not set. */
   readonly title: Scalars['String'];
-};
-
-export type AudioSet = {
-  readonly __typename: 'AudioSet';
-  readonly optimized?: Maybe<Audio>;
-  readonly raw: Audio;
 };
 
 export type AuthChallengeResult = {
@@ -269,7 +244,7 @@ export type CheckingInMetadataV3 = {
   readonly address?: Maybe<PhysicalAddress>;
   readonly appId?: Maybe<Scalars['AppId']>;
   readonly attachments?: Maybe<ReadonlyArray<PublicationMetadataMedia>>;
-  readonly attributes?: Maybe<ReadonlyArray<PublicationMetadataV3Attribute>>;
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   /** Optional content. Empty if not set. */
   readonly content: Scalars['EncryptableMarkdown'];
   readonly contentWarning?: Maybe<PublicationContentWarningType>;
@@ -1154,7 +1129,7 @@ export type EmbedMetadataV3 = {
   readonly __typename: 'EmbedMetadataV3';
   readonly appId?: Maybe<Scalars['AppId']>;
   readonly attachments?: Maybe<ReadonlyArray<PublicationMetadataMedia>>;
-  readonly attributes?: Maybe<ReadonlyArray<PublicationMetadataV3Attribute>>;
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   /** Optional content. Empty if not set. */
   readonly content: Scalars['EncryptableMarkdown'];
   readonly contentWarning?: Maybe<PublicationContentWarningType>;
@@ -1214,14 +1189,6 @@ export type EncryptableVideoSet = {
   readonly raw: EncryptableVideo;
 };
 
-export type EncryptedMedia = {
-  readonly __typename: 'EncryptedMedia';
-  readonly altTag?: Maybe<Scalars['EncryptedValue']>;
-  readonly cover?: Maybe<Scalars['EncryptedValue']>;
-  readonly mimeType?: Maybe<Scalars['MimeType']>;
-  readonly uri: Scalars['URI'];
-};
-
 export type EnsOnchainIdentity = {
   readonly __typename: 'EnsOnchainIdentity';
   /** The default ens mapped to this address */
@@ -1257,7 +1224,7 @@ export type EventMetadataV3 = {
   readonly address?: Maybe<PhysicalAddress>;
   readonly appId?: Maybe<Scalars['AppId']>;
   readonly attachments?: Maybe<ReadonlyArray<PublicationMetadataMedia>>;
-  readonly attributes?: Maybe<ReadonlyArray<PublicationMetadataV3Attribute>>;
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   readonly contentWarning?: Maybe<PublicationContentWarningType>;
   readonly encryptedWith?: Maybe<PublicationMetadataEncryptionStrategy>;
   readonly endsAt: Scalars['EncryptableDateTime'];
@@ -1567,7 +1534,7 @@ export type ImageMetadataV3 = {
   readonly appId?: Maybe<Scalars['AppId']>;
   readonly asset: PublicationMetadataMediaImage;
   readonly attachments?: Maybe<ReadonlyArray<PublicationMetadataMedia>>;
-  readonly attributes?: Maybe<ReadonlyArray<PublicationMetadataV3Attribute>>;
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   /** Optional content. Empty if not set. */
   readonly content: Scalars['EncryptableMarkdown'];
   readonly contentWarning?: Maybe<PublicationContentWarningType>;
@@ -1645,14 +1612,6 @@ export type LegacyAaveFeeCollectModuleSettings = {
   readonly referralFee: Scalars['Float'];
 };
 
-export type LegacyAudioItem = {
-  readonly __typename: 'LegacyAudioItem';
-  /** Alternative text for the audio */
-  readonly altTag?: Maybe<Scalars['String']>;
-  readonly audio: AudioSet;
-  readonly cover?: Maybe<ImageSet>;
-};
-
 export type LegacyCollectRequest = {
   readonly on: Scalars['PublicationId'];
   readonly referrer?: InputMaybe<Scalars['PublicationId']>;
@@ -1701,13 +1660,6 @@ export type LegacyFreeCollectModuleSettings = {
   readonly followerOnly: Scalars['Boolean'];
 };
 
-export type LegacyImageItem = {
-  readonly __typename: 'LegacyImageItem';
-  /** Alternative text for the image */
-  readonly altTag?: Maybe<Scalars['String']>;
-  readonly image: ImageSet;
-};
-
 export type LegacyLimitedFeeCollectModuleSettings = {
   readonly __typename: 'LegacyLimitedFeeCollectModuleSettings';
   /** The collect module amount info */
@@ -1744,8 +1696,6 @@ export type LegacyLimitedTimedFeeCollectModuleSettings = {
   readonly referralFee: Scalars['Float'];
 };
 
-export type LegacyMediaItem = LegacyAudioItem | LegacyImageItem | LegacyVideoItem;
-
 export type LegacyMultirecipientFeeCollectModuleSettings = {
   readonly __typename: 'LegacyMultirecipientFeeCollectModuleSettings';
   /** The collect module amount info */
@@ -1764,45 +1714,6 @@ export type LegacyMultirecipientFeeCollectModuleSettings = {
   /** The referral fee associated with this publication. */
   readonly referralFee: Scalars['Float'];
 };
-
-export type LegacyPublicationMetadata = {
-  readonly __typename: 'LegacyPublicationMetadata';
-  readonly appId?: Maybe<Scalars['AppId']>;
-  /**
-   * Always defined with `mainContentFocus` value(s): `ARTICLE`, `LINK`, `TEXT_ONLY`.
-   * Empty string if not set.
-   *
-   * If encrypted it contains a placeholder human readable text
-   */
-  readonly content: Scalars['EncryptableMarkdown'];
-  readonly contentWarning?: Maybe<PublicationContentWarningType>;
-  readonly encryptedWith?: Maybe<PublicationMetadataV2Encryption>;
-  readonly id: Scalars['String'];
-  readonly locale: Scalars['Locale'];
-  /** This is provided for backwards compatibility with legacy v1 and v2 publications. For new publications the nature of the content is explicit in their type. With new publications you SHOULD use __typename to discriminate specific fields. */
-  readonly mainContentFocus: LegacyPublicationMetadataMainFocusType;
-  readonly marketplace?: Maybe<MarketplaceMetadata>;
-  /**
-   * Depends on `mainContentFocus`
-   *
-   * - Not empty for: `AUDIO`, `IMAGE`, `VIDEO`
-   * - `null` for `TEXT_ONLY`
-   * - Optional otherwise.
-   */
-  readonly media?: Maybe<ReadonlyArray<LegacyMediaItem>>;
-  readonly rawURI: Scalars['URI'];
-  readonly tags?: Maybe<ReadonlyArray<Scalars['String']>>;
-};
-
-export enum LegacyPublicationMetadataMainFocusType {
-  Article = 'ARTICLE',
-  Audio = 'AUDIO',
-  Embed = 'EMBED',
-  Image = 'IMAGE',
-  Link = 'LINK',
-  TextOnly = 'TEXT_ONLY',
-  Video = 'VIDEO',
-}
 
 export type LegacyRevertCollectModuleSettings = {
   readonly __typename: 'LegacyRevertCollectModuleSettings';
@@ -1843,14 +1754,6 @@ export type LegacyTimedFeeCollectModuleSettings = {
   readonly recipient: Scalars['EvmAddress'];
   /** The collect module referral fee */
   readonly referralFee: Scalars['Float'];
-};
-
-export type LegacyVideoItem = {
-  readonly __typename: 'LegacyVideoItem';
-  /** Alternative text for the video */
-  readonly altTag?: Maybe<Scalars['String']>;
-  readonly cover?: Maybe<ImageSet>;
-  readonly video: VideoSet;
 };
 
 export type LensProfileManagerRelayError = {
@@ -1905,7 +1808,7 @@ export type LinkMetadataV3 = {
   readonly __typename: 'LinkMetadataV3';
   readonly appId?: Maybe<Scalars['AppId']>;
   readonly attachments?: Maybe<ReadonlyArray<PublicationMetadataMedia>>;
-  readonly attributes?: Maybe<ReadonlyArray<PublicationMetadataV3Attribute>>;
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   /** Optional content. Empty if not set. */
   readonly content: Scalars['EncryptableMarkdown'];
   readonly contentWarning?: Maybe<PublicationContentWarningType>;
@@ -1923,7 +1826,7 @@ export type LiveStreamMetadataV3 = {
   readonly __typename: 'LiveStreamMetadataV3';
   readonly appId?: Maybe<Scalars['AppId']>;
   readonly attachments?: Maybe<ReadonlyArray<PublicationMetadataMedia>>;
-  readonly attributes?: Maybe<ReadonlyArray<PublicationMetadataV3Attribute>>;
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   readonly checkLiveAPI?: Maybe<Scalars['EncryptableURI']>;
   /** Optional content. Empty if not set. */
   readonly content: Scalars['EncryptableMarkdown'];
@@ -1966,11 +1869,53 @@ export type MentionNotification = {
   readonly publication: PrimaryPublication;
 };
 
+export type MetadataAttribute =
+  | MetadataBooleanAttribute
+  | MetadataDateAttribute
+  | MetadataJsonAttribute
+  | MetadataNumberAttribute
+  | MetadataStringAttribute;
+
+export type MetadataBooleanAttribute = {
+  readonly __typename: 'MetadataBooleanAttribute';
+  readonly key: Scalars['String'];
+  /** A JS boolean value serialized as string. It's consumer responsibility to parse it. */
+  readonly value: Scalars['String'];
+};
+
+export type MetadataDateAttribute = {
+  readonly __typename: 'MetadataDateAttribute';
+  readonly key: Scalars['String'];
+  /** A valid ISO 8601 date string.  It's consumer responsibility to parse it. */
+  readonly value: Scalars['String'];
+};
+
+export type MetadataJsonAttribute = {
+  readonly __typename: 'MetadataJSONAttribute';
+  readonly key: Scalars['String'];
+  /** A JSON string. It's consumer responsibility to validate and parse it. */
+  readonly value: Scalars['String'];
+};
+
+export type MetadataNumberAttribute = {
+  readonly __typename: 'MetadataNumberAttribute';
+  readonly key: Scalars['String'];
+  /** A valid JS number serialized as string. It's consumer responsibility to parse it. */
+  readonly value: Scalars['String'];
+};
+
+export type MetadataStringAttribute = {
+  readonly __typename: 'MetadataStringAttribute';
+  readonly key: Scalars['String'];
+  /** Any string value. */
+  readonly value: Scalars['String'];
+};
+
 export type MintMetadataV3 = {
   readonly __typename: 'MintMetadataV3';
   readonly appId?: Maybe<Scalars['AppId']>;
   readonly attachments?: Maybe<ReadonlyArray<PublicationMetadataMedia>>;
-  readonly attributes?: Maybe<ReadonlyArray<PublicationMetadataV3Attribute>>;
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   /** Optional content. Empty if not set. */
   readonly content: Scalars['EncryptableMarkdown'];
   readonly contentWarning?: Maybe<PublicationContentWarningType>;
@@ -2176,7 +2121,7 @@ export type MultirecipientFeeCollectModuleInput = {
   readonly amount: AmountInput;
   readonly collectLimit?: InputMaybe<Scalars['String']>;
   readonly endsAt?: InputMaybe<Scalars['DateTime']>;
-  readonly followerOnly?: InputMaybe<Scalars['Boolean']>;
+  readonly followerOnly: Scalars['Boolean'];
   readonly recipients: ReadonlyArray<RecipientDataInput>;
   readonly referralFee?: InputMaybe<Scalars['Float']>;
 };
@@ -3185,7 +3130,7 @@ export type Profile = {
   readonly interests: ReadonlyArray<Scalars['String']>;
   readonly invitedBy?: Maybe<Profile>;
   /** The number of invites left */
-  readonly invitesLeft?: Maybe<Scalars['Int']>;
+  readonly invitesLeft: Scalars['Int'];
   /** If the profile has got the lens manager enabled - supports signless experience */
   readonly lensManager: Scalars['Boolean'];
   /** The profile metadata. You can optionally query profile metadata by app id.  */
@@ -3334,9 +3279,9 @@ export type ProfileManagersRequest = {
 export type ProfileMetadata = {
   readonly __typename: 'ProfileMetadata';
   /** The app that this metadata is displayed on */
-  readonly app?: Maybe<Scalars['AppId']>;
-  /** Metadata custom attributes */
-  readonly attributes: ReadonlyArray<Attribute>;
+  readonly appId?: Maybe<Scalars['AppId']>;
+  /** Profile Custom attributes */
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   /** The bio for the profile */
   readonly bio?: Maybe<Scalars['Markdown']>;
   /** The cover picture for the profile */
@@ -3562,7 +3507,6 @@ export type PublicationMetadata =
   | EmbedMetadataV3
   | EventMetadataV3
   | ImageMetadataV3
-  | LegacyPublicationMetadata
   | LinkMetadataV3
   | LiveStreamMetadataV3
   | MintMetadataV3
@@ -3577,7 +3521,7 @@ export type PublicationMetadataContentWarningFilter = {
   readonly oneOf: ReadonlyArray<PublicationContentWarningType>;
 };
 
-export type PublicationMetadataEncryptionStrategy = PublicationMetadataV3LitEncryption;
+export type PublicationMetadataEncryptionStrategy = PublicationMetadataLitEncryption;
 
 export type PublicationMetadataFilters = {
   readonly contentWarning?: InputMaybe<PublicationMetadataContentWarningFilter>;
@@ -3626,6 +3570,13 @@ export enum PublicationMetadataLicenseType {
   TbnlNcNdPlLegal = 'TBNL_NC_ND_PL_Legal',
 }
 
+export type PublicationMetadataLitEncryption = {
+  readonly __typename: 'PublicationMetadataLitEncryption';
+  readonly accessCondition: RootCondition;
+  readonly encryptedPaths: ReadonlyArray<Scalars['EncryptedPath']>;
+  readonly encryptionKey: Scalars['ContentEncryptionKey'];
+};
+
 export enum PublicationMetadataMainFocusType {
   Article = 'ARTICLE',
   Audio = 'AUDIO',
@@ -3653,6 +3604,7 @@ export type PublicationMetadataMedia =
 export type PublicationMetadataMediaAudio = {
   readonly __typename: 'PublicationMetadataMediaAudio';
   readonly artist?: Maybe<Scalars['EncryptableString']>;
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   readonly audio: EncryptableAudioSet;
   readonly cover?: Maybe<EncryptableImageSet>;
   readonly credits?: Maybe<Scalars['EncryptableString']>;
@@ -3667,6 +3619,7 @@ export type PublicationMetadataMediaImage = {
   readonly __typename: 'PublicationMetadataMediaImage';
   /** Alternative text for the image */
   readonly altTag?: Maybe<Scalars['EncryptableString']>;
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   readonly image: EncryptableImageSet;
   readonly license?: Maybe<PublicationMetadataLicenseType>;
 };
@@ -3675,6 +3628,7 @@ export type PublicationMetadataMediaVideo = {
   readonly __typename: 'PublicationMetadataMediaVideo';
   /** Alternative text for the video */
   readonly altTag?: Maybe<Scalars['EncryptableString']>;
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   readonly cover?: Maybe<EncryptableImageSet>;
   readonly duration?: Maybe<Scalars['Int']>;
   readonly license?: Maybe<PublicationMetadataLicenseType>;
@@ -3691,35 +3645,6 @@ export enum PublicationMetadataTransactionType {
   Erc721 = 'ERC721',
   Other = 'OTHER',
 }
-
-export type PublicationMetadataV2EncryptedFields = {
-  readonly __typename: 'PublicationMetadataV2EncryptedFields';
-  readonly animationUrl?: Maybe<Scalars['EncryptedValue']>;
-  readonly content?: Maybe<Scalars['EncryptedValue']>;
-  readonly externalUrl?: Maybe<Scalars['EncryptedValue']>;
-  readonly image?: Maybe<Scalars['EncryptedValue']>;
-  readonly media?: Maybe<ReadonlyArray<EncryptedMedia>>;
-};
-
-export type PublicationMetadataV2Encryption = {
-  readonly __typename: 'PublicationMetadataV2Encryption';
-  readonly accessCondition: RootCondition;
-  readonly encryptedFields: PublicationMetadataV2EncryptedFields;
-  readonly encryptionKey: Scalars['ContentEncryptionKey'];
-};
-
-export type PublicationMetadataV3Attribute = {
-  readonly __typename: 'PublicationMetadataV3Attribute';
-  readonly key: Scalars['String'];
-  readonly value: Scalars['String'];
-};
-
-export type PublicationMetadataV3LitEncryption = {
-  readonly __typename: 'PublicationMetadataV3LitEncryption';
-  readonly accessCondition: RootCondition;
-  readonly encryptedPaths: ReadonlyArray<Scalars['EncryptedPath']>;
-  readonly encryptionKey: Scalars['ContentEncryptionKey'];
-};
 
 export type PublicationNotInterestedRequest = {
   readonly on: Scalars['PublicationId'];
@@ -3826,6 +3751,7 @@ export type PublicationSearchRequest = {
 export type PublicationSearchWhere = {
   readonly customFilters?: InputMaybe<ReadonlyArray<CustomFiltersType>>;
   readonly metadata?: InputMaybe<PublicationMetadataFilters>;
+  readonly publicationTypes?: InputMaybe<ReadonlyArray<SearchPublicationType>>;
 };
 
 export type PublicationStats = {
@@ -3848,7 +3774,7 @@ export type PublicationStatsReactionsArgs = {
 };
 
 export type PublicationStatsCountOpenActionArgs = {
-  readonly anyOf: ReadonlyArray<OpenActionFilter>;
+  readonly anyOf?: InputMaybe<ReadonlyArray<OpenActionFilter>>;
 };
 
 export type PublicationStatsInput = {
@@ -3881,10 +3807,6 @@ export type PublicationValidateMetadataResult = {
 export enum PublicationsOrderByType {
   CommentOfQueryRanking = 'COMMENT_OF_QUERY_RANKING',
   Latest = 'LATEST',
-  TopCollectedOpenAction = 'TOP_COLLECTED_OPEN_ACTION',
-  TopCommented = 'TOP_COMMENTED',
-  TopMirrored = 'TOP_MIRRORED',
-  TopQuoted = 'TOP_QUOTED',
 }
 
 export type PublicationsRequest = {
@@ -3972,7 +3894,7 @@ export type Query = {
   readonly publications: PaginatedPublicationsResult;
   readonly publicationsTags: PaginatedPublicationsTagsResult;
   readonly relayQueues: ReadonlyArray<RelayQueueResult>;
-  readonly revenueFromPublication: PublicationRevenue;
+  readonly revenueFromPublication?: Maybe<PublicationRevenue>;
   readonly revenueFromPublications: PaginatedRevenueFromPublicationsResult;
   readonly searchProfiles: PaginatedProfileResult;
   readonly searchPublications: PaginatedPublicationPrimaryResult;
@@ -4402,6 +4324,8 @@ export type RevenueAggregate = {
 
 export type RevenueFromPublicationRequest = {
   readonly for: Scalars['PublicationId'];
+  /** Will return revenue for publications made on any of the provided app ids. Will include all apps if omitted */
+  readonly publishedOn?: InputMaybe<ReadonlyArray<Scalars['AppId']>>;
 };
 
 export type RevenueFromPublicationsRequest = {
@@ -4422,6 +4346,12 @@ export type RootCondition = {
   readonly __typename: 'RootCondition';
   readonly criteria: ReadonlyArray<SecondTierCondition>;
 };
+
+export enum SearchPublicationType {
+  Comment = 'COMMENT',
+  Post = 'POST',
+  Quote = 'QUOTE',
+}
 
 export type SecondTierCondition =
   | AndCondition
@@ -4453,7 +4383,7 @@ export type SimpleCollectOpenActionModuleInput = {
   readonly amount?: InputMaybe<AmountInput>;
   readonly collectLimit?: InputMaybe<Scalars['String']>;
   readonly endsAt?: InputMaybe<Scalars['DateTime']>;
-  readonly followerOnly?: InputMaybe<Scalars['Boolean']>;
+  readonly followerOnly: Scalars['Boolean'];
   readonly recipient?: InputMaybe<Scalars['EvmAddress']>;
   readonly referralFee?: InputMaybe<Scalars['Float']>;
 };
@@ -4481,7 +4411,7 @@ export type SpaceMetadataV3 = {
   readonly __typename: 'SpaceMetadataV3';
   readonly appId?: Maybe<Scalars['AppId']>;
   readonly attachments?: Maybe<ReadonlyArray<PublicationMetadataMedia>>;
-  readonly attributes?: Maybe<ReadonlyArray<PublicationMetadataV3Attribute>>;
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   /** Optional content. Empty if not set. */
   readonly content: Scalars['EncryptableMarkdown'];
   readonly contentWarning?: Maybe<PublicationContentWarningType>;
@@ -4506,7 +4436,7 @@ export type StoryMetadataV3 = {
   readonly __typename: 'StoryMetadataV3';
   readonly appId?: Maybe<Scalars['AppId']>;
   readonly asset: PublicationMetadataMedia;
-  readonly attributes?: Maybe<ReadonlyArray<PublicationMetadataV3Attribute>>;
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   /** Optional content. Empty if not set. */
   readonly content: Scalars['EncryptableMarkdown'];
   readonly contentWarning?: Maybe<PublicationContentWarningType>;
@@ -4579,7 +4509,7 @@ export enum TagSortCriteriaType {
 export type TextOnlyMetadataV3 = {
   readonly __typename: 'TextOnlyMetadataV3';
   readonly appId?: Maybe<Scalars['AppId']>;
-  readonly attributes?: Maybe<ReadonlyArray<PublicationMetadataV3Attribute>>;
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   readonly content: Scalars['EncryptableMarkdown'];
   readonly contentWarning?: Maybe<PublicationContentWarningType>;
   readonly encryptedWith?: Maybe<PublicationMetadataEncryptionStrategy>;
@@ -4604,7 +4534,7 @@ export type ThreeDMetadataV3 = {
   readonly appId?: Maybe<Scalars['AppId']>;
   readonly assets: ReadonlyArray<ThreeDMetadataV3Asset>;
   readonly attachments?: Maybe<ReadonlyArray<PublicationMetadataMedia>>;
-  readonly attributes?: Maybe<ReadonlyArray<PublicationMetadataV3Attribute>>;
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   /** Optional content. Empty if not set. */
   readonly content: Scalars['EncryptableMarkdown'];
   readonly contentWarning?: Maybe<PublicationContentWarningType>;
@@ -4630,7 +4560,7 @@ export type TransactionMetadataV3 = {
   readonly __typename: 'TransactionMetadataV3';
   readonly appId?: Maybe<Scalars['AppId']>;
   readonly attachments?: Maybe<ReadonlyArray<PublicationMetadataMedia>>;
-  readonly attributes?: Maybe<ReadonlyArray<PublicationMetadataV3Attribute>>;
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   readonly chainId: Scalars['ChainId'];
   /** Optional content. Empty if not set. */
   readonly content: Scalars['EncryptableMarkdown'];
@@ -4759,7 +4689,7 @@ export type VideoMetadataV3 = {
   readonly appId?: Maybe<Scalars['AppId']>;
   readonly asset: PublicationMetadataMediaVideo;
   readonly attachments?: Maybe<ReadonlyArray<PublicationMetadataMedia>>;
-  readonly attributes?: Maybe<ReadonlyArray<PublicationMetadataV3Attribute>>;
+  readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
   /** Optional content. Empty if not set. */
   readonly content: Scalars['EncryptableMarkdown'];
   readonly contentWarning?: Maybe<PublicationContentWarningType>;
@@ -4773,12 +4703,6 @@ export type VideoMetadataV3 = {
   readonly tags?: Maybe<ReadonlyArray<Scalars['String']>>;
   /** The title of the video. Empty if not set. */
   readonly title: Scalars['String'];
-};
-
-export type VideoSet = {
-  readonly __typename: 'VideoSet';
-  readonly optimized?: Maybe<Video>;
-  readonly raw: Video;
 };
 
 export type WhoActedOnPublicationRequest = {

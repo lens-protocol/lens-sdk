@@ -40,7 +40,7 @@ export function mockPublicationMetadata(): PublicationMetadata {
 }
 
 export function mockEvmAddress(): EvmAddress {
-  return toEvmAddress(mocks.mockEthereumAddress());
+  return toEvmAddress(mocks.mockEvmAddress());
 }
 
 export function mockNetworkAddress(overrides?: Partial<NetworkAddress>): NetworkAddress {

@@ -567,7 +567,7 @@ describe(`Given the paths helpers`, () => {
           encryptedWith: {
             encryptedPaths,
           } as unknown, // TODO remove "as unknown" when the type is fixed
-        } as gql.EncryptedFragmentOfPublicationMetadata);
+        } as gql.EncryptedFragmentOfAnyPublicationMetadata);
 
         expect(result).toEqual(expect.arrayContaining(expected));
       });

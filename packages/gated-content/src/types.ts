@@ -1,7 +1,5 @@
 import { Primitive } from '@lens-protocol/shared-kernel';
 
-export type Mutable<T> = { -readonly [P in keyof T]: T[P] };
-
 type UnionOf<A> = A extends Array<unknown> ? A[number] : A[keyof A];
 
 // Adapted from ts-toolbelt: https://github.com/millsp/ts-toolbelt/blob/master/sources/Object/Paths.ts#L21

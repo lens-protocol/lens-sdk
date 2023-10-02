@@ -84,70 +84,38 @@ describe(`Given an instance of the ${GatedClient.name}`, () => {
       encrypted = encryptionResult.unwrap();
     });
 
-    describe(`with an encrypted metadata v3 fragment`, () => {
-      it(`should throw an ${CannotDecryptError.name} if it cannot determine the metadata type`, async () => {
-        const result = await client.decryptPublicationMetadataFragment(
-          {} as EncryptedFragmentOfAnyPublicationMetadata,
-          context,
-        );
+    it(`should throw an ${CannotDecryptError.name} if it cannot determine the metadata type`, async () => {
+      const result = await client.decryptPublicationMetadataFragment(
+        {} as EncryptedFragmentOfAnyPublicationMetadata,
+        context,
+      );
 
-        return expect(() => result.unwrap()).toThrow(CannotDecryptError);
-      });
-
-      it(`should return the decrypted fragment`, async () => {
-        // setup
-        // simulate the transcription process done by the indexer and Lens API
-        const encryptedFragment = gql.mockEncryptedArticleMetadataV3Fragment({
-          content: encrypted.lens.content as string,
-          encryptedWith: gql.mockPublicationMetadataV3LitEncryption({
-            encryptionKey: encrypted.lens.encryptedWith?.encryptionKey,
-            encryptedPaths: encrypted.lens.encryptedWith?.encryptedPaths,
-            accessCondition: gql.mockRootCondition({
-              criteria: [
-                gql.mockProfileOwnershipCondition({ profileId: ownerId }),
-                gql.mockEoaOwnershipCondition({ address: knownAddress }),
-              ],
-            }),
-          }),
-        });
-
-        // exercise
-        const result = await client.decryptPublicationMetadataFragment(encryptedFragment, context);
-
-        // verify
-        expect(result.unwrap()).toMatchObject({
-          content: rawMetadata.lens.content,
-        });
-      });
+      return expect(() => result.unwrap()).toThrow(CannotDecryptError);
     });
 
-    describe(`with an encrypted metadata v2 fragment`, () => {
-      it(`should return the decrypted fragment`, async () => {
-        // setup
-        // simulate the transcription process done by the indexer and Lens API
-        const encryptedFragment = gql.mockEncryptedFragmentOfLegacyPublicationMetadata({
-          content: 'Any placeholder text as per v2 spec',
-          encryptedWith: gql.mockPublicationMetadataV2Encryption({
-            encryptionKey: encrypted.lens.encryptedWith?.encryptionKey,
-            accessCondition: gql.mockRootCondition({
-              criteria: [
-                gql.mockProfileOwnershipCondition({ profileId: ownerId }),
-                gql.mockEoaOwnershipCondition({ address: knownAddress }),
-              ],
-            }),
-            encryptedFields: gql.mockPublicationMetadataV2EncryptedFields({
-              content: encrypted.lens.content as string,
-            }),
+    it(`should return the decrypted fragment`, async () => {
+      // setup
+      // simulate the transcription process done by the indexer and Lens API
+      const encryptedFragment = gql.mockEncryptedArticleMetadataV3Fragment({
+        content: encrypted.lens.content as string,
+        encryptedWith: gql.mockPublicationMetadataLitEncryption({
+          encryptionKey: encrypted.lens.encryptedWith?.encryptionKey,
+          encryptedPaths: encrypted.lens.encryptedWith?.encryptedPaths,
+          accessCondition: gql.mockRootCondition({
+            criteria: [
+              gql.mockProfileOwnershipCondition({ profileId: ownerId }),
+              gql.mockEoaOwnershipCondition({ address: knownAddress }),
+            ],
           }),
-        });
+        }),
+      });
 
-        // exercise
-        const result = await client.decryptPublicationMetadataFragment(encryptedFragment, context);
+      // exercise
+      const result = await client.decryptPublicationMetadataFragment(encryptedFragment, context);
 
-        // verify
-        expect(result.unwrap()).toMatchObject({
-          content: rawMetadata.lens.content,
-        });
+      // verify
+      expect(result.unwrap()).toMatchObject({
+        content: rawMetadata.lens.content,
       });
     });
   });

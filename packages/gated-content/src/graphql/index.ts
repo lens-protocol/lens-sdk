@@ -1,15 +1,8 @@
 import { Overwrite, Primitive } from '@lens-protocol/shared-kernel';
 
-import { PublicationMetadata, LegacyPublicationMetadata, Maybe } from './generated';
+import { PublicationMetadata, Maybe } from './generated';
 
 export * from './generated';
-
-/**
- * `PublicationMetadata` but `LegacyPublicationMetadata`
- *
- * @internal
- */
-export type NonLegacyPublicationMetadata = Exclude<PublicationMetadata, LegacyPublicationMetadata>;
 
 type PrettyIntersection<S, T> = { [K in keyof (S & T)]: (S & T)[K] };
 
@@ -66,30 +59,14 @@ export type EncryptedFragmentOf<Metadata extends EncryptablePublicationMetadata<
     : never;
 
 /**
- * Any fragment of `LegacyPublicationMetadata` with `encryptedWith` field defined.
- *
- * Fragments must include `__typename` at all levels.
- */
-export type EncryptedFragmentOfLegacyPublicationMetadata =
-  EncryptedFragmentOf<LegacyPublicationMetadata>;
-
-/**
- * Any fragment of `NonLegacyPublicationMetadata` with `encryptedWith` field defined.
- *
- * Fragments must include `__typename` at all levels.
- */
-export type EncryptedFragmentOfPublicationMetadata =
-  EncryptedFragmentOf<NonLegacyPublicationMetadata>;
-
-/**
- * Any fragment of `PublicationMetadata`  with `encryptedWith` field defined.
+ * Any fragment of `PublicationMetadata` with `encryptedWith` field defined.
  *
  * Fragments must include `__typename` at all levels.
  */
 export type EncryptedFragmentOfAnyPublicationMetadata = EncryptedFragmentOf<PublicationMetadata>;
 
 /**
- * Any fragment of `PublicationMetadata`  with `encryptedWith` field defined.
+ * Any encryptable `PublicationMetadata` fragment.
  */
 export type EncryptablePublicationMetadataFragment = Pick<PublicationMetadata, 'encryptedWith'>;
 /**

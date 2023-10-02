@@ -1,7 +1,7 @@
 import { isAddress } from '@ethersproject/address';
 import { BigNumber } from '@ethersproject/bignumber';
 import { ProfileId, PublicationId } from '@lens-protocol/metadata';
-import { EthereumAddress, IEquatableError, TwoAtLeastArray } from '@lens-protocol/shared-kernel';
+import { EvmAddress, IEquatableError, TwoAtLeastArray } from '@lens-protocol/shared-kernel';
 
 import { isSupportedChainId, SupportedChainId } from './types';
 
@@ -9,7 +9,7 @@ export class InvalidAccessCriteriaError extends Error implements IEquatableError
   name = 'InvalidAccessCriteriaError' as const;
 }
 
-export function assertValidAddress(address: string): asserts address is EthereumAddress {
+export function assertValidAddress(address: string): asserts address is EvmAddress {
   if (isAddress(address)) return;
 
   throw new InvalidAccessCriteriaError(`Invalid address: ${address}`);

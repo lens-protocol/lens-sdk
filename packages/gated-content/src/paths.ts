@@ -240,7 +240,7 @@ export function resolvePathsToEncrypt({ $schema }: raw.PublicationMetadata): Enc
   return [];
 }
 
-type DecryptablePath = PathsOf<DistributiveOmit<gql.NonLegacyPublicationMetadata, 'encryptedWith'>>;
+type DecryptablePath = PathsOf<DistributiveOmit<gql.PublicationMetadata, 'encryptedWith'>>;
 
 const DecryptablePathsMapping: { [key in EncryptablePath]?: DecryptablePath | DecryptablePath[] } =
   {
@@ -302,7 +302,7 @@ const DecryptablePathsMapping: { [key in EncryptablePath]?: DecryptablePath | De
 
 export function resolvePathsToDecrypt({
   encryptedWith,
-}: gql.EncryptedFragmentOfPublicationMetadata) {
+}: gql.EncryptedFragmentOfAnyPublicationMetadata) {
   return encryptedWith.encryptedPaths
     .reduce((acc, path) => {
       if (path in DecryptablePathsMapping && DecryptablePathsMapping[path as EncryptablePath]) {

@@ -17,11 +17,7 @@ import { AuthSig, createAuthStorage } from './AuthStorage';
 import { CannotDecryptError } from './CannotDecryptError';
 import { ICipher, IEncryptionProvider } from './IEncryptionProvider';
 import { DecryptionContext, transformFromGql, transformFromRaw } from './conditions';
-import {
-  PublicationMetadataDecryptor,
-  PublicationMetadataEncryptor,
-  LegacyPublicationMetadataDecryptor,
-} from './encryption';
+import { PublicationMetadataDecryptor, PublicationMetadataEncryptor } from './encryption';
 import { EnvironmentConfig } from './environments';
 import * as gql from './graphql';
 import { isLitError } from './types';
@@ -183,11 +179,6 @@ export class GatedClient {
     );
 
     switch (encryptedMetadata.__typename) {
-      case 'LegacyPublicationMetadata':
-        return new LegacyPublicationMetadataDecryptor(cipher).decrypt(
-          encryptedMetadata,
-        ) as Promise<T>;
-
       case 'ArticleMetadataV3':
       case 'AudioMetadataV3':
       case 'CheckingInMetadataV3':
@@ -203,7 +194,7 @@ export class GatedClient {
       case 'ThreeDMetadataV3':
       case 'TransactionMetadataV3':
       case 'VideoMetadataV3':
-        return new PublicationMetadataDecryptor(cipher).decrypt(encryptedMetadata) as Promise<T>;
+        return new PublicationMetadataDecryptor(cipher).decrypt(encryptedMetadata);
     }
 
     assertNever(encryptedMetadata, `Not supported metadata type`);
