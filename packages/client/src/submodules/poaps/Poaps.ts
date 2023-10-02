@@ -34,7 +34,7 @@ export class Poaps {
   }
 
   /**
-   * Get profile's POAP tokens.
+   * Get profile POAP tokens.
    *
    * @param request - The request object.
    * @returns POAP tokens wrapped in {@link PaginatedResult}

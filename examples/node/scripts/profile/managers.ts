@@ -1,11 +1,15 @@
 import { LensClient, development } from '@lens-protocol/client';
 
+import { getOwnedProfileId } from '../shared/getOwnedProfileId';
+import { setupWallet } from '../shared/setupWallet';
+
 async function main() {
   const client = new LensClient({
     environment: development,
   });
 
-  const profileId = '0x01';
+  const wallet = setupWallet();
+  const profileId = await getOwnedProfileId(client, wallet.address);
 
   const result = await client.profile.managers({
     for: profileId,

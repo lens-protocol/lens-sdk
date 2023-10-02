@@ -1,12 +1,12 @@
-import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
-import { setupWallet } from '../shared/setupWallet';
+import { LensClient, development } from '@lens-protocol/client';
 
 async function main() {
-  const wallet = setupWallet();
-  const client = await getAuthenticatedClientFromEthersWallet(wallet);
+  const client = new LensClient({
+    environment: development,
+  });
 
   const result = await client.profile.followers({
-    of: 'PROFILE_ID',
+    of: '0x01',
   });
 
   console.log(

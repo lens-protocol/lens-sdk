@@ -20,7 +20,7 @@ import {
 } from './graphql/revenue.generated';
 
 /**
- * Fetch a profile's or publication's revenue.
+ * Fetch a profile or publications revenue.
  *
  * @group LensClient Modules
  */

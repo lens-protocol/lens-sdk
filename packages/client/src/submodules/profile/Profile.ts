@@ -103,7 +103,7 @@ export class Profile {
   }
 
   /**
-   * Fetch all profiles by requested criteria
+   * Fetch all profiles by requested criteria.
    *
    * @param request - Request object for the query
    * @param options - Additional options for the query
@@ -134,7 +134,7 @@ export class Profile {
   }
 
   /**
-   * Fetches addresses of profile's managers
+   * Fetch addresses of profile managers.
    *
    * @param request - Request object for the query
    * @returns Profile managers wrapped in {@link PaginatedResult}
@@ -159,7 +159,7 @@ export class Profile {
   }
 
   /**
-   * Fetch all recommended profiles
+   * Fetch recommended profiles.
    *
    * @param request - Request object for the query
    * @returns Array of recommended profiles wrapped in {@link PaginatedResult}
@@ -185,7 +185,7 @@ export class Profile {
   }
 
   /**
-   * Dismiss profiles from the recommended list
+   * Dismiss profiles from the recommended list.
    *
    * ⚠️ Requires authenticated LensClient.
    *
@@ -207,6 +207,19 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch profiles that are followed by a requested profile.
+   *
+   * @param request - Request object for the query
+   * @returns Profiles wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.following({
+   *   for: '0x01',
+   * });
+   * ```
+   */
   async following(request: FollowingRequest): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Following({
@@ -218,6 +231,19 @@ export class Profile {
     }, request);
   }
 
+  /**
+   * Fetch profiles that follow a requested profile.
+   *
+   * @param request - Request object for the query
+   * @returns Profiles wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.followers({
+   *   of: '0x01',
+   * });
+   * ```
+   */
   async followers(request: FollowersRequest): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Followers({
@@ -230,7 +256,7 @@ export class Profile {
   }
 
   /**
-   * Fetch mutual followers between two profiles
+   * Fetch mutual followers between two profiles.
    *
    * @param request - Request object for the query
    * @returns Profiles wrapped in {@link PaginatedResult}
@@ -257,7 +283,7 @@ export class Profile {
   }
 
   /**
-   * Fetch profiles that acted on a publication
+   * Fetch profiles that acted on a publication.
    *
    * @param request - Request object for the query
    * @returns Profiles wrapped in {@link PaginatedResult}
@@ -298,7 +324,7 @@ export class Profile {
   // }
 
   /**
-   * Create a new profile
+   * Create a new profile.
    *
    * @param request - Request object for the mutation
    * @returns Status of the transaction
@@ -318,6 +344,21 @@ export class Profile {
     return result.data.result;
   }
 
+  /**
+   * Set profile metadata using Profile Manager. Profile has to have a Profile Manager enabled.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelaySuccessFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.setProfileMetadata({
+   *   metadataURI: 'ipfs://Qm...',
+   * });
+   * ```
+   */
   async setProfileMetadata(
     request: OnchainSetProfileMetadataRequest,
   ): PromiseResult<
@@ -330,6 +371,24 @@ export class Profile {
     });
   }
 
+  /**
+   * Create typed data for setting the profile metadata.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for setting the profile metadata
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createSetProfileMetadataTypedData({
+   *   metadataURI: 'ipfs://Qm...',
+   * });
+   * ```
+   */
   async createSetProfileMetadataTypedData(
     request: OnchainSetProfileMetadataRequest,
     options?: TypedDataOptions,
@@ -350,6 +409,24 @@ export class Profile {
     });
   }
 
+  /**
+   * Create typed data for changing profile managers.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for changing profile managers
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createChangeProfileManagersTypedData({
+   *   approveLensManager: true,
+   * });
+   * ```
+   */
   async createChangeProfileManagersTypedData(
     request: ChangeProfileManagersRequest,
     options?: TypedDataOptions,
@@ -370,6 +447,23 @@ export class Profile {
     });
   }
 
+  /**
+   * Set profile follow module using Profile Manager. Profile has to have a Profile Manager enabled.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelaySuccessFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.setFollowModule({
+   *   followModule: {
+   *     freeFollowModule: true,
+   *   },
+   * });
+   * ```
+   */
   async setFollowModule(
     request: SetFollowModuleRequest,
   ): PromiseResult<
@@ -382,6 +476,26 @@ export class Profile {
     });
   }
 
+  /**
+   * Create typed data for setting a profile follow module.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for setting a profile follow module
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createSetFollowModuleTypedData({
+   *   followModule: {
+   *     freeFollowModule: true,
+   *   },
+   * });
+   * ```
+   */
   async createSetFollowModuleTypedData(
     request: SetFollowModuleRequest,
     options?: TypedDataOptions,

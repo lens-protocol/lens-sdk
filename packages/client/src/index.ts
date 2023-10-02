@@ -114,6 +114,7 @@ export type {
   RelayErrorFragment,
   RelaySuccessFragment,
   RevertFollowModuleSettingsFragment,
+  RootConditionFragment,
   SimpleCollectOpenActionSettingsFragment,
   SpaceMetadataV3Fragment,
   StoryMetadataV3Fragment,
