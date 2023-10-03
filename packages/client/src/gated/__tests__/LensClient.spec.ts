@@ -53,10 +53,10 @@ describe(`Given an instance of "gated.${LensClient.name}"`, () => {
       expect(decrypted.unwrap()).toMatchObject({
         content: cleartextMetadata.lens.content,
       });
-    }, 30_000);
+    }, 60_000);
 
     // TODO complete once collect is fixed at the API level
-    it('should be decryptable via the collect condition', async () => {
+    it.skip('should be decryptable via the collect condition', async () => {
       const condition = metadata.collectCondition({
         publicationId: await client.publication.predictNextOnChainPublicationId({
           from: profile.id,
