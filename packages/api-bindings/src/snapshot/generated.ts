@@ -142,6 +142,10 @@ export type RankingWhere = {
   search?: InputMaybe<Scalars['String']>;
 };
 
+export type RolesWhere = {
+  address?: InputMaybe<Scalars['String']>;
+};
+
 export type SpaceWhere = {
   id?: InputMaybe<Scalars['String']>;
   id_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;

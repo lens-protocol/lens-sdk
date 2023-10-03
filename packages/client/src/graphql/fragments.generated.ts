@@ -92,6 +92,27 @@ export type ImageFragment = {
   height: number | null;
 };
 
+export type ImageSetFragment = {
+  __typename: 'ImageSet';
+  raw: ImageFragment;
+  optimized: ImageFragment | null;
+  transformed: ImageFragment | null;
+};
+
+export type EncryptableImageFragment = {
+  __typename: 'EncryptableImage';
+  uri: string;
+  mimeType: string | null;
+  width: number | null;
+  height: number | null;
+};
+
+export type EncryptableImageSetFragment = {
+  __typename: 'EncryptableImageSet';
+  raw: EncryptableImageFragment;
+  optimized: ImageFragment | null;
+};
+
 export type VideoFragment = { __typename: 'Video'; uri: string; mimeType: string | null };
 
 export type EncryptableVideoFragment = {
@@ -481,27 +502,6 @@ export type RootConditionFragment = {
     | OrConditionFragment
     | ProfileOwnershipConditionFragment
   >;
-};
-
-export type ImageSetFragment = {
-  __typename: 'ImageSet';
-  raw: ImageFragment;
-  optimized: ImageFragment | null;
-  transformed: ImageFragment | null;
-};
-
-export type EncryptableImageFragment = {
-  __typename: 'EncryptableImage';
-  uri: string;
-  mimeType: string | null;
-  width: number | null;
-  height: number | null;
-};
-
-export type EncryptableImageSetFragment = {
-  __typename: 'EncryptableImageSet';
-  raw: EncryptableImageFragment;
-  optimized: ImageFragment | null;
 };
 
 export type PublicationMarketplaceMetadataAttributeFragment = {
