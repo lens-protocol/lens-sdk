@@ -60,7 +60,7 @@ export class Search {
    * @example
    * ```ts
    * const result = await client.search.publications({
-   *  query: 'lens',
+   *   query: 'lens',
    * });
    * ```
    */

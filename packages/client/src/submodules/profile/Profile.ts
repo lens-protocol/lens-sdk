@@ -21,6 +21,7 @@ import type {
   HandleUnlinkFromProfileRequest,
   MutualFollowersRequest,
   OnchainSetProfileMetadataRequest,
+  ProfileActionHistoryRequest,
   ProfileInterestsRequest,
   ProfileManagersRequest,
   ProfileRecommendationsRequest,
@@ -50,6 +51,7 @@ import {
   CreateSetFollowModuleBroadcastItemResultFragment,
   CreateUnblockProfilesBroadcastItemResultFragment,
   CreateUnfollowBroadcastItemResultFragment,
+  ProfileActionHistoryFragment,
   ProfileManagerFragment,
   Sdk,
   getSdk,
@@ -309,6 +311,39 @@ export class Profile {
   }
 
   /**
+   * Fetch profile action history.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the query
+   * @returns Profile action history item wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.actionHistory();
+   * ```
+   */
+  async actionHistory(
+    request: ProfileActionHistoryRequest = {},
+  ): PromiseResult<
+    PaginatedResult<ProfileActionHistoryFragment>,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      return buildPaginatedQueryResult(async (currRequest) => {
+        const result = await this.sdk.ProfileActionHistory(
+          {
+            request: currRequest,
+          },
+          headers,
+        );
+
+        return result.data.result;
+      }, request);
+    });
+  }
+
+  /**
    * NOT IMPLEMENTED ON THE API SIDE
    */
   // async claim(
@@ -332,8 +367,8 @@ export class Profile {
    * @example
    * ```ts
    * const result = await client.profile.create({
-   *  handle: 'handle',
-   *  to: '0x1234567890123456789012345678901234567890',
+   *   handle: 'handle',
+   *   to: '0x1234567890123456789012345678901234567890',
    * });
    * ```
    */

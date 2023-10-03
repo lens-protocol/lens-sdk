@@ -263,6 +263,22 @@ export type WhoActedOnPublicationQuery = {
   result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
 };
 
+export type ProfileActionHistoryFragment = {
+  id: number;
+  actionType: Types.ProfileActionHistoryType;
+  who: string;
+  txHash: string | null;
+  actionedOn: string;
+};
+
+export type ProfileActionHistoryQueryVariables = Types.Exact<{
+  request: Types.ProfileActionHistoryRequest;
+}>;
+
+export type ProfileActionHistoryQuery = {
+  result: { items: Array<ProfileActionHistoryFragment>; pageInfo: PaginatedResultInfoFragment };
+};
+
 export type ClaimProfileMutationVariables = Types.Exact<{
   request: Types.ClaimProfileRequest;
 }>;
@@ -670,6 +686,15 @@ export const CreateHandleUnlinkFromProfileBroadcastItemResultFragmentDoc = gql`
   ${Eip712TypedDataFieldFragmentDoc}
   ${Eip712TypedDataDomainFragmentDoc}
 `;
+export const ProfileActionHistoryFragmentDoc = gql`
+  fragment ProfileActionHistory on ProfileActionHistory {
+    id
+    actionType
+    who
+    txHash
+    actionedOn
+  }
+`;
 export const ProfileDocument = gql`
   query Profile(
     $request: ProfileRequest!
@@ -823,6 +848,20 @@ export const WhoActedOnPublicationDocument = gql`
     }
   }
   ${ProfileFragmentDoc}
+  ${PaginatedResultInfoFragmentDoc}
+`;
+export const ProfileActionHistoryDocument = gql`
+  query ProfileActionHistory($request: ProfileActionHistoryRequest!) {
+    result: profileActionHistory(request: $request) {
+      items {
+        ...ProfileActionHistory
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${ProfileActionHistoryFragmentDoc}
   ${PaginatedResultInfoFragmentDoc}
 `;
 export const ClaimProfileDocument = gql`
@@ -1083,6 +1122,7 @@ const FollowingDocumentString = print(FollowingDocument);
 const FollowersDocumentString = print(FollowersDocument);
 const MutualFollowersDocumentString = print(MutualFollowersDocument);
 const WhoActedOnPublicationDocumentString = print(WhoActedOnPublicationDocument);
+const ProfileActionHistoryDocumentString = print(ProfileActionHistoryDocument);
 const ClaimProfileDocumentString = print(ClaimProfileDocument);
 const CreateProfileWithHandleDocumentString = print(CreateProfileWithHandleDocument);
 const AddProfileInterestsDocumentString = print(AddProfileInterestsDocument);
@@ -1246,6 +1286,26 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'WhoActedOnPublication',
+        'query',
+      );
+    },
+    ProfileActionHistory(
+      variables: ProfileActionHistoryQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: ProfileActionHistoryQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ProfileActionHistoryQuery>(
+            ProfileActionHistoryDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'ProfileActionHistory',
         'query',
       );
     },

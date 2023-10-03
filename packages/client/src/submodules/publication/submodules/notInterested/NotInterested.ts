@@ -56,7 +56,7 @@ export class NotInterested {
    * @example
    * ```ts
    * await client.publication.notInterested.undo({
-   *  on: '0x02-0x01',
+   *   on: '0x02-0x01',
    * });
    * ```
    */

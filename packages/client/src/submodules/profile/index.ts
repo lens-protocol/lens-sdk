@@ -13,5 +13,6 @@ export type {
   CreateSetFollowModuleBroadcastItemResultFragment,
   CreateUnblockProfilesBroadcastItemResultFragment,
   CreateUnfollowBroadcastItemResultFragment,
+  ProfileActionHistoryFragment,
   ProfileManagerFragment,
 } from './graphql/profile.generated';
