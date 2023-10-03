@@ -37,6 +37,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     accessTokenStorage,
     pollingInterval: config.environment.timings.pollingInterval,
     logger,
+    contentMatchers: [config.environment.snapshot.matcher],
   });
 
   return {

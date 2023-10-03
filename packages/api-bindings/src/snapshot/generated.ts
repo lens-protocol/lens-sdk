@@ -55,6 +55,8 @@ export type FollowWhere = {
 };
 
 export type MessageWhere = {
+  address?: InputMaybe<Scalars['String']>;
+  address_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   id?: InputMaybe<Scalars['String']>;
   id_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   mci?: InputMaybe<Scalars['Int']>;

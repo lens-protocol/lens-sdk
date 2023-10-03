@@ -16,6 +16,7 @@ import { ProfilesPage } from './profiles/ProfilesPage';
 import { UseProfile } from './profiles/UseProfile';
 import { PublicationsPage } from './publications/PublicationsPage';
 import { UsePublication } from './publications/UsePublication';
+import { UsePublications } from './publications/UsePublications';
 import { localStorage } from './storage';
 
 const { publicClient, webSocketPublicClient } = configureChains(
@@ -57,6 +58,7 @@ export function App() {
                   <Route path="/publications">
                     <Route index element={<PublicationsPage />} />
                     <Route path="usePublication" element={<UsePublication />} />
+                    <Route path="usePublications" element={<UsePublications />} />
                   </Route>
 
                   <Route path="/profiles">

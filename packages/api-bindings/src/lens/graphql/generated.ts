@@ -27,47 +27,89 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The app id */
   AppId: AppId;
+  /** Blockchain data */
   BlockchainData: string;
+  /** The broadcast id */
   BroadcastId: string;
+  /** The chain id */
   ChainId: number;
+  /** The challenge id */
   ChallengeId: string;
+  /** The content encryption key value */
   ContentEncryptionKey: ContentEncryptionKey;
+  /** Create handle value */
   CreateHandle: string;
+  /** Cursor custom scalar type */
   Cursor: Cursor;
+  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: string;
+  /** An ISO-8610 DateTime that could also be encrypted in some circumstances. Check parent nodes to determine if the value is encrypted or ready to use. */
   EncryptableDateTime: string;
+  /** A Markdown text that could also be encrypted in some circumstances. Check parent nodes to determine if the value is encrypted or ready to use. */
   EncryptableMarkdown: string;
+  /** A string that could also be encrypted in some circumstances. Check parent nodes to determine if the value is encrypted or ready to use. */
   EncryptableString: string;
+  /** The tx hash that could also be encrypted in some circumstances. Check parent nodes to determine if the value is encrypted or ready to use. */
   EncryptableTxHash: string;
+  /** A URI value that could also be encrypted in some circumstances. Check parent nodes to determine if the value is encrypted or ready to use. */
   EncryptableURI: string;
+  /** Define a path of a possibly encrypted property in the Publication Metadata */
   EncryptedPath: string;
+  /** The encrypted value */
   EncryptedValue: string;
+  /** The ens name */
   Ens: string;
+  /** evm address type */
   EvmAddress: EvmAddress;
+  /** The handle attached to a profile - note its it own NFT and always identified by its full name */
   Handle: string;
+  /** The image size transform */
   ImageSizeTransform: ImageSizeTransform;
+  /** The jwt token */
   Jwt: string;
+  /** The locale */
   Locale: string;
+  /** The markdown value */
   Markdown: string;
+  /** Mimetype type */
   MimeType: string;
+  /** The momoke id */
   MomokaId: string;
+  /** The momoke proof */
   MomokaProof: string;
+  /** Nft gallery id type */
   NftGalleryId: string;
+  /** Nft gallery name type */
   NftGalleryName: string;
+  /** The nonce value */
   Nonce: number;
+  /** The onchain publication id */
   OnchainPublicationId: string;
+  /** The Poap Event id */
   PoapEventId: string;
+  /** ProfileId custom scalar type */
   ProfileId: ProfileId;
+  /** Publication id */
   PublicationId: PublicationId;
+  /** The signature value */
   Signature: string;
+  /** The NFT token id */
   TokenId: string;
+  /** The tx hash */
   TxHash: string;
+  /** The tx id */
   TxId: string;
+  /** The URI value not this can be used in it can be a https OR different aka ar:// and ipfs://  */
   URI: string;
+  /** The url value */
   URL: Url;
+  /** The guid uuid value */
   UUID: string;
+  /** The unix timestamp */
   UnixTimestamp: number;
+  /** Represents NULL values */
   Void: void;
 };
 
@@ -1797,6 +1839,7 @@ export type Profile = {
 
 export type PaginatedResultInfo = {
   __typename: 'PaginatedResultInfo';
+  moreAfter: boolean;
   prev: Cursor | null;
   next: Cursor | null;
 };
@@ -2615,11 +2658,7 @@ export type CreateActOnOpenActionEip712TypedData = {
   };
 };
 
-export type RelaySuccess = {
-  __typename: 'RelaySuccess';
-  txHash: string | null;
-  txId: string | null;
-};
+export type RelaySuccess = { __typename: 'RelaySuccess'; txHash: string | null; txId: string };
 
 export type RelayError = { __typename: 'RelayError'; reason: RelayErrorReasonType };
 
@@ -3111,7 +3150,10 @@ export type PublicationVariables = Exact<{
 export type PublicationData = { result: Comment | Mirror | Post | Quote | null };
 
 export type PublicationsVariables = Exact<{
-  request: PublicationsRequest;
+  where: PublicationsWhere;
+  orderBy?: InputMaybe<PublicationsOrderByType>;
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   publicationImageTransform?: InputMaybe<ImageTransform>;
   publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
   publicationStatsInput?: PublicationStatsInput;
@@ -5826,6 +5868,7 @@ export const FragmentFeedItem = /*#__PURE__*/ gql`
 export const FragmentPaginatedResultInfo = /*#__PURE__*/ gql`
   fragment PaginatedResultInfo on PaginatedResultInfo {
     __typename
+    moreAfter @client
     prev
     next
   }
@@ -8813,7 +8856,10 @@ export type PublicationLazyQueryHookResult = ReturnType<typeof usePublicationLaz
 export type PublicationQueryResult = Apollo.QueryResult<PublicationData, PublicationVariables>;
 export const PublicationsDocument = /*#__PURE__*/ gql`
   query Publications(
-    $request: PublicationsRequest!
+    $where: PublicationsWhere!
+    $orderBy: PublicationsOrderByType
+    $limit: LimitType
+    $cursor: Cursor
     $publicationImageTransform: ImageTransform = {}
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
     $publicationStatsInput: PublicationStatsInput! = {}
@@ -8824,7 +8870,9 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
-    result: publications(request: $request) {
+    result: publications(
+      request: { where: $where, orderBy: $orderBy, limit: $limit, cursor: $cursor }
+    ) {
       items {
         ... on Post {
           ...Post
@@ -8863,7 +8911,10 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = usePublications({
  *   variables: {
- *      request: // value for 'request'
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *      publicationImageTransform: // value for 'publicationImageTransform'
  *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
  *      publicationStatsInput: // value for 'publicationStatsInput'
@@ -13349,8 +13400,14 @@ export type PaginatedPublicationsTagsResultFieldPolicy = {
   items?: FieldPolicy<any> | FieldReadFunction<any>;
   pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type PaginatedResultInfoKeySpecifier = ('next' | 'prev' | PaginatedResultInfoKeySpecifier)[];
+export type PaginatedResultInfoKeySpecifier = (
+  | 'moreAfter'
+  | 'next'
+  | 'prev'
+  | PaginatedResultInfoKeySpecifier
+)[];
 export type PaginatedResultInfoFieldPolicy = {
+  moreAfter?: FieldPolicy<any> | FieldReadFunction<any>;
   next?: FieldPolicy<any> | FieldReadFunction<any>;
   prev?: FieldPolicy<any> | FieldReadFunction<any>;
 };

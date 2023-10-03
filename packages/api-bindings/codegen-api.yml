@@ -60,6 +60,7 @@ generates:
         Void: void
     schema:
       - https://api-v2-mumbai.lens.dev/graphql
+      - src/lens/graphql/client.graphql
     documents:
       - src/lens/graphql/*.graphql
     plugins:

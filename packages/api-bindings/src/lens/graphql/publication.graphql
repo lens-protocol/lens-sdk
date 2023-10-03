@@ -39,7 +39,10 @@ query Publication(
 }
 
 query Publications(
-  $request: PublicationsRequest!
+  $where: PublicationsWhere!
+  $orderBy: PublicationsOrderByType
+  $limit: LimitType
+  $cursor: Cursor
   $publicationImageTransform: ImageTransform = {}
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $publicationStatsInput: PublicationStatsInput! = {}
@@ -50,7 +53,9 @@ query Publications(
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
-  result: publications(request: $request) {
+  result: publications(
+    request: { where: $where, orderBy: $orderBy, limit: $limit, cursor: $cursor }
+  ) {
     items {
       ... on Post {
         ...Post

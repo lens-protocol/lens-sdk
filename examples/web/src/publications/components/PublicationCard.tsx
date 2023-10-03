@@ -1,4 +1,4 @@
-import { Comment, Mirror, Post, Quote } from '@lens-protocol/react';
+import { Comment, Mirror, Post, Quote, isPostPublication } from '@lens-protocol/react';
 
 import { ProfilePicture } from '../../profiles/components/ProfilePicture';
 
@@ -14,6 +14,9 @@ export function PublicationCard({ publication }: PublicationCardProps) {
         {publication.__typename} by{' '}
         {publication.by.metadata?.displayName ?? publication.by.handle ?? publication.by.id}
       </p>
+      {isPostPublication(publication) && 'content' in publication.metadata && (
+        <p>{publication.metadata.content}</p>
+      )}
     </article>
   );
 }

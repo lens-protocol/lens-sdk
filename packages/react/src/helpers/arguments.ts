@@ -1,12 +1,6 @@
 import { OperationVariables } from '@apollo/client';
-import {
-  createSnapshotApolloClient,
-  MediaTransformParams,
-  SafeApolloClient,
-  Sources,
-} from '@lens-protocol/api-bindings';
+import { MediaTransformParams, SafeApolloClient, Sources } from '@lens-protocol/api-bindings';
 import { AppId } from '@lens-protocol/domain/entities';
-import { useState } from 'react';
 
 import { mediaTransformConfigToQueryVariables } from '../mediaTransforms';
 import { useSharedDependencies } from '../shared';
@@ -19,23 +13,6 @@ export function useLensApolloClient<TOptions>(
   args: TOptions = {} as TOptions,
 ): UseApolloClientResult<TOptions> {
   const { apolloClient: client } = useSharedDependencies();
-
-  return {
-    ...args,
-    client,
-  };
-}
-
-export function useSnapshotApolloClient<TOptions>(
-  args: TOptions = {} as TOptions,
-): UseApolloClientResult<TOptions> {
-  const { environment } = useSharedDependencies();
-
-  const [client] = useState(() =>
-    createSnapshotApolloClient({
-      backendURL: environment.snapshot.hub,
-    }),
-  );
 
   return {
     ...args,

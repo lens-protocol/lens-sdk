@@ -6,6 +6,11 @@ const publicationHooks = [
     description: `Fetch a single publication by it's ID.`,
     path: '/publications/usePublication',
   },
+  {
+    label: 'usePublications',
+    description: `Fetch a list of publications.`,
+    path: '/publications/usePublications',
+  },
 ];
 
 export function PublicationsPage() {
