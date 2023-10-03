@@ -1,6 +1,0 @@
-query ValidatePublicationMetadata($metadata: PublicationMetadataV2Input!) {
-  validatePublicationMetadata(request: { metadatav2: $metadata }) {
-    valid
-    reason
-  }
-}
