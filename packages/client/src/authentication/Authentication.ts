@@ -1,11 +1,17 @@
-import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
-import { InMemoryStorageProvider } from '@lens-protocol/storage';
+import {
+  failure,
+  IEquatableError,
+  PromiseResult,
+  Result,
+  success,
+} from '@lens-protocol/shared-kernel';
 
-import type { LensConfig } from '../consts/config';
-import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
+import type { LensContext } from '../context';
+import { CredentialsExpiredError, NotAuthenticatedError } from '../errors';
 import type { ChallengeRequest, SignedAuthChallenge } from '../graphql/types.generated';
 import type { IAuthentication } from './IAuthentication';
 import { AuthenticationApi } from './adapters/AuthenticationApi';
+import { Credentials } from './adapters/Credentials';
 import { CredentialsStorage } from './adapters/CredentialsStorage';
 import type { AuthChallengeFragment } from './graphql/auth.generated';
 
@@ -14,14 +20,11 @@ import type { AuthChallengeFragment } from './graphql/auth.generated';
  */
 export class Authentication implements IAuthentication {
   private readonly api: AuthenticationApi;
-  private readonly storage: CredentialsStorage;
+  private readonly credentials: CredentialsStorage;
 
-  constructor(config: LensConfig) {
-    this.api = new AuthenticationApi(config);
-    this.storage = new CredentialsStorage(
-      config.storage || new InMemoryStorageProvider(),
-      config.environment.name,
-    );
+  constructor(context: LensContext) {
+    this.api = new AuthenticationApi(context);
+    this.credentials = new CredentialsStorage(context.storage, context.environment.name);
   }
 
   async generateChallenge(request: ChallengeRequest): Promise<AuthChallengeFragment> {
@@ -30,7 +33,7 @@ export class Authentication implements IAuthentication {
 
   async authenticate(request: SignedAuthChallenge): Promise<void> {
     const credentials = await this.api.authenticate(request);
-    await this.storage.set(credentials);
+    await this.credentials.set(credentials);
   }
 
   async verify(accessToken: string): Promise<boolean> {
@@ -38,7 +41,7 @@ export class Authentication implements IAuthentication {
   }
 
   async isAuthenticated(): Promise<boolean> {
-    const credentials = await this.storage.get();
+    const credentials = await this.credentials.get();
 
     if (!credentials) {
       return false;
@@ -50,7 +53,7 @@ export class Authentication implements IAuthentication {
 
     if (credentials.canRefresh()) {
       const newCredentials = await this.api.refresh(credentials.refreshToken);
-      await this.storage.set(newCredentials);
+      await this.credentials.set(newCredentials);
       return true;
     }
 
@@ -59,7 +62,7 @@ export class Authentication implements IAuthentication {
   }
 
   async getAccessToken(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError> {
-    const credentials = await this.storage.get();
+    const credentials = await this.credentials.get();
 
     if (!credentials) {
       return failure(new NotAuthenticatedError());
@@ -71,7 +74,7 @@ export class Authentication implements IAuthentication {
 
     if (credentials.canRefresh()) {
       const newCredentials = await this.api.refresh(credentials.refreshToken);
-      await this.storage.set(newCredentials);
+      await this.credentials.set(newCredentials);
 
       if (!newCredentials.accessToken) {
         return failure(new CredentialsExpiredError());
@@ -83,26 +86,38 @@ export class Authentication implements IAuthentication {
     return failure(new CredentialsExpiredError());
   }
 
-  async getProfileId(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError> {
-    const credentials = await this.storage.get();
+  async getProfileId(): Promise<string | null> {
+    const result = await this.getCredentials();
 
-    if (!credentials) {
-      return failure(new NotAuthenticatedError());
+    if (result.isFailure()) {
+      return null;
     }
 
-    if (!credentials.canRefresh()) {
-      return failure(new CredentialsExpiredError());
-    }
-
-    return success(credentials.getProfileId());
+    return result.value.getProfileId();
   }
 
-  // private methods
+  // privileged methods
+  async requireAuthentication<
+    TResult extends Result<TValue, TError>,
+    TValue,
+    TError extends IEquatableError,
+  >(
+    handler: (profileId: string) => Promise<TResult>,
+  ): PromiseResult<TValue, TError | CredentialsExpiredError | NotAuthenticatedError> {
+    const result = await this.getCredentials();
+
+    if (result.isFailure()) {
+      return failure(result.error);
+    }
+
+    return handler(result.value.getProfileId());
+  }
+
   async getRequestHeader(): PromiseResult<
     Record<string, string>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    const credentials = await this.storage.get();
+    const credentials = await this.credentials.get();
 
     if (!credentials) {
       return failure(new NotAuthenticatedError());
@@ -114,11 +129,27 @@ export class Authentication implements IAuthentication {
 
     if (credentials.canRefresh()) {
       const newCredentials = await this.api.refresh(credentials.refreshToken);
-      await this.storage.set(newCredentials);
+      await this.credentials.set(newCredentials);
       return success(this.buildHeader(newCredentials.accessToken));
     }
 
     return failure(new CredentialsExpiredError());
+  }
+
+  private async getCredentials(): PromiseResult<
+    Credentials,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    const credentials = await this.credentials.get();
+
+    if (!credentials) {
+      return failure(new NotAuthenticatedError());
+    }
+
+    if (!credentials.canRefresh()) {
+      return failure(new CredentialsExpiredError());
+    }
+    return success(credentials);
   }
 
   private buildHeader(accessToken: string | undefined) {

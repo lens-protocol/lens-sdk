@@ -1,0 +1,68 @@
+overwrite: true
+hooks:
+  afterAllFileWrite:
+    - prettier --write
+    - eslint --fix
+
+watch: false
+config:
+  gqlImport: graphql-tag
+  avoidOptionals:
+    field: false
+  strictScalars: true
+  scalars:
+    AppId: string
+    BlockchainData: string
+    BroadcastId: string
+    ChainId: number
+    ChallengeId: string
+    ContentEncryptionKey: string
+    CreateHandle: string
+    Cursor: string
+    DateTime: string
+    EncryptableDateTime: string
+    EncryptableMarkdown: string
+    EncryptableString: string
+    EncryptableTxHash: string
+    EncryptableURI: string
+    EncryptedPath: string
+    EncryptedValue: string
+    Ens: string
+    EvmAddress: string
+    Handle: string
+    ImageSizeTransform: string
+    IpfsCid: string
+    Jwt: string
+    LimitScalar: number
+    Locale: string
+    Markdown: string
+    MimeType: string
+    MomokaId: string
+    MomokaProof: string
+    NftGalleryId: string
+    NftGalleryName: string
+    Nonce: string
+    OnchainPublicationId: string
+    PoapEventId: string
+    ProfileId: string
+    PublicationId: string
+    Signature: string
+    TokenId: string
+    TxHash: string
+    TxId: string
+    UnixTimestamp: string
+    URI: string
+    URL: string
+    UUID: string
+    Void: string
+
+schema:
+  # - https://api-v2-mumbai.lens.dev/graphql
+  - http://localhost:4000/graphql
+
+generates:
+  src/graphql/generated.ts:
+    plugins:
+      - typescript:
+          nonOptionalTypename: true
+          immutableTypes: true

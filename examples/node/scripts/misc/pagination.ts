@@ -30,14 +30,17 @@ async function main() {
     console.log(`Fetching page for cursor: ${pagination.pageInfo.next}`);
 
     const nextPage = await pagination.next();
-    publications.push(...nextPage.items);
 
-    console.log(
-      `Next page:`,
-      nextPage.items.map((i) => ({
-        id: i.id,
-      })),
-    );
+    if (nextPage) {
+      publications.push(...nextPage.items);
+
+      console.log(
+        `Next page:`,
+        nextPage.items.map((i) => ({
+          id: i.id,
+        })),
+      );
+    }
   }
 
   console.log(

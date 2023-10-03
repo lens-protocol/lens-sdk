@@ -5,84 +5,123 @@ import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
-export type OptimisticStatusResultFragment = { value: boolean; isFinalisedOnchain: boolean };
+export type OptimisticStatusResultFragment = {
+  __typename: 'OptimisticStatusResult';
+  value: boolean;
+  isFinalisedOnchain: boolean;
+};
 
 export type Erc20Fragment = {
+  __typename: 'Erc20';
   name: string;
   symbol: string;
   decimals: number;
   contract: NetworkAddressFragment;
 };
 
-export type FiatAmountFragment = { value: string; asset: FiatFragment };
+export type FiatAmountFragment = { __typename: 'FiatAmount'; value: string; asset: FiatFragment };
 
-export type FiatFragment = { name: string; symbol: string; decimals: number };
+export type FiatFragment = { __typename: 'Fiat'; name: string; symbol: string; decimals: number };
 
 export type AmountFragment = {
+  __typename: 'Amount';
   value: string;
   asset: Erc20Fragment;
   rate: FiatAmountFragment | null;
 };
 
 export type FeeFollowModuleSettingsFragment = {
+  __typename: 'FeeFollowModuleSettings';
   recipient: string;
   amount: AmountFragment;
   contract: NetworkAddressFragment;
 };
 
-export type RevertFollowModuleSettingsFragment = { contract: NetworkAddressFragment };
+export type RevertFollowModuleSettingsFragment = {
+  __typename: 'RevertFollowModuleSettings';
+  contract: NetworkAddressFragment;
+};
 
 export type UnknownFollowModuleSettingsFragment = {
+  __typename: 'UnknownFollowModuleSettings';
   followModuleReturnData: string;
   contract: NetworkAddressFragment;
 };
 
-export type NetworkAddressFragment = { address: string; chainId: number };
+export type NetworkAddressFragment = {
+  __typename: 'NetworkAddress';
+  address: string;
+  chainId: number;
+};
+
+export type MetadataBooleanAttributeFragment = {
+  __typename: 'MetadataBooleanAttribute';
+  key: string;
+  value: string;
+};
+
+export type MetadataDateAttributeFragment = {
+  __typename: 'MetadataDateAttribute';
+  key: string;
+  value: string;
+};
+
+export type MetadataNumberAttributeFragment = {
+  __typename: 'MetadataNumberAttribute';
+  key: string;
+  value: string;
+};
+
+export type MetadataJsonAttributeFragment = {
+  __typename: 'MetadataJSONAttribute';
+  key: string;
+  value: string;
+};
+
+export type MetadataStringAttributeFragment = {
+  __typename: 'MetadataStringAttribute';
+  key: string;
+  value: string;
+};
 
 export type ImageFragment = {
+  __typename: 'Image';
   uri: string;
   mimeType: string | null;
   width: number | null;
   height: number | null;
 };
 
-export type VideoFragment = { uri: string; mimeType: string | null };
+export type VideoFragment = { __typename: 'Video'; uri: string; mimeType: string | null };
 
-export type VideoSetFragment = { raw: VideoFragment; optimized: VideoFragment | null };
-
-export type EncryptableVideoFragment = { mimeType: string | null; uri: string };
+export type EncryptableVideoFragment = {
+  __typename: 'EncryptableVideo';
+  mimeType: string | null;
+  uri: string;
+};
 
 export type EncryptableVideoSetFragment = {
+  __typename: 'EncryptableVideoSet';
   raw: EncryptableVideoFragment;
   optimized: VideoFragment | null;
 };
 
-export type AudioFragment = { uri: string; mimeType: string | null };
+export type AudioFragment = { __typename: 'Audio'; uri: string; mimeType: string | null };
 
-export type AudioSetFragment = { raw: AudioFragment; optimized: AudioFragment | null };
-
-export type EncryptableAudioFragment = { mimeType: string | null; uri: string };
+export type EncryptableAudioFragment = {
+  __typename: 'EncryptableAudio';
+  mimeType: string | null;
+  uri: string;
+};
 
 export type EncryptableAudioSetFragment = {
+  __typename: 'EncryptableAudioSet';
   raw: EncryptableAudioFragment;
   optimized: AudioFragment | null;
 };
 
-export type LegacyAudioItemFragment = {
-  altTag: string | null;
-  audio: AudioSetFragment;
-  cover: PublicationImageSetFragment | null;
-};
-
-export type LegacyImageItemFragment = { altTag: string | null; image: PublicationImageSetFragment };
-
-export type LegacyVideoItemFragment = {
-  altTag: string | null;
-  video: VideoSetFragment;
-  cover: PublicationImageSetFragment | null;
-};
-
 export type ProfileCoverSetFragment = {
+  __typename: 'ImageSet';
   raw: ImageFragment;
   optimized: ImageFragment | null;
   transformed: ImageFragment | null;
@@ -131,6 +170,7 @@ export type ProfileFragment = {
   lensManager: boolean;
   ownedBy: NetworkAddressFragment;
   operations: {
+    __typename: 'ProfileOperations';
     id: string;
     canBlock: boolean;
     canUnblock: boolean;
@@ -154,12 +194,19 @@ export type ProfileFragment = {
     | UnknownFollowModuleSettingsFragment
     | null;
   metadata: {
+    appId: string | null;
     displayName: string | null;
     bio: string | null;
     rawURI: string;
     picture: ProfilePictureSetFragment | NftImageFragment | null;
     coverPicture: ProfileCoverSetFragment | null;
-    attributes: Array<{ type: Types.AttributeType; key: string; value: string }>;
+    attributes: Array<
+      | MetadataBooleanAttributeFragment
+      | MetadataDateAttributeFragment
+      | MetadataJsonAttributeFragment
+      | MetadataNumberAttributeFragment
+      | MetadataStringAttributeFragment
+    > | null;
   } | null;
   invitedBy: { id: string } | null;
   stats: ProfileStatsFragment;
@@ -167,13 +214,17 @@ export type ProfileFragment = {
 
 export type PaginatedResultInfoFragment = { prev: string | null; next: string | null };
 
-export type AppFragment = { id: string };
+export type AppFragment = { __typename: 'App'; id: string };
 
-export type MomokaInfoFragment = { proof: string };
+export type MomokaInfoFragment = { __typename: 'MomokaInfo'; proof: string };
 
-export type FollowOnlyReferenceModuleSettingsFragment = { contract: NetworkAddressFragment };
+export type FollowOnlyReferenceModuleSettingsFragment = {
+  __typename: 'FollowOnlyReferenceModuleSettings';
+  contract: NetworkAddressFragment;
+};
 
 export type DegreesOfSeparationReferenceModuleSettingsFragment = {
+  __typename: 'DegreesOfSeparationReferenceModuleSettings';
   commentsRestricted: boolean;
   mirrorsRestricted: boolean;
   degreesOfSeparation: number;
@@ -181,11 +232,13 @@ export type DegreesOfSeparationReferenceModuleSettingsFragment = {
 };
 
 export type UnknownReferenceModuleSettingsFragment = {
+  __typename: 'UnknownReferenceModuleSettings';
   referenceModuleReturnData: string;
   contract: NetworkAddressFragment;
 };
 
 export type SimpleCollectOpenActionSettingsFragment = {
+  __typename: 'SimpleCollectOpenActionSettings';
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
@@ -196,16 +249,18 @@ export type SimpleCollectOpenActionSettingsFragment = {
 };
 
 export type MultirecipientFeeCollectOpenActionSettingsFragment = {
+  __typename: 'MultirecipientFeeCollectOpenActionSettings';
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
   endsAt: string | null;
   contract: NetworkAddressFragment;
   amount: AmountFragment;
-  recipients: Array<{ recipient: string; split: number }>;
+  recipients: Array<{ __typename: 'RecipientDataOutput'; recipient: string; split: number }>;
 };
 
 export type UnknownOpenActionModuleSettingsFragment = {
+  __typename: 'UnknownOpenActionModuleSettings';
   openActionModuleReturnData: string | null;
   contract: NetworkAddressFragment;
 };
@@ -216,6 +271,7 @@ export type LegacyFreeCollectModuleSettingsFragment = {
 };
 
 export type LegacyFeeCollectModuleSettingsFragment = {
+  __typename: 'LegacyFeeCollectModuleSettings';
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
@@ -224,6 +280,7 @@ export type LegacyFeeCollectModuleSettingsFragment = {
 };
 
 export type LegacyLimitedFeeCollectModuleSettingsFragment = {
+  __typename: 'LegacyLimitedFeeCollectModuleSettings';
   collectLimit: string | null;
   recipient: string;
   referralFee: number;
@@ -233,18 +290,23 @@ export type LegacyLimitedFeeCollectModuleSettingsFragment = {
 };
 
 export type LegacyLimitedTimedFeeCollectModuleSettingsFragment = {
+  __typename: 'LegacyLimitedTimedFeeCollectModuleSettings';
   collectLimit: string | null;
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
   endTimestamp: string;
-  contract: { address: string };
+  contract: NetworkAddressFragment;
   amount: AmountFragment;
 };
 
-export type LegacyRevertCollectModuleSettingsFragment = { contract: NetworkAddressFragment };
+export type LegacyRevertCollectModuleSettingsFragment = {
+  __typename: 'LegacyRevertCollectModuleSettings';
+  contract: NetworkAddressFragment;
+};
 
 export type LegacyTimedFeeCollectModuleSettingsFragment = {
+  __typename: 'LegacyTimedFeeCollectModuleSettings';
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
@@ -254,6 +316,7 @@ export type LegacyTimedFeeCollectModuleSettingsFragment = {
 };
 
 export type LegacyMultirecipientFeeCollectModuleSettingsFragment = {
+  __typename: 'LegacyMultirecipientFeeCollectModuleSettings';
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
@@ -264,6 +327,7 @@ export type LegacyMultirecipientFeeCollectModuleSettingsFragment = {
 };
 
 export type LegacySimpleCollectModuleSettingsFragment = {
+  __typename: 'LegacySimpleCollectModuleSettings';
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
@@ -274,6 +338,7 @@ export type LegacySimpleCollectModuleSettingsFragment = {
 };
 
 export type LegacyErc4626FeeCollectModuleSettingsFragment = {
+  __typename: 'LegacyERC4626FeeCollectModuleSettings';
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
@@ -285,6 +350,7 @@ export type LegacyErc4626FeeCollectModuleSettingsFragment = {
 };
 
 export type LegacyAaveFeeCollectModuleSettingsFragment = {
+  __typename: 'LegacyAaveFeeCollectModuleSettings';
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
@@ -295,12 +361,16 @@ export type LegacyAaveFeeCollectModuleSettingsFragment = {
 };
 
 export type UnknownOpenActionResultFragment = {
+  __typename: 'UnknownOpenActionResult';
   address: string;
   category: Types.OpenActionCategoryType | null;
   initReturnData: string | null;
 };
 
-export type KnownCollectOpenActionResultFragment = { type: Types.CollectOpenActionModuleType };
+export type KnownCollectOpenActionResultFragment = {
+  __typename: 'KnownCollectOpenActionResult';
+  type: Types.CollectOpenActionModuleType;
+};
 
 export type OpenActionResult_KnownCollectOpenActionResult_Fragment =
   KnownCollectOpenActionResultFragment;
@@ -312,12 +382,14 @@ export type OpenActionResultFragment =
   | OpenActionResult_UnknownOpenActionResult_Fragment;
 
 export type CanDecryptResponseFragment = {
+  __typename: 'CanDecryptResponse';
   result: boolean;
   reasons: Array<Types.DecryptFailReasonType> | null;
   extraDetails: string | null;
 };
 
 export type PublicationOperationsFragment = {
+  __typename: 'PublicationOperations';
   isNotInterested: boolean;
   hasBookmarked: boolean;
   hasReported: boolean;
@@ -335,8 +407,8 @@ export type PublicationOperationsFragment = {
   canDecrypt: CanDecryptResponseFragment;
 };
 
-export type PublicationMetadataEncryptionStrategyFragment = {
-  __typename: 'PublicationMetadataV3LitEncryption';
+export type PublicationMetadataLitEncryptionFragment = {
+  __typename: 'PublicationMetadataLitEncryption';
   encryptionKey: string;
   encryptedPaths: Array<string>;
   accessCondition: RootConditionFragment;
@@ -411,53 +483,62 @@ export type RootConditionFragment = {
   >;
 };
 
-export type PublicationImageSetFragment = {
+export type ImageSetFragment = {
+  __typename: 'ImageSet';
   raw: ImageFragment;
   optimized: ImageFragment | null;
   transformed: ImageFragment | null;
 };
 
 export type EncryptableImageFragment = {
+  __typename: 'EncryptableImage';
   uri: string;
   mimeType: string | null;
   width: number | null;
   height: number | null;
 };
 
-export type PublicationEncryptableImageSetFragment = {
+export type EncryptableImageSetFragment = {
+  __typename: 'EncryptableImageSet';
   raw: EncryptableImageFragment;
   optimized: ImageFragment | null;
 };
 
 export type PublicationMarketplaceMetadataAttributeFragment = {
+  __typename: 'PublicationMarketplaceMetadataAttribute';
   displayType: Types.MarketplaceMetadataAttributeDisplayType | null;
   traitType: string | null;
   value: string | null;
 };
 
 export type MarketplaceMetadataFragment = {
+  __typename: 'MarketplaceMetadata';
   description: string | null;
   externalURL: string | null;
   name: string | null;
   animationUrl: string | null;
   attributes: Array<PublicationMarketplaceMetadataAttributeFragment> | null;
-  image: PublicationImageSetFragment | null;
+  image: ImageSetFragment | null;
 };
 
 export type PublicationMetadataMediaVideoFragment = {
+  __typename: 'PublicationMetadataMediaVideo';
   duration: number | null;
   license: Types.PublicationMetadataLicenseType | null;
   altTag: string | null;
   video: EncryptableVideoSetFragment;
-  cover: PublicationEncryptableImageSetFragment | null;
+  cover: EncryptableImageSetFragment | null;
 };
 
 export type PublicationMetadataMediaImageFragment = {
+  __typename: 'PublicationMetadataMediaImage';
+  altTag: string | null;
   license: Types.PublicationMetadataLicenseType | null;
-  image: PublicationEncryptableImageSetFragment;
+  image: EncryptableImageSetFragment;
 };
 
 export type PublicationMetadataMediaAudioFragment = {
+  __typename: 'PublicationMetadataMediaAudio';
   duration: number | null;
   license: Types.PublicationMetadataLicenseType | null;
   credits: string | null;
@@ -466,36 +547,18 @@ export type PublicationMetadataMediaAudioFragment = {
   recordLabel: string | null;
   lyrics: string | null;
   audio: EncryptableAudioSetFragment;
-  cover: PublicationEncryptableImageSetFragment | null;
+  cover: EncryptableImageSetFragment | null;
 };
 
-export type LegacyPublicationMetadataFragment = {
-  content: string;
-  locale: string;
-  tags: Array<string> | null;
-  contentWarning: Types.PublicationContentWarningType | null;
-  mainContentFocus: Types.LegacyPublicationMetadataMainFocusType;
-  media: Array<LegacyAudioItemFragment | LegacyImageItemFragment | LegacyVideoItemFragment> | null;
-  marketplace: MarketplaceMetadataFragment | null;
-  encryptedWith: {
-    encryptionKey: string;
-    encryptedFields: {
-      content: string | null;
-      image: string | null;
-      animationUrl: string | null;
-      externalUrl: string | null;
-      media: Array<{
-        uri: string;
-        mimeType: string | null;
-        altTag: string | null;
-        cover: string | null;
-      }> | null;
-    };
-    accessCondition: RootConditionFragment;
-  } | null;
+export type GeoLocationFragment = {
+  __typename: 'GeoLocation';
+  rawURI: string;
+  latitude: number | null;
+  longitude: number | null;
 };
 
 export type VideoMetadataV3Fragment = {
+  __typename: 'VideoMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -507,8 +570,14 @@ export type VideoMetadataV3Fragment = {
   title: string;
   content: string;
   marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  attributes: Array<
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
+  > | null;
+  encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   asset: PublicationMetadataMediaVideoFragment;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
@@ -518,6 +587,7 @@ export type VideoMetadataV3Fragment = {
 };
 
 export type AudioMetadataV3Fragment = {
+  __typename: 'AudioMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -528,8 +598,14 @@ export type AudioMetadataV3Fragment = {
   title: string;
   content: string;
   marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  attributes: Array<
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
+  > | null;
+  encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   asset: PublicationMetadataMediaAudioFragment;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
@@ -539,6 +615,7 @@ export type AudioMetadataV3Fragment = {
 };
 
 export type ImageMetadataV3Fragment = {
+  __typename: 'ImageMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -549,8 +626,14 @@ export type ImageMetadataV3Fragment = {
   title: string;
   content: string;
   marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  attributes: Array<
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
+  > | null;
+  encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   asset: PublicationMetadataMediaImageFragment;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
@@ -560,6 +643,7 @@ export type ImageMetadataV3Fragment = {
 };
 
 export type ArticleMetadataV3Fragment = {
+  __typename: 'ArticleMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -570,8 +654,14 @@ export type ArticleMetadataV3Fragment = {
   title: string;
   content: string;
   marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  attributes: Array<
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
+  > | null;
+  encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -580,6 +670,7 @@ export type ArticleMetadataV3Fragment = {
 };
 
 export type EventMetadataV3Fragment = {
+  __typename: 'EventMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -592,9 +683,15 @@ export type EventMetadataV3Fragment = {
   links: Array<string> | null;
   location: string;
   marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
-  geographic: { latitude: number | null; longitude: number | null } | null;
+  attributes: Array<
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
+  > | null;
+  encryptedWith: PublicationMetadataLitEncryptionFragment | null;
+  geographic: GeoLocationFragment | null;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -603,6 +700,7 @@ export type EventMetadataV3Fragment = {
 };
 
 export type LinkMetadataV3Fragment = {
+  __typename: 'LinkMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -613,8 +711,14 @@ export type LinkMetadataV3Fragment = {
   content: string;
   sharingLink: string;
   marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  attributes: Array<
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
+  > | null;
+  encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -623,6 +727,7 @@ export type LinkMetadataV3Fragment = {
 };
 
 export type EmbedMetadataV3Fragment = {
+  __typename: 'EmbedMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -633,8 +738,14 @@ export type EmbedMetadataV3Fragment = {
   content: string;
   embed: string;
   marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  attributes: Array<
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
+  > | null;
+  encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -643,6 +754,7 @@ export type EmbedMetadataV3Fragment = {
 };
 
 export type CheckingInMetadataV3Fragment = {
+  __typename: 'CheckingInMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -653,9 +765,15 @@ export type CheckingInMetadataV3Fragment = {
   content: string;
   location: string;
   marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
-  geographic: { latitude: number | null; longitude: number | null } | null;
+  attributes: Array<
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
+  > | null;
+  encryptedWith: PublicationMetadataLitEncryptionFragment | null;
+  geographic: GeoLocationFragment | null;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -664,6 +782,7 @@ export type CheckingInMetadataV3Fragment = {
 };
 
 export type TextOnlyMetadataV3Fragment = {
+  __typename: 'TextOnlyMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -673,11 +792,27 @@ export type TextOnlyMetadataV3Fragment = {
   appId: string | null;
   content: string;
   marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  attributes: Array<
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
+  > | null;
+  encryptedWith: PublicationMetadataLitEncryptionFragment | null;
+};
+
+export type ThreeDMetadataV3AssetFragment = {
+  __typename: 'ThreeDMetadataV3Asset';
+  uri: string;
+  zipPath: string | null;
+  playerURL: string;
+  format: string;
+  license: Types.PublicationMetadataLicenseType | null;
 };
 
 export type ThreeDMetadataV3Fragment = {
+  __typename: 'ThreeDMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -687,15 +822,15 @@ export type ThreeDMetadataV3Fragment = {
   appId: string | null;
   content: string;
   marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
-  assets: Array<{
-    uri: string;
-    zipPath: string | null;
-    playerURL: string;
-    format: string;
-    license: Types.PublicationMetadataLicenseType | null;
-  }>;
+  attributes: Array<
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
+  > | null;
+  encryptedWith: PublicationMetadataLitEncryptionFragment | null;
+  assets: Array<ThreeDMetadataV3AssetFragment>;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -704,6 +839,7 @@ export type ThreeDMetadataV3Fragment = {
 };
 
 export type StoryMetadataV3Fragment = {
+  __typename: 'StoryMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -713,8 +849,14 @@ export type StoryMetadataV3Fragment = {
   appId: string | null;
   content: string;
   marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  attributes: Array<
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
+  > | null;
+  encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   asset:
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -722,6 +864,7 @@ export type StoryMetadataV3Fragment = {
 };
 
 export type TransactionMetadataV3Fragment = {
+  __typename: 'TransactionMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -734,8 +877,14 @@ export type TransactionMetadataV3Fragment = {
   txHash: string;
   chainId: number;
   marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  attributes: Array<
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
+  > | null;
+  encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -744,6 +893,7 @@ export type TransactionMetadataV3Fragment = {
 };
 
 export type MintMetadataV3Fragment = {
+  __typename: 'MintMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -754,8 +904,14 @@ export type MintMetadataV3Fragment = {
   content: string;
   mintLink: string;
   marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  attributes: Array<
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
+  > | null;
+  encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -764,6 +920,7 @@ export type MintMetadataV3Fragment = {
 };
 
 export type SpaceMetadataV3Fragment = {
+  __typename: 'SpaceMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -776,8 +933,14 @@ export type SpaceMetadataV3Fragment = {
   link: string;
   startsAt: string;
   marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  attributes: Array<
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
+  > | null;
+  encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -786,6 +949,7 @@ export type SpaceMetadataV3Fragment = {
 };
 
 export type LiveStreamMetadataV3Fragment = {
+  __typename: 'LiveStreamMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -801,8 +965,14 @@ export type LiveStreamMetadataV3Fragment = {
   liveURL: string;
   checkLiveAPI: string | null;
   marketplace: MarketplaceMetadataFragment | null;
-  attributes: Array<{ key: string; value: string }> | null;
-  encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
+  attributes: Array<
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
+  > | null;
+  encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   attachments: Array<
     | PublicationMetadataMediaAudioFragment
     | PublicationMetadataMediaImageFragment
@@ -838,7 +1008,6 @@ export type PostFragment = {
     | EmbedMetadataV3Fragment
     | EventMetadataV3Fragment
     | ImageMetadataV3Fragment
-    | LegacyPublicationMetadataFragment
     | LinkMetadataV3Fragment
     | LiveStreamMetadataV3Fragment
     | MintMetadataV3Fragment
@@ -888,7 +1057,6 @@ export type CommentBaseFragment = {
     | EmbedMetadataV3Fragment
     | EventMetadataV3Fragment
     | ImageMetadataV3Fragment
-    | LegacyPublicationMetadataFragment
     | LinkMetadataV3Fragment
     | LiveStreamMetadataV3Fragment
     | MintMetadataV3Fragment
@@ -956,7 +1124,6 @@ export type QuoteBaseFragment = {
     | EmbedMetadataV3Fragment
     | EventMetadataV3Fragment
     | ImageMetadataV3Fragment
-    | LegacyPublicationMetadataFragment
     | LinkMetadataV3Fragment
     | LiveStreamMetadataV3Fragment
     | MintMetadataV3Fragment
@@ -1046,28 +1213,33 @@ export const PaginatedResultInfoFragmentDoc = gql`
 `;
 export const AppFragmentDoc = gql`
   fragment App on App {
+    __typename
     id
   }
 `;
 export const MomokaInfoFragmentDoc = gql`
   fragment MomokaInfo on MomokaInfo {
+    __typename
     proof
   }
 `;
 export const NetworkAddressFragmentDoc = gql`
   fragment NetworkAddress on NetworkAddress {
+    __typename
     address
     chainId
   }
 `;
 export const OptimisticStatusResultFragmentDoc = gql`
   fragment OptimisticStatusResult on OptimisticStatusResult {
+    __typename
     value
     isFinalisedOnchain
   }
 `;
 export const Erc20FragmentDoc = gql`
   fragment Erc20 on Erc20 {
+    __typename
     name
     symbol
     decimals
@@ -1079,6 +1251,7 @@ export const Erc20FragmentDoc = gql`
 `;
 export const FiatFragmentDoc = gql`
   fragment Fiat on Fiat {
+    __typename
     name
     symbol
     decimals
@@ -1086,6 +1259,7 @@ export const FiatFragmentDoc = gql`
 `;
 export const FiatAmountFragmentDoc = gql`
   fragment FiatAmount on FiatAmount {
+    __typename
     asset {
       ...Fiat
     }
@@ -1095,6 +1269,7 @@ export const FiatAmountFragmentDoc = gql`
 `;
 export const AmountFragmentDoc = gql`
   fragment Amount on Amount {
+    __typename
     asset {
       ...Erc20
     }
@@ -1108,6 +1283,7 @@ export const AmountFragmentDoc = gql`
 `;
 export const FeeFollowModuleSettingsFragmentDoc = gql`
   fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
+    __typename
     amount {
       ...Amount
     }
@@ -1121,6 +1297,7 @@ export const FeeFollowModuleSettingsFragmentDoc = gql`
 `;
 export const RevertFollowModuleSettingsFragmentDoc = gql`
   fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -1129,6 +1306,7 @@ export const RevertFollowModuleSettingsFragmentDoc = gql`
 `;
 export const UnknownFollowModuleSettingsFragmentDoc = gql`
   fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -1138,6 +1316,7 @@ export const UnknownFollowModuleSettingsFragmentDoc = gql`
 `;
 export const ImageFragmentDoc = gql`
   fragment Image on Image {
+    __typename
     uri
     mimeType
     width
@@ -1176,6 +1355,7 @@ export const NftImageFragmentDoc = gql`
 `;
 export const ProfileCoverSetFragmentDoc = gql`
   fragment ProfileCoverSet on ImageSet {
+    __typename
     raw {
       ...Image
     }
@@ -1187,6 +1367,41 @@ export const ProfileCoverSetFragmentDoc = gql`
     }
   }
   ${ImageFragmentDoc}
+`;
+export const MetadataBooleanAttributeFragmentDoc = gql`
+  fragment MetadataBooleanAttribute on MetadataBooleanAttribute {
+    __typename
+    key
+    value
+  }
+`;
+export const MetadataDateAttributeFragmentDoc = gql`
+  fragment MetadataDateAttribute on MetadataDateAttribute {
+    __typename
+    key
+    value
+  }
+`;
+export const MetadataNumberAttributeFragmentDoc = gql`
+  fragment MetadataNumberAttribute on MetadataNumberAttribute {
+    __typename
+    key
+    value
+  }
+`;
+export const MetadataJsonAttributeFragmentDoc = gql`
+  fragment MetadataJSONAttribute on MetadataJSONAttribute {
+    __typename
+    key
+    value
+  }
+`;
+export const MetadataStringAttributeFragmentDoc = gql`
+  fragment MetadataStringAttribute on MetadataStringAttribute {
+    __typename
+    key
+    value
+  }
 `;
 export const ProfileStatsFragmentDoc = gql`
   fragment ProfileStats on ProfileStats {
@@ -1215,6 +1430,7 @@ export const ProfileFragmentDoc = gql`
     txHash
     createdAt
     operations {
+      __typename
       id
       isBlockedByMe {
         ...OptimisticStatusResult
@@ -1267,6 +1483,7 @@ export const ProfileFragmentDoc = gql`
       }
     }
     metadata {
+      appId
       displayName
       bio
       rawURI
@@ -1282,9 +1499,21 @@ export const ProfileFragmentDoc = gql`
         ...ProfileCoverSet
       }
       attributes {
-        type
-        key
-        value
+        ... on MetadataBooleanAttribute {
+          ...MetadataBooleanAttribute
+        }
+        ... on MetadataDateAttribute {
+          ...MetadataDateAttribute
+        }
+        ... on MetadataNumberAttribute {
+          ...MetadataNumberAttribute
+        }
+        ... on MetadataJSONAttribute {
+          ...MetadataJSONAttribute
+        }
+        ... on MetadataStringAttribute {
+          ...MetadataStringAttribute
+        }
       }
     }
     handle
@@ -1305,15 +1534,22 @@ export const ProfileFragmentDoc = gql`
   ${ProfilePictureSetFragmentDoc}
   ${NftImageFragmentDoc}
   ${ProfileCoverSetFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
   ${ProfileStatsFragmentDoc}
 `;
 export const KnownCollectOpenActionResultFragmentDoc = gql`
   fragment KnownCollectOpenActionResult on KnownCollectOpenActionResult {
+    __typename
     type
   }
 `;
 export const UnknownOpenActionResultFragmentDoc = gql`
   fragment UnknownOpenActionResult on UnknownOpenActionResult {
+    __typename
     address
     category
     initReturnData
@@ -1333,6 +1569,7 @@ export const OpenActionResultFragmentDoc = gql`
 `;
 export const CanDecryptResponseFragmentDoc = gql`
   fragment CanDecryptResponse on CanDecryptResponse {
+    __typename
     result
     reasons
     extraDetails
@@ -1340,6 +1577,7 @@ export const CanDecryptResponseFragmentDoc = gql`
 `;
 export const PublicationOperationsFragmentDoc = gql`
   fragment PublicationOperations on PublicationOperations {
+    __typename
     isNotInterested
     hasBookmarked
     hasReported
@@ -1363,25 +1601,17 @@ export const PublicationOperationsFragmentDoc = gql`
   ${OpenActionResultFragmentDoc}
   ${CanDecryptResponseFragmentDoc}
 `;
-export const AudioFragmentDoc = gql`
-  fragment Audio on Audio {
-    uri
-    mimeType
+export const PublicationMarketplaceMetadataAttributeFragmentDoc = gql`
+  fragment PublicationMarketplaceMetadataAttribute on PublicationMarketplaceMetadataAttribute {
+    __typename
+    displayType
+    traitType
+    value
   }
 `;
-export const AudioSetFragmentDoc = gql`
-  fragment AudioSet on AudioSet {
-    raw {
-      ...Audio
-    }
-    optimized {
-      ...Audio
-    }
-  }
-  ${AudioFragmentDoc}
-`;
-export const PublicationImageSetFragmentDoc = gql`
-  fragment PublicationImageSet on ImageSet {
+export const ImageSetFragmentDoc = gql`
+  fragment ImageSet on ImageSet {
+    __typename
     raw {
       ...Image
     }
@@ -1394,67 +1624,9 @@ export const PublicationImageSetFragmentDoc = gql`
   }
   ${ImageFragmentDoc}
 `;
-export const LegacyAudioItemFragmentDoc = gql`
-  fragment LegacyAudioItem on LegacyAudioItem {
-    audio {
-      ...AudioSet
-    }
-    cover {
-      ...PublicationImageSet
-    }
-    altTag
-  }
-  ${AudioSetFragmentDoc}
-  ${PublicationImageSetFragmentDoc}
-`;
-export const LegacyImageItemFragmentDoc = gql`
-  fragment LegacyImageItem on LegacyImageItem {
-    image {
-      ...PublicationImageSet
-    }
-    altTag
-  }
-  ${PublicationImageSetFragmentDoc}
-`;
-export const VideoFragmentDoc = gql`
-  fragment Video on Video {
-    uri
-    mimeType
-  }
-`;
-export const VideoSetFragmentDoc = gql`
-  fragment VideoSet on VideoSet {
-    raw {
-      ...Video
-    }
-    optimized {
-      ...Video
-    }
-  }
-  ${VideoFragmentDoc}
-`;
-export const LegacyVideoItemFragmentDoc = gql`
-  fragment LegacyVideoItem on LegacyVideoItem {
-    video {
-      ...VideoSet
-    }
-    cover {
-      ...PublicationImageSet
-    }
-    altTag
-  }
-  ${VideoSetFragmentDoc}
-  ${PublicationImageSetFragmentDoc}
-`;
-export const PublicationMarketplaceMetadataAttributeFragmentDoc = gql`
-  fragment PublicationMarketplaceMetadataAttribute on PublicationMarketplaceMetadataAttribute {
-    displayType
-    traitType
-    value
-  }
-`;
 export const MarketplaceMetadataFragmentDoc = gql`
   fragment MarketplaceMetadata on MarketplaceMetadata {
+    __typename
     description
     externalURL
     name
@@ -1462,12 +1634,12 @@ export const MarketplaceMetadataFragmentDoc = gql`
       ...PublicationMarketplaceMetadataAttribute
     }
     image {
-      ...PublicationImageSet
+      ...ImageSet
     }
     animationUrl
   }
   ${PublicationMarketplaceMetadataAttributeFragmentDoc}
-  ${PublicationImageSetFragmentDoc}
+  ${ImageSetFragmentDoc}
 `;
 export const NftOwnershipConditionFragmentDoc = gql`
   fragment NftOwnershipCondition on NftOwnershipCondition {
@@ -1616,54 +1788,8 @@ export const RootConditionFragmentDoc = gql`
   ${AndConditionFragmentDoc}
   ${OrConditionFragmentDoc}
 `;
-export const LegacyPublicationMetadataFragmentDoc = gql`
-  fragment LegacyPublicationMetadata on LegacyPublicationMetadata {
-    content
-    media {
-      ... on LegacyAudioItem {
-        ...LegacyAudioItem
-      }
-      ... on LegacyImageItem {
-        ...LegacyImageItem
-      }
-      ... on LegacyVideoItem {
-        ...LegacyVideoItem
-      }
-    }
-    locale
-    tags
-    contentWarning
-    mainContentFocus
-    marketplace {
-      ...MarketplaceMetadata
-    }
-    encryptedWith {
-      encryptionKey
-      encryptedFields {
-        content
-        image
-        media {
-          uri
-          mimeType
-          altTag
-          cover
-        }
-        animationUrl
-        externalUrl
-      }
-      accessCondition {
-        ...RootCondition
-      }
-    }
-  }
-  ${LegacyAudioItemFragmentDoc}
-  ${LegacyImageItemFragmentDoc}
-  ${LegacyVideoItemFragmentDoc}
-  ${MarketplaceMetadataFragmentDoc}
-  ${RootConditionFragmentDoc}
-`;
-export const PublicationMetadataEncryptionStrategyFragmentDoc = gql`
-  fragment PublicationMetadataEncryptionStrategy on PublicationMetadataV3LitEncryption {
+export const PublicationMetadataLitEncryptionFragmentDoc = gql`
+  fragment PublicationMetadataLitEncryption on PublicationMetadataLitEncryption {
     __typename
     encryptionKey
     accessCondition {
@@ -1675,12 +1801,21 @@ export const PublicationMetadataEncryptionStrategyFragmentDoc = gql`
 `;
 export const EncryptableAudioFragmentDoc = gql`
   fragment EncryptableAudio on EncryptableAudio {
+    __typename
     mimeType
     uri
   }
 `;
+export const AudioFragmentDoc = gql`
+  fragment Audio on Audio {
+    __typename
+    uri
+    mimeType
+  }
+`;
 export const EncryptableAudioSetFragmentDoc = gql`
   fragment EncryptableAudioSet on EncryptableAudioSet {
+    __typename
     raw {
       ...EncryptableAudio
     }
@@ -1693,14 +1828,16 @@ export const EncryptableAudioSetFragmentDoc = gql`
 `;
 export const EncryptableImageFragmentDoc = gql`
   fragment EncryptableImage on EncryptableImage {
+    __typename
     uri
     mimeType
     width
     height
   }
 `;
-export const PublicationEncryptableImageSetFragmentDoc = gql`
-  fragment PublicationEncryptableImageSet on EncryptableImageSet {
+export const EncryptableImageSetFragmentDoc = gql`
+  fragment EncryptableImageSet on EncryptableImageSet {
+    __typename
     raw {
       ...EncryptableImage
     }
@@ -1713,11 +1850,12 @@ export const PublicationEncryptableImageSetFragmentDoc = gql`
 `;
 export const PublicationMetadataMediaAudioFragmentDoc = gql`
   fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
+    __typename
     audio {
       ...EncryptableAudioSet
     }
     cover {
-      ...PublicationEncryptableImageSet
+      ...EncryptableImageSet
     }
     duration
     license
@@ -1728,16 +1866,25 @@ export const PublicationMetadataMediaAudioFragmentDoc = gql`
     lyrics
   }
   ${EncryptableAudioSetFragmentDoc}
-  ${PublicationEncryptableImageSetFragmentDoc}
+  ${EncryptableImageSetFragmentDoc}
 `;
 export const EncryptableVideoFragmentDoc = gql`
   fragment EncryptableVideo on EncryptableVideo {
+    __typename
     mimeType
     uri
   }
 `;
+export const VideoFragmentDoc = gql`
+  fragment Video on Video {
+    __typename
+    uri
+    mimeType
+  }
+`;
 export const EncryptableVideoSetFragmentDoc = gql`
   fragment EncryptableVideoSet on EncryptableVideoSet {
+    __typename
     raw {
       ...EncryptableVideo
     }
@@ -1750,30 +1897,34 @@ export const EncryptableVideoSetFragmentDoc = gql`
 `;
 export const PublicationMetadataMediaVideoFragmentDoc = gql`
   fragment PublicationMetadataMediaVideo on PublicationMetadataMediaVideo {
+    __typename
     video {
       ...EncryptableVideoSet
     }
     cover {
-      ...PublicationEncryptableImageSet
+      ...EncryptableImageSet
     }
     duration
     license
     altTag
   }
   ${EncryptableVideoSetFragmentDoc}
-  ${PublicationEncryptableImageSetFragmentDoc}
+  ${EncryptableImageSetFragmentDoc}
 `;
 export const PublicationMetadataMediaImageFragmentDoc = gql`
   fragment PublicationMetadataMediaImage on PublicationMetadataMediaImage {
+    __typename
     image {
-      ...PublicationEncryptableImageSet
+      ...EncryptableImageSet
     }
+    altTag
     license
   }
-  ${PublicationEncryptableImageSetFragmentDoc}
+  ${EncryptableImageSetFragmentDoc}
 `;
 export const AudioMetadataV3FragmentDoc = gql`
   fragment AudioMetadataV3 on AudioMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -1785,12 +1936,25 @@ export const AudioMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      key
-      value
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
-      ... on PublicationMetadataEncryptionStrategy {
-        ...PublicationMetadataEncryptionStrategy
+      ... on PublicationMetadataLitEncryption {
+        ...PublicationMetadataLitEncryption
       }
     }
     asset {
@@ -1811,13 +1975,19 @@ export const AudioMetadataV3FragmentDoc = gql`
     content
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${PublicationMetadataEncryptionStrategyFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
+  ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
 `;
 export const VideoMetadataV3FragmentDoc = gql`
   fragment VideoMetadataV3 on VideoMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -1829,12 +1999,25 @@ export const VideoMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      key
-      value
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
-      ... on PublicationMetadataEncryptionStrategy {
-        ...PublicationMetadataEncryptionStrategy
+      ... on PublicationMetadataLitEncryption {
+        ...PublicationMetadataLitEncryption
       }
     }
     asset {
@@ -1856,13 +2039,19 @@ export const VideoMetadataV3FragmentDoc = gql`
     content
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${PublicationMetadataEncryptionStrategyFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
+  ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
 export const ImageMetadataV3FragmentDoc = gql`
   fragment ImageMetadataV3 on ImageMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -1874,12 +2063,25 @@ export const ImageMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      key
-      value
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
-      ... on PublicationMetadataEncryptionStrategy {
-        ...PublicationMetadataEncryptionStrategy
+      ... on PublicationMetadataLitEncryption {
+        ...PublicationMetadataLitEncryption
       }
     }
     title
@@ -1900,13 +2102,19 @@ export const ImageMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${PublicationMetadataEncryptionStrategyFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
+  ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
 export const ArticleMetadataV3FragmentDoc = gql`
   fragment ArticleMetadataV3 on ArticleMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -1918,12 +2126,25 @@ export const ArticleMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      key
-      value
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
-      ... on PublicationMetadataEncryptionStrategy {
-        ...PublicationMetadataEncryptionStrategy
+      ... on PublicationMetadataLitEncryption {
+        ...PublicationMetadataLitEncryption
       }
     }
     title
@@ -1941,13 +2162,27 @@ export const ArticleMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${PublicationMetadataEncryptionStrategyFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
+  ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
+export const GeoLocationFragmentDoc = gql`
+  fragment GeoLocation on GeoLocation {
+    __typename
+    rawURI
+    latitude
+    longitude
+  }
+`;
 export const EventMetadataV3FragmentDoc = gql`
   fragment EventMetadataV3 on EventMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -1959,17 +2194,29 @@ export const EventMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      key
-      value
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
-      ... on PublicationMetadataEncryptionStrategy {
-        ...PublicationMetadataEncryptionStrategy
+      ... on PublicationMetadataLitEncryption {
+        ...PublicationMetadataLitEncryption
       }
     }
     geographic {
-      latitude
-      longitude
+      ...GeoLocation
     }
     startsAt
     endsAt
@@ -1988,13 +2235,20 @@ export const EventMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${PublicationMetadataEncryptionStrategyFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
+  ${PublicationMetadataLitEncryptionFragmentDoc}
+  ${GeoLocationFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
 export const LinkMetadataV3FragmentDoc = gql`
   fragment LinkMetadataV3 on LinkMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -2006,12 +2260,25 @@ export const LinkMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      key
-      value
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
-      ... on PublicationMetadataEncryptionStrategy {
-        ...PublicationMetadataEncryptionStrategy
+      ... on PublicationMetadataLitEncryption {
+        ...PublicationMetadataLitEncryption
       }
     }
     content
@@ -2029,13 +2296,19 @@ export const LinkMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${PublicationMetadataEncryptionStrategyFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
+  ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
 export const EmbedMetadataV3FragmentDoc = gql`
   fragment EmbedMetadataV3 on EmbedMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -2047,12 +2320,25 @@ export const EmbedMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      key
-      value
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
-      ... on PublicationMetadataEncryptionStrategy {
-        ...PublicationMetadataEncryptionStrategy
+      ... on PublicationMetadataLitEncryption {
+        ...PublicationMetadataLitEncryption
       }
     }
     content
@@ -2070,13 +2356,19 @@ export const EmbedMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${PublicationMetadataEncryptionStrategyFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
+  ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
 export const CheckingInMetadataV3FragmentDoc = gql`
   fragment CheckingInMetadataV3 on CheckingInMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -2088,19 +2380,31 @@ export const CheckingInMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      key
-      value
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
-      ... on PublicationMetadataEncryptionStrategy {
-        ...PublicationMetadataEncryptionStrategy
+      ... on PublicationMetadataLitEncryption {
+        ...PublicationMetadataLitEncryption
       }
     }
     content
     location
     geographic {
-      latitude
-      longitude
+      ...GeoLocation
     }
     attachments {
       ... on PublicationMetadataMediaVideo {
@@ -2115,13 +2419,20 @@ export const CheckingInMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${PublicationMetadataEncryptionStrategyFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
+  ${PublicationMetadataLitEncryptionFragmentDoc}
+  ${GeoLocationFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
 export const TextOnlyMetadataV3FragmentDoc = gql`
   fragment TextOnlyMetadataV3 on TextOnlyMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -2133,21 +2444,50 @@ export const TextOnlyMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      key
-      value
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
-      ... on PublicationMetadataEncryptionStrategy {
-        ...PublicationMetadataEncryptionStrategy
+      ... on PublicationMetadataLitEncryption {
+        ...PublicationMetadataLitEncryption
       }
     }
     content
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${PublicationMetadataEncryptionStrategyFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
+  ${PublicationMetadataLitEncryptionFragmentDoc}
+`;
+export const ThreeDMetadataV3AssetFragmentDoc = gql`
+  fragment ThreeDMetadataV3Asset on ThreeDMetadataV3Asset {
+    __typename
+    uri
+    zipPath
+    playerURL
+    format
+    license
+  }
 `;
 export const ThreeDMetadataV3FragmentDoc = gql`
   fragment ThreeDMetadataV3 on ThreeDMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -2159,21 +2499,30 @@ export const ThreeDMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      key
-      value
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
-      ... on PublicationMetadataEncryptionStrategy {
-        ...PublicationMetadataEncryptionStrategy
+      ... on PublicationMetadataLitEncryption {
+        ...PublicationMetadataLitEncryption
       }
     }
     content
     assets {
-      uri
-      zipPath
-      playerURL
-      format
-      license
+      ...ThreeDMetadataV3Asset
     }
     attachments {
       ... on PublicationMetadataMediaVideo {
@@ -2188,13 +2537,20 @@ export const ThreeDMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${PublicationMetadataEncryptionStrategyFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
+  ${PublicationMetadataLitEncryptionFragmentDoc}
+  ${ThreeDMetadataV3AssetFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
 export const StoryMetadataV3FragmentDoc = gql`
   fragment StoryMetadataV3 on StoryMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -2206,12 +2562,25 @@ export const StoryMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      key
-      value
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
-      ... on PublicationMetadataEncryptionStrategy {
-        ...PublicationMetadataEncryptionStrategy
+      ... on PublicationMetadataLitEncryption {
+        ...PublicationMetadataLitEncryption
       }
     }
     content
@@ -2228,13 +2597,19 @@ export const StoryMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${PublicationMetadataEncryptionStrategyFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
+  ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
 export const TransactionMetadataV3FragmentDoc = gql`
   fragment TransactionMetadataV3 on TransactionMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -2246,12 +2621,25 @@ export const TransactionMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      key
-      value
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
-      ... on PublicationMetadataEncryptionStrategy {
-        ...PublicationMetadataEncryptionStrategy
+      ... on PublicationMetadataLitEncryption {
+        ...PublicationMetadataLitEncryption
       }
     }
     content
@@ -2271,13 +2659,19 @@ export const TransactionMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${PublicationMetadataEncryptionStrategyFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
+  ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
 export const MintMetadataV3FragmentDoc = gql`
   fragment MintMetadataV3 on MintMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -2289,12 +2683,25 @@ export const MintMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      key
-      value
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
-      ... on PublicationMetadataEncryptionStrategy {
-        ...PublicationMetadataEncryptionStrategy
+      ... on PublicationMetadataLitEncryption {
+        ...PublicationMetadataLitEncryption
       }
     }
     content
@@ -2312,13 +2719,19 @@ export const MintMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${PublicationMetadataEncryptionStrategyFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
+  ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
 export const SpaceMetadataV3FragmentDoc = gql`
   fragment SpaceMetadataV3 on SpaceMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -2330,12 +2743,25 @@ export const SpaceMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      key
-      value
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
-      ... on PublicationMetadataEncryptionStrategy {
-        ...PublicationMetadataEncryptionStrategy
+      ... on PublicationMetadataLitEncryption {
+        ...PublicationMetadataLitEncryption
       }
     }
     content
@@ -2355,13 +2781,19 @@ export const SpaceMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${PublicationMetadataEncryptionStrategyFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
+  ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
 `;
 export const LiveStreamMetadataV3FragmentDoc = gql`
   fragment LiveStreamMetadataV3 on LiveStreamMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -2373,12 +2805,25 @@ export const LiveStreamMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      key
-      value
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
-      ... on PublicationMetadataEncryptionStrategy {
-        ...PublicationMetadataEncryptionStrategy
+      ... on PublicationMetadataLitEncryption {
+        ...PublicationMetadataLitEncryption
       }
     }
     title
@@ -2401,7 +2846,12 @@ export const LiveStreamMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${PublicationMetadataEncryptionStrategyFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
+  ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
@@ -2417,6 +2867,7 @@ export const LegacyFreeCollectModuleSettingsFragmentDoc = gql`
 `;
 export const LegacyFeeCollectModuleSettingsFragmentDoc = gql`
   fragment LegacyFeeCollectModuleSettings on LegacyFeeCollectModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -2432,6 +2883,7 @@ export const LegacyFeeCollectModuleSettingsFragmentDoc = gql`
 `;
 export const LegacyLimitedFeeCollectModuleSettingsFragmentDoc = gql`
   fragment LegacyLimitedFeeCollectModuleSettings on LegacyLimitedFeeCollectModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -2448,8 +2900,9 @@ export const LegacyLimitedFeeCollectModuleSettingsFragmentDoc = gql`
 `;
 export const LegacyLimitedTimedFeeCollectModuleSettingsFragmentDoc = gql`
   fragment LegacyLimitedTimedFeeCollectModuleSettings on LegacyLimitedTimedFeeCollectModuleSettings {
+    __typename
     contract {
-      address
+      ...NetworkAddress
     }
     collectLimit
     amount {
@@ -2460,10 +2913,12 @@ export const LegacyLimitedTimedFeeCollectModuleSettingsFragmentDoc = gql`
     followerOnly
     endTimestamp
   }
+  ${NetworkAddressFragmentDoc}
   ${AmountFragmentDoc}
 `;
 export const LegacyRevertCollectModuleSettingsFragmentDoc = gql`
   fragment LegacyRevertCollectModuleSettings on LegacyRevertCollectModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -2472,6 +2927,7 @@ export const LegacyRevertCollectModuleSettingsFragmentDoc = gql`
 `;
 export const LegacyTimedFeeCollectModuleSettingsFragmentDoc = gql`
   fragment LegacyTimedFeeCollectModuleSettings on LegacyTimedFeeCollectModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -2488,6 +2944,7 @@ export const LegacyTimedFeeCollectModuleSettingsFragmentDoc = gql`
 `;
 export const LegacyMultirecipientFeeCollectModuleSettingsFragmentDoc = gql`
   fragment LegacyMultirecipientFeeCollectModuleSettings on LegacyMultirecipientFeeCollectModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -2508,6 +2965,7 @@ export const LegacyMultirecipientFeeCollectModuleSettingsFragmentDoc = gql`
 `;
 export const LegacySimpleCollectModuleSettingsFragmentDoc = gql`
   fragment LegacySimpleCollectModuleSettings on LegacySimpleCollectModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -2525,6 +2983,7 @@ export const LegacySimpleCollectModuleSettingsFragmentDoc = gql`
 `;
 export const LegacyErc4626FeeCollectModuleSettingsFragmentDoc = gql`
   fragment LegacyERC4626FeeCollectModuleSettings on LegacyERC4626FeeCollectModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -2545,6 +3004,7 @@ export const LegacyErc4626FeeCollectModuleSettingsFragmentDoc = gql`
 `;
 export const LegacyAaveFeeCollectModuleSettingsFragmentDoc = gql`
   fragment LegacyAaveFeeCollectModuleSettings on LegacyAaveFeeCollectModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -2562,6 +3022,7 @@ export const LegacyAaveFeeCollectModuleSettingsFragmentDoc = gql`
 `;
 export const MultirecipientFeeCollectOpenActionSettingsFragmentDoc = gql`
   fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectOpenActionSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -2569,6 +3030,7 @@ export const MultirecipientFeeCollectOpenActionSettingsFragmentDoc = gql`
       ...Amount
     }
     recipients {
+      __typename
       recipient
       split
     }
@@ -2582,6 +3044,7 @@ export const MultirecipientFeeCollectOpenActionSettingsFragmentDoc = gql`
 `;
 export const SimpleCollectOpenActionSettingsFragmentDoc = gql`
   fragment SimpleCollectOpenActionSettings on SimpleCollectOpenActionSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -2599,6 +3062,7 @@ export const SimpleCollectOpenActionSettingsFragmentDoc = gql`
 `;
 export const UnknownOpenActionModuleSettingsFragmentDoc = gql`
   fragment UnknownOpenActionModuleSettings on UnknownOpenActionModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -2608,6 +3072,7 @@ export const UnknownOpenActionModuleSettingsFragmentDoc = gql`
 `;
 export const FollowOnlyReferenceModuleSettingsFragmentDoc = gql`
   fragment FollowOnlyReferenceModuleSettings on FollowOnlyReferenceModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -2616,6 +3081,7 @@ export const FollowOnlyReferenceModuleSettingsFragmentDoc = gql`
 `;
 export const DegreesOfSeparationReferenceModuleSettingsFragmentDoc = gql`
   fragment DegreesOfSeparationReferenceModuleSettings on DegreesOfSeparationReferenceModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -2627,6 +3093,7 @@ export const DegreesOfSeparationReferenceModuleSettingsFragmentDoc = gql`
 `;
 export const UnknownReferenceModuleSettingsFragmentDoc = gql`
   fragment UnknownReferenceModuleSettings on UnknownReferenceModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -2666,9 +3133,6 @@ export const PostFragmentDoc = gql`
       ...PublicationOperations
     }
     metadata {
-      ... on LegacyPublicationMetadata {
-        ...LegacyPublicationMetadata
-      }
       ... on AudioMetadataV3 {
         ...AudioMetadataV3
       }
@@ -2775,7 +3239,6 @@ export const PostFragmentDoc = gql`
   ${MomokaInfoFragmentDoc}
   ${ProfileFragmentDoc}
   ${PublicationOperationsFragmentDoc}
-  ${LegacyPublicationMetadataFragmentDoc}
   ${AudioMetadataV3FragmentDoc}
   ${VideoMetadataV3FragmentDoc}
   ${ImageMetadataV3FragmentDoc}
@@ -2829,9 +3292,6 @@ export const CommentBaseFragmentDoc = gql`
       ...PublicationOperations
     }
     metadata {
-      ... on LegacyPublicationMetadata {
-        ...LegacyPublicationMetadata
-      }
       ... on AudioMetadataV3 {
         ...AudioMetadataV3
       }
@@ -2935,7 +3395,6 @@ export const CommentBaseFragmentDoc = gql`
   ${MomokaInfoFragmentDoc}
   ${ProfileFragmentDoc}
   ${PublicationOperationsFragmentDoc}
-  ${LegacyPublicationMetadataFragmentDoc}
   ${AudioMetadataV3FragmentDoc}
   ${VideoMetadataV3FragmentDoc}
   ${ImageMetadataV3FragmentDoc}
@@ -2988,9 +3447,6 @@ export const QuoteBaseFragmentDoc = gql`
       ...PublicationOperations
     }
     metadata {
-      ... on LegacyPublicationMetadata {
-        ...LegacyPublicationMetadata
-      }
       ... on AudioMetadataV3 {
         ...AudioMetadataV3
       }
@@ -3094,7 +3550,6 @@ export const QuoteBaseFragmentDoc = gql`
   ${MomokaInfoFragmentDoc}
   ${ProfileFragmentDoc}
   ${PublicationOperationsFragmentDoc}
-  ${LegacyPublicationMetadataFragmentDoc}
   ${AudioMetadataV3FragmentDoc}
   ${VideoMetadataV3FragmentDoc}
   ${ImageMetadataV3FragmentDoc}

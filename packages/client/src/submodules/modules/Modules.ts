@@ -1,8 +1,8 @@
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Authentication } from '../../authentication';
-import { LensConfig } from '../../consts/config';
-import { CredentialsExpiredError, NotAuthenticatedError } from '../../consts/errors';
+import { LensContext } from '../../context';
+import { CredentialsExpiredError, NotAuthenticatedError } from '../../errors';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import { Erc20Fragment } from '../../graphql/fragments.generated';
 import {
@@ -33,8 +33,8 @@ export class Modules {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
-  constructor(config: LensConfig, authentication: Authentication) {
-    const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
+  constructor(context: LensContext, authentication: Authentication) {
+    const client = new FetchGraphQLClient(context.environment.gqlEndpoint);
 
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;

@@ -9,6 +9,8 @@ import { Narrow } from './ts-helpers/types';
  *
  * @sealed
  * @privateRemarks DO NOT EXPORT, see type export later on
+ * @typeParam T - the success value type
+ * @typeParam E - the failure error type
  */
 class Success<T, E> {
   /** @internal */
@@ -35,6 +37,8 @@ class Success<T, E> {
  *
  * @sealed
  * @privateRemarks DO NOT EXPORT, see type export later on
+ * @typeParam T - the success value type
+ * @typeParam E - the failure error type
  */
 class Failure<T, E> {
   /** @internal */
@@ -148,11 +152,17 @@ export interface IEquatableError<T extends string = string, P = Narrow<T>> {
  * @see https://developer.apple.com/documentation/swift/result
  * @see https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/
  * @see https://the-guild.dev/blog/graphql-error-handling-with-fp#monads-to-the-rescue
+ *
+ * @typeParam T - the success value type
+ * @typeParam E - the failure error type
  */
 export type Result<T, E extends IEquatableError> = Success<T, E> | Failure<T, E>;
 
 /**
  * A `PromiseResult` is a convenience type alias that represents either a {@link Result} in the context of asynchronous tasks.
+ *
+ * @typeParam T - the success value type
+ * @typeParam E - the failure error type
  */
 export type PromiseResult<T, E extends IEquatableError> = Promise<Result<T, E>>;
 

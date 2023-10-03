@@ -1,9 +1,8 @@
-import { ProfileId } from '@lens-protocol/domain/entities';
-import { mockProfileId } from '@lens-protocol/domain/mocks';
+import { toProfileId } from '@lens-protocol/metadata';
 import { BigNumber } from 'ethers';
 
 import { testing } from '../../__helpers__/env';
-import { mockFollowConditionInput } from '../__helpers__/mocks';
+import { mockFollowCondition, mockProfileId } from '../../__helpers__/mocks';
 import { transformFollowCondition } from '../follow-condition';
 import {
   LitConditionType,
@@ -19,7 +18,7 @@ describe(`Given the "${transformFollowCondition.name}" function`, () => {
     const profileId = mockProfileId();
 
     it('should return the expected Lit AccessControlCondition', () => {
-      const condition = mockFollowConditionInput({ profileId });
+      const condition = mockFollowCondition({ follow: profileId });
 
       const actual = transformFollowCondition(condition, testing);
 
@@ -83,8 +82,8 @@ describe(`Given the "${transformFollowCondition.name}" function`, () => {
     it.each([
       {
         description: 'if with invalid profile Id',
-        condition: mockFollowConditionInput({
-          profileId: 'invalid-profile-id' as ProfileId,
+        condition: mockFollowCondition({
+          follow: toProfileId('invalid-profile-id'),
         }),
       },
     ])(`should throw an ${InvalidAccessCriteriaError.name} $description`, ({ condition }) => {

@@ -1,8 +1,5 @@
 import { PaginatedResultInfoFragment } from '../graphql/fragments.generated';
 
-/**
- * @internal
- */
 export type PaginatedQueryData<Item> = {
   pageInfo: PaginatedResultInfoFragment;
   items: Item[];

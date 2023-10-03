@@ -1,8 +1,8 @@
 import type { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Authentication } from '../../authentication';
-import { LensConfig } from '../../consts/config';
-import { CredentialsExpiredError, NotAuthenticatedError } from '../../consts/errors';
+import { LensContext } from '../../context';
+import { CredentialsExpiredError, NotAuthenticatedError } from '../../errors';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import { AlreadyInvitedCheckRequest, InviteRequest } from '../../graphql/types.generated';
 import { buildRequestFromConfig, requireAuthHeaders, sdkAuthHeaderWrapper } from '../../helpers';
@@ -18,10 +18,10 @@ export class Invites {
   private readonly sdk: Sdk;
 
   constructor(
-    private readonly config: LensConfig,
+    private readonly context: LensContext,
     authentication?: Authentication,
   ) {
-    const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
+    const client = new FetchGraphQLClient(context.environment.gqlEndpoint);
 
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
@@ -44,7 +44,7 @@ export class Invites {
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.InvitedProfiles(buildRequestFromConfig(this.config), headers);
+      const result = await this.sdk.InvitedProfiles(buildRequestFromConfig(this.context), headers);
 
       return result.data.invitedProfiles;
     });

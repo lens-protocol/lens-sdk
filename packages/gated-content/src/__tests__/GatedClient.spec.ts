@@ -1,47 +1,29 @@
 /*
  * @jest-environment node
  */
-import {
-  AccessCondition,
-  EncryptedFieldsOutput,
-  EncryptionProvider,
-  LeafCondition,
-} from '@lens-protocol/api-bindings';
-import {
-  mockEncryptionParamsOutputFragment,
-  mockEoaOwnershipAccessCondition,
-  mockMetadataOutputFragment,
-  mockProfileOwnershipAccessCondition,
-  mockPublicationMetadata,
-  mockEncryptedFieldsOutputFragment,
-} from '@lens-protocol/api-bindings/mocks';
-import { mockProfileId } from '@lens-protocol/domain/mocks';
+import * as raw from '@lens-protocol/metadata';
 import { InMemoryStorageProvider } from '@lens-protocol/storage';
 import { Wallet } from 'ethers';
 
-import { GatedClient } from '../GatedClient';
+import { CannotDecryptError } from '../CannotDecryptError';
+import { DecryptionContext, GatedClient } from '../GatedClient';
 import { testing } from '../__helpers__/env';
+import {
+  mockEoaOwnershipCondition,
+  mockProfileId,
+  mockProfileOwnershipCondition,
+  mockPublicationMetadata,
+} from '../__helpers__/mocks';
+import { EncryptedFragmentOfAnyPublicationMetadata } from '../graphql';
+import * as gql from '../graphql/__helpers__/mocks';
 import { webCryptoProvider } from '../web';
 
-const ownerId = mockProfileId();
-
-const metadata = mockPublicationMetadata({
-  content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-});
 const signer = Wallet.createRandom();
 
-const eoaOwnershipAccessCondition = mockEoaOwnershipAccessCondition({
-  address: signer.address,
-});
-const profileOwnershipAccessCondition = mockProfileOwnershipAccessCondition({ profileId: ownerId });
-const accessCondition: AccessCondition = {
-  or: {
-    criteria: [
-      profileOwnershipAccessCondition as LeafCondition,
-      eoaOwnershipAccessCondition as LeafCondition,
-    ],
-  },
-};
+const ownerId = mockProfileId();
+const knownAddress = raw.toEvmAddress(signer.address);
+
+const rawMetadata = mockPublicationMetadata();
 
 function setupTestScenario() {
   const client = new GatedClient({
@@ -57,60 +39,83 @@ function setupTestScenario() {
 
   return { client };
 }
+const rawAccessCondition: raw.AccessCondition = raw.orCondition([
+  mockProfileOwnershipCondition({ profileId: ownerId }),
+  mockEoaOwnershipCondition({
+    address: knownAddress,
+  }),
+]);
 
 describe(`Given an instance of the ${GatedClient.name}`, () => {
-  describe(`when calling the "${GatedClient.prototype.encryptPublication.name}" method`, () => {
-    it(`should return the expected GatedPublicationMetadata`, async () => {
+  describe(`when calling the "${GatedClient.prototype.encryptPublicationMetadata.name}" method`, () => {
+    it(`should return the expected raw PublicationMetadata`, async () => {
       const { client } = setupTestScenario();
 
-      const result = await client.encryptPublication(metadata, accessCondition);
+      const result = await client.encryptPublicationMetadata(rawMetadata, rawAccessCondition);
 
       expect(result.unwrap()).toMatchObject({
-        ...metadata,
-
-        content: 'This publication is gated.',
-
-        encryptionParams: {
-          accessCondition,
-          providerSpecificParams: {
-            encryptionKey: expect.any(String),
-          },
-          encryptionProvider: EncryptionProvider.LitProtocol,
-          encryptedFields: {
-            content: expect.any(String),
+        $schema: 'https://json-schemas.lens.dev/publications/article/3.0.0.json',
+        lens: {
+          content: expect.not.stringContaining(rawMetadata.lens.content as string),
+          locale: 'en-US',
+          mainContentFocus: 'ARTICLE',
+          encryptedWith: {
+            provider: raw.EncryptionProvider.LIT_PROTOCOL,
+            encryptionKey: expect.stringMatching(/^\w{368}$/),
+            accessCondition: rawAccessCondition,
           },
         },
       });
     });
   });
 
-  describe(`when calling the "${GatedClient.prototype.decryptPublication.name}" method`, () => {
-    it(`should be able to decrypt and return the expected MetadataOutput`, async () => {
-      // setup
-      const { client } = setupTestScenario();
-      const encryptionResult = await client.encryptPublication(metadata, accessCondition);
-      const encrypted = encryptionResult.unwrap();
+  describe(`when calling the "${GatedClient.prototype.decryptPublicationMetadataFragment.name}" method`, () => {
+    const { client } = setupTestScenario();
+    const context: DecryptionContext = {
+      profileId: mockProfileId(),
+    };
+    let encrypted: raw.PublicationMetadata;
 
+    beforeAll(async () => {
+      const encryptionResult = await client.encryptPublicationMetadata(
+        rawMetadata,
+        rawAccessCondition,
+      );
+      encrypted = encryptionResult.unwrap();
+    });
+
+    it(`should throw an ${CannotDecryptError.name} if it cannot determine the metadata type`, async () => {
+      const result = await client.decryptPublicationMetadataFragment(
+        {} as EncryptedFragmentOfAnyPublicationMetadata,
+        context,
+      );
+
+      return expect(() => result.unwrap()).toThrow(CannotDecryptError);
+    });
+
+    it(`should return the decrypted fragment`, async () => {
+      // setup
       // simulate the transcription process done by the indexer and Lens API
-      const metadataFragment = mockMetadataOutputFragment({
-        content: encrypted.content,
-      });
-      const encryptionParams = mockEncryptionParamsOutputFragment({
-        ownerId,
-        others: [eoaOwnershipAccessCondition],
-        encryptionKey: encrypted.encryptionParams.providerSpecificParams.encryptionKey,
-        encryptedFields: mockEncryptedFieldsOutputFragment(
-          // this assertion is safe as EncryptedFields is a subset of EncryptedFieldsOutput
-          encrypted.encryptionParams.encryptedFields as EncryptedFieldsOutput,
-        ),
+      const encryptedFragment = gql.mockEncryptedArticleMetadataV3Fragment({
+        content: encrypted.lens.content as string,
+        encryptedWith: gql.mockPublicationMetadataLitEncryption({
+          encryptionKey: encrypted.lens.encryptedWith?.encryptionKey,
+          encryptedPaths: encrypted.lens.encryptedWith?.encryptedPaths,
+          accessCondition: gql.mockRootCondition({
+            criteria: [
+              gql.mockProfileOwnershipCondition({ profileId: ownerId }),
+              gql.mockEoaOwnershipCondition({ address: knownAddress }),
+            ],
+          }),
+        }),
       });
 
       // exercise
-      const decryptionResult = await client.decryptPublication(metadataFragment, encryptionParams);
+      const result = await client.decryptPublicationMetadataFragment(encryptedFragment, context);
 
       // verify
-      expect(decryptionResult.unwrap()).toMatchObject({
-        content: metadata.content,
+      expect(result.unwrap()).toMatchObject({
+        content: rawMetadata.lens.content,
       });
     });
   });

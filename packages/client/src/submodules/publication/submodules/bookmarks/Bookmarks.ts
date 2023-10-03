@@ -1,8 +1,8 @@
 import type { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import type { Authentication } from '../../../../authentication';
-import type { LensConfig } from '../../../../consts/config';
-import type { CredentialsExpiredError, NotAuthenticatedError } from '../../../../consts/errors';
+import { LensContext } from '../../../../context';
+import type { CredentialsExpiredError, NotAuthenticatedError } from '../../../../errors';
 import { FetchGraphQLClient } from '../../../../graphql/FetchGraphQLClient';
 import type { AnyPublicationFragment } from '../../../../graphql/types';
 import type {
@@ -28,10 +28,10 @@ export class Bookmarks {
   private readonly sdk: Sdk;
 
   constructor(
-    private readonly config: LensConfig,
+    private readonly context: LensContext,
     authentication?: Authentication,
   ) {
-    const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
+    const client = new FetchGraphQLClient(context.environment.gqlEndpoint);
 
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
@@ -61,7 +61,7 @@ export class Bookmarks {
         const result = await this.sdk.PublicationBookmarks(
           {
             request: currRequest,
-            ...buildRequestFromConfig(this.config),
+            ...buildRequestFromConfig(this.context),
           },
           headers,
         );

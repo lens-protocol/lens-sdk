@@ -9,11 +9,11 @@ async function main() {
     forId: '0x04-0x0b',
   });
 
-  if (isMirrorPublication(result)) {
+  if (result && isMirrorPublication(result)) {
     throw new Error(`Stats are not available for mirrors`);
   }
 
-  console.log(`Stats for the publication: `, result.stats);
+  console.log(`Stats for the publication: `, result?.stats);
 }
 
 main();

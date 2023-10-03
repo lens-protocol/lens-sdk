@@ -29,9 +29,9 @@ async function main() {
   );
 
   console.log(`Result: `, {
-    id: result.id,
-    handle: result.handle,
-    stats: result.stats,
+    id: result?.id,
+    handle: result?.handle,
+    stats: result?.stats,
   });
 }
 

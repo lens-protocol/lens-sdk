@@ -61,7 +61,8 @@ async function main() {
   }
 
   console.log(
-    `Profile follow module sucessfully set and successfully broadcasted with txId ${followBroadcastResultValue.txId}`,
+    `Profile follow module successfully set and successfully broadcasted with txId`,
+    followBroadcastResultValue.txId,
   );
 
   // wait for follow to be indexed

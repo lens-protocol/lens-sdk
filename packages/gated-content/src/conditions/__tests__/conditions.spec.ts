@@ -1,23 +1,20 @@
 import {
-  ContractType,
-  LeafConditionOutput,
-  RootConditionOutput,
-} from '@lens-protocol/api-bindings';
-import {
-  mockEoaOwnershipAccessCondition,
-  mockNftOwnershipAccessCondition,
-  mockOrAccessCondition,
-  mockProfileOwnershipAccessCondition,
-  mockAndAccessCondition,
-} from '@lens-protocol/api-bindings/mocks';
-import { mockProfileId } from '@lens-protocol/domain/mocks';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
+  accessCondition,
+  AccessCondition,
+  andCondition,
+  ConditionType,
+  orCondition,
+  toChainId,
+} from '@lens-protocol/metadata';
 import { BigNumber } from 'ethers';
 
 import { testing } from '../../__helpers__/env';
-import { transform } from '../index';
+import * as metadata from '../../__helpers__/mocks';
+import * as gql from '../../graphql/__helpers__/mocks';
+import { DecryptionContext, transformFromGql, transformFromRaw } from '../index';
 import {
   LitConditionType,
+  LitContractType,
   LitKnownMethods,
   LitKnownParams,
   LitScalarOperator,
@@ -25,17 +22,23 @@ import {
 } from '../types';
 import { InvalidAccessCriteriaError } from '../validators';
 
-const ownerProfileId = mockProfileId();
-const knownAddress = mockEthereumAddress();
+const ownerProfileId = metadata.mockProfileId();
+const knownAddress = metadata.mockEvmAddress();
 
-describe(`Given the "${transform.name}" function`, () => {
+describe(`Given the conditions helpers`, () => {
   describe.each([
     {
       description: 'a simple condition',
-      condition: mockOrAccessCondition([
-        mockProfileOwnershipAccessCondition({ profileId: ownerProfileId }),
-        mockEoaOwnershipAccessCondition({ address: knownAddress }) as LeafConditionOutput,
+      raw: accessCondition([
+        metadata.mockProfileOwnershipCondition({ profileId: ownerProfileId }),
+        metadata.mockEoaOwnershipCondition({ address: knownAddress }),
       ]),
+      gql: gql.mockRootCondition({
+        criteria: [
+          gql.mockProfileOwnershipCondition({ profileId: ownerProfileId }),
+          gql.mockEoaOwnershipCondition({ address: knownAddress }),
+        ],
+      }),
       expectedLitAccessConditions: [
         {
           conditionType: LitConditionType.EVM_CONTRACT,
@@ -100,13 +103,28 @@ describe(`Given the "${transform.name}" function`, () => {
     },
     {
       description: 'a nested OR condition',
-      condition: mockOrAccessCondition([
-        mockProfileOwnershipAccessCondition({ profileId: ownerProfileId }),
-        mockOrAccessCondition([
-          mockEoaOwnershipAccessCondition({ address: knownAddress }),
-          mockNftOwnershipAccessCondition({ contractAddress: knownAddress, tokenIds: null }),
+      raw: accessCondition([
+        metadata.mockProfileOwnershipCondition({ profileId: ownerProfileId }),
+        orCondition([
+          metadata.mockEoaOwnershipCondition({ address: knownAddress }),
+          metadata.mockNftOwnershipCondition({
+            contract: metadata.mockNetworkAddress({ address: knownAddress, chainId: toChainId(1) }),
+          }),
         ]),
       ]),
+      gql: gql.mockRootCondition({
+        criteria: [
+          gql.mockProfileOwnershipCondition({ profileId: ownerProfileId }),
+          gql.mockOrCondition({
+            criteria: [
+              gql.mockEoaOwnershipCondition({ address: knownAddress }),
+              gql.mockNftOwnershipCondition({
+                contract: gql.mockNetworkAddress({ address: knownAddress, chainId: 1 }),
+              }),
+            ],
+          }),
+        ],
+      }),
       expectedLitAccessConditions: [
         {
           conditionType: LitConditionType.EVM_CONTRACT,
@@ -179,20 +197,35 @@ describe(`Given the "${transform.name}" function`, () => {
               comparator: LitScalarOperator.GREATER_THAN,
               value: '0',
             },
-            standardContractType: ContractType.Erc721,
+            standardContractType: LitContractType.ERC721,
           },
         ],
       ],
     },
     {
       description: 'a nested AND condition',
-      condition: mockOrAccessCondition([
-        mockProfileOwnershipAccessCondition({ profileId: ownerProfileId }),
-        mockAndAccessCondition([
-          mockEoaOwnershipAccessCondition({ address: knownAddress }),
-          mockNftOwnershipAccessCondition({ contractAddress: knownAddress, tokenIds: null }),
+      raw: accessCondition([
+        metadata.mockProfileOwnershipCondition({ profileId: ownerProfileId }),
+        andCondition([
+          metadata.mockEoaOwnershipCondition({ address: knownAddress }),
+          metadata.mockNftOwnershipCondition({
+            contract: metadata.mockNetworkAddress({ address: knownAddress, chainId: toChainId(1) }),
+          }),
         ]),
       ]),
+      gql: gql.mockRootCondition({
+        criteria: [
+          gql.mockProfileOwnershipCondition({ profileId: ownerProfileId }),
+          gql.mockAndCondition({
+            criteria: [
+              gql.mockEoaOwnershipCondition({ address: knownAddress }),
+              gql.mockNftOwnershipCondition({
+                contract: gql.mockNetworkAddress({ address: knownAddress, chainId: 1 }),
+              }),
+            ],
+          }),
+        ],
+      }),
       expectedLitAccessConditions: [
         {
           conditionType: LitConditionType.EVM_CONTRACT,
@@ -265,97 +298,144 @@ describe(`Given the "${transform.name}" function`, () => {
               comparator: LitScalarOperator.GREATER_THAN,
               value: '0',
             },
-            standardContractType: ContractType.Erc721,
+            standardContractType: LitContractType.ERC721,
           },
         ],
       ],
     },
-  ])('when called with $description', ({ condition, expectedLitAccessConditions }) => {
-    it('should return the expected Lit AccessControlCondition', () => {
-      const actual = transform(condition as RootConditionOutput, testing);
+  ])(`and $description`, ({ raw, gql, expectedLitAccessConditions }) => {
+    describe(`when calling "${transformFromRaw.name}"`, () => {
+      it('should return the expected Lit AccessControlCondition', () => {
+        const actual = transformFromRaw(raw, testing);
 
-      expect(actual).toMatchObject(expectedLitAccessConditions);
+        expect(actual).toMatchObject(expectedLitAccessConditions);
+      });
+    });
+
+    describe(`when calling "${transformFromGql.name}"`, () => {
+      const context: DecryptionContext = {
+        profileId: metadata.mockProfileId(),
+      };
+
+      it('should return the expected Lit AccessControlCondition', () => {
+        const actual = transformFromGql(gql, testing, context);
+
+        expect(actual).toMatchObject(expectedLitAccessConditions);
+      });
     });
   });
 
   describe.each([
     {
       description: 'with a root condition that is not an OR condition',
-      condition: mockProfileOwnershipAccessCondition(),
+      condition: metadata.mockProfileOwnershipCondition(),
     },
     {
       description: 'with an OR root condition that has more than 2 criteria',
-      condition: mockOrAccessCondition([
-        mockProfileOwnershipAccessCondition(),
-        mockEoaOwnershipAccessCondition(),
-        mockNftOwnershipAccessCondition(),
-      ]),
+      condition: {
+        type: ConditionType.OR,
+        criteria: [
+          metadata.mockProfileOwnershipCondition(),
+          metadata.mockEoaOwnershipCondition(),
+          metadata.mockNftOwnershipCondition(),
+        ],
+      },
     },
     {
       description: 'with an OR root condition that does not include a profile ownership condition',
-      condition: mockOrAccessCondition([
-        mockEoaOwnershipAccessCondition(),
-        mockNftOwnershipAccessCondition(),
-      ]),
+      condition: {
+        type: ConditionType.OR,
+        criteria: [metadata.mockEoaOwnershipCondition(), metadata.mockNftOwnershipCondition()],
+      },
     },
     {
       description: 'a nested AND condition with less than 2 criteria',
-      condition: mockOrAccessCondition([
-        mockProfileOwnershipAccessCondition(),
-        mockAndAccessCondition([mockEoaOwnershipAccessCondition()]),
-      ]),
+      condition: {
+        type: ConditionType.OR,
+        criteria: [
+          metadata.mockProfileOwnershipCondition(),
+          {
+            type: ConditionType.AND,
+            criteria: [metadata.mockEoaOwnershipCondition()],
+          },
+        ],
+      },
     },
     {
       description: 'a nested AND condition with more than 5 criteria',
-      condition: mockOrAccessCondition([
-        mockProfileOwnershipAccessCondition(),
-        mockAndAccessCondition([
-          mockEoaOwnershipAccessCondition(),
-          mockEoaOwnershipAccessCondition(),
-          mockEoaOwnershipAccessCondition(),
-          mockEoaOwnershipAccessCondition(),
-          mockEoaOwnershipAccessCondition(),
-          mockEoaOwnershipAccessCondition(),
-        ]),
-      ]),
+      condition: {
+        type: ConditionType.OR,
+        criteria: [
+          metadata.mockProfileOwnershipCondition(),
+          {
+            type: ConditionType.AND,
+            criteria: [
+              metadata.mockEoaOwnershipCondition(),
+              metadata.mockEoaOwnershipCondition(),
+              metadata.mockEoaOwnershipCondition(),
+              metadata.mockEoaOwnershipCondition(),
+              metadata.mockEoaOwnershipCondition(),
+              metadata.mockEoaOwnershipCondition(),
+            ],
+          },
+        ],
+      },
     },
     {
       description: 'a nested OR condition with less than 2 criteria',
-      condition: mockOrAccessCondition([
-        mockProfileOwnershipAccessCondition(),
-        mockOrAccessCondition([mockEoaOwnershipAccessCondition()]),
-      ]),
+      condition: {
+        type: ConditionType.OR,
+        criteria: [
+          metadata.mockProfileOwnershipCondition(),
+          {
+            type: ConditionType.OR,
+            criteria: [metadata.mockEoaOwnershipCondition()],
+          },
+        ],
+      },
     },
     {
       description: 'a nested OR condition with more than 5 criteria',
-      condition: mockOrAccessCondition([
-        mockProfileOwnershipAccessCondition(),
-        mockOrAccessCondition([
-          mockEoaOwnershipAccessCondition(),
-          mockEoaOwnershipAccessCondition(),
-          mockEoaOwnershipAccessCondition(),
-          mockEoaOwnershipAccessCondition(),
-          mockEoaOwnershipAccessCondition(),
-          mockEoaOwnershipAccessCondition(),
-        ]),
-      ]),
+      condition: {
+        type: ConditionType.OR,
+        criteria: [
+          metadata.mockProfileOwnershipCondition(),
+          {
+            type: ConditionType.OR,
+            criteria: [
+              metadata.mockEoaOwnershipCondition(),
+              metadata.mockEoaOwnershipCondition(),
+              metadata.mockEoaOwnershipCondition(),
+              metadata.mockEoaOwnershipCondition(),
+              metadata.mockEoaOwnershipCondition(),
+              metadata.mockEoaOwnershipCondition(),
+            ],
+          },
+        ],
+      },
     },
     {
       description: 'with more than 2 nested levels AND and OR conditions ',
-      condition: mockOrAccessCondition([
-        mockProfileOwnershipAccessCondition(),
-        mockAndAccessCondition([
-          mockEoaOwnershipAccessCondition(),
-          mockOrAccessCondition([
-            mockEoaOwnershipAccessCondition(),
-            mockEoaOwnershipAccessCondition(),
-          ]),
-        ]),
-      ]),
+      condition: {
+        type: ConditionType.OR,
+        criteria: [
+          metadata.mockProfileOwnershipCondition(),
+          {
+            type: ConditionType.AND,
+            criteria: [
+              metadata.mockEoaOwnershipCondition(),
+              orCondition([
+                metadata.mockEoaOwnershipCondition(),
+                metadata.mockEoaOwnershipCondition(),
+              ]),
+            ],
+          },
+        ],
+      },
     },
-  ])('when called with $description', ({ condition }) => {
+  ])(`when calling "${transformFromRaw.name}" with $description`, ({ condition }) => {
     it(`should throw a ${InvalidAccessCriteriaError.name}`, () => {
-      expect(() => transform(condition as RootConditionOutput, testing)).toThrow(
+      expect(() => transformFromRaw(condition as AccessCondition, testing)).toThrow(
         InvalidAccessCriteriaError,
       );
     });

@@ -1,16 +1,18 @@
-import { ContractType, ScalarOperator } from '@lens-protocol/api-bindings';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
+import { toChainId, ConditionComparisonOperator, toEvmAddress } from '@lens-protocol/metadata';
 
-import { mockErc20OwnershipInput } from '../__helpers__/mocks';
+import {
+  mockAmount,
+  mockAsset,
+  mockErc20OwnershipCondition,
+  mockNetworkAddress,
+} from '../../__helpers__/mocks';
 import { resolveScalarOperatorSymbol, transformErc20Condition } from '../erc20-condition';
-import { LitConditionType, SupportedChains } from '../types';
+import { LitConditionType, LitContractType, SupportedChains } from '../types';
 import { InvalidAccessCriteriaError } from '../validators';
-
-const knownAddress = mockEthereumAddress();
 
 describe(`Given the "${transformErc20Condition.name}" function`, () => {
   describe('when called with an Erc20 Ownership condition', () => {
-    const operatorPairs = Object.values(ScalarOperator).map((operator) => ({
+    const operatorPairs = Object.values(ConditionComparisonOperator).map((operator) => ({
       operator,
       expectedLitOperator: resolveScalarOperatorSymbol(operator),
     }));
@@ -18,9 +20,8 @@ describe(`Given the "${transformErc20Condition.name}" function`, () => {
     it.each(operatorPairs)(
       'should support $operator comparisons',
       ({ operator, expectedLitOperator }) => {
-        const condition = mockErc20OwnershipInput({
+        const condition = mockErc20OwnershipCondition({
           condition: operator,
-          contractAddress: knownAddress,
         });
 
         const actual = transformErc20Condition(condition);
@@ -29,14 +30,14 @@ describe(`Given the "${transformErc20Condition.name}" function`, () => {
           {
             conditionType: LitConditionType.EVM_BASIC,
             chain: SupportedChains.ETHEREUM,
-            contractAddress: knownAddress.toLowerCase(),
+            contractAddress: condition.amount.asset.contract.address.toLowerCase(),
             method: 'balanceOf',
             parameters: [':userAddress'],
             returnValueTest: {
               comparator: expectedLitOperator,
               value: '100000000000000000000',
             },
-            standardContractType: ContractType.Erc20,
+            standardContractType: LitContractType.ERC20,
           },
         ];
         expect(actual).toEqual(expectedLitAccessConditions);
@@ -44,9 +45,11 @@ describe(`Given the "${transformErc20Condition.name}" function`, () => {
     );
 
     it('should transform decimal amounts as expected', () => {
-      const condition = mockErc20OwnershipInput({
-        amount: '0.1',
-        decimals: 18,
+      const condition = mockErc20OwnershipCondition({
+        amount: mockAmount({
+          asset: mockAsset({ decimals: 18 }),
+          value: '0.1',
+        }),
       });
 
       const actual = transformErc20Condition(condition);
@@ -63,29 +66,43 @@ describe(`Given the "${transformErc20Condition.name}" function`, () => {
     it.each([
       {
         description: 'if with invalid contract address',
-        condition: mockErc20OwnershipInput({
-          contractAddress: '0x123',
+        condition: mockErc20OwnershipCondition({
+          amount: mockAmount({
+            asset: mockAsset({
+              contract: mockNetworkAddress({
+                address: toEvmAddress('0x123'),
+              }),
+            }),
+          }),
         }),
       },
 
       {
         description: 'if with invalid chain ID',
-        condition: mockErc20OwnershipInput({
-          chainID: 42,
+        condition: mockErc20OwnershipCondition({
+          amount: mockAmount({
+            asset: mockAsset({
+              contract: mockNetworkAddress({
+                chainId: toChainId(42),
+              }),
+            }),
+          }),
         }),
       },
 
       {
         description: 'if with invalid condition amount',
-        condition: mockErc20OwnershipInput({
-          amount: 'a',
+        condition: mockErc20OwnershipCondition({
+          amount: mockAmount({
+            value: 'a',
+          }),
         }),
       },
 
       {
         description: 'if with invalid comparison operator',
-        condition: mockErc20OwnershipInput({
-          condition: 'a' as ScalarOperator,
+        condition: mockErc20OwnershipCondition({
+          condition: 'a' as ConditionComparisonOperator,
         }),
       },
     ])(`should throw an ${InvalidAccessCriteriaError.name} $description`, ({ condition }) => {

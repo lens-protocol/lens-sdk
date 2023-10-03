@@ -1,8 +1,8 @@
 import type { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import type { Authentication } from '../../../../authentication';
-import type { LensConfig } from '../../../../consts/config';
-import type { CredentialsExpiredError, NotAuthenticatedError } from '../../../../consts/errors';
+import { LensContext } from '../../../../context';
+import type { CredentialsExpiredError, NotAuthenticatedError } from '../../../../errors';
 import { FetchGraphQLClient } from '../../../../graphql/FetchGraphQLClient';
 import type { PublicationNotInterestedRequest } from '../../../../graphql/types.generated';
 import { requireAuthHeaders, sdkAuthHeaderWrapper } from '../../../../helpers';
@@ -15,8 +15,8 @@ export class NotInterested {
   private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
-  constructor(config: LensConfig, authentication?: Authentication) {
-    const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
+  constructor(context: LensContext, authentication?: Authentication) {
+    const client = new FetchGraphQLClient(context.environment.gqlEndpoint);
 
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;

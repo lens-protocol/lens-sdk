@@ -38,7 +38,7 @@ async function main() {
   // or wait till transaction is indexed
   await client.transaction.waitUntilComplete({ forTxId: broadcastResultValue.txId });
 
-  console.log(`Transaction was successfully broadcasted with txId ${broadcastResultValue.txId}`);
+  console.log(`Transaction was successfully broadcasted with txId`, broadcastResultValue.txId);
 }
 
 main();

@@ -1,5 +1,5 @@
 import type { Authentication } from '../../authentication';
-import type { LensConfig } from '../../consts/config';
+import { LensContext } from '../../context';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import type {
   FollowRevenueRequest,
@@ -28,10 +28,10 @@ export class Revenue {
   private readonly sdk: Sdk;
 
   constructor(
-    private readonly config: LensConfig,
+    private readonly context: LensContext,
     authentication?: Authentication,
   ) {
-    const client = new FetchGraphQLClient(config.environment.gqlEndpoint);
+    const client = new FetchGraphQLClient(context.environment.gqlEndpoint);
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
   }
 
@@ -73,7 +73,7 @@ export class Revenue {
   ): Promise<PublicationRevenueFragment | null> {
     const result = await this.sdk.RevenueFromPublication({
       request,
-      ...buildRequestFromConfig(this.config),
+      ...buildRequestFromConfig(this.context),
     });
 
     return result.data.result;
@@ -98,7 +98,7 @@ export class Revenue {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.RevenueFromPublications({
         request: currRequest,
-        ...buildRequestFromConfig(this.config),
+        ...buildRequestFromConfig(this.context),
       });
 
       return result.data.result;

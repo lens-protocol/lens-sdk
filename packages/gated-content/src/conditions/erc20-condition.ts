@@ -1,9 +1,10 @@
 import { parseFixed } from '@ethersproject/bignumber';
-import { ContractType, Erc20OwnershipInput, ScalarOperator } from '@lens-protocol/api-bindings';
+import { Erc20OwnershipCondition, ConditionComparisonOperator } from '@lens-protocol/metadata';
 
 import {
   LitAccessCondition,
   LitConditionType,
+  LitContractType,
   LitKnownMethods,
   LitKnownParams,
   LitScalarOperator,
@@ -15,45 +16,34 @@ import {
   InvalidAccessCriteriaError,
 } from './validators';
 
-export const resolveScalarOperatorSymbol = (operator: ScalarOperator): LitScalarOperator => {
-  switch (operator) {
-    case ScalarOperator.Equal:
-      return LitScalarOperator.EQUAL;
-    case ScalarOperator.GreaterThan:
-      return LitScalarOperator.GREATER_THAN;
-    case ScalarOperator.GreaterThanOrEqual:
-      return LitScalarOperator.GREATER_THAN_OR_EQUAL;
-    case ScalarOperator.LessThan:
-      return LitScalarOperator.LESS_THAN;
-    case ScalarOperator.LessThanOrEqual:
-      return LitScalarOperator.LESS_THAN_OR_EQUAL;
-    case ScalarOperator.NotEqual:
-      return LitScalarOperator.NOT_EQUAL;
-    default:
-      throw new InvalidAccessCriteriaError(`Invalid operator: ${String(operator)}`);
-  }
+export const resolveScalarOperatorSymbol = (
+  operator: ConditionComparisonOperator,
+): LitScalarOperator => {
+  if (operator in LitScalarOperator) return LitScalarOperator[operator];
+
+  throw new InvalidAccessCriteriaError(`Invalid operator: ${String(operator)}`);
 };
 
-function parseConditionAmount(condition: Erc20OwnershipInput): string {
+function parseConditionAmount(condition: Erc20OwnershipCondition): string {
   try {
-    return parseFixed(condition.amount, condition.decimals).toString();
+    return parseFixed(condition.amount.value, condition.amount.asset.decimals).toString();
   } catch (e: unknown) {
-    throw new InvalidAccessCriteriaError(`Invalid amount: ${condition.amount}`);
+    throw new InvalidAccessCriteriaError(`Invalid amount: ${condition.amount.value}`);
   }
 }
 
 export const transformErc20Condition = (
-  condition: Erc20OwnershipInput,
+  condition: Erc20OwnershipCondition,
 ): Array<LitAccessCondition> => {
-  assertValidAddress(condition.contractAddress);
-  assertSupportedChainId(condition.chainID);
+  assertValidAddress(condition.amount.asset.contract.address);
+  assertSupportedChainId(condition.amount.asset.contract.chainId);
 
   return [
     {
       conditionType: LitConditionType.EVM_BASIC,
-      contractAddress: condition.contractAddress.toLowerCase(),
-      standardContractType: ContractType.Erc20,
-      chain: toLitSupportedChainName(condition.chainID),
+      contractAddress: condition.amount.asset.contract.address.toLowerCase(),
+      standardContractType: LitContractType.ERC20,
+      chain: toLitSupportedChainName(condition.amount.asset.contract.chainId),
       method: LitKnownMethods.BALANCE_OF,
       parameters: [LitKnownParams.USER_ADDRESS],
       returnValueTest: {

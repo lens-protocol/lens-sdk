@@ -10,7 +10,9 @@ export async function uploadWithBundlr(data: { [key: string]: unknown }): Promis
   const atomicBalance = await bundlr.getLoadedBalance();
   const balance = bundlr.utils.fromAtomic(atomicBalance);
 
-  console.log(`Bundlr balance for wallet ${bundlr.address} is ${balance.toString()} MUMBAI MATIC`);
+  console.log(
+    `Bundlr balance for wallet ${String(bundlr.address)} is ${balance.toString()} MUMBAI MATIC`,
+  );
 
   // fund bundlr balance if empty
   if (balance.eq(0)) {
