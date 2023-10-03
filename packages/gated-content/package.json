@@ -91,6 +91,7 @@
     "zod": "^3.22.0"
   },
   "peerDependencies": {
+    "@ethersproject/address": "^5.7.0",
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/hash": "^5.7.0",
