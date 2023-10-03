@@ -137,7 +137,7 @@ export function transformFromRaw(
 function toRawNetworkAddress({ address, chainId }: gql.NetworkAddress): raw.NetworkAddress {
   return {
     address: raw.toEvmAddress(address),
-    chainId: raw.toChainId(parseInt(chainId)),
+    chainId: raw.toChainId(chainId),
   };
 }
 
@@ -155,7 +155,7 @@ function toRawSimpleCondition(gqlCondition: gql.ThirdTierCondition): raw.SimpleC
 
     case 'Erc20OwnershipCondition':
       return raw.erc20OwnershipCondition({
-        chainId: parseInt(gqlCondition.amount.asset.contract.chainId),
+        chainId: gqlCondition.amount.asset.contract.chainId,
         condition:
           raw.ConditionComparisonOperator[gqlCondition.condition] ??
           never(`Not supported condition: ${gqlCondition.condition}`),

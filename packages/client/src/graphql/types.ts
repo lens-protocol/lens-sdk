@@ -11,7 +11,6 @@ import {
   EmbedMetadataV3Fragment,
   EventMetadataV3Fragment,
   ImageMetadataV3Fragment,
-  LegacyPublicationMetadataFragment,
   LinkMetadataV3Fragment,
   LiveStreamMetadataV3Fragment,
   MintMetadataV3Fragment,
@@ -38,7 +37,6 @@ export type AnyPublicationMetadataFragment =
   | EmbedMetadataV3Fragment
   | EventMetadataV3Fragment
   | ImageMetadataV3Fragment
-  | LegacyPublicationMetadataFragment
   | LinkMetadataV3Fragment
   | LiveStreamMetadataV3Fragment
   | MintMetadataV3Fragment

@@ -32,7 +32,6 @@ export type Scalars = {
   EncryptableTxHash: { input: string; output: string };
   EncryptableURI: { input: string; output: string };
   EncryptedPath: { input: string; output: string };
-  EncryptedValue: { input: string; output: string };
   Ens: { input: string; output: string };
   EvmAddress: { input: string; output: string };
   Handle: { input: string; output: string };
@@ -105,14 +104,6 @@ export type ApprovedModuleAllowanceAmountRequest = {
   unknownOpenActionModules?: InputMaybe<Array<Scalars['EvmAddress']['input']>>;
   unknownReferenceModules?: InputMaybe<Array<Scalars['EvmAddress']['input']>>;
 };
-
-export enum AttributeType {
-  Boolean = 'BOOLEAN',
-  Date = 'DATE',
-  Json = 'JSON',
-  Number = 'NUMBER',
-  String = 'STRING',
-}
 
 export type BlockRequest = {
   profiles: Array<Scalars['ProfileId']['input']>;
@@ -453,16 +444,6 @@ export type LegacyCollectRequest = {
   on: Scalars['PublicationId']['input'];
   referrer?: InputMaybe<Scalars['PublicationId']['input']>;
 };
-
-export enum LegacyPublicationMetadataMainFocusType {
-  Article = 'ARTICLE',
-  Audio = 'AUDIO',
-  Embed = 'EMBED',
-  Image = 'IMAGE',
-  Link = 'LINK',
-  TextOnly = 'TEXT_ONLY',
-  Video = 'VIDEO',
-}
 
 export enum LensProfileManagerRelayErrorReasonType {
   AppGaslessNotAllowed = 'APP_GASLESS_NOT_ALLOWED',

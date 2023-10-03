@@ -73,6 +73,56 @@ fragment NetworkAddress on NetworkAddress {
   chainId
 }
 
+# metadata attributes
+
+fragment MetadataBooleanAttribute on MetadataBooleanAttribute {
+  __typename
+  key
+  value
+}
+
+fragment MetadataDateAttribute on MetadataDateAttribute {
+  __typename
+  key
+  value
+}
+
+fragment MetadataNumberAttribute on MetadataNumberAttribute {
+  __typename
+  key
+  value
+}
+
+fragment MetadataJSONAttribute on MetadataJSONAttribute {
+  __typename
+  key
+  value
+}
+
+fragment MetadataStringAttribute on MetadataStringAttribute {
+  __typename
+  key
+  value
+}
+
+fragment MetadataAttribute on MetadataAttribute {
+  ... on MetadataBooleanAttribute {
+    ...MetadataBooleanAttribute
+  }
+  ... on MetadataDateAttribute {
+    ...MetadataDateAttribute
+  }
+  ... on MetadataNumberAttribute {
+    ...MetadataNumberAttribute
+  }
+  ... on MetadataJSONAttribute {
+    ...MetadataJSONAttribute
+  }
+  ... on MetadataStringAttribute {
+    ...MetadataStringAttribute
+  }
+}
+
 # media
 fragment Image on Image {
   __typename
@@ -86,16 +136,6 @@ fragment Video on Video {
   __typename
   uri
   mimeType
-}
-
-fragment VideoSet on VideoSet {
-  __typename
-  raw {
-    ...Video
-  }
-  optimized {
-    ...Video
-  }
 }
 
 fragment EncryptableVideo on EncryptableVideo {
@@ -120,16 +160,6 @@ fragment Audio on Audio {
   mimeType
 }
 
-fragment AudioSet on AudioSet {
-  __typename
-  raw {
-    ...Audio
-  }
-  optimized {
-    ...Audio
-  }
-}
-
 fragment EncryptableAudio on EncryptableAudio {
   __typename
   mimeType
@@ -144,36 +174,6 @@ fragment EncryptableAudioSet on EncryptableAudioSet {
   optimized {
     ...Audio
   }
-}
-
-fragment LegacyAudioItem on LegacyAudioItem {
-  __typename
-  audio {
-    ...AudioSet
-  }
-  cover {
-    ...PublicationImageSet
-  }
-  altTag
-}
-
-fragment LegacyImageItem on LegacyImageItem {
-  __typename
-  image {
-    ...PublicationImageSet
-  }
-  altTag
-}
-
-fragment LegacyVideoItem on LegacyVideoItem {
-  __typename
-  video {
-    ...VideoSet
-  }
-  cover {
-    ...PublicationImageSet
-  }
-  altTag
 }
 
 # profile
@@ -293,6 +293,7 @@ fragment Profile on Profile {
     }
   }
   metadata {
+    appId
     displayName
     bio
     rawURI
@@ -308,9 +309,7 @@ fragment Profile on Profile {
       ...ProfileCoverSet
     }
     attributes {
-      type
-      key
-      value
+      ...MetadataAttribute
     }
   }
   handle
@@ -595,7 +594,7 @@ fragment PublicationOperations on PublicationOperations {
 }
 
 # gated content
-fragment PublicationMetadataEncryptionStrategy on PublicationMetadataV3LitEncryption {
+fragment PublicationMetadataLitEncryption on PublicationMetadataLitEncryption {
   __typename
   encryptionKey
   accessCondition {
@@ -721,7 +720,7 @@ fragment RootCondition on RootCondition {
 }
 
 # publication metadata
-fragment PublicationImageSet on ImageSet {
+fragment ImageSet on ImageSet {
   __typename
   raw {
     ...Image
@@ -742,7 +741,7 @@ fragment EncryptableImage on EncryptableImage {
   height
 }
 
-fragment PublicationEncryptableImageSet on EncryptableImageSet {
+fragment EncryptableImageSet on EncryptableImageSet {
   __typename
   raw {
     ...EncryptableImage
@@ -768,7 +767,7 @@ fragment MarketplaceMetadata on MarketplaceMetadata {
     ...PublicationMarketplaceMetadataAttribute
   }
   image {
-    ...PublicationImageSet
+    ...ImageSet
   }
   animationUrl
 }
@@ -779,7 +778,7 @@ fragment PublicationMetadataMediaVideo on PublicationMetadataMediaVideo {
     ...EncryptableVideoSet
   }
   cover {
-    ...PublicationEncryptableImageSet
+    ...EncryptableImageSet
   }
   duration
   license
@@ -789,8 +788,9 @@ fragment PublicationMetadataMediaVideo on PublicationMetadataMediaVideo {
 fragment PublicationMetadataMediaImage on PublicationMetadataMediaImage {
   __typename
   image {
-    ...PublicationEncryptableImageSet
+    ...EncryptableImageSet
   }
+  altTag
   license
 }
 
@@ -800,7 +800,7 @@ fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
     ...EncryptableAudioSet
   }
   cover {
-    ...PublicationEncryptableImageSet
+    ...EncryptableImageSet
   }
   duration
   license
@@ -811,61 +811,11 @@ fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
   lyrics
 }
 
-fragment LegacyPublicationMetadata on LegacyPublicationMetadata {
-  __typename
-  content
-  media {
-    ... on LegacyAudioItem {
-      ...LegacyAudioItem
-    }
-    ... on LegacyImageItem {
-      ...LegacyImageItem
-    }
-    ... on LegacyVideoItem {
-      ...LegacyVideoItem
-    }
-  }
-  locale
-  tags
-  contentWarning
-  mainContentFocus
-  marketplace {
-    ...MarketplaceMetadata
-  }
-  encryptedWith {
-    __typename
-    encryptionKey
-    encryptedFields {
-      __typename
-      content
-      image
-      media {
-        __typename
-        uri
-        mimeType
-        altTag
-        cover
-      }
-      animationUrl
-      externalUrl
-    }
-    accessCondition {
-      ...RootCondition
-    }
-  }
-}
-
 fragment GeoLocation on GeoLocation {
   __typename
   rawURI
   latitude
   longitude
-}
-
-fragment PublicationMetadataV3Attribute on PublicationMetadataV3Attribute {
-  __typename
-  key
-  value
 }
 
 fragment VideoMetadataV3 on VideoMetadataV3 {
@@ -881,11 +831,11 @@ fragment VideoMetadataV3 on VideoMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...PublicationMetadataV3Attribute
+    ...MetadataAttribute
   }
   encryptedWith {
-    ... on PublicationMetadataEncryptionStrategy {
-      ...PublicationMetadataEncryptionStrategy
+    ... on PublicationMetadataLitEncryption {
+      ...PublicationMetadataLitEncryption
     }
   }
   asset {
@@ -920,11 +870,11 @@ fragment AudioMetadataV3 on AudioMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...PublicationMetadataV3Attribute
+    ...MetadataAttribute
   }
   encryptedWith {
-    ... on PublicationMetadataEncryptionStrategy {
-      ...PublicationMetadataEncryptionStrategy
+    ... on PublicationMetadataLitEncryption {
+      ...PublicationMetadataLitEncryption
     }
   }
   asset {
@@ -958,11 +908,11 @@ fragment ImageMetadataV3 on ImageMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...PublicationMetadataV3Attribute
+    ...MetadataAttribute
   }
   encryptedWith {
-    ... on PublicationMetadataEncryptionStrategy {
-      ...PublicationMetadataEncryptionStrategy
+    ... on PublicationMetadataLitEncryption {
+      ...PublicationMetadataLitEncryption
     }
   }
   title
@@ -996,11 +946,11 @@ fragment ArticleMetadataV3 on ArticleMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...PublicationMetadataV3Attribute
+    ...MetadataAttribute
   }
   encryptedWith {
-    ... on PublicationMetadataEncryptionStrategy {
-      ...PublicationMetadataEncryptionStrategy
+    ... on PublicationMetadataLitEncryption {
+      ...PublicationMetadataLitEncryption
     }
   }
   title
@@ -1031,11 +981,11 @@ fragment EventMetadataV3 on EventMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...PublicationMetadataV3Attribute
+    ...MetadataAttribute
   }
   encryptedWith {
-    ... on PublicationMetadataEncryptionStrategy {
-      ...PublicationMetadataEncryptionStrategy
+    ... on PublicationMetadataLitEncryption {
+      ...PublicationMetadataLitEncryption
     }
   }
   geographic {
@@ -1071,11 +1021,11 @@ fragment LinkMetadataV3 on LinkMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...PublicationMetadataV3Attribute
+    ...MetadataAttribute
   }
   encryptedWith {
-    ... on PublicationMetadataEncryptionStrategy {
-      ...PublicationMetadataEncryptionStrategy
+    ... on PublicationMetadataLitEncryption {
+      ...PublicationMetadataLitEncryption
     }
   }
   content
@@ -1106,11 +1056,11 @@ fragment EmbedMetadataV3 on EmbedMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...PublicationMetadataV3Attribute
+    ...MetadataAttribute
   }
   encryptedWith {
-    ... on PublicationMetadataEncryptionStrategy {
-      ...PublicationMetadataEncryptionStrategy
+    ... on PublicationMetadataLitEncryption {
+      ...PublicationMetadataLitEncryption
     }
   }
   content
@@ -1141,11 +1091,11 @@ fragment CheckingInMetadataV3 on CheckingInMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...PublicationMetadataV3Attribute
+    ...MetadataAttribute
   }
   encryptedWith {
-    ... on PublicationMetadataEncryptionStrategy {
-      ...PublicationMetadataEncryptionStrategy
+    ... on PublicationMetadataLitEncryption {
+      ...PublicationMetadataLitEncryption
     }
   }
   content
@@ -1179,11 +1129,11 @@ fragment TextOnlyMetadataV3 on TextOnlyMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...PublicationMetadataV3Attribute
+    ...MetadataAttribute
   }
   encryptedWith {
-    ... on PublicationMetadataEncryptionStrategy {
-      ...PublicationMetadataEncryptionStrategy
+    ... on PublicationMetadataLitEncryption {
+      ...PublicationMetadataLitEncryption
     }
   }
   content
@@ -1211,11 +1161,11 @@ fragment ThreeDMetadataV3 on ThreeDMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...PublicationMetadataV3Attribute
+    ...MetadataAttribute
   }
   encryptedWith {
-    ... on PublicationMetadataEncryptionStrategy {
-      ...PublicationMetadataEncryptionStrategy
+    ... on PublicationMetadataLitEncryption {
+      ...PublicationMetadataLitEncryption
     }
   }
   content
@@ -1248,11 +1198,11 @@ fragment StoryMetadataV3 on StoryMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...PublicationMetadataV3Attribute
+    ...MetadataAttribute
   }
   encryptedWith {
-    ... on PublicationMetadataEncryptionStrategy {
-      ...PublicationMetadataEncryptionStrategy
+    ... on PublicationMetadataLitEncryption {
+      ...PublicationMetadataLitEncryption
     }
   }
   content
@@ -1282,11 +1232,11 @@ fragment TransactionMetadataV3 on TransactionMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...PublicationMetadataV3Attribute
+    ...MetadataAttribute
   }
   encryptedWith {
-    ... on PublicationMetadataEncryptionStrategy {
-      ...PublicationMetadataEncryptionStrategy
+    ... on PublicationMetadataLitEncryption {
+      ...PublicationMetadataLitEncryption
     }
   }
   content
@@ -1319,11 +1269,11 @@ fragment MintMetadataV3 on MintMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...PublicationMetadataV3Attribute
+    ...MetadataAttribute
   }
   encryptedWith {
-    ... on PublicationMetadataEncryptionStrategy {
-      ...PublicationMetadataEncryptionStrategy
+    ... on PublicationMetadataLitEncryption {
+      ...PublicationMetadataLitEncryption
     }
   }
   content
@@ -1354,11 +1304,11 @@ fragment SpaceMetadataV3 on SpaceMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...PublicationMetadataV3Attribute
+    ...MetadataAttribute
   }
   encryptedWith {
-    ... on PublicationMetadataEncryptionStrategy {
-      ...PublicationMetadataEncryptionStrategy
+    ... on PublicationMetadataLitEncryption {
+      ...PublicationMetadataLitEncryption
     }
   }
   content
@@ -1391,11 +1341,11 @@ fragment LiveStreamMetadataV3 on LiveStreamMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...PublicationMetadataV3Attribute
+    ...MetadataAttribute
   }
   encryptedWith {
-    ... on PublicationMetadataEncryptionStrategy {
-      ...PublicationMetadataEncryptionStrategy
+    ... on PublicationMetadataLitEncryption {
+      ...PublicationMetadataLitEncryption
     }
   }
   title
@@ -1449,9 +1399,6 @@ fragment Post on Post {
     ...PublicationOperations
   }
   metadata {
-    ... on LegacyPublicationMetadata {
-      ...LegacyPublicationMetadata
-    }
     ... on AudioMetadataV3 {
       ...AudioMetadataV3
     }
@@ -1574,9 +1521,6 @@ fragment CommentBase on Comment {
     ...PublicationOperations
   }
   metadata {
-    ... on LegacyPublicationMetadata {
-      ...LegacyPublicationMetadata
-    }
     ... on AudioMetadataV3 {
       ...AudioMetadataV3
     }
@@ -1748,9 +1692,6 @@ fragment QuoteBase on Quote {
     ...PublicationOperations
   }
   metadata {
-    ... on LegacyPublicationMetadata {
-      ...LegacyPublicationMetadata
-    }
     ... on AudioMetadataV3 {
       ...AudioMetadataV3
     }

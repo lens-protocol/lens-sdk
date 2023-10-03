@@ -119,7 +119,7 @@ describe(`Given the conditions helpers`, () => {
             criteria: [
               gql.mockEoaOwnershipCondition({ address: knownAddress }),
               gql.mockNftOwnershipCondition({
-                contract: gql.mockNetworkAddress({ address: knownAddress, chainId: '1' }),
+                contract: gql.mockNetworkAddress({ address: knownAddress, chainId: 1 }),
               }),
             ],
           }),
@@ -220,7 +220,7 @@ describe(`Given the conditions helpers`, () => {
             criteria: [
               gql.mockEoaOwnershipCondition({ address: knownAddress }),
               gql.mockNftOwnershipCondition({
-                contract: gql.mockNetworkAddress({ address: knownAddress, chainId: '1' }),
+                contract: gql.mockNetworkAddress({ address: knownAddress, chainId: 1 }),
               }),
             ],
           }),

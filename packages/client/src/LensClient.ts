@@ -1,5 +1,4 @@
 import { InMemoryStorageProvider, IStorageProvider } from '@lens-protocol/storage';
-import { TypedQueryDocumentNode } from 'graphql';
 
 import { Authentication, IAuthentication } from './authentication';
 import { LensContext, MediaTransformsConfig } from './context';
@@ -50,8 +49,6 @@ export type LensClientConfig = {
    * If not provided, all apps will be used.
    */
   forApps?: string[];
-
-  profileFragment: TypedQueryDocumentNode;
 };
 
 /**

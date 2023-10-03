@@ -90,6 +90,7 @@ export async function postOnchainViaLensManager(
         collectOpenAction: {
           simpleCollectOpenAction: {
             collectLimit: '1',
+            followerOnly: false,
           },
         },
       },

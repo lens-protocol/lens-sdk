@@ -68,7 +68,7 @@ export function mockFollowCondition(overrides?: Partial<FollowCondition>): Follo
 export function mockNetworkAddress(overrides?: Partial<NetworkAddress>): NetworkAddress {
   return {
     address: mockEvmAddress(),
-    chainId: faker.datatype.number({ min: 1, max: 1000 }).toString(),
+    chainId: faker.datatype.number({ min: 1, max: 1000 }),
     ...overrides,
     __typename: 'NetworkAddress',
   };

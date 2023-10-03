@@ -13,7 +13,7 @@ export type Scalars = {
   AppId: string;
   BlockchainData: string;
   BroadcastId: string;
-  ChainId: string;
+  ChainId: number;
   ChallengeId: string;
   ContentEncryptionKey: string;
   CreateHandle: string;
