@@ -47,22 +47,34 @@ export class Nfts {
   /**
    * Fetch NFTs.
    *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * If you are using `development` enviroment you can only query chainIds 5 and 80001.
+   * If you are using `production` enviroment you can only query chainIds 1 and 137.
+   *
    * @param request - Request object for the query
-   * @returns Array of NFTs wrapped in {@link PaginatedResult}
+   * @returns {@link PromiseResult} with NFTs wrapped in {@link PaginatedResult}
    *
    * @example
    * ```ts
    * const result = await client.nfts.fetch();
    * ```
    */
-  async fetch(request: NftsRequest): Promise<PaginatedResult<NftFragment>> {
-    return buildPaginatedQueryResult(async (currRequest) => {
-      const result = await this.sdk.Nfts({
-        request: currRequest,
-      });
+  async fetch(
+    request: NftsRequest = {},
+  ): PromiseResult<PaginatedResult<NftFragment>, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      return buildPaginatedQueryResult(async (currRequest) => {
+        const result = await this.sdk.Nfts(
+          {
+            request: currRequest,
+          },
+          headers,
+        );
 
-      return result.data.result;
-    }, request);
+        return result.data.result;
+      }, request);
+    });
   }
 
   /**
@@ -70,20 +82,23 @@ export class Nfts {
    *
    * ⚠️ Requires authenticated LensClient.
    *
+   * If you are using `development` enviroment you can only query chainIds 5 and 80001.
+   * If you are using `production` enviroment you can only query chainIds 1 and 137.
+   *
    * @param request - Request object for the query
    * @returns {@link PromiseResult} with {@link NftOwnershipChallengeResultFragment}
    *
    * @example
    * ```ts
    * const result = await client.nfts.ownershipChallenge({
-   *   for: '0xdfd7D26fd33473F475b57556118F8251464a24eb',
+   *   for: '0x1234567890123456789012345678901234567890',
    *   nfts: [
    *     {
    *       contract: {
-   *         address: '0x54439D4908A3E19356F876aa6022D67d0b3B12d6'
-   *         chainId: 1,
+   *         address: '0x1234123412341234123412341234123412341234', // an NFT that wallet owns
+   *         chainId: 5,
    *       },
-   *       tokenId: '5742',
+   *       tokenId: '1',
    *     }
    *   ]
    * });
@@ -111,7 +126,7 @@ export class Nfts {
    * @example
    * ```ts
    * const result = await client.nfts.fetchGalleries({
-   *   for: '0x0185',
+   *   for: '0x01',
    * });
    * ```
    */
@@ -130,6 +145,9 @@ export class Nfts {
    *
    * ⚠️ Requires authenticated LensClient.
    *
+   * If you are using `development` enviroment you can only query chainIds 5 and 80001.
+   * If you are using `production` enviroment you can only query chainIds 1 and 137.
+   *
    * @param request - Request object for the mutation
    * @returns {@link PromiseResult} with the id of the new gallery
    *
@@ -140,8 +158,8 @@ export class Nfts {
    *   items: [
    *     {
    *       contract: {
-   *         address: '0x1234123412341234123412341234123412341234'
-   *         chainId: 137,
+   *         address: '0x1234123412341234123412341234123412341234', // an NFT that wallet owns
+   *         chainId: 5,
    *       },
    *       tokenId: '1',
    *     }
@@ -160,7 +178,7 @@ export class Nfts {
   }
 
   /**
-   * Update a NFT gallery.
+   * Update an NFT gallery.
    *
    * ⚠️ Requires authenticated LensClient.
    *
@@ -170,8 +188,8 @@ export class Nfts {
    * @example
    * ```ts
    * const result = await client.nfts.updateGalleryInfo({
-   *  galleryId: '9aeb66b2-0d8f-4c33-951c-feedbb171148',
-   *  name: 'New name',
+   *   galleryId: '9aeb66b2-0d8f-4c33-951c-feedbb171148',
+   *   name: 'New name',
    * });
    * ```
    */
@@ -188,6 +206,9 @@ export class Nfts {
    *
    * ⚠️ Requires authenticated LensClient.
    *
+   * If you are using `development` enviroment you can only query chainIds 5 and 80001.
+   * If you are using `production` enviroment you can only query chainIds 1 and 137.
+   *
    * @param request - Request object for the mutation
    * @returns {@link PromiseResult} with void
    *
@@ -195,20 +216,24 @@ export class Nfts {
    * ```ts
    * const result = await client.nfts.updateGalleryItems({
    *   galleryId: '9aeb66b2-0d8f-4c33-951c-feedbb171148',
-   *   toAdd: [{
-   *     contract: {
-   *       address: '0x1234123412341234123412341234123412341234'
-   *       chainId: 137,
+   *   toAdd: [
+   *     {
+   *       contract: {
+   *         address: '0x1234123412341234123412341234123412341234', // an NFT that wallet owns
+   *         chainId: 5,
+   *       },
+   *       tokenId: '1',
    *     },
-   *     tokenId: '1',
-   *   }],
-   *   toRemove: [{
-   *     contract: {
-   *       address: '0x1234123412341234123412341234123412341234'
-   *       chainId: 137,
+   *   ],
+   *   toRemove: [
+   *     {
+   *       contract: {
+   *         address: '0x1234123412341234123412341234123412341234', // an NFT that wallet owns
+   *         chainId: 5,
+   *       },
+   *       tokenId: '2',
    *     },
-   *     tokenId: '2',
-   *   }]
+   *   ],
    * });
    * ```
    */
@@ -225,6 +250,9 @@ export class Nfts {
    *
    * ⚠️ Requires authenticated LensClient.
    *
+   * If you are using `development` enviroment you can only query chainIds 5 and 80001.
+   * If you are using `production` enviroment you can only query chainIds 1 and 137.
+   *
    * @param request - Request object for the mutation
    * @returns {@link PromiseResult} with void
    *
@@ -232,15 +260,17 @@ export class Nfts {
    * ```ts
    * const result = await client.nfts.updateGalleryOrder({
    *   galleryId: '9aeb66b2-0d8f-4c33-951c-feedbb171148',
-   *   updates: [{
-   *     contract: {
-   *       address: '0x1234123412341234123412341234123412341234'
-   *       chainId: 137,
+   *   updates: [
+   *     {
+   *       contract: {
+   *         address: '0x1234123412341234123412341234123412341234', // an NFT that wallet owns
+   *         chainId: 5,
+   *       },
+   *       tokenId: '1',
+   *       newOrder: 1,
    *     },
-   *     tokenId: '1',
-   *     newOrder: 1,
-   *   }]
-   *  });
+   *   ],
+   * });
    * ```
    */
   async updateGalleryOrder(

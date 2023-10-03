@@ -21,6 +21,7 @@ import type {
   HandleUnlinkFromProfileRequest,
   MutualFollowersRequest,
   OnchainSetProfileMetadataRequest,
+  ProfileActionHistoryRequest,
   ProfileInterestsRequest,
   ProfileManagersRequest,
   ProfileRecommendationsRequest,
@@ -50,6 +51,7 @@ import {
   CreateSetFollowModuleBroadcastItemResultFragment,
   CreateUnblockProfilesBroadcastItemResultFragment,
   CreateUnfollowBroadcastItemResultFragment,
+  ProfileActionHistoryFragment,
   ProfileManagerFragment,
   Sdk,
   getSdk,
@@ -103,7 +105,7 @@ export class Profile {
   }
 
   /**
-   * Fetch all profiles by requested criteria
+   * Fetch all profiles by requested criteria.
    *
    * @param request - Request object for the query
    * @param options - Additional options for the query
@@ -134,7 +136,7 @@ export class Profile {
   }
 
   /**
-   * Fetches addresses of profile's managers
+   * Fetch addresses of profile managers.
    *
    * @param request - Request object for the query
    * @returns Profile managers wrapped in {@link PaginatedResult}
@@ -159,7 +161,7 @@ export class Profile {
   }
 
   /**
-   * Fetch all recommended profiles
+   * Fetch recommended profiles.
    *
    * @param request - Request object for the query
    * @returns Array of recommended profiles wrapped in {@link PaginatedResult}
@@ -185,7 +187,7 @@ export class Profile {
   }
 
   /**
-   * Dismiss profiles from the recommended list
+   * Dismiss profiles from the recommended list.
    *
    * ⚠️ Requires authenticated LensClient.
    *
@@ -207,6 +209,19 @@ export class Profile {
     });
   }
 
+  /**
+   * Fetch profiles that are followed by a requested profile.
+   *
+   * @param request - Request object for the query
+   * @returns Profiles wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.following({
+   *   for: '0x01',
+   * });
+   * ```
+   */
   async following(request: FollowingRequest): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Following({
@@ -218,6 +233,19 @@ export class Profile {
     }, request);
   }
 
+  /**
+   * Fetch profiles that follow a requested profile.
+   *
+   * @param request - Request object for the query
+   * @returns Profiles wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.followers({
+   *   of: '0x01',
+   * });
+   * ```
+   */
   async followers(request: FollowersRequest): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Followers({
@@ -230,7 +258,7 @@ export class Profile {
   }
 
   /**
-   * Fetch mutual followers between two profiles
+   * Fetch mutual followers between two profiles.
    *
    * @param request - Request object for the query
    * @returns Profiles wrapped in {@link PaginatedResult}
@@ -257,7 +285,7 @@ export class Profile {
   }
 
   /**
-   * Fetch profiles that acted on a publication
+   * Fetch profiles that acted on a publication.
    *
    * @param request - Request object for the query
    * @returns Profiles wrapped in {@link PaginatedResult}
@@ -283,6 +311,39 @@ export class Profile {
   }
 
   /**
+   * Fetch profile action history.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the query
+   * @returns Profile action history item wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.actionHistory();
+   * ```
+   */
+  async actionHistory(
+    request: ProfileActionHistoryRequest = {},
+  ): PromiseResult<
+    PaginatedResult<ProfileActionHistoryFragment>,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      return buildPaginatedQueryResult(async (currRequest) => {
+        const result = await this.sdk.ProfileActionHistory(
+          {
+            request: currRequest,
+          },
+          headers,
+        );
+
+        return result.data.result;
+      }, request);
+    });
+  }
+
+  /**
    * NOT IMPLEMENTED ON THE API SIDE
    */
   // async claim(
@@ -298,7 +359,7 @@ export class Profile {
   // }
 
   /**
-   * Create a new profile
+   * Create a new profile.
    *
    * @param request - Request object for the mutation
    * @returns Status of the transaction
@@ -306,8 +367,8 @@ export class Profile {
    * @example
    * ```ts
    * const result = await client.profile.create({
-   *  handle: 'handle',
-   *  to: '0x1234567890123456789012345678901234567890',
+   *   handle: 'handle',
+   *   to: '0x1234567890123456789012345678901234567890',
    * });
    * ```
    */
@@ -318,6 +379,21 @@ export class Profile {
     return result.data.result;
   }
 
+  /**
+   * Set profile metadata using Profile Manager. Profile has to have a Profile Manager enabled.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelaySuccessFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.setProfileMetadata({
+   *   metadataURI: 'ipfs://Qm...',
+   * });
+   * ```
+   */
   async setProfileMetadata(
     request: OnchainSetProfileMetadataRequest,
   ): PromiseResult<
@@ -330,6 +406,24 @@ export class Profile {
     });
   }
 
+  /**
+   * Create typed data for setting the profile metadata.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for setting the profile metadata
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createSetProfileMetadataTypedData({
+   *   metadataURI: 'ipfs://Qm...',
+   * });
+   * ```
+   */
   async createSetProfileMetadataTypedData(
     request: OnchainSetProfileMetadataRequest,
     options?: TypedDataOptions,
@@ -350,6 +444,24 @@ export class Profile {
     });
   }
 
+  /**
+   * Create typed data for changing profile managers.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for changing profile managers
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createChangeProfileManagersTypedData({
+   *   approveLensManager: true,
+   * });
+   * ```
+   */
   async createChangeProfileManagersTypedData(
     request: ChangeProfileManagersRequest,
     options?: TypedDataOptions,
@@ -370,6 +482,23 @@ export class Profile {
     });
   }
 
+  /**
+   * Set profile follow module using Profile Manager. Profile has to have a Profile Manager enabled.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelaySuccessFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.setFollowModule({
+   *   followModule: {
+   *     freeFollowModule: true,
+   *   },
+   * });
+   * ```
+   */
   async setFollowModule(
     request: SetFollowModuleRequest,
   ): PromiseResult<
@@ -382,6 +511,26 @@ export class Profile {
     });
   }
 
+  /**
+   * Create typed data for setting a profile follow module.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for setting a profile follow module
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createSetFollowModuleTypedData({
+   *   followModule: {
+   *     freeFollowModule: true,
+   *   },
+   * });
+   * ```
+   */
   async createSetFollowModuleTypedData(
     request: SetFollowModuleRequest,
     options?: TypedDataOptions,
@@ -402,6 +551,21 @@ export class Profile {
     });
   }
 
+  /**
+   * Block a profile using Profile Manager. Profile has to have a Profile Manager enabled.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelaySuccessFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.block({
+   *   profiles: ['0x01'],
+   * });
+   * ```
+   */
   async block(
     request: BlockRequest,
   ): PromiseResult<
@@ -414,6 +578,24 @@ export class Profile {
     });
   }
 
+  /**
+   * Create typed data for blocking a profile.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for requested transaction
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createBlockProfilesTypedData({
+   *   profiles: ['0x01'],
+   * });
+   * ```
+   */
   async createBlockProfilesTypedData(
     request: BlockRequest,
     options?: TypedDataOptions,
@@ -434,6 +616,21 @@ export class Profile {
     });
   }
 
+  /**
+   * Unblock a profile using Profile Manager. Profile has to have a Profile Manager enabled.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelaySuccessFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.unblock({
+   *   profiles: ['0x01'],
+   * });
+   * ```
+   */
   async unblock(
     request: UnblockRequest,
   ): PromiseResult<
@@ -446,8 +643,26 @@ export class Profile {
     });
   }
 
+  /**
+   * Create typed data for unblocking a profile.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for requested transaction
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createUnblockProfilesTypedData({
+   *   profiles: ['0x01'],
+   * });
+   * ```
+   */
   async createUnblockProfilesTypedData(
-    request: BlockRequest,
+    request: UnblockRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
     CreateUnblockProfilesBroadcastItemResultFragment,
@@ -466,6 +681,25 @@ export class Profile {
     });
   }
 
+  /**
+   * Follow a profile using Profile Manager. Profile has to have a Profile Manager enabled.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelaySuccessFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.follow({
+   *   follow: [
+   *     {
+   *       profileId: '0x01',
+   *     },
+   *   ],
+   * });
+   * ```
+   */
   async follow(
     request: FollowRequest,
   ): PromiseResult<
@@ -478,6 +712,28 @@ export class Profile {
     });
   }
 
+  /**
+   * Create typed data for following a profile.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for requested transaction
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createFollowTypedData({
+   *   follow: [
+   *     {
+   *       profileId: '0x01',
+   *     },
+   *   ],
+   * });
+   * ```
+   */
   async createFollowTypedData(
     request: FollowRequest,
     options?: TypedDataOptions,
@@ -498,6 +754,21 @@ export class Profile {
     });
   }
 
+  /**
+   * Unfollow a profile using Profile Manager. Profile has to have a Profile Manager enabled.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelaySuccessFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.unfollow({
+   *   unfollow: ['0x01'],
+   * });
+   * ```
+   */
   async unfollow(
     request: UnfollowRequest,
   ): PromiseResult<
@@ -510,6 +781,24 @@ export class Profile {
     });
   }
 
+  /**
+   * Create typed data for unfollowing a profile.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for requested transaction
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createUnfollowTypedData({
+   *   unfollow: ['0x01'],
+   * });
+   * ```
+   */
   async createUnfollowTypedData(
     request: UnfollowRequest,
     options?: TypedDataOptions,
@@ -530,43 +819,125 @@ export class Profile {
     });
   }
 
+  /**
+   * Link a profile to a handle using Profile Manager. Profile has to have a Profile Manager enabled.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelaySuccessFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.linkHandle({
+   *   handle: 'my-handle',
+   * });
+   * ```
+   */
   async linkHandle(
     request: HandleLinkToProfileRequest,
-  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+  ): PromiseResult<
+    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      await this.sdk.HandleLinkToProfile({ request }, headers);
+      const result = await this.sdk.HandleLinkToProfile({ request }, headers);
+      return result.data.result;
     });
   }
 
+  /**
+   * Create typed data for linking a profile to a handle.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for requested transaction
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createLinkHandleTypedData({
+   *   handle: 'my-handle',
+   * });
+   * ```
+   */
   async createLinkHandleTypedData(
     request: HandleLinkToProfileRequest,
+    options?: TypedDataOptions,
   ): PromiseResult<
     CreateHandleLinkToProfileBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateHandleLinkToProfileTypedData({ request }, headers);
+      const result = await this.sdk.CreateHandleLinkToProfileTypedData(
+        { request, options },
+        headers,
+      );
 
       return result.data.result;
     });
   }
 
+  /**
+   * Unlink a profile from a handle using Profile Manager. Profile has to have a Profile Manager enabled.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with {@link RelaySuccessFragment} or {@link LensProfileManagerRelayErrorFragment}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.unlinkHandle({
+   *   handle: 'my-handle',
+   * });
+   * ```
+   */
   async unlinkHandle(
     request: HandleUnlinkFromProfileRequest,
-  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+  ): PromiseResult<
+    RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      await this.sdk.HandleUnlinkFromProfile({ request }, headers);
+      const result = await this.sdk.HandleUnlinkFromProfile({ request }, headers);
+      return result.data.result;
     });
   }
 
+  /**
+   * Create typed data for unlinking a profile from a handle.
+   *
+   * Typed data has to be signed by the profile's wallet and broadcasted with {@link Transaction.broadcastOnchain}.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @param options - Configure returned typed data
+   * @returns Typed data for requested transaction
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.createUnlinkHandleTypedData({
+   *   handle: 'my-handle',
+   * });
+   * ```
+   */
   async createUnlinkHandleTypedData(
     request: HandleUnlinkFromProfileRequest,
+    options?: TypedDataOptions,
   ): PromiseResult<
     CreateHandleUnlinkFromProfileBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateHandleUnlinkFromProfileTypedData({ request }, headers);
+      const result = await this.sdk.CreateHandleUnlinkFromProfileTypedData(
+        { request, options },
+        headers,
+      );
 
       return result.data.result;
     });

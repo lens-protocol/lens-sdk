@@ -2,7 +2,7 @@
  * An EVM address
  */
 // TODO brand and enforce correct patterns
-export type EthereumAddress = string;
+export type EvmAddress = string;
 
 /**
  * A URL

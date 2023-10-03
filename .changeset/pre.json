@@ -20,11 +20,16 @@
     "@lens-protocol/shared-kernel": "0.10.0",
     "@lens-protocol/storage": "0.7.4",
     "@lens-protocol/tsconfig": "0.2.0",
-    "@lens-protocol/wagmi": "2.1.1"
+    "@lens-protocol/wagmi": "2.1.1",
+    "example-web": "0.1.0",
+    "api-bindings-v1": "0.10.1",
+    "react-v1": "1.3.1"
   },
   "changesets": [
     "brown-flies-pump",
     "cyan-radios-sniff",
+    "fresh-lamps-explain",
+    "grumpy-coats-scream",
     "happy-pumpkins-clean",
     "heavy-dodos-raise",
     "lemon-drinks-exercise",

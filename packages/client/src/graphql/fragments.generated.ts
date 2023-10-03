@@ -37,7 +37,7 @@ export type UnknownFollowModuleSettingsFragment = {
   contract: NetworkAddressFragment;
 };
 
-export type NetworkAddressFragment = { address: string; chainId: string };
+export type NetworkAddressFragment = { address: string; chainId: number };
 
 export type ImageFragment = {
   uri: string;
@@ -89,12 +89,14 @@ export type ProfileCoverSetFragment = {
 };
 
 export type ProfilePictureSetFragment = {
+  __typename: 'ImageSet';
   raw: ImageFragment;
   optimized: ImageFragment | null;
   transformed: ImageFragment | null;
 };
 
 export type NftImageFragment = {
+  __typename: 'NftImage';
   tokenId: string;
   verified: boolean;
   collection: NetworkAddressFragment;
@@ -123,7 +125,7 @@ export type ProfileFragment = {
   txHash: string;
   createdAt: string;
   interests: Array<string>;
-  invitesLeft: number | null;
+  invitesLeft: number;
   handle: string | null;
   sponsor: boolean;
   lensManager: boolean;
@@ -730,7 +732,7 @@ export type TransactionMetadataV3Fragment = {
   content: string;
   type: Types.PublicationMetadataTransactionType;
   txHash: string;
-  chainId: string;
+  chainId: number;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<{ key: string; value: string }> | null;
   encryptedWith: PublicationMetadataEncryptionStrategyFragment | null;
@@ -993,7 +995,7 @@ export type QuoteFragment = {
 
 export type Eip712TypedDataDomainFragment = {
   name: string;
-  chainId: string;
+  chainId: number;
   version: string;
   verifyingContract: string;
 };
@@ -1004,8 +1006,8 @@ export type CreateActOnOpenActionEip712TypedDataFragment = {
   types: { Act: Array<Eip712TypedDataFieldFragment> };
   domain: Eip712TypedDataDomainFragment;
   value: {
-    nonce: string;
-    deadline: string;
+    nonce: number;
+    deadline: number;
     publicationActedProfileId: string;
     publicationActedId: string;
     actorProfileId: string;
@@ -1144,6 +1146,7 @@ export const ImageFragmentDoc = gql`
 `;
 export const ProfilePictureSetFragmentDoc = gql`
   fragment ProfilePictureSet on ImageSet {
+    __typename
     raw {
       ...Image
     }
@@ -1158,6 +1161,7 @@ export const ProfilePictureSetFragmentDoc = gql`
 `;
 export const NftImageFragmentDoc = gql`
   fragment NftImage on NftImage {
+    __typename
     collection {
       ...NetworkAddress
     }

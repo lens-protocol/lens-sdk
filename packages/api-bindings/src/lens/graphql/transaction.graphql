@@ -1,0 +1,52 @@
+fragment LensTransactionResult on LensTransactionResult {
+  status
+  txHash
+  reason
+  extraInfo
+}
+
+query TxIdToTxHash($for: TxId!) {
+  result: txIdToTxHash(for: $for)
+}
+
+fragment RelayQueueResult on RelayQueueResult {
+  key
+  relay {
+    ...NetworkAddress
+  }
+  queue
+}
+
+query RelayQueues {
+  result: relayQueues {
+    ...RelayQueueResult
+  }
+}
+
+query LensTransactionStatus($request: LensTransactionStatusRequest!) {
+  result: lensTransactionStatus(request: $request) {
+    ...LensTransactionResult
+  }
+}
+
+mutation BroadcastOnchain($request: BroadcastRequest!) {
+  result: broadcastOnchain(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}
+
+mutation BroadcastOnMomoka($request: BroadcastRequest!) {
+  result: broadcastOnMomoka(request: $request) {
+    ... on CreateMomokaPublicationResult {
+      ...CreateMomokaPublicationResult
+    }
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}

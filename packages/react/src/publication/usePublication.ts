@@ -15,7 +15,7 @@ import {
 import { ReadResult, useReadResult } from '../helpers/reads';
 
 /**
- * {@link useProfile} hook arguments
+ * {@link usePublication} hook arguments
  */
 export type UsePublicationArgs = OneOf<PublicationRequest>;
 

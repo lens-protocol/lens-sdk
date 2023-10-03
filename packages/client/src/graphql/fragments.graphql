@@ -169,6 +169,7 @@ fragment ProfileCoverSet on ImageSet {
 }
 
 fragment ProfilePictureSet on ImageSet {
+  __typename
   raw {
     ...Image
   }
@@ -181,6 +182,7 @@ fragment ProfilePictureSet on ImageSet {
 }
 
 fragment NftImage on NftImage {
+  __typename
   collection {
     ...NetworkAddress
   }

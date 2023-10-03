@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { jest } from '@jest/globals';
 import {
   ChainType,
-  EthereumAddress,
+  EvmAddress,
   failure,
   PromiseResult,
   success,
@@ -10,7 +10,7 @@ import {
 import {
   mock32BytesHexString,
   mockDaiAmount,
-  mockEthereumAddress,
+  mockEvmAddress,
 } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 
@@ -66,15 +66,13 @@ export function mockPublicationId(profileId: ProfileId = mockProfileId()): Publi
   return `${profileId}-${faker.datatype.hexadecimal({ length: 2 })}` as PublicationId;
 }
 
-export function mockWallet({
-  address = mockEthereumAddress(),
-}: { address?: EthereumAddress } = {}) {
+export function mockWallet({ address = mockEvmAddress() }: { address?: EvmAddress } = {}) {
   return mock<Wallet>({ address });
 }
 
 export function mockCredentials(overrides?: Partial<ICredentials>) {
   return mock<ICredentials>({
-    address: mockEthereumAddress(),
+    address: mockEvmAddress(),
     ...overrides,
   });
 }
@@ -396,7 +394,7 @@ export function mockNftOwnershipCriterion(
   overrides?: Partial<NftOwnershipCriterion>,
 ): NftOwnershipCriterion {
   return {
-    contractAddress: mockEthereumAddress(),
+    contractAddress: mockEvmAddress(),
     chainId: 1,
     contractType: NftContractType.Erc721,
     tokenIds: ['0x1', '0x2', '0x3'],
@@ -420,7 +418,7 @@ export function mockAddressOwnershipCriterion(
   overrides?: Partial<AddressOwnershipCriterion>,
 ): AddressOwnershipCriterion {
   return {
-    address: mockEthereumAddress(),
+    address: mockEvmAddress(),
     ...overrides,
     type: DecryptionCriteriaType.ADDRESS_OWNERSHIP,
   };

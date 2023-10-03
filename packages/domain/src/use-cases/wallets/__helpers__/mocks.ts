@@ -1,5 +1,5 @@
-import { Amount, Erc20, EthereumAddress, Result } from '@lens-protocol/shared-kernel';
-import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
+import { Amount, Erc20, EvmAddress, Result } from '@lens-protocol/shared-kernel';
+import { mockDaiAmount, mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
@@ -67,7 +67,7 @@ export function mockITokenGateway<T extends Erc20>({
 }: {
   owner: Wallet;
   asset: T;
-  spender: EthereumAddress;
+  spender: EvmAddress;
   allowance: Amount<T>;
 }): ITokenGateway {
   const gateway = mock<ITokenGateway>();
@@ -84,7 +84,7 @@ export function mockTokenAvailabilityRequest(
 ): TokenAvailabilityRequest {
   return {
     amount: mockDaiAmount(1),
-    spender: mockEthereumAddress(),
+    spender: mockEvmAddress(),
     ...override,
   };
 }
@@ -94,7 +94,7 @@ export function mockTokenAllowanceRequest(
 ): TokenAllowanceRequest {
   return {
     amount: mockDaiAmount(1),
-    spender: mockEthereumAddress(),
+    spender: mockEvmAddress(),
     limit: TokenAllowanceLimit.EXACT,
     ...override,
     kind: TransactionKind.APPROVE_MODULE,
@@ -137,7 +137,7 @@ export function mockWalletLoginRequest(
   overrides?: Partial<WalletLoginRequest>,
 ): WalletLoginRequest {
   return {
-    address: mockEthereumAddress(),
+    address: mockEvmAddress(),
     ...overrides,
   };
 }

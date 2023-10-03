@@ -44,7 +44,7 @@ export type CreateOnchainSetProfileMetadataBroadcastItemResultFragment = {
   typedData: {
     types: { SetProfileMetadataURI: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string; profileId: string; metadataURI: string };
+    value: { nonce: number; deadline: number; profileId: string; metadataURI: string };
   };
 };
 
@@ -55,8 +55,8 @@ export type CreateChangeProfileManagersBroadcastItemResultFragment = {
     types: { ChangeDelegatedExecutorsConfig: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       delegatorProfileId: string;
       delegatedExecutors: Array<string>;
       approvals: Array<boolean>;
@@ -73,8 +73,8 @@ export type CreateBlockProfilesBroadcastItemResultFragment = {
     types: { SetBlockStatus: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       byProfileId: string;
       idsOfProfilesToSetBlockStatus: Array<string>;
       blockStatus: Array<boolean>;
@@ -89,8 +89,8 @@ export type CreateUnblockProfilesBroadcastItemResultFragment = {
     types: { SetBlockStatus: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       byProfileId: string;
       idsOfProfilesToSetBlockStatus: Array<string>;
       blockStatus: Array<boolean>;
@@ -105,8 +105,8 @@ export type CreateFollowBroadcastItemResultFragment = {
     types: { Follow: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       followerProfileId: string;
       idsOfProfilesToFollow: Array<string>;
       followTokenIds: Array<string>;
@@ -122,8 +122,8 @@ export type CreateUnfollowBroadcastItemResultFragment = {
     types: { Unfollow: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       unfollowerProfileId: string;
       idsOfProfilesToUnfollow: Array<string>;
     };
@@ -137,8 +137,8 @@ export type CreateSetFollowModuleBroadcastItemResultFragment = {
     types: { SetFollowModule: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       profileId: string;
       followModule: string;
       followModuleInitData: string;
@@ -152,7 +152,7 @@ export type CreateHandleLinkToProfileBroadcastItemResultFragment = {
   typedData: {
     types: { Link: Array<Eip712TypedDataFieldFragment> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string; profileId: string; handleId: string };
+    value: { nonce: number; deadline: number; profileId: string; handleId: string };
   };
 };
 
@@ -162,7 +162,7 @@ export type CreateHandleUnlinkFromProfileBroadcastItemResultFragment = {
   typedData: {
     types: { Unlink: Array<Eip712TypedDataFieldFragment> };
     domain: Eip712TypedDataDomainFragment;
-    value: { nonce: string; deadline: string; profileId: string; handleId: string };
+    value: { nonce: number; deadline: number; profileId: string; handleId: string };
   };
 };
 
@@ -261,6 +261,22 @@ export type WhoActedOnPublicationQueryVariables = Types.Exact<{
 
 export type WhoActedOnPublicationQuery = {
   result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
+};
+
+export type ProfileActionHistoryFragment = {
+  id: number;
+  actionType: Types.ProfileActionHistoryType;
+  who: string;
+  txHash: string | null;
+  actionedOn: string;
+};
+
+export type ProfileActionHistoryQueryVariables = Types.Exact<{
+  request: Types.ProfileActionHistoryRequest;
+}>;
+
+export type ProfileActionHistoryQuery = {
+  result: { items: Array<ProfileActionHistoryFragment>; pageInfo: PaginatedResultInfoFragment };
 };
 
 export type ClaimProfileMutationVariables = Types.Exact<{
@@ -420,6 +436,7 @@ export type HandleUnlinkFromProfileMutation = {
 
 export type CreateHandleLinkToProfileTypedDataMutationVariables = Types.Exact<{
   request: Types.HandleLinkToProfileRequest;
+  options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
 export type CreateHandleLinkToProfileTypedDataMutation = {
@@ -428,6 +445,7 @@ export type CreateHandleLinkToProfileTypedDataMutation = {
 
 export type CreateHandleUnlinkFromProfileTypedDataMutationVariables = Types.Exact<{
   request: Types.HandleUnlinkFromProfileRequest;
+  options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
 export type CreateHandleUnlinkFromProfileTypedDataMutation = {
@@ -668,6 +686,15 @@ export const CreateHandleUnlinkFromProfileBroadcastItemResultFragmentDoc = gql`
   ${Eip712TypedDataFieldFragmentDoc}
   ${Eip712TypedDataDomainFragmentDoc}
 `;
+export const ProfileActionHistoryFragmentDoc = gql`
+  fragment ProfileActionHistory on ProfileActionHistory {
+    id
+    actionType
+    who
+    txHash
+    actionedOn
+  }
+`;
 export const ProfileDocument = gql`
   query Profile(
     $request: ProfileRequest!
@@ -821,6 +848,20 @@ export const WhoActedOnPublicationDocument = gql`
     }
   }
   ${ProfileFragmentDoc}
+  ${PaginatedResultInfoFragmentDoc}
+`;
+export const ProfileActionHistoryDocument = gql`
+  query ProfileActionHistory($request: ProfileActionHistoryRequest!) {
+    result: profileActionHistory(request: $request) {
+      items {
+        ...ProfileActionHistory
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${ProfileActionHistoryFragmentDoc}
   ${PaginatedResultInfoFragmentDoc}
 `;
 export const ClaimProfileDocument = gql`
@@ -1044,16 +1085,22 @@ export const HandleUnlinkFromProfileDocument = gql`
   ${LensProfileManagerRelayErrorFragmentDoc}
 `;
 export const CreateHandleLinkToProfileTypedDataDocument = gql`
-  mutation CreateHandleLinkToProfileTypedData($request: HandleLinkToProfileRequest!) {
-    result: createHandleLinkToProfileTypedData(request: $request) {
+  mutation CreateHandleLinkToProfileTypedData(
+    $request: HandleLinkToProfileRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createHandleLinkToProfileTypedData(request: $request, options: $options) {
       ...CreateHandleLinkToProfileBroadcastItemResult
     }
   }
   ${CreateHandleLinkToProfileBroadcastItemResultFragmentDoc}
 `;
 export const CreateHandleUnlinkFromProfileTypedDataDocument = gql`
-  mutation CreateHandleUnlinkFromProfileTypedData($request: HandleUnlinkFromProfileRequest!) {
-    result: createHandleUnlinkFromProfileTypedData(request: $request) {
+  mutation CreateHandleUnlinkFromProfileTypedData(
+    $request: HandleUnlinkFromProfileRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createHandleUnlinkFromProfileTypedData(request: $request, options: $options) {
       ...CreateHandleUnlinkFromProfileBroadcastItemResult
     }
   }
@@ -1075,6 +1122,7 @@ const FollowingDocumentString = print(FollowingDocument);
 const FollowersDocumentString = print(FollowersDocument);
 const MutualFollowersDocumentString = print(MutualFollowersDocument);
 const WhoActedOnPublicationDocumentString = print(WhoActedOnPublicationDocument);
+const ProfileActionHistoryDocumentString = print(ProfileActionHistoryDocument);
 const ClaimProfileDocumentString = print(ClaimProfileDocument);
 const CreateProfileWithHandleDocumentString = print(CreateProfileWithHandleDocument);
 const AddProfileInterestsDocumentString = print(AddProfileInterestsDocument);
@@ -1238,6 +1286,26 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'WhoActedOnPublication',
+        'query',
+      );
+    },
+    ProfileActionHistory(
+      variables: ProfileActionHistoryQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: ProfileActionHistoryQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ProfileActionHistoryQuery>(
+            ProfileActionHistoryDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'ProfileActionHistory',
         'query',
       );
     },

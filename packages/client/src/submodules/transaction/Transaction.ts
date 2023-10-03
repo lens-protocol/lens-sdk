@@ -159,8 +159,9 @@ export class Transaction {
   /**
    * Poll the transaction status until it has been completed.
    *
-   * @param txId - transaction id
+   * @param request - Request object for the query
    * @returns The transaction status
+   * @throws {@link TransactionPollingError} if the transaction is not completed within 60s
    *
    * @example
    * ```ts

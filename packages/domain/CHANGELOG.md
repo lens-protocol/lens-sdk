@@ -1,5 +1,16 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.0
+
+### Minor Changes
+
+- 731ff1d0: Added support for Lens Protocol v2
+
+### Patch Changes
+
+- Updated dependencies [731ff1d0]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.0
+
 ## 0.10.1
 
 ### Patch Changes

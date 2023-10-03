@@ -3,7 +3,7 @@ import { utils } from 'ethers';
 import { Amount, Denomination } from '../Amount';
 import { erc20, Erc20 } from '../Asset';
 import { ChainType } from '../ChainType';
-import { EthereumAddress } from '../types';
+import { EvmAddress } from '../types';
 
 const genRanHex = (size: number) =>
   [...Array<string>(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
@@ -16,7 +16,7 @@ export function mockUint256HexString() {
   return mock32BytesHexString();
 }
 
-export function mockEthereumAddress(): EthereumAddress {
+export function mockEvmAddress(): EvmAddress {
   return utils.getAddress(`0x${genRanHex(20 * 2)}`);
 }
 

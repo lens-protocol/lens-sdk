@@ -1,10 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { ChainType, Result } from '@lens-protocol/shared-kernel';
-import {
-  mockEthereumAddress,
-  mockDaiAmount,
-  mockUsdcAmount,
-} from '@lens-protocol/shared-kernel/mocks';
+import { mockEvmAddress, mockDaiAmount, mockUsdcAmount } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
@@ -79,7 +75,7 @@ export function mockChargeFollowConfig(
 ): ChargeFollowConfig {
   return {
     amount: mockUsdcAmount(42),
-    recipient: mockEthereumAddress(),
+    recipient: mockEvmAddress(),
     ...overrides,
     type: FollowPolicyType.CHARGE,
   };
@@ -133,7 +129,7 @@ export function mockUnconstrainedFollowRequest(
   overrides?: Partial<UnconstrainedFollowRequest>,
 ): UnconstrainedFollowRequest {
   return {
-    followerAddress: mockEthereumAddress(),
+    followerAddress: mockEvmAddress(),
     profileId: mockProfileId(),
     ...overrides,
     kind: TransactionKind.FOLLOW_PROFILES,
@@ -142,12 +138,12 @@ export function mockUnconstrainedFollowRequest(
 
 export function mockPaidFollowRequest(): PaidFollowRequest {
   return {
-    followerAddress: mockEthereumAddress(),
+    followerAddress: mockEvmAddress(),
     profileId: mockProfileId(),
     fee: {
       amount: mockDaiAmount(1, ChainType.POLYGON),
-      contractAddress: mockEthereumAddress(),
-      recipient: mockEthereumAddress(),
+      contractAddress: mockEvmAddress(),
+      recipient: mockEvmAddress(),
     },
     kind: TransactionKind.FOLLOW_PROFILES,
   };
@@ -155,7 +151,7 @@ export function mockPaidFollowRequest(): PaidFollowRequest {
 
 export function mockProfileOwnerFollowRequest(): ProfileOwnerFollowRequest {
   return {
-    followerAddress: mockEthereumAddress(),
+    followerAddress: mockEvmAddress(),
     profileId: mockProfileId(),
     followerProfileId: mockProfileId(),
     kind: TransactionKind.FOLLOW_PROFILES,
@@ -172,9 +168,9 @@ export function mockUnfollowRequest(overrides?: Partial<UnfollowRequest>): Unfol
 
 export function mockProveNftOwnershipRequest(): ProveNftOwnershipRequest {
   return {
-    contractAddress: mockEthereumAddress(),
+    contractAddress: mockEvmAddress(),
     chainId: faker.datatype.number(),
-    ownerAddress: mockEthereumAddress(),
+    ownerAddress: mockEvmAddress(),
     tokenId: faker.datatype.uuid(),
   };
 }

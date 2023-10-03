@@ -1,4 +1,4 @@
-import { Amount, Erc20, EthereumAddress, failure } from '@lens-protocol/shared-kernel';
+import { Amount, Erc20, EvmAddress, failure } from '@lens-protocol/shared-kernel';
 
 import {
   TransactionKind,
@@ -19,7 +19,7 @@ import {
 export type FollowRequestFee = {
   amount: Amount<Erc20>;
   contractAddress: string;
-  recipient: EthereumAddress;
+  recipient: EvmAddress;
 };
 
 export type UnconstrainedFollowRequest = {

@@ -1,4 +1,4 @@
-import { EthereumAddress, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { EvmAddress, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import {
   ICredentials,
@@ -32,7 +32,7 @@ export interface ICredentialsWriter {
 }
 
 export type WalletLoginRequest = {
-  address: EthereumAddress;
+  address: EvmAddress;
   handle?: string;
 };
 

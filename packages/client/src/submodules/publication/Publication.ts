@@ -182,7 +182,7 @@ export class Publication {
   }
 
   /**
-   * Validate a publication's metadata before creating it
+   * Validate a publication metadata before creating it
    *
    * @param request - Request object for the query
    * @returns Validation result
@@ -209,7 +209,7 @@ export class Publication {
   }
 
   /**
-   * Refresh a publication's metadata stored by the API
+   * Refresh a publication metadata stored by the API
    *
    * @param request - Request object for the mutation
    * @returns Refresh mutation result
@@ -287,7 +287,7 @@ export class Publication {
   }
 
   /**
-   * Create a post onchain.
+   * Create a post onchain using Profile Manager. Profile has to have a Profile Manager enabled.
    *
    * ⚠️ Requires authenticated LensClient.
    *
@@ -314,7 +314,7 @@ export class Publication {
   }
 
   /**
-   * Create a comment onchain.
+   * Create a comment onchain using Profile Manager. Profile has to have a Profile Manager enabled.
    *
    * ⚠️ Requires authenticated LensClient.
    *
@@ -342,7 +342,7 @@ export class Publication {
   }
 
   /**
-   * Create a mirror onchain.
+   * Create a mirror onchain using Profile Manager. Profile has to have a Profile Manager enabled.
    *
    * ⚠️ Requires authenticated LensClient.
    *
@@ -369,7 +369,7 @@ export class Publication {
   }
 
   /**
-   * Create a quote onchain.
+   * Create a quote onchain using Profile Manager. Profile has to have a Profile Manager enabled.
    *
    * ⚠️ Requires authenticated LensClient.
    *
@@ -803,7 +803,7 @@ export class Publication {
   }
 
   /**
-   * Collect a publication.
+   * Collect a publication using Profile Manager. Profile has to have a Profile Manager enabled.
    *
    * ⚠️ Requires authenticated LensClient.
    *

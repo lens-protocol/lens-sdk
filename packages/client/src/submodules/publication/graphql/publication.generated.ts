@@ -100,8 +100,8 @@ export type CreateOnchainPostBroadcastItemResultFragment = {
     types: { Post: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       profileId: string;
       contentURI: string;
       actionModules: Array<string>;
@@ -119,8 +119,8 @@ export type CreateOnchainCommentBroadcastItemResultFragment = {
     types: { Comment: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       profileId: string;
       contentURI: string;
       pointedProfileId: string;
@@ -143,8 +143,8 @@ export type CreateOnchainMirrorBroadcastItemResultFragment = {
     types: { Mirror: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       profileId: string;
       metadataURI: string;
       pointedProfileId: string;
@@ -163,8 +163,8 @@ export type CreateOnchainQuoteBroadcastItemResultFragment = {
     types: { Quote: Array<Eip712TypedDataFieldFragment> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       profileId: string;
       contentURI: string;
       pointedProfileId: string;
@@ -187,8 +187,8 @@ export type CreateMomokaPostBroadcastItemResultFragment = {
     types: { Post: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       profileId: string;
       contentURI: string;
       actionModules: Array<string>;
@@ -206,8 +206,8 @@ export type CreateMomokaCommentBroadcastItemResultFragment = {
     types: { Comment: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       profileId: string;
       contentURI: string;
       pointedProfileId: string;
@@ -230,8 +230,8 @@ export type CreateMomokaMirrorBroadcastItemResultFragment = {
     types: { Mirror: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       profileId: string;
       metadataURI: string;
       pointedProfileId: string;
@@ -250,8 +250,8 @@ export type CreateMomokaQuoteBroadcastItemResultFragment = {
     types: { Quote: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomainFragment;
     value: {
-      nonce: string;
-      deadline: string;
+      nonce: number;
+      deadline: number;
       profileId: string;
       contentURI: string;
       pointedProfileId: string;

@@ -8,7 +8,7 @@ export * from './consts/errors';
 // types
 export type {
   Cast,
-  EthereumAddress,
+  EvmAddress,
   Failure,
   IEquatableError,
   InvariantError,
@@ -114,6 +114,7 @@ export type {
   RelayErrorFragment,
   RelaySuccessFragment,
   RevertFollowModuleSettingsFragment,
+  RootConditionFragment,
   SimpleCollectOpenActionSettingsFragment,
   SpaceMetadataV3Fragment,
   StoryMetadataV3Fragment,
@@ -182,6 +183,7 @@ export type {
   PaginatedOffsetRequest,
   PoapEventQueryRequest,
   PoapHoldersQueryRequest,
+  ProfileActionHistoryRequest,
   ProfileInterestsRequest,
   ProfileManagersRequest,
   ProfileRecommendationsRequest,
@@ -307,6 +309,7 @@ export {
   OpenActionCategoryType,
   OpenActionModuleType,
   PoapTokenLayerType,
+  ProfileActionHistoryType,
   ProfileInterestTypes,
   PublicationContentWarningType,
   PublicationMetadataLicenseType,

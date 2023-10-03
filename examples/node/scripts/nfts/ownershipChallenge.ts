@@ -1,0 +1,24 @@
+import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
+import { setupWallet } from '../shared/setupWallet';
+
+async function main() {
+  const wallet = setupWallet();
+  const client = await getAuthenticatedClientFromEthersWallet(wallet);
+
+  const result = await client.nfts.ownershipChallenge({
+    for: wallet.address,
+    nfts: [
+      {
+        contract: {
+          address: '0x1234123412341234123412341234123412341234', // an NFT that wallet owns
+          chainId: 5,
+        },
+        tokenId: '1',
+      },
+    ],
+  });
+
+  console.log('Result: ', result.unwrap());
+}
+
+main();

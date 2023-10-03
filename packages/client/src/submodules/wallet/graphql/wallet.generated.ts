@@ -48,8 +48,8 @@ export type ProfilesManagedQuery = {
 };
 
 export type UserSigNoncesFragment = {
-  lensHubOnchainSigNonce: string;
-  lensTokenHandleRegistryOnchainSigNonce: string;
+  lensHubOnchainSigNonce: number;
+  lensTokenHandleRegistryOnchainSigNonce: number;
 };
 
 export type UserSigNoncesQueryVariables = Types.Exact<{ [key: string]: never }>;

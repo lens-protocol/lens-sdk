@@ -38,6 +38,16 @@ export class Momoka {
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
   }
 
+  /**
+   * Fetch momoka submitters
+   *
+   * @returns Submitters wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.momoka.submitters();
+   * ```
+   */
   async submitters(): Promise<PaginatedResult<MomokaSubmitterResultFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.MomokaSubmitters(currRequest);
@@ -46,18 +56,50 @@ export class Momoka {
     }, {});
   }
 
+  /**
+   * Fetch momoka summary
+   *
+   * @returns Summary of momoka transactions
+   *
+   * @example
+   * ```ts
+   * const result = await client.momoka.summary();
+   * ```
+   */
   async summary(): Promise<{ totalTransactions: number }> {
     const result = await this.sdk.MomokaSummary(undefined);
     return result.data.result;
   }
 
+  /**
+   * Fetch momoka transaction
+   *
+   * @param request - The request object
+   * @returns Momoka transaction
+   *
+   * @example
+   * ```ts
+   * const result = await client.momoka.transaction({ for: 'Go2-u7-11rykJn9nS7nNlQW4Bl2w0c3EOnn1_99Zltk' });
+   * ```
+   */
   async transaction(request: MomokaTransactionRequest): Promise<MomokaTransaction | null> {
     const result = await this.sdk.MomokaTransaction({ request });
     return result.data.result;
   }
 
+  /**
+   * Fetch momoka transactions
+   *
+   * @param request - The request object
+   * @returns Momoka transactions wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.momoka.transactions();
+   * ```
+   */
   async transactions(
-    request: MomokaTransactionsRequest,
+    request: MomokaTransactionsRequest = {},
   ): Promise<PaginatedResult<MomokaTransaction>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.momokaTransactions({

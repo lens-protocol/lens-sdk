@@ -1,4 +1,4 @@
-import { Amount, Erc20, EthereumAddress, Url } from '@lens-protocol/shared-kernel';
+import { Amount, Erc20, EvmAddress, Url } from '@lens-protocol/shared-kernel';
 
 import { AudioType, ImageType, VideoType } from './config';
 
@@ -132,7 +132,7 @@ export type NftMetadata = {
 };
 
 export type RecipientWithSplit = {
-  recipient: EthereumAddress;
+  recipient: EvmAddress;
   split: number;
 };
 
@@ -150,7 +150,7 @@ export type AaveChargeCollectPolicyConfig = {
   mirrorReward: number;
   collectLimit?: number;
 
-  recipient: EthereumAddress;
+  recipient: EvmAddress;
   depositToAave: true;
   endTimestamp?: number;
 };
@@ -163,8 +163,8 @@ export type VaultChargeCollectPolicyConfig = {
   mirrorReward: number;
   collectLimit?: number;
 
-  recipient: EthereumAddress;
-  vault: EthereumAddress;
+  recipient: EvmAddress;
+  vault: EvmAddress;
   endTimestamp?: number;
 };
 
@@ -187,7 +187,7 @@ export type SimpleChargeCollectPolicyConfig = {
   metadata: NftMetadata;
   mirrorReward: number;
   collectLimit?: number;
-  recipient: EthereumAddress;
+  recipient: EvmAddress;
   endTimestamp?: number;
   /**
    * If `true` it will set `endTimestamp` to the current timestamp + 24 hours.
