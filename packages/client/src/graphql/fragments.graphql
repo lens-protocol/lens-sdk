@@ -105,24 +105,6 @@ fragment MetadataStringAttribute on MetadataStringAttribute {
   value
 }
 
-fragment MetadataAttribute on MetadataAttribute {
-  ... on MetadataBooleanAttribute {
-    ...MetadataBooleanAttribute
-  }
-  ... on MetadataDateAttribute {
-    ...MetadataDateAttribute
-  }
-  ... on MetadataNumberAttribute {
-    ...MetadataNumberAttribute
-  }
-  ... on MetadataJSONAttribute {
-    ...MetadataJSONAttribute
-  }
-  ... on MetadataStringAttribute {
-    ...MetadataStringAttribute
-  }
-}
-
 # media
 fragment Image on Image {
   __typename
@@ -309,7 +291,21 @@ fragment Profile on Profile {
       ...ProfileCoverSet
     }
     attributes {
-      ...MetadataAttribute
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
   }
   handle
@@ -831,7 +827,21 @@ fragment VideoMetadataV3 on VideoMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...MetadataAttribute
+    ... on MetadataBooleanAttribute {
+      ...MetadataBooleanAttribute
+    }
+    ... on MetadataDateAttribute {
+      ...MetadataDateAttribute
+    }
+    ... on MetadataNumberAttribute {
+      ...MetadataNumberAttribute
+    }
+    ... on MetadataJSONAttribute {
+      ...MetadataJSONAttribute
+    }
+    ... on MetadataStringAttribute {
+      ...MetadataStringAttribute
+    }
   }
   encryptedWith {
     ... on PublicationMetadataLitEncryption {
@@ -870,7 +880,21 @@ fragment AudioMetadataV3 on AudioMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...MetadataAttribute
+    ... on MetadataBooleanAttribute {
+      ...MetadataBooleanAttribute
+    }
+    ... on MetadataDateAttribute {
+      ...MetadataDateAttribute
+    }
+    ... on MetadataNumberAttribute {
+      ...MetadataNumberAttribute
+    }
+    ... on MetadataJSONAttribute {
+      ...MetadataJSONAttribute
+    }
+    ... on MetadataStringAttribute {
+      ...MetadataStringAttribute
+    }
   }
   encryptedWith {
     ... on PublicationMetadataLitEncryption {
@@ -908,7 +932,21 @@ fragment ImageMetadataV3 on ImageMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...MetadataAttribute
+    ... on MetadataBooleanAttribute {
+      ...MetadataBooleanAttribute
+    }
+    ... on MetadataDateAttribute {
+      ...MetadataDateAttribute
+    }
+    ... on MetadataNumberAttribute {
+      ...MetadataNumberAttribute
+    }
+    ... on MetadataJSONAttribute {
+      ...MetadataJSONAttribute
+    }
+    ... on MetadataStringAttribute {
+      ...MetadataStringAttribute
+    }
   }
   encryptedWith {
     ... on PublicationMetadataLitEncryption {
@@ -946,7 +984,21 @@ fragment ArticleMetadataV3 on ArticleMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...MetadataAttribute
+    ... on MetadataBooleanAttribute {
+      ...MetadataBooleanAttribute
+    }
+    ... on MetadataDateAttribute {
+      ...MetadataDateAttribute
+    }
+    ... on MetadataNumberAttribute {
+      ...MetadataNumberAttribute
+    }
+    ... on MetadataJSONAttribute {
+      ...MetadataJSONAttribute
+    }
+    ... on MetadataStringAttribute {
+      ...MetadataStringAttribute
+    }
   }
   encryptedWith {
     ... on PublicationMetadataLitEncryption {
@@ -981,7 +1033,21 @@ fragment EventMetadataV3 on EventMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...MetadataAttribute
+    ... on MetadataBooleanAttribute {
+      ...MetadataBooleanAttribute
+    }
+    ... on MetadataDateAttribute {
+      ...MetadataDateAttribute
+    }
+    ... on MetadataNumberAttribute {
+      ...MetadataNumberAttribute
+    }
+    ... on MetadataJSONAttribute {
+      ...MetadataJSONAttribute
+    }
+    ... on MetadataStringAttribute {
+      ...MetadataStringAttribute
+    }
   }
   encryptedWith {
     ... on PublicationMetadataLitEncryption {
@@ -1021,7 +1087,21 @@ fragment LinkMetadataV3 on LinkMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...MetadataAttribute
+    ... on MetadataBooleanAttribute {
+      ...MetadataBooleanAttribute
+    }
+    ... on MetadataDateAttribute {
+      ...MetadataDateAttribute
+    }
+    ... on MetadataNumberAttribute {
+      ...MetadataNumberAttribute
+    }
+    ... on MetadataJSONAttribute {
+      ...MetadataJSONAttribute
+    }
+    ... on MetadataStringAttribute {
+      ...MetadataStringAttribute
+    }
   }
   encryptedWith {
     ... on PublicationMetadataLitEncryption {
@@ -1056,7 +1136,21 @@ fragment EmbedMetadataV3 on EmbedMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...MetadataAttribute
+    ... on MetadataBooleanAttribute {
+      ...MetadataBooleanAttribute
+    }
+    ... on MetadataDateAttribute {
+      ...MetadataDateAttribute
+    }
+    ... on MetadataNumberAttribute {
+      ...MetadataNumberAttribute
+    }
+    ... on MetadataJSONAttribute {
+      ...MetadataJSONAttribute
+    }
+    ... on MetadataStringAttribute {
+      ...MetadataStringAttribute
+    }
   }
   encryptedWith {
     ... on PublicationMetadataLitEncryption {
@@ -1091,7 +1185,21 @@ fragment CheckingInMetadataV3 on CheckingInMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...MetadataAttribute
+    ... on MetadataBooleanAttribute {
+      ...MetadataBooleanAttribute
+    }
+    ... on MetadataDateAttribute {
+      ...MetadataDateAttribute
+    }
+    ... on MetadataNumberAttribute {
+      ...MetadataNumberAttribute
+    }
+    ... on MetadataJSONAttribute {
+      ...MetadataJSONAttribute
+    }
+    ... on MetadataStringAttribute {
+      ...MetadataStringAttribute
+    }
   }
   encryptedWith {
     ... on PublicationMetadataLitEncryption {
@@ -1129,7 +1237,21 @@ fragment TextOnlyMetadataV3 on TextOnlyMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...MetadataAttribute
+    ... on MetadataBooleanAttribute {
+      ...MetadataBooleanAttribute
+    }
+    ... on MetadataDateAttribute {
+      ...MetadataDateAttribute
+    }
+    ... on MetadataNumberAttribute {
+      ...MetadataNumberAttribute
+    }
+    ... on MetadataJSONAttribute {
+      ...MetadataJSONAttribute
+    }
+    ... on MetadataStringAttribute {
+      ...MetadataStringAttribute
+    }
   }
   encryptedWith {
     ... on PublicationMetadataLitEncryption {
@@ -1161,7 +1283,21 @@ fragment ThreeDMetadataV3 on ThreeDMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...MetadataAttribute
+    ... on MetadataBooleanAttribute {
+      ...MetadataBooleanAttribute
+    }
+    ... on MetadataDateAttribute {
+      ...MetadataDateAttribute
+    }
+    ... on MetadataNumberAttribute {
+      ...MetadataNumberAttribute
+    }
+    ... on MetadataJSONAttribute {
+      ...MetadataJSONAttribute
+    }
+    ... on MetadataStringAttribute {
+      ...MetadataStringAttribute
+    }
   }
   encryptedWith {
     ... on PublicationMetadataLitEncryption {
@@ -1198,7 +1334,21 @@ fragment StoryMetadataV3 on StoryMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...MetadataAttribute
+    ... on MetadataBooleanAttribute {
+      ...MetadataBooleanAttribute
+    }
+    ... on MetadataDateAttribute {
+      ...MetadataDateAttribute
+    }
+    ... on MetadataNumberAttribute {
+      ...MetadataNumberAttribute
+    }
+    ... on MetadataJSONAttribute {
+      ...MetadataJSONAttribute
+    }
+    ... on MetadataStringAttribute {
+      ...MetadataStringAttribute
+    }
   }
   encryptedWith {
     ... on PublicationMetadataLitEncryption {
@@ -1232,7 +1382,21 @@ fragment TransactionMetadataV3 on TransactionMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...MetadataAttribute
+    ... on MetadataBooleanAttribute {
+      ...MetadataBooleanAttribute
+    }
+    ... on MetadataDateAttribute {
+      ...MetadataDateAttribute
+    }
+    ... on MetadataNumberAttribute {
+      ...MetadataNumberAttribute
+    }
+    ... on MetadataJSONAttribute {
+      ...MetadataJSONAttribute
+    }
+    ... on MetadataStringAttribute {
+      ...MetadataStringAttribute
+    }
   }
   encryptedWith {
     ... on PublicationMetadataLitEncryption {
@@ -1269,7 +1433,21 @@ fragment MintMetadataV3 on MintMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...MetadataAttribute
+    ... on MetadataBooleanAttribute {
+      ...MetadataBooleanAttribute
+    }
+    ... on MetadataDateAttribute {
+      ...MetadataDateAttribute
+    }
+    ... on MetadataNumberAttribute {
+      ...MetadataNumberAttribute
+    }
+    ... on MetadataJSONAttribute {
+      ...MetadataJSONAttribute
+    }
+    ... on MetadataStringAttribute {
+      ...MetadataStringAttribute
+    }
   }
   encryptedWith {
     ... on PublicationMetadataLitEncryption {
@@ -1304,7 +1482,21 @@ fragment SpaceMetadataV3 on SpaceMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...MetadataAttribute
+    ... on MetadataBooleanAttribute {
+      ...MetadataBooleanAttribute
+    }
+    ... on MetadataDateAttribute {
+      ...MetadataDateAttribute
+    }
+    ... on MetadataNumberAttribute {
+      ...MetadataNumberAttribute
+    }
+    ... on MetadataJSONAttribute {
+      ...MetadataJSONAttribute
+    }
+    ... on MetadataStringAttribute {
+      ...MetadataStringAttribute
+    }
   }
   encryptedWith {
     ... on PublicationMetadataLitEncryption {
@@ -1341,7 +1533,21 @@ fragment LiveStreamMetadataV3 on LiveStreamMetadataV3 {
     ...MarketplaceMetadata
   }
   attributes {
-    ...MetadataAttribute
+    ... on MetadataBooleanAttribute {
+      ...MetadataBooleanAttribute
+    }
+    ... on MetadataDateAttribute {
+      ...MetadataDateAttribute
+    }
+    ... on MetadataNumberAttribute {
+      ...MetadataNumberAttribute
+    }
+    ... on MetadataJSONAttribute {
+      ...MetadataJSONAttribute
+    }
+    ... on MetadataStringAttribute {
+      ...MetadataStringAttribute
+    }
   }
   encryptedWith {
     ... on PublicationMetadataLitEncryption {

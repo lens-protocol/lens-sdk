@@ -1,4 +1,11 @@
 import { EncryptedFragmentOf } from '@lens-protocol/gated-content';
+import {
+  MetadataBooleanAttribute,
+  MetadataDateAttribute,
+  MetadataJsonAttribute,
+  MetadataNumberAttribute,
+  MetadataStringAttribute,
+} from '@lens-protocol/gated-content/src/graphql';
 
 import {
   CommentFragment,
@@ -46,6 +53,16 @@ export type AnyPublicationMetadataFragment =
   | ThreeDMetadataV3Fragment
   | TransactionMetadataV3Fragment
   | VideoMetadataV3Fragment;
+
+/**
+ * Any metadata attribute
+ */
+export type AnyMetadataAttribute =
+  | MetadataBooleanAttribute
+  | MetadataDateAttribute
+  | MetadataNumberAttribute
+  | MetadataJsonAttribute
+  | MetadataStringAttribute;
 
 /**
  * Any encrypted publication metadata regardless of its type, or capabilities

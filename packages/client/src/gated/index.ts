@@ -190,9 +190,16 @@
  *
  * @module Gated
  */
+import { LensClientConfig, LensClient } from './LensClient';
 
+export * from '../index';
 export * from './Gated';
-export * from './LensClient';
+
+// NOTE: local exports takes priority over package exports, basically overriding the LensClient and
+// see https://github.com/systemjs/systemjs/issues/1031#issuecomment-171262430
+export type { LensClientConfig };
+export { LensClient };
+
 export { isEncryptedPublicationMetadata } from '@lens-protocol/gated-content';
 export type {
   AuthenticationConfig,

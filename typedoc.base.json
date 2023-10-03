@@ -8,6 +8,5 @@
   "excludeProtected": true,
   "disableSources": true,
   "gitRevision": "lens-v2",
-  "hideGenerator": true,
-  "intentionallyNotExported": []
+  "hideGenerator": true
 }

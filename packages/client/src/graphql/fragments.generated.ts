@@ -84,23 +84,6 @@ export type MetadataStringAttributeFragment = {
   value: string;
 };
 
-export type MetadataAttribute_MetadataBooleanAttribute_Fragment = MetadataBooleanAttributeFragment;
-
-export type MetadataAttribute_MetadataDateAttribute_Fragment = MetadataDateAttributeFragment;
-
-export type MetadataAttribute_MetadataJsonAttribute_Fragment = MetadataJsonAttributeFragment;
-
-export type MetadataAttribute_MetadataNumberAttribute_Fragment = MetadataNumberAttributeFragment;
-
-export type MetadataAttribute_MetadataStringAttribute_Fragment = MetadataStringAttributeFragment;
-
-export type MetadataAttributeFragment =
-  | MetadataAttribute_MetadataBooleanAttribute_Fragment
-  | MetadataAttribute_MetadataDateAttribute_Fragment
-  | MetadataAttribute_MetadataJsonAttribute_Fragment
-  | MetadataAttribute_MetadataNumberAttribute_Fragment
-  | MetadataAttribute_MetadataStringAttribute_Fragment;
-
 export type ImageFragment = {
   __typename: 'Image';
   uri: string;
@@ -218,11 +201,11 @@ export type ProfileFragment = {
     picture: ProfilePictureSetFragment | NftImageFragment | null;
     coverPicture: ProfileCoverSetFragment | null;
     attributes: Array<
-      | MetadataAttribute_MetadataBooleanAttribute_Fragment
-      | MetadataAttribute_MetadataDateAttribute_Fragment
-      | MetadataAttribute_MetadataJsonAttribute_Fragment
-      | MetadataAttribute_MetadataNumberAttribute_Fragment
-      | MetadataAttribute_MetadataStringAttribute_Fragment
+      | MetadataBooleanAttributeFragment
+      | MetadataDateAttributeFragment
+      | MetadataJsonAttributeFragment
+      | MetadataNumberAttributeFragment
+      | MetadataStringAttributeFragment
     > | null;
   } | null;
   invitedBy: { id: string } | null;
@@ -588,11 +571,11 @@ export type VideoMetadataV3Fragment = {
   content: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<
-    | MetadataAttribute_MetadataBooleanAttribute_Fragment
-    | MetadataAttribute_MetadataDateAttribute_Fragment
-    | MetadataAttribute_MetadataJsonAttribute_Fragment
-    | MetadataAttribute_MetadataNumberAttribute_Fragment
-    | MetadataAttribute_MetadataStringAttribute_Fragment
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
   > | null;
   encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   asset: PublicationMetadataMediaVideoFragment;
@@ -616,11 +599,11 @@ export type AudioMetadataV3Fragment = {
   content: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<
-    | MetadataAttribute_MetadataBooleanAttribute_Fragment
-    | MetadataAttribute_MetadataDateAttribute_Fragment
-    | MetadataAttribute_MetadataJsonAttribute_Fragment
-    | MetadataAttribute_MetadataNumberAttribute_Fragment
-    | MetadataAttribute_MetadataStringAttribute_Fragment
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
   > | null;
   encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   asset: PublicationMetadataMediaAudioFragment;
@@ -644,11 +627,11 @@ export type ImageMetadataV3Fragment = {
   content: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<
-    | MetadataAttribute_MetadataBooleanAttribute_Fragment
-    | MetadataAttribute_MetadataDateAttribute_Fragment
-    | MetadataAttribute_MetadataJsonAttribute_Fragment
-    | MetadataAttribute_MetadataNumberAttribute_Fragment
-    | MetadataAttribute_MetadataStringAttribute_Fragment
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
   > | null;
   encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   asset: PublicationMetadataMediaImageFragment;
@@ -672,11 +655,11 @@ export type ArticleMetadataV3Fragment = {
   content: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<
-    | MetadataAttribute_MetadataBooleanAttribute_Fragment
-    | MetadataAttribute_MetadataDateAttribute_Fragment
-    | MetadataAttribute_MetadataJsonAttribute_Fragment
-    | MetadataAttribute_MetadataNumberAttribute_Fragment
-    | MetadataAttribute_MetadataStringAttribute_Fragment
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
   > | null;
   encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   attachments: Array<
@@ -701,11 +684,11 @@ export type EventMetadataV3Fragment = {
   location: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<
-    | MetadataAttribute_MetadataBooleanAttribute_Fragment
-    | MetadataAttribute_MetadataDateAttribute_Fragment
-    | MetadataAttribute_MetadataJsonAttribute_Fragment
-    | MetadataAttribute_MetadataNumberAttribute_Fragment
-    | MetadataAttribute_MetadataStringAttribute_Fragment
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
   > | null;
   encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   geographic: GeoLocationFragment | null;
@@ -729,11 +712,11 @@ export type LinkMetadataV3Fragment = {
   sharingLink: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<
-    | MetadataAttribute_MetadataBooleanAttribute_Fragment
-    | MetadataAttribute_MetadataDateAttribute_Fragment
-    | MetadataAttribute_MetadataJsonAttribute_Fragment
-    | MetadataAttribute_MetadataNumberAttribute_Fragment
-    | MetadataAttribute_MetadataStringAttribute_Fragment
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
   > | null;
   encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   attachments: Array<
@@ -756,11 +739,11 @@ export type EmbedMetadataV3Fragment = {
   embed: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<
-    | MetadataAttribute_MetadataBooleanAttribute_Fragment
-    | MetadataAttribute_MetadataDateAttribute_Fragment
-    | MetadataAttribute_MetadataJsonAttribute_Fragment
-    | MetadataAttribute_MetadataNumberAttribute_Fragment
-    | MetadataAttribute_MetadataStringAttribute_Fragment
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
   > | null;
   encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   attachments: Array<
@@ -783,11 +766,11 @@ export type CheckingInMetadataV3Fragment = {
   location: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<
-    | MetadataAttribute_MetadataBooleanAttribute_Fragment
-    | MetadataAttribute_MetadataDateAttribute_Fragment
-    | MetadataAttribute_MetadataJsonAttribute_Fragment
-    | MetadataAttribute_MetadataNumberAttribute_Fragment
-    | MetadataAttribute_MetadataStringAttribute_Fragment
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
   > | null;
   encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   geographic: GeoLocationFragment | null;
@@ -810,11 +793,11 @@ export type TextOnlyMetadataV3Fragment = {
   content: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<
-    | MetadataAttribute_MetadataBooleanAttribute_Fragment
-    | MetadataAttribute_MetadataDateAttribute_Fragment
-    | MetadataAttribute_MetadataJsonAttribute_Fragment
-    | MetadataAttribute_MetadataNumberAttribute_Fragment
-    | MetadataAttribute_MetadataStringAttribute_Fragment
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
   > | null;
   encryptedWith: PublicationMetadataLitEncryptionFragment | null;
 };
@@ -840,11 +823,11 @@ export type ThreeDMetadataV3Fragment = {
   content: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<
-    | MetadataAttribute_MetadataBooleanAttribute_Fragment
-    | MetadataAttribute_MetadataDateAttribute_Fragment
-    | MetadataAttribute_MetadataJsonAttribute_Fragment
-    | MetadataAttribute_MetadataNumberAttribute_Fragment
-    | MetadataAttribute_MetadataStringAttribute_Fragment
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
   > | null;
   encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   assets: Array<ThreeDMetadataV3AssetFragment>;
@@ -867,11 +850,11 @@ export type StoryMetadataV3Fragment = {
   content: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<
-    | MetadataAttribute_MetadataBooleanAttribute_Fragment
-    | MetadataAttribute_MetadataDateAttribute_Fragment
-    | MetadataAttribute_MetadataJsonAttribute_Fragment
-    | MetadataAttribute_MetadataNumberAttribute_Fragment
-    | MetadataAttribute_MetadataStringAttribute_Fragment
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
   > | null;
   encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   asset:
@@ -895,11 +878,11 @@ export type TransactionMetadataV3Fragment = {
   chainId: number;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<
-    | MetadataAttribute_MetadataBooleanAttribute_Fragment
-    | MetadataAttribute_MetadataDateAttribute_Fragment
-    | MetadataAttribute_MetadataJsonAttribute_Fragment
-    | MetadataAttribute_MetadataNumberAttribute_Fragment
-    | MetadataAttribute_MetadataStringAttribute_Fragment
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
   > | null;
   encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   attachments: Array<
@@ -922,11 +905,11 @@ export type MintMetadataV3Fragment = {
   mintLink: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<
-    | MetadataAttribute_MetadataBooleanAttribute_Fragment
-    | MetadataAttribute_MetadataDateAttribute_Fragment
-    | MetadataAttribute_MetadataJsonAttribute_Fragment
-    | MetadataAttribute_MetadataNumberAttribute_Fragment
-    | MetadataAttribute_MetadataStringAttribute_Fragment
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
   > | null;
   encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   attachments: Array<
@@ -951,11 +934,11 @@ export type SpaceMetadataV3Fragment = {
   startsAt: string;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<
-    | MetadataAttribute_MetadataBooleanAttribute_Fragment
-    | MetadataAttribute_MetadataDateAttribute_Fragment
-    | MetadataAttribute_MetadataJsonAttribute_Fragment
-    | MetadataAttribute_MetadataNumberAttribute_Fragment
-    | MetadataAttribute_MetadataStringAttribute_Fragment
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
   > | null;
   encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   attachments: Array<
@@ -983,11 +966,11 @@ export type LiveStreamMetadataV3Fragment = {
   checkLiveAPI: string | null;
   marketplace: MarketplaceMetadataFragment | null;
   attributes: Array<
-    | MetadataAttribute_MetadataBooleanAttribute_Fragment
-    | MetadataAttribute_MetadataDateAttribute_Fragment
-    | MetadataAttribute_MetadataJsonAttribute_Fragment
-    | MetadataAttribute_MetadataNumberAttribute_Fragment
-    | MetadataAttribute_MetadataStringAttribute_Fragment
+    | MetadataBooleanAttributeFragment
+    | MetadataDateAttributeFragment
+    | MetadataJsonAttributeFragment
+    | MetadataNumberAttributeFragment
+    | MetadataStringAttributeFragment
   > | null;
   encryptedWith: PublicationMetadataLitEncryptionFragment | null;
   attachments: Array<
@@ -1420,30 +1403,6 @@ export const MetadataStringAttributeFragmentDoc = gql`
     value
   }
 `;
-export const MetadataAttributeFragmentDoc = gql`
-  fragment MetadataAttribute on MetadataAttribute {
-    ... on MetadataBooleanAttribute {
-      ...MetadataBooleanAttribute
-    }
-    ... on MetadataDateAttribute {
-      ...MetadataDateAttribute
-    }
-    ... on MetadataNumberAttribute {
-      ...MetadataNumberAttribute
-    }
-    ... on MetadataJSONAttribute {
-      ...MetadataJSONAttribute
-    }
-    ... on MetadataStringAttribute {
-      ...MetadataStringAttribute
-    }
-  }
-  ${MetadataBooleanAttributeFragmentDoc}
-  ${MetadataDateAttributeFragmentDoc}
-  ${MetadataNumberAttributeFragmentDoc}
-  ${MetadataJsonAttributeFragmentDoc}
-  ${MetadataStringAttributeFragmentDoc}
-`;
 export const ProfileStatsFragmentDoc = gql`
   fragment ProfileStats on ProfileStats {
     id
@@ -1540,7 +1499,21 @@ export const ProfileFragmentDoc = gql`
         ...ProfileCoverSet
       }
       attributes {
-        ...MetadataAttribute
+        ... on MetadataBooleanAttribute {
+          ...MetadataBooleanAttribute
+        }
+        ... on MetadataDateAttribute {
+          ...MetadataDateAttribute
+        }
+        ... on MetadataNumberAttribute {
+          ...MetadataNumberAttribute
+        }
+        ... on MetadataJSONAttribute {
+          ...MetadataJSONAttribute
+        }
+        ... on MetadataStringAttribute {
+          ...MetadataStringAttribute
+        }
       }
     }
     handle
@@ -1561,7 +1534,11 @@ export const ProfileFragmentDoc = gql`
   ${ProfilePictureSetFragmentDoc}
   ${NftImageFragmentDoc}
   ${ProfileCoverSetFragmentDoc}
-  ${MetadataAttributeFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
   ${ProfileStatsFragmentDoc}
 `;
 export const KnownCollectOpenActionResultFragmentDoc = gql`
@@ -1959,7 +1936,21 @@ export const AudioMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ...MetadataAttribute
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -1984,7 +1975,11 @@ export const AudioMetadataV3FragmentDoc = gql`
     content
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${MetadataAttributeFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
   ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaAudioFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
@@ -2004,7 +1999,21 @@ export const VideoMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ...MetadataAttribute
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -2030,7 +2039,11 @@ export const VideoMetadataV3FragmentDoc = gql`
     content
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${MetadataAttributeFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
   ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
@@ -2050,7 +2063,21 @@ export const ImageMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ...MetadataAttribute
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -2075,7 +2102,11 @@ export const ImageMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${MetadataAttributeFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
   ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
@@ -2095,7 +2126,21 @@ export const ArticleMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ...MetadataAttribute
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -2117,7 +2162,11 @@ export const ArticleMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${MetadataAttributeFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
   ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
@@ -2145,7 +2194,21 @@ export const EventMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ...MetadataAttribute
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -2172,7 +2235,11 @@ export const EventMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${MetadataAttributeFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
   ${PublicationMetadataLitEncryptionFragmentDoc}
   ${GeoLocationFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
@@ -2193,7 +2260,21 @@ export const LinkMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ...MetadataAttribute
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -2215,7 +2296,11 @@ export const LinkMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${MetadataAttributeFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
   ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
@@ -2235,7 +2320,21 @@ export const EmbedMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ...MetadataAttribute
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -2257,7 +2356,11 @@ export const EmbedMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${MetadataAttributeFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
   ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
@@ -2277,7 +2380,21 @@ export const CheckingInMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ...MetadataAttribute
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -2302,7 +2419,11 @@ export const CheckingInMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${MetadataAttributeFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
   ${PublicationMetadataLitEncryptionFragmentDoc}
   ${GeoLocationFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
@@ -2323,7 +2444,21 @@ export const TextOnlyMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ...MetadataAttribute
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -2333,7 +2468,11 @@ export const TextOnlyMetadataV3FragmentDoc = gql`
     content
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${MetadataAttributeFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
   ${PublicationMetadataLitEncryptionFragmentDoc}
 `;
 export const ThreeDMetadataV3AssetFragmentDoc = gql`
@@ -2360,7 +2499,21 @@ export const ThreeDMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ...MetadataAttribute
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -2384,7 +2537,11 @@ export const ThreeDMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${MetadataAttributeFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
   ${PublicationMetadataLitEncryptionFragmentDoc}
   ${ThreeDMetadataV3AssetFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
@@ -2405,7 +2562,21 @@ export const StoryMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ...MetadataAttribute
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -2426,7 +2597,11 @@ export const StoryMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${MetadataAttributeFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
   ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
@@ -2446,7 +2621,21 @@ export const TransactionMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ...MetadataAttribute
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -2470,7 +2659,11 @@ export const TransactionMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${MetadataAttributeFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
   ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
@@ -2490,7 +2683,21 @@ export const MintMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ...MetadataAttribute
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -2512,7 +2719,11 @@ export const MintMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${MetadataAttributeFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
   ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
@@ -2532,7 +2743,21 @@ export const SpaceMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ...MetadataAttribute
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -2556,7 +2781,11 @@ export const SpaceMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${MetadataAttributeFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
   ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
@@ -2576,7 +2805,21 @@ export const LiveStreamMetadataV3FragmentDoc = gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ...MetadataAttribute
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -2603,7 +2846,11 @@ export const LiveStreamMetadataV3FragmentDoc = gql`
     }
   }
   ${MarketplaceMetadataFragmentDoc}
-  ${MetadataAttributeFragmentDoc}
+  ${MetadataBooleanAttributeFragmentDoc}
+  ${MetadataDateAttributeFragmentDoc}
+  ${MetadataNumberAttributeFragmentDoc}
+  ${MetadataJsonAttributeFragmentDoc}
+  ${MetadataStringAttributeFragmentDoc}
   ${PublicationMetadataLitEncryptionFragmentDoc}
   ${PublicationMetadataMediaVideoFragmentDoc}
   ${PublicationMetadataMediaImageFragmentDoc}
