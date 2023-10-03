@@ -1,5 +1,17 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.7
+
+### Minor Changes
+
+- c043b1d2: **feat:** token-gated support for LIP-2 metadata spec
+
+### Patch Changes
+
+- 62a382db: **Added** profile action history as `profile.actionHistory()`
+- Updated dependencies [c043b1d2]
+  - @lens-protocol/gated-content@0.3.3-alpha.4
+
 ## 2.0.0-alpha.6
 
 ### Patch Changes

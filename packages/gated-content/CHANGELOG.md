@@ -1,5 +1,11 @@
 # @lens-protocol/gated-content
 
+## 0.3.3-alpha.4
+
+### Patch Changes
+
+- c043b1d2: **feat:** token-gated support for LIP-2 metadata spec
+
 ## 0.3.3
 
 ### Patch Changes
