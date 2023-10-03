@@ -28,8 +28,7 @@ async function main() {
   const accessTokenResult = await client.authentication.getAccessToken();
   const accessToken = accessTokenResult.unwrap();
 
-  const profileIdResult = await client.authentication.getProfileId();
-  const profileId = profileIdResult.unwrap();
+  const profileId = await client.authentication.getProfileId();
 
   console.log(`Is LensClient authenticated? `, await client.authentication.isAuthenticated());
   console.log(`Authenticated profileId: `, profileId);

@@ -6,9 +6,7 @@ interface IErrorWithCode<T> extends Error {
 
 export function assertError(error: unknown): asserts error is Error {
   if (!(error instanceof Error)) {
-    throw new InvariantError(`Received ${typeof error}, expected instance of Error`, {
-      cause: error,
-    });
+    throw new InvariantError(`Received ${typeof error}, expected instance of Error`);
   }
 }
 

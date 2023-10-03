@@ -7,8 +7,7 @@ async function main() {
   const wallet = setupWallet();
   const client = await getAuthenticatedClientFromEthersWallet(wallet);
 
-  const profileIdResult = await client.authentication.getProfileId();
-  const profileId = profileIdResult.unwrap();
+  const profileId = await client.authentication.getProfileId();
 
   const typedDataResult = await client.profile.createChangeProfileManagersTypedData({
     approveLensManager: true,

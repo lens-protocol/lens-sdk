@@ -10,10 +10,14 @@ import {
 } from '@lens-protocol/shared-kernel';
 import { IStorage, IStorageProvider } from '@lens-protocol/storage';
 import { NodeClient } from '@lit-protocol/node-client';
-import { JsonEncryptionRetrieveRequest, JsonSaveEncryptionKeyRequest } from '@lit-protocol/types';
+import {
+  JsonAuthSig,
+  JsonEncryptionRetrieveRequest,
+  JsonSaveEncryptionKeyRequest,
+} from '@lit-protocol/types';
 import { SiweMessage } from 'siwe';
 
-import { AuthSig, createAuthStorage } from './AuthStorage';
+import { createAuthStorage } from './AuthStorage';
 import { CannotDecryptError } from './CannotDecryptError';
 import { ICipher, IEncryptionProvider } from './IEncryptionProvider';
 import { DecryptionContext, transformFromGql, transformFromRaw } from './conditions';
@@ -99,7 +103,7 @@ export class GatedClient {
 
   private readonly environment: EnvironmentConfig;
 
-  private readonly storage: IStorage<AuthSig>;
+  private readonly storage: IStorage<JsonAuthSig>;
 
   private readonly signer: ISigner;
 
@@ -200,7 +204,7 @@ export class GatedClient {
     assertNever(encryptedMetadata, `Not supported metadata type`);
   }
 
-  private async getOrCreateAuthSig(): Promise<AuthSig> {
+  private async getOrCreateAuthSig(): Promise<JsonAuthSig> {
     const authSig = await this.storage.get();
 
     if (authSig) {
