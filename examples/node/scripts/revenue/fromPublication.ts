@@ -1,4 +1,4 @@
-import { LensClient, development } from '@lens-protocol/client';
+import { LensClient, PublicationType, development } from '@lens-protocol/client';
 
 async function main() {
   const client = new LensClient({
@@ -6,7 +6,9 @@ async function main() {
   });
 
   const publications = await client.publication.fetchAll({
-    where: {},
+    where: {
+      publicationTypes: [PublicationType.Post],
+    },
   });
 
   const firstPublication = publications.items[0];
