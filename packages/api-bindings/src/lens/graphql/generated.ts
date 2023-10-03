@@ -12,7 +12,7 @@ import type { EvmAddress, Url } from '@lens-protocol/shared-kernel';
 import gql from 'graphql-tag';
 
 import type { ContentEncryptionKey } from '../ContentEncryptionKey';
-import type { Cursor , Cursor } from '../Cursor';
+import type { Cursor } from '../Cursor';
 import type { ImageSizeTransform } from '../ImageSizeTransform';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -2615,11 +2615,7 @@ export type CreateActOnOpenActionEip712TypedData = {
   };
 };
 
-export type RelaySuccess = {
-  __typename: 'RelaySuccess';
-  txHash: string | null;
-  txId: string | null;
-};
+export type RelaySuccess = { __typename: 'RelaySuccess'; txHash: string | null; txId: string };
 
 export type RelayError = { __typename: 'RelayError'; reason: RelayErrorReasonType };
 
@@ -3111,7 +3107,10 @@ export type PublicationVariables = Exact<{
 export type PublicationData = { result: Comment | Mirror | Post | Quote | null };
 
 export type PublicationsVariables = Exact<{
-  request: PublicationsRequest;
+  where: PublicationsWhere;
+  orderBy?: InputMaybe<PublicationsOrderByType>;
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   publicationImageTransform?: InputMaybe<ImageTransform>;
   publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
   publicationStatsInput?: PublicationStatsInput;
@@ -8813,7 +8812,10 @@ export type PublicationLazyQueryHookResult = ReturnType<typeof usePublicationLaz
 export type PublicationQueryResult = Apollo.QueryResult<PublicationData, PublicationVariables>;
 export const PublicationsDocument = /*#__PURE__*/ gql`
   query Publications(
-    $request: PublicationsRequest!
+    $where: PublicationsWhere!
+    $orderBy: PublicationsOrderByType
+    $limit: LimitType
+    $cursor: Cursor
     $publicationImageTransform: ImageTransform = {}
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
     $publicationStatsInput: PublicationStatsInput! = {}
@@ -8824,7 +8826,9 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
-    result: publications(request: $request) {
+    result: publications(
+      request: { where: $where, orderBy: $orderBy, limit: $limit, cursor: $cursor }
+    ) {
       items {
         ... on Post {
           ...Post
@@ -8863,7 +8867,10 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = usePublications({
  *   variables: {
- *      request: // value for 'request'
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *      publicationImageTransform: // value for 'publicationImageTransform'
  *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
  *      publicationStatsInput: // value for 'publicationStatsInput'

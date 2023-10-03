@@ -79,7 +79,6 @@ generates:
               "import type { ContentEncryptionKey } from '../ContentEncryptionKey';",
               "import type { Cursor } from '../Cursor';",
               "import type { ImageSizeTransform } from '../ImageSizeTransform';",
-              "import type { Cursor} from '../Cursor'",
             ]
       - 'typescript-operations':
           skipTypename: true

@@ -53,14 +53,11 @@ describe(`Given the ${usePublications.name} hook`, () => {
       const { renderHook } = setupTestScenario([
         mockGetPublicationsResponse({
           variables: {
-            request: {
-              where: {
-                actedBy: profileId,
-              },
-
-              orderBy: PublicationsOrderByType.Latest,
-              limit: LimitType.Ten,
+            where: {
+              actedBy: profileId,
             },
+            orderBy: PublicationsOrderByType.Latest,
+            limit: LimitType.Ten,
             ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           publications,
@@ -82,13 +79,11 @@ describe(`Given the ${usePublications.name} hook`, () => {
         const { renderHook } = setupTestScenario([
           mockGetPublicationsResponse({
             variables: {
-              request: {
-                where: {
-                  actedBy: profileId,
-                },
-                orderBy: PublicationsOrderByType.Latest,
-                limit: LimitType.Fifty,
+              where: {
+                actedBy: profileId,
               },
+              orderBy: PublicationsOrderByType.Latest,
+              limit: LimitType.Fifty,
               ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
             },
             publications,
@@ -113,13 +108,11 @@ describe(`Given the ${usePublications.name} hook`, () => {
       const { renderHook } = setupTestScenario([
         mockGetPublicationsResponse({
           variables: {
-            request: {
-              where: {
-                actedBy: profileId,
-              },
-              orderBy: PublicationsOrderByType.Latest,
-              limit: LimitType.Ten,
+            where: {
+              from: [profileId],
             },
+            orderBy: PublicationsOrderByType.Latest,
+            limit: LimitType.Ten,
             ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           publications,
@@ -128,14 +121,12 @@ describe(`Given the ${usePublications.name} hook`, () => {
 
         mockGetPublicationsResponse({
           variables: {
-            request: {
-              where: {
-                actedBy: profileId,
-              },
-              orderBy: PublicationsOrderByType.Latest,
-              limit: LimitType.Ten,
-              cursor: initialPageInfo.prev,
+            where: {
+              from: [profileId],
             },
+            orderBy: PublicationsOrderByType.Latest,
+            limit: LimitType.Ten,
+            cursor: initialPageInfo.prev,
             ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           publications: [mockPostFragment()],
@@ -143,10 +134,10 @@ describe(`Given the ${usePublications.name} hook`, () => {
       ]);
 
       it(`should return cached data and then update the 'beforeCount' if new results are available`, async () => {
-        const first = renderHook(() => usePublications({ where: { actedBy: profileId } }));
+        const first = renderHook(() => usePublications({ where: { from: [profileId] } }));
         await waitFor(() => expect(first.result.current.loading).toBeFalsy());
 
-        const second = renderHook(() => usePublications({ where: { actedBy: profileId } }));
+        const second = renderHook(() => usePublications({ where: { from: [profileId] } }));
 
         expect(second.result.current).toMatchObject({
           data: expectations,

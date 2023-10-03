@@ -2,6 +2,7 @@
  * Hooks
  */
 export * from './usePublication';
+export * from './usePublications';
 
 /**
  * Fragments
@@ -17,3 +18,5 @@ export type {
   isMirrorPublication,
   isQuotePublication,
 } from '@lens-protocol/api-bindings';
+
+export { PublicationType } from '@lens-protocol/api-bindings';

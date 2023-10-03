@@ -60,11 +60,9 @@ export function usePublications({
     usePublicationsBase(
       useLensApolloClient({
         variables: useMediaTransformFromConfig({
-          request: {
-            where,
-            limit,
-            orderBy,
-          },
+          where,
+          limit,
+          orderBy,
         }),
       }),
     ),
