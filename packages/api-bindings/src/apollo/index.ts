@@ -6,6 +6,7 @@ import type { IAccessTokenStorage } from './IAccessTokenStorage';
 import { SafeApolloClient } from './SafeApolloClient';
 import { createSnapshotCache } from './cache';
 import { createLensCache } from './cache/createLensCache';
+import { ContentInsightMatcher } from './cache/utils/ContentInsight';
 import { createAuthLink, createLensLink, createSnapshotLink } from './links';
 
 export type { ContentInsightMatcher } from './cache/utils/ContentInsight';
@@ -16,6 +17,7 @@ export type ApolloClientConfig = {
   backendURL: string;
   logger: ILogger;
   pollingInterval: number;
+  contentMatchers: ContentInsightMatcher[];
 };
 
 export function createLensApolloClient({

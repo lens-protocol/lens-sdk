@@ -24,7 +24,9 @@ export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
  * Fetch publications by a Profile ID
  * ```tsx
  * const { data, loading, error } = usePublications({
- *   profileId: profileId('0x0635')
+ *   where: {
+ *      from: [profileId('0x0635')]
+ *    }
  * });
  * ```
  *
@@ -32,7 +34,9 @@ export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
  * Fetch publications by several Profile IDs
  * ```tsx
  * const { data, loading, error } = usePublications({
- *   profileIds: [ profileId('0x0635'), profileId('0x0f') ]
+ *   where: {
+ *      from: [profileId('0x0635'), profileId('0x0f')]
+ *    }
  * });
  * ```
  *
@@ -40,8 +44,10 @@ export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
  * Filter publications by type
  * ```tsx
  * const { data, loading, error } = usePublications({
- *   profileId: profileId('0x0635')
- *   publicationTypes: [ PublicationTypes.Post ]
+ *   where: {
+ *      from: [profileId('0x0635')]
+ *      publicationTypes: [PublicationType.Post]
+ *    }
  * });
  * ```
  */
