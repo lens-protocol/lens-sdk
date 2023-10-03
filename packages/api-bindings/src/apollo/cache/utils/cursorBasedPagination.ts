@@ -26,11 +26,13 @@ export function cursorBasedPagination<TResult extends CursorBasedPaginatedResult
 
       const { items, pageInfo } = existing;
 
+      // items that are not in the cache anymore (for .e.g deleted publication)
       const readRes: SafeReadonly<TResult> = {
         ...existing,
         items,
         pageInfo: {
           ...pageInfo,
+          moreAfter: existing.pageInfo.moreAfter ?? existing.pageInfo.next !== null,
         },
       };
 
@@ -67,6 +69,7 @@ export function cursorBasedPagination<TResult extends CursorBasedPaginatedResult
           items: incomingItems.concat(existingItems),
           pageInfo: {
             ...incoming.pageInfo, // future-proofing in case we add more fields to pageInfo
+            moreAfter: existing.pageInfo.moreAfter,
             next: existing.pageInfo.next,
             prev: incoming.pageInfo.prev ?? existing.pageInfo.prev,
           },

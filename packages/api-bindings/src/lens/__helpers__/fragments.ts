@@ -178,9 +178,9 @@ export function mockPaginatedResultInfo(
   overrides: Partial<PaginatedResultInfo> = {},
 ): PaginatedResultInfo {
   return {
+    moreAfter: false,
     prev: null,
     next: null,
-
     ...overrides,
     __typename: 'PaginatedResultInfo',
   };

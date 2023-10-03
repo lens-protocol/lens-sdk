@@ -303,6 +303,7 @@ fragment Profile on Profile {
 
 fragment PaginatedResultInfo on PaginatedResultInfo {
   __typename
+  moreAfter @client
   prev
   next
 }

@@ -44,7 +44,8 @@ describe(`Given a cursor-based paginated query field`, () => {
     describe('when fetching the next page', () => {
       it(`should:
           - append incoming items to the existing ones
-          - update "pageInfo.prev" to results prior the first page and "pageInfo.next" to results after the new last page`, async () => {
+          - update "pageInfo.prev" to results prior the first page and "pageInfo.next" to results after the new last page
+          - update "pageInfo.moreAfter" accordingly`, async () => {
         const initialResult = mockAnyPaginatedQueryResult({
           next: nextCursor,
           prev: prevCursor,
@@ -75,6 +76,7 @@ describe(`Given a cursor-based paginated query field`, () => {
         expect(data.result).toMatchObject({
           items: [...initialResult.items, ...nextResult.items],
           pageInfo: {
+            moreAfter: true,
             next: nextResult.pageInfo.next,
             prev: initialResult.pageInfo.prev,
           },
@@ -83,7 +85,8 @@ describe(`Given a cursor-based paginated query field`, () => {
 
       describe('but the incoming result is empty', () => {
         it(`should:
-            - NOT update the "pageInfo.next" cursor`, async () => {
+            - NOT update the "pageInfo.next" cursor
+            - unset the "pageInfo.moreAfter" flag`, async () => {
           const initialResult = mockAnyPaginatedQueryResult({
             next: nextCursor,
             prev: prevCursor,
@@ -113,6 +116,7 @@ describe(`Given a cursor-based paginated query field`, () => {
 
           expect(data.result).toMatchObject({
             pageInfo: {
+              moreAfter: false,
               next: initialResult.pageInfo.next,
               prev: initialResult.pageInfo.prev,
             },
@@ -124,7 +128,8 @@ describe(`Given a cursor-based paginated query field`, () => {
     describe('when fetching the previous page', () => {
       it(`should:
           - prepend incoming items to the existing ones
-          - update the "pageInfo.prev" to results prior the new first page and "pageInfo.next" to results after the last page`, async () => {
+          - update the "pageInfo.prev" to results prior the new first page and "pageInfo.next" to results after the last page
+          - update the "pageInfo.moreAfter" accordingly`, async () => {
         const initialResult = mockAnyPaginatedQueryResult({
           prev: prevCursor,
           next: null,
@@ -155,6 +160,7 @@ describe(`Given a cursor-based paginated query field`, () => {
         expect(data.result).toMatchObject({
           items: [...prevResult.items, ...initialResult.items],
           pageInfo: {
+            moreAfter: false,
             next: initialResult.pageInfo.next,
             prev: prevResult.pageInfo.prev,
           },
@@ -192,6 +198,7 @@ describe(`Given a cursor-based paginated query field`, () => {
 
           expect(data.result).toMatchObject({
             pageInfo: {
+              moreAfter: true,
               next: initialResult.pageInfo.next,
               prev: initialResult.pageInfo.prev,
             },
