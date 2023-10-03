@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
+import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PublicationCard } from './components/PublicationCard';
 
 const allPublicationType = [PublicationType.Comment, PublicationType.Post, PublicationType.Mirror];
@@ -17,13 +18,15 @@ export function UsePublications() {
     loading,
     hasMore,
     prev,
-    next,
-  } = usePublications({
-    where: {
-      from: [profileId('0x1b')],
-      publicationTypes: publicationType,
-    },
-  });
+    observeRef,
+  } = useInfiniteScroll(
+    usePublications({
+      where: {
+        from: [profileId('0x1b')],
+        publicationTypes: publicationType,
+      },
+    }),
+  );
 
   if (loading) return <Loading />;
 
@@ -65,11 +68,7 @@ export function UsePublications() {
           <PublicationCard key={publication.id} publication={publication} />
         ))}
 
-        {hasMore && (
-          <button disabled={loading} onClick={next}>
-            Fetch older
-          </button>
-        )}
+        {hasMore && <p ref={observeRef}>Loading more...</p>}
       </div>
     </div>
   );

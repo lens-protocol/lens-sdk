@@ -13,10 +13,9 @@ export type {
   Mirror,
   Quote,
   AnyPublication,
-  isPostPublication,
   isCommentPublication,
   isMirrorPublication,
   isQuotePublication,
 } from '@lens-protocol/api-bindings';
 
-export { PublicationType } from '@lens-protocol/api-bindings';
+export { PublicationType, isPostPublication } from '@lens-protocol/api-bindings';

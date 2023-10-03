@@ -6,7 +6,6 @@ import {
   mockLensApolloClient,
   mockPaginatedResultInfo,
   mockPostFragment,
-  mockSources,
   simulateNotAuthenticated,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
@@ -19,8 +18,6 @@ import {
 } from '../../mediaTransforms';
 import { UsePublicationsArgs, usePublications } from '../usePublications';
 
-const sources = mockSources();
-
 function setupTestScenario(mocks: MockedResponse[]) {
   const client = mockLensApolloClient(mocks);
 
@@ -30,7 +27,6 @@ function setupTestScenario(mocks: MockedResponse[]) {
     ): RenderHookResult<TResult, TProps> {
       return renderHookWithMocks(callback, {
         mocks: {
-          sources,
           mediaTransforms: defaultMediaTransformsConfig,
           apolloClient: client,
         },

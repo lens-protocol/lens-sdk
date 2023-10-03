@@ -31,6 +31,17 @@ export type {
 export type { LensConfig } from './config';
 
 /**
+ * Hooks helpers types
+ */
+export type {
+  PaginatedArgs,
+  PaginatedReadResult,
+  ReadResult,
+  ReadResultWithError,
+  ReadResultWithoutError,
+} from './helpers/reads';
+
+/**
  * Helpers
  */
 export * from './utils';
