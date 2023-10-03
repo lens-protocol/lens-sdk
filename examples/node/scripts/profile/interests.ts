@@ -15,11 +15,11 @@ async function main() {
   });
 
   // fetch all interests
-  const { interests } = await client.profile.fetch({
+  const profile = await client.profile.fetch({
     forProfileId: profileId,
   });
 
-  console.log(`Profile interests`, interests);
+  console.log(`Profile interests`, profile?.interests);
 
   // remove interests
   await client.profile.removeInterests({

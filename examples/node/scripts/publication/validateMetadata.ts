@@ -12,7 +12,7 @@ async function main() {
   });
 
   if (!result.valid) {
-    throw new Error(`Metadata is not valid because of ${result.reason}`);
+    throw new Error(`Metadata is not valid because of ${String(result.reason)}`);
   }
 
   console.log(`Result: `, result);

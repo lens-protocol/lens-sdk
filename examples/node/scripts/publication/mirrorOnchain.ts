@@ -18,7 +18,7 @@ async function main() {
     return;
   }
 
-  console.log(`Transaction was successfully broadcasted with txId ${resultValue.txId}`);
+  console.log(`Transaction was successfully broadcasted with txId`, resultValue.txId);
 
   // wait in a loop
   console.log(`Waiting for the transaction to be indexed...`);

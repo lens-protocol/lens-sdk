@@ -10,7 +10,7 @@ async function main() {
     forProfileId: '0x01',
   });
 
-  console.log(`Profile fetched by id: `, { id: profileById.id, handle: profileById.handle });
+  console.log(`Profile fetched by id: `, { id: profileById?.id, handle: profileById?.handle });
 
   // by handle
   const profileByHandle = await client.profile.fetch({
@@ -18,8 +18,8 @@ async function main() {
   });
 
   console.log(`Profile fetched by handle: `, {
-    id: profileByHandle.id,
-    handle: profileByHandle.handle,
+    id: profileByHandle?.id,
+    handle: profileByHandle?.handle,
   });
 }
 

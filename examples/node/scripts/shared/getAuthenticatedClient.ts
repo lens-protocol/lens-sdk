@@ -1,5 +1,5 @@
 import { LensClient, development } from '@lens-protocol/client';
-import { Wallet } from 'ethers';
+import { Wallet, constants } from 'ethers';
 import { WalletClient } from 'viem';
 
 import { getOwnedProfileId } from './getOwnedProfileId';
@@ -26,7 +26,7 @@ export async function getAuthenticatedClientFromViemWalletClient(walletClient: W
   const client = new LensClient({
     environment: development,
   });
-  const address = walletClient.account.address;
+  const address = walletClient.account?.address ?? constants.AddressZero;
   const profileId = await getOwnedProfileId(client, address);
 
   const { id, text } = await client.authentication.generateChallenge({

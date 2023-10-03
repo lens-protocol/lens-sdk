@@ -42,7 +42,7 @@ async function main() {
   }
 
   console.log(
-    `Successfully changed profile manager for profile ${profileId} with: `,
+    `Successfully changed profile manager for profile ${String(profileId)} with: `,
     onchainRelayResult,
   );
 }

@@ -5,6 +5,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "skipLibCheck": true,
+    "strict": true,
     "target": "es6"
   },
   "include": ["scripts"],

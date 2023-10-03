@@ -36,7 +36,8 @@ async function main() {
   }
 
   console.log(
-    `Transaction to follow ${profileToUnfollowId} was successfully broadcasted with txId ${followBroadcastResultValue.txId}`,
+    `Transaction to follow ${profileToUnfollowId} was successfully broadcasted with txId`,
+    followBroadcastResultValue.txId,
   );
 
   // wait for follow to be indexed
@@ -49,9 +50,9 @@ async function main() {
   });
 
   console.log(`Just followed profile`, {
-    id: justFollowedProfile.id,
-    handle: justFollowedProfile.handle,
-    isFollowedByMe: justFollowedProfile.operations.isFollowedByMe,
+    id: justFollowedProfile?.id,
+    handle: justFollowedProfile?.handle,
+    isFollowedByMe: justFollowedProfile?.operations.isFollowedByMe,
   });
 }
 
