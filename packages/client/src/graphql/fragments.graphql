@@ -74,7 +74,6 @@ fragment NetworkAddress on NetworkAddress {
 }
 
 # metadata attributes
-
 fragment MetadataBooleanAttribute on MetadataBooleanAttribute {
   __typename
   key
@@ -112,6 +111,37 @@ fragment Image on Image {
   mimeType
   width
   height
+}
+
+fragment ImageSet on ImageSet {
+  __typename
+  raw {
+    ...Image
+  }
+  optimized {
+    ...Image
+  }
+  transformed(request: $publicationImageTransform) {
+    ...Image
+  }
+}
+
+fragment EncryptableImage on EncryptableImage {
+  __typename
+  uri
+  mimeType
+  width
+  height
+}
+
+fragment EncryptableImageSet on EncryptableImageSet {
+  __typename
+  raw {
+    ...EncryptableImage
+  }
+  optimized {
+    ...Image
+  }
 }
 
 fragment Video on Video {
@@ -716,37 +746,6 @@ fragment RootCondition on RootCondition {
 }
 
 # publication metadata
-fragment ImageSet on ImageSet {
-  __typename
-  raw {
-    ...Image
-  }
-  optimized {
-    ...Image
-  }
-  transformed(request: $publicationImageTransform) {
-    ...Image
-  }
-}
-
-fragment EncryptableImage on EncryptableImage {
-  __typename
-  uri
-  mimeType
-  width
-  height
-}
-
-fragment EncryptableImageSet on EncryptableImageSet {
-  __typename
-  raw {
-    ...EncryptableImage
-  }
-  optimized {
-    ...Image
-  }
-}
-
 fragment PublicationMarketplaceMetadataAttribute on PublicationMarketplaceMetadataAttribute {
   __typename
   displayType
