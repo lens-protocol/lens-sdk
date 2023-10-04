@@ -7,4 +7,8 @@ export const CATEGORIES = [
     label: 'Publications',
     path: '/publications',
   },
+  {
+    label: 'Search',
+    path: '/search',
+  },
 ];

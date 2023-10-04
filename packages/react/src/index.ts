@@ -8,6 +8,7 @@ export * from './LensProvider';
  */
 export * from './profile';
 export * from './publication';
+export * from './search';
 
 /**
  * Domain essentials
@@ -40,6 +41,7 @@ export type {
   ReadResultWithError,
   ReadResultWithoutError,
 } from './helpers/reads';
+export { LimitType } from './helpers/reads';
 
 /**
  * Helpers

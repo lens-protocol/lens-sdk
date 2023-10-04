@@ -270,6 +270,8 @@ export type DegreesOfSeparationReferenceModuleInput = {
   degreesOfSeparation: Scalars['Int'];
   mirrorsRestricted: Scalars['Boolean'];
   quotesRestricted: Scalars['Boolean'];
+  /** You can set the degree to follow someone elses graph, if you leave blank it use your profile */
+  sourceProfileId?: InputMaybe<Scalars['ProfileId']>;
 };
 
 export type DismissRecommendedProfilesRequest = {
@@ -775,6 +777,7 @@ export type NotificationWhere = {
 
 export type OnchainCommentRequest = {
   commentOn: Scalars['PublicationId'];
+  /** If your using an unknown reference modules you need to pass this in. `followerOnlyReferenceModule` and `degreesOfSeparationReferenceModule` is handled automatically for you and if you supply this on publications with those settings it will be ignored */
   commentOnReferenceModuleData?: InputMaybe<Scalars['BlockchainData']>;
   contentURI: Scalars['URI'];
   openActionModules?: InputMaybe<Array<OpenActionModuleInput>>;
@@ -786,6 +789,7 @@ export type OnchainMirrorRequest = {
   /** You can add information like app on a mirror or tracking stuff */
   metadataURI?: InputMaybe<Scalars['URI']>;
   mirrorOn: Scalars['PublicationId'];
+  /** If your using an unknown reference modules you need to pass this in. `followerOnlyReferenceModule` and `degreesOfSeparationReferenceModule` is handled automatically for you and if you supply this on publications with those settings it will be ignored */
   mirrorReferenceModuleData?: InputMaybe<Scalars['BlockchainData']>;
   referrers?: InputMaybe<Array<OnchainReferrer>>;
 };
@@ -800,6 +804,7 @@ export type OnchainQuoteRequest = {
   contentURI: Scalars['URI'];
   openActionModules?: InputMaybe<Array<OpenActionModuleInput>>;
   quoteOn: Scalars['PublicationId'];
+  /** If your using an unknown reference modules you need to pass this in. `followerOnlyReferenceModule` and `degreesOfSeparationReferenceModule` is handled automatically for you and if you supply this on publications with those settings it will be ignored */
   quoteOnReferenceModuleData?: InputMaybe<Scalars['BlockchainData']>;
   referenceModule?: InputMaybe<ReferenceModuleInput>;
   referrers?: InputMaybe<Array<OnchainReferrer>>;
@@ -2735,11 +2740,7 @@ export type CreateActOnOpenActionEip712TypedData = {
   };
 };
 
-export type RelaySuccess = {
-  __typename: 'RelaySuccess';
-  txHash: string | null;
-  txId: string | null;
-};
+export type RelaySuccess = { __typename: 'RelaySuccess'; txHash: string | null; txId: string };
 
 export type RelayError = { __typename: 'RelayError'; reason: RelayErrorReasonType };
 
@@ -3632,7 +3633,10 @@ export type FollowRevenuesVariables = Exact<{
 export type FollowRevenuesData = { result: { revenues: Array<RevenueAggregate> } };
 
 export type SearchPublicationsVariables = Exact<{
-  request: PublicationSearchRequest;
+  query: Scalars['String'];
+  where?: InputMaybe<PublicationSearchWhere>;
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   publicationImageTransform?: InputMaybe<ImageTransform>;
   publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
   publicationStatsInput?: PublicationStatsInput;
@@ -10671,7 +10675,10 @@ export type FollowRevenuesQueryResult = Apollo.QueryResult<
 >;
 export const SearchPublicationsDocument = /*#__PURE__*/ gql`
   query SearchPublications(
-    $request: PublicationSearchRequest!
+    $query: String!
+    $where: PublicationSearchWhere
+    $limit: LimitType
+    $cursor: Cursor
     $publicationImageTransform: ImageTransform = {}
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
     $publicationStatsInput: PublicationStatsInput! = {}
@@ -10682,7 +10689,9 @@ export const SearchPublicationsDocument = /*#__PURE__*/ gql`
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
-    result: searchPublications(request: $request) {
+    result: searchPublications(
+      request: { query: $query, where: $where, cursor: $cursor, limit: $limit }
+    ) {
       items {
         ... on Post {
           ...Post
@@ -10717,7 +10726,10 @@ export const SearchPublicationsDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useSearchPublications({
  *   variables: {
- *      request: // value for 'request'
+ *      query: // value for 'query'
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *      publicationImageTransform: // value for 'publicationImageTransform'
  *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
  *      publicationStatsInput: // value for 'publicationStatsInput'
@@ -12371,6 +12383,7 @@ export type DegreesOfSeparationReferenceModuleSettingsKeySpecifier = (
   | 'degreesOfSeparation'
   | 'mirrorsRestricted'
   | 'quotesRestricted'
+  | 'sourceProfileId'
   | DegreesOfSeparationReferenceModuleSettingsKeySpecifier
 )[];
 export type DegreesOfSeparationReferenceModuleSettingsFieldPolicy = {
@@ -12379,6 +12392,7 @@ export type DegreesOfSeparationReferenceModuleSettingsFieldPolicy = {
   degreesOfSeparation?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrorsRestricted?: FieldPolicy<any> | FieldReadFunction<any>;
   quotesRestricted?: FieldPolicy<any> | FieldReadFunction<any>;
+  sourceProfileId?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type DoesFollowResultKeySpecifier = (
   | 'followerProfileId'
@@ -14139,6 +14153,7 @@ export type PublicationOperationsKeySpecifier = (
   | 'canComment'
   | 'canDecrypt'
   | 'canMirror'
+  | 'canQuote'
   | 'hasActed'
   | 'hasBookmarked'
   | 'hasMirrored'
@@ -14153,6 +14168,7 @@ export type PublicationOperationsFieldPolicy = {
   canComment?: FieldPolicy<any> | FieldReadFunction<any>;
   canDecrypt?: FieldPolicy<any> | FieldReadFunction<any>;
   canMirror?: FieldPolicy<any> | FieldReadFunction<any>;
+  canQuote?: FieldPolicy<any> | FieldReadFunction<any>;
   hasActed?: FieldPolicy<any> | FieldReadFunction<any>;
   hasBookmarked?: FieldPolicy<any> | FieldReadFunction<any>;
   hasMirrored?: FieldPolicy<any> | FieldReadFunction<any>;

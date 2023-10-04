@@ -17,6 +17,8 @@ import { UseProfile } from './profiles/UseProfile';
 import { PublicationsPage } from './publications/PublicationsPage';
 import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
+import { SearchPage } from './search/SearchPage';
+import { UseSearchPublications } from './search/UseSearchPublications';
 import { localStorage } from './storage';
 
 const { publicClient, webSocketPublicClient } = configureChains(
@@ -65,6 +67,13 @@ export function App() {
                     <Route index element={<ProfilesPage />} />
                     <Route path="useProfile" element={<UseProfile />} />
                   </Route>
+
+                  <Route path="/search">
+                    <Route index element={<SearchPage />} />
+                    <Route path="useSearchPublications" element={<UseSearchPublications />} />
+                  </Route>
+
+                  <Route path="*" element={<p>Not found</p>} />
                 </Routes>
               </GenericErrorBoundary>
               <Toaster />

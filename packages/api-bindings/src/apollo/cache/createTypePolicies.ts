@@ -2,6 +2,7 @@ import { TypePolicy } from '@apollo/client';
 
 import { StrictTypedTypePolicies } from '../../lens';
 import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
+import { createSearchPublicationsFieldPolicy } from './createSearchPublicationsFieldPolicy';
 import { createPublicationTypePolicy } from './publication';
 import { notNormalizedType } from './utils/notNormalizedType';
 
@@ -22,6 +23,7 @@ export function createTypePolicies(): StrictTypedTypePolicies & InheritedTypePol
     Query: {
       fields: {
         publications: createPublicationsFieldPolicy(),
+        searchPublications: createSearchPublicationsFieldPolicy(),
       },
     },
   };
