@@ -1,6 +1,5 @@
 import { OperationVariables } from '@apollo/client';
-import { MediaTransformParams, SafeApolloClient, Sources } from '@lens-protocol/api-bindings';
-import { AppId } from '@lens-protocol/domain/entities';
+import { MediaTransformParams, SafeApolloClient } from '@lens-protocol/api-bindings';
 
 import { mediaTransformConfigToQueryVariables } from '../mediaTransforms';
 import { useSharedDependencies } from '../shared';
@@ -17,24 +16,6 @@ export function useLensApolloClient<TOptions>(
   return {
     ...args,
     client,
-  };
-}
-
-export type UseProfileStatsArgFromConfigResult<TVariables extends OperationVariables> =
-  TVariables & {
-    profileStatsArg?: {
-      forApps?: Sources;
-    };
-  };
-
-export function useProfileStatsArgFromConfig<
-  TVariables extends OperationVariables & { sources?: AppId[] },
->(variables: TVariables): UseProfileStatsArgFromConfigResult<TVariables> {
-  const { sources } = useSharedDependencies();
-
-  return {
-    ...variables,
-    profileStatsArg: { forApps: sources },
   };
 }
 

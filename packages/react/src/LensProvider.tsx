@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react';
 
-import { LensConfig, validateConfig } from './config';
+import { LensConfig } from './config';
 import { createSharedDependencies, SharedDependenciesProvider } from './shared';
 
 /**
@@ -25,7 +25,6 @@ export type LensProviderProps = {
  */
 export function LensProvider({ children, ...props }: LensProviderProps) {
   const [sharedDependencies] = useState(() => {
-    validateConfig(props.config);
     return createSharedDependencies(props.config);
   });
 

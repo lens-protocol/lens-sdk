@@ -14,6 +14,7 @@ import { ErrorMessage } from './components/error/ErrorMessage';
 import { Header } from './components/header/Header';
 import { ProfilesPage } from './profiles/ProfilesPage';
 import { UseProfile } from './profiles/UseProfile';
+import { UseProfiles } from './profiles/UseProfiles';
 import { PublicationsPage } from './publications/PublicationsPage';
 import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
@@ -66,6 +67,7 @@ export function App() {
                   <Route path="/profiles">
                     <Route index element={<ProfilesPage />} />
                     <Route path="useProfile" element={<UseProfile />} />
+                    <Route path="useProfiles" element={<UseProfiles />} />
                   </Route>
 
                   <Route path="/search">

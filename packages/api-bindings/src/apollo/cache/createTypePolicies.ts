@@ -1,9 +1,10 @@
 import { TypePolicy } from '@apollo/client';
 
 import { StrictTypedTypePolicies } from '../../lens';
+import { createProfilesFieldPolicy } from './createProfilesFieldPolicy';
+import { createPublicationTypePolicy } from './createPublicationTypePolicy';
 import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
 import { createSearchPublicationsFieldPolicy } from './createSearchPublicationsFieldPolicy';
-import { createPublicationTypePolicy } from './publication';
 import { notNormalizedType } from './utils/notNormalizedType';
 
 type InheritedTypePolicies = {
@@ -24,6 +25,7 @@ export function createTypePolicies(): StrictTypedTypePolicies & InheritedTypePol
       fields: {
         publications: createPublicationsFieldPolicy(),
         searchPublications: createSearchPublicationsFieldPolicy(),
+        profiles: createProfilesFieldPolicy(),
       },
     },
   };

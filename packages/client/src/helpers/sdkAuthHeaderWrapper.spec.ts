@@ -9,7 +9,6 @@ const context: LensContext = {
   environment: buildTestEnvironment(),
   mediaTransforms: {},
   storage: new InMemoryStorageProvider(),
-  forApps: [],
 };
 
 describe(`Given the "${sdkAuthHeaderWrapper.name}" helper`, () => {

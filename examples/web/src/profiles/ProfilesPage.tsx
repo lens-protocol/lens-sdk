@@ -3,8 +3,13 @@ import { LinkCard } from '../components/LinkCard';
 const profileHooks = [
   {
     label: 'useProfile',
-    description: `Get a profile by the profile id or by its handle.`,
+    description: `Fetch a single profile.`,
     path: '/profiles/useProfile',
+  },
+  {
+    label: 'useProfiles',
+    description: `Fetch a list of profiles.`,
+    path: '/profiles/useProfiles',
   },
 ];
 

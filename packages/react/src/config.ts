@@ -1,5 +1,5 @@
 import { AppId } from '@lens-protocol/domain/entities';
-import { ILogger, invariant } from '@lens-protocol/shared-kernel';
+import { ILogger } from '@lens-protocol/shared-kernel';
 import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/storage';
 
 import { EnvironmentConfig } from './environments';
@@ -31,17 +31,7 @@ export type LensConfig = {
    */
   storage: IStorageProvider | IObservableStorageProvider;
   /**
-   * The `sources` determines the sources of posts and comments that will be fetched
-   *
-   * It also determines some Profile related statistics, such as the number of posts and comments.
-   *
-   * @defaultValue any sources, not restricted
-   */
-  sources?: AppId[];
-  /**
    * The `appId` identifies post and comment created from the SDK
-   *
-   * The `appId`, if provided, MUST be included in the `sources` array.
    *
    * @defaultValue not set
    *
@@ -58,11 +48,3 @@ export type LensConfig = {
    */
   mediaTransforms?: MediaTransformsConfig;
 };
-
-/** @internal */
-export function validateConfig(config: LensConfig) {
-  invariant(
-    !(config.appId && config.sources && !config.sources?.includes(config.appId)),
-    `LensProvider config: "sources" don't include your "appId"`,
-  );
-}

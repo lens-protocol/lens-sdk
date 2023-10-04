@@ -4,6 +4,10 @@ import { faker } from '@faker-js/faker';
 import { Cursor } from '../Cursor';
 import {
   PaginatedResultInfo,
+  Profile,
+  ProfilesData,
+  ProfilesDocument,
+  ProfilesVariables,
   PublicationData,
   PublicationDocument,
   PublicationVariables,
@@ -15,43 +19,10 @@ import {
   SearchPublicationsVariables,
 } from '../graphql/generated';
 import { AnyPublication, PrimaryPublication } from '../utils';
-import { mockPaginatedResultInfo, mockPostFragment } from './fragments';
+import { mockPaginatedResultInfo } from './fragments';
 
 export function mockCursor(): Cursor {
   return faker.random.alphaNumeric(10) as Cursor;
-}
-
-export function mockPublicationsResponse({
-  variables,
-  publications,
-  info = mockPaginatedResultInfo(),
-}: {
-  variables: PublicationsVariables;
-  publications: Array<AnyPublication>;
-  info?: PaginatedResultInfo;
-}): MockedResponse<PublicationsData> {
-  return {
-    request: {
-      query: PublicationsDocument,
-      variables: variables,
-    },
-    result: {
-      data: {
-        result: {
-          items: publications,
-          pageInfo: info,
-        },
-      },
-    },
-  };
-}
-
-function mockPublicationData(
-  publication: AnyPublication | null = mockPostFragment(),
-): PublicationData {
-  return {
-    result: publication,
-  };
 }
 
 export function mockPublicationResponse({
@@ -67,12 +38,14 @@ export function mockPublicationResponse({
       variables,
     },
     result: {
-      data: mockPublicationData(publication),
+      data: {
+        result: publication,
+      },
     },
   };
 }
 
-export function mockGetPublicationsResponse({
+export function mockPublicationsResponse({
   variables,
   publications,
   info = mockPaginatedResultInfo(),
@@ -133,6 +106,38 @@ export function mockSearchPublicationsResponse(args: {
         result: {
           items: args.items,
           pageInfo: mockPaginatedResultInfo(),
+        },
+      },
+    },
+  };
+}
+
+export function mockProfilesResponse({
+  variables,
+  profiles,
+  info = mockPaginatedResultInfo(),
+}: {
+  variables: ProfilesVariables;
+  profiles: Profile[];
+  info?: PaginatedResultInfo;
+}): MockedResponse<ProfilesData> {
+  return {
+    request: {
+      query: ProfilesDocument,
+      variables: {
+        profileCoverTransform: {},
+        profilePictureTransform: {},
+        profileStatsArg: {},
+        profileStatsCountOpenActionArgs: {},
+        rateRequest: { for: 'USD' },
+        ...variables,
+      },
+    },
+    result: {
+      data: {
+        result: {
+          items: profiles,
+          pageInfo: info,
         },
       },
     },

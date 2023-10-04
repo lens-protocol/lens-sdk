@@ -1,4 +1,4 @@
-import { createLensApolloClient, SafeApolloClient, Sources } from '@lens-protocol/api-bindings';
+import { createLensApolloClient, SafeApolloClient } from '@lens-protocol/api-bindings';
 import { AppId } from '@lens-protocol/domain/entities';
 import { ILogger, invariant } from '@lens-protocol/shared-kernel';
 import React, { ReactNode, useContext } from 'react';
@@ -14,11 +14,9 @@ export type SharedDependencies = {
   environment: EnvironmentConfig;
   logger: ILogger;
   mediaTransforms: MediaTransformsConfig;
-  sources: Sources;
 };
 
 export function createSharedDependencies(config: LensConfig): SharedDependencies {
-  const sources = (config.sources as Sources) ?? [];
   const logger = config.logger ?? new ConsoleLogger();
   const mediaTransforms = config.mediaTransforms ?? defaultMediaTransformsConfig;
 
@@ -46,7 +44,6 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     environment: config.environment,
     logger,
     mediaTransforms,
-    sources,
   };
 }
 
