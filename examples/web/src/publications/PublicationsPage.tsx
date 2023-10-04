@@ -3,7 +3,7 @@ import { LinkCard } from '../components/LinkCard';
 const publicationHooks = [
   {
     label: 'usePublication',
-    description: `Fetch a single publication by it's ID.`,
+    description: `Fetch a single publication.`,
     path: '/publications/usePublication',
   },
   {
