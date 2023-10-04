@@ -1,6 +1,6 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": ["packages/client"],
+  "entryPoints": ["packages/client", "packages/react"],
   "entryPointStrategy": "packages",
   "name": "Lens SDK Reference",
   "out": "docs",

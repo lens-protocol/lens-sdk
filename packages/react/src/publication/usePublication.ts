@@ -20,6 +20,8 @@ import { ReadResult, useReadResult } from '../helpers/reads';
 export type UsePublicationArgs = OneOf<PublicationRequest>;
 
 /**
+ * Fetch a publication by either it's publicationId or transaction hash.
+ *
  * @category Publications
  * @group Hooks
  */

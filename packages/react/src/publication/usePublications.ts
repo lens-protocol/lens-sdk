@@ -15,10 +15,49 @@ import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../h
 export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
 
 /**
- * `usePublications` is a paginated hook that lets you fetch publications based on a set of filters.
+ * Fetch a paginated result of publications based on a set of filters.
  *
  * @category Publications
  * @group Hooks
+ *
+ * @example
+ * Fetch post publications
+ * ```tsx
+ * const { data, loading, error } = usePublications({
+ *   where: {
+ *      publicationTypes: [PublicationType.Post]
+ *    }
+ * });
+ * ```
+ * @example
+ * Fetch comment publications
+ * ```tsx
+ * const { data, loading, error } = usePublications({
+ *   where: {
+ *      publicationTypes: [PublicationType.Comment]
+ *    }
+ * });
+ * ```
+ *
+ * @example
+ * Fetch quote publications
+ * ```tsx
+ * const { data, loading, error } = usePublications({
+ *   where: {
+ *      publicationTypes: [PublicationType.Quote]
+ *    }
+ * });
+ * ```
+ *
+ * @example
+ * Fetch mirror publications
+ * ```tsx
+ * const { data, loading, error } = usePublications({
+ *   where: {
+ *      publicationTypes: [PublicationType.Mirror]
+ *    }
+ * });
+ * ```
  *
  * @example
  * Fetch publications by a Profile ID
@@ -40,16 +79,6 @@ export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
  * });
  * ```
  *
- * @example
- * Filter publications by type
- * ```tsx
- * const { data, loading, error } = usePublications({
- *   where: {
- *      from: [profileId('0x0635')]
- *      publicationTypes: [PublicationType.Post]
- *    }
- * });
- * ```
  */
 export function usePublications({
   where,
