@@ -43,12 +43,6 @@ export type LensClientConfig = {
    * @see {@link MediaTransformsConfig} for more information
    */
   mediaTransforms?: MediaTransformsConfig;
-
-  /**
-   * The app ids to use to read data from the Lens Protocol.
-   * If not provided, all apps will be used.
-   */
-  forApps?: string[];
 };
 
 /**
@@ -79,7 +73,6 @@ export class LensClient {
       environment: config.environment,
       storage: config.storage || new InMemoryStorageProvider(),
       mediaTransforms: config.mediaTransforms || {},
-      forApps: config.forApps || [],
     };
     this._authentication = new Authentication(this.context);
   }
