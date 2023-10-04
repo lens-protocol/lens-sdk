@@ -29,38 +29,44 @@ export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
  *    }
  * });
  * ```
+ *
  * @example
- * Fetch comment publications
+ * Fetch all short form video post publications
+ * ```tsx
+ * const { data, loading, error } = usePublications({
+ *    where: {
+ *      publicationTypes: [PublicationType.Post]
+ *      metadata: {
+ *        mainContentFocus: [PublicationMetadataMainFocusType.ShortVideo],
+ *      }
+ *    }
+ * });
+ * ```
+ *
+ * @example
+ * Fetch all comments for a specified publication
  * ```tsx
  * const { data, loading, error } = usePublications({
  *   where: {
  *      publicationTypes: [PublicationType.Comment]
+ *      publicationIds: ['0x1b-0x012b']
  *    }
  * });
  * ```
  *
  * @example
- * Fetch quote publications
- * ```tsx
- * const { data, loading, error } = usePublications({
- *   where: {
- *      publicationTypes: [PublicationType.Quote]
- *    }
- * });
- * ```
- *
- * @example
- * Fetch mirror publications
+ * Fetch all mirrors made by a specified profile
  * ```tsx
  * const { data, loading, error } = usePublications({
  *   where: {
  *      publicationTypes: [PublicationType.Mirror]
+ *      from: [profileId('0x0635')]
  *    }
  * });
  * ```
  *
  * @example
- * Fetch publications by a Profile ID
+ * Fetch all publications by a Profile ID
  * ```tsx
  * const { data, loading, error } = usePublications({
  *   where: {
