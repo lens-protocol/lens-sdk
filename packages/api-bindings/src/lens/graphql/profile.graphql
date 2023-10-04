@@ -225,14 +225,16 @@ query Profile(
 }
 
 query Profiles(
-  $request: ProfilesRequest!
+  $where: ProfilesRequestWhere!
+  $limit: LimitType
+  $cursor: Cursor
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
-  result: profiles(request: $request) {
+  result: profiles(request: { where: $where, limit: $limit, cursor: $cursor }) {
     items {
       ...Profile
     }

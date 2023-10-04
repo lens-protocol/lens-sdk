@@ -25,8 +25,8 @@ export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
  * ```tsx
  * const { data, loading, error } = usePublications({
  *   where: {
- *      publicationTypes: [PublicationType.Post]
- *    }
+ *     publicationTypes: [PublicationType.Post]
+ *   }
  * });
  * ```
  *
@@ -34,12 +34,12 @@ export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
  * Fetch all short form video post publications
  * ```tsx
  * const { data, loading, error } = usePublications({
- *    where: {
- *      publicationTypes: [PublicationType.Post]
- *      metadata: {
- *        mainContentFocus: [PublicationMetadataMainFocusType.ShortVideo],
- *      }
- *    }
+ *   where: {
+ *     publicationTypes: [PublicationType.Post]
+ *     metadata: {
+ *       mainContentFocus: [PublicationMetadataMainFocusType.ShortVideo],
+ *     }
+ *   }
  * });
  * ```
  *
@@ -48,9 +48,9 @@ export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
  * ```tsx
  * const { data, loading, error } = usePublications({
  *   where: {
- *      publicationTypes: [PublicationType.Comment]
- *      publicationIds: ['0x1b-0x012b']
- *    }
+ *     publicationTypes: [PublicationType.Comment]
+ *     publicationIds: ['0x1b-0x012b']
+ *   }
  * });
  * ```
  *
@@ -59,9 +59,9 @@ export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
  * ```tsx
  * const { data, loading, error } = usePublications({
  *   where: {
- *      publicationTypes: [PublicationType.Mirror]
- *      from: [profileId('0x0635')]
- *    }
+ *     publicationTypes: [PublicationType.Mirror]
+ *     from: [profileId('0x0635')]
+ *   }
  * });
  * ```
  *
@@ -70,8 +70,8 @@ export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
  * ```tsx
  * const { data, loading, error } = usePublications({
  *   where: {
- *      from: [profileId('0x0635')]
- *    }
+ *     from: [profileId('0x0635')]
+ *   }
  * });
  * ```
  *
@@ -80,11 +80,10 @@ export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
  * ```tsx
  * const { data, loading, error } = usePublications({
  *   where: {
- *      from: [profileId('0x0635'), profileId('0x0f')]
- *    }
+ *     from: [profileId('0x0635'), profileId('0x0f')]
+ *   }
  * });
  * ```
- *
  */
 export function usePublications({
   where,

@@ -7,11 +7,7 @@ import {
 import { invariant, OneOf } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
-import {
-  useLensApolloClient,
-  useMediaTransformFromConfig,
-  useProfileStatsArgFromConfig,
-} from '../helpers/arguments';
+import { useLensApolloClient, useMediaTransformFromConfig } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
 
 /**
@@ -39,14 +35,12 @@ export function useProfile({
   const { data, error, loading } = useReadResult(
     useProfileHook(
       useLensApolloClient({
-        variables: useMediaTransformFromConfig(
-          useProfileStatsArgFromConfig({
-            request: {
-              forHandle,
-              forProfileId,
-            },
-          }),
-        ),
+        variables: useMediaTransformFromConfig({
+          request: {
+            ...(forHandle && { forHandle }),
+            ...(forProfileId && { forProfileId }),
+          },
+        }),
         fetchPolicy: 'cache-and-network',
         nextFetchPolicy: 'cache-first',
       }),

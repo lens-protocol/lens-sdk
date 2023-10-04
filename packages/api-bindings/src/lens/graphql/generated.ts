@@ -2735,11 +2735,7 @@ export type CreateActOnOpenActionEip712TypedData = {
   };
 };
 
-export type RelaySuccess = {
-  __typename: 'RelaySuccess';
-  txHash: string | null;
-  txId: string | null;
-};
+export type RelaySuccess = { __typename: 'RelaySuccess'; txHash: string | null; txId: string };
 
 export type RelayError = { __typename: 'RelayError'; reason: RelayErrorReasonType };
 
@@ -2979,7 +2975,9 @@ export type ProfileVariables = Exact<{
 export type ProfileData = { result: Profile | null };
 
 export type ProfilesVariables = Exact<{
-  request: ProfilesRequest;
+  where: ProfilesRequestWhere;
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   profileCoverTransform?: InputMaybe<ImageTransform>;
   profilePictureTransform?: InputMaybe<ImageTransform>;
   profileStatsArg?: InputMaybe<ProfileStatsArg>;
@@ -7620,14 +7618,16 @@ export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>;
 export type ProfileQueryResult = Apollo.QueryResult<ProfileData, ProfileVariables>;
 export const ProfilesDocument = /*#__PURE__*/ gql`
   query Profiles(
-    $request: ProfilesRequest!
+    $where: ProfilesRequestWhere!
+    $limit: LimitType
+    $cursor: Cursor
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
     $profileStatsArg: ProfileStatsArg = {}
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
-    result: profiles(request: $request) {
+    result: profiles(request: { where: $where, limit: $limit, cursor: $cursor }) {
       items {
         ...Profile
       }
@@ -7652,7 +7652,9 @@ export const ProfilesDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useProfiles({
  *   variables: {
- *      request: // value for 'request'
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *      profileCoverTransform: // value for 'profileCoverTransform'
  *      profilePictureTransform: // value for 'profilePictureTransform'
  *      profileStatsArg: // value for 'profileStatsArg'
