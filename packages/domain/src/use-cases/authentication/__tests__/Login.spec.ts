@@ -8,95 +8,76 @@ import {
   WalletConnectionError,
   WalletConnectionErrorReason,
 } from '../../../entities';
-import { mockCredentials, mockProfile, mockWallet } from '../../../entities/__helpers__/mocks';
-import { ISessionPresenter } from '../../lifecycle';
-import { ActiveProfileLoader } from '../../profile/ActiveProfileLoader';
+import { mockICredentials, mockWallet } from '../../../entities/__helpers__/mocks';
 import {
   ICredentialsIssuer,
   ICredentialsWriter,
   IWalletFactory,
-  IWalletLoginPresenter,
+  ILoginPresenter,
   IWritableWalletGateway,
-  WalletLogin,
-} from '../WalletLogin';
-import { mockWalletLoginRequest } from '../__helpers__/mocks';
+  Login,
+} from '../Login';
+import { mockLoginRequest } from '../__helpers__/mocks';
 
 function setupTestScenario({
-  activeProfileLoader = mock<ActiveProfileLoader>(),
   walletFactory,
   credentialsIssuer,
 }: {
-  activeProfileLoader?: ActiveProfileLoader;
   walletFactory: IWalletFactory;
   credentialsIssuer: ICredentialsIssuer;
 }) {
   const walletGateway = mock<IWritableWalletGateway>();
   const credentialsWriter = mock<ICredentialsWriter>();
-  const loginPresenter = mock<IWalletLoginPresenter>();
-  const sessionPresenter = mock<ISessionPresenter>();
+  const loginPresenter = mock<ILoginPresenter>();
 
-  const walletLogin = new WalletLogin(
+  const interactor = new Login(
     walletFactory,
     walletGateway,
     credentialsIssuer,
     credentialsWriter,
     loginPresenter,
-    activeProfileLoader,
-    sessionPresenter,
   );
 
   return {
-    activeProfileLoader,
     credentialsIssuer,
     credentialsWriter,
     loginPresenter,
     walletFactory,
     walletGateway,
-    walletLogin,
-    sessionPresenter,
+    interactor,
   };
 }
 
-describe(`Given the ${WalletLogin.name} interactor`, () => {
-  describe(`when "${WalletLogin.prototype.login.name}" is invoked`, () => {
-    const request = mockWalletLoginRequest();
+describe(`Given the ${Login.name} interactor`, () => {
+  describe(`when "${Login.prototype.execute.name}" is invoked`, () => {
+    const request = mockLoginRequest();
     const wallet = mockWallet(request);
-    const activeProfile = mockProfile();
 
     it(`should:
         - use the IWalletFactory to create the specified ${Wallet.name} entity
         - generate new credentials for the wallet
         - save wallet and credentials
-        - load the active profile associated with the wallet
-        - present an authenticated session
         - present successful result`, async () => {
       const walletFactory = mock<IWalletFactory>();
       const credentialsIssuer = mock<ICredentialsIssuer>();
-      const activeProfileLoader = mock<ActiveProfileLoader>();
 
-      const credentials = mockCredentials({ address: wallet.address });
+      const credentials = mockICredentials({ address: wallet.address });
 
-      when(walletFactory.create).calledWith(request).mockResolvedValue(wallet);
+      when(walletFactory.create).calledWith(request.address).mockResolvedValue(wallet);
       when(credentialsIssuer.issueCredentials)
-        .calledWith(wallet)
+        .calledWith(request.profileId, wallet)
         .mockResolvedValue(success(credentials));
-      when(activeProfileLoader.loadActiveProfileByOwnerAddress)
-        .calledWith(wallet.address, undefined)
-        .mockResolvedValue(activeProfile);
 
-      const { walletLogin, walletGateway, credentialsWriter, loginPresenter, sessionPresenter } =
-        setupTestScenario({
-          activeProfileLoader,
-          credentialsIssuer,
-          walletFactory,
-        });
+      const { interactor, walletGateway, credentialsWriter, loginPresenter } = setupTestScenario({
+        credentialsIssuer,
+        walletFactory,
+      });
 
-      await walletLogin.login(request);
+      await interactor.execute(request);
 
       expect(walletGateway.save).toHaveBeenCalledWith(wallet);
       expect(credentialsWriter.save).toHaveBeenCalledWith(credentials);
-      expect(sessionPresenter.authenticated).toHaveBeenCalledWith(wallet, activeProfile);
-      expect(loginPresenter.present).toBeCalledWith(success(activeProfile));
+      expect(loginPresenter.present).toBeCalledWith(success(request));
     });
 
     it('should handle scenarios where the user cancels the challenge signing operation', async () => {
@@ -105,14 +86,14 @@ describe(`Given the ${WalletLogin.name} interactor`, () => {
       const error = new UserRejectedError();
 
       when(walletFactory.create).mockResolvedValue(wallet);
-      when(credentialsIssuer.issueCredentials).calledWith(wallet).mockResolvedValue(failure(error));
+      when(credentialsIssuer.issueCredentials).mockResolvedValue(failure(error));
 
-      const { loginPresenter, walletLogin } = setupTestScenario({
+      const { loginPresenter, interactor } = setupTestScenario({
         credentialsIssuer,
         walletFactory,
       });
 
-      await walletLogin.login(request);
+      await interactor.execute(request);
 
       expect(loginPresenter.present).toHaveBeenCalledWith(failure(error));
     });
@@ -122,15 +103,15 @@ describe(`Given the ${WalletLogin.name} interactor`, () => {
       const credentialsIssuer = mock<ICredentialsIssuer>();
       const error = new WalletConnectionError(WalletConnectionErrorReason.WRONG_ACCOUNT);
 
-      when(walletFactory.create).calledWith(request).mockResolvedValue(wallet);
-      when(credentialsIssuer.issueCredentials).calledWith(wallet).mockResolvedValue(failure(error));
+      when(walletFactory.create).calledWith(request.address).mockResolvedValue(wallet);
+      when(credentialsIssuer.issueCredentials).mockResolvedValue(failure(error));
 
-      const { loginPresenter, walletLogin } = setupTestScenario({
+      const { loginPresenter, interactor } = setupTestScenario({
         credentialsIssuer,
         walletFactory,
       });
 
-      await walletLogin.login(request);
+      await interactor.execute(request);
 
       expect(loginPresenter.present).toHaveBeenCalledWith(failure(error));
     });

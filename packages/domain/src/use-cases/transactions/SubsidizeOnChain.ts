@@ -13,7 +13,7 @@ import {
   ProtocolTransactionRequestModel,
   TransactionError,
 } from '../../entities';
-import { ActiveWallet } from '../wallets/ActiveWallet';
+import { ActiveWallet } from '../authentication/ActiveWallet';
 import { BroadcastingError } from './BroadcastingError';
 import { ISignedOperation } from './DelegableSigning';
 import { ITransactionResultPresenter } from './ITransactionResultPresenter';

@@ -6,7 +6,7 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '../../entities';
-import { ActiveWallet } from '../wallets';
+import { ActiveWallet } from '../authentication';
 
 type SignMessageResult = Result<
   Signature,

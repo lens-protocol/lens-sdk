@@ -1,16 +1,11 @@
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
-import { ICredentials, AnyTransactionRequestModel, Wallet } from '../../entities';
-import { ActiveProfileLoader } from '../profile';
+import { ICredentials, AnyTransactionRequestModel } from '../../entities';
 import { TransactionQueue } from '../transactions';
-import {
-  ActiveWallet,
-  ICredentialsReader,
-  ICredentialsWriter,
-  LogoutReason,
-  WalletLogout,
-} from '../wallets';
-import { ISessionPresenter } from './ISessionPresenter';
+import { ICredentialsReader } from './ActiveWallet';
+import { ICredentialsWriter } from './Login';
+import { Logout, LogoutReason } from './Logout';
+import { SessionData } from './SessionData';
 
 export class CredentialsExpiredError extends Error {
   name = 'CredentialsExpiredError' as const;
@@ -23,52 +18,43 @@ export interface ICredentialsRenewer {
   renewCredentials(credentials: ICredentials): PromiseResult<ICredentials, CredentialsExpiredError>;
 }
 
+export interface IBootstrapPresenter {
+  anonymous(): void;
+
+  authenticated(session: SessionData): void;
+}
+
 export class Bootstrap {
   constructor(
-    private readonly activeWallet: ActiveWallet,
     private readonly credentialsGateway: ICredentialsGateway,
     private readonly credentialsRenewer: ICredentialsRenewer,
-    private readonly activeProfileLoader: ActiveProfileLoader,
     private readonly transactionQueue: TransactionQueue<AnyTransactionRequestModel>,
-    private readonly sessionPresenter: ISessionPresenter,
-    private readonly walletLogout: WalletLogout,
+    private readonly logout: Logout,
+    private readonly presenter: IBootstrapPresenter,
   ) {}
 
   async execute() {
-    const wallet = await this.activeWallet.getActiveWallet();
-
-    if (!wallet) {
-      this.sessionPresenter.anonymous();
-      return;
-    }
-
     const credentials = await this.credentialsGateway.getCredentials();
+
     if (!credentials) {
-      await this.logout();
+      this.presenter.anonymous();
       return;
     }
 
     const result = await this.credentialsRenewer.renewCredentials(credentials);
 
     if (result.isFailure()) {
-      await this.logout();
+      await this.logout.execute(LogoutReason.CREDENTIALS_EXPIRED);
       return;
     }
 
     await this.credentialsGateway.save(result.value);
 
-    await this.authenticated(wallet);
-  }
-
-  private async authenticated(wallet: Wallet) {
-    const profile = await this.activeProfileLoader.loadActiveProfileByOwnerAddress(wallet.address);
-
-    this.sessionPresenter.authenticated(wallet, profile);
-
     await this.transactionQueue.resume();
-  }
 
-  private async logout() {
-    await this.walletLogout.logout(LogoutReason.CREDENTIALS_EXPIRED);
+    this.presenter.authenticated({
+      address: credentials.address,
+      profileId: credentials.profileId,
+    });
   }
 }

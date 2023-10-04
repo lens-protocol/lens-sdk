@@ -18,15 +18,16 @@ import {
   mockAnyTransactionRequestModel,
   mockUnsignedTransaction,
   mockWallet,
-} from '../../../entities/__helpers__/mocks';
-import { mockActiveWallet, mockIPayTransactionGateway } from '../../../mocks';
+  mockActiveWallet,
+  mockIPayTransactionGateway,
+  mockTransactionQueue,
+} from '../../../mocks';
 import {
   IPayTransactionGateway,
   IPayTransactionPresenter,
   PayTransaction,
 } from '../PayTransaction';
 import { TransactionQueue } from '../TransactionQueue';
-import { mockTransactionQueue } from '../__helpers__/mocks';
 
 function setupPayTransaction({
   gateway,

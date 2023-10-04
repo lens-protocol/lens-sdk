@@ -1,6 +1,3 @@
-import type { ISessionPresenter } from '../lifecycle/ISessionPresenter';
-import { ActiveWallet } from './ActiveWallet';
-
 /**
  * The reason for logging out
  */
@@ -17,33 +14,28 @@ export interface IResettableWalletGateway {
   reset(): Promise<void>;
 }
 
-export interface IActiveProfileGateway {
-  reset(): Promise<void>;
-}
-
 export interface IConversationsGateway {
   reset(): Promise<void>;
 }
 
-export class WalletLogout {
+export interface ILogoutPresenter {
+  logout(reason: LogoutReason): void;
+}
+
+export class Logout {
   constructor(
     private walletGateway: IResettableWalletGateway,
     private credentialsGateway: IResettableCredentialsGateway,
-    private activeWallet: ActiveWallet,
-    private activeProfileGateway: IActiveProfileGateway,
     private conversationsGateway: IConversationsGateway,
-    private sessionPresenter: ISessionPresenter,
+    private presenter: ILogoutPresenter,
   ) {}
 
-  async logout(reason: LogoutReason): Promise<void> {
-    const activeWallet = await this.activeWallet.requireActiveWallet();
-
+  async execute(reason: LogoutReason): Promise<void> {
     await this.walletGateway.reset();
-    await this.activeProfileGateway.reset();
     await this.conversationsGateway.reset();
 
     await this.credentialsGateway.invalidate();
 
-    this.sessionPresenter.logout({ lastLoggedInWallet: activeWallet, logoutReason: reason });
+    this.presenter.logout(reason);
   }
 }

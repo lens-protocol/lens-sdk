@@ -70,9 +70,10 @@ export function mockWallet({ address = mockEvmAddress() }: { address?: EvmAddres
   return mock<Wallet>({ address });
 }
 
-export function mockCredentials(overrides?: Partial<ICredentials>) {
+export function mockICredentials(overrides?: Partial<ICredentials>) {
   return mock<ICredentials>({
     address: mockEvmAddress(),
+    profileId: mockProfileId(),
     ...overrides,
   });
 }

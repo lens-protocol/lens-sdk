@@ -9,10 +9,7 @@ import {
   AnyTransactionRequestModel,
   UnsignedTransaction,
 } from '../../../entities';
-import { mockWallet } from '../../../entities/__helpers__/mocks';
-import { WalletData } from '../../lifecycle';
 import { IPayTransactionGateway } from '../../transactions/PayTransaction';
-import { ActiveWallet } from '../ActiveWallet';
 import {
   IApproveTransactionGateway,
   TokenAllowanceRequest,
@@ -26,22 +23,6 @@ import {
   TokenAvailabilityError,
   TokenAvailabilityRequest,
 } from '../TokenAvailability';
-import { WalletLoginRequest } from '../WalletLogin';
-
-export function mockWalletData(override: Partial<WalletData> = {}): WalletData {
-  // Currently leverages structural typing matching the type of WalletData
-  // this might not hold true in the future
-  return mockWallet(override);
-}
-
-export function mockActiveWallet({ wallet = mockWallet() }: { wallet?: Wallet } = {}) {
-  const activeWallet = mock<ActiveWallet>();
-
-  when(activeWallet.requireActiveWallet).mockResolvedValue(wallet);
-  when(activeWallet.getActiveWallet).mockResolvedValue(wallet);
-
-  return activeWallet;
-}
 
 export function mockIBalanceGateway<T extends Erc20>({
   wallet,
@@ -131,15 +112,6 @@ export function mockTokeAvailability({
   when(tokenAvailability.checkAvailability).calledWith(request).mockResolvedValue(result);
 
   return tokenAvailability;
-}
-
-export function mockWalletLoginRequest(
-  overrides?: Partial<WalletLoginRequest>,
-): WalletLoginRequest {
-  return {
-    address: mockEvmAddress(),
-    ...overrides,
-  };
 }
 
 export function mockIPayTransactionGateway<T extends AnyTransactionRequestModel>({
