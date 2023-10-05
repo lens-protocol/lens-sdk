@@ -2,15 +2,19 @@ import { TypePolicy } from '@apollo/client';
 
 import { StrictTypedTypePolicies } from '../../lens';
 import { createFeedFieldPolicy } from './createFeedFieldPolicy';
-import { createFollowersFieldPolicy } from './createFollowersFieldPolicy';
-import { createFollowingFieldPolicy } from './createFollowingFieldPolicy';
-import { createMutualFollowersFieldPolicy } from './createMutualFollowersFieldPolicy';
-import { createProfilesFieldPolicy } from './createProfilesFieldPolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
-import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
 import { createQueryParamsLocalFields, QueryParams } from './createQueryParamsLocalFields';
-import { createSearchProfilesFieldPolicy } from './createSearchProfilesFieldPolicy';
-import { createSearchPublicationsFieldPolicy } from './createSearchPublicationsFieldPolicy';
+import {
+  createFollowersFieldPolicy,
+  createFollowingFieldPolicy,
+  createMutualFollowersFieldPolicy,
+  createProfileRecommendationsFieldPolicy,
+  createProfilesFieldPolicy,
+  createPublicationsFieldPolicy,
+  createSearchProfilesFieldPolicy,
+  createSearchPublicationsFieldPolicy,
+  createWhoActedOnPublicationFieldPolicy,
+} from './field-policies';
 import { notNormalizedType } from './utils/notNormalizedType';
 
 type InheritedTypePolicies = {
@@ -32,15 +36,16 @@ export function createTypePolicies(
 
     Query: {
       fields: {
+        feed: createFeedFieldPolicy(),
         followers: createFollowersFieldPolicy(),
         following: createFollowingFieldPolicy(),
         mutualFollowers: createMutualFollowersFieldPolicy(),
+        profileRecommendations: createProfileRecommendationsFieldPolicy(),
         profiles: createProfilesFieldPolicy(),
         publications: createPublicationsFieldPolicy(),
-        searchPublications: createSearchPublicationsFieldPolicy(),
         searchProfiles: createSearchProfilesFieldPolicy(),
-        feed: createFeedFieldPolicy(),
-
+        searchPublications: createSearchPublicationsFieldPolicy(),
+        whoActedOnPublication: createWhoActedOnPublicationFieldPolicy(),
         ...createQueryParamsLocalFields(params),
       },
     },

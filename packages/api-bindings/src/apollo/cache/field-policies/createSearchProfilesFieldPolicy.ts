@@ -1,4 +1,4 @@
-import { cursorBasedPagination } from './utils/cursorBasedPagination';
+import { cursorBasedPagination } from '../utils/cursorBasedPagination';
 
 export function createSearchProfilesFieldPolicy() {
   return cursorBasedPagination([['request', ['query', 'where', ['customFilters']]]]);

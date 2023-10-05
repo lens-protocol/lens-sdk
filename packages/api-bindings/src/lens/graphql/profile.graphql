@@ -262,14 +262,20 @@ query ProfileManagers($request: ProfileManagersRequest!) {
 }
 
 query ProfileRecommendations(
-  $request: ProfileRecommendationsRequest!
+  $for: ProfileId!
+  $disableML: Boolean
+  $shuffle: Boolean
+  $limit: LimitType
+  $cursor: Cursor
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
   $activityOn: [AppId!]
   $fxRateFor: SupportedFiatType = USD
 ) {
   ...InjectCommonQueryParams
-  result: profileRecommendations(request: $request) {
+  result: profileRecommendations(
+    request: { for: $for, disableML: $disableML, shuffle: $shuffle, limit: $limit, cursor: $cursor }
+  ) {
     items {
       ...Profile
     }
@@ -343,14 +349,19 @@ query MutualFollowers(
 }
 
 query WhoActedOnPublication(
-  $request: WhoActedOnPublicationRequest!
+  $on: PublicationId!
+  $where: WhoActedOnPublicationWhere
+  $limit: LimitType
+  $cursor: Cursor
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
   $activityOn: [AppId!]
   $fxRateFor: SupportedFiatType = USD
 ) {
   ...InjectCommonQueryParams
-  result: whoActedOnPublication(request: $request) {
+  result: whoActedOnPublication(
+    request: { on: $on, where: $where, limit: $limit, cursor: $cursor }
+  ) {
     items {
       ...Profile
     }
