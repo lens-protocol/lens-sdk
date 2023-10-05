@@ -1,7 +1,10 @@
 /**
  * Hooks
  */
+export * from './useMutualFollowers';
 export * from './useProfile';
+export * from './useProfileFollowers';
+export * from './useProfileFollowing';
 export * from './useProfiles';
 
 /**

@@ -29,7 +29,7 @@
     "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix && pnpm run tsc",
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
-    "test": "exit 0",
+    "test": "jest",
     "test:watch": "jest --watch",
     "tsc": "tsc --noEmit"
   },

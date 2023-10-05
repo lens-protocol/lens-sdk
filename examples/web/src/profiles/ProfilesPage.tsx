@@ -11,6 +11,21 @@ const profileHooks = [
     description: `Fetch a list of profiles.`,
     path: '/profiles/useProfiles',
   },
+  {
+    label: 'useProfileFollowers',
+    description: `Fetch a list of profile followers.`,
+    path: '/profiles/useProfileFollowers',
+  },
+  {
+    label: 'useProfileFollowing',
+    description: `Fetch a list of profile following.`,
+    path: '/profiles/useProfileFollowing',
+  },
+  {
+    label: 'useMutualFollowers',
+    description: `Fetch a list of mutual followers between profiles.`,
+    path: '/profiles/useMutualFollowers',
+  },
 ];
 
 export function ProfilesPage() {

@@ -1,39 +1,20 @@
-import { MockedResponse } from '@apollo/client/testing';
 import { LimitType } from '@lens-protocol/api-bindings';
 import {
   mockCursor,
-  mockLensApolloClient,
   mockPaginatedResultInfo,
   mockProfileFragment,
   mockProfilesResponse,
   simulateNotAuthenticated,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
-import { RenderHookResult, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 
-import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
 import {
   defaultMediaTransformsConfig,
   mediaTransformConfigToQueryVariables,
 } from '../../mediaTransforms';
 import { UseProfilesArgs, useProfiles } from '../useProfiles';
-
-function setupTestScenario(mocks: MockedResponse[]) {
-  const client = mockLensApolloClient(mocks);
-
-  return {
-    renderHook<TProps, TResult>(
-      callback: (props: TProps) => TResult,
-    ): RenderHookResult<TResult, TProps> {
-      return renderHookWithMocks(callback, {
-        mocks: {
-          mediaTransforms: defaultMediaTransformsConfig,
-          apolloClient: client,
-        },
-      });
-    },
-  };
-}
 
 describe(`Given the ${useProfiles.name} hook`, () => {
   const evmAddress = mockEvmAddress();
@@ -46,7 +27,7 @@ describe(`Given the ${useProfiles.name} hook`, () => {
 
   describe('when the query returns data successfully', () => {
     it('should settle with the profiles', async () => {
-      const { renderHook } = setupTestScenario([
+      const { renderHook } = setupHookTestScenario([
         mockProfilesResponse({
           variables: {
             where: {
@@ -55,7 +36,7 @@ describe(`Given the ${useProfiles.name} hook`, () => {
             limit: LimitType.Ten,
             ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
-          profiles,
+          items: profiles,
         }),
       ]);
 
@@ -72,7 +53,7 @@ describe(`Given the ${useProfiles.name} hook`, () => {
     describe(`when re-rendered`, () => {
       const initialPageInfo = mockPaginatedResultInfo({ prev: mockCursor() });
 
-      const { renderHook } = setupTestScenario([
+      const { renderHook } = setupHookTestScenario([
         mockProfilesResponse({
           variables: {
             where: {
@@ -81,7 +62,7 @@ describe(`Given the ${useProfiles.name} hook`, () => {
             limit: LimitType.Ten,
             ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
-          profiles,
+          items: profiles,
           info: initialPageInfo,
         }),
 
@@ -94,7 +75,7 @@ describe(`Given the ${useProfiles.name} hook`, () => {
             cursor: initialPageInfo.prev,
             ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
-          profiles: [mockProfileFragment()],
+          items: [mockProfileFragment()],
         }),
       ]);
 
