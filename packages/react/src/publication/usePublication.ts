@@ -7,7 +7,7 @@ import {
 import { OneOf, invariant } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
-import { useLensApolloClient, useMediaTransformFromConfig } from '../helpers/arguments';
+import { useLensApolloClient } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
 
 /**
@@ -33,12 +33,12 @@ export function usePublication({
   const { data, error, loading } = useReadResult(
     usePublicationHook(
       useLensApolloClient({
-        variables: useMediaTransformFromConfig({
+        variables: {
           request: {
             ...(forId && { forId }),
             ...(forTxHash && { forTxHash }),
           },
-        }),
+        },
         fetchPolicy: 'cache-and-network',
         nextFetchPolicy: 'cache-first',
       }),

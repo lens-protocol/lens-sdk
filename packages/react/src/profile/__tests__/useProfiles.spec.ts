@@ -10,10 +10,6 @@ import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
-import {
-  defaultMediaTransformsConfig,
-  mediaTransformConfigToQueryVariables,
-} from '../../mediaTransforms';
 import { UseProfilesArgs, useProfiles } from '../useProfiles';
 
 describe(`Given the ${useProfiles.name} hook`, () => {
@@ -34,7 +30,6 @@ describe(`Given the ${useProfiles.name} hook`, () => {
               ownedBy: [evmAddress],
             },
             limit: LimitType.Ten,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           items: profiles,
         }),
@@ -49,49 +44,47 @@ describe(`Given the ${useProfiles.name} hook`, () => {
       await waitFor(() => expect(result.current.loading).toBeFalsy());
       expect(result.current.data).toMatchObject(expectations);
     });
+  });
 
-    describe(`when re-rendered`, () => {
-      const initialPageInfo = mockPaginatedResultInfo({ prev: mockCursor() });
+  describe(`when re-rendered`, () => {
+    const initialPageInfo = mockPaginatedResultInfo({ prev: mockCursor() });
 
-      const { renderHook } = setupHookTestScenario([
-        mockProfilesResponse({
-          variables: {
-            where: {
-              ownedBy: [evmAddress],
-            },
-            limit: LimitType.Ten,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
+    const { renderHook } = setupHookTestScenario([
+      mockProfilesResponse({
+        variables: {
+          where: {
+            ownedBy: [evmAddress],
           },
-          items: profiles,
-          info: initialPageInfo,
-        }),
+          limit: LimitType.Ten,
+        },
+        items: profiles,
+        info: initialPageInfo,
+      }),
 
-        mockProfilesResponse({
-          variables: {
-            where: {
-              ownedBy: [evmAddress],
-            },
-            limit: LimitType.Ten,
-            cursor: initialPageInfo.prev,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
+      mockProfilesResponse({
+        variables: {
+          where: {
+            ownedBy: [evmAddress],
           },
-          items: [mockProfileFragment()],
-        }),
-      ]);
+          limit: LimitType.Ten,
+          cursor: initialPageInfo.prev,
+        },
+        items: [mockProfileFragment()],
+      }),
+    ]);
 
-      it(`should return cached data and then update the 'beforeCount' if new results are available`, async () => {
-        const first = renderHook(() => useProfiles({ where: { ownedBy: [evmAddress] } }));
-        await waitFor(() => expect(first.result.current.loading).toBeFalsy());
+    it(`should return cached data and then update the 'beforeCount' if new results are available`, async () => {
+      const first = renderHook(() => useProfiles({ where: { ownedBy: [evmAddress] } }));
+      await waitFor(() => expect(first.result.current.loading).toBeFalsy());
 
-        const second = renderHook(() => useProfiles({ where: { ownedBy: [evmAddress] } }));
+      const second = renderHook(() => useProfiles({ where: { ownedBy: [evmAddress] } }));
 
-        expect(second.result.current).toMatchObject({
-          data: expectations,
-          loading: false,
-        });
-
-        await waitFor(() => expect(second.result.current.beforeCount).toEqual(1));
+      expect(second.result.current).toMatchObject({
+        data: expectations,
+        loading: false,
       });
+
+      await waitFor(() => expect(second.result.current.beforeCount).toEqual(1));
     });
   });
 });

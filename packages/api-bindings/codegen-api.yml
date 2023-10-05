@@ -80,7 +80,7 @@ generates:
               "import type { EvmAddress, Url } from '@lens-protocol/shared-kernel';",
               "import type { ContentEncryptionKey } from '../ContentEncryptionKey';",
               "import type { Cursor } from '../Cursor';",
-              "import type { ImageSizeTransform } from '../ImageSizeTransform';",
+              "import type { ImageSizeTransform } from '../ImageTransform';",
             ]
       - 'typescript-operations':
           skipTypename: true

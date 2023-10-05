@@ -5,7 +5,7 @@ import {
   useMutualFollowers as useMutualFollowersHook,
 } from '@lens-protocol/api-bindings';
 
-import { useLensApolloClient, useMediaTransformFromConfig } from '../helpers/arguments';
+import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 
 /**
@@ -35,11 +35,11 @@ export function useMutualFollowers({
   return usePaginatedReadResult(
     useMutualFollowersHook(
       useLensApolloClient({
-        variables: useMediaTransformFromConfig({
+        variables: {
           observer,
           viewing,
           limit,
-        }),
+        },
       }),
     ),
   );

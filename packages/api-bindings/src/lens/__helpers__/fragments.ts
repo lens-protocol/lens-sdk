@@ -152,19 +152,20 @@ export function mockPublicationTextOnlyMetadata(overrides: Partial<TextOnlyMetad
   };
 }
 
-export function mockPublicationOperationsFragment(overrides: Partial<PublicationOperations> = {}) {
+export function mockPublicationOperationsFragment(
+  overrides: Partial<PublicationOperations> = {},
+): PublicationOperations {
   return {
     isNotInterested: false,
     hasBookmarked: false,
     hasReported: false,
-    canAct: TriStateValue.Unknown,
+    canCollect: TriStateValue.Unknown,
     canComment: TriStateValue.Unknown,
     canMirror: TriStateValue.Unknown,
     hasMirrored: false,
     hasUpvoted: false,
     hasDownvoted: false,
-    hasActed: { value: false, isFinalisedOnchain: false },
-    actedOn: [],
+    hasCollected: { value: false, isFinalisedOnchain: false },
     canDecrypt: {
       result: false,
       reasons: null,
@@ -196,9 +197,9 @@ export function mockPublicationStatsFragment(
     mirrors: faker.datatype.number(),
     quotes: faker.datatype.number(),
     bookmarks: faker.datatype.number(),
-    countOpenActions: faker.datatype.number(),
-    upvoteReactions: faker.datatype.number(),
-    downvoteReactions: faker.datatype.number(),
+    collects: faker.datatype.number(),
+    upvotes: faker.datatype.number(),
+    downvotes: faker.datatype.number(),
 
     ...overrides,
   };
@@ -214,11 +215,11 @@ export function mockProfileStatsFragment(overrides: Partial<ProfileStats> = {}):
     mirrors: faker.datatype.number(),
     quotes: faker.datatype.number(),
     publications: faker.datatype.number(),
-    countOpenActions: faker.datatype.number(),
-    upvoteReactions: faker.datatype.number(),
-    downvoteReactions: faker.datatype.number(),
-    upvoteReacted: faker.datatype.number(),
-    downvoteReacted: faker.datatype.number(),
+    collects: faker.datatype.number(),
+    upvotes: faker.datatype.number(),
+    downvotes: faker.datatype.number(),
+    upvoted: faker.datatype.number(),
+    downvoted: faker.datatype.number(),
 
     ...overrides,
   };

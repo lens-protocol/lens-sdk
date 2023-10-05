@@ -15,11 +15,10 @@ query OwnedHandles($request: OwnedHandlesRequest!) {
 
 query ProfilesManaged(
   $request: ProfilesManagedRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
   result: profilesManaged(request: $request) {
     items {

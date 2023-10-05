@@ -4,7 +4,7 @@ import {
   useProfiles as useProfilesHook,
 } from '@lens-protocol/api-bindings';
 
-import { useLensApolloClient, useMediaTransformFromConfig } from '../helpers/arguments';
+import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
@@ -86,10 +86,10 @@ export function useProfiles({
   return usePaginatedReadResult(
     useProfilesHook(
       useLensApolloClient({
-        variables: useMediaTransformFromConfig({
+        variables: {
           where,
           limit,
-        }),
+        },
       }),
     ),
   );

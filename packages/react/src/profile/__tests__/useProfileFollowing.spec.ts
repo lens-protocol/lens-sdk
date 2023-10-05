@@ -8,10 +8,6 @@ import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
-import {
-  defaultMediaTransformsConfig,
-  mediaTransformConfigToQueryVariables,
-} from '../../mediaTransforms';
 import { UseProfileFollowingArgs, useProfileFollowing } from '../useProfileFollowing';
 
 describe(`Given the ${useProfileFollowing.name} hook`, () => {
@@ -30,7 +26,6 @@ describe(`Given the ${useProfileFollowing.name} hook`, () => {
           variables: {
             for: profileId,
             limit: LimitType.Ten,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           items: profiles,
         }),

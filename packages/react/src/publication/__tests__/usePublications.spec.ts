@@ -10,10 +10,6 @@ import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
-import {
-  defaultMediaTransformsConfig,
-  mediaTransformConfigToQueryVariables,
-} from '../../mediaTransforms';
 import { UsePublicationsArgs, usePublications } from '../usePublications';
 
 describe(`Given the ${usePublications.name} hook`, () => {
@@ -35,7 +31,6 @@ describe(`Given the ${usePublications.name} hook`, () => {
             },
             orderBy: PublicationsOrderByType.Latest,
             limit: LimitType.Ten,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           items: publications,
         }),
@@ -61,7 +56,6 @@ describe(`Given the ${usePublications.name} hook`, () => {
               },
               orderBy: PublicationsOrderByType.Latest,
               limit: LimitType.Fifty,
-              ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
             },
             items: publications,
           }),
@@ -90,7 +84,6 @@ describe(`Given the ${usePublications.name} hook`, () => {
             },
             orderBy: PublicationsOrderByType.Latest,
             limit: LimitType.Ten,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           items: publications,
           info: initialPageInfo,
@@ -104,7 +97,6 @@ describe(`Given the ${usePublications.name} hook`, () => {
             orderBy: PublicationsOrderByType.Latest,
             limit: LimitType.Ten,
             cursor: initialPageInfo.prev,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           items: [mockPostFragment()],
         }),

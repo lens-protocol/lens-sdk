@@ -9,7 +9,7 @@ export type Pixel =
 
 export type ImageSizeTransform = Pixel | Percentage | 'auto';
 
-export type MediaTransformParams = {
+export type ImageTransform = {
   /**
    * Set the transformed image's width. You can use specific size in
    * pixels eg. 100px, a percentage eg. 50% or set as 'auto' to be set automatically.

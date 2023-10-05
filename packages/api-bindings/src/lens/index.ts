@@ -8,10 +8,10 @@ export * from './graphql/generated';
 export type {
   Digit,
   ImageSizeTransform,
-  MediaTransformParams, // overwrite the generated one
+  ImageTransform, // shadows the less type-safe generated ImageTransform
   Percentage,
   Pixel,
-} from './ImageSizeTransform';
+} from './ImageTransform';
 export * from './utils';
 
 export type CursorBasedPaginatedResult<T = StoreValue> = {

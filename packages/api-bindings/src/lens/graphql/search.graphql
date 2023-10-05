@@ -3,16 +3,14 @@ query SearchPublications(
   $where: PublicationSearchWhere
   $limit: LimitType
   $cursor: Cursor
-  $publicationImageTransform: ImageTransform = {}
-  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-  $publicationStatsInput: PublicationStatsInput! = {}
-  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $imageSmallSize: ImageTransform = {}
+  $imageMediumSize: ImageTransform = {}
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: searchPublications(
     request: { query: $query, where: $where, cursor: $cursor, limit: $limit }
   ) {
@@ -38,12 +36,12 @@ query SearchProfiles(
   $where: ProfileSearchWhere
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: searchProfiles(
     request: { query: $query, where: $where, limit: $limit, cursor: $cursor }
   ) {
