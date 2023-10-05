@@ -7,6 +7,7 @@ import { createMutualFollowersFieldPolicy } from './createMutualFollowersFieldPo
 import { createProfilesFieldPolicy } from './createProfilesFieldPolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
 import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
+import { createSearchProfilesFieldPolicy } from './createSearchProfilesFieldPolicy';
 import { createSearchPublicationsFieldPolicy } from './createSearchPublicationsFieldPolicy';
 import { notNormalizedType } from './utils/notNormalizedType';
 
@@ -32,6 +33,7 @@ export function createTypePolicies(): StrictTypedTypePolicies & InheritedTypePol
         profiles: createProfilesFieldPolicy(),
         publications: createPublicationsFieldPolicy(),
         searchPublications: createSearchPublicationsFieldPolicy(),
+        searchProfiles: createSearchProfilesFieldPolicy(),
       },
     },
   };
