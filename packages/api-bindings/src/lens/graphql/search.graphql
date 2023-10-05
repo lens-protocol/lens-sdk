@@ -34,14 +34,19 @@ query SearchPublications(
 }
 
 query SearchProfiles(
-  $request: ProfileSearchRequest!
+  $query: String!
+  $where: ProfileSearchWhere
+  $limit: LimitType
+  $cursor: Cursor
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
-  result: searchProfiles(request: $request) {
+  result: searchProfiles(
+    request: { query: $query, where: $where, limit: $limit, cursor: $cursor }
+  ) {
     items {
       ...Profile
     }

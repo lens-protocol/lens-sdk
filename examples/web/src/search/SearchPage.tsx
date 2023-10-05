@@ -6,6 +6,11 @@ const searchHooks = [
     description: 'Search for publications using filters.',
     path: '/search/useSearchPublications',
   },
+  {
+    label: 'useSearchProfiles',
+    description: 'Search for profiles using filters.',
+    path: '/search/useSearchProfiles',
+  },
 ];
 
 export function SearchPage() {

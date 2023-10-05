@@ -1,12 +1,12 @@
 import {
   PrimaryPublication,
-  LimitType,
-  useSearchPublications as useBaseSearchPublications,
   PublicationSearchRequest,
+  useSearchPublications as useBaseSearchPublications,
 } from '@lens-protocol/api-bindings';
 
 import { useLensApolloClient, useMediaTransformFromConfig } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 export type UseSearchPublicationsArgs = PaginatedArgs<PublicationSearchRequest>;
 
@@ -76,7 +76,7 @@ export type UseSearchPublicationsArgs = PaginatedArgs<PublicationSearchRequest>;
 export function useSearchPublications({
   query,
   where,
-  limit = LimitType.Ten,
+  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
 }: UseSearchPublicationsArgs): PaginatedReadResult<PrimaryPublication[]> {
   return usePaginatedReadResult(
     useBaseSearchPublications(

@@ -108,14 +108,17 @@ export function useReadResult<
 }
 
 export type PaginatedArgs<T> = Prettify<
-  T & {
-    /**
-     * The number of items to return.
-     *
-     * @defaultValue LimitType.Ten
-     */
-    limit?: LimitType;
-  }
+  Omit<
+    T & {
+      /**
+       * The number of items to return.
+       *
+       * @defaultValue LimitType.Ten
+       */
+      limit?: LimitType;
+    },
+    'cursor'
+  >
 >;
 
 /**

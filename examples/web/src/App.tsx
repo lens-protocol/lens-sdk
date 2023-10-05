@@ -19,6 +19,7 @@ import { PublicationsPage } from './publications/PublicationsPage';
 import { UsePublication } from './publications/UsePublication';
 import { UsePublications } from './publications/UsePublications';
 import { SearchPage } from './search/SearchPage';
+import { UseSearchProfiles } from './search/UseSearchProfiles';
 import { UseSearchPublications } from './search/UseSearchPublications';
 import { localStorage } from './storage';
 
@@ -73,6 +74,7 @@ export function App() {
                   <Route path="/search">
                     <Route index element={<SearchPage />} />
                     <Route path="useSearchPublications" element={<UseSearchPublications />} />
+                    <Route path="useSearchProfiles" element={<UseSearchProfiles />} />
                   </Route>
 
                   <Route path="*" element={<p>Not found</p>} />
