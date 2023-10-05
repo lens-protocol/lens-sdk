@@ -12,15 +12,16 @@ import { Breadcrumbs } from './components/Breadcrumbs';
 import { GenericErrorBoundary } from './components/GenericErrorBoundary';
 import { ErrorMessage } from './components/error/ErrorMessage';
 import { Header } from './components/header/Header';
-import { ProfilesPage } from './profiles/ProfilesPage';
-import { UseProfile } from './profiles/UseProfile';
-import { UseProfiles } from './profiles/UseProfiles';
-import { PublicationsPage } from './publications/PublicationsPage';
-import { UsePublication } from './publications/UsePublication';
-import { UsePublications } from './publications/UsePublications';
-import { SearchPage } from './search/SearchPage';
-import { UseSearchProfiles } from './search/UseSearchProfiles';
-import { UseSearchPublications } from './search/UseSearchPublications';
+import {
+  ProfilesPage,
+  UseMutualFollowers,
+  UseProfile,
+  UseProfileFollowers,
+  UseProfileFollowing,
+  UseProfiles,
+} from './profiles';
+import { PublicationsPage, UsePublication, UsePublications } from './publications';
+import { SearchPage, UseSearchProfiles, UseSearchPublications } from './search';
 import { localStorage } from './storage';
 
 const { publicClient, webSocketPublicClient } = configureChains(
@@ -69,6 +70,9 @@ export function App() {
                     <Route index element={<ProfilesPage />} />
                     <Route path="useProfile" element={<UseProfile />} />
                     <Route path="useProfiles" element={<UseProfiles />} />
+                    <Route path="useProfileFollowers" element={<UseProfileFollowers />} />
+                    <Route path="useProfileFollowing" element={<UseProfileFollowing />} />
+                    <Route path="useMutualFollowers" element={<UseMutualFollowers />} />
                   </Route>
 
                   <Route path="/search">

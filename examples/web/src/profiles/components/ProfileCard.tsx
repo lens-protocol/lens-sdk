@@ -20,10 +20,10 @@ export function ProfileCard({ profile }: ProfileCardProps) {
           <p>Name: {metadata.displayName}</p>
           <p>Bio: {metadata.bio}</p>
           <ul>
-            {Object.entries(metadata.attributes ?? []).map(([key, value]) => (
-              <li key={key}>
-                <b>{key}:</b>&nbsp;
-                {value.toString() ?? null}
+            {(metadata.attributes ?? []).map((attribute) => (
+              <li key={attribute.key}>
+                <b>{attribute.key}:</b>&nbsp;
+                {attribute.value}
               </li>
             ))}
           </ul>
