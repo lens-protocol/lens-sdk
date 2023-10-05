@@ -19,7 +19,7 @@ export type UseSearchProfilesArgs = PaginatedArgs<ProfileSearchRequest>;
  *
  * @example
  * ```tsx
- * import { useSearchProfiles } from '@lens-protocol/react-web';
+ * import { useSearchProfiles } from '@lens-protocol/react';
  *
  * function SearchProfiles() {
  *   const { data, error, loading } = useSearchProfiles({ query: 'foo' });
