@@ -1,34 +1,47 @@
 import {
+  createAuthApolloClient,
   createLensApolloClient,
-  SafeApolloClient,
   defaultQueryParams,
+  SafeApolloClient,
 } from '@lens-protocol/api-bindings';
-import { AppId } from '@lens-protocol/domain/entities';
 import { ILogger, invariant } from '@lens-protocol/shared-kernel';
 import React, { ReactNode, useContext } from 'react';
 
 import { ConsoleLogger } from './ConsoleLogger';
+import { AccessTokenStorage } from './authentication/adapters/AccessTokenStorage';
+import { AuthApi } from './authentication/adapters/AuthApi';
+import { CredentialsFactory } from './authentication/adapters/CredentialsFactory';
+import { CredentialsGateway } from './authentication/adapters/CredentialsGateway';
+import { CredentialsStorage } from './authentication/adapters/CredentialsStorage';
 import { LensConfig } from './config';
 import { EnvironmentConfig } from './environments';
+import { IProfileCacheManager } from './profile/adapters/IProfileCacheManager';
+import { ProfileCacheManager } from './profile/infrastructure/ProfileCacheManager';
+import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
+import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
+import { WalletFactory } from './wallet/adapters/WalletFactory';
+import { WalletGateway } from './wallet/adapters/WalletGateway';
+import { ProviderFactory } from './wallet/infrastructure/ProviderFactory';
+import { SignerFactory } from './wallet/infrastructure/SignerFactory';
+import { createWalletStorage } from './wallet/infrastructure/WalletStorage';
 
-export type SharedDependencies = {
-  apolloClient: SafeApolloClient;
-  appId?: AppId;
-  environment: EnvironmentConfig;
-  logger: ILogger;
-};
-
+/**
+ * @internal
+ */
 export function createSharedDependencies(config: LensConfig): SharedDependencies {
   const logger = config.logger ?? new ConsoleLogger();
 
-  const accessTokenStorage = {
-    getAccessToken() {
-      return '';
-    },
-    refreshToken() {
-      return Promise.resolve();
-    },
-  };
+  // auth api
+  const anonymousApolloClient = createAuthApolloClient({
+    backendURL: config.environment.backend,
+    logger,
+  });
+  const authApi = new AuthApi(anonymousApolloClient);
+
+  // storages
+  const credentialsStorage = new CredentialsStorage(config.storage, config.environment.name);
+  const accessTokenStorage = new AccessTokenStorage(authApi, credentialsStorage);
+  const walletStorage = createWalletStorage(config.storage, config.environment.name);
 
   // apollo client
   const apolloClient = createLensApolloClient({
@@ -40,12 +53,48 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     contentMatchers: [config.environment.snapshot.matcher],
   });
 
+  // infrastructure
+  const signerFactory = new SignerFactory(config.bindings, config.environment.chains);
+  const providerFactory = new ProviderFactory(config.bindings, config.environment.chains);
+  const transactionObserver = new TransactionObserver(
+    providerFactory,
+    apolloClient,
+    config.environment.timings,
+  );
+
+  // common adapters
+  const transactionFactory = new TransactionFactory(transactionObserver);
+  const credentialsFactory = new CredentialsFactory(authApi);
+  const credentialsGateway = new CredentialsGateway(credentialsStorage);
+  const profileCacheManager = new ProfileCacheManager(apolloClient);
+  const walletFactory = new WalletFactory(signerFactory, transactionFactory);
+  const walletGateway = new WalletGateway(walletStorage, walletFactory);
+
   return {
     apolloClient,
+    credentialsFactory,
+    credentialsGateway,
     environment: config.environment,
     logger,
+    profileCacheManager,
+    walletFactory,
+    walletGateway,
   };
 }
+
+/**
+ * @internal
+ */
+export type SharedDependencies = {
+  apolloClient: SafeApolloClient;
+  credentialsFactory: CredentialsFactory;
+  credentialsGateway: CredentialsGateway;
+  environment: EnvironmentConfig;
+  logger: ILogger;
+  profileCacheManager: IProfileCacheManager;
+  walletFactory: WalletFactory;
+  walletGateway: WalletGateway;
+};
 
 const SharedDependenciesContext = React.createContext<SharedDependencies | null>(null);
 
@@ -54,6 +103,9 @@ type SharedDependenciesProviderProps = {
   dependencies: SharedDependencies;
 };
 
+/**
+ * @internal
+ */
 export function SharedDependenciesProvider({
   children,
   dependencies: context,

@@ -1,6 +1,5 @@
 export * from './CreateProfile';
 export * from './FollowProfiles';
-export * from './IProfileGateway';
 export * from './ProveNftOwnership';
 export * from './UnfollowProfile';
 export * from './UpdateDispatcherConfig';

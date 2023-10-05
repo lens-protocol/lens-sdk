@@ -1,3 +1,6 @@
+import { faker } from '@faker-js/faker';
+
+import { Cursor } from '../../Cursor';
 import {
   PaginatedResultInfo,
   PublicationDocument,
@@ -10,6 +13,10 @@ import {
 import { AnyPublication, PrimaryPublication } from '../../publication';
 import { mockPaginatedResultInfo } from '../fragments';
 import { mockAnyPaginatedResponse } from './mockAnyPaginatedResponse';
+
+export function mockCursor(): Cursor {
+  return faker.random.alphaNumeric(10) as Cursor;
+}
 
 export function mockPublicationResponse({
   variables,

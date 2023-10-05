@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 
 import { CATEGORIES } from '../../config';
+import { LoginButton } from '../auth';
 
 export function Header() {
   return (
@@ -25,7 +26,9 @@ export function Header() {
             justifyContent: 'space-between',
             gap: '1rem',
           }}
-        ></div>
+        >
+          <LoginButton />
+        </div>
       </div>
 
       <nav>

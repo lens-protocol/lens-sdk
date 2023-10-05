@@ -1,25 +1,15 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
-import { ProfileIdentifier, WalletData } from '@lens-protocol/domain/use-cases/lifecycle';
-
-export enum SessionType {
-  Anonymous = 'ANONYMOUS',
-  JustWallet = 'JUST_WALLET',
-  WithProfile = 'WITH_PROFILE',
-}
+import { SessionData } from '@lens-protocol/domain/src/use-cases/authentication';
 
 /**
  * @experimental
  */
-class NotAuthenticatedSession<TWallet, TProfile> {
-  readonly type = SessionType.Anonymous;
-
-  isAuthenticated(): this is
-    | AuthenticatedWalletSession<TWallet, TProfile>
-    | AuthenticatedProfileSession<TWallet, TProfile> {
+class NotAuthenticatedSession {
+  isAuthenticated(): this is AuthenticatedProfileSession {
     return false;
   }
 
-  isNotAuthenticated(): this is NotAuthenticatedSession<TWallet, TProfile> {
+  isNotAuthenticated(): this is NotAuthenticatedSession {
     return true;
   }
 }
@@ -27,77 +17,34 @@ class NotAuthenticatedSession<TWallet, TProfile> {
 /**
  * @experimental
  */
-class AuthenticatedWalletSession<TWallet, TProfile> {
-  readonly type = SessionType.JustWallet;
+class AuthenticatedProfileSession {
+  constructor(readonly data: SessionData) {}
 
-  constructor(readonly wallet: TWallet) {}
-
-  isAuthenticated(): this is
-    | AuthenticatedWalletSession<TWallet, TProfile>
-    | AuthenticatedProfileSession<TWallet, TProfile> {
+  isAuthenticated(): this is AuthenticatedProfileSession {
     return true;
   }
 
-  isNotAuthenticated(): this is NotAuthenticatedSession<TWallet, TProfile> {
+  isNotAuthenticated(): this is NotAuthenticatedSession {
     return false;
   }
 }
 
-/**
- * @experimental
- */
-class AuthenticatedProfileSession<TWallet, TProfile> {
-  readonly type = SessionType.WithProfile;
-
-  constructor(readonly wallet: TWallet, readonly profile: TProfile) {}
-
-  isAuthenticated(): this is
-    | AuthenticatedWalletSession<TWallet, TProfile>
-    | AuthenticatedProfileSession<TWallet, TProfile> {
-    return true;
-  }
-
-  isNotAuthenticated(): this is NotAuthenticatedSession<TWallet, TProfile> {
-    return false;
-  }
-}
-
-export type { NotAuthenticatedSession, AuthenticatedWalletSession, AuthenticatedProfileSession };
+export type { NotAuthenticatedSession, AuthenticatedProfileSession };
 
 export function notAuthenticated() {
-  return new NotAuthenticatedSession<never, never>();
+  return new NotAuthenticatedSession();
 }
 
-export function authenticatedWallet<T extends WalletData>(wallet: T) {
-  return new AuthenticatedWalletSession<T, never>(wallet);
-}
-
-export function authenticatedProfile<
-  TWallet extends WalletData,
-  TProfile extends ProfileIdentifier,
->(wallet: TWallet, profile: TProfile) {
-  return new AuthenticatedProfileSession(wallet, profile);
-}
-
-export function authenticatedWith<TWallet extends WalletData, TProfile extends ProfileIdentifier>(
-  wallet: TWallet,
-  profile: TProfile | null,
-) {
-  if (profile === null) {
-    return authenticatedWallet(wallet);
-  }
-  return authenticatedProfile(wallet, profile);
+export function authenticated(data: SessionData) {
+  return new AuthenticatedProfileSession(data);
 }
 
 /**
  * @experimental
  */
-export type Session<TWallet extends WalletData, TProfile extends ProfileIdentifier> =
-  | NotAuthenticatedSession<never, never>
-  | AuthenticatedWalletSession<TWallet, never>
-  | AuthenticatedProfileSession<TWallet, TProfile>;
+export type Session = NotAuthenticatedSession | AuthenticatedProfileSession;
 
-const sessionVar = makeVar<Session<WalletData, ProfileIdentifier> | null>(null);
+const sessionVar = makeVar<Session | null>(null);
 
 export function getSession() {
   return sessionVar();
@@ -111,6 +58,6 @@ export function resetSession() {
   sessionVar(null);
 }
 
-export function updateSession(session: Session<WalletData, ProfileIdentifier>) {
+export function updateSession(session: Session) {
   sessionVar(session);
 }
