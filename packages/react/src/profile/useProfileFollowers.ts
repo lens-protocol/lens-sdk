@@ -18,6 +18,13 @@ export type UseProfileFollowersArgs = PaginatedArgs<FollowersRequest>;
  *
  * @category Profiles
  * @group Hooks
+ *
+ * @example
+ * ```tsx
+ * const { data, loading, error } = useProfileFollowers({
+ *   of: '0x123',
+ * });
+ * ```
  */
 export function useProfileFollowers({
   of,

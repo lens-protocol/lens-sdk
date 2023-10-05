@@ -1,39 +1,20 @@
-import { MockedResponse } from '@apollo/client/testing';
 import { LimitType, PublicationsOrderByType } from '@lens-protocol/api-bindings';
 import {
   mockCursor,
   mockPublicationsResponse,
-  mockLensApolloClient,
   mockPaginatedResultInfo,
   mockPostFragment,
   simulateNotAuthenticated,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
-import { RenderHookResult, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 
-import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
 import {
   defaultMediaTransformsConfig,
   mediaTransformConfigToQueryVariables,
 } from '../../mediaTransforms';
 import { UsePublicationsArgs, usePublications } from '../usePublications';
-
-function setupTestScenario(mocks: MockedResponse[]) {
-  const client = mockLensApolloClient(mocks);
-
-  return {
-    renderHook<TProps, TResult>(
-      callback: (props: TProps) => TResult,
-    ): RenderHookResult<TResult, TProps> {
-      return renderHookWithMocks(callback, {
-        mocks: {
-          mediaTransforms: defaultMediaTransformsConfig,
-          apolloClient: client,
-        },
-      });
-    },
-  };
-}
 
 describe(`Given the ${usePublications.name} hook`, () => {
   const profileId = mockProfileId();
@@ -46,7 +27,7 @@ describe(`Given the ${usePublications.name} hook`, () => {
 
   describe('when the query returns data successfully', () => {
     it('should settle with the publications', async () => {
-      const { renderHook } = setupTestScenario([
+      const { renderHook } = setupHookTestScenario([
         mockPublicationsResponse({
           variables: {
             where: {
@@ -56,7 +37,7 @@ describe(`Given the ${usePublications.name} hook`, () => {
             limit: LimitType.Ten,
             ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
-          publications,
+          items: publications,
         }),
       ]);
 
@@ -72,7 +53,7 @@ describe(`Given the ${usePublications.name} hook`, () => {
 
     describe('when limit is provided', () => {
       it('should override the default limit', async () => {
-        const { renderHook } = setupTestScenario([
+        const { renderHook } = setupHookTestScenario([
           mockPublicationsResponse({
             variables: {
               where: {
@@ -82,7 +63,7 @@ describe(`Given the ${usePublications.name} hook`, () => {
               limit: LimitType.Fifty,
               ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
             },
-            publications,
+            items: publications,
           }),
         ]);
 
@@ -101,7 +82,7 @@ describe(`Given the ${usePublications.name} hook`, () => {
     describe(`when re-rendered`, () => {
       const initialPageInfo = mockPaginatedResultInfo({ prev: mockCursor() });
 
-      const { renderHook } = setupTestScenario([
+      const { renderHook } = setupHookTestScenario([
         mockPublicationsResponse({
           variables: {
             where: {
@@ -111,7 +92,7 @@ describe(`Given the ${usePublications.name} hook`, () => {
             limit: LimitType.Ten,
             ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
-          publications,
+          items: publications,
           info: initialPageInfo,
         }),
 
@@ -125,7 +106,7 @@ describe(`Given the ${usePublications.name} hook`, () => {
             cursor: initialPageInfo.prev,
             ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
-          publications: [mockPostFragment()],
+          items: [mockPostFragment()],
         }),
       ]);
 

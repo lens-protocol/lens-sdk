@@ -48,7 +48,7 @@ describe(`Given the ${useSearchPublications.name} hook`, () => {
   const expectations = publications.map(({ __typename, id }) => ({ __typename, id }));
 
   describe('when the query returns data successfully', () => {
-    it.only('should return publications that match the search result', async () => {
+    it('should return publications that match the search result', async () => {
       const { result } = setupTestScenario({
         query,
         where: {

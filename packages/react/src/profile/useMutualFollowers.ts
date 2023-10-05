@@ -18,6 +18,14 @@ export type UseMutualFollowersArgs = PaginatedArgs<MutualFollowersRequest>;
  *
  * @category Profiles
  * @group Hooks
+ *
+ * @example
+ * ```tsx
+ * const { data, loading, error } = useMutualFollowers({
+ *   observer: '0x123',
+ *   viewing: '0x456',
+ * });
+ * ```
  */
 export function useMutualFollowers({
   observer,
