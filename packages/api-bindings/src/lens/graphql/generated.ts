@@ -166,8 +166,8 @@ export type BroadcastRequest = {
 };
 
 export type ChallengeRequest = {
-  /** The profile ID to initiate a challenge */
-  for: Scalars['ProfileId'];
+  /** The profile ID to initiate a challenge - note if you do not pass this in you be logging in as a wallet and wont be able to use all the features */
+  for?: InputMaybe<Scalars['ProfileId']>;
   /** The Ethereum address that will sign the challenge */
   signedBy: Scalars['EvmAddress'];
 };
@@ -491,6 +491,10 @@ export type ImageTransform = {
 export type InviteRequest = {
   invites: Array<Scalars['EvmAddress']>;
   secret: Scalars['String'];
+};
+
+export type LastLoggedInProfileRequest = {
+  for: Scalars['EvmAddress'];
 };
 
 export type LegacyCollectRequest = {
@@ -3655,7 +3659,10 @@ export type SearchPublicationsData = {
 };
 
 export type SearchProfilesVariables = Exact<{
-  request: ProfileSearchRequest;
+  query: Scalars['String'];
+  where?: InputMaybe<ProfileSearchWhere>;
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   profileCoverTransform?: InputMaybe<ImageTransform>;
   profilePictureTransform?: InputMaybe<ImageTransform>;
   profileStatsArg?: InputMaybe<ProfileStatsArg>;
@@ -10776,14 +10783,19 @@ export type SearchPublicationsQueryResult = Apollo.QueryResult<
 >;
 export const SearchProfilesDocument = /*#__PURE__*/ gql`
   query SearchProfiles(
-    $request: ProfileSearchRequest!
+    $query: String!
+    $where: ProfileSearchWhere
+    $limit: LimitType
+    $cursor: Cursor
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
     $profileStatsArg: ProfileStatsArg = {}
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
-    result: searchProfiles(request: $request) {
+    result: searchProfiles(
+      request: { query: $query, where: $where, limit: $limit, cursor: $cursor }
+    ) {
       items {
         ...Profile
       }
@@ -10808,7 +10820,10 @@ export const SearchProfilesDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useSearchProfiles({
  *   variables: {
- *      request: // value for 'request'
+ *      query: // value for 'query'
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *      profileCoverTransform: // value for 'profileCoverTransform'
  *      profilePictureTransform: // value for 'profilePictureTransform'
  *      profileStatsArg: // value for 'profileStatsArg'
@@ -14235,6 +14250,7 @@ export type QueryKeySpecifier = (
   | 'following'
   | 'generateModuleCurrencyApprovalData'
   | 'invitedProfiles'
+  | 'lastLoggedInProfile'
   | 'lensTransactionStatus'
   | 'momokaSubmitters'
   | 'momokaSummary'
@@ -14300,6 +14316,7 @@ export type QueryFieldPolicy = {
   following?: FieldPolicy<any> | FieldReadFunction<any>;
   generateModuleCurrencyApprovalData?: FieldPolicy<any> | FieldReadFunction<any>;
   invitedProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
+  lastLoggedInProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   lensTransactionStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   momokaSubmitters?: FieldPolicy<any> | FieldReadFunction<any>;
   momokaSummary?: FieldPolicy<any> | FieldReadFunction<any>;

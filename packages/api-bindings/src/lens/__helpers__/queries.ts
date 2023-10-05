@@ -14,6 +14,9 @@ import {
   PublicationsData,
   PublicationsDocument,
   PublicationsVariables,
+  SearchProfilesData,
+  SearchProfilesDocument,
+  SearchProfilesVariables,
   SearchPublicationsData,
   SearchPublicationsDocument,
   SearchPublicationsVariables,
@@ -138,6 +141,33 @@ export function mockProfilesResponse({
         result: {
           items: profiles,
           pageInfo: info,
+        },
+      },
+    },
+  };
+}
+
+export function mockSearchProfilesResponse(args: {
+  variables: SearchProfilesVariables;
+  items: Profile[];
+}): MockedResponse<SearchProfilesData> {
+  return {
+    request: {
+      query: SearchProfilesDocument,
+      variables: {
+        profileCoverTransform: {},
+        profilePictureTransform: {},
+        profileStatsArg: {},
+        profileStatsCountOpenActionArgs: {},
+        rateRequest: { for: 'USD' },
+        ...args.variables,
+      },
+    },
+    result: {
+      data: {
+        result: {
+          items: args.items,
+          pageInfo: mockPaginatedResultInfo(),
         },
       },
     },

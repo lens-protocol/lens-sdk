@@ -2,7 +2,7 @@ import {
   AnyPublication,
   PublicationsOrderByType,
   PublicationsRequest,
-  usePublications as usePublicationsBase
+  usePublications as usePublicationsBase,
 } from '@lens-protocol/api-bindings';
 
 import { useLensApolloClient, useMediaTransformFromConfig } from '../helpers/arguments';
