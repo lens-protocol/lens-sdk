@@ -1,13 +1,13 @@
 import {
   AnyPublication,
-  LimitType,
   PublicationsOrderByType,
   PublicationsRequest,
-  usePublications as usePublicationsBase,
+  usePublications as usePublicationsBase
 } from '@lens-protocol/api-bindings';
 
 import { useLensApolloClient, useMediaTransformFromConfig } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 /**
  * {@link usePublications} hook arguments
@@ -88,7 +88,7 @@ export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
 export function usePublications({
   where,
   orderBy = PublicationsOrderByType.Latest,
-  limit = LimitType.Ten,
+  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
 }: UsePublicationsArgs): PaginatedReadResult<AnyPublication[]> {
   return usePaginatedReadResult(
     usePublicationsBase(

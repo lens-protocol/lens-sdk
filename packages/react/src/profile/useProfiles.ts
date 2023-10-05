@@ -1,5 +1,4 @@
 import {
-  LimitType,
   Profile,
   ProfilesRequest,
   useProfiles as useProfilesHook,
@@ -7,6 +6,7 @@ import {
 
 import { useLensApolloClient, useMediaTransformFromConfig } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 /**
  * {@link useProfiles} hook arguments
@@ -81,7 +81,7 @@ export type UseProfilesArgs = PaginatedArgs<ProfilesRequest>;
  */
 export function useProfiles({
   where,
-  limit = LimitType.Ten,
+  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
 }: UseProfilesArgs): PaginatedReadResult<Profile[]> {
   return usePaginatedReadResult(
     useProfilesHook(
