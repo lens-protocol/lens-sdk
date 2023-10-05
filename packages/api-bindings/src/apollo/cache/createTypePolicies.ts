@@ -1,6 +1,9 @@
 import { TypePolicy } from '@apollo/client';
 
 import { StrictTypedTypePolicies } from '../../lens';
+import { createFollowersFieldPolicy } from './createFollowersFieldPolicy';
+import { createFollowingFieldPolicy } from './createFollowingFieldPolicy';
+import { createMutualFollowersFieldPolicy } from './createMutualFollowersFieldPolicy';
 import { createProfilesFieldPolicy } from './createProfilesFieldPolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
 import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
@@ -23,9 +26,12 @@ export function createTypePolicies(): StrictTypedTypePolicies & InheritedTypePol
 
     Query: {
       fields: {
+        followers: createFollowersFieldPolicy(),
+        following: createFollowingFieldPolicy(),
+        mutualFollowers: createMutualFollowersFieldPolicy(),
+        profiles: createProfilesFieldPolicy(),
         publications: createPublicationsFieldPolicy(),
         searchPublications: createSearchPublicationsFieldPolicy(),
-        profiles: createProfilesFieldPolicy(),
       },
     },
   };

@@ -3018,7 +3018,9 @@ export type ProfileRecommendationsData = {
 };
 
 export type FollowingVariables = Exact<{
-  request: FollowingRequest;
+  for: Scalars['ProfileId'];
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   profileCoverTransform?: InputMaybe<ImageTransform>;
   profilePictureTransform?: InputMaybe<ImageTransform>;
   profileStatsArg?: InputMaybe<ProfileStatsArg>;
@@ -3029,7 +3031,9 @@ export type FollowingVariables = Exact<{
 export type FollowingData = { result: { items: Array<Profile>; pageInfo: PaginatedResultInfo } };
 
 export type FollowersVariables = Exact<{
-  request: FollowersRequest;
+  of: Scalars['ProfileId'];
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   profileCoverTransform?: InputMaybe<ImageTransform>;
   profilePictureTransform?: InputMaybe<ImageTransform>;
   profileStatsArg?: InputMaybe<ProfileStatsArg>;
@@ -3040,7 +3044,10 @@ export type FollowersVariables = Exact<{
 export type FollowersData = { result: { items: Array<Profile>; pageInfo: PaginatedResultInfo } };
 
 export type MutualFollowersVariables = Exact<{
-  request: MutualFollowersRequest;
+  observer: Scalars['ProfileId'];
+  viewing: Scalars['ProfileId'];
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   profileCoverTransform?: InputMaybe<ImageTransform>;
   profilePictureTransform?: InputMaybe<ImageTransform>;
   profileStatsArg?: InputMaybe<ProfileStatsArg>;
@@ -7820,14 +7827,16 @@ export type ProfileRecommendationsQueryResult = Apollo.QueryResult<
 >;
 export const FollowingDocument = /*#__PURE__*/ gql`
   query Following(
-    $request: FollowingRequest!
+    $for: ProfileId!
+    $limit: LimitType
+    $cursor: Cursor
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
     $profileStatsArg: ProfileStatsArg = {}
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
-    result: following(request: $request) {
+    result: following(request: { for: $for, limit: $limit, cursor: $cursor }) {
       items {
         ...Profile
       }
@@ -7852,7 +7861,9 @@ export const FollowingDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useFollowing({
  *   variables: {
- *      request: // value for 'request'
+ *      for: // value for 'for'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *      profileCoverTransform: // value for 'profileCoverTransform'
  *      profilePictureTransform: // value for 'profilePictureTransform'
  *      profileStatsArg: // value for 'profileStatsArg'
@@ -7878,14 +7889,16 @@ export type FollowingLazyQueryHookResult = ReturnType<typeof useFollowingLazyQue
 export type FollowingQueryResult = Apollo.QueryResult<FollowingData, FollowingVariables>;
 export const FollowersDocument = /*#__PURE__*/ gql`
   query Followers(
-    $request: FollowersRequest!
+    $of: ProfileId!
+    $limit: LimitType
+    $cursor: Cursor
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
     $profileStatsArg: ProfileStatsArg = {}
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
-    result: followers(request: $request) {
+    result: followers(request: { of: $of, limit: $limit, cursor: $cursor }) {
       items {
         ...Profile
       }
@@ -7910,7 +7923,9 @@ export const FollowersDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useFollowers({
  *   variables: {
- *      request: // value for 'request'
+ *      of: // value for 'of'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *      profileCoverTransform: // value for 'profileCoverTransform'
  *      profilePictureTransform: // value for 'profilePictureTransform'
  *      profileStatsArg: // value for 'profileStatsArg'
@@ -7936,14 +7951,19 @@ export type FollowersLazyQueryHookResult = ReturnType<typeof useFollowersLazyQue
 export type FollowersQueryResult = Apollo.QueryResult<FollowersData, FollowersVariables>;
 export const MutualFollowersDocument = /*#__PURE__*/ gql`
   query MutualFollowers(
-    $request: MutualFollowersRequest!
+    $observer: ProfileId!
+    $viewing: ProfileId!
+    $limit: LimitType
+    $cursor: Cursor
     $profileCoverTransform: ImageTransform = {}
     $profilePictureTransform: ImageTransform = {}
     $profileStatsArg: ProfileStatsArg = {}
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
-    result: mutualFollowers(request: $request) {
+    result: mutualFollowers(
+      request: { observer: $observer, viewing: $viewing, limit: $limit, cursor: $cursor }
+    ) {
       items {
         ...Profile
       }
@@ -7968,7 +7988,10 @@ export const MutualFollowersDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useMutualFollowers({
  *   variables: {
- *      request: // value for 'request'
+ *      observer: // value for 'observer'
+ *      viewing: // value for 'viewing'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *      profileCoverTransform: // value for 'profileCoverTransform'
  *      profilePictureTransform: // value for 'profilePictureTransform'
  *      profileStatsArg: // value for 'profileStatsArg'

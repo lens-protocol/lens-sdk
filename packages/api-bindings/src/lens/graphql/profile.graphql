@@ -274,14 +274,16 @@ query ProfileRecommendations(
 }
 
 query Following(
-  $request: FollowingRequest!
+  $for: ProfileId!
+  $limit: LimitType
+  $cursor: Cursor
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
-  result: following(request: $request) {
+  result: following(request: { for: $for, limit: $limit, cursor: $cursor }) {
     items {
       ...Profile
     }
@@ -292,14 +294,16 @@ query Following(
 }
 
 query Followers(
-  $request: FollowersRequest!
+  $of: ProfileId!
+  $limit: LimitType
+  $cursor: Cursor
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
-  result: followers(request: $request) {
+  result: followers(request: { of: $of, limit: $limit, cursor: $cursor }) {
     items {
       ...Profile
     }
@@ -310,14 +314,19 @@ query Followers(
 }
 
 query MutualFollowers(
-  $request: MutualFollowersRequest!
+  $observer: ProfileId!
+  $viewing: ProfileId!
+  $limit: LimitType
+  $cursor: Cursor
   $profileCoverTransform: ImageTransform = {}
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
-  result: mutualFollowers(request: $request) {
+  result: mutualFollowers(
+    request: { observer: $observer, viewing: $viewing, limit: $limit, cursor: $cursor }
+  ) {
     items {
       ...Profile
     }
