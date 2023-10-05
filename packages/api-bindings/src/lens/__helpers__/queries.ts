@@ -14,8 +14,11 @@ import {
   PublicationsData,
   PublicationsDocument,
   PublicationsVariables,
+  SearchPublicationsData,
+  SearchPublicationsDocument,
+  SearchPublicationsVariables,
 } from '../graphql/generated';
-import { AnyPublication } from '../utils';
+import { AnyPublication, PrimaryPublication } from '../utils';
 import { mockPaginatedResultInfo } from './fragments';
 
 export function mockCursor(): Cursor {
@@ -72,6 +75,37 @@ export function mockPublicationsResponse({
         result: {
           items: publications,
           pageInfo: info,
+        },
+      },
+    },
+  };
+}
+
+export function mockSearchPublicationsResponse(args: {
+  variables: SearchPublicationsVariables;
+  items: Array<PrimaryPublication>;
+}): MockedResponse<SearchPublicationsData> {
+  return {
+    request: {
+      query: SearchPublicationsDocument,
+      variables: {
+        publicationImageTransform: {},
+        publicationOperationsActedArgs: {},
+        publicationStatsInput: {},
+        publicationStatsCountOpenActionArgs: {},
+        profileCoverTransform: {},
+        profilePictureTransform: {},
+        profileStatsArg: {},
+        profileStatsCountOpenActionArgs: {},
+        rateRequest: { for: 'USD' },
+        ...args.variables,
+      },
+    },
+    result: {
+      data: {
+        result: {
+          items: args.items,
+          pageInfo: mockPaginatedResultInfo(),
         },
       },
     },

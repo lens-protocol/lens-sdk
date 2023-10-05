@@ -4,6 +4,7 @@ import { StrictTypedTypePolicies } from '../../lens';
 import { createProfilesFieldPolicy } from './createProfilesFieldPolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
 import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
+import { createSearchPublicationsFieldPolicy } from './createSearchPublicationsFieldPolicy';
 import { notNormalizedType } from './utils/notNormalizedType';
 
 type InheritedTypePolicies = {
@@ -23,6 +24,7 @@ export function createTypePolicies(): StrictTypedTypePolicies & InheritedTypePol
     Query: {
       fields: {
         publications: createPublicationsFieldPolicy(),
+        searchPublications: createSearchPublicationsFieldPolicy(),
         profiles: createProfilesFieldPolicy(),
       },
     },

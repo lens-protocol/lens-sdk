@@ -1,5 +1,8 @@
 query SearchPublications(
-  $request: PublicationSearchRequest!
+  $query: String!
+  $where: PublicationSearchWhere
+  $limit: LimitType
+  $cursor: Cursor
   $publicationImageTransform: ImageTransform = {}
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $publicationStatsInput: PublicationStatsInput! = {}
@@ -10,7 +13,9 @@ query SearchPublications(
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
-  result: searchPublications(request: $request) {
+  result: searchPublications(
+    request: { query: $query, where: $where, cursor: $cursor, limit: $limit }
+  ) {
     items {
       ... on Post {
         ...Post
