@@ -10,17 +10,16 @@ import { Narrow } from './ts-helpers/types';
  * @sealed
  * @privateRemarks DO NOT EXPORT, see type export later on
  * @typeParam T - the success value type
- * @typeParam E - the failure error type
  */
-class Success<T, E> {
+class Success<T> {
   /** @internal */
   public constructor(public readonly value: T) {}
 
-  public isSuccess(): this is Success<T, E> {
+  public isSuccess(): this is Success<T> {
     return true;
   }
 
-  public isFailure(): this is Failure<T, E> {
+  public isFailure(): this is Failure<unknown> {
     return false;
   }
 
@@ -37,18 +36,17 @@ class Success<T, E> {
  *
  * @sealed
  * @privateRemarks DO NOT EXPORT, see type export later on
- * @typeParam T - the success value type
  * @typeParam E - the failure error type
  */
-class Failure<T, E> {
+class Failure<E> {
   /** @internal */
   public constructor(public readonly error: E) {}
 
-  public isSuccess(): this is Success<T, E> {
+  public isSuccess(): this is Success<unknown> {
     return false;
   }
 
-  public isFailure(): this is Failure<T, E> {
+  public isFailure(): this is Failure<E> {
     return true;
   }
 
@@ -112,13 +110,13 @@ export interface IEquatableError<T extends string = string, P = Narrow<T>> {
  * const result: Result<number, RangeError> = doSomething();
  *
  * if (result.isFailure()) {
- *   // because of the `isFailure` check above, TS knows that `result` is a `Failure<number, RangeError>` here
+ *   // because of the `isFailure` check above, TS knows that `result` is a `Failure<RangeError>` here
  *   console.log(result.error); // result.error gets narrowed to `RangeError`
  *
  *   return; // early return
  * }
  *
- * // because of the `isFailure` check above and the early return, TS knows that `result` is a `Success<number, RangeError>` here
+ * // because of the `isFailure` check above and the early return, TS knows that `result` is a `Success<number>` here
  * console.log(result.value); // result.value gets narrowed to `number`
  * ```
  *
@@ -132,7 +130,7 @@ export interface IEquatableError<T extends string = string, P = Narrow<T>> {
  * ```
  * You can use a function with a `switch` statement to perform exhaustive error handling:
  * ```ts
- * function format(failure: Failure<number, PendingSigningError | WalletConnectionError>): string {
+ * function format(failure: Failure<PendingSigningError | WalletConnectionError>): string {
  *   switch (failure.error.name) {
  *     case 'PendingSigningError':
  *       return 'Please sign the transaction';
@@ -156,7 +154,7 @@ export interface IEquatableError<T extends string = string, P = Narrow<T>> {
  * @typeParam T - the success value type
  * @typeParam E - the failure error type
  */
-export type Result<T, E extends IEquatableError> = Success<T, E> | Failure<T, E>;
+export type Result<T, E extends IEquatableError> = Success<T> | Failure<E>;
 
 /**
  * A `PromiseResult` is a convenience type alias that represents either a {@link Result} in the context of asynchronous tasks.
@@ -166,23 +164,20 @@ export type Result<T, E extends IEquatableError> = Success<T, E> | Failure<T, E>
  */
 export type PromiseResult<T, E extends IEquatableError> = Promise<Result<T, E>>;
 
-export function success<T extends void>(): Success<T, never>;
-export function success<T>(value: T): Success<T, never>;
+export function success<T extends void>(): Success<T>;
+export function success<T>(value: T): Success<T>;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function success<T>(value: any = undefined): Success<T, never> {
+export function success<T>(value: any = undefined): Success<T> {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return new Success(value);
 }
 
-export const failure = <E extends IEquatableError>(error: E): Failure<never, E> =>
-  new Failure(error);
+export const failure = <E extends IEquatableError>(error: E): Failure<E> => new Failure(error);
 
 /**
  * Returns `true` if the result is a success.
  */
-export function assertSuccess<T>(
-  result: Result<T, IEquatableError>,
-): asserts result is Success<T, never> {
+export function assertSuccess<T>(result: Result<T, IEquatableError>): asserts result is Success<T> {
   invariant(result.isSuccess(), 'Expected a success result');
 }
 
@@ -191,6 +186,6 @@ export function assertSuccess<T>(
  */
 export function assertFailure<T, E extends IEquatableError>(
   result: Result<T, E>,
-): asserts result is Failure<never, E> {
+): asserts result is Failure<E> {
   invariant(result.isFailure(), 'Expected a failure result');
 }
