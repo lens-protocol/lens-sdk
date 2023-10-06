@@ -779,6 +779,15 @@ importers:
 
   packages/gated-content:
     dependencies:
+      '@ethersproject/abi':
+        specifier: ^5.7.0
+        version: 5.7.0
+      '@ethersproject/address':
+        specifier: ^5.7.0
+        version: 5.7.0
+      '@ethersproject/bignumber':
+        specifier: ^5.7.0
+        version: 5.7.0
       '@lens-protocol/shared-kernel':
         specifier: workspace:*
         version: link:../shared-kernel
@@ -819,12 +828,6 @@ importers:
       '@babel/preset-typescript':
         specifier: ^7.18.6
         version: 7.18.6(@babel/core@7.20.12)
-      '@ethersproject/address':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/bignumber':
-        specifier: ^5.7.0
-        version: 5.7.0
       '@ethersproject/contracts':
         specifier: ^5.7.0
         version: 5.7.0
@@ -853,8 +856,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config
       '@lens-protocol/metadata':
-        specifier: 0.1.0-alpha.29
-        version: 0.1.0-alpha.29(zod@3.22.0)
+        specifier: ^0.1.0-alpha.30
+        version: 0.1.0-alpha.30(zod@3.22.0)
       '@lens-protocol/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
@@ -7563,6 +7566,19 @@ packages:
       v8-to-istanbul: 9.1.0
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@lens-protocol/metadata@0.1.0-alpha.30(zod@3.22.0):
+    resolution: {integrity: sha512-zYdd/H9Hnl5qdIBLE8rDELhWL7HpTs/g9fAjk3gwxFReJQiyfQJHjCVB1s7yEwlzSYdxhQNvB2jhY3JUO9+DaQ==}
+    engines: {node: ^v18.12.1}
+    peerDependencies:
+      zod: ^3.22.0
+    peerDependenciesMeta:
+      zod:
+        optional: true
+    dependencies:
+      uuid: 9.0.1
+      zod: 3.22.0
     dev: true
 
   /@jest/schemas@29.4.3:

@@ -45,6 +45,9 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/address": "^5.7.0",
+    "@ethersproject/bignumber": "^5.7.0",
     "@lens-protocol/shared-kernel": "workspace:*",
     "@lens-protocol/storage": "workspace:*",
     "@lit-protocol/constants": "2.1.62",
@@ -60,8 +63,6 @@
     "@babel/core": "^7.20.12",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-typescript": "^7.18.6",
-    "@ethersproject/address": "^5.7.0",
-    "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/hash": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
@@ -71,7 +72,7 @@
     "@graphql-codegen/typescript": "3.0.1",
     "@jest/globals": "^29.4.3",
     "@lens-protocol/eslint-config": "workspace:*",
-    "@lens-protocol/metadata": "0.1.0-alpha.29",
+    "@lens-protocol/metadata": "^0.1.0-alpha.30",
     "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
     "@types/jest": "29.5.3",
@@ -91,13 +92,14 @@
     "zod": "^3.22.0"
   },
   "peerDependencies": {
+    "@ethersproject/abi": "^5.7.0",
     "@ethersproject/address": "^5.7.0",
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/hash": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@ethersproject/wallet": "^5.7.0",
-    "@lens-protocol/metadata": "0.1.0-alpha.29",
+    "@lens-protocol/metadata": "0.1.0-alpha.30",
     "zod": "^3.22.0"
   },
   "prettier": "@lens-protocol/prettier-config",

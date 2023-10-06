@@ -1,6 +1,8 @@
 import { assertNever, never } from '@lens-protocol/shared-kernel';
 
-import { LitOperator, SupportedChainId, SupportedChains } from './types';
+import { ConditionComparisonOperator } from '../../../../../lens-metadata';
+import { LitOperator, SupportedChainId, SupportedChains, LitScalarOperator } from './types';
+import { InvalidAccessCriteriaError } from './validators';
 
 export const insertObjectInBetweenArrayElements = <T>(
   array: Array<T>,
@@ -29,4 +31,12 @@ export const toLitSupportedChainName = (chainId: SupportedChainId): SupportedCha
     default:
       assertNever(chainId, 'Unsupported chain id');
   }
+};
+
+export const resolveScalarOperatorSymbol = (
+  operator: ConditionComparisonOperator,
+): LitScalarOperator => {
+  if (operator in LitScalarOperator) return LitScalarOperator[operator];
+
+  throw new InvalidAccessCriteriaError(`Invalid operator: ${String(operator)}`);
 };

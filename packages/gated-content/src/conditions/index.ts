@@ -4,6 +4,7 @@ import type { UnifiedAccessControlConditions } from '@lit-protocol/types';
 
 import { EnvironmentConfig } from '../environments';
 import * as gql from '../graphql';
+import { transformAdvancedContractCondition } from './advanced-contract-condition';
 import { transformCollectCondition } from './collect-condition';
 import { transformEoaCondition } from './eoa-condition';
 import { transformErc20Condition } from './erc20-condition';
@@ -59,6 +60,8 @@ function transformSimpleCondition(
       return transformCollectCondition(condition, env, context);
     case raw.ConditionType.FOLLOW:
       return transformFollowCondition(condition, env);
+    case raw.ConditionType.ADVANCED_CONTRACT:
+      return transformAdvancedContractCondition(condition);
     default:
       throw new InvariantError(
         `Unknown access criteria type: \n${JSON.stringify(condition, null, 2)}`,
@@ -155,11 +158,10 @@ function toRawSimpleCondition(gqlCondition: gql.ThirdTierCondition): raw.SimpleC
 
     case 'Erc20OwnershipCondition':
       return raw.erc20OwnershipCondition({
-        chainId: gqlCondition.amount.asset.contract.chainId,
         condition:
           raw.ConditionComparisonOperator[gqlCondition.condition] ??
           never(`Not supported condition: ${gqlCondition.condition}`),
-        contract: gqlCondition.amount.asset.contract.address,
+        contract: toRawNetworkAddress(gqlCondition.amount.asset.contract),
         decimals: gqlCondition.amount.asset.decimals,
         value: gqlCondition.amount.value,
       });
@@ -193,6 +195,19 @@ function toRawSimpleCondition(gqlCondition: gql.ThirdTierCondition): raw.SimpleC
       return raw.followCondition({
         follow: raw.toProfileId(gqlCondition.follow),
       });
+
+    case 'AdvancedContractCondition':
+      return {
+        type: raw.ConditionType.ADVANCED_CONTRACT,
+        contract: toRawNetworkAddress(gqlCondition.contract),
+        abi: gqlCondition.abi,
+        functionName: gqlCondition.functionName,
+        params: gqlCondition.params as string[],
+        comparison:
+          raw.ConditionComparisonOperator[gqlCondition.comparison] ??
+          never(`Not supported condition: ${gqlCondition.comparison}`),
+        value: gqlCondition.value,
+      };
 
     default:
       assertNever(gqlCondition, 'Unknown access condition type');

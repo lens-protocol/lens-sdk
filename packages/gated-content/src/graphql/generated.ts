@@ -84,6 +84,23 @@ export type ActedNotification = {
   readonly publication: AnyPublication;
 };
 
+/** Condition that checks if the given on-chain contract function returns true. It only supports view functions */
+export type AdvancedContractCondition = {
+  readonly __typename: 'AdvancedContractCondition';
+  /** The contract ABI. Has to be in human readable single string format containing the signature of the function you want to call. See https://docs.ethers.org/v5/api/utils/abi/fragments/#human-readable-abi for more info */
+  readonly abi: Scalars['String'];
+  /** The check to perform on the result of the function. In case of boolean outputs, "EQUALS" and "NOT_EQUALS" are supported. For BigNumber outputs, you can use every comparison option */
+  readonly comparison: ComparisonOperatorConditionType;
+  /** The address and chain ID of the contract to call */
+  readonly contract: NetworkAddress;
+  /** The name of the function to call. Must be included in the provided abi */
+  readonly functionName: Scalars['String'];
+  /** ABI encoded function parameters. In order to represent the address of the person trying to decrypt, you *have* to use the string ":userAddress" as this param represents the decrypting user address. If a param is an array or tuple, it will be in stringified format. */
+  readonly params: ReadonlyArray<Scalars['String']>;
+  /** The value to compare the result of the function against. Can be "true", "false" or a BigNumber */
+  readonly value: Scalars['String'];
+};
+
 export type AlreadyInvitedCheckRequest = {
   readonly for: Scalars['EvmAddress'];
 };
@@ -4527,6 +4544,7 @@ export type ThirdTierCondition =
   | Erc20OwnershipCondition
   | FollowCondition
   | NftOwnershipCondition
+  | AdvancedContractCondition
   | ProfileOwnershipCondition;
 
 export type ThreeDMetadataV3 = {

@@ -6,8 +6,9 @@ import {
   mockErc20OwnershipCondition,
   mockNetworkAddress,
 } from '../../__helpers__/mocks';
-import { resolveScalarOperatorSymbol, transformErc20Condition } from '../erc20-condition';
+import { transformErc20Condition } from '../erc20-condition';
 import { LitConditionType, LitContractType, SupportedChains } from '../types';
+import { resolveScalarOperatorSymbol } from '../utils';
 import { InvalidAccessCriteriaError } from '../validators';
 
 describe(`Given the "${transformErc20Condition.name}" function`, () => {
