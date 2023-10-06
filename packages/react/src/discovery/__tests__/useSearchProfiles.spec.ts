@@ -1,29 +1,9 @@
-import { LimitType, Profile } from '@lens-protocol/api-bindings';
-import {
-  mockLensApolloClient,
-  mockProfileFragment,
-  mockSearchProfilesResponse,
-} from '@lens-protocol/api-bindings/mocks';
+import { mockProfileFragment, mockSearchProfilesResponse } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
-import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
+import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../../utils';
 import { UseSearchProfilesArgs, useSearchProfiles } from '../useSearchProfiles';
-
-function setupTestScenario({ result, ...args }: UseSearchProfilesArgs & { result: Profile[] }) {
-  return renderHookWithMocks(() => useSearchProfiles(args), {
-    mocks: {
-      apolloClient: mockLensApolloClient([
-        mockSearchProfilesResponse({
-          variables: {
-            ...args,
-            limit: LimitType.Ten,
-          },
-          items: result,
-        }),
-      ]),
-    },
-  });
-}
 
 describe(`Given the ${useSearchProfiles.name} hook`, () => {
   const query = 'query_test';
@@ -32,10 +12,23 @@ describe(`Given the ${useSearchProfiles.name} hook`, () => {
 
   describe('when the query returns data successfully', () => {
     it('should return profiles that match the search criteria', async () => {
-      const { result } = setupTestScenario({ query, result: profiles });
+      const { renderHook } = setupHookTestScenario([
+        mockSearchProfilesResponse({
+          variables: {
+            query,
+            limit: DEFAULT_PAGINATED_QUERY_LIMIT,
+          },
+          items: profiles,
+        }),
+      ]);
+
+      const args: UseSearchProfilesArgs = {
+        query,
+      };
+
+      const { result } = renderHook(() => useSearchProfiles(args));
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-
       expect(result.current.data).toMatchObject(expectations);
     });
   });
