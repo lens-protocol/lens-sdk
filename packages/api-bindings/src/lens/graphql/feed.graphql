@@ -31,7 +31,8 @@ fragment FeedItem on FeedItem {
 }
 
 query Feed(
-  $request: FeedRequest!
+  $where: FeedWhere
+  $cursor: Cursor
   $publicationImageTransform: ImageTransform = {}
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $publicationStatsInput: PublicationStatsInput! = {}
@@ -42,7 +43,7 @@ query Feed(
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
-  result: feed(request: $request) {
+  result: feed(request: { where: $where, cursor: $cursor }) {
     items {
       ...FeedItem
     }

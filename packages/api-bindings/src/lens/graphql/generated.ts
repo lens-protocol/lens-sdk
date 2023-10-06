@@ -234,6 +234,11 @@ export enum ComparisonOperatorConditionType {
   NotEqual = 'NOT_EQUAL',
 }
 
+export type CreateProfileRequest = {
+  followModule?: InputMaybe<FollowModuleInput>;
+  to: Scalars['EvmAddress'];
+};
+
 export enum CreateProfileWithHandleErrorReasonType {
   Failed = 'FAILED',
   HandleTaken = 'HANDLE_TAKEN',
@@ -488,6 +493,89 @@ export type ImageTransform = {
   width?: InputMaybe<Scalars['ImageSizeTransform']>;
 };
 
+export type InternalAddCuratedTagRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+  ttt: Scalars['String'];
+};
+
+export type InternalAddInvitesRequest = {
+  n: Scalars['Int'];
+  p: Scalars['ProfileId'];
+  secret: Scalars['String'];
+};
+
+export type InternalAllowDomainRequest = {
+  domain: Scalars['URI'];
+  secret: Scalars['String'];
+};
+
+export type InternalAllowedDomainsRequest = {
+  secret: Scalars['String'];
+};
+
+export type InternalClaimRequest = {
+  address: Scalars['EvmAddress'];
+  freeTextHandle: Scalars['Boolean'];
+  handle: Scalars['CreateHandle'];
+  overrideAlreadyClaimed: Scalars['Boolean'];
+  overrideTradeMark: Scalars['Boolean'];
+  secret: Scalars['String'];
+};
+
+export type InternalClaimStatusRequest = {
+  address: Scalars['EvmAddress'];
+  secret: Scalars['String'];
+};
+
+export type InternalCuratedHandlesRequest = {
+  secret: Scalars['String'];
+};
+
+export type InternalCuratedTagsRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+};
+
+export type InternalCuratedUpdateRequest = {
+  handle: Scalars['Handle'];
+  remove: Scalars['Boolean'];
+  secret: Scalars['String'];
+};
+
+export type InternalInvitesRequest = {
+  p: Scalars['ProfileId'];
+  secret: Scalars['String'];
+};
+
+export type InternalNftIndexRequest = {
+  n: Array<Nfi>;
+  secret: Scalars['String'];
+};
+
+export type InternalNftVerifyRequest = {
+  n: Array<Nfi>;
+  secret: Scalars['String'];
+};
+
+export type InternalProfileStatusRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+};
+
+export type InternalRemoveCuratedTagRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+  ttt: Scalars['String'];
+};
+
+export type InternalUpdateProfileStatusRequest = {
+  dd: Scalars['Boolean'];
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+  ss: Scalars['Boolean'];
+};
+
 export type InviteRequest = {
   invites: Array<Scalars['EvmAddress']>;
   secret: Scalars['String'];
@@ -646,6 +734,11 @@ export type MutualPoapsQueryRequest = {
 export type NetworkAddressInput = {
   address: Scalars['EvmAddress'];
   chainId: Scalars['ChainId'];
+};
+
+export type Nfi = {
+  c: Scalars['EvmAddress'];
+  i: Scalars['ChainId'];
 };
 
 export enum NftCollectionOwnersOrder {
@@ -1654,7 +1747,8 @@ export type FeedItem = {
 };
 
 export type FeedVariables = Exact<{
-  request: FeedRequest;
+  where?: InputMaybe<FeedWhere>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   publicationImageTransform?: InputMaybe<ImageTransform>;
   publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
   publicationStatsInput?: PublicationStatsInput;
@@ -2070,6 +2164,7 @@ export type AndCondition = {
     | FollowCondition
     | NftOwnershipCondition
     | ProfileOwnershipCondition
+    | {}
   >;
 };
 
@@ -2082,6 +2177,7 @@ export type OrCondition = {
     | FollowCondition
     | NftOwnershipCondition
     | ProfileOwnershipCondition
+    | {}
   >;
 };
 
@@ -2096,6 +2192,7 @@ export type RootCondition = {
     | NftOwnershipCondition
     | OrCondition
     | ProfileOwnershipCondition
+    | {}
   >;
 };
 
@@ -7347,7 +7444,8 @@ export type ExploreProfilesQueryResult = Apollo.QueryResult<
 >;
 export const FeedDocument = /*#__PURE__*/ gql`
   query Feed(
-    $request: FeedRequest!
+    $where: FeedWhere
+    $cursor: Cursor
     $publicationImageTransform: ImageTransform = {}
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
     $publicationStatsInput: PublicationStatsInput! = {}
@@ -7358,7 +7456,7 @@ export const FeedDocument = /*#__PURE__*/ gql`
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
-    result: feed(request: $request) {
+    result: feed(request: { where: $where, cursor: $cursor }) {
       items {
         ...FeedItem
       }
@@ -7383,7 +7481,8 @@ export const FeedDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useFeed({
  *   variables: {
- *      request: // value for 'request'
+ *      where: // value for 'where'
+ *      cursor: // value for 'cursor'
  *      publicationImageTransform: // value for 'publicationImageTransform'
  *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
  *      publicationStatsInput: // value for 'publicationStatsInput'
@@ -7396,7 +7495,7 @@ export const FeedDocument = /*#__PURE__*/ gql`
  *   },
  * });
  */
-export function useFeed(baseOptions: Apollo.QueryHookOptions<FeedData, FeedVariables>) {
+export function useFeed(baseOptions?: Apollo.QueryHookOptions<FeedData, FeedVariables>) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<FeedData, FeedVariables>(FeedDocument, options);
 }
@@ -11286,6 +11385,23 @@ export type ActedNotificationFieldPolicy = {
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   publication?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type AdvancedContractConditionKeySpecifier = (
+  | 'abi'
+  | 'comparison'
+  | 'contract'
+  | 'functionName'
+  | 'params'
+  | 'value'
+  | AdvancedContractConditionKeySpecifier
+)[];
+export type AdvancedContractConditionFieldPolicy = {
+  abi?: FieldPolicy<any> | FieldReadFunction<any>;
+  comparison?: FieldPolicy<any> | FieldReadFunction<any>;
+  contract?: FieldPolicy<any> | FieldReadFunction<any>;
+  functionName?: FieldPolicy<any> | FieldReadFunction<any>;
+  params?: FieldPolicy<any> | FieldReadFunction<any>;
+  value?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type AmountKeySpecifier = ('asset' | 'rate' | 'value' | AmountKeySpecifier)[];
 export type AmountFieldPolicy = {
   asset?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -13369,6 +13485,7 @@ export type MutationKeySpecifier = (
   | 'createOnchainPostTypedData'
   | 'createOnchainQuoteTypedData'
   | 'createOnchainSetProfileMetadataTypedData'
+  | 'createProfile'
   | 'createProfileWithHandle'
   | 'createSetFollowModuleTypedData'
   | 'createUnblockProfilesTypedData'
@@ -13380,6 +13497,15 @@ export type MutationKeySpecifier = (
   | 'handleUnlinkFromProfile'
   | 'hidePublication'
   | 'idKitPhoneVerifyWebhook'
+  | 'internalAddCuratedTag'
+  | 'internalAddInvites'
+  | 'internalAllowDomain'
+  | 'internalClaim'
+  | 'internalCuratedUpdate'
+  | 'internalNftIndex'
+  | 'internalNftVerify'
+  | 'internalRemoveCuratedTag'
+  | 'internalUpdateProfileStatus'
   | 'inviteProfile'
   | 'legacyCollect'
   | 'mirrorOnMomoka'
@@ -13435,6 +13561,7 @@ export type MutationFieldPolicy = {
   createOnchainPostTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createOnchainQuoteTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createOnchainSetProfileMetadataTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
+  createProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   createProfileWithHandle?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetFollowModuleTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createUnblockProfilesTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -13446,6 +13573,15 @@ export type MutationFieldPolicy = {
   handleUnlinkFromProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   hidePublication?: FieldPolicy<any> | FieldReadFunction<any>;
   idKitPhoneVerifyWebhook?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalAddCuratedTag?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalAddInvites?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalAllowDomain?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalClaim?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalCuratedUpdate?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalNftIndex?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalNftVerify?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalRemoveCuratedTag?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalUpdateProfileStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   inviteProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   legacyCollect?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrorOnMomoka?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -13922,6 +14058,11 @@ export type PostFieldPolicy = {
   stats?: FieldPolicy<any> | FieldReadFunction<any>;
   txHash?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type PrfResultKeySpecifier = ('dd' | 'ss' | PrfResultKeySpecifier)[];
+export type PrfResultFieldPolicy = {
+  dd?: FieldPolicy<any> | FieldReadFunction<any>;
+  ss?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type ProfileKeySpecifier = (
   | 'createdAt'
   | 'followModule'
@@ -14272,6 +14413,12 @@ export type QueryKeySpecifier = (
   | 'followers'
   | 'following'
   | 'generateModuleCurrencyApprovalData'
+  | 'internalAllowedDomains'
+  | 'internalClaimStatus'
+  | 'internalCuratedHandles'
+  | 'internalCuratedTags'
+  | 'internalInvites'
+  | 'internalProfileStatus'
   | 'invitedProfiles'
   | 'lastLoggedInProfile'
   | 'lensTransactionStatus'
@@ -14338,6 +14485,12 @@ export type QueryFieldPolicy = {
   followers?: FieldPolicy<any> | FieldReadFunction<any>;
   following?: FieldPolicy<any> | FieldReadFunction<any>;
   generateModuleCurrencyApprovalData?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalAllowedDomains?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalClaimStatus?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalCuratedHandles?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalCuratedTags?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalInvites?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalProfileStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   invitedProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   lastLoggedInProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   lensTransactionStatus?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -14856,6 +15009,13 @@ export type StrictTypedTypePolicies = {
       | ActedNotificationKeySpecifier
       | (() => undefined | ActedNotificationKeySpecifier);
     fields?: ActedNotificationFieldPolicy;
+  };
+  AdvancedContractCondition?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | AdvancedContractConditionKeySpecifier
+      | (() => undefined | AdvancedContractConditionKeySpecifier);
+    fields?: AdvancedContractConditionFieldPolicy;
   };
   Amount?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | AmountKeySpecifier | (() => undefined | AmountKeySpecifier);
@@ -16164,6 +16324,10 @@ export type StrictTypedTypePolicies = {
     keyFields?: false | PostKeySpecifier | (() => undefined | PostKeySpecifier);
     fields?: PostFieldPolicy;
   };
+  PrfResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | PrfResultKeySpecifier | (() => undefined | PrfResultKeySpecifier);
+    fields?: PrfResultFieldPolicy;
+  };
   Profile?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | ProfileKeySpecifier | (() => undefined | ProfileKeySpecifier);
     fields?: ProfileFieldPolicy;
@@ -16629,6 +16793,7 @@ const result: PossibleTypesResultData = {
     RelayMomokaResult: ['CreateMomokaPublicationResult', 'LensProfileManagerRelayError'],
     RelayResult: ['RelayError', 'RelaySuccess'],
     SecondTierCondition: [
+      'AdvancedContractCondition',
       'AndCondition',
       'CollectCondition',
       'EoaOwnershipCondition',
@@ -16640,6 +16805,7 @@ const result: PossibleTypesResultData = {
     ],
     SupportedModule: ['KnownSupportedModule', 'UnknownSupportedModule'],
     ThirdTierCondition: [
+      'AdvancedContractCondition',
       'CollectCondition',
       'EoaOwnershipCondition',
       'Erc20OwnershipCondition',

@@ -26,9 +26,7 @@ function setupTestScenario({ items, where }: { where: FeedWhere; items: FeedItem
         apolloClient: mockLensApolloClient([
           mockFeedResponse({
             variables: {
-              request: {
-                where,
-              },
+              where,
               ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
             },
             items,
