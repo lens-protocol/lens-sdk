@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import {
+  AdvancedContractCondition,
   Amount,
   Asset,
   CollectCondition,
@@ -130,6 +131,21 @@ export function mockCollectCondition(overrides?: Partial<CollectCondition>): Col
     type: ConditionType.COLLECT,
     publicationId: mockPublicationId(),
     thisPublication: false,
+    ...overrides,
+  };
+}
+
+export function mockAdvancedContractCondition(
+  overrides?: Partial<AdvancedContractCondition>,
+): AdvancedContractCondition {
+  return {
+    type: ConditionType.ADVANCED_CONTRACT,
+    contract: mockNetworkAddress(),
+    abi: 'function balanceOf(address) external view returns (uint256)',
+    functionName: 'balanceOf',
+    params: [':userAddress'],
+    comparison: ConditionComparisonOperator.EQUAL,
+    value: '1',
     ...overrides,
   };
 }
