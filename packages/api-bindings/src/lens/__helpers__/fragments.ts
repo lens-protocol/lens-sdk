@@ -4,6 +4,7 @@ import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import {
   Comment,
+  FeedItem,
   Mirror,
   PaginatedResultInfo,
   Post,
@@ -219,6 +220,17 @@ export function mockProfileStatsFragment(overrides: Partial<ProfileStats> = {}):
     upvoteReacted: faker.datatype.number(),
     downvoteReacted: faker.datatype.number(),
 
+    ...overrides,
+  };
+}
+
+export function mockFeedItemFragment(overrides?: Partial<FeedItem>): FeedItem {
+  return {
+    id: faker.datatype.uuid(),
+    root: mockPostFragment(),
+    comments: [],
+    mirrors: [],
+    reactions: [],
     ...overrides,
   };
 }

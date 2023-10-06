@@ -12,6 +12,10 @@ import { Breadcrumbs } from './components/Breadcrumbs';
 import { GenericErrorBoundary } from './components/GenericErrorBoundary';
 import { ErrorMessage } from './components/error/ErrorMessage';
 import { Header } from './components/header/Header';
+import { DiscoveryPage } from './discovery/DiscoveryPage';
+import { UseFeed } from './discovery/UseFeed';
+import { UseSearchProfiles } from './discovery/UseSearchProfiles';
+import { UseSearchPublications } from './discovery/UseSearchPublications';
 import {
   ProfilesPage,
   UseMutualFollowers,
@@ -21,7 +25,6 @@ import {
   UseProfiles,
 } from './profiles';
 import { PublicationsPage, UsePublication, UsePublications } from './publications';
-import { SearchPage, UseSearchProfiles, UseSearchPublications } from './search';
 import { localStorage } from './storage';
 
 const { publicClient, webSocketPublicClient } = configureChains(
@@ -75,8 +78,9 @@ export function App() {
                     <Route path="useMutualFollowers" element={<UseMutualFollowers />} />
                   </Route>
 
-                  <Route path="/search">
-                    <Route index element={<SearchPage />} />
+                  <Route path="/discovery">
+                    <Route index element={<DiscoveryPage />} />
+                    <Route path="useFeed" element={<UseFeed />} />
                     <Route path="useSearchPublications" element={<UseSearchPublications />} />
                     <Route path="useSearchProfiles" element={<UseSearchProfiles />} />
                   </Route>
