@@ -16,7 +16,7 @@ export type UseFeedArgs = OmitCursor<FeedRequest>;
  *
  * @example
  * ```tsx
- * import { useFeed, ProfileId } from '@lens-protocol/react-web';
+ * import { useFeed, ProfileId } from '@lens-protocol/react';
  *
  * function Feed({ profileId }: { profileId: ProfileId }) {
  *   const { data, loading, error } =  useFeed({
@@ -32,7 +32,7 @@ export type UseFeedArgs = OmitCursor<FeedRequest>;
  *   return (
  *     <ul>
  *       {data.map((item, idx) => (
- *         <li key={key={`${item.root.id}-${idx}`}}>
+ *         <li key={`${item.root.id}-${idx}`}>
  *           // render item details
  *         </li>
  *       ))}

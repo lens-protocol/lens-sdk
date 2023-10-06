@@ -21,10 +21,10 @@ export type UseFeedHighlightsArgs = OmitCursor<FeedHighlightsRequest>;
  *
  * @example
  * ```tsx
- * import { useFeed, ProfileId } from '@lens-protocol/react-web';
+ * import { useFeedHighlights, ProfileId } from '@lens-protocol/react';
  *
  * function Feed({ profileId }: { profileId: ProfileId }) {
- *   const { data, loading, error } =  useFeed({
+ *   const { data, loading, error } =  useFeedHighlights({
  *      where: {
  *        for: profileId,
  *      },
@@ -36,8 +36,8 @@ export type UseFeedHighlightsArgs = OmitCursor<FeedHighlightsRequest>;
  *
  *   return (
  *     <ul>
- *       {data.map((item, idx) => (
- *         <li key={key={`${item.root.id}-${idx}`}}>
+ *       {data.map((item) => (
+ *         <li key={item.id}>
  *           // render item details
  *         </li>
  *       ))}
