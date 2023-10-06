@@ -4,6 +4,7 @@ import {
   mockMentionNotification,
   mockNotificationsResponse,
 } from '@lens-protocol/api-bindings/mocks';
+import { mockAppId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
@@ -43,7 +44,9 @@ describe(`Given the ${useNotifications.name} hook`, () => {
   describe('when the query returns data successfully', () => {
     it('should return notifications', async () => {
       const { result } = setupTestScenario({
-        where: {},
+        where: {
+          publishedOn: [mockAppId()],
+        },
         items,
       });
 
