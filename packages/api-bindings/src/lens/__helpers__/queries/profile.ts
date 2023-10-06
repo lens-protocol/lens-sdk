@@ -12,12 +12,15 @@ import {
   ProfileActionHistoryVariables,
   ProfileRecommendationsDocument,
   ProfileRecommendationsVariables,
+  ProfileWhoReactedResult,
   ProfilesDocument,
   ProfilesVariables,
   SearchProfilesDocument,
   SearchProfilesVariables,
   WhoActedOnPublicationDocument,
   WhoActedOnPublicationVariables,
+  WhoReactedPublicationDocument,
+  WhoReactedPublicationVariables,
 } from '../../graphql/generated';
 import { mockPaginatedResultInfo } from '../fragments';
 import { mockAnyPaginatedResponse } from './mockAnyPaginatedResponse';
@@ -164,4 +167,21 @@ export function mockProfileActionHistoryResponse({
       },
     },
   };
+}
+
+export function mockWhoReactedToPublicationResponse({
+  variables,
+  items,
+  info = mockPaginatedResultInfo(),
+}: {
+  variables: WhoReactedPublicationVariables;
+  items: ProfileWhoReactedResult[];
+  info?: PaginatedResultInfo;
+}) {
+  return mockAnyPaginatedResponse({
+    variables,
+    items,
+    info,
+    query: WhoReactedPublicationDocument,
+  });
 }

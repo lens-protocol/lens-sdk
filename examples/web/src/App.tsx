@@ -27,7 +27,12 @@ import {
   UseRecommendedProfiles,
   UseWhoActedOnPublication,
 } from './profiles';
-import { PublicationsPage, UsePublication, UsePublications } from './publications';
+import {
+  PublicationsPage,
+  UsePublication,
+  UsePublications,
+  UseWhoReactedToPublication,
+} from './publications';
 import { localStorage } from './storage';
 
 const { publicClient, webSocketPublicClient } = configureChains(
@@ -70,6 +75,10 @@ export function App() {
                     <Route index element={<PublicationsPage />} />
                     <Route path="usePublication" element={<UsePublication />} />
                     <Route path="usePublications" element={<UsePublications />} />
+                    <Route
+                      path="useWhoReactedToPublication"
+                      element={<UseWhoReactedToPublication />}
+                    />
                   </Route>
 
                   <Route path="/profiles">

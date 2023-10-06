@@ -1,11 +1,10 @@
 import {
-  LimitType,
   ProfileWhoReactedResult,
   WhoReactedPublicationRequest,
   useWhoReactedPublication as useWhoReactedPublicationHook,
 } from '@lens-protocol/api-bindings';
 
-import { useLensApolloClient, useMediaTransformFromConfig } from '../helpers/arguments';
+import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 
 /**
@@ -27,19 +26,13 @@ export type UseWhoReactedToPublicationArgs = PaginatedArgs<WhoReactedPublication
  * });
  * ```
  */
-export function useWhoReactedToPublication({
-  for: forId,
-  where,
-  limit = LimitType.Ten,
-}: UseWhoReactedToPublicationArgs): PaginatedReadResult<ProfileWhoReactedResult[]> {
+export function useWhoReactedToPublication(
+  args: UseWhoReactedToPublicationArgs,
+): PaginatedReadResult<ProfileWhoReactedResult[]> {
   return usePaginatedReadResult(
     useWhoReactedPublicationHook(
       useLensApolloClient({
-        variables: useMediaTransformFromConfig({
-          for: forId,
-          where,
-          limit,
-        }),
+        variables: args,
       }),
     ),
   );

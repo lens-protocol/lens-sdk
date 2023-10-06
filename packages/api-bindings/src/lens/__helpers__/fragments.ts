@@ -11,8 +11,11 @@ import {
   Profile,
   ProfileActionHistory,
   ProfileActionHistoryType,
+  ProfileReactionResult,
   ProfileStats,
+  ProfileWhoReactedResult,
   PublicationOperations,
+  PublicationReactionType,
   PublicationStats,
   TextOnlyMetadataV3,
   TriStateValue,
@@ -248,6 +251,28 @@ export function mockProfileActionHistoryFragment(
     who: mockEvmAddress(),
     txHash: mockTransactionHash(),
     actionedOn: faker.date.past().toISOString(),
+
+    ...overrides,
+  };
+}
+
+export function mockProfileReactionResultFragment(
+  overrides: Partial<ProfileReactionResult> = {},
+): ProfileReactionResult {
+  return {
+    reaction: PublicationReactionType.Upvote,
+    reactionAt: faker.date.past().toISOString(),
+
+    ...overrides,
+  };
+}
+
+export function mockProfileWhoReactedResultFragment(
+  overrides: Partial<ProfileWhoReactedResult> = {},
+): ProfileWhoReactedResult {
+  return {
+    profile: mockProfileFragment(),
+    reactions: [mockProfileReactionResultFragment()],
 
     ...overrides,
   };

@@ -3,6 +3,7 @@
  */
 export * from './usePublication';
 export * from './usePublications';
+export * from './useWhoReactedToPublication';
 
 /**
  * Fragments

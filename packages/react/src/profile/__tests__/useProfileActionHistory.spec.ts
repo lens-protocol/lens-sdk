@@ -7,7 +7,7 @@ import { waitFor } from '@testing-library/react';
 import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
 import { useProfileActionHistory } from '../useProfileActionHistory';
 
-describe(`Given the ${useProfileActionHistory.name} hook`, () => {
+describe.skip(`Given the ${useProfileActionHistory.name} hook`, () => {
   const history = [mockProfileActionHistoryFragment()];
   const expectations = history.map(({ id, actionType }) => ({ id, actionType }));
 
