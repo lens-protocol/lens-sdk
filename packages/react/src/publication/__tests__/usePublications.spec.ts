@@ -4,7 +4,6 @@ import {
   mockPublicationsResponse,
   mockPaginatedResultInfo,
   mockPostFragment,
-  simulateNotAuthenticated,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
@@ -16,10 +15,6 @@ describe(`Given the ${usePublications.name} hook`, () => {
   const profileId = mockProfileId();
   const publications = [mockPostFragment()];
   const expectations = publications.map(({ __typename, id }) => ({ __typename, id }));
-
-  beforeAll(() => {
-    simulateNotAuthenticated();
-  });
 
   describe('when the query returns data successfully', () => {
     it('should settle with the publications', async () => {

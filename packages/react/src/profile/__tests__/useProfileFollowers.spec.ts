@@ -1,9 +1,5 @@
 import { LimitType } from '@lens-protocol/api-bindings';
-import {
-  mockProfileFragment,
-  mockFollowersResponse,
-  simulateNotAuthenticated,
-} from '@lens-protocol/api-bindings/mocks';
+import { mockProfileFragment, mockFollowersResponse } from '@lens-protocol/api-bindings/mocks';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
@@ -14,10 +10,6 @@ describe(`Given the ${useProfileFollowers.name} hook`, () => {
   const profileId = mockProfileId();
   const profiles = [mockProfileFragment()];
   const expectations = profiles.map(({ __typename, id }) => ({ __typename, id }));
-
-  beforeAll(() => {
-    simulateNotAuthenticated();
-  });
 
   describe('when the query returns data successfully', () => {
     it('should settle with the profiles', async () => {

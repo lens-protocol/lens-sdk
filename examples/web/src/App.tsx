@@ -23,6 +23,8 @@ import {
   UseProfileFollowers,
   UseProfileFollowing,
   UseProfiles,
+  UseRecommendedProfiles,
+  UseWhoActedOnPublication,
 } from './profiles';
 import { PublicationsPage, UsePublication, UsePublications } from './publications';
 import { localStorage } from './storage';
@@ -76,6 +78,8 @@ export function App() {
                     <Route path="useProfileFollowers" element={<UseProfileFollowers />} />
                     <Route path="useProfileFollowing" element={<UseProfileFollowing />} />
                     <Route path="useMutualFollowers" element={<UseMutualFollowers />} />
+                    <Route path="useRecommendedProfiles" element={<UseRecommendedProfiles />} />
+                    <Route path="useWhoActedOnPublication" element={<UseWhoActedOnPublication />} />
                   </Route>
 
                   <Route path="/discovery">

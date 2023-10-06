@@ -3106,7 +3106,11 @@ export type ProfileManagersData = {
 };
 
 export type ProfileRecommendationsVariables = Exact<{
-  request: ProfileRecommendationsRequest;
+  for: Scalars['ProfileId'];
+  disableML?: InputMaybe<Scalars['Boolean']>;
+  shuffle?: InputMaybe<Scalars['Boolean']>;
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   profileCoverSize?: InputMaybe<ImageTransform>;
   profilePictureSize?: InputMaybe<ImageTransform>;
   activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
@@ -3161,7 +3165,10 @@ export type MutualFollowersData = {
 } & InjectCommonQueryParams;
 
 export type WhoActedOnPublicationVariables = Exact<{
-  request: WhoActedOnPublicationRequest;
+  on: Scalars['PublicationId'];
+  where?: InputMaybe<WhoActedOnPublicationWhere>;
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   profileCoverSize?: InputMaybe<ImageTransform>;
   profilePictureSize?: InputMaybe<ImageTransform>;
   activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
@@ -7852,14 +7859,26 @@ export type ProfileManagersQueryResult = Apollo.QueryResult<
 >;
 export const ProfileRecommendationsDocument = /*#__PURE__*/ gql`
   query ProfileRecommendations(
-    $request: ProfileRecommendationsRequest!
+    $for: ProfileId!
+    $disableML: Boolean
+    $shuffle: Boolean
+    $limit: LimitType
+    $cursor: Cursor
     $profileCoverSize: ImageTransform = {}
     $profilePictureSize: ImageTransform = {}
     $activityOn: [AppId!]
     $fxRateFor: SupportedFiatType = USD
   ) {
     ...InjectCommonQueryParams
-    result: profileRecommendations(request: $request) {
+    result: profileRecommendations(
+      request: {
+        for: $for
+        disableML: $disableML
+        shuffle: $shuffle
+        limit: $limit
+        cursor: $cursor
+      }
+    ) {
       items {
         ...Profile
       }
@@ -7885,7 +7904,11 @@ export const ProfileRecommendationsDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useProfileRecommendations({
  *   variables: {
- *      request: // value for 'request'
+ *      for: // value for 'for'
+ *      disableML: // value for 'disableML'
+ *      shuffle: // value for 'shuffle'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *      profileCoverSize: // value for 'profileCoverSize'
  *      profilePictureSize: // value for 'profilePictureSize'
  *      activityOn: // value for 'activityOn'
@@ -8123,14 +8146,19 @@ export type MutualFollowersQueryResult = Apollo.QueryResult<
 >;
 export const WhoActedOnPublicationDocument = /*#__PURE__*/ gql`
   query WhoActedOnPublication(
-    $request: WhoActedOnPublicationRequest!
+    $on: PublicationId!
+    $where: WhoActedOnPublicationWhere
+    $limit: LimitType
+    $cursor: Cursor
     $profileCoverSize: ImageTransform = {}
     $profilePictureSize: ImageTransform = {}
     $activityOn: [AppId!]
     $fxRateFor: SupportedFiatType = USD
   ) {
     ...InjectCommonQueryParams
-    result: whoActedOnPublication(request: $request) {
+    result: whoActedOnPublication(
+      request: { on: $on, where: $where, limit: $limit, cursor: $cursor }
+    ) {
       items {
         ...Profile
       }
@@ -8156,7 +8184,10 @@ export const WhoActedOnPublicationDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useWhoActedOnPublication({
  *   variables: {
- *      request: // value for 'request'
+ *      on: // value for 'on'
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *      profileCoverSize: // value for 'profileCoverSize'
  *      profilePictureSize: // value for 'profilePictureSize'
  *      activityOn: // value for 'activityOn'

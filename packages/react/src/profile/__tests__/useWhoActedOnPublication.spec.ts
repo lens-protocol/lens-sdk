@@ -1,39 +1,39 @@
 import { LimitType } from '@lens-protocol/api-bindings';
 import {
   mockProfileFragment,
-  mockMutualFollowersResponse,
+  mockWhoActedOnPublicationResponse,
 } from '@lens-protocol/api-bindings/mocks';
-import { mockProfileId } from '@lens-protocol/domain/mocks';
+import { mockPublicationId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
-import { UseMutualFollowersArgs, useMutualFollowers } from '../useMutualFollowers';
+import {
+  UseWhoActedOnPublicationArgs,
+  useWhoActedOnPublication,
+} from '../useWhoActedOnPublication';
 
-describe(`Given the ${useMutualFollowers.name} hook`, () => {
-  const observerProfileId = mockProfileId();
-  const viewingProfileId = mockProfileId();
+describe(`Given the ${useWhoActedOnPublication.name} hook`, () => {
+  const publicationId = mockPublicationId();
   const profiles = [mockProfileFragment()];
   const expectations = profiles.map(({ __typename, id }) => ({ __typename, id }));
 
   describe('when the query returns data successfully', () => {
     it('should settle with the profiles', async () => {
       const { renderHook } = setupHookTestScenario([
-        mockMutualFollowersResponse({
+        mockWhoActedOnPublicationResponse({
           variables: {
-            observer: observerProfileId,
-            viewing: viewingProfileId,
+            on: publicationId,
             limit: LimitType.Ten,
           },
           items: profiles,
         }),
       ]);
 
-      const args: UseMutualFollowersArgs = {
-        observer: observerProfileId,
-        viewing: viewingProfileId,
+      const args: UseWhoActedOnPublicationArgs = {
+        on: publicationId,
       };
 
-      const { result } = renderHook(() => useMutualFollowers(args));
+      const { result } = renderHook(() => useWhoActedOnPublication(args));
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
       expect(result.current.data).toMatchObject(expectations);

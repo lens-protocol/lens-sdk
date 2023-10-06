@@ -7,10 +7,14 @@ import {
   MutualFollowersVariables,
   PaginatedResultInfo,
   Profile,
+  ProfileRecommendationsDocument,
+  ProfileRecommendationsVariables,
   ProfilesDocument,
   ProfilesVariables,
   SearchProfilesDocument,
   SearchProfilesVariables,
+  WhoActedOnPublicationDocument,
+  WhoActedOnPublicationVariables,
 } from '../../graphql/generated';
 import { mockPaginatedResultInfo } from '../fragments';
 import { mockAnyPaginatedResponse } from './mockAnyPaginatedResponse';
@@ -97,5 +101,39 @@ export function mockSearchProfilesResponse({
     items,
     info,
     query: SearchProfilesDocument,
+  });
+}
+
+export function mockProfileRecommendationsResponse({
+  variables,
+  items,
+  info = mockPaginatedResultInfo(),
+}: {
+  variables: ProfileRecommendationsVariables;
+  items: Profile[];
+  info?: PaginatedResultInfo;
+}) {
+  return mockAnyPaginatedResponse({
+    variables,
+    items,
+    info,
+    query: ProfileRecommendationsDocument,
+  });
+}
+
+export function mockWhoActedOnPublicationResponse({
+  variables,
+  items,
+  info = mockPaginatedResultInfo(),
+}: {
+  variables: WhoActedOnPublicationVariables;
+  items: Profile[];
+  info?: PaginatedResultInfo;
+}) {
+  return mockAnyPaginatedResponse({
+    variables,
+    items,
+    info,
+    query: WhoActedOnPublicationDocument,
   });
 }

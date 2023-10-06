@@ -5,12 +5,7 @@ import { ProfileIdentifier, WalletData } from '@lens-protocol/domain/use-cases/l
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 
 import { createLensCache } from '../createLensCache';
-import {
-  authenticatedProfile,
-  authenticatedWallet,
-  notAuthenticated,
-  updateSession,
-} from '../session';
+import { authenticatedProfile, authenticatedWallet, updateSession } from '../session';
 import { TransactionState, TxStatus } from '../transactions';
 
 export type MockCacheConfiguration = {
@@ -41,8 +36,4 @@ export function simulateAuthenticatedProfile(
   wallet = mockWalletData(),
 ) {
   updateSession(authenticatedProfile(wallet, profile));
-}
-
-export function simulateNotAuthenticated() {
-  updateSession(notAuthenticated());
 }

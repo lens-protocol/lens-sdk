@@ -1,39 +1,36 @@
 import { LimitType } from '@lens-protocol/api-bindings';
 import {
   mockProfileFragment,
-  mockMutualFollowersResponse,
+  mockProfileRecommendationsResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
-import { UseMutualFollowersArgs, useMutualFollowers } from '../useMutualFollowers';
+import { UseRecommendedProfilesArgs, useRecommendedProfiles } from '../useRecommendedProfiles';
 
-describe(`Given the ${useMutualFollowers.name} hook`, () => {
-  const observerProfileId = mockProfileId();
-  const viewingProfileId = mockProfileId();
+describe(`Given the ${useRecommendedProfiles.name} hook`, () => {
+  const profileId = mockProfileId();
   const profiles = [mockProfileFragment()];
   const expectations = profiles.map(({ __typename, id }) => ({ __typename, id }));
 
   describe('when the query returns data successfully', () => {
     it('should settle with the profiles', async () => {
       const { renderHook } = setupHookTestScenario([
-        mockMutualFollowersResponse({
+        mockProfileRecommendationsResponse({
           variables: {
-            observer: observerProfileId,
-            viewing: viewingProfileId,
+            for: profileId,
             limit: LimitType.Ten,
           },
           items: profiles,
         }),
       ]);
 
-      const args: UseMutualFollowersArgs = {
-        observer: observerProfileId,
-        viewing: viewingProfileId,
+      const args: UseRecommendedProfilesArgs = {
+        for: profileId,
       };
 
-      const { result } = renderHook(() => useMutualFollowers(args));
+      const { result } = renderHook(() => useRecommendedProfiles(args));
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
       expect(result.current.data).toMatchObject(expectations);
