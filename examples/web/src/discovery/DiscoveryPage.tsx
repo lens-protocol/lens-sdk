@@ -1,24 +1,29 @@
 import { LinkCard } from '../components/LinkCard';
 
-const searchHooks = [
+const discoveryHooks = [
+  {
+    label: 'useFeed',
+    description: `Fetch the feed of a profile matching given filters.`,
+    path: '/discovery/useFeed',
+  },
   {
     label: 'useSearchPublications',
     description: 'Search for publications using filters.',
-    path: '/search/useSearchPublications',
+    path: '/discovery/useSearchPublications',
   },
   {
     label: 'useSearchProfiles',
     description: 'Search for profiles using filters.',
-    path: '/search/useSearchProfiles',
+    path: '/discovery/useSearchProfiles',
   },
 ];
 
-export function SearchPage() {
+export function DiscoveryPage() {
   return (
     <div>
-      <h1>Search</h1>
+      <h1>Discovery</h1>
 
-      {searchHooks.map((link) => (
+      {discoveryHooks.map((link) => (
         <LinkCard key={link.path} {...link} />
       ))}
     </div>

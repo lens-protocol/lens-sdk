@@ -8,7 +8,7 @@ export * from './LensProvider';
  */
 export * from './profile';
 export * from './publication';
-export * from './search';
+export * from './discovery';
 
 /**
  * Domain essentials

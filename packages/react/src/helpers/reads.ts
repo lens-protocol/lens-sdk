@@ -107,8 +107,10 @@ export function useReadResult<
   return buildReadResult(data?.result, error);
 }
 
+export type OmitCursor<T> = Omit<T, 'cursor'>;
+
 export type PaginatedArgs<T> = Prettify<
-  Omit<
+  OmitCursor<
     T & {
       /**
        * The number of items to return.
@@ -116,8 +118,7 @@ export type PaginatedArgs<T> = Prettify<
        * @defaultValue LimitType.Ten
        */
       limit?: LimitType;
-    },
-    'cursor'
+    }
   >
 >;
 
