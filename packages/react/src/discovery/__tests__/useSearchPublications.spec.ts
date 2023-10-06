@@ -1,40 +1,17 @@
 import {
-  LimitType,
-  PrimaryPublication,
   PublicationMetadataMainFocusType,
   SearchPublicationType,
 } from '@lens-protocol/api-bindings';
 import {
   mockCommentFragment,
-  mockLensApolloClient,
   mockPostFragment,
   mockSearchPublicationsResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
-import { renderHookWithMocks } from '../../__helpers__/testing-library';
+import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
+import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../../utils';
 import { UseSearchPublicationsArgs, useSearchPublications } from '../useSearchPublications';
-
-function setupTestScenario({
-  result,
-  ...args
-}: UseSearchPublicationsArgs & {
-  result: PrimaryPublication[];
-}) {
-  return renderHookWithMocks(() => useSearchPublications(args), {
-    mocks: {
-      apolloClient: mockLensApolloClient([
-        mockSearchPublicationsResponse({
-          variables: {
-            ...args,
-            limit: LimitType.Ten,
-          },
-          items: result,
-        }),
-      ]),
-    },
-  });
-}
 
 describe(`Given the ${useSearchPublications.name} hook`, () => {
   const query = 'query_test';
@@ -43,7 +20,7 @@ describe(`Given the ${useSearchPublications.name} hook`, () => {
 
   describe('when the query returns data successfully', () => {
     it('should return publications that match the search result', async () => {
-      const { result } = setupTestScenario({
+      const args: UseSearchPublicationsArgs = {
         query,
         where: {
           publicationTypes: [SearchPublicationType.Post],
@@ -51,8 +28,19 @@ describe(`Given the ${useSearchPublications.name} hook`, () => {
             mainContentFocus: [PublicationMetadataMainFocusType.Audio],
           },
         },
-        result: publications,
-      });
+      };
+
+      const { renderHook } = setupHookTestScenario([
+        mockSearchPublicationsResponse({
+          variables: {
+            ...args,
+            limit: DEFAULT_PAGINATED_QUERY_LIMIT,
+          },
+          items: publications,
+        }),
+      ]);
+
+      const { result } = renderHook(() => useSearchPublications(args));
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
       expect(result.current.data).toMatchObject(expectations);

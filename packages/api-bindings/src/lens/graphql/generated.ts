@@ -3179,6 +3179,23 @@ export type WhoActedOnPublicationData = {
   result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
 } & InjectCommonQueryParams;
 
+export type ProfileActionHistory = {
+  id: number;
+  actionType: ProfileActionHistoryType;
+  who: EvmAddress;
+  txHash: string | null;
+  actionedOn: string;
+};
+
+export type ProfileActionHistoryVariables = Exact<{
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
+}>;
+
+export type ProfileActionHistoryData = {
+  result: { items: Array<ProfileActionHistory>; pageInfo: PaginatedResultInfo };
+};
+
 export type ClaimProfileVariables = Exact<{
   request: ClaimProfileRequest;
 }>;
@@ -3701,6 +3718,37 @@ export type RefreshPublicationMetadataVariables = Exact<{
 export type RefreshPublicationMetadataData = {
   result: { result: RefreshPublicationMetadataResultType };
 };
+
+export type AddReactionVariables = Exact<{
+  request: ReactionRequest;
+}>;
+
+export type AddReactionData = { addReaction: void | null };
+
+export type RemoveReactionVariables = Exact<{
+  request: ReactionRequest;
+}>;
+
+export type RemoveReactionData = { removeReaction: void | null };
+
+export type ProfileReactionResult = { reaction: PublicationReactionType; reactionAt: string };
+
+export type ProfileWhoReactedResult = { profile: Profile; reactions: Array<ProfileReactionResult> };
+
+export type WhoReactedPublicationVariables = Exact<{
+  for: Scalars['PublicationId'];
+  where?: InputMaybe<WhoReactedPublicationWhere>;
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
+}>;
+
+export type WhoReactedPublicationData = {
+  result: { items: Array<ProfileWhoReactedResult>; pageInfo: PaginatedResultInfo };
+} & InjectCommonQueryParams;
 
 export type RevenueAggregate = { total: Amount };
 
@@ -6792,6 +6840,15 @@ export const FragmentCreateHandleUnlinkFromProfileBroadcastItemResult = /*#__PUR
   ${FragmentEip712TypedDataField}
   ${FragmentEip712TypedDataDomain}
 `;
+export const FragmentProfileActionHistory = /*#__PURE__*/ gql`
+  fragment ProfileActionHistory on ProfileActionHistory {
+    id
+    actionType
+    who
+    txHash
+    actionedOn
+  }
+`;
 export const FragmentTagResult = /*#__PURE__*/ gql`
   fragment TagResult on TagResult {
     tag
@@ -7084,6 +7141,24 @@ export const FragmentCreateLegacyCollectBroadcastItemResult = /*#__PURE__*/ gql`
     }
   }
   ${FragmentCreateActOnOpenActionEip712TypedData}
+`;
+export const FragmentProfileReactionResult = /*#__PURE__*/ gql`
+  fragment ProfileReactionResult on ProfileReactionResult {
+    reaction
+    reactionAt
+  }
+`;
+export const FragmentProfileWhoReactedResult = /*#__PURE__*/ gql`
+  fragment ProfileWhoReactedResult on ProfileWhoReactedResult {
+    profile {
+      ...Profile
+    }
+    reactions {
+      ...ProfileReactionResult
+    }
+  }
+  ${FragmentProfile}
+  ${FragmentProfileReactionResult}
 `;
 export const FragmentRevenueAggregate = /*#__PURE__*/ gql`
   fragment RevenueAggregate on RevenueAggregate {
@@ -8223,6 +8298,67 @@ export type WhoActedOnPublicationLazyQueryHookResult = ReturnType<
 export type WhoActedOnPublicationQueryResult = Apollo.QueryResult<
   WhoActedOnPublicationData,
   WhoActedOnPublicationVariables
+>;
+export const ProfileActionHistoryDocument = /*#__PURE__*/ gql`
+  query ProfileActionHistory($limit: LimitType, $cursor: Cursor) {
+    result: profileActionHistory(request: { limit: $limit, cursor: $cursor }) {
+      items {
+        ...ProfileActionHistory
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentProfileActionHistory}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __useProfileActionHistory__
+ *
+ * To run a query within a React component, call `useProfileActionHistory` and pass it any options that fit your needs.
+ * When your component renders, `useProfileActionHistory` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfileActionHistory({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function useProfileActionHistory(
+  baseOptions?: Apollo.QueryHookOptions<ProfileActionHistoryData, ProfileActionHistoryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfileActionHistoryData, ProfileActionHistoryVariables>(
+    ProfileActionHistoryDocument,
+    options,
+  );
+}
+export function useProfileActionHistoryLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ProfileActionHistoryData,
+    ProfileActionHistoryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProfileActionHistoryData, ProfileActionHistoryVariables>(
+    ProfileActionHistoryDocument,
+    options,
+  );
+}
+export type ProfileActionHistoryHookResult = ReturnType<typeof useProfileActionHistory>;
+export type ProfileActionHistoryLazyQueryHookResult = ReturnType<
+  typeof useProfileActionHistoryLazyQuery
+>;
+export type ProfileActionHistoryQueryResult = Apollo.QueryResult<
+  ProfileActionHistoryData,
+  ProfileActionHistoryVariables
 >;
 export const ClaimProfileDocument = /*#__PURE__*/ gql`
   mutation ClaimProfile($request: ClaimProfileRequest!) {
@@ -10619,6 +10755,164 @@ export type RefreshPublicationMetadataMutationResult =
 export type RefreshPublicationMetadataMutationOptions = Apollo.BaseMutationOptions<
   RefreshPublicationMetadataData,
   RefreshPublicationMetadataVariables
+>;
+export const AddReactionDocument = /*#__PURE__*/ gql`
+  mutation AddReaction($request: ReactionRequest!) {
+    addReaction(request: $request)
+  }
+`;
+export type AddReactionMutationFn = Apollo.MutationFunction<AddReactionData, AddReactionVariables>;
+
+/**
+ * __useAddReaction__
+ *
+ * To run a mutation, you first call `useAddReaction` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddReaction` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addReaction, { data, loading, error }] = useAddReaction({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAddReaction(
+  baseOptions?: Apollo.MutationHookOptions<AddReactionData, AddReactionVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddReactionData, AddReactionVariables>(AddReactionDocument, options);
+}
+export type AddReactionHookResult = ReturnType<typeof useAddReaction>;
+export type AddReactionMutationResult = Apollo.MutationResult<AddReactionData>;
+export type AddReactionMutationOptions = Apollo.BaseMutationOptions<
+  AddReactionData,
+  AddReactionVariables
+>;
+export const RemoveReactionDocument = /*#__PURE__*/ gql`
+  mutation RemoveReaction($request: ReactionRequest!) {
+    removeReaction(request: $request)
+  }
+`;
+export type RemoveReactionMutationFn = Apollo.MutationFunction<
+  RemoveReactionData,
+  RemoveReactionVariables
+>;
+
+/**
+ * __useRemoveReaction__
+ *
+ * To run a mutation, you first call `useRemoveReaction` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveReaction` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeReaction, { data, loading, error }] = useRemoveReaction({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useRemoveReaction(
+  baseOptions?: Apollo.MutationHookOptions<RemoveReactionData, RemoveReactionVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RemoveReactionData, RemoveReactionVariables>(
+    RemoveReactionDocument,
+    options,
+  );
+}
+export type RemoveReactionHookResult = ReturnType<typeof useRemoveReaction>;
+export type RemoveReactionMutationResult = Apollo.MutationResult<RemoveReactionData>;
+export type RemoveReactionMutationOptions = Apollo.BaseMutationOptions<
+  RemoveReactionData,
+  RemoveReactionVariables
+>;
+export const WhoReactedPublicationDocument = /*#__PURE__*/ gql`
+  query WhoReactedPublication(
+    $for: PublicationId!
+    $where: WhoReactedPublicationWhere
+    $limit: LimitType
+    $cursor: Cursor
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
+  ) {
+    ...InjectCommonQueryParams
+    result: whoReactedPublication(
+      request: { for: $for, where: $where, limit: $limit, cursor: $cursor }
+    ) {
+      items {
+        ...ProfileWhoReactedResult
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentInjectCommonQueryParams}
+  ${FragmentProfileWhoReactedResult}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __useWhoReactedPublication__
+ *
+ * To run a query within a React component, call `useWhoReactedPublication` and pass it any options that fit your needs.
+ * When your component renders, `useWhoReactedPublication` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useWhoReactedPublication({
+ *   variables: {
+ *      for: // value for 'for'
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
+ *   },
+ * });
+ */
+export function useWhoReactedPublication(
+  baseOptions: Apollo.QueryHookOptions<WhoReactedPublicationData, WhoReactedPublicationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<WhoReactedPublicationData, WhoReactedPublicationVariables>(
+    WhoReactedPublicationDocument,
+    options,
+  );
+}
+export function useWhoReactedPublicationLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    WhoReactedPublicationData,
+    WhoReactedPublicationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<WhoReactedPublicationData, WhoReactedPublicationVariables>(
+    WhoReactedPublicationDocument,
+    options,
+  );
+}
+export type WhoReactedPublicationHookResult = ReturnType<typeof useWhoReactedPublication>;
+export type WhoReactedPublicationLazyQueryHookResult = ReturnType<
+  typeof useWhoReactedPublicationLazyQuery
+>;
+export type WhoReactedPublicationQueryResult = Apollo.QueryResult<
+  WhoReactedPublicationData,
+  WhoReactedPublicationVariables
 >;
 export const RevenueFromPublicationsDocument = /*#__PURE__*/ gql`
   query RevenueFromPublications(

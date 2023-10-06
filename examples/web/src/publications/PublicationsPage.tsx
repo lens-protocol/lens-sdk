@@ -11,6 +11,11 @@ const publicationHooks = [
     description: `Fetch a list of publications.`,
     path: '/publications/usePublications',
   },
+  {
+    label: 'useWhoReactedToPublication',
+    description: `Fetch a list of profiles who reacted to a publication.`,
+    path: '/publications/useWhoReactedToPublication',
+  },
 ];
 
 export function PublicationsPage() {

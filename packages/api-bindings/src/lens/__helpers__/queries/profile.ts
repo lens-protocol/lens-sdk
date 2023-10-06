@@ -7,14 +7,20 @@ import {
   MutualFollowersVariables,
   PaginatedResultInfo,
   Profile,
+  ProfileActionHistory,
+  ProfileActionHistoryDocument,
+  ProfileActionHistoryVariables,
   ProfileRecommendationsDocument,
   ProfileRecommendationsVariables,
+  ProfileWhoReactedResult,
   ProfilesDocument,
   ProfilesVariables,
   SearchProfilesDocument,
   SearchProfilesVariables,
   WhoActedOnPublicationDocument,
   WhoActedOnPublicationVariables,
+  WhoReactedPublicationDocument,
+  WhoReactedPublicationVariables,
 } from '../../graphql/generated';
 import { mockPaginatedResultInfo } from '../fragments';
 import { mockAnyPaginatedResponse } from './mockAnyPaginatedResponse';
@@ -135,5 +141,47 @@ export function mockWhoActedOnPublicationResponse({
     items,
     info,
     query: WhoActedOnPublicationDocument,
+  });
+}
+
+export function mockProfileActionHistoryResponse({
+  variables,
+  items,
+  info = mockPaginatedResultInfo(),
+}: {
+  variables: ProfileActionHistoryVariables;
+  items: ProfileActionHistory[];
+  info?: PaginatedResultInfo;
+}) {
+  return {
+    request: {
+      query: ProfileActionHistoryDocument,
+      variables,
+    },
+    result: {
+      data: {
+        result: {
+          items,
+          pageInfo: info,
+        },
+      },
+    },
+  };
+}
+
+export function mockWhoReactedToPublicationResponse({
+  variables,
+  items,
+  info = mockPaginatedResultInfo(),
+}: {
+  variables: WhoReactedPublicationVariables;
+  items: ProfileWhoReactedResult[];
+  info?: PaginatedResultInfo;
+}) {
+  return mockAnyPaginatedResponse({
+    variables,
+    items,
+    info,
+    query: WhoReactedPublicationDocument,
   });
 }
