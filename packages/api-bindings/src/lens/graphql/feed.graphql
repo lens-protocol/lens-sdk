@@ -63,7 +63,9 @@ fragment FeedHighlight on FeedHighlight {
 }
 
 query FeedHighlights(
-  $request: FeedHighlightsRequest!
+  $where: FeedHighlightWhere
+  $limit: LimitType
+  $cursor: Cursor
   $publicationImageTransform: ImageTransform = {}
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $publicationStatsInput: PublicationStatsInput! = {}
@@ -74,7 +76,7 @@ query FeedHighlights(
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
-  result: feedHighlights(request: $request) {
+  result: feedHighlights(request: { where: $where, limit: $limit, cursor: $cursor }) {
     items {
       ...FeedHighlight
     }

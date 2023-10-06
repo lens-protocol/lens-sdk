@@ -1769,7 +1769,9 @@ type FeedHighlight_Quote_ = Quote;
 export type FeedHighlight = FeedHighlight_Post_ | FeedHighlight_Quote_;
 
 export type FeedHighlightsVariables = Exact<{
-  request: FeedHighlightsRequest;
+  where?: InputMaybe<FeedHighlightWhere>;
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   publicationImageTransform?: InputMaybe<ImageTransform>;
   publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
   publicationStatsInput?: PublicationStatsInput;
@@ -7531,7 +7533,9 @@ export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>;
 export type FeedQueryResult = Apollo.QueryResult<FeedData, FeedVariables>;
 export const FeedHighlightsDocument = /*#__PURE__*/ gql`
   query FeedHighlights(
-    $request: FeedHighlightsRequest!
+    $where: FeedHighlightWhere
+    $limit: LimitType
+    $cursor: Cursor
     $publicationImageTransform: ImageTransform = {}
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
     $publicationStatsInput: PublicationStatsInput! = {}
@@ -7542,7 +7546,7 @@ export const FeedHighlightsDocument = /*#__PURE__*/ gql`
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
-    result: feedHighlights(request: $request) {
+    result: feedHighlights(request: { where: $where, limit: $limit, cursor: $cursor }) {
       items {
         ...FeedHighlight
       }
@@ -7567,7 +7571,9 @@ export const FeedHighlightsDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useFeedHighlights({
  *   variables: {
- *      request: // value for 'request'
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *      publicationImageTransform: // value for 'publicationImageTransform'
  *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
  *      publicationStatsInput: // value for 'publicationStatsInput'
@@ -7581,7 +7587,7 @@ export const FeedHighlightsDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useFeedHighlights(
-  baseOptions: Apollo.QueryHookOptions<FeedHighlightsData, FeedHighlightsVariables>,
+  baseOptions?: Apollo.QueryHookOptions<FeedHighlightsData, FeedHighlightsVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<FeedHighlightsData, FeedHighlightsVariables>(

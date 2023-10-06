@@ -12,6 +12,7 @@ import {
   defaultMediaTransformsConfig,
   mediaTransformConfigToQueryVariables,
 } from '../../mediaTransforms';
+import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../../utils';
 import { useFeedHighlights } from '../useFeedHighlights';
 
 function setupTestScenario({
@@ -32,9 +33,8 @@ function setupTestScenario({
         apolloClient: mockLensApolloClient([
           mockFeedHighlightsResponse({
             variables: {
-              request: {
-                where,
-              },
+              where,
+              limit: DEFAULT_PAGINATED_QUERY_LIMIT,
               ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
             },
             items,

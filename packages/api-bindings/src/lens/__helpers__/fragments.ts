@@ -4,7 +4,6 @@ import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import {
   Comment,
-  FeedHighlight,
   FeedItem,
   Mirror,
   PaginatedResultInfo,
