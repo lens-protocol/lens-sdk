@@ -1,5 +1,16 @@
 # @lens-protocol/react
 
+## 2.0.0-alpha.1
+
+### Patch Changes
+
+- 25fe9a46: **Added** new hooks: useFeed, useSearchProfiles, useSearchPublications, useProfiles, usePublications, useProfileFollowing, useProfileFollowers, useMutualFollowers, useRecommendedProfiles, useProfileActionHistory, useWhoReactedToPublication, useWhoActedOnPublication
+- Updated dependencies [25fe9a46]
+  - @lens-protocol/api-bindings@0.11.0-alpha.1
+  - @lens-protocol/domain@0.11.0-alpha.1
+  - @lens-protocol/shared-kernel@0.11.0-alpha.1
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.1
+
 ## 2.0.0-alpha.0
 
 ### Major Changes

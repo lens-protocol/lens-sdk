@@ -1,5 +1,14 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.1
+
+### Patch Changes
+
+- 25fe9a46: Support for new v2 hooks
+- Updated dependencies [25fe9a46]
+  - @lens-protocol/domain@0.11.0-alpha.1
+  - @lens-protocol/shared-kernel@0.11.0-alpha.1
+
 ## 0.11.0-alpha.0
 
 ### Minor Changes
