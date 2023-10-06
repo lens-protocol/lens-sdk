@@ -7,6 +7,9 @@ import {
   MutualFollowersVariables,
   PaginatedResultInfo,
   Profile,
+  ProfileActionHistory,
+  ProfileActionHistoryDocument,
+  ProfileActionHistoryVariables,
   ProfileRecommendationsDocument,
   ProfileRecommendationsVariables,
   ProfilesDocument,
@@ -136,4 +139,29 @@ export function mockWhoActedOnPublicationResponse({
     info,
     query: WhoActedOnPublicationDocument,
   });
+}
+
+export function mockProfileActionHistoryResponse({
+  variables,
+  items,
+  info = mockPaginatedResultInfo(),
+}: {
+  variables: ProfileActionHistoryVariables;
+  items: ProfileActionHistory[];
+  info?: PaginatedResultInfo;
+}) {
+  return {
+    request: {
+      query: ProfileActionHistoryDocument,
+      variables,
+    },
+    result: {
+      data: {
+        result: {
+          items,
+          pageInfo: info,
+        },
+      },
+    },
+  };
 }

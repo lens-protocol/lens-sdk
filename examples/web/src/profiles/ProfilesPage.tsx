@@ -36,6 +36,11 @@ const profileHooks = [
     description: `Fetch a list of profiles who acted on a publication.`,
     path: '/profiles/useWhoActedOnPublication',
   },
+  {
+    label: 'useProfileActionHistory',
+    description: `Fetch profile action history.`,
+    path: '/profiles/useProfileActionHistory',
+  },
 ];
 
 export function ProfilesPage() {

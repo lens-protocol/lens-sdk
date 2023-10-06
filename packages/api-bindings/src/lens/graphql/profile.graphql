@@ -371,6 +371,25 @@ query WhoActedOnPublication(
   }
 }
 
+fragment ProfileActionHistory on ProfileActionHistory {
+  id
+  actionType
+  who
+  txHash
+  actionedOn
+}
+
+query ProfileActionHistory($limit: LimitType, $cursor: Cursor) {
+  result: profileActionHistory(request: { limit: $limit, cursor: $cursor }) {
+    items {
+      ...ProfileActionHistory
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
 # mutations
 mutation ClaimProfile($request: ClaimProfileRequest!) {
   result: claimProfile(request: $request) {

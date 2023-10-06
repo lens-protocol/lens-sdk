@@ -20,6 +20,7 @@ import {
   ProfilesPage,
   UseMutualFollowers,
   UseProfile,
+  UseProfileActionHistory,
   UseProfileFollowers,
   UseProfileFollowing,
   UseProfiles,
@@ -80,6 +81,7 @@ export function App() {
                     <Route path="useMutualFollowers" element={<UseMutualFollowers />} />
                     <Route path="useRecommendedProfiles" element={<UseRecommendedProfiles />} />
                     <Route path="useWhoActedOnPublication" element={<UseWhoActedOnPublication />} />
+                    <Route path="useProfileActionHistory" element={<UseProfileActionHistory />} />
                   </Route>
 
                   <Route path="/discovery">

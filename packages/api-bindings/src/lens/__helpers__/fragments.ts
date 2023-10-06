@@ -9,6 +9,8 @@ import {
   PaginatedResultInfo,
   Post,
   Profile,
+  ProfileActionHistory,
+  ProfileActionHistoryType,
   ProfileStats,
   PublicationOperations,
   PublicationStats,
@@ -232,6 +234,21 @@ export function mockFeedItemFragment(overrides?: Partial<FeedItem>): FeedItem {
     comments: [],
     mirrors: [],
     reactions: [],
+
+    ...overrides,
+  };
+}
+
+export function mockProfileActionHistoryFragment(
+  overrides: Partial<ProfileActionHistory> = {},
+): ProfileActionHistory {
+  return {
+    id: faker.datatype.number(),
+    actionType: ProfileActionHistoryType.LoggedIn,
+    who: mockEvmAddress(),
+    txHash: mockTransactionHash(),
+    actionedOn: faker.date.past().toISOString(),
+
     ...overrides,
   };
 }
