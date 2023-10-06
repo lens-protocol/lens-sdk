@@ -4,7 +4,6 @@ import {
   mockPaginatedResultInfo,
   mockProfileFragment,
   mockProfilesResponse,
-  simulateNotAuthenticated,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { waitFor } from '@testing-library/react';
@@ -16,10 +15,6 @@ describe(`Given the ${useProfiles.name} hook`, () => {
   const evmAddress = mockEvmAddress();
   const profiles = [mockProfileFragment()];
   const expectations = profiles.map(({ __typename, id }) => ({ __typename, id }));
-
-  beforeAll(() => {
-    simulateNotAuthenticated();
-  });
 
   describe('when the query returns data successfully', () => {
     it('should settle with the profiles', async () => {
