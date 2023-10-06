@@ -75,7 +75,7 @@ function ProfilesList({ owner }: { owner: string }) {
 }
 
 export function LogInPage() {
-  const { address, isDisconnected } = useAccount();
+  const { address, isConnected, isConnecting } = useAccount();
 
   const { connect } = useConnect({
     connector: new InjectedConnector(),
@@ -83,7 +83,11 @@ export function LogInPage() {
 
   return (
     <div>
-      {isDisconnected && <button onClick={() => connect()}>Connect first</button>}
+      {!isConnected && (
+        <button disabled={isConnecting} onClick={() => connect()}>
+          Connect first
+        </button>
+      )}
 
       {address && <ProfilesList owner={address} />}
     </div>

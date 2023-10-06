@@ -1,5 +1,6 @@
 import { ReactNode, useState } from 'react';
 
+import { useBootstrapController } from './authentication/adapters/useBootstrapController';
 import { LensConfig } from './config';
 import { createSharedDependencies, SharedDependenciesProvider } from './shared';
 
@@ -24,9 +25,9 @@ export type LensProviderProps = {
  * @param props - {@link LensProviderProps}
  */
 export function LensProvider({ children, ...props }: LensProviderProps) {
-  const [sharedDependencies] = useState(() => {
-    return createSharedDependencies(props.config);
-  });
+  const [sharedDependencies] = useState(() => createSharedDependencies(props.config));
+
+  useBootstrapController(sharedDependencies);
 
   return (
     <SharedDependenciesProvider dependencies={sharedDependencies}>

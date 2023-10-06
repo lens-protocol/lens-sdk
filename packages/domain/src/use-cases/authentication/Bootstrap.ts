@@ -5,7 +5,7 @@ import { TransactionQueue } from '../transactions';
 import { ICredentialsReader } from './ActiveWallet';
 import { ICredentialsWriter } from './Login';
 import { Logout, LogoutReason } from './Logout';
-import { SessionData } from './SessionData';
+import { anonymousSessionData, profileSessionData, SessionData } from './SessionData';
 
 export class CredentialsExpiredError extends Error {
   name = 'CredentialsExpiredError' as const;
@@ -19,9 +19,7 @@ export interface ICredentialsRenewer {
 }
 
 export interface IBootstrapPresenter {
-  anonymous(): void;
-
-  authenticated(session: SessionData): void;
+  present(session: SessionData): void;
 }
 
 export class Bootstrap {
@@ -37,7 +35,7 @@ export class Bootstrap {
     const credentials = await this.credentialsGateway.getCredentials();
 
     if (!credentials) {
-      this.presenter.anonymous();
+      this.presenter.present(anonymousSessionData());
       return;
     }
 
@@ -52,9 +50,11 @@ export class Bootstrap {
 
     await this.transactionQueue.resume();
 
-    this.presenter.authenticated({
-      address: credentials.address,
-      profileId: credentials.profileId,
-    });
+    this.presenter.present(
+      profileSessionData({
+        address: credentials.address,
+        profileId: credentials.profileId,
+      }),
+    );
   }
 }

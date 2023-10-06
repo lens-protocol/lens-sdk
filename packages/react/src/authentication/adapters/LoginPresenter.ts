@@ -1,8 +1,9 @@
-import { authenticated, Profile, updateSession } from '@lens-protocol/api-bindings';
+import { Profile, updateSessionData } from '@lens-protocol/api-bindings';
 import {
   ILoginPresenter,
   LoginError,
   SessionData,
+  SessionType,
 } from '@lens-protocol/domain/use-cases/authentication';
 import {
   Deferred,
@@ -26,12 +27,17 @@ export class LoginPresenter implements ILoginPresenter {
       return;
     }
 
+    invariant(
+      result.value.type === SessionType.WithProfile,
+      `At the moment we only support ${SessionType.WithProfile} sessions`,
+    );
+
     const { profileId } = result.value;
     const profile = await this.profileCacheManager.fetchProfile(profileId);
 
     invariant(profile, 'Profile not found');
 
-    updateSession(authenticated(result.value));
+    updateSessionData(result.value);
 
     this.deferredResult.resolve(success(profile));
     return;

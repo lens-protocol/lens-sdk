@@ -8,7 +8,7 @@ import {
   Wallet,
   WalletConnectionError,
 } from '../../entities';
-import { SessionData } from './SessionData';
+import { profileSessionData, SessionData } from './SessionData';
 
 /**
  * The details required to authenticate the session.
@@ -70,6 +70,6 @@ export class Login {
     await this.walletGateway.save(wallet);
     await this.credentialsWriter.save(result.value);
 
-    this.presenter.present(success(request));
+    this.presenter.present(success(profileSessionData(request)));
   }
 }

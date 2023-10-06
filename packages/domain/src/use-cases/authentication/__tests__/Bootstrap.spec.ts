@@ -82,7 +82,7 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
       await bootstrap.execute();
 
       expect(credentialsGateway.save).toHaveBeenCalledWith(newCredentials);
-      expect(presenter.authenticated).toHaveBeenCalledWith({
+      expect(presenter.present).toHaveBeenCalledWith({
         address: oldCredentials.address,
         profileId: oldCredentials.profileId,
       });

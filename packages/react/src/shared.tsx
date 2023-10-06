@@ -4,6 +4,7 @@ import {
   defaultQueryParams,
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
+import { IConversationsGateway, Logout } from '@lens-protocol/domain/use-cases/authentication';
 import { ILogger, invariant } from '@lens-protocol/shared-kernel';
 import React, { ReactNode, useContext } from 'react';
 
@@ -13,6 +14,7 @@ import { AuthApi } from './authentication/adapters/AuthApi';
 import { CredentialsFactory } from './authentication/adapters/CredentialsFactory';
 import { CredentialsGateway } from './authentication/adapters/CredentialsGateway';
 import { CredentialsStorage } from './authentication/adapters/CredentialsStorage';
+import { LogoutPresenter } from './authentication/adapters/LogoutPresenter';
 import { LensConfig } from './config';
 import { EnvironmentConfig } from './environments';
 import { IProfileCacheManager } from './profile/adapters/IProfileCacheManager';
@@ -70,12 +72,27 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   const walletFactory = new WalletFactory(signerFactory, transactionFactory);
   const walletGateway = new WalletGateway(walletStorage, walletFactory);
 
+  const conversationsGateway: IConversationsGateway = {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    async reset() {},
+  };
+
+  // logout
+  const logoutPresenter = new LogoutPresenter();
+  const logout = new Logout(
+    walletGateway,
+    credentialsGateway,
+    conversationsGateway,
+    logoutPresenter,
+  );
+
   return {
     apolloClient,
     credentialsFactory,
     credentialsGateway,
     environment: config.environment,
     logger,
+    logout,
     profileCacheManager,
     walletFactory,
     walletGateway,
@@ -91,6 +108,7 @@ export type SharedDependencies = {
   credentialsGateway: CredentialsGateway;
   environment: EnvironmentConfig;
   logger: ILogger;
+  logout: Logout;
   profileCacheManager: IProfileCacheManager;
   walletFactory: WalletFactory;
   walletGateway: WalletGateway;

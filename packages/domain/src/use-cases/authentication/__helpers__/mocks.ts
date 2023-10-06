@@ -6,7 +6,6 @@ import { Wallet } from '../../../entities';
 import { mockProfileId, mockWallet } from '../../../entities/__helpers__/mocks';
 import { ActiveWallet } from '../ActiveWallet';
 import { LoginRequest } from '../Login';
-import { SessionData } from '../SessionData';
 
 export function mockLoginRequest(): LoginRequest {
   return {
@@ -21,11 +20,4 @@ export function mockActiveWallet({ wallet = mockWallet() }: { wallet?: Wallet } 
   when(activeWallet.requireActiveWallet).mockResolvedValue(wallet);
 
   return activeWallet;
-}
-
-export function mockSessionData(): SessionData {
-  return {
-    address: mockEvmAddress(),
-    profileId: mockProfileId(),
-  };
 }

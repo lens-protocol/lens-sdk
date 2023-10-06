@@ -1,9 +1,11 @@
+import { SessionType, useSession } from '@lens-protocol/react';
 import { NavLink } from 'react-router-dom';
 
 import { CATEGORIES } from '../../config';
 import { LoginButton } from '../auth';
 
 export function Header() {
+  const { data: session } = useSession();
   return (
     <header>
       <div
@@ -27,6 +29,14 @@ export function Header() {
             gap: '1rem',
           }}
         >
+          {session?.type === SessionType.WithProfile && (
+            <strong>
+              {session.profile.metadata?.displayName ??
+                session.profile.handle ??
+                session.profile.id}
+            </strong>
+          )}
+
           <LoginButton />
         </div>
       </div>
