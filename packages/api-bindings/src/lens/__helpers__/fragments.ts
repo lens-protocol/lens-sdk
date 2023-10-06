@@ -5,6 +5,7 @@ import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import {
   Comment,
   FeedItem,
+  MentionNotification,
   Mirror,
   PaginatedResultInfo,
   Post,
@@ -231,6 +232,17 @@ export function mockFeedItemFragment(overrides?: Partial<FeedItem>): FeedItem {
     comments: [],
     mirrors: [],
     reactions: [],
+    ...overrides,
+  };
+}
+
+export function mockMentionNotification(
+  overrides?: Partial<MentionNotification>,
+): MentionNotification {
+  return {
+    __typename: 'MentionNotification',
+    id: faker.datatype.uuid(),
+    publication: mockPostFragment(),
     ...overrides,
   };
 }

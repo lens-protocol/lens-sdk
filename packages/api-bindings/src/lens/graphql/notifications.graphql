@@ -118,9 +118,34 @@ fragment MentionNotification on MentionNotification {
   }
 }
 
+fragment Notification on Notification {
+  ... on ReactionNotification {
+    ...ReactionNotification
+  }
+  ... on CommentNotification {
+    ...CommentNotification
+  }
+  ... on MirrorNotification {
+    ...MirrorNotification
+  }
+  ... on QuoteNotification {
+    ...QuoteNotification
+  }
+  ... on ActedNotification {
+    ...ActedNotification
+  }
+  ... on FollowNotification {
+    ...FollowNotification
+  }
+  ... on MentionNotification {
+    ...MentionNotification
+  }
+}
+
 # queries
 query Notifications(
-  $request: NotificationRequest!
+  $where: NotificationWhere
+  $cursor: Cursor
   $publicationImageTransform: ImageTransform = {}
   $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
   $publicationStatsInput: PublicationStatsInput! = {}
@@ -131,29 +156,9 @@ query Notifications(
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
-  result: notifications(request: $request) {
+  result: notifications(request: { where: $where, cursor: $cursor }) {
     items {
-      ... on ReactionNotification {
-        ...ReactionNotification
-      }
-      ... on CommentNotification {
-        ...CommentNotification
-      }
-      ... on MirrorNotification {
-        ...MirrorNotification
-      }
-      ... on QuoteNotification {
-        ...QuoteNotification
-      }
-      ... on ActedNotification {
-        ...ActedNotification
-      }
-      ... on FollowNotification {
-        ...FollowNotification
-      }
-      ... on MentionNotification {
-        ...MentionNotification
-      }
+      ...Notification
     }
     pageInfo {
       ...PaginatedResultInfo

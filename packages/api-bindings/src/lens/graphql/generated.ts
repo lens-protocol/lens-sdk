@@ -234,6 +234,11 @@ export enum ComparisonOperatorConditionType {
   NotEqual = 'NOT_EQUAL',
 }
 
+export type CreateProfileRequest = {
+  followModule?: InputMaybe<FollowModuleInput>;
+  to: Scalars['EvmAddress'];
+};
+
 export enum CreateProfileWithHandleErrorReasonType {
   Failed = 'FAILED',
   HandleTaken = 'HANDLE_TAKEN',
@@ -356,15 +361,15 @@ export enum FeedEventItemType {
   Reaction = 'REACTION',
 }
 
-export type FeedHighlightWhere = {
-  for?: InputMaybe<Scalars['ProfileId']>;
-  metadata?: InputMaybe<PublicationMetadataFilters>;
-};
-
 export type FeedHighlightsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']>;
   limit?: InputMaybe<LimitType>;
-  where?: InputMaybe<FeedHighlightWhere>;
+  where?: InputMaybe<FeedHighlightsWhere>;
+};
+
+export type FeedHighlightsWhere = {
+  for?: InputMaybe<Scalars['ProfileId']>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
 };
 
 export type FeedRequest = {
@@ -486,6 +491,89 @@ export type ImageTransform = {
   keepAspectRatio?: InputMaybe<Scalars['Boolean']>;
   /** Set the transformed image's width */
   width?: InputMaybe<Scalars['ImageSizeTransform']>;
+};
+
+export type InternalAddCuratedTagRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+  ttt: Scalars['String'];
+};
+
+export type InternalAddInvitesRequest = {
+  n: Scalars['Int'];
+  p: Scalars['ProfileId'];
+  secret: Scalars['String'];
+};
+
+export type InternalAllowDomainRequest = {
+  domain: Scalars['URI'];
+  secret: Scalars['String'];
+};
+
+export type InternalAllowedDomainsRequest = {
+  secret: Scalars['String'];
+};
+
+export type InternalClaimRequest = {
+  address: Scalars['EvmAddress'];
+  freeTextHandle: Scalars['Boolean'];
+  handle: Scalars['CreateHandle'];
+  overrideAlreadyClaimed: Scalars['Boolean'];
+  overrideTradeMark: Scalars['Boolean'];
+  secret: Scalars['String'];
+};
+
+export type InternalClaimStatusRequest = {
+  address: Scalars['EvmAddress'];
+  secret: Scalars['String'];
+};
+
+export type InternalCuratedHandlesRequest = {
+  secret: Scalars['String'];
+};
+
+export type InternalCuratedTagsRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+};
+
+export type InternalCuratedUpdateRequest = {
+  handle: Scalars['Handle'];
+  remove: Scalars['Boolean'];
+  secret: Scalars['String'];
+};
+
+export type InternalInvitesRequest = {
+  p: Scalars['ProfileId'];
+  secret: Scalars['String'];
+};
+
+export type InternalNftIndexRequest = {
+  n: Array<Nfi>;
+  secret: Scalars['String'];
+};
+
+export type InternalNftVerifyRequest = {
+  n: Array<Nfi>;
+  secret: Scalars['String'];
+};
+
+export type InternalProfileStatusRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+};
+
+export type InternalRemoveCuratedTagRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+  ttt: Scalars['String'];
+};
+
+export type InternalUpdateProfileStatusRequest = {
+  dd: Scalars['Boolean'];
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+  ss: Scalars['Boolean'];
 };
 
 export type InviteRequest = {
@@ -646,6 +734,11 @@ export type MutualPoapsQueryRequest = {
 export type NetworkAddressInput = {
   address: Scalars['EvmAddress'];
   chainId: Scalars['ChainId'];
+};
+
+export type Nfi = {
+  c: Scalars['EvmAddress'];
+  i: Scalars['ChainId'];
 };
 
 export enum NftCollectionOwnersOrder {
@@ -2070,6 +2163,7 @@ export type AndCondition = {
     | FollowCondition
     | NftOwnershipCondition
     | ProfileOwnershipCondition
+    | {}
   >;
 };
 
@@ -2082,6 +2176,7 @@ export type OrCondition = {
     | FollowCondition
     | NftOwnershipCondition
     | ProfileOwnershipCondition
+    | {}
   >;
 };
 
@@ -2096,6 +2191,7 @@ export type RootCondition = {
     | NftOwnershipCondition
     | OrCondition
     | ProfileOwnershipCondition
+    | {}
   >;
 };
 
@@ -2812,8 +2908,32 @@ export type MentionNotification = {
   publication: Comment | Post | Quote;
 };
 
+type Notification_ActedNotification_ = ActedNotification;
+
+type Notification_CommentNotification_ = CommentNotification;
+
+type Notification_FollowNotification_ = FollowNotification;
+
+type Notification_MentionNotification_ = MentionNotification;
+
+type Notification_MirrorNotification_ = MirrorNotification;
+
+type Notification_QuoteNotification_ = QuoteNotification;
+
+type Notification_ReactionNotification_ = ReactionNotification;
+
+export type Notification =
+  | Notification_ActedNotification_
+  | Notification_CommentNotification_
+  | Notification_FollowNotification_
+  | Notification_MentionNotification_
+  | Notification_MirrorNotification_
+  | Notification_QuoteNotification_
+  | Notification_ReactionNotification_;
+
 export type NotificationsVariables = Exact<{
-  request: NotificationRequest;
+  where?: InputMaybe<NotificationWhere>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   publicationImageTransform?: InputMaybe<ImageTransform>;
   publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
   publicationStatsInput?: PublicationStatsInput;
@@ -2828,13 +2948,13 @@ export type NotificationsVariables = Exact<{
 export type NotificationsData = {
   result: {
     items: Array<
-      | ActedNotification
-      | CommentNotification
-      | FollowNotification
-      | MentionNotification
-      | MirrorNotification
-      | QuoteNotification
-      | ReactionNotification
+      | Notification_ActedNotification_
+      | Notification_CommentNotification_
+      | Notification_FollowNotification_
+      | Notification_MentionNotification_
+      | Notification_MirrorNotification_
+      | Notification_QuoteNotification_
+      | Notification_ReactionNotification_
     >;
     pageInfo: PaginatedResultInfo;
   };
@@ -6424,6 +6544,38 @@ export const FragmentMentionNotification = /*#__PURE__*/ gql`
   ${FragmentComment}
   ${FragmentQuote}
 `;
+export const FragmentNotification = /*#__PURE__*/ gql`
+  fragment Notification on Notification {
+    ... on ReactionNotification {
+      ...ReactionNotification
+    }
+    ... on CommentNotification {
+      ...CommentNotification
+    }
+    ... on MirrorNotification {
+      ...MirrorNotification
+    }
+    ... on QuoteNotification {
+      ...QuoteNotification
+    }
+    ... on ActedNotification {
+      ...ActedNotification
+    }
+    ... on FollowNotification {
+      ...FollowNotification
+    }
+    ... on MentionNotification {
+      ...MentionNotification
+    }
+  }
+  ${FragmentReactionNotification}
+  ${FragmentCommentNotification}
+  ${FragmentMirrorNotification}
+  ${FragmentQuoteNotification}
+  ${FragmentActedNotification}
+  ${FragmentFollowNotification}
+  ${FragmentMentionNotification}
+`;
 export const FragmentProfileManager = /*#__PURE__*/ gql`
   fragment ProfileManager on ProfilesManagedResult {
     address
@@ -7492,7 +7644,8 @@ export type FeedHighlightsQueryResult = Apollo.QueryResult<
 >;
 export const NotificationsDocument = /*#__PURE__*/ gql`
   query Notifications(
-    $request: NotificationRequest!
+    $where: NotificationWhere
+    $cursor: Cursor
     $publicationImageTransform: ImageTransform = {}
     $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
     $publicationStatsInput: PublicationStatsInput! = {}
@@ -7503,42 +7656,16 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
     $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
     $rateRequest: RateRequest = { for: USD }
   ) {
-    result: notifications(request: $request) {
+    result: notifications(request: { where: $where, cursor: $cursor }) {
       items {
-        ... on ReactionNotification {
-          ...ReactionNotification
-        }
-        ... on CommentNotification {
-          ...CommentNotification
-        }
-        ... on MirrorNotification {
-          ...MirrorNotification
-        }
-        ... on QuoteNotification {
-          ...QuoteNotification
-        }
-        ... on ActedNotification {
-          ...ActedNotification
-        }
-        ... on FollowNotification {
-          ...FollowNotification
-        }
-        ... on MentionNotification {
-          ...MentionNotification
-        }
+        ...Notification
       }
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }
-  ${FragmentReactionNotification}
-  ${FragmentCommentNotification}
-  ${FragmentMirrorNotification}
-  ${FragmentQuoteNotification}
-  ${FragmentActedNotification}
-  ${FragmentFollowNotification}
-  ${FragmentMentionNotification}
+  ${FragmentNotification}
   ${FragmentPaginatedResultInfo}
 `;
 
@@ -7554,7 +7681,8 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useNotifications({
  *   variables: {
- *      request: // value for 'request'
+ *      where: // value for 'where'
+ *      cursor: // value for 'cursor'
  *      publicationImageTransform: // value for 'publicationImageTransform'
  *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
  *      publicationStatsInput: // value for 'publicationStatsInput'
@@ -7568,7 +7696,7 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useNotifications(
-  baseOptions: Apollo.QueryHookOptions<NotificationsData, NotificationsVariables>,
+  baseOptions?: Apollo.QueryHookOptions<NotificationsData, NotificationsVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<NotificationsData, NotificationsVariables>(NotificationsDocument, options);
@@ -11286,6 +11414,23 @@ export type ActedNotificationFieldPolicy = {
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   publication?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type AdvancedContractConditionKeySpecifier = (
+  | 'abi'
+  | 'comparison'
+  | 'contract'
+  | 'functionName'
+  | 'params'
+  | 'value'
+  | AdvancedContractConditionKeySpecifier
+)[];
+export type AdvancedContractConditionFieldPolicy = {
+  abi?: FieldPolicy<any> | FieldReadFunction<any>;
+  comparison?: FieldPolicy<any> | FieldReadFunction<any>;
+  contract?: FieldPolicy<any> | FieldReadFunction<any>;
+  functionName?: FieldPolicy<any> | FieldReadFunction<any>;
+  params?: FieldPolicy<any> | FieldReadFunction<any>;
+  value?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type AmountKeySpecifier = ('asset' | 'rate' | 'value' | AmountKeySpecifier)[];
 export type AmountFieldPolicy = {
   asset?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -13369,6 +13514,7 @@ export type MutationKeySpecifier = (
   | 'createOnchainPostTypedData'
   | 'createOnchainQuoteTypedData'
   | 'createOnchainSetProfileMetadataTypedData'
+  | 'createProfile'
   | 'createProfileWithHandle'
   | 'createSetFollowModuleTypedData'
   | 'createUnblockProfilesTypedData'
@@ -13380,6 +13526,15 @@ export type MutationKeySpecifier = (
   | 'handleUnlinkFromProfile'
   | 'hidePublication'
   | 'idKitPhoneVerifyWebhook'
+  | 'internalAddCuratedTag'
+  | 'internalAddInvites'
+  | 'internalAllowDomain'
+  | 'internalClaim'
+  | 'internalCuratedUpdate'
+  | 'internalNftIndex'
+  | 'internalNftVerify'
+  | 'internalRemoveCuratedTag'
+  | 'internalUpdateProfileStatus'
   | 'inviteProfile'
   | 'legacyCollect'
   | 'mirrorOnMomoka'
@@ -13435,6 +13590,7 @@ export type MutationFieldPolicy = {
   createOnchainPostTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createOnchainQuoteTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createOnchainSetProfileMetadataTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
+  createProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   createProfileWithHandle?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetFollowModuleTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createUnblockProfilesTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -13446,6 +13602,15 @@ export type MutationFieldPolicy = {
   handleUnlinkFromProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   hidePublication?: FieldPolicy<any> | FieldReadFunction<any>;
   idKitPhoneVerifyWebhook?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalAddCuratedTag?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalAddInvites?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalAllowDomain?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalClaim?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalCuratedUpdate?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalNftIndex?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalNftVerify?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalRemoveCuratedTag?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalUpdateProfileStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   inviteProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   legacyCollect?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrorOnMomoka?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -13922,6 +14087,11 @@ export type PostFieldPolicy = {
   stats?: FieldPolicy<any> | FieldReadFunction<any>;
   txHash?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type PrfResultKeySpecifier = ('dd' | 'ss' | PrfResultKeySpecifier)[];
+export type PrfResultFieldPolicy = {
+  dd?: FieldPolicy<any> | FieldReadFunction<any>;
+  ss?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type ProfileKeySpecifier = (
   | 'createdAt'
   | 'followModule'
@@ -14272,6 +14442,12 @@ export type QueryKeySpecifier = (
   | 'followers'
   | 'following'
   | 'generateModuleCurrencyApprovalData'
+  | 'internalAllowedDomains'
+  | 'internalClaimStatus'
+  | 'internalCuratedHandles'
+  | 'internalCuratedTags'
+  | 'internalInvites'
+  | 'internalProfileStatus'
   | 'invitedProfiles'
   | 'lastLoggedInProfile'
   | 'lensTransactionStatus'
@@ -14338,6 +14514,12 @@ export type QueryFieldPolicy = {
   followers?: FieldPolicy<any> | FieldReadFunction<any>;
   following?: FieldPolicy<any> | FieldReadFunction<any>;
   generateModuleCurrencyApprovalData?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalAllowedDomains?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalClaimStatus?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalCuratedHandles?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalCuratedTags?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalInvites?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalProfileStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   invitedProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   lastLoggedInProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   lensTransactionStatus?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -14856,6 +15038,13 @@ export type StrictTypedTypePolicies = {
       | ActedNotificationKeySpecifier
       | (() => undefined | ActedNotificationKeySpecifier);
     fields?: ActedNotificationFieldPolicy;
+  };
+  AdvancedContractCondition?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | AdvancedContractConditionKeySpecifier
+      | (() => undefined | AdvancedContractConditionKeySpecifier);
+    fields?: AdvancedContractConditionFieldPolicy;
   };
   Amount?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | AmountKeySpecifier | (() => undefined | AmountKeySpecifier);
@@ -16164,6 +16353,10 @@ export type StrictTypedTypePolicies = {
     keyFields?: false | PostKeySpecifier | (() => undefined | PostKeySpecifier);
     fields?: PostFieldPolicy;
   };
+  PrfResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | PrfResultKeySpecifier | (() => undefined | PrfResultKeySpecifier);
+    fields?: PrfResultFieldPolicy;
+  };
   Profile?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | ProfileKeySpecifier | (() => undefined | ProfileKeySpecifier);
     fields?: ProfileFieldPolicy;
@@ -16629,6 +16822,7 @@ const result: PossibleTypesResultData = {
     RelayMomokaResult: ['CreateMomokaPublicationResult', 'LensProfileManagerRelayError'],
     RelayResult: ['RelayError', 'RelaySuccess'],
     SecondTierCondition: [
+      'AdvancedContractCondition',
       'AndCondition',
       'CollectCondition',
       'EoaOwnershipCondition',
@@ -16640,6 +16834,7 @@ const result: PossibleTypesResultData = {
     ],
     SupportedModule: ['KnownSupportedModule', 'UnknownSupportedModule'],
     ThirdTierCondition: [
+      'AdvancedContractCondition',
       'CollectCondition',
       'EoaOwnershipCondition',
       'Erc20OwnershipCondition',
