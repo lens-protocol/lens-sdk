@@ -8,10 +8,6 @@ import { waitFor } from '@testing-library/react';
 
 import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
 import {
-  defaultMediaTransformsConfig,
-  mediaTransformConfigToQueryVariables,
-} from '../../mediaTransforms';
-import {
   UseWhoActedOnPublicationArgs,
   useWhoActedOnPublication,
 } from '../useWhoActedOnPublication';
@@ -28,7 +24,6 @@ describe(`Given the ${useWhoActedOnPublication.name} hook`, () => {
           variables: {
             on: publicationId,
             limit: LimitType.Ten,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           items: profiles,
         }),

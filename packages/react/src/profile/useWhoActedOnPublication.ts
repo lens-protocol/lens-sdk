@@ -5,7 +5,7 @@ import {
   WhoActedOnPublicationRequest,
 } from '@lens-protocol/api-bindings';
 
-import { useLensApolloClient, useMediaTransformFromConfig } from '../helpers/arguments';
+import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 
 /**
@@ -34,11 +34,11 @@ export function useWhoActedOnPublication({
   return usePaginatedReadResult(
     useWhoActedOnPublicationHook(
       useLensApolloClient({
-        variables: useMediaTransformFromConfig({
+        variables: {
           on,
           where,
           limit,
-        }),
+        },
       }),
     ),
   );
