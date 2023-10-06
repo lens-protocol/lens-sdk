@@ -4,6 +4,7 @@ import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import {
   Comment,
+  FeedHighlight,
   FeedItem,
   Mirror,
   PaginatedResultInfo,
@@ -233,4 +234,8 @@ export function mockFeedItemFragment(overrides?: Partial<FeedItem>): FeedItem {
     reactions: [],
     ...overrides,
   };
+}
+
+export function mockFeedHighlightFragment(overrides?: Partial<FeedHighlight>): FeedHighlight {
+  return mockPostFragment(overrides);
 }

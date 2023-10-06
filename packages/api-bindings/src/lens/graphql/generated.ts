@@ -1762,6 +1762,12 @@ export type FeedVariables = Exact<{
 
 export type FeedData = { result: { items: Array<FeedItem>; pageInfo: PaginatedResultInfo } };
 
+type FeedHighlight_Post_ = Post;
+
+type FeedHighlight_Quote_ = Quote;
+
+export type FeedHighlight = FeedHighlight_Post_ | FeedHighlight_Quote_;
+
 export type FeedHighlightsVariables = Exact<{
   request: FeedHighlightsRequest;
   publicationImageTransform?: InputMaybe<ImageTransform>;
@@ -1776,7 +1782,10 @@ export type FeedHighlightsVariables = Exact<{
 }>;
 
 export type FeedHighlightsData = {
-  result: { items: Array<Post | Quote>; pageInfo: PaginatedResultInfo };
+  result: {
+    items: Array<FeedHighlight_Post_ | FeedHighlight_Quote_>;
+    pageInfo: PaginatedResultInfo;
+  };
 };
 
 export type OptimisticStatusResult = { value: boolean; isFinalisedOnchain: boolean };
@@ -6337,6 +6346,18 @@ export const FragmentFeedItem = /*#__PURE__*/ gql`
   ${FragmentMirror}
   ${FragmentReactionEvent}
 `;
+export const FragmentFeedHighlight = /*#__PURE__*/ gql`
+  fragment FeedHighlight on FeedHighlight {
+    ... on Post {
+      ...Post
+    }
+    ... on Quote {
+      ...Quote
+    }
+  }
+  ${FragmentPost}
+  ${FragmentQuote}
+`;
 export const FragmentPaginatedResultInfo = /*#__PURE__*/ gql`
   fragment PaginatedResultInfo on PaginatedResultInfo {
     __typename
@@ -7523,20 +7544,14 @@ export const FeedHighlightsDocument = /*#__PURE__*/ gql`
   ) {
     result: feedHighlights(request: $request) {
       items {
-        ... on Post {
-          ...Post
-        }
-        ... on Quote {
-          ...Quote
-        }
+        ...FeedHighlight
       }
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }
-  ${FragmentPost}
-  ${FragmentQuote}
+  ${FragmentFeedHighlight}
   ${FragmentPaginatedResultInfo}
 `;
 

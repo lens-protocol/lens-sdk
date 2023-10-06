@@ -6,7 +6,7 @@ import { OmitCursor, PaginatedReadResult, usePaginatedReadResult } from '../help
 export type UseFeedArgs = OmitCursor<FeedRequest>;
 
 /**
- * Fetch a the feed a given profile and filters.
+ * Fetch a the feed of a given profile and filters.
  *
  * You MUST be authenticated via {@link useWalletLogin} to use this hook.
  *

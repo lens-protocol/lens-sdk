@@ -1,18 +1,22 @@
-import { FeedItem, FeedRequest, useFeed as useBaseFeedQuery } from '@lens-protocol/api-bindings';
+import {
+  FeedHighlight,
+  FeedHighlightsRequest,
+  useFeedHighlights as useBaseFeedHighlightsQuery,
+} from '@lens-protocol/api-bindings';
 
 import { useLensApolloClient, useMediaTransformFromConfig } from '../helpers/arguments';
 import { OmitCursor, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 
-export type UseFeedArgs = OmitCursor<FeedRequest>;
+export type UseFeedHighlightsArgs = OmitCursor<FeedHighlightsRequest>;
 
 /**
- * Fetch a the feed a given profile and filters.
+ * Fetch a the highlights of a feed for given profile and filters.
  *
  * You MUST be authenticated via {@link useWalletLogin} to use this hook.
  *
  * @category Discovery
  * @group Hooks
- * @param args - {@link UseFeedArgs}
+ * @param args - {@link UseFeedHighlightsArgs}
  *
  * @example
  * ```tsx
@@ -41,9 +45,11 @@ export type UseFeedArgs = OmitCursor<FeedRequest>;
  * }
  * ```
  */
-export function useFeed({ where }: UseFeedArgs): PaginatedReadResult<FeedItem[]> {
+export function useFeedHighlights({
+  where,
+}: UseFeedHighlightsArgs): PaginatedReadResult<FeedHighlight[]> {
   return usePaginatedReadResult(
-    useBaseFeedQuery(
+    useBaseFeedHighlightsQuery(
       useLensApolloClient({
         variables: useMediaTransformFromConfig({
           request: { where },

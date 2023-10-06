@@ -1,6 +1,15 @@
 import { MockedResponse } from '@apollo/client/testing';
 
-import { FeedVariables, FeedItem, FeedData, FeedDocument } from '../../graphql/generated';
+import {
+  FeedVariables,
+  FeedItem,
+  FeedData,
+  FeedDocument,
+  FeedHighlightsVariables,
+  FeedHighlight,
+  FeedHighlightsData,
+  FeedHighlightsDocument,
+} from '../../graphql/generated';
 import { mockPaginatedResultInfo } from '../fragments';
 
 export function mockFeedResponse(args: {
@@ -10,6 +19,37 @@ export function mockFeedResponse(args: {
   return {
     request: {
       query: FeedDocument,
+      variables: {
+        publicationImageTransform: {},
+        publicationOperationsActedArgs: {},
+        publicationStatsInput: {},
+        publicationStatsCountOpenActionArgs: {},
+        profileCoverTransform: {},
+        profilePictureTransform: {},
+        profileStatsArg: {},
+        profileStatsCountOpenActionArgs: {},
+        rateRequest: { for: 'USD' },
+        ...args.variables,
+      },
+    },
+    result: {
+      data: {
+        result: {
+          items: args.items,
+          pageInfo: mockPaginatedResultInfo(),
+        },
+      },
+    },
+  };
+}
+
+export function mockFeedHighlightsResponse(args: {
+  variables: FeedHighlightsVariables;
+  items: FeedHighlight[];
+}): MockedResponse<FeedHighlightsData> {
+  return {
+    request: {
+      query: FeedHighlightsDocument,
       variables: {
         publicationImageTransform: {},
         publicationOperationsActedArgs: {},

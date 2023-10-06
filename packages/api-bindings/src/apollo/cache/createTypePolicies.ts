@@ -2,6 +2,7 @@ import { TypePolicy } from '@apollo/client';
 
 import { StrictTypedTypePolicies } from '../../lens';
 import { createFeedFieldPolicy } from './createFeedFieldPolicy';
+import { createFeedHighlightsFieldPolicy } from './createFeedHighlightsFieldPolicy';
 import { createFollowersFieldPolicy } from './createFollowersFieldPolicy';
 import { createFollowingFieldPolicy } from './createFollowingFieldPolicy';
 import { createMutualFollowersFieldPolicy } from './createMutualFollowersFieldPolicy';
@@ -14,6 +15,7 @@ import { notNormalizedType } from './utils/notNormalizedType';
 
 type InheritedTypePolicies = {
   Publication: TypePolicy;
+  FeedHighlight: TypePolicy;
 };
 
 export function createTypePolicies(): StrictTypedTypePolicies & InheritedTypePolicies {
@@ -24,6 +26,7 @@ export function createTypePolicies(): StrictTypedTypePolicies & InheritedTypePol
     Quote: notNormalizedType(),
     Mirror: notNormalizedType(),
     FeedItem: notNormalizedType(),
+    FeedHighlight: notNormalizedType(),
 
     PaginatedResultInfo: notNormalizedType(),
 
@@ -37,6 +40,7 @@ export function createTypePolicies(): StrictTypedTypePolicies & InheritedTypePol
         searchPublications: createSearchPublicationsFieldPolicy(),
         searchProfiles: createSearchProfilesFieldPolicy(),
         feed: createFeedFieldPolicy(),
+        feedHighlights: createFeedHighlightsFieldPolicy(),
       },
     },
   };
