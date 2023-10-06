@@ -210,15 +210,21 @@ fragment CreateHandleUnlinkFromProfileBroadcastItemResult on CreateHandleUnlinkF
   }
 }
 
+fragment ImageTransformParam on ImageTransformParam {
+  height
+  width
+  keepAspectRatio
+}
+
 # queries
 query Profile(
   $request: ProfileRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: profile(request: $request) {
     ...Profile
   }
@@ -228,12 +234,12 @@ query Profiles(
   $where: ProfilesRequestWhere!
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: profiles(request: { where: $where, limit: $limit, cursor: $cursor }) {
     items {
       ...Profile
@@ -257,12 +263,12 @@ query ProfileManagers($request: ProfileManagersRequest!) {
 
 query ProfileRecommendations(
   $request: ProfileRecommendationsRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: profileRecommendations(request: $request) {
     items {
       ...Profile
@@ -277,12 +283,12 @@ query Following(
   $for: ProfileId!
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: following(request: { for: $for, limit: $limit, cursor: $cursor }) {
     items {
       ...Profile
@@ -297,12 +303,12 @@ query Followers(
   $of: ProfileId!
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: followers(request: { of: $of, limit: $limit, cursor: $cursor }) {
     items {
       ...Profile
@@ -318,12 +324,12 @@ query MutualFollowers(
   $viewing: ProfileId!
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: mutualFollowers(
     request: { observer: $observer, viewing: $viewing, limit: $limit, cursor: $cursor }
   ) {
@@ -338,12 +344,12 @@ query MutualFollowers(
 
 query WhoActedOnPublication(
   $request: WhoActedOnPublicationRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: whoActedOnPublication(request: $request) {
     items {
       ...Profile

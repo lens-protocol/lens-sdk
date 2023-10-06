@@ -31,7 +31,7 @@ fragment Amount on Amount {
     ...Erc20
   }
   value
-  rate(request: $rateRequest) {
+  rate(request: { for: $fxRateFor }) {
     ...FiatAmount
   }
 }
@@ -110,7 +110,10 @@ fragment ImageSet on ImageSet {
   optimized {
     ...Image
   }
-  transformed(request: $publicationImageTransform) {
+  small: transformed(request: $imageSmallSize) {
+    ...Image
+  }
+  medium: transformed(request: $imageMediumSize) {
     ...Image
   }
 }
@@ -177,7 +180,7 @@ fragment ProfileCoverSet on ImageSet {
   optimized {
     ...Image
   }
-  transformed(request: $profileCoverTransform) {
+  transformed(request: $profileCoverSize) {
     ...Image
   }
 }
@@ -190,7 +193,7 @@ fragment ProfilePictureSet on ImageSet {
   optimized {
     ...Image
   }
-  transformed(request: $profilePictureTransform) {
+  thumbnail: transformed(request: $profilePictureSize) {
     ...Image
   }
 }
@@ -216,11 +219,11 @@ fragment ProfileStats on ProfileStats {
   mirrors
   quotes
   publications
-  upvoteReactions: reactions(request: { type: UPVOTE })
-  downvoteReactions: reactions(request: { type: DOWNVOTE })
-  upvoteReacted: reacted(request: { type: UPVOTE })
-  downvoteReacted: reacted(request: { type: DOWNVOTE })
-  countOpenActions(request: $profileStatsCountOpenActionArgs)
+  upvotes: reactions(request: { type: UPVOTE })
+  downvotes: reactions(request: { type: DOWNVOTE })
+  upvoted: reacted(request: { type: UPVOTE })
+  downvoted: reacted(request: { type: DOWNVOTE })
+  collects: countOpenActions(request: { anyOf: [{ category: COLLECT }] })
 }
 
 fragment Profile on Profile {
@@ -323,7 +326,7 @@ fragment Profile on Profile {
   invitedBy {
     id
   }
-  stats(request: $profileStatsArg) {
+  stats(request: { forApps: $activityOn }) {
     ...ProfileStats
   }
 }
@@ -561,13 +564,13 @@ fragment PublicationOperations on PublicationOperations {
   isNotInterested
   hasBookmarked
   hasReported
-  canAct(request: $publicationOperationsActedArgs)
-  hasActed(request: $publicationOperationsActedArgs) {
+  canCollect: canAct(request: { filter: { category: COLLECT } })
+  hasCollected: hasActed(request: { filter: { category: COLLECT } }) {
     ...OptimisticStatusResult
   }
-  actedOn(request: $publicationOperationsActedArgs) {
-    ...OpenActionResult
-  }
+  # TBD: actedOn(request: { filter: { category: COLLECT } }) {
+  #   ...OpenActionResult
+  # }
   hasUpvoted: hasReacted(request: { type: UPVOTE })
   hasDownvoted: hasReacted(request: { type: DOWNVOTE })
   canComment
@@ -1559,9 +1562,9 @@ fragment PublicationStats on PublicationStats {
   mirrors
   quotes
   bookmarks
-  upvoteReactions: reactions(request: { type: UPVOTE })
-  downvoteReactions: reactions(request: { type: DOWNVOTE })
-  countOpenActions(request: $publicationStatsCountOpenActionArgs)
+  upvotes: reactions(request: { type: UPVOTE })
+  downvotes: reactions(request: { type: DOWNVOTE })
+  collects: countOpenActions(request: { anyOf: [{ category: COLLECT }] })
 }
 
 fragment Post on Post {
@@ -1681,7 +1684,7 @@ fragment Post on Post {
       ...UnknownReferenceModuleSettings
     }
   }
-  stats(request: $publicationStatsInput) {
+  stats(request: { metadata: { publishedOn: $activityOn } }) {
     ...PublicationStats
   }
 }
@@ -1824,7 +1827,7 @@ fragment Comment on Comment {
   firstComment {
     ...CommentBase
   }
-  stats(request: $publicationStatsInput) {
+  stats(request: { metadata: { publishedOn: $activityOn } }) {
     ...PublicationStats
   }
 }
@@ -1989,7 +1992,7 @@ fragment Quote on Quote {
       ...QuoteBase
     }
   }
-  stats(request: $publicationStatsInput) {
+  stats(request: { metadata: { publishedOn: $activityOn } }) {
     ...PublicationStats
   }
 }
@@ -2050,4 +2053,21 @@ fragment CreateMomokaPublicationResult on CreateMomokaPublicationResult {
   id
   proof
   momokaId
+}
+
+# utils
+fragment InjectCommonQueryParams on Query {
+  fxRateFor @client @export(as: "fxRateFor")
+  profileCoverSize @client @export(as: "profileCoverSize") {
+    ...ImageTransformParam
+  }
+  profilePictureSize @client @export(as: "profilePictureSize") {
+    ...ImageTransformParam
+  }
+  imageSmallSize @client @export(as: "imageSmallSize") {
+    ...ImageTransformParam
+  }
+  imageMediumSize @client @export(as: "imageMediumSize") {
+    ...ImageTransformParam
+  }
 }

@@ -1,4 +1,4 @@
-import { Profile } from '@lens-protocol/api-bindings';
+import { LimitType, Profile } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   mockProfileFragment,
@@ -7,29 +7,16 @@ import {
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import {
-  defaultMediaTransformsConfig,
-  mediaTransformConfigToQueryVariables,
-} from '../../mediaTransforms';
-import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../../utils';
 import { UseSearchProfilesArgs, useSearchProfiles } from '../useSearchProfiles';
 
-function setupTestScenario({
-  result,
-  query,
-  where,
-  limit,
-}: UseSearchProfilesArgs & { result: Profile[] }) {
-  return renderHookWithMocks(() => useSearchProfiles({ query, where, limit }), {
+function setupTestScenario({ result, ...args }: UseSearchProfilesArgs & { result: Profile[] }) {
+  return renderHookWithMocks(() => useSearchProfiles(args), {
     mocks: {
-      mediaTransforms: defaultMediaTransformsConfig,
       apolloClient: mockLensApolloClient([
         mockSearchProfilesResponse({
           variables: {
-            query,
-            where,
-            limit: limit ?? DEFAULT_PAGINATED_QUERY_LIMIT,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
+            ...args,
+            limit: LimitType.Ten,
           },
           items: result,
         }),

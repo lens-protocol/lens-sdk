@@ -1,9 +1,10 @@
-import { AppId } from '@lens-protocol/domain/entities';
+import { QueryParams } from '@lens-protocol/api-bindings/src/apollo/cache';
 import { ILogger } from '@lens-protocol/shared-kernel';
 import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/storage';
 
 import { EnvironmentConfig } from './environments';
-import { MediaTransformsConfig } from './mediaTransforms';
+
+export type { QueryParams };
 
 /**
  * `<LensProvider>` configuration
@@ -31,20 +32,9 @@ export type LensConfig = {
    */
   storage: IStorageProvider | IObservableStorageProvider;
   /**
-   * The `appId` identifies post and comment created from the SDK
+   * The common query params allows you customize some aspect of the returned data.
    *
-   * @defaultValue not set
-   *
-   * @see {@link appId} helper
+   * @defaultValue {@link defaultQueryParams}
    */
-  appId?: AppId;
-
-  /**
-   * Media returned from the publication and profile queries can be transformed
-   * to sizes needed by the SDK consuming application.
-   * To overwrite default transformation values, provide a `mediaTransforms` object.
-   *
-   * @see {@link MediaTransformsConfig} for more information
-   */
-  mediaTransforms?: MediaTransformsConfig;
+  params?: QueryParams;
 };

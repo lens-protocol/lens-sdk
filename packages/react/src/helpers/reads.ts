@@ -102,7 +102,7 @@ type InferResult<T extends QueryData<unknown>> = T extends QueryData<infer R> ? 
 export function useReadResult<
   T extends QueryData<R>,
   R = InferResult<T>,
-  V = { [key: string]: never },
+  V extends OperationVariables = { [key: string]: never },
 >({ error, data }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError> {
   return buildReadResult(data?.result, error);
 }

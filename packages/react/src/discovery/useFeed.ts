@@ -1,6 +1,6 @@
 import { FeedItem, FeedRequest, useFeed as useBaseFeedQuery } from '@lens-protocol/api-bindings';
 
-import { useLensApolloClient, useMediaTransformFromConfig } from '../helpers/arguments';
+import { useLensApolloClient } from '../helpers/arguments';
 import { OmitCursor, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 
 export type UseFeedArgs = OmitCursor<FeedRequest>;
@@ -45,9 +45,9 @@ export function useFeed({ where }: UseFeedArgs): PaginatedReadResult<FeedItem[]>
   return usePaginatedReadResult(
     useBaseFeedQuery(
       useLensApolloClient({
-        variables: useMediaTransformFromConfig({
+        variables: {
           request: { where },
-        }),
+        },
       }),
     ),
   );

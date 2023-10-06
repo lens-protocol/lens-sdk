@@ -13,7 +13,7 @@ import gql from 'graphql-tag';
 
 import type { ContentEncryptionKey } from '../ContentEncryptionKey';
 import type { Cursor } from '../Cursor';
-import type { ImageSizeTransform } from '../ImageSizeTransform';
+import type { ImageSizeTransform } from '../ImageTransform';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -234,6 +234,11 @@ export enum ComparisonOperatorConditionType {
   NotEqual = 'NOT_EQUAL',
 }
 
+export type CreateProfileRequest = {
+  followModule?: InputMaybe<FollowModuleInput>;
+  to: Scalars['EvmAddress'];
+};
+
 export enum CreateProfileWithHandleErrorReasonType {
   Failed = 'FAILED',
   HandleTaken = 'HANDLE_TAKEN',
@@ -356,15 +361,15 @@ export enum FeedEventItemType {
   Reaction = 'REACTION',
 }
 
-export type FeedHighlightWhere = {
-  for?: InputMaybe<Scalars['ProfileId']>;
-  metadata?: InputMaybe<PublicationMetadataFilters>;
-};
-
 export type FeedHighlightsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']>;
   limit?: InputMaybe<LimitType>;
-  where?: InputMaybe<FeedHighlightWhere>;
+  where?: InputMaybe<FeedHighlightsWhere>;
+};
+
+export type FeedHighlightsWhere = {
+  for?: InputMaybe<Scalars['ProfileId']>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
 };
 
 export type FeedRequest = {
@@ -486,6 +491,89 @@ export type ImageTransform = {
   keepAspectRatio?: InputMaybe<Scalars['Boolean']>;
   /** Set the transformed image's width */
   width?: InputMaybe<Scalars['ImageSizeTransform']>;
+};
+
+export type InternalAddCuratedTagRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+  ttt: Scalars['String'];
+};
+
+export type InternalAddInvitesRequest = {
+  n: Scalars['Int'];
+  p: Scalars['ProfileId'];
+  secret: Scalars['String'];
+};
+
+export type InternalAllowDomainRequest = {
+  domain: Scalars['URI'];
+  secret: Scalars['String'];
+};
+
+export type InternalAllowedDomainsRequest = {
+  secret: Scalars['String'];
+};
+
+export type InternalClaimRequest = {
+  address: Scalars['EvmAddress'];
+  freeTextHandle: Scalars['Boolean'];
+  handle: Scalars['CreateHandle'];
+  overrideAlreadyClaimed: Scalars['Boolean'];
+  overrideTradeMark: Scalars['Boolean'];
+  secret: Scalars['String'];
+};
+
+export type InternalClaimStatusRequest = {
+  address: Scalars['EvmAddress'];
+  secret: Scalars['String'];
+};
+
+export type InternalCuratedHandlesRequest = {
+  secret: Scalars['String'];
+};
+
+export type InternalCuratedTagsRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+};
+
+export type InternalCuratedUpdateRequest = {
+  handle: Scalars['Handle'];
+  remove: Scalars['Boolean'];
+  secret: Scalars['String'];
+};
+
+export type InternalInvitesRequest = {
+  p: Scalars['ProfileId'];
+  secret: Scalars['String'];
+};
+
+export type InternalNftIndexRequest = {
+  n: Array<Nfi>;
+  secret: Scalars['String'];
+};
+
+export type InternalNftVerifyRequest = {
+  n: Array<Nfi>;
+  secret: Scalars['String'];
+};
+
+export type InternalProfileStatusRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+};
+
+export type InternalRemoveCuratedTagRequest = {
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+  ttt: Scalars['String'];
+};
+
+export type InternalUpdateProfileStatusRequest = {
+  dd: Scalars['Boolean'];
+  hhh: Scalars['String'];
+  secret: Scalars['String'];
+  ss: Scalars['Boolean'];
 };
 
 export type InviteRequest = {
@@ -646,6 +734,11 @@ export type MutualPoapsQueryRequest = {
 export type NetworkAddressInput = {
   address: Scalars['EvmAddress'];
   chainId: Scalars['ChainId'];
+};
+
+export type Nfi = {
+  c: Scalars['EvmAddress'];
+  i: Scalars['ChainId'];
 };
 
 export enum NftCollectionOwnersOrder {
@@ -1615,33 +1708,29 @@ export type AuthRefreshData = { result: { accessToken: string; refreshToken: str
 
 export type ExplorePublicationsVariables = Exact<{
   request: ExplorePublicationRequest;
-  publicationImageTransform?: InputMaybe<ImageTransform>;
-  publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
-  publicationStatsInput?: PublicationStatsInput;
-  publicationStatsCountOpenActionArgs?: PublicationStatsCountOpenActionArgs;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  imageSmallSize?: InputMaybe<ImageTransform>;
+  imageMediumSize?: InputMaybe<ImageTransform>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
 export type ExplorePublicationsData = {
   result: { items: Array<Post | Quote>; pageInfo: { prev: Cursor | null; next: Cursor | null } };
-};
+} & InjectCommonQueryParams;
 
 export type ExploreProfilesVariables = Exact<{
   request: ExploreProfilesRequest;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
 export type ExploreProfilesData = {
   result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
-};
+} & InjectCommonQueryParams;
 
 export type ReactionEvent = { reaction: PublicationReactionType; createdAt: string; by: Profile };
 
@@ -1655,35 +1744,31 @@ export type FeedItem = {
 
 export type FeedVariables = Exact<{
   request: FeedRequest;
-  publicationImageTransform?: InputMaybe<ImageTransform>;
-  publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
-  publicationStatsInput?: PublicationStatsInput;
-  publicationStatsCountOpenActionArgs?: PublicationStatsCountOpenActionArgs;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  imageSmallSize?: InputMaybe<ImageTransform>;
+  imageMediumSize?: InputMaybe<ImageTransform>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
-export type FeedData = { result: { items: Array<FeedItem>; pageInfo: PaginatedResultInfo } };
+export type FeedData = {
+  result: { items: Array<FeedItem>; pageInfo: PaginatedResultInfo };
+} & InjectCommonQueryParams;
 
 export type FeedHighlightsVariables = Exact<{
   request: FeedHighlightsRequest;
-  publicationImageTransform?: InputMaybe<ImageTransform>;
-  publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
-  publicationStatsInput?: PublicationStatsInput;
-  publicationStatsCountOpenActionArgs?: PublicationStatsCountOpenActionArgs;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  imageSmallSize?: InputMaybe<ImageTransform>;
+  imageMediumSize?: InputMaybe<ImageTransform>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
 export type FeedHighlightsData = {
   result: { items: Array<Post | Quote>; pageInfo: PaginatedResultInfo };
-};
+} & InjectCommonQueryParams;
 
 export type OptimisticStatusResult = { value: boolean; isFinalisedOnchain: boolean };
 
@@ -1747,7 +1832,12 @@ export type Image = {
   height: number | null;
 };
 
-export type ImageSet = { raw: Image; optimized: Image | null; transformed: Image | null };
+export type ImageSet = {
+  raw: Image;
+  optimized: Image | null;
+  small: Image | null;
+  medium: Image | null;
+};
 
 export type EncryptableImage = {
   uri: string;
@@ -1776,7 +1866,7 @@ export type ProfilePictureSet = {
   __typename: 'ImageSet';
   raw: Image;
   optimized: Image | null;
-  transformed: Image | null;
+  thumbnail: Image | null;
 };
 
 export type NftImage = {
@@ -1796,11 +1886,11 @@ export type ProfileStats = {
   mirrors: number;
   quotes: number;
   publications: number;
-  countOpenActions: number;
-  upvoteReactions: number;
-  downvoteReactions: number;
-  upvoteReacted: number;
-  downvoteReacted: number;
+  upvotes: number;
+  downvotes: number;
+  upvoted: number;
+  downvoted: number;
+  collects: number;
 };
 
 export type Profile = {
@@ -2013,16 +2103,13 @@ export type PublicationOperations = {
   isNotInterested: boolean;
   hasBookmarked: boolean;
   hasReported: boolean;
-  canAct: TriStateValue;
   canComment: TriStateValue;
   canMirror: TriStateValue;
   hasMirrored: boolean;
+  canCollect: TriStateValue;
   hasUpvoted: boolean;
   hasDownvoted: boolean;
-  hasActed: OptimisticStatusResult;
-  actedOn: Array<
-    OpenActionResult_KnownCollectOpenActionResult_ | OpenActionResult_UnknownOpenActionResult_
-  >;
+  hasCollected: OptimisticStatusResult;
   canDecrypt: CanDecryptResponse;
 };
 
@@ -2070,6 +2157,7 @@ export type AndCondition = {
     | FollowCondition
     | NftOwnershipCondition
     | ProfileOwnershipCondition
+    | {}
   >;
 };
 
@@ -2082,6 +2170,7 @@ export type OrCondition = {
     | FollowCondition
     | NftOwnershipCondition
     | ProfileOwnershipCondition
+    | {}
   >;
 };
 
@@ -2096,6 +2185,7 @@ export type RootCondition = {
     | NftOwnershipCondition
     | OrCondition
     | ProfileOwnershipCondition
+    | {}
   >;
 };
 
@@ -2545,9 +2635,9 @@ export type PublicationStats = {
   mirrors: number;
   quotes: number;
   bookmarks: number;
-  countOpenActions: number;
-  upvoteReactions: number;
-  downvoteReactions: number;
+  upvotes: number;
+  downvotes: number;
+  collects: number;
 };
 
 export type Post = {
@@ -2760,6 +2850,14 @@ export type CreateMomokaPublicationResult = {
   momokaId: string;
 };
 
+export type InjectCommonQueryParams = {
+  fxRateFor: SupportedFiatType | null;
+  profileCoverSize: ImageTransformParam | null;
+  profilePictureSize: ImageTransformParam | null;
+  imageSmallSize: ImageTransformParam | null;
+  imageMediumSize: ImageTransformParam | null;
+};
+
 export type ReactionNotification = {
   __typename: 'ReactionNotification';
   id: string;
@@ -2814,15 +2912,12 @@ export type MentionNotification = {
 
 export type NotificationsVariables = Exact<{
   request: NotificationRequest;
-  publicationImageTransform?: InputMaybe<ImageTransform>;
-  publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
-  publicationStatsInput?: PublicationStatsInput;
-  publicationStatsCountOpenActionArgs?: PublicationStatsCountOpenActionArgs;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  imageSmallSize?: InputMaybe<ImageTransform>;
+  imageMediumSize?: InputMaybe<ImageTransform>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
 export type NotificationsData = {
@@ -2838,7 +2933,7 @@ export type NotificationsData = {
     >;
     pageInfo: PaginatedResultInfo;
   };
-};
+} & InjectCommonQueryParams;
 
 export type ProfileManager = { address: EvmAddress };
 
@@ -2972,29 +3067,35 @@ export type CreateHandleUnlinkFromProfileBroadcastItemResult = {
   };
 };
 
+export type ImageTransformParam = {
+  height: ImageSizeTransform | null;
+  width: ImageSizeTransform | null;
+  keepAspectRatio: boolean | null;
+};
+
 export type ProfileVariables = Exact<{
   request: ProfileRequest;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
-export type ProfileData = { result: Profile | null };
+export type ProfileData = { result: Profile | null } & InjectCommonQueryParams;
 
 export type ProfilesVariables = Exact<{
   where: ProfilesRequestWhere;
   limit?: InputMaybe<LimitType>;
   cursor?: InputMaybe<Scalars['Cursor']>;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
-export type ProfilesData = { result: { items: Array<Profile>; pageInfo: PaginatedResultInfo } };
+export type ProfilesData = {
+  result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
+} & InjectCommonQueryParams;
 
 export type ProfileManagersVariables = Exact<{
   request: ProfileManagersRequest;
@@ -3006,71 +3107,70 @@ export type ProfileManagersData = {
 
 export type ProfileRecommendationsVariables = Exact<{
   request: ProfileRecommendationsRequest;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
 export type ProfileRecommendationsData = {
   result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
-};
+} & InjectCommonQueryParams;
 
 export type FollowingVariables = Exact<{
   for: Scalars['ProfileId'];
   limit?: InputMaybe<LimitType>;
   cursor?: InputMaybe<Scalars['Cursor']>;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
-export type FollowingData = { result: { items: Array<Profile>; pageInfo: PaginatedResultInfo } };
+export type FollowingData = {
+  result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
+} & InjectCommonQueryParams;
 
 export type FollowersVariables = Exact<{
   of: Scalars['ProfileId'];
   limit?: InputMaybe<LimitType>;
   cursor?: InputMaybe<Scalars['Cursor']>;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
-export type FollowersData = { result: { items: Array<Profile>; pageInfo: PaginatedResultInfo } };
+export type FollowersData = {
+  result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
+} & InjectCommonQueryParams;
 
 export type MutualFollowersVariables = Exact<{
   observer: Scalars['ProfileId'];
   viewing: Scalars['ProfileId'];
   limit?: InputMaybe<LimitType>;
   cursor?: InputMaybe<Scalars['Cursor']>;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
 export type MutualFollowersData = {
   result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
-};
+} & InjectCommonQueryParams;
 
 export type WhoActedOnPublicationVariables = Exact<{
   request: WhoActedOnPublicationRequest;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
 export type WhoActedOnPublicationData = {
   result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
-};
+} & InjectCommonQueryParams;
 
 export type ClaimProfileVariables = Exact<{
   request: ClaimProfileRequest;
@@ -3231,38 +3331,34 @@ export type PublicationValidateMetadataResult = { valid: boolean; reason: string
 
 export type PublicationVariables = Exact<{
   request: PublicationRequest;
-  publicationImageTransform?: InputMaybe<ImageTransform>;
-  publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
-  publicationStatsInput?: PublicationStatsInput;
-  publicationStatsCountOpenActionArgs?: PublicationStatsCountOpenActionArgs;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  imageSmallSize?: InputMaybe<ImageTransform>;
+  imageMediumSize?: InputMaybe<ImageTransform>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
-export type PublicationData = { result: Comment | Mirror | Post | Quote | null };
+export type PublicationData = {
+  result: Comment | Mirror | Post | Quote | null;
+} & InjectCommonQueryParams;
 
 export type PublicationsVariables = Exact<{
   where: PublicationsWhere;
   orderBy?: InputMaybe<PublicationsOrderByType>;
   limit?: InputMaybe<LimitType>;
   cursor?: InputMaybe<Scalars['Cursor']>;
-  publicationImageTransform?: InputMaybe<ImageTransform>;
-  publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
-  publicationStatsInput?: PublicationStatsInput;
-  publicationStatsCountOpenActionArgs?: PublicationStatsCountOpenActionArgs;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  imageSmallSize?: InputMaybe<ImageTransform>;
+  imageMediumSize?: InputMaybe<ImageTransform>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
 export type PublicationsData = {
   result: { items: Array<Comment | Mirror | Post | Quote>; pageInfo: PaginatedResultInfo };
-};
+} & InjectCommonQueryParams;
 
 export type PublicationsTagsVariables = Exact<{
   request: PublicationsTagsRequest;
@@ -3608,78 +3704,72 @@ export type PublicationRevenue = {
 
 export type RevenueFromPublicationsVariables = Exact<{
   request: RevenueFromPublicationsRequest;
-  publicationImageTransform?: InputMaybe<ImageTransform>;
-  publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
-  publicationStatsInput?: PublicationStatsInput;
-  publicationStatsCountOpenActionArgs?: PublicationStatsCountOpenActionArgs;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  imageSmallSize?: InputMaybe<ImageTransform>;
+  imageMediumSize?: InputMaybe<ImageTransform>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
 export type RevenueFromPublicationsData = {
   result: { items: Array<PublicationRevenue>; pageInfo: PaginatedResultInfo };
-};
+} & InjectCommonQueryParams;
 
 export type RevenueFromPublicationVariables = Exact<{
   request: RevenueFromPublicationRequest;
-  publicationImageTransform?: InputMaybe<ImageTransform>;
-  publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
-  publicationStatsInput?: PublicationStatsInput;
-  publicationStatsCountOpenActionArgs?: PublicationStatsCountOpenActionArgs;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  imageSmallSize?: InputMaybe<ImageTransform>;
+  imageMediumSize?: InputMaybe<ImageTransform>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
-export type RevenueFromPublicationData = { result: PublicationRevenue | null };
+export type RevenueFromPublicationData = {
+  result: PublicationRevenue | null;
+} & InjectCommonQueryParams;
 
 export type FollowRevenuesVariables = Exact<{
   request: FollowRevenueRequest;
-  rateRequest?: InputMaybe<RateRequest>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
-export type FollowRevenuesData = { result: { revenues: Array<RevenueAggregate> } };
+export type FollowRevenuesData = {
+  result: { revenues: Array<RevenueAggregate> };
+} & InjectCommonQueryParams;
 
 export type SearchPublicationsVariables = Exact<{
   query: Scalars['String'];
   where?: InputMaybe<PublicationSearchWhere>;
   limit?: InputMaybe<LimitType>;
   cursor?: InputMaybe<Scalars['Cursor']>;
-  publicationImageTransform?: InputMaybe<ImageTransform>;
-  publicationOperationsActedArgs?: InputMaybe<PublicationOperationsActedArgs>;
-  publicationStatsInput?: PublicationStatsInput;
-  publicationStatsCountOpenActionArgs?: PublicationStatsCountOpenActionArgs;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  imageSmallSize?: InputMaybe<ImageTransform>;
+  imageMediumSize?: InputMaybe<ImageTransform>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
 export type SearchPublicationsData = {
   result: { items: Array<Comment | Post | Quote>; pageInfo: PaginatedResultInfo };
-};
+} & InjectCommonQueryParams;
 
 export type SearchProfilesVariables = Exact<{
   query: Scalars['String'];
   where?: InputMaybe<ProfileSearchWhere>;
   limit?: InputMaybe<LimitType>;
   cursor?: InputMaybe<Scalars['Cursor']>;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
 export type SearchProfilesData = {
   result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
-};
+} & InjectCommonQueryParams;
 
 export type LensTransactionResult = {
   status: LensTransactionStatusType;
@@ -3730,11 +3820,10 @@ export type OwnedHandlesData = {
 
 export type ProfilesManagedVariables = Exact<{
   request: ProfilesManagedRequest;
-  profileCoverTransform?: InputMaybe<ImageTransform>;
-  profilePictureTransform?: InputMaybe<ImageTransform>;
-  profileStatsArg?: InputMaybe<ProfileStatsArg>;
-  profileStatsCountOpenActionArgs?: InputMaybe<ProfileStatsCountOpenActionArgs>;
-  rateRequest?: InputMaybe<RateRequest>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
 export type ProfilesManagedData = {
@@ -3811,7 +3900,7 @@ export const FragmentAmount = /*#__PURE__*/ gql`
       ...Erc20
     }
     value
-    rate(request: $rateRequest) {
+    rate(request: { for: $fxRateFor }) {
       ...FiatAmount
     }
   }
@@ -3865,7 +3954,7 @@ export const FragmentProfilePictureSet = /*#__PURE__*/ gql`
     optimized {
       ...Image
     }
-    transformed(request: $profilePictureTransform) {
+    thumbnail: transformed(request: $profilePictureSize) {
       ...Image
     }
   }
@@ -3894,7 +3983,7 @@ export const FragmentProfileCoverSet = /*#__PURE__*/ gql`
     optimized {
       ...Image
     }
-    transformed(request: $profileCoverTransform) {
+    transformed(request: $profileCoverSize) {
       ...Image
     }
   }
@@ -3945,11 +4034,11 @@ export const FragmentProfileStats = /*#__PURE__*/ gql`
     mirrors
     quotes
     publications
-    upvoteReactions: reactions(request: { type: UPVOTE })
-    downvoteReactions: reactions(request: { type: DOWNVOTE })
-    upvoteReacted: reacted(request: { type: UPVOTE })
-    downvoteReacted: reacted(request: { type: DOWNVOTE })
-    countOpenActions(request: $profileStatsCountOpenActionArgs)
+    upvotes: reactions(request: { type: UPVOTE })
+    downvotes: reactions(request: { type: DOWNVOTE })
+    upvoted: reacted(request: { type: UPVOTE })
+    downvoted: reacted(request: { type: DOWNVOTE })
+    collects: countOpenActions(request: { anyOf: [{ category: COLLECT }] })
   }
 `;
 export const FragmentProfile = /*#__PURE__*/ gql`
@@ -4053,7 +4142,7 @@ export const FragmentProfile = /*#__PURE__*/ gql`
     invitedBy {
       id
     }
-    stats(request: $profileStatsArg) {
+    stats(request: { forApps: $activityOn }) {
       ...ProfileStats
     }
   }
@@ -4072,30 +4161,6 @@ export const FragmentProfile = /*#__PURE__*/ gql`
   ${FragmentMetadataStringAttribute}
   ${FragmentProfileStats}
 `;
-export const FragmentKnownCollectOpenActionResult = /*#__PURE__*/ gql`
-  fragment KnownCollectOpenActionResult on KnownCollectOpenActionResult {
-    type
-  }
-`;
-export const FragmentUnknownOpenActionResult = /*#__PURE__*/ gql`
-  fragment UnknownOpenActionResult on UnknownOpenActionResult {
-    address
-    category
-    initReturnData
-  }
-`;
-export const FragmentOpenActionResult = /*#__PURE__*/ gql`
-  fragment OpenActionResult on OpenActionResult {
-    ... on KnownCollectOpenActionResult {
-      ...KnownCollectOpenActionResult
-    }
-    ... on UnknownOpenActionResult {
-      ...UnknownOpenActionResult
-    }
-  }
-  ${FragmentKnownCollectOpenActionResult}
-  ${FragmentUnknownOpenActionResult}
-`;
 export const FragmentCanDecryptResponse = /*#__PURE__*/ gql`
   fragment CanDecryptResponse on CanDecryptResponse {
     result
@@ -4108,12 +4173,9 @@ export const FragmentPublicationOperations = /*#__PURE__*/ gql`
     isNotInterested
     hasBookmarked
     hasReported
-    canAct(request: $publicationOperationsActedArgs)
-    hasActed(request: $publicationOperationsActedArgs) {
+    canCollect: canAct(request: { filter: { category: COLLECT } })
+    hasCollected: hasActed(request: { filter: { category: COLLECT } }) {
       ...OptimisticStatusResult
-    }
-    actedOn(request: $publicationOperationsActedArgs) {
-      ...OpenActionResult
     }
     hasUpvoted: hasReacted(request: { type: UPVOTE })
     hasDownvoted: hasReacted(request: { type: DOWNVOTE })
@@ -4125,7 +4187,6 @@ export const FragmentPublicationOperations = /*#__PURE__*/ gql`
     }
   }
   ${FragmentOptimisticStatusResult}
-  ${FragmentOpenActionResult}
   ${FragmentCanDecryptResponse}
 `;
 export const FragmentPublicationMarketplaceMetadataAttribute = /*#__PURE__*/ gql`
@@ -4143,7 +4204,10 @@ export const FragmentImageSet = /*#__PURE__*/ gql`
     optimized {
       ...Image
     }
-    transformed(request: $publicationImageTransform) {
+    small: transformed(request: $imageSmallSize) {
+      ...Image
+    }
+    medium: transformed(request: $imageMediumSize) {
       ...Image
     }
   }
@@ -5639,9 +5703,9 @@ export const FragmentPublicationStats = /*#__PURE__*/ gql`
     mirrors
     quotes
     bookmarks
-    upvoteReactions: reactions(request: { type: UPVOTE })
-    downvoteReactions: reactions(request: { type: DOWNVOTE })
-    countOpenActions(request: $publicationStatsCountOpenActionArgs)
+    upvotes: reactions(request: { type: UPVOTE })
+    downvotes: reactions(request: { type: DOWNVOTE })
+    collects: countOpenActions(request: { anyOf: [{ category: COLLECT }] })
   }
 `;
 export const FragmentPost = /*#__PURE__*/ gql`
@@ -5762,7 +5826,7 @@ export const FragmentPost = /*#__PURE__*/ gql`
         ...UnknownReferenceModuleSettings
       }
     }
-    stats(request: $publicationStatsInput) {
+    stats(request: { metadata: { publishedOn: $activityOn } }) {
       ...PublicationStats
     }
   }
@@ -6133,7 +6197,7 @@ export const FragmentComment = /*#__PURE__*/ gql`
     firstComment {
       ...CommentBase
     }
-    stats(request: $publicationStatsInput) {
+    stats(request: { metadata: { publishedOn: $activityOn } }) {
       ...PublicationStats
     }
   }
@@ -6156,7 +6220,7 @@ export const FragmentQuote = /*#__PURE__*/ gql`
         ...QuoteBase
       }
     }
-    stats(request: $publicationStatsInput) {
+    stats(request: { metadata: { publishedOn: $activityOn } }) {
       ...PublicationStats
     }
   }
@@ -6275,6 +6339,31 @@ export const FragmentCreateMomokaPublicationResult = /*#__PURE__*/ gql`
     momokaId
   }
 `;
+export const FragmentImageTransformParam = /*#__PURE__*/ gql`
+  fragment ImageTransformParam on ImageTransformParam {
+    height
+    width
+    keepAspectRatio
+  }
+`;
+export const FragmentInjectCommonQueryParams = /*#__PURE__*/ gql`
+  fragment InjectCommonQueryParams on Query {
+    fxRateFor @client @export(as: "fxRateFor")
+    profileCoverSize @client @export(as: "profileCoverSize") {
+      ...ImageTransformParam
+    }
+    profilePictureSize @client @export(as: "profilePictureSize") {
+      ...ImageTransformParam
+    }
+    imageSmallSize @client @export(as: "imageSmallSize") {
+      ...ImageTransformParam
+    }
+    imageMediumSize @client @export(as: "imageMediumSize") {
+      ...ImageTransformParam
+    }
+  }
+  ${FragmentImageTransformParam}
+`;
 export const FragmentReactionNotification = /*#__PURE__*/ gql`
   fragment ReactionNotification on ReactionNotification {
     __typename
@@ -6352,6 +6441,30 @@ export const FragmentQuoteNotification = /*#__PURE__*/ gql`
     }
   }
   ${FragmentQuote}
+`;
+export const FragmentKnownCollectOpenActionResult = /*#__PURE__*/ gql`
+  fragment KnownCollectOpenActionResult on KnownCollectOpenActionResult {
+    type
+  }
+`;
+export const FragmentUnknownOpenActionResult = /*#__PURE__*/ gql`
+  fragment UnknownOpenActionResult on UnknownOpenActionResult {
+    address
+    category
+    initReturnData
+  }
+`;
+export const FragmentOpenActionResult = /*#__PURE__*/ gql`
+  fragment OpenActionResult on OpenActionResult {
+    ... on KnownCollectOpenActionResult {
+      ...KnownCollectOpenActionResult
+    }
+    ... on UnknownOpenActionResult {
+      ...UnknownOpenActionResult
+    }
+  }
+  ${FragmentKnownCollectOpenActionResult}
+  ${FragmentUnknownOpenActionResult}
 `;
 export const FragmentOpenActionProfileActed = /*#__PURE__*/ gql`
   fragment OpenActionProfileActed on OpenActionProfileActed {
@@ -7198,16 +7311,14 @@ export type AuthRefreshMutationOptions = Apollo.BaseMutationOptions<
 export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
   query ExplorePublications(
     $request: ExplorePublicationRequest!
-    $publicationImageTransform: ImageTransform = {}
-    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-    $publicationStatsInput: PublicationStatsInput! = {}
-    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $imageSmallSize: ImageTransform = {}
+    $imageMediumSize: ImageTransform = {}
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
+    ...InjectCommonQueryParams
     result: explorePublications(request: $request) {
       items {
         ... on Post {
@@ -7223,6 +7334,7 @@ export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
       }
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentPost}
   ${FragmentQuote}
 `;
@@ -7240,15 +7352,12 @@ export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
  * const { data, loading, error } = useExplorePublications({
  *   variables: {
  *      request: // value for 'request'
- *      publicationImageTransform: // value for 'publicationImageTransform'
- *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
- *      publicationStatsInput: // value for 'publicationStatsInput'
- *      publicationStatsCountOpenActionArgs: // value for 'publicationStatsCountOpenActionArgs'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      imageSmallSize: // value for 'imageSmallSize'
+ *      imageMediumSize: // value for 'imageMediumSize'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -7281,12 +7390,12 @@ export type ExplorePublicationsQueryResult = Apollo.QueryResult<
 export const ExploreProfilesDocument = /*#__PURE__*/ gql`
   query ExploreProfiles(
     $request: ExploreProfilesRequest!
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
+    ...InjectCommonQueryParams
     result: exploreProfiles(request: $request) {
       items {
         ...Profile
@@ -7296,6 +7405,7 @@ export const ExploreProfilesDocument = /*#__PURE__*/ gql`
       }
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentProfile}
   ${FragmentPaginatedResultInfo}
 `;
@@ -7313,11 +7423,10 @@ export const ExploreProfilesDocument = /*#__PURE__*/ gql`
  * const { data, loading, error } = useExploreProfiles({
  *   variables: {
  *      request: // value for 'request'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -7348,16 +7457,14 @@ export type ExploreProfilesQueryResult = Apollo.QueryResult<
 export const FeedDocument = /*#__PURE__*/ gql`
   query Feed(
     $request: FeedRequest!
-    $publicationImageTransform: ImageTransform = {}
-    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-    $publicationStatsInput: PublicationStatsInput! = {}
-    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $imageSmallSize: ImageTransform = {}
+    $imageMediumSize: ImageTransform = {}
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
+    ...InjectCommonQueryParams
     result: feed(request: $request) {
       items {
         ...FeedItem
@@ -7367,6 +7474,7 @@ export const FeedDocument = /*#__PURE__*/ gql`
       }
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentFeedItem}
   ${FragmentPaginatedResultInfo}
 `;
@@ -7384,15 +7492,12 @@ export const FeedDocument = /*#__PURE__*/ gql`
  * const { data, loading, error } = useFeed({
  *   variables: {
  *      request: // value for 'request'
- *      publicationImageTransform: // value for 'publicationImageTransform'
- *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
- *      publicationStatsInput: // value for 'publicationStatsInput'
- *      publicationStatsCountOpenActionArgs: // value for 'publicationStatsCountOpenActionArgs'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      imageSmallSize: // value for 'imageSmallSize'
+ *      imageMediumSize: // value for 'imageMediumSize'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -7412,16 +7517,14 @@ export type FeedQueryResult = Apollo.QueryResult<FeedData, FeedVariables>;
 export const FeedHighlightsDocument = /*#__PURE__*/ gql`
   query FeedHighlights(
     $request: FeedHighlightsRequest!
-    $publicationImageTransform: ImageTransform = {}
-    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-    $publicationStatsInput: PublicationStatsInput! = {}
-    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $imageSmallSize: ImageTransform = {}
+    $imageMediumSize: ImageTransform = {}
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
+    ...InjectCommonQueryParams
     result: feedHighlights(request: $request) {
       items {
         ... on Post {
@@ -7436,6 +7539,7 @@ export const FeedHighlightsDocument = /*#__PURE__*/ gql`
       }
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentPost}
   ${FragmentQuote}
   ${FragmentPaginatedResultInfo}
@@ -7454,15 +7558,12 @@ export const FeedHighlightsDocument = /*#__PURE__*/ gql`
  * const { data, loading, error } = useFeedHighlights({
  *   variables: {
  *      request: // value for 'request'
- *      publicationImageTransform: // value for 'publicationImageTransform'
- *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
- *      publicationStatsInput: // value for 'publicationStatsInput'
- *      publicationStatsCountOpenActionArgs: // value for 'publicationStatsCountOpenActionArgs'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      imageSmallSize: // value for 'imageSmallSize'
+ *      imageMediumSize: // value for 'imageMediumSize'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -7493,16 +7594,14 @@ export type FeedHighlightsQueryResult = Apollo.QueryResult<
 export const NotificationsDocument = /*#__PURE__*/ gql`
   query Notifications(
     $request: NotificationRequest!
-    $publicationImageTransform: ImageTransform = {}
-    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-    $publicationStatsInput: PublicationStatsInput! = {}
-    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $imageSmallSize: ImageTransform = {}
+    $imageMediumSize: ImageTransform = {}
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
+    ...InjectCommonQueryParams
     result: notifications(request: $request) {
       items {
         ... on ReactionNotification {
@@ -7532,6 +7631,7 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
       }
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentReactionNotification}
   ${FragmentCommentNotification}
   ${FragmentMirrorNotification}
@@ -7555,15 +7655,12 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
  * const { data, loading, error } = useNotifications({
  *   variables: {
  *      request: // value for 'request'
- *      publicationImageTransform: // value for 'publicationImageTransform'
- *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
- *      publicationStatsInput: // value for 'publicationStatsInput'
- *      publicationStatsCountOpenActionArgs: // value for 'publicationStatsCountOpenActionArgs'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      imageSmallSize: // value for 'imageSmallSize'
+ *      imageMediumSize: // value for 'imageMediumSize'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -7591,16 +7688,17 @@ export type NotificationsQueryResult = Apollo.QueryResult<
 export const ProfileDocument = /*#__PURE__*/ gql`
   query Profile(
     $request: ProfileRequest!
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
+    ...InjectCommonQueryParams
     result: profile(request: $request) {
       ...Profile
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentProfile}
 `;
 
@@ -7617,11 +7715,10 @@ export const ProfileDocument = /*#__PURE__*/ gql`
  * const { data, loading, error } = useProfile({
  *   variables: {
  *      request: // value for 'request'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -7643,12 +7740,12 @@ export const ProfilesDocument = /*#__PURE__*/ gql`
     $where: ProfilesRequestWhere!
     $limit: LimitType
     $cursor: Cursor
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
+    ...InjectCommonQueryParams
     result: profiles(request: { where: $where, limit: $limit, cursor: $cursor }) {
       items {
         ...Profile
@@ -7658,6 +7755,7 @@ export const ProfilesDocument = /*#__PURE__*/ gql`
       }
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentProfile}
   ${FragmentPaginatedResultInfo}
 `;
@@ -7677,11 +7775,10 @@ export const ProfilesDocument = /*#__PURE__*/ gql`
  *      where: // value for 'where'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -7756,12 +7853,12 @@ export type ProfileManagersQueryResult = Apollo.QueryResult<
 export const ProfileRecommendationsDocument = /*#__PURE__*/ gql`
   query ProfileRecommendations(
     $request: ProfileRecommendationsRequest!
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
+    ...InjectCommonQueryParams
     result: profileRecommendations(request: $request) {
       items {
         ...Profile
@@ -7771,6 +7868,7 @@ export const ProfileRecommendationsDocument = /*#__PURE__*/ gql`
       }
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentProfile}
   ${FragmentPaginatedResultInfo}
 `;
@@ -7788,11 +7886,10 @@ export const ProfileRecommendationsDocument = /*#__PURE__*/ gql`
  * const { data, loading, error } = useProfileRecommendations({
  *   variables: {
  *      request: // value for 'request'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -7830,12 +7927,12 @@ export const FollowingDocument = /*#__PURE__*/ gql`
     $for: ProfileId!
     $limit: LimitType
     $cursor: Cursor
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
+    ...InjectCommonQueryParams
     result: following(request: { for: $for, limit: $limit, cursor: $cursor }) {
       items {
         ...Profile
@@ -7845,6 +7942,7 @@ export const FollowingDocument = /*#__PURE__*/ gql`
       }
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentProfile}
   ${FragmentPaginatedResultInfo}
 `;
@@ -7864,11 +7962,10 @@ export const FollowingDocument = /*#__PURE__*/ gql`
  *      for: // value for 'for'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -7892,12 +7989,12 @@ export const FollowersDocument = /*#__PURE__*/ gql`
     $of: ProfileId!
     $limit: LimitType
     $cursor: Cursor
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
+    ...InjectCommonQueryParams
     result: followers(request: { of: $of, limit: $limit, cursor: $cursor }) {
       items {
         ...Profile
@@ -7907,6 +8004,7 @@ export const FollowersDocument = /*#__PURE__*/ gql`
       }
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentProfile}
   ${FragmentPaginatedResultInfo}
 `;
@@ -7926,11 +8024,10 @@ export const FollowersDocument = /*#__PURE__*/ gql`
  *      of: // value for 'of'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -7955,12 +8052,12 @@ export const MutualFollowersDocument = /*#__PURE__*/ gql`
     $viewing: ProfileId!
     $limit: LimitType
     $cursor: Cursor
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
+    ...InjectCommonQueryParams
     result: mutualFollowers(
       request: { observer: $observer, viewing: $viewing, limit: $limit, cursor: $cursor }
     ) {
@@ -7972,6 +8069,7 @@ export const MutualFollowersDocument = /*#__PURE__*/ gql`
       }
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentProfile}
   ${FragmentPaginatedResultInfo}
 `;
@@ -7992,11 +8090,10 @@ export const MutualFollowersDocument = /*#__PURE__*/ gql`
  *      viewing: // value for 'viewing'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -8027,12 +8124,12 @@ export type MutualFollowersQueryResult = Apollo.QueryResult<
 export const WhoActedOnPublicationDocument = /*#__PURE__*/ gql`
   query WhoActedOnPublication(
     $request: WhoActedOnPublicationRequest!
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
+    ...InjectCommonQueryParams
     result: whoActedOnPublication(request: $request) {
       items {
         ...Profile
@@ -8042,6 +8139,7 @@ export const WhoActedOnPublicationDocument = /*#__PURE__*/ gql`
       }
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentProfile}
   ${FragmentPaginatedResultInfo}
 `;
@@ -8059,11 +8157,10 @@ export const WhoActedOnPublicationDocument = /*#__PURE__*/ gql`
  * const { data, loading, error } = useWhoActedOnPublication({
  *   variables: {
  *      request: // value for 'request'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -9178,16 +9275,14 @@ export type CreateHandleUnlinkFromProfileTypedDataMutationOptions = Apollo.BaseM
 export const PublicationDocument = /*#__PURE__*/ gql`
   query Publication(
     $request: PublicationRequest!
-    $publicationImageTransform: ImageTransform = {}
-    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-    $publicationStatsInput: PublicationStatsInput! = {}
-    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $imageSmallSize: ImageTransform = {}
+    $imageMediumSize: ImageTransform = {}
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
+    ...InjectCommonQueryParams
     result: publication(request: $request) {
       ... on Post {
         ...Post
@@ -9203,6 +9298,7 @@ export const PublicationDocument = /*#__PURE__*/ gql`
       }
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentPost}
   ${FragmentMirror}
   ${FragmentComment}
@@ -9222,15 +9318,12 @@ export const PublicationDocument = /*#__PURE__*/ gql`
  * const { data, loading, error } = usePublication({
  *   variables: {
  *      request: // value for 'request'
- *      publicationImageTransform: // value for 'publicationImageTransform'
- *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
- *      publicationStatsInput: // value for 'publicationStatsInput'
- *      publicationStatsCountOpenActionArgs: // value for 'publicationStatsCountOpenActionArgs'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      imageSmallSize: // value for 'imageSmallSize'
+ *      imageMediumSize: // value for 'imageMediumSize'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -9255,16 +9348,14 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
     $orderBy: PublicationsOrderByType
     $limit: LimitType
     $cursor: Cursor
-    $publicationImageTransform: ImageTransform = {}
-    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-    $publicationStatsInput: PublicationStatsInput! = {}
-    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $imageSmallSize: ImageTransform = {}
+    $imageMediumSize: ImageTransform = {}
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
+    ...InjectCommonQueryParams
     result: publications(
       request: { where: $where, orderBy: $orderBy, limit: $limit, cursor: $cursor }
     ) {
@@ -9287,6 +9378,7 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
       }
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentPost}
   ${FragmentMirror}
   ${FragmentComment}
@@ -9310,15 +9402,12 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
  *      orderBy: // value for 'orderBy'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
- *      publicationImageTransform: // value for 'publicationImageTransform'
- *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
- *      publicationStatsInput: // value for 'publicationStatsInput'
- *      publicationStatsCountOpenActionArgs: // value for 'publicationStatsCountOpenActionArgs'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      imageSmallSize: // value for 'imageSmallSize'
+ *      imageMediumSize: // value for 'imageMediumSize'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -10503,16 +10592,14 @@ export type RefreshPublicationMetadataMutationOptions = Apollo.BaseMutationOptio
 export const RevenueFromPublicationsDocument = /*#__PURE__*/ gql`
   query RevenueFromPublications(
     $request: RevenueFromPublicationsRequest!
-    $publicationImageTransform: ImageTransform = {}
-    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-    $publicationStatsInput: PublicationStatsInput! = {}
-    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $imageSmallSize: ImageTransform = {}
+    $imageMediumSize: ImageTransform = {}
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
+    ...InjectCommonQueryParams
     result: revenueFromPublications(request: $request) {
       items {
         ...PublicationRevenue
@@ -10522,6 +10609,7 @@ export const RevenueFromPublicationsDocument = /*#__PURE__*/ gql`
       }
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentPublicationRevenue}
   ${FragmentPaginatedResultInfo}
 `;
@@ -10539,15 +10627,12 @@ export const RevenueFromPublicationsDocument = /*#__PURE__*/ gql`
  * const { data, loading, error } = useRevenueFromPublications({
  *   variables: {
  *      request: // value for 'request'
- *      publicationImageTransform: // value for 'publicationImageTransform'
- *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
- *      publicationStatsInput: // value for 'publicationStatsInput'
- *      publicationStatsCountOpenActionArgs: // value for 'publicationStatsCountOpenActionArgs'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      imageSmallSize: // value for 'imageSmallSize'
+ *      imageMediumSize: // value for 'imageMediumSize'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -10586,20 +10671,19 @@ export type RevenueFromPublicationsQueryResult = Apollo.QueryResult<
 export const RevenueFromPublicationDocument = /*#__PURE__*/ gql`
   query RevenueFromPublication(
     $request: RevenueFromPublicationRequest!
-    $publicationImageTransform: ImageTransform = {}
-    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-    $publicationStatsInput: PublicationStatsInput! = {}
-    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $imageSmallSize: ImageTransform = {}
+    $imageMediumSize: ImageTransform = {}
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
+    ...InjectCommonQueryParams
     result: revenueFromPublication(request: $request) {
       ...PublicationRevenue
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentPublicationRevenue}
 `;
 
@@ -10616,15 +10700,12 @@ export const RevenueFromPublicationDocument = /*#__PURE__*/ gql`
  * const { data, loading, error } = useRevenueFromPublication({
  *   variables: {
  *      request: // value for 'request'
- *      publicationImageTransform: // value for 'publicationImageTransform'
- *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
- *      publicationStatsInput: // value for 'publicationStatsInput'
- *      publicationStatsCountOpenActionArgs: // value for 'publicationStatsCountOpenActionArgs'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      imageSmallSize: // value for 'imageSmallSize'
+ *      imageMediumSize: // value for 'imageMediumSize'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -10658,13 +10739,15 @@ export type RevenueFromPublicationQueryResult = Apollo.QueryResult<
   RevenueFromPublicationVariables
 >;
 export const FollowRevenuesDocument = /*#__PURE__*/ gql`
-  query FollowRevenues($request: FollowRevenueRequest!, $rateRequest: RateRequest = { for: USD }) {
+  query FollowRevenues($request: FollowRevenueRequest!, $fxRateFor: SupportedFiatType = USD) {
+    ...InjectCommonQueryParams
     result: followRevenues(request: $request) {
       revenues {
         ...RevenueAggregate
       }
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentRevenueAggregate}
 `;
 
@@ -10681,7 +10764,7 @@ export const FollowRevenuesDocument = /*#__PURE__*/ gql`
  * const { data, loading, error } = useFollowRevenues({
  *   variables: {
  *      request: // value for 'request'
- *      rateRequest: // value for 'rateRequest'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -10715,16 +10798,14 @@ export const SearchPublicationsDocument = /*#__PURE__*/ gql`
     $where: PublicationSearchWhere
     $limit: LimitType
     $cursor: Cursor
-    $publicationImageTransform: ImageTransform = {}
-    $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-    $publicationStatsInput: PublicationStatsInput! = {}
-    $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $imageSmallSize: ImageTransform = {}
+    $imageMediumSize: ImageTransform = {}
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
+    ...InjectCommonQueryParams
     result: searchPublications(
       request: { query: $query, where: $where, cursor: $cursor, limit: $limit }
     ) {
@@ -10744,6 +10825,7 @@ export const SearchPublicationsDocument = /*#__PURE__*/ gql`
       }
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentPost}
   ${FragmentComment}
   ${FragmentQuote}
@@ -10766,15 +10848,12 @@ export const SearchPublicationsDocument = /*#__PURE__*/ gql`
  *      where: // value for 'where'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
- *      publicationImageTransform: // value for 'publicationImageTransform'
- *      publicationOperationsActedArgs: // value for 'publicationOperationsActedArgs'
- *      publicationStatsInput: // value for 'publicationStatsInput'
- *      publicationStatsCountOpenActionArgs: // value for 'publicationStatsCountOpenActionArgs'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      imageSmallSize: // value for 'imageSmallSize'
+ *      imageMediumSize: // value for 'imageMediumSize'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -10810,12 +10889,12 @@ export const SearchProfilesDocument = /*#__PURE__*/ gql`
     $where: ProfileSearchWhere
     $limit: LimitType
     $cursor: Cursor
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
+    ...InjectCommonQueryParams
     result: searchProfiles(
       request: { query: $query, where: $where, limit: $limit, cursor: $cursor }
     ) {
@@ -10827,6 +10906,7 @@ export const SearchProfilesDocument = /*#__PURE__*/ gql`
       }
     }
   }
+  ${FragmentInjectCommonQueryParams}
   ${FragmentProfile}
   ${FragmentPaginatedResultInfo}
 `;
@@ -10847,11 +10927,10 @@ export const SearchProfilesDocument = /*#__PURE__*/ gql`
  *      where: // value for 'where'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -11166,11 +11245,10 @@ export type OwnedHandlesQueryResult = Apollo.QueryResult<OwnedHandlesData, Owned
 export const ProfilesManagedDocument = /*#__PURE__*/ gql`
   query ProfilesManaged(
     $request: ProfilesManagedRequest!
-    $profileCoverTransform: ImageTransform = {}
-    $profilePictureTransform: ImageTransform = {}
-    $profileStatsArg: ProfileStatsArg = {}
-    $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-    $rateRequest: RateRequest = { for: USD }
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
   ) {
     result: profilesManaged(request: $request) {
       items {
@@ -11198,11 +11276,10 @@ export const ProfilesManagedDocument = /*#__PURE__*/ gql`
  * const { data, loading, error } = useProfilesManaged({
  *   variables: {
  *      request: // value for 'request'
- *      profileCoverTransform: // value for 'profileCoverTransform'
- *      profilePictureTransform: // value for 'profilePictureTransform'
- *      profileStatsArg: // value for 'profileStatsArg'
- *      profileStatsCountOpenActionArgs: // value for 'profileStatsCountOpenActionArgs'
- *      rateRequest: // value for 'rateRequest'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
  *   },
  * });
  */
@@ -11285,6 +11362,23 @@ export type ActedNotificationFieldPolicy = {
   actions?: FieldPolicy<any> | FieldReadFunction<any>;
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   publication?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type AdvancedContractConditionKeySpecifier = (
+  | 'abi'
+  | 'comparison'
+  | 'contract'
+  | 'functionName'
+  | 'params'
+  | 'value'
+  | AdvancedContractConditionKeySpecifier
+)[];
+export type AdvancedContractConditionFieldPolicy = {
+  abi?: FieldPolicy<any> | FieldReadFunction<any>;
+  comparison?: FieldPolicy<any> | FieldReadFunction<any>;
+  contract?: FieldPolicy<any> | FieldReadFunction<any>;
+  functionName?: FieldPolicy<any> | FieldReadFunction<any>;
+  params?: FieldPolicy<any> | FieldReadFunction<any>;
+  value?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type AmountKeySpecifier = ('asset' | 'rate' | 'value' | AmountKeySpecifier)[];
 export type AmountFieldPolicy = {
@@ -12750,6 +12844,17 @@ export type ImageSetFieldPolicy = {
   raw?: FieldPolicy<any> | FieldReadFunction<any>;
   transformed?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type ImageTransformParamKeySpecifier = (
+  | 'height'
+  | 'keepAspectRatio'
+  | 'width'
+  | ImageTransformParamKeySpecifier
+)[];
+export type ImageTransformParamFieldPolicy = {
+  height?: FieldPolicy<any> | FieldReadFunction<any>;
+  keepAspectRatio?: FieldPolicy<any> | FieldReadFunction<any>;
+  width?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type InvitedResultKeySpecifier = (
   | 'by'
   | 'profileMinted'
@@ -13369,6 +13474,7 @@ export type MutationKeySpecifier = (
   | 'createOnchainPostTypedData'
   | 'createOnchainQuoteTypedData'
   | 'createOnchainSetProfileMetadataTypedData'
+  | 'createProfile'
   | 'createProfileWithHandle'
   | 'createSetFollowModuleTypedData'
   | 'createUnblockProfilesTypedData'
@@ -13380,6 +13486,15 @@ export type MutationKeySpecifier = (
   | 'handleUnlinkFromProfile'
   | 'hidePublication'
   | 'idKitPhoneVerifyWebhook'
+  | 'internalAddCuratedTag'
+  | 'internalAddInvites'
+  | 'internalAllowDomain'
+  | 'internalClaim'
+  | 'internalCuratedUpdate'
+  | 'internalNftIndex'
+  | 'internalNftVerify'
+  | 'internalRemoveCuratedTag'
+  | 'internalUpdateProfileStatus'
   | 'inviteProfile'
   | 'legacyCollect'
   | 'mirrorOnMomoka'
@@ -13435,6 +13550,7 @@ export type MutationFieldPolicy = {
   createOnchainPostTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createOnchainQuoteTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createOnchainSetProfileMetadataTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
+  createProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   createProfileWithHandle?: FieldPolicy<any> | FieldReadFunction<any>;
   createSetFollowModuleTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createUnblockProfilesTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -13446,6 +13562,15 @@ export type MutationFieldPolicy = {
   handleUnlinkFromProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   hidePublication?: FieldPolicy<any> | FieldReadFunction<any>;
   idKitPhoneVerifyWebhook?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalAddCuratedTag?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalAddInvites?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalAllowDomain?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalClaim?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalCuratedUpdate?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalNftIndex?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalNftVerify?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalRemoveCuratedTag?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalUpdateProfileStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   inviteProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   legacyCollect?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrorOnMomoka?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -13922,6 +14047,11 @@ export type PostFieldPolicy = {
   stats?: FieldPolicy<any> | FieldReadFunction<any>;
   txHash?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type PrfResultKeySpecifier = ('dd' | 'ss' | PrfResultKeySpecifier)[];
+export type PrfResultFieldPolicy = {
+  dd?: FieldPolicy<any> | FieldReadFunction<any>;
+  ss?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type ProfileKeySpecifier = (
   | 'createdAt'
   | 'followModule'
@@ -14271,7 +14401,16 @@ export type QueryKeySpecifier = (
   | 'followRevenues'
   | 'followers'
   | 'following'
+  | 'fxRateFor'
   | 'generateModuleCurrencyApprovalData'
+  | 'imageMediumSize'
+  | 'imageSmallSize'
+  | 'internalAllowedDomains'
+  | 'internalClaimStatus'
+  | 'internalCuratedHandles'
+  | 'internalCuratedTags'
+  | 'internalInvites'
+  | 'internalProfileStatus'
   | 'invitedProfiles'
   | 'lastLoggedInProfile'
   | 'lensTransactionStatus'
@@ -14296,8 +14435,10 @@ export type QueryKeySpecifier = (
   | 'profile'
   | 'profileActionHistory'
   | 'profileAlreadyInvited'
+  | 'profileCoverSize'
   | 'profileInterestsOptions'
   | 'profileManagers'
+  | 'profilePictureSize'
   | 'profileRecommendations'
   | 'profiles'
   | 'profilesManaged'
@@ -14337,7 +14478,16 @@ export type QueryFieldPolicy = {
   followRevenues?: FieldPolicy<any> | FieldReadFunction<any>;
   followers?: FieldPolicy<any> | FieldReadFunction<any>;
   following?: FieldPolicy<any> | FieldReadFunction<any>;
+  fxRateFor?: FieldPolicy<any> | FieldReadFunction<any>;
   generateModuleCurrencyApprovalData?: FieldPolicy<any> | FieldReadFunction<any>;
+  imageMediumSize?: FieldPolicy<any> | FieldReadFunction<any>;
+  imageSmallSize?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalAllowedDomains?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalClaimStatus?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalCuratedHandles?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalCuratedTags?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalInvites?: FieldPolicy<any> | FieldReadFunction<any>;
+  internalProfileStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   invitedProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   lastLoggedInProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   lensTransactionStatus?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -14362,8 +14512,10 @@ export type QueryFieldPolicy = {
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   profileActionHistory?: FieldPolicy<any> | FieldReadFunction<any>;
   profileAlreadyInvited?: FieldPolicy<any> | FieldReadFunction<any>;
+  profileCoverSize?: FieldPolicy<any> | FieldReadFunction<any>;
   profileInterestsOptions?: FieldPolicy<any> | FieldReadFunction<any>;
   profileManagers?: FieldPolicy<any> | FieldReadFunction<any>;
+  profilePictureSize?: FieldPolicy<any> | FieldReadFunction<any>;
   profileRecommendations?: FieldPolicy<any> | FieldReadFunction<any>;
   profiles?: FieldPolicy<any> | FieldReadFunction<any>;
   profilesManaged?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -14856,6 +15008,13 @@ export type StrictTypedTypePolicies = {
       | ActedNotificationKeySpecifier
       | (() => undefined | ActedNotificationKeySpecifier);
     fields?: ActedNotificationFieldPolicy;
+  };
+  AdvancedContractCondition?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | AdvancedContractConditionKeySpecifier
+      | (() => undefined | AdvancedContractConditionKeySpecifier);
+    fields?: AdvancedContractConditionFieldPolicy;
   };
   Amount?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | AmountKeySpecifier | (() => undefined | AmountKeySpecifier);
@@ -15658,6 +15817,13 @@ export type StrictTypedTypePolicies = {
     keyFields?: false | ImageSetKeySpecifier | (() => undefined | ImageSetKeySpecifier);
     fields?: ImageSetFieldPolicy;
   };
+  ImageTransformParam?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | ImageTransformParamKeySpecifier
+      | (() => undefined | ImageTransformParamKeySpecifier);
+    fields?: ImageTransformParamFieldPolicy;
+  };
   InvitedResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | InvitedResultKeySpecifier | (() => undefined | InvitedResultKeySpecifier);
     fields?: InvitedResultFieldPolicy;
@@ -16164,6 +16330,10 @@ export type StrictTypedTypePolicies = {
     keyFields?: false | PostKeySpecifier | (() => undefined | PostKeySpecifier);
     fields?: PostFieldPolicy;
   };
+  PrfResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | PrfResultKeySpecifier | (() => undefined | PrfResultKeySpecifier);
+    fields?: PrfResultFieldPolicy;
+  };
   Profile?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | ProfileKeySpecifier | (() => undefined | ProfileKeySpecifier);
     fields?: ProfileFieldPolicy;
@@ -16629,6 +16799,7 @@ const result: PossibleTypesResultData = {
     RelayMomokaResult: ['CreateMomokaPublicationResult', 'LensProfileManagerRelayError'],
     RelayResult: ['RelayError', 'RelaySuccess'],
     SecondTierCondition: [
+      'AdvancedContractCondition',
       'AndCondition',
       'CollectCondition',
       'EoaOwnershipCondition',
@@ -16640,6 +16811,7 @@ const result: PossibleTypesResultData = {
     ],
     SupportedModule: ['KnownSupportedModule', 'UnknownSupportedModule'],
     ThirdTierCondition: [
+      'AdvancedContractCondition',
       'CollectCondition',
       'EoaOwnershipCondition',
       'Erc20OwnershipCondition',

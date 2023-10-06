@@ -8,6 +8,7 @@ import { createMutualFollowersFieldPolicy } from './createMutualFollowersFieldPo
 import { createProfilesFieldPolicy } from './createProfilesFieldPolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
 import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
+import { createQueryParamsLocalFields, QueryParams } from './createQueryParamsLocalFields';
 import { createSearchProfilesFieldPolicy } from './createSearchProfilesFieldPolicy';
 import { createSearchPublicationsFieldPolicy } from './createSearchPublicationsFieldPolicy';
 import { notNormalizedType } from './utils/notNormalizedType';
@@ -16,7 +17,9 @@ type InheritedTypePolicies = {
   Publication: TypePolicy;
 };
 
-export function createTypePolicies(): StrictTypedTypePolicies & InheritedTypePolicies {
+export function createTypePolicies(
+  params?: QueryParams,
+): StrictTypedTypePolicies & InheritedTypePolicies {
   return {
     Publication: createPublicationTypePolicy(),
     Post: notNormalizedType(),
@@ -37,6 +40,8 @@ export function createTypePolicies(): StrictTypedTypePolicies & InheritedTypePol
         searchPublications: createSearchPublicationsFieldPolicy(),
         searchProfiles: createSearchProfilesFieldPolicy(),
         feed: createFeedFieldPolicy(),
+
+        ...createQueryParamsLocalFields(params),
       },
     },
   };

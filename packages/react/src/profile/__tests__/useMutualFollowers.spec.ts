@@ -8,10 +8,6 @@ import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
-import {
-  defaultMediaTransformsConfig,
-  mediaTransformConfigToQueryVariables,
-} from '../../mediaTransforms';
 import { UseMutualFollowersArgs, useMutualFollowers } from '../useMutualFollowers';
 
 describe(`Given the ${useMutualFollowers.name} hook`, () => {
@@ -32,7 +28,6 @@ describe(`Given the ${useMutualFollowers.name} hook`, () => {
             observer: observerProfileId,
             viewing: viewingProfileId,
             limit: LimitType.Ten,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           items: profiles,
         }),

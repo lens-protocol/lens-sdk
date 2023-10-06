@@ -1,4 +1,8 @@
-import { createLensApolloClient, SafeApolloClient } from '@lens-protocol/api-bindings';
+import {
+  createLensApolloClient,
+  SafeApolloClient,
+  defaultQueryParams,
+} from '@lens-protocol/api-bindings';
 import { AppId } from '@lens-protocol/domain/entities';
 import { ILogger, invariant } from '@lens-protocol/shared-kernel';
 import React, { ReactNode, useContext } from 'react';
@@ -6,19 +10,16 @@ import React, { ReactNode, useContext } from 'react';
 import { ConsoleLogger } from './ConsoleLogger';
 import { LensConfig } from './config';
 import { EnvironmentConfig } from './environments';
-import { defaultMediaTransformsConfig, MediaTransformsConfig } from './mediaTransforms';
 
 export type SharedDependencies = {
   apolloClient: SafeApolloClient;
   appId?: AppId;
   environment: EnvironmentConfig;
   logger: ILogger;
-  mediaTransforms: MediaTransformsConfig;
 };
 
 export function createSharedDependencies(config: LensConfig): SharedDependencies {
   const logger = config.logger ?? new ConsoleLogger();
-  const mediaTransforms = config.mediaTransforms ?? defaultMediaTransformsConfig;
 
   const accessTokenStorage = {
     getAccessToken() {
@@ -31,6 +32,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
 
   // apollo client
   const apolloClient = createLensApolloClient({
+    queryParams: config.params ?? defaultQueryParams,
     backendURL: config.environment.backend,
     accessTokenStorage,
     pollingInterval: config.environment.timings.pollingInterval,
@@ -40,10 +42,8 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
 
   return {
     apolloClient,
-    appId: config.appId,
     environment: config.environment,
     logger,
-    mediaTransforms,
   };
 }
 

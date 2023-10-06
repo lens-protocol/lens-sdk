@@ -8,10 +8,6 @@ import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import {
-  defaultMediaTransformsConfig,
-  mediaTransformConfigToQueryVariables,
-} from '../../mediaTransforms';
 import { useFeed } from '../useFeed';
 
 function setupTestScenario({ items, where }: { where: FeedWhere; items: FeedItem[] }) {
@@ -22,14 +18,12 @@ function setupTestScenario({ items, where }: { where: FeedWhere; items: FeedItem
       }),
     {
       mocks: {
-        mediaTransforms: defaultMediaTransformsConfig,
         apolloClient: mockLensApolloClient([
           mockFeedResponse({
             variables: {
               request: {
                 where,
               },
-              ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
             },
             items,
           }),

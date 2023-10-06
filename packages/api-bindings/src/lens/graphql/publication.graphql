@@ -12,16 +12,14 @@ fragment PublicationValidateMetadataResult on PublicationValidateMetadataResult 
 # queries
 query Publication(
   $request: PublicationRequest!
-  $publicationImageTransform: ImageTransform = {}
-  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-  $publicationStatsInput: PublicationStatsInput! = {}
-  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $imageSmallSize: ImageTransform = {}
+  $imageMediumSize: ImageTransform = {}
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: publication(request: $request) {
     ... on Post {
       ...Post
@@ -43,16 +41,14 @@ query Publications(
   $orderBy: PublicationsOrderByType
   $limit: LimitType
   $cursor: Cursor
-  $publicationImageTransform: ImageTransform = {}
-  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-  $publicationStatsInput: PublicationStatsInput! = {}
-  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $imageSmallSize: ImageTransform = {}
+  $imageMediumSize: ImageTransform = {}
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: publications(
     request: { where: $where, orderBy: $orderBy, limit: $limit, cursor: $cursor }
   ) {

@@ -1,5 +1,3 @@
-import { MockedResponse } from '@apollo/client/testing';
-
 import {
   FollowersDocument,
   FollowersVariables,
@@ -9,51 +7,13 @@ import {
   MutualFollowersVariables,
   PaginatedResultInfo,
   Profile,
-  ProfilesData,
   ProfilesDocument,
   ProfilesVariables,
-  SearchProfilesData,
   SearchProfilesDocument,
   SearchProfilesVariables,
 } from '../../graphql/generated';
 import { mockPaginatedResultInfo } from '../fragments';
-
-/**
- * All paginated profile responses have the same shape
- */
-function mockAnyPaginatedProfilesResponse<V, Q>({
-  variables,
-  items,
-  info = mockPaginatedResultInfo(),
-  query,
-}: {
-  variables: V;
-  items: Profile[];
-  info?: PaginatedResultInfo;
-  query: Q;
-}) {
-  return {
-    request: {
-      query,
-      variables: {
-        profileCoverTransform: {},
-        profilePictureTransform: {},
-        profileStatsArg: {},
-        profileStatsCountOpenActionArgs: {},
-        rateRequest: { for: 'USD' },
-        ...variables,
-      },
-    },
-    result: {
-      data: {
-        result: {
-          items,
-          pageInfo: info,
-        },
-      },
-    },
-  };
-}
+import { mockAnyPaginatedResponse } from './mockAnyPaginatedResponse';
 
 export function mockProfilesResponse({
   variables,
@@ -63,8 +23,8 @@ export function mockProfilesResponse({
   variables: ProfilesVariables;
   items: Profile[];
   info?: PaginatedResultInfo;
-}): MockedResponse<ProfilesData> {
-  return mockAnyPaginatedProfilesResponse({
+}) {
+  return mockAnyPaginatedResponse({
     variables,
     items,
     info,
@@ -80,8 +40,8 @@ export function mockMutualFollowersResponse({
   variables: MutualFollowersVariables;
   items: Profile[];
   info?: PaginatedResultInfo;
-}): MockedResponse<ProfilesData> {
-  return mockAnyPaginatedProfilesResponse({
+}) {
+  return mockAnyPaginatedResponse({
     variables,
     items,
     info,
@@ -97,8 +57,8 @@ export function mockFollowersResponse({
   variables: FollowersVariables;
   items: Profile[];
   info?: PaginatedResultInfo;
-}): MockedResponse<ProfilesData> {
-  return mockAnyPaginatedProfilesResponse({
+}) {
+  return mockAnyPaginatedResponse({
     variables,
     items,
     info,
@@ -114,8 +74,8 @@ export function mockFollowingResponse({
   variables: FollowingVariables;
   items: Profile[];
   info?: PaginatedResultInfo;
-}): MockedResponse<ProfilesData> {
-  return mockAnyPaginatedProfilesResponse({
+}) {
+  return mockAnyPaginatedResponse({
     variables,
     items,
     info,
@@ -131,8 +91,8 @@ export function mockSearchProfilesResponse({
   variables: SearchProfilesVariables;
   items: Profile[];
   info?: PaginatedResultInfo;
-}): MockedResponse<SearchProfilesData> {
-  return mockAnyPaginatedProfilesResponse({
+}) {
+  return mockAnyPaginatedResponse({
     variables,
     items,
     info,

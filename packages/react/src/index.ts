@@ -21,14 +21,6 @@ export type { ChainType, EvmAddress, Url } from '@lens-protocol/shared-kernel';
  */
 export * from './chains';
 export * from './environments';
-export type {
-  Digit,
-  ImageSizeTransform,
-  MediaTransformsConfig,
-  MediaTransformParams,
-  Percentage,
-  Pixel,
-} from './mediaTransforms';
 export type { LensConfig } from './config';
 
 /**

@@ -13,10 +13,6 @@ import {
 import { waitFor } from '@testing-library/react';
 
 import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import {
-  defaultMediaTransformsConfig,
-  mediaTransformConfigToQueryVariables,
-} from '../../mediaTransforms';
 import { UseSearchPublicationsArgs, useSearchPublications } from '../useSearchPublications';
 
 function setupTestScenario({
@@ -27,13 +23,11 @@ function setupTestScenario({
 }) {
   return renderHookWithMocks(() => useSearchPublications(args), {
     mocks: {
-      mediaTransforms: defaultMediaTransformsConfig,
       apolloClient: mockLensApolloClient([
         mockSearchPublicationsResponse({
           variables: {
             ...args,
             limit: LimitType.Ten,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           items: result,
         }),

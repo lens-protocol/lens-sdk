@@ -24,18 +24,21 @@ export function createAuthLink(accessTokenStorage: IAccessTokenStorage) {
     return;
   });
 
-  const authHeaderLink = setContext(() => {
+  const authHeaderLink = setContext((_, prevContext) => {
     const token = accessTokenStorage.getAccessToken();
 
     if (token) {
       return {
+        ...prevContext,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         headers: {
           authorization: `Bearer ${token}`,
+          ...('headers' in prevContext && prevContext.headers),
         },
       };
     }
 
-    return;
+    return prevContext;
   });
 
   return from([errorLink, authHeaderLink]);
