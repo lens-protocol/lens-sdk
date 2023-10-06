@@ -235,7 +235,3 @@ export function mockFeedItemFragment(overrides?: Partial<FeedItem>): FeedItem {
     ...overrides,
   };
 }
-
-export function mockFeedHighlightFragment(overrides?: Partial<FeedHighlight>): FeedHighlight {
-  return mockPostFragment(overrides);
-}
