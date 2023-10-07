@@ -5,6 +5,7 @@ import {
   DocumentNode,
   LazyQueryExecFunction,
   OperationVariables,
+  LazyQueryResultTuple as ApolloLazyResultTuple,
   useLazyQuery,
 } from '@apollo/client';
 import {
@@ -14,7 +15,14 @@ import {
   PaginatedResultInfo,
   LimitType,
 } from '@lens-protocol/api-bindings';
-import { Prettify } from '@lens-protocol/shared-kernel';
+import {
+  failure,
+  IEquatableError,
+  never,
+  Prettify,
+  PromiseResult,
+  success,
+} from '@lens-protocol/shared-kernel';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useSharedDependencies } from '../shared';
@@ -99,12 +107,61 @@ export type QueryData<R> = { result: R };
 
 type InferResult<T extends QueryData<unknown>> = T extends QueryData<infer R> ? R : never;
 
+/**
+ * @internal
+ */
 export function useReadResult<
   T extends QueryData<R>,
   R = InferResult<T>,
   V extends OperationVariables = { [key: string]: never },
 >({ error, data }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError> {
   return buildReadResult(data?.result, error);
+}
+
+/**
+ * @experimental This is a pathfinder type for new lazy query hooks. It can change at any time.
+ */
+export type LazyReadResult<
+  TArgs,
+  TValue,
+  TError extends IEquatableError = UnspecifiedError,
+> = ReadResult<TValue, TError> & {
+  /**
+   * Fetches the data for this query.
+   *
+   * @returns A promise that resolves when the data has been fetched.
+   */
+  execute: (args: TArgs) => PromiseResult<TValue, TError>;
+};
+
+/**
+ * @internal
+ */
+export function useLazyReadResult<
+  TData extends QueryData<TResult>,
+  TResult = InferResult<TData>,
+  TVariables extends OperationVariables = { [key: string]: never },
+>([execute, { error, data }]: ApolloLazyResultTuple<TData, TVariables>): LazyReadResult<
+  TVariables,
+  TResult,
+  UnspecifiedError
+> {
+  return {
+    ...buildReadResult(data?.result, error),
+
+    execute: useCallback(
+      async (variables: TVariables) => {
+        const result = await execute({ variables });
+
+        if (result.error) {
+          return failure(new UnspecifiedError(result.error));
+        }
+
+        return success(result.data ? result.data.result : never());
+      },
+      [execute],
+    ),
+  };
 }
 
 export type OmitCursor<T> = Omit<T, 'cursor'>;

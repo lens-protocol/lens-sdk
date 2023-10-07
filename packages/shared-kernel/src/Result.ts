@@ -164,7 +164,10 @@ export type Result<T, E extends IEquatableError> = Success<T> | Failure<E>;
  */
 export type PromiseResult<T, E extends IEquatableError> = Promise<Result<T, E>>;
 
-export function success<T extends void>(): Success<T>;
+/**
+ * @internal
+ */
+export function success(): Success<void>;
 export function success<T>(value: T): Success<T>;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function success<T>(value: any = undefined): Success<T> {
@@ -172,17 +175,20 @@ export function success<T>(value: any = undefined): Success<T> {
   return new Success(value);
 }
 
+/**
+ * @internal
+ */
 export const failure = <E extends IEquatableError>(error: E): Failure<E> => new Failure(error);
 
 /**
- * Returns `true` if the result is a success.
+ * Ensures the `Result<T, E>` is a `Success<T>`.
  */
 export function assertSuccess<T>(result: Result<T, IEquatableError>): asserts result is Success<T> {
   invariant(result.isSuccess(), 'Expected a success result');
 }
 
 /**
- * Returns `true` if the result is a failure.
+ * Ensures the `Result<T, E>` is a `Failure<E>`.
  */
 export function assertFailure<T, E extends IEquatableError>(
   result: Result<T, E>,
