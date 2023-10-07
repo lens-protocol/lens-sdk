@@ -7,6 +7,7 @@ fragment ReactionEvent on ReactionEvent {
 }
 
 fragment FeedItem on FeedItem {
+  __typename
   id
   root {
     ... on Post {

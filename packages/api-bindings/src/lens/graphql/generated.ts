@@ -1680,7 +1680,7 @@ export type WorldcoinPhoneVerifyWebhookRequest = {
   signalType: WorldcoinPhoneVerifyType;
 };
 
-export type AuthChallenge = { id: string; text: string };
+export type AuthChallenge = { __typename: 'AuthChallengeResult'; id: string; text: string };
 
 export type AuthChallengeVariables = Exact<{
   request: ChallengeRequest;
@@ -1735,6 +1735,7 @@ export type ExploreProfilesData = {
 export type ReactionEvent = { reaction: PublicationReactionType; createdAt: string; by: Profile };
 
 export type FeedItem = {
+  __typename: 'FeedItem';
   id: string;
   root: Comment | Post | Quote;
   mirrors: Array<Mirror>;
@@ -1770,30 +1771,45 @@ export type FeedHighlightsData = {
   result: { items: Array<Post | Quote>; pageInfo: PaginatedResultInfo };
 } & InjectCommonQueryParams;
 
-export type OptimisticStatusResult = { value: boolean; isFinalisedOnchain: boolean };
+export type OptimisticStatusResult = {
+  __typename: 'OptimisticStatusResult';
+  value: boolean;
+  isFinalisedOnchain: boolean;
+};
 
-export type Erc20 = { name: string; symbol: string; decimals: number; contract: NetworkAddress };
+export type Erc20 = {
+  __typename: 'Erc20';
+  name: string;
+  symbol: string;
+  decimals: number;
+  contract: NetworkAddress;
+};
 
-export type FiatAmount = { value: string; asset: Fiat };
+export type FiatAmount = { __typename: 'FiatAmount'; value: string; asset: Fiat };
 
-export type Fiat = { name: string; symbol: string; decimals: number };
+export type Fiat = { __typename: 'Fiat'; name: string; symbol: string; decimals: number };
 
-export type Amount = { value: string; asset: Erc20; rate: FiatAmount | null };
+export type Amount = { __typename: 'Amount'; value: string; asset: Erc20; rate: FiatAmount | null };
 
 export type FeeFollowModuleSettings = {
+  __typename: 'FeeFollowModuleSettings';
   recipient: EvmAddress;
   amount: Amount;
   contract: NetworkAddress;
 };
 
-export type RevertFollowModuleSettings = { contract: NetworkAddress };
+export type RevertFollowModuleSettings = {
+  __typename: 'RevertFollowModuleSettings';
+  contract: NetworkAddress;
+};
 
 export type UnknownFollowModuleSettings = {
+  __typename: 'UnknownFollowModuleSettings';
   followModuleReturnData: string;
   contract: NetworkAddress;
 };
 
-export type NetworkAddress = { address: EvmAddress; chainId: number };
+export type NetworkAddress = { __typename: 'NetworkAddress'; address: EvmAddress; chainId: number };
 
 export type MetadataBooleanAttribute = {
   __typename: 'MetadataBooleanAttribute';
@@ -1826,6 +1842,7 @@ export type MetadataStringAttribute = {
 };
 
 export type Image = {
+  __typename: 'Image';
   uri: string;
   mimeType: string | null;
   width: number | null;
@@ -1833,6 +1850,7 @@ export type Image = {
 };
 
 export type ImageSet = {
+  __typename: 'ImageSet';
   raw: Image;
   optimized: Image | null;
   small: Image | null;
@@ -1840,27 +1858,53 @@ export type ImageSet = {
 };
 
 export type EncryptableImage = {
+  __typename: 'EncryptableImage';
   uri: string;
   mimeType: string | null;
   width: number | null;
   height: number | null;
 };
 
-export type EncryptableImageSet = { raw: EncryptableImage; optimized: Image | null };
+export type EncryptableImageSet = {
+  __typename: 'EncryptableImageSet';
+  raw: EncryptableImage;
+  optimized: Image | null;
+};
 
-export type Video = { uri: string; mimeType: string | null };
+export type Video = { __typename: 'Video'; uri: string; mimeType: string | null };
 
-export type EncryptableVideo = { mimeType: string | null; uri: string };
+export type EncryptableVideo = {
+  __typename: 'EncryptableVideo';
+  mimeType: string | null;
+  uri: string;
+};
 
-export type EncryptableVideoSet = { raw: EncryptableVideo; optimized: Video | null };
+export type EncryptableVideoSet = {
+  __typename: 'EncryptableVideoSet';
+  raw: EncryptableVideo;
+  optimized: Video | null;
+};
 
-export type Audio = { uri: string; mimeType: string | null };
+export type Audio = { __typename: 'Audio'; uri: string; mimeType: string | null };
 
-export type EncryptableAudio = { mimeType: string | null; uri: string };
+export type EncryptableAudio = {
+  __typename: 'EncryptableAudio';
+  mimeType: string | null;
+  uri: string;
+};
 
-export type EncryptableAudioSet = { raw: EncryptableAudio; optimized: Audio | null };
+export type EncryptableAudioSet = {
+  __typename: 'EncryptableAudioSet';
+  raw: EncryptableAudio;
+  optimized: Audio | null;
+};
 
-export type ProfileCoverSet = { raw: Image; optimized: Image | null; transformed: Image | null };
+export type ProfileCoverSet = {
+  __typename: 'ImageSet';
+  raw: Image;
+  optimized: Image | null;
+  transformed: Image | null;
+};
 
 export type ProfilePictureSet = {
   __typename: 'ImageSet';
@@ -1878,6 +1922,7 @@ export type NftImage = {
 };
 
 export type ProfileStats = {
+  __typename: 'ProfileStats';
   id: ProfileId;
   followers: number;
   following: number;
@@ -1893,7 +1938,56 @@ export type ProfileStats = {
   collects: number;
 };
 
-export type Profile = {
+export type ProfileOperations = {
+  __typename: 'ProfileOperations';
+  id: ProfileId;
+  canBlock: boolean;
+  canUnblock: boolean;
+  canFollow: TriStateValue;
+  canUnfollow: boolean;
+  isBlockedByMe: OptimisticStatusResult;
+  isFollowedByMe: OptimisticStatusResult;
+  isFollowingMe: OptimisticStatusResult;
+};
+
+export type ProfileOnchainIdentity = {
+  __typename: 'ProfileOnchainIdentity';
+  proofOfHumanity: boolean;
+  ens: { name: string | null } | null;
+  sybilDotOrg: { source: { twitter: { handle: string | null } } | null };
+  worldcoin: { isHuman: boolean };
+};
+
+export type ProfileGuardianResult = {
+  __typename: 'ProfileGuardianResult';
+  protected: boolean;
+  cooldownEndsOn: string | null;
+};
+
+type ProfilePicture_ImageSet_ = { __typename: 'ImageSet' } & ProfilePictureSet;
+
+type ProfilePicture_NftImage_ = { __typename: 'NftImage' } & NftImage;
+
+export type ProfilePicture = ProfilePicture_ImageSet_ | ProfilePicture_NftImage_;
+
+export type ProfileMetadata = {
+  __typename: 'ProfileMetadata';
+  appId: AppId | null;
+  displayName: string | null;
+  bio: string | null;
+  rawURI: string;
+  picture: ProfilePicture_ImageSet_ | ProfilePicture_NftImage_ | null;
+  coverPicture: ProfileCoverSet | null;
+  attributes: Array<
+    | MetadataBooleanAttribute
+    | MetadataDateAttribute
+    | MetadataJsonAttribute
+    | MetadataNumberAttribute
+    | MetadataStringAttribute
+  > | null;
+};
+
+export type ProfileFields = {
   __typename: 'Profile';
   id: ProfileId;
   txHash: string;
@@ -1904,47 +1998,20 @@ export type Profile = {
   sponsor: boolean;
   lensManager: boolean;
   ownedBy: NetworkAddress;
-  operations: {
-    id: ProfileId;
-    canBlock: boolean;
-    canUnblock: boolean;
-    canFollow: TriStateValue;
-    canUnfollow: boolean;
-    isBlockedByMe: OptimisticStatusResult;
-    isFollowedByMe: OptimisticStatusResult;
-    isFollowingMe: OptimisticStatusResult;
-  };
-  guardian: { protected: boolean; cooldownEndsOn: string | null } | null;
-  onchainIdentity: {
-    proofOfHumanity: boolean;
-    ens: { name: string | null } | null;
-    sybilDotOrg: { source: { twitter: { handle: string | null } } | null };
-    worldcoin: { isHuman: boolean };
-  };
+  operations: ProfileOperations;
+  guardian: ProfileGuardianResult | null;
+  onchainIdentity: ProfileOnchainIdentity;
   followNftAddress: NetworkAddress | null;
   followModule:
     | FeeFollowModuleSettings
     | RevertFollowModuleSettings
     | UnknownFollowModuleSettings
     | null;
-  metadata: {
-    appId: AppId | null;
-    displayName: string | null;
-    bio: string | null;
-    rawURI: string;
-    picture: ProfilePictureSet | NftImage | null;
-    coverPicture: ProfileCoverSet | null;
-    attributes: Array<
-      | MetadataBooleanAttribute
-      | MetadataDateAttribute
-      | MetadataJsonAttribute
-      | MetadataNumberAttribute
-      | MetadataStringAttribute
-    > | null;
-  } | null;
-  invitedBy: { id: ProfileId } | null;
+  metadata: ProfileMetadata | null;
   stats: ProfileStats;
 };
+
+export type Profile = { invitedBy: ProfileFields | null };
 
 export type PaginatedResultInfo = {
   __typename: 'PaginatedResultInfo';
@@ -1953,13 +2020,17 @@ export type PaginatedResultInfo = {
   next: Cursor | null;
 };
 
-export type App = { id: AppId };
+export type App = { __typename: 'App'; id: AppId };
 
-export type MomokaInfo = { proof: string };
+export type MomokaInfo = { __typename: 'MomokaInfo'; proof: string };
 
-export type FollowOnlyReferenceModuleSettings = { contract: NetworkAddress };
+export type FollowOnlyReferenceModuleSettings = {
+  __typename: 'FollowOnlyReferenceModuleSettings';
+  contract: NetworkAddress;
+};
 
 export type DegreesOfSeparationReferenceModuleSettings = {
+  __typename: 'DegreesOfSeparationReferenceModuleSettings';
   commentsRestricted: boolean;
   mirrorsRestricted: boolean;
   degreesOfSeparation: number;
@@ -1967,11 +2038,13 @@ export type DegreesOfSeparationReferenceModuleSettings = {
 };
 
 export type UnknownReferenceModuleSettings = {
+  __typename: 'UnknownReferenceModuleSettings';
   referenceModuleReturnData: string;
   contract: NetworkAddress;
 };
 
 export type SimpleCollectOpenActionSettings = {
+  __typename: 'SimpleCollectOpenActionSettings';
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
@@ -1981,24 +2054,33 @@ export type SimpleCollectOpenActionSettings = {
   amount: Amount;
 };
 
+export type Recipient = { recipient: EvmAddress; split: number };
+
 export type MultirecipientFeeCollectOpenActionSettings = {
+  __typename: 'MultirecipientFeeCollectOpenActionSettings';
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
   endsAt: string | null;
   contract: NetworkAddress;
   amount: Amount;
-  recipients: Array<{ recipient: EvmAddress; split: number }>;
+  recipients: Array<Recipient>;
 };
 
 export type UnknownOpenActionModuleSettings = {
+  __typename: 'UnknownOpenActionModuleSettings';
   openActionModuleReturnData: string | null;
   contract: NetworkAddress;
 };
 
-export type LegacyFreeCollectModuleSettings = { followerOnly: boolean; contract: NetworkAddress };
+export type LegacyFreeCollectModuleSettings = {
+  __typename: 'LegacyFreeCollectModuleSettings';
+  followerOnly: boolean;
+  contract: NetworkAddress;
+};
 
 export type LegacyFeeCollectModuleSettings = {
+  __typename: 'LegacyFeeCollectModuleSettings';
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
@@ -2007,6 +2089,7 @@ export type LegacyFeeCollectModuleSettings = {
 };
 
 export type LegacyLimitedFeeCollectModuleSettings = {
+  __typename: 'LegacyLimitedFeeCollectModuleSettings';
   collectLimit: string | null;
   recipient: EvmAddress;
   referralFee: number;
@@ -2016,18 +2099,23 @@ export type LegacyLimitedFeeCollectModuleSettings = {
 };
 
 export type LegacyLimitedTimedFeeCollectModuleSettings = {
+  __typename: 'LegacyLimitedTimedFeeCollectModuleSettings';
   collectLimit: string | null;
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
   endTimestamp: string;
-  contract: { address: EvmAddress };
+  contract: NetworkAddress;
   amount: Amount;
 };
 
-export type LegacyRevertCollectModuleSettings = { contract: NetworkAddress };
+export type LegacyRevertCollectModuleSettings = {
+  __typename: 'LegacyRevertCollectModuleSettings';
+  contract: NetworkAddress;
+};
 
 export type LegacyTimedFeeCollectModuleSettings = {
+  __typename: 'LegacyTimedFeeCollectModuleSettings';
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
@@ -2037,16 +2125,18 @@ export type LegacyTimedFeeCollectModuleSettings = {
 };
 
 export type LegacyMultirecipientFeeCollectModuleSettings = {
+  __typename: 'LegacyMultirecipientFeeCollectModuleSettings';
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
   endsAt: string | null;
   contract: NetworkAddress;
   amount: Amount;
-  recipients: Array<{ recipient: EvmAddress; split: number }>;
+  recipients: Array<Recipient>;
 };
 
 export type LegacySimpleCollectModuleSettings = {
+  __typename: 'LegacySimpleCollectModuleSettings';
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
@@ -2057,6 +2147,7 @@ export type LegacySimpleCollectModuleSettings = {
 };
 
 export type LegacyErc4626FeeCollectModuleSettings = {
+  __typename: 'LegacyERC4626FeeCollectModuleSettings';
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
@@ -2068,6 +2159,7 @@ export type LegacyErc4626FeeCollectModuleSettings = {
 };
 
 export type LegacyAaveFeeCollectModuleSettings = {
+  __typename: 'LegacyAaveFeeCollectModuleSettings';
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
@@ -2078,12 +2170,16 @@ export type LegacyAaveFeeCollectModuleSettings = {
 };
 
 export type UnknownOpenActionResult = {
+  __typename: 'UnknownOpenActionResult';
   address: EvmAddress;
   category: OpenActionCategoryType | null;
   initReturnData: string | null;
 };
 
-export type KnownCollectOpenActionResult = { type: CollectOpenActionModuleType };
+export type KnownCollectOpenActionResult = {
+  __typename: 'KnownCollectOpenActionResult';
+  type: CollectOpenActionModuleType;
+};
 
 type OpenActionResult_KnownCollectOpenActionResult_ = KnownCollectOpenActionResult;
 
@@ -2094,12 +2190,14 @@ export type OpenActionResult =
   | OpenActionResult_UnknownOpenActionResult_;
 
 export type CanDecryptResponse = {
+  __typename: 'CanDecryptResponse';
   result: boolean;
   reasons: Array<DecryptFailReasonType> | null;
   extraDetails: string | null;
 };
 
 export type PublicationOperations = {
+  __typename: 'PublicationOperations';
   isNotInterested: boolean;
   hasBookmarked: boolean;
   hasReported: boolean;
@@ -2190,12 +2288,14 @@ export type RootCondition = {
 };
 
 export type PublicationMarketplaceMetadataAttribute = {
+  __typename: 'PublicationMarketplaceMetadataAttribute';
   displayType: MarketplaceMetadataAttributeDisplayType | null;
   traitType: string | null;
   value: string | null;
 };
 
 export type MarketplaceMetadata = {
+  __typename: 'MarketplaceMetadata';
   description: string | null;
   externalURL: Url | null;
   name: string | null;
@@ -2205,6 +2305,7 @@ export type MarketplaceMetadata = {
 };
 
 export type PublicationMetadataMediaVideo = {
+  __typename: 'PublicationMetadataMediaVideo';
   duration: number | null;
   license: PublicationMetadataLicenseType | null;
   altTag: string | null;
@@ -2220,6 +2321,7 @@ export type PublicationMetadataMediaVideo = {
 };
 
 export type PublicationMetadataMediaImage = {
+  __typename: 'PublicationMetadataMediaImage';
   license: PublicationMetadataLicenseType | null;
   image: EncryptableImageSet;
   attributes: Array<
@@ -2232,6 +2334,7 @@ export type PublicationMetadataMediaImage = {
 };
 
 export type PublicationMetadataMediaAudio = {
+  __typename: 'PublicationMetadataMediaAudio';
   duration: number | null;
   license: PublicationMetadataLicenseType | null;
   credits: string | null;
@@ -2250,7 +2353,15 @@ export type PublicationMetadataMediaAudio = {
   > | null;
 };
 
+export type GeoLocation = {
+  __typename: 'GeoLocation';
+  rawURI: string;
+  latitude: number | null;
+  longitude: number | null;
+};
+
 export type VideoMetadataV3 = {
+  __typename: 'VideoMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -2277,6 +2388,7 @@ export type VideoMetadataV3 = {
 };
 
 export type AudioMetadataV3 = {
+  __typename: 'AudioMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -2302,6 +2414,7 @@ export type AudioMetadataV3 = {
 };
 
 export type ImageMetadataV3 = {
+  __typename: 'ImageMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -2327,6 +2440,7 @@ export type ImageMetadataV3 = {
 };
 
 export type ArticleMetadataV3 = {
+  __typename: 'ArticleMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -2351,6 +2465,7 @@ export type ArticleMetadataV3 = {
 };
 
 export type EventMetadataV3 = {
+  __typename: 'EventMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -2371,13 +2486,14 @@ export type EventMetadataV3 = {
     | MetadataStringAttribute
   > | null;
   encryptedWith: PublicationMetadataLitEncryption | null;
-  geographic: { latitude: number | null; longitude: number | null } | null;
+  geographic: GeoLocation | null;
   attachments: Array<
     PublicationMetadataMediaAudio | PublicationMetadataMediaImage | PublicationMetadataMediaVideo
   > | null;
 };
 
 export type LinkMetadataV3 = {
+  __typename: 'LinkMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -2402,6 +2518,7 @@ export type LinkMetadataV3 = {
 };
 
 export type EmbedMetadataV3 = {
+  __typename: 'EmbedMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -2426,6 +2543,7 @@ export type EmbedMetadataV3 = {
 };
 
 export type CheckingInMetadataV3 = {
+  __typename: 'CheckingInMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -2444,13 +2562,14 @@ export type CheckingInMetadataV3 = {
     | MetadataStringAttribute
   > | null;
   encryptedWith: PublicationMetadataLitEncryption | null;
-  geographic: { latitude: number | null; longitude: number | null } | null;
+  geographic: GeoLocation | null;
   attachments: Array<
     PublicationMetadataMediaAudio | PublicationMetadataMediaImage | PublicationMetadataMediaVideo
   > | null;
 };
 
 export type TextOnlyMetadataV3 = {
+  __typename: 'TextOnlyMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -2470,7 +2589,17 @@ export type TextOnlyMetadataV3 = {
   encryptedWith: PublicationMetadataLitEncryption | null;
 };
 
+export type ThreeDMetadataV3Asset = {
+  __typename: 'ThreeDMetadataV3Asset';
+  uri: string;
+  zipPath: string | null;
+  playerURL: string;
+  format: string;
+  license: PublicationMetadataLicenseType | null;
+};
+
 export type ThreeDMetadataV3 = {
+  __typename: 'ThreeDMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -2488,19 +2617,14 @@ export type ThreeDMetadataV3 = {
     | MetadataStringAttribute
   > | null;
   encryptedWith: PublicationMetadataLitEncryption | null;
-  assets: Array<{
-    uri: string;
-    zipPath: string | null;
-    playerURL: string;
-    format: string;
-    license: PublicationMetadataLicenseType | null;
-  }>;
+  assets: Array<ThreeDMetadataV3Asset>;
   attachments: Array<
     PublicationMetadataMediaAudio | PublicationMetadataMediaImage | PublicationMetadataMediaVideo
   > | null;
 };
 
 export type StoryMetadataV3 = {
+  __typename: 'StoryMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -2525,6 +2649,7 @@ export type StoryMetadataV3 = {
 };
 
 export type TransactionMetadataV3 = {
+  __typename: 'TransactionMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -2551,6 +2676,7 @@ export type TransactionMetadataV3 = {
 };
 
 export type MintMetadataV3 = {
+  __typename: 'MintMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -2575,6 +2701,7 @@ export type MintMetadataV3 = {
 };
 
 export type SpaceMetadataV3 = {
+  __typename: 'SpaceMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -2601,6 +2728,7 @@ export type SpaceMetadataV3 = {
 };
 
 export type LiveStreamMetadataV3 = {
+  __typename: 'LiveStreamMetadataV3';
   id: string;
   rawURI: string;
   locale: string;
@@ -2630,6 +2758,7 @@ export type LiveStreamMetadataV3 = {
 };
 
 export type PublicationStats = {
+  __typename: 'PublicationStats';
   id: PublicationId;
   comments: number;
   mirrors: number;
@@ -2689,7 +2818,7 @@ export type Post = {
   stats: PublicationStats;
 };
 
-export type CommentBase = {
+export type CommentFields = {
   __typename: 'Comment';
   id: PublicationId;
   isHidden: boolean;
@@ -2699,6 +2828,7 @@ export type CommentBase = {
   momoka: MomokaInfo | null;
   by: Profile;
   operations: PublicationOperations;
+  root: Post;
   metadata:
     | ArticleMetadataV3
     | AudioMetadataV3
@@ -2735,14 +2865,13 @@ export type CommentBase = {
     | FollowOnlyReferenceModuleSettings
     | UnknownReferenceModuleSettings
     | null;
+  stats: PublicationStats;
 };
 
 export type Comment = {
-  root: Post;
-  commentOn: CommentBase | Post | QuoteBase;
-  firstComment: CommentBase | null;
-  stats: PublicationStats;
-} & CommentBase;
+  firstComment: CommentFields | null;
+  commentOn: CommentFields | Post | QuoteFields;
+} & CommentFields;
 
 export type Mirror = {
   __typename: 'Mirror';
@@ -2756,7 +2885,7 @@ export type Mirror = {
   mirrorOn: Comment | Post | Quote;
 };
 
-export type QuoteBase = {
+export type QuoteFields = {
   __typename: 'Quote';
   id: PublicationId;
   isHidden: boolean;
@@ -2802,12 +2931,10 @@ export type QuoteBase = {
     | FollowOnlyReferenceModuleSettings
     | UnknownReferenceModuleSettings
     | null;
+  stats: PublicationStats;
 };
 
-export type Quote = {
-  quoteOn: CommentBase | Post | QuoteBase;
-  stats: PublicationStats;
-} & QuoteBase;
+export type Quote = { quoteOn: CommentFields | Post | QuoteFields } & QuoteFields;
 
 export type Eip712TypedDataDomain = {
   name: string;
@@ -2850,6 +2977,12 @@ export type CreateMomokaPublicationResult = {
   momokaId: string;
 };
 
+export type ImageTransformParam = {
+  height: ImageSizeTransform | null;
+  width: ImageSizeTransform | null;
+  keepAspectRatio: boolean | null;
+};
+
 export type InjectCommonQueryParams = {
   fxRateFor: SupportedFiatType | null;
   profileCoverSize: ImageTransformParam | null;
@@ -2858,13 +2991,22 @@ export type InjectCommonQueryParams = {
   imageMediumSize: ImageTransformParam | null;
 };
 
+export type ReactedResult = {
+  __typename: 'ReactedResult';
+  reaction: PublicationReactionType;
+  reactedAt: string;
+};
+
+export type ProfileReactedResult = {
+  __typename: 'ProfileReactedResult';
+  profile: Profile;
+  reactions: Array<ReactedResult>;
+};
+
 export type ReactionNotification = {
   __typename: 'ReactionNotification';
   id: string;
-  reactions: Array<{
-    profile: Profile;
-    reactions: Array<{ reaction: PublicationReactionType; reactedAt: string }>;
-  }>;
+  reactions: Array<ProfileReactedResult>;
   publication: Comment | Post | Quote;
 };
 
@@ -2874,16 +3016,24 @@ export type CommentNotification = {
   comment: Comment;
 };
 
+export type ProfileMirrorResult = {
+  __typename: 'ProfileMirrorResult';
+  mirrorId: PublicationId;
+  mirroredAt: string;
+  profile: Profile;
+};
+
 export type MirrorNotification = {
   __typename: 'MirrorNotification';
   id: string;
-  mirrors: Array<{ mirrorId: PublicationId; mirroredAt: string; profile: Profile }>;
+  mirrors: Array<ProfileMirrorResult>;
   publication: Comment | Post | Quote;
 };
 
 export type QuoteNotification = { __typename: 'QuoteNotification'; id: string; quote: Quote };
 
 export type OpenActionProfileActed = {
+  __typename: 'OpenActionProfileActed';
   actedAt: string;
   by: Profile;
   action:
@@ -2935,11 +3085,15 @@ export type NotificationsData = {
   };
 } & InjectCommonQueryParams;
 
-export type ProfileManager = { address: EvmAddress };
+export type ProfilesManager = { address: EvmAddress };
 
-export type CreateProfileWithHandleErrorResult = { reason: CreateProfileWithHandleErrorReasonType };
+export type CreateProfileWithHandleErrorResult = {
+  __typename: 'CreateProfileWithHandleErrorResult';
+  reason: CreateProfileWithHandleErrorReasonType;
+};
 
 export type CreateOnchainSetProfileMetadataBroadcastItemResult = {
+  __typename: 'CreateOnchainSetProfileMetadataBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -2950,6 +3104,7 @@ export type CreateOnchainSetProfileMetadataBroadcastItemResult = {
 };
 
 export type CreateChangeProfileManagersBroadcastItemResult = {
+  __typename: 'CreateChangeProfileManagersBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -2968,6 +3123,7 @@ export type CreateChangeProfileManagersBroadcastItemResult = {
 };
 
 export type CreateBlockProfilesBroadcastItemResult = {
+  __typename: 'CreateBlockProfilesBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -2984,6 +3140,7 @@ export type CreateBlockProfilesBroadcastItemResult = {
 };
 
 export type CreateUnblockProfilesBroadcastItemResult = {
+  __typename: 'CreateUnblockProfilesBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -3000,6 +3157,7 @@ export type CreateUnblockProfilesBroadcastItemResult = {
 };
 
 export type CreateFollowBroadcastItemResult = {
+  __typename: 'CreateFollowBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -3017,6 +3175,7 @@ export type CreateFollowBroadcastItemResult = {
 };
 
 export type CreateUnfollowBroadcastItemResult = {
+  __typename: 'CreateUnfollowBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -3032,6 +3191,7 @@ export type CreateUnfollowBroadcastItemResult = {
 };
 
 export type CreateSetFollowModuleBroadcastItemResult = {
+  __typename: 'CreateSetFollowModuleBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -3048,6 +3208,7 @@ export type CreateSetFollowModuleBroadcastItemResult = {
 };
 
 export type CreateHandleLinkToProfileBroadcastItemResult = {
+  __typename: 'CreateHandleLinkToProfileBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -3058,6 +3219,7 @@ export type CreateHandleLinkToProfileBroadcastItemResult = {
 };
 
 export type CreateHandleUnlinkFromProfileBroadcastItemResult = {
+  __typename: 'CreateHandleUnlinkFromProfileBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -3065,12 +3227,6 @@ export type CreateHandleUnlinkFromProfileBroadcastItemResult = {
     domain: Eip712TypedDataDomain;
     value: { nonce: number; deadline: number; profileId: ProfileId; handleId: string };
   };
-};
-
-export type ImageTransformParam = {
-  height: ImageSizeTransform | null;
-  width: ImageSizeTransform | null;
-  keepAspectRatio: boolean | null;
 };
 
 export type ProfileVariables = Exact<{
@@ -3102,7 +3258,7 @@ export type ProfileManagersVariables = Exact<{
 }>;
 
 export type ProfileManagersData = {
-  result: { items: Array<ProfileManager>; pageInfo: PaginatedResultInfo };
+  result: { items: Array<ProfilesManager>; pageInfo: PaginatedResultInfo };
 };
 
 export type ProfileRecommendationsVariables = Exact<{
@@ -3349,9 +3505,13 @@ export type CreateHandleUnlinkFromProfileTypedDataData = {
   result: CreateHandleUnlinkFromProfileBroadcastItemResult;
 };
 
-export type TagResult = { tag: string; total: number };
+export type TagResult = { __typename: 'TagResult'; tag: string; total: number };
 
-export type PublicationValidateMetadataResult = { valid: boolean; reason: string | null };
+export type PublicationValidateMetadataResult = {
+  __typename: 'PublicationValidateMetadataResult';
+  valid: boolean;
+  reason: string | null;
+};
 
 export type PublicationVariables = Exact<{
   request: PublicationRequest;
@@ -3399,6 +3559,7 @@ export type ValidatePublicationMetadataVariables = Exact<{
 export type ValidatePublicationMetadataData = { result: PublicationValidateMetadataResult };
 
 export type CreateOnchainPostBroadcastItemResult = {
+  __typename: 'CreateOnchainPostBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -3418,6 +3579,7 @@ export type CreateOnchainPostBroadcastItemResult = {
 };
 
 export type CreateOnchainCommentBroadcastItemResult = {
+  __typename: 'CreateOnchainCommentBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -3442,6 +3604,7 @@ export type CreateOnchainCommentBroadcastItemResult = {
 };
 
 export type CreateOnchainMirrorBroadcastItemResult = {
+  __typename: 'CreateOnchainMirrorBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -3462,6 +3625,7 @@ export type CreateOnchainMirrorBroadcastItemResult = {
 };
 
 export type CreateOnchainQuoteBroadcastItemResult = {
+  __typename: 'CreateOnchainQuoteBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -3486,6 +3650,7 @@ export type CreateOnchainQuoteBroadcastItemResult = {
 };
 
 export type CreateMomokaPostBroadcastItemResult = {
+  __typename: 'CreateMomokaPostBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -3505,6 +3670,7 @@ export type CreateMomokaPostBroadcastItemResult = {
 };
 
 export type CreateMomokaCommentBroadcastItemResult = {
+  __typename: 'CreateMomokaCommentBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -3529,6 +3695,7 @@ export type CreateMomokaCommentBroadcastItemResult = {
 };
 
 export type CreateMomokaMirrorBroadcastItemResult = {
+  __typename: 'CreateMomokaMirrorBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -3549,6 +3716,7 @@ export type CreateMomokaMirrorBroadcastItemResult = {
 };
 
 export type CreateMomokaQuoteBroadcastItemResult = {
+  __typename: 'CreateMomokaQuoteBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -3573,6 +3741,7 @@ export type CreateMomokaQuoteBroadcastItemResult = {
 };
 
 export type CreateLegacyCollectBroadcastItemResult = {
+  __typename: 'CreateLegacyCollectBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: CreateActOnOpenActionEip712TypedData;
@@ -3731,9 +3900,17 @@ export type RemoveReactionVariables = Exact<{
 
 export type RemoveReactionData = { removeReaction: void | null };
 
-export type ProfileReactionResult = { reaction: PublicationReactionType; reactionAt: string };
+export type ProfileReactionResult = {
+  __typename: 'ProfileReactionResult';
+  reaction: PublicationReactionType;
+  reactionAt: string;
+};
 
-export type ProfileWhoReactedResult = { profile: Profile; reactions: Array<ProfileReactionResult> };
+export type ProfileWhoReactedResult = {
+  __typename: 'ProfileWhoReactedResult';
+  profile: Profile;
+  reactions: Array<ProfileReactionResult>;
+};
 
 export type WhoReactedPublicationVariables = Exact<{
   for: Scalars['PublicationId'];
@@ -3750,9 +3927,10 @@ export type WhoReactedPublicationData = {
   result: { items: Array<ProfileWhoReactedResult>; pageInfo: PaginatedResultInfo };
 } & InjectCommonQueryParams;
 
-export type RevenueAggregate = { total: Amount };
+export type RevenueAggregate = { __typename: 'RevenueAggregate'; total: Amount };
 
 export type PublicationRevenue = {
+  __typename: 'PublicationRevenue';
   publication: Comment | Mirror | Post | Quote;
   revenue: Array<RevenueAggregate>;
 };
@@ -3827,6 +4005,7 @@ export type SearchProfilesData = {
 } & InjectCommonQueryParams;
 
 export type LensTransactionResult = {
+  __typename: 'LensTransactionResult';
   status: LensTransactionStatusType;
   txHash: string;
   reason: LensTransactionFailureType | null;
@@ -3839,7 +4018,12 @@ export type TxIdToTxHashVariables = Exact<{
 
 export type TxIdToTxHashData = { result: string | null };
 
-export type RelayQueueResult = { key: RelayRoleKey; queue: number; relay: NetworkAddress };
+export type RelayQueueResult = {
+  __typename: 'RelayQueueResult';
+  key: RelayRoleKey;
+  queue: number;
+  relay: NetworkAddress;
+};
 
 export type RelayQueuesVariables = Exact<{ [key: string]: never }>;
 
@@ -3863,7 +4047,7 @@ export type BroadcastOnMomokaVariables = Exact<{
 
 export type BroadcastOnMomokaData = { result: CreateMomokaPublicationResult | RelayError };
 
-export type HandleResult = { handle: string };
+export type HandleResult = { __typename: 'HandleResult'; handle: string };
 
 export type OwnedHandlesVariables = Exact<{
   request: OwnedHandlesRequest;
@@ -3886,6 +4070,7 @@ export type ProfilesManagedData = {
 };
 
 export type UserSigNonces = {
+  __typename: 'UserSigNonces';
   lensHubOnchainSigNonce: number;
   lensTokenHandleRegistryOnchainSigNonce: number;
 };
@@ -3896,34 +4081,86 @@ export type UserSigNoncesData = { result: UserSigNonces };
 
 export const FragmentAuthChallenge = /*#__PURE__*/ gql`
   fragment AuthChallenge on AuthChallengeResult {
+    __typename
     id
     text
   }
 `;
 export const FragmentApp = /*#__PURE__*/ gql`
   fragment App on App {
+    __typename
     id
   }
 `;
 export const FragmentMomokaInfo = /*#__PURE__*/ gql`
   fragment MomokaInfo on MomokaInfo {
+    __typename
     proof
   }
 `;
 export const FragmentNetworkAddress = /*#__PURE__*/ gql`
   fragment NetworkAddress on NetworkAddress {
+    __typename
     address
     chainId
   }
 `;
 export const FragmentOptimisticStatusResult = /*#__PURE__*/ gql`
   fragment OptimisticStatusResult on OptimisticStatusResult {
+    __typename
     value
     isFinalisedOnchain
   }
 `;
+export const FragmentProfileOperations = /*#__PURE__*/ gql`
+  fragment ProfileOperations on ProfileOperations {
+    __typename
+    id
+    isBlockedByMe {
+      ...OptimisticStatusResult
+    }
+    isFollowedByMe {
+      ...OptimisticStatusResult
+    }
+    isFollowingMe {
+      ...OptimisticStatusResult
+    }
+    canBlock
+    canUnblock
+    canFollow
+    canUnfollow
+  }
+  ${FragmentOptimisticStatusResult}
+`;
+export const FragmentProfileGuardianResult = /*#__PURE__*/ gql`
+  fragment ProfileGuardianResult on ProfileGuardianResult {
+    __typename
+    protected
+    cooldownEndsOn
+  }
+`;
+export const FragmentProfileOnchainIdentity = /*#__PURE__*/ gql`
+  fragment ProfileOnchainIdentity on ProfileOnchainIdentity {
+    __typename
+    proofOfHumanity
+    ens {
+      name
+    }
+    sybilDotOrg {
+      source {
+        twitter {
+          handle
+        }
+      }
+    }
+    worldcoin {
+      isHuman
+    }
+  }
+`;
 export const FragmentErc20 = /*#__PURE__*/ gql`
   fragment Erc20 on Erc20 {
+    __typename
     name
     symbol
     decimals
@@ -3935,6 +4172,7 @@ export const FragmentErc20 = /*#__PURE__*/ gql`
 `;
 export const FragmentFiat = /*#__PURE__*/ gql`
   fragment Fiat on Fiat {
+    __typename
     name
     symbol
     decimals
@@ -3942,6 +4180,7 @@ export const FragmentFiat = /*#__PURE__*/ gql`
 `;
 export const FragmentFiatAmount = /*#__PURE__*/ gql`
   fragment FiatAmount on FiatAmount {
+    __typename
     asset {
       ...Fiat
     }
@@ -3951,6 +4190,7 @@ export const FragmentFiatAmount = /*#__PURE__*/ gql`
 `;
 export const FragmentAmount = /*#__PURE__*/ gql`
   fragment Amount on Amount {
+    __typename
     asset {
       ...Erc20
     }
@@ -3964,6 +4204,7 @@ export const FragmentAmount = /*#__PURE__*/ gql`
 `;
 export const FragmentFeeFollowModuleSettings = /*#__PURE__*/ gql`
   fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
+    __typename
     amount {
       ...Amount
     }
@@ -3977,6 +4218,7 @@ export const FragmentFeeFollowModuleSettings = /*#__PURE__*/ gql`
 `;
 export const FragmentRevertFollowModuleSettings = /*#__PURE__*/ gql`
   fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -3985,6 +4227,7 @@ export const FragmentRevertFollowModuleSettings = /*#__PURE__*/ gql`
 `;
 export const FragmentUnknownFollowModuleSettings = /*#__PURE__*/ gql`
   fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -3994,6 +4237,7 @@ export const FragmentUnknownFollowModuleSettings = /*#__PURE__*/ gql`
 `;
 export const FragmentImage = /*#__PURE__*/ gql`
   fragment Image on Image {
+    __typename
     uri
     mimeType
     width
@@ -4030,8 +4274,22 @@ export const FragmentNftImage = /*#__PURE__*/ gql`
   ${FragmentNetworkAddress}
   ${FragmentProfilePictureSet}
 `;
+export const FragmentProfilePicture = /*#__PURE__*/ gql`
+  fragment ProfilePicture on ProfilePicture {
+    __typename
+    ... on ImageSet {
+      ...ProfilePictureSet
+    }
+    ... on NftImage {
+      ...NftImage
+    }
+  }
+  ${FragmentProfilePictureSet}
+  ${FragmentNftImage}
+`;
 export const FragmentProfileCoverSet = /*#__PURE__*/ gql`
   fragment ProfileCoverSet on ImageSet {
+    __typename
     raw {
       ...Image
     }
@@ -4079,8 +4337,48 @@ export const FragmentMetadataStringAttribute = /*#__PURE__*/ gql`
     value
   }
 `;
+export const FragmentProfileMetadata = /*#__PURE__*/ gql`
+  fragment ProfileMetadata on ProfileMetadata {
+    __typename
+    appId
+    displayName
+    bio
+    rawURI
+    picture {
+      ...ProfilePicture
+    }
+    coverPicture {
+      ...ProfileCoverSet
+    }
+    attributes {
+      ... on MetadataBooleanAttribute {
+        ...MetadataBooleanAttribute
+      }
+      ... on MetadataDateAttribute {
+        ...MetadataDateAttribute
+      }
+      ... on MetadataNumberAttribute {
+        ...MetadataNumberAttribute
+      }
+      ... on MetadataJSONAttribute {
+        ...MetadataJSONAttribute
+      }
+      ... on MetadataStringAttribute {
+        ...MetadataStringAttribute
+      }
+    }
+  }
+  ${FragmentProfilePicture}
+  ${FragmentProfileCoverSet}
+  ${FragmentMetadataBooleanAttribute}
+  ${FragmentMetadataDateAttribute}
+  ${FragmentMetadataNumberAttribute}
+  ${FragmentMetadataJsonAttribute}
+  ${FragmentMetadataStringAttribute}
+`;
 export const FragmentProfileStats = /*#__PURE__*/ gql`
   fragment ProfileStats on ProfileStats {
+    __typename
     id
     followers
     following
@@ -4096,8 +4394,8 @@ export const FragmentProfileStats = /*#__PURE__*/ gql`
     collects: countOpenActions(request: { anyOf: [{ category: COLLECT }] })
   }
 `;
-export const FragmentProfile = /*#__PURE__*/ gql`
-  fragment Profile on Profile {
+export const FragmentProfileFields = /*#__PURE__*/ gql`
+  fragment ProfileFields on Profile {
     __typename
     id
     ownedBy {
@@ -4106,42 +4404,15 @@ export const FragmentProfile = /*#__PURE__*/ gql`
     txHash
     createdAt
     operations {
-      id
-      isBlockedByMe {
-        ...OptimisticStatusResult
-      }
-      isFollowedByMe {
-        ...OptimisticStatusResult
-      }
-      isFollowingMe {
-        ...OptimisticStatusResult
-      }
-      canBlock
-      canUnblock
-      canFollow
-      canUnfollow
+      ...ProfileOperations
     }
     interests
     guardian {
-      protected
-      cooldownEndsOn
+      ...ProfileGuardianResult
     }
     invitesLeft
     onchainIdentity {
-      proofOfHumanity
-      ens {
-        name
-      }
-      sybilDotOrg {
-        source {
-          twitter {
-            handle
-          }
-        }
-      }
-      worldcoin {
-        isHuman
-      }
+      ...ProfileOnchainIdentity
     }
     followNftAddress {
       ...NetworkAddress
@@ -4158,66 +4429,36 @@ export const FragmentProfile = /*#__PURE__*/ gql`
       }
     }
     metadata {
-      appId
-      displayName
-      bio
-      rawURI
-      picture {
-        ... on ImageSet {
-          ...ProfilePictureSet
-        }
-        ... on NftImage {
-          ...NftImage
-        }
-      }
-      coverPicture {
-        ...ProfileCoverSet
-      }
-      attributes {
-        ... on MetadataBooleanAttribute {
-          ...MetadataBooleanAttribute
-        }
-        ... on MetadataDateAttribute {
-          ...MetadataDateAttribute
-        }
-        ... on MetadataNumberAttribute {
-          ...MetadataNumberAttribute
-        }
-        ... on MetadataJSONAttribute {
-          ...MetadataJSONAttribute
-        }
-        ... on MetadataStringAttribute {
-          ...MetadataStringAttribute
-        }
-      }
+      ...ProfileMetadata
     }
     handle
     sponsor
     lensManager
-    invitedBy {
-      id
-    }
     stats(request: { forApps: $activityOn }) {
       ...ProfileStats
     }
   }
   ${FragmentNetworkAddress}
-  ${FragmentOptimisticStatusResult}
+  ${FragmentProfileOperations}
+  ${FragmentProfileGuardianResult}
+  ${FragmentProfileOnchainIdentity}
   ${FragmentFeeFollowModuleSettings}
   ${FragmentRevertFollowModuleSettings}
   ${FragmentUnknownFollowModuleSettings}
-  ${FragmentProfilePictureSet}
-  ${FragmentNftImage}
-  ${FragmentProfileCoverSet}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
+  ${FragmentProfileMetadata}
   ${FragmentProfileStats}
+`;
+export const FragmentProfile = /*#__PURE__*/ gql`
+  fragment Profile on Profile {
+    invitedBy {
+      ...ProfileFields
+    }
+  }
+  ${FragmentProfileFields}
 `;
 export const FragmentCanDecryptResponse = /*#__PURE__*/ gql`
   fragment CanDecryptResponse on CanDecryptResponse {
+    __typename
     result
     reasons
     extraDetails
@@ -4225,6 +4466,7 @@ export const FragmentCanDecryptResponse = /*#__PURE__*/ gql`
 `;
 export const FragmentPublicationOperations = /*#__PURE__*/ gql`
   fragment PublicationOperations on PublicationOperations {
+    __typename
     isNotInterested
     hasBookmarked
     hasReported
@@ -4246,6 +4488,7 @@ export const FragmentPublicationOperations = /*#__PURE__*/ gql`
 `;
 export const FragmentPublicationMarketplaceMetadataAttribute = /*#__PURE__*/ gql`
   fragment PublicationMarketplaceMetadataAttribute on PublicationMarketplaceMetadataAttribute {
+    __typename
     displayType
     traitType
     value
@@ -4253,6 +4496,7 @@ export const FragmentPublicationMarketplaceMetadataAttribute = /*#__PURE__*/ gql
 `;
 export const FragmentImageSet = /*#__PURE__*/ gql`
   fragment ImageSet on ImageSet {
+    __typename
     raw {
       ...Image
     }
@@ -4270,6 +4514,7 @@ export const FragmentImageSet = /*#__PURE__*/ gql`
 `;
 export const FragmentMarketplaceMetadata = /*#__PURE__*/ gql`
   fragment MarketplaceMetadata on MarketplaceMetadata {
+    __typename
     description
     externalURL
     name
@@ -4444,18 +4689,21 @@ export const FragmentPublicationMetadataLitEncryption = /*#__PURE__*/ gql`
 `;
 export const FragmentEncryptableAudio = /*#__PURE__*/ gql`
   fragment EncryptableAudio on EncryptableAudio {
+    __typename
     mimeType
     uri
   }
 `;
 export const FragmentAudio = /*#__PURE__*/ gql`
   fragment Audio on Audio {
+    __typename
     uri
     mimeType
   }
 `;
 export const FragmentEncryptableAudioSet = /*#__PURE__*/ gql`
   fragment EncryptableAudioSet on EncryptableAudioSet {
+    __typename
     raw {
       ...EncryptableAudio
     }
@@ -4468,6 +4716,7 @@ export const FragmentEncryptableAudioSet = /*#__PURE__*/ gql`
 `;
 export const FragmentEncryptableImage = /*#__PURE__*/ gql`
   fragment EncryptableImage on EncryptableImage {
+    __typename
     uri
     mimeType
     width
@@ -4476,6 +4725,7 @@ export const FragmentEncryptableImage = /*#__PURE__*/ gql`
 `;
 export const FragmentEncryptableImageSet = /*#__PURE__*/ gql`
   fragment EncryptableImageSet on EncryptableImageSet {
+    __typename
     raw {
       ...EncryptableImage
     }
@@ -4488,6 +4738,7 @@ export const FragmentEncryptableImageSet = /*#__PURE__*/ gql`
 `;
 export const FragmentPublicationMetadataMediaAudio = /*#__PURE__*/ gql`
   fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
+    __typename
     audio {
       ...EncryptableAudioSet
     }
@@ -4529,18 +4780,21 @@ export const FragmentPublicationMetadataMediaAudio = /*#__PURE__*/ gql`
 `;
 export const FragmentEncryptableVideo = /*#__PURE__*/ gql`
   fragment EncryptableVideo on EncryptableVideo {
+    __typename
     mimeType
     uri
   }
 `;
 export const FragmentVideo = /*#__PURE__*/ gql`
   fragment Video on Video {
+    __typename
     uri
     mimeType
   }
 `;
 export const FragmentEncryptableVideoSet = /*#__PURE__*/ gql`
   fragment EncryptableVideoSet on EncryptableVideoSet {
+    __typename
     raw {
       ...EncryptableVideo
     }
@@ -4553,6 +4807,7 @@ export const FragmentEncryptableVideoSet = /*#__PURE__*/ gql`
 `;
 export const FragmentPublicationMetadataMediaVideo = /*#__PURE__*/ gql`
   fragment PublicationMetadataMediaVideo on PublicationMetadataMediaVideo {
+    __typename
     video {
       ...EncryptableVideoSet
     }
@@ -4590,6 +4845,7 @@ export const FragmentPublicationMetadataMediaVideo = /*#__PURE__*/ gql`
 `;
 export const FragmentPublicationMetadataMediaImage = /*#__PURE__*/ gql`
   fragment PublicationMetadataMediaImage on PublicationMetadataMediaImage {
+    __typename
     image {
       ...EncryptableImageSet
     }
@@ -4621,6 +4877,7 @@ export const FragmentPublicationMetadataMediaImage = /*#__PURE__*/ gql`
 `;
 export const FragmentAudioMetadataV3 = /*#__PURE__*/ gql`
   fragment AudioMetadataV3 on AudioMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -4683,6 +4940,7 @@ export const FragmentAudioMetadataV3 = /*#__PURE__*/ gql`
 `;
 export const FragmentVideoMetadataV3 = /*#__PURE__*/ gql`
   fragment VideoMetadataV3 on VideoMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -4746,6 +5004,7 @@ export const FragmentVideoMetadataV3 = /*#__PURE__*/ gql`
 `;
 export const FragmentImageMetadataV3 = /*#__PURE__*/ gql`
   fragment ImageMetadataV3 on ImageMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -4808,6 +5067,7 @@ export const FragmentImageMetadataV3 = /*#__PURE__*/ gql`
 `;
 export const FragmentArticleMetadataV3 = /*#__PURE__*/ gql`
   fragment ArticleMetadataV3 on ArticleMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -4865,8 +5125,17 @@ export const FragmentArticleMetadataV3 = /*#__PURE__*/ gql`
   ${FragmentPublicationMetadataMediaImage}
   ${FragmentPublicationMetadataMediaAudio}
 `;
+export const FragmentGeoLocation = /*#__PURE__*/ gql`
+  fragment GeoLocation on GeoLocation {
+    __typename
+    rawURI
+    latitude
+    longitude
+  }
+`;
 export const FragmentEventMetadataV3 = /*#__PURE__*/ gql`
   fragment EventMetadataV3 on EventMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -4900,8 +5169,7 @@ export const FragmentEventMetadataV3 = /*#__PURE__*/ gql`
       }
     }
     geographic {
-      latitude
-      longitude
+      ...GeoLocation
     }
     startsAt
     endsAt
@@ -4926,12 +5194,14 @@ export const FragmentEventMetadataV3 = /*#__PURE__*/ gql`
   ${FragmentMetadataJsonAttribute}
   ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
+  ${FragmentGeoLocation}
   ${FragmentPublicationMetadataMediaVideo}
   ${FragmentPublicationMetadataMediaImage}
   ${FragmentPublicationMetadataMediaAudio}
 `;
 export const FragmentLinkMetadataV3 = /*#__PURE__*/ gql`
   fragment LinkMetadataV3 on LinkMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -4991,6 +5261,7 @@ export const FragmentLinkMetadataV3 = /*#__PURE__*/ gql`
 `;
 export const FragmentEmbedMetadataV3 = /*#__PURE__*/ gql`
   fragment EmbedMetadataV3 on EmbedMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -5050,6 +5321,7 @@ export const FragmentEmbedMetadataV3 = /*#__PURE__*/ gql`
 `;
 export const FragmentCheckingInMetadataV3 = /*#__PURE__*/ gql`
   fragment CheckingInMetadataV3 on CheckingInMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -5085,8 +5357,7 @@ export const FragmentCheckingInMetadataV3 = /*#__PURE__*/ gql`
     content
     location
     geographic {
-      latitude
-      longitude
+      ...GeoLocation
     }
     attachments {
       ... on PublicationMetadataMediaVideo {
@@ -5107,12 +5378,14 @@ export const FragmentCheckingInMetadataV3 = /*#__PURE__*/ gql`
   ${FragmentMetadataJsonAttribute}
   ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
+  ${FragmentGeoLocation}
   ${FragmentPublicationMetadataMediaVideo}
   ${FragmentPublicationMetadataMediaImage}
   ${FragmentPublicationMetadataMediaAudio}
 `;
 export const FragmentTextOnlyMetadataV3 = /*#__PURE__*/ gql`
   fragment TextOnlyMetadataV3 on TextOnlyMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -5155,8 +5428,19 @@ export const FragmentTextOnlyMetadataV3 = /*#__PURE__*/ gql`
   ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
 `;
+export const FragmentThreeDMetadataV3Asset = /*#__PURE__*/ gql`
+  fragment ThreeDMetadataV3Asset on ThreeDMetadataV3Asset {
+    __typename
+    uri
+    zipPath
+    playerURL
+    format
+    license
+  }
+`;
 export const FragmentThreeDMetadataV3 = /*#__PURE__*/ gql`
   fragment ThreeDMetadataV3 on ThreeDMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -5191,11 +5475,7 @@ export const FragmentThreeDMetadataV3 = /*#__PURE__*/ gql`
     }
     content
     assets {
-      uri
-      zipPath
-      playerURL
-      format
-      license
+      ...ThreeDMetadataV3Asset
     }
     attachments {
       ... on PublicationMetadataMediaVideo {
@@ -5216,12 +5496,14 @@ export const FragmentThreeDMetadataV3 = /*#__PURE__*/ gql`
   ${FragmentMetadataJsonAttribute}
   ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
+  ${FragmentThreeDMetadataV3Asset}
   ${FragmentPublicationMetadataMediaVideo}
   ${FragmentPublicationMetadataMediaImage}
   ${FragmentPublicationMetadataMediaAudio}
 `;
 export const FragmentStoryMetadataV3 = /*#__PURE__*/ gql`
   fragment StoryMetadataV3 on StoryMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -5280,6 +5562,7 @@ export const FragmentStoryMetadataV3 = /*#__PURE__*/ gql`
 `;
 export const FragmentTransactionMetadataV3 = /*#__PURE__*/ gql`
   fragment TransactionMetadataV3 on TransactionMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -5341,6 +5624,7 @@ export const FragmentTransactionMetadataV3 = /*#__PURE__*/ gql`
 `;
 export const FragmentMintMetadataV3 = /*#__PURE__*/ gql`
   fragment MintMetadataV3 on MintMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -5400,6 +5684,7 @@ export const FragmentMintMetadataV3 = /*#__PURE__*/ gql`
 `;
 export const FragmentSpaceMetadataV3 = /*#__PURE__*/ gql`
   fragment SpaceMetadataV3 on SpaceMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -5461,6 +5746,7 @@ export const FragmentSpaceMetadataV3 = /*#__PURE__*/ gql`
 `;
 export const FragmentLiveStreamMetadataV3 = /*#__PURE__*/ gql`
   fragment LiveStreamMetadataV3 on LiveStreamMetadataV3 {
+    __typename
     id
     rawURI
     locale
@@ -5525,6 +5811,7 @@ export const FragmentLiveStreamMetadataV3 = /*#__PURE__*/ gql`
 `;
 export const FragmentLegacyFreeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyFreeCollectModuleSettings on LegacyFreeCollectModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -5534,6 +5821,7 @@ export const FragmentLegacyFreeCollectModuleSettings = /*#__PURE__*/ gql`
 `;
 export const FragmentLegacyFeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyFeeCollectModuleSettings on LegacyFeeCollectModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -5549,6 +5837,7 @@ export const FragmentLegacyFeeCollectModuleSettings = /*#__PURE__*/ gql`
 `;
 export const FragmentLegacyLimitedFeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyLimitedFeeCollectModuleSettings on LegacyLimitedFeeCollectModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -5565,8 +5854,9 @@ export const FragmentLegacyLimitedFeeCollectModuleSettings = /*#__PURE__*/ gql`
 `;
 export const FragmentLegacyLimitedTimedFeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyLimitedTimedFeeCollectModuleSettings on LegacyLimitedTimedFeeCollectModuleSettings {
+    __typename
     contract {
-      address
+      ...NetworkAddress
     }
     collectLimit
     amount {
@@ -5577,10 +5867,12 @@ export const FragmentLegacyLimitedTimedFeeCollectModuleSettings = /*#__PURE__*/ 
     followerOnly
     endTimestamp
   }
+  ${FragmentNetworkAddress}
   ${FragmentAmount}
 `;
 export const FragmentLegacyRevertCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyRevertCollectModuleSettings on LegacyRevertCollectModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -5589,6 +5881,7 @@ export const FragmentLegacyRevertCollectModuleSettings = /*#__PURE__*/ gql`
 `;
 export const FragmentLegacyTimedFeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyTimedFeeCollectModuleSettings on LegacyTimedFeeCollectModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -5603,8 +5896,15 @@ export const FragmentLegacyTimedFeeCollectModuleSettings = /*#__PURE__*/ gql`
   ${FragmentNetworkAddress}
   ${FragmentAmount}
 `;
+export const FragmentRecipient = /*#__PURE__*/ gql`
+  fragment Recipient on RecipientDataOutput {
+    recipient
+    split
+  }
+`;
 export const FragmentLegacyMultirecipientFeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyMultirecipientFeeCollectModuleSettings on LegacyMultirecipientFeeCollectModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -5612,8 +5912,7 @@ export const FragmentLegacyMultirecipientFeeCollectModuleSettings = /*#__PURE__*
       ...Amount
     }
     recipients {
-      recipient
-      split
+      ...Recipient
     }
     referralFee
     followerOnly
@@ -5622,9 +5921,11 @@ export const FragmentLegacyMultirecipientFeeCollectModuleSettings = /*#__PURE__*
   }
   ${FragmentNetworkAddress}
   ${FragmentAmount}
+  ${FragmentRecipient}
 `;
 export const FragmentLegacySimpleCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacySimpleCollectModuleSettings on LegacySimpleCollectModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -5642,6 +5943,7 @@ export const FragmentLegacySimpleCollectModuleSettings = /*#__PURE__*/ gql`
 `;
 export const FragmentLegacyErc4626FeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyERC4626FeeCollectModuleSettings on LegacyERC4626FeeCollectModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -5662,6 +5964,7 @@ export const FragmentLegacyErc4626FeeCollectModuleSettings = /*#__PURE__*/ gql`
 `;
 export const FragmentLegacyAaveFeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyAaveFeeCollectModuleSettings on LegacyAaveFeeCollectModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -5679,6 +5982,7 @@ export const FragmentLegacyAaveFeeCollectModuleSettings = /*#__PURE__*/ gql`
 `;
 export const FragmentMultirecipientFeeCollectOpenActionSettings = /*#__PURE__*/ gql`
   fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectOpenActionSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -5686,8 +5990,7 @@ export const FragmentMultirecipientFeeCollectOpenActionSettings = /*#__PURE__*/ 
       ...Amount
     }
     recipients {
-      recipient
-      split
+      ...Recipient
     }
     referralFee
     followerOnly
@@ -5696,9 +5999,11 @@ export const FragmentMultirecipientFeeCollectOpenActionSettings = /*#__PURE__*/ 
   }
   ${FragmentNetworkAddress}
   ${FragmentAmount}
+  ${FragmentRecipient}
 `;
 export const FragmentSimpleCollectOpenActionSettings = /*#__PURE__*/ gql`
   fragment SimpleCollectOpenActionSettings on SimpleCollectOpenActionSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -5716,6 +6021,7 @@ export const FragmentSimpleCollectOpenActionSettings = /*#__PURE__*/ gql`
 `;
 export const FragmentUnknownOpenActionModuleSettings = /*#__PURE__*/ gql`
   fragment UnknownOpenActionModuleSettings on UnknownOpenActionModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -5725,6 +6031,7 @@ export const FragmentUnknownOpenActionModuleSettings = /*#__PURE__*/ gql`
 `;
 export const FragmentFollowOnlyReferenceModuleSettings = /*#__PURE__*/ gql`
   fragment FollowOnlyReferenceModuleSettings on FollowOnlyReferenceModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -5733,6 +6040,7 @@ export const FragmentFollowOnlyReferenceModuleSettings = /*#__PURE__*/ gql`
 `;
 export const FragmentDegreesOfSeparationReferenceModuleSettings = /*#__PURE__*/ gql`
   fragment DegreesOfSeparationReferenceModuleSettings on DegreesOfSeparationReferenceModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -5744,6 +6052,7 @@ export const FragmentDegreesOfSeparationReferenceModuleSettings = /*#__PURE__*/ 
 `;
 export const FragmentUnknownReferenceModuleSettings = /*#__PURE__*/ gql`
   fragment UnknownReferenceModuleSettings on UnknownReferenceModuleSettings {
+    __typename
     contract {
       ...NetworkAddress
     }
@@ -5753,6 +6062,7 @@ export const FragmentUnknownReferenceModuleSettings = /*#__PURE__*/ gql`
 `;
 export const FragmentPublicationStats = /*#__PURE__*/ gql`
   fragment PublicationStats on PublicationStats {
+    __typename
     id
     comments
     mirrors
@@ -5922,8 +6232,8 @@ export const FragmentPost = /*#__PURE__*/ gql`
   ${FragmentUnknownReferenceModuleSettings}
   ${FragmentPublicationStats}
 `;
-export const FragmentCommentBase = /*#__PURE__*/ gql`
-  fragment CommentBase on Comment {
+export const FragmentCommentFields = /*#__PURE__*/ gql`
+  fragment CommentFields on Comment {
     __typename
     id
     publishedOn {
@@ -5940,6 +6250,9 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
     }
     operations {
       ...PublicationOperations
+    }
+    root {
+      ...Post
     }
     metadata {
       ... on AudioMetadataV3 {
@@ -6040,11 +6353,15 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
         ...UnknownReferenceModuleSettings
       }
     }
+    stats(request: { metadata: { publishedOn: $activityOn } }) {
+      ...PublicationStats
+    }
   }
   ${FragmentApp}
   ${FragmentMomokaInfo}
   ${FragmentProfile}
   ${FragmentPublicationOperations}
+  ${FragmentPost}
   ${FragmentAudioMetadataV3}
   ${FragmentVideoMetadataV3}
   ${FragmentImageMetadataV3}
@@ -6076,9 +6393,10 @@ export const FragmentCommentBase = /*#__PURE__*/ gql`
   ${FragmentFollowOnlyReferenceModuleSettings}
   ${FragmentDegreesOfSeparationReferenceModuleSettings}
   ${FragmentUnknownReferenceModuleSettings}
+  ${FragmentPublicationStats}
 `;
-export const FragmentQuoteBase = /*#__PURE__*/ gql`
-  fragment QuoteBase on Quote {
+export const FragmentQuoteFields = /*#__PURE__*/ gql`
+  fragment QuoteFields on Quote {
     __typename
     id
     publishedOn {
@@ -6195,6 +6513,9 @@ export const FragmentQuoteBase = /*#__PURE__*/ gql`
         ...UnknownReferenceModuleSettings
       }
     }
+    stats(request: { metadata: { publishedOn: $activityOn } }) {
+      ...PublicationStats
+    }
   }
   ${FragmentApp}
   ${FragmentMomokaInfo}
@@ -6231,58 +6552,48 @@ export const FragmentQuoteBase = /*#__PURE__*/ gql`
   ${FragmentFollowOnlyReferenceModuleSettings}
   ${FragmentDegreesOfSeparationReferenceModuleSettings}
   ${FragmentUnknownReferenceModuleSettings}
+  ${FragmentPublicationStats}
 `;
 export const FragmentComment = /*#__PURE__*/ gql`
   fragment Comment on Comment {
-    ...CommentBase
-    root {
-      ...Post
+    ...CommentFields
+    firstComment {
+      ...CommentFields
     }
     commentOn {
       ... on Post {
         ...Post
       }
       ... on Comment {
-        ...CommentBase
+        ...CommentFields
       }
       ... on Quote {
-        ...QuoteBase
+        ...QuoteFields
       }
     }
-    firstComment {
-      ...CommentBase
-    }
-    stats(request: { metadata: { publishedOn: $activityOn } }) {
-      ...PublicationStats
-    }
   }
-  ${FragmentCommentBase}
+  ${FragmentCommentFields}
   ${FragmentPost}
-  ${FragmentQuoteBase}
-  ${FragmentPublicationStats}
+  ${FragmentQuoteFields}
 `;
 export const FragmentQuote = /*#__PURE__*/ gql`
   fragment Quote on Quote {
-    ...QuoteBase
+    ...QuoteFields
     quoteOn {
       ... on Post {
         ...Post
       }
       ... on Comment {
-        ...CommentBase
+        ...CommentFields
       }
       ... on Quote {
-        ...QuoteBase
+        ...QuoteFields
       }
     }
-    stats(request: { metadata: { publishedOn: $activityOn } }) {
-      ...PublicationStats
-    }
   }
-  ${FragmentQuoteBase}
+  ${FragmentQuoteFields}
   ${FragmentPost}
-  ${FragmentCommentBase}
-  ${FragmentPublicationStats}
+  ${FragmentCommentFields}
 `;
 export const FragmentMirror = /*#__PURE__*/ gql`
   fragment Mirror on Mirror {
@@ -6331,6 +6642,7 @@ export const FragmentReactionEvent = /*#__PURE__*/ gql`
 `;
 export const FragmentFeedItem = /*#__PURE__*/ gql`
   fragment FeedItem on FeedItem {
+    __typename
     id
     root {
       ... on Post {
@@ -6419,18 +6731,32 @@ export const FragmentInjectCommonQueryParams = /*#__PURE__*/ gql`
   }
   ${FragmentImageTransformParam}
 `;
+export const FragmentReactedResult = /*#__PURE__*/ gql`
+  fragment ReactedResult on ReactedResult {
+    __typename
+    reaction
+    reactedAt
+  }
+`;
+export const FragmentProfileReactedResult = /*#__PURE__*/ gql`
+  fragment ProfileReactedResult on ProfileReactedResult {
+    __typename
+    profile {
+      ...Profile
+    }
+    reactions {
+      ...ReactedResult
+    }
+  }
+  ${FragmentProfile}
+  ${FragmentReactedResult}
+`;
 export const FragmentReactionNotification = /*#__PURE__*/ gql`
   fragment ReactionNotification on ReactionNotification {
     __typename
     id
     reactions {
-      profile {
-        ...Profile
-      }
-      reactions {
-        reaction
-        reactedAt
-      }
+      ...ProfileReactedResult
     }
     publication {
       ... on Post {
@@ -6444,7 +6770,7 @@ export const FragmentReactionNotification = /*#__PURE__*/ gql`
       }
     }
   }
-  ${FragmentProfile}
+  ${FragmentProfileReactedResult}
   ${FragmentPost}
   ${FragmentComment}
   ${FragmentQuote}
@@ -6459,16 +6785,23 @@ export const FragmentCommentNotification = /*#__PURE__*/ gql`
   }
   ${FragmentComment}
 `;
+export const FragmentProfileMirrorResult = /*#__PURE__*/ gql`
+  fragment ProfileMirrorResult on ProfileMirrorResult {
+    __typename
+    mirrorId
+    mirroredAt
+    profile {
+      ...Profile
+    }
+  }
+  ${FragmentProfile}
+`;
 export const FragmentMirrorNotification = /*#__PURE__*/ gql`
   fragment MirrorNotification on MirrorNotification {
     __typename
     id
     mirrors {
-      mirrorId
-      mirroredAt
-      profile {
-        ...Profile
-      }
+      ...ProfileMirrorResult
     }
     publication {
       ... on Post {
@@ -6482,7 +6815,7 @@ export const FragmentMirrorNotification = /*#__PURE__*/ gql`
       }
     }
   }
-  ${FragmentProfile}
+  ${FragmentProfileMirrorResult}
   ${FragmentPost}
   ${FragmentComment}
   ${FragmentQuote}
@@ -6499,11 +6832,13 @@ export const FragmentQuoteNotification = /*#__PURE__*/ gql`
 `;
 export const FragmentKnownCollectOpenActionResult = /*#__PURE__*/ gql`
   fragment KnownCollectOpenActionResult on KnownCollectOpenActionResult {
+    __typename
     type
   }
 `;
 export const FragmentUnknownOpenActionResult = /*#__PURE__*/ gql`
   fragment UnknownOpenActionResult on UnknownOpenActionResult {
+    __typename
     address
     category
     initReturnData
@@ -6523,6 +6858,7 @@ export const FragmentOpenActionResult = /*#__PURE__*/ gql`
 `;
 export const FragmentOpenActionProfileActed = /*#__PURE__*/ gql`
   fragment OpenActionProfileActed on OpenActionProfileActed {
+    __typename
     by {
       ...Profile
     }
@@ -6592,13 +6928,14 @@ export const FragmentMentionNotification = /*#__PURE__*/ gql`
   ${FragmentComment}
   ${FragmentQuote}
 `;
-export const FragmentProfileManager = /*#__PURE__*/ gql`
-  fragment ProfileManager on ProfilesManagedResult {
+export const FragmentProfilesManager = /*#__PURE__*/ gql`
+  fragment ProfilesManager on ProfilesManagedResult {
     address
   }
 `;
 export const FragmentCreateProfileWithHandleErrorResult = /*#__PURE__*/ gql`
   fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
+    __typename
     reason
   }
 `;
@@ -6612,6 +6949,7 @@ export const FragmentEip712TypedDataDomain = /*#__PURE__*/ gql`
 `;
 export const FragmentCreateOnchainSetProfileMetadataBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateOnchainSetProfileMetadataBroadcastItemResult on CreateOnchainSetProfileMetadataBroadcastItemResult {
+    __typename
     id
     expiresAt
     typedData {
@@ -6636,6 +6974,7 @@ export const FragmentCreateOnchainSetProfileMetadataBroadcastItemResult = /*#__P
 `;
 export const FragmentCreateChangeProfileManagersBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateChangeProfileManagersBroadcastItemResult on CreateChangeProfileManagersBroadcastItemResult {
+    __typename
     id
     expiresAt
     typedData {
@@ -6663,6 +7002,7 @@ export const FragmentCreateChangeProfileManagersBroadcastItemResult = /*#__PURE_
 `;
 export const FragmentCreateBlockProfilesBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateBlockProfilesBroadcastItemResult on CreateBlockProfilesBroadcastItemResult {
+    __typename
     id
     expiresAt
     typedData {
@@ -6688,6 +7028,7 @@ export const FragmentCreateBlockProfilesBroadcastItemResult = /*#__PURE__*/ gql`
 `;
 export const FragmentCreateUnblockProfilesBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateUnblockProfilesBroadcastItemResult on CreateUnblockProfilesBroadcastItemResult {
+    __typename
     id
     expiresAt
     typedData {
@@ -6713,6 +7054,7 @@ export const FragmentCreateUnblockProfilesBroadcastItemResult = /*#__PURE__*/ gq
 `;
 export const FragmentCreateFollowBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateFollowBroadcastItemResult on CreateFollowBroadcastItemResult {
+    __typename
     id
     expiresAt
     typedData {
@@ -6739,6 +7081,7 @@ export const FragmentCreateFollowBroadcastItemResult = /*#__PURE__*/ gql`
 `;
 export const FragmentCreateUnfollowBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateUnfollowBroadcastItemResult on CreateUnfollowBroadcastItemResult {
+    __typename
     id
     expiresAt
     typedData {
@@ -6763,6 +7106,7 @@ export const FragmentCreateUnfollowBroadcastItemResult = /*#__PURE__*/ gql`
 `;
 export const FragmentCreateSetFollowModuleBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateSetFollowModuleBroadcastItemResult on CreateSetFollowModuleBroadcastItemResult {
+    __typename
     id
     expiresAt
     typedData {
@@ -6794,6 +7138,7 @@ export const FragmentEip712TypedDataField = /*#__PURE__*/ gql`
 `;
 export const FragmentCreateHandleLinkToProfileBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateHandleLinkToProfileBroadcastItemResult on CreateHandleLinkToProfileBroadcastItemResult {
+    __typename
     id
     expiresAt
     typedData {
@@ -6818,6 +7163,7 @@ export const FragmentCreateHandleLinkToProfileBroadcastItemResult = /*#__PURE__*
 `;
 export const FragmentCreateHandleUnlinkFromProfileBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateHandleUnlinkFromProfileBroadcastItemResult on CreateHandleUnlinkFromProfileBroadcastItemResult {
+    __typename
     id
     expiresAt
     typedData {
@@ -6851,18 +7197,21 @@ export const FragmentProfileActionHistory = /*#__PURE__*/ gql`
 `;
 export const FragmentTagResult = /*#__PURE__*/ gql`
   fragment TagResult on TagResult {
+    __typename
     tag
     total
   }
 `;
 export const FragmentPublicationValidateMetadataResult = /*#__PURE__*/ gql`
   fragment PublicationValidateMetadataResult on PublicationValidateMetadataResult {
+    __typename
     valid
     reason
   }
 `;
 export const FragmentCreateOnchainPostBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateOnchainPostBroadcastItemResult on CreateOnchainPostBroadcastItemResult {
+    __typename
     id
     expiresAt
     typedData {
@@ -6891,6 +7240,7 @@ export const FragmentCreateOnchainPostBroadcastItemResult = /*#__PURE__*/ gql`
 `;
 export const FragmentCreateOnchainCommentBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateOnchainCommentBroadcastItemResult on CreateOnchainCommentBroadcastItemResult {
+    __typename
     id
     expiresAt
     typedData {
@@ -6924,6 +7274,7 @@ export const FragmentCreateOnchainCommentBroadcastItemResult = /*#__PURE__*/ gql
 `;
 export const FragmentCreateOnchainMirrorBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateOnchainMirrorBroadcastItemResult on CreateOnchainMirrorBroadcastItemResult {
+    __typename
     id
     expiresAt
     typedData {
@@ -6953,6 +7304,7 @@ export const FragmentCreateOnchainMirrorBroadcastItemResult = /*#__PURE__*/ gql`
 `;
 export const FragmentCreateOnchainQuoteBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateOnchainQuoteBroadcastItemResult on CreateOnchainQuoteBroadcastItemResult {
+    __typename
     id
     expiresAt
     typedData {
@@ -6986,6 +7338,7 @@ export const FragmentCreateOnchainQuoteBroadcastItemResult = /*#__PURE__*/ gql`
 `;
 export const FragmentCreateMomokaPostBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateMomokaPostBroadcastItemResult on CreateMomokaPostBroadcastItemResult {
+    __typename
     id
     expiresAt
     typedData {
@@ -7014,6 +7367,7 @@ export const FragmentCreateMomokaPostBroadcastItemResult = /*#__PURE__*/ gql`
 `;
 export const FragmentCreateMomokaCommentBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateMomokaCommentBroadcastItemResult on CreateMomokaCommentBroadcastItemResult {
+    __typename
     id
     expiresAt
     typedData {
@@ -7047,6 +7401,7 @@ export const FragmentCreateMomokaCommentBroadcastItemResult = /*#__PURE__*/ gql`
 `;
 export const FragmentCreateMomokaMirrorBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateMomokaMirrorBroadcastItemResult on CreateMomokaMirrorBroadcastItemResult {
+    __typename
     id
     expiresAt
     typedData {
@@ -7076,6 +7431,7 @@ export const FragmentCreateMomokaMirrorBroadcastItemResult = /*#__PURE__*/ gql`
 `;
 export const FragmentCreateMomokaQuoteBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateMomokaQuoteBroadcastItemResult on CreateMomokaQuoteBroadcastItemResult {
+    __typename
     id
     expiresAt
     typedData {
@@ -7134,6 +7490,7 @@ export const FragmentCreateActOnOpenActionEip712TypedData = /*#__PURE__*/ gql`
 `;
 export const FragmentCreateLegacyCollectBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateLegacyCollectBroadcastItemResult on CreateLegacyCollectBroadcastItemResult {
+    __typename
     id
     expiresAt
     typedData {
@@ -7144,12 +7501,14 @@ export const FragmentCreateLegacyCollectBroadcastItemResult = /*#__PURE__*/ gql`
 `;
 export const FragmentProfileReactionResult = /*#__PURE__*/ gql`
   fragment ProfileReactionResult on ProfileReactionResult {
+    __typename
     reaction
     reactionAt
   }
 `;
 export const FragmentProfileWhoReactedResult = /*#__PURE__*/ gql`
   fragment ProfileWhoReactedResult on ProfileWhoReactedResult {
+    __typename
     profile {
       ...Profile
     }
@@ -7162,6 +7521,7 @@ export const FragmentProfileWhoReactedResult = /*#__PURE__*/ gql`
 `;
 export const FragmentRevenueAggregate = /*#__PURE__*/ gql`
   fragment RevenueAggregate on RevenueAggregate {
+    __typename
     total {
       ...Amount
     }
@@ -7170,6 +7530,7 @@ export const FragmentRevenueAggregate = /*#__PURE__*/ gql`
 `;
 export const FragmentPublicationRevenue = /*#__PURE__*/ gql`
   fragment PublicationRevenue on PublicationRevenue {
+    __typename
     publication {
       ... on Post {
         ...Post
@@ -7196,6 +7557,7 @@ export const FragmentPublicationRevenue = /*#__PURE__*/ gql`
 `;
 export const FragmentLensTransactionResult = /*#__PURE__*/ gql`
   fragment LensTransactionResult on LensTransactionResult {
+    __typename
     status
     txHash
     reason
@@ -7204,6 +7566,7 @@ export const FragmentLensTransactionResult = /*#__PURE__*/ gql`
 `;
 export const FragmentRelayQueueResult = /*#__PURE__*/ gql`
   fragment RelayQueueResult on RelayQueueResult {
+    __typename
     key
     relay {
       ...NetworkAddress
@@ -7214,11 +7577,13 @@ export const FragmentRelayQueueResult = /*#__PURE__*/ gql`
 `;
 export const FragmentHandleResult = /*#__PURE__*/ gql`
   fragment HandleResult on HandleResult {
+    __typename
     handle
   }
 `;
 export const FragmentUserSigNonces = /*#__PURE__*/ gql`
   fragment UserSigNonces on UserSigNonces {
+    __typename
     lensHubOnchainSigNonce
     lensTokenHandleRegistryOnchainSigNonce
   }
@@ -7881,14 +8246,14 @@ export const ProfileManagersDocument = /*#__PURE__*/ gql`
   query ProfileManagers($request: ProfileManagersRequest!) {
     result: profileManagers(request: $request) {
       items {
-        ...ProfileManager
+        ...ProfilesManager
       }
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }
-  ${FragmentProfileManager}
+  ${FragmentProfilesManager}
   ${FragmentPaginatedResultInfo}
 `;
 

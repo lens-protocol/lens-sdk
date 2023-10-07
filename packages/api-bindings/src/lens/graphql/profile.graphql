@@ -1,12 +1,16 @@
-fragment ProfileManager on ProfilesManagedResult {
+# API node has an odd name, masking it here
+fragment ProfilesManager on ProfilesManagedResult {
+  # __typename omitted on purpose to hide odd name, not needed anyway here
   address
 }
 
 fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
+  __typename
   reason
 }
 
 fragment CreateOnchainSetProfileMetadataBroadcastItemResult on CreateOnchainSetProfileMetadataBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -29,6 +33,7 @@ fragment CreateOnchainSetProfileMetadataBroadcastItemResult on CreateOnchainSetP
 }
 
 fragment CreateChangeProfileManagersBroadcastItemResult on CreateChangeProfileManagersBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -54,6 +59,7 @@ fragment CreateChangeProfileManagersBroadcastItemResult on CreateChangeProfileMa
 }
 
 fragment CreateBlockProfilesBroadcastItemResult on CreateBlockProfilesBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -77,6 +83,7 @@ fragment CreateBlockProfilesBroadcastItemResult on CreateBlockProfilesBroadcastI
 }
 
 fragment CreateUnblockProfilesBroadcastItemResult on CreateUnblockProfilesBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -100,6 +107,7 @@ fragment CreateUnblockProfilesBroadcastItemResult on CreateUnblockProfilesBroadc
 }
 
 fragment CreateFollowBroadcastItemResult on CreateFollowBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -124,6 +132,7 @@ fragment CreateFollowBroadcastItemResult on CreateFollowBroadcastItemResult {
 }
 
 fragment CreateUnfollowBroadcastItemResult on CreateUnfollowBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -146,6 +155,7 @@ fragment CreateUnfollowBroadcastItemResult on CreateUnfollowBroadcastItemResult 
 }
 
 fragment CreateSetFollowModuleBroadcastItemResult on CreateSetFollowModuleBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -169,6 +179,7 @@ fragment CreateSetFollowModuleBroadcastItemResult on CreateSetFollowModuleBroadc
 }
 
 fragment CreateHandleLinkToProfileBroadcastItemResult on CreateHandleLinkToProfileBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -190,6 +201,7 @@ fragment CreateHandleLinkToProfileBroadcastItemResult on CreateHandleLinkToProfi
 }
 
 fragment CreateHandleUnlinkFromProfileBroadcastItemResult on CreateHandleUnlinkFromProfileBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -208,12 +220,6 @@ fragment CreateHandleUnlinkFromProfileBroadcastItemResult on CreateHandleUnlinkF
       handleId
     }
   }
-}
-
-fragment ImageTransformParam on ImageTransformParam {
-  height
-  width
-  keepAspectRatio
 }
 
 # queries
@@ -253,7 +259,7 @@ query Profiles(
 query ProfileManagers($request: ProfileManagersRequest!) {
   result: profileManagers(request: $request) {
     items {
-      ...ProfileManager
+      ...ProfilesManager
     }
     pageInfo {
       ...PaginatedResultInfo

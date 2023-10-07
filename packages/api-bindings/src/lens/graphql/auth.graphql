@@ -1,4 +1,5 @@
 fragment AuthChallenge on AuthChallengeResult {
+  __typename
   id
   text
 }

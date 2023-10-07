@@ -7,11 +7,13 @@ mutation RemoveReaction($request: ReactionRequest!) {
 }
 
 fragment ProfileReactionResult on ProfileReactionResult {
+  __typename
   reaction
   reactionAt
 }
 
 fragment ProfileWhoReactedResult on ProfileWhoReactedResult {
+  __typename
   profile {
     ...Profile
   }
