@@ -1,5 +1,11 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.2
+
+### Patch Changes
+
+- 6f51659c: **fix:** adds missing `__typename` and expose `ProfileFields` from `Profile.invitedBy`
+
 ## 0.11.0-alpha.1
 
 ### Patch Changes

@@ -1,10 +1,12 @@
 # query fragments
 fragment TagResult on TagResult {
+  __typename
   tag
   total
 }
 
 fragment PublicationValidateMetadataResult on PublicationValidateMetadataResult {
+  __typename
   valid
   reason
 }
@@ -91,6 +93,7 @@ query ValidatePublicationMetadata($request: ValidatePublicationMetadataRequest!)
 
 # mutation fragments
 fragment CreateOnchainPostBroadcastItemResult on CreateOnchainPostBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -117,6 +120,7 @@ fragment CreateOnchainPostBroadcastItemResult on CreateOnchainPostBroadcastItemR
 }
 
 fragment CreateOnchainCommentBroadcastItemResult on CreateOnchainCommentBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -148,6 +152,7 @@ fragment CreateOnchainCommentBroadcastItemResult on CreateOnchainCommentBroadcas
 }
 
 fragment CreateOnchainMirrorBroadcastItemResult on CreateOnchainMirrorBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -175,6 +180,7 @@ fragment CreateOnchainMirrorBroadcastItemResult on CreateOnchainMirrorBroadcastI
 }
 
 fragment CreateOnchainQuoteBroadcastItemResult on CreateOnchainQuoteBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -205,6 +211,7 @@ fragment CreateOnchainQuoteBroadcastItemResult on CreateOnchainQuoteBroadcastIte
 }
 
 fragment CreateMomokaPostBroadcastItemResult on CreateMomokaPostBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -231,6 +238,7 @@ fragment CreateMomokaPostBroadcastItemResult on CreateMomokaPostBroadcastItemRes
 }
 
 fragment CreateMomokaCommentBroadcastItemResult on CreateMomokaCommentBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -262,6 +270,7 @@ fragment CreateMomokaCommentBroadcastItemResult on CreateMomokaCommentBroadcastI
 }
 
 fragment CreateMomokaMirrorBroadcastItemResult on CreateMomokaMirrorBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -289,6 +298,7 @@ fragment CreateMomokaMirrorBroadcastItemResult on CreateMomokaMirrorBroadcastIte
 }
 
 fragment CreateMomokaQuoteBroadcastItemResult on CreateMomokaQuoteBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -320,6 +330,7 @@ fragment CreateMomokaQuoteBroadcastItemResult on CreateMomokaQuoteBroadcastItemR
 }
 
 fragment CreateLegacyCollectBroadcastItemResult on CreateLegacyCollectBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
