@@ -13,6 +13,8 @@ export type {
   Pixel,
 } from './ImageTransform';
 export * from './utils';
+export * from './publication';
+export * from './MetadataAttribute';
 
 export type CursorBasedPaginatedResult<T = StoreValue> = {
   items: T[];

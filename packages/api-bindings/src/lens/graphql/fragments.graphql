@@ -375,6 +375,8 @@ fragment ProfileFields on Profile {
 }
 
 fragment Profile on Profile {
+  __typename
+  ...ProfileFields
   invitedBy {
     ...ProfileFields
   }
@@ -1924,7 +1926,7 @@ fragment CommentFields on Comment {
 }
 
 fragment Comment on Comment {
-  # __typename in CommentFields already
+  __typename
   ...CommentFields
 
   firstComment {
@@ -2095,7 +2097,7 @@ fragment QuoteFields on Quote {
 }
 
 fragment Quote on Quote {
-  # __typename in QuoteFields already
+  __typename
   ...QuoteFields
   quoteOn {
     ... on Post {

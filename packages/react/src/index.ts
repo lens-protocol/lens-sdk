@@ -36,6 +36,11 @@ export type {
 export { LimitType } from './helpers/reads';
 
 /**
+ * GQL common types
+ */
+export type { MetadataAttribute } from '@lens-protocol/api-bindings';
+
+/**
  * Helpers
  */
 export * from './utils';

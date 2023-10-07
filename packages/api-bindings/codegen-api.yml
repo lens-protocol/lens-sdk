@@ -86,8 +86,10 @@ generates:
           skipTypename: true
           immutableTypes: false
           inlineFragmentTypes: combine
+          exportFragmentSpreadSubTypes: false # we do not want odd named fragment types ProfilePicture_ImageSet_
           omitOperationSuffix: true
           operationResultSuffix: 'Data'
+          dedupeFragments: true
       - 'typescript-react-apollo':
           pureMagicComment: true # keep
           omitOperationSuffix: true # MUST goes with typescript-operations.omitOperationSuffix

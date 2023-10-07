@@ -1680,13 +1680,13 @@ export type WorldcoinPhoneVerifyWebhookRequest = {
   signalType: WorldcoinPhoneVerifyType;
 };
 
-export type AuthChallenge = { __typename: 'AuthChallengeResult'; id: string; text: string };
+export type AuthChallengeResult = { __typename: 'AuthChallengeResult'; id: string; text: string };
 
 export type AuthChallengeVariables = Exact<{
   request: ChallengeRequest;
 }>;
 
-export type AuthChallengeData = { result: AuthChallenge };
+export type AuthChallengeData = { result: AuthChallengeResult };
 
 export type AuthVerifyVariables = Exact<{
   request: VerifyRequest;
@@ -2011,7 +2011,7 @@ export type ProfileFields = {
   stats: ProfileStats;
 };
 
-export type Profile = { invitedBy: ProfileFields | null };
+export type Profile = { __typename: 'Profile'; invitedBy: ProfileFields | null } & ProfileFields;
 
 export type PaginatedResultInfo = {
   __typename: 'PaginatedResultInfo';
@@ -2869,6 +2869,7 @@ export type CommentFields = {
 };
 
 export type Comment = {
+  __typename: 'Comment';
   firstComment: CommentFields | null;
   commentOn: CommentFields | Post | QuoteFields;
 } & CommentFields;
@@ -2934,7 +2935,10 @@ export type QuoteFields = {
   stats: PublicationStats;
 };
 
-export type Quote = { quoteOn: CommentFields | Post | QuoteFields } & QuoteFields;
+export type Quote = {
+  __typename: 'Quote';
+  quoteOn: CommentFields | Post | QuoteFields;
+} & QuoteFields;
 
 export type Eip712TypedDataDomain = {
   name: string;
@@ -4079,8 +4083,8 @@ export type UserSigNoncesVariables = Exact<{ [key: string]: never }>;
 
 export type UserSigNoncesData = { result: UserSigNonces };
 
-export const FragmentAuthChallenge = /*#__PURE__*/ gql`
-  fragment AuthChallenge on AuthChallengeResult {
+export const FragmentAuthChallengeResult = /*#__PURE__*/ gql`
+  fragment AuthChallengeResult on AuthChallengeResult {
     __typename
     id
     text
@@ -4450,6 +4454,8 @@ export const FragmentProfileFields = /*#__PURE__*/ gql`
 `;
 export const FragmentProfile = /*#__PURE__*/ gql`
   fragment Profile on Profile {
+    __typename
+    ...ProfileFields
     invitedBy {
       ...ProfileFields
     }
@@ -6556,6 +6562,7 @@ export const FragmentQuoteFields = /*#__PURE__*/ gql`
 `;
 export const FragmentComment = /*#__PURE__*/ gql`
   fragment Comment on Comment {
+    __typename
     ...CommentFields
     firstComment {
       ...CommentFields
@@ -6578,6 +6585,7 @@ export const FragmentComment = /*#__PURE__*/ gql`
 `;
 export const FragmentQuote = /*#__PURE__*/ gql`
   fragment Quote on Quote {
+    __typename
     ...QuoteFields
     quoteOn {
       ... on Post {
@@ -7591,10 +7599,10 @@ export const FragmentUserSigNonces = /*#__PURE__*/ gql`
 export const AuthChallengeDocument = /*#__PURE__*/ gql`
   query AuthChallenge($request: ChallengeRequest!) {
     result: challenge(request: $request) {
-      ...AuthChallenge
+      ...AuthChallengeResult
     }
   }
-  ${FragmentAuthChallenge}
+  ${FragmentAuthChallengeResult}
 `;
 
 /**

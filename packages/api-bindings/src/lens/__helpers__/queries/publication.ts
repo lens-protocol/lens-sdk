@@ -7,7 +7,7 @@ import {
   SearchPublicationsDocument,
   SearchPublicationsVariables,
 } from '../../graphql/generated';
-import { AnyPublication, PrimaryPublication } from '../../utils';
+import { AnyPublication, PrimaryPublication } from '../../publication';
 import { mockPaginatedResultInfo } from '../fragments';
 import { mockAnyPaginatedResponse } from './mockAnyPaginatedResponse';
 
