@@ -9,7 +9,7 @@ function MetadataSwitch({ metadata }: { metadata: PublicationMetadata }) {
       return <p>{metadata.content}</p>;
 
     default:
-      return <p>{metadata.__typename} not supported yet</p>;
+      return <p>{metadata.__typename} not supported in this example</p>;
   }
 }
 
