@@ -1,5 +1,17 @@
 # @lens-protocol/wagmi
 
+## 3.0.0-alpha.0
+
+### Major Changes
+
+- 9df5730b: **feat:** updateds peer dep on `@lens-protocol/react@2.x`
+
+### Patch Changes
+
+- Updated dependencies [6d0d62dd]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.2
+  - @lens-protocol/react-web@2.0.0-alpha.3
+
 ## 2.1.1
 
 ### Patch Changes

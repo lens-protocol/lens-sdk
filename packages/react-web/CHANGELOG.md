@@ -1,5 +1,16 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.3
+
+### Patch Changes
+
+- Updated dependencies [6d0d62dd]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.2
+  - @lens-protocol/api-bindings@0.11.0-alpha.3
+  - @lens-protocol/domain@0.11.0-alpha.2
+  - @lens-protocol/react@2.0.0-alpha.3
+  - @lens-protocol/storage@0.7.5-alpha.0
+
 ## 1.3.1
 
 ### Patch Changes
