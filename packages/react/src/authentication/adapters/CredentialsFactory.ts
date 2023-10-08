@@ -35,7 +35,7 @@ export class CredentialsFactory implements ICredentialsIssuer, ICredentialsRenew
     const result = await signedBy.signMessage(challenge.text);
 
     if (result.isFailure()) {
-      return failure(result.error);
+      return result;
     }
 
     const credentials = await this.auth.generateCredentials({

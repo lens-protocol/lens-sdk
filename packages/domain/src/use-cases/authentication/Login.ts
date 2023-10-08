@@ -1,4 +1,4 @@
-import { EvmAddress, failure, PromiseResult, Result, success } from '@lens-protocol/shared-kernel';
+import { EvmAddress, PromiseResult, Result, success } from '@lens-protocol/shared-kernel';
 
 import {
   ICredentials,
@@ -63,7 +63,7 @@ export class Login {
     const result = await this.credentialsIssuer.issueCredentials(request.profileId, wallet);
 
     if (result.isFailure()) {
-      this.presenter.present(failure(result.error));
+      this.presenter.present(result);
       return;
     }
 

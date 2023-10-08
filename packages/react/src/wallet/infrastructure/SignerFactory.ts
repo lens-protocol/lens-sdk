@@ -49,7 +49,7 @@ export class SignerFactory implements ISignerFactory {
           const result = await this.switchChain(signer, chainConfig);
 
           if (result.isFailure()) {
-            return failure(result.error);
+            return result;
           }
         }
       } catch (err) {

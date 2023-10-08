@@ -12,7 +12,7 @@ import {
   ProtocolTransactionRequest,
   AnyTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, PromiseResult, success, XOR } from '@lens-protocol/shared-kernel';
+import { ChainType, PromiseResult, success, XOR } from '@lens-protocol/shared-kernel';
 
 import {
   DataTransactionData,
@@ -110,7 +110,7 @@ class SerializableMetaTransaction<T extends ProtocolTransactionRequest>
       this.state = result.value.state;
       return success(result.value.event);
     }
-    return failure(result.error);
+    return result;
   }
 }
 
@@ -170,7 +170,7 @@ class SerializableNativeTransaction<T extends AnyTransactionRequest>
       this.state = result.value.state;
       return success(result.value.event);
     }
-    return failure(result.error);
+    return result;
   }
 }
 
@@ -265,7 +265,7 @@ export class TransactionFactory implements ISerializableTransactionFactory {
       const indexingEventResult = await this.transactionObserver.waitForNextIndexingEvent(request);
 
       if (indexingEventResult.isFailure()) {
-        return failure(indexingEventResult.error);
+        return indexingEventResult;
       }
 
       if (indexingEventResult.value.indexed) {
@@ -298,7 +298,7 @@ export class TransactionFactory implements ISerializableTransactionFactory {
       });
 
       if (result.isFailure()) {
-        return failure(result.error);
+        return result;
       }
 
       return success({

@@ -1,4 +1,4 @@
-import { Amount, Erc20, EvmAddress, failure } from '@lens-protocol/shared-kernel';
+import { Amount, Erc20, EvmAddress } from '@lens-protocol/shared-kernel';
 
 import {
   TransactionKind,
@@ -74,7 +74,7 @@ export class CollectPublication {
       });
 
       if (result.isFailure()) {
-        this.collectPublicationPresenter.present(failure(result.error));
+        this.collectPublicationPresenter.present(result);
         return;
       }
 

@@ -148,7 +148,7 @@ export class ConcreteWallet extends Wallet {
     });
 
     if (result.isFailure()) {
-      return failure(result.error);
+      return result;
     }
 
     if (this.signingInProgress) {
@@ -190,7 +190,7 @@ export class ConcreteWallet extends Wallet {
     });
 
     if (result.isFailure()) {
-      return failure(result.error);
+      return result;
     }
 
     if (this.signingInProgress) {
@@ -226,7 +226,7 @@ export class ConcreteWallet extends Wallet {
     });
 
     if (result.isFailure()) {
-      return failure(result.error);
+      return result;
     }
 
     if (this.signingInProgress) {
@@ -273,7 +273,7 @@ export class ConcreteWallet extends Wallet {
     });
 
     if (result.isFailure()) {
-      return failure(result.error);
+      return result;
     }
 
     if (this.signingInProgress) {

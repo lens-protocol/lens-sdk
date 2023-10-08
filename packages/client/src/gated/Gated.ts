@@ -5,7 +5,7 @@ import {
   profileOwnershipCondition,
   PublicationMetadata,
 } from '@lens-protocol/metadata';
-import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import { Authentication } from '../authentication';
 import { CredentialsExpiredError, NotAuthenticatedError } from '../errors';
@@ -126,7 +126,7 @@ export class Gated {
       if (result.isSuccess()) {
         return success(result.value);
       }
-      return failure(result.error);
+      return result;
     });
   }
 }

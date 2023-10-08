@@ -14,12 +14,12 @@ export async function requireAuthHeaders<Val>(
     return failure(new NotAuthenticatedError());
   }
 
-  const headerResult = await authentication.getRequestHeader();
+  const result = await authentication.getRequestHeader();
 
-  if (headerResult.isFailure()) {
-    return failure(headerResult.error);
+  if (result.isFailure()) {
+    return result;
   }
 
-  const result = await handler(headerResult.value);
-  return success(result);
+  const value = await handler(result.value);
+  return success(value);
 }
