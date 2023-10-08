@@ -107,7 +107,7 @@ export class Authentication implements IAuthentication {
     const result = await this.getCredentials();
 
     if (result.isFailure()) {
-      return failure(result.error);
+      return result;
     }
 
     return handler(result.value.getProfileId());

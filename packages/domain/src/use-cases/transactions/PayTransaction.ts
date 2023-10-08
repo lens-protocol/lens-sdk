@@ -1,5 +1,3 @@
-import { failure } from '@lens-protocol/shared-kernel';
-
 import {
   InsufficientGasError,
   PendingSigningRequestError,
@@ -36,14 +34,14 @@ export class PayTransaction<T extends AnyTransactionRequestModel> {
 
     const approveTransaction = await this.gateway.prepareSelfFundedTransaction(request, wallet);
 
-    const relayResult = await wallet.sendTransaction(approveTransaction);
+    const result = await wallet.sendTransaction(approveTransaction);
 
-    if (relayResult.isFailure()) {
-      this.presenter.present(failure(relayResult.error));
+    if (result.isFailure()) {
+      this.presenter.present(result);
       return;
     }
 
-    const transaction = relayResult.value;
+    const transaction = result.value;
     await this.queue.push(transaction, this.presenter);
   }
 }

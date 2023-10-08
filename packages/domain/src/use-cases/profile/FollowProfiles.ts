@@ -1,4 +1,4 @@
-import { Amount, Erc20, EvmAddress, failure } from '@lens-protocol/shared-kernel';
+import { Amount, Erc20, EvmAddress } from '@lens-protocol/shared-kernel';
 
 import {
   TransactionKind,
@@ -88,7 +88,7 @@ export class FollowProfiles {
       });
 
       if (result.isFailure()) {
-        this.followProfilePresenter.present(failure(result.error));
+        this.followProfilePresenter.present(result);
         return;
       }
     }

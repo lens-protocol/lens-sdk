@@ -5,14 +5,7 @@ import {
   SessionData,
   SessionType,
 } from '@lens-protocol/domain/use-cases/authentication';
-import {
-  Deferred,
-  failure,
-  invariant,
-  PromiseResult,
-  Result,
-  success,
-} from '@lens-protocol/shared-kernel';
+import { Deferred, invariant, PromiseResult, Result, success } from '@lens-protocol/shared-kernel';
 
 import { IProfileCacheManager } from '../../profile/adapters/IProfileCacheManager';
 
@@ -23,7 +16,7 @@ export class LoginPresenter implements ILoginPresenter {
 
   async present(result: Result<SessionData, LoginError>) {
     if (result.isFailure()) {
-      this.deferredResult.resolve(failure(result.error));
+      this.deferredResult.resolve(result);
       return;
     }
 
