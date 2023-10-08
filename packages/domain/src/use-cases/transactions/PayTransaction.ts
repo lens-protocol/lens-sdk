@@ -9,7 +9,7 @@ import {
   WalletConnectionError,
 } from '../../entities';
 import { UnsignedTransaction } from '../../entities/Transactions';
-import { ActiveWallet } from '../wallets/ActiveWallet';
+import { ActiveWallet } from '../authentication/ActiveWallet';
 import { ITransactionResultPresenter } from './ITransactionResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 

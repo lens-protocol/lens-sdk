@@ -13,8 +13,10 @@ import {
   ProfileRecommendationsDocument,
   ProfileRecommendationsVariables,
   ProfileWhoReactedResult,
+  ProfileDocument,
   ProfilesDocument,
   ProfilesVariables,
+  ProfileVariables,
   SearchProfilesDocument,
   SearchProfilesVariables,
   WhoActedOnPublicationDocument,
@@ -23,7 +25,7 @@ import {
   WhoReactedPublicationVariables,
 } from '../../graphql/generated';
 import { mockPaginatedResultInfo } from '../fragments';
-import { mockAnyPaginatedResponse } from './mockAnyPaginatedResponse';
+import { mockAnyPaginatedResponse, mockAnyResponse } from './mockAnyPaginatedResponse';
 
 export function mockProfilesResponse({
   variables,
@@ -183,5 +185,23 @@ export function mockWhoReactedToPublicationResponse({
     items,
     info,
     query: WhoReactedPublicationDocument,
+  });
+}
+
+export function mockProfileResponse({
+  variables,
+  result,
+}: {
+  variables: ProfileVariables;
+  result: Profile | null;
+}) {
+  return mockAnyResponse({
+    request: {
+      query: ProfileDocument,
+      variables,
+    },
+    result: {
+      data: { result },
+    },
   });
 }

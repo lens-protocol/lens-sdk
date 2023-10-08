@@ -158,11 +158,11 @@ export type Prettify<T> = {
   // eslint-disable-next-line @typescript-eslint/ban-types
 } & {};
 
-declare const brand: unique symbol;
-
 /**
  * Branding function
  *
  * @internal
  */
-export type Brand<T, TBrand> = T & { [brand]: TBrand };
+export type Brand<T, TBrand, ReservedName extends string = '__type__'> = T & {
+  [K in ReservedName]: TBrand;
+};

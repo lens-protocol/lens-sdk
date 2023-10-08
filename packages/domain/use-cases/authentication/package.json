@@ -1,0 +1,4 @@
+{
+  "main": "dist/lens-protocol-domain-use-cases-authentication.cjs.js",
+  "module": "dist/lens-protocol-domain-use-cases-authentication.esm.js"
+}

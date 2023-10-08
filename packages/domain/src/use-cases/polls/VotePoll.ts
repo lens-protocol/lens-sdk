@@ -7,8 +7,8 @@ import {
   WalletConnectionError,
 } from '../../entities';
 import { PollId, ISignedVote, IUnsignedVote } from '../../entities/polls';
+import { ActiveWallet } from '../authentication';
 import { IGenericResultPresenter } from '../transactions';
-import { ActiveWallet } from '../wallets';
 
 export type VoteChoice = number | number[];
 

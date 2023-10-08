@@ -7,8 +7,8 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '../../entities';
+import { ActiveWallet } from '../authentication/ActiveWallet';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
-import { ActiveWallet } from '../wallets/ActiveWallet';
 
 export type ProveNftOwnershipRequest = {
   chainId: number;

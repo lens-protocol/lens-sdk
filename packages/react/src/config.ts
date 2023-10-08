@@ -3,8 +3,13 @@ import { ILogger } from '@lens-protocol/shared-kernel';
 import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/storage';
 
 import { EnvironmentConfig } from './environments';
+import { IProviderBinding, GetProvider } from './wallet/infrastructure/ProviderFactory';
+import { ISignerBinding, GetSigner } from './wallet/infrastructure/SignerFactory';
 
 export type { QueryParams };
+export type { GetProvider, GetSigner };
+
+export interface IBindings extends ISignerBinding, IProviderBinding {}
 
 /**
  * `<LensProvider>` configuration
@@ -13,7 +18,7 @@ export type LensConfig = {
   /**
    * Provides integration with the ethers.js Signer and Provider
    */
-  // bindings: IBindings;
+  bindings: IBindings;
   /**
    * The environment to use. See {@link production}, {@link development}, and {@link sandbox}
    */

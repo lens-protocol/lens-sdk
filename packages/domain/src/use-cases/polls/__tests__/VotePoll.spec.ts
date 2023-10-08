@@ -9,13 +9,16 @@ import {
   WalletConnectionError,
   WalletConnectionErrorReason,
 } from '../../../entities';
-import { mockActiveWallet, mockISignedVote, mockIUnsignedVote, mockWallet } from '../../../mocks';
-import { IPollVoteRelayer, IVotePollPresenter, VotePoll, VotePollRequest } from '../VotePoll';
 import {
+  mockActiveWallet,
+  mockISignedVote,
+  mockIUnsignedVote,
+  mockWallet,
   mockCreateUnsignedVoteRequest,
   mockIUnsignedVoteFactory,
   mockVotePollRequest,
-} from '../__helpers__/mocks';
+} from '../../../mocks';
+import { IPollVoteRelayer, IVotePollPresenter, VotePoll, VotePollRequest } from '../VotePoll';
 
 function setupTestScenario({ request, voter }: { request: VotePollRequest; voter: Wallet }) {
   const unsignedVote = mockIUnsignedVote(request);

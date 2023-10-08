@@ -17,19 +17,19 @@ import {
   mockUnsignedTransaction,
   mockWallet,
 } from '../../../entities/__helpers__/mocks';
+import {
+  mockActiveWallet,
+  mockTransactionQueue,
+  mockIApproveTransactionGateway,
+  mockTokenAllowanceRequest,
+} from '../../../mocks';
 import { TransactionQueue } from '../../transactions/TransactionQueue';
-import { mockTransactionQueue } from '../../transactions/__helpers__/mocks';
 import {
   IApproveTransactionGateway,
   ITokenAllowancePresenter,
   TokenAllowance,
   TokenAllowanceRequest,
 } from '../TokenAllowance';
-import {
-  mockActiveWallet,
-  mockIApproveTransactionGateway,
-  mockTokenAllowanceRequest,
-} from '../__helpers__/mocks';
 
 function setupTokenAllowance({
   gateway,

@@ -27,10 +27,6 @@
       "module": "./use-cases/wallets/dist/lens-protocol-domain-use-cases-wallets.esm.js",
       "default": "./use-cases/wallets/dist/lens-protocol-domain-use-cases-wallets.cjs.js"
     },
-    "./use-cases/lifecycle": {
-      "module": "./use-cases/lifecycle/dist/lens-protocol-domain-use-cases-lifecycle.esm.js",
-      "default": "./use-cases/lifecycle/dist/lens-protocol-domain-use-cases-lifecycle.cjs.js"
-    },
     "./use-cases/publications": {
       "module": "./use-cases/publications/dist/lens-protocol-domain-use-cases-publications.esm.js",
       "default": "./use-cases/publications/dist/lens-protocol-domain-use-cases-publications.cjs.js"
@@ -38,6 +34,10 @@
     "./use-cases/transactions": {
       "module": "./use-cases/transactions/dist/lens-protocol-domain-use-cases-transactions.esm.js",
       "default": "./use-cases/transactions/dist/lens-protocol-domain-use-cases-transactions.cjs.js"
+    },
+    "./use-cases/authentication": {
+      "module": "./use-cases/authentication/dist/lens-protocol-domain-use-cases-authentication.esm.js",
+      "default": "./use-cases/authentication/dist/lens-protocol-domain-use-cases-authentication.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -124,7 +124,7 @@
   "preconstruct": {
     "entrypoints": [
       "entities/index.ts",
-      "use-cases/lifecycle/index.ts",
+      "use-cases/authentication/index.ts",
       "use-cases/inbox/index.ts",
       "use-cases/profile/index.ts",
       "use-cases/polls/index.ts",

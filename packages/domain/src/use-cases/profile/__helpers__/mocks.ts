@@ -6,7 +6,6 @@ import { when } from 'jest-when';
 
 import { TransactionKind, NftOwnershipChallenge, NativeTransaction } from '../../../entities';
 import { mockProfileId, mockSignature } from '../../../entities/__helpers__/mocks';
-import { ProfileIdentifier } from '../../lifecycle';
 import { BroadcastingError } from '../../transactions';
 import {
   CreateProfileRequest,
@@ -60,14 +59,6 @@ export function mockIProfileTransactionGateway({
     .mockResolvedValue(result);
 
   return profileTransactionGateway;
-}
-
-export function mockProfileIdentifier(overrides?: Partial<ProfileIdentifier>): ProfileIdentifier {
-  return {
-    id: mockProfileId(),
-    handle: faker.internet.userName(),
-    ...overrides,
-  };
 }
 
 export function mockChargeFollowConfig(
