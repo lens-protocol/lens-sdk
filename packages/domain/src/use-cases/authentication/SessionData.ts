@@ -86,22 +86,26 @@ export function anonymousSessionData(lastLogoutReason?: LogoutReason): Anonymous
 /**
  * @internal
  */
-export function profileSessionData(data: {
+export function profileSessionData({
+  address,
+  profileId,
+}: {
   address: EvmAddress;
   profileId: ProfileId;
 }): ProfileSessionData {
   return {
     type: SessionType.WithProfile,
-    ...data,
+    address,
+    profileId,
   };
 }
 
 /**
  * @internal
  */
-export function walletOnlySessionData(data: { address: EvmAddress }): WalletOnlySessionData {
+export function walletOnlySessionData({ address }: { address: EvmAddress }): WalletOnlySessionData {
   return {
     type: SessionType.JustWallet,
-    ...data,
+    address,
   };
 }

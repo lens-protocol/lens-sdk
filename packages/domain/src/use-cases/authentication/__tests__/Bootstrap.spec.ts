@@ -13,6 +13,7 @@ import {
   IBootstrapPresenter,
 } from '../Bootstrap';
 import { Logout, LogoutReason } from '../Logout';
+import { anonymousSessionData, profileSessionData } from '../SessionData';
 
 type BootstrapSetupConfig = {
   credentialsGateway?: ICredentialsGateway;
@@ -54,7 +55,7 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
 
       await bootstrap.execute();
 
-      expect(presenter.anonymous).toHaveBeenCalled();
+      expect(presenter.present).toHaveBeenCalledWith(anonymousSessionData());
     });
   });
 
@@ -82,10 +83,7 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
       await bootstrap.execute();
 
       expect(credentialsGateway.save).toHaveBeenCalledWith(newCredentials);
-      expect(presenter.present).toHaveBeenCalledWith({
-        address: oldCredentials.address,
-        profileId: oldCredentials.profileId,
-      });
+      expect(presenter.present).toHaveBeenCalledWith(profileSessionData(oldCredentials));
       expect(transactionQueue.resume).toHaveBeenCalled();
     });
 

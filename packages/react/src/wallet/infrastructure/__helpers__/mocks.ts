@@ -5,7 +5,7 @@ import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import { production } from '../../../environments';
-import { RequiredSigner } from '../../../wallet/adapters/ConcreteWallet';
+import { RequiredSigner } from '../../adapters/ConcreteWallet';
 import { ISignerBinding } from '../SignerFactory';
 
 export class VoidJsonRpcProvider extends providers.JsonRpcProvider {

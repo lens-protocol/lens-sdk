@@ -17,6 +17,7 @@ import {
   IWritableWalletGateway,
   Login,
 } from '../Login';
+import { profileSessionData } from '../SessionData';
 import { mockLoginRequest } from '../__helpers__/mocks';
 
 function setupTestScenario({
@@ -77,7 +78,7 @@ describe(`Given the ${Login.name} interactor`, () => {
 
       expect(walletGateway.save).toHaveBeenCalledWith(wallet);
       expect(credentialsWriter.save).toHaveBeenCalledWith(credentials);
-      expect(loginPresenter.present).toBeCalledWith(success(request));
+      expect(loginPresenter.present).toBeCalledWith(success(profileSessionData(request)));
     });
 
     it('should handle scenarios where the user cancels the challenge signing operation', async () => {

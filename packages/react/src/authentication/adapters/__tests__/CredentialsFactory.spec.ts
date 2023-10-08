@@ -11,12 +11,12 @@ import { failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { AuthApi, Challenge } from '../AuthApi';
+import { AuthApi, AuthChallenge } from '../AuthApi';
 import { Credentials } from '../Credentials';
 import { CredentialsFactory } from '../CredentialsFactory';
 import { mockCredentials } from '../__helpers__/mocks';
 
-const challenge: Challenge = {
+const challenge: AuthChallenge = {
   id: faker.datatype.uuid(),
   text: 'Challenge to sign from backend',
 };

@@ -9,14 +9,13 @@ import {
   AuthRefreshData,
   AuthRefreshVariables,
   SafeApolloClient,
-  AuthChallenge,
   ChallengeRequest,
   SignedAuthChallenge,
 } from '@lens-protocol/api-bindings';
 
 import { Credentials } from './Credentials';
 
-export type Challenge = {
+export type AuthChallenge = {
   id: string;
   text: string;
 };

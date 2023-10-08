@@ -44,13 +44,7 @@ const chainType = ChainType.POLYGON;
 
 function setupWalletInstance({ signerFactory }: { signerFactory: ISignerFactory }) {
   const transactionFactory = mockITransactionFactory();
-  return ConcreteWallet.create(
-    {
-      address,
-    },
-    signerFactory,
-    transactionFactory,
-  );
+  return ConcreteWallet.create(address, signerFactory, transactionFactory);
 }
 
 describe(`Given an instance of ${ConcreteWallet.name}`, () => {
