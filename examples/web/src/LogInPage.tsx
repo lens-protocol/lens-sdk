@@ -1,4 +1,4 @@
-import { profileId, useLogin, useProfiles } from '@lens-protocol/react';
+import { profileId, useLogin, useProfiles } from '@lens-protocol/react-web';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useAccount, useConnect } from 'wagmi';

@@ -1,4 +1,4 @@
-import { LensConfig, LensProvider, development } from '@lens-protocol/react';
+import { LensConfig, LensProvider, development } from '@lens-protocol/react-web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import { XMTPProvider } from '@xmtp/react-sdk';
 import { Toaster } from 'react-hot-toast';
@@ -36,7 +36,6 @@ import {
   UsePublications,
   UseWhoReactedToPublication,
 } from './publications';
-import { localStorage } from './storage';
 
 const { publicClient, webSocketPublicClient } = configureChains(
   [polygonMumbai],
@@ -58,7 +57,6 @@ const config = createConfig({
 
 const lensConfig: LensConfig = {
   environment: development,
-  storage: localStorage(),
   bindings: wagmiBindings(),
 };
 

@@ -1,4 +1,4 @@
-import { PublicationType, profileId, usePublications } from '@lens-protocol/react';
+import { PublicationType, profileId, usePublications } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';

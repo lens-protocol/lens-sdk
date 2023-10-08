@@ -1,4 +1,4 @@
-import { Comment, Post, AnyPublication, PublicationMetadata } from '@lens-protocol/react';
+import { Comment, Post, AnyPublication, PublicationMetadata } from '@lens-protocol/react-web';
 
 import { ProfilePicture } from '../../profiles/components/ProfilePicture';
 

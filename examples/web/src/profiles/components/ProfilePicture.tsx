@@ -1,4 +1,4 @@
-import { NftImage, ProfilePictureSet } from '@lens-protocol/react';
+import { NftImage, ProfilePictureSet } from '@lens-protocol/react-web';
 
 import { useBuildResourceSrc } from '../../hooks/useBuildResourceSrc';
 

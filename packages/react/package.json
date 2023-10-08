@@ -112,9 +112,5 @@
       "index.ts"
     ],
     "exports": true
-  },
-  "typedoc": {
-    "entryPoint": "./src/index.ts",
-    "tsconfig": "./tsconfig.json"
   }
 }

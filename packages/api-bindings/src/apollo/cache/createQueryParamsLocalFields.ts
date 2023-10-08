@@ -45,6 +45,8 @@ function buildImageTransform(
 
 /**
  * The default query parameters.
+ *
+ * A default configuration that should be good as a starting point.
  */
 export const defaultQueryParams: QueryParams = {
   image: {

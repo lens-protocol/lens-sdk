@@ -1,4 +1,4 @@
-import { profileId, useFeed } from '@lens-protocol/react';
+import { profileId, useFeed } from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
