@@ -3,11 +3,13 @@ import { ILogger } from '@lens-protocol/shared-kernel';
 import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/storage';
 
 import { EnvironmentConfig } from './environments';
+import { RequiredSigner } from './wallet/adapters/ConcreteWallet';
 import { IProviderBinding, GetProvider } from './wallet/infrastructure/ProviderFactory';
 import { ISignerBinding, GetSigner } from './wallet/infrastructure/SignerFactory';
 
-export type { QueryParams };
-export type { GetProvider, GetSigner };
+export type { QueryParams, ILogger, GetProvider, GetSigner, RequiredSigner };
+
+export { defaultQueryParams } from '@lens-protocol/api-bindings';
 
 export interface IBindings extends ISignerBinding, IProviderBinding {}
 
@@ -26,7 +28,7 @@ export type LensConfig = {
   /**
    * The logger interface to use when something worth logging happens
    *
-   * @defaultValue `ConsoleLogger`, an internal implementation of {@link ILogger} that logs to the console
+   * @defaultValue `ConsoleLogger`, an internal implementation of `ILogger` interface that logs to the console
    */
   logger?: ILogger;
   /**
@@ -39,7 +41,7 @@ export type LensConfig = {
   /**
    * The common query params allows you customize some aspect of the returned data.
    *
-   * @defaultValue {@link defaultQueryParams}
+   * If not provided {@link defaultQueryParams} will be used instead.
    */
   params?: QueryParams;
 };

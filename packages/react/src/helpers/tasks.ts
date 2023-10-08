@@ -3,8 +3,6 @@ import { useCallback, useState } from 'react';
 
 /**
  * An deferrable task is a function that can be executed multiple times and that can be in a pending state.
- *
- * @internal
  */
 export type DeferrableTask<
   TData,
@@ -12,35 +10,51 @@ export type DeferrableTask<
   TInput extends UnknownObject = never,
 > = (input: TInput) => PromiseResult<TData, TError>;
 
-export type NeverCalled = {
+/**
+ * The initial state of a deferred task.
+ */
+export type DeferredTaskIdle = {
   called: false;
   loading: false;
   data: undefined;
   error: undefined;
 };
 
-export type FirstCall = {
+/**
+ * The state of a deferred task during the first call.
+ */
+export type DeferredTaskFirstCall = {
   called: true;
   loading: true;
   data: undefined;
   error: undefined;
 };
 
-export type SubsequentCall<TData> = {
+/**
+ * The state of a deferred task during the n-th call
+ * with data from the previous successful call.
+ */
+export type DeferredTaskNthCall<TData> = {
   called: true;
   loading: true;
   data: TData;
   error: undefined;
 };
 
-export type Success<TData> = {
+/**
+ * The state of a deferred task after a successful call.
+ */
+export type DeferredTaskSuccess<TData> = {
   called: true;
   loading: false;
   data: TData;
   error: undefined;
 };
 
-export type Failed<TError extends IEquatableError> = {
+/**
+ * The state of a deferred task after a failed call.
+ */
+export type DeferredTaskFailed<TError extends IEquatableError> = {
   called: true;
   loading: false;
   data: undefined;
@@ -48,17 +62,17 @@ export type Failed<TError extends IEquatableError> = {
 };
 
 /**
- * The possible states of a deferred task.
+ * The possible statuses of a deferred task.
  */
-type DeferredTaskState<TData, TError extends IEquatableError> =
-  | NeverCalled
-  | FirstCall
-  | SubsequentCall<TData>
-  | Success<TData>
-  | Failed<TError>;
+export type DeferredTaskState<TData, TError extends IEquatableError> =
+  | DeferredTaskIdle
+  | DeferredTaskFirstCall
+  | DeferredTaskNthCall<TData>
+  | DeferredTaskSuccess<TData>
+  | DeferredTaskFailed<TError>;
 
 /**
- * An deferred task React Hook is a tiny wrapper around an {@link DeferrableTask}
+ * An deferred task React Hook is a tiny wrapper around an asynchronous function
  * that provides a way to determine when the task is running and also provide access
  * the last error that occurred during the execution of the task.
  *

@@ -1,5 +1,7 @@
 import { IObservableStorageProvider, StorageProviderSubscriber } from '@lens-protocol/storage';
 
+import { window } from './globals';
+
 class LocalStorageProvider implements IObservableStorageProvider {
   private subscribers = new Map<string, StorageProviderSubscriber[]>();
 

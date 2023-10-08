@@ -1,4 +1,4 @@
-import { SessionType, useSession } from '@lens-protocol/react';
+import { SessionType, useSession } from '@lens-protocol/react-web';
 import { NavLink } from 'react-router-dom';
 
 import { CATEGORIES } from '../../config';

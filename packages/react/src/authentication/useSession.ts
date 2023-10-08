@@ -112,6 +112,9 @@ export type Session = AnonymousSession | ProfileSession | WalletOnlySession;
  *   }
  * }
  * ```
+ *
+ * @category Authentication
+ * @group Hooks
  */
 export function useSession(): ReadResult<Session, UnspecifiedError> {
   const sessionData = useSessionDataVar();
