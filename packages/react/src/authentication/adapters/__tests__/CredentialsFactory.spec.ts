@@ -12,7 +12,6 @@ import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import { AuthApi, AuthChallenge } from '../AuthApi';
-import { Credentials } from '../Credentials';
 import { CredentialsFactory } from '../CredentialsFactory';
 import { mockCredentials } from '../__helpers__/mocks';
 
@@ -85,6 +84,9 @@ describe(`Given an instance of the ${CredentialsFactory.name} class`, () => {
 
   describe(`when the "${CredentialsFactory.prototype.renewCredentials.name}" method is invoked`, () => {
     it('should return the new credentials', async () => {
+      jest.useFakeTimers({
+        now: new Date(0),
+      });
       const newCredentials = mockCredentials();
       const { credentialsFactory, authApi } = setupTestScenario();
 
@@ -98,11 +100,10 @@ describe(`Given an instance of the ${CredentialsFactory.name} class`, () => {
     });
 
     it(`should fail with ${CredentialsExpiredError.name} if the credentials cant be refreshed`, async () => {
-      const { credentialsFactory } = setupTestScenario();
-
-      const credentials = mock<Credentials>({
-        canRefresh: () => false,
+      jest.useFakeTimers({
+        now: new Date(Number.MAX_SAFE_INTEGER),
       });
+      const { credentialsFactory } = setupTestScenario();
 
       const result = await credentialsFactory.renewCredentials(credentials);
       expect(() => result.unwrap()).toThrow(CredentialsExpiredError);
