@@ -1,4 +1,4 @@
-import { ProfileId, useLogin, useProfiles } from '@lens-protocol/react';
+import { profileId, useLogin, useProfiles } from '@lens-protocol/react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useAccount, useConnect } from 'wagmi';
@@ -10,7 +10,7 @@ import { never } from './utils';
 
 function ProfilesList({ owner }: { owner: string }) {
   const navigate = useNavigate();
-  const { execute: login, isPending: isLoginPending } = useLogin();
+  const { execute: login, loading: isLoginPending } = useLogin();
   const { data: profiles, error, loading } = useProfiles({ where: { ownedBy: [owner] } });
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -19,11 +19,11 @@ function ProfilesList({ owner }: { owner: string }) {
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const profileId = (formData.get('id') as string) ?? never();
+    const id = profileId(formData.get('id') as string) ?? never();
 
     const result = await login({
       address: owner,
-      profileId: profileId as ProfileId,
+      profileId: id,
     });
 
     if (result.isSuccess()) {

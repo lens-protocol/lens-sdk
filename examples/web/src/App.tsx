@@ -20,6 +20,7 @@ import { UseSearchProfiles } from './discovery/UseSearchProfiles';
 import { UseSearchPublications } from './discovery/UseSearchPublications';
 import {
   ProfilesPage,
+  UseLazyProfile,
   UseMutualFollowers,
   UseProfile,
   UseProfileActionHistory,
@@ -88,6 +89,7 @@ export function App() {
                     <Route path="/profiles">
                       <Route index element={<ProfilesPage />} />
                       <Route path="useProfile" element={<UseProfile />} />
+                      <Route path="useLazyProfile" element={<UseLazyProfile />} />
                       <Route path="useProfiles" element={<UseProfiles />} />
                       <Route path="useProfileFollowers" element={<UseProfileFollowers />} />
                       <Route path="useProfileFollowing" element={<UseProfileFollowing />} />
