@@ -1,14 +1,5 @@
 # @lens-protocol/react
 
-## 1.3.2-alpha.0
-
-### Patch Changes
-
-- Updated dependencies [38a40c70]
-- Updated dependencies [1c3a10c3]
-- Updated dependencies [6762b170]
-  - @lens-protocol/api-bindings@0.11.0-alpha.4
-
 ## 1.3.1
 
 ### Patch Changes
