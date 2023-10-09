@@ -1,4 +1,7 @@
-import { ExplorePublicationsOrderByType } from '@lens-protocol/api-bindings';
+import {
+  ExplorePublicationsOrderByType,
+  ExplorePublicationType,
+} from '@lens-protocol/api-bindings';
 import {
   mockExplorePublicationsResponse,
   mockPostFragment,
@@ -12,8 +15,13 @@ describe(`Given the ${useExplorePublications.name} hook`, () => {
   const publications = [mockPostFragment()];
 
   describe('when invoked', () => {
-    it('should return publications that match the explore with default parameters', async () => {
-      const args: UseExplorePublicationsArgs = { orderBy: ExplorePublicationsOrderByType.Latest };
+    it('should return publications that match the explore parameters', async () => {
+      const args: UseExplorePublicationsArgs = {
+        where: {
+          publicationTypes: [ExplorePublicationType.Post],
+        },
+        orderBy: ExplorePublicationsOrderByType.TopCommented,
+      };
 
       const { renderHook } = setupHookTestScenario([
         mockExplorePublicationsResponse({

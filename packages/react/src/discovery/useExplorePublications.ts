@@ -18,12 +18,17 @@ export type UseExplorePublicationsArgs = PaginatedArgs<ExplorePublicationRequest
  * @param args - {@link UseExplorePublicationsArgs}
  *
  * @example
- *
+ * Explore publications of type post with the most comments
  * ```tsx
- * import { PublicationSortCriteria, useExplorePublications } from '@lens-protocol/react-web';
+ * import { useExplorePublications, ExplorePublicationsOrderByType, ExplorePublicationType  } from '@lens-protocol/react-web';
  *
  * function ExplorePublications() {
- *   const { data, error, loading } = useExplorePublications({ sortCriteria: PublicationSortCriteria.MostComments });
+ *   const { data, error, loading } = useExplorePublications(
+ *    where: {
+ *        publicationTypes: [ExplorePublicationType.Post],
+ *      },
+ *    orderBy: ExplorePublicationsOrderByType.TopCommented,
+ * );
  *
  *   if (loading) return <p>Loading...</p>;
  *
