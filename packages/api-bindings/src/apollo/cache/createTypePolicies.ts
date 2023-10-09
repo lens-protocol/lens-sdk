@@ -18,6 +18,7 @@ import {
   createWhoActedOnPublicationFieldPolicy,
   createWhoReactedPublicationFieldPolicy,
 } from './field-policies';
+import { createExplorePublicationsFieldPolicy } from './field-policies/createExplorePublicationsFieldPolicy';
 import { notNormalizedType } from './utils/notNormalizedType';
 
 type InheritedTypePolicies = {
@@ -53,6 +54,7 @@ export function createTypePolicies(
         searchPublications: createSearchPublicationsFieldPolicy(),
         whoActedOnPublication: createWhoActedOnPublicationFieldPolicy(),
         whoReactedPublication: createWhoReactedPublicationFieldPolicy(),
+        explorePublications: createExplorePublicationsFieldPolicy(),
         feedHighlights: createFeedHighlightsFieldPolicy(),
 
         ...createQueryParamsLocalFields(params),

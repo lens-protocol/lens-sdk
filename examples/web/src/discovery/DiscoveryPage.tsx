@@ -21,6 +21,11 @@ const discoveryHooks = [
     description: 'Search for profiles using filters.',
     path: '/discovery/useSearchProfiles',
   },
+  {
+    label: 'useExplorePublications',
+    description: 'Explore publications using filters.',
+    path: '/discovery/useExplorePublications',
+  },
 ];
 
 export function DiscoveryPage() {
