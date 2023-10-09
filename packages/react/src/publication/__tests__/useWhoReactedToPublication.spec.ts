@@ -29,9 +29,7 @@ describe(`Given the ${useWhoReactedToPublication.name} hook`, () => {
 
       const { renderHook } = setupHookTestScenario([
         mockWhoReactedToPublicationResponse({
-          variables: {
-            ...args,
-          },
+          variables: args,
           items: profileReactions,
         }),
       ]);

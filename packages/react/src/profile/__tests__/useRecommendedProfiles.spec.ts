@@ -1,4 +1,3 @@
-import { LimitType } from '@lens-protocol/api-bindings';
 import {
   mockProfileFragment,
   mockProfileRecommendationsResponse,
@@ -20,7 +19,6 @@ describe(`Given the ${useRecommendedProfiles.name} hook`, () => {
         mockProfileRecommendationsResponse({
           variables: {
             for: profileId,
-            limit: LimitType.Ten,
           },
           items: profiles,
         }),

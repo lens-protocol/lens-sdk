@@ -1,4 +1,3 @@
-import { LimitType } from '@lens-protocol/api-bindings';
 import {
   mockCursor,
   mockPaginatedResultInfo,
@@ -24,7 +23,6 @@ describe(`Given the ${useProfiles.name} hook`, () => {
             where: {
               ownedBy: [evmAddress],
             },
-            limit: LimitType.Ten,
           },
           items: profiles,
         }),
@@ -50,7 +48,6 @@ describe(`Given the ${useProfiles.name} hook`, () => {
           where: {
             ownedBy: [evmAddress],
           },
-          limit: LimitType.Ten,
         },
         items: profiles,
         info: initialPageInfo,
@@ -61,7 +58,6 @@ describe(`Given the ${useProfiles.name} hook`, () => {
           where: {
             ownedBy: [evmAddress],
           },
-          limit: LimitType.Ten,
           cursor: initialPageInfo.prev,
         },
         items: [mockProfileFragment()],
