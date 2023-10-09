@@ -1,4 +1,3 @@
-import { LimitType } from '@lens-protocol/api-bindings';
 import { mockFeedHighlightsResponse, mockPostFragment } from '@lens-protocol/api-bindings/mocks';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
@@ -15,7 +14,6 @@ describe(`Given the ${useFeedHighlights.name} hook`, () => {
     it('should return the feed highlights', async () => {
       const args: UseFeedHighlightsArgs = {
         where: { for: profileId },
-        limit: LimitType.Ten,
       };
 
       const { renderHook } = setupHookTestScenario([
