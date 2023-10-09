@@ -14,12 +14,16 @@ import { LogInPage } from './LogInPage';
 import { GenericErrorBoundary } from './components/GenericErrorBoundary';
 import { ErrorMessage } from './components/error/ErrorMessage';
 import { Header } from './components/header/Header';
-import { DiscoveryPage } from './discovery/DiscoveryPage';
-import { UseExploreProfiles } from './discovery/UseExploreProfiles';
-import { UseExplorePublications } from './discovery/UseExplorePublications';
-import { UseFeed } from './discovery/UseFeed';
-import { UseSearchProfiles } from './discovery/UseSearchProfiles';
-import { UseSearchPublications } from './discovery/UseSearchPublications';
+import {
+  DiscoveryPage,
+  UseExploreProfiles,
+  UseExplorePublications,
+  UseFeed,
+  UseFeedHighlights,
+  UseSearchProfiles,
+  UseSearchPublications,
+} from './discovery';
+import { MiscPage, UseCurrencies } from './misc';
 import {
   ProfilesPage,
   UseLazyProfile,
@@ -114,10 +118,16 @@ export function App() {
                     <Route path="/discovery">
                       <Route index element={<DiscoveryPage />} />
                       <Route path="useFeed" element={<UseFeed />} />
+                      <Route path="useFeedHighlights" element={<UseFeedHighlights />} />
                       <Route path="useSearchPublications" element={<UseSearchPublications />} />
                       <Route path="useSearchProfiles" element={<UseSearchProfiles />} />
                       <Route path="useExploreProfiles" element={<UseExploreProfiles />} />
                       <Route path="useExplorePublications" element={<UseExplorePublications />} />
+                    </Route>
+
+                    <Route path="/misc">
+                      <Route index element={<MiscPage />} />
+                      <Route path="useCurrencies" element={<UseCurrencies />} />
                     </Route>
                   </Route>
 

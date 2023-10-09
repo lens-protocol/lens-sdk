@@ -3020,6 +3020,96 @@ export type InjectCommonQueryParams = {
   imageMediumSize: ImageTransformParam | null;
 };
 
+export type ModuleInfo = { name: string; type: string };
+
+export type KnownSupportedModule = {
+  moduleName: string;
+  contract: NetworkAddress;
+  moduleInput: Array<ModuleInfo>;
+  redeemInput: Array<ModuleInfo>;
+  returnDataInput: Array<ModuleInfo>;
+};
+
+export type UnknownSupportedModule = { moduleName: string; contract: NetworkAddress };
+
+export type ApprovedAllowanceAmountResult = {
+  moduleName: string;
+  moduleContract: NetworkAddress;
+  allowance: Amount;
+};
+
+export type GenerateModuleCurrencyApprovalResult = {
+  to: EvmAddress;
+  from: EvmAddress;
+  data: string;
+};
+
+export type CurrenciesVariables = Exact<{
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
+}>;
+
+export type CurrenciesData = { result: { items: Array<Erc20>; pageInfo: PaginatedResultInfo } };
+
+export type ApprovedModuleAllowanceAmountVariables = Exact<{
+  request: ApprovedModuleAllowanceAmountRequest;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
+}>;
+
+export type ApprovedModuleAllowanceAmountData = { result: Array<ApprovedAllowanceAmountResult> };
+
+export type GenerateModuleCurrencyApprovalDataVariables = Exact<{
+  request: GenerateModuleCurrencyApprovalDataRequest;
+}>;
+
+export type GenerateModuleCurrencyApprovalDataData = {
+  result: GenerateModuleCurrencyApprovalResult;
+};
+
+export type SupportedFollowModulesVariables = Exact<{
+  request: SupportedModulesRequest;
+}>;
+
+export type SupportedFollowModulesData = {
+  result: {
+    items: Array<KnownSupportedModule | UnknownSupportedModule>;
+    pageInfo: PaginatedResultInfo;
+  };
+};
+
+export type SupportedReferenceModulesVariables = Exact<{
+  request: SupportedModulesRequest;
+}>;
+
+export type SupportedReferenceModulesData = {
+  result: {
+    items: Array<KnownSupportedModule | UnknownSupportedModule>;
+    pageInfo: PaginatedResultInfo;
+  };
+};
+
+export type SupportedOpenActionModulesVariables = Exact<{
+  request: SupportedModulesRequest;
+}>;
+
+export type SupportedOpenActionModulesData = {
+  result: {
+    items: Array<KnownSupportedModule | UnknownSupportedModule>;
+    pageInfo: PaginatedResultInfo;
+  };
+};
+
+export type SupportedOpenActionCollectModulesVariables = Exact<{
+  request: SupportedModulesRequest;
+}>;
+
+export type SupportedOpenActionCollectModulesData = {
+  result: {
+    items: Array<KnownSupportedModule | UnknownSupportedModule>;
+    pageInfo: PaginatedResultInfo;
+  };
+};
+
 export type ReactedResult = {
   __typename: 'ReactedResult';
   reaction: PublicationReactionType;
@@ -6812,6 +6902,60 @@ export const FragmentInjectCommonQueryParams = /*#__PURE__*/ gql`
   }
   ${FragmentImageTransformParam}
 `;
+export const FragmentModuleInfo = /*#__PURE__*/ gql`
+  fragment ModuleInfo on ModuleInfo {
+    name
+    type
+  }
+`;
+export const FragmentKnownSupportedModule = /*#__PURE__*/ gql`
+  fragment KnownSupportedModule on KnownSupportedModule {
+    moduleName
+    contract {
+      ...NetworkAddress
+    }
+    moduleInput {
+      ...ModuleInfo
+    }
+    redeemInput {
+      ...ModuleInfo
+    }
+    returnDataInput {
+      ...ModuleInfo
+    }
+  }
+  ${FragmentNetworkAddress}
+  ${FragmentModuleInfo}
+`;
+export const FragmentUnknownSupportedModule = /*#__PURE__*/ gql`
+  fragment UnknownSupportedModule on UnknownSupportedModule {
+    moduleName
+    contract {
+      ...NetworkAddress
+    }
+  }
+  ${FragmentNetworkAddress}
+`;
+export const FragmentApprovedAllowanceAmountResult = /*#__PURE__*/ gql`
+  fragment ApprovedAllowanceAmountResult on ApprovedAllowanceAmountResult {
+    moduleName
+    moduleContract {
+      ...NetworkAddress
+    }
+    allowance {
+      ...Amount
+    }
+  }
+  ${FragmentNetworkAddress}
+  ${FragmentAmount}
+`;
+export const FragmentGenerateModuleCurrencyApprovalResult = /*#__PURE__*/ gql`
+  fragment GenerateModuleCurrencyApprovalResult on GenerateModuleCurrencyApprovalResult {
+    to
+    from
+    data
+  }
+`;
 export const FragmentReactedResult = /*#__PURE__*/ gql`
   fragment ReactedResult on ReactedResult {
     __typename
@@ -8158,6 +8302,454 @@ export type FeedHighlightsLazyQueryHookResult = ReturnType<typeof useFeedHighlig
 export type FeedHighlightsQueryResult = Apollo.QueryResult<
   FeedHighlightsData,
   FeedHighlightsVariables
+>;
+export const CurrenciesDocument = /*#__PURE__*/ gql`
+  query Currencies($limit: LimitType, $cursor: Cursor) {
+    result: currencies(request: { limit: $limit, cursor: $cursor }) {
+      items {
+        ...Erc20
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentErc20}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __useCurrencies__
+ *
+ * To run a query within a React component, call `useCurrencies` and pass it any options that fit your needs.
+ * When your component renders, `useCurrencies` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCurrencies({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function useCurrencies(
+  baseOptions?: Apollo.QueryHookOptions<CurrenciesData, CurrenciesVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<CurrenciesData, CurrenciesVariables>(CurrenciesDocument, options);
+}
+export function useCurrenciesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<CurrenciesData, CurrenciesVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<CurrenciesData, CurrenciesVariables>(CurrenciesDocument, options);
+}
+export type CurrenciesHookResult = ReturnType<typeof useCurrencies>;
+export type CurrenciesLazyQueryHookResult = ReturnType<typeof useCurrenciesLazyQuery>;
+export type CurrenciesQueryResult = Apollo.QueryResult<CurrenciesData, CurrenciesVariables>;
+export const ApprovedModuleAllowanceAmountDocument = /*#__PURE__*/ gql`
+  query ApprovedModuleAllowanceAmount(
+    $request: ApprovedModuleAllowanceAmountRequest!
+    $fxRateFor: SupportedFiatType = USD
+  ) {
+    result: approvedModuleAllowanceAmount(request: $request) {
+      ... on ApprovedAllowanceAmountResult {
+        ...ApprovedAllowanceAmountResult
+      }
+    }
+  }
+  ${FragmentApprovedAllowanceAmountResult}
+`;
+
+/**
+ * __useApprovedModuleAllowanceAmount__
+ *
+ * To run a query within a React component, call `useApprovedModuleAllowanceAmount` and pass it any options that fit your needs.
+ * When your component renders, `useApprovedModuleAllowanceAmount` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useApprovedModuleAllowanceAmount({
+ *   variables: {
+ *      request: // value for 'request'
+ *      fxRateFor: // value for 'fxRateFor'
+ *   },
+ * });
+ */
+export function useApprovedModuleAllowanceAmount(
+  baseOptions: Apollo.QueryHookOptions<
+    ApprovedModuleAllowanceAmountData,
+    ApprovedModuleAllowanceAmountVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ApprovedModuleAllowanceAmountData, ApprovedModuleAllowanceAmountVariables>(
+    ApprovedModuleAllowanceAmountDocument,
+    options,
+  );
+}
+export function useApprovedModuleAllowanceAmountLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ApprovedModuleAllowanceAmountData,
+    ApprovedModuleAllowanceAmountVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    ApprovedModuleAllowanceAmountData,
+    ApprovedModuleAllowanceAmountVariables
+  >(ApprovedModuleAllowanceAmountDocument, options);
+}
+export type ApprovedModuleAllowanceAmountHookResult = ReturnType<
+  typeof useApprovedModuleAllowanceAmount
+>;
+export type ApprovedModuleAllowanceAmountLazyQueryHookResult = ReturnType<
+  typeof useApprovedModuleAllowanceAmountLazyQuery
+>;
+export type ApprovedModuleAllowanceAmountQueryResult = Apollo.QueryResult<
+  ApprovedModuleAllowanceAmountData,
+  ApprovedModuleAllowanceAmountVariables
+>;
+export const GenerateModuleCurrencyApprovalDataDocument = /*#__PURE__*/ gql`
+  query GenerateModuleCurrencyApprovalData($request: GenerateModuleCurrencyApprovalDataRequest!) {
+    result: generateModuleCurrencyApprovalData(request: $request) {
+      ... on GenerateModuleCurrencyApprovalResult {
+        ...GenerateModuleCurrencyApprovalResult
+      }
+    }
+  }
+  ${FragmentGenerateModuleCurrencyApprovalResult}
+`;
+
+/**
+ * __useGenerateModuleCurrencyApprovalData__
+ *
+ * To run a query within a React component, call `useGenerateModuleCurrencyApprovalData` and pass it any options that fit your needs.
+ * When your component renders, `useGenerateModuleCurrencyApprovalData` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGenerateModuleCurrencyApprovalData({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useGenerateModuleCurrencyApprovalData(
+  baseOptions: Apollo.QueryHookOptions<
+    GenerateModuleCurrencyApprovalDataData,
+    GenerateModuleCurrencyApprovalDataVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GenerateModuleCurrencyApprovalDataData,
+    GenerateModuleCurrencyApprovalDataVariables
+  >(GenerateModuleCurrencyApprovalDataDocument, options);
+}
+export function useGenerateModuleCurrencyApprovalDataLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GenerateModuleCurrencyApprovalDataData,
+    GenerateModuleCurrencyApprovalDataVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GenerateModuleCurrencyApprovalDataData,
+    GenerateModuleCurrencyApprovalDataVariables
+  >(GenerateModuleCurrencyApprovalDataDocument, options);
+}
+export type GenerateModuleCurrencyApprovalDataHookResult = ReturnType<
+  typeof useGenerateModuleCurrencyApprovalData
+>;
+export type GenerateModuleCurrencyApprovalDataLazyQueryHookResult = ReturnType<
+  typeof useGenerateModuleCurrencyApprovalDataLazyQuery
+>;
+export type GenerateModuleCurrencyApprovalDataQueryResult = Apollo.QueryResult<
+  GenerateModuleCurrencyApprovalDataData,
+  GenerateModuleCurrencyApprovalDataVariables
+>;
+export const SupportedFollowModulesDocument = /*#__PURE__*/ gql`
+  query SupportedFollowModules($request: SupportedModulesRequest!) {
+    result: supportedFollowModules(request: $request) {
+      items {
+        ... on KnownSupportedModule {
+          ...KnownSupportedModule
+        }
+        ... on UnknownSupportedModule {
+          ...UnknownSupportedModule
+        }
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentKnownSupportedModule}
+  ${FragmentUnknownSupportedModule}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __useSupportedFollowModules__
+ *
+ * To run a query within a React component, call `useSupportedFollowModules` and pass it any options that fit your needs.
+ * When your component renders, `useSupportedFollowModules` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSupportedFollowModules({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useSupportedFollowModules(
+  baseOptions: Apollo.QueryHookOptions<SupportedFollowModulesData, SupportedFollowModulesVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<SupportedFollowModulesData, SupportedFollowModulesVariables>(
+    SupportedFollowModulesDocument,
+    options,
+  );
+}
+export function useSupportedFollowModulesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    SupportedFollowModulesData,
+    SupportedFollowModulesVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<SupportedFollowModulesData, SupportedFollowModulesVariables>(
+    SupportedFollowModulesDocument,
+    options,
+  );
+}
+export type SupportedFollowModulesHookResult = ReturnType<typeof useSupportedFollowModules>;
+export type SupportedFollowModulesLazyQueryHookResult = ReturnType<
+  typeof useSupportedFollowModulesLazyQuery
+>;
+export type SupportedFollowModulesQueryResult = Apollo.QueryResult<
+  SupportedFollowModulesData,
+  SupportedFollowModulesVariables
+>;
+export const SupportedReferenceModulesDocument = /*#__PURE__*/ gql`
+  query SupportedReferenceModules($request: SupportedModulesRequest!) {
+    result: supportedReferenceModules(request: $request) {
+      items {
+        ... on KnownSupportedModule {
+          ...KnownSupportedModule
+        }
+        ... on UnknownSupportedModule {
+          ...UnknownSupportedModule
+        }
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentKnownSupportedModule}
+  ${FragmentUnknownSupportedModule}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __useSupportedReferenceModules__
+ *
+ * To run a query within a React component, call `useSupportedReferenceModules` and pass it any options that fit your needs.
+ * When your component renders, `useSupportedReferenceModules` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSupportedReferenceModules({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useSupportedReferenceModules(
+  baseOptions: Apollo.QueryHookOptions<
+    SupportedReferenceModulesData,
+    SupportedReferenceModulesVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<SupportedReferenceModulesData, SupportedReferenceModulesVariables>(
+    SupportedReferenceModulesDocument,
+    options,
+  );
+}
+export function useSupportedReferenceModulesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    SupportedReferenceModulesData,
+    SupportedReferenceModulesVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<SupportedReferenceModulesData, SupportedReferenceModulesVariables>(
+    SupportedReferenceModulesDocument,
+    options,
+  );
+}
+export type SupportedReferenceModulesHookResult = ReturnType<typeof useSupportedReferenceModules>;
+export type SupportedReferenceModulesLazyQueryHookResult = ReturnType<
+  typeof useSupportedReferenceModulesLazyQuery
+>;
+export type SupportedReferenceModulesQueryResult = Apollo.QueryResult<
+  SupportedReferenceModulesData,
+  SupportedReferenceModulesVariables
+>;
+export const SupportedOpenActionModulesDocument = /*#__PURE__*/ gql`
+  query SupportedOpenActionModules($request: SupportedModulesRequest!) {
+    result: supportedOpenActionModules(request: $request) {
+      items {
+        ... on KnownSupportedModule {
+          ...KnownSupportedModule
+        }
+        ... on UnknownSupportedModule {
+          ...UnknownSupportedModule
+        }
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentKnownSupportedModule}
+  ${FragmentUnknownSupportedModule}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __useSupportedOpenActionModules__
+ *
+ * To run a query within a React component, call `useSupportedOpenActionModules` and pass it any options that fit your needs.
+ * When your component renders, `useSupportedOpenActionModules` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSupportedOpenActionModules({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useSupportedOpenActionModules(
+  baseOptions: Apollo.QueryHookOptions<
+    SupportedOpenActionModulesData,
+    SupportedOpenActionModulesVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<SupportedOpenActionModulesData, SupportedOpenActionModulesVariables>(
+    SupportedOpenActionModulesDocument,
+    options,
+  );
+}
+export function useSupportedOpenActionModulesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    SupportedOpenActionModulesData,
+    SupportedOpenActionModulesVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<SupportedOpenActionModulesData, SupportedOpenActionModulesVariables>(
+    SupportedOpenActionModulesDocument,
+    options,
+  );
+}
+export type SupportedOpenActionModulesHookResult = ReturnType<typeof useSupportedOpenActionModules>;
+export type SupportedOpenActionModulesLazyQueryHookResult = ReturnType<
+  typeof useSupportedOpenActionModulesLazyQuery
+>;
+export type SupportedOpenActionModulesQueryResult = Apollo.QueryResult<
+  SupportedOpenActionModulesData,
+  SupportedOpenActionModulesVariables
+>;
+export const SupportedOpenActionCollectModulesDocument = /*#__PURE__*/ gql`
+  query SupportedOpenActionCollectModules($request: SupportedModulesRequest!) {
+    result: supportedOpenActionCollectModules(request: $request) {
+      items {
+        ... on KnownSupportedModule {
+          ...KnownSupportedModule
+        }
+        ... on UnknownSupportedModule {
+          ...UnknownSupportedModule
+        }
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentKnownSupportedModule}
+  ${FragmentUnknownSupportedModule}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __useSupportedOpenActionCollectModules__
+ *
+ * To run a query within a React component, call `useSupportedOpenActionCollectModules` and pass it any options that fit your needs.
+ * When your component renders, `useSupportedOpenActionCollectModules` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSupportedOpenActionCollectModules({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useSupportedOpenActionCollectModules(
+  baseOptions: Apollo.QueryHookOptions<
+    SupportedOpenActionCollectModulesData,
+    SupportedOpenActionCollectModulesVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    SupportedOpenActionCollectModulesData,
+    SupportedOpenActionCollectModulesVariables
+  >(SupportedOpenActionCollectModulesDocument, options);
+}
+export function useSupportedOpenActionCollectModulesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    SupportedOpenActionCollectModulesData,
+    SupportedOpenActionCollectModulesVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    SupportedOpenActionCollectModulesData,
+    SupportedOpenActionCollectModulesVariables
+  >(SupportedOpenActionCollectModulesDocument, options);
+}
+export type SupportedOpenActionCollectModulesHookResult = ReturnType<
+  typeof useSupportedOpenActionCollectModules
+>;
+export type SupportedOpenActionCollectModulesLazyQueryHookResult = ReturnType<
+  typeof useSupportedOpenActionCollectModulesLazyQuery
+>;
+export type SupportedOpenActionCollectModulesQueryResult = Apollo.QueryResult<
+  SupportedOpenActionCollectModulesData,
+  SupportedOpenActionCollectModulesVariables
 >;
 export const NotificationsDocument = /*#__PURE__*/ gql`
   query Notifications(
