@@ -6,7 +6,6 @@ import {
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { OmitCursor, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
-import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 export type UseFeedHighlightsArgs = OmitCursor<FeedHighlightsRequest>;
 
@@ -48,14 +47,12 @@ export type UseFeedHighlightsArgs = OmitCursor<FeedHighlightsRequest>;
  */
 export function useFeedHighlights({
   where,
-  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
 }: UseFeedHighlightsArgs): PaginatedReadResult<FeedHighlight[]> {
   return usePaginatedReadResult(
     useBaseFeedHighlightsQuery(
       useLensApolloClient({
         variables: {
           where,
-          limit,
         },
       }),
     ),
