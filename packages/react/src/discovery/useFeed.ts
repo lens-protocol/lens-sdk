@@ -46,7 +46,7 @@ export function useFeed({ where }: UseFeedArgs): PaginatedReadResult<FeedItem[]>
     useBaseFeedQuery(
       useLensApolloClient({
         variables: {
-          request: { where },
+          where,
         },
       }),
     ),

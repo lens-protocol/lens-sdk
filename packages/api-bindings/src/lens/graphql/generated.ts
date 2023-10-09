@@ -1756,6 +1756,12 @@ export type FeedVariables = Exact<{
 
 export type FeedData = { result: { items: Array<FeedItem>; pageInfo: PaginatedResultInfo } };
 
+type FeedHighlight_Post_ = Post;
+
+type FeedHighlight_Quote_ = Quote;
+
+export type FeedHighlight = FeedHighlight_Post_ | FeedHighlight_Quote_;
+
 export type FeedHighlightsVariables = Exact<{
   where?: InputMaybe<FeedHighlightsWhere>;
   limit?: InputMaybe<LimitType>;
@@ -1769,7 +1775,10 @@ export type FeedHighlightsVariables = Exact<{
 }>;
 
 export type FeedHighlightsData = {
-  result: { items: Array<Post | Quote>; pageInfo: PaginatedResultInfo };
+  result: {
+    items: Array<FeedHighlight_Post_ | FeedHighlight_Quote_>;
+    pageInfo: PaginatedResultInfo;
+  };
 } & InjectCommonQueryParams;
 
 export type OptimisticStatusResult = {
@@ -6680,6 +6689,18 @@ export const FragmentFeedItem = /*#__PURE__*/ gql`
   ${FragmentMirror}
   ${FragmentReactionEvent}
 `;
+export const FragmentFeedHighlight = /*#__PURE__*/ gql`
+  fragment FeedHighlight on FeedHighlight {
+    ... on Post {
+      ...Post
+    }
+    ... on Quote {
+      ...Quote
+    }
+  }
+  ${FragmentPost}
+  ${FragmentQuote}
+`;
 export const FragmentPaginatedResultInfo = /*#__PURE__*/ gql`
   fragment PaginatedResultInfo on PaginatedResultInfo {
     __typename
@@ -7985,12 +8006,7 @@ export const FeedHighlightsDocument = /*#__PURE__*/ gql`
     ...InjectCommonQueryParams
     result: feedHighlights(request: { where: $where, limit: $limit, cursor: $cursor }) {
       items {
-        ... on Post {
-          ...Post
-        }
-        ... on Quote {
-          ...Quote
-        }
+        ...FeedHighlight
       }
       pageInfo {
         ...PaginatedResultInfo
@@ -7998,8 +8014,7 @@ export const FeedHighlightsDocument = /*#__PURE__*/ gql`
     }
   }
   ${FragmentInjectCommonQueryParams}
-  ${FragmentPost}
-  ${FragmentQuote}
+  ${FragmentFeedHighlight}
   ${FragmentPaginatedResultInfo}
 `;
 

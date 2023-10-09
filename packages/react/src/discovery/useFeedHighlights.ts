@@ -4,7 +4,7 @@ import {
   useFeedHighlights as useBaseFeedHighlightsQuery,
 } from '@lens-protocol/api-bindings';
 
-import { useLensApolloClient, useMediaTransformFromConfig } from '../helpers/arguments';
+import { useLensApolloClient } from '../helpers/arguments';
 import { OmitCursor, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
@@ -53,10 +53,10 @@ export function useFeedHighlights({
   return usePaginatedReadResult(
     useBaseFeedHighlightsQuery(
       useLensApolloClient({
-        variables: useMediaTransformFromConfig({
+        variables: {
           where,
           limit,
-        }),
+        },
       }),
     ),
   );

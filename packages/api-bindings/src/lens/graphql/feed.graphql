@@ -51,6 +51,15 @@ query Feed(
   }
 }
 
+fragment FeedHighlight on FeedHighlight {
+  ... on Post {
+    ...Post
+  }
+  ... on Quote {
+    ...Quote
+  }
+}
+
 query FeedHighlights(
   $where: FeedHighlightsWhere
   $limit: LimitType
@@ -65,12 +74,7 @@ query FeedHighlights(
   ...InjectCommonQueryParams
   result: feedHighlights(request: { where: $where, limit: $limit, cursor: $cursor }) {
     items {
-      ... on Post {
-        ...Post
-      }
-      ... on Quote {
-        ...Quote
-      }
+      ...FeedHighlight
     }
     pageInfo {
       ...PaginatedResultInfo
