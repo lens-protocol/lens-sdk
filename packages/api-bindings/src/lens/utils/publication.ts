@@ -1,9 +1,4 @@
-import { Comment, Mirror, Post, Quote } from '../graphql/generated';
 import { PickByTypename, Typename } from './types';
-
-export type AnyPublication = Comment | Mirror | Post | Quote;
-
-export type PrimaryPublication = Post | Comment | Quote;
 
 /**
  * @group Helpers

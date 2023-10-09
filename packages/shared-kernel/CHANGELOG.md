@@ -1,5 +1,17 @@
 # @lens-protocol/shared-kernel
 
+## 0.11.0-alpha.2
+
+### Patch Changes
+
+- 6d0d62dd: **feat:** new `useLogin` and `useSession` hooks
+
+## 0.11.0-alpha.1
+
+### Patch Changes
+
+- 25fe9a46: Support for new v2 hooks
+
 ## 0.11.0-alpha.0
 
 ### Minor Changes

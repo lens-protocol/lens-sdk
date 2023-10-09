@@ -7,6 +7,11 @@ const profileHooks = [
     path: '/profiles/useProfile',
   },
   {
+    label: 'useLazyProfile',
+    description: `Lazy fetch a single profile.`,
+    path: '/profiles/useLazyProfile',
+  },
+  {
     label: 'useProfiles',
     description: `Fetch a list of profiles.`,
     path: '/profiles/useProfiles',
@@ -25,6 +30,21 @@ const profileHooks = [
     label: 'useMutualFollowers',
     description: `Fetch a list of mutual followers between profiles.`,
     path: '/profiles/useMutualFollowers',
+  },
+  {
+    label: 'useRecommendedProfiles',
+    description: `Fetch a list of recommended profiles.`,
+    path: '/profiles/useRecommendedProfiles',
+  },
+  {
+    label: 'useWhoActedOnPublication',
+    description: `Fetch a list of profiles who acted on a publication.`,
+    path: '/profiles/useWhoActedOnPublication',
+  },
+  {
+    label: 'useProfileActionHistory',
+    description: `Fetch profile action history.`,
+    path: '/profiles/useProfileActionHistory',
   },
 ];
 

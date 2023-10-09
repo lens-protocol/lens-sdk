@@ -1,4 +1,4 @@
-import { failure, PromiseResult, Url } from '@lens-protocol/shared-kernel';
+import { PromiseResult, Url } from '@lens-protocol/shared-kernel';
 
 import { NativeTransaction, TransactionKind, AnyTransactionRequestModel } from '../../entities';
 import { BroadcastingError } from '../transactions/BroadcastingError';
@@ -40,14 +40,14 @@ export class CreateProfile {
   ) {}
 
   async execute(request: CreateProfileRequest) {
-    const transactionResult = await this.transactionFactory.createProfileTransaction(request);
+    const result = await this.transactionFactory.createProfileTransaction(request);
 
-    if (transactionResult.isFailure()) {
-      this.presenter.present(failure(transactionResult.error));
+    if (result.isFailure()) {
+      this.presenter.present(result);
       return;
     }
 
-    const transaction = transactionResult.value;
+    const transaction = result.value;
 
     await this.transactionQueue.push(transaction, this.presenter);
   }

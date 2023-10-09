@@ -19,8 +19,12 @@ import {
   mockNonce,
   mockProtocolTransactionRequestModel,
   mockWallet,
-} from '../../../entities/__helpers__/mocks';
-import { mockActiveWallet } from '../../wallets/__helpers__/mocks';
+  mockActiveWallet,
+  mockIMetaTransactionNonceGateway,
+  mockIOnChainRelayer,
+  mockIOnChainProtocolCallGateway,
+  mockTransactionQueue,
+} from '../../../mocks';
 import { BroadcastingError } from '../BroadcastingError';
 import {
   SubsidizeOnChain,
@@ -30,12 +34,6 @@ import {
   IOnChainRelayer,
 } from '../SubsidizeOnChain';
 import { TransactionQueue } from '../TransactionQueue';
-import {
-  mockIMetaTransactionNonceGateway,
-  mockIOnChainRelayer,
-  mockIOnChainProtocolCallGateway,
-  mockTransactionQueue,
-} from '../__helpers__/mocks';
 
 function setupSubsidizedCall<T extends ProtocolTransactionRequestModel>({
   metaTransactionNonceGateway,

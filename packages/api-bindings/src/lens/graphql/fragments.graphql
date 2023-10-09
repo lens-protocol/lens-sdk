@@ -1,10 +1,12 @@
 # query fragments
 fragment OptimisticStatusResult on OptimisticStatusResult {
+  __typename
   value
   isFinalisedOnchain
 }
 
 fragment Erc20 on Erc20 {
+  __typename
   name
   symbol
   decimals
@@ -14,6 +16,7 @@ fragment Erc20 on Erc20 {
 }
 
 fragment FiatAmount on FiatAmount {
+  __typename
   asset {
     ...Fiat
   }
@@ -21,22 +24,25 @@ fragment FiatAmount on FiatAmount {
 }
 
 fragment Fiat on Fiat {
+  __typename
   name
   symbol
   decimals
 }
 
 fragment Amount on Amount {
+  __typename
   asset {
     ...Erc20
   }
   value
-  rate(request: $rateRequest) {
+  rate(request: { for: $fxRateFor }) {
     ...FiatAmount
   }
 }
 
 fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
+  __typename
   amount {
     ...Amount
   }
@@ -47,12 +53,14 @@ fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
 }
 
 fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
 }
 
 fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -60,6 +68,7 @@ fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
 }
 
 fragment NetworkAddress on NetworkAddress {
+  __typename
   address
   chainId
 }
@@ -97,6 +106,7 @@ fragment MetadataStringAttribute on MetadataStringAttribute {
 
 # media
 fragment Image on Image {
+  __typename
   uri
   mimeType
   width
@@ -104,18 +114,23 @@ fragment Image on Image {
 }
 
 fragment ImageSet on ImageSet {
+  __typename
   raw {
     ...Image
   }
   optimized {
     ...Image
   }
-  transformed(request: $publicationImageTransform) {
+  small: transformed(request: $imageSmallSize) {
+    ...Image
+  }
+  medium: transformed(request: $imageMediumSize) {
     ...Image
   }
 }
 
 fragment EncryptableImage on EncryptableImage {
+  __typename
   uri
   mimeType
   width
@@ -123,6 +138,7 @@ fragment EncryptableImage on EncryptableImage {
 }
 
 fragment EncryptableImageSet on EncryptableImageSet {
+  __typename
   raw {
     ...EncryptableImage
   }
@@ -132,16 +148,19 @@ fragment EncryptableImageSet on EncryptableImageSet {
 }
 
 fragment Video on Video {
+  __typename
   uri
   mimeType
 }
 
 fragment EncryptableVideo on EncryptableVideo {
+  __typename
   mimeType
   uri
 }
 
 fragment EncryptableVideoSet on EncryptableVideoSet {
+  __typename
   raw {
     ...EncryptableVideo
   }
@@ -151,16 +170,19 @@ fragment EncryptableVideoSet on EncryptableVideoSet {
 }
 
 fragment Audio on Audio {
+  __typename
   uri
   mimeType
 }
 
 fragment EncryptableAudio on EncryptableAudio {
+  __typename
   mimeType
   uri
 }
 
 fragment EncryptableAudioSet on EncryptableAudioSet {
+  __typename
   raw {
     ...EncryptableAudio
   }
@@ -171,13 +193,14 @@ fragment EncryptableAudioSet on EncryptableAudioSet {
 
 # profile
 fragment ProfileCoverSet on ImageSet {
+  __typename
   raw {
     ...Image
   }
   optimized {
     ...Image
   }
-  transformed(request: $profileCoverTransform) {
+  transformed(request: $profileCoverSize) {
     ...Image
   }
 }
@@ -190,7 +213,7 @@ fragment ProfilePictureSet on ImageSet {
   optimized {
     ...Image
   }
-  transformed(request: $profilePictureTransform) {
+  thumbnail: transformed(request: $profilePictureSize) {
     ...Image
   }
 }
@@ -208,6 +231,7 @@ fragment NftImage on NftImage {
 }
 
 fragment ProfileStats on ProfileStats {
+  __typename
   id
   followers
   following
@@ -216,14 +240,97 @@ fragment ProfileStats on ProfileStats {
   mirrors
   quotes
   publications
-  upvoteReactions: reactions(request: { type: UPVOTE })
-  downvoteReactions: reactions(request: { type: DOWNVOTE })
-  upvoteReacted: reacted(request: { type: UPVOTE })
-  downvoteReacted: reacted(request: { type: DOWNVOTE })
-  countOpenActions(request: $profileStatsCountOpenActionArgs)
+  upvotes: reactions(request: { type: UPVOTE })
+  downvotes: reactions(request: { type: DOWNVOTE })
+  upvoted: reacted(request: { type: UPVOTE })
+  downvoted: reacted(request: { type: DOWNVOTE })
+  collects: countOpenActions(request: { anyOf: [{ category: COLLECT }] })
 }
 
-fragment Profile on Profile {
+fragment ProfileOperations on ProfileOperations {
+  __typename
+  id
+  isBlockedByMe {
+    ...OptimisticStatusResult
+  }
+  isFollowedByMe {
+    ...OptimisticStatusResult
+  }
+  isFollowingMe {
+    ...OptimisticStatusResult
+  }
+  canBlock
+  canUnblock
+  canFollow
+  canUnfollow
+}
+
+fragment ProfileOnchainIdentity on ProfileOnchainIdentity {
+  __typename
+  proofOfHumanity
+  ens {
+    name
+  }
+  sybilDotOrg {
+    source {
+      twitter {
+        handle
+      }
+    }
+  }
+  worldcoin {
+    isHuman
+  }
+}
+
+fragment ProfileGuardianResult on ProfileGuardianResult {
+  __typename
+  protected
+  cooldownEndsOn
+}
+
+fragment ProfilePicture on ProfilePicture {
+  __typename
+  ... on ImageSet {
+    ...ProfilePictureSet
+  }
+  ... on NftImage {
+    ...NftImage
+  }
+}
+
+fragment ProfileMetadata on ProfileMetadata {
+  __typename
+  appId
+  displayName
+  bio
+  rawURI
+  picture {
+    ...ProfilePicture
+  }
+  coverPicture {
+    ...ProfileCoverSet
+  }
+  attributes {
+    ... on MetadataBooleanAttribute {
+      ...MetadataBooleanAttribute
+    }
+    ... on MetadataDateAttribute {
+      ...MetadataDateAttribute
+    }
+    ... on MetadataNumberAttribute {
+      ...MetadataNumberAttribute
+    }
+    ... on MetadataJSONAttribute {
+      ...MetadataJSONAttribute
+    }
+    ... on MetadataStringAttribute {
+      ...MetadataStringAttribute
+    }
+  }
+}
+
+fragment ProfileFields on Profile {
   __typename
   id
   ownedBy {
@@ -232,42 +339,15 @@ fragment Profile on Profile {
   txHash
   createdAt
   operations {
-    id
-    isBlockedByMe {
-      ...OptimisticStatusResult
-    }
-    isFollowedByMe {
-      ...OptimisticStatusResult
-    }
-    isFollowingMe {
-      ...OptimisticStatusResult
-    }
-    canBlock
-    canUnblock
-    canFollow
-    canUnfollow
+    ...ProfileOperations
   }
   interests
   guardian {
-    protected
-    cooldownEndsOn
+    ...ProfileGuardianResult
   }
   invitesLeft
   onchainIdentity {
-    proofOfHumanity
-    ens {
-      name
-    }
-    sybilDotOrg {
-      source {
-        twitter {
-          handle
-        }
-      }
-    }
-    worldcoin {
-      isHuman
-    }
+    ...ProfileOnchainIdentity
   }
   followNftAddress {
     ...NetworkAddress
@@ -284,47 +364,21 @@ fragment Profile on Profile {
     }
   }
   metadata {
-    appId
-    displayName
-    bio
-    rawURI
-    picture {
-      ... on ImageSet {
-        ...ProfilePictureSet
-      }
-      ... on NftImage {
-        ...NftImage
-      }
-    }
-    coverPicture {
-      ...ProfileCoverSet
-    }
-    attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
-    }
+    ...ProfileMetadata
   }
   handle
   sponsor
   lensManager
-  invitedBy {
-    id
-  }
-  stats(request: $profileStatsArg) {
+  stats(request: { forApps: $activityOn }) {
     ...ProfileStats
+  }
+}
+
+fragment Profile on Profile {
+  __typename
+  ...ProfileFields
+  invitedBy {
+    ...ProfileFields
   }
 }
 
@@ -336,21 +390,25 @@ fragment PaginatedResultInfo on PaginatedResultInfo {
 }
 
 fragment App on App {
+  __typename
   id
 }
 
 fragment MomokaInfo on MomokaInfo {
+  __typename
   proof
 }
 
 # reference modules
 fragment FollowOnlyReferenceModuleSettings on FollowOnlyReferenceModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
 }
 
 fragment DegreesOfSeparationReferenceModuleSettings on DegreesOfSeparationReferenceModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -360,6 +418,7 @@ fragment DegreesOfSeparationReferenceModuleSettings on DegreesOfSeparationRefere
 }
 
 fragment UnknownReferenceModuleSettings on UnknownReferenceModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -368,6 +427,7 @@ fragment UnknownReferenceModuleSettings on UnknownReferenceModuleSettings {
 
 # open action modules
 fragment SimpleCollectOpenActionSettings on SimpleCollectOpenActionSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -381,7 +441,15 @@ fragment SimpleCollectOpenActionSettings on SimpleCollectOpenActionSettings {
   endsAt
 }
 
+# purposefully renamed Recipient to have a better narrative
+fragment Recipient on RecipientDataOutput {
+  # __typename not include to hide RecipientDataOutput not needed anyway here
+  recipient
+  split
+}
+
 fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectOpenActionSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -389,8 +457,7 @@ fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectO
     ...Amount
   }
   recipients {
-    recipient
-    split
+    ...Recipient
   }
   referralFee
   followerOnly
@@ -399,6 +466,7 @@ fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectO
 }
 
 fragment UnknownOpenActionModuleSettings on UnknownOpenActionModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -406,6 +474,7 @@ fragment UnknownOpenActionModuleSettings on UnknownOpenActionModuleSettings {
 }
 
 fragment LegacyFreeCollectModuleSettings on LegacyFreeCollectModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -413,6 +482,7 @@ fragment LegacyFreeCollectModuleSettings on LegacyFreeCollectModuleSettings {
 }
 
 fragment LegacyFeeCollectModuleSettings on LegacyFeeCollectModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -425,6 +495,7 @@ fragment LegacyFeeCollectModuleSettings on LegacyFeeCollectModuleSettings {
 }
 
 fragment LegacyLimitedFeeCollectModuleSettings on LegacyLimitedFeeCollectModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -438,8 +509,9 @@ fragment LegacyLimitedFeeCollectModuleSettings on LegacyLimitedFeeCollectModuleS
 }
 
 fragment LegacyLimitedTimedFeeCollectModuleSettings on LegacyLimitedTimedFeeCollectModuleSettings {
+  __typename
   contract {
-    address
+    ...NetworkAddress
   }
   collectLimit
   amount {
@@ -452,12 +524,14 @@ fragment LegacyLimitedTimedFeeCollectModuleSettings on LegacyLimitedTimedFeeColl
 }
 
 fragment LegacyRevertCollectModuleSettings on LegacyRevertCollectModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
 }
 
 fragment LegacyTimedFeeCollectModuleSettings on LegacyTimedFeeCollectModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -471,6 +545,7 @@ fragment LegacyTimedFeeCollectModuleSettings on LegacyTimedFeeCollectModuleSetti
 }
 
 fragment LegacyMultirecipientFeeCollectModuleSettings on LegacyMultirecipientFeeCollectModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -478,8 +553,7 @@ fragment LegacyMultirecipientFeeCollectModuleSettings on LegacyMultirecipientFee
     ...Amount
   }
   recipients {
-    recipient
-    split
+    ...Recipient
   }
   referralFee
   followerOnly
@@ -488,6 +562,7 @@ fragment LegacyMultirecipientFeeCollectModuleSettings on LegacyMultirecipientFee
 }
 
 fragment LegacySimpleCollectModuleSettings on LegacySimpleCollectModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -502,6 +577,7 @@ fragment LegacySimpleCollectModuleSettings on LegacySimpleCollectModuleSettings 
 }
 
 fragment LegacyERC4626FeeCollectModuleSettings on LegacyERC4626FeeCollectModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -519,6 +595,7 @@ fragment LegacyERC4626FeeCollectModuleSettings on LegacyERC4626FeeCollectModuleS
 }
 
 fragment LegacyAaveFeeCollectModuleSettings on LegacyAaveFeeCollectModuleSettings {
+  __typename
   contract {
     ...NetworkAddress
   }
@@ -533,16 +610,19 @@ fragment LegacyAaveFeeCollectModuleSettings on LegacyAaveFeeCollectModuleSetting
 }
 
 fragment UnknownOpenActionResult on UnknownOpenActionResult {
+  __typename
   address
   category
   initReturnData
 }
 
 fragment KnownCollectOpenActionResult on KnownCollectOpenActionResult {
+  __typename
   type
 }
 
 fragment OpenActionResult on OpenActionResult {
+  # __typename in individual fragments
   ... on KnownCollectOpenActionResult {
     ...KnownCollectOpenActionResult
   }
@@ -552,22 +632,25 @@ fragment OpenActionResult on OpenActionResult {
 }
 
 fragment CanDecryptResponse on CanDecryptResponse {
+  __typename
   result
   reasons
   extraDetails
 }
 
 fragment PublicationOperations on PublicationOperations {
+  __typename
   isNotInterested
   hasBookmarked
   hasReported
-  canAct(request: $publicationOperationsActedArgs)
-  hasActed(request: $publicationOperationsActedArgs) {
+  canCollect: canAct(request: { filter: { category: COLLECT } })
+  hasCollected: hasActed(request: { filter: { category: COLLECT } }) {
     ...OptimisticStatusResult
   }
-  actedOn(request: $publicationOperationsActedArgs) {
-    ...OpenActionResult
-  }
+  # not used for now, consider enable it to support custom open actions
+  # actedOn(request: { filter: { category: COLLECT } }) {
+  #   ...OpenActionResult
+  # }
   hasUpvoted: hasReacted(request: { type: UPVOTE })
   hasDownvoted: hasReacted(request: { type: DOWNVOTE })
   canComment
@@ -706,12 +789,14 @@ fragment RootCondition on RootCondition {
 
 # publication metadata
 fragment PublicationMarketplaceMetadataAttribute on PublicationMarketplaceMetadataAttribute {
+  __typename
   displayType
   traitType
   value
 }
 
 fragment MarketplaceMetadata on MarketplaceMetadata {
+  __typename
   description
   externalURL
   name
@@ -725,6 +810,7 @@ fragment MarketplaceMetadata on MarketplaceMetadata {
 }
 
 fragment PublicationMetadataMediaVideo on PublicationMetadataMediaVideo {
+  __typename
   video {
     ...EncryptableVideoSet
   }
@@ -754,6 +840,7 @@ fragment PublicationMetadataMediaVideo on PublicationMetadataMediaVideo {
 }
 
 fragment PublicationMetadataMediaImage on PublicationMetadataMediaImage {
+  __typename
   image {
     ...EncryptableImageSet
   }
@@ -778,6 +865,7 @@ fragment PublicationMetadataMediaImage on PublicationMetadataMediaImage {
 }
 
 fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
+  __typename
   audio {
     ...EncryptableAudioSet
   }
@@ -810,7 +898,15 @@ fragment PublicationMetadataMediaAudio on PublicationMetadataMediaAudio {
   }
 }
 
+fragment GeoLocation on GeoLocation {
+  __typename
+  rawURI
+  latitude
+  longitude
+}
+
 fragment VideoMetadataV3 on VideoMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -863,6 +959,7 @@ fragment VideoMetadataV3 on VideoMetadataV3 {
 }
 
 fragment AudioMetadataV3 on AudioMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -914,6 +1011,7 @@ fragment AudioMetadataV3 on AudioMetadataV3 {
 }
 
 fragment ImageMetadataV3 on ImageMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -965,6 +1063,7 @@ fragment ImageMetadataV3 on ImageMetadataV3 {
 }
 
 fragment ArticleMetadataV3 on ArticleMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1013,6 +1112,7 @@ fragment ArticleMetadataV3 on ArticleMetadataV3 {
 }
 
 fragment EventMetadataV3 on EventMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1046,8 +1146,7 @@ fragment EventMetadataV3 on EventMetadataV3 {
     }
   }
   geographic {
-    latitude
-    longitude
+    ...GeoLocation
   }
   startsAt
   endsAt
@@ -1067,6 +1166,7 @@ fragment EventMetadataV3 on EventMetadataV3 {
 }
 
 fragment LinkMetadataV3 on LinkMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1115,6 +1215,7 @@ fragment LinkMetadataV3 on LinkMetadataV3 {
 }
 
 fragment EmbedMetadataV3 on EmbedMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1163,6 +1264,7 @@ fragment EmbedMetadataV3 on EmbedMetadataV3 {
 }
 
 fragment CheckingInMetadataV3 on CheckingInMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1198,8 +1300,7 @@ fragment CheckingInMetadataV3 on CheckingInMetadataV3 {
   content
   location
   geographic {
-    latitude
-    longitude
+    ...GeoLocation
   }
   attachments {
     ... on PublicationMetadataMediaVideo {
@@ -1215,6 +1316,7 @@ fragment CheckingInMetadataV3 on CheckingInMetadataV3 {
 }
 
 fragment TextOnlyMetadataV3 on TextOnlyMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1250,7 +1352,17 @@ fragment TextOnlyMetadataV3 on TextOnlyMetadataV3 {
   content
 }
 
+fragment ThreeDMetadataV3Asset on ThreeDMetadataV3Asset {
+  __typename
+  uri
+  zipPath
+  playerURL
+  format
+  license
+}
+
 fragment ThreeDMetadataV3 on ThreeDMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1285,11 +1397,7 @@ fragment ThreeDMetadataV3 on ThreeDMetadataV3 {
   }
   content
   assets {
-    uri
-    zipPath
-    playerURL
-    format
-    license
+    ...ThreeDMetadataV3Asset
   }
   attachments {
     ... on PublicationMetadataMediaVideo {
@@ -1305,6 +1413,7 @@ fragment ThreeDMetadataV3 on ThreeDMetadataV3 {
 }
 
 fragment StoryMetadataV3 on StoryMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1352,6 +1461,7 @@ fragment StoryMetadataV3 on StoryMetadataV3 {
 }
 
 fragment TransactionMetadataV3 on TransactionMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1402,6 +1512,7 @@ fragment TransactionMetadataV3 on TransactionMetadataV3 {
 }
 
 fragment MintMetadataV3 on MintMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1450,6 +1561,7 @@ fragment MintMetadataV3 on MintMetadataV3 {
 }
 
 fragment SpaceMetadataV3 on SpaceMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1500,6 +1612,7 @@ fragment SpaceMetadataV3 on SpaceMetadataV3 {
 }
 
 fragment LiveStreamMetadataV3 on LiveStreamMetadataV3 {
+  __typename
   id
   rawURI
   locale
@@ -1554,14 +1667,15 @@ fragment LiveStreamMetadataV3 on LiveStreamMetadataV3 {
 
 # publication fragments
 fragment PublicationStats on PublicationStats {
+  __typename
   id
   comments
   mirrors
   quotes
   bookmarks
-  upvoteReactions: reactions(request: { type: UPVOTE })
-  downvoteReactions: reactions(request: { type: DOWNVOTE })
-  countOpenActions(request: $publicationStatsCountOpenActionArgs)
+  upvotes: reactions(request: { type: UPVOTE })
+  downvotes: reactions(request: { type: DOWNVOTE })
+  collects: countOpenActions(request: { anyOf: [{ category: COLLECT }] })
 }
 
 fragment Post on Post {
@@ -1681,12 +1795,12 @@ fragment Post on Post {
       ...UnknownReferenceModuleSettings
     }
   }
-  stats(request: $publicationStatsInput) {
+  stats(request: { metadata: { publishedOn: $activityOn } }) {
     ...PublicationStats
   }
 }
 
-fragment CommentBase on Comment {
+fragment CommentFields on Comment {
   __typename
   id
   publishedOn {
@@ -1703,6 +1817,9 @@ fragment CommentBase on Comment {
   }
   operations {
     ...PublicationOperations
+  }
+  root {
+    ...Post
   }
   metadata {
     ... on AudioMetadataV3 {
@@ -1803,29 +1920,29 @@ fragment CommentBase on Comment {
       ...UnknownReferenceModuleSettings
     }
   }
+  stats(request: { metadata: { publishedOn: $activityOn } }) {
+    ...PublicationStats
+  }
 }
 
 fragment Comment on Comment {
-  ...CommentBase
-  root {
-    ...Post
+  __typename
+  ...CommentFields
+
+  firstComment {
+    ...CommentFields
   }
+
   commentOn {
     ... on Post {
       ...Post
     }
     ... on Comment {
-      ...CommentBase
+      ...CommentFields
     }
     ... on Quote {
-      ...QuoteBase
+      ...QuoteFields
     }
-  }
-  firstComment {
-    ...CommentBase
-  }
-  stats(request: $publicationStatsInput) {
-    ...PublicationStats
   }
 }
 
@@ -1857,7 +1974,7 @@ fragment Mirror on Mirror {
   }
 }
 
-fragment QuoteBase on Quote {
+fragment QuoteFields on Quote {
   __typename
   id
   publishedOn {
@@ -1974,28 +2091,30 @@ fragment QuoteBase on Quote {
       ...UnknownReferenceModuleSettings
     }
   }
+  stats(request: { metadata: { publishedOn: $activityOn } }) {
+    ...PublicationStats
+  }
 }
 
 fragment Quote on Quote {
-  ...QuoteBase
+  __typename
+  ...QuoteFields
   quoteOn {
     ... on Post {
       ...Post
     }
     ... on Comment {
-      ...CommentBase
+      ...CommentFields
     }
     ... on Quote {
-      ...QuoteBase
+      ...QuoteFields
     }
-  }
-  stats(request: $publicationStatsInput) {
-    ...PublicationStats
   }
 }
 
 # mutation fragments
 fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
+  # __typename omitted to easy the signing process
   name
   chainId
   version
@@ -2003,12 +2122,15 @@ fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
 }
 
 fragment EIP712TypedDataField on EIP712TypedDataField {
+  # __typename omitted to easy the signing process
   name
   type
 }
 
 fragment CreateActOnOpenActionEIP712TypedData on CreateActOnOpenActionEIP712TypedData {
+  # __typename omitted to easy the signing process
   types {
+    # __typename omitted to easy the signing process
     Act {
       ...EIP712TypedDataField
     }
@@ -2017,6 +2139,7 @@ fragment CreateActOnOpenActionEIP712TypedData on CreateActOnOpenActionEIP712Type
     ...EIP712TypedDataDomain
   }
   value {
+    # __typename omitted to easy the signing process
     nonce
     deadline
     publicationActedProfileId
@@ -2050,4 +2173,28 @@ fragment CreateMomokaPublicationResult on CreateMomokaPublicationResult {
   id
   proof
   momokaId
+}
+
+# utils
+fragment ImageTransformParam on ImageTransformParam {
+  # __typename not needed in this client-only type fragment
+  height
+  width
+  keepAspectRatio
+}
+
+fragment InjectCommonQueryParams on Query {
+  fxRateFor @client @export(as: "fxRateFor")
+  profileCoverSize @client @export(as: "profileCoverSize") {
+    ...ImageTransformParam
+  }
+  profilePictureSize @client @export(as: "profilePictureSize") {
+    ...ImageTransformParam
+  }
+  imageSmallSize @client @export(as: "imageSmallSize") {
+    ...ImageTransformParam
+  }
+  imageMediumSize @client @export(as: "imageMediumSize") {
+    ...ImageTransformParam
+  }
 }

@@ -1,12 +1,16 @@
-fragment ProfileManager on ProfilesManagedResult {
+# API node has an odd name, masking it here
+fragment ProfilesManager on ProfilesManagedResult {
+  # __typename omitted on purpose to hide odd name, not needed anyway here
   address
 }
 
 fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
+  __typename
   reason
 }
 
 fragment CreateOnchainSetProfileMetadataBroadcastItemResult on CreateOnchainSetProfileMetadataBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -29,6 +33,7 @@ fragment CreateOnchainSetProfileMetadataBroadcastItemResult on CreateOnchainSetP
 }
 
 fragment CreateChangeProfileManagersBroadcastItemResult on CreateChangeProfileManagersBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -54,6 +59,7 @@ fragment CreateChangeProfileManagersBroadcastItemResult on CreateChangeProfileMa
 }
 
 fragment CreateBlockProfilesBroadcastItemResult on CreateBlockProfilesBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -77,6 +83,7 @@ fragment CreateBlockProfilesBroadcastItemResult on CreateBlockProfilesBroadcastI
 }
 
 fragment CreateUnblockProfilesBroadcastItemResult on CreateUnblockProfilesBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -100,6 +107,7 @@ fragment CreateUnblockProfilesBroadcastItemResult on CreateUnblockProfilesBroadc
 }
 
 fragment CreateFollowBroadcastItemResult on CreateFollowBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -124,6 +132,7 @@ fragment CreateFollowBroadcastItemResult on CreateFollowBroadcastItemResult {
 }
 
 fragment CreateUnfollowBroadcastItemResult on CreateUnfollowBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -146,6 +155,7 @@ fragment CreateUnfollowBroadcastItemResult on CreateUnfollowBroadcastItemResult 
 }
 
 fragment CreateSetFollowModuleBroadcastItemResult on CreateSetFollowModuleBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -169,6 +179,7 @@ fragment CreateSetFollowModuleBroadcastItemResult on CreateSetFollowModuleBroadc
 }
 
 fragment CreateHandleLinkToProfileBroadcastItemResult on CreateHandleLinkToProfileBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -190,6 +201,7 @@ fragment CreateHandleLinkToProfileBroadcastItemResult on CreateHandleLinkToProfi
 }
 
 fragment CreateHandleUnlinkFromProfileBroadcastItemResult on CreateHandleUnlinkFromProfileBroadcastItemResult {
+  __typename
   id
   expiresAt
   typedData {
@@ -213,12 +225,12 @@ fragment CreateHandleUnlinkFromProfileBroadcastItemResult on CreateHandleUnlinkF
 # queries
 query Profile(
   $request: ProfileRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: profile(request: $request) {
     ...Profile
   }
@@ -228,12 +240,12 @@ query Profiles(
   $where: ProfilesRequestWhere!
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: profiles(request: { where: $where, limit: $limit, cursor: $cursor }) {
     items {
       ...Profile
@@ -247,7 +259,7 @@ query Profiles(
 query ProfileManagers($request: ProfileManagersRequest!) {
   result: profileManagers(request: $request) {
     items {
-      ...ProfileManager
+      ...ProfilesManager
     }
     pageInfo {
       ...PaginatedResultInfo
@@ -256,14 +268,20 @@ query ProfileManagers($request: ProfileManagersRequest!) {
 }
 
 query ProfileRecommendations(
-  $request: ProfileRecommendationsRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $for: ProfileId!
+  $disableML: Boolean
+  $shuffle: Boolean
+  $limit: LimitType
+  $cursor: Cursor
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
-  result: profileRecommendations(request: $request) {
+  ...InjectCommonQueryParams
+  result: profileRecommendations(
+    request: { for: $for, disableML: $disableML, shuffle: $shuffle, limit: $limit, cursor: $cursor }
+  ) {
     items {
       ...Profile
     }
@@ -277,12 +295,12 @@ query Following(
   $for: ProfileId!
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: following(request: { for: $for, limit: $limit, cursor: $cursor }) {
     items {
       ...Profile
@@ -297,12 +315,12 @@ query Followers(
   $of: ProfileId!
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: followers(request: { of: $of, limit: $limit, cursor: $cursor }) {
     items {
       ...Profile
@@ -318,12 +336,12 @@ query MutualFollowers(
   $viewing: ProfileId!
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: mutualFollowers(
     request: { observer: $observer, viewing: $viewing, limit: $limit, cursor: $cursor }
   ) {
@@ -337,16 +355,40 @@ query MutualFollowers(
 }
 
 query WhoActedOnPublication(
-  $request: WhoActedOnPublicationRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $on: PublicationId!
+  $where: WhoActedOnPublicationWhere
+  $limit: LimitType
+  $cursor: Cursor
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
-  result: whoActedOnPublication(request: $request) {
+  ...InjectCommonQueryParams
+  result: whoActedOnPublication(
+    request: { on: $on, where: $where, limit: $limit, cursor: $cursor }
+  ) {
     items {
       ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+fragment ProfileActionHistory on ProfileActionHistory {
+  id
+  actionType
+  who
+  txHash
+  actionedOn
+}
+
+query ProfileActionHistory($limit: LimitType, $cursor: Cursor) {
+  result: profileActionHistory(request: { limit: $limit, cursor: $cursor }) {
+    items {
+      ...ProfileActionHistory
     }
     pageInfo {
       ...PaginatedResultInfo

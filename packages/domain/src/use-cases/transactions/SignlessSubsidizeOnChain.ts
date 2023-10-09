@@ -1,4 +1,4 @@
-import { PromiseResult, failure } from '@lens-protocol/shared-kernel';
+import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import {
   ProtocolTransactionRequestModel,
@@ -28,7 +28,7 @@ export class SignlessSubsidizeOnChain<T extends ProtocolTransactionRequestModel>
     const result = await this.relayer.createProxyTransaction(request);
 
     if (result.isFailure()) {
-      this.presenter.present(failure(result.error));
+      this.presenter.present(result);
       return;
     }
 

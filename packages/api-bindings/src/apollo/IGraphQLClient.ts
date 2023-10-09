@@ -40,15 +40,19 @@ export function assertGraphQLClientMutationResult<TData>(
 }
 
 export interface IGraphQLClient<TCacheShape extends NormalizedCacheObject> {
-  query<TData = unknown, TVariables = OperationVariables>(
+  query<TData = unknown, TVariables extends OperationVariables = OperationVariables>(
     options: QueryOptions<TVariables, TData>,
   ): Promise<GraphQLClientQueryResult<TData>>;
 
-  mutate<TData = unknown, TVariables = OperationVariables, TContext = DefaultContext>(
+  mutate<
+    TData = unknown,
+    TVariables extends OperationVariables = OperationVariables,
+    TContext extends DefaultContext = DefaultContext,
+  >(
     options: MutationOptions<TData, TVariables, TContext, ApolloCache<TCacheShape>>,
   ): Promise<GraphQLClientMutationResult<TData>>;
 
-  poll<TData = unknown, TVariables = OperationVariables>(
+  poll<TData = unknown, TVariables extends OperationVariables = OperationVariables>(
     options: QueryOptions<TVariables, TData>,
   ): Observable<TData>;
 }

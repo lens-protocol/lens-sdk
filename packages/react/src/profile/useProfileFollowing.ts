@@ -5,7 +5,7 @@ import {
   useFollowing as useFollowingHook,
 } from '@lens-protocol/api-bindings';
 
-import { useLensApolloClient, useMediaTransformFromConfig } from '../helpers/arguments';
+import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 
 /**
@@ -33,10 +33,10 @@ export function useProfileFollowing({
   return usePaginatedReadResult(
     useFollowingHook(
       useLensApolloClient({
-        variables: useMediaTransformFromConfig({
+        variables: {
           for: forId,
           limit,
-        }),
+        },
       }),
     ),
   );

@@ -1,0 +1,46 @@
+mutation AddReaction($request: ReactionRequest!) {
+  addReaction(request: $request)
+}
+
+mutation RemoveReaction($request: ReactionRequest!) {
+  removeReaction(request: $request)
+}
+
+fragment ProfileReactionResult on ProfileReactionResult {
+  __typename
+  reaction
+  reactionAt
+}
+
+fragment ProfileWhoReactedResult on ProfileWhoReactedResult {
+  __typename
+  profile {
+    ...Profile
+  }
+  reactions {
+    ...ProfileReactionResult
+  }
+}
+
+query WhoReactedPublication(
+  $for: PublicationId!
+  $where: WhoReactedPublicationWhere
+  $limit: LimitType
+  $cursor: Cursor
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
+) {
+  ...InjectCommonQueryParams
+  result: whoReactedPublication(
+    request: { for: $for, where: $where, limit: $limit, cursor: $cursor }
+  ) {
+    items {
+      ...ProfileWhoReactedResult
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}

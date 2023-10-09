@@ -4,26 +4,17 @@ import {
   mockPublicationsResponse,
   mockPaginatedResultInfo,
   mockPostFragment,
-  simulateNotAuthenticated,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
-import {
-  defaultMediaTransformsConfig,
-  mediaTransformConfigToQueryVariables,
-} from '../../mediaTransforms';
 import { UsePublicationsArgs, usePublications } from '../usePublications';
 
 describe(`Given the ${usePublications.name} hook`, () => {
   const profileId = mockProfileId();
   const publications = [mockPostFragment()];
   const expectations = publications.map(({ __typename, id }) => ({ __typename, id }));
-
-  beforeAll(() => {
-    simulateNotAuthenticated();
-  });
 
   describe('when the query returns data successfully', () => {
     it('should settle with the publications', async () => {
@@ -35,7 +26,6 @@ describe(`Given the ${usePublications.name} hook`, () => {
             },
             orderBy: PublicationsOrderByType.Latest,
             limit: LimitType.Ten,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           items: publications,
         }),
@@ -61,7 +51,6 @@ describe(`Given the ${usePublications.name} hook`, () => {
               },
               orderBy: PublicationsOrderByType.Latest,
               limit: LimitType.Fifty,
-              ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
             },
             items: publications,
           }),
@@ -90,7 +79,6 @@ describe(`Given the ${usePublications.name} hook`, () => {
             },
             orderBy: PublicationsOrderByType.Latest,
             limit: LimitType.Ten,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           items: publications,
           info: initialPageInfo,
@@ -104,7 +92,6 @@ describe(`Given the ${usePublications.name} hook`, () => {
             orderBy: PublicationsOrderByType.Latest,
             limit: LimitType.Ten,
             cursor: initialPageInfo.prev,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           items: [mockPostFragment()],
         }),

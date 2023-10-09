@@ -3,9 +3,13 @@
  */
 export * from './useMutualFollowers';
 export * from './useProfile';
+export * from './useProfileActionHistory';
+export * from './useLazyProfile';
 export * from './useProfileFollowers';
 export * from './useProfileFollowing';
 export * from './useProfiles';
+export * from './useRecommendedProfiles';
+export * from './useWhoActedOnPublication';
 
 /**
  * Fragments

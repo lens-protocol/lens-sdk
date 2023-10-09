@@ -2,16 +2,11 @@ import { LimitType } from '@lens-protocol/api-bindings';
 import {
   mockProfileFragment,
   mockMutualFollowersResponse,
-  simulateNotAuthenticated,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
-import {
-  defaultMediaTransformsConfig,
-  mediaTransformConfigToQueryVariables,
-} from '../../mediaTransforms';
 import { UseMutualFollowersArgs, useMutualFollowers } from '../useMutualFollowers';
 
 describe(`Given the ${useMutualFollowers.name} hook`, () => {
@@ -19,10 +14,6 @@ describe(`Given the ${useMutualFollowers.name} hook`, () => {
   const viewingProfileId = mockProfileId();
   const profiles = [mockProfileFragment()];
   const expectations = profiles.map(({ __typename, id }) => ({ __typename, id }));
-
-  beforeAll(() => {
-    simulateNotAuthenticated();
-  });
 
   describe('when the query returns data successfully', () => {
     it('should settle with the profiles', async () => {
@@ -32,7 +23,6 @@ describe(`Given the ${useMutualFollowers.name} hook`, () => {
             observer: observerProfileId,
             viewing: viewingProfileId,
             limit: LimitType.Ten,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           items: profiles,
         }),

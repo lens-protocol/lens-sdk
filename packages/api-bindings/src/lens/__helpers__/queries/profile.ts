@@ -1,5 +1,3 @@
-import { MockedResponse } from '@apollo/client/testing';
-
 import {
   FollowersDocument,
   FollowersVariables,
@@ -9,51 +7,25 @@ import {
   MutualFollowersVariables,
   PaginatedResultInfo,
   Profile,
-  ProfilesData,
+  ProfileActionHistory,
+  ProfileActionHistoryDocument,
+  ProfileActionHistoryVariables,
+  ProfileRecommendationsDocument,
+  ProfileRecommendationsVariables,
+  ProfileWhoReactedResult,
+  ProfileDocument,
   ProfilesDocument,
   ProfilesVariables,
-  SearchProfilesData,
+  ProfileVariables,
   SearchProfilesDocument,
   SearchProfilesVariables,
+  WhoActedOnPublicationDocument,
+  WhoActedOnPublicationVariables,
+  WhoReactedPublicationDocument,
+  WhoReactedPublicationVariables,
 } from '../../graphql/generated';
 import { mockPaginatedResultInfo } from '../fragments';
-
-/**
- * All paginated profile responses have the same shape
- */
-function mockAnyPaginatedProfilesResponse<V, Q>({
-  variables,
-  items,
-  info = mockPaginatedResultInfo(),
-  query,
-}: {
-  variables: V;
-  items: Profile[];
-  info?: PaginatedResultInfo;
-  query: Q;
-}) {
-  return {
-    request: {
-      query,
-      variables: {
-        profileCoverTransform: {},
-        profilePictureTransform: {},
-        profileStatsArg: {},
-        profileStatsCountOpenActionArgs: {},
-        rateRequest: { for: 'USD' },
-        ...variables,
-      },
-    },
-    result: {
-      data: {
-        result: {
-          items,
-          pageInfo: info,
-        },
-      },
-    },
-  };
-}
+import { mockAnyPaginatedResponse, mockAnyResponse } from './mockAnyPaginatedResponse';
 
 export function mockProfilesResponse({
   variables,
@@ -63,8 +35,8 @@ export function mockProfilesResponse({
   variables: ProfilesVariables;
   items: Profile[];
   info?: PaginatedResultInfo;
-}): MockedResponse<ProfilesData> {
-  return mockAnyPaginatedProfilesResponse({
+}) {
+  return mockAnyPaginatedResponse({
     variables,
     items,
     info,
@@ -80,8 +52,8 @@ export function mockMutualFollowersResponse({
   variables: MutualFollowersVariables;
   items: Profile[];
   info?: PaginatedResultInfo;
-}): MockedResponse<ProfilesData> {
-  return mockAnyPaginatedProfilesResponse({
+}) {
+  return mockAnyPaginatedResponse({
     variables,
     items,
     info,
@@ -97,8 +69,8 @@ export function mockFollowersResponse({
   variables: FollowersVariables;
   items: Profile[];
   info?: PaginatedResultInfo;
-}): MockedResponse<ProfilesData> {
-  return mockAnyPaginatedProfilesResponse({
+}) {
+  return mockAnyPaginatedResponse({
     variables,
     items,
     info,
@@ -114,8 +86,8 @@ export function mockFollowingResponse({
   variables: FollowingVariables;
   items: Profile[];
   info?: PaginatedResultInfo;
-}): MockedResponse<ProfilesData> {
-  return mockAnyPaginatedProfilesResponse({
+}) {
+  return mockAnyPaginatedResponse({
     variables,
     items,
     info,
@@ -131,11 +103,105 @@ export function mockSearchProfilesResponse({
   variables: SearchProfilesVariables;
   items: Profile[];
   info?: PaginatedResultInfo;
-}): MockedResponse<SearchProfilesData> {
-  return mockAnyPaginatedProfilesResponse({
+}) {
+  return mockAnyPaginatedResponse({
     variables,
     items,
     info,
     query: SearchProfilesDocument,
+  });
+}
+
+export function mockProfileRecommendationsResponse({
+  variables,
+  items,
+  info = mockPaginatedResultInfo(),
+}: {
+  variables: ProfileRecommendationsVariables;
+  items: Profile[];
+  info?: PaginatedResultInfo;
+}) {
+  return mockAnyPaginatedResponse({
+    variables,
+    items,
+    info,
+    query: ProfileRecommendationsDocument,
+  });
+}
+
+export function mockWhoActedOnPublicationResponse({
+  variables,
+  items,
+  info = mockPaginatedResultInfo(),
+}: {
+  variables: WhoActedOnPublicationVariables;
+  items: Profile[];
+  info?: PaginatedResultInfo;
+}) {
+  return mockAnyPaginatedResponse({
+    variables,
+    items,
+    info,
+    query: WhoActedOnPublicationDocument,
+  });
+}
+
+export function mockProfileActionHistoryResponse({
+  variables,
+  items,
+  info = mockPaginatedResultInfo(),
+}: {
+  variables: ProfileActionHistoryVariables;
+  items: ProfileActionHistory[];
+  info?: PaginatedResultInfo;
+}) {
+  return {
+    request: {
+      query: ProfileActionHistoryDocument,
+      variables,
+    },
+    result: {
+      data: {
+        result: {
+          items,
+          pageInfo: info,
+        },
+      },
+    },
+  };
+}
+
+export function mockWhoReactedToPublicationResponse({
+  variables,
+  items,
+  info = mockPaginatedResultInfo(),
+}: {
+  variables: WhoReactedPublicationVariables;
+  items: ProfileWhoReactedResult[];
+  info?: PaginatedResultInfo;
+}) {
+  return mockAnyPaginatedResponse({
+    variables,
+    items,
+    info,
+    query: WhoReactedPublicationDocument,
+  });
+}
+
+export function mockProfileResponse({
+  variables,
+  result,
+}: {
+  variables: ProfileVariables;
+  result: Profile | null;
+}) {
+  return mockAnyResponse({
+    request: {
+      query: ProfileDocument,
+      variables,
+    },
+    result: {
+      data: { result },
+    },
   });
 }

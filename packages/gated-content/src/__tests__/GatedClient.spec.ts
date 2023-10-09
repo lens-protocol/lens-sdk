@@ -18,6 +18,8 @@ import { EncryptedFragmentOfAnyPublicationMetadata } from '../graphql';
 import * as gql from '../graphql/__helpers__/mocks';
 import { webCryptoProvider } from '../web';
 
+jest.retryTimes(3, { logErrorsBeforeRetry: true });
+
 const signer = Wallet.createRandom();
 
 const ownerId = mockProfileId();

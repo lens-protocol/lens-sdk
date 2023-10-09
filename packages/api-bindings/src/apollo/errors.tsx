@@ -1,5 +1,10 @@
 import { CausedError } from '@lens-protocol/shared-kernel';
 
+/**
+ * An unexpected error, usually from an API response.
+ *
+ * See the error message for more details.
+ */
 export class UnspecifiedError extends CausedError {
   name = 'UnspecifiedError' as const;
 
@@ -8,6 +13,11 @@ export class UnspecifiedError extends CausedError {
   }
 }
 
+/**
+ * A GraphQL validation error from the API.
+ *
+ * See the error message for more details.
+ */
 export class ValidationError extends CausedError {
   name = 'ValidationError' as const;
 

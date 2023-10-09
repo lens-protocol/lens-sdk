@@ -2,21 +2,30 @@ import { TypePolicy } from '@apollo/client';
 
 import { StrictTypedTypePolicies } from '../../lens';
 import { createFeedFieldPolicy } from './createFeedFieldPolicy';
-import { createFollowersFieldPolicy } from './createFollowersFieldPolicy';
-import { createFollowingFieldPolicy } from './createFollowingFieldPolicy';
-import { createMutualFollowersFieldPolicy } from './createMutualFollowersFieldPolicy';
-import { createProfilesFieldPolicy } from './createProfilesFieldPolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
-import { createPublicationsFieldPolicy } from './createPublicationsFieldPolicy';
-import { createSearchProfilesFieldPolicy } from './createSearchProfilesFieldPolicy';
-import { createSearchPublicationsFieldPolicy } from './createSearchPublicationsFieldPolicy';
+import { createQueryParamsLocalFields, QueryParams } from './createQueryParamsLocalFields';
+import {
+  createFollowersFieldPolicy,
+  createFollowingFieldPolicy,
+  createMutualFollowersFieldPolicy,
+  createProfileActionHistoryFieldPolicy,
+  createProfileRecommendationsFieldPolicy,
+  createProfilesFieldPolicy,
+  createPublicationsFieldPolicy,
+  createSearchProfilesFieldPolicy,
+  createSearchPublicationsFieldPolicy,
+  createWhoActedOnPublicationFieldPolicy,
+  createWhoReactedPublicationFieldPolicy,
+} from './field-policies';
 import { notNormalizedType } from './utils/notNormalizedType';
 
 type InheritedTypePolicies = {
   Publication: TypePolicy;
 };
 
-export function createTypePolicies(): StrictTypedTypePolicies & InheritedTypePolicies {
+export function createTypePolicies(
+  params?: QueryParams,
+): StrictTypedTypePolicies & InheritedTypePolicies {
   return {
     Publication: createPublicationTypePolicy(),
     Post: notNormalizedType(),
@@ -29,14 +38,19 @@ export function createTypePolicies(): StrictTypedTypePolicies & InheritedTypePol
 
     Query: {
       fields: {
+        feed: createFeedFieldPolicy(),
         followers: createFollowersFieldPolicy(),
         following: createFollowingFieldPolicy(),
         mutualFollowers: createMutualFollowersFieldPolicy(),
+        profileActionHistory: createProfileActionHistoryFieldPolicy(),
+        profileRecommendations: createProfileRecommendationsFieldPolicy(),
         profiles: createProfilesFieldPolicy(),
         publications: createPublicationsFieldPolicy(),
-        searchPublications: createSearchPublicationsFieldPolicy(),
         searchProfiles: createSearchProfilesFieldPolicy(),
-        feed: createFeedFieldPolicy(),
+        searchPublications: createSearchPublicationsFieldPolicy(),
+        whoActedOnPublication: createWhoActedOnPublicationFieldPolicy(),
+        whoReactedPublication: createWhoReactedPublicationFieldPolicy(),
+        ...createQueryParamsLocalFields(params),
       },
     },
   };

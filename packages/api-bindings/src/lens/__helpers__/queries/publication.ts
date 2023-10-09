@@ -1,19 +1,22 @@
-import { MockedResponse } from '@apollo/client/testing';
+import { faker } from '@faker-js/faker';
 
+import { Cursor } from '../../Cursor';
 import {
   PaginatedResultInfo,
-  PublicationData,
   PublicationDocument,
   PublicationVariables,
-  PublicationsData,
   PublicationsDocument,
   PublicationsVariables,
-  SearchPublicationsData,
   SearchPublicationsDocument,
   SearchPublicationsVariables,
 } from '../../graphql/generated';
-import { AnyPublication, PrimaryPublication } from '../../utils';
+import { AnyPublication, PrimaryPublication } from '../../publication';
 import { mockPaginatedResultInfo } from '../fragments';
+import { mockAnyPaginatedResponse } from './mockAnyPaginatedResponse';
+
+export function mockCursor(): Cursor {
+  return faker.random.alphaNumeric(10) as Cursor;
+}
 
 export function mockPublicationResponse({
   variables,
@@ -21,7 +24,7 @@ export function mockPublicationResponse({
 }: {
   variables: PublicationVariables;
   publication: AnyPublication | null;
-}): MockedResponse<PublicationData> {
+}) {
   return {
     request: {
       query: PublicationDocument,
@@ -35,47 +38,6 @@ export function mockPublicationResponse({
   };
 }
 
-/**
- * All paginated publication responses have the same shape
- */
-function mockAnyPaginatedPublicationResponse<V, I, Q>({
-  variables,
-  items,
-  info = mockPaginatedResultInfo(),
-  query,
-}: {
-  variables: V;
-  items: I[];
-  info?: PaginatedResultInfo;
-  query: Q;
-}) {
-  return {
-    request: {
-      query,
-      variables: {
-        publicationImageTransform: {},
-        publicationOperationsActedArgs: {},
-        publicationStatsInput: {},
-        publicationStatsCountOpenActionArgs: {},
-        profileCoverTransform: {},
-        profilePictureTransform: {},
-        profileStatsArg: {},
-        profileStatsCountOpenActionArgs: {},
-        rateRequest: { for: 'USD' },
-        ...variables,
-      },
-    },
-    result: {
-      data: {
-        result: {
-          items,
-          pageInfo: info,
-        },
-      },
-    },
-  };
-}
-
 export function mockPublicationsResponse({
   variables,
   items,
@@ -84,8 +46,8 @@ export function mockPublicationsResponse({
   variables: PublicationsVariables;
   items: Array<AnyPublication>;
   info?: PaginatedResultInfo;
-}): MockedResponse<PublicationsData> {
-  return mockAnyPaginatedPublicationResponse({
+}) {
+  return mockAnyPaginatedResponse({
     variables,
     items,
     info,
@@ -101,8 +63,8 @@ export function mockSearchPublicationsResponse({
   variables: SearchPublicationsVariables;
   items: Array<PrimaryPublication>;
   info?: PaginatedResultInfo;
-}): MockedResponse<SearchPublicationsData> {
-  return mockAnyPaginatedPublicationResponse({
+}) {
+  return mockAnyPaginatedResponse({
     variables,
     items,
     info,

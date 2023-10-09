@@ -1,27 +1,15 @@
 import { LimitType } from '@lens-protocol/api-bindings';
-import {
-  mockProfileFragment,
-  mockFollowingResponse,
-  simulateNotAuthenticated,
-} from '@lens-protocol/api-bindings/mocks';
+import { mockProfileFragment, mockFollowingResponse } from '@lens-protocol/api-bindings/mocks';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
-import {
-  defaultMediaTransformsConfig,
-  mediaTransformConfigToQueryVariables,
-} from '../../mediaTransforms';
 import { UseProfileFollowingArgs, useProfileFollowing } from '../useProfileFollowing';
 
 describe(`Given the ${useProfileFollowing.name} hook`, () => {
   const profileId = mockProfileId();
   const profiles = [mockProfileFragment()];
   const expectations = profiles.map(({ __typename, id }) => ({ __typename, id }));
-
-  beforeAll(() => {
-    simulateNotAuthenticated();
-  });
 
   describe('when the query returns data successfully', () => {
     it('should settle with the profiles', async () => {
@@ -30,7 +18,6 @@ describe(`Given the ${useProfileFollowing.name} hook`, () => {
           variables: {
             for: profileId,
             limit: LimitType.Ten,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
           },
           items: profiles,
         }),

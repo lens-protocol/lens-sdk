@@ -7,6 +7,7 @@ fragment ReactionEvent on ReactionEvent {
 }
 
 fragment FeedItem on FeedItem {
+  __typename
   id
   root {
     ... on Post {
@@ -32,16 +33,14 @@ fragment FeedItem on FeedItem {
 
 query Feed(
   $request: FeedRequest!
-  $publicationImageTransform: ImageTransform = {}
-  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-  $publicationStatsInput: PublicationStatsInput! = {}
-  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $imageSmallSize: ImageTransform = {}
+  $imageMediumSize: ImageTransform = {}
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: feed(request: $request) {
     items {
       ...FeedItem
@@ -54,16 +53,14 @@ query Feed(
 
 query FeedHighlights(
   $request: FeedHighlightsRequest!
-  $publicationImageTransform: ImageTransform = {}
-  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-  $publicationStatsInput: PublicationStatsInput! = {}
-  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $imageSmallSize: ImageTransform = {}
+  $imageMediumSize: ImageTransform = {}
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: feedHighlights(request: $request) {
     items {
       ... on Post {
@@ -82,12 +79,13 @@ query FeedHighlights(
 # Not yet ready for production use
 #query ForYou(
 #  $request: PublicationForYouRequest!
-#  $publicationImageTransform: ImageTransform = {}
-#  $profileCoverTransform: ImageTransform = {}
-#  $profilePictureTransform: ImageTransform = {}
-#  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-#  $rateRequest: RateRequest = { for: USD }
+#  $imageSmallSize: ImageTransform = {}
+#  $imageMediumSize: ImageTransform = {}
+#  $profileCoverSize: ImageTransform = {}
+#  $profilePictureSize: ImageTransform = {}
+#  $fxRateFor: SupportedFiatType = USD
 #) {
+#  ...InjectCommonQueryParams
 #  result: forYou(request: $request) {
 #    items {
 #      ... on Post {

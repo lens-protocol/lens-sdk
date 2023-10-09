@@ -1,11 +1,12 @@
-fragment AuthChallenge on AuthChallengeResult {
+fragment AuthChallengeResult on AuthChallengeResult {
+  __typename
   id
   text
 }
 
 query AuthChallenge($request: ChallengeRequest!) {
   result: challenge(request: $request) {
-    ...AuthChallenge
+    ...AuthChallengeResult
   }
 }
 

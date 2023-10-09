@@ -1,35 +1,10 @@
-import { MockedResponse } from '@apollo/client/testing';
+import { FeedVariables, FeedItem, FeedDocument } from '../../graphql/generated';
+import { mockAnyPaginatedResponse } from './mockAnyPaginatedResponse';
 
-import { FeedVariables, FeedItem, FeedData, FeedDocument } from '../../graphql/generated';
-import { mockPaginatedResultInfo } from '../fragments';
-
-export function mockFeedResponse(args: {
-  variables: FeedVariables;
-  items: FeedItem[];
-}): MockedResponse<FeedData> {
-  return {
-    request: {
-      query: FeedDocument,
-      variables: {
-        publicationImageTransform: {},
-        publicationOperationsActedArgs: {},
-        publicationStatsInput: {},
-        publicationStatsCountOpenActionArgs: {},
-        profileCoverTransform: {},
-        profilePictureTransform: {},
-        profileStatsArg: {},
-        profileStatsCountOpenActionArgs: {},
-        rateRequest: { for: 'USD' },
-        ...args.variables,
-      },
-    },
-    result: {
-      data: {
-        result: {
-          items: args.items,
-          pageInfo: mockPaginatedResultInfo(),
-        },
-      },
-    },
-  };
+export function mockFeedResponse(args: { variables: FeedVariables; items: FeedItem[] }) {
+  return mockAnyPaginatedResponse({
+    variables: args.variables,
+    items: args.items,
+    query: FeedDocument,
+  });
 }

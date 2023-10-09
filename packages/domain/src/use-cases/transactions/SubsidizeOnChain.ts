@@ -1,4 +1,4 @@
-import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
+import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import {
   IUnsignedProtocolCall,
@@ -13,7 +13,7 @@ import {
   ProtocolTransactionRequestModel,
   TransactionError,
 } from '../../entities';
-import { ActiveWallet } from '../wallets/ActiveWallet';
+import { ActiveWallet } from '../authentication/ActiveWallet';
 import { BroadcastingError } from './BroadcastingError';
 import { ISignedOperation } from './DelegableSigning';
 import { ITransactionResultPresenter } from './ITransactionResultPresenter';
@@ -70,14 +70,14 @@ export class SubsidizeOnChain<T extends ProtocolTransactionRequestModel>
     const signingResult = await wallet.signProtocolCall(unsignedCall);
 
     if (signingResult.isFailure()) {
-      this.presenter.present(failure(signingResult.error));
+      this.presenter.present(signingResult);
       return;
     }
 
     const relayResult = await this.relayer.relayProtocolCall(signingResult.value);
 
     if (relayResult.isFailure()) {
-      this.presenter.present(failure(relayResult.error));
+      this.presenter.present(relayResult);
       return;
     }
 

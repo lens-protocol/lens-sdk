@@ -80,14 +80,16 @@ generates:
               "import type { EvmAddress, Url } from '@lens-protocol/shared-kernel';",
               "import type { ContentEncryptionKey } from '../ContentEncryptionKey';",
               "import type { Cursor } from '../Cursor';",
-              "import type { ImageSizeTransform } from '../ImageSizeTransform';",
+              "import type { ImageSizeTransform } from '../ImageTransform';",
             ]
       - 'typescript-operations':
           skipTypename: true
           immutableTypes: false
           inlineFragmentTypes: combine
+          exportFragmentSpreadSubTypes: false # we do not want odd named fragment types ProfilePicture_ImageSet_
           omitOperationSuffix: true
           operationResultSuffix: 'Data'
+          dedupeFragments: true
       - 'typescript-react-apollo':
           pureMagicComment: true # keep
           omitOperationSuffix: true # MUST goes with typescript-operations.omitOperationSuffix

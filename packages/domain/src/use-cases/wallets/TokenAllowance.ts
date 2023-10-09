@@ -1,4 +1,4 @@
-import { Amount, Erc20, EvmAddress, failure, success } from '@lens-protocol/shared-kernel';
+import { Amount, Erc20, EvmAddress, success } from '@lens-protocol/shared-kernel';
 
 import {
   UnsignedTransaction,
@@ -10,9 +10,9 @@ import {
   PendingSigningRequestError,
   AnyTransactionRequestModel,
 } from '../../entities';
+import { ActiveWallet } from '../authentication/ActiveWallet';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
 import { TransactionQueue } from '../transactions/TransactionQueue';
-import { ActiveWallet } from './ActiveWallet';
 
 export enum TokenAllowanceLimit {
   EXACT,
@@ -53,14 +53,14 @@ export class TokenAllowance {
 
     const approveTransaction = await this.gateway.createApproveTransaction(request, wallet);
 
-    const relayResult = await wallet.sendTransaction(approveTransaction);
+    const result = await wallet.sendTransaction(approveTransaction);
 
-    if (relayResult.isFailure()) {
-      this.presenter.present(failure(relayResult.error));
+    if (result.isFailure()) {
+      this.presenter.present(result);
       return;
     }
 
-    const transaction = relayResult.value;
+    const transaction = result.value;
     await this.queue.push(transaction);
 
     this.presenter.present(success());
