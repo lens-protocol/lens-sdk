@@ -1,5 +1,16 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.4
+
+### Minor Changes
+
+- 38a40c70: add explore profiles
+- 1c3a10c3: add explore publications
+
+### Patch Changes
+
+- 6762b170: add feed highlights
+
 ## 0.11.0-alpha.3
 
 ### Patch Changes

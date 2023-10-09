@@ -1,5 +1,15 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.4
+
+### Patch Changes
+
+- Updated dependencies [38a40c70]
+- Updated dependencies [1c3a10c3]
+- Updated dependencies [6762b170]
+  - @lens-protocol/api-bindings@0.11.0-alpha.4
+  - @lens-protocol/react@2.0.0-alpha.4
+
 ## 2.0.0-alpha.3
 
 ### Patch Changes
