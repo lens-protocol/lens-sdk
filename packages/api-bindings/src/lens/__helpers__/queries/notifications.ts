@@ -1,40 +1,25 @@
-import { MockedResponse } from '@apollo/client/testing';
-
 import {
-  NotificationsVariables,
   Notification,
-  NotificationsData,
   NotificationsDocument,
+  NotificationsVariables,
+  PaginatedResultInfo,
 } from '../../graphql/generated';
 import { mockPaginatedResultInfo } from '../fragments';
+import { mockAnyPaginatedResponse } from './mockAnyPaginatedResponse';
 
-export function mockNotificationsResponse(args: {
+export function mockNotificationsResponse({
+  variables,
+  items,
+  info = mockPaginatedResultInfo(),
+}: {
   variables: NotificationsVariables;
   items: Notification[];
-}): MockedResponse<NotificationsData> {
-  return {
-    request: {
-      query: NotificationsDocument,
-      variables: {
-        publicationImageTransform: {},
-        publicationOperationsActedArgs: {},
-        publicationStatsInput: {},
-        publicationStatsCountOpenActionArgs: {},
-        profileCoverTransform: {},
-        profilePictureTransform: {},
-        profileStatsArg: {},
-        profileStatsCountOpenActionArgs: {},
-        rateRequest: { for: 'USD' },
-        ...args.variables,
-      },
-    },
-    result: {
-      data: {
-        result: {
-          items: args.items,
-          pageInfo: mockPaginatedResultInfo(),
-        },
-      },
-    },
-  };
+  info?: PaginatedResultInfo;
+}) {
+  return mockAnyPaginatedResponse({
+    variables,
+    items,
+    query: NotificationsDocument,
+    info,
+  });
 }

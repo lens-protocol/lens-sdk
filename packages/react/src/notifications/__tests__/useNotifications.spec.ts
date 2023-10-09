@@ -1,41 +1,12 @@
-import { Notification, NotificationWhere } from '@lens-protocol/api-bindings';
 import {
-  mockLensApolloClient,
   mockMentionNotification,
   mockNotificationsResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { mockAppId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
-import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import {
-  defaultMediaTransformsConfig,
-  mediaTransformConfigToQueryVariables,
-} from '../../mediaTransforms';
-import { useNotifications } from '../useNotifications';
-
-function setupTestScenario({ items, where }: { where: NotificationWhere; items: Notification[] }) {
-  return renderHookWithMocks(
-    () =>
-      useNotifications({
-        where,
-      }),
-    {
-      mocks: {
-        mediaTransforms: defaultMediaTransformsConfig,
-        apolloClient: mockLensApolloClient([
-          mockNotificationsResponse({
-            variables: {
-              where,
-              ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
-            },
-            items,
-          }),
-        ]),
-      },
-    },
-  );
-}
+import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
+import { UseNotificationsArgs, useNotifications } from '../useNotifications';
 
 describe(`Given the ${useNotifications.name} hook`, () => {
   const items = [mockMentionNotification(), mockMentionNotification()];
@@ -43,15 +14,21 @@ describe(`Given the ${useNotifications.name} hook`, () => {
 
   describe('when the query returns data successfully', () => {
     it('should return notifications', async () => {
-      const { result } = setupTestScenario({
+      const args: UseNotificationsArgs = {
         where: {
           publishedOn: [mockAppId()],
         },
-        items,
-      });
+      };
+      const { renderHook } = setupHookTestScenario([
+        mockNotificationsResponse({
+          variables: args,
+          items,
+        }),
+      ]);
+
+      const { result } = renderHook(() => useNotifications(args));
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
-
       expect(result.current.data).toMatchObject(expectations);
     });
   });
