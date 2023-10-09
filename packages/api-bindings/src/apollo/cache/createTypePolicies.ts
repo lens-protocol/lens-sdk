@@ -1,6 +1,7 @@
 import { TypePolicy } from '@apollo/client';
 
 import { StrictTypedTypePolicies } from '../../lens';
+import { createFeedHighlightsFieldPolicy } from './createFeedHighlightsFieldPolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
 import { createQueryParamsLocalFields, QueryParams } from './createQueryParamsLocalFields';
 import {
@@ -22,6 +23,7 @@ import { notNormalizedType } from './utils/notNormalizedType';
 
 type InheritedTypePolicies = {
   Publication: TypePolicy;
+  FeedHighlight: TypePolicy;
 };
 
 export function createTypePolicies(
@@ -34,6 +36,7 @@ export function createTypePolicies(
     Quote: notNormalizedType(),
     Mirror: notNormalizedType(),
     FeedItem: notNormalizedType(),
+    FeedHighlight: notNormalizedType(),
 
     PaginatedResultInfo: notNormalizedType(),
 
@@ -52,6 +55,7 @@ export function createTypePolicies(
         whoActedOnPublication: createWhoActedOnPublicationFieldPolicy(),
         whoReactedPublication: createWhoReactedPublicationFieldPolicy(),
         explorePublications: createExplorePublicationsFieldPolicy(),
+        feedHighlights: createFeedHighlightsFieldPolicy(),
 
         ...createQueryParamsLocalFields(params),
       },

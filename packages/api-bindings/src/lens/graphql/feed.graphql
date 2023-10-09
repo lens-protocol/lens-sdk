@@ -32,7 +32,8 @@ fragment FeedItem on FeedItem {
 }
 
 query Feed(
-  $request: FeedRequest!
+  $where: FeedWhere
+  $cursor: Cursor
   $imageSmallSize: ImageTransform = {}
   $imageMediumSize: ImageTransform = {}
   $profileCoverSize: ImageTransform = {}
@@ -40,8 +41,7 @@ query Feed(
   $activityOn: [AppId!]
   $fxRateFor: SupportedFiatType = USD
 ) {
-  ...InjectCommonQueryParams
-  result: feed(request: $request) {
+  result: feed(request: { where: $where, cursor: $cursor }) {
     items {
       ...FeedItem
     }
@@ -51,8 +51,19 @@ query Feed(
   }
 }
 
+fragment FeedHighlight on FeedHighlight {
+  ... on Post {
+    ...Post
+  }
+  ... on Quote {
+    ...Quote
+  }
+}
+
 query FeedHighlights(
-  $request: FeedHighlightsRequest!
+  $where: FeedHighlightsWhere
+  $limit: LimitType
+  $cursor: Cursor
   $imageSmallSize: ImageTransform = {}
   $imageMediumSize: ImageTransform = {}
   $profileCoverSize: ImageTransform = {}
@@ -61,14 +72,9 @@ query FeedHighlights(
   $fxRateFor: SupportedFiatType = USD
 ) {
   ...InjectCommonQueryParams
-  result: feedHighlights(request: $request) {
+  result: feedHighlights(request: { where: $where, limit: $limit, cursor: $cursor }) {
     items {
-      ... on Post {
-        ...Post
-      }
-      ... on Quote {
-        ...Quote
-      }
+      ...FeedHighlight
     }
     pageInfo {
       ...PaginatedResultInfo
