@@ -6,7 +6,6 @@ import {
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
-import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 /**
  * {@link useProfiles} hook arguments
@@ -79,17 +78,11 @@ export type UseProfilesArgs = PaginatedArgs<ProfilesRequest>;
  * });
  * ```
  */
-export function useProfiles({
-  where,
-  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-}: UseProfilesArgs): PaginatedReadResult<Profile[]> {
+export function useProfiles(args: UseProfilesArgs): PaginatedReadResult<Profile[]> {
   return usePaginatedReadResult(
     useProfilesHook(
       useLensApolloClient({
-        variables: {
-          where,
-          limit,
-        },
+        variables: args,
       }),
     ),
   );

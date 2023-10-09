@@ -1,13 +1,11 @@
 import {
   AnyPublication,
-  PublicationsOrderByType,
   PublicationsRequest,
   usePublications as usePublicationsBase,
 } from '@lens-protocol/api-bindings';
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
-import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 /**
  * {@link usePublications} hook arguments
@@ -85,19 +83,11 @@ export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
  * });
  * ```
  */
-export function usePublications({
-  where,
-  orderBy = PublicationsOrderByType.Latest,
-  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-}: UsePublicationsArgs): PaginatedReadResult<AnyPublication[]> {
+export function usePublications(args: UsePublicationsArgs): PaginatedReadResult<AnyPublication[]> {
   return usePaginatedReadResult(
     usePublicationsBase(
       useLensApolloClient({
-        variables: {
-          where,
-          limit,
-          orderBy,
-        },
+        variables: args,
       }),
     ),
   );

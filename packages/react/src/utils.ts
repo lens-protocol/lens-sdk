@@ -1,7 +1,4 @@
-import { LimitType } from '@lens-protocol/api-bindings';
 import { AppId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
-
-export const DEFAULT_PAGINATED_QUERY_LIMIT = LimitType.Ten;
 
 /**
  * Ensures that the given value is a valid AppId
