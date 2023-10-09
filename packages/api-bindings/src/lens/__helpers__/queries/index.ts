@@ -5,6 +5,7 @@ import { Cursor } from '../../Cursor';
 export * from './profile';
 export * from './publication';
 export * from './discovery';
+export * from './notifications';
 export * from './transaction';
 
 export function mockCursor(): Cursor {
