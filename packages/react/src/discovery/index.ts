@@ -4,8 +4,9 @@ export * from './useSearchProfiles';
 export * from './useSearchPublications';
 export * from './useExplorePublications';
 
-export type {
-  FeedEventItemType, FeedItem, FeedHighlight,
-  ExplorePublicationsOrderByType,
+export type { FeedItem, FeedHighlight } from '@lens-protocol/api-bindings';
+export {
   ExplorePublicationType,
+  ExplorePublicationsOrderByType,
+  FeedEventItemType,
 } from '@lens-protocol/api-bindings';
