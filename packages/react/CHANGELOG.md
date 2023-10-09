@@ -1,5 +1,22 @@
 # @lens-protocol/react
 
+## 2.0.0-alpha.4
+
+### Minor Changes
+
+- 38a40c70: add explore profiles
+- 1c3a10c3: add explore publications
+- reintroduce notifications for v2
+
+### Patch Changes
+
+- 6762b170: add feed highlights
+- Updated dependencies [38a40c70]
+- Updated dependencies [1c3a10c3]
+- Updated dependencies [6762b170]
+- Updated dependencies
+  - @lens-protocol/api-bindings@0.11.0-alpha.4
+
 ## 2.0.0-alpha.3
 
 ### Patch Changes
