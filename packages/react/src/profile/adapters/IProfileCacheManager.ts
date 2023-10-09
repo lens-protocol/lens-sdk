@@ -4,7 +4,7 @@ import { ProfileId } from '@lens-protocol/domain/entities';
 export interface IProfileCacheManager {
   fetchProfile(id: ProfileId): Promise<Profile | null>;
 
-  refreshProfile(id: ProfileId): Promise<Profile>;
+  refreshCurrentProfile(): Promise<void>;
 
   updateProfile(id: ProfileId, updateFn: (current: Profile) => Profile): void;
 }

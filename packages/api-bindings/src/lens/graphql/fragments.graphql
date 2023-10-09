@@ -2138,7 +2138,7 @@ fragment CreateActOnOpenActionEIP712TypedData on CreateActOnOpenActionEIP712Type
   domain {
     ...EIP712TypedDataDomain
   }
-  value {
+  message: value {
     # __typename omitted to easy the signing process
     nonce
     deadline

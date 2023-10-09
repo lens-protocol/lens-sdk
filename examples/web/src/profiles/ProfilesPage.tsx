@@ -46,6 +46,16 @@ const profileHooks = [
     description: `Fetch profile action history.`,
     path: '/profiles/useProfileActionHistory',
   },
+  {
+    label: 'useProfileManagers',
+    description: `Fetch a list of profile managers.`,
+    path: '/profiles/useProfileManagers',
+  },
+  {
+    label: 'useUpdateProfileManagers',
+    description: `Update the Profile Manager configuration for the logged-in Profile.`,
+    path: '/profiles/useUpdateProfileManagers',
+  },
 ];
 
 export function ProfilesPage() {

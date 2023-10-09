@@ -34,7 +34,7 @@ export interface ITransactionResponder<T extends AnyTransactionRequestModel> {
 function transactionData<T extends AnyTransactionRequestModel>(
   tx: Transaction<T>,
 ): TransactionData<T> {
-  if ('hash' in tx) {
+  if ('hash' in tx && tx.hash) {
     return {
       id: tx.id,
       request: tx.request,

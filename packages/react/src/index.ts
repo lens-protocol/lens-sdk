@@ -22,6 +22,7 @@ export * from './authentication';
 export * from './profile';
 export * from './publication';
 export * from './discovery';
+export * from './transactions';
 
 /**
  * Domain essentials
