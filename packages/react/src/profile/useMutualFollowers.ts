@@ -1,5 +1,4 @@
 import {
-  LimitType,
   Profile,
   MutualFollowersRequest,
   useMutualFollowers as useMutualFollowersHook,
@@ -27,19 +26,11 @@ export type UseMutualFollowersArgs = PaginatedArgs<MutualFollowersRequest>;
  * });
  * ```
  */
-export function useMutualFollowers({
-  observer,
-  viewing,
-  limit = LimitType.Ten,
-}: UseMutualFollowersArgs): PaginatedReadResult<Profile[]> {
+export function useMutualFollowers(args: UseMutualFollowersArgs): PaginatedReadResult<Profile[]> {
   return usePaginatedReadResult(
     useMutualFollowersHook(
       useLensApolloClient({
-        variables: {
-          observer,
-          viewing,
-          limit,
-        },
+        variables: args,
       }),
     ),
   );

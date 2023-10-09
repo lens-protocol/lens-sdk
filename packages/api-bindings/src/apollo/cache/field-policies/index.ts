@@ -1,3 +1,4 @@
+export * from './createFeedFieldPolicy';
 export * from './createFollowersFieldPolicy';
 export * from './createFollowingFieldPolicy';
 export * from './createMutualFollowersFieldPolicy';

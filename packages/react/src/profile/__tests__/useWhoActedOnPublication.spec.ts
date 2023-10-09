@@ -1,4 +1,3 @@
-import { LimitType } from '@lens-protocol/api-bindings';
 import {
   mockProfileFragment,
   mockWhoActedOnPublicationResponse,
@@ -23,7 +22,6 @@ describe(`Given the ${useWhoActedOnPublication.name} hook`, () => {
         mockWhoActedOnPublicationResponse({
           variables: {
             on: publicationId,
-            limit: LimitType.Ten,
           },
           items: profiles,
         }),

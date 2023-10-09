@@ -1,4 +1,4 @@
-import { LimitType, PublicationsOrderByType } from '@lens-protocol/api-bindings';
+import { LimitType } from '@lens-protocol/api-bindings';
 import {
   mockCursor,
   mockPublicationsResponse,
@@ -24,8 +24,6 @@ describe(`Given the ${usePublications.name} hook`, () => {
             where: {
               actedBy: profileId,
             },
-            orderBy: PublicationsOrderByType.Latest,
-            limit: LimitType.Ten,
           },
           items: publications,
         }),
@@ -49,7 +47,6 @@ describe(`Given the ${usePublications.name} hook`, () => {
               where: {
                 actedBy: profileId,
               },
-              orderBy: PublicationsOrderByType.Latest,
               limit: LimitType.Fifty,
             },
             items: publications,
@@ -77,8 +74,6 @@ describe(`Given the ${usePublications.name} hook`, () => {
             where: {
               from: [profileId],
             },
-            orderBy: PublicationsOrderByType.Latest,
-            limit: LimitType.Ten,
           },
           items: publications,
           info: initialPageInfo,
@@ -89,8 +84,6 @@ describe(`Given the ${usePublications.name} hook`, () => {
             where: {
               from: [profileId],
             },
-            orderBy: PublicationsOrderByType.Latest,
-            limit: LimitType.Ten,
             cursor: initialPageInfo.prev,
           },
           items: [mockPostFragment()],

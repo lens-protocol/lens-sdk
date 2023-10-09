@@ -2,7 +2,6 @@ import { mockProfileFragment, mockSearchProfilesResponse } from '@lens-protocol/
 import { waitFor } from '@testing-library/react';
 
 import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
-import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../../utils';
 import { UseSearchProfilesArgs, useSearchProfiles } from '../useSearchProfiles';
 
 describe(`Given the ${useSearchProfiles.name} hook`, () => {
@@ -16,7 +15,6 @@ describe(`Given the ${useSearchProfiles.name} hook`, () => {
         mockSearchProfilesResponse({
           variables: {
             query,
-            limit: DEFAULT_PAGINATED_QUERY_LIMIT,
           },
           items: profiles,
         }),

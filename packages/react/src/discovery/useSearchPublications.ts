@@ -6,7 +6,6 @@ import {
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
-import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
 
 export type UseSearchPublicationsArgs = PaginatedArgs<PublicationSearchRequest>;
 
@@ -73,19 +72,13 @@ export type UseSearchPublicationsArgs = PaginatedArgs<PublicationSearchRequest>;
  * }
  * ```
  */
-export function useSearchPublications({
-  query,
-  where,
-  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-}: UseSearchPublicationsArgs): PaginatedReadResult<PrimaryPublication[]> {
+export function useSearchPublications(
+  args: UseSearchPublicationsArgs,
+): PaginatedReadResult<PrimaryPublication[]> {
   return usePaginatedReadResult(
     useBaseSearchPublications(
       useLensApolloClient({
-        variables: {
-          query,
-          where,
-          limit,
-        },
+        variables: args,
       }),
     ),
   );

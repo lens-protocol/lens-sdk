@@ -1,11 +1,11 @@
 import { TypePolicy } from '@apollo/client';
 
 import { StrictTypedTypePolicies } from '../../lens';
-import { createFeedFieldPolicy } from './createFeedFieldPolicy';
 import { createFeedHighlightsFieldPolicy } from './createFeedHighlightsFieldPolicy';
 import { createPublicationTypePolicy } from './createPublicationTypePolicy';
 import { createQueryParamsLocalFields, QueryParams } from './createQueryParamsLocalFields';
 import {
+  createFeedFieldPolicy,
   createFollowersFieldPolicy,
   createFollowingFieldPolicy,
   createMutualFollowersFieldPolicy,
@@ -54,6 +54,7 @@ export function createTypePolicies(
         whoActedOnPublication: createWhoActedOnPublicationFieldPolicy(),
         whoReactedPublication: createWhoReactedPublicationFieldPolicy(),
         feedHighlights: createFeedHighlightsFieldPolicy(),
+
         ...createQueryParamsLocalFields(params),
       },
     },

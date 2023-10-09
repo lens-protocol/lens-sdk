@@ -3074,8 +3074,32 @@ export type MentionNotification = {
   publication: Comment | Post | Quote;
 };
 
+type Notification_ActedNotification_ = ActedNotification;
+
+type Notification_CommentNotification_ = CommentNotification;
+
+type Notification_FollowNotification_ = FollowNotification;
+
+type Notification_MentionNotification_ = MentionNotification;
+
+type Notification_MirrorNotification_ = MirrorNotification;
+
+type Notification_QuoteNotification_ = QuoteNotification;
+
+type Notification_ReactionNotification_ = ReactionNotification;
+
+export type Notification =
+  | Notification_ActedNotification_
+  | Notification_CommentNotification_
+  | Notification_FollowNotification_
+  | Notification_MentionNotification_
+  | Notification_MirrorNotification_
+  | Notification_QuoteNotification_
+  | Notification_ReactionNotification_;
+
 export type NotificationsVariables = Exact<{
-  request: NotificationRequest;
+  where?: InputMaybe<NotificationWhere>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   imageSmallSize?: InputMaybe<ImageTransform>;
   imageMediumSize?: InputMaybe<ImageTransform>;
   profileCoverSize?: InputMaybe<ImageTransform>;
@@ -6958,6 +6982,38 @@ export const FragmentMentionNotification = /*#__PURE__*/ gql`
   ${FragmentComment}
   ${FragmentQuote}
 `;
+export const FragmentNotification = /*#__PURE__*/ gql`
+  fragment Notification on Notification {
+    ... on ReactionNotification {
+      ...ReactionNotification
+    }
+    ... on CommentNotification {
+      ...CommentNotification
+    }
+    ... on MirrorNotification {
+      ...MirrorNotification
+    }
+    ... on QuoteNotification {
+      ...QuoteNotification
+    }
+    ... on ActedNotification {
+      ...ActedNotification
+    }
+    ... on FollowNotification {
+      ...FollowNotification
+    }
+    ... on MentionNotification {
+      ...MentionNotification
+    }
+  }
+  ${FragmentReactionNotification}
+  ${FragmentCommentNotification}
+  ${FragmentMirrorNotification}
+  ${FragmentQuoteNotification}
+  ${FragmentActedNotification}
+  ${FragmentFollowNotification}
+  ${FragmentMentionNotification}
+`;
 export const FragmentProfilesManager = /*#__PURE__*/ gql`
   fragment ProfilesManager on ProfilesManagedResult {
     address
@@ -8068,7 +8124,8 @@ export type FeedHighlightsQueryResult = Apollo.QueryResult<
 >;
 export const NotificationsDocument = /*#__PURE__*/ gql`
   query Notifications(
-    $request: NotificationRequest!
+    $where: NotificationWhere
+    $cursor: Cursor
     $imageSmallSize: ImageTransform = {}
     $imageMediumSize: ImageTransform = {}
     $profileCoverSize: ImageTransform = {}
@@ -8077,7 +8134,7 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
     $fxRateFor: SupportedFiatType = USD
   ) {
     ...InjectCommonQueryParams
-    result: notifications(request: $request) {
+    result: notifications(request: { where: $where, cursor: $cursor }) {
       items {
         ... on ReactionNotification {
           ...ReactionNotification
@@ -8129,7 +8186,8 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useNotifications({
  *   variables: {
- *      request: // value for 'request'
+ *      where: // value for 'where'
+ *      cursor: // value for 'cursor'
  *      imageSmallSize: // value for 'imageSmallSize'
  *      imageMediumSize: // value for 'imageMediumSize'
  *      profileCoverSize: // value for 'profileCoverSize'
@@ -8140,7 +8198,7 @@ export const NotificationsDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useNotifications(
-  baseOptions: Apollo.QueryHookOptions<NotificationsData, NotificationsVariables>,
+  baseOptions?: Apollo.QueryHookOptions<NotificationsData, NotificationsVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<NotificationsData, NotificationsVariables>(NotificationsDocument, options);

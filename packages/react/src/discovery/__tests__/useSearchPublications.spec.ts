@@ -10,7 +10,6 @@ import {
 import { waitFor } from '@testing-library/react';
 
 import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
-import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../../utils';
 import { UseSearchPublicationsArgs, useSearchPublications } from '../useSearchPublications';
 
 describe(`Given the ${useSearchPublications.name} hook`, () => {
@@ -32,10 +31,7 @@ describe(`Given the ${useSearchPublications.name} hook`, () => {
 
       const { renderHook } = setupHookTestScenario([
         mockSearchPublicationsResponse({
-          variables: {
-            ...args,
-            limit: DEFAULT_PAGINATED_QUERY_LIMIT,
-          },
+          variables: args,
           items: publications,
         }),
       ]);

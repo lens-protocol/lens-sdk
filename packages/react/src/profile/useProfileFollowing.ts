@@ -1,5 +1,4 @@
 import {
-  LimitType,
   Profile,
   FollowingRequest,
   useFollowing as useFollowingHook,
@@ -26,17 +25,11 @@ export type UseProfileFollowingArgs = PaginatedArgs<FollowingRequest>;
  * });
  * ```
  */
-export function useProfileFollowing({
-  for: forId,
-  limit = LimitType.Ten,
-}: UseProfileFollowingArgs): PaginatedReadResult<Profile[]> {
+export function useProfileFollowing(args: UseProfileFollowingArgs): PaginatedReadResult<Profile[]> {
   return usePaginatedReadResult(
     useFollowingHook(
       useLensApolloClient({
-        variables: {
-          for: forId,
-          limit,
-        },
+        variables: args,
       }),
     ),
   );

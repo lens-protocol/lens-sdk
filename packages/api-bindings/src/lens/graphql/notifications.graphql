@@ -134,9 +134,34 @@ fragment MentionNotification on MentionNotification {
   }
 }
 
+fragment Notification on Notification {
+  ... on ReactionNotification {
+    ...ReactionNotification
+  }
+  ... on CommentNotification {
+    ...CommentNotification
+  }
+  ... on MirrorNotification {
+    ...MirrorNotification
+  }
+  ... on QuoteNotification {
+    ...QuoteNotification
+  }
+  ... on ActedNotification {
+    ...ActedNotification
+  }
+  ... on FollowNotification {
+    ...FollowNotification
+  }
+  ... on MentionNotification {
+    ...MentionNotification
+  }
+}
+
 # queries
 query Notifications(
-  $request: NotificationRequest!
+  $where: NotificationWhere
+  $cursor: Cursor
   $imageSmallSize: ImageTransform = {}
   $imageMediumSize: ImageTransform = {}
   $profileCoverSize: ImageTransform = {}
@@ -145,7 +170,7 @@ query Notifications(
   $fxRateFor: SupportedFiatType = USD
 ) {
   ...InjectCommonQueryParams
-  result: notifications(request: $request) {
+  result: notifications(request: { where: $where, cursor: $cursor }) {
     items {
       ... on ReactionNotification {
         ...ReactionNotification

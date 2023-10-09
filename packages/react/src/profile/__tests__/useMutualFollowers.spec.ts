@@ -1,4 +1,3 @@
-import { LimitType } from '@lens-protocol/api-bindings';
 import {
   mockProfileFragment,
   mockMutualFollowersResponse,
@@ -17,21 +16,17 @@ describe(`Given the ${useMutualFollowers.name} hook`, () => {
 
   describe('when the query returns data successfully', () => {
     it('should settle with the profiles', async () => {
-      const { renderHook } = setupHookTestScenario([
-        mockMutualFollowersResponse({
-          variables: {
-            observer: observerProfileId,
-            viewing: viewingProfileId,
-            limit: LimitType.Ten,
-          },
-          items: profiles,
-        }),
-      ]);
-
       const args: UseMutualFollowersArgs = {
         observer: observerProfileId,
         viewing: viewingProfileId,
       };
+
+      const { renderHook } = setupHookTestScenario([
+        mockMutualFollowersResponse({
+          variables: args,
+          items: profiles,
+        }),
+      ]);
 
       const { result } = renderHook(() => useMutualFollowers(args));
 

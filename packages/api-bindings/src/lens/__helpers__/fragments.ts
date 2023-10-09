@@ -6,6 +6,7 @@ import {
   CanDecryptResponse,
   Comment,
   FeedItem,
+  MentionNotification,
   Mirror,
   NetworkAddress,
   OptimisticStatusResult,
@@ -300,6 +301,17 @@ export function mockProfileActionHistoryFragment(
     txHash: mockTransactionHash(),
     actionedOn: faker.date.past().toISOString(),
 
+    ...overrides,
+  };
+}
+
+export function mockMentionNotification(
+  overrides?: Partial<MentionNotification>,
+): MentionNotification {
+  return {
+    __typename: 'MentionNotification',
+    id: faker.datatype.uuid(),
+    publication: mockPostFragment(),
     ...overrides,
   };
 }

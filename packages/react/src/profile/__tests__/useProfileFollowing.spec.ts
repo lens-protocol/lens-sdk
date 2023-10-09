@@ -1,4 +1,3 @@
-import { LimitType } from '@lens-protocol/api-bindings';
 import { mockProfileFragment, mockFollowingResponse } from '@lens-protocol/api-bindings/mocks';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
@@ -17,7 +16,6 @@ describe(`Given the ${useProfileFollowing.name} hook`, () => {
         mockFollowingResponse({
           variables: {
             for: profileId,
-            limit: LimitType.Ten,
           },
           items: profiles,
         }),

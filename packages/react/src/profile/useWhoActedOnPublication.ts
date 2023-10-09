@@ -1,5 +1,4 @@
 import {
-  LimitType,
   Profile,
   useWhoActedOnPublication as useWhoActedOnPublicationHook,
   WhoActedOnPublicationRequest,
@@ -26,19 +25,13 @@ export type UseWhoActedOnPublicationArgs = PaginatedArgs<WhoActedOnPublicationRe
  * });
  * ```
  */
-export function useWhoActedOnPublication({
-  on,
-  where,
-  limit = LimitType.Ten,
-}: UseWhoActedOnPublicationArgs): PaginatedReadResult<Profile[]> {
+export function useWhoActedOnPublication(
+  args: UseWhoActedOnPublicationArgs,
+): PaginatedReadResult<Profile[]> {
   return usePaginatedReadResult(
     useWhoActedOnPublicationHook(
       useLensApolloClient({
-        variables: {
-          on,
-          where,
-          limit,
-        },
+        variables: args,
       }),
     ),
   );

@@ -1,5 +1,4 @@
 import {
-  LimitType,
   Profile,
   ProfileRecommendationsRequest,
   useProfileRecommendations as useProfileRecommendationsHook,
@@ -26,21 +25,13 @@ export type UseRecommendedProfilesArgs = PaginatedArgs<ProfileRecommendationsReq
  * });
  * ```
  */
-export function useRecommendedProfiles({
-  for: forId,
-  disableML,
-  shuffle,
-  limit = LimitType.Ten,
-}: UseRecommendedProfilesArgs): PaginatedReadResult<Profile[]> {
+export function useRecommendedProfiles(
+  args: UseRecommendedProfilesArgs,
+): PaginatedReadResult<Profile[]> {
   return usePaginatedReadResult(
     useProfileRecommendationsHook(
       useLensApolloClient({
-        variables: {
-          for: forId,
-          disableML,
-          shuffle,
-          limit,
-        },
+        variables: args,
       }),
     ),
   );
