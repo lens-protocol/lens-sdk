@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:with-packages": "turbo run build --filter=...example-web",
     "preview": "vite preview",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",

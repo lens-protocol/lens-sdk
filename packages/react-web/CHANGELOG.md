@@ -1,5 +1,32 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.3
+
+### Patch Changes
+
+- Updated dependencies [6d0d62dd]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.2
+  - @lens-protocol/api-bindings@0.11.0-alpha.3
+  - @lens-protocol/domain@0.11.0-alpha.2
+  - @lens-protocol/react@2.0.0-alpha.3
+  - @lens-protocol/storage@0.7.5-alpha.0
+
+### Migrate from `@lens-protocol/react@2.0.0-alpha-x`
+
+- Uninstall `@lens-protocol/react` and install `@lens-protocol/react-web@alpha` instead
+- Change all import statement to import from `@lens-protocol/react-web` instead of `@lens-protocol/react`
+- Remove any direct dependency on `@lens-protocol/storage` (if you had one)
+- Install the latest `@lens-protocol/wagmi@alpha`
+- Amend `LensConfig` as follows:
+  ```diff
+  const lensConfig: LensConfig = {
+    environment: development,
+  -   storage: localStorage(),
+    bindings: wagmiBindings(),
+  };
+  ```
+  and delete any `localStorage()` temporary stop-gap you might have created while following the `examples/web` app configuration (this is built-in into the `@lens-protocol/react-web` package now).
+
 ## 1.3.1
 
 ### Patch Changes

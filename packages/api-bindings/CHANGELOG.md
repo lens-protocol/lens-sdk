@@ -1,5 +1,14 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.3
+
+### Patch Changes
+
+- 6d0d62dd: **feat:** new `useLogin` and `useSession` hooks
+- Updated dependencies [6d0d62dd]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.2
+  - @lens-protocol/domain@0.11.0-alpha.2
+
 ## 0.11.0-alpha.2
 
 ### Patch Changes
