@@ -1,5 +1,17 @@
+fragment ExplorePublication on ExplorePublication {
+  ... on Post {
+    ...Post
+  }
+  ... on Quote {
+    ...Quote
+  }
+}
+
 query ExplorePublications(
-  $request: ExplorePublicationRequest!
+  $orderBy: ExplorePublicationsOrderByType!
+  $where: ExplorePublicationsWhere
+  $limit: LimitType
+  $cursor: Cursor
   $imageSmallSize: ImageTransform = {}
   $imageMediumSize: ImageTransform = {}
   $profileCoverSize: ImageTransform = {}
@@ -8,18 +20,14 @@ query ExplorePublications(
   $fxRateFor: SupportedFiatType = USD
 ) {
   ...InjectCommonQueryParams
-  result: explorePublications(request: $request) {
+  result: explorePublications(
+    request: { orderBy: $orderBy, where: $where, limit: $limit, cursor: $cursor }
+  ) {
     items {
-      ... on Post {
-        ...Post
-      }
-      ... on Quote {
-        ...Quote
-      }
+      ...ExplorePublication
     }
     pageInfo {
-      prev
-      next
+      ...PaginatedResultInfo
     }
   }
 }

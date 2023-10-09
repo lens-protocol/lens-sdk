@@ -33,7 +33,7 @@ export type UseExploreProfilesArgs = PaginatedArgs<
  * import { useExploreProfiles } from '@lens-protocol/react-web';
  *
  * function ExploreProfiles() {
- *   const { data, error, loading } = useExploreProfiles({ sortCriteria: ProfileSortCriteria.MostFollowers });
+ *   const { data, error, loading } = useExploreProfiles({ : ProfileSortCriteria.MostFollowers });
  *
  *   if (loading) return <p>Loading...</p>;
  *

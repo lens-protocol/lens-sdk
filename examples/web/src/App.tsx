@@ -16,6 +16,7 @@ import { ErrorMessage } from './components/error/ErrorMessage';
 import { Header } from './components/header/Header';
 import { DiscoveryPage } from './discovery/DiscoveryPage';
 import { UseExploreProfiles } from './discovery/UseExploreProfiles';
+import { UseExplorePublications } from './discovery/UseExplorePublications';
 import { UseFeed } from './discovery/UseFeed';
 import { UseSearchProfiles } from './discovery/UseSearchProfiles';
 import { UseSearchPublications } from './discovery/UseSearchPublications';
@@ -107,6 +108,7 @@ export function App() {
                       <Route path="useSearchPublications" element={<UseSearchPublications />} />
                       <Route path="useSearchProfiles" element={<UseSearchProfiles />} />
                       <Route path="useExploreProfiles" element={<UseExploreProfiles />} />
+                      <Route path="useExplorePublications" element={<UseExplorePublications />} />
                     </Route>
                   </Route>
 

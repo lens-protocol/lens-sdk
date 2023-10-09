@@ -1706,8 +1706,17 @@ export type AuthRefreshVariables = Exact<{
 
 export type AuthRefreshData = { result: { accessToken: string; refreshToken: string } };
 
+type ExplorePublication_Post_ = Post;
+
+type ExplorePublication_Quote_ = Quote;
+
+export type ExplorePublication = ExplorePublication_Post_ | ExplorePublication_Quote_;
+
 export type ExplorePublicationsVariables = Exact<{
-  request: ExplorePublicationRequest;
+  orderBy: ExplorePublicationsOrderByType;
+  where?: InputMaybe<ExplorePublicationsWhere>;
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   imageSmallSize?: InputMaybe<ImageTransform>;
   imageMediumSize?: InputMaybe<ImageTransform>;
   profileCoverSize?: InputMaybe<ImageTransform>;
@@ -1717,7 +1726,10 @@ export type ExplorePublicationsVariables = Exact<{
 }>;
 
 export type ExplorePublicationsData = {
-  result: { items: Array<Post | Quote>; pageInfo: { prev: Cursor | null; next: Cursor | null } };
+  result: {
+    items: Array<ExplorePublication_Post_ | ExplorePublication_Quote_>;
+    pageInfo: PaginatedResultInfo;
+  };
 } & InjectCommonQueryParams;
 
 export type ExploreProfilesVariables = Exact<{
@@ -6275,6 +6287,165 @@ export const FragmentPost = /*#__PURE__*/ gql`
   ${FragmentUnknownReferenceModuleSettings}
   ${FragmentPublicationStats}
 `;
+export const FragmentQuoteFields = /*#__PURE__*/ gql`
+  fragment QuoteFields on Quote {
+    __typename
+    id
+    publishedOn {
+      ...App
+    }
+    isHidden
+    momoka {
+      ...MomokaInfo
+    }
+    txHash
+    createdAt
+    by {
+      ...Profile
+    }
+    operations {
+      ...PublicationOperations
+    }
+    metadata {
+      ... on AudioMetadataV3 {
+        ...AudioMetadataV3
+      }
+      ... on VideoMetadataV3 {
+        ...VideoMetadataV3
+      }
+      ... on ImageMetadataV3 {
+        ...ImageMetadataV3
+      }
+      ... on ArticleMetadataV3 {
+        ...ArticleMetadataV3
+      }
+      ... on EventMetadataV3 {
+        ...EventMetadataV3
+      }
+      ... on LinkMetadataV3 {
+        ...LinkMetadataV3
+      }
+      ... on EmbedMetadataV3 {
+        ...EmbedMetadataV3
+      }
+      ... on CheckingInMetadataV3 {
+        ...CheckingInMetadataV3
+      }
+      ... on TextOnlyMetadataV3 {
+        ...TextOnlyMetadataV3
+      }
+      ... on ThreeDMetadataV3 {
+        ...ThreeDMetadataV3
+      }
+      ... on StoryMetadataV3 {
+        ...StoryMetadataV3
+      }
+      ... on TransactionMetadataV3 {
+        ...TransactionMetadataV3
+      }
+      ... on MintMetadataV3 {
+        ...MintMetadataV3
+      }
+      ... on SpaceMetadataV3 {
+        ...SpaceMetadataV3
+      }
+      ... on LiveStreamMetadataV3 {
+        ...LiveStreamMetadataV3
+      }
+    }
+    openActionModules {
+      ... on LegacyFreeCollectModuleSettings {
+        ...LegacyFreeCollectModuleSettings
+      }
+      ... on LegacyFeeCollectModuleSettings {
+        ...LegacyFeeCollectModuleSettings
+      }
+      ... on LegacyLimitedFeeCollectModuleSettings {
+        ...LegacyLimitedFeeCollectModuleSettings
+      }
+      ... on LegacyLimitedTimedFeeCollectModuleSettings {
+        ...LegacyLimitedTimedFeeCollectModuleSettings
+      }
+      ... on LegacyRevertCollectModuleSettings {
+        ...LegacyRevertCollectModuleSettings
+      }
+      ... on LegacyTimedFeeCollectModuleSettings {
+        ...LegacyTimedFeeCollectModuleSettings
+      }
+      ... on LegacyMultirecipientFeeCollectModuleSettings {
+        ...LegacyMultirecipientFeeCollectModuleSettings
+      }
+      ... on LegacySimpleCollectModuleSettings {
+        ...LegacySimpleCollectModuleSettings
+      }
+      ... on LegacyERC4626FeeCollectModuleSettings {
+        ...LegacyERC4626FeeCollectModuleSettings
+      }
+      ... on LegacyAaveFeeCollectModuleSettings {
+        ...LegacyAaveFeeCollectModuleSettings
+      }
+      ... on MultirecipientFeeCollectOpenActionSettings {
+        ...MultirecipientFeeCollectOpenActionSettings
+      }
+      ... on SimpleCollectOpenActionSettings {
+        ...SimpleCollectOpenActionSettings
+      }
+      ... on UnknownOpenActionModuleSettings {
+        ...UnknownOpenActionModuleSettings
+      }
+    }
+    referenceModule {
+      ... on FollowOnlyReferenceModuleSettings {
+        ...FollowOnlyReferenceModuleSettings
+      }
+      ... on DegreesOfSeparationReferenceModuleSettings {
+        ...DegreesOfSeparationReferenceModuleSettings
+      }
+      ... on UnknownReferenceModuleSettings {
+        ...UnknownReferenceModuleSettings
+      }
+    }
+    stats(request: { metadata: { publishedOn: $activityOn } }) {
+      ...PublicationStats
+    }
+  }
+  ${FragmentApp}
+  ${FragmentMomokaInfo}
+  ${FragmentProfile}
+  ${FragmentPublicationOperations}
+  ${FragmentAudioMetadataV3}
+  ${FragmentVideoMetadataV3}
+  ${FragmentImageMetadataV3}
+  ${FragmentArticleMetadataV3}
+  ${FragmentEventMetadataV3}
+  ${FragmentLinkMetadataV3}
+  ${FragmentEmbedMetadataV3}
+  ${FragmentCheckingInMetadataV3}
+  ${FragmentTextOnlyMetadataV3}
+  ${FragmentThreeDMetadataV3}
+  ${FragmentStoryMetadataV3}
+  ${FragmentTransactionMetadataV3}
+  ${FragmentMintMetadataV3}
+  ${FragmentSpaceMetadataV3}
+  ${FragmentLiveStreamMetadataV3}
+  ${FragmentLegacyFreeCollectModuleSettings}
+  ${FragmentLegacyFeeCollectModuleSettings}
+  ${FragmentLegacyLimitedFeeCollectModuleSettings}
+  ${FragmentLegacyLimitedTimedFeeCollectModuleSettings}
+  ${FragmentLegacyRevertCollectModuleSettings}
+  ${FragmentLegacyTimedFeeCollectModuleSettings}
+  ${FragmentLegacyMultirecipientFeeCollectModuleSettings}
+  ${FragmentLegacySimpleCollectModuleSettings}
+  ${FragmentLegacyErc4626FeeCollectModuleSettings}
+  ${FragmentLegacyAaveFeeCollectModuleSettings}
+  ${FragmentMultirecipientFeeCollectOpenActionSettings}
+  ${FragmentSimpleCollectOpenActionSettings}
+  ${FragmentUnknownOpenActionModuleSettings}
+  ${FragmentFollowOnlyReferenceModuleSettings}
+  ${FragmentDegreesOfSeparationReferenceModuleSettings}
+  ${FragmentUnknownReferenceModuleSettings}
+  ${FragmentPublicationStats}
+`;
 export const FragmentCommentFields = /*#__PURE__*/ gql`
   fragment CommentFields on Comment {
     __typename
@@ -6438,164 +6609,37 @@ export const FragmentCommentFields = /*#__PURE__*/ gql`
   ${FragmentUnknownReferenceModuleSettings}
   ${FragmentPublicationStats}
 `;
-export const FragmentQuoteFields = /*#__PURE__*/ gql`
-  fragment QuoteFields on Quote {
+export const FragmentQuote = /*#__PURE__*/ gql`
+  fragment Quote on Quote {
     __typename
-    id
-    publishedOn {
-      ...App
-    }
-    isHidden
-    momoka {
-      ...MomokaInfo
-    }
-    txHash
-    createdAt
-    by {
-      ...Profile
-    }
-    operations {
-      ...PublicationOperations
-    }
-    metadata {
-      ... on AudioMetadataV3 {
-        ...AudioMetadataV3
+    ...QuoteFields
+    quoteOn {
+      ... on Post {
+        ...Post
       }
-      ... on VideoMetadataV3 {
-        ...VideoMetadataV3
+      ... on Comment {
+        ...CommentFields
       }
-      ... on ImageMetadataV3 {
-        ...ImageMetadataV3
+      ... on Quote {
+        ...QuoteFields
       }
-      ... on ArticleMetadataV3 {
-        ...ArticleMetadataV3
-      }
-      ... on EventMetadataV3 {
-        ...EventMetadataV3
-      }
-      ... on LinkMetadataV3 {
-        ...LinkMetadataV3
-      }
-      ... on EmbedMetadataV3 {
-        ...EmbedMetadataV3
-      }
-      ... on CheckingInMetadataV3 {
-        ...CheckingInMetadataV3
-      }
-      ... on TextOnlyMetadataV3 {
-        ...TextOnlyMetadataV3
-      }
-      ... on ThreeDMetadataV3 {
-        ...ThreeDMetadataV3
-      }
-      ... on StoryMetadataV3 {
-        ...StoryMetadataV3
-      }
-      ... on TransactionMetadataV3 {
-        ...TransactionMetadataV3
-      }
-      ... on MintMetadataV3 {
-        ...MintMetadataV3
-      }
-      ... on SpaceMetadataV3 {
-        ...SpaceMetadataV3
-      }
-      ... on LiveStreamMetadataV3 {
-        ...LiveStreamMetadataV3
-      }
-    }
-    openActionModules {
-      ... on LegacyFreeCollectModuleSettings {
-        ...LegacyFreeCollectModuleSettings
-      }
-      ... on LegacyFeeCollectModuleSettings {
-        ...LegacyFeeCollectModuleSettings
-      }
-      ... on LegacyLimitedFeeCollectModuleSettings {
-        ...LegacyLimitedFeeCollectModuleSettings
-      }
-      ... on LegacyLimitedTimedFeeCollectModuleSettings {
-        ...LegacyLimitedTimedFeeCollectModuleSettings
-      }
-      ... on LegacyRevertCollectModuleSettings {
-        ...LegacyRevertCollectModuleSettings
-      }
-      ... on LegacyTimedFeeCollectModuleSettings {
-        ...LegacyTimedFeeCollectModuleSettings
-      }
-      ... on LegacyMultirecipientFeeCollectModuleSettings {
-        ...LegacyMultirecipientFeeCollectModuleSettings
-      }
-      ... on LegacySimpleCollectModuleSettings {
-        ...LegacySimpleCollectModuleSettings
-      }
-      ... on LegacyERC4626FeeCollectModuleSettings {
-        ...LegacyERC4626FeeCollectModuleSettings
-      }
-      ... on LegacyAaveFeeCollectModuleSettings {
-        ...LegacyAaveFeeCollectModuleSettings
-      }
-      ... on MultirecipientFeeCollectOpenActionSettings {
-        ...MultirecipientFeeCollectOpenActionSettings
-      }
-      ... on SimpleCollectOpenActionSettings {
-        ...SimpleCollectOpenActionSettings
-      }
-      ... on UnknownOpenActionModuleSettings {
-        ...UnknownOpenActionModuleSettings
-      }
-    }
-    referenceModule {
-      ... on FollowOnlyReferenceModuleSettings {
-        ...FollowOnlyReferenceModuleSettings
-      }
-      ... on DegreesOfSeparationReferenceModuleSettings {
-        ...DegreesOfSeparationReferenceModuleSettings
-      }
-      ... on UnknownReferenceModuleSettings {
-        ...UnknownReferenceModuleSettings
-      }
-    }
-    stats(request: { metadata: { publishedOn: $activityOn } }) {
-      ...PublicationStats
     }
   }
-  ${FragmentApp}
-  ${FragmentMomokaInfo}
-  ${FragmentProfile}
-  ${FragmentPublicationOperations}
-  ${FragmentAudioMetadataV3}
-  ${FragmentVideoMetadataV3}
-  ${FragmentImageMetadataV3}
-  ${FragmentArticleMetadataV3}
-  ${FragmentEventMetadataV3}
-  ${FragmentLinkMetadataV3}
-  ${FragmentEmbedMetadataV3}
-  ${FragmentCheckingInMetadataV3}
-  ${FragmentTextOnlyMetadataV3}
-  ${FragmentThreeDMetadataV3}
-  ${FragmentStoryMetadataV3}
-  ${FragmentTransactionMetadataV3}
-  ${FragmentMintMetadataV3}
-  ${FragmentSpaceMetadataV3}
-  ${FragmentLiveStreamMetadataV3}
-  ${FragmentLegacyFreeCollectModuleSettings}
-  ${FragmentLegacyFeeCollectModuleSettings}
-  ${FragmentLegacyLimitedFeeCollectModuleSettings}
-  ${FragmentLegacyLimitedTimedFeeCollectModuleSettings}
-  ${FragmentLegacyRevertCollectModuleSettings}
-  ${FragmentLegacyTimedFeeCollectModuleSettings}
-  ${FragmentLegacyMultirecipientFeeCollectModuleSettings}
-  ${FragmentLegacySimpleCollectModuleSettings}
-  ${FragmentLegacyErc4626FeeCollectModuleSettings}
-  ${FragmentLegacyAaveFeeCollectModuleSettings}
-  ${FragmentMultirecipientFeeCollectOpenActionSettings}
-  ${FragmentSimpleCollectOpenActionSettings}
-  ${FragmentUnknownOpenActionModuleSettings}
-  ${FragmentFollowOnlyReferenceModuleSettings}
-  ${FragmentDegreesOfSeparationReferenceModuleSettings}
-  ${FragmentUnknownReferenceModuleSettings}
-  ${FragmentPublicationStats}
+  ${FragmentQuoteFields}
+  ${FragmentPost}
+  ${FragmentCommentFields}
+`;
+export const FragmentExplorePublication = /*#__PURE__*/ gql`
+  fragment ExplorePublication on ExplorePublication {
+    ... on Post {
+      ...Post
+    }
+    ... on Quote {
+      ...Quote
+    }
+  }
+  ${FragmentPost}
+  ${FragmentQuote}
 `;
 export const FragmentComment = /*#__PURE__*/ gql`
   fragment Comment on Comment {
@@ -6619,26 +6663,6 @@ export const FragmentComment = /*#__PURE__*/ gql`
   ${FragmentCommentFields}
   ${FragmentPost}
   ${FragmentQuoteFields}
-`;
-export const FragmentQuote = /*#__PURE__*/ gql`
-  fragment Quote on Quote {
-    __typename
-    ...QuoteFields
-    quoteOn {
-      ... on Post {
-        ...Post
-      }
-      ... on Comment {
-        ...CommentFields
-      }
-      ... on Quote {
-        ...QuoteFields
-      }
-    }
-  }
-  ${FragmentQuoteFields}
-  ${FragmentPost}
-  ${FragmentCommentFields}
 `;
 export const FragmentMirror = /*#__PURE__*/ gql`
   fragment Mirror on Mirror {
@@ -7846,7 +7870,10 @@ export type AuthRefreshMutationOptions = Apollo.BaseMutationOptions<
 >;
 export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
   query ExplorePublications(
-    $request: ExplorePublicationRequest!
+    $orderBy: ExplorePublicationsOrderByType!
+    $where: ExplorePublicationsWhere
+    $limit: LimitType
+    $cursor: Cursor
     $imageSmallSize: ImageTransform = {}
     $imageMediumSize: ImageTransform = {}
     $profileCoverSize: ImageTransform = {}
@@ -7855,24 +7882,20 @@ export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
     $fxRateFor: SupportedFiatType = USD
   ) {
     ...InjectCommonQueryParams
-    result: explorePublications(request: $request) {
+    result: explorePublications(
+      request: { orderBy: $orderBy, where: $where, limit: $limit, cursor: $cursor }
+    ) {
       items {
-        ... on Post {
-          ...Post
-        }
-        ... on Quote {
-          ...Quote
-        }
+        ...ExplorePublication
       }
       pageInfo {
-        prev
-        next
+        ...PaginatedResultInfo
       }
     }
   }
   ${FragmentInjectCommonQueryParams}
-  ${FragmentPost}
-  ${FragmentQuote}
+  ${FragmentExplorePublication}
+  ${FragmentPaginatedResultInfo}
 `;
 
 /**
@@ -7887,7 +7910,10 @@ export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useExplorePublications({
  *   variables: {
- *      request: // value for 'request'
+ *      orderBy: // value for 'orderBy'
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *      imageSmallSize: // value for 'imageSmallSize'
  *      imageMediumSize: // value for 'imageMediumSize'
  *      profileCoverSize: // value for 'profileCoverSize'
