@@ -1,4 +1,6 @@
 import {
+  ExploreProfilesDocument,
+  ExploreProfilesVariables,
   FeedVariables,
   FeedItem,
   FeedDocument,
@@ -8,6 +10,7 @@ import {
   ExplorePublicationsDocument,
   ExplorePublicationsVariables,
   ExplorePublication,
+  Profile,
 } from '../../graphql/generated';
 import { mockAnyPaginatedResponse } from './mockAnyPaginatedResponse';
 
@@ -47,5 +50,19 @@ export function mockFeedHighlightsResponse({
     variables,
     items,
     query: FeedHighlightsDocument,
+  });
+}
+
+export function mockExploreProfilesResponse({
+  variables,
+  items,
+}: {
+  variables: ExploreProfilesVariables;
+  items: Profile[];
+}) {
+  return mockAnyPaginatedResponse({
+    variables,
+    items,
+    query: ExploreProfilesDocument,
   });
 }

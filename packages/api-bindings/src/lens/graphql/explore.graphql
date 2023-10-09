@@ -33,14 +33,19 @@ query ExplorePublications(
 }
 
 query ExploreProfiles(
-  $request: ExploreProfilesRequest!
+  $where: ExploreProfilesWhere
+  $orderBy: ExploreProfilesOrderByType!
+  $limit: LimitType
+  $cursor: Cursor
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
   $activityOn: [AppId!]
   $fxRateFor: SupportedFiatType = USD
 ) {
   ...InjectCommonQueryParams
-  result: exploreProfiles(request: $request) {
+  result: exploreProfiles(
+    request: { where: $where, orderBy: $orderBy, limit: $limit, cursor: $cursor }
+  ) {
     items {
       ...Profile
     }

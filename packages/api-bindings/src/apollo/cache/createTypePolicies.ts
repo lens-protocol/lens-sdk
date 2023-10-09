@@ -18,6 +18,7 @@ import {
   createWhoActedOnPublicationFieldPolicy,
   createWhoReactedPublicationFieldPolicy,
 } from './field-policies';
+import { createExploreProfilesFieldPolicy } from './field-policies/createExploreProfilesFieldPolicy';
 import { createExplorePublicationsFieldPolicy } from './field-policies/createExplorePublicationsFieldPolicy';
 import { notNormalizedType } from './utils/notNormalizedType';
 
@@ -56,6 +57,7 @@ export function createTypePolicies(
         whoReactedPublication: createWhoReactedPublicationFieldPolicy(),
         explorePublications: createExplorePublicationsFieldPolicy(),
         feedHighlights: createFeedHighlightsFieldPolicy(),
+        exploreProfiles: createExploreProfilesFieldPolicy(),
 
         ...createQueryParamsLocalFields(params),
       },

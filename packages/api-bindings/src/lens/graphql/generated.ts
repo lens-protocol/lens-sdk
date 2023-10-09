@@ -1733,7 +1733,10 @@ export type ExplorePublicationsData = {
 } & InjectCommonQueryParams;
 
 export type ExploreProfilesVariables = Exact<{
-  request: ExploreProfilesRequest;
+  where?: InputMaybe<ExploreProfilesWhere>;
+  orderBy: ExploreProfilesOrderByType;
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   profileCoverSize?: InputMaybe<ImageTransform>;
   profilePictureSize?: InputMaybe<ImageTransform>;
   activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
@@ -7948,14 +7951,19 @@ export type ExplorePublicationsQueryResult = Apollo.QueryResult<
 >;
 export const ExploreProfilesDocument = /*#__PURE__*/ gql`
   query ExploreProfiles(
-    $request: ExploreProfilesRequest!
+    $where: ExploreProfilesWhere
+    $orderBy: ExploreProfilesOrderByType!
+    $limit: LimitType
+    $cursor: Cursor
     $profileCoverSize: ImageTransform = {}
     $profilePictureSize: ImageTransform = {}
     $activityOn: [AppId!]
     $fxRateFor: SupportedFiatType = USD
   ) {
     ...InjectCommonQueryParams
-    result: exploreProfiles(request: $request) {
+    result: exploreProfiles(
+      request: { where: $where, orderBy: $orderBy, limit: $limit, cursor: $cursor }
+    ) {
       items {
         ...Profile
       }
@@ -7981,7 +7989,10 @@ export const ExploreProfilesDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useExploreProfiles({
  *   variables: {
- *      request: // value for 'request'
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *      profileCoverSize: // value for 'profileCoverSize'
  *      profilePictureSize: // value for 'profilePictureSize'
  *      activityOn: // value for 'activityOn'
