@@ -1,25 +1,29 @@
-import { FeedItem, FeedRequest, useFeed as useBaseFeedQuery } from '@lens-protocol/api-bindings';
+import {
+  FeedHighlight,
+  FeedHighlightsRequest,
+  useFeedHighlights as useBaseFeedHighlightsQuery,
+} from '@lens-protocol/api-bindings';
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { OmitCursor, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 
-export type UseFeedArgs = OmitCursor<FeedRequest>;
+export type UseFeedHighlightsArgs = OmitCursor<FeedHighlightsRequest>;
 
 /**
- * Fetch a the feed of a given profile and filters.
+ * Fetch a the highlights of a feed for given profile and filters.
  *
- * You MUST be authenticated via {@link useLogin} to use this hook.
+ * You MUST be authenticated via {@link useWalletLogin} to use this hook.
  *
  * @category Discovery
  * @group Hooks
- * @param args - {@link UseFeedArgs}
+ * @param args - {@link UseFeedHighlightsArgs}
  *
  * @example
  * ```tsx
- * import { useFeed, ProfileId } from '@lens-protocol/react';
+ * import { useFeedHighlights, ProfileId } from '@lens-protocol/react';
  *
  * function Feed({ profileId }: { profileId: ProfileId }) {
- *   const { data, loading, error } =  useFeed({
+ *   const { data, loading, error } =  useFeedHighlights({
  *      where: {
  *        for: profileId,
  *      },
@@ -31,8 +35,8 @@ export type UseFeedArgs = OmitCursor<FeedRequest>;
  *
  *   return (
  *     <ul>
- *       {data.map((item, idx) => (
- *         <li key={`${item.root.id}-${idx}`}>
+ *       {data.map((item) => (
+ *         <li key={item.id}>
  *           // render item details
  *         </li>
  *       ))}
@@ -41,9 +45,11 @@ export type UseFeedArgs = OmitCursor<FeedRequest>;
  * }
  * ```
  */
-export function useFeed({ where }: UseFeedArgs): PaginatedReadResult<FeedItem[]> {
+export function useFeedHighlights({
+  where,
+}: UseFeedHighlightsArgs): PaginatedReadResult<FeedHighlight[]> {
   return usePaginatedReadResult(
-    useBaseFeedQuery(
+    useBaseFeedHighlightsQuery(
       useLensApolloClient({
         variables: {
           where,

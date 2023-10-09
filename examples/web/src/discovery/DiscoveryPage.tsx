@@ -7,6 +7,11 @@ const discoveryHooks = [
     path: '/discovery/useFeed',
   },
   {
+    label: 'useFeedHighlights',
+    description: `Fetch the highlights of a feed for a profile matching given filters.`,
+    path: '/discovery/useFeedHighlights',
+  },
+  {
     label: 'useSearchPublications',
     description: 'Search for publications using filters.',
     path: '/discovery/useSearchPublications',

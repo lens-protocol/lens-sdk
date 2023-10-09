@@ -1,37 +1,9 @@
-import { FeedItem, FeedWhere } from '@lens-protocol/api-bindings';
-import {
-  mockFeedItemFragment,
-  mockFeedResponse,
-  mockLensApolloClient,
-} from '@lens-protocol/api-bindings/mocks';
+import { mockFeedItemFragment, mockFeedResponse } from '@lens-protocol/api-bindings/mocks';
 import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
-import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { useFeed } from '../useFeed';
-
-function setupTestScenario({ items, where }: { where: FeedWhere; items: FeedItem[] }) {
-  return renderHookWithMocks(
-    () =>
-      useFeed({
-        where,
-      }),
-    {
-      mocks: {
-        apolloClient: mockLensApolloClient([
-          mockFeedResponse({
-            variables: {
-              request: {
-                where,
-              },
-            },
-            items,
-          }),
-        ]),
-      },
-    },
-  );
-}
+import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
+import { UseFeedArgs, useFeed } from '../useFeed';
 
 describe(`Given the ${useFeed.name} hook`, () => {
   const profileId = mockProfileId();
@@ -39,11 +11,19 @@ describe(`Given the ${useFeed.name} hook`, () => {
   const expectations = items.map(({ id }) => ({ id }));
 
   describe('when the query returns data successfully', () => {
+    const args: UseFeedArgs = {
+      where: { for: profileId },
+    };
+
     it('should return the feed', async () => {
-      const { result } = setupTestScenario({
-        where: { for: profileId },
-        items,
-      });
+      const { renderHook } = setupHookTestScenario([
+        mockFeedResponse({
+          variables: args,
+          items,
+        }),
+      ]);
+
+      const { result } = renderHook(() => useFeed(args));
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
 

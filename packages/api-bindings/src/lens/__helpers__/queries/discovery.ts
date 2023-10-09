@@ -1,10 +1,37 @@
-import { FeedVariables, FeedItem, FeedDocument } from '../../graphql/generated';
+import {
+  FeedDocument,
+  FeedHighlight,
+  FeedHighlightsDocument,
+  FeedHighlightsVariables,
+  FeedItem,
+  FeedVariables,
+} from '../../graphql/generated';
 import { mockAnyPaginatedResponse } from './mockAnyPaginatedResponse';
 
-export function mockFeedResponse(args: { variables: FeedVariables; items: FeedItem[] }) {
+export function mockFeedResponse({
+  variables,
+  items,
+}: {
+  variables: FeedVariables;
+  items: FeedItem[];
+}) {
   return mockAnyPaginatedResponse({
-    variables: args.variables,
-    items: args.items,
+    variables,
+    items,
     query: FeedDocument,
+  });
+}
+
+export function mockFeedHighlightsResponse({
+  variables,
+  items,
+}: {
+  variables: FeedHighlightsVariables;
+  items: FeedHighlight[];
+}) {
+  return mockAnyPaginatedResponse({
+    variables,
+    items,
+    query: FeedHighlightsDocument,
   });
 }

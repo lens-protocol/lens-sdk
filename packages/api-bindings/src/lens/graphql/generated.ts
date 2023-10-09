@@ -1744,7 +1744,8 @@ export type FeedItem = {
 };
 
 export type FeedVariables = Exact<{
-  request: FeedRequest;
+  where?: InputMaybe<FeedWhere>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   imageSmallSize?: InputMaybe<ImageTransform>;
   imageMediumSize?: InputMaybe<ImageTransform>;
   profileCoverSize?: InputMaybe<ImageTransform>;
@@ -1753,12 +1754,18 @@ export type FeedVariables = Exact<{
   fxRateFor?: InputMaybe<SupportedFiatType>;
 }>;
 
-export type FeedData = {
-  result: { items: Array<FeedItem>; pageInfo: PaginatedResultInfo };
-} & InjectCommonQueryParams;
+export type FeedData = { result: { items: Array<FeedItem>; pageInfo: PaginatedResultInfo } };
+
+type FeedHighlight_Post_ = Post;
+
+type FeedHighlight_Quote_ = Quote;
+
+export type FeedHighlight = FeedHighlight_Post_ | FeedHighlight_Quote_;
 
 export type FeedHighlightsVariables = Exact<{
-  request: FeedHighlightsRequest;
+  where?: InputMaybe<FeedHighlightsWhere>;
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   imageSmallSize?: InputMaybe<ImageTransform>;
   imageMediumSize?: InputMaybe<ImageTransform>;
   profileCoverSize?: InputMaybe<ImageTransform>;
@@ -1768,7 +1775,10 @@ export type FeedHighlightsVariables = Exact<{
 }>;
 
 export type FeedHighlightsData = {
-  result: { items: Array<Post | Quote>; pageInfo: PaginatedResultInfo };
+  result: {
+    items: Array<FeedHighlight_Post_ | FeedHighlight_Quote_>;
+    pageInfo: PaginatedResultInfo;
+  };
 } & InjectCommonQueryParams;
 
 export type OptimisticStatusResult = {
@@ -6703,6 +6713,18 @@ export const FragmentFeedItem = /*#__PURE__*/ gql`
   ${FragmentMirror}
   ${FragmentReactionEvent}
 `;
+export const FragmentFeedHighlight = /*#__PURE__*/ gql`
+  fragment FeedHighlight on FeedHighlight {
+    ... on Post {
+      ...Post
+    }
+    ... on Quote {
+      ...Quote
+    }
+  }
+  ${FragmentPost}
+  ${FragmentQuote}
+`;
 export const FragmentPaginatedResultInfo = /*#__PURE__*/ gql`
   fragment PaginatedResultInfo on PaginatedResultInfo {
     __typename
@@ -7967,7 +7989,8 @@ export type ExploreProfilesQueryResult = Apollo.QueryResult<
 >;
 export const FeedDocument = /*#__PURE__*/ gql`
   query Feed(
-    $request: FeedRequest!
+    $where: FeedWhere
+    $cursor: Cursor
     $imageSmallSize: ImageTransform = {}
     $imageMediumSize: ImageTransform = {}
     $profileCoverSize: ImageTransform = {}
@@ -7975,8 +7998,7 @@ export const FeedDocument = /*#__PURE__*/ gql`
     $activityOn: [AppId!]
     $fxRateFor: SupportedFiatType = USD
   ) {
-    ...InjectCommonQueryParams
-    result: feed(request: $request) {
+    result: feed(request: { where: $where, cursor: $cursor }) {
       items {
         ...FeedItem
       }
@@ -7985,7 +8007,6 @@ export const FeedDocument = /*#__PURE__*/ gql`
       }
     }
   }
-  ${FragmentInjectCommonQueryParams}
   ${FragmentFeedItem}
   ${FragmentPaginatedResultInfo}
 `;
@@ -8002,7 +8023,8 @@ export const FeedDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useFeed({
  *   variables: {
- *      request: // value for 'request'
+ *      where: // value for 'where'
+ *      cursor: // value for 'cursor'
  *      imageSmallSize: // value for 'imageSmallSize'
  *      imageMediumSize: // value for 'imageMediumSize'
  *      profileCoverSize: // value for 'profileCoverSize'
@@ -8012,7 +8034,7 @@ export const FeedDocument = /*#__PURE__*/ gql`
  *   },
  * });
  */
-export function useFeed(baseOptions: Apollo.QueryHookOptions<FeedData, FeedVariables>) {
+export function useFeed(baseOptions?: Apollo.QueryHookOptions<FeedData, FeedVariables>) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<FeedData, FeedVariables>(FeedDocument, options);
 }
@@ -8027,7 +8049,9 @@ export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>;
 export type FeedQueryResult = Apollo.QueryResult<FeedData, FeedVariables>;
 export const FeedHighlightsDocument = /*#__PURE__*/ gql`
   query FeedHighlights(
-    $request: FeedHighlightsRequest!
+    $where: FeedHighlightsWhere
+    $limit: LimitType
+    $cursor: Cursor
     $imageSmallSize: ImageTransform = {}
     $imageMediumSize: ImageTransform = {}
     $profileCoverSize: ImageTransform = {}
@@ -8036,14 +8060,9 @@ export const FeedHighlightsDocument = /*#__PURE__*/ gql`
     $fxRateFor: SupportedFiatType = USD
   ) {
     ...InjectCommonQueryParams
-    result: feedHighlights(request: $request) {
+    result: feedHighlights(request: { where: $where, limit: $limit, cursor: $cursor }) {
       items {
-        ... on Post {
-          ...Post
-        }
-        ... on Quote {
-          ...Quote
-        }
+        ...FeedHighlight
       }
       pageInfo {
         ...PaginatedResultInfo
@@ -8051,8 +8070,7 @@ export const FeedHighlightsDocument = /*#__PURE__*/ gql`
     }
   }
   ${FragmentInjectCommonQueryParams}
-  ${FragmentPost}
-  ${FragmentQuote}
+  ${FragmentFeedHighlight}
   ${FragmentPaginatedResultInfo}
 `;
 
@@ -8068,7 +8086,9 @@ export const FeedHighlightsDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useFeedHighlights({
  *   variables: {
- *      request: // value for 'request'
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *      imageSmallSize: // value for 'imageSmallSize'
  *      imageMediumSize: // value for 'imageMediumSize'
  *      profileCoverSize: // value for 'profileCoverSize'
@@ -8079,7 +8099,7 @@ export const FeedHighlightsDocument = /*#__PURE__*/ gql`
  * });
  */
 export function useFeedHighlights(
-  baseOptions: Apollo.QueryHookOptions<FeedHighlightsData, FeedHighlightsVariables>,
+  baseOptions?: Apollo.QueryHookOptions<FeedHighlightsData, FeedHighlightsVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<FeedHighlightsData, FeedHighlightsVariables>(
