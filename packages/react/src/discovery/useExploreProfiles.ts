@@ -18,12 +18,14 @@ export type UseExploreProfilesArgs = PaginatedArgs<ExploreProfilesRequest>;
  * @param args - {@link UseExploreProfilesArgs}
  *
  * @example
- *
+ * Explore the latest created profiles
  * ```tsx
- * import { useExploreProfiles } from '@lens-protocol/react-web';
+ * import { useExploreProfiles, ExploreProfilesOrderByType } from '@lens-protocol/react-web';
  *
  * function ExploreProfiles() {
- *   const { data, error, loading } = useExploreProfiles({ sortCriteria: ProfileSortCriteria.MostFollowers });
+ *   const { data, error, loading } = useExploreProfiles({
+ *      orderBy: ExploreProfilesOrderByType.LatestCreated,
+ *   });
  *
  *   if (loading) return <p>Loading...</p>;
  *
