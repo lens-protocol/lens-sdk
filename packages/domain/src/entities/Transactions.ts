@@ -90,6 +90,9 @@ export enum TransactionEvent {
   SETTLED = 'SETTLED',
 }
 
+/**
+ * @deprecated delete this
+ */
 export enum ProxyActionStatus {
   MINTING = 'MINTING',
   TRANSFERRING = 'TRANSFERRING',
@@ -115,6 +118,9 @@ export abstract class NativeTransaction<T extends AnyTransactionRequestModel> {
   abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
 }
 
+/**
+ * @deprecated delete this
+ */
 export abstract class ProxyTransaction<T extends ProtocolTransactionRequestModel> {
   abstract get chainType(): ChainType;
   abstract get id(): string;
@@ -140,6 +146,7 @@ export type Transaction<T extends AnyTransactionRequestModel> =
 
 /**
  * The reason why a transaction failed.
+ * @deprecated delete this, not very used after all
  */
 export enum TransactionErrorReason {
   /**

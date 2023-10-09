@@ -1,16 +1,6 @@
-import { MockedResponse } from '@apollo/client/testing';
+import { GetSnapshotProposalDocument, SnapshotProposal } from '../generated';
 
-import {
-  GetSnapshotProposalData,
-  GetSnapshotProposalDocument,
-  SnapshotProposal,
-} from '../generated';
-
-export function mockGetSnapshotProposalDataResponse({
-  proposal,
-}: {
-  proposal: SnapshotProposal;
-}): MockedResponse<GetSnapshotProposalData> {
+export function mockGetSnapshotProposalDataResponse({ proposal }: { proposal: SnapshotProposal }) {
   return {
     request: {
       query: GetSnapshotProposalDocument,

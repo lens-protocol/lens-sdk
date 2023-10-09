@@ -1,4 +1,5 @@
-import { LensConfig, LensProvider, development } from '@lens-protocol/react';
+import { LensConfig, LensProvider, development } from '@lens-protocol/react-web';
+import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import { XMTPProvider } from '@xmtp/react-sdk';
 import { Toaster } from 'react-hot-toast';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
@@ -7,8 +8,9 @@ import { polygonMumbai } from 'wagmi/chains';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { publicProvider } from 'wagmi/providers/public';
 
-import { Home } from './HomePage';
-import { Breadcrumbs } from './components/Breadcrumbs';
+import { HomePage } from './HomePage';
+import { Layout } from './Layout';
+import { LogInPage } from './LogInPage';
 import { GenericErrorBoundary } from './components/GenericErrorBoundary';
 import { ErrorMessage } from './components/error/ErrorMessage';
 import { Header } from './components/header/Header';
@@ -18,14 +20,22 @@ import { UseSearchProfiles } from './discovery/UseSearchProfiles';
 import { UseSearchPublications } from './discovery/UseSearchPublications';
 import {
   ProfilesPage,
+  UseLazyProfile,
   UseMutualFollowers,
   UseProfile,
+  UseProfileActionHistory,
   UseProfileFollowers,
   UseProfileFollowing,
   UseProfiles,
+  UseRecommendedProfiles,
+  UseWhoActedOnPublication,
 } from './profiles';
-import { PublicationsPage, UsePublication, UsePublications } from './publications';
-import { localStorage } from './storage';
+import {
+  PublicationsPage,
+  UsePublication,
+  UsePublications,
+  UseWhoReactedToPublication,
+} from './publications';
 
 const { publicClient, webSocketPublicClient } = configureChains(
   [polygonMumbai],
@@ -47,7 +57,7 @@ const config = createConfig({
 
 const lensConfig: LensConfig = {
   environment: development,
-  storage: localStorage(),
+  bindings: wagmiBindings(),
 };
 
 export function App() {
@@ -58,31 +68,44 @@ export function App() {
           <Router>
             <Header />
             <main>
-              <Breadcrumbs />
               <GenericErrorBoundary fallback={ErrorMessage}>
                 <Routes>
-                  <Route index element={<Home />} />
+                  <Route index element={<HomePage />} />
+                  <Route path="/login" element={<LogInPage />} />
 
-                  <Route path="/publications">
-                    <Route index element={<PublicationsPage />} />
-                    <Route path="usePublication" element={<UsePublication />} />
-                    <Route path="usePublications" element={<UsePublications />} />
-                  </Route>
+                  <Route element={<Layout />}>
+                    <Route path="/publications">
+                      <Route index element={<PublicationsPage />} />
+                      <Route path="usePublication" element={<UsePublication />} />
+                      <Route path="usePublications" element={<UsePublications />} />
+                      <Route
+                        path="useWhoReactedToPublication"
+                        element={<UseWhoReactedToPublication />}
+                      />
+                    </Route>
 
-                  <Route path="/profiles">
-                    <Route index element={<ProfilesPage />} />
-                    <Route path="useProfile" element={<UseProfile />} />
-                    <Route path="useProfiles" element={<UseProfiles />} />
-                    <Route path="useProfileFollowers" element={<UseProfileFollowers />} />
-                    <Route path="useProfileFollowing" element={<UseProfileFollowing />} />
-                    <Route path="useMutualFollowers" element={<UseMutualFollowers />} />
-                  </Route>
+                    <Route path="/profiles">
+                      <Route index element={<ProfilesPage />} />
+                      <Route path="useProfile" element={<UseProfile />} />
+                      <Route path="useLazyProfile" element={<UseLazyProfile />} />
+                      <Route path="useProfiles" element={<UseProfiles />} />
+                      <Route path="useProfileFollowers" element={<UseProfileFollowers />} />
+                      <Route path="useProfileFollowing" element={<UseProfileFollowing />} />
+                      <Route path="useMutualFollowers" element={<UseMutualFollowers />} />
+                      <Route path="useRecommendedProfiles" element={<UseRecommendedProfiles />} />
+                      <Route
+                        path="useWhoActedOnPublication"
+                        element={<UseWhoActedOnPublication />}
+                      />
+                      <Route path="useProfileActionHistory" element={<UseProfileActionHistory />} />
+                    </Route>
 
-                  <Route path="/discovery">
-                    <Route index element={<DiscoveryPage />} />
-                    <Route path="useFeed" element={<UseFeed />} />
-                    <Route path="useSearchPublications" element={<UseSearchPublications />} />
-                    <Route path="useSearchProfiles" element={<UseSearchProfiles />} />
+                    <Route path="/discovery">
+                      <Route index element={<DiscoveryPage />} />
+                      <Route path="useFeed" element={<UseFeed />} />
+                      <Route path="useSearchPublications" element={<UseSearchPublications />} />
+                      <Route path="useSearchProfiles" element={<UseSearchProfiles />} />
+                    </Route>
                   </Route>
 
                   <Route path="*" element={<p>Not found</p>} />

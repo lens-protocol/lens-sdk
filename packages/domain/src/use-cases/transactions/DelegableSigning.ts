@@ -1,4 +1,4 @@
-import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
+import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import {
   ProtocolTransactionRequestModel,
@@ -39,7 +39,7 @@ export class DelegableSigning<T extends ProtocolTransactionRequestModel> {
       const result = await this.transactionGateway.createDelegatedTransaction(request);
 
       if (result.isFailure()) {
-        this.presenter.present(failure(result.error));
+        this.presenter.present(result);
         return;
       }
 

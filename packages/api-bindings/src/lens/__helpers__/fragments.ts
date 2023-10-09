@@ -3,18 +3,84 @@ import { mockProfileId, mockPublicationId, mockTransactionHash } from '@lens-pro
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import {
+  CanDecryptResponse,
   Comment,
   FeedItem,
   Mirror,
+  NetworkAddress,
+  OptimisticStatusResult,
   PaginatedResultInfo,
   Post,
   Profile,
+  ProfileActionHistory,
+  ProfileActionHistoryType,
+  ProfileOnchainIdentity,
+  ProfileOperations,
+  ProfileReactionResult,
   ProfileStats,
+  ProfileWhoReactedResult,
   PublicationOperations,
+  PublicationReactionType,
   PublicationStats,
   TextOnlyMetadataV3,
   TriStateValue,
 } from '../graphql/generated';
+
+function mockNetworkAddressFragment(overrides?: Partial<NetworkAddress>): NetworkAddress {
+  return {
+    address: mockEvmAddress(),
+    chainId: 1,
+    ...overrides,
+    __typename: 'NetworkAddress',
+  };
+}
+
+function mockOptimisticStatusResultFragment(
+  overrides?: Partial<OptimisticStatusResult>,
+): OptimisticStatusResult {
+  return {
+    value: true,
+    isFinalisedOnchain: false,
+    ...overrides,
+    __typename: 'OptimisticStatusResult',
+  };
+}
+
+function mockProfileOperationsFragment(overrides?: Partial<ProfileOperations>): ProfileOperations {
+  return {
+    id: mockProfileId(),
+    canBlock: false,
+    canUnblock: false,
+    canFollow: TriStateValue.Unknown,
+    canUnfollow: false,
+    isBlockedByMe: mockOptimisticStatusResultFragment(),
+    isFollowedByMe: mockOptimisticStatusResultFragment(),
+    isFollowingMe: mockOptimisticStatusResultFragment(),
+    ...overrides,
+    __typename: 'ProfileOperations',
+  };
+}
+
+function mockProfileOnchainIdentityFragment(
+  overrides?: Partial<ProfileOnchainIdentity>,
+): ProfileOnchainIdentity {
+  return {
+    proofOfHumanity: false,
+    ens: null,
+    sybilDotOrg: {
+      source: {
+        twitter: {
+          handle: null,
+        },
+      },
+    },
+    worldcoin: {
+      isHuman: false,
+    },
+    ...overrides,
+    __typename: 'ProfileOnchainIdentity',
+  };
+}
 
 export function mockProfileFragment(overrides?: Partial<Profile>): Profile {
   const firstName = faker.name.firstName();
@@ -29,39 +95,11 @@ export function mockProfileFragment(overrides?: Partial<Profile>): Profile {
     invitesLeft: 0,
     sponsor: false,
     lensManager: false,
-    ownedBy: {
-      address: mockEvmAddress(),
-      chainId: 1,
-    },
-    operations: {
-      id: mockProfileId(),
-      canBlock: false,
-      canUnblock: false,
-      canFollow: TriStateValue.Unknown,
-      canUnfollow: false,
-      isBlockedByMe: { value: false, isFinalisedOnchain: false },
-      isFollowedByMe: { value: false, isFinalisedOnchain: false },
-      isFollowingMe: { value: false, isFinalisedOnchain: false },
-    },
+    ownedBy: mockNetworkAddressFragment(),
+    operations: mockProfileOperationsFragment(),
     guardian: null,
-    onchainIdentity: {
-      proofOfHumanity: false,
-      ens: null,
-      sybilDotOrg: {
-        source: {
-          twitter: {
-            handle: null,
-          },
-        },
-      },
-      worldcoin: {
-        isHuman: false,
-      },
-    },
-    followNftAddress: {
-      address: mockEvmAddress(),
-      chainId: 1,
-    },
+    onchainIdentity: mockProfileOnchainIdentityFragment(),
+    followNftAddress: mockNetworkAddressFragment(),
     followModule: null,
     metadata: null,
     invitedBy: null,
@@ -134,7 +172,9 @@ export function mockMirrorFragment(overrides?: Partial<Omit<Mirror, '__typename'
   };
 }
 
-export function mockPublicationTextOnlyMetadata(overrides: Partial<TextOnlyMetadataV3> = {}) {
+export function mockPublicationTextOnlyMetadata(
+  overrides: Partial<TextOnlyMetadataV3> = {},
+): TextOnlyMetadataV3 {
   return {
     id: faker.helpers.unique(faker.datatype.uuid),
     rawURI: faker.internet.url(),
@@ -149,29 +189,40 @@ export function mockPublicationTextOnlyMetadata(overrides: Partial<TextOnlyMetad
     encryptedWith: null,
 
     ...overrides,
+    __typename: 'TextOnlyMetadataV3',
   };
 }
 
-export function mockPublicationOperationsFragment(overrides: Partial<PublicationOperations> = {}) {
+function mockCanDecryptResponseFragment(
+  overrides?: Partial<ProfileOperations>,
+): CanDecryptResponse {
+  return {
+    result: false,
+    reasons: null,
+    extraDetails: null,
+    ...overrides,
+    __typename: 'CanDecryptResponse',
+  };
+}
+
+export function mockPublicationOperationsFragment(
+  overrides: Partial<PublicationOperations> = {},
+): PublicationOperations {
   return {
     isNotInterested: false,
     hasBookmarked: false,
     hasReported: false,
-    canAct: TriStateValue.Unknown,
+    canCollect: TriStateValue.Unknown,
     canComment: TriStateValue.Unknown,
     canMirror: TriStateValue.Unknown,
     hasMirrored: false,
     hasUpvoted: false,
     hasDownvoted: false,
-    hasActed: { value: false, isFinalisedOnchain: false },
-    actedOn: [],
-    canDecrypt: {
-      result: false,
-      reasons: null,
-      extraDetails: null,
-    },
+    hasCollected: mockOptimisticStatusResultFragment(),
+    canDecrypt: mockCanDecryptResponseFragment(),
 
     ...overrides,
+    __typename: 'PublicationOperations',
   };
 }
 
@@ -196,11 +247,12 @@ export function mockPublicationStatsFragment(
     mirrors: faker.datatype.number(),
     quotes: faker.datatype.number(),
     bookmarks: faker.datatype.number(),
-    countOpenActions: faker.datatype.number(),
-    upvoteReactions: faker.datatype.number(),
-    downvoteReactions: faker.datatype.number(),
+    collects: faker.datatype.number(),
+    upvotes: faker.datatype.number(),
+    downvotes: faker.datatype.number(),
 
     ...overrides,
+    __typename: 'PublicationStats',
   };
 }
 
@@ -214,13 +266,14 @@ export function mockProfileStatsFragment(overrides: Partial<ProfileStats> = {}):
     mirrors: faker.datatype.number(),
     quotes: faker.datatype.number(),
     publications: faker.datatype.number(),
-    countOpenActions: faker.datatype.number(),
-    upvoteReactions: faker.datatype.number(),
-    downvoteReactions: faker.datatype.number(),
-    upvoteReacted: faker.datatype.number(),
-    downvoteReacted: faker.datatype.number(),
+    collects: faker.datatype.number(),
+    upvotes: faker.datatype.number(),
+    downvotes: faker.datatype.number(),
+    upvoted: faker.datatype.number(),
+    downvoted: faker.datatype.number(),
 
     ...overrides,
+    __typename: 'ProfileStats',
   };
 }
 
@@ -231,6 +284,46 @@ export function mockFeedItemFragment(overrides?: Partial<FeedItem>): FeedItem {
     comments: [],
     mirrors: [],
     reactions: [],
+
     ...overrides,
+    __typename: 'FeedItem',
+  };
+}
+
+export function mockProfileActionHistoryFragment(
+  overrides: Partial<ProfileActionHistory> = {},
+): ProfileActionHistory {
+  return {
+    id: faker.datatype.number(),
+    actionType: ProfileActionHistoryType.LoggedIn,
+    who: mockEvmAddress(),
+    txHash: mockTransactionHash(),
+    actionedOn: faker.date.past().toISOString(),
+
+    ...overrides,
+  };
+}
+
+export function mockProfileReactionResultFragment(
+  overrides: Partial<ProfileReactionResult> = {},
+): ProfileReactionResult {
+  return {
+    reaction: PublicationReactionType.Upvote,
+    reactionAt: faker.date.past().toISOString(),
+
+    ...overrides,
+    __typename: 'ProfileReactionResult',
+  };
+}
+
+export function mockProfileWhoReactedResultFragment(
+  overrides: Partial<ProfileWhoReactedResult> = {},
+): ProfileWhoReactedResult {
+  return {
+    profile: mockProfileFragment(),
+    reactions: [mockProfileReactionResultFragment()],
+
+    ...overrides,
+    __typename: 'ProfileWhoReactedResult',
   };
 }

@@ -1,9 +1,17 @@
-import { AppId } from '@lens-protocol/domain/entities';
+import { QueryParams } from '@lens-protocol/api-bindings/src/apollo/cache';
 import { ILogger } from '@lens-protocol/shared-kernel';
 import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/storage';
 
 import { EnvironmentConfig } from './environments';
-import { MediaTransformsConfig } from './mediaTransforms';
+import { RequiredSigner } from './wallet/adapters/ConcreteWallet';
+import { IProviderBinding, GetProvider } from './wallet/infrastructure/ProviderFactory';
+import { ISignerBinding, GetSigner } from './wallet/infrastructure/SignerFactory';
+
+export type { QueryParams, ILogger, GetProvider, GetSigner, RequiredSigner };
+
+export { defaultQueryParams } from '@lens-protocol/api-bindings';
+
+export interface IBindings extends ISignerBinding, IProviderBinding {}
 
 /**
  * `<LensProvider>` configuration
@@ -12,7 +20,7 @@ export type LensConfig = {
   /**
    * Provides integration with the ethers.js Signer and Provider
    */
-  // bindings: IBindings;
+  bindings: IBindings;
   /**
    * The environment to use. See {@link production}, {@link development}, and {@link sandbox}
    */
@@ -20,7 +28,7 @@ export type LensConfig = {
   /**
    * The logger interface to use when something worth logging happens
    *
-   * @defaultValue `ConsoleLogger`, an internal implementation of {@link ILogger} that logs to the console
+   * @defaultValue `ConsoleLogger`, an internal implementation of `ILogger` interface that logs to the console
    */
   logger?: ILogger;
   /**
@@ -31,20 +39,9 @@ export type LensConfig = {
    */
   storage: IStorageProvider | IObservableStorageProvider;
   /**
-   * The `appId` identifies post and comment created from the SDK
+   * The common query params allows you customize some aspect of the returned data.
    *
-   * @defaultValue not set
-   *
-   * @see {@link appId} helper
+   * If not provided {@link defaultQueryParams} will be used instead.
    */
-  appId?: AppId;
-
-  /**
-   * Media returned from the publication and profile queries can be transformed
-   * to sizes needed by the SDK consuming application.
-   * To overwrite default transformation values, provide a `mediaTransforms` object.
-   *
-   * @see {@link MediaTransformsConfig} for more information
-   */
-  mediaTransforms?: MediaTransformsConfig;
+  params?: QueryParams;
 };

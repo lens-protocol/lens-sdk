@@ -2,7 +2,6 @@ import { MockedResponse } from '@apollo/client/testing';
 import { mockLensApolloClient } from '@lens-protocol/api-bindings/mocks';
 import { RenderHookResult } from '@testing-library/react';
 
-import { defaultMediaTransformsConfig } from '../mediaTransforms';
 import { renderHookWithMocks } from './testing-library';
 
 export function setupHookTestScenario(mocks: MockedResponse[]) {
@@ -14,7 +13,6 @@ export function setupHookTestScenario(mocks: MockedResponse[]) {
     ): RenderHookResult<TResult, TProps> {
       return renderHookWithMocks(callback, {
         mocks: {
-          mediaTransforms: defaultMediaTransformsConfig,
           apolloClient: client,
         },
       });

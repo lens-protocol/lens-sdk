@@ -1,4 +1,4 @@
-import { failure, success } from '@lens-protocol/shared-kernel';
+import { success } from '@lens-protocol/shared-kernel';
 
 import {
   PendingSigningRequestError,
@@ -7,8 +7,8 @@ import {
   WalletConnectionError,
 } from '../../entities';
 import { PollId, ISignedVote, IUnsignedVote } from '../../entities/polls';
+import { ActiveWallet } from '../authentication';
 import { IGenericResultPresenter } from '../transactions';
-import { ActiveWallet } from '../wallets';
 
 export type VoteChoice = number | number[];
 
@@ -48,7 +48,7 @@ export class VotePoll {
     const result = await wallet.signVote(unsignedVote);
 
     if (result.isFailure()) {
-      this.presenter.present(failure(result.error));
+      this.presenter.present(result);
       return;
     }
 

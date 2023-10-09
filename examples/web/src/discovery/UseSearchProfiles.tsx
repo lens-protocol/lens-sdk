@@ -1,4 +1,4 @@
-import { useSearchProfiles } from '@lens-protocol/react';
+import { useSearchProfiles } from '@lens-protocol/react-web';
 import { ChangeEvent, useState } from 'react';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';

@@ -13,17 +13,15 @@ import {
   mockNftOwnershipChallenge,
   mockSignature,
   mockWallet,
-} from '../../../entities/__helpers__/mocks';
-import { mockActiveWallet } from '../../wallets/__helpers__/mocks';
+  mockActiveWallet,
+  mockINftOwnershipChallengeGateway,
+  mockProveNftOwnershipRequest,
+} from '../../../mocks';
 import {
   INftOwnershipChallengeGateway,
   IProveNftOwnershipPresenter,
   ProveNftOwnership,
 } from '../ProveNftOwnership';
-import {
-  mockINftOwnershipChallengeGateway,
-  mockProveNftOwnershipRequest,
-} from '../__helpers__/mocks';
 
 function setupProveNftOwnership({
   gateway,

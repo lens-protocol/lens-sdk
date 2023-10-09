@@ -1,6 +1,6 @@
 import { FeedItem, FeedRequest, useFeed as useBaseFeedQuery } from '@lens-protocol/api-bindings';
 
-import { useLensApolloClient, useMediaTransformFromConfig } from '../helpers/arguments';
+import { useLensApolloClient } from '../helpers/arguments';
 import { OmitCursor, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 
 export type UseFeedArgs = OmitCursor<FeedRequest>;
@@ -8,7 +8,7 @@ export type UseFeedArgs = OmitCursor<FeedRequest>;
 /**
  * Fetch a the feed of a given profile and filters.
  *
- * You MUST be authenticated via {@link useWalletLogin} to use this hook.
+ * You MUST be authenticated via {@link useLogin} to use this hook.
  *
  * @category Discovery
  * @group Hooks
@@ -45,9 +45,9 @@ export function useFeed({ where }: UseFeedArgs): PaginatedReadResult<FeedItem[]>
   return usePaginatedReadResult(
     useBaseFeedQuery(
       useLensApolloClient({
-        variables: useMediaTransformFromConfig({
-          where,
-        }),
+        variables: {
+          request: { where },
+        },
       }),
     ),
   );

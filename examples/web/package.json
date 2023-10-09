@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:with-packages": "turbo run build --filter=...example-web",
     "preview": "vite preview",
     "eslint:fix": "pnpm run eslint --fix",
     "eslint": "eslint src",
@@ -17,8 +18,7 @@
   "dependencies": {
     "@bundlr-network/client": "^0.11.9",
     "@ethersproject/providers": "^5.7.2",
-    "@lens-protocol/react": "workspace:*",
-    "@lens-protocol/storage": "workspace:*",
+    "@lens-protocol/react-web": "workspace:*",
     "@lens-protocol/wagmi": "workspace:*",
     "@xmtp/react-sdk": "1.0.0-preview.40",
     "example-shared": "workspace:*",

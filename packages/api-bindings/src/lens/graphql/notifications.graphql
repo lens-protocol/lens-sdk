@@ -1,14 +1,24 @@
+fragment ReactedResult on ReactedResult {
+  __typename
+  reaction
+  reactedAt
+}
+
+fragment ProfileReactedResult on ProfileReactedResult {
+  __typename
+  profile {
+    ...Profile
+  }
+  reactions {
+    ...ReactedResult
+  }
+}
+
 fragment ReactionNotification on ReactionNotification {
   __typename
   id
   reactions {
-    profile {
-      ...Profile
-    }
-    reactions {
-      reaction
-      reactedAt
-    }
+    ...ProfileReactedResult
   }
   publication {
     ... on Post {
@@ -31,15 +41,20 @@ fragment CommentNotification on CommentNotification {
   }
 }
 
+fragment ProfileMirrorResult on ProfileMirrorResult {
+  __typename
+  mirrorId
+  mirroredAt
+  profile {
+    ...Profile
+  }
+}
+
 fragment MirrorNotification on MirrorNotification {
   __typename
   id
   mirrors {
-    mirrorId
-    mirroredAt
-    profile {
-      ...Profile
-    }
+    ...ProfileMirrorResult
   }
   publication {
     ... on Post {
@@ -63,6 +78,7 @@ fragment QuoteNotification on QuoteNotification {
 }
 
 fragment OpenActionProfileActed on OpenActionProfileActed {
+  __typename
   by {
     ...Profile
   }
@@ -121,16 +137,14 @@ fragment MentionNotification on MentionNotification {
 # queries
 query Notifications(
   $request: NotificationRequest!
-  $publicationImageTransform: ImageTransform = {}
-  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-  $publicationStatsInput: PublicationStatsInput! = {}
-  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $imageSmallSize: ImageTransform = {}
+  $imageMediumSize: ImageTransform = {}
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
 ) {
+  ...InjectCommonQueryParams
   result: notifications(request: $request) {
     items {
       ... on ReactionNotification {

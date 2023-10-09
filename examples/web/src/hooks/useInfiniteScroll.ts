@@ -1,4 +1,4 @@
-import { PaginatedReadResult } from '@lens-protocol/react';
+import { PaginatedReadResult } from '@lens-protocol/react-web';
 import { RefCallback } from 'react';
 import { useInView } from 'react-cool-inview';
 

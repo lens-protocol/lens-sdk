@@ -3,6 +3,7 @@
  */
 export * from './usePublication';
 export * from './usePublications';
+export * from './useWhoReactedToPublication';
 
 /**
  * Fragments
@@ -13,6 +14,9 @@ export type {
   Mirror,
   Quote,
   AnyPublication,
+  PrimaryPublication,
+  PublicationMetadata,
+  PublicationMetadataMedia,
   isCommentPublication,
   isMirrorPublication,
   isQuotePublication,

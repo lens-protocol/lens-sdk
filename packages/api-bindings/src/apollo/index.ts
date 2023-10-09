@@ -5,7 +5,7 @@ import { LENS_API_MINIMAL_SUPPORTED_VERSION } from '../constants';
 import type { IAccessTokenStorage } from './IAccessTokenStorage';
 import { SafeApolloClient } from './SafeApolloClient';
 import { createSnapshotCache } from './cache';
-import { createLensCache } from './cache/createLensCache';
+import { createLensCache, QueryParams } from './cache/createLensCache';
 import { ContentInsightMatcher } from './cache/utils/ContentInsight';
 import { createAuthLink, createLensLink, createSnapshotLink } from './links';
 
@@ -18,6 +18,7 @@ export type ApolloClientConfig = {
   logger: ILogger;
   pollingInterval: number;
   contentMatchers: ContentInsightMatcher[];
+  queryParams: QueryParams;
 };
 
 export function createLensApolloClient({
@@ -25,6 +26,7 @@ export function createLensApolloClient({
   backendURL,
   logger,
   pollingInterval,
+  queryParams,
 }: ApolloClientConfig) {
   const uri = `${backendURL}/graphql`;
 
@@ -38,7 +40,7 @@ export function createLensApolloClient({
 
   return new SafeApolloClient({
     connectToDevTools: true,
-    cache: createLensCache(),
+    cache: createLensCache(queryParams),
     link: from([authLink, httpLink]),
     pollingInterval,
     version: LENS_API_MINIMAL_SUPPORTED_VERSION,
@@ -74,6 +76,8 @@ export function createSnapshotApolloClient({ backendURL }: SnapshotApolloClientC
 }
 
 export type { IAccessTokenStorage };
+export { defaultQueryParams } from './cache/createLensCache';
+export type { QueryParams };
 export type { IGraphQLClient } from './IGraphQLClient';
 export * from './errors';
 export * from './cache/transactions';

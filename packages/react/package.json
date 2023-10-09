@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/react",
-  "version": "2.0.0-alpha.0",
+  "version": "2.0.0-alpha.3",
   "description": "Interacting with the Lens Protocol API using React.",
   "main": "dist/lens-protocol-react.cjs.js",
   "module": "dist/lens-protocol-react.esm.js",
@@ -35,7 +35,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@apollo/client": "^3.7.1",
+    "@apollo/client": "^3.8.5",
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/address": "^5.7.0",
     "@ethersproject/bignumber": "^5.7.0",
@@ -112,9 +112,5 @@
       "index.ts"
     ],
     "exports": true
-  },
-  "typedoc": {
-    "entryPoint": "./src/index.ts",
-    "tsconfig": "./tsconfig.json"
   }
 }
