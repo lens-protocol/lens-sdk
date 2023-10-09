@@ -1,0 +1,36 @@
+name: "Generate docs and publish"
+
+on:
+  push:
+    branches: ["lens-v2"]
+  workflow_run:
+    workflows: ["CI actions: Build, Lint and Test"]
+
+jobs:
+  docs:
+    needs: build
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: docs
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.2.4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm typedoc
+
+      - name: Deploy documenation
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: docs
+          folder: docs
