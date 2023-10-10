@@ -38,6 +38,7 @@ import {
   UsePublications,
   UseWhoReactedToPublication,
 } from './publications';
+import { UseReportPublication } from './publications/UseReportPublication';
 
 const { publicClient, webSocketPublicClient } = configureChains(
   [polygonMumbai],
@@ -84,6 +85,7 @@ export function App() {
                         path="useWhoReactedToPublication"
                         element={<UseWhoReactedToPublication />}
                       />
+                      <Route path="useReportPublication" element={<UseReportPublication />} />
                     </Route>
 
                     <Route path="/profiles">
