@@ -1,6 +1,6 @@
 import {
   AnyPublication,
-  FragmentAnyPublication,
+  FragmentAnyPublicationFragment,
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import { PublicationId } from '@lens-protocol/domain/entities';
@@ -21,7 +21,7 @@ export class PublicationCacheManager {
       {
         id,
         fragmentName: 'Publication',
-        fragment: FragmentAnyPublication,
+        fragment: FragmentAnyPublicationFragment,
       },
       (data) => {
         if (data) {

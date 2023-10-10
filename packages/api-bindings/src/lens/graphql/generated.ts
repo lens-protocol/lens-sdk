@@ -1438,6 +1438,7 @@ export type ReferenceModuleInput = {
 export enum ReferenceModuleType {
   DegreesOfSeparationReferenceModule = 'DegreesOfSeparationReferenceModule',
   FollowerOnlyReferenceModule = 'FollowerOnlyReferenceModule',
+  LegacyDegreesOfSeparationReferenceModule = 'LegacyDegreesOfSeparationReferenceModule',
   LegacyFollowerOnlyReferenceModule = 'LegacyFollowerOnlyReferenceModule',
   UnknownReferenceModule = 'UnknownReferenceModule',
 }
@@ -3584,19 +3585,19 @@ export type PublicationData = {
   result: Comment | Mirror | Post | Quote | null;
 } & InjectCommonQueryParams;
 
-type AnyPublication_Comment_ = Comment;
+type AnyPublicationFragment_Comment_ = Comment;
 
-type AnyPublication_Mirror_ = Mirror;
+type AnyPublicationFragment_Mirror_ = Mirror;
 
-type AnyPublication_Post_ = Post;
+type AnyPublicationFragment_Post_ = Post;
 
-type AnyPublication_Quote_ = Quote;
+type AnyPublicationFragment_Quote_ = Quote;
 
-export type AnyPublication =
-  | AnyPublication_Comment_
-  | AnyPublication_Mirror_
-  | AnyPublication_Post_
-  | AnyPublication_Quote_;
+export type AnyPublicationFragment =
+  | AnyPublicationFragment_Comment_
+  | AnyPublicationFragment_Mirror_
+  | AnyPublicationFragment_Post_
+  | AnyPublicationFragment_Quote_;
 
 export type PublicationsVariables = Exact<{
   where: PublicationsWhere;
@@ -3614,10 +3615,10 @@ export type PublicationsVariables = Exact<{
 export type PublicationsData = {
   result: {
     items: Array<
-      | AnyPublication_Comment_
-      | AnyPublication_Mirror_
-      | AnyPublication_Post_
-      | AnyPublication_Quote_
+      | AnyPublicationFragment_Comment_
+      | AnyPublicationFragment_Mirror_
+      | AnyPublicationFragment_Post_
+      | AnyPublicationFragment_Quote_
     >;
     pageInfo: PaginatedResultInfo;
   };
@@ -7348,8 +7349,8 @@ export const FragmentPublicationValidateMetadataResult = /*#__PURE__*/ gql`
     reason
   }
 `;
-export const FragmentAnyPublication = /*#__PURE__*/ gql`
-  fragment AnyPublication on AnyPublication {
+export const FragmentAnyPublicationFragment = /*#__PURE__*/ gql`
+  fragment AnyPublicationFragment on AnyPublication {
     ... on Post {
       ...Post
     }
@@ -10061,7 +10062,7 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
       request: { where: $where, orderBy: $orderBy, limit: $limit, cursor: $cursor }
     ) {
       items {
-        ...AnyPublication
+        ...AnyPublicationFragment
       }
       pageInfo {
         ...PaginatedResultInfo
@@ -10069,7 +10070,7 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
     }
   }
   ${FragmentInjectCommonQueryParams}
-  ${FragmentAnyPublication}
+  ${FragmentAnyPublicationFragment}
   ${FragmentPaginatedResultInfo}
 `;
 
@@ -13760,6 +13761,21 @@ export type LegacyAaveFeeCollectModuleSettingsFieldPolicy = {
   referralFee?: FieldPolicy<any> | FieldReadFunction<any>;
   type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type LegacyDegreesOfSeparationReferenceModuleSettingsKeySpecifier = (
+  | 'commentsRestricted'
+  | 'contract'
+  | 'degreesOfSeparation'
+  | 'mirrorsRestricted'
+  | 'type'
+  | LegacyDegreesOfSeparationReferenceModuleSettingsKeySpecifier
+)[];
+export type LegacyDegreesOfSeparationReferenceModuleSettingsFieldPolicy = {
+  commentsRestricted?: FieldPolicy<any> | FieldReadFunction<any>;
+  contract?: FieldPolicy<any> | FieldReadFunction<any>;
+  degreesOfSeparation?: FieldPolicy<any> | FieldReadFunction<any>;
+  mirrorsRestricted?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type LegacyERC4626FeeCollectModuleSettingsKeySpecifier = (
   | 'amount'
   | 'collectLimit'
@@ -16741,6 +16757,13 @@ export type StrictTypedTypePolicies = {
       | (() => undefined | LegacyAaveFeeCollectModuleSettingsKeySpecifier);
     fields?: LegacyAaveFeeCollectModuleSettingsFieldPolicy;
   };
+  LegacyDegreesOfSeparationReferenceModuleSettings?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | LegacyDegreesOfSeparationReferenceModuleSettingsKeySpecifier
+      | (() => undefined | LegacyDegreesOfSeparationReferenceModuleSettingsKeySpecifier);
+    fields?: LegacyDegreesOfSeparationReferenceModuleSettingsFieldPolicy;
+  };
   LegacyERC4626FeeCollectModuleSettings?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
       | false
@@ -17693,6 +17716,7 @@ const result: PossibleTypesResultData = {
     ReferenceModule: [
       'DegreesOfSeparationReferenceModuleSettings',
       'FollowOnlyReferenceModuleSettings',
+      'LegacyDegreesOfSeparationReferenceModuleSettings',
       'LegacyFollowOnlyReferenceModuleSettings',
       'UnknownReferenceModuleSettings',
     ],

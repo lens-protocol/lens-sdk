@@ -38,7 +38,7 @@ query Publication(
   }
 }
 
-fragment AnyPublication on AnyPublication {
+fragment AnyPublicationFragment on AnyPublication {
   ... on Post {
     ...Post
   }
@@ -70,7 +70,7 @@ query Publications(
     request: { where: $where, orderBy: $orderBy, limit: $limit, cursor: $cursor }
   ) {
     items {
-      ...AnyPublication
+      ...AnyPublicationFragment
     }
     pageInfo {
       ...PaginatedResultInfo
