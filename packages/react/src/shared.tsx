@@ -25,6 +25,8 @@ import { LensConfig } from './config';
 import { EnvironmentConfig } from './environments';
 import { IProfileCacheManager } from './profile/adapters/IProfileCacheManager';
 import { ProfileCacheManager } from './profile/infrastructure/ProfileCacheManager';
+import { IPublicationCacheManager } from './publication/adapters/IPublicationCacheManager';
+import { PublicationCacheManager } from './publication/infrastructure/PublicationCacheManager';
 import { ITransactionFactory } from './transactions/adapters/ITransactionFactory';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
@@ -82,6 +84,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   const credentialsFactory = new CredentialsFactory(authApi);
   const credentialsGateway = new CredentialsGateway(credentialsStorage);
   const profileCacheManager = new ProfileCacheManager(apolloClient);
+  const publicationCacheManager = new PublicationCacheManager(apolloClient);
   const walletFactory = new WalletFactory(signerFactory, transactionFactory);
   const walletGateway = new WalletGateway(walletStorage, walletFactory);
   const transactionGateway = new PendingTransactionGateway(transactionStorage, transactionFactory);
@@ -132,6 +135,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     logger,
     logout,
     profileCacheManager,
+    publicationCacheManager,
     transactionFactory,
     transactionGateway,
     transactionQueue,
@@ -151,6 +155,7 @@ export type SharedDependencies = {
   logger: ILogger;
   logout: Logout;
   profileCacheManager: IProfileCacheManager;
+  publicationCacheManager: IPublicationCacheManager;
   transactionFactory: ITransactionFactory<AnyTransactionRequest>;
   transactionGateway: PendingTransactionGateway;
   transactionQueue: TransactionQueue<AnyTransactionRequest>;

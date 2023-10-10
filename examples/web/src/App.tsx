@@ -38,6 +38,7 @@ import {
   PublicationsPage,
   UsePublication,
   UsePublications,
+  UseReactionToggle,
   UseWhoReactedToPublication,
 } from './publications';
 
@@ -86,6 +87,7 @@ export function App() {
                         path="useWhoReactedToPublication"
                         element={<UseWhoReactedToPublication />}
                       />
+                      <Route path="useReactionToggle" element={<UseReactionToggle />} />
                     </Route>
 
                     <Route path="/profiles">

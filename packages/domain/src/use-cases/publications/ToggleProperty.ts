@@ -1,7 +1,6 @@
-import { ProfileId, PublicationId } from '../../entities';
+import { PublicationId } from '../../entities';
 
 export type TogglePropertyRequest = {
-  profileId: ProfileId;
   publicationId: PublicationId;
 };
 
