@@ -6,6 +6,7 @@ import {
   TransactionEvent,
   TransactionError,
   TransactionErrorReason,
+  Transaction,
 } from '../../../entities';
 import {
   MockedMetaTransaction,
@@ -28,16 +29,16 @@ function mockResponders<T extends AnyTransactionRequestModel>(
   return mocks as TransactionResponders<T>;
 }
 
-function setupTestScenario<T extends AnyTransactionRequestModel>({
-  request = mockAnyTransactionRequestModel() as T,
+function setupTestScenario({
+  request = mockAnyTransactionRequestModel(),
 }: {
-  request?: T;
+  request?: AnyTransactionRequestModel;
 } = {}) {
   const responder = mock<ITransactionResponder<typeof request>>();
   const responders = mockResponders({ [request.kind]: responder });
 
-  const transactionGateway = mock<IPendingTransactionGateway<T>>();
-  const transactionQueuePresenter = mock<ITransactionQueuePresenter<T>>();
+  const transactionGateway = mock<IPendingTransactionGateway<AnyTransactionRequestModel>>();
+  const transactionQueuePresenter = mock<ITransactionQueuePresenter<AnyTransactionRequestModel>>();
 
   const transactionQueue = TransactionQueue.create(
     responders,
@@ -211,7 +212,9 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
       } = setupTestScenario({
         request,
       });
-      transactionGateway.getAll.mockResolvedValue([transaction]);
+      transactionGateway.getAll.mockResolvedValue([
+        transaction as Transaction<AnyTransactionRequestModel>,
+      ]);
 
       await transactionQueue.resume();
 
@@ -240,7 +243,7 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
       transactionGateway.getAll.mockResolvedValue([]);
 
       transactionGateway.subscribe.mock.calls.forEach(([cb]) => {
-        cb([transaction]);
+        cb([transaction as Transaction<AnyTransactionRequestModel>]);
       });
 
       await waitForCommit();
@@ -265,7 +268,7 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
       transactionGateway.getAll.mockResolvedValue([]);
 
       transactionGateway.subscribe.mock.calls.forEach(([cb]) => {
-        cb([transaction]);
+        cb([transaction as Transaction<AnyTransactionRequestModel>]);
       });
 
       expect(transactionGateway.save).not.toHaveBeenCalled();
