@@ -12,24 +12,46 @@ export type UseHidePublicationArgs = {
 export type HidePublicationOperation = Operation<void>;
 
 /**
+ * Hide a publication posted by the authenticated profile to prevent other profiles from seeing it.
+ *
+ * You MUST be authenticated via {@link useLogin} to use this hook.
+ *
  * @category Publications
  * @group Hooks
+ * @param args - {@link UseHidePublicationArgs}
+ *
+ * @example
+ * ```tsx
+ * import { useHidePublication, AnyPublication } from '@lens-protocol/react';
+ *
+ * function HidePublication({ publication }: { publication: AnyPublication }) {
+ *  const { execute: hide, isPending } = useHidePublication({ publication });
+ *
+ *  return (
+ *    <button onClick={hide} disabled={isPending}>
+ *      Hide
+ *    </button>
+ * );
+ *```
  */
 export function useHidePublication({
   publication,
 }: UseHidePublicationArgs): HidePublicationOperation {
-  const { data, error, loading } = useSession();
+  const { data } = useSession();
+
   const hide = useHidePublicationController();
 
   return useOperation(async () => {
+    invariant(data?.authenticated, 'Must be authenticated to hide a publication');
     invariant(
-      publication.profile.ownedByMe,
+      publication.by.ownedBy.address === data.address,
       'Publication not owned by the active wallet. Make sure that publication is owned by the wallet (for .e.g. by calling `isPublicationOwnedByMe`) before trying to hide it?',
     );
 
     await hide({
       publicationId: publication.id,
     });
+
     return success();
   });
 }

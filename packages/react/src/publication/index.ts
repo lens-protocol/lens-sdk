@@ -4,6 +4,7 @@
 export * from './usePublication';
 export * from './usePublications';
 export * from './useWhoReactedToPublication';
+export * from './useHidePublication';
 
 /**
  * Fragments

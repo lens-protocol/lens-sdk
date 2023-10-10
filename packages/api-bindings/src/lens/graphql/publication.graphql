@@ -38,6 +38,21 @@ query Publication(
   }
 }
 
+fragment AnyPublication on AnyPublication {
+  ... on Post {
+    ...Post
+  }
+  ... on Mirror {
+    ...Mirror
+  }
+  ... on Comment {
+    ...Comment
+  }
+  ... on Quote {
+    ...Quote
+  }
+}
+
 query Publications(
   $where: PublicationsWhere!
   $orderBy: PublicationsOrderByType
@@ -55,18 +70,7 @@ query Publications(
     request: { where: $where, orderBy: $orderBy, limit: $limit, cursor: $cursor }
   ) {
     items {
-      ... on Post {
-        ...Post
-      }
-      ... on Mirror {
-        ...Mirror
-      }
-      ... on Comment {
-        ...Comment
-      }
-      ... on Quote {
-        ...Quote
-      }
+      ...AnyPublication
     }
     pageInfo {
       ...PaginatedResultInfo

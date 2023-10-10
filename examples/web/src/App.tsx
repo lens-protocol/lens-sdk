@@ -38,6 +38,7 @@ import {
   UsePublications,
   UseWhoReactedToPublication,
 } from './publications';
+import { UseHidePublication } from './publications/UseHidePublication';
 
 const { publicClient, webSocketPublicClient } = configureChains(
   [polygonMumbai],
@@ -84,6 +85,7 @@ export function App() {
                         path="useWhoReactedToPublication"
                         element={<UseWhoReactedToPublication />}
                       />
+                      <Route path="useHidePublication" element={<UseHidePublication />} />
                     </Route>
 
                     <Route path="/profiles">

@@ -19,6 +19,7 @@ import { LensConfig } from './config';
 import { EnvironmentConfig } from './environments';
 import { IProfileCacheManager } from './profile/adapters/IProfileCacheManager';
 import { ProfileCacheManager } from './profile/infrastructure/ProfileCacheManager';
+import { PublicationCacheManager } from './transactions/adapters/PublicationCacheManager';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { WalletFactory } from './wallet/adapters/WalletFactory';
@@ -54,6 +55,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     logger,
     contentMatchers: [config.environment.snapshot.matcher],
   });
+  const publicationCacheManager = new PublicationCacheManager(apolloClient);
 
   // infrastructure
   const signerFactory = new SignerFactory(config.bindings, config.environment.chains);
@@ -94,6 +96,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     logger,
     logout,
     profileCacheManager,
+    publicationCacheManager,
     walletFactory,
     walletGateway,
   };
@@ -110,6 +113,7 @@ export type SharedDependencies = {
   logger: ILogger;
   logout: Logout;
   profileCacheManager: IProfileCacheManager;
+  publicationCacheManager: PublicationCacheManager;
   walletFactory: WalletFactory;
   walletGateway: WalletGateway;
 };

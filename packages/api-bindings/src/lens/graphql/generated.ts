@@ -1438,6 +1438,7 @@ export type ReferenceModuleInput = {
 export enum ReferenceModuleType {
   DegreesOfSeparationReferenceModule = 'DegreesOfSeparationReferenceModule',
   FollowerOnlyReferenceModule = 'FollowerOnlyReferenceModule',
+  LegacyFollowerOnlyReferenceModule = 'LegacyFollowerOnlyReferenceModule',
   UnknownReferenceModule = 'UnknownReferenceModule',
 }
 
@@ -2839,6 +2840,7 @@ export type Post = {
     | DegreesOfSeparationReferenceModuleSettings
     | FollowOnlyReferenceModuleSettings
     | UnknownReferenceModuleSettings
+    | {}
     | null;
   stats: PublicationStats;
 };
@@ -2889,6 +2891,7 @@ export type CommentFields = {
     | DegreesOfSeparationReferenceModuleSettings
     | FollowOnlyReferenceModuleSettings
     | UnknownReferenceModuleSettings
+    | {}
     | null;
   stats: PublicationStats;
 };
@@ -2956,6 +2959,7 @@ export type QuoteFields = {
     | DegreesOfSeparationReferenceModuleSettings
     | FollowOnlyReferenceModuleSettings
     | UnknownReferenceModuleSettings
+    | {}
     | null;
   stats: PublicationStats;
 };
@@ -3580,6 +3584,20 @@ export type PublicationData = {
   result: Comment | Mirror | Post | Quote | null;
 } & InjectCommonQueryParams;
 
+type AnyPublication_Comment_ = Comment;
+
+type AnyPublication_Mirror_ = Mirror;
+
+type AnyPublication_Post_ = Post;
+
+type AnyPublication_Quote_ = Quote;
+
+export type AnyPublication =
+  | AnyPublication_Comment_
+  | AnyPublication_Mirror_
+  | AnyPublication_Post_
+  | AnyPublication_Quote_;
+
 export type PublicationsVariables = Exact<{
   where: PublicationsWhere;
   orderBy?: InputMaybe<PublicationsOrderByType>;
@@ -3594,7 +3612,15 @@ export type PublicationsVariables = Exact<{
 }>;
 
 export type PublicationsData = {
-  result: { items: Array<Comment | Mirror | Post | Quote>; pageInfo: PaginatedResultInfo };
+  result: {
+    items: Array<
+      | AnyPublication_Comment_
+      | AnyPublication_Mirror_
+      | AnyPublication_Post_
+      | AnyPublication_Quote_
+    >;
+    pageInfo: PaginatedResultInfo;
+  };
 } & InjectCommonQueryParams;
 
 export type PublicationsTagsVariables = Exact<{
@@ -7322,6 +7348,26 @@ export const FragmentPublicationValidateMetadataResult = /*#__PURE__*/ gql`
     reason
   }
 `;
+export const FragmentAnyPublication = /*#__PURE__*/ gql`
+  fragment AnyPublication on AnyPublication {
+    ... on Post {
+      ...Post
+    }
+    ... on Mirror {
+      ...Mirror
+    }
+    ... on Comment {
+      ...Comment
+    }
+    ... on Quote {
+      ...Quote
+    }
+  }
+  ${FragmentPost}
+  ${FragmentMirror}
+  ${FragmentComment}
+  ${FragmentQuote}
+`;
 export const FragmentCreateOnchainPostBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateOnchainPostBroadcastItemResult on CreateOnchainPostBroadcastItemResult {
     __typename
@@ -10015,18 +10061,7 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
       request: { where: $where, orderBy: $orderBy, limit: $limit, cursor: $cursor }
     ) {
       items {
-        ... on Post {
-          ...Post
-        }
-        ... on Mirror {
-          ...Mirror
-        }
-        ... on Comment {
-          ...Comment
-        }
-        ... on Quote {
-          ...Quote
-        }
+        ...AnyPublication
       }
       pageInfo {
         ...PaginatedResultInfo
@@ -10034,10 +10069,7 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
     }
   }
   ${FragmentInjectCommonQueryParams}
-  ${FragmentPost}
-  ${FragmentMirror}
-  ${FragmentComment}
-  ${FragmentQuote}
+  ${FragmentAnyPublication}
   ${FragmentPaginatedResultInfo}
 `;
 
@@ -13335,6 +13367,7 @@ export type DegreesOfSeparationReferenceModuleSettingsKeySpecifier = (
   | 'mirrorsRestricted'
   | 'quotesRestricted'
   | 'sourceProfileId'
+  | 'type'
   | DegreesOfSeparationReferenceModuleSettingsKeySpecifier
 )[];
 export type DegreesOfSeparationReferenceModuleSettingsFieldPolicy = {
@@ -13344,6 +13377,7 @@ export type DegreesOfSeparationReferenceModuleSettingsFieldPolicy = {
   mirrorsRestricted?: FieldPolicy<any> | FieldReadFunction<any>;
   quotesRestricted?: FieldPolicy<any> | FieldReadFunction<any>;
   sourceProfileId?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type DoesFollowResultKeySpecifier = (
   | 'followerProfileId'
@@ -13526,12 +13560,14 @@ export type FeeFollowModuleSettingsKeySpecifier = (
   | 'amount'
   | 'contract'
   | 'recipient'
+  | 'type'
   | FeeFollowModuleSettingsKeySpecifier
 )[];
 export type FeeFollowModuleSettingsFieldPolicy = {
   amount?: FieldPolicy<any> | FieldReadFunction<any>;
   contract?: FieldPolicy<any> | FieldReadFunction<any>;
   recipient?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type FeedItemKeySpecifier = (
   | 'acted'
@@ -13576,10 +13612,12 @@ export type FollowNotificationFieldPolicy = {
 };
 export type FollowOnlyReferenceModuleSettingsKeySpecifier = (
   | 'contract'
+  | 'type'
   | FollowOnlyReferenceModuleSettingsKeySpecifier
 )[];
 export type FollowOnlyReferenceModuleSettingsFieldPolicy = {
   contract?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type FollowRevenueResultKeySpecifier = ('revenues' | FollowRevenueResultKeySpecifier)[];
 export type FollowRevenueResultFieldPolicy = {
@@ -13709,6 +13747,7 @@ export type LegacyAaveFeeCollectModuleSettingsKeySpecifier = (
   | 'followerOnly'
   | 'recipient'
   | 'referralFee'
+  | 'type'
   | LegacyAaveFeeCollectModuleSettingsKeySpecifier
 )[];
 export type LegacyAaveFeeCollectModuleSettingsFieldPolicy = {
@@ -13719,6 +13758,7 @@ export type LegacyAaveFeeCollectModuleSettingsFieldPolicy = {
   followerOnly?: FieldPolicy<any> | FieldReadFunction<any>;
   recipient?: FieldPolicy<any> | FieldReadFunction<any>;
   referralFee?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type LegacyERC4626FeeCollectModuleSettingsKeySpecifier = (
   | 'amount'
@@ -13728,6 +13768,7 @@ export type LegacyERC4626FeeCollectModuleSettingsKeySpecifier = (
   | 'followerOnly'
   | 'recipient'
   | 'referralFee'
+  | 'type'
   | 'vault'
   | LegacyERC4626FeeCollectModuleSettingsKeySpecifier
 )[];
@@ -13739,6 +13780,7 @@ export type LegacyERC4626FeeCollectModuleSettingsFieldPolicy = {
   followerOnly?: FieldPolicy<any> | FieldReadFunction<any>;
   recipient?: FieldPolicy<any> | FieldReadFunction<any>;
   referralFee?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
   vault?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type LegacyFeeCollectModuleSettingsKeySpecifier = (
@@ -13748,6 +13790,7 @@ export type LegacyFeeCollectModuleSettingsKeySpecifier = (
   | 'followerOnly'
   | 'recipient'
   | 'referralFee'
+  | 'type'
   | LegacyFeeCollectModuleSettingsKeySpecifier
 )[];
 export type LegacyFeeCollectModuleSettingsFieldPolicy = {
@@ -13757,17 +13800,29 @@ export type LegacyFeeCollectModuleSettingsFieldPolicy = {
   followerOnly?: FieldPolicy<any> | FieldReadFunction<any>;
   recipient?: FieldPolicy<any> | FieldReadFunction<any>;
   referralFee?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type LegacyFollowOnlyReferenceModuleSettingsKeySpecifier = (
+  | 'contract'
+  | 'type'
+  | LegacyFollowOnlyReferenceModuleSettingsKeySpecifier
+)[];
+export type LegacyFollowOnlyReferenceModuleSettingsFieldPolicy = {
+  contract?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type LegacyFreeCollectModuleSettingsKeySpecifier = (
   | 'collectNft'
   | 'contract'
   | 'followerOnly'
+  | 'type'
   | LegacyFreeCollectModuleSettingsKeySpecifier
 )[];
 export type LegacyFreeCollectModuleSettingsFieldPolicy = {
   collectNft?: FieldPolicy<any> | FieldReadFunction<any>;
   contract?: FieldPolicy<any> | FieldReadFunction<any>;
   followerOnly?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type LegacyLimitedFeeCollectModuleSettingsKeySpecifier = (
   | 'amount'
@@ -13777,6 +13832,7 @@ export type LegacyLimitedFeeCollectModuleSettingsKeySpecifier = (
   | 'followerOnly'
   | 'recipient'
   | 'referralFee'
+  | 'type'
   | LegacyLimitedFeeCollectModuleSettingsKeySpecifier
 )[];
 export type LegacyLimitedFeeCollectModuleSettingsFieldPolicy = {
@@ -13787,6 +13843,7 @@ export type LegacyLimitedFeeCollectModuleSettingsFieldPolicy = {
   followerOnly?: FieldPolicy<any> | FieldReadFunction<any>;
   recipient?: FieldPolicy<any> | FieldReadFunction<any>;
   referralFee?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type LegacyLimitedTimedFeeCollectModuleSettingsKeySpecifier = (
   | 'amount'
@@ -13797,6 +13854,7 @@ export type LegacyLimitedTimedFeeCollectModuleSettingsKeySpecifier = (
   | 'followerOnly'
   | 'recipient'
   | 'referralFee'
+  | 'type'
   | LegacyLimitedTimedFeeCollectModuleSettingsKeySpecifier
 )[];
 export type LegacyLimitedTimedFeeCollectModuleSettingsFieldPolicy = {
@@ -13808,6 +13866,7 @@ export type LegacyLimitedTimedFeeCollectModuleSettingsFieldPolicy = {
   followerOnly?: FieldPolicy<any> | FieldReadFunction<any>;
   recipient?: FieldPolicy<any> | FieldReadFunction<any>;
   referralFee?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type LegacyMultirecipientFeeCollectModuleSettingsKeySpecifier = (
   | 'amount'
@@ -13818,6 +13877,7 @@ export type LegacyMultirecipientFeeCollectModuleSettingsKeySpecifier = (
   | 'followerOnly'
   | 'recipients'
   | 'referralFee'
+  | 'type'
   | LegacyMultirecipientFeeCollectModuleSettingsKeySpecifier
 )[];
 export type LegacyMultirecipientFeeCollectModuleSettingsFieldPolicy = {
@@ -13829,13 +13889,16 @@ export type LegacyMultirecipientFeeCollectModuleSettingsFieldPolicy = {
   followerOnly?: FieldPolicy<any> | FieldReadFunction<any>;
   recipients?: FieldPolicy<any> | FieldReadFunction<any>;
   referralFee?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type LegacyRevertCollectModuleSettingsKeySpecifier = (
   | 'contract'
+  | 'type'
   | LegacyRevertCollectModuleSettingsKeySpecifier
 )[];
 export type LegacyRevertCollectModuleSettingsFieldPolicy = {
   contract?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type LegacySimpleCollectModuleSettingsKeySpecifier = (
   | 'amount'
@@ -13846,6 +13909,7 @@ export type LegacySimpleCollectModuleSettingsKeySpecifier = (
   | 'followerOnly'
   | 'recipient'
   | 'referralFee'
+  | 'type'
   | LegacySimpleCollectModuleSettingsKeySpecifier
 )[];
 export type LegacySimpleCollectModuleSettingsFieldPolicy = {
@@ -13857,6 +13921,7 @@ export type LegacySimpleCollectModuleSettingsFieldPolicy = {
   followerOnly?: FieldPolicy<any> | FieldReadFunction<any>;
   recipient?: FieldPolicy<any> | FieldReadFunction<any>;
   referralFee?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type LegacyTimedFeeCollectModuleSettingsKeySpecifier = (
   | 'amount'
@@ -13866,6 +13931,7 @@ export type LegacyTimedFeeCollectModuleSettingsKeySpecifier = (
   | 'followerOnly'
   | 'recipient'
   | 'referralFee'
+  | 'type'
   | LegacyTimedFeeCollectModuleSettingsKeySpecifier
 )[];
 export type LegacyTimedFeeCollectModuleSettingsFieldPolicy = {
@@ -13876,6 +13942,7 @@ export type LegacyTimedFeeCollectModuleSettingsFieldPolicy = {
   followerOnly?: FieldPolicy<any> | FieldReadFunction<any>;
   recipient?: FieldPolicy<any> | FieldReadFunction<any>;
   referralFee?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type LensProfileManagerRelayErrorKeySpecifier = (
   | 'reason'
@@ -14245,6 +14312,7 @@ export type MultirecipientFeeCollectOpenActionSettingsKeySpecifier = (
   | 'followerOnly'
   | 'recipients'
   | 'referralFee'
+  | 'type'
   | MultirecipientFeeCollectOpenActionSettingsKeySpecifier
 )[];
 export type MultirecipientFeeCollectOpenActionSettingsFieldPolicy = {
@@ -14256,6 +14324,7 @@ export type MultirecipientFeeCollectOpenActionSettingsFieldPolicy = {
   followerOnly?: FieldPolicy<any> | FieldReadFunction<any>;
   recipients?: FieldPolicy<any> | FieldReadFunction<any>;
   referralFee?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type MutationKeySpecifier = (
   | 'actOnOpenAction'
@@ -15471,10 +15540,12 @@ export type RevenueAggregateFieldPolicy = {
 };
 export type RevertFollowModuleSettingsKeySpecifier = (
   | 'contract'
+  | 'type'
   | RevertFollowModuleSettingsKeySpecifier
 )[];
 export type RevertFollowModuleSettingsFieldPolicy = {
   contract?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type RootConditionKeySpecifier = ('criteria' | RootConditionKeySpecifier)[];
 export type RootConditionFieldPolicy = {
@@ -15489,6 +15560,7 @@ export type SimpleCollectOpenActionSettingsKeySpecifier = (
   | 'followerOnly'
   | 'recipient'
   | 'referralFee'
+  | 'type'
   | SimpleCollectOpenActionSettingsKeySpecifier
 )[];
 export type SimpleCollectOpenActionSettingsFieldPolicy = {
@@ -15500,6 +15572,7 @@ export type SimpleCollectOpenActionSettingsFieldPolicy = {
   followerOnly?: FieldPolicy<any> | FieldReadFunction<any>;
   recipient?: FieldPolicy<any> | FieldReadFunction<any>;
   referralFee?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type SpaceMetadataV3KeySpecifier = (
   | 'appId'
@@ -15715,22 +15788,26 @@ export type TransactionMetadataV3FieldPolicy = {
 export type UnknownFollowModuleSettingsKeySpecifier = (
   | 'contract'
   | 'followModuleReturnData'
+  | 'type'
   | UnknownFollowModuleSettingsKeySpecifier
 )[];
 export type UnknownFollowModuleSettingsFieldPolicy = {
   contract?: FieldPolicy<any> | FieldReadFunction<any>;
   followModuleReturnData?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type UnknownOpenActionModuleSettingsKeySpecifier = (
   | 'collectNft'
   | 'contract'
   | 'openActionModuleReturnData'
+  | 'type'
   | UnknownOpenActionModuleSettingsKeySpecifier
 )[];
 export type UnknownOpenActionModuleSettingsFieldPolicy = {
   collectNft?: FieldPolicy<any> | FieldReadFunction<any>;
   contract?: FieldPolicy<any> | FieldReadFunction<any>;
   openActionModuleReturnData?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type UnknownOpenActionResultKeySpecifier = (
   | 'address'
@@ -15746,11 +15823,13 @@ export type UnknownOpenActionResultFieldPolicy = {
 export type UnknownReferenceModuleSettingsKeySpecifier = (
   | 'contract'
   | 'referenceModuleReturnData'
+  | 'type'
   | UnknownReferenceModuleSettingsKeySpecifier
 )[];
 export type UnknownReferenceModuleSettingsFieldPolicy = {
   contract?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModuleReturnData?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type UnknownSupportedModuleKeySpecifier = (
   | 'contract'
@@ -16675,6 +16754,13 @@ export type StrictTypedTypePolicies = {
       | LegacyFeeCollectModuleSettingsKeySpecifier
       | (() => undefined | LegacyFeeCollectModuleSettingsKeySpecifier);
     fields?: LegacyFeeCollectModuleSettingsFieldPolicy;
+  };
+  LegacyFollowOnlyReferenceModuleSettings?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | LegacyFollowOnlyReferenceModuleSettingsKeySpecifier
+      | (() => undefined | LegacyFollowOnlyReferenceModuleSettingsKeySpecifier);
+    fields?: LegacyFollowOnlyReferenceModuleSettingsFieldPolicy;
   };
   LegacyFreeCollectModuleSettings?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
@@ -17607,6 +17693,7 @@ const result: PossibleTypesResultData = {
     ReferenceModule: [
       'DegreesOfSeparationReferenceModuleSettings',
       'FollowOnlyReferenceModuleSettings',
+      'LegacyFollowOnlyReferenceModuleSettings',
       'UnknownReferenceModuleSettings',
     ],
     RelayMomokaResult: ['CreateMomokaPublicationResult', 'LensProfileManagerRelayError'],
