@@ -221,6 +221,7 @@ export enum CollectOpenActionModuleType {
 }
 
 export enum CommentRankingFilterType {
+  All = 'ALL',
   NoneRelevant = 'NONE_RELEVANT',
   Relevant = 'RELEVANT',
 }
@@ -269,6 +270,10 @@ export enum DecryptFailReasonType {
   UnauthorizedAddress = 'UNAUTHORIZED_ADDRESS',
   UnauthorizedBalance = 'UNAUTHORIZED_BALANCE',
 }
+
+export type DefaultProfileRequest = {
+  for: Scalars['EvmAddress'];
+};
 
 export type DegreesOfSeparationReferenceModuleInput = {
   commentsRestricted: Scalars['Boolean'];
@@ -1190,8 +1195,12 @@ export type PublicationBookmarksWhere = {
 };
 
 export type PublicationCommentOn = {
-  commentsRankingFilter?: InputMaybe<CommentRankingFilterType>;
   id: Scalars['PublicationId'];
+  ranking?: InputMaybe<PublicationCommentOnRanking>;
+};
+
+export type PublicationCommentOnRanking = {
+  filter?: InputMaybe<CommentRankingFilterType>;
 };
 
 export enum PublicationContentWarningType {
@@ -1538,6 +1547,10 @@ export enum SearchPublicationType {
 export type SensitiveReasonInput = {
   reason: PublicationReportingReason;
   subreason: PublicationReportingSensitiveSubreason;
+};
+
+export type SetDefaultProfileRequest = {
+  profileId: Scalars['ProfileId'];
 };
 
 export type SetFollowModuleRequest = {
@@ -3675,20 +3688,6 @@ export type PublicationData = {
   result: Comment | Mirror | Post | Quote | null;
 } & InjectCommonQueryParams;
 
-type AnyPublicationFragment_Comment_ = Comment;
-
-type AnyPublicationFragment_Mirror_ = Mirror;
-
-type AnyPublicationFragment_Post_ = Post;
-
-type AnyPublicationFragment_Quote_ = Quote;
-
-export type AnyPublicationFragment =
-  | AnyPublicationFragment_Comment_
-  | AnyPublicationFragment_Mirror_
-  | AnyPublicationFragment_Post_
-  | AnyPublicationFragment_Quote_;
-
 export type PublicationsVariables = Exact<{
   where: PublicationsWhere;
   orderBy?: InputMaybe<PublicationsOrderByType>;
@@ -3703,15 +3702,7 @@ export type PublicationsVariables = Exact<{
 }>;
 
 export type PublicationsData = {
-  result: {
-    items: Array<
-      | AnyPublicationFragment_Comment_
-      | AnyPublicationFragment_Mirror_
-      | AnyPublicationFragment_Post_
-      | AnyPublicationFragment_Quote_
-    >;
-    pageInfo: PaginatedResultInfo;
-  };
+  result: { items: Array<Comment | Mirror | Post | Quote>; pageInfo: PaginatedResultInfo };
 } & InjectCommonQueryParams;
 
 export type PublicationsTagsVariables = Exact<{
@@ -7493,26 +7484,6 @@ export const FragmentPublicationValidateMetadataResult = /*#__PURE__*/ gql`
     reason
   }
 `;
-export const FragmentAnyPublicationFragment = /*#__PURE__*/ gql`
-  fragment AnyPublicationFragment on AnyPublication {
-    ... on Post {
-      ...Post
-    }
-    ... on Mirror {
-      ...Mirror
-    }
-    ... on Comment {
-      ...Comment
-    }
-    ... on Quote {
-      ...Quote
-    }
-  }
-  ${FragmentPost}
-  ${FragmentMirror}
-  ${FragmentComment}
-  ${FragmentQuote}
-`;
 export const FragmentCreateOnchainPostBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateOnchainPostBroadcastItemResult on CreateOnchainPostBroadcastItemResult {
     __typename
@@ -10654,7 +10625,18 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
       request: { where: $where, orderBy: $orderBy, limit: $limit, cursor: $cursor }
     ) {
       items {
-        ...AnyPublicationFragment
+        ... on Post {
+          ...Post
+        }
+        ... on Mirror {
+          ...Mirror
+        }
+        ... on Comment {
+          ...Comment
+        }
+        ... on Quote {
+          ...Quote
+        }
       }
       pageInfo {
         ...PaginatedResultInfo
@@ -10662,7 +10644,10 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
     }
   }
   ${FragmentInjectCommonQueryParams}
-  ${FragmentAnyPublicationFragment}
+  ${FragmentPost}
+  ${FragmentMirror}
+  ${FragmentComment}
+  ${FragmentQuote}
   ${FragmentPaginatedResultInfo}
 `;
 
@@ -15000,6 +14985,7 @@ export type MutationKeySpecifier = (
   | 'removePublicationBookmark'
   | 'removeReaction'
   | 'reportPublication'
+  | 'setDefaultProfile'
   | 'setFollowModule'
   | 'setProfileMetadata'
   | 'unblock'
@@ -15076,6 +15062,7 @@ export type MutationFieldPolicy = {
   removePublicationBookmark?: FieldPolicy<any> | FieldReadFunction<any>;
   removeReaction?: FieldPolicy<any> | FieldReadFunction<any>;
   reportPublication?: FieldPolicy<any> | FieldReadFunction<any>;
+  setDefaultProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   setFollowModule?: FieldPolicy<any> | FieldReadFunction<any>;
   setProfileMetadata?: FieldPolicy<any> | FieldReadFunction<any>;
   unblock?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -15883,6 +15870,7 @@ export type QueryKeySpecifier = (
   | 'claimableProfiles'
   | 'claimableStatus'
   | 'currencies'
+  | 'defaultProfile'
   | 'doesFollow'
   | 'exploreProfiles'
   | 'explorePublications'
@@ -15960,6 +15948,7 @@ export type QueryFieldPolicy = {
   claimableProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   claimableStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   currencies?: FieldPolicy<any> | FieldReadFunction<any>;
+  defaultProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   doesFollow?: FieldPolicy<any> | FieldReadFunction<any>;
   exploreProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   explorePublications?: FieldPolicy<any> | FieldReadFunction<any>;

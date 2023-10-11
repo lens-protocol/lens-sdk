@@ -1,7 +1,7 @@
 import { FragmentPost, Post } from '@lens-protocol/api-bindings';
 import { mockLensApolloClient, mockPostFragment } from '@lens-protocol/api-bindings/mocks';
 
-import { PublicationCacheManager } from '../../../transactions/adapters/PublicationCacheManager';
+import { PublicationCacheManager } from '../../infrastructure/PublicationCacheManager';
 import { HidePublicationPresenter } from '../HidePublicationPresenter';
 
 function setupTestScenario({ post }: { post: Post }) {

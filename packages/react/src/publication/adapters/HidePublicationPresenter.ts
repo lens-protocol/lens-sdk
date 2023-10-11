@@ -7,6 +7,9 @@ export class HidePublicationPresenter implements IHidePublicationPresenter {
   constructor(private readonly publicationCacheManager: IPublicationCacheManager) {}
 
   present(publicationId: PublicationId) {
-    this.publicationCacheManager.update(publicationId, (current) => ({ ...current, hidden: true }));
+    this.publicationCacheManager.update(publicationId, (current) => ({
+      ...current,
+      isHidden: true,
+    }));
   }
 }
