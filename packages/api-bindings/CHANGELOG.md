@@ -1,5 +1,12 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.6
+
+### Minor Changes
+
+- 4630efb9: add report publication
+- 25b7ef51: add hide publicaiton
+
 ## 0.11.0-alpha.5
 
 ### Patch Changes
