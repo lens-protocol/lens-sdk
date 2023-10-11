@@ -79,7 +79,7 @@ export function useCurrencies(args: UseCurrenciesArgs = {}): PaginatedReadResult
         decimals: currency.decimals,
         symbol: currency.symbol,
         address: currency.contract.address,
-        chainType: ChainType.POLYGON,
+        chainType: ChainType.POLYGON, // TODO: resolve it from currency.contract.chainId
       }),
     ),
   };
