@@ -1,5 +1,14 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.3
+
+### Patch Changes
+
+- 734d6823: **feat:** adds `useProfileManagers` and `useUpdateProfileManagers` hooks
+- 51f8cec6: **Added** useReactionToggle hook
+- Updated dependencies [734d6823]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.3
+
 ## 0.11.0-alpha.2
 
 ### Patch Changes

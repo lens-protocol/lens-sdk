@@ -89,7 +89,12 @@ export function LogInPage() {
         </button>
       )}
 
-      {address && <ProfilesList owner={address} />}
+      {address && (
+        <div>
+          <p>{`Using wallet ${address}`}</p>
+          <ProfilesList owner={address} />
+        </div>
+      )}
     </div>
   );
 }

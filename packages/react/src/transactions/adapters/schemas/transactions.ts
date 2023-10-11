@@ -13,7 +13,7 @@ import {
   ProfileOwnerFollowRequestSchema,
   UnconstrainedFollowRequestSchema,
   UnfollowRequestSchema,
-  UpdateDispatcherConfigRequestSchema,
+  UpdateProfileManagersRequestSchema,
   updateFollowPolicyRequestSchema,
   UpdateNftProfileImageRequestSchema,
   UpdateOffChainProfileImageRequestSchema,
@@ -63,7 +63,7 @@ const ProtocolTransactionRequestSchema: z.Schema<
 
   UnfollowRequestSchema,
 
-  UpdateDispatcherConfigRequestSchema,
+  UpdateProfileManagersRequestSchema,
 
   updateFollowPolicyRequestSchema(SerializedErc20AmountSchema),
 
@@ -105,7 +105,7 @@ const AnyTransactionRequestSchema: z.Schema<AnyTransactionRequest, z.ZodTypeDef,
 
     UnfollowRequestSchema,
 
-    UpdateDispatcherConfigRequestSchema,
+    UpdateProfileManagersRequestSchema,
 
     updateFollowPolicyRequestSchema(SerializedErc20AmountSchema),
 
@@ -127,7 +127,7 @@ const MetaTransactionSchema = z.object({
   chainType: z.nativeEnum(ChainType),
   id: z.string(),
   indexingId: z.string(),
-  txHash: z.string(),
+  txHash: z.string().nullable(),
   nonce: z.number(),
   request: ProtocolTransactionRequestSchema,
 });

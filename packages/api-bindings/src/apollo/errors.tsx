@@ -22,6 +22,6 @@ export class ValidationError extends CausedError {
   name = 'ValidationError' as const;
 
   constructor(cause: Error) {
-    super('A validation error occurred', { cause });
+    super(cause.message, { cause });
   }
 }

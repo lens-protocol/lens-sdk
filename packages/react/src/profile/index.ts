@@ -10,6 +10,7 @@ export * from './useProfileFollowing';
 export * from './useProfiles';
 export * from './useRecommendedProfiles';
 export * from './useWhoActedOnPublication';
+export * from './useProfileManagers';
 
 /**
  * Fragments

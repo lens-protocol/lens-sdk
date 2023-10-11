@@ -12,6 +12,7 @@ import {
   WalletConnectionError,
   ProtocolTransactionRequestModel,
   TransactionError,
+  Transaction,
 } from '../../entities';
 import { ActiveWallet } from '../authentication/ActiveWallet';
 import { BroadcastingError } from './BroadcastingError';
@@ -82,6 +83,6 @@ export class SubsidizeOnChain<T extends ProtocolTransactionRequestModel>
     }
 
     const transaction = relayResult.value;
-    await this.transactionQueue.push(transaction, this.presenter);
+    await this.transactionQueue.push(transaction as Transaction<T>, this.presenter);
   }
 }

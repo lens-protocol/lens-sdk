@@ -7,14 +7,7 @@ import {
   LensTransactionStatusType,
 } from '@lens-protocol/api-bindings';
 import { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
-import {
-  failure,
-  InvariantError,
-  never,
-  PromiseResult,
-  Result,
-  success,
-} from '@lens-protocol/shared-kernel';
+import { failure, never, PromiseResult, Result, success } from '@lens-protocol/shared-kernel';
 
 import { IProviderFactory } from '../../wallet/adapters/IProviderFactory';
 import {
@@ -111,12 +104,14 @@ export class TransactionObserver implements ITransactionObserver {
     return new Promise<Result<IndexingEvent, TransactionError>>((resolve, reject) => {
       const subscription = observable.subscribe({
         next: async ({ result }) => {
-          if (request.indexingId && result === null) {
-            subscription.unsubscribe();
+          // if (request.indexingId && result === null) {
+          //   return; // keep trying for now until API race condition is solved
+          //   subscription.unsubscribe();
 
-            reject(new InvariantError(`Transaction ${String(request.indexingId)} not found`));
-          }
+          //   reject(new InvariantError(`Transaction ${String(request.indexingId)} not found`));
+          // }
 
+          // keep trying for now until API race condition is solved
           if (result === null) {
             return;
           }

@@ -35,6 +35,7 @@ import {
   validateTokenAllowanceRequest,
   validateUpdateFollowPolicyRequest,
   validateUpdateProfileDetailsRequest,
+  validateUpdateProfileManagersRequest,
 } from '../validators';
 
 describe(`Given the validator helpers`, () => {
@@ -647,6 +648,20 @@ describe(`Given the validator helpers`, () => {
         		· "attributes.foo": Expected null, received object
         · "bio": Expected string, received number
         · "name": Required"
+      `);
+    });
+  });
+
+  describe(`when testing the "validateUpdateProfileManagersRequest"`, () => {
+    it('should provide an actionable error message in case of misuse', () => {
+      expect(() =>
+        validateUpdateProfileManagersRequest({
+          kind: TransactionKind.UPDATE_PROFILE_MANAGERS,
+          profileId: mockProfileId(),
+        }),
+      ).toThrowErrorMatchingInlineSnapshot(`
+        "fix the following issues
+        At least one of 'add', 'remove', or 'lensManager' must be present."
       `);
     });
   });

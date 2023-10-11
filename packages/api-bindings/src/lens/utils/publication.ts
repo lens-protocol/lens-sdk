@@ -1,3 +1,4 @@
+import { AnyPublication, PrimaryPublication } from '../publication';
 import { PickByTypename, Typename } from './types';
 
 /**
@@ -34,4 +35,17 @@ export function isQuotePublication<T extends Typename<string>>(
   publication: T,
 ): publication is PickByTypename<T, 'Quote'> {
   return publication.__typename === 'Quote';
+}
+
+/**
+ * @group Helpers
+ */
+export function isPrimaryPublication(
+  publication: AnyPublication,
+): publication is PrimaryPublication {
+  return (
+    isCommentPublication(publication) ||
+    isPostPublication(publication) ||
+    isQuotePublication(publication)
+  );
 }

@@ -23,371 +23,299 @@ import type {
   PromiseOrValue,
 } from './common';
 
-export declare namespace DataTypes {
+export declare namespace Types {
+  export type MigrationParamsStruct = {
+    lensHandlesAddress: PromiseOrValue<string>;
+    tokenHandleRegistryAddress: PromiseOrValue<string>;
+    legacyFeeFollowModule: PromiseOrValue<string>;
+    legacyProfileFollowModule: PromiseOrValue<string>;
+    newFeeFollowModule: PromiseOrValue<string>;
+    migrationAdmin: PromiseOrValue<string>;
+  };
+
+  export type MigrationParamsStructOutput = [string, string, string, string, string, string] & {
+    lensHandlesAddress: string;
+    tokenHandleRegistryAddress: string;
+    legacyFeeFollowModule: string;
+    legacyProfileFollowModule: string;
+    newFeeFollowModule: string;
+    migrationAdmin: string;
+  };
+
+  export type PublicationActionParamsStruct = {
+    publicationActedProfileId: PromiseOrValue<BigNumberish>;
+    publicationActedId: PromiseOrValue<BigNumberish>;
+    actorProfileId: PromiseOrValue<BigNumberish>;
+    referrerProfileIds: PromiseOrValue<BigNumberish>[];
+    referrerPubIds: PromiseOrValue<BigNumberish>[];
+    actionModuleAddress: PromiseOrValue<string>;
+    actionModuleData: PromiseOrValue<BytesLike>;
+  };
+
+  export type PublicationActionParamsStructOutput = [
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber[],
+    BigNumber[],
+    string,
+    string,
+  ] & {
+    publicationActedProfileId: BigNumber;
+    publicationActedId: BigNumber;
+    actorProfileId: BigNumber;
+    referrerProfileIds: BigNumber[];
+    referrerPubIds: BigNumber[];
+    actionModuleAddress: string;
+    actionModuleData: string;
+  };
+
   export type EIP712SignatureStruct = {
+    signer: PromiseOrValue<string>;
     v: PromiseOrValue<BigNumberish>;
     r: PromiseOrValue<BytesLike>;
     s: PromiseOrValue<BytesLike>;
     deadline: PromiseOrValue<BigNumberish>;
   };
 
-  export type EIP712SignatureStructOutput = [number, string, string, BigNumber] & {
+  export type EIP712SignatureStructOutput = [string, number, string, string, BigNumber] & {
+    signer: string;
     v: number;
     r: string;
     s: string;
     deadline: BigNumber;
   };
 
-  export type CollectWithSigDataStruct = {
-    collector: PromiseOrValue<string>;
-    profileId: PromiseOrValue<BigNumberish>;
-    pubId: PromiseOrValue<BigNumberish>;
-    data: PromiseOrValue<BytesLike>;
-    sig: DataTypes.EIP712SignatureStruct;
+  export type CollectParamsStruct = {
+    publicationCollectedProfileId: PromiseOrValue<BigNumberish>;
+    publicationCollectedId: PromiseOrValue<BigNumberish>;
+    collectorProfileId: PromiseOrValue<BigNumberish>;
+    referrerProfileId: PromiseOrValue<BigNumberish>;
+    referrerPubId: PromiseOrValue<BigNumberish>;
+    collectModuleData: PromiseOrValue<BytesLike>;
   };
 
-  export type CollectWithSigDataStructOutput = [
-    string,
+  export type CollectParamsStructOutput = [
     BigNumber,
     BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
     string,
-    DataTypes.EIP712SignatureStructOutput,
   ] & {
-    collector: string;
-    profileId: BigNumber;
-    pubId: BigNumber;
-    data: string;
-    sig: DataTypes.EIP712SignatureStructOutput;
+    publicationCollectedProfileId: BigNumber;
+    publicationCollectedId: BigNumber;
+    collectorProfileId: BigNumber;
+    referrerProfileId: BigNumber;
+    referrerPubId: BigNumber;
+    collectModuleData: string;
   };
 
-  export type CommentDataStruct = {
+  export type CommentParamsStruct = {
     profileId: PromiseOrValue<BigNumberish>;
     contentURI: PromiseOrValue<string>;
-    profileIdPointed: PromiseOrValue<BigNumberish>;
-    pubIdPointed: PromiseOrValue<BigNumberish>;
+    pointedProfileId: PromiseOrValue<BigNumberish>;
+    pointedPubId: PromiseOrValue<BigNumberish>;
+    referrerProfileIds: PromiseOrValue<BigNumberish>[];
+    referrerPubIds: PromiseOrValue<BigNumberish>[];
     referenceModuleData: PromiseOrValue<BytesLike>;
-    collectModule: PromiseOrValue<string>;
-    collectModuleInitData: PromiseOrValue<BytesLike>;
+    actionModules: PromiseOrValue<string>[];
+    actionModulesInitDatas: PromiseOrValue<BytesLike>[];
     referenceModule: PromiseOrValue<string>;
     referenceModuleInitData: PromiseOrValue<BytesLike>;
   };
 
-  export type CommentDataStructOutput = [
+  export type CommentParamsStructOutput = [
     BigNumber,
     string,
     BigNumber,
     BigNumber,
+    BigNumber[],
+    BigNumber[],
     string,
-    string,
-    string,
+    string[],
+    string[],
     string,
     string,
   ] & {
     profileId: BigNumber;
     contentURI: string;
-    profileIdPointed: BigNumber;
-    pubIdPointed: BigNumber;
+    pointedProfileId: BigNumber;
+    pointedPubId: BigNumber;
+    referrerProfileIds: BigNumber[];
+    referrerPubIds: BigNumber[];
     referenceModuleData: string;
-    collectModule: string;
-    collectModuleInitData: string;
+    actionModules: string[];
+    actionModulesInitDatas: string[];
     referenceModule: string;
     referenceModuleInitData: string;
   };
 
-  export type CommentWithSigDataStruct = {
-    profileId: PromiseOrValue<BigNumberish>;
-    contentURI: PromiseOrValue<string>;
-    profileIdPointed: PromiseOrValue<BigNumberish>;
-    pubIdPointed: PromiseOrValue<BigNumberish>;
-    referenceModuleData: PromiseOrValue<BytesLike>;
-    collectModule: PromiseOrValue<string>;
-    collectModuleInitData: PromiseOrValue<BytesLike>;
-    referenceModule: PromiseOrValue<string>;
-    referenceModuleInitData: PromiseOrValue<BytesLike>;
-    sig: DataTypes.EIP712SignatureStruct;
-  };
-
-  export type CommentWithSigDataStructOutput = [
-    BigNumber,
-    string,
-    BigNumber,
-    BigNumber,
-    string,
-    string,
-    string,
-    string,
-    string,
-    DataTypes.EIP712SignatureStructOutput,
-  ] & {
-    profileId: BigNumber;
-    contentURI: string;
-    profileIdPointed: BigNumber;
-    pubIdPointed: BigNumber;
-    referenceModuleData: string;
-    collectModule: string;
-    collectModuleInitData: string;
-    referenceModule: string;
-    referenceModuleInitData: string;
-    sig: DataTypes.EIP712SignatureStructOutput;
-  };
-
-  export type CreateProfileDataStruct = {
+  export type CreateProfileParamsStruct = {
     to: PromiseOrValue<string>;
-    handle: PromiseOrValue<string>;
-    imageURI: PromiseOrValue<string>;
     followModule: PromiseOrValue<string>;
     followModuleInitData: PromiseOrValue<BytesLike>;
-    followNFTURI: PromiseOrValue<string>;
   };
 
-  export type CreateProfileDataStructOutput = [string, string, string, string, string, string] & {
+  export type CreateProfileParamsStructOutput = [string, string, string] & {
     to: string;
-    handle: string;
-    imageURI: string;
     followModule: string;
     followModuleInitData: string;
-    followNFTURI: string;
   };
 
-  export type FollowWithSigDataStruct = {
-    follower: PromiseOrValue<string>;
-    profileIds: PromiseOrValue<BigNumberish>[];
-    datas: PromiseOrValue<BytesLike>[];
-    sig: DataTypes.EIP712SignatureStruct;
+  export type ActionModuleWhitelistDataStruct = {
+    id: PromiseOrValue<BigNumberish>;
+    isWhitelisted: PromiseOrValue<boolean>;
   };
 
-  export type FollowWithSigDataStructOutput = [
-    string,
-    BigNumber[],
-    string[],
-    DataTypes.EIP712SignatureStructOutput,
-  ] & {
-    follower: string;
-    profileIds: BigNumber[];
-    datas: string[];
-    sig: DataTypes.EIP712SignatureStructOutput;
+  export type ActionModuleWhitelistDataStructOutput = [BigNumber, boolean] & {
+    id: BigNumber;
+    isWhitelisted: boolean;
   };
 
-  export type ProfileStructStruct = {
+  export type ProfileStruct = {
     pubCount: PromiseOrValue<BigNumberish>;
     followModule: PromiseOrValue<string>;
     followNFT: PromiseOrValue<string>;
-    handle: PromiseOrValue<string>;
-    imageURI: PromiseOrValue<string>;
-    followNFTURI: PromiseOrValue<string>;
+    __DEPRECATED__handle: PromiseOrValue<string>;
+    __DEPRECATED__imageURI: PromiseOrValue<string>;
+    __DEPRECATED__followNFTURI: PromiseOrValue<string>;
+    metadataURI: PromiseOrValue<string>;
   };
 
-  export type ProfileStructStructOutput = [BigNumber, string, string, string, string, string] & {
+  export type ProfileStructOutput = [BigNumber, string, string, string, string, string, string] & {
     pubCount: BigNumber;
     followModule: string;
     followNFT: string;
-    handle: string;
-    imageURI: string;
-    followNFTURI: string;
+    __DEPRECATED__handle: string;
+    __DEPRECATED__imageURI: string;
+    __DEPRECATED__followNFTURI: string;
+    metadataURI: string;
   };
 
-  export type PublicationStructStruct = {
-    profileIdPointed: PromiseOrValue<BigNumberish>;
-    pubIdPointed: PromiseOrValue<BigNumberish>;
+  export type PublicationStruct = {
+    pointedProfileId: PromiseOrValue<BigNumberish>;
+    pointedPubId: PromiseOrValue<BigNumberish>;
     contentURI: PromiseOrValue<string>;
     referenceModule: PromiseOrValue<string>;
-    collectModule: PromiseOrValue<string>;
-    collectNFT: PromiseOrValue<string>;
+    __DEPRECATED__collectModule: PromiseOrValue<string>;
+    __DEPRECATED__collectNFT: PromiseOrValue<string>;
+    pubType: PromiseOrValue<BigNumberish>;
+    rootProfileId: PromiseOrValue<BigNumberish>;
+    rootPubId: PromiseOrValue<BigNumberish>;
+    enabledActionModulesBitmap: PromiseOrValue<BigNumberish>;
   };
 
-  export type PublicationStructStructOutput = [
+  export type PublicationStructOutput = [
     BigNumber,
     BigNumber,
     string,
     string,
     string,
     string,
+    number,
+    BigNumber,
+    BigNumber,
+    BigNumber,
   ] & {
-    profileIdPointed: BigNumber;
-    pubIdPointed: BigNumber;
+    pointedProfileId: BigNumber;
+    pointedPubId: BigNumber;
     contentURI: string;
     referenceModule: string;
-    collectModule: string;
-    collectNFT: string;
+    __DEPRECATED__collectModule: string;
+    __DEPRECATED__collectNFT: string;
+    pubType: number;
+    rootProfileId: BigNumber;
+    rootPubId: BigNumber;
+    enabledActionModulesBitmap: BigNumber;
   };
 
-  export type MirrorDataStruct = {
+  export type MirrorParamsStruct = {
     profileId: PromiseOrValue<BigNumberish>;
-    profileIdPointed: PromiseOrValue<BigNumberish>;
-    pubIdPointed: PromiseOrValue<BigNumberish>;
+    metadataURI: PromiseOrValue<string>;
+    pointedProfileId: PromiseOrValue<BigNumberish>;
+    pointedPubId: PromiseOrValue<BigNumberish>;
+    referrerProfileIds: PromiseOrValue<BigNumberish>[];
+    referrerPubIds: PromiseOrValue<BigNumberish>[];
     referenceModuleData: PromiseOrValue<BytesLike>;
+  };
+
+  export type MirrorParamsStructOutput = [
+    BigNumber,
+    string,
+    BigNumber,
+    BigNumber,
+    BigNumber[],
+    BigNumber[],
+    string,
+  ] & {
+    profileId: BigNumber;
+    metadataURI: string;
+    pointedProfileId: BigNumber;
+    pointedPubId: BigNumber;
+    referrerProfileIds: BigNumber[];
+    referrerPubIds: BigNumber[];
+    referenceModuleData: string;
+  };
+
+  export type PostParamsStruct = {
+    profileId: PromiseOrValue<BigNumberish>;
+    contentURI: PromiseOrValue<string>;
+    actionModules: PromiseOrValue<string>[];
+    actionModulesInitDatas: PromiseOrValue<BytesLike>[];
     referenceModule: PromiseOrValue<string>;
     referenceModuleInitData: PromiseOrValue<BytesLike>;
   };
 
-  export type MirrorDataStructOutput = [BigNumber, BigNumber, BigNumber, string, string, string] & {
+  export type PostParamsStructOutput = [BigNumber, string, string[], string[], string, string] & {
     profileId: BigNumber;
-    profileIdPointed: BigNumber;
-    pubIdPointed: BigNumber;
-    referenceModuleData: string;
+    contentURI: string;
+    actionModules: string[];
+    actionModulesInitDatas: string[];
     referenceModule: string;
     referenceModuleInitData: string;
   };
 
-  export type MirrorWithSigDataStruct = {
+  export type QuoteParamsStruct = {
     profileId: PromiseOrValue<BigNumberish>;
-    profileIdPointed: PromiseOrValue<BigNumberish>;
-    pubIdPointed: PromiseOrValue<BigNumberish>;
+    contentURI: PromiseOrValue<string>;
+    pointedProfileId: PromiseOrValue<BigNumberish>;
+    pointedPubId: PromiseOrValue<BigNumberish>;
+    referrerProfileIds: PromiseOrValue<BigNumberish>[];
+    referrerPubIds: PromiseOrValue<BigNumberish>[];
     referenceModuleData: PromiseOrValue<BytesLike>;
+    actionModules: PromiseOrValue<string>[];
+    actionModulesInitDatas: PromiseOrValue<BytesLike>[];
     referenceModule: PromiseOrValue<string>;
     referenceModuleInitData: PromiseOrValue<BytesLike>;
-    sig: DataTypes.EIP712SignatureStruct;
   };
 
-  export type MirrorWithSigDataStructOutput = [
-    BigNumber,
-    BigNumber,
+  export type QuoteParamsStructOutput = [
     BigNumber,
     string,
+    BigNumber,
+    BigNumber,
+    BigNumber[],
+    BigNumber[],
+    string,
+    string[],
+    string[],
     string,
     string,
-    DataTypes.EIP712SignatureStructOutput,
   ] & {
     profileId: BigNumber;
-    profileIdPointed: BigNumber;
-    pubIdPointed: BigNumber;
+    contentURI: string;
+    pointedProfileId: BigNumber;
+    pointedPubId: BigNumber;
+    referrerProfileIds: BigNumber[];
+    referrerPubIds: BigNumber[];
     referenceModuleData: string;
-    referenceModule: string;
-    referenceModuleInitData: string;
-    sig: DataTypes.EIP712SignatureStructOutput;
-  };
-
-  export type PostDataStruct = {
-    profileId: PromiseOrValue<BigNumberish>;
-    contentURI: PromiseOrValue<string>;
-    collectModule: PromiseOrValue<string>;
-    collectModuleInitData: PromiseOrValue<BytesLike>;
-    referenceModule: PromiseOrValue<string>;
-    referenceModuleInitData: PromiseOrValue<BytesLike>;
-  };
-
-  export type PostDataStructOutput = [BigNumber, string, string, string, string, string] & {
-    profileId: BigNumber;
-    contentURI: string;
-    collectModule: string;
-    collectModuleInitData: string;
+    actionModules: string[];
+    actionModulesInitDatas: string[];
     referenceModule: string;
     referenceModuleInitData: string;
   };
 
-  export type PostWithSigDataStruct = {
-    profileId: PromiseOrValue<BigNumberish>;
-    contentURI: PromiseOrValue<string>;
-    collectModule: PromiseOrValue<string>;
-    collectModuleInitData: PromiseOrValue<BytesLike>;
-    referenceModule: PromiseOrValue<string>;
-    referenceModuleInitData: PromiseOrValue<BytesLike>;
-    sig: DataTypes.EIP712SignatureStruct;
-  };
-
-  export type PostWithSigDataStructOutput = [
-    BigNumber,
-    string,
-    string,
-    string,
-    string,
-    string,
-    DataTypes.EIP712SignatureStructOutput,
-  ] & {
-    profileId: BigNumber;
-    contentURI: string;
-    collectModule: string;
-    collectModuleInitData: string;
-    referenceModule: string;
-    referenceModuleInitData: string;
-    sig: DataTypes.EIP712SignatureStructOutput;
-  };
-
-  export type SetDefaultProfileWithSigDataStruct = {
-    wallet: PromiseOrValue<string>;
-    profileId: PromiseOrValue<BigNumberish>;
-    sig: DataTypes.EIP712SignatureStruct;
-  };
-
-  export type SetDefaultProfileWithSigDataStructOutput = [
-    string,
-    BigNumber,
-    DataTypes.EIP712SignatureStructOutput,
-  ] & {
-    wallet: string;
-    profileId: BigNumber;
-    sig: DataTypes.EIP712SignatureStructOutput;
-  };
-
-  export type SetDispatcherWithSigDataStruct = {
-    profileId: PromiseOrValue<BigNumberish>;
-    dispatcher: PromiseOrValue<string>;
-    sig: DataTypes.EIP712SignatureStruct;
-  };
-
-  export type SetDispatcherWithSigDataStructOutput = [
-    BigNumber,
-    string,
-    DataTypes.EIP712SignatureStructOutput,
-  ] & {
-    profileId: BigNumber;
-    dispatcher: string;
-    sig: DataTypes.EIP712SignatureStructOutput;
-  };
-
-  export type SetFollowModuleWithSigDataStruct = {
-    profileId: PromiseOrValue<BigNumberish>;
-    followModule: PromiseOrValue<string>;
-    followModuleInitData: PromiseOrValue<BytesLike>;
-    sig: DataTypes.EIP712SignatureStruct;
-  };
-
-  export type SetFollowModuleWithSigDataStructOutput = [
-    BigNumber,
-    string,
-    string,
-    DataTypes.EIP712SignatureStructOutput,
-  ] & {
-    profileId: BigNumber;
-    followModule: string;
-    followModuleInitData: string;
-    sig: DataTypes.EIP712SignatureStructOutput;
-  };
-
-  export type SetFollowNFTURIWithSigDataStruct = {
-    profileId: PromiseOrValue<BigNumberish>;
-    followNFTURI: PromiseOrValue<string>;
-    sig: DataTypes.EIP712SignatureStruct;
-  };
-
-  export type SetFollowNFTURIWithSigDataStructOutput = [
-    BigNumber,
-    string,
-    DataTypes.EIP712SignatureStructOutput,
-  ] & {
-    profileId: BigNumber;
-    followNFTURI: string;
-    sig: DataTypes.EIP712SignatureStructOutput;
-  };
-
-  export type SetProfileImageURIWithSigDataStruct = {
-    profileId: PromiseOrValue<BigNumberish>;
-    imageURI: PromiseOrValue<string>;
-    sig: DataTypes.EIP712SignatureStruct;
-  };
-
-  export type SetProfileImageURIWithSigDataStructOutput = [
-    BigNumber,
-    string,
-    DataTypes.EIP712SignatureStructOutput,
-  ] & {
-    profileId: BigNumber;
-    imageURI: string;
-    sig: DataTypes.EIP712SignatureStructOutput;
-  };
-}
-
-export declare namespace IERC721Time {
   export type TokenDataStruct = {
     owner: PromiseOrValue<string>;
     mintTimestamp: PromiseOrValue<BigNumberish>;
@@ -401,83 +329,89 @@ export declare namespace IERC721Time {
 
 export interface LensHubInterface extends utils.Interface {
   functions: {
+    'DANGER__disableTokenGuardian()': FunctionFragment;
+    'act((uint256,uint256,uint256,uint256[],uint256[],address,bytes))': FunctionFragment;
+    'actWithSig((uint256,uint256,uint256,uint256[],uint256[],address,bytes),(address,uint8,bytes32,bytes32,uint256))': FunctionFragment;
     'approve(address,uint256)': FunctionFragment;
     'balanceOf(address)': FunctionFragment;
+    'batchMigrateFollowModules(uint256[])': FunctionFragment;
+    'batchMigrateFollowers(uint256[],uint256,uint256[])': FunctionFragment;
+    'batchMigrateFollows(uint256,uint256[],uint256[])': FunctionFragment;
+    'batchMigrateProfiles(uint256[])': FunctionFragment;
     'burn(uint256)': FunctionFragment;
-    'burnWithSig(uint256,(uint8,bytes32,bytes32,uint256))': FunctionFragment;
-    'collect(uint256,uint256,bytes)': FunctionFragment;
-    'collectWithSig((address,uint256,uint256,bytes,(uint8,bytes32,bytes32,uint256)))': FunctionFragment;
-    'comment((uint256,string,uint256,uint256,bytes,address,bytes,address,bytes))': FunctionFragment;
-    'commentWithSig((uint256,string,uint256,uint256,bytes,address,bytes,address,bytes,(uint8,bytes32,bytes32,uint256)))': FunctionFragment;
-    'createProfile((address,string,string,address,bytes,string))': FunctionFragment;
-    'defaultProfile(address)': FunctionFragment;
+    'changeDelegatedExecutorsConfig(uint256,address[],bool[],uint64,bool)': FunctionFragment;
+    'changeDelegatedExecutorsConfig(uint256,address[],bool[])': FunctionFragment;
+    'changeDelegatedExecutorsConfigWithSig(uint256,address[],bool[],uint64,bool,(address,uint8,bytes32,bytes32,uint256))': FunctionFragment;
+    'collect((uint256,uint256,uint256,uint256,uint256,bytes))': FunctionFragment;
+    'collectWithSig((uint256,uint256,uint256,uint256,uint256,bytes),(address,uint8,bytes32,bytes32,uint256))': FunctionFragment;
+    'comment((uint256,string,uint256,uint256,uint256[],uint256[],bytes,address[],bytes[],address,bytes))': FunctionFragment;
+    'commentWithSig((uint256,string,uint256,uint256,uint256[],uint256[],bytes,address[],bytes[],address,bytes),(address,uint8,bytes32,bytes32,uint256))': FunctionFragment;
+    'createProfile((address,address,bytes))': FunctionFragment;
     'emitCollectNFTTransferEvent(uint256,uint256,uint256,address,address)': FunctionFragment;
-    'emitFollowNFTTransferEvent(uint256,uint256,address,address)': FunctionFragment;
+    'emitUnfollowedEvent(uint256,uint256,address)': FunctionFragment;
+    'enableTokenGuardian()': FunctionFragment;
     'exists(uint256)': FunctionFragment;
-    'follow(uint256[],bytes[])': FunctionFragment;
-    'followWithSig((address,uint256[],bytes[],(uint8,bytes32,bytes32,uint256)))': FunctionFragment;
+    'follow(uint256,uint256[],uint256[],bytes[])': FunctionFragment;
+    'followWithSig(uint256,uint256[],uint256[],bytes[],(address,uint8,bytes32,bytes32,uint256))': FunctionFragment;
+    'getActionModuleById(uint256)': FunctionFragment;
+    'getActionModuleWhitelistData(address)': FunctionFragment;
     'getApproved(uint256)': FunctionFragment;
-    'getCollectModule(uint256,uint256)': FunctionFragment;
-    'getCollectNFT(uint256,uint256)': FunctionFragment;
     'getCollectNFTImpl()': FunctionFragment;
     'getContentURI(uint256,uint256)': FunctionFragment;
-    'getDispatcher(uint256)': FunctionFragment;
+    'getDelegatedExecutorsConfigNumber(uint256)': FunctionFragment;
+    'getDelegatedExecutorsMaxConfigNumberSet(uint256)': FunctionFragment;
+    'getDelegatedExecutorsPrevConfigNumber(uint256)': FunctionFragment;
     'getDomainSeparator()': FunctionFragment;
-    'getFollowModule(uint256)': FunctionFragment;
-    'getFollowNFT(uint256)': FunctionFragment;
     'getFollowNFTImpl()': FunctionFragment;
-    'getFollowNFTURI(uint256)': FunctionFragment;
     'getGovernance()': FunctionFragment;
-    'getHandle(uint256)': FunctionFragment;
     'getProfile(uint256)': FunctionFragment;
-    'getProfileIdByHandle(string)': FunctionFragment;
-    'getPub(uint256,uint256)': FunctionFragment;
-    'getPubCount(uint256)': FunctionFragment;
-    'getPubPointer(uint256,uint256)': FunctionFragment;
-    'getPubType(uint256,uint256)': FunctionFragment;
-    'getReferenceModule(uint256,uint256)': FunctionFragment;
+    'getProfileIdByHandleHash(bytes32)': FunctionFragment;
+    'getPublication(uint256,uint256)': FunctionFragment;
+    'getPublicationType(uint256,uint256)': FunctionFragment;
     'getState()': FunctionFragment;
-    'initialize(string,string,address)': FunctionFragment;
+    'getTokenGuardianDisablingTimestamp(address)': FunctionFragment;
     'isApprovedForAll(address,address)': FunctionFragment;
-    'isCollectModuleWhitelisted(address)': FunctionFragment;
+    'isBlocked(uint256,uint256)': FunctionFragment;
+    'isDelegatedExecutorApproved(uint256,address)': FunctionFragment;
+    'isDelegatedExecutorApproved(uint256,address,uint64)': FunctionFragment;
     'isFollowModuleWhitelisted(address)': FunctionFragment;
+    'isFollowing(uint256,uint256)': FunctionFragment;
     'isProfileCreatorWhitelisted(address)': FunctionFragment;
     'isReferenceModuleWhitelisted(address)': FunctionFragment;
     'mintTimestampOf(uint256)': FunctionFragment;
-    'mirror((uint256,uint256,uint256,bytes,address,bytes))': FunctionFragment;
-    'mirrorWithSig((uint256,uint256,uint256,bytes,address,bytes,(uint8,bytes32,bytes32,uint256)))': FunctionFragment;
+    'mirror((uint256,string,uint256,uint256,uint256[],uint256[],bytes))': FunctionFragment;
+    'mirrorWithSig((uint256,string,uint256,uint256,uint256[],uint256[],bytes),(address,uint8,bytes32,bytes32,uint256))': FunctionFragment;
     'name()': FunctionFragment;
+    'nonces(address)': FunctionFragment;
     'ownerOf(uint256)': FunctionFragment;
-    'permit(address,uint256,(uint8,bytes32,bytes32,uint256))': FunctionFragment;
-    'permitForAll(address,address,bool,(uint8,bytes32,bytes32,uint256))': FunctionFragment;
-    'post((uint256,string,address,bytes,address,bytes))': FunctionFragment;
-    'postWithSig((uint256,string,address,bytes,address,bytes,(uint8,bytes32,bytes32,uint256)))': FunctionFragment;
+    'post((uint256,string,address[],bytes[],address,bytes))': FunctionFragment;
+    'postWithSig((uint256,string,address[],bytes[],address,bytes),(address,uint8,bytes32,bytes32,uint256))': FunctionFragment;
+    'quote((uint256,string,uint256,uint256,uint256[],uint256[],bytes,address[],bytes[],address,bytes))': FunctionFragment;
+    'quoteWithSig((uint256,string,uint256,uint256,uint256[],uint256[],bytes,address[],bytes[],address,bytes),(address,uint8,bytes32,bytes32,uint256))': FunctionFragment;
+    'royaltyInfo(uint256,uint256)': FunctionFragment;
     'safeTransferFrom(address,address,uint256)': FunctionFragment;
     'safeTransferFrom(address,address,uint256,bytes)': FunctionFragment;
     'setApprovalForAll(address,bool)': FunctionFragment;
-    'setDefaultProfile(uint256)': FunctionFragment;
-    'setDefaultProfileWithSig((address,uint256,(uint8,bytes32,bytes32,uint256)))': FunctionFragment;
-    'setDispatcher(uint256,address)': FunctionFragment;
-    'setDispatcherWithSig((uint256,address,(uint8,bytes32,bytes32,uint256)))': FunctionFragment;
+    'setBlockStatus(uint256,uint256[],bool[])': FunctionFragment;
+    'setBlockStatusWithSig(uint256,uint256[],bool[],(address,uint8,bytes32,bytes32,uint256))': FunctionFragment;
     'setEmergencyAdmin(address)': FunctionFragment;
     'setFollowModule(uint256,address,bytes)': FunctionFragment;
-    'setFollowModuleWithSig((uint256,address,bytes,(uint8,bytes32,bytes32,uint256)))': FunctionFragment;
-    'setFollowNFTURI(uint256,string)': FunctionFragment;
-    'setFollowNFTURIWithSig((uint256,string,(uint8,bytes32,bytes32,uint256)))': FunctionFragment;
+    'setFollowModuleWithSig(uint256,address,bytes,(address,uint8,bytes32,bytes32,uint256))': FunctionFragment;
     'setGovernance(address)': FunctionFragment;
-    'setProfileImageURI(uint256,string)': FunctionFragment;
-    'setProfileImageURIWithSig((uint256,string,(uint8,bytes32,bytes32,uint256)))': FunctionFragment;
+    'setMigrationAdmins(address[],bool)': FunctionFragment;
+    'setProfileMetadataURI(uint256,string)': FunctionFragment;
+    'setProfileMetadataURIWithSig(uint256,string,(address,uint8,bytes32,bytes32,uint256))': FunctionFragment;
+    'setRoyalty(uint256)': FunctionFragment;
     'setState(uint8)': FunctionFragment;
-    'sigNonces(address)': FunctionFragment;
     'supportsInterface(bytes4)': FunctionFragment;
     'symbol()': FunctionFragment;
-    'tokenByIndex(uint256)': FunctionFragment;
     'tokenDataOf(uint256)': FunctionFragment;
-    'tokenOfOwnerByIndex(address,uint256)': FunctionFragment;
     'tokenURI(uint256)': FunctionFragment;
     'totalSupply()': FunctionFragment;
     'transferFrom(address,address,uint256)': FunctionFragment;
-    'whitelistCollectModule(address,bool)': FunctionFragment;
+    'unfollow(uint256,uint256[])': FunctionFragment;
+    'unfollowWithSig(uint256,uint256[],(address,uint8,bytes32,bytes32,uint256))': FunctionFragment;
+    'whitelistActionModule(address,bool)': FunctionFragment;
     'whitelistFollowModule(address,bool)': FunctionFragment;
     'whitelistProfileCreator(address,bool)': FunctionFragment;
     'whitelistReferenceModule(address,bool)': FunctionFragment;
@@ -485,116 +419,172 @@ export interface LensHubInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
+      | 'DANGER__disableTokenGuardian'
+      | 'act'
+      | 'actWithSig'
       | 'approve'
       | 'balanceOf'
+      | 'batchMigrateFollowModules'
+      | 'batchMigrateFollowers'
+      | 'batchMigrateFollows'
+      | 'batchMigrateProfiles'
       | 'burn'
-      | 'burnWithSig'
+      | 'changeDelegatedExecutorsConfig(uint256,address[],bool[],uint64,bool)'
+      | 'changeDelegatedExecutorsConfig(uint256,address[],bool[])'
+      | 'changeDelegatedExecutorsConfigWithSig'
       | 'collect'
       | 'collectWithSig'
       | 'comment'
       | 'commentWithSig'
       | 'createProfile'
-      | 'defaultProfile'
       | 'emitCollectNFTTransferEvent'
-      | 'emitFollowNFTTransferEvent'
+      | 'emitUnfollowedEvent'
+      | 'enableTokenGuardian'
       | 'exists'
       | 'follow'
       | 'followWithSig'
+      | 'getActionModuleById'
+      | 'getActionModuleWhitelistData'
       | 'getApproved'
-      | 'getCollectModule'
-      | 'getCollectNFT'
       | 'getCollectNFTImpl'
       | 'getContentURI'
-      | 'getDispatcher'
+      | 'getDelegatedExecutorsConfigNumber'
+      | 'getDelegatedExecutorsMaxConfigNumberSet'
+      | 'getDelegatedExecutorsPrevConfigNumber'
       | 'getDomainSeparator'
-      | 'getFollowModule'
-      | 'getFollowNFT'
       | 'getFollowNFTImpl'
-      | 'getFollowNFTURI'
       | 'getGovernance'
-      | 'getHandle'
       | 'getProfile'
-      | 'getProfileIdByHandle'
-      | 'getPub'
-      | 'getPubCount'
-      | 'getPubPointer'
-      | 'getPubType'
-      | 'getReferenceModule'
+      | 'getProfileIdByHandleHash'
+      | 'getPublication'
+      | 'getPublicationType'
       | 'getState'
-      | 'initialize'
+      | 'getTokenGuardianDisablingTimestamp'
       | 'isApprovedForAll'
-      | 'isCollectModuleWhitelisted'
+      | 'isBlocked'
+      | 'isDelegatedExecutorApproved(uint256,address)'
+      | 'isDelegatedExecutorApproved(uint256,address,uint64)'
       | 'isFollowModuleWhitelisted'
+      | 'isFollowing'
       | 'isProfileCreatorWhitelisted'
       | 'isReferenceModuleWhitelisted'
       | 'mintTimestampOf'
       | 'mirror'
       | 'mirrorWithSig'
       | 'name'
+      | 'nonces'
       | 'ownerOf'
-      | 'permit'
-      | 'permitForAll'
       | 'post'
       | 'postWithSig'
+      | 'quote'
+      | 'quoteWithSig'
+      | 'royaltyInfo'
       | 'safeTransferFrom(address,address,uint256)'
       | 'safeTransferFrom(address,address,uint256,bytes)'
       | 'setApprovalForAll'
-      | 'setDefaultProfile'
-      | 'setDefaultProfileWithSig'
-      | 'setDispatcher'
-      | 'setDispatcherWithSig'
+      | 'setBlockStatus'
+      | 'setBlockStatusWithSig'
       | 'setEmergencyAdmin'
       | 'setFollowModule'
       | 'setFollowModuleWithSig'
-      | 'setFollowNFTURI'
-      | 'setFollowNFTURIWithSig'
       | 'setGovernance'
-      | 'setProfileImageURI'
-      | 'setProfileImageURIWithSig'
+      | 'setMigrationAdmins'
+      | 'setProfileMetadataURI'
+      | 'setProfileMetadataURIWithSig'
+      | 'setRoyalty'
       | 'setState'
-      | 'sigNonces'
       | 'supportsInterface'
       | 'symbol'
-      | 'tokenByIndex'
       | 'tokenDataOf'
-      | 'tokenOfOwnerByIndex'
       | 'tokenURI'
       | 'totalSupply'
       | 'transferFrom'
-      | 'whitelistCollectModule'
+      | 'unfollow'
+      | 'unfollowWithSig'
+      | 'whitelistActionModule'
       | 'whitelistFollowModule'
       | 'whitelistProfileCreator'
       | 'whitelistReferenceModule',
   ): FunctionFragment;
 
+  encodeFunctionData(functionFragment: 'DANGER__disableTokenGuardian', values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: 'act',
+    values: [Types.PublicationActionParamsStruct],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'actWithSig',
+    values: [Types.PublicationActionParamsStruct, Types.EIP712SignatureStruct],
+  ): string;
   encodeFunctionData(
     functionFragment: 'approve',
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(functionFragment: 'balanceOf', values: [PromiseOrValue<string>]): string;
+  encodeFunctionData(
+    functionFragment: 'batchMigrateFollowModules',
+    values: [PromiseOrValue<BigNumberish>[]],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'batchMigrateFollowers',
+    values: [
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>[],
+    ],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'batchMigrateFollows',
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>[],
+    ],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'batchMigrateProfiles',
+    values: [PromiseOrValue<BigNumberish>[]],
+  ): string;
   encodeFunctionData(functionFragment: 'burn', values: [PromiseOrValue<BigNumberish>]): string;
   encodeFunctionData(
-    functionFragment: 'burnWithSig',
-    values: [PromiseOrValue<BigNumberish>, DataTypes.EIP712SignatureStruct],
+    functionFragment: 'changeDelegatedExecutorsConfig(uint256,address[],bool[],uint64,bool)',
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>[],
+      PromiseOrValue<boolean>[],
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<boolean>,
+    ],
   ): string;
   encodeFunctionData(
-    functionFragment: 'collect',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>],
+    functionFragment: 'changeDelegatedExecutorsConfig(uint256,address[],bool[])',
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>[], PromiseOrValue<boolean>[]],
   ): string;
+  encodeFunctionData(
+    functionFragment: 'changeDelegatedExecutorsConfigWithSig',
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>[],
+      PromiseOrValue<boolean>[],
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<boolean>,
+      Types.EIP712SignatureStruct,
+    ],
+  ): string;
+  encodeFunctionData(functionFragment: 'collect', values: [Types.CollectParamsStruct]): string;
   encodeFunctionData(
     functionFragment: 'collectWithSig',
-    values: [DataTypes.CollectWithSigDataStruct],
+    values: [Types.CollectParamsStruct, Types.EIP712SignatureStruct],
   ): string;
-  encodeFunctionData(functionFragment: 'comment', values: [DataTypes.CommentDataStruct]): string;
+  encodeFunctionData(functionFragment: 'comment', values: [Types.CommentParamsStruct]): string;
   encodeFunctionData(
     functionFragment: 'commentWithSig',
-    values: [DataTypes.CommentWithSigDataStruct],
+    values: [Types.CommentParamsStruct, Types.EIP712SignatureStruct],
   ): string;
   encodeFunctionData(
     functionFragment: 'createProfile',
-    values: [DataTypes.CreateProfileDataStruct],
+    values: [Types.CreateProfileParamsStruct],
   ): string;
-  encodeFunctionData(functionFragment: 'defaultProfile', values: [PromiseOrValue<string>]): string;
   encodeFunctionData(
     functionFragment: 'emitCollectNFTTransferEvent',
     values: [
@@ -606,34 +596,41 @@ export interface LensHubInterface extends utils.Interface {
     ],
   ): string;
   encodeFunctionData(
-    functionFragment: 'emitFollowNFTTransferEvent',
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-    ],
+    functionFragment: 'emitUnfollowedEvent',
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>, PromiseOrValue<string>],
   ): string;
+  encodeFunctionData(functionFragment: 'enableTokenGuardian', values?: undefined): string;
   encodeFunctionData(functionFragment: 'exists', values: [PromiseOrValue<BigNumberish>]): string;
   encodeFunctionData(
     functionFragment: 'follow',
-    values: [PromiseOrValue<BigNumberish>[], PromiseOrValue<BytesLike>[]],
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BytesLike>[],
+    ],
   ): string;
   encodeFunctionData(
     functionFragment: 'followWithSig',
-    values: [DataTypes.FollowWithSigDataStruct],
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BytesLike>[],
+      Types.EIP712SignatureStruct,
+    ],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'getActionModuleById',
+    values: [PromiseOrValue<BigNumberish>],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'getActionModuleWhitelistData',
+    values: [PromiseOrValue<string>],
   ): string;
   encodeFunctionData(
     functionFragment: 'getApproved',
     values: [PromiseOrValue<BigNumberish>],
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getCollectModule',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getCollectNFT',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(functionFragment: 'getCollectNFTImpl', values?: undefined): string;
   encodeFunctionData(
@@ -641,69 +638,64 @@ export interface LensHubInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(
-    functionFragment: 'getDispatcher',
+    functionFragment: 'getDelegatedExecutorsConfigNumber',
+    values: [PromiseOrValue<BigNumberish>],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'getDelegatedExecutorsMaxConfigNumberSet',
+    values: [PromiseOrValue<BigNumberish>],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'getDelegatedExecutorsPrevConfigNumber',
     values: [PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(functionFragment: 'getDomainSeparator', values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: 'getFollowModule',
-    values: [PromiseOrValue<BigNumberish>],
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getFollowNFT',
-    values: [PromiseOrValue<BigNumberish>],
-  ): string;
   encodeFunctionData(functionFragment: 'getFollowNFTImpl', values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: 'getFollowNFTURI',
-    values: [PromiseOrValue<BigNumberish>],
-  ): string;
   encodeFunctionData(functionFragment: 'getGovernance', values?: undefined): string;
-  encodeFunctionData(functionFragment: 'getHandle', values: [PromiseOrValue<BigNumberish>]): string;
   encodeFunctionData(
     functionFragment: 'getProfile',
     values: [PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(
-    functionFragment: 'getProfileIdByHandle',
-    values: [PromiseOrValue<string>],
+    functionFragment: 'getProfileIdByHandleHash',
+    values: [PromiseOrValue<BytesLike>],
   ): string;
   encodeFunctionData(
-    functionFragment: 'getPub',
+    functionFragment: 'getPublication',
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(
-    functionFragment: 'getPubCount',
-    values: [PromiseOrValue<BigNumberish>],
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getPubPointer',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getPubType',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'getReferenceModule',
+    functionFragment: 'getPublicationType',
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(functionFragment: 'getState', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'initialize',
-    values: [PromiseOrValue<string>, PromiseOrValue<string>, PromiseOrValue<string>],
+    functionFragment: 'getTokenGuardianDisablingTimestamp',
+    values: [PromiseOrValue<string>],
   ): string;
   encodeFunctionData(
     functionFragment: 'isApprovedForAll',
     values: [PromiseOrValue<string>, PromiseOrValue<string>],
   ): string;
   encodeFunctionData(
-    functionFragment: 'isCollectModuleWhitelisted',
-    values: [PromiseOrValue<string>],
+    functionFragment: 'isBlocked',
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'isDelegatedExecutorApproved(uint256,address)',
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'isDelegatedExecutorApproved(uint256,address,uint64)',
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(
     functionFragment: 'isFollowModuleWhitelisted',
     values: [PromiseOrValue<string>],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'isFollowing',
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(
     functionFragment: 'isProfileCreatorWhitelisted',
@@ -717,30 +709,27 @@ export interface LensHubInterface extends utils.Interface {
     functionFragment: 'mintTimestampOf',
     values: [PromiseOrValue<BigNumberish>],
   ): string;
-  encodeFunctionData(functionFragment: 'mirror', values: [DataTypes.MirrorDataStruct]): string;
+  encodeFunctionData(functionFragment: 'mirror', values: [Types.MirrorParamsStruct]): string;
   encodeFunctionData(
     functionFragment: 'mirrorWithSig',
-    values: [DataTypes.MirrorWithSigDataStruct],
+    values: [Types.MirrorParamsStruct, Types.EIP712SignatureStruct],
   ): string;
   encodeFunctionData(functionFragment: 'name', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'nonces', values: [PromiseOrValue<string>]): string;
   encodeFunctionData(functionFragment: 'ownerOf', values: [PromiseOrValue<BigNumberish>]): string;
-  encodeFunctionData(
-    functionFragment: 'permit',
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>, DataTypes.EIP712SignatureStruct],
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'permitForAll',
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<boolean>,
-      DataTypes.EIP712SignatureStruct,
-    ],
-  ): string;
-  encodeFunctionData(functionFragment: 'post', values: [DataTypes.PostDataStruct]): string;
+  encodeFunctionData(functionFragment: 'post', values: [Types.PostParamsStruct]): string;
   encodeFunctionData(
     functionFragment: 'postWithSig',
-    values: [DataTypes.PostWithSigDataStruct],
+    values: [Types.PostParamsStruct, Types.EIP712SignatureStruct],
+  ): string;
+  encodeFunctionData(functionFragment: 'quote', values: [Types.QuoteParamsStruct]): string;
+  encodeFunctionData(
+    functionFragment: 'quoteWithSig',
+    values: [Types.QuoteParamsStruct, Types.EIP712SignatureStruct],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'royaltyInfo',
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(
     functionFragment: 'safeTransferFrom(address,address,uint256)',
@@ -760,20 +749,21 @@ export interface LensHubInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<boolean>],
   ): string;
   encodeFunctionData(
-    functionFragment: 'setDefaultProfile',
-    values: [PromiseOrValue<BigNumberish>],
+    functionFragment: 'setBlockStatus',
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<boolean>[],
+    ],
   ): string;
   encodeFunctionData(
-    functionFragment: 'setDefaultProfileWithSig',
-    values: [DataTypes.SetDefaultProfileWithSigDataStruct],
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'setDispatcher',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>],
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'setDispatcherWithSig',
-    values: [DataTypes.SetDispatcherWithSigDataStruct],
+    functionFragment: 'setBlockStatusWithSig',
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<boolean>[],
+      Types.EIP712SignatureStruct,
+    ],
   ): string;
   encodeFunctionData(
     functionFragment: 'setEmergencyAdmin',
@@ -785,43 +775,39 @@ export interface LensHubInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: 'setFollowModuleWithSig',
-    values: [DataTypes.SetFollowModuleWithSigDataStruct],
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'setFollowNFTURI',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>],
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'setFollowNFTURIWithSig',
-    values: [DataTypes.SetFollowNFTURIWithSigDataStruct],
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>,
+      Types.EIP712SignatureStruct,
+    ],
   ): string;
   encodeFunctionData(functionFragment: 'setGovernance', values: [PromiseOrValue<string>]): string;
   encodeFunctionData(
-    functionFragment: 'setProfileImageURI',
+    functionFragment: 'setMigrationAdmins',
+    values: [PromiseOrValue<string>[], PromiseOrValue<boolean>],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'setProfileMetadataURI',
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>],
   ): string;
   encodeFunctionData(
-    functionFragment: 'setProfileImageURIWithSig',
-    values: [DataTypes.SetProfileImageURIWithSigDataStruct],
+    functionFragment: 'setProfileMetadataURIWithSig',
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>, Types.EIP712SignatureStruct],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'setRoyalty',
+    values: [PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(functionFragment: 'setState', values: [PromiseOrValue<BigNumberish>]): string;
-  encodeFunctionData(functionFragment: 'sigNonces', values: [PromiseOrValue<string>]): string;
   encodeFunctionData(
     functionFragment: 'supportsInterface',
     values: [PromiseOrValue<BytesLike>],
   ): string;
   encodeFunctionData(functionFragment: 'symbol', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'tokenByIndex',
-    values: [PromiseOrValue<BigNumberish>],
-  ): string;
-  encodeFunctionData(
     functionFragment: 'tokenDataOf',
     values: [PromiseOrValue<BigNumberish>],
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'tokenOfOwnerByIndex',
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(functionFragment: 'tokenURI', values: [PromiseOrValue<BigNumberish>]): string;
   encodeFunctionData(functionFragment: 'totalSupply', values?: undefined): string;
@@ -830,7 +816,19 @@ export interface LensHubInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(
-    functionFragment: 'whitelistCollectModule',
+    functionFragment: 'unfollow',
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>[]],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'unfollowWithSig',
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>[],
+      Types.EIP712SignatureStruct,
+    ],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'whitelistActionModule',
     values: [PromiseOrValue<string>, PromiseOrValue<boolean>],
   ): string;
   encodeFunctionData(
@@ -846,57 +844,93 @@ export interface LensHubInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<boolean>],
   ): string;
 
+  decodeFunctionResult(functionFragment: 'DANGER__disableTokenGuardian', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'act', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'actWithSig', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'approve', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'balanceOf', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'batchMigrateFollowModules', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'batchMigrateFollowers', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'batchMigrateFollows', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'batchMigrateProfiles', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'burn', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'burnWithSig', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'changeDelegatedExecutorsConfig(uint256,address[],bool[],uint64,bool)',
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'changeDelegatedExecutorsConfig(uint256,address[],bool[])',
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'changeDelegatedExecutorsConfigWithSig',
+    data: BytesLike,
+  ): Result;
   decodeFunctionResult(functionFragment: 'collect', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'collectWithSig', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'comment', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'commentWithSig', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'createProfile', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'defaultProfile', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'emitCollectNFTTransferEvent', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'emitFollowNFTTransferEvent', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'emitUnfollowedEvent', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'enableTokenGuardian', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'exists', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'follow', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'followWithSig', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getActionModuleById', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getActionModuleWhitelistData', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getApproved', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'getCollectModule', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'getCollectNFT', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getCollectNFTImpl', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getContentURI', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'getDispatcher', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'getDelegatedExecutorsConfigNumber',
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'getDelegatedExecutorsMaxConfigNumberSet',
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'getDelegatedExecutorsPrevConfigNumber',
+    data: BytesLike,
+  ): Result;
   decodeFunctionResult(functionFragment: 'getDomainSeparator', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'getFollowModule', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'getFollowNFT', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getFollowNFTImpl', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'getFollowNFTURI', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getGovernance', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'getHandle', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getProfile', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'getProfileIdByHandle', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'getPub', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'getPubCount', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'getPubPointer', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'getPubType', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'getReferenceModule', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getProfileIdByHandleHash', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getPublication', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getPublicationType', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getState', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'initialize', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'getTokenGuardianDisablingTimestamp',
+    data: BytesLike,
+  ): Result;
   decodeFunctionResult(functionFragment: 'isApprovedForAll', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'isCollectModuleWhitelisted', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'isBlocked', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'isDelegatedExecutorApproved(uint256,address)',
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'isDelegatedExecutorApproved(uint256,address,uint64)',
+    data: BytesLike,
+  ): Result;
   decodeFunctionResult(functionFragment: 'isFollowModuleWhitelisted', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'isFollowing', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'isProfileCreatorWhitelisted', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'isReferenceModuleWhitelisted', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'mintTimestampOf', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'mirror', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'mirrorWithSig', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'name', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'nonces', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'ownerOf', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'permit', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'permitForAll', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'post', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'postWithSig', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'quote', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'quoteWithSig', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'royaltyInfo', data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: 'safeTransferFrom(address,address,uint256)',
     data: BytesLike,
@@ -906,29 +940,26 @@ export interface LensHubInterface extends utils.Interface {
     data: BytesLike,
   ): Result;
   decodeFunctionResult(functionFragment: 'setApprovalForAll', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'setDefaultProfile', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'setDefaultProfileWithSig', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'setDispatcher', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'setDispatcherWithSig', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setBlockStatus', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setBlockStatusWithSig', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setEmergencyAdmin', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setFollowModule', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setFollowModuleWithSig', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'setFollowNFTURI', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'setFollowNFTURIWithSig', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setGovernance', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'setProfileImageURI', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'setProfileImageURIWithSig', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setMigrationAdmins', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setProfileMetadataURI', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setProfileMetadataURIWithSig', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setRoyalty', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setState', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'sigNonces', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'supportsInterface', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'symbol', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'tokenByIndex', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'tokenDataOf', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'tokenOfOwnerByIndex', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'tokenURI', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'totalSupply', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'transferFrom', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'whitelistCollectModule', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'unfollow', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'unfollowWithSig', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'whitelistActionModule', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'whitelistFollowModule', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'whitelistProfileCreator', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'whitelistReferenceModule', data: BytesLike): Result;
@@ -996,6 +1027,21 @@ export interface LensHub extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    DANGER__disableTokenGuardian(
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    act(
+      publicationActionParams: Types.PublicationActionParamsStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    actWithSig(
+      publicationActionParams: Types.PublicationActionParamsStruct,
+      signature: Types.EIP712SignatureStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
     approve(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
@@ -1004,45 +1050,87 @@ export interface LensHub extends BaseContract {
 
     balanceOf(owner: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    batchMigrateFollowModules(
+      profileIds: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    batchMigrateFollowers(
+      followerProfileIds: PromiseOrValue<BigNumberish>[],
+      idOfProfileFollowed: PromiseOrValue<BigNumberish>,
+      followTokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    batchMigrateFollows(
+      followerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfileFollowed: PromiseOrValue<BigNumberish>[],
+      followTokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    batchMigrateProfiles(
+      profileIds: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
     burn(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
-    burnWithSig(
-      tokenId: PromiseOrValue<BigNumberish>,
-      sig: DataTypes.EIP712SignatureStruct,
+    'changeDelegatedExecutorsConfig(uint256,address[],bool[],uint64,bool)'(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutors: PromiseOrValue<string>[],
+      approvals: PromiseOrValue<boolean>[],
+      configNumber: PromiseOrValue<BigNumberish>,
+      switchToGivenConfig: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    'changeDelegatedExecutorsConfig(uint256,address[],bool[])'(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutors: PromiseOrValue<string>[],
+      approvals: PromiseOrValue<boolean>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    changeDelegatedExecutorsConfigWithSig(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutors: PromiseOrValue<string>[],
+      approvals: PromiseOrValue<boolean>[],
+      configNumber: PromiseOrValue<BigNumberish>,
+      switchToGivenConfig: PromiseOrValue<boolean>,
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     collect(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+      collectParams: Types.CollectParamsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     collectWithSig(
-      vars: DataTypes.CollectWithSigDataStruct,
+      collectParams: Types.CollectParamsStruct,
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     comment(
-      vars: DataTypes.CommentDataStruct,
+      commentParams: Types.CommentParamsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     commentWithSig(
-      vars: DataTypes.CommentWithSigDataStruct,
+      commentParams: Types.CommentParamsStruct,
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     createProfile(
-      vars: DataTypes.CreateProfileDataStruct,
+      createProfileParams: Types.CreateProfileParamsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
-
-    defaultProfile(wallet: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     emitCollectNFTTransferEvent(
       profileId: PromiseOrValue<BigNumberish>,
@@ -1053,41 +1141,48 @@ export interface LensHub extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
-    emitFollowNFTTransferEvent(
-      profileId: PromiseOrValue<BigNumberish>,
-      followNFTId: PromiseOrValue<BigNumberish>,
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
+    emitUnfollowedEvent(
+      unfollowerProfileId: PromiseOrValue<BigNumberish>,
+      idOfProfileUnfollowed: PromiseOrValue<BigNumberish>,
+      transactionExecutor: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    enableTokenGuardian(
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     exists(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<[boolean]>;
 
     follow(
-      profileIds: PromiseOrValue<BigNumberish>[],
+      followerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToFollow: PromiseOrValue<BigNumberish>[],
+      followTokenIds: PromiseOrValue<BigNumberish>[],
       datas: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     followWithSig(
-      vars: DataTypes.FollowWithSigDataStruct,
+      followerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToFollow: PromiseOrValue<BigNumberish>[],
+      followTokenIds: PromiseOrValue<BigNumberish>[],
+      datas: PromiseOrValue<BytesLike>[],
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
+    getActionModuleById(
+      id: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<[string]>;
+
+    getActionModuleWhitelistData(
+      actionModule: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<[Types.ActionModuleWhitelistDataStructOutput]>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<[string]>;
-
-    getCollectModule(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<[string]>;
-
-    getCollectNFT(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<[string]>;
 
@@ -1099,84 +1194,55 @@ export interface LensHub extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<[string]>;
 
-    getDispatcher(
-      profileId: PromiseOrValue<BigNumberish>,
+    getDelegatedExecutorsConfigNumber(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
-    ): Promise<[string]>;
+    ): Promise<[BigNumber]>;
+
+    getDelegatedExecutorsMaxConfigNumberSet(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber]>;
+
+    getDelegatedExecutorsPrevConfigNumber(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber]>;
 
     getDomainSeparator(overrides?: CallOverrides): Promise<[string]>;
 
-    getFollowModule(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<[string]>;
-
-    getFollowNFT(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<[string]>;
-
     getFollowNFTImpl(overrides?: CallOverrides): Promise<[string]>;
 
-    getFollowNFTURI(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<[string]>;
-
     getGovernance(overrides?: CallOverrides): Promise<[string]>;
-
-    getHandle(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<[string]>;
 
     getProfile(
       profileId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
-    ): Promise<[DataTypes.ProfileStructStructOutput]>;
+    ): Promise<[Types.ProfileStructOutput]>;
 
-    getProfileIdByHandle(
-      handle: PromiseOrValue<string>,
+    getProfileIdByHandleHash(
+      handleHash: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
     ): Promise<[BigNumber]>;
 
-    getPub(
+    getPublication(
       profileId: PromiseOrValue<BigNumberish>,
       pubId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
-    ): Promise<[DataTypes.PublicationStructStructOutput]>;
+    ): Promise<[Types.PublicationStructOutput]>;
 
-    getPubCount(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<[BigNumber]>;
-
-    getPubPointer(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<[BigNumber, BigNumber]>;
-
-    getPubType(
+    getPublicationType(
       profileId: PromiseOrValue<BigNumberish>,
       pubId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<[number]>;
 
-    getReferenceModule(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<[string]>;
-
     getState(overrides?: CallOverrides): Promise<[number]>;
 
-    initialize(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      newGovernance: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>;
+    getTokenGuardianDisablingTimestamp(
+      wallet: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber]>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -1184,13 +1250,33 @@ export interface LensHub extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<[boolean]>;
 
-    isCollectModuleWhitelisted(
-      collectModule: PromiseOrValue<string>,
+    isBlocked(
+      profileId: PromiseOrValue<BigNumberish>,
+      byProfileId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<[boolean]>;
+
+    'isDelegatedExecutorApproved(uint256,address)'(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutor: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<[boolean]>;
+
+    'isDelegatedExecutorApproved(uint256,address,uint64)'(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutor: PromiseOrValue<string>,
+      configNumber: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<[boolean]>;
 
     isFollowModuleWhitelisted(
       followModule: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<[boolean]>;
+
+    isFollowing(
+      followerProfileId: PromiseOrValue<BigNumberish>,
+      followedProfileId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<[boolean]>;
 
@@ -1210,43 +1296,49 @@ export interface LensHub extends BaseContract {
     ): Promise<[BigNumber]>;
 
     mirror(
-      vars: DataTypes.MirrorDataStruct,
+      mirrorParams: Types.MirrorParamsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     mirrorWithSig(
-      vars: DataTypes.MirrorWithSigDataStruct,
+      mirrorParams: Types.MirrorParamsStruct,
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
+    nonces(signer: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>;
+
     ownerOf(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<[string]>;
 
-    permit(
-      spender: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      sig: DataTypes.EIP712SignatureStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>;
-
-    permitForAll(
-      owner: PromiseOrValue<string>,
-      operator: PromiseOrValue<string>,
-      approved: PromiseOrValue<boolean>,
-      sig: DataTypes.EIP712SignatureStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>;
-
     post(
-      vars: DataTypes.PostDataStruct,
+      postParams: Types.PostParamsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     postWithSig(
-      vars: DataTypes.PostWithSigDataStruct,
+      postParams: Types.PostParamsStruct,
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
+
+    quote(
+      quoteParams: Types.QuoteParamsStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    quoteWithSig(
+      quoteParams: Types.QuoteParamsStruct,
+      signature: Types.EIP712SignatureStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    royaltyInfo(
+      tokenId: PromiseOrValue<BigNumberish>,
+      salePrice: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<[string, BigNumber]>;
 
     'safeTransferFrom(address,address,uint256)'(
       from: PromiseOrValue<string>,
@@ -1269,24 +1361,18 @@ export interface LensHub extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
-    setDefaultProfile(
-      profileId: PromiseOrValue<BigNumberish>,
+    setBlockStatus(
+      byProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToSetBlockStatus: PromiseOrValue<BigNumberish>[],
+      blockStatus: PromiseOrValue<boolean>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
-    setDefaultProfileWithSig(
-      vars: DataTypes.SetDefaultProfileWithSigDataStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>;
-
-    setDispatcher(
-      profileId: PromiseOrValue<BigNumberish>,
-      dispatcher: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>;
-
-    setDispatcherWithSig(
-      vars: DataTypes.SetDispatcherWithSigDataStruct,
+    setBlockStatusWithSig(
+      byProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToSetBlockStatus: PromiseOrValue<BigNumberish>[],
+      blockStatus: PromiseOrValue<boolean>[],
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
@@ -1303,18 +1389,10 @@ export interface LensHub extends BaseContract {
     ): Promise<ContractTransaction>;
 
     setFollowModuleWithSig(
-      vars: DataTypes.SetFollowModuleWithSigDataStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>;
-
-    setFollowNFTURI(
       profileId: PromiseOrValue<BigNumberish>,
-      followNFTURI: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>;
-
-    setFollowNFTURIWithSig(
-      vars: DataTypes.SetFollowNFTURIWithSigDataStruct,
+      followModule: PromiseOrValue<string>,
+      followModuleInitData: PromiseOrValue<BytesLike>,
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
@@ -1323,14 +1401,27 @@ export interface LensHub extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
-    setProfileImageURI(
-      profileId: PromiseOrValue<BigNumberish>,
-      imageURI: PromiseOrValue<string>,
+    setMigrationAdmins(
+      migrationAdmins: PromiseOrValue<string>[],
+      whitelisted: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
-    setProfileImageURIWithSig(
-      vars: DataTypes.SetProfileImageURIWithSigDataStruct,
+    setProfileMetadataURI(
+      profileId: PromiseOrValue<BigNumberish>,
+      metadataURI: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    setProfileMetadataURIWithSig(
+      profileId: PromiseOrValue<BigNumberish>,
+      metadataURI: PromiseOrValue<string>,
+      signature: Types.EIP712SignatureStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    setRoyalty(
+      royaltiesInBasisPoints: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
@@ -1339,8 +1430,6 @@ export interface LensHub extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
-    sigNonces(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>;
-
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
@@ -1348,21 +1437,10 @@ export interface LensHub extends BaseContract {
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
-    tokenByIndex(
-      index: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<[BigNumber]>;
-
     tokenDataOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
-    ): Promise<[IERC721Time.TokenDataStructOutput]>;
-
-    tokenOfOwnerByIndex(
-      owner: PromiseOrValue<string>,
-      index: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<[BigNumber]>;
+    ): Promise<[Types.TokenDataStructOutput]>;
 
     tokenURI(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<[string]>;
 
@@ -1375,8 +1453,21 @@ export interface LensHub extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
-    whitelistCollectModule(
-      collectModule: PromiseOrValue<string>,
+    unfollow(
+      unfollowerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToUnfollow: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    unfollowWithSig(
+      unfollowerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToUnfollow: PromiseOrValue<BigNumberish>[],
+      signature: Types.EIP712SignatureStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    whitelistActionModule(
+      actionModule: PromiseOrValue<string>,
       whitelist: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
@@ -1400,6 +1491,21 @@ export interface LensHub extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
+  DANGER__disableTokenGuardian(
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  act(
+    publicationActionParams: Types.PublicationActionParamsStruct,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  actWithSig(
+    publicationActionParams: Types.PublicationActionParamsStruct,
+    signature: Types.EIP712SignatureStruct,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
   approve(
     to: PromiseOrValue<string>,
     tokenId: PromiseOrValue<BigNumberish>,
@@ -1408,45 +1514,87 @@ export interface LensHub extends BaseContract {
 
   balanceOf(owner: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
 
+  batchMigrateFollowModules(
+    profileIds: PromiseOrValue<BigNumberish>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  batchMigrateFollowers(
+    followerProfileIds: PromiseOrValue<BigNumberish>[],
+    idOfProfileFollowed: PromiseOrValue<BigNumberish>,
+    followTokenIds: PromiseOrValue<BigNumberish>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  batchMigrateFollows(
+    followerProfileId: PromiseOrValue<BigNumberish>,
+    idsOfProfileFollowed: PromiseOrValue<BigNumberish>[],
+    followTokenIds: PromiseOrValue<BigNumberish>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  batchMigrateProfiles(
+    profileIds: PromiseOrValue<BigNumberish>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
   burn(
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
-  burnWithSig(
-    tokenId: PromiseOrValue<BigNumberish>,
-    sig: DataTypes.EIP712SignatureStruct,
+  'changeDelegatedExecutorsConfig(uint256,address[],bool[],uint64,bool)'(
+    delegatorProfileId: PromiseOrValue<BigNumberish>,
+    delegatedExecutors: PromiseOrValue<string>[],
+    approvals: PromiseOrValue<boolean>[],
+    configNumber: PromiseOrValue<BigNumberish>,
+    switchToGivenConfig: PromiseOrValue<boolean>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  'changeDelegatedExecutorsConfig(uint256,address[],bool[])'(
+    delegatorProfileId: PromiseOrValue<BigNumberish>,
+    delegatedExecutors: PromiseOrValue<string>[],
+    approvals: PromiseOrValue<boolean>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  changeDelegatedExecutorsConfigWithSig(
+    delegatorProfileId: PromiseOrValue<BigNumberish>,
+    delegatedExecutors: PromiseOrValue<string>[],
+    approvals: PromiseOrValue<boolean>[],
+    configNumber: PromiseOrValue<BigNumberish>,
+    switchToGivenConfig: PromiseOrValue<boolean>,
+    signature: Types.EIP712SignatureStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   collect(
-    profileId: PromiseOrValue<BigNumberish>,
-    pubId: PromiseOrValue<BigNumberish>,
-    data: PromiseOrValue<BytesLike>,
+    collectParams: Types.CollectParamsStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   collectWithSig(
-    vars: DataTypes.CollectWithSigDataStruct,
+    collectParams: Types.CollectParamsStruct,
+    signature: Types.EIP712SignatureStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   comment(
-    vars: DataTypes.CommentDataStruct,
+    commentParams: Types.CommentParamsStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   commentWithSig(
-    vars: DataTypes.CommentWithSigDataStruct,
+    commentParams: Types.CommentParamsStruct,
+    signature: Types.EIP712SignatureStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   createProfile(
-    vars: DataTypes.CreateProfileDataStruct,
+    createProfileParams: Types.CreateProfileParamsStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
-
-  defaultProfile(wallet: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
 
   emitCollectNFTTransferEvent(
     profileId: PromiseOrValue<BigNumberish>,
@@ -1457,40 +1605,44 @@ export interface LensHub extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
-  emitFollowNFTTransferEvent(
-    profileId: PromiseOrValue<BigNumberish>,
-    followNFTId: PromiseOrValue<BigNumberish>,
-    from: PromiseOrValue<string>,
-    to: PromiseOrValue<string>,
+  emitUnfollowedEvent(
+    unfollowerProfileId: PromiseOrValue<BigNumberish>,
+    idOfProfileUnfollowed: PromiseOrValue<BigNumberish>,
+    transactionExecutor: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  enableTokenGuardian(
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   exists(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<boolean>;
 
   follow(
-    profileIds: PromiseOrValue<BigNumberish>[],
+    followerProfileId: PromiseOrValue<BigNumberish>,
+    idsOfProfilesToFollow: PromiseOrValue<BigNumberish>[],
+    followTokenIds: PromiseOrValue<BigNumberish>[],
     datas: PromiseOrValue<BytesLike>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   followWithSig(
-    vars: DataTypes.FollowWithSigDataStruct,
+    followerProfileId: PromiseOrValue<BigNumberish>,
+    idsOfProfilesToFollow: PromiseOrValue<BigNumberish>[],
+    followTokenIds: PromiseOrValue<BigNumberish>[],
+    datas: PromiseOrValue<BytesLike>[],
+    signature: Types.EIP712SignatureStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
+  getActionModuleById(id: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
+
+  getActionModuleWhitelistData(
+    actionModule: PromiseOrValue<string>,
+    overrides?: CallOverrides,
+  ): Promise<Types.ActionModuleWhitelistDataStructOutput>;
+
   getApproved(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
-
-  getCollectModule(
-    profileId: PromiseOrValue<BigNumberish>,
-    pubId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides,
-  ): Promise<string>;
-
-  getCollectNFT(
-    profileId: PromiseOrValue<BigNumberish>,
-    pubId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides,
-  ): Promise<string>;
 
   getCollectNFTImpl(overrides?: CallOverrides): Promise<string>;
 
@@ -1500,78 +1652,55 @@ export interface LensHub extends BaseContract {
     overrides?: CallOverrides,
   ): Promise<string>;
 
-  getDispatcher(
-    profileId: PromiseOrValue<BigNumberish>,
+  getDelegatedExecutorsConfigNumber(
+    delegatorProfileId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides,
-  ): Promise<string>;
+  ): Promise<BigNumber>;
+
+  getDelegatedExecutorsMaxConfigNumberSet(
+    delegatorProfileId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides,
+  ): Promise<BigNumber>;
+
+  getDelegatedExecutorsPrevConfigNumber(
+    delegatorProfileId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides,
+  ): Promise<BigNumber>;
 
   getDomainSeparator(overrides?: CallOverrides): Promise<string>;
 
-  getFollowModule(
-    profileId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides,
-  ): Promise<string>;
-
-  getFollowNFT(profileId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
-
   getFollowNFTImpl(overrides?: CallOverrides): Promise<string>;
 
-  getFollowNFTURI(
-    profileId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides,
-  ): Promise<string>;
-
   getGovernance(overrides?: CallOverrides): Promise<string>;
-
-  getHandle(profileId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
 
   getProfile(
     profileId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides,
-  ): Promise<DataTypes.ProfileStructStructOutput>;
+  ): Promise<Types.ProfileStructOutput>;
 
-  getProfileIdByHandle(
-    handle: PromiseOrValue<string>,
+  getProfileIdByHandleHash(
+    handleHash: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides,
   ): Promise<BigNumber>;
 
-  getPub(
+  getPublication(
     profileId: PromiseOrValue<BigNumberish>,
     pubId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides,
-  ): Promise<DataTypes.PublicationStructStructOutput>;
+  ): Promise<Types.PublicationStructOutput>;
 
-  getPubCount(
-    profileId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides,
-  ): Promise<BigNumber>;
-
-  getPubPointer(
-    profileId: PromiseOrValue<BigNumberish>,
-    pubId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides,
-  ): Promise<[BigNumber, BigNumber]>;
-
-  getPubType(
+  getPublicationType(
     profileId: PromiseOrValue<BigNumberish>,
     pubId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides,
   ): Promise<number>;
 
-  getReferenceModule(
-    profileId: PromiseOrValue<BigNumberish>,
-    pubId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides,
-  ): Promise<string>;
-
   getState(overrides?: CallOverrides): Promise<number>;
 
-  initialize(
-    name: PromiseOrValue<string>,
-    symbol: PromiseOrValue<string>,
-    newGovernance: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>;
+  getTokenGuardianDisablingTimestamp(
+    wallet: PromiseOrValue<string>,
+    overrides?: CallOverrides,
+  ): Promise<BigNumber>;
 
   isApprovedForAll(
     owner: PromiseOrValue<string>,
@@ -1579,13 +1708,33 @@ export interface LensHub extends BaseContract {
     overrides?: CallOverrides,
   ): Promise<boolean>;
 
-  isCollectModuleWhitelisted(
-    collectModule: PromiseOrValue<string>,
+  isBlocked(
+    profileId: PromiseOrValue<BigNumberish>,
+    byProfileId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides,
+  ): Promise<boolean>;
+
+  'isDelegatedExecutorApproved(uint256,address)'(
+    delegatorProfileId: PromiseOrValue<BigNumberish>,
+    delegatedExecutor: PromiseOrValue<string>,
+    overrides?: CallOverrides,
+  ): Promise<boolean>;
+
+  'isDelegatedExecutorApproved(uint256,address,uint64)'(
+    delegatorProfileId: PromiseOrValue<BigNumberish>,
+    delegatedExecutor: PromiseOrValue<string>,
+    configNumber: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides,
   ): Promise<boolean>;
 
   isFollowModuleWhitelisted(
     followModule: PromiseOrValue<string>,
+    overrides?: CallOverrides,
+  ): Promise<boolean>;
+
+  isFollowing(
+    followerProfileId: PromiseOrValue<BigNumberish>,
+    followedProfileId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides,
   ): Promise<boolean>;
 
@@ -1605,43 +1754,49 @@ export interface LensHub extends BaseContract {
   ): Promise<BigNumber>;
 
   mirror(
-    vars: DataTypes.MirrorDataStruct,
+    mirrorParams: Types.MirrorParamsStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   mirrorWithSig(
-    vars: DataTypes.MirrorWithSigDataStruct,
+    mirrorParams: Types.MirrorParamsStruct,
+    signature: Types.EIP712SignatureStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
+  nonces(signer: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
+
   ownerOf(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
 
-  permit(
-    spender: PromiseOrValue<string>,
-    tokenId: PromiseOrValue<BigNumberish>,
-    sig: DataTypes.EIP712SignatureStruct,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>;
-
-  permitForAll(
-    owner: PromiseOrValue<string>,
-    operator: PromiseOrValue<string>,
-    approved: PromiseOrValue<boolean>,
-    sig: DataTypes.EIP712SignatureStruct,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>;
-
   post(
-    vars: DataTypes.PostDataStruct,
+    postParams: Types.PostParamsStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   postWithSig(
-    vars: DataTypes.PostWithSigDataStruct,
+    postParams: Types.PostParamsStruct,
+    signature: Types.EIP712SignatureStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
+
+  quote(
+    quoteParams: Types.QuoteParamsStruct,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  quoteWithSig(
+    quoteParams: Types.QuoteParamsStruct,
+    signature: Types.EIP712SignatureStruct,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  royaltyInfo(
+    tokenId: PromiseOrValue<BigNumberish>,
+    salePrice: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides,
+  ): Promise<[string, BigNumber]>;
 
   'safeTransferFrom(address,address,uint256)'(
     from: PromiseOrValue<string>,
@@ -1664,24 +1819,18 @@ export interface LensHub extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
-  setDefaultProfile(
-    profileId: PromiseOrValue<BigNumberish>,
+  setBlockStatus(
+    byProfileId: PromiseOrValue<BigNumberish>,
+    idsOfProfilesToSetBlockStatus: PromiseOrValue<BigNumberish>[],
+    blockStatus: PromiseOrValue<boolean>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
-  setDefaultProfileWithSig(
-    vars: DataTypes.SetDefaultProfileWithSigDataStruct,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>;
-
-  setDispatcher(
-    profileId: PromiseOrValue<BigNumberish>,
-    dispatcher: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>;
-
-  setDispatcherWithSig(
-    vars: DataTypes.SetDispatcherWithSigDataStruct,
+  setBlockStatusWithSig(
+    byProfileId: PromiseOrValue<BigNumberish>,
+    idsOfProfilesToSetBlockStatus: PromiseOrValue<BigNumberish>[],
+    blockStatus: PromiseOrValue<boolean>[],
+    signature: Types.EIP712SignatureStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
@@ -1698,18 +1847,10 @@ export interface LensHub extends BaseContract {
   ): Promise<ContractTransaction>;
 
   setFollowModuleWithSig(
-    vars: DataTypes.SetFollowModuleWithSigDataStruct,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>;
-
-  setFollowNFTURI(
     profileId: PromiseOrValue<BigNumberish>,
-    followNFTURI: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>;
-
-  setFollowNFTURIWithSig(
-    vars: DataTypes.SetFollowNFTURIWithSigDataStruct,
+    followModule: PromiseOrValue<string>,
+    followModuleInitData: PromiseOrValue<BytesLike>,
+    signature: Types.EIP712SignatureStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
@@ -1718,14 +1859,27 @@ export interface LensHub extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
-  setProfileImageURI(
-    profileId: PromiseOrValue<BigNumberish>,
-    imageURI: PromiseOrValue<string>,
+  setMigrationAdmins(
+    migrationAdmins: PromiseOrValue<string>[],
+    whitelisted: PromiseOrValue<boolean>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
-  setProfileImageURIWithSig(
-    vars: DataTypes.SetProfileImageURIWithSigDataStruct,
+  setProfileMetadataURI(
+    profileId: PromiseOrValue<BigNumberish>,
+    metadataURI: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  setProfileMetadataURIWithSig(
+    profileId: PromiseOrValue<BigNumberish>,
+    metadataURI: PromiseOrValue<string>,
+    signature: Types.EIP712SignatureStruct,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  setRoyalty(
+    royaltiesInBasisPoints: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
@@ -1734,8 +1888,6 @@ export interface LensHub extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
-  sigNonces(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
-
   supportsInterface(
     interfaceId: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides,
@@ -1743,18 +1895,10 @@ export interface LensHub extends BaseContract {
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
-  tokenByIndex(index: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>;
-
   tokenDataOf(
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides,
-  ): Promise<IERC721Time.TokenDataStructOutput>;
-
-  tokenOfOwnerByIndex(
-    owner: PromiseOrValue<string>,
-    index: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides,
-  ): Promise<BigNumber>;
+  ): Promise<Types.TokenDataStructOutput>;
 
   tokenURI(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
 
@@ -1767,8 +1911,21 @@ export interface LensHub extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
-  whitelistCollectModule(
-    collectModule: PromiseOrValue<string>,
+  unfollow(
+    unfollowerProfileId: PromiseOrValue<BigNumberish>,
+    idsOfProfilesToUnfollow: PromiseOrValue<BigNumberish>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  unfollowWithSig(
+    unfollowerProfileId: PromiseOrValue<BigNumberish>,
+    idsOfProfilesToUnfollow: PromiseOrValue<BigNumberish>[],
+    signature: Types.EIP712SignatureStruct,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  whitelistActionModule(
+    actionModule: PromiseOrValue<string>,
     whitelist: PromiseOrValue<boolean>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
@@ -1792,6 +1949,19 @@ export interface LensHub extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    DANGER__disableTokenGuardian(overrides?: CallOverrides): Promise<void>;
+
+    act(
+      publicationActionParams: Types.PublicationActionParamsStruct,
+      overrides?: CallOverrides,
+    ): Promise<string>;
+
+    actWithSig(
+      publicationActionParams: Types.PublicationActionParamsStruct,
+      signature: Types.EIP712SignatureStruct,
+      overrides?: CallOverrides,
+    ): Promise<string>;
+
     approve(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
@@ -1800,39 +1970,84 @@ export interface LensHub extends BaseContract {
 
     balanceOf(owner: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
 
+    batchMigrateFollowModules(
+      profileIds: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
+    batchMigrateFollowers(
+      followerProfileIds: PromiseOrValue<BigNumberish>[],
+      idOfProfileFollowed: PromiseOrValue<BigNumberish>,
+      followTokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
+    batchMigrateFollows(
+      followerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfileFollowed: PromiseOrValue<BigNumberish>[],
+      followTokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
+    batchMigrateProfiles(
+      profileIds: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
     burn(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>;
 
-    burnWithSig(
-      tokenId: PromiseOrValue<BigNumberish>,
-      sig: DataTypes.EIP712SignatureStruct,
+    'changeDelegatedExecutorsConfig(uint256,address[],bool[],uint64,bool)'(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutors: PromiseOrValue<string>[],
+      approvals: PromiseOrValue<boolean>[],
+      configNumber: PromiseOrValue<BigNumberish>,
+      switchToGivenConfig: PromiseOrValue<boolean>,
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
+    'changeDelegatedExecutorsConfig(uint256,address[],bool[])'(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutors: PromiseOrValue<string>[],
+      approvals: PromiseOrValue<boolean>[],
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
+    changeDelegatedExecutorsConfigWithSig(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutors: PromiseOrValue<string>[],
+      approvals: PromiseOrValue<boolean>[],
+      configNumber: PromiseOrValue<BigNumberish>,
+      switchToGivenConfig: PromiseOrValue<boolean>,
+      signature: Types.EIP712SignatureStruct,
       overrides?: CallOverrides,
     ): Promise<void>;
 
     collect(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+      collectParams: Types.CollectParamsStruct,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     collectWithSig(
-      vars: DataTypes.CollectWithSigDataStruct,
+      collectParams: Types.CollectParamsStruct,
+      signature: Types.EIP712SignatureStruct,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    comment(vars: DataTypes.CommentDataStruct, overrides?: CallOverrides): Promise<BigNumber>;
+    comment(
+      commentParams: Types.CommentParamsStruct,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>;
 
     commentWithSig(
-      vars: DataTypes.CommentWithSigDataStruct,
+      commentParams: Types.CommentParamsStruct,
+      signature: Types.EIP712SignatureStruct,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     createProfile(
-      vars: DataTypes.CreateProfileDataStruct,
+      createProfileParams: Types.CreateProfileParamsStruct,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
-
-    defaultProfile(wallet: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
 
     emitCollectNFTTransferEvent(
       profileId: PromiseOrValue<BigNumberish>,
@@ -1843,40 +2058,45 @@ export interface LensHub extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    emitFollowNFTTransferEvent(
-      profileId: PromiseOrValue<BigNumberish>,
-      followNFTId: PromiseOrValue<BigNumberish>,
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
+    emitUnfollowedEvent(
+      unfollowerProfileId: PromiseOrValue<BigNumberish>,
+      idOfProfileUnfollowed: PromiseOrValue<BigNumberish>,
+      transactionExecutor: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<void>;
+
+    enableTokenGuardian(overrides?: CallOverrides): Promise<void>;
 
     exists(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<boolean>;
 
     follow(
-      profileIds: PromiseOrValue<BigNumberish>[],
+      followerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToFollow: PromiseOrValue<BigNumberish>[],
+      followTokenIds: PromiseOrValue<BigNumberish>[],
       datas: PromiseOrValue<BytesLike>[],
       overrides?: CallOverrides,
     ): Promise<BigNumber[]>;
 
     followWithSig(
-      vars: DataTypes.FollowWithSigDataStruct,
+      followerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToFollow: PromiseOrValue<BigNumberish>[],
+      followTokenIds: PromiseOrValue<BigNumberish>[],
+      datas: PromiseOrValue<BytesLike>[],
+      signature: Types.EIP712SignatureStruct,
       overrides?: CallOverrides,
     ): Promise<BigNumber[]>;
 
+    getActionModuleById(
+      id: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<string>;
+
+    getActionModuleWhitelistData(
+      actionModule: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<Types.ActionModuleWhitelistDataStructOutput>;
+
     getApproved(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
-
-    getCollectModule(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<string>;
-
-    getCollectNFT(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<string>;
 
     getCollectNFTImpl(overrides?: CallOverrides): Promise<string>;
 
@@ -1886,81 +2106,55 @@ export interface LensHub extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<string>;
 
-    getDispatcher(
-      profileId: PromiseOrValue<BigNumberish>,
+    getDelegatedExecutorsConfigNumber(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
-    ): Promise<string>;
+    ): Promise<BigNumber>;
+
+    getDelegatedExecutorsMaxConfigNumberSet(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>;
+
+    getDelegatedExecutorsPrevConfigNumber(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>;
 
     getDomainSeparator(overrides?: CallOverrides): Promise<string>;
 
-    getFollowModule(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<string>;
-
-    getFollowNFT(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<string>;
-
     getFollowNFTImpl(overrides?: CallOverrides): Promise<string>;
 
-    getFollowNFTURI(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<string>;
-
     getGovernance(overrides?: CallOverrides): Promise<string>;
-
-    getHandle(profileId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
 
     getProfile(
       profileId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
-    ): Promise<DataTypes.ProfileStructStructOutput>;
+    ): Promise<Types.ProfileStructOutput>;
 
-    getProfileIdByHandle(
-      handle: PromiseOrValue<string>,
+    getProfileIdByHandleHash(
+      handleHash: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    getPub(
+    getPublication(
       profileId: PromiseOrValue<BigNumberish>,
       pubId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
-    ): Promise<DataTypes.PublicationStructStructOutput>;
+    ): Promise<Types.PublicationStructOutput>;
 
-    getPubCount(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
-    getPubPointer(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<[BigNumber, BigNumber]>;
-
-    getPubType(
+    getPublicationType(
       profileId: PromiseOrValue<BigNumberish>,
       pubId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<number>;
 
-    getReferenceModule(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<string>;
-
     getState(overrides?: CallOverrides): Promise<number>;
 
-    initialize(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      newGovernance: PromiseOrValue<string>,
+    getTokenGuardianDisablingTimestamp(
+      wallet: PromiseOrValue<string>,
       overrides?: CallOverrides,
-    ): Promise<void>;
+    ): Promise<BigNumber>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -1968,13 +2162,33 @@ export interface LensHub extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<boolean>;
 
-    isCollectModuleWhitelisted(
-      collectModule: PromiseOrValue<string>,
+    isBlocked(
+      profileId: PromiseOrValue<BigNumberish>,
+      byProfileId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<boolean>;
+
+    'isDelegatedExecutorApproved(uint256,address)'(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutor: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<boolean>;
+
+    'isDelegatedExecutorApproved(uint256,address,uint64)'(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutor: PromiseOrValue<string>,
+      configNumber: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<boolean>;
 
     isFollowModuleWhitelisted(
       followModule: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<boolean>;
+
+    isFollowing(
+      followerProfileId: PromiseOrValue<BigNumberish>,
+      followedProfileId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<boolean>;
 
@@ -1993,38 +2207,41 @@ export interface LensHub extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    mirror(vars: DataTypes.MirrorDataStruct, overrides?: CallOverrides): Promise<BigNumber>;
+    mirror(mirrorParams: Types.MirrorParamsStruct, overrides?: CallOverrides): Promise<BigNumber>;
 
     mirrorWithSig(
-      vars: DataTypes.MirrorWithSigDataStruct,
+      mirrorParams: Types.MirrorParamsStruct,
+      signature: Types.EIP712SignatureStruct,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
+    nonces(signer: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
+
     ownerOf(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
 
-    permit(
-      spender: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      sig: DataTypes.EIP712SignatureStruct,
-      overrides?: CallOverrides,
-    ): Promise<void>;
-
-    permitForAll(
-      owner: PromiseOrValue<string>,
-      operator: PromiseOrValue<string>,
-      approved: PromiseOrValue<boolean>,
-      sig: DataTypes.EIP712SignatureStruct,
-      overrides?: CallOverrides,
-    ): Promise<void>;
-
-    post(vars: DataTypes.PostDataStruct, overrides?: CallOverrides): Promise<BigNumber>;
+    post(postParams: Types.PostParamsStruct, overrides?: CallOverrides): Promise<BigNumber>;
 
     postWithSig(
-      vars: DataTypes.PostWithSigDataStruct,
+      postParams: Types.PostParamsStruct,
+      signature: Types.EIP712SignatureStruct,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
+
+    quote(quoteParams: Types.QuoteParamsStruct, overrides?: CallOverrides): Promise<BigNumber>;
+
+    quoteWithSig(
+      quoteParams: Types.QuoteParamsStruct,
+      signature: Types.EIP712SignatureStruct,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>;
+
+    royaltyInfo(
+      tokenId: PromiseOrValue<BigNumberish>,
+      salePrice: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<[string, BigNumber]>;
 
     'safeTransferFrom(address,address,uint256)'(
       from: PromiseOrValue<string>,
@@ -2047,24 +2264,18 @@ export interface LensHub extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    setDefaultProfile(
-      profileId: PromiseOrValue<BigNumberish>,
+    setBlockStatus(
+      byProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToSetBlockStatus: PromiseOrValue<BigNumberish>[],
+      blockStatus: PromiseOrValue<boolean>[],
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    setDefaultProfileWithSig(
-      vars: DataTypes.SetDefaultProfileWithSigDataStruct,
-      overrides?: CallOverrides,
-    ): Promise<void>;
-
-    setDispatcher(
-      profileId: PromiseOrValue<BigNumberish>,
-      dispatcher: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<void>;
-
-    setDispatcherWithSig(
-      vars: DataTypes.SetDispatcherWithSigDataStruct,
+    setBlockStatusWithSig(
+      byProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToSetBlockStatus: PromiseOrValue<BigNumberish>[],
+      blockStatus: PromiseOrValue<boolean>[],
+      signature: Types.EIP712SignatureStruct,
       overrides?: CallOverrides,
     ): Promise<void>;
 
@@ -2081,37 +2292,40 @@ export interface LensHub extends BaseContract {
     ): Promise<void>;
 
     setFollowModuleWithSig(
-      vars: DataTypes.SetFollowModuleWithSigDataStruct,
-      overrides?: CallOverrides,
-    ): Promise<void>;
-
-    setFollowNFTURI(
       profileId: PromiseOrValue<BigNumberish>,
-      followNFTURI: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<void>;
-
-    setFollowNFTURIWithSig(
-      vars: DataTypes.SetFollowNFTURIWithSigDataStruct,
+      followModule: PromiseOrValue<string>,
+      followModuleInitData: PromiseOrValue<BytesLike>,
+      signature: Types.EIP712SignatureStruct,
       overrides?: CallOverrides,
     ): Promise<void>;
 
     setGovernance(newGovernance: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
 
-    setProfileImageURI(
-      profileId: PromiseOrValue<BigNumberish>,
-      imageURI: PromiseOrValue<string>,
+    setMigrationAdmins(
+      migrationAdmins: PromiseOrValue<string>[],
+      whitelisted: PromiseOrValue<boolean>,
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    setProfileImageURIWithSig(
-      vars: DataTypes.SetProfileImageURIWithSigDataStruct,
+    setProfileMetadataURI(
+      profileId: PromiseOrValue<BigNumberish>,
+      metadataURI: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
+    setProfileMetadataURIWithSig(
+      profileId: PromiseOrValue<BigNumberish>,
+      metadataURI: PromiseOrValue<string>,
+      signature: Types.EIP712SignatureStruct,
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
+    setRoyalty(
+      royaltiesInBasisPoints: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<void>;
 
     setState(newState: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>;
-
-    sigNonces(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
 
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
@@ -2120,21 +2334,10 @@ export interface LensHub extends BaseContract {
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
-    tokenByIndex(
-      index: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
     tokenDataOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
-    ): Promise<IERC721Time.TokenDataStructOutput>;
-
-    tokenOfOwnerByIndex(
-      owner: PromiseOrValue<string>,
-      index: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
+    ): Promise<Types.TokenDataStructOutput>;
 
     tokenURI(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>;
 
@@ -2147,8 +2350,21 @@ export interface LensHub extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    whitelistCollectModule(
-      collectModule: PromiseOrValue<string>,
+    unfollow(
+      unfollowerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToUnfollow: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
+    unfollowWithSig(
+      unfollowerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToUnfollow: PromiseOrValue<BigNumberish>[],
+      signature: Types.EIP712SignatureStruct,
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
+    whitelistActionModule(
+      actionModule: PromiseOrValue<string>,
       whitelist: PromiseOrValue<boolean>,
       overrides?: CallOverrides,
     ): Promise<void>;
@@ -2208,6 +2424,21 @@ export interface LensHub extends BaseContract {
   };
 
   estimateGas: {
+    DANGER__disableTokenGuardian(
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    act(
+      publicationActionParams: Types.PublicationActionParamsStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    actWithSig(
+      publicationActionParams: Types.PublicationActionParamsStruct,
+      signature: Types.EIP712SignatureStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
     approve(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
@@ -2216,45 +2447,87 @@ export interface LensHub extends BaseContract {
 
     balanceOf(owner: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
 
+    batchMigrateFollowModules(
+      profileIds: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    batchMigrateFollowers(
+      followerProfileIds: PromiseOrValue<BigNumberish>[],
+      idOfProfileFollowed: PromiseOrValue<BigNumberish>,
+      followTokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    batchMigrateFollows(
+      followerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfileFollowed: PromiseOrValue<BigNumberish>[],
+      followTokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    batchMigrateProfiles(
+      profileIds: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
     burn(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
-    burnWithSig(
-      tokenId: PromiseOrValue<BigNumberish>,
-      sig: DataTypes.EIP712SignatureStruct,
+    'changeDelegatedExecutorsConfig(uint256,address[],bool[],uint64,bool)'(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutors: PromiseOrValue<string>[],
+      approvals: PromiseOrValue<boolean>[],
+      configNumber: PromiseOrValue<BigNumberish>,
+      switchToGivenConfig: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    'changeDelegatedExecutorsConfig(uint256,address[],bool[])'(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutors: PromiseOrValue<string>[],
+      approvals: PromiseOrValue<boolean>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    changeDelegatedExecutorsConfigWithSig(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutors: PromiseOrValue<string>[],
+      approvals: PromiseOrValue<boolean>[],
+      configNumber: PromiseOrValue<BigNumberish>,
+      switchToGivenConfig: PromiseOrValue<boolean>,
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     collect(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+      collectParams: Types.CollectParamsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     collectWithSig(
-      vars: DataTypes.CollectWithSigDataStruct,
+      collectParams: Types.CollectParamsStruct,
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     comment(
-      vars: DataTypes.CommentDataStruct,
+      commentParams: Types.CommentParamsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     commentWithSig(
-      vars: DataTypes.CommentWithSigDataStruct,
+      commentParams: Types.CommentParamsStruct,
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     createProfile(
-      vars: DataTypes.CreateProfileDataStruct,
+      createProfileParams: Types.CreateProfileParamsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
-
-    defaultProfile(wallet: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
 
     emitCollectNFTTransferEvent(
       profileId: PromiseOrValue<BigNumberish>,
@@ -2265,41 +2538,48 @@ export interface LensHub extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
-    emitFollowNFTTransferEvent(
-      profileId: PromiseOrValue<BigNumberish>,
-      followNFTId: PromiseOrValue<BigNumberish>,
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
+    emitUnfollowedEvent(
+      unfollowerProfileId: PromiseOrValue<BigNumberish>,
+      idOfProfileUnfollowed: PromiseOrValue<BigNumberish>,
+      transactionExecutor: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    enableTokenGuardian(
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     exists(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>;
 
     follow(
-      profileIds: PromiseOrValue<BigNumberish>[],
+      followerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToFollow: PromiseOrValue<BigNumberish>[],
+      followTokenIds: PromiseOrValue<BigNumberish>[],
       datas: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     followWithSig(
-      vars: DataTypes.FollowWithSigDataStruct,
+      followerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToFollow: PromiseOrValue<BigNumberish>[],
+      followTokenIds: PromiseOrValue<BigNumberish>[],
+      datas: PromiseOrValue<BytesLike>[],
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    getActionModuleById(
+      id: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>;
+
+    getActionModuleWhitelistData(
+      actionModule: PromiseOrValue<string>,
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
-    getCollectModule(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
-    getCollectNFT(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
@@ -2311,71 +2591,44 @@ export interface LensHub extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    getDispatcher(
-      profileId: PromiseOrValue<BigNumberish>,
+    getDelegatedExecutorsConfigNumber(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>;
+
+    getDelegatedExecutorsMaxConfigNumberSet(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>;
+
+    getDelegatedExecutorsPrevConfigNumber(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     getDomainSeparator(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getFollowModule(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
-    getFollowNFT(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
     getFollowNFTImpl(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getFollowNFTURI(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
     getGovernance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getHandle(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
 
     getProfile(
       profileId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    getProfileIdByHandle(
-      handle: PromiseOrValue<string>,
+    getProfileIdByHandleHash(
+      handleHash: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    getPub(
+    getPublication(
       profileId: PromiseOrValue<BigNumberish>,
       pubId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    getPubCount(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
-    getPubPointer(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
-    getPubType(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
-    getReferenceModule(
+    getPublicationType(
       profileId: PromiseOrValue<BigNumberish>,
       pubId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
@@ -2383,11 +2636,9 @@ export interface LensHub extends BaseContract {
 
     getState(overrides?: CallOverrides): Promise<BigNumber>;
 
-    initialize(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      newGovernance: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    getTokenGuardianDisablingTimestamp(
+      wallet: PromiseOrValue<string>,
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     isApprovedForAll(
@@ -2396,13 +2647,33 @@ export interface LensHub extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    isCollectModuleWhitelisted(
-      collectModule: PromiseOrValue<string>,
+    isBlocked(
+      profileId: PromiseOrValue<BigNumberish>,
+      byProfileId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>;
+
+    'isDelegatedExecutorApproved(uint256,address)'(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutor: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>;
+
+    'isDelegatedExecutorApproved(uint256,address,uint64)'(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutor: PromiseOrValue<string>,
+      configNumber: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     isFollowModuleWhitelisted(
       followModule: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>;
+
+    isFollowing(
+      followerProfileId: PromiseOrValue<BigNumberish>,
+      followedProfileId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
@@ -2422,42 +2693,48 @@ export interface LensHub extends BaseContract {
     ): Promise<BigNumber>;
 
     mirror(
-      vars: DataTypes.MirrorDataStruct,
+      mirrorParams: Types.MirrorParamsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     mirrorWithSig(
-      vars: DataTypes.MirrorWithSigDataStruct,
+      mirrorParams: Types.MirrorParamsStruct,
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
+    nonces(signer: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
+
     ownerOf(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>;
 
-    permit(
-      spender: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      sig: DataTypes.EIP712SignatureStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>;
-
-    permitForAll(
-      owner: PromiseOrValue<string>,
-      operator: PromiseOrValue<string>,
-      approved: PromiseOrValue<boolean>,
-      sig: DataTypes.EIP712SignatureStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>;
-
     post(
-      vars: DataTypes.PostDataStruct,
+      postParams: Types.PostParamsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     postWithSig(
-      vars: DataTypes.PostWithSigDataStruct,
+      postParams: Types.PostParamsStruct,
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    quote(
+      quoteParams: Types.QuoteParamsStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    quoteWithSig(
+      quoteParams: Types.QuoteParamsStruct,
+      signature: Types.EIP712SignatureStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    royaltyInfo(
+      tokenId: PromiseOrValue<BigNumberish>,
+      salePrice: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     'safeTransferFrom(address,address,uint256)'(
@@ -2481,24 +2758,18 @@ export interface LensHub extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
-    setDefaultProfile(
-      profileId: PromiseOrValue<BigNumberish>,
+    setBlockStatus(
+      byProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToSetBlockStatus: PromiseOrValue<BigNumberish>[],
+      blockStatus: PromiseOrValue<boolean>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
-    setDefaultProfileWithSig(
-      vars: DataTypes.SetDefaultProfileWithSigDataStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>;
-
-    setDispatcher(
-      profileId: PromiseOrValue<BigNumberish>,
-      dispatcher: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>;
-
-    setDispatcherWithSig(
-      vars: DataTypes.SetDispatcherWithSigDataStruct,
+    setBlockStatusWithSig(
+      byProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToSetBlockStatus: PromiseOrValue<BigNumberish>[],
+      blockStatus: PromiseOrValue<boolean>[],
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
@@ -2515,18 +2786,10 @@ export interface LensHub extends BaseContract {
     ): Promise<BigNumber>;
 
     setFollowModuleWithSig(
-      vars: DataTypes.SetFollowModuleWithSigDataStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>;
-
-    setFollowNFTURI(
       profileId: PromiseOrValue<BigNumberish>,
-      followNFTURI: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>;
-
-    setFollowNFTURIWithSig(
-      vars: DataTypes.SetFollowNFTURIWithSigDataStruct,
+      followModule: PromiseOrValue<string>,
+      followModuleInitData: PromiseOrValue<BytesLike>,
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
@@ -2535,14 +2798,27 @@ export interface LensHub extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
-    setProfileImageURI(
-      profileId: PromiseOrValue<BigNumberish>,
-      imageURI: PromiseOrValue<string>,
+    setMigrationAdmins(
+      migrationAdmins: PromiseOrValue<string>[],
+      whitelisted: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
-    setProfileImageURIWithSig(
-      vars: DataTypes.SetProfileImageURIWithSigDataStruct,
+    setProfileMetadataURI(
+      profileId: PromiseOrValue<BigNumberish>,
+      metadataURI: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    setProfileMetadataURIWithSig(
+      profileId: PromiseOrValue<BigNumberish>,
+      metadataURI: PromiseOrValue<string>,
+      signature: Types.EIP712SignatureStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    setRoyalty(
+      royaltiesInBasisPoints: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
@@ -2551,8 +2827,6 @@ export interface LensHub extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
-    sigNonces(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
-
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
@@ -2560,19 +2834,8 @@ export interface LensHub extends BaseContract {
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
-    tokenByIndex(
-      index: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
     tokenDataOf(
       tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
-    tokenOfOwnerByIndex(
-      owner: PromiseOrValue<string>,
-      index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
@@ -2587,8 +2850,21 @@ export interface LensHub extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
-    whitelistCollectModule(
-      collectModule: PromiseOrValue<string>,
+    unfollow(
+      unfollowerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToUnfollow: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    unfollowWithSig(
+      unfollowerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToUnfollow: PromiseOrValue<BigNumberish>[],
+      signature: Types.EIP712SignatureStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    whitelistActionModule(
+      actionModule: PromiseOrValue<string>,
       whitelist: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
@@ -2613,6 +2889,21 @@ export interface LensHub extends BaseContract {
   };
 
   populateTransaction: {
+    DANGER__disableTokenGuardian(
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    act(
+      publicationActionParams: Types.PublicationActionParamsStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    actWithSig(
+      publicationActionParams: Types.PublicationActionParamsStruct,
+      signature: Types.EIP712SignatureStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
     approve(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
@@ -2624,47 +2915,86 @@ export interface LensHub extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
+    batchMigrateFollowModules(
+      profileIds: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    batchMigrateFollowers(
+      followerProfileIds: PromiseOrValue<BigNumberish>[],
+      idOfProfileFollowed: PromiseOrValue<BigNumberish>,
+      followTokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    batchMigrateFollows(
+      followerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfileFollowed: PromiseOrValue<BigNumberish>[],
+      followTokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    batchMigrateProfiles(
+      profileIds: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
     burn(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
-    burnWithSig(
-      tokenId: PromiseOrValue<BigNumberish>,
-      sig: DataTypes.EIP712SignatureStruct,
+    'changeDelegatedExecutorsConfig(uint256,address[],bool[],uint64,bool)'(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutors: PromiseOrValue<string>[],
+      approvals: PromiseOrValue<boolean>[],
+      configNumber: PromiseOrValue<BigNumberish>,
+      switchToGivenConfig: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    'changeDelegatedExecutorsConfig(uint256,address[],bool[])'(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutors: PromiseOrValue<string>[],
+      approvals: PromiseOrValue<boolean>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    changeDelegatedExecutorsConfigWithSig(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutors: PromiseOrValue<string>[],
+      approvals: PromiseOrValue<boolean>[],
+      configNumber: PromiseOrValue<BigNumberish>,
+      switchToGivenConfig: PromiseOrValue<boolean>,
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     collect(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+      collectParams: Types.CollectParamsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     collectWithSig(
-      vars: DataTypes.CollectWithSigDataStruct,
+      collectParams: Types.CollectParamsStruct,
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     comment(
-      vars: DataTypes.CommentDataStruct,
+      commentParams: Types.CommentParamsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     commentWithSig(
-      vars: DataTypes.CommentWithSigDataStruct,
+      commentParams: Types.CommentParamsStruct,
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     createProfile(
-      vars: DataTypes.CreateProfileDataStruct,
+      createProfileParams: Types.CreateProfileParamsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>;
-
-    defaultProfile(
-      wallet: PromiseOrValue<string>,
-      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     emitCollectNFTTransferEvent(
@@ -2676,11 +3006,14 @@ export interface LensHub extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
-    emitFollowNFTTransferEvent(
-      profileId: PromiseOrValue<BigNumberish>,
-      followNFTId: PromiseOrValue<BigNumberish>,
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
+    emitUnfollowedEvent(
+      unfollowerProfileId: PromiseOrValue<BigNumberish>,
+      idOfProfileUnfollowed: PromiseOrValue<BigNumberish>,
+      transactionExecutor: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    enableTokenGuardian(
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
@@ -2690,30 +3023,34 @@ export interface LensHub extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     follow(
-      profileIds: PromiseOrValue<BigNumberish>[],
+      followerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToFollow: PromiseOrValue<BigNumberish>[],
+      followTokenIds: PromiseOrValue<BigNumberish>[],
       datas: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     followWithSig(
-      vars: DataTypes.FollowWithSigDataStruct,
+      followerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToFollow: PromiseOrValue<BigNumberish>[],
+      followTokenIds: PromiseOrValue<BigNumberish>[],
+      datas: PromiseOrValue<BytesLike>[],
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    getActionModuleById(
+      id: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>;
+
+    getActionModuleWhitelistData(
+      actionModule: PromiseOrValue<string>,
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
-
-    getCollectModule(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
-
-    getCollectNFT(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
@@ -2725,71 +3062,44 @@ export interface LensHub extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    getDispatcher(
-      profileId: PromiseOrValue<BigNumberish>,
+    getDelegatedExecutorsConfigNumber(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>;
+
+    getDelegatedExecutorsMaxConfigNumberSet(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>;
+
+    getDelegatedExecutorsPrevConfigNumber(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     getDomainSeparator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getFollowModule(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
-
-    getFollowNFT(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
-
     getFollowNFTImpl(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getFollowNFTURI(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
-
     getGovernance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getHandle(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
 
     getProfile(
       profileId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    getProfileIdByHandle(
-      handle: PromiseOrValue<string>,
+    getProfileIdByHandleHash(
+      handleHash: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    getPub(
+    getPublication(
       profileId: PromiseOrValue<BigNumberish>,
       pubId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    getPubCount(
-      profileId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
-
-    getPubPointer(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
-
-    getPubType(
-      profileId: PromiseOrValue<BigNumberish>,
-      pubId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
-
-    getReferenceModule(
+    getPublicationType(
       profileId: PromiseOrValue<BigNumberish>,
       pubId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
@@ -2797,11 +3107,9 @@ export interface LensHub extends BaseContract {
 
     getState(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    initialize(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      newGovernance: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    getTokenGuardianDisablingTimestamp(
+      wallet: PromiseOrValue<string>,
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     isApprovedForAll(
@@ -2810,13 +3118,33 @@ export interface LensHub extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    isCollectModuleWhitelisted(
-      collectModule: PromiseOrValue<string>,
+    isBlocked(
+      profileId: PromiseOrValue<BigNumberish>,
+      byProfileId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>;
+
+    'isDelegatedExecutorApproved(uint256,address)'(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutor: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>;
+
+    'isDelegatedExecutorApproved(uint256,address,uint64)'(
+      delegatorProfileId: PromiseOrValue<BigNumberish>,
+      delegatedExecutor: PromiseOrValue<string>,
+      configNumber: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     isFollowModuleWhitelisted(
       followModule: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>;
+
+    isFollowing(
+      followerProfileId: PromiseOrValue<BigNumberish>,
+      followedProfileId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
@@ -2836,45 +3164,54 @@ export interface LensHub extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     mirror(
-      vars: DataTypes.MirrorDataStruct,
+      mirrorParams: Types.MirrorParamsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     mirrorWithSig(
-      vars: DataTypes.MirrorWithSigDataStruct,
+      mirrorParams: Types.MirrorParamsStruct,
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    nonces(
+      signer: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>;
 
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    permit(
-      spender: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      sig: DataTypes.EIP712SignatureStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>;
-
-    permitForAll(
-      owner: PromiseOrValue<string>,
-      operator: PromiseOrValue<string>,
-      approved: PromiseOrValue<boolean>,
-      sig: DataTypes.EIP712SignatureStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>;
-
     post(
-      vars: DataTypes.PostDataStruct,
+      postParams: Types.PostParamsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     postWithSig(
-      vars: DataTypes.PostWithSigDataStruct,
+      postParams: Types.PostParamsStruct,
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    quote(
+      quoteParams: Types.QuoteParamsStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    quoteWithSig(
+      quoteParams: Types.QuoteParamsStruct,
+      signature: Types.EIP712SignatureStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    royaltyInfo(
+      tokenId: PromiseOrValue<BigNumberish>,
+      salePrice: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     'safeTransferFrom(address,address,uint256)'(
@@ -2898,24 +3235,18 @@ export interface LensHub extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
-    setDefaultProfile(
-      profileId: PromiseOrValue<BigNumberish>,
+    setBlockStatus(
+      byProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToSetBlockStatus: PromiseOrValue<BigNumberish>[],
+      blockStatus: PromiseOrValue<boolean>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
-    setDefaultProfileWithSig(
-      vars: DataTypes.SetDefaultProfileWithSigDataStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>;
-
-    setDispatcher(
-      profileId: PromiseOrValue<BigNumberish>,
-      dispatcher: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>;
-
-    setDispatcherWithSig(
-      vars: DataTypes.SetDispatcherWithSigDataStruct,
+    setBlockStatusWithSig(
+      byProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToSetBlockStatus: PromiseOrValue<BigNumberish>[],
+      blockStatus: PromiseOrValue<boolean>[],
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
@@ -2932,18 +3263,10 @@ export interface LensHub extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     setFollowModuleWithSig(
-      vars: DataTypes.SetFollowModuleWithSigDataStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>;
-
-    setFollowNFTURI(
       profileId: PromiseOrValue<BigNumberish>,
-      followNFTURI: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>;
-
-    setFollowNFTURIWithSig(
-      vars: DataTypes.SetFollowNFTURIWithSigDataStruct,
+      followModule: PromiseOrValue<string>,
+      followModuleInitData: PromiseOrValue<BytesLike>,
+      signature: Types.EIP712SignatureStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
@@ -2952,25 +3275,33 @@ export interface LensHub extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
-    setProfileImageURI(
-      profileId: PromiseOrValue<BigNumberish>,
-      imageURI: PromiseOrValue<string>,
+    setMigrationAdmins(
+      migrationAdmins: PromiseOrValue<string>[],
+      whitelisted: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
-    setProfileImageURIWithSig(
-      vars: DataTypes.SetProfileImageURIWithSigDataStruct,
+    setProfileMetadataURI(
+      profileId: PromiseOrValue<BigNumberish>,
+      metadataURI: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    setProfileMetadataURIWithSig(
+      profileId: PromiseOrValue<BigNumberish>,
+      metadataURI: PromiseOrValue<string>,
+      signature: Types.EIP712SignatureStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    setRoyalty(
+      royaltiesInBasisPoints: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     setState(
       newState: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>;
-
-    sigNonces(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     supportsInterface(
@@ -2980,19 +3311,8 @@ export interface LensHub extends BaseContract {
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    tokenByIndex(
-      index: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
-
     tokenDataOf(
       tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
-
-    tokenOfOwnerByIndex(
-      owner: PromiseOrValue<string>,
-      index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
@@ -3010,8 +3330,21 @@ export interface LensHub extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
-    whitelistCollectModule(
-      collectModule: PromiseOrValue<string>,
+    unfollow(
+      unfollowerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToUnfollow: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    unfollowWithSig(
+      unfollowerProfileId: PromiseOrValue<BigNumberish>,
+      idsOfProfilesToUnfollow: PromiseOrValue<BigNumberish>[],
+      signature: Types.EIP712SignatureStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    whitelistActionModule(
+      actionModule: PromiseOrValue<string>,
       whitelist: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;

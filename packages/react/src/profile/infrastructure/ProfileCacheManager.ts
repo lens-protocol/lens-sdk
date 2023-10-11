@@ -1,6 +1,7 @@
 import { FetchPolicy } from '@apollo/client';
 import {
   FragmentProfile,
+  getSessionData,
   Profile,
   ProfileData,
   ProfileDocument,
@@ -8,7 +9,8 @@ import {
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
-import { never } from '@lens-protocol/shared-kernel';
+import { SessionType } from '@lens-protocol/domain/use-cases/authentication';
+import { invariant, never } from '@lens-protocol/shared-kernel';
 
 import { IProfileCacheManager } from '../adapters/IProfileCacheManager';
 
@@ -19,12 +21,29 @@ export class ProfileCacheManager implements IProfileCacheManager {
     return this.request(id, 'cache-first');
   }
 
-  async refreshProfile(id: ProfileId) {
-    const profile = await this.request(id, 'network-only');
+  async refreshCurrentProfile() {
+    const session = getSessionData();
 
-    return profile ?? never();
+    if (!session) {
+      // fail-safe in case the event leading to this cache update happened after logout
+      return;
+    }
+
+    invariant(
+      session.type === SessionType.WithProfile,
+      `It's not possible to refresh a profile without a profile session`,
+    );
+
+    await this.client.refetchQueries({
+      updateCache: (cache) => {
+        cache.evict({
+          id: cache.identify({ __typename: 'Profile', id: session.profileId }),
+        });
+      },
+    });
   }
 
+  // TODO no longer need to accept a profile id, only authenticated profile can be used
   updateProfile(id: string, updateFn: (current: Profile) => Profile): void {
     const identifier =
       this.client.cache.identify({ __typename: 'Profile', id }) ??

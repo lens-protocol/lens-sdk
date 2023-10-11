@@ -1,6 +1,8 @@
 import { MockedResponse } from '@apollo/client/testing';
 
 import {
+  AddReactionDocument,
+  AddReactionVariables,
   ReportPublicationVariables,
   ReportPublicationData,
   ReportPublicationDocument,
@@ -15,5 +17,17 @@ export function mockReportPublicationResponse(args: {
       variables: args.variables,
     },
     result: { data: { reportPublication: null } },
+  };
+}
+
+export function mockAddReactionResponse({ variables }: { variables: AddReactionVariables }) {
+  return {
+    request: {
+      query: AddReactionDocument,
+      variables,
+    },
+    result: {
+      data: { addReaction: null },
+    },
   };
 }

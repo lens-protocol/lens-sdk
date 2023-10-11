@@ -1,0 +1,137 @@
+fragment ModuleInfo on ModuleInfo {
+  name
+  type
+}
+
+fragment KnownSupportedModule on KnownSupportedModule {
+  moduleName
+  contract {
+    ...NetworkAddress
+  }
+  moduleInput {
+    ...ModuleInfo
+  }
+  redeemInput {
+    ...ModuleInfo
+  }
+  returnDataInput {
+    ...ModuleInfo
+  }
+}
+
+fragment UnknownSupportedModule on UnknownSupportedModule {
+  moduleName
+  contract {
+    ...NetworkAddress
+  }
+}
+
+fragment ApprovedAllowanceAmountResult on ApprovedAllowanceAmountResult {
+  moduleName
+  moduleContract {
+    ...NetworkAddress
+  }
+  allowance {
+    ...Amount
+  }
+}
+
+fragment GenerateModuleCurrencyApprovalResult on GenerateModuleCurrencyApprovalResult {
+  to
+  from
+  data
+}
+
+query Currencies($limit: LimitType, $cursor: Cursor) {
+  result: currencies(request: { limit: $limit, cursor: $cursor }) {
+    items {
+      ...Erc20
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query ApprovedModuleAllowanceAmount(
+  $request: ApprovedModuleAllowanceAmountRequest!
+  $fxRateFor: SupportedFiatType = USD
+) {
+  result: approvedModuleAllowanceAmount(request: $request) {
+    ... on ApprovedAllowanceAmountResult {
+      ...ApprovedAllowanceAmountResult
+    }
+  }
+}
+
+query GenerateModuleCurrencyApprovalData($request: GenerateModuleCurrencyApprovalDataRequest!) {
+  result: generateModuleCurrencyApprovalData(request: $request) {
+    ... on GenerateModuleCurrencyApprovalResult {
+      ...GenerateModuleCurrencyApprovalResult
+    }
+  }
+}
+
+query SupportedFollowModules($request: SupportedModulesRequest!) {
+  result: supportedFollowModules(request: $request) {
+    items {
+      ... on KnownSupportedModule {
+        ...KnownSupportedModule
+      }
+      ... on UnknownSupportedModule {
+        ...UnknownSupportedModule
+      }
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query SupportedReferenceModules($request: SupportedModulesRequest!) {
+  result: supportedReferenceModules(request: $request) {
+    items {
+      ... on KnownSupportedModule {
+        ...KnownSupportedModule
+      }
+      ... on UnknownSupportedModule {
+        ...UnknownSupportedModule
+      }
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query SupportedOpenActionModules($request: SupportedModulesRequest!) {
+  result: supportedOpenActionModules(request: $request) {
+    items {
+      ... on KnownSupportedModule {
+        ...KnownSupportedModule
+      }
+      ... on UnknownSupportedModule {
+        ...UnknownSupportedModule
+      }
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query SupportedOpenActionCollectModules($request: SupportedModulesRequest!) {
+  result: supportedOpenActionCollectModules(request: $request) {
+    items {
+      ... on KnownSupportedModule {
+        ...KnownSupportedModule
+      }
+      ... on UnknownSupportedModule {
+        ...UnknownSupportedModule
+      }
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
