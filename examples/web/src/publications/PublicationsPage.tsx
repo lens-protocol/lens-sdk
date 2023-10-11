@@ -17,6 +17,11 @@ const publicationHooks = [
     path: '/publications/useWhoReactedToPublication',
   },
   {
+    label: 'useReportPublication',
+    description: `Report a publication.`,
+    path: '/publications/useReportPublication',
+  },
+  {
     label: 'useReactionToggle',
     description: `Add or remove a reaction to a publication.`,
     path: '/publications/useReactionToggle',
