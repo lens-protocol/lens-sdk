@@ -17,6 +17,11 @@ const publicationHooks = [
     path: '/publications/useWhoReactedToPublication',
   },
   {
+    label: 'useHidePublication',
+    description: `Hide a publication.`,
+    path: '/publications/useHidePublication',
+  },
+  {
     label: 'useReportPublication',
     description: `Report a publication.`,
     path: '/publications/useReportPublication',
