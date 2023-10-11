@@ -32,12 +32,13 @@ import {
   UseProfileActionHistory,
   UseProfileFollowers,
   UseProfileFollowing,
+  UseProfileManagers,
   UseProfiles,
   UseRecommendedProfiles,
+  UseUpdateFollowPolicy,
+  UseUpdateProfileManagers,
   UseWhoActedOnPublication,
 } from './profiles';
-import { UseProfileManagers } from './profiles/UseProfileManagers';
-import { UseUpdateProfileManagers } from './profiles/UseUpdateProfileManagers';
 import {
   PublicationsPage,
   UsePublication,
@@ -121,6 +122,7 @@ export function App() {
                         element={<UseWhoActedOnPublication />}
                       />
                       <Route path="useProfileActionHistory" element={<UseProfileActionHistory />} />
+                      <Route path="useUpdateFollowPolicy" element={<UseUpdateFollowPolicy />} />
                     </Route>
 
                     <Route path="/discovery">

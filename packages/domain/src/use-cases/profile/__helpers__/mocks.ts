@@ -79,7 +79,6 @@ export function mockUpdateFollowPolicyRequest(
   overrides?: Partial<UpdateFollowPolicyRequest>,
 ): UpdateFollowPolicyRequest {
   return {
-    profileId: mockProfileId(),
     policy: mockChargeFollowConfig(),
     ...overrides,
     kind: TransactionKind.UPDATE_FOLLOW_POLICY,

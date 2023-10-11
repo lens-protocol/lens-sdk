@@ -56,6 +56,11 @@ const profileHooks = [
     description: `Update the Profile Manager configuration for the logged-in Profile.`,
     path: '/profiles/useUpdateProfileManagers',
   },
+  {
+    label: 'useUpdateFollowPolicy',
+    description: `Update the follow policy for the logged-in Profile.`,
+    path: '/profiles/useUpdateFollowPolicy',
+  },
 ];
 
 export function ProfilesPage() {

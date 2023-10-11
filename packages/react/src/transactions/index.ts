@@ -1,8 +1,8 @@
 export * from './useCreateComment';
 export * from './useCreatePost';
+export * from './useUpdateFollowPolicy';
 export * from './useUpdateProfileManagers';
 
-export { OpenActionType, ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
 export type {
   AnyoneReferencePolicyConfig,
   CollectActionConfig,
@@ -16,3 +16,22 @@ export type {
   SimpleCollectActionConfig,
   UnknownOpenActionConfig,
 } from '@lens-protocol/domain/use-cases/publications';
+
+export type {
+  FollowPolicyConfig,
+  ChargeFollowConfig,
+  NoFeeFollowConfig,
+} from '@lens-protocol/domain/use-cases/profile';
+
+export type {
+  FollowPolicy,
+  ChargeFollowPolicy,
+  NoFeeFollowPolicy,
+  OpenFollowPolicy,
+} from '@lens-protocol/api-bindings';
+
+/**
+ * Enums
+ */
+export { OpenActionType, ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
+export { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';

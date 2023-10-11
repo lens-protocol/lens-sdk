@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { mockProfileId, mockPublicationId, mockTransactionHash } from '@lens-protocol/domain/mocks';
+import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import {
@@ -101,6 +102,9 @@ export function mockProfileFragment(overrides?: Partial<Profile>): Profile {
     guardian: null,
     onchainIdentity: mockProfileOnchainIdentityFragment(),
     followNftAddress: mockNetworkAddressFragment(),
+    followPolicy: {
+      type: FollowPolicyType.ANYONE,
+    },
     followModule: null,
     metadata: null,
     invitedBy: null,

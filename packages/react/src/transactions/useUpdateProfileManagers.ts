@@ -30,6 +30,8 @@ export type UpdateProfileManagersArgs = AtLeastOneOf<{
  * `useUpdateProfileManagers` is a React Hook that allows you to update the Profile managers
  * configuration for the authenticated Profile.
  *
+ * You MUST be authenticated via {@link useLogin} to use this hook.
+ *
  * **NOTE** This hook waits for the transaction to be mined and indexed before returning.
  * This is due to fact that until a Profile Manager configuration change is fully finalized the enabled managers cannot sign transactions (yet),
  * and in the case of disabling profile managers, it's very likely you'll want the rest of the application to not perform operations like the
