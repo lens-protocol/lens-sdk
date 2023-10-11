@@ -45,7 +45,7 @@ export function useHidePublication({
     invariant(data?.authenticated, 'Must be authenticated to hide a publication');
     invariant(
       publication.by.ownedBy.address === data.address,
-      'Publication not owned by the active wallet. Make sure that publication is owned by the wallet (for .e.g. by calling `isPublicationOwnedByMe`) before trying to hide it?',
+      'Publication not owned by the active wallet. Make sure that publication is owned by the wallet before trying to hide it.',
     );
 
     await hide({
