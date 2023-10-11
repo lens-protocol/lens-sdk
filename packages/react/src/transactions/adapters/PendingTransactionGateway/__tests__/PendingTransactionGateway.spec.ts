@@ -11,7 +11,6 @@ import {
   mockFreeCollectRequest,
   mockTokenAllowanceRequest,
   mockUpdateProfileManagersRequest,
-  mockProtocolTransactionRequestModel,
   mockCreateQuoteRequest,
 } from '@lens-protocol/domain/mocks';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
@@ -75,7 +74,7 @@ describe(`Given an instance of the ${PendingTransactionGateway.name}`, () => {
   const factory = mockITransactionFactory();
 
   describe(`when the "${PendingTransactionGateway.prototype.save.name}" method is invoked`, () => {
-    const request = mockProtocolTransactionRequestModel();
+    const request = mockCreatePostRequest();
 
     it(`should save in memory all the given Transaction alongside existing ones`, async () => {
       const gateway = setupPendingTransactionGateway({ factory });

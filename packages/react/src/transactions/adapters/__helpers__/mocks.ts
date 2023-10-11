@@ -10,16 +10,13 @@ import {
   mockProtocolTransactionRequestModel,
   mockTransactionHash,
 } from '@lens-protocol/domain/mocks';
-import { ChainType } from '@lens-protocol/shared-kernel';
+import { ChainType, Data } from '@lens-protocol/shared-kernel';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 
 import { ITransactionObserver, TransactionFactory } from '../../infrastructure/TransactionFactory';
 import { MetaTransactionData, NativeTransactionData } from '../ITransactionFactory';
-import {
-  Data,
-  SelfFundedProtocolTransactionRequest,
-} from '../SelfFundedProtocolTransactionRequest';
+import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 
 export function mockITransactionFactory(
   transactionObserver: ITransactionObserver = mock<ITransactionObserver>(),
