@@ -1,5 +1,19 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.6
+
+### Minor Changes
+
+- 4630efb9: add report publication
+- 25b7ef51: add hide publication
+
+### Patch Changes
+
+- Updated dependencies [4630efb9]
+- Updated dependencies [25b7ef51]
+  - @lens-protocol/api-bindings@0.11.0-alpha.6
+  - @lens-protocol/react@2.0.0-alpha.6
+
 ## 2.0.0-alpha.5
 
 ### Patch Changes
