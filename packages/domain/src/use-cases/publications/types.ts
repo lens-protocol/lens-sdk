@@ -1,9 +1,15 @@
-import { Amount, Erc20, EvmAddress, Url } from '@lens-protocol/shared-kernel';
+import { Amount, Data, Erc20, EvmAddress, Url } from '@lens-protocol/shared-kernel';
 
 import { AudioType, ImageType, VideoType } from './config';
 
+/**
+ * @deprecated use `@lens-protocol/metadata` instead.
+ */
 export type Locale = string;
 
+/**
+ * @deprecated use `@lens-protocol/metadata` instead.
+ */
 export enum ContentFocus {
   /**
    * The primary objective of the publication is to provide a document-like textual content.
@@ -46,19 +52,26 @@ export enum ContentFocus {
    */
   VIDEO = 'Video',
 }
-
+/**
+ * @deprecated use `@lens-protocol/metadata` instead.
+ */
 export enum ContentWarning {
   NSFW = 'Nsfw',
   SENSITIVE = 'Sensitive',
   SPOILER = 'Spoiler',
 }
-
+/**
+ * @deprecated use `@lens-protocol/metadata` instead.
+ */
 export enum MetadataAttributeDisplayType {
   Number = 'Number',
   String = 'String',
   Date = 'Date',
 }
 
+/**
+ * @deprecated use `@lens-protocol/metadata` instead.
+ */
 export type MetadataAttribute =
   | {
       displayType: MetadataAttributeDisplayType.Date;
@@ -78,6 +91,7 @@ export type MetadataAttribute =
 
 /**
  * The metadata of an image
+ * @deprecated use `@lens-protocol/metadata` instead.
  */
 export type MetadataImage = {
   /**
@@ -90,6 +104,9 @@ export type MetadataImage = {
   mimeType: ImageType;
 };
 
+/**
+ * @deprecated use `@lens-protocol/metadata` instead.
+ */
 export type NftMetadata = {
   /**
    * The name of the collect NFT.
@@ -135,13 +152,17 @@ export type RecipientWithSplit = {
   recipient: EvmAddress;
   split: number;
 };
-
+/**
+ * @deprecated Use new Open Action config
+ */
 export enum CollectPolicyType {
   CHARGE = 'CHARGE',
   FREE = 'FREE',
   NO_COLLECT = 'NO_COLLECT',
 }
-
+/**
+ * @deprecated Use new Open Action config
+ */
 export type AaveChargeCollectPolicyConfig = {
   type: CollectPolicyType.CHARGE;
   fee: Amount<Erc20>;
@@ -154,7 +175,9 @@ export type AaveChargeCollectPolicyConfig = {
   depositToAave: true;
   endTimestamp?: number;
 };
-
+/**
+ * @deprecated Use new Open Action config
+ */
 export type VaultChargeCollectPolicyConfig = {
   type: CollectPolicyType.CHARGE;
   fee: Amount<Erc20>;
@@ -167,7 +190,9 @@ export type VaultChargeCollectPolicyConfig = {
   vault: EvmAddress;
   endTimestamp?: number;
 };
-
+/**
+ * @deprecated Use new Open Action config
+ */
 export type MultirecipientChargeCollectPolicyConfig = {
   type: CollectPolicyType.CHARGE;
   fee: Amount<Erc20>;
@@ -179,7 +204,9 @@ export type MultirecipientChargeCollectPolicyConfig = {
   recipients: RecipientWithSplit[];
   endTimestamp?: number;
 };
-
+/**
+ * @deprecated Use new Open Action config
+ */
 export type SimpleChargeCollectPolicyConfig = {
   type: CollectPolicyType.CHARGE;
   fee: Amount<Erc20>;
@@ -196,13 +223,17 @@ export type SimpleChargeCollectPolicyConfig = {
    */
   timeLimited?: boolean;
 };
-
+/**
+ * @deprecated Use new Open Action config
+ */
 export type ChargeCollectPolicyConfig =
   | SimpleChargeCollectPolicyConfig
   | MultirecipientChargeCollectPolicyConfig
   | VaultChargeCollectPolicyConfig
   | AaveChargeCollectPolicyConfig;
-
+/**
+ * @deprecated Use new Open Action config
+ */
 export type FreeCollectPolicyConfig = {
   type: CollectPolicyType.FREE;
   metadata: NftMetadata;
@@ -210,15 +241,48 @@ export type FreeCollectPolicyConfig = {
   collectLimit?: number;
   endTimestamp?: number;
 };
-
+/**
+ * @deprecated Use new Open Action config
+ */
 export type NoCollectPolicyConfig = {
   type: CollectPolicyType.NO_COLLECT;
 };
-
+/**
+ * @deprecated Use new Open Action config
+ */
 export type CollectablePolicyConfig = ChargeCollectPolicyConfig | FreeCollectPolicyConfig;
-
+/**
+ * @deprecated Use new Open Action config
+ */
 export type CollectPolicyConfig = CollectablePolicyConfig | NoCollectPolicyConfig;
 
+export enum OpenActionType {
+  SIMPLE_COLLECT = 'SIMPLE_COLLECT',
+  MULTIRECIPIENT_COLLECT = 'MULTIRECIPIENT_COLLECT',
+  CUSTOM = 'CUSTOM',
+}
+
+export type SimpleCollectActionConfig = {
+  type: OpenActionType.SIMPLE_COLLECT;
+};
+
+export type MultirecipientCollectActionConfig = {
+  type: OpenActionType.MULTIRECIPIENT_COLLECT;
+};
+
+export type CollectActionConfig = SimpleCollectActionConfig | MultirecipientCollectActionConfig;
+
+export type CustomOpenActionConfig = {
+  type: OpenActionType.CUSTOM;
+  address: EvmAddress;
+  data: Data;
+};
+
+export type OpenActionConfig = CollectActionConfig;
+
+/**
+ * @deprecated use `@lens-protocol/metadata` instead.
+ */
 export type SupportedPublicationMediaType =
   | ImageType.PNG
   | ImageType.JPEG
@@ -229,6 +293,9 @@ export type SupportedPublicationMediaType =
   | AudioType.OGG
   | AudioType.WAV;
 
+/**
+ * @deprecated use `@lens-protocol/metadata` instead.
+ */
 export type MediaObject = {
   altTag?: string;
   cover?: Url;

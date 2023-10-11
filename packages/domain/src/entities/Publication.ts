@@ -28,6 +28,7 @@ export enum Erc20ComparisonOperator {
 
 /**
  * The active wallet must satisfy the NFT ownership criteria
+ * @deprecated
  */
 // TODO: Introduce a new type that splits NFT ownership criteria into two types: one for ERC721 and one for ERC1155
 // This would allow to force the `tokenIds` field to be always presented for ERC1155
@@ -53,6 +54,7 @@ export type NftOwnershipCriterion = {
 
 /**
  * The active wallet must have the specified amount of ERC20 tokens
+ * @deprecated
  */
 export type Erc20OwnershipCriterion = {
   type: DecryptionCriteriaType.ERC20_OWNERSHIP;
@@ -68,6 +70,7 @@ export type Erc20OwnershipCriterion = {
 
 /**
  * The active wallet must have the specified address
+ * @deprecated
  */
 export type AddressOwnershipCriterion = {
   type: DecryptionCriteriaType.ADDRESS_OWNERSHIP;
@@ -79,6 +82,7 @@ export type AddressOwnershipCriterion = {
 
 /**
  * The profile with the specified id must be owned by the active wallet
+ * @deprecated
  */
 export type ProfileOwnershipCriterion = {
   type: DecryptionCriteriaType.PROFILE_OWNERSHIP;
@@ -90,6 +94,7 @@ export type ProfileOwnershipCriterion = {
 
 /**
  * The profile with the specified id must be followed
+ * @deprecated
  */
 export type FollowProfileCriterion = {
   type: DecryptionCriteriaType.FOLLOW_PROFILE;
@@ -101,6 +106,7 @@ export type FollowProfileCriterion = {
 
 /**
  * The publication with the specified id must be collected
+ * @deprecated
  */
 export type CollectPublicationCriterion = {
   type: DecryptionCriteriaType.COLLECT_PUBLICATION;
@@ -112,6 +118,7 @@ export type CollectPublicationCriterion = {
 
 /**
  * This publication must be collected
+ * @deprecated
  */
 export type CollectThisPublicationCriterion = {
   type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION;
@@ -119,6 +126,7 @@ export type CollectThisPublicationCriterion = {
 
 /**
  * A simple, non-composite criterion
+ * @deprecated
  */
 export type SimpleCriterion =
   | NftOwnershipCriterion
@@ -131,6 +139,7 @@ export type SimpleCriterion =
 
 /**
  * At least one criterion in the array must be satisfied
+ * @deprecated
  */
 export type OrCriterion<T extends AnyCriterion[]> = {
   type: DecryptionCriteriaType.OR;
@@ -139,6 +148,7 @@ export type OrCriterion<T extends AnyCriterion[]> = {
 
 /**
  * All criteria in the array must be satisfied
+ * @deprecated
  */
 export type AndCriterion<T extends AnyCriterion[]> = {
   type: DecryptionCriteriaType.AND;
@@ -147,10 +157,13 @@ export type AndCriterion<T extends AnyCriterion[]> = {
 
 /**
  * A criterion that can be either a simple criterion or a composite criterion
+ * @deprecated
  */
 export type AnyCriterion<T extends SimpleCriterion = SimpleCriterion> =
   | SimpleCriterion
   | OrCriterion<T[]>
   | AndCriterion<T[]>;
-
+/**
+ * @deprecated
+ */
 export type DecryptionCriteria = AnyCriterion<SimpleCriterion>;

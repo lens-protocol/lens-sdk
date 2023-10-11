@@ -390,7 +390,9 @@ export class MockedDataTransaction<
     });
   }
 }
-
+/**
+ * @deprecated no longer needed with metadata package
+ */
 export function mockNftOwnershipCriterion(
   overrides?: Partial<NftOwnershipCriterion>,
 ): NftOwnershipCriterion {
@@ -403,7 +405,9 @@ export function mockNftOwnershipCriterion(
     type: DecryptionCriteriaType.NFT_OWNERSHIP,
   };
 }
-
+/**
+ * @deprecated no longer needed with metadata package
+ */
 export function mockErc20OwnershipCriterion(
   overrides?: Partial<Erc20OwnershipCriterion>,
 ): Erc20OwnershipCriterion {
@@ -414,7 +418,9 @@ export function mockErc20OwnershipCriterion(
     type: DecryptionCriteriaType.ERC20_OWNERSHIP,
   };
 }
-
+/**
+ * @deprecated no longer needed with metadata package
+ */
 export function mockAddressOwnershipCriterion(
   overrides?: Partial<AddressOwnershipCriterion>,
 ): AddressOwnershipCriterion {
@@ -424,7 +430,9 @@ export function mockAddressOwnershipCriterion(
     type: DecryptionCriteriaType.ADDRESS_OWNERSHIP,
   };
 }
-
+/**
+ * @deprecated no longer needed with metadata package
+ */
 export function mockProfileOwnershipCriterion(
   overrides?: Partial<ProfileOwnershipCriterion>,
 ): ProfileOwnershipCriterion {
@@ -434,7 +442,9 @@ export function mockProfileOwnershipCriterion(
     type: DecryptionCriteriaType.PROFILE_OWNERSHIP,
   };
 }
-
+/**
+ * @deprecated no longer needed with metadata package
+ */
 export function mockFollowProfileCriterion(
   overrides?: Partial<FollowProfileCriterion>,
 ): FollowProfileCriterion {
@@ -444,7 +454,9 @@ export function mockFollowProfileCriterion(
     type: DecryptionCriteriaType.FOLLOW_PROFILE,
   };
 }
-
+/**
+ * @deprecated no longer needed with metadata package
+ */
 export function mockCollectPublicationCriterion(
   overrides?: Partial<CollectPublicationCriterion>,
 ): CollectPublicationCriterion {
@@ -454,20 +466,26 @@ export function mockCollectPublicationCriterion(
     type: DecryptionCriteriaType.COLLECT_PUBLICATION,
   };
 }
-
+/**
+ * @deprecated no longer needed with metadata package
+ */
 export function mockCollectThisPublicationCriterion(): CollectThisPublicationCriterion {
   return {
     type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION,
   };
 }
-
+/**
+ * @deprecated no longer needed with metadata package
+ */
 export function mockOrCriterion<T extends AnyCriterion[]>(criteria: T): OrCriterion<T> {
   return {
     or: criteria,
     type: DecryptionCriteriaType.OR,
   };
 }
-
+/**
+ * @deprecated no longer needed with metadata package
+ */
 export function mockAndCriterion<T extends AnyCriterion[]>(criteria: T): AndCriterion<T> {
   return {
     and: criteria,

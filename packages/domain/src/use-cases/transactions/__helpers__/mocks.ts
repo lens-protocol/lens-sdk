@@ -19,7 +19,10 @@ import {
 } from '../../../entities';
 import { MockedProxyTransaction, mockNonce } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../BroadcastingError';
-import { IDelegatedTransactionGateway, WithDelegateFlag } from '../DelegableSigning';
+import {
+  DelegableProtocolTransactionRequestModel,
+  IDelegatedTransactionGateway,
+} from '../DelegableSigning';
 import { ISignlessSubsidizedCallRelayer } from '../SignlessSubsidizeOnChain';
 import { IOffChainRelayer, IOffChainProtocolCallGateway } from '../SubsidizeOffChain';
 import {
@@ -147,15 +150,15 @@ export function mockISignlessSubsidizedCallRelayer<
   return relayer;
 }
 
-export function mockProtocolTransactionRequestModelWithDelegateFlag({
+export function mockDelegableProtocolTransactionRequestModel({
   delegate,
 }: {
   delegate: boolean;
-}): WithDelegateFlag<ProtocolTransactionRequestModel> {
+}): DelegableProtocolTransactionRequestModel {
   return {
     kind: TransactionKind.CREATE_POST,
     delegate,
-  } as WithDelegateFlag<ProtocolTransactionRequestModel>;
+  };
 }
 
 export function mockProtocolTransactionRequestModelWithOffChainFlag(): ProtocolTransactionRequestModel {
