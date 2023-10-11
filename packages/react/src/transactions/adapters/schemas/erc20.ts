@@ -1,16 +1,20 @@
 import { TransactionKind } from '@lens-protocol/domain/entities';
-import { TokenAllowanceLimit } from '@lens-protocol/domain/use-cases/wallets';
+import {
+  TokenAllowanceLimit,
+  TokenAllowanceRequest,
+} from '@lens-protocol/domain/use-cases/wallets';
+import { UnknownObject } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
 import { Erc20AmountSchema } from './common';
 
-export function tokenAllowanceRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  amountSchema: TAmountSchema,
-) {
-  return z.object({
-    amount: amountSchema,
-    spender: z.string(),
-    limit: z.nativeEnum(TokenAllowanceLimit),
-    kind: z.literal(TransactionKind.APPROVE_MODULE),
-  });
-}
+export const TokenAllowanceRequestSchema: z.ZodType<
+  TokenAllowanceRequest,
+  z.ZodTypeDef,
+  UnknownObject
+> = z.object({
+  amount: Erc20AmountSchema,
+  spender: z.string(),
+  limit: z.nativeEnum(TokenAllowanceLimit),
+  kind: z.literal(TransactionKind.APPROVE_MODULE),
+});

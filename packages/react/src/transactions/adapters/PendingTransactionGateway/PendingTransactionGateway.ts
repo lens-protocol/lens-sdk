@@ -31,10 +31,10 @@ const lensHubTransactionKinds = [
   TransactionKind.COLLECT_PUBLICATION,
   TransactionKind.CREATE_COMMENT,
   TransactionKind.CREATE_POST,
+  TransactionKind.CREATE_QUOTE,
   TransactionKind.FOLLOW_PROFILES,
   TransactionKind.MIRROR_PUBLICATION,
   TransactionKind.UPDATE_PROFILE_MANAGERS,
-  TransactionKind.UPDATE_PROFILE_IMAGE,
   TransactionKind.UPDATE_FOLLOW_POLICY,
   TransactionKind.UPDATE_PROFILE_DETAILS,
 ];
@@ -45,10 +45,10 @@ const transactionKindToFilterGroup: { [k in TransactionKind]: TransactionKind[] 
   [TransactionKind.COLLECT_PUBLICATION]: lensHubTransactionKinds,
   [TransactionKind.CREATE_COMMENT]: lensHubTransactionKinds,
   [TransactionKind.CREATE_POST]: lensHubTransactionKinds,
+  [TransactionKind.CREATE_QUOTE]: lensHubTransactionKinds,
   [TransactionKind.FOLLOW_PROFILES]: lensHubTransactionKinds,
   [TransactionKind.MIRROR_PUBLICATION]: lensHubTransactionKinds,
   [TransactionKind.UPDATE_PROFILE_MANAGERS]: lensHubTransactionKinds,
-  [TransactionKind.UPDATE_PROFILE_IMAGE]: lensHubTransactionKinds,
   [TransactionKind.UPDATE_FOLLOW_POLICY]: lensHubTransactionKinds,
   [TransactionKind.UPDATE_PROFILE_DETAILS]: lensHubTransactionKinds,
 

@@ -4,7 +4,6 @@ import {
   mockUnconstrainedFollowRequest,
   mockUnfollowRequest,
   mockUpdateFollowPolicyRequest,
-  mockUpdateOffChainProfileImageRequest,
   mockUpdateProfileDetailsRequest,
   mockCreateCommentRequest,
   mockCreateMirrorRequest,
@@ -12,6 +11,8 @@ import {
   mockFreeCollectRequest,
   mockTokenAllowanceRequest,
   mockUpdateProfileManagersRequest,
+  mockProtocolTransactionRequestModel,
+  mockCreateQuoteRequest,
 } from '@lens-protocol/domain/mocks';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { InvariantError } from '@lens-protocol/shared-kernel';
@@ -46,11 +47,11 @@ const requests: TransactionRequest = {
   [TransactionKind.COLLECT_PUBLICATION]: mockFreeCollectRequest(),
   [TransactionKind.CREATE_COMMENT]: mockCreateCommentRequest(),
   [TransactionKind.CREATE_POST]: mockCreatePostRequest(),
+  [TransactionKind.CREATE_QUOTE]: mockCreateQuoteRequest(),
   [TransactionKind.FOLLOW_PROFILES]: mockUnconstrainedFollowRequest(),
   [TransactionKind.MIRROR_PUBLICATION]: mockCreateMirrorRequest(),
   [TransactionKind.UPDATE_FOLLOW_POLICY]: mockUpdateFollowPolicyRequest(),
   [TransactionKind.UPDATE_PROFILE_DETAILS]: mockUpdateProfileDetailsRequest(),
-  [TransactionKind.UPDATE_PROFILE_IMAGE]: mockUpdateOffChainProfileImageRequest(),
   [TransactionKind.CREATE_PROFILE]: mockCreateProfileRequest(),
   [TransactionKind.UNFOLLOW_PROFILE]: mockUnfollowRequest(),
   [TransactionKind.UPDATE_PROFILE_MANAGERS]: mockUpdateProfileManagersRequest(),
@@ -60,11 +61,11 @@ const lensHubTransactionKinds = [
   TransactionKind.COLLECT_PUBLICATION,
   TransactionKind.CREATE_COMMENT,
   TransactionKind.CREATE_POST,
+  TransactionKind.CREATE_QUOTE,
   TransactionKind.FOLLOW_PROFILES,
   TransactionKind.MIRROR_PUBLICATION,
   TransactionKind.UPDATE_PROFILE_MANAGERS,
   TransactionKind.UPDATE_FOLLOW_POLICY,
-  TransactionKind.UPDATE_PROFILE_IMAGE,
   TransactionKind.UPDATE_PROFILE_DETAILS,
 ] as const;
 
@@ -74,7 +75,7 @@ describe(`Given an instance of the ${PendingTransactionGateway.name}`, () => {
   const factory = mockITransactionFactory();
 
   describe(`when the "${PendingTransactionGateway.prototype.save.name}" method is invoked`, () => {
-    const request = mockCreatePostRequest();
+    const request = mockProtocolTransactionRequestModel();
 
     it(`should save in memory all the given Transaction alongside existing ones`, async () => {
       const gateway = setupPendingTransactionGateway({ factory });

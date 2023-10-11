@@ -10,9 +10,10 @@ import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
 import { UpdateProfileManagersRequest } from '@lens-protocol/domain/use-cases/profile';
 import { IOnChainProtocolCallGateway } from '@lens-protocol/domain/use-cases/transactions';
+import { Data } from '@lens-protocol/shared-kernel';
 
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
-import { Data, SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
+import { SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 
 export class UpdateProfileManagersCallGateway
   implements IOnChainProtocolCallGateway<UpdateProfileManagersRequest>

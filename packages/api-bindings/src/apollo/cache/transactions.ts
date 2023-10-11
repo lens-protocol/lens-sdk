@@ -146,5 +146,5 @@ export function isMirrorTransactionFor({
   return (transaction): transaction is TransactionState<CreateMirrorRequest> =>
     transaction.request.kind === TransactionKind.MIRROR_PUBLICATION &&
     transaction.request.profileId === profileId &&
-    transaction.request.publicationId === publicationId;
+    transaction.request.mirrorOn === publicationId;
 }
