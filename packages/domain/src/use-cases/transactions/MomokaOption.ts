@@ -18,15 +18,15 @@ export type MomokaOptionRequest = {
 
 export class MomokaOption<TRequest extends MomokaOptionRequest> {
   constructor(
-    private readonly createOnChainPost: DelegableSigning<TRequest>,
-    private readonly createOffChainPost: DelegableSigning<TRequest>,
+    private readonly onChain: DelegableSigning<TRequest>,
+    private readonly momoka: DelegableSigning<TRequest>,
   ) {}
 
   async execute(request: TRequest) {
     if (request.momoka) {
-      await this.createOffChainPost.execute(request);
+      await this.momoka.execute(request);
     } else {
-      await this.createOnChainPost.execute(request);
+      await this.onChain.execute(request);
     }
   }
 }

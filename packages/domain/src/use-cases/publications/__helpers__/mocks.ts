@@ -20,7 +20,7 @@ export function mockCreateMirrorRequest(
 ): CreateMirrorRequest {
   return {
     profileId: mockProfileId(),
-    publicationId: mockPublicationId(),
+    mirrorOn: mockPublicationId(),
     delegate: false,
     momoka: false,
     ...overrides,

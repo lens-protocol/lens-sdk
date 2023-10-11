@@ -3,7 +3,7 @@ import { MomokaOption } from '../transactions/MomokaOption';
 
 export type CreateMirrorRequest = {
   profileId: ProfileId;
-  publicationId: PublicationId;
+  mirrorOn: PublicationId;
   kind: TransactionKind.MIRROR_PUBLICATION;
   delegate: boolean;
   momoka: boolean;

@@ -17,6 +17,9 @@ export interface ISignlessSubsidizedCallRelayer<T extends ProtocolTransactionReq
 export type ISignlessSubsidizeOnChainPresenter<T extends ProtocolTransactionRequestModel> =
   ITransactionResultPresenter<T, BroadcastingError>;
 
+/**
+ * @deprecated ProxyActions are no more
+ */
 export class SignlessSubsidizeOnChain<T extends ProtocolTransactionRequestModel> {
   constructor(
     protected readonly relayer: ISignlessSubsidizedCallRelayer<T>,

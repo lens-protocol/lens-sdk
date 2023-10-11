@@ -2,8 +2,8 @@ import { NonEmptyArray, URI } from '@lens-protocol/shared-kernel';
 
 import { PublicationId, TransactionKind } from '../../entities';
 import { MomokaOption } from '../transactions/MomokaOption';
+import { OpenActionConfig } from './OpenActionConfig';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
-import { OpenActionConfig } from './types';
 
 export type CreateQuoteRequest = {
   /**
@@ -18,26 +18,22 @@ export type CreateQuoteRequest = {
    * The publication ID that is being quoted.
    */
   quoteOn: PublicationId;
+  /**
+   * The metadata URI.
+   */
+  metadata: URI;
 } & (
   | {
       /**
        * Host on Momoka
        */
       momoka: true;
-      /**
-       * The metadata URI.
-       */
-      metadata: URI;
     }
   | {
       /**
        * Host on on-chain
        */
       momoka: false;
-      /**
-       * The metadata URI.
-       */
-      metadata: URI;
       /**
        * The Open Actions associated with the publication.
        */

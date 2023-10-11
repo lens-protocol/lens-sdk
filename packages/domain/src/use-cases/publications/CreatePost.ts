@@ -2,8 +2,8 @@ import { NonEmptyArray, URI } from '@lens-protocol/shared-kernel';
 
 import { TransactionKind } from '../../entities';
 import { MomokaOption } from '../transactions/MomokaOption';
+import { OpenActionConfig } from './OpenActionConfig';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
-import { OpenActionConfig } from './types';
 
 export type CreatePostRequest = {
   /**
@@ -14,26 +14,16 @@ export type CreatePostRequest = {
    * Whether is possible to delegate the publication signing to the profile's dispatcher.
    */
   delegate: boolean;
+  /**
+   * The metadata URI.
+   */
+  metadata: URI;
 } & (
   | {
-      /**
-       * Host on Momoka
-       */
       momoka: true;
-      /**
-       * The metadata URI.
-       */
-      metadata: URI;
     }
   | {
-      /**
-       * Host on on-chain
-       */
       momoka: false;
-      /**
-       * The metadata URI.
-       */
-      metadata: URI;
       /**
        * The Open Actions associated with the publication.
        */
