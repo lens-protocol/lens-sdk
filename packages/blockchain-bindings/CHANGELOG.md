@@ -1,5 +1,15 @@
 # @lens-protocol/blockchain-bindings
 
+## 0.10.0-alpha.3
+
+### Patch Changes
+
+- 734d6823: **feat:** adds `useProfileManagers` and `useUpdateProfileManagers` hooks
+- Updated dependencies [734d6823]
+- Updated dependencies [51f8cec6]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.3
+  - @lens-protocol/domain@0.11.0-alpha.3
+
 ## 0.10.0-alpha.2
 
 ### Patch Changes
