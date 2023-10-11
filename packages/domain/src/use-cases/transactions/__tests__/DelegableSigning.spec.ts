@@ -24,7 +24,7 @@ import {
 function setupDelegableSigning<T extends ProtocolTransactionRequestModel>({
   signedOperation = mock<ISignedOperation<T>>(),
   transactionGateway = mock<IDelegatedTransactionGateway<T>>(),
-  transactionQueue = mockTransactionQueue<T>(),
+  transactionQueue = mockTransactionQueue<AnyTransactionRequestModel>(),
   presenter = mock<IDelegatedTransactionPresenter<T>>(),
 }: {
   signedOperation?: ISignedOperation<T>;

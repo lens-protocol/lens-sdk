@@ -3,8 +3,13 @@
  */
 export * from './usePublication';
 export * from './usePublications';
+export * from './useReactionToggle';
 export * from './useWhoReactedToPublication';
+<<<<<<< HEAD
 export * from './useHidePublication';
+=======
+export * from './useReportPublication';
+>>>>>>> lens-v2
 
 /**
  * Fragments
@@ -18,9 +23,14 @@ export type {
   PrimaryPublication,
   PublicationMetadata,
   PublicationMetadataMedia,
+} from '@lens-protocol/api-bindings';
+
+export {
+  PublicationType,
+  isPostPublication,
   isCommentPublication,
   isMirrorPublication,
   isQuotePublication,
+  isPrimaryPublication,
+  PublicationReactionType,
 } from '@lens-protocol/api-bindings';
-
-export { PublicationType, isPostPublication } from '@lens-protocol/api-bindings';

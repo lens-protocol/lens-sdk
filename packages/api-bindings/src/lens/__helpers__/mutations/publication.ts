@@ -4,6 +4,11 @@ import {
   HidePublicationVariables,
   HidePublicationData,
   HidePublicationDocument,
+  AddReactionDocument,
+  AddReactionVariables,
+  ReportPublicationVariables,
+  ReportPublicationData,
+  ReportPublicationDocument,
 } from '../../graphql/generated';
 
 export function mockHidePublicationResponse(args: {
@@ -16,6 +21,30 @@ export function mockHidePublicationResponse(args: {
     },
     result: {
       data: { hidePublication: null },
+    },
+  };
+}
+
+export function mockReportPublicationResponse(args: {
+  variables: ReportPublicationVariables;
+}): MockedResponse<ReportPublicationData> {
+  return {
+    request: {
+      query: ReportPublicationDocument,
+      variables: args.variables,
+    },
+    result: { data: { reportPublication: null } },
+  };
+}
+
+export function mockAddReactionResponse({ variables }: { variables: AddReactionVariables }) {
+  return {
+    request: {
+      query: AddReactionDocument,
+      variables,
+    },
+    result: {
+      data: { addReaction: null },
     },
   };
 }

@@ -1,5 +1,21 @@
 # @lens-protocol/react
 
+## 2.0.0-alpha.5
+
+### Patch Changes
+
+- 734d6823: Added `useProfileManagers` and `useUpdateProfileManagers` hooks
+- 51f8cec6: Added `useReactionToggle` hook
+- d7129e39: Added `useCurrencies` hook
+- Updated dependencies [734d6823]
+- Updated dependencies [51f8cec6]
+- Updated dependencies [d7129e39]
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.3
+  - @lens-protocol/shared-kernel@0.11.0-alpha.3
+  - @lens-protocol/api-bindings@0.11.0-alpha.5
+  - @lens-protocol/domain@0.11.0-alpha.3
+  - @lens-protocol/storage@0.7.5-alpha.1
+
 ## 2.0.0-alpha.4
 
 ### Minor Changes

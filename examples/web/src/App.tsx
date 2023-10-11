@@ -14,12 +14,16 @@ import { LogInPage } from './LogInPage';
 import { GenericErrorBoundary } from './components/GenericErrorBoundary';
 import { ErrorMessage } from './components/error/ErrorMessage';
 import { Header } from './components/header/Header';
-import { DiscoveryPage } from './discovery/DiscoveryPage';
-import { UseExploreProfiles } from './discovery/UseExploreProfiles';
-import { UseExplorePublications } from './discovery/UseExplorePublications';
-import { UseFeed } from './discovery/UseFeed';
-import { UseSearchProfiles } from './discovery/UseSearchProfiles';
-import { UseSearchPublications } from './discovery/UseSearchPublications';
+import {
+  DiscoveryPage,
+  UseExploreProfiles,
+  UseExplorePublications,
+  UseFeed,
+  UseFeedHighlights,
+  UseSearchProfiles,
+  UseSearchPublications,
+} from './discovery';
+import { MiscPage, UseCurrencies } from './misc';
 import {
   ProfilesPage,
   UseLazyProfile,
@@ -32,10 +36,14 @@ import {
   UseRecommendedProfiles,
   UseWhoActedOnPublication,
 } from './profiles';
+import { UseProfileManagers } from './profiles/UseProfileManagers';
+import { UseUpdateProfileManagers } from './profiles/UseUpdateProfileManagers';
 import {
   PublicationsPage,
   UsePublication,
   UsePublications,
+  UseReportPublication,
+  UseReactionToggle,
   UseWhoReactedToPublication,
 } from './publications';
 import { UseHidePublication } from './publications/UseHidePublication';
@@ -86,6 +94,8 @@ export function App() {
                         element={<UseWhoReactedToPublication />}
                       />
                       <Route path="useHidePublication" element={<UseHidePublication />} />
+                      <Route path="useReportPublication" element={<UseReportPublication />} />
+                      <Route path="useReactionToggle" element={<UseReactionToggle />} />
                     </Route>
 
                     <Route path="/profiles">
@@ -97,6 +107,11 @@ export function App() {
                       <Route path="useProfileFollowing" element={<UseProfileFollowing />} />
                       <Route path="useMutualFollowers" element={<UseMutualFollowers />} />
                       <Route path="useRecommendedProfiles" element={<UseRecommendedProfiles />} />
+                      <Route path="useProfileManagers" element={<UseProfileManagers />} />
+                      <Route
+                        path="useUpdateProfileManagers"
+                        element={<UseUpdateProfileManagers />}
+                      />
                       <Route
                         path="useWhoActedOnPublication"
                         element={<UseWhoActedOnPublication />}
@@ -107,10 +122,16 @@ export function App() {
                     <Route path="/discovery">
                       <Route index element={<DiscoveryPage />} />
                       <Route path="useFeed" element={<UseFeed />} />
+                      <Route path="useFeedHighlights" element={<UseFeedHighlights />} />
                       <Route path="useSearchPublications" element={<UseSearchPublications />} />
                       <Route path="useSearchProfiles" element={<UseSearchProfiles />} />
                       <Route path="useExploreProfiles" element={<UseExploreProfiles />} />
                       <Route path="useExplorePublications" element={<UseExplorePublications />} />
+                    </Route>
+
+                    <Route path="/misc">
+                      <Route index element={<MiscPage />} />
+                      <Route path="useCurrencies" element={<UseCurrencies />} />
                     </Route>
                   </Route>
 

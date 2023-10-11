@@ -10,6 +10,7 @@ import {
 import {
   mockAnyTransactionRequestModel,
   mockPollId,
+  mockProtocolTransactionRequestModel,
   mockSignature,
 } from '@lens-protocol/domain/mocks';
 import { ChainType, EvmAddress, Result } from '@lens-protocol/shared-kernel';
@@ -27,6 +28,7 @@ import {
   ConcreteWallet,
   ISignerFactory,
   ITransactionRequest,
+  SignedProtocolCall,
   SignedVote,
   UnsignedProtocolCall,
 } from '../ConcreteWallet';
@@ -133,4 +135,14 @@ export function mockIProviderFactory({
     .mockResolvedValue(provider);
 
   return factory;
+}
+
+export function mockSignedProtocolCall<T extends ProtocolTransactionRequestModel>() {
+  return SignedProtocolCall.create({
+    unsignedCall: mockUnsignedProtocolCall({
+      typedData: mockTypedData(),
+      request: mockProtocolTransactionRequestModel() as T,
+    }),
+    signature: mockSignature(),
+  });
 }

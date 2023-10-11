@@ -4,7 +4,13 @@ import {
   defaultQueryParams,
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
+import { TransactionKind } from '@lens-protocol/domain/entities';
 import { IConversationsGateway, Logout } from '@lens-protocol/domain/use-cases/authentication';
+import {
+  AnyTransactionRequest,
+  TransactionQueue,
+  TransactionResponders,
+} from '@lens-protocol/domain/use-cases/transactions';
 import { ILogger, invariant } from '@lens-protocol/shared-kernel';
 import React, { ReactNode, useContext } from 'react';
 
@@ -19,9 +25,20 @@ import { LensConfig } from './config';
 import { EnvironmentConfig } from './environments';
 import { IProfileCacheManager } from './profile/adapters/IProfileCacheManager';
 import { ProfileCacheManager } from './profile/infrastructure/ProfileCacheManager';
+<<<<<<< HEAD
 import { PublicationCacheManager } from './transactions/adapters/PublicationCacheManager';
+=======
+import { IPublicationCacheManager } from './publication/adapters/IPublicationCacheManager';
+import { PublicationCacheManager } from './publication/infrastructure/PublicationCacheManager';
+import { ITransactionFactory } from './transactions/adapters/ITransactionFactory';
+import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
+import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
+import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
+import { UpdateProfileManagersResponder } from './transactions/adapters/responders/UpdateProfileManagersResponder';
+>>>>>>> lens-v2
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
+import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
 import { WalletFactory } from './wallet/adapters/WalletFactory';
 import { WalletGateway } from './wallet/adapters/WalletGateway';
 import { ProviderFactory } from './wallet/infrastructure/ProviderFactory';
@@ -45,6 +62,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   const credentialsStorage = new CredentialsStorage(config.storage, config.environment.name);
   const accessTokenStorage = new AccessTokenStorage(authApi, credentialsStorage);
   const walletStorage = createWalletStorage(config.storage, config.environment.name);
+  const transactionStorage = createTransactionStorage(config.storage, config.environment.name);
 
   // apollo client
   const apolloClient = createLensApolloClient({
@@ -71,13 +89,39 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   const credentialsFactory = new CredentialsFactory(authApi);
   const credentialsGateway = new CredentialsGateway(credentialsStorage);
   const profileCacheManager = new ProfileCacheManager(apolloClient);
+  const publicationCacheManager = new PublicationCacheManager(apolloClient);
   const walletFactory = new WalletFactory(signerFactory, transactionFactory);
   const walletGateway = new WalletGateway(walletStorage, walletFactory);
+  const transactionGateway = new PendingTransactionGateway(transactionStorage, transactionFactory);
 
   const conversationsGateway: IConversationsGateway = {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     async reset() {},
   };
+
+  const responders: TransactionResponders<AnyTransactionRequest> = {
+    [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
+    [TransactionKind.COLLECT_PUBLICATION]: new NoopResponder(),
+    [TransactionKind.CREATE_COMMENT]: new NoopResponder(),
+    [TransactionKind.CREATE_POST]: new NoopResponder(),
+    [TransactionKind.CREATE_PROFILE]: new NoopResponder(),
+    [TransactionKind.FOLLOW_PROFILES]: new NoopResponder(),
+    [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(),
+    [TransactionKind.UNFOLLOW_PROFILE]: new NoopResponder(),
+    [TransactionKind.UPDATE_FOLLOW_POLICY]: new NoopResponder(),
+    [TransactionKind.UPDATE_PROFILE_DETAILS]: new NoopResponder(),
+    [TransactionKind.UPDATE_PROFILE_IMAGE]: new NoopResponder(),
+    [TransactionKind.UPDATE_PROFILE_MANAGERS]: new UpdateProfileManagersResponder(
+      apolloClient,
+      profileCacheManager,
+    ),
+  };
+  const transactionQueuePresenter = new TransactionQueuePresenter();
+  const transactionQueue = TransactionQueue.create(
+    responders,
+    transactionGateway,
+    transactionQueuePresenter,
+  );
 
   // logout
   const logoutPresenter = new LogoutPresenter();
@@ -97,6 +141,12 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     logout,
     profileCacheManager,
     publicationCacheManager,
+<<<<<<< HEAD
+=======
+    transactionFactory,
+    transactionGateway,
+    transactionQueue,
+>>>>>>> lens-v2
     walletFactory,
     walletGateway,
   };
@@ -113,7 +163,14 @@ export type SharedDependencies = {
   logger: ILogger;
   logout: Logout;
   profileCacheManager: IProfileCacheManager;
+<<<<<<< HEAD
   publicationCacheManager: PublicationCacheManager;
+=======
+  publicationCacheManager: IPublicationCacheManager;
+  transactionFactory: ITransactionFactory<AnyTransactionRequest>;
+  transactionGateway: PendingTransactionGateway;
+  transactionQueue: TransactionQueue<AnyTransactionRequest>;
+>>>>>>> lens-v2
   walletFactory: WalletFactory;
   walletGateway: WalletGateway;
 };

@@ -19,9 +19,11 @@ export * from './LensProvider';
  * Hooks
  */
 export * from './authentication';
+export * from './discovery';
+export * from './misc';
 export * from './profile';
 export * from './publication';
-export * from './discovery';
+export * from './transactions';
 
 /**
  * Domain essentials

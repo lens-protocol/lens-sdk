@@ -34,7 +34,6 @@ export type FetchProfileArgs = OneOf<ProfileRequest>;
  * ```ts
  * const { called, data, error, loading, execute } = useLazyProfile();
  *
- *
  * const callback = async () => {
  *   const result = await execute({ forProfileId: profileId });
  *

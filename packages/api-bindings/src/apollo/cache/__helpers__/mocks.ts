@@ -15,8 +15,8 @@ export function mockTransactionState<T extends AnyTransactionRequest>(
 ): TransactionState<T> {
   return {
     id: faker.datatype.uuid(),
-    status: TxStatus.BROADCASTING,
+    status: TxStatus.PENDING,
     request: mockCreatePostRequest() as T,
     ...partial,
-  };
+  } as TransactionState<T>;
 }

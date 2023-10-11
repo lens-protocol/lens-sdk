@@ -1,6 +1,7 @@
 import {
   UpdateFollowPolicyRequest,
   UpdateProfileDetailsRequest,
+  UpdateProfileManagersRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import {
   CreateCommentRequest,
@@ -13,7 +14,11 @@ import { z } from 'zod';
 import { Erc20AmountInstanceSchema } from './common';
 import { tokenAllowanceRequestSchema } from './erc20';
 import { formatZodError } from './formatters';
-import { updateFollowPolicyRequestSchema, UpdateProfileDetailsRequestSchema } from './profiles';
+import {
+  updateFollowPolicyRequestSchema,
+  UpdateProfileDetailsRequestSchema,
+  UpdateProfileManagersRequestSchema,
+} from './profiles';
 import {
   createEmbedCommentRequestSchema,
   createEmbedPostRequestSchema,
@@ -68,3 +73,21 @@ export const validateUpdateFollowPolicyRequest: Validator<UpdateFollowPolicyRequ
 
 export const validateUpdateProfileDetailsRequest: Validator<UpdateProfileDetailsRequest> =
   createRequestValidator(UpdateProfileDetailsRequestSchema);
+
+export const validateUpdateProfileManagersRequest: Validator<UpdateProfileDetailsRequest> =
+  createRequestValidator(
+    UpdateProfileManagersRequestSchema.superRefine(
+      (val, ctx): val is UpdateProfileManagersRequest => {
+        if (['add', 'remove', 'lensManager'].every((key) => !(key in val))) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `At least one of 'add', 'remove', or 'lensManager' must be present.`,
+          });
+          return z.NEVER;
+        }
+        // TODO add further checks needed
+
+        return z.NEVER;
+      },
+    ),
+  );

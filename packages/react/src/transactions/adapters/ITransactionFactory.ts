@@ -22,7 +22,7 @@ export type MetaTransactionData<T extends AnyTransactionRequestModel> = {
   indexingId: string;
   nonce: Nonce;
   request: T;
-  txHash: string;
+  txHash: string | null;
 };
 
 export type DataTransactionData<T extends AnyTransactionRequestModel> = {

@@ -4,15 +4,11 @@ import { useEffect, useRef } from 'react';
 import { SharedDependencies } from '../../shared';
 import { BootstrapPresenter } from './BootstrapPresenter';
 
-const transactionQueue = {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  resume: async () => {},
-};
-
 export function useBootstrapController({
   credentialsGateway,
   credentialsFactory,
   logout,
+  transactionQueue,
 }: SharedDependencies) {
   const isStartedRef = useRef(false);
 
@@ -27,12 +23,11 @@ export function useBootstrapController({
     const bootstrap = new Bootstrap(
       credentialsGateway,
       credentialsFactory,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      transactionQueue as any,
+      transactionQueue,
       logout,
       new BootstrapPresenter(),
     );
 
     void bootstrap.execute();
-  }, [credentialsFactory, credentialsGateway, logout]);
+  }, [credentialsFactory, credentialsGateway, logout, transactionQueue]);
 }

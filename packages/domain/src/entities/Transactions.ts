@@ -16,7 +16,7 @@ export enum TransactionKind {
   UNFOLLOW_PROFILE = 'UNFOLLOW_PROFILE',
   UPDATE_PROFILE_DETAILS = 'UPDATE_PROFILE_DETAILS',
   UPDATE_FOLLOW_POLICY = 'UPDATE_FOLLOW_POLICY',
-  UPDATE_DISPATCHER_CONFIG = 'UPDATE_DISPATCHER_CONFIG',
+  UPDATE_PROFILE_MANAGERS = 'UPDATE_PROFILE_MANAGERS',
 }
 
 export const ProtocolTransactionKinds = [
@@ -30,7 +30,7 @@ export const ProtocolTransactionKinds = [
   TransactionKind.UNFOLLOW_PROFILE,
   TransactionKind.UPDATE_PROFILE_DETAILS,
   TransactionKind.UPDATE_FOLLOW_POLICY,
-  TransactionKind.UPDATE_DISPATCHER_CONFIG,
+  TransactionKind.UPDATE_PROFILE_MANAGERS,
 ] as const;
 
 export type ProtocolTransactionKind = (typeof ProtocolTransactionKinds)[number];
@@ -39,16 +39,14 @@ export type ProtocolTransactionRequestModel = {
   kind: ProtocolTransactionKind;
 };
 
-export type AnyTransactionRequestModel =
-  | ProtocolTransactionRequestModel
-  | {
-      kind: TransactionKind.APPROVE_MODULE;
-    };
+export type AnyTransactionRequestModel = {
+  kind: TransactionKind;
+};
 
 /**
  * @internal
  */
-export type PickByKind<T extends AnyTransactionRequestModel, K extends T['kind']> = T extends {
+export type PickByKind<T extends AnyTransactionRequestModel, K> = T extends {
   kind: K;
 }
   ? T
@@ -104,7 +102,7 @@ export abstract class MetaTransaction<T extends ProtocolTransactionRequestModel>
   abstract get id(): string;
   abstract get request(): T;
   abstract get nonce(): Nonce;
-  abstract get hash(): string;
+  abstract get hash(): string | null;
 
   abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
 }
@@ -138,11 +136,11 @@ export abstract class DataTransaction<T extends ProtocolTransactionRequestModel>
   abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
 }
 
+// TODO: move, this type might be a convenience type but not an entity per se
 export type Transaction<T extends AnyTransactionRequestModel> =
   | DataTransaction<JustProtocolRequest<T>>
   | MetaTransaction<JustProtocolRequest<T>>
-  | NativeTransaction<T>
-  | ProxyTransaction<JustProtocolRequest<T>>;
+  | NativeTransaction<T>;
 
 /**
  * The reason why a transaction failed.

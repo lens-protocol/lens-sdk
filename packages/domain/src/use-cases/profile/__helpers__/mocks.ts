@@ -23,13 +23,13 @@ import {
   ProveNftOwnershipRequest,
 } from '../ProveNftOwnership';
 import { UnfollowRequest } from '../UnfollowProfile';
-import { UpdateDispatcherConfigRequest } from '../UpdateDispatcherConfig';
 import { UpdateFollowPolicyRequest } from '../UpdateFollowPolicy';
 import { UpdateProfileDetailsRequest } from '../UpdateProfileDetails';
 import {
   UpdateNftProfileImageRequest,
   UpdateOffChainProfileImageRequest,
 } from '../UpdateProfileImage';
+import { UpdateProfileManagersRequest } from '../UpdateProfileManagers';
 import { ChargeFollowConfig, FollowPolicyType, NoFeeFollowConfig } from '../types';
 
 export function mockCreateProfileRequest(
@@ -105,14 +105,13 @@ export function mockUpdateProfileDetailsRequest(
   };
 }
 
-export function mockUpdateDispatcherConfigRequest(
-  overrides?: Partial<UpdateDispatcherConfigRequest>,
-): UpdateDispatcherConfigRequest {
+export function mockUpdateProfileManagersRequest(
+  overrides?: Partial<UpdateProfileManagersRequest>,
+): UpdateProfileManagersRequest {
   return {
-    profileId: mockProfileId(),
-    enabled: true,
+    lensManager: true,
     ...overrides,
-    kind: TransactionKind.UPDATE_DISPATCHER_CONFIG,
+    kind: TransactionKind.UPDATE_PROFILE_MANAGERS,
   };
 }
 
