@@ -8,6 +8,31 @@ import { invariant, success } from '@lens-protocol/shared-kernel';
 import { Operation, useOperation } from '../helpers/operations';
 import { useReactionToggleController } from './adapters/useReactionToggleController';
 
+export type HasReactedArgs = {
+  publication: PrimaryPublication;
+  reaction: PublicationReactionType;
+};
+
+/**
+ * A helper to check if a certain type of reaction has been added to a publication.
+ *
+ * @example
+ * ```tsx
+ * const hasUpvoted = hasReacted({
+ *   publication,
+ *   reaction: PublicationReactionType.Upvote,
+ * });
+ * ```
+ */
+export function hasReacted(args: HasReactedArgs): boolean {
+  switch (args.reaction) {
+    case PublicationReactionType.Upvote:
+      return args.publication.operations.hasUpvoted;
+    case PublicationReactionType.Downvote:
+      return args.publication.operations.hasDownvoted;
+  }
+}
+
 export type UseReactionToggleArgs = {
   publication: PrimaryPublication;
 };
@@ -17,15 +42,6 @@ export type ReactionToggleArgs = {
 };
 
 export type ReactionOperation = Operation<void, never, [ReactionToggleArgs]>;
-
-function getHasReacted(publication: PrimaryPublication, reaction: PublicationReactionType) {
-  switch (reaction) {
-    case PublicationReactionType.Upvote:
-      return publication.operations.hasUpvoted;
-    case PublicationReactionType.Downvote:
-      return publication.operations.hasDownvoted;
-  }
-}
 
 /**
  * `useReactionToggle` hook allows to add or remove a reaction to a publication.
@@ -57,9 +73,7 @@ export function useReactionToggle({ publication }: UseReactionToggleArgs): React
   invariant(isPrimaryPublication(publication), 'Publication is not a primary publication');
 
   return useOperation(async (args: ReactionToggleArgs) => {
-    const hasReacted = getHasReacted(publication, args.reaction);
-
-    if (hasReacted) {
+    if (hasReacted({ publication, reaction: args.reaction })) {
       await remove({
         publicationId: publication.id,
         reaction: args.reaction,

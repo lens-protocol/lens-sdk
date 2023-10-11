@@ -1,6 +1,7 @@
 import {
   PrimaryPublication,
   PublicationReactionType,
+  hasReacted,
   isPrimaryPublication,
   publicationId,
   usePublication,
@@ -13,36 +14,27 @@ import { Loading } from '../components/loading/Loading';
 import { invariant } from '../utils';
 import { PublicationCard } from './components/PublicationCard';
 
-function hasReacted(publication: PrimaryPublication, reaction: PublicationReactionType) {
-  switch (reaction) {
-    case PublicationReactionType.Upvote:
-      return publication.operations.hasUpvoted;
-    case PublicationReactionType.Downvote:
-      return publication.operations.hasDownvoted;
-  }
-}
-
 type ReactionButtonProps = {
   publication: PrimaryPublication;
-  reactionType: PublicationReactionType;
+  reaction: PublicationReactionType;
 };
 
-function ReactionButton({ publication, reactionType }: ReactionButtonProps) {
+function ReactionButton({ publication, reaction }: ReactionButtonProps) {
   const { execute: toggle, isPending } = useReactionToggle({
     publication,
   });
 
-  const hasReactionType = hasReacted(publication, reactionType);
+  const hasReactionType = hasReacted({ publication, reaction });
 
   const toggleReaction = async () => {
     await toggle({
-      reaction: reactionType,
+      reaction,
     });
   };
 
   return (
     <button onClick={toggleReaction} disabled={isPending}>
-      <strong>{hasReactionType ? `Remove ${reactionType}` : `Add ${reactionType}`}</strong>
+      <strong>{hasReactionType ? `Remove ${reaction}` : `Add ${reaction}`}</strong>
     </button>
   );
 }
@@ -68,8 +60,8 @@ function UseReactionToggleInner() {
       <div>Total Downvotes: {publication.stats.downvotes}</div>
 
       <div>
-        <ReactionButton publication={publication} reactionType={PublicationReactionType.Upvote} />
-        <ReactionButton publication={publication} reactionType={PublicationReactionType.Downvote} />
+        <ReactionButton publication={publication} reaction={PublicationReactionType.Upvote} />
+        <ReactionButton publication={publication} reaction={PublicationReactionType.Downvote} />
       </div>
     </div>
   );
