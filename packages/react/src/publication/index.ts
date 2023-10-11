@@ -5,11 +5,8 @@ export * from './usePublication';
 export * from './usePublications';
 export * from './useReactionToggle';
 export * from './useWhoReactedToPublication';
-<<<<<<< HEAD
 export * from './useHidePublication';
-=======
 export * from './useReportPublication';
->>>>>>> lens-v2
 
 /**
  * Fragments

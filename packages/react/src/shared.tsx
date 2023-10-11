@@ -25,9 +25,6 @@ import { LensConfig } from './config';
 import { EnvironmentConfig } from './environments';
 import { IProfileCacheManager } from './profile/adapters/IProfileCacheManager';
 import { ProfileCacheManager } from './profile/infrastructure/ProfileCacheManager';
-<<<<<<< HEAD
-import { PublicationCacheManager } from './transactions/adapters/PublicationCacheManager';
-=======
 import { IPublicationCacheManager } from './publication/adapters/IPublicationCacheManager';
 import { PublicationCacheManager } from './publication/infrastructure/PublicationCacheManager';
 import { ITransactionFactory } from './transactions/adapters/ITransactionFactory';
@@ -35,7 +32,6 @@ import { PendingTransactionGateway } from './transactions/adapters/PendingTransa
 import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { UpdateProfileManagersResponder } from './transactions/adapters/responders/UpdateProfileManagersResponder';
->>>>>>> lens-v2
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
@@ -73,7 +69,6 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     logger,
     contentMatchers: [config.environment.snapshot.matcher],
   });
-  const publicationCacheManager = new PublicationCacheManager(apolloClient);
 
   // infrastructure
   const signerFactory = new SignerFactory(config.bindings, config.environment.chains);
@@ -141,12 +136,9 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     logout,
     profileCacheManager,
     publicationCacheManager,
-<<<<<<< HEAD
-=======
     transactionFactory,
     transactionGateway,
     transactionQueue,
->>>>>>> lens-v2
     walletFactory,
     walletGateway,
   };
@@ -163,14 +155,10 @@ export type SharedDependencies = {
   logger: ILogger;
   logout: Logout;
   profileCacheManager: IProfileCacheManager;
-<<<<<<< HEAD
-  publicationCacheManager: PublicationCacheManager;
-=======
   publicationCacheManager: IPublicationCacheManager;
   transactionFactory: ITransactionFactory<AnyTransactionRequest>;
   transactionGateway: PendingTransactionGateway;
   transactionQueue: TransactionQueue<AnyTransactionRequest>;
->>>>>>> lens-v2
   walletFactory: WalletFactory;
   walletGateway: WalletGateway;
 };

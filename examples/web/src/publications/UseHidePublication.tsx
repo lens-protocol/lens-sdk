@@ -1,6 +1,7 @@
 import {
   AnyPublication,
-  ProfileSession,
+  EvmAddress,
+  Profile,
   PublicationType,
   useHidePublication,
   usePublications,
@@ -28,18 +29,12 @@ function HidePublicationButton({ publication }: HidePublicationButtonProps) {
   );
 }
 
-function FeedItem({
-  publication,
-  session,
-}: {
-  publication: AnyPublication;
-  session: ProfileSession;
-}) {
+function FeedItem({ publication, address }: { publication: AnyPublication; address: EvmAddress }) {
   return (
     <section>
       <PublicationCard publication={publication} />
 
-      {publication.by.ownedBy.address === session.address ? (
+      {publication.by.ownedBy.address === address ? (
         <HidePublicationButton publication={publication} />
       ) : (
         "Can't hide publication that's not owned by you"
@@ -49,10 +44,11 @@ function FeedItem({
 }
 
 type FeedProps = {
-  session: ProfileSession;
+  profile: Profile;
+  address: EvmAddress;
 };
 
-function Feed({ session }: FeedProps) {
+function Feed({ profile, address }: FeedProps) {
   const {
     data: publications,
     error,
@@ -63,7 +59,7 @@ function Feed({ session }: FeedProps) {
     usePublications({
       where: {
         publicationTypes: [PublicationType.Post],
-        from: [session.profile.id],
+        from: [profile.id],
       },
     }),
   );
@@ -77,7 +73,7 @@ function Feed({ session }: FeedProps) {
   return (
     <>
       {publications.map((publication) => (
-        <FeedItem key={publication.id} publication={publication} session={session} />
+        <FeedItem key={publication.id} publication={publication} address={address} />
       ))}
 
       {hasMore && <p ref={observeRef}>Loading more...</p>}
@@ -91,7 +87,9 @@ export function UseHidePublication() {
       <h1>
         <code>useHidePublication</code>
       </h1>
-      <WhenLoggedIn>{({ session }) => <Feed session={session} />}</WhenLoggedIn>
+      <WhenLoggedIn>
+        {({ profile, address }) => <Feed profile={profile} address={address} />}
+      </WhenLoggedIn>
       <WhenLoggedOut>
         <div>
           <p>You must be logged in to use this example.</p>
