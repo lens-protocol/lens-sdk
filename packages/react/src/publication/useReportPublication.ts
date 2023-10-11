@@ -25,6 +25,7 @@ export type ReportPublicationOperation = Operation<void, never, [ReportPublicati
  * @param args - {@link UseReportPublicationArgs}
  *
  * @example
+ *
  * Form to provide a reason and comments to report a publication.
  * ```tsx
  * function ReportPublicationForm({ publication }: ReportPublicationFormProps) {

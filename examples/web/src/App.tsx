@@ -36,9 +36,9 @@ import {
   PublicationsPage,
   UsePublication,
   UsePublications,
+  UseReportPublication,
   UseWhoReactedToPublication,
 } from './publications';
-import { UseReportPublication } from './publications/UseReportPublication';
 
 const { publicClient, webSocketPublicClient } = configureChains(
   [polygonMumbai],
