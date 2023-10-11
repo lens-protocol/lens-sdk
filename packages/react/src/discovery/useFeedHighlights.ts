@@ -12,7 +12,7 @@ export type UseFeedHighlightsArgs = OmitCursor<FeedHighlightsRequest>;
 /**
  * Fetch a the highlights of a feed for given profile and filters.
  *
- * You MUST be authenticated via {@link useWalletLogin} to use this hook.
+ * You MUST be authenticated via {@link useLogin} to use this hook.
  *
  * @category Discovery
  * @group Hooks

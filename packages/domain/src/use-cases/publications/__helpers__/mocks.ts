@@ -175,7 +175,6 @@ export function mockTogglePropertyRequest(
   overrides?: Partial<TogglePropertyRequest>,
 ): TogglePropertyRequest {
   return {
-    profileId: mockProfileId(),
     publicationId: mockPublicationId(),
     ...overrides,
   };
