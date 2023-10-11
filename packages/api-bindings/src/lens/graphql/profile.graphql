@@ -1,5 +1,5 @@
 # API node has an odd name, masking it here
-fragment ProfilesManager on ProfilesManagedResult {
+fragment ProfileManager on ProfilesManagedResult {
   # __typename omitted on purpose to hide odd name, not needed anyway here
   address
 }
@@ -23,7 +23,7 @@ fragment CreateOnchainSetProfileMetadataBroadcastItemResult on CreateOnchainSetP
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       profileId
@@ -46,7 +46,7 @@ fragment CreateChangeProfileManagersBroadcastItemResult on CreateChangeProfileMa
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       delegatorProfileId
@@ -72,7 +72,7 @@ fragment CreateBlockProfilesBroadcastItemResult on CreateBlockProfilesBroadcastI
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       byProfileId
@@ -96,7 +96,7 @@ fragment CreateUnblockProfilesBroadcastItemResult on CreateUnblockProfilesBroadc
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       byProfileId
@@ -120,7 +120,7 @@ fragment CreateFollowBroadcastItemResult on CreateFollowBroadcastItemResult {
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       followerProfileId
@@ -145,7 +145,7 @@ fragment CreateUnfollowBroadcastItemResult on CreateUnfollowBroadcastItemResult 
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       unfollowerProfileId
@@ -168,7 +168,7 @@ fragment CreateSetFollowModuleBroadcastItemResult on CreateSetFollowModuleBroadc
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       profileId
@@ -191,7 +191,7 @@ fragment CreateHandleLinkToProfileBroadcastItemResult on CreateHandleLinkToProfi
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       profileId
@@ -213,7 +213,7 @@ fragment CreateHandleUnlinkFromProfileBroadcastItemResult on CreateHandleUnlinkF
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       profileId
@@ -259,7 +259,7 @@ query Profiles(
 query ProfileManagers($request: ProfileManagersRequest!) {
   result: profileManagers(request: $request) {
     items {
-      ...ProfilesManager
+      ...ProfileManager
     }
     pageInfo {
       ...PaginatedResultInfo

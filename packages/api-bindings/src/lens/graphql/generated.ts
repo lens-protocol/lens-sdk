@@ -2977,7 +2977,7 @@ export type Eip712TypedDataField = { name: string; type: string };
 export type CreateActOnOpenActionEip712TypedData = {
   types: { Act: Array<Eip712TypedDataField> };
   domain: Eip712TypedDataDomain;
-  value: {
+  message: {
     nonce: number;
     deadline: number;
     publicationActedProfileId: ProfileId;
@@ -3138,7 +3138,7 @@ export type NotificationsData = {
   };
 } & InjectCommonQueryParams;
 
-export type ProfilesManager = { address: EvmAddress };
+export type ProfileManager = { address: EvmAddress };
 
 export type CreateProfileWithHandleErrorResult = {
   __typename: 'CreateProfileWithHandleErrorResult';
@@ -3152,7 +3152,7 @@ export type CreateOnchainSetProfileMetadataBroadcastItemResult = {
   typedData: {
     types: { SetProfileMetadataURI: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
-    value: { nonce: number; deadline: number; profileId: ProfileId; metadataURI: string };
+    message: { nonce: number; deadline: number; profileId: ProfileId; metadataURI: string };
   };
 };
 
@@ -3163,7 +3163,7 @@ export type CreateChangeProfileManagersBroadcastItemResult = {
   typedData: {
     types: { ChangeDelegatedExecutorsConfig: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
-    value: {
+    message: {
       nonce: number;
       deadline: number;
       delegatorProfileId: ProfileId;
@@ -3182,7 +3182,7 @@ export type CreateBlockProfilesBroadcastItemResult = {
   typedData: {
     types: { SetBlockStatus: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
-    value: {
+    message: {
       nonce: number;
       deadline: number;
       byProfileId: ProfileId;
@@ -3199,7 +3199,7 @@ export type CreateUnblockProfilesBroadcastItemResult = {
   typedData: {
     types: { SetBlockStatus: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
-    value: {
+    message: {
       nonce: number;
       deadline: number;
       byProfileId: ProfileId;
@@ -3216,7 +3216,7 @@ export type CreateFollowBroadcastItemResult = {
   typedData: {
     types: { Follow: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
-    value: {
+    message: {
       nonce: number;
       deadline: number;
       followerProfileId: ProfileId;
@@ -3234,7 +3234,7 @@ export type CreateUnfollowBroadcastItemResult = {
   typedData: {
     types: { Unfollow: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
-    value: {
+    message: {
       nonce: number;
       deadline: number;
       unfollowerProfileId: ProfileId;
@@ -3250,7 +3250,7 @@ export type CreateSetFollowModuleBroadcastItemResult = {
   typedData: {
     types: { SetFollowModule: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
-    value: {
+    message: {
       nonce: number;
       deadline: number;
       profileId: ProfileId;
@@ -3267,7 +3267,7 @@ export type CreateHandleLinkToProfileBroadcastItemResult = {
   typedData: {
     types: { Link: Array<Eip712TypedDataField> };
     domain: Eip712TypedDataDomain;
-    value: { nonce: number; deadline: number; profileId: ProfileId; handleId: string };
+    message: { nonce: number; deadline: number; profileId: ProfileId; handleId: string };
   };
 };
 
@@ -3278,7 +3278,7 @@ export type CreateHandleUnlinkFromProfileBroadcastItemResult = {
   typedData: {
     types: { Unlink: Array<Eip712TypedDataField> };
     domain: Eip712TypedDataDomain;
-    value: { nonce: number; deadline: number; profileId: ProfileId; handleId: string };
+    message: { nonce: number; deadline: number; profileId: ProfileId; handleId: string };
   };
 };
 
@@ -3311,7 +3311,7 @@ export type ProfileManagersVariables = Exact<{
 }>;
 
 export type ProfileManagersData = {
-  result: { items: Array<ProfilesManager>; pageInfo: PaginatedResultInfo };
+  result: { items: Array<ProfileManager>; pageInfo: PaginatedResultInfo };
 };
 
 export type ProfileRecommendationsVariables = Exact<{
@@ -3618,7 +3618,7 @@ export type CreateOnchainPostBroadcastItemResult = {
   typedData: {
     types: { Post: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
-    value: {
+    message: {
       nonce: number;
       deadline: number;
       profileId: ProfileId;
@@ -3638,7 +3638,7 @@ export type CreateOnchainCommentBroadcastItemResult = {
   typedData: {
     types: { Comment: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
-    value: {
+    message: {
       nonce: number;
       deadline: number;
       profileId: ProfileId;
@@ -3663,7 +3663,7 @@ export type CreateOnchainMirrorBroadcastItemResult = {
   typedData: {
     types: { Mirror: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
-    value: {
+    message: {
       nonce: number;
       deadline: number;
       profileId: ProfileId;
@@ -3684,7 +3684,7 @@ export type CreateOnchainQuoteBroadcastItemResult = {
   typedData: {
     types: { Quote: Array<Eip712TypedDataField> };
     domain: Eip712TypedDataDomain;
-    value: {
+    message: {
       nonce: number;
       deadline: number;
       profileId: ProfileId;
@@ -3709,7 +3709,7 @@ export type CreateMomokaPostBroadcastItemResult = {
   typedData: {
     types: { Post: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
-    value: {
+    message: {
       nonce: number;
       deadline: number;
       profileId: ProfileId;
@@ -3729,7 +3729,7 @@ export type CreateMomokaCommentBroadcastItemResult = {
   typedData: {
     types: { Comment: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
-    value: {
+    message: {
       nonce: number;
       deadline: number;
       profileId: ProfileId;
@@ -3754,7 +3754,7 @@ export type CreateMomokaMirrorBroadcastItemResult = {
   typedData: {
     types: { Mirror: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
-    value: {
+    message: {
       nonce: number;
       deadline: number;
       profileId: ProfileId;
@@ -3775,7 +3775,7 @@ export type CreateMomokaQuoteBroadcastItemResult = {
   typedData: {
     types: { Quote: Array<{ name: string; type: string }> };
     domain: Eip712TypedDataDomain;
-    value: {
+    message: {
       nonce: number;
       deadline: number;
       profileId: ProfileId;
@@ -7041,8 +7041,8 @@ export const FragmentNotification = /*#__PURE__*/ gql`
   ${FragmentFollowNotification}
   ${FragmentMentionNotification}
 `;
-export const FragmentProfilesManager = /*#__PURE__*/ gql`
-  fragment ProfilesManager on ProfilesManagedResult {
+export const FragmentProfileManager = /*#__PURE__*/ gql`
+  fragment ProfileManager on ProfilesManagedResult {
     address
   }
 `;
@@ -7075,7 +7075,7 @@ export const FragmentCreateOnchainSetProfileMetadataBroadcastItemResult = /*#__P
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         profileId
@@ -7100,7 +7100,7 @@ export const FragmentCreateChangeProfileManagersBroadcastItemResult = /*#__PURE_
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         delegatorProfileId
@@ -7128,7 +7128,7 @@ export const FragmentCreateBlockProfilesBroadcastItemResult = /*#__PURE__*/ gql`
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         byProfileId
@@ -7154,7 +7154,7 @@ export const FragmentCreateUnblockProfilesBroadcastItemResult = /*#__PURE__*/ gq
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         byProfileId
@@ -7180,7 +7180,7 @@ export const FragmentCreateFollowBroadcastItemResult = /*#__PURE__*/ gql`
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         followerProfileId
@@ -7207,7 +7207,7 @@ export const FragmentCreateUnfollowBroadcastItemResult = /*#__PURE__*/ gql`
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         unfollowerProfileId
@@ -7232,7 +7232,7 @@ export const FragmentCreateSetFollowModuleBroadcastItemResult = /*#__PURE__*/ gq
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         profileId
@@ -7263,7 +7263,7 @@ export const FragmentCreateHandleLinkToProfileBroadcastItemResult = /*#__PURE__*
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         profileId
@@ -7288,7 +7288,7 @@ export const FragmentCreateHandleUnlinkFromProfileBroadcastItemResult = /*#__PUR
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         profileId
@@ -7337,7 +7337,7 @@ export const FragmentCreateOnchainPostBroadcastItemResult = /*#__PURE__*/ gql`
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         profileId
@@ -7366,7 +7366,7 @@ export const FragmentCreateOnchainCommentBroadcastItemResult = /*#__PURE__*/ gql
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         profileId
@@ -7400,7 +7400,7 @@ export const FragmentCreateOnchainMirrorBroadcastItemResult = /*#__PURE__*/ gql`
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         profileId
@@ -7429,7 +7429,7 @@ export const FragmentCreateOnchainQuoteBroadcastItemResult = /*#__PURE__*/ gql`
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         profileId
@@ -7464,7 +7464,7 @@ export const FragmentCreateMomokaPostBroadcastItemResult = /*#__PURE__*/ gql`
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         profileId
@@ -7493,7 +7493,7 @@ export const FragmentCreateMomokaCommentBroadcastItemResult = /*#__PURE__*/ gql`
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         profileId
@@ -7527,7 +7527,7 @@ export const FragmentCreateMomokaMirrorBroadcastItemResult = /*#__PURE__*/ gql`
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         profileId
@@ -7557,7 +7557,7 @@ export const FragmentCreateMomokaQuoteBroadcastItemResult = /*#__PURE__*/ gql`
       domain {
         ...EIP712TypedDataDomain
       }
-      value {
+      message: value {
         nonce
         deadline
         profileId
@@ -7586,7 +7586,7 @@ export const FragmentCreateActOnOpenActionEip712TypedData = /*#__PURE__*/ gql`
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       publicationActedProfileId
@@ -8369,14 +8369,14 @@ export const ProfileManagersDocument = /*#__PURE__*/ gql`
   query ProfileManagers($request: ProfileManagersRequest!) {
     result: profileManagers(request: $request) {
       items {
-        ...ProfilesManager
+        ...ProfileManager
       }
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }
-  ${FragmentProfilesManager}
+  ${FragmentProfileManager}
   ${FragmentPaginatedResultInfo}
 `;
 

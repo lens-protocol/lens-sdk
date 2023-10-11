@@ -12,7 +12,7 @@ import {
   ProtocolTransactionRequest,
   AnyTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, PromiseResult, success, XOR } from '@lens-protocol/shared-kernel';
+import { ChainType, never, PromiseResult, success, XOR } from '@lens-protocol/shared-kernel';
 
 import {
   DataTransactionData,
@@ -52,22 +52,13 @@ type StateUpdate<T> = {
 
 type StateReducer<T> = (state: T) => PromiseResult<StateUpdate<T>, TransactionError>;
 
-type MetaTransactionState<T extends AnyTransactionRequest> = {
-  chainType: ChainType;
-  id: string;
-  indexingId: string;
-  nonce: Nonce;
-  request: T;
-  txHash: string;
-};
-
 class SerializableMetaTransaction<T extends ProtocolTransactionRequest>
   extends MetaTransaction<T>
   implements ISerializableMetaTransaction<T>
 {
   constructor(
-    private state: MetaTransactionState<T>,
-    private readonly reduce: StateReducer<MetaTransactionState<T>>,
+    private state: MetaTransactionData<T>,
+    private readonly reduce: StateReducer<MetaTransactionData<T>>,
   ) {
     super();
   }
@@ -99,7 +90,7 @@ class SerializableMetaTransaction<T extends ProtocolTransactionRequest>
     return this.state.nonce;
   }
 
-  get hash(): string {
+  get hash(): string | null {
     return this.state.txHash;
   }
 
@@ -114,21 +105,13 @@ class SerializableMetaTransaction<T extends ProtocolTransactionRequest>
   }
 }
 
-type NativeTransactionState<T extends AnyTransactionRequest> = {
-  chainType: ChainType;
-  id: string;
-  indexingId?: string;
-  request: T;
-  txHash: string;
-};
-
 class SerializableNativeTransaction<T extends AnyTransactionRequest>
   extends NativeTransaction<T>
   implements ISerializableNativeTransaction<T>
 {
   constructor(
-    private state: NativeTransactionState<T>,
-    private readonly reduce: StateReducer<NativeTransactionState<T>>,
+    private state: NativeTransactionData<T>,
+    private readonly reduce: StateReducer<NativeTransactionData<T>>,
   ) {
     super();
   }
@@ -160,7 +143,7 @@ class SerializableNativeTransaction<T extends AnyTransactionRequest>
   }
 
   get hash(): string {
-    return this.state?.txHash;
+    return this.state.txHash;
   }
 
   async waitNextEvent(): PromiseResult<TransactionEvent, TransactionError> {
@@ -255,12 +238,12 @@ export class TransactionFactory implements ISerializableTransactionFactory {
 
   private createProtocolCallStateReducer<
     T extends AnyTransactionRequest,
-    S extends MetaTransactionState<T> | NativeTransactionState<T>,
+    S extends MetaTransactionData<T> | NativeTransactionData<T>,
   >(): StateReducer<S> {
     return async (state) => {
       const request = state.indexingId
         ? { indexingId: state.indexingId }
-        : { txHash: state.txHash };
+        : { txHash: state.txHash ?? never() };
 
       const indexingEventResult = await this.transactionObserver.waitForNextIndexingEvent(request);
 
@@ -289,7 +272,7 @@ export class TransactionFactory implements ISerializableTransactionFactory {
 
   private createPureBlockchainStateReducer<
     T extends AnyTransactionRequest,
-    S extends NativeTransactionState<T>,
+    S extends NativeTransactionData<T>,
   >(): StateReducer<S> {
     return async (state) => {
       const result = await this.transactionObserver.waitForConfirmation({

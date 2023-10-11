@@ -32,6 +32,8 @@ import {
   UseRecommendedProfiles,
   UseWhoActedOnPublication,
 } from './profiles';
+import { UseProfileManagers } from './profiles/UseProfileManagers';
+import { UseUpdateProfileManagers } from './profiles/UseUpdateProfileManagers';
 import {
   PublicationsPage,
   UsePublication,
@@ -95,6 +97,11 @@ export function App() {
                       <Route path="useProfileFollowing" element={<UseProfileFollowing />} />
                       <Route path="useMutualFollowers" element={<UseMutualFollowers />} />
                       <Route path="useRecommendedProfiles" element={<UseRecommendedProfiles />} />
+                      <Route path="useProfileManagers" element={<UseProfileManagers />} />
+                      <Route
+                        path="useUpdateProfileManagers"
+                        element={<UseUpdateProfileManagers />}
+                      />
                       <Route
                         path="useWhoActedOnPublication"
                         element={<UseWhoActedOnPublication />}

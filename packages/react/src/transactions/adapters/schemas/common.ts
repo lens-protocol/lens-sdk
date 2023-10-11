@@ -7,12 +7,18 @@ import {
   Erc20,
   erc20,
   Erc20Amount,
+  EvmAddress,
   Kind,
   UnknownObject,
 } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
 import { profileId, publicationId } from '../../../utils';
+
+export const EvmAddressSchema: z.ZodType<EvmAddress, z.ZodTypeDef, string> = z
+  .string()
+  .min(42)
+  .transform((value) => value);
 
 const Erc20Schema: z.Schema<Erc20, z.ZodTypeDef, UnknownObject> = z
   .object({

@@ -13,16 +13,6 @@ import { DateUtils, EvmAddress } from '@lens-protocol/shared-kernel';
 
 export enum TxStatus {
   /**
-   * @deprecated Use {@link TxStatus.PENDING} instead. It will be removed in the next major version.
-   */
-  BROADCASTING = 'pending',
-
-  /**
-   * @deprecated Use {@link TxStatus.PENDING} instead. It will be removed in the next major version.
-   */
-  MINING = 'pending',
-
-  /**
    * A pending transaction is a transaction that is either mining or it's mined but not indexed yet.
    */
   PENDING = 'pending',
@@ -38,36 +28,23 @@ export enum TxStatus {
   FAILED = 'failed',
 }
 
-const PENDING_STATUSES = [TxStatus.BROADCASTING, TxStatus.MINING];
-
-/**
- * @deprecated Use {@link TransactionState} instead. It will be removed in the next major version.
- */
-export type PendingTransactionState<T extends AnyTransactionRequest> = {
-  status: TxStatus.BROADCASTING | TxStatus.FAILED;
-  id: string;
-  request: T;
-};
-
-/**
- * @deprecated Use {@link TransactionState} instead. It will be removed in the next major version.
- */
-export type BroadcastedTransactionState<T extends AnyTransactionRequest> = {
-  status: TxStatus.MINING | TxStatus.SETTLED | TxStatus.FAILED;
-  id: string;
-  request: T;
-  txHash: string;
-};
-
 /**
  * Describe the state of a transaction and the originating request.
  */
-export type TransactionState<T extends AnyTransactionRequest> = {
-  status: TxStatus;
-  id: string;
-  request: T;
-  txHash?: string;
-};
+export type TransactionState<T extends AnyTransactionRequest> =
+  | {
+      status: TxStatus.PENDING | TxStatus.SETTLED;
+      id: string;
+      request: T;
+      txHash?: string;
+    }
+  | {
+      status: TxStatus.FAILED;
+      id: string;
+      request: T;
+      txHash?: string;
+      error: TransactionError;
+    };
 
 export const recentTransactionsVar = makeVar<TransactionState<AnyTransactionRequest>[]>([]);
 
@@ -83,20 +60,8 @@ function hasTransactionWith<T extends AnyTransactionRequest>(
   return transactions.some((txState) => statuses.includes(txState.status) && predicate(txState));
 }
 
-export function hasPendingTransactionWith<T extends AnyTransactionRequest>(
-  predicate: TransactionStatusPredicate<T>,
-) {
-  return hasTransactionWith(recentTransactionsVar(), PENDING_STATUSES, predicate);
-}
-
-export function hasSettledTransactionWith<T extends AnyTransactionRequest>(
-  predicate: TransactionStatusPredicate<T>,
-) {
-  return hasTransactionWith(recentTransactionsVar(), [TxStatus.SETTLED], predicate);
-}
-
 export function getAllPendingTransactions() {
-  return recentTransactionsVar().filter((txState) => PENDING_STATUSES.includes(txState.status));
+  return recentTransactionsVar().filter((txState) => txState.status === TxStatus.PENDING);
 }
 
 function delay(waitInMs: number) {
@@ -112,7 +77,7 @@ export function useHasPendingTransaction<T extends AnyTransactionRequest>(
 ) {
   const transactions = useRecentTransactionsVar();
 
-  return hasTransactionWith(transactions, PENDING_STATUSES, predicate);
+  return hasTransactionWith(transactions, [TxStatus.PENDING], predicate);
 }
 
 const FIFTEEN_SECONDS = DateUtils.secondsToMs(30);

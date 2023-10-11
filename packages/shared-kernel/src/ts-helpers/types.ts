@@ -76,6 +76,11 @@ export type OneOf<T, K extends keyof T = keyof T> = Prettify<
 >;
 
 /**
+ * At least one of the properties must be provided
+ */
+export type AtLeastOneOf<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
+
+/**
  * Ask TS to re-check that A1 extends A2. And if it fails, A2 will be enforced anyway.
  * @internal
  */

@@ -106,7 +106,7 @@ fragment CreateOnchainPostBroadcastItemResult on CreateOnchainPostBroadcastItemR
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       profileId
@@ -133,7 +133,7 @@ fragment CreateOnchainCommentBroadcastItemResult on CreateOnchainCommentBroadcas
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       profileId
@@ -165,7 +165,7 @@ fragment CreateOnchainMirrorBroadcastItemResult on CreateOnchainMirrorBroadcastI
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       profileId
@@ -192,7 +192,7 @@ fragment CreateOnchainQuoteBroadcastItemResult on CreateOnchainQuoteBroadcastIte
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       profileId
@@ -224,7 +224,7 @@ fragment CreateMomokaPostBroadcastItemResult on CreateMomokaPostBroadcastItemRes
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       profileId
@@ -251,7 +251,7 @@ fragment CreateMomokaCommentBroadcastItemResult on CreateMomokaCommentBroadcastI
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       profileId
@@ -283,7 +283,7 @@ fragment CreateMomokaMirrorBroadcastItemResult on CreateMomokaMirrorBroadcastIte
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       profileId
@@ -311,7 +311,7 @@ fragment CreateMomokaQuoteBroadcastItemResult on CreateMomokaQuoteBroadcastItemR
     domain {
       ...EIP712TypedDataDomain
     }
-    value {
+    message: value {
       nonce
       deadline
       profileId

@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 import {
   Erc20AmountSchema,
+  EvmAddressSchema,
   ProfileIdSchema,
   SerializedErc20AmountSchema,
   SignatureSchema,
@@ -45,10 +46,11 @@ export const UnfollowRequestSchema = z.object({
   kind: z.literal(TransactionKind.UNFOLLOW_PROFILE),
 });
 
-export const UpdateDispatcherConfigRequestSchema = z.object({
-  profileId: ProfileIdSchema,
-  enabled: z.boolean(),
-  kind: z.literal(TransactionKind.UPDATE_DISPATCHER_CONFIG),
+export const UpdateProfileManagersRequestSchema = z.object({
+  lensManager: z.boolean().optional(),
+  add: EvmAddressSchema.array().min(1).optional(),
+  remove: EvmAddressSchema.array().min(1).optional(),
+  kind: z.literal(TransactionKind.UPDATE_PROFILE_MANAGERS),
 });
 
 function chargeFollowPolicyConfigSchema<TAmountSchema extends Erc20AmountSchema>(

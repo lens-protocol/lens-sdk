@@ -4,9 +4,9 @@ import { Contract } from 'ethers';
 
 import lensFollowNftAbi from './abi/LensFollowNFT.json';
 import lensHubAbi from './abi/LensHub.json';
-import lensPeripheryAbi from './abi/LensPeriphery.json';
+import lensTokenHandleRegistryAbi from './abi/LensTokenHandleRegistry.json';
 import erc20Abi from './abi/erc-20.json';
-import type { Erc20, LensFollowNFT, LensHub, LensPeriphery } from './types';
+import type { Erc20, LensFollowNFT, LensHub, LensTokenHandleRegistry } from './types';
 
 export function erc20(address: EvmAddress, provider: Provider) {
   return new Contract(address, erc20Abi, provider) as Erc20;
@@ -20,6 +20,6 @@ export function lensHub(address: EvmAddress, provider?: Provider) {
   return new Contract(address, lensHubAbi, provider) as LensHub;
 }
 
-export function lensPeriphery(address: EvmAddress, provider?: Provider) {
-  return new Contract(address, lensPeripheryAbi, provider) as LensPeriphery;
+export function lensTokenHandleRegistry(address: EvmAddress, provider?: Provider) {
+  return new Contract(address, lensTokenHandleRegistryAbi, provider) as LensTokenHandleRegistry;
 }

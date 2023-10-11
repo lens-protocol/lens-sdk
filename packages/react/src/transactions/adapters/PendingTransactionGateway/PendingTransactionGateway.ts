@@ -33,12 +33,13 @@ const lensHubTransactionKinds = [
   TransactionKind.CREATE_POST,
   TransactionKind.FOLLOW_PROFILES,
   TransactionKind.MIRROR_PUBLICATION,
-  TransactionKind.UPDATE_DISPATCHER_CONFIG,
+  TransactionKind.UPDATE_PROFILE_MANAGERS,
   TransactionKind.UPDATE_PROFILE_IMAGE,
   TransactionKind.UPDATE_FOLLOW_POLICY,
+  TransactionKind.UPDATE_PROFILE_DETAILS,
 ];
 
-const lensPeripheryTransactionKinds = [TransactionKind.UPDATE_PROFILE_DETAILS];
+// const tokenHandleRegistryTransactionKinds = []; // not used yet
 
 const transactionKindToFilterGroup: { [k in TransactionKind]: TransactionKind[] } = {
   [TransactionKind.COLLECT_PUBLICATION]: lensHubTransactionKinds,
@@ -46,11 +47,10 @@ const transactionKindToFilterGroup: { [k in TransactionKind]: TransactionKind[] 
   [TransactionKind.CREATE_POST]: lensHubTransactionKinds,
   [TransactionKind.FOLLOW_PROFILES]: lensHubTransactionKinds,
   [TransactionKind.MIRROR_PUBLICATION]: lensHubTransactionKinds,
-  [TransactionKind.UPDATE_DISPATCHER_CONFIG]: lensHubTransactionKinds,
+  [TransactionKind.UPDATE_PROFILE_MANAGERS]: lensHubTransactionKinds,
   [TransactionKind.UPDATE_PROFILE_IMAGE]: lensHubTransactionKinds,
   [TransactionKind.UPDATE_FOLLOW_POLICY]: lensHubTransactionKinds,
-
-  [TransactionKind.UPDATE_PROFILE_DETAILS]: lensPeripheryTransactionKinds,
+  [TransactionKind.UPDATE_PROFILE_DETAILS]: lensHubTransactionKinds,
 
   [TransactionKind.APPROVE_MODULE]: [],
   [TransactionKind.CREATE_PROFILE]: [],
