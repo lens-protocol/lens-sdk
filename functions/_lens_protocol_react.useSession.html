@@ -34,11 +34,14 @@
 <li class="tsd-signature tsd-anchor-link" id="useSession"><span class="tsd-kind-call-signature">use<wbr/>Session</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/_lens_protocol_react.ReadResult.html" class="tsd-signature-type tsd-kind-type-alias">ReadResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/_lens_protocol_react.Session.html" class="tsd-signature-type tsd-kind-type-alias">Session</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type ">UnspecifiedError</span><span class="tsd-signature-symbol">&gt;</span><a href="#useSession" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p><code>useSession</code> is a hook that lets you access the current <a href="../types/_lens_protocol_react.Session.html" class="tsd-kind-type-alias">Session</a></p>
-<p><strong>Pro-tip</strong>: Use this hook to determine if the user is authenticated or not.</p>
+<p><strong>WARNING:</strong> the <a href="../types/_lens_protocol_react.Session.html" class="tsd-kind-type-alias">Session</a> type is a union type of <a href="../types/_lens_protocol_react.AnonymousSession.html" class="tsd-kind-type-alias">AnonymousSession</a>, <a href="../types/_lens_protocol_react.ProfileSession.html" class="tsd-kind-type-alias">ProfileSession</a>, and <a href="../types/_lens_protocol_react.WalletOnlySession.html" class="tsd-kind-type-alias">WalletOnlySession</a>.
+At the moment only <a href="../types/_lens_protocol_react.AnonymousSession.html" class="tsd-kind-type-alias">AnonymousSession</a> and <a href="../types/_lens_protocol_react.ProfileSession.html" class="tsd-kind-type-alias">ProfileSession</a> are supported. <a href="../types/_lens_protocol_react.WalletOnlySession.html" class="tsd-kind-type-alias">WalletOnlySession</a> will be supported soon
+after the official Lens Protocol v2 switch.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <a href="../types/_lens_protocol_react.ReadResult.html" class="tsd-signature-type tsd-kind-type-alias">ReadResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/_lens_protocol_react.Session.html" class="tsd-signature-type tsd-kind-type-alias">Session</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type ">UnspecifiedError</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography">
-<h4>Example</h4><pre><code class="language-tsx"><span class="hl-4">function</span><span class="hl-1"> </span><span class="hl-7">Page</span><span class="hl-1">() {</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> { </span><span class="hl-5">data</span><span class="hl-1">, </span><span class="hl-5">loading</span><span class="hl-1"> } = </span><span class="hl-7">useSession</span><span class="hl-1">();</span><br/><br/><span class="hl-1">  </span><span class="hl-0">if</span><span class="hl-1"> (</span><span class="hl-2">loading</span><span class="hl-1">) </span><span class="hl-0">return</span><span class="hl-1"> </span><span class="hl-8">&lt;</span><span class="hl-10">p</span><span class="hl-8">&gt;</span><span class="hl-1">Loading...</span><span class="hl-8">&lt;/</span><span class="hl-10">p</span><span class="hl-8">&gt;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">  </span><span class="hl-0">switch</span><span class="hl-1"> (</span><span class="hl-2">data</span><span class="hl-1">.</span><span class="hl-2">type</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-0">case</span><span class="hl-1"> </span><span class="hl-2">SessionType</span><span class="hl-1">.</span><span class="hl-2">Anonymous</span><span class="hl-1">:</span><br/><span class="hl-1">      </span><span class="hl-0">return</span><span class="hl-1"> </span><span class="hl-8">&lt;</span><span class="hl-6">Login</span><span class="hl-1"> </span><span class="hl-8">/&gt;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">    </span><span class="hl-0">case</span><span class="hl-1"> </span><span class="hl-2">SessionType</span><span class="hl-1">.</span><span class="hl-2">WithProfile</span><span class="hl-1">:</span><br/><span class="hl-1">      </span><span class="hl-0">return</span><span class="hl-1"> </span><span class="hl-8">&lt;</span><span class="hl-6">MyProfile</span><span class="hl-1"> </span><span class="hl-9">profile</span><span class="hl-1">=</span><span class="hl-4">{</span><span class="hl-2">session</span><span class="hl-11">.</span><span class="hl-2">profile</span><span class="hl-4">}</span><span class="hl-1"> </span><span class="hl-8">/&gt;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">    </span><span class="hl-0">default</span><span class="hl-1">:</span><br/><span class="hl-1">      </span><span class="hl-0">return</span><span class="hl-1"> </span><span class="hl-8">&lt;</span><span class="hl-10">p</span><span class="hl-8">&gt;</span><span class="hl-1">Something went wrong.</span><span class="hl-8">&lt;/</span><span class="hl-10">p</span><span class="hl-8">&gt;</span><span class="hl-1">;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+<h4>Example</h4><p>Use this hook to determine if the user is authenticated or not.</p>
+<pre><code class="language-tsx"><span class="hl-4">function</span><span class="hl-1"> </span><span class="hl-7">Page</span><span class="hl-1">() {</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> { </span><span class="hl-5">data</span><span class="hl-1">, </span><span class="hl-5">loading</span><span class="hl-1"> } = </span><span class="hl-7">useSession</span><span class="hl-1">();</span><br/><br/><span class="hl-1">  </span><span class="hl-0">if</span><span class="hl-1"> (</span><span class="hl-2">loading</span><span class="hl-1">) </span><span class="hl-0">return</span><span class="hl-1"> </span><span class="hl-8">&lt;</span><span class="hl-10">p</span><span class="hl-8">&gt;</span><span class="hl-1">Loading...</span><span class="hl-8">&lt;/</span><span class="hl-10">p</span><span class="hl-8">&gt;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">  </span><span class="hl-0">switch</span><span class="hl-1"> (</span><span class="hl-2">data</span><span class="hl-1">.</span><span class="hl-2">type</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-0">case</span><span class="hl-1"> </span><span class="hl-2">SessionType</span><span class="hl-1">.</span><span class="hl-2">Anonymous</span><span class="hl-1">:</span><br/><span class="hl-1">      </span><span class="hl-13">// session is a AnonymousSession</span><br/><span class="hl-1">      </span><span class="hl-0">return</span><span class="hl-1"> </span><span class="hl-8">&lt;</span><span class="hl-6">Login</span><span class="hl-1"> </span><span class="hl-8">/&gt;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">    </span><span class="hl-0">case</span><span class="hl-1"> </span><span class="hl-2">SessionType</span><span class="hl-1">.</span><span class="hl-2">WithProfile</span><span class="hl-1">:</span><br/><span class="hl-1">      </span><span class="hl-13">// session is a ProfileSession</span><br/><span class="hl-1">      </span><span class="hl-0">return</span><span class="hl-1"> </span><span class="hl-8">&lt;</span><span class="hl-6">MyProfile</span><span class="hl-1"> </span><span class="hl-9">profile</span><span class="hl-1">=</span><span class="hl-4">{</span><span class="hl-2">session</span><span class="hl-11">.</span><span class="hl-2">profile</span><span class="hl-4">}</span><span class="hl-1"> </span><span class="hl-8">/&gt;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">    </span><span class="hl-0">default</span><span class="hl-1">:</span><br/><span class="hl-1">      </span><span class="hl-0">return</span><span class="hl-1"> </span><span class="hl-8">&lt;</span><span class="hl-10">p</span><span class="hl-8">&gt;</span><span class="hl-1">Something went wrong.</span><span class="hl-8">&lt;/</span><span class="hl-10">p</span><span class="hl-8">&gt;</span><span class="hl-1">;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
 </code><button>Copy</button></pre>
 </div></li></ul></section></div>
 <div class="col-sidebar">
@@ -203,6 +206,8 @@
 <li><a href="../types/_lens_protocol_react_web.Session.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Session
 <div class="menu-item-desc">Describes the details of a user&#39;s session.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.UpdateProfileManagersArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Update<wbr/>Profile<wbr/>Managers<wbr/>Args</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.Url.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Url
 <div class="menu-item-desc">A URL</div></div></a></li>
@@ -232,6 +237,8 @@
 <li><a href="../types/_lens_protocol_react_web.UseProfileFollowingArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Use<wbr/>Profile<wbr/>Following<wbr/>Args
 <div class="menu-item-desc">useProfileFollowing hook arguments</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.UseProfileManagersArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Use<wbr/>Profile<wbr/>Managers<wbr/>Args</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.UseProfilesArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Use<wbr/>Profiles<wbr/>Args
 <div class="menu-item-desc">useProfiles hook arguments</div></div></a></li>
@@ -322,6 +329,9 @@
 <li><a href="_lens_protocol_react_web.useProfileFollowing.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Profile<wbr/>Following
 <div class="menu-item-desc">`useProfileFollowing` is a paginated hook that lets you fetch profiles that are followed by a requested profile.</div></div></a></li>
+<li><a href="_lens_protocol_react_web.useProfileManagers.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Profile<wbr/>Managers
+<div class="menu-item-desc">`useProfileManagers` is a paginated React hook that lets you fetch profile manager details for a given profile.</div></div></a></li>
 <li><a href="_lens_protocol_react_web.useProfiles.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Profiles
 <div class="menu-item-desc">`useProfiles` is a paginated hook that lets you fetch profiles based on a set of filters.</div></div></a></li>
@@ -342,7 +352,10 @@
 <div class="menu-item-desc">Search for publications based on a defined criteria</div></div></a></li>
 <li><a href="_lens_protocol_react_web.useSession.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Session
-<div class="menu-item-desc">`useSession` is a hook that lets you access the current Session **Pro-tip**: Use this hook to determine if the user is authenticated or not.</div></div></a></li>
+<div class="menu-item-desc">`useSession` is a hook that lets you access the current Session **WARNING:** the Session type is a union type of AnonymousSession, ProfileSession, and WalletOnlySession.</div></div></a></li>
+<li><a href="_lens_protocol_react_web.useUpdateProfileManagers.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Update<wbr/>Profile<wbr/>Managers
+<div class="menu-item-desc">`useUpdateProfileManagers` is a React Hook that allows you to update the Profile managers</div></div></a></li>
 <li><a href="_lens_protocol_react_web.useWhoActedOnPublication.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Who<wbr/>Acted<wbr/>On<wbr/>Publication
 <div class="menu-item-desc">`useWhoActedOnPublication` is a paginated hook that lets you fetch profiles that acted on a publication.</div></div></a></li>
@@ -499,6 +512,8 @@
 <li><a href="../types/_lens_protocol_react.Session.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Session
 <div class="menu-item-desc">Describes the details of a user&#39;s session.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.UpdateProfileManagersArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Update<wbr/>Profile<wbr/>Managers<wbr/>Args</div></a></li>
 <li><a href="../types/_lens_protocol_react.Url.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Url
 <div class="menu-item-desc">A URL</div></div></a></li>
@@ -528,6 +543,8 @@
 <li><a href="../types/_lens_protocol_react.UseProfileFollowingArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Use<wbr/>Profile<wbr/>Following<wbr/>Args
 <div class="menu-item-desc">useProfileFollowing hook arguments</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.UseProfileManagersArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Use<wbr/>Profile<wbr/>Managers<wbr/>Args</div></a></li>
 <li><a href="../types/_lens_protocol_react.UseProfilesArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Use<wbr/>Profiles<wbr/>Args
 <div class="menu-item-desc">useProfiles hook arguments</div></div></a></li>
@@ -618,6 +635,9 @@
 <li><a href="_lens_protocol_react.useProfileFollowing.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Profile<wbr/>Following
 <div class="menu-item-desc">`useProfileFollowing` is a paginated hook that lets you fetch profiles that are followed by a requested profile.</div></div></a></li>
+<li><a href="_lens_protocol_react.useProfileManagers.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Profile<wbr/>Managers
+<div class="menu-item-desc">`useProfileManagers` is a paginated React hook that lets you fetch profile manager details for a given profile.</div></div></a></li>
 <li><a href="_lens_protocol_react.useProfiles.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Profiles
 <div class="menu-item-desc">`useProfiles` is a paginated hook that lets you fetch profiles based on a set of filters.</div></div></a></li>
@@ -638,7 +658,10 @@
 <div class="menu-item-desc">Search for publications based on a defined criteria</div></div></a></li>
 <li><a href="_lens_protocol_react.useSession.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Session
-<div class="menu-item-desc">`useSession` is a hook that lets you access the current Session **Pro-tip**: Use this hook to determine if the user is authenticated or not.</div></div></a></li>
+<div class="menu-item-desc">`useSession` is a hook that lets you access the current Session **WARNING:** the Session type is a union type of AnonymousSession, ProfileSession, and WalletOnlySession.</div></div></a></li>
+<li><a href="_lens_protocol_react.useUpdateProfileManagers.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Update<wbr/>Profile<wbr/>Managers
+<div class="menu-item-desc">`useUpdateProfileManagers` is a React Hook that allows you to update the Profile managers</div></div></a></li>
 <li><a href="_lens_protocol_react.useWhoActedOnPublication.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Who<wbr/>Acted<wbr/>On<wbr/>Publication
 <div class="menu-item-desc">`useWhoActedOnPublication` is a paginated hook that lets you fetch profiles that acted on a publication.</div></div></a></li>
