@@ -25,6 +25,7 @@ import {
   CreateCommentRequestSchema,
   CreateMirrorRequestSchema,
   CreatePostRequestSchema,
+  CreateQuoteRequestSchema,
 } from './publications';
 
 function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) {
@@ -34,6 +35,9 @@ function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) 
 
     case TransactionKind.CREATE_COMMENT:
       return CreateCommentRequestSchema;
+
+    case TransactionKind.CREATE_QUOTE:
+      return CreateQuoteRequestSchema;
 
     case TransactionKind.MIRROR_PUBLICATION:
       return CreateMirrorRequestSchema;
@@ -57,7 +61,6 @@ function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) 
     // PaidFollowRequestSchema,
     // ProfileOwnerFollowRequestSchema,
     // UnconstrainedFollowRequestSchema,
-    case TransactionKind.CREATE_QUOTE:
     case TransactionKind.COLLECT_PUBLICATION:
     // FreeCollectRequestSchema,
     // PaidCollectRequestSchema,

@@ -33,6 +33,7 @@ export type ISubsidizeOffChainPresenter<T extends ProtocolTransactionRequestMode
     BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
   >;
 
+// TODO rename to Momoka for more clarity
 export class SubsidizeOffChain<T extends ProtocolTransactionRequestModel>
   implements ISignedOperation<T>
 {

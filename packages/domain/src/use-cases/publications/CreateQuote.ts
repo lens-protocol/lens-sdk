@@ -1,7 +1,7 @@
-import { NonEmptyArray, URI } from '@lens-protocol/shared-kernel';
+import { URI } from '@lens-protocol/shared-kernel';
 
 import { PublicationId, TransactionKind } from '../../entities';
-import { MomokaOption } from '../transactions/MomokaOption';
+import { MomokaCapable } from '../transactions/MomokaCapable';
 import { OpenActionConfig } from './OpenActionConfig';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
 
@@ -22,27 +22,21 @@ export type CreateQuoteRequest = {
    * The metadata URI.
    */
   metadata: URI;
-} & (
-  | {
-      /**
-       * Host on Momoka
-       */
-      momoka: true;
-    }
-  | {
-      /**
-       * Host on on-chain
-       */
-      momoka: false;
-      /**
-       * The Open Actions associated with the publication.
-       */
-      actions?: NonEmptyArray<OpenActionConfig>;
-      /**
-       * The post reference policy.
-       */
-      reference: ReferencePolicyConfig;
-    }
-);
+  /**
+   * The Open Actions associated with the publication.
+   */
+  actions?: OpenActionConfig;
+  /**
+   * The post reference policy.
+   */
+  reference?: ReferencePolicyConfig;
+};
 
-export class CreateQuote extends MomokaOption<CreateQuoteRequest> {}
+export class CreateQuote extends MomokaCapable<CreateQuoteRequest> {
+  override async execute(request: CreateQuoteRequest): Promise<void> {
+    if (['actions', 'reference'].some((key) => key in request)) {
+      return this.onChain.execute(request);
+    }
+    return this.momoka.execute(request);
+  }
+}
