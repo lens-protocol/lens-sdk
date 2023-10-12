@@ -20,7 +20,9 @@ import { validateUpdateProfileManagersRequest } from './schemas/validators';
 
 export function useUpdateProfileManagersController() {
   const {
+    activeWallet,
     apolloClient,
+    onChainRelayer,
     credentialsGateway,
     logger,
     transactionFactory,
@@ -46,8 +48,6 @@ export function useUpdateProfileManagersController() {
       BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
     const gateway = new UpdateProfileManagersCallGateway(apolloClient);
-    const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
-    const onChainRelayer = new OnChainRelayer(apolloClient, transactionFactory, logger);
 
     const updateProfileManagers = new UpdateProfileManagers(
       activeWallet,

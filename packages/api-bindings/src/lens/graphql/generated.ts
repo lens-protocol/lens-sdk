@@ -598,6 +598,7 @@ export type LegacyCollectRequest = {
 export enum LensProfileManagerRelayErrorReasonType {
   AppGaslessNotAllowed = 'APP_GASLESS_NOT_ALLOWED',
   Failed = 'FAILED',
+  NotSponsored = 'NOT_SPONSORED',
   NoLensManagerEnabled = 'NO_LENS_MANAGER_ENABLED',
   RateLimited = 'RATE_LIMITED',
   RequiresSignature = 'REQUIRES_SIGNATURE',
@@ -854,10 +855,6 @@ export type NftsRequestWhere = {
 export type NotificationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']>;
   where?: InputMaybe<NotificationWhere>;
-};
-
-export type NotificationSubscriptionRequest = {
-  for: Scalars['ProfileId'];
 };
 
 export enum NotificationType {
@@ -1375,10 +1372,6 @@ export type PublicationStatsReactionArgs = {
   type: PublicationReactionType;
 };
 
-export type PublicationStatsSubscriptionRequest = {
-  for: Scalars['PublicationId'];
-};
-
 export enum PublicationType {
   Comment = 'COMMENT',
   Mirror = 'MIRROR',
@@ -1472,6 +1465,7 @@ export enum RelayErrorReasonType {
   AppGaslessNotAllowed = 'APP_GASLESS_NOT_ALLOWED',
   Expired = 'EXPIRED',
   Failed = 'FAILED',
+  NotSponsored = 'NOT_SPONSORED',
   RateLimited = 'RATE_LIMITED',
   WrongWalletSigned = 'WRONG_WALLET_SIGNED',
 }
@@ -1845,7 +1839,7 @@ export type RevertFollowModuleSettings = {
 
 export type UnknownFollowModuleSettings = {
   __typename: 'UnknownFollowModuleSettings';
-  followModuleReturnData: string;
+  followModuleReturnData: string | null;
   contract: NetworkAddress;
 };
 
@@ -2079,7 +2073,7 @@ export type DegreesOfSeparationReferenceModuleSettings = {
 
 export type UnknownReferenceModuleSettings = {
   __typename: 'UnknownReferenceModuleSettings';
-  referenceModuleReturnData: string;
+  referenceModuleReturnData: string | null;
   contract: NetworkAddress;
 };
 
