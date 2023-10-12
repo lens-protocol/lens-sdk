@@ -43,7 +43,182 @@ export type CreatePostArgs = {
 /**
  * `useCreatePost` is React Hook that allows you to create a new Lens Post.
  *
- * ## Migration from v1
+ * ## Basic usage
+ *
+ * Create a text-only post:
+ *
+ * ```tsx
+ * const { execute, error, loading } = useCreatePost();
+ *
+ * const post = (content: string) => {
+ *   // create the desired metadata via the `@lens-protocol/metadata` package helpers
+ *   const metadata = textOnly({ content });
+ *
+ *   // upload the metadata to a storage provider of your choice (IPFS in this example)
+ *   const uri = await uploadToIpfs(metadata);
+ *
+ *   // invoke the `execute` function to create the post
+ *   const result = await execute({
+ *     metadata: uri,
+ *   });
+ * }
+ * ```
+ *
+ * See the [`@lens-protocol/metadata` package](https://github.com/lens-protocol/metadata) for more
+ * information on how to create metadata for other types of publications.
+ *
+ * ## Failure scenarios
+ *
+ * You can handle possible failure scenarios by checking the `result` value.
+ *
+ * ```tsx
+ * const { execute, error, loading } = useCreatePost();
+ *
+ * const post = async (content: string) => {
+ *   // first part is the same as in the initial example
+ *
+ *   // invoke the `execute` function to create the post
+ *   const result = await execute({
+ *     metadata: uri,
+ *   });
+ *
+ *   if (result.isFailure()) {
+ *     switch (error.constructor) {
+ *       case BroadcastingError:
+ *         console.log('There was an error broadcasting the transaction', error.message);
+ *         break;
+ *
+ *       case PendingSigningRequestError:
+ *         console.log(
+ *           'There is a pending signing request in your wallet. ' +
+ *             'Approve it or discard it and try again.'
+ *         );
+ *         break;
+ *
+ *       case WalletConnectionError:
+ *         console.log('There was an error connecting to your wallet', error.message);
+ *         break;
+ *
+ *       case UserRejectedError:
+ *         // the user decided to not sign, usually this is silently ignored by UIs
+ *         break;
+ *     }
+ *     return;
+ *   }
+ * };
+ * ```
+ * At this point the post creation is completed from and end-user perspective but,
+ * in case of on-chain TX, this not necessarily mined  and indexed. See the following section.
+ *
+ * ## Wait for completion
+ *
+ * In case of successful submission, the `result` value can be used to wait for the post to be fully processed.
+ *
+ * This gives you an opportunity to decide what UX to provide to the end-user.
+ *
+ * For example if the post is on-chain it might take a while to be mined and indexed. So you might want to show a loading indicator or
+ * let the user navigate away from the page.
+ *
+ * ```tsx
+ * const { execute, error, loading } = useCreatePost();
+ *
+ * const post = async (content: string) => {
+ *   // first part is the same as in the initial example
+ *
+ *   // invoke the `execute` function to create the post
+ *   const result = await execute({
+ *     metadata: uri,
+ *   });
+ *
+ *   if (result.isFailure()) {
+ *     // handle failure scenarios
+ *     return;
+ *   }
+ *
+ *   // this might take a while, depends on the type of tx (on-chain or Momoka)
+ *   // and the congestion of the network
+ *   const completion = await result.value.completion();
+ *
+ *   if (completion.isFailure()) {
+ *     console.log('There was an processing the transaction', completion.error.message);
+ *     return;
+ *   }
+ *
+ *   // the post is now ready to be used
+ *   const post = completion.value;
+ *   console.log('Post created', post);
+ * };
+ * ```
+ *
+ * ## Configure the reference policy
+ *
+ * Contextually to the post creation you can configure the reference policy.
+ *
+ * A post with reference policy other than `ANYONE` will be hosted on-chain.
+ * If the post has reference policy `ANYONE` (which is also the default value) and does not have
+ * any open actions, it will be hosted on Momoka.
+ *
+ * @example
+ * No one can comment, quote, or mirror the post:
+ * ```tsx
+ * const result = await execute({
+ *   metadata: uri,
+ *
+ *   reference: {
+ *     type: ReferencePolicyType.NO_ONE
+ *   }
+ * });
+ * ```
+ *
+ * @example
+ * Only followers can comment, quote, or mirror the post:
+ * ```tsx
+ * const result = await execute({
+ *   metadata: uri,
+ *
+ *   reference: {
+ *     type: ReferencePolicyType.FOLLOWERS_ONLY
+ *   }
+ * });
+ * ```
+ *
+ * @example
+ * You can have finer control over who can comment, quote, or mirror the post by using the `DEGREES_OF_SEPARATION` reference policy:
+ * ```tsx
+ * const result = await execute({
+ *   metadata: uri,
+ *
+ *   reference: {
+ *     type: ReferencePolicyType.DEGREES_OF_SEPARATION,
+ *     params: {
+ *       degreesOfSeparation: 2, // followers and followers of your followers
+ *       commentsRestricted: true, // can comment
+ *       mirrorsRestricted: true, // can mirror
+ *       quotesRestricted: false, // cannot quote
+ *     }
+ *   }
+ * });
+ * ```
+ * You can even set the `DEGREES_OF_SEPARATION` reference policy to follow someone elses graph:
+ * ```tsx
+ * const result = await execute({
+ *   metadata: uri,
+ *
+ *   reference: {
+ *     type: ReferencePolicyType.DEGREES_OF_SEPARATION,
+ *     params: {
+ *       degreesOfSeparation: 2, // followers and followers of your followers
+ *       commentsRestricted: true, // can comment
+ *       mirrorsRestricted: true, // can mirror
+ *       quotesRestricted: false, // cannot quote
+ *
+ *       sourceProfileId: '0x01', // in relation to Profile Id 0x01
+ *     }
+ *   }
+ * });
+ * ```
+ *
+ * ## Upgrading from v1
  *
  * Replace the `useCreatePost` hook with `useCreatePost` like in the following diff:
  * ```diff
@@ -64,6 +239,8 @@ export type CreatePostArgs = {
  * const result = await execute({
  *   metadata: uri,
  * })
+ *
+ * // continue as usual
  * ```
  *
  * @category Publications

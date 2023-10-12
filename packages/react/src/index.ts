@@ -28,8 +28,8 @@ export * from './transactions';
 /**
  * Domain essentials
  */
-export type { AppId, NftId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
 export type { ChainType, EvmAddress, Url } from '@lens-protocol/shared-kernel';
+export type { AppId, NftId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
 
 /**
  * Config
@@ -57,8 +57,15 @@ export * from './helpers/tasks';
 export type { MetadataAttribute } from '@lens-protocol/api-bindings';
 
 /**
- * Common types
+ * Common errors
  */
+export {
+  PendingSigningRequestError,
+  TransactionError,
+  UserRejectedError,
+  WalletConnectionError,
+} from '@lens-protocol/domain/entities';
+export { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 export { NotFoundError } from './NotFoundError';
 
 /**

@@ -4,7 +4,6 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { ActiveWallet } from '@lens-protocol/domain/use-cases/authentication';
 import {
   UpdateProfileManagers,
   UpdateProfileManagersRequest,
@@ -13,23 +12,13 @@ import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions'
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
-import { OnChainRelayer } from './OnChainRelayer';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
 import { UpdateProfileManagersCallGateway } from './UpdateProfileManagersCallGateway';
 import { validateUpdateProfileManagersRequest } from './schemas/validators';
 
 export function useUpdateProfileManagersController() {
-  const {
-    activeWallet,
-    apolloClient,
-    onChainRelayer,
-    credentialsGateway,
-    logger,
-    transactionFactory,
-    transactionGateway,
-    transactionQueue,
-    walletGateway,
-  } = useSharedDependencies();
+  const { activeWallet, apolloClient, onChainRelayer, transactionGateway, transactionQueue } =
+    useSharedDependencies();
 
   return async (
     request: UpdateProfileManagersRequest,
