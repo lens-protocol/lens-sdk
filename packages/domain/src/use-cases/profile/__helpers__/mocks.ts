@@ -16,7 +16,7 @@ import {
   UnconstrainedFollowRequest,
   PaidFollowRequest,
   ProfileOwnerFollowRequest,
-} from '../FollowProfiles';
+} from '../FollowProfile';
 import {
   INftOwnershipChallengeGateway,
   NftOwnershipSignature,
@@ -117,7 +117,7 @@ export function mockUnconstrainedFollowRequest(
     followerAddress: mockEvmAddress(),
     profileId: mockProfileId(),
     ...overrides,
-    kind: TransactionKind.FOLLOW_PROFILES,
+    kind: TransactionKind.FOLLOW_PROFILE,
   };
 }
 
@@ -130,7 +130,7 @@ export function mockPaidFollowRequest(): PaidFollowRequest {
       contractAddress: mockEvmAddress(),
       recipient: mockEvmAddress(),
     },
-    kind: TransactionKind.FOLLOW_PROFILES,
+    kind: TransactionKind.FOLLOW_PROFILE,
   };
 }
 
@@ -139,7 +139,7 @@ export function mockProfileOwnerFollowRequest(): ProfileOwnerFollowRequest {
     followerAddress: mockEvmAddress(),
     profileId: mockProfileId(),
     followerProfileId: mockProfileId(),
-    kind: TransactionKind.FOLLOW_PROFILES,
+    kind: TransactionKind.FOLLOW_PROFILE,
   };
 }
 

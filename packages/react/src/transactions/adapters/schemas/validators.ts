@@ -1,4 +1,5 @@
 import {
+  UnfollowRequest,
   UpdateFollowPolicyRequest,
   UpdateProfileDetailsRequest,
 } from '@lens-protocol/domain/use-cases/profile';
@@ -9,6 +10,7 @@ import { z } from 'zod';
 
 import { TokenAllowanceRequestSchema } from './erc20';
 import {
+  UnfollowRequestSchema,
   UpdateFollowPolicyRequestSchema,
   UpdateProfileDetailsRequestSchema,
   UpdateProfileManagersRequestSchema,
@@ -39,3 +41,6 @@ export const validateUpdateProfileDetailsRequest: Validator<UpdateProfileDetails
 
 export const validateUpdateProfileManagersRequest: Validator<UpdateProfileDetailsRequest> =
   createRequestValidator(UpdateProfileManagersRequestSchema);
+
+export const validateUnfollowRequest: Validator<UnfollowRequest> =
+  createRequestValidator(UnfollowRequestSchema);

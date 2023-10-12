@@ -57,7 +57,7 @@ function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) 
     case TransactionKind.UPDATE_FOLLOW_POLICY:
       return UpdateFollowPolicyRequestSchema;
 
-    case TransactionKind.FOLLOW_PROFILES:
+    case TransactionKind.FOLLOW_PROFILE:
     // PaidFollowRequestSchema,
     // ProfileOwnerFollowRequestSchema,
     // UnconstrainedFollowRequestSchema,

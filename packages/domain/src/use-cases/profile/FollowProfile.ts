@@ -25,20 +25,20 @@ export type FollowRequestFee = {
 export type UnconstrainedFollowRequest = {
   followerAddress: string;
   profileId: ProfileId;
-  kind: TransactionKind.FOLLOW_PROFILES;
+  kind: TransactionKind.FOLLOW_PROFILE;
 };
 
 export type PaidFollowRequest = {
   followerAddress: string;
   profileId: ProfileId;
-  kind: TransactionKind.FOLLOW_PROFILES;
+  kind: TransactionKind.FOLLOW_PROFILE;
   fee: FollowRequestFee;
 };
 
 export type ProfileOwnerFollowRequest = {
   followerAddress: string;
   profileId: ProfileId;
-  kind: TransactionKind.FOLLOW_PROFILES;
+  kind: TransactionKind.FOLLOW_PROFILE;
   followerProfileId: ProfileId;
 };
 
@@ -72,7 +72,7 @@ export type IFollowProfilePresenter = ITransactionResultPresenter<
   | WalletConnectionError
 >;
 
-export class FollowProfiles {
+export class FollowProfile {
   constructor(
     private readonly tokenAvailability: TokenAvailability,
     private readonly signedFollow: SubsidizeOnChain<FollowRequest>,

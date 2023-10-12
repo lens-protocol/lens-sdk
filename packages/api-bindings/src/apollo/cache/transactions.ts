@@ -108,7 +108,7 @@ export function isFollowTransactionFor({
   followerAddress: EvmAddress;
 }): TransactionStatusPredicate<FollowRequest> {
   return (transaction): transaction is TransactionState<FollowRequest> =>
-    transaction.request.kind === TransactionKind.FOLLOW_PROFILES &&
+    transaction.request.kind === TransactionKind.FOLLOW_PROFILE &&
     transaction.request.profileId === profileId &&
     transaction.request.followerAddress === followerAddress;
 }

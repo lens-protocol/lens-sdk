@@ -11,11 +11,11 @@ import {
 } from '../../wallets/TokenAvailability';
 import { mockTokeAvailability } from '../../wallets/__helpers__/mocks';
 import {
-  FollowProfiles,
+  FollowProfile,
   FollowRequest,
   IFollowProfilePresenter,
   UnconstrainedFollowRequest,
-} from '../FollowProfiles';
+} from '../FollowProfile';
 import {
   mockPaidFollowRequest,
   mockProfileOwnerFollowRequest,
@@ -30,7 +30,7 @@ function mockSignlessSubsidizedCall<T extends UnconstrainedFollowRequest>() {
   return mock<SignlessSubsidizeOnChain<T>>();
 }
 
-function setupFollowProfiles({
+function setupFollowProfile({
   tokenAvailability = mock<TokenAvailability>(),
   presenter = mock<IFollowProfilePresenter>(),
   signedCall = mockSubsidizedCall<FollowRequest>(),
@@ -41,11 +41,11 @@ function setupFollowProfiles({
   signedCall?: SubsidizeOnChain<FollowRequest>;
   signlessCall?: SignlessSubsidizeOnChain<UnconstrainedFollowRequest>;
 }) {
-  return new FollowProfiles(tokenAvailability, signedCall, signlessCall, presenter);
+  return new FollowProfile(tokenAvailability, signedCall, signlessCall, presenter);
 }
 
-describe(`Given an instance of the ${FollowProfiles.name} interactor`, () => {
-  describe(`when calling the "${FollowProfiles.prototype.execute.name}" method`, () => {
+describe(`Given an instance of the ${FollowProfile.name} interactor`, () => {
+  describe(`when calling the "${FollowProfile.prototype.execute.name}" method`, () => {
     describe('with an UnconstrainedFollowRequest', () => {
       const request = mockUnconstrainedFollowRequest();
 
@@ -53,12 +53,12 @@ describe(`Given an instance of the ${FollowProfiles.name} interactor`, () => {
         const signedCall = mockSubsidizedCall<FollowRequest>();
         const signlessCall = mockSignlessSubsidizedCall<UnconstrainedFollowRequest>();
 
-        const followProfiles = setupFollowProfiles({
+        const followProfile = setupFollowProfile({
           signedCall,
           signlessCall,
         });
 
-        await followProfiles.execute(request);
+        await followProfile.execute(request);
 
         expect(signlessCall.execute).toHaveBeenCalledWith(request);
         expect(signedCall.execute).not.toHaveBeenCalled();
@@ -72,12 +72,12 @@ describe(`Given an instance of the ${FollowProfiles.name} interactor`, () => {
         const signedCall = mockSubsidizedCall<FollowRequest>();
         const signlessCall = mockSignlessSubsidizedCall<UnconstrainedFollowRequest>();
 
-        const followProfiles = setupFollowProfiles({
+        const followProfile = setupFollowProfile({
           signedCall,
           signlessCall,
         });
 
-        await followProfiles.execute(request);
+        await followProfile.execute(request);
 
         expect(signedCall.execute).toHaveBeenCalledWith(request);
         expect(signlessCall.execute).not.toHaveBeenCalled();
@@ -98,13 +98,13 @@ describe(`Given an instance of the ${FollowProfiles.name} interactor`, () => {
         const signedCall = mockSubsidizedCall<FollowRequest>();
         const signlessCall = mockSignlessSubsidizedCall<UnconstrainedFollowRequest>();
 
-        const followProfiles = setupFollowProfiles({
+        const followProfile = setupFollowProfile({
           signedCall,
           signlessCall,
           tokenAvailability,
         });
 
-        await followProfiles.execute(request);
+        await followProfile.execute(request);
 
         expect(signedCall.execute).toHaveBeenCalledWith(request);
         expect(signlessCall.execute).not.toHaveBeenCalled();
@@ -129,12 +129,12 @@ describe(`Given an instance of the ${FollowProfiles.name} interactor`, () => {
           });
           const presenter = mock<IFollowProfilePresenter>();
 
-          const followProfiles = setupFollowProfiles({
+          const followProfile = setupFollowProfile({
             tokenAvailability,
             presenter,
           });
 
-          await followProfiles.execute(request);
+          await followProfile.execute(request);
 
           expect(presenter.present).toHaveBeenCalledWith(failure(error));
         },
