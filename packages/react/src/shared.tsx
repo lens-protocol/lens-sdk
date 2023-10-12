@@ -21,6 +21,7 @@ import React, { ReactNode, useContext } from 'react';
 import { ConsoleLogger } from './ConsoleLogger';
 import { AccessTokenStorage } from './authentication/adapters/AccessTokenStorage';
 import { AuthApi } from './authentication/adapters/AuthApi';
+import { CredentialsExpiryController } from './authentication/adapters/CredentialsExpiryController';
 import { CredentialsFactory } from './authentication/adapters/CredentialsFactory';
 import { CredentialsGateway } from './authentication/adapters/CredentialsGateway';
 import { CredentialsStorage } from './authentication/adapters/CredentialsStorage';
@@ -134,6 +135,10 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     conversationsGateway,
     logoutPresenter,
   );
+
+  // controllers
+  const credentialsExpiryController = new CredentialsExpiryController(logout);
+  credentialsExpiryController.subscribe(accessTokenStorage);
 
   return {
     activeWallet,
