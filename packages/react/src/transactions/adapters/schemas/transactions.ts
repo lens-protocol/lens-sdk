@@ -20,6 +20,7 @@ import {
   UpdateProfileManagersRequestSchema,
   UpdateProfileDetailsRequestSchema,
   UpdateFollowPolicyRequestSchema,
+  FollowRequestSchema,
 } from './profiles';
 import {
   CreateCommentRequestSchema,
@@ -58,9 +59,8 @@ function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) 
       return UpdateFollowPolicyRequestSchema;
 
     case TransactionKind.FOLLOW_PROFILE:
-    // PaidFollowRequestSchema,
-    // ProfileOwnerFollowRequestSchema,
-    // UnconstrainedFollowRequestSchema,
+      return FollowRequestSchema;
+
     case TransactionKind.COLLECT_PUBLICATION:
     // FreeCollectRequestSchema,
     // PaidCollectRequestSchema,

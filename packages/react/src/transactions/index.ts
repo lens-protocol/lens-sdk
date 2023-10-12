@@ -1,5 +1,7 @@
 export * from './useCreateComment';
 export * from './useCreatePost';
+export * from './useFollowProfile';
+export * from './useUnfollowProfile';
 export * from './useUpdateFollowPolicy';
 export * from './useUpdateProfileManagers';
 

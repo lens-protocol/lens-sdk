@@ -12,11 +12,7 @@ import {
   DuplicatedHandleError,
   IProfileTransactionGateway,
 } from '../CreateProfile';
-import {
-  UnconstrainedFollowRequest,
-  PaidFollowRequest,
-  ProfileOwnerFollowRequest,
-} from '../FollowProfile';
+import { UnconstrainedFollowRequest, PaidFollowRequest } from '../FollowProfile';
 import {
   INftOwnershipChallengeGateway,
   NftOwnershipSignature,
@@ -114,7 +110,6 @@ export function mockUnconstrainedFollowRequest(
   overrides?: Partial<UnconstrainedFollowRequest>,
 ): UnconstrainedFollowRequest {
   return {
-    followerAddress: mockEvmAddress(),
     profileId: mockProfileId(),
     ...overrides,
     kind: TransactionKind.FOLLOW_PROFILE,
@@ -123,22 +118,12 @@ export function mockUnconstrainedFollowRequest(
 
 export function mockPaidFollowRequest(): PaidFollowRequest {
   return {
-    followerAddress: mockEvmAddress(),
     profileId: mockProfileId(),
     fee: {
       amount: mockDaiAmount(1, ChainType.POLYGON),
       contractAddress: mockEvmAddress(),
       recipient: mockEvmAddress(),
     },
-    kind: TransactionKind.FOLLOW_PROFILE,
-  };
-}
-
-export function mockProfileOwnerFollowRequest(): ProfileOwnerFollowRequest {
-  return {
-    followerAddress: mockEvmAddress(),
-    profileId: mockProfileId(),
-    followerProfileId: mockProfileId(),
     kind: TransactionKind.FOLLOW_PROFILE,
   };
 }

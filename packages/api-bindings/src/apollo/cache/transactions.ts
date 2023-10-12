@@ -9,7 +9,7 @@ import {
 import { FollowRequest, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import { CollectRequest, CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
-import { DateUtils, EvmAddress } from '@lens-protocol/shared-kernel';
+import { DateUtils } from '@lens-protocol/shared-kernel';
 
 export enum TxStatus {
   /**
@@ -102,15 +102,12 @@ export function useWaitUntilTransactionSettled(waitTimeInMs: number = FIFTEEN_SE
 
 export function isFollowTransactionFor({
   profileId,
-  followerAddress,
 }: {
   profileId: ProfileId;
-  followerAddress: EvmAddress;
 }): TransactionStatusPredicate<FollowRequest> {
   return (transaction): transaction is TransactionState<FollowRequest> =>
     transaction.request.kind === TransactionKind.FOLLOW_PROFILE &&
-    transaction.request.profileId === profileId &&
-    transaction.request.followerAddress === followerAddress;
+    transaction.request.profileId === profileId;
 }
 
 export function isUnfollowTransactionFor({

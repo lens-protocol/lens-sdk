@@ -1,4 +1,5 @@
 export * from './ProfilesPage';
+export * from './UseFollowAndUnfollowProfile';
 export * from './UseLazyProfile';
 export * from './UseMutualFollowers';
 export * from './UseProfile';

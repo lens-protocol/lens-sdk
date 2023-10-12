@@ -1,4 +1,5 @@
 import {
+  FollowRequest,
   UnfollowRequest,
   UpdateFollowPolicyRequest,
   UpdateProfileDetailsRequest,
@@ -10,6 +11,7 @@ import { z } from 'zod';
 
 import { TokenAllowanceRequestSchema } from './erc20';
 import {
+  FollowRequestSchema,
   UnfollowRequestSchema,
   UpdateFollowPolicyRequestSchema,
   UpdateProfileDetailsRequestSchema,
@@ -44,3 +46,6 @@ export const validateUpdateProfileManagersRequest: Validator<UpdateProfileDetail
 
 export const validateUnfollowRequest: Validator<UnfollowRequest> =
   createRequestValidator(UnfollowRequestSchema);
+
+export const validateFollowRequest: Validator<FollowRequest> =
+  createRequestValidator(FollowRequestSchema);

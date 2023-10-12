@@ -8,7 +8,6 @@ import {
   ProfileId,
 } from '../../entities';
 import { ITransactionResultPresenter } from '../transactions/ITransactionResultPresenter';
-import { SignlessSubsidizeOnChain } from '../transactions/SignlessSubsidizeOnChain';
 import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
 import {
   InsufficientAllowanceError,
@@ -23,44 +22,26 @@ export type FollowRequestFee = {
 };
 
 export type UnconstrainedFollowRequest = {
-  followerAddress: string;
   profileId: ProfileId;
   kind: TransactionKind.FOLLOW_PROFILE;
 };
 
 export type PaidFollowRequest = {
-  followerAddress: string;
   profileId: ProfileId;
   kind: TransactionKind.FOLLOW_PROFILE;
   fee: FollowRequestFee;
 };
 
-export type ProfileOwnerFollowRequest = {
-  followerAddress: string;
-  profileId: ProfileId;
-  kind: TransactionKind.FOLLOW_PROFILE;
-  followerProfileId: ProfileId;
-};
-
-export type FollowRequest =
-  | UnconstrainedFollowRequest
-  | ProfileOwnerFollowRequest
-  | PaidFollowRequest;
+export type FollowRequest = UnconstrainedFollowRequest | PaidFollowRequest;
 
 export function isPaidFollowRequest(request: FollowRequest): request is PaidFollowRequest {
   return 'fee' in request && request.fee !== undefined;
 }
 
-export function isProfileOwnerFollowRequest(
-  request: FollowRequest,
-): request is ProfileOwnerFollowRequest {
-  return 'followerProfileId' in request && request.followerProfileId !== undefined;
-}
-
 export function isUnconstrainedFollowRequest(
   request: FollowRequest,
 ): request is UnconstrainedFollowRequest {
-  return !isPaidFollowRequest(request) && !isProfileOwnerFollowRequest(request);
+  return !isPaidFollowRequest(request);
 }
 
 export type IFollowProfilePresenter = ITransactionResultPresenter<
@@ -76,7 +57,6 @@ export class FollowProfile {
   constructor(
     private readonly tokenAvailability: TokenAvailability,
     private readonly signedFollow: SubsidizeOnChain<FollowRequest>,
-    private readonly signlessFollow: SignlessSubsidizeOnChain<UnconstrainedFollowRequest>,
     private readonly followProfilePresenter: IFollowProfilePresenter,
   ) {}
 
@@ -91,11 +71,6 @@ export class FollowProfile {
         this.followProfilePresenter.present(result);
         return;
       }
-    }
-
-    if (isUnconstrainedFollowRequest(request)) {
-      await this.signlessFollow.execute(request);
-      return;
     }
 
     await this.signedFollow.execute(request);

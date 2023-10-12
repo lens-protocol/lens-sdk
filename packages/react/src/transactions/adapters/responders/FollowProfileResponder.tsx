@@ -1,28 +1,29 @@
-import { UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
+import { TriStateValue } from '@lens-protocol/api-bindings';
+import { FollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
-  TransactionData,
   ITransactionResponder,
+  TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
 
 import { IProfileCacheManager } from '../../../profile/adapters/IProfileCacheManager';
 
-export class UnfollowProfileResponder implements ITransactionResponder<UnfollowRequest> {
+export class FollowProfileResponder implements ITransactionResponder<FollowRequest> {
   constructor(private readonly profileCacheManager: IProfileCacheManager) {}
 
-  async prepare({ request }: TransactionData<UnfollowRequest>) {
+  async prepare({ request }: TransactionData<FollowRequest>) {
     this.profileCacheManager.updateProfile(request.profileId, (current) => {
       return {
         ...current,
         stats: {
           ...current.stats,
-          followers: current.stats.followers - 1,
+          followers: current.stats.followers + 1,
         },
         operations: {
           ...current.operations,
-          canUnfollow: false,
+          canFollow: TriStateValue.No,
           isFollowedByMe: {
             __typename: 'OptimisticStatusResult',
-            value: false,
+            value: true,
             isFinalisedOnchain: false,
           },
         },
@@ -30,11 +31,11 @@ export class UnfollowProfileResponder implements ITransactionResponder<UnfollowR
     });
   }
 
-  async commit({ request }: TransactionData<UnfollowRequest>) {
+  async commit({ request }: TransactionData<FollowRequest>) {
     await this.profileCacheManager.fetchProfile(request.profileId);
   }
 
-  async rollback({ request }: TransactionData<UnfollowRequest>) {
+  async rollback({ request }: TransactionData<FollowRequest>) {
     await this.profileCacheManager.fetchProfile(request.profileId);
   }
 }

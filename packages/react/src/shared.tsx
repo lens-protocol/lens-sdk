@@ -36,6 +36,7 @@ import { MomokaRelayer } from './transactions/adapters/MomokaRelayer';
 import { OnChainRelayer } from './transactions/adapters/OnChainRelayer';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
+import { FollowProfileResponder } from './transactions/adapters/responders/FollowProfileResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { UnfollowProfileResponder } from './transactions/adapters/responders/UnfollowProfileResponder';
 import { UpdateFollowPolicyResponder } from './transactions/adapters/responders/UpdateFollowPolicyResponder';
@@ -112,7 +113,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     [TransactionKind.CREATE_POST]: new NoopResponder(),
     [TransactionKind.CREATE_QUOTE]: new NoopResponder(),
     [TransactionKind.CREATE_PROFILE]: new NoopResponder(),
-    [TransactionKind.FOLLOW_PROFILE]: new NoopResponder(),
+    [TransactionKind.FOLLOW_PROFILE]: new FollowProfileResponder(profileCacheManager),
     [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(),
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(profileCacheManager),
     [TransactionKind.UPDATE_FOLLOW_POLICY]: new UpdateFollowPolicyResponder(profileCacheManager),
@@ -153,6 +154,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     momokaRelayer,
     onChainRelayer,
     profileCacheManager,
+    providerFactory,
     publicationCacheManager,
     transactionFactory,
     transactionGateway,
@@ -176,6 +178,7 @@ export type SharedDependencies = {
   momokaRelayer: MomokaRelayer;
   onChainRelayer: OnChainRelayer;
   profileCacheManager: IProfileCacheManager;
+  providerFactory: ProviderFactory;
   publicationCacheManager: PublicationCacheManager;
   transactionFactory: ITransactionFactory<AnyTransactionRequest>;
   transactionGateway: PendingTransactionGateway;
