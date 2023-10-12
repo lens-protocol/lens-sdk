@@ -100,6 +100,7 @@ const ProtocolTransactionRequestSchema: z.ZodType<
   .object({
     kind: z.enum(ProtocolTransactionKinds),
   })
+  .passthrough()
   .refine(refineProtocolTransactionRequest)
   .transform(toProtocolTransactionRequest);
 
@@ -121,6 +122,7 @@ const AnyTransactionRequestSchema: z.Schema<AnyTransactionRequest, z.ZodTypeDef,
   .object({
     kind: z.nativeEnum(TransactionKind),
   })
+  .passthrough()
   .refine(refineAnyTransactionRequest)
   .transform(toAnyTransactionRequest);
 
