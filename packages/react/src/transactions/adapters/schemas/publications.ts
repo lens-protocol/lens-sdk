@@ -1,4 +1,5 @@
 import { TransactionKind } from '@lens-protocol/domain/entities';
+import { CreateQuoteRequest } from '@lens-protocol/domain/src/use-cases/publications/CreateQuote';
 import {
   CollectType,
   CreateCommentRequest,
@@ -9,7 +10,7 @@ import {
   RecipientWithSplit,
   ReferencePolicyType,
 } from '@lens-protocol/domain/use-cases/publications';
-import { hasAtLeastOne, NonEmptyArray, UnknownObject } from '@lens-protocol/shared-kernel';
+import { UnknownObject } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
 import {
@@ -90,56 +91,49 @@ const ReferencePolicyConfigSchema = z.discriminatedUnion('type', [
   NoReferencePolicyConfigSchema,
 ]);
 
-const BaseCreatePostRequestSchema = z.object({
-  kind: z.literal(TransactionKind.CREATE_POST),
-  delegate: z.boolean(),
-  metadata: UriSchema,
-});
-
 export const CreatePostRequestSchema: z.ZodType<CreatePostRequest, z.ZodTypeDef, UnknownObject> =
-  z.discriminatedUnion('momoka', [
-    BaseCreatePostRequestSchema.extend({
-      momoka: z.literal(true),
-    }),
-    BaseCreatePostRequestSchema.extend({
-      momoka: z.literal(false),
-      reference: ReferencePolicyConfigSchema,
-      actions: OpenActionConfigSchema.array()
-        .refine(hasAtLeastOne, 'You must provide at least one open action or not actions at all')
-        .transform((value) => value as NonEmptyArray<OpenActionConfig>),
-    }),
-  ]);
-
-const BaseCreateCommentRequestSchema = z.object({
-  kind: z.literal(TransactionKind.CREATE_COMMENT),
-  delegate: z.boolean(),
-  metadata: UriSchema,
-  commentOn: PublicationIdSchema,
-});
+  z.object({
+    kind: z.literal(TransactionKind.CREATE_POST),
+    delegate: z.boolean(),
+    metadata: UriSchema,
+    reference: ReferencePolicyConfigSchema.optional(),
+    actions: OpenActionConfigSchema.array()
+      .min(1, 'You must provide at least one open action')
+      .optional(),
+  });
 
 export const CreateCommentRequestSchema: z.ZodType<
   CreateCommentRequest,
   z.ZodTypeDef,
   UnknownObject
-> = z.discriminatedUnion('momoka', [
-  BaseCreateCommentRequestSchema.extend({
-    momoka: z.literal(true),
-  }),
-  BaseCreateCommentRequestSchema.extend({
-    momoka: z.literal(false),
-    reference: ReferencePolicyConfigSchema,
+> = z.object({
+  kind: z.literal(TransactionKind.CREATE_COMMENT),
+  delegate: z.boolean(),
+  metadata: UriSchema,
+  commentOn: PublicationIdSchema,
+  reference: ReferencePolicyConfigSchema.optional(),
+  actions: OpenActionConfigSchema.array()
+    .min(1, 'You must provide at least one open action')
+    .optional(),
+});
+
+export const CreateQuoteRequestSchema: z.ZodType<CreateQuoteRequest, z.ZodTypeDef, UnknownObject> =
+  z.object({
+    kind: z.literal(TransactionKind.CREATE_QUOTE),
+    delegate: z.boolean(),
+    metadata: UriSchema,
+    quoteOn: PublicationIdSchema,
+    reference: ReferencePolicyConfigSchema.optional(),
     actions: OpenActionConfigSchema.array()
-      .refine(hasAtLeastOne, 'You must provide at least one open action or not actions at all')
-      .transform((value) => value as NonEmptyArray<OpenActionConfig>),
-  }),
-]);
+      .min(1, 'You must provide at least one open action')
+      .optional(),
+  });
 
 export const CreateMirrorRequestSchema: z.ZodType<
   CreateMirrorRequest,
   z.ZodTypeDef,
   UnknownObject
 > = z.object({
-  profileId: ProfileIdSchema,
   mirrorOn: PublicationIdSchema,
   momoka: z.boolean(),
   kind: z.literal(TransactionKind.MIRROR_PUBLICATION),

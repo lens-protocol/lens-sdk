@@ -12,7 +12,7 @@ import {
   ProtocolTransactionRequest,
   AnyTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { success } from '@lens-protocol/shared-kernel';
+import { never, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
 import {
@@ -175,7 +175,7 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
               const indexingEvent = mockIndexingEvent({ indexed: true });
               const observer = MockedTransactionObserver.withIndexingEventSequence({
                 request: {
-                  txHash: init.txHash,
+                  txHash: init.txHash ?? never(),
                 },
                 events: [indexingEvent],
               });
@@ -200,7 +200,7 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
 
           it(`should resolve with Success<TransactionEvent.SETTLED> as soon as the transaction is executed`, async () => {
             const observer = MockedTransactionObserver.withExecutedOutcome({
-              txHash: init.txHash,
+              txHash: init.txHash ?? never(),
               chainType: init.chainType,
               result: success(),
             });

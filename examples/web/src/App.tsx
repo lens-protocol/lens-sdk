@@ -46,6 +46,7 @@ import {
   UseReactionToggle,
   UseWhoReactedToPublication,
 } from './publications';
+import { UseCreatePost } from './publications/UseCreatePost';
 import { UseHidePublication } from './publications/UseHidePublication';
 
 const { publicClient, webSocketPublicClient } = configureChains(
@@ -87,6 +88,7 @@ export function App() {
                   <Route element={<Layout />}>
                     <Route path="/publications">
                       <Route index element={<PublicationsPage />} />
+                      <Route path="useCreatePost" element={<UseCreatePost />} />
                       <Route path="usePublication" element={<UsePublication />} />
                       <Route path="usePublications" element={<UsePublications />} />
                       <Route

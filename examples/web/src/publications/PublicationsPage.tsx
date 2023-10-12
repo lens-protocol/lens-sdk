@@ -2,6 +2,11 @@ import { LinkCard } from '../components/LinkCard';
 
 const publicationHooks = [
   {
+    label: 'useCreatePost',
+    description: `Create a post.`,
+    path: '/publications/useCreatePost',
+  },
+  {
     label: 'usePublication',
     description: `Fetch a single publication.`,
     path: '/publications/usePublication',

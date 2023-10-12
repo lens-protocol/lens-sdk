@@ -4,7 +4,6 @@ import { mockDaiAmount, mockEvmAddress } from '@lens-protocol/shared-kernel/mock
 
 import { ReportReason, TransactionKind } from '../../../entities';
 import { mockProfileId, mockPublicationId } from '../../../entities/__helpers__/mocks';
-import { MomokaOptionRequest } from '../../transactions/MomokaOption';
 import { CollectType, FreeCollectRequest, PaidCollectRequest } from '../CollectPublication';
 import { CreateCommentRequest } from '../CreateComment';
 import { CreateMirrorRequest } from '../CreateMirror';
@@ -19,7 +18,6 @@ export function mockCreateMirrorRequest(
   overrides?: Partial<CreateMirrorRequest>,
 ): CreateMirrorRequest {
   return {
-    profileId: mockProfileId(),
     mirrorOn: mockPublicationId(),
     delegate: false,
     momoka: false,
@@ -30,7 +28,6 @@ export function mockCreateMirrorRequest(
 
 export function mockCreatePostRequest(overrides?: Partial<CreatePostRequest>): CreatePostRequest {
   return {
-    momoka: false,
     delegate: false,
     metadata: faker.internet.url() as URI,
     reference: {
@@ -45,7 +42,6 @@ export function mockCreateCommentRequest(
   overrides?: Partial<CreateCommentRequest>,
 ): CreateCommentRequest {
   return {
-    momoka: false,
     delegate: false,
     metadata: faker.internet.url() as URI,
     reference: {
@@ -61,7 +57,6 @@ export function mockCreateQuoteRequest(
   overrides?: Partial<CreateQuoteRequest>,
 ): CreateQuoteRequest {
   return {
-    momoka: false,
     delegate: false,
     metadata: faker.internet.url() as URI,
     reference: {
@@ -70,17 +65,6 @@ export function mockCreateQuoteRequest(
     quoteOn: mockPublicationId(),
     ...overrides,
     kind: TransactionKind.CREATE_QUOTE,
-  };
-}
-
-export function mockMomokaOptionRequest(
-  overrides?: Partial<MomokaOptionRequest>,
-): MomokaOptionRequest {
-  return {
-    momoka: false,
-    delegate: false,
-    ...overrides,
-    kind: TransactionKind.CREATE_POST,
   };
 }
 
