@@ -12,9 +12,10 @@ import {
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import { mockNonce, mockCreatePostRequest } from '@lens-protocol/domain/mocks';
-import { ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
+import { OpenActionType, ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType } from '@lens-protocol/shared-kernel';
+import { ChainType, Data } from '@lens-protocol/shared-kernel';
+import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
 import {
@@ -35,6 +36,13 @@ function setupTestScenario({ apolloClient }: { apolloClient: SafeApolloClient })
 
 describe(`Given an instance of ${CreateOnChainPostGateway.name}`, () => {
   const request = mockCreatePostRequest({
+    actions: [
+      {
+        type: OpenActionType.UNKNOWN_OPEN_ACTION,
+        address: mockEvmAddress(),
+        data: '0x' as Data,
+      },
+    ],
     reference: {
       type: ReferencePolicyType.NO_ONE,
     },

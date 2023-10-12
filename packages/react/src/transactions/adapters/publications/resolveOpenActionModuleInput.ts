@@ -1,7 +1,65 @@
 import { OpenActionModuleInput } from '@lens-protocol/api-bindings';
-import { OpenActionConfig } from '@lens-protocol/domain/use-cases/publications';
+import { OpenActionConfig, OpenActionType } from '@lens-protocol/domain/use-cases/publications';
 
-export function resolveOpenActionModuleInput(_: OpenActionConfig): OpenActionModuleInput {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any
-  return {} as any;
+export function resolveOpenActionModuleInput(config: OpenActionConfig): OpenActionModuleInput {
+  switch (config.type) {
+    case OpenActionType.SIMPLE_COLLECT:
+      return {
+        collectOpenAction: {
+          simpleCollectOpenAction: {
+            ...(config.amount && {
+              amount: {
+                currency: config.amount.asset.address,
+                value: config.amount.toSignificantDigits(),
+              },
+
+              referralFee: config.referralFee ?? null,
+
+              recipient: config.recipient ?? null,
+            }),
+
+            collectLimit: config.collectLimit?.toString() ?? null,
+
+            endsAt: config.endsAt?.toISOString() ?? null,
+
+            followerOnly: config.followerOnly,
+          },
+        },
+      };
+
+    case OpenActionType.MULTIRECIPIENT_COLLECT:
+      return {
+        collectOpenAction: {
+          multirecipientCollectOpenAction: {
+            ...(config.amount && {
+              amount: {
+                currency: config.amount.asset.address,
+                value: config.amount.toSignificantDigits(),
+              },
+
+              referralFee: config.referralFee ?? null,
+
+              recipients: config.recipients.map(({ recipient, split }) => ({
+                recipient,
+                split,
+              })),
+            }),
+
+            collectLimit: config.collectLimit?.toString() ?? null,
+
+            endsAt: config.endsAt?.toISOString() ?? null,
+
+            followerOnly: config.followerOnly,
+          },
+        },
+      };
+
+    case OpenActionType.UNKNOWN_OPEN_ACTION:
+      return {
+        unknownOpenAction: {
+          address: config.address,
+          data: config.data,
+        },
+      };
+  }
 }

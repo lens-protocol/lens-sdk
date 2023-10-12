@@ -26,6 +26,7 @@ import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from '../ITransactionFactory';
 import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError } from '../relayer';
+import { resolveOpenActionModuleInput } from './resolveOpenActionModuleInput';
 import { resolveReferenceModuleInput } from './resolveReferenceModuleInput';
 
 export class CreateOnChainPostGateway
@@ -114,7 +115,7 @@ export class CreateOnChainPostGateway
   private resolveOnchainPostRequest(request: CreatePostRequest): OnchainPostRequest {
     return {
       contentURI: request.metadata,
-      // TODO open actions
+      openActionModules: request.actions?.map(resolveOpenActionModuleInput),
       referenceModule: request.reference && resolveReferenceModuleInput(request.reference),
     };
   }

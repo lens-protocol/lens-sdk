@@ -43,6 +43,11 @@ export type CreatePostArgs = {
 /**
  * `useCreatePost` is React Hook that allows you to create a new Lens Post.
  *
+ * @example
+ * ```ts
+ * const { execute, error, loading } = useCreatePost();
+ * ```
+ *
  * ## Basic usage
  *
  * Create a text-only post:
@@ -150,7 +155,82 @@ export type CreatePostArgs = {
  * };
  * ```
  *
- * ## Configure the reference policy
+ * ## Open actions
+ *
+ * Contextually to the post creation you can configure the open actions.
+ *
+ * As with anything involving amounts in the Lens SDK you can use the
+ * {@link Amount} helper with currencies from the {@link useCurrencies} hook to
+ * create the desired amounts.
+ *
+ * Create a post with a simple collect open action:
+ * ```tsx
+ * const wmatic = ... // from useCurrencies hook
+ *
+ * const result = await execute({
+ *   metadata: uri,
+ *   actions: [
+ *     {
+ *       type: OpenActionType.SIMPLE_COLLECT,
+ *       amount: Amount.erc20(wmatic, 100), // 100 WMATIC
+ *       followerOnly: true,
+ *       collectLimit: 10,
+ *       recipient: '0x4f94FAFEE38F545920485fC747467EFc85C302E0',
+ *       endsAt: new Date('2025-12-31T00:00:00.000Z'),
+ *     }
+ *   ]
+ * });
+ * ```
+ * See {@link SimpleCollectActionConfig} for more details.
+ *
+ * Create a post with a multirecipient collect open action:
+ * ```tsx
+ * const wmatic = ... // from useCurrencies hook
+ *
+ * const result = await execute({
+ *   metadata: uri,
+ *   actions: [
+ *     {
+ *       type: OpenActionType.MULTIRECIPIENT_COLLECT,
+ *       amount: Amount.erc20(wmatic, 100), // 100 WMATIC
+ *       followerOnly: true,
+ *       collectLimit: 10,
+ *       recipients: [
+ *         {
+ *           recipient: '0x4f94FAFEE38F545920485fC747467EFc85C302E0',
+ *           split: 0.3, // 30%
+ *         },
+ *         {
+ *           recipient: '0x097A4fE5cfFf0360438990b88549d4288748f6cB',
+ *           split: 0.7, // 70%
+ *         },
+ *       ],
+ *       endsAt: new Date('2025-12-31T00:00:00.000Z'),
+ *     }
+ *   ]
+ * });
+ * ```
+ *
+ * See {@link MultirecipientCollectActionConfig} for more details.
+ *
+ * Finally you can also create a post with a custom open action (AKA unknown open action):
+ *
+ * ```tsx
+ * const result = await execute({
+ *   metadata: uri,
+ *   actions: [
+ *     {
+ *       type: OpenActionType.UNKNOWN_OPEN_ACTION,
+ *       address: '0x4f94FAFEE38F545920485fC747467EFc85C302E0',
+ *       data: '0x.....'
+ *     }
+ *   ]
+ * });
+ * ```
+ *
+ * See {@link UnknownOpenActionConfig} for more details.
+ *
+ * ## Reference policy
  *
  * Contextually to the post creation you can configure the reference policy.
  *
@@ -158,7 +238,6 @@ export type CreatePostArgs = {
  * If the post has reference policy `ANYONE` (which is also the default value) and does not have
  * any open actions, it will be hosted on Momoka.
  *
- * @example
  * No one can comment, quote, or mirror the post:
  * ```tsx
  * const result = await execute({
@@ -170,7 +249,6 @@ export type CreatePostArgs = {
  * });
  * ```
  *
- * @example
  * Only followers can comment, quote, or mirror the post:
  * ```tsx
  * const result = await execute({
@@ -182,7 +260,6 @@ export type CreatePostArgs = {
  * });
  * ```
  *
- * @example
  * You can have finer control over who can comment, quote, or mirror the post by using the `DEGREES_OF_SEPARATION` reference policy:
  * ```tsx
  * const result = await execute({
@@ -199,6 +276,7 @@ export type CreatePostArgs = {
  *   }
  * });
  * ```
+ *
  * You can even set the `DEGREES_OF_SEPARATION` reference policy to follow someone elses graph:
  * ```tsx
  * const result = await execute({
@@ -217,6 +295,8 @@ export type CreatePostArgs = {
  *   }
  * });
  * ```
+ *
+ * See {@link DegreesOfSeparationReferencePolicyConfig} for more details.
  *
  * ## Upgrading from v1
  *
@@ -245,7 +325,6 @@ export type CreatePostArgs = {
  *
  * @category Publications
  * @group Hooks
- * @param args - {@link UseCreatePostArgs}
  */
 export function useCreatePost(): UseDeferredTask<
   PostAsyncResult,

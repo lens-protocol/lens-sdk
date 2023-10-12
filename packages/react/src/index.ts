@@ -28,7 +28,39 @@ export * from './transactions';
 /**
  * Domain essentials
  */
-export type { ChainType, EvmAddress, Url } from '@lens-protocol/shared-kernel';
+export {
+  Amount,
+  WellKnownSymbols,
+  ChainType,
+  ether,
+  matic,
+  erc20,
+  usd,
+} from '@lens-protocol/shared-kernel';
+export type { EvmAddress, Url } from '@lens-protocol/shared-kernel';
+export type {
+  AmountValue,
+  Asset,
+  BigDecimal,
+  CryptoAmount,
+  CryptoAsset,
+  CryptoNativeAmount,
+  CryptoNativeAsset,
+  Erc20,
+  Erc20Amount,
+  Erc20Info,
+  Ether,
+  Kind,
+  NativeType,
+  Failure,
+  Fiat,
+  FiatAmount,
+  IEquatableError,
+  Matic,
+  PromiseResult,
+  Result,
+  Success,
+} from '@lens-protocol/shared-kernel';
 export type { AppId, NftId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
 
 /**
@@ -59,6 +91,7 @@ export type { MetadataAttribute } from '@lens-protocol/api-bindings';
 /**
  * Common errors
  */
+export { InvariantError } from '@lens-protocol/shared-kernel';
 export {
   PendingSigningRequestError,
   TransactionError,
