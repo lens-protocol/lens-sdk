@@ -9,11 +9,9 @@ import { BroadcastingError } from './BroadcastingError';
 import { ITransactionResultPresenter } from './ITransactionResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
-export type WithDelegateFlag<T extends ProtocolTransactionRequestModel> = T extends {
+export type DelegableProtocolTransactionRequestModel = ProtocolTransactionRequestModel & {
   delegate: boolean;
-}
-  ? T
-  : never;
+};
 
 export interface ISignedOperation<T extends ProtocolTransactionRequestModel> {
   execute(request: T): Promise<void>;
@@ -26,7 +24,7 @@ export interface IDelegatedTransactionGateway<T extends ProtocolTransactionReque
 export type IDelegatedTransactionPresenter<T extends ProtocolTransactionRequestModel> =
   ITransactionResultPresenter<T, BroadcastingError>;
 
-export class DelegableSigning<T extends ProtocolTransactionRequestModel> {
+export class DelegableSigning<T extends DelegableProtocolTransactionRequestModel> {
   constructor(
     private readonly signedOperation: ISignedOperation<T>,
     private readonly transactionGateway: IDelegatedTransactionGateway<T>,
@@ -34,7 +32,7 @@ export class DelegableSigning<T extends ProtocolTransactionRequestModel> {
     private readonly presenter: IDelegatedTransactionPresenter<T>,
   ) {}
 
-  async execute(request: WithDelegateFlag<T>): Promise<void> {
+  async execute(request: T): Promise<void> {
     if (request.delegate) {
       const result = await this.transactionGateway.createDelegatedTransaction(request);
 

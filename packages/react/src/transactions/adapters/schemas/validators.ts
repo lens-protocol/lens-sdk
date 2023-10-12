@@ -1,7 +1,6 @@
 import {
   UpdateFollowPolicyRequest,
   UpdateProfileDetailsRequest,
-  UpdateProfileManagersRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import {
   CreateCommentRequest,
@@ -11,22 +10,14 @@ import { TokenAllowanceRequest } from '@lens-protocol/domain/use-cases/wallets';
 import { never } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
-import { Erc20AmountInstanceSchema } from './common';
-import { tokenAllowanceRequestSchema } from './erc20';
+import { TokenAllowanceRequestSchema } from './erc20';
 import { formatZodError } from './formatters';
 import {
-  updateFollowPolicyRequestSchema,
+  UpdateFollowPolicyRequestSchema,
   UpdateProfileDetailsRequestSchema,
   UpdateProfileManagersRequestSchema,
 } from './profiles';
-import {
-  createEmbedCommentRequestSchema,
-  createEmbedPostRequestSchema,
-  createMediaCommentRequestSchema,
-  createMediaPostRequestSchema,
-  createTextualCommentRequestSchema,
-  createTextualPostRequestSchema,
-} from './publications';
+import { CreateCommentRequestSchema, CreatePostRequestSchema } from './publications';
 
 export type Validator<T> = (request: unknown) => asserts request is T;
 
@@ -42,31 +33,15 @@ function createRequestValidator<T extends z.ZodType<unknown>>(schema: T) {
   };
 }
 
-const CreatePostRequestSchema = z.discriminatedUnion('contentFocus', [
-  createEmbedPostRequestSchema(Erc20AmountInstanceSchema),
-  createMediaPostRequestSchema(Erc20AmountInstanceSchema),
-  createTextualPostRequestSchema(Erc20AmountInstanceSchema),
-]);
-
 export const validateCreatePostRequest: Validator<CreatePostRequest> =
   createRequestValidator(CreatePostRequestSchema);
-
-const CreateCommentRequestSchema = z.discriminatedUnion('contentFocus', [
-  createEmbedCommentRequestSchema(Erc20AmountInstanceSchema),
-  createMediaCommentRequestSchema(Erc20AmountInstanceSchema),
-  createTextualCommentRequestSchema(Erc20AmountInstanceSchema),
-]);
 
 export const validateCreateCommentRequest: Validator<CreateCommentRequest> = createRequestValidator(
   CreateCommentRequestSchema,
 );
 
-const TokenAllowanceRequestSchema = tokenAllowanceRequestSchema(Erc20AmountInstanceSchema);
-
 export const validateTokenAllowanceRequest: Validator<TokenAllowanceRequest> =
   createRequestValidator(TokenAllowanceRequestSchema);
-
-const UpdateFollowPolicyRequestSchema = updateFollowPolicyRequestSchema(Erc20AmountInstanceSchema);
 
 export const validateUpdateFollowPolicyRequest: Validator<UpdateFollowPolicyRequest> =
   createRequestValidator(UpdateFollowPolicyRequestSchema);
@@ -75,19 +50,4 @@ export const validateUpdateProfileDetailsRequest: Validator<UpdateProfileDetails
   createRequestValidator(UpdateProfileDetailsRequestSchema);
 
 export const validateUpdateProfileManagersRequest: Validator<UpdateProfileDetailsRequest> =
-  createRequestValidator(
-    UpdateProfileManagersRequestSchema.superRefine(
-      (val, ctx): val is UpdateProfileManagersRequest => {
-        if (['add', 'remove', 'lensManager'].every((key) => !(key in val))) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: `At least one of 'add', 'remove', or 'lensManager' must be present.`,
-          });
-          return z.NEVER;
-        }
-        // TODO add further checks needed
-
-        return z.NEVER;
-      },
-    ),
-  );
+  createRequestValidator(UpdateProfileManagersRequestSchema);

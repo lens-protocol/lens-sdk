@@ -1,7 +1,5 @@
 import { ProtocolTransactionRequestModel } from '@lens-protocol/domain/entities';
-import { Brand, Distribute, EvmAddress } from '@lens-protocol/shared-kernel';
-
-export type Data = Brand<string, 'Data'>;
+import { Data, Distribute, EvmAddress } from '@lens-protocol/shared-kernel';
 
 /**
  * @internal

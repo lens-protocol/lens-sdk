@@ -5,19 +5,19 @@ import { MomokaOption } from '../transactions/MomokaOption';
 import { OpenActionConfig } from './OpenActionConfig';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
 
-export type CreateCommentRequest = {
+export type CreateQuoteRequest = {
   /**
    * The discriminator for the transaction kind.
    */
-  kind: TransactionKind.CREATE_COMMENT;
+  kind: TransactionKind.CREATE_QUOTE;
   /**
    * Whether is possible to delegate the publication signing to the profile's dispatcher.
    */
   delegate: boolean;
   /**
-   * The publication ID to comment on.
+   * The publication ID that is being quoted.
    */
-  commentOn: PublicationId;
+  quoteOn: PublicationId;
   /**
    * The metadata URI.
    */
@@ -45,4 +45,4 @@ export type CreateCommentRequest = {
     }
 );
 
-export class CreateComment extends MomokaOption<CreateCommentRequest> {}
+export class CreateQuote extends MomokaOption<CreateQuoteRequest> {}

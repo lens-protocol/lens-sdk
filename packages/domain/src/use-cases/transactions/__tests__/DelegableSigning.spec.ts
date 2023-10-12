@@ -9,6 +9,7 @@ import {
 import { MockedNativeTransaction } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../BroadcastingError';
 import {
+  DelegableProtocolTransactionRequestModel,
   DelegableSigning,
   IDelegatedTransactionGateway,
   IDelegatedTransactionPresenter,
@@ -18,10 +19,10 @@ import { TransactionQueue } from '../TransactionQueue';
 import {
   mockIDelegatedTransactionGateway,
   mockTransactionQueue,
-  mockProtocolTransactionRequestModelWithDelegateFlag,
+  mockDelegableProtocolTransactionRequestModel,
 } from '../__helpers__/mocks';
 
-function setupDelegableSigning<T extends ProtocolTransactionRequestModel>({
+function setupDelegableSigning<T extends DelegableProtocolTransactionRequestModel>({
   signedOperation = mock<ISignedOperation<T>>(),
   transactionGateway = mock<IDelegatedTransactionGateway<T>>(),
   transactionQueue = mockTransactionQueue<AnyTransactionRequestModel>(),
@@ -37,8 +38,8 @@ function setupDelegableSigning<T extends ProtocolTransactionRequestModel>({
 
 describe(`Given an instance of the ${DelegableSigning.name}<T> interactor`, () => {
   describe(`when calling the "${DelegableSigning.prototype.execute.name}" method`, () => {
-    describe('with a WithDelegateFlag<ProtocolTransactionRequestModel> that has the "delegate" flag unset', () => {
-      const request = mockProtocolTransactionRequestModelWithDelegateFlag({ delegate: false });
+    describe('with a request that has the "delegate" flag unset', () => {
+      const request = mockDelegableProtocolTransactionRequestModel({ delegate: false });
 
       it(`should execute the ISignedOperation<T>`, async () => {
         const signedOperation = mock<ISignedOperation<ProtocolTransactionRequestModel>>();
@@ -52,8 +53,8 @@ describe(`Given an instance of the ${DelegableSigning.name}<T> interactor`, () =
       });
     });
 
-    describe('with a WithDelegateFlag<ProtocolTransactionRequestModel> that has the "delegate" flag set', () => {
-      const request = mockProtocolTransactionRequestModelWithDelegateFlag({ delegate: true });
+    describe('with a request that has the "delegate" flag set', () => {
+      const request = mockDelegableProtocolTransactionRequestModel({ delegate: true });
 
       it(`should:
           - create a ${NativeTransaction.name}<T>

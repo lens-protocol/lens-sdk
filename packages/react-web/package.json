@@ -52,6 +52,7 @@
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
     "@lens-protocol/eslint-config": "workspace:*",
+    "@lens-protocol/metadata": "0.1.0-alpha.30",
     "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
     "@testing-library/react": "^13.4.0",
@@ -72,6 +73,7 @@
     "typescript": "^4.9.5"
   },
   "peerDependencies": {
+    "@lens-protocol/metadata": "0.1.0-alpha.30",
     "ethers": "^5.7.2",
     "react": "^18.2.0"
   },

@@ -25,10 +25,6 @@ import {
 import { UnfollowRequest } from '../UnfollowProfile';
 import { UpdateFollowPolicyRequest } from '../UpdateFollowPolicy';
 import { UpdateProfileDetailsRequest } from '../UpdateProfileDetails';
-import {
-  UpdateNftProfileImageRequest,
-  UpdateOffChainProfileImageRequest,
-} from '../UpdateProfileImage';
 import { UpdateProfileManagersRequest } from '../UpdateProfileManagers';
 import { ChargeFollowConfig, FollowPolicyType, NoFeeFollowConfig } from '../types';
 
@@ -187,28 +183,4 @@ export function mockINftOwnershipChallengeGateway({
   when(gateway.createOwnershipChallenge).calledWith(request).mockResolvedValue(result);
 
   return gateway;
-}
-
-export function mockUpdateNftProfileImageRequest(
-  overrides?: Partial<UpdateNftProfileImageRequest>,
-): UpdateNftProfileImageRequest {
-  return {
-    profileId: mockProfileId(),
-    delegate: true,
-    signature: mockNftOwnershipSignature(),
-    ...overrides,
-    kind: TransactionKind.UPDATE_PROFILE_IMAGE,
-  };
-}
-
-export function mockUpdateOffChainProfileImageRequest(
-  overrides?: Partial<UpdateOffChainProfileImageRequest>,
-): UpdateOffChainProfileImageRequest {
-  return {
-    profileId: mockProfileId(),
-    url: faker.image.imageUrl(),
-    delegate: true,
-    ...overrides,
-    kind: TransactionKind.UPDATE_PROFILE_IMAGE,
-  };
 }
