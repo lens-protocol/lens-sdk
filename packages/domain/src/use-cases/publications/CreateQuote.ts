@@ -25,7 +25,7 @@ export type CreateQuoteRequest = {
   /**
    * The Open Actions associated with the publication.
    */
-  actions?: OpenActionConfig;
+  actions?: OpenActionConfig[];
   /**
    * The post reference policy.
    */
