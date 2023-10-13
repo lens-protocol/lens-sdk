@@ -5,7 +5,7 @@ import {
   SafeApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
-// import { lensFollowNFT } from '@lens-protocol/blockchain-bindings';
+import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import { IOnChainProtocolCallGateway } from '@lens-protocol/domain/use-cases/transactions';
 import { Data } from '@lens-protocol/shared-kernel';
@@ -39,17 +39,15 @@ export class UnfollowProfileCallGateway implements IOnChainProtocolCallGateway<U
     });
   }
 
-  // TODO: implement fallback
   private createRequestFallback(
     request: UnfollowRequest,
     data: CreateUnfollowTypedDataData,
   ): SelfFundedProtocolTransactionRequest<UnfollowRequest> {
-    // const contract = lensFollowNFT(data.result.typedData.domain.verifyingContract);
-    const encodedData = '';
-
-    // contract.interface.encodeFunctionData('burn', [
-    //   data.result.typedData.message.tokenId,
-    // ]);
+    const contract = lensHub(data.result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('unfollow', [
+      data.result.typedData.message.unfollowerProfileId,
+      data.result.typedData.message.idsOfProfilesToUnfollow,
+    ]);
     return {
       ...request,
       contractAddress: data.result.typedData.domain.verifyingContract,

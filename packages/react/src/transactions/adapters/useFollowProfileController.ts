@@ -4,7 +4,6 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { ActiveWallet } from '@lens-protocol/domain/use-cases/authentication';
 import { FollowProfile, FollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
 import {
@@ -18,20 +17,17 @@ import { useSharedDependencies } from '../../shared';
 import { BalanceGateway } from '../../wallet/adapters/BalanceGateway';
 import { TokenGateway } from '../../wallet/adapters/TokenGateway';
 import { FollowProfileCallGateway } from './FollowProfileCallGateway';
-import { OnChainRelayer } from './OnChainRelayer';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
 import { validateFollowRequest } from './schemas/validators';
 
 export function useFollowProfileController() {
   const {
+    activeWallet,
     apolloClient,
-    credentialsGateway,
-    logger,
+    onChainRelayer,
     providerFactory,
-    transactionFactory,
     transactionGateway,
     transactionQueue,
-    walletGateway,
   } = useSharedDependencies();
 
   return async (
@@ -59,8 +55,6 @@ export function useFollowProfileController() {
       | WalletConnectionError
     >();
     const gateway = new FollowProfileCallGateway(apolloClient);
-    const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
-    const onChainRelayer = new OnChainRelayer(apolloClient, transactionFactory, logger);
 
     const signedFollow = new SubsidizeOnChain<FollowRequest>(
       activeWallet,

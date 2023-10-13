@@ -6,6 +6,7 @@ import {
   SafeApolloClient,
   omitTypename,
 } from '@lens-protocol/api-bindings';
+import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
 import { FollowRequest, isPaidFollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import { IOnChainProtocolCallGateway } from '@lens-protocol/domain/use-cases/transactions';
@@ -66,17 +67,17 @@ export class FollowProfileCallGateway implements IOnChainProtocolCallGateway<Fol
     return data;
   }
 
-  // TODO: implement fallback
   private createRequestFallback(
     request: FollowRequest,
     data: CreateFollowTypedDataData,
   ): SelfFundedProtocolTransactionRequest<FollowRequest> {
-    // const contract = lensHub(data.result.typedData.domain.verifyingContract);
-    const encodedData = '';
-    // const encodedData = contract.interface.encodeFunctionData('follow', [
-    //   data.result.typedData.message.profileIds,
-    //   data.result.typedData.message.datas,
-    // ]);
+    const contract = lensHub(data.result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('follow', [
+      data.result.typedData.message.followerProfileId,
+      data.result.typedData.message.idsOfProfilesToFollow,
+      data.result.typedData.message.followTokenIds,
+      data.result.typedData.message.datas,
+    ]);
     return {
       ...request,
       contractAddress: data.result.typedData.domain.verifyingContract,

@@ -4,7 +4,6 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { ActiveWallet } from '@lens-protocol/domain/use-cases/authentication';
 import {
   UpdateFollowPolicy,
   UpdateFollowPolicyRequest,
@@ -13,21 +12,13 @@ import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions'
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
-import { OnChainRelayer } from './OnChainRelayer';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
 import { UpdateFollowPolicyCallGateway } from './UpdateFollowPolicyCallGateway';
 import { validateUpdateFollowPolicyRequest } from './schemas/validators';
 
 export function useUpdateFollowPolicyController() {
-  const {
-    apolloClient,
-    credentialsGateway,
-    logger,
-    transactionFactory,
-    transactionGateway,
-    transactionQueue,
-    walletGateway,
-  } = useSharedDependencies();
+  const { activeWallet, apolloClient, onChainRelayer, transactionGateway, transactionQueue } =
+    useSharedDependencies();
 
   return async (
     request: UpdateFollowPolicyRequest,
@@ -46,8 +37,6 @@ export function useUpdateFollowPolicyController() {
       BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
     const gateway = new UpdateFollowPolicyCallGateway(apolloClient);
-    const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
-    const onChainRelayer = new OnChainRelayer(apolloClient, transactionFactory, logger);
 
     const updateFollowPolicy = new UpdateFollowPolicy(
       activeWallet,
