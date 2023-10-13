@@ -1,5 +1,29 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.7
+
+### Minor Changes
+
+- a929c0f6: **feat:** implements `useCreatePost` hook
+- 5bc7e430: **feat:** implements `useCreateComment` hook
+- 8b86832f: **fix:** logs out user on failed on-the-fly token refresh
+
+### Patch Changes
+
+- d1414eda: **feat:** implements `useCreateMirror` hook
+- 2f618240: Added `useFollowProfile` and `useUnfollowProfile` hooks
+- Updated dependencies [a929c0f6]
+- Updated dependencies [f82b90a5]
+- Updated dependencies [5bc7e430]
+- Updated dependencies [8b86832f]
+- Updated dependencies [d1414eda]
+- Updated dependencies [2f618240]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.4
+  - @lens-protocol/api-bindings@0.11.0-alpha.7
+  - @lens-protocol/domain@0.11.0-alpha.4
+  - @lens-protocol/react@2.0.0-alpha.7
+  - @lens-protocol/storage@0.7.5-alpha.2
+
 ## 2.0.0-alpha.6
 
 ### Minor Changes
