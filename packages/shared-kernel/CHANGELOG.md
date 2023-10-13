@@ -1,5 +1,11 @@
 # @lens-protocol/shared-kernel
 
+## 0.11.0-alpha.4
+
+### Minor Changes
+
+- a929c0f6: **feat:** implements `useCreatePost` hook
+
 ## 0.11.0-alpha.3
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.11
+
+### Patch Changes
+
+- 8c4da31a: Updated to latest api schema, used TypedDocumentNode to improve startup time
+- Updated dependencies [a929c0f6]
+- Updated dependencies [8c4da31a]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.4
+  - @lens-protocol/gated-content@0.3.3-alpha.7
+  - @lens-protocol/storage@0.7.5-alpha.2
+
 ## 2.0.0-alpha.10
 
 ### Patch Changes

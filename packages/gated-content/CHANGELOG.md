@@ -1,5 +1,14 @@
 # @lens-protocol/gated-content
 
+## 0.3.3-alpha.7
+
+### Patch Changes
+
+- 8c4da31a: Updated to latest api schema, used TypedDocumentNode to improve startup time
+- Updated dependencies [a929c0f6]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.4
+  - @lens-protocol/storage@0.7.5-alpha.2
+
 ## 0.3.3-alpha.6
 
 ### Patch Changes
