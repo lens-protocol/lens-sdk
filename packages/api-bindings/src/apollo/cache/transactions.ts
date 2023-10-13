@@ -138,13 +138,11 @@ export function isCollectTransactionFor({
 
 export function isMirrorTransactionFor({
   publicationId,
-  profileId,
 }: {
   publicationId: PublicationId;
   profileId: ProfileId;
 }): TransactionStatusPredicate<CreateMirrorRequest> {
   return (transaction): transaction is TransactionState<CreateMirrorRequest> =>
     transaction.request.kind === TransactionKind.MIRROR_PUBLICATION &&
-    transaction.request.profileId === profileId &&
     transaction.request.mirrorOn === publicationId;
 }

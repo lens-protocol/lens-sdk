@@ -75,10 +75,6 @@ const AnyoneFollowPolicyConfigSchema = z.object({
   type: z.literal(FollowPolicyType.ANYONE),
 });
 
-const OnlyProfileOwnersFollowPolicyConfigSchema = z.object({
-  type: z.literal(FollowPolicyType.ONLY_PROFILE_OWNERS),
-});
-
 const NoOneFollowPolicyConfigSchema = z.object({
   type: z.literal(FollowPolicyType.NO_ONE),
 });
@@ -88,11 +84,9 @@ export const UpdateFollowPolicyRequestSchema: z.ZodType<
   z.ZodTypeDef,
   UnknownObject
 > = z.object({
-  profileId: ProfileIdSchema,
   policy: z.discriminatedUnion('type', [
     ChargeFollowPolicyConfigSchema,
     AnyoneFollowPolicyConfigSchema,
-    OnlyProfileOwnersFollowPolicyConfigSchema,
     NoOneFollowPolicyConfigSchema,
   ]),
   kind: z.literal(TransactionKind.UPDATE_FOLLOW_POLICY),

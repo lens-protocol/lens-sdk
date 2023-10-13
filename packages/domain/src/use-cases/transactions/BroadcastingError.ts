@@ -3,7 +3,7 @@ import { AnyTransactionRequestModel } from '../../entities';
 export type RequestFallback = AnyTransactionRequestModel;
 
 /**
- * An error thrown when the Lens API refuses to relay a transaction.
+ * An error thrown when the Lens API cannot relay a transaction.
  */
 export class BroadcastingError extends Error {
   name = 'BroadcastingError' as const;
@@ -12,6 +12,6 @@ export class BroadcastingError extends Error {
    * @internal
    */
   constructor(reason: string, readonly fallback?: RequestFallback) {
-    super(`broadcasting failed with reason: ${reason}`);
+    super(reason);
   }
 }

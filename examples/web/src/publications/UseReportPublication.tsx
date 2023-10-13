@@ -16,7 +16,7 @@ type ReportPublicationFormProps = {
 };
 
 function ReportPublicationForm({ publication }: ReportPublicationFormProps) {
-  const { execute: report, isPending } = useReportPublication({ publication });
+  const { execute: report, loading } = useReportPublication({ publication });
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -41,7 +41,7 @@ function ReportPublicationForm({ publication }: ReportPublicationFormProps) {
       <div>
         <p>Why are you reporting this publication?</p>
 
-        <select name="reason" disabled={isPending}>
+        <select name="reason" disabled={loading}>
           <option value="">Select one</option>
           <optgroup label="Illegal">
             <option value={ReportReason.HARASSMENT}>Bullying or harassment</option>
@@ -79,11 +79,11 @@ function ReportPublicationForm({ publication }: ReportPublicationFormProps) {
           name="additionalComments"
           rows={3}
           placeholder="Optional comment"
-          disabled={isPending}
+          disabled={loading}
         />
       </div>
 
-      <button type="submit" disabled={isPending}>
+      <button type="submit" disabled={loading}>
         Report
       </button>
     </form>

@@ -28,7 +28,6 @@ export type FetchProfileArgs = OneOf<ProfileRequest>;
  * @category Profiles
  * @group Hooks
  *
- *
  * @example
  * Simple usage
  * ```ts

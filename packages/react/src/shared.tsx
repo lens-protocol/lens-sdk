@@ -21,6 +21,7 @@ import React, { ReactNode, useContext } from 'react';
 import { ConsoleLogger } from './ConsoleLogger';
 import { AccessTokenStorage } from './authentication/adapters/AccessTokenStorage';
 import { AuthApi } from './authentication/adapters/AuthApi';
+import { CredentialsExpiryController } from './authentication/adapters/CredentialsExpiryController';
 import { CredentialsFactory } from './authentication/adapters/CredentialsFactory';
 import { CredentialsGateway } from './authentication/adapters/CredentialsGateway';
 import { CredentialsStorage } from './authentication/adapters/CredentialsStorage';
@@ -29,14 +30,15 @@ import { LensConfig } from './config';
 import { EnvironmentConfig } from './environments';
 import { IProfileCacheManager } from './profile/adapters/IProfileCacheManager';
 import { ProfileCacheManager } from './profile/infrastructure/ProfileCacheManager';
-import { IPublicationCacheManager } from './publication/adapters/IPublicationCacheManager';
 import { PublicationCacheManager } from './publication/infrastructure/PublicationCacheManager';
 import { ITransactionFactory } from './transactions/adapters/ITransactionFactory';
+import { MomokaRelayer } from './transactions/adapters/MomokaRelayer';
 import { OnChainRelayer } from './transactions/adapters/OnChainRelayer';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { SetProfileMetadataResponder } from './transactions/adapters/responders/SetProfileMetadataResponder';
+import { UpdateFollowPolicyResponder } from './transactions/adapters/responders/UpdateFollowPolicyResponder';
 import { UpdateProfileManagersResponder } from './transactions/adapters/responders/UpdateProfileManagersResponder';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
@@ -95,7 +97,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   const walletGateway = new WalletGateway(walletStorage, walletFactory);
   const transactionGateway = new PendingTransactionGateway(transactionStorage, transactionFactory);
   const onChainRelayer = new OnChainRelayer(apolloClient, transactionFactory, logger);
-
+  const momokaRelayer = new MomokaRelayer(apolloClient, transactionFactory, logger);
   const conversationsGateway: IConversationsGateway = {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     async reset() {},
@@ -113,8 +115,8 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     [TransactionKind.FOLLOW_PROFILES]: new NoopResponder(),
     [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(),
     [TransactionKind.UNFOLLOW_PROFILE]: new NoopResponder(),
-    [TransactionKind.UPDATE_FOLLOW_POLICY]: new NoopResponder(),
     [TransactionKind.UPDATE_PROFILE_DETAILS]: new SetProfileMetadataResponder(profileCacheManager),
+    [TransactionKind.UPDATE_FOLLOW_POLICY]: new UpdateFollowPolicyResponder(profileCacheManager),
     [TransactionKind.UPDATE_PROFILE_MANAGERS]: new UpdateProfileManagersResponder(
       apolloClient,
       profileCacheManager,
@@ -136,6 +138,10 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     logoutPresenter,
   );
 
+  // controllers
+  const credentialsExpiryController = new CredentialsExpiryController(logout);
+  credentialsExpiryController.subscribe(accessTokenStorage);
+
   return {
     activeWallet,
     apolloClient,
@@ -145,6 +151,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     logger,
     logout,
     onChainRelayer,
+    momokaRelayer,
     profileCacheManager,
     publicationCacheManager,
     transactionFactory,
@@ -166,9 +173,10 @@ export type SharedDependencies = {
   environment: EnvironmentConfig;
   logger: ILogger;
   logout: Logout;
+  momokaRelayer: MomokaRelayer;
   onChainRelayer: OnChainRelayer;
   profileCacheManager: IProfileCacheManager;
-  publicationCacheManager: IPublicationCacheManager;
+  publicationCacheManager: PublicationCacheManager;
   transactionFactory: ITransactionFactory<AnyTransactionRequest>;
   transactionGateway: PendingTransactionGateway;
   transactionQueue: TransactionQueue<AnyTransactionRequest>;

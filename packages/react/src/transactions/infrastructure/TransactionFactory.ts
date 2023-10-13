@@ -142,7 +142,7 @@ class SerializableNativeTransaction<T extends AnyTransactionRequest>
     return this.state.request;
   }
 
-  get hash(): string {
+  get hash(): string | null {
     return this.state.txHash;
   }
 
@@ -276,7 +276,9 @@ export class TransactionFactory implements ISerializableTransactionFactory {
   >(): StateReducer<S> {
     return async (state) => {
       const result = await this.transactionObserver.waitForConfirmation({
-        txHash: state.txHash,
+        txHash:
+          state.txHash ??
+          never(`Cannot observe ${NativeTransaction.name} on-chain without a TX hash`),
         chainType: state.chainType,
       });
 

@@ -1,8 +1,9 @@
 import {
   PaginatedOffsetRequest,
+  chainType,
   useCurrencies as useCurrenciesHook,
 } from '@lens-protocol/api-bindings';
-import { ChainType, erc20, Erc20 } from '@lens-protocol/shared-kernel';
+import { erc20, Erc20 } from '@lens-protocol/shared-kernel';
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
@@ -15,8 +16,8 @@ export type UseCurrenciesArgs = PaginatedArgs<PaginatedOffsetRequest>;
 /**
  * `useCurrencies` is a paginated hook that lets you fetch ERC20 tokens that are enabled on the Lens protocol.
  *
- * **Pro-tip**: use this hook to populate a dropdown menu of currencies
- * to choose from for powering a collect policy form of your post composer interface.
+ * **Pro-tip**: use this hook to populate a dropdown menu of currencies to choose from
+ * to support for example a collect open action form or setup follow policy fees.
  *
  * @category Misc
  * @group Hooks
@@ -28,8 +29,6 @@ export type UseCurrenciesArgs = PaginatedArgs<PaginatedOffsetRequest>;
  *
  * @example
  * ```tsx
- * import { Erc20, useCurrencies } from '@lens-protocol/react-web';
- *
  * function CurrencySelector({ onChange }: { onChange: (currency: Erc20) => void }) {
  *   const { data: currencies, error, loading } = useCurrencies();
  *
@@ -79,7 +78,7 @@ export function useCurrencies(args: UseCurrenciesArgs = {}): PaginatedReadResult
         decimals: currency.decimals,
         symbol: currency.symbol,
         address: currency.contract.address,
-        chainType: ChainType.POLYGON, // TODO: resolve it from currency.contract.chainId
+        chainType: chainType(currency.contract.chainId),
       }),
     ),
   };

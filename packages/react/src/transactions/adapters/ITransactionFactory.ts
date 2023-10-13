@@ -13,7 +13,7 @@ export type NativeTransactionData<T extends AnyTransactionRequestModel> = {
   id: string;
   indexingId?: string;
   request: T;
-  txHash: string;
+  txHash: string | null;
 };
 
 export type MetaTransactionData<T extends AnyTransactionRequestModel> = {

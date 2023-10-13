@@ -111,7 +111,7 @@ export abstract class NativeTransaction<T extends AnyTransactionRequestModel> {
   abstract get chainType(): ChainType;
   abstract get id(): string;
   abstract get request(): T;
-  abstract get hash(): string;
+  abstract get hash(): string | null;
 
   abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
 }

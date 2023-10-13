@@ -95,6 +95,11 @@ export type AmountInput = {
   value: Scalars['String']['input'];
 };
 
+export type ApprovedAuthenticationRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  limit?: InputMaybe<LimitType>;
+};
+
 export type ApprovedModuleAllowanceAmountRequest = {
   currencies: Array<Scalars['EvmAddress']['input']>;
   followModules?: InputMaybe<Array<FollowModuleType>>;
@@ -115,8 +120,8 @@ export type BroadcastRequest = {
 };
 
 export type ChallengeRequest = {
-  /** The profile ID to initiate a challenge */
-  for: Scalars['ProfileId']['input'];
+  /** The profile ID to initiate a challenge - note if you do not pass this in you be logging in as a wallet and wont be able to use all the features */
+  for?: InputMaybe<Scalars['ProfileId']['input']>;
   /** The Ethereum address that will sign the challenge */
   signedBy: Scalars['EvmAddress']['input'];
 };
@@ -170,6 +175,7 @@ export enum CollectOpenActionModuleType {
 }
 
 export enum CommentRankingFilterType {
+  All = 'ALL',
   NoneRelevant = 'NONE_RELEVANT',
   Relevant = 'RELEVANT',
 }
@@ -182,6 +188,11 @@ export enum ComparisonOperatorConditionType {
   LessThanOrEqual = 'LESS_THAN_OR_EQUAL',
   NotEqual = 'NOT_EQUAL',
 }
+
+export type CreateProfileRequest = {
+  followModule?: InputMaybe<FollowModuleInput>;
+  to: Scalars['EvmAddress']['input'];
+};
 
 export enum CreateProfileWithHandleErrorReasonType {
   Failed = 'FAILED',
@@ -214,11 +225,17 @@ export enum DecryptFailReasonType {
   UnauthorizedBalance = 'UNAUTHORIZED_BALANCE',
 }
 
+export type DefaultProfileRequest = {
+  for: Scalars['EvmAddress']['input'];
+};
+
 export type DegreesOfSeparationReferenceModuleInput = {
   commentsRestricted: Scalars['Boolean']['input'];
   degreesOfSeparation: Scalars['Int']['input'];
   mirrorsRestricted: Scalars['Boolean']['input'];
   quotesRestricted: Scalars['Boolean']['input'];
+  /** You can set the degree to follow someone elses graph, if you leave blank it use your profile */
+  sourceProfileId?: InputMaybe<Scalars['ProfileId']['input']>;
 };
 
 export type DismissRecommendedProfilesRequest = {
@@ -303,15 +320,15 @@ export enum FeedEventItemType {
   Reaction = 'REACTION',
 }
 
-export type FeedHighlightWhere = {
-  for?: InputMaybe<Scalars['ProfileId']['input']>;
-  metadata?: InputMaybe<PublicationMetadataFilters>;
-};
-
 export type FeedHighlightsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<LimitType>;
-  where?: InputMaybe<FeedHighlightWhere>;
+  where?: InputMaybe<FeedHighlightsWhere>;
+};
+
+export type FeedHighlightsWhere = {
+  for?: InputMaybe<Scalars['ProfileId']['input']>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
 };
 
 export type FeedRequest = {
@@ -435,9 +452,96 @@ export type ImageTransform = {
   width?: InputMaybe<Scalars['ImageSizeTransform']['input']>;
 };
 
+export type InternalAddCuratedTagRequest = {
+  hhh: Scalars['String']['input'];
+  secret: Scalars['String']['input'];
+  ttt: Scalars['String']['input'];
+};
+
+export type InternalAddInvitesRequest = {
+  n: Scalars['Int']['input'];
+  p: Scalars['ProfileId']['input'];
+  secret: Scalars['String']['input'];
+};
+
+export type InternalAllowDomainRequest = {
+  domain: Scalars['URI']['input'];
+  secret: Scalars['String']['input'];
+};
+
+export type InternalAllowedDomainsRequest = {
+  secret: Scalars['String']['input'];
+};
+
+export type InternalClaimRequest = {
+  address: Scalars['EvmAddress']['input'];
+  freeTextHandle: Scalars['Boolean']['input'];
+  handle: Scalars['CreateHandle']['input'];
+  overrideAlreadyClaimed: Scalars['Boolean']['input'];
+  overrideTradeMark: Scalars['Boolean']['input'];
+  secret: Scalars['String']['input'];
+};
+
+export type InternalClaimStatusRequest = {
+  address: Scalars['EvmAddress']['input'];
+  secret: Scalars['String']['input'];
+};
+
+export type InternalCuratedHandlesRequest = {
+  secret: Scalars['String']['input'];
+};
+
+export type InternalCuratedTagsRequest = {
+  hhh: Scalars['String']['input'];
+  secret: Scalars['String']['input'];
+};
+
+export type InternalCuratedUpdateRequest = {
+  handle: Scalars['Handle']['input'];
+  remove: Scalars['Boolean']['input'];
+  secret: Scalars['String']['input'];
+};
+
+export type InternalInvitesRequest = {
+  p: Scalars['ProfileId']['input'];
+  secret: Scalars['String']['input'];
+};
+
+export type InternalNftIndexRequest = {
+  n: Array<Nfi>;
+  secret: Scalars['String']['input'];
+};
+
+export type InternalNftVerifyRequest = {
+  n: Array<Nfi>;
+  secret: Scalars['String']['input'];
+};
+
+export type InternalProfileStatusRequest = {
+  hhh: Scalars['String']['input'];
+  secret: Scalars['String']['input'];
+};
+
+export type InternalRemoveCuratedTagRequest = {
+  hhh: Scalars['String']['input'];
+  secret: Scalars['String']['input'];
+  ttt: Scalars['String']['input'];
+};
+
+export type InternalUpdateProfileStatusRequest = {
+  dd: Scalars['Boolean']['input'];
+  hhh: Scalars['String']['input'];
+  secret: Scalars['String']['input'];
+  ss: Scalars['Boolean']['input'];
+};
+
 export type InviteRequest = {
   invites: Array<Scalars['EvmAddress']['input']>;
   secret: Scalars['String']['input'];
+};
+
+export type LastLoggedInProfileRequest = {
+  for: Scalars['EvmAddress']['input'];
 };
 
 export type LegacyCollectRequest = {
@@ -446,8 +550,9 @@ export type LegacyCollectRequest = {
 };
 
 export enum LensProfileManagerRelayErrorReasonType {
-  AppGaslessNotAllowed = 'APP_GASLESS_NOT_ALLOWED',
+  AppNotAllowed = 'APP_NOT_ALLOWED',
   Failed = 'FAILED',
+  NotSponsored = 'NOT_SPONSORED',
   NoLensManagerEnabled = 'NO_LENS_MANAGER_ENABLED',
   RateLimited = 'RATE_LIMITED',
   RequiresSignature = 'REQUIRES_SIGNATURE',
@@ -591,6 +696,11 @@ export type NetworkAddressInput = {
   chainId: Scalars['ChainId']['input'];
 };
 
+export type Nfi = {
+  c: Scalars['EvmAddress']['input'];
+  i: Scalars['ChainId']['input'];
+};
+
 export enum NftCollectionOwnersOrder {
   FollowersFirst = 'FollowersFirst',
   None = 'None',
@@ -701,10 +811,6 @@ export type NotificationRequest = {
   where?: InputMaybe<NotificationWhere>;
 };
 
-export type NotificationSubscriptionRequest = {
-  for: Scalars['ProfileId']['input'];
-};
-
 export enum NotificationType {
   Acted = 'ACTED',
   Commented = 'COMMENTED',
@@ -724,6 +830,7 @@ export type NotificationWhere = {
 
 export type OnchainCommentRequest = {
   commentOn: Scalars['PublicationId']['input'];
+  /** If your using an unknown reference modules you need to pass this in. `followerOnlyReferenceModule` and `degreesOfSeparationReferenceModule` is handled automatically for you and if you supply this on publications with those settings it will be ignored */
   commentOnReferenceModuleData?: InputMaybe<Scalars['BlockchainData']['input']>;
   contentURI: Scalars['URI']['input'];
   openActionModules?: InputMaybe<Array<OpenActionModuleInput>>;
@@ -735,6 +842,7 @@ export type OnchainMirrorRequest = {
   /** You can add information like app on a mirror or tracking stuff */
   metadataURI?: InputMaybe<Scalars['URI']['input']>;
   mirrorOn: Scalars['PublicationId']['input'];
+  /** If your using an unknown reference modules you need to pass this in. `followerOnlyReferenceModule` and `degreesOfSeparationReferenceModule` is handled automatically for you and if you supply this on publications with those settings it will be ignored */
   mirrorReferenceModuleData?: InputMaybe<Scalars['BlockchainData']['input']>;
   referrers?: InputMaybe<Array<OnchainReferrer>>;
 };
@@ -749,6 +857,7 @@ export type OnchainQuoteRequest = {
   contentURI: Scalars['URI']['input'];
   openActionModules?: InputMaybe<Array<OpenActionModuleInput>>;
   quoteOn: Scalars['PublicationId']['input'];
+  /** If your using an unknown reference modules you need to pass this in. `followerOnlyReferenceModule` and `degreesOfSeparationReferenceModule` is handled automatically for you and if you supply this on publications with those settings it will be ignored */
   quoteOnReferenceModuleData?: InputMaybe<Scalars['BlockchainData']['input']>;
   referenceModule?: InputMaybe<ReferenceModuleInput>;
   referrers?: InputMaybe<Array<OnchainReferrer>>;
@@ -1037,8 +1146,12 @@ export type PublicationBookmarksWhere = {
 };
 
 export type PublicationCommentOn = {
-  commentsRankingFilter?: InputMaybe<CommentRankingFilterType>;
   id: Scalars['PublicationId']['input'];
+  ranking?: InputMaybe<PublicationCommentOnRanking>;
+};
+
+export type PublicationCommentOnRanking = {
+  filter?: InputMaybe<CommentRankingFilterType>;
 };
 
 export enum PublicationContentWarningType {
@@ -1213,10 +1326,6 @@ export type PublicationStatsReactionArgs = {
   type: PublicationReactionType;
 };
 
-export type PublicationStatsSubscriptionRequest = {
-  for: Scalars['PublicationId']['input'];
-};
-
 export enum PublicationType {
   Comment = 'COMMENT',
   Mirror = 'MIRROR',
@@ -1285,6 +1394,8 @@ export type ReferenceModuleInput = {
 export enum ReferenceModuleType {
   DegreesOfSeparationReferenceModule = 'DegreesOfSeparationReferenceModule',
   FollowerOnlyReferenceModule = 'FollowerOnlyReferenceModule',
+  LegacyDegreesOfSeparationReferenceModule = 'LegacyDegreesOfSeparationReferenceModule',
+  LegacyFollowerOnlyReferenceModule = 'LegacyFollowerOnlyReferenceModule',
   UnknownReferenceModule = 'UnknownReferenceModule',
 }
 
@@ -1305,9 +1416,10 @@ export type RefreshRequest = {
 };
 
 export enum RelayErrorReasonType {
-  AppGaslessNotAllowed = 'APP_GASLESS_NOT_ALLOWED',
+  AppNotAllowed = 'APP_NOT_ALLOWED',
   Expired = 'EXPIRED',
   Failed = 'FAILED',
+  NotSponsored = 'NOT_SPONSORED',
   RateLimited = 'RATE_LIMITED',
   WrongWalletSigned = 'WRONG_WALLET_SIGNED',
 }
@@ -1374,6 +1486,11 @@ export type RevenueFromPublicationsRequest = {
   publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
 };
 
+export type RevokeAuthenticationRequest = {
+  /** The token authorization id wish to revoke */
+  authorizationId: Scalars['UUID']['input'];
+};
+
 export enum SearchPublicationType {
   Comment = 'COMMENT',
   Post = 'POST',
@@ -1383,6 +1500,10 @@ export enum SearchPublicationType {
 export type SensitiveReasonInput = {
   reason: PublicationReportingReason;
   subreason: PublicationReportingSensitiveSubreason;
+};
+
+export type SetDefaultProfileRequest = {
+  profileId: Scalars['ProfileId']['input'];
 };
 
 export type SetFollowModuleRequest = {

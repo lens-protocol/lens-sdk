@@ -20,7 +20,7 @@ type ReactionButtonProps = {
 };
 
 function ReactionButton({ publication, reaction }: ReactionButtonProps) {
-  const { execute: toggle, isPending } = useReactionToggle({
+  const { execute: toggle, loading } = useReactionToggle({
     publication,
   });
 
@@ -33,7 +33,7 @@ function ReactionButton({ publication, reaction }: ReactionButtonProps) {
   };
 
   return (
-    <button onClick={toggleReaction} disabled={isPending}>
+    <button onClick={toggleReaction} disabled={loading}>
       <strong>{hasReactionType ? `Remove ${reaction}` : `Add ${reaction}`}</strong>
     </button>
   );

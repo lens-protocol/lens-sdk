@@ -61,6 +61,11 @@ const profileHooks = [
     description: `Set the metadata for the authenticated Profile.`,
     path: '/profiles/useSetProfileMetadata',
   },
+  {
+    label: 'useUpdateFollowPolicy',
+    description: `Update the follow policy for the logged-in Profile.`,
+    path: '/profiles/useUpdateFollowPolicy',
+  },
 ];
 
 export function ProfilesPage() {

@@ -32,7 +32,9 @@ export type DegreesOfSeparationReferencePolicyConfig = {
      */
     quotesRestricted: boolean;
     /**
-     * You can set the degree to follow someone elses graph, if you leave blank it use the authenticate Profile ID
+     * You can set the degree to follow someone elses graph.
+     *
+     * @defaultValue the authenticated Profile ID
      */
     sourceProfileId?: ProfileId;
   };

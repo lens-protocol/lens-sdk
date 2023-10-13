@@ -4,7 +4,7 @@ import * as Types from '../../../../../graphql/types.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
-import gql from 'graphql-tag';
+import { DocumentNode } from 'graphql';
 export type AddPublicationNotInterestedMutationVariables = Types.Exact<{
   request: Types.PublicationNotInterestedRequest;
 }>;
@@ -17,16 +17,84 @@ export type UndoPublicationNotInterestedMutationVariables = Types.Exact<{
 
 export type UndoPublicationNotInterestedMutation = { undoPublicationNotInterested: string | null };
 
-export const AddPublicationNotInterestedDocument = gql`
-  mutation AddPublicationNotInterested($request: PublicationNotInterestedRequest!) {
-    addPublicationNotInterested(request: $request)
-  }
-`;
-export const UndoPublicationNotInterestedDocument = gql`
-  mutation UndoPublicationNotInterested($request: PublicationNotInterestedRequest!) {
-    undoPublicationNotInterested(request: $request)
-  }
-`;
+export const AddPublicationNotInterestedDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'AddPublicationNotInterested' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'PublicationNotInterestedRequest' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'addPublicationNotInterested' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const UndoPublicationNotInterestedDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UndoPublicationNotInterested' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'PublicationNotInterestedRequest' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'undoPublicationNotInterested' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,

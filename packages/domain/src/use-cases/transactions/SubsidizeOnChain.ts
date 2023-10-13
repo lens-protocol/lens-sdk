@@ -51,7 +51,7 @@ export class SubsidizeOnChain<T extends ProtocolTransactionRequestModel>
     protected readonly activeWallet: ActiveWallet,
     protected readonly metaTransactionNonceGateway: IMetaTransactionNonceGateway,
     protected readonly onChainProtocolCallGateway: IOnChainProtocolCallGateway<T>,
-    protected readonly relayer: IOnChainRelayer<T>,
+    protected readonly relayer: IOnChainRelayer<ProtocolTransactionRequestModel>,
     protected readonly transactionQueue: TransactionQueue<AnyTransactionRequestModel>,
     protected readonly presenter: ISubsidizeOnChainPresenter<T>,
   ) {}

@@ -12,7 +12,7 @@ export type UseSearchPublicationsArgs = PaginatedArgs<PublicationSearchRequest>;
 /**
  * Search for publications based on a defined criteria
  *
- * @category Search
+ * @category Discovery
  * @group Hooks
  * @param args - {@link UseSearchPublicationsArgs}
  *

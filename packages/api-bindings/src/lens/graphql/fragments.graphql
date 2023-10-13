@@ -352,6 +352,7 @@ fragment ProfileFields on Profile {
   followNftAddress {
     ...NetworkAddress
   }
+  followPolicy @client
   followModule {
     ... on FeeFollowModuleSettings {
       ...FeeFollowModuleSettings
@@ -2114,7 +2115,7 @@ fragment Quote on Quote {
 
 # mutation fragments
 fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
-  # __typename omitted to easy the signing process
+  # __typename omitted to ease the signing process
   name
   chainId
   version
@@ -2122,15 +2123,15 @@ fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
 }
 
 fragment EIP712TypedDataField on EIP712TypedDataField {
-  # __typename omitted to easy the signing process
+  # __typename omitted to ease the signing process
   name
   type
 }
 
 fragment CreateActOnOpenActionEIP712TypedData on CreateActOnOpenActionEIP712TypedData {
-  # __typename omitted to easy the signing process
+  # __typename omitted to ease the signing process
   types {
-    # __typename omitted to easy the signing process
+    # __typename omitted to ease the signing process
     Act {
       ...EIP712TypedDataField
     }
@@ -2139,7 +2140,7 @@ fragment CreateActOnOpenActionEIP712TypedData on CreateActOnOpenActionEIP712Type
     ...EIP712TypedDataDomain
   }
   message: value {
-    # __typename omitted to easy the signing process
+    # __typename omitted to ease the signing process
     nonce
     deadline
     publicationActedProfileId

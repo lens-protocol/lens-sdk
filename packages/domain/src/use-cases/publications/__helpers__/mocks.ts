@@ -1,17 +1,17 @@
 import { faker } from '@faker-js/faker';
-import { ChainType, URI } from '@lens-protocol/shared-kernel';
+import { ChainType, Data, URI } from '@lens-protocol/shared-kernel';
 import { mockDaiAmount, mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import { ReportReason, TransactionKind } from '../../../entities';
 import { mockProfileId, mockPublicationId } from '../../../entities/__helpers__/mocks';
-import { MomokaOptionRequest } from '../../transactions/MomokaOption';
 import { CollectType, FreeCollectRequest, PaidCollectRequest } from '../CollectPublication';
 import { CreateCommentRequest } from '../CreateComment';
 import { CreateMirrorRequest } from '../CreateMirror';
 import { CreatePostRequest } from '../CreatePost';
 import { CreateQuoteRequest } from '../CreateQuote';
 import { HidePublicationRequest } from '../HidePublication';
-import { ReferencePolicyType } from '../ReferencePolicyConfig';
+import { OpenActionType, UnknownOpenActionConfig } from '../OpenActionConfig';
+import { AnyoneReferencePolicyConfig, ReferencePolicyType } from '../ReferencePolicyConfig';
 import { ReportPublicationRequest } from '../ReportPublication';
 import { TogglePropertyRequest } from '../ToggleProperty';
 
@@ -19,7 +19,6 @@ export function mockCreateMirrorRequest(
   overrides?: Partial<CreateMirrorRequest>,
 ): CreateMirrorRequest {
   return {
-    profileId: mockProfileId(),
     mirrorOn: mockPublicationId(),
     delegate: false,
     momoka: false,
@@ -30,12 +29,10 @@ export function mockCreateMirrorRequest(
 
 export function mockCreatePostRequest(overrides?: Partial<CreatePostRequest>): CreatePostRequest {
   return {
-    momoka: false,
     delegate: false,
     metadata: faker.internet.url() as URI,
-    reference: {
-      type: ReferencePolicyType.ANYONE,
-    },
+    actions: [mockUnknownOpenActionConfig()],
+    reference: mockAnyoneReferencePolicyConfig(),
     ...overrides,
     kind: TransactionKind.CREATE_POST,
   };
@@ -45,12 +42,10 @@ export function mockCreateCommentRequest(
   overrides?: Partial<CreateCommentRequest>,
 ): CreateCommentRequest {
   return {
-    momoka: false,
     delegate: false,
     metadata: faker.internet.url() as URI,
-    reference: {
-      type: ReferencePolicyType.ANYONE,
-    },
+    actions: [mockUnknownOpenActionConfig()],
+    reference: mockAnyoneReferencePolicyConfig(),
     commentOn: mockPublicationId(),
     ...overrides,
     kind: TransactionKind.CREATE_COMMENT,
@@ -61,26 +56,13 @@ export function mockCreateQuoteRequest(
   overrides?: Partial<CreateQuoteRequest>,
 ): CreateQuoteRequest {
   return {
-    momoka: false,
     delegate: false,
     metadata: faker.internet.url() as URI,
-    reference: {
-      type: ReferencePolicyType.ANYONE,
-    },
+    actions: [mockUnknownOpenActionConfig()],
+    reference: mockAnyoneReferencePolicyConfig(),
     quoteOn: mockPublicationId(),
     ...overrides,
     kind: TransactionKind.CREATE_QUOTE,
-  };
-}
-
-export function mockMomokaOptionRequest(
-  overrides?: Partial<MomokaOptionRequest>,
-): MomokaOptionRequest {
-  return {
-    momoka: false,
-    delegate: false,
-    ...overrides,
-    kind: TransactionKind.CREATE_POST,
   };
 }
 
@@ -139,5 +121,19 @@ export function mockReportPublicationRequest(
     reason: ReportReason.FAKE_ENGAGEMENT,
     additionalComments: faker.lorem.sentence(),
     ...overrides,
+  };
+}
+
+export function mockUnknownOpenActionConfig(): UnknownOpenActionConfig {
+  return {
+    type: OpenActionType.UNKNOWN_OPEN_ACTION,
+    address: mockEvmAddress(),
+    data: '0x' as Data,
+  };
+}
+
+export function mockAnyoneReferencePolicyConfig(): AnyoneReferencePolicyConfig {
+  return {
+    type: ReferencePolicyType.ANYONE,
   };
 }
