@@ -1,19 +1,18 @@
 import {
-  SafeApolloClient,
   LensProfileManagerRelayErrorReasonType,
+  SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
+  mockCommentOnMomokaResponse,
+  mockCreateMomokaCommentTypedDataData,
+  mockCreateMomokaCommentTypedDataResponse,
+  mockCreateMomokaPublicationResult,
   mockLensApolloClient,
-  mockCreateOnchainPostTypedDataResponse,
-  mockCreateOnchainPostTypedDataData,
-  mockRelaySuccessFragment,
-  mockPostOnchainResponse,
   mockLensProfileManagerRelayError,
 } from '@lens-protocol/api-bindings/mocks';
-import { NativeTransaction } from '@lens-protocol/domain/entities';
-import { mockNonce, mockCreatePostRequest } from '@lens-protocol/domain/mocks';
+import { DataTransaction } from '@lens-protocol/domain/entities';
+import { mockCreateCommentRequest } from '@lens-protocol/domain/mocks';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType } from '@lens-protocol/shared-kernel';
 
 import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
 import {
@@ -21,69 +20,52 @@ import {
   assertUnsignedProtocolCallCorrectness,
 } from '../../__helpers__/assertions';
 import { mockITransactionFactory } from '../../__helpers__/mocks';
-import { CreateOnChainPostGateway } from '../CreateOnChainPostGateway';
-import { mockOnchainPostRequest } from '../__helpers__/mocks';
+import { CreateMomokaCommentGateway } from '../CreateMomokaCommentGateway';
+import { mockMomokaCommentRequest } from '../__helpers__/mocks';
 
 function setupTestScenario({ apolloClient }: { apolloClient: SafeApolloClient }) {
   const transactionFactory = mockITransactionFactory();
 
-  const gateway = new CreateOnChainPostGateway(apolloClient, transactionFactory);
+  const gateway = new CreateMomokaCommentGateway(apolloClient, transactionFactory);
 
   return { gateway };
 }
 
-describe(`Given an instance of ${CreateOnChainPostGateway.name}`, () => {
-  const request = mockCreatePostRequest();
-  const onchainPostRequest = mockOnchainPostRequest(request);
-  const data = mockCreateOnchainPostTypedDataData();
+describe(`Given an instance of ${CreateMomokaCommentGateway.name}`, () => {
+  const request = mockCreateCommentRequest();
+  const momokaCommentRequest = mockMomokaCommentRequest(request);
+  const data = mockCreateMomokaCommentTypedDataData();
 
-  describe(`when creating an IUnsignedProtocolCall<CreatePostRequest>`, () => {
-    it(`should create an instance of the ${UnsignedProtocolCall.name} with the expected typed data`, async () => {
+  describe(`when creating an IUnsignedProtocolCall<CreateCommentRequest>`, () => {
+    it(`should:
+        - use the IMetadataUploader<CreateCommentRequest'> to upload the publication metadata
+        - create an instance of the ${UnsignedProtocolCall.name} with the expected typed data`, async () => {
       const apolloClient = mockLensApolloClient([
-        mockCreateOnchainPostTypedDataResponse({
+        mockCreateMomokaCommentTypedDataResponse({
           variables: {
-            request: onchainPostRequest,
+            request: momokaCommentRequest,
           },
           data,
         }),
       ]);
+
       const { gateway } = setupTestScenario({ apolloClient });
 
       const unsignedCall = await gateway.createUnsignedProtocolCall(request);
 
       assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
     });
-
-    it(`should allow to override the signature nonce`, async () => {
-      const nonce = mockNonce();
-      const apolloClient = mockLensApolloClient([
-        mockCreateOnchainPostTypedDataResponse({
-          variables: {
-            request: onchainPostRequest,
-            options: {
-              overrideSigNonce: nonce,
-            },
-          },
-          data: mockCreateOnchainPostTypedDataData({ nonce }),
-        }),
-      ]);
-      const { gateway } = setupTestScenario({ apolloClient });
-
-      const unsignedCall = await gateway.createUnsignedProtocolCall(request, nonce);
-
-      expect(unsignedCall.nonce).toEqual(nonce);
-    });
   });
 
-  describe(`when creating a ${NativeTransaction.name}<CreatePostRequest>`, () => {
-    it(`should create an instance of the ${NativeTransaction.name}`, async () => {
+  describe(`when creating a ${DataTransaction.name}<CreateCommentRequest>`, () => {
+    it(`should create an instance of the ${DataTransaction.name}`, async () => {
       const apolloClient = mockLensApolloClient([
-        mockPostOnchainResponse({
+        mockCommentOnMomokaResponse({
           variables: {
-            request: onchainPostRequest,
+            request: momokaCommentRequest,
           },
           data: {
-            result: mockRelaySuccessFragment(),
+            result: mockCreateMomokaPublicationResult(),
           },
         }),
       ]);
@@ -91,10 +73,9 @@ describe(`Given an instance of ${CreateOnChainPostGateway.name}`, () => {
 
       const result = await gateway.createDelegatedTransaction(request);
 
-      expect(result.unwrap()).toBeInstanceOf(NativeTransaction);
+      expect(result.unwrap()).toBeInstanceOf(DataTransaction);
       expect(result.unwrap()).toEqual(
         expect.objectContaining({
-          chainType: ChainType.POLYGON,
           id: expect.any(String),
           request,
         }),
@@ -110,17 +91,17 @@ describe(`Given an instance of ${CreateOnChainPostGateway.name}`, () => {
       `should fail w/ a ${BroadcastingError.name} in case of $__typename response with "$reason" reason`,
       async (relayError) => {
         const apolloClient = mockLensApolloClient([
-          mockPostOnchainResponse({
+          mockCommentOnMomokaResponse({
             variables: {
-              request: onchainPostRequest,
+              request: momokaCommentRequest,
             },
             data: {
               result: relayError,
             },
           }),
-          mockCreateOnchainPostTypedDataResponse({
+          mockCreateMomokaCommentTypedDataResponse({
             variables: {
-              request: onchainPostRequest,
+              request: momokaCommentRequest,
             },
             data,
           }),

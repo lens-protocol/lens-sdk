@@ -2,18 +2,18 @@ import {
   SafeApolloClient,
   omitTypename,
   RelaySuccess,
-  CreateOnchainPostTypedDataData,
-  CreateOnchainPostBroadcastItemResult,
-  CreateOnchainPostTypedDataVariables,
-  CreateOnchainPostTypedDataDocument,
-  OnchainPostRequest,
-  PostOnchainData,
-  PostOnchainVariables,
-  PostOnchainDocument,
+  CommentOnchainData,
+  CommentOnchainVariables,
+  CommentOnchainDocument,
+  OnchainCommentRequest,
+  CreateOnchainCommentBroadcastItemResult,
+  CreateOnchainCommentTypedDataData,
+  CreateOnchainCommentTypedDataVariables,
+  CreateOnchainCommentTypedDataDocument,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
-import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
+import { CreateCommentRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
@@ -29,19 +29,19 @@ import { handleRelayError } from '../relayer';
 import { resolveOpenActionModuleInput } from './resolveOpenActionModuleInput';
 import { resolveReferenceModuleInput } from './resolveReferenceModuleInput';
 
-export class CreateOnChainPostGateway
+export class CreateOnChainCommentGateway
   implements
-    IDelegatedTransactionGateway<CreatePostRequest>,
-    IOnChainProtocolCallGateway<CreatePostRequest>
+    IDelegatedTransactionGateway<CreateCommentRequest>,
+    IOnChainProtocolCallGateway<CreateCommentRequest>
 {
   constructor(
     private readonly apolloClient: SafeApolloClient,
-    private readonly transactionFactory: ITransactionFactory<CreatePostRequest>,
+    private readonly transactionFactory: ITransactionFactory<CreateCommentRequest>,
   ) {}
 
   async createDelegatedTransaction(
-    request: CreatePostRequest,
-  ): PromiseResult<NativeTransaction<CreatePostRequest>, BroadcastingError> {
+    request: CreateCommentRequest,
+  ): PromiseResult<NativeTransaction<CreateCommentRequest>, BroadcastingError> {
     const result = await this.broadcast(request);
 
     if (result.isFailure()) return failure(result.error);
@@ -58,10 +58,10 @@ export class CreateOnChainPostGateway
   }
 
   async createUnsignedProtocolCall(
-    request: CreatePostRequest,
+    request: CreateCommentRequest,
     nonce?: Nonce,
-  ): Promise<UnsignedProtocolCall<CreatePostRequest>> {
-    const input = this.resolveOnchainPostRequest(request);
+  ): Promise<UnsignedProtocolCall<CreateCommentRequest>> {
+    const input = this.resolveOnchainCommentRequest(request);
     const result = await this.createTypedData(input, nonce);
 
     return UnsignedProtocolCall.create({
@@ -73,12 +73,12 @@ export class CreateOnChainPostGateway
   }
 
   private async broadcast(
-    request: CreatePostRequest,
+    request: CreateCommentRequest,
   ): PromiseResult<RelaySuccess, BroadcastingError> {
-    const input = this.resolveOnchainPostRequest(request);
+    const input = this.resolveOnchainCommentRequest(request);
 
-    const { data } = await this.apolloClient.mutate<PostOnchainData, PostOnchainVariables>({
-      mutation: PostOnchainDocument,
+    const { data } = await this.apolloClient.mutate<CommentOnchainData, CommentOnchainVariables>({
+      mutation: CommentOnchainDocument,
       variables: {
         request: input,
       },
@@ -95,14 +95,14 @@ export class CreateOnChainPostGateway
   }
 
   private async createTypedData(
-    request: OnchainPostRequest,
+    request: OnchainCommentRequest,
     nonce?: Nonce,
-  ): Promise<CreateOnchainPostBroadcastItemResult> {
+  ): Promise<CreateOnchainCommentBroadcastItemResult> {
     const { data } = await this.apolloClient.mutate<
-      CreateOnchainPostTypedDataData,
-      CreateOnchainPostTypedDataVariables
+      CreateOnchainCommentTypedDataData,
+      CreateOnchainCommentTypedDataVariables
     >({
-      mutation: CreateOnchainPostTypedDataDocument,
+      mutation: CreateOnchainCommentTypedDataDocument,
       variables: {
         request,
         options: nonce ? { overrideSigNonce: nonce } : undefined,
@@ -111,20 +111,23 @@ export class CreateOnChainPostGateway
     return data.result;
   }
 
-  private resolveOnchainPostRequest(request: CreatePostRequest): OnchainPostRequest {
+  private resolveOnchainCommentRequest(request: CreateCommentRequest): OnchainCommentRequest {
     return {
       contentURI: request.metadata,
+      commentOn: request.commentOn,
       openActionModules: request.actions?.map(resolveOpenActionModuleInput),
       referenceModule: request.reference && resolveReferenceModuleInput(request.reference),
     };
   }
 
   private createRequestFallback(
-    request: CreatePostRequest,
-    result: CreateOnchainPostBroadcastItemResult,
-  ): SelfFundedProtocolTransactionRequest<CreatePostRequest> {
+    request: CreateCommentRequest,
+    result: CreateOnchainCommentBroadcastItemResult,
+  ): SelfFundedProtocolTransactionRequest<CreateCommentRequest> {
     const contract = lensHub(result.typedData.domain.verifyingContract);
-    const encodedData = contract.interface.encodeFunctionData('post', [result.typedData.message]);
+    const encodedData = contract.interface.encodeFunctionData('comment', [
+      result.typedData.message,
+    ]);
     return {
       ...request,
       contractAddress: result.typedData.domain.verifyingContract,

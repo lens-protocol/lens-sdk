@@ -4,28 +4,27 @@ import { mockCreatePostRequest, mockTransactionData } from '@lens-protocol/domai
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastingError, TransactionData } from '@lens-protocol/domain/use-cases/transactions';
 import { failure, Result, success } from '@lens-protocol/shared-kernel';
-import { mock } from 'jest-mock-extended';
 
-import { CreatePostPresenter, INewPostCacheManager } from '../CreatePostPresenter';
+import { NewPublicationPresenter } from '../NewPublicationPresenter';
 
 function setupTestScenario() {
-  const cacheManager = mock<INewPostCacheManager>();
+  const fetchNewPublicationHandler = jest.fn();
 
-  const presenter = new CreatePostPresenter(cacheManager);
+  const presenter = new NewPublicationPresenter(fetchNewPublicationHandler);
 
   return {
-    cacheManager,
+    fetchNewPublicationHandler,
     presenter,
   };
 }
 
-describe(`Given an instance of the ${CreatePostPresenter.name}`, () => {
+describe(`Given an instance of the ${NewPublicationPresenter.name}`, () => {
   describe.each([new BroadcastingError('error')])(
-    `and the "${CreatePostPresenter.prototype.present.name}" method is called with failure($name)`,
+    `and the "${NewPublicationPresenter.prototype.present.name}" method is called with failure($name)`,
     (error) => {
       const result: Result<never, typeof error> = failure(error);
 
-      describe(`when the "${CreatePostPresenter.prototype.asResult.name}" is called`, () => {
+      describe(`when the "${NewPublicationPresenter.prototype.asResult.name}" is called`, () => {
         it(`should eagerly return the failure`, async () => {
           const { presenter } = setupTestScenario();
 
@@ -37,8 +36,8 @@ describe(`Given an instance of the ${CreatePostPresenter.name}`, () => {
     },
   );
 
-  describe(`and the "${CreatePostPresenter.prototype.asResult.name}" method is called`, () => {
-    describe(`when the "${CreatePostPresenter.prototype.present.name}" method is subsequently called`, () => {
+  describe(`and the "${NewPublicationPresenter.prototype.asResult.name}" method is called`, () => {
+    describe(`when the "${NewPublicationPresenter.prototype.present.name}" method is subsequently called`, () => {
       describe(`with failure(${TransactionError.name})`, () => {
         const result: Result<never, TransactionError> = failure(
           new TransactionError(TransactionErrorReason.REVERTED),
@@ -66,8 +65,8 @@ describe(`Given an instance of the ${CreatePostPresenter.name}`, () => {
         const post = mockPostFragment();
 
         it('should fetch and return the newly create Profile as result of the "waitForCompletion" callback', async () => {
-          const { cacheManager, presenter } = setupTestScenario();
-          cacheManager.fetchNewPost.mockResolvedValue(post);
+          const { fetchNewPublicationHandler, presenter } = setupTestScenario();
+          fetchNewPublicationHandler.mockResolvedValue(post);
 
           const broadcasted = presenter.asResult();
 

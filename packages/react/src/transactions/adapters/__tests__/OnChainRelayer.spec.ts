@@ -63,7 +63,7 @@ describe(`Given an instance of the ${OnChainRelayer.name}`, () => {
 
   describe(`when relaying an ISignedProtocolCall fails`, () => {
     it.each([
-      mockRelayErrorFragment(RelayErrorReasonType.AppGaslessNotAllowed),
+      mockRelayErrorFragment(RelayErrorReasonType.AppNotAllowed),
       mockRelayErrorFragment(RelayErrorReasonType.NotSponsored),
       mockRelayErrorFragment(RelayErrorReasonType.RateLimited),
     ])(

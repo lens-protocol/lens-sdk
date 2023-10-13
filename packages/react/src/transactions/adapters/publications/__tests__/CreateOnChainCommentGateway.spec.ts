@@ -1,17 +1,17 @@
 import {
-  SafeApolloClient,
   LensProfileManagerRelayErrorReasonType,
+  SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
+  mockCommentOnchainResponse,
+  mockCreateOnchainCommentTypedDataData,
+  mockCreateOnchainCommentTypedDataResponse,
   mockLensApolloClient,
-  mockCreateOnchainPostTypedDataResponse,
-  mockCreateOnchainPostTypedDataData,
-  mockRelaySuccessFragment,
-  mockPostOnchainResponse,
   mockLensProfileManagerRelayError,
+  mockRelaySuccessFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
-import { mockNonce, mockCreatePostRequest } from '@lens-protocol/domain/mocks';
+import { mockNonce, mockCreateCommentRequest } from '@lens-protocol/domain/mocks';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType } from '@lens-protocol/shared-kernel';
 
@@ -21,28 +21,28 @@ import {
   assertUnsignedProtocolCallCorrectness,
 } from '../../__helpers__/assertions';
 import { mockITransactionFactory } from '../../__helpers__/mocks';
-import { CreateOnChainPostGateway } from '../CreateOnChainPostGateway';
-import { mockOnchainPostRequest } from '../__helpers__/mocks';
+import { CreateOnChainCommentGateway } from '../CreateOnChainCommentGateway';
+import { mockOnchainCommentRequest } from '../__helpers__/mocks';
 
 function setupTestScenario({ apolloClient }: { apolloClient: SafeApolloClient }) {
   const transactionFactory = mockITransactionFactory();
 
-  const gateway = new CreateOnChainPostGateway(apolloClient, transactionFactory);
+  const gateway = new CreateOnChainCommentGateway(apolloClient, transactionFactory);
 
   return { gateway };
 }
 
-describe(`Given an instance of ${CreateOnChainPostGateway.name}`, () => {
-  const request = mockCreatePostRequest();
-  const onchainPostRequest = mockOnchainPostRequest(request);
-  const data = mockCreateOnchainPostTypedDataData();
+describe(`Given an instance of ${CreateOnChainCommentGateway.name}`, () => {
+  const request = mockCreateCommentRequest();
+  const onchainCommentRequest = mockOnchainCommentRequest(request);
+  const data = mockCreateOnchainCommentTypedDataData();
 
-  describe(`when creating an IUnsignedProtocolCall<CreatePostRequest>`, () => {
+  describe(`when creating an IUnsignedProtocolCall<CreateCommentRequest>`, () => {
     it(`should create an instance of the ${UnsignedProtocolCall.name} with the expected typed data`, async () => {
       const apolloClient = mockLensApolloClient([
-        mockCreateOnchainPostTypedDataResponse({
+        mockCreateOnchainCommentTypedDataResponse({
           variables: {
-            request: onchainPostRequest,
+            request: onchainCommentRequest,
           },
           data,
         }),
@@ -54,17 +54,17 @@ describe(`Given an instance of ${CreateOnChainPostGateway.name}`, () => {
       assertUnsignedProtocolCallCorrectness(unsignedCall, data.result);
     });
 
-    it(`should allow to override the signature nonce`, async () => {
+    it(`should be possible to override the signature nonce`, async () => {
       const nonce = mockNonce();
       const apolloClient = mockLensApolloClient([
-        mockCreateOnchainPostTypedDataResponse({
+        mockCreateOnchainCommentTypedDataResponse({
           variables: {
-            request: onchainPostRequest,
+            request: onchainCommentRequest,
             options: {
               overrideSigNonce: nonce,
             },
           },
-          data: mockCreateOnchainPostTypedDataData({ nonce }),
+          data: mockCreateOnchainCommentTypedDataData({ nonce }),
         }),
       ]);
       const { gateway } = setupTestScenario({ apolloClient });
@@ -75,18 +75,19 @@ describe(`Given an instance of ${CreateOnChainPostGateway.name}`, () => {
     });
   });
 
-  describe(`when creating a ${NativeTransaction.name}<CreatePostRequest>`, () => {
+  describe(`when creating a ${NativeTransaction.name}<CreateCommentRequest>}"`, () => {
     it(`should create an instance of the ${NativeTransaction.name}`, async () => {
       const apolloClient = mockLensApolloClient([
-        mockPostOnchainResponse({
+        mockCommentOnchainResponse({
           variables: {
-            request: onchainPostRequest,
+            request: onchainCommentRequest,
           },
           data: {
             result: mockRelaySuccessFragment(),
           },
         }),
       ]);
+
       const { gateway } = setupTestScenario({ apolloClient });
 
       const result = await gateway.createDelegatedTransaction(request);
@@ -110,23 +111,24 @@ describe(`Given an instance of ${CreateOnChainPostGateway.name}`, () => {
       `should fail w/ a ${BroadcastingError.name} in case of $__typename response with "$reason" reason`,
       async (relayError) => {
         const apolloClient = mockLensApolloClient([
-          mockPostOnchainResponse({
+          mockCommentOnchainResponse({
             variables: {
-              request: onchainPostRequest,
+              request: onchainCommentRequest,
             },
             data: {
               result: relayError,
             },
           }),
-          mockCreateOnchainPostTypedDataResponse({
+          mockCreateOnchainCommentTypedDataResponse({
             variables: {
-              request: onchainPostRequest,
+              request: onchainCommentRequest,
             },
             data,
           }),
         ]);
 
         const { gateway } = setupTestScenario({ apolloClient });
+
         const result = await gateway.createDelegatedTransaction(request);
 
         assertBroadcastingErrorResultWithRequestFallback(result, data.result.typedData);
