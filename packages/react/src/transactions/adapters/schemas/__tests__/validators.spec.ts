@@ -5,7 +5,7 @@ import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import {
   validateTokenAllowanceRequest,
   validateUpdateFollowPolicyRequest,
-  validateUpdateProfileDetailsRequest,
+  validateSetProfileMetadataRequest,
   validateUpdateProfileManagersRequest,
 } from '../validators';
 
@@ -51,10 +51,10 @@ describe(`Given the validator helpers`, () => {
     });
   });
 
-  describe(`when testing the "validateUpdateProfileDetailsRequest"`, () => {
+  describe(`when testing the "validateSetProfileMetadataRequest"`, () => {
     it('should provide an actionable error message in case of misuse', () => {
       expect(() =>
-        validateUpdateProfileDetailsRequest({
+        validateSetProfileMetadataRequest({
           attributes: {
             foo: new RegExp('foo'),
           },

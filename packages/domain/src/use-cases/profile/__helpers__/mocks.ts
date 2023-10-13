@@ -20,7 +20,7 @@ import {
 } from '../ProveNftOwnership';
 import { UnfollowRequest } from '../UnfollowProfile';
 import { UpdateFollowPolicyRequest } from '../UpdateFollowPolicy';
-import { UpdateProfileDetailsRequest } from '../UpdateProfileDetails';
+import { SetProfileMetadataRequest } from '../UpdateProfileDetails';
 import { UpdateProfileManagersRequest } from '../UpdateProfileManagers';
 import { ChargeFollowConfig, FollowPolicyType, NoFeeFollowConfig } from '../types';
 
@@ -81,9 +81,9 @@ export function mockUpdateFollowPolicyRequest(
   };
 }
 
-export function mockUpdateProfileDetailsRequest(
-  overrides?: Partial<UpdateProfileDetailsRequest>,
-): UpdateProfileDetailsRequest {
+export function mockSetProfileMetadataRequest(
+  overrides?: Partial<SetProfileMetadataRequest>,
+): SetProfileMetadataRequest {
   return {
     delegate: true,
     metadataURI: faker.internet.url(),

@@ -8,7 +8,7 @@ import {
   mockProfileFragment,
   mockProfileResponse,
 } from '@lens-protocol/api-bindings/mocks';
-import { mockNonce, mockUpdateProfileDetailsRequest } from '@lens-protocol/domain/mocks';
+import { mockNonce, mockSetProfileMetadataRequest } from '@lens-protocol/domain/mocks';
 
 import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
 import {
@@ -47,11 +47,11 @@ const uploadUrl = faker.internet.url();
 
 describe(`Given an instance of the ${ProfileMetadataGateway.name}`, () => {
   const existingProfile = mockProfileFragment();
-  const request = mockUpdateProfileDetailsRequest({
+  const request = mockSetProfileMetadataRequest({
     metadataURI: uploadUrl,
   });
 
-  describe(`when creating an IUnsignedProtocolCall<UpdateProfileDetailsRequest> via the "${ProfileMetadataGateway.prototype.createUnsignedProtocolCall.name}" method`, () => {
+  describe(`when creating an IUnsignedProtocolCall<SetProfileMetadataRequest> via the "${ProfileMetadataGateway.prototype.createUnsignedProtocolCall.name}" method`, () => {
     const data = mockCreateSetProfileMetadataTypedDataData({ metadataURI: uploadUrl });
 
     it(`should:

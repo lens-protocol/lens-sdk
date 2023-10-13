@@ -88,7 +88,7 @@ export const UpdateFollowPolicyRequestSchema: z.ZodType<
   kind: z.literal(TransactionKind.UPDATE_FOLLOW_POLICY),
 });
 
-export const UpdateProfileDetailsRequestSchema = z.object({
+export const SetProfileMetadataRequestSchema = z.object({
   metadataURI: z.string().url(),
   kind: z.literal(TransactionKind.UPDATE_PROFILE_DETAILS),
   delegate: z.boolean(),

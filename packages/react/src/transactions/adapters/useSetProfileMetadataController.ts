@@ -4,8 +4,8 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import {
-  UpdateProfileDetails,
-  UpdateProfileDetailsRequest,
+  SetProfileMetadata,
+  SetProfileMetadataRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
 
@@ -23,15 +23,15 @@ export function useSetProfileMetadataController() {
     onChainRelayer,
   } = useSharedDependencies();
 
-  return async (request: UpdateProfileDetailsRequest) => {
+  return async (request: SetProfileMetadataRequest) => {
     const presenter = new TransactionResultPresenter<
-      UpdateProfileDetailsRequest,
+      SetProfileMetadataRequest,
       BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
 
     const gateway = new ProfileMetadataGateway(apolloClient, transactionFactory);
 
-    const signedSetProfileMetadata = new SubsidizeOnChain<UpdateProfileDetailsRequest>(
+    const signedSetProfileMetadata = new SubsidizeOnChain<SetProfileMetadataRequest>(
       activeWallet,
       transactionGateway,
       gateway,
@@ -40,14 +40,14 @@ export function useSetProfileMetadataController() {
       presenter,
     );
 
-    const updateProfileDetails = new UpdateProfileDetails(
+    const setProfileMetadata = new SetProfileMetadata(
       signedSetProfileMetadata,
       gateway,
       transactionQueue,
       presenter,
     );
 
-    await updateProfileDetails.execute(request);
+    await setProfileMetadata.execute(request);
 
     return presenter.asResult();
   };

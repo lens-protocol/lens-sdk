@@ -3,7 +3,7 @@ import { CreateProfileRequest } from '../profile/CreateProfile';
 import { FollowRequest } from '../profile/FollowProfile';
 import { UnfollowRequest } from '../profile/UnfollowProfile';
 import { UpdateFollowPolicyRequest } from '../profile/UpdateFollowPolicy';
-import { UpdateProfileDetailsRequest } from '../profile/UpdateProfileDetails';
+import { SetProfileMetadataRequest } from '../profile/UpdateProfileDetails';
 import { UpdateProfileManagersRequest } from '../profile/UpdateProfileManagers';
 import { CollectRequest } from '../publications/CollectPublication';
 import { CreateCommentRequest } from '../publications/CreateComment';
@@ -24,6 +24,6 @@ export type AnyTransactionRequest =
   | UnfollowRequest
   | UpdateProfileManagersRequest
   | UpdateFollowPolicyRequest
-  | UpdateProfileDetailsRequest;
+  | SetProfileMetadataRequest;
 
 export type ProtocolTransactionRequest = JustProtocolRequest<AnyTransactionRequest>;
