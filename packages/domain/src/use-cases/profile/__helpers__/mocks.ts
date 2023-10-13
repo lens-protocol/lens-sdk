@@ -90,12 +90,8 @@ export function mockUpdateProfileDetailsRequest(
   overrides?: Partial<UpdateProfileDetailsRequest>,
 ): UpdateProfileDetailsRequest {
   return {
-    attributes: {},
-    bio: faker.lorem.sentence(),
-    coverPicture: faker.image.imageUrl(),
-    name: faker.name.firstName(),
-    profileId: mockProfileId(),
     delegate: true,
+    metadataURI: faker.internet.url(),
     ...overrides,
     kind: TransactionKind.UPDATE_PROFILE_DETAILS,
   };

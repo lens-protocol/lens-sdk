@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { omitTypename } from '@lens-protocol/api-bindings';
 import { TypedData } from '@lens-protocol/blockchain-bindings';
 import {
   AnyTransactionRequestModel,
@@ -14,6 +15,7 @@ import { ChainType, Data } from '@lens-protocol/shared-kernel';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 
+import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ITransactionObserver, TransactionFactory } from '../../infrastructure/TransactionFactory';
 import { MetaTransactionData, NativeTransactionData } from '../ITransactionFactory';
 import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
@@ -91,4 +93,15 @@ export function mockSelfFundedProtocolTransactionRequest<
     encodedData: faker.datatype.hexadecimal({ length: 32 }) as Data,
     ...mockAnyTransactionRequestModel(),
   } as SelfFundedProtocolTransactionRequest<TRequest>;
+}
+
+export function assertUnsignedProtocolCallCorrectness<T extends ProtocolTransactionRequestModel>(
+  unsignedProtocolCall: UnsignedProtocolCall<T>,
+  broadcastResult: {
+    id: string;
+    typedData: TypedData;
+  },
+) {
+  expect(unsignedProtocolCall.id).toEqual(broadcastResult.id);
+  expect(unsignedProtocolCall.typedData).toEqual(omitTypename(broadcastResult.typedData));
 }

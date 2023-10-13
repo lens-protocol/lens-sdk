@@ -10,8 +10,8 @@ type UpdateProfileFormProps = {
   activeProfile: Profile;
 };
 
-function UpdateProfileForm({ activeProfile: activeProfile }: UpdateProfileFormProps) {
-  const { execute: update, error, isPending } = useSetProfileMetadata({ profile: activeProfile });
+function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
+  const { execute: update, error, loading } = useSetProfileMetadata();
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -22,17 +22,26 @@ function UpdateProfileForm({ activeProfile: activeProfile }: UpdateProfileFormPr
     const bio = formData.get('bio') as string | undefined;
     const location = formData.get('location') as string | undefined;
     const website = formData.get('website') as string | undefined;
-    const locationAttribute = location
-      ? [{ key: 'location', value: location, type: MetadataAttributeType.STRING } as const]
-      : [];
-    const websiteAttribute = website
-      ? [{ key: 'website', value: website, type: MetadataAttributeType.STRING } as const]
-      : [];
+
+    if (!location || !website) {
+      throw new Error('Location and website are required');
+    }
 
     const metadata = profile({
       name,
       bio,
-      attributes: [...locationAttribute, ...websiteAttribute],
+      attributes: [
+        {
+          key: 'location',
+          value: location,
+          type: MetadataAttributeType.STRING,
+        },
+        {
+          key: 'website',
+          value: website,
+          type: MetadataAttributeType.STRING,
+        },
+      ],
     });
 
     const metadataURI = await uploadJson(metadata);
@@ -54,9 +63,9 @@ function UpdateProfileForm({ activeProfile: activeProfile }: UpdateProfileFormPr
           required
           type="text"
           placeholder="Your name"
-          disabled={isPending}
+          disabled={loading}
           name="name"
-          defaultValue={activeProfile.metadata?.displayName ?? ''}
+          defaultValue={activeProfile.metadata?.displayName ?? undefined}
         />
       </label>
 
@@ -65,11 +74,12 @@ function UpdateProfileForm({ activeProfile: activeProfile }: UpdateProfileFormPr
         <br />
         <textarea
           rows={3}
+          required
           placeholder="Write a line about you"
           style={{ resize: 'none' }}
-          disabled={isPending}
+          disabled={loading}
           name="bio"
-          defaultValue={activeProfile.metadata?.bio ?? ''}
+          defaultValue={activeProfile.metadata?.bio ?? undefined}
         ></textarea>
       </label>
 
@@ -78,8 +88,9 @@ function UpdateProfileForm({ activeProfile: activeProfile }: UpdateProfileFormPr
         <br />
         <input
           type="text"
+          required
           placeholder="Where are you?"
-          disabled={isPending}
+          disabled={loading}
           name="location"
           defaultValue={location?.value ?? ''}
         />
@@ -90,15 +101,16 @@ function UpdateProfileForm({ activeProfile: activeProfile }: UpdateProfileFormPr
         <br />
         <input
           type="text"
+          required
           placeholder="https://example.com"
-          disabled={isPending}
+          disabled={loading}
           name="website"
-          defaultValue={website?.value ?? ''}
+          defaultValue={website?.value ?? undefined}
         />
       </label>
 
-      <button type="submit" disabled={isPending}>
-        {isPending ? 'Updating...' : 'Update'}
+      <button type="submit" disabled={loading}>
+        {loading ? 'Updating...' : 'Update'}
       </button>
 
       {error && <p>{error.message}</p>}

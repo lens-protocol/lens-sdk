@@ -36,6 +36,7 @@ import { OnChainRelayer } from './transactions/adapters/OnChainRelayer';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
+import { SetProfileMetadataResponder } from './transactions/adapters/responders/SetProfileMetadataResponder';
 import { UpdateProfileManagersResponder } from './transactions/adapters/responders/UpdateProfileManagersResponder';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
@@ -113,7 +114,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(),
     [TransactionKind.UNFOLLOW_PROFILE]: new NoopResponder(),
     [TransactionKind.UPDATE_FOLLOW_POLICY]: new NoopResponder(),
-    [TransactionKind.UPDATE_PROFILE_DETAILS]: new NoopResponder(),
+    [TransactionKind.UPDATE_PROFILE_DETAILS]: new SetProfileMetadataResponder(profileCacheManager),
     [TransactionKind.UPDATE_PROFILE_MANAGERS]: new UpdateProfileManagersResponder(
       apolloClient,
       profileCacheManager,

@@ -11,7 +11,7 @@ import {
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
-import { IUnsignedProtocolCall, Nonce, Transaction } from '@lens-protocol/domain/entities';
+import { Nonce, Transaction } from '@lens-protocol/domain/entities';
 import { UpdateProfileDetailsRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastingError,
@@ -56,7 +56,7 @@ export class ProfileMetadataGateway
   async createUnsignedProtocolCall(
     request: UpdateProfileDetailsRequest,
     nonce?: Nonce,
-  ): Promise<IUnsignedProtocolCall<UpdateProfileDetailsRequest>> {
+  ): Promise<UnsignedProtocolCall<UpdateProfileDetailsRequest>> {
     const data = await this.createTypedData(request, nonce);
 
     return UnsignedProtocolCall.create({
