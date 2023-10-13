@@ -3,10 +3,11 @@ import {
   DelegableSigning,
   SubsidizeOffChain,
   SubsidizeOnChain,
+  TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
-import { CreatePostPresenter } from './CreatePostPresenter';
+import { NewPublicationPresenter } from './NewPublicationPresenter';
 import { CreateMomokaPostGateway } from './publications/CreateMomokaPostGateway';
 import { CreateOnChainPostGateway } from './publications/CreateOnChainPostGateway';
 
@@ -23,7 +24,9 @@ export function useCreatePostController() {
   } = useSharedDependencies();
 
   return async (request: CreatePostRequest) => {
-    const presenter = new CreatePostPresenter(publicationCacheManager);
+    const presenter = new NewPublicationPresenter((tx: TransactionData<CreatePostRequest>) =>
+      publicationCacheManager.fetchNewPost(tx),
+    );
 
     const onChainGateway = new CreateOnChainPostGateway(apolloClient, transactionFactory);
 

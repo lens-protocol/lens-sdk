@@ -81,7 +81,8 @@ describe(`Given an instance of ${CreateMomokaPostGateway.name}`, () => {
     });
 
     it.each([
-      mockLensProfileManagerRelayError(LensProfileManagerRelayErrorReasonType.AppGaslessNotAllowed),
+      mockLensProfileManagerRelayError(LensProfileManagerRelayErrorReasonType.AppNotAllowed),
+      mockLensProfileManagerRelayError(LensProfileManagerRelayErrorReasonType.NoLensManagerEnabled),
       mockLensProfileManagerRelayError(LensProfileManagerRelayErrorReasonType.NotSponsored),
       mockLensProfileManagerRelayError(LensProfileManagerRelayErrorReasonType.RateLimited),
     ])(

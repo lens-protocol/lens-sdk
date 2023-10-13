@@ -34,7 +34,7 @@ export type DegreesOfSeparationReferencePolicyConfig = {
     /**
      * You can set the degree to follow someone elses graph.
      *
-     * @defaultValue the authenticate Profile ID
+     * @defaultValue the authenticated Profile ID
      */
     sourceProfileId?: ProfileId;
   };

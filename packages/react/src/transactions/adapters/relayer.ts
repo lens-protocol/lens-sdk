@@ -17,14 +17,15 @@ export function handleRelayError(
   fallback?: SelfFundedProtocolTransactionRequest<ProtocolTransactionRequest>,
 ): Failure<BroadcastingError> {
   switch (error.reason) {
-    case RelayErrorReasonType.AppGaslessNotAllowed:
-    case LensProfileManagerRelayErrorReasonType.AppGaslessNotAllowed:
+    case RelayErrorReasonType.AppNotAllowed:
+    case LensProfileManagerRelayErrorReasonType.AppNotAllowed:
     case RelayErrorReasonType.Failed:
     case LensProfileManagerRelayErrorReasonType.Failed:
     case RelayErrorReasonType.RateLimited:
     case LensProfileManagerRelayErrorReasonType.RateLimited:
     case RelayErrorReasonType.NotSponsored:
     case LensProfileManagerRelayErrorReasonType.NotSponsored:
+    case LensProfileManagerRelayErrorReasonType.NoLensManagerEnabled:
       return failure(new BroadcastingError(error.reason, fallback));
     default:
       throw new InvariantError(`Unexpected relay error reason: ${error.reason}`);

@@ -1,3 +1,4 @@
+export * from './useCreateComment';
 export * from './useCreatePost';
 export * from './useUpdateProfileManagers';
 

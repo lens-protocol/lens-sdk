@@ -1,6 +1,6 @@
 import { URI } from '@lens-protocol/shared-kernel';
 
-import { PublicationId, TransactionKind } from '../../entities';
+import { isMomokaPublicationId, PublicationId, TransactionKind } from '../../entities';
 import { MomokaCapable } from '../transactions/MomokaCapable';
 import { OpenActionConfig } from './OpenActionConfig';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
@@ -34,7 +34,10 @@ export type CreateCommentRequest = {
 
 export class CreateComment extends MomokaCapable<CreateCommentRequest> {
   override async execute(request: CreateCommentRequest): Promise<void> {
-    if (['actions', 'reference'].some((key) => key in request)) {
+    if (
+      ['actions', 'reference'].some((key) => key in request) ||
+      !isMomokaPublicationId(request.commentOn)
+    ) {
       return this.onChain.execute(request);
     }
     return this.momoka.execute(request);
