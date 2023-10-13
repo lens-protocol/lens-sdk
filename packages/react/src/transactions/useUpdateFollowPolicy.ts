@@ -79,6 +79,7 @@ export function useUpdateFollowPolicy(): UseDeferredTask<
     return updateFollowPolicy({
       kind: TransactionKind.UPDATE_FOLLOW_POLICY,
       policy: args.followPolicy,
+      delegate: true,
     });
   });
 }

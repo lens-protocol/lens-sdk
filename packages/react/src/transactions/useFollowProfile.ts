@@ -33,11 +33,13 @@ function createFollowRequest(profile: Profile): FollowRequest {
         },
         kind: TransactionKind.FOLLOW_PROFILE,
         profileId: profile.id,
+        delegate: false,
       };
     case FollowPolicyType.ANYONE:
       return {
         kind: TransactionKind.FOLLOW_PROFILE,
         profileId: profile.id,
+        delegate: true,
       };
     case FollowPolicyType.NO_ONE:
       throw new InvariantError(`The profile is configured so that nobody can follow it.`);

@@ -1,10 +1,11 @@
 import { TransactionKind } from '../../entities';
-import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
+import { DelegableSigning } from '../transactions/DelegableSigning';
 import { FollowPolicyConfig } from './types';
 
 export type UpdateFollowPolicyRequest = {
   policy: FollowPolicyConfig;
   kind: TransactionKind.UPDATE_FOLLOW_POLICY;
+  delegate: boolean;
 };
 
-export class UpdateFollowPolicy extends SubsidizeOnChain<UpdateFollowPolicyRequest> {}
+export class UpdateFollowPolicy extends DelegableSigning<UpdateFollowPolicyRequest> {}

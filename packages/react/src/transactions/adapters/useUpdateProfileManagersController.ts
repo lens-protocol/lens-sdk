@@ -13,7 +13,7 @@ import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
-import { UpdateProfileManagersCallGateway } from './UpdateProfileManagersCallGateway';
+import { UpdateProfileManagersGateway } from './profiles/UpdateProfileManagersGateway';
 import { validateUpdateProfileManagersRequest } from './schemas/validators';
 
 export function useUpdateProfileManagersController() {
@@ -36,7 +36,7 @@ export function useUpdateProfileManagersController() {
       UpdateProfileManagersRequest,
       BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
-    const gateway = new UpdateProfileManagersCallGateway(apolloClient);
+    const gateway = new UpdateProfileManagersGateway(apolloClient);
 
     const updateProfileManagers = new UpdateProfileManagers(
       activeWallet,

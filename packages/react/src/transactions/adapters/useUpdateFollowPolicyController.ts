@@ -8,17 +8,23 @@ import {
   UpdateFollowPolicy,
   UpdateFollowPolicyRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
-import { UpdateFollowPolicyCallGateway } from './UpdateFollowPolicyCallGateway';
+import { UpdateFollowPolicyGateway } from './profiles/UpdateFollowPolicyGateway';
 import { validateUpdateFollowPolicyRequest } from './schemas/validators';
 
 export function useUpdateFollowPolicyController() {
-  const { activeWallet, apolloClient, onChainRelayer, transactionGateway, transactionQueue } =
-    useSharedDependencies();
+  const {
+    activeWallet,
+    apolloClient,
+    onChainRelayer,
+    transactionFactory,
+    transactionGateway,
+    transactionQueue,
+  } = useSharedDependencies();
 
   return async (
     request: UpdateFollowPolicyRequest,
@@ -26,23 +32,35 @@ export function useUpdateFollowPolicyController() {
     void,
     | BroadcastingError
     | PendingSigningRequestError
+    | TransactionError
     | UserRejectedError
     | WalletConnectionError
-    | TransactionError
   > => {
     validateUpdateFollowPolicyRequest(request);
 
     const presenter = new TransactionResultPresenter<
       UpdateFollowPolicyRequest,
-      BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
+      | BroadcastingError
+      | PendingSigningRequestError
+      | TransactionError
+      | UserRejectedError
+      | WalletConnectionError
     >();
-    const gateway = new UpdateFollowPolicyCallGateway(apolloClient);
 
-    const updateFollowPolicy = new UpdateFollowPolicy(
+    const gateway = new UpdateFollowPolicyGateway(apolloClient, transactionFactory);
+
+    const signedFollow = new SubsidizeOnChain<UpdateFollowPolicyRequest>(
       activeWallet,
       transactionGateway,
       gateway,
       onChainRelayer,
+      transactionQueue,
+      presenter,
+    );
+
+    const updateFollowPolicy = new UpdateFollowPolicy(
+      signedFollow,
+      gateway,
       transactionQueue,
       presenter,
     );

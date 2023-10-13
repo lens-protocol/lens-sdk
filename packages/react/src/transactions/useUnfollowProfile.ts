@@ -50,6 +50,7 @@ export function useUnfollowProfile(): UseDeferredTask<
     return unfollowProfile({
       kind: TransactionKind.UNFOLLOW_PROFILE,
       profileId: args.profile.id,
+      delegate: true,
     });
   });
 }

@@ -76,6 +76,7 @@ export function mockUpdateFollowPolicyRequest(
 ): UpdateFollowPolicyRequest {
   return {
     policy: mockChargeFollowConfig(),
+    delegate: true,
     ...overrides,
     kind: TransactionKind.UPDATE_FOLLOW_POLICY,
   };
@@ -107,6 +108,7 @@ export function mockUnconstrainedFollowRequest(
 ): UnconstrainedFollowRequest {
   return {
     profileId: mockProfileId(),
+    delegate: true,
     ...overrides,
     kind: TransactionKind.FOLLOW_PROFILE,
   };
@@ -121,14 +123,15 @@ export function mockPaidFollowRequest(): PaidFollowRequest {
       recipient: mockEvmAddress(),
     },
     kind: TransactionKind.FOLLOW_PROFILE,
+    delegate: false,
   };
 }
 
-export function mockUnfollowRequest(overrides?: Partial<UnfollowRequest>): UnfollowRequest {
+export function mockUnfollowRequest(): UnfollowRequest {
   return {
     profileId: mockProfileId(),
-    ...overrides,
     kind: TransactionKind.UNFOLLOW_PROFILE,
+    delegate: true,
   };
 }
 

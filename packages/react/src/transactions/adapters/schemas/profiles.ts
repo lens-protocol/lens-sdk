@@ -23,12 +23,14 @@ const FollowRequestFeeSchema = z.object({
 export const UnconstrainedFollowRequestSchema = z.object({
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.FOLLOW_PROFILE),
+  delegate: z.boolean(),
 });
 
 export const PaidFollowRequestSchema = z.object({
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.FOLLOW_PROFILE),
   fee: FollowRequestFeeSchema,
+  delegate: z.boolean(),
 });
 
 export const FollowRequestSchema = z.union([
@@ -39,6 +41,7 @@ export const FollowRequestSchema = z.union([
 export const UnfollowRequestSchema = z.object({
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.UNFOLLOW_PROFILE),
+  delegate: z.boolean(),
 });
 
 export const UpdateProfileManagersRequestSchema = z
@@ -86,6 +89,7 @@ export const UpdateFollowPolicyRequestSchema: z.ZodType<
     NoOneFollowPolicyConfigSchema,
   ]),
   kind: z.literal(TransactionKind.UPDATE_FOLLOW_POLICY),
+  delegate: z.boolean(),
 });
 
 export const SetProfileMetadataRequestSchema = z.object({

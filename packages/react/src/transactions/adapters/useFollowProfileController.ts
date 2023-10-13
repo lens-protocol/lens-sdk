@@ -4,8 +4,16 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { FollowProfile, FollowRequest } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  FollowProfile,
+  FollowRequest,
+  UnconstrainedFollowRequest,
+} from '@lens-protocol/domain/use-cases/profile';
+import {
+  BroadcastingError,
+  DelegableSigning,
+  SubsidizeOnChain,
+} from '@lens-protocol/domain/use-cases/transactions';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -16,8 +24,8 @@ import { PromiseResult } from '@lens-protocol/shared-kernel';
 import { useSharedDependencies } from '../../shared';
 import { BalanceGateway } from '../../wallet/adapters/BalanceGateway';
 import { TokenGateway } from '../../wallet/adapters/TokenGateway';
-import { FollowProfileCallGateway } from './FollowProfileCallGateway';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
+import { FollowProfileGateway } from './profiles/FollowProfileGateway';
 import { validateFollowRequest } from './schemas/validators';
 
 export function useFollowProfileController() {
@@ -26,6 +34,7 @@ export function useFollowProfileController() {
     apolloClient,
     onChainRelayer,
     providerFactory,
+    transactionFactory,
     transactionGateway,
     transactionQueue,
   } = useSharedDependencies();
@@ -54,9 +63,9 @@ export function useFollowProfileController() {
       | UserRejectedError
       | WalletConnectionError
     >();
-    const gateway = new FollowProfileCallGateway(apolloClient);
+    const gateway = new FollowProfileGateway(apolloClient, transactionFactory);
 
-    const signedFollow = new SubsidizeOnChain<FollowRequest>(
+    const signedFollow = new SubsidizeOnChain<UnconstrainedFollowRequest>(
       activeWallet,
       transactionGateway,
       gateway,
@@ -65,13 +74,25 @@ export function useFollowProfileController() {
       presenter,
     );
 
+    const delegableFollow = new DelegableSigning(
+      signedFollow,
+      gateway,
+      transactionQueue,
+      presenter,
+    );
+
     const balanceGateway = new BalanceGateway(providerFactory);
     const tokenGateway = new TokenGateway(providerFactory);
     const tokenAvailability = new TokenAvailability(balanceGateway, tokenGateway, activeWallet);
 
-    const followProfiles = new FollowProfile(tokenAvailability, signedFollow, presenter);
+    const followProfile = new FollowProfile(
+      tokenAvailability,
+      signedFollow,
+      delegableFollow,
+      presenter,
+    );
 
-    await followProfiles.execute(request);
+    await followProfile.execute(request);
 
     const result = presenter.asResult();
 
