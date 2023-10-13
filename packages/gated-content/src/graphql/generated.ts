@@ -84,6 +84,23 @@ export type ActedNotification = {
   readonly publication: AnyPublication;
 };
 
+/** Condition that checks if the given on-chain contract function returns true. It only supports view functions */
+export type AdvancedContractCondition = {
+  readonly __typename: 'AdvancedContractCondition';
+  /** The contract ABI. Has to be in human readable single string format containing the signature of the function you want to call. See https://docs.ethers.org/v5/api/utils/abi/fragments/#human-readable-abi for more info */
+  readonly abi: Scalars['String'];
+  /** The check to perform on the result of the function. In case of boolean outputs, "EQUALS" and "NOT_EQUALS" are supported. For BigNumber outputs, you can use every comparison option */
+  readonly comparison: ComparisonOperatorConditionType;
+  /** The address and chain ID of the contract to call */
+  readonly contract: NetworkAddress;
+  /** The name of the function to call. Must be included in the provided abi */
+  readonly functionName: Scalars['String'];
+  /** ABI encoded function parameters. In order to represent the address of the person trying to decrypt, you *have* to use the string ":userAddress" as this param represents the decrypting user address. If a param is an array or tuple, it will be in stringified format. */
+  readonly params: ReadonlyArray<Scalars['String']>;
+  /** The value to compare the result of the function against. Can be "true", "false" or a number in string format */
+  readonly value: Scalars['String'];
+};
+
 export type AlreadyInvitedCheckRequest = {
   readonly for: Scalars['EvmAddress'];
 };
@@ -125,6 +142,23 @@ export type ApprovedAllowanceAmountResult = {
   readonly allowance: Amount;
   readonly moduleContract: NetworkAddress;
   readonly moduleName: Scalars['String'];
+};
+
+export type ApprovedAuthentication = {
+  readonly __typename: 'ApprovedAuthentication';
+  readonly authorizationId: Scalars['UUID'];
+  readonly browser?: Maybe<Scalars['String']>;
+  readonly createdAt: Scalars['DateTime'];
+  readonly device?: Maybe<Scalars['String']>;
+  readonly expiresAt: Scalars['DateTime'];
+  readonly origin?: Maybe<Scalars['URI']>;
+  readonly os?: Maybe<Scalars['String']>;
+  readonly updatedAt: Scalars['DateTime'];
+};
+
+export type ApprovedAuthenticationRequest = {
+  readonly cursor?: InputMaybe<Scalars['Cursor']>;
+  readonly limit?: InputMaybe<LimitType>;
 };
 
 export type ApprovedModuleAllowanceAmountRequest = {
@@ -218,8 +252,8 @@ export type CanDecryptResponse = {
 };
 
 export type ChallengeRequest = {
-  /** The profile ID to initiate a challenge */
-  readonly for: Scalars['ProfileId'];
+  /** The profile ID to initiate a challenge - note if you do not pass this in you be logging in as a wallet and wont be able to use all the features */
+  readonly for?: InputMaybe<Scalars['ProfileId']>;
   /** The Ethereum address that will sign the challenge */
   readonly signedBy: Scalars['EvmAddress'];
 };
@@ -334,6 +368,7 @@ export type CommentNotification = {
 };
 
 export enum CommentRankingFilterType {
+  All = 'ALL',
   NoneRelevant = 'NONE_RELEVANT',
   Relevant = 'RELEVANT',
 }
@@ -927,6 +962,11 @@ export type CreateOnchainSetProfileMetadataEip712TypedDataValue = {
   readonly profileId: Scalars['ProfileId'];
 };
 
+export type CreateProfileRequest = {
+  readonly followModule?: InputMaybe<FollowModuleInput>;
+  readonly to: Scalars['EvmAddress'];
+};
+
 export enum CreateProfileWithHandleErrorReasonType {
   Failed = 'FAILED',
   HandleTaken = 'HANDLE_TAKEN',
@@ -1066,11 +1106,17 @@ export enum DecryptFailReasonType {
   UnauthorizedBalance = 'UNAUTHORIZED_BALANCE',
 }
 
+export type DefaultProfileRequest = {
+  readonly for: Scalars['EvmAddress'];
+};
+
 export type DegreesOfSeparationReferenceModuleInput = {
   readonly commentsRestricted: Scalars['Boolean'];
   readonly degreesOfSeparation: Scalars['Int'];
   readonly mirrorsRestricted: Scalars['Boolean'];
   readonly quotesRestricted: Scalars['Boolean'];
+  /** You can set the degree to follow someone elses graph, if you leave blank it use your profile */
+  readonly sourceProfileId?: InputMaybe<Scalars['ProfileId']>;
 };
 
 export type DegreesOfSeparationReferenceModuleSettings = {
@@ -1084,6 +1130,9 @@ export type DegreesOfSeparationReferenceModuleSettings = {
   readonly mirrorsRestricted: Scalars['Boolean'];
   /** Applied to quotes */
   readonly quotesRestricted: Scalars['Boolean'];
+  /** Who the degree of separation is applied to */
+  readonly sourceProfileId: Scalars['ProfileId'];
+  readonly type: ReferenceModuleType;
 };
 
 export type DismissRecommendedProfilesRequest = {
@@ -1310,6 +1359,7 @@ export type FeeFollowModuleSettings = {
   readonly contract: NetworkAddress;
   /** The module recipient address */
   readonly recipient: Scalars['EvmAddress'];
+  readonly type: FollowModuleType;
 };
 
 export enum FeedEventItemType {
@@ -1324,15 +1374,15 @@ export enum FeedEventItemType {
 
 export type FeedHighlight = Post | Quote;
 
-export type FeedHighlightWhere = {
-  readonly for?: InputMaybe<Scalars['ProfileId']>;
-  readonly metadata?: InputMaybe<PublicationMetadataFilters>;
-};
-
 export type FeedHighlightsRequest = {
   readonly cursor?: InputMaybe<Scalars['Cursor']>;
   readonly limit?: InputMaybe<LimitType>;
-  readonly where?: InputMaybe<FeedHighlightWhere>;
+  readonly where?: InputMaybe<FeedHighlightsWhere>;
+};
+
+export type FeedHighlightsWhere = {
+  readonly for?: InputMaybe<Scalars['ProfileId']>;
+  readonly metadata?: InputMaybe<PublicationMetadataFilters>;
 };
 
 export type FeedItem = {
@@ -1425,6 +1475,7 @@ export type FollowNotification = {
 export type FollowOnlyReferenceModuleSettings = {
   readonly __typename: 'FollowOnlyReferenceModuleSettings';
   readonly contract: NetworkAddress;
+  readonly type: ReferenceModuleType;
 };
 
 export type FollowRequest = {
@@ -1569,6 +1620,89 @@ export type ImageTransform = {
   readonly width?: InputMaybe<Scalars['ImageSizeTransform']>;
 };
 
+export type InternalAddCuratedTagRequest = {
+  readonly hhh: Scalars['String'];
+  readonly secret: Scalars['String'];
+  readonly ttt: Scalars['String'];
+};
+
+export type InternalAddInvitesRequest = {
+  readonly n: Scalars['Int'];
+  readonly p: Scalars['ProfileId'];
+  readonly secret: Scalars['String'];
+};
+
+export type InternalAllowDomainRequest = {
+  readonly domain: Scalars['URI'];
+  readonly secret: Scalars['String'];
+};
+
+export type InternalAllowedDomainsRequest = {
+  readonly secret: Scalars['String'];
+};
+
+export type InternalClaimRequest = {
+  readonly address: Scalars['EvmAddress'];
+  readonly freeTextHandle: Scalars['Boolean'];
+  readonly handle: Scalars['CreateHandle'];
+  readonly overrideAlreadyClaimed: Scalars['Boolean'];
+  readonly overrideTradeMark: Scalars['Boolean'];
+  readonly secret: Scalars['String'];
+};
+
+export type InternalClaimStatusRequest = {
+  readonly address: Scalars['EvmAddress'];
+  readonly secret: Scalars['String'];
+};
+
+export type InternalCuratedHandlesRequest = {
+  readonly secret: Scalars['String'];
+};
+
+export type InternalCuratedTagsRequest = {
+  readonly hhh: Scalars['String'];
+  readonly secret: Scalars['String'];
+};
+
+export type InternalCuratedUpdateRequest = {
+  readonly handle: Scalars['Handle'];
+  readonly remove: Scalars['Boolean'];
+  readonly secret: Scalars['String'];
+};
+
+export type InternalInvitesRequest = {
+  readonly p: Scalars['ProfileId'];
+  readonly secret: Scalars['String'];
+};
+
+export type InternalNftIndexRequest = {
+  readonly n: ReadonlyArray<Nfi>;
+  readonly secret: Scalars['String'];
+};
+
+export type InternalNftVerifyRequest = {
+  readonly n: ReadonlyArray<Nfi>;
+  readonly secret: Scalars['String'];
+};
+
+export type InternalProfileStatusRequest = {
+  readonly hhh: Scalars['String'];
+  readonly secret: Scalars['String'];
+};
+
+export type InternalRemoveCuratedTagRequest = {
+  readonly hhh: Scalars['String'];
+  readonly secret: Scalars['String'];
+  readonly ttt: Scalars['String'];
+};
+
+export type InternalUpdateProfileStatusRequest = {
+  readonly dd: Scalars['Boolean'];
+  readonly hhh: Scalars['String'];
+  readonly secret: Scalars['String'];
+  readonly ss: Scalars['Boolean'];
+};
+
 export type InviteRequest = {
   readonly invites: ReadonlyArray<Scalars['EvmAddress']>;
   readonly secret: Scalars['String'];
@@ -1595,6 +1729,10 @@ export type KnownSupportedModule = {
   readonly returnDataInput: ReadonlyArray<ModuleInfo>;
 };
 
+export type LastLoggedInProfileRequest = {
+  readonly for: Scalars['EvmAddress'];
+};
+
 export type LegacyAaveFeeCollectModuleSettings = {
   readonly __typename: 'LegacyAaveFeeCollectModuleSettings';
   /** The collect module amount info */
@@ -1610,11 +1748,24 @@ export type LegacyAaveFeeCollectModuleSettings = {
   readonly recipient: Scalars['EvmAddress'];
   /** The referral fee associated with this publication. */
   readonly referralFee: Scalars['Float'];
+  readonly type: OpenActionModuleType;
 };
 
 export type LegacyCollectRequest = {
   readonly on: Scalars['PublicationId'];
   readonly referrer?: InputMaybe<Scalars['PublicationId']>;
+};
+
+export type LegacyDegreesOfSeparationReferenceModuleSettings = {
+  readonly __typename: 'LegacyDegreesOfSeparationReferenceModuleSettings';
+  /** Applied to comments */
+  readonly commentsRestricted: Scalars['Boolean'];
+  readonly contract: NetworkAddress;
+  /** Degrees of separation */
+  readonly degreesOfSeparation: Scalars['Int'];
+  /** Applied to mirrors */
+  readonly mirrorsRestricted: Scalars['Boolean'];
+  readonly type: ReferenceModuleType;
 };
 
 export type LegacyErc4626FeeCollectModuleSettings = {
@@ -1632,6 +1783,7 @@ export type LegacyErc4626FeeCollectModuleSettings = {
   readonly recipient: Scalars['EvmAddress'];
   /** The referral fee associated with this publication. */
   readonly referralFee: Scalars['Float'];
+  readonly type: OpenActionModuleType;
   /** The ERC4626 vault address */
   readonly vault: NetworkAddress;
 };
@@ -1649,6 +1801,13 @@ export type LegacyFeeCollectModuleSettings = {
   readonly recipient: Scalars['EvmAddress'];
   /** The collect module referral fee */
   readonly referralFee: Scalars['Float'];
+  readonly type: OpenActionModuleType;
+};
+
+export type LegacyFollowOnlyReferenceModuleSettings = {
+  readonly __typename: 'LegacyFollowOnlyReferenceModuleSettings';
+  readonly contract: NetworkAddress;
+  readonly type: ReferenceModuleType;
 };
 
 export type LegacyFreeCollectModuleSettings = {
@@ -1658,6 +1817,7 @@ export type LegacyFreeCollectModuleSettings = {
   readonly contract: NetworkAddress;
   /** Follower only */
   readonly followerOnly: Scalars['Boolean'];
+  readonly type: OpenActionModuleType;
 };
 
 export type LegacyLimitedFeeCollectModuleSettings = {
@@ -1675,6 +1835,7 @@ export type LegacyLimitedFeeCollectModuleSettings = {
   readonly recipient: Scalars['EvmAddress'];
   /** The collect module referral fee */
   readonly referralFee: Scalars['Float'];
+  readonly type: OpenActionModuleType;
 };
 
 export type LegacyLimitedTimedFeeCollectModuleSettings = {
@@ -1694,6 +1855,7 @@ export type LegacyLimitedTimedFeeCollectModuleSettings = {
   readonly recipient: Scalars['EvmAddress'];
   /** The collect module referral fee */
   readonly referralFee: Scalars['Float'];
+  readonly type: OpenActionModuleType;
 };
 
 export type LegacyMultirecipientFeeCollectModuleSettings = {
@@ -1713,11 +1875,13 @@ export type LegacyMultirecipientFeeCollectModuleSettings = {
   readonly recipients: ReadonlyArray<RecipientDataOutput>;
   /** The referral fee associated with this publication. */
   readonly referralFee: Scalars['Float'];
+  readonly type: OpenActionModuleType;
 };
 
 export type LegacyRevertCollectModuleSettings = {
   readonly __typename: 'LegacyRevertCollectModuleSettings';
   readonly contract: NetworkAddress;
+  readonly type: OpenActionModuleType;
 };
 
 export type LegacySimpleCollectModuleSettings = {
@@ -1737,6 +1901,7 @@ export type LegacySimpleCollectModuleSettings = {
   readonly recipient: Scalars['EvmAddress'];
   /** The collect module referral fee */
   readonly referralFee: Scalars['Float'];
+  readonly type: OpenActionModuleType;
 };
 
 export type LegacyTimedFeeCollectModuleSettings = {
@@ -1754,6 +1919,7 @@ export type LegacyTimedFeeCollectModuleSettings = {
   readonly recipient: Scalars['EvmAddress'];
   /** The collect module referral fee */
   readonly referralFee: Scalars['Float'];
+  readonly type: OpenActionModuleType;
 };
 
 export type LensProfileManagerRelayError = {
@@ -1762,8 +1928,9 @@ export type LensProfileManagerRelayError = {
 };
 
 export enum LensProfileManagerRelayErrorReasonType {
-  AppGaslessNotAllowed = 'APP_GASLESS_NOT_ALLOWED',
+  AppNotAllowed = 'APP_NOT_ALLOWED',
   Failed = 'FAILED',
+  NotSponsored = 'NOT_SPONSORED',
   NoLensManagerEnabled = 'NO_LENS_MANAGER_ENABLED',
   RateLimited = 'RATE_LIMITED',
   RequiresSignature = 'REQUIRES_SIGNATURE',
@@ -2143,6 +2310,7 @@ export type MultirecipientFeeCollectOpenActionSettings = {
   readonly recipients: ReadonlyArray<RecipientDataOutput>;
   /** The referral fee associated with this publication. */
   readonly referralFee: Scalars['Float'];
+  readonly type: OpenActionModuleType;
 };
 
 export type Mutation = {
@@ -2176,6 +2344,7 @@ export type Mutation = {
   readonly createOnchainPostTypedData: CreateOnchainPostBroadcastItemResult;
   readonly createOnchainQuoteTypedData: CreateOnchainQuoteBroadcastItemResult;
   readonly createOnchainSetProfileMetadataTypedData: CreateOnchainSetProfileMetadataBroadcastItemResult;
+  readonly createProfile: RelaySuccess;
   readonly createProfileWithHandle: CreateProfileWithHandleResult;
   readonly createSetFollowModuleTypedData: CreateSetFollowModuleBroadcastItemResult;
   readonly createUnblockProfilesTypedData: CreateUnblockProfilesBroadcastItemResult;
@@ -2187,6 +2356,15 @@ export type Mutation = {
   readonly handleUnlinkFromProfile: LensProfileManagerRelayResult;
   readonly hidePublication?: Maybe<Scalars['Void']>;
   readonly idKitPhoneVerifyWebhook: IdKitPhoneVerifyWebhookResultStatusType;
+  readonly internalAddCuratedTag?: Maybe<Scalars['Void']>;
+  readonly internalAddInvites?: Maybe<Scalars['Void']>;
+  readonly internalAllowDomain?: Maybe<Scalars['Void']>;
+  readonly internalClaim?: Maybe<Scalars['Void']>;
+  readonly internalCuratedUpdate?: Maybe<Scalars['Void']>;
+  readonly internalNftIndex?: Maybe<Scalars['Void']>;
+  readonly internalNftVerify?: Maybe<Scalars['Void']>;
+  readonly internalRemoveCuratedTag?: Maybe<Scalars['Void']>;
+  readonly internalUpdateProfileStatus?: Maybe<Scalars['Void']>;
   readonly inviteProfile?: Maybe<Scalars['Void']>;
   readonly legacyCollect: LensProfileManagerRelayResult;
   readonly mirrorOnMomoka: RelayMomokaResult;
@@ -2202,6 +2380,8 @@ export type Mutation = {
   readonly removePublicationBookmark?: Maybe<Scalars['Void']>;
   readonly removeReaction?: Maybe<Scalars['Void']>;
   readonly reportPublication?: Maybe<Scalars['Void']>;
+  readonly revokeAuthentication?: Maybe<Scalars['Void']>;
+  readonly setDefaultProfile?: Maybe<Scalars['Void']>;
   readonly setFollowModule: LensProfileManagerRelayResult;
   readonly setProfileMetadata: LensProfileManagerRelayResult;
   readonly unblock: LensProfileManagerRelayResult;
@@ -2340,6 +2520,10 @@ export type MutationCreateOnchainSetProfileMetadataTypedDataArgs = {
   request: OnchainSetProfileMetadataRequest;
 };
 
+export type MutationCreateProfileArgs = {
+  request: CreateProfileRequest;
+};
+
 export type MutationCreateProfileWithHandleArgs = {
   request: CreateProfileWithHandleRequest;
 };
@@ -2385,6 +2569,42 @@ export type MutationHidePublicationArgs = {
 
 export type MutationIdKitPhoneVerifyWebhookArgs = {
   request: IdKitPhoneVerifyWebhookRequest;
+};
+
+export type MutationInternalAddCuratedTagArgs = {
+  request: InternalAddCuratedTagRequest;
+};
+
+export type MutationInternalAddInvitesArgs = {
+  request: InternalAddInvitesRequest;
+};
+
+export type MutationInternalAllowDomainArgs = {
+  request: InternalAllowDomainRequest;
+};
+
+export type MutationInternalClaimArgs = {
+  request: InternalClaimRequest;
+};
+
+export type MutationInternalCuratedUpdateArgs = {
+  request: InternalCuratedUpdateRequest;
+};
+
+export type MutationInternalNftIndexArgs = {
+  request: InternalNftIndexRequest;
+};
+
+export type MutationInternalNftVerifyArgs = {
+  request: InternalNftVerifyRequest;
+};
+
+export type MutationInternalRemoveCuratedTagArgs = {
+  request: InternalRemoveCuratedTagRequest;
+};
+
+export type MutationInternalUpdateProfileStatusArgs = {
+  request: InternalUpdateProfileStatusRequest;
 };
 
 export type MutationInviteProfileArgs = {
@@ -2445,6 +2665,14 @@ export type MutationRemoveReactionArgs = {
 
 export type MutationReportPublicationArgs = {
   request: ReportPublicationRequest;
+};
+
+export type MutationRevokeAuthenticationArgs = {
+  request: RevokeAuthenticationRequest;
+};
+
+export type MutationSetDefaultProfileArgs = {
+  request: SetDefaultProfileRequest;
 };
 
 export type MutationSetFollowModuleArgs = {
@@ -2512,6 +2740,11 @@ export type NetworkAddress = {
 export type NetworkAddressInput = {
   readonly address: Scalars['EvmAddress'];
   readonly chainId: Scalars['ChainId'];
+};
+
+export type Nfi = {
+  readonly c: Scalars['EvmAddress'];
+  readonly i: Scalars['ChainId'];
 };
 
 export type Nft = {
@@ -2716,10 +2949,6 @@ export type NotificationRequest = {
   readonly where?: InputMaybe<NotificationWhere>;
 };
 
-export type NotificationSubscriptionRequest = {
-  readonly for: Scalars['ProfileId'];
-};
-
 export enum NotificationType {
   Acted = 'ACTED',
   Commented = 'COMMENTED',
@@ -2739,6 +2968,7 @@ export type NotificationWhere = {
 
 export type OnchainCommentRequest = {
   readonly commentOn: Scalars['PublicationId'];
+  /** If your using an unknown reference modules you need to pass this in. `followerOnlyReferenceModule` and `degreesOfSeparationReferenceModule` is handled automatically for you and if you supply this on publications with those settings it will be ignored */
   readonly commentOnReferenceModuleData?: InputMaybe<Scalars['BlockchainData']>;
   readonly contentURI: Scalars['URI'];
   readonly openActionModules?: InputMaybe<ReadonlyArray<OpenActionModuleInput>>;
@@ -2750,6 +2980,7 @@ export type OnchainMirrorRequest = {
   /** You can add information like app on a mirror or tracking stuff */
   readonly metadataURI?: InputMaybe<Scalars['URI']>;
   readonly mirrorOn: Scalars['PublicationId'];
+  /** If your using an unknown reference modules you need to pass this in. `followerOnlyReferenceModule` and `degreesOfSeparationReferenceModule` is handled automatically for you and if you supply this on publications with those settings it will be ignored */
   readonly mirrorReferenceModuleData?: InputMaybe<Scalars['BlockchainData']>;
   readonly referrers?: InputMaybe<ReadonlyArray<OnchainReferrer>>;
 };
@@ -2764,6 +2995,7 @@ export type OnchainQuoteRequest = {
   readonly contentURI: Scalars['URI'];
   readonly openActionModules?: InputMaybe<ReadonlyArray<OpenActionModuleInput>>;
   readonly quoteOn: Scalars['PublicationId'];
+  /** If your using an unknown reference modules you need to pass this in. `followerOnlyReferenceModule` and `degreesOfSeparationReferenceModule` is handled automatically for you and if you supply this on publications with those settings it will be ignored */
   readonly quoteOnReferenceModuleData?: InputMaybe<Scalars['BlockchainData']>;
   readonly referenceModule?: InputMaybe<ReferenceModuleInput>;
   readonly referrers?: InputMaybe<ReadonlyArray<OnchainReferrer>>;
@@ -2855,6 +3087,12 @@ export type Owner = {
   readonly __typename: 'Owner';
   readonly address: Scalars['EvmAddress'];
   readonly amount: Scalars['String'];
+};
+
+export type PaginatedApprovedAuthenticationResult = {
+  readonly __typename: 'PaginatedApprovedAuthenticationResult';
+  readonly items: ReadonlyArray<ApprovedAuthentication>;
+  readonly pageInfo: PaginatedResultInfo;
 };
 
 export type PaginatedCurrenciesResult = {
@@ -3109,6 +3347,12 @@ export type Post = {
 
 export type PostStatsArgs = {
   request?: InputMaybe<PublicationStatsInput>;
+};
+
+export type PrfResult = {
+  readonly __typename: 'PrfResult';
+  readonly dd: Scalars['Boolean'];
+  readonly ss: Scalars['Boolean'];
 };
 
 export type PrimaryPublication = Comment | Post | Quote;
@@ -3483,8 +3727,12 @@ export type PublicationBookmarksWhere = {
 };
 
 export type PublicationCommentOn = {
-  readonly commentsRankingFilter?: InputMaybe<CommentRankingFilterType>;
   readonly id: Scalars['PublicationId'];
+  readonly ranking?: InputMaybe<PublicationCommentOnRanking>;
+};
+
+export type PublicationCommentOnRanking = {
+  readonly filter?: InputMaybe<CommentRankingFilterType>;
 };
 
 export enum PublicationContentWarningType {
@@ -3657,6 +3905,7 @@ export type PublicationOperations = {
   readonly canComment: TriStateValue;
   readonly canDecrypt: CanDecryptResponse;
   readonly canMirror: TriStateValue;
+  readonly canQuote: TriStateValue;
   readonly hasActed: OptimisticStatusResult;
   readonly hasBookmarked: Scalars['Boolean'];
   readonly hasMirrored: Scalars['Boolean'];
@@ -3787,10 +4036,6 @@ export type PublicationStatsReactionArgs = {
   readonly type: PublicationReactionType;
 };
 
-export type PublicationStatsSubscriptionRequest = {
-  readonly for: Scalars['PublicationId'];
-};
-
 export enum PublicationType {
   Comment = 'COMMENT',
   Mirror = 'MIRROR',
@@ -3842,12 +4087,15 @@ export type PublicationsWhere = {
 
 export type Query = {
   readonly __typename: 'Query';
+  readonly approvedAuthentication?: Maybe<PaginatedApprovedAuthenticationResult>;
   readonly approvedModuleAllowanceAmount: ReadonlyArray<ApprovedAllowanceAmountResult>;
   readonly challenge: AuthChallengeResult;
   readonly claimableProfiles: ClaimableProfilesResult;
   readonly claimableStatus: ClaimProfileStatusType;
   /** Get all enabled currencies */
   readonly currencies: PaginatedCurrenciesResult;
+  /** Get the default profile for a given EvmAddress. If no default is explicitly set, you will get the oldest profile owned by the address. */
+  readonly defaultProfile?: Maybe<Profile>;
   readonly doesFollow: ReadonlyArray<DoesFollowResult>;
   readonly exploreProfiles: PaginatedProfileResult;
   readonly explorePublications: PaginatedExplorePublicationResult;
@@ -3857,7 +4105,15 @@ export type Query = {
   readonly followers: PaginatedProfileResult;
   readonly following: PaginatedProfileResult;
   readonly generateModuleCurrencyApprovalData: GenerateModuleCurrencyApprovalResult;
+  readonly internalAllowedDomains: ReadonlyArray<Scalars['URI']>;
+  readonly internalClaimStatus?: Maybe<Scalars['Void']>;
+  readonly internalCuratedHandles: ReadonlyArray<Scalars['String']>;
+  readonly internalCuratedTags: ReadonlyArray<Scalars['String']>;
+  readonly internalInvites: Scalars['Int'];
+  readonly internalProfileStatus: PrfResult;
   readonly invitedProfiles: ReadonlyArray<InvitedResult>;
+  readonly lastLoggedInProfile?: Maybe<Profile>;
+  readonly lensProtocolVersion: Scalars['String'];
   readonly lensTransactionStatus?: Maybe<LensTransactionResult>;
   readonly momokaSubmitters: MomokaSubmittersResult;
   readonly momokaSummary: MomokaSummaryResult;
@@ -3911,6 +4167,10 @@ export type Query = {
   readonly whoReactedPublication: PaginatedWhoReactedResult;
 };
 
+export type QueryApprovedAuthenticationArgs = {
+  request: ApprovedAuthenticationRequest;
+};
+
 export type QueryApprovedModuleAllowanceAmountArgs = {
   request: ApprovedModuleAllowanceAmountRequest;
 };
@@ -3921,6 +4181,10 @@ export type QueryChallengeArgs = {
 
 export type QueryCurrenciesArgs = {
   request: PaginatedOffsetRequest;
+};
+
+export type QueryDefaultProfileArgs = {
+  request: DefaultProfileRequest;
 };
 
 export type QueryDoesFollowArgs = {
@@ -3957,6 +4221,34 @@ export type QueryFollowingArgs = {
 
 export type QueryGenerateModuleCurrencyApprovalDataArgs = {
   request: GenerateModuleCurrencyApprovalDataRequest;
+};
+
+export type QueryInternalAllowedDomainsArgs = {
+  request: InternalAllowedDomainsRequest;
+};
+
+export type QueryInternalClaimStatusArgs = {
+  request: InternalClaimStatusRequest;
+};
+
+export type QueryInternalCuratedHandlesArgs = {
+  request: InternalCuratedHandlesRequest;
+};
+
+export type QueryInternalCuratedTagsArgs = {
+  request: InternalCuratedTagsRequest;
+};
+
+export type QueryInternalInvitesArgs = {
+  request: InternalInvitesRequest;
+};
+
+export type QueryInternalProfileStatusArgs = {
+  request: InternalProfileStatusRequest;
+};
+
+export type QueryLastLoggedInProfileArgs = {
+  request: LastLoggedInProfileRequest;
 };
 
 export type QueryLensTransactionStatusArgs = {
@@ -4197,6 +4489,8 @@ export type RecipientDataOutput = {
 export type ReferenceModule =
   | DegreesOfSeparationReferenceModuleSettings
   | FollowOnlyReferenceModuleSettings
+  | LegacyDegreesOfSeparationReferenceModuleSettings
+  | LegacyFollowOnlyReferenceModuleSettings
   | UnknownReferenceModuleSettings;
 
 export type ReferenceModuleInput = {
@@ -4208,6 +4502,8 @@ export type ReferenceModuleInput = {
 export enum ReferenceModuleType {
   DegreesOfSeparationReferenceModule = 'DegreesOfSeparationReferenceModule',
   FollowerOnlyReferenceModule = 'FollowerOnlyReferenceModule',
+  LegacyDegreesOfSeparationReferenceModule = 'LegacyDegreesOfSeparationReferenceModule',
+  LegacyFollowerOnlyReferenceModule = 'LegacyFollowerOnlyReferenceModule',
   UnknownReferenceModule = 'UnknownReferenceModule',
 }
 
@@ -4238,9 +4534,10 @@ export type RelayError = {
 };
 
 export enum RelayErrorReasonType {
-  AppGaslessNotAllowed = 'APP_GASLESS_NOT_ALLOWED',
+  AppNotAllowed = 'APP_NOT_ALLOWED',
   Expired = 'EXPIRED',
   Failed = 'FAILED',
+  NotSponsored = 'NOT_SPONSORED',
   RateLimited = 'RATE_LIMITED',
   WrongWalletSigned = 'WRONG_WALLET_SIGNED',
 }
@@ -4293,7 +4590,7 @@ export enum RelayRoleKey {
 export type RelaySuccess = {
   readonly __typename: 'RelaySuccess';
   readonly txHash?: Maybe<Scalars['TxHash']>;
-  readonly txId?: Maybe<Scalars['TxId']>;
+  readonly txId: Scalars['TxId'];
 };
 
 export type ReportPublicationRequest = {
@@ -4340,6 +4637,12 @@ export type RevenueFromPublicationsRequest = {
 export type RevertFollowModuleSettings = {
   readonly __typename: 'RevertFollowModuleSettings';
   readonly contract: NetworkAddress;
+  readonly type: FollowModuleType;
+};
+
+export type RevokeAuthenticationRequest = {
+  /** The token authorization id wish to revoke */
+  readonly authorizationId: Scalars['UUID'];
 };
 
 export type RootCondition = {
@@ -4354,6 +4657,7 @@ export enum SearchPublicationType {
 }
 
 export type SecondTierCondition =
+  | AdvancedContractCondition
   | AndCondition
   | CollectCondition
   | EoaOwnershipCondition
@@ -4366,6 +4670,10 @@ export type SecondTierCondition =
 export type SensitiveReasonInput = {
   readonly reason: PublicationReportingReason;
   readonly subreason: PublicationReportingSensitiveSubreason;
+};
+
+export type SetDefaultProfileRequest = {
+  readonly profileId: Scalars['ProfileId'];
 };
 
 export type SetFollowModuleRequest = {
@@ -4405,6 +4713,7 @@ export type SimpleCollectOpenActionSettings = {
   readonly recipient: Scalars['EvmAddress'];
   /** The collect module referral fee */
   readonly referralFee: Scalars['Float'];
+  readonly type: OpenActionModuleType;
 };
 
 export type SpaceMetadataV3 = {
@@ -4457,11 +4766,11 @@ export type Subscription = {
 };
 
 export type SubscriptionNewNotificationArgs = {
-  request: NotificationSubscriptionRequest;
+  for: Scalars['ProfileId'];
 };
 
 export type SubscriptionNewPublicationStatsArgs = {
-  request: PublicationStatsSubscriptionRequest;
+  for: Scalars['PublicationId'];
 };
 
 export enum SupportedFiatType {
@@ -4522,6 +4831,7 @@ export type TextOnlyMetadataV3 = {
 };
 
 export type ThirdTierCondition =
+  | AdvancedContractCondition
   | CollectCondition
   | EoaOwnershipCondition
   | Erc20OwnershipCondition
@@ -4609,7 +4919,8 @@ export type UnknownFollowModuleSettings = {
   readonly __typename: 'UnknownFollowModuleSettings';
   readonly contract: NetworkAddress;
   /** The data used to setup the module which you can decode with your known ABI  */
-  readonly followModuleReturnData: Scalars['BlockchainData'];
+  readonly followModuleReturnData?: Maybe<Scalars['BlockchainData']>;
+  readonly type: FollowModuleType;
 };
 
 export type UnknownOpenActionActRedeemInput = {
@@ -4629,6 +4940,7 @@ export type UnknownOpenActionModuleSettings = {
   readonly contract: NetworkAddress;
   /** The data used to setup the module which you can decode with your known ABI  */
   readonly openActionModuleReturnData?: Maybe<Scalars['BlockchainData']>;
+  readonly type: OpenActionModuleType;
 };
 
 export type UnknownOpenActionResult = {
@@ -4647,7 +4959,8 @@ export type UnknownReferenceModuleSettings = {
   readonly __typename: 'UnknownReferenceModuleSettings';
   readonly contract: NetworkAddress;
   /** The data used to setup the module which you can decode with your known ABI  */
-  readonly referenceModuleReturnData: Scalars['BlockchainData'];
+  readonly referenceModuleReturnData?: Maybe<Scalars['BlockchainData']>;
+  readonly type: ReferenceModuleType;
 };
 
 export type UnknownSupportedModule = {

@@ -688,6 +688,9 @@ fragment AndCondition on AndCondition {
     ... on CollectCondition {
       ...CollectCondition
     }
+    ... on AdvancedContractCondition {
+      ...AdvancedContractCondition
+    }
   }
 }
 
@@ -712,7 +715,22 @@ fragment OrCondition on OrCondition {
     ... on CollectCondition {
       ...CollectCondition
     }
+    ... on AdvancedContractCondition {
+      ...AdvancedContractCondition
+    }
   }
+}
+
+fragment AdvancedContractCondition on AdvancedContractCondition {
+  __typename
+  contract {
+    ...NetworkAddress
+  }
+  functionName
+  abi
+  params
+  comparison
+  value
 }
 
 fragment RootCondition on RootCondition {
@@ -741,6 +759,9 @@ fragment RootCondition on RootCondition {
     }
     ... on OrCondition {
       ...OrCondition
+    }
+    ... on AdvancedContractCondition {
+      ...AdvancedContractCondition
     }
   }
 }

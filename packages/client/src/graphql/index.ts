@@ -186,7 +186,7 @@ export type {
   // where
   ExploreProfilesWhere,
   ExplorePublicationsWhere,
-  FeedHighlightWhere,
+  FeedHighlightsWhere,
   FeedWhere,
   NftsRequestWhere,
   NotificationWhere,
