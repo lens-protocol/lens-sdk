@@ -21,24 +21,20 @@ const FollowRequestFeeSchema = z.object({
 });
 
 export const UnconstrainedFollowRequestSchema = z.object({
-  followerAddress: z.string(),
   profileId: ProfileIdSchema,
-  kind: z.literal(TransactionKind.FOLLOW_PROFILES),
+  kind: z.literal(TransactionKind.FOLLOW_PROFILE),
 });
 
 export const PaidFollowRequestSchema = z.object({
-  followerAddress: z.string(),
   profileId: ProfileIdSchema,
-  kind: z.literal(TransactionKind.FOLLOW_PROFILES),
+  kind: z.literal(TransactionKind.FOLLOW_PROFILE),
   fee: FollowRequestFeeSchema,
 });
 
-export const ProfileOwnerFollowRequestSchema = z.object({
-  followerAddress: z.string(),
-  profileId: ProfileIdSchema,
-  kind: z.literal(TransactionKind.FOLLOW_PROFILES),
-  followerProfileId: z.string(),
-});
+export const FollowRequestSchema = z.union([
+  PaidFollowRequestSchema,
+  UnconstrainedFollowRequestSchema,
+]);
 
 export const UnfollowRequestSchema = z.object({
   profileId: ProfileIdSchema,

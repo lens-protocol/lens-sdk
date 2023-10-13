@@ -39,6 +39,9 @@ export type UseProfileManagersArgs = PaginatedArgs<{
  *   );
  * }
  * ```
+ *
+ * @category Profiles
+ * @group Hooks
  */
 export function useProfileManagers(args: UseProfileManagersArgs) {
   return usePaginatedReadResult(

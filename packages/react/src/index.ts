@@ -87,6 +87,7 @@ export * from './helpers/tasks';
  * GQL common types
  */
 export type { MetadataAttribute } from '@lens-protocol/api-bindings';
+export { TriStateValue } from '@lens-protocol/api-bindings';
 
 /**
  * Common errors

@@ -1,4 +1,4 @@
-import { Amount, Erc20 } from '@lens-protocol/shared-kernel';
+import { Amount, Erc20, EvmAddress } from '@lens-protocol/shared-kernel';
 
 export enum FollowPolicyType {
   CHARGE = 'CHARGE',
@@ -10,7 +10,7 @@ export enum FollowPolicyType {
 export type ChargeFollowConfig = {
   type: FollowPolicyType.CHARGE;
   amount: Amount<Erc20>;
-  recipient: string;
+  recipient: EvmAddress;
 };
 
 export type NoFeeFollowConfig = {
