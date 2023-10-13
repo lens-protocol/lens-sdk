@@ -469,32 +469,43 @@ export type CollectConditionFragment = {
 export type AndConditionFragment = {
   __typename: 'AndCondition';
   criteria: Array<
+    | AdvancedContractConditionFragment
     | CollectConditionFragment
     | EoaOwnershipConditionFragment
     | Erc20OwnershipConditionFragment
     | FollowConditionFragment
     | NftOwnershipConditionFragment
     | ProfileOwnershipConditionFragment
-    | {}
   >;
 };
 
 export type OrConditionFragment = {
   __typename: 'OrCondition';
   criteria: Array<
+    | AdvancedContractConditionFragment
     | CollectConditionFragment
     | EoaOwnershipConditionFragment
     | Erc20OwnershipConditionFragment
     | FollowConditionFragment
     | NftOwnershipConditionFragment
     | ProfileOwnershipConditionFragment
-    | {}
   >;
+};
+
+export type AdvancedContractConditionFragment = {
+  __typename: 'AdvancedContractCondition';
+  functionName: string;
+  abi: string;
+  params: Array<string>;
+  comparison: Types.ComparisonOperatorConditionType;
+  value: string;
+  contract: NetworkAddressFragment;
 };
 
 export type RootConditionFragment = {
   __typename: 'RootCondition';
   criteria: Array<
+    | AdvancedContractConditionFragment
     | AndConditionFragment
     | CollectConditionFragment
     | EoaOwnershipConditionFragment
@@ -503,7 +514,6 @@ export type RootConditionFragment = {
     | NftOwnershipConditionFragment
     | OrConditionFragment
     | ProfileOwnershipConditionFragment
-    | {}
   >;
 };
 
@@ -3958,6 +3968,53 @@ export const CollectConditionFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode;
+export const AdvancedContractConditionFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'NetworkAddress' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NetworkAddress' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'address' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'chainId' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
 export const AndConditionFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -4062,6 +4119,22 @@ export const AndConditionFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'CollectCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -4272,6 +4345,35 @@ export const AndConditionFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'publicationId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'thisPublication' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -4384,6 +4486,22 @@ export const OrConditionFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -4591,6 +4709,35 @@ export const OrConditionFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'publicationId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'thisPublication' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -4729,6 +4876,22 @@ export const RootConditionFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -5043,6 +5206,22 @@ export const RootConditionFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -5153,9 +5332,54 @@ export const RootConditionFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -5498,6 +5722,22 @@ export const PublicationMetadataLitEncryptionFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -5608,9 +5848,54 @@ export const PublicationMetadataLitEncryptionFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -5741,6 +6026,22 @@ export const PublicationMetadataLitEncryptionFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -7273,6 +7574,22 @@ export const AudioMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -7383,9 +7700,54 @@ export const AudioMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -7516,6 +7878,22 @@ export const AudioMetadataV3FragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -8524,6 +8902,22 @@ export const VideoMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -8634,9 +9028,54 @@ export const VideoMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -8767,6 +9206,22 @@ export const VideoMetadataV3FragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -9774,6 +10229,22 @@ export const ImageMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -9884,9 +10355,54 @@ export const ImageMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -10017,6 +10533,22 @@ export const ImageMetadataV3FragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -11011,6 +11543,22 @@ export const ArticleMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -11121,9 +11669,54 @@ export const ArticleMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -11254,6 +11847,22 @@ export const ArticleMetadataV3FragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -12279,6 +12888,22 @@ export const EventMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -12389,9 +13014,54 @@ export const EventMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -12522,6 +13192,22 @@ export const EventMetadataV3FragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -13530,6 +14216,22 @@ export const LinkMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -13640,9 +14342,54 @@ export const LinkMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -13773,6 +14520,22 @@ export const LinkMetadataV3FragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -14767,6 +15530,22 @@ export const EmbedMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -14877,9 +15656,54 @@ export const EmbedMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -15010,6 +15834,22 @@ export const EmbedMetadataV3FragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -16014,6 +16854,22 @@ export const CheckingInMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -16124,9 +16980,54 @@ export const CheckingInMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -16257,6 +17158,22 @@ export const CheckingInMetadataV3FragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -17053,6 +17970,22 @@ export const TextOnlyMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -17163,9 +18096,54 @@ export const TextOnlyMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -17296,6 +18274,22 @@ export const TextOnlyMetadataV3FragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -18216,6 +19210,22 @@ export const ThreeDMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -18326,9 +19336,54 @@ export const ThreeDMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -18459,6 +19514,22 @@ export const ThreeDMetadataV3FragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -19468,6 +20539,22 @@ export const StoryMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -19578,9 +20665,54 @@ export const StoryMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -19711,6 +20843,22 @@ export const StoryMetadataV3FragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -20707,6 +21855,22 @@ export const TransactionMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -20817,9 +21981,54 @@ export const TransactionMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -20950,6 +22159,22 @@ export const TransactionMetadataV3FragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -21944,6 +23169,22 @@ export const MintMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -22054,9 +23295,54 @@ export const MintMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -22187,6 +23473,22 @@ export const MintMetadataV3FragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -23183,6 +24485,22 @@ export const SpaceMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -23293,9 +24611,54 @@ export const SpaceMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -23426,6 +24789,22 @@ export const SpaceMetadataV3FragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -24425,6 +25804,22 @@ export const LiveStreamMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -24535,9 +25930,54 @@ export const LiveStreamMetadataV3FragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -24668,6 +26108,22 @@ export const LiveStreamMetadataV3FragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -29365,6 +30821,22 @@ export const PostFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -29475,9 +30947,54 @@ export const PostFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -29608,6 +31125,22 @@ export const PostFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -35585,6 +37118,22 @@ export const CommentBaseFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -35695,9 +37244,54 @@ export const CommentBaseFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -35828,6 +37422,22 @@ export const CommentBaseFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -41734,6 +43344,22 @@ export const QuoteBaseFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -41844,9 +43470,54 @@ export const QuoteBaseFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -41977,6 +43648,22 @@ export const QuoteBaseFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -47421,6 +49108,22 @@ export const CommentFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -47531,9 +49234,54 @@ export const CommentFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -47664,6 +49412,22 @@ export const CommentFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -54813,6 +56577,22 @@ export const QuoteFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -54923,9 +56703,54 @@ export const QuoteFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -55056,6 +56881,22 @@ export const QuoteFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
@@ -62216,6 +64057,22 @@ export const MirrorFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -62326,9 +64183,54 @@ export const MirrorFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -62459,6 +64361,22 @@ export const MirrorFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OrCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },

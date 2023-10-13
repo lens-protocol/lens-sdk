@@ -194,6 +194,9 @@ function toRawSimpleCondition(gqlCondition: gql.ThirdTierCondition): raw.SimpleC
         follow: raw.toProfileId(gqlCondition.follow),
       });
 
+    case 'AdvancedContractCondition':
+      throw new Error('Support for AdvancedContractCondition not implemented yet.');
+
     default:
       assertNever(gqlCondition, 'Unknown access condition type');
   }

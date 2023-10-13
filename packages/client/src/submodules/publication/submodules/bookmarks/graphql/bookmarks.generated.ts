@@ -2438,6 +2438,22 @@ export const PublicationBookmarksDocument = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -2646,9 +2662,54 @@ export const PublicationBookmarksDocument = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'functionName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'abi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comparison' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },
@@ -2753,6 +2814,22 @@ export const PublicationBookmarksDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'CollectCondition' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AdvancedContractCondition' },
+                      },
                     ],
                   },
                 },
