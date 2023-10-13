@@ -2,7 +2,7 @@ import { AnyPublication } from '@lens-protocol/api-bindings';
 import { ReportReason } from '@lens-protocol/domain/entities';
 import { ReportPublicationRequest } from '@lens-protocol/domain/use-cases/publications';
 
-import { Operation, useOperation } from '../helpers/operations';
+import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useReportPublicationController } from './adapters/useReportPublicationController';
 
 export { ReportReason };
@@ -13,23 +13,16 @@ export type UseReportPublicationArgs = {
 
 export type ReportPublicationArgs = Pick<ReportPublicationRequest, 'additionalComments' | 'reason'>;
 
-export type ReportPublicationOperation = Operation<void, never, [ReportPublicationArgs]>;
-
 /**
  * Report a publication for a given reason.
  *
  * You MUST be authenticated via {@link useLogin} to use this hook.
  *
- * @category Publications
- * @group Hooks
- * @param args - {@link UseReportPublicationArgs}
- *
  * @example
- *
  * Form to provide a reason and comments to report a publication.
  * ```tsx
  * function ReportPublicationForm({ publication }: ReportPublicationFormProps) {
- *   const { execute: report, isPending } = useReportPublication({ publication });
+ *   const { execute: report, loading } = useReportPublication({ publication });
  *   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
  *     event.preventDefault();
  *
@@ -55,7 +48,7 @@ export type ReportPublicationOperation = Operation<void, never, [ReportPublicati
  *       <div>
  *         <p>Why are you reporting this publication?</p>
  *
- *         <select name="reason" disabled={isPending}>
+ *         <select name="reason" disabled={loading}>
  *           <option value="">Select one</option>
  *           <optgroup label="Illegal">
  *             <option value={ReportReason.HARASSMENT}>Bullying or harassment</option>
@@ -91,29 +84,30 @@ export type ReportPublicationOperation = Operation<void, never, [ReportPublicati
  *           name="additionalComments"
  *           rows={3}
  *           placeholder="Optional comment"
- *           disabled={isPending}
+ *           disabled={loading}
  *         />
  *       </div>
  *
- *       <button type="submit" disabled={isPending}>
+ *       <button type="submit" disabled={loading}>
  *         Report
  *       </button>
  *     </form>
  *   );
  * }
  * ```
+ *
+ * @category Publications
+ * @group Hooks
  */
-
 export function useReportPublication({
   publication,
-}: UseReportPublicationArgs): ReportPublicationOperation {
+}: UseReportPublicationArgs): UseDeferredTask<void, never, ReportPublicationArgs> {
   const reportPublication = useReportPublicationController();
 
-  return useOperation(async ({ additionalComments, reason }: ReportPublicationArgs) =>
-    reportPublication({
-      additionalComments,
-      reason,
+  return useDeferredTask(async (args) => {
+    return reportPublication({
       publicationId: publication.id,
-    }),
-  );
+      ...args,
+    });
+  });
 }

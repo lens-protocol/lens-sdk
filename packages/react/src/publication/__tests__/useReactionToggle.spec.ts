@@ -58,7 +58,7 @@ describe(`Given the ${useReactionToggle.name} hook`, () => {
         });
       });
 
-      expect(result.current.isPending).toBe(false);
+      expect(result.current.loading).toBe(false);
 
       // check publication stats and operations
       expect(publicationResult.current.data.operations.hasUpvoted).toBe(true);

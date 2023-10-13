@@ -2,46 +2,44 @@ import { AnyPublication } from '@lens-protocol/api-bindings';
 import { invariant, success } from '@lens-protocol/shared-kernel';
 
 import { useSession } from '../authentication';
-import { Operation, useOperation } from '../helpers/operations';
+import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useHidePublicationController } from './adapters/useHidePublicationController';
 
 export type UseHidePublicationArgs = {
   publication: AnyPublication;
 };
 
-export type HidePublicationOperation = Operation<void>;
-
 /**
  * Hide a publication posted by the authenticated profile to prevent other profiles from seeing it.
  *
  * You MUST be authenticated via {@link useLogin} to use this hook.
- *
- * @category Publications
- * @group Hooks
- * @param args - {@link UseHidePublicationArgs}
  *
  * @example
  * ```tsx
  * import { useHidePublication, AnyPublication } from '@lens-protocol/react';
  *
  * function HidePublication({ publication }: { publication: AnyPublication }) {
- *  const { execute: hide, isPending } = useHidePublication({ publication });
+ *   const { execute: hide, loading } = useHidePublication({ publication });
  *
- *  return (
- *    <button onClick={hide} disabled={isPending}>
- *      Hide
- *    </button>
- * );
- *```
+ *   return (
+ *     <button onClick={hide} disabled={loading}>
+ *       Hide
+ *     </button>
+ *   );
+ * }
+ * ```
+ *
+ * @category Publications
+ * @group Hooks
  */
 export function useHidePublication({
   publication,
-}: UseHidePublicationArgs): HidePublicationOperation {
+}: UseHidePublicationArgs): UseDeferredTask<void, never> {
   const { data } = useSession();
 
   const hide = useHidePublicationController();
 
-  return useOperation(async () => {
+  return useDeferredTask(async () => {
     invariant(data?.authenticated, 'Must be authenticated to hide a publication');
     invariant(
       publication.by.ownedBy.address === data.address,
