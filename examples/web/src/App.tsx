@@ -37,6 +37,7 @@ import {
   UseWhoActedOnPublication,
 } from './profiles';
 import { UseProfileManagers } from './profiles/UseProfileManagers';
+import { UseUpdateProfileDetails } from './profiles/UseUpdateProfileDetails';
 import { UseUpdateProfileManagers } from './profiles/UseUpdateProfileManagers';
 import {
   PublicationsPage,
@@ -117,6 +118,7 @@ export function App() {
                         element={<UseWhoActedOnPublication />}
                       />
                       <Route path="useProfileActionHistory" element={<UseProfileActionHistory />} />
+                      <Route path="useSetProfileMetadata" element={<UseUpdateProfileDetails />} />
                     </Route>
 
                     <Route path="/discovery">

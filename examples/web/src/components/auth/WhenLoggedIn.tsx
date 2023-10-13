@@ -7,13 +7,14 @@ type RenderFunction = (session: ProfileSession) => ReactNode;
 
 export type WhenLoggedInProps = {
   children: ReactNode | RenderFunction;
+  loadingElement?: ReactNode;
 };
 
-export function WhenLoggedIn({ children }: WhenLoggedInProps) {
+export function WhenLoggedIn({ children, loadingElement }: WhenLoggedInProps) {
   const { data: session, loading, error } = useSession();
 
   if (loading) {
-    return null;
+    return <>{loadingElement ?? null}</>;
   }
 
   if (error) {

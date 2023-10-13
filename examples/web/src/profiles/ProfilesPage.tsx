@@ -56,6 +56,11 @@ const profileHooks = [
     description: `Update the Profile Manager configuration for the logged-in Profile.`,
     path: '/profiles/useUpdateProfileManagers',
   },
+  {
+    label: 'useSetProfileMetadata',
+    description: `Set the metadata for the authenticated Profile.`,
+    path: '/profiles/useSetProfileMetadata',
+  },
 ];
 
 export function ProfilesPage() {

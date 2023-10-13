@@ -5,7 +5,11 @@ import {
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import { TransactionKind } from '@lens-protocol/domain/entities';
-import { IConversationsGateway, Logout } from '@lens-protocol/domain/use-cases/authentication';
+import {
+  ActiveWallet,
+  IConversationsGateway,
+  Logout,
+} from '@lens-protocol/domain/use-cases/authentication';
 import {
   AnyTransactionRequest,
   TransactionQueue,
@@ -28,6 +32,7 @@ import { ProfileCacheManager } from './profile/infrastructure/ProfileCacheManage
 import { IPublicationCacheManager } from './publication/adapters/IPublicationCacheManager';
 import { PublicationCacheManager } from './publication/infrastructure/PublicationCacheManager';
 import { ITransactionFactory } from './transactions/adapters/ITransactionFactory';
+import { OnChainRelayer } from './transactions/adapters/OnChainRelayer';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
@@ -88,11 +93,14 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   const walletFactory = new WalletFactory(signerFactory, transactionFactory);
   const walletGateway = new WalletGateway(walletStorage, walletFactory);
   const transactionGateway = new PendingTransactionGateway(transactionStorage, transactionFactory);
+  const onChainRelayer = new OnChainRelayer(apolloClient, transactionFactory, logger);
 
   const conversationsGateway: IConversationsGateway = {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     async reset() {},
   };
+
+  const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
 
   const responders: TransactionResponders<AnyTransactionRequest> = {
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
@@ -128,12 +136,14 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   );
 
   return {
+    activeWallet,
     apolloClient,
     credentialsFactory,
     credentialsGateway,
     environment: config.environment,
     logger,
     logout,
+    onChainRelayer,
     profileCacheManager,
     publicationCacheManager,
     transactionFactory,
@@ -148,12 +158,14 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
  * @internal
  */
 export type SharedDependencies = {
+  activeWallet: ActiveWallet;
   apolloClient: SafeApolloClient;
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
   environment: EnvironmentConfig;
   logger: ILogger;
   logout: Logout;
+  onChainRelayer: OnChainRelayer;
   profileCacheManager: IProfileCacheManager;
   publicationCacheManager: IPublicationCacheManager;
   transactionFactory: ITransactionFactory<AnyTransactionRequest>;

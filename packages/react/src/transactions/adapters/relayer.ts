@@ -1,4 +1,8 @@
-import { RelayError, RelayErrorReasonType } from '@lens-protocol/api-bindings';
+import {
+  LensProfileManagerRelayError,
+  RelayError,
+  RelayErrorReasonType,
+} from '@lens-protocol/api-bindings';
 import {
   BroadcastingError,
   ProtocolTransactionRequest,
@@ -12,7 +16,7 @@ export type OffChainBroadcastReceipt = {
 };
 
 export function handleRelayError(
-  error: RelayError,
+  error: RelayError | LensProfileManagerRelayError,
   fallback?: SelfFundedProtocolTransactionRequest<ProtocolTransactionRequest>,
 ): Failure<BroadcastingError> {
   switch (error.reason) {

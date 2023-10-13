@@ -8,6 +8,7 @@ export type WhenLoggedOutProps = {
 export function WhenLoggedOut({ children }: WhenLoggedOutProps) {
   const { data: wallet, loading } = useActiveWallet();
 
+  console.log({ wallet, loading });
   if (loading || wallet !== null) {
     return null;
   }
