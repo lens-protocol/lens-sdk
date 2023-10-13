@@ -126,7 +126,19 @@ export class CreateOnChainCommentGateway
   ): SelfFundedProtocolTransactionRequest<CreateCommentRequest> {
     const contract = lensHub(result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('comment', [
-      result.typedData.message,
+      {
+        profileId: result.typedData.message.profileId,
+        contentURI: result.typedData.message.contentURI,
+        pointedProfileId: result.typedData.message.pointedProfileId,
+        pointedPubId: result.typedData.message.pointedPubId,
+        referrerProfileIds: result.typedData.message.referrerProfileIds,
+        referrerPubIds: result.typedData.message.referrerPubIds,
+        referenceModuleData: result.typedData.message.referenceModuleData,
+        actionModules: result.typedData.message.actionModules,
+        actionModulesInitDatas: result.typedData.message.actionModulesInitDatas,
+        referenceModule: result.typedData.message.referenceModule,
+        referenceModuleInitData: result.typedData.message.referenceModuleInitData,
+      },
     ]);
     return {
       ...request,

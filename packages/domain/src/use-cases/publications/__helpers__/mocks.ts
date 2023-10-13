@@ -21,7 +21,6 @@ export function mockCreateMirrorRequest(
   return {
     mirrorOn: mockPublicationId(),
     delegate: false,
-    momoka: false,
     ...overrides,
     kind: TransactionKind.MIRROR_PUBLICATION,
   };

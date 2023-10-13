@@ -1,19 +1,19 @@
 import {
-  SafeApolloClient,
-  omitTypename,
+  CreateMomokaMirrorBroadcastItemResult,
+  CreateMomokaMirrorTypedDataData,
+  CreateMomokaMirrorTypedDataDocument,
+  CreateMomokaMirrorTypedDataVariables,
   CreateMomokaPublicationResult,
-  CommentOnMomokaData,
-  CommentOnMomokaVariables,
-  CommentOnMomokaDocument,
-  MomokaCommentRequest,
-  CreateMomokaCommentBroadcastItemResult,
-  CreateMomokaCommentTypedDataData,
-  CreateMomokaCommentTypedDataVariables,
-  CreateMomokaCommentTypedDataDocument,
+  MirrorOnMomokaData,
+  MirrorOnMomokaDocument,
+  MirrorOnMomokaVariables,
+  MomokaMirrorRequest,
+  omitTypename,
+  SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { DataTransaction } from '@lens-protocol/domain/entities';
-import { CreateCommentRequest } from '@lens-protocol/domain/use-cases/publications';
+import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
@@ -26,19 +26,19 @@ import { ITransactionFactory } from '../ITransactionFactory';
 import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError } from '../relayer';
 
-export class CreateMomokaCommentGateway
+export class CreateMomokaMirrorGateway
   implements
-    IDelegatedTransactionGateway<CreateCommentRequest>,
-    IOffChainProtocolCallGateway<CreateCommentRequest>
+    IDelegatedTransactionGateway<CreateMirrorRequest>,
+    IOffChainProtocolCallGateway<CreateMirrorRequest>
 {
   constructor(
     private readonly apolloClient: SafeApolloClient,
-    private readonly transactionFactory: ITransactionFactory<CreateCommentRequest>,
+    private readonly transactionFactory: ITransactionFactory<CreateMirrorRequest>,
   ) {}
 
   async createDelegatedTransaction(
-    request: CreateCommentRequest,
-  ): PromiseResult<DataTransaction<CreateCommentRequest>, BroadcastingError> {
+    request: CreateMirrorRequest,
+  ): PromiseResult<DataTransaction<CreateMirrorRequest>, BroadcastingError> {
     const result = await this.broadcast(request);
 
     if (result.isFailure()) return result;
@@ -52,9 +52,9 @@ export class CreateMomokaCommentGateway
   }
 
   async createUnsignedProtocolCall(
-    request: CreateCommentRequest,
-  ): Promise<UnsignedProtocolCall<CreateCommentRequest>> {
-    const input = this.resolveMomokaCommentRequest(request);
+    request: CreateMirrorRequest,
+  ): Promise<UnsignedProtocolCall<CreateMirrorRequest>> {
+    const input = this.resolveMomokaMirrorRequest(request);
     const result = await this.createTypedData(input);
 
     return UnsignedProtocolCall.create({
@@ -66,12 +66,12 @@ export class CreateMomokaCommentGateway
   }
 
   private async broadcast(
-    request: CreateCommentRequest,
+    request: CreateMirrorRequest,
   ): PromiseResult<CreateMomokaPublicationResult, BroadcastingError> {
-    const input = this.resolveMomokaCommentRequest(request);
+    const input = this.resolveMomokaMirrorRequest(request);
 
-    const { data } = await this.apolloClient.mutate<CommentOnMomokaData, CommentOnMomokaVariables>({
-      mutation: CommentOnMomokaDocument,
+    const { data } = await this.apolloClient.mutate<MirrorOnMomokaData, MirrorOnMomokaVariables>({
+      mutation: MirrorOnMomokaDocument,
       variables: {
         request: input,
       },
@@ -87,47 +87,41 @@ export class CreateMomokaCommentGateway
     return success(data.result);
   }
 
-  private resolveMomokaCommentRequest(request: CreateCommentRequest): MomokaCommentRequest {
+  private resolveMomokaMirrorRequest(request: CreateMirrorRequest): MomokaMirrorRequest {
     return {
-      contentURI: request.metadata,
-      commentOn: request.commentOn,
+      mirrorOn: request.mirrorOn,
     };
   }
 
   private async createTypedData(
-    request: MomokaCommentRequest,
-  ): Promise<CreateMomokaCommentBroadcastItemResult> {
+    request: MomokaMirrorRequest,
+  ): Promise<CreateMomokaMirrorBroadcastItemResult> {
     const { data } = await this.apolloClient.mutate<
-      CreateMomokaCommentTypedDataData,
-      CreateMomokaCommentTypedDataVariables
+      CreateMomokaMirrorTypedDataData,
+      CreateMomokaMirrorTypedDataVariables
     >({
-      mutation: CreateMomokaCommentTypedDataDocument,
+      mutation: CreateMomokaMirrorTypedDataDocument,
       variables: { request },
     });
     return data.result;
   }
 
   private createRequestFallback(
-    request: CreateCommentRequest,
-    result: CreateMomokaCommentBroadcastItemResult,
-  ): SelfFundedProtocolTransactionRequest<CreateCommentRequest> {
+    request: CreateMirrorRequest,
+    result: CreateMomokaMirrorBroadcastItemResult,
+  ): SelfFundedProtocolTransactionRequest<CreateMirrorRequest> {
     const contract = lensHub(result.typedData.domain.verifyingContract);
-    const encodedData = contract.interface.encodeFunctionData('comment', [
+    const encodedData = contract.interface.encodeFunctionData('mirror', [
       {
         profileId: result.typedData.message.profileId,
-        contentURI: result.typedData.message.contentURI,
+        metadataURI: result.typedData.message.metadataURI,
         pointedProfileId: result.typedData.message.pointedProfileId,
         pointedPubId: result.typedData.message.pointedPubId,
         referrerProfileIds: result.typedData.message.referrerProfileIds,
         referrerPubIds: result.typedData.message.referrerPubIds,
         referenceModuleData: result.typedData.message.referenceModuleData,
-        actionModules: result.typedData.message.actionModules,
-        actionModulesInitDatas: result.typedData.message.actionModulesInitDatas,
-        referenceModule: result.typedData.message.referenceModule,
-        referenceModuleInitData: result.typedData.message.referenceModuleInitData,
       },
     ]);
-
     return {
       ...request,
       contractAddress: result.typedData.domain.verifyingContract,
