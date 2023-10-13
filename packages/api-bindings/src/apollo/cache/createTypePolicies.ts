@@ -20,7 +20,11 @@ import {
   createWhoActedOnPublicationFieldPolicy,
   createWhoReactedPublicationFieldPolicy,
 } from './field-policies';
-import { createPrimaryPublicationTypePolicy, createPublicationTypePolicy } from './type-policies';
+import {
+  createPrimaryPublicationTypePolicy,
+  createProfileTypePolicy,
+  createPublicationTypePolicy,
+} from './type-policies';
 import { notNormalizedType } from './utils/notNormalizedType';
 
 type InheritedTypePolicies = {
@@ -38,6 +42,8 @@ export function createTypePolicies(
     Post: createPrimaryPublicationTypePolicy(),
     Comment: createPrimaryPublicationTypePolicy(),
     Quote: createPrimaryPublicationTypePolicy(),
+
+    Profile: createProfileTypePolicy(),
 
     FeedItem: notNormalizedType(),
     PaginatedResultInfo: notNormalizedType(),

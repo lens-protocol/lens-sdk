@@ -1,8 +1,9 @@
 import {
   PaginatedOffsetRequest,
+  chainType,
   useCurrencies as useCurrenciesHook,
 } from '@lens-protocol/api-bindings';
-import { ChainType, erc20, Erc20 } from '@lens-protocol/shared-kernel';
+import { erc20, Erc20 } from '@lens-protocol/shared-kernel';
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
@@ -77,7 +78,7 @@ export function useCurrencies(args: UseCurrenciesArgs = {}): PaginatedReadResult
         decimals: currency.decimals,
         symbol: currency.symbol,
         address: currency.contract.address,
-        chainType: ChainType.POLYGON, // TODO: resolve it from currency.contract.chainId
+        chainType: chainType(currency.contract.chainId),
       }),
     ),
   };
