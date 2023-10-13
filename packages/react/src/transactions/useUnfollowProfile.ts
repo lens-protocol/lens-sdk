@@ -23,6 +23,15 @@ export type UnfollowProfileArgs = {
  *
  * You MUST be authenticated via {@link useLogin} to use this hook.
  *
+ * @example
+ * ```tsx
+ * const { execute: unfollow, error, loading } = useUnfollowProfile();
+ *
+ * <button onClick={() => unfollow({ profile })} disabled={loading}>
+ *   Unfollow
+ * </button>
+ * ```
+ *
  * @category Profiles
  * @group Hooks
  */

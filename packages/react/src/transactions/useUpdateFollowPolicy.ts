@@ -20,6 +20,47 @@ export type UpdateFollowPolicyArgs = {
  *
  * You MUST be authenticated via {@link useLogin} to use this hook.
  *
+ * To setup a {@link FollowPolicyType.CHARGE} you need to define an amount of a currency as a fee.
+ * You can get a list of supported currencies via {@link useCurrencies}.
+ *
+ * @example
+ * Anyone can follow.
+ * ```tsx
+ * const { execute, loading, error } = useUpdateFollowPolicy();
+ *
+ * await execute({
+ *   followPolicy: {
+ *     type: FollowPolicyType.ANYONE,
+ *   },
+ * });
+ * ```
+ *
+ * @example
+ * No one can follow.
+ * ```tsx
+ * const { execute, loading, error } = useUpdateFollowPolicy();
+ *
+ * await execute({
+ *   followPolicy: {
+ *     type: FollowPolicyType.NO_ONE,
+ *   },
+ * });
+ * ```
+ *
+ * @example
+ * Anyone can follow, but they must pay a fee.
+ * ```tsx
+ * const { execute, loading, error } = useUpdateFollowPolicy();
+ *
+ * await execute({
+ *   followPolicy: {
+ *     type: FollowPolicyType.CHARGE,
+ *     amount: Amount.erc20(erc20, amount),
+ *     recipient: '0x1234123412341234123412341234123412341234',
+ *   },
+ * });
+ * ```
+ *
  * @category Profiles
  * @group Hooks
  */
