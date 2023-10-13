@@ -98,6 +98,7 @@ export type ReportPublicationArgs = Pick<ReportPublicationRequest, 'additionalCo
  *
  * @category Publications
  * @group Hooks
+ * @param args - {@link UseReportPublicationArgs}
  */
 export function useReportPublication({
   publication,

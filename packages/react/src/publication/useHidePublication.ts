@@ -31,6 +31,7 @@ export type UseHidePublicationArgs = {
  *
  * @category Publications
  * @group Hooks
+ * @param args - {@link UseHidePublicationArgs}
  */
 export function useHidePublication({
   publication,
