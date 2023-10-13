@@ -1,13 +1,18 @@
 import { TransactionKind } from '@lens-protocol/domain/entities';
 import {
   CreateCommentRequest,
+  CreateMirrorRequest,
   CreatePostRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 import { never, RecursiveUnbrand } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
 import { formatZodError } from './formatters';
-import { CreateCommentRequestSchema, CreatePostRequestSchema } from './publications';
+import {
+  CreateCommentRequestSchema,
+  CreateMirrorRequestSchema,
+  CreatePostRequestSchema,
+} from './publications';
 
 function evaluate<Input, Output>(result: z.SafeParseReturnType<Input, Output>): Output {
   if (result.success) {
@@ -33,6 +38,17 @@ export function createPostRequest(
   return evaluate(
     CreatePostRequestSchema.safeParse({
       kind: TransactionKind.CREATE_POST,
+      ...input,
+    }),
+  );
+}
+
+export function createMirrorRequest(
+  input: RecursiveUnbrand<Omit<CreateMirrorRequest, 'kind'>>,
+): CreateMirrorRequest {
+  return evaluate(
+    CreateMirrorRequestSchema.safeParse({
+      kind: TransactionKind.MIRROR_PUBLICATION,
       ...input,
     }),
   );

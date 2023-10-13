@@ -1,6 +1,6 @@
 import { JustProtocolRequest } from '../../entities';
 import { CreateProfileRequest } from '../profile/CreateProfile';
-import { FollowRequest } from '../profile/FollowProfiles';
+import { FollowRequest } from '../profile/FollowProfile';
 import { UnfollowRequest } from '../profile/UnfollowProfile';
 import { UpdateFollowPolicyRequest } from '../profile/UpdateFollowPolicy';
 import { UpdateProfileDetailsRequest } from '../profile/UpdateProfileDetails';

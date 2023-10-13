@@ -1,50 +1,48 @@
 import {
-  SafeApolloClient,
+  CreateOnchainMirrorBroadcastItemResult,
+  CreateOnchainMirrorTypedDataData,
+  CreateOnchainMirrorTypedDataDocument,
+  CreateOnchainMirrorTypedDataVariables,
+  MirrorOnchainData,
+  MirrorOnchainDocument,
+  MirrorOnMomokaVariables,
   omitTypename,
+  OnchainMirrorRequest,
   RelaySuccess,
-  CreateOnchainPostTypedDataData,
-  CreateOnchainPostBroadcastItemResult,
-  CreateOnchainPostTypedDataVariables,
-  CreateOnchainPostTypedDataDocument,
-  OnchainPostRequest,
-  PostOnchainData,
-  PostOnchainVariables,
-  PostOnchainDocument,
+  SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
-import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
+import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
   IOnChainProtocolCallGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, Data, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from '../ITransactionFactory';
 import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError } from '../relayer';
-import { resolveOpenActionModuleInput } from './resolveOpenActionModuleInput';
-import { resolveReferenceModuleInput } from './resolveReferenceModuleInput';
 
-export class CreateOnChainPostGateway
+export class CreateOnChainMirrorGateway
   implements
-    IDelegatedTransactionGateway<CreatePostRequest>,
-    IOnChainProtocolCallGateway<CreatePostRequest>
+    IDelegatedTransactionGateway<CreateMirrorRequest>,
+    IOnChainProtocolCallGateway<CreateMirrorRequest>
 {
   constructor(
     private readonly apolloClient: SafeApolloClient,
-    private readonly transactionFactory: ITransactionFactory<CreatePostRequest>,
+    private readonly transactionFactory: ITransactionFactory<CreateMirrorRequest>,
   ) {}
 
   async createDelegatedTransaction(
-    request: CreatePostRequest,
-  ): PromiseResult<NativeTransaction<CreatePostRequest>, BroadcastingError> {
+    request: CreateMirrorRequest,
+  ): PromiseResult<NativeTransaction<CreateMirrorRequest>, BroadcastingError> {
     const result = await this.broadcast(request);
 
-    if (result.isFailure()) return failure(result.error);
+    if (result.isFailure()) return result;
 
     const transaction = this.transactionFactory.createNativeTransaction({
       chainType: ChainType.POLYGON,
@@ -58,10 +56,10 @@ export class CreateOnChainPostGateway
   }
 
   async createUnsignedProtocolCall(
-    request: CreatePostRequest,
+    request: CreateMirrorRequest,
     nonce?: Nonce,
-  ): Promise<UnsignedProtocolCall<CreatePostRequest>> {
-    const input = this.resolveOnchainPostRequest(request);
+  ): Promise<UnsignedProtocolCall<CreateMirrorRequest>> {
+    const input = this.resolveOnchainMirrorRequest(request);
     const result = await this.createTypedData(input, nonce);
 
     return UnsignedProtocolCall.create({
@@ -73,12 +71,12 @@ export class CreateOnChainPostGateway
   }
 
   private async broadcast(
-    request: CreatePostRequest,
+    request: CreateMirrorRequest,
   ): PromiseResult<RelaySuccess, BroadcastingError> {
-    const input = this.resolveOnchainPostRequest(request);
+    const input = this.resolveOnchainMirrorRequest(request);
 
-    const { data } = await this.apolloClient.mutate<PostOnchainData, PostOnchainVariables>({
-      mutation: PostOnchainDocument,
+    const { data } = await this.apolloClient.mutate<MirrorOnchainData, MirrorOnMomokaVariables>({
+      mutation: MirrorOnchainDocument,
       variables: {
         request: input,
       },
@@ -95,14 +93,14 @@ export class CreateOnChainPostGateway
   }
 
   private async createTypedData(
-    request: OnchainPostRequest,
+    request: OnchainMirrorRequest,
     nonce?: Nonce,
-  ): Promise<CreateOnchainPostBroadcastItemResult> {
+  ): Promise<CreateOnchainMirrorBroadcastItemResult> {
     const { data } = await this.apolloClient.mutate<
-      CreateOnchainPostTypedDataData,
-      CreateOnchainPostTypedDataVariables
+      CreateOnchainMirrorTypedDataData,
+      CreateOnchainMirrorTypedDataVariables
     >({
-      mutation: CreateOnchainPostTypedDataDocument,
+      mutation: CreateOnchainMirrorTypedDataDocument,
       variables: {
         request,
         options: nonce ? { overrideSigNonce: nonce } : undefined,
@@ -111,27 +109,26 @@ export class CreateOnChainPostGateway
     return data.result;
   }
 
-  private resolveOnchainPostRequest(request: CreatePostRequest): OnchainPostRequest {
+  private resolveOnchainMirrorRequest(request: CreateMirrorRequest): OnchainMirrorRequest {
     return {
-      contentURI: request.metadata,
-      openActionModules: request.actions?.map(resolveOpenActionModuleInput),
-      referenceModule: request.reference && resolveReferenceModuleInput(request.reference),
+      mirrorOn: request.mirrorOn,
     };
   }
 
   private createRequestFallback(
-    request: CreatePostRequest,
-    result: CreateOnchainPostBroadcastItemResult,
-  ): SelfFundedProtocolTransactionRequest<CreatePostRequest> {
+    request: CreateMirrorRequest,
+    result: CreateOnchainMirrorBroadcastItemResult,
+  ): SelfFundedProtocolTransactionRequest<CreateMirrorRequest> {
     const contract = lensHub(result.typedData.domain.verifyingContract);
-    const encodedData = contract.interface.encodeFunctionData('post', [
+    const encodedData = contract.interface.encodeFunctionData('mirror', [
       {
         profileId: result.typedData.message.profileId,
-        contentURI: result.typedData.message.contentURI,
-        actionModules: result.typedData.message.actionModules,
-        actionModulesInitDatas: result.typedData.message.actionModulesInitDatas,
-        referenceModule: result.typedData.message.referenceModule,
-        referenceModuleInitData: result.typedData.message.referenceModuleInitData,
+        metadataURI: result.typedData.message.metadataURI,
+        pointedProfileId: result.typedData.message.pointedProfileId,
+        pointedPubId: result.typedData.message.pointedPubId,
+        referrerProfileIds: result.typedData.message.referrerProfileIds,
+        referrerPubIds: result.typedData.message.referrerPubIds,
+        referenceModuleData: result.typedData.message.referenceModuleData,
       },
     ]);
     return {

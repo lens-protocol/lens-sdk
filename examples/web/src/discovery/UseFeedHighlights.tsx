@@ -9,7 +9,7 @@ export function UseFeedHighlights() {
   const { data, error, loading, hasMore, observeRef, prev } = useInfiniteScroll(
     useFeedHighlights({
       where: {
-        for: profileId('0x01'),
+        for: profileId('0x04'),
       },
     }),
   );

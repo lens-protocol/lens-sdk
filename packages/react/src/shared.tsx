@@ -36,8 +36,10 @@ import { MomokaRelayer } from './transactions/adapters/MomokaRelayer';
 import { OnChainRelayer } from './transactions/adapters/OnChainRelayer';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
+import { FollowProfileResponder } from './transactions/adapters/responders/FollowProfileResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { SetProfileMetadataResponder } from './transactions/adapters/responders/SetProfileMetadataResponder';
+import { UnfollowProfileResponder } from './transactions/adapters/responders/UnfollowProfileResponder';
 import { UpdateFollowPolicyResponder } from './transactions/adapters/responders/UpdateFollowPolicyResponder';
 import { UpdateProfileManagersResponder } from './transactions/adapters/responders/UpdateProfileManagersResponder';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
@@ -112,9 +114,9 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     [TransactionKind.CREATE_POST]: new NoopResponder(),
     [TransactionKind.CREATE_QUOTE]: new NoopResponder(),
     [TransactionKind.CREATE_PROFILE]: new NoopResponder(),
-    [TransactionKind.FOLLOW_PROFILES]: new NoopResponder(),
+    [TransactionKind.FOLLOW_PROFILE]: new FollowProfileResponder(profileCacheManager),
     [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(),
-    [TransactionKind.UNFOLLOW_PROFILE]: new NoopResponder(),
+    [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(profileCacheManager),
     [TransactionKind.UPDATE_PROFILE_DETAILS]: new SetProfileMetadataResponder(profileCacheManager),
     [TransactionKind.UPDATE_FOLLOW_POLICY]: new UpdateFollowPolicyResponder(profileCacheManager),
     [TransactionKind.UPDATE_PROFILE_MANAGERS]: new UpdateProfileManagersResponder(
@@ -153,6 +155,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     onChainRelayer,
     momokaRelayer,
     profileCacheManager,
+    providerFactory,
     publicationCacheManager,
     transactionFactory,
     transactionGateway,
@@ -176,6 +179,7 @@ export type SharedDependencies = {
   momokaRelayer: MomokaRelayer;
   onChainRelayer: OnChainRelayer;
   profileCacheManager: IProfileCacheManager;
+  providerFactory: ProviderFactory;
   publicationCacheManager: PublicationCacheManager;
   transactionFactory: ITransactionFactory<AnyTransactionRequest>;
   transactionGateway: PendingTransactionGateway;

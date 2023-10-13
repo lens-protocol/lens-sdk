@@ -4,24 +4,21 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import {
-  UpdateFollowPolicy,
-  UpdateFollowPolicyRequest,
-} from '@lens-protocol/domain/use-cases/profile';
+import { UnfollowProfile, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
-import { UpdateFollowPolicyCallGateway } from './UpdateFollowPolicyCallGateway';
-import { validateUpdateFollowPolicyRequest } from './schemas/validators';
+import { UnfollowProfileCallGateway } from './UnfollowProfileCallGateway';
+import { validateUnfollowRequest } from './schemas/validators';
 
-export function useUpdateFollowPolicyController() {
+export function useUnfollowProfileController() {
   const { activeWallet, apolloClient, onChainRelayer, transactionGateway, transactionQueue } =
     useSharedDependencies();
 
   return async (
-    request: UpdateFollowPolicyRequest,
+    request: UnfollowRequest,
   ): PromiseResult<
     void,
     | BroadcastingError
@@ -30,15 +27,15 @@ export function useUpdateFollowPolicyController() {
     | WalletConnectionError
     | TransactionError
   > => {
-    validateUpdateFollowPolicyRequest(request);
+    validateUnfollowRequest(request);
 
     const presenter = new TransactionResultPresenter<
-      UpdateFollowPolicyRequest,
+      UnfollowRequest,
       BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
-    const gateway = new UpdateFollowPolicyCallGateway(apolloClient);
+    const gateway = new UnfollowProfileCallGateway(apolloClient);
 
-    const updateFollowPolicy = new UpdateFollowPolicy(
+    const unfollowProfiles = new UnfollowProfile(
       activeWallet,
       transactionGateway,
       gateway,
@@ -47,7 +44,7 @@ export function useUpdateFollowPolicyController() {
       presenter,
     );
 
-    await updateFollowPolicy.execute(request);
+    await unfollowProfiles.execute(request);
 
     const result = presenter.asResult();
 

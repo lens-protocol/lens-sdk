@@ -111,7 +111,16 @@ export class CreateMomokaPostGateway
     result: CreateMomokaPostBroadcastItemResult,
   ): SelfFundedProtocolTransactionRequest<CreatePostRequest> {
     const contract = lensHub(result.typedData.domain.verifyingContract);
-    const encodedData = contract.interface.encodeFunctionData('post', [result.typedData.message]);
+    const encodedData = contract.interface.encodeFunctionData('post', [
+      {
+        profileId: result.typedData.message.profileId,
+        contentURI: result.typedData.message.contentURI,
+        actionModules: result.typedData.message.actionModules,
+        actionModulesInitDatas: result.typedData.message.actionModulesInitDatas,
+        referenceModule: result.typedData.message.referenceModule,
+        referenceModuleInitData: result.typedData.message.referenceModuleInitData,
+      },
+    ]);
     return {
       ...request,
       contractAddress: result.typedData.domain.verifyingContract,
