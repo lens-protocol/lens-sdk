@@ -6,6 +6,12 @@ import {
   BroadcastOnchainData,
   BroadcastOnchainDocument,
   BroadcastOnchainVariables,
+  BroadcastOnMomokaData,
+  BroadcastOnMomokaDocument,
+  BroadcastOnMomokaVariables,
+  CreateMomokaPublicationResult,
+  LensProfileManagerRelayError,
+  LensProfileManagerRelayErrorReasonType,
   RelayError,
   RelayErrorReasonType,
   RelaySuccess,
@@ -47,5 +53,32 @@ export function mockRelayErrorFragment(reason: RelayErrorReasonType): RelayError
   return {
     __typename: 'RelayError',
     reason,
+  };
+}
+
+export function mockLensProfileManagerRelayError(
+  reason: LensProfileManagerRelayErrorReasonType,
+): LensProfileManagerRelayError {
+  return {
+    __typename: 'LensProfileManagerRelayError',
+    reason,
+  };
+}
+
+export function mockBroadcastOnMomokaResponse<V extends BroadcastOnMomokaVariables>({
+  variables,
+  result,
+}: {
+  variables: V;
+  result: CreateMomokaPublicationResult | RelayError;
+}): MockedResponse<BroadcastOnMomokaData, V> {
+  return {
+    request: {
+      query: BroadcastOnMomokaDocument,
+      variables,
+    },
+    result: {
+      data: { result },
+    },
   };
 }

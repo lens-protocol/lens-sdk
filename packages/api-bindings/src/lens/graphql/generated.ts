@@ -146,6 +146,11 @@ export type AmountInput = {
   value: Scalars['String'];
 };
 
+export type ApprovedAuthenticationRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  limit?: InputMaybe<LimitType>;
+};
+
 export type ApprovedModuleAllowanceAmountRequest = {
   currencies: Array<Scalars['EvmAddress']>;
   followModules?: InputMaybe<Array<FollowModuleType>>;
@@ -596,8 +601,9 @@ export type LegacyCollectRequest = {
 };
 
 export enum LensProfileManagerRelayErrorReasonType {
-  AppGaslessNotAllowed = 'APP_GASLESS_NOT_ALLOWED',
+  AppNotAllowed = 'APP_NOT_ALLOWED',
   Failed = 'FAILED',
+  NotSponsored = 'NOT_SPONSORED',
   NoLensManagerEnabled = 'NO_LENS_MANAGER_ENABLED',
   RateLimited = 'RATE_LIMITED',
   RequiresSignature = 'REQUIRES_SIGNATURE',
@@ -854,10 +860,6 @@ export type NftsRequestWhere = {
 export type NotificationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']>;
   where?: InputMaybe<NotificationWhere>;
-};
-
-export type NotificationSubscriptionRequest = {
-  for: Scalars['ProfileId'];
 };
 
 export enum NotificationType {
@@ -1375,10 +1377,6 @@ export type PublicationStatsReactionArgs = {
   type: PublicationReactionType;
 };
 
-export type PublicationStatsSubscriptionRequest = {
-  for: Scalars['PublicationId'];
-};
-
 export enum PublicationType {
   Comment = 'COMMENT',
   Mirror = 'MIRROR',
@@ -1469,9 +1467,10 @@ export type RefreshRequest = {
 };
 
 export enum RelayErrorReasonType {
-  AppGaslessNotAllowed = 'APP_GASLESS_NOT_ALLOWED',
+  AppNotAllowed = 'APP_NOT_ALLOWED',
   Expired = 'EXPIRED',
   Failed = 'FAILED',
+  NotSponsored = 'NOT_SPONSORED',
   RateLimited = 'RATE_LIMITED',
   WrongWalletSigned = 'WRONG_WALLET_SIGNED',
 }
@@ -1536,6 +1535,11 @@ export type RevenueFromPublicationsRequest = {
   limit?: InputMaybe<LimitType>;
   /** Will return revenue for publications made on any of the provided app ids. Will include all apps if omitted */
   publishedOn?: InputMaybe<Array<Scalars['AppId']>>;
+};
+
+export type RevokeAuthenticationRequest = {
+  /** The token authorization id wish to revoke */
+  authorizationId: Scalars['UUID'];
 };
 
 export enum SearchPublicationType {
@@ -1845,7 +1849,7 @@ export type RevertFollowModuleSettings = {
 
 export type UnknownFollowModuleSettings = {
   __typename: 'UnknownFollowModuleSettings';
-  followModuleReturnData: string;
+  followModuleReturnData: string | null;
   contract: NetworkAddress;
 };
 
@@ -2079,7 +2083,7 @@ export type DegreesOfSeparationReferenceModuleSettings = {
 
 export type UnknownReferenceModuleSettings = {
   __typename: 'UnknownReferenceModuleSettings';
-  referenceModuleReturnData: string;
+  referenceModuleReturnData: string | null;
   contract: NetworkAddress;
 };
 
@@ -12828,6 +12832,27 @@ export type ApprovedAllowanceAmountResultFieldPolicy = {
   moduleContract?: FieldPolicy<any> | FieldReadFunction<any>;
   moduleName?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type ApprovedAuthenticationKeySpecifier = (
+  | 'authorizationId'
+  | 'browser'
+  | 'createdAt'
+  | 'device'
+  | 'expiresAt'
+  | 'origin'
+  | 'os'
+  | 'updatedAt'
+  | ApprovedAuthenticationKeySpecifier
+)[];
+export type ApprovedAuthenticationFieldPolicy = {
+  authorizationId?: FieldPolicy<any> | FieldReadFunction<any>;
+  browser?: FieldPolicy<any> | FieldReadFunction<any>;
+  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  device?: FieldPolicy<any> | FieldReadFunction<any>;
+  expiresAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  origin?: FieldPolicy<any> | FieldReadFunction<any>;
+  os?: FieldPolicy<any> | FieldReadFunction<any>;
+  updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type ArticleMetadataV3KeySpecifier = (
   | 'appId'
   | 'attachments'
@@ -14985,6 +15010,7 @@ export type MutationKeySpecifier = (
   | 'removePublicationBookmark'
   | 'removeReaction'
   | 'reportPublication'
+  | 'revokeAuthentication'
   | 'setDefaultProfile'
   | 'setFollowModule'
   | 'setProfileMetadata'
@@ -15062,6 +15088,7 @@ export type MutationFieldPolicy = {
   removePublicationBookmark?: FieldPolicy<any> | FieldReadFunction<any>;
   removeReaction?: FieldPolicy<any> | FieldReadFunction<any>;
   reportPublication?: FieldPolicy<any> | FieldReadFunction<any>;
+  revokeAuthentication?: FieldPolicy<any> | FieldReadFunction<any>;
   setDefaultProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   setFollowModule?: FieldPolicy<any> | FieldReadFunction<any>;
   setProfileMetadata?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -15219,6 +15246,15 @@ export type OwnerKeySpecifier = ('address' | 'amount' | OwnerKeySpecifier)[];
 export type OwnerFieldPolicy = {
   address?: FieldPolicy<any> | FieldReadFunction<any>;
   amount?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type PaginatedApprovedAuthenticationResultKeySpecifier = (
+  | 'items'
+  | 'pageInfo'
+  | PaginatedApprovedAuthenticationResultKeySpecifier
+)[];
+export type PaginatedApprovedAuthenticationResultFieldPolicy = {
+  items?: FieldPolicy<any> | FieldReadFunction<any>;
+  pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type PaginatedCurrenciesResultKeySpecifier = (
   | 'items'
@@ -15865,6 +15901,7 @@ export type PublicationValidateMetadataResultFieldPolicy = {
   valid?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type QueryKeySpecifier = (
+  | 'approvedAuthentication'
   | 'approvedModuleAllowanceAmount'
   | 'challenge'
   | 'claimableProfiles'
@@ -15891,6 +15928,7 @@ export type QueryKeySpecifier = (
   | 'internalProfileStatus'
   | 'invitedProfiles'
   | 'lastLoggedInProfile'
+  | 'lensProtocolVersion'
   | 'lensTransactionStatus'
   | 'momokaSubmitters'
   | 'momokaSummary'
@@ -15943,6 +15981,7 @@ export type QueryKeySpecifier = (
   | QueryKeySpecifier
 )[];
 export type QueryFieldPolicy = {
+  approvedAuthentication?: FieldPolicy<any> | FieldReadFunction<any>;
   approvedModuleAllowanceAmount?: FieldPolicy<any> | FieldReadFunction<any>;
   challenge?: FieldPolicy<any> | FieldReadFunction<any>;
   claimableProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -15969,6 +16008,7 @@ export type QueryFieldPolicy = {
   internalProfileStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   invitedProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   lastLoggedInProfile?: FieldPolicy<any> | FieldReadFunction<any>;
+  lensProtocolVersion?: FieldPolicy<any> | FieldReadFunction<any>;
   lensTransactionStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   momokaSubmitters?: FieldPolicy<any> | FieldReadFunction<any>;
   momokaSummary?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -16523,6 +16563,13 @@ export type StrictTypedTypePolicies = {
       | ApprovedAllowanceAmountResultKeySpecifier
       | (() => undefined | ApprovedAllowanceAmountResultKeySpecifier);
     fields?: ApprovedAllowanceAmountResultFieldPolicy;
+  };
+  ApprovedAuthentication?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | ApprovedAuthenticationKeySpecifier
+      | (() => undefined | ApprovedAuthenticationKeySpecifier);
+    fields?: ApprovedAuthenticationFieldPolicy;
   };
   ArticleMetadataV3?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
@@ -17659,6 +17706,13 @@ export type StrictTypedTypePolicies = {
   Owner?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | OwnerKeySpecifier | (() => undefined | OwnerKeySpecifier);
     fields?: OwnerFieldPolicy;
+  };
+  PaginatedApprovedAuthenticationResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | PaginatedApprovedAuthenticationResultKeySpecifier
+      | (() => undefined | PaginatedApprovedAuthenticationResultKeySpecifier);
+    fields?: PaginatedApprovedAuthenticationResultFieldPolicy;
   };
   PaginatedCurrenciesResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:

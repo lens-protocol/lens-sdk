@@ -62,15 +62,20 @@ describe(`Given an instance of the ${OnChainRelayer.name}`, () => {
   });
 
   describe(`when relaying an ISignedProtocolCall fails`, () => {
-    it(`should resolve with a failure(${BroadcastingError.name}) carrying the RequestFallback from the ${SignedProtocolCall.name}`, async () => {
-      const broadcastResult = mockRelayErrorFragment(RelayErrorReasonType.AppGaslessNotAllowed);
+    it.each([
+      mockRelayErrorFragment(RelayErrorReasonType.AppNotAllowed),
+      mockRelayErrorFragment(RelayErrorReasonType.NotSponsored),
+      mockRelayErrorFragment(RelayErrorReasonType.RateLimited),
+    ])(
+      `should fail w/ a ${BroadcastingError.name} in case of $__typename response with "$reason" reason carrying the RequestFallback from the ${SignedProtocolCall.name}`,
+      async (broadcastResult) => {
+        const relayer = setupRelayer({ broadcastResult, signedCall });
+        const result = await relayer.relayProtocolCall(signedCall);
 
-      const relayer = setupRelayer({ broadcastResult, signedCall });
-      const result = await relayer.relayProtocolCall(signedCall);
-
-      assertFailure(result);
-      expect(result.error).toBeInstanceOf(BroadcastingError);
-      expect(result.error.fallback).toMatchObject(signedCall.fallback);
-    });
+        assertFailure(result);
+        expect(result.error).toBeInstanceOf(BroadcastingError);
+        expect(result.error.fallback).toMatchObject(signedCall.fallback);
+      },
+    );
   });
 });

@@ -1,7 +1,7 @@
-import { NonEmptyArray, URI } from '@lens-protocol/shared-kernel';
+import { URI } from '@lens-protocol/shared-kernel';
 
 import { TransactionKind } from '../../entities';
-import { MomokaOption } from '../transactions/MomokaOption';
+import { MomokaCapable } from '../transactions/MomokaCapable';
 import { OpenActionConfig } from './OpenActionConfig';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
 
@@ -18,21 +18,21 @@ export type CreatePostRequest = {
    * The metadata URI.
    */
   metadata: URI;
-} & (
-  | {
-      momoka: true;
-    }
-  | {
-      momoka: false;
-      /**
-       * The Open Actions associated with the publication.
-       */
-      actions?: NonEmptyArray<OpenActionConfig>;
-      /**
-       * The post reference policy.
-       */
-      reference: ReferencePolicyConfig;
-    }
-);
+  /**
+   * The Open Actions associated with the publication.
+   */
+  actions?: OpenActionConfig[];
+  /**
+   * The post reference policy.
+   */
+  reference?: ReferencePolicyConfig;
+};
 
-export class CreatePost extends MomokaOption<CreatePostRequest> {}
+export class CreatePost extends MomokaCapable<CreatePostRequest> {
+  override async execute(request: CreatePostRequest): Promise<void> {
+    if (['actions', 'reference'].some((key) => key in request)) {
+      return this.onChain.execute(request);
+    }
+    return this.momoka.execute(request);
+  }
+}

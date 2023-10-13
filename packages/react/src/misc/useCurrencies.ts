@@ -15,8 +15,8 @@ export type UseCurrenciesArgs = PaginatedArgs<PaginatedOffsetRequest>;
 /**
  * `useCurrencies` is a paginated hook that lets you fetch ERC20 tokens that are enabled on the Lens protocol.
  *
- * **Pro-tip**: use this hook to populate a dropdown menu of currencies
- * to choose from for powering a collect policy form of your post composer interface.
+ * **Pro-tip**: use this hook to populate a dropdown menu of currencies to choose from
+ * to support for example a collect open action form or setup follow policy fees.
  *
  * @category Misc
  * @group Hooks
@@ -28,8 +28,6 @@ export type UseCurrenciesArgs = PaginatedArgs<PaginatedOffsetRequest>;
  *
  * @example
  * ```tsx
- * import { Erc20, useCurrencies } from '@lens-protocol/react-web';
- *
  * function CurrencySelector({ onChange }: { onChange: (currency: Erc20) => void }) {
  *   const { data: currencies, error, loading } = useCurrencies();
  *

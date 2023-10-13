@@ -25,6 +25,7 @@ import {
   CreateCommentRequestSchema,
   CreateMirrorRequestSchema,
   CreatePostRequestSchema,
+  CreateQuoteRequestSchema,
 } from './publications';
 
 function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) {
@@ -34,6 +35,9 @@ function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) 
 
     case TransactionKind.CREATE_COMMENT:
       return CreateCommentRequestSchema;
+
+    case TransactionKind.CREATE_QUOTE:
+      return CreateQuoteRequestSchema;
 
     case TransactionKind.MIRROR_PUBLICATION:
       return CreateMirrorRequestSchema;
@@ -57,7 +61,6 @@ function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) 
     // PaidFollowRequestSchema,
     // ProfileOwnerFollowRequestSchema,
     // UnconstrainedFollowRequestSchema,
-    case TransactionKind.CREATE_QUOTE:
     case TransactionKind.COLLECT_PUBLICATION:
     // FreeCollectRequestSchema,
     // PaidCollectRequestSchema,
@@ -78,10 +81,15 @@ function resolveAnyTransactionRequestSchema(kind: TransactionKind) {
 
 function refineProtocolTransactionRequest(
   val: ProtocolTransactionRequestModel,
+  ctx: z.RefinementCtx,
 ): val is ProtocolTransactionRequest {
   const schema = resolveProtocolTransactionRequestSchema(val.kind);
+  const result = schema.safeParse(val);
 
-  return schema.safeParse(val).success;
+  if (!result.success) {
+    result.error.issues.forEach((issue) => ctx.addIssue(issue));
+  }
+  return z.NEVER;
 }
 
 function toProtocolTransactionRequest(
@@ -101,15 +109,20 @@ const ProtocolTransactionRequestSchema: z.ZodType<
     kind: z.enum(ProtocolTransactionKinds),
   })
   .passthrough()
-  .refine(refineProtocolTransactionRequest)
+  .superRefine(refineProtocolTransactionRequest)
   .transform(toProtocolTransactionRequest);
 
 function refineAnyTransactionRequest(
   val: AnyTransactionRequestModel,
-): val is AnyTransactionRequest {
+  ctx: z.RefinementCtx,
+): val is ProtocolTransactionRequest {
   const schema = resolveAnyTransactionRequestSchema(val.kind);
+  const result = schema.safeParse(val);
 
-  return schema.safeParse(val).success;
+  if (!result.success) {
+    result.error.issues.forEach((issue) => ctx.addIssue(issue));
+  }
+  return z.NEVER;
 }
 
 function toAnyTransactionRequest(val: AnyTransactionRequestModel): AnyTransactionRequest {
@@ -123,7 +136,7 @@ const AnyTransactionRequestSchema: z.Schema<AnyTransactionRequest, z.ZodTypeDef,
     kind: z.nativeEnum(TransactionKind),
   })
   .passthrough()
-  .refine(refineAnyTransactionRequest)
+  .superRefine(refineAnyTransactionRequest)
   .transform(toAnyTransactionRequest);
 
 export enum TransactionType {
@@ -149,7 +162,7 @@ const NativeTransactionSchema = z.object({
   chainType: z.nativeEnum(ChainType),
   id: z.string(),
   indexingId: z.string().optional(),
-  txHash: z.string(),
+  txHash: z.string().nullable(),
   request: AnyTransactionRequestSchema,
 });
 

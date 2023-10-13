@@ -67,11 +67,7 @@ export const Erc20AmountSchema = z
     const result = SerializedErc20AmountSchema.safeParse(val);
 
     if (!result.success) {
-      result.error.issues.forEach((issue) =>
-        ctx.addIssue({
-          ...issue,
-        }),
-      );
+      result.error.issues.forEach((issue) => ctx.addIssue(issue));
     }
 
     return z.NEVER;
