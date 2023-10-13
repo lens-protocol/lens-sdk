@@ -3,7 +3,9 @@ import {
   AnyPublication,
   Comment,
   isCommentPublication,
+  isMirrorPublication,
   isPostPublication,
+  Mirror,
   Post,
   PublicationData,
   PublicationDocument,
@@ -35,6 +37,12 @@ export class PublicationCacheManager implements IPublicationCacheManager {
   async fetchNewComment(tx: TransactionData<CreateCommentRequest>): Promise<Comment> {
     const publication = await this.fetchNewPublication(tx);
     invariant(isCommentPublication(publication), `Unexpected publication type`);
+    return publication;
+  }
+
+  async fetchNewMirror(tx: TransactionData<CreateMirrorRequest>): Promise<Mirror> {
+    const publication = await this.fetchNewPublication(tx);
+    invariant(isMirrorPublication(publication), `Unexpected publication type`);
     return publication;
   }
 

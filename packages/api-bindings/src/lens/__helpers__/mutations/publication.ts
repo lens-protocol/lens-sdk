@@ -38,6 +38,18 @@ import {
   CommentOnMomokaData,
   CommentOnMomokaVariables,
   CommentOnMomokaDocument,
+  CreateMomokaMirrorTypedDataData,
+  CreateMomokaMirrorTypedDataDocument,
+  CreateMomokaMirrorTypedDataVariables,
+  MirrorOnMomokaData,
+  MirrorOnMomokaVariables,
+  MirrorOnMomokaDocument,
+  CreateOnchainMirrorTypedDataData,
+  CreateOnchainMirrorTypedDataVariables,
+  CreateOnchainMirrorTypedDataDocument,
+  MirrorOnchainData,
+  MirrorOnchainVariables,
+  MirrorOnchainDocument,
 } from '../../graphql/generated';
 import {
   mockCreateTypedDataResult,
@@ -325,6 +337,122 @@ export function mockCommentOnMomokaResponse<
   return {
     request: {
       query: CommentOnMomokaDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function mockCreateMomokaMirrorTypedDataData({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateMomokaMirrorTypedDataData {
+  return {
+    result: mockCreateTypedDataResult('CreateMomokaMirrorBroadcastItemResult', {
+      types: {
+        Mirror: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      message: {
+        nonce,
+        deadline: 1644303500,
+        profileId: mockProfileId(),
+        metadataURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json',
+        pointedProfileId: mockProfileId(),
+        pointedPubId: '0x01',
+        referrerProfileIds: [],
+        referrerPubIds: [],
+        referenceModuleData: '0x',
+      },
+    }),
+  };
+}
+
+export function mockCreateMomokaMirrorTypedDataResponse<T extends CreateMomokaMirrorTypedDataData>({
+  variables,
+  data,
+}: {
+  variables: CreateMomokaMirrorTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateMomokaMirrorTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function mockMirrorOnMomokaResponse<
+  T extends MirrorOnMomokaData,
+  V extends MirrorOnMomokaVariables,
+>({ variables, data }: { variables: V; data: T }): MockedResponse<T, V> {
+  return {
+    request: {
+      query: MirrorOnMomokaDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function mockCreateOnchainMirrorTypedDataData({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateOnchainMirrorTypedDataData {
+  return {
+    result: mockCreateTypedDataResult('CreateOnchainMirrorBroadcastItemResult', {
+      types: {
+        Mirror: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      message: {
+        nonce,
+        deadline: 1644303500,
+        profileId: mockProfileId(),
+        metadataURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json',
+        pointedProfileId: mockProfileId(),
+        pointedPubId: '0x01',
+        referrerProfileIds: [],
+        referrerPubIds: [],
+        referenceModuleData: '0x',
+      },
+    }),
+  };
+}
+
+export function mockCreateOnchainMirrorTypedDataResponse<
+  T extends CreateOnchainMirrorTypedDataData,
+>({
+  variables,
+  data,
+}: {
+  variables: CreateOnchainMirrorTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateOnchainMirrorTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function mockMirrorOnchainResponse<
+  T extends MirrorOnchainData,
+  V extends MirrorOnchainVariables,
+>({ variables, data }: { variables: V; data: T }): MockedResponse<T, V> {
+  return {
+    request: {
+      query: MirrorOnchainDocument,
       variables,
     },
     result: {

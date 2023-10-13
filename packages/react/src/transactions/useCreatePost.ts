@@ -120,8 +120,8 @@ export type CreatePostArgs = {
  *   }
  * };
  * ```
- * At this point the post creation is completed from and end-user perspective but,
- * in case of on-chain TX, this not necessarily mined  and indexed. See the following section.
+ * At this point the post creation is completed from an end-user perspective but,
+ * in case of on-chain TX, this not necessarily mined and indexed. See the following section.
  *
  * ## Wait for completion
  *
