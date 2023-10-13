@@ -1,4 +1,4 @@
-import { Logout, LogoutReason } from '@lens-protocol/domain/src/use-cases/authentication/Logout';
+import { Logout, LogoutReason } from '@lens-protocol/domain/use-cases/authentication';
 
 export type Callback = () => void;
 
