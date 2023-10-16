@@ -37,7 +37,10 @@
 <p>You MUST be authenticated via <a href="_lens_protocol_react_web.useLogin.html" class="tsd-kind-function">useLogin</a> to use this hook.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <a href="../types/_lens_protocol_react_web.UseDeferredTask.html" class="tsd-signature-type tsd-kind-type-alias">UseDeferredTask</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">AsyncTransactionResult</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><a href="../classes/_lens_protocol_react_web.BroadcastingError.html" class="tsd-signature-type tsd-kind-class">BroadcastingError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react_web.PendingSigningRequestError.html" class="tsd-signature-type tsd-kind-class">PendingSigningRequestError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react_web.UserRejectedError.html" class="tsd-signature-type tsd-kind-class">UserRejectedError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react_web.WalletConnectionError.html" class="tsd-signature-type tsd-kind-class">WalletConnectionError</a><span class="tsd-signature-symbol">, </span><a href="../types/_lens_protocol_react_web.UseSetProfileMetadataArgs.html" class="tsd-signature-type tsd-kind-type-alias">UseSetProfileMetadataArgs</a><span class="tsd-signature-symbol">&gt;</span></h4>
-<div class="tsd-comment tsd-typography"></div></li></ul></section></div>
+<div class="tsd-comment tsd-typography">
+<h4>Example</h4><pre><code class="language-tsx"><span class="hl-4">const</span><span class="hl-1"> { </span><span class="hl-2">execute</span><span class="hl-1">: </span><span class="hl-5">update</span><span class="hl-1">, </span><span class="hl-5">error</span><span class="hl-1">, </span><span class="hl-5">loading</span><span class="hl-1"> } = </span><span class="hl-7">useSetProfileMetadata</span><span class="hl-1">();</span><br/><br/><span class="hl-7">update</span><span class="hl-1">({ </span><span class="hl-2">metadataURI:</span><span class="hl-1"> </span><span class="hl-3">&#39;your-uploaded-metadata-uri&#39;</span><span class="hl-1"> });</span><br/>
+</code><button>Copy</button></pre>
+</div></li></ul></section></div>
 <div class="col-sidebar">
 <div class="page-menu"></div>
 <div class="site-menu">
@@ -381,6 +384,8 @@
 <li><a href="../types/_lens_protocol_react_web.UseMutualFollowersArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Use<wbr/>Mutual<wbr/>Followers<wbr/>Args
 <div class="menu-item-desc">useMutualFollowers hook arguments</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.UseMyBookmarksArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Use<wbr/>My<wbr/>Bookmarks<wbr/>Args</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.UseProfileActionHistoryArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Use<wbr/>Profile<wbr/>Action<wbr/>History<wbr/>Args
 <div class="menu-item-desc">useProfileActionHistory hook arguments</div></div></a></li>
@@ -514,6 +519,9 @@
 <li><a href="_lens_protocol_react_web.useMutualFollowers.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Mutual<wbr/>Followers
 <div class="menu-item-desc">`useMutualFollowers` is a paginated hook that lets you fetch mutual followers between two profiles.</div></div></a></li>
+<li><a href="_lens_protocol_react_web.useMyBookmarks.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>My<wbr/>Bookmarks
+<div class="menu-item-desc">`useMyBookmarks` is a paginated hook that lets you fetch the bookmarks of a profile owned by the logged in wallet.</div></div></a></li>
 <li><a href="_lens_protocol_react_web.useProfile.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Profile
 <div class="menu-item-desc">Get a profile by either a handle or profile Id.</div></div></a></li>
@@ -905,6 +913,8 @@
 <li><a href="../types/_lens_protocol_react.UseMutualFollowersArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Use<wbr/>Mutual<wbr/>Followers<wbr/>Args
 <div class="menu-item-desc">useMutualFollowers hook arguments</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.UseMyBookmarksArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Use<wbr/>My<wbr/>Bookmarks<wbr/>Args</div></a></li>
 <li><a href="../types/_lens_protocol_react.UseProfileActionHistoryArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Use<wbr/>Profile<wbr/>Action<wbr/>History<wbr/>Args
 <div class="menu-item-desc">useProfileActionHistory hook arguments</div></div></a></li>
@@ -1038,6 +1048,9 @@
 <li><a href="_lens_protocol_react.useMutualFollowers.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Mutual<wbr/>Followers
 <div class="menu-item-desc">`useMutualFollowers` is a paginated hook that lets you fetch mutual followers between two profiles.</div></div></a></li>
+<li><a href="_lens_protocol_react.useMyBookmarks.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>My<wbr/>Bookmarks
+<div class="menu-item-desc">`useMyBookmarks` is a paginated hook that lets you fetch the bookmarks of a profile owned by the logged in wallet.</div></div></a></li>
 <li><a href="_lens_protocol_react.useProfile.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Profile
 <div class="menu-item-desc">Get a profile by either a handle or profile Id.</div></div></a></li>
