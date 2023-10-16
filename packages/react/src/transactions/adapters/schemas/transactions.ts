@@ -18,7 +18,7 @@ import {
   CreateProfileRequestSchema,
   UnfollowRequestSchema,
   UpdateProfileManagersRequestSchema,
-  UpdateProfileDetailsRequestSchema,
+  SetProfileMetadataRequestSchema,
   UpdateFollowPolicyRequestSchema,
   FollowRequestSchema,
 } from './profiles';
@@ -53,7 +53,7 @@ function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) 
       return UpdateProfileManagersRequestSchema;
 
     case TransactionKind.UPDATE_PROFILE_DETAILS:
-      return UpdateProfileDetailsRequestSchema;
+      return SetProfileMetadataRequestSchema;
 
     case TransactionKind.UPDATE_FOLLOW_POLICY:
       return UpdateFollowPolicyRequestSchema;

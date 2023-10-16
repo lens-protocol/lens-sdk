@@ -1,18 +1,10 @@
-import { ProfileId, TransactionKind } from '../../entities';
+import { TransactionKind } from '../../entities';
 import { DelegableSigning } from '../transactions/DelegableSigning';
 
-export type ProfileAttributeValue = boolean | Date | string | number;
-
-export type PartialAttributesUpdate = Record<string, ProfileAttributeValue | null>;
-
-export type UpdateProfileDetailsRequest = {
-  attributes?: PartialAttributesUpdate;
-  bio?: string | null;
-  coverPicture?: string | null;
-  delegate: boolean;
+export type SetProfileMetadataRequest = {
+  metadataURI: string;
   kind: TransactionKind.UPDATE_PROFILE_DETAILS;
-  name: string;
-  profileId: ProfileId;
+  delegate: boolean;
 };
 
-export class UpdateProfileDetails extends DelegableSigning<UpdateProfileDetailsRequest> {}
+export class SetProfileMetadata extends DelegableSigning<SetProfileMetadataRequest> {}

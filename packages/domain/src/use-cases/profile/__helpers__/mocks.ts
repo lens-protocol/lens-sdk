@@ -20,7 +20,7 @@ import {
 } from '../ProveNftOwnership';
 import { UnfollowRequest } from '../UnfollowProfile';
 import { UpdateFollowPolicyRequest } from '../UpdateFollowPolicy';
-import { UpdateProfileDetailsRequest } from '../UpdateProfileDetails';
+import { SetProfileMetadataRequest } from '../UpdateProfileDetails';
 import { UpdateProfileManagersRequest } from '../UpdateProfileManagers';
 import { ChargeFollowConfig, FollowPolicyType, NoFeeFollowConfig } from '../types';
 
@@ -81,16 +81,12 @@ export function mockUpdateFollowPolicyRequest(
   };
 }
 
-export function mockUpdateProfileDetailsRequest(
-  overrides?: Partial<UpdateProfileDetailsRequest>,
-): UpdateProfileDetailsRequest {
+export function mockSetProfileMetadataRequest(
+  overrides?: Partial<SetProfileMetadataRequest>,
+): SetProfileMetadataRequest {
   return {
-    attributes: {},
-    bio: faker.lorem.sentence(),
-    coverPicture: faker.image.imageUrl(),
-    name: faker.name.firstName(),
-    profileId: mockProfileId(),
     delegate: true,
+    metadataURI: faker.internet.url(),
     ...overrides,
     kind: TransactionKind.UPDATE_PROFILE_DETAILS,
   };

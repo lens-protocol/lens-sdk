@@ -88,16 +88,8 @@ export const UpdateFollowPolicyRequestSchema: z.ZodType<
   kind: z.literal(TransactionKind.UPDATE_FOLLOW_POLICY),
 });
 
-const PartialAttributesUpdateSchema = z.record(
-  z.union([z.boolean(), z.coerce.date(), z.number(), z.string(), z.null()]),
-);
-
-export const UpdateProfileDetailsRequestSchema = z.object({
-  attributes: PartialAttributesUpdateSchema.optional(),
-  bio: z.string().nullable().optional(),
-  coverPicture: z.string().nullable().optional(),
-  name: z.string(),
-  profileId: ProfileIdSchema,
+export const SetProfileMetadataRequestSchema = z.object({
+  metadataURI: z.string().url(),
   kind: z.literal(TransactionKind.UPDATE_PROFILE_DETAILS),
   delegate: z.boolean(),
 });

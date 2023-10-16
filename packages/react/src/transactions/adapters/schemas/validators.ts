@@ -2,7 +2,7 @@ import {
   FollowRequest,
   UnfollowRequest,
   UpdateFollowPolicyRequest,
-  UpdateProfileDetailsRequest,
+  SetProfileMetadataRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import { TokenAllowanceRequest } from '@lens-protocol/domain/use-cases/wallets';
 import { formatZodError } from '@lens-protocol/metadata';
@@ -14,7 +14,7 @@ import {
   FollowRequestSchema,
   UnfollowRequestSchema,
   UpdateFollowPolicyRequestSchema,
-  UpdateProfileDetailsRequestSchema,
+  SetProfileMetadataRequestSchema,
   UpdateProfileManagersRequestSchema,
 } from './profiles';
 
@@ -38,10 +38,10 @@ export const validateTokenAllowanceRequest: Validator<TokenAllowanceRequest> =
 export const validateUpdateFollowPolicyRequest: Validator<UpdateFollowPolicyRequest> =
   createRequestValidator(UpdateFollowPolicyRequestSchema);
 
-export const validateUpdateProfileDetailsRequest: Validator<UpdateProfileDetailsRequest> =
-  createRequestValidator(UpdateProfileDetailsRequestSchema);
+export const validateSetProfileMetadataRequest: Validator<SetProfileMetadataRequest> =
+  createRequestValidator(SetProfileMetadataRequestSchema);
 
-export const validateUpdateProfileManagersRequest: Validator<UpdateProfileDetailsRequest> =
+export const validateUpdateProfileManagersRequest: Validator<SetProfileMetadataRequest> =
   createRequestValidator(UpdateProfileManagersRequestSchema);
 
 export const validateUnfollowRequest: Validator<UnfollowRequest> =

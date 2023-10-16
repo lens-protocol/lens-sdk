@@ -5,6 +5,7 @@ export * from './useFollowProfile';
 export * from './useUnfollowProfile';
 export * from './useUpdateFollowPolicy';
 export * from './useUpdateProfileManagers';
+export * from './useSetProfileMetadata';
 
 export type {
   AnyoneReferencePolicyConfig,

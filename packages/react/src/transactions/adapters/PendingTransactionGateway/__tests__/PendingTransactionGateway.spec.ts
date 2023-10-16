@@ -4,7 +4,7 @@ import {
   mockUnconstrainedFollowRequest,
   mockUnfollowRequest,
   mockUpdateFollowPolicyRequest,
-  mockUpdateProfileDetailsRequest,
+  mockSetProfileMetadataRequest,
   mockCreateCommentRequest,
   mockCreateMirrorRequest,
   mockCreatePostRequest,
@@ -50,7 +50,7 @@ const requests: TransactionRequest = {
   [TransactionKind.FOLLOW_PROFILE]: mockUnconstrainedFollowRequest(),
   [TransactionKind.MIRROR_PUBLICATION]: mockCreateMirrorRequest(),
   [TransactionKind.UPDATE_FOLLOW_POLICY]: mockUpdateFollowPolicyRequest(),
-  [TransactionKind.UPDATE_PROFILE_DETAILS]: mockUpdateProfileDetailsRequest(),
+  [TransactionKind.UPDATE_PROFILE_DETAILS]: mockSetProfileMetadataRequest(),
   [TransactionKind.CREATE_PROFILE]: mockCreateProfileRequest(),
   [TransactionKind.UNFOLLOW_PROFILE]: mockUnfollowRequest(),
   [TransactionKind.UPDATE_PROFILE_MANAGERS]: mockUpdateProfileManagersRequest(),
@@ -233,7 +233,7 @@ describe(`Given an instance of the ${PendingTransactionGateway.name}`, () => {
 
       // TODO update with Link/Unlink tx types once ready
       it.skip(`should not be affected by ${MetaTransaction.name} for methods exposed on TokenHandleRegistry.sol contract`, async () => {
-        const request = mockUpdateProfileDetailsRequest();
+        const request = mockSetProfileMetadataRequest();
         const gateway = setupPendingTransactionGateway({ factory });
         const init = mockMetaTransactionData({ request });
         const tx = factory.createMetaTransaction(init);

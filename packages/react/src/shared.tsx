@@ -38,6 +38,7 @@ import { PendingTransactionGateway } from './transactions/adapters/PendingTransa
 import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
 import { FollowProfileResponder } from './transactions/adapters/responders/FollowProfileResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
+import { SetProfileMetadataResponder } from './transactions/adapters/responders/SetProfileMetadataResponder';
 import { UnfollowProfileResponder } from './transactions/adapters/responders/UnfollowProfileResponder';
 import { UpdateFollowPolicyResponder } from './transactions/adapters/responders/UpdateFollowPolicyResponder';
 import { UpdateProfileManagersResponder } from './transactions/adapters/responders/UpdateProfileManagersResponder';
@@ -116,8 +117,8 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     [TransactionKind.FOLLOW_PROFILE]: new FollowProfileResponder(profileCacheManager),
     [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(),
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(profileCacheManager),
+    [TransactionKind.UPDATE_PROFILE_DETAILS]: new SetProfileMetadataResponder(profileCacheManager),
     [TransactionKind.UPDATE_FOLLOW_POLICY]: new UpdateFollowPolicyResponder(profileCacheManager),
-    [TransactionKind.UPDATE_PROFILE_DETAILS]: new NoopResponder(),
     [TransactionKind.UPDATE_PROFILE_MANAGERS]: new UpdateProfileManagersResponder(
       apolloClient,
       profileCacheManager,
@@ -151,8 +152,8 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     environment: config.environment,
     logger,
     logout,
-    momokaRelayer,
     onChainRelayer,
+    momokaRelayer,
     profileCacheManager,
     providerFactory,
     publicationCacheManager,

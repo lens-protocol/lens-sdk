@@ -5,7 +5,7 @@ import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import {
   validateTokenAllowanceRequest,
   validateUpdateFollowPolicyRequest,
-  validateUpdateProfileDetailsRequest,
+  validateSetProfileMetadataRequest,
   validateUpdateProfileManagersRequest,
 } from '../validators';
 
@@ -51,10 +51,10 @@ describe(`Given the validator helpers`, () => {
     });
   });
 
-  describe(`when testing the "validateUpdateProfileDetailsRequest"`, () => {
+  describe(`when testing the "validateSetProfileMetadataRequest"`, () => {
     it('should provide an actionable error message in case of misuse', () => {
       expect(() =>
-        validateUpdateProfileDetailsRequest({
+        validateSetProfileMetadataRequest({
           attributes: {
             foo: new RegExp('foo'),
           },
@@ -69,20 +69,9 @@ describe(`Given the validator helpers`, () => {
           profileId: mockProfileId(),
         }),
       ).toThrowErrorMatchingInlineSnapshot(`
-        "fix the following issues
-        · "attributes.foo": expected to match one of the following groups:
-        		"attributes.foo": Expected boolean, received object
-        	OR:
-        		"attributes.foo": Invalid date
-        	OR:
-        		"attributes.foo": Expected number, received object
-        	OR:
-        		"attributes.foo": Expected string, received object
-        	OR:
-        		"attributes.foo": Expected null, received object
-        · "bio": Expected string, received number
-        · "name": Required"
-      `);
+      "fix the following issues
+      · "metadataURI": Required"
+    `);
     });
   });
 
