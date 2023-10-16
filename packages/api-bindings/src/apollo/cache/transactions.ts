@@ -1,10 +1,12 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
 import {
+  ProfileId,
   PublicationId,
   TransactionError,
   TransactionErrorReason,
   TransactionKind,
 } from '@lens-protocol/domain/entities';
+import { FollowRequest, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import { OpenActionRequest, AllOpenActionType } from '@lens-protocol/domain/use-cases/publications';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { DateUtils } from '@lens-protocol/shared-kernel';
@@ -131,6 +133,44 @@ export function countAnyPendingCollect() {
     (count, transaction) =>
       count +
       (isCollectTransaction(transaction) && transaction.status === TxStatus.PENDING ? 1 : 0),
+    0,
+  );
+}
+
+function isFollowTransaction(
+  transaction: TransactionState<AnyTransactionRequest>,
+): transaction is TransactionState<FollowRequest> {
+  return transaction.request.kind === TransactionKind.FOLLOW_PROFILE;
+}
+
+export function countPendingFollowFor(profileId: ProfileId) {
+  return recentTransactionsVar().reduce(
+    (count, transaction) =>
+      count +
+      (isFollowTransaction(transaction) &&
+      transaction.request.profileId === profileId &&
+      transaction.status === TxStatus.PENDING
+        ? 1
+        : 0),
+    0,
+  );
+}
+
+function isUnfollowTransaction(
+  transaction: TransactionState<AnyTransactionRequest>,
+): transaction is TransactionState<UnfollowRequest> {
+  return transaction.request.kind === TransactionKind.UNFOLLOW_PROFILE;
+}
+
+export function countPendingUnfollowFor(profileId: ProfileId) {
+  return recentTransactionsVar().reduce(
+    (count, transaction) =>
+      count +
+      (isUnfollowTransaction(transaction) &&
+      transaction.request.profileId === profileId &&
+      transaction.status === TxStatus.PENDING
+        ? 1
+        : 0),
     0,
   );
 }

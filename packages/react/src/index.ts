@@ -115,3 +115,4 @@ export {
  * Helpers
  */
 export * from './utils';
+export { isValidHandle, resolveFollowPolicy } from '@lens-protocol/api-bindings';

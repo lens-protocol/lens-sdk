@@ -14,7 +14,6 @@ import gql from 'graphql-tag';
 
 import type { ContentEncryptionKey } from '../ContentEncryptionKey';
 import type { Cursor } from '../Cursor';
-import type { FollowPolicy } from '../FollowPolicy';
 import type { ImageSizeTransform } from '../ImageTransform';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -63,7 +62,6 @@ export type Scalars = {
   Ens: string;
   /** evm address type */
   EvmAddress: EvmAddress;
-  FollowPolicy: FollowPolicy;
   /** The handle attached to a profile - note its it own NFT and always identified by its full name */
   Handle: string;
   /** The image size transform */
@@ -2080,7 +2078,6 @@ export type ProfileFields = {
   createdAt: string;
   interests: Array<string>;
   invitesLeft: number;
-  followPolicy: FollowPolicy;
   sponsor: boolean;
   signless: boolean;
   ownedBy: NetworkAddress;
@@ -4601,7 +4598,6 @@ export const FragmentProfileFields = /*#__PURE__*/ gql`
     followNftAddress {
       ...NetworkAddress
     }
-    followPolicy @client
     followModule {
       ... on FeeFollowModuleSettings {
         ...FeeFollowModuleSettings
@@ -15743,7 +15739,6 @@ export type ProfileKeySpecifier = (
   | 'createdAt'
   | 'followModule'
   | 'followNftAddress'
-  | 'followPolicy'
   | 'guardian'
   | 'handle'
   | 'id'
@@ -15764,7 +15759,6 @@ export type ProfileFieldPolicy = {
   createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
   followModule?: FieldPolicy<any> | FieldReadFunction<any>;
   followNftAddress?: FieldPolicy<any> | FieldReadFunction<any>;
-  followPolicy?: FieldPolicy<any> | FieldReadFunction<any>;
   guardian?: FieldPolicy<any> | FieldReadFunction<any>;
   handle?: FieldPolicy<any> | FieldReadFunction<any>;
   id?: FieldPolicy<any> | FieldReadFunction<any>;

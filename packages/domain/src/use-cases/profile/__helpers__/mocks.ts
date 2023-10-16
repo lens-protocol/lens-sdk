@@ -13,6 +13,7 @@ import {
   DuplicatedHandleError,
   IProfileTransactionGateway,
 } from '../CreateProfile';
+import { ChargeFollowConfig, FollowPolicyType, NoFeeFollowConfig } from '../FollowPolicy';
 import { FreeFollowRequest, PaidFollowRequest } from '../FollowProfile';
 import { LinkHandleRequest } from '../LinkHandle';
 import {
@@ -25,7 +26,6 @@ import { UnfollowRequest } from '../UnfollowProfile';
 import { UnlinkHandleRequest } from '../UnlinkHandle';
 import { UpdateFollowPolicyRequest } from '../UpdateFollowPolicy';
 import { UpdateProfileManagersRequest } from '../UpdateProfileManagers';
-import { ChargeFollowConfig, FollowPolicyType, NoFeeFollowConfig } from '../types';
 
 export function mockCreateProfileRequest(
   overrides?: Partial<CreateProfileRequest>,

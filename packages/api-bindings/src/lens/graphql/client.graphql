@@ -1,9 +1,3 @@
-scalar FollowPolicy
-
-extend type Profile {
-  followPolicy: FollowPolicy!
-}
-
 extend type PaginatedResultInfo {
   moreAfter: Boolean!
 }
