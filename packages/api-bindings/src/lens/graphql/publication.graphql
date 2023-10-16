@@ -508,3 +508,42 @@ mutation RefreshPublicationMetadata($request: RefreshPublicationMetadataRequest!
     result
   }
 }
+
+query PublicationBookmarks(
+  $request: PublicationBookmarksRequest!
+  $imageSmallSize: ImageTransform = {}
+  $imageMediumSize: ImageTransform = {}
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
+) {
+  ...InjectCommonQueryParams
+  result: publicationBookmarks(request: $request) {
+    items {
+      ... on Post {
+        ...Post
+      }
+      ... on Comment {
+        ...Comment
+      }
+      ... on Mirror {
+        ...Mirror
+      }
+      ... on Quote {
+        ...Quote
+      }
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+mutation AddPublicationBookmark($request: PublicationBookmarkRequest!) {
+  result: addPublicationBookmark(request: $request)
+}
+
+mutation RemovePublicationBookmark($request: PublicationBookmarkRequest!) {
+  result: removePublicationBookmark(request: $request)
+}
