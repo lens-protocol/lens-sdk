@@ -4,6 +4,7 @@ export * from './UseCreateComment';
 export * from './UseCreatePost';
 export * from './UseHidePublication';
 export * from './UseMyBookmarks';
+export * from './UseOpenAction';
 export * from './UsePublication';
 export * from './UsePublications';
 export * from './UseReactionToggle';

@@ -1,7 +1,7 @@
 import { TransactionKind } from '@lens-protocol/domain/entities';
 import { CreateQuoteRequest } from '@lens-protocol/domain/src/use-cases/publications/CreateQuote';
 import {
-  CollectType,
+  AllOpenActionType,
   CreateCommentRequest,
   CreateMirrorRequest,
   CreatePostRequest,
@@ -34,7 +34,7 @@ const SimpleCollectActionConfigSchema = z.object({
   followerOnly: z.boolean(),
   referralFee: z.number().optional(),
   collectLimit: z.number().optional(),
-  recipient: EvmAddressSchema,
+  recipient: EvmAddressSchema.optional(),
   endsAt: z.coerce.date().min(new Date()).optional(),
 });
 
@@ -139,23 +139,50 @@ export const CreateMirrorRequestSchema: z.ZodType<
   delegate: z.boolean(),
 });
 
+const CollectFeeSchema = z.object({
+  amount: Erc20AmountSchema,
+  contractAddress: EvmAddressSchema,
+});
+
 const BaseCollectRequestSchema = z.object({
-  kind: z.literal(TransactionKind.COLLECT_PUBLICATION),
-  profileId: ProfileIdSchema,
+  kind: z.literal(TransactionKind.ACT_ON_PUBLICATION),
   publicationId: PublicationIdSchema,
 });
 
-export const FreeCollectRequestSchema = BaseCollectRequestSchema.extend({
-  type: z.literal(CollectType.FREE),
-  followerOnly: z.boolean(),
+export const LegacyCollectRequestSchema = BaseCollectRequestSchema.extend({
+  type: z.literal(AllOpenActionType.LEGACY_COLLECT),
+  delegate: z.boolean(),
+  publicationId: PublicationIdSchema,
+  referrer: PublicationIdSchema.optional(),
+  fee: CollectFeeSchema.optional(),
 });
 
-const CollectFeeSchema = z.object({
-  amount: Erc20AmountSchema,
-  contractAddress: z.string(),
+export const SimpleCollectRequestSchema = BaseCollectRequestSchema.extend({
+  type: z.literal(AllOpenActionType.SIMPLE_COLLECT),
+  delegate: z.boolean(),
+  publicationId: PublicationIdSchema,
+  referrers: z.union([PublicationIdSchema, ProfileIdSchema]).array().min(1).optional(),
+  fee: CollectFeeSchema.optional(),
 });
 
-export const PaidCollectRequestSchema = BaseCollectRequestSchema.extend({
-  type: z.literal(CollectType.PAID),
+export const MultirecipientCollectRequestSchema = BaseCollectRequestSchema.extend({
+  type: z.literal(AllOpenActionType.MULTIRECIPIENT_COLLECT),
+  publicationId: PublicationIdSchema,
+  referrers: z.union([PublicationIdSchema, ProfileIdSchema]).array().min(1).optional(),
   fee: CollectFeeSchema,
 });
+
+export const UnknownActionRequestSchema = BaseCollectRequestSchema.extend({
+  type: z.literal(AllOpenActionType.UNKNOWN_OPEN_ACTION),
+  delegate: z.boolean(),
+  publicationId: PublicationIdSchema,
+  address: EvmAddressSchema,
+  data: DataSchema,
+});
+
+export const CollectRequestSchema = z.discriminatedUnion('type', [
+  LegacyCollectRequestSchema,
+  SimpleCollectRequestSchema,
+  MultirecipientCollectRequestSchema,
+  UnknownActionRequestSchema,
+]);

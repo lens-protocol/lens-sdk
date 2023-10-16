@@ -1,5 +1,16 @@
+import { PublicationId } from '@lens-protocol/domain/entities';
+
 import { AnyPublication, PrimaryPublication } from '../publication';
 import { PickByTypename, Typename } from './types';
+
+const publicationIdRegExp = /^0x[a-f0-9]{2,}-0x[a-f0-9]{2,}/i;
+
+/**
+ * @group Helpers
+ */
+export function isPublicationId(value: string): value is PublicationId {
+  return publicationIdRegExp.test(value);
+}
 
 /**
  * @group Helpers

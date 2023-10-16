@@ -1,13 +1,11 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
 import {
-  ProfileId,
   PublicationId,
   TransactionError,
   TransactionErrorReason,
   TransactionKind,
 } from '@lens-protocol/domain/entities';
-import { FollowRequest, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
-import { CollectRequest, CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
+import { OpenActionRequest, AllOpenActionType } from '@lens-protocol/domain/use-cases/publications';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { DateUtils } from '@lens-protocol/shared-kernel';
 
@@ -48,7 +46,7 @@ export type TransactionState<T extends AnyTransactionRequest> =
 
 export const recentTransactionsVar = makeVar<TransactionState<AnyTransactionRequest>[]>([]);
 
-type TransactionStatusPredicate<T extends AnyTransactionRequest> = (
+export type TransactionStatusPredicate<T extends AnyTransactionRequest> = (
   txState: TransactionState<AnyTransactionRequest>,
 ) => txState is TransactionState<T>;
 
@@ -60,10 +58,6 @@ function hasTransactionWith<T extends AnyTransactionRequest>(
   return transactions.some((txState) => statuses.includes(txState.status) && predicate(txState));
 }
 
-export function getAllPendingTransactions() {
-  return recentTransactionsVar().filter((txState) => txState.status === TxStatus.PENDING);
-}
-
 function delay(waitInMs: number) {
   return new Promise((resolve) => setTimeout(resolve, waitInMs));
 }
@@ -72,6 +66,9 @@ export function useRecentTransactionsVar() {
   return useReactiveVar(recentTransactionsVar);
 }
 
+/**
+ * @deprecated use a FieldPolicy if possible
+ */
 export function useHasPendingTransaction<T extends AnyTransactionRequest>(
   predicate: TransactionStatusPredicate<T>,
 ) {
@@ -82,6 +79,9 @@ export function useHasPendingTransaction<T extends AnyTransactionRequest>(
 
 const FIFTEEN_SECONDS = DateUtils.secondsToMs(30);
 
+/**
+ * @deprecated use AsyncTransactionResult instead
+ */
 export function useWaitUntilTransactionSettled(waitTimeInMs: number = FIFTEEN_SECONDS) {
   return async <T extends AnyTransactionRequest>(predicate: TransactionStatusPredicate<T>) => {
     const resolveWhenNoPendingTransactions = new Promise<void>((resolve) => {
@@ -100,46 +100,37 @@ export function useWaitUntilTransactionSettled(waitTimeInMs: number = FIFTEEN_SE
   };
 }
 
-export function isFollowTransactionFor({
-  profileId,
-}: {
-  profileId: ProfileId;
-}): TransactionStatusPredicate<FollowRequest> {
-  return (transaction): transaction is TransactionState<FollowRequest> =>
-    transaction.request.kind === TransactionKind.FOLLOW_PROFILE &&
-    transaction.request.profileId === profileId;
+function isCollectTransaction(
+  transaction: TransactionState<AnyTransactionRequest>,
+): transaction is TransactionState<OpenActionRequest> {
+  return (
+    transaction.request.kind === TransactionKind.ACT_ON_PUBLICATION &&
+    [
+      AllOpenActionType.LEGACY_COLLECT,
+      AllOpenActionType.SIMPLE_COLLECT,
+      AllOpenActionType.MULTIRECIPIENT_COLLECT,
+    ].includes(transaction.request.type)
+  );
 }
 
-export function isUnfollowTransactionFor({
-  profileId,
-}: {
-  profileId: ProfileId;
-}): TransactionStatusPredicate<UnfollowRequest> {
-  return (transaction): transaction is TransactionState<UnfollowRequest> =>
-    transaction.request.kind === TransactionKind.UNFOLLOW_PROFILE &&
-    transaction.request.profileId === profileId;
+export function countAnyPendingCollectFor(publicationId: PublicationId) {
+  return recentTransactionsVar().reduce(
+    (count, transaction) =>
+      count +
+      (isCollectTransaction(transaction) &&
+      transaction.status === TxStatus.PENDING &&
+      transaction.request.publicationId === publicationId
+        ? 1
+        : 0),
+    0,
+  );
 }
 
-export function isCollectTransactionFor({
-  publicationId,
-  profileId,
-}: {
-  publicationId: PublicationId;
-  profileId: ProfileId;
-}): TransactionStatusPredicate<CollectRequest> {
-  return (transaction): transaction is TransactionState<CollectRequest> =>
-    transaction.request.kind === TransactionKind.COLLECT_PUBLICATION &&
-    transaction.request.profileId === profileId &&
-    transaction.request.publicationId === publicationId;
-}
-
-export function isMirrorTransactionFor({
-  publicationId,
-}: {
-  publicationId: PublicationId;
-  profileId: ProfileId;
-}): TransactionStatusPredicate<CreateMirrorRequest> {
-  return (transaction): transaction is TransactionState<CreateMirrorRequest> =>
-    transaction.request.kind === TransactionKind.MIRROR_PUBLICATION &&
-    transaction.request.mirrorOn === publicationId;
+export function countAnyPendingCollect() {
+  return recentTransactionsVar().reduce(
+    (count, transaction) =>
+      count +
+      (isCollectTransaction(transaction) && transaction.status === TxStatus.PENDING ? 1 : 0),
+    0,
+  );
 }

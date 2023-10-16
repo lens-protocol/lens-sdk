@@ -23,6 +23,7 @@ import {
   FollowRequestSchema,
 } from './profiles';
 import {
+  CollectRequestSchema,
   CreateCommentRequestSchema,
   CreateMirrorRequestSchema,
   CreatePostRequestSchema,
@@ -61,9 +62,9 @@ function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) 
     case TransactionKind.FOLLOW_PROFILE:
       return FollowRequestSchema;
 
-    case TransactionKind.COLLECT_PUBLICATION:
-    // FreeCollectRequestSchema,
-    // PaidCollectRequestSchema,
+    case TransactionKind.ACT_ON_PUBLICATION:
+      return CollectRequestSchema;
+
     default:
       throw new Error('Not implemented');
   }

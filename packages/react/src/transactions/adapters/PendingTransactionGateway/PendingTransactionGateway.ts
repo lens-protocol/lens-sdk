@@ -28,7 +28,7 @@ import {
 } from './ISerializableTransactionFactory';
 
 const lensHubTransactionKinds = [
-  TransactionKind.COLLECT_PUBLICATION,
+  TransactionKind.ACT_ON_PUBLICATION,
   TransactionKind.CREATE_COMMENT,
   TransactionKind.CREATE_POST,
   TransactionKind.CREATE_QUOTE,
@@ -42,7 +42,7 @@ const lensHubTransactionKinds = [
 // const tokenHandleRegistryTransactionKinds = []; // not used yet
 
 const transactionKindToFilterGroup: { [k in TransactionKind]: TransactionKind[] } = {
-  [TransactionKind.COLLECT_PUBLICATION]: lensHubTransactionKinds,
+  [TransactionKind.ACT_ON_PUBLICATION]: lensHubTransactionKinds,
   [TransactionKind.CREATE_COMMENT]: lensHubTransactionKinds,
   [TransactionKind.CREATE_POST]: lensHubTransactionKinds,
   [TransactionKind.CREATE_QUOTE]: lensHubTransactionKinds,

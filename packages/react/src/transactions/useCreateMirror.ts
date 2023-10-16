@@ -34,6 +34,8 @@ export type CreateMirrorArgs = {
 /**
  * `useCreateMirror` is React Hook that allows you to mirror a Lens publication.
  *
+ * You MUST be authenticated via {@link useLogin} to use this hook.
+ *
  * @example
  * ```ts
  * const { execute, error, loading } = useCreateMirror();
@@ -64,7 +66,7 @@ export type CreateMirrorArgs = {
  *   });
  *
  *   if (result.isFailure()) {
- *     switch (error.constructor) {
+ *     switch (result.error.constructor) {
  *       case BroadcastingError:
  *         console.log('There was an error broadcasting the transaction', error.message);
  *         break;
@@ -115,7 +117,7 @@ export type CreateMirrorArgs = {
  *
  *   // this might take a while, depends on the type of tx (on-chain or Momoka)
  *   // and the congestion of the network
- *   const completion = await result.value.completion();
+ *   const completion = await result.value.waitForCompletion();
  *
  *   if (completion.isFailure()) {
  *     console.log('There was an processing the transaction', completion.error.message);

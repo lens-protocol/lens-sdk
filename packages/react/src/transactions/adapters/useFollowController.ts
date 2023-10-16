@@ -13,13 +13,10 @@ import {
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
-  TokenAvailability,
 } from '@lens-protocol/domain/use-cases/wallets';
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
-import { BalanceGateway } from '../../wallet/adapters/BalanceGateway';
-import { TokenGateway } from '../../wallet/adapters/TokenGateway';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
 import { FollowProfileGateway } from './profiles/FollowProfileGateway';
 import { validateFollowRequest } from './schemas/validators';
@@ -29,7 +26,7 @@ export function useFollowController() {
     activeWallet,
     apolloClient,
     onChainRelayer,
-    providerFactory,
+    tokenAvailability,
     transactionFactory,
     transactionGateway,
     transactionQueue,
@@ -55,7 +52,6 @@ export function useFollowController() {
       | InsufficientAllowanceError
       | InsufficientFundsError
       | PendingSigningRequestError
-      | TransactionError
       | UserRejectedError
       | WalletConnectionError
     >();
@@ -76,10 +72,6 @@ export function useFollowController() {
       transactionQueue,
       presenter,
     );
-
-    const balanceGateway = new BalanceGateway(providerFactory);
-    const tokenGateway = new TokenGateway(providerFactory);
-    const tokenAvailability = new TokenAvailability(balanceGateway, tokenGateway, activeWallet);
 
     const followProfile = new FollowProfile(
       tokenAvailability,

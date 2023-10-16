@@ -14,7 +14,6 @@ import {
 import {
   BroadcastingError,
   IDelegatedTransactionPresenter,
-  ISubsidizeOffChainPresenter,
   ISubsidizeOnChainPresenter,
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
@@ -34,13 +33,10 @@ type EarlyFailureError =
   | UserRejectedError
   | WalletConnectionError;
 
-export class NewPublicationPresenter<
+export class RefreshPublicationPresenter<
   TRequest extends AnyCreatePublicationRequest,
   TPublication extends AnyPublication,
-> implements
-    IDelegatedTransactionPresenter<TRequest>,
-    ISubsidizeOnChainPresenter<TRequest>,
-    ISubsidizeOffChainPresenter<TRequest>
+> implements IDelegatedTransactionPresenter<TRequest>, ISubsidizeOnChainPresenter<TRequest>
 {
   private deferredResult = new Deferred<Result<TPublication, TransactionError>>();
 

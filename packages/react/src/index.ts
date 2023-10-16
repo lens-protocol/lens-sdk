@@ -87,7 +87,7 @@ export * from './helpers/tasks';
 /**
  * GQL common types
  */
-export type { MetadataAttribute } from '@lens-protocol/api-bindings';
+export type { App, MetadataAttribute } from '@lens-protocol/api-bindings';
 export { TriStateValue } from '@lens-protocol/api-bindings';
 
 /**
@@ -102,7 +102,10 @@ export {
 } from '@lens-protocol/domain/entities';
 export { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 export { NotFoundError } from './NotFoundError';
-
+export {
+  InsufficientAllowanceError,
+  InsufficientFundsError,
+} from '@lens-protocol/domain/use-cases/wallets';
 /**
  * Helpers
  */

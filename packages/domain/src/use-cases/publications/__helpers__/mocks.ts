@@ -3,13 +3,20 @@ import { ChainType, Data, URI } from '@lens-protocol/shared-kernel';
 import { mockDaiAmount, mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import { ReportReason, TransactionKind } from '../../../entities';
-import { mockProfileId, mockPublicationId } from '../../../entities/__helpers__/mocks';
-import { CollectType, FreeCollectRequest, PaidCollectRequest } from '../CollectPublication';
+import { mockPublicationId } from '../../../entities/__helpers__/mocks';
 import { CreateCommentRequest } from '../CreateComment';
 import { CreateMirrorRequest } from '../CreateMirror';
 import { CreatePostRequest } from '../CreatePost';
 import { CreateQuoteRequest } from '../CreateQuote';
 import { HidePublicationRequest } from '../HidePublication';
+import {
+  AllOpenActionType,
+  CollectFee,
+  LegacyCollectRequest,
+  MultirecipientCollectRequest,
+  SimpleCollectRequest,
+  UnknownActionRequest,
+} from '../OpenAction';
 import { OpenActionType, UnknownOpenActionConfig } from '../OpenActionConfig';
 import { AnyoneReferencePolicyConfig, ReferencePolicyType } from '../ReferencePolicyConfig';
 import { ReportPublicationRequest } from '../ReportPublication';
@@ -83,35 +90,6 @@ export function mockHidePublicationRequest(
   };
 }
 
-export function mockFreeCollectRequest(
-  overrides?: Partial<FreeCollectRequest>,
-): FreeCollectRequest {
-  return {
-    profileId: mockProfileId(),
-    type: CollectType.FREE,
-    publicationId: mockPublicationId(),
-    followerOnly: false,
-    ...overrides,
-    kind: TransactionKind.COLLECT_PUBLICATION,
-  };
-}
-
-export function mockPaidCollectRequest(
-  overrides?: Partial<PaidCollectRequest>,
-): PaidCollectRequest {
-  return {
-    profileId: mockProfileId(),
-    type: CollectType.PAID,
-    publicationId: mockPublicationId(),
-    fee: {
-      amount: mockDaiAmount(1, ChainType.POLYGON),
-      contractAddress: mockEvmAddress(),
-    },
-    ...overrides,
-    kind: TransactionKind.COLLECT_PUBLICATION,
-  };
-}
-
 export function mockReportPublicationRequest(
   overrides?: Partial<ReportPublicationRequest>,
 ): ReportPublicationRequest {
@@ -134,5 +112,63 @@ export function mockUnknownOpenActionConfig(): UnknownOpenActionConfig {
 export function mockAnyoneReferencePolicyConfig(): AnyoneReferencePolicyConfig {
   return {
     type: ReferencePolicyType.ANYONE,
+  };
+}
+
+export function mockCollectFee(overrides?: Partial<CollectFee>): CollectFee {
+  return {
+    amount: mockDaiAmount(1, ChainType.POLYGON),
+    contractAddress: mockEvmAddress(),
+    ...overrides,
+  };
+}
+
+export function mockLegacyCollectRequest(
+  overrides?: Partial<LegacyCollectRequest>,
+): LegacyCollectRequest {
+  return {
+    delegate: true,
+    publicationId: mockPublicationId(),
+    ...overrides,
+    type: AllOpenActionType.LEGACY_COLLECT,
+    kind: TransactionKind.ACT_ON_PUBLICATION,
+  };
+}
+
+export function mockSimpleCollectRequest(
+  overrides?: Partial<SimpleCollectRequest>,
+): SimpleCollectRequest {
+  return {
+    delegate: true,
+    publicationId: mockPublicationId(),
+    ...overrides,
+    type: AllOpenActionType.SIMPLE_COLLECT,
+    kind: TransactionKind.ACT_ON_PUBLICATION,
+  };
+}
+
+export function mockMultirecipientCollectRequest(
+  overrides?: Partial<MultirecipientCollectRequest>,
+): MultirecipientCollectRequest {
+  return {
+    publicationId: mockPublicationId(),
+    fee: mockCollectFee(),
+    ...overrides,
+    type: AllOpenActionType.MULTIRECIPIENT_COLLECT,
+    kind: TransactionKind.ACT_ON_PUBLICATION,
+  };
+}
+
+export function mockUnknownActionRequest(
+  overrides?: Partial<UnknownActionRequest>,
+): UnknownActionRequest {
+  return {
+    delegate: true,
+    publicationId: mockPublicationId(),
+    address: mockEvmAddress(),
+    data: '0x' as Data,
+    ...overrides,
+    type: AllOpenActionType.UNKNOWN_OPEN_ACTION,
+    kind: TransactionKind.ACT_ON_PUBLICATION,
   };
 }
