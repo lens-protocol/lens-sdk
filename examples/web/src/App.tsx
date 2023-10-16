@@ -52,6 +52,7 @@ import {
 import { UseCreateComment } from './publications/UseCreateComment';
 import { UseCreatePost } from './publications/UseCreatePost';
 import { UseHidePublication } from './publications/UseHidePublication';
+import { UseMyBookmarks } from './publications/UseMyBookmarks';
 
 const { publicClient, webSocketPublicClient } = configureChains(
   [polygonMumbai],
@@ -103,6 +104,7 @@ export function App() {
                       <Route path="useHidePublication" element={<UseHidePublication />} />
                       <Route path="useReportPublication" element={<UseReportPublication />} />
                       <Route path="useReactionToggle" element={<UseReactionToggle />} />
+                      <Route path="useMyBookmarks" element={<UseMyBookmarks />} />
                     </Route>
 
                     <Route path="/profiles">

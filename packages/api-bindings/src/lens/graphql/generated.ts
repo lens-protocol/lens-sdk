@@ -611,6 +611,11 @@ export enum LensProfileManagerRelayErrorReasonType {
   RequiresSignature = 'REQUIRES_SIGNATURE',
 }
 
+export enum LensProtocolVersion {
+  V1 = 'V1',
+  V2 = 'V2',
+}
+
 export enum LensTransactionFailureType {
   MetadataError = 'METADATA_ERROR',
   Reverted = 'REVERTED',
@@ -4055,6 +4060,32 @@ export type RefreshPublicationMetadataVariables = Exact<{
 export type RefreshPublicationMetadataData = {
   result: { result: RefreshPublicationMetadataResultType };
 };
+
+export type PublicationBookmarksVariables = Exact<{
+  request: PublicationBookmarksRequest;
+  imageSmallSize?: InputMaybe<ImageTransform>;
+  imageMediumSize?: InputMaybe<ImageTransform>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
+}>;
+
+export type PublicationBookmarksData = {
+  result: { items: Array<Comment | Mirror | Post | Quote>; pageInfo: PaginatedResultInfo };
+} & InjectCommonQueryParams;
+
+export type AddPublicationBookmarkVariables = Exact<{
+  request: PublicationBookmarkRequest;
+}>;
+
+export type AddPublicationBookmarkData = { result: void | null };
+
+export type RemovePublicationBookmarkVariables = Exact<{
+  request: PublicationBookmarkRequest;
+}>;
+
+export type RemovePublicationBookmarkData = { result: void | null };
 
 export type AddReactionVariables = Exact<{
   request: ReactionRequest;
@@ -11861,6 +11892,188 @@ export type RefreshPublicationMetadataMutationResult =
 export type RefreshPublicationMetadataMutationOptions = Apollo.BaseMutationOptions<
   RefreshPublicationMetadataData,
   RefreshPublicationMetadataVariables
+>;
+export const PublicationBookmarksDocument = /*#__PURE__*/ gql`
+  query PublicationBookmarks(
+    $request: PublicationBookmarksRequest!
+    $imageSmallSize: ImageTransform = {}
+    $imageMediumSize: ImageTransform = {}
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
+  ) {
+    ...InjectCommonQueryParams
+    result: publicationBookmarks(request: $request) {
+      items {
+        ... on Post {
+          ...Post
+        }
+        ... on Comment {
+          ...Comment
+        }
+        ... on Mirror {
+          ...Mirror
+        }
+        ... on Quote {
+          ...Quote
+        }
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentInjectCommonQueryParams}
+  ${FragmentPost}
+  ${FragmentComment}
+  ${FragmentMirror}
+  ${FragmentQuote}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __usePublicationBookmarks__
+ *
+ * To run a query within a React component, call `usePublicationBookmarks` and pass it any options that fit your needs.
+ * When your component renders, `usePublicationBookmarks` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePublicationBookmarks({
+ *   variables: {
+ *      request: // value for 'request'
+ *      imageSmallSize: // value for 'imageSmallSize'
+ *      imageMediumSize: // value for 'imageMediumSize'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
+ *   },
+ * });
+ */
+export function usePublicationBookmarks(
+  baseOptions: Apollo.QueryHookOptions<PublicationBookmarksData, PublicationBookmarksVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<PublicationBookmarksData, PublicationBookmarksVariables>(
+    PublicationBookmarksDocument,
+    options,
+  );
+}
+export function usePublicationBookmarksLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    PublicationBookmarksData,
+    PublicationBookmarksVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<PublicationBookmarksData, PublicationBookmarksVariables>(
+    PublicationBookmarksDocument,
+    options,
+  );
+}
+export type PublicationBookmarksHookResult = ReturnType<typeof usePublicationBookmarks>;
+export type PublicationBookmarksLazyQueryHookResult = ReturnType<
+  typeof usePublicationBookmarksLazyQuery
+>;
+export type PublicationBookmarksQueryResult = Apollo.QueryResult<
+  PublicationBookmarksData,
+  PublicationBookmarksVariables
+>;
+export const AddPublicationBookmarkDocument = /*#__PURE__*/ gql`
+  mutation AddPublicationBookmark($request: PublicationBookmarkRequest!) {
+    result: addPublicationBookmark(request: $request)
+  }
+`;
+export type AddPublicationBookmarkMutationFn = Apollo.MutationFunction<
+  AddPublicationBookmarkData,
+  AddPublicationBookmarkVariables
+>;
+
+/**
+ * __useAddPublicationBookmark__
+ *
+ * To run a mutation, you first call `useAddPublicationBookmark` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddPublicationBookmark` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addPublicationBookmark, { data, loading, error }] = useAddPublicationBookmark({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAddPublicationBookmark(
+  baseOptions?: Apollo.MutationHookOptions<
+    AddPublicationBookmarkData,
+    AddPublicationBookmarkVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddPublicationBookmarkData, AddPublicationBookmarkVariables>(
+    AddPublicationBookmarkDocument,
+    options,
+  );
+}
+export type AddPublicationBookmarkHookResult = ReturnType<typeof useAddPublicationBookmark>;
+export type AddPublicationBookmarkMutationResult =
+  Apollo.MutationResult<AddPublicationBookmarkData>;
+export type AddPublicationBookmarkMutationOptions = Apollo.BaseMutationOptions<
+  AddPublicationBookmarkData,
+  AddPublicationBookmarkVariables
+>;
+export const RemovePublicationBookmarkDocument = /*#__PURE__*/ gql`
+  mutation RemovePublicationBookmark($request: PublicationBookmarkRequest!) {
+    result: removePublicationBookmark(request: $request)
+  }
+`;
+export type RemovePublicationBookmarkMutationFn = Apollo.MutationFunction<
+  RemovePublicationBookmarkData,
+  RemovePublicationBookmarkVariables
+>;
+
+/**
+ * __useRemovePublicationBookmark__
+ *
+ * To run a mutation, you first call `useRemovePublicationBookmark` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemovePublicationBookmark` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removePublicationBookmark, { data, loading, error }] = useRemovePublicationBookmark({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useRemovePublicationBookmark(
+  baseOptions?: Apollo.MutationHookOptions<
+    RemovePublicationBookmarkData,
+    RemovePublicationBookmarkVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RemovePublicationBookmarkData, RemovePublicationBookmarkVariables>(
+    RemovePublicationBookmarkDocument,
+    options,
+  );
+}
+export type RemovePublicationBookmarkHookResult = ReturnType<typeof useRemovePublicationBookmark>;
+export type RemovePublicationBookmarkMutationResult =
+  Apollo.MutationResult<RemovePublicationBookmarkData>;
+export type RemovePublicationBookmarkMutationOptions = Apollo.BaseMutationOptions<
+  RemovePublicationBookmarkData,
+  RemovePublicationBookmarkVariables
 >;
 export const AddReactionDocument = /*#__PURE__*/ gql`
   mutation AddReaction($request: ReactionRequest!) {
