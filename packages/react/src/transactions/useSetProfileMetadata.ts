@@ -23,6 +23,14 @@ export type UseSetProfileMetadataArgs = OnchainSetProfileMetadataRequest;
  * @category Profiles
  * @group Hooks
  * @param args - {@link UseSetProfileMetadataArgs}
+ *
+ * @example
+ * ```tsx
+ * const { execute: update, error, loading } = useSetProfileMetadata();
+ *
+ * update({ metadataURI: 'your-uploaded-metadata-uri' });
+ *
+ * ```
  */
 export function useSetProfileMetadata(): UseDeferredTask<
   AsyncTransactionResult<void>,
