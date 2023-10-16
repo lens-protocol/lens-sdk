@@ -1,4 +1,4 @@
-import { Profile, useMyBookmarks } from '@lens-protocol/react-web';
+import { useMyBookmarks } from '@lens-protocol/react-web';
 
 import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
@@ -6,14 +6,14 @@ import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PublicationCard } from './components/PublicationCard';
 
-export function MyBookmarks({ profile }: { profile: Profile }) {
+export function MyBookmarks() {
   const {
     data: publications,
     error,
     loading,
     hasMore,
     observeRef,
-  } = useInfiniteScroll(useMyBookmarks({ where: {} }));
+  } = useInfiniteScroll(useMyBookmarks());
 
   if (loading) return <Loading />;
 
@@ -38,7 +38,7 @@ export function UseMyBookmarks() {
         <code>useMyBookmarks</code>
       </h1>
 
-      <WhenLoggedIn>{({ profile }) => <MyBookmarks profile={profile} />}</WhenLoggedIn>
+      <WhenLoggedIn>{() => <MyBookmarks />}</WhenLoggedIn>
       <UnauthenticatedFallback message="Log in to run this demo." />
     </div>
   );

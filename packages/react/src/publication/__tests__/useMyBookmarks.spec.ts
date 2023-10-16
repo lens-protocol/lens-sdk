@@ -1,4 +1,4 @@
-import { LimitType, SafeApolloClient } from '@lens-protocol/api-bindings';
+import { SafeApolloClient } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   mockPostFragment,
@@ -31,10 +31,7 @@ describe(`Given the ${useMyBookmarks.name} hook`, () => {
     const client = mockLensApolloClient([
       mockProfileBookmarksResponse({
         variables: {
-          request: {
-            where: {},
-            limit: LimitType.Ten,
-          },
+          request: {},
         },
         items: publications,
       }),
@@ -43,7 +40,7 @@ describe(`Given the ${useMyBookmarks.name} hook`, () => {
     it('should settle with the bookmarked publications', async () => {
       const { renderHook } = setupTestScenario({ client });
 
-      const { result } = renderHook(() => useMyBookmarks({ where: {}, limit: LimitType.Ten }));
+      const { result } = renderHook(() => useMyBookmarks());
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
       expect(result.current.data).toMatchObject(expectations);
