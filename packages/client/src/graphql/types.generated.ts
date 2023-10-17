@@ -74,7 +74,7 @@ export type ActOnOpenActionLensManagerInput = {
 
 export type ActOnOpenActionLensManagerRequest = {
   actOn: ActOnOpenActionLensManagerInput;
-  for?: InputMaybe<Scalars['PublicationId']['input']>;
+  for: Scalars['PublicationId']['input'];
   referrers?: InputMaybe<Array<OnchainReferrer>>;
 };
 
@@ -310,6 +310,10 @@ export type FeeFollowModuleInput = {
   recipient: Scalars['EvmAddress']['input'];
 };
 
+export type FeeFollowModuleRedeemInput = {
+  amount: AmountInput;
+};
+
 export enum FeedEventItemType {
   Acted = 'ACTED',
   Collect = 'COLLECT',
@@ -369,7 +373,7 @@ export type FollowModuleInput = {
 };
 
 export type FollowModuleRedeemInput = {
-  feeFollowModule?: InputMaybe<Scalars['Boolean']['input']>;
+  feeFollowModule?: InputMaybe<FeeFollowModuleRedeemInput>;
   unknownFollowModule?: InputMaybe<UnknownFollowModuleRedeemInput>;
 };
 
@@ -556,6 +560,11 @@ export enum LensProfileManagerRelayErrorReasonType {
   NoLensManagerEnabled = 'NO_LENS_MANAGER_ENABLED',
   RateLimited = 'RATE_LIMITED',
   RequiresSignature = 'REQUIRES_SIGNATURE',
+}
+
+export enum LensProtocolVersion {
+  V1 = 'V1',
+  V2 = 'V2',
 }
 
 export enum LensTransactionFailureType {

@@ -155,11 +155,13 @@ function toRawSimpleCondition(gqlCondition: gql.ThirdTierCondition): raw.SimpleC
 
     case 'Erc20OwnershipCondition':
       return raw.erc20OwnershipCondition({
-        chainId: gqlCondition.amount.asset.contract.chainId,
         condition:
           raw.ConditionComparisonOperator[gqlCondition.condition] ??
           never(`Not supported condition: ${gqlCondition.condition}`),
-        contract: gqlCondition.amount.asset.contract.address,
+        contract: {
+          chainId: gqlCondition.amount.asset.contract.chainId,
+          address: gqlCondition.amount.asset.contract.address,
+        },
         decimals: gqlCondition.amount.asset.decimals,
         value: gqlCondition.amount.value,
       });

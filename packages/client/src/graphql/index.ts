@@ -1,4 +1,5 @@
 export type {
+  AdvancedContractConditionFragment,
   AmountFragment,
   AndConditionFragment,
   AppFragment,
@@ -205,6 +206,7 @@ export type {
   CollectActionModuleInput,
   DegreesOfSeparationReferenceModuleInput,
   FeeFollowModuleInput,
+  FeeFollowModuleRedeemInput,
   FollowModuleInput,
   FollowModuleRedeemInput,
   FraudReasonInput,
@@ -248,6 +250,7 @@ export type {
   OnchainReferrer,
   OpenActionFilter,
   PublicationCommentOn,
+  PublicationCommentOnRanking,
   Scalars,
   SignedAuthChallenge,
   TypedDataOptions,
