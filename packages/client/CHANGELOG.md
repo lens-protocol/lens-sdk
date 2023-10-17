@@ -1,5 +1,13 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.12
+
+### Patch Changes
+
+- 01b2c2cb: Updated to support the latest API schema
+- Updated dependencies [01b2c2cb]
+  - @lens-protocol/gated-content@0.3.3-alpha.8
+
 ## 2.0.0-alpha.11
 
 ### Patch Changes
