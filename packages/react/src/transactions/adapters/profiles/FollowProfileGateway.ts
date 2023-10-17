@@ -39,7 +39,12 @@ function resolveProfileFollow(request: FollowRequest): Follow[] {
       {
         profileId: request.profileId,
         followModule: {
-          feeFollowModule: true,
+          feeFollowModule: {
+            amount: {
+              currency: request.fee.amount.asset.address,
+              value: request.fee.amount.toSignificantDigits(),
+            },
+          },
         },
       },
     ];

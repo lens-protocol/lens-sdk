@@ -36,7 +36,12 @@ describe(`Given an instance of ${FollowProfileGateway.name}`, () => {
                 {
                   profileId: request.profileId,
                   followModule: {
-                    feeFollowModule: true,
+                    feeFollowModule: {
+                      amount: {
+                        currency: request.fee.amount.asset.address,
+                        value: request.fee.amount.toSignificantDigits(),
+                      },
+                    },
                   },
                 },
               ],

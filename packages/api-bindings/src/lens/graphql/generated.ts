@@ -127,7 +127,7 @@ export type ActOnOpenActionLensManagerInput = {
 
 export type ActOnOpenActionLensManagerRequest = {
   actOn: ActOnOpenActionLensManagerInput;
-  for?: InputMaybe<Scalars['PublicationId']>;
+  for: Scalars['PublicationId'];
   referrers?: InputMaybe<Array<OnchainReferrer>>;
 };
 
@@ -363,6 +363,10 @@ export type FeeFollowModuleInput = {
   recipient: Scalars['EvmAddress'];
 };
 
+export type FeeFollowModuleRedeemInput = {
+  amount: AmountInput;
+};
+
 export enum FeedEventItemType {
   Acted = 'ACTED',
   Collect = 'COLLECT',
@@ -422,7 +426,7 @@ export type FollowModuleInput = {
 };
 
 export type FollowModuleRedeemInput = {
-  feeFollowModule?: InputMaybe<Scalars['Boolean']>;
+  feeFollowModule?: InputMaybe<FeeFollowModuleRedeemInput>;
   unknownFollowModule?: InputMaybe<UnknownFollowModuleRedeemInput>;
 };
 
