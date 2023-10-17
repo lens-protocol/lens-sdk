@@ -28,18 +28,14 @@
 <li><a href="../index.html">Lens SDK Reference</a></li>
 <li><a href="../modules/_lens_protocol_react.html">@lens-protocol/react</a></li>
 <li><a href="_lens_protocol_react.useFollowProfile.html">useFollowProfile</a></li></ul>
-<h1>Function useFollowProfile</h1></div>
+<h1 class="deprecated">Function useFollowProfile</h1></div>
 <section class="tsd-panel">
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="useFollowProfile"><span class="tsd-kind-call-signature">use<wbr/>Follow<wbr/>Profile</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/_lens_protocol_react.UseDeferredTask.html" class="tsd-signature-type tsd-kind-type-alias">UseDeferredTask</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">, </span><a href="../classes/_lens_protocol_react.BroadcastingError.html" class="tsd-signature-type tsd-kind-class">BroadcastingError</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">InsufficientAllowanceError</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">InsufficientFundsError</span><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react.PendingSigningRequestError.html" class="tsd-signature-type tsd-kind-class">PendingSigningRequestError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react.PrematureFollowError.html" class="tsd-signature-type tsd-kind-class">PrematureFollowError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react.TransactionError.html" class="tsd-signature-type tsd-kind-class">TransactionError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react.UserRejectedError.html" class="tsd-signature-type tsd-kind-class">UserRejectedError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react.WalletConnectionError.html" class="tsd-signature-type tsd-kind-class">WalletConnectionError</a><span class="tsd-signature-symbol">, </span><a href="../types/_lens_protocol_react.FollowProfileArgs.html" class="tsd-signature-type tsd-kind-type-alias">FollowProfileArgs</a><span class="tsd-signature-symbol">&gt;</span><a href="#useFollowProfile" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p><code>useFollowProfile</code> allows you to follow another Profile.</p>
-<p>You MUST be authenticated via <a href="_lens_protocol_react.useLogin.html" class="tsd-kind-function">useLogin</a> to use this hook.</p>
-</div>
 <h4 class="tsd-returns-title">Returns <a href="../types/_lens_protocol_react.UseDeferredTask.html" class="tsd-signature-type tsd-kind-type-alias">UseDeferredTask</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">, </span><a href="../classes/_lens_protocol_react.BroadcastingError.html" class="tsd-signature-type tsd-kind-class">BroadcastingError</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">InsufficientAllowanceError</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">InsufficientFundsError</span><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react.PendingSigningRequestError.html" class="tsd-signature-type tsd-kind-class">PendingSigningRequestError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react.PrematureFollowError.html" class="tsd-signature-type tsd-kind-class">PrematureFollowError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react.TransactionError.html" class="tsd-signature-type tsd-kind-class">TransactionError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react.UserRejectedError.html" class="tsd-signature-type tsd-kind-class">UserRejectedError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react.WalletConnectionError.html" class="tsd-signature-type tsd-kind-class">WalletConnectionError</a><span class="tsd-signature-symbol">, </span><a href="../types/_lens_protocol_react.FollowProfileArgs.html" class="tsd-signature-type tsd-kind-type-alias">FollowProfileArgs</a><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography">
-<h4>Example</h4><pre><code class="language-tsx"><span class="hl-4">const</span><span class="hl-1"> { </span><span class="hl-2">execute</span><span class="hl-1">: </span><span class="hl-5">follow</span><span class="hl-1">, </span><span class="hl-5">error</span><span class="hl-1">, </span><span class="hl-5">loading</span><span class="hl-1"> } = </span><span class="hl-7">useUnfollowProfile</span><span class="hl-1">();</span><br/><br/><span class="hl-8">&lt;</span><span class="hl-11">button</span><span class="hl-1"> </span><span class="hl-9">onClick</span><span class="hl-1">=</span><span class="hl-4">{</span><span class="hl-12">() </span><span class="hl-4">=&gt;</span><span class="hl-12"> </span><span class="hl-7">follow</span><span class="hl-12">({ </span><span class="hl-2">profile</span><span class="hl-12"> })</span><span class="hl-4">}</span><span class="hl-1"> </span><span class="hl-9">disabled</span><span class="hl-1">=</span><span class="hl-4">{</span><span class="hl-2">loading</span><span class="hl-4">}</span><span class="hl-8">&gt;</span><br/><span class="hl-1">  Follow</span><br/><span class="hl-8">&lt;/</span><span class="hl-11">button</span><span class="hl-8">&gt;</span>
-</code><button>Copy</button></pre>
+<h4>Deprecated</h4><p>use useFollow instead, this will be removed soon.</p>
 </div></li></ul></section></div>
 <div class="col-sidebar">
 <div class="page-menu"></div>
@@ -354,8 +350,8 @@
 <div class="menu-item-desc">Describes the details of a user&#39;s session.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.SimpleCollectActionConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Simple<wbr/>Collect<wbr/>Action<wbr/>Config</div></a></li>
-<li><a href="../types/_lens_protocol_react_web.UnfollowProfileArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
-<div>Unfollow<wbr/>Profile<wbr/>Args</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.UnfollowArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Unfollow<wbr/>Args</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.UnknownOpenActionConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Unknown<wbr/>Open<wbr/>Action<wbr/>Config</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.UpdateFollowPolicyArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -504,9 +500,11 @@
 <li><a href="_lens_protocol_react_web.useFeedHighlights.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Feed<wbr/>Highlights
 <div class="menu-item-desc">Fetch a the highlights of a feed for given profile and filters.</div></div></a></li>
-<li><a href="_lens_protocol_react_web.useFollowProfile.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
-<div>use<wbr/>Follow<wbr/>Profile
-<div class="menu-item-desc">`useFollowProfile` allows you to follow another Profile.</div></div></a></li>
+<li><a href="_lens_protocol_react_web.useFollow.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Follow
+<div class="menu-item-desc">`useFollow` allows you to follow another Profile.</div></div></a></li>
+<li><a href="_lens_protocol_react_web.useFollowProfile.html" class="deprecated"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Follow<wbr/>Profile</div></a></li>
 <li><a href="_lens_protocol_react_web.useHidePublication.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Hide<wbr/>Publication
 <div class="menu-item-desc">Hide a publication posted by the authenticated profile to prevent other profiles from seeing it.</div></div></a></li>
@@ -567,9 +565,11 @@
 <li><a href="_lens_protocol_react_web.useSetProfileMetadata.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Set<wbr/>Profile<wbr/>Metadata
 <div class="menu-item-desc">Set a profile&#39;s metadata.</div></div></a></li>
-<li><a href="_lens_protocol_react_web.useUnfollowProfile.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
-<div>use<wbr/>Unfollow<wbr/>Profile
-<div class="menu-item-desc">`useUnfollowProfile` allows you to unfollow a Profile.</div></div></a></li>
+<li><a href="_lens_protocol_react_web.useUnfollow.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Unfollow
+<div class="menu-item-desc">`useUnfollow` allows you to unfollow a Profile.</div></div></a></li>
+<li><a href="_lens_protocol_react_web.useUnfollowProfile.html" class="deprecated"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Unfollow<wbr/>Profile</div></a></li>
 <li><a href="_lens_protocol_react_web.useUpdateFollowPolicy.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Update<wbr/>Follow<wbr/>Policy
 <div class="menu-item-desc">`useUpdateFollowPolicy` allows you to update the follow policy of the authenticated Profile.</div></div></a></li>
@@ -883,8 +883,8 @@
 <div class="menu-item-desc">Describes the details of a user&#39;s session.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.SimpleCollectActionConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Simple<wbr/>Collect<wbr/>Action<wbr/>Config</div></a></li>
-<li><a href="../types/_lens_protocol_react.UnfollowProfileArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
-<div>Unfollow<wbr/>Profile<wbr/>Args</div></a></li>
+<li><a href="../types/_lens_protocol_react.UnfollowArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Unfollow<wbr/>Args</div></a></li>
 <li><a href="../types/_lens_protocol_react.UnknownOpenActionConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Unknown<wbr/>Open<wbr/>Action<wbr/>Config</div></a></li>
 <li><a href="../types/_lens_protocol_react.UpdateFollowPolicyArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -1033,9 +1033,11 @@
 <li><a href="_lens_protocol_react.useFeedHighlights.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Feed<wbr/>Highlights
 <div class="menu-item-desc">Fetch a the highlights of a feed for given profile and filters.</div></div></a></li>
-<li><a href="_lens_protocol_react.useFollowProfile.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
-<div>use<wbr/>Follow<wbr/>Profile
-<div class="menu-item-desc">`useFollowProfile` allows you to follow another Profile.</div></div></a></li>
+<li><a href="_lens_protocol_react.useFollow.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Follow
+<div class="menu-item-desc">`useFollow` allows you to follow another Profile.</div></div></a></li>
+<li><a href="_lens_protocol_react.useFollowProfile.html" class="current deprecated"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Follow<wbr/>Profile</div></a></li>
 <li><a href="_lens_protocol_react.useHidePublication.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Hide<wbr/>Publication
 <div class="menu-item-desc">Hide a publication posted by the authenticated profile to prevent other profiles from seeing it.</div></div></a></li>
@@ -1096,9 +1098,11 @@
 <li><a href="_lens_protocol_react.useSetProfileMetadata.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Set<wbr/>Profile<wbr/>Metadata
 <div class="menu-item-desc">Set a profile&#39;s metadata.</div></div></a></li>
-<li><a href="_lens_protocol_react.useUnfollowProfile.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
-<div>use<wbr/>Unfollow<wbr/>Profile
-<div class="menu-item-desc">`useUnfollowProfile` allows you to unfollow a Profile.</div></div></a></li>
+<li><a href="_lens_protocol_react.useUnfollow.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Unfollow
+<div class="menu-item-desc">`useUnfollow` allows you to unfollow a Profile.</div></div></a></li>
+<li><a href="_lens_protocol_react.useUnfollowProfile.html" class="deprecated"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Unfollow<wbr/>Profile</div></a></li>
 <li><a href="_lens_protocol_react.useUpdateFollowPolicy.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Update<wbr/>Follow<wbr/>Policy
 <div class="menu-item-desc">`useUpdateFollowPolicy` allows you to update the follow policy of the authenticated Profile.</div></div></a></li>
