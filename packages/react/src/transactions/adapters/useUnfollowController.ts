@@ -45,7 +45,7 @@ export function useUnfollowController() {
     >();
     const gateway = new UnfollowProfileGateway(apolloClient, transactionFactory);
 
-    const signedFollow = new SubsidizeOnChain<UnfollowRequest>(
+    const signedFollow = new SubsidizeOnChain(
       activeWallet,
       transactionGateway,
       gateway,

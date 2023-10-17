@@ -4,11 +4,7 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import {
-  FollowProfile,
-  FollowRequest,
-  FreeFollowRequest,
-} from '@lens-protocol/domain/use-cases/profile';
+import { FollowProfile, FollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastingError,
   DelegableSigning,
@@ -65,7 +61,7 @@ export function useFollowController() {
     >();
     const gateway = new FollowProfileGateway(apolloClient, transactionFactory);
 
-    const signedFollow = new SubsidizeOnChain<FreeFollowRequest>(
+    const signedFollow = new SubsidizeOnChain(
       activeWallet,
       transactionGateway,
       gateway,

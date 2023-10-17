@@ -49,7 +49,7 @@ export function useUpdateFollowPolicyController() {
 
     const gateway = new UpdateFollowPolicyGateway(apolloClient, transactionFactory);
 
-    const signedFollow = new SubsidizeOnChain<UpdateFollowPolicyRequest>(
+    const signedFollow = new SubsidizeOnChain(
       activeWallet,
       transactionGateway,
       gateway,

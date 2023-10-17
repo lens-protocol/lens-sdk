@@ -33,7 +33,6 @@ function createFollowRequest(profile: Profile): FollowRequest {
         },
         kind: TransactionKind.FOLLOW_PROFILE,
         profileId: profile.id,
-        delegate: false,
       };
     case FollowPolicyType.ANYONE:
       return {
