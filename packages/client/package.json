@@ -69,7 +69,7 @@
     "@graphql-codegen/typescript-graphql-request": "^5.0.0",
     "@graphql-codegen/typescript-operations": "^4.0.1",
     "@lens-protocol/eslint-config": "workspace:*",
-    "@lens-protocol/metadata": "0.1.0-alpha.29",
+    "@lens-protocol/metadata": "0.1.0-alpha.30",
     "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
     "@types/jest": "^29.5.3",
