@@ -15,7 +15,7 @@ import {
 import { InvariantError, invariant } from '@lens-protocol/shared-kernel';
 
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
-import { useFollowProfileController } from './adapters/useFollowProfileController';
+import { useFollowController } from './adapters/useFollowController';
 
 export class PrematureFollowError extends Error {
   name = 'PrematureFollowError' as const;
@@ -56,13 +56,13 @@ export type FollowProfileArgs = {
 };
 
 /**
- * `useFollowProfile` allows you to follow another Profile.
+ * `useFollow` allows you to follow another Profile.
  *
  * You MUST be authenticated via {@link useLogin} to use this hook.
  *
  * @example
  * ```tsx
- * const { execute: follow, error, loading } = useUnfollowProfile();
+ * const { execute: follow, error, loading } = useFollow();
  *
  * <button onClick={() => follow({ profile })} disabled={loading}>
  *   Follow
@@ -72,7 +72,7 @@ export type FollowProfileArgs = {
  * @category Profiles
  * @group Hooks
  */
-export function useFollowProfile(): UseDeferredTask<
+export function useFollow(): UseDeferredTask<
   void,
   | BroadcastingError
   | InsufficientAllowanceError
@@ -84,7 +84,7 @@ export function useFollowProfile(): UseDeferredTask<
   | WalletConnectionError,
   FollowProfileArgs
 > {
-  const followProfile = useFollowProfileController();
+  const followProfile = useFollowController();
 
   // const hasPendingUnfollowTx = useHasPendingTransaction(
   //   isUnfollowTransactionFor({ profileId: profile.id }),
@@ -101,10 +101,15 @@ export function useFollowProfile(): UseDeferredTask<
 
     invariant(
       profile.operations.canFollow,
-      "You're already following this profile. Check the `profile.operations.canFollow` to determine if you can call `useFollowProfile`.",
+      "You're already following this profile. Check the `profile.operations.canFollow` to determine if you can call `useFollow`.",
     );
 
     const request = createFollowRequest(profile);
     return followProfile(request);
   });
 }
+
+/**
+ * @deprecated use useFollow instead, this will be removed soon.
+ */
+export const useFollowProfile = useFollow;

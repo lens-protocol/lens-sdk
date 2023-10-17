@@ -17,7 +17,7 @@ import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
 import {
   FollowRequest,
-  UnconstrainedFollowRequest,
+  FreeFollowRequest,
   isPaidFollowRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import {
@@ -25,7 +25,7 @@ import {
   IDelegatedTransactionGateway,
   IOnChainProtocolCallGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, Data, PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
+import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
@@ -50,20 +50,20 @@ function resolveProfileFollow(request: FollowRequest): Follow[] {
 
 export class FollowProfileGateway
   implements
-    IDelegatedTransactionGateway<UnconstrainedFollowRequest>,
+    IDelegatedTransactionGateway<FreeFollowRequest>,
     IOnChainProtocolCallGateway<FollowRequest>
 {
   constructor(
     private readonly apolloClient: SafeApolloClient,
-    private readonly transactionFactory: ITransactionFactory<UnconstrainedFollowRequest>,
+    private readonly transactionFactory: ITransactionFactory<FreeFollowRequest>,
   ) {}
 
   async createDelegatedTransaction(
-    request: UnconstrainedFollowRequest,
-  ): PromiseResult<NativeTransaction<UnconstrainedFollowRequest>, BroadcastingError> {
+    request: FreeFollowRequest,
+  ): PromiseResult<NativeTransaction<FreeFollowRequest>, BroadcastingError> {
     const result = await this.relayWithProfileManager(request);
 
-    if (result.isFailure()) return failure(result.error);
+    if (result.isFailure()) return result;
 
     const transaction = this.transactionFactory.createNativeTransaction({
       chainType: ChainType.POLYGON,
@@ -91,7 +91,7 @@ export class FollowProfileGateway
   }
 
   private async relayWithProfileManager(
-    request: UnconstrainedFollowRequest,
+    request: FreeFollowRequest,
   ): PromiseResult<RelaySuccess, BroadcastingError> {
     const { data } = await this.apolloClient.mutate<FollowData, FollowVariables>({
       mutation: FollowDocument,
@@ -124,9 +124,7 @@ export class FollowProfileGateway
     return data.result;
   }
 
-  private resolveFollowLensManagerRequest(
-    request: UnconstrainedFollowRequest,
-  ): FollowLensManagerRequest {
+  private resolveFollowLensManagerRequest(request: FreeFollowRequest): FollowLensManagerRequest {
     return {
       follow: resolveProfileFollow(request),
     };

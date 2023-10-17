@@ -7,7 +7,7 @@ import {
   mockCreateFollowTypedDataData,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
-import { mockPaidFollowRequest, mockUnconstrainedFollowRequest } from '@lens-protocol/domain/mocks';
+import { mockPaidFollowRequest, mockFreeFollowRequest } from '@lens-protocol/domain/mocks';
 
 import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
 import { assertUnsignedProtocolCallCorrectness } from '../../__helpers__/assertions';
@@ -54,9 +54,9 @@ describe(`Given an instance of ${FollowProfileGateway.name}`, () => {
     });
   });
 
-  describe(`when creating a ${NativeTransaction.name}<UnconstrainedFollowRequest>`, () => {
+  describe(`when creating a ${NativeTransaction.name}<FreeFollowRequest>`, () => {
     it(`should create an instance of the ${NativeTransaction.name}`, async () => {
-      const request = mockUnconstrainedFollowRequest();
+      const request = mockFreeFollowRequest();
 
       const apolloClient = mockLensApolloClient([
         mockFollowResponse({

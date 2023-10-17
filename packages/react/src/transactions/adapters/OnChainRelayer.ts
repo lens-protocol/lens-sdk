@@ -36,7 +36,7 @@ export class OnChainRelayer implements IOnChainRelayer<ProtocolTransactionReques
   ): PromiseResult<MetaTransaction<T>, BroadcastingError> {
     const result = await this.broadcast(signedCall);
 
-    if (result.isFailure()) return failure(result.error);
+    if (result.isFailure()) return result;
 
     const receipt = result.value;
 

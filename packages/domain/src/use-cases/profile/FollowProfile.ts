@@ -24,7 +24,7 @@ export type FollowRequestFee = {
   recipient: EvmAddress;
 };
 
-export type UnconstrainedFollowRequest = {
+export type FreeFollowRequest = {
   profileId: ProfileId;
   kind: TransactionKind.FOLLOW_PROFILE;
   delegate: boolean;
@@ -34,10 +34,9 @@ export type PaidFollowRequest = {
   profileId: ProfileId;
   kind: TransactionKind.FOLLOW_PROFILE;
   fee: FollowRequestFee;
-  delegate: boolean;
 };
 
-export type FollowRequest = UnconstrainedFollowRequest | PaidFollowRequest;
+export type FollowRequest = FreeFollowRequest | PaidFollowRequest;
 
 export function isPaidFollowRequest(request: FollowRequest): request is PaidFollowRequest {
   return 'fee' in request && request.fee !== undefined;
@@ -58,7 +57,7 @@ export class FollowProfile {
   constructor(
     private readonly tokenAvailability: TokenAvailability,
     private readonly signedFollow: SubsidizeOnChain<FollowRequest>,
-    private readonly delegableFollow: DelegableSigning<UnconstrainedFollowRequest>,
+    private readonly delegableFollow: DelegableSigning<FreeFollowRequest>,
     private readonly presenter: IFollowProfilePresenter,
   ) {}
 

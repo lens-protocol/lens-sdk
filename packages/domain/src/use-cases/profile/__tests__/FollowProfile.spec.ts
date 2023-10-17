@@ -14,15 +14,15 @@ import {
   FollowProfile,
   FollowRequest,
   IFollowProfilePresenter,
-  UnconstrainedFollowRequest,
+  FreeFollowRequest,
 } from '../FollowProfile';
-import { mockPaidFollowRequest, mockUnconstrainedFollowRequest } from '../__helpers__/mocks';
+import { mockPaidFollowRequest, mockFreeFollowRequest } from '../__helpers__/mocks';
 
 function mockSubsidizedCall<T extends FollowRequest>() {
   return mock<SubsidizeOnChain<T>>();
 }
 
-function mockDelegableSigningCall<T extends UnconstrainedFollowRequest>() {
+function mockDelegableSigningCall<T extends FreeFollowRequest>() {
   return mock<DelegableSigning<T>>();
 }
 
@@ -30,24 +30,24 @@ function setupFollowProfile({
   tokenAvailability = mock<TokenAvailability>(),
   presenter = mock<IFollowProfilePresenter>(),
   signedCall = mockSubsidizedCall<FollowRequest>(),
-  delegableCall = mockDelegableSigningCall<UnconstrainedFollowRequest>(),
+  delegableCall = mockDelegableSigningCall<FreeFollowRequest>(),
 }: {
   tokenAvailability?: TokenAvailability;
   presenter?: IFollowProfilePresenter;
   signedCall?: SubsidizeOnChain<FollowRequest>;
-  delegableCall?: DelegableSigning<UnconstrainedFollowRequest>;
+  delegableCall?: DelegableSigning<FreeFollowRequest>;
 }) {
   return new FollowProfile(tokenAvailability, signedCall, delegableCall, presenter);
 }
 
 describe(`Given an instance of the ${FollowProfile.name} interactor`, () => {
   describe(`when calling the "${FollowProfile.prototype.execute.name}" method`, () => {
-    describe('with an UnconstrainedFollowRequest', () => {
-      const request = mockUnconstrainedFollowRequest();
+    describe('with an FreeFollowRequest', () => {
+      const request = mockFreeFollowRequest();
 
-      it(`should execute the ${DelegableSigning.name}<UnconstrainedFollowRequest> strategy`, async () => {
+      it(`should execute the ${DelegableSigning.name}<FreeFollowRequest> strategy`, async () => {
         const signedCall = mockSubsidizedCall<FollowRequest>();
-        const delegableCall = mockDelegableSigningCall<UnconstrainedFollowRequest>();
+        const delegableCall = mockDelegableSigningCall<FreeFollowRequest>();
 
         const followProfile = setupFollowProfile({
           signedCall,
@@ -73,7 +73,7 @@ describe(`Given an instance of the ${FollowProfile.name} interactor`, () => {
           result: success(),
         });
         const signedCall = mockSubsidizedCall<FollowRequest>();
-        const delegableCall = mockDelegableSigningCall<UnconstrainedFollowRequest>();
+        const delegableCall = mockDelegableSigningCall<FreeFollowRequest>();
 
         const followProfile = setupFollowProfile({
           signedCall,

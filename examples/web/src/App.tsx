@@ -26,7 +26,7 @@ import {
 import { MiscPage, UseCurrencies } from './misc';
 import {
   ProfilesPage,
-  UseFollowAndUnfollowProfile,
+  UseFollowAndUnfollow,
   UseLazyProfile,
   UseMutualFollowers,
   UseProfile,
@@ -115,7 +115,7 @@ export function App() {
                       <Route path="useProfileFollowers" element={<UseProfileFollowers />} />
                       <Route path="useProfileFollowing" element={<UseProfileFollowing />} />
                       <Route path="useMutualFollowers" element={<UseMutualFollowers />} />
-                      <Route path="useFollowProfile" element={<UseFollowAndUnfollowProfile />} />
+                      <Route path="useFollow" element={<UseFollowAndUnfollow />} />
                       <Route path="useRecommendedProfiles" element={<UseRecommendedProfiles />} />
                       <Route path="useProfileManagers" element={<UseProfileManagers />} />
                       <Route

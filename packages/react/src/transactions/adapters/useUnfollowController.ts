@@ -13,7 +13,7 @@ import { TransactionResultPresenter } from './TransactionResultPresenter';
 import { UnfollowProfileGateway } from './profiles/UnfollowProfileGateway';
 import { validateUnfollowRequest } from './schemas/validators';
 
-export function useUnfollowProfileController() {
+export function useUnfollowController() {
   const {
     activeWallet,
     apolloClient,

@@ -23,7 +23,7 @@ import {
   IDelegatedTransactionGateway,
   IOnChainProtocolCallGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, Data, PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
+import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
@@ -69,7 +69,7 @@ export class UpdateFollowPolicyGateway
   ): PromiseResult<NativeTransaction<UpdateFollowPolicyRequest>, BroadcastingError> {
     const result = await this.relayWithProfileManager(request);
 
-    if (result.isFailure()) return failure(result.error);
+    if (result.isFailure()) return result;
 
     const transaction = this.transactionFactory.createNativeTransaction({
       chainType: ChainType.POLYGON,

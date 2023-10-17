@@ -12,7 +12,7 @@ import {
   DuplicatedHandleError,
   IProfileTransactionGateway,
 } from '../CreateProfile';
-import { UnconstrainedFollowRequest, PaidFollowRequest } from '../FollowProfile';
+import { FreeFollowRequest, PaidFollowRequest } from '../FollowProfile';
 import {
   INftOwnershipChallengeGateway,
   NftOwnershipSignature,
@@ -103,9 +103,7 @@ export function mockUpdateProfileManagersRequest(
   };
 }
 
-export function mockUnconstrainedFollowRequest(
-  overrides?: Partial<UnconstrainedFollowRequest>,
-): UnconstrainedFollowRequest {
+export function mockFreeFollowRequest(overrides?: Partial<FreeFollowRequest>): FreeFollowRequest {
   return {
     profileId: mockProfileId(),
     delegate: true,
@@ -123,7 +121,6 @@ export function mockPaidFollowRequest(): PaidFollowRequest {
       recipient: mockEvmAddress(),
     },
     kind: TransactionKind.FOLLOW_PROFILE,
-    delegate: false,
   };
 }
 

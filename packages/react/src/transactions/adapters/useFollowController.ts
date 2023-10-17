@@ -7,7 +7,7 @@ import {
 import {
   FollowProfile,
   FollowRequest,
-  UnconstrainedFollowRequest,
+  FreeFollowRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastingError,
@@ -28,7 +28,7 @@ import { TransactionResultPresenter } from './TransactionResultPresenter';
 import { FollowProfileGateway } from './profiles/FollowProfileGateway';
 import { validateFollowRequest } from './schemas/validators';
 
-export function useFollowProfileController() {
+export function useFollowController() {
   const {
     activeWallet,
     apolloClient,
@@ -65,7 +65,7 @@ export function useFollowProfileController() {
     >();
     const gateway = new FollowProfileGateway(apolloClient, transactionFactory);
 
-    const signedFollow = new SubsidizeOnChain<UnconstrainedFollowRequest>(
+    const signedFollow = new SubsidizeOnChain<FreeFollowRequest>(
       activeWallet,
       transactionGateway,
       gateway,
