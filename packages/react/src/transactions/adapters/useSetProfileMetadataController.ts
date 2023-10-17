@@ -10,8 +10,8 @@ import {
 import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
-import { ProfileMetadataGateway } from './ProfileMetadataGateway/ProfileMetadataGateway';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
+import { ProfileMetadataGateway } from './profiles/ProfileMetadataGateway';
 
 export function useSetProfileMetadataController() {
   const {

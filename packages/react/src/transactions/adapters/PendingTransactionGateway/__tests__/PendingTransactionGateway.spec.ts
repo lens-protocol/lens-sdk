@@ -1,7 +1,7 @@
 import { MetaTransaction, TransactionKind } from '@lens-protocol/domain/entities';
 import {
   mockCreateProfileRequest,
-  mockUnconstrainedFollowRequest,
+  mockFreeFollowRequest,
   mockUnfollowRequest,
   mockUpdateFollowPolicyRequest,
   mockSetProfileMetadataRequest,
@@ -47,7 +47,7 @@ const requests: TransactionRequest = {
   [TransactionKind.CREATE_COMMENT]: mockCreateCommentRequest(),
   [TransactionKind.CREATE_POST]: mockCreatePostRequest(),
   [TransactionKind.CREATE_QUOTE]: mockCreateQuoteRequest(),
-  [TransactionKind.FOLLOW_PROFILE]: mockUnconstrainedFollowRequest(),
+  [TransactionKind.FOLLOW_PROFILE]: mockFreeFollowRequest(),
   [TransactionKind.MIRROR_PUBLICATION]: mockCreateMirrorRequest(),
   [TransactionKind.UPDATE_FOLLOW_POLICY]: mockUpdateFollowPolicyRequest(),
   [TransactionKind.UPDATE_PROFILE_DETAILS]: mockSetProfileMetadataRequest(),

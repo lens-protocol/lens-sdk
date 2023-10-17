@@ -5,40 +5,33 @@ import { mockNonce, mockProfileId } from '@lens-protocol/domain/mocks';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import {
+  CreateFollowTypedDataData,
+  CreateFollowTypedDataDocument,
+  CreateFollowTypedDataVariables,
+  CreateUnfollowTypedDataData,
+  CreateUnfollowTypedDataDocument,
+  CreateUnfollowTypedDataVariables,
+  FollowData,
+  FollowDocument,
+  FollowVariables,
+  UnfollowData,
+  UnfollowDocument,
+  UnfollowVariables,
   CreateOnchainSetProfileMetadataTypedDataData,
   CreateOnchainSetProfileMetadataTypedDataDocument,
-  Eip712TypedDataDomain,
   OnchainSetProfileMetadataRequest,
+  CreateSetFollowModuleTypedDataData,
+  CreateSetFollowModuleTypedDataVariables,
+  CreateSetFollowModuleTypedDataDocument,
+  SetFollowModuleData,
+  SetFollowModuleVariables,
+  SetFollowModuleDocument,
 } from '../../graphql/generated';
-
-function mockCreateTypedDataResult<T extends string, D extends object>(
-  __typename: T,
-  typedData: D,
-) {
-  return {
-    __typename,
-    id: faker.datatype.uuid(),
-    expiresAt: faker.date.future().toISOString(),
-    typedData,
-  };
-}
-
-function mockEIP712TypedDataField() {
-  return {
-    __typename: 'EIP712TypedDataField',
-    name: 'nonce',
-    type: 'uint256',
-  };
-}
-
-function mockEIP712TypedDataDomain(): Eip712TypedDataDomain {
-  return {
-    name: 'Lens',
-    version: '1',
-    chainId: 0,
-    verifyingContract: mockEvmAddress(),
-  };
-}
+import {
+  mockCreateTypedDataResult,
+  mockEIP712TypedDataDomain,
+  mockEIP712TypedDataField,
+} from './utils';
 
 export function mockCreateSetProfileMetadataTypedDataData({
   metadataURI = faker.internet.url(),
@@ -84,5 +77,172 @@ export function mockCreateSetProfileMetadataTypedDataResponse({
       },
     },
     result: { data },
+  };
+}
+
+export function mockCreateFollowTypedDataData({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateFollowTypedDataData {
+  return {
+    result: mockCreateTypedDataResult('CreateFollowBroadcastItemResult', {
+      types: {
+        Follow: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      message: {
+        nonce,
+        deadline: 1644303500,
+        followerProfileId: mockProfileId(),
+        idsOfProfilesToFollow: [mockProfileId()],
+        followTokenIds: [],
+        datas: [],
+      },
+    }),
+  };
+}
+
+export function mockCreateFollowTypedDataResponse<T extends CreateFollowTypedDataData>({
+  variables,
+  data,
+}: {
+  variables: CreateFollowTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateFollowTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function mockFollowResponse<T extends FollowData, V extends FollowVariables>({
+  variables,
+  data,
+}: {
+  variables: V;
+  data: T;
+}): MockedResponse<T, V> {
+  return {
+    request: {
+      query: FollowDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function mockCreateUnfollowTypedDataData({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateUnfollowTypedDataData {
+  return {
+    result: mockCreateTypedDataResult('CreateUnfollowBroadcastItemResult', {
+      types: {
+        Unfollow: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      message: {
+        nonce,
+        deadline: 1644303500,
+        unfollowerProfileId: mockProfileId(),
+        idsOfProfilesToUnfollow: [mockProfileId()],
+      },
+    }),
+  };
+}
+
+export function mockCreateUnfollowTypedDataResponse<T extends CreateUnfollowTypedDataData>({
+  variables,
+  data,
+}: {
+  variables: CreateUnfollowTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateUnfollowTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function mockUnfollowResponse<T extends UnfollowData, V extends UnfollowVariables>({
+  variables,
+  data,
+}: {
+  variables: V;
+  data: T;
+}): MockedResponse<T, V> {
+  return {
+    request: {
+      query: UnfollowDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function mockCreateSetFollowModuleTypedDataData({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateSetFollowModuleTypedDataData {
+  return {
+    result: mockCreateTypedDataResult('CreateSetFollowModuleBroadcastItemResult', {
+      types: {
+        SetFollowModule: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      message: {
+        nonce,
+        deadline: 1644303500,
+        profileId: mockProfileId(),
+        followModule: mockEvmAddress(),
+        followModuleInitData: '0x',
+      },
+    }),
+  };
+}
+
+export function mockCreateSetFollowModuleTypedDataResponse<
+  T extends CreateSetFollowModuleTypedDataData,
+>({
+  variables,
+  data,
+}: {
+  variables: CreateSetFollowModuleTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateSetFollowModuleTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function mockSetFollowModuleResponse<
+  T extends SetFollowModuleData,
+  V extends SetFollowModuleVariables,
+>({ variables, data }: { variables: V; data: T }): MockedResponse<T, V> {
+  return {
+    request: {
+      query: SetFollowModuleDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
   };
 }

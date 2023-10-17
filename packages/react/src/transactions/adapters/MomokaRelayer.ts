@@ -36,7 +36,7 @@ export class MomokaRelayer implements IOffChainRelayer<CreatePostRequest> {
   ): PromiseResult<DataTransaction<T>, BroadcastingError> {
     const result = await this.broadcast(signedCall);
 
-    if (result.isFailure()) return failure(result.error);
+    if (result.isFailure()) return result;
 
     const receipt = result.value;
 

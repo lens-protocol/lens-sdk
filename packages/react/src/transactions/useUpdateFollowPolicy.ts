@@ -20,9 +20,6 @@ export type UpdateFollowPolicyArgs = {
  *
  * You MUST be authenticated via {@link useLogin} to use this hook.
  *
- * To setup a {@link FollowPolicyType.CHARGE} you need to define an amount of a currency as a fee.
- * You can get a list of supported currencies via {@link useCurrencies}.
- *
  * @example
  * Anyone can follow.
  * ```tsx
@@ -49,13 +46,21 @@ export type UpdateFollowPolicyArgs = {
  *
  * @example
  * Anyone can follow, but they must pay a fee.
+ * To setup a {@link FollowPolicyType.CHARGE} you need to define an amount of a currency as a fee.
+ *
+ * As with anything involving amounts in the Lens SDK you can use the
+ * {@link Amount} helper with currencies from the {@link useCurrencies} hook to
+ * create the desired amounts.
+ *
  * ```tsx
  * const { execute, loading, error } = useUpdateFollowPolicy();
+ *
+ * const wmatic = ... // from useCurrencies hook
  *
  * await execute({
  *   followPolicy: {
  *     type: FollowPolicyType.CHARGE,
- *     amount: Amount.erc20(erc20, amount),
+ *     amount: Amount.erc20(wmatic, 100), // 100 WMATIC
  *     recipient: '0x1234123412341234123412341234123412341234',
  *   },
  * });
@@ -79,6 +84,7 @@ export function useUpdateFollowPolicy(): UseDeferredTask<
     return updateFollowPolicy({
       kind: TransactionKind.UPDATE_FOLLOW_POLICY,
       policy: args.followPolicy,
+      delegate: true,
     });
   });
 }

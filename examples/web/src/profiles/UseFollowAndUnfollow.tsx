@@ -1,9 +1,4 @@
-import {
-  Profile,
-  useExploreProfiles,
-  useFollowProfile,
-  useUnfollowProfile,
-} from '@lens-protocol/react-web';
+import { Profile, useExploreProfiles, useFollow, useUnfollow } from '@lens-protocol/react-web';
 
 import { UnauthenticatedFallback, WhenLoggedIn, WhenLoggedOut } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
@@ -15,13 +10,9 @@ type FollowButtonProps = {
 };
 
 function FollowButton({ followee }: FollowButtonProps) {
-  const { execute: follow, error: followError, loading: isFollowLoading } = useFollowProfile();
+  const { execute: follow, error: followError, loading: isFollowLoading } = useFollow();
 
-  const {
-    execute: unfollow,
-    error: unfollowError,
-    loading: isUnfollowLoading,
-  } = useUnfollowProfile();
+  const { execute: unfollow, error: unfollowError, loading: isUnfollowLoading } = useUnfollow();
 
   if (followee.operations.isFollowedByMe.value) {
     // or followee.operations.canFollow === TriStateValue.Yes
@@ -65,11 +56,11 @@ function UseFollowInner() {
   );
 }
 
-export function UseFollowAndUnfollowProfile() {
+export function UseFollowAndUnfollow() {
   return (
     <>
       <h1>
-        <code>useFollowProfile / useUnfollowProfile</code>
+        <code>useFollow / useUnfollow</code>
       </h1>
       <WhenLoggedIn>
         <UseFollowInner />

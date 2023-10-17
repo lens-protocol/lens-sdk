@@ -1,9 +1,10 @@
 import { ProfileId, TransactionKind } from '../../entities';
-import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
+import { DelegableSigning } from '../transactions/DelegableSigning';
 
 export type UnfollowRequest = {
   profileId: ProfileId;
   kind: TransactionKind.UNFOLLOW_PROFILE;
+  delegate: boolean;
 };
 
-export class UnfollowProfile extends SubsidizeOnChain<UnfollowRequest> {}
+export class UnfollowProfile extends DelegableSigning<UnfollowRequest> {}
