@@ -13,7 +13,14 @@ import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../h
 export type UseRevenueFromPublicationsArgs = PaginatedArgs<RevenueFromPublicationsRequest>;
 
 /**
- * Fetch a profile's revenue from all publications.
+ * Fetch a profile's revenue for all their publications.
+ *
+ * @example
+ * ```tsx
+ * const { data, error, loading } = useRevenueFromPublications({
+ *   for: '0x04',
+ * });
+ * ```
  *
  * @category Revenue
  * @group Hooks

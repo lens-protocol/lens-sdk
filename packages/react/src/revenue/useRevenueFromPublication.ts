@@ -17,6 +17,13 @@ export type UseRevenueFromPublicationArgs = RevenueFromPublicationRequest;
 /**
  * Fetch a profile's revenue from a single publication.
  *
+ * @example
+ * ```tsx
+ * const { data, error, loading } = useRevenueFromPublication({
+ *   for: '0x04-0x0b',
+ * });
+ * ```
+ *
  * @category Revenue
  * @group Hooks
  */

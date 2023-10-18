@@ -20,15 +20,14 @@ export type UsePublicationArgs = OneOf<PublicationRequest>;
  *
  * @example
  * ```tsx
- * import { publicationId, usePublication } from '@lens-protocol/react';
- *
  * const { data, error, loading } = usePublication({
- *   forId: publicationId('0x04-0x0b'),
+ *   forId: '0x04-0x0b',
  * });
  * ```
  *
  * @category Publications
  * @group Hooks
+ * @param args - {@link UsePublicationArgs}
  */
 export function usePublication({
   forId,

@@ -13,7 +13,14 @@ import { ReadResult, useReadResult } from '../helpers/reads';
 export type UseRevenueFromFollowArgs = FollowRevenueRequest;
 
 /**
- * Fetch a revenue from all follow actions.
+ * Fetch a revenue of a profile from all follow actions.
+ *
+ * @example
+ * ```tsx
+ * const { data, error, loading } = useRevenueFromFollow({
+ *   for: '0x04',
+ * });
+ * ```
  *
  * @category Revenue
  * @group Hooks
