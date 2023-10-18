@@ -7,6 +7,7 @@ export * from './useReactionToggle';
 export * from './useWhoReactedToPublication';
 export * from './useHidePublication';
 export * from './useReportPublication';
+export * from './useBookmarkToggle';
 export * from './useMyBookmarks';
 
 /**

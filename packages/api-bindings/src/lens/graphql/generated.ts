@@ -16069,6 +16069,7 @@ export type PublicationOperationsKeySpecifier = (
   | 'hasMirrored'
   | 'hasReacted'
   | 'hasReported'
+  | 'id'
   | 'isNotInterested'
   | PublicationOperationsKeySpecifier
 )[];
@@ -16084,6 +16085,7 @@ export type PublicationOperationsFieldPolicy = {
   hasMirrored?: FieldPolicy<any> | FieldReadFunction<any>;
   hasReacted?: FieldPolicy<any> | FieldReadFunction<any>;
   hasReported?: FieldPolicy<any> | FieldReadFunction<any>;
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
   isNotInterested?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type PublicationRevenueKeySpecifier = (

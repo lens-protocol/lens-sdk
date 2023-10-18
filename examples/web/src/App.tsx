@@ -49,6 +49,7 @@ import {
   UseReactionToggle,
   UseWhoReactedToPublication,
 } from './publications';
+import { UseBookmarkToggle } from './publications/UseBookmarkToggle';
 import { UseCreateComment } from './publications/UseCreateComment';
 import { UseCreatePost } from './publications/UseCreatePost';
 import { UseHidePublication } from './publications/UseHidePublication';
@@ -104,6 +105,7 @@ export function App() {
                       <Route path="useHidePublication" element={<UseHidePublication />} />
                       <Route path="useReportPublication" element={<UseReportPublication />} />
                       <Route path="useReactionToggle" element={<UseReactionToggle />} />
+                      <Route path="useBookmarkToggle" element={<UseBookmarkToggle />} />
                       <Route path="useMyBookmarks" element={<UseMyBookmarks />} />
                     </Route>
 
