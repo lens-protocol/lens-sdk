@@ -1,5 +1,6 @@
 import { MetadataAttributeType, profile } from '@lens-protocol/metadata';
 import { Profile, useSetProfileMetadata } from '@lens-protocol/react-web';
+import { toast } from 'react-hot-toast';
 
 import { WhenLoggedIn, WhenLoggedOut } from '../components/auth';
 import { Loading } from '../components/loading/Loading';
@@ -18,14 +19,10 @@ function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
 
     const formData = new FormData(event.currentTarget);
 
-    const name = formData.get('name') as string;
+    const name = formData.get('name') as string | undefined;
     const bio = formData.get('bio') as string | undefined;
     const location = formData.get('location') as string | undefined;
     const website = formData.get('website') as string | undefined;
-
-    if (!location || !website) {
-      throw new Error('Location and website are required');
-    }
 
     const metadata = profile({
       name,
@@ -33,12 +30,12 @@ function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
       attributes: [
         {
           key: 'location',
-          value: location,
+          value: location ?? '',
           type: MetadataAttributeType.STRING,
         },
         {
           key: 'website',
-          value: website,
+          value: website ?? '',
           type: MetadataAttributeType.STRING,
         },
       ],
@@ -46,7 +43,21 @@ function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
 
     const metadataURI = await uploadJson(metadata);
 
-    await update({ metadataURI });
+    const result = await update({ metadataURI });
+
+    if (result.isFailure()) {
+      toast.error(result.error.message);
+      return;
+    }
+
+    const completion = await result.value.waitForCompletion();
+
+    if (completion.isFailure()) {
+      toast.error(completion.error.message);
+      return;
+    }
+
+    toast.success('Profile updated');
   }
 
   const location = activeProfile.metadata?.attributes?.find((a) => a.key === 'location');
@@ -60,7 +71,6 @@ function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
         Name:
         <br />
         <input
-          required
           type="text"
           placeholder="Your name"
           disabled={loading}
@@ -74,7 +84,6 @@ function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
         <br />
         <textarea
           rows={3}
-          required
           placeholder="Write a line about you"
           style={{ resize: 'none' }}
           disabled={loading}
@@ -88,11 +97,10 @@ function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
         <br />
         <input
           type="text"
-          required
           placeholder="Where are you?"
           disabled={loading}
           name="location"
-          defaultValue={location?.value ?? ''}
+          defaultValue={location?.value ?? undefined}
         />
       </label>
 
@@ -101,7 +109,6 @@ function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
         <br />
         <input
           type="text"
-          required
           placeholder="https://example.com"
           disabled={loading}
           name="website"
@@ -118,11 +125,11 @@ function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
   );
 }
 
-export function UseUpdateProfileDetails() {
+export function UseSetProfileMetadata() {
   return (
     <div>
       <h1>
-        <code>useUpdateProfileDetails</code>
+        <code>useSetProfileMetadata</code>
       </h1>
 
       <WhenLoggedIn loadingElement={<Loading />}>
