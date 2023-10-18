@@ -13,7 +13,7 @@ import { Loading } from '../components/loading/Loading';
 import { PublicationCard } from './components/PublicationCard';
 
 function IndividualPublication({ publication }: { publication: Post | Comment }) {
-  const { execute: toggle, loading } = useBookmarkToggle({ publication });
+  const { execute: toggle, loading } = useBookmarkToggle();
   return (
     <PublicationCard publication={publication}>
       <label>

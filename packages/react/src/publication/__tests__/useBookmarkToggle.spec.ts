@@ -98,7 +98,7 @@ describe(`Given the ${useBookmarkToggle.name} hook`, () => {
           publication,
         });
 
-        const { result } = scenario.renderHook(() => useBookmarkToggle({ publication }));
+        const { result } = scenario.renderHook(() => useBookmarkToggle());
 
         act(() => {
           void result.current.execute({ publication });
@@ -125,7 +125,7 @@ describe(`Given the ${useBookmarkToggle.name} hook`, () => {
       });
       const scenario = setupTestScenario({ fragment: FragmentMirror, profile, publication });
 
-      const { result } = scenario.renderHook(() => useBookmarkToggle({ publication }));
+      const { result } = scenario.renderHook(() => useBookmarkToggle());
 
       act(() => {
         void result.current.execute({ publication });
