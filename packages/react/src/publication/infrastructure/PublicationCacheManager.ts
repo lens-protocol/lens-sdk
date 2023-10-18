@@ -14,11 +14,11 @@ import {
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import { PublicationId } from '@lens-protocol/domain/entities';
-import { CreateQuoteRequest } from '@lens-protocol/domain/src/use-cases/publications/CreateQuote';
 import {
   CreateCommentRequest,
   CreateMirrorRequest,
   CreatePostRequest,
+  CreateQuoteRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
 import { invariant } from '@lens-protocol/shared-kernel';

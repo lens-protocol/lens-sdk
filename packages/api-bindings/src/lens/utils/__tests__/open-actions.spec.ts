@@ -5,18 +5,16 @@ import { mockDaiAmount, mockEvmAddress } from '@lens-protocol/shared-kernel/mock
 
 import {
   mockAmountFragmentFrom,
+  mockLegacyAaveFeeCollectModuleSettingsFragment,
+  mockLegacyFreeCollectModuleSettingsFragment,
+  mockLegacyRevertCollectModuleSettingsFragment,
   mockMirrorFragment,
+  mockMultirecipientFeeCollectOpenActionSettingsFragment,
   mockNetworkAddressFragment,
   mockPostFragment,
+  mockSimpleCollectOpenActionSettingsFragment,
+  mockUnknownOpenActionModuleSettingsFragment,
 } from '../../__helpers__';
-import {
-  mockLegacyAaveFeeCollectModuleSettings,
-  mockLegacyFreeCollectModuleSettings,
-  mockLegacyRevertCollectModuleSettings,
-  mockMultirecipientFeeCollectOpenActionSettings,
-  mockSimpleCollectOpenActionSettings,
-  mockUnknownOpenActionModuleSettings,
-} from '../__helpers__/mocks';
 import { OpenActionKind, resolveOpenActionRequestFor } from '../open-actions';
 
 const fee = mockDaiAmount(42);
@@ -25,7 +23,7 @@ const contractAddress = mockEvmAddress();
 describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
   describe.each([
     {
-      settings: mockLegacyAaveFeeCollectModuleSettings({
+      settings: mockLegacyAaveFeeCollectModuleSettingsFragment({
         amount: mockAmountFragmentFrom(fee),
         contract: mockNetworkAddressFragment({
           address: contractAddress,
@@ -40,7 +38,7 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
       },
     },
     {
-      settings: mockLegacyFreeCollectModuleSettings(),
+      settings: mockLegacyFreeCollectModuleSettingsFragment(),
       expected: {
         type: AllOpenActionType.LEGACY_COLLECT,
       },
@@ -88,9 +86,9 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
     });
   });
 
-  describe('when called for a publication with LegacyRevertCollectModuleSettings', () => {
+  describe('when called for a publication with LegacyRevertCollectModuleSettingsFragment', () => {
     const publication = mockPostFragment({
-      openActionModules: [mockLegacyRevertCollectModuleSettings()],
+      openActionModules: [mockLegacyRevertCollectModuleSettingsFragment()],
     });
 
     it(`should throw an ${InvariantError.name}`, () => {
@@ -105,7 +103,7 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
 
   describe.each([
     {
-      settings: mockSimpleCollectOpenActionSettings({
+      settings: mockSimpleCollectOpenActionSettingsFragment({
         amount: mockAmountFragmentFrom(fee),
         contract: mockNetworkAddressFragment({
           address: contractAddress,
@@ -121,7 +119,7 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
       },
     },
     {
-      settings: mockMultirecipientFeeCollectOpenActionSettings({
+      settings: mockMultirecipientFeeCollectOpenActionSettingsFragment({
         amount: mockAmountFragmentFrom(fee),
         contract: mockNetworkAddressFragment({
           address: contractAddress,
@@ -177,7 +175,7 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
   });
 
   describe(`and the $settings.__typename`, () => {
-    const settings = mockUnknownOpenActionModuleSettings({
+    const settings = mockUnknownOpenActionModuleSettingsFragment({
       contract: mockNetworkAddressFragment({
         address: contractAddress,
       }),
@@ -209,9 +207,9 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
       it('should work among many open action modules', () => {
         const publication = mockPostFragment({
           openActionModules: [
-            mockSimpleCollectOpenActionSettings(),
-            mockUnknownOpenActionModuleSettings(),
-            mockUnknownOpenActionModuleSettings(),
+            mockSimpleCollectOpenActionSettingsFragment(),
+            mockUnknownOpenActionModuleSettingsFragment(),
+            mockUnknownOpenActionModuleSettingsFragment(),
             settings,
           ],
         });

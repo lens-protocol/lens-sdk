@@ -10,7 +10,7 @@ import { CreateMirrorRequest } from '../publications/CreateMirror';
 import { CreatePostRequest } from '../publications/CreatePost';
 import { CreateQuoteRequest } from '../publications/CreateQuote';
 import { OpenActionRequest } from '../publications/OpenAction';
-import { TokenAllowanceRequest } from '../wallets/TokenAllowance';
+import { TokenAllowanceRequest } from './TokenAllowance';
 
 export type AnyTransactionRequest =
   | OpenActionRequest

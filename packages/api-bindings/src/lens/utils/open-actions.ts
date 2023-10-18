@@ -9,7 +9,8 @@ import {
 import { Data, EvmAddress, invariant, never } from '@lens-protocol/shared-kernel';
 
 import * as gql from '../graphql/generated';
-import { AnyPublication, OpenActionModuleSettings, PrimaryPublication } from '../publication';
+import { AnyPublication, OpenActionModuleSettings } from '../publication';
+import { findCollectActionModuleSettings } from './KnownCollectModuleSettings';
 import { erc20Amount } from './amount';
 
 /**
@@ -67,50 +68,6 @@ export type OpenActionContext<TAction extends OpenActionParams = OpenActionParam
   delegate: boolean;
   action: TAction;
 };
-
-const ModulesWithKnownCollectCapability: Record<OpenActionModuleSettings['__typename'], boolean> = {
-  LegacyAaveFeeCollectModuleSettings: true,
-  LegacyERC4626FeeCollectModuleSettings: true,
-  LegacyFeeCollectModuleSettings: true,
-  LegacyLimitedFeeCollectModuleSettings: true,
-  LegacyLimitedTimedFeeCollectModuleSettings: true,
-  LegacyMultirecipientFeeCollectModuleSettings: true,
-  LegacyTimedFeeCollectModuleSettings: true,
-  LegacySimpleCollectModuleSettings: true,
-  LegacyFreeCollectModuleSettings: true,
-  MultirecipientFeeCollectOpenActionSettings: true,
-  SimpleCollectOpenActionSettings: true,
-
-  LegacyRevertCollectModuleSettings: false,
-  UnknownOpenActionModuleSettings: false,
-};
-
-type KnownCollectModuleSettings =
-  | gql.LegacyAaveFeeCollectModuleSettings
-  | gql.LegacyErc4626FeeCollectModuleSettings
-  | gql.LegacyFeeCollectModuleSettings
-  | gql.LegacyLimitedFeeCollectModuleSettings
-  | gql.LegacyLimitedTimedFeeCollectModuleSettings
-  | gql.LegacyMultirecipientFeeCollectModuleSettings
-  | gql.LegacyTimedFeeCollectModuleSettings
-  | gql.LegacySimpleCollectModuleSettings
-  | gql.LegacyFreeCollectModuleSettings
-  | gql.MultirecipientFeeCollectOpenActionSettings
-  | gql.SimpleCollectOpenActionSettings;
-
-function isKnownCollectModuleSettings(
-  settings: OpenActionModuleSettings,
-): settings is KnownCollectModuleSettings {
-  return ModulesWithKnownCollectCapability[settings.__typename] ?? false;
-}
-
-function findCollectActionModuleSettings(
-  collectable: PrimaryPublication,
-): KnownCollectModuleSettings | null {
-  if (!collectable.openActionModules) return null;
-
-  return collectable.openActionModules.find(isKnownCollectModuleSettings) ?? null;
-}
 
 function resolveCollectRequestFor(
   publication: AnyPublication,

@@ -3,6 +3,7 @@ import { mockProfileId, mockPublicationId, mockTransactionHash } from '@lens-pro
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { ChainType, Erc20, Erc20Amount } from '@lens-protocol/shared-kernel';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
+import { mock } from 'jest-mock-extended';
 
 import * as gql from '../graphql/generated';
 import { AnyPublication } from '../publication';
@@ -164,6 +165,27 @@ export function mockCommentFragment(
 
     ...overrides,
     __typename: 'Comment',
+  };
+}
+
+export function mockQuoteFragment(overrides?: Partial<Omit<gql.Quote, '__typename'>>): gql.Quote {
+  return {
+    id: mockPublicationId(),
+    isHidden: false,
+    txHash: mockTransactionHash(),
+    by: mockProfileFragment(),
+    createdAt: faker.date.past().toISOString(),
+    publishedOn: null,
+    momoka: null,
+    operations: mockPublicationOperationsFragment(),
+    metadata: mockPublicationTextOnlyMetadata(),
+    openActionModules: null,
+    referenceModule: null,
+    quoteOn: mockPostFragment(),
+    stats: mockPublicationStatsFragment(),
+
+    ...overrides,
+    __typename: 'Quote',
   };
 }
 
@@ -396,4 +418,130 @@ export function mockPublicationRevenueFragment({
     publication: publication,
     revenue: [mockRevenueAggregateFragment()],
   };
+}
+
+export function mockFeeFollowModuleSettingsFragment(
+  overrides?: Partial<gql.FeeFollowModuleSettings>,
+): gql.FeeFollowModuleSettings {
+  return mock<gql.FeeFollowModuleSettings>({
+    ...overrides,
+    __typename: 'FeeFollowModuleSettings',
+  });
+}
+
+export function mockSimpleCollectOpenActionSettingsFragment(
+  overrides?: Partial<gql.SimpleCollectOpenActionSettings>,
+) {
+  return mock<gql.SimpleCollectOpenActionSettings>({
+    ...overrides,
+    __typename: 'SimpleCollectOpenActionSettings',
+  });
+}
+
+export function mockMultirecipientFeeCollectOpenActionSettingsFragment(
+  overrides?: Partial<gql.MultirecipientFeeCollectOpenActionSettings>,
+) {
+  return mock<gql.MultirecipientFeeCollectOpenActionSettings>({
+    ...overrides,
+    __typename: 'MultirecipientFeeCollectOpenActionSettings',
+  });
+}
+
+export function mockUnknownOpenActionModuleSettingsFragment(
+  overrides?: Partial<gql.UnknownOpenActionModuleSettings>,
+) {
+  return mock<gql.UnknownOpenActionModuleSettings>({
+    ...overrides,
+    __typename: 'UnknownOpenActionModuleSettings',
+  });
+}
+
+export function mockLegacyFreeCollectModuleSettingsFragment(
+  overrides?: Partial<gql.LegacyFreeCollectModuleSettings>,
+) {
+  return mock<gql.LegacyFreeCollectModuleSettings>({
+    ...overrides,
+    __typename: 'LegacyFreeCollectModuleSettings',
+  });
+}
+
+export function mockLegacyFeeCollectModuleSettingsFragment(
+  overrides?: Partial<gql.LegacyFeeCollectModuleSettings>,
+) {
+  return mock<gql.LegacyFeeCollectModuleSettings>({
+    ...overrides,
+    __typename: 'LegacyFeeCollectModuleSettings',
+  });
+}
+
+export function mockLegacyLimitedFeeCollectModuleSettingsFragment(
+  overrides?: Partial<gql.LegacyLimitedFeeCollectModuleSettings>,
+) {
+  return mock<gql.LegacyLimitedFeeCollectModuleSettings>({
+    ...overrides,
+    __typename: 'LegacyLimitedFeeCollectModuleSettings',
+  });
+}
+
+export function mockLegacyLimitedTimedFeeCollectModuleSettingsFragment(
+  overrides?: Partial<gql.LegacyLimitedTimedFeeCollectModuleSettings>,
+) {
+  return mock<gql.LegacyLimitedTimedFeeCollectModuleSettings>({
+    ...overrides,
+    __typename: 'LegacyLimitedTimedFeeCollectModuleSettings',
+  });
+}
+
+export function mockLegacyRevertCollectModuleSettingsFragment(
+  overrides?: Partial<gql.LegacyRevertCollectModuleSettings>,
+) {
+  return mock<gql.LegacyRevertCollectModuleSettings>({
+    ...overrides,
+    __typename: 'LegacyRevertCollectModuleSettings',
+  });
+}
+
+export function mockLegacyTimedFeeCollectModuleSettingsFragment(
+  overrides?: Partial<gql.LegacyTimedFeeCollectModuleSettings>,
+) {
+  return mock<gql.LegacyTimedFeeCollectModuleSettings>({
+    ...overrides,
+    __typename: 'LegacyTimedFeeCollectModuleSettings',
+  });
+}
+
+export function mockLegacyMultirecipientFeeCollectModuleSettingsFragment(
+  overrides?: Partial<gql.LegacyMultirecipientFeeCollectModuleSettings>,
+) {
+  return mock<gql.LegacyMultirecipientFeeCollectModuleSettings>({
+    ...overrides,
+    __typename: 'LegacyMultirecipientFeeCollectModuleSettings',
+  });
+}
+
+export function mockLegacySimpleCollectModuleSettingsFragment(
+  overrides?: Partial<gql.LegacySimpleCollectModuleSettings>,
+) {
+  return mock<gql.LegacySimpleCollectModuleSettings>({
+    ...overrides,
+    __typename: 'LegacySimpleCollectModuleSettings',
+  });
+}
+
+export function mockLegacyErc4626FeeCollectModuleSettingsFragment(
+  overrides?: Partial<gql.LegacyErc4626FeeCollectModuleSettings>,
+) {
+  return mock<gql.LegacyErc4626FeeCollectModuleSettings>({
+    ...overrides,
+    __typename: 'LegacyERC4626FeeCollectModuleSettings',
+  });
+}
+
+export function mockLegacyAaveFeeCollectModuleSettingsFragment(
+  overrides?: Partial<gql.LegacyAaveFeeCollectModuleSettings>,
+) {
+  return mock<gql.LegacyAaveFeeCollectModuleSettings>({
+    ...overrides,
+    __typename: 'LegacyAaveFeeCollectModuleSettings',
+  });
 }

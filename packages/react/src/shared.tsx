@@ -48,6 +48,7 @@ import { TransactionFactory } from './transactions/infrastructure/TransactionFac
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
 import { BalanceGateway } from './wallet/adapters/BalanceGateway';
+import { IProviderFactory } from './wallet/adapters/IProviderFactory';
 import { TokenGateway } from './wallet/adapters/TokenGateway';
 import { WalletFactory } from './wallet/adapters/WalletFactory';
 import { WalletGateway } from './wallet/adapters/WalletGateway';
@@ -164,6 +165,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     onChainRelayer,
     momokaRelayer,
     profileCacheManager,
+    providerFactory,
     publicationCacheManager,
     tokenAvailability,
     transactionFactory,
@@ -188,6 +190,7 @@ export type SharedDependencies = {
   momokaRelayer: MomokaRelayer;
   onChainRelayer: OnChainRelayer;
   profileCacheManager: IProfileCacheManager;
+  providerFactory: IProviderFactory;
   publicationCacheManager: PublicationCacheManager;
   tokenAvailability: TokenAvailability;
   transactionFactory: ITransactionFactory<AnyTransactionRequest>;
