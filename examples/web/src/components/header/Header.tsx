@@ -2,7 +2,7 @@ import { SessionType, useSession } from '@lens-protocol/react-web';
 import { NavLink } from 'react-router-dom';
 
 import { CATEGORIES } from '../../config';
-import { LoginButton } from '../auth';
+import { LoginButton, LogoutButton } from '../auth';
 
 export function Header() {
   const { data: session } = useSession();
@@ -37,7 +37,7 @@ export function Header() {
             </strong>
           )}
 
-          <LoginButton />
+          {session?.authenticated ? <LogoutButton /> : <LoginButton />}
         </div>
       </div>
 

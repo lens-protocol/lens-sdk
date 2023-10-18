@@ -1,14 +1,12 @@
-import { IEquatableError, PromiseResult, UnknownObject } from '@lens-protocol/shared-kernel';
+import { IEquatableError, PromiseResult } from '@lens-protocol/shared-kernel';
 import { useCallback, useState } from 'react';
 
 /**
  * An deferrable task is a function that can be executed multiple times and that can be in a pending state.
  */
-export type DeferrableTask<
-  TData,
-  TError extends IEquatableError,
-  TInput extends UnknownObject = never,
-> = (input: TInput) => PromiseResult<TData, TError>;
+export type DeferrableTask<TData, TError extends IEquatableError = never, TInput = void> = (
+  input: TInput,
+) => PromiseResult<TData, TError>;
 
 /**
  * The initial state of a deferred task.
@@ -105,9 +103,9 @@ export type DeferredTaskState<TData, TError extends IEquatableError> =
  * ```
  */
 export type UseDeferredTask<
-  TData,
-  TError extends IEquatableError,
-  TInput extends UnknownObject = never,
+  TData = void,
+  TError extends IEquatableError = never,
+  TInput = void,
 > = DeferredTaskState<TData, TError> & {
   execute: DeferrableTask<TData, TError, TInput>;
 };
@@ -115,11 +113,9 @@ export type UseDeferredTask<
 /**
  * @internal
  */
-export function useDeferredTask<
-  TData,
-  TError extends IEquatableError,
-  TInput extends UnknownObject = never,
->(handler: DeferrableTask<TData, TError, TInput>): UseDeferredTask<TData, TError, TInput> {
+export function useDeferredTask<TData, TError extends IEquatableError, TInput = never>(
+  handler: DeferrableTask<TData, TError, TInput>,
+): UseDeferredTask<TData, TError, TInput> {
   const [state, setState] = useState<DeferredTaskState<TData, TError>>({
     called: false,
     loading: false,
