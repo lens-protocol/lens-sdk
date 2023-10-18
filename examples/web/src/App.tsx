@@ -40,7 +40,7 @@ import {
   UseUpdateProfileManagers,
   UseWhoActedOnPublication,
 } from './profiles';
-import { UseSetProfileMetadata } from './profiles/UseSetProfileDetails';
+import { UseSetProfileMetadata } from './profiles/UseSetProfileMetadata';
 import {
   PublicationsPage,
   UsePublication,
