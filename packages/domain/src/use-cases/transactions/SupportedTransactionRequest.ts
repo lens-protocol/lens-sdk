@@ -1,4 +1,5 @@
 import { JustProtocolRequest } from '../../entities';
+import { BlockProfilesRequest } from '../profile/BlockProfiles';
 import { CreateProfileRequest } from '../profile/CreateProfile';
 import { FollowRequest } from '../profile/FollowProfile';
 import { UnfollowRequest } from '../profile/UnfollowProfile';
@@ -13,6 +14,7 @@ import { CreateQuoteRequest } from '../publications/CreateQuote';
 import { TokenAllowanceRequest } from '../wallets/TokenAllowance';
 
 export type AnyTransactionRequest =
+  | BlockProfilesRequest
   | CollectRequest
   | CreateCommentRequest
   | CreateMirrorRequest

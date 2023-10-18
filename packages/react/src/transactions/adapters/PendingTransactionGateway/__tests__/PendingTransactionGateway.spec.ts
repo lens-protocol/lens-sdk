@@ -12,6 +12,7 @@ import {
   mockTokenAllowanceRequest,
   mockUpdateProfileManagersRequest,
   mockCreateQuoteRequest,
+  mockBlockProfilesRequest,
 } from '@lens-protocol/domain/mocks';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { InvariantError } from '@lens-protocol/shared-kernel';
@@ -43,6 +44,7 @@ type TransactionRequest = {
 
 const requests: TransactionRequest = {
   [TransactionKind.APPROVE_MODULE]: mockTokenAllowanceRequest(),
+  [TransactionKind.BLOCK_PROFILE]: mockBlockProfilesRequest(),
   [TransactionKind.COLLECT_PUBLICATION]: mockFreeCollectRequest(),
   [TransactionKind.CREATE_COMMENT]: mockCreateCommentRequest(),
   [TransactionKind.CREATE_POST]: mockCreatePostRequest(),

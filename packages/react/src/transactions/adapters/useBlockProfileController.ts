@@ -1,0 +1,54 @@
+import {
+  PendingSigningRequestError,
+  UserRejectedError,
+  WalletConnectionError,
+} from '@lens-protocol/domain/entities';
+import {
+  BlockProfiles,
+  BlockProfilesRequest,
+} from '@lens-protocol/domain/src/use-cases/profile/BlockProfiles';
+import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
+
+import { useSharedDependencies } from '../../shared';
+import { TransactionResultPresenter } from './TransactionResultPresenter';
+import { BlockProfilesGateway } from './profiles/BlockProfilesGateway';
+
+export function useBlockProfilesController() {
+  const {
+    activeWallet,
+    apolloClient,
+    transactionGateway,
+    transactionQueue,
+    transactionFactory,
+    onChainRelayer,
+  } = useSharedDependencies();
+
+  const presenter = new TransactionResultPresenter<
+    BlockProfilesRequest,
+    BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
+  >();
+
+  const gateway = new BlockProfilesGateway(apolloClient, transactionFactory);
+
+  const signedBlockProfiles = new SubsidizeOnChain<BlockProfilesRequest>(
+    activeWallet,
+    transactionGateway,
+    gateway,
+    onChainRelayer,
+    transactionQueue,
+    presenter,
+  );
+
+  return async (request: BlockProfilesRequest) => {
+    const blockProfile = new BlockProfiles(
+      signedBlockProfiles,
+      gateway,
+      transactionQueue,
+      presenter,
+    );
+
+    await blockProfile.execute(request);
+
+    return presenter.asResult();
+  };
+}

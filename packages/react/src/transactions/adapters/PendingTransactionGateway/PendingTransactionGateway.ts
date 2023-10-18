@@ -42,6 +42,7 @@ const lensHubTransactionKinds = [
 // const tokenHandleRegistryTransactionKinds = []; // not used yet
 
 const transactionKindToFilterGroup: { [k in TransactionKind]: TransactionKind[] } = {
+  [TransactionKind.BLOCK_PROFILE]: lensHubTransactionKinds,
   [TransactionKind.COLLECT_PUBLICATION]: lensHubTransactionKinds,
   [TransactionKind.CREATE_COMMENT]: lensHubTransactionKinds,
   [TransactionKind.CREATE_POST]: lensHubTransactionKinds,

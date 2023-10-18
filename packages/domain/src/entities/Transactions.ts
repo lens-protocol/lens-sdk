@@ -6,6 +6,7 @@ export type Nonce = number;
 
 export enum TransactionKind {
   APPROVE_MODULE = 'APPROVE_MODULE',
+  BLOCK_PROFILE = 'BLOCK_PROFILE',
   COLLECT_PUBLICATION = 'COLLECT_PUBLICATION',
   CREATE_COMMENT = 'CREATE_COMMENT',
   CREATE_POST = 'CREATE_POST',
@@ -20,6 +21,7 @@ export enum TransactionKind {
 }
 
 export const ProtocolTransactionKinds = [
+  TransactionKind.BLOCK_PROFILE,
   TransactionKind.COLLECT_PUBLICATION,
   TransactionKind.CREATE_COMMENT,
   TransactionKind.CREATE_POST,

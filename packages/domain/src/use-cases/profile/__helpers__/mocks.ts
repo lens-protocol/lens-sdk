@@ -7,6 +7,7 @@ import { when } from 'jest-when';
 import { TransactionKind, NftOwnershipChallenge, NativeTransaction } from '../../../entities';
 import { mockProfileId, mockSignature } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../../transactions';
+import { BlockProfilesRequest } from '../BlockProfiles';
 import {
   CreateProfileRequest,
   DuplicatedHandleError,
@@ -163,4 +164,15 @@ export function mockINftOwnershipChallengeGateway({
   when(gateway.createOwnershipChallenge).calledWith(request).mockResolvedValue(result);
 
   return gateway;
+}
+
+export function mockBlockProfilesRequest(
+  overrides?: Partial<BlockProfilesRequest>,
+): BlockProfilesRequest {
+  return {
+    delegate: true,
+    profileIds: [mockProfileId()],
+    ...overrides,
+    kind: TransactionKind.BLOCK_PROFILE,
+  };
 }
