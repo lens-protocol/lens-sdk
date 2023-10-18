@@ -16,7 +16,7 @@ type ReportPublicationFormProps = {
 };
 
 function ReportPublicationForm({ publication }: ReportPublicationFormProps) {
-  const { execute: report, loading } = useReportPublication({ publication });
+  const { execute: report, loading } = useReportPublication();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -26,7 +26,7 @@ function ReportPublicationForm({ publication }: ReportPublicationFormProps) {
     const reason = (formData.get('reason') as ReportReason | null) ?? never();
     const additionalComments = (formData.get('additionalComments') as string | null) ?? never();
 
-    const result = await report({ reason, additionalComments });
+    const result = await report({ publicationId: publication.id, reason, additionalComments });
 
     if (result.isSuccess()) {
       alert('Publication reported!');
