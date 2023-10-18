@@ -18,12 +18,12 @@ type HidePublicationButtonProps = {
 };
 
 function HidePublicationButton({ publication }: HidePublicationButtonProps) {
-  const { execute: hide, isPending } = useHidePublication({ publication });
+  const { execute: hide, isPending } = useHidePublication();
 
   if (publication.hidden) return null;
 
   return (
-    <button onClick={hide} disabled={isPending}>
+    <button onClick={() => hide({ publication })} disabled={isPending}>
       Hide
     </button>
   );

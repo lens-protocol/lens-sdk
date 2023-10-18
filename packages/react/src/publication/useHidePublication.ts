@@ -19,10 +19,10 @@ export type UseHidePublicationArgs = {
  * import { useHidePublication, AnyPublication } from '@lens-protocol/react';
  *
  * function HidePublication({ publication }: { publication: AnyPublication }) {
- *   const { execute: hide, loading } = useHidePublication({ publication });
+ *   const { execute: hide, loading } = useHidePublication();
  *
  *   return (
- *     <button onClick={hide} disabled={loading}>
+ *     <button onClick={() => hide({ publication })} disabled={loading}>
  *       Hide
  *     </button>
  *   );
@@ -33,17 +33,15 @@ export type UseHidePublicationArgs = {
  * @group Hooks
  * @param args - {@link UseHidePublicationArgs}
  */
-export function useHidePublication({
-  publication,
-}: UseHidePublicationArgs): UseDeferredTask<void, never> {
-  const { data } = useSession();
+export function useHidePublication(): UseDeferredTask<void, never, UseHidePublicationArgs> {
+  const { data: session } = useSession();
 
   const hide = useHidePublicationController();
 
-  return useDeferredTask(async () => {
-    invariant(data?.authenticated, 'Must be authenticated to hide a publication');
+  return useDeferredTask(async ({ publication }) => {
+    invariant(session?.authenticated, 'Must be authenticated to hide a publication');
     invariant(
-      publication.by.ownedBy.address === data.address,
+      publication.by.ownedBy.address === session.address,
       'Publication not owned by the active wallet. Make sure that publication is owned by the wallet before trying to hide it.',
     );
 
