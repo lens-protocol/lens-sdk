@@ -58,6 +58,7 @@ export class Revenue {
 
   /**
    * Fetch a profile's revenue from a single publication.
+   *
    * @param request - Request object for the query
    * @returns Publication revenue
    *

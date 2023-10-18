@@ -16,7 +16,16 @@ import { ReadResult, useReadResult } from '../helpers/reads';
 export type UsePublicationArgs = OneOf<PublicationRequest>;
 
 /**
- * Fetch a publication by either it's publicationId or transaction hash.
+ * Fetch a publication by either its publication id or transaction hash.
+ *
+ * @example
+ * ```tsx
+ * import { publicationId, usePublication } from '@lens-protocol/react';
+ *
+ * const { data, error, loading } = usePublication({
+ *   forId: publicationId('0x04-0x0b'),
+ * });
+ * ```
  *
  * @category Publications
  * @group Hooks

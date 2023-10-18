@@ -4,8 +4,10 @@ import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import {
+  Amount,
   CanDecryptResponse,
   Comment,
+  Erc20,
   FeedItem,
   MentionNotification,
   Mirror,
@@ -23,10 +25,13 @@ import {
   ProfileWhoReactedResult,
   PublicationOperations,
   PublicationReactionType,
+  PublicationRevenue,
   PublicationStats,
+  RevenueAggregate,
   TextOnlyMetadataV3,
   TriStateValue,
 } from '../graphql/generated';
+import { AnyPublication } from '../publication';
 
 function mockNetworkAddressFragment(overrides?: Partial<NetworkAddress>): NetworkAddress {
   return {
@@ -341,5 +346,48 @@ export function mockProfileWhoReactedResultFragment(
 
     ...overrides,
     __typename: 'ProfileWhoReactedResult',
+  };
+}
+
+export function mockErc20Fragment(overrides: Partial<Erc20> = {}): Erc20 {
+  return {
+    name: 'Wrapped MATIC',
+    symbol: 'WMATIC',
+    decimals: 18,
+    contract: mockNetworkAddressFragment(),
+    ...overrides,
+    __typename: 'Erc20',
+  };
+}
+
+export function mockAmountFragment(overrides: Partial<Amount> = {}): Amount {
+  return {
+    value: faker.datatype.number().toString(),
+    asset: mockErc20Fragment(),
+    rate: null,
+    ...overrides,
+    __typename: 'Amount',
+  };
+}
+
+export function mockRevenueAggregateFragment(
+  overrides: Partial<RevenueAggregate> = {},
+): RevenueAggregate {
+  return {
+    total: mockAmountFragment(),
+    ...overrides,
+    __typename: 'RevenueAggregate',
+  };
+}
+
+export function mockPublicationRevenueFragment({
+  publication = mockPostFragment(),
+}: {
+  publication?: AnyPublication;
+} = {}): PublicationRevenue {
+  return {
+    __typename: 'PublicationRevenue',
+    publication: publication,
+    revenue: [mockRevenueAggregateFragment()],
   };
 }
