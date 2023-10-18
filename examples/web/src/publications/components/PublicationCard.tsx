@@ -1,4 +1,5 @@
 import { Comment, Post, AnyPublication, PublicationMetadata } from '@lens-protocol/react-web';
+import { ReactNode } from 'react';
 
 import { ProfilePicture } from '../../profiles/components/ProfilePicture';
 
@@ -33,9 +34,10 @@ function PublicationSwitch({ publication }: { publication: AnyPublication }) {
 
 type PublicationCardProps = {
   publication: AnyPublication;
+  children?: ReactNode;
 };
 
-export function PublicationCard({ publication }: PublicationCardProps) {
+export function PublicationCard({ publication, children }: PublicationCardProps) {
   return (
     <article>
       <ProfilePicture picture={publication.by.metadata?.picture ?? null} />
@@ -44,6 +46,7 @@ export function PublicationCard({ publication }: PublicationCardProps) {
         {publication.by.metadata?.displayName ?? publication.by.handle ?? publication.by.id}
       </p>
       <PublicationSwitch publication={publication} />
+      {children}
     </article>
   );
 }

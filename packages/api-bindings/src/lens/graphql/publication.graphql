@@ -508,3 +508,11 @@ mutation RefreshPublicationMetadata($request: RefreshPublicationMetadataRequest!
     result
   }
 }
+
+mutation AddPublicationBookmark($request: PublicationBookmarkRequest!) {
+  result: addPublicationBookmark(request: $request)
+}
+
+mutation RemovePublicationBookmark($request: PublicationBookmarkRequest!) {
+  result: removePublicationBookmark(request: $request)
+}

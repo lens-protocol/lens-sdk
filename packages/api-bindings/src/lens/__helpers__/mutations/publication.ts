@@ -50,6 +50,12 @@ import {
   MirrorOnchainData,
   MirrorOnchainVariables,
   MirrorOnchainDocument,
+  AddPublicationBookmarkVariables,
+  AddPublicationBookmarkData,
+  AddPublicationBookmarkDocument,
+  RemovePublicationBookmarkVariables,
+  RemovePublicationBookmarkData,
+  RemovePublicationBookmarkDocument,
 } from '../../graphql/generated';
 import {
   mockCreateTypedDataResult,
@@ -458,5 +464,29 @@ export function mockMirrorOnchainResponse<
     result: {
       data,
     },
+  };
+}
+
+export function mockAddToMyBookmarksResponse(
+  variables: AddPublicationBookmarkVariables,
+): MockedResponse<AddPublicationBookmarkData> {
+  return {
+    request: {
+      query: AddPublicationBookmarkDocument,
+      variables,
+    },
+    result: { data: { result: null } },
+  };
+}
+
+export function mockRemoveFromMyBookmarksResponse(
+  variables: RemovePublicationBookmarkVariables,
+): MockedResponse<RemovePublicationBookmarkData> {
+  return {
+    request: {
+      query: RemovePublicationBookmarkDocument,
+      variables,
+    },
+    result: { data: { result: null } },
   };
 }

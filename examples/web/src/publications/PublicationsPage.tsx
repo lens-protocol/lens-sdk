@@ -41,6 +41,11 @@ const publicationHooks = [
     description: `Add or remove a reaction to a publication.`,
     path: '/publications/useReactionToggle',
   },
+  {
+    label: 'useBookmarkToggle',
+    description: `Add or remove a bookmark to a publication.`,
+    path: '/publications/useBookmarkToggle',
+  },
 ];
 
 export function PublicationsPage() {
