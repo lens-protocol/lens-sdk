@@ -4,59 +4,48 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { FollowProfile, FollowRequest } from '@lens-protocol/domain/use-cases/profile';
+import { UnfollowProfile, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
-import {
-  InsufficientAllowanceError,
-  InsufficientFundsError,
-  TokenAvailability,
-} from '@lens-protocol/domain/use-cases/wallets';
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
-import { BalanceGateway } from '../../wallet/adapters/BalanceGateway';
-import { TokenGateway } from '../../wallet/adapters/TokenGateway';
-import { FollowProfileCallGateway } from './FollowProfileCallGateway';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
-import { validateFollowRequest } from './schemas/validators';
+import { UnfollowProfileGateway } from './profiles/UnfollowProfileGateway';
+import { validateUnfollowRequest } from './schemas/validators';
 
-export function useFollowProfileController() {
+export function useUnfollowController() {
   const {
     activeWallet,
     apolloClient,
     onChainRelayer,
-    providerFactory,
+    transactionFactory,
     transactionGateway,
     transactionQueue,
   } = useSharedDependencies();
 
   return async (
-    request: FollowRequest,
+    request: UnfollowRequest,
   ): PromiseResult<
     void,
     | BroadcastingError
-    | InsufficientAllowanceError
-    | InsufficientFundsError
     | PendingSigningRequestError
     | TransactionError
     | UserRejectedError
     | WalletConnectionError
   > => {
-    validateFollowRequest(request);
+    validateUnfollowRequest(request);
 
     const presenter = new TransactionResultPresenter<
-      FollowRequest,
+      UnfollowRequest,
       | BroadcastingError
-      | InsufficientAllowanceError
-      | InsufficientFundsError
       | PendingSigningRequestError
       | TransactionError
       | UserRejectedError
       | WalletConnectionError
     >();
-    const gateway = new FollowProfileCallGateway(apolloClient);
+    const gateway = new UnfollowProfileGateway(apolloClient, transactionFactory);
 
-    const signedFollow = new SubsidizeOnChain<FollowRequest>(
+    const signedFollow = new SubsidizeOnChain(
       activeWallet,
       transactionGateway,
       gateway,
@@ -65,13 +54,9 @@ export function useFollowProfileController() {
       presenter,
     );
 
-    const balanceGateway = new BalanceGateway(providerFactory);
-    const tokenGateway = new TokenGateway(providerFactory);
-    const tokenAvailability = new TokenAvailability(balanceGateway, tokenGateway, activeWallet);
+    const unfollowProfile = new UnfollowProfile(signedFollow, gateway, transactionQueue, presenter);
 
-    const followProfiles = new FollowProfile(tokenAvailability, signedFollow, presenter);
-
-    await followProfiles.execute(request);
+    await unfollowProfile.execute(request);
 
     const result = presenter.asResult();
 

@@ -1,17 +1,17 @@
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
-import { Erc20Amount } from '@lens-protocol/shared-kernel';
+import { Erc20Amount, EvmAddress } from '@lens-protocol/shared-kernel';
 
 export type ChargeFollowPolicy = {
   type: FollowPolicyType.CHARGE;
   amount: Erc20Amount;
   recipient: string;
-  contractAddress: string;
+  contractAddress: EvmAddress;
   chainId: number;
 };
 
 export type NoFeeFollowPolicy = {
   type: FollowPolicyType.NO_ONE | FollowPolicyType.UNKNOWN;
-  contractAddress: string;
+  contractAddress: EvmAddress;
   chainId: number;
 };
 

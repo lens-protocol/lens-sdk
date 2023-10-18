@@ -12,10 +12,10 @@ import { UpdateProfileManagersRequest } from '@lens-protocol/domain/use-cases/pr
 import { IOnChainProtocolCallGateway } from '@lens-protocol/domain/use-cases/transactions';
 import { Data } from '@lens-protocol/shared-kernel';
 
-import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
-import { SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
+import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 
-export class UpdateProfileManagersCallGateway
+export class UpdateProfileManagersGateway
   implements IOnChainProtocolCallGateway<UpdateProfileManagersRequest>
 {
   constructor(private apolloClient: SafeApolloClient) {}

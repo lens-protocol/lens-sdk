@@ -46,7 +46,8 @@ describe(`Given the validator helpers`, () => {
         		"policy.amount": Expected object, received number
         	OR:
         		"policy.amount": Input not instance of Amount
-        · "policy.recipient": Required"
+        · "policy.recipient": Required
+        · "delegate": Required"
       `);
     });
   });
@@ -69,9 +70,9 @@ describe(`Given the validator helpers`, () => {
           profileId: mockProfileId(),
         }),
       ).toThrowErrorMatchingInlineSnapshot(`
-      "fix the following issues
-      · "metadataURI": Required"
-    `);
+              "fix the following issues
+              · "metadataURI": Required"
+          `);
     });
   });
 

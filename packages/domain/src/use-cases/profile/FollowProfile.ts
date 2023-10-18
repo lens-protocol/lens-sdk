@@ -6,7 +6,10 @@ import {
   UserRejectedError,
   WalletConnectionError,
   ProfileId,
+  TransactionError,
 } from '../../entities';
+import { BroadcastingError } from '../transactions/BroadcastingError';
+import { DelegableSigning } from '../transactions/DelegableSigning';
 import { ITransactionResultPresenter } from '../transactions/ITransactionResultPresenter';
 import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
 import {
@@ -17,13 +20,14 @@ import {
 
 export type FollowRequestFee = {
   amount: Amount<Erc20>;
-  contractAddress: string;
+  contractAddress: EvmAddress;
   recipient: EvmAddress;
 };
 
-export type UnconstrainedFollowRequest = {
+export type FreeFollowRequest = {
   profileId: ProfileId;
   kind: TransactionKind.FOLLOW_PROFILE;
+  delegate: boolean;
 };
 
 export type PaidFollowRequest = {
@@ -32,23 +36,19 @@ export type PaidFollowRequest = {
   fee: FollowRequestFee;
 };
 
-export type FollowRequest = UnconstrainedFollowRequest | PaidFollowRequest;
+export type FollowRequest = FreeFollowRequest | PaidFollowRequest;
 
 export function isPaidFollowRequest(request: FollowRequest): request is PaidFollowRequest {
   return 'fee' in request && request.fee !== undefined;
 }
 
-export function isUnconstrainedFollowRequest(
-  request: FollowRequest,
-): request is UnconstrainedFollowRequest {
-  return !isPaidFollowRequest(request);
-}
-
 export type IFollowProfilePresenter = ITransactionResultPresenter<
   FollowRequest,
+  | BroadcastingError
   | InsufficientAllowanceError
   | InsufficientFundsError
   | PendingSigningRequestError
+  | TransactionError
   | UserRejectedError
   | WalletConnectionError
 >;
@@ -57,7 +57,8 @@ export class FollowProfile {
   constructor(
     private readonly tokenAvailability: TokenAvailability,
     private readonly signedFollow: SubsidizeOnChain<FollowRequest>,
-    private readonly followProfilePresenter: IFollowProfilePresenter,
+    private readonly delegableFollow: DelegableSigning<FreeFollowRequest>,
+    private readonly presenter: IFollowProfilePresenter,
   ) {}
 
   async execute(request: FollowRequest) {
@@ -68,11 +69,13 @@ export class FollowProfile {
       });
 
       if (result.isFailure()) {
-        this.followProfilePresenter.present(result);
+        this.presenter.present(result);
         return;
       }
+      await this.signedFollow.execute(request);
+      return;
     }
 
-    await this.signedFollow.execute(request);
+    await this.delegableFollow.execute(request);
   }
 }

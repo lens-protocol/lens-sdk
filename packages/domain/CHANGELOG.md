@@ -1,5 +1,16 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.5
+
+### Minor Changes
+
+- 30ccf19d: **Added** useMyBookmarks hook
+- a42e90e7: **Added** useSetProfileMetadata hook
+- 9dd33b03:
+  **Renamed** useFollowProfile to useFollow
+  **Renamed** useUnfollowProfile to useUnfollow
+  **Added** support for LensProfileManager to useFollow, useUnfollow and useUpdateFollowPolicy hooks
+
 ## 0.11.0-alpha.4
 
 ### Minor Changes

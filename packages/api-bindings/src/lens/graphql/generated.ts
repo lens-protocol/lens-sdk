@@ -4065,6 +4065,20 @@ export type RefreshPublicationMetadataData = {
   result: { result: RefreshPublicationMetadataResultType };
 };
 
+export type PublicationBookmarksVariables = Exact<{
+  request: PublicationBookmarksRequest;
+  imageSmallSize?: InputMaybe<ImageTransform>;
+  imageMediumSize?: InputMaybe<ImageTransform>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
+}>;
+
+export type PublicationBookmarksData = {
+  result: { items: Array<Comment | Mirror | Post | Quote>; pageInfo: PaginatedResultInfo };
+} & InjectCommonQueryParams;
+
 export type AddPublicationBookmarkVariables = Exact<{
   request: PublicationBookmarkRequest;
 }>;
@@ -11883,6 +11897,96 @@ export type RefreshPublicationMetadataMutationOptions = Apollo.BaseMutationOptio
   RefreshPublicationMetadataData,
   RefreshPublicationMetadataVariables
 >;
+export const PublicationBookmarksDocument = /*#__PURE__*/ gql`
+  query PublicationBookmarks(
+    $request: PublicationBookmarksRequest!
+    $imageSmallSize: ImageTransform = {}
+    $imageMediumSize: ImageTransform = {}
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
+  ) {
+    ...InjectCommonQueryParams
+    result: publicationBookmarks(request: $request) {
+      items {
+        ... on Post {
+          ...Post
+        }
+        ... on Comment {
+          ...Comment
+        }
+        ... on Mirror {
+          ...Mirror
+        }
+        ... on Quote {
+          ...Quote
+        }
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentInjectCommonQueryParams}
+  ${FragmentPost}
+  ${FragmentComment}
+  ${FragmentMirror}
+  ${FragmentQuote}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __usePublicationBookmarks__
+ *
+ * To run a query within a React component, call `usePublicationBookmarks` and pass it any options that fit your needs.
+ * When your component renders, `usePublicationBookmarks` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePublicationBookmarks({
+ *   variables: {
+ *      request: // value for 'request'
+ *      imageSmallSize: // value for 'imageSmallSize'
+ *      imageMediumSize: // value for 'imageMediumSize'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
+ *   },
+ * });
+ */
+export function usePublicationBookmarks(
+  baseOptions: Apollo.QueryHookOptions<PublicationBookmarksData, PublicationBookmarksVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<PublicationBookmarksData, PublicationBookmarksVariables>(
+    PublicationBookmarksDocument,
+    options,
+  );
+}
+export function usePublicationBookmarksLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    PublicationBookmarksData,
+    PublicationBookmarksVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<PublicationBookmarksData, PublicationBookmarksVariables>(
+    PublicationBookmarksDocument,
+    options,
+  );
+}
+export type PublicationBookmarksHookResult = ReturnType<typeof usePublicationBookmarks>;
+export type PublicationBookmarksLazyQueryHookResult = ReturnType<
+  typeof usePublicationBookmarksLazyQuery
+>;
+export type PublicationBookmarksQueryResult = Apollo.QueryResult<
+  PublicationBookmarksData,
+  PublicationBookmarksVariables
+>;
 export const AddPublicationBookmarkDocument = /*#__PURE__*/ gql`
   mutation AddPublicationBookmark($request: PublicationBookmarkRequest!) {
     result: addPublicationBookmark(request: $request)
@@ -15965,6 +16069,7 @@ export type PublicationOperationsKeySpecifier = (
   | 'hasMirrored'
   | 'hasReacted'
   | 'hasReported'
+  | 'id'
   | 'isNotInterested'
   | PublicationOperationsKeySpecifier
 )[];
@@ -15980,6 +16085,7 @@ export type PublicationOperationsFieldPolicy = {
   hasMirrored?: FieldPolicy<any> | FieldReadFunction<any>;
   hasReacted?: FieldPolicy<any> | FieldReadFunction<any>;
   hasReported?: FieldPolicy<any> | FieldReadFunction<any>;
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
   isNotInterested?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type PublicationRevenueKeySpecifier = (

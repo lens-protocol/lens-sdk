@@ -17,6 +17,12 @@ export type { LoginError, LoginRequest };
  * - an EIP-1227 compliant smart wallet address (owner or authorized Profile Manager of the given Profile)
  *
  * @example
+ * ```tsx
+ * const { execute, loading, data, error } = useLogin();
+ * ```
+ *
+ * ## Usage
+ *
  * Login with a Profile Id
  * ```tsx
  * const { execute, loading, data, error } = useLogin();
@@ -43,7 +49,6 @@ export type { LoginError, LoginRequest };
  * }
  * ```
  *
- * @example
  * Combine with `useLazyProfile` to login with Profile handle
  * ```tsx
  * const { execute: fetchProfile } = useLazyProfile();

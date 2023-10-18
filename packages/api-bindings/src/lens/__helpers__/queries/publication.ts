@@ -1,5 +1,7 @@
 import {
   PaginatedResultInfo,
+  PublicationBookmarksDocument,
+  PublicationBookmarksVariables,
   PublicationDocument,
   PublicationVariables,
   PublicationsDocument,
@@ -60,5 +62,22 @@ export function mockSearchPublicationsResponse({
     items,
     info,
     query: SearchPublicationsDocument,
+  });
+}
+
+export function mockProfileBookmarksResponse({
+  variables,
+  items,
+  info = mockPaginatedResultInfo(),
+}: {
+  variables: PublicationBookmarksVariables;
+  items: AnyPublication[];
+  info?: PaginatedResultInfo;
+}) {
+  return mockAnyPaginatedResponse({
+    variables,
+    items,
+    info,
+    query: PublicationBookmarksDocument,
   });
 }

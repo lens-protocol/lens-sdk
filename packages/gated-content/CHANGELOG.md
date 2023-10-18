@@ -1,5 +1,11 @@
 # @lens-protocol/gated-content
 
+## 0.3.3-alpha.8
+
+### Patch Changes
+
+- 01b2c2cb: Updated to support the latest API schema
+
 ## 0.3.3-alpha.7
 
 ### Patch Changes

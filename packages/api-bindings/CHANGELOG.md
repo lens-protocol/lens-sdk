@@ -1,5 +1,23 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.8
+
+### Minor Changes
+
+- 30ccf19d: **Added** useMyBookmarks hook
+- a42e90e7: **Added** useSetProfileMetadata hook
+- 9dd33b03:
+  **Renamed** useFollowProfile to useFollow
+  **Renamed** useUnfollowProfile to useUnfollow
+  **Added** support for LensProfileManager to useFollow, useUnfollow and useUpdateFollowPolicy hooks
+
+### Patch Changes
+
+- 01b2c2cb: Updated to support the latest API schema
+- Updated dependencies [a42e90e7]
+- Updated dependencies [9dd33b03]
+  - @lens-protocol/domain@0.11.0-alpha.5
+
 ## 0.11.0-alpha.7
 
 ### Minor Changes

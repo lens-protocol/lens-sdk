@@ -26,7 +26,7 @@ import {
 import { MiscPage, UseCurrencies } from './misc';
 import {
   ProfilesPage,
-  UseFollowAndUnfollowProfile,
+  UseFollowAndUnfollow,
   UseLazyProfile,
   UseMutualFollowers,
   UseProfile,
@@ -40,7 +40,7 @@ import {
   UseUpdateProfileManagers,
   UseWhoActedOnPublication,
 } from './profiles';
-import { UseUpdateProfileDetails } from './profiles/UseUpdateProfileDetails';
+import { UseSetProfileMetadata } from './profiles/UseSetProfileMetadata';
 import {
   PublicationsPage,
   UsePublication,
@@ -53,6 +53,7 @@ import { UseBookmarkToggle } from './publications/UseBookmarkToggle';
 import { UseCreateComment } from './publications/UseCreateComment';
 import { UseCreatePost } from './publications/UseCreatePost';
 import { UseHidePublication } from './publications/UseHidePublication';
+import { UseMyBookmarks } from './publications/UseMyBookmarks';
 
 const { publicClient, webSocketPublicClient } = configureChains(
   [polygonMumbai],
@@ -105,6 +106,7 @@ export function App() {
                       <Route path="useReportPublication" element={<UseReportPublication />} />
                       <Route path="useReactionToggle" element={<UseReactionToggle />} />
                       <Route path="useBookmarkToggle" element={<UseBookmarkToggle />} />
+                      <Route path="useMyBookmarks" element={<UseMyBookmarks />} />
                     </Route>
 
                     <Route path="/profiles">
@@ -115,7 +117,7 @@ export function App() {
                       <Route path="useProfileFollowers" element={<UseProfileFollowers />} />
                       <Route path="useProfileFollowing" element={<UseProfileFollowing />} />
                       <Route path="useMutualFollowers" element={<UseMutualFollowers />} />
-                      <Route path="useFollowProfile" element={<UseFollowAndUnfollowProfile />} />
+                      <Route path="useFollow" element={<UseFollowAndUnfollow />} />
                       <Route path="useRecommendedProfiles" element={<UseRecommendedProfiles />} />
                       <Route path="useProfileManagers" element={<UseProfileManagers />} />
                       <Route
@@ -127,7 +129,7 @@ export function App() {
                         element={<UseWhoActedOnPublication />}
                       />
                       <Route path="useProfileActionHistory" element={<UseProfileActionHistory />} />
-                      <Route path="useSetProfileMetadata" element={<UseUpdateProfileDetails />} />
+                      <Route path="useSetProfileMetadata" element={<UseSetProfileMetadata />} />
                       <Route path="useUpdateFollowPolicy" element={<UseUpdateFollowPolicy />} />
                     </Route>
 

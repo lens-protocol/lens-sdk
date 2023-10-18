@@ -12,7 +12,7 @@ import {
   DuplicatedHandleError,
   IProfileTransactionGateway,
 } from '../CreateProfile';
-import { UnconstrainedFollowRequest, PaidFollowRequest } from '../FollowProfile';
+import { FreeFollowRequest, PaidFollowRequest } from '../FollowProfile';
 import {
   INftOwnershipChallengeGateway,
   NftOwnershipSignature,
@@ -76,6 +76,7 @@ export function mockUpdateFollowPolicyRequest(
 ): UpdateFollowPolicyRequest {
   return {
     policy: mockChargeFollowConfig(),
+    delegate: true,
     ...overrides,
     kind: TransactionKind.UPDATE_FOLLOW_POLICY,
   };
@@ -102,11 +103,10 @@ export function mockUpdateProfileManagersRequest(
   };
 }
 
-export function mockUnconstrainedFollowRequest(
-  overrides?: Partial<UnconstrainedFollowRequest>,
-): UnconstrainedFollowRequest {
+export function mockFreeFollowRequest(overrides?: Partial<FreeFollowRequest>): FreeFollowRequest {
   return {
     profileId: mockProfileId(),
+    delegate: true,
     ...overrides,
     kind: TransactionKind.FOLLOW_PROFILE,
   };
@@ -124,11 +124,11 @@ export function mockPaidFollowRequest(): PaidFollowRequest {
   };
 }
 
-export function mockUnfollowRequest(overrides?: Partial<UnfollowRequest>): UnfollowRequest {
+export function mockUnfollowRequest(): UnfollowRequest {
   return {
     profileId: mockProfileId(),
-    ...overrides,
     kind: TransactionKind.UNFOLLOW_PROFILE,
+    delegate: true,
   };
 }
 

@@ -31,6 +31,7 @@ export class Logout {
   ) {}
 
   async execute(reason: LogoutReason): Promise<void> {
+    // TODO reset transactions gateway storage
     await this.walletGateway.reset();
     await this.conversationsGateway.reset();
 
