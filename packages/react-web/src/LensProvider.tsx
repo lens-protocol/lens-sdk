@@ -6,6 +6,7 @@ import {
 } from '@lens-protocol/react';
 import type { LensConfig as LensConfigBase } from '@lens-protocol/react';
 import { ILogger } from '@lens-protocol/shared-kernel';
+import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/storage';
 import { ReactNode, useState } from 'react';
 
 import { localStorage } from './storage';
@@ -28,6 +29,15 @@ export type LensConfig = {
    * @defaultValue `ConsoleLogger`, an internal implementation of `ILogger` interface that logs to the console
    */
   logger?: ILogger;
+  /**
+   * The storage provider to use.
+   *
+   * If an implementation of {@link IObservableStorageProvider} is provided,
+   * the provider will be used to subscribe to changes in the storage.
+   *
+   * @defaultValue an implementation based on `window.localStorage` and `StorageEvent`.
+   */
+  storage?: IStorageProvider | IObservableStorageProvider;
   /**
    * The common query params allows you customize some aspect of the returned data.
    *
@@ -80,7 +90,7 @@ const storage = localStorage();
 export function LensProvider({ config, ...props }: LensProviderProps) {
   const [resolvedConfig] = useState<LensConfigBase>(() => ({
     ...config,
-    storage,
+    storage: config.storage ?? storage,
   }));
 
   return <LensProviderBase config={resolvedConfig} {...props} />;
