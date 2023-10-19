@@ -12,6 +12,8 @@ import {
   mockUpdateProfileManagersRequest,
   mockCreateQuoteRequest,
   mockSimpleCollectRequest,
+  mockLinkHandleRequest,
+  mockUnlinkHandleRequest,
 } from '@lens-protocol/domain/mocks';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { InvariantError } from '@lens-protocol/shared-kernel';
@@ -42,17 +44,19 @@ type TransactionRequest = {
 };
 
 const requests: TransactionRequest = {
-  [TransactionKind.APPROVE_MODULE]: mockTokenAllowanceRequest(),
   [TransactionKind.ACT_ON_PUBLICATION]: mockSimpleCollectRequest(),
+  [TransactionKind.APPROVE_MODULE]: mockTokenAllowanceRequest(),
   [TransactionKind.CREATE_COMMENT]: mockCreateCommentRequest(),
   [TransactionKind.CREATE_POST]: mockCreatePostRequest(),
+  [TransactionKind.CREATE_PROFILE]: mockCreateProfileRequest(),
   [TransactionKind.CREATE_QUOTE]: mockCreateQuoteRequest(),
   [TransactionKind.FOLLOW_PROFILE]: mockFreeFollowRequest(),
+  [TransactionKind.LINK_HANDLE]: mockLinkHandleRequest(),
   [TransactionKind.MIRROR_PUBLICATION]: mockCreateMirrorRequest(),
+  [TransactionKind.UNFOLLOW_PROFILE]: mockUnfollowRequest(),
+  [TransactionKind.UNLINK_HANDLE]: mockUnlinkHandleRequest(),
   [TransactionKind.UPDATE_FOLLOW_POLICY]: mockUpdateFollowPolicyRequest(),
   [TransactionKind.UPDATE_PROFILE_DETAILS]: mockSetProfileMetadataRequest(),
-  [TransactionKind.CREATE_PROFILE]: mockCreateProfileRequest(),
-  [TransactionKind.UNFOLLOW_PROFILE]: mockUnfollowRequest(),
   [TransactionKind.UPDATE_PROFILE_MANAGERS]: mockUpdateProfileManagersRequest(),
 };
 

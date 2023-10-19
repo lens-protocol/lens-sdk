@@ -1,7 +1,6 @@
 import { Profile } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
-  TransactionError,
   TransactionKind,
   UserRejectedError,
   WalletConnectionError,
@@ -15,6 +14,7 @@ import {
 import { InvariantError, invariant } from '@lens-protocol/shared-kernel';
 
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
+import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useFollowController } from './adapters/useFollowController';
 
 export class PrematureFollowError extends Error {
@@ -47,7 +47,14 @@ function createFollowRequest(profile: Profile): FollowRequest {
   }
 }
 
-export type FollowProfileArgs = {
+/**
+ * An object representing the result of a follow operation.
+ *
+ * It allows to wait for the transaction to be processed and indexed.
+ */
+export type FollowAsyncResult = AsyncTransactionResult<void>;
+
+export type FollowArgs = {
   /**
    * The profile to follow
    */
@@ -72,16 +79,15 @@ export type FollowProfileArgs = {
  * @group Hooks
  */
 export function useFollow(): UseDeferredTask<
-  void,
+  FollowAsyncResult,
   | BroadcastingError
   | InsufficientAllowanceError
   | InsufficientFundsError
   | PendingSigningRequestError
   | PrematureFollowError
-  | TransactionError
   | UserRejectedError
   | WalletConnectionError,
-  FollowProfileArgs
+  FollowArgs
 > {
   const followProfile = useFollowController();
 

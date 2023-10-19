@@ -3,6 +3,8 @@ import {
   UnfollowRequest,
   UpdateFollowPolicyRequest,
   SetProfileMetadataRequest,
+  UnlinkHandleRequest,
+  LinkHandleRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import { TokenAllowanceRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { formatZodError } from '@lens-protocol/metadata';
@@ -16,6 +18,8 @@ import {
   UpdateFollowPolicyRequestSchema,
   SetProfileMetadataRequestSchema,
   UpdateProfileManagersRequestSchema,
+  LinkHandleRequestSchema,
+  UnlinkHandleRequestSchema,
 } from './profiles';
 
 export type Validator<T> = (request: unknown) => asserts request is T;
@@ -49,3 +53,9 @@ export const validateUnfollowRequest: Validator<UnfollowRequest> =
 
 export const validateFollowRequest: Validator<FollowRequest> =
   createRequestValidator(FollowRequestSchema);
+
+export const validateLinkHandleRequest: Validator<LinkHandleRequest> =
+  createRequestValidator(LinkHandleRequestSchema);
+
+export const validateUnlinkHandleRequest: Validator<UnlinkHandleRequest> =
+  createRequestValidator(UnlinkHandleRequestSchema);

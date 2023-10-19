@@ -3690,6 +3690,7 @@ export type HandleUnlinkFromProfileData = { result: LensProfileManagerRelayError
 
 export type CreateHandleLinkToProfileTypedDataVariables = Exact<{
   request: HandleLinkToProfileRequest;
+  options?: InputMaybe<TypedDataOptions>;
 }>;
 
 export type CreateHandleLinkToProfileTypedDataData = {
@@ -3698,6 +3699,7 @@ export type CreateHandleLinkToProfileTypedDataData = {
 
 export type CreateHandleUnlinkFromProfileTypedDataVariables = Exact<{
   request: HandleUnlinkFromProfileRequest;
+  options?: InputMaybe<TypedDataOptions>;
 }>;
 
 export type CreateHandleUnlinkFromProfileTypedDataData = {
@@ -10635,8 +10637,11 @@ export type HandleUnlinkFromProfileMutationOptions = Apollo.BaseMutationOptions<
   HandleUnlinkFromProfileVariables
 >;
 export const CreateHandleLinkToProfileTypedDataDocument = /*#__PURE__*/ gql`
-  mutation CreateHandleLinkToProfileTypedData($request: HandleLinkToProfileRequest!) {
-    result: createHandleLinkToProfileTypedData(request: $request) {
+  mutation CreateHandleLinkToProfileTypedData(
+    $request: HandleLinkToProfileRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createHandleLinkToProfileTypedData(request: $request, options: $options) {
       ...CreateHandleLinkToProfileBroadcastItemResult
     }
   }
@@ -10661,6 +10666,7 @@ export type CreateHandleLinkToProfileTypedDataMutationFn = Apollo.MutationFuncti
  * const [createHandleLinkToProfileTypedData, { data, loading, error }] = useCreateHandleLinkToProfileTypedData({
  *   variables: {
  *      request: // value for 'request'
+ *      options: // value for 'options'
  *   },
  * });
  */
@@ -10686,8 +10692,11 @@ export type CreateHandleLinkToProfileTypedDataMutationOptions = Apollo.BaseMutat
   CreateHandleLinkToProfileTypedDataVariables
 >;
 export const CreateHandleUnlinkFromProfileTypedDataDocument = /*#__PURE__*/ gql`
-  mutation CreateHandleUnlinkFromProfileTypedData($request: HandleUnlinkFromProfileRequest!) {
-    result: createHandleUnlinkFromProfileTypedData(request: $request) {
+  mutation CreateHandleUnlinkFromProfileTypedData(
+    $request: HandleUnlinkFromProfileRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createHandleUnlinkFromProfileTypedData(request: $request, options: $options) {
       ...CreateHandleUnlinkFromProfileBroadcastItemResult
     }
   }
@@ -10712,6 +10721,7 @@ export type CreateHandleUnlinkFromProfileTypedDataMutationFn = Apollo.MutationFu
  * const [createHandleUnlinkFromProfileTypedData, { data, loading, error }] = useCreateHandleUnlinkFromProfileTypedData({
  *   variables: {
  *      request: // value for 'request'
+ *      options: // value for 'options'
  *   },
  * });
  */

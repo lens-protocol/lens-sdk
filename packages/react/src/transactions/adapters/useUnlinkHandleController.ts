@@ -3,17 +3,17 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { UnfollowProfile, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
+import { UnlinkHandle, UnlinkHandleRequest } from '@lens-protocol/domain/use-cases/profile';
 import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
 import { AsyncTransactionResult } from './AsyncTransactionResult';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
-import { UnfollowProfileGateway } from './profiles/UnfollowProfileGateway';
-import { validateUnfollowRequest } from './schemas/validators';
+import { UnlinkHandleGateway } from './profiles/UnlinkHandleGateway';
+import { validateUnlinkHandleRequest } from './schemas/validators';
 
-export function useUnfollowController() {
+export function useUnlinkHandleController() {
   const {
     activeWallet,
     apolloClient,
@@ -24,18 +24,18 @@ export function useUnfollowController() {
   } = useSharedDependencies();
 
   return async (
-    request: UnfollowRequest,
+    request: UnlinkHandleRequest,
   ): PromiseResult<
     AsyncTransactionResult<void>,
     BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
   > => {
-    validateUnfollowRequest(request);
+    validateUnlinkHandleRequest(request);
 
     const presenter = new TransactionResultPresenter<
-      UnfollowRequest,
+      UnlinkHandleRequest,
       BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
-    const gateway = new UnfollowProfileGateway(apolloClient, transactionFactory);
+    const gateway = new UnlinkHandleGateway(apolloClient, transactionFactory);
 
     const signedFollow = new SubsidizeOnChain(
       activeWallet,
@@ -46,9 +46,9 @@ export function useUnfollowController() {
       presenter,
     );
 
-    const unfollowProfile = new UnfollowProfile(signedFollow, gateway, transactionQueue, presenter);
+    const unlinkHandle = new UnlinkHandle(signedFollow, gateway, transactionQueue, presenter);
 
-    await unfollowProfile.execute(request);
+    await unlinkHandle.execute(request);
 
     return presenter.asResult();
   };

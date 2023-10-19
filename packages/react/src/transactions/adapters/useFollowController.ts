@@ -1,6 +1,5 @@
 import {
   PendingSigningRequestError,
-  TransactionError,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
@@ -17,6 +16,7 @@ import {
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
+import { AsyncTransactionResult } from './AsyncTransactionResult';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
 import { FollowProfileGateway } from './profiles/FollowProfileGateway';
 import { validateFollowRequest } from './schemas/validators';
@@ -35,12 +35,11 @@ export function useFollowController() {
   return async (
     request: FollowRequest,
   ): PromiseResult<
-    void,
+    AsyncTransactionResult<void>,
     | BroadcastingError
     | InsufficientAllowanceError
     | InsufficientFundsError
     | PendingSigningRequestError
-    | TransactionError
     | UserRejectedError
     | WalletConnectionError
   > => {
@@ -82,11 +81,6 @@ export function useFollowController() {
 
     await followProfile.execute(request);
 
-    const result = presenter.asResult();
-
-    if (result.isSuccess()) {
-      return result.value.waitForCompletion();
-    }
-    return result;
+    return presenter.asResult();
   };
 }

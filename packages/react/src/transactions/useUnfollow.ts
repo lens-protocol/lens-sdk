@@ -1,7 +1,6 @@
 import { Profile } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
-  TransactionError,
   TransactionKind,
   UserRejectedError,
   WalletConnectionError,
@@ -9,7 +8,15 @@ import {
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
+import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useUnfollowController } from './adapters/useUnfollowController';
+
+/**
+ * An object representing the result of an unfollow operation.
+ *
+ * It allows to wait for the transaction to be processed and indexed.
+ */
+export type UnfollowAsyncResult = AsyncTransactionResult<void>;
 
 export type UnfollowArgs = {
   /**
@@ -36,12 +43,8 @@ export type UnfollowArgs = {
  * @group Hooks
  */
 export function useUnfollow(): UseDeferredTask<
-  void,
-  | BroadcastingError
-  | PendingSigningRequestError
-  | UserRejectedError
-  | WalletConnectionError
-  | TransactionError,
+  UnfollowAsyncResult,
+  BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
   UnfollowArgs
 > {
   const unfollowProfile = useUnfollowController();
