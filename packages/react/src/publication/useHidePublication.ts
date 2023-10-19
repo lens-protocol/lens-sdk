@@ -21,9 +21,13 @@ export type UseHidePublicationArgs = {
  * function HidePublication({ publication }: { publication: AnyPublication }) {
  *   const { execute: hide, loading } = useHidePublication();
  *
+ *   if (publication.isHidden) {
+ *    return <span>Publication is hidden</span>;
+ *   }
+ *
  *   return (
  *     <button onClick={() => hide({ publication })} disabled={loading}>
- *       Hide
+ *       Hide publication
  *     </button>
  *   );
  * }
