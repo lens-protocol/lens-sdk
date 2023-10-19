@@ -71,6 +71,11 @@ const profileHooks = [
     description: `Update the follow policy for the logged-in Profile.`,
     path: '/profiles/useUpdateFollowPolicy',
   },
+  {
+    label: 'useOwnedHandles & useLinkHandle & useUnlinkHandle',
+    description: `Link and unlink handle from a profile.`,
+    path: '/profiles/useOwnedHandles',
+  },
 ];
 
 export function ProfilesPage() {

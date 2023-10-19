@@ -25,6 +25,7 @@ export * from './profile';
 export * from './publication';
 export * from './revenue';
 export * from './transactions';
+export * from './wallet';
 
 /**
  * Domain essentials
