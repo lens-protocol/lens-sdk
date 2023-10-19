@@ -30,10 +30,12 @@ export type LensConfig = {
    */
   logger?: ILogger;
   /**
-   * Optional storage provider to use. If not provided, the `window.localStorage` will be used.
+   * The storage provider to use.
    *
-   * If a implementation of {@link IObservableStorageProvider} is provided,
+   * If an implementation of {@link IObservableStorageProvider} is provided,
    * the provider will be used to subscribe to changes in the storage.
+   *
+   * @defaultValue an implementation based on `window.localStorage` and `StorageEvent`.
    */
   storage?: IStorageProvider | IObservableStorageProvider;
   /**
