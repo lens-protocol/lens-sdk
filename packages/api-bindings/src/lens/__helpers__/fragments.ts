@@ -1,39 +1,15 @@
 import { faker } from '@faker-js/faker';
 import { mockProfileId, mockPublicationId, mockTransactionHash } from '@lens-protocol/domain/mocks';
 import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
+import { ChainType, Erc20, Erc20Amount } from '@lens-protocol/shared-kernel';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
-import {
-  Amount,
-  CanDecryptResponse,
-  Comment,
-  Erc20,
-  FeedItem,
-  MentionNotification,
-  Mirror,
-  NetworkAddress,
-  OptimisticStatusResult,
-  PaginatedResultInfo,
-  Post,
-  Profile,
-  ProfileActionHistory,
-  ProfileActionHistoryType,
-  ProfileOnchainIdentity,
-  ProfileOperations,
-  ProfileReactionResult,
-  ProfileStats,
-  ProfileWhoReactedResult,
-  PublicationOperations,
-  PublicationReactionType,
-  PublicationRevenue,
-  PublicationStats,
-  RevenueAggregate,
-  TextOnlyMetadataV3,
-  TriStateValue,
-} from '../graphql/generated';
+import * as gql from '../graphql/generated';
 import { AnyPublication } from '../publication';
 
-function mockNetworkAddressFragment(overrides?: Partial<NetworkAddress>): NetworkAddress {
+export function mockNetworkAddressFragment(
+  overrides?: Partial<gql.NetworkAddress>,
+): gql.NetworkAddress {
   return {
     address: mockEvmAddress(),
     chainId: 1,
@@ -42,9 +18,31 @@ function mockNetworkAddressFragment(overrides?: Partial<NetworkAddress>): Networ
   };
 }
 
+function mockErc20FragmentFrom(erc20: Erc20): gql.Erc20 {
+  return {
+    __typename: 'Erc20',
+    name: erc20.name,
+    symbol: erc20.symbol,
+    decimals: erc20.decimals,
+    contract: mockNetworkAddressFragment({
+      address: erc20.address,
+      chainId: erc20.chainType === ChainType.ETHEREUM ? 1 : 137,
+    }),
+  };
+}
+
+export function mockAmountFragmentFrom(amount: Erc20Amount): gql.Amount {
+  return {
+    __typename: 'Amount',
+    asset: mockErc20FragmentFrom(amount.asset),
+    value: amount.toSignificantDigits(),
+    rate: null,
+  };
+}
+
 function mockOptimisticStatusResultFragment(
-  overrides?: Partial<OptimisticStatusResult>,
-): OptimisticStatusResult {
+  overrides?: Partial<gql.OptimisticStatusResult>,
+): gql.OptimisticStatusResult {
   return {
     value: true,
     isFinalisedOnchain: false,
@@ -53,12 +51,14 @@ function mockOptimisticStatusResultFragment(
   };
 }
 
-function mockProfileOperationsFragment(overrides?: Partial<ProfileOperations>): ProfileOperations {
+function mockProfileOperationsFragment(
+  overrides?: Partial<gql.ProfileOperations>,
+): gql.ProfileOperations {
   return {
     id: mockProfileId(),
     canBlock: false,
     canUnblock: false,
-    canFollow: TriStateValue.Unknown,
+    canFollow: gql.TriStateValue.Unknown,
     canUnfollow: false,
     isBlockedByMe: mockOptimisticStatusResultFragment(),
     isFollowedByMe: mockOptimisticStatusResultFragment(),
@@ -69,8 +69,8 @@ function mockProfileOperationsFragment(overrides?: Partial<ProfileOperations>): 
 }
 
 function mockProfileOnchainIdentityFragment(
-  overrides?: Partial<ProfileOnchainIdentity>,
-): ProfileOnchainIdentity {
+  overrides?: Partial<gql.ProfileOnchainIdentity>,
+): gql.ProfileOnchainIdentity {
   return {
     proofOfHumanity: false,
     ens: null,
@@ -89,7 +89,7 @@ function mockProfileOnchainIdentityFragment(
   };
 }
 
-export function mockProfileFragment(overrides?: Partial<Profile>): Profile {
+export function mockProfileFragment(overrides?: Partial<gql.Profile>): gql.Profile {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
 
@@ -120,7 +120,7 @@ export function mockProfileFragment(overrides?: Partial<Profile>): Profile {
   };
 }
 
-export function mockPostFragment(overrides?: Partial<Omit<Post, '__typename'>>): Post {
+export function mockPostFragment(overrides?: Partial<Omit<gql.Post, '__typename'>>): gql.Post {
   return {
     id: mockPublicationId(),
     isHidden: false,
@@ -140,7 +140,9 @@ export function mockPostFragment(overrides?: Partial<Omit<Post, '__typename'>>):
   };
 }
 
-export function mockCommentFragment(overrides?: Partial<Omit<Comment, '__typename'>>): Comment {
+export function mockCommentFragment(
+  overrides?: Partial<Omit<gql.Comment, '__typename'>>,
+): gql.Comment {
   const mainPost = mockPostFragment();
 
   return {
@@ -165,7 +167,9 @@ export function mockCommentFragment(overrides?: Partial<Omit<Comment, '__typenam
   };
 }
 
-export function mockMirrorFragment(overrides?: Partial<Omit<Mirror, '__typename'>>): Mirror {
+export function mockMirrorFragment(
+  overrides?: Partial<Omit<gql.Mirror, '__typename'>>,
+): gql.Mirror {
   const mainPost = mockPostFragment();
 
   return {
@@ -183,8 +187,8 @@ export function mockMirrorFragment(overrides?: Partial<Omit<Mirror, '__typename'
 }
 
 export function mockPublicationTextOnlyMetadata(
-  overrides: Partial<TextOnlyMetadataV3> = {},
-): TextOnlyMetadataV3 {
+  overrides: Partial<gql.TextOnlyMetadataV3> = {},
+): gql.TextOnlyMetadataV3 {
   return {
     id: faker.helpers.unique(faker.datatype.uuid),
     rawURI: faker.internet.url(),
@@ -204,8 +208,8 @@ export function mockPublicationTextOnlyMetadata(
 }
 
 function mockCanDecryptResponseFragment(
-  overrides?: Partial<ProfileOperations>,
-): CanDecryptResponse {
+  overrides?: Partial<gql.ProfileOperations>,
+): gql.CanDecryptResponse {
   return {
     result: false,
     reasons: null,
@@ -216,15 +220,15 @@ function mockCanDecryptResponseFragment(
 }
 
 export function mockPublicationOperationsFragment(
-  overrides: Partial<PublicationOperations> = {},
-): PublicationOperations {
+  overrides: Partial<gql.PublicationOperations> = {},
+): gql.PublicationOperations {
   return {
     isNotInterested: false,
     hasBookmarked: false,
     hasReported: false,
-    canCollect: TriStateValue.Unknown,
-    canComment: TriStateValue.Unknown,
-    canMirror: TriStateValue.Unknown,
+    canCollect: gql.TriStateValue.Unknown,
+    canComment: gql.TriStateValue.Unknown,
+    canMirror: gql.TriStateValue.Unknown,
     hasMirrored: false,
     hasUpvoted: false,
     hasDownvoted: false,
@@ -237,8 +241,8 @@ export function mockPublicationOperationsFragment(
 }
 
 export function mockPaginatedResultInfo(
-  overrides: Partial<PaginatedResultInfo> = {},
-): PaginatedResultInfo {
+  overrides: Partial<gql.PaginatedResultInfo> = {},
+): gql.PaginatedResultInfo {
   return {
     moreAfter: false,
     prev: null,
@@ -249,8 +253,8 @@ export function mockPaginatedResultInfo(
 }
 
 export function mockPublicationStatsFragment(
-  overrides: Partial<PublicationStats> = {},
-): PublicationStats {
+  overrides: Partial<gql.PublicationStats> = {},
+): gql.PublicationStats {
   return {
     id: mockPublicationId(),
     comments: faker.datatype.number(),
@@ -266,7 +270,9 @@ export function mockPublicationStatsFragment(
   };
 }
 
-export function mockProfileStatsFragment(overrides: Partial<ProfileStats> = {}): ProfileStats {
+export function mockProfileStatsFragment(
+  overrides: Partial<gql.ProfileStats> = {},
+): gql.ProfileStats {
   return {
     id: mockProfileId(),
     followers: faker.datatype.number(),
@@ -287,7 +293,7 @@ export function mockProfileStatsFragment(overrides: Partial<ProfileStats> = {}):
   };
 }
 
-export function mockFeedItemFragment(overrides?: Partial<FeedItem>): FeedItem {
+export function mockFeedItemFragment(overrides?: Partial<gql.FeedItem>): gql.FeedItem {
   return {
     id: faker.datatype.uuid(),
     root: mockPostFragment(),
@@ -301,11 +307,11 @@ export function mockFeedItemFragment(overrides?: Partial<FeedItem>): FeedItem {
 }
 
 export function mockProfileActionHistoryFragment(
-  overrides: Partial<ProfileActionHistory> = {},
-): ProfileActionHistory {
+  overrides: Partial<gql.ProfileActionHistory> = {},
+): gql.ProfileActionHistory {
   return {
     id: faker.datatype.number(),
-    actionType: ProfileActionHistoryType.LoggedIn,
+    actionType: gql.ProfileActionHistoryType.LoggedIn,
     who: mockEvmAddress(),
     txHash: mockTransactionHash(),
     actionedOn: faker.date.past().toISOString(),
@@ -315,8 +321,8 @@ export function mockProfileActionHistoryFragment(
 }
 
 export function mockMentionNotification(
-  overrides?: Partial<MentionNotification>,
-): MentionNotification {
+  overrides?: Partial<gql.MentionNotification>,
+): gql.MentionNotification {
   return {
     __typename: 'MentionNotification',
     id: faker.datatype.uuid(),
@@ -326,10 +332,10 @@ export function mockMentionNotification(
 }
 
 export function mockProfileReactionResultFragment(
-  overrides: Partial<ProfileReactionResult> = {},
-): ProfileReactionResult {
+  overrides: Partial<gql.ProfileReactionResult> = {},
+): gql.ProfileReactionResult {
   return {
-    reaction: PublicationReactionType.Upvote,
+    reaction: gql.PublicationReactionType.Upvote,
     reactionAt: faker.date.past().toISOString(),
 
     ...overrides,
@@ -338,8 +344,8 @@ export function mockProfileReactionResultFragment(
 }
 
 export function mockProfileWhoReactedResultFragment(
-  overrides: Partial<ProfileWhoReactedResult> = {},
-): ProfileWhoReactedResult {
+  overrides: Partial<gql.ProfileWhoReactedResult> = {},
+): gql.ProfileWhoReactedResult {
   return {
     profile: mockProfileFragment(),
     reactions: [mockProfileReactionResultFragment()],
@@ -349,7 +355,7 @@ export function mockProfileWhoReactedResultFragment(
   };
 }
 
-export function mockErc20Fragment(overrides: Partial<Erc20> = {}): Erc20 {
+export function mockErc20Fragment(overrides: Partial<gql.Erc20> = {}): gql.Erc20 {
   return {
     name: 'Wrapped MATIC',
     symbol: 'WMATIC',
@@ -360,7 +366,7 @@ export function mockErc20Fragment(overrides: Partial<Erc20> = {}): Erc20 {
   };
 }
 
-export function mockAmountFragment(overrides: Partial<Amount> = {}): Amount {
+export function mockAmountFragment(overrides: Partial<gql.Amount> = {}): gql.Amount {
   return {
     value: faker.datatype.number().toString(),
     asset: mockErc20Fragment(),
@@ -371,8 +377,8 @@ export function mockAmountFragment(overrides: Partial<Amount> = {}): Amount {
 }
 
 export function mockRevenueAggregateFragment(
-  overrides: Partial<RevenueAggregate> = {},
-): RevenueAggregate {
+  overrides: Partial<gql.RevenueAggregate> = {},
+): gql.RevenueAggregate {
   return {
     total: mockAmountFragment(),
     ...overrides,
@@ -384,7 +390,7 @@ export function mockPublicationRevenueFragment({
   publication = mockPostFragment(),
 }: {
   publication?: AnyPublication;
-} = {}): PublicationRevenue {
+} = {}): gql.PublicationRevenue {
   return {
     __typename: 'PublicationRevenue',
     publication: publication,

@@ -16,20 +16,20 @@ import { useDeferredTask, UseDeferredTask } from '../helpers/tasks';
 export type FetchProfileArgs = OneOf<ProfileRequest>;
 
 /**
- * Lazy version of {@link useProfile} hook.
+ * `useLazyProfile` is a lazy version of {@link useProfile} React Hook.
  *
  * This hook will not fetch the profile until the returned function is called.
  *
  * This hook is intended to enable more complex use cases, the vast majority of
  * use cases should use {@link useProfile} instead.
  *
+ * @example
+ * ```ts
+ * const { called, data, error, loading, execute } = useLazyProfile();
+ * ```
+ *
  * @experimental This hook is experimental and may change in the future.
  *
- * @category Profiles
- * @group Hooks
- *
- * @example
- * Simple usage
  * ```ts
  * const { called, data, error, loading, execute } = useLazyProfile();
  *
@@ -46,6 +46,9 @@ export type FetchProfileArgs = OneOf<ProfileRequest>;
  *   // do something with profile
  * }
  * ```
+ *
+ * @category Profiles
+ * @group Hooks
  */
 export function useLazyProfile(): UseDeferredTask<
   Profile,
@@ -66,7 +69,9 @@ export function useLazyProfile(): UseDeferredTask<
     }
 
     if (!data?.result) {
-      return failure(new NotFoundError(`Profile with id: ${String(args.forProfileId)}`));
+      return failure(
+        new NotFoundError(`profile for: ${String(args.forProfileId ?? args.forHandle)}`),
+      );
     }
 
     return success(data.result);

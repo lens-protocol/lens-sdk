@@ -1710,6 +1710,28 @@ export type WorldcoinPhoneVerifyWebhookRequest = {
   signalType: WorldcoinPhoneVerifyType;
 };
 
+export type ActOnOpenActionVariables = Exact<{
+  request: ActOnOpenActionLensManagerRequest;
+}>;
+
+export type ActOnOpenActionData = { result: LensProfileManagerRelayError | RelaySuccess };
+
+export type CreateActOnOpenActionBroadcastItemResult = {
+  __typename: 'CreateActOnOpenActionBroadcastItemResult';
+  id: string;
+  expiresAt: string;
+  typedData: CreateActOnOpenActionEip712TypedData;
+};
+
+export type CreateActOnOpenActionTypedDataVariables = Exact<{
+  request: ActOnOpenActionRequest;
+  options?: InputMaybe<TypedDataOptions>;
+}>;
+
+export type CreateActOnOpenActionTypedDataData = {
+  result: CreateActOnOpenActionBroadcastItemResult;
+};
+
 export type AuthChallengeResult = { __typename: 'AuthChallengeResult'; id: string; text: string };
 
 export type AuthChallengeVariables = Exact<{
@@ -4285,6 +4307,56 @@ export type UserSigNoncesVariables = Exact<{ [key: string]: never }>;
 
 export type UserSigNoncesData = { result: UserSigNonces };
 
+export const FragmentEip712TypedDataField = /*#__PURE__*/ gql`
+  fragment EIP712TypedDataField on EIP712TypedDataField {
+    name
+    type
+  }
+`;
+export const FragmentEip712TypedDataDomain = /*#__PURE__*/ gql`
+  fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
+    name
+    chainId
+    version
+    verifyingContract
+  }
+`;
+export const FragmentCreateActOnOpenActionEip712TypedData = /*#__PURE__*/ gql`
+  fragment CreateActOnOpenActionEIP712TypedData on CreateActOnOpenActionEIP712TypedData {
+    types {
+      Act {
+        ...EIP712TypedDataField
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    message: value {
+      nonce
+      deadline
+      publicationActedProfileId
+      publicationActedId
+      actorProfileId
+      referrerProfileIds
+      referrerPubIds
+      actionModuleAddress
+      actionModuleData
+    }
+  }
+  ${FragmentEip712TypedDataField}
+  ${FragmentEip712TypedDataDomain}
+`;
+export const FragmentCreateActOnOpenActionBroadcastItemResult = /*#__PURE__*/ gql`
+  fragment CreateActOnOpenActionBroadcastItemResult on CreateActOnOpenActionBroadcastItemResult {
+    __typename
+    id
+    expiresAt
+    typedData {
+      ...CreateActOnOpenActionEIP712TypedData
+    }
+  }
+  ${FragmentCreateActOnOpenActionEip712TypedData}
+`;
 export const FragmentAuthChallengeResult = /*#__PURE__*/ gql`
   fragment AuthChallengeResult on AuthChallengeResult {
     __typename
@@ -7260,14 +7332,6 @@ export const FragmentCreateProfileWithHandleErrorResult = /*#__PURE__*/ gql`
     reason
   }
 `;
-export const FragmentEip712TypedDataDomain = /*#__PURE__*/ gql`
-  fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
-    name
-    chainId
-    version
-    verifyingContract
-  }
-`;
 export const FragmentCreateOnchainSetProfileMetadataBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateOnchainSetProfileMetadataBroadcastItemResult on CreateOnchainSetProfileMetadataBroadcastItemResult {
     __typename
@@ -7450,12 +7514,6 @@ export const FragmentCreateSetFollowModuleBroadcastItemResult = /*#__PURE__*/ gq
     }
   }
   ${FragmentEip712TypedDataDomain}
-`;
-export const FragmentEip712TypedDataField = /*#__PURE__*/ gql`
-  fragment EIP712TypedDataField on EIP712TypedDataField {
-    name
-    type
-  }
 `;
 export const FragmentCreateHandleLinkToProfileBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateHandleLinkToProfileBroadcastItemResult on CreateHandleLinkToProfileBroadcastItemResult {
@@ -7784,31 +7842,6 @@ export const FragmentCreateMomokaQuoteBroadcastItemResult = /*#__PURE__*/ gql`
   }
   ${FragmentEip712TypedDataDomain}
 `;
-export const FragmentCreateActOnOpenActionEip712TypedData = /*#__PURE__*/ gql`
-  fragment CreateActOnOpenActionEIP712TypedData on CreateActOnOpenActionEIP712TypedData {
-    types {
-      Act {
-        ...EIP712TypedDataField
-      }
-    }
-    domain {
-      ...EIP712TypedDataDomain
-    }
-    message: value {
-      nonce
-      deadline
-      publicationActedProfileId
-      publicationActedId
-      actorProfileId
-      referrerProfileIds
-      referrerPubIds
-      actionModuleAddress
-      actionModuleData
-    }
-  }
-  ${FragmentEip712TypedDataField}
-  ${FragmentEip712TypedDataDomain}
-`;
 export const FragmentCreateLegacyCollectBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateLegacyCollectBroadcastItemResult on CreateLegacyCollectBroadcastItemResult {
     __typename
@@ -7909,6 +7942,112 @@ export const FragmentUserSigNonces = /*#__PURE__*/ gql`
     lensTokenHandleRegistryOnchainSigNonce
   }
 `;
+export const ActOnOpenActionDocument = /*#__PURE__*/ gql`
+  mutation ActOnOpenAction($request: ActOnOpenActionLensManagerRequest!) {
+    result: actOnOpenAction(request: $request) {
+      ... on RelaySuccess {
+        ...RelaySuccess
+      }
+      ... on LensProfileManagerRelayError {
+        ...LensProfileManagerRelayError
+      }
+    }
+  }
+  ${FragmentRelaySuccess}
+  ${FragmentLensProfileManagerRelayError}
+`;
+export type ActOnOpenActionMutationFn = Apollo.MutationFunction<
+  ActOnOpenActionData,
+  ActOnOpenActionVariables
+>;
+
+/**
+ * __useActOnOpenAction__
+ *
+ * To run a mutation, you first call `useActOnOpenAction` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useActOnOpenAction` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [actOnOpenAction, { data, loading, error }] = useActOnOpenAction({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useActOnOpenAction(
+  baseOptions?: Apollo.MutationHookOptions<ActOnOpenActionData, ActOnOpenActionVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<ActOnOpenActionData, ActOnOpenActionVariables>(
+    ActOnOpenActionDocument,
+    options,
+  );
+}
+export type ActOnOpenActionHookResult = ReturnType<typeof useActOnOpenAction>;
+export type ActOnOpenActionMutationResult = Apollo.MutationResult<ActOnOpenActionData>;
+export type ActOnOpenActionMutationOptions = Apollo.BaseMutationOptions<
+  ActOnOpenActionData,
+  ActOnOpenActionVariables
+>;
+export const CreateActOnOpenActionTypedDataDocument = /*#__PURE__*/ gql`
+  mutation CreateActOnOpenActionTypedData(
+    $request: ActOnOpenActionRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createActOnOpenActionTypedData(request: $request, options: $options) {
+      ...CreateActOnOpenActionBroadcastItemResult
+    }
+  }
+  ${FragmentCreateActOnOpenActionBroadcastItemResult}
+`;
+export type CreateActOnOpenActionTypedDataMutationFn = Apollo.MutationFunction<
+  CreateActOnOpenActionTypedDataData,
+  CreateActOnOpenActionTypedDataVariables
+>;
+
+/**
+ * __useCreateActOnOpenActionTypedData__
+ *
+ * To run a mutation, you first call `useCreateActOnOpenActionTypedData` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateActOnOpenActionTypedData` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createActOnOpenActionTypedData, { data, loading, error }] = useCreateActOnOpenActionTypedData({
+ *   variables: {
+ *      request: // value for 'request'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateActOnOpenActionTypedData(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateActOnOpenActionTypedDataData,
+    CreateActOnOpenActionTypedDataVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateActOnOpenActionTypedDataData,
+    CreateActOnOpenActionTypedDataVariables
+  >(CreateActOnOpenActionTypedDataDocument, options);
+}
+export type CreateActOnOpenActionTypedDataHookResult = ReturnType<
+  typeof useCreateActOnOpenActionTypedData
+>;
+export type CreateActOnOpenActionTypedDataMutationResult =
+  Apollo.MutationResult<CreateActOnOpenActionTypedDataData>;
+export type CreateActOnOpenActionTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateActOnOpenActionTypedDataData,
+  CreateActOnOpenActionTypedDataVariables
+>;
 export const AuthChallengeDocument = /*#__PURE__*/ gql`
   query AuthChallenge($request: ChallengeRequest!) {
     result: challenge(request: $request) {

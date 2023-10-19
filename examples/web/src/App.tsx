@@ -39,8 +39,8 @@ import {
   UseUpdateFollowPolicy,
   UseUpdateProfileManagers,
   UseWhoActedOnPublication,
+  UseSetProfileMetadata,
 } from './profiles';
-import { UseSetProfileMetadata } from './profiles/UseSetProfileMetadata';
 import {
   PublicationsPage,
   UseBookmarkToggle,
@@ -48,6 +48,7 @@ import {
   UseCreatePost,
   UseHidePublication,
   UseMyBookmarks,
+  UseOpenAction,
   UsePublication,
   UsePublications,
   UseReactionToggle,
@@ -113,6 +114,7 @@ export function App() {
                       <Route path="useReactionToggle" element={<UseReactionToggle />} />
                       <Route path="useBookmarkToggle" element={<UseBookmarkToggle />} />
                       <Route path="useMyBookmarks" element={<UseMyBookmarks />} />
+                      <Route path="useOpenAction" element={<UseOpenAction />} />
                     </Route>
 
                     <Route path="/profiles">

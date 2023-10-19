@@ -1,4 +1,4 @@
-export * from './CollectPublication';
+export * from './OpenAction';
 export * from './CreateComment';
 export * from './CreateMirror';
 export * from './CreatePost';

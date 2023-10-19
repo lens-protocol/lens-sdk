@@ -46,6 +46,10 @@ export class PublicationCacheManager implements IPublicationCacheManager {
     return publication;
   }
 
+  async refresh(publicationId: PublicationId): Promise<void> {
+    await this.request({ forId: publicationId }, 'network-only');
+  }
+
   update(
     publicationId: PublicationId,
     updateFn: <TPublication extends AnyPublication>(current: TPublication) => TPublication,

@@ -51,6 +51,11 @@ const publicationHooks = [
     description: `Fetch a list of publications that the current user has bookmarked.`,
     path: '/publications/useMyBookmarks',
   },
+  {
+    label: 'useOpenAction',
+    description: `Execute an Open Action on a publication.`,
+    path: '/publications/useOpenAction',
+  },
 ];
 
 export function PublicationsPage() {
