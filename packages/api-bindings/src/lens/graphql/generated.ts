@@ -4139,7 +4139,10 @@ export type PublicationRevenue = {
 };
 
 export type RevenueFromPublicationsVariables = Exact<{
-  request: RevenueFromPublicationsRequest;
+  for: Scalars['ProfileId'];
+  publishedOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   imageSmallSize?: InputMaybe<ImageTransform>;
   imageMediumSize?: InputMaybe<ImageTransform>;
   profileCoverSize?: InputMaybe<ImageTransform>;
@@ -12239,7 +12242,10 @@ export type WhoReactedPublicationQueryResult = Apollo.QueryResult<
 >;
 export const RevenueFromPublicationsDocument = /*#__PURE__*/ gql`
   query RevenueFromPublications(
-    $request: RevenueFromPublicationsRequest!
+    $for: ProfileId!
+    $publishedOn: [AppId!]
+    $limit: LimitType
+    $cursor: Cursor
     $imageSmallSize: ImageTransform = {}
     $imageMediumSize: ImageTransform = {}
     $profileCoverSize: ImageTransform = {}
@@ -12248,7 +12254,9 @@ export const RevenueFromPublicationsDocument = /*#__PURE__*/ gql`
     $fxRateFor: SupportedFiatType = USD
   ) {
     ...InjectCommonQueryParams
-    result: revenueFromPublications(request: $request) {
+    result: revenueFromPublications(
+      request: { for: $for, publishedOn: $publishedOn, limit: $limit, cursor: $cursor }
+    ) {
       items {
         ...PublicationRevenue
       }
@@ -12274,7 +12282,10 @@ export const RevenueFromPublicationsDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useRevenueFromPublications({
  *   variables: {
- *      request: // value for 'request'
+ *      for: // value for 'for'
+ *      publishedOn: // value for 'publishedOn'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *      imageSmallSize: // value for 'imageSmallSize'
  *      imageMediumSize: // value for 'imageMediumSize'
  *      profileCoverSize: // value for 'profileCoverSize'

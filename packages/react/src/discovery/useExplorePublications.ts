@@ -20,7 +20,7 @@ export type UseExplorePublicationsArgs = PaginatedArgs<ExplorePublicationRequest
  * @example
  * Explore publications of type post with the most comments
  * ```tsx
- * import { useExplorePublications, ExplorePublicationsOrderByType, ExplorePublicationType  } from '@lens-protocol/react-web';
+ * import { useExplorePublications, ExplorePublicationsOrderByType, ExplorePublicationType  } from '@lens-protocol/react';
  *
  * function ExplorePublications() {
  *   const { data, error, loading } = useExplorePublications(

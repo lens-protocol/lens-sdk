@@ -43,17 +43,23 @@ import {
 import { UseSetProfileMetadata } from './profiles/UseSetProfileMetadata';
 import {
   PublicationsPage,
+  UseBookmarkToggle,
+  UseCreateComment,
+  UseCreatePost,
+  UseHidePublication,
+  UseMyBookmarks,
   UsePublication,
   UsePublications,
-  UseReportPublication,
   UseReactionToggle,
+  UseReportPublication,
   UseWhoReactedToPublication,
 } from './publications';
-import { UseBookmarkToggle } from './publications/UseBookmarkToggle';
-import { UseCreateComment } from './publications/UseCreateComment';
-import { UseCreatePost } from './publications/UseCreatePost';
-import { UseHidePublication } from './publications/UseHidePublication';
-import { UseMyBookmarks } from './publications/UseMyBookmarks';
+import {
+  RevenuePage,
+  UseRevenueFromFollow,
+  UseRevenueFromPublication,
+  UseRevenueFromPublications,
+} from './revenue';
 
 const { publicClient, webSocketPublicClient } = configureChains(
   [polygonMumbai],
@@ -141,6 +147,19 @@ export function App() {
                       <Route path="useSearchProfiles" element={<UseSearchProfiles />} />
                       <Route path="useExploreProfiles" element={<UseExploreProfiles />} />
                       <Route path="useExplorePublications" element={<UseExplorePublications />} />
+                    </Route>
+
+                    <Route path="/revenue">
+                      <Route index element={<RevenuePage />} />
+                      <Route path="useRevenueFromFollow" element={<UseRevenueFromFollow />} />
+                      <Route
+                        path="useRevenueFromPublication"
+                        element={<UseRevenueFromPublication />}
+                      />
+                      <Route
+                        path="useRevenueFromPublications"
+                        element={<UseRevenueFromPublications />}
+                      />
                     </Route>
 
                     <Route path="/misc">

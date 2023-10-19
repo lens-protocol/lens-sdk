@@ -23,6 +23,7 @@ export * from './discovery';
 export * from './misc';
 export * from './profile';
 export * from './publication';
+export * from './revenue';
 export * from './transactions';
 
 /**
