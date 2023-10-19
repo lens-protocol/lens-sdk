@@ -47,7 +47,7 @@
   "dependencies": {
     "@lens-protocol/shared-kernel": "workspace:*",
     "@lens-protocol/storage": "workspace:*",
-    "@lit-protocol/constants": "2.1.62",
+    "@lit-protocol/constants": "2.2.61",
     "@lit-protocol/crypto": "2.1.62",
     "@lit-protocol/encryption": "2.1.62",
     "@lit-protocol/node-client": "^2.1.62",

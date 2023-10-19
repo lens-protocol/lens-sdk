@@ -786,8 +786,8 @@ importers:
         specifier: workspace:*
         version: link:../storage
       '@lit-protocol/constants':
-        specifier: 2.1.62
-        version: 2.1.62
+        specifier: 2.2.61
+        version: 2.2.61
       '@lit-protocol/crypto':
         specifier: 2.1.62
         version: 2.1.62
@@ -7619,7 +7619,7 @@ packages:
       collect-v8-coverage: 1.0.1
       exit: 0.1.2
       glob: 7.2.3
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       istanbul-lib-coverage: 3.2.0
       istanbul-lib-instrument: 5.2.1
       istanbul-lib-report: 3.0.0
@@ -7691,7 +7691,7 @@ packages:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.19
       callsites: 3.1.0
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
     dev: true
 
   /@jest/source-map@29.6.0:
@@ -7726,7 +7726,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/test-result': 29.6.2
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       jest-haste-map: 29.6.2
       slash: 3.0.0
     dev: true
@@ -7751,7 +7751,7 @@ packages:
       chalk: 4.1.2
       convert-source-map: 2.0.0
       fast-json-stable-stringify: 2.1.0
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       jest-haste-map: 29.4.3
       jest-regex-util: 29.4.3
       jest-util: 29.6.2
@@ -8557,6 +8557,16 @@ packages:
       - utf-8-validate
     dev: false
 
+  /@lit-protocol/auth-helpers@2.2.61(ethers@5.7.2):
+    resolution: {integrity: sha512-2VzwFaHwMHN4raQ5RsKfXz02KqQ2hbPHCf0GPfXify79ZAUYp/BIsOyo1mpVlVkA1moaQ0zadHAlTdcBVNCVtQ==}
+    dependencies:
+      siwe: 2.1.4(ethers@5.7.2)
+      siwe-recap: 0.0.2-alpha.0(ethers@5.7.2)
+      tslib: 2.6.2
+    transitivePeerDependencies:
+      - ethers
+    dev: false
+
   /@lit-protocol/bls-sdk@2.1.62:
     resolution: {integrity: sha512-UjNjycoNXOEoLH/foIJx1L9PLL5OxmHcCD/mFXr4KSeQV/v4srvGNpY/4ng7+k9sJEbvwRwv+FB07ng3/Ihacg==}
     dev: false
@@ -8566,6 +8576,20 @@ packages:
     dependencies:
       '@lit-protocol/types': 2.1.62
       tslib: 2.6.1
+    dev: false
+
+  /@lit-protocol/constants@2.2.61:
+    resolution: {integrity: sha512-M4jvbawMX0QgPriTT8H4iymkh7uJXjqPZvm+pr/5bIsDbarng5eRpHd1gB6DPX9n5RV9X+rSk1FFSoahUeWieg==}
+    dependencies:
+      '@lit-protocol/auth-helpers': 2.2.61(ethers@5.7.2)
+      '@lit-protocol/types': 2.2.61
+      ethers: 5.7.2
+      siwe: 2.1.4(ethers@5.7.2)
+      siwe-recap: 0.0.2-alpha.0(ethers@5.7.2)
+      tslib: 2.6.2
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
     dev: false
 
   /@lit-protocol/crypto@2.1.62:
@@ -8726,6 +8750,19 @@ packages:
 
   /@lit-protocol/types@2.1.62:
     resolution: {integrity: sha512-DoIOmbI+Bg3zLWzqx4fLv1vW3k1sbDof/fxslHsLt5aX/MXHSZVKTJb+jWgNVcQ4ba+YLqgoKaPb1i58DMvCPw==}
+    dev: false
+
+  /@lit-protocol/types@2.2.61:
+    resolution: {integrity: sha512-5BFOFZlrlWPNvkROcw3690uypFdeIr/e7Kqr3JS/22RH1dsAz9Oq0kJGXe+qEF4hp699BvyLQzsqd15CzY5+oA==}
+    dependencies:
+      '@lit-protocol/auth-helpers': 2.2.61(ethers@5.7.2)
+      ethers: 5.7.2
+      siwe: 2.1.4(ethers@5.7.2)
+      siwe-recap: 0.0.2-alpha.0(ethers@5.7.2)
+      tslib: 2.6.2
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
     dev: false
 
   /@lit-protocol/uint8arrays@2.1.62:
@@ -11698,7 +11735,7 @@ packages:
       babel-plugin-istanbul: 6.1.1
       babel-preset-jest: 29.4.3(@babel/core@7.22.10)
       chalk: 4.1.2
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       slash: 3.0.0
     transitivePeerDependencies:
       - supports-color
@@ -12420,6 +12457,10 @@ packages:
 
   /caniuse-lite@1.0.30001519:
     resolution: {integrity: sha512-0QHgqR+Jv4bxHMp8kZ1Kn8CH55OikjKJ6JmKkZYP1F3D7w+lnFXF70nG5eNfsZS89jadi5Ywy5UCSKLAglIRkg==}
+
+  /canonicalize@2.0.0:
+    resolution: {integrity: sha512-ulDEYPv7asdKvqahuAY35c1selLdzDwHqugK92hfkzvlDCwXRRelDkR+Er33md/PtnpqHemgkuDPanZ4fiYZ8w==}
+    dev: false
 
   /capital-case@1.0.4:
     resolution: {integrity: sha512-ds37W8CytHgwnhGGTi88pcPyR15qoNkOpYwmMMfnWqqWgESapLqvDx6huFjQ5vqWSn2Z06173XNA7LtMOeUh1A==}
@@ -16312,7 +16353,7 @@ packages:
       ci-info: 3.8.0
       deepmerge: 4.3.0
       glob: 7.2.3
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       jest-circus: 29.4.3
       jest-environment-node: 29.4.3
       jest-get-type: 29.4.3
@@ -16351,7 +16392,7 @@ packages:
       ci-info: 3.8.0
       deepmerge: 4.3.0
       glob: 7.2.3
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       jest-circus: 29.4.3
       jest-environment-node: 29.4.3
       jest-get-type: 29.4.3
@@ -16542,7 +16583,7 @@ packages:
       '@types/node': 18.15.13
       anymatch: 3.1.3
       fb-watchman: 2.0.2
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       jest-regex-util: 29.4.3
       jest-util: 29.6.2
       jest-worker: 29.4.3
@@ -16697,7 +16738,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       chalk: 4.1.2
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       jest-haste-map: 29.4.3
       jest-pnp-resolver: 1.2.3(jest-resolve@29.4.3)
       jest-util: 29.6.2
@@ -16733,7 +16774,7 @@ packages:
       '@types/node': 18.15.13
       chalk: 4.1.2
       emittery: 0.13.1
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       jest-docblock: 29.4.3
       jest-environment-node: 29.4.3
       jest-haste-map: 29.4.3
@@ -16794,7 +16835,7 @@ packages:
       cjs-module-lexer: 1.2.2
       collect-v8-coverage: 1.0.1
       glob: 7.2.3
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       jest-haste-map: 29.4.3
       jest-message-util: 29.6.2
       jest-mock: 29.4.3
@@ -16855,7 +16896,7 @@ packages:
       babel-preset-current-node-syntax: 1.0.1(@babel/core@7.22.10)
       chalk: 4.1.2
       expect: 29.6.2
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       jest-diff: 29.6.2
       jest-get-type: 29.4.3
       jest-haste-map: 29.4.3
@@ -17222,7 +17263,7 @@ packages:
   /jsonfile@4.0.0:
     resolution: {integrity: sha512-m6F1R3z8jjlf2imQHS2Qez5sjKWQzbuuhuJ/FKYFRZvPE3PuHcSMVZzfsLhGVOkfd20obL5SWEBew5ShlquNxg==}
     optionalDependencies:
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
     dev: true
 
   /jsonfile@6.1.0:
@@ -17230,7 +17271,7 @@ packages:
     dependencies:
       universalify: 2.0.0
     optionalDependencies:
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
     dev: true
 
   /jsonify@0.0.1:
@@ -18132,6 +18173,11 @@ packages:
 
   /ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
+
+  /multiformats@11.0.2:
+    resolution: {integrity: sha512-b5mYMkOkARIuVZCpvijFj9a6m5wMVLC7cf/jIPd5D/ARDOfLC5+IFkbgDXQgcU2goIsTD/O9NY4DI/Mt4OGvlg==}
+    engines: {node: '>=16.0.0', npm: '>=7.0.0'}
+    dev: false
 
   /multiformats@9.9.0:
     resolution: {integrity: sha512-HoMUjhH9T8DDBNT+6xzkrd9ga/XiBI4xLr58LJACwK6G3HTOPeMz4nB4KJs33L2BelrIJa7P0VuNaVF3hMYfjg==}
@@ -20078,6 +20124,17 @@ packages:
   /sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
 
+  /siwe-recap@0.0.2-alpha.0(ethers@5.7.2):
+    resolution: {integrity: sha512-xqFUnvrACWW/Q4s5HQ02avg8IyH2RcgkUzfvN4scYaaHErotLVtTGDZkSS0sn/oNK4MXRt83lTqredsvXgt8iA==}
+    peerDependencies:
+      ethers: ^5.5.1 || 5.7.2
+    dependencies:
+      canonicalize: 2.0.0
+      ethers: 5.7.2
+      multiformats: 11.0.2
+      siwe: 2.1.4(ethers@5.7.2)
+    dev: false
+
   /siwe@1.1.6(ethers@5.7.2):
     resolution: {integrity: sha512-3WRdEil32Tc2vuNzqJ2/Z/MIvsvy0Nkzc2ov+QujmpHO7tM83dgcb47z0Pu236T4JQkOQCqQkq3AJ/rVIezniA==}
     peerDependencies:
@@ -20087,6 +20144,18 @@ packages:
       '@stablelib/random': 1.0.2
       apg-js: 4.1.3
       ethers: 5.7.2
+    dev: false
+
+  /siwe@2.1.4(ethers@5.7.2):
+    resolution: {integrity: sha512-Dke1Qqa3mgiLm3vjqw/+SQ7dl8WV/Pfk3AlQBF94cBFydTYhztngqYrikzE3X5UTsJ6565dfVbQptszsuYZNYg==}
+    peerDependencies:
+      ethers: ^5.6.8 || ^6.0.8 || 5.7.2
+    dependencies:
+      '@spruceid/siwe-parser': 1.1.3
+      '@stablelib/random': 1.0.2
+      ethers: 5.7.2
+      uri-js: 4.4.1
+      valid-url: 1.0.9
     dev: false
 
   /slash@3.0.0:
@@ -21568,6 +21637,10 @@ packages:
       '@jridgewell/trace-mapping': 0.3.19
       '@types/istanbul-lib-coverage': 2.0.4
       convert-source-map: 1.9.0
+
+  /valid-url@1.0.9:
+    resolution: {integrity: sha512-QQDsV8OnSf5Uc30CKSwG9lnhMPe6exHtTXLRYX8uMwKENy640pU+2BgBL0LRbDh/eYRahNCS7aewCx0wf3NYVA==}
+    dev: false
 
   /validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
