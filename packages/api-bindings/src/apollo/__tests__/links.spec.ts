@@ -64,7 +64,7 @@ describe(`Given an instance of the ${ApolloClient.name}`, () => {
 
         await client.query({ query });
 
-        expect(logger.error).toHaveBeenCalled();
+        expect(logger.warn).toHaveBeenCalled();
       });
     });
 

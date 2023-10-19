@@ -41,7 +41,7 @@ export interface IMockedStorage<T> extends IStorage<T> {
 }
 
 export function mockStorage<T>(initial: T | null = null): IMockedStorage<T> {
-  let internalStorage: unknown | null = mockStorageRoundTrip(initial);
+  let internalStorage = mockStorageRoundTrip(initial);
 
   return {
     get: jest.fn<Promise<T | null>, []>(async () => internalStorage as T | null),
