@@ -59,31 +59,165 @@ export type ApproveModuleArgs = {
  *
  *
  * ## Pre-approve a Profile Follow module
- * ```ts
- * const { execute, error, loading } = useApproveModule();
  *
- * const approve = async () => {
- *   await execute({
+ * Assuming you integrated the {@link useFollow} hook in your application, you might
+ * find that, in case of paid follows the result might fail with an {@link InsufficientAllowanceError}.
+ *
+ * ```ts
+ * const follow = useFollow();
+ *
+ * const followProfile = async (profile: Profile) => {
+ *   const result = await follow.execute({ profile });
+ *
+ *   if (result.isFailure()) {
+ *     switch (result.error.constructor) {
+ *       case InsufficientAllowanceError:
+ *         // not enough allowance
+ *         // pre-approve the module
+ *         break;
+ *
+ *       // others
+ *     }
+ *   }
+ * };
  * ```
- * TBD
+ *
+ * You can use the `useApproveModule` hook to pre-approve the module and,
+ * according to the desired UX, try again the follow operation.
+ *
+ *
+ * ```ts
+ * const approve = useApproveModule();
+ * const follow = useFollow();
+ *
+ * const approveFollowModuleFor = async (profile: Profile) => {
+ *   const result = await approve.execute({ on: profile });
+ *
+ *   if (result.isFailure()) {
+ *     console.log(result.error.message);
+ *     return;
+ *   }
+ *
+ *   // try again the follow operation
+ *   return followProfile(profile);
+ * };
+ *
+ * const followProfile = async (profile: Profile) => {
+ *   const result = await follow.execute({ profile });
+ *
+ *   if (result.isFailure()) {
+ *     switch (result.error.constructor) {
+ *       case InsufficientAllowanceError:
+ *         return approveFollowModuleFor(profile);
+ *
+ *       // others
+ *     }
+ *   }
+ *
+ *   // ...
+ * };
+ * ```
  *
  * ## Pre-approve a Publication Collect module
  *
- * TBD
+ * Similarly to the Profile Follow module, you can use the `useApproveModule` hook
+ * to pre-approve a Publication Collect module (legacy or Open Action based).
+ *
+ * ```ts
+ * const approve = useApproveModule();
+ * const collect = useOpenAction({
+ *   action: {
+ *     kind: OpenActionKind.COLLECT,
+ *   }
+ * });
+ *
+ * const approveCollectModuleFor = async (publication: AnyPublication) => {
+ *   const result = await approve.execute({ on: publication });
+ *
+ *   if (result.isFailure()) {
+ *     console.log(result.error.message);
+ *     return;
+ *   }
+ *
+ *   // try again the collect operation
+ *   return collectPublication(publication);
+ * };
+ *
+ * const collectPublication = async (publication: AnyPublication) => {
+ *   const result = collect.execute({ publication });
+ *
+ *   if (result.isFailure()) {
+ *     switch (result.error.constructor) {
+ *       case InsufficientAllowanceError:
+ *         return approveCollectModuleFor(publication);
+ *
+ *       // others
+ *     }
+ *   }
+ *
+ *   // ...
+ * };
+ * ```
  *
  * ## Failure scenarios
  *
- * TBD
+ * Like many other SDK hooks there are some failure scenarios that you might want to handle.
+ *
+ * ```ts
+ * const { execute, error, loading } = useApproveModule();
+ *
+ * const approve = async (item: AnyPublication | Profile) => {
+ *   const result = await approve.execute({ on: publication });
+ *
+ *   if (result.isFailure()) {
+ *     switch (result.error.constructor) {
+ *       case InsufficientGasError:
+ *         console.log(`The user's wallet does not have enough MATIC to pay for the transaction`);
+ *         break;
+ *
+ *       case PendingSigningRequestError:
+ *         console.log(
+ *           'There is a pending signing request in your wallet. ' +
+ *             'Approve it or discard it and try again.'
+ *         );
+ *         break;
+ *
+ *       case TransactionError:
+ *         console.log('There was an processing the transaction', completion.error.message);
+ *         break;
+ *
+ *       case WalletConnectionError:
+ *         console.log('There was an error connecting to your wallet', error.message);
+ *         break;
+ *
+ *       case UserRejectedError:
+ *         // the user decided to not sign, usually this is silently ignored by UIs
+ *         break;
+ *     }
+ *     return;
+ *   }
+ *
+ *   // ...
+ * };
+ * ```
  *
  * ## Infinite approval
  *
- * TBD
+ * By default the `useApproveModule` hook will pre-approve the exact amount required.
+ *
+ * You can still pre-approve an infinite amount by passing the `limit` argument:
+ *
+ * ```ts
+ * const { execute, error, loading } = useApproveModule({
+ *   limit: TokenAllowanceLimit.INFINITE
+ * });
+ * ```
  *
  * @category Modules
  * @group Hooks
  */
 export function useApproveModule(
-  args: UseApproveModuleArgs,
+  args: UseApproveModuleArgs = { limit: TokenAllowanceLimit.EXACT },
 ): UseDeferredTask<
   void,
   | InsufficientGasError

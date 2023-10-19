@@ -65,7 +65,7 @@ export function useOpenActionController() {
       presenter,
     );
 
-    void openAction.execute(request);
+    await openAction.execute(request);
 
     return presenter.asResult();
   };

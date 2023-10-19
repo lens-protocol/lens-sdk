@@ -45,9 +45,10 @@ export function useTokenAllowanceController() {
 
     const result = presenter.asResult();
 
-    if (result.isSuccess()) {
-      return result.value.waitForCompletion();
+    if (result.isFailure()) {
+      return result;
     }
-    return result;
+
+    return result.value.waitForCompletion();
   };
 }

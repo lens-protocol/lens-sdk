@@ -26,7 +26,7 @@ export class InsufficientAllowanceError extends Error {
   name = 'InsufficientAllowanceError' as const;
 
   constructor(readonly requestedAmount: Amount<Erc20>) {
-    super(`Insufficient allowance to cover the requested ${requestedAmount.asset.toString()}`);
+    super(`Insufficient allowance ${requestedAmount.toString()}`);
   }
 }
 
@@ -34,7 +34,7 @@ export class InsufficientFundsError extends Error {
   name = 'InsufficientFundsError' as const;
 
   constructor(readonly requestedAmount: Amount<Erc20>) {
-    super(`Insufficient funds to cover the requested ${requestedAmount.asset.toString()}`);
+    super(`Insufficient funds ${requestedAmount.toString()}`);
   }
 }
 
