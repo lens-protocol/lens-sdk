@@ -4290,7 +4290,9 @@ export type BroadcastOnMomokaData = { result: CreateMomokaPublicationResult | Re
 export type HandleResult = { __typename: 'HandleResult'; handle: string };
 
 export type OwnedHandlesVariables = Exact<{
-  request: OwnedHandlesRequest;
+  for: Scalars['EvmAddress'];
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
 }>;
 
 export type OwnedHandlesData = {
@@ -13100,8 +13102,8 @@ export type BroadcastOnMomokaMutationOptions = Apollo.BaseMutationOptions<
   BroadcastOnMomokaVariables
 >;
 export const OwnedHandlesDocument = /*#__PURE__*/ gql`
-  query OwnedHandles($request: OwnedHandlesRequest!) {
-    result: ownedHandles(request: $request) {
+  query OwnedHandles($for: EvmAddress!, $limit: LimitType, $cursor: Cursor) {
+    result: ownedHandles(request: { for: $for, limit: $limit, cursor: $cursor }) {
       items {
         ...HandleResult
       }
@@ -13126,7 +13128,9 @@ export const OwnedHandlesDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useOwnedHandles({
  *   variables: {
- *      request: // value for 'request'
+ *      for: // value for 'for'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *   },
  * });
  */
