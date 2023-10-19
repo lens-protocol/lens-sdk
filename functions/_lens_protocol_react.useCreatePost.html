@@ -34,6 +34,7 @@
 <li class="tsd-signature tsd-anchor-link" id="useCreatePost"><span class="tsd-kind-call-signature">use<wbr/>Create<wbr/>Post</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/_lens_protocol_react.UseDeferredTask.html" class="tsd-signature-type tsd-kind-type-alias">UseDeferredTask</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/_lens_protocol_react.PostAsyncResult.html" class="tsd-signature-type tsd-kind-type-alias">PostAsyncResult</a><span class="tsd-signature-symbol">, </span><a href="../classes/_lens_protocol_react.BroadcastingError.html" class="tsd-signature-type tsd-kind-class">BroadcastingError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react.PendingSigningRequestError.html" class="tsd-signature-type tsd-kind-class">PendingSigningRequestError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react.UserRejectedError.html" class="tsd-signature-type tsd-kind-class">UserRejectedError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react.WalletConnectionError.html" class="tsd-signature-type tsd-kind-class">WalletConnectionError</a><span class="tsd-signature-symbol">, </span><a href="../types/_lens_protocol_react.CreatePostArgs.html" class="tsd-signature-type tsd-kind-type-alias">CreatePostArgs</a><span class="tsd-signature-symbol">&gt;</span><a href="#useCreatePost" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p><code>useCreatePost</code> is React Hook that allows you to create a new Lens Post.</p>
+<p>You MUST be authenticated via <a href="_lens_protocol_react.useLogin.html" class="tsd-kind-function">useLogin</a> to use this hook.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <a href="../types/_lens_protocol_react.UseDeferredTask.html" class="tsd-signature-type tsd-kind-type-alias">UseDeferredTask</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/_lens_protocol_react.PostAsyncResult.html" class="tsd-signature-type tsd-kind-type-alias">PostAsyncResult</a><span class="tsd-signature-symbol">, </span><a href="../classes/_lens_protocol_react.BroadcastingError.html" class="tsd-signature-type tsd-kind-class">BroadcastingError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react.PendingSigningRequestError.html" class="tsd-signature-type tsd-kind-class">PendingSigningRequestError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react.UserRejectedError.html" class="tsd-signature-type tsd-kind-class">UserRejectedError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react.WalletConnectionError.html" class="tsd-signature-type tsd-kind-class">WalletConnectionError</a><span class="tsd-signature-symbol">, </span><a href="../types/_lens_protocol_react.CreatePostArgs.html" class="tsd-signature-type tsd-kind-type-alias">CreatePostArgs</a><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography">
@@ -45,7 +46,7 @@
 <p>See the <a href="https://github.com/lens-protocol/metadata"><code>@lens-protocol/metadata</code> package</a> for more
 information on how to create metadata for other types of publications.</p>
 <a id="md:failure-scenarios" class="tsd-anchor"></a><h2><a href="#md:failure-scenarios">Failure scenarios</a></h2><p>You can handle possible failure scenarios by checking the <code>result</code> value.</p>
-<pre><code class="language-tsx"><span class="hl-4">const</span><span class="hl-1"> { </span><span class="hl-5">execute</span><span class="hl-1">, </span><span class="hl-5">error</span><span class="hl-1">, </span><span class="hl-5">loading</span><span class="hl-1"> } = </span><span class="hl-7">useCreatePost</span><span class="hl-1">();</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-7">post</span><span class="hl-1"> = </span><span class="hl-4">async</span><span class="hl-1"> (</span><span class="hl-2">content</span><span class="hl-1">: </span><span class="hl-6">string</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-10">// first part is the same as in the initial example</span><br/><br/><span class="hl-1">  </span><span class="hl-10">// invoke the `execute` function to create the post</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">result</span><span class="hl-1"> = </span><span class="hl-0">await</span><span class="hl-1"> </span><span class="hl-7">execute</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-2">metadata:</span><span class="hl-1"> </span><span class="hl-2">uri</span><span class="hl-1">,</span><br/><span class="hl-1">  });</span><br/><br/><span class="hl-1">  </span><span class="hl-0">if</span><span class="hl-1"> (</span><span class="hl-2">result</span><span class="hl-1">.</span><span class="hl-7">isFailure</span><span class="hl-1">()) {</span><br/><span class="hl-1">    </span><span class="hl-0">switch</span><span class="hl-1"> (</span><span class="hl-2">error</span><span class="hl-1">.</span><span class="hl-2">constructor</span><span class="hl-1">) {</span><br/><span class="hl-1">      </span><span class="hl-0">case</span><span class="hl-1"> </span><span class="hl-2">BroadcastingError</span><span class="hl-1">:</span><br/><span class="hl-1">        </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-7">log</span><span class="hl-1">(</span><span class="hl-3">&#39;There was an error broadcasting the transaction&#39;</span><span class="hl-1">, </span><span class="hl-2">error</span><span class="hl-1">.</span><span class="hl-2">message</span><span class="hl-1">);</span><br/><span class="hl-1">        </span><span class="hl-0">break</span><span class="hl-1">;</span><br/><br/><span class="hl-1">      </span><span class="hl-0">case</span><span class="hl-1"> </span><span class="hl-2">PendingSigningRequestError</span><span class="hl-1">:</span><br/><span class="hl-1">        </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-7">log</span><span class="hl-1">(</span><br/><span class="hl-1">          </span><span class="hl-3">&#39;There is a pending signing request in your wallet. &#39;</span><span class="hl-1"> +</span><br/><span class="hl-1">            </span><span class="hl-3">&#39;Approve it or discard it and try again.&#39;</span><br/><span class="hl-1">        );</span><br/><span class="hl-1">        </span><span class="hl-0">break</span><span class="hl-1">;</span><br/><br/><span class="hl-1">      </span><span class="hl-0">case</span><span class="hl-1"> </span><span class="hl-2">WalletConnectionError</span><span class="hl-1">:</span><br/><span class="hl-1">        </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-7">log</span><span class="hl-1">(</span><span class="hl-3">&#39;There was an error connecting to your wallet&#39;</span><span class="hl-1">, </span><span class="hl-2">error</span><span class="hl-1">.</span><span class="hl-2">message</span><span class="hl-1">);</span><br/><span class="hl-1">        </span><span class="hl-0">break</span><span class="hl-1">;</span><br/><br/><span class="hl-1">      </span><span class="hl-0">case</span><span class="hl-1"> </span><span class="hl-2">UserRejectedError</span><span class="hl-1">:</span><br/><span class="hl-1">        </span><span class="hl-10">// the user decided to not sign, usually this is silently ignored by UIs</span><br/><span class="hl-1">        </span><span class="hl-0">break</span><span class="hl-1">;</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">    </span><span class="hl-0">return</span><span class="hl-1">;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">};</span>
+<pre><code class="language-tsx"><span class="hl-4">const</span><span class="hl-1"> { </span><span class="hl-5">execute</span><span class="hl-1">, </span><span class="hl-5">error</span><span class="hl-1">, </span><span class="hl-5">loading</span><span class="hl-1"> } = </span><span class="hl-7">useCreatePost</span><span class="hl-1">();</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-7">post</span><span class="hl-1"> = </span><span class="hl-4">async</span><span class="hl-1"> (</span><span class="hl-2">content</span><span class="hl-1">: </span><span class="hl-6">string</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-10">// first part is the same as in the initial example</span><br/><br/><span class="hl-1">  </span><span class="hl-10">// invoke the `execute` function to create the post</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">result</span><span class="hl-1"> = </span><span class="hl-0">await</span><span class="hl-1"> </span><span class="hl-7">execute</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-2">metadata:</span><span class="hl-1"> </span><span class="hl-2">uri</span><span class="hl-1">,</span><br/><span class="hl-1">  });</span><br/><br/><span class="hl-1">  </span><span class="hl-0">if</span><span class="hl-1"> (</span><span class="hl-2">result</span><span class="hl-1">.</span><span class="hl-7">isFailure</span><span class="hl-1">()) {</span><br/><span class="hl-1">    </span><span class="hl-0">switch</span><span class="hl-1"> (</span><span class="hl-2">result</span><span class="hl-1">.</span><span class="hl-2">error</span><span class="hl-1">.</span><span class="hl-2">constructor</span><span class="hl-1">) {</span><br/><span class="hl-1">      </span><span class="hl-0">case</span><span class="hl-1"> </span><span class="hl-2">BroadcastingError</span><span class="hl-1">:</span><br/><span class="hl-1">        </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-7">log</span><span class="hl-1">(</span><span class="hl-3">&#39;There was an error broadcasting the transaction&#39;</span><span class="hl-1">, </span><span class="hl-2">error</span><span class="hl-1">.</span><span class="hl-2">message</span><span class="hl-1">);</span><br/><span class="hl-1">        </span><span class="hl-0">break</span><span class="hl-1">;</span><br/><br/><span class="hl-1">      </span><span class="hl-0">case</span><span class="hl-1"> </span><span class="hl-2">PendingSigningRequestError</span><span class="hl-1">:</span><br/><span class="hl-1">        </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-7">log</span><span class="hl-1">(</span><br/><span class="hl-1">          </span><span class="hl-3">&#39;There is a pending signing request in your wallet. &#39;</span><span class="hl-1"> +</span><br/><span class="hl-1">            </span><span class="hl-3">&#39;Approve it or discard it and try again.&#39;</span><br/><span class="hl-1">        );</span><br/><span class="hl-1">        </span><span class="hl-0">break</span><span class="hl-1">;</span><br/><br/><span class="hl-1">      </span><span class="hl-0">case</span><span class="hl-1"> </span><span class="hl-2">WalletConnectionError</span><span class="hl-1">:</span><br/><span class="hl-1">        </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-7">log</span><span class="hl-1">(</span><span class="hl-3">&#39;There was an error connecting to your wallet&#39;</span><span class="hl-1">, </span><span class="hl-2">error</span><span class="hl-1">.</span><span class="hl-2">message</span><span class="hl-1">);</span><br/><span class="hl-1">        </span><span class="hl-0">break</span><span class="hl-1">;</span><br/><br/><span class="hl-1">      </span><span class="hl-0">case</span><span class="hl-1"> </span><span class="hl-2">UserRejectedError</span><span class="hl-1">:</span><br/><span class="hl-1">        </span><span class="hl-10">// the user decided to not sign, usually this is silently ignored by UIs</span><br/><span class="hl-1">        </span><span class="hl-0">break</span><span class="hl-1">;</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">    </span><span class="hl-0">return</span><span class="hl-1">;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">};</span>
 </code><button>Copy</button></pre>
 <p>At this point the post creation is completed from an end-user perspective but,
 in case of on-chain TX, this not necessarily mined and indexed. See the following section.</p>
@@ -53,13 +54,13 @@ in case of on-chain TX, this not necessarily mined and indexed. See the followin
 <p>This gives you an opportunity to decide what UX to provide to the end-user.</p>
 <p>For example if the post is on-chain it might take a while to be mined and indexed. So you might want to show a loading indicator or
 let the user navigate away from the page.</p>
-<pre><code class="language-tsx"><span class="hl-4">const</span><span class="hl-1"> { </span><span class="hl-5">execute</span><span class="hl-1">, </span><span class="hl-5">error</span><span class="hl-1">, </span><span class="hl-5">loading</span><span class="hl-1"> } = </span><span class="hl-7">useCreatePost</span><span class="hl-1">();</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-7">post</span><span class="hl-1"> = </span><span class="hl-4">async</span><span class="hl-1"> (</span><span class="hl-2">content</span><span class="hl-1">: </span><span class="hl-6">string</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-10">// first part is the same as in the initial example</span><br/><br/><span class="hl-1">  </span><span class="hl-10">// invoke the `execute` function to create the post</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">result</span><span class="hl-1"> = </span><span class="hl-0">await</span><span class="hl-1"> </span><span class="hl-7">execute</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-2">metadata:</span><span class="hl-1"> </span><span class="hl-2">uri</span><span class="hl-1">,</span><br/><span class="hl-1">  });</span><br/><br/><span class="hl-1">  </span><span class="hl-0">if</span><span class="hl-1"> (</span><span class="hl-2">result</span><span class="hl-1">.</span><span class="hl-7">isFailure</span><span class="hl-1">()) {</span><br/><span class="hl-1">    </span><span class="hl-10">// handle failure scenarios</span><br/><span class="hl-1">    </span><span class="hl-0">return</span><span class="hl-1">;</span><br/><span class="hl-1">  }</span><br/><br/><span class="hl-1">  </span><span class="hl-10">// this might take a while, depends on the type of tx (on-chain or Momoka)</span><br/><span class="hl-1">  </span><span class="hl-10">// and the congestion of the network</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">completion</span><span class="hl-1"> = </span><span class="hl-0">await</span><span class="hl-1"> </span><span class="hl-2">result</span><span class="hl-1">.</span><span class="hl-2">value</span><span class="hl-1">.</span><span class="hl-7">completion</span><span class="hl-1">();</span><br/><br/><span class="hl-1">  </span><span class="hl-0">if</span><span class="hl-1"> (</span><span class="hl-2">completion</span><span class="hl-1">.</span><span class="hl-7">isFailure</span><span class="hl-1">()) {</span><br/><span class="hl-1">    </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-7">log</span><span class="hl-1">(</span><span class="hl-3">&#39;There was an processing the transaction&#39;</span><span class="hl-1">, </span><span class="hl-2">completion</span><span class="hl-1">.</span><span class="hl-2">error</span><span class="hl-1">.</span><span class="hl-2">message</span><span class="hl-1">);</span><br/><span class="hl-1">    </span><span class="hl-0">return</span><span class="hl-1">;</span><br/><span class="hl-1">  }</span><br/><br/><span class="hl-1">  </span><span class="hl-10">// the post is now ready to be used</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">post</span><span class="hl-1"> = </span><span class="hl-2">completion</span><span class="hl-1">.</span><span class="hl-2">value</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-7">log</span><span class="hl-1">(</span><span class="hl-3">&#39;Post created&#39;</span><span class="hl-1">, </span><span class="hl-2">post</span><span class="hl-1">);</span><br/><span class="hl-1">};</span>
+<pre><code class="language-tsx"><span class="hl-4">const</span><span class="hl-1"> { </span><span class="hl-5">execute</span><span class="hl-1">, </span><span class="hl-5">error</span><span class="hl-1">, </span><span class="hl-5">loading</span><span class="hl-1"> } = </span><span class="hl-7">useCreatePost</span><span class="hl-1">();</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-7">post</span><span class="hl-1"> = </span><span class="hl-4">async</span><span class="hl-1"> (</span><span class="hl-2">content</span><span class="hl-1">: </span><span class="hl-6">string</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-10">// first part is the same as in the initial example</span><br/><br/><span class="hl-1">  </span><span class="hl-10">// invoke the `execute` function to create the post</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">result</span><span class="hl-1"> = </span><span class="hl-0">await</span><span class="hl-1"> </span><span class="hl-7">execute</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-2">metadata:</span><span class="hl-1"> </span><span class="hl-2">uri</span><span class="hl-1">,</span><br/><span class="hl-1">  });</span><br/><br/><span class="hl-1">  </span><span class="hl-0">if</span><span class="hl-1"> (</span><span class="hl-2">result</span><span class="hl-1">.</span><span class="hl-7">isFailure</span><span class="hl-1">()) {</span><br/><span class="hl-1">    </span><span class="hl-10">// handle failure scenarios</span><br/><span class="hl-1">    </span><span class="hl-0">return</span><span class="hl-1">;</span><br/><span class="hl-1">  }</span><br/><br/><span class="hl-1">  </span><span class="hl-10">// this might take a while, depends on the type of tx (on-chain or Momoka)</span><br/><span class="hl-1">  </span><span class="hl-10">// and the congestion of the network</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">completion</span><span class="hl-1"> = </span><span class="hl-0">await</span><span class="hl-1"> </span><span class="hl-2">result</span><span class="hl-1">.</span><span class="hl-2">value</span><span class="hl-1">.</span><span class="hl-7">waitForCompletion</span><span class="hl-1">();</span><br/><br/><span class="hl-1">  </span><span class="hl-0">if</span><span class="hl-1"> (</span><span class="hl-2">completion</span><span class="hl-1">.</span><span class="hl-7">isFailure</span><span class="hl-1">()) {</span><br/><span class="hl-1">    </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-7">log</span><span class="hl-1">(</span><span class="hl-3">&#39;There was an processing the transaction&#39;</span><span class="hl-1">, </span><span class="hl-2">completion</span><span class="hl-1">.</span><span class="hl-2">error</span><span class="hl-1">.</span><span class="hl-2">message</span><span class="hl-1">);</span><br/><span class="hl-1">    </span><span class="hl-0">return</span><span class="hl-1">;</span><br/><span class="hl-1">  }</span><br/><br/><span class="hl-1">  </span><span class="hl-10">// the post is now ready to be used</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">post</span><span class="hl-1"> = </span><span class="hl-2">completion</span><span class="hl-1">.</span><span class="hl-2">value</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-7">log</span><span class="hl-1">(</span><span class="hl-3">&#39;Post created&#39;</span><span class="hl-1">, </span><span class="hl-2">post</span><span class="hl-1">);</span><br/><span class="hl-1">};</span>
 </code><button>Copy</button></pre>
 <a id="md:open-actions" class="tsd-anchor"></a><h2><a href="#md:open-actions">Open actions</a></h2><p>Contextually to the post creation you can configure the open actions.</p>
 <p>As with anything involving amounts in the Lens SDK you can use the
 <a href="../classes/_lens_protocol_react.Amount.html" class="tsd-kind-class">Amount</a> helper with currencies from the <a href="_lens_protocol_react.useCurrencies.html" class="tsd-kind-function">useCurrencies</a> hook to
 create the desired amounts.</p>
-<p>Create a post with a simple collect open action:</p>
+<p>Create a post with a SimpleCollectOpenAction module:</p>
 <pre><code class="language-tsx"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">wmatic</span><span class="hl-1"> = ... </span><span class="hl-10">// from useCurrencies hook</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">result</span><span class="hl-1"> = </span><span class="hl-0">await</span><span class="hl-1"> </span><span class="hl-7">execute</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-2">metadata:</span><span class="hl-1"> </span><span class="hl-2">uri</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">actions:</span><span class="hl-1"> [</span><br/><span class="hl-1">    {</span><br/><span class="hl-1">      </span><span class="hl-2">type:</span><span class="hl-1"> </span><span class="hl-2">OpenActionType</span><span class="hl-1">.</span><span class="hl-5">SIMPLE_COLLECT</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">amount:</span><span class="hl-1"> </span><span class="hl-2">Amount</span><span class="hl-1">.</span><span class="hl-7">erc20</span><span class="hl-1">(</span><span class="hl-2">wmatic</span><span class="hl-1">, </span><span class="hl-13">100</span><span class="hl-1">), </span><span class="hl-10">// 100 WMATIC</span><br/><span class="hl-1">      </span><span class="hl-2">followerOnly:</span><span class="hl-1"> </span><span class="hl-4">true</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">collectLimit:</span><span class="hl-1"> </span><span class="hl-13">10</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">recipient:</span><span class="hl-1"> </span><span class="hl-3">&#39;0x4f94FAFEE38F545920485fC747467EFc85C302E0&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">endsAt:</span><span class="hl-1"> </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-7">Date</span><span class="hl-1">(</span><span class="hl-3">&#39;2025-12-31T00:00:00.000Z&#39;</span><span class="hl-1">),</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  ]</span><br/><span class="hl-1">});</span>
 </code><button>Copy</button></pre>
 <p>See <a href="../types/_lens_protocol_react.SimpleCollectActionConfig.html" class="tsd-kind-type-alias">SimpleCollectActionConfig</a> for more details.</p>
@@ -142,6 +143,9 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../enums/_lens_protocol_react_web.LogoutReason.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
 <div>Logout<wbr/>Reason
 <div class="menu-item-desc">The reason for logging out</div></div></a></li>
+<li><a href="../enums/_lens_protocol_react_web.OpenActionKind.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
+<div>Open<wbr/>Action<wbr/>Kind
+<div class="menu-item-desc">The category of Open Actions to perform on a given publication.</div></div></a></li>
 <li><a href="../enums/_lens_protocol_react_web.OpenActionType.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
 <div>Open<wbr/>Action<wbr/>Type</div></a></li>
 <li><a href="../enums/_lens_protocol_react_web.PublicationReactionType.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
@@ -155,6 +159,9 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../enums/_lens_protocol_react_web.SessionType.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
 <div>Session<wbr/>Type
 <div class="menu-item-desc">The type of user&#39;s session.</div></div></a></li>
+<li><a href="../enums/_lens_protocol_react_web.TokenAllowanceLimit.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
+<div>Token<wbr/>Allowance<wbr/>Limit
+<div class="menu-item-desc">Token allowance limit.</div></div></a></li>
 <li><a href="../enums/_lens_protocol_react_web.TriStateValue.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
 <div>Tri<wbr/>State<wbr/>Value</div></a></li>
 <li><a href="../enums/_lens_protocol_react_web.WellKnownSymbols.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
@@ -181,6 +188,12 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../classes/_lens_protocol_react_web.Fiat.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>
 <div>Fiat
 <div class="menu-item-desc">Fiat is a value object representing a fiat currency.</div></div></a></li>
+<li><a href="../classes/_lens_protocol_react_web.InsufficientAllowanceError.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>
+<div>Insufficient<wbr/>Allowance<wbr/>Error</div></a></li>
+<li><a href="../classes/_lens_protocol_react_web.InsufficientFundsError.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>
+<div>Insufficient<wbr/>Funds<wbr/>Error</div></a></li>
+<li><a href="../classes/_lens_protocol_react_web.InsufficientGasError.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>
+<div>Insufficient<wbr/>Gas<wbr/>Error</div></a></li>
 <li><a href="../classes/_lens_protocol_react_web.InvariantError.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>
 <div>Invariant<wbr/>Error
 <div class="menu-item-desc">An error that occurs when a task violates a logical condition that is assumed to be true at all times.</div></div></a></li>
@@ -222,9 +235,14 @@ any open actions, it will be hosted on Momoka.</p>
 <div class="menu-item-desc">Convenience type for any publication type.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.AnyoneReferencePolicyConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Anyone<wbr/>Reference<wbr/>Policy<wbr/>Config</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.App.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>App</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.AppId.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>App<wbr/>Id
 <div class="menu-item-desc">Unique identifier for an app</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.ApproveModuleArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Approve<wbr/>Module<wbr/>Args
+<div class="menu-item-desc">Arguments for the useApproveModule hook callback.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.Asset.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Asset
 <div class="menu-item-desc">Asset is a convenience union of value objects representing currency or token.</div></div></a></li>
@@ -236,6 +254,9 @@ any open actions, it will be hosted on Momoka.</p>
 <div>Charge<wbr/>Follow<wbr/>Policy</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.CollectActionConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Collect<wbr/>Action<wbr/>Config</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.CollectParams.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Collect<wbr/>Params
+<div class="menu-item-desc">Execute the Collect Open Action defined by the publication.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.Comment.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Comment</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.CommentAsyncResult.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -282,6 +303,8 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../types/_lens_protocol_react_web.DeferredTaskSuccess.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Deferred<wbr/>Task<wbr/>Success
 <div class="menu-item-desc">The state of a deferred task after a successful call.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.DegreesOfSeparationReferenceModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Degrees<wbr/>Of<wbr/>Separation<wbr/>Reference<wbr/>Module<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.DegreesOfSeparationReferencePolicyConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Degrees<wbr/>Of<wbr/>Separation<wbr/>Reference<wbr/>Policy<wbr/>Config</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.EncryptionConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -294,6 +317,8 @@ any open actions, it will be hosted on Momoka.</p>
 <div class="menu-item-desc">Initialization object for `erc20` factory function</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.EvmAddress.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Evm<wbr/>Address</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.FeeFollowModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Fee<wbr/>Follow<wbr/>Module<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.FeedHighlight.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Feed<wbr/>Highlight</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.FeedItem.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -301,9 +326,14 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../types/_lens_protocol_react_web.FetchProfileArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Fetch<wbr/>Profile<wbr/>Args
 <div class="menu-item-desc">useLazyProfile callback hook arguments</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.FetchPublicationArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Fetch<wbr/>Publication<wbr/>Args
+<div class="menu-item-desc">useLazyPublication callback hook arguments</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.FiatAmount.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Fiat<wbr/>Amount
 <div class="menu-item-desc">A convenience type to specify a fiat amount.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.FollowOnlyReferenceModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Follow<wbr/>Only<wbr/>Reference<wbr/>Module<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.FollowPolicy.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Follow<wbr/>Policy</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.FollowPolicyConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -322,6 +352,26 @@ any open actions, it will be hosted on Momoka.</p>
 <div>IObservable<wbr/>Storage<wbr/>Provider</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.IStorageProvider.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>IStorage<wbr/>Provider</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.LegacyAaveFeeCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Aave<wbr/>Fee<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.LegacyErc4626FeeCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Erc4626<wbr/>Fee<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.LegacyFeeCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Fee<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.LegacyFreeCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Free<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.LegacyLimitedFeeCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Limited<wbr/>Fee<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.LegacyLimitedTimedFeeCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Limited<wbr/>Timed<wbr/>Fee<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.LegacyMultirecipientFeeCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Multirecipient<wbr/>Fee<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.LegacyRevertCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Revert<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.LegacySimpleCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Simple<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.LegacyTimedFeeCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Timed<wbr/>Fee<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.LensConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Lens<wbr/>Config
 <div class="menu-item-desc">`&lt;LensProvider&gt;` configuration</div></div></a></li>
@@ -341,8 +391,12 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../types/_lens_protocol_react_web.MirrorAsyncResult.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Mirror<wbr/>Async<wbr/>Result
 <div class="menu-item-desc">An object representing the result of a mirror creation.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.MomokaInfo.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Momoka<wbr/>Info</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.MultirecipientCollectActionConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Multirecipient<wbr/>Collect<wbr/>Action<wbr/>Config</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.MultirecipientFeeCollectOpenActionSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Multirecipient<wbr/>Fee<wbr/>Collect<wbr/>Open<wbr/>Action<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.NftId.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Nft<wbr/>Id</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.NftImage.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -353,8 +407,17 @@ any open actions, it will be hosted on Momoka.</p>
 <div>No<wbr/>Fee<wbr/>Follow<wbr/>Policy</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.NoReferencePolicyConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>No<wbr/>Reference<wbr/>Policy<wbr/>Config</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.OpenActionArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Open<wbr/>Action<wbr/>Args
+<div class="menu-item-desc">Arguments for the `useOpenAction` hook callback.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.OpenActionAsyncResult.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Open<wbr/>Action<wbr/>Async<wbr/>Result
+<div class="menu-item-desc">An object representing the result of an open action is finalized.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.OpenActionConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Open<wbr/>Action<wbr/>Config</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.OpenActionParams.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Open<wbr/>Action<wbr/>Params
+<div class="menu-item-desc">The Open Action to perform.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.OpenFollowPolicy.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Open<wbr/>Follow<wbr/>Policy</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.PaginatedArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -372,13 +435,23 @@ any open actions, it will be hosted on Momoka.</p>
 <div class="menu-item-desc">Convenience type for publication with metadata content.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.Profile.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Profile</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.ProfileGuardianResult.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Profile<wbr/>Guardian<wbr/>Result</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.ProfileId.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Profile<wbr/>Id</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.ProfileMetadata.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Profile<wbr/>Metadata</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.ProfileOnchainIdentity.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Profile<wbr/>Onchain<wbr/>Identity</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.ProfileOperations.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Profile<wbr/>Operations</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.ProfilePictureSet.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Profile<wbr/>Picture<wbr/>Set</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.ProfileSession.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Profile<wbr/>Session
 <div class="menu-item-desc">A typical authenticated user&#39;s session.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.ProfileStats.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Profile<wbr/>Stats</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.ProfilesRequestWhere.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Profiles<wbr/>Request<wbr/>Where</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.PromiseResult.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -392,6 +465,12 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../types/_lens_protocol_react_web.PublicationMetadataMedia.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Publication<wbr/>Metadata<wbr/>Media
 <div class="menu-item-desc">Convenience type for publication media types.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.PublicationOperations.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Publication<wbr/>Operations</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.PublicationRevenue.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Publication<wbr/>Revenue</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.PublicationStats.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Publication<wbr/>Stats</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.QueryParams.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Query<wbr/>Params
 <div class="menu-item-desc">The common query parameters used across any query.</div></div></a></li>
@@ -419,15 +498,30 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../types/_lens_protocol_react_web.Result.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Result
 <div class="menu-item-desc">A `Result` type represents either `Success` or `Failure`.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.RevenueAggregate.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Revenue<wbr/>Aggregate</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.RevertFollowModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Revert<wbr/>Follow<wbr/>Module<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.Session.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Session
 <div class="menu-item-desc">Describes the details of a user&#39;s session.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.SimpleCollectActionConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Simple<wbr/>Collect<wbr/>Action<wbr/>Config</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.SimpleCollectOpenActionSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Simple<wbr/>Collect<wbr/>Open<wbr/>Action<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.UnfollowArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Unfollow<wbr/>Args</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.UnknownActionParams.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Unknown<wbr/>Action<wbr/>Params
+<div class="menu-item-desc">Execute the specified Unknown Open Action.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.UnknownFollowModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Unknown<wbr/>Follow<wbr/>Module<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.UnknownOpenActionConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Unknown<wbr/>Open<wbr/>Action<wbr/>Config</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.UnknownOpenActionModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Unknown<wbr/>Open<wbr/>Action<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.UnknownReferenceModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Unknown<wbr/>Reference<wbr/>Module<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.UpdateFollowPolicyArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Update<wbr/>Follow<wbr/>Policy<wbr/>Args</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.UpdateProfileManagersArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -435,6 +529,9 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../types/_lens_protocol_react_web.Url.html" class="deprecated"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Url
 <div class="menu-item-desc">A URL</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.UseApproveModuleArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Use<wbr/>Approve<wbr/>Module<wbr/>Args
+<div class="menu-item-desc">Arguments for the useApproveModule hook.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.UseBookmarkToggleArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Use<wbr/>Bookmark<wbr/>Toggle<wbr/>Args</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.UseCurrenciesArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -458,6 +555,9 @@ any open actions, it will be hosted on Momoka.</p>
 <div class="menu-item-desc">useMutualFollowers hook arguments</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.UseMyBookmarksArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Use<wbr/>My<wbr/>Bookmarks<wbr/>Args</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.UseOpenActionArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Use<wbr/>Open<wbr/>Action<wbr/>Args
+<div class="menu-item-desc">Arguments for the `useOpenAction` hook.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.UseProfileActionHistoryArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Use<wbr/>Profile<wbr/>Action<wbr/>History<wbr/>Args
 <div class="menu-item-desc">useProfileActionHistory hook arguments</div></div></a></li>
@@ -488,6 +588,15 @@ any open actions, it will be hosted on Momoka.</p>
 <div class="menu-item-desc">useRecommendedProfiles hook arguments</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.UseReportPublicationArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Use<wbr/>Report<wbr/>Publication<wbr/>Args</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.UseRevenueFromFollowArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Use<wbr/>Revenue<wbr/>From<wbr/>Follow<wbr/>Args
+<div class="menu-item-desc">useRevenueFromFollow hook arguments</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.UseRevenueFromPublicationArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Use<wbr/>Revenue<wbr/>From<wbr/>Publication<wbr/>Args
+<div class="menu-item-desc">useRevenueFromPublication hook arguments</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.UseRevenueFromPublicationsArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Use<wbr/>Revenue<wbr/>From<wbr/>Publications<wbr/>Args
+<div class="menu-item-desc">useRevenueFromPublications hook arguments</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.UseSearchProfilesArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Use<wbr/>Search<wbr/>Profiles<wbr/>Args</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.UseSearchPublicationsArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -552,6 +661,9 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="_lens_protocol_react_web.usd.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>usd
 <div class="menu-item-desc">A convenience function to create a Fiat asset for USD.</div></div></a></li>
+<li><a href="_lens_protocol_react_web.useApproveModule.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Approve<wbr/>Module
+<div class="menu-item-desc">`useApproveModule` is a React Hook that allows to perform an ERC20 pre-approval</div></div></a></li>
 <li><a href="_lens_protocol_react_web.useBookmarkToggle.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Bookmark<wbr/>Toggle
 <div class="menu-item-desc">`useBookmarkToggle` hook lets the user save or remove a publication from their bookmarks.</div></div></a></li>
@@ -589,7 +701,10 @@ any open actions, it will be hosted on Momoka.</p>
 <div class="menu-item-desc">Hide a publication posted by the authenticated profile to prevent other profiles from seeing it.</div></div></a></li>
 <li><a href="_lens_protocol_react_web.useLazyProfile.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Lazy<wbr/>Profile
-<div class="menu-item-desc">Lazy version of useProfile hook.</div></div></a></li>
+<div class="menu-item-desc">`useLazyProfile` is a lazy version of useProfile React Hook.</div></div></a></li>
+<li><a href="_lens_protocol_react_web.useLazyPublication.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Lazy<wbr/>Publication
+<div class="menu-item-desc">`useLazyPublication` is a lazy version of usePublication React Hook.</div></div></a></li>
 <li><a href="_lens_protocol_react_web.useLogin.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Login
 <div class="menu-item-desc">`useLogin` is React Hook that allows you to login with the Lens API.</div></div></a></li>
@@ -602,6 +717,9 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="_lens_protocol_react_web.useMyBookmarks.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>My<wbr/>Bookmarks
 <div class="menu-item-desc">`useMyBookmarks` is a paginated hook that lets you fetch the bookmarks of a profile owned by the logged in wallet.</div></div></a></li>
+<li><a href="_lens_protocol_react_web.useOpenAction.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Open<wbr/>Action
+<div class="menu-item-desc">`useOpenAction` is a React Hook that allows to perform an Open Action on a publication.</div></div></a></li>
 <li><a href="_lens_protocol_react_web.useProfile.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Profile
 <div class="menu-item-desc">Get a profile by either a handle or profile Id.</div></div></a></li>
@@ -622,7 +740,7 @@ any open actions, it will be hosted on Momoka.</p>
 <div class="menu-item-desc">`useProfiles` is a paginated hook that lets you fetch profiles based on a set of filters.</div></div></a></li>
 <li><a href="_lens_protocol_react_web.usePublication.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Publication
-<div class="menu-item-desc">Fetch a publication by either it&#39;s publicationId or transaction hash.</div></div></a></li>
+<div class="menu-item-desc">Fetch a publication by either its publication id or transaction hash.</div></div></a></li>
 <li><a href="_lens_protocol_react_web.usePublications.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Publications
 <div class="menu-item-desc">Fetch a paginated result of publications based on a set of filters.</div></div></a></li>
@@ -635,6 +753,15 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="_lens_protocol_react_web.useReportPublication.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Report<wbr/>Publication
 <div class="menu-item-desc">Report a publication for a given reason.</div></div></a></li>
+<li><a href="_lens_protocol_react_web.useRevenueFromFollow.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Revenue<wbr/>From<wbr/>Follow
+<div class="menu-item-desc">Fetch a revenue of a profile from all follow actions.</div></div></a></li>
+<li><a href="_lens_protocol_react_web.useRevenueFromPublication.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Revenue<wbr/>From<wbr/>Publication
+<div class="menu-item-desc">Fetch a profile&#39;s revenue from a single publication.</div></div></a></li>
+<li><a href="_lens_protocol_react_web.useRevenueFromPublications.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Revenue<wbr/>From<wbr/>Publications
+<div class="menu-item-desc">Fetch a profile&#39;s revenue for all their publications.</div></div></a></li>
 <li><a href="_lens_protocol_react_web.useSearchProfiles.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Search<wbr/>Profiles
 <div class="menu-item-desc">`useSearchProfiles` is a paginated hook that lets you search for profiles based on a defined criteria</div></div></a></li>
@@ -691,6 +818,9 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../enums/_lens_protocol_react.LogoutReason.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
 <div>Logout<wbr/>Reason
 <div class="menu-item-desc">The reason for logging out</div></div></a></li>
+<li><a href="../enums/_lens_protocol_react.OpenActionKind.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
+<div>Open<wbr/>Action<wbr/>Kind
+<div class="menu-item-desc">The category of Open Actions to perform on a given publication.</div></div></a></li>
 <li><a href="../enums/_lens_protocol_react.OpenActionType.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
 <div>Open<wbr/>Action<wbr/>Type</div></a></li>
 <li><a href="../enums/_lens_protocol_react.PublicationReactionType.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
@@ -704,6 +834,9 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../enums/_lens_protocol_react.SessionType.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
 <div>Session<wbr/>Type
 <div class="menu-item-desc">The type of user&#39;s session.</div></div></a></li>
+<li><a href="../enums/_lens_protocol_react.TokenAllowanceLimit.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
+<div>Token<wbr/>Allowance<wbr/>Limit
+<div class="menu-item-desc">Token allowance limit.</div></div></a></li>
 <li><a href="../enums/_lens_protocol_react.TriStateValue.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
 <div>Tri<wbr/>State<wbr/>Value</div></a></li>
 <li><a href="../enums/_lens_protocol_react.WellKnownSymbols.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
@@ -730,6 +863,12 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../classes/_lens_protocol_react.Fiat.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>
 <div>Fiat
 <div class="menu-item-desc">Fiat is a value object representing a fiat currency.</div></div></a></li>
+<li><a href="../classes/_lens_protocol_react.InsufficientAllowanceError.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>
+<div>Insufficient<wbr/>Allowance<wbr/>Error</div></a></li>
+<li><a href="../classes/_lens_protocol_react.InsufficientFundsError.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>
+<div>Insufficient<wbr/>Funds<wbr/>Error</div></a></li>
+<li><a href="../classes/_lens_protocol_react.InsufficientGasError.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>
+<div>Insufficient<wbr/>Gas<wbr/>Error</div></a></li>
 <li><a href="../classes/_lens_protocol_react.InvariantError.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>
 <div>Invariant<wbr/>Error
 <div class="menu-item-desc">An error that occurs when a task violates a logical condition that is assumed to be true at all times.</div></div></a></li>
@@ -771,9 +910,14 @@ any open actions, it will be hosted on Momoka.</p>
 <div class="menu-item-desc">Convenience type for any publication type.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.AnyoneReferencePolicyConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Anyone<wbr/>Reference<wbr/>Policy<wbr/>Config</div></a></li>
+<li><a href="../types/_lens_protocol_react.App.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>App</div></a></li>
 <li><a href="../types/_lens_protocol_react.AppId.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>App<wbr/>Id
 <div class="menu-item-desc">Unique identifier for an app</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.ApproveModuleArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Approve<wbr/>Module<wbr/>Args
+<div class="menu-item-desc">Arguments for the useApproveModule hook callback.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.Asset.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Asset
 <div class="menu-item-desc">Asset is a convenience union of value objects representing currency or token.</div></div></a></li>
@@ -785,6 +929,9 @@ any open actions, it will be hosted on Momoka.</p>
 <div>Charge<wbr/>Follow<wbr/>Policy</div></a></li>
 <li><a href="../types/_lens_protocol_react.CollectActionConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Collect<wbr/>Action<wbr/>Config</div></a></li>
+<li><a href="../types/_lens_protocol_react.CollectParams.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Collect<wbr/>Params
+<div class="menu-item-desc">Execute the Collect Open Action defined by the publication.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.Comment.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Comment</div></a></li>
 <li><a href="../types/_lens_protocol_react.CommentAsyncResult.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -831,6 +978,8 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../types/_lens_protocol_react.DeferredTaskSuccess.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Deferred<wbr/>Task<wbr/>Success
 <div class="menu-item-desc">The state of a deferred task after a successful call.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.DegreesOfSeparationReferenceModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Degrees<wbr/>Of<wbr/>Separation<wbr/>Reference<wbr/>Module<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react.DegreesOfSeparationReferencePolicyConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Degrees<wbr/>Of<wbr/>Separation<wbr/>Reference<wbr/>Policy<wbr/>Config</div></a></li>
 <li><a href="../types/_lens_protocol_react.Erc20Amount.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -841,6 +990,8 @@ any open actions, it will be hosted on Momoka.</p>
 <div class="menu-item-desc">Initialization object for `erc20` factory function</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.EvmAddress.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Evm<wbr/>Address</div></a></li>
+<li><a href="../types/_lens_protocol_react.FeeFollowModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Fee<wbr/>Follow<wbr/>Module<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react.FeedHighlight.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Feed<wbr/>Highlight</div></a></li>
 <li><a href="../types/_lens_protocol_react.FeedItem.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -848,9 +999,14 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../types/_lens_protocol_react.FetchProfileArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Fetch<wbr/>Profile<wbr/>Args
 <div class="menu-item-desc">useLazyProfile callback hook arguments</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.FetchPublicationArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Fetch<wbr/>Publication<wbr/>Args
+<div class="menu-item-desc">useLazyPublication callback hook arguments</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.FiatAmount.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Fiat<wbr/>Amount
 <div class="menu-item-desc">A convenience type to specify a fiat amount.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.FollowOnlyReferenceModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Follow<wbr/>Only<wbr/>Reference<wbr/>Module<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react.FollowPolicy.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Follow<wbr/>Policy</div></a></li>
 <li><a href="../types/_lens_protocol_react.FollowPolicyConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -865,6 +1021,26 @@ any open actions, it will be hosted on Momoka.</p>
 <div>Get<wbr/>Signer</div></a></li>
 <li><a href="../types/_lens_protocol_react.HasReactedArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Has<wbr/>Reacted<wbr/>Args</div></a></li>
+<li><a href="../types/_lens_protocol_react.LegacyAaveFeeCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Aave<wbr/>Fee<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react.LegacyErc4626FeeCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Erc4626<wbr/>Fee<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react.LegacyFeeCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Fee<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react.LegacyFreeCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Free<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react.LegacyLimitedFeeCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Limited<wbr/>Fee<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react.LegacyLimitedTimedFeeCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Limited<wbr/>Timed<wbr/>Fee<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react.LegacyMultirecipientFeeCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Multirecipient<wbr/>Fee<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react.LegacyRevertCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Revert<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react.LegacySimpleCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Simple<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react.LegacyTimedFeeCollectModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Legacy<wbr/>Timed<wbr/>Fee<wbr/>Collect<wbr/>Module<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react.LensConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Lens<wbr/>Config
 <div class="menu-item-desc">`&lt;LensProvider&gt;` configuration</div></div></a></li>
@@ -884,8 +1060,12 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../types/_lens_protocol_react.MirrorAsyncResult.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Mirror<wbr/>Async<wbr/>Result
 <div class="menu-item-desc">An object representing the result of a mirror creation.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.MomokaInfo.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Momoka<wbr/>Info</div></a></li>
 <li><a href="../types/_lens_protocol_react.MultirecipientCollectActionConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Multirecipient<wbr/>Collect<wbr/>Action<wbr/>Config</div></a></li>
+<li><a href="../types/_lens_protocol_react.MultirecipientFeeCollectOpenActionSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Multirecipient<wbr/>Fee<wbr/>Collect<wbr/>Open<wbr/>Action<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react.NftId.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Nft<wbr/>Id</div></a></li>
 <li><a href="../types/_lens_protocol_react.NftImage.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -896,8 +1076,17 @@ any open actions, it will be hosted on Momoka.</p>
 <div>No<wbr/>Fee<wbr/>Follow<wbr/>Policy</div></a></li>
 <li><a href="../types/_lens_protocol_react.NoReferencePolicyConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>No<wbr/>Reference<wbr/>Policy<wbr/>Config</div></a></li>
+<li><a href="../types/_lens_protocol_react.OpenActionArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Open<wbr/>Action<wbr/>Args
+<div class="menu-item-desc">Arguments for the `useOpenAction` hook callback.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.OpenActionAsyncResult.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Open<wbr/>Action<wbr/>Async<wbr/>Result
+<div class="menu-item-desc">An object representing the result of an open action is finalized.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.OpenActionConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Open<wbr/>Action<wbr/>Config</div></a></li>
+<li><a href="../types/_lens_protocol_react.OpenActionParams.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Open<wbr/>Action<wbr/>Params
+<div class="menu-item-desc">The Open Action to perform.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.OpenFollowPolicy.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Open<wbr/>Follow<wbr/>Policy</div></a></li>
 <li><a href="../types/_lens_protocol_react.PaginatedArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -915,13 +1104,23 @@ any open actions, it will be hosted on Momoka.</p>
 <div class="menu-item-desc">Convenience type for publication with metadata content.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.Profile.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Profile</div></a></li>
+<li><a href="../types/_lens_protocol_react.ProfileGuardianResult.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Profile<wbr/>Guardian<wbr/>Result</div></a></li>
 <li><a href="../types/_lens_protocol_react.ProfileId.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Profile<wbr/>Id</div></a></li>
+<li><a href="../types/_lens_protocol_react.ProfileMetadata.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Profile<wbr/>Metadata</div></a></li>
+<li><a href="../types/_lens_protocol_react.ProfileOnchainIdentity.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Profile<wbr/>Onchain<wbr/>Identity</div></a></li>
+<li><a href="../types/_lens_protocol_react.ProfileOperations.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Profile<wbr/>Operations</div></a></li>
 <li><a href="../types/_lens_protocol_react.ProfilePictureSet.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Profile<wbr/>Picture<wbr/>Set</div></a></li>
 <li><a href="../types/_lens_protocol_react.ProfileSession.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Profile<wbr/>Session
 <div class="menu-item-desc">A typical authenticated user&#39;s session.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.ProfileStats.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Profile<wbr/>Stats</div></a></li>
 <li><a href="../types/_lens_protocol_react.ProfilesRequestWhere.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Profiles<wbr/>Request<wbr/>Where</div></a></li>
 <li><a href="../types/_lens_protocol_react.PromiseResult.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -935,6 +1134,12 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../types/_lens_protocol_react.PublicationMetadataMedia.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Publication<wbr/>Metadata<wbr/>Media
 <div class="menu-item-desc">Convenience type for publication media types.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.PublicationOperations.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Publication<wbr/>Operations</div></a></li>
+<li><a href="../types/_lens_protocol_react.PublicationRevenue.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Publication<wbr/>Revenue</div></a></li>
+<li><a href="../types/_lens_protocol_react.PublicationStats.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Publication<wbr/>Stats</div></a></li>
 <li><a href="../types/_lens_protocol_react.QueryParams.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Query<wbr/>Params
 <div class="menu-item-desc">The common query parameters used across any query.</div></div></a></li>
@@ -962,15 +1167,30 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../types/_lens_protocol_react.Result.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Result
 <div class="menu-item-desc">A `Result` type represents either `Success` or `Failure`.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.RevenueAggregate.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Revenue<wbr/>Aggregate</div></a></li>
+<li><a href="../types/_lens_protocol_react.RevertFollowModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Revert<wbr/>Follow<wbr/>Module<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react.Session.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Session
 <div class="menu-item-desc">Describes the details of a user&#39;s session.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.SimpleCollectActionConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Simple<wbr/>Collect<wbr/>Action<wbr/>Config</div></a></li>
+<li><a href="../types/_lens_protocol_react.SimpleCollectOpenActionSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Simple<wbr/>Collect<wbr/>Open<wbr/>Action<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react.UnfollowArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Unfollow<wbr/>Args</div></a></li>
+<li><a href="../types/_lens_protocol_react.UnknownActionParams.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Unknown<wbr/>Action<wbr/>Params
+<div class="menu-item-desc">Execute the specified Unknown Open Action.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.UnknownFollowModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Unknown<wbr/>Follow<wbr/>Module<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react.UnknownOpenActionConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Unknown<wbr/>Open<wbr/>Action<wbr/>Config</div></a></li>
+<li><a href="../types/_lens_protocol_react.UnknownOpenActionModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Unknown<wbr/>Open<wbr/>Action<wbr/>Module<wbr/>Settings</div></a></li>
+<li><a href="../types/_lens_protocol_react.UnknownReferenceModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Unknown<wbr/>Reference<wbr/>Module<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react.UpdateFollowPolicyArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Update<wbr/>Follow<wbr/>Policy<wbr/>Args</div></a></li>
 <li><a href="../types/_lens_protocol_react.UpdateProfileManagersArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -978,6 +1198,9 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../types/_lens_protocol_react.Url.html" class="deprecated"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Url
 <div class="menu-item-desc">A URL</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.UseApproveModuleArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Use<wbr/>Approve<wbr/>Module<wbr/>Args
+<div class="menu-item-desc">Arguments for the useApproveModule hook.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.UseBookmarkToggleArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Use<wbr/>Bookmark<wbr/>Toggle<wbr/>Args</div></a></li>
 <li><a href="../types/_lens_protocol_react.UseCurrenciesArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -1001,6 +1224,9 @@ any open actions, it will be hosted on Momoka.</p>
 <div class="menu-item-desc">useMutualFollowers hook arguments</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.UseMyBookmarksArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Use<wbr/>My<wbr/>Bookmarks<wbr/>Args</div></a></li>
+<li><a href="../types/_lens_protocol_react.UseOpenActionArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Use<wbr/>Open<wbr/>Action<wbr/>Args
+<div class="menu-item-desc">Arguments for the `useOpenAction` hook.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.UseProfileActionHistoryArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Use<wbr/>Profile<wbr/>Action<wbr/>History<wbr/>Args
 <div class="menu-item-desc">useProfileActionHistory hook arguments</div></div></a></li>
@@ -1031,6 +1257,15 @@ any open actions, it will be hosted on Momoka.</p>
 <div class="menu-item-desc">useRecommendedProfiles hook arguments</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.UseReportPublicationArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Use<wbr/>Report<wbr/>Publication<wbr/>Args</div></a></li>
+<li><a href="../types/_lens_protocol_react.UseRevenueFromFollowArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Use<wbr/>Revenue<wbr/>From<wbr/>Follow<wbr/>Args
+<div class="menu-item-desc">useRevenueFromFollow hook arguments</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.UseRevenueFromPublicationArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Use<wbr/>Revenue<wbr/>From<wbr/>Publication<wbr/>Args
+<div class="menu-item-desc">useRevenueFromPublication hook arguments</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.UseRevenueFromPublicationsArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Use<wbr/>Revenue<wbr/>From<wbr/>Publications<wbr/>Args
+<div class="menu-item-desc">useRevenueFromPublications hook arguments</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.UseSearchProfilesArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Use<wbr/>Search<wbr/>Profiles<wbr/>Args</div></a></li>
 <li><a href="../types/_lens_protocol_react.UseSearchPublicationsArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -1095,6 +1330,9 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="_lens_protocol_react.usd.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>usd
 <div class="menu-item-desc">A convenience function to create a Fiat asset for USD.</div></div></a></li>
+<li><a href="_lens_protocol_react.useApproveModule.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Approve<wbr/>Module
+<div class="menu-item-desc">`useApproveModule` is a React Hook that allows to perform an ERC20 pre-approval</div></div></a></li>
 <li><a href="_lens_protocol_react.useBookmarkToggle.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Bookmark<wbr/>Toggle
 <div class="menu-item-desc">`useBookmarkToggle` hook lets the user save or remove a publication from their bookmarks.</div></div></a></li>
@@ -1132,7 +1370,10 @@ any open actions, it will be hosted on Momoka.</p>
 <div class="menu-item-desc">Hide a publication posted by the authenticated profile to prevent other profiles from seeing it.</div></div></a></li>
 <li><a href="_lens_protocol_react.useLazyProfile.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Lazy<wbr/>Profile
-<div class="menu-item-desc">Lazy version of useProfile hook.</div></div></a></li>
+<div class="menu-item-desc">`useLazyProfile` is a lazy version of useProfile React Hook.</div></div></a></li>
+<li><a href="_lens_protocol_react.useLazyPublication.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Lazy<wbr/>Publication
+<div class="menu-item-desc">`useLazyPublication` is a lazy version of usePublication React Hook.</div></div></a></li>
 <li><a href="_lens_protocol_react.useLogin.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Login
 <div class="menu-item-desc">`useLogin` is React Hook that allows you to login with the Lens API.</div></div></a></li>
@@ -1145,6 +1386,9 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="_lens_protocol_react.useMyBookmarks.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>My<wbr/>Bookmarks
 <div class="menu-item-desc">`useMyBookmarks` is a paginated hook that lets you fetch the bookmarks of a profile owned by the logged in wallet.</div></div></a></li>
+<li><a href="_lens_protocol_react.useOpenAction.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Open<wbr/>Action
+<div class="menu-item-desc">`useOpenAction` is a React Hook that allows to perform an Open Action on a publication.</div></div></a></li>
 <li><a href="_lens_protocol_react.useProfile.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Profile
 <div class="menu-item-desc">Get a profile by either a handle or profile Id.</div></div></a></li>
@@ -1165,7 +1409,7 @@ any open actions, it will be hosted on Momoka.</p>
 <div class="menu-item-desc">`useProfiles` is a paginated hook that lets you fetch profiles based on a set of filters.</div></div></a></li>
 <li><a href="_lens_protocol_react.usePublication.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Publication
-<div class="menu-item-desc">Fetch a publication by either it&#39;s publicationId or transaction hash.</div></div></a></li>
+<div class="menu-item-desc">Fetch a publication by either its publication id or transaction hash.</div></div></a></li>
 <li><a href="_lens_protocol_react.usePublications.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Publications
 <div class="menu-item-desc">Fetch a paginated result of publications based on a set of filters.</div></div></a></li>
@@ -1178,6 +1422,15 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="_lens_protocol_react.useReportPublication.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Report<wbr/>Publication
 <div class="menu-item-desc">Report a publication for a given reason.</div></div></a></li>
+<li><a href="_lens_protocol_react.useRevenueFromFollow.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Revenue<wbr/>From<wbr/>Follow
+<div class="menu-item-desc">Fetch a revenue of a profile from all follow actions.</div></div></a></li>
+<li><a href="_lens_protocol_react.useRevenueFromPublication.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Revenue<wbr/>From<wbr/>Publication
+<div class="menu-item-desc">Fetch a profile&#39;s revenue from a single publication.</div></div></a></li>
+<li><a href="_lens_protocol_react.useRevenueFromPublications.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Revenue<wbr/>From<wbr/>Publications
+<div class="menu-item-desc">Fetch a profile&#39;s revenue for all their publications.</div></div></a></li>
 <li><a href="_lens_protocol_react.useSearchProfiles.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Search<wbr/>Profiles
 <div class="menu-item-desc">`useSearchProfiles` is a paginated hook that lets you search for profiles based on a defined criteria</div></div></a></li>
@@ -1409,8 +1662,8 @@ any open actions, it will be hosted on Momoka.</p>
 <li><a href="../types/_lens_protocol_client.Base.AnyEncryptablePublicationMetadataFragment.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Any<wbr/>Encryptable<wbr/>Publication<wbr/>Metadata<wbr/>Fragment
 <div class="menu-item-desc">Any encrypted publication metadata regardless of its type, or capabilities</div></div></a></li>
-<li><a href="../types/_lens_protocol_client.Base.AnyMetadataAttribute.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
-<div>Any<wbr/>Metadata<wbr/>Attribute
+<li><a href="../types/_lens_protocol_client.Base.AnyMetadataAttributeFragment.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Any<wbr/>Metadata<wbr/>Attribute<wbr/>Fragment
 <div class="menu-item-desc">Any metadata attribute</div></div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.AnyPublicationFragment.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Any<wbr/>Publication<wbr/>Fragment</div></a></li>
@@ -2107,8 +2360,8 @@ any open actions, it will be hosted on Momoka.</p>
 <div>And<wbr/>Condition<wbr/>Fragment</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#AnyEncryptablePublicationMetadataFragment"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
 <div>Any<wbr/>Encryptable<wbr/>Publication<wbr/>Metadata<wbr/>Fragment</div></a></li>
-<li><a href="../modules/_lens_protocol_client.Gated.html#AnyMetadataAttribute"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
-<div>Any<wbr/>Metadata<wbr/>Attribute</div></a></li>
+<li><a href="../modules/_lens_protocol_client.Gated.html#AnyMetadataAttributeFragment"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
+<div>Any<wbr/>Metadata<wbr/>Attribute<wbr/>Fragment</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#AnyPublicationFragment"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
 <div>Any<wbr/>Publication<wbr/>Fragment</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#AnyPublicationMetadataFragment"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
