@@ -24,8 +24,6 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm build
-
       - run: pnpm lint
 
       - name: Run tests
@@ -39,3 +37,5 @@ jobs:
           TESTING_HEADER_VALUE: ${{secrets.TESTING_HEADER_VALUE}}
 
       - run: pnpm lint:examples
+
+      - run: pnpm build
