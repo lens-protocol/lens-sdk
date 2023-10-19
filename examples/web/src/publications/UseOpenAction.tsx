@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 import { Logs } from '../components/Logs';
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useLogs } from '../hooks/useLogs';
 import { uploadJson } from '../upload';
@@ -32,7 +33,7 @@ function TestScenario({ id }: { id: PublicationId }) {
   }
 
   if (error) {
-    return <p>{error.message}</p>;
+    return <ErrorMessage error={error} />;
   }
 
   const collect = async () => {

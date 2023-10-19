@@ -54,12 +54,23 @@ const UnknownOpenActionConfigSchema = z.object({
   data: DataSchema,
 });
 
-const OpenActionConfigSchema: z.ZodType<OpenActionConfig, z.ZodTypeDef, UnknownObject> =
-  z.discriminatedUnion('type', [
+const OpenActionConfigSchema: z.ZodType<OpenActionConfig, z.ZodTypeDef, UnknownObject> = z
+  .discriminatedUnion('type', [
     SimpleCollectActionConfigSchema,
     MultirecipientCollectActionConfigSchema,
     UnknownOpenActionConfigSchema,
-  ]);
+  ])
+  .superRefine((val, ctx) => {
+    if (val.type === OpenActionType.SIMPLE_COLLECT) {
+      if (val.amount && !val.recipient) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'You must provide a recipient when specifying an amount',
+          path: ['recipient'],
+        });
+      }
+    }
+  });
 
 const AnyoneReferencePolicyConfigSchema = z.object({
   type: z.literal(ReferencePolicyType.ANYONE),

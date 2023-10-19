@@ -1,17 +1,19 @@
 import { textOnly } from '@lens-protocol/metadata';
 import {
   Amount,
-  AnyPublication,
   OpenActionType,
   useCreatePost,
   useCurrencies,
-  useLazyPublication,
   useApproveModule,
   useOpenAction,
   OpenActionKind,
   InsufficientAllowanceError,
+  usePublication,
+  PublicationId,
 } from '@lens-protocol/react-web';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { useAccount } from 'wagmi';
 
 import { Logs } from '../components/Logs';
 import { ErrorMessage } from '../components/error/ErrorMessage';
@@ -21,13 +23,22 @@ import { PublicationCard } from '../publications/components/PublicationCard';
 import { uploadJson } from '../upload';
 import { never } from '../utils';
 
-function TestScenario({ publication }: { publication: AnyPublication }) {
+function TestScenario({ publicationId }: { publicationId: PublicationId }) {
+  const { data: publication, loading, error } = usePublication({ forId: publicationId });
   const { execute: collect, loading: collecting } = useOpenAction({
     action: {
       kind: OpenActionKind.COLLECT,
     },
   });
   const { execute: approve, loading: approving } = useApproveModule();
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <ErrorMessage error={error} />;
+  }
 
   const run = async () => {
     const result = await collect({ publication });
@@ -44,12 +55,12 @@ function TestScenario({ publication }: { publication: AnyPublication }) {
     }
 
     if (result.error instanceof InsufficientAllowanceError) {
-      const outcome = await approve({
+      const approval = await approve({
         on: publication,
       });
 
-      if (outcome.isFailure()) {
-        toast.error(outcome.error.message);
+      if (approval.isFailure()) {
+        toast.error(approval.error.message);
         return;
       }
 
@@ -75,8 +86,9 @@ function TestScenario({ publication }: { publication: AnyPublication }) {
 }
 
 export function UseApproveModule() {
+  const [id, setId] = useState<PublicationId | undefined>();
+  const { address } = useAccount();
   const { data: currencies, loading, error } = useCurrencies();
-  const { data: collectable, execute: fetch } = useLazyPublication();
   const { logs, clear, log } = useLogs();
 
   const { execute: post } = useCreatePost();
@@ -108,6 +120,7 @@ export function UseApproveModule() {
           amount: Amount.erc20(currency, 1),
           followerOnly: false,
           collectLimit: 5,
+          recipient: address,
         },
       ],
     });
@@ -125,7 +138,7 @@ export function UseApproveModule() {
       return;
     }
 
-    await fetch({ forId: completion.value.id });
+    setId(completion.value.id);
   };
 
   if (loading) {
@@ -142,7 +155,7 @@ export function UseApproveModule() {
         <code>useApproveModule</code>
       </h1>
 
-      {!collectable && (
+      {!id && (
         <>
           {logs.length === 0 && (
             <form onSubmit={prepare}>
@@ -164,7 +177,7 @@ export function UseApproveModule() {
         </>
       )}
 
-      {collectable && <TestScenario publication={collectable} />}
+      {id && <TestScenario publicationId={id} />}
     </div>
   );
 }
