@@ -50,19 +50,28 @@ export type ReactionToggleArgs = {
  *
  * @example
  * ```tsx
- * const { execute: toggle, loading } = useReactionToggle({
- *   publication,
- * });
+ * import { AnyPublication, useReactionToggle } from '@lens-protocol/react-web';
  *
- * const toggleReaction = async () => {
- *   await toggle({
- *     reaction: PublicationReactionType.Upvote,
- *   });
- * };
+ * function Publication({ publication }: { publication: AnyPublication }) {
+ *  const { execute: toggle, loading } = useReactionToggle({
+ *    publication,
+ *  });
  *
- * <button onClick={toggleReaction} disabled={loading}>
- *   Toggle reaction
- * </button>
+ *  const toggleReaction = async () => {
+ *    await toggle({
+ *      reaction: PublicationReactionType.Upvote,
+ *    });
+ *  };
+ *
+ *  return (
+ *    <div>
+ *      // render publication details
+ *      <button onClick={toggleReaction} disabled={loading}>
+ *        Toggle reaction
+ *      </button>
+ *    </div>
+ *  );
+ * }
  * ```
  *
  * @category Publications
