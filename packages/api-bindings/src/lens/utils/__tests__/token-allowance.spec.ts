@@ -6,7 +6,7 @@ import {
 import { mockDaiAmount, mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import {
-  mockAmountFragment,
+  mockAmountFragmentFrom,
   mockCommentFragment,
   mockFeeFollowModuleSettingsFragment,
   mockLegacyAaveFeeCollectModuleSettingsFragment,
@@ -45,7 +45,7 @@ describe(`Given the ${resolveTokenAllowanceRequest.name} helper`, () => {
   describe(`when the item is a Profile`, () => {
     const item = mockProfileFragment({
       followModule: mockFeeFollowModuleSettingsFragment({
-        amount: mockAmountFragment(amount),
+        amount: mockAmountFragmentFrom(amount),
         contract: mockNetworkAddressFragment({ address: spender }),
       }),
     });
@@ -96,52 +96,52 @@ describe(`Given the ${resolveTokenAllowanceRequest.name} helper`, () => {
   ])(`when the item is a $name`, ({ mockPublicationWith }) => {
     describe.each([
       mockSimpleCollectOpenActionSettingsFragment({
-        amount: mockAmountFragment(amount),
+        amount: mockAmountFragmentFrom(amount),
         contract: mockNetworkAddressFragment({ address: spender }),
       }),
 
       mockMultirecipientFeeCollectOpenActionSettingsFragment({
-        amount: mockAmountFragment(amount),
+        amount: mockAmountFragmentFrom(amount),
         contract: mockNetworkAddressFragment({ address: spender }),
       }),
 
       mockLegacyFeeCollectModuleSettingsFragment({
-        amount: mockAmountFragment(amount),
+        amount: mockAmountFragmentFrom(amount),
         contract: mockNetworkAddressFragment({ address: spender }),
       }),
 
       mockLegacyLimitedFeeCollectModuleSettingsFragment({
-        amount: mockAmountFragment(amount),
+        amount: mockAmountFragmentFrom(amount),
         contract: mockNetworkAddressFragment({ address: spender }),
       }),
 
       mockLegacyLimitedTimedFeeCollectModuleSettingsFragment({
-        amount: mockAmountFragment(amount),
+        amount: mockAmountFragmentFrom(amount),
         contract: mockNetworkAddressFragment({ address: spender }),
       }),
 
       mockLegacyTimedFeeCollectModuleSettingsFragment({
-        amount: mockAmountFragment(amount),
+        amount: mockAmountFragmentFrom(amount),
         contract: mockNetworkAddressFragment({ address: spender }),
       }),
 
       mockLegacyMultirecipientFeeCollectModuleSettingsFragment({
-        amount: mockAmountFragment(amount),
+        amount: mockAmountFragmentFrom(amount),
         contract: mockNetworkAddressFragment({ address: spender }),
       }),
 
       mockLegacySimpleCollectModuleSettingsFragment({
-        amount: mockAmountFragment(amount),
+        amount: mockAmountFragmentFrom(amount),
         contract: mockNetworkAddressFragment({ address: spender }),
       }),
 
       mockLegacyErc4626FeeCollectModuleSettingsFragment({
-        amount: mockAmountFragment(amount),
+        amount: mockAmountFragmentFrom(amount),
         contract: mockNetworkAddressFragment({ address: spender }),
       }),
 
       mockLegacyAaveFeeCollectModuleSettingsFragment({
-        amount: mockAmountFragment(amount),
+        amount: mockAmountFragmentFrom(amount),
         contract: mockNetworkAddressFragment({ address: spender }),
       }),
     ])('configured with $__typename', (settings) => {

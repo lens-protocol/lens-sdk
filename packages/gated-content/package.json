@@ -54,7 +54,7 @@
     "@lit-protocol/types": "2.1.62",
     "siwe": "^1.1.6",
     "traverse": "^0.6.7",
-    "tslib": "^2.5.0"
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",

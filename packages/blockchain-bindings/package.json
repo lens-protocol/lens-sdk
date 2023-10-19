@@ -44,7 +44,7 @@
     "@lens-protocol/domain": "workspace:*",
     "@lens-protocol/shared-kernel": "workspace:*",
     "ethers": "^5.7.2",
-    "tslib": "^2.5.0"
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",

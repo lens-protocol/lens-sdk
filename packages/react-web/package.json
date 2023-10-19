@@ -44,7 +44,7 @@
     "@lens-protocol/react": "workspace:*",
     "@lens-protocol/shared-kernel": "workspace:*",
     "@lens-protocol/storage": "workspace:*",
-    "tslib": "^2.5.0"
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
