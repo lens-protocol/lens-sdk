@@ -1,7 +1,7 @@
-import { IResettableWalletGateway } from '@lens-protocol/domain/src/use-cases/authentication/Logout';
 import {
   IReadableWalletGateway,
   IWritableWalletGateway,
+  IResettableWalletGateway,
 } from '@lens-protocol/domain/use-cases/authentication';
 import { EvmAddress, never } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';

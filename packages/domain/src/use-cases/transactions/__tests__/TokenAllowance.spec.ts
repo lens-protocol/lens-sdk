@@ -17,19 +17,19 @@ import {
   mockUnsignedTransaction,
   mockWallet,
 } from '../../../entities/__helpers__/mocks';
-import {
-  mockActiveWallet,
-  mockTransactionQueue,
-  mockIApproveTransactionGateway,
-  mockTokenAllowanceRequest,
-} from '../../../mocks';
-import { TransactionQueue } from '../../transactions/TransactionQueue';
+import { mockActiveWallet } from '../../authentication/__helpers__/mocks';
 import {
   IApproveTransactionGateway,
   ITokenAllowancePresenter,
   TokenAllowance,
   TokenAllowanceRequest,
 } from '../TokenAllowance';
+import { TransactionQueue } from '../TransactionQueue';
+import {
+  mockIApproveTransactionGateway,
+  mockTokenAllowanceRequest,
+  mockTransactionQueue,
+} from '../__helpers__/mocks';
 
 function setupTokenAllowance({
   gateway,
@@ -77,8 +77,7 @@ describe(`Given the ${TokenAllowance.name} interactor`, () => {
 
       await tokenAllowance.increaseAllowance(request);
 
-      expect(queue.push).toHaveBeenCalledWith(transaction);
-      expect(presenter.present).toHaveBeenCalledWith(success());
+      expect(queue.push).toHaveBeenCalledWith(transaction, presenter);
     });
 
     it.each([

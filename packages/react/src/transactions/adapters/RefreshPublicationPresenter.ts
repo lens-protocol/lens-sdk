@@ -5,8 +5,8 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { CreateQuoteRequest } from '@lens-protocol/domain/src/use-cases/publications/CreateQuote';
 import {
+  CreateQuoteRequest,
   CreateCommentRequest,
   CreateMirrorRequest,
   CreatePostRequest,

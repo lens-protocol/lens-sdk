@@ -2,8 +2,8 @@ import {
   ExplorePublicationRequest,
   ExplorePublicationsOrderByType,
   useExplorePublications as useUnderlyingQuery,
+  ExplorePublication,
 } from '@lens-protocol/api-bindings';
-import { ExplorePublication } from '@lens-protocol/api-bindings/src/lens';
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';

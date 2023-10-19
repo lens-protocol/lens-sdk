@@ -6,6 +6,11 @@ const hooks = [
     description: `Fetch ERC20 tokens that are enabled on the Lens protocol.`,
     path: '/misc/useCurrencies',
   },
+  {
+    label: 'useApproveModule',
+    description: `Pre-approves an ERC20 spend on a given collect/follow module.`,
+    path: '/misc/useApproveModule',
+  },
 ];
 
 export function MiscPage() {

@@ -29,8 +29,8 @@
     "react-hot-toast": "^2.4.0",
     "react-router-dom": "^6.8.1",
     "readable-web-to-node-stream": "^3.0.2",
-    "viem": "^1.0.0",
-    "wagmi": "^1.1.0"
+    "viem": "^1.16.6",
+    "wagmi": "^1.4.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",

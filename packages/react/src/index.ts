@@ -95,6 +95,7 @@ export { TriStateValue } from '@lens-protocol/api-bindings';
  */
 export { InvariantError } from '@lens-protocol/shared-kernel';
 export {
+  InsufficientGasError,
   PendingSigningRequestError,
   TransactionError,
   UserRejectedError,

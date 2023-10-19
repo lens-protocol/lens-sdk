@@ -1,4 +1,4 @@
-import { Amount, Erc20, EvmAddress, success } from '@lens-protocol/shared-kernel';
+import { Amount, Erc20, EvmAddress } from '@lens-protocol/shared-kernel';
 
 import {
   UnsignedTransaction,
@@ -11,11 +11,20 @@ import {
   AnyTransactionRequestModel,
 } from '../../entities';
 import { ActiveWallet } from '../authentication/ActiveWallet';
-import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
-import { TransactionQueue } from '../transactions/TransactionQueue';
+import { ITransactionResultPresenter } from './ITransactionResultPresenter';
+import { TransactionQueue } from './TransactionQueue';
 
+/**
+ * Token allowance limit.
+ */
 export enum TokenAllowanceLimit {
+  /**
+   * The allowance will be set to the exact amount specified in the request.
+   */
   EXACT,
+  /**
+   * The allowance will be set to the maximum value possible, virtually infinite.
+   */
   INFINITE,
 }
 
@@ -35,8 +44,8 @@ export interface IApproveTransactionGateway {
   ): Promise<UnsignedTokenAllowanceTransaction>;
 }
 
-export type ITokenAllowancePresenter = IGenericResultPresenter<
-  void,
+export type ITokenAllowancePresenter = ITransactionResultPresenter<
+  TokenAllowanceRequest,
   PendingSigningRequestError | InsufficientGasError | UserRejectedError | WalletConnectionError
 >;
 
@@ -61,8 +70,6 @@ export class TokenAllowance {
     }
 
     const transaction = result.value;
-    await this.queue.push(transaction);
-
-    this.presenter.present(success());
+    await this.queue.push(transaction, this.presenter);
   }
 }

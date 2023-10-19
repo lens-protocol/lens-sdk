@@ -3,7 +3,7 @@ import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import { XMTPProvider } from '@xmtp/react-sdk';
 import { Toaster } from 'react-hot-toast';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import { WagmiConfig, configureChains, createConfig } from 'wagmi';
+import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { polygonMumbai } from 'wagmi/chains';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { publicProvider } from 'wagmi/providers/public';
@@ -24,6 +24,7 @@ import {
   UseSearchPublications,
 } from './discovery';
 import { MiscPage, UseCurrencies } from './misc';
+import { UseApproveModule } from './misc/UseApproveModule';
 import {
   ProfilesPage,
   UseFollowAndUnfollow,
@@ -167,6 +168,7 @@ export function App() {
                     <Route path="/misc">
                       <Route index element={<MiscPage />} />
                       <Route path="useCurrencies" element={<UseCurrencies />} />
+                      <Route path="useApproveModule" element={<UseApproveModule />} />
                     </Route>
                   </Route>
 

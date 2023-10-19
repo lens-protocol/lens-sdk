@@ -250,6 +250,15 @@ export class Amount<T extends Asset> {
   }
 
   /**
+   * Diagnostic method to inspect the internal value.
+   *
+   * @returns a string representation of the Amount value and {@link Asset} symbol.
+   */
+  toString() {
+    return `${this.toSignificantDigits(6)} ${this.asset.symbol}`;
+  }
+
+  /**
    * Creates an Amount of the same {@link Asset} with the new specified `value`.
    *
    * @returns a new Amount with the same {@link Asset} and the new `value`.
@@ -267,6 +276,13 @@ export class Amount<T extends Asset> {
         return new Amount(asset, value);
     }
   }
+
+  /**
+   *
+   *
+   * @internal
+   */
+  static [Symbol.toStringTag] = 'Amount';
 
   /**
    * Creates an Amount of the specified {@link Erc20} with the specified `value`.

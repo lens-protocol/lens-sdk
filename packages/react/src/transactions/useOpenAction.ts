@@ -7,8 +7,8 @@ import {
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
-} from '@lens-protocol/domain/src/entities';
-import { BroadcastingError } from '@lens-protocol/domain/src/use-cases/transactions/BroadcastingError';
+} from '@lens-protocol/domain/entities';
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,

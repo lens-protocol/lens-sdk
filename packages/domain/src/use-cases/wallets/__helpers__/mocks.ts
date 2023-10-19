@@ -3,19 +3,8 @@ import { mockDaiAmount, mockEvmAddress } from '@lens-protocol/shared-kernel/mock
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import {
-  Wallet,
-  TransactionKind,
-  AnyTransactionRequestModel,
-  UnsignedTransaction,
-} from '../../../entities';
+import { Wallet, AnyTransactionRequestModel, UnsignedTransaction } from '../../../entities';
 import { IPayTransactionGateway } from '../../transactions/PayTransaction';
-import {
-  IApproveTransactionGateway,
-  TokenAllowanceRequest,
-  TokenAllowanceLimit,
-  UnsignedTokenAllowanceTransaction,
-} from '../TokenAllowance';
 import {
   IBalanceGateway,
   ITokenGateway,
@@ -68,36 +57,6 @@ export function mockTokenAvailabilityRequest(
     spender: mockEvmAddress(),
     ...override,
   };
-}
-
-export function mockTokenAllowanceRequest(
-  override: Partial<TokenAllowanceRequest> = {},
-): TokenAllowanceRequest {
-  return {
-    amount: mockDaiAmount(1),
-    spender: mockEvmAddress(),
-    limit: TokenAllowanceLimit.EXACT,
-    ...override,
-    kind: TransactionKind.APPROVE_MODULE,
-  };
-}
-
-export function mockIApproveTransactionGateway({
-  request,
-  wallet,
-  unsignedTransaction,
-}: {
-  request: TokenAllowanceRequest;
-  wallet: Wallet;
-  unsignedTransaction: UnsignedTokenAllowanceTransaction;
-}): IApproveTransactionGateway {
-  const gateway = mock<IApproveTransactionGateway>();
-
-  when(gateway.createApproveTransaction)
-    .calledWith(request, wallet)
-    .mockResolvedValue(unsignedTransaction);
-
-  return gateway;
 }
 
 export function mockTokeAvailability({

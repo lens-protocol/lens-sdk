@@ -9,10 +9,13 @@ import {
   useOpenAction,
   usePublication,
 } from '@lens-protocol/react-web';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
+import { Logs } from '../components/Logs';
+import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
+import { useLogs } from '../hooks/useLogs';
 import { uploadJson } from '../upload';
 import { invariant } from '../utils';
 import { PublicationCard } from './components/PublicationCard';
@@ -30,7 +33,7 @@ function TestScenario({ id }: { id: PublicationId }) {
   }
 
   if (error) {
-    return <p>{error.message}</p>;
+    return <ErrorMessage error={error} />;
   }
 
   const collect = async () => {
@@ -74,22 +77,6 @@ function TestScenario({ id }: { id: PublicationId }) {
       </div>
     </div>
   );
-}
-
-function useLogs() {
-  const [logs, setLogs] = useState<string[]>([]);
-
-  const clear = () => setLogs([]);
-
-  const log = (message: string) => {
-    setLogs((previous) => [...previous, message]);
-  };
-
-  return {
-    logs,
-    clear,
-    log,
-  };
 }
 
 export function UseOpenAction() {
@@ -151,16 +138,7 @@ export function UseOpenAction() {
               Prepare example
             </button>
           )}
-          {logs.length > 0 && (
-            <pre>
-              {logs.map((line, index) => (
-                <React.Fragment key={index}>
-                  {line}
-                  <br />
-                </React.Fragment>
-              ))}
-            </pre>
-          )}
+          <Logs logs={logs} />
         </>
       )}
 

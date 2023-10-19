@@ -9,3 +9,4 @@ export * from './BroadcastingError';
 export * from './MomokaCapable';
 export * from './PayTransaction';
 export * from './ITransactionResultPresenter';
+export * from './TokenAllowance';

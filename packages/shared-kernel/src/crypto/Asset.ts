@@ -1,4 +1,5 @@
 import { ChainType } from './ChainType';
+import { EvmAddress } from './types';
 
 /** @internal */
 export enum Kind {
@@ -145,7 +146,7 @@ class Erc20 {
     readonly name: string,
     readonly decimals: number,
     readonly symbol: string,
-    readonly address: string,
+    readonly address: EvmAddress,
     readonly chainType: ChainType,
   ) {}
 
@@ -218,7 +219,7 @@ function immutable(key: string, asset: Asset): Asset {
  *
  */
 export type Erc20Info = {
-  address: string;
+  address: EvmAddress;
   chainType: ChainType;
   decimals: number;
   name: string;
