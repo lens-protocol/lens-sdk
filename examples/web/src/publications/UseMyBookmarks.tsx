@@ -17,19 +17,15 @@ export function MyBookmarks() {
 
   if (loading) return <Loading />;
 
-  if (error) return <p>error.message</p>;
+  if (error) return <ErrorMessage error={error} />;
 
-  if (publications.length === 0) return (
-  <p>No bookmarks yet.</p>
+  if (publications.length === 0) return <p>No bookmarks yet.</p>;
 
   return (
     <div>
-      {publications.map((publication) => {
-        publication.id
-        return (
-          <PublicationCard key={publication.id} publication={publication} />
-        );
-      })}
+      {publications.map((publication) => (
+        <PublicationCard key={publication.id} publication={publication} />
+      ))}
       {hasMore && <p ref={observeRef}>Loading more...</p>}
     </div>
   );
