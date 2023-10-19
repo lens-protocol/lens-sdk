@@ -9,17 +9,13 @@ import { act, waitFor } from '@testing-library/react';
 
 import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
 import { usePublication } from '../usePublication';
-import { UseReactionToggleArgs, useReactionToggle } from '../useReactionToggle';
+import { useReactionToggle } from '../useReactionToggle';
 
 describe(`Given the ${useReactionToggle.name} hook`, () => {
   const publication = mockPostFragment();
 
   describe('when calling the execute method', () => {
     it('should call correct mutation', async () => {
-      const args: UseReactionToggleArgs = {
-        publication,
-      };
-
       const { renderHook } = setupHookTestScenario([
         mockPublicationResponse({
           variables: {
@@ -40,7 +36,7 @@ describe(`Given the ${useReactionToggle.name} hook`, () => {
       const { result: publicationResult } = renderHook(() =>
         usePublication({ forId: publication.id }),
       );
-      const { result } = renderHook(() => useReactionToggle(args));
+      const { result } = renderHook(() => useReactionToggle());
 
       // put publication in cache
       await waitFor(() => expect(publicationResult.current.loading).toBeFalsy());
@@ -55,6 +51,7 @@ describe(`Given the ${useReactionToggle.name} hook`, () => {
       await act(async () => {
         await result.current.execute({
           reaction: PublicationReactionType.Upvote,
+          publication,
         });
       });
 
