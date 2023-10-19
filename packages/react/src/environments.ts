@@ -38,7 +38,7 @@ export type ProfileHandleResolver = (handle: string) => string;
  * @internal
  */
 export type EnvironmentConfig = {
-  name: 'production' | 'development' | 'sandbox' | string;
+  name: string;
   backend: URL;
   chains: ChainConfigRegistry;
   timings: TransactionObserverTimings;
