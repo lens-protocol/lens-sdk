@@ -1,4 +1,3 @@
-import { AnyPublication } from '@lens-protocol/api-bindings';
 import { ReportReason } from '@lens-protocol/domain/entities';
 import { ReportPublicationRequest } from '@lens-protocol/domain/use-cases/publications';
 
@@ -7,11 +6,7 @@ import { useReportPublicationController } from './adapters/useReportPublicationC
 
 export { ReportReason };
 
-export type UseReportPublicationArgs = {
-  publication: AnyPublication;
-};
-
-export type ReportPublicationArgs = Pick<ReportPublicationRequest, 'additionalComments' | 'reason'>;
+export type ReportPublicationArgs = ReportPublicationRequest;
 
 /**
  * Report a publication for a given reason.
@@ -98,17 +93,11 @@ export type ReportPublicationArgs = Pick<ReportPublicationRequest, 'additionalCo
  *
  * @category Publications
  * @group Hooks
- * @param args - {@link UseReportPublicationArgs}
  */
-export function useReportPublication({
-  publication,
-}: UseReportPublicationArgs): UseDeferredTask<void, never, ReportPublicationArgs> {
+export function useReportPublication(): UseDeferredTask<void, never, ReportPublicationArgs> {
   const reportPublication = useReportPublicationController();
 
-  return useDeferredTask(async (args) => {
-    return reportPublication({
-      publicationId: publication.id,
-      ...args,
-    });
+  return useDeferredTask(async ({ publicationId, reason, additionalComments }) => {
+    return reportPublication({ publicationId, reason, additionalComments });
   });
 }
