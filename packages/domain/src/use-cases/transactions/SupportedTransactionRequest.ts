@@ -6,16 +6,16 @@ import { UnfollowRequest } from '../profile/UnfollowProfile';
 import { UpdateFollowPolicyRequest } from '../profile/UpdateFollowPolicy';
 import { SetProfileMetadataRequest } from '../profile/UpdateProfileDetails';
 import { UpdateProfileManagersRequest } from '../profile/UpdateProfileManagers';
-import { CollectRequest } from '../publications/CollectPublication';
 import { CreateCommentRequest } from '../publications/CreateComment';
 import { CreateMirrorRequest } from '../publications/CreateMirror';
 import { CreatePostRequest } from '../publications/CreatePost';
 import { CreateQuoteRequest } from '../publications/CreateQuote';
-import { TokenAllowanceRequest } from '../wallets/TokenAllowance';
+import { OpenActionRequest } from '../publications/OpenAction';
+import { TokenAllowanceRequest } from './TokenAllowance';
 
 export type AnyTransactionRequest =
   | BlockProfilesRequest
-  | CollectRequest
+  | OpenActionRequest
   | CreateCommentRequest
   | CreateMirrorRequest
   | CreatePostRequest

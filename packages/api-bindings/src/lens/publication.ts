@@ -34,6 +34,11 @@ export type AnyPublication = Comment | Mirror | Post | Quote;
 export type PrimaryPublication = Post | Comment | Quote;
 
 /**
+ * Convenience type for all supported open action module settings.
+ */
+export type OpenActionModuleSettings = NonNullable<PrimaryPublication['openActionModules']>[number];
+
+/**
  * Convenience type for publication metadata types.
  */
 export type PublicationMetadata =

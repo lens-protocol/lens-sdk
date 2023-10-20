@@ -15,6 +15,7 @@ import {
   TransactionQueue,
   TransactionResponders,
 } from '@lens-protocol/domain/use-cases/transactions';
+import { TokenAvailability } from '@lens-protocol/domain/use-cases/wallets';
 import { ILogger, invariant } from '@lens-protocol/shared-kernel';
 import React, { ReactNode, useContext } from 'react';
 
@@ -39,6 +40,7 @@ import { TransactionQueuePresenter } from './transactions/adapters/TransactionQu
 import { BlockProfilesResponder } from './transactions/adapters/responders/BlockProfilesResponder';
 import { FollowProfileResponder } from './transactions/adapters/responders/FollowProfileResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
+import { RefreshPublicationResponder } from './transactions/adapters/responders/RefreshPublicationResponder';
 import { SetProfileMetadataResponder } from './transactions/adapters/responders/SetProfileMetadataResponder';
 import { UnfollowProfileResponder } from './transactions/adapters/responders/UnfollowProfileResponder';
 import { UpdateFollowPolicyResponder } from './transactions/adapters/responders/UpdateFollowPolicyResponder';
@@ -46,6 +48,9 @@ import { UpdateProfileManagersResponder } from './transactions/adapters/responde
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
+import { BalanceGateway } from './wallet/adapters/BalanceGateway';
+import { IProviderFactory } from './wallet/adapters/IProviderFactory';
+import { TokenGateway } from './wallet/adapters/TokenGateway';
 import { WalletFactory } from './wallet/adapters/WalletFactory';
 import { WalletGateway } from './wallet/adapters/WalletGateway';
 import { ProviderFactory } from './wallet/infrastructure/ProviderFactory';
@@ -106,18 +111,16 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     async reset() {},
   };
 
-  const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
-
   const responders: TransactionResponders<AnyTransactionRequest> = {
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
+    [TransactionKind.ACT_ON_PUBLICATION]: new RefreshPublicationResponder(publicationCacheManager),
     [TransactionKind.BLOCK_PROFILE]: new BlockProfilesResponder(profileCacheManager),
-    [TransactionKind.COLLECT_PUBLICATION]: new NoopResponder(),
-    [TransactionKind.CREATE_COMMENT]: new NoopResponder(),
-    [TransactionKind.CREATE_POST]: new NoopResponder(),
-    [TransactionKind.CREATE_QUOTE]: new NoopResponder(),
+    [TransactionKind.CREATE_COMMENT]: new NoopResponder(), // TODO update profile for new stats
+    [TransactionKind.CREATE_POST]: new NoopResponder(), // TODO update profile for new stats
+    [TransactionKind.CREATE_QUOTE]: new NoopResponder(), // TODO update profile for new stats
     [TransactionKind.CREATE_PROFILE]: new NoopResponder(),
     [TransactionKind.FOLLOW_PROFILE]: new FollowProfileResponder(profileCacheManager),
-    [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(),
+    [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(), // TODO update profile for new stats
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(profileCacheManager),
     [TransactionKind.UPDATE_PROFILE_DETAILS]: new SetProfileMetadataResponder(profileCacheManager),
     [TransactionKind.UPDATE_FOLLOW_POLICY]: new UpdateFollowPolicyResponder(profileCacheManager),
@@ -127,6 +130,13 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     ),
   };
   const transactionQueuePresenter = new TransactionQueuePresenter();
+
+  const balanceGateway = new BalanceGateway(providerFactory);
+  const tokenGateway = new TokenGateway(providerFactory);
+
+  // common interactors
+  const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
+  const tokenAvailability = new TokenAvailability(balanceGateway, tokenGateway, activeWallet);
   const transactionQueue = TransactionQueue.create(
     responders,
     transactionGateway,
@@ -159,6 +169,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     profileCacheManager,
     providerFactory,
     publicationCacheManager,
+    tokenAvailability,
     transactionFactory,
     transactionGateway,
     transactionQueue,
@@ -181,8 +192,9 @@ export type SharedDependencies = {
   momokaRelayer: MomokaRelayer;
   onChainRelayer: OnChainRelayer;
   profileCacheManager: IProfileCacheManager;
-  providerFactory: ProviderFactory;
+  providerFactory: IProviderFactory;
   publicationCacheManager: PublicationCacheManager;
+  tokenAvailability: TokenAvailability;
   transactionFactory: ITransactionFactory<AnyTransactionRequest>;
   transactionGateway: PendingTransactionGateway;
   transactionQueue: TransactionQueue<AnyTransactionRequest>;

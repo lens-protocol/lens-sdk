@@ -42,9 +42,19 @@ const publicationHooks = [
     path: '/publications/useReactionToggle',
   },
   {
+    label: 'useBookmarkToggle',
+    description: `Add or remove a bookmark to a publication.`,
+    path: '/publications/useBookmarkToggle',
+  },
+  {
     label: 'useMyBookmarks',
     description: `Fetch a list of publications that the current user has bookmarked.`,
     path: '/publications/useMyBookmarks',
+  },
+  {
+    label: 'useOpenAction',
+    description: `Execute an Open Action on a publication.`,
+    path: '/publications/useOpenAction',
   },
 ];
 

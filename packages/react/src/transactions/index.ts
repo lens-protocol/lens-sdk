@@ -1,11 +1,13 @@
+export * from './useApproveModule';
 export * from './useCreateComment';
 export * from './useCreateMirror';
 export * from './useCreatePost';
 export * from './useFollow';
+export * from './useOpenAction';
+export * from './useSetProfileMetadata';
 export * from './useUnfollow';
 export * from './useUpdateFollowPolicy';
 export * from './useUpdateProfileManagers';
-export * from './useSetProfileMetadata';
 
 export type {
   AnyoneReferencePolicyConfig,

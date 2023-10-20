@@ -8,11 +8,11 @@ import {
   mockCreateCommentRequest,
   mockCreateMirrorRequest,
   mockCreatePostRequest,
-  mockFreeCollectRequest,
   mockTokenAllowanceRequest,
   mockUpdateProfileManagersRequest,
   mockCreateQuoteRequest,
   mockBlockProfilesRequest,
+  mockSimpleCollectRequest,
 } from '@lens-protocol/domain/mocks';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { InvariantError } from '@lens-protocol/shared-kernel';
@@ -44,8 +44,8 @@ type TransactionRequest = {
 
 const requests: TransactionRequest = {
   [TransactionKind.APPROVE_MODULE]: mockTokenAllowanceRequest(),
+  [TransactionKind.ACT_ON_PUBLICATION]: mockSimpleCollectRequest(),
   [TransactionKind.BLOCK_PROFILE]: mockBlockProfilesRequest(),
-  [TransactionKind.COLLECT_PUBLICATION]: mockFreeCollectRequest(),
   [TransactionKind.CREATE_COMMENT]: mockCreateCommentRequest(),
   [TransactionKind.CREATE_POST]: mockCreatePostRequest(),
   [TransactionKind.CREATE_QUOTE]: mockCreateQuoteRequest(),
@@ -59,7 +59,7 @@ const requests: TransactionRequest = {
 };
 
 const lensHubTransactionKinds = [
-  TransactionKind.COLLECT_PUBLICATION,
+  TransactionKind.ACT_ON_PUBLICATION,
   TransactionKind.CREATE_COMMENT,
   TransactionKind.CREATE_POST,
   TransactionKind.CREATE_QUOTE,

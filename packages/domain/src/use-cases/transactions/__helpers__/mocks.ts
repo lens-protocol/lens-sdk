@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { failure, Result, success } from '@lens-protocol/shared-kernel';
+import { mockDaiAmount, mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 import waitFor from 'wait-for-expect';
@@ -16,6 +17,7 @@ import {
   ProtocolTransactionRequestModel,
   DataTransaction,
   TransactionError,
+  Wallet,
 } from '../../../entities';
 import { MockedProxyTransaction, mockNonce } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../BroadcastingError';
@@ -31,6 +33,12 @@ import {
   IOnChainProtocolCallGateway,
 } from '../SubsidizeOnChain';
 import { AnyTransactionRequest } from '../SupportedTransactionRequest';
+import {
+  IApproveTransactionGateway,
+  TokenAllowanceLimit,
+  TokenAllowanceRequest,
+  UnsignedTokenAllowanceTransaction,
+} from '../TokenAllowance';
 import { TransactionData, TransactionQueue } from '../TransactionQueue';
 
 export function mockIOnChainRelayer<T extends ProtocolTransactionRequestModel>({
@@ -184,4 +192,34 @@ export function mockITransactionCompletionPresenter() {
       });
     },
   };
+}
+
+export function mockTokenAllowanceRequest(
+  override: Partial<TokenAllowanceRequest> = {},
+): TokenAllowanceRequest {
+  return {
+    amount: mockDaiAmount(1),
+    spender: mockEvmAddress(),
+    limit: TokenAllowanceLimit.EXACT,
+    ...override,
+    kind: TransactionKind.APPROVE_MODULE,
+  };
+}
+
+export function mockIApproveTransactionGateway({
+  request,
+  wallet,
+  unsignedTransaction,
+}: {
+  request: TokenAllowanceRequest;
+  wallet: Wallet;
+  unsignedTransaction: UnsignedTokenAllowanceTransaction;
+}): IApproveTransactionGateway {
+  const gateway = mock<IApproveTransactionGateway>();
+
+  when(gateway.createApproveTransaction)
+    .calledWith(request, wallet)
+    .mockResolvedValue(unsignedTransaction);
+
+  return gateway;
 }

@@ -56,6 +56,8 @@ export type CreateCommentArgs = {
 /**
  * `useCreateComment` is React Hook that allows you to create a new Lens Comment.
  *
+ * You MUST be authenticated via {@link useLogin} to use this hook.
+ *
  * @example
  * ```ts
  * const { execute, error, loading } = useCreateComment();
@@ -101,7 +103,7 @@ export type CreateCommentArgs = {
  *   });
  *
  *   if (result.isFailure()) {
- *     switch (error.constructor) {
+ *     switch (result.error.constructor) {
  *       case BroadcastingError:
  *         console.log('There was an error broadcasting the transaction', error.message);
  *         break;
@@ -156,7 +158,7 @@ export type CreateCommentArgs = {
  *
  *   // this might take a while, depends on the type of tx (on-chain or Momoka)
  *   // and the congestion of the network
- *   const completion = await result.value.completion();
+ *   const completion = await result.value.waitForCompletion();
  *
  *   if (completion.isFailure()) {
  *     console.log('There was an processing the transaction', completion.error.message);
@@ -177,7 +179,7 @@ export type CreateCommentArgs = {
  * {@link Amount} helper with currencies from the {@link useCurrencies} hook to
  * create the desired amounts.
  *
- * Create a comment with a simple collect open action:
+ * Create a comment with a SimpleCollectOpenAction module:
  * ```tsx
  * const wmatic = ... // from useCurrencies hook
  *

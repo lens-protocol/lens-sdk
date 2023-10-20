@@ -1,9 +1,9 @@
-import { noCachedField } from '../utils/noCachedField';
+import { oneToOneRelationship } from '../utils/oneToOneRelationship';
 
 export function createPrimaryPublicationTypePolicy() {
   return {
     fields: {
-      stats: noCachedField(),
+      stats: oneToOneRelationship(),
     },
   };
 }

@@ -27,7 +27,10 @@ fragment PublicationRevenue on PublicationRevenue {
 }
 
 query RevenueFromPublications(
-  $request: RevenueFromPublicationsRequest!
+  $for: ProfileId!
+  $publishedOn: [AppId!]
+  $limit: LimitType
+  $cursor: Cursor
   $imageSmallSize: ImageTransform = {}
   $imageMediumSize: ImageTransform = {}
   $profileCoverSize: ImageTransform = {}
@@ -36,7 +39,9 @@ query RevenueFromPublications(
   $fxRateFor: SupportedFiatType = USD
 ) {
   ...InjectCommonQueryParams
-  result: revenueFromPublications(request: $request) {
+  result: revenueFromPublications(
+    request: { for: $for, publishedOn: $publishedOn, limit: $limit, cursor: $cursor }
+  ) {
     items {
       ...PublicationRevenue
     }

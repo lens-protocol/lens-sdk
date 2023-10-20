@@ -1,0 +1,28 @@
+mutation ActOnOpenAction($request: ActOnOpenActionLensManagerRequest!) {
+  result: actOnOpenAction(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+fragment CreateActOnOpenActionBroadcastItemResult on CreateActOnOpenActionBroadcastItemResult {
+  __typename
+  id
+  expiresAt
+  typedData {
+    ...CreateActOnOpenActionEIP712TypedData
+  }
+}
+
+mutation CreateActOnOpenActionTypedData(
+  $request: ActOnOpenActionRequest!
+  $options: TypedDataOptions
+) {
+  result: createActOnOpenActionTypedData(request: $request, options: $options) {
+    ...CreateActOnOpenActionBroadcastItemResult
+  }
+}

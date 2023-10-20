@@ -1,4 +1,4 @@
-import { QueryParams } from '@lens-protocol/api-bindings/src/apollo/cache';
+import { QueryParams } from '@lens-protocol/api-bindings';
 import { ILogger } from '@lens-protocol/shared-kernel';
 import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/storage';
 

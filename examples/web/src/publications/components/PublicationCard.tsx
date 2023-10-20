@@ -1,4 +1,11 @@
-import { Comment, Post, AnyPublication, PublicationMetadata } from '@lens-protocol/react-web';
+import {
+  AnyPublication,
+  Comment,
+  Post,
+  PublicationMetadata,
+  PublicationStats,
+} from '@lens-protocol/react-web';
+import { ReactNode } from 'react';
 
 import { ProfilePicture } from '../../profiles/components/ProfilePicture';
 
@@ -13,11 +20,39 @@ function MetadataSwitch({ metadata }: { metadata: PublicationMetadata }) {
   }
 }
 
-function PublicationContent({ publication }: { publication: Post | Comment }) {
+function PublicationTickers({ stats }: { stats: PublicationStats }) {
   return (
-    <section>
+    <p
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        gap: '2rem',
+        justifyContent: 'space-between',
+      }}
+    >
+      <span>
+        Collects:&nbsp;<strong>{stats.collects}</strong>
+      </span>
+      <span>
+        Mirrors:&nbsp;<strong>{stats.mirrors}</strong>
+      </span>
+      <span>
+        Reactions:&nbsp;<strong>{stats.upvotes - stats.downvotes}</strong>
+      </span>
+      <span>
+        Comments:&nbsp;<strong>{stats.comments}</strong>
+      </span>
+    </p>
+  );
+}
+
+function PublicationBody({ publication }: { publication: Post | Comment }) {
+  return (
+    <div>
       <MetadataSwitch metadata={publication.metadata} />
-    </section>
+      <hr />
+      <PublicationTickers stats={publication.stats} />
+    </div>
   );
 }
 
@@ -25,7 +60,7 @@ function PublicationSwitch({ publication }: { publication: AnyPublication }) {
   switch (publication.__typename) {
     case 'Post':
     case 'Comment':
-      return <PublicationContent publication={publication} />;
+      return <PublicationBody publication={publication} />;
     default:
       return null;
   }
@@ -33,17 +68,28 @@ function PublicationSwitch({ publication }: { publication: AnyPublication }) {
 
 type PublicationCardProps = {
   publication: AnyPublication;
+  children?: ReactNode;
 };
 
-export function PublicationCard({ publication }: PublicationCardProps) {
+export function PublicationCard({ publication, children }: PublicationCardProps) {
   return (
     <article>
-      <ProfilePicture picture={publication.by.metadata?.picture ?? null} />
-      <p>
-        {publication.__typename} by{' '}
-        {publication.by.metadata?.displayName ?? publication.by.handle ?? publication.by.id}
-      </p>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'flex-start',
+          gap: '2rem',
+        }}
+      >
+        <ProfilePicture picture={publication.by.metadata?.picture ?? null} />
+        <p>
+          {publication.__typename} by{' '}
+          {publication.by.metadata?.displayName ?? publication.by.handle ?? publication.by.id}
+        </p>
+      </div>
       <PublicationSwitch publication={publication} />
+      {children}
     </article>
   );
 }

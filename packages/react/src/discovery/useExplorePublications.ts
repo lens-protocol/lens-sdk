@@ -2,8 +2,8 @@ import {
   ExplorePublicationRequest,
   ExplorePublicationsOrderByType,
   useExplorePublications as useUnderlyingQuery,
+  ExplorePublication,
 } from '@lens-protocol/api-bindings';
-import { ExplorePublication } from '@lens-protocol/api-bindings/src/lens';
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
@@ -20,7 +20,7 @@ export type UseExplorePublicationsArgs = PaginatedArgs<ExplorePublicationRequest
  * @example
  * Explore publications of type post with the most comments
  * ```tsx
- * import { useExplorePublications, ExplorePublicationsOrderByType, ExplorePublicationType  } from '@lens-protocol/react-web';
+ * import { useExplorePublications, ExplorePublicationsOrderByType, ExplorePublicationType  } from '@lens-protocol/react';
  *
  * function ExplorePublications() {
  *   const { data, error, loading } = useExplorePublications(

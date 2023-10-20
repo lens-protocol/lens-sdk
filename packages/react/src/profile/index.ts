@@ -16,8 +16,16 @@ export * from './useProfileManagers';
  * Fragments
  */
 export type {
-  Profile,
-  ProfilePictureSet,
+  FeeFollowModuleSettings,
   NftImage,
+  Profile,
+  ProfileGuardianResult,
+  ProfileMetadata,
+  ProfileOnchainIdentity,
+  ProfileOperations,
+  ProfilePictureSet,
   ProfilesRequestWhere,
+  ProfileStats,
+  RevertFollowModuleSettings,
+  UnknownFollowModuleSettings,
 } from '@lens-protocol/api-bindings';

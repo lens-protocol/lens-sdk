@@ -1,4 +1,5 @@
 /** Code generated. DO NOT EDIT. */
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 /* eslint-disable import/no-default-export */
 /* eslint-disable no-restricted-imports */
 /* eslint-disable tsdoc/syntax */
