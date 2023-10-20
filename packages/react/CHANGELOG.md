@@ -1,5 +1,39 @@
 # @lens-protocol/react
 
+## 2.0.0-alpha.12
+
+### Patch Changes
+
+- Update dependencies
+- Updated dependencies
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.8
+  - @lens-protocol/api-bindings@0.11.0-alpha.12
+  - @lens-protocol/domain@0.11.0-alpha.8
+
+## 2.0.0-alpha.11
+
+### Patch Changes
+
+- Update dependencies
+- Updated dependencies
+  - @lens-protocol/api-bindings@0.11.0-alpha.11
+  - @lens-protocol/domain@0.11.0-alpha.7
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.7
+
+## 2.0.0-alpha.10
+
+### Minor Changes
+
+- fa49d587: refactors hook arguments to be passed to the callback
+- c09c5fdc: Added `useNotInterestedToggle` hook
+- 0687207b: Added `useOwnedHandles` hook
+
+### Patch Changes
+
+- Updated dependencies [c09c5fdc]
+- Updated dependencies [0687207b]
+  - @lens-protocol/api-bindings@0.11.0-alpha.10
+
 ## 2.0.0-alpha.9
 
 ### Minor Changes

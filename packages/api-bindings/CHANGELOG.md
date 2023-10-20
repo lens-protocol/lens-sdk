@@ -1,5 +1,28 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.12
+
+### Patch Changes
+
+- Update dependencies
+- Updated dependencies
+  - @lens-protocol/domain@0.11.0-alpha.8
+
+## 0.11.0-alpha.11
+
+### Patch Changes
+
+- Update dependencies
+- Updated dependencies
+  - @lens-protocol/domain@0.11.0-alpha.7
+
+## 0.11.0-alpha.10
+
+### Minor Changes
+
+- c09c5fdc: Added `useNotInterestedToggle` hook
+- 0687207b: Added `useOwnedHandles` hook
+
 ## 0.11.0-alpha.9
 
 ### Minor Changes
