@@ -1,5 +1,21 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.10
+
+### Minor Changes
+
+- fa49d587: refactors hook arguments to be passed to the callback
+- c09c5fdc: Added `useNotInterestedToggle` hook
+- 0687207b: Added `useOwnedHandles` hook
+
+### Patch Changes
+
+- Updated dependencies [fa49d587]
+- Updated dependencies [c09c5fdc]
+- Updated dependencies [0687207b]
+  - @lens-protocol/react@2.0.0-alpha.10
+  - @lens-protocol/api-bindings@0.11.0-alpha.10
+
 ## 2.0.0-alpha.9
 
 ### Minor Changes

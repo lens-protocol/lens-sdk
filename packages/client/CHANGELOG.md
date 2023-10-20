@@ -1,5 +1,11 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.14
+
+### Patch Changes
+
+- c46f6b34: Added profile.fetchDefault and profile.setDefault methods
+
 ## 2.0.0-alpha.13
 
 ### Patch Changes
