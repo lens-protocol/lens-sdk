@@ -1,5 +1,11 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.7
+
+### Patch Changes
+
+- 0687207b: Added LinkHandle and UnlinkHandle use-cases
+
 ## 0.11.0-alpha.6
 
 ### Minor Changes

@@ -1,5 +1,15 @@
 # @lens-protocol/react
 
+## 2.0.0-alpha.11
+
+### Patch Changes
+
+- Update dependencies
+- Updated dependencies
+  - @lens-protocol/api-bindings@0.11.0-alpha.11
+  - @lens-protocol/domain@0.11.0-alpha.7
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.7
+
 ## 2.0.0-alpha.10
 
 ### Minor Changes

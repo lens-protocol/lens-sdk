@@ -1,5 +1,13 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.11
+
+### Patch Changes
+
+- Update dependencies
+- Updated dependencies
+  - @lens-protocol/domain@0.11.0-alpha.7
+
 ## 0.11.0-alpha.10
 
 ### Minor Changes
