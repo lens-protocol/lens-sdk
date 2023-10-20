@@ -95,7 +95,7 @@ export function mockHandleInfo(): gql.HandleInfo {
   const namespace = faker.internet.domainWord();
   return {
     id: `${namespace}/${localName}}`,
-    fullHandle: `@${localName}/${namespace}`,
+    fullHandle: `${localName}/${namespace}`,
     namespace,
     localName,
     ownedBy: mockEvmAddress(),

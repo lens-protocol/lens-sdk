@@ -1,8 +1,9 @@
-import { TransactionKind } from '../../entities';
+import { ProfileId, TransactionKind } from '../../entities';
 import { DelegableSigning } from '../transactions/DelegableSigning';
 
 export type LinkHandleRequest = {
-  handle: string;
+  fullHandle: string;
+  profileId: ProfileId;
   kind: TransactionKind.LINK_HANDLE;
   delegate: boolean;
 };

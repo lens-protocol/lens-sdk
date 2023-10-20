@@ -1,6 +1,6 @@
 import { useProfileActionHistory } from '@lens-protocol/react-web';
 
-import { WhenLoggedIn, WhenLoggedOut } from '../components/auth';
+import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
@@ -41,9 +41,7 @@ export function UseProfileActionHistory() {
       <WhenLoggedIn>
         <UseProfileActionHistoryInner />
       </WhenLoggedIn>
-      <WhenLoggedOut>
-        <p>You must be logged in to use this example.</p>
-      </WhenLoggedOut>
+      <UnauthenticatedFallback />
     </div>
   );
 }

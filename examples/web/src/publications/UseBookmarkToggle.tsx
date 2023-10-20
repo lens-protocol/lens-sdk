@@ -64,7 +64,7 @@ export function UseBookmarkToggle() {
       <WhenLoggedIn>
         <UseBookmarkToggleInner />
       </WhenLoggedIn>
-      <UnauthenticatedFallback message="Log in to run this demo." />
+      <UnauthenticatedFallback />
     </>
   );
 }

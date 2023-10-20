@@ -33,7 +33,7 @@ describe(`Given an instance of ${UnlinkHandleGateway.name}`, () => {
         mockCreateUnlinkHandleFromProfileTypedDataResponse({
           variables: {
             request: {
-              handle: request.handle,
+              handle: request.fullHandle,
             },
           },
           data,
@@ -54,7 +54,7 @@ describe(`Given an instance of ${UnlinkHandleGateway.name}`, () => {
         mockUnlinkHandleFromProfileResponse({
           variables: {
             request: {
-              handle: request.handle,
+              handle: request.fullHandle,
             },
           },
           data: {

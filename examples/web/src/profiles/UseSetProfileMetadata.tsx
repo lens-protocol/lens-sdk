@@ -2,7 +2,7 @@ import { MetadataAttributeType, profile } from '@lens-protocol/metadata';
 import { Profile, useSetProfileMetadata } from '@lens-protocol/react-web';
 import { toast } from 'react-hot-toast';
 
-import { WhenLoggedIn, WhenLoggedOut } from '../components/auth';
+import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
 import { Loading } from '../components/loading/Loading';
 import { uploadJson } from '../upload';
 import { ProfileCard } from './components/ProfileCard';
@@ -139,10 +139,7 @@ export function UseSetProfileMetadata() {
       <WhenLoggedIn loadingElement={<Loading />}>
         {({ profile: activeProfile }) => <UpdateProfileForm activeProfile={activeProfile} />}
       </WhenLoggedIn>
-
-      <WhenLoggedOut>
-        <p>You need to be logged in to use this example.</p>
-      </WhenLoggedOut>
+      <UnauthenticatedFallback />
     </div>
   );
 }

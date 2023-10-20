@@ -170,9 +170,17 @@ export function mockINftOwnershipChallengeGateway({
   return gateway;
 }
 
+function mockFullHandle(): string {
+  const localName = faker.internet.userName();
+  const namespace = faker.internet.domainWord();
+
+  return `${localName}/${namespace}`;
+}
+
 export function mockLinkHandleRequest(overrides?: Partial<LinkHandleRequest>): LinkHandleRequest {
   return {
-    handle: faker.internet.userName(),
+    fullHandle: mockFullHandle(),
+    profileId: mockProfileId(),
     delegate: true,
     ...overrides,
     kind: TransactionKind.LINK_HANDLE,
@@ -183,7 +191,8 @@ export function mockUnlinkHandleRequest(
   overrides?: Partial<UnlinkHandleRequest>,
 ): UnlinkHandleRequest {
   return {
-    handle: faker.internet.userName(),
+    fullHandle: mockFullHandle(),
+    profileId: mockProfileId(),
     delegate: true,
     ...overrides,
     kind: TransactionKind.UNLINK_HANDLE,
