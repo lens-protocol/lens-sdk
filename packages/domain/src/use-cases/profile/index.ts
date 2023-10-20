@@ -6,5 +6,5 @@ export * from './types';
 export * from './UnfollowProfile';
 export * from './UnlinkHandle';
 export * from './UpdateFollowPolicy';
-export * from './UpdateProfileDetails';
+export * from './SetProfileMetadata';
 export * from './UpdateProfileManagers';
