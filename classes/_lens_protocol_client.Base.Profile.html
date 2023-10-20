@@ -65,6 +65,7 @@
 <a href="_lens_protocol_client.Base.Profile.html#dismissRecommended" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>dismiss<wbr/>Recommended</span></a>
 <a href="_lens_protocol_client.Base.Profile.html#fetch" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>fetch</span></a>
 <a href="_lens_protocol_client.Base.Profile.html#fetchAll" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>fetch<wbr/>All</span></a>
+<a href="_lens_protocol_client.Base.Profile.html#fetchDefault" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>fetch<wbr/>Default</span></a>
 <a href="_lens_protocol_client.Base.Profile.html#follow" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>follow</span></a>
 <a href="_lens_protocol_client.Base.Profile.html#followers" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>followers</span></a>
 <a href="_lens_protocol_client.Base.Profile.html#following" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>following</span></a>
@@ -73,6 +74,7 @@
 <a href="_lens_protocol_client.Base.Profile.html#mutualFollowers" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>mutual<wbr/>Followers</span></a>
 <a href="_lens_protocol_client.Base.Profile.html#recommendations" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>recommendations</span></a>
 <a href="_lens_protocol_client.Base.Profile.html#removeInterests" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>remove<wbr/>Interests</span></a>
+<a href="_lens_protocol_client.Base.Profile.html#setDefault" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Default</span></a>
 <a href="_lens_protocol_client.Base.Profile.html#setFollowModule" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Follow<wbr/>Module</span></a>
 <a href="_lens_protocol_client.Base.Profile.html#setProfileMetadata" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Profile<wbr/>Metadata</span></a>
 <a href="_lens_protocol_client.Base.Profile.html#unblock" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>unblock</span></a>
@@ -510,6 +512,28 @@
 <h4>Example</h4><pre><code class="language-ts"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">result</span><span class="hl-1"> = </span><span class="hl-0">await</span><span class="hl-1"> </span><span class="hl-2">client</span><span class="hl-1">.</span><span class="hl-2">profile</span><span class="hl-1">.</span><span class="hl-7">fetchAll</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-2">where:</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-2">ownedBy:</span><span class="hl-1"> [</span><span class="hl-3">&#39;0xe3D871d389BF78c091E29deCe83200E9d6B2B0C2&#39;</span><span class="hl-1">],</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">});</span>
 </code><button>Copy</button></pre>
 </div></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="fetchDefault" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>fetch<wbr/>Default</span><a href="#fetchDefault" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="fetchDefault.fetchDefault-1"><span class="tsd-kind-call-signature">fetch<wbr/>Default</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">request</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="../types/_lens_protocol_client.Base.ProfileFragment.html" class="tsd-signature-type tsd-kind-type-alias">ProfileFragment</a><span class="tsd-signature-symbol">&gt;</span><a href="#fetchDefault.fetchDefault-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Fetch the default profile for a given address.
+If no default is explicitly set, it returns the oldest profile owned by the address.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">request</span>: <a href="../types/_lens_protocol_client.Base.DefaultProfileRequest.html" class="tsd-signature-type tsd-kind-type-alias">DefaultProfileRequest</a></h5>
+<div class="tsd-comment tsd-typography"><p>Request object for the query</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="../types/_lens_protocol_client.Base.ProfileFragment.html" class="tsd-signature-type tsd-kind-type-alias">ProfileFragment</a><span class="tsd-signature-symbol">&gt;</span></h4><p>Profile or null if not found</p>
+
+<div class="tsd-comment tsd-typography">
+<h4>Example</h4><pre><code class="language-ts"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">result</span><span class="hl-1"> = </span><span class="hl-0">await</span><span class="hl-1"> </span><span class="hl-2">client</span><span class="hl-1">.</span><span class="hl-2">profile</span><span class="hl-1">.</span><span class="hl-7">fetchDefault</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-2">for:</span><span class="hl-1"> </span><span class="hl-3">&#39;0x1234567890123456789012345678901234567890&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">});</span>
+</code><button>Copy</button></pre>
+</div></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="follow" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>follow</span><a href="#follow" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -681,6 +705,28 @@
 <h4>Example</h4><pre><code class="language-ts"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">ProfileInterestTypes</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@lens-protocol/client&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">await</span><span class="hl-1"> </span><span class="hl-2">client</span><span class="hl-1">.</span><span class="hl-2">profile</span><span class="hl-1">.</span><span class="hl-7">removeInterests</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-2">interests:</span><span class="hl-1"> [</span><span class="hl-2">ProfileInterestTypes</span><span class="hl-1">.</span><span class="hl-2">Technology</span><span class="hl-1">],</span><br/><span class="hl-1">});</span>
 </code><button>Copy</button></pre>
 </div></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="setDefault" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>set<wbr/>Default</span><a href="#setDefault" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="setDefault.setDefault-1"><span class="tsd-kind-call-signature">set<wbr/>Default</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">request</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/_lens_protocol_client.Base.PromiseResult.html" class="tsd-signature-type tsd-kind-type-alias">PromiseResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">, </span><a href="_lens_protocol_client.Base.NotAuthenticatedError.html" class="tsd-signature-type tsd-kind-class">NotAuthenticatedError</a><span class="tsd-signature-symbol"> | </span><a href="_lens_protocol_client.Base.CredentialsExpiredError.html" class="tsd-signature-type tsd-kind-class">CredentialsExpiredError</a><span class="tsd-signature-symbol">&gt;</span><a href="#setDefault.setDefault-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Set default profile for authenticated address.</p>
+<p>⚠️ Requires authenticated LensClient.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">request</span>: <a href="../types/_lens_protocol_client.Base.SetDefaultProfileRequest.html" class="tsd-signature-type tsd-kind-type-alias">SetDefaultProfileRequest</a></h5>
+<div class="tsd-comment tsd-typography"><p>Request object for the mutation</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="../types/_lens_protocol_client.Base.PromiseResult.html" class="tsd-signature-type tsd-kind-type-alias">PromiseResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">, </span><a href="_lens_protocol_client.Base.NotAuthenticatedError.html" class="tsd-signature-type tsd-kind-class">NotAuthenticatedError</a><span class="tsd-signature-symbol"> | </span><a href="_lens_protocol_client.Base.CredentialsExpiredError.html" class="tsd-signature-type tsd-kind-class">CredentialsExpiredError</a><span class="tsd-signature-symbol">&gt;</span></h4><p><a href="../types/_lens_protocol_client.Base.PromiseResult.html" class="tsd-kind-type-alias">PromiseResult</a> with void</p>
+
+<div class="tsd-comment tsd-typography">
+<h4>Example</h4><pre><code class="language-ts"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">result</span><span class="hl-1"> = </span><span class="hl-0">await</span><span class="hl-1"> </span><span class="hl-2">client</span><span class="hl-1">.</span><span class="hl-2">profile</span><span class="hl-1">.</span><span class="hl-7">setDefault</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-2">profileId:</span><span class="hl-1"> </span><span class="hl-3">&#39;0x123&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">});</span>
+</code><button>Copy</button></pre>
+</div></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setFollowModule" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Follow<wbr/>Module</span><a href="#setFollowModule" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -835,6 +881,7 @@
 <li><a href="#dismissRecommended" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>dismiss<wbr/>Recommended</span></a></li>
 <li><a href="#fetch" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>fetch</span></a></li>
 <li><a href="#fetchAll" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>fetch<wbr/>All</span></a></li>
+<li><a href="#fetchDefault" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>fetch<wbr/>Default</span></a></li>
 <li><a href="#follow" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>follow</span></a></li>
 <li><a href="#followers" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>followers</span></a></li>
 <li><a href="#following" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>following</span></a></li>
@@ -843,6 +890,7 @@
 <li><a href="#mutualFollowers" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>mutual<wbr/>Followers</span></a></li>
 <li><a href="#recommendations" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>recommendations</span></a></li>
 <li><a href="#removeInterests" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>remove<wbr/>Interests</span></a></li>
+<li><a href="#setDefault" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Default</span></a></li>
 <li><a href="#setFollowModule" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Follow<wbr/>Module</span></a></li>
 <li><a href="#setProfileMetadata" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Profile<wbr/>Metadata</span></a></li>
 <li><a href="#unblock" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>unblock</span></a></li>
@@ -2492,6 +2540,8 @@
 <div>Create<wbr/>Unblock<wbr/>Profiles<wbr/>Broadcast<wbr/>Item<wbr/>Result<wbr/>Fragment</div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.CreateUnfollowBroadcastItemResultFragment.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Create<wbr/>Unfollow<wbr/>Broadcast<wbr/>Item<wbr/>Result<wbr/>Fragment</div></a></li>
+<li><a href="../types/_lens_protocol_client.Base.DefaultProfileRequest.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Default<wbr/>Profile<wbr/>Request</div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.DegreesOfSeparationReferenceModuleInput.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Degrees<wbr/>Of<wbr/>Separation<wbr/>Reference<wbr/>Module<wbr/>Input</div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.DegreesOfSeparationReferenceModuleSettingsFragment.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -2969,6 +3019,8 @@
 <div class="menu-item-desc">All built-in and custom scalars, mapped to their actual values</div></div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.SensitiveReasonInput.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Sensitive<wbr/>Reason<wbr/>Input</div></a></li>
+<li><a href="../types/_lens_protocol_client.Base.SetDefaultProfileRequest.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Set<wbr/>Default<wbr/>Profile<wbr/>Request</div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.SetFollowModuleRequest.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Set<wbr/>Follow<wbr/>Module<wbr/>Request</div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.SignedAuthChallenge.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -3209,6 +3261,8 @@
 <div>Custom<wbr/>Filters<wbr/>Type</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#DecryptFailReasonType"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
 <div>Decrypt<wbr/>Fail<wbr/>Reason<wbr/>Type</div></a></li>
+<li><a href="../modules/_lens_protocol_client.Gated.html#DefaultProfileRequest"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
+<div>Default<wbr/>Profile<wbr/>Request</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#DegreesOfSeparationReferenceModuleInput"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
 <div>Degrees<wbr/>Of<wbr/>Separation<wbr/>Reference<wbr/>Module<wbr/>Input</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#DegreesOfSeparationReferenceModuleSettingsFragment"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
@@ -3789,6 +3843,8 @@
 <div>Search<wbr/>Publication<wbr/>Type</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#SensitiveReasonInput"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
 <div>Sensitive<wbr/>Reason<wbr/>Input</div></a></li>
+<li><a href="../modules/_lens_protocol_client.Gated.html#SetDefaultProfileRequest"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
+<div>Set<wbr/>Default<wbr/>Profile<wbr/>Request</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#SetFollowModuleRequest"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
 <div>Set<wbr/>Follow<wbr/>Module<wbr/>Request</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#SignedAuthChallenge"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
