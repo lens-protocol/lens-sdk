@@ -56,6 +56,7 @@ import {
   UseReportPublication,
   UseWhoReactedToPublication,
 } from './publications';
+import { UseNotInterestedToggle } from './publications/UseNotInterestedToggle';
 import {
   RevenuePage,
   UseRevenueFromFollow,
@@ -116,6 +117,7 @@ export function App() {
                       <Route path="useBookmarkToggle" element={<UseBookmarkToggle />} />
                       <Route path="useMyBookmarks" element={<UseMyBookmarks />} />
                       <Route path="useOpenAction" element={<UseOpenAction />} />
+                      <Route path="useNotInterestedToggle" element={<UseNotInterestedToggle />} />
                     </Route>
 
                     <Route path="/profiles">

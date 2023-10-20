@@ -1,0 +1,69 @@
+import {
+  ExplorePublicationType,
+  ExplorePublicationsOrderByType,
+  PrimaryPublication,
+  useExplorePublications,
+  useNotInterestedToggle,
+} from '@lens-protocol/react-web';
+
+import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
+import { ErrorMessage } from '../components/error/ErrorMessage';
+import { Loading } from '../components/loading/Loading';
+import { PublicationCard } from './components/PublicationCard';
+
+function IndividualPublication({ publication }: { publication: PrimaryPublication }) {
+  const { execute: toggle, loading } = useNotInterestedToggle();
+  return (
+    <PublicationCard publication={publication}>
+      <label>
+        Not interested{' '}
+        <input
+          disabled={loading}
+          type="checkbox"
+          checked={publication.operations.isNotInterested}
+          onChange={() => toggle({ publication })}
+        />
+      </label>
+    </PublicationCard>
+  );
+}
+
+function UseNotInterestedToggleInner() {
+  const {
+    data: publications,
+    error,
+    loading,
+  } = useExplorePublications({
+    orderBy: ExplorePublicationsOrderByType.Latest,
+    where: {
+      publicationTypes: [ExplorePublicationType.Post],
+    },
+  });
+
+  if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
+
+  return (
+    <div>
+      <h1>
+        <code>useNotInterested</code>
+      </h1>
+
+      {publications.map((publication) => (
+        <IndividualPublication key={publication.id} publication={publication} />
+      ))}
+    </div>
+  );
+}
+
+export function UseNotInterestedToggle() {
+  return (
+    <>
+      <WhenLoggedIn>
+        <UseNotInterestedToggleInner />
+      </WhenLoggedIn>
+      <UnauthenticatedFallback message="Log in mark publications as not interesting." />
+    </>
+  );
+}
