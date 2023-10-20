@@ -272,7 +272,7 @@ export function mockCreateHandleLinkToProfileTypedDataData({
         nonce,
         deadline: 1644303500,
         profileId: mockProfileId(),
-        handleId: faker.internet.userName(),
+        handleId: mockEvmAddress(),
       },
     }),
   };
@@ -326,7 +326,7 @@ export function mockCreateHandleUnlinkFromProfileTypedDataData({
         nonce,
         deadline: 1644303500,
         profileId: mockProfileId(),
-        handleId: faker.internet.userName(),
+        handleId: mockEvmAddress(),
       },
     }),
   };

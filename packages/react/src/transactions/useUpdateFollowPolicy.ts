@@ -7,7 +7,9 @@ import {
 } from '@lens-protocol/domain/entities';
 import { ChargeFollowConfig, NoFeeFollowConfig } from '@lens-protocol/domain/use-cases/profile';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
+import { invariant } from '@lens-protocol/shared-kernel';
 
+import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useUpdateFollowPolicyController } from './adapters/useUpdateFollowPolicyController';
 
@@ -78,13 +80,23 @@ export function useUpdateFollowPolicy(): UseDeferredTask<
   | TransactionError,
   UpdateFollowPolicyArgs
 > {
+  const { data: session } = useSession();
   const updateFollowPolicy = useUpdateFollowPolicyController();
 
   return useDeferredTask(async (args) => {
+    invariant(
+      session?.authenticated,
+      'You must be authenticated to use this operation. Use `useLogin` hook to authenticate.',
+    );
+    invariant(
+      session.type === SessionType.WithProfile,
+      'You must have a profile to use this operation.',
+    );
+
     return updateFollowPolicy({
       kind: TransactionKind.UPDATE_FOLLOW_POLICY,
       policy: args.followPolicy,
-      delegate: true,
+      delegate: session.profile.lensManager,
     });
   });
 }

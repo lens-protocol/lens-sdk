@@ -13,6 +13,7 @@ import {
 } from '@lens-protocol/domain/use-cases/wallets';
 import { InvariantError, invariant } from '@lens-protocol/shared-kernel';
 
+import { Session, SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useFollowController } from './adapters/useFollowController';
@@ -21,7 +22,16 @@ export class PrematureFollowError extends Error {
   name = 'PrematureFollowError' as const;
 }
 
-function createFollowRequest(profile: Profile): FollowRequest {
+function createFollowRequest(profile: Profile, session?: Session): FollowRequest {
+  invariant(
+    session?.authenticated,
+    'You must be authenticated to use this operation. Use `useLogin` hook to authenticate.',
+  );
+  invariant(
+    session.type === SessionType.WithProfile,
+    'You must have a profile to use this operation.',
+  );
+
   const followPolicy = profile.followPolicy;
   switch (followPolicy.type) {
     case FollowPolicyType.CHARGE:
@@ -38,7 +48,7 @@ function createFollowRequest(profile: Profile): FollowRequest {
       return {
         kind: TransactionKind.FOLLOW_PROFILE,
         profileId: profile.id,
-        delegate: true,
+        delegate: session.profile.lensManager,
       };
     case FollowPolicyType.NO_ONE:
       throw new InvariantError(`The profile is configured so that nobody can follow it.`);
@@ -89,6 +99,7 @@ export function useFollow(): UseDeferredTask<
   | WalletConnectionError,
   FollowArgs
 > {
+  const { data: session } = useSession();
   const followProfile = useFollowController();
 
   // const hasPendingUnfollowTx = useHasPendingTransaction(
@@ -109,7 +120,7 @@ export function useFollow(): UseDeferredTask<
       "You're already following this profile. Check the `profile.operations.canFollow` to determine if you can call `useFollow`.",
     );
 
-    const request = createFollowRequest(profile);
+    const request = createFollowRequest(profile, session);
     return followProfile(request);
   });
 }

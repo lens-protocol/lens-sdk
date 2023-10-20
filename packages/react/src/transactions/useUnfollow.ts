@@ -6,7 +6,9 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
+import { invariant } from '@lens-protocol/shared-kernel';
 
+import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useUnfollowController } from './adapters/useUnfollowController';
@@ -47,13 +49,23 @@ export function useUnfollow(): UseDeferredTask<
   BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
   UnfollowArgs
 > {
+  const { data: session } = useSession();
   const unfollowProfile = useUnfollowController();
 
   return useDeferredTask(async (args) => {
+    invariant(
+      session?.authenticated,
+      'You must be authenticated to use this operation. Use `useLogin` hook to authenticate.',
+    );
+    invariant(
+      session.type === SessionType.WithProfile,
+      'You must have a profile to use this operation.',
+    );
+
     return unfollowProfile({
       kind: TransactionKind.UNFOLLOW_PROFILE,
       profileId: args.profile.id,
-      delegate: true,
+      delegate: session.profile.lensManager,
     });
   });
 }

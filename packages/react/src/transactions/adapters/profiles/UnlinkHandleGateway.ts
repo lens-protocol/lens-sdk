@@ -10,6 +10,7 @@ import {
   CreateHandleUnlinkFromProfileTypedDataDocument,
   CreateHandleUnlinkFromProfileBroadcastItemResult,
 } from '@lens-protocol/api-bindings';
+import { lensTokenHandleRegistry } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
 import { UnlinkHandleRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
@@ -113,13 +114,11 @@ export class UnlinkHandleGateway
     request: UnlinkHandleRequest,
     result: CreateHandleUnlinkFromProfileBroadcastItemResult,
   ): SelfFundedProtocolTransactionRequest<UnlinkHandleRequest> {
-    // const contract = lensHub(result.typedData.domain.verifyingContract);
-    const encodedData = '0x';
-
-    // contract.interface.encodeFunctionData('unlink', [
-    //   result.typedData.message.unfollowerProfileId,
-    //   result.typedData.message.idsOfProfilesToUnfollow,
-    // ]);
+    const contract = lensTokenHandleRegistry(result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('unlink', [
+      result.typedData.message.handleId,
+      result.typedData.message.profileId,
+    ]);
     return {
       ...request,
       contractAddress: result.typedData.domain.verifyingContract,
