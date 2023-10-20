@@ -18,9 +18,9 @@ import {
   NftOwnershipSignature,
   ProveNftOwnershipRequest,
 } from '../ProveNftOwnership';
+import { SetProfileMetadataRequest } from '../SetProfileMetadata';
 import { UnfollowRequest } from '../UnfollowProfile';
 import { UpdateFollowPolicyRequest } from '../UpdateFollowPolicy';
-import { SetProfileMetadataRequest } from '../UpdateProfileDetails';
 import { UpdateProfileManagersRequest } from '../UpdateProfileManagers';
 import { ChargeFollowConfig, FollowPolicyType, NoFeeFollowConfig } from '../types';
 

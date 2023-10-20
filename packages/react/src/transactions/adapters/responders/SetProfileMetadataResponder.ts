@@ -9,6 +9,6 @@ export class SetProfileMetadataResponder
   constructor(private readonly profileCacheManager: IProfileCacheManager) {}
 
   async commit() {
-    await Promise.all([this.profileCacheManager.refreshCurrentProfile()]);
+    await this.profileCacheManager.refreshCurrentProfile();
   }
 }

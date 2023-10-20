@@ -1,9 +1,9 @@
 import { JustProtocolRequest } from '../../entities';
 import { CreateProfileRequest } from '../profile/CreateProfile';
 import { FollowRequest } from '../profile/FollowProfile';
+import { SetProfileMetadataRequest } from '../profile/SetProfileMetadata';
 import { UnfollowRequest } from '../profile/UnfollowProfile';
 import { UpdateFollowPolicyRequest } from '../profile/UpdateFollowPolicy';
-import { SetProfileMetadataRequest } from '../profile/UpdateProfileDetails';
 import { UpdateProfileManagersRequest } from '../profile/UpdateProfileManagers';
 import { CreateCommentRequest } from '../publications/CreateComment';
 import { CreateMirrorRequest } from '../publications/CreateMirror';
