@@ -1,5 +1,11 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.8
+
+### Patch Changes
+
+- Update dependencies
+
 ## 0.11.0-alpha.7
 
 ### Patch Changes
