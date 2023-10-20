@@ -74,6 +74,7 @@ function UseOwnedProfiles({ address }: { address: EvmAddress }) {
   );
 }
 
+// eslint-disable-next-line
 function UseOwnedHandlesInner({ address }: { address: EvmAddress }) {
   const {
     data: handleResult,
@@ -117,7 +118,7 @@ function Content({ address, profile }: ContentProps) {
       </p>
       <div style={{ display: 'flex' }}>
         <UseOwnedProfiles address={address} />
-        <UseOwnedHandlesInner address={address} />
+        {/* <UseOwnedHandlesInner address={address} /> */}
       </div>
     </div>
   );
@@ -127,7 +128,8 @@ export function UseOwnedHandles() {
   return (
     <div>
       <h1>
-        <code>useOwnedHandles & useLinkHandle & useUnlinkHandle</code>
+        {/* <code>useOwnedHandles & useLinkHandle & useUnlinkHandle</code> */}
+        <code>useOwnedHandles</code>
       </h1>
 
       <WhenLoggedIn>

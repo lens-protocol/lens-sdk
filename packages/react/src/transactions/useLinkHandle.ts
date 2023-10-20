@@ -35,6 +35,7 @@ export type LinkHandleArgs = {
  *
  * @category Profiles
  * @group Hooks
+ * @experimental This hook is experimental and may change in future releases.
  */
 export function useLinkHandle(): UseDeferredTask<
   AsyncTransactionResult<void>,

@@ -72,8 +72,10 @@ const profileHooks = [
     path: '/profiles/useUpdateFollowPolicy',
   },
   {
-    label: 'useOwnedHandles & useLinkHandle & useUnlinkHandle',
-    description: `Link and unlink handle from a profile.`,
+    label: 'useOwnedHandles',
+    // label: 'useOwnedHandles & useLinkHandle & useUnlinkHandle',
+    // description: `Link and unlink handle from a profile.`,
+    description: `Fetch all handles owned by a wallet.`,
     path: '/profiles/useOwnedHandles',
   },
 ];
