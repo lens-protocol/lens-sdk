@@ -5,51 +5,63 @@ import { mockNonce, mockProfileId, mockPublicationId } from '@lens-protocol/doma
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import {
-  HidePublicationVariables,
-  HidePublicationData,
-  HidePublicationDocument,
+  AddPublicationBookmarkData,
+  AddPublicationBookmarkDocument,
+  AddPublicationBookmarkVariables,
   AddReactionDocument,
   AddReactionVariables,
-  ReportPublicationVariables,
-  ReportPublicationData,
-  ReportPublicationDocument,
-  CreateOnchainPostTypedDataData,
-  CreateOnchainPostTypedDataVariables,
-  CreateOnchainPostTypedDataDocument,
-  CreateMomokaPostTypedDataData,
-  CreateMomokaPostTypedDataVariables,
-  CreateMomokaPostTypedDataDocument,
-  PostOnchainData,
-  PostOnchainVariables,
-  PostOnchainDocument,
-  CreateMomokaPublicationResult,
-  PostOnMomokaDocument,
-  PostOnMomokaData,
-  PostOnMomokaVariables,
-  CreateOnchainCommentTypedDataData,
-  CreateOnchainCommentTypedDataVariables,
-  CreateOnchainCommentTypedDataDocument,
   CommentOnchainData,
-  CommentOnchainVariables,
   CommentOnchainDocument,
-  CreateMomokaCommentTypedDataData,
-  CreateMomokaCommentTypedDataVariables,
-  CreateMomokaCommentTypedDataDocument,
+  CommentOnchainVariables,
   CommentOnMomokaData,
-  CommentOnMomokaVariables,
   CommentOnMomokaDocument,
+  CommentOnMomokaVariables,
+  CreateLegacyCollectTypedDataData,
+  CreateLegacyCollectTypedDataDocument,
+  CreateLegacyCollectTypedDataVariables,
+  CreateMomokaCommentTypedDataData,
+  CreateMomokaCommentTypedDataDocument,
+  CreateMomokaCommentTypedDataVariables,
   CreateMomokaMirrorTypedDataData,
   CreateMomokaMirrorTypedDataDocument,
   CreateMomokaMirrorTypedDataVariables,
-  MirrorOnMomokaData,
-  MirrorOnMomokaVariables,
-  MirrorOnMomokaDocument,
+  CreateMomokaPostTypedDataData,
+  CreateMomokaPostTypedDataDocument,
+  CreateMomokaPostTypedDataVariables,
+  CreateMomokaPublicationResult,
+  CreateOnchainCommentTypedDataData,
+  CreateOnchainCommentTypedDataDocument,
+  CreateOnchainCommentTypedDataVariables,
   CreateOnchainMirrorTypedDataData,
-  CreateOnchainMirrorTypedDataVariables,
   CreateOnchainMirrorTypedDataDocument,
+  CreateOnchainMirrorTypedDataVariables,
+  CreateOnchainPostTypedDataData,
+  CreateOnchainPostTypedDataDocument,
+  CreateOnchainPostTypedDataVariables,
+  HidePublicationData,
+  HidePublicationDocument,
+  HidePublicationVariables,
+  LegacyCollectData,
+  LegacyCollectDocument,
+  LegacyCollectVariables,
   MirrorOnchainData,
-  MirrorOnchainVariables,
   MirrorOnchainDocument,
+  MirrorOnchainVariables,
+  MirrorOnMomokaData,
+  MirrorOnMomokaDocument,
+  MirrorOnMomokaVariables,
+  PostOnchainData,
+  PostOnchainDocument,
+  PostOnchainVariables,
+  PostOnMomokaData,
+  PostOnMomokaDocument,
+  PostOnMomokaVariables,
+  RemovePublicationBookmarkData,
+  RemovePublicationBookmarkDocument,
+  RemovePublicationBookmarkVariables,
+  ReportPublicationData,
+  ReportPublicationDocument,
+  ReportPublicationVariables,
 } from '../../graphql/generated';
 import {
   mockCreateTypedDataResult,
@@ -453,6 +465,85 @@ export function mockMirrorOnchainResponse<
   return {
     request: {
       query: MirrorOnchainDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function mockAddToMyBookmarksResponse(
+  variables: AddPublicationBookmarkVariables,
+): MockedResponse<AddPublicationBookmarkData> {
+  return {
+    request: {
+      query: AddPublicationBookmarkDocument,
+      variables,
+    },
+    result: { data: { result: null } },
+  };
+}
+
+export function mockRemoveFromMyBookmarksResponse(
+  variables: RemovePublicationBookmarkVariables,
+): MockedResponse<RemovePublicationBookmarkData> {
+  return {
+    request: {
+      query: RemovePublicationBookmarkDocument,
+      variables,
+    },
+    result: { data: { result: null } },
+  };
+}
+
+// TODO fix this helper once the API is fixed. Accidentally returns actWithSig typed data and not collectWithSig one.
+export function mockCreateLegacyCollectTypedDataData({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateLegacyCollectTypedDataData {
+  return {
+    result: mockCreateTypedDataResult('CreateLegacyCollectBroadcastItemResult', {
+      types: {
+        Act: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      message: {
+        nonce,
+        deadline: 1644303500,
+        publicationActedProfileId: mockProfileId(),
+        publicationActedId: '0x01',
+        actorProfileId: mockProfileId(),
+        referrerProfileIds: [],
+        referrerPubIds: [],
+        actionModuleAddress: mockEvmAddress(),
+        actionModuleData: '0x',
+      },
+    }),
+  };
+}
+
+export function mockCreateLegacyCollectTypedDataResponse<
+  T extends CreateLegacyCollectTypedDataData,
+  V extends CreateLegacyCollectTypedDataVariables,
+>({ variables, data }: { variables: V; data: T }): MockedResponse<T, V> {
+  return {
+    request: {
+      query: CreateLegacyCollectTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function mockLegacyCollectResponse<
+  T extends LegacyCollectData,
+  V extends LegacyCollectVariables,
+>({ variables, data }: { variables: V; data: T }): MockedResponse<T, V> {
+  return {
+    request: {
+      query: LegacyCollectDocument,
       variables,
     },
     result: {

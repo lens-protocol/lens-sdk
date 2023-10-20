@@ -9,6 +9,7 @@ export * from './UseProfileFollowing';
 export * from './UseProfileManagers';
 export * from './UseProfiles';
 export * from './UseRecommendedProfiles';
+export * from './UseSetProfileMetadata';
 export * from './UseUpdateFollowPolicy';
 export * from './UseUpdateProfileManagers';
 export * from './UseWhoActedOnPublication';

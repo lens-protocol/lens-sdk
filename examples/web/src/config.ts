@@ -12,6 +12,10 @@ export const CATEGORIES = [
     path: '/discovery',
   },
   {
+    label: 'Revenue',
+    path: '/revenue',
+  },
+  {
     label: 'Misc',
     path: '/misc',
   },

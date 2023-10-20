@@ -1,5 +1,5 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
-import { SessionData } from '@lens-protocol/domain/src/use-cases/authentication';
+import { SessionData } from '@lens-protocol/domain/use-cases/authentication';
 
 const sessionVar = makeVar<SessionData | null>(null);
 

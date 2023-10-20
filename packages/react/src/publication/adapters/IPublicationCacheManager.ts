@@ -6,4 +6,6 @@ export interface IPublicationCacheManager {
     publicationId: PublicationId,
     updateFn: <TPublication extends AnyPublication>(current: TPublication) => TPublication,
   ): void;
+
+  refresh(publicationId: PublicationId): Promise<void>;
 }

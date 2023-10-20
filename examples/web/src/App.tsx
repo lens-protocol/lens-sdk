@@ -3,7 +3,7 @@ import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import { XMTPProvider } from '@xmtp/react-sdk';
 import { Toaster } from 'react-hot-toast';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import { WagmiConfig, configureChains, createConfig } from 'wagmi';
+import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { polygonMumbai } from 'wagmi/chains';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { publicProvider } from 'wagmi/providers/public';
@@ -24,6 +24,7 @@ import {
   UseSearchPublications,
 } from './discovery';
 import { MiscPage, UseCurrencies } from './misc';
+import { UseApproveModule } from './misc/UseApproveModule';
 import {
   ProfilesPage,
   UseFollowAndUnfollow,
@@ -39,20 +40,28 @@ import {
   UseUpdateFollowPolicy,
   UseUpdateProfileManagers,
   UseWhoActedOnPublication,
+  UseSetProfileMetadata,
 } from './profiles';
-import { UseSetProfileMetadata } from './profiles/UseSetProfileMetadata';
 import {
   PublicationsPage,
+  UseBookmarkToggle,
+  UseCreateComment,
+  UseCreatePost,
+  UseHidePublication,
+  UseMyBookmarks,
+  UseOpenAction,
   UsePublication,
   UsePublications,
-  UseReportPublication,
   UseReactionToggle,
+  UseReportPublication,
   UseWhoReactedToPublication,
 } from './publications';
-import { UseCreateComment } from './publications/UseCreateComment';
-import { UseCreatePost } from './publications/UseCreatePost';
-import { UseHidePublication } from './publications/UseHidePublication';
-import { UseMyBookmarks } from './publications/UseMyBookmarks';
+import {
+  RevenuePage,
+  UseRevenueFromFollow,
+  UseRevenueFromPublication,
+  UseRevenueFromPublications,
+} from './revenue';
 
 const { publicClient, webSocketPublicClient } = configureChains(
   [polygonMumbai],
@@ -104,7 +113,9 @@ export function App() {
                       <Route path="useHidePublication" element={<UseHidePublication />} />
                       <Route path="useReportPublication" element={<UseReportPublication />} />
                       <Route path="useReactionToggle" element={<UseReactionToggle />} />
+                      <Route path="useBookmarkToggle" element={<UseBookmarkToggle />} />
                       <Route path="useMyBookmarks" element={<UseMyBookmarks />} />
+                      <Route path="useOpenAction" element={<UseOpenAction />} />
                     </Route>
 
                     <Route path="/profiles">
@@ -141,9 +152,23 @@ export function App() {
                       <Route path="useExplorePublications" element={<UseExplorePublications />} />
                     </Route>
 
+                    <Route path="/revenue">
+                      <Route index element={<RevenuePage />} />
+                      <Route path="useRevenueFromFollow" element={<UseRevenueFromFollow />} />
+                      <Route
+                        path="useRevenueFromPublication"
+                        element={<UseRevenueFromPublication />}
+                      />
+                      <Route
+                        path="useRevenueFromPublications"
+                        element={<UseRevenueFromPublications />}
+                      />
+                    </Route>
+
                     <Route path="/misc">
                       <Route index element={<MiscPage />} />
                       <Route path="useCurrencies" element={<UseCurrencies />} />
+                      <Route path="useApproveModule" element={<UseApproveModule />} />
                     </Route>
                   </Route>
 

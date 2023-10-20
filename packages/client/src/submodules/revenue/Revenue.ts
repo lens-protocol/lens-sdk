@@ -58,6 +58,7 @@ export class Revenue {
 
   /**
    * Fetch a profile's revenue from a single publication.
+   *
    * @param request - Request object for the query
    * @returns Publication revenue
    *
@@ -80,7 +81,7 @@ export class Revenue {
   }
 
   /**
-   * Fetch a profile's revenue from all publications.
+   * Fetch a profile's revenue for all their publications.
    *
    * @param request - Request object for the query
    * @returns {@link PublicationRevenueFragment} wrapped in {@link PaginatedResult}

@@ -20,7 +20,7 @@ export type UseExploreProfilesArgs = PaginatedArgs<ExploreProfilesRequest>;
  * @example
  * Explore the latest created profiles
  * ```tsx
- * import { useExploreProfiles, ExploreProfilesOrderByType } from '@lens-protocol/react-web';
+ * import { useExploreProfiles, ExploreProfilesOrderByType } from '@lens-protocol/react';
  *
  * function ExploreProfiles() {
  *   const { data, error, loading } = useExploreProfiles({

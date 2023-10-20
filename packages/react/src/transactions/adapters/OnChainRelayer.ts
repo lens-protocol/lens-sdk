@@ -75,8 +75,8 @@ export class OnChainRelayer implements IOnChainRelayer<ProtocolTransactionReques
 
       return success(data.result);
     } catch (err) {
-      this.logger.error(err, `It was not possible to relay the transaction for ${signedCall.id}`);
       assertError(err);
+      this.logger.error(err, `It was not possible to relay the transaction for ${signedCall.id}`);
       return failure(new BroadcastingError(err.message));
     }
   }

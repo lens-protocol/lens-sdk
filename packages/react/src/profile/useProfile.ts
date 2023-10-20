@@ -18,6 +18,13 @@ export type UseProfileArgs = OneOf<ProfileRequest>;
 /**
  * Get a profile by either a handle or profile Id.
  *
+ * @example
+ * ```tsx
+ * const { data, error, loading } = useProfile({
+ *   forProfileId: '0x04',
+ * });
+ * ```
+ *
  * @category Profiles
  * @group Hooks
  *

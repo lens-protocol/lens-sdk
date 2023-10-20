@@ -16,10 +16,18 @@ import { ReadResult, useReadResult } from '../helpers/reads';
 export type UsePublicationArgs = OneOf<PublicationRequest>;
 
 /**
- * Fetch a publication by either it's publicationId or transaction hash.
+ * Fetch a publication by either its publication id or transaction hash.
+ *
+ * @example
+ * ```tsx
+ * const { data, error, loading } = usePublication({
+ *   forId: '0x04-0x0b',
+ * });
+ * ```
  *
  * @category Publications
  * @group Hooks
+ * @param args - {@link UsePublicationArgs}
  */
 export function usePublication({
   forId,

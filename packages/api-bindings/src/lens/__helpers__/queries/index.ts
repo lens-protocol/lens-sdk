@@ -7,6 +7,7 @@ export * from './misc';
 export * from './notifications';
 export * from './profile';
 export * from './publication';
+export * from './revenue';
 export * from './transaction';
 
 export function mockCursor(): Cursor {

@@ -1,5 +1,5 @@
 import { ContentInsightMatcher, demoSnapshotPoll, snapshotPoll } from '@lens-protocol/api-bindings';
-import { ChainType, Url } from '@lens-protocol/shared-kernel';
+import { ChainType, URL } from '@lens-protocol/shared-kernel';
 
 import { ChainConfigRegistry, goerli, mainnet, mumbai, polygon } from './chains';
 
@@ -20,8 +20,8 @@ export type TransactionObserverTimings = {
  * @internal
  */
 export type SnapshotConfig = {
-  hub: Url;
-  sequencer: Url;
+  hub: URL;
+  sequencer: URL;
   matcher: ContentInsightMatcher;
 };
 
@@ -38,8 +38,8 @@ export type ProfileHandleResolver = (handle: string) => string;
  * @internal
  */
 export type EnvironmentConfig = {
-  name: 'production' | 'development' | 'sandbox' | string;
-  backend: Url;
+  name: string;
+  backend: URL;
   chains: ChainConfigRegistry;
   timings: TransactionObserverTimings;
   handleResolver: ProfileHandleResolver;
@@ -59,7 +59,7 @@ export type EnvironmentConfig = {
  */
 export const production: EnvironmentConfig = {
   name: 'production',
-  backend: 'https://api.lens.dev',
+  backend: 'https://api.lens.dev' as URL,
   chains: {
     [ChainType.ETHEREUM]: mainnet,
     [ChainType.POLYGON]: polygon,
@@ -71,9 +71,9 @@ export const production: EnvironmentConfig = {
   },
   handleResolver: (handle) => `${handle}.lens`,
   snapshot: {
-    hub: 'https://hub.snapshot.org',
+    hub: 'https://hub.snapshot.org' as URL,
     matcher: snapshotPoll,
-    sequencer: 'https://seq.snapshot.org',
+    sequencer: 'https://seq.snapshot.org' as URL,
   },
   // gated: GatedEnvironments.production,
 };
@@ -90,7 +90,7 @@ export const production: EnvironmentConfig = {
  */
 export const development: EnvironmentConfig = {
   name: 'development',
-  backend: 'https://api-v2-mumbai.lens.dev',
+  backend: 'https://api-v2-mumbai.lens.dev' as URL,
   chains: {
     [ChainType.ETHEREUM]: goerli,
     [ChainType.POLYGON]: mumbai,
@@ -102,9 +102,9 @@ export const development: EnvironmentConfig = {
   },
   handleResolver: (handle) => `${handle}.test`,
   snapshot: {
-    hub: 'https://testnet.snapshot.org',
+    hub: 'https://testnet.snapshot.org' as URL,
     matcher: demoSnapshotPoll,
-    sequencer: 'https://testnet.seq.snapshot.org',
+    sequencer: 'https://testnet.seq.snapshot.org' as URL,
   },
   // gated: GatedEnvironments.development,
 };
@@ -122,7 +122,7 @@ export const development: EnvironmentConfig = {
  */
 export const sandbox: EnvironmentConfig = {
   name: 'sandbox',
-  backend: 'https://api-sandbox-mumbai.lens.dev',
+  backend: 'https://api-sandbox-mumbai.lens.dev' as URL,
   chains: {
     [ChainType.ETHEREUM]: goerli,
     [ChainType.POLYGON]: mumbai,
@@ -134,9 +134,9 @@ export const sandbox: EnvironmentConfig = {
   },
   handleResolver: (handle) => `${handle}.test`,
   snapshot: {
-    hub: 'https://testnet.snapshot.org',
+    hub: 'https://testnet.snapshot.org' as URL,
     matcher: demoSnapshotPoll,
-    sequencer: 'https://testnet.seq.snapshot.org',
+    sequencer: 'https://testnet.seq.snapshot.org' as URL,
   },
   // gated: GatedEnvironments.sandbox,
 };

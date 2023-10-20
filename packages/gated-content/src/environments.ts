@@ -5,7 +5,7 @@ import { SupportedChains } from './conditions/types';
 export { SupportedChains };
 
 export type EnvironmentConfig = {
-  name: 'production' | 'development' | 'sandbox' | string;
+  name: string;
   chainId: number;
   chainName: SupportedChains | string;
   contractAddress: EvmAddress;

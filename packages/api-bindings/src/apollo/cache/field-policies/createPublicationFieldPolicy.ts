@@ -11,10 +11,18 @@ export function createPublicationFieldPolicy(): FieldPolicy<
 > {
   return {
     read(_, { args, toReference }) {
-      return toReference({
-        __typename: PUBLICATION_TYPENAME,
-        id: args?.request.forId,
-      });
+      if (!args) {
+        return undefined;
+      }
+
+      if (args.request?.forId) {
+        return toReference({
+          __typename: PUBLICATION_TYPENAME,
+          id: args.request.forId,
+        });
+      }
+
+      return undefined;
     },
   };
 }

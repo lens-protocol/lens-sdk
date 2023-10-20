@@ -19,7 +19,7 @@ export type UseSearchPublicationsArgs = PaginatedArgs<PublicationSearchRequest>;
  * @example
  * Search for publications with content that contains "foo"
  * ```tsx
- * import { useSearchPublications } from '@lens-protocol/react-web';
+ * import { useSearchPublications } from '@lens-protocol/react';
  *
  * function SearchPublication() {
  *   const { data, error, loading } = useSearchPublications({ query: 'foo' });
@@ -43,7 +43,7 @@ export type UseSearchPublicationsArgs = PaginatedArgs<PublicationSearchRequest>;
  * @example
  * Search for audio post publications with content that matches a query
  * ```tsx
- * import { useSearchPublications } from '@lens-protocol/react-web';
+ * import { useSearchPublications } from '@lens-protocol/react';
  *
  * function SearchPublication() {
  *   const { data, error, loading } = useSearchPublications({

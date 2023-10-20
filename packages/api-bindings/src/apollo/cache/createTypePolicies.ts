@@ -23,9 +23,12 @@ import {
 import {
   createPrimaryPublicationTypePolicy,
   createProfileTypePolicy,
+  createPublicationStatsTypePolicy,
   createPublicationTypePolicy,
+  notNormalizedType,
 } from './type-policies';
-import { notNormalizedType } from './utils/notNormalizedType';
+import { createProfileStatsTypePolicy } from './type-policies/createProfileStatsTypePolicy';
+import { createPublicationOperationsTypePolicy } from './type-policies/createPublicationOperationsTypePolicy';
 
 type InheritedTypePolicies = {
   AnyPublication: TypePolicy;
@@ -42,12 +45,16 @@ export function createTypePolicies(
     Post: createPrimaryPublicationTypePolicy(),
     Comment: createPrimaryPublicationTypePolicy(),
     Quote: createPrimaryPublicationTypePolicy(),
+    PublicationMetadata: notNormalizedType(),
+    PublicationStats: createPublicationStatsTypePolicy(),
+    PublicationOperations: createPublicationOperationsTypePolicy(),
 
     Profile: createProfileTypePolicy(),
+    ProfileStats: createProfileStatsTypePolicy(),
+    ProfileOperations: notNormalizedType(),
 
     FeedItem: notNormalizedType(),
     PaginatedResultInfo: notNormalizedType(),
-    PublicationMetadata: notNormalizedType(),
 
     Query: {
       fields: {
