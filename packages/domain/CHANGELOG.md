@@ -1,5 +1,17 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.6
+
+### Minor Changes
+
+- cfc03dff: **feat:** implements `useOpenAction` hook
+
+### Patch Changes
+
+- 9481f48b: **feat:** implements `useApproveModule` hook. It also upgrades viem and wagmi peer deps.
+- Updated dependencies [9481f48b]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.5
+
 ## 0.11.0-alpha.5
 
 ### Minor Changes

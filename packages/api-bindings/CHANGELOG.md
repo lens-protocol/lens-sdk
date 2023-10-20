@@ -1,5 +1,21 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.9
+
+### Minor Changes
+
+- cfc03dff: **feat:** implements `useOpenAction` hook
+- 6ab0e99a: **Added** revenue hooks: useRevenueFromFollow, useRevenueFromPublication, useRevenueFromPublications
+- bdf81299: implements `useBookmarkToggle`
+
+### Patch Changes
+
+- 9481f48b: **feat:** implements `useApproveModule` hook. It also upgrades viem and wagmi peer deps.
+- Updated dependencies [cfc03dff]
+- Updated dependencies [9481f48b]
+  - @lens-protocol/domain@0.11.0-alpha.6
+  - @lens-protocol/shared-kernel@0.11.0-alpha.5
+
 ## 0.11.0-alpha.8
 
 ### Minor Changes
