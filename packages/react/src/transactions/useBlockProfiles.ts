@@ -1,6 +1,7 @@
 import { Profile } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
+  TransactionError,
   TransactionKind,
   UserRejectedError,
   WalletConnectionError,
@@ -14,7 +15,6 @@ import { invariant } from '@lens-protocol/shared-kernel';
 
 import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
-import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useBlockProfilesController } from './adapters/useBlockProfileController';
 
 export type BlockProfileArgs = {
@@ -25,13 +25,14 @@ export type BlockProfileArgs = {
 };
 
 export type BlockOperation = UseDeferredTask<
-  AsyncTransactionResult<void>,
+  void,
   | BroadcastingError
   | InsufficientAllowanceError
   | InsufficientFundsError
   | PendingSigningRequestError
   | UserRejectedError
-  | WalletConnectionError,
+  | WalletConnectionError
+  | TransactionError,
   BlockProfileArgs
 >;
 

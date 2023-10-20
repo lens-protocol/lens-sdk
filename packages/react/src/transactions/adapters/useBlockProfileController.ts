@@ -1,5 +1,6 @@
 import {
   PendingSigningRequestError,
+  TransactionError,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
@@ -22,7 +23,11 @@ export function useBlockProfilesController() {
 
   const presenter = new TransactionResultPresenter<
     BlockProfilesRequest,
-    BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
+    | BroadcastingError
+    | PendingSigningRequestError
+    | UserRejectedError
+    | WalletConnectionError
+    | TransactionError
   >();
 
   const gateway = new BlockProfilesGateway(apolloClient, transactionFactory);
