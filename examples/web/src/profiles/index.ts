@@ -2,6 +2,7 @@ export * from './ProfilesPage';
 export * from './UseFollowAndUnfollow';
 export * from './UseLazyProfile';
 export * from './UseMutualFollowers';
+export * from './UseOwnedHandles';
 export * from './UseProfile';
 export * from './UseProfileActionHistory';
 export * from './UseProfileFollowers';

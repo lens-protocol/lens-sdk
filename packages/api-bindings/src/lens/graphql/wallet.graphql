@@ -3,8 +3,8 @@ fragment HandleResult on HandleResult {
   handle
 }
 
-query OwnedHandles($request: OwnedHandlesRequest!) {
-  result: ownedHandles(request: $request) {
+query OwnedHandles($for: EvmAddress!, $limit: LimitType, $cursor: Cursor) {
+  result: ownedHandles(request: { for: $for, limit: $limit, cursor: $cursor }) {
     items {
       ...HandleResult
     }

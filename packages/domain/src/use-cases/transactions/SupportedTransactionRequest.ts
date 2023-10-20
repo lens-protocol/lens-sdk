@@ -1,7 +1,9 @@
 import { JustProtocolRequest } from '../../entities';
 import { CreateProfileRequest } from '../profile/CreateProfile';
 import { FollowRequest } from '../profile/FollowProfile';
+import { LinkHandleRequest } from '../profile/LinkHandle';
 import { UnfollowRequest } from '../profile/UnfollowProfile';
+import { UnlinkHandleRequest } from '../profile/UnlinkHandle';
 import { UpdateFollowPolicyRequest } from '../profile/UpdateFollowPolicy';
 import { SetProfileMetadataRequest } from '../profile/UpdateProfileDetails';
 import { UpdateProfileManagersRequest } from '../profile/UpdateProfileManagers';
@@ -24,6 +26,8 @@ export type AnyTransactionRequest =
   | UnfollowRequest
   | UpdateProfileManagersRequest
   | UpdateFollowPolicyRequest
-  | SetProfileMetadataRequest;
+  | SetProfileMetadataRequest
+  | LinkHandleRequest
+  | UnlinkHandleRequest;
 
 export type ProtocolTransactionRequest = JustProtocolRequest<AnyTransactionRequest>;

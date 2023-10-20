@@ -1,4 +1,3 @@
-import { Profile } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -11,46 +10,40 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
-import { useUnfollowController } from './adapters/useUnfollowController';
+import { useLinkHandleController } from './adapters/useLinkHandleController';
 
-/**
- * An object representing the result of an unfollow operation.
- *
- * It allows to wait for the transaction to be processed and indexed.
- */
-export type UnfollowAsyncResult = AsyncTransactionResult<void>;
-
-export type UnfollowArgs = {
+export type LinkHandleArgs = {
   /**
-   * The profile to unfollow
+   * The owned handle to link to the currently authenticated Profile.
    */
-  profile: Profile;
+  handle: string;
 };
 
 /**
- * `useUnfollow` allows you to unfollow a Profile.
+ * `useLinkHandle` allows you to link an owned handle to your Profile.
  *
  * You MUST be authenticated via {@link useLogin} to use this hook.
  *
  * @example
  * ```tsx
- * const { execute: unfollow, error, loading } = useUnfollow();
+ * const { execute, error, loading } = useLinkHandle();
  *
- * <button onClick={() => unfollow({ profile })} disabled={loading}>
- *   Unfollow
+ * <button onClick={() => execute({ handle })} disabled={loading}>
+ *   Link handle
  * </button>
  * ```
  *
  * @category Profiles
  * @group Hooks
+ * @experimental This hook is experimental and may change in future releases.
  */
-export function useUnfollow(): UseDeferredTask<
-  UnfollowAsyncResult,
+export function useLinkHandle(): UseDeferredTask<
+  AsyncTransactionResult<void>,
   BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
-  UnfollowArgs
+  LinkHandleArgs
 > {
   const { data: session } = useSession();
-  const unfollowProfile = useUnfollowController();
+  const linkHandle = useLinkHandleController();
 
   return useDeferredTask(async (args) => {
     invariant(
@@ -62,15 +55,10 @@ export function useUnfollow(): UseDeferredTask<
       'You must have a profile to use this operation.',
     );
 
-    return unfollowProfile({
-      kind: TransactionKind.UNFOLLOW_PROFILE,
-      profileId: args.profile.id,
+    return linkHandle({
+      kind: TransactionKind.LINK_HANDLE,
+      handle: args.handle,
       delegate: session.profile.lensManager,
     });
   });
 }
-
-/**
- * @deprecated use useUnfollow instead, this will be removed soon.
- */
-export const useUnfollowProfile = useUnfollow;

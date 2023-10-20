@@ -233,10 +233,6 @@ export function useOpenAction(
       publication.momoka === null,
       'You cannot execute an Open Action on a Momoka publication.',
     );
-    invariant(
-      publication.momoka === null,
-      'You cannot execute an Open Action on a Momoka publication.',
-    );
 
     const request = resolveOpenActionRequestFor(publication, {
       action: args.action,

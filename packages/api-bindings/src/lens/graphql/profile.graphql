@@ -570,14 +570,20 @@ mutation HandleUnlinkFromProfile($request: HandleUnlinkFromProfileRequest!) {
   }
 }
 
-mutation CreateHandleLinkToProfileTypedData($request: HandleLinkToProfileRequest!) {
-  result: createHandleLinkToProfileTypedData(request: $request) {
+mutation CreateHandleLinkToProfileTypedData(
+  $request: HandleLinkToProfileRequest!
+  $options: TypedDataOptions
+) {
+  result: createHandleLinkToProfileTypedData(request: $request, options: $options) {
     ...CreateHandleLinkToProfileBroadcastItemResult
   }
 }
 
-mutation CreateHandleUnlinkFromProfileTypedData($request: HandleUnlinkFromProfileRequest!) {
-  result: createHandleUnlinkFromProfileTypedData(request: $request) {
+mutation CreateHandleUnlinkFromProfileTypedData(
+  $request: HandleUnlinkFromProfileRequest!
+  $options: TypedDataOptions
+) {
+  result: createHandleUnlinkFromProfileTypedData(request: $request, options: $options) {
     ...CreateHandleUnlinkFromProfileBroadcastItemResult
   }
 }

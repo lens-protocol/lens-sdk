@@ -41,6 +41,7 @@ import {
   UseUpdateProfileManagers,
   UseWhoActedOnPublication,
   UseSetProfileMetadata,
+  UseOwnedHandles,
 } from './profiles';
 import {
   PublicationsPage,
@@ -142,6 +143,7 @@ export function App() {
                       <Route path="useProfileActionHistory" element={<UseProfileActionHistory />} />
                       <Route path="useSetProfileMetadata" element={<UseSetProfileMetadata />} />
                       <Route path="useUpdateFollowPolicy" element={<UseUpdateFollowPolicy />} />
+                      <Route path="useOwnedHandles" element={<UseOwnedHandles />} />
                     </Route>
 
                     <Route path="/discovery">
