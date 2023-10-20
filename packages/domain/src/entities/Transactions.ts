@@ -148,14 +148,6 @@ export type Transaction<T extends AnyTransactionRequestModel> =
  */
 export enum TransactionErrorReason {
   /**
-   * Failed to be broadcasted
-   *
-   * @deprecated {@link TransactionError} is not longer throw with this reason. See {@link BroadcastingError} instead.
-   *
-   * It will be removed in the next major version. Its value falls back to {@link TransactionErrorReason.UNKNOWN} so to not cause a breaking change in consumer's code.
-   */
-  CANNOT_EXECUTE = 'UNKNOWN',
-  /**
    * The tx was broadcasted but it was not indexed within the expected timeout
    */
   INDEXING_TIMEOUT = 'INDEXING_TIMEOUT',
@@ -163,14 +155,6 @@ export enum TransactionErrorReason {
    * The tx was broadcasted but it was not mined within the expected timeout
    */
   MINING_TIMEOUT = 'MINING_TIMEOUT',
-  /**
-   * The gas-less broadcasting of the tx was rejected, probably due to reaching a quota limit
-   *
-   * @deprecated {@link TransactionError} is not longer throw with this reason. See {@link BroadcastingError} instead.
-   *
-   * It will be removed in the next major version. Its value falls back to {@link TransactionErrorReason.UNKNOWN} so to not cause a breaking change in consumer's code.
-   */
-  REJECTED = 'UNKNOWN',
   /**
    * The tx was reverted
    */

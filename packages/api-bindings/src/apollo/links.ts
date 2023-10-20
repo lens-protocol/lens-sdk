@@ -59,7 +59,7 @@ function wrapFetch(
 
       if (apiVersion) {
         if (apiVersion < supportedVersion) {
-          logger.error(
+          logger.warn(
             `The Lens API ${apiVersion} is outside of the Lens SDK support range ^${supportedVersion}`,
           );
           return response;
