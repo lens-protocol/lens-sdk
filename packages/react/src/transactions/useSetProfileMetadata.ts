@@ -40,15 +40,10 @@ export type UseSetProfileMetadataArgs = OnchainSetProfileMetadataRequest;
  *
  *    const formData = new FormData(event.currentTarget);
  *
- *    const name = formData.get('name') as string | undefined;
- *    const bio = formData.get('bio') as string | undefined;
- *    const location = formData.get('location') as string | undefined;
- *    const website = formData.get('website') as string | undefined;
- *
- *    if (!name && !bio && !location && !website) {
- *      // alert user of error
- *     return;
- *    }
+ *    const name = formData.get('name') as string;
+ *    const bio = formData.get('bio') as string;
+ *    const location = formData.get('location') as string;
+ *    const website = formData.get('website') as string;
  *
  *   const metadata = profile({
  *    name,
