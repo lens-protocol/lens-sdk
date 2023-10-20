@@ -19,6 +19,7 @@ import {
 } from '@lens-protocol/domain/use-cases/transactions';
 import { Data, PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
 
+import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from '../ITransactionFactory';
 import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError } from '../relayer';
@@ -51,11 +52,18 @@ export class BlockProfilesGateway
     return success(transaction);
   }
 
-  createUnsignedProtocolCall(
-    _request: BlockProfilesRequest,
-    _nonceOverride?: number | undefined,
+  async createUnsignedProtocolCall(
+    request: BlockProfilesRequest,
+    nonceOverride?: number | undefined,
   ): Promise<IUnsignedProtocolCall<BlockProfilesRequest>> {
-    throw new Error('Method not implemented.');
+    const result = await this.createTypedData(request, nonceOverride);
+
+    return UnsignedProtocolCall.create({
+      id: result.id,
+      request,
+      typedData: result.typedData,
+      fallback: this.createRequestFallback(request, result),
+    });
   }
 
   private async broadcast(

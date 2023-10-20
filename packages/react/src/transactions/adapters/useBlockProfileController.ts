@@ -37,7 +37,7 @@ export function useBlockProfilesController() {
   );
 
   return async (request: BlockProfilesRequest) => {
-  const blockProfile = new BlockProfiles(
+    const blockProfile = new BlockProfiles(
       signedBlockProfiles,
       gateway,
       transactionQueue,
@@ -46,6 +46,12 @@ export function useBlockProfilesController() {
 
     await blockProfile.execute(request);
 
-    return presenter.asResult();
+    const result = presenter.asResult();
+
+    if (result.isSuccess()) {
+      return result.value.waitForCompletion();
+    }
+
+    return result;
   };
 }
