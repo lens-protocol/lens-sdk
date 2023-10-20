@@ -16,7 +16,7 @@ import { UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IOnChainProtocolCallGateway,
+  ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -27,9 +27,7 @@ import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTrans
 import { handleRelayError } from '../relayer';
 
 export class UnfollowProfileGateway
-  implements
-    IDelegatedTransactionGateway<UnfollowRequest>,
-    IOnChainProtocolCallGateway<UnfollowRequest>
+  implements IDelegatedTransactionGateway<UnfollowRequest>, ISignedOnChainGateway<UnfollowRequest>
 {
   constructor(
     private readonly apolloClient: SafeApolloClient,

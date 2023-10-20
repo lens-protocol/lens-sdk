@@ -30,11 +30,11 @@ export interface IOnChainRelayer<T extends ProtocolTransactionRequestModel> {
   ): PromiseResult<MetaTransaction<T>, BroadcastingError>;
 }
 
-export interface IOnChainProtocolCallGateway<T extends ProtocolTransactionRequestModel> {
+export interface ISignedOnChainGateway<T extends ProtocolTransactionRequestModel> {
   createUnsignedProtocolCall(request: T, nonceOverride?: Nonce): Promise<IUnsignedProtocolCall<T>>;
 }
 
-export type ISubsidizeOnChainPresenter<T extends ProtocolTransactionRequestModel> =
+export type ISignedOnChainPresenter<T extends ProtocolTransactionRequestModel> =
   ITransactionResultPresenter<
     T,
     | BroadcastingError
@@ -44,16 +44,16 @@ export type ISubsidizeOnChainPresenter<T extends ProtocolTransactionRequestModel
     | TransactionError
   >;
 
-export class SubsidizeOnChain<T extends ProtocolTransactionRequestModel>
+export class SignedOnChain<T extends ProtocolTransactionRequestModel>
   implements ISignedOperation<T>
 {
   constructor(
     protected readonly activeWallet: ActiveWallet,
     protected readonly metaTransactionNonceGateway: IMetaTransactionNonceGateway,
-    protected readonly onChainProtocolCallGateway: IOnChainProtocolCallGateway<T>,
+    protected readonly signedOnChainGateway: ISignedOnChainGateway<T>,
     protected readonly relayer: IOnChainRelayer<ProtocolTransactionRequestModel>,
     protected readonly transactionQueue: TransactionQueue<AnyTransactionRequestModel>,
-    protected readonly presenter: ISubsidizeOnChainPresenter<T>,
+    protected readonly presenter: ISignedOnChainPresenter<T>,
   ) {}
 
   async execute(request: T) {
@@ -63,10 +63,7 @@ export class SubsidizeOnChain<T extends ProtocolTransactionRequestModel>
       request.kind,
     );
 
-    const unsignedCall = await this.onChainProtocolCallGateway.createUnsignedProtocolCall(
-      request,
-      nonce,
-    );
+    const unsignedCall = await this.signedOnChainGateway.createUnsignedProtocolCall(request, nonce);
 
     const signingResult = await wallet.signProtocolCall(unsignedCall);
 

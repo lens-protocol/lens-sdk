@@ -10,7 +10,7 @@ import {
 } from '../../entities';
 import { DelegableSigning } from '../transactions/DelegableSigning';
 import { ITransactionResultPresenter } from '../transactions/ITransactionResultPresenter';
-import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
+import { SignedOnChain } from '../transactions/SignedOnChain';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -104,7 +104,7 @@ export type IOpenActionPresenter = ITransactionResultPresenter<
 export class OpenAction {
   constructor(
     private readonly tokenAvailability: TokenAvailability,
-    private readonly signedExecution: SubsidizeOnChain<OpenActionRequest>,
+    private readonly signedExecution: SignedOnChain<OpenActionRequest>,
     private readonly delegableExecution: DelegableSigning<OpenActionRequest>,
     private readonly presenter: IOpenActionPresenter,
   ) {}

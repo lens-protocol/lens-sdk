@@ -2,7 +2,7 @@ import { failure, invariant, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
 import { DelegableSigning } from '../../transactions';
-import { SubsidizeOnChain } from '../../transactions/SubsidizeOnChain';
+import { SignedOnChain } from '../../transactions/SignedOnChain';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -32,7 +32,7 @@ function setupCollectPublication({
   tokenAvailability?: TokenAvailability;
 } = {}) {
   const presenter = mock<IOpenActionPresenter>();
-  const signedExecution = mock<SubsidizeOnChain<OpenActionRequest>>();
+  const signedExecution = mock<SignedOnChain<OpenActionRequest>>();
   const delegableExecution =
     mock<DelegableSigning<LegacyCollectRequest | SimpleCollectRequest | UnknownActionRequest>>();
   const openAction = new OpenAction(

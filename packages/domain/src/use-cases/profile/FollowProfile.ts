@@ -11,7 +11,7 @@ import {
 import { BroadcastingError } from '../transactions/BroadcastingError';
 import { DelegableSigning } from '../transactions/DelegableSigning';
 import { ITransactionResultPresenter } from '../transactions/ITransactionResultPresenter';
-import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
+import { SignedOnChain } from '../transactions/SignedOnChain';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -56,7 +56,7 @@ export type IFollowProfilePresenter = ITransactionResultPresenter<
 export class FollowProfile {
   constructor(
     private readonly tokenAvailability: TokenAvailability,
-    private readonly signedFollow: SubsidizeOnChain<FollowRequest>,
+    private readonly signedFollow: SignedOnChain<FollowRequest>,
     private readonly delegableFollow: DelegableSigning<FreeFollowRequest>,
     private readonly presenter: IFollowProfilePresenter,
   ) {}

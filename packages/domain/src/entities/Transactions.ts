@@ -1,4 +1,4 @@
-import { ChainType, PromiseResult } from '@lens-protocol/shared-kernel';
+import { ChainType, IEquatableError, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { Signature } from './Signature';
 
@@ -70,6 +70,7 @@ export class UnsignedTransaction<T extends AnyTransactionRequestModel> {
   constructor(readonly id: string, readonly chainType: ChainType, readonly request: T) {}
 }
 
+// TODO rename to UnsignedOperation
 export interface IUnsignedProtocolCall<T extends ProtocolTransactionRequestModel> {
   readonly id: string;
 
@@ -78,6 +79,7 @@ export interface IUnsignedProtocolCall<T extends ProtocolTransactionRequestModel
   readonly nonce: Nonce;
 }
 
+// TODO rename to SignedOperation
 export interface ISignedProtocolCall<T extends ProtocolTransactionRequestModel> {
   readonly id: string;
 
@@ -92,15 +94,6 @@ export enum TransactionEvent {
   BROADCASTED = 'BROADCASTED',
   UPGRADED = 'UPGRADED',
   SETTLED = 'SETTLED',
-}
-
-/**
- * @deprecated delete this
- */
-export enum ProxyActionStatus {
-  MINTING = 'MINTING',
-  TRANSFERRING = 'TRANSFERRING',
-  COMPLETE = 'COMPLETE',
 }
 
 export abstract class MetaTransaction<T extends ProtocolTransactionRequestModel> {
@@ -122,19 +115,6 @@ export abstract class NativeTransaction<T extends AnyTransactionRequestModel> {
   abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
 }
 
-/**
- * @deprecated delete this
- */
-export abstract class ProxyTransaction<T extends ProtocolTransactionRequestModel> {
-  abstract get chainType(): ChainType;
-  abstract get id(): string;
-  abstract get request(): T;
-  abstract get hash(): string | undefined;
-  abstract get status(): ProxyActionStatus | undefined;
-
-  abstract waitNextEvent(): PromiseResult<TransactionEvent, TransactionError>;
-}
-
 export abstract class DataTransaction<T extends ProtocolTransactionRequestModel> {
   abstract get id(): string;
   abstract get request(): T;
@@ -150,7 +130,6 @@ export type Transaction<T extends AnyTransactionRequestModel> =
 
 /**
  * The reason why a transaction failed.
- * @deprecated delete this, not very used after all
  */
 export enum TransactionErrorReason {
   /**
@@ -174,7 +153,7 @@ export enum TransactionErrorReason {
 /**
  * An error that occurs when a transaction fails.
  */
-export class TransactionError extends Error {
+export class TransactionError extends Error implements IEquatableError {
   name = 'TransactionError' as const;
 
   constructor(readonly reason: TransactionErrorReason) {

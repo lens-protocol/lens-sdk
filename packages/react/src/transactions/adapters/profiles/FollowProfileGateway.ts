@@ -23,7 +23,7 @@ import {
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IOnChainProtocolCallGateway,
+  ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -54,9 +54,7 @@ function resolveProfileFollow(request: FollowRequest): Follow[] {
 }
 
 export class FollowProfileGateway
-  implements
-    IDelegatedTransactionGateway<FreeFollowRequest>,
-    IOnChainProtocolCallGateway<FollowRequest>
+  implements IDelegatedTransactionGateway<FreeFollowRequest>, ISignedOnChainGateway<FollowRequest>
 {
   constructor(
     private readonly apolloClient: SafeApolloClient,

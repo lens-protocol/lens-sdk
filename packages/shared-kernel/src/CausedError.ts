@@ -12,12 +12,12 @@ import isObject from 'lodash/isObject.js';
 export class CausedError extends Error {
   readonly cause?: Error;
 
-  constructor(message: string, options: { cause: Error }) {
+  constructor(message: string, options?: { cause?: Error }) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore Error not yet properly typed
     super(message, options);
 
-    if (isObject(options) && 'cause' in options && !('cause' in this)) {
+    if (isObject(options) && options.cause && !('cause' in this)) {
       const cause = options.cause;
 
       this.cause = cause;

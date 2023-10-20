@@ -8,7 +8,7 @@ import {
   UpdateFollowPolicy,
   UpdateFollowPolicyRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError, SignedOnChain } from '@lens-protocol/domain/use-cases/transactions';
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
@@ -49,7 +49,7 @@ export function useUpdateFollowPolicyController() {
 
     const gateway = new UpdateFollowPolicyGateway(apolloClient, transactionFactory);
 
-    const signedFollow = new SubsidizeOnChain(
+    const signedUpdate = new SignedOnChain(
       activeWallet,
       transactionGateway,
       gateway,
@@ -59,7 +59,7 @@ export function useUpdateFollowPolicyController() {
     );
 
     const updateFollowPolicy = new UpdateFollowPolicy(
-      signedFollow,
+      signedUpdate,
       gateway,
       transactionQueue,
       presenter,

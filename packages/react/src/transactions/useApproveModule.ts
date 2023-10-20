@@ -70,8 +70,8 @@ export type ApproveModuleArgs = {
  *   const result = await follow.execute({ profile });
  *
  *   if (result.isFailure()) {
- *     switch (result.error.constructor) {
- *       case InsufficientAllowanceError:
+ *     switch (result.error.name) {
+ *       case 'InsufficientAllowanceError':
  *         // not enough allowance
  *         // pre-approve the module
  *         break;
@@ -106,8 +106,8 @@ export type ApproveModuleArgs = {
  *   const result = await follow.execute({ profile });
  *
  *   if (result.isFailure()) {
- *     switch (result.error.constructor) {
- *       case InsufficientAllowanceError:
+ *     switch (result.error.name) {
+ *       case 'InsufficientAllowanceError':
  *         return approveFollowModuleFor(profile);
  *
  *       // others
@@ -147,8 +147,8 @@ export type ApproveModuleArgs = {
  *   const result = collect.execute({ publication });
  *
  *   if (result.isFailure()) {
- *     switch (result.error.constructor) {
- *       case InsufficientAllowanceError:
+ *     switch (result.error.name) {
+ *       case 'InsufficientAllowanceError':
  *         return approveCollectModuleFor(publication);
  *
  *       // others
@@ -170,27 +170,27 @@ export type ApproveModuleArgs = {
  *   const result = await approve.execute({ on: publication });
  *
  *   if (result.isFailure()) {
- *     switch (result.error.constructor) {
- *       case InsufficientGasError:
+ *     switch (result.error.name) {
+ *       case 'InsufficientGasError':
  *         console.log(`The user's wallet does not have enough MATIC to pay for the transaction`);
  *         break;
  *
- *       case PendingSigningRequestError:
+ *       case 'PendingSigningRequestError':
  *         console.log(
  *           'There is a pending signing request in your wallet. ' +
  *             'Approve it or discard it and try again.'
  *         );
  *         break;
  *
- *       case TransactionError:
+ *       case 'TransactionError':
  *         console.log('There was an processing the transaction', completion.error.message);
  *         break;
  *
- *       case WalletConnectionError:
+ *       case 'WalletConnectionError':
  *         console.log('There was an error connecting to your wallet', error.message);
  *         break;
  *
- *       case UserRejectedError:
+ *       case 'UserRejectedError':
  *         // the user decided to not sign, usually this is silently ignored by UIs
  *         break;
  *     }

@@ -14,8 +14,8 @@ import {
 import {
   BroadcastingError,
   IDelegatedTransactionPresenter,
-  ISubsidizeOffChainPresenter,
-  ISubsidizeOnChainPresenter,
+  ISignedMomokaPresenter,
+  ISignedOnChainPresenter,
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { Deferred, failure, Failure, Result, success } from '@lens-protocol/shared-kernel';
@@ -39,8 +39,8 @@ export class NewPublicationPresenter<
   TPublication extends AnyPublication,
 > implements
     IDelegatedTransactionPresenter<TRequest>,
-    ISubsidizeOnChainPresenter<TRequest>,
-    ISubsidizeOffChainPresenter<TRequest>
+    ISignedOnChainPresenter<TRequest>,
+    ISignedMomokaPresenter<TRequest>
 {
   private deferredResult = new Deferred<Result<TPublication, TransactionError>>();
 

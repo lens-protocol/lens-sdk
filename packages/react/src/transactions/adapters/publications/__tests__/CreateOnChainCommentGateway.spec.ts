@@ -12,12 +12,15 @@ import {
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import { mockNonce, mockCreateCommentRequest } from '@lens-protocol/domain/mocks';
-import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  BroadcastingError,
+  BroadcastingErrorReason,
+} from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType } from '@lens-protocol/shared-kernel';
 
 import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
 import {
-  assertBroadcastingErrorResultWithRequestFallback,
+  assertBroadcastingErrorWithReason,
   assertUnsignedProtocolCallCorrectness,
 } from '../../__helpers__/assertions';
 import { mockITransactionFactory } from '../../__helpers__/mocks';
@@ -103,13 +106,37 @@ describe(`Given an instance of ${CreateOnChainCommentGateway.name}`, () => {
     });
 
     it.each([
-      mockLensProfileManagerRelayError(LensProfileManagerRelayErrorReasonType.AppNotAllowed),
-      mockLensProfileManagerRelayError(LensProfileManagerRelayErrorReasonType.NoLensManagerEnabled),
-      mockLensProfileManagerRelayError(LensProfileManagerRelayErrorReasonType.NotSponsored),
-      mockLensProfileManagerRelayError(LensProfileManagerRelayErrorReasonType.RateLimited),
+      {
+        relayError: mockLensProfileManagerRelayError(
+          LensProfileManagerRelayErrorReasonType.AppNotAllowed,
+        ),
+        reason: BroadcastingErrorReason.APP_NOT_ALLOWED,
+      },
+      {
+        relayError: mockLensProfileManagerRelayError(
+          LensProfileManagerRelayErrorReasonType.NoLensManagerEnabled,
+        ),
+        reason: BroadcastingErrorReason.NO_LENS_MANAGER_ENABLED,
+      },
+      {
+        relayError: mockLensProfileManagerRelayError(
+          LensProfileManagerRelayErrorReasonType.NotSponsored,
+        ),
+        reason: BroadcastingErrorReason.NOT_SPONSORED,
+      },
+      {
+        relayError: mockLensProfileManagerRelayError(
+          LensProfileManagerRelayErrorReasonType.RateLimited,
+        ),
+        reason: BroadcastingErrorReason.RATE_LIMITED,
+      },
+      {
+        relayError: mockLensProfileManagerRelayError(LensProfileManagerRelayErrorReasonType.Failed),
+        reason: BroadcastingErrorReason.UNKNOWN,
+      },
     ])(
-      `should fail w/ a ${BroadcastingError.name} in case of $__typename response with "$reason" reason`,
-      async (relayError) => {
+      `should fail w/ a ${BroadcastingError.name} with $reason in case of $relayError.__typename response with "$relayError.reason" reason`,
+      async ({ relayError, reason }) => {
         const apolloClient = mockLensApolloClient([
           mockCommentOnchainResponse({
             variables: {
@@ -131,7 +158,7 @@ describe(`Given an instance of ${CreateOnChainCommentGateway.name}`, () => {
 
         const result = await gateway.createDelegatedTransaction(request);
 
-        assertBroadcastingErrorResultWithRequestFallback(result, data.result.typedData);
+        assertBroadcastingErrorWithReason(result, reason);
       },
     );
   });

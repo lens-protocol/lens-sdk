@@ -9,7 +9,8 @@ import { DataTransaction } from '@lens-protocol/domain/entities';
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastingError,
-  IOffChainRelayer,
+  BroadcastingErrorReason,
+  IMomokaRelayer,
   ProtocolTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
@@ -24,14 +25,14 @@ import { SignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from './ITransactionFactory';
 import { handleRelayError } from './relayer';
 
-export class MomokaRelayer implements IOffChainRelayer<CreatePostRequest> {
+export class MomokaRelayer implements IMomokaRelayer<CreatePostRequest> {
   constructor(
     private apolloClient: SafeApolloClient,
     private factory: ITransactionFactory<ProtocolTransactionRequest>,
     private logger: ILogger,
   ) {}
 
-  async relayProtocolCall<T extends ProtocolTransactionRequest>(
+  async relaySignedMomoka<T extends ProtocolTransactionRequest>(
     signedCall: SignedProtocolCall<T>,
   ): PromiseResult<DataTransaction<T>, BroadcastingError> {
     const result = await this.broadcast(signedCall);
@@ -73,7 +74,7 @@ export class MomokaRelayer implements IOffChainRelayer<CreatePostRequest> {
     } catch (err) {
       assertError(err);
       this.logger.error(err, `It was not possible to relay the transaction for ${signedCall.id}`);
-      return failure(new BroadcastingError(err.message));
+      return failure(new BroadcastingError(BroadcastingErrorReason.UNKNOWN, { cause: err }));
     }
   }
 }

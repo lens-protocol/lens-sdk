@@ -11,7 +11,7 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import {
-  ClaimHandleError,
+  ClaimHandleError as GenericClaimHandleError,
   ClaimHandleRequest,
   FollowPolicyConfig,
 } from '@lens-protocol/domain/use-cases/profile';
@@ -21,7 +21,11 @@ import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useClaimHandleController } from './adapters/useClaimHandleController';
 
-export { ClaimHandleError };
+// re-export constructor and specialized type
+export const ClaimHandleError = GenericClaimHandleError;
+export type ClaimHandleError = GenericClaimHandleError<ClaimProfileWithHandleErrorReasonType>;
+
+export { ClaimProfileWithHandleErrorReasonType };
 
 /**
  * Claim a handle details.
@@ -53,7 +57,7 @@ export type ClaimHandleArgs = OneOf<{
  */
 export function useClaimHandle(): UseDeferredTask<
   Profile,
-  | ClaimHandleError<ClaimProfileWithHandleErrorReasonType>
+  | ClaimHandleError
   | PendingSigningRequestError
   | UserRejectedError
   | TransactionError

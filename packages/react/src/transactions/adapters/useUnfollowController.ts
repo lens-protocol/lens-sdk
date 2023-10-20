@@ -4,7 +4,7 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { UnfollowProfile, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError, SignedOnChain } from '@lens-protocol/domain/use-cases/transactions';
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
@@ -37,7 +37,7 @@ export function useUnfollowController() {
     >();
     const gateway = new UnfollowProfileGateway(apolloClient, transactionFactory);
 
-    const signedFollow = new SubsidizeOnChain(
+    const signedUnfollow = new SignedOnChain(
       activeWallet,
       transactionGateway,
       gateway,
@@ -46,7 +46,12 @@ export function useUnfollowController() {
       presenter,
     );
 
-    const unfollowProfile = new UnfollowProfile(signedFollow, gateway, transactionQueue, presenter);
+    const unfollowProfile = new UnfollowProfile(
+      signedUnfollow,
+      gateway,
+      transactionQueue,
+      presenter,
+    );
 
     await unfollowProfile.execute(request);
 

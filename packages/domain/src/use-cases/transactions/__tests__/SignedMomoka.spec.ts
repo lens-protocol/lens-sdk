@@ -11,33 +11,33 @@ import {
 import {
   mockActiveWallet,
   MockedDataTransaction,
-  mockIOffChainRelayer,
+  mockIMomokaRelayer,
   mockISignedProtocolCall,
   mockIUnsignedProtocolCall,
-  mockIOffChainProtocolCallGateway,
+  mockISignedMomokaGateway,
   mockTransactionQueue,
   mockWallet,
   mockProtocolTransactionRequestModelWithOffChainFlag,
 } from '../../../mocks';
 import {
-  IOffChainRelayer,
-  ISubsidizeOffChainPresenter,
-  IOffChainProtocolCallGateway,
+  IMomokaRelayer,
+  ISignedMomokaPresenter,
+  ISignedMomokaGateway,
   SubsidizeOffChain,
-} from '../SubsidizeOffChain';
+} from '../SignedMomoka';
 import { TransactionQueue } from '../TransactionQueue';
 
 function setup<T extends ProtocolTransactionRequestModel>({
   gateway,
-  relayer = mock<IOffChainRelayer<T>>(),
+  relayer = mock<IMomokaRelayer<T>>(),
   queue = mockTransactionQueue(),
   presenter,
   wallet,
 }: {
-  gateway: IOffChainProtocolCallGateway<T>;
-  relayer?: IOffChainRelayer<T>;
+  gateway: ISignedMomokaGateway<T>;
+  relayer?: IMomokaRelayer<T>;
   queue?: TransactionQueue<AnyTransactionRequestModel>;
-  presenter: ISubsidizeOffChainPresenter<T>;
+  presenter: ISignedMomokaPresenter<T>;
   wallet: Wallet;
 }) {
   const activeWallet = mockActiveWallet({ wallet });
@@ -54,7 +54,7 @@ describe(`Given an instance of the ${SubsidizeOffChain.name}<T> interactor`, () 
         - sign it with the user's ${Wallet.name}
         - relay the resulting ISignedProtocolCall<T>
         - push the resulting ${DataTransaction.name}<T> into the ${TransactionQueue.name}`, async () => {
-      const gateway = mockIOffChainProtocolCallGateway({
+      const gateway = mockISignedMomokaGateway({
         request,
         unsignedCall,
       });
@@ -64,14 +64,14 @@ describe(`Given an instance of the ${SubsidizeOffChain.name}<T> interactor`, () 
       when(wallet.signProtocolCall).calledWith(unsignedCall).mockResolvedValue(success(signedCall));
 
       const transaction = MockedDataTransaction.fromSignedCall(signedCall);
-      const relayer = mockIOffChainRelayer({
+      const relayer = mockIMomokaRelayer({
         signedCall,
         result: success(transaction),
       });
 
       const queue = mockTransactionQueue();
 
-      const presenter = mock<ISubsidizeOffChainPresenter<typeof request>>();
+      const presenter = mock<ISignedMomokaPresenter<typeof request>>();
 
       const useCase = setup({
         gateway,

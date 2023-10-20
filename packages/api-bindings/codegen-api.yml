@@ -71,7 +71,6 @@ generates:
       - add:
           content: [
               '/** Code generated. DO NOT EDIT. */',
-              '/* eslint-disable @typescript-eslint/no-redundant-type-constituents */',
               '/* eslint-disable import/no-default-export */', # generatedTypes default export
               '/* eslint-disable @typescript-eslint/ban-types */', # needed by unions with {}
               '/* eslint-disable @typescript-eslint/no-explicit-any */', # see extensive use of FieldPolicy<any> | FieldReadFunction<any>

@@ -7,7 +7,7 @@ import { FollowProfile, FollowRequest } from '@lens-protocol/domain/use-cases/pr
 import {
   BroadcastingError,
   DelegableSigning,
-  SubsidizeOnChain,
+  SignedOnChain,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
   InsufficientAllowanceError,
@@ -56,7 +56,7 @@ export function useFollowController() {
     >();
     const gateway = new FollowProfileGateway(apolloClient, transactionFactory);
 
-    const signedFollow = new SubsidizeOnChain(
+    const signedFollow = new SignedOnChain(
       activeWallet,
       transactionGateway,
       gateway,
