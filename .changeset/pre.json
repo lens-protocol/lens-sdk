@@ -27,6 +27,7 @@
     "react-web-v1": "1.3.1"
   },
   "changesets": [
+    "breezy-lizards-sell",
     "brown-bears-repair",
     "brown-flies-pump",
     "brown-points-rhyme",
@@ -36,6 +37,7 @@
     "cyan-radios-sniff",
     "dirty-tools-hammer",
     "early-spiders-scream",
+    "five-seals-tap",
     "fluffy-apricots-provide",
     "fresh-lamps-explain",
     "friendly-pumpkins-turn",
@@ -50,12 +52,14 @@
     "lemon-drinks-exercise",
     "lemon-schools-decide",
     "long-carpets-marry",
+    "loud-pets-decide",
     "nervous-papayas-design",
     "new-doors-sip",
     "odd-cougars-poke",
     "old-carrots-breathe",
     "olive-beans-double",
     "popular-pants-look",
+    "serious-bats-shake",
     "shaggy-carrots-cry",
     "shy-pugs-taste",
     "six-feet-sparkle",
@@ -63,7 +67,10 @@
     "slow-cats-dance",
     "slow-melons-fail",
     "tasty-houses-admire",
+    "tasty-yaks-destroy",
     "tricky-planets-share",
-    "violet-ads-warn"
+    "two-geese-protect",
+    "violet-ads-warn",
+    "violet-impalas-grab"
   ]
 }
