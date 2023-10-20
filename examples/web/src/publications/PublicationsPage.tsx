@@ -25,7 +25,7 @@ const publicationHooks = [
     label: 'useWhoReactedToPublication',
     description: `Fetch a list of profiles who reacted to a publication.`,
     path: '/publications/useWhoReactedToPublication',
-},
+  },
   {
     label: 'useHidePublication',
     description: `Hide a publication.`,
