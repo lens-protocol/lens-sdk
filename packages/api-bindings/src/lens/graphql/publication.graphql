@@ -547,3 +547,11 @@ mutation AddPublicationBookmark($request: PublicationBookmarkRequest!) {
 mutation RemovePublicationBookmark($request: PublicationBookmarkRequest!) {
   result: removePublicationBookmark(request: $request)
 }
+
+mutation AddPublicationNotInterested($request: PublicationNotInterestedRequest!) {
+  addPublicationNotInterested(request: $request)
+}
+
+mutation UndoPublicationNotInterested($request: PublicationNotInterestedRequest!) {
+  undoPublicationNotInterested(request: $request)
+}

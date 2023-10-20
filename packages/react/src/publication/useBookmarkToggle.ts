@@ -1,10 +1,4 @@
 import { AnyPublication, isMirrorPublication } from '@lens-protocol/api-bindings';
-import {
-  PendingSigningRequestError,
-  UserRejectedError,
-  WalletConnectionError,
-} from '@lens-protocol/domain/entities';
-import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { success } from '@lens-protocol/shared-kernel';
 
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
@@ -14,11 +8,7 @@ export type UseBookmarkToggleArgs = {
   publication: AnyPublication;
 };
 
-export type BookmarkOperation = UseDeferredTask<
-  void,
-  BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
-  UseBookmarkToggleArgs
->;
+export type BookmarkOperation = UseDeferredTask<void, never, UseBookmarkToggleArgs>;
 
 /**
  * `useBookmarkToggle` hook lets the user save or remove a publication from their bookmarks.
