@@ -35,6 +35,7 @@ export class NotInterestedPresenter implements ITogglablePropertyPresenter<NotIn
       return {
         ...current,
         operations: {
+          ...current.operations,
           isNotInterested: false,
         },
       };
