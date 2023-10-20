@@ -43,7 +43,7 @@
     "@apollo/client": "^3.7.1",
     "@lens-protocol/domain": "workspace:*",
     "@lens-protocol/shared-kernel": "workspace:*",
-    "graphql": "^16.6.0",
+    "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",
     "tslib": "^2.6.2"
   },
