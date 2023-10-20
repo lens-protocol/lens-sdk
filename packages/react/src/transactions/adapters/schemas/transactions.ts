@@ -21,6 +21,7 @@ import {
   SetProfileMetadataRequestSchema,
   UpdateFollowPolicyRequestSchema,
   FollowRequestSchema,
+  BlockProfilesRequestSchema,
 } from './profiles';
 import {
   CollectRequestSchema,
@@ -32,6 +33,9 @@ import {
 
 function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) {
   switch (kind) {
+    case TransactionKind.BLOCK_PROFILE:
+      return BlockProfilesRequestSchema;
+
     case TransactionKind.CREATE_POST:
       return CreatePostRequestSchema;
 

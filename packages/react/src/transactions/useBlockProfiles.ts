@@ -14,8 +14,8 @@ import { invariant } from '@lens-protocol/shared-kernel';
 
 import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
-import { AsyncTransactionResult } from '../transactions/adapters/AsyncTransactionResult';
-import { useBlockProfilesController } from '../transactions/adapters/useBlockProfileController';
+import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
+import { useBlockProfilesController } from './adapters/useBlockProfileController';
 
 export type BlockProfileArgs = {
   /**

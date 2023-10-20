@@ -3,10 +3,7 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import {
-  BlockProfiles,
-  BlockProfilesRequest,
-} from '@lens-protocol/domain/src/use-cases/profile/BlockProfiles';
+import { BlockProfiles, BlockProfilesRequest } from '@lens-protocol/domain/use-cases/profile';
 import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
@@ -40,7 +37,7 @@ export function useBlockProfilesController() {
   );
 
   return async (request: BlockProfilesRequest) => {
-    const blockProfile = new BlockProfiles(
+  const blockProfile = new BlockProfiles(
       signedBlockProfiles,
       gateway,
       transactionQueue,

@@ -1,3 +1,4 @@
+export * from './BlockProfiles';
 export * from './CreateProfile';
 export * from './FollowProfile';
 export * from './ProveNftOwnership';

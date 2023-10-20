@@ -93,3 +93,9 @@ export const SetProfileMetadataRequestSchema = z.object({
   kind: z.literal(TransactionKind.UPDATE_PROFILE_DETAILS),
   delegate: z.boolean(),
 });
+
+export const BlockProfilesRequestSchema = z.object({
+  profileIds: ProfileIdSchema.array().min(1),
+  kind: z.literal(TransactionKind.BLOCK_PROFILE),
+  delegate: z.boolean(),
+});
