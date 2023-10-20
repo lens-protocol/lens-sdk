@@ -6,9 +6,16 @@ import { setupWallet } from '../shared/setupWallet';
 async function main() {
   const wallet = setupWallet();
   const client = await getAuthenticatedClientFromEthersWallet(wallet);
+  const profileId = await client.authentication.getProfileId();
+
+  const ownedHandles = await client.wallet.ownedHandles({
+    for: wallet.address,
+  });
+
+  console.log(`Handles owned by ${wallet.address}:`, ownedHandles);
 
   const linkHandleToProfileTypedData = await client.profile.createLinkHandleTypedData({
-    handle: 'HANDLE',
+    handle: ownedHandles.items[0].handle,
   });
 
   const data = linkHandleToProfileTypedData.unwrap();
@@ -19,6 +26,7 @@ async function main() {
     data.typedData.value,
   );
 
+  console.log(`Linking handle ${ownedHandles.items[0].handle} to profile ${profileId}`);
   const broadcastResult = await client.transaction.broadcastOnchain({
     id: data.id,
     signature: signedTypedData,

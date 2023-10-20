@@ -13,6 +13,7 @@ import type {
   BlockRequest,
   ChangeProfileManagersRequest,
   CreateProfileWithHandleRequest,
+  DefaultProfileRequest,
   DismissRecommendedProfilesRequest,
   FollowRequest,
   FollowersRequest,
@@ -27,6 +28,7 @@ import type {
   ProfileRecommendationsRequest,
   ProfileRequest,
   ProfilesRequest,
+  SetDefaultProfileRequest,
   SetFollowModuleRequest,
   TypedDataOptions,
   UnblockRequest,
@@ -206,6 +208,52 @@ export class Profile {
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.DismissRecommendedProfiles({ request }, headers);
+    });
+  }
+
+  /**
+   * Fetch the default profile for a given address.
+   * If no default is explicitly set, it returns the oldest profile owned by the address.
+   *
+   * @param request - Request object for the query
+   * @returns Profile or null if not found
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.fetchDefault({
+   *   for: '0x1234567890123456789012345678901234567890',
+   * });
+   * ```
+   */
+  async fetchDefault(request: DefaultProfileRequest): Promise<ProfileFragment | null> {
+    const result = await this.sdk.DefaultProfile({
+      request,
+      ...buildRequestFromConfig(this.context),
+    });
+
+    return result.data.result;
+  }
+
+  /**
+   * Set default profile for authenticated address.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.setDefault({
+   *   profileId: '0x123',
+   * });
+   * ```
+   */
+  async setDefault(
+    request: SetDefaultProfileRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      await this.sdk.SetDefaultProfile({ request }, headers);
     });
   }
 

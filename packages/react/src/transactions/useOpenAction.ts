@@ -205,9 +205,9 @@ export type OpenActionArgs = {
  * @category Publications
  * @group Hooks
  */
-export function useOpenAction({
-  action,
-}: UseOpenActionArgs): UseDeferredTask<
+export function useOpenAction(
+  args: UseOpenActionArgs,
+): UseDeferredTask<
   OpenActionAsyncResult,
   | BroadcastingError
   | InsufficientAllowanceError
@@ -233,13 +233,9 @@ export function useOpenAction({
       publication.momoka === null,
       'You cannot execute an Open Action on a Momoka publication.',
     );
-    invariant(
-      publication.momoka === null,
-      'You cannot execute an Open Action on a Momoka publication.',
-    );
 
     const request = resolveOpenActionRequestFor(publication, {
-      action,
+      action: args.action,
       delegate: session.profile.lensManager,
     });
 

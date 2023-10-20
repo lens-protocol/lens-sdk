@@ -3690,6 +3690,7 @@ export type HandleUnlinkFromProfileData = { result: LensProfileManagerRelayError
 
 export type CreateHandleLinkToProfileTypedDataVariables = Exact<{
   request: HandleLinkToProfileRequest;
+  options?: InputMaybe<TypedDataOptions>;
 }>;
 
 export type CreateHandleLinkToProfileTypedDataData = {
@@ -3698,6 +3699,7 @@ export type CreateHandleLinkToProfileTypedDataData = {
 
 export type CreateHandleUnlinkFromProfileTypedDataVariables = Exact<{
   request: HandleUnlinkFromProfileRequest;
+  options?: InputMaybe<TypedDataOptions>;
 }>;
 
 export type CreateHandleUnlinkFromProfileTypedDataData = {
@@ -4113,6 +4115,18 @@ export type RemovePublicationBookmarkVariables = Exact<{
 
 export type RemovePublicationBookmarkData = { result: void | null };
 
+export type AddPublicationNotInterestedVariables = Exact<{
+  request: PublicationNotInterestedRequest;
+}>;
+
+export type AddPublicationNotInterestedData = { addPublicationNotInterested: void | null };
+
+export type UndoPublicationNotInterestedVariables = Exact<{
+  request: PublicationNotInterestedRequest;
+}>;
+
+export type UndoPublicationNotInterestedData = { undoPublicationNotInterested: void | null };
+
 export type AddReactionVariables = Exact<{
   request: ReactionRequest;
 }>;
@@ -4278,7 +4292,9 @@ export type BroadcastOnMomokaData = { result: CreateMomokaPublicationResult | Re
 export type HandleResult = { __typename: 'HandleResult'; handle: string };
 
 export type OwnedHandlesVariables = Exact<{
-  request: OwnedHandlesRequest;
+  for: Scalars['EvmAddress'];
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
 }>;
 
 export type OwnedHandlesData = {
@@ -10621,8 +10637,11 @@ export type HandleUnlinkFromProfileMutationOptions = Apollo.BaseMutationOptions<
   HandleUnlinkFromProfileVariables
 >;
 export const CreateHandleLinkToProfileTypedDataDocument = /*#__PURE__*/ gql`
-  mutation CreateHandleLinkToProfileTypedData($request: HandleLinkToProfileRequest!) {
-    result: createHandleLinkToProfileTypedData(request: $request) {
+  mutation CreateHandleLinkToProfileTypedData(
+    $request: HandleLinkToProfileRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createHandleLinkToProfileTypedData(request: $request, options: $options) {
       ...CreateHandleLinkToProfileBroadcastItemResult
     }
   }
@@ -10647,6 +10666,7 @@ export type CreateHandleLinkToProfileTypedDataMutationFn = Apollo.MutationFuncti
  * const [createHandleLinkToProfileTypedData, { data, loading, error }] = useCreateHandleLinkToProfileTypedData({
  *   variables: {
  *      request: // value for 'request'
+ *      options: // value for 'options'
  *   },
  * });
  */
@@ -10672,8 +10692,11 @@ export type CreateHandleLinkToProfileTypedDataMutationOptions = Apollo.BaseMutat
   CreateHandleLinkToProfileTypedDataVariables
 >;
 export const CreateHandleUnlinkFromProfileTypedDataDocument = /*#__PURE__*/ gql`
-  mutation CreateHandleUnlinkFromProfileTypedData($request: HandleUnlinkFromProfileRequest!) {
-    result: createHandleUnlinkFromProfileTypedData(request: $request) {
+  mutation CreateHandleUnlinkFromProfileTypedData(
+    $request: HandleUnlinkFromProfileRequest!
+    $options: TypedDataOptions
+  ) {
+    result: createHandleUnlinkFromProfileTypedData(request: $request, options: $options) {
       ...CreateHandleUnlinkFromProfileBroadcastItemResult
     }
   }
@@ -10698,6 +10721,7 @@ export type CreateHandleUnlinkFromProfileTypedDataMutationFn = Apollo.MutationFu
  * const [createHandleUnlinkFromProfileTypedData, { data, loading, error }] = useCreateHandleUnlinkFromProfileTypedData({
  *   variables: {
  *      request: // value for 'request'
+ *      options: // value for 'options'
  *   },
  * });
  */
@@ -12221,6 +12245,102 @@ export type RemovePublicationBookmarkMutationOptions = Apollo.BaseMutationOption
   RemovePublicationBookmarkData,
   RemovePublicationBookmarkVariables
 >;
+export const AddPublicationNotInterestedDocument = /*#__PURE__*/ gql`
+  mutation AddPublicationNotInterested($request: PublicationNotInterestedRequest!) {
+    addPublicationNotInterested(request: $request)
+  }
+`;
+export type AddPublicationNotInterestedMutationFn = Apollo.MutationFunction<
+  AddPublicationNotInterestedData,
+  AddPublicationNotInterestedVariables
+>;
+
+/**
+ * __useAddPublicationNotInterested__
+ *
+ * To run a mutation, you first call `useAddPublicationNotInterested` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddPublicationNotInterested` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addPublicationNotInterested, { data, loading, error }] = useAddPublicationNotInterested({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAddPublicationNotInterested(
+  baseOptions?: Apollo.MutationHookOptions<
+    AddPublicationNotInterestedData,
+    AddPublicationNotInterestedVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddPublicationNotInterestedData, AddPublicationNotInterestedVariables>(
+    AddPublicationNotInterestedDocument,
+    options,
+  );
+}
+export type AddPublicationNotInterestedHookResult = ReturnType<
+  typeof useAddPublicationNotInterested
+>;
+export type AddPublicationNotInterestedMutationResult =
+  Apollo.MutationResult<AddPublicationNotInterestedData>;
+export type AddPublicationNotInterestedMutationOptions = Apollo.BaseMutationOptions<
+  AddPublicationNotInterestedData,
+  AddPublicationNotInterestedVariables
+>;
+export const UndoPublicationNotInterestedDocument = /*#__PURE__*/ gql`
+  mutation UndoPublicationNotInterested($request: PublicationNotInterestedRequest!) {
+    undoPublicationNotInterested(request: $request)
+  }
+`;
+export type UndoPublicationNotInterestedMutationFn = Apollo.MutationFunction<
+  UndoPublicationNotInterestedData,
+  UndoPublicationNotInterestedVariables
+>;
+
+/**
+ * __useUndoPublicationNotInterested__
+ *
+ * To run a mutation, you first call `useUndoPublicationNotInterested` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUndoPublicationNotInterested` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [undoPublicationNotInterested, { data, loading, error }] = useUndoPublicationNotInterested({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useUndoPublicationNotInterested(
+  baseOptions?: Apollo.MutationHookOptions<
+    UndoPublicationNotInterestedData,
+    UndoPublicationNotInterestedVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UndoPublicationNotInterestedData,
+    UndoPublicationNotInterestedVariables
+  >(UndoPublicationNotInterestedDocument, options);
+}
+export type UndoPublicationNotInterestedHookResult = ReturnType<
+  typeof useUndoPublicationNotInterested
+>;
+export type UndoPublicationNotInterestedMutationResult =
+  Apollo.MutationResult<UndoPublicationNotInterestedData>;
+export type UndoPublicationNotInterestedMutationOptions = Apollo.BaseMutationOptions<
+  UndoPublicationNotInterestedData,
+  UndoPublicationNotInterestedVariables
+>;
 export const AddReactionDocument = /*#__PURE__*/ gql`
   mutation AddReaction($request: ReactionRequest!) {
     addReaction(request: $request)
@@ -12992,8 +13112,8 @@ export type BroadcastOnMomokaMutationOptions = Apollo.BaseMutationOptions<
   BroadcastOnMomokaVariables
 >;
 export const OwnedHandlesDocument = /*#__PURE__*/ gql`
-  query OwnedHandles($request: OwnedHandlesRequest!) {
-    result: ownedHandles(request: $request) {
+  query OwnedHandles($for: EvmAddress!, $limit: LimitType, $cursor: Cursor) {
+    result: ownedHandles(request: { for: $for, limit: $limit, cursor: $cursor }) {
       items {
         ...HandleResult
       }
@@ -13018,7 +13138,9 @@ export const OwnedHandlesDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useOwnedHandles({
  *   variables: {
- *      request: // value for 'request'
+ *      for: // value for 'for'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *   },
  * });
  */

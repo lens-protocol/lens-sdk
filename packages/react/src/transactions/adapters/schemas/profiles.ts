@@ -93,3 +93,15 @@ export const SetProfileMetadataRequestSchema = z.object({
   kind: z.literal(TransactionKind.UPDATE_PROFILE_DETAILS),
   delegate: z.boolean(),
 });
+
+export const LinkHandleRequestSchema = z.object({
+  handle: z.string(),
+  kind: z.literal(TransactionKind.LINK_HANDLE),
+  delegate: z.boolean(),
+});
+
+export const UnlinkHandleRequestSchema = z.object({
+  handle: z.string(),
+  kind: z.literal(TransactionKind.UNLINK_HANDLE),
+  delegate: z.boolean(),
+});

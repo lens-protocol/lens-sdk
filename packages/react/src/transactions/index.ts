@@ -3,9 +3,11 @@ export * from './useCreateComment';
 export * from './useCreateMirror';
 export * from './useCreatePost';
 export * from './useFollow';
+export * from './useLinkHandle';
 export * from './useOpenAction';
 export * from './useSetProfileMetadata';
 export * from './useUnfollow';
+export * from './useUnlinkHandle';
 export * from './useUpdateFollowPolicy';
 export * from './useUpdateProfileManagers';
 

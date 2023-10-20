@@ -1,10 +1,4 @@
 import { AnyPublication, isMirrorPublication } from '@lens-protocol/api-bindings';
-import {
-  PendingSigningRequestError,
-  UserRejectedError,
-  WalletConnectionError,
-} from '@lens-protocol/domain/entities';
-import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { success } from '@lens-protocol/shared-kernel';
 
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
@@ -14,18 +8,14 @@ export type UseBookmarkToggleArgs = {
   publication: AnyPublication;
 };
 
-export type BookmarkOperation = UseDeferredTask<
-  void,
-  BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
-  UseBookmarkToggleArgs
->;
+export type BookmarkOperation = UseDeferredTask<void, never, UseBookmarkToggleArgs>;
 
 /**
  * `useBookmarkToggle` hook lets the user save or remove a publication from their bookmarks.
  *
  * You MUST be authenticated via {@link useLogin} to use this hook.
  *
- * You can use the `publication.operations.hasBookmarked` property to determine
+ * You can use the `primaryPublication.operations.hasBookmarked` property to determine
  * if the publication is bookmarked by the active profile.
  *
  * @category Publications
@@ -37,10 +27,10 @@ export type BookmarkOperation = UseDeferredTask<
  * import { AnyPublication, useBookmarkToggle } from '@lens-protocol/react-web';
  *
  * function Publication({ publication }: { publication: AnyPublication }) {
- *   const { execute: toggle, isPending } = useBookmarkToggle();
+ *   const { execute: toggle, loading } = useBookmarkToggle();
  *
  *   return (
- *     <button onClick={() => toggle({ publication })} disabled={isPending}>
+ *     <button onClick={() => toggle({ publication })} disabled={loading}>
  *       {publication.operations.hasBookmarked ? 'Bookmarked' : 'Not bookmarked'}
  *     </button>
  *   );

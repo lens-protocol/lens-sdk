@@ -224,6 +224,19 @@ query Profile(
   }
 }
 
+query DefaultProfile(
+  $request: DefaultProfileRequest!
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
+) {
+  result: defaultProfile(request: $request) {
+    ...Profile
+  }
+}
+
 query Profiles(
   $request: ProfilesRequest!
   $profileCoverTransform: ImageTransform = {}
@@ -450,6 +463,10 @@ mutation Unfollow($request: UnfollowRequest!) {
 
 mutation DismissRecommendedProfiles($request: DismissRecommendedProfilesRequest!) {
   result: dismissRecommendedProfiles(request: $request)
+}
+
+mutation SetDefaultProfile($request: SetDefaultProfileRequest!) {
+  result: setDefaultProfile(request: $request)
 }
 
 mutation CreateOnchainSetProfileMetadataTypedData(

@@ -10,6 +10,7 @@ export * from './useHidePublication';
 export * from './useReportPublication';
 export * from './useBookmarkToggle';
 export * from './useMyBookmarks';
+export * from './useNotInterestedToggle';
 
 /**
  * Fragments

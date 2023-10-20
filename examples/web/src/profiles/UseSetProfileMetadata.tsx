@@ -19,10 +19,10 @@ function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
 
     const formData = new FormData(event.currentTarget);
 
-    const name = formData.get('name') as string | undefined;
-    const bio = formData.get('bio') as string | undefined;
-    const location = formData.get('location') as string | undefined;
-    const website = formData.get('website') as string | undefined;
+    const name = formData.get('name') as string;
+    const bio = formData.get('bio') as string;
+    const location = formData.get('location') as string;
+    const website = formData.get('website') as string;
 
     const metadata = profile({
       name,
@@ -30,12 +30,12 @@ function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
       attributes: [
         {
           key: 'location',
-          value: location ?? '',
+          value: location,
           type: MetadataAttributeType.STRING,
         },
         {
           key: 'website',
-          value: website ?? '',
+          value: website,
           type: MetadataAttributeType.STRING,
         },
       ],
@@ -73,6 +73,7 @@ function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
         <input
           type="text"
           placeholder="Your name"
+          required
           disabled={loading}
           name="name"
           defaultValue={activeProfile.metadata?.displayName ?? undefined}
@@ -85,6 +86,7 @@ function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
         <textarea
           rows={3}
           placeholder="Write a line about you"
+          required
           style={{ resize: 'none' }}
           disabled={loading}
           name="bio"
@@ -98,6 +100,7 @@ function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
         <input
           type="text"
           placeholder="Where are you?"
+          required
           disabled={loading}
           name="location"
           defaultValue={location?.value ?? undefined}
@@ -111,6 +114,7 @@ function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
           type="text"
           placeholder="https://example.com"
           disabled={loading}
+          required
           name="website"
           defaultValue={website?.value ?? undefined}
         />

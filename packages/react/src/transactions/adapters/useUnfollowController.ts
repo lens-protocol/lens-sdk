@@ -1,6 +1,5 @@
 import {
   PendingSigningRequestError,
-  TransactionError,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
@@ -9,6 +8,7 @@ import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-c
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
+import { AsyncTransactionResult } from './AsyncTransactionResult';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
 import { UnfollowProfileGateway } from './profiles/UnfollowProfileGateway';
 import { validateUnfollowRequest } from './schemas/validators';
@@ -26,22 +26,14 @@ export function useUnfollowController() {
   return async (
     request: UnfollowRequest,
   ): PromiseResult<
-    void,
-    | BroadcastingError
-    | PendingSigningRequestError
-    | TransactionError
-    | UserRejectedError
-    | WalletConnectionError
+    AsyncTransactionResult<void>,
+    BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
   > => {
     validateUnfollowRequest(request);
 
     const presenter = new TransactionResultPresenter<
       UnfollowRequest,
-      | BroadcastingError
-      | PendingSigningRequestError
-      | TransactionError
-      | UserRejectedError
-      | WalletConnectionError
+      BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
     const gateway = new UnfollowProfileGateway(apolloClient, transactionFactory);
 
@@ -58,11 +50,6 @@ export function useUnfollowController() {
 
     await unfollowProfile.execute(request);
 
-    const result = presenter.asResult();
-
-    if (result.isSuccess()) {
-      return result.value.waitForCompletion();
-    }
-    return result;
+    return presenter.asResult();
   };
 }

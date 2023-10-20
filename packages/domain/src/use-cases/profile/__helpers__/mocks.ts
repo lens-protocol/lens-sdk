@@ -13,6 +13,7 @@ import {
   IProfileTransactionGateway,
 } from '../CreateProfile';
 import { FreeFollowRequest, PaidFollowRequest } from '../FollowProfile';
+import { LinkHandleRequest } from '../LinkHandle';
 import {
   INftOwnershipChallengeGateway,
   NftOwnershipSignature,
@@ -20,6 +21,7 @@ import {
 } from '../ProveNftOwnership';
 import { SetProfileMetadataRequest } from '../SetProfileMetadata';
 import { UnfollowRequest } from '../UnfollowProfile';
+import { UnlinkHandleRequest } from '../UnlinkHandle';
 import { UpdateFollowPolicyRequest } from '../UpdateFollowPolicy';
 import { UpdateProfileManagersRequest } from '../UpdateProfileManagers';
 import { ChargeFollowConfig, FollowPolicyType, NoFeeFollowConfig } from '../types';
@@ -163,4 +165,24 @@ export function mockINftOwnershipChallengeGateway({
   when(gateway.createOwnershipChallenge).calledWith(request).mockResolvedValue(result);
 
   return gateway;
+}
+
+export function mockLinkHandleRequest(overrides?: Partial<LinkHandleRequest>): LinkHandleRequest {
+  return {
+    handle: faker.internet.userName(),
+    delegate: true,
+    ...overrides,
+    kind: TransactionKind.LINK_HANDLE,
+  };
+}
+
+export function mockUnlinkHandleRequest(
+  overrides?: Partial<UnlinkHandleRequest>,
+): UnlinkHandleRequest {
+  return {
+    handle: faker.internet.userName(),
+    delegate: true,
+    ...overrides,
+    kind: TransactionKind.UNLINK_HANDLE,
+  };
 }
