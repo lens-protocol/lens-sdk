@@ -205,9 +205,9 @@ export type OpenActionArgs = {
  * @category Publications
  * @group Hooks
  */
-export function useOpenAction({
-  action,
-}: UseOpenActionArgs): UseDeferredTask<
+export function useOpenAction(
+  args: UseOpenActionArgs,
+): UseDeferredTask<
   OpenActionAsyncResult,
   | BroadcastingError
   | InsufficientAllowanceError
@@ -239,7 +239,7 @@ export function useOpenAction({
     );
 
     const request = resolveOpenActionRequestFor(publication, {
-      action,
+      action: args.action,
       delegate: session.profile.lensManager,
     });
 
