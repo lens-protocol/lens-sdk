@@ -2104,6 +2104,7 @@ export type UnknownReferenceModuleSettings = {
 
 export type SimpleCollectOpenActionSettings = {
   __typename: 'SimpleCollectOpenActionSettings';
+  type: OpenActionModuleType;
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
@@ -2117,6 +2118,7 @@ export type Recipient = { recipient: EvmAddress; split: number };
 
 export type MultirecipientFeeCollectOpenActionSettings = {
   __typename: 'MultirecipientFeeCollectOpenActionSettings';
+  type: OpenActionModuleType;
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
@@ -2128,18 +2130,21 @@ export type MultirecipientFeeCollectOpenActionSettings = {
 
 export type UnknownOpenActionModuleSettings = {
   __typename: 'UnknownOpenActionModuleSettings';
+  type: OpenActionModuleType;
   openActionModuleReturnData: string | null;
   contract: NetworkAddress;
 };
 
 export type LegacyFreeCollectModuleSettings = {
   __typename: 'LegacyFreeCollectModuleSettings';
+  type: OpenActionModuleType;
   followerOnly: boolean;
   contract: NetworkAddress;
 };
 
 export type LegacyFeeCollectModuleSettings = {
   __typename: 'LegacyFeeCollectModuleSettings';
+  type: OpenActionModuleType;
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
@@ -2149,6 +2154,7 @@ export type LegacyFeeCollectModuleSettings = {
 
 export type LegacyLimitedFeeCollectModuleSettings = {
   __typename: 'LegacyLimitedFeeCollectModuleSettings';
+  type: OpenActionModuleType;
   collectLimit: string | null;
   recipient: EvmAddress;
   referralFee: number;
@@ -2159,6 +2165,7 @@ export type LegacyLimitedFeeCollectModuleSettings = {
 
 export type LegacyLimitedTimedFeeCollectModuleSettings = {
   __typename: 'LegacyLimitedTimedFeeCollectModuleSettings';
+  type: OpenActionModuleType;
   collectLimit: string | null;
   recipient: EvmAddress;
   referralFee: number;
@@ -2170,11 +2177,13 @@ export type LegacyLimitedTimedFeeCollectModuleSettings = {
 
 export type LegacyRevertCollectModuleSettings = {
   __typename: 'LegacyRevertCollectModuleSettings';
+  type: OpenActionModuleType;
   contract: NetworkAddress;
 };
 
 export type LegacyTimedFeeCollectModuleSettings = {
   __typename: 'LegacyTimedFeeCollectModuleSettings';
+  type: OpenActionModuleType;
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
@@ -2185,6 +2194,7 @@ export type LegacyTimedFeeCollectModuleSettings = {
 
 export type LegacyMultirecipientFeeCollectModuleSettings = {
   __typename: 'LegacyMultirecipientFeeCollectModuleSettings';
+  type: OpenActionModuleType;
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
@@ -2196,6 +2206,7 @@ export type LegacyMultirecipientFeeCollectModuleSettings = {
 
 export type LegacySimpleCollectModuleSettings = {
   __typename: 'LegacySimpleCollectModuleSettings';
+  type: OpenActionModuleType;
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
@@ -2207,6 +2218,7 @@ export type LegacySimpleCollectModuleSettings = {
 
 export type LegacyErc4626FeeCollectModuleSettings = {
   __typename: 'LegacyERC4626FeeCollectModuleSettings';
+  type: OpenActionModuleType;
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
@@ -2219,6 +2231,7 @@ export type LegacyErc4626FeeCollectModuleSettings = {
 
 export type LegacyAaveFeeCollectModuleSettings = {
   __typename: 'LegacyAaveFeeCollectModuleSettings';
+  type: OpenActionModuleType;
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
@@ -5645,6 +5658,7 @@ export const FragmentLiveStreamMetadataV3 = /*#__PURE__*/ gql`
 export const FragmentLegacyFreeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyFreeCollectModuleSettings on LegacyFreeCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -5655,6 +5669,7 @@ export const FragmentLegacyFreeCollectModuleSettings = /*#__PURE__*/ gql`
 export const FragmentLegacyFeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyFeeCollectModuleSettings on LegacyFeeCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -5671,6 +5686,7 @@ export const FragmentLegacyFeeCollectModuleSettings = /*#__PURE__*/ gql`
 export const FragmentLegacyLimitedFeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyLimitedFeeCollectModuleSettings on LegacyLimitedFeeCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -5688,6 +5704,7 @@ export const FragmentLegacyLimitedFeeCollectModuleSettings = /*#__PURE__*/ gql`
 export const FragmentLegacyLimitedTimedFeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyLimitedTimedFeeCollectModuleSettings on LegacyLimitedTimedFeeCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -5706,6 +5723,7 @@ export const FragmentLegacyLimitedTimedFeeCollectModuleSettings = /*#__PURE__*/ 
 export const FragmentLegacyRevertCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyRevertCollectModuleSettings on LegacyRevertCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -5715,6 +5733,7 @@ export const FragmentLegacyRevertCollectModuleSettings = /*#__PURE__*/ gql`
 export const FragmentLegacyTimedFeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyTimedFeeCollectModuleSettings on LegacyTimedFeeCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -5738,6 +5757,7 @@ export const FragmentRecipient = /*#__PURE__*/ gql`
 export const FragmentLegacyMultirecipientFeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyMultirecipientFeeCollectModuleSettings on LegacyMultirecipientFeeCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -5759,6 +5779,7 @@ export const FragmentLegacyMultirecipientFeeCollectModuleSettings = /*#__PURE__*
 export const FragmentLegacySimpleCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacySimpleCollectModuleSettings on LegacySimpleCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -5777,6 +5798,7 @@ export const FragmentLegacySimpleCollectModuleSettings = /*#__PURE__*/ gql`
 export const FragmentLegacyErc4626FeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyERC4626FeeCollectModuleSettings on LegacyERC4626FeeCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -5798,6 +5820,7 @@ export const FragmentLegacyErc4626FeeCollectModuleSettings = /*#__PURE__*/ gql`
 export const FragmentLegacyAaveFeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyAaveFeeCollectModuleSettings on LegacyAaveFeeCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -5816,6 +5839,7 @@ export const FragmentLegacyAaveFeeCollectModuleSettings = /*#__PURE__*/ gql`
 export const FragmentMultirecipientFeeCollectOpenActionSettings = /*#__PURE__*/ gql`
   fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectOpenActionSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -5837,6 +5861,7 @@ export const FragmentMultirecipientFeeCollectOpenActionSettings = /*#__PURE__*/ 
 export const FragmentSimpleCollectOpenActionSettings = /*#__PURE__*/ gql`
   fragment SimpleCollectOpenActionSettings on SimpleCollectOpenActionSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -5855,6 +5880,7 @@ export const FragmentSimpleCollectOpenActionSettings = /*#__PURE__*/ gql`
 export const FragmentUnknownOpenActionModuleSettings = /*#__PURE__*/ gql`
   fragment UnknownOpenActionModuleSettings on UnknownOpenActionModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }

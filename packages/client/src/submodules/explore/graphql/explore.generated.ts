@@ -4692,6 +4692,8 @@ export const ExplorePublicationsDocument = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -4717,6 +4719,7 @@ export const ExplorePublicationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -4752,6 +4755,7 @@ export const ExplorePublicationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -4788,6 +4792,7 @@ export const ExplorePublicationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -4825,6 +4830,7 @@ export const ExplorePublicationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -4849,6 +4855,7 @@ export const ExplorePublicationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -4885,6 +4892,7 @@ export const ExplorePublicationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -4932,6 +4940,7 @@ export const ExplorePublicationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -4969,6 +4978,7 @@ export const ExplorePublicationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -5016,6 +5026,7 @@ export const ExplorePublicationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -5053,6 +5064,7 @@ export const ExplorePublicationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -5101,6 +5113,7 @@ export const ExplorePublicationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -5138,6 +5151,7 @@ export const ExplorePublicationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },

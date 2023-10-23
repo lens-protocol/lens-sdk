@@ -4646,6 +4646,8 @@ export const ReactionNotificationFragmentDoc = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -4671,6 +4673,7 @@ export const ReactionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -4706,6 +4709,7 @@ export const ReactionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -4742,6 +4746,7 @@ export const ReactionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -4779,6 +4784,7 @@ export const ReactionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -4803,6 +4809,7 @@ export const ReactionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -4839,6 +4846,7 @@ export const ReactionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -4886,6 +4894,7 @@ export const ReactionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -4923,6 +4932,7 @@ export const ReactionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -4970,6 +4980,7 @@ export const ReactionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -5007,6 +5018,7 @@ export const ReactionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -5055,6 +5067,7 @@ export const ReactionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -5092,6 +5105,7 @@ export const ReactionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -10981,6 +10995,8 @@ export const CommentNotificationFragmentDoc = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -11006,6 +11022,7 @@ export const CommentNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -11041,6 +11058,7 @@ export const CommentNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -11077,6 +11095,7 @@ export const CommentNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -11114,6 +11133,7 @@ export const CommentNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -11138,6 +11158,7 @@ export const CommentNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -11174,6 +11195,7 @@ export const CommentNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -11221,6 +11243,7 @@ export const CommentNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -11258,6 +11281,7 @@ export const CommentNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -11305,6 +11329,7 @@ export const CommentNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -11342,6 +11367,7 @@ export const CommentNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -11390,6 +11416,7 @@ export const CommentNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -11427,6 +11454,7 @@ export const CommentNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -17301,6 +17329,8 @@ export const MirrorNotificationFragmentDoc = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -17326,6 +17356,7 @@ export const MirrorNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -17361,6 +17392,7 @@ export const MirrorNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -17397,6 +17429,7 @@ export const MirrorNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -17434,6 +17467,7 @@ export const MirrorNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -17458,6 +17492,7 @@ export const MirrorNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -17494,6 +17529,7 @@ export const MirrorNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -17541,6 +17577,7 @@ export const MirrorNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -17578,6 +17615,7 @@ export const MirrorNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -17625,6 +17663,7 @@ export const MirrorNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -17662,6 +17701,7 @@ export const MirrorNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -17710,6 +17750,7 @@ export const MirrorNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -17747,6 +17788,7 @@ export const MirrorNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -23636,6 +23678,8 @@ export const QuoteNotificationFragmentDoc = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -23661,6 +23705,7 @@ export const QuoteNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -23696,6 +23741,7 @@ export const QuoteNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -23732,6 +23778,7 @@ export const QuoteNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -23769,6 +23816,7 @@ export const QuoteNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -23793,6 +23841,7 @@ export const QuoteNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -23829,6 +23878,7 @@ export const QuoteNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -23876,6 +23926,7 @@ export const QuoteNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -23913,6 +23964,7 @@ export const QuoteNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -23960,6 +24012,7 @@ export const QuoteNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -23997,6 +24050,7 @@ export const QuoteNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -24045,6 +24099,7 @@ export const QuoteNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -24082,6 +24137,7 @@ export const QuoteNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -30893,6 +30949,8 @@ export const ActedNotificationFragmentDoc = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -30918,6 +30976,7 @@ export const ActedNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -30953,6 +31012,7 @@ export const ActedNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -30989,6 +31049,7 @@ export const ActedNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -31026,6 +31087,7 @@ export const ActedNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -31050,6 +31112,7 @@ export const ActedNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -31086,6 +31149,7 @@ export const ActedNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -31133,6 +31197,7 @@ export const ActedNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -31170,6 +31235,7 @@ export const ActedNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -31217,6 +31283,7 @@ export const ActedNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -31254,6 +31321,7 @@ export const ActedNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -31302,6 +31370,7 @@ export const ActedNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -31339,6 +31408,7 @@ export const ActedNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -38177,6 +38247,8 @@ export const MentionNotificationFragmentDoc = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -38202,6 +38274,7 @@ export const MentionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -38237,6 +38310,7 @@ export const MentionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -38273,6 +38347,7 @@ export const MentionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -38310,6 +38385,7 @@ export const MentionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -38334,6 +38410,7 @@ export const MentionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -38370,6 +38447,7 @@ export const MentionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -38417,6 +38495,7 @@ export const MentionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -38454,6 +38533,7 @@ export const MentionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -38501,6 +38581,7 @@ export const MentionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -38538,6 +38619,7 @@ export const MentionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -38586,6 +38668,7 @@ export const MentionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -38623,6 +38706,7 @@ export const MentionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -45109,6 +45193,8 @@ export const NotificationsDocument = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -45134,6 +45220,7 @@ export const NotificationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -45169,6 +45256,7 @@ export const NotificationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -45205,6 +45293,7 @@ export const NotificationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -45242,6 +45331,7 @@ export const NotificationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -45266,6 +45356,7 @@ export const NotificationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -45302,6 +45393,7 @@ export const NotificationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -45349,6 +45441,7 @@ export const NotificationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -45386,6 +45479,7 @@ export const NotificationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -45433,6 +45527,7 @@ export const NotificationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -45470,6 +45565,7 @@ export const NotificationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -45518,6 +45614,7 @@ export const NotificationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },
@@ -45555,6 +45652,7 @@ export const NotificationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'contract' },

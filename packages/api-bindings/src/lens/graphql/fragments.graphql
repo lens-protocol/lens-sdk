@@ -407,6 +407,7 @@ fragment UnknownReferenceModuleSettings on UnknownReferenceModuleSettings {
 # open action modules
 fragment SimpleCollectOpenActionSettings on SimpleCollectOpenActionSettings {
   __typename
+  type
   contract {
     ...NetworkAddress
   }
@@ -429,6 +430,7 @@ fragment Recipient on RecipientDataOutput {
 
 fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectOpenActionSettings {
   __typename
+  type
   contract {
     ...NetworkAddress
   }
@@ -446,6 +448,7 @@ fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectO
 
 fragment UnknownOpenActionModuleSettings on UnknownOpenActionModuleSettings {
   __typename
+  type
   contract {
     ...NetworkAddress
   }
@@ -454,6 +457,7 @@ fragment UnknownOpenActionModuleSettings on UnknownOpenActionModuleSettings {
 
 fragment LegacyFreeCollectModuleSettings on LegacyFreeCollectModuleSettings {
   __typename
+  type
   contract {
     ...NetworkAddress
   }
@@ -462,6 +466,7 @@ fragment LegacyFreeCollectModuleSettings on LegacyFreeCollectModuleSettings {
 
 fragment LegacyFeeCollectModuleSettings on LegacyFeeCollectModuleSettings {
   __typename
+  type
   contract {
     ...NetworkAddress
   }
@@ -475,6 +480,7 @@ fragment LegacyFeeCollectModuleSettings on LegacyFeeCollectModuleSettings {
 
 fragment LegacyLimitedFeeCollectModuleSettings on LegacyLimitedFeeCollectModuleSettings {
   __typename
+  type
   contract {
     ...NetworkAddress
   }
@@ -489,6 +495,7 @@ fragment LegacyLimitedFeeCollectModuleSettings on LegacyLimitedFeeCollectModuleS
 
 fragment LegacyLimitedTimedFeeCollectModuleSettings on LegacyLimitedTimedFeeCollectModuleSettings {
   __typename
+  type
   contract {
     ...NetworkAddress
   }
@@ -504,6 +511,7 @@ fragment LegacyLimitedTimedFeeCollectModuleSettings on LegacyLimitedTimedFeeColl
 
 fragment LegacyRevertCollectModuleSettings on LegacyRevertCollectModuleSettings {
   __typename
+  type
   contract {
     ...NetworkAddress
   }
@@ -511,6 +519,7 @@ fragment LegacyRevertCollectModuleSettings on LegacyRevertCollectModuleSettings 
 
 fragment LegacyTimedFeeCollectModuleSettings on LegacyTimedFeeCollectModuleSettings {
   __typename
+  type
   contract {
     ...NetworkAddress
   }
@@ -525,6 +534,7 @@ fragment LegacyTimedFeeCollectModuleSettings on LegacyTimedFeeCollectModuleSetti
 
 fragment LegacyMultirecipientFeeCollectModuleSettings on LegacyMultirecipientFeeCollectModuleSettings {
   __typename
+  type
   contract {
     ...NetworkAddress
   }
@@ -542,6 +552,7 @@ fragment LegacyMultirecipientFeeCollectModuleSettings on LegacyMultirecipientFee
 
 fragment LegacySimpleCollectModuleSettings on LegacySimpleCollectModuleSettings {
   __typename
+  type
   contract {
     ...NetworkAddress
   }
@@ -557,6 +568,7 @@ fragment LegacySimpleCollectModuleSettings on LegacySimpleCollectModuleSettings 
 
 fragment LegacyERC4626FeeCollectModuleSettings on LegacyERC4626FeeCollectModuleSettings {
   __typename
+  type
   contract {
     ...NetworkAddress
   }
@@ -575,6 +587,7 @@ fragment LegacyERC4626FeeCollectModuleSettings on LegacyERC4626FeeCollectModuleS
 
 fragment LegacyAaveFeeCollectModuleSettings on LegacyAaveFeeCollectModuleSettings {
   __typename
+  type
   contract {
     ...NetworkAddress
   }
