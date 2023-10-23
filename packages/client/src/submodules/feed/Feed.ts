@@ -28,7 +28,7 @@ export class Feed {
     private readonly context: LensContext,
     authentication: Authentication,
   ) {
-    const client = new FetchGraphQLClient(context.environment.gqlEndpoint);
+    const client = new FetchGraphQLClient(context);
 
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;

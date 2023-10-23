@@ -30,8 +30,7 @@ export type MediaTransformsConfig = {
  */
 export type LensContext = {
   environment: Environment;
-
   storage: IStorageProvider;
-
   mediaTransforms: MediaTransformsConfig;
+  origin?: string;
 };
