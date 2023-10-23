@@ -67,7 +67,7 @@ export type ActOnOpenActionLensManagerInput = {
 
 export type ActOnOpenActionLensManagerRequest = {
   readonly actOn: ActOnOpenActionLensManagerInput;
-  readonly for?: InputMaybe<Scalars['PublicationId']>;
+  readonly for: Scalars['PublicationId'];
   readonly referrers?: InputMaybe<ReadonlyArray<OnchainReferrer>>;
 };
 
@@ -1352,6 +1352,10 @@ export type FeeFollowModuleInput = {
   readonly recipient: Scalars['EvmAddress'];
 };
 
+export type FeeFollowModuleRedeemInput = {
+  readonly amount: AmountInput;
+};
+
 export type FeeFollowModuleSettings = {
   readonly __typename: 'FeeFollowModuleSettings';
   /** The amount info */
@@ -1456,7 +1460,7 @@ export type FollowModuleInput = {
 };
 
 export type FollowModuleRedeemInput = {
-  readonly feeFollowModule?: InputMaybe<Scalars['Boolean']>;
+  readonly feeFollowModule?: InputMaybe<FeeFollowModuleRedeemInput>;
   readonly unknownFollowModule?: InputMaybe<UnknownFollowModuleRedeemInput>;
 };
 
@@ -1938,6 +1942,11 @@ export enum LensProfileManagerRelayErrorReasonType {
 
 export type LensProfileManagerRelayResult = LensProfileManagerRelayError | RelaySuccess;
 
+export enum LensProtocolVersion {
+  V1 = 'V1',
+  V2 = 'V2',
+}
+
 export enum LensTransactionFailureType {
   MetadataError = 'METADATA_ERROR',
   Reverted = 'REVERTED',
@@ -2036,47 +2045,30 @@ export type MentionNotification = {
   readonly publication: PrimaryPublication;
 };
 
-export type MetadataAttribute =
-  | MetadataBooleanAttribute
-  | MetadataDateAttribute
-  | MetadataJsonAttribute
-  | MetadataNumberAttribute
-  | MetadataStringAttribute;
-
-export type MetadataBooleanAttribute = {
-  readonly __typename: 'MetadataBooleanAttribute';
+export type MetadataAttribute = {
+  readonly __typename: 'MetadataAttribute';
   readonly key: Scalars['String'];
-  /** A JS boolean value serialized as string. It's consumer responsibility to parse it. */
+  /**
+   * The type of the attribute. When:
+   * - BOOLEAN: the `value` is `true`|`false`
+   * - DATE: the `value` is a valid ISO 8601 date string
+   * - NUMBER: the `value` is a valid JS number as string
+   * - STRING: the `value` is a string.
+   * - JSON: the `value` is a valid JSON serialized as string
+   *
+   */
+  readonly type: MetadataAttributeType;
+  /** The value serialized as string. It's consumer responsibility to parse it according to `type`. */
   readonly value: Scalars['String'];
 };
 
-export type MetadataDateAttribute = {
-  readonly __typename: 'MetadataDateAttribute';
-  readonly key: Scalars['String'];
-  /** A valid ISO 8601 date string.  It's consumer responsibility to parse it. */
-  readonly value: Scalars['String'];
-};
-
-export type MetadataJsonAttribute = {
-  readonly __typename: 'MetadataJSONAttribute';
-  readonly key: Scalars['String'];
-  /** A JSON string. It's consumer responsibility to validate and parse it. */
-  readonly value: Scalars['String'];
-};
-
-export type MetadataNumberAttribute = {
-  readonly __typename: 'MetadataNumberAttribute';
-  readonly key: Scalars['String'];
-  /** A valid JS number serialized as string. It's consumer responsibility to parse it. */
-  readonly value: Scalars['String'];
-};
-
-export type MetadataStringAttribute = {
-  readonly __typename: 'MetadataStringAttribute';
-  readonly key: Scalars['String'];
-  /** Any string value. */
-  readonly value: Scalars['String'];
-};
+export enum MetadataAttributeType {
+  Boolean = 'BOOLEAN',
+  Date = 'DATE',
+  Json = 'JSON',
+  Number = 'NUMBER',
+  String = 'STRING',
+}
 
 export type MintMetadataV3 = {
   readonly __typename: 'MintMetadataV3';
@@ -3911,6 +3903,7 @@ export type PublicationOperations = {
   readonly hasMirrored: Scalars['Boolean'];
   readonly hasReacted: Scalars['Boolean'];
   readonly hasReported: Scalars['Boolean'];
+  readonly id: Scalars['PublicationId'];
   readonly isNotInterested: Scalars['Boolean'];
 };
 
@@ -4113,12 +4106,13 @@ export type Query = {
   readonly internalProfileStatus: PrfResult;
   readonly invitedProfiles: ReadonlyArray<InvitedResult>;
   readonly lastLoggedInProfile?: Maybe<Profile>;
-  readonly lensProtocolVersion: Scalars['String'];
+  readonly lensProtocolVersion: LensProtocolVersion;
   readonly lensTransactionStatus?: Maybe<LensTransactionResult>;
   readonly momokaSubmitters: MomokaSubmittersResult;
   readonly momokaSummary: MomokaSummaryResult;
   readonly momokaTransaction?: Maybe<MomokaTransaction>;
   readonly momokaTransactions: MomokaTransactionsResult;
+  /** Returns a paged list of profiles that are followed by both the observer and the viewing profile */
   readonly mutualFollowers: PaginatedProfileResult;
   /** Get the NFT collections that the given two profiles own at least one NFT of. */
   readonly mutualNftCollections: PaginatedNftCollectionsResult;
@@ -4163,6 +4157,7 @@ export type Query = {
   readonly validatePublicationMetadata: PublicationValidateMetadataResult;
   readonly verify: Scalars['Boolean'];
   readonly whoActedOnPublication: PaginatedProfileResult;
+  /** The list of profiles that the logged in profile has blocked */
   readonly whoHaveBlocked: PaginatedProfileResult;
   readonly whoReactedPublication: PaginatedWhoReactedResult;
 };
@@ -4763,6 +4758,7 @@ export type Subscription = {
   readonly newMomokaTransaction: MomokaTransaction;
   readonly newNotification: Notification;
   readonly newPublicationStats: PublicationStats;
+  readonly userSigNonces: UserSigNonces;
 };
 
 export type SubscriptionNewNotificationArgs = {
@@ -4771,6 +4767,10 @@ export type SubscriptionNewNotificationArgs = {
 
 export type SubscriptionNewPublicationStatsArgs = {
   for: Scalars['PublicationId'];
+};
+
+export type SubscriptionUserSigNoncesArgs = {
+  address: Scalars['EvmAddress'];
 };
 
 export enum SupportedFiatType {
@@ -4978,6 +4978,7 @@ export type UserPoapsQueryRequest = {
 export type UserSigNonces = {
   readonly __typename: 'UserSigNonces';
   readonly lensHubOnchainSigNonce: Scalars['Nonce'];
+  readonly lensPublicActProxyOnchainSigNonce: Scalars['Nonce'];
   readonly lensTokenHandleRegistryOnchainSigNonce: Scalars['Nonce'];
 };
 

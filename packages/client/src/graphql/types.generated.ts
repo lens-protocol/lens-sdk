@@ -598,6 +598,14 @@ export enum MarketplaceMetadataAttributeDisplayType {
   String = 'STRING',
 }
 
+export enum MetadataAttributeType {
+  Boolean = 'BOOLEAN',
+  Date = 'DATE',
+  Json = 'JSON',
+  Number = 'NUMBER',
+  String = 'STRING',
+}
+
 export type ModuleCurrencyApproval = {
   followModule?: InputMaybe<FollowModuleType>;
   openActionModule?: InputMaybe<OpenActionModuleType>;
