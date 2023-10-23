@@ -90,16 +90,34 @@ function mockProfileOnchainIdentityFragment(
   };
 }
 
-export function mockProfileFragment(overrides?: Partial<gql.Profile>): gql.Profile {
-  const firstName = faker.name.firstName();
-  const lastName = faker.name.lastName();
+export function mockHandleInfo(): gql.HandleInfo {
+  const localName = faker.internet.userName();
+  const namespace = faker.internet.domainWord();
+  return {
+    id: `${namespace}/${localName}}`,
+    fullHandle: `@${localName}/${namespace}`,
+    namespace,
+    localName,
+    ownedBy: mockEvmAddress(),
+    suggestedFormatted: {
+      full: `${namespace}/@${localName}`,
+      localName: `@${localName}`,
+    },
+    linkedTo: {
+      nftTokenId: '1',
+      contract: mockNetworkAddressFragment(),
+    },
+    __typename: 'HandleInfo',
+  };
+}
 
+export function mockProfileFragment(overrides?: Partial<gql.Profile>): gql.Profile {
   return {
     id: mockProfileId(),
     txHash: mockTransactionHash(),
     createdAt: faker.date.past().toISOString(),
     interests: [],
-    handle: faker.internet.userName(firstName, lastName),
+    handle: mockHandleInfo(),
     invitesLeft: 0,
     sponsor: false,
     lensManager: false,

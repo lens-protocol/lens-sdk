@@ -287,6 +287,25 @@ fragment ProfileMetadata on ProfileMetadata {
   }
 }
 
+fragment HandleInfo on HandleInfo {
+  __typename
+  id
+  fullHandle
+  namespace
+  localName
+  suggestedFormatted {
+    full
+    localName
+  }
+  linkedTo {
+    contract {
+      ...NetworkAddress
+    }
+    nftTokenId
+  }
+  ownedBy
+}
+
 fragment ProfileFields on Profile {
   __typename
   id
@@ -324,7 +343,9 @@ fragment ProfileFields on Profile {
   metadata {
     ...ProfileMetadata
   }
-  handle
+  handle {
+    ...HandleInfo
+  }
   sponsor
   lensManager
   stats(request: { forApps: $activityOn }) {

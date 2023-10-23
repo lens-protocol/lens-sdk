@@ -1541,16 +1541,38 @@ export type GetProfileMetadataArgs = {
   readonly useFallback?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type HandleInfo = {
+  readonly __typename: 'HandleInfo';
+  /** The full handle - namespace/localname */
+  readonly fullHandle: Scalars['Handle'];
+  /** The handle nft token id */
+  readonly id: Scalars['TokenId'];
+  /** If null its not linked to anything */
+  readonly linkedTo?: Maybe<HandleLinkedTo>;
+  /** The localname */
+  readonly localName: Scalars['String'];
+  /** The namespace */
+  readonly namespace: Scalars['String'];
+  readonly ownedBy: Scalars['EvmAddress'];
+  /** The suggested format to use on UI for ease but you can innovate and slice and dice as you want */
+  readonly suggestedFormatted: SuggestedFormattedHandle;
+};
+
 export type HandleLinkToProfileRequest = {
+  /** The full handle - namespace/localname */
   readonly handle: Scalars['Handle'];
 };
 
-export type HandleResult = {
-  readonly __typename: 'HandleResult';
-  readonly handle: Scalars['Handle'];
+export type HandleLinkedTo = {
+  readonly __typename: 'HandleLinkedTo';
+  /** The contract address it is linked to */
+  readonly contract: NetworkAddress;
+  /** The nft token id it is linked to (this can be the profile Id) */
+  readonly nftTokenId: Scalars['TokenId'];
 };
 
 export type HandleUnlinkFromProfileRequest = {
+  /** The full handle - namespace/localname */
   readonly handle: Scalars['Handle'];
 };
 
@@ -1669,6 +1691,7 @@ export type InternalCuratedTagsRequest = {
 };
 
 export type InternalCuratedUpdateRequest = {
+  /** The full handle - namespace/localname */
   readonly handle: Scalars['Handle'];
   readonly remove: Scalars['Boolean'];
   readonly secret: Scalars['String'];
@@ -3113,7 +3136,7 @@ export type PaginatedFeedResult = {
 
 export type PaginatedHandlesResult = {
   readonly __typename: 'PaginatedHandlesResult';
-  readonly items: ReadonlyArray<HandleResult>;
+  readonly items: ReadonlyArray<HandleInfo>;
   readonly pageInfo: PaginatedResultInfo;
 };
 
@@ -3360,7 +3383,7 @@ export type Profile = {
   readonly followNftAddress?: Maybe<NetworkAddress>;
   readonly guardian?: Maybe<ProfileGuardianResult>;
   /** The profile handle - a profile may not have one */
-  readonly handle?: Maybe<Scalars['Handle']>;
+  readonly handle?: Maybe<HandleInfo>;
   /** The profile id */
   readonly id: Scalars['ProfileId'];
   readonly interests: ReadonlyArray<Scalars['String']>;
@@ -3595,7 +3618,7 @@ export type ProfileRecommendationsRequest = {
 };
 
 export type ProfileRequest = {
-  /** The handle for profile you want to fetch */
+  /** The handle for profile you want to fetch - namespace/localname */
   readonly forHandle?: InputMaybe<Scalars['Handle']>;
   /** The profile you want to fetch */
   readonly forProfileId?: InputMaybe<Scalars['ProfileId']>;
@@ -4042,15 +4065,9 @@ export type PublicationValidateMetadataResult = {
   readonly valid: Scalars['Boolean'];
 };
 
-export enum PublicationsOrderByType {
-  CommentOfQueryRanking = 'COMMENT_OF_QUERY_RANKING',
-  Latest = 'LATEST',
-}
-
 export type PublicationsRequest = {
   readonly cursor?: InputMaybe<Scalars['Cursor']>;
   readonly limit?: InputMaybe<LimitType>;
-  readonly orderBy?: InputMaybe<PublicationsOrderByType>;
   readonly where: PublicationsWhere;
 };
 
@@ -4606,6 +4623,7 @@ export type ReservedClaimable = {
   readonly expiry: Scalars['DateTime'];
   readonly id: Scalars['String'];
   readonly source: Scalars['AppId'];
+  /** The full handle - namespace/localname */
   readonly withHandle: Scalars['Handle'];
 };
 
@@ -4771,6 +4789,14 @@ export type SubscriptionNewPublicationStatsArgs = {
 
 export type SubscriptionUserSigNoncesArgs = {
   address: Scalars['EvmAddress'];
+};
+
+export type SuggestedFormattedHandle = {
+  readonly __typename: 'SuggestedFormattedHandle';
+  /** The full formatted handle - namespace/@localname */
+  readonly full: Scalars['String'];
+  /** The formatted handle - @localname */
+  readonly localName: Scalars['String'];
 };
 
 export enum SupportedFiatType {

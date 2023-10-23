@@ -33,6 +33,7 @@ export type {
   FollowConditionFragment,
   FollowOnlyReferenceModuleSettingsFragment,
   GeoLocationFragment,
+  HandleInfoFragment,
   ImageFragment,
   ImageMetadataV3Fragment,
   ImageSetFragment,

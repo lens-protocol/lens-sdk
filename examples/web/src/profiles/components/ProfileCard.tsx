@@ -12,7 +12,7 @@ export function ProfileCard({ profile }: ProfileCardProps) {
   return (
     <article>
       <p>ID: {profile.id}</p>
-      <p>Handle: {profile.handle}</p>
+      <p>Handle: {profile.handle?.fullHandle}</p>
 
       {metadata && (
         <div>

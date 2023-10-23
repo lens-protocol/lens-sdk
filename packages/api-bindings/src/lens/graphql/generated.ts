@@ -475,10 +475,12 @@ export type GetProfileMetadataArgs = {
 };
 
 export type HandleLinkToProfileRequest = {
+  /** The full handle - namespace/localname */
   handle: Scalars['Handle'];
 };
 
 export type HandleUnlinkFromProfileRequest = {
+  /** The full handle - namespace/localname */
   handle: Scalars['Handle'];
 };
 
@@ -555,6 +557,7 @@ export type InternalCuratedTagsRequest = {
 };
 
 export type InternalCuratedUpdateRequest = {
+  /** The full handle - namespace/localname */
   handle: Scalars['Handle'];
   remove: Scalars['Boolean'];
   secret: Scalars['String'];
@@ -1137,7 +1140,7 @@ export type ProfileRecommendationsRequest = {
 };
 
 export type ProfileRequest = {
-  /** The handle for profile you want to fetch */
+  /** The handle for profile you want to fetch - namespace/localname */
   forHandle?: InputMaybe<Scalars['Handle']>;
   /** The profile you want to fetch */
   forProfileId?: InputMaybe<Scalars['ProfileId']>;
@@ -1404,15 +1407,9 @@ export enum PublicationType {
   Quote = 'QUOTE',
 }
 
-export enum PublicationsOrderByType {
-  CommentOfQueryRanking = 'COMMENT_OF_QUERY_RANKING',
-  Latest = 'LATEST',
-}
-
 export type PublicationsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']>;
   limit?: InputMaybe<LimitType>;
-  orderBy?: InputMaybe<PublicationsOrderByType>;
   where: PublicationsWhere;
 };
 
@@ -2037,6 +2034,17 @@ export type ProfileMetadata = {
   attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
 };
 
+export type HandleInfo = {
+  __typename: 'HandleInfo';
+  id: string;
+  fullHandle: string;
+  namespace: string;
+  localName: string;
+  ownedBy: EvmAddress;
+  suggestedFormatted: { full: string; localName: string };
+  linkedTo: { nftTokenId: string; contract: NetworkAddress } | null;
+};
+
 export type ProfileFields = {
   __typename: 'Profile';
   id: ProfileId;
@@ -2045,7 +2053,6 @@ export type ProfileFields = {
   interests: Array<string>;
   invitesLeft: number;
   followPolicy: FollowPolicy;
-  handle: string | null;
   sponsor: boolean;
   lensManager: boolean;
   ownedBy: NetworkAddress;
@@ -2059,6 +2066,7 @@ export type ProfileFields = {
     | UnknownFollowModuleSettings
     | null;
   metadata: ProfileMetadata | null;
+  handle: HandleInfo | null;
   stats: ProfileStats;
 };
 
@@ -3595,7 +3603,6 @@ export type PublicationData = {
 
 export type PublicationsVariables = Exact<{
   where: PublicationsWhere;
-  orderBy?: InputMaybe<PublicationsOrderByType>;
   limit?: InputMaybe<LimitType>;
   cursor?: InputMaybe<Scalars['Cursor']>;
   imageSmallSize?: InputMaybe<ImageTransform>;
@@ -4154,8 +4161,6 @@ export type BroadcastOnMomokaVariables = Exact<{
 
 export type BroadcastOnMomokaData = { result: CreateMomokaPublicationResult | RelayError };
 
-export type HandleResult = { __typename: 'HandleResult'; handle: string };
-
 export type OwnedHandlesVariables = Exact<{
   for: Scalars['EvmAddress'];
   limit?: InputMaybe<LimitType>;
@@ -4163,7 +4168,7 @@ export type OwnedHandlesVariables = Exact<{
 }>;
 
 export type OwnedHandlesData = {
-  result: { items: Array<HandleResult>; pageInfo: PaginatedResultInfo };
+  result: { items: Array<HandleInfo>; pageInfo: PaginatedResultInfo };
 };
 
 export type ProfilesManagedVariables = Exact<{
@@ -4483,6 +4488,27 @@ export const FragmentProfileMetadata = /*#__PURE__*/ gql`
   ${FragmentProfilePicture}
   ${FragmentProfileCoverSet}
 `;
+export const FragmentHandleInfo = /*#__PURE__*/ gql`
+  fragment HandleInfo on HandleInfo {
+    __typename
+    id
+    fullHandle
+    namespace
+    localName
+    suggestedFormatted {
+      full
+      localName
+    }
+    linkedTo {
+      contract {
+        ...NetworkAddress
+      }
+      nftTokenId
+    }
+    ownedBy
+  }
+  ${FragmentNetworkAddress}
+`;
 export const FragmentProfileStats = /*#__PURE__*/ gql`
   fragment ProfileStats on ProfileStats {
     __typename
@@ -4539,7 +4565,9 @@ export const FragmentProfileFields = /*#__PURE__*/ gql`
     metadata {
       ...ProfileMetadata
     }
-    handle
+    handle {
+      ...HandleInfo
+    }
     sponsor
     lensManager
     stats(request: { forApps: $activityOn }) {
@@ -4554,6 +4582,7 @@ export const FragmentProfileFields = /*#__PURE__*/ gql`
   ${FragmentRevertFollowModuleSettings}
   ${FragmentUnknownFollowModuleSettings}
   ${FragmentProfileMetadata}
+  ${FragmentHandleInfo}
   ${FragmentProfileStats}
 `;
 export const FragmentProfile = /*#__PURE__*/ gql`
@@ -7452,12 +7481,6 @@ export const FragmentRelayQueueResult = /*#__PURE__*/ gql`
   }
   ${FragmentNetworkAddress}
 `;
-export const FragmentHandleResult = /*#__PURE__*/ gql`
-  fragment HandleResult on HandleResult {
-    __typename
-    handle
-  }
-`;
 export const FragmentUserSigNonces = /*#__PURE__*/ gql`
   fragment UserSigNonces on UserSigNonces {
     __typename
@@ -10326,7 +10349,6 @@ export type PublicationQueryResult = Apollo.QueryResult<PublicationData, Publica
 export const PublicationsDocument = /*#__PURE__*/ gql`
   query Publications(
     $where: PublicationsWhere!
-    $orderBy: PublicationsOrderByType
     $limit: LimitType
     $cursor: Cursor
     $imageSmallSize: ImageTransform = {}
@@ -10337,9 +10359,7 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
     $fxRateFor: SupportedFiatType = USD
   ) {
     ...InjectCommonQueryParams
-    result: publications(
-      request: { where: $where, orderBy: $orderBy, limit: $limit, cursor: $cursor }
-    ) {
+    result: publications(request: { where: $where, limit: $limit, cursor: $cursor }) {
       items {
         ... on Post {
           ...Post
@@ -10380,7 +10400,6 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
  * const { data, loading, error } = usePublications({
  *   variables: {
  *      where: // value for 'where'
- *      orderBy: // value for 'orderBy'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      imageSmallSize: // value for 'imageSmallSize'
@@ -12622,14 +12641,14 @@ export const OwnedHandlesDocument = /*#__PURE__*/ gql`
   query OwnedHandles($for: EvmAddress!, $limit: LimitType, $cursor: Cursor) {
     result: ownedHandles(request: { for: $for, limit: $limit, cursor: $cursor }) {
       items {
-        ...HandleResult
+        ...HandleInfo
       }
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }
-  ${FragmentHandleResult}
+  ${FragmentHandleInfo}
   ${FragmentPaginatedResultInfo}
 `;
 
@@ -14248,9 +14267,29 @@ export type GeoLocationFieldPolicy = {
   longitude?: FieldPolicy<any> | FieldReadFunction<any>;
   rawURI?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type HandleResultKeySpecifier = ('handle' | HandleResultKeySpecifier)[];
-export type HandleResultFieldPolicy = {
-  handle?: FieldPolicy<any> | FieldReadFunction<any>;
+export type HandleInfoKeySpecifier = (
+  | 'fullHandle'
+  | 'id'
+  | 'linkedTo'
+  | 'localName'
+  | 'namespace'
+  | 'ownedBy'
+  | 'suggestedFormatted'
+  | HandleInfoKeySpecifier
+)[];
+export type HandleInfoFieldPolicy = {
+  fullHandle?: FieldPolicy<any> | FieldReadFunction<any>;
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  linkedTo?: FieldPolicy<any> | FieldReadFunction<any>;
+  localName?: FieldPolicy<any> | FieldReadFunction<any>;
+  namespace?: FieldPolicy<any> | FieldReadFunction<any>;
+  ownedBy?: FieldPolicy<any> | FieldReadFunction<any>;
+  suggestedFormatted?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type HandleLinkedToKeySpecifier = ('contract' | 'nftTokenId' | HandleLinkedToKeySpecifier)[];
+export type HandleLinkedToFieldPolicy = {
+  contract?: FieldPolicy<any> | FieldReadFunction<any>;
+  nftTokenId?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ImageKeySpecifier = ('height' | 'mimeType' | 'uri' | 'width' | ImageKeySpecifier)[];
 export type ImageFieldPolicy = {
@@ -16258,6 +16297,15 @@ export type SubscriptionFieldPolicy = {
   newPublicationStats?: FieldPolicy<any> | FieldReadFunction<any>;
   userSigNonces?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type SuggestedFormattedHandleKeySpecifier = (
+  | 'full'
+  | 'localName'
+  | SuggestedFormattedHandleKeySpecifier
+)[];
+export type SuggestedFormattedHandleFieldPolicy = {
+  full?: FieldPolicy<any> | FieldReadFunction<any>;
+  localName?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type SybilDotOrgIdentityKeySpecifier = (
   | 'source'
   | 'verified'
@@ -17308,9 +17356,13 @@ export type StrictTypedTypePolicies = {
     keyFields?: false | GeoLocationKeySpecifier | (() => undefined | GeoLocationKeySpecifier);
     fields?: GeoLocationFieldPolicy;
   };
-  HandleResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
-    keyFields?: false | HandleResultKeySpecifier | (() => undefined | HandleResultKeySpecifier);
-    fields?: HandleResultFieldPolicy;
+  HandleInfo?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | HandleInfoKeySpecifier | (() => undefined | HandleInfoKeySpecifier);
+    fields?: HandleInfoFieldPolicy;
+  };
+  HandleLinkedTo?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | HandleLinkedToKeySpecifier | (() => undefined | HandleLinkedToKeySpecifier);
+    fields?: HandleLinkedToFieldPolicy;
   };
   Image?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | ImageKeySpecifier | (() => undefined | ImageKeySpecifier);
@@ -18093,6 +18145,13 @@ export type StrictTypedTypePolicies = {
   Subscription?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | SubscriptionKeySpecifier | (() => undefined | SubscriptionKeySpecifier);
     fields?: SubscriptionFieldPolicy;
+  };
+  SuggestedFormattedHandle?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | SuggestedFormattedHandleKeySpecifier
+      | (() => undefined | SuggestedFormattedHandleKeySpecifier);
+    fields?: SuggestedFormattedHandleFieldPolicy;
   };
   SybilDotOrgIdentity?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:

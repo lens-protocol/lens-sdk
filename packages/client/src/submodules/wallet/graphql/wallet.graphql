@@ -1,11 +1,7 @@
-fragment HandleResult on HandleResult {
-  handle
-}
-
 query OwnedHandles($request: OwnedHandlesRequest!) {
   result: ownedHandles(request: $request) {
     items {
-      ...HandleResult
+      ...HandleInfo
     }
     pageInfo {
       ...PaginatedResultInfo

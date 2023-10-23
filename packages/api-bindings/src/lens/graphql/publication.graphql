@@ -40,7 +40,6 @@ query Publication(
 
 query Publications(
   $where: PublicationsWhere!
-  $orderBy: PublicationsOrderByType
   $limit: LimitType
   $cursor: Cursor
   $imageSmallSize: ImageTransform = {}
@@ -51,9 +50,7 @@ query Publications(
   $fxRateFor: SupportedFiatType = USD
 ) {
   ...InjectCommonQueryParams
-  result: publications(
-    request: { where: $where, orderBy: $orderBy, limit: $limit, cursor: $cursor }
-  ) {
+  result: publications(request: { where: $where, limit: $limit, cursor: $cursor }) {
     items {
       ... on Post {
         ...Post

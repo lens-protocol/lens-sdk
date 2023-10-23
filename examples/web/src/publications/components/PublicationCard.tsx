@@ -85,7 +85,9 @@ export function PublicationCard({ publication, children }: PublicationCardProps)
         <ProfilePicture picture={publication.by.metadata?.picture ?? null} />
         <p>
           {publication.__typename} by{' '}
-          {publication.by.metadata?.displayName ?? publication.by.handle ?? publication.by.id}
+          {publication.by.metadata?.displayName ??
+            publication.by.handle?.fullHandle ??
+            publication.by.id}
         </p>
       </div>
       <PublicationSwitch publication={publication} />

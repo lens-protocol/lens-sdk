@@ -421,10 +421,12 @@ export type GetProfileMetadataArgs = {
 };
 
 export type HandleLinkToProfileRequest = {
+  /** The full handle - namespace/localname */
   handle: Scalars['Handle']['input'];
 };
 
 export type HandleUnlinkFromProfileRequest = {
+  /** The full handle - namespace/localname */
   handle: Scalars['Handle']['input'];
 };
 
@@ -501,6 +503,7 @@ export type InternalCuratedTagsRequest = {
 };
 
 export type InternalCuratedUpdateRequest = {
+  /** The full handle - namespace/localname */
   handle: Scalars['Handle']['input'];
   remove: Scalars['Boolean']['input'];
   secret: Scalars['String']['input'];
@@ -1083,7 +1086,7 @@ export type ProfileRecommendationsRequest = {
 };
 
 export type ProfileRequest = {
-  /** The handle for profile you want to fetch */
+  /** The handle for profile you want to fetch - namespace/localname */
   forHandle?: InputMaybe<Scalars['Handle']['input']>;
   /** The profile you want to fetch */
   forProfileId?: InputMaybe<Scalars['ProfileId']['input']>;
@@ -1350,15 +1353,9 @@ export enum PublicationType {
   Quote = 'QUOTE',
 }
 
-export enum PublicationsOrderByType {
-  CommentOfQueryRanking = 'COMMENT_OF_QUERY_RANKING',
-  Latest = 'LATEST',
-}
-
 export type PublicationsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<LimitType>;
-  orderBy?: InputMaybe<PublicationsOrderByType>;
   where: PublicationsWhere;
 };
 

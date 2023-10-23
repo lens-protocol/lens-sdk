@@ -212,6 +212,25 @@ fragment ProfileStats on ProfileStats {
   countOpenActions(request: $profileStatsCountOpenActionArgs)
 }
 
+fragment HandleInfo on HandleInfo {
+  __typename
+  id
+  fullHandle
+  namespace
+  localName
+  suggestedFormatted {
+    full
+    localName
+  }
+  linkedTo {
+    contract {
+      ...NetworkAddress
+    }
+    nftTokenId
+  }
+  ownedBy
+}
+
 fragment Profile on Profile {
   __typename
   id
@@ -295,7 +314,9 @@ fragment Profile on Profile {
       value
     }
   }
-  handle
+  handle {
+    ...HandleInfo
+  }
   sponsor
   lensManager
   invitedBy {

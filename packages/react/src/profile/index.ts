@@ -17,6 +17,7 @@ export * from './useProfileManagers';
  */
 export type {
   FeeFollowModuleSettings,
+  HandleInfo,
   NftImage,
   Profile,
   ProfileGuardianResult,

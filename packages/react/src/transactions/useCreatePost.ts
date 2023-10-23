@@ -49,7 +49,7 @@ export type CreatePostArgs = {
 };
 
 /**
- * `useCreatePost` is React Hook that allows you to create a new Lens Post.
+ * `useCreatePost` is a React Hook that allows you to create a new Lens Post.
  *
  * You MUST be authenticated via {@link useLogin} to use this hook.
  *
