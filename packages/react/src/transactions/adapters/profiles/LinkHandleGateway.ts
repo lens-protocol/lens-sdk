@@ -2,13 +2,13 @@ import {
   SafeApolloClient,
   omitTypename,
   RelaySuccess,
-  CreateHandleLinkToProfileTypedDataVariables,
-  HandleLinkToProfileVariables,
-  HandleLinkToProfileDocument,
-  HandleLinkToProfileData,
-  CreateHandleLinkToProfileTypedDataData,
-  CreateHandleLinkToProfileTypedDataDocument,
-  CreateHandleLinkToProfileBroadcastItemResult,
+  CreateLinkHandleToProfileTypedDataVariables,
+  LinkHandleToProfileVariables,
+  LinkHandleToProfileDocument,
+  LinkHandleToProfileData,
+  CreateLinkHandleToProfileTypedDataData,
+  CreateLinkHandleToProfileTypedDataDocument,
+  CreateLinkHandleToProfileBroadcastItemResult,
 } from '@lens-protocol/api-bindings';
 import { lensTokenHandleRegistry } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -72,10 +72,10 @@ export class LinkHandleGateway
     request: LinkHandleRequest,
   ): PromiseResult<RelaySuccess, BroadcastingError> {
     const { data } = await this.apolloClient.mutate<
-      HandleLinkToProfileData,
-      HandleLinkToProfileVariables
+      LinkHandleToProfileData,
+      LinkHandleToProfileVariables
     >({
-      mutation: HandleLinkToProfileDocument,
+      mutation: LinkHandleToProfileDocument,
       variables: {
         request: {
           handle: request.handle,
@@ -95,10 +95,10 @@ export class LinkHandleGateway
 
   private async createTypedData(request: LinkHandleRequest, nonce?: Nonce) {
     const { data } = await this.apolloClient.mutate<
-      CreateHandleLinkToProfileTypedDataData,
-      CreateHandleLinkToProfileTypedDataVariables
+      CreateLinkHandleToProfileTypedDataData,
+      CreateLinkHandleToProfileTypedDataVariables
     >({
-      mutation: CreateHandleLinkToProfileTypedDataDocument,
+      mutation: CreateLinkHandleToProfileTypedDataDocument,
       variables: {
         request: {
           handle: request.handle,
@@ -112,7 +112,7 @@ export class LinkHandleGateway
 
   private createRequestFallback(
     request: LinkHandleRequest,
-    result: CreateHandleLinkToProfileBroadcastItemResult,
+    result: CreateLinkHandleToProfileBroadcastItemResult,
   ): SelfFundedProtocolTransactionRequest<LinkHandleRequest> {
     const contract = lensTokenHandleRegistry(result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('link', [
