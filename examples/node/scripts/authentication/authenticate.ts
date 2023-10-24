@@ -1,6 +1,6 @@
 import { LensClient, development } from '@lens-protocol/client';
 
-import { setupWallet } from './shared/setupWallet';
+import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const client = new LensClient({

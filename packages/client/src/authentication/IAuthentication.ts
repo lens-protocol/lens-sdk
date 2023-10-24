@@ -1,8 +1,17 @@
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { CredentialsExpiredError, NotAuthenticatedError } from '../errors';
-import type { ChallengeRequest, SignedAuthChallenge } from '../graphql/types.generated';
-import type { AuthChallengeFragment } from './graphql/auth.generated';
+import type {
+  ApprovedAuthenticationRequest,
+  ChallengeRequest,
+  RevokeAuthenticationRequest,
+  SignedAuthChallenge,
+} from '../graphql/types.generated';
+import type { PaginatedResult } from '../helpers/buildPaginatedQueryResult';
+import type {
+  ApprovedAuthenticationFragment,
+  AuthChallengeFragment,
+} from './graphql/auth.generated';
 
 /**
  * Authentication for Lens API.
@@ -54,4 +63,43 @@ export interface IAuthentication {
    * @returns The profile id or null if not authenticated
    */
   getProfileId(): Promise<string | null>;
+
+  /**
+   * Fetch active authentication sessions.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the query
+   * @returns {@link ApprovedAuthenticationFragment} wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.authentication.fetchAll();
+   * ```
+   */
+  fetchAll(
+    request?: ApprovedAuthenticationRequest,
+  ): PromiseResult<
+    PaginatedResult<ApprovedAuthenticationFragment>,
+    CredentialsExpiredError | NotAuthenticatedError
+  >;
+
+  /**
+   * Revoke an active authentication session.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * await client.authentication.revoke({
+   *   authorizationId: '8a905b63-1236-4d69-8969-95e93b7dd35d',
+   * });
+   * ```
+   */
+  revoke(
+    request: RevokeAuthenticationRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError>;
 }

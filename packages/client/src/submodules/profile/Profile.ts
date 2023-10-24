@@ -12,14 +12,14 @@ import type {
 import type {
   BlockRequest,
   ChangeProfileManagersRequest,
+  ClaimProfileWithHandleRequest,
   CreateProfileWithHandleRequest,
   DefaultProfileRequest,
   DismissRecommendedProfilesRequest,
-  FollowRequest,
   FollowersRequest,
   FollowingRequest,
+  FollowRequest,
   LinkHandleToProfileRequest,
-  UnlinkHandleFromProfileRequest,
   MutualFollowersRequest,
   OnchainSetProfileMetadataRequest,
   ProfileActionHistoryRequest,
@@ -33,6 +33,7 @@ import type {
   TypedDataOptions,
   UnblockRequest,
   UnfollowRequest,
+  UnlinkHandleFromProfileRequest,
   WhoActedOnPublicationRequest,
 } from '../../graphql/types.generated';
 import {
@@ -57,6 +58,7 @@ import {
   ProfileManagerFragment,
   Sdk,
   getSdk,
+  ClaimProfileWithHandleErrorResultFragment,
 } from './graphql/profile.generated';
 import { FetchProfileOptions } from './types';
 
@@ -392,16 +394,16 @@ export class Profile {
   }
 
   /**
-   * NOT IMPLEMENTED ON THE API SIDE
+   * TODO: Claim a profile
    */
   // async claim(
-  //   request: ClaimProfileRequest,
+  //   request: ClaimProfileWithHandleRequest,
   // ): PromiseResult<
-  //   RelaySuccessFragment | CreateProfileWithHandleErrorResultFragment,
+  //   RelaySuccessFragment | ClaimProfileWithHandleErrorResultFragment,
   //   CredentialsExpiredError | NotAuthenticatedError
   // > {
   //   return requireAuthHeaders(this.authentication, async (headers) => {
-  //     const result = await this.sdk.ClaimProfile({ request }, headers);
+  //     const result = await this.sdk.ClaimProfileWithHandle({ request }, headers);
   //     return result.data.result;
   //   });
   // }

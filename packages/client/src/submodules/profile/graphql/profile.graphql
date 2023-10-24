@@ -6,6 +6,10 @@ fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResul
   reason
 }
 
+fragment ClaimProfileWithHandleErrorResult on ClaimProfileWithHandleErrorResult {
+  reason
+}
+
 fragment CreateOnchainSetProfileMetadataBroadcastItemResult on CreateOnchainSetProfileMetadataBroadcastItemResult {
   id
   expiresAt
@@ -376,13 +380,13 @@ query ProfileActionHistory($request: ProfileActionHistoryRequest!) {
 }
 
 # mutations
-mutation ClaimProfile($request: ClaimProfileRequest!) {
-  result: claimProfile(request: $request) {
+mutation ClaimProfileWithHandle($request: ClaimProfileWithHandleRequest!) {
+  result: claimProfileWithHandle(request: $request) {
     ... on RelaySuccess {
       ...RelaySuccess
     }
-    ... on CreateProfileWithHandleErrorResult {
-      ...CreateProfileWithHandleErrorResult
+    ... on ClaimProfileWithHandleErrorResult {
+      ...ClaimProfileWithHandleErrorResult
     }
   }
 }

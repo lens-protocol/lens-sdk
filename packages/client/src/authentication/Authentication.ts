@@ -8,7 +8,13 @@ import {
 
 import type { LensContext } from '../context';
 import { CredentialsExpiredError, NotAuthenticatedError } from '../errors';
-import type { ChallengeRequest, SignedAuthChallenge } from '../graphql/types.generated';
+import type {
+  ApprovedAuthenticationRequest,
+  ChallengeRequest,
+  RevokeAuthenticationRequest,
+  SignedAuthChallenge,
+} from '../graphql/types.generated';
+import { requireAuthHeaders } from '../helpers/requireAuthHeaders';
 import type { IAuthentication } from './IAuthentication';
 import { AuthenticationApi } from './adapters/AuthenticationApi';
 import { Credentials } from './adapters/Credentials';
@@ -94,6 +100,18 @@ export class Authentication implements IAuthentication {
     }
 
     return result.value.getProfileId();
+  }
+
+  async fetchAll(request: ApprovedAuthenticationRequest = {}) {
+    return requireAuthHeaders(this, async (headers) => {
+      return this.api.approvedAuthentications(request, headers);
+    });
+  }
+
+  async revoke(request: RevokeAuthenticationRequest) {
+    return requireAuthHeaders(this, async (headers) => {
+      await this.api.revoke(request, headers);
+    });
   }
 
   // privileged methods
