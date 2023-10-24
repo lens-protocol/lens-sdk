@@ -1,5 +1,17 @@
 # @lens-protocol/wagmi
 
+## 3.0.0-alpha.10
+
+### Patch Changes
+
+- 50b546c5: **fix:** wagmi peer dep
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+  - @lens-protocol/react-web@2.0.0-alpha.13
+
 ## 3.0.0-alpha.9
 
 ### Patch Changes

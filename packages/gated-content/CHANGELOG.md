@@ -1,5 +1,14 @@
 # @lens-protocol/gated-content
 
+## 0.3.3-alpha.10
+
+### Patch Changes
+
+- 5f93ea77: **fix:** support `Profile.lensManager` into `Profile.signless` renaming
+- 5f93ea77: **fix:** support new `HandleInfo`
+- 5f93ea77: **fix:** renames of `handleLinkToProfile`, `handleUnlinkToProfile` and correlated mutations, types
+- 5f93ea77: **fix:** adds `type` to Open Action module settings types
+
 ## 0.3.3-alpha.9
 
 ### Patch Changes

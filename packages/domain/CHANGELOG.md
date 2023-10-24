@@ -1,5 +1,12 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.9
+
+### Patch Changes
+
+- 5f93ea77: **fix:** support `Profile.lensManager` into `Profile.signless` renaming
+- 5f93ea77: **fix:** renames of `handleLinkToProfile`, `handleUnlinkToProfile` and correlated mutations, types
+
 ## 0.11.0-alpha.8
 
 ### Patch Changes
