@@ -1,5 +1,24 @@
 # @lens-protocol/react
 
+## 2.0.0-alpha.13
+
+### Patch Changes
+
+- 5f93ea77: **fix:** support `Profile.lensManager` into `Profile.signless` renaming
+- 5f93ea77: **fix:** support new `HandleInfo`
+- 5f93ea77: **fix:** renames of `handleLinkToProfile`, `handleUnlinkToProfile` and correlated mutations, types
+- 09975f6f: Exported useNotifications + example
+- 5f93ea77: **fix:** supports `MetadataAttribute.type`
+- 5f93ea77: **fix:** adds `type` to Open Action module settings types
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+  - @lens-protocol/api-bindings@0.11.0-alpha.13
+  - @lens-protocol/domain@0.11.0-alpha.9
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.9
+
 ## 2.0.0-alpha.12
 
 ### Patch Changes
