@@ -161,12 +161,6 @@ export type ApprovedAuthenticationRequest = {
   readonly limit?: InputMaybe<LimitType>;
 };
 
-export type ApprovedAuthenticationsResult = {
-  readonly __typename: 'ApprovedAuthenticationsResult';
-  readonly current: ApprovedAuthentication;
-  readonly others: PaginatedApprovedAuthenticationResult;
-};
-
 export type ApprovedModuleAllowanceAmountRequest = {
   readonly currencies: ReadonlyArray<Scalars['EvmAddress']>;
   readonly followModules?: InputMaybe<ReadonlyArray<FollowModuleType>>;
@@ -535,72 +529,6 @@ export type CreateFollowEip712TypedDataValue = {
   readonly nonce: Scalars['Nonce'];
 };
 
-export type CreateHandleLinkToProfileBroadcastItemResult = {
-  readonly __typename: 'CreateHandleLinkToProfileBroadcastItemResult';
-  /** The date the broadcast item expiries */
-  readonly expiresAt: Scalars['DateTime'];
-  /** This broadcast item ID */
-  readonly id: Scalars['BroadcastId'];
-  /** The typed data */
-  readonly typedData: CreateHandleLinkToProfileEip712TypedData;
-};
-
-export type CreateHandleLinkToProfileEip712TypedData = {
-  readonly __typename: 'CreateHandleLinkToProfileEIP712TypedData';
-  /** The typed data domain */
-  readonly domain: Eip712TypedDataDomain;
-  /** The types */
-  readonly types: CreateHandleLinkToProfileEip712TypedDataTypes;
-  /** The values */
-  readonly value: CreateHandleLinkToProfileEip712TypedDataValue;
-};
-
-export type CreateHandleLinkToProfileEip712TypedDataTypes = {
-  readonly __typename: 'CreateHandleLinkToProfileEIP712TypedDataTypes';
-  readonly Link: ReadonlyArray<Eip712TypedDataField>;
-};
-
-export type CreateHandleLinkToProfileEip712TypedDataValue = {
-  readonly __typename: 'CreateHandleLinkToProfileEIP712TypedDataValue';
-  readonly deadline: Scalars['UnixTimestamp'];
-  readonly handleId: Scalars['TokenId'];
-  readonly nonce: Scalars['Nonce'];
-  readonly profileId: Scalars['ProfileId'];
-};
-
-export type CreateHandleUnlinkFromProfileBroadcastItemResult = {
-  readonly __typename: 'CreateHandleUnlinkFromProfileBroadcastItemResult';
-  /** The date the broadcast item expiries */
-  readonly expiresAt: Scalars['DateTime'];
-  /** This broadcast item ID */
-  readonly id: Scalars['BroadcastId'];
-  /** The typed data */
-  readonly typedData: CreateHandleUnlinkFromProfileEip712TypedData;
-};
-
-export type CreateHandleUnlinkFromProfileEip712TypedData = {
-  readonly __typename: 'CreateHandleUnlinkFromProfileEIP712TypedData';
-  /** The typed data domain */
-  readonly domain: Eip712TypedDataDomain;
-  /** The types */
-  readonly types: CreateHandleUnlinkFromProfileEip712TypedDataTypes;
-  /** The values */
-  readonly value: CreateHandleUnlinkFromProfileEip712TypedDataValue;
-};
-
-export type CreateHandleUnlinkFromProfileEip712TypedDataTypes = {
-  readonly __typename: 'CreateHandleUnlinkFromProfileEIP712TypedDataTypes';
-  readonly Unlink: ReadonlyArray<Eip712TypedDataField>;
-};
-
-export type CreateHandleUnlinkFromProfileEip712TypedDataValue = {
-  readonly __typename: 'CreateHandleUnlinkFromProfileEIP712TypedDataValue';
-  readonly deadline: Scalars['UnixTimestamp'];
-  readonly handleId: Scalars['TokenId'];
-  readonly nonce: Scalars['Nonce'];
-  readonly profileId: Scalars['ProfileId'];
-};
-
 export type CreateLegacyCollectBroadcastItemResult = {
   readonly __typename: 'CreateLegacyCollectBroadcastItemResult';
   /** The date the broadcast item expiries */
@@ -609,6 +537,39 @@ export type CreateLegacyCollectBroadcastItemResult = {
   readonly id: Scalars['BroadcastId'];
   /** The typed data */
   readonly typedData: CreateActOnOpenActionEip712TypedData;
+};
+
+export type CreateLinkHandleToProfileBroadcastItemResult = {
+  readonly __typename: 'CreateLinkHandleToProfileBroadcastItemResult';
+  /** The date the broadcast item expiries */
+  readonly expiresAt: Scalars['DateTime'];
+  /** This broadcast item ID */
+  readonly id: Scalars['BroadcastId'];
+  /** The typed data */
+  readonly typedData: CreateLinkHandleToProfileEip712TypedData;
+};
+
+export type CreateLinkHandleToProfileEip712TypedData = {
+  readonly __typename: 'CreateLinkHandleToProfileEIP712TypedData';
+  /** The typed data domain */
+  readonly domain: Eip712TypedDataDomain;
+  /** The types */
+  readonly types: CreateLinkHandleToProfileEip712TypedDataTypes;
+  /** The values */
+  readonly value: CreateLinkHandleToProfileEip712TypedDataValue;
+};
+
+export type CreateLinkHandleToProfileEip712TypedDataTypes = {
+  readonly __typename: 'CreateLinkHandleToProfileEIP712TypedDataTypes';
+  readonly Link: ReadonlyArray<Eip712TypedDataField>;
+};
+
+export type CreateLinkHandleToProfileEip712TypedDataValue = {
+  readonly __typename: 'CreateLinkHandleToProfileEIP712TypedDataValue';
+  readonly deadline: Scalars['UnixTimestamp'];
+  readonly handleId: Scalars['TokenId'];
+  readonly nonce: Scalars['Nonce'];
+  readonly profileId: Scalars['ProfileId'];
 };
 
 export type CreateMomokaCommentBroadcastItemResult = {
@@ -1093,6 +1054,39 @@ export type CreateUnfollowEip712TypedDataValue = {
   readonly unfollowerProfileId: Scalars['ProfileId'];
 };
 
+export type CreateUnlinkHandleFromProfileBroadcastItemResult = {
+  readonly __typename: 'CreateUnlinkHandleFromProfileBroadcastItemResult';
+  /** The date the broadcast item expiries */
+  readonly expiresAt: Scalars['DateTime'];
+  /** This broadcast item ID */
+  readonly id: Scalars['BroadcastId'];
+  /** The typed data */
+  readonly typedData: CreateUnlinkHandleFromProfileEip712TypedData;
+};
+
+export type CreateUnlinkHandleFromProfileEip712TypedData = {
+  readonly __typename: 'CreateUnlinkHandleFromProfileEIP712TypedData';
+  /** The typed data domain */
+  readonly domain: Eip712TypedDataDomain;
+  /** The types */
+  readonly types: CreateUnlinkHandleFromProfileEip712TypedDataTypes;
+  /** The values */
+  readonly value: CreateUnlinkHandleFromProfileEip712TypedDataValue;
+};
+
+export type CreateUnlinkHandleFromProfileEip712TypedDataTypes = {
+  readonly __typename: 'CreateUnlinkHandleFromProfileEIP712TypedDataTypes';
+  readonly Unlink: ReadonlyArray<Eip712TypedDataField>;
+};
+
+export type CreateUnlinkHandleFromProfileEip712TypedDataValue = {
+  readonly __typename: 'CreateUnlinkHandleFromProfileEIP712TypedDataValue';
+  readonly deadline: Scalars['UnixTimestamp'];
+  readonly handleId: Scalars['TokenId'];
+  readonly nonce: Scalars['Nonce'];
+  readonly profileId: Scalars['ProfileId'];
+};
+
 export enum CustomFiltersType {
   Gardeners = 'GARDENERS',
 }
@@ -1565,22 +1559,12 @@ export type HandleInfo = {
   readonly suggestedFormatted: SuggestedFormattedHandle;
 };
 
-export type HandleLinkToProfileRequest = {
-  /** The full handle - namespace/localname */
-  readonly handle: Scalars['Handle'];
-};
-
 export type HandleLinkedTo = {
   readonly __typename: 'HandleLinkedTo';
   /** The contract address it is linked to */
   readonly contract: NetworkAddress;
   /** The nft token id it is linked to (this can be the profile Id) */
   readonly nftTokenId: Scalars['TokenId'];
-};
-
-export type HandleUnlinkFromProfileRequest = {
-  /** The full handle - namespace/localname */
-  readonly handle: Scalars['Handle'];
 };
 
 export type HidePublicationRequest = {
@@ -2009,6 +1993,11 @@ export enum LimitType {
   TwentyFive = 'TwentyFive',
 }
 
+export type LinkHandleToProfileRequest = {
+  /** The full handle - namespace/localname */
+  readonly handle: Scalars['Handle'];
+};
+
 export type LinkMetadataV3 = {
   readonly __typename: 'LinkMetadataV3';
   readonly appId?: Maybe<Scalars['AppId']>;
@@ -2354,9 +2343,8 @@ export type Mutation = {
   readonly createBlockProfilesTypedData: CreateBlockProfilesBroadcastItemResult;
   readonly createChangeProfileManagersTypedData: CreateChangeProfileManagersBroadcastItemResult;
   readonly createFollowTypedData: CreateFollowBroadcastItemResult;
-  readonly createHandleLinkToProfileTypedData: CreateHandleLinkToProfileBroadcastItemResult;
-  readonly createHandleUnlinkFromProfileTypedData: CreateHandleUnlinkFromProfileBroadcastItemResult;
   readonly createLegacyCollectTypedData: CreateLegacyCollectBroadcastItemResult;
+  readonly createLinkHandleToProfileTypedData: CreateLinkHandleToProfileBroadcastItemResult;
   readonly createMomokaCommentTypedData: CreateMomokaCommentBroadcastItemResult;
   readonly createMomokaMirrorTypedData: CreateMomokaMirrorBroadcastItemResult;
   readonly createMomokaPostTypedData: CreateMomokaPostBroadcastItemResult;
@@ -2372,11 +2360,10 @@ export type Mutation = {
   readonly createSetFollowModuleTypedData: CreateSetFollowModuleBroadcastItemResult;
   readonly createUnblockProfilesTypedData: CreateUnblockProfilesBroadcastItemResult;
   readonly createUnfollowTypedData: CreateUnfollowBroadcastItemResult;
+  readonly createUnlinkHandleFromProfileTypedData: CreateUnlinkHandleFromProfileBroadcastItemResult;
   readonly deleteNftGallery?: Maybe<Scalars['Void']>;
   readonly dismissRecommendedProfiles?: Maybe<Scalars['Void']>;
   readonly follow: LensProfileManagerRelayResult;
-  readonly handleLinkToProfile: LensProfileManagerRelayResult;
-  readonly handleUnlinkFromProfile: LensProfileManagerRelayResult;
   readonly hidePublication?: Maybe<Scalars['Void']>;
   readonly idKitPhoneVerifyWebhook: IdKitPhoneVerifyWebhookResultStatusType;
   readonly internalAddCuratedTag?: Maybe<Scalars['Void']>;
@@ -2390,6 +2377,7 @@ export type Mutation = {
   readonly internalUpdateProfileStatus?: Maybe<Scalars['Void']>;
   readonly invite?: Maybe<Scalars['Void']>;
   readonly legacyCollect: LensProfileManagerRelayResult;
+  readonly linkHandleToProfile: LensProfileManagerRelayResult;
   readonly mirrorOnMomoka: RelayMomokaResult;
   readonly mirrorOnchain: LensProfileManagerRelayResult;
   readonly nftOwnershipChallenge: NftOwnershipChallengeResult;
@@ -2410,6 +2398,7 @@ export type Mutation = {
   readonly unblock: LensProfileManagerRelayResult;
   readonly undoPublicationNotInterested?: Maybe<Scalars['Void']>;
   readonly unfollow: LensProfileManagerRelayResult;
+  readonly unlinkHandleFromProfile: LensProfileManagerRelayResult;
   readonly updateNftGalleryInfo?: Maybe<Scalars['Void']>;
   readonly updateNftGalleryItems?: Maybe<Scalars['Void']>;
   readonly updateNftGalleryOrder?: Maybe<Scalars['Void']>;
@@ -2483,19 +2472,14 @@ export type MutationCreateFollowTypedDataArgs = {
   request: FollowRequest;
 };
 
-export type MutationCreateHandleLinkToProfileTypedDataArgs = {
-  options?: InputMaybe<TypedDataOptions>;
-  request: HandleLinkToProfileRequest;
-};
-
-export type MutationCreateHandleUnlinkFromProfileTypedDataArgs = {
-  options?: InputMaybe<TypedDataOptions>;
-  request: HandleUnlinkFromProfileRequest;
-};
-
 export type MutationCreateLegacyCollectTypedDataArgs = {
   options?: InputMaybe<TypedDataOptions>;
   request: LegacyCollectRequest;
+};
+
+export type MutationCreateLinkHandleToProfileTypedDataArgs = {
+  options?: InputMaybe<TypedDataOptions>;
+  request: LinkHandleToProfileRequest;
 };
 
 export type MutationCreateMomokaCommentTypedDataArgs = {
@@ -2566,6 +2550,11 @@ export type MutationCreateUnfollowTypedDataArgs = {
   request: UnfollowRequest;
 };
 
+export type MutationCreateUnlinkHandleFromProfileTypedDataArgs = {
+  options?: InputMaybe<TypedDataOptions>;
+  request: UnlinkHandleFromProfileRequest;
+};
+
 export type MutationDeleteNftGalleryArgs = {
   request: NftGalleryDeleteRequest;
 };
@@ -2576,14 +2565,6 @@ export type MutationDismissRecommendedProfilesArgs = {
 
 export type MutationFollowArgs = {
   request: FollowLensManagerRequest;
-};
-
-export type MutationHandleLinkToProfileArgs = {
-  request: HandleLinkToProfileRequest;
-};
-
-export type MutationHandleUnlinkFromProfileArgs = {
-  request: HandleUnlinkFromProfileRequest;
 };
 
 export type MutationHidePublicationArgs = {
@@ -2636,6 +2617,10 @@ export type MutationInviteArgs = {
 
 export type MutationLegacyCollectArgs = {
   request: LegacyCollectRequest;
+};
+
+export type MutationLinkHandleToProfileArgs = {
+  request: LinkHandleToProfileRequest;
 };
 
 export type MutationMirrorOnMomokaArgs = {
@@ -2716,6 +2701,10 @@ export type MutationUndoPublicationNotInterestedArgs = {
 
 export type MutationUnfollowArgs = {
   request: UnfollowRequest;
+};
+
+export type MutationUnlinkHandleFromProfileArgs = {
+  request: UnlinkHandleFromProfileRequest;
 };
 
 export type MutationUpdateNftGalleryInfoArgs = {
@@ -4106,13 +4095,14 @@ export type PublicationsWhere = {
 
 export type Query = {
   readonly __typename: 'Query';
-  readonly approvedAuthentications?: Maybe<ApprovedAuthenticationsResult>;
+  readonly approvedAuthentications: PaginatedApprovedAuthenticationResult;
   readonly approvedModuleAllowanceAmount: ReadonlyArray<ApprovedAllowanceAmountResult>;
   readonly challenge: AuthChallengeResult;
   readonly claimableProfiles: ClaimableProfilesResult;
   readonly claimableStatus: ClaimProfileStatusType;
   /** Get all enabled currencies */
   readonly currencies: PaginatedCurrenciesResult;
+  readonly currentSession: ApprovedAuthentication;
   /** Get the default profile for a given EvmAddress. If no default is explicitly set, you will get the oldest profile owned by the address. */
   readonly defaultProfile?: Maybe<Profile>;
   readonly doesFollow: ReadonlyArray<DoesFollowResult>;
@@ -5002,6 +4992,11 @@ export type UnknownSupportedModule = {
   readonly __typename: 'UnknownSupportedModule';
   readonly contract: NetworkAddress;
   readonly moduleName: Scalars['String'];
+};
+
+export type UnlinkHandleFromProfileRequest = {
+  /** The full handle - namespace/localname */
+  readonly handle: Scalars['Handle'];
 };
 
 export type UserPoapsQueryRequest = {
