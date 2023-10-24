@@ -41,7 +41,7 @@ export class ProfileMetadataGateway
     const result = await this.broadcast(request);
 
     if (result.isFailure()) {
-      return failure(result.error);
+      return result;
     }
 
     const receipt = result.value;

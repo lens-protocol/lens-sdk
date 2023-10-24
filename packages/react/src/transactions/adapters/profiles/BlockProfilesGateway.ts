@@ -41,7 +41,7 @@ export class BlockProfilesGateway
     const result = await this.broadcast(request);
 
     if (result.isFailure()) {
-      return failure(result.error);
+      return result;
     }
 
     const transaction = this.transactionFactory.createNativeTransaction({

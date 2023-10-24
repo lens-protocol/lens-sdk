@@ -53,10 +53,6 @@ export function useBlockProfilesController() {
 
     const result = presenter.asResult();
 
-    if (result.isSuccess()) {
-      return result.value.waitForCompletion();
-    }
-
     return result;
   };
 }
