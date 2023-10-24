@@ -1,6 +1,7 @@
 import { JustProtocolRequest } from '../../entities';
 import { CreateProfileRequest } from '../profile/CreateProfile';
 import { FollowRequest } from '../profile/FollowProfile';
+import { UnblockProfilesRequest } from '../profile/UnblockProfiles';
 import { UnfollowRequest } from '../profile/UnfollowProfile';
 import { UpdateFollowPolicyRequest } from '../profile/UpdateFollowPolicy';
 import { SetProfileMetadataRequest } from '../profile/UpdateProfileDetails';
@@ -21,6 +22,7 @@ export type AnyTransactionRequest =
   | CreateProfileRequest
   | FollowRequest
   | TokenAllowanceRequest
+  | UnblockProfilesRequest
   | UnfollowRequest
   | UpdateProfileManagersRequest
   | UpdateFollowPolicyRequest

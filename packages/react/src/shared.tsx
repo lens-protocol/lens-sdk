@@ -119,6 +119,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     [TransactionKind.CREATE_PROFILE]: new NoopResponder(),
     [TransactionKind.FOLLOW_PROFILE]: new FollowProfileResponder(profileCacheManager),
     [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(), // TODO update profile for new stats
+    [TransactionKind.UNBLOCK_PROFILE]: new NoopResponder(),
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(profileCacheManager),
     [TransactionKind.UPDATE_PROFILE_DETAILS]: new SetProfileMetadataResponder(profileCacheManager),
     [TransactionKind.UPDATE_FOLLOW_POLICY]: new UpdateFollowPolicyResponder(profileCacheManager),
@@ -199,8 +200,6 @@ export type SharedDependencies = {
   walletFactory: WalletFactory;
   walletGateway: WalletGateway;
 };
-
-const SharedDependenciesContext = React.createContext<SharedDependencies | null>(null);
 
 type SharedDependenciesProviderProps = {
   children: ReactNode;
