@@ -13,10 +13,10 @@ async function main() {
 
   console.log(`Handles owned by ${wallet.address}:`, ownedHandles);
 
-  console.log(`Linking handle ${ownedHandles.items[0].handle} to profile ${profileId}`);
+  console.log(`Linking handle ${ownedHandles.items[0].fullHandle} to profile ${profileId}`);
 
   await client.profile.linkHandle({
-    handle: ownedHandles.items[0].handle,
+    handle: ownedHandles.items[0].fullHandle,
   });
 }
 

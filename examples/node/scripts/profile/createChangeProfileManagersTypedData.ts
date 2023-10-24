@@ -10,7 +10,7 @@ async function main() {
   const profileId = await client.authentication.getProfileId();
 
   const typedDataResult = await client.profile.createChangeProfileManagersTypedData({
-    approveLensManager: true,
+    approveSignless: true,
     // changeManagers: [
     //   {
     //     action: ChangeProfileManagerActionType.Add,
