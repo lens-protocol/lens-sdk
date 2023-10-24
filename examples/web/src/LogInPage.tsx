@@ -60,7 +60,7 @@ function ProfilesList({ owner }: { owner: string }) {
               name="id"
               value={profile.id}
             />
-            {profile.handle}
+            {profile.handle?.fullHandle ?? profile.id}
           </label>
         ))}
 

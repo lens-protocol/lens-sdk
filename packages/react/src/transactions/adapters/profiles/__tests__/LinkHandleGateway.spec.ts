@@ -2,9 +2,9 @@ import { SafeApolloClient } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   mockRelaySuccessFragment,
-  mockCreateHandleLinkToProfileTypedDataData,
-  mockCreateHandleLinkToProfileTypedDataResponse,
-  mockHandleLinkToProfileResponse,
+  mockCreateLinkHandleToProfileTypedDataData,
+  mockCreateLinkHandleToProfileTypedDataResponse,
+  mockLinkHandleToProfileResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import { mockLinkHandleRequest } from '@lens-protocol/domain/mocks';
@@ -27,10 +27,10 @@ describe(`Given an instance of ${LinkHandleGateway.name}`, () => {
 
   describe(`when creating an IUnsignedProtocolCall<LinkHandleRequest>`, () => {
     it(`should create an instance of the ${UnsignedProtocolCall.name} with the expected typed data`, async () => {
-      const data = mockCreateHandleLinkToProfileTypedDataData();
+      const data = mockCreateLinkHandleToProfileTypedDataData();
 
       const apolloClient = mockLensApolloClient([
-        mockCreateHandleLinkToProfileTypedDataResponse({
+        mockCreateLinkHandleToProfileTypedDataResponse({
           variables: {
             request: {
               handle: request.handle,
@@ -51,7 +51,7 @@ describe(`Given an instance of ${LinkHandleGateway.name}`, () => {
   describe(`when creating a ${NativeTransaction.name}<LinkHandleRequest>`, () => {
     it(`should create an instance of the ${NativeTransaction.name}`, async () => {
       const apolloClient = mockLensApolloClient([
-        mockHandleLinkToProfileResponse({
+        mockLinkHandleToProfileResponse({
           variables: {
             request: {
               handle: request.handle,

@@ -66,7 +66,7 @@ function UseOwnedProfiles({ address }: { address: EvmAddress }) {
       <ul>
         {profiles.map((p, index) => (
           <li key={index}>
-            {p.id} {p.handle || 'NOT LINKED'}
+            {p.id} {p.handle?.fullHandle || 'NOT LINKED'}
           </li>
         ))}
       </ul>
@@ -94,9 +94,9 @@ function UseOwnedHandlesInner({ address }: { address: EvmAddress }) {
       <ul>
         {handleResult.map((handle, index) => (
           <li key={index}>
-            <div>{handle.handle}</div>
-            <LinkHandleButton handle={handle.handle} />{' '}
-            <UnlinkHandleButton handle={handle.handle} />
+            <div>{handle.fullHandle}</div>
+            <LinkHandleButton handle={handle.fullHandle} />{' '}
+            <UnlinkHandleButton handle={handle.fullHandle} />
           </li>
         ))}
       </ul>
@@ -114,7 +114,7 @@ function Content({ address, profile }: ContentProps) {
     <div>
       <p>Wallet address: {address}.</p>
       <p>
-        Active profile: {profile.id}. Current handle {profile.handle || 'NOT LINKED'}
+        Active profile: {profile.id}. Current handle {profile.handle?.fullHandle || 'NOT LINKED'}
       </p>
       <div style={{ display: 'flex' }}>
         <UseOwnedProfiles address={address} />

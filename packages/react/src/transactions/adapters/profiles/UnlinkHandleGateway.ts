@@ -2,13 +2,13 @@ import {
   SafeApolloClient,
   omitTypename,
   RelaySuccess,
-  HandleUnlinkFromProfileDocument,
-  HandleUnlinkFromProfileData,
-  HandleUnlinkFromProfileVariables,
-  CreateHandleUnlinkFromProfileTypedDataData,
-  CreateHandleUnlinkFromProfileTypedDataVariables,
-  CreateHandleUnlinkFromProfileTypedDataDocument,
-  CreateHandleUnlinkFromProfileBroadcastItemResult,
+  UnlinkHandleFromProfileDocument,
+  UnlinkHandleFromProfileData,
+  UnlinkHandleFromProfileVariables,
+  CreateUnlinkHandleFromProfileTypedDataData,
+  CreateUnlinkHandleFromProfileTypedDataVariables,
+  CreateUnlinkHandleFromProfileTypedDataDocument,
+  CreateUnlinkHandleFromProfileBroadcastItemResult,
 } from '@lens-protocol/api-bindings';
 import { lensTokenHandleRegistry } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -72,10 +72,10 @@ export class UnlinkHandleGateway
     request: UnlinkHandleRequest,
   ): PromiseResult<RelaySuccess, BroadcastingError> {
     const { data } = await this.apolloClient.mutate<
-      HandleUnlinkFromProfileData,
-      HandleUnlinkFromProfileVariables
+      UnlinkHandleFromProfileData,
+      UnlinkHandleFromProfileVariables
     >({
-      mutation: HandleUnlinkFromProfileDocument,
+      mutation: UnlinkHandleFromProfileDocument,
       variables: {
         request: {
           handle: request.handle,
@@ -95,10 +95,10 @@ export class UnlinkHandleGateway
 
   private async createTypedData(request: UnlinkHandleRequest, nonce?: Nonce) {
     const { data } = await this.apolloClient.mutate<
-      CreateHandleUnlinkFromProfileTypedDataData,
-      CreateHandleUnlinkFromProfileTypedDataVariables
+      CreateUnlinkHandleFromProfileTypedDataData,
+      CreateUnlinkHandleFromProfileTypedDataVariables
     >({
-      mutation: CreateHandleUnlinkFromProfileTypedDataDocument,
+      mutation: CreateUnlinkHandleFromProfileTypedDataDocument,
       variables: {
         request: {
           handle: request.handle,
@@ -112,7 +112,7 @@ export class UnlinkHandleGateway
 
   private createRequestFallback(
     request: UnlinkHandleRequest,
-    result: CreateHandleUnlinkFromProfileBroadcastItemResult,
+    result: CreateUnlinkHandleFromProfileBroadcastItemResult,
   ): SelfFundedProtocolTransactionRequest<UnlinkHandleRequest> {
     const contract = lensTokenHandleRegistry(result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('unlink', [

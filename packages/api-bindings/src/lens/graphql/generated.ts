@@ -1,4 +1,5 @@
 /** Code generated. DO NOT EDIT. */
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 /* eslint-disable import/no-default-export */
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -190,7 +191,8 @@ export enum ChangeProfileManagerActionType {
 }
 
 export type ChangeProfileManagersRequest = {
-  approveLensManager?: InputMaybe<Scalars['Boolean']>;
+  /** if you define this true will enable it and false will disable it within the same tx as any other managers you are changing state for. Leave it blank if you do not want to change its current state */
+  approveSignless?: InputMaybe<Scalars['Boolean']>;
   changeManagers?: InputMaybe<Array<ChangeProfileManager>>;
 };
 
@@ -473,14 +475,6 @@ export type GetProfileMetadataArgs = {
   useFallback?: InputMaybe<Scalars['Boolean']>;
 };
 
-export type HandleLinkToProfileRequest = {
-  handle: Scalars['Handle'];
-};
-
-export type HandleUnlinkFromProfileRequest = {
-  handle: Scalars['Handle'];
-};
-
 export type HidePublicationRequest = {
   for: Scalars['PublicationId'];
 };
@@ -554,6 +548,7 @@ export type InternalCuratedTagsRequest = {
 };
 
 export type InternalCuratedUpdateRequest = {
+  /** The full handle - namespace/localname */
   handle: Scalars['Handle'];
   remove: Scalars['Boolean'];
   secret: Scalars['String'];
@@ -594,7 +589,6 @@ export type InternalUpdateProfileStatusRequest = {
 
 export type InviteRequest = {
   invites: Array<Scalars['EvmAddress']>;
-  secret: Scalars['String'];
 };
 
 export type LastLoggedInProfileRequest = {
@@ -645,8 +639,21 @@ export enum LimitType {
   TwentyFive = 'TwentyFive',
 }
 
+export type LinkHandleToProfileRequest = {
+  /** The full handle - namespace/localname */
+  handle: Scalars['Handle'];
+};
+
 export enum MarketplaceMetadataAttributeDisplayType {
   Date = 'DATE',
+  Number = 'NUMBER',
+  String = 'STRING',
+}
+
+export enum MetadataAttributeType {
+  Boolean = 'BOOLEAN',
+  Date = 'DATE',
+  Json = 'JSON',
   Number = 'NUMBER',
   String = 'STRING',
 }
@@ -666,6 +673,8 @@ export type MomokaCommentRequest = {
 };
 
 export type MomokaMirrorRequest = {
+  /** You can add information like app on a mirror or tracking stuff */
+  metadataURI?: InputMaybe<Scalars['URI']>;
   mirrorOn: Scalars['PublicationId'];
 };
 
@@ -1128,7 +1137,7 @@ export type ProfileRecommendationsRequest = {
 };
 
 export type ProfileRequest = {
-  /** The handle for profile you want to fetch */
+  /** The handle for profile you want to fetch - namespace/localname */
   forHandle?: InputMaybe<Scalars['Handle']>;
   /** The profile you want to fetch */
   forProfileId?: InputMaybe<Scalars['ProfileId']>;
@@ -1395,15 +1404,9 @@ export enum PublicationType {
   Quote = 'QUOTE',
 }
 
-export enum PublicationsOrderByType {
-  CommentOfQueryRanking = 'COMMENT_OF_QUERY_RANKING',
-  Latest = 'LATEST',
-}
-
 export type PublicationsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']>;
   limit?: InputMaybe<LimitType>;
-  orderBy?: InputMaybe<PublicationsOrderByType>;
   where: PublicationsWhere;
 };
 
@@ -1654,6 +1657,11 @@ export type UnknownReferenceModuleInput = {
   data: Scalars['BlockchainData'];
 };
 
+export type UnlinkHandleFromProfileRequest = {
+  /** The full handle - namespace/localname */
+  handle: Scalars['Handle'];
+};
+
 export type UserPoapsQueryRequest = {
   cursor?: InputMaybe<Scalars['Cursor']>;
   for: Scalars['ProfileId'];
@@ -1888,36 +1896,6 @@ export type UnknownFollowModuleSettings = {
 
 export type NetworkAddress = { __typename: 'NetworkAddress'; address: EvmAddress; chainId: number };
 
-export type MetadataBooleanAttribute = {
-  __typename: 'MetadataBooleanAttribute';
-  key: string;
-  value: string;
-};
-
-export type MetadataDateAttribute = {
-  __typename: 'MetadataDateAttribute';
-  key: string;
-  value: string;
-};
-
-export type MetadataNumberAttribute = {
-  __typename: 'MetadataNumberAttribute';
-  key: string;
-  value: string;
-};
-
-export type MetadataJsonAttribute = {
-  __typename: 'MetadataJSONAttribute';
-  key: string;
-  value: string;
-};
-
-export type MetadataStringAttribute = {
-  __typename: 'MetadataStringAttribute';
-  key: string;
-  value: string;
-};
-
 export type Image = {
   __typename: 'Image';
   uri: string;
@@ -2055,13 +2033,18 @@ export type ProfileMetadata = {
   rawURI: string;
   picture: ProfilePicture_ImageSet_ | ProfilePicture_NftImage_ | null;
   coverPicture: ProfileCoverSet | null;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
+};
+
+export type HandleInfo = {
+  __typename: 'HandleInfo';
+  id: string;
+  fullHandle: string;
+  namespace: string;
+  localName: string;
+  ownedBy: EvmAddress;
+  suggestedFormatted: { full: string; localName: string };
+  linkedTo: { nftTokenId: string; contract: NetworkAddress } | null;
 };
 
 export type ProfileFields = {
@@ -2072,9 +2055,8 @@ export type ProfileFields = {
   interests: Array<string>;
   invitesLeft: number;
   followPolicy: FollowPolicy;
-  handle: string | null;
   sponsor: boolean;
-  lensManager: boolean;
+  signless: boolean;
   ownedBy: NetworkAddress;
   operations: ProfileOperations;
   guardian: ProfileGuardianResult | null;
@@ -2086,6 +2068,7 @@ export type ProfileFields = {
     | UnknownFollowModuleSettings
     | null;
   metadata: ProfileMetadata | null;
+  handle: HandleInfo | null;
   stats: ProfileStats;
 };
 
@@ -2123,6 +2106,7 @@ export type UnknownReferenceModuleSettings = {
 
 export type SimpleCollectOpenActionSettings = {
   __typename: 'SimpleCollectOpenActionSettings';
+  type: OpenActionModuleType;
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
@@ -2136,6 +2120,7 @@ export type Recipient = { recipient: EvmAddress; split: number };
 
 export type MultirecipientFeeCollectOpenActionSettings = {
   __typename: 'MultirecipientFeeCollectOpenActionSettings';
+  type: OpenActionModuleType;
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
@@ -2147,18 +2132,21 @@ export type MultirecipientFeeCollectOpenActionSettings = {
 
 export type UnknownOpenActionModuleSettings = {
   __typename: 'UnknownOpenActionModuleSettings';
+  type: OpenActionModuleType;
   openActionModuleReturnData: string | null;
   contract: NetworkAddress;
 };
 
 export type LegacyFreeCollectModuleSettings = {
   __typename: 'LegacyFreeCollectModuleSettings';
+  type: OpenActionModuleType;
   followerOnly: boolean;
   contract: NetworkAddress;
 };
 
 export type LegacyFeeCollectModuleSettings = {
   __typename: 'LegacyFeeCollectModuleSettings';
+  type: OpenActionModuleType;
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
@@ -2168,6 +2156,7 @@ export type LegacyFeeCollectModuleSettings = {
 
 export type LegacyLimitedFeeCollectModuleSettings = {
   __typename: 'LegacyLimitedFeeCollectModuleSettings';
+  type: OpenActionModuleType;
   collectLimit: string | null;
   recipient: EvmAddress;
   referralFee: number;
@@ -2178,6 +2167,7 @@ export type LegacyLimitedFeeCollectModuleSettings = {
 
 export type LegacyLimitedTimedFeeCollectModuleSettings = {
   __typename: 'LegacyLimitedTimedFeeCollectModuleSettings';
+  type: OpenActionModuleType;
   collectLimit: string | null;
   recipient: EvmAddress;
   referralFee: number;
@@ -2189,11 +2179,13 @@ export type LegacyLimitedTimedFeeCollectModuleSettings = {
 
 export type LegacyRevertCollectModuleSettings = {
   __typename: 'LegacyRevertCollectModuleSettings';
+  type: OpenActionModuleType;
   contract: NetworkAddress;
 };
 
 export type LegacyTimedFeeCollectModuleSettings = {
   __typename: 'LegacyTimedFeeCollectModuleSettings';
+  type: OpenActionModuleType;
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
@@ -2204,6 +2196,7 @@ export type LegacyTimedFeeCollectModuleSettings = {
 
 export type LegacyMultirecipientFeeCollectModuleSettings = {
   __typename: 'LegacyMultirecipientFeeCollectModuleSettings';
+  type: OpenActionModuleType;
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
@@ -2215,6 +2208,7 @@ export type LegacyMultirecipientFeeCollectModuleSettings = {
 
 export type LegacySimpleCollectModuleSettings = {
   __typename: 'LegacySimpleCollectModuleSettings';
+  type: OpenActionModuleType;
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
@@ -2226,6 +2220,7 @@ export type LegacySimpleCollectModuleSettings = {
 
 export type LegacyErc4626FeeCollectModuleSettings = {
   __typename: 'LegacyERC4626FeeCollectModuleSettings';
+  type: OpenActionModuleType;
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
@@ -2238,6 +2233,7 @@ export type LegacyErc4626FeeCollectModuleSettings = {
 
 export type LegacyAaveFeeCollectModuleSettings = {
   __typename: 'LegacyAaveFeeCollectModuleSettings';
+  type: OpenActionModuleType;
   recipient: EvmAddress;
   referralFee: number;
   followerOnly: boolean;
@@ -2389,26 +2385,14 @@ export type PublicationMetadataMediaVideo = {
   altTag: string | null;
   video: EncryptableVideoSet;
   cover: EncryptableImageSet | null;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
 };
 
 export type PublicationMetadataMediaImage = {
   __typename: 'PublicationMetadataMediaImage';
   license: PublicationMetadataLicenseType | null;
   image: EncryptableImageSet;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
 };
 
 export type PublicationMetadataMediaAudio = {
@@ -2422,13 +2406,7 @@ export type PublicationMetadataMediaAudio = {
   lyrics: string | null;
   audio: EncryptableAudioSet;
   cover: EncryptableImageSet | null;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
 };
 
 export type GeoLocation = {
@@ -2451,13 +2429,7 @@ export type VideoMetadataV3 = {
   title: string;
   content: string;
   marketplace: MarketplaceMetadata | null;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
   encryptedWith: PublicationMetadataLitEncryption | null;
   asset: PublicationMetadataMediaVideo;
   attachments: Array<
@@ -2477,13 +2449,7 @@ export type AudioMetadataV3 = {
   title: string;
   content: string;
   marketplace: MarketplaceMetadata | null;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
   encryptedWith: PublicationMetadataLitEncryption | null;
   asset: PublicationMetadataMediaAudio;
   attachments: Array<
@@ -2503,13 +2469,7 @@ export type ImageMetadataV3 = {
   title: string;
   content: string;
   marketplace: MarketplaceMetadata | null;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
   encryptedWith: PublicationMetadataLitEncryption | null;
   asset: PublicationMetadataMediaImage;
   attachments: Array<
@@ -2529,13 +2489,7 @@ export type ArticleMetadataV3 = {
   title: string;
   content: string;
   marketplace: MarketplaceMetadata | null;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
   encryptedWith: PublicationMetadataLitEncryption | null;
   attachments: Array<
     PublicationMetadataMediaAudio | PublicationMetadataMediaImage | PublicationMetadataMediaVideo
@@ -2556,13 +2510,7 @@ export type EventMetadataV3 = {
   links: Array<string> | null;
   location: string;
   marketplace: MarketplaceMetadata | null;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
   encryptedWith: PublicationMetadataLitEncryption | null;
   geographic: GeoLocation | null;
   attachments: Array<
@@ -2582,13 +2530,7 @@ export type LinkMetadataV3 = {
   content: string;
   sharingLink: string;
   marketplace: MarketplaceMetadata | null;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
   encryptedWith: PublicationMetadataLitEncryption | null;
   attachments: Array<
     PublicationMetadataMediaAudio | PublicationMetadataMediaImage | PublicationMetadataMediaVideo
@@ -2607,13 +2549,7 @@ export type EmbedMetadataV3 = {
   content: string;
   embed: string;
   marketplace: MarketplaceMetadata | null;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
   encryptedWith: PublicationMetadataLitEncryption | null;
   attachments: Array<
     PublicationMetadataMediaAudio | PublicationMetadataMediaImage | PublicationMetadataMediaVideo
@@ -2632,13 +2568,7 @@ export type CheckingInMetadataV3 = {
   content: string;
   location: string;
   marketplace: MarketplaceMetadata | null;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
   encryptedWith: PublicationMetadataLitEncryption | null;
   geographic: GeoLocation | null;
   attachments: Array<
@@ -2657,13 +2587,7 @@ export type TextOnlyMetadataV3 = {
   appId: AppId | null;
   content: string;
   marketplace: MarketplaceMetadata | null;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
   encryptedWith: PublicationMetadataLitEncryption | null;
 };
 
@@ -2687,13 +2611,7 @@ export type ThreeDMetadataV3 = {
   appId: AppId | null;
   content: string;
   marketplace: MarketplaceMetadata | null;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
   encryptedWith: PublicationMetadataLitEncryption | null;
   assets: Array<ThreeDMetadataV3Asset>;
   attachments: Array<
@@ -2712,13 +2630,7 @@ export type StoryMetadataV3 = {
   appId: AppId | null;
   content: string;
   marketplace: MarketplaceMetadata | null;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
   encryptedWith: PublicationMetadataLitEncryption | null;
   asset:
     | PublicationMetadataMediaAudio
@@ -2740,13 +2652,7 @@ export type TransactionMetadataV3 = {
   txHash: string;
   chainId: number;
   marketplace: MarketplaceMetadata | null;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
   encryptedWith: PublicationMetadataLitEncryption | null;
   attachments: Array<
     PublicationMetadataMediaAudio | PublicationMetadataMediaImage | PublicationMetadataMediaVideo
@@ -2765,13 +2671,7 @@ export type MintMetadataV3 = {
   content: string;
   mintLink: string;
   marketplace: MarketplaceMetadata | null;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
   encryptedWith: PublicationMetadataLitEncryption | null;
   attachments: Array<
     PublicationMetadataMediaAudio | PublicationMetadataMediaImage | PublicationMetadataMediaVideo
@@ -2792,13 +2692,7 @@ export type SpaceMetadataV3 = {
   link: string;
   startsAt: string;
   marketplace: MarketplaceMetadata | null;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
   encryptedWith: PublicationMetadataLitEncryption | null;
   attachments: Array<
     PublicationMetadataMediaAudio | PublicationMetadataMediaImage | PublicationMetadataMediaVideo
@@ -2822,13 +2716,7 @@ export type LiveStreamMetadataV3 = {
   liveURL: string;
   checkLiveAPI: string | null;
   marketplace: MarketplaceMetadata | null;
-  attributes: Array<
-    | MetadataBooleanAttribute
-    | MetadataDateAttribute
-    | MetadataJsonAttribute
-    | MetadataNumberAttribute
-    | MetadataStringAttribute
-  > | null;
+  attributes: Array<{ type: MetadataAttributeType; key: string; value: string }> | null;
   encryptedWith: PublicationMetadataLitEncryption | null;
   attachments: Array<
     PublicationMetadataMediaAudio | PublicationMetadataMediaImage | PublicationMetadataMediaVideo
@@ -3406,8 +3294,8 @@ export type CreateSetFollowModuleBroadcastItemResult = {
   };
 };
 
-export type CreateHandleLinkToProfileBroadcastItemResult = {
-  __typename: 'CreateHandleLinkToProfileBroadcastItemResult';
+export type CreateLinkHandleToProfileBroadcastItemResult = {
+  __typename: 'CreateLinkHandleToProfileBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -3417,8 +3305,8 @@ export type CreateHandleLinkToProfileBroadcastItemResult = {
   };
 };
 
-export type CreateHandleUnlinkFromProfileBroadcastItemResult = {
-  __typename: 'CreateHandleUnlinkFromProfileBroadcastItemResult';
+export type CreateUnlinkHandleFromProfileBroadcastItemResult = {
+  __typename: 'CreateUnlinkHandleFromProfileBroadcastItemResult';
   id: string;
   expiresAt: string;
   typedData: {
@@ -3676,34 +3564,34 @@ export type CreateSetFollowModuleTypedDataData = {
   result: CreateSetFollowModuleBroadcastItemResult;
 };
 
-export type HandleLinkToProfileVariables = Exact<{
-  request: HandleLinkToProfileRequest;
+export type LinkHandleToProfileVariables = Exact<{
+  request: LinkHandleToProfileRequest;
 }>;
 
-export type HandleLinkToProfileData = { result: LensProfileManagerRelayError | RelaySuccess };
+export type LinkHandleToProfileData = { result: LensProfileManagerRelayError | RelaySuccess };
 
-export type HandleUnlinkFromProfileVariables = Exact<{
-  request: HandleUnlinkFromProfileRequest;
+export type UnlinkHandleFromProfileVariables = Exact<{
+  request: UnlinkHandleFromProfileRequest;
 }>;
 
-export type HandleUnlinkFromProfileData = { result: LensProfileManagerRelayError | RelaySuccess };
+export type UnlinkHandleFromProfileData = { result: LensProfileManagerRelayError | RelaySuccess };
 
-export type CreateHandleLinkToProfileTypedDataVariables = Exact<{
-  request: HandleLinkToProfileRequest;
+export type CreateLinkHandleToProfileTypedDataVariables = Exact<{
+  request: LinkHandleToProfileRequest;
   options?: InputMaybe<TypedDataOptions>;
 }>;
 
-export type CreateHandleLinkToProfileTypedDataData = {
-  result: CreateHandleLinkToProfileBroadcastItemResult;
+export type CreateLinkHandleToProfileTypedDataData = {
+  result: CreateLinkHandleToProfileBroadcastItemResult;
 };
 
-export type CreateHandleUnlinkFromProfileTypedDataVariables = Exact<{
-  request: HandleUnlinkFromProfileRequest;
+export type CreateUnlinkHandleFromProfileTypedDataVariables = Exact<{
+  request: UnlinkHandleFromProfileRequest;
   options?: InputMaybe<TypedDataOptions>;
 }>;
 
-export type CreateHandleUnlinkFromProfileTypedDataData = {
-  result: CreateHandleUnlinkFromProfileBroadcastItemResult;
+export type CreateUnlinkHandleFromProfileTypedDataData = {
+  result: CreateUnlinkHandleFromProfileBroadcastItemResult;
 };
 
 export type TagResult = { __typename: 'TagResult'; tag: string; total: number };
@@ -3730,7 +3618,6 @@ export type PublicationData = {
 
 export type PublicationsVariables = Exact<{
   where: PublicationsWhere;
-  orderBy?: InputMaybe<PublicationsOrderByType>;
   limit?: InputMaybe<LimitType>;
   cursor?: InputMaybe<Scalars['Cursor']>;
   imageSmallSize?: InputMaybe<ImageTransform>;
@@ -4289,8 +4176,6 @@ export type BroadcastOnMomokaVariables = Exact<{
 
 export type BroadcastOnMomokaData = { result: CreateMomokaPublicationResult | RelayError };
 
-export type HandleResult = { __typename: 'HandleResult'; handle: string };
-
 export type OwnedHandlesVariables = Exact<{
   for: Scalars['EvmAddress'];
   limit?: InputMaybe<LimitType>;
@@ -4298,7 +4183,7 @@ export type OwnedHandlesVariables = Exact<{
 }>;
 
 export type OwnedHandlesData = {
-  result: { items: Array<HandleResult>; pageInfo: PaginatedResultInfo };
+  result: { items: Array<HandleInfo>; pageInfo: PaginatedResultInfo };
 };
 
 export type ProfilesManagedVariables = Exact<{
@@ -4596,41 +4481,6 @@ export const FragmentProfileCoverSet = /*#__PURE__*/ gql`
   }
   ${FragmentImage}
 `;
-export const FragmentMetadataBooleanAttribute = /*#__PURE__*/ gql`
-  fragment MetadataBooleanAttribute on MetadataBooleanAttribute {
-    __typename
-    key
-    value
-  }
-`;
-export const FragmentMetadataDateAttribute = /*#__PURE__*/ gql`
-  fragment MetadataDateAttribute on MetadataDateAttribute {
-    __typename
-    key
-    value
-  }
-`;
-export const FragmentMetadataNumberAttribute = /*#__PURE__*/ gql`
-  fragment MetadataNumberAttribute on MetadataNumberAttribute {
-    __typename
-    key
-    value
-  }
-`;
-export const FragmentMetadataJsonAttribute = /*#__PURE__*/ gql`
-  fragment MetadataJSONAttribute on MetadataJSONAttribute {
-    __typename
-    key
-    value
-  }
-`;
-export const FragmentMetadataStringAttribute = /*#__PURE__*/ gql`
-  fragment MetadataStringAttribute on MetadataStringAttribute {
-    __typename
-    key
-    value
-  }
-`;
 export const FragmentProfileMetadata = /*#__PURE__*/ gql`
   fragment ProfileMetadata on ProfileMetadata {
     __typename
@@ -4645,30 +4495,34 @@ export const FragmentProfileMetadata = /*#__PURE__*/ gql`
       ...ProfileCoverSet
     }
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
   }
   ${FragmentProfilePicture}
   ${FragmentProfileCoverSet}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
+`;
+export const FragmentHandleInfo = /*#__PURE__*/ gql`
+  fragment HandleInfo on HandleInfo {
+    __typename
+    id
+    fullHandle
+    namespace
+    localName
+    suggestedFormatted {
+      full
+      localName
+    }
+    linkedTo {
+      contract {
+        ...NetworkAddress
+      }
+      nftTokenId
+    }
+    ownedBy
+  }
+  ${FragmentNetworkAddress}
 `;
 export const FragmentProfileStats = /*#__PURE__*/ gql`
   fragment ProfileStats on ProfileStats {
@@ -4726,9 +4580,11 @@ export const FragmentProfileFields = /*#__PURE__*/ gql`
     metadata {
       ...ProfileMetadata
     }
-    handle
+    handle {
+      ...HandleInfo
+    }
     sponsor
-    lensManager
+    signless
     stats(request: { forApps: $activityOn }) {
       ...ProfileStats
     }
@@ -4741,6 +4597,7 @@ export const FragmentProfileFields = /*#__PURE__*/ gql`
   ${FragmentRevertFollowModuleSettings}
   ${FragmentUnknownFollowModuleSettings}
   ${FragmentProfileMetadata}
+  ${FragmentHandleInfo}
   ${FragmentProfileStats}
 `;
 export const FragmentProfile = /*#__PURE__*/ gql`
@@ -5050,30 +4907,13 @@ export const FragmentPublicationMetadataMediaAudio = /*#__PURE__*/ gql`
     recordLabel
     lyrics
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
   }
   ${FragmentEncryptableAudioSet}
   ${FragmentEncryptableImageSet}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
 `;
 export const FragmentEncryptableVideo = /*#__PURE__*/ gql`
   fragment EncryptableVideo on EncryptableVideo {
@@ -5115,30 +4955,13 @@ export const FragmentPublicationMetadataMediaVideo = /*#__PURE__*/ gql`
     license
     altTag
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
   }
   ${FragmentEncryptableVideoSet}
   ${FragmentEncryptableImageSet}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
 `;
 export const FragmentPublicationMetadataMediaImage = /*#__PURE__*/ gql`
   fragment PublicationMetadataMediaImage on PublicationMetadataMediaImage {
@@ -5148,29 +4971,12 @@ export const FragmentPublicationMetadataMediaImage = /*#__PURE__*/ gql`
     }
     license
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
   }
   ${FragmentEncryptableImageSet}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
 `;
 export const FragmentAudioMetadataV3 = /*#__PURE__*/ gql`
   fragment AudioMetadataV3 on AudioMetadataV3 {
@@ -5186,21 +4992,9 @@ export const FragmentAudioMetadataV3 = /*#__PURE__*/ gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -5225,11 +5019,6 @@ export const FragmentAudioMetadataV3 = /*#__PURE__*/ gql`
     content
   }
   ${FragmentMarketplaceMetadata}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
   ${FragmentPublicationMetadataMediaAudio}
   ${FragmentPublicationMetadataMediaVideo}
@@ -5249,21 +5038,9 @@ export const FragmentVideoMetadataV3 = /*#__PURE__*/ gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -5289,11 +5066,6 @@ export const FragmentVideoMetadataV3 = /*#__PURE__*/ gql`
     content
   }
   ${FragmentMarketplaceMetadata}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
   ${FragmentPublicationMetadataMediaVideo}
   ${FragmentPublicationMetadataMediaImage}
@@ -5313,21 +5085,9 @@ export const FragmentImageMetadataV3 = /*#__PURE__*/ gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -5352,11 +5112,6 @@ export const FragmentImageMetadataV3 = /*#__PURE__*/ gql`
     }
   }
   ${FragmentMarketplaceMetadata}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
   ${FragmentPublicationMetadataMediaImage}
   ${FragmentPublicationMetadataMediaVideo}
@@ -5376,21 +5131,9 @@ export const FragmentArticleMetadataV3 = /*#__PURE__*/ gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -5412,11 +5155,6 @@ export const FragmentArticleMetadataV3 = /*#__PURE__*/ gql`
     }
   }
   ${FragmentMarketplaceMetadata}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
   ${FragmentPublicationMetadataMediaVideo}
   ${FragmentPublicationMetadataMediaImage}
@@ -5444,21 +5182,9 @@ export const FragmentEventMetadataV3 = /*#__PURE__*/ gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -5485,11 +5211,6 @@ export const FragmentEventMetadataV3 = /*#__PURE__*/ gql`
     }
   }
   ${FragmentMarketplaceMetadata}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
   ${FragmentGeoLocation}
   ${FragmentPublicationMetadataMediaVideo}
@@ -5510,21 +5231,9 @@ export const FragmentLinkMetadataV3 = /*#__PURE__*/ gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -5546,11 +5255,6 @@ export const FragmentLinkMetadataV3 = /*#__PURE__*/ gql`
     }
   }
   ${FragmentMarketplaceMetadata}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
   ${FragmentPublicationMetadataMediaVideo}
   ${FragmentPublicationMetadataMediaImage}
@@ -5570,21 +5274,9 @@ export const FragmentEmbedMetadataV3 = /*#__PURE__*/ gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -5606,11 +5298,6 @@ export const FragmentEmbedMetadataV3 = /*#__PURE__*/ gql`
     }
   }
   ${FragmentMarketplaceMetadata}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
   ${FragmentPublicationMetadataMediaVideo}
   ${FragmentPublicationMetadataMediaImage}
@@ -5630,21 +5317,9 @@ export const FragmentCheckingInMetadataV3 = /*#__PURE__*/ gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -5669,11 +5344,6 @@ export const FragmentCheckingInMetadataV3 = /*#__PURE__*/ gql`
     }
   }
   ${FragmentMarketplaceMetadata}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
   ${FragmentGeoLocation}
   ${FragmentPublicationMetadataMediaVideo}
@@ -5694,21 +5364,9 @@ export const FragmentTextOnlyMetadataV3 = /*#__PURE__*/ gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -5718,11 +5376,6 @@ export const FragmentTextOnlyMetadataV3 = /*#__PURE__*/ gql`
     content
   }
   ${FragmentMarketplaceMetadata}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
 `;
 export const FragmentThreeDMetadataV3Asset = /*#__PURE__*/ gql`
@@ -5749,21 +5402,9 @@ export const FragmentThreeDMetadataV3 = /*#__PURE__*/ gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -5787,11 +5428,6 @@ export const FragmentThreeDMetadataV3 = /*#__PURE__*/ gql`
     }
   }
   ${FragmentMarketplaceMetadata}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
   ${FragmentThreeDMetadataV3Asset}
   ${FragmentPublicationMetadataMediaVideo}
@@ -5812,21 +5448,9 @@ export const FragmentStoryMetadataV3 = /*#__PURE__*/ gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -5847,11 +5471,6 @@ export const FragmentStoryMetadataV3 = /*#__PURE__*/ gql`
     }
   }
   ${FragmentMarketplaceMetadata}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
   ${FragmentPublicationMetadataMediaVideo}
   ${FragmentPublicationMetadataMediaImage}
@@ -5871,21 +5490,9 @@ export const FragmentTransactionMetadataV3 = /*#__PURE__*/ gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -5909,11 +5516,6 @@ export const FragmentTransactionMetadataV3 = /*#__PURE__*/ gql`
     }
   }
   ${FragmentMarketplaceMetadata}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
   ${FragmentPublicationMetadataMediaVideo}
   ${FragmentPublicationMetadataMediaImage}
@@ -5933,21 +5535,9 @@ export const FragmentMintMetadataV3 = /*#__PURE__*/ gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -5969,11 +5559,6 @@ export const FragmentMintMetadataV3 = /*#__PURE__*/ gql`
     }
   }
   ${FragmentMarketplaceMetadata}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
   ${FragmentPublicationMetadataMediaVideo}
   ${FragmentPublicationMetadataMediaImage}
@@ -5993,21 +5578,9 @@ export const FragmentSpaceMetadataV3 = /*#__PURE__*/ gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -6031,11 +5604,6 @@ export const FragmentSpaceMetadataV3 = /*#__PURE__*/ gql`
     }
   }
   ${FragmentMarketplaceMetadata}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
   ${FragmentPublicationMetadataMediaVideo}
   ${FragmentPublicationMetadataMediaImage}
@@ -6055,21 +5623,9 @@ export const FragmentLiveStreamMetadataV3 = /*#__PURE__*/ gql`
       ...MarketplaceMetadata
     }
     attributes {
-      ... on MetadataBooleanAttribute {
-        ...MetadataBooleanAttribute
-      }
-      ... on MetadataDateAttribute {
-        ...MetadataDateAttribute
-      }
-      ... on MetadataNumberAttribute {
-        ...MetadataNumberAttribute
-      }
-      ... on MetadataJSONAttribute {
-        ...MetadataJSONAttribute
-      }
-      ... on MetadataStringAttribute {
-        ...MetadataStringAttribute
-      }
+      type
+      key
+      value
     }
     encryptedWith {
       ... on PublicationMetadataLitEncryption {
@@ -6096,11 +5652,6 @@ export const FragmentLiveStreamMetadataV3 = /*#__PURE__*/ gql`
     }
   }
   ${FragmentMarketplaceMetadata}
-  ${FragmentMetadataBooleanAttribute}
-  ${FragmentMetadataDateAttribute}
-  ${FragmentMetadataNumberAttribute}
-  ${FragmentMetadataJsonAttribute}
-  ${FragmentMetadataStringAttribute}
   ${FragmentPublicationMetadataLitEncryption}
   ${FragmentPublicationMetadataMediaVideo}
   ${FragmentPublicationMetadataMediaImage}
@@ -6109,6 +5660,7 @@ export const FragmentLiveStreamMetadataV3 = /*#__PURE__*/ gql`
 export const FragmentLegacyFreeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyFreeCollectModuleSettings on LegacyFreeCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -6119,6 +5671,7 @@ export const FragmentLegacyFreeCollectModuleSettings = /*#__PURE__*/ gql`
 export const FragmentLegacyFeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyFeeCollectModuleSettings on LegacyFeeCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -6135,6 +5688,7 @@ export const FragmentLegacyFeeCollectModuleSettings = /*#__PURE__*/ gql`
 export const FragmentLegacyLimitedFeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyLimitedFeeCollectModuleSettings on LegacyLimitedFeeCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -6152,6 +5706,7 @@ export const FragmentLegacyLimitedFeeCollectModuleSettings = /*#__PURE__*/ gql`
 export const FragmentLegacyLimitedTimedFeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyLimitedTimedFeeCollectModuleSettings on LegacyLimitedTimedFeeCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -6170,6 +5725,7 @@ export const FragmentLegacyLimitedTimedFeeCollectModuleSettings = /*#__PURE__*/ 
 export const FragmentLegacyRevertCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyRevertCollectModuleSettings on LegacyRevertCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -6179,6 +5735,7 @@ export const FragmentLegacyRevertCollectModuleSettings = /*#__PURE__*/ gql`
 export const FragmentLegacyTimedFeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyTimedFeeCollectModuleSettings on LegacyTimedFeeCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -6202,6 +5759,7 @@ export const FragmentRecipient = /*#__PURE__*/ gql`
 export const FragmentLegacyMultirecipientFeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyMultirecipientFeeCollectModuleSettings on LegacyMultirecipientFeeCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -6223,6 +5781,7 @@ export const FragmentLegacyMultirecipientFeeCollectModuleSettings = /*#__PURE__*
 export const FragmentLegacySimpleCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacySimpleCollectModuleSettings on LegacySimpleCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -6241,6 +5800,7 @@ export const FragmentLegacySimpleCollectModuleSettings = /*#__PURE__*/ gql`
 export const FragmentLegacyErc4626FeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyERC4626FeeCollectModuleSettings on LegacyERC4626FeeCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -6262,6 +5822,7 @@ export const FragmentLegacyErc4626FeeCollectModuleSettings = /*#__PURE__*/ gql`
 export const FragmentLegacyAaveFeeCollectModuleSettings = /*#__PURE__*/ gql`
   fragment LegacyAaveFeeCollectModuleSettings on LegacyAaveFeeCollectModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -6280,6 +5841,7 @@ export const FragmentLegacyAaveFeeCollectModuleSettings = /*#__PURE__*/ gql`
 export const FragmentMultirecipientFeeCollectOpenActionSettings = /*#__PURE__*/ gql`
   fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectOpenActionSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -6301,6 +5863,7 @@ export const FragmentMultirecipientFeeCollectOpenActionSettings = /*#__PURE__*/ 
 export const FragmentSimpleCollectOpenActionSettings = /*#__PURE__*/ gql`
   fragment SimpleCollectOpenActionSettings on SimpleCollectOpenActionSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -6319,6 +5882,7 @@ export const FragmentSimpleCollectOpenActionSettings = /*#__PURE__*/ gql`
 export const FragmentUnknownOpenActionModuleSettings = /*#__PURE__*/ gql`
   fragment UnknownOpenActionModuleSettings on UnknownOpenActionModuleSettings {
     __typename
+    type
     contract {
       ...NetworkAddress
     }
@@ -7531,8 +7095,8 @@ export const FragmentCreateSetFollowModuleBroadcastItemResult = /*#__PURE__*/ gq
   }
   ${FragmentEip712TypedDataDomain}
 `;
-export const FragmentCreateHandleLinkToProfileBroadcastItemResult = /*#__PURE__*/ gql`
-  fragment CreateHandleLinkToProfileBroadcastItemResult on CreateHandleLinkToProfileBroadcastItemResult {
+export const FragmentCreateLinkHandleToProfileBroadcastItemResult = /*#__PURE__*/ gql`
+  fragment CreateLinkHandleToProfileBroadcastItemResult on CreateLinkHandleToProfileBroadcastItemResult {
     __typename
     id
     expiresAt
@@ -7556,8 +7120,8 @@ export const FragmentCreateHandleLinkToProfileBroadcastItemResult = /*#__PURE__*
   ${FragmentEip712TypedDataField}
   ${FragmentEip712TypedDataDomain}
 `;
-export const FragmentCreateHandleUnlinkFromProfileBroadcastItemResult = /*#__PURE__*/ gql`
-  fragment CreateHandleUnlinkFromProfileBroadcastItemResult on CreateHandleUnlinkFromProfileBroadcastItemResult {
+export const FragmentCreateUnlinkHandleFromProfileBroadcastItemResult = /*#__PURE__*/ gql`
+  fragment CreateUnlinkHandleFromProfileBroadcastItemResult on CreateUnlinkHandleFromProfileBroadcastItemResult {
     __typename
     id
     expiresAt
@@ -7944,12 +7508,6 @@ export const FragmentRelayQueueResult = /*#__PURE__*/ gql`
     queue
   }
   ${FragmentNetworkAddress}
-`;
-export const FragmentHandleResult = /*#__PURE__*/ gql`
-  fragment HandleResult on HandleResult {
-    __typename
-    handle
-  }
 `;
 export const FragmentUserSigNonces = /*#__PURE__*/ gql`
   fragment UserSigNonces on UserSigNonces {
@@ -10530,9 +10088,9 @@ export type CreateSetFollowModuleTypedDataMutationOptions = Apollo.BaseMutationO
   CreateSetFollowModuleTypedDataData,
   CreateSetFollowModuleTypedDataVariables
 >;
-export const HandleLinkToProfileDocument = /*#__PURE__*/ gql`
-  mutation HandleLinkToProfile($request: HandleLinkToProfileRequest!) {
-    result: handleLinkToProfile(request: $request) {
+export const LinkHandleToProfileDocument = /*#__PURE__*/ gql`
+  mutation LinkHandleToProfile($request: LinkHandleToProfileRequest!) {
+    result: linkHandleToProfile(request: $request) {
       ... on RelaySuccess {
         ...RelaySuccess
       }
@@ -10544,46 +10102,46 @@ export const HandleLinkToProfileDocument = /*#__PURE__*/ gql`
   ${FragmentRelaySuccess}
   ${FragmentLensProfileManagerRelayError}
 `;
-export type HandleLinkToProfileMutationFn = Apollo.MutationFunction<
-  HandleLinkToProfileData,
-  HandleLinkToProfileVariables
+export type LinkHandleToProfileMutationFn = Apollo.MutationFunction<
+  LinkHandleToProfileData,
+  LinkHandleToProfileVariables
 >;
 
 /**
- * __useHandleLinkToProfile__
+ * __useLinkHandleToProfile__
  *
- * To run a mutation, you first call `useHandleLinkToProfile` within a React component and pass it any options that fit your needs.
- * When your component renders, `useHandleLinkToProfile` returns a tuple that includes:
+ * To run a mutation, you first call `useLinkHandleToProfile` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLinkHandleToProfile` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [handleLinkToProfile, { data, loading, error }] = useHandleLinkToProfile({
+ * const [linkHandleToProfile, { data, loading, error }] = useLinkHandleToProfile({
  *   variables: {
  *      request: // value for 'request'
  *   },
  * });
  */
-export function useHandleLinkToProfile(
-  baseOptions?: Apollo.MutationHookOptions<HandleLinkToProfileData, HandleLinkToProfileVariables>,
+export function useLinkHandleToProfile(
+  baseOptions?: Apollo.MutationHookOptions<LinkHandleToProfileData, LinkHandleToProfileVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<HandleLinkToProfileData, HandleLinkToProfileVariables>(
-    HandleLinkToProfileDocument,
+  return Apollo.useMutation<LinkHandleToProfileData, LinkHandleToProfileVariables>(
+    LinkHandleToProfileDocument,
     options,
   );
 }
-export type HandleLinkToProfileHookResult = ReturnType<typeof useHandleLinkToProfile>;
-export type HandleLinkToProfileMutationResult = Apollo.MutationResult<HandleLinkToProfileData>;
-export type HandleLinkToProfileMutationOptions = Apollo.BaseMutationOptions<
-  HandleLinkToProfileData,
-  HandleLinkToProfileVariables
+export type LinkHandleToProfileHookResult = ReturnType<typeof useLinkHandleToProfile>;
+export type LinkHandleToProfileMutationResult = Apollo.MutationResult<LinkHandleToProfileData>;
+export type LinkHandleToProfileMutationOptions = Apollo.BaseMutationOptions<
+  LinkHandleToProfileData,
+  LinkHandleToProfileVariables
 >;
-export const HandleUnlinkFromProfileDocument = /*#__PURE__*/ gql`
-  mutation HandleUnlinkFromProfile($request: HandleUnlinkFromProfileRequest!) {
-    result: handleUnlinkFromProfile(request: $request) {
+export const UnlinkHandleFromProfileDocument = /*#__PURE__*/ gql`
+  mutation UnlinkHandleFromProfile($request: UnlinkHandleFromProfileRequest!) {
+    result: unlinkHandleFromProfile(request: $request) {
       ... on RelaySuccess {
         ...RelaySuccess
       }
@@ -10595,156 +10153,156 @@ export const HandleUnlinkFromProfileDocument = /*#__PURE__*/ gql`
   ${FragmentRelaySuccess}
   ${FragmentLensProfileManagerRelayError}
 `;
-export type HandleUnlinkFromProfileMutationFn = Apollo.MutationFunction<
-  HandleUnlinkFromProfileData,
-  HandleUnlinkFromProfileVariables
+export type UnlinkHandleFromProfileMutationFn = Apollo.MutationFunction<
+  UnlinkHandleFromProfileData,
+  UnlinkHandleFromProfileVariables
 >;
 
 /**
- * __useHandleUnlinkFromProfile__
+ * __useUnlinkHandleFromProfile__
  *
- * To run a mutation, you first call `useHandleUnlinkFromProfile` within a React component and pass it any options that fit your needs.
- * When your component renders, `useHandleUnlinkFromProfile` returns a tuple that includes:
+ * To run a mutation, you first call `useUnlinkHandleFromProfile` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnlinkHandleFromProfile` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [handleUnlinkFromProfile, { data, loading, error }] = useHandleUnlinkFromProfile({
+ * const [unlinkHandleFromProfile, { data, loading, error }] = useUnlinkHandleFromProfile({
  *   variables: {
  *      request: // value for 'request'
  *   },
  * });
  */
-export function useHandleUnlinkFromProfile(
+export function useUnlinkHandleFromProfile(
   baseOptions?: Apollo.MutationHookOptions<
-    HandleUnlinkFromProfileData,
-    HandleUnlinkFromProfileVariables
+    UnlinkHandleFromProfileData,
+    UnlinkHandleFromProfileVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<HandleUnlinkFromProfileData, HandleUnlinkFromProfileVariables>(
-    HandleUnlinkFromProfileDocument,
+  return Apollo.useMutation<UnlinkHandleFromProfileData, UnlinkHandleFromProfileVariables>(
+    UnlinkHandleFromProfileDocument,
     options,
   );
 }
-export type HandleUnlinkFromProfileHookResult = ReturnType<typeof useHandleUnlinkFromProfile>;
-export type HandleUnlinkFromProfileMutationResult =
-  Apollo.MutationResult<HandleUnlinkFromProfileData>;
-export type HandleUnlinkFromProfileMutationOptions = Apollo.BaseMutationOptions<
-  HandleUnlinkFromProfileData,
-  HandleUnlinkFromProfileVariables
+export type UnlinkHandleFromProfileHookResult = ReturnType<typeof useUnlinkHandleFromProfile>;
+export type UnlinkHandleFromProfileMutationResult =
+  Apollo.MutationResult<UnlinkHandleFromProfileData>;
+export type UnlinkHandleFromProfileMutationOptions = Apollo.BaseMutationOptions<
+  UnlinkHandleFromProfileData,
+  UnlinkHandleFromProfileVariables
 >;
-export const CreateHandleLinkToProfileTypedDataDocument = /*#__PURE__*/ gql`
-  mutation CreateHandleLinkToProfileTypedData(
-    $request: HandleLinkToProfileRequest!
+export const CreateLinkHandleToProfileTypedDataDocument = /*#__PURE__*/ gql`
+  mutation CreateLinkHandleToProfileTypedData(
+    $request: LinkHandleToProfileRequest!
     $options: TypedDataOptions
   ) {
-    result: createHandleLinkToProfileTypedData(request: $request, options: $options) {
-      ...CreateHandleLinkToProfileBroadcastItemResult
+    result: createLinkHandleToProfileTypedData(request: $request, options: $options) {
+      ...CreateLinkHandleToProfileBroadcastItemResult
     }
   }
-  ${FragmentCreateHandleLinkToProfileBroadcastItemResult}
+  ${FragmentCreateLinkHandleToProfileBroadcastItemResult}
 `;
-export type CreateHandleLinkToProfileTypedDataMutationFn = Apollo.MutationFunction<
-  CreateHandleLinkToProfileTypedDataData,
-  CreateHandleLinkToProfileTypedDataVariables
+export type CreateLinkHandleToProfileTypedDataMutationFn = Apollo.MutationFunction<
+  CreateLinkHandleToProfileTypedDataData,
+  CreateLinkHandleToProfileTypedDataVariables
 >;
 
 /**
- * __useCreateHandleLinkToProfileTypedData__
+ * __useCreateLinkHandleToProfileTypedData__
  *
- * To run a mutation, you first call `useCreateHandleLinkToProfileTypedData` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateHandleLinkToProfileTypedData` returns a tuple that includes:
+ * To run a mutation, you first call `useCreateLinkHandleToProfileTypedData` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLinkHandleToProfileTypedData` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [createHandleLinkToProfileTypedData, { data, loading, error }] = useCreateHandleLinkToProfileTypedData({
+ * const [createLinkHandleToProfileTypedData, { data, loading, error }] = useCreateLinkHandleToProfileTypedData({
  *   variables: {
  *      request: // value for 'request'
  *      options: // value for 'options'
  *   },
  * });
  */
-export function useCreateHandleLinkToProfileTypedData(
+export function useCreateLinkHandleToProfileTypedData(
   baseOptions?: Apollo.MutationHookOptions<
-    CreateHandleLinkToProfileTypedDataData,
-    CreateHandleLinkToProfileTypedDataVariables
+    CreateLinkHandleToProfileTypedDataData,
+    CreateLinkHandleToProfileTypedDataVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    CreateHandleLinkToProfileTypedDataData,
-    CreateHandleLinkToProfileTypedDataVariables
-  >(CreateHandleLinkToProfileTypedDataDocument, options);
+    CreateLinkHandleToProfileTypedDataData,
+    CreateLinkHandleToProfileTypedDataVariables
+  >(CreateLinkHandleToProfileTypedDataDocument, options);
 }
-export type CreateHandleLinkToProfileTypedDataHookResult = ReturnType<
-  typeof useCreateHandleLinkToProfileTypedData
+export type CreateLinkHandleToProfileTypedDataHookResult = ReturnType<
+  typeof useCreateLinkHandleToProfileTypedData
 >;
-export type CreateHandleLinkToProfileTypedDataMutationResult =
-  Apollo.MutationResult<CreateHandleLinkToProfileTypedDataData>;
-export type CreateHandleLinkToProfileTypedDataMutationOptions = Apollo.BaseMutationOptions<
-  CreateHandleLinkToProfileTypedDataData,
-  CreateHandleLinkToProfileTypedDataVariables
+export type CreateLinkHandleToProfileTypedDataMutationResult =
+  Apollo.MutationResult<CreateLinkHandleToProfileTypedDataData>;
+export type CreateLinkHandleToProfileTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateLinkHandleToProfileTypedDataData,
+  CreateLinkHandleToProfileTypedDataVariables
 >;
-export const CreateHandleUnlinkFromProfileTypedDataDocument = /*#__PURE__*/ gql`
-  mutation CreateHandleUnlinkFromProfileTypedData(
-    $request: HandleUnlinkFromProfileRequest!
+export const CreateUnlinkHandleFromProfileTypedDataDocument = /*#__PURE__*/ gql`
+  mutation CreateUnlinkHandleFromProfileTypedData(
+    $request: UnlinkHandleFromProfileRequest!
     $options: TypedDataOptions
   ) {
-    result: createHandleUnlinkFromProfileTypedData(request: $request, options: $options) {
-      ...CreateHandleUnlinkFromProfileBroadcastItemResult
+    result: createUnlinkHandleFromProfileTypedData(request: $request, options: $options) {
+      ...CreateUnlinkHandleFromProfileBroadcastItemResult
     }
   }
-  ${FragmentCreateHandleUnlinkFromProfileBroadcastItemResult}
+  ${FragmentCreateUnlinkHandleFromProfileBroadcastItemResult}
 `;
-export type CreateHandleUnlinkFromProfileTypedDataMutationFn = Apollo.MutationFunction<
-  CreateHandleUnlinkFromProfileTypedDataData,
-  CreateHandleUnlinkFromProfileTypedDataVariables
+export type CreateUnlinkHandleFromProfileTypedDataMutationFn = Apollo.MutationFunction<
+  CreateUnlinkHandleFromProfileTypedDataData,
+  CreateUnlinkHandleFromProfileTypedDataVariables
 >;
 
 /**
- * __useCreateHandleUnlinkFromProfileTypedData__
+ * __useCreateUnlinkHandleFromProfileTypedData__
  *
- * To run a mutation, you first call `useCreateHandleUnlinkFromProfileTypedData` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateHandleUnlinkFromProfileTypedData` returns a tuple that includes:
+ * To run a mutation, you first call `useCreateUnlinkHandleFromProfileTypedData` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUnlinkHandleFromProfileTypedData` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [createHandleUnlinkFromProfileTypedData, { data, loading, error }] = useCreateHandleUnlinkFromProfileTypedData({
+ * const [createUnlinkHandleFromProfileTypedData, { data, loading, error }] = useCreateUnlinkHandleFromProfileTypedData({
  *   variables: {
  *      request: // value for 'request'
  *      options: // value for 'options'
  *   },
  * });
  */
-export function useCreateHandleUnlinkFromProfileTypedData(
+export function useCreateUnlinkHandleFromProfileTypedData(
   baseOptions?: Apollo.MutationHookOptions<
-    CreateHandleUnlinkFromProfileTypedDataData,
-    CreateHandleUnlinkFromProfileTypedDataVariables
+    CreateUnlinkHandleFromProfileTypedDataData,
+    CreateUnlinkHandleFromProfileTypedDataVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    CreateHandleUnlinkFromProfileTypedDataData,
-    CreateHandleUnlinkFromProfileTypedDataVariables
-  >(CreateHandleUnlinkFromProfileTypedDataDocument, options);
+    CreateUnlinkHandleFromProfileTypedDataData,
+    CreateUnlinkHandleFromProfileTypedDataVariables
+  >(CreateUnlinkHandleFromProfileTypedDataDocument, options);
 }
-export type CreateHandleUnlinkFromProfileTypedDataHookResult = ReturnType<
-  typeof useCreateHandleUnlinkFromProfileTypedData
+export type CreateUnlinkHandleFromProfileTypedDataHookResult = ReturnType<
+  typeof useCreateUnlinkHandleFromProfileTypedData
 >;
-export type CreateHandleUnlinkFromProfileTypedDataMutationResult =
-  Apollo.MutationResult<CreateHandleUnlinkFromProfileTypedDataData>;
-export type CreateHandleUnlinkFromProfileTypedDataMutationOptions = Apollo.BaseMutationOptions<
-  CreateHandleUnlinkFromProfileTypedDataData,
-  CreateHandleUnlinkFromProfileTypedDataVariables
+export type CreateUnlinkHandleFromProfileTypedDataMutationResult =
+  Apollo.MutationResult<CreateUnlinkHandleFromProfileTypedDataData>;
+export type CreateUnlinkHandleFromProfileTypedDataMutationOptions = Apollo.BaseMutationOptions<
+  CreateUnlinkHandleFromProfileTypedDataData,
+  CreateUnlinkHandleFromProfileTypedDataVariables
 >;
 export const PublicationDocument = /*#__PURE__*/ gql`
   query Publication(
@@ -10819,7 +10377,6 @@ export type PublicationQueryResult = Apollo.QueryResult<PublicationData, Publica
 export const PublicationsDocument = /*#__PURE__*/ gql`
   query Publications(
     $where: PublicationsWhere!
-    $orderBy: PublicationsOrderByType
     $limit: LimitType
     $cursor: Cursor
     $imageSmallSize: ImageTransform = {}
@@ -10830,9 +10387,7 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
     $fxRateFor: SupportedFiatType = USD
   ) {
     ...InjectCommonQueryParams
-    result: publications(
-      request: { where: $where, orderBy: $orderBy, limit: $limit, cursor: $cursor }
-    ) {
+    result: publications(request: { where: $where, limit: $limit, cursor: $cursor }) {
       items {
         ... on Post {
           ...Post
@@ -10873,7 +10428,6 @@ export const PublicationsDocument = /*#__PURE__*/ gql`
  * const { data, loading, error } = usePublications({
  *   variables: {
  *      where: // value for 'where'
- *      orderBy: // value for 'orderBy'
  *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *      imageSmallSize: // value for 'imageSmallSize'
@@ -13115,14 +12669,14 @@ export const OwnedHandlesDocument = /*#__PURE__*/ gql`
   query OwnedHandles($for: EvmAddress!, $limit: LimitType, $cursor: Cursor) {
     result: ownedHandles(request: { for: $for, limit: $limit, cursor: $cursor }) {
       items {
-        ...HandleResult
+        ...HandleInfo
       }
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }
-  ${FragmentHandleResult}
+  ${FragmentHandleInfo}
   ${FragmentPaginatedResultInfo}
 `;
 
@@ -13727,90 +13281,6 @@ export type CreateFollowEIP712TypedDataValueFieldPolicy = {
   idsOfProfilesToFollow?: FieldPolicy<any> | FieldReadFunction<any>;
   nonce?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type CreateHandleLinkToProfileBroadcastItemResultKeySpecifier = (
-  | 'expiresAt'
-  | 'id'
-  | 'typedData'
-  | CreateHandleLinkToProfileBroadcastItemResultKeySpecifier
-)[];
-export type CreateHandleLinkToProfileBroadcastItemResultFieldPolicy = {
-  expiresAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  id?: FieldPolicy<any> | FieldReadFunction<any>;
-  typedData?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type CreateHandleLinkToProfileEIP712TypedDataKeySpecifier = (
-  | 'domain'
-  | 'types'
-  | 'value'
-  | CreateHandleLinkToProfileEIP712TypedDataKeySpecifier
-)[];
-export type CreateHandleLinkToProfileEIP712TypedDataFieldPolicy = {
-  domain?: FieldPolicy<any> | FieldReadFunction<any>;
-  types?: FieldPolicy<any> | FieldReadFunction<any>;
-  value?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type CreateHandleLinkToProfileEIP712TypedDataTypesKeySpecifier = (
-  | 'Link'
-  | CreateHandleLinkToProfileEIP712TypedDataTypesKeySpecifier
-)[];
-export type CreateHandleLinkToProfileEIP712TypedDataTypesFieldPolicy = {
-  Link?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type CreateHandleLinkToProfileEIP712TypedDataValueKeySpecifier = (
-  | 'deadline'
-  | 'handleId'
-  | 'nonce'
-  | 'profileId'
-  | CreateHandleLinkToProfileEIP712TypedDataValueKeySpecifier
-)[];
-export type CreateHandleLinkToProfileEIP712TypedDataValueFieldPolicy = {
-  deadline?: FieldPolicy<any> | FieldReadFunction<any>;
-  handleId?: FieldPolicy<any> | FieldReadFunction<any>;
-  nonce?: FieldPolicy<any> | FieldReadFunction<any>;
-  profileId?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type CreateHandleUnlinkFromProfileBroadcastItemResultKeySpecifier = (
-  | 'expiresAt'
-  | 'id'
-  | 'typedData'
-  | CreateHandleUnlinkFromProfileBroadcastItemResultKeySpecifier
-)[];
-export type CreateHandleUnlinkFromProfileBroadcastItemResultFieldPolicy = {
-  expiresAt?: FieldPolicy<any> | FieldReadFunction<any>;
-  id?: FieldPolicy<any> | FieldReadFunction<any>;
-  typedData?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type CreateHandleUnlinkFromProfileEIP712TypedDataKeySpecifier = (
-  | 'domain'
-  | 'types'
-  | 'value'
-  | CreateHandleUnlinkFromProfileEIP712TypedDataKeySpecifier
-)[];
-export type CreateHandleUnlinkFromProfileEIP712TypedDataFieldPolicy = {
-  domain?: FieldPolicy<any> | FieldReadFunction<any>;
-  types?: FieldPolicy<any> | FieldReadFunction<any>;
-  value?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type CreateHandleUnlinkFromProfileEIP712TypedDataTypesKeySpecifier = (
-  | 'Unlink'
-  | CreateHandleUnlinkFromProfileEIP712TypedDataTypesKeySpecifier
-)[];
-export type CreateHandleUnlinkFromProfileEIP712TypedDataTypesFieldPolicy = {
-  Unlink?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type CreateHandleUnlinkFromProfileEIP712TypedDataValueKeySpecifier = (
-  | 'deadline'
-  | 'handleId'
-  | 'nonce'
-  | 'profileId'
-  | CreateHandleUnlinkFromProfileEIP712TypedDataValueKeySpecifier
-)[];
-export type CreateHandleUnlinkFromProfileEIP712TypedDataValueFieldPolicy = {
-  deadline?: FieldPolicy<any> | FieldReadFunction<any>;
-  handleId?: FieldPolicy<any> | FieldReadFunction<any>;
-  nonce?: FieldPolicy<any> | FieldReadFunction<any>;
-  profileId?: FieldPolicy<any> | FieldReadFunction<any>;
-};
 export type CreateLegacyCollectBroadcastItemResultKeySpecifier = (
   | 'expiresAt'
   | 'id'
@@ -13821,6 +13291,48 @@ export type CreateLegacyCollectBroadcastItemResultFieldPolicy = {
   expiresAt?: FieldPolicy<any> | FieldReadFunction<any>;
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   typedData?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type CreateLinkHandleToProfileBroadcastItemResultKeySpecifier = (
+  | 'expiresAt'
+  | 'id'
+  | 'typedData'
+  | CreateLinkHandleToProfileBroadcastItemResultKeySpecifier
+)[];
+export type CreateLinkHandleToProfileBroadcastItemResultFieldPolicy = {
+  expiresAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  typedData?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type CreateLinkHandleToProfileEIP712TypedDataKeySpecifier = (
+  | 'domain'
+  | 'types'
+  | 'value'
+  | CreateLinkHandleToProfileEIP712TypedDataKeySpecifier
+)[];
+export type CreateLinkHandleToProfileEIP712TypedDataFieldPolicy = {
+  domain?: FieldPolicy<any> | FieldReadFunction<any>;
+  types?: FieldPolicy<any> | FieldReadFunction<any>;
+  value?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type CreateLinkHandleToProfileEIP712TypedDataTypesKeySpecifier = (
+  | 'Link'
+  | CreateLinkHandleToProfileEIP712TypedDataTypesKeySpecifier
+)[];
+export type CreateLinkHandleToProfileEIP712TypedDataTypesFieldPolicy = {
+  Link?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type CreateLinkHandleToProfileEIP712TypedDataValueKeySpecifier = (
+  | 'deadline'
+  | 'handleId'
+  | 'nonce'
+  | 'profileId'
+  | CreateLinkHandleToProfileEIP712TypedDataValueKeySpecifier
+)[];
+export type CreateLinkHandleToProfileEIP712TypedDataValueFieldPolicy = {
+  deadline?: FieldPolicy<any> | FieldReadFunction<any>;
+  handleId?: FieldPolicy<any> | FieldReadFunction<any>;
+  nonce?: FieldPolicy<any> | FieldReadFunction<any>;
+  profileId?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type CreateMomokaCommentBroadcastItemResultKeySpecifier = (
   | 'expiresAt'
@@ -14456,6 +13968,48 @@ export type CreateUnfollowEIP712TypedDataValueFieldPolicy = {
   nonce?: FieldPolicy<any> | FieldReadFunction<any>;
   unfollowerProfileId?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type CreateUnlinkHandleFromProfileBroadcastItemResultKeySpecifier = (
+  | 'expiresAt'
+  | 'id'
+  | 'typedData'
+  | CreateUnlinkHandleFromProfileBroadcastItemResultKeySpecifier
+)[];
+export type CreateUnlinkHandleFromProfileBroadcastItemResultFieldPolicy = {
+  expiresAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  typedData?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type CreateUnlinkHandleFromProfileEIP712TypedDataKeySpecifier = (
+  | 'domain'
+  | 'types'
+  | 'value'
+  | CreateUnlinkHandleFromProfileEIP712TypedDataKeySpecifier
+)[];
+export type CreateUnlinkHandleFromProfileEIP712TypedDataFieldPolicy = {
+  domain?: FieldPolicy<any> | FieldReadFunction<any>;
+  types?: FieldPolicy<any> | FieldReadFunction<any>;
+  value?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type CreateUnlinkHandleFromProfileEIP712TypedDataTypesKeySpecifier = (
+  | 'Unlink'
+  | CreateUnlinkHandleFromProfileEIP712TypedDataTypesKeySpecifier
+)[];
+export type CreateUnlinkHandleFromProfileEIP712TypedDataTypesFieldPolicy = {
+  Unlink?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type CreateUnlinkHandleFromProfileEIP712TypedDataValueKeySpecifier = (
+  | 'deadline'
+  | 'handleId'
+  | 'nonce'
+  | 'profileId'
+  | CreateUnlinkHandleFromProfileEIP712TypedDataValueKeySpecifier
+)[];
+export type CreateUnlinkHandleFromProfileEIP712TypedDataValueFieldPolicy = {
+  deadline?: FieldPolicy<any> | FieldReadFunction<any>;
+  handleId?: FieldPolicy<any> | FieldReadFunction<any>;
+  nonce?: FieldPolicy<any> | FieldReadFunction<any>;
+  profileId?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type DegreesOfSeparationReferenceModuleSettingsKeySpecifier = (
   | 'commentsRestricted'
   | 'contract'
@@ -14741,9 +14295,29 @@ export type GeoLocationFieldPolicy = {
   longitude?: FieldPolicy<any> | FieldReadFunction<any>;
   rawURI?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type HandleResultKeySpecifier = ('handle' | HandleResultKeySpecifier)[];
-export type HandleResultFieldPolicy = {
-  handle?: FieldPolicy<any> | FieldReadFunction<any>;
+export type HandleInfoKeySpecifier = (
+  | 'fullHandle'
+  | 'id'
+  | 'linkedTo'
+  | 'localName'
+  | 'namespace'
+  | 'ownedBy'
+  | 'suggestedFormatted'
+  | HandleInfoKeySpecifier
+)[];
+export type HandleInfoFieldPolicy = {
+  fullHandle?: FieldPolicy<any> | FieldReadFunction<any>;
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  linkedTo?: FieldPolicy<any> | FieldReadFunction<any>;
+  localName?: FieldPolicy<any> | FieldReadFunction<any>;
+  namespace?: FieldPolicy<any> | FieldReadFunction<any>;
+  ownedBy?: FieldPolicy<any> | FieldReadFunction<any>;
+  suggestedFormatted?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type HandleLinkedToKeySpecifier = ('contract' | 'nftTokenId' | HandleLinkedToKeySpecifier)[];
+export type HandleLinkedToFieldPolicy = {
+  contract?: FieldPolicy<any> | FieldReadFunction<any>;
+  nftTokenId?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ImageKeySpecifier = ('height' | 'mimeType' | 'uri' | 'width' | ImageKeySpecifier)[];
 export type ImageFieldPolicy = {
@@ -15173,49 +14747,15 @@ export type MentionNotificationFieldPolicy = {
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   publication?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type MetadataBooleanAttributeKeySpecifier = (
+export type MetadataAttributeKeySpecifier = (
   | 'key'
+  | 'type'
   | 'value'
-  | MetadataBooleanAttributeKeySpecifier
+  | MetadataAttributeKeySpecifier
 )[];
-export type MetadataBooleanAttributeFieldPolicy = {
+export type MetadataAttributeFieldPolicy = {
   key?: FieldPolicy<any> | FieldReadFunction<any>;
-  value?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type MetadataDateAttributeKeySpecifier = (
-  | 'key'
-  | 'value'
-  | MetadataDateAttributeKeySpecifier
-)[];
-export type MetadataDateAttributeFieldPolicy = {
-  key?: FieldPolicy<any> | FieldReadFunction<any>;
-  value?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type MetadataJSONAttributeKeySpecifier = (
-  | 'key'
-  | 'value'
-  | MetadataJSONAttributeKeySpecifier
-)[];
-export type MetadataJSONAttributeFieldPolicy = {
-  key?: FieldPolicy<any> | FieldReadFunction<any>;
-  value?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type MetadataNumberAttributeKeySpecifier = (
-  | 'key'
-  | 'value'
-  | MetadataNumberAttributeKeySpecifier
-)[];
-export type MetadataNumberAttributeFieldPolicy = {
-  key?: FieldPolicy<any> | FieldReadFunction<any>;
-  value?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type MetadataStringAttributeKeySpecifier = (
-  | 'key'
-  | 'value'
-  | MetadataStringAttributeKeySpecifier
-)[];
-export type MetadataStringAttributeFieldPolicy = {
-  key?: FieldPolicy<any> | FieldReadFunction<any>;
+  type?: FieldPolicy<any> | FieldReadFunction<any>;
   value?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type MintMetadataV3KeySpecifier = (
@@ -15454,9 +14994,8 @@ export type MutationKeySpecifier = (
   | 'createBlockProfilesTypedData'
   | 'createChangeProfileManagersTypedData'
   | 'createFollowTypedData'
-  | 'createHandleLinkToProfileTypedData'
-  | 'createHandleUnlinkFromProfileTypedData'
   | 'createLegacyCollectTypedData'
+  | 'createLinkHandleToProfileTypedData'
   | 'createMomokaCommentTypedData'
   | 'createMomokaMirrorTypedData'
   | 'createMomokaPostTypedData'
@@ -15472,11 +15011,10 @@ export type MutationKeySpecifier = (
   | 'createSetFollowModuleTypedData'
   | 'createUnblockProfilesTypedData'
   | 'createUnfollowTypedData'
+  | 'createUnlinkHandleFromProfileTypedData'
   | 'deleteNftGallery'
   | 'dismissRecommendedProfiles'
   | 'follow'
-  | 'handleLinkToProfile'
-  | 'handleUnlinkFromProfile'
   | 'hidePublication'
   | 'idKitPhoneVerifyWebhook'
   | 'internalAddCuratedTag'
@@ -15488,8 +15026,9 @@ export type MutationKeySpecifier = (
   | 'internalNftVerify'
   | 'internalRemoveCuratedTag'
   | 'internalUpdateProfileStatus'
-  | 'inviteProfile'
+  | 'invite'
   | 'legacyCollect'
+  | 'linkHandleToProfile'
   | 'mirrorOnMomoka'
   | 'mirrorOnchain'
   | 'nftOwnershipChallenge'
@@ -15510,6 +15049,7 @@ export type MutationKeySpecifier = (
   | 'unblock'
   | 'undoPublicationNotInterested'
   | 'unfollow'
+  | 'unlinkHandleFromProfile'
   | 'updateNftGalleryInfo'
   | 'updateNftGalleryItems'
   | 'updateNftGalleryOrder'
@@ -15532,9 +15072,8 @@ export type MutationFieldPolicy = {
   createBlockProfilesTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createChangeProfileManagersTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createFollowTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
-  createHandleLinkToProfileTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
-  createHandleUnlinkFromProfileTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createLegacyCollectTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
+  createLinkHandleToProfileTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createMomokaCommentTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createMomokaMirrorTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createMomokaPostTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -15550,11 +15089,10 @@ export type MutationFieldPolicy = {
   createSetFollowModuleTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createUnblockProfilesTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   createUnfollowTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
+  createUnlinkHandleFromProfileTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
   deleteNftGallery?: FieldPolicy<any> | FieldReadFunction<any>;
   dismissRecommendedProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   follow?: FieldPolicy<any> | FieldReadFunction<any>;
-  handleLinkToProfile?: FieldPolicy<any> | FieldReadFunction<any>;
-  handleUnlinkFromProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   hidePublication?: FieldPolicy<any> | FieldReadFunction<any>;
   idKitPhoneVerifyWebhook?: FieldPolicy<any> | FieldReadFunction<any>;
   internalAddCuratedTag?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -15566,8 +15104,9 @@ export type MutationFieldPolicy = {
   internalNftVerify?: FieldPolicy<any> | FieldReadFunction<any>;
   internalRemoveCuratedTag?: FieldPolicy<any> | FieldReadFunction<any>;
   internalUpdateProfileStatus?: FieldPolicy<any> | FieldReadFunction<any>;
-  inviteProfile?: FieldPolicy<any> | FieldReadFunction<any>;
+  invite?: FieldPolicy<any> | FieldReadFunction<any>;
   legacyCollect?: FieldPolicy<any> | FieldReadFunction<any>;
+  linkHandleToProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrorOnMomoka?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrorOnchain?: FieldPolicy<any> | FieldReadFunction<any>;
   nftOwnershipChallenge?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -15588,6 +15127,7 @@ export type MutationFieldPolicy = {
   unblock?: FieldPolicy<any> | FieldReadFunction<any>;
   undoPublicationNotInterested?: FieldPolicy<any> | FieldReadFunction<any>;
   unfollow?: FieldPolicy<any> | FieldReadFunction<any>;
+  unlinkHandleFromProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   updateNftGalleryInfo?: FieldPolicy<any> | FieldReadFunction<any>;
   updateNftGalleryItems?: FieldPolicy<any> | FieldReadFunction<any>;
   updateNftGalleryOrder?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -16069,11 +15609,11 @@ export type ProfileKeySpecifier = (
   | 'interests'
   | 'invitedBy'
   | 'invitesLeft'
-  | 'lensManager'
   | 'metadata'
   | 'onchainIdentity'
   | 'operations'
   | 'ownedBy'
+  | 'signless'
   | 'sponsor'
   | 'stats'
   | 'txHash'
@@ -16090,11 +15630,11 @@ export type ProfileFieldPolicy = {
   interests?: FieldPolicy<any> | FieldReadFunction<any>;
   invitedBy?: FieldPolicy<any> | FieldReadFunction<any>;
   invitesLeft?: FieldPolicy<any> | FieldReadFunction<any>;
-  lensManager?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   onchainIdentity?: FieldPolicy<any> | FieldReadFunction<any>;
   operations?: FieldPolicy<any> | FieldReadFunction<any>;
   ownedBy?: FieldPolicy<any> | FieldReadFunction<any>;
+  signless?: FieldPolicy<any> | FieldReadFunction<any>;
   sponsor?: FieldPolicy<any> | FieldReadFunction<any>;
   stats?: FieldPolicy<any> | FieldReadFunction<any>;
   txHash?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -16339,6 +15879,7 @@ export type PublicationOperationsKeySpecifier = (
   | 'hasActed'
   | 'hasBookmarked'
   | 'hasMirrored'
+  | 'hasQuoted'
   | 'hasReacted'
   | 'hasReported'
   | 'id'
@@ -16355,6 +15896,7 @@ export type PublicationOperationsFieldPolicy = {
   hasActed?: FieldPolicy<any> | FieldReadFunction<any>;
   hasBookmarked?: FieldPolicy<any> | FieldReadFunction<any>;
   hasMirrored?: FieldPolicy<any> | FieldReadFunction<any>;
+  hasQuoted?: FieldPolicy<any> | FieldReadFunction<any>;
   hasReacted?: FieldPolicy<any> | FieldReadFunction<any>;
   hasReported?: FieldPolicy<any> | FieldReadFunction<any>;
   id?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -16398,12 +15940,13 @@ export type PublicationValidateMetadataResultFieldPolicy = {
   valid?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type QueryKeySpecifier = (
-  | 'approvedAuthentication'
+  | 'approvedAuthentications'
   | 'approvedModuleAllowanceAmount'
   | 'challenge'
   | 'claimableProfiles'
   | 'claimableStatus'
   | 'currencies'
+  | 'currentSession'
   | 'defaultProfile'
   | 'doesFollow'
   | 'exploreProfiles'
@@ -16478,12 +16021,13 @@ export type QueryKeySpecifier = (
   | QueryKeySpecifier
 )[];
 export type QueryFieldPolicy = {
-  approvedAuthentication?: FieldPolicy<any> | FieldReadFunction<any>;
+  approvedAuthentications?: FieldPolicy<any> | FieldReadFunction<any>;
   approvedModuleAllowanceAmount?: FieldPolicy<any> | FieldReadFunction<any>;
   challenge?: FieldPolicy<any> | FieldReadFunction<any>;
   claimableProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   claimableStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   currencies?: FieldPolicy<any> | FieldReadFunction<any>;
+  currentSession?: FieldPolicy<any> | FieldReadFunction<any>;
   defaultProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   doesFollow?: FieldPolicy<any> | FieldReadFunction<any>;
   exploreProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -16776,12 +16320,23 @@ export type SubscriptionKeySpecifier = (
   | 'newMomokaTransaction'
   | 'newNotification'
   | 'newPublicationStats'
+  | 'userSigNonces'
   | SubscriptionKeySpecifier
 )[];
 export type SubscriptionFieldPolicy = {
   newMomokaTransaction?: FieldPolicy<any> | FieldReadFunction<any>;
   newNotification?: FieldPolicy<any> | FieldReadFunction<any>;
   newPublicationStats?: FieldPolicy<any> | FieldReadFunction<any>;
+  userSigNonces?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type SuggestedFormattedHandleKeySpecifier = (
+  | 'full'
+  | 'localName'
+  | SuggestedFormattedHandleKeySpecifier
+)[];
+export type SuggestedFormattedHandleFieldPolicy = {
+  full?: FieldPolicy<any> | FieldReadFunction<any>;
+  localName?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type SybilDotOrgIdentityKeySpecifier = (
   | 'source'
@@ -16976,11 +16531,13 @@ export type UnknownSupportedModuleFieldPolicy = {
 };
 export type UserSigNoncesKeySpecifier = (
   | 'lensHubOnchainSigNonce'
+  | 'lensPublicActProxyOnchainSigNonce'
   | 'lensTokenHandleRegistryOnchainSigNonce'
   | UserSigNoncesKeySpecifier
 )[];
 export type UserSigNoncesFieldPolicy = {
   lensHubOnchainSigNonce?: FieldPolicy<any> | FieldReadFunction<any>;
+  lensPublicActProxyOnchainSigNonce?: FieldPolicy<any> | FieldReadFunction<any>;
   lensTokenHandleRegistryOnchainSigNonce?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type VideoKeySpecifier = ('mimeType' | 'uri' | VideoKeySpecifier)[];
@@ -17251,68 +16808,40 @@ export type StrictTypedTypePolicies = {
       | (() => undefined | CreateFollowEIP712TypedDataValueKeySpecifier);
     fields?: CreateFollowEIP712TypedDataValueFieldPolicy;
   };
-  CreateHandleLinkToProfileBroadcastItemResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
-    keyFields?:
-      | false
-      | CreateHandleLinkToProfileBroadcastItemResultKeySpecifier
-      | (() => undefined | CreateHandleLinkToProfileBroadcastItemResultKeySpecifier);
-    fields?: CreateHandleLinkToProfileBroadcastItemResultFieldPolicy;
-  };
-  CreateHandleLinkToProfileEIP712TypedData?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
-    keyFields?:
-      | false
-      | CreateHandleLinkToProfileEIP712TypedDataKeySpecifier
-      | (() => undefined | CreateHandleLinkToProfileEIP712TypedDataKeySpecifier);
-    fields?: CreateHandleLinkToProfileEIP712TypedDataFieldPolicy;
-  };
-  CreateHandleLinkToProfileEIP712TypedDataTypes?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
-    keyFields?:
-      | false
-      | CreateHandleLinkToProfileEIP712TypedDataTypesKeySpecifier
-      | (() => undefined | CreateHandleLinkToProfileEIP712TypedDataTypesKeySpecifier);
-    fields?: CreateHandleLinkToProfileEIP712TypedDataTypesFieldPolicy;
-  };
-  CreateHandleLinkToProfileEIP712TypedDataValue?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
-    keyFields?:
-      | false
-      | CreateHandleLinkToProfileEIP712TypedDataValueKeySpecifier
-      | (() => undefined | CreateHandleLinkToProfileEIP712TypedDataValueKeySpecifier);
-    fields?: CreateHandleLinkToProfileEIP712TypedDataValueFieldPolicy;
-  };
-  CreateHandleUnlinkFromProfileBroadcastItemResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
-    keyFields?:
-      | false
-      | CreateHandleUnlinkFromProfileBroadcastItemResultKeySpecifier
-      | (() => undefined | CreateHandleUnlinkFromProfileBroadcastItemResultKeySpecifier);
-    fields?: CreateHandleUnlinkFromProfileBroadcastItemResultFieldPolicy;
-  };
-  CreateHandleUnlinkFromProfileEIP712TypedData?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
-    keyFields?:
-      | false
-      | CreateHandleUnlinkFromProfileEIP712TypedDataKeySpecifier
-      | (() => undefined | CreateHandleUnlinkFromProfileEIP712TypedDataKeySpecifier);
-    fields?: CreateHandleUnlinkFromProfileEIP712TypedDataFieldPolicy;
-  };
-  CreateHandleUnlinkFromProfileEIP712TypedDataTypes?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
-    keyFields?:
-      | false
-      | CreateHandleUnlinkFromProfileEIP712TypedDataTypesKeySpecifier
-      | (() => undefined | CreateHandleUnlinkFromProfileEIP712TypedDataTypesKeySpecifier);
-    fields?: CreateHandleUnlinkFromProfileEIP712TypedDataTypesFieldPolicy;
-  };
-  CreateHandleUnlinkFromProfileEIP712TypedDataValue?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
-    keyFields?:
-      | false
-      | CreateHandleUnlinkFromProfileEIP712TypedDataValueKeySpecifier
-      | (() => undefined | CreateHandleUnlinkFromProfileEIP712TypedDataValueKeySpecifier);
-    fields?: CreateHandleUnlinkFromProfileEIP712TypedDataValueFieldPolicy;
-  };
   CreateLegacyCollectBroadcastItemResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
       | false
       | CreateLegacyCollectBroadcastItemResultKeySpecifier
       | (() => undefined | CreateLegacyCollectBroadcastItemResultKeySpecifier);
     fields?: CreateLegacyCollectBroadcastItemResultFieldPolicy;
+  };
+  CreateLinkHandleToProfileBroadcastItemResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | CreateLinkHandleToProfileBroadcastItemResultKeySpecifier
+      | (() => undefined | CreateLinkHandleToProfileBroadcastItemResultKeySpecifier);
+    fields?: CreateLinkHandleToProfileBroadcastItemResultFieldPolicy;
+  };
+  CreateLinkHandleToProfileEIP712TypedData?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | CreateLinkHandleToProfileEIP712TypedDataKeySpecifier
+      | (() => undefined | CreateLinkHandleToProfileEIP712TypedDataKeySpecifier);
+    fields?: CreateLinkHandleToProfileEIP712TypedDataFieldPolicy;
+  };
+  CreateLinkHandleToProfileEIP712TypedDataTypes?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | CreateLinkHandleToProfileEIP712TypedDataTypesKeySpecifier
+      | (() => undefined | CreateLinkHandleToProfileEIP712TypedDataTypesKeySpecifier);
+    fields?: CreateLinkHandleToProfileEIP712TypedDataTypesFieldPolicy;
+  };
+  CreateLinkHandleToProfileEIP712TypedDataValue?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | CreateLinkHandleToProfileEIP712TypedDataValueKeySpecifier
+      | (() => undefined | CreateLinkHandleToProfileEIP712TypedDataValueKeySpecifier);
+    fields?: CreateLinkHandleToProfileEIP712TypedDataValueFieldPolicy;
   };
   CreateMomokaCommentBroadcastItemResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
@@ -17664,6 +17193,34 @@ export type StrictTypedTypePolicies = {
       | (() => undefined | CreateUnfollowEIP712TypedDataValueKeySpecifier);
     fields?: CreateUnfollowEIP712TypedDataValueFieldPolicy;
   };
+  CreateUnlinkHandleFromProfileBroadcastItemResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | CreateUnlinkHandleFromProfileBroadcastItemResultKeySpecifier
+      | (() => undefined | CreateUnlinkHandleFromProfileBroadcastItemResultKeySpecifier);
+    fields?: CreateUnlinkHandleFromProfileBroadcastItemResultFieldPolicy;
+  };
+  CreateUnlinkHandleFromProfileEIP712TypedData?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | CreateUnlinkHandleFromProfileEIP712TypedDataKeySpecifier
+      | (() => undefined | CreateUnlinkHandleFromProfileEIP712TypedDataKeySpecifier);
+    fields?: CreateUnlinkHandleFromProfileEIP712TypedDataFieldPolicy;
+  };
+  CreateUnlinkHandleFromProfileEIP712TypedDataTypes?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | CreateUnlinkHandleFromProfileEIP712TypedDataTypesKeySpecifier
+      | (() => undefined | CreateUnlinkHandleFromProfileEIP712TypedDataTypesKeySpecifier);
+    fields?: CreateUnlinkHandleFromProfileEIP712TypedDataTypesFieldPolicy;
+  };
+  CreateUnlinkHandleFromProfileEIP712TypedDataValue?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | CreateUnlinkHandleFromProfileEIP712TypedDataValueKeySpecifier
+      | (() => undefined | CreateUnlinkHandleFromProfileEIP712TypedDataValueKeySpecifier);
+    fields?: CreateUnlinkHandleFromProfileEIP712TypedDataValueFieldPolicy;
+  };
   DegreesOfSeparationReferenceModuleSettings?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
       | false
@@ -17831,9 +17388,13 @@ export type StrictTypedTypePolicies = {
     keyFields?: false | GeoLocationKeySpecifier | (() => undefined | GeoLocationKeySpecifier);
     fields?: GeoLocationFieldPolicy;
   };
-  HandleResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
-    keyFields?: false | HandleResultKeySpecifier | (() => undefined | HandleResultKeySpecifier);
-    fields?: HandleResultFieldPolicy;
+  HandleInfo?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | HandleInfoKeySpecifier | (() => undefined | HandleInfoKeySpecifier);
+    fields?: HandleInfoFieldPolicy;
+  };
+  HandleLinkedTo?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | HandleLinkedToKeySpecifier | (() => undefined | HandleLinkedToKeySpecifier);
+    fields?: HandleLinkedToFieldPolicy;
   };
   Image?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | ImageKeySpecifier | (() => undefined | ImageKeySpecifier);
@@ -17998,40 +17559,12 @@ export type StrictTypedTypePolicies = {
       | (() => undefined | MentionNotificationKeySpecifier);
     fields?: MentionNotificationFieldPolicy;
   };
-  MetadataBooleanAttribute?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+  MetadataAttribute?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
       | false
-      | MetadataBooleanAttributeKeySpecifier
-      | (() => undefined | MetadataBooleanAttributeKeySpecifier);
-    fields?: MetadataBooleanAttributeFieldPolicy;
-  };
-  MetadataDateAttribute?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
-    keyFields?:
-      | false
-      | MetadataDateAttributeKeySpecifier
-      | (() => undefined | MetadataDateAttributeKeySpecifier);
-    fields?: MetadataDateAttributeFieldPolicy;
-  };
-  MetadataJSONAttribute?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
-    keyFields?:
-      | false
-      | MetadataJSONAttributeKeySpecifier
-      | (() => undefined | MetadataJSONAttributeKeySpecifier);
-    fields?: MetadataJSONAttributeFieldPolicy;
-  };
-  MetadataNumberAttribute?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
-    keyFields?:
-      | false
-      | MetadataNumberAttributeKeySpecifier
-      | (() => undefined | MetadataNumberAttributeKeySpecifier);
-    fields?: MetadataNumberAttributeFieldPolicy;
-  };
-  MetadataStringAttribute?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
-    keyFields?:
-      | false
-      | MetadataStringAttributeKeySpecifier
-      | (() => undefined | MetadataStringAttributeKeySpecifier);
-    fields?: MetadataStringAttributeFieldPolicy;
+      | MetadataAttributeKeySpecifier
+      | (() => undefined | MetadataAttributeKeySpecifier);
+    fields?: MetadataAttributeFieldPolicy;
   };
   MintMetadataV3?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?: false | MintMetadataV3KeySpecifier | (() => undefined | MintMetadataV3KeySpecifier);
@@ -18645,6 +18178,13 @@ export type StrictTypedTypePolicies = {
     keyFields?: false | SubscriptionKeySpecifier | (() => undefined | SubscriptionKeySpecifier);
     fields?: SubscriptionFieldPolicy;
   };
+  SuggestedFormattedHandle?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | SuggestedFormattedHandleKeySpecifier
+      | (() => undefined | SuggestedFormattedHandleKeySpecifier);
+    fields?: SuggestedFormattedHandleFieldPolicy;
+  };
   SybilDotOrgIdentity?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
       | false
@@ -18777,13 +18317,6 @@ const result: PossibleTypesResultData = {
       'UnknownFollowModuleSettings',
     ],
     LensProfileManagerRelayResult: ['LensProfileManagerRelayError', 'RelaySuccess'],
-    MetadataAttribute: [
-      'MetadataBooleanAttribute',
-      'MetadataDateAttribute',
-      'MetadataJSONAttribute',
-      'MetadataNumberAttribute',
-      'MetadataStringAttribute',
-    ],
     MirrorablePublication: ['Comment', 'Post', 'Quote'],
     MomokaTransaction: [
       'MomokaCommentTransaction',

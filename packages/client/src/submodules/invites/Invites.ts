@@ -88,7 +88,7 @@ export class Invites {
     request: InviteRequest,
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      await this.sdk.InviteProfile({ request }, headers);
+      await this.sdk.Invite({ request }, headers);
     });
   }
 }

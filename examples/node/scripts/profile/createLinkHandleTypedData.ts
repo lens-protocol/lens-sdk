@@ -15,7 +15,7 @@ async function main() {
   console.log(`Handles owned by ${wallet.address}:`, ownedHandles);
 
   const linkHandleToProfileTypedData = await client.profile.createLinkHandleTypedData({
-    handle: ownedHandles.items[0].handle,
+    handle: ownedHandles.items[0].fullHandle,
   });
 
   const data = linkHandleToProfileTypedData.unwrap();
@@ -26,7 +26,7 @@ async function main() {
     data.typedData.value,
   );
 
-  console.log(`Linking handle ${ownedHandles.items[0].handle} to profile ${profileId}`);
+  console.log(`Linking handle ${ownedHandles.items[0].fullHandle} to profile ${profileId}`);
   const broadcastResult = await client.transaction.broadcastOnchain({
     id: data.id,
     signature: signedTypedData,

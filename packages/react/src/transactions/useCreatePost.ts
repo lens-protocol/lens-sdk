@@ -49,7 +49,7 @@ export type CreatePostArgs = {
 };
 
 /**
- * `useCreatePost` is React Hook that allows you to create a new Lens Post.
+ * `useCreatePost` is a React Hook that allows you to create a new Lens Post.
  *
  * You MUST be authenticated via {@link useLogin} to use this hook.
  *
@@ -355,7 +355,7 @@ export function useCreatePost(): UseDeferredTask<
     );
 
     const request = createPostRequest({
-      delegate: session.profile.lensManager,
+      delegate: session.profile.signless,
       ...args,
     });
 

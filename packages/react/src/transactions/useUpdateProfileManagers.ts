@@ -15,7 +15,7 @@ export type UpdateProfileManagersArgs = AtLeastOneOf<{
   /**
    * Enables the Lens Profile Manager to sign transactions on behalf of the authenticated Profile.
    */
-  lensManager?: boolean;
+  approveSignless?: boolean;
   /**
    * Adds the given addresses to the list of Profile managers for the authenticated Profile.
    */
@@ -44,7 +44,7 @@ export type UpdateProfileManagersArgs = AtLeastOneOf<{
  *
  * const callback = async () => {
  *   const result = await execute({
- *     lensManager: true, // or false to disable it
+ *     approveSignless: true, // or false to disable it
  *   });
  *
  *   if (result.isFailure()) {

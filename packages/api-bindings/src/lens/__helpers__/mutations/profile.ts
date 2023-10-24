@@ -26,18 +26,18 @@ import {
   SetFollowModuleData,
   SetFollowModuleVariables,
   SetFollowModuleDocument,
-  CreateHandleLinkToProfileTypedDataData,
-  CreateHandleLinkToProfileTypedDataVariables,
-  CreateHandleLinkToProfileTypedDataDocument,
-  HandleLinkToProfileData,
-  HandleLinkToProfileVariables,
-  HandleLinkToProfileDocument,
-  HandleUnlinkFromProfileData,
-  HandleUnlinkFromProfileVariables,
-  HandleUnlinkFromProfileDocument,
-  CreateHandleUnlinkFromProfileTypedDataData,
-  CreateHandleUnlinkFromProfileTypedDataVariables,
-  CreateHandleUnlinkFromProfileTypedDataDocument,
+  CreateLinkHandleToProfileTypedDataData,
+  CreateLinkHandleToProfileTypedDataVariables,
+  CreateLinkHandleToProfileTypedDataDocument,
+  LinkHandleToProfileData,
+  LinkHandleToProfileVariables,
+  LinkHandleToProfileDocument,
+  CreateUnlinkHandleFromProfileTypedDataData,
+  CreateUnlinkHandleFromProfileTypedDataVariables,
+  CreateUnlinkHandleFromProfileTypedDataDocument,
+  UnlinkHandleFromProfileData,
+  UnlinkHandleFromProfileVariables,
+  UnlinkHandleFromProfileDocument,
 } from '../../graphql/generated';
 import {
   mockCreateTypedDataResult,
@@ -259,11 +259,11 @@ export function mockSetFollowModuleResponse<
   };
 }
 
-export function mockCreateHandleLinkToProfileTypedDataData({
+export function mockCreateLinkHandleToProfileTypedDataData({
   nonce = mockNonce(),
-}: { nonce?: Nonce } = {}): CreateHandleLinkToProfileTypedDataData {
+}: { nonce?: Nonce } = {}): CreateLinkHandleToProfileTypedDataData {
   return {
-    result: mockCreateTypedDataResult('CreateHandleLinkToProfileBroadcastItemResult', {
+    result: mockCreateTypedDataResult('CreateLinkHandleToProfileBroadcastItemResult', {
       types: {
         Link: [mockEIP712TypedDataField()],
       },
@@ -278,18 +278,18 @@ export function mockCreateHandleLinkToProfileTypedDataData({
   };
 }
 
-export function mockCreateHandleLinkToProfileTypedDataResponse<
-  T extends CreateHandleLinkToProfileTypedDataData,
+export function mockCreateLinkHandleToProfileTypedDataResponse<
+  T extends CreateLinkHandleToProfileTypedDataData,
 >({
   variables,
   data,
 }: {
-  variables: CreateHandleLinkToProfileTypedDataVariables;
+  variables: CreateLinkHandleToProfileTypedDataVariables;
   data: T;
 }): MockedResponse<T> {
   return {
     request: {
-      query: CreateHandleLinkToProfileTypedDataDocument,
+      query: CreateLinkHandleToProfileTypedDataDocument,
       variables,
     },
     result: {
@@ -298,13 +298,13 @@ export function mockCreateHandleLinkToProfileTypedDataResponse<
   };
 }
 
-export function mockHandleLinkToProfileResponse<
-  T extends HandleLinkToProfileData,
-  V extends HandleLinkToProfileVariables,
+export function mockLinkHandleToProfileResponse<
+  T extends LinkHandleToProfileData,
+  V extends LinkHandleToProfileVariables,
 >({ variables, data }: { variables: V; data: T }): MockedResponse<T, V> {
   return {
     request: {
-      query: HandleLinkToProfileDocument,
+      query: LinkHandleToProfileDocument,
       variables,
     },
     result: {
@@ -313,11 +313,11 @@ export function mockHandleLinkToProfileResponse<
   };
 }
 
-export function mockCreateHandleUnlinkFromProfileTypedDataData({
+export function mockCreateUnlinkHandleFromProfileTypedDataData({
   nonce = mockNonce(),
-}: { nonce?: Nonce } = {}): CreateHandleUnlinkFromProfileTypedDataData {
+}: { nonce?: Nonce } = {}): CreateUnlinkHandleFromProfileTypedDataData {
   return {
-    result: mockCreateTypedDataResult('CreateHandleUnlinkFromProfileBroadcastItemResult', {
+    result: mockCreateTypedDataResult('CreateUnlinkHandleFromProfileBroadcastItemResult', {
       types: {
         Unlink: [mockEIP712TypedDataField()],
       },
@@ -332,18 +332,18 @@ export function mockCreateHandleUnlinkFromProfileTypedDataData({
   };
 }
 
-export function mockCreateHandleUnlinkFromProfileTypedDataResponse<
-  T extends CreateHandleUnlinkFromProfileTypedDataData,
+export function mockCreateUnlinkHandleFromProfileTypedDataResponse<
+  T extends CreateUnlinkHandleFromProfileTypedDataData,
 >({
   variables,
   data,
 }: {
-  variables: CreateHandleUnlinkFromProfileTypedDataVariables;
+  variables: CreateUnlinkHandleFromProfileTypedDataVariables;
   data: T;
 }): MockedResponse<T> {
   return {
     request: {
-      query: CreateHandleUnlinkFromProfileTypedDataDocument,
+      query: CreateUnlinkHandleFromProfileTypedDataDocument,
       variables,
     },
     result: {
@@ -352,13 +352,13 @@ export function mockCreateHandleUnlinkFromProfileTypedDataResponse<
   };
 }
 
-export function mockHandleUnlinkFromProfileResponse<
-  T extends HandleUnlinkFromProfileData,
-  V extends HandleUnlinkFromProfileVariables,
+export function mockUnlinkHandleFromProfileResponse<
+  T extends UnlinkHandleFromProfileData,
+  V extends UnlinkHandleFromProfileVariables,
 >({ variables, data }: { variables: V; data: T }): MockedResponse<T, V> {
   return {
     request: {
-      query: HandleUnlinkFromProfileDocument,
+      query: UnlinkHandleFromProfileDocument,
       variables,
     },
     result: {

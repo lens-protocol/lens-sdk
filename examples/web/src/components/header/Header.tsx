@@ -32,7 +32,7 @@ export function Header() {
           {session?.type === SessionType.WithProfile && (
             <strong>
               {session.profile.metadata?.displayName ??
-                session.profile.handle ??
+                session.profile.handle?.fullHandle ??
                 session.profile.id}
             </strong>
           )}

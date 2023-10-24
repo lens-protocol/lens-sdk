@@ -1,7 +1,7 @@
 import {
   useOwnedHandles as useOwnedHandlesHook,
   OwnedHandlesRequest,
-  HandleResult,
+  HandleInfo,
 } from '@lens-protocol/api-bindings';
 
 import { useLensApolloClient } from '../helpers/arguments';
@@ -25,7 +25,7 @@ export type UseOwnedHandlesArgs = PaginatedArgs<OwnedHandlesRequest>;
  * });
  * ```
  */
-export function useOwnedHandles(args: UseOwnedHandlesArgs): PaginatedReadResult<HandleResult[]> {
+export function useOwnedHandles(args: UseOwnedHandlesArgs): PaginatedReadResult<HandleInfo[]> {
   return usePaginatedReadResult(
     useOwnedHandlesHook(
       useLensApolloClient({

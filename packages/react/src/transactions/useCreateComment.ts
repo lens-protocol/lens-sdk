@@ -369,7 +369,7 @@ export function useCreateComment(): UseDeferredTask<
     );
 
     const request = createCommentRequest({
-      delegate: session.profile.lensManager,
+      delegate: session.profile.signless,
       ...args,
     });
 

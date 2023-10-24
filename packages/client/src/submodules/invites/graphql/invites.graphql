@@ -22,6 +22,6 @@ query ProfileAlreadyInvited($request: AlreadyInvitedCheckRequest!) {
   result: profileAlreadyInvited(request: $request)
 }
 
-mutation InviteProfile($request: InviteRequest!) {
-  inviteProfile(request: $request)
+mutation Invite($request: InviteRequest!) {
+  invite(request: $request)
 }

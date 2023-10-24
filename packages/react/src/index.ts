@@ -88,7 +88,7 @@ export * from './helpers/tasks';
 /**
  * GQL common types
  */
-export type { App, MetadataAttribute } from '@lens-protocol/api-bindings';
+export type { App } from '@lens-protocol/api-bindings';
 export { TriStateValue } from '@lens-protocol/api-bindings';
 
 /**
@@ -108,6 +108,7 @@ export {
   InsufficientAllowanceError,
   InsufficientFundsError,
 } from '@lens-protocol/domain/use-cases/wallets';
+
 /**
  * Helpers
  */

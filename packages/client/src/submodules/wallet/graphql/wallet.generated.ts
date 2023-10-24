@@ -2,6 +2,7 @@
 import * as Types from '../../../graphql/types.generated';
 
 import {
+  HandleInfoFragment,
   PaginatedResultInfoFragment,
   ProfileFragment,
   PostFragment,
@@ -15,14 +16,12 @@ import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
 import { DocumentNode } from 'graphql';
-export type HandleResultFragment = { handle: string };
-
 export type OwnedHandlesQueryVariables = Types.Exact<{
   request: Types.OwnedHandlesRequest;
 }>;
 
 export type OwnedHandlesQuery = {
-  result: { items: Array<HandleResultFragment>; pageInfo: PaginatedResultInfoFragment };
+  result: { items: Array<HandleInfoFragment>; pageInfo: PaginatedResultInfoFragment };
 };
 
 export type ProfilesManagedQueryVariables = Types.Exact<{
@@ -47,20 +46,6 @@ export type UserSigNoncesQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type UserSigNoncesQuery = { result: UserSigNoncesFragment };
 
-export const HandleResultFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'HandleResult' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'HandleResult' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [{ kind: 'Field', name: { kind: 'Name', value: 'handle' } }],
-      },
-    },
-  ],
-} as unknown as DocumentNode;
 export const UserSigNoncesFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -121,7 +106,7 @@ export const OwnedHandlesDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'HandleResult' } },
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'HandleInfo' } },
                     ],
                   },
                 },
@@ -146,11 +131,62 @@ export const OwnedHandlesDocument = {
     },
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'HandleResult' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'HandleResult' } },
+      name: { kind: 'Name', value: 'HandleInfo' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'HandleInfo' } },
       selectionSet: {
         kind: 'SelectionSet',
-        selections: [{ kind: 'Field', name: { kind: 'Name', value: 'handle' } }],
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'fullHandle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'namespace' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'localName' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'suggestedFormatted' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'full' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'localName' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'linkedTo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'contract' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'nftTokenId' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'ownedBy' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'NetworkAddress' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NetworkAddress' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'address' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'chainId' } },
+        ],
       },
     },
     {
@@ -272,6 +308,66 @@ export const ProfilesManagedDocument = {
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'HandleInfo' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'HandleInfo' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'fullHandle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'namespace' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'localName' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'suggestedFormatted' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'full' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'localName' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'linkedTo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'contract' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'nftTokenId' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'ownedBy' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'NetworkAddress' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NetworkAddress' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'address' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'chainId' } },
         ],
       },
     },
@@ -560,95 +656,25 @@ export const ProfilesManagedDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'MetadataBooleanAttribute' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'MetadataBooleanAttribute' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'MetadataDateAttribute' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'MetadataDateAttribute' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'MetadataNumberAttribute' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'MetadataNumberAttribute' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'MetadataJSONAttribute' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'MetadataJSONAttribute' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'MetadataStringAttribute' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'MetadataStringAttribute' },
-                            },
-                          ],
-                        },
-                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
                     ],
                   },
                 },
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'handle' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'HandleInfo' } }],
+            },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -674,19 +700,6 @@ export const ProfilesManagedDocument = {
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'NetworkAddress' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NetworkAddress' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'address' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'chainId' } },
         ],
       },
     },
@@ -1010,80 +1023,6 @@ export const ProfilesManagedDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'MetadataBooleanAttribute' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'MetadataBooleanAttribute' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'MetadataDateAttribute' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'MetadataDateAttribute' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'MetadataNumberAttribute' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'MetadataNumberAttribute' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'MetadataJSONAttribute' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'MetadataJSONAttribute' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'MetadataStringAttribute' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'MetadataStringAttribute' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
         ],
       },
     },

@@ -37,11 +37,11 @@ export type ProfileAlreadyInvitedQueryVariables = Types.Exact<{
 
 export type ProfileAlreadyInvitedQuery = { result: boolean };
 
-export type InviteProfileMutationVariables = Types.Exact<{
+export type InviteMutationVariables = Types.Exact<{
   request: Types.InviteRequest;
 }>;
 
-export type InviteProfileMutation = { inviteProfile: string | null };
+export type InviteMutation = { invite: string | null };
 
 export const InvitedResultFragmentDoc = {
   kind: 'Document',
@@ -339,95 +339,25 @@ export const InvitedResultFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'MetadataBooleanAttribute' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'MetadataBooleanAttribute' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'MetadataDateAttribute' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'MetadataDateAttribute' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'MetadataNumberAttribute' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'MetadataNumberAttribute' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'MetadataJSONAttribute' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'MetadataJSONAttribute' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'MetadataStringAttribute' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'MetadataStringAttribute' },
-                            },
-                          ],
-                        },
-                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
                     ],
                   },
                 },
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'handle' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'HandleInfo' } }],
+            },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -794,75 +724,48 @@ export const InvitedResultFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'MetadataBooleanAttribute' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'MetadataBooleanAttribute' },
-      },
+      name: { kind: 'Name', value: 'HandleInfo' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'HandleInfo' } },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'MetadataDateAttribute' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'MetadataDateAttribute' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'MetadataNumberAttribute' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'MetadataNumberAttribute' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'MetadataJSONAttribute' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'MetadataJSONAttribute' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'MetadataStringAttribute' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'MetadataStringAttribute' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'fullHandle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'namespace' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'localName' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'suggestedFormatted' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'full' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'localName' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'linkedTo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'contract' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'nftTokenId' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'ownedBy' } },
         ],
       },
     },
@@ -1347,95 +1250,25 @@ export const InvitedProfilesDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'MetadataBooleanAttribute' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'MetadataBooleanAttribute' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'MetadataDateAttribute' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'MetadataDateAttribute' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'MetadataNumberAttribute' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'MetadataNumberAttribute' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'MetadataJSONAttribute' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'MetadataJSONAttribute' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'MetadataStringAttribute' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'MetadataStringAttribute' },
-                            },
-                          ],
-                        },
-                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
                     ],
                   },
                 },
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'handle' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'HandleInfo' } }],
+            },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -1802,75 +1635,48 @@ export const InvitedProfilesDocument = {
     },
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'MetadataBooleanAttribute' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'MetadataBooleanAttribute' },
-      },
+      name: { kind: 'Name', value: 'HandleInfo' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'HandleInfo' } },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'MetadataDateAttribute' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'MetadataDateAttribute' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'MetadataNumberAttribute' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'MetadataNumberAttribute' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'MetadataJSONAttribute' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'MetadataJSONAttribute' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'MetadataStringAttribute' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'MetadataStringAttribute' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'fullHandle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'namespace' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'localName' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'suggestedFormatted' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'full' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'localName' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'linkedTo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'contract' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'nftTokenId' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'ownedBy' } },
         ],
       },
     },
@@ -2032,13 +1838,13 @@ export const ProfileAlreadyInvitedDocument = {
     },
   ],
 } as unknown as DocumentNode;
-export const InviteProfileDocument = {
+export const InviteDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'mutation',
-      name: { kind: 'Name', value: 'InviteProfile' },
+      name: { kind: 'Name', value: 'Invite' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -2054,7 +1860,7 @@ export const InviteProfileDocument = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'inviteProfile' },
+            name: { kind: 'Name', value: 'invite' },
             arguments: [
               {
                 kind: 'Argument',
@@ -2078,7 +1884,7 @@ export type SdkFunctionWrapper = <T>(
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const InvitedProfilesDocumentString = print(InvitedProfilesDocument);
 const ProfileAlreadyInvitedDocumentString = print(ProfileAlreadyInvitedDocument);
-const InviteProfileDocumentString = print(InviteProfileDocument);
+const InviteDocumentString = print(InviteDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     InvitedProfiles(
@@ -2120,22 +1926,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'query',
       );
     },
-    InviteProfile(
-      variables: InviteProfileMutationVariables,
+    Invite(
+      variables: InviteMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
-    ): Promise<{
-      data: InviteProfileMutation;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
+    ): Promise<{ data: InviteMutation; extensions?: any; headers: Dom.Headers; status: number }> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.rawRequest<InviteProfileMutation>(InviteProfileDocumentString, variables, {
+          client.rawRequest<InviteMutation>(InviteDocumentString, variables, {
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
-        'InviteProfile',
+        'Invite',
         'mutation',
       );
     },

@@ -65,7 +65,7 @@ export function useUnfollow(): UseDeferredTask<
     return unfollowProfile({
       kind: TransactionKind.UNFOLLOW_PROFILE,
       profileId: args.profile.id,
-      delegate: session.profile.lensManager,
+      delegate: session.profile.signless,
     });
   });
 }

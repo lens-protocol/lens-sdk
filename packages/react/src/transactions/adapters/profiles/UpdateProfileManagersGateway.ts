@@ -31,7 +31,7 @@ export class UpdateProfileManagersGateway
       mutation: CreateChangeProfileManagersTypedDataDocument,
       variables: {
         request: {
-          approveLensManager: request.lensManager,
+          approveSignless: request.approveSignless,
           changeManagers: [
             ...(request.add?.map((address) => ({
               action: ChangeProfileManagerActionType.Add,

@@ -1,12 +1,7 @@
-fragment HandleResult on HandleResult {
-  __typename
-  handle
-}
-
 query OwnedHandles($for: EvmAddress!, $limit: LimitType, $cursor: Cursor) {
   result: ownedHandles(request: { for: $for, limit: $limit, cursor: $cursor }) {
     items {
-      ...HandleResult
+      ...HandleInfo
     }
     pageInfo {
       ...PaginatedResultInfo

@@ -58,7 +58,7 @@ export function useUnlinkHandle(): UseDeferredTask<
     return unlinkHandle({
       kind: TransactionKind.UNLINK_HANDLE,
       handle: args.handle,
-      delegate: session.profile.lensManager,
+      delegate: session.profile.signless,
     });
   });
 }

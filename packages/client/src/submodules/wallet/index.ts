@@ -1,3 +1,3 @@
 export * from './Wallet';
 
-export type { HandleResultFragment, UserSigNoncesFragment } from './graphql/wallet.generated';
+export type { UserSigNoncesFragment } from './graphql/wallet.generated';
