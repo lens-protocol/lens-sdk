@@ -11,12 +11,12 @@ import {
 import { mockICredentials, mockWallet } from '../../../entities/__helpers__/mocks';
 import {
   ICredentialsIssuer,
-  ICredentialsWriter,
   IWalletFactory,
   ILoginPresenter,
   IWritableWalletGateway,
   Login,
 } from '../Login';
+import { ICredentialsWriter } from '../ICredentialsWriter';
 import { profileSessionData } from '../SessionData';
 import { mockLoginRequest } from '../__helpers__/mocks';
 

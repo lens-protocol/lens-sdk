@@ -3,7 +3,7 @@ import { PromiseResult } from '@lens-protocol/shared-kernel';
 import { ICredentials, AnyTransactionRequestModel } from '../../entities';
 import { TransactionQueue } from '../transactions';
 import { ICredentialsReader } from './ActiveWallet';
-import { ICredentialsWriter } from './Login';
+import { ICredentialsWriter } from './ICredentialsWriter';
 import { Logout, LogoutReason } from './Logout';
 import { anonymousSessionData, profileSessionData, SessionData } from './SessionData';
 

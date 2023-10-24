@@ -8,6 +8,7 @@ import {
   Wallet,
   WalletConnectionError,
 } from '../../entities';
+import { ICredentialsWriter } from './ICredentialsWriter';
 import { profileSessionData, SessionData } from './SessionData';
 
 /**
@@ -43,10 +44,6 @@ export interface ICredentialsIssuer {
     forProfile: ProfileId,
     signedBy: Wallet,
   ): PromiseResult<ICredentials, LoginError>;
-}
-
-export interface ICredentialsWriter {
-  save(credentials: ICredentials): Promise<void>;
 }
 
 export class Login {
