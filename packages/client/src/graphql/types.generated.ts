@@ -421,16 +421,6 @@ export type GetProfileMetadataArgs = {
   useFallback?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-export type HandleLinkToProfileRequest = {
-  /** The full handle - namespace/localname */
-  handle: Scalars['Handle']['input'];
-};
-
-export type HandleUnlinkFromProfileRequest = {
-  /** The full handle - namespace/localname */
-  handle: Scalars['Handle']['input'];
-};
-
 export type HidePublicationRequest = {
   for: Scalars['PublicationId']['input'];
 };
@@ -594,6 +584,11 @@ export enum LimitType {
   Ten = 'Ten',
   TwentyFive = 'TwentyFive',
 }
+
+export type LinkHandleToProfileRequest = {
+  /** The full handle - namespace/localname */
+  handle: Scalars['Handle']['input'];
+};
 
 export enum MarketplaceMetadataAttributeDisplayType {
   Date = 'DATE',
@@ -1606,6 +1601,11 @@ export type UnknownOpenActionModuleInput = {
 export type UnknownReferenceModuleInput = {
   address: Scalars['EvmAddress']['input'];
   data: Scalars['BlockchainData']['input'];
+};
+
+export type UnlinkHandleFromProfileRequest = {
+  /** The full handle - namespace/localname */
+  handle: Scalars['Handle']['input'];
 };
 
 export type UserPoapsQueryRequest = {

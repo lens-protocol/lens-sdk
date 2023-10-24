@@ -168,7 +168,7 @@ fragment CreateSetFollowModuleBroadcastItemResult on CreateSetFollowModuleBroadc
   }
 }
 
-fragment CreateHandleLinkToProfileBroadcastItemResult on CreateHandleLinkToProfileBroadcastItemResult {
+fragment CreateLinkHandleToProfileBroadcastItemResult on CreateLinkHandleToProfileBroadcastItemResult {
   id
   expiresAt
   typedData {
@@ -189,7 +189,7 @@ fragment CreateHandleLinkToProfileBroadcastItemResult on CreateHandleLinkToProfi
   }
 }
 
-fragment CreateHandleUnlinkFromProfileBroadcastItemResult on CreateHandleUnlinkFromProfileBroadcastItemResult {
+fragment CreateUnlinkHandleFromProfileBroadcastItemResult on CreateUnlinkHandleFromProfileBroadcastItemResult {
   id
   expiresAt
   typedData {
@@ -531,8 +531,8 @@ mutation CreateSetFollowModuleTypedData(
   }
 }
 
-mutation HandleLinkToProfile($request: HandleLinkToProfileRequest!) {
-  result: handleLinkToProfile(request: $request) {
+mutation LinkHandleToProfile($request: LinkHandleToProfileRequest!) {
+  result: linkHandleToProfile(request: $request) {
     ... on RelaySuccess {
       ...RelaySuccess
     }
@@ -542,8 +542,8 @@ mutation HandleLinkToProfile($request: HandleLinkToProfileRequest!) {
   }
 }
 
-mutation HandleUnlinkFromProfile($request: HandleUnlinkFromProfileRequest!) {
-  result: handleUnlinkFromProfile(request: $request) {
+mutation UnlinkHandleFromProfile($request: UnlinkHandleFromProfileRequest!) {
+  result: unlinkHandleFromProfile(request: $request) {
     ... on RelaySuccess {
       ...RelaySuccess
     }
@@ -553,20 +553,20 @@ mutation HandleUnlinkFromProfile($request: HandleUnlinkFromProfileRequest!) {
   }
 }
 
-mutation CreateHandleLinkToProfileTypedData(
-  $request: HandleLinkToProfileRequest!
+mutation CreateLinkHandleToProfileTypedData(
+  $request: LinkHandleToProfileRequest!
   $options: TypedDataOptions
 ) {
-  result: createHandleLinkToProfileTypedData(request: $request, options: $options) {
-    ...CreateHandleLinkToProfileBroadcastItemResult
+  result: createLinkHandleToProfileTypedData(request: $request, options: $options) {
+    ...CreateLinkHandleToProfileBroadcastItemResult
   }
 }
 
-mutation CreateHandleUnlinkFromProfileTypedData(
-  $request: HandleUnlinkFromProfileRequest!
+mutation CreateUnlinkHandleFromProfileTypedData(
+  $request: UnlinkHandleFromProfileRequest!
   $options: TypedDataOptions
 ) {
-  result: createHandleUnlinkFromProfileTypedData(request: $request, options: $options) {
-    ...CreateHandleUnlinkFromProfileBroadcastItemResult
+  result: createUnlinkHandleFromProfileTypedData(request: $request, options: $options) {
+    ...CreateUnlinkHandleFromProfileBroadcastItemResult
   }
 }

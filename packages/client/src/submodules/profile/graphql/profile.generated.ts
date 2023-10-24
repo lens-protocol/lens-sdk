@@ -133,7 +133,7 @@ export type CreateSetFollowModuleBroadcastItemResultFragment = {
   };
 };
 
-export type CreateHandleLinkToProfileBroadcastItemResultFragment = {
+export type CreateLinkHandleToProfileBroadcastItemResultFragment = {
   id: string;
   expiresAt: string;
   typedData: {
@@ -143,7 +143,7 @@ export type CreateHandleLinkToProfileBroadcastItemResultFragment = {
   };
 };
 
-export type CreateHandleUnlinkFromProfileBroadcastItemResultFragment = {
+export type CreateUnlinkHandleFromProfileBroadcastItemResultFragment = {
   id: string;
   expiresAt: string;
   typedData: {
@@ -422,38 +422,38 @@ export type CreateSetFollowModuleTypedDataMutation = {
   result: CreateSetFollowModuleBroadcastItemResultFragment;
 };
 
-export type HandleLinkToProfileMutationVariables = Types.Exact<{
-  request: Types.HandleLinkToProfileRequest;
+export type LinkHandleToProfileMutationVariables = Types.Exact<{
+  request: Types.LinkHandleToProfileRequest;
 }>;
 
-export type HandleLinkToProfileMutation = {
+export type LinkHandleToProfileMutation = {
   result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
 };
 
-export type HandleUnlinkFromProfileMutationVariables = Types.Exact<{
-  request: Types.HandleUnlinkFromProfileRequest;
+export type UnlinkHandleFromProfileMutationVariables = Types.Exact<{
+  request: Types.UnlinkHandleFromProfileRequest;
 }>;
 
-export type HandleUnlinkFromProfileMutation = {
+export type UnlinkHandleFromProfileMutation = {
   result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
 };
 
-export type CreateHandleLinkToProfileTypedDataMutationVariables = Types.Exact<{
-  request: Types.HandleLinkToProfileRequest;
+export type CreateLinkHandleToProfileTypedDataMutationVariables = Types.Exact<{
+  request: Types.LinkHandleToProfileRequest;
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateHandleLinkToProfileTypedDataMutation = {
-  result: CreateHandleLinkToProfileBroadcastItemResultFragment;
+export type CreateLinkHandleToProfileTypedDataMutation = {
+  result: CreateLinkHandleToProfileBroadcastItemResultFragment;
 };
 
-export type CreateHandleUnlinkFromProfileTypedDataMutationVariables = Types.Exact<{
-  request: Types.HandleUnlinkFromProfileRequest;
+export type CreateUnlinkHandleFromProfileTypedDataMutationVariables = Types.Exact<{
+  request: Types.UnlinkHandleFromProfileRequest;
   options?: Types.InputMaybe<Types.TypedDataOptions>;
 }>;
 
-export type CreateHandleUnlinkFromProfileTypedDataMutation = {
-  result: CreateHandleUnlinkFromProfileBroadcastItemResultFragment;
+export type CreateUnlinkHandleFromProfileTypedDataMutation = {
+  result: CreateUnlinkHandleFromProfileBroadcastItemResultFragment;
 };
 
 export const ProfileManagerFragmentDoc = {
@@ -1124,15 +1124,15 @@ export const CreateSetFollowModuleBroadcastItemResultFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode;
-export const CreateHandleLinkToProfileBroadcastItemResultFragmentDoc = {
+export const CreateLinkHandleToProfileBroadcastItemResultFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'CreateHandleLinkToProfileBroadcastItemResult' },
+      name: { kind: 'Name', value: 'CreateLinkHandleToProfileBroadcastItemResult' },
       typeCondition: {
         kind: 'NamedType',
-        name: { kind: 'Name', value: 'CreateHandleLinkToProfileBroadcastItemResult' },
+        name: { kind: 'Name', value: 'CreateLinkHandleToProfileBroadcastItemResult' },
       },
       selectionSet: {
         kind: 'SelectionSet',
@@ -1227,15 +1227,15 @@ export const CreateHandleLinkToProfileBroadcastItemResultFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode;
-export const CreateHandleUnlinkFromProfileBroadcastItemResultFragmentDoc = {
+export const CreateUnlinkHandleFromProfileBroadcastItemResultFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'CreateHandleUnlinkFromProfileBroadcastItemResult' },
+      name: { kind: 'Name', value: 'CreateUnlinkHandleFromProfileBroadcastItemResult' },
       typeCondition: {
         kind: 'NamedType',
-        name: { kind: 'Name', value: 'CreateHandleUnlinkFromProfileBroadcastItemResult' },
+        name: { kind: 'Name', value: 'CreateUnlinkHandleFromProfileBroadcastItemResult' },
       },
       selectionSet: {
         kind: 'SelectionSet',
@@ -10942,13 +10942,13 @@ export const CreateSetFollowModuleTypedDataDocument = {
     },
   ],
 } as unknown as DocumentNode;
-export const HandleLinkToProfileDocument = {
+export const LinkHandleToProfileDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'mutation',
-      name: { kind: 'Name', value: 'HandleLinkToProfile' },
+      name: { kind: 'Name', value: 'LinkHandleToProfile' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -10957,7 +10957,7 @@ export const HandleLinkToProfileDocument = {
             kind: 'NonNullType',
             type: {
               kind: 'NamedType',
-              name: { kind: 'Name', value: 'HandleLinkToProfileRequest' },
+              name: { kind: 'Name', value: 'LinkHandleToProfileRequest' },
             },
           },
         },
@@ -10968,7 +10968,7 @@ export const HandleLinkToProfileDocument = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'result' },
-            name: { kind: 'Name', value: 'handleLinkToProfile' },
+            name: { kind: 'Name', value: 'linkHandleToProfile' },
             arguments: [
               {
                 kind: 'Argument',
@@ -11044,13 +11044,13 @@ export const HandleLinkToProfileDocument = {
     },
   ],
 } as unknown as DocumentNode;
-export const HandleUnlinkFromProfileDocument = {
+export const UnlinkHandleFromProfileDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'mutation',
-      name: { kind: 'Name', value: 'HandleUnlinkFromProfile' },
+      name: { kind: 'Name', value: 'UnlinkHandleFromProfile' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -11059,7 +11059,7 @@ export const HandleUnlinkFromProfileDocument = {
             kind: 'NonNullType',
             type: {
               kind: 'NamedType',
-              name: { kind: 'Name', value: 'HandleUnlinkFromProfileRequest' },
+              name: { kind: 'Name', value: 'UnlinkHandleFromProfileRequest' },
             },
           },
         },
@@ -11070,7 +11070,7 @@ export const HandleUnlinkFromProfileDocument = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'result' },
-            name: { kind: 'Name', value: 'handleUnlinkFromProfile' },
+            name: { kind: 'Name', value: 'unlinkHandleFromProfile' },
             arguments: [
               {
                 kind: 'Argument',
@@ -11146,13 +11146,13 @@ export const HandleUnlinkFromProfileDocument = {
     },
   ],
 } as unknown as DocumentNode;
-export const CreateHandleLinkToProfileTypedDataDocument = {
+export const CreateLinkHandleToProfileTypedDataDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'mutation',
-      name: { kind: 'Name', value: 'CreateHandleLinkToProfileTypedData' },
+      name: { kind: 'Name', value: 'CreateLinkHandleToProfileTypedData' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -11161,7 +11161,7 @@ export const CreateHandleLinkToProfileTypedDataDocument = {
             kind: 'NonNullType',
             type: {
               kind: 'NamedType',
-              name: { kind: 'Name', value: 'HandleLinkToProfileRequest' },
+              name: { kind: 'Name', value: 'LinkHandleToProfileRequest' },
             },
           },
         },
@@ -11177,7 +11177,7 @@ export const CreateHandleLinkToProfileTypedDataDocument = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'result' },
-            name: { kind: 'Name', value: 'createHandleLinkToProfileTypedData' },
+            name: { kind: 'Name', value: 'createLinkHandleToProfileTypedData' },
             arguments: [
               {
                 kind: 'Argument',
@@ -11195,7 +11195,7 @@ export const CreateHandleLinkToProfileTypedDataDocument = {
               selections: [
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'CreateHandleLinkToProfileBroadcastItemResult' },
+                  name: { kind: 'Name', value: 'CreateLinkHandleToProfileBroadcastItemResult' },
                 },
               ],
             },
@@ -11205,10 +11205,10 @@ export const CreateHandleLinkToProfileTypedDataDocument = {
     },
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'CreateHandleLinkToProfileBroadcastItemResult' },
+      name: { kind: 'Name', value: 'CreateLinkHandleToProfileBroadcastItemResult' },
       typeCondition: {
         kind: 'NamedType',
-        name: { kind: 'Name', value: 'CreateHandleLinkToProfileBroadcastItemResult' },
+        name: { kind: 'Name', value: 'CreateLinkHandleToProfileBroadcastItemResult' },
       },
       selectionSet: {
         kind: 'SelectionSet',
@@ -11303,13 +11303,13 @@ export const CreateHandleLinkToProfileTypedDataDocument = {
     },
   ],
 } as unknown as DocumentNode;
-export const CreateHandleUnlinkFromProfileTypedDataDocument = {
+export const CreateUnlinkHandleFromProfileTypedDataDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'mutation',
-      name: { kind: 'Name', value: 'CreateHandleUnlinkFromProfileTypedData' },
+      name: { kind: 'Name', value: 'CreateUnlinkHandleFromProfileTypedData' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -11318,7 +11318,7 @@ export const CreateHandleUnlinkFromProfileTypedDataDocument = {
             kind: 'NonNullType',
             type: {
               kind: 'NamedType',
-              name: { kind: 'Name', value: 'HandleUnlinkFromProfileRequest' },
+              name: { kind: 'Name', value: 'UnlinkHandleFromProfileRequest' },
             },
           },
         },
@@ -11334,7 +11334,7 @@ export const CreateHandleUnlinkFromProfileTypedDataDocument = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'result' },
-            name: { kind: 'Name', value: 'createHandleUnlinkFromProfileTypedData' },
+            name: { kind: 'Name', value: 'createUnlinkHandleFromProfileTypedData' },
             arguments: [
               {
                 kind: 'Argument',
@@ -11352,7 +11352,7 @@ export const CreateHandleUnlinkFromProfileTypedDataDocument = {
               selections: [
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'CreateHandleUnlinkFromProfileBroadcastItemResult' },
+                  name: { kind: 'Name', value: 'CreateUnlinkHandleFromProfileBroadcastItemResult' },
                 },
               ],
             },
@@ -11362,10 +11362,10 @@ export const CreateHandleUnlinkFromProfileTypedDataDocument = {
     },
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'CreateHandleUnlinkFromProfileBroadcastItemResult' },
+      name: { kind: 'Name', value: 'CreateUnlinkHandleFromProfileBroadcastItemResult' },
       typeCondition: {
         kind: 'NamedType',
-        name: { kind: 'Name', value: 'CreateHandleUnlinkFromProfileBroadcastItemResult' },
+        name: { kind: 'Name', value: 'CreateUnlinkHandleFromProfileBroadcastItemResult' },
       },
       selectionSet: {
         kind: 'SelectionSet',
@@ -11501,13 +11501,13 @@ const CreateFollowTypedDataDocumentString = print(CreateFollowTypedDataDocument)
 const CreateUnfollowTypedDataDocumentString = print(CreateUnfollowTypedDataDocument);
 const SetFollowModuleDocumentString = print(SetFollowModuleDocument);
 const CreateSetFollowModuleTypedDataDocumentString = print(CreateSetFollowModuleTypedDataDocument);
-const HandleLinkToProfileDocumentString = print(HandleLinkToProfileDocument);
-const HandleUnlinkFromProfileDocumentString = print(HandleUnlinkFromProfileDocument);
-const CreateHandleLinkToProfileTypedDataDocumentString = print(
-  CreateHandleLinkToProfileTypedDataDocument,
+const LinkHandleToProfileDocumentString = print(LinkHandleToProfileDocument);
+const UnlinkHandleFromProfileDocumentString = print(UnlinkHandleFromProfileDocument);
+const CreateLinkHandleToProfileTypedDataDocumentString = print(
+  CreateLinkHandleToProfileTypedDataDocument,
 );
-const CreateHandleUnlinkFromProfileTypedDataDocumentString = print(
-  CreateHandleUnlinkFromProfileTypedDataDocument,
+const CreateUnlinkHandleFromProfileTypedDataDocumentString = print(
+  CreateUnlinkHandleFromProfileTypedDataDocument,
 );
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
@@ -12037,83 +12037,83 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'mutation',
       );
     },
-    HandleLinkToProfile(
-      variables: HandleLinkToProfileMutationVariables,
+    LinkHandleToProfile(
+      variables: LinkHandleToProfileMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
     ): Promise<{
-      data: HandleLinkToProfileMutation;
+      data: LinkHandleToProfileMutation;
       extensions?: any;
       headers: Dom.Headers;
       status: number;
     }> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.rawRequest<HandleLinkToProfileMutation>(
-            HandleLinkToProfileDocumentString,
+          client.rawRequest<LinkHandleToProfileMutation>(
+            LinkHandleToProfileDocumentString,
             variables,
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
-        'HandleLinkToProfile',
+        'LinkHandleToProfile',
         'mutation',
       );
     },
-    HandleUnlinkFromProfile(
-      variables: HandleUnlinkFromProfileMutationVariables,
+    UnlinkHandleFromProfile(
+      variables: UnlinkHandleFromProfileMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
     ): Promise<{
-      data: HandleUnlinkFromProfileMutation;
+      data: UnlinkHandleFromProfileMutation;
       extensions?: any;
       headers: Dom.Headers;
       status: number;
     }> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.rawRequest<HandleUnlinkFromProfileMutation>(
-            HandleUnlinkFromProfileDocumentString,
+          client.rawRequest<UnlinkHandleFromProfileMutation>(
+            UnlinkHandleFromProfileDocumentString,
             variables,
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
-        'HandleUnlinkFromProfile',
+        'UnlinkHandleFromProfile',
         'mutation',
       );
     },
-    CreateHandleLinkToProfileTypedData(
-      variables: CreateHandleLinkToProfileTypedDataMutationVariables,
+    CreateLinkHandleToProfileTypedData(
+      variables: CreateLinkHandleToProfileTypedDataMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
     ): Promise<{
-      data: CreateHandleLinkToProfileTypedDataMutation;
+      data: CreateLinkHandleToProfileTypedDataMutation;
       extensions?: any;
       headers: Dom.Headers;
       status: number;
     }> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.rawRequest<CreateHandleLinkToProfileTypedDataMutation>(
-            CreateHandleLinkToProfileTypedDataDocumentString,
+          client.rawRequest<CreateLinkHandleToProfileTypedDataMutation>(
+            CreateLinkHandleToProfileTypedDataDocumentString,
             variables,
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
-        'CreateHandleLinkToProfileTypedData',
+        'CreateLinkHandleToProfileTypedData',
         'mutation',
       );
     },
-    CreateHandleUnlinkFromProfileTypedData(
-      variables: CreateHandleUnlinkFromProfileTypedDataMutationVariables,
+    CreateUnlinkHandleFromProfileTypedData(
+      variables: CreateUnlinkHandleFromProfileTypedDataMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
     ): Promise<{
-      data: CreateHandleUnlinkFromProfileTypedDataMutation;
+      data: CreateUnlinkHandleFromProfileTypedDataMutation;
       extensions?: any;
       headers: Dom.Headers;
       status: number;
     }> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.rawRequest<CreateHandleUnlinkFromProfileTypedDataMutation>(
-            CreateHandleUnlinkFromProfileTypedDataDocumentString,
+          client.rawRequest<CreateUnlinkHandleFromProfileTypedDataMutation>(
+            CreateUnlinkHandleFromProfileTypedDataDocumentString,
             variables,
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
-        'CreateHandleUnlinkFromProfileTypedData',
+        'CreateUnlinkHandleFromProfileTypedData',
         'mutation',
       );
     },
