@@ -168,7 +168,7 @@ export type ProfileFragment = {
   interests: Array<string>;
   invitesLeft: number;
   sponsor: boolean;
-  lensManager: boolean;
+  signless: boolean;
   ownedBy: NetworkAddressFragment;
   operations: {
     __typename: 'ProfileOperations';
@@ -2460,7 +2460,7 @@ export const ProfileFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -27293,7 +27293,7 @@ export const PostFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -32367,7 +32367,7 @@ export const CommentBaseFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -37370,7 +37370,7 @@ export const QuoteBaseFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -41911,7 +41911,7 @@ export const CommentFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -48157,7 +48157,7 @@ export const QuoteFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -54414,7 +54414,7 @@ export const MirrorFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },

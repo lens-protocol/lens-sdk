@@ -377,7 +377,7 @@ export const ReactionEventFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -1295,7 +1295,7 @@ export const FeedItemFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -7944,7 +7944,7 @@ export const FeedDocument = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -14533,7 +14533,7 @@ export const FeedHighlightsDocument = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },

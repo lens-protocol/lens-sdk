@@ -99,7 +99,7 @@ export function mockUpdateProfileManagersRequest(
   overrides?: Partial<UpdateProfileManagersRequest>,
 ): UpdateProfileManagersRequest {
   return {
-    lensManager: true,
+    approveSignless: true,
     ...overrides,
     kind: TransactionKind.UPDATE_PROFILE_MANAGERS,
   };

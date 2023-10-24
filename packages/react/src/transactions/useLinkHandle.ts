@@ -58,7 +58,7 @@ export function useLinkHandle(): UseDeferredTask<
     return linkHandle({
       kind: TransactionKind.LINK_HANDLE,
       handle: args.handle,
-      delegate: session.profile.lensManager,
+      delegate: session.profile.signless,
     });
   });
 }

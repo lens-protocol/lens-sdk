@@ -347,7 +347,7 @@ fragment ProfileFields on Profile {
     ...HandleInfo
   }
   sponsor
-  lensManager
+  signless
   stats(request: { forApps: $activityOn }) {
     ...ProfileStats
   }

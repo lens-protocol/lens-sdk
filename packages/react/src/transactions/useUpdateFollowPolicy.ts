@@ -96,7 +96,7 @@ export function useUpdateFollowPolicy(): UseDeferredTask<
     return updateFollowPolicy({
       kind: TransactionKind.UPDATE_FOLLOW_POLICY,
       policy: args.followPolicy,
-      delegate: session.profile.lensManager,
+      delegate: session.profile.signless,
     });
   });
 }

@@ -161,6 +161,12 @@ export type ApprovedAuthenticationRequest = {
   readonly limit?: InputMaybe<LimitType>;
 };
 
+export type ApprovedAuthenticationsResult = {
+  readonly __typename: 'ApprovedAuthenticationsResult';
+  readonly current: ApprovedAuthentication;
+  readonly others: PaginatedApprovedAuthenticationResult;
+};
+
 export type ApprovedModuleAllowanceAmountRequest = {
   readonly currencies: ReadonlyArray<Scalars['EvmAddress']>;
   readonly followModules?: InputMaybe<ReadonlyArray<FollowModuleType>>;
@@ -269,7 +275,8 @@ export enum ChangeProfileManagerActionType {
 }
 
 export type ChangeProfileManagersRequest = {
-  readonly approveLensManager?: InputMaybe<Scalars['Boolean']>;
+  /** if you define this true will enable it and false will disable it within the same tx as any other managers you are changing state for. Leave it blank if you do not want to change its current state */
+  readonly approveSignless?: InputMaybe<Scalars['Boolean']>;
   readonly changeManagers?: InputMaybe<ReadonlyArray<ChangeProfileManager>>;
 };
 
@@ -1732,7 +1739,6 @@ export type InternalUpdateProfileStatusRequest = {
 
 export type InviteRequest = {
   readonly invites: ReadonlyArray<Scalars['EvmAddress']>;
-  readonly secret: Scalars['String'];
 };
 
 export type InvitedResult = {
@@ -2169,6 +2175,8 @@ export type MomokaInfo = {
 };
 
 export type MomokaMirrorRequest = {
+  /** You can add information like app on a mirror or tracking stuff */
+  readonly metadataURI?: InputMaybe<Scalars['URI']>;
   readonly mirrorOn: Scalars['PublicationId'];
 };
 
@@ -2380,7 +2388,7 @@ export type Mutation = {
   readonly internalNftVerify?: Maybe<Scalars['Void']>;
   readonly internalRemoveCuratedTag?: Maybe<Scalars['Void']>;
   readonly internalUpdateProfileStatus?: Maybe<Scalars['Void']>;
-  readonly inviteProfile?: Maybe<Scalars['Void']>;
+  readonly invite?: Maybe<Scalars['Void']>;
   readonly legacyCollect: LensProfileManagerRelayResult;
   readonly mirrorOnMomoka: RelayMomokaResult;
   readonly mirrorOnchain: LensProfileManagerRelayResult;
@@ -2622,7 +2630,7 @@ export type MutationInternalUpdateProfileStatusArgs = {
   request: InternalUpdateProfileStatusRequest;
 };
 
-export type MutationInviteProfileArgs = {
+export type MutationInviteArgs = {
   request: InviteRequest;
 };
 
@@ -3390,8 +3398,6 @@ export type Profile = {
   readonly invitedBy?: Maybe<Profile>;
   /** The number of invites left */
   readonly invitesLeft: Scalars['Int'];
-  /** If the profile has got the lens manager enabled - supports signless experience */
-  readonly lensManager: Scalars['Boolean'];
   /** The profile metadata. You can optionally query profile metadata by app id.  */
   readonly metadata?: Maybe<ProfileMetadata>;
   /** The on chain identity */
@@ -3399,7 +3405,9 @@ export type Profile = {
   readonly operations: ProfileOperations;
   /** Who owns the profile */
   readonly ownedBy: NetworkAddress;
-  /** If lens API will sponsor this persons for gasless experience */
+  /** If the profile has got signless enabled */
+  readonly signless: Scalars['Boolean'];
+  /** If lens API will sponsor this persons for gasless experience, note they can have signless on but sponsor false which means it be rejected */
   readonly sponsor: Scalars['Boolean'];
   readonly stats: ProfileStats;
   readonly txHash: Scalars['TxHash'];
@@ -3924,6 +3932,7 @@ export type PublicationOperations = {
   readonly hasActed: OptimisticStatusResult;
   readonly hasBookmarked: Scalars['Boolean'];
   readonly hasMirrored: Scalars['Boolean'];
+  readonly hasQuoted: Scalars['Boolean'];
   readonly hasReacted: Scalars['Boolean'];
   readonly hasReported: Scalars['Boolean'];
   readonly id: Scalars['PublicationId'];
@@ -4097,7 +4106,7 @@ export type PublicationsWhere = {
 
 export type Query = {
   readonly __typename: 'Query';
-  readonly approvedAuthentication?: Maybe<PaginatedApprovedAuthenticationResult>;
+  readonly approvedAuthentications?: Maybe<ApprovedAuthenticationsResult>;
   readonly approvedModuleAllowanceAmount: ReadonlyArray<ApprovedAllowanceAmountResult>;
   readonly challenge: AuthChallengeResult;
   readonly claimableProfiles: ClaimableProfilesResult;
@@ -4179,7 +4188,7 @@ export type Query = {
   readonly whoReactedPublication: PaginatedWhoReactedResult;
 };
 
-export type QueryApprovedAuthenticationArgs = {
+export type QueryApprovedAuthenticationsArgs = {
   request: ApprovedAuthenticationRequest;
 };
 

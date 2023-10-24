@@ -472,7 +472,7 @@ export const ReactionNotificationFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -6821,7 +6821,7 @@ export const CommentNotificationFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -13155,7 +13155,7 @@ export const MirrorNotificationFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -19504,7 +19504,7 @@ export const QuoteNotificationFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -25779,7 +25779,7 @@ export const OpenActionProfileActedFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -26775,7 +26775,7 @@ export const ActedNotificationFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -33200,7 +33200,7 @@ export const FollowNotificationFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -34073,7 +34073,7 @@ export const MentionNotificationFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -41019,7 +41019,7 @@ export const NotificationsDocument = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },

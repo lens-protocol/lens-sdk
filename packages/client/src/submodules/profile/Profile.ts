@@ -506,7 +506,7 @@ export class Profile {
    * @example
    * ```ts
    * const result = await client.profile.createChangeProfileManagersTypedData({
-   *   approveLensManager: true,
+   *   approveSignless: true,
    * });
    * ```
    */

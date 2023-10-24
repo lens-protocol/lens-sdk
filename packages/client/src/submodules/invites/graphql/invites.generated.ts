@@ -37,11 +37,11 @@ export type ProfileAlreadyInvitedQueryVariables = Types.Exact<{
 
 export type ProfileAlreadyInvitedQuery = { result: boolean };
 
-export type InviteProfileMutationVariables = Types.Exact<{
+export type InviteMutationVariables = Types.Exact<{
   request: Types.InviteRequest;
 }>;
 
-export type InviteProfileMutation = { inviteProfile: string | null };
+export type InviteMutation = { invite: string | null };
 
 export const InvitedResultFragmentDoc = {
   kind: 'Document',
@@ -357,7 +357,7 @@ export const InvitedResultFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -1268,7 +1268,7 @@ export const InvitedProfilesDocument = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'sponsor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lensManager' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signless' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'invitedBy' },
@@ -1838,13 +1838,13 @@ export const ProfileAlreadyInvitedDocument = {
     },
   ],
 } as unknown as DocumentNode;
-export const InviteProfileDocument = {
+export const InviteDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'mutation',
-      name: { kind: 'Name', value: 'InviteProfile' },
+      name: { kind: 'Name', value: 'Invite' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -1860,7 +1860,7 @@ export const InviteProfileDocument = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'inviteProfile' },
+            name: { kind: 'Name', value: 'invite' },
             arguments: [
               {
                 kind: 'Argument',
@@ -1884,7 +1884,7 @@ export type SdkFunctionWrapper = <T>(
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const InvitedProfilesDocumentString = print(InvitedProfilesDocument);
 const ProfileAlreadyInvitedDocumentString = print(ProfileAlreadyInvitedDocument);
-const InviteProfileDocumentString = print(InviteProfileDocument);
+const InviteDocumentString = print(InviteDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     InvitedProfiles(
@@ -1926,22 +1926,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'query',
       );
     },
-    InviteProfile(
-      variables: InviteProfileMutationVariables,
+    Invite(
+      variables: InviteMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
-    ): Promise<{
-      data: InviteProfileMutation;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
+    ): Promise<{ data: InviteMutation; extensions?: any; headers: Dom.Headers; status: number }> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.rawRequest<InviteProfileMutation>(InviteProfileDocumentString, variables, {
+          client.rawRequest<InviteMutation>(InviteDocumentString, variables, {
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
-        'InviteProfile',
+        'Invite',
         'mutation',
       );
     },

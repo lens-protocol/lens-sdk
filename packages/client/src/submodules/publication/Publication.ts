@@ -23,7 +23,6 @@ import {
   OnchainPostRequest,
   OnchainQuoteRequest,
   PublicationRequest,
-  PublicationsOrderByType,
   PublicationsRequest,
   PublicationsTagsRequest,
   RefreshPublicationMetadataRequest,
@@ -884,7 +883,6 @@ export class Publication {
   }): Promise<Scalars['PublicationId']['output']> {
     const result = await this.fetchAll({
       limit: LimitType.Ten,
-      orderBy: PublicationsOrderByType.Latest,
       where: { from: [from] },
     });
 

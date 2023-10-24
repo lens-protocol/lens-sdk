@@ -97,7 +97,7 @@ export function useSetProfileMetadata(): UseDeferredTask<
 
     return setProfileMetadata({
       kind: TransactionKind.UPDATE_PROFILE_DETAILS,
-      delegate: session.profile.lensManager,
+      delegate: session.profile.signless,
       metadataURI,
     });
   });

@@ -191,7 +191,8 @@ export enum ChangeProfileManagerActionType {
 }
 
 export type ChangeProfileManagersRequest = {
-  approveLensManager?: InputMaybe<Scalars['Boolean']>;
+  /** if you define this true will enable it and false will disable it within the same tx as any other managers you are changing state for. Leave it blank if you do not want to change its current state */
+  approveSignless?: InputMaybe<Scalars['Boolean']>;
   changeManagers?: InputMaybe<Array<ChangeProfileManager>>;
 };
 
@@ -598,7 +599,6 @@ export type InternalUpdateProfileStatusRequest = {
 
 export type InviteRequest = {
   invites: Array<Scalars['EvmAddress']>;
-  secret: Scalars['String'];
 };
 
 export type LastLoggedInProfileRequest = {
@@ -678,6 +678,8 @@ export type MomokaCommentRequest = {
 };
 
 export type MomokaMirrorRequest = {
+  /** You can add information like app on a mirror or tracking stuff */
+  metadataURI?: InputMaybe<Scalars['URI']>;
   mirrorOn: Scalars['PublicationId'];
 };
 
@@ -2054,7 +2056,7 @@ export type ProfileFields = {
   invitesLeft: number;
   followPolicy: FollowPolicy;
   sponsor: boolean;
-  lensManager: boolean;
+  signless: boolean;
   ownedBy: NetworkAddress;
   operations: ProfileOperations;
   guardian: ProfileGuardianResult | null;
@@ -4582,7 +4584,7 @@ export const FragmentProfileFields = /*#__PURE__*/ gql`
       ...HandleInfo
     }
     sponsor
-    lensManager
+    signless
     stats(request: { forApps: $activityOn }) {
       ...ProfileStats
     }
@@ -12898,6 +12900,15 @@ export type ApprovedAuthenticationFieldPolicy = {
   os?: FieldPolicy<any> | FieldReadFunction<any>;
   updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type ApprovedAuthenticationsResultKeySpecifier = (
+  | 'current'
+  | 'others'
+  | ApprovedAuthenticationsResultKeySpecifier
+)[];
+export type ApprovedAuthenticationsResultFieldPolicy = {
+  current?: FieldPolicy<any> | FieldReadFunction<any>;
+  others?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type ArticleMetadataV3KeySpecifier = (
   | 'appId'
   | 'attachments'
@@ -15026,7 +15037,7 @@ export type MutationKeySpecifier = (
   | 'internalNftVerify'
   | 'internalRemoveCuratedTag'
   | 'internalUpdateProfileStatus'
-  | 'inviteProfile'
+  | 'invite'
   | 'legacyCollect'
   | 'mirrorOnMomoka'
   | 'mirrorOnchain'
@@ -15104,7 +15115,7 @@ export type MutationFieldPolicy = {
   internalNftVerify?: FieldPolicy<any> | FieldReadFunction<any>;
   internalRemoveCuratedTag?: FieldPolicy<any> | FieldReadFunction<any>;
   internalUpdateProfileStatus?: FieldPolicy<any> | FieldReadFunction<any>;
-  inviteProfile?: FieldPolicy<any> | FieldReadFunction<any>;
+  invite?: FieldPolicy<any> | FieldReadFunction<any>;
   legacyCollect?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrorOnMomoka?: FieldPolicy<any> | FieldReadFunction<any>;
   mirrorOnchain?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -15607,11 +15618,11 @@ export type ProfileKeySpecifier = (
   | 'interests'
   | 'invitedBy'
   | 'invitesLeft'
-  | 'lensManager'
   | 'metadata'
   | 'onchainIdentity'
   | 'operations'
   | 'ownedBy'
+  | 'signless'
   | 'sponsor'
   | 'stats'
   | 'txHash'
@@ -15628,11 +15639,11 @@ export type ProfileFieldPolicy = {
   interests?: FieldPolicy<any> | FieldReadFunction<any>;
   invitedBy?: FieldPolicy<any> | FieldReadFunction<any>;
   invitesLeft?: FieldPolicy<any> | FieldReadFunction<any>;
-  lensManager?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   onchainIdentity?: FieldPolicy<any> | FieldReadFunction<any>;
   operations?: FieldPolicy<any> | FieldReadFunction<any>;
   ownedBy?: FieldPolicy<any> | FieldReadFunction<any>;
+  signless?: FieldPolicy<any> | FieldReadFunction<any>;
   sponsor?: FieldPolicy<any> | FieldReadFunction<any>;
   stats?: FieldPolicy<any> | FieldReadFunction<any>;
   txHash?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -15877,6 +15888,7 @@ export type PublicationOperationsKeySpecifier = (
   | 'hasActed'
   | 'hasBookmarked'
   | 'hasMirrored'
+  | 'hasQuoted'
   | 'hasReacted'
   | 'hasReported'
   | 'id'
@@ -15893,6 +15905,7 @@ export type PublicationOperationsFieldPolicy = {
   hasActed?: FieldPolicy<any> | FieldReadFunction<any>;
   hasBookmarked?: FieldPolicy<any> | FieldReadFunction<any>;
   hasMirrored?: FieldPolicy<any> | FieldReadFunction<any>;
+  hasQuoted?: FieldPolicy<any> | FieldReadFunction<any>;
   hasReacted?: FieldPolicy<any> | FieldReadFunction<any>;
   hasReported?: FieldPolicy<any> | FieldReadFunction<any>;
   id?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -15936,7 +15949,7 @@ export type PublicationValidateMetadataResultFieldPolicy = {
   valid?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type QueryKeySpecifier = (
-  | 'approvedAuthentication'
+  | 'approvedAuthentications'
   | 'approvedModuleAllowanceAmount'
   | 'challenge'
   | 'claimableProfiles'
@@ -16016,7 +16029,7 @@ export type QueryKeySpecifier = (
   | QueryKeySpecifier
 )[];
 export type QueryFieldPolicy = {
-  approvedAuthentication?: FieldPolicy<any> | FieldReadFunction<any>;
+  approvedAuthentications?: FieldPolicy<any> | FieldReadFunction<any>;
   approvedModuleAllowanceAmount?: FieldPolicy<any> | FieldReadFunction<any>;
   challenge?: FieldPolicy<any> | FieldReadFunction<any>;
   claimableProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -16618,6 +16631,13 @@ export type StrictTypedTypePolicies = {
       | ApprovedAuthenticationKeySpecifier
       | (() => undefined | ApprovedAuthenticationKeySpecifier);
     fields?: ApprovedAuthenticationFieldPolicy;
+  };
+  ApprovedAuthenticationsResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | ApprovedAuthenticationsResultKeySpecifier
+      | (() => undefined | ApprovedAuthenticationsResultKeySpecifier);
+    fields?: ApprovedAuthenticationsResultFieldPolicy;
   };
   ArticleMetadataV3?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:

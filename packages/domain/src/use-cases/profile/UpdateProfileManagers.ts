@@ -5,7 +5,7 @@ import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
 
 export type UpdateProfileManagersRequest = {
   kind: TransactionKind.UPDATE_PROFILE_MANAGERS;
-  lensManager?: boolean;
+  approveSignless?: boolean;
   add?: EvmAddress[];
   remove?: EvmAddress[];
 };

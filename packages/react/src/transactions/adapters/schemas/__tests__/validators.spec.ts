@@ -85,7 +85,7 @@ describe(`Given the validator helpers`, () => {
         }),
       ).toThrowErrorMatchingInlineSnapshot(`
         "fix the following issues
-        At least one of 'add', 'remove', or 'lensManager' must be present."
+        At least one of 'add', 'remove', or 'approveSignless' must be present."
       `);
     });
   });

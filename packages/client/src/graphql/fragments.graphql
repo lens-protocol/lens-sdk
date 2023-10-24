@@ -318,7 +318,7 @@ fragment Profile on Profile {
     ...HandleInfo
   }
   sponsor
-  lensManager
+  signless
   invitedBy {
     id
   }

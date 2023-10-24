@@ -236,7 +236,7 @@ export function useOpenAction(
 
     const request = resolveOpenActionRequestFor(publication, {
       action: args.action,
-      delegate: session.profile.lensManager,
+      delegate: session.profile.signless,
     });
 
     return openAction(request);

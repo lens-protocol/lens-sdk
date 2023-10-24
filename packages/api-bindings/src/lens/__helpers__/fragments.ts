@@ -120,7 +120,7 @@ export function mockProfileFragment(overrides?: Partial<gql.Profile>): gql.Profi
     handle: mockHandleInfo(),
     invitesLeft: 0,
     sponsor: false,
-    lensManager: false,
+    signless: false,
     ownedBy: mockNetworkAddressFragment(),
     operations: mockProfileOperationsFragment(),
     guardian: null,

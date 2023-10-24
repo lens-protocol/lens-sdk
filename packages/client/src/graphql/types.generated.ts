@@ -137,7 +137,8 @@ export enum ChangeProfileManagerActionType {
 }
 
 export type ChangeProfileManagersRequest = {
-  approveLensManager?: InputMaybe<Scalars['Boolean']['input']>;
+  /** if you define this true will enable it and false will disable it within the same tx as any other managers you are changing state for. Leave it blank if you do not want to change its current state */
+  approveSignless?: InputMaybe<Scalars['Boolean']['input']>;
   changeManagers?: InputMaybe<Array<ChangeProfileManager>>;
 };
 
@@ -544,7 +545,6 @@ export type InternalUpdateProfileStatusRequest = {
 
 export type InviteRequest = {
   invites: Array<Scalars['EvmAddress']['input']>;
-  secret: Scalars['String']['input'];
 };
 
 export type LastLoggedInProfileRequest = {
@@ -624,6 +624,8 @@ export type MomokaCommentRequest = {
 };
 
 export type MomokaMirrorRequest = {
+  /** You can add information like app on a mirror or tracking stuff */
+  metadataURI?: InputMaybe<Scalars['URI']['input']>;
   mirrorOn: Scalars['PublicationId']['input'];
 };
 

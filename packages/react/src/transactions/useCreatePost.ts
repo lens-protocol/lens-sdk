@@ -355,7 +355,7 @@ export function useCreatePost(): UseDeferredTask<
     );
 
     const request = createPostRequest({
-      delegate: session.profile.lensManager,
+      delegate: session.profile.signless,
       ...args,
     });
 

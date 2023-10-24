@@ -48,7 +48,7 @@ function createFollowRequest(profile: Profile, session?: Session): FollowRequest
       return {
         kind: TransactionKind.FOLLOW_PROFILE,
         profileId: profile.id,
-        delegate: session.profile.lensManager,
+        delegate: session.profile.signless,
       };
     case FollowPolicyType.NO_ONE:
       throw new InvariantError(`The profile is configured so that nobody can follow it.`);
