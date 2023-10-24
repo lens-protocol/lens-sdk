@@ -21,6 +21,7 @@ export * from './LensProvider';
 export * from './authentication';
 export * from './discovery';
 export * from './misc';
+export * from './notifications';
 export * from './profile';
 export * from './publication';
 export * from './revenue';

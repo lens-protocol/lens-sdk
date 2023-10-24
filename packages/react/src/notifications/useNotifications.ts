@@ -16,12 +16,12 @@ import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../h
 export type UseNotificationsArgs = PaginatedArgs<NotificationRequest>;
 
 export type Notification =
-  | FollowNotification
   | ActedNotification
   | CommentNotification
+  | FollowNotification
+  | MentionNotification
   | MirrorNotification
   | QuoteNotification
-  | MentionNotification
   | ReactionNotification;
 
 /**
