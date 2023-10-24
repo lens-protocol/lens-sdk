@@ -42,6 +42,7 @@ import {
   UseWhoActedOnPublication,
   UseSetProfileMetadata,
 } from './profiles';
+import { UseUnblockProfiles } from './profiles/UseBlockProfiles';
 import {
   PublicationsPage,
   UseBookmarkToggle,
@@ -140,6 +141,7 @@ export function App() {
                       <Route path="useProfileActionHistory" element={<UseProfileActionHistory />} />
                       <Route path="useSetProfileMetadata" element={<UseSetProfileMetadata />} />
                       <Route path="useUpdateFollowPolicy" element={<UseUpdateFollowPolicy />} />
+                      <Route path="useUnblockProfiles" element={<UseUnblockProfiles />} />
                     </Route>
 
                     <Route path="/discovery">

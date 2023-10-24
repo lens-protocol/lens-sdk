@@ -8,6 +8,7 @@ export * from './useSetProfileMetadata';
 export * from './useUnfollow';
 export * from './useUpdateFollowPolicy';
 export * from './useUpdateProfileManagers';
+export * from './useUnblockProfiles';
 
 export type {
   AnyoneReferencePolicyConfig,

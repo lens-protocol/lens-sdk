@@ -17,8 +17,10 @@ import {
   IDelegatedTransactionGateway,
   IOnChainProtocolCallGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { Data, PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
+import { ChainType, Data, PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
+import { v4 } from 'uuid';
 
+import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from '../ITransactionFactory';
 import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError } from '../relayer';
@@ -42,20 +44,29 @@ export class UnblockProfilesGateway
       return failure(result.error);
     }
 
-    const receipt = result.value;
-    const transaction = this.transactionFactory.createDataTransaction({
-      id: receipt.txId,
+    const transaction = this.transactionFactory.createNativeTransaction({
+      chainType: ChainType.POLYGON,
+      id: v4(),
       request,
+      indexingId: result.value.txId,
+      txHash: result.value.txHash,
     });
 
     return success(transaction);
   }
 
-  createUnsignedProtocolCall(
-    _request: UnblockProfilesRequest,
-    _nonceOverride?: number | undefined,
+  async createUnsignedProtocolCall(
+    request: UnblockProfilesRequest,
+    nonceOverride?: number | undefined,
   ): Promise<IUnsignedProtocolCall<UnblockProfilesRequest>> {
-    throw new Error('Method not implemented.');
+    const result = await this.createTypedData(request, nonceOverride);
+
+    return UnsignedProtocolCall.create({
+      id: result.id,
+      request,
+      typedData: result.typedData,
+      fallback: this.createRequestFallback(request, result),
+    });
   }
 
   private async broadcast(

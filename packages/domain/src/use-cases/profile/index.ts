@@ -5,4 +5,5 @@ export * from './UnfollowProfile';
 export * from './UpdateFollowPolicy';
 export * from './UpdateProfileDetails';
 export * from './UpdateProfileManagers';
+export * from './UnblockProfiles';
 export * from './types';

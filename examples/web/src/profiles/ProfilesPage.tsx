@@ -71,6 +71,11 @@ const profileHooks = [
     description: `Update the follow policy for the logged-in Profile.`,
     path: '/profiles/useUpdateFollowPolicy',
   },
+  {
+    label: 'useUnblockProfiles',
+    description: `Unblock profiles.`,
+    path: '/profiles/useUnblockProfiles',
+  },
 ];
 
 export function ProfilesPage() {

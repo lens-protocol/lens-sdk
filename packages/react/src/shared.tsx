@@ -201,6 +201,8 @@ export type SharedDependencies = {
   walletGateway: WalletGateway;
 };
 
+const SharedDependenciesContext = React.createContext<SharedDependencies | null>(null);
+
 type SharedDependenciesProviderProps = {
   children: ReactNode;
   dependencies: SharedDependencies;

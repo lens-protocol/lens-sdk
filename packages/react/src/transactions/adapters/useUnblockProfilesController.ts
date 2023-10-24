@@ -3,10 +3,7 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import {
-  UnblockProfiles,
-  UnblockProfilesRequest,
-} from '@lens-protocol/domain/src/use-cases/profile/UnblockProfiles';
+import { UnblockProfiles, UnblockProfilesRequest } from '@lens-protocol/domain/use-cases/profile';
 import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
