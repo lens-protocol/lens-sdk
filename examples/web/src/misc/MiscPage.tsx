@@ -2,6 +2,11 @@ import { LinkCard } from '../components/LinkCard';
 
 const hooks = [
   {
+    label: 'useNotifications',
+    description: `Fetch notifications for the active profile.`,
+    path: '/misc/useNotifications',
+  },
+  {
     label: 'useCurrencies',
     description: `Fetch ERC20 tokens that are enabled on the Lens protocol.`,
     path: '/misc/useCurrencies',

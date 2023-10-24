@@ -23,7 +23,7 @@ import {
   UseSearchProfiles,
   UseSearchPublications,
 } from './discovery';
-import { MiscPage, UseCurrencies } from './misc';
+import { MiscPage, UseCurrencies, UseNotifications } from './misc';
 import { UseApproveModule } from './misc/UseApproveModule';
 import {
   ProfilesPage,
@@ -171,6 +171,7 @@ export function App() {
 
                     <Route path="/misc">
                       <Route index element={<MiscPage />} />
+                      <Route path="useNotifications" element={<UseNotifications />} />
                       <Route path="useCurrencies" element={<UseCurrencies />} />
                       <Route path="useApproveModule" element={<UseApproveModule />} />
                     </Route>
