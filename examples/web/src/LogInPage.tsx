@@ -27,7 +27,7 @@ function ProfilesList({ owner }: { owner: string }) {
     });
 
     if (result.isSuccess()) {
-      toast.success(`Welcome ${String(result.value.handle)}`);
+      toast.success(`Welcome ${String(result.value.handle?.fullHandle ?? result.value.id)}`);
       return navigate('/');
     }
 
