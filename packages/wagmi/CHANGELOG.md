@@ -1,5 +1,59 @@
 # @lens-protocol/wagmi
 
+## 3.0.0-alpha.10
+
+### Patch Changes
+
+- 50b546c5: **fix:** wagmi peer dep
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+  - @lens-protocol/react-web@2.0.0-alpha.13
+
+## 3.0.0-alpha.9
+
+### Patch Changes
+
+- Update dependencies
+- Updated dependencies
+  - @lens-protocol/react-web@2.0.0-alpha.12
+
+## 3.0.0-alpha.8
+
+### Patch Changes
+
+- Updated dependencies
+  - @lens-protocol/react-web@2.0.0-alpha.11
+
+## 3.0.0-alpha.7
+
+### Patch Changes
+
+- Updated dependencies [fa49d587]
+- Updated dependencies [c09c5fdc]
+- Updated dependencies [0687207b]
+  - @lens-protocol/react-web@2.0.0-alpha.10
+
+## 3.0.0-alpha.6
+
+### Minor Changes
+
+- 9481f48b: **feat:** implements `useApproveModule` hook. It also upgrades viem and wagmi peer deps.
+
+### Patch Changes
+
+- Updated dependencies [cfc03dff]
+- Updated dependencies [9481f48b]
+- Updated dependencies [fca2473b]
+- Updated dependencies [6ab0e99a]
+- Updated dependencies [f997e3f0]
+- Updated dependencies [cfc03dff]
+- Updated dependencies [bdf81299]
+  - @lens-protocol/react-web@2.0.0-alpha.9
+  - @lens-protocol/shared-kernel@0.11.0-alpha.5
+
 ## 3.0.0-alpha.5
 
 ### Patch Changes

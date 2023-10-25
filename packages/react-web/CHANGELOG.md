@@ -1,5 +1,86 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.13
+
+### Patch Changes
+
+- 5f93ea77: **fix:** support `Profile.lensManager` into `Profile.signless` renaming
+- 5f93ea77: **fix:** support new `HandleInfo`
+- 5f93ea77: **fix:** renames of `handleLinkToProfile`, `handleUnlinkToProfile` and correlated mutations, types
+- 5f93ea77: **fix:** supports `MetadataAttribute.type`
+- 5f93ea77: **fix:** adds `type` to Open Action module settings types
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [09975f6f]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+  - @lens-protocol/api-bindings@0.11.0-alpha.13
+  - @lens-protocol/domain@0.11.0-alpha.9
+  - @lens-protocol/react@2.0.0-alpha.13
+
+## 2.0.0-alpha.12
+
+### Patch Changes
+
+- Update dependencies
+- Updated dependencies
+  - @lens-protocol/api-bindings@0.11.0-alpha.12
+  - @lens-protocol/domain@0.11.0-alpha.8
+  - @lens-protocol/react@2.0.0-alpha.12
+
+## 2.0.0-alpha.11
+
+### Patch Changes
+
+- Update dependencies
+- Updated dependencies
+  - @lens-protocol/api-bindings@0.11.0-alpha.11
+  - @lens-protocol/react@2.0.0-alpha.11
+  - @lens-protocol/domain@0.11.0-alpha.7
+
+## 2.0.0-alpha.10
+
+### Minor Changes
+
+- fa49d587: refactors hook arguments to be passed to the callback
+- c09c5fdc: Added `useNotInterestedToggle` hook
+- 0687207b: Added `useOwnedHandles` hook
+
+### Patch Changes
+
+- Updated dependencies [fa49d587]
+- Updated dependencies [c09c5fdc]
+- Updated dependencies [0687207b]
+  - @lens-protocol/react@2.0.0-alpha.10
+  - @lens-protocol/api-bindings@0.11.0-alpha.10
+
+## 2.0.0-alpha.9
+
+### Minor Changes
+
+- cfc03dff: **feat:** implements `useOpenAction` hook
+- 9481f48b: **feat:** implements `useApproveModule` hook. It also upgrades viem and wagmi peer deps.
+- fca2473b: **feat:** implements `useLogout` hook
+- 6ab0e99a: **Added** revenue hooks: useRevenueFromFollow, useRevenueFromPublication, useRevenueFromPublications
+- cfc03dff: **feat:** implements experimental `useLazyPublication` hook
+- bdf81299: implements `useBookmarkToggle`
+
+### Patch Changes
+
+- f997e3f0: Added possibility to overwrite the default storage config.
+- Updated dependencies [cfc03dff]
+- Updated dependencies [9481f48b]
+- Updated dependencies [fca2473b]
+- Updated dependencies [6ab0e99a]
+- Updated dependencies [cfc03dff]
+- Updated dependencies [bdf81299]
+  - @lens-protocol/api-bindings@0.11.0-alpha.9
+  - @lens-protocol/domain@0.11.0-alpha.6
+  - @lens-protocol/react@2.0.0-alpha.9
+  - @lens-protocol/shared-kernel@0.11.0-alpha.5
+  - @lens-protocol/storage@0.7.5-alpha.3
+
 ## 2.0.0-alpha.8
 
 ### Minor Changes

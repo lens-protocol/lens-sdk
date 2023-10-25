@@ -20,17 +20,18 @@ type ReactionButtonProps = {
 };
 
 function ReactionButton({ publication, reaction }: ReactionButtonProps) {
-  const { execute: toggle, loading } = useReactionToggle({
-    publication,
-  });
+  const { execute: toggle, loading, error } = useReactionToggle();
 
   const hasReactionType = hasReacted({ publication, reaction });
 
   const toggleReaction = async () => {
     await toggle({
       reaction,
+      publication,
     });
   };
+
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <button onClick={toggleReaction} disabled={loading}>

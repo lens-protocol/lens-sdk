@@ -56,6 +56,11 @@ const publicationHooks = [
     description: `Execute an Open Action on a publication.`,
     path: '/publications/useOpenAction',
   },
+  {
+    label: 'useNotInterestedToggle',
+    description: `Add or remove a not interested flag to a publication.`,
+    path: '/publications/useNotInterestedToggle',
+  },
 ];
 
 export function PublicationsPage() {

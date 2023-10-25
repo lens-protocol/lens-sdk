@@ -115,6 +115,7 @@ generates:
       - add:
           content: [
               '/** Code generated. DO NOT EDIT. */',
+              '/* eslint-disable @typescript-eslint/no-redundant-type-constituents */',
               '/* eslint-disable import/no-default-export */', # generatedTypes default export
               '/* eslint-disable no-restricted-imports */', # import * from @apollo/client
               '/* eslint-disable tsdoc/syntax */',

@@ -76,6 +76,13 @@ const profileHooks = [
     description: `Unblock profiles.`,
     path: '/profiles/useUnblockProfiles',
   },
+  {
+    label: 'useOwnedHandles',
+    // label: 'useOwnedHandles & useLinkHandle & useUnlinkHandle',
+    // description: `Link and unlink handle from a profile.`,
+    description: `Fetch all handles owned by a wallet.`,
+    path: '/profiles/useOwnedHandles',
+  },
 ];
 
 export function ProfilesPage() {

@@ -23,7 +23,7 @@ function HidePublicationButton({ publication }: HidePublicationButtonProps) {
   if (publication.hidden) return null;
 
   return (
-    <button onClick={hide} disabled={isPending}>
+    <button onClick={() => hide()} disabled={isPending}>
       Hide
     </button>
   );

@@ -21,10 +21,12 @@ export * from './LensProvider';
 export * from './authentication';
 export * from './discovery';
 export * from './misc';
+export * from './notifications';
 export * from './profile';
 export * from './publication';
 export * from './revenue';
 export * from './transactions';
+export * from './wallet';
 
 /**
  * Domain essentials
@@ -87,7 +89,7 @@ export * from './helpers/tasks';
 /**
  * GQL common types
  */
-export type { App, MetadataAttribute } from '@lens-protocol/api-bindings';
+export type { App } from '@lens-protocol/api-bindings';
 export { TriStateValue } from '@lens-protocol/api-bindings';
 
 /**
@@ -107,6 +109,7 @@ export {
   InsufficientAllowanceError,
   InsufficientFundsError,
 } from '@lens-protocol/domain/use-cases/wallets';
+
 /**
  * Helpers
  */

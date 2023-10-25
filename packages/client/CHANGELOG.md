@@ -1,5 +1,37 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.15
+
+### Patch Changes
+
+- 5f93ea77: **fix:** support `Profile.lensManager` into `Profile.signless` renaming
+- 5f93ea77: **fix:** support new `HandleInfo`
+- 5f93ea77: **fix:** supports `MetadataAttribute.type`
+- 5f93ea77: **fix:** renames of `handleLinkToProfile`, `handleUnlinkToProfile` and correlated mutations, types
+- 5f93ea77: **fix:** uses `invite` mutation rather than `inviteProfile`
+- 5f93ea77: **fix:** adds `type` to Open Action module settings types
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+  - @lens-protocol/gated-content@0.3.3-alpha.10
+
+## 2.0.0-alpha.14
+
+### Patch Changes
+
+- c46f6b34: Added profile.fetchDefault and profile.setDefault methods
+
+## 2.0.0-alpha.13
+
+### Patch Changes
+
+- 9481f48b: **feat:** upgrades viem and wagmi peer deps.
+- Updated dependencies [9481f48b]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.5
+  - @lens-protocol/gated-content@0.3.3-alpha.9
+  - @lens-protocol/storage@0.7.5-alpha.3
+
 ## 2.0.0-alpha.12
 
 ### Patch Changes

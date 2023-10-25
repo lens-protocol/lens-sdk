@@ -7,8 +7,8 @@ import { isRelaySuccess } from '../submodules';
 import { BundlrUploader } from './BundlrUploader';
 
 export async function createOrGetProfile(signer: Wallet, client: LensClient, handle: string) {
-  const fullhandle = `test/@${handle}`;
-  const profile = await client.profile.fetch({ forHandle: fullhandle });
+  const fullHandle = `test/${handle}`;
+  const profile = await client.profile.fetch({ forHandle: fullHandle });
 
   if (profile) {
     return profile;
@@ -23,7 +23,7 @@ export async function createOrGetProfile(signer: Wallet, client: LensClient, han
     await client.transaction.waitUntilComplete({ forTxId: profileCreateResult.txId });
   }
 
-  const result = await client.profile.fetch({ forHandle: fullhandle });
+  const result = await client.profile.fetch({ forHandle: fullHandle });
 
   return result ?? never('Profile not found');
 }
@@ -44,14 +44,14 @@ export async function enableLensProfileManager(
   client: LensClient,
   profile: ProfileFragment,
 ) {
-  if (!profile.lensManager) {
+  if (!profile.signless) {
     invariant(
       profile.id === (await client.authentication.getProfileId()),
       `Cannot setup Lens Profile Manager for ${profile.id}. It's not the authenticated profile.`,
     );
 
     const result = await client.profile.createChangeProfileManagersTypedData({
-      approveLensManager: true,
+      approveSignless: true,
     });
 
     const data = result.unwrap();

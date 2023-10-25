@@ -42,7 +42,7 @@ async function main() {
     allOwnedProfiles.items.map((i) => ({ id: i.id, handle: i.handle })),
   );
 
-  const newProfile = allOwnedProfiles.items.find((item) => item.handle === `${handle}.test`);
+  const newProfile = allOwnedProfiles.items.find((item) => item.handle?.localName === handle);
 
   if (newProfile) {
     console.log(`The newly created profile's id is: ${newProfile.id}`);

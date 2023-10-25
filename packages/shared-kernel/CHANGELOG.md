@@ -1,5 +1,11 @@
 # @lens-protocol/shared-kernel
 
+## 0.11.0-alpha.5
+
+### Patch Changes
+
+- 9481f48b: **feat:** implements `useApproveModule` hook. It also upgrades viem and wagmi peer deps.
+
 ## 0.11.0-alpha.4
 
 ### Minor Changes

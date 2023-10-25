@@ -23,7 +23,7 @@ import {
   UseSearchProfiles,
   UseSearchPublications,
 } from './discovery';
-import { MiscPage, UseCurrencies } from './misc';
+import { MiscPage, UseCurrencies, UseNotifications } from './misc';
 import { UseApproveModule } from './misc/UseApproveModule';
 import {
   ProfilesPage,
@@ -41,6 +41,7 @@ import {
   UseUpdateProfileManagers,
   UseWhoActedOnPublication,
   UseSetProfileMetadata,
+  UseOwnedHandles,
 } from './profiles';
 import { UseUnblockProfiles } from './profiles/UseBlockProfiles';
 import {
@@ -57,6 +58,7 @@ import {
   UseReportPublication,
   UseWhoReactedToPublication,
 } from './publications';
+import { UseNotInterestedToggle } from './publications/UseNotInterestedToggle';
 import {
   RevenuePage,
   UseRevenueFromFollow,
@@ -117,6 +119,7 @@ export function App() {
                       <Route path="useBookmarkToggle" element={<UseBookmarkToggle />} />
                       <Route path="useMyBookmarks" element={<UseMyBookmarks />} />
                       <Route path="useOpenAction" element={<UseOpenAction />} />
+                      <Route path="useNotInterestedToggle" element={<UseNotInterestedToggle />} />
                     </Route>
 
                     <Route path="/profiles">
@@ -142,6 +145,7 @@ export function App() {
                       <Route path="useSetProfileMetadata" element={<UseSetProfileMetadata />} />
                       <Route path="useUpdateFollowPolicy" element={<UseUpdateFollowPolicy />} />
                       <Route path="useUnblockProfiles" element={<UseUnblockProfiles />} />
+                      <Route path="useOwnedHandles" element={<UseOwnedHandles />} />
                     </Route>
 
                     <Route path="/discovery">
@@ -169,6 +173,7 @@ export function App() {
 
                     <Route path="/misc">
                       <Route index element={<MiscPage />} />
+                      <Route path="useNotifications" element={<UseNotifications />} />
                       <Route path="useCurrencies" element={<UseCurrencies />} />
                       <Route path="useApproveModule" element={<UseApproveModule />} />
                     </Route>

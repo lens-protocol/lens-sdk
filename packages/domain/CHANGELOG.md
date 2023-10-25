@@ -1,5 +1,36 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.9
+
+### Patch Changes
+
+- 5f93ea77: **fix:** support `Profile.lensManager` into `Profile.signless` renaming
+- 5f93ea77: **fix:** renames of `handleLinkToProfile`, `handleUnlinkToProfile` and correlated mutations, types
+
+## 0.11.0-alpha.8
+
+### Patch Changes
+
+- Update dependencies
+
+## 0.11.0-alpha.7
+
+### Patch Changes
+
+- 0687207b: Added LinkHandle and UnlinkHandle use-cases
+
+## 0.11.0-alpha.6
+
+### Minor Changes
+
+- cfc03dff: **feat:** implements `useOpenAction` hook
+
+### Patch Changes
+
+- 9481f48b: **feat:** implements `useApproveModule` hook. It also upgrades viem and wagmi peer deps.
+- Updated dependencies [9481f48b]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.5
+
 ## 0.11.0-alpha.5
 
 ### Minor Changes

@@ -25,11 +25,56 @@ export type UseSetProfileMetadataArgs = OnchainSetProfileMetadataRequest;
  * @param args - {@link UseSetProfileMetadataArgs}
  *
  * @example
+ * Update profile metadata with name and bio with location and website attributes.
+ *
  * ```tsx
- * const { execute: update, error, loading } = useSetProfileMetadata();
+ * import { MetadataAttributeType, profile } from '@lens-protocol/metadata';
+ * import { useSetProfileMetadata } from '@lens-protocol/react';
+ * import uploadMetadataJson from './your-upload-metadata-json';
  *
- * update({ metadataURI: 'your-uploaded-metadata-uri' });
+ * function SetProfileMetadata() {
+ *  const { execute: setMetadata, loading } = useSetProfileMetadata();
  *
+ *  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+ *    event.preventDefault();
+ *
+ *    const formData = new FormData(event.currentTarget);
+ *
+ *    const name = formData.get('name') as string;
+ *    const bio = formData.get('bio') as string;
+ *    const location = formData.get('location') as string;
+ *    const website = formData.get('website') as string;
+ *
+ *   const metadata = profile({
+ *    name,
+ *    bio,
+ *    attributes: [
+ *      {
+ *        key: 'location',
+ *        type: MetadataAttributeType.Location,
+ *        value: location,
+ *      },
+ *      {
+ *        key: 'website',
+ *        type: MetadataAttributeType.Website,
+ *        value: website,
+ *      },
+ *     ],
+ *    });
+ *
+ *   const metadataURI = await uploadMetadataJson(metadata);
+ *
+ *   await setMetadata({
+ *    metadataURI,
+ *   });
+ *  }
+ *
+ *  return (
+ *    <form onSubmit={handleSubmit}>
+ *     // render form fields
+ *   </form>
+ *  );
+ * }
  * ```
  */
 export function useSetProfileMetadata(): UseDeferredTask<
@@ -52,7 +97,7 @@ export function useSetProfileMetadata(): UseDeferredTask<
 
     return setProfileMetadata({
       kind: TransactionKind.UPDATE_PROFILE_DETAILS,
-      delegate: session.profile.lensManager,
+      delegate: session.profile.signless,
       metadataURI,
     });
   });

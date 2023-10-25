@@ -13,12 +13,13 @@ import type {
   BlockRequest,
   ChangeProfileManagersRequest,
   CreateProfileWithHandleRequest,
+  DefaultProfileRequest,
   DismissRecommendedProfilesRequest,
   FollowRequest,
   FollowersRequest,
   FollowingRequest,
-  HandleLinkToProfileRequest,
-  HandleUnlinkFromProfileRequest,
+  LinkHandleToProfileRequest,
+  UnlinkHandleFromProfileRequest,
   MutualFollowersRequest,
   OnchainSetProfileMetadataRequest,
   ProfileActionHistoryRequest,
@@ -27,6 +28,7 @@ import type {
   ProfileRecommendationsRequest,
   ProfileRequest,
   ProfilesRequest,
+  SetDefaultProfileRequest,
   SetFollowModuleRequest,
   TypedDataOptions,
   UnblockRequest,
@@ -44,8 +46,8 @@ import {
   CreateBlockProfilesBroadcastItemResultFragment,
   CreateChangeProfileManagersBroadcastItemResultFragment,
   CreateFollowBroadcastItemResultFragment,
-  CreateHandleLinkToProfileBroadcastItemResultFragment,
-  CreateHandleUnlinkFromProfileBroadcastItemResultFragment,
+  CreateLinkHandleToProfileBroadcastItemResultFragment,
+  CreateUnlinkHandleFromProfileBroadcastItemResultFragment,
   CreateOnchainSetProfileMetadataBroadcastItemResultFragment,
   CreateProfileWithHandleErrorResultFragment,
   CreateSetFollowModuleBroadcastItemResultFragment,
@@ -206,6 +208,52 @@ export class Profile {
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.DismissRecommendedProfiles({ request }, headers);
+    });
+  }
+
+  /**
+   * Fetch the default profile for a given address.
+   * If no default is explicitly set, it returns the oldest profile owned by the address.
+   *
+   * @param request - Request object for the query
+   * @returns Profile or null if not found
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.fetchDefault({
+   *   for: '0x1234567890123456789012345678901234567890',
+   * });
+   * ```
+   */
+  async fetchDefault(request: DefaultProfileRequest): Promise<ProfileFragment | null> {
+    const result = await this.sdk.DefaultProfile({
+      request,
+      ...buildRequestFromConfig(this.context),
+    });
+
+    return result.data.result;
+  }
+
+  /**
+   * Set default profile for authenticated address.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.setDefault({
+   *   profileId: '0x123',
+   * });
+   * ```
+   */
+  async setDefault(
+    request: SetDefaultProfileRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      await this.sdk.SetDefaultProfile({ request }, headers);
     });
   }
 
@@ -458,7 +506,7 @@ export class Profile {
    * @example
    * ```ts
    * const result = await client.profile.createChangeProfileManagersTypedData({
-   *   approveLensManager: true,
+   *   approveSignless: true,
    * });
    * ```
    */
@@ -835,13 +883,13 @@ export class Profile {
    * ```
    */
   async linkHandle(
-    request: HandleLinkToProfileRequest,
+    request: LinkHandleToProfileRequest,
   ): PromiseResult<
     RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.HandleLinkToProfile({ request }, headers);
+      const result = await this.sdk.LinkHandleToProfile({ request }, headers);
       return result.data.result;
     });
   }
@@ -865,14 +913,14 @@ export class Profile {
    * ```
    */
   async createLinkHandleTypedData(
-    request: HandleLinkToProfileRequest,
+    request: LinkHandleToProfileRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    CreateHandleLinkToProfileBroadcastItemResultFragment,
+    CreateLinkHandleToProfileBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateHandleLinkToProfileTypedData(
+      const result = await this.sdk.CreateLinkHandleToProfileTypedData(
         { request, options },
         headers,
       );
@@ -897,13 +945,13 @@ export class Profile {
    * ```
    */
   async unlinkHandle(
-    request: HandleUnlinkFromProfileRequest,
+    request: UnlinkHandleFromProfileRequest,
   ): PromiseResult<
     RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.HandleUnlinkFromProfile({ request }, headers);
+      const result = await this.sdk.UnlinkHandleFromProfile({ request }, headers);
       return result.data.result;
     });
   }
@@ -927,14 +975,14 @@ export class Profile {
    * ```
    */
   async createUnlinkHandleTypedData(
-    request: HandleUnlinkFromProfileRequest,
+    request: UnlinkHandleFromProfileRequest,
     options?: TypedDataOptions,
   ): PromiseResult<
-    CreateHandleUnlinkFromProfileBroadcastItemResultFragment,
+    CreateUnlinkHandleFromProfileBroadcastItemResultFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.CreateHandleUnlinkFromProfileTypedData(
+      const result = await this.sdk.CreateUnlinkHandleFromProfileTypedData(
         { request, options },
         headers,
       );

@@ -35,11 +35,8 @@ export function hasReacted(args: HasReactedArgs): boolean {
   }
 }
 
-export type UseReactionToggleArgs = {
-  publication: PrimaryPublication;
-};
-
 export type ReactionToggleArgs = {
+  publication: PrimaryPublication;
   reaction: PublicationReactionType;
 };
 
@@ -50,40 +47,50 @@ export type ReactionToggleArgs = {
  *
  * @example
  * ```tsx
- * const { execute: toggle, loading } = useReactionToggle({
- *   publication,
- * });
+ * import { PrimaryPublication, useReactionToggle } from '@lens-protocol/react-web';
  *
- * const toggleReaction = async () => {
- *   await toggle({
- *     reaction: PublicationReactionType.Upvote,
- *   });
- * };
+ * function Publication({ publication }: { publication: PrimaryPublication }) {
+ *  const { execute: toggle, loading, error } = useReactionToggle();
  *
- * <button onClick={toggleReaction} disabled={loading}>
- *   Toggle reaction
- * </button>
+ *  const toggleReaction = async () => {
+ *    await toggle({
+ *      reaction: PublicationReactionType.Upvote,
+ *      publication,
+ *    });
+ *  };
+ *
+ *  if (error) {
+ *   return <p>Error reacting to publication: {error.message}</p>;
+ *  }
+ *
+ *  return (
+ *    <div>
+ *      // render publication details
+ *      <button onClick={toggleReaction} disabled={loading}>
+ *        Toggle reaction
+ *      </button>
+ *    </div>
+ *  );
+ * }
  * ```
  *
  * @category Publications
  * @group Hooks
  */
-export function useReactionToggle(
-  args: UseReactionToggleArgs,
-): UseDeferredTask<void, never, ReactionToggleArgs> {
+export function useReactionToggle(): UseDeferredTask<void, never, ReactionToggleArgs> {
   const { add, remove } = useReactionToggleController();
 
-  invariant(isPrimaryPublication(args.publication), 'Publication is not a primary publication');
+  return useDeferredTask(async ({ reaction, publication }) => {
+    invariant(isPrimaryPublication(publication), 'Publication is not a primary publication');
 
-  return useDeferredTask(async ({ reaction }) => {
-    if (hasReacted({ publication: args.publication, reaction })) {
+    if (hasReacted({ publication, reaction })) {
       await remove({
-        publicationId: args.publication.id,
+        publicationId: publication.id,
         reaction: reaction,
       });
     } else {
       await add({
-        publicationId: args.publication.id,
+        publicationId: publication.id,
         reaction: reaction,
       });
     }

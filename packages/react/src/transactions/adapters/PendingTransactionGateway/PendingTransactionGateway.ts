@@ -55,6 +55,8 @@ const transactionKindToFilterGroup: { [k in TransactionKind]: TransactionKind[] 
   [TransactionKind.APPROVE_MODULE]: [],
   [TransactionKind.CREATE_PROFILE]: [],
   [TransactionKind.UNFOLLOW_PROFILE]: [],
+  [TransactionKind.LINK_HANDLE]: [],
+  [TransactionKind.UNLINK_HANDLE]: [],
 };
 
 function isSerializableMetaTransaction<T extends AnyTransactionRequest>(

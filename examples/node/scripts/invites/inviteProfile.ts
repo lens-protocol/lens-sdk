@@ -7,7 +7,6 @@ async function main() {
 
   const result = await client.invites.inviteProfile({
     invites: ['0x1234567890123456789012345678901234567890'],
-    secret: 'secret',
   });
 
   console.log(`Result: `, result.unwrap());

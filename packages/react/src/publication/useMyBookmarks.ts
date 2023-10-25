@@ -20,17 +20,25 @@ export type UseMyBookmarksArgs = PaginatedArgs<PublicationBookmarksRequest>;
  *
  * @example
  * ```tsx
- * const { data, loading, error } = useMyBookmarks();
+ * import { useMyBookmarks } from '@lens-protocol/react';
  *
- * if (loading) return <p>Loading...</p>;
+ * function MyBookmarks() {
+ *  const { data: bookmarks, loading, error, hasMore } = useMyBookmarks();
  *
- * return (
- *  <div>
- *   {data.map((publication) => (
- *    <PublicationCard publication={publication} key={publication.id} />
- *  ))}
- * </div>
- * );
+ *  if (loading) return <p>Loading...</p>;
+ *
+ *  if (error) return <p>Error: {error.message}</p>;
+ *
+ *  return (
+ *   <ul>
+ *      {bookmarks.map((bookmark, idx) => (
+ *       <li key={`${bookmark.id}-${idx}`}>
+ *        // render bookmark details
+ *      </li>
+ *      ))}
+ *   </ul>
+ *  );
+ * }
  * ```
  */
 export function useMyBookmarks({ where, limit }: UseMyBookmarksArgs = {}): PaginatedReadResult<
