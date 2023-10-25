@@ -102,6 +102,10 @@ export class Authentication implements IAuthentication {
     return result.value.getProfileId();
   }
 
+  async logout(): Promise<void> {
+    await this.credentials.reset();
+  }
+
   async fetchAll(request: ApprovedAuthenticationRequest = {}) {
     return requireAuthHeaders(this, async (headers) => {
       return this.api.approvedAuthentications(request, headers);

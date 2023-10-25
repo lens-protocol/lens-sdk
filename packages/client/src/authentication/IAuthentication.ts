@@ -65,6 +65,13 @@ export interface IAuthentication {
   getProfileId(): Promise<string | null>;
 
   /**
+   * Logout the authenticated profile. Cleanup the storage.
+   *
+   * @returns Nothing
+   */
+  logout(): Promise<void>;
+
+  /**
    * Fetch active authentication sessions.
    *
    * ⚠️ Requires authenticated LensClient.

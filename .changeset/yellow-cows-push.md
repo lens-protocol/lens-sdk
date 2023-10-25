@@ -2,4 +2,4 @@
 "@lens-protocol/client": patch
 ---
 
-Added `authentication.fetchAll` and `authentication.revoke` methods to manage active sessions.
+Added `authentication.fetchAll`, `authentication.revoke` and `authentication.logout` methods to manage active sessions.

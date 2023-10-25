@@ -12,7 +12,6 @@ import type {
 import type {
   BlockRequest,
   ChangeProfileManagersRequest,
-  ClaimProfileWithHandleRequest,
   CreateProfileWithHandleRequest,
   DefaultProfileRequest,
   DismissRecommendedProfilesRequest,
@@ -58,7 +57,6 @@ import {
   ProfileManagerFragment,
   Sdk,
   getSdk,
-  ClaimProfileWithHandleErrorResultFragment,
 } from './graphql/profile.generated';
 import { FetchProfileOptions } from './types';
 
