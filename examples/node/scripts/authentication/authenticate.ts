@@ -5,6 +5,7 @@ import { setupWallet } from '../shared/setupWallet';
 async function main() {
   const client = new LensClient({
     environment: development,
+    origin: 'https://lens-scripts.example',
   });
 
   const wallet = setupWallet();
@@ -20,6 +21,8 @@ async function main() {
     signedBy: address,
     for: ownedProfiles.items[0].id,
   });
+
+  console.log(`Challenge: `, text);
 
   const signature = await wallet.signMessage(text);
 

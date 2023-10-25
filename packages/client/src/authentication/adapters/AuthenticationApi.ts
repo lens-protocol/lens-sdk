@@ -22,7 +22,7 @@ export class AuthenticationApi {
   private readonly sdk: Sdk;
 
   constructor(context: LensContext) {
-    const client = new FetchGraphQLClient(context.environment.gqlEndpoint);
+    const client = new FetchGraphQLClient(context);
     this.sdk = getSdk(client);
   }
 

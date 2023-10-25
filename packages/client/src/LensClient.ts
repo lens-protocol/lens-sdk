@@ -28,6 +28,7 @@ export type LensClientConfig = {
    * The environment to use. See {@link production}, {@link development}, and {@link sandbox}.
    */
   environment: Environment;
+
   /**
    * The storage provider to use.
    *
@@ -43,6 +44,11 @@ export type LensClientConfig = {
    * @see {@link MediaTransformsConfig} for more information
    */
   mediaTransforms?: MediaTransformsConfig;
+
+  /**
+   * The origin to be sent in the `Origin` header when making requests to the Lens API.
+   */
+  origin?: string;
 };
 
 /**
@@ -73,6 +79,7 @@ export class LensClient {
       environment: config.environment,
       storage: config.storage || new InMemoryStorageProvider(),
       mediaTransforms: config.mediaTransforms || {},
+      origin: config.origin,
     };
     this._authentication = new Authentication(this.context);
   }
