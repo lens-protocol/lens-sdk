@@ -27,3 +27,12 @@ mutation AuthRefresh($request: RefreshRequest!) {
     refreshToken
   }
 }
+
+mutation WalletAuthenticationToProfileAuthentication(
+  $request: WalletAuthenticationToProfileAuthenticationRequest!
+) {
+  result: walletAuthenticationToProfileAuthentication(request: $request) {
+    accessToken
+    refreshToken
+  }
+}
