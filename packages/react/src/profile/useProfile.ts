@@ -16,10 +16,22 @@ import { ReadResult, useReadResult } from '../helpers/reads';
 export type UseProfileArgs = OneOf<ProfileRequest>;
 
 /**
- * Get a profile by either a handle or profile Id.
+ * `useProfile` is a React hook that allows you to fetch a profile from the Lens API.
  *
  * @example
- * ```tsx
+ * ```ts
+ * const { data, error, loading } = useProfile({ forProfileId: '0x04' });
+ * ```
+ *
+ * Get a profile by handle:
+ * ```ts
+ * const { data, error, loading } = useProfile({
+ *   forHandle: 'lens/stani',
+ * });
+ * ```
+ *
+ * Get a profile by Id:
+ * ```ts
  * const { data, error, loading } = useProfile({
  *   forProfileId: '0x04',
  * });

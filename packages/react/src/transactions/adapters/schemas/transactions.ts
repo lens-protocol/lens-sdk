@@ -22,6 +22,8 @@ import {
   UpdateFollowPolicyRequestSchema,
   FollowRequestSchema,
   BlockProfilesRequestSchema,
+  LinkHandleRequestSchema,
+  UnlinkHandleRequestSchema,
 } from './profiles';
 import {
   CollectRequestSchema,
@@ -33,41 +35,34 @@ import {
 
 function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) {
   switch (kind) {
-    case TransactionKind.BLOCK_PROFILE:
-      return BlockProfilesRequestSchema;
-
-    case TransactionKind.CREATE_POST:
-      return CreatePostRequestSchema;
-
-    case TransactionKind.CREATE_COMMENT:
-      return CreateCommentRequestSchema;
-
-    case TransactionKind.CREATE_QUOTE:
-      return CreateQuoteRequestSchema;
-
-    case TransactionKind.MIRROR_PUBLICATION:
-      return CreateMirrorRequestSchema;
-
-    case TransactionKind.CREATE_PROFILE:
-      return CreateProfileRequestSchema;
-
-    case TransactionKind.UNFOLLOW_PROFILE:
-      return UnfollowRequestSchema;
-
-    case TransactionKind.UPDATE_PROFILE_MANAGERS:
-      return UpdateProfileManagersRequestSchema;
-
-    case TransactionKind.UPDATE_PROFILE_DETAILS:
-      return SetProfileMetadataRequestSchema;
-
-    case TransactionKind.UPDATE_FOLLOW_POLICY:
-      return UpdateFollowPolicyRequestSchema;
-
-    case TransactionKind.FOLLOW_PROFILE:
-      return FollowRequestSchema;
-
     case TransactionKind.ACT_ON_PUBLICATION:
       return CollectRequestSchema;
+    case TransactionKind.BLOCK_PROFILE:
+      return BlockProfilesRequestSchema;
+    case TransactionKind.CREATE_COMMENT:
+      return CreateCommentRequestSchema;
+    case TransactionKind.CREATE_POST:
+      return CreatePostRequestSchema;
+    case TransactionKind.CREATE_PROFILE:
+      return CreateProfileRequestSchema;
+    case TransactionKind.CREATE_QUOTE:
+      return CreateQuoteRequestSchema;
+    case TransactionKind.FOLLOW_PROFILE:
+      return FollowRequestSchema;
+    case TransactionKind.LINK_HANDLE:
+      return LinkHandleRequestSchema;
+    case TransactionKind.MIRROR_PUBLICATION:
+      return CreateMirrorRequestSchema;
+    case TransactionKind.UNFOLLOW_PROFILE:
+      return UnfollowRequestSchema;
+    case TransactionKind.UNLINK_HANDLE:
+      return UnlinkHandleRequestSchema;
+    case TransactionKind.UPDATE_FOLLOW_POLICY:
+      return UpdateFollowPolicyRequestSchema;
+    case TransactionKind.UPDATE_PROFILE_DETAILS:
+      return SetProfileMetadataRequestSchema;
+    case TransactionKind.UPDATE_PROFILE_MANAGERS:
+      return UpdateProfileManagersRequestSchema;
 
     default:
       throw new Error('Not implemented');

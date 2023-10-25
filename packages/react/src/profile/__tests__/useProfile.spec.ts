@@ -1,4 +1,5 @@
 import { mockProfileFragment, mockProfileResponse } from '@lens-protocol/api-bindings/mocks';
+import { never } from '@lens-protocol/shared-kernel';
 import { waitFor } from '@testing-library/react';
 
 import { NotFoundError } from '../../NotFoundError';
@@ -16,7 +17,7 @@ describe(`Given the ${useProfile.name} hook`, () => {
     },
     {
       description: 'when invoked with a profile handle',
-      args: { forHandle: profile.handle },
+      args: { forHandle: profile.handle?.fullHandle ?? never() },
     },
   ])('$description', ({ args }) => {
     it('should settle with the profile data', async () => {

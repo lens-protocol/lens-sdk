@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/wagmi",
-  "version": "3.0.0-alpha.5",
+  "version": "3.0.0-alpha.10",
   "description": "wagmi bindings for @lens-protocol/react",
   "repository": {
     "directory": "packages/wagmi",
@@ -52,7 +52,7 @@
     "@lens-protocol/react-web": "workspace:*",
     "ethers": "^5.7.2",
     "viem": "^1.16.6",
-    "wagmi": "~1.1.0"
+    "wagmi": "^1.1.0"
   },
   "prettier": "@lens-protocol/prettier-config",
   "dependencies": {

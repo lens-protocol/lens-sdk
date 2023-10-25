@@ -137,7 +137,8 @@ export enum ChangeProfileManagerActionType {
 }
 
 export type ChangeProfileManagersRequest = {
-  approveLensManager?: InputMaybe<Scalars['Boolean']['input']>;
+  /** if you define this true will enable it and false will disable it within the same tx as any other managers you are changing state for. Leave it blank if you do not want to change its current state */
+  approveSignless?: InputMaybe<Scalars['Boolean']['input']>;
   changeManagers?: InputMaybe<Array<ChangeProfileManager>>;
 };
 
@@ -420,14 +421,6 @@ export type GetProfileMetadataArgs = {
   useFallback?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-export type HandleLinkToProfileRequest = {
-  handle: Scalars['Handle']['input'];
-};
-
-export type HandleUnlinkFromProfileRequest = {
-  handle: Scalars['Handle']['input'];
-};
-
 export type HidePublicationRequest = {
   for: Scalars['PublicationId']['input'];
 };
@@ -501,6 +494,7 @@ export type InternalCuratedTagsRequest = {
 };
 
 export type InternalCuratedUpdateRequest = {
+  /** The full handle - namespace/localname */
   handle: Scalars['Handle']['input'];
   remove: Scalars['Boolean']['input'];
   secret: Scalars['String']['input'];
@@ -541,7 +535,6 @@ export type InternalUpdateProfileStatusRequest = {
 
 export type InviteRequest = {
   invites: Array<Scalars['EvmAddress']['input']>;
-  secret: Scalars['String']['input'];
 };
 
 export type LastLoggedInProfileRequest = {
@@ -592,8 +585,21 @@ export enum LimitType {
   TwentyFive = 'TwentyFive',
 }
 
+export type LinkHandleToProfileRequest = {
+  /** The full handle - namespace/localname */
+  handle: Scalars['Handle']['input'];
+};
+
 export enum MarketplaceMetadataAttributeDisplayType {
   Date = 'DATE',
+  Number = 'NUMBER',
+  String = 'STRING',
+}
+
+export enum MetadataAttributeType {
+  Boolean = 'BOOLEAN',
+  Date = 'DATE',
+  Json = 'JSON',
   Number = 'NUMBER',
   String = 'STRING',
 }
@@ -613,6 +619,8 @@ export type MomokaCommentRequest = {
 };
 
 export type MomokaMirrorRequest = {
+  /** You can add information like app on a mirror or tracking stuff */
+  metadataURI?: InputMaybe<Scalars['URI']['input']>;
   mirrorOn: Scalars['PublicationId']['input'];
 };
 
@@ -1075,7 +1083,7 @@ export type ProfileRecommendationsRequest = {
 };
 
 export type ProfileRequest = {
-  /** The handle for profile you want to fetch */
+  /** The handle for profile you want to fetch - namespace/localname */
   forHandle?: InputMaybe<Scalars['Handle']['input']>;
   /** The profile you want to fetch */
   forProfileId?: InputMaybe<Scalars['ProfileId']['input']>;
@@ -1342,15 +1350,9 @@ export enum PublicationType {
   Quote = 'QUOTE',
 }
 
-export enum PublicationsOrderByType {
-  CommentOfQueryRanking = 'COMMENT_OF_QUERY_RANKING',
-  Latest = 'LATEST',
-}
-
 export type PublicationsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<LimitType>;
-  orderBy?: InputMaybe<PublicationsOrderByType>;
   where: PublicationsWhere;
 };
 
@@ -1599,6 +1601,11 @@ export type UnknownOpenActionModuleInput = {
 export type UnknownReferenceModuleInput = {
   address: Scalars['EvmAddress']['input'];
   data: Scalars['BlockchainData']['input'];
+};
+
+export type UnlinkHandleFromProfileRequest = {
+  /** The full handle - namespace/localname */
+  handle: Scalars['Handle']['input'];
 };
 
 export type UserPoapsQueryRequest = {

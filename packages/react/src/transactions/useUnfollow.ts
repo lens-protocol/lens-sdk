@@ -1,15 +1,24 @@
 import { Profile } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
-  TransactionError,
   TransactionKind,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
+import { invariant } from '@lens-protocol/shared-kernel';
 
+import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
+import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useUnfollowController } from './adapters/useUnfollowController';
+
+/**
+ * An object representing the result of an unfollow operation.
+ *
+ * It allows to wait for the transaction to be processed and indexed.
+ */
+export type UnfollowAsyncResult = AsyncTransactionResult<void>;
 
 export type UnfollowArgs = {
   /**
@@ -36,21 +45,27 @@ export type UnfollowArgs = {
  * @group Hooks
  */
 export function useUnfollow(): UseDeferredTask<
-  void,
-  | BroadcastingError
-  | PendingSigningRequestError
-  | UserRejectedError
-  | WalletConnectionError
-  | TransactionError,
+  UnfollowAsyncResult,
+  BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
   UnfollowArgs
 > {
+  const { data: session } = useSession();
   const unfollowProfile = useUnfollowController();
 
   return useDeferredTask(async (args) => {
+    invariant(
+      session?.authenticated,
+      'You must be authenticated to use this operation. Use `useLogin` hook to authenticate.',
+    );
+    invariant(
+      session.type === SessionType.WithProfile,
+      'You must have a profile to use this operation.',
+    );
+
     return unfollowProfile({
       kind: TransactionKind.UNFOLLOW_PROFILE,
       profileId: args.profile.id,
-      delegate: true,
+      delegate: session.profile.signless,
     });
   });
 }

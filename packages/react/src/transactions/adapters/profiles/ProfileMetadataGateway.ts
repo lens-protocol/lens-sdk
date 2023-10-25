@@ -18,7 +18,8 @@ import {
   IDelegatedTransactionGateway,
   IOnChainProtocolCallGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { Data, PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
+import { ChainType, Data, PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
+import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from '../ITransactionFactory';
@@ -45,8 +46,11 @@ export class ProfileMetadataGateway
     }
 
     const receipt = result.value;
-    const transaction = this.transactionFactory.createDataTransaction({
-      id: receipt.txId,
+    const transaction = this.transactionFactory.createNativeTransaction({
+      chainType: ChainType.POLYGON,
+      id: v4(),
+      indexingId: receipt.txId,
+      txHash: receipt.txHash,
       request,
     });
 

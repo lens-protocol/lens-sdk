@@ -18,7 +18,7 @@ function UpdateProfileManagersForm({ profile }: { profile: Profile }) {
     const enabled = formData.get('enabled') === 'on';
 
     await execute({
-      lensManager: enabled,
+      approveSignless: enabled,
     });
   };
 
@@ -42,7 +42,7 @@ function UpdateProfileManagersForm({ profile }: { profile: Profile }) {
           <input
             name="enabled"
             type="checkbox"
-            defaultChecked={profile.lensManager}
+            defaultChecked={profile.signless}
             value="on"
             disabled={loading}
           />

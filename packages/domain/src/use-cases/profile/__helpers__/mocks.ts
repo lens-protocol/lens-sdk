@@ -14,14 +14,16 @@ import {
   IProfileTransactionGateway,
 } from '../CreateProfile';
 import { FreeFollowRequest, PaidFollowRequest } from '../FollowProfile';
+import { LinkHandleRequest } from '../LinkHandle';
 import {
   INftOwnershipChallengeGateway,
   NftOwnershipSignature,
   ProveNftOwnershipRequest,
 } from '../ProveNftOwnership';
+import { SetProfileMetadataRequest } from '../SetProfileMetadata';
 import { UnfollowRequest } from '../UnfollowProfile';
+import { UnlinkHandleRequest } from '../UnlinkHandle';
 import { UpdateFollowPolicyRequest } from '../UpdateFollowPolicy';
-import { SetProfileMetadataRequest } from '../UpdateProfileDetails';
 import { UpdateProfileManagersRequest } from '../UpdateProfileManagers';
 import { ChargeFollowConfig, FollowPolicyType, NoFeeFollowConfig } from '../types';
 
@@ -98,7 +100,7 @@ export function mockUpdateProfileManagersRequest(
   overrides?: Partial<UpdateProfileManagersRequest>,
 ): UpdateProfileManagersRequest {
   return {
-    lensManager: true,
+    approveSignless: true,
     ...overrides,
     kind: TransactionKind.UPDATE_PROFILE_MANAGERS,
   };
@@ -174,5 +176,25 @@ export function mockBlockProfilesRequest(
     profileIds: [mockProfileId()],
     ...overrides,
     kind: TransactionKind.BLOCK_PROFILE,
+  };
+}
+
+export function mockLinkHandleRequest(overrides?: Partial<LinkHandleRequest>): LinkHandleRequest {
+  return {
+    handle: faker.internet.userName(),
+    delegate: true,
+    ...overrides,
+    kind: TransactionKind.LINK_HANDLE,
+  };
+}
+
+export function mockUnlinkHandleRequest(
+  overrides?: Partial<UnlinkHandleRequest>,
+): UnlinkHandleRequest {
+  return {
+    handle: faker.internet.userName(),
+    delegate: true,
+    ...overrides,
+    kind: TransactionKind.UNLINK_HANDLE,
   };
 }

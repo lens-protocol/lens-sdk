@@ -40,10 +40,9 @@ import { TransactionQueuePresenter } from './transactions/adapters/TransactionQu
 import { BlockProfilesResponder } from './transactions/adapters/responders/BlockProfilesResponder';
 import { FollowProfileResponder } from './transactions/adapters/responders/FollowProfileResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
+import { RefreshCurrentProfileResponder } from './transactions/adapters/responders/RefreshCurrentProfileResponder';
 import { RefreshPublicationResponder } from './transactions/adapters/responders/RefreshPublicationResponder';
-import { SetProfileMetadataResponder } from './transactions/adapters/responders/SetProfileMetadataResponder';
 import { UnfollowProfileResponder } from './transactions/adapters/responders/UnfollowProfileResponder';
-import { UpdateFollowPolicyResponder } from './transactions/adapters/responders/UpdateFollowPolicyResponder';
 import { UpdateProfileManagersResponder } from './transactions/adapters/responders/UpdateProfileManagersResponder';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
@@ -112,18 +111,22 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   };
 
   const responders: TransactionResponders<AnyTransactionRequest> = {
-    [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
     [TransactionKind.ACT_ON_PUBLICATION]: new RefreshPublicationResponder(publicationCacheManager),
+    [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
     [TransactionKind.BLOCK_PROFILE]: new BlockProfilesResponder(profileCacheManager),
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(), // TODO update profile for new stats
     [TransactionKind.CREATE_POST]: new NoopResponder(), // TODO update profile for new stats
-    [TransactionKind.CREATE_QUOTE]: new NoopResponder(), // TODO update profile for new stats
     [TransactionKind.CREATE_PROFILE]: new NoopResponder(),
+    [TransactionKind.CREATE_QUOTE]: new NoopResponder(), // TODO update profile for new stats
     [TransactionKind.FOLLOW_PROFILE]: new FollowProfileResponder(profileCacheManager),
+    [TransactionKind.LINK_HANDLE]: new RefreshCurrentProfileResponder(profileCacheManager),
     [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(), // TODO update profile for new stats
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(profileCacheManager),
-    [TransactionKind.UPDATE_PROFILE_DETAILS]: new SetProfileMetadataResponder(profileCacheManager),
-    [TransactionKind.UPDATE_FOLLOW_POLICY]: new UpdateFollowPolicyResponder(profileCacheManager),
+    [TransactionKind.UNLINK_HANDLE]: new RefreshCurrentProfileResponder(profileCacheManager),
+    [TransactionKind.UPDATE_FOLLOW_POLICY]: new RefreshCurrentProfileResponder(profileCacheManager),
+    [TransactionKind.UPDATE_PROFILE_DETAILS]: new RefreshCurrentProfileResponder(
+      profileCacheManager,
+    ),
     [TransactionKind.UPDATE_PROFILE_MANAGERS]: new UpdateProfileManagersResponder(
       apolloClient,
       profileCacheManager,

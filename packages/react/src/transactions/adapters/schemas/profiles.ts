@@ -42,16 +42,16 @@ export const UnfollowRequestSchema = z.object({
 
 export const UpdateProfileManagersRequestSchema = z
   .object({
-    lensManager: z.boolean().optional(),
+    approveSignless: z.boolean().optional(),
     add: EvmAddressSchema.array().min(1).optional(),
     remove: EvmAddressSchema.array().min(1).optional(),
     kind: z.literal(TransactionKind.UPDATE_PROFILE_MANAGERS),
   })
   .superRefine((val, ctx): val is UpdateProfileManagersRequest => {
-    if (['add', 'remove', 'lensManager'].every((key) => !(key in val))) {
+    if (['add', 'remove', 'approveSignless'].every((key) => !(key in val))) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `At least one of 'add', 'remove', or 'lensManager' must be present.`,
+        message: `At least one of 'add', 'remove', or 'approveSignless' must be present.`,
       });
       return z.NEVER;
     }
@@ -97,5 +97,17 @@ export const SetProfileMetadataRequestSchema = z.object({
 export const BlockProfilesRequestSchema = z.object({
   profileIds: ProfileIdSchema.array().min(1),
   kind: z.literal(TransactionKind.BLOCK_PROFILE),
+  delegate: z.boolean(),
+});
+
+export const LinkHandleRequestSchema = z.object({
+  handle: z.string(),
+  kind: z.literal(TransactionKind.LINK_HANDLE),
+  delegate: z.boolean(),
+});
+
+export const UnlinkHandleRequestSchema = z.object({
+  handle: z.string(),
+  kind: z.literal(TransactionKind.UNLINK_HANDLE),
   delegate: z.boolean(),
 });

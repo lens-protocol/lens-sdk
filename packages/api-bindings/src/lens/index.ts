@@ -13,7 +13,6 @@ export type {
 export * from './utils';
 export * from './publication';
 export * from './profile';
-export * from './MetadataAttribute';
 export * from './ContentInsight';
 export * from './Cursor';
 export * from './FollowPolicy';

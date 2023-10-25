@@ -20,11 +20,6 @@ import {
   ThreeDMetadataV3Fragment,
   TransactionMetadataV3Fragment,
   VideoMetadataV3Fragment,
-  MetadataBooleanAttributeFragment,
-  MetadataDateAttributeFragment,
-  MetadataJsonAttributeFragment,
-  MetadataNumberAttributeFragment,
-  MetadataStringAttributeFragment,
 } from './fragments.generated';
 
 export type AnyPublicationFragment =
@@ -51,16 +46,6 @@ export type AnyPublicationMetadataFragment =
   | ThreeDMetadataV3Fragment
   | TransactionMetadataV3Fragment
   | VideoMetadataV3Fragment;
-
-/**
- * Any metadata attribute
- */
-export type AnyMetadataAttributeFragment =
-  | MetadataBooleanAttributeFragment
-  | MetadataDateAttributeFragment
-  | MetadataJsonAttributeFragment
-  | MetadataNumberAttributeFragment
-  | MetadataStringAttributeFragment;
 
 /**
  * Any encrypted publication metadata regardless of its type, or capabilities

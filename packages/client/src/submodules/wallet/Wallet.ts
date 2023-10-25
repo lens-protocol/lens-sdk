@@ -4,7 +4,7 @@ import type { Authentication } from '../../authentication';
 import { LensContext } from '../../context';
 import { CredentialsExpiredError, NotAuthenticatedError } from '../../errors';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
-import type { ProfileFragment } from '../../graphql/fragments.generated';
+import type { HandleInfoFragment, ProfileFragment } from '../../graphql/fragments.generated';
 import type { OwnedHandlesRequest, ProfilesManagedRequest } from '../../graphql/types.generated';
 import {
   PaginatedResult,
@@ -13,12 +13,7 @@ import {
   requireAuthHeaders,
   sdkAuthHeaderWrapper,
 } from '../../helpers';
-import {
-  getSdk,
-  HandleResultFragment,
-  Sdk,
-  UserSigNoncesFragment,
-} from './graphql/wallet.generated';
+import { getSdk, Sdk, UserSigNoncesFragment } from './graphql/wallet.generated';
 
 /**
  * @group LensClient Modules
@@ -50,7 +45,7 @@ export class Wallet {
    * });
    * ```
    */
-  async ownedHandles(request: OwnedHandlesRequest): Promise<PaginatedResult<HandleResultFragment>> {
+  async ownedHandles(request: OwnedHandlesRequest): Promise<PaginatedResult<HandleInfoFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.OwnedHandles({
         request: currRequest,

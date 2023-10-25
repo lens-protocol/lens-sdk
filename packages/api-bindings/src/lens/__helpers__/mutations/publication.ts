@@ -8,6 +8,9 @@ import {
   AddPublicationBookmarkData,
   AddPublicationBookmarkDocument,
   AddPublicationBookmarkVariables,
+  AddPublicationNotInterestedData,
+  AddPublicationNotInterestedDocument,
+  AddPublicationNotInterestedVariables,
   AddReactionDocument,
   AddReactionVariables,
   CommentOnchainData,
@@ -62,6 +65,9 @@ import {
   ReportPublicationData,
   ReportPublicationDocument,
   ReportPublicationVariables,
+  UndoPublicationNotInterestedData,
+  UndoPublicationNotInterestedDocument,
+  UndoPublicationNotInterestedVariables,
 } from '../../graphql/generated';
 import {
   mockCreateTypedDataResult,
@@ -549,5 +555,29 @@ export function mockLegacyCollectResponse<
     result: {
       data,
     },
+  };
+}
+
+export function mockAddPublicationNotInterestedResponse(
+  variables: AddPublicationNotInterestedVariables,
+): MockedResponse<AddPublicationNotInterestedData> {
+  return {
+    request: {
+      query: AddPublicationNotInterestedDocument,
+      variables,
+    },
+    result: { data: { addPublicationNotInterested: null } },
+  };
+}
+
+export function mockUndoPublicationNotInterestedResponse(
+  variables: UndoPublicationNotInterestedVariables,
+): MockedResponse<UndoPublicationNotInterestedData> {
+  return {
+    request: {
+      query: UndoPublicationNotInterestedDocument,
+      variables,
+    },
+    result: { data: { undoPublicationNotInterested: null } },
   };
 }
