@@ -13,6 +13,28 @@ query AuthVerify($request: VerifyRequest!) {
   result: verify(request: $request)
 }
 
+fragment ApprovedAuthentication on ApprovedAuthentication {
+  authorizationId
+  browser
+  device
+  os
+  origin
+  expiresAt
+  createdAt
+  updatedAt
+}
+
+query ApprovedAuthentications($request: ApprovedAuthenticationRequest!) {
+  result: approvedAuthentications(request: $request) {
+    items {
+      ...ApprovedAuthentication
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
 mutation AuthAuthenticate($request: SignedAuthChallenge!) {
   result: authenticate(request: $request) {
     accessToken
@@ -25,4 +47,8 @@ mutation AuthRefresh($request: RefreshRequest!) {
     accessToken
     refreshToken
   }
+}
+
+mutation RevokeAuthentication($request: RevokeAuthenticationRequest!) {
+  revokeAuthentication(request: $request)
 }

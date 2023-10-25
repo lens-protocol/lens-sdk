@@ -1,11 +1,11 @@
 import { isRelaySuccess } from '@lens-protocol/client';
 
-import { getAuthenticatedClientFromEthersWallet } from '../shared/getAuthenticatedClient';
+import { getAuthenticatedClient } from '../shared/getAuthenticatedClient';
 import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
-  const client = await getAuthenticatedClientFromEthersWallet(wallet);
+  const client = await getAuthenticatedClient(wallet);
 
   const contentURI = 'https://arweave.net/Ff8hn9iT0RXG3S_l0_AbYRb1OzY-4WS9QDRsEHBQpgw';
 

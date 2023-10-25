@@ -142,17 +142,29 @@ export type ChangeProfileManagersRequest = {
   changeManagers?: InputMaybe<Array<ChangeProfileManager>>;
 };
 
-export type ClaimProfileRequest = {
-  followModule?: InputMaybe<FollowModuleInput>;
-  freeTextHandle?: InputMaybe<Scalars['CreateHandle']['input']>;
-  id: Scalars['String']['input'];
-};
-
 export enum ClaimProfileStatusType {
   AlreadyClaimed = 'ALREADY_CLAIMED',
   ClaimFailed = 'CLAIM_FAILED',
   NotClaimed = 'NOT_CLAIMED',
 }
+
+/** Claim profile with handle error reason type */
+export enum ClaimProfileWithHandleErrorReasonType {
+  CanNotFreeText = 'CAN_NOT_FREE_TEXT',
+  ClaimNotFound = 'CLAIM_NOT_FOUND',
+  ClaimNotLinkedToWallet = 'CLAIM_NOT_LINKED_TO_WALLET',
+  ClaimTimeExpired = 'CLAIM_TIME_EXPIRED',
+  ContractExecuted = 'CONTRACT_EXECUTED',
+  HandleAlreadyClaimed = 'HANDLE_ALREADY_CLAIMED',
+  HandleAlreadyExists = 'HANDLE_ALREADY_EXISTS',
+  HandleReserved = 'HANDLE_RESERVED',
+}
+
+export type ClaimProfileWithHandleRequest = {
+  followModule?: InputMaybe<FollowModuleInput>;
+  freeTextHandle?: InputMaybe<Scalars['CreateHandle']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+};
 
 export type CollectActionModuleInput = {
   multirecipientCollectOpenAction?: InputMaybe<MultirecipientFeeCollectModuleInput>;
@@ -241,13 +253,6 @@ export type DegreesOfSeparationReferenceModuleInput = {
 
 export type DismissRecommendedProfilesRequest = {
   dismiss: Array<Scalars['ProfileId']['input']>;
-};
-
-export type DoesFollowRequest = {
-  cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  followers: Array<Scalars['ProfileId']['input']>;
-  for: Scalars['ProfileId']['input'];
-  limit?: InputMaybe<LimitType>;
 };
 
 /** Possible sort criteria for exploring profiles */
@@ -390,6 +395,15 @@ export type FollowRequest = {
 
 export type FollowRevenueRequest = {
   for: Scalars['ProfileId']['input'];
+};
+
+export type FollowStatusBulk = {
+  follower: Scalars['ProfileId']['input'];
+  profileId: Scalars['ProfileId']['input'];
+};
+
+export type FollowStatusBulkRequest = {
+  followInfos: Array<FollowStatusBulk>;
 };
 
 export type FollowersRequest = {
@@ -1622,6 +1636,11 @@ export type ValidatePublicationMetadataRequest = {
 export type VerifyRequest = {
   /** The access token to verify */
   accessToken: Scalars['Jwt']['input'];
+};
+
+export type WalletAuthenticationToProfileAuthenticationRequest = {
+  /** This can convert a wallet token to a profile token if you now onboarded */
+  profileId: Scalars['ProfileId']['input'];
 };
 
 export type WhoActedOnPublicationRequest = {
