@@ -18,14 +18,14 @@ export type LoginRequest = {
   /**
    * The user's wallet. Could be an EOA or EIP-1271 compliant Smart Wallet (e.g. ERC-6551).
    *
-   * If a Profile ID is also provide the address MUST be the Profile Owner or an authorized Profile Manager for it.
+   * If a Profile ID is also provide the address MUST be the Profile Owner or a Profile Manager for it.
    */
   address: EvmAddress;
   /**
    * The Profile ID to login with.
    *
    * If not provided the authenticated session will be of {@link SessionType.JustWallet} type.
-   * This has a limited set of features available. Namely, it can be used to claim a Profile handle
+   * This has a limited set of features available. Namely, it can be used to claim a Profile handle (if eligible)
    * and execute Open Actions on publications (e.g Collect Open Action).
    */
   profileId?: ProfileId;

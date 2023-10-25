@@ -7,6 +7,7 @@ import { when } from 'jest-when';
 import { TransactionKind, NftOwnershipChallenge, NativeTransaction } from '../../../entities';
 import { mockProfileId, mockSignature } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../../transactions';
+import { ClaimHandleRequest } from '../ClaimHandle';
 import {
   CreateProfileRequest,
   DuplicatedHandleError,
@@ -184,5 +185,12 @@ export function mockUnlinkHandleRequest(
     delegate: true,
     ...overrides,
     kind: TransactionKind.UNLINK_HANDLE,
+  };
+}
+
+export function mockClaimHandleRequest(): ClaimHandleRequest {
+  return {
+    localName: faker.internet.userName(),
+    kind: TransactionKind.CLAIM_HANDLE,
   };
 }

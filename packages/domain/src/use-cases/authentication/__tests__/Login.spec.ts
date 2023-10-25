@@ -128,7 +128,7 @@ describe(`Given the ${Login.name} interactor`, () => {
 
         when(walletFactory.create).calledWith(request.address).mockResolvedValue(wallet);
         when(credentialsIssuer.issueCredentials)
-          .calledWith(wallet, request.profileId)
+          .calledWith(wallet, undefined)
           .mockResolvedValue(success(credentials));
 
         const { interactor, walletGateway, credentialsWriter, loginPresenter } = setupTestScenario({
