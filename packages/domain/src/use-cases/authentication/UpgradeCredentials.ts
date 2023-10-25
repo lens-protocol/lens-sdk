@@ -1,4 +1,4 @@
-import { Result, success } from '@lens-protocol/shared-kernel';
+import { Result, invariant, success } from '@lens-protocol/shared-kernel';
 
 import { ICredentials, ProfileId } from '../../entities';
 import { ICredentialsWriter } from './ICredentialsWriter';
@@ -28,6 +28,16 @@ export class UpgradeCredentials {
 
     await this.credentialsWriter.save(credentials);
 
-    this.presenter.present(success(profileSessionData(credentials)));
+    // quick fix... should profile SessionData to replace ICredentials entity and make this code more type safe
+    invariant(credentials.profileId, 'Profile ID is missing');
+
+    this.presenter.present(
+      success(
+        profileSessionData({
+          profileId: credentials.profileId,
+          address: credentials.address,
+        }),
+      ),
+    );
   }
 }
