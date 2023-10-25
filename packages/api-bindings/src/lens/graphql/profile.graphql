@@ -397,16 +397,16 @@ query ProfileActionHistory($limit: LimitType, $cursor: Cursor) {
 }
 
 # mutations
-mutation ClaimProfile($request: ClaimProfileRequest!) {
-  result: claimProfile(request: $request) {
-    ... on RelaySuccess {
-      ...RelaySuccess
-    }
-    ... on CreateProfileWithHandleErrorResult {
-      ...CreateProfileWithHandleErrorResult
-    }
-  }
-}
+# mutation ClaimProfile($request: ClaimProfileRequest!) {
+#   result: claimProfile(request: $request) {
+#     ... on RelaySuccess {
+#       ...RelaySuccess
+#     }
+#     ... on CreateProfileWithHandleErrorResult {
+#       ...CreateProfileWithHandleErrorResult
+#     }
+#   }
+# }
 
 mutation CreateProfileWithHandle($request: CreateProfileWithHandleRequest!) {
   result: createProfileWithHandle(request: $request) {
