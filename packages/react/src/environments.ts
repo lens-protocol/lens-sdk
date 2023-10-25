@@ -54,7 +54,7 @@ export type EnvironmentConfig = {
  *
  * - Endpoint: https://api.lens.dev
  * - Chain IDs: 137 (Polygon), 1 (Ethereum)
- * - Profile handle suffix: `.lens`
+ * - Profile handle namespace: `lens/`
  * - Environment specific timings
  */
 export const production: EnvironmentConfig = {
@@ -69,7 +69,7 @@ export const production: EnvironmentConfig = {
     maxIndexingWaitTime: 120000,
     maxMiningWaitTime: 60000,
   },
-  handleResolver: (handle) => `${handle}.lens`,
+  handleResolver: (localName) => `lens/${localName}`,
   snapshot: {
     hub: 'https://hub.snapshot.org' as URL,
     matcher: snapshotPoll,
@@ -85,7 +85,7 @@ export const production: EnvironmentConfig = {
  *
  * - Endpoint: https://api-mumbai.lens.dev
  * - Chain IDs: 80001 (Mumbai), 5 (Goerli)
- * - Profile handle suffix: `.test`
+ * - Profile handle namespace: `test/`
  * - Environment specific timings
  */
 export const development: EnvironmentConfig = {
@@ -100,7 +100,7 @@ export const development: EnvironmentConfig = {
     maxIndexingWaitTime: 240000,
     maxMiningWaitTime: 120000,
   },
-  handleResolver: (handle) => `${handle}.test`,
+  handleResolver: (localName) => `test/${localName}`,
   snapshot: {
     hub: 'https://testnet.snapshot.org' as URL,
     matcher: demoSnapshotPoll,
@@ -117,7 +117,7 @@ export const development: EnvironmentConfig = {
  *
  * - Endpoint: https://api-sandbox-mumbai.lens.dev
  * - Chain IDs: 80001 (Mumbai), 5 (Goerli)
- * - Profile handle suffix: `.test`
+ * - Profile handle namespace: `test/`
  * - Environment specific timings
  */
 export const sandbox: EnvironmentConfig = {
@@ -132,7 +132,7 @@ export const sandbox: EnvironmentConfig = {
     maxIndexingWaitTime: 240000,
     maxMiningWaitTime: 120000,
   },
-  handleResolver: (handle) => `${handle}.test`,
+  handleResolver: (localName) => `test/${localName}`,
   snapshot: {
     hub: 'https://testnet.snapshot.org' as URL,
     matcher: demoSnapshotPoll,

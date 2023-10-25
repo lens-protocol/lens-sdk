@@ -26,7 +26,7 @@ export class LoginPresenter implements ILoginPresenter {
     );
 
     const { profileId } = result.value;
-    const profile = await this.profileCacheManager.fetchProfile(profileId);
+    const profile = await this.profileCacheManager.fetchProfileById(profileId);
 
     invariant(profile, 'Profile not found');
 

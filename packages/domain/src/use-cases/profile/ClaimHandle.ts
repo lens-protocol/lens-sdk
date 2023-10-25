@@ -1,4 +1,4 @@
-import { PromiseResult, Url } from '@lens-protocol/shared-kernel';
+import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { NativeTransaction, TransactionKind, AnyTransactionRequestModel } from '../../entities';
 import { ITransactionResultPresenter } from '../transactions/ITransactionResultPresenter';
@@ -6,17 +6,17 @@ import { TransactionQueue } from '../transactions/TransactionQueue';
 import { FollowPolicyConfig } from './types';
 
 export type ClaimHandleRequest = {
-  kind: TransactionKind.CREATE_PROFILE;
+  kind: TransactionKind.CLAIM_HANDLE;
   id: string;
-  handle: string;
+  localName: string;
   followPolicy?: FollowPolicyConfig;
 };
 
 export class ClaimHandleError<TErrorReason extends string> extends Error {
   name = 'ClaimHandleError' as const;
 
-  constructor(readonly handle: string, readonly reason: TErrorReason) {
-    super(`Cannot claim"${handle}" because: ${reason}`);
+  constructor(readonly localName: string, readonly reason: TErrorReason) {
+    super(`Cannot claim"${localName}" because: ${reason}`);
   }
 }
 

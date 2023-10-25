@@ -112,6 +112,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   const responders: TransactionResponders<AnyTransactionRequest> = {
     [TransactionKind.ACT_ON_PUBLICATION]: new RefreshPublicationResponder(publicationCacheManager),
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
+    [TransactionKind.CLAIM_HANDLE]: new NoopResponder(),
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(), // TODO update profile for new stats
     [TransactionKind.CREATE_POST]: new NoopResponder(), // TODO update profile for new stats
     [TransactionKind.CREATE_PROFILE]: new NoopResponder(),

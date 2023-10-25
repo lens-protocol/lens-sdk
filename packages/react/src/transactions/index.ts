@@ -1,4 +1,5 @@
 export * from './useApproveModule';
+export * from './useClaimHandle';
 export * from './useCreateComment';
 export * from './useCreateMirror';
 export * from './useCreatePost';

@@ -14,12 +14,10 @@ import {
   FollowPolicyType,
   IClaimHandleGateway,
 } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { ITransactionFactory } from '../ITransactionFactory';
-import { handleRelayError } from '../relayer';
 
 // TODO: duplicated from UpdateFollowPolicyGateway but I dunno where is the best place to put it
 export function resolveFollowModuleParams(policy: FollowPolicyConfig): FollowModuleInput {
@@ -45,7 +43,9 @@ export function resolveFollowModuleParams(policy: FollowPolicyConfig): FollowMod
   }
 }
 
-export class ClaimProfileGateway implements IClaimHandleGateway<ClaimHandleError> {
+export class ClaimProfileGateway
+  implements IClaimHandleGateway<ClaimProfileWithHandleErrorReasonType>
+{
   constructor(
     private apolloClient: SafeApolloClient,
     private transactionFactory: ITransactionFactory<ClaimHandleRequest>,
@@ -53,7 +53,7 @@ export class ClaimProfileGateway implements IClaimHandleGateway<ClaimHandleError
 
   async claimHandleTransaction<T extends ClaimHandleRequest>(
     request: T,
-  ): PromiseResult<NativeTransaction<T>, ClaimHandleError | BroadcastingError> {
+  ): PromiseResult<NativeTransaction<T>, ClaimHandleError<ClaimProfileWithHandleErrorReasonType>> {
     const { data } = await this.apolloClient.mutate<
       ClaimProfileWithHandleData,
       ClaimProfileWithHandleVariables
@@ -62,7 +62,7 @@ export class ClaimProfileGateway implements IClaimHandleGateway<ClaimHandleError
       variables: {
         request: {
           id: request.id,
-          freeTextHandle: request.handle,
+          freeTextHandle: request.localName,
           followModule: request.followPolicy
             ? resolveFollowModuleParams(request.followPolicy)
             : null,
@@ -71,15 +71,7 @@ export class ClaimProfileGateway implements IClaimHandleGateway<ClaimHandleError
     });
 
     if (data.result.__typename === 'ClaimProfileWithHandleErrorResult') {
-      switch (data.result.reason) {
-        case ClaimProfileWithHandleErrorReasonType.HandleAlreadyClaimed:
-        case ClaimProfileWithHandleErrorReasonType.HandleAlreadyExists:
-        case ClaimProfileWithHandleErrorReasonType.HandleReserved:
-          return failure(new ClaimHandleError(request.handle, data.result.reason));
-
-        default:
-          return handleRelayError(data.result);
-      }
+      return failure(new ClaimHandleError(request.localName, data.result.reason));
     }
 
     const transaction = this.transactionFactory.createNativeTransaction({
