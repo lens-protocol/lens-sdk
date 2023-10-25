@@ -1,55 +1,41 @@
-import { useLogin } from '@lens-protocol/react-web';
-import { useAccount, useConnect } from 'wagmi';
-import { InjectedConnector } from 'wagmi/connectors/injected';
+import { useCanClaimHandle } from '@lens-protocol/react-web';
 
-function ClaimHandleOptions({ address }: { address: string }) {
-  const { execute: login, loading: isLoginPending } = useLogin();
+import { UnauthenticatedFallback, WhenLoggedIn, WhenLoggedOut } from '../components/auth';
+import { ErrorMessage } from '../components/error/ErrorMessage';
+import { Loading } from '../components/loading/Loading';
 
-  const start = async () => {
-    const result = await login({ address });
+export function UseCanClaimHandle() {
+  const { data, error, loading } = useCanClaimHandle();
 
-    if (result.isSuccess()) {
-      console.log(result.value);
-    } else {
-      console.log(result.error);
-    }
-  };
+  if (loading) return <Loading />;
 
+  if (error) return <ErrorMessage error={error} />;
+
+  console.log(data);
+
+  return <div>TODO</div>;
+}
+
+function UseClaimHandleInner() {
   return (
     <div>
-      <button type="button" onClick={start} disabled={isLoginPending}>
-        Login
-      </button>
+      <UseCanClaimHandle />
     </div>
   );
 }
 
 export function UseClaimHandle() {
-  const { address, isConnected, isConnecting } = useAccount();
-
-  const { connect } = useConnect({
-    connector: new InjectedConnector(),
-  });
-
   return (
     <div>
       <h1>
         <code>useClaimHandle</code>
       </h1>
-      <div>
-        {!isConnected && (
-          <button disabled={isConnecting} onClick={() => connect()}>
-            Connect first
-          </button>
-        )}
-
-        {address && (
-          <div>
-            <p>{`Using wallet ${address}`}</p>
-            <ClaimHandleOptions address={address} />
-          </div>
-        )}
-      </div>
+      <WhenLoggedIn>
+        <UseClaimHandleInner />
+      </WhenLoggedIn>
+      <WhenLoggedOut>
+        <UnauthenticatedFallback />
+      </WhenLoggedOut>
     </div>
   );
 }

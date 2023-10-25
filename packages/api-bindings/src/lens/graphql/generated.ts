@@ -3463,6 +3463,17 @@ export type ProfileActionHistoryData = {
   result: { items: Array<ProfileActionHistory>; pageInfo: PaginatedResultInfo };
 };
 
+export type ReservedClaimable = { id: string; withHandle: string; source: AppId; expiry: string };
+
+export type ClaimableProfilesResult = {
+  canMintProfileWithFreeTextHandle: boolean;
+  reserved: Array<ReservedClaimable>;
+};
+
+export type ClaimableProfilesVariables = Exact<{ [key: string]: never }>;
+
+export type ClaimableProfilesData = { result: ClaimableProfilesResult };
+
 export type ClaimProfileWithHandleVariables = Exact<{
   request: ClaimProfileWithHandleRequest;
 }>;
@@ -7186,6 +7197,23 @@ export const FragmentProfileActionHistory = /*#__PURE__*/ gql`
     actionedOn
   }
 `;
+export const FragmentReservedClaimable = /*#__PURE__*/ gql`
+  fragment ReservedClaimable on ReservedClaimable {
+    id
+    withHandle
+    source
+    expiry
+  }
+`;
+export const FragmentClaimableProfilesResult = /*#__PURE__*/ gql`
+  fragment ClaimableProfilesResult on ClaimableProfilesResult {
+    reserved {
+      ...ReservedClaimable
+    }
+    canMintProfileWithFreeTextHandle
+  }
+  ${FragmentReservedClaimable}
+`;
 export const FragmentTagResult = /*#__PURE__*/ gql`
   fragment TagResult on TagResult {
     __typename
@@ -9248,6 +9276,54 @@ export type ProfileActionHistoryLazyQueryHookResult = ReturnType<
 export type ProfileActionHistoryQueryResult = Apollo.QueryResult<
   ProfileActionHistoryData,
   ProfileActionHistoryVariables
+>;
+export const ClaimableProfilesDocument = /*#__PURE__*/ gql`
+  query ClaimableProfiles {
+    result: claimableProfiles {
+      ...ClaimableProfilesResult
+    }
+  }
+  ${FragmentClaimableProfilesResult}
+`;
+
+/**
+ * __useClaimableProfiles__
+ *
+ * To run a query within a React component, call `useClaimableProfiles` and pass it any options that fit your needs.
+ * When your component renders, `useClaimableProfiles` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useClaimableProfiles({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useClaimableProfiles(
+  baseOptions?: Apollo.QueryHookOptions<ClaimableProfilesData, ClaimableProfilesVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ClaimableProfilesData, ClaimableProfilesVariables>(
+    ClaimableProfilesDocument,
+    options,
+  );
+}
+export function useClaimableProfilesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<ClaimableProfilesData, ClaimableProfilesVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ClaimableProfilesData, ClaimableProfilesVariables>(
+    ClaimableProfilesDocument,
+    options,
+  );
+}
+export type ClaimableProfilesHookResult = ReturnType<typeof useClaimableProfiles>;
+export type ClaimableProfilesLazyQueryHookResult = ReturnType<typeof useClaimableProfilesLazyQuery>;
+export type ClaimableProfilesQueryResult = Apollo.QueryResult<
+  ClaimableProfilesData,
+  ClaimableProfilesVariables
 >;
 export const ClaimProfileWithHandleDocument = /*#__PURE__*/ gql`
   mutation ClaimProfileWithHandle($request: ClaimProfileWithHandleRequest!) {
