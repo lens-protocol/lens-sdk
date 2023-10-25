@@ -433,17 +433,6 @@ mutation ClaimProfileWithHandle($request: ClaimProfileWithHandleRequest!) {
   }
 }
 
-mutation CreateProfileWithHandle($request: CreateProfileWithHandleRequest!) {
-  result: createProfileWithHandle(request: $request) {
-    ... on RelaySuccess {
-      ...RelaySuccess
-    }
-    ... on CreateProfileWithHandleErrorResult {
-      ...CreateProfileWithHandleErrorResult
-    }
-  }
-}
-
 mutation AddProfileInterests($request: ProfileInterestsRequest!) {
   result: addProfileInterests(request: $request)
 }

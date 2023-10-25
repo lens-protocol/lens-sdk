@@ -294,17 +294,36 @@ export type CheckingInMetadataV3 = {
   readonly tags?: Maybe<ReadonlyArray<Scalars['String']>>;
 };
 
-export type ClaimProfileRequest = {
-  readonly followModule?: InputMaybe<FollowModuleInput>;
-  readonly freeTextHandle?: InputMaybe<Scalars['CreateHandle']>;
-  readonly id: Scalars['String'];
-};
-
 export enum ClaimProfileStatusType {
   AlreadyClaimed = 'ALREADY_CLAIMED',
   ClaimFailed = 'CLAIM_FAILED',
   NotClaimed = 'NOT_CLAIMED',
 }
+
+/** Claim profile with handle error reason type */
+export enum ClaimProfileWithHandleErrorReasonType {
+  CanNotFreeText = 'CAN_NOT_FREE_TEXT',
+  ClaimNotFound = 'CLAIM_NOT_FOUND',
+  ClaimNotLinkedToWallet = 'CLAIM_NOT_LINKED_TO_WALLET',
+  ClaimTimeExpired = 'CLAIM_TIME_EXPIRED',
+  ContractExecuted = 'CONTRACT_EXECUTED',
+  HandleAlreadyClaimed = 'HANDLE_ALREADY_CLAIMED',
+  HandleAlreadyExists = 'HANDLE_ALREADY_EXISTS',
+  HandleReserved = 'HANDLE_RESERVED',
+}
+
+export type ClaimProfileWithHandleErrorResult = {
+  readonly __typename: 'ClaimProfileWithHandleErrorResult';
+  readonly reason: ClaimProfileWithHandleErrorReasonType;
+};
+
+export type ClaimProfileWithHandleRequest = {
+  readonly followModule?: InputMaybe<FollowModuleInput>;
+  readonly freeTextHandle?: InputMaybe<Scalars['CreateHandle']>;
+  readonly id?: InputMaybe<Scalars['String']>;
+};
+
+export type ClaimProfileWithHandleResult = ClaimProfileWithHandleErrorResult | RelaySuccess;
 
 export type ClaimableProfilesResult = {
   readonly __typename: 'ClaimableProfilesResult';
@@ -345,15 +364,18 @@ export type Comment = {
   readonly commentOn: PrimaryPublication;
   readonly createdAt: Scalars['DateTime'];
   readonly firstComment?: Maybe<Comment>;
+  readonly hashtagsMentioned: ReadonlyArray<Scalars['String']>;
   readonly id: Scalars['PublicationId'];
+  readonly isEncrypted: Scalars['Boolean'];
   readonly isHidden: Scalars['Boolean'];
   readonly metadata: PublicationMetadata;
   readonly momoka?: Maybe<MomokaInfo>;
   readonly openActionModules?: Maybe<ReadonlyArray<OpenActionModule>>;
   readonly operations: PublicationOperations;
+  readonly profilesMentioned: ReadonlyArray<ProfileMentioned>;
   readonly publishedOn?: Maybe<App>;
   readonly referenceModule?: Maybe<ReferenceModule>;
-  readonly root: Post;
+  readonly root: CommentablePublication;
   readonly stats: PublicationStats;
   readonly txHash?: Maybe<Scalars['TxHash']>;
 };
@@ -373,6 +395,8 @@ export enum CommentRankingFilterType {
   NoneRelevant = 'NONE_RELEVANT',
   Relevant = 'RELEVANT',
 }
+
+export type CommentablePublication = Post | Quote;
 
 export enum ComparisonOperatorConditionType {
   Equal = 'EQUAL',
@@ -1105,6 +1129,7 @@ export enum DecryptFailReasonType {
   PublicationIsNotGated = 'PUBLICATION_IS_NOT_GATED',
   UnauthorizedAddress = 'UNAUTHORIZED_ADDRESS',
   UnauthorizedBalance = 'UNAUTHORIZED_BALANCE',
+  Unsupported = 'UNSUPPORTED',
 }
 
 export type DefaultProfileRequest = {
@@ -1138,19 +1163,6 @@ export type DegreesOfSeparationReferenceModuleSettings = {
 
 export type DismissRecommendedProfilesRequest = {
   readonly dismiss: ReadonlyArray<Scalars['ProfileId']>;
-};
-
-export type DoesFollowRequest = {
-  readonly cursor?: InputMaybe<Scalars['Cursor']>;
-  readonly followers: ReadonlyArray<Scalars['ProfileId']>;
-  readonly for: Scalars['ProfileId'];
-  readonly limit?: InputMaybe<LimitType>;
-};
-
-export type DoesFollowResult = {
-  readonly __typename: 'DoesFollowResult';
-  readonly followerProfileId: Scalars['ProfileId'];
-  readonly status: OptimisticStatusResult;
 };
 
 /** The eip 712 typed data domain */
@@ -1496,6 +1508,22 @@ export type FollowRevenueResult = {
   readonly revenues: ReadonlyArray<RevenueAggregate>;
 };
 
+export type FollowStatusBulk = {
+  readonly follower: Scalars['ProfileId'];
+  readonly profileId: Scalars['ProfileId'];
+};
+
+export type FollowStatusBulkRequest = {
+  readonly followInfos: ReadonlyArray<FollowStatusBulk>;
+};
+
+export type FollowStatusBulkResult = {
+  readonly __typename: 'FollowStatusBulkResult';
+  readonly follower: Scalars['ProfileId'];
+  readonly profileId: Scalars['ProfileId'];
+  readonly status: OptimisticStatusResult;
+};
+
 export type FollowersRequest = {
   readonly cursor?: InputMaybe<Scalars['Cursor']>;
   readonly limit?: InputMaybe<LimitType>;
@@ -1660,8 +1688,8 @@ export type InternalAllowedDomainsRequest = {
 
 export type InternalClaimRequest = {
   readonly address: Scalars['EvmAddress'];
-  readonly freeTextHandle: Scalars['Boolean'];
-  readonly handle: Scalars['CreateHandle'];
+  readonly freeTextHandle?: InputMaybe<Scalars['Boolean']>;
+  readonly handle?: InputMaybe<Scalars['CreateHandle']>;
   readonly overrideAlreadyClaimed: Scalars['Boolean'];
   readonly overrideTradeMark: Scalars['Boolean'];
   readonly secret: Scalars['String'];
@@ -2336,7 +2364,7 @@ export type Mutation = {
   readonly block: LensProfileManagerRelayResult;
   readonly broadcastOnMomoka: BroadcastMomokaResult;
   readonly broadcastOnchain: RelayResult;
-  readonly claimProfile: CreateProfileWithHandleResult;
+  readonly claimProfileWithHandle: ClaimProfileWithHandleResult;
   readonly commentOnMomoka: RelayMomokaResult;
   readonly commentOnchain: LensProfileManagerRelayResult;
   readonly createActOnOpenActionTypedData: CreateActOnOpenActionBroadcastItemResult;
@@ -2402,6 +2430,7 @@ export type Mutation = {
   readonly updateNftGalleryInfo?: Maybe<Scalars['Void']>;
   readonly updateNftGalleryItems?: Maybe<Scalars['Void']>;
   readonly updateNftGalleryOrder?: Maybe<Scalars['Void']>;
+  readonly walletAuthenticationToProfileAuthentication: AuthenticationResult;
 };
 
 export type MutationActOnOpenActionArgs = {
@@ -2440,8 +2469,8 @@ export type MutationBroadcastOnchainArgs = {
   request: BroadcastRequest;
 };
 
-export type MutationClaimProfileArgs = {
-  request: ClaimProfileRequest;
+export type MutationClaimProfileWithHandleArgs = {
+  request: ClaimProfileWithHandleRequest;
 };
 
 export type MutationCommentOnMomokaArgs = {
@@ -2717,6 +2746,10 @@ export type MutationUpdateNftGalleryItemsArgs = {
 
 export type MutationUpdateNftGalleryOrderArgs = {
   request: NftGalleryUpdateItemOrderRequest;
+};
+
+export type MutationWalletAuthenticationToProfileAuthenticationArgs = {
+  request: WalletAuthenticationToProfileAuthenticationRequest;
 };
 
 export type MutualFollowersRequest = {
@@ -3345,12 +3378,15 @@ export type Post = {
   readonly __typename: 'Post';
   readonly by: Profile;
   readonly createdAt: Scalars['DateTime'];
+  readonly hashtagsMentioned: ReadonlyArray<Scalars['String']>;
   readonly id: Scalars['PublicationId'];
+  readonly isEncrypted: Scalars['Boolean'];
   readonly isHidden: Scalars['Boolean'];
   readonly metadata: PublicationMetadata;
   readonly momoka?: Maybe<MomokaInfo>;
   readonly openActionModules?: Maybe<ReadonlyArray<OpenActionModule>>;
   readonly operations: PublicationOperations;
+  readonly profilesMentioned: ReadonlyArray<ProfileMentioned>;
   readonly publishedOn?: Maybe<App>;
   readonly referenceModule?: Maybe<ReferenceModule>;
   readonly stats: PublicationStats;
@@ -3530,6 +3566,13 @@ export type ProfileManagersRequest = {
   /** The profile ID for which to retrieve managers */
   readonly for: Scalars['ProfileId'];
   readonly limit?: InputMaybe<LimitType>;
+};
+
+export type ProfileMentioned = {
+  readonly __typename: 'ProfileMentioned';
+  readonly profile: Profile;
+  readonly snapshotHandleMentioned: HandleInfo;
+  readonly stillOwnsHandle: Scalars['Boolean'];
 };
 
 export type ProfileMetadata = {
@@ -3733,8 +3776,6 @@ export type PublicationBookmarksRequest = {
 };
 
 export type PublicationBookmarksWhere = {
-  readonly cursor?: InputMaybe<Scalars['Cursor']>;
-  readonly limit?: InputMaybe<LimitType>;
   readonly metadata?: InputMaybe<PublicationMetadataFilters>;
 };
 
@@ -4105,12 +4146,12 @@ export type Query = {
   readonly currentSession: ApprovedAuthentication;
   /** Get the default profile for a given EvmAddress. If no default is explicitly set, you will get the oldest profile owned by the address. */
   readonly defaultProfile?: Maybe<Profile>;
-  readonly doesFollow: ReadonlyArray<DoesFollowResult>;
   readonly exploreProfiles: PaginatedProfileResult;
   readonly explorePublications: PaginatedExplorePublicationResult;
   readonly feed: PaginatedFeedResult;
   readonly feedHighlights: PaginatedFeedHighlightsResult;
   readonly followRevenues: FollowRevenueResult;
+  readonly followStatusBulk: ReadonlyArray<FollowStatusBulkResult>;
   readonly followers: PaginatedProfileResult;
   readonly following: PaginatedProfileResult;
   readonly generateModuleCurrencyApprovalData: GenerateModuleCurrencyApprovalResult;
@@ -4122,6 +4163,7 @@ export type Query = {
   readonly internalProfileStatus: PrfResult;
   readonly invitedProfiles: ReadonlyArray<InvitedResult>;
   readonly lastLoggedInProfile?: Maybe<Profile>;
+  readonly lensAPIOwnedEOAs: ReadonlyArray<Scalars['EvmAddress']>;
   readonly lensProtocolVersion: LensProtocolVersion;
   readonly lensTransactionStatus?: Maybe<LensTransactionResult>;
   readonly momokaSubmitters: MomokaSubmittersResult;
@@ -4198,10 +4240,6 @@ export type QueryDefaultProfileArgs = {
   request: DefaultProfileRequest;
 };
 
-export type QueryDoesFollowArgs = {
-  request: DoesFollowRequest;
-};
-
 export type QueryExploreProfilesArgs = {
   request: ExploreProfilesRequest;
 };
@@ -4220,6 +4258,10 @@ export type QueryFeedHighlightsArgs = {
 
 export type QueryFollowRevenuesArgs = {
   request: FollowRevenueRequest;
+};
+
+export type QueryFollowStatusBulkArgs = {
+  request: FollowStatusBulkRequest;
 };
 
 export type QueryFollowersArgs = {
@@ -4430,12 +4472,15 @@ export type Quote = {
   readonly __typename: 'Quote';
   readonly by: Profile;
   readonly createdAt: Scalars['DateTime'];
+  readonly hashtagsMentioned: ReadonlyArray<Scalars['String']>;
   readonly id: Scalars['PublicationId'];
+  readonly isEncrypted: Scalars['Boolean'];
   readonly isHidden: Scalars['Boolean'];
   readonly metadata: PublicationMetadata;
   readonly momoka?: Maybe<MomokaInfo>;
   readonly openActionModules?: Maybe<ReadonlyArray<OpenActionModule>>;
   readonly operations: PublicationOperations;
+  readonly profilesMentioned: ReadonlyArray<ProfileMentioned>;
   readonly publishedOn?: Maybe<App>;
   readonly quoteOn: PrimaryPublication;
   readonly referenceModule?: Maybe<ReferenceModule>;
@@ -4772,10 +4817,15 @@ export type StoryMetadataV3 = {
 
 export type Subscription = {
   readonly __typename: 'Subscription';
+  readonly authorizationRecordRevoked?: Maybe<Scalars['Void']>;
   readonly newMomokaTransaction: MomokaTransaction;
-  readonly newNotification: Notification;
+  readonly newNotification?: Maybe<Notification>;
   readonly newPublicationStats: PublicationStats;
   readonly userSigNonces: UserSigNonces;
+};
+
+export type SubscriptionAuthorizationRecordRevokedArgs = {
+  authorizationId: Scalars['UUID'];
 };
 
 export type SubscriptionNewNotificationArgs = {
@@ -5047,6 +5097,11 @@ export type VideoMetadataV3 = {
   readonly tags?: Maybe<ReadonlyArray<Scalars['String']>>;
   /** The title of the video. Empty if not set. */
   readonly title: Scalars['String'];
+};
+
+export type WalletAuthenticationToProfileAuthenticationRequest = {
+  /** This can convert a wallet token to a profile token if you now onboarded */
+  readonly profileId: Scalars['ProfileId'];
 };
 
 export type WhoActedOnPublicationRequest = {

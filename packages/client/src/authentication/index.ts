@@ -1,4 +1,7 @@
 export * from './Authentication';
 export * from './IAuthentication';
 
-export type { AuthChallengeFragment } from './graphql/auth.generated';
+export type {
+  AuthChallengeFragment,
+  ApprovedAuthenticationFragment,
+} from './graphql/auth.generated';

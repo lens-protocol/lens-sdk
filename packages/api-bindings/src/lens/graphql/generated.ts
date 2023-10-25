@@ -290,6 +290,7 @@ export enum DecryptFailReasonType {
   PublicationIsNotGated = 'PUBLICATION_IS_NOT_GATED',
   UnauthorizedAddress = 'UNAUTHORIZED_ADDRESS',
   UnauthorizedBalance = 'UNAUTHORIZED_BALANCE',
+  Unsupported = 'UNSUPPORTED',
 }
 
 export type DefaultProfileRequest = {
@@ -540,8 +541,8 @@ export type InternalAllowedDomainsRequest = {
 
 export type InternalClaimRequest = {
   address: Scalars['EvmAddress'];
-  freeTextHandle: Scalars['Boolean'];
-  handle: Scalars['CreateHandle'];
+  freeTextHandle?: InputMaybe<Scalars['Boolean']>;
+  handle?: InputMaybe<Scalars['CreateHandle']>;
   overrideAlreadyClaimed: Scalars['Boolean'];
   overrideTradeMark: Scalars['Boolean'];
   secret: Scalars['String'];
@@ -1225,8 +1226,6 @@ export type PublicationBookmarksRequest = {
 };
 
 export type PublicationBookmarksWhere = {
-  cursor?: InputMaybe<Scalars['Cursor']>;
-  limit?: InputMaybe<LimitType>;
   metadata?: InputMaybe<PublicationMetadataFilters>;
 };
 
@@ -2822,7 +2821,7 @@ export type CommentFields = {
   momoka: MomokaInfo | null;
   by: Profile;
   operations: PublicationOperations;
-  root: Post | {};
+  root: Post | QuoteFields;
   metadata:
     | ArticleMetadataV3
     | AudioMetadataV3
@@ -3488,14 +3487,6 @@ export type ClaimProfileWithHandleVariables = Exact<{
 
 export type ClaimProfileWithHandleData = {
   result: ClaimProfileWithHandleErrorResult | RelaySuccess;
-};
-
-export type CreateProfileWithHandleVariables = Exact<{
-  request: CreateProfileWithHandleRequest;
-}>;
-
-export type CreateProfileWithHandleData = {
-  result: CreateProfileWithHandleErrorResult | RelaySuccess;
 };
 
 export type AddProfileInterestsVariables = Exact<{
@@ -6317,7 +6308,12 @@ export const FragmentCommentFields = /*#__PURE__*/ gql`
       ...PublicationOperations
     }
     root {
-      ...Post
+      ... on Post {
+        ...Post
+      }
+      ... on Quote {
+        ...QuoteFields
+      }
     }
     metadata {
       ... on AudioMetadataV3 {
@@ -6427,6 +6423,7 @@ export const FragmentCommentFields = /*#__PURE__*/ gql`
   ${FragmentProfile}
   ${FragmentPublicationOperations}
   ${FragmentPost}
+  ${FragmentQuoteFields}
   ${FragmentAudioMetadataV3}
   ${FragmentVideoMetadataV3}
   ${FragmentImageMetadataV3}
@@ -9440,61 +9437,6 @@ export type ClaimProfileWithHandleMutationResult =
 export type ClaimProfileWithHandleMutationOptions = Apollo.BaseMutationOptions<
   ClaimProfileWithHandleData,
   ClaimProfileWithHandleVariables
->;
-export const CreateProfileWithHandleDocument = /*#__PURE__*/ gql`
-  mutation CreateProfileWithHandle($request: CreateProfileWithHandleRequest!) {
-    result: createProfileWithHandle(request: $request) {
-      ... on RelaySuccess {
-        ...RelaySuccess
-      }
-      ... on CreateProfileWithHandleErrorResult {
-        ...CreateProfileWithHandleErrorResult
-      }
-    }
-  }
-  ${FragmentRelaySuccess}
-  ${FragmentCreateProfileWithHandleErrorResult}
-`;
-export type CreateProfileWithHandleMutationFn = Apollo.MutationFunction<
-  CreateProfileWithHandleData,
-  CreateProfileWithHandleVariables
->;
-
-/**
- * __useCreateProfileWithHandle__
- *
- * To run a mutation, you first call `useCreateProfileWithHandle` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateProfileWithHandle` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createProfileWithHandle, { data, loading, error }] = useCreateProfileWithHandle({
- *   variables: {
- *      request: // value for 'request'
- *   },
- * });
- */
-export function useCreateProfileWithHandle(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateProfileWithHandleData,
-    CreateProfileWithHandleVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<CreateProfileWithHandleData, CreateProfileWithHandleVariables>(
-    CreateProfileWithHandleDocument,
-    options,
-  );
-}
-export type CreateProfileWithHandleHookResult = ReturnType<typeof useCreateProfileWithHandle>;
-export type CreateProfileWithHandleMutationResult =
-  Apollo.MutationResult<CreateProfileWithHandleData>;
-export type CreateProfileWithHandleMutationOptions = Apollo.BaseMutationOptions<
-  CreateProfileWithHandleData,
-  CreateProfileWithHandleVariables
 >;
 export const AddProfileInterestsDocument = /*#__PURE__*/ gql`
   mutation AddProfileInterests($request: ProfileInterestsRequest!) {

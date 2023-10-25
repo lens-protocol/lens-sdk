@@ -1595,7 +1595,12 @@ fragment CommentFields on Comment {
     ...PublicationOperations
   }
   root {
-    ...Post
+    ... on Post {
+      ...Post
+    }
+    ... on Quote {
+      ...QuoteFields
+    }
   }
   metadata {
     ... on AudioMetadataV3 {

@@ -1,4 +1,4 @@
-import { LensClient, development } from '@lens-protocol/client';
+import { LensClient, OpenActionCategoryType, development } from '@lens-protocol/client';
 
 async function main() {
   const client = new LensClient({
@@ -7,6 +7,13 @@ async function main() {
 
   const result = await client.profile.whoActedOnPublication({
     on: '0x0635-0x0f',
+    where: {
+      anyOf: [
+        {
+          category: OpenActionCategoryType.Collect,
+        },
+      ],
+    },
   });
 
   console.log(
