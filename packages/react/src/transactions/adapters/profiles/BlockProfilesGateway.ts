@@ -8,6 +8,7 @@ import {
   CreateBlockProfilesTypedDataVariables,
   RelaySuccess,
   SafeApolloClient,
+  omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { IUnsignedProtocolCall, Nonce, Transaction } from '@lens-protocol/domain/entities';
@@ -64,7 +65,7 @@ export class BlockProfilesGateway
     return UnsignedProtocolCall.create({
       id: result.id,
       request,
-      typedData: result.typedData,
+      typedData: omitTypename(result.typedData),
       fallback: this.createRequestFallback(request, result),
     });
   }
