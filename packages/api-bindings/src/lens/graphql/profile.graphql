@@ -401,6 +401,26 @@ query ProfileActionHistory($limit: LimitType, $cursor: Cursor) {
   }
 }
 
+fragment ReservedClaimable on ReservedClaimable {
+  id
+  withHandle
+  source
+  expiry
+}
+
+fragment ClaimableProfilesResult on ClaimableProfilesResult {
+  reserved {
+    ...ReservedClaimable
+  }
+  canMintProfileWithFreeTextHandle
+}
+
+query ClaimableProfiles {
+  result: claimableProfiles {
+    ...ClaimableProfilesResult
+  }
+}
+
 # mutations
 mutation ClaimProfileWithHandle($request: ClaimProfileWithHandleRequest!) {
   result: claimProfileWithHandle(request: $request) {

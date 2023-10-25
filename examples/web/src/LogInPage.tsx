@@ -6,7 +6,6 @@ import { InjectedConnector } from 'wagmi/connectors/injected';
 
 import { ErrorMessage } from './components/error/ErrorMessage';
 import { Loading } from './components/loading/Loading';
-import { never } from './utils';
 
 function ProfilesList({ owner }: { owner: string }) {
   const navigate = useNavigate();
@@ -19,11 +18,11 @@ function ProfilesList({ owner }: { owner: string }) {
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const id = profileId(formData.get('id') as string) ?? never();
+    const id = profileId(formData.get('id') as string);
 
     const result = await login({
       address: owner,
-      profileId: id,
+      ...(id && { profileId: id }),
     });
 
     if (result.isSuccess()) {
@@ -51,6 +50,10 @@ function ProfilesList({ owner }: { owner: string }) {
       <fieldset>
         <legend>Which Profile you want to log-in with?</legend>
 
+        <label>
+          <input disabled={isLoginPending} type="radio" name="id" value="" />
+          LOGIN WITH WALLET ONLY
+        </label>
         {profiles.map((profile, idx) => (
           <label key={profile.id}>
             <input
