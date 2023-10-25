@@ -7,9 +7,9 @@ import { FollowPolicyConfig } from './types';
 
 export type ClaimHandleRequest = {
   kind: TransactionKind.CREATE_PROFILE;
-  localName: string;
+  id: string;
+  handle: string;
   followPolicy?: FollowPolicyConfig;
-  profileImage?: Url;
 };
 
 export class ClaimHandleError<TErrorReason extends string> extends Error {

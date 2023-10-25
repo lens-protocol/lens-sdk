@@ -196,17 +196,29 @@ export type ChangeProfileManagersRequest = {
   changeManagers?: InputMaybe<Array<ChangeProfileManager>>;
 };
 
-export type ClaimProfileRequest = {
-  followModule?: InputMaybe<FollowModuleInput>;
-  freeTextHandle?: InputMaybe<Scalars['CreateHandle']>;
-  id: Scalars['String'];
-};
-
 export enum ClaimProfileStatusType {
   AlreadyClaimed = 'ALREADY_CLAIMED',
   ClaimFailed = 'CLAIM_FAILED',
   NotClaimed = 'NOT_CLAIMED',
 }
+
+/** Claim profile with handle error reason type */
+export enum ClaimProfileWithHandleErrorReasonType {
+  CanNotFreeText = 'CAN_NOT_FREE_TEXT',
+  ClaimNotFound = 'CLAIM_NOT_FOUND',
+  ClaimNotLinkedToWallet = 'CLAIM_NOT_LINKED_TO_WALLET',
+  ClaimTimeExpired = 'CLAIM_TIME_EXPIRED',
+  ContractExecuted = 'CONTRACT_EXECUTED',
+  HandleAlreadyClaimed = 'HANDLE_ALREADY_CLAIMED',
+  HandleAlreadyExists = 'HANDLE_ALREADY_EXISTS',
+  HandleReserved = 'HANDLE_RESERVED',
+}
+
+export type ClaimProfileWithHandleRequest = {
+  followModule?: InputMaybe<FollowModuleInput>;
+  freeTextHandle?: InputMaybe<Scalars['CreateHandle']>;
+  id?: InputMaybe<Scalars['String']>;
+};
 
 export type CollectActionModuleInput = {
   multirecipientCollectOpenAction?: InputMaybe<MultirecipientFeeCollectModuleInput>;
@@ -295,13 +307,6 @@ export type DegreesOfSeparationReferenceModuleInput = {
 
 export type DismissRecommendedProfilesRequest = {
   dismiss: Array<Scalars['ProfileId']>;
-};
-
-export type DoesFollowRequest = {
-  cursor?: InputMaybe<Scalars['Cursor']>;
-  followers: Array<Scalars['ProfileId']>;
-  for: Scalars['ProfileId'];
-  limit?: InputMaybe<LimitType>;
 };
 
 /** Possible sort criteria for exploring profiles */
@@ -444,6 +449,15 @@ export type FollowRequest = {
 
 export type FollowRevenueRequest = {
   for: Scalars['ProfileId'];
+};
+
+export type FollowStatusBulk = {
+  follower: Scalars['ProfileId'];
+  profileId: Scalars['ProfileId'];
+};
+
+export type FollowStatusBulkRequest = {
+  followInfos: Array<FollowStatusBulk>;
 };
 
 export type FollowersRequest = {
@@ -1676,6 +1690,11 @@ export type ValidatePublicationMetadataRequest = {
 export type VerifyRequest = {
   /** The access token to verify */
   accessToken: Scalars['Jwt'];
+};
+
+export type WalletAuthenticationToProfileAuthenticationRequest = {
+  /** This can convert a wallet token to a profile token if you now onboarded */
+  profileId: Scalars['ProfileId'];
 };
 
 export type WhoActedOnPublicationRequest = {
@@ -3174,6 +3193,11 @@ export type NotificationsData = {
 
 export type ProfileManager = { address: EvmAddress };
 
+export type ClaimProfileWithHandleErrorResult = {
+  __typename: 'ClaimProfileWithHandleErrorResult';
+  reason: ClaimProfileWithHandleErrorReasonType;
+};
+
 export type CreateProfileWithHandleErrorResult = {
   __typename: 'CreateProfileWithHandleErrorResult';
   reason: CreateProfileWithHandleErrorReasonType;
@@ -3439,11 +3463,13 @@ export type ProfileActionHistoryData = {
   result: { items: Array<ProfileActionHistory>; pageInfo: PaginatedResultInfo };
 };
 
-export type ClaimProfileVariables = Exact<{
-  request: ClaimProfileRequest;
+export type ClaimProfileWithHandleVariables = Exact<{
+  request: ClaimProfileWithHandleRequest;
 }>;
 
-export type ClaimProfileData = { result: CreateProfileWithHandleErrorResult | RelaySuccess };
+export type ClaimProfileWithHandleData = {
+  result: ClaimProfileWithHandleErrorResult | RelaySuccess;
+};
 
 export type CreateProfileWithHandleVariables = Exact<{
   request: CreateProfileWithHandleRequest;
@@ -6906,6 +6932,12 @@ export const FragmentProfileManager = /*#__PURE__*/ gql`
     address
   }
 `;
+export const FragmentClaimProfileWithHandleErrorResult = /*#__PURE__*/ gql`
+  fragment ClaimProfileWithHandleErrorResult on ClaimProfileWithHandleErrorResult {
+    __typename
+    reason
+  }
+`;
 export const FragmentCreateProfileWithHandleErrorResult = /*#__PURE__*/ gql`
   fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
     __typename
@@ -9217,53 +9249,60 @@ export type ProfileActionHistoryQueryResult = Apollo.QueryResult<
   ProfileActionHistoryData,
   ProfileActionHistoryVariables
 >;
-export const ClaimProfileDocument = /*#__PURE__*/ gql`
-  mutation ClaimProfile($request: ClaimProfileRequest!) {
-    result: claimProfile(request: $request) {
+export const ClaimProfileWithHandleDocument = /*#__PURE__*/ gql`
+  mutation ClaimProfileWithHandle($request: ClaimProfileWithHandleRequest!) {
+    result: claimProfileWithHandle(request: $request) {
       ... on RelaySuccess {
         ...RelaySuccess
       }
-      ... on CreateProfileWithHandleErrorResult {
-        ...CreateProfileWithHandleErrorResult
+      ... on ClaimProfileWithHandleErrorResult {
+        ...ClaimProfileWithHandleErrorResult
       }
     }
   }
   ${FragmentRelaySuccess}
-  ${FragmentCreateProfileWithHandleErrorResult}
+  ${FragmentClaimProfileWithHandleErrorResult}
 `;
-export type ClaimProfileMutationFn = Apollo.MutationFunction<
-  ClaimProfileData,
-  ClaimProfileVariables
+export type ClaimProfileWithHandleMutationFn = Apollo.MutationFunction<
+  ClaimProfileWithHandleData,
+  ClaimProfileWithHandleVariables
 >;
 
 /**
- * __useClaimProfile__
+ * __useClaimProfileWithHandle__
  *
- * To run a mutation, you first call `useClaimProfile` within a React component and pass it any options that fit your needs.
- * When your component renders, `useClaimProfile` returns a tuple that includes:
+ * To run a mutation, you first call `useClaimProfileWithHandle` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useClaimProfileWithHandle` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [claimProfile, { data, loading, error }] = useClaimProfile({
+ * const [claimProfileWithHandle, { data, loading, error }] = useClaimProfileWithHandle({
  *   variables: {
  *      request: // value for 'request'
  *   },
  * });
  */
-export function useClaimProfile(
-  baseOptions?: Apollo.MutationHookOptions<ClaimProfileData, ClaimProfileVariables>,
+export function useClaimProfileWithHandle(
+  baseOptions?: Apollo.MutationHookOptions<
+    ClaimProfileWithHandleData,
+    ClaimProfileWithHandleVariables
+  >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<ClaimProfileData, ClaimProfileVariables>(ClaimProfileDocument, options);
+  return Apollo.useMutation<ClaimProfileWithHandleData, ClaimProfileWithHandleVariables>(
+    ClaimProfileWithHandleDocument,
+    options,
+  );
 }
-export type ClaimProfileHookResult = ReturnType<typeof useClaimProfile>;
-export type ClaimProfileMutationResult = Apollo.MutationResult<ClaimProfileData>;
-export type ClaimProfileMutationOptions = Apollo.BaseMutationOptions<
-  ClaimProfileData,
-  ClaimProfileVariables
+export type ClaimProfileWithHandleHookResult = ReturnType<typeof useClaimProfileWithHandle>;
+export type ClaimProfileWithHandleMutationResult =
+  Apollo.MutationResult<ClaimProfileWithHandleData>;
+export type ClaimProfileWithHandleMutationOptions = Apollo.BaseMutationOptions<
+  ClaimProfileWithHandleData,
+  ClaimProfileWithHandleVariables
 >;
 export const CreateProfileWithHandleDocument = /*#__PURE__*/ gql`
   mutation CreateProfileWithHandle($request: CreateProfileWithHandleRequest!) {
@@ -13029,6 +13068,13 @@ export type CheckingInMetadataV3FieldPolicy = {
   rawURI?: FieldPolicy<any> | FieldReadFunction<any>;
   tags?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type ClaimProfileWithHandleErrorResultKeySpecifier = (
+  | 'reason'
+  | ClaimProfileWithHandleErrorResultKeySpecifier
+)[];
+export type ClaimProfileWithHandleErrorResultFieldPolicy = {
+  reason?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type ClaimableProfilesResultKeySpecifier = (
   | 'canMintProfileWithFreeTextHandle'
   | 'reserved'
@@ -13052,12 +13098,15 @@ export type CommentKeySpecifier = (
   | 'commentOn'
   | 'createdAt'
   | 'firstComment'
+  | 'hashtagsMentioned'
   | 'id'
+  | 'isEncrypted'
   | 'isHidden'
   | 'metadata'
   | 'momoka'
   | 'openActionModules'
   | 'operations'
+  | 'profilesMentioned'
   | 'publishedOn'
   | 'referenceModule'
   | 'root'
@@ -13070,12 +13119,15 @@ export type CommentFieldPolicy = {
   commentOn?: FieldPolicy<any> | FieldReadFunction<any>;
   createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
   firstComment?: FieldPolicy<any> | FieldReadFunction<any>;
+  hashtagsMentioned?: FieldPolicy<any> | FieldReadFunction<any>;
   id?: FieldPolicy<any> | FieldReadFunction<any>;
+  isEncrypted?: FieldPolicy<any> | FieldReadFunction<any>;
   isHidden?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   momoka?: FieldPolicy<any> | FieldReadFunction<any>;
   openActionModules?: FieldPolicy<any> | FieldReadFunction<any>;
   operations?: FieldPolicy<any> | FieldReadFunction<any>;
+  profilesMentioned?: FieldPolicy<any> | FieldReadFunction<any>;
   publishedOn?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
   root?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -14029,15 +14081,6 @@ export type DegreesOfSeparationReferenceModuleSettingsFieldPolicy = {
   sourceProfileId?: FieldPolicy<any> | FieldReadFunction<any>;
   type?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type DoesFollowResultKeySpecifier = (
-  | 'followerProfileId'
-  | 'status'
-  | DoesFollowResultKeySpecifier
-)[];
-export type DoesFollowResultFieldPolicy = {
-  followerProfileId?: FieldPolicy<any> | FieldReadFunction<any>;
-  status?: FieldPolicy<any> | FieldReadFunction<any>;
-};
 export type EIP712TypedDataDomainKeySpecifier = (
   | 'chainId'
   | 'name'
@@ -14272,6 +14315,17 @@ export type FollowOnlyReferenceModuleSettingsFieldPolicy = {
 export type FollowRevenueResultKeySpecifier = ('revenues' | FollowRevenueResultKeySpecifier)[];
 export type FollowRevenueResultFieldPolicy = {
   revenues?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type FollowStatusBulkResultKeySpecifier = (
+  | 'follower'
+  | 'profileId'
+  | 'status'
+  | FollowStatusBulkResultKeySpecifier
+)[];
+export type FollowStatusBulkResultFieldPolicy = {
+  follower?: FieldPolicy<any> | FieldReadFunction<any>;
+  profileId?: FieldPolicy<any> | FieldReadFunction<any>;
+  status?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type GenerateModuleCurrencyApprovalResultKeySpecifier = (
   | 'data'
@@ -14987,7 +15041,7 @@ export type MutationKeySpecifier = (
   | 'block'
   | 'broadcastOnMomoka'
   | 'broadcastOnchain'
-  | 'claimProfile'
+  | 'claimProfileWithHandle'
   | 'commentOnMomoka'
   | 'commentOnchain'
   | 'createActOnOpenActionTypedData'
@@ -15053,6 +15107,7 @@ export type MutationKeySpecifier = (
   | 'updateNftGalleryInfo'
   | 'updateNftGalleryItems'
   | 'updateNftGalleryOrder'
+  | 'walletAuthenticationToProfileAuthentication'
   | MutationKeySpecifier
 )[];
 export type MutationFieldPolicy = {
@@ -15065,7 +15120,7 @@ export type MutationFieldPolicy = {
   block?: FieldPolicy<any> | FieldReadFunction<any>;
   broadcastOnMomoka?: FieldPolicy<any> | FieldReadFunction<any>;
   broadcastOnchain?: FieldPolicy<any> | FieldReadFunction<any>;
-  claimProfile?: FieldPolicy<any> | FieldReadFunction<any>;
+  claimProfileWithHandle?: FieldPolicy<any> | FieldReadFunction<any>;
   commentOnMomoka?: FieldPolicy<any> | FieldReadFunction<any>;
   commentOnchain?: FieldPolicy<any> | FieldReadFunction<any>;
   createActOnOpenActionTypedData?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -15131,6 +15186,7 @@ export type MutationFieldPolicy = {
   updateNftGalleryInfo?: FieldPolicy<any> | FieldReadFunction<any>;
   updateNftGalleryItems?: FieldPolicy<any> | FieldReadFunction<any>;
   updateNftGalleryOrder?: FieldPolicy<any> | FieldReadFunction<any>;
+  walletAuthenticationToProfileAuthentication?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type NetworkAddressKeySpecifier = ('address' | 'chainId' | NetworkAddressKeySpecifier)[];
 export type NetworkAddressFieldPolicy = {
@@ -15567,12 +15623,15 @@ export type PoapTokenFieldPolicy = {
 export type PostKeySpecifier = (
   | 'by'
   | 'createdAt'
+  | 'hashtagsMentioned'
   | 'id'
+  | 'isEncrypted'
   | 'isHidden'
   | 'metadata'
   | 'momoka'
   | 'openActionModules'
   | 'operations'
+  | 'profilesMentioned'
   | 'publishedOn'
   | 'referenceModule'
   | 'stats'
@@ -15582,12 +15641,15 @@ export type PostKeySpecifier = (
 export type PostFieldPolicy = {
   by?: FieldPolicy<any> | FieldReadFunction<any>;
   createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  hashtagsMentioned?: FieldPolicy<any> | FieldReadFunction<any>;
   id?: FieldPolicy<any> | FieldReadFunction<any>;
+  isEncrypted?: FieldPolicy<any> | FieldReadFunction<any>;
   isHidden?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   momoka?: FieldPolicy<any> | FieldReadFunction<any>;
   openActionModules?: FieldPolicy<any> | FieldReadFunction<any>;
   operations?: FieldPolicy<any> | FieldReadFunction<any>;
+  profilesMentioned?: FieldPolicy<any> | FieldReadFunction<any>;
   publishedOn?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
   stats?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -15662,6 +15724,17 @@ export type ProfileGuardianResultKeySpecifier = (
 export type ProfileGuardianResultFieldPolicy = {
   cooldownEndsOn?: FieldPolicy<any> | FieldReadFunction<any>;
   protected?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type ProfileMentionedKeySpecifier = (
+  | 'profile'
+  | 'snapshotHandleMentioned'
+  | 'stillOwnsHandle'
+  | ProfileMentionedKeySpecifier
+)[];
+export type ProfileMentionedFieldPolicy = {
+  profile?: FieldPolicy<any> | FieldReadFunction<any>;
+  snapshotHandleMentioned?: FieldPolicy<any> | FieldReadFunction<any>;
+  stillOwnsHandle?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ProfileMetadataKeySpecifier = (
   | 'appId'
@@ -15948,12 +16021,12 @@ export type QueryKeySpecifier = (
   | 'currencies'
   | 'currentSession'
   | 'defaultProfile'
-  | 'doesFollow'
   | 'exploreProfiles'
   | 'explorePublications'
   | 'feed'
   | 'feedHighlights'
   | 'followRevenues'
+  | 'followStatusBulk'
   | 'followers'
   | 'following'
   | 'fxRateFor'
@@ -15968,6 +16041,7 @@ export type QueryKeySpecifier = (
   | 'internalProfileStatus'
   | 'invitedProfiles'
   | 'lastLoggedInProfile'
+  | 'lensAPIOwnedEOAs'
   | 'lensProtocolVersion'
   | 'lensTransactionStatus'
   | 'momokaSubmitters'
@@ -16029,12 +16103,12 @@ export type QueryFieldPolicy = {
   currencies?: FieldPolicy<any> | FieldReadFunction<any>;
   currentSession?: FieldPolicy<any> | FieldReadFunction<any>;
   defaultProfile?: FieldPolicy<any> | FieldReadFunction<any>;
-  doesFollow?: FieldPolicy<any> | FieldReadFunction<any>;
   exploreProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   explorePublications?: FieldPolicy<any> | FieldReadFunction<any>;
   feed?: FieldPolicy<any> | FieldReadFunction<any>;
   feedHighlights?: FieldPolicy<any> | FieldReadFunction<any>;
   followRevenues?: FieldPolicy<any> | FieldReadFunction<any>;
+  followStatusBulk?: FieldPolicy<any> | FieldReadFunction<any>;
   followers?: FieldPolicy<any> | FieldReadFunction<any>;
   following?: FieldPolicy<any> | FieldReadFunction<any>;
   fxRateFor?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -16049,6 +16123,7 @@ export type QueryFieldPolicy = {
   internalProfileStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   invitedProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   lastLoggedInProfile?: FieldPolicy<any> | FieldReadFunction<any>;
+  lensAPIOwnedEOAs?: FieldPolicy<any> | FieldReadFunction<any>;
   lensProtocolVersion?: FieldPolicy<any> | FieldReadFunction<any>;
   lensTransactionStatus?: FieldPolicy<any> | FieldReadFunction<any>;
   momokaSubmitters?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -16103,12 +16178,15 @@ export type QueryFieldPolicy = {
 export type QuoteKeySpecifier = (
   | 'by'
   | 'createdAt'
+  | 'hashtagsMentioned'
   | 'id'
+  | 'isEncrypted'
   | 'isHidden'
   | 'metadata'
   | 'momoka'
   | 'openActionModules'
   | 'operations'
+  | 'profilesMentioned'
   | 'publishedOn'
   | 'quoteOn'
   | 'referenceModule'
@@ -16119,12 +16197,15 @@ export type QuoteKeySpecifier = (
 export type QuoteFieldPolicy = {
   by?: FieldPolicy<any> | FieldReadFunction<any>;
   createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  hashtagsMentioned?: FieldPolicy<any> | FieldReadFunction<any>;
   id?: FieldPolicy<any> | FieldReadFunction<any>;
+  isEncrypted?: FieldPolicy<any> | FieldReadFunction<any>;
   isHidden?: FieldPolicy<any> | FieldReadFunction<any>;
   metadata?: FieldPolicy<any> | FieldReadFunction<any>;
   momoka?: FieldPolicy<any> | FieldReadFunction<any>;
   openActionModules?: FieldPolicy<any> | FieldReadFunction<any>;
   operations?: FieldPolicy<any> | FieldReadFunction<any>;
+  profilesMentioned?: FieldPolicy<any> | FieldReadFunction<any>;
   publishedOn?: FieldPolicy<any> | FieldReadFunction<any>;
   quoteOn?: FieldPolicy<any> | FieldReadFunction<any>;
   referenceModule?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -16317,6 +16398,7 @@ export type StoryMetadataV3FieldPolicy = {
   tags?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type SubscriptionKeySpecifier = (
+  | 'authorizationRecordRevoked'
   | 'newMomokaTransaction'
   | 'newNotification'
   | 'newPublicationStats'
@@ -16324,6 +16406,7 @@ export type SubscriptionKeySpecifier = (
   | SubscriptionKeySpecifier
 )[];
 export type SubscriptionFieldPolicy = {
+  authorizationRecordRevoked?: FieldPolicy<any> | FieldReadFunction<any>;
   newMomokaTransaction?: FieldPolicy<any> | FieldReadFunction<any>;
   newNotification?: FieldPolicy<any> | FieldReadFunction<any>;
   newPublicationStats?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -16670,6 +16753,13 @@ export type StrictTypedTypePolicies = {
       | CheckingInMetadataV3KeySpecifier
       | (() => undefined | CheckingInMetadataV3KeySpecifier);
     fields?: CheckingInMetadataV3FieldPolicy;
+  };
+  ClaimProfileWithHandleErrorResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | ClaimProfileWithHandleErrorResultKeySpecifier
+      | (() => undefined | ClaimProfileWithHandleErrorResultKeySpecifier);
+    fields?: ClaimProfileWithHandleErrorResultFieldPolicy;
   };
   ClaimableProfilesResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
@@ -17228,13 +17318,6 @@ export type StrictTypedTypePolicies = {
       | (() => undefined | DegreesOfSeparationReferenceModuleSettingsKeySpecifier);
     fields?: DegreesOfSeparationReferenceModuleSettingsFieldPolicy;
   };
-  DoesFollowResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
-    keyFields?:
-      | false
-      | DoesFollowResultKeySpecifier
-      | (() => undefined | DoesFollowResultKeySpecifier);
-    fields?: DoesFollowResultFieldPolicy;
-  };
   EIP712TypedDataDomain?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
       | false
@@ -17376,6 +17459,13 @@ export type StrictTypedTypePolicies = {
       | FollowRevenueResultKeySpecifier
       | (() => undefined | FollowRevenueResultKeySpecifier);
     fields?: FollowRevenueResultFieldPolicy;
+  };
+  FollowStatusBulkResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | FollowStatusBulkResultKeySpecifier
+      | (() => undefined | FollowStatusBulkResultKeySpecifier);
+    fields?: FollowStatusBulkResultFieldPolicy;
   };
   GenerateModuleCurrencyApprovalResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
@@ -17939,6 +18029,13 @@ export type StrictTypedTypePolicies = {
       | (() => undefined | ProfileGuardianResultKeySpecifier);
     fields?: ProfileGuardianResultFieldPolicy;
   };
+  ProfileMentioned?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | ProfileMentionedKeySpecifier
+      | (() => undefined | ProfileMentionedKeySpecifier);
+    fields?: ProfileMentionedFieldPolicy;
+  };
   ProfileMetadata?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
       | false
@@ -18308,6 +18405,7 @@ const result: PossibleTypesResultData = {
     AnyPublication: ['Comment', 'Mirror', 'Post', 'Quote'],
     Asset: ['Erc20'],
     BroadcastMomokaResult: ['CreateMomokaPublicationResult', 'RelayError'],
+    ClaimProfileWithHandleResult: ['ClaimProfileWithHandleErrorResult', 'RelaySuccess'],
     CreateProfileWithHandleResult: ['CreateProfileWithHandleErrorResult', 'RelaySuccess'],
     ExplorePublication: ['Post', 'Quote'],
     FeedHighlight: ['Post', 'Quote'],
