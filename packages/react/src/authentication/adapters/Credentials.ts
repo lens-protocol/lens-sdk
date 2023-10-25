@@ -1,17 +1,15 @@
 import { ICredentials, ProfileId } from '@lens-protocol/domain/entities';
-import { DateUtils, EvmAddress, invariant, InvariantError } from '@lens-protocol/shared-kernel';
+import { DateUtils, EvmAddress, invariant } from '@lens-protocol/shared-kernel';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import isObject from 'lodash/isObject.js';
 
 type ParsedJwt = {
-  id: ProfileId;
+  id?: ProfileId;
   evmAddress: EvmAddress;
 };
 
-function assertIdInJwt(decodedJwt: unknown): asserts decodedJwt is ParsedJwt {
-  if (isObject(decodedJwt) && !['id', 'evmAddress'].every((key) => key in decodedJwt)) {
-    throw new InvariantError('Invalid JWT format.');
-  }
+function assertJwtContent(decodedJwt: unknown): asserts decodedJwt is ParsedJwt {
+  invariant(isObject(decodedJwt) && 'evmAddress' in decodedJwt, 'Invalid JWT format.');
 }
 
 // Threshold in seconds that will mark token as expired even it's still valid
@@ -20,12 +18,12 @@ const TOKEN_EXP_THRESHOLD = DateUtils.secondsToMs(3);
 
 export class Credentials implements ICredentials {
   readonly address: EvmAddress;
-  readonly profileId: ProfileId;
+  readonly profileId?: ProfileId;
 
   constructor(readonly accessToken: string | null, readonly refreshToken: string) {
     const decodedRefreshToken = jwtDecode<JwtPayload>(refreshToken);
 
-    assertIdInJwt(decodedRefreshToken);
+    assertJwtContent(decodedRefreshToken);
 
     this.address = decodedRefreshToken.evmAddress;
     this.profileId = decodedRefreshToken.id;

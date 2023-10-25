@@ -1,4 +1,4 @@
-import { failure, success } from '@lens-protocol/shared-kernel';
+import { failure, never, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
@@ -83,7 +83,12 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
       await bootstrap.execute();
 
       expect(credentialsGateway.save).toHaveBeenCalledWith(newCredentials);
-      expect(presenter.present).toHaveBeenCalledWith(profileSessionData(oldCredentials));
+      expect(presenter.present).toHaveBeenCalledWith(
+        profileSessionData({
+          address: newCredentials.address,
+          profileId: newCredentials.profileId ?? never(),
+        }),
+      );
       expect(transactionQueue.resume).toHaveBeenCalled();
     });
 
