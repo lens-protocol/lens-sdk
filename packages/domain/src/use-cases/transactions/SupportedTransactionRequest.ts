@@ -1,9 +1,9 @@
 import { JustProtocolRequest } from '../../entities';
 import { CreateProfileRequest } from '../profile/CreateProfile';
 import { FollowRequest } from '../profile/FollowProfile';
-import { UnblockProfilesRequest } from '../profile/UnblockProfiles';
 import { LinkHandleRequest } from '../profile/LinkHandle';
 import { SetProfileMetadataRequest } from '../profile/SetProfileMetadata';
+import { UnblockProfilesRequest } from '../profile/UnblockProfiles';
 import { UnfollowRequest } from '../profile/UnfollowProfile';
 import { UnlinkHandleRequest } from '../profile/UnlinkHandle';
 import { UpdateFollowPolicyRequest } from '../profile/UpdateFollowPolicy';
