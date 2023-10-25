@@ -9,6 +9,7 @@ import {
   WalletConnectionErrorReason,
 } from '../../../entities';
 import { mockICredentials, mockWallet } from '../../../entities/__helpers__/mocks';
+import { ICredentialsWriter } from '../ICredentialsWriter';
 import {
   ICredentialsIssuer,
   IWalletFactory,
@@ -16,7 +17,6 @@ import {
   IWritableWalletGateway,
   Login,
 } from '../Login';
-import { ICredentialsWriter } from '../ICredentialsWriter';
 import { profileSessionData } from '../SessionData';
 import { mockLoginRequest } from '../__helpers__/mocks';
 
