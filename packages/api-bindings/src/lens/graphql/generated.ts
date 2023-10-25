@@ -1785,6 +1785,14 @@ export type AuthRefreshVariables = Exact<{
 
 export type AuthRefreshData = { result: { accessToken: string; refreshToken: string } };
 
+export type WalletAuthenticationToProfileAuthenticationVariables = Exact<{
+  request: WalletAuthenticationToProfileAuthenticationRequest;
+}>;
+
+export type WalletAuthenticationToProfileAuthenticationData = {
+  result: { accessToken: string; refreshToken: string };
+};
+
 type ExplorePublication_Post_ = Post;
 
 type ExplorePublication_Quote_ = Quote;
@@ -2814,7 +2822,7 @@ export type CommentFields = {
   momoka: MomokaInfo | null;
   by: Profile;
   operations: PublicationOperations;
-  root: Post;
+  root: Post | {};
   metadata:
     | ArticleMetadataV3
     | AudioMetadataV3
@@ -7848,6 +7856,59 @@ export type AuthRefreshMutationResult = Apollo.MutationResult<AuthRefreshData>;
 export type AuthRefreshMutationOptions = Apollo.BaseMutationOptions<
   AuthRefreshData,
   AuthRefreshVariables
+>;
+export const WalletAuthenticationToProfileAuthenticationDocument = /*#__PURE__*/ gql`
+  mutation WalletAuthenticationToProfileAuthentication(
+    $request: WalletAuthenticationToProfileAuthenticationRequest!
+  ) {
+    result: walletAuthenticationToProfileAuthentication(request: $request) {
+      accessToken
+      refreshToken
+    }
+  }
+`;
+export type WalletAuthenticationToProfileAuthenticationMutationFn = Apollo.MutationFunction<
+  WalletAuthenticationToProfileAuthenticationData,
+  WalletAuthenticationToProfileAuthenticationVariables
+>;
+
+/**
+ * __useWalletAuthenticationToProfileAuthentication__
+ *
+ * To run a mutation, you first call `useWalletAuthenticationToProfileAuthentication` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useWalletAuthenticationToProfileAuthentication` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [walletAuthenticationToProfileAuthentication, { data, loading, error }] = useWalletAuthenticationToProfileAuthentication({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useWalletAuthenticationToProfileAuthentication(
+  baseOptions?: Apollo.MutationHookOptions<
+    WalletAuthenticationToProfileAuthenticationData,
+    WalletAuthenticationToProfileAuthenticationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    WalletAuthenticationToProfileAuthenticationData,
+    WalletAuthenticationToProfileAuthenticationVariables
+  >(WalletAuthenticationToProfileAuthenticationDocument, options);
+}
+export type WalletAuthenticationToProfileAuthenticationHookResult = ReturnType<
+  typeof useWalletAuthenticationToProfileAuthentication
+>;
+export type WalletAuthenticationToProfileAuthenticationMutationResult =
+  Apollo.MutationResult<WalletAuthenticationToProfileAuthenticationData>;
+export type WalletAuthenticationToProfileAuthenticationMutationOptions = Apollo.BaseMutationOptions<
+  WalletAuthenticationToProfileAuthenticationData,
+  WalletAuthenticationToProfileAuthenticationVariables
 >;
 export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
   query ExplorePublications(
@@ -18482,6 +18543,7 @@ const result: PossibleTypesResultData = {
     Asset: ['Erc20'],
     BroadcastMomokaResult: ['CreateMomokaPublicationResult', 'RelayError'],
     ClaimProfileWithHandleResult: ['ClaimProfileWithHandleErrorResult', 'RelaySuccess'],
+    CommentablePublication: ['Post', 'Quote'],
     CreateProfileWithHandleResult: ['CreateProfileWithHandleErrorResult', 'RelaySuccess'],
     ExplorePublication: ['Post', 'Quote'],
     FeedHighlight: ['Post', 'Quote'],

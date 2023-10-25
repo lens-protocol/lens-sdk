@@ -5,11 +5,11 @@ import { ICredentialsWriter } from './ICredentialsWriter';
 import { SessionData, profileSessionData } from './SessionData';
 
 export type UpgradeCredentialsRequest = {
-  forProfile: ProfileId;
+  profileId: ProfileId;
 };
 
 export interface ICredentialsUpgrader {
-  upgradeCredentials(forProfile: ProfileId): Promise<ICredentials>;
+  upgradeCredentials(profileId: ProfileId): Promise<ICredentials>;
 }
 
 export interface IUpgradeCredentialsPresenter {
@@ -24,7 +24,7 @@ export class UpgradeCredentials {
   ) {}
 
   async execute(request: UpgradeCredentialsRequest): Promise<void> {
-    const credentials = await this.credentialsUpgrader.upgradeCredentials(request.forProfile);
+    const credentials = await this.credentialsUpgrader.upgradeCredentials(request.profileId);
 
     await this.credentialsWriter.save(credentials);
 
