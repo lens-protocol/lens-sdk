@@ -159,6 +159,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   credentialsExpiryController.subscribe(accessTokenStorage);
 
   return {
+    accessTokenStorage,
     activeWallet,
     apolloClient,
     credentialsFactory,
@@ -184,6 +185,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
  * @internal
  */
 export type SharedDependencies = {
+  accessTokenStorage: AccessTokenStorage;
   activeWallet: ActiveWallet;
   apolloClient: SafeApolloClient;
   credentialsFactory: CredentialsFactory;
