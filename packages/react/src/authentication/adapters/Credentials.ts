@@ -37,7 +37,7 @@ export class Credentials implements ICredentials {
   readonly profileId?: ProfileId;
 
   constructor(readonly accessToken: string | null, readonly refreshToken: string) {
-    const decodedRefreshToken = jwtDecode<WalletJwtPayload | ProfileJwtPayload>(refreshToken);
+    const decodedRefreshToken = jwtDecode(refreshToken);
 
     if (isWalletJwtContent(decodedRefreshToken)) {
       this.address = decodedRefreshToken.id;

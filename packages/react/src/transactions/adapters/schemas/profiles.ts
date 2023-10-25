@@ -74,16 +74,18 @@ const NoOneFollowPolicyConfigSchema = z.object({
   type: z.literal(FollowPolicyType.NO_ONE),
 });
 
+const FollowPolicyConfigSchema = z.discriminatedUnion('type', [
+  ChargeFollowPolicyConfigSchema,
+  AnyoneFollowPolicyConfigSchema,
+  NoOneFollowPolicyConfigSchema,
+]);
+
 export const UpdateFollowPolicyRequestSchema: z.ZodType<
   UpdateFollowPolicyRequest,
   z.ZodTypeDef,
   UnknownObject
 > = z.object({
-  policy: z.discriminatedUnion('type', [
-    ChargeFollowPolicyConfigSchema,
-    AnyoneFollowPolicyConfigSchema,
-    NoOneFollowPolicyConfigSchema,
-  ]),
+  policy: FollowPolicyConfigSchema,
   kind: z.literal(TransactionKind.UPDATE_FOLLOW_POLICY),
   delegate: z.boolean(),
 });
@@ -105,3 +107,17 @@ export const UnlinkHandleRequestSchema = z.object({
   kind: z.literal(TransactionKind.UNLINK_HANDLE),
   delegate: z.boolean(),
 });
+
+export const ClaimHandleRequestSchema = z.union([
+  z.object({
+    kind: z.literal(TransactionKind.CLAIM_HANDLE),
+    localName: z.string(),
+    followPolicy: FollowPolicyConfigSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal(TransactionKind.CLAIM_HANDLE),
+    id: z.string(),
+    handle: z.string(),
+    followPolicy: FollowPolicyConfigSchema.optional(),
+  }),
+]);

@@ -1,4 +1,5 @@
 import { JustProtocolRequest } from '../../entities';
+import { ClaimHandleRequest } from '../profile';
 import { CreateProfileRequest } from '../profile/CreateProfile';
 import { FollowRequest } from '../profile/FollowProfile';
 import { LinkHandleRequest } from '../profile/LinkHandle';
@@ -16,6 +17,7 @@ import { TokenAllowanceRequest } from './TokenAllowance';
 
 export type AnyTransactionRequest =
   | OpenActionRequest
+  | ClaimHandleRequest
   | CreateCommentRequest
   | CreateMirrorRequest
   | CreatePostRequest

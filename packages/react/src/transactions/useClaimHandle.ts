@@ -1,4 +1,8 @@
-import { ClaimProfileWithHandleErrorReasonType, Profile } from '@lens-protocol/api-bindings';
+import {
+  ClaimProfileWithHandleErrorReasonType,
+  Profile,
+  ReservedClaimable,
+} from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionError,
@@ -6,8 +10,12 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { ClaimHandleError, FollowPolicyConfig } from '@lens-protocol/domain/use-cases/profile';
-import { invariant } from '@lens-protocol/shared-kernel';
+import {
+  ClaimHandleError,
+  ClaimHandleRequest,
+  FollowPolicyConfig,
+} from '@lens-protocol/domain/use-cases/profile';
+import { OneOf, invariant } from '@lens-protocol/shared-kernel';
 
 import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
@@ -16,15 +24,16 @@ import { useClaimHandleController } from './adapters/useClaimHandleController';
 /**
  * Claim a handle details.
  */
-export type ClaimHandleArgs = {
+export type ClaimHandleArgs = OneOf<{
   /**
-   * The claimable handle ID.
-   */
-  id: string;
-  /**
-   * The free text localName to claim.
+   * The handle local name to claim.
    */
   localName: string;
+  /**
+   * The handle reservation to claim.
+   */
+  reserved: ReservedClaimable;
+}> & {
   /**
    * You can optionally specify a follow policy for the profile.
    */
@@ -59,9 +68,18 @@ export function useClaimHandle(): UseDeferredTask<
       'You must be authenticated with just a wallet to claim an handle. Use `useLogin` hook omitting the profileId.',
     );
 
-    return claimHandle({
-      kind: TransactionKind.CLAIM_HANDLE,
-      ...args,
-    });
+    const request: ClaimHandleRequest =
+      `reserved` in args && args.reserved
+        ? {
+            kind: TransactionKind.CLAIM_HANDLE,
+            id: args.reserved?.id,
+            handle: args.reserved?.withHandle,
+          }
+        : {
+            kind: TransactionKind.CLAIM_HANDLE,
+            localName: args.localName,
+          };
+
+    return claimHandle(request);
   });
 }

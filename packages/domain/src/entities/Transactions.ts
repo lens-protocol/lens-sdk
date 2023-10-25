@@ -24,6 +24,7 @@ export enum TransactionKind {
 
 export const ProtocolTransactionKinds = [
   TransactionKind.ACT_ON_PUBLICATION,
+  TransactionKind.CLAIM_HANDLE,
   TransactionKind.CREATE_COMMENT,
   TransactionKind.CREATE_POST,
   TransactionKind.CREATE_PROFILE,

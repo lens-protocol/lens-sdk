@@ -52,6 +52,7 @@ const transactionKindToFilterGroup: { [k in TransactionKind]: TransactionKind[] 
   [TransactionKind.UPDATE_FOLLOW_POLICY]: lensHubTransactionKinds,
   [TransactionKind.UPDATE_PROFILE_DETAILS]: lensHubTransactionKinds,
 
+  [TransactionKind.CLAIM_HANDLE]: [],
   [TransactionKind.APPROVE_MODULE]: [],
   [TransactionKind.CREATE_PROFILE]: [],
   [TransactionKind.UNFOLLOW_PROFILE]: [],

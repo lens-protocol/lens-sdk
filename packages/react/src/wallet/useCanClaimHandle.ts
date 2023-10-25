@@ -9,13 +9,15 @@ import { SessionType, useSession } from '../authentication';
 import { useLensApolloClient } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
 
+export type { ClaimableProfilesResult, ReservedClaimable } from '@lens-protocol/api-bindings';
+
 /**
  * Check if authenticated wallet can claim a handle
  *
  * @category Wallet
  * @group Hooks
  */
-export function useCanClaimHandle(): ReadResult<ClaimableProfilesResult | undefined> {
+export function useCanClaimHandle(): ReadResult<ClaimableProfilesResult> {
   const { data: session } = useSession();
   const { data, error, loading } = useReadResult(useClaimableProfiles(useLensApolloClient()));
 

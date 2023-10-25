@@ -5,12 +5,20 @@ import { ITransactionResultPresenter } from '../transactions/ITransactionResultP
 import { TransactionQueue } from '../transactions/TransactionQueue';
 import { FollowPolicyConfig } from './types';
 
-export type ClaimHandleRequest = {
+export type ClaimFreeTextHandleRequest = {
   kind: TransactionKind.CLAIM_HANDLE;
-  id: string;
   localName: string;
   followPolicy?: FollowPolicyConfig;
 };
+
+export type ClaimReservedHandleRequest = {
+  kind: TransactionKind.CLAIM_HANDLE;
+  id: string;
+  handle: string;
+  followPolicy?: FollowPolicyConfig;
+};
+
+export type ClaimHandleRequest = ClaimFreeTextHandleRequest | ClaimReservedHandleRequest;
 
 export class ClaimHandleError<TErrorReason extends string> extends Error {
   name = 'ClaimHandleError' as const;
