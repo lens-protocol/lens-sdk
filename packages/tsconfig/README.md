@@ -17,7 +17,7 @@ $ pnpm add -D @lens-protocol/tsconfig
 ```bash
 $ pnpm add tslib@^2.5.0
 
-$ pnpm add -D typescript@^4.9.5
+$ pnpm add -D typescript@^5.3.2
 ```
 
 Ensure the version number used matches the peer dependencies criteria of this package `package.json` file.
