@@ -11,10 +11,10 @@ import { NativeTransaction } from '@lens-protocol/domain/entities';
 import {
   ClaimHandleError,
   ClaimHandleRequest,
-  ClaimReservedHandleRequest,
   FollowPolicyConfig,
   FollowPolicyType,
   IClaimHandleGateway,
+  isClaimReservedHandleRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -43,12 +43,6 @@ export function resolveFollowModuleParams(policy: FollowPolicyConfig): FollowMod
         revertFollowModule: true,
       };
   }
-}
-
-function isClaimReservedHandleRequest(
-  request: ClaimHandleRequest,
-): request is ClaimReservedHandleRequest {
-  return 'id' in request;
 }
 
 function resolveClaimProfileWithHandleRequest(

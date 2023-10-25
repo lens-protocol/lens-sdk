@@ -214,8 +214,8 @@ export function useSession(): ReadResult<Session, UnspecifiedError> {
       };
     }
 
-    // transitioning from NotAuthenticatedSession to AuthenticatedProfileSession
-    // OR from AuthenticatedWalletSession to AuthenticatedProfileSession
+    // transitioning from AnonymousSession to ProfileSession
+    // OR from WalletOnlySession to ProfileSession
     return {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore

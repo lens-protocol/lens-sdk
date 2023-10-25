@@ -20,6 +20,12 @@ export type ClaimReservedHandleRequest = {
 
 export type ClaimHandleRequest = ClaimFreeTextHandleRequest | ClaimReservedHandleRequest;
 
+export function isClaimReservedHandleRequest(
+  request: ClaimHandleRequest,
+): request is ClaimReservedHandleRequest {
+  return 'id' in request;
+}
+
 export class ClaimHandleError<TErrorReason extends string> extends Error {
   name = 'ClaimHandleError' as const;
 

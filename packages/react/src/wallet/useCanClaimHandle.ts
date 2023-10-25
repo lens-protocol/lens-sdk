@@ -1,58 +1,25 @@
-import {
-  ClaimableProfilesResult,
-  UnspecifiedError,
-  useClaimableProfiles,
-} from '@lens-protocol/api-bindings';
-import { invariant } from '@lens-protocol/shared-kernel';
+import { ClaimableProfilesResult, useClaimableProfiles } from '@lens-protocol/api-bindings';
 
-import { SessionType, useSession } from '../authentication';
 import { useLensApolloClient } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
 
 export type { ClaimableProfilesResult, ReservedClaimable } from '@lens-protocol/api-bindings';
 
 /**
- * Check if authenticated wallet can claim a handle
+ * `useCanClaimHandle` is React Hook that allows you to check if you can claim a handle.
  *
+ * You MUST be authenticated with a {@link WalletOnlySession} via {@link useLogin} to use this hook.
+ *
+ * @experimental This hook is experimental and may change in future versions.
  * @category Wallet
  * @group Hooks
  */
 export function useCanClaimHandle(): ReadResult<ClaimableProfilesResult> {
-  const { data: session } = useSession();
-  const { data, error, loading } = useReadResult(useClaimableProfiles(useLensApolloClient()));
-
-  invariant(
-    session?.authenticated,
-    'You must be authenticated to use this operation. Use `useLogin` hook to authenticate.',
+  return useReadResult(
+    useClaimableProfiles(
+      useLensApolloClient({
+        fetchPolicy: 'network-only',
+      }),
+    ),
   );
-
-  if (session.type !== SessionType.JustWallet) {
-    return {
-      data: undefined,
-      error: new UnspecifiedError(new Error('You must be authenticated with just wallet.')),
-      loading: false,
-    };
-  }
-
-  if (loading) {
-    return {
-      data: undefined,
-      error: undefined,
-      loading: true,
-    };
-  }
-
-  if (error) {
-    return {
-      data: undefined,
-      error,
-      loading: false,
-    };
-  }
-
-  return {
-    data,
-    error: undefined,
-    loading: false,
-  };
 }

@@ -9,6 +9,7 @@ import {
   ClaimHandleError,
   ClaimHandleRequest,
   IClaimHandlePresenter,
+  isClaimReservedHandleRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
 import {
@@ -55,7 +56,9 @@ export class NewProfilePresenter
       return;
     }
     const profile = await this.profileCacheManager.fetchProfileByHandle(
-      this.fullHandleResolver(result.value.request.localName),
+      isClaimReservedHandleRequest(result.value.request)
+        ? result.value.request.handle
+        : this.fullHandleResolver(result.value.request.localName),
     );
 
     invariant(profile, 'Profile not found');

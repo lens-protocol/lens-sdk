@@ -21,6 +21,8 @@ import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useClaimHandleController } from './adapters/useClaimHandleController';
 
+export { ClaimHandleError };
+
 /**
  * Claim a handle details.
  */
@@ -45,8 +47,7 @@ export type ClaimHandleArgs = OneOf<{
  *
  * You MUST be authenticated with a {@link WalletOnlySession} via {@link useLogin} to use this hook.
  *
- * @experimental
- *
+ * @experimental This hook is experimental and may change in future versions.
  * @category Profiles
  * @group Hooks
  */
