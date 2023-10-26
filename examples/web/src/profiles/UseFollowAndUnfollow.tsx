@@ -1,4 +1,10 @@
-import { Profile, useExploreProfiles, useFollow, useUnfollow } from '@lens-protocol/react-web';
+import {
+  Profile,
+  TriStateValue,
+  useExploreProfiles,
+  useFollow,
+  useUnfollow,
+} from '@lens-protocol/react-web';
 
 import { UnauthenticatedFallback, WhenLoggedIn, WhenLoggedOut } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
@@ -14,8 +20,18 @@ function FollowButton({ followee }: FollowButtonProps) {
 
   const { execute: unfollow, error: unfollowError, loading: isUnfollowLoading } = useUnfollow();
 
-  if (followee.operations.isFollowedByMe.value) {
-    // or followee.operations.canFollow === TriStateValue.Yes
+  if (followee.operations.canFollow === TriStateValue.Yes) {
+    return (
+      <>
+        <button onClick={() => follow({ profile: followee })} disabled={isFollowLoading}>
+          Follow
+        </button>
+        {followError && <p>{followError.message}</p>}
+      </>
+    );
+  }
+
+  if (followee.operations.canUnfollow === true) {
     return (
       <>
         <button onClick={() => unfollow({ profile: followee })} disabled={isUnfollowLoading}>
@@ -26,14 +42,7 @@ function FollowButton({ followee }: FollowButtonProps) {
     );
   }
 
-  return (
-    <>
-      <button onClick={() => follow({ profile: followee })} disabled={isFollowLoading}>
-        Follow
-      </button>
-      {followError && <p>{followError.message}</p>}
-    </>
-  );
+  return <button disabled={true}>In progress</button>;
 }
 
 function UseFollowInner() {

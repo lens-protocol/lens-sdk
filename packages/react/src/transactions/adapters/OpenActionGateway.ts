@@ -26,7 +26,7 @@ import {
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IOnChainProtocolCallGateway,
+  ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -43,7 +43,7 @@ type NewOpenActionRequest =
 
 export class OpenActionGateway
   implements
-    IOnChainProtocolCallGateway<OpenActionRequest>,
+    ISignedOnChainGateway<OpenActionRequest>,
     IDelegatedTransactionGateway<DelegableOpenActionRequest>
 {
   constructor(

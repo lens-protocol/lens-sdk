@@ -17,7 +17,7 @@ export class Environment {
 
 export const production = new Environment(
   'production',
-  'https://api.lens.dev',
+  'https://api-v2.lens.dev',
   GatedEnvironments.production,
 );
 

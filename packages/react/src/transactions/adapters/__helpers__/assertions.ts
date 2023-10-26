@@ -1,7 +1,10 @@
 import { omitTypename } from '@lens-protocol/api-bindings';
 import { TypedData } from '@lens-protocol/blockchain-bindings';
 import { ProtocolTransactionRequestModel } from '@lens-protocol/domain/entities';
-import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  BroadcastingError,
+  BroadcastingErrorReason,
+} from '@lens-protocol/domain/use-cases/transactions';
 import { assertFailure, Result } from '@lens-protocol/shared-kernel';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
@@ -17,14 +20,11 @@ export function assertUnsignedProtocolCallCorrectness<T extends ProtocolTransact
   expect(unsignedProtocolCall.typedData).toEqual(omitTypename(broadcastResult.typedData));
 }
 
-export function assertBroadcastingErrorResultWithRequestFallback(
+export function assertBroadcastingErrorWithReason(
   result: Result<unknown, BroadcastingError>,
-  typedData: TypedData,
+  reason: BroadcastingErrorReason,
 ) {
   assertFailure(result);
   expect(result.error).toBeInstanceOf(BroadcastingError);
-  expect(result.error.fallback).toMatchObject({
-    contractAddress: typedData.domain.verifyingContract,
-    encodedData: expect.any(String),
-  });
+  expect(result.error.reason).toEqual(reason);
 }

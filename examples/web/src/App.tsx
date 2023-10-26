@@ -25,6 +25,7 @@ import {
 } from './discovery';
 import { MiscPage, UseCurrencies, UseNotifications } from './misc';
 import { UseApproveModule } from './misc/UseApproveModule';
+import { UseClaimHandle } from './misc/UseClaimHandle';
 import {
   ProfilesPage,
   UseFollowAndUnfollow,
@@ -176,6 +177,7 @@ export function App() {
                       <Route path="useNotifications" element={<UseNotifications />} />
                       <Route path="useCurrencies" element={<UseCurrencies />} />
                       <Route path="useApproveModule" element={<UseApproveModule />} />
+                      <Route path="useClaimHandle" element={<UseClaimHandle />} />
                     </Route>
                   </Route>
 

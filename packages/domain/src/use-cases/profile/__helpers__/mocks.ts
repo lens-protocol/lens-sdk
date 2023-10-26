@@ -7,11 +7,13 @@ import { when } from 'jest-when';
 import { TransactionKind, NftOwnershipChallenge, NativeTransaction } from '../../../entities';
 import { mockProfileId, mockSignature } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../../transactions';
+import { ClaimHandleRequest } from '../ClaimHandle';
 import {
   CreateProfileRequest,
   DuplicatedHandleError,
   IProfileTransactionGateway,
 } from '../CreateProfile';
+import { ChargeFollowConfig, FollowPolicyType, NoFeeFollowConfig } from '../FollowPolicy';
 import { FreeFollowRequest, PaidFollowRequest } from '../FollowProfile';
 import { LinkHandleRequest } from '../LinkHandle';
 import {
@@ -24,7 +26,6 @@ import { UnfollowRequest } from '../UnfollowProfile';
 import { UnlinkHandleRequest } from '../UnlinkHandle';
 import { UpdateFollowPolicyRequest } from '../UpdateFollowPolicy';
 import { UpdateProfileManagersRequest } from '../UpdateProfileManagers';
-import { ChargeFollowConfig, FollowPolicyType, NoFeeFollowConfig } from '../types';
 
 export function mockCreateProfileRequest(
   overrides?: Partial<CreateProfileRequest>,
@@ -184,5 +185,12 @@ export function mockUnlinkHandleRequest(
     delegate: true,
     ...overrides,
     kind: TransactionKind.UNLINK_HANDLE,
+  };
+}
+
+export function mockClaimHandleRequest(): ClaimHandleRequest {
+  return {
+    localName: faker.internet.userName(),
+    kind: TransactionKind.CLAIM_HANDLE,
   };
 }

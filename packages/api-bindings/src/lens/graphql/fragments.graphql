@@ -241,6 +241,7 @@ fragment ProfileOnchainIdentity on ProfileOnchainIdentity {
     name
   }
   sybilDotOrg {
+    verified
     source {
       twitter {
         handle
@@ -328,7 +329,6 @@ fragment ProfileFields on Profile {
   followNftAddress {
     ...NetworkAddress
   }
-  followPolicy @client
   followModule {
     ... on FeeFollowModuleSettings {
       ...FeeFollowModuleSettings
@@ -632,6 +632,7 @@ fragment CanDecryptResponse on CanDecryptResponse {
 
 fragment PublicationOperations on PublicationOperations {
   __typename
+  id
   isNotInterested
   hasBookmarked
   hasReported
@@ -1595,7 +1596,12 @@ fragment CommentFields on Comment {
     ...PublicationOperations
   }
   root {
-    ...Post
+    ... on Post {
+      ...Post
+    }
+    ... on Quote {
+      ...QuoteFields
+    }
   }
   metadata {
     ... on AudioMetadataV3 {

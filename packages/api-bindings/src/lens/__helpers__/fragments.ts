@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
 import { mockProfileId, mockPublicationId, mockTransactionHash } from '@lens-protocol/domain/mocks';
-import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
 import { ChainType, Erc20, Erc20Amount } from '@lens-protocol/shared-kernel';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
@@ -76,6 +75,7 @@ function mockProfileOnchainIdentityFragment(
     proofOfHumanity: false,
     ens: null,
     sybilDotOrg: {
+      verified: true,
       source: {
         twitter: {
           handle: null,
@@ -126,9 +126,6 @@ export function mockProfileFragment(overrides?: Partial<gql.Profile>): gql.Profi
     guardian: null,
     onchainIdentity: mockProfileOnchainIdentityFragment(),
     followNftAddress: mockNetworkAddressFragment(),
-    followPolicy: {
-      type: FollowPolicyType.ANYONE,
-    },
     followModule: null,
     metadata: null,
     invitedBy: null,
@@ -263,6 +260,7 @@ export function mockPublicationOperationsFragment(
   overrides: Partial<gql.PublicationOperations> = {},
 ): gql.PublicationOperations {
   return {
+    id: mockPublicationId(),
     isNotInterested: false,
     hasBookmarked: false,
     hasReported: false,

@@ -7,10 +7,18 @@ import { mockProfileId, mockWallet } from '../../../entities/__helpers__/mocks';
 import { ActiveWallet } from '../ActiveWallet';
 import { LoginRequest } from '../Login';
 
-export function mockLoginRequest(): LoginRequest {
+export function mockProfileLoginRequest(overrides?: Partial<LoginRequest>): LoginRequest {
   return {
     address: mockEvmAddress(),
     profileId: mockProfileId(),
+    ...overrides,
+  };
+}
+
+export function mockJustWalletLoginRequest(overrides?: Partial<LoginRequest>): LoginRequest {
+  return {
+    address: mockEvmAddress(),
+    ...overrides,
   };
 }
 

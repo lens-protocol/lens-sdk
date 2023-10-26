@@ -2,7 +2,7 @@ import { CreatePost, CreatePostRequest } from '@lens-protocol/domain/use-cases/p
 import {
   DelegableSigning,
   SubsidizeOffChain,
-  SubsidizeOnChain,
+  SignedOnChain,
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
 
@@ -30,7 +30,7 @@ export function useCreatePostController() {
 
     const onChainGateway = new CreateOnChainPostGateway(apolloClient, transactionFactory);
 
-    const onChainPost = new SubsidizeOnChain(
+    const onChainPost = new SignedOnChain(
       activeWallet,
       transactionGateway,
       onChainGateway,

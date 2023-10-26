@@ -20,6 +20,7 @@ export * from './LensProvider';
  */
 export * from './authentication';
 export * from './discovery';
+export * from './experimental';
 export * from './misc';
 export * from './notifications';
 export * from './profile';
@@ -114,3 +115,4 @@ export {
  * Helpers
  */
 export * from './utils';
+export { isValidHandle, resolveFollowPolicy } from '@lens-protocol/api-bindings';

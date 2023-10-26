@@ -8,20 +8,27 @@ import {
   Wallet,
   WalletConnectionError,
 } from '../../entities';
-import { profileSessionData, SessionData } from './SessionData';
+import { ICredentialsWriter } from './ICredentialsWriter';
+import { SessionData, profileSessionData, walletOnlySessionData } from './SessionData';
 
 /**
  * The details required to authenticate the session.
  */
 export type LoginRequest = {
   /**
-   * The Profile Owner or an authorized Profile Manager.
+   * The user's wallet. Could be an EOA or EIP-1271 compliant Smart Wallet (e.g. ERC-6551).
+   *
+   * If a Profile ID is also provide the address MUST be the Profile Owner or a Profile Manager for it.
    */
   address: EvmAddress;
   /**
-   * The authenticated Profile ID.
+   * The Profile ID to login with.
+   *
+   * If not provided the authenticated session will be of {@link SessionType.JustWallet} type.
+   * This has a limited set of features available. Namely, it can be used to claim a Profile handle (if eligible)
+   * and execute Open Actions on publications (e.g Collect Open Action).
    */
-  profileId: ProfileId;
+  profileId?: ProfileId;
 };
 
 export interface IWalletFactory {
@@ -39,14 +46,7 @@ export interface ILoginPresenter {
 }
 
 export interface ICredentialsIssuer {
-  issueCredentials(
-    forProfile: ProfileId,
-    signedBy: Wallet,
-  ): PromiseResult<ICredentials, LoginError>;
-}
-
-export interface ICredentialsWriter {
-  save(credentials: ICredentials): Promise<void>;
+  issueCredentials(signer: Wallet, using?: ProfileId): PromiseResult<ICredentials, LoginError>;
 }
 
 export class Login {
@@ -60,7 +60,7 @@ export class Login {
 
   async execute(request: LoginRequest): Promise<void> {
     const wallet = await this.walletFactory.create(request.address);
-    const result = await this.credentialsIssuer.issueCredentials(request.profileId, wallet);
+    const result = await this.credentialsIssuer.issueCredentials(wallet, request.profileId);
 
     if (result.isFailure()) {
       this.presenter.present(result);
@@ -70,6 +70,13 @@ export class Login {
     await this.walletGateway.save(wallet);
     await this.credentialsWriter.save(result.value);
 
-    this.presenter.present(success(profileSessionData(request)));
+    if (request.profileId) {
+      this.presenter.present(
+        success(profileSessionData({ address: wallet.address, profileId: request.profileId })),
+      );
+      return;
+    }
+
+    this.presenter.present(success(walletOnlySessionData({ address: wallet.address })));
   }
 }

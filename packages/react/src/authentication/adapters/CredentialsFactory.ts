@@ -24,15 +24,15 @@ export class CredentialsFactory implements ICredentialsIssuer, ICredentialsRenew
   }
 
   async issueCredentials(
-    forProfile: ProfileId,
-    signedBy: Wallet,
+    signer: Wallet,
+    using?: ProfileId,
   ): PromiseResult<Credentials, LoginError> {
     const challenge = await this.auth.generateChallenge({
-      for: forProfile,
-      signedBy: signedBy.address,
+      for: using,
+      signedBy: signer.address,
     });
 
-    const result = await signedBy.signMessage(challenge.text);
+    const result = await signer.signMessage(challenge.text);
 
     if (result.isFailure()) {
       return result;

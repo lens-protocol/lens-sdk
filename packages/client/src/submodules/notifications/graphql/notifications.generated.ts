@@ -290,6 +290,7 @@ export const ReactionNotificationFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -1594,6 +1595,7 @@ export const ReactionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },
@@ -6639,6 +6641,7 @@ export const CommentNotificationFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -7943,6 +7946,7 @@ export const CommentNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },
@@ -12973,6 +12977,7 @@ export const MirrorNotificationFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -14277,6 +14282,7 @@ export const MirrorNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },
@@ -19322,6 +19328,7 @@ export const QuoteNotificationFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -20626,6 +20633,7 @@ export const QuoteNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },
@@ -25597,6 +25605,7 @@ export const OpenActionProfileActedFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -26593,6 +26602,7 @@ export const ActedNotificationFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -27897,6 +27907,7 @@ export const ActedNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },
@@ -33018,6 +33029,7 @@ export const FollowNotificationFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -33891,6 +33903,7 @@ export const MentionNotificationFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -35195,6 +35208,7 @@ export const MentionNotificationFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },
@@ -40837,6 +40851,7 @@ export const NotificationsDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -42141,6 +42156,7 @@ export const NotificationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },

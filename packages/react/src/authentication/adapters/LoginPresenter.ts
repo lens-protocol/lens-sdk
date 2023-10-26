@@ -10,7 +10,7 @@ import { Deferred, invariant, PromiseResult, Result, success } from '@lens-proto
 import { IProfileCacheManager } from '../../profile/adapters/IProfileCacheManager';
 
 export class LoginPresenter implements ILoginPresenter {
-  private deferredResult = new Deferred<Result<Profile, LoginError>>();
+  private deferredResult = new Deferred<Result<Profile | null, LoginError>>();
 
   constructor(private readonly profileCacheManager: IProfileCacheManager) {}
 
@@ -20,23 +20,28 @@ export class LoginPresenter implements ILoginPresenter {
       return;
     }
 
-    invariant(
-      result.value.type === SessionType.WithProfile,
-      `At the moment we only support ${SessionType.WithProfile} sessions`,
-    );
+    const session = result.value;
 
-    const { profileId } = result.value;
-    const profile = await this.profileCacheManager.fetchProfile(profileId);
+    invariant(session.type !== SessionType.Anonymous, 'Unexpected anonymous session type');
+
+    if (session.type === SessionType.JustWallet) {
+      updateSessionData(session);
+
+      this.deferredResult.resolve(success(null));
+      return;
+    }
+
+    const profile = await this.profileCacheManager.fetchProfileById(session.profileId);
 
     invariant(profile, 'Profile not found');
 
-    updateSessionData(result.value);
+    updateSessionData(session);
 
     this.deferredResult.resolve(success(profile));
     return;
   }
 
-  asResult(): PromiseResult<Profile, LoginError> {
+  asResult(): PromiseResult<Profile | null, LoginError> {
     return this.deferredResult.promise;
   }
 }

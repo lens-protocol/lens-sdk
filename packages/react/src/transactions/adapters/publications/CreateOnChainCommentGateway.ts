@@ -17,7 +17,7 @@ import { CreateCommentRequest } from '@lens-protocol/domain/use-cases/publicatio
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IOnChainProtocolCallGateway,
+  ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -32,7 +32,7 @@ import { resolveReferenceModuleInput } from './resolveReferenceModuleInput';
 export class CreateOnChainCommentGateway
   implements
     IDelegatedTransactionGateway<CreateCommentRequest>,
-    IOnChainProtocolCallGateway<CreateCommentRequest>
+    ISignedOnChainGateway<CreateCommentRequest>
 {
   constructor(
     private readonly apolloClient: SafeApolloClient,

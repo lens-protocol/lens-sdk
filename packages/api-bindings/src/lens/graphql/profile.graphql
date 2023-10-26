@@ -4,6 +4,11 @@ fragment ProfileManager on ProfilesManagedResult {
   address
 }
 
+fragment ClaimProfileWithHandleErrorResult on ClaimProfileWithHandleErrorResult {
+  __typename
+  reason
+}
+
 fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
   __typename
   reason
@@ -396,25 +401,34 @@ query ProfileActionHistory($limit: LimitType, $cursor: Cursor) {
   }
 }
 
-# mutations
-mutation ClaimProfile($request: ClaimProfileRequest!) {
-  result: claimProfile(request: $request) {
-    ... on RelaySuccess {
-      ...RelaySuccess
-    }
-    ... on CreateProfileWithHandleErrorResult {
-      ...CreateProfileWithHandleErrorResult
-    }
+fragment ReservedClaimable on ReservedClaimable {
+  id
+  withHandle
+  source
+  expiry
+}
+
+fragment ClaimableProfilesResult on ClaimableProfilesResult {
+  reserved {
+    ...ReservedClaimable
+  }
+  canMintProfileWithFreeTextHandle
+}
+
+query ClaimableProfiles {
+  result: claimableProfiles {
+    ...ClaimableProfilesResult
   }
 }
 
-mutation CreateProfileWithHandle($request: CreateProfileWithHandleRequest!) {
-  result: createProfileWithHandle(request: $request) {
+# mutations
+mutation ClaimProfileWithHandle($request: ClaimProfileWithHandleRequest!) {
+  result: claimProfileWithHandle(request: $request) {
     ... on RelaySuccess {
       ...RelaySuccess
     }
-    ... on CreateProfileWithHandleErrorResult {
-      ...CreateProfileWithHandleErrorResult
+    ... on ClaimProfileWithHandleErrorResult {
+      ...ClaimProfileWithHandleErrorResult
     }
   }
 }

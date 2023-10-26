@@ -5,6 +5,7 @@ import {
   Profile,
   ProfileData,
   ProfileDocument,
+  ProfileRequest,
   ProfileVariables,
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
@@ -17,8 +18,16 @@ import { IProfileCacheManager } from '../adapters/IProfileCacheManager';
 export class ProfileCacheManager implements IProfileCacheManager {
   constructor(private readonly client: SafeApolloClient) {}
 
-  async fetchProfile(id: ProfileId) {
-    return this.request(id, 'cache-first');
+  async fetchProfileById(id: ProfileId) {
+    return this.fetch({ forProfileId: id }, 'cache-first');
+  }
+
+  async fetchProfileByHandle(fullHandle: string) {
+    return this.fetch({ forHandle: fullHandle }, 'cache-first');
+  }
+
+  async refresh(id: ProfileId): Promise<void> {
+    await this.fetch({ forProfileId: id }, 'network-only');
   }
 
   async refreshCurrentProfile() {
@@ -67,14 +76,10 @@ export class ProfileCacheManager implements IProfileCacheManager {
     }
   }
 
-  private async request(id: ProfileId, fetchPolicy: FetchPolicy) {
+  private async fetch(request: ProfileRequest, fetchPolicy: FetchPolicy) {
     const { data } = await this.client.query<ProfileData, ProfileVariables>({
       query: ProfileDocument,
-      variables: {
-        request: {
-          forProfileId: id,
-        },
-      },
+      variables: { request },
       fetchPolicy,
     });
 

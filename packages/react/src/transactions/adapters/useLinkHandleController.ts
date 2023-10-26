@@ -4,7 +4,7 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { LinkHandleRequest, LinkHandle } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError, SignedOnChain } from '@lens-protocol/domain/use-cases/transactions';
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
@@ -37,7 +37,7 @@ export function useLinkHandleController() {
     >();
     const gateway = new LinkHandleGateway(apolloClient, transactionFactory);
 
-    const signedFollow = new SubsidizeOnChain(
+    const signedLink = new SignedOnChain(
       activeWallet,
       transactionGateway,
       gateway,
@@ -46,7 +46,7 @@ export function useLinkHandleController() {
       presenter,
     );
 
-    const linkHandle = new LinkHandle(signedFollow, gateway, transactionQueue, presenter);
+    const linkHandle = new LinkHandle(signedLink, gateway, transactionQueue, presenter);
 
     await linkHandle.execute(request);
 

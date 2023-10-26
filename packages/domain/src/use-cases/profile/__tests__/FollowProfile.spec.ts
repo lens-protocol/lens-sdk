@@ -3,7 +3,7 @@ import { failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
 import { DelegableSigning } from '../../transactions/DelegableSigning';
-import { SubsidizeOnChain } from '../../transactions/SubsidizeOnChain';
+import { SignedOnChain } from '../../transactions/SignedOnChain';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -19,7 +19,7 @@ import {
 import { mockPaidFollowRequest, mockFreeFollowRequest } from '../__helpers__/mocks';
 
 function mockSubsidizedCall<T extends FollowRequest>() {
-  return mock<SubsidizeOnChain<T>>();
+  return mock<SignedOnChain<T>>();
 }
 
 function mockDelegableSigningCall<T extends FreeFollowRequest>() {
@@ -34,7 +34,7 @@ function setupFollowProfile({
 }: {
   tokenAvailability?: TokenAvailability;
   presenter?: IFollowProfilePresenter;
-  signedCall?: SubsidizeOnChain<FollowRequest>;
+  signedCall?: SignedOnChain<FollowRequest>;
   delegableCall?: DelegableSigning<FreeFollowRequest>;
 }) {
   return new FollowProfile(tokenAvailability, signedCall, delegableCall, presenter);
@@ -64,7 +64,7 @@ describe(`Given an instance of the ${FollowProfile.name} interactor`, () => {
     describe('with a PaidFollowRequest', () => {
       const request = mockPaidFollowRequest();
 
-      it(`should execute the ${SubsidizeOnChain.name}<T> strategy`, async () => {
+      it(`should execute the ${SignedOnChain.name}<T> strategy`, async () => {
         const tokenAvailability = mockTokeAvailability({
           request: {
             amount: request.fee.amount,

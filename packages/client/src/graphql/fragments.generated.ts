@@ -185,7 +185,7 @@ export type ProfileFragment = {
   onchainIdentity: {
     proofOfHumanity: boolean;
     ens: { name: string | null } | null;
-    sybilDotOrg: { source: { twitter: { handle: string | null } } | null };
+    sybilDotOrg: { verified: boolean; source: { twitter: { handle: string | null } } | null };
     worldcoin: { isHuman: boolean };
   };
   followNftAddress: NetworkAddressFragment | null;
@@ -400,6 +400,7 @@ export type CanDecryptResponseFragment = {
 
 export type PublicationOperationsFragment = {
   __typename: 'PublicationOperations';
+  id: string;
   isNotInterested: boolean;
   hasBookmarked: boolean;
   hasReported: boolean;
@@ -1078,7 +1079,7 @@ export type CommentBaseFragment = {
 };
 
 export type CommentFragment = {
-  root: PostFragment;
+  root: PostFragment | {};
   commentOn: CommentBaseFragment | PostFragment | QuoteBaseFragment;
   firstComment: CommentBaseFragment | null;
   stats: PublicationStatsFragment;
@@ -2278,6 +2279,7 @@ export const ProfileFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -3141,6 +3143,7 @@ export const PublicationOperationsFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },
@@ -27111,6 +27114,7 @@ export const PostFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -28002,6 +28006,7 @@ export const PostFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },
@@ -32185,6 +32190,7 @@ export const CommentBaseFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -33076,6 +33082,7 @@ export const CommentBaseFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },
@@ -37188,6 +37195,7 @@ export const QuoteBaseFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -38079,6 +38087,7 @@ export const QuoteBaseFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },
@@ -41729,6 +41738,7 @@ export const CommentFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -42620,6 +42630,7 @@ export const CommentFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },
@@ -47975,6 +47986,7 @@ export const QuoteFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -48866,6 +48878,7 @@ export const QuoteFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },
@@ -54232,6 +54245,7 @@ export const MirrorFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -55123,6 +55137,7 @@ export const MirrorFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },

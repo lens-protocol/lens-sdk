@@ -1,6 +1,19 @@
 fragment AuthChallenge on AuthChallengeResult {
+  __typename
   id
   text
+}
+
+fragment ApprovedAuthentication on ApprovedAuthentication {
+  __typename
+  authorizationId
+  browser
+  device
+  os
+  origin
+  expiresAt
+  createdAt
+  updatedAt
 }
 
 query AuthChallenge($request: ChallengeRequest!) {
@@ -11,6 +24,23 @@ query AuthChallenge($request: ChallengeRequest!) {
 
 query AuthVerify($request: VerifyRequest!) {
   result: verify(request: $request)
+}
+
+query CurrentSession {
+  result: currentSession {
+    ...ApprovedAuthentication
+  }
+}
+
+query ApprovedAuthentications($request: ApprovedAuthenticationRequest!) {
+  result: approvedAuthentications(request: $request) {
+    items {
+      ...ApprovedAuthentication
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
 }
 
 mutation AuthAuthenticate($request: SignedAuthChallenge!) {
@@ -25,4 +55,8 @@ mutation AuthRefresh($request: RefreshRequest!) {
     accessToken
     refreshToken
   }
+}
+
+mutation RevokeAuthentication($request: RevokeAuthenticationRequest!) {
+  revokeAuthentication(request: $request)
 }

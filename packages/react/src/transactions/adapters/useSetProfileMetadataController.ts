@@ -7,7 +7,7 @@ import {
   SetProfileMetadata,
   SetProfileMetadataRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError, SignedOnChain } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
@@ -31,7 +31,7 @@ export function useSetProfileMetadataController() {
 
     const gateway = new ProfileMetadataGateway(apolloClient, transactionFactory);
 
-    const signedSetProfileMetadata = new SubsidizeOnChain<SetProfileMetadataRequest>(
+    const signedSetProfileMetadata = new SignedOnChain<SetProfileMetadataRequest>(
       activeWallet,
       transactionGateway,
       gateway,

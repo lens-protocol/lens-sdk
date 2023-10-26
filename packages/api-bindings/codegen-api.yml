@@ -33,7 +33,6 @@ generates:
         EncryptedValue: string
         Ens: string
         EvmAddress: EvmAddress
-        FollowPolicy: FollowPolicy
         Handle: string
         ImageSizeTransform: ImageSizeTransform
         Jwt: string
@@ -71,7 +70,6 @@ generates:
       - add:
           content: [
               '/** Code generated. DO NOT EDIT. */',
-              '/* eslint-disable @typescript-eslint/no-redundant-type-constituents */',
               '/* eslint-disable import/no-default-export */', # generatedTypes default export
               '/* eslint-disable @typescript-eslint/ban-types */', # needed by unions with {}
               '/* eslint-disable @typescript-eslint/no-explicit-any */', # see extensive use of FieldPolicy<any> | FieldReadFunction<any>
@@ -81,7 +79,6 @@ generates:
               "import type { AppId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';",
               "import type { EvmAddress, Url } from '@lens-protocol/shared-kernel';",
               "import type { ContentEncryptionKey } from '../ContentEncryptionKey';",
-              "import type { FollowPolicy } from '../FollowPolicy';",
               "import type { Cursor } from '../Cursor';",
               "import type { ImageSizeTransform } from '../ImageTransform';",
             ]

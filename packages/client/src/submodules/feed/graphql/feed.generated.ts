@@ -195,6 +195,7 @@ export const ReactionEventFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -1113,6 +1114,7 @@ export const FeedItemFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -2417,6 +2419,7 @@ export const FeedItemFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },
@@ -7762,6 +7765,7 @@ export const FeedDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -9066,6 +9070,7 @@ export const FeedDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },
@@ -14351,6 +14356,7 @@ export const FeedHighlightsDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -15655,6 +15661,7 @@ export const FeedHighlightsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },

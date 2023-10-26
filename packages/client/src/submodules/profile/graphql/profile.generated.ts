@@ -25,6 +25,10 @@ export type CreateProfileWithHandleErrorResultFragment = {
   reason: Types.CreateProfileWithHandleErrorReasonType;
 };
 
+export type ClaimProfileWithHandleErrorResultFragment = {
+  reason: Types.ClaimProfileWithHandleErrorReasonType;
+};
+
 export type CreateOnchainSetProfileMetadataBroadcastItemResultFragment = {
   id: string;
   expiresAt: string;
@@ -277,12 +281,12 @@ export type ProfileActionHistoryQuery = {
   result: { items: Array<ProfileActionHistoryFragment>; pageInfo: PaginatedResultInfoFragment };
 };
 
-export type ClaimProfileMutationVariables = Types.Exact<{
-  request: Types.ClaimProfileRequest;
+export type ClaimProfileWithHandleMutationVariables = Types.Exact<{
+  request: Types.ClaimProfileWithHandleRequest;
 }>;
 
-export type ClaimProfileMutation = {
-  result: CreateProfileWithHandleErrorResultFragment | RelaySuccessFragment;
+export type ClaimProfileWithHandleMutation = {
+  result: ClaimProfileWithHandleErrorResultFragment | RelaySuccessFragment;
 };
 
 export type CreateProfileWithHandleMutationVariables = Types.Exact<{
@@ -479,6 +483,23 @@ export const CreateProfileWithHandleErrorResultFragmentDoc = {
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'CreateProfileWithHandleErrorResult' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [{ kind: 'Field', name: { kind: 'Name', value: 'reason' } }],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const ClaimProfileWithHandleErrorResultFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ClaimProfileWithHandleErrorResult' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ClaimProfileWithHandleErrorResult' },
       },
       selectionSet: {
         kind: 'SelectionSet',
@@ -1543,6 +1564,7 @@ export const ProfileDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -2448,6 +2470,7 @@ export const DefaultProfileDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -3377,6 +3400,7 @@ export const ProfilesDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -4407,6 +4431,7 @@ export const ProfileRecommendationsDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -5348,6 +5373,7 @@ export const FollowingDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -6289,6 +6315,7 @@ export const FollowersDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -7230,6 +7257,7 @@ export const MutualFollowersDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -8174,6 +8202,7 @@ export const WhoActedOnPublicationDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -8996,20 +9025,23 @@ export const ProfileActionHistoryDocument = {
     },
   ],
 } as unknown as DocumentNode;
-export const ClaimProfileDocument = {
+export const ClaimProfileWithHandleDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'mutation',
-      name: { kind: 'Name', value: 'ClaimProfile' },
+      name: { kind: 'Name', value: 'ClaimProfileWithHandle' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
           type: {
             kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ClaimProfileRequest' } },
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'ClaimProfileWithHandleRequest' },
+            },
           },
         },
       ],
@@ -9019,7 +9051,7 @@ export const ClaimProfileDocument = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'result' },
-            name: { kind: 'Name', value: 'claimProfile' },
+            name: { kind: 'Name', value: 'claimProfileWithHandle' },
             arguments: [
               {
                 kind: 'Argument',
@@ -9047,14 +9079,14 @@ export const ClaimProfileDocument = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
-                    name: { kind: 'Name', value: 'CreateProfileWithHandleErrorResult' },
+                    name: { kind: 'Name', value: 'ClaimProfileWithHandleErrorResult' },
                   },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'CreateProfileWithHandleErrorResult' },
+                        name: { kind: 'Name', value: 'ClaimProfileWithHandleErrorResult' },
                       },
                     ],
                   },
@@ -9067,10 +9099,10 @@ export const ClaimProfileDocument = {
     },
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'CreateProfileWithHandleErrorResult' },
+      name: { kind: 'Name', value: 'ClaimProfileWithHandleErrorResult' },
       typeCondition: {
         kind: 'NamedType',
-        name: { kind: 'Name', value: 'CreateProfileWithHandleErrorResult' },
+        name: { kind: 'Name', value: 'ClaimProfileWithHandleErrorResult' },
       },
       selectionSet: {
         kind: 'SelectionSet',
@@ -11478,7 +11510,7 @@ const FollowersDocumentString = print(FollowersDocument);
 const MutualFollowersDocumentString = print(MutualFollowersDocument);
 const WhoActedOnPublicationDocumentString = print(WhoActedOnPublicationDocument);
 const ProfileActionHistoryDocumentString = print(ProfileActionHistoryDocument);
-const ClaimProfileDocumentString = print(ClaimProfileDocument);
+const ClaimProfileWithHandleDocumentString = print(ClaimProfileWithHandleDocument);
 const CreateProfileWithHandleDocumentString = print(CreateProfileWithHandleDocument);
 const AddProfileInterestsDocumentString = print(AddProfileInterestsDocument);
 const RemoveProfileInterestsDocumentString = print(RemoveProfileInterestsDocument);
@@ -11684,22 +11716,23 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'query',
       );
     },
-    ClaimProfile(
-      variables: ClaimProfileMutationVariables,
+    ClaimProfileWithHandle(
+      variables: ClaimProfileWithHandleMutationVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
     ): Promise<{
-      data: ClaimProfileMutation;
+      data: ClaimProfileWithHandleMutation;
       extensions?: any;
       headers: Dom.Headers;
       status: number;
     }> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.rawRequest<ClaimProfileMutation>(ClaimProfileDocumentString, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'ClaimProfile',
+          client.rawRequest<ClaimProfileWithHandleMutation>(
+            ClaimProfileWithHandleDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'ClaimProfileWithHandle',
         'mutation',
       );
     },

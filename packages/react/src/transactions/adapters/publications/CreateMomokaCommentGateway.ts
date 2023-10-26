@@ -17,7 +17,7 @@ import { CreateCommentRequest } from '@lens-protocol/domain/use-cases/publicatio
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IOffChainProtocolCallGateway,
+  ISignedMomokaGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
@@ -29,7 +29,7 @@ import { handleRelayError } from '../relayer';
 export class CreateMomokaCommentGateway
   implements
     IDelegatedTransactionGateway<CreateCommentRequest>,
-    IOffChainProtocolCallGateway<CreateCommentRequest>
+    ISignedMomokaGateway<CreateCommentRequest>
 {
   constructor(
     private readonly apolloClient: SafeApolloClient,

@@ -1086,6 +1086,7 @@ export const PublicationRevenueFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -1698,6 +1699,7 @@ export const PublicationRevenueFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },
@@ -7732,6 +7734,7 @@ export const RevenueFromPublicationsDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -8344,6 +8347,7 @@ export const RevenueFromPublicationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },
@@ -14365,6 +14369,7 @@ export const RevenueFromPublicationDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -14977,6 +14982,7 @@ export const RevenueFromPublicationDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },

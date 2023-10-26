@@ -16,7 +16,7 @@ import { LinkHandleRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IOnChainProtocolCallGateway,
+  ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -29,7 +29,7 @@ import { handleRelayError } from '../relayer';
 export class LinkHandleGateway
   implements
     IDelegatedTransactionGateway<LinkHandleRequest>,
-    IOnChainProtocolCallGateway<LinkHandleRequest>
+    ISignedOnChainGateway<LinkHandleRequest>
 {
   constructor(
     private readonly apolloClient: SafeApolloClient,

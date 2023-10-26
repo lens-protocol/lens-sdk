@@ -1,6 +1,5 @@
 import { FieldFunctionOptions } from '@apollo/client/cache/inmemory/policies';
 import { PublicationId } from '@lens-protocol/domain/entities';
-import { never } from '@lens-protocol/shared-kernel';
 
 import {
   OpenActionCategoryType,
@@ -28,12 +27,7 @@ export function createPublicationStatsTypePolicy(): StrictTypedTypePolicies['Pub
           if (args && isCollectsAlias(args)) {
             const id = readField('id') as PublicationId;
 
-            return (
-              (existing ?? 0) +
-              countAnyPendingCollectFor(
-                id ?? never('PublicationStats.id is missing, this is likely a bug.'),
-              )
-            );
+            return (existing ?? 0) + countAnyPendingCollectFor(id);
           }
           return existing ?? 0;
         },

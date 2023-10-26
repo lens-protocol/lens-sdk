@@ -3,7 +3,7 @@ import { Wallet } from 'ethers';
 
 import { getOwnedProfileId } from './getOwnedProfileId';
 
-export async function getAuthenticatedClientFromEthersWallet(wallet: Wallet): Promise<LensClient> {
+export async function getAuthenticatedClient(wallet: Wallet): Promise<LensClient> {
   const client = new LensClient({
     environment: development,
   });

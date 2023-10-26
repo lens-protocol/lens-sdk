@@ -16,7 +16,7 @@ import { SetProfileMetadataRequest } from '@lens-protocol/domain/use-cases/profi
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IOnChainProtocolCallGateway,
+  ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -29,7 +29,7 @@ import { handleRelayError } from '../relayer';
 export class ProfileMetadataGateway
   implements
     IDelegatedTransactionGateway<SetProfileMetadataRequest>,
-    IOnChainProtocolCallGateway<SetProfileMetadataRequest>
+    ISignedOnChainGateway<SetProfileMetadataRequest>
 {
   constructor(
     private readonly apolloClient: SafeApolloClient,

@@ -21,8 +21,6 @@ import {
   MetaTransaction,
   NativeTransaction,
   Nonce,
-  ProxyActionStatus,
-  ProxyTransaction,
   ISignedProtocolCall,
   TransactionError,
   TransactionErrorReason,
@@ -286,60 +284,6 @@ export function mockNftOwnershipChallenge(): NftOwnershipChallenge {
     id: faker.datatype.uuid(),
     message: mockChallenge(),
   };
-}
-
-type MockedProxyTransactionInit<T extends ProtocolTransactionRequestModel> = {
-  request: T;
-  chainType?: ChainType;
-  hash?: string;
-  id?: string;
-  status: ProxyActionStatus;
-};
-
-export class MockedProxyTransaction<
-  T extends ProtocolTransactionRequestModel,
-> extends ProxyTransaction<T> {
-  readonly chainType: ChainType;
-  readonly id: string;
-  readonly request: T;
-  hash: string | undefined;
-  status: ProxyActionStatus;
-
-  private constructor(
-    {
-      chainType = ChainType.POLYGON,
-      id = faker.datatype.uuid(),
-      hash,
-      request,
-      status,
-    }: MockedProxyTransactionInit<T>,
-    private instructions: MockedTransactionInstructions = { withUpdatesSequence: [] },
-  ) {
-    super();
-
-    this.chainType = chainType;
-    this.id = id;
-    this.request = request;
-    this.hash = hash;
-    this.status = status;
-  }
-
-  async waitNextEvent(): PromiseResult<TransactionEvent, TransactionError> {
-    const item = this.instructions.withUpdatesSequence.shift();
-    if (!item) {
-      return success(TransactionEvent.SETTLED);
-    }
-
-    if ('error' in item) {
-      return failure(item.error);
-    }
-    this.hash = item.txHash ?? this.hash;
-    return success(item.event);
-  }
-
-  static fromRequest<T extends ProtocolTransactionRequestModel>(request: T): ProxyTransaction<T> {
-    return new MockedProxyTransaction({ request, status: ProxyActionStatus.MINTING });
-  }
 }
 
 type MockedDataTransactionInit<T extends ProtocolTransactionRequestModel> = {

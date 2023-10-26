@@ -1,14 +1,28 @@
 import { LensContext } from '../../context';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
-import type { ChallengeRequest, SignedAuthChallenge } from '../../graphql/types.generated';
-import { AuthChallengeFragment, getSdk, Sdk } from '../graphql/auth.generated';
+import type {
+  ApprovedAuthenticationRequest,
+  ChallengeRequest,
+  RevokeAuthenticationRequest,
+  SignedAuthChallenge,
+} from '../../graphql/types.generated';
+import {
+  buildPaginatedQueryResult,
+  type PaginatedResult,
+} from '../../helpers/buildPaginatedQueryResult';
+import {
+  ApprovedAuthenticationFragment,
+  AuthChallengeFragment,
+  getSdk,
+  Sdk,
+} from '../graphql/auth.generated';
 import { Credentials } from './Credentials';
 
 export class AuthenticationApi {
   private readonly sdk: Sdk;
 
   constructor(context: LensContext) {
-    const client = new FetchGraphQLClient(context.environment.gqlEndpoint);
+    const client = new FetchGraphQLClient(context);
     this.sdk = getSdk(client);
   }
 
@@ -42,5 +56,29 @@ export class AuthenticationApi {
     credentials.checkClock();
 
     return credentials;
+  }
+
+  async currentSession(headers?: Record<string, string>): Promise<ApprovedAuthenticationFragment> {
+    const result = await this.sdk.CurrentSession({}, headers);
+
+    return result.data.result;
+  }
+
+  async approvedAuthentications(
+    request: ApprovedAuthenticationRequest,
+    headers?: Record<string, string>,
+  ): Promise<PaginatedResult<ApprovedAuthenticationFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.ApprovedAuthentications({ request: currRequest }, headers);
+
+      return result.data.result;
+    }, request);
+  }
+
+  async revoke(
+    request: RevokeAuthenticationRequest,
+    headers?: Record<string, string>,
+  ): Promise<void> {
+    await this.sdk.RevokeAuthentication({ request }, headers);
   }
 }

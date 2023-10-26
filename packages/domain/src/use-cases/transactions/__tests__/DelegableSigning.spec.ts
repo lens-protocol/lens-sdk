@@ -20,6 +20,7 @@ import {
   mockIDelegatedTransactionGateway,
   mockTransactionQueue,
   mockDelegableProtocolTransactionRequestModel,
+  mockAnyBroadcastingError,
 } from '../__helpers__/mocks';
 
 function setupDelegableSigning<T extends DelegableProtocolTransactionRequestModel>({
@@ -82,7 +83,7 @@ describe(`Given an instance of the ${DelegableSigning.name}<T> interactor`, () =
       });
 
       it(`should present any ${BroadcastingError.name} from the IDelegableProtocolCallGateway<T>`, async () => {
-        const error = new BroadcastingError('some reason');
+        const error = mockAnyBroadcastingError();
         const transactionGateway = mockIDelegatedTransactionGateway({
           request,
           result: failure(error),

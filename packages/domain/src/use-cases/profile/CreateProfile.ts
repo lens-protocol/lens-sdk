@@ -4,7 +4,7 @@ import { NativeTransaction, TransactionKind, AnyTransactionRequestModel } from '
 import { BroadcastingError } from '../transactions/BroadcastingError';
 import { ITransactionResultPresenter } from '../transactions/ITransactionResultPresenter';
 import { TransactionQueue } from '../transactions/TransactionQueue';
-import { FollowPolicyConfig } from './types';
+import { FollowPolicyConfig } from './FollowPolicy';
 
 export type CreateProfileRequest = {
   handle: string;

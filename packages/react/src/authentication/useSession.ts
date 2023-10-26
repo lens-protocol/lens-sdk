@@ -150,21 +150,27 @@ export function useSession(): ReadResult<Session, UnspecifiedError> {
     };
   }
 
-  invariant(
-    sessionData.type !== SessionType.JustWallet,
-    `${SessionType.JustWallet} sessions are not supported a the moment.`,
-  );
-
-  if (sessionData.type === SessionType.Anonymous) {
-    return {
-      data: {
-        type: SessionType.Anonymous,
-        authenticated: false,
-        lastLogoutReason: sessionData.lastLogoutReason,
-      },
-      error: undefined,
-      loading: false,
-    };
+  switch (sessionData.type) {
+    case SessionType.Anonymous:
+      return {
+        data: {
+          type: SessionType.Anonymous,
+          authenticated: false,
+          lastLogoutReason: sessionData.lastLogoutReason,
+        },
+        error: undefined,
+        loading: false,
+      };
+    case SessionType.JustWallet:
+      return {
+        data: {
+          type: SessionType.JustWallet,
+          authenticated: true,
+          address: sessionData.address,
+        },
+        error: undefined,
+        loading: false,
+      };
   }
 
   if (error) {
@@ -208,8 +214,8 @@ export function useSession(): ReadResult<Session, UnspecifiedError> {
       };
     }
 
-    // transitioning from NotAuthenticatedSession to AuthenticatedProfileSession
-    // OR from AuthenticatedWalletSession to AuthenticatedProfileSession
+    // transitioning from AnonymousSession to ProfileSession
+    // OR from WalletOnlySession to ProfileSession
     return {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore

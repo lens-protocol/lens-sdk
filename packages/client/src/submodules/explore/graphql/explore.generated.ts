@@ -922,6 +922,7 @@ export const ExplorePublicationsDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -1640,6 +1641,7 @@ export const ExplorePublicationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isNotInterested' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasBookmarked' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasReported' } },
@@ -6687,6 +6689,7 @@ export const ExploreProfilesDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },

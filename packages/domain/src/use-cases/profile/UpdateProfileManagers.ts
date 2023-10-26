@@ -1,7 +1,7 @@
 import { EvmAddress } from '@lens-protocol/shared-kernel';
 
 import { TransactionKind } from '../../entities';
-import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
+import { SignedOnChain } from '../transactions/SignedOnChain';
 
 export type UpdateProfileManagersRequest = {
   kind: TransactionKind.UPDATE_PROFILE_MANAGERS;
@@ -10,4 +10,4 @@ export type UpdateProfileManagersRequest = {
   remove?: EvmAddress[];
 };
 
-export class UpdateProfileManagers extends SubsidizeOnChain<UpdateProfileManagersRequest> {}
+export class UpdateProfileManagers extends SignedOnChain<UpdateProfileManagersRequest> {}

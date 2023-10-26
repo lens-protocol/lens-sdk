@@ -15,11 +15,10 @@ import type {
   CreateProfileWithHandleRequest,
   DefaultProfileRequest,
   DismissRecommendedProfilesRequest,
-  FollowRequest,
   FollowersRequest,
   FollowingRequest,
+  FollowRequest,
   LinkHandleToProfileRequest,
-  UnlinkHandleFromProfileRequest,
   MutualFollowersRequest,
   OnchainSetProfileMetadataRequest,
   ProfileActionHistoryRequest,
@@ -33,6 +32,7 @@ import type {
   TypedDataOptions,
   UnblockRequest,
   UnfollowRequest,
+  UnlinkHandleFromProfileRequest,
   WhoActedOnPublicationRequest,
 } from '../../graphql/types.generated';
 import {
@@ -73,7 +73,7 @@ export class Profile {
     private readonly context: LensContext,
     authentication?: Authentication,
   ) {
-    const client = new FetchGraphQLClient(context.environment.gqlEndpoint);
+    const client = new FetchGraphQLClient(context);
 
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
     this.authentication = authentication;
@@ -390,21 +390,6 @@ export class Profile {
       }, request);
     });
   }
-
-  /**
-   * NOT IMPLEMENTED ON THE API SIDE
-   */
-  // async claim(
-  //   request: ClaimProfileRequest,
-  // ): PromiseResult<
-  //   RelaySuccessFragment | CreateProfileWithHandleErrorResultFragment,
-  //   CredentialsExpiredError | NotAuthenticatedError
-  // > {
-  //   return requireAuthHeaders(this.authentication, async (headers) => {
-  //     const result = await this.sdk.ClaimProfile({ request }, headers);
-  //     return result.data.result;
-  //   });
-  // }
 
   /**
    * Create a new profile.

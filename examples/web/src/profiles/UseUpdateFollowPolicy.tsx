@@ -2,12 +2,10 @@ import {
   Amount,
   Erc20,
   FollowPolicyType,
+  Profile,
+  resolveFollowPolicy,
   useCurrencies,
   useUpdateFollowPolicy,
-  FollowPolicy,
-  ChargeFollowConfig,
-  NoFeeFollowConfig,
-  Profile,
 } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
@@ -23,28 +21,6 @@ const followPolicyTypeToDescriptionMap: Record<SupportedFollowPolicy, string> = 
   [FollowPolicyType.NO_ONE]: 'No one can follow',
   [FollowPolicyType.CHARGE]: 'Anyone can follow, but they must pay a fee',
 };
-
-function resolveFollowPolicy({
-  followPolicyType,
-  amount,
-  recipient,
-}: {
-  followPolicyType: SupportedFollowPolicy;
-  amount?: Amount<Erc20>;
-  recipient?: string;
-}): ChargeFollowConfig | NoFeeFollowConfig {
-  if (followPolicyType === FollowPolicyType.CHARGE) {
-    return {
-      type: FollowPolicyType.CHARGE,
-      amount: amount ?? never(),
-      recipient: recipient ?? never(),
-    };
-  }
-
-  return {
-    type: FollowPolicyType[followPolicyType],
-  };
-}
 
 function FollowPolicyRadioButton({
   followPolicyType,
@@ -92,18 +68,15 @@ function UpdateButtonText({
 
 type UpdateFollowPolicyFormProps = {
   profile: Profile;
-  currentFollowPolicy: FollowPolicy | null;
   currencies: Erc20[];
 };
 
-function UpdateFollowPolicyForm({
-  profile,
-  currencies,
-  currentFollowPolicy,
-}: UpdateFollowPolicyFormProps) {
+function UpdateFollowPolicyForm({ profile, currencies }: UpdateFollowPolicyFormProps) {
+  const followPolicy = resolveFollowPolicy(profile);
+
   const { execute: updateFollowPolicy, loading, error } = useUpdateFollowPolicy();
   const [selectedFollowPolicyType, setSelectedFollowPolicyType] = useState<FollowPolicyType | null>(
-    currentFollowPolicy?.type ?? null,
+    followPolicy.type,
   );
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -119,11 +92,11 @@ function UpdateFollowPolicyForm({
       const fee = Amount.erc20(erc20, amount);
 
       await updateFollowPolicy({
-        followPolicy: resolveFollowPolicy({
+        followPolicy: {
+          type: FollowPolicyType.CHARGE,
           amount: fee,
-          followPolicyType: selectedFollowPolicyType,
           recipient,
-        }),
+        },
       });
 
       return;
@@ -133,7 +106,7 @@ function UpdateFollowPolicyForm({
     invariant(selectedFollowPolicyType !== FollowPolicyType.UNKNOWN, 'Unknown follow policy type');
 
     await updateFollowPolicy({
-      followPolicy: resolveFollowPolicy({ followPolicyType: selectedFollowPolicyType }),
+      followPolicy: { type: selectedFollowPolicyType },
     });
   }
 
@@ -160,7 +133,7 @@ function UpdateFollowPolicyForm({
           setSelectedFollowPolicyType={setSelectedFollowPolicyType}
         />
 
-        {!selectedFollowPolicyType && profile.followPolicy?.type !== FollowPolicyType.UNKNOWN && (
+        {!selectedFollowPolicyType && followPolicy.type !== FollowPolicyType.UNKNOWN && (
           <p>Your current follow policy is unsupported by the Lens SDK.</p>
         )}
       </div>
@@ -171,8 +144,8 @@ function UpdateFollowPolicyForm({
           <select
             name="chargeCurrency"
             defaultValue={
-              profile.followPolicy?.type === FollowPolicyType.CHARGE
-                ? profile.followPolicy.amount.asset.symbol
+              followPolicy.type === FollowPolicyType.CHARGE
+                ? followPolicy.amount.asset.symbol
                 : undefined
             }
           >
@@ -185,8 +158,8 @@ function UpdateFollowPolicyForm({
           <label htmlFor="chargeFee">Fee Amount</label>
           <input
             defaultValue={
-              profile.followPolicy?.type === FollowPolicyType.CHARGE
-                ? profile.followPolicy.amount.toNumber()
+              followPolicy.type === FollowPolicyType.CHARGE
+                ? followPolicy.amount.toNumber()
                 : undefined
             }
             name="chargeFee"
@@ -196,8 +169,8 @@ function UpdateFollowPolicyForm({
           <label htmlFor="chargeFeeRecipient">Follow Fee Recipient</label>
           <input
             defaultValue={
-              profile.followPolicy?.type === FollowPolicyType.CHARGE
-                ? profile.followPolicy.recipient
+              followPolicy.type === FollowPolicyType.CHARGE
+                ? followPolicy.recipient
                 : profile.ownedBy.address
             }
             name="chargeFeeRecipient"
@@ -207,13 +180,10 @@ function UpdateFollowPolicyForm({
         </div>
       )}
 
-      <button
-        disabled={currentFollowPolicy?.type === selectedFollowPolicyType || loading}
-        type="submit"
-      >
+      <button disabled={followPolicy.type === selectedFollowPolicyType || loading} type="submit">
         <UpdateButtonText
           isTxPending={loading}
-          currentFollowModule={currentFollowPolicy?.type ?? null}
+          currentFollowModule={followPolicy.type}
           followPolicyTypeToUpdate={selectedFollowPolicyType}
         />
       </button>
@@ -236,19 +206,12 @@ type UpdateFollowPolicyProps = {
 
 function UpdateFollowPolicy({ profile }: UpdateFollowPolicyProps) {
   const { data: currencies, error, loading } = useCurrencies();
-  const currentFollowPolicy = profile.followPolicy;
 
   if (loading) return <Loading />;
 
   if (error) return <ErrorMessage error={error} />;
 
-  return (
-    <UpdateFollowPolicyForm
-      profile={profile}
-      currencies={currencies}
-      currentFollowPolicy={currentFollowPolicy}
-    />
-  );
+  return <UpdateFollowPolicyForm profile={profile} currencies={currencies} />;
 }
 
 export function UseUpdateFollowPolicy() {

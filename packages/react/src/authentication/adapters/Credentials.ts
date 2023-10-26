@@ -1,17 +1,31 @@
 import { ICredentials, ProfileId } from '@lens-protocol/domain/entities';
-import { DateUtils, EvmAddress, invariant, InvariantError } from '@lens-protocol/shared-kernel';
-import jwtDecode, { JwtPayload } from 'jwt-decode';
-import isObject from 'lodash/isObject.js';
+import { DateUtils, EvmAddress, invariant, never } from '@lens-protocol/shared-kernel';
+import jwtDecode from 'jwt-decode';
+import isObject from 'lodash/isObject';
 
-type ParsedJwt = {
-  id: ProfileId;
-  evmAddress: EvmAddress;
+type WalletJwtPayload = {
+  authorizationId: string;
+  id: EvmAddress;
+  role: 'wallet_refresh';
+  iat: number;
+  exp: number;
 };
 
-function assertIdInJwt(decodedJwt: unknown): asserts decodedJwt is ParsedJwt {
-  if (isObject(decodedJwt) && !['id', 'evmAddress'].every((key) => key in decodedJwt)) {
-    throw new InvariantError('Invalid JWT format.');
-  }
+type ProfileJwtPayload = {
+  authorizationId: string;
+  id: ProfileId;
+  evmAddress: string;
+  role: 'profile_refresh';
+  iat: number;
+  exp: number;
+};
+
+function isWalletJwtContent(decodedJwt: unknown): decodedJwt is WalletJwtPayload {
+  return isObject(decodedJwt) && 'role' in decodedJwt && decodedJwt.role === 'wallet_refresh';
+}
+
+function isProfileJwtContent(decodedJwt: unknown): decodedJwt is ProfileJwtPayload {
+  return isObject(decodedJwt) && 'role' in decodedJwt && decodedJwt.role === 'profile_refresh';
 }
 
 // Threshold in seconds that will mark token as expired even it's still valid
@@ -20,15 +34,23 @@ const TOKEN_EXP_THRESHOLD = DateUtils.secondsToMs(3);
 
 export class Credentials implements ICredentials {
   readonly address: EvmAddress;
-  readonly profileId: ProfileId;
+  readonly profileId?: ProfileId;
 
   constructor(readonly accessToken: string | null, readonly refreshToken: string) {
-    const decodedRefreshToken = jwtDecode<JwtPayload>(refreshToken);
+    const decodedRefreshToken = jwtDecode(refreshToken);
 
-    assertIdInJwt(decodedRefreshToken);
+    if (isWalletJwtContent(decodedRefreshToken)) {
+      this.address = decodedRefreshToken.id;
+      return;
+    }
 
-    this.address = decodedRefreshToken.evmAddress;
-    this.profileId = decodedRefreshToken.id;
+    if (isProfileJwtContent(decodedRefreshToken)) {
+      this.address = decodedRefreshToken.evmAddress;
+      this.profileId = decodedRefreshToken.id;
+      return;
+    }
+
+    never('Invalid JWT format');
   }
 
   canRefresh(): boolean {
@@ -52,7 +74,7 @@ export class Credentials implements ICredentials {
   }
 
   private getTokenExpDate(token: string) {
-    const decodedToken = jwtDecode<JwtPayload>(token);
+    const decodedToken = jwtDecode<WalletJwtPayload | ProfileJwtPayload>(token);
 
     invariant(decodedToken.exp, 'Exp date should be provided by JWT token');
 

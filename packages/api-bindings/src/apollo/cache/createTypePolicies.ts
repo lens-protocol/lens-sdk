@@ -22,14 +22,15 @@ import {
 } from './field-policies';
 import {
   createPrimaryPublicationTypePolicy,
+  createProfileOperationsTypePolicy,
+  createProfileStatsTypePolicy,
   createProfileTypePolicy,
+  createPublicationOperationsTypePolicy,
   createPublicationStatsTypePolicy,
   createPublicationTypePolicy,
   notNormalizedType,
 } from './type-policies';
 import { createProfileOperationsTypePolicy } from './type-policies/createProfileOperationsTypePolicy';
-import { createProfileStatsTypePolicy } from './type-policies/createProfileStatsTypePolicy';
-import { createPublicationOperationsTypePolicy } from './type-policies/createPublicationOperationsTypePolicy';
 
 type InheritedTypePolicies = {
   AnyPublication: TypePolicy;

@@ -1,8 +1,19 @@
 import { mockPostFragment } from '@lens-protocol/api-bindings/mocks';
-import { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
+import {
+  PendingSigningRequestError,
+  TransactionError,
+  TransactionErrorReason,
+  UserRejectedError,
+  WalletConnectionError,
+  WalletConnectionErrorReason,
+} from '@lens-protocol/domain/entities';
 import { mockCreatePostRequest, mockTransactionData } from '@lens-protocol/domain/mocks';
 import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
-import { BroadcastingError, TransactionData } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  BroadcastingError,
+  BroadcastingErrorReason,
+  TransactionData,
+} from '@lens-protocol/domain/use-cases/transactions';
 import { failure, Result, success } from '@lens-protocol/shared-kernel';
 
 import { NewPublicationPresenter } from '../NewPublicationPresenter';
@@ -19,7 +30,12 @@ function setupTestScenario() {
 }
 
 describe(`Given an instance of the ${NewPublicationPresenter.name}`, () => {
-  describe.each([new BroadcastingError('error')])(
+  describe.each([
+    new BroadcastingError(BroadcastingErrorReason.UNKNOWN),
+    new PendingSigningRequestError(),
+    new UserRejectedError(),
+    new WalletConnectionError(WalletConnectionErrorReason.INCORRECT_CHAIN),
+  ])(
     `and the "${NewPublicationPresenter.prototype.present.name}" method is called with failure($name)`,
     (error) => {
       const result: Result<never, typeof error> = failure(error);

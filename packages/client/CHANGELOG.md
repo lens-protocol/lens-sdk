@@ -1,5 +1,18 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.16
+
+### Patch Changes
+
+- bef43b12: Added option to configure the `Origin` header when making requests to the Lens API.
+- 55a07ad4: Added `authentication.fetch` to get current session details
+- 061df834: **chore:** configure Lens API v2 production URL
+- 75f25d39: Added `authentication.fetchAll`, `authentication.revoke` and `authentication.logout` methods to manage active sessions.
+- Updated dependencies [061df834]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.6
+  - @lens-protocol/gated-content@0.3.3-alpha.11
+  - @lens-protocol/storage@0.7.5-alpha.4
+
 ## 2.0.0-alpha.15
 
 ### Patch Changes

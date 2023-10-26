@@ -1,4 +1,5 @@
 export * from './useApproveModule';
+export * from './useClaimHandle';
 export * from './useCreateComment';
 export * from './useCreateMirror';
 export * from './useCreatePost';
@@ -27,17 +28,16 @@ export type {
 } from '@lens-protocol/domain/use-cases/publications';
 
 export type {
-  FollowPolicyConfig,
   ChargeFollowConfig,
-  NoFeeFollowConfig,
-} from '@lens-protocol/domain/use-cases/profile';
-
-export type {
-  FollowPolicy,
   ChargeFollowPolicy,
+  FollowPolicy,
+  FollowPolicyConfig,
+  NoFeeFollowConfig,
   NoFeeFollowPolicy,
   OpenFollowPolicy,
-} from '@lens-protocol/api-bindings';
+} from '@lens-protocol/domain/use-cases/profile';
+
+export type { FollowModule } from '@lens-protocol/api-bindings';
 
 /**
  * Enums

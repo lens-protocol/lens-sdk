@@ -12,14 +12,15 @@ import {
 import { DataTransaction, ISignedProtocolCall } from '@lens-protocol/domain/entities';
 import {
   BroadcastingError,
+  BroadcastingErrorReason,
   ProtocolTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { assertFailure, assertSuccess, ILogger } from '@lens-protocol/shared-kernel';
+import { assertSuccess, ILogger } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
-import { SignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { mockSignedProtocolCall } from '../../../wallet/adapters/__helpers__/mocks';
 import { MomokaRelayer } from '../MomokaRelayer';
+import { assertBroadcastingErrorWithReason } from '../__helpers__/assertions';
 import { mockITransactionFactory } from '../__helpers__/mocks';
 
 function setupRelayer({
@@ -52,7 +53,7 @@ describe(`Given an instance of the ${MomokaRelayer.name}`, () => {
       const broadcastResult = mockCreateMomokaPublicationResult();
 
       const relayer = setupRelayer({ broadcastResult, signedCall });
-      const result = await relayer.relayProtocolCall(signedCall);
+      const result = await relayer.relaySignedMomoka(signedCall);
 
       assertSuccess(result);
       expect(result.value).toBeInstanceOf(DataTransaction);
@@ -65,21 +66,32 @@ describe(`Given an instance of the ${MomokaRelayer.name}`, () => {
     });
   });
 
-  describe(`when relaying an ISignedProtocolCall fails`, () => {
-    it.each([
-      mockRelayErrorFragment(RelayErrorReasonType.AppNotAllowed),
-      mockRelayErrorFragment(RelayErrorReasonType.NotSponsored),
-      mockRelayErrorFragment(RelayErrorReasonType.RateLimited),
-    ])(
-      `should fail w/ a ${BroadcastingError.name} in case of $__typename response with "$reason" reason carrying the RequestFallback from the ${SignedProtocolCall.name}`,
-      async (broadcastResult) => {
+  describe.only.each([
+    {
+      broadcastResult: mockRelayErrorFragment(RelayErrorReasonType.AppNotAllowed),
+      reason: BroadcastingErrorReason.APP_NOT_ALLOWED,
+    },
+    {
+      broadcastResult: mockRelayErrorFragment(RelayErrorReasonType.NotSponsored),
+      reason: BroadcastingErrorReason.NOT_SPONSORED,
+    },
+    {
+      broadcastResult: mockRelayErrorFragment(RelayErrorReasonType.RateLimited),
+      reason: BroadcastingErrorReason.RATE_LIMITED,
+    },
+    {
+      broadcastResult: mockRelayErrorFragment(RelayErrorReasonType.Failed),
+      reason: BroadcastingErrorReason.UNKNOWN,
+    },
+  ])(
+    `when relaying an ISignedProtocolCall returns a $broadcastResult.__typename with $broadcastResult.reason reason`,
+    ({ broadcastResult, reason }) => {
+      it(`should fail w/ a ${BroadcastingError.name} with ${reason} reason`, async () => {
         const relayer = setupRelayer({ broadcastResult, signedCall });
-        const result = await relayer.relayProtocolCall(signedCall);
+        const result = await relayer.relaySignedMomoka(signedCall);
 
-        assertFailure(result);
-        expect(result.error).toBeInstanceOf(BroadcastingError);
-        expect(result.error.fallback).toMatchObject(signedCall.fallback);
-      },
-    );
-  });
+        assertBroadcastingErrorWithReason(result, reason);
+      });
+    },
+  );
 });
