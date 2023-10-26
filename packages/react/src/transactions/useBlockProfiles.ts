@@ -49,7 +49,7 @@ export function useBlockProfiles(): BlockOperation {
     return blockProfile({
       profileIds: profiles.map((profile) => profile.id),
       kind: TransactionKind.BLOCK_PROFILE,
-      delegate: session.profile.lensManager,
+      delegate: session.profile.signless,
     });
   });
 }
