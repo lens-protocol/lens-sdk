@@ -3,7 +3,7 @@ import { PromiseResult } from '@lens-protocol/shared-kernel';
 import { NativeTransaction, TransactionKind, AnyTransactionRequestModel } from '../../entities';
 import { ITransactionResultPresenter } from '../transactions/ITransactionResultPresenter';
 import { TransactionQueue } from '../transactions/TransactionQueue';
-import { FollowPolicyConfig } from './types';
+import { FollowPolicyConfig } from './FollowPolicy';
 
 export type ClaimFreeTextHandleRequest = {
   kind: TransactionKind.CLAIM_HANDLE;

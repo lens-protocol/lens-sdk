@@ -1,4 +1,4 @@
-import { Profile } from '@lens-protocol/api-bindings';
+import { Profile, TriStateValue, resolveFollowPolicy } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -11,7 +11,7 @@ import {
   InsufficientAllowanceError,
   InsufficientFundsError,
 } from '@lens-protocol/domain/use-cases/wallets';
-import { InvariantError, invariant } from '@lens-protocol/shared-kernel';
+import { InvariantError, PromiseResult, failure, invariant } from '@lens-protocol/shared-kernel';
 
 import { Session, SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
@@ -32,7 +32,8 @@ function createFollowRequest(profile: Profile, session?: Session): FollowRequest
     'You must have a profile to use this operation.',
   );
 
-  const followPolicy = profile.followPolicy;
+  const followPolicy = resolveFollowPolicy(profile);
+
   switch (followPolicy.type) {
     case FollowPolicyType.CHARGE:
       return {
@@ -102,27 +103,37 @@ export function useFollow(): UseDeferredTask<
   const { data: session } = useSession();
   const followProfile = useFollowController();
 
-  // const hasPendingUnfollowTx = useHasPendingTransaction(
-  //   isUnfollowTransactionFor({ profileId: profile.id }),
-  // );
+  return useDeferredTask(
+    async ({
+      profile,
+    }): PromiseResult<
+      FollowAsyncResult,
+      | BroadcastingError
+      | InsufficientAllowanceError
+      | InsufficientFundsError
+      | PendingSigningRequestError
+      | PrematureFollowError
+      | UserRejectedError
+      | WalletConnectionError
+    > => {
+      invariant(
+        profile.operations.canFollow === TriStateValue.Yes,
+        "You can't follow this profile. Check the `profile.operations.canFollow` beforehand.",
+      );
 
-  return useDeferredTask(async ({ profile }) => {
-    // if (hasPendingUnfollowTx) {
-    //   return failure(
-    //     new PrematureFollowError(
-    //       `A previous unfollow request for ${profile.id} is still pending. Make sure you check 'profile.operations.canFollow' beforehand.`,
-    //     ),
-    //   );
-    // }
+      if (!profile.operations.isFollowedByMe.isFinalisedOnchain) {
+        return failure(
+          new PrematureFollowError(
+            `A previous unfollow request for ${profile.id} is still pending.
+          Check 'profile.operations.isFollowedByMe.isFinalisedOnchain' beforehand.`,
+          ),
+        );
+      }
 
-    invariant(
-      profile.operations.canFollow,
-      "You're already following this profile. Check the `profile.operations.canFollow` to determine if you can call `useFollow`.",
-    );
-
-    const request = createFollowRequest(profile, session);
-    return followProfile(request);
-  });
+      const request = createFollowRequest(profile, session);
+      return followProfile(request);
+    },
+  );
 }
 
 /**

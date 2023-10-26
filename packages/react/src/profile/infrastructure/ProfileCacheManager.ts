@@ -26,6 +26,10 @@ export class ProfileCacheManager implements IProfileCacheManager {
     return this.fetch({ forHandle: fullHandle }, 'cache-first');
   }
 
+  async refresh(id: ProfileId): Promise<void> {
+    await this.fetch({ forProfileId: id }, 'network-only');
+  }
+
   async refreshCurrentProfile() {
     const session = getSessionData();
 

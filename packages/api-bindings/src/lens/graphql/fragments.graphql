@@ -328,7 +328,6 @@ fragment ProfileFields on Profile {
   followNftAddress {
     ...NetworkAddress
   }
-  followPolicy @client
   followModule {
     ... on FeeFollowModuleSettings {
       ...FeeFollowModuleSettings

@@ -22,13 +22,14 @@ import {
 } from './field-policies';
 import {
   createPrimaryPublicationTypePolicy,
+  createProfileOperationsTypePolicy,
+  createProfileStatsTypePolicy,
   createProfileTypePolicy,
+  createPublicationOperationsTypePolicy,
   createPublicationStatsTypePolicy,
   createPublicationTypePolicy,
   notNormalizedType,
 } from './type-policies';
-import { createProfileStatsTypePolicy } from './type-policies/createProfileStatsTypePolicy';
-import { createPublicationOperationsTypePolicy } from './type-policies/createPublicationOperationsTypePolicy';
 
 type InheritedTypePolicies = {
   AnyPublication: TypePolicy;
@@ -51,7 +52,7 @@ export function createTypePolicies(
 
     Profile: createProfileTypePolicy(),
     ProfileStats: createProfileStatsTypePolicy(),
-    ProfileOperations: notNormalizedType(),
+    ProfileOperations: createProfileOperationsTypePolicy(),
 
     FeedItem: notNormalizedType(),
     PaginatedResultInfo: notNormalizedType(),
