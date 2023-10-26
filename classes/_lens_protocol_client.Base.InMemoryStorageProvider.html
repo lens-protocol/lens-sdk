@@ -179,6 +179,8 @@
 <li><a href="_lens_protocol_react_web.BroadcastingError.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>
 <div>Broadcasting<wbr/>Error
 <div class="menu-item-desc">An error thrown when the Lens API cannot relay a transaction.</div></div></a></li>
+<li><a href="_lens_protocol_react_web.ClaimHandleError.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>
+<div>Claim<wbr/>Handle<wbr/>Error</div></a></li>
 <li><a href="_lens_protocol_react_web.Erc20.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>
 <div>Erc20
 <div class="menu-item-desc">Erc20 is a value object representing an ERC20 token.</div></div></a></li>
@@ -257,6 +259,11 @@
 <div>Charge<wbr/>Follow<wbr/>Config</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.ChargeFollowPolicy.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Charge<wbr/>Follow<wbr/>Policy</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.ClaimHandleArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Claim<wbr/>Handle<wbr/>Args
+<div class="menu-item-desc">Claim a handle details.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.ClaimableProfilesResult.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Claimable<wbr/>Profiles<wbr/>Result</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.CollectActionConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Collect<wbr/>Action<wbr/>Config</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.CollectParams.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -520,6 +527,8 @@
 <div>Report<wbr/>Publication<wbr/>Args</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.RequiredSigner.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Required<wbr/>Signer</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.ReservedClaimable.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Reserved<wbr/>Claimable</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.Result.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Result
 <div class="menu-item-desc">A `Result` type represents either `Success` or `Failure`.</div></div></a></li>
@@ -556,6 +565,8 @@
 <div>Update<wbr/>Follow<wbr/>Policy<wbr/>Args</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.UpdateProfileManagersArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Update<wbr/>Profile<wbr/>Managers<wbr/>Args</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.UpgradeCredentialsRequest.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Upgrade<wbr/>Credentials<wbr/>Request</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.Url.html" class="deprecated"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Url
 <div class="menu-item-desc">A URL</div></div></a></li>
@@ -694,12 +705,24 @@
 <li><a href="../functions/_lens_protocol_react_web.usd.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>usd
 <div class="menu-item-desc">A convenience function to create a Fiat asset for USD.</div></div></a></li>
+<li><a href="../functions/_lens_protocol_react_web.useAccessToken.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Access<wbr/>Token
+<div class="menu-item-desc">Returns the current access token.</div></div></a></li>
+<li><a href="../functions/_lens_protocol_react_web.useApolloClient.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Apollo<wbr/>Client
+<div class="menu-item-desc">Returns the internal Apollo Client instance.</div></div></a></li>
 <li><a href="../functions/_lens_protocol_react_web.useApproveModule.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Approve<wbr/>Module
 <div class="menu-item-desc">`useApproveModule` is a React Hook that allows to perform an ERC20 pre-approval</div></div></a></li>
 <li><a href="../functions/_lens_protocol_react_web.useBookmarkToggle.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Bookmark<wbr/>Toggle
 <div class="menu-item-desc">`useBookmarkToggle` hook lets the user save or remove a publication from their bookmarks.</div></div></a></li>
+<li><a href="../functions/_lens_protocol_react_web.useCanClaimHandle.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Can<wbr/>Claim<wbr/>Handle
+<div class="menu-item-desc">`useCanClaimHandle` is React Hook that allows you to check if you can claim a handle.</div></div></a></li>
+<li><a href="../functions/_lens_protocol_react_web.useClaimHandle.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Claim<wbr/>Handle
+<div class="menu-item-desc">`useClaimHandle` is React Hook that allows you to claim a handle.</div></div></a></li>
 <li><a href="../functions/_lens_protocol_react_web.useCreateComment.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Create<wbr/>Comment
 <div class="menu-item-desc">`useCreateComment` is React Hook that allows you to create a new Lens Comment.</div></div></a></li>
@@ -835,6 +858,9 @@
 <li><a href="../functions/_lens_protocol_react_web.useUpdateProfileManagers.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Update<wbr/>Profile<wbr/>Managers
 <div class="menu-item-desc">`useUpdateProfileManagers` is a React Hook that allows you to update the Profile managers</div></div></a></li>
+<li><a href="../functions/_lens_protocol_react_web.useUpgradeCredentials.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Upgrade<wbr/>Credentials
+<div class="menu-item-desc">Upgrade credentials from &quot;just wallet&quot; to &quot;with profile&quot;.</div></div></a></li>
 <li><a href="../functions/_lens_protocol_react_web.useWhoActedOnPublication.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Who<wbr/>Acted<wbr/>On<wbr/>Publication
 <div class="menu-item-desc">`useWhoActedOnPublication` is a paginated hook that lets you fetch profiles that acted on a publication.</div></div></a></li>
@@ -901,6 +927,8 @@
 <li><a href="_lens_protocol_react.BroadcastingError.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>
 <div>Broadcasting<wbr/>Error
 <div class="menu-item-desc">An error thrown when the Lens API cannot relay a transaction.</div></div></a></li>
+<li><a href="_lens_protocol_react.ClaimHandleError.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>
+<div>Claim<wbr/>Handle<wbr/>Error</div></a></li>
 <li><a href="_lens_protocol_react.Erc20.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg>
 <div>Erc20
 <div class="menu-item-desc">Erc20 is a value object representing an ERC20 token.</div></div></a></li>
@@ -979,6 +1007,11 @@
 <div>Charge<wbr/>Follow<wbr/>Config</div></a></li>
 <li><a href="../types/_lens_protocol_react.ChargeFollowPolicy.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Charge<wbr/>Follow<wbr/>Policy</div></a></li>
+<li><a href="../types/_lens_protocol_react.ClaimHandleArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Claim<wbr/>Handle<wbr/>Args
+<div class="menu-item-desc">Claim a handle details.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.ClaimableProfilesResult.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Claimable<wbr/>Profiles<wbr/>Result</div></a></li>
 <li><a href="../types/_lens_protocol_react.CollectActionConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Collect<wbr/>Action<wbr/>Config</div></a></li>
 <li><a href="../types/_lens_protocol_react.CollectParams.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -1236,6 +1269,8 @@
 <div>Report<wbr/>Publication<wbr/>Args</div></a></li>
 <li><a href="../types/_lens_protocol_react.RequiredSigner.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Required<wbr/>Signer</div></a></li>
+<li><a href="../types/_lens_protocol_react.ReservedClaimable.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Reserved<wbr/>Claimable</div></a></li>
 <li><a href="../types/_lens_protocol_react.Result.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Result
 <div class="menu-item-desc">A `Result` type represents either `Success` or `Failure`.</div></div></a></li>
@@ -1272,6 +1307,8 @@
 <div>Update<wbr/>Follow<wbr/>Policy<wbr/>Args</div></a></li>
 <li><a href="../types/_lens_protocol_react.UpdateProfileManagersArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Update<wbr/>Profile<wbr/>Managers<wbr/>Args</div></a></li>
+<li><a href="../types/_lens_protocol_react.UpgradeCredentialsRequest.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Upgrade<wbr/>Credentials<wbr/>Request</div></a></li>
 <li><a href="../types/_lens_protocol_react.Url.html" class="deprecated"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Url
 <div class="menu-item-desc">A URL</div></div></a></li>
@@ -1410,12 +1447,24 @@
 <li><a href="../functions/_lens_protocol_react.usd.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>usd
 <div class="menu-item-desc">A convenience function to create a Fiat asset for USD.</div></div></a></li>
+<li><a href="../functions/_lens_protocol_react.useAccessToken.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Access<wbr/>Token
+<div class="menu-item-desc">Returns the current access token.</div></div></a></li>
+<li><a href="../functions/_lens_protocol_react.useApolloClient.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Apollo<wbr/>Client
+<div class="menu-item-desc">Returns the internal Apollo Client instance.</div></div></a></li>
 <li><a href="../functions/_lens_protocol_react.useApproveModule.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Approve<wbr/>Module
 <div class="menu-item-desc">`useApproveModule` is a React Hook that allows to perform an ERC20 pre-approval</div></div></a></li>
 <li><a href="../functions/_lens_protocol_react.useBookmarkToggle.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Bookmark<wbr/>Toggle
 <div class="menu-item-desc">`useBookmarkToggle` hook lets the user save or remove a publication from their bookmarks.</div></div></a></li>
+<li><a href="../functions/_lens_protocol_react.useCanClaimHandle.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Can<wbr/>Claim<wbr/>Handle
+<div class="menu-item-desc">`useCanClaimHandle` is React Hook that allows you to check if you can claim a handle.</div></div></a></li>
+<li><a href="../functions/_lens_protocol_react.useClaimHandle.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Claim<wbr/>Handle
+<div class="menu-item-desc">`useClaimHandle` is React Hook that allows you to claim a handle.</div></div></a></li>
 <li><a href="../functions/_lens_protocol_react.useCreateComment.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Create<wbr/>Comment
 <div class="menu-item-desc">`useCreateComment` is React Hook that allows you to create a new Lens Comment.</div></div></a></li>
@@ -1551,6 +1600,9 @@
 <li><a href="../functions/_lens_protocol_react.useUpdateProfileManagers.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Update<wbr/>Profile<wbr/>Managers
 <div class="menu-item-desc">`useUpdateProfileManagers` is a React Hook that allows you to update the Profile managers</div></div></a></li>
+<li><a href="../functions/_lens_protocol_react.useUpgradeCredentials.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Upgrade<wbr/>Credentials
+<div class="menu-item-desc">Upgrade credentials from &quot;just wallet&quot; to &quot;with profile&quot;.</div></div></a></li>
 <li><a href="../functions/_lens_protocol_react.useWhoActedOnPublication.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Who<wbr/>Acted<wbr/>On<wbr/>Publication
 <div class="menu-item-desc">`useWhoActedOnPublication` is a paginated hook that lets you fetch profiles that acted on a publication.</div></div></a></li>
@@ -1602,6 +1654,8 @@
 <div>Limit<wbr/>Type</div></a></li>
 <li><a href="../enums/_lens_protocol_client.Base.MarketplaceMetadataAttributeDisplayType.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
 <div>Marketplace<wbr/>Metadata<wbr/>Attribute<wbr/>Display<wbr/>Type</div></a></li>
+<li><a href="../enums/_lens_protocol_client.Base.MetadataAttributeType.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
+<div>Metadata<wbr/>Attribute<wbr/>Type</div></a></li>
 <li><a href="../enums/_lens_protocol_client.Base.MomokaValidatorError.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
 <div>Momoka<wbr/>Validator<wbr/>Error</div></a></li>
 <li><a href="../enums/_lens_protocol_client.Base.NftContractType.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>
@@ -1765,6 +1819,10 @@
 <div>App<wbr/>Fragment</div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.ApprovedAllowanceAmountResultFragment.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Approved<wbr/>Allowance<wbr/>Amount<wbr/>Result<wbr/>Fragment</div></a></li>
+<li><a href="../types/_lens_protocol_client.Base.ApprovedAuthenticationFragment.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Approved<wbr/>Authentication<wbr/>Fragment</div></a></li>
+<li><a href="../types/_lens_protocol_client.Base.ApprovedAuthenticationRequest.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Approved<wbr/>Authentication<wbr/>Request</div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.ApprovedModuleAllowanceAmountRequest.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Approved<wbr/>Module<wbr/>Allowance<wbr/>Amount<wbr/>Request</div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.ArticleMetadataV3Fragment.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -1789,8 +1847,8 @@
 <div>Change<wbr/>Profile<wbr/>Managers<wbr/>Request</div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.CheckingInMetadataV3Fragment.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Checking<wbr/>In<wbr/>Metadata<wbr/>V3<wbr/>Fragment</div></a></li>
-<li><a href="../types/_lens_protocol_client.Base.ClaimProfileRequest.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
-<div>Claim<wbr/>Profile<wbr/>Request</div></a></li>
+<li><a href="../types/_lens_protocol_client.Base.ClaimProfileWithHandleRequest.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Claim<wbr/>Profile<wbr/>With<wbr/>Handle<wbr/>Request</div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.CollectActionModuleInput.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Collect<wbr/>Action<wbr/>Module<wbr/>Input</div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.CollectConditionFragment.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -2307,6 +2365,8 @@
 <div>Revenue<wbr/>From<wbr/>Publications<wbr/>Request</div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.RevertFollowModuleSettingsFragment.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Revert<wbr/>Follow<wbr/>Module<wbr/>Settings<wbr/>Fragment</div></a></li>
+<li><a href="../types/_lens_protocol_client.Base.RevokeAuthenticationRequest.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Revoke<wbr/>Authentication<wbr/>Request</div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.RootConditionFragment.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Root<wbr/>Condition<wbr/>Fragment</div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.Scalars.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -2454,6 +2514,10 @@
 <div>App<wbr/>Fragment</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#ApprovedAllowanceAmountResultFragment"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
 <div>Approved<wbr/>Allowance<wbr/>Amount<wbr/>Result<wbr/>Fragment</div></a></li>
+<li><a href="../modules/_lens_protocol_client.Gated.html#ApprovedAuthenticationFragment"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
+<div>Approved<wbr/>Authentication<wbr/>Fragment</div></a></li>
+<li><a href="../modules/_lens_protocol_client.Gated.html#ApprovedAuthenticationRequest"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
+<div>Approved<wbr/>Authentication<wbr/>Request</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#ApprovedModuleAllowanceAmountRequest"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
 <div>Approved<wbr/>Module<wbr/>Allowance<wbr/>Amount<wbr/>Request</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#ArticleMetadataV3Fragment"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
@@ -2484,8 +2548,8 @@
 <div>Change<wbr/>Profile<wbr/>Managers<wbr/>Request</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#CheckingInMetadataV3Fragment"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
 <div>Checking<wbr/>In<wbr/>Metadata<wbr/>V3<wbr/>Fragment</div></a></li>
-<li><a href="../modules/_lens_protocol_client.Gated.html#ClaimProfileRequest"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
-<div>Claim<wbr/>Profile<wbr/>Request</div></a></li>
+<li><a href="../modules/_lens_protocol_client.Gated.html#ClaimProfileWithHandleRequest"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
+<div>Claim<wbr/>Profile<wbr/>With<wbr/>Handle<wbr/>Request</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#CollectActionModuleInput"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
 <div>Collect<wbr/>Action<wbr/>Module<wbr/>Input</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#CollectConditionFragment"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
@@ -2762,6 +2826,8 @@
 <div>Media<wbr/>Transforms<wbr/>Config</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#MentionNotificationFragment"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
 <div>Mention<wbr/>Notification<wbr/>Fragment</div></a></li>
+<li><a href="../modules/_lens_protocol_client.Gated.html#MetadataAttributeType"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
+<div>Metadata<wbr/>Attribute<wbr/>Type</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#MintMetadataV3Fragment"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
 <div>Mint<wbr/>Metadata<wbr/>V3<wbr/>Fragment</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#MirrorFragment"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
@@ -3114,6 +3180,8 @@
 <div>Revenue<wbr/>From<wbr/>Publications<wbr/>Request</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#RevertFollowModuleSettingsFragment"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
 <div>Revert<wbr/>Follow<wbr/>Module<wbr/>Settings<wbr/>Fragment</div></a></li>
+<li><a href="../modules/_lens_protocol_client.Gated.html#RevokeAuthenticationRequest"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
+<div>Revoke<wbr/>Authentication<wbr/>Request</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#RootConditionFragment"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
 <div>Root<wbr/>Condition<wbr/>Fragment</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#Scalars"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
