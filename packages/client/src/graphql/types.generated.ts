@@ -119,6 +119,10 @@ export type BroadcastRequest = {
   signature: Scalars['Signature']['input'];
 };
 
+export type CanClaimRequest = {
+  addresses: Array<Scalars['EvmAddress']['input']>;
+};
+
 export type ChallengeRequest = {
   /** The profile ID to initiate a challenge - note if you do not pass this in you be logging in as a wallet and wont be able to use all the features */
   for?: InputMaybe<Scalars['ProfileId']['input']>;

@@ -631,6 +631,7 @@ fragment CanDecryptResponse on CanDecryptResponse {
 
 fragment PublicationOperations on PublicationOperations {
   __typename
+  id
   isNotInterested
   hasBookmarked
   hasReported

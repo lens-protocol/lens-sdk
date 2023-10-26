@@ -259,6 +259,7 @@ export function mockPublicationOperationsFragment(
   overrides: Partial<gql.PublicationOperations> = {},
 ): gql.PublicationOperations {
   return {
+    id: mockPublicationId(),
     isNotInterested: false,
     hasBookmarked: false,
     hasReported: false,

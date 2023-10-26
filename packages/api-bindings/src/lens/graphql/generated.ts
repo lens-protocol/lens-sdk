@@ -170,6 +170,10 @@ export type BroadcastRequest = {
   signature: Scalars['Signature'];
 };
 
+export type CanClaimRequest = {
+  addresses: Array<Scalars['EvmAddress']>;
+};
+
 export type ChallengeRequest = {
   /** The profile ID to initiate a challenge - note if you do not pass this in you be logging in as a wallet and wont be able to use all the features */
   for?: InputMaybe<Scalars['ProfileId']>;
@@ -2294,6 +2298,7 @@ export type CanDecryptResponse = {
 
 export type PublicationOperations = {
   __typename: 'PublicationOperations';
+  id: PublicationId;
   isNotInterested: boolean;
   hasBookmarked: boolean;
   hasReported: boolean;
@@ -4652,6 +4657,7 @@ export const FragmentCanDecryptResponse = /*#__PURE__*/ gql`
 export const FragmentPublicationOperations = /*#__PURE__*/ gql`
   fragment PublicationOperations on PublicationOperations {
     __typename
+    id
     isNotInterested
     hasBookmarked
     hasReported
@@ -13096,6 +13102,11 @@ export type AuthenticationResultFieldPolicy = {
   accessToken?: FieldPolicy<any> | FieldReadFunction<any>;
   refreshToken?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type CanClaimResultKeySpecifier = ('address' | 'canClaim' | CanClaimResultKeySpecifier)[];
+export type CanClaimResultFieldPolicy = {
+  address?: FieldPolicy<any> | FieldReadFunction<any>;
+  canClaim?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type CanDecryptResponseKeySpecifier = (
   | 'extraDetails'
   | 'reasons'
@@ -16087,6 +16098,7 @@ export type PublicationValidateMetadataResultFieldPolicy = {
 export type QueryKeySpecifier = (
   | 'approvedAuthentications'
   | 'approvedModuleAllowanceAmount'
+  | 'canClaim'
   | 'challenge'
   | 'claimableProfiles'
   | 'claimableStatus'
@@ -16169,6 +16181,7 @@ export type QueryKeySpecifier = (
 export type QueryFieldPolicy = {
   approvedAuthentications?: FieldPolicy<any> | FieldReadFunction<any>;
   approvedModuleAllowanceAmount?: FieldPolicy<any> | FieldReadFunction<any>;
+  canClaim?: FieldPolicy<any> | FieldReadFunction<any>;
   challenge?: FieldPolicy<any> | FieldReadFunction<any>;
   claimableProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
   claimableStatus?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -16811,6 +16824,10 @@ export type StrictTypedTypePolicies = {
       | AuthenticationResultKeySpecifier
       | (() => undefined | AuthenticationResultKeySpecifier);
     fields?: AuthenticationResultFieldPolicy;
+  };
+  CanClaimResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?: false | CanClaimResultKeySpecifier | (() => undefined | CanClaimResultKeySpecifier);
+    fields?: CanClaimResultFieldPolicy;
   };
   CanDecryptResponse?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:
