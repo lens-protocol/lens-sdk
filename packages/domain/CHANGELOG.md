@@ -1,5 +1,19 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.10
+
+### Minor Changes
+
+- 8120f676: **feat:** reintroduces `useAccessToken` and `useApolloClient` hooks
+- 8120f676: **feat:** implements `useClaimHandle`, `useCanClaimHandle`, and `useUpgradeCredentials`
+
+### Patch Changes
+
+- 8120f676: **feat:** allow wallet-only authentication via `useLogin`
+- 061df834: **chore:** configure Lens API v2 production URL
+- Updated dependencies [061df834]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.6
+
 ## 0.11.0-alpha.9
 
 ### Patch Changes
