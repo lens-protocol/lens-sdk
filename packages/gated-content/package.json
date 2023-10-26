@@ -71,7 +71,7 @@
     "@graphql-codegen/typescript": "3.0.1",
     "@jest/globals": "^29.4.3",
     "@lens-protocol/eslint-config": "workspace:*",
-    "@lens-protocol/metadata": "0.1.0-alpha.30",
+    "@lens-protocol/metadata": "^1.0.0",
     "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
     "@types/jest": "29.5.3",
@@ -97,7 +97,7 @@
     "@ethersproject/hash": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@ethersproject/wallet": "^5.7.0",
-    "@lens-protocol/metadata": "0.1.0-alpha.30",
+    "@lens-protocol/metadata": "^1.0.0",
     "zod": "^3.22.0"
   },
   "prettier": "@lens-protocol/prettier-config",

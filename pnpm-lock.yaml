@@ -101,8 +101,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/client
       '@lens-protocol/metadata':
-        specifier: 0.1.0-alpha.30
-        version: 0.1.0-alpha.30(zod@3.22.0)
+        specifier: ^1.0.0
+        version: 1.0.0(zod@3.22.0)
       dotenv:
         specifier: ^16.0.3
         version: 16.0.3
@@ -152,8 +152,8 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
       '@lens-protocol/metadata':
-        specifier: 0.1.0-alpha.30
-        version: 0.1.0-alpha.30(zod@3.22.0)
+        specifier: ^1.0.0
+        version: 1.0.0(zod@3.22.0)
       '@lens-protocol/react-web':
         specifier: workspace:*
         version: link:../../packages/react-web
@@ -647,8 +647,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config
       '@lens-protocol/metadata':
-        specifier: 0.1.0-alpha.30
-        version: 0.1.0-alpha.30(zod@3.22.0)
+        specifier: ^1.0.0
+        version: 1.0.0(zod@3.22.0)
       '@lens-protocol/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
@@ -854,8 +854,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config
       '@lens-protocol/metadata':
-        specifier: 0.1.0-alpha.30
-        version: 0.1.0-alpha.30(zod@3.22.0)
+        specifier: ^1.0.0
+        version: 1.0.0(zod@3.22.0)
       '@lens-protocol/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
@@ -1005,8 +1005,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config
       '@lens-protocol/metadata':
-        specifier: 0.1.0-alpha.30
-        version: 0.1.0-alpha.30(zod@3.22.0)
+        specifier: ^1.0.0
+        version: 1.0.0(zod@3.22.0)
       '@lens-protocol/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
@@ -1262,8 +1262,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config
       '@lens-protocol/metadata':
-        specifier: 0.1.0-alpha.30
-        version: 0.1.0-alpha.30(zod@3.22.0)
+        specifier: ^1.0.0
+        version: 1.0.0(zod@3.22.0)
       '@lens-protocol/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
@@ -8214,11 +8214,11 @@ packages:
       - wait-for-expect
     dev: false
 
-  /@lens-protocol/metadata@0.1.0-alpha.30(zod@3.22.0):
-    resolution: {integrity: sha512-zYdd/H9Hnl5qdIBLE8rDELhWL7HpTs/g9fAjk3gwxFReJQiyfQJHjCVB1s7yEwlzSYdxhQNvB2jhY3JUO9+DaQ==}
+  /@lens-protocol/metadata@1.0.0(zod@3.22.0):
+    resolution: {integrity: sha512-ugusUDJ5qWf5xyjIepuNKQ0n+i+vsh0wWhNHyxwMEqhrh7VARhh664WKjsCUxbTU6mKm7aiGgPzgmQyLTB+7PA==}
     engines: {node: ^v18.12.1}
     peerDependencies:
-      zod: ^3.22.0
+      zod: ^3.22.3
     peerDependenciesMeta:
       zod:
         optional: true
@@ -21650,14 +21650,18 @@ packages:
 
   /uuid@3.4.0:
     resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
+    deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+    hasBin: true
     dev: true
 
   /uuid@7.0.3:
     resolution: {integrity: sha512-DPSke0pXhTZgoF/d+WSt2QaKMCFSfx7QegxEWT+JOuHF5aWrKEn0G+ztjuJg/gG8/ItK+rbPCD/yNv8yyih6Cg==}
+    hasBin: true
     dev: true
 
   /uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
 
   /uuid@9.0.0:
     resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
@@ -21665,6 +21669,7 @@ packages:
 
   /uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    hasBin: true
 
   /v8-compile-cache-lib@3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
