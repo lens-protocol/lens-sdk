@@ -1,5 +1,22 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.14
+
+### Minor Changes
+
+- 8120f676: **feat:** reintroduces `useAccessToken` and `useApolloClient` hooks
+- 8120f676: **feat:** implements `useClaimHandle`, `useCanClaimHandle`, and `useUpgradeCredentials`
+
+### Patch Changes
+
+- 061df834: **chore:** configure Lens API v2 production URL
+- Updated dependencies [8120f676]
+- Updated dependencies [8120f676]
+- Updated dependencies [061df834]
+- Updated dependencies [8120f676]
+  - @lens-protocol/domain@0.11.0-alpha.10
+  - @lens-protocol/shared-kernel@0.11.0-alpha.6
+
 ## 0.11.0-alpha.13
 
 ### Patch Changes

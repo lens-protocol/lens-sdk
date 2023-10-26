@@ -1,5 +1,11 @@
 # @lens-protocol/shared-kernel
 
+## 0.11.0-alpha.6
+
+### Patch Changes
+
+- 061df834: **chore:** configure Lens API v2 production URL
+
 ## 0.11.0-alpha.5
 
 ### Patch Changes
