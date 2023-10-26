@@ -1,5 +1,6 @@
 import {
   ClaimHandleArgs,
+  ClaimProfileWithHandleErrorReasonType,
   ReservedClaimable,
   SessionType,
   useCanClaimHandle,
@@ -26,26 +27,26 @@ function ClaimHandleOptions() {
 
     // check for failure scenarios
     if (result.isFailure()) {
-      switch (result.error.name) {
-        case 'PendingSigningRequestError':
-          toast.error(
-            'There is a pending signing request in your wallet. ' +
-              'Approve it or discard it and try again.',
-          );
-          break;
+      if (result.error.name === 'ClaimHandleError') {
+        switch (result.error.reason) {
+          case ClaimProfileWithHandleErrorReasonType.HandleAlreadyClaimed:
+            toast.error(`The ${result.error.localName} already claimed`);
+            return;
+          case ClaimProfileWithHandleErrorReasonType.HandleAlreadyExists:
+            toast.error(`The ${result.error.localName} already exists`);
+            return;
+          case ClaimProfileWithHandleErrorReasonType.HandleReserved:
+            toast.error(`The ${result.error.localName} is reserved`);
+            return;
 
-        case 'WalletConnectionError':
-          toast.error('There was an error connecting to your wallet');
-          break;
-
-        case 'UserRejectedError':
-          // the user decided to not sign, usually this is silently ignored by UIs
-          break;
-
-        case 'ClaimHandleError':
-          // use result.error.reason to know more
-          toast.error(result.error.message);
-          break;
+          case ClaimProfileWithHandleErrorReasonType.CanNotFreeText:
+          case ClaimProfileWithHandleErrorReasonType.ClaimNotFound:
+          case ClaimProfileWithHandleErrorReasonType.ClaimNotLinkedToWallet:
+          case ClaimProfileWithHandleErrorReasonType.ClaimTimeExpired:
+          case ClaimProfileWithHandleErrorReasonType.ContractExecuted:
+            toast.error(result.error.message);
+            return;
+        }
       }
       toast.error(result.error.message);
       return;

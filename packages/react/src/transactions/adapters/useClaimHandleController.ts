@@ -1,10 +1,5 @@
 import { ClaimProfileWithHandleErrorReasonType, Profile } from '@lens-protocol/api-bindings';
-import {
-  PendingSigningRequestError,
-  TransactionError,
-  UserRejectedError,
-  WalletConnectionError,
-} from '@lens-protocol/domain/entities';
+import { TransactionError } from '@lens-protocol/domain/entities';
 import {
   ClaimHandle,
   ClaimHandleError,
@@ -24,11 +19,7 @@ export function useClaimHandleController() {
     request: ClaimHandleRequest,
   ): PromiseResult<
     Profile,
-    | ClaimHandleError<ClaimProfileWithHandleErrorReasonType>
-    | PendingSigningRequestError
-    | TransactionError
-    | UserRejectedError
-    | WalletConnectionError
+    ClaimHandleError<ClaimProfileWithHandleErrorReasonType> | TransactionError
   > => {
     const gateway = new ClaimProfileGateway(apolloClient, transactionFactory);
     const presenter = new NewProfilePresenter(profileCacheManager, environment.handleResolver);
