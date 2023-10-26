@@ -23,6 +23,7 @@ import {
   FollowRequestSchema,
   LinkHandleRequestSchema,
   UnlinkHandleRequestSchema,
+  UnblockProfilesRequestSchema,
 } from './profiles';
 import {
   CollectRequestSchema,
@@ -60,6 +61,8 @@ function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) 
       return SetProfileMetadataRequestSchema;
     case TransactionKind.UPDATE_PROFILE_MANAGERS:
       return UpdateProfileManagersRequestSchema;
+    case TransactionKind.UNBLOCK_PROFILE:
+      return UnblockProfilesRequestSchema;
 
     default:
       throw new Error('Not implemented');

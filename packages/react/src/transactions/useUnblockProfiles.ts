@@ -48,7 +48,7 @@ export function useUnblockProfiles(): UnblockOperation {
     return unblockProfile({
       profileIds: profiles.map((profile) => profile.id),
       kind: TransactionKind.UNBLOCK_PROFILE,
-      delegate: session.profile.lensManager,
+      delegate: session.profile.signless,
     });
   });
 }

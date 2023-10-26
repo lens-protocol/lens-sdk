@@ -105,3 +105,9 @@ export const UnlinkHandleRequestSchema = z.object({
   kind: z.literal(TransactionKind.UNLINK_HANDLE),
   delegate: z.boolean(),
 });
+
+export const UnblockProfilesRequestSchema = z.object({
+  profileIds: ProfileIdSchema.array().min(1),
+  kind: z.literal(TransactionKind.UNBLOCK_PROFILE),
+  delegate: z.boolean(),
+});

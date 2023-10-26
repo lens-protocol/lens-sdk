@@ -27,6 +27,7 @@ import {
   createPublicationTypePolicy,
   notNormalizedType,
 } from './type-policies';
+import { createProfileOperationsTypePolicy } from './type-policies/createProfileOperationsTypePolicy';
 import { createProfileStatsTypePolicy } from './type-policies/createProfileStatsTypePolicy';
 import { createPublicationOperationsTypePolicy } from './type-policies/createPublicationOperationsTypePolicy';
 
@@ -51,7 +52,7 @@ export function createTypePolicies(
 
     Profile: createProfileTypePolicy(),
     ProfileStats: createProfileStatsTypePolicy(),
-    ProfileOperations: notNormalizedType(),
+    ProfileOperations: createProfileOperationsTypePolicy(),
 
     FeedItem: notNormalizedType(),
     PaginatedResultInfo: notNormalizedType(),

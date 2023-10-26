@@ -5,6 +5,8 @@ import {
   TransactionErrorReason,
   TransactionKind,
 } from '@lens-protocol/domain/entities';
+import { ProfileId } from '@lens-protocol/domain/src/entities';
+import { UnblockProfilesRequest } from '@lens-protocol/domain/use-cases/profile';
 import { OpenActionRequest, AllOpenActionType } from '@lens-protocol/domain/use-cases/publications';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { DateUtils } from '@lens-protocol/shared-kernel';
@@ -133,4 +135,20 @@ export function countAnyPendingCollect() {
       (isCollectTransaction(transaction) && transaction.status === TxStatus.PENDING ? 1 : 0),
     0,
   );
+}
+
+function isUnblockTransaction(
+  transaction: TransactionState<AnyTransactionRequest>,
+): transaction is TransactionState<UnblockProfilesRequest> {
+  return transaction.request.kind === TransactionKind.UNBLOCK_PROFILE;
+}
+
+export function hasPendingUnblockForProfile(profileId: ProfileId) {
+  return recentTransactionsVar().some((transaction) => {
+    return (
+      isUnblockTransaction(transaction) &&
+      transaction.status === TxStatus.PENDING &&
+      transaction.request.profileIds.includes(profileId)
+    );
+  });
 }

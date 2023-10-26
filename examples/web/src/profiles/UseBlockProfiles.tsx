@@ -8,6 +8,17 @@ import { ProfileCard } from './components/ProfileCard';
 function ProfileBlockCard({ profile }: { profile: Profile }) {
   const { execute: block, loading, error } = useUnblockProfiles();
 
+  if (profile.operations.canUnblock) {
+    return (
+      <ProfileCard profile={profile}>
+        <button onClick={() => block({ profiles: [profile] })} disabled={loading}>
+          Unblock
+        </button>
+        {error && <p>Error unblocking profile: {error.message}</p>}
+      </ProfileCard>
+    );
+  }
+
   if (!profile.operations.isBlockedByMe.value) {
     return (
       <ProfileCard profile={profile}>
@@ -18,10 +29,7 @@ function ProfileBlockCard({ profile }: { profile: Profile }) {
 
   return (
     <ProfileCard profile={profile}>
-      <button onClick={() => block({ profiles: [profile] })} disabled={loading}>
-        Unblock
-      </button>
-      {error && <p>Error unblocking profile: {error.message}</p>}
+      <p>in progress</p>
     </ProfileCard>
   );
 }
