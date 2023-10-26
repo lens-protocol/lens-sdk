@@ -4,7 +4,7 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { UnblockProfiles, UnblockProfilesRequest } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError, SignedOnChain } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
@@ -27,7 +27,7 @@ export function useUnblockProfilesController() {
 
   const gateway = new UnblockProfilesGateway(apolloClient, transactionFactory);
 
-  const signedBlockProfiles = new SubsidizeOnChain<UnblockProfilesRequest>(
+  const signedBlockProfiles = new SignedOnChain<UnblockProfilesRequest>(
     activeWallet,
     transactionGateway,
     gateway,

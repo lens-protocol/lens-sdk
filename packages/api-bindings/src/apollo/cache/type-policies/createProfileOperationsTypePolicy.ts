@@ -80,7 +80,7 @@ export function createProfileOperationsTypePolicy(): StrictTypedTypePolicies['Pr
       },
       canUnblock: {
         read(existing: boolean | undefined, { readField }: FieldFunctionOptions) {
-          if (!existing === undefined) {
+          if (!existing) {
             return existing;
           }
 
@@ -102,8 +102,6 @@ export function createProfileOperationsTypePolicy(): StrictTypedTypePolicies['Pr
           const id = readField('id') as ProfileId;
 
           const hasPendingUnblock = hasPendingUnblockForProfile(id);
-
-          // console.log({ hasPendingUnblock, existing, id, adFiel });
 
           if (hasPendingUnblock) {
             return {

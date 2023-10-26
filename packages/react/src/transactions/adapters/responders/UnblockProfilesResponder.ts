@@ -11,13 +11,7 @@ export class UnblockProfilesResponder implements ITransactionResponder<UnblockPr
 
   async commit({ request }: TransactionData<UnblockProfilesRequest>) {
     request.profileIds.forEach(async (profileId) => {
-      await this.profileCacheManager.fetchProfile(profileId);
-    });
-  }
-
-  async rollback({ request }: TransactionData<UnblockProfilesRequest>) {
-    request.profileIds.forEach(async (profileId) => {
-      await this.profileCacheManager.fetchProfile(profileId);
+      await this.profileCacheManager.refresh(profileId);
     });
   }
 }
