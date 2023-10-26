@@ -17,32 +17,31 @@ import { ISignedOperation } from './DelegableSigning';
 import { ITransactionResultPresenter } from './ITransactionResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
-export interface IOffChainRelayer<T extends ProtocolTransactionRequestModel> {
-  relayProtocolCall(
+export interface IMomokaRelayer<T extends ProtocolTransactionRequestModel> {
+  relaySignedMomoka(
     signedCall: ISignedProtocolCall<T>,
   ): PromiseResult<DataTransaction<T>, BroadcastingError>;
 }
 
-export interface IOffChainProtocolCallGateway<T extends ProtocolTransactionRequestModel> {
+export interface ISignedMomokaGateway<T extends ProtocolTransactionRequestModel> {
   createUnsignedProtocolCall(request: T): Promise<IUnsignedProtocolCall<T>>;
 }
 
-export type ISubsidizeOffChainPresenter<T extends ProtocolTransactionRequestModel> =
+export type ISignedMomokaPresenter<T extends ProtocolTransactionRequestModel> =
   ITransactionResultPresenter<
     T,
     BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
   >;
 
-// TODO rename to Momoka for more clarity
 export class SubsidizeOffChain<T extends ProtocolTransactionRequestModel>
   implements ISignedOperation<T>
 {
   constructor(
     protected readonly activeWallet: ActiveWallet,
-    protected readonly gateway: IOffChainProtocolCallGateway<T>,
-    protected readonly relayer: IOffChainRelayer<ProtocolTransactionRequestModel>,
+    protected readonly gateway: ISignedMomokaGateway<T>,
+    protected readonly relayer: IMomokaRelayer<ProtocolTransactionRequestModel>,
     protected readonly queue: TransactionQueue<AnyTransactionRequestModel>,
-    protected readonly presenter: ISubsidizeOffChainPresenter<T>,
+    protected readonly presenter: ISignedMomokaPresenter<T>,
   ) {}
 
   async execute(request: T) {
@@ -57,7 +56,7 @@ export class SubsidizeOffChain<T extends ProtocolTransactionRequestModel>
       return;
     }
 
-    const relayResult = await this.relayer.relayProtocolCall(signingResult.value);
+    const relayResult = await this.relayer.relaySignedMomoka(signingResult.value);
 
     if (relayResult.isFailure()) {
       this.presenter.present(relayResult);

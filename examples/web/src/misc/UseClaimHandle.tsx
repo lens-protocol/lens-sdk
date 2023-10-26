@@ -1,11 +1,7 @@
 import {
   ClaimHandleArgs,
-  ClaimHandleError,
-  PendingSigningRequestError,
   ReservedClaimable,
   SessionType,
-  UserRejectedError,
-  WalletConnectionError,
   useCanClaimHandle,
   useClaimHandle,
   useLogin,
@@ -30,23 +26,24 @@ function ClaimHandleOptions() {
 
     // check for failure scenarios
     if (result.isFailure()) {
-      switch (result.error.constructor) {
-        case PendingSigningRequestError:
+      switch (result.error.name) {
+        case 'PendingSigningRequestError':
           toast.error(
             'There is a pending signing request in your wallet. ' +
               'Approve it or discard it and try again.',
           );
           break;
 
-        case WalletConnectionError:
+        case 'WalletConnectionError':
           toast.error('There was an error connecting to your wallet');
           break;
 
-        case UserRejectedError:
+        case 'UserRejectedError':
           // the user decided to not sign, usually this is silently ignored by UIs
           break;
 
-        case ClaimHandleError:
+        case 'ClaimHandleError':
+          // use result.error.reason to know more
           toast.error(result.error.message);
           break;
       }

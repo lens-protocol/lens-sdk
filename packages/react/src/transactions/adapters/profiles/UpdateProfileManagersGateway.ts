@@ -9,14 +9,14 @@ import {
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
 import { UpdateProfileManagersRequest } from '@lens-protocol/domain/use-cases/profile';
-import { IOnChainProtocolCallGateway } from '@lens-protocol/domain/use-cases/transactions';
+import { ISignedOnChainGateway } from '@lens-protocol/domain/use-cases/transactions';
 import { Data } from '@lens-protocol/shared-kernel';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 
 export class UpdateProfileManagersGateway
-  implements IOnChainProtocolCallGateway<UpdateProfileManagersRequest>
+  implements ISignedOnChainGateway<UpdateProfileManagersRequest>
 {
   constructor(private apolloClient: SafeApolloClient) {}
 

@@ -2,7 +2,7 @@ import { CreateMirror, CreateMirrorRequest } from '@lens-protocol/domain/use-cas
 import {
   DelegableSigning,
   SubsidizeOffChain,
-  SubsidizeOnChain,
+  SignedOnChain,
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
 
@@ -30,7 +30,7 @@ export function useCreateMirrorController() {
 
     const onChainGateway = new CreateOnChainMirrorGateway(apolloClient, transactionFactory);
 
-    const onChainMirror = new SubsidizeOnChain(
+    const onChainMirror = new SignedOnChain(
       activeWallet,
       transactionGateway,
       onChainGateway,

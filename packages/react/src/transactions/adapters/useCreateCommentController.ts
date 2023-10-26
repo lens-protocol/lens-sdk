@@ -2,7 +2,7 @@ import { CreateComment, CreateCommentRequest } from '@lens-protocol/domain/use-c
 import {
   DelegableSigning,
   SubsidizeOffChain,
-  SubsidizeOnChain,
+  SignedOnChain,
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
 
@@ -30,7 +30,7 @@ export function useCreateCommentController() {
 
     const onChainGateway = new CreateOnChainCommentGateway(apolloClient, transactionFactory);
 
-    const onChainComment = new SubsidizeOnChain(
+    const onChainComment = new SignedOnChain(
       activeWallet,
       transactionGateway,
       onChainGateway,

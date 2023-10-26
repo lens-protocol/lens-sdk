@@ -4,7 +4,7 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { UnlinkHandle, UnlinkHandleRequest } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError, SignedOnChain } from '@lens-protocol/domain/use-cases/transactions';
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
@@ -37,7 +37,7 @@ export function useUnlinkHandleController() {
     >();
     const gateway = new UnlinkHandleGateway(apolloClient, transactionFactory);
 
-    const signedFollow = new SubsidizeOnChain(
+    const signedUnlink = new SignedOnChain(
       activeWallet,
       transactionGateway,
       gateway,
@@ -46,7 +46,7 @@ export function useUnlinkHandleController() {
       presenter,
     );
 
-    const unlinkHandle = new UnlinkHandle(signedFollow, gateway, transactionQueue, presenter);
+    const unlinkHandle = new UnlinkHandle(signedUnlink, gateway, transactionQueue, presenter);
 
     await unlinkHandle.execute(request);
 

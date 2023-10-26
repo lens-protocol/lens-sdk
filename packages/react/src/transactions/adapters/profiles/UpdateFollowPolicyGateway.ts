@@ -21,7 +21,7 @@ import {
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IOnChainProtocolCallGateway,
+  ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -57,7 +57,7 @@ export function resolveFollowModuleParams(policy: FollowPolicyConfig): FollowMod
 export class UpdateFollowPolicyGateway
   implements
     IDelegatedTransactionGateway<UpdateFollowPolicyRequest>,
-    IOnChainProtocolCallGateway<UpdateFollowPolicyRequest>
+    ISignedOnChainGateway<UpdateFollowPolicyRequest>
 {
   constructor(
     private readonly apolloClient: SafeApolloClient,

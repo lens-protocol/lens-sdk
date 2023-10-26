@@ -16,8 +16,8 @@ type WithDelegateFlag<T extends ProtocolTransactionRequestModel> = T & {
 export type DelegableProtocolTransactionRequestModel =
   WithDelegateFlag<ProtocolTransactionRequestModel>;
 
-export interface ISignedOperation<TSigned extends ProtocolTransactionRequestModel> {
-  execute(request: TSigned): Promise<void>;
+export interface ISignedOperation<TRequest extends ProtocolTransactionRequestModel> {
+  execute(request: TRequest): Promise<void>;
 }
 
 export interface IDelegatedTransactionGateway<TDelegable extends ProtocolTransactionRequestModel> {
@@ -30,11 +30,11 @@ export type IDelegatedTransactionPresenter<TDelegable extends ProtocolTransactio
   ITransactionResultPresenter<TDelegable, BroadcastingError>;
 
 export class DelegableSigning<
-  TSigned extends ProtocolTransactionRequestModel,
-  TDelegable extends WithDelegateFlag<TSigned> = WithDelegateFlag<TSigned>,
+  TRequest extends ProtocolTransactionRequestModel,
+  TDelegable extends WithDelegateFlag<TRequest> = WithDelegateFlag<TRequest>,
 > {
   constructor(
-    private readonly signedOperation: ISignedOperation<TSigned>,
+    private readonly signedOperation: ISignedOperation<TRequest>,
     private readonly transactionGateway: IDelegatedTransactionGateway<TDelegable>,
     private readonly transactionQueue: TransactionQueue<AnyTransactionRequestModel>,
     private readonly presenter: IDelegatedTransactionPresenter<TDelegable>,

@@ -7,7 +7,7 @@ import { OpenAction, OpenActionRequest } from '@lens-protocol/domain/use-cases/p
 import {
   BroadcastingError,
   DelegableSigning,
-  SubsidizeOnChain,
+  SignedOnChain,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
   InsufficientAllowanceError,
@@ -42,7 +42,7 @@ export function useOpenActionController() {
 
     const onChainGateway = new OpenActionGateway(apolloClient, transactionFactory);
 
-    const signedExecution = new SubsidizeOnChain(
+    const signedExecution = new SignedOnChain(
       activeWallet,
       transactionGateway,
       onChainGateway,

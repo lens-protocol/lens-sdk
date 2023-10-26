@@ -10,6 +10,7 @@ import {
   IOnChainRelayer,
   BroadcastingError,
   ProtocolTransactionRequest,
+  BroadcastingErrorReason,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
   assertError,
@@ -77,7 +78,7 @@ export class OnChainRelayer implements IOnChainRelayer<ProtocolTransactionReques
     } catch (err) {
       assertError(err);
       this.logger.error(err, `It was not possible to relay the transaction for ${signedCall.id}`);
-      return failure(new BroadcastingError(err.message));
+      return failure(new BroadcastingError(BroadcastingErrorReason.UNKNOWN, { cause: err }));
     }
   }
 }
