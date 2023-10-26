@@ -922,6 +922,7 @@ export const ExplorePublicationsDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -6688,6 +6689,7 @@ export const ExploreProfilesDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },

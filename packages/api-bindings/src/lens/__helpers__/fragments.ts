@@ -75,6 +75,7 @@ function mockProfileOnchainIdentityFragment(
     proofOfHumanity: false,
     ens: null,
     sybilDotOrg: {
+      verified: true,
       source: {
         twitter: {
           handle: null,

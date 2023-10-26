@@ -2036,7 +2036,7 @@ export type ProfileOnchainIdentity = {
   __typename: 'ProfileOnchainIdentity';
   proofOfHumanity: boolean;
   ens: { name: string | null } | null;
-  sybilDotOrg: { source: { twitter: { handle: string | null } } | null };
+  sybilDotOrg: { verified: boolean; source: { twitter: { handle: string | null } } | null };
   worldcoin: { isHuman: boolean };
 };
 
@@ -4363,6 +4363,7 @@ export const FragmentProfileOnchainIdentity = /*#__PURE__*/ gql`
       name
     }
     sybilDotOrg {
+      verified
       source {
         twitter {
           handle

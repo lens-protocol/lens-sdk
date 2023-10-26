@@ -290,6 +290,7 @@ export const ReactionNotificationFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -6640,6 +6641,7 @@ export const CommentNotificationFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -12975,6 +12977,7 @@ export const MirrorNotificationFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -19325,6 +19328,7 @@ export const QuoteNotificationFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -25601,6 +25605,7 @@ export const OpenActionProfileActedFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -26597,6 +26602,7 @@ export const ActedNotificationFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -33023,6 +33029,7 @@ export const FollowNotificationFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -33896,6 +33903,7 @@ export const MentionNotificationFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -40843,6 +40851,7 @@ export const NotificationsDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },

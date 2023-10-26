@@ -241,6 +241,7 @@ fragment ProfileOnchainIdentity on ProfileOnchainIdentity {
     name
   }
   sybilDotOrg {
+    verified
     source {
       twitter {
         handle

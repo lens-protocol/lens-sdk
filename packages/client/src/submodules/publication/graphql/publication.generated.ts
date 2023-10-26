@@ -2229,6 +2229,7 @@ export const PublicationDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -8833,6 +8834,7 @@ export const PublicationsDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },

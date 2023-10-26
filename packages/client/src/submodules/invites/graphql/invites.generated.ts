@@ -175,6 +175,7 @@ export const InvitedResultFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -1086,6 +1087,7 @@ export const InvitedProfilesDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },

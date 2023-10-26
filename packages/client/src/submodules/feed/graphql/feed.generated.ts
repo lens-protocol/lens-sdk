@@ -195,6 +195,7 @@ export const ReactionEventFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -1113,6 +1114,7 @@ export const FeedItemFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -7763,6 +7765,7 @@ export const FeedDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
@@ -14353,6 +14356,7 @@ export const FeedHighlightsDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'source' },
