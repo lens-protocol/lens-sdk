@@ -10,6 +10,7 @@ export enum TransactionKind {
   CREATE_COMMENT = 'CREATE_COMMENT',
   CREATE_POST = 'CREATE_POST',
   CREATE_PROFILE = 'CREATE_PROFILE',
+  CLAIM_HANDLE = 'CLAIM_HANDLE',
   CREATE_QUOTE = 'CREATE_QUOTE',
   FOLLOW_PROFILE = 'FOLLOW_PROFILE',
   LINK_HANDLE = 'LINK_HANDLE',
@@ -23,6 +24,7 @@ export enum TransactionKind {
 
 export const ProtocolTransactionKinds = [
   TransactionKind.ACT_ON_PUBLICATION,
+  TransactionKind.CLAIM_HANDLE,
   TransactionKind.CREATE_COMMENT,
   TransactionKind.CREATE_POST,
   TransactionKind.CREATE_PROFILE,

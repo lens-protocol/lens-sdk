@@ -1,4 +1,6 @@
 import {
+  ClaimProfileWithHandleErrorReasonType,
+  ClaimProfileWithHandleErrorResult,
   LensProfileManagerRelayError,
   LensProfileManagerRelayErrorReasonType,
   RelayError,
@@ -13,7 +15,7 @@ import { failure, Failure, InvariantError } from '@lens-protocol/shared-kernel';
 import { SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 
 export function handleRelayError(
-  error: RelayError | LensProfileManagerRelayError,
+  error: RelayError | LensProfileManagerRelayError | ClaimProfileWithHandleErrorResult,
   fallback?: SelfFundedProtocolTransactionRequest<ProtocolTransactionRequest>,
 ): Failure<BroadcastingError> {
   switch (error.reason) {
@@ -26,6 +28,11 @@ export function handleRelayError(
     case RelayErrorReasonType.NotSponsored:
     case LensProfileManagerRelayErrorReasonType.NotSponsored:
     case LensProfileManagerRelayErrorReasonType.NoLensManagerEnabled:
+    case ClaimProfileWithHandleErrorReasonType.CanNotFreeText:
+    case ClaimProfileWithHandleErrorReasonType.ClaimNotFound:
+    case ClaimProfileWithHandleErrorReasonType.ClaimNotLinkedToWallet:
+    case ClaimProfileWithHandleErrorReasonType.ClaimTimeExpired:
+    case ClaimProfileWithHandleErrorReasonType.ContractExecuted:
       return failure(new BroadcastingError(error.reason, fallback));
     default:
       throw new InvariantError(`Unexpected relay error reason: ${error.reason}`);

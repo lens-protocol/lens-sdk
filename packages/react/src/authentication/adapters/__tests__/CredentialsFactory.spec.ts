@@ -49,7 +49,7 @@ describe(`Given an instance of the ${CredentialsFactory.name} class`, () => {
         .calledWith({ id: challenge.id, signature })
         .mockResolvedValue(credentials);
 
-      const result = await credentialsFactory.issueCredentials(profileId, wallet);
+      const result = await credentialsFactory.issueCredentials(wallet, profileId);
 
       expect(result.unwrap()).toEqual(credentials);
     });
@@ -75,7 +75,7 @@ describe(`Given an instance of the ${CredentialsFactory.name} class`, () => {
         when(authApi.generateChallenge).mockResolvedValue(challenge);
         when(wallet.signMessage).mockResolvedValue(failure(error));
 
-        const result = await credentialsFactory.issueCredentials(profileId, wallet);
+        const result = await credentialsFactory.issueCredentials(wallet, profileId);
 
         expect(() => result.unwrap()).toThrow(ErrorCtor);
       },

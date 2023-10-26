@@ -5,7 +5,7 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { ChargeFollowConfig, NoFeeFollowConfig } from '@lens-protocol/domain/use-cases/profile';
+import { FollowPolicyConfig } from '@lens-protocol/domain/use-cases/profile';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { invariant } from '@lens-protocol/shared-kernel';
 
@@ -14,7 +14,7 @@ import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useUpdateFollowPolicyController } from './adapters/useUpdateFollowPolicyController';
 
 export type UpdateFollowPolicyArgs = {
-  followPolicy: ChargeFollowConfig | NoFeeFollowConfig;
+  followPolicy: FollowPolicyConfig;
 };
 
 /**

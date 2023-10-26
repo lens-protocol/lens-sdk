@@ -1,7 +1,6 @@
 import { Profile, updateSessionData } from '@lens-protocol/api-bindings';
 import {
-  ILoginPresenter,
-  LoginError,
+  IUpgradeCredentialsPresenter,
   SessionData,
   SessionType,
 } from '@lens-protocol/domain/use-cases/authentication';
@@ -9,39 +8,34 @@ import { Deferred, invariant, PromiseResult, Result, success } from '@lens-proto
 
 import { IProfileCacheManager } from '../../profile/adapters/IProfileCacheManager';
 
-export class LoginPresenter implements ILoginPresenter {
-  private deferredResult = new Deferred<Result<Profile | null, LoginError>>();
+export class UpgradeCredentialsPresenter implements IUpgradeCredentialsPresenter {
+  private deferredResult = new Deferred<Result<Profile, never>>();
 
   constructor(private readonly profileCacheManager: IProfileCacheManager) {}
 
-  async present(result: Result<SessionData, LoginError>) {
+  async present(result: Result<SessionData, never>) {
     if (result.isFailure()) {
       this.deferredResult.resolve(result);
       return;
     }
 
-    const session = result.value;
+    invariant(
+      result.value.type === SessionType.WithProfile,
+      `You can only upgrade to session with profile`,
+    );
 
-    invariant(session.type !== SessionType.Anonymous, 'Unexpected anonymous session type');
-
-    if (session.type === SessionType.JustWallet) {
-      updateSessionData(session);
-
-      this.deferredResult.resolve(success(null));
-      return;
-    }
-
-    const profile = await this.profileCacheManager.fetchProfileById(session.profileId);
+    const { profileId } = result.value;
+    const profile = await this.profileCacheManager.fetchProfileById(profileId);
 
     invariant(profile, 'Profile not found');
 
-    updateSessionData(session);
+    updateSessionData(result.value);
 
     this.deferredResult.resolve(success(profile));
     return;
   }
 
-  asResult(): PromiseResult<Profile | null, LoginError> {
+  asResult(): PromiseResult<Profile, never> {
     return this.deferredResult.promise;
   }
 }

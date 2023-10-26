@@ -16,6 +16,11 @@ const hooks = [
     description: `Pre-approves an ERC20 spend on a given collect/follow module.`,
     path: '/misc/useApproveModule',
   },
+  {
+    label: 'useClaimHandle',
+    description: `Allows to claim an handle for a whitelisted address.`,
+    path: '/misc/useClaimHandle',
+  },
 ];
 
 export function MiscPage() {

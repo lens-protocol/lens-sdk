@@ -1784,6 +1784,14 @@ export type AuthRefreshVariables = Exact<{
 
 export type AuthRefreshData = { result: { accessToken: string; refreshToken: string } };
 
+export type WalletAuthenticationToProfileAuthenticationVariables = Exact<{
+  request: WalletAuthenticationToProfileAuthenticationRequest;
+}>;
+
+export type WalletAuthenticationToProfileAuthenticationData = {
+  result: { accessToken: string; refreshToken: string };
+};
+
 type ExplorePublication_Post_ = Post;
 
 type ExplorePublication_Quote_ = Quote;
@@ -3192,6 +3200,11 @@ export type NotificationsData = {
 
 export type ProfileManager = { address: EvmAddress };
 
+export type ClaimProfileWithHandleErrorResult = {
+  __typename: 'ClaimProfileWithHandleErrorResult';
+  reason: ClaimProfileWithHandleErrorReasonType;
+};
+
 export type CreateProfileWithHandleErrorResult = {
   __typename: 'CreateProfileWithHandleErrorResult';
   reason: CreateProfileWithHandleErrorReasonType;
@@ -3457,12 +3470,23 @@ export type ProfileActionHistoryData = {
   result: { items: Array<ProfileActionHistory>; pageInfo: PaginatedResultInfo };
 };
 
-export type CreateProfileWithHandleVariables = Exact<{
-  request: CreateProfileWithHandleRequest;
+export type ReservedClaimable = { id: string; withHandle: string; source: AppId; expiry: string };
+
+export type ClaimableProfilesResult = {
+  canMintProfileWithFreeTextHandle: boolean;
+  reserved: Array<ReservedClaimable>;
+};
+
+export type ClaimableProfilesVariables = Exact<{ [key: string]: never }>;
+
+export type ClaimableProfilesData = { result: ClaimableProfilesResult };
+
+export type ClaimProfileWithHandleVariables = Exact<{
+  request: ClaimProfileWithHandleRequest;
 }>;
 
-export type CreateProfileWithHandleData = {
-  result: CreateProfileWithHandleErrorResult | RelaySuccess;
+export type ClaimProfileWithHandleData = {
+  result: ClaimProfileWithHandleErrorResult | RelaySuccess;
 };
 
 export type AddProfileInterestsVariables = Exact<{
@@ -6924,6 +6948,12 @@ export const FragmentProfileManager = /*#__PURE__*/ gql`
     address
   }
 `;
+export const FragmentClaimProfileWithHandleErrorResult = /*#__PURE__*/ gql`
+  fragment ClaimProfileWithHandleErrorResult on ClaimProfileWithHandleErrorResult {
+    __typename
+    reason
+  }
+`;
 export const FragmentCreateProfileWithHandleErrorResult = /*#__PURE__*/ gql`
   fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
     __typename
@@ -7171,6 +7201,23 @@ export const FragmentProfileActionHistory = /*#__PURE__*/ gql`
     txHash
     actionedOn
   }
+`;
+export const FragmentReservedClaimable = /*#__PURE__*/ gql`
+  fragment ReservedClaimable on ReservedClaimable {
+    id
+    withHandle
+    source
+    expiry
+  }
+`;
+export const FragmentClaimableProfilesResult = /*#__PURE__*/ gql`
+  fragment ClaimableProfilesResult on ClaimableProfilesResult {
+    reserved {
+      ...ReservedClaimable
+    }
+    canMintProfileWithFreeTextHandle
+  }
+  ${FragmentReservedClaimable}
 `;
 export const FragmentTagResult = /*#__PURE__*/ gql`
   fragment TagResult on TagResult {
@@ -7806,6 +7853,59 @@ export type AuthRefreshMutationResult = Apollo.MutationResult<AuthRefreshData>;
 export type AuthRefreshMutationOptions = Apollo.BaseMutationOptions<
   AuthRefreshData,
   AuthRefreshVariables
+>;
+export const WalletAuthenticationToProfileAuthenticationDocument = /*#__PURE__*/ gql`
+  mutation WalletAuthenticationToProfileAuthentication(
+    $request: WalletAuthenticationToProfileAuthenticationRequest!
+  ) {
+    result: walletAuthenticationToProfileAuthentication(request: $request) {
+      accessToken
+      refreshToken
+    }
+  }
+`;
+export type WalletAuthenticationToProfileAuthenticationMutationFn = Apollo.MutationFunction<
+  WalletAuthenticationToProfileAuthenticationData,
+  WalletAuthenticationToProfileAuthenticationVariables
+>;
+
+/**
+ * __useWalletAuthenticationToProfileAuthentication__
+ *
+ * To run a mutation, you first call `useWalletAuthenticationToProfileAuthentication` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useWalletAuthenticationToProfileAuthentication` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [walletAuthenticationToProfileAuthentication, { data, loading, error }] = useWalletAuthenticationToProfileAuthentication({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useWalletAuthenticationToProfileAuthentication(
+  baseOptions?: Apollo.MutationHookOptions<
+    WalletAuthenticationToProfileAuthenticationData,
+    WalletAuthenticationToProfileAuthenticationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    WalletAuthenticationToProfileAuthenticationData,
+    WalletAuthenticationToProfileAuthenticationVariables
+  >(WalletAuthenticationToProfileAuthenticationDocument, options);
+}
+export type WalletAuthenticationToProfileAuthenticationHookResult = ReturnType<
+  typeof useWalletAuthenticationToProfileAuthentication
+>;
+export type WalletAuthenticationToProfileAuthenticationMutationResult =
+  Apollo.MutationResult<WalletAuthenticationToProfileAuthenticationData>;
+export type WalletAuthenticationToProfileAuthenticationMutationOptions = Apollo.BaseMutationOptions<
+  WalletAuthenticationToProfileAuthenticationData,
+  WalletAuthenticationToProfileAuthenticationVariables
 >;
 export const ExplorePublicationsDocument = /*#__PURE__*/ gql`
   query ExplorePublications(
@@ -9235,60 +9335,108 @@ export type ProfileActionHistoryQueryResult = Apollo.QueryResult<
   ProfileActionHistoryData,
   ProfileActionHistoryVariables
 >;
-export const CreateProfileWithHandleDocument = /*#__PURE__*/ gql`
-  mutation CreateProfileWithHandle($request: CreateProfileWithHandleRequest!) {
-    result: createProfileWithHandle(request: $request) {
+export const ClaimableProfilesDocument = /*#__PURE__*/ gql`
+  query ClaimableProfiles {
+    result: claimableProfiles {
+      ...ClaimableProfilesResult
+    }
+  }
+  ${FragmentClaimableProfilesResult}
+`;
+
+/**
+ * __useClaimableProfiles__
+ *
+ * To run a query within a React component, call `useClaimableProfiles` and pass it any options that fit your needs.
+ * When your component renders, `useClaimableProfiles` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useClaimableProfiles({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useClaimableProfiles(
+  baseOptions?: Apollo.QueryHookOptions<ClaimableProfilesData, ClaimableProfilesVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ClaimableProfilesData, ClaimableProfilesVariables>(
+    ClaimableProfilesDocument,
+    options,
+  );
+}
+export function useClaimableProfilesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<ClaimableProfilesData, ClaimableProfilesVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ClaimableProfilesData, ClaimableProfilesVariables>(
+    ClaimableProfilesDocument,
+    options,
+  );
+}
+export type ClaimableProfilesHookResult = ReturnType<typeof useClaimableProfiles>;
+export type ClaimableProfilesLazyQueryHookResult = ReturnType<typeof useClaimableProfilesLazyQuery>;
+export type ClaimableProfilesQueryResult = Apollo.QueryResult<
+  ClaimableProfilesData,
+  ClaimableProfilesVariables
+>;
+export const ClaimProfileWithHandleDocument = /*#__PURE__*/ gql`
+  mutation ClaimProfileWithHandle($request: ClaimProfileWithHandleRequest!) {
+    result: claimProfileWithHandle(request: $request) {
       ... on RelaySuccess {
         ...RelaySuccess
       }
-      ... on CreateProfileWithHandleErrorResult {
-        ...CreateProfileWithHandleErrorResult
+      ... on ClaimProfileWithHandleErrorResult {
+        ...ClaimProfileWithHandleErrorResult
       }
     }
   }
   ${FragmentRelaySuccess}
-  ${FragmentCreateProfileWithHandleErrorResult}
+  ${FragmentClaimProfileWithHandleErrorResult}
 `;
-export type CreateProfileWithHandleMutationFn = Apollo.MutationFunction<
-  CreateProfileWithHandleData,
-  CreateProfileWithHandleVariables
+export type ClaimProfileWithHandleMutationFn = Apollo.MutationFunction<
+  ClaimProfileWithHandleData,
+  ClaimProfileWithHandleVariables
 >;
 
 /**
- * __useCreateProfileWithHandle__
+ * __useClaimProfileWithHandle__
  *
- * To run a mutation, you first call `useCreateProfileWithHandle` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateProfileWithHandle` returns a tuple that includes:
+ * To run a mutation, you first call `useClaimProfileWithHandle` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useClaimProfileWithHandle` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [createProfileWithHandle, { data, loading, error }] = useCreateProfileWithHandle({
+ * const [claimProfileWithHandle, { data, loading, error }] = useClaimProfileWithHandle({
  *   variables: {
  *      request: // value for 'request'
  *   },
  * });
  */
-export function useCreateProfileWithHandle(
+export function useClaimProfileWithHandle(
   baseOptions?: Apollo.MutationHookOptions<
-    CreateProfileWithHandleData,
-    CreateProfileWithHandleVariables
+    ClaimProfileWithHandleData,
+    ClaimProfileWithHandleVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<CreateProfileWithHandleData, CreateProfileWithHandleVariables>(
-    CreateProfileWithHandleDocument,
+  return Apollo.useMutation<ClaimProfileWithHandleData, ClaimProfileWithHandleVariables>(
+    ClaimProfileWithHandleDocument,
     options,
   );
 }
-export type CreateProfileWithHandleHookResult = ReturnType<typeof useCreateProfileWithHandle>;
-export type CreateProfileWithHandleMutationResult =
-  Apollo.MutationResult<CreateProfileWithHandleData>;
-export type CreateProfileWithHandleMutationOptions = Apollo.BaseMutationOptions<
-  CreateProfileWithHandleData,
-  CreateProfileWithHandleVariables
+export type ClaimProfileWithHandleHookResult = ReturnType<typeof useClaimProfileWithHandle>;
+export type ClaimProfileWithHandleMutationResult =
+  Apollo.MutationResult<ClaimProfileWithHandleData>;
+export type ClaimProfileWithHandleMutationOptions = Apollo.BaseMutationOptions<
+  ClaimProfileWithHandleData,
+  ClaimProfileWithHandleVariables
 >;
 export const AddProfileInterestsDocument = /*#__PURE__*/ gql`
   mutation AddProfileInterests($request: ProfileInterestsRequest!) {

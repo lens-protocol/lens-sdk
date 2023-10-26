@@ -31,10 +31,10 @@ export class UnfollowProfileResponder implements ITransactionResponder<UnfollowR
   }
 
   async commit({ request }: TransactionData<UnfollowRequest>) {
-    await this.profileCacheManager.fetchProfile(request.profileId);
+    await this.profileCacheManager.fetchProfileById(request.profileId);
   }
 
   async rollback({ request }: TransactionData<UnfollowRequest>) {
-    await this.profileCacheManager.fetchProfile(request.profileId);
+    await this.profileCacheManager.fetchProfileById(request.profileId);
   }
 }

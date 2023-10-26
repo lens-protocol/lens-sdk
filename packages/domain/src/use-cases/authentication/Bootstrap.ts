@@ -3,9 +3,14 @@ import { PromiseResult } from '@lens-protocol/shared-kernel';
 import { ICredentials, AnyTransactionRequestModel } from '../../entities';
 import { TransactionQueue } from '../transactions';
 import { ICredentialsReader } from './ActiveWallet';
-import { ICredentialsWriter } from './Login';
+import { ICredentialsWriter } from './ICredentialsWriter';
 import { Logout, LogoutReason } from './Logout';
-import { anonymousSessionData, profileSessionData, SessionData } from './SessionData';
+import {
+  anonymousSessionData,
+  profileSessionData,
+  SessionData,
+  walletOnlySessionData,
+} from './SessionData';
 
 export class CredentialsExpiredError extends Error {
   name = 'CredentialsExpiredError' as const;
@@ -51,10 +56,12 @@ export class Bootstrap {
     await this.transactionQueue.resume();
 
     this.presenter.present(
-      profileSessionData({
-        address: credentials.address,
-        profileId: credentials.profileId,
-      }),
+      credentials.profileId
+        ? profileSessionData({
+            address: credentials.address,
+            profileId: credentials.profileId,
+          })
+        : walletOnlySessionData(credentials),
     );
   }
 }

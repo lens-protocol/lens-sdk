@@ -23,6 +23,7 @@ import {
   FollowRequestSchema,
   LinkHandleRequestSchema,
   UnlinkHandleRequestSchema,
+  ClaimHandleRequestSchema,
 } from './profiles';
 import {
   CollectRequestSchema,
@@ -36,6 +37,8 @@ function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) 
   switch (kind) {
     case TransactionKind.ACT_ON_PUBLICATION:
       return CollectRequestSchema;
+    case TransactionKind.CLAIM_HANDLE:
+      return ClaimHandleRequestSchema;
     case TransactionKind.CREATE_COMMENT:
       return CreateCommentRequestSchema;
     case TransactionKind.CREATE_POST:

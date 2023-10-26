@@ -29,11 +29,13 @@ export function Header() {
             gap: '1rem',
           }}
         >
-          {session?.type === SessionType.WithProfile && (
+          {session?.authenticated && (
             <strong>
-              {session.profile.metadata?.displayName ??
-                session.profile.handle?.fullHandle ??
-                session.profile.id}
+              {session.type === SessionType.WithProfile
+                ? session.profile?.metadata?.displayName ??
+                  session.profile.handle?.fullHandle ??
+                  session.profile.id
+                : session.address}
             </strong>
           )}
 

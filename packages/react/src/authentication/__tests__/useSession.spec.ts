@@ -4,6 +4,7 @@ import {
   anonymousSessionData,
   profileSessionData,
   SessionType,
+  walletOnlySessionData,
 } from '@lens-protocol/domain/use-cases/authentication';
 import { act, waitFor } from '@testing-library/react';
 
@@ -50,6 +51,14 @@ describe(`Given the ${useSession.name} hook`, () => {
       },
     },
     {
+      session: walletOnlySessionData({ address: profile.ownedBy.address }),
+      expectations: {
+        type: SessionType.JustWallet,
+        authenticated: true,
+        address: profile.ownedBy.address,
+      },
+    },
+    {
       session: profileSessionData({ address: profile.ownedBy.address, profileId: profile.id }),
       expectations: {
         type: SessionType.WithProfile,
@@ -81,6 +90,32 @@ describe(`Given the ${useSession.name} hook`, () => {
         await waitFor(() => {
           expect(result.current.loading).toBe(false);
           expect(result.current.data).toMatchObject(expectations);
+        });
+      });
+    });
+  });
+
+  describe(`when the user logs-in with just a wallet`, () => {
+    beforeAll(() => {
+      updateSessionData(anonymousSessionData());
+    });
+
+    it('should return the expected WalletOnlySession', async () => {
+      const { renderHook } = setupTestScenario({ profiles: [profile] });
+
+      const { result } = renderHook(() => useSession());
+
+      act(() => {
+        updateSessionData(walletOnlySessionData({ address: profile.ownedBy.address }));
+      });
+
+      expect(result.current.loading).toBe(false);
+
+      await waitFor(() => {
+        expect(result.current.data).toMatchObject({
+          type: SessionType.JustWallet,
+          address: profile.ownedBy.address,
+          authenticated: true,
         });
       });
     });

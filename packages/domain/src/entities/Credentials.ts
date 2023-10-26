@@ -4,7 +4,7 @@ import { ProfileId } from './Profile';
 
 export interface ICredentials {
   readonly address: EvmAddress;
-  readonly profileId: ProfileId;
+  readonly profileId?: ProfileId;
 
   isExpired(): boolean;
 }

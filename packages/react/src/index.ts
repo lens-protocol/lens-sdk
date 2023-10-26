@@ -20,6 +20,7 @@ export * from './LensProvider';
  */
 export * from './authentication';
 export * from './discovery';
+export * from './experimental';
 export * from './misc';
 export * from './notifications';
 export * from './profile';

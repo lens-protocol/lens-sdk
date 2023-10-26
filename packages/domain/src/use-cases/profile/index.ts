@@ -1,3 +1,4 @@
+export * from './ClaimHandle';
 export * from './CreateProfile';
 export * from './FollowProfile';
 export * from './LinkHandle';

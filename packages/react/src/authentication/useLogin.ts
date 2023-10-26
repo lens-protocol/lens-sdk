@@ -86,7 +86,7 @@ export type { LoginError, LoginRequest };
  * @category Authentication
  * @group Hooks
  */
-export function useLogin(): UseDeferredTask<Profile, LoginError, LoginRequest> {
+export function useLogin(): UseDeferredTask<Profile | null, LoginError, LoginRequest> {
   const login = useLoginController();
   return useDeferredTask(login);
 }

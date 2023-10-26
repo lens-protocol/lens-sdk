@@ -32,10 +32,10 @@ export class FollowProfileResponder implements ITransactionResponder<FollowReque
   }
 
   async commit({ request }: TransactionData<FollowRequest>) {
-    await this.profileCacheManager.fetchProfile(request.profileId);
+    await this.profileCacheManager.fetchProfileById(request.profileId);
   }
 
   async rollback({ request }: TransactionData<FollowRequest>) {
-    await this.profileCacheManager.fetchProfile(request.profileId);
+    await this.profileCacheManager.fetchProfileById(request.profileId);
   }
 }
