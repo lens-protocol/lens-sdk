@@ -50,6 +50,7 @@
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Methods</h3>
 <div class="tsd-index-list"><a href="_lens_protocol_client.Base.IAuthentication.html#authenticate" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>authenticate</span></a>
+<a href="_lens_protocol_client.Base.IAuthentication.html#fetch" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>fetch</span></a>
 <a href="_lens_protocol_client.Base.IAuthentication.html#fetchAll" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>fetch<wbr/>All</span></a>
 <a href="_lens_protocol_client.Base.IAuthentication.html#generateChallenge" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>generate<wbr/>Challenge</span></a>
 <a href="_lens_protocol_client.Base.IAuthentication.html#getAccessToken" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Access<wbr/>Token</span></a>
@@ -75,12 +76,25 @@
 <h5><span class="tsd-kind-parameter">request</span>: <a href="../types/_lens_protocol_client.Base.SignedAuthChallenge.html" class="tsd-signature-type tsd-kind-type-alias">SignedAuthChallenge</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="fetch" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>fetch</span><a href="#fetch" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="fetch.fetch-1"><span class="tsd-kind-call-signature">fetch</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/_lens_protocol_client.Base.PromiseResult.html" class="tsd-signature-type tsd-kind-type-alias">PromiseResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/_lens_protocol_client.Base.ApprovedAuthenticationFragment.html" class="tsd-signature-type tsd-kind-type-alias">ApprovedAuthenticationFragment</a><span class="tsd-signature-symbol">, </span><a href="../classes/_lens_protocol_client.Base.NotAuthenticatedError.html" class="tsd-signature-type tsd-kind-class">NotAuthenticatedError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_client.Base.CredentialsExpiredError.html" class="tsd-signature-type tsd-kind-class">CredentialsExpiredError</a><span class="tsd-signature-symbol">&gt;</span><a href="#fetch.fetch-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Fetch current active authentication session.</p>
+<p>⚠️ Requires authenticated LensClient.</p>
+</div>
+<h4 class="tsd-returns-title">Returns <a href="../types/_lens_protocol_client.Base.PromiseResult.html" class="tsd-signature-type tsd-kind-type-alias">PromiseResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/_lens_protocol_client.Base.ApprovedAuthenticationFragment.html" class="tsd-signature-type tsd-kind-type-alias">ApprovedAuthenticationFragment</a><span class="tsd-signature-symbol">, </span><a href="../classes/_lens_protocol_client.Base.NotAuthenticatedError.html" class="tsd-signature-type tsd-kind-class">NotAuthenticatedError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_client.Base.CredentialsExpiredError.html" class="tsd-signature-type tsd-kind-class">CredentialsExpiredError</a><span class="tsd-signature-symbol">&gt;</span></h4><p><a href="../types/_lens_protocol_client.Base.ApprovedAuthenticationFragment.html" class="tsd-kind-type-alias">ApprovedAuthenticationFragment</a></p>
+<pre><code class="language-ts"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">result</span><span class="hl-1"> = </span><span class="hl-0">await</span><span class="hl-1"> </span><span class="hl-2">client</span><span class="hl-1">.</span><span class="hl-2">authentication</span><span class="hl-1">.</span><span class="hl-7">fetch</span><span class="hl-1">();</span>
+</code><button>Copy</button></pre>
+
+<div class="tsd-comment tsd-typography"></div></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="fetchAll" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>fetch<wbr/>All</span><a href="#fetchAll" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="fetchAll.fetchAll-1"><span class="tsd-kind-call-signature">fetch<wbr/>All</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">request</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/_lens_protocol_client.Base.PromiseResult.html" class="tsd-signature-type tsd-kind-type-alias">PromiseResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/_lens_protocol_client.Base.PaginatedResult.html" class="tsd-signature-type tsd-kind-type-alias">PaginatedResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/_lens_protocol_client.Base.ApprovedAuthenticationFragment.html" class="tsd-signature-type tsd-kind-type-alias">ApprovedAuthenticationFragment</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><a href="../classes/_lens_protocol_client.Base.NotAuthenticatedError.html" class="tsd-signature-type tsd-kind-class">NotAuthenticatedError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_client.Base.CredentialsExpiredError.html" class="tsd-signature-type tsd-kind-class">CredentialsExpiredError</a><span class="tsd-signature-symbol">&gt;</span><a href="#fetchAll.fetchAll-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Fetch active authentication sessions.</p>
+<div class="tsd-comment tsd-typography"><p>Fetch all active authentication sessions.</p>
 <p>⚠️ Requires authenticated LensClient.</p>
 </div>
 <div class="tsd-parameters">
@@ -199,6 +213,7 @@
 <div class="tsd-accordion-details">
 <ul>
 <li><a href="#authenticate" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>authenticate</span></a></li>
+<li><a href="#fetch" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>fetch</span></a></li>
 <li><a href="#fetchAll" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>fetch<wbr/>All</span></a></li>
 <li><a href="#generateChallenge" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>generate<wbr/>Challenge</span></a></li>
 <li><a href="#getAccessToken" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Access<wbr/>Token</span></a></li>
@@ -443,14 +458,18 @@
 <li><a href="../types/_lens_protocol_react_web.FollowAsyncResult.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Follow<wbr/>Async<wbr/>Result
 <div class="menu-item-desc">An object representing the result of a follow operation.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.FollowModule.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Follow<wbr/>Module</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.FollowNotification.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Follow<wbr/>Notification</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.FollowOnlyReferenceModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Follow<wbr/>Only<wbr/>Reference<wbr/>Module<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.FollowPolicy.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
-<div>Follow<wbr/>Policy</div></a></li>
+<div>Follow<wbr/>Policy
+<div class="menu-item-desc">Use when preparing a follow profile request.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.FollowPolicyConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
-<div>Follow<wbr/>Policy<wbr/>Config</div></a></li>
+<div>Follow<wbr/>Policy<wbr/>Config
+<div class="menu-item-desc">Use when configuring a profile&#39;s follow module.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.FollowersOnlyReferencePolicyConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Followers<wbr/>Only<wbr/>Reference<wbr/>Policy<wbr/>Config</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.GetProvider.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -785,6 +804,8 @@
 <div>is<wbr/>Primary<wbr/>Publication</div></a></li>
 <li><a href="../functions/_lens_protocol_react_web.isQuotePublication.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>is<wbr/>Quote<wbr/>Publication</div></a></li>
+<li><a href="../functions/_lens_protocol_react_web.isValidHandle.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>is<wbr/>Valid<wbr/>Handle</div></a></li>
 <li><a href="../functions/_lens_protocol_react_web.matic-1.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>matic
 <div class="menu-item-desc">Matic asset provider function.</div></div></a></li>
@@ -794,6 +815,9 @@
 <li><a href="../functions/_lens_protocol_react_web.publicationId-1.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>publication<wbr/>Id
 <div class="menu-item-desc">Ensures that the given value is a valid PublicationId</div></div></a></li>
+<li><a href="../functions/_lens_protocol_react_web.resolveFollowPolicy.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>resolve<wbr/>Follow<wbr/>Policy
+<div class="menu-item-desc">Resolve API FollowModule to more user friendly FollowPolicy</div></div></a></li>
 <li><a href="../functions/_lens_protocol_react_web.usd.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>usd
 <div class="menu-item-desc">A convenience function to create a Fiat asset for USD.</div></div></a></li>
@@ -1189,14 +1213,18 @@
 <li><a href="../types/_lens_protocol_react.FollowAsyncResult.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Follow<wbr/>Async<wbr/>Result
 <div class="menu-item-desc">An object representing the result of a follow operation.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.FollowModule.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Follow<wbr/>Module</div></a></li>
 <li><a href="../types/_lens_protocol_react.FollowNotification.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Follow<wbr/>Notification</div></a></li>
 <li><a href="../types/_lens_protocol_react.FollowOnlyReferenceModuleSettings.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Follow<wbr/>Only<wbr/>Reference<wbr/>Module<wbr/>Settings</div></a></li>
 <li><a href="../types/_lens_protocol_react.FollowPolicy.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
-<div>Follow<wbr/>Policy</div></a></li>
+<div>Follow<wbr/>Policy
+<div class="menu-item-desc">Use when preparing a follow profile request.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.FollowPolicyConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
-<div>Follow<wbr/>Policy<wbr/>Config</div></a></li>
+<div>Follow<wbr/>Policy<wbr/>Config
+<div class="menu-item-desc">Use when configuring a profile&#39;s follow module.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.FollowersOnlyReferencePolicyConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Followers<wbr/>Only<wbr/>Reference<wbr/>Policy<wbr/>Config</div></a></li>
 <li><a href="../types/_lens_protocol_react.GetProvider.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -1527,6 +1555,8 @@
 <div>is<wbr/>Primary<wbr/>Publication</div></a></li>
 <li><a href="../functions/_lens_protocol_react.isQuotePublication.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>is<wbr/>Quote<wbr/>Publication</div></a></li>
+<li><a href="../functions/_lens_protocol_react.isValidHandle.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>is<wbr/>Valid<wbr/>Handle</div></a></li>
 <li><a href="../functions/_lens_protocol_react.matic-1.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>matic
 <div class="menu-item-desc">Matic asset provider function.</div></div></a></li>
@@ -1536,6 +1566,9 @@
 <li><a href="../functions/_lens_protocol_react.publicationId-1.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>publication<wbr/>Id
 <div class="menu-item-desc">Ensures that the given value is a valid PublicationId</div></div></a></li>
+<li><a href="../functions/_lens_protocol_react.resolveFollowPolicy.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>resolve<wbr/>Follow<wbr/>Policy
+<div class="menu-item-desc">Resolve API FollowModule to more user friendly FollowPolicy</div></div></a></li>
 <li><a href="../functions/_lens_protocol_react.usd.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>usd
 <div class="menu-item-desc">A convenience function to create a Fiat asset for USD.</div></div></a></li>
@@ -1939,8 +1972,6 @@
 <div>Change<wbr/>Profile<wbr/>Managers<wbr/>Request</div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.CheckingInMetadataV3Fragment.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Checking<wbr/>In<wbr/>Metadata<wbr/>V3<wbr/>Fragment</div></a></li>
-<li><a href="../types/_lens_protocol_client.Base.ClaimProfileWithHandleRequest.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
-<div>Claim<wbr/>Profile<wbr/>With<wbr/>Handle<wbr/>Request</div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.CollectActionModuleInput.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Collect<wbr/>Action<wbr/>Module<wbr/>Input</div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.CollectConditionFragment.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -2640,8 +2671,6 @@
 <div>Change<wbr/>Profile<wbr/>Managers<wbr/>Request</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#CheckingInMetadataV3Fragment"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
 <div>Checking<wbr/>In<wbr/>Metadata<wbr/>V3<wbr/>Fragment</div></a></li>
-<li><a href="../modules/_lens_protocol_client.Gated.html#ClaimProfileWithHandleRequest"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
-<div>Claim<wbr/>Profile<wbr/>With<wbr/>Handle<wbr/>Request</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#CollectActionModuleInput"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
 <div>Collect<wbr/>Action<wbr/>Module<wbr/>Input</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#CollectConditionFragment"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
