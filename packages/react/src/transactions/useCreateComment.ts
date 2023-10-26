@@ -9,7 +9,7 @@ import {
   ReferencePolicyConfig,
 } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { PublicationId } from '@lens-protocol/metadata/*';
+import { PublicationId } from '@lens-protocol/metadata';
 import { invariant } from '@lens-protocol/shared-kernel';
 
 import { SessionType, useSession } from '../authentication';
