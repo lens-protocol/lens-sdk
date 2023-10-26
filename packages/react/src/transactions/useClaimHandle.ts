@@ -3,13 +3,7 @@ import {
   Profile,
   ReservedClaimable,
 } from '@lens-protocol/api-bindings';
-import {
-  PendingSigningRequestError,
-  TransactionError,
-  TransactionKind,
-  UserRejectedError,
-  WalletConnectionError,
-} from '@lens-protocol/domain/entities';
+import { TransactionError, TransactionKind } from '@lens-protocol/domain/entities';
 import {
   ClaimHandleError as GenericClaimHandleError,
   ClaimHandleRequest,
@@ -57,11 +51,7 @@ export type ClaimHandleArgs = OneOf<{
  */
 export function useClaimHandle(): UseDeferredTask<
   Profile,
-  | ClaimHandleError
-  | PendingSigningRequestError
-  | UserRejectedError
-  | TransactionError
-  | WalletConnectionError,
+  ClaimHandleError | TransactionError,
   ClaimHandleArgs
 > {
   const { data: session } = useSession();

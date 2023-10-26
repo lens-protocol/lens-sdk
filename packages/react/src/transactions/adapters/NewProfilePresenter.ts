@@ -1,10 +1,5 @@
 import { ClaimProfileWithHandleErrorReasonType, Profile } from '@lens-protocol/api-bindings';
-import {
-  PendingSigningRequestError,
-  TransactionError,
-  UserRejectedError,
-  WalletConnectionError,
-} from '@lens-protocol/domain/entities';
+import { TransactionError } from '@lens-protocol/domain/entities';
 import {
   ClaimHandleError,
   ClaimHandleRequest,
@@ -25,11 +20,7 @@ import { ProfileHandleResolver } from '../../environments';
 import { IProfileCacheManager } from '../../profile/adapters/IProfileCacheManager';
 import { AsyncTransactionResult } from './AsyncTransactionResult';
 
-type EarlyFailureError =
-  | ClaimHandleError<ClaimProfileWithHandleErrorReasonType>
-  | PendingSigningRequestError
-  | UserRejectedError
-  | WalletConnectionError;
+type EarlyFailureError = ClaimHandleError<ClaimProfileWithHandleErrorReasonType>;
 
 export class NewProfilePresenter
   implements IClaimHandlePresenter<ClaimProfileWithHandleErrorReasonType>
