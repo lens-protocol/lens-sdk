@@ -58,6 +58,12 @@ export class AuthenticationApi {
     return credentials;
   }
 
+  async currentSession(headers?: Record<string, string>): Promise<ApprovedAuthenticationFragment> {
+    const result = await this.sdk.CurrentSession({}, headers);
+
+    return result.data.result;
+  }
+
   async approvedAuthentications(
     request: ApprovedAuthenticationRequest,
     headers?: Record<string, string>,

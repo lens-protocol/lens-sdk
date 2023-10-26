@@ -25,6 +25,7 @@ import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
 import { DocumentNode } from 'graphql';
 export type LensTransactionResultFragment = {
+  __typename: 'LensTransactionResult';
   status: Types.LensTransactionStatusType;
   txHash: string;
   reason: Types.LensTransactionFailureType | null;
@@ -38,6 +39,7 @@ export type TxIdToTxHashQueryVariables = Types.Exact<{
 export type TxIdToTxHashQuery = { result: string | null };
 
 export type RelayQueueResultFragment = {
+  __typename: 'RelayQueueResult';
   key: Types.RelayRoleKey;
   queue: number;
   relay: NetworkAddressFragment;
@@ -77,6 +79,7 @@ export const LensTransactionResultFragmentDoc = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'reason' } },
@@ -96,6 +99,7 @@ export const RelayQueueResultFragmentDoc = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'key' } },
           {
             kind: 'Field',
@@ -194,6 +198,7 @@ export const RelayQueuesDocument = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'key' } },
           {
             kind: 'Field',
@@ -275,6 +280,7 @@ export const LensTransactionStatusDocument = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'reason' } },

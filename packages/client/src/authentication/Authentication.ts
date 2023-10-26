@@ -106,6 +106,12 @@ export class Authentication implements IAuthentication {
     await this.credentials.reset();
   }
 
+  async fetch() {
+    return requireAuthHeaders(this, async (headers) => {
+      return this.api.currentSession(headers);
+    });
+  }
+
   async fetchAll(request: ApprovedAuthenticationRequest = {}) {
     return requireAuthHeaders(this, async (headers) => {
       return this.api.approvedAuthentications(request, headers);

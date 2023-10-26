@@ -72,7 +72,23 @@ export interface IAuthentication {
   logout(): Promise<void>;
 
   /**
-   * Fetch active authentication sessions.
+   * Fetch current active authentication session.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @returns {@link ApprovedAuthenticationFragment}
+   *
+   * ```ts
+   * const result = await client.authentication.fetch();
+   * ```
+   */
+  fetch(): PromiseResult<
+    ApprovedAuthenticationFragment,
+    CredentialsExpiredError | NotAuthenticatedError
+  >;
+
+  /**
+   * Fetch all active authentication sessions.
    *
    * ⚠️ Requires authenticated LensClient.
    *
