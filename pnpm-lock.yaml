@@ -102,7 +102,7 @@ importers:
         version: link:../../packages/client
       '@lens-protocol/metadata':
         specifier: ^1.0.0
-        version: 1.0.0(zod@3.22.0)
+        version: 1.0.0(zod@3.22.4)
       dotenv:
         specifier: ^16.0.3
         version: 16.0.3
@@ -114,10 +114,10 @@ importers:
         version: 9.0.0
       viem:
         specifier: ^1.16.6
-        version: 1.16.6(typescript@5.2.2)(zod@3.22.0)
+        version: 1.16.6(typescript@5.2.2)(zod@3.22.4)
       zod:
-        specifier: ^3.22.0
-        version: 3.22.0
+        specifier: ^3.22.3
+        version: 3.22.4
     devDependencies:
       '@lens-protocol/eslint-config':
         specifier: workspace:*
@@ -153,7 +153,7 @@ importers:
         version: 5.7.2
       '@lens-protocol/metadata':
         specifier: ^1.0.0
-        version: 1.0.0(zod@3.22.0)
+        version: 1.0.0(zod@3.22.4)
       '@lens-protocol/react-web':
         specifier: workspace:*
         version: link:../../packages/react-web
@@ -186,7 +186,7 @@ importers:
         version: 3.0.2
       viem:
         specifier: ^1.16.6
-        version: 1.16.6(typescript@5.2.2)(zod@3.22.0)
+        version: 1.16.6(typescript@5.2.2)(zod@3.22.4)
       wagmi:
         specifier: ^1.4.4
         version: 1.4.4(@types/react@18.0.28)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(viem@1.16.6)
@@ -268,7 +268,7 @@ importers:
         version: 3.0.2
       viem:
         specifier: ^1.16.6
-        version: 1.16.6(typescript@5.2.2)(zod@3.22.0)
+        version: 1.16.6(typescript@5.2.2)(zod@3.22.4)
       wagmi:
         specifier: ^1.4.4
         version: 1.4.4(@types/react@18.0.28)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(viem@1.16.6)
@@ -607,8 +607,8 @@ importers:
         specifier: ^2.6.2
         version: 2.6.2
       zod:
-        specifier: ^3.22.0
-        version: 3.22.0
+        specifier: ^3.22.3
+        version: 3.22.4
     devDependencies:
       '@babel/core':
         specifier: ^7.22.10
@@ -648,7 +648,7 @@ importers:
         version: link:../eslint-config
       '@lens-protocol/metadata':
         specifier: ^1.0.0
-        version: 1.0.0(zod@3.22.0)
+        version: 1.0.0(zod@3.22.4)
       '@lens-protocol/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
@@ -855,7 +855,7 @@ importers:
         version: link:../eslint-config
       '@lens-protocol/metadata':
         specifier: ^1.0.0
-        version: 1.0.0(zod@3.22.0)
+        version: 1.0.0(zod@3.22.4)
       '@lens-protocol/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
@@ -905,8 +905,8 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2
       zod:
-        specifier: ^3.22.0
-        version: 3.22.0
+        specifier: ^3.22.3
+        version: 3.22.4
 
   packages/prettier-config:
     devDependencies:
@@ -971,8 +971,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
       zod:
-        specifier: ^3.22.0
-        version: 3.22.0
+        specifier: ^3.22.3
+        version: 3.22.4
     devDependencies:
       '@babel/core':
         specifier: ^7.20.12
@@ -1006,7 +1006,7 @@ importers:
         version: link:../eslint-config
       '@lens-protocol/metadata':
         specifier: ^1.0.0
-        version: 1.0.0(zod@3.22.0)
+        version: 1.0.0(zod@3.22.4)
       '@lens-protocol/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
@@ -1122,8 +1122,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
       zod:
-        specifier: ^3.20.6
-        version: 3.22.0
+        specifier: ^3.22.3
+        version: 3.22.4
     devDependencies:
       '@babel/core':
         specifier: ^7.20.12
@@ -1263,7 +1263,7 @@ importers:
         version: link:../eslint-config
       '@lens-protocol/metadata':
         specifier: ^1.0.0
-        version: 1.0.0(zod@3.22.0)
+        version: 1.0.0(zod@3.22.4)
       '@lens-protocol/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
@@ -1489,8 +1489,8 @@ importers:
         specifier: ^2.6.2
         version: 2.6.2
       zod:
-        specifier: ^3.22.0
-        version: 3.22.0
+        specifier: ^3.22.3
+        version: 3.22.4
     devDependencies:
       '@babel/core':
         specifier: ^7.20.12
@@ -1581,7 +1581,7 @@ importers:
         version: 5.2.2
       viem:
         specifier: ^1.16.6
-        version: 1.16.6(typescript@5.2.2)(zod@3.22.0)
+        version: 1.16.6(typescript@5.2.2)(zod@3.22.4)
       wagmi:
         specifier: ^1.4.4
         version: 1.4.4(@types/react@18.0.28)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(viem@1.16.6)
@@ -8214,7 +8214,7 @@ packages:
       - wait-for-expect
     dev: false
 
-  /@lens-protocol/metadata@1.0.0(zod@3.22.0):
+  /@lens-protocol/metadata@1.0.0(zod@3.22.4):
     resolution: {integrity: sha512-ugusUDJ5qWf5xyjIepuNKQ0n+i+vsh0wWhNHyxwMEqhrh7VARhh664WKjsCUxbTU6mKm7aiGgPzgmQyLTB+7PA==}
     engines: {node: ^v18.12.1}
     peerDependencies:
@@ -8224,7 +8224,7 @@ packages:
         optional: true
     dependencies:
       uuid: 9.0.1
-      zod: 3.22.0
+      zod: 3.22.4
 
   /@lens-protocol/react-web@1.3.1(@ethersproject/providers@5.7.2)(@types/node@18.15.11)(@xmtp/react-sdk@1.0.0-preview.40)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
     resolution: {integrity: sha512-9Dmx2gyNgqdHdjidKs+0I4gztCJ4a5DqRMNg/EqRNslwhoqGXmV8xbWNF7fzhQpTI31HHJXS+wQdKvhw0b3xCg==}
@@ -9500,7 +9500,7 @@ packages:
     resolution: {integrity: sha512-gYw0ki/EAuV1oSyMxpqandHjnthZjYYy+YWpTAzf8BqfXM3ItcZLpjxfg+3+mXW8HIO+3jw6T9iiqEXsqHaMMw==}
     dependencies:
       '@safe-global/safe-gateway-typescript-sdk': 3.12.0
-      viem: 1.16.6(typescript@5.2.2)(zod@3.22.0)
+      viem: 1.16.6(typescript@5.2.2)(zod@3.22.4)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -9511,7 +9511,7 @@ packages:
     resolution: {integrity: sha512-XJbEPuaVc7b9n23MqlF6c+ToYIS3f7P2Sel8f3cSBQ9WORE4xrSuvhMpK9fDSFqJ7by/brc+rmJR/5HViRr0/w==}
     dependencies:
       '@safe-global/safe-gateway-typescript-sdk': 3.12.0
-      viem: 1.16.6(typescript@5.2.2)(zod@3.22.0)
+      viem: 1.16.6(typescript@5.2.2)(zod@3.22.4)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -9930,7 +9930,7 @@ packages:
   /@types/connect@3.4.37:
     resolution: {integrity: sha512-zBUSRqkfZ59OcwXon4HVxhx5oWCJmc0OtBTK05M+p0dYjgN6iTwIL2T/WbsQZrEsdnwaF9cWQ+azOnpPvIqY3Q==}
     dependencies:
-      '@types/node': 18.15.11
+      '@types/node': 18.15.13
 
   /@types/debug@4.1.10:
     resolution: {integrity: sha512-tOSCru6s732pofZ+sMv9o4o3Zc+Sa8l3bxd/tweTQudFn06vAzb13ZX46Zi6m6EJ+RUbRTHvgQJ1gBtSgkaUYA==}
@@ -10395,7 +10395,7 @@ packages:
       abitype: 0.8.7(typescript@5.2.2)
       eventemitter3: 4.0.7
       typescript: 5.2.2
-      viem: 1.16.6(typescript@5.2.2)(zod@3.22.0)
+      viem: 1.16.6(typescript@5.2.2)(zod@3.22.4)
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
       - '@types/react'
@@ -10420,7 +10420,7 @@ packages:
       abitype: 0.8.7(typescript@5.2.2)
       eventemitter3: 4.0.7
       typescript: 5.2.2
-      viem: 1.16.6(typescript@5.2.2)(zod@3.22.0)
+      viem: 1.16.6(typescript@5.2.2)(zod@3.22.4)
       zustand: 4.4.3(@types/react@18.0.28)(react@18.2.0)
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
@@ -11144,7 +11144,7 @@ packages:
     dependencies:
       typescript: 5.2.2
 
-  /abitype@0.9.8(typescript@5.2.2)(zod@3.22.0):
+  /abitype@0.9.8(typescript@5.2.2)(zod@3.22.4):
     resolution: {integrity: sha512-puLifILdm+8sjyss4S+fsUN09obiT1g2YW6CtcQF+QDzxR0euzgEB29MZujC6zMk2a6SVmtttq1fc6+YFA7WYQ==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -11156,7 +11156,7 @@ packages:
         optional: true
     dependencies:
       typescript: 5.2.2
-      zod: 3.22.0
+      zod: 3.22.4
 
   /abstract-level@1.0.3:
     resolution: {integrity: sha512-t6jv+xHy+VYwc4xqZMn2Pa9DjcdzvzZmQGRjTFc8spIbRGHgBrEKbPq+rYXc7CCo0lxgYvSgKVg9qZAhpVQSjA==}
@@ -20941,6 +20941,7 @@ packages:
 
   /tr46@0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
+    requiresBuild: true
 
   /tr46@3.0.0:
     resolution: {integrity: sha512-l7FvfAHlcmulp8kr+flpQZmVwtu7nfRV7NZujtN0OqES8EL4O4e0qqzL0DC5gAvx/ZC/9lk6rhcUwYvkBnBnYA==}
@@ -21724,7 +21725,7 @@ packages:
       extsprintf: 1.3.0
     dev: true
 
-  /viem@1.16.6(typescript@5.2.2)(zod@3.22.0):
+  /viem@1.16.6(typescript@5.2.2)(zod@3.22.4):
     resolution: {integrity: sha512-jcWcFQ+xzIfDwexwPJRvCuCRJKEkK9iHTStG7mpU5MmuSBpACs4nATBDyXNFtUiyYTFzLlVEwWkt68K0nCSImg==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -21737,7 +21738,7 @@ packages:
       '@noble/hashes': 1.3.2
       '@scure/bip32': 1.3.2
       '@scure/bip39': 1.2.1
-      abitype: 0.9.8(typescript@5.2.2)(zod@3.22.0)
+      abitype: 0.9.8(typescript@5.2.2)(zod@3.22.4)
       isows: 1.0.3(ws@8.13.0)
       typescript: 5.2.2
       ws: 8.13.0
@@ -21834,7 +21835,7 @@ packages:
       react: 18.2.0
       typescript: 5.2.2
       use-sync-external-store: 1.2.0(react@18.2.0)
-      viem: 1.16.6(typescript@5.2.2)(zod@3.22.0)
+      viem: 1.16.6(typescript@5.2.2)(zod@3.22.4)
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
       - '@types/react'
@@ -21918,6 +21919,7 @@ packages:
 
   /webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
+    requiresBuild: true
 
   /webidl-conversions@7.0.0:
     resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
@@ -22386,12 +22388,8 @@ packages:
   /zen-observable@0.8.15:
     resolution: {integrity: sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==}
 
-  /zod@3.22.0:
-    resolution: {integrity: sha512-y5KZY/ssf5n7hCGDGGtcJO/EBJEm5Pa+QQvFBeyMOtnFYOSflalxIFFvdaYevPhePcmcKC4aTbFkCcXN7D0O8Q==}
-
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
-    dev: false
 
   /zustand@4.4.3(@types/react@18.0.28)(react@18.2.0):
     resolution: {integrity: sha512-oRy+X3ZazZvLfmv6viIaQmtLOMeij1noakIsK/Y47PWYhT8glfXzQ4j0YcP5i0P0qI1A4rIB//SGROGyZhx91A==}

@@ -24,7 +24,7 @@
     "ethers": "^5.7.2",
     "uuid": "^9.0.0",
     "viem": "^1.16.6",
-    "zod": "^3.22.0"
+    "zod": "^3.22.3"
   },
   "devDependencies": {
     "@lens-protocol/eslint-config": "workspace:*",
