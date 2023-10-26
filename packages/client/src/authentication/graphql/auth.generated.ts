@@ -6,7 +6,19 @@ import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
 import { DocumentNode } from 'graphql';
-export type AuthChallengeFragment = { id: string; text: string };
+export type AuthChallengeFragment = { __typename: 'AuthChallengeResult'; id: string; text: string };
+
+export type ApprovedAuthenticationFragment = {
+  __typename: 'ApprovedAuthentication';
+  authorizationId: string;
+  browser: string | null;
+  device: string | null;
+  os: string | null;
+  origin: string | null;
+  expiresAt: string;
+  createdAt: string;
+  updatedAt: string;
+};
 
 export type AuthChallengeQueryVariables = Types.Exact<{
   request: Types.ChallengeRequest;
@@ -20,16 +32,9 @@ export type AuthVerifyQueryVariables = Types.Exact<{
 
 export type AuthVerifyQuery = { result: boolean };
 
-export type ApprovedAuthenticationFragment = {
-  authorizationId: string;
-  browser: string | null;
-  device: string | null;
-  os: string | null;
-  origin: string | null;
-  expiresAt: string;
-  createdAt: string;
-  updatedAt: string;
-};
+export type CurrentSessionQueryVariables = Types.Exact<{ [key: string]: never }>;
+
+export type CurrentSessionQuery = { result: ApprovedAuthenticationFragment };
 
 export type ApprovedAuthenticationsQueryVariables = Types.Exact<{
   request: Types.ApprovedAuthenticationRequest;
@@ -67,6 +72,7 @@ export const AuthChallengeFragmentDoc = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'text' } },
         ],
@@ -84,6 +90,7 @@ export const ApprovedAuthenticationFragmentDoc = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'authorizationId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'browser' } },
           { kind: 'Field', name: { kind: 'Name', value: 'device' } },
@@ -145,6 +152,7 @@ export const AuthChallengeDocument = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'text' } },
         ],
@@ -184,6 +192,51 @@ export const AuthVerifyDocument = {
               },
             ],
           },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const CurrentSessionDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'CurrentSession' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'result' },
+            name: { kind: 'Name', value: 'currentSession' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ApprovedAuthentication' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ApprovedAuthentication' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ApprovedAuthentication' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'authorizationId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'browser' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'device' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'os' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'origin' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'expiresAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
         ],
       },
     },
@@ -265,6 +318,7 @@ export const ApprovedAuthenticationsDocument = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'authorizationId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'browser' } },
           { kind: 'Field', name: { kind: 'Name', value: 'device' } },
@@ -427,6 +481,7 @@ export type SdkFunctionWrapper = <T>(
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const AuthChallengeDocumentString = print(AuthChallengeDocument);
 const AuthVerifyDocumentString = print(AuthVerifyDocument);
+const CurrentSessionDocumentString = print(CurrentSessionDocument);
 const ApprovedAuthenticationsDocumentString = print(ApprovedAuthenticationsDocument);
 const AuthAuthenticateDocumentString = print(AuthAuthenticateDocument);
 const AuthRefreshDocumentString = print(AuthRefreshDocument);
@@ -463,6 +518,25 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'AuthVerify',
+        'query',
+      );
+    },
+    CurrentSession(
+      variables?: CurrentSessionQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: CurrentSessionQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CurrentSessionQuery>(CurrentSessionDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'CurrentSession',
         'query',
       );
     },

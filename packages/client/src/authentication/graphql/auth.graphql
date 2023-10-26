@@ -1,6 +1,19 @@
 fragment AuthChallenge on AuthChallengeResult {
+  __typename
   id
   text
+}
+
+fragment ApprovedAuthentication on ApprovedAuthentication {
+  __typename
+  authorizationId
+  browser
+  device
+  os
+  origin
+  expiresAt
+  createdAt
+  updatedAt
 }
 
 query AuthChallenge($request: ChallengeRequest!) {
@@ -13,15 +26,10 @@ query AuthVerify($request: VerifyRequest!) {
   result: verify(request: $request)
 }
 
-fragment ApprovedAuthentication on ApprovedAuthentication {
-  authorizationId
-  browser
-  device
-  os
-  origin
-  expiresAt
-  createdAt
-  updatedAt
+query CurrentSession {
+  result: currentSession {
+    ...ApprovedAuthentication
+  }
 }
 
 query ApprovedAuthentications($request: ApprovedAuthenticationRequest!) {

@@ -236,6 +236,7 @@ export enum DecryptFailReasonType {
   PublicationIsNotGated = 'PUBLICATION_IS_NOT_GATED',
   UnauthorizedAddress = 'UNAUTHORIZED_ADDRESS',
   UnauthorizedBalance = 'UNAUTHORIZED_BALANCE',
+  Unsupported = 'UNSUPPORTED',
 }
 
 export type DefaultProfileRequest = {
@@ -486,8 +487,8 @@ export type InternalAllowedDomainsRequest = {
 
 export type InternalClaimRequest = {
   address: Scalars['EvmAddress']['input'];
-  freeTextHandle: Scalars['Boolean']['input'];
-  handle: Scalars['CreateHandle']['input'];
+  freeTextHandle?: InputMaybe<Scalars['Boolean']['input']>;
+  handle?: InputMaybe<Scalars['CreateHandle']['input']>;
   overrideAlreadyClaimed: Scalars['Boolean']['input'];
   overrideTradeMark: Scalars['Boolean']['input'];
   secret: Scalars['String']['input'];
@@ -1171,8 +1172,6 @@ export type PublicationBookmarksRequest = {
 };
 
 export type PublicationBookmarksWhere = {
-  cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<LimitType>;
   metadata?: InputMaybe<PublicationMetadataFilters>;
 };
 

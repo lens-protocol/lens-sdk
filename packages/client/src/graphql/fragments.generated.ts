@@ -1078,7 +1078,7 @@ export type CommentBaseFragment = {
 };
 
 export type CommentFragment = {
-  root: PostFragment;
+  root: PostFragment | {};
   commentOn: CommentBaseFragment | PostFragment | QuoteBaseFragment;
   firstComment: CommentBaseFragment | null;
   stats: PublicationStatsFragment;

@@ -392,21 +392,6 @@ export class Profile {
   }
 
   /**
-   * TODO: Claim a profile
-   */
-  // async claim(
-  //   request: ClaimProfileWithHandleRequest,
-  // ): PromiseResult<
-  //   RelaySuccessFragment | ClaimProfileWithHandleErrorResultFragment,
-  //   CredentialsExpiredError | NotAuthenticatedError
-  // > {
-  //   return requireAuthHeaders(this.authentication, async (headers) => {
-  //     const result = await this.sdk.ClaimProfileWithHandle({ request }, headers);
-  //     return result.data.result;
-  //   });
-  // }
-
-  /**
    * Create a new profile.
    *
    * @param request - Request object for the mutation
