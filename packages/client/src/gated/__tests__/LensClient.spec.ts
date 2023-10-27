@@ -32,7 +32,11 @@ describe(`Given an instance of "gated.${LensClient.name}"`, () => {
   }, 30_000);
 
   describe(`when testing encryption and decryption end-to-end`, () => {
-    const cleartextMetadata = metadata.article({
+    const initial = metadata.image({
+      image: {
+        item: faker.internet.url(),
+        type: metadata.MediaImageMimeType.JPEG,
+      },
       content: metadata.toMarkdown(faker.lorem.sentence()),
       hideFromFeed: true,
     });
@@ -41,7 +45,7 @@ describe(`Given an instance of "gated.${LensClient.name}"`, () => {
       const condition = metadata.eoaOwnershipCondition({
         address: Wallet.createRandom().address,
       });
-      const encrypted = await client.gated.encryptPublicationMetadata(cleartextMetadata, condition);
+      const encrypted = await client.gated.encryptPublicationMetadata(initial, condition);
 
       const post = await postOnchainViaLensManager(signer, client, encrypted.unwrap());
 
@@ -53,7 +57,14 @@ describe(`Given an instance of "gated.${LensClient.name}"`, () => {
       const decrypted = await client.gated.decryptPublicationMetadataFragment(post.metadata);
 
       expect(decrypted.unwrap()).toMatchObject({
-        content: cleartextMetadata.lens.content,
+        asset: {
+          image: {
+            raw: {
+              uri: initial.lens.image.item,
+            },
+          },
+        },
+        content: initial.lens.content,
       });
     }, 60_000);
 
@@ -65,7 +76,7 @@ describe(`Given an instance of "gated.${LensClient.name}"`, () => {
         }),
         thisPublication: true,
       });
-      const encrypted = await client.gated.encryptPublicationMetadata(cleartextMetadata, condition);
+      const encrypted = await client.gated.encryptPublicationMetadata(initial, condition);
 
       const post = await postOnchainViaLensManager(signer, client, encrypted.unwrap());
 
@@ -83,7 +94,7 @@ describe(`Given an instance of "gated.${LensClient.name}"`, () => {
       // const decrypted = await client.gated.decryptPublicationMetadataFragment(post.metadata);
 
       // expect(decrypted.unwrap()).toMatchObject({
-      //   content: cleartextMetadata.lens.content,
+      //   content: initial.lens.content,
       // });
     }, 60_000);
   });

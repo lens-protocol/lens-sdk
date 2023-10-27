@@ -20,8 +20,7 @@ export async function update<TObject extends UnknownObject>(
 
   for (const path of toUpdate) {
     const value = traverse.get(output, path) as unknown;
-
-    if (typeof value === 'string') {
+    if (typeof value === 'string' && value.length > 0) {
       const updated = await updater(value, path.join('.'));
       traverse.set(output, path, updated);
     }
