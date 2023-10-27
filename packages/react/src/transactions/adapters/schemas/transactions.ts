@@ -25,6 +25,7 @@ import {
   UnlinkHandleRequestSchema,
   UnblockProfilesRequestSchema,
   ClaimHandleRequestSchema,
+  BlockProfilesRequestSchema,
 } from './profiles';
 import {
   CollectRequestSchema,
@@ -38,6 +39,9 @@ function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) 
   switch (kind) {
     case TransactionKind.ACT_ON_PUBLICATION:
       return CollectRequestSchema;
+    case TransactionKind.BLOCK_PROFILE:
+      return BlockProfilesRequestSchema;
+
     case TransactionKind.CLAIM_HANDLE:
       return ClaimHandleRequestSchema;
     case TransactionKind.CREATE_COMMENT:

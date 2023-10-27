@@ -37,6 +37,7 @@ import { MomokaRelayer } from './transactions/adapters/MomokaRelayer';
 import { OnChainRelayer } from './transactions/adapters/OnChainRelayer';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
+import { BlockProfilesResponder } from './transactions/adapters/responders/BlockProfilesResponder';
 import { FollowProfileResponder } from './transactions/adapters/responders/FollowProfileResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { RefreshCurrentProfileResponder } from './transactions/adapters/responders/RefreshCurrentProfileResponder';
@@ -113,6 +114,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   const responders: TransactionResponders<AnyTransactionRequest> = {
     [TransactionKind.ACT_ON_PUBLICATION]: new RefreshPublicationResponder(publicationCacheManager),
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
+    [TransactionKind.BLOCK_PROFILE]: new BlockProfilesResponder(profileCacheManager),
     [TransactionKind.CLAIM_HANDLE]: new NoopResponder(),
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(), // TODO update profile for new stats
     [TransactionKind.CREATE_POST]: new NoopResponder(), // TODO update profile for new stats

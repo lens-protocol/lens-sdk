@@ -8,6 +8,7 @@ import { TransactionKind, NftOwnershipChallenge, NativeTransaction } from '../..
 import { mockProfileId, mockSignature } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../../transactions';
 import { ClaimHandleRequest } from '../ClaimHandle';
+import { BlockProfilesRequest } from '../BlockProfiles';
 import {
   CreateProfileRequest,
   DuplicatedHandleError,
@@ -192,5 +193,16 @@ export function mockClaimHandleRequest(): ClaimHandleRequest {
   return {
     localName: faker.internet.userName(),
     kind: TransactionKind.CLAIM_HANDLE,
+  };
+}
+
+export function mockBlockProfilesRequest(
+  overrides?: Partial<BlockProfilesRequest>,
+): BlockProfilesRequest {
+  return {
+    delegate: true,
+    profileIds: [mockProfileId()],
+    ...overrides,
+    kind: TransactionKind.BLOCK_PROFILE,
   };
 }

@@ -127,3 +127,9 @@ export const ClaimHandleRequestSchema = z.union([
     followPolicy: FollowPolicyConfigSchema.optional(),
   }),
 ]);
+
+export const BlockProfilesRequestSchema = z.object({
+  profileIds: ProfileIdSchema.array().min(1),
+  kind: z.literal(TransactionKind.BLOCK_PROFILE),
+  delegate: z.boolean(),
+});

@@ -11,6 +11,7 @@ import {
   mockTokenAllowanceRequest,
   mockUpdateProfileManagersRequest,
   mockCreateQuoteRequest,
+  mockBlockProfilesRequest,
   mockSimpleCollectRequest,
   mockLinkHandleRequest,
   mockUnlinkHandleRequest,
@@ -47,6 +48,7 @@ type TransactionRequest = {
 const requests: TransactionRequest = {
   [TransactionKind.ACT_ON_PUBLICATION]: mockSimpleCollectRequest(),
   [TransactionKind.APPROVE_MODULE]: mockTokenAllowanceRequest(),
+  [TransactionKind.BLOCK_PROFILE]: mockBlockProfilesRequest(),
   [TransactionKind.CLAIM_HANDLE]: mockClaimHandleRequest(),
   [TransactionKind.CREATE_COMMENT]: mockCreateCommentRequest(),
   [TransactionKind.CREATE_POST]: mockCreatePostRequest(),

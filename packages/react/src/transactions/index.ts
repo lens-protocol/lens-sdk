@@ -12,6 +12,7 @@ export * from './useUnlinkHandle';
 export * from './useUpdateFollowPolicy';
 export * from './useUpdateProfileManagers';
 export * from './useUnblockProfiles';
+export * from './useBlockProfiles';
 
 export type {
   AnyoneReferencePolicyConfig,

@@ -1,5 +1,6 @@
 import { JustProtocolRequest } from '../../entities';
 import { ClaimHandleRequest } from '../profile';
+import { BlockProfilesRequest } from '../profile/BlockProfiles';
 import { CreateProfileRequest } from '../profile/CreateProfile';
 import { FollowRequest } from '../profile/FollowProfile';
 import { LinkHandleRequest } from '../profile/LinkHandle';
@@ -17,6 +18,7 @@ import { OpenActionRequest } from '../publications/OpenAction';
 import { TokenAllowanceRequest } from './TokenAllowance';
 
 export type AnyTransactionRequest =
+  | BlockProfilesRequest
   | OpenActionRequest
   | ClaimHandleRequest
   | CreateCommentRequest

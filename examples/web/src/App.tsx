@@ -45,6 +45,7 @@ import {
   UseOwnedHandles,
 } from './profiles';
 import { UseUnblockProfiles } from './profiles/UseBlockProfiles';
+import { UseBlockProfiles } from './profiles/UseBlockProfiles';
 import {
   PublicationsPage,
   UseBookmarkToggle,
@@ -147,6 +148,7 @@ export function App() {
                       <Route path="useUpdateFollowPolicy" element={<UseUpdateFollowPolicy />} />
                       <Route path="useUnblockProfiles" element={<UseUnblockProfiles />} />
                       <Route path="useOwnedHandles" element={<UseOwnedHandles />} />
+                      <Route path="useBlockProfiles" element={<UseBlockProfiles />} />
                     </Route>
 
                     <Route path="/discovery">

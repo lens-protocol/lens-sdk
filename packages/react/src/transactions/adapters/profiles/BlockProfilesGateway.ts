@@ -1,22 +1,21 @@
 import {
-  CreateOnchainSetProfileMetadataBroadcastItemResult,
-  CreateOnchainSetProfileMetadataTypedDataData,
-  CreateOnchainSetProfileMetadataTypedDataDocument,
-  CreateOnchainSetProfileMetadataTypedDataVariables,
+  BlockData,
+  BlockDocument,
+  BlockVariables,
+  CreateBlockProfilesBroadcastItemResult,
+  CreateBlockProfilesTypedDataData,
+  CreateBlockProfilesTypedDataDocument,
+  CreateBlockProfilesTypedDataVariables,
   RelaySuccess,
   SafeApolloClient,
-  SetProfileMetadataData,
-  SetProfileMetadataDocument,
-  SetProfileMetadataVariables,
-  omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
-import { Nonce, Transaction } from '@lens-protocol/domain/entities';
-import { SetProfileMetadataRequest } from '@lens-protocol/domain/use-cases/profile';
+import { IUnsignedProtocolCall, Nonce, Transaction } from '@lens-protocol/domain/entities';
+import { BlockProfilesRequest } from '@lens-protocol/domain/src/use-cases/profile/BlockProfiles';
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  ISignedOnChainGateway,
+  IOnChainProtocolCallGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -26,62 +25,58 @@ import { ITransactionFactory } from '../ITransactionFactory';
 import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError } from '../relayer';
 
-export class ProfileMetadataGateway
+export class BlockProfilesGateway
   implements
-    IDelegatedTransactionGateway<SetProfileMetadataRequest>,
-    ISignedOnChainGateway<SetProfileMetadataRequest>
+    IDelegatedTransactionGateway<BlockProfilesRequest>,
+    IOnChainProtocolCallGateway<BlockProfilesRequest>
 {
   constructor(
     private readonly apolloClient: SafeApolloClient,
-    private readonly transactionFactory: ITransactionFactory<SetProfileMetadataRequest>,
+    private readonly transactionFactory: ITransactionFactory<BlockProfilesRequest>,
   ) {}
 
   async createDelegatedTransaction(
-    request: SetProfileMetadataRequest,
-  ): PromiseResult<Transaction<SetProfileMetadataRequest>, BroadcastingError> {
+    request: BlockProfilesRequest,
+  ): PromiseResult<Transaction<BlockProfilesRequest>, BroadcastingError> {
     const result = await this.broadcast(request);
 
     if (result.isFailure()) {
       return result;
     }
 
-    const receipt = result.value;
     const transaction = this.transactionFactory.createNativeTransaction({
       chainType: ChainType.POLYGON,
       id: v4(),
-      indexingId: receipt.txId,
-      txHash: receipt.txHash,
       request,
+      indexingId: result.value.txId,
+      txHash: result.value.txHash,
     });
 
     return success(transaction);
   }
 
   async createUnsignedProtocolCall(
-    request: SetProfileMetadataRequest,
-    nonce?: Nonce,
-  ): Promise<UnsignedProtocolCall<SetProfileMetadataRequest>> {
-    const data = await this.createTypedData(request, nonce);
+    request: BlockProfilesRequest,
+    nonceOverride?: number | undefined,
+  ): Promise<IUnsignedProtocolCall<BlockProfilesRequest>> {
+    const result = await this.createTypedData(request, nonceOverride);
 
     return UnsignedProtocolCall.create({
-      id: data.id,
+      id: result.id,
       request,
-      typedData: omitTypename(data.typedData),
-      fallback: this.createRequestFallback(request, data),
+      typedData: result.typedData,
+      fallback: this.createRequestFallback(request, result),
     });
   }
 
   private async broadcast(
-    request: SetProfileMetadataRequest,
+    request: BlockProfilesRequest,
   ): PromiseResult<RelaySuccess, BroadcastingError> {
-    const { data } = await this.apolloClient.mutate<
-      SetProfileMetadataData,
-      SetProfileMetadataVariables
-    >({
-      mutation: SetProfileMetadataDocument,
+    const { data } = await this.apolloClient.mutate<BlockData, BlockVariables>({
+      mutation: BlockDocument,
       variables: {
         request: {
-          metadataURI: request.metadataURI,
+          profiles: request.profileIds,
         },
       },
     });
@@ -97,17 +92,17 @@ export class ProfileMetadataGateway
   }
 
   private async createTypedData(
-    request: SetProfileMetadataRequest,
+    request: BlockProfilesRequest,
     nonce?: Nonce,
-  ): Promise<CreateOnchainSetProfileMetadataBroadcastItemResult> {
+  ): Promise<CreateBlockProfilesBroadcastItemResult> {
     const { data } = await this.apolloClient.mutate<
-      CreateOnchainSetProfileMetadataTypedDataData,
-      CreateOnchainSetProfileMetadataTypedDataVariables
+      CreateBlockProfilesTypedDataData,
+      CreateBlockProfilesTypedDataVariables
     >({
-      mutation: CreateOnchainSetProfileMetadataTypedDataDocument,
+      mutation: CreateBlockProfilesTypedDataDocument,
       variables: {
         request: {
-          metadataURI: request.metadataURI,
+          profiles: request.profileIds,
         },
         options: nonce ? { overrideSigNonce: nonce } : undefined,
       },
@@ -117,13 +112,14 @@ export class ProfileMetadataGateway
   }
 
   private createRequestFallback(
-    request: SetProfileMetadataRequest,
-    result: CreateOnchainSetProfileMetadataBroadcastItemResult,
-  ): SelfFundedProtocolTransactionRequest<SetProfileMetadataRequest> {
+    request: BlockProfilesRequest,
+    result: CreateBlockProfilesBroadcastItemResult,
+  ): SelfFundedProtocolTransactionRequest<BlockProfilesRequest> {
     const contract = lensHub(result.typedData.domain.verifyingContract);
-    const encodedData = contract.interface.encodeFunctionData('setProfileMetadataURI', [
-      result.typedData.message.profileId,
-      request.metadataURI,
+    const encodedData = contract.interface.encodeFunctionData('setBlockStatus', [
+      result.typedData.message.byProfileId,
+      result.typedData.message.idsOfProfilesToSetBlockStatus,
+      result.typedData.message.blockStatus,
     ]);
     return {
       ...request,
