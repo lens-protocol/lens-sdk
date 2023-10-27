@@ -1,5 +1,12 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.15
+
+### Patch Changes
+
+- becb6338: Updated to latest API schema to use correct legacy collect typed data
+- 86fa12e0: **fix:** all paginated queries that accidentally overwrite each other when using same hook twice
+
 ## 0.11.0-alpha.14
 
 ### Minor Changes

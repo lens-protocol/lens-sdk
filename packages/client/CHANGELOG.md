@@ -1,5 +1,14 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.17
+
+### Patch Changes
+
+- 1bd69391: **chore:** updates `@lens-protocol/metadata` package to 1.0.0
+- becb6338: Updated to latest API schema to use correct legacy collect typed data
+- Updated dependencies [1bd69391]
+  - @lens-protocol/gated-content@0.3.3-alpha.12
+
 ## 2.0.0-alpha.16
 
 ### Patch Changes

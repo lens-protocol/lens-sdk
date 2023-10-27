@@ -1,5 +1,17 @@
 # @lens-protocol/react
 
+## 2.0.0-alpha.15
+
+### Patch Changes
+
+- 672c85e6: **fix:** `useClaimHandle` types
+- 1bd69391: **chore:** updates `@lens-protocol/metadata` package to 1.0.0
+- becb6338: Updated to latest API schema to use correct legacy collect typed data
+- 86fa12e0: **fix:** all paginated queries that accidentally overwrite each other when using same hook twice
+- Updated dependencies [becb6338]
+- Updated dependencies [86fa12e0]
+  - @lens-protocol/api-bindings@0.11.0-alpha.15
+
 ## 2.0.0-alpha.14
 
 ### Minor Changes
