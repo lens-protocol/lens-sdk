@@ -63,7 +63,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
 
   // auth api
   const anonymousApolloClient = createAuthApolloClient({
-    backendURL: config.environment.backend,
+    uri: config.environment.backend,
     logger,
   });
   const authApi = new AuthApi(anonymousApolloClient);
@@ -77,11 +77,11 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   // apollo client
   const apolloClient = createLensApolloClient({
     queryParams: config.params ?? defaultQueryParams,
-    backendURL: config.environment.backend,
+    uri: config.environment.backend,
     accessTokenStorage,
     pollingInterval: config.environment.timings.pollingInterval,
     logger,
-    contentMatchers: [config.environment.snapshot.matcher],
+    // contentMatchers: [config.environment.snapshot.matcher], // TODO is it in use?
   });
 
   // infrastructure
