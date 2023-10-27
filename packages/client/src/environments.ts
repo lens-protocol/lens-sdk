@@ -26,9 +26,3 @@ export const development = new Environment(
   'https://api-v2-mumbai.lens.dev/graphql',
   GatedEnvironments.development,
 );
-
-export const sandbox = new Environment(
-  'sandbox',
-  'https://api-v2-mumbai.lens.dev/graphql', // same as development for now
-  GatedEnvironments.sandbox,
-);

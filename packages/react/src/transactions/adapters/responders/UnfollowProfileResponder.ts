@@ -10,6 +10,6 @@ export class UnfollowProfileResponder implements ITransactionResponder<UnfollowR
   constructor(private readonly profileCacheManager: IProfileCacheManager) {}
 
   async commit({ request }: TransactionData<UnfollowRequest>) {
-    await this.profileCacheManager.refresh(request.profileId);
+    await this.profileCacheManager.fetchProfileById(request.profileId);
   }
 }
