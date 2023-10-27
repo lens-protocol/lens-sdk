@@ -503,26 +503,24 @@ export function mockRemoveFromMyBookmarksResponse(
   };
 }
 
-// TODO fix this helper once the API is fixed. Accidentally returns actWithSig typed data and not collectWithSig one.
 export function mockCreateLegacyCollectTypedDataData({
   nonce = mockNonce(),
 }: { nonce?: Nonce } = {}): CreateLegacyCollectTypedDataData {
   return {
     result: mockCreateTypedDataResult('CreateLegacyCollectBroadcastItemResult', {
       types: {
-        Act: [mockEIP712TypedDataField()],
+        CollectLegacy: [mockEIP712TypedDataField()],
       },
       domain: mockEIP712TypedDataDomain(),
       message: {
         nonce,
         deadline: 1644303500,
-        publicationActedProfileId: mockProfileId(),
-        publicationActedId: '0x01',
-        actorProfileId: mockProfileId(),
-        referrerProfileIds: [],
-        referrerPubIds: [],
-        actionModuleAddress: mockEvmAddress(),
-        actionModuleData: '0x',
+        publicationCollectedProfileId: mockProfileId(),
+        publicationCollectedId: '0x01',
+        collectorProfileId: mockProfileId(),
+        referrerProfileId: mockProfileId(),
+        referrerPubId: faker.datatype.hexadecimal({ length: 2 }),
+        collectModuleData: '0x',
       },
     }),
   };

@@ -1722,8 +1722,6 @@ export type WhoReactedPublicationRequest = {
 
 export type WhoReactedPublicationWhere = {
   anyOf?: InputMaybe<Array<PublicationReactionType>>;
-  cursor?: InputMaybe<Scalars['Cursor']>;
-  limit?: InputMaybe<LimitType>;
 };
 
 export enum WorldcoinPhoneVerifyType {
@@ -1737,11 +1735,21 @@ export type WorldcoinPhoneVerifyWebhookRequest = {
   signalType: WorldcoinPhoneVerifyType;
 };
 
-export type ActOnOpenActionVariables = Exact<{
-  request: ActOnOpenActionLensManagerRequest;
-}>;
-
-export type ActOnOpenActionData = { result: LensProfileManagerRelayError | RelaySuccess };
+export type CreateActOnOpenActionEip712TypedData = {
+  types: { Act: Array<Eip712TypedDataField> };
+  domain: Eip712TypedDataDomain;
+  message: {
+    nonce: number;
+    deadline: number;
+    publicationActedProfileId: ProfileId;
+    publicationActedId: string;
+    actorProfileId: ProfileId;
+    referrerProfileIds: Array<ProfileId>;
+    referrerPubIds: Array<string>;
+    actionModuleAddress: EvmAddress;
+    actionModuleData: string;
+  };
+};
 
 export type CreateActOnOpenActionBroadcastItemResult = {
   __typename: 'CreateActOnOpenActionBroadcastItemResult';
@@ -1749,6 +1757,12 @@ export type CreateActOnOpenActionBroadcastItemResult = {
   expiresAt: string;
   typedData: CreateActOnOpenActionEip712TypedData;
 };
+
+export type ActOnOpenActionVariables = Exact<{
+  request: ActOnOpenActionLensManagerRequest;
+}>;
+
+export type ActOnOpenActionData = { result: LensProfileManagerRelayError | RelaySuccess };
 
 export type CreateActOnOpenActionTypedDataVariables = Exact<{
   request: ActOnOpenActionRequest;
@@ -2945,22 +2959,6 @@ export type Eip712TypedDataDomain = {
 
 export type Eip712TypedDataField = { name: string; type: string };
 
-export type CreateActOnOpenActionEip712TypedData = {
-  types: { Act: Array<Eip712TypedDataField> };
-  domain: Eip712TypedDataDomain;
-  message: {
-    nonce: number;
-    deadline: number;
-    publicationActedProfileId: ProfileId;
-    publicationActedId: string;
-    actorProfileId: ProfileId;
-    referrerProfileIds: Array<ProfileId>;
-    referrerPubIds: Array<string>;
-    actionModuleAddress: EvmAddress;
-    actionModuleData: string;
-  };
-};
-
 export type RelaySuccess = { __typename: 'RelaySuccess'; txHash: string | null; txId: string };
 
 export type RelayError = { __typename: 'RelayError'; reason: RelayErrorReasonType };
@@ -3865,11 +3863,26 @@ export type CreateMomokaQuoteBroadcastItemResult = {
   };
 };
 
+export type CreateLegacyCollectEip712TypedData = {
+  types: { CollectLegacy: Array<Eip712TypedDataField> };
+  domain: Eip712TypedDataDomain;
+  message: {
+    nonce: number;
+    deadline: number;
+    publicationCollectedProfileId: ProfileId;
+    publicationCollectedId: string;
+    collectorProfileId: ProfileId;
+    referrerProfileId: ProfileId;
+    referrerPubId: string;
+    collectModuleData: string;
+  };
+};
+
 export type CreateLegacyCollectBroadcastItemResult = {
   __typename: 'CreateLegacyCollectBroadcastItemResult';
   id: string;
   expiresAt: string;
-  typedData: CreateActOnOpenActionEip712TypedData;
+  typedData: CreateLegacyCollectEip712TypedData;
 };
 
 export type CreateOnchainPostTypedDataVariables = Exact<{
@@ -7489,16 +7502,40 @@ export const FragmentCreateMomokaQuoteBroadcastItemResult = /*#__PURE__*/ gql`
   }
   ${FragmentEip712TypedDataDomain}
 `;
+export const FragmentCreateLegacyCollectEip712TypedData = /*#__PURE__*/ gql`
+  fragment CreateLegacyCollectEIP712TypedData on CreateLegacyCollectEIP712TypedData {
+    types {
+      CollectLegacy {
+        ...EIP712TypedDataField
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    message: value {
+      nonce
+      deadline
+      publicationCollectedProfileId
+      publicationCollectedId
+      collectorProfileId
+      referrerProfileId
+      referrerPubId
+      collectModuleData
+    }
+  }
+  ${FragmentEip712TypedDataField}
+  ${FragmentEip712TypedDataDomain}
+`;
 export const FragmentCreateLegacyCollectBroadcastItemResult = /*#__PURE__*/ gql`
   fragment CreateLegacyCollectBroadcastItemResult on CreateLegacyCollectBroadcastItemResult {
     __typename
     id
     expiresAt
     typedData {
-      ...CreateActOnOpenActionEIP712TypedData
+      ...CreateLegacyCollectEIP712TypedData
     }
   }
-  ${FragmentCreateActOnOpenActionEip712TypedData}
+  ${FragmentCreateLegacyCollectEip712TypedData}
 `;
 export const FragmentProfileReactionResult = /*#__PURE__*/ gql`
   fragment ProfileReactionResult on ProfileReactionResult {
@@ -13430,6 +13467,45 @@ export type CreateLegacyCollectBroadcastItemResultFieldPolicy = {
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   typedData?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type CreateLegacyCollectEIP712TypedDataKeySpecifier = (
+  | 'domain'
+  | 'types'
+  | 'value'
+  | CreateLegacyCollectEIP712TypedDataKeySpecifier
+)[];
+export type CreateLegacyCollectEIP712TypedDataFieldPolicy = {
+  domain?: FieldPolicy<any> | FieldReadFunction<any>;
+  types?: FieldPolicy<any> | FieldReadFunction<any>;
+  value?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type CreateLegacyCollectEIP712TypedDataTypesKeySpecifier = (
+  | 'CollectLegacy'
+  | CreateLegacyCollectEIP712TypedDataTypesKeySpecifier
+)[];
+export type CreateLegacyCollectEIP712TypedDataTypesFieldPolicy = {
+  CollectLegacy?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type CreateLegacyCollectEIP712TypedDataValueKeySpecifier = (
+  | 'collectModuleData'
+  | 'collectorProfileId'
+  | 'deadline'
+  | 'nonce'
+  | 'publicationCollectedId'
+  | 'publicationCollectedProfileId'
+  | 'referrerProfileId'
+  | 'referrerPubId'
+  | CreateLegacyCollectEIP712TypedDataValueKeySpecifier
+)[];
+export type CreateLegacyCollectEIP712TypedDataValueFieldPolicy = {
+  collectModuleData?: FieldPolicy<any> | FieldReadFunction<any>;
+  collectorProfileId?: FieldPolicy<any> | FieldReadFunction<any>;
+  deadline?: FieldPolicy<any> | FieldReadFunction<any>;
+  nonce?: FieldPolicy<any> | FieldReadFunction<any>;
+  publicationCollectedId?: FieldPolicy<any> | FieldReadFunction<any>;
+  publicationCollectedProfileId?: FieldPolicy<any> | FieldReadFunction<any>;
+  referrerProfileId?: FieldPolicy<any> | FieldReadFunction<any>;
+  referrerPubId?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type CreateLinkHandleToProfileBroadcastItemResultKeySpecifier = (
   | 'expiresAt'
   | 'id'
@@ -15868,6 +15944,7 @@ export type ProfileOperationsKeySpecifier = (
   | 'canFollow'
   | 'canUnblock'
   | 'canUnfollow'
+  | 'hasBlockedMe'
   | 'id'
   | 'isBlockedByMe'
   | 'isFollowedByMe'
@@ -15879,6 +15956,7 @@ export type ProfileOperationsFieldPolicy = {
   canFollow?: FieldPolicy<any> | FieldReadFunction<any>;
   canUnblock?: FieldPolicy<any> | FieldReadFunction<any>;
   canUnfollow?: FieldPolicy<any> | FieldReadFunction<any>;
+  hasBlockedMe?: FieldPolicy<any> | FieldReadFunction<any>;
   id?: FieldPolicy<any> | FieldReadFunction<any>;
   isBlockedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
   isFollowedByMe?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -16994,6 +17072,27 @@ export type StrictTypedTypePolicies = {
       | CreateLegacyCollectBroadcastItemResultKeySpecifier
       | (() => undefined | CreateLegacyCollectBroadcastItemResultKeySpecifier);
     fields?: CreateLegacyCollectBroadcastItemResultFieldPolicy;
+  };
+  CreateLegacyCollectEIP712TypedData?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | CreateLegacyCollectEIP712TypedDataKeySpecifier
+      | (() => undefined | CreateLegacyCollectEIP712TypedDataKeySpecifier);
+    fields?: CreateLegacyCollectEIP712TypedDataFieldPolicy;
+  };
+  CreateLegacyCollectEIP712TypedDataTypes?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | CreateLegacyCollectEIP712TypedDataTypesKeySpecifier
+      | (() => undefined | CreateLegacyCollectEIP712TypedDataTypesKeySpecifier);
+    fields?: CreateLegacyCollectEIP712TypedDataTypesFieldPolicy;
+  };
+  CreateLegacyCollectEIP712TypedDataValue?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
+    keyFields?:
+      | false
+      | CreateLegacyCollectEIP712TypedDataValueKeySpecifier
+      | (() => undefined | CreateLegacyCollectEIP712TypedDataValueKeySpecifier);
+    fields?: CreateLegacyCollectEIP712TypedDataValueFieldPolicy;
   };
   CreateLinkHandleToProfileBroadcastItemResult?: Omit<TypePolicy, 'fields' | 'keyFields'> & {
     keyFields?:

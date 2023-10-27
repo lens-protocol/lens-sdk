@@ -247,21 +247,19 @@ export class OpenActionGateway
     return data.result;
   }
 
-  // TODO fix once API are also fixed... wrong typed data returned
   private createLegacyCollectFallback(
     request: LegacyCollectRequest,
     result: gql.CreateLegacyCollectBroadcastItemResult,
   ): SelfFundedProtocolTransactionRequest<LegacyCollectRequest> {
     const contract = lensHub(result.typedData.domain.verifyingContract);
-    const encodedData = contract.interface.encodeFunctionData('act', [
+    const encodedData = contract.interface.encodeFunctionData('collect', [
       {
-        publicationActedProfileId: result.typedData.message.publicationActedProfileId,
-        publicationActedId: result.typedData.message.publicationActedId,
-        actorProfileId: result.typedData.message.actorProfileId,
-        referrerProfileIds: result.typedData.message.referrerProfileIds,
-        referrerPubIds: result.typedData.message.referrerPubIds,
-        actionModuleAddress: result.typedData.message.actionModuleAddress,
-        actionModuleData: result.typedData.message.actionModuleData,
+        publicationCollectedProfileId: result.typedData.message.publicationCollectedProfileId,
+        publicationCollectedId: result.typedData.message.publicationCollectedId,
+        collectorProfileId: result.typedData.message.collectorProfileId,
+        referrerProfileId: result.typedData.message.referrerProfileId,
+        referrerPubId: result.typedData.message.referrerPubId,
+        collectModuleData: result.typedData.message.collectModuleData,
       },
     ]);
     return {

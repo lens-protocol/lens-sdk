@@ -326,12 +326,33 @@ fragment CreateMomokaQuoteBroadcastItemResult on CreateMomokaQuoteBroadcastItemR
   }
 }
 
+fragment CreateLegacyCollectEIP712TypedData on CreateLegacyCollectEIP712TypedData {
+  types {
+    CollectLegacy {
+      ...EIP712TypedDataField
+    }
+  }
+  domain {
+    ...EIP712TypedDataDomain
+  }
+  message: value {
+    nonce
+    deadline
+    publicationCollectedProfileId
+    publicationCollectedId
+    collectorProfileId
+    referrerProfileId
+    referrerPubId
+    collectModuleData
+  }
+}
+
 fragment CreateLegacyCollectBroadcastItemResult on CreateLegacyCollectBroadcastItemResult {
   __typename
   id
   expiresAt
   typedData {
-    ...CreateActOnOpenActionEIP712TypedData
+    ...CreateLegacyCollectEIP712TypedData
   }
 }
 
