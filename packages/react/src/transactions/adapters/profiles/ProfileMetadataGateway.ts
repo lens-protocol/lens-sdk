@@ -18,7 +18,7 @@ import {
   IDelegatedTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, Data, PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
+import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';

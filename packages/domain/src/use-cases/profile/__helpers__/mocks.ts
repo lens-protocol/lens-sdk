@@ -23,6 +23,7 @@ import {
   ProveNftOwnershipRequest,
 } from '../ProveNftOwnership';
 import { SetProfileMetadataRequest } from '../SetProfileMetadata';
+import { UnblockProfilesRequest } from '../UnblockProfiles';
 import { UnfollowRequest } from '../UnfollowProfile';
 import { UnlinkHandleRequest } from '../UnlinkHandle';
 import { UpdateFollowPolicyRequest } from '../UpdateFollowPolicy';
@@ -204,5 +205,16 @@ export function mockBlockProfilesRequest(
     profileIds: [mockProfileId()],
     ...overrides,
     kind: TransactionKind.BLOCK_PROFILE,
+  };
+}
+
+export function mockUnblockProfilesRequest(
+  overrides?: Partial<UnblockProfilesRequest>,
+): UnblockProfilesRequest {
+  return {
+    delegate: true,
+    profileIds: [mockProfileId()],
+    ...overrides,
+    kind: TransactionKind.UNBLOCK_PROFILE,
   };
 }

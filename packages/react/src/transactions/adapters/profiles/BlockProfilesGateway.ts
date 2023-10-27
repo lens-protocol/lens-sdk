@@ -16,7 +16,7 @@ import { BlockProfilesRequest } from '@lens-protocol/domain/src/use-cases/profil
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IOnChainProtocolCallGateway,
+  ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -29,7 +29,7 @@ import { handleRelayError } from '../relayer';
 export class BlockProfilesGateway
   implements
     IDelegatedTransactionGateway<BlockProfilesRequest>,
-    IOnChainProtocolCallGateway<BlockProfilesRequest>
+    ISignedOnChainGateway<BlockProfilesRequest>
 {
   constructor(
     private readonly apolloClient: SafeApolloClient,

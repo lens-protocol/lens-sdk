@@ -16,7 +16,7 @@ import { UnblockProfilesRequest } from '@lens-protocol/domain/src/use-cases/prof
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IOnChainProtocolCallGateway,
+  ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -29,7 +29,7 @@ import { handleRelayError } from '../relayer';
 export class UnblockProfilesGateway
   implements
     IDelegatedTransactionGateway<UnblockProfilesRequest>,
-    IOnChainProtocolCallGateway<UnblockProfilesRequest>
+    ISignedOnChainGateway<UnblockProfilesRequest>
 {
   constructor(
     private readonly apolloClient: SafeApolloClient,
