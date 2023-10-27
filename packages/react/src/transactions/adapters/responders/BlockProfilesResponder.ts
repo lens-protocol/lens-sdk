@@ -11,7 +11,9 @@ export class BlockProfilesResponder implements ITransactionResponder<BlockProfil
 
   async commit({ request }: TransactionData<BlockProfilesRequest>) {
     await Promise.all(
-      request.profileIds.map(async (profileId) => this.profileCacheManager.refresh(profileId)),
+      request.profileIds.map(async (profileId) =>
+        this.profileCacheManager.fetchProfileById(profileId),
+      ),
     );
   }
 }

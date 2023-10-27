@@ -19,7 +19,7 @@
   "dependencies": {
     "@bundlr-network/client": "^0.11.9",
     "@lens-protocol/client": "workspace:*",
-    "@lens-protocol/metadata": "0.1.0-alpha.30",
+    "@lens-protocol/metadata": "^1.0.0",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",
     "uuid": "^9.0.0",

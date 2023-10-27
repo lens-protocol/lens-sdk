@@ -2,26 +2,51 @@
 import * as Types from '../../../../../graphql/types.generated';
 
 import {
+  Eip712TypedDataFieldFragment,
+  Eip712TypedDataDomainFragment,
+  ProfileFragment,
+  PostFragment,
+  QuoteFragment,
+  PaginatedResultInfoFragment,
+  CommentFragment,
+  MirrorFragment,
+  OpenActionResult_KnownCollectOpenActionResult_Fragment,
+  OpenActionResult_UnknownOpenActionResult_Fragment,
   RelaySuccessFragment,
   LensProfileManagerRelayErrorFragment,
-  CreateActOnOpenActionEip712TypedDataFragment,
 } from '../../../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
 import { DocumentNode } from 'graphql';
-export type ActOnOpenActionMutationVariables = Types.Exact<{
-  request: Types.ActOnOpenActionLensManagerRequest;
-}>;
-
-export type ActOnOpenActionMutation = {
-  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
+export type CreateActOnOpenActionEip712TypedDataFragment = {
+  types: { Act: Array<Eip712TypedDataFieldFragment> };
+  domain: Eip712TypedDataDomainFragment;
+  value: {
+    nonce: number;
+    deadline: number;
+    publicationActedProfileId: string;
+    publicationActedId: string;
+    actorProfileId: string;
+    referrerProfileIds: Array<string>;
+    referrerPubIds: Array<string>;
+    actionModuleAddress: string;
+    actionModuleData: string;
+  };
 };
 
 export type CreateActOnOpenActionBroadcastItemResultFragment = {
   id: string;
   expiresAt: string;
   typedData: CreateActOnOpenActionEip712TypedDataFragment;
+};
+
+export type ActOnOpenActionMutationVariables = Types.Exact<{
+  request: Types.ActOnOpenActionLensManagerRequest;
+}>;
+
+export type ActOnOpenActionMutation = {
+  result: LensProfileManagerRelayErrorFragment | RelaySuccessFragment;
 };
 
 export type CreateActOnOpenActionTypedDataMutationVariables = Types.Exact<{
@@ -33,6 +58,100 @@ export type CreateActOnOpenActionTypedDataMutation = {
   result: CreateActOnOpenActionBroadcastItemResultFragment;
 };
 
+export const CreateActOnOpenActionEip712TypedDataFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CreateActOnOpenActionEIP712TypedData' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'CreateActOnOpenActionEIP712TypedData' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'types' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'Act' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'EIP712TypedDataField' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'domain' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'EIP712TypedDataDomain' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'value' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'nonce' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'deadline' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'publicationActedProfileId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'publicationActedId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'actorProfileId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'referrerProfileIds' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'referrerPubIds' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'actionModuleAddress' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'actionModuleData' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'EIP712TypedDataField' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'EIP712TypedDataField' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'EIP712TypedDataDomain' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'EIP712TypedDataDomain' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'chainId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'version' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'verifyingContract' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
 export const CreateActOnOpenActionBroadcastItemResultFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -313,34 +432,6 @@ export const CreateActOnOpenActionTypedDataDocument = {
     },
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'CreateActOnOpenActionBroadcastItemResult' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'CreateActOnOpenActionBroadcastItemResult' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'expiresAt' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'typedData' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'CreateActOnOpenActionEIP712TypedData' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'CreateActOnOpenActionEIP712TypedData' },
       typeCondition: {
         kind: 'NamedType',
@@ -396,6 +487,34 @@ export const CreateActOnOpenActionTypedDataDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'referrerPubIds' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'actionModuleAddress' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'actionModuleData' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CreateActOnOpenActionBroadcastItemResult' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'CreateActOnOpenActionBroadcastItemResult' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'expiresAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'typedData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'CreateActOnOpenActionEIP712TypedData' },
+                },
               ],
             },
           },

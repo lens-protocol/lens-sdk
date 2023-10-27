@@ -14,7 +14,6 @@ import {
   OpenActionResult_UnknownOpenActionResult_Fragment,
   RelaySuccessFragment,
   LensProfileManagerRelayErrorFragment,
-  CreateActOnOpenActionEip712TypedDataFragment,
   CreateMomokaPublicationResultFragment,
 } from '../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';
@@ -252,10 +251,25 @@ export type CreateMomokaQuoteBroadcastItemResultFragment = {
   };
 };
 
+export type CreateLegacyCollectEip712TypedDataFragment = {
+  types: { CollectLegacy: Array<Eip712TypedDataFieldFragment> };
+  domain: Eip712TypedDataDomainFragment;
+  value: {
+    nonce: number;
+    deadline: number;
+    publicationCollectedProfileId: string;
+    publicationCollectedId: string;
+    collectorProfileId: string;
+    referrerProfileId: string;
+    referrerPubId: string;
+    collectModuleData: string;
+  };
+};
+
 export type CreateLegacyCollectBroadcastItemResultFragment = {
   id: string;
   expiresAt: string;
-  typedData: CreateActOnOpenActionEip712TypedDataFragment;
+  typedData: CreateLegacyCollectEip712TypedDataFragment;
 };
 
 export type CreateOnchainPostTypedDataMutationVariables = Types.Exact<{
@@ -1244,31 +1258,65 @@ export const CreateMomokaQuoteBroadcastItemResultFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode;
-export const CreateLegacyCollectBroadcastItemResultFragmentDoc = {
+export const CreateLegacyCollectEip712TypedDataFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'CreateLegacyCollectBroadcastItemResult' },
+      name: { kind: 'Name', value: 'CreateLegacyCollectEIP712TypedData' },
       typeCondition: {
         kind: 'NamedType',
-        name: { kind: 'Name', value: 'CreateLegacyCollectBroadcastItemResult' },
+        name: { kind: 'Name', value: 'CreateLegacyCollectEIP712TypedData' },
       },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'expiresAt' } },
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'typedData' },
+            name: { kind: 'Name', value: 'types' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
                 {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'CreateActOnOpenActionEIP712TypedData' },
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'CollectLegacy' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'EIP712TypedDataField' },
+                      },
+                    ],
+                  },
                 },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'domain' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'EIP712TypedDataDomain' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'value' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'nonce' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'deadline' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'publicationCollectedProfileId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'publicationCollectedId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'collectorProfileId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'referrerProfileId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'referrerPubId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'collectModuleData' } },
               ],
             },
           },
@@ -1301,12 +1349,45 @@ export const CreateLegacyCollectBroadcastItemResultFragmentDoc = {
         ],
       },
     },
+  ],
+} as unknown as DocumentNode;
+export const CreateLegacyCollectBroadcastItemResultFragmentDoc = {
+  kind: 'Document',
+  definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'CreateActOnOpenActionEIP712TypedData' },
+      name: { kind: 'Name', value: 'CreateLegacyCollectBroadcastItemResult' },
       typeCondition: {
         kind: 'NamedType',
-        name: { kind: 'Name', value: 'CreateActOnOpenActionEIP712TypedData' },
+        name: { kind: 'Name', value: 'CreateLegacyCollectBroadcastItemResult' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'expiresAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'typedData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'CreateLegacyCollectEIP712TypedData' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CreateLegacyCollectEIP712TypedData' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'CreateLegacyCollectEIP712TypedData' },
       },
       selectionSet: {
         kind: 'SelectionSet',
@@ -1319,7 +1400,7 @@ export const CreateLegacyCollectBroadcastItemResultFragmentDoc = {
               selections: [
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'Act' },
+                  name: { kind: 'Name', value: 'CollectLegacy' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
@@ -1351,16 +1432,41 @@ export const CreateLegacyCollectBroadcastItemResultFragmentDoc = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'nonce' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'deadline' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'publicationActedProfileId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'publicationActedId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'actorProfileId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'referrerProfileIds' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'referrerPubIds' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'actionModuleAddress' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'actionModuleData' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'publicationCollectedProfileId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'publicationCollectedId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'collectorProfileId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'referrerProfileId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'referrerPubId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'collectModuleData' } },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'EIP712TypedDataDomain' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'EIP712TypedDataDomain' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'chainId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'version' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'verifyingContract' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'EIP712TypedDataField' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'EIP712TypedDataField' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
         ],
       },
     },
@@ -16903,64 +17009,10 @@ export const CreateLegacyCollectTypedDataDocument = {
     },
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'CreateLegacyCollectBroadcastItemResult' },
+      name: { kind: 'Name', value: 'CreateLegacyCollectEIP712TypedData' },
       typeCondition: {
         kind: 'NamedType',
-        name: { kind: 'Name', value: 'CreateLegacyCollectBroadcastItemResult' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'expiresAt' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'typedData' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'CreateActOnOpenActionEIP712TypedData' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'EIP712TypedDataDomain' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'EIP712TypedDataDomain' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'chainId' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'version' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'verifyingContract' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'EIP712TypedDataField' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'EIP712TypedDataField' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'CreateActOnOpenActionEIP712TypedData' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'CreateActOnOpenActionEIP712TypedData' },
+        name: { kind: 'Name', value: 'CreateLegacyCollectEIP712TypedData' },
       },
       selectionSet: {
         kind: 'SelectionSet',
@@ -16973,7 +17025,7 @@ export const CreateLegacyCollectTypedDataDocument = {
               selections: [
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'Act' },
+                  name: { kind: 'Name', value: 'CollectLegacy' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
@@ -17005,16 +17057,69 @@ export const CreateLegacyCollectTypedDataDocument = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'nonce' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'deadline' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'publicationActedProfileId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'publicationActedId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'actorProfileId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'referrerProfileIds' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'referrerPubIds' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'actionModuleAddress' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'actionModuleData' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'publicationCollectedProfileId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'publicationCollectedId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'collectorProfileId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'referrerProfileId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'referrerPubId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'collectModuleData' } },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CreateLegacyCollectBroadcastItemResult' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'CreateLegacyCollectBroadcastItemResult' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'expiresAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'typedData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'CreateLegacyCollectEIP712TypedData' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'EIP712TypedDataDomain' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'EIP712TypedDataDomain' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'chainId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'version' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'verifyingContract' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'EIP712TypedDataField' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'EIP712TypedDataField' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
         ],
       },
     },

@@ -1160,22 +1160,6 @@ export type Eip712TypedDataDomainFragment = {
 
 export type Eip712TypedDataFieldFragment = { name: string; type: string };
 
-export type CreateActOnOpenActionEip712TypedDataFragment = {
-  types: { Act: Array<Eip712TypedDataFieldFragment> };
-  domain: Eip712TypedDataDomainFragment;
-  value: {
-    nonce: number;
-    deadline: number;
-    publicationActedProfileId: string;
-    publicationActedId: string;
-    actorProfileId: string;
-    referrerProfileIds: Array<string>;
-    referrerPubIds: Array<string>;
-    actionModuleAddress: string;
-    actionModuleData: string;
-  };
-};
-
 export type RelaySuccessFragment = {
   __typename: 'RelaySuccess';
   txHash: string | null;
@@ -59766,23 +59750,6 @@ export const MirrorFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode;
-export const Eip712TypedDataFieldFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'EIP712TypedDataField' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'EIP712TypedDataField' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode;
 export const Eip712TypedDataDomainFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -59802,86 +59769,9 @@ export const Eip712TypedDataDomainFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode;
-export const CreateActOnOpenActionEip712TypedDataFragmentDoc = {
+export const Eip712TypedDataFieldFragmentDoc = {
   kind: 'Document',
   definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'CreateActOnOpenActionEIP712TypedData' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'CreateActOnOpenActionEIP712TypedData' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'types' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'Act' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'EIP712TypedDataField' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'domain' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'EIP712TypedDataDomain' } },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'value' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'nonce' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'deadline' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'publicationActedProfileId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'publicationActedId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'actorProfileId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'referrerProfileIds' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'referrerPubIds' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'actionModuleAddress' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'actionModuleData' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'EIP712TypedDataDomain' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'EIP712TypedDataDomain' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'chainId' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'version' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'verifyingContract' } },
-        ],
-      },
-    },
     {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'EIP712TypedDataField' },
