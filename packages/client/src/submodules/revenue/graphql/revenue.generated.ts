@@ -15,7 +15,6 @@ import {
   OpenActionResult_UnknownOpenActionResult_Fragment,
   RelaySuccessFragment,
   LensProfileManagerRelayErrorFragment,
-  CreateActOnOpenActionEip712TypedDataFragment,
   CreateMomokaPublicationResultFragment,
 } from '../../../graphql/fragments.generated';
 import { GraphQLClient } from 'graphql-request';

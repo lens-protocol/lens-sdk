@@ -1671,8 +1671,6 @@ export type WhoReactedPublicationRequest = {
 
 export type WhoReactedPublicationWhere = {
   anyOf?: InputMaybe<Array<PublicationReactionType>>;
-  cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  limit?: InputMaybe<LimitType>;
 };
 
 export enum WorldcoinPhoneVerifyType {

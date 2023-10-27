@@ -1878,28 +1878,6 @@ fragment EIP712TypedDataField on EIP712TypedDataField {
   type
 }
 
-fragment CreateActOnOpenActionEIP712TypedData on CreateActOnOpenActionEIP712TypedData {
-  types {
-    Act {
-      ...EIP712TypedDataField
-    }
-  }
-  domain {
-    ...EIP712TypedDataDomain
-  }
-  value {
-    nonce
-    deadline
-    publicationActedProfileId
-    publicationActedId
-    actorProfileId
-    referrerProfileIds
-    referrerPubIds
-    actionModuleAddress
-    actionModuleData
-  }
-}
-
 fragment RelaySuccess on RelaySuccess {
   __typename
   txHash

@@ -1,3 +1,6 @@
 export * from './Actions';
 
-export type { CreateActOnOpenActionBroadcastItemResultFragment } from './graphql/actions.generated';
+export type {
+  CreateActOnOpenActionBroadcastItemResultFragment,
+  CreateActOnOpenActionEip712TypedDataFragment,
+} from './graphql/actions.generated';

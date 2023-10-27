@@ -11,7 +11,6 @@ export type {
   CollectConditionFragment,
   CommentBaseFragment,
   CommentFragment,
-  CreateActOnOpenActionEip712TypedDataFragment,
   CreateMomokaPublicationResultFragment,
   DegreesOfSeparationReferenceModuleSettingsFragment,
   Eip712TypedDataDomainFragment,
