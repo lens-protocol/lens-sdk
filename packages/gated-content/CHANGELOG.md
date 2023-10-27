@@ -1,5 +1,11 @@
 # @lens-protocol/gated-content
 
+## 0.3.3-alpha.13
+
+### Patch Changes
+
+- 7ed02dd93: **fix:** decryption of undefined metadata fields that are exposed as empty strings in GQL schemas
+
 ## 0.3.3-alpha.12
 
 ### Patch Changes
