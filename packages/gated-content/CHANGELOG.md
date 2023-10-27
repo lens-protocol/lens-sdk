@@ -1,5 +1,11 @@
 # @lens-protocol/gated-content
 
+## 0.3.3-alpha.12
+
+### Patch Changes
+
+- 1bd69391: **chore:** updates `@lens-protocol/metadata` package to 1.0.0
+
 ## 0.3.3-alpha.11
 
 ### Patch Changes
