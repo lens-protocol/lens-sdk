@@ -25,7 +25,7 @@ import {
  */
 export type LensClientConfig = {
   /**
-   * The environment to use. See {@link production}, {@link development}, and {@link sandbox}.
+   * The environment to use. See {@link production} or {@link development}.
    */
   environment: Environment;
 
