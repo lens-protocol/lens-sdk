@@ -10,6 +10,6 @@ export class FollowProfileResponder implements ITransactionResponder<FollowReque
   constructor(private readonly profileCacheManager: IProfileCacheManager) {}
 
   async commit({ request }: TransactionData<FollowRequest>) {
-    await this.profileCacheManager.refresh(request.profileId);
+    await this.profileCacheManager.fetchProfileById(request.profileId);
   }
 }

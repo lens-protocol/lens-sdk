@@ -108,35 +108,3 @@ export const development: EnvironmentConfig = {
   },
   // gated: GatedEnvironments.development,
 };
-
-/**
- * The sandbox environment configuration
- *
- * This is the environment to be used when you develop and you need to experiment with custom collect/follow modules.
- * Although the Lens contract are also deployed on Mumbai this is a separate deployment so expect different test data, profiles, users, etc.
- *
- * - Endpoint: https://api-sandbox-mumbai.lens.dev
- * - Chain IDs: 80001 (Mumbai), 5 (Goerli)
- * - Profile handle namespace: `test/`
- * - Environment specific timings
- */
-export const sandbox: EnvironmentConfig = {
-  name: 'sandbox',
-  backend: 'https://api-sandbox-mumbai.lens.dev' as URL,
-  chains: {
-    [ChainType.ETHEREUM]: goerli,
-    [ChainType.POLYGON]: mumbai,
-  },
-  timings: {
-    pollingInterval: 3000,
-    maxIndexingWaitTime: 240000,
-    maxMiningWaitTime: 120000,
-  },
-  handleResolver: (localName) => `test/${localName}`,
-  snapshot: {
-    hub: 'https://testnet.snapshot.org' as URL,
-    matcher: demoSnapshotPoll,
-    sequencer: 'https://testnet.seq.snapshot.org' as URL,
-  },
-  // gated: GatedEnvironments.sandbox,
-};
