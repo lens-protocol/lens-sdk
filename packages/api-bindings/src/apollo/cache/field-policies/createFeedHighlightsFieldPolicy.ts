@@ -1,5 +1,5 @@
 import { cursorBasedPagination } from '../utils/cursorBasedPagination';
 
 export function createFeedHighlightsFieldPolicy() {
-  return cursorBasedPagination([['request', ['where', ['metadata', 'for']]]]);
+  return cursorBasedPagination([['request', ['where']]]);
 }

@@ -1,8 +1,4 @@
-import {
-  useExploreProfiles,
-  CustomFiltersType,
-  ExploreProfilesOrderByType,
-} from '@lens-protocol/react-web';
+import { useExploreProfiles, ExploreProfilesOrderByType } from '@lens-protocol/react-web';
 
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
@@ -13,9 +9,6 @@ export function UseExploreProfiles() {
   const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
     useExploreProfiles({
       orderBy: ExploreProfilesOrderByType.LatestCreated,
-      where: {
-        customFilters: [CustomFiltersType.Gardeners],
-      },
     }),
   );
 

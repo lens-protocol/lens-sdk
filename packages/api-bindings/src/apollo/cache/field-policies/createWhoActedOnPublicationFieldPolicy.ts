@@ -1,5 +1,5 @@
 import { cursorBasedPagination } from '../utils/cursorBasedPagination';
 
 export function createWhoActedOnPublicationFieldPolicy() {
-  return cursorBasedPagination([['request', ['on', 'where', ['anyOf']]]]);
+  return cursorBasedPagination([['request', ['on', 'where']]]);
 }
