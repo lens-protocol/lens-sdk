@@ -1,11 +1,22 @@
-mutation ActOnOpenAction($request: ActOnOpenActionLensManagerRequest!) {
-  result: actOnOpenAction(request: $request) {
-    ... on RelaySuccess {
-      ...RelaySuccess
+fragment CreateActOnOpenActionEIP712TypedData on CreateActOnOpenActionEIP712TypedData {
+  types {
+    Act {
+      ...EIP712TypedDataField
     }
-    ... on LensProfileManagerRelayError {
-      ...LensProfileManagerRelayError
-    }
+  }
+  domain {
+    ...EIP712TypedDataDomain
+  }
+  value {
+    nonce
+    deadline
+    publicationActedProfileId
+    publicationActedId
+    actorProfileId
+    referrerProfileIds
+    referrerPubIds
+    actionModuleAddress
+    actionModuleData
   }
 }
 
@@ -14,6 +25,17 @@ fragment CreateActOnOpenActionBroadcastItemResult on CreateActOnOpenActionBroadc
   expiresAt
   typedData {
     ...CreateActOnOpenActionEIP712TypedData
+  }
+}
+
+mutation ActOnOpenAction($request: ActOnOpenActionLensManagerRequest!) {
+  result: actOnOpenAction(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
   }
 }
 

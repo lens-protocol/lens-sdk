@@ -5,6 +5,7 @@ export * from './types';
 
 export type {
   CreateLegacyCollectBroadcastItemResultFragment,
+  CreateLegacyCollectEip712TypedDataFragment,
   CreateMomokaCommentBroadcastItemResultFragment,
   CreateMomokaMirrorBroadcastItemResultFragment,
   CreateMomokaPostBroadcastItemResultFragment,

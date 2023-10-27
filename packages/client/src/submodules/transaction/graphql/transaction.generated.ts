@@ -15,8 +15,6 @@ import {
   OpenActionResult_KnownCollectOpenActionResult_Fragment,
   OpenActionResult_UnknownOpenActionResult_Fragment,
   RelaySuccessFragment,
-  LensProfileManagerRelayErrorFragment,
-  CreateActOnOpenActionEip712TypedDataFragment,
   RelayErrorFragment,
   CreateMomokaPublicationResultFragment,
 } from '../../../graphql/fragments.generated';
