@@ -11,7 +11,7 @@ import {
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
-import { IUnsignedProtocolCall, Nonce, Transaction } from '@lens-protocol/domain/entities';
+import { Nonce, Transaction } from '@lens-protocol/domain/entities';
 import { BlockProfilesRequest } from '@lens-protocol/domain/src/use-cases/profile/BlockProfiles';
 import {
   BroadcastingError,
@@ -59,7 +59,7 @@ export class BlockProfilesGateway
   async createUnsignedProtocolCall(
     request: BlockProfilesRequest,
     nonceOverride?: number | undefined,
-  ): Promise<IUnsignedProtocolCall<BlockProfilesRequest>> {
+  ): Promise<UnsignedProtocolCall<BlockProfilesRequest>> {
     const result = await this.createTypedData(request, nonceOverride);
 
     return UnsignedProtocolCall.create({

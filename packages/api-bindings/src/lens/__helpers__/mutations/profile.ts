@@ -5,39 +5,45 @@ import { mockNonce, mockProfileId } from '@lens-protocol/domain/mocks';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import {
+  BlockData,
+  BlockDocument,
+  BlockVariables,
+  CreateBlockProfilesTypedDataData,
+  CreateBlockProfilesTypedDataDocument,
+  CreateBlockProfilesTypedDataVariables,
   CreateFollowTypedDataData,
   CreateFollowTypedDataDocument,
   CreateFollowTypedDataVariables,
+  CreateLinkHandleToProfileTypedDataData,
+  CreateLinkHandleToProfileTypedDataDocument,
+  CreateLinkHandleToProfileTypedDataVariables,
+  CreateOnchainSetProfileMetadataTypedDataData,
+  CreateOnchainSetProfileMetadataTypedDataDocument,
+  CreateSetFollowModuleTypedDataData,
+  CreateSetFollowModuleTypedDataDocument,
+  CreateSetFollowModuleTypedDataVariables,
   CreateUnfollowTypedDataData,
   CreateUnfollowTypedDataDocument,
   CreateUnfollowTypedDataVariables,
+  CreateUnlinkHandleFromProfileTypedDataData,
+  CreateUnlinkHandleFromProfileTypedDataDocument,
+  CreateUnlinkHandleFromProfileTypedDataVariables,
   FollowData,
   FollowDocument,
   FollowVariables,
+  LinkHandleToProfileData,
+  LinkHandleToProfileDocument,
+  LinkHandleToProfileVariables,
+  OnchainSetProfileMetadataRequest,
+  SetFollowModuleData,
+  SetFollowModuleDocument,
+  SetFollowModuleVariables,
   UnfollowData,
   UnfollowDocument,
   UnfollowVariables,
-  CreateOnchainSetProfileMetadataTypedDataData,
-  CreateOnchainSetProfileMetadataTypedDataDocument,
-  OnchainSetProfileMetadataRequest,
-  CreateSetFollowModuleTypedDataData,
-  CreateSetFollowModuleTypedDataVariables,
-  CreateSetFollowModuleTypedDataDocument,
-  SetFollowModuleData,
-  SetFollowModuleVariables,
-  SetFollowModuleDocument,
-  CreateLinkHandleToProfileTypedDataData,
-  CreateLinkHandleToProfileTypedDataVariables,
-  CreateLinkHandleToProfileTypedDataDocument,
-  LinkHandleToProfileData,
-  LinkHandleToProfileVariables,
-  LinkHandleToProfileDocument,
-  CreateUnlinkHandleFromProfileTypedDataData,
-  CreateUnlinkHandleFromProfileTypedDataVariables,
-  CreateUnlinkHandleFromProfileTypedDataDocument,
   UnlinkHandleFromProfileData,
-  UnlinkHandleFromProfileVariables,
   UnlinkHandleFromProfileDocument,
+  UnlinkHandleFromProfileVariables,
 } from '../../graphql/generated';
 import {
   mockCreateTypedDataResult,
@@ -89,6 +95,63 @@ export function mockCreateSetProfileMetadataTypedDataResponse({
       },
     },
     result: { data },
+  };
+}
+
+export function mockBlockProfilesResponse<T extends BlockData, V extends BlockVariables>({
+  variables,
+  data,
+}: {
+  variables: V;
+  data: T;
+}): MockedResponse<T, V> {
+  return {
+    request: {
+      query: BlockDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function mockBlockProfilesTypedDataData({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateBlockProfilesTypedDataData {
+  return {
+    result: mockCreateTypedDataResult('CreateBlockProfilesBroadcastItemResult', {
+      types: {
+        SetBlockStatus: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      message: {
+        nonce,
+        deadline: 1644303500,
+        blockStatus: [true],
+        byProfileId: mockProfileId(),
+        idsOfProfilesToSetBlockStatus: [mockProfileId()],
+        datas: [],
+      },
+    }),
+  };
+}
+
+export function mockBlockProfilesTypedDataResponse<T extends CreateBlockProfilesTypedDataData>({
+  variables,
+  data,
+}: {
+  variables: CreateBlockProfilesTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateBlockProfilesTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
   };
 }
 
