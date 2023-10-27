@@ -22,6 +22,9 @@ import {
   CreateSetFollowModuleTypedDataData,
   CreateSetFollowModuleTypedDataDocument,
   CreateSetFollowModuleTypedDataVariables,
+  CreateUnblockProfilesTypedDataData,
+  CreateUnblockProfilesTypedDataDocument,
+  CreateUnblockProfilesTypedDataVariables,
   CreateUnfollowTypedDataData,
   CreateUnfollowTypedDataDocument,
   CreateUnfollowTypedDataVariables,
@@ -38,6 +41,9 @@ import {
   SetFollowModuleData,
   SetFollowModuleDocument,
   SetFollowModuleVariables,
+  UnblockData,
+  UnblockDocument,
+  UnblockVariables,
   UnfollowData,
   UnfollowDocument,
   UnfollowVariables,
@@ -95,6 +101,63 @@ export function mockCreateSetProfileMetadataTypedDataResponse({
       },
     },
     result: { data },
+  };
+}
+
+export function mockUnblockProfilesTypedDataData({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateUnblockProfilesTypedDataData {
+  return {
+    result: mockCreateTypedDataResult('CreateUnblockProfilesBroadcastItemResult', {
+      types: {
+        SetBlockStatus: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      message: {
+        nonce,
+        deadline: 1644303500,
+        blockStatus: [false],
+        byProfileId: mockProfileId(),
+        idsOfProfilesToSetBlockStatus: [mockProfileId()],
+        datas: [],
+      },
+    }),
+  };
+}
+
+export function mockUnblockProfilesResponse<T extends UnblockData, V extends UnblockVariables>({
+  variables,
+  data,
+}: {
+  variables: V;
+  data: T;
+}): MockedResponse<T, V> {
+  return {
+    request: {
+      query: UnblockDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function mockUnblockProfilesTypedDataResponse<T extends CreateUnblockProfilesTypedDataData>({
+  variables,
+  data,
+}: {
+  variables: CreateUnblockProfilesTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateUnblockProfilesTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
   };
 }
 
