@@ -5,7 +5,7 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { BlockProfiles, BlockProfilesRequest } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError, SubsidizeOnChain } from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError, SignedOnChain } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
@@ -32,7 +32,7 @@ export function useBlockProfilesController() {
 
   const gateway = new BlockProfilesGateway(apolloClient, transactionFactory);
 
-  const signedBlockProfiles = new SubsidizeOnChain<BlockProfilesRequest>(
+  const signedBlockProfiles = new SignedOnChain<BlockProfilesRequest>(
     activeWallet,
     transactionGateway,
     gateway,

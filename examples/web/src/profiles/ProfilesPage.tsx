@@ -84,7 +84,7 @@ const profileHooks = [
     path: '/profiles/useOwnedHandles',
   },
   {
-    label: 'useBlockProfiles',
+    label: 'useBlockProfiles & useUnblockProfiles',
     description: 'Block profiles from the active profile.',
     path: '/profiles/useBlockProfiles',
   },

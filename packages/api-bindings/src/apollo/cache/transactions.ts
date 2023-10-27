@@ -157,6 +157,22 @@ export function hasPendingUnblockForProfile(profileId: ProfileId) {
   });
 }
 
+function isBlockTransaction(
+  transaction: TransactionState<AnyTransactionRequest>,
+): transaction is TransactionState<UnblockProfilesRequest> {
+  return transaction.request.kind === TransactionKind.BLOCK_PROFILE;
+}
+
+export function hasPendingBlockForProfile(profileId: ProfileId) {
+  return recentTransactionsVar().some((transaction) => {
+    return (
+      isBlockTransaction(transaction) &&
+      transaction.status === TxStatus.PENDING &&
+      transaction.request.profileIds.includes(profileId)
+    );
+  });
+}
+
 function isFollowTransaction(
   transaction: TransactionState<AnyTransactionRequest>,
 ): transaction is TransactionState<FollowRequest> {

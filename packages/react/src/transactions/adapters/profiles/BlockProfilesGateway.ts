@@ -8,6 +8,7 @@ import {
   CreateBlockProfilesTypedDataVariables,
   RelaySuccess,
   SafeApolloClient,
+  omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { IUnsignedProtocolCall, Nonce, Transaction } from '@lens-protocol/domain/entities';
@@ -17,7 +18,7 @@ import {
   IDelegatedTransactionGateway,
   IOnChainProtocolCallGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, Data, PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
+import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
@@ -64,7 +65,7 @@ export class BlockProfilesGateway
     return UnsignedProtocolCall.create({
       id: result.id,
       request,
-      typedData: result.typedData,
+      typedData: omitTypename(result.typedData),
       fallback: this.createRequestFallback(request, result),
     });
   }

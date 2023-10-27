@@ -25,6 +25,7 @@ type RemoteProfilePictureProps = {
 function RemoteProfilePicture({ picture }: RemoteProfilePictureProps) {
   const url = picture.optimized?.uri || picture.raw.uri;
   const src = useBuildResourceSrc(url);
+  if (!src) return null;
   return (
     <img
       src={src}

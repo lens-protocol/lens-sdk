@@ -7,8 +7,8 @@ import { when } from 'jest-when';
 import { TransactionKind, NftOwnershipChallenge, NativeTransaction } from '../../../entities';
 import { mockProfileId, mockSignature } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../../transactions';
-import { ClaimHandleRequest } from '../ClaimHandle';
 import { BlockProfilesRequest } from '../BlockProfiles';
+import { ClaimHandleRequest } from '../ClaimHandle';
 import {
   CreateProfileRequest,
   DuplicatedHandleError,

@@ -5,6 +5,7 @@ import { OptimisticStatusResult, StrictTypedTypePolicies, TriStateValue } from '
 import {
   countPendingFollowFor,
   countPendingUnfollowFor,
+  hasPendingBlockForProfile,
   hasPendingUnblockForProfile,
 } from '../transactions';
 
@@ -93,6 +94,21 @@ export function createProfileOperationsTypePolicy(): StrictTypedTypePolicies['Pr
           return existing;
         },
       },
+      canBlock: {
+        read(existing: boolean | undefined, { readField }: FieldFunctionOptions) {
+          if (existing === undefined) {
+            return existing;
+          }
+
+          const id = readField('id') as ProfileId;
+
+          if (hasPendingBlockForProfile(id)) {
+            return false;
+          }
+
+          return existing;
+        },
+      },
       isBlockedByMe: {
         read(existing: OptimisticStatusResult | undefined, { readField }: FieldFunctionOptions) {
           if (!existing) {
@@ -108,6 +124,16 @@ export function createProfileOperationsTypePolicy(): StrictTypedTypePolicies['Pr
               ...existing,
               isFinalisedOnchain: false,
               value: false,
+            };
+          }
+
+          const hasPendingBlock = hasPendingBlockForProfile(id);
+
+          if (hasPendingBlock) {
+            return {
+              ...existing,
+              isFinalisedOnchain: false,
+              value: true,
             };
           }
 

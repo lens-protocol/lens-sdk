@@ -15,6 +15,7 @@ import { invariant } from '@lens-protocol/shared-kernel';
 
 import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
+import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useBlockProfilesController } from './adapters/useBlockProfileController';
 
 export type BlockProfileArgs = {
@@ -25,7 +26,7 @@ export type BlockProfileArgs = {
 };
 
 export type BlockOperation = UseDeferredTask<
-  void,
+  AsyncTransactionResult<void>,
   | BroadcastingError
   | InsufficientAllowanceError
   | InsufficientFundsError
@@ -49,7 +50,7 @@ export function useBlockProfiles(): BlockOperation {
     return blockProfile({
       profileIds: profiles.map((profile) => profile.id),
       kind: TransactionKind.BLOCK_PROFILE,
-      delegate: session.profile.lensManager,
+      delegate: session.profile.signless,
     });
   });
 }

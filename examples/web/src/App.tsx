@@ -44,8 +44,7 @@ import {
   UseSetProfileMetadata,
   UseOwnedHandles,
 } from './profiles';
-import { UseUnblockProfiles } from './profiles/UseBlockProfiles';
-import { UseBlockProfiles } from './profiles/UseBlockProfiles';
+import { UseBlockAndUnblockProfiles } from './profiles/UseBlockAndUnblockProfiles';
 import {
   PublicationsPage,
   UseBookmarkToggle,
@@ -146,9 +145,9 @@ export function App() {
                       <Route path="useProfileActionHistory" element={<UseProfileActionHistory />} />
                       <Route path="useSetProfileMetadata" element={<UseSetProfileMetadata />} />
                       <Route path="useUpdateFollowPolicy" element={<UseUpdateFollowPolicy />} />
-                      <Route path="useUnblockProfiles" element={<UseUnblockProfiles />} />
+                      <Route path="useUnblockProfiles" element={<UseBlockAndUnblockProfiles />} />
                       <Route path="useOwnedHandles" element={<UseOwnedHandles />} />
-                      <Route path="useBlockProfiles" element={<UseBlockProfiles />} />
+                      <Route path="useBlockProfiles" element={<UseBlockAndUnblockProfiles />} />
                     </Route>
 
                     <Route path="/discovery">
