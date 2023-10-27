@@ -80,7 +80,7 @@ export function createProfileOperationsTypePolicy(): StrictTypedTypePolicies['Pr
       },
       canUnblock: {
         read(existing: boolean | undefined, { readField }: FieldFunctionOptions) {
-          if (!existing) {
+          if (existing === undefined) {
             return existing;
           }
 

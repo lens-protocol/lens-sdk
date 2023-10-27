@@ -6,6 +6,10 @@ import {
   ProfileData,
   ProfileDocument,
   ProfileRequest,
+  ProfilesData,
+  ProfilesDocument,
+  ProfilesRequest,
+  ProfilesVariables,
   ProfileVariables,
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
@@ -28,6 +32,10 @@ export class ProfileCacheManager implements IProfileCacheManager {
 
   async refresh(id: ProfileId): Promise<void> {
     await this.fetch({ forProfileId: id }, 'network-only');
+  }
+
+  async refreshMultiple(profileIds: ProfileId[]): Promise<void> {
+    await this.fetchMultiple({ where: { profileIds } }, 'network-only');
   }
 
   async refreshCurrentProfile() {
@@ -80,6 +88,16 @@ export class ProfileCacheManager implements IProfileCacheManager {
     const { data } = await this.client.query<ProfileData, ProfileVariables>({
       query: ProfileDocument,
       variables: { request },
+      fetchPolicy,
+    });
+
+    return data.result;
+  }
+
+  private async fetchMultiple(request: ProfilesRequest, fetchPolicy: FetchPolicy) {
+    const { data } = await this.client.query<ProfilesData, ProfilesVariables>({
+      query: ProfilesDocument,
+      variables: { ...request },
       fetchPolicy,
     });
 

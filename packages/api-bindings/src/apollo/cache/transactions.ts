@@ -6,9 +6,11 @@ import {
   TransactionErrorReason,
   TransactionKind,
 } from '@lens-protocol/domain/entities';
-import { ProfileId } from '@lens-protocol/domain/src/entities';
-import { UnblockProfilesRequest } from '@lens-protocol/domain/use-cases/profile';
-import { FollowRequest, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
+import {
+  UnblockProfilesRequest,
+  FollowRequest,
+  UnfollowRequest,
+} from '@lens-protocol/domain/use-cases/profile';
 import { OpenActionRequest, AllOpenActionType } from '@lens-protocol/domain/use-cases/publications';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { DateUtils } from '@lens-protocol/shared-kernel';

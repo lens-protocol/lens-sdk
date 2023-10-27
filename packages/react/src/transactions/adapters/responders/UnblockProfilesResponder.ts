@@ -10,8 +10,6 @@ export class UnblockProfilesResponder implements ITransactionResponder<UnblockPr
   constructor(private readonly profileCacheManager: IProfileCacheManager) {}
 
   async commit({ request }: TransactionData<UnblockProfilesRequest>) {
-    request.profileIds.forEach(async (profileId) => {
-      await this.profileCacheManager.refresh(profileId);
-    });
+    await this.profileCacheManager.refreshMultiple(request.profileIds);
   }
 }

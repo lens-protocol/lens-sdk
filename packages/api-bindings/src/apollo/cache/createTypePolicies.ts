@@ -30,7 +30,6 @@ import {
   createPublicationTypePolicy,
   notNormalizedType,
 } from './type-policies';
-import { createProfileOperationsTypePolicy } from './type-policies/createProfileOperationsTypePolicy';
 
 type InheritedTypePolicies = {
   AnyPublication: TypePolicy;
