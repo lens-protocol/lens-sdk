@@ -145,7 +145,6 @@ export function App() {
                       <Route path="useProfileActionHistory" element={<UseProfileActionHistory />} />
                       <Route path="useSetProfileMetadata" element={<UseSetProfileMetadata />} />
                       <Route path="useUpdateFollowPolicy" element={<UseUpdateFollowPolicy />} />
-                      <Route path="useUnblockProfiles" element={<UseBlockAndUnblockProfiles />} />
                       <Route path="useOwnedHandles" element={<UseOwnedHandles />} />
                       <Route path="useBlockProfiles" element={<UseBlockAndUnblockProfiles />} />
                     </Route>
