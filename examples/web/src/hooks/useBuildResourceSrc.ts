@@ -6,7 +6,7 @@ const extractIpfsHash = (ifpsUrl: string) => {
   const match = ipfsRegex.exec(ifpsUrl);
 
   if (!(match && match[1])) {
-    throw new Error('Invalid IPFS URL');
+    return null;
   }
 
   return match[1];

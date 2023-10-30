@@ -1,4 +1,5 @@
 export * from './ClaimHandle';
+export * from './BlockProfiles';
 export * from './CreateProfile';
 export * from './FollowPolicy';
 export * from './FollowProfile';
@@ -11,3 +12,4 @@ export * from './UnlinkHandle';
 export * from './UpdateFollowPolicy';
 export * from './UpdateFollowPolicy';
 export * from './UpdateProfileManagers';
+export * from './UnblockProfiles';

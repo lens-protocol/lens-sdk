@@ -108,6 +108,12 @@ export const UnlinkHandleRequestSchema = z.object({
   delegate: z.boolean(),
 });
 
+export const UnblockProfilesRequestSchema = z.object({
+  profileIds: ProfileIdSchema.array().min(1),
+  kind: z.literal(TransactionKind.UNBLOCK_PROFILE),
+  delegate: z.boolean(),
+});
+
 export const ClaimHandleRequestSchema = z.union([
   z.object({
     kind: z.literal(TransactionKind.CLAIM_HANDLE),
@@ -121,3 +127,9 @@ export const ClaimHandleRequestSchema = z.union([
     followPolicy: FollowPolicyConfigSchema.optional(),
   }),
 ]);
+
+export const BlockProfilesRequestSchema = z.object({
+  profileIds: ProfileIdSchema.array().min(1),
+  kind: z.literal(TransactionKind.BLOCK_PROFILE),
+  delegate: z.boolean(),
+});

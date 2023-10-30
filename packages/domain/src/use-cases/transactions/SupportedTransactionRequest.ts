@@ -1,9 +1,11 @@
 import { JustProtocolRequest } from '../../entities';
 import { ClaimHandleRequest } from '../profile';
+import { BlockProfilesRequest } from '../profile/BlockProfiles';
 import { CreateProfileRequest } from '../profile/CreateProfile';
 import { FollowRequest } from '../profile/FollowProfile';
 import { LinkHandleRequest } from '../profile/LinkHandle';
 import { SetProfileMetadataRequest } from '../profile/SetProfileMetadata';
+import { UnblockProfilesRequest } from '../profile/UnblockProfiles';
 import { UnfollowRequest } from '../profile/UnfollowProfile';
 import { UnlinkHandleRequest } from '../profile/UnlinkHandle';
 import { UpdateFollowPolicyRequest } from '../profile/UpdateFollowPolicy';
@@ -16,6 +18,7 @@ import { OpenActionRequest } from '../publications/OpenAction';
 import { TokenAllowanceRequest } from './TokenAllowance';
 
 export type AnyTransactionRequest =
+  | BlockProfilesRequest
   | OpenActionRequest
   | ClaimHandleRequest
   | CreateCommentRequest
@@ -25,6 +28,7 @@ export type AnyTransactionRequest =
   | CreateProfileRequest
   | FollowRequest
   | TokenAllowanceRequest
+  | UnblockProfilesRequest
   | UnfollowRequest
   | UpdateProfileManagersRequest
   | UpdateFollowPolicyRequest

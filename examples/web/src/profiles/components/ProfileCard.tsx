@@ -1,12 +1,14 @@
 import { Profile } from '@lens-protocol/react-web';
+import { ReactNode } from 'react';
 
 import { ProfilePicture } from './ProfilePicture';
 
 type ProfileCardProps = {
   profile: Profile;
+  children?: ReactNode;
 };
 
-export function ProfileCard({ profile }: ProfileCardProps) {
+export function ProfileCard({ profile, children }: ProfileCardProps) {
   const { metadata } = profile;
 
   return (
@@ -29,6 +31,8 @@ export function ProfileCard({ profile }: ProfileCardProps) {
           </ul>
         </div>
       )}
+
+      {children}
     </article>
   );
 }

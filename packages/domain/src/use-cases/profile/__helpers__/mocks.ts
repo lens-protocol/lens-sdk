@@ -7,6 +7,7 @@ import { when } from 'jest-when';
 import { TransactionKind, NftOwnershipChallenge, NativeTransaction } from '../../../entities';
 import { mockProfileId, mockSignature } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../../transactions';
+import { BlockProfilesRequest } from '../BlockProfiles';
 import { ClaimHandleRequest } from '../ClaimHandle';
 import {
   CreateProfileRequest,
@@ -22,6 +23,7 @@ import {
   ProveNftOwnershipRequest,
 } from '../ProveNftOwnership';
 import { SetProfileMetadataRequest } from '../SetProfileMetadata';
+import { UnblockProfilesRequest } from '../UnblockProfiles';
 import { UnfollowRequest } from '../UnfollowProfile';
 import { UnlinkHandleRequest } from '../UnlinkHandle';
 import { UpdateFollowPolicyRequest } from '../UpdateFollowPolicy';
@@ -192,5 +194,27 @@ export function mockClaimHandleRequest(): ClaimHandleRequest {
   return {
     localName: faker.internet.userName(),
     kind: TransactionKind.CLAIM_HANDLE,
+  };
+}
+
+export function mockBlockProfilesRequest(
+  overrides?: Partial<BlockProfilesRequest>,
+): BlockProfilesRequest {
+  return {
+    delegate: true,
+    profileIds: [mockProfileId()],
+    ...overrides,
+    kind: TransactionKind.BLOCK_PROFILE,
+  };
+}
+
+export function mockUnblockProfilesRequest(
+  overrides?: Partial<UnblockProfilesRequest>,
+): UnblockProfilesRequest {
+  return {
+    delegate: true,
+    profileIds: [mockProfileId()],
+    ...overrides,
+    kind: TransactionKind.UNBLOCK_PROFILE,
   };
 }

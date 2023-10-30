@@ -37,10 +37,12 @@ import { MomokaRelayer } from './transactions/adapters/MomokaRelayer';
 import { OnChainRelayer } from './transactions/adapters/OnChainRelayer';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
+import { BlockProfilesResponder } from './transactions/adapters/responders/BlockProfilesResponder';
 import { FollowProfileResponder } from './transactions/adapters/responders/FollowProfileResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { RefreshCurrentProfileResponder } from './transactions/adapters/responders/RefreshCurrentProfileResponder';
 import { RefreshPublicationResponder } from './transactions/adapters/responders/RefreshPublicationResponder';
+import { UnblockProfilesResponder } from './transactions/adapters/responders/UnblockProfilesResponder';
 import { UnfollowProfileResponder } from './transactions/adapters/responders/UnfollowProfileResponder';
 import { UpdateProfileManagersResponder } from './transactions/adapters/responders/UpdateProfileManagersResponder';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
@@ -112,6 +114,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   const responders: TransactionResponders<AnyTransactionRequest> = {
     [TransactionKind.ACT_ON_PUBLICATION]: new RefreshPublicationResponder(publicationCacheManager),
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
+    [TransactionKind.BLOCK_PROFILE]: new BlockProfilesResponder(profileCacheManager),
     [TransactionKind.CLAIM_HANDLE]: new NoopResponder(),
     [TransactionKind.CREATE_COMMENT]: new NoopResponder(), // TODO update profile for new stats
     [TransactionKind.CREATE_POST]: new NoopResponder(), // TODO update profile for new stats
@@ -120,6 +123,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     [TransactionKind.FOLLOW_PROFILE]: new FollowProfileResponder(profileCacheManager),
     [TransactionKind.LINK_HANDLE]: new RefreshCurrentProfileResponder(profileCacheManager),
     [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(), // TODO update profile for new stats
+    [TransactionKind.UNBLOCK_PROFILE]: new UnblockProfilesResponder(profileCacheManager),
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(profileCacheManager),
     [TransactionKind.UNLINK_HANDLE]: new RefreshCurrentProfileResponder(profileCacheManager),
     [TransactionKind.UPDATE_FOLLOW_POLICY]: new RefreshCurrentProfileResponder(profileCacheManager),

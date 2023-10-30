@@ -23,7 +23,9 @@ import {
   FollowRequestSchema,
   LinkHandleRequestSchema,
   UnlinkHandleRequestSchema,
+  UnblockProfilesRequestSchema,
   ClaimHandleRequestSchema,
+  BlockProfilesRequestSchema,
 } from './profiles';
 import {
   CollectRequestSchema,
@@ -37,6 +39,9 @@ function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) 
   switch (kind) {
     case TransactionKind.ACT_ON_PUBLICATION:
       return CollectRequestSchema;
+    case TransactionKind.BLOCK_PROFILE:
+      return BlockProfilesRequestSchema;
+
     case TransactionKind.CLAIM_HANDLE:
       return ClaimHandleRequestSchema;
     case TransactionKind.CREATE_COMMENT:
@@ -63,6 +68,8 @@ function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) 
       return SetProfileMetadataRequestSchema;
     case TransactionKind.UPDATE_PROFILE_MANAGERS:
       return UpdateProfileManagersRequestSchema;
+    case TransactionKind.UNBLOCK_PROFILE:
+      return UnblockProfilesRequestSchema;
 
     default:
       throw new Error('Not implemented');

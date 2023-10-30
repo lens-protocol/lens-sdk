@@ -43,6 +43,8 @@ const lensHubTransactionKinds = [
 
 const transactionKindToFilterGroup: { [k in TransactionKind]: TransactionKind[] } = {
   [TransactionKind.ACT_ON_PUBLICATION]: lensHubTransactionKinds,
+  [TransactionKind.BLOCK_PROFILE]: lensHubTransactionKinds,
+  [TransactionKind.UNBLOCK_PROFILE]: lensHubTransactionKinds,
   [TransactionKind.CREATE_COMMENT]: lensHubTransactionKinds,
   [TransactionKind.CREATE_POST]: lensHubTransactionKinds,
   [TransactionKind.CREATE_QUOTE]: lensHubTransactionKinds,

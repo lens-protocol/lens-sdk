@@ -2,7 +2,12 @@ import { FieldFunctionOptions } from '@apollo/client/cache/inmemory/policies';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
 import { OptimisticStatusResult, StrictTypedTypePolicies, TriStateValue } from '../../../lens';
-import { countPendingFollowFor, countPendingUnfollowFor } from '../transactions';
+import {
+  countPendingFollowFor,
+  countPendingUnfollowFor,
+  hasPendingBlockForProfile,
+  hasPendingUnblockForProfile,
+} from '../transactions';
 
 export function createProfileOperationsTypePolicy(): StrictTypedTypePolicies['ProfileOperations'] {
   return {
@@ -68,6 +73,67 @@ export function createProfileOperationsTypePolicy(): StrictTypedTypePolicies['Pr
               ...existing,
               value: false,
               isFinalisedOnchain: false,
+            };
+          }
+
+          return existing;
+        },
+      },
+      canUnblock: {
+        read(existing: boolean | undefined, { readField }: FieldFunctionOptions) {
+          if (existing === undefined) {
+            return existing;
+          }
+
+          const id = readField('id') as ProfileId;
+
+          if (hasPendingUnblockForProfile(id)) {
+            return false;
+          }
+
+          return existing;
+        },
+      },
+      canBlock: {
+        read(existing: boolean | undefined, { readField }: FieldFunctionOptions) {
+          if (existing === undefined) {
+            return existing;
+          }
+
+          const id = readField('id') as ProfileId;
+
+          if (hasPendingBlockForProfile(id)) {
+            return false;
+          }
+
+          return existing;
+        },
+      },
+      isBlockedByMe: {
+        read(existing: OptimisticStatusResult | undefined, { readField }: FieldFunctionOptions) {
+          if (!existing) {
+            return existing;
+          }
+
+          const id = readField('id') as ProfileId;
+
+          const hasPendingUnblock = hasPendingUnblockForProfile(id);
+
+          if (hasPendingUnblock) {
+            return {
+              ...existing,
+              isFinalisedOnchain: false,
+              value: false,
+            };
+          }
+
+          const hasPendingBlock = hasPendingBlockForProfile(id);
+
+          if (hasPendingBlock) {
+            return {
+              ...existing,
+              isFinalisedOnchain: false,
+              value: true,
             };
           }
 

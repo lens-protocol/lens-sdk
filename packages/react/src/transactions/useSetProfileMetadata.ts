@@ -87,12 +87,8 @@ export function useSetProfileMetadata(): UseDeferredTask<
 
   return useDeferredTask(async ({ metadataURI }: UseSetProfileMetadataArgs) => {
     invariant(
-      session?.authenticated,
+      session?.type === SessionType.WithProfile,
       'You must be authenticated to set profile metadata. Use `useLogin` hook to authenticate.',
-    );
-    invariant(
-      session.type === SessionType.WithProfile,
-      'You must have a profile to set profile metadata.',
     );
 
     return setProfileMetadata({

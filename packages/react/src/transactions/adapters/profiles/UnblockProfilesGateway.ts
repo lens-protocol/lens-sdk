@@ -1,24 +1,24 @@
 import {
-  CreateOnchainSetProfileMetadataBroadcastItemResult,
-  CreateOnchainSetProfileMetadataTypedDataData,
-  CreateOnchainSetProfileMetadataTypedDataDocument,
-  CreateOnchainSetProfileMetadataTypedDataVariables,
+  CreateUnblockProfilesBroadcastItemResult,
+  CreateUnblockProfilesTypedDataData,
+  CreateUnblockProfilesTypedDataDocument,
+  CreateUnblockProfilesTypedDataVariables,
   RelaySuccess,
   SafeApolloClient,
-  SetProfileMetadataData,
-  SetProfileMetadataDocument,
-  SetProfileMetadataVariables,
+  UnblockData,
+  UnblockDocument,
+  UnblockVariables,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce, Transaction } from '@lens-protocol/domain/entities';
-import { SetProfileMetadataRequest } from '@lens-protocol/domain/use-cases/profile';
+import { UnblockProfilesRequest } from '@lens-protocol/domain/src/use-cases/profile/UnblockProfiles';
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { ChainType, Data, PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
@@ -26,62 +26,58 @@ import { ITransactionFactory } from '../ITransactionFactory';
 import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError } from '../relayer';
 
-export class ProfileMetadataGateway
+export class UnblockProfilesGateway
   implements
-    IDelegatedTransactionGateway<SetProfileMetadataRequest>,
-    ISignedOnChainGateway<SetProfileMetadataRequest>
+    IDelegatedTransactionGateway<UnblockProfilesRequest>,
+    ISignedOnChainGateway<UnblockProfilesRequest>
 {
   constructor(
     private readonly apolloClient: SafeApolloClient,
-    private readonly transactionFactory: ITransactionFactory<SetProfileMetadataRequest>,
+    private readonly transactionFactory: ITransactionFactory<UnblockProfilesRequest>,
   ) {}
 
   async createDelegatedTransaction(
-    request: SetProfileMetadataRequest,
-  ): PromiseResult<Transaction<SetProfileMetadataRequest>, BroadcastingError> {
+    request: UnblockProfilesRequest,
+  ): PromiseResult<Transaction<UnblockProfilesRequest>, BroadcastingError> {
     const result = await this.broadcast(request);
 
     if (result.isFailure()) {
-      return result;
+      return failure(result.error);
     }
 
-    const receipt = result.value;
     const transaction = this.transactionFactory.createNativeTransaction({
       chainType: ChainType.POLYGON,
       id: v4(),
-      indexingId: receipt.txId,
-      txHash: receipt.txHash,
       request,
+      indexingId: result.value.txId,
+      txHash: result.value.txHash,
     });
 
     return success(transaction);
   }
 
   async createUnsignedProtocolCall(
-    request: SetProfileMetadataRequest,
-    nonce?: Nonce,
-  ): Promise<UnsignedProtocolCall<SetProfileMetadataRequest>> {
-    const data = await this.createTypedData(request, nonce);
+    request: UnblockProfilesRequest,
+    nonceOverride?: number | undefined,
+  ): Promise<UnsignedProtocolCall<UnblockProfilesRequest>> {
+    const result = await this.createTypedData(request, nonceOverride);
 
     return UnsignedProtocolCall.create({
-      id: data.id,
+      id: result.id,
       request,
-      typedData: omitTypename(data.typedData),
-      fallback: this.createRequestFallback(request, data),
+      typedData: omitTypename(result.typedData),
+      fallback: this.createRequestFallback(request, result),
     });
   }
 
   private async broadcast(
-    request: SetProfileMetadataRequest,
+    request: UnblockProfilesRequest,
   ): PromiseResult<RelaySuccess, BroadcastingError> {
-    const { data } = await this.apolloClient.mutate<
-      SetProfileMetadataData,
-      SetProfileMetadataVariables
-    >({
-      mutation: SetProfileMetadataDocument,
+    const { data } = await this.apolloClient.mutate<UnblockData, UnblockVariables>({
+      mutation: UnblockDocument,
       variables: {
         request: {
-          metadataURI: request.metadataURI,
+          profiles: request.profileIds,
         },
       },
     });
@@ -97,17 +93,17 @@ export class ProfileMetadataGateway
   }
 
   private async createTypedData(
-    request: SetProfileMetadataRequest,
+    request: UnblockProfilesRequest,
     nonce?: Nonce,
-  ): Promise<CreateOnchainSetProfileMetadataBroadcastItemResult> {
+  ): Promise<CreateUnblockProfilesBroadcastItemResult> {
     const { data } = await this.apolloClient.mutate<
-      CreateOnchainSetProfileMetadataTypedDataData,
-      CreateOnchainSetProfileMetadataTypedDataVariables
+      CreateUnblockProfilesTypedDataData,
+      CreateUnblockProfilesTypedDataVariables
     >({
-      mutation: CreateOnchainSetProfileMetadataTypedDataDocument,
+      mutation: CreateUnblockProfilesTypedDataDocument,
       variables: {
         request: {
-          metadataURI: request.metadataURI,
+          profiles: request.profileIds,
         },
         options: nonce ? { overrideSigNonce: nonce } : undefined,
       },
@@ -117,13 +113,14 @@ export class ProfileMetadataGateway
   }
 
   private createRequestFallback(
-    request: SetProfileMetadataRequest,
-    result: CreateOnchainSetProfileMetadataBroadcastItemResult,
-  ): SelfFundedProtocolTransactionRequest<SetProfileMetadataRequest> {
+    request: UnblockProfilesRequest,
+    result: CreateUnblockProfilesBroadcastItemResult,
+  ): SelfFundedProtocolTransactionRequest<UnblockProfilesRequest> {
     const contract = lensHub(result.typedData.domain.verifyingContract);
-    const encodedData = contract.interface.encodeFunctionData('setProfileMetadataURI', [
-      result.typedData.message.profileId,
-      request.metadataURI,
+    const encodedData = contract.interface.encodeFunctionData('setBlockStatus', [
+      result.typedData.message.byProfileId,
+      result.typedData.message.idsOfProfilesToSetBlockStatus,
+      result.typedData.message.blockStatus,
     ]);
     return {
       ...request,

@@ -7,6 +7,7 @@ export type Nonce = number;
 export enum TransactionKind {
   APPROVE_MODULE = 'APPROVE_MODULE',
   ACT_ON_PUBLICATION = 'ACT_ON_PUBLICATION',
+  BLOCK_PROFILE = 'BLOCK_PROFILE',
   CREATE_COMMENT = 'CREATE_COMMENT',
   CREATE_POST = 'CREATE_POST',
   CREATE_PROFILE = 'CREATE_PROFILE',
@@ -15,6 +16,7 @@ export enum TransactionKind {
   FOLLOW_PROFILE = 'FOLLOW_PROFILE',
   LINK_HANDLE = 'LINK_HANDLE',
   MIRROR_PUBLICATION = 'MIRROR_PUBLICATION',
+  UNBLOCK_PROFILE = 'UNBLOCK_PROFILE',
   UNFOLLOW_PROFILE = 'UNFOLLOW_PROFILE',
   UNLINK_HANDLE = 'UNLINK_HANDLE',
   UPDATE_FOLLOW_POLICY = 'UPDATE_FOLLOW_POLICY',
@@ -24,6 +26,8 @@ export enum TransactionKind {
 
 export const ProtocolTransactionKinds = [
   TransactionKind.ACT_ON_PUBLICATION,
+  TransactionKind.BLOCK_PROFILE,
+  TransactionKind.UNFOLLOW_PROFILE,
   TransactionKind.CLAIM_HANDLE,
   TransactionKind.CREATE_COMMENT,
   TransactionKind.CREATE_POST,
@@ -32,6 +36,7 @@ export const ProtocolTransactionKinds = [
   TransactionKind.FOLLOW_PROFILE,
   TransactionKind.LINK_HANDLE,
   TransactionKind.MIRROR_PUBLICATION,
+  TransactionKind.UNBLOCK_PROFILE,
   TransactionKind.UNFOLLOW_PROFILE,
   TransactionKind.UNLINK_HANDLE,
   TransactionKind.UPDATE_FOLLOW_POLICY,
