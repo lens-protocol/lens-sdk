@@ -3,6 +3,7 @@ import {
   CreateCommentRequest,
   CreateMirrorRequest,
   CreatePostRequest,
+  CreateQuoteRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 import { never, RecursiveUnbrand } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
@@ -12,6 +13,7 @@ import {
   CreateCommentRequestSchema,
   CreateMirrorRequestSchema,
   CreatePostRequestSchema,
+  CreateQuoteRequestSchema,
 } from './publications';
 
 function evaluate<Input, Output>(result: z.SafeParseReturnType<Input, Output>): Output {
@@ -49,6 +51,17 @@ export function createMirrorRequest(
   return evaluate(
     CreateMirrorRequestSchema.safeParse({
       kind: TransactionKind.MIRROR_PUBLICATION,
+      ...input,
+    }),
+  );
+}
+
+export function createQuoteRequest(
+  input: RecursiveUnbrand<Omit<CreateQuoteRequest, 'kind'>>,
+): CreateQuoteRequest {
+  return evaluate(
+    CreateQuoteRequestSchema.safeParse({
+      kind: TransactionKind.CREATE_QUOTE,
       ...input,
     }),
   );

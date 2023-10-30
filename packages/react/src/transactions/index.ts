@@ -3,6 +3,7 @@ export * from './useClaimHandle';
 export * from './useCreateComment';
 export * from './useCreateMirror';
 export * from './useCreatePost';
+export * from './useCreateQuote';
 export * from './useFollow';
 export * from './useLinkHandle';
 export * from './useOpenAction';

@@ -5,12 +5,14 @@ import {
   isCommentPublication,
   isMirrorPublication,
   isPostPublication,
+  isQuotePublication,
   Mirror,
   Post,
   PublicationData,
   PublicationDocument,
   PublicationRequest,
   PublicationVariables,
+  Quote,
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import { PublicationId } from '@lens-protocol/domain/entities';
@@ -43,6 +45,12 @@ export class PublicationCacheManager implements IPublicationCacheManager {
   async fetchNewMirror(tx: TransactionData<CreateMirrorRequest>): Promise<Mirror> {
     const publication = await this.fetchNewPublication(tx);
     invariant(isMirrorPublication(publication), `Unexpected publication type`);
+    return publication;
+  }
+
+  async fetchNewQuote(tx: TransactionData<CreateQuoteRequest>): Promise<Quote> {
+    const publication = await this.fetchNewPublication(tx);
+    invariant(isQuotePublication(publication), `Unexpected publication type`);
     return publication;
   }
 

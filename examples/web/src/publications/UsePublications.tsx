@@ -59,11 +59,11 @@ export function UsePublications() {
             </label>
           ))}
         </fieldset>
-        {beforeCount > 0 && (
-          <button disabled={loading} onClick={prev}>
-            Fetch newer
-          </button>
-        )}
+
+        <button disabled={loading || beforeCount === 0} onClick={prev}>
+          Fetch newer
+        </button>
+
         {publications.map((publication) => (
           <PublicationCard key={publication.id} publication={publication} />
         ))}
