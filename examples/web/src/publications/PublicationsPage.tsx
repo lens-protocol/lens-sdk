@@ -12,6 +12,11 @@ const publicationHooks = [
     path: '/publications/useCreateComment',
   },
   {
+    label: 'useCreateQuote',
+    description: `Quote another publication.`,
+    path: '/publications/useCreateQuote',
+  },
+  {
     label: 'usePublication',
     description: `Fetch a single publication.`,
     path: '/publications/usePublication',

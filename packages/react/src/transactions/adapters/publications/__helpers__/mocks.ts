@@ -2,14 +2,17 @@ import {
   MomokaCommentRequest,
   MomokaMirrorRequest,
   MomokaPostRequest,
+  MomokaQuoteRequest,
   OnchainCommentRequest,
   OnchainMirrorRequest,
   OnchainPostRequest,
+  OnchainQuoteRequest,
 } from '@lens-protocol/api-bindings';
 import {
   CreateCommentRequest,
   CreateMirrorRequest,
   CreatePostRequest,
+  CreateQuoteRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 
 import { resolveOpenActionModuleInput } from '../resolveOpenActionModuleInput';
@@ -54,5 +57,21 @@ export function mockOnchainMirrorRequest(request: CreateMirrorRequest): OnchainM
 export function mockMomokaMirrorRequest(request: CreateMirrorRequest): MomokaMirrorRequest {
   return {
     mirrorOn: request.mirrorOn,
+  };
+}
+
+export function mockOnchainQuoteRequest(request: CreateQuoteRequest): OnchainQuoteRequest {
+  return {
+    quoteOn: request.quoteOn,
+    contentURI: request.metadata,
+    referenceModule: request.reference && resolveReferenceModuleInput(request.reference),
+    openActionModules: request.actions?.map(resolveOpenActionModuleInput),
+  };
+}
+
+export function mockMomokaQuoteRequest(request: CreateQuoteRequest): MomokaQuoteRequest {
+  return {
+    quoteOn: request.quoteOn,
+    contentURI: request.metadata,
   };
 }

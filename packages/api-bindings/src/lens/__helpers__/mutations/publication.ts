@@ -32,6 +32,9 @@ import {
   CreateMomokaPostTypedDataDocument,
   CreateMomokaPostTypedDataVariables,
   CreateMomokaPublicationResult,
+  CreateMomokaQuoteTypedDataData,
+  CreateMomokaQuoteTypedDataDocument,
+  CreateMomokaQuoteTypedDataVariables,
   CreateOnchainCommentTypedDataData,
   CreateOnchainCommentTypedDataDocument,
   CreateOnchainCommentTypedDataVariables,
@@ -41,6 +44,9 @@ import {
   CreateOnchainPostTypedDataData,
   CreateOnchainPostTypedDataDocument,
   CreateOnchainPostTypedDataVariables,
+  CreateOnchainQuoteTypedDataData,
+  CreateOnchainQuoteTypedDataDocument,
+  CreateOnchainQuoteTypedDataVariables,
   HidePublicationData,
   HidePublicationDocument,
   HidePublicationVariables,
@@ -59,6 +65,12 @@ import {
   PostOnMomokaData,
   PostOnMomokaDocument,
   PostOnMomokaVariables,
+  QuoteOnchainData,
+  QuoteOnchainDocument,
+  QuoteOnchainVariables,
+  QuoteOnMomokaData,
+  QuoteOnMomokaDocument,
+  QuoteOnMomokaVariables,
   RemovePublicationBookmarkData,
   RemovePublicationBookmarkDocument,
   RemovePublicationBookmarkVariables,
@@ -471,6 +483,128 @@ export function mockMirrorOnchainResponse<
   return {
     request: {
       query: MirrorOnchainDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function mockCreateOnchainQuoteTypedDataData({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateOnchainQuoteTypedDataData {
+  return {
+    result: mockCreateTypedDataResult('CreateOnchainQuoteBroadcastItemResult', {
+      types: {
+        Quote: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      message: {
+        nonce,
+        deadline: 1644303500,
+        profileId: mockProfileId(),
+        contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json',
+        pointedProfileId: mockProfileId(),
+        pointedPubId: '0x01',
+        referrerProfileIds: [],
+        referrerPubIds: [],
+        referenceModuleData: '0x',
+        actionModules: [mockEvmAddress()],
+        actionModulesInitDatas: ['0x'],
+        referenceModule: '0x0000000000000000000000000000000000000000',
+        referenceModuleInitData: '0x',
+      },
+    }),
+  };
+}
+
+export function mockCreateOnchainQuoteTypedDataResponse<T extends CreateOnchainQuoteTypedDataData>({
+  variables,
+  data,
+}: {
+  variables: CreateOnchainQuoteTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateOnchainQuoteTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function mockQuoteOnchainResponse<
+  T extends QuoteOnchainData,
+  V extends QuoteOnchainVariables,
+>({ variables, data }: { variables: V; data: T }): MockedResponse<T, V> {
+  return {
+    request: {
+      query: QuoteOnchainDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function mockCreateMomokaQuoteTypedDataData({
+  nonce = mockNonce(),
+}: { nonce?: Nonce } = {}): CreateMomokaQuoteTypedDataData {
+  return {
+    result: mockCreateTypedDataResult('CreateMomokaQuoteBroadcastItemResult', {
+      types: {
+        Quote: [mockEIP712TypedDataField()],
+      },
+      domain: mockEIP712TypedDataDomain(),
+      message: {
+        nonce,
+        deadline: 1644303500,
+        profileId: mockProfileId(),
+        contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json',
+        pointedProfileId: mockProfileId(),
+        pointedPubId: '0x01',
+        referrerProfileIds: [],
+        referrerPubIds: [],
+        referenceModuleData: '0x',
+        actionModules: [mockEvmAddress()],
+        actionModulesInitDatas: ['0x'],
+        referenceModule: '0x0000000000000000000000000000000000000000',
+        referenceModuleInitData: '0x',
+      },
+    }),
+  };
+}
+
+export function mockCreateMomokaQuoteTypedDataResponse<T extends CreateMomokaQuoteTypedDataData>({
+  variables,
+  data,
+}: {
+  variables: CreateMomokaQuoteTypedDataVariables;
+  data: T;
+}): MockedResponse<T> {
+  return {
+    request: {
+      query: CreateMomokaQuoteTypedDataDocument,
+      variables,
+    },
+    result: {
+      data,
+    },
+  };
+}
+
+export function mockQuoteOnMomokaResponse<
+  T extends QuoteOnMomokaData,
+  V extends QuoteOnMomokaVariables,
+>({ variables, data }: { variables: V; data: T }): MockedResponse<T, V> {
+  return {
+    request: {
+      query: QuoteOnMomokaDocument,
       variables,
     },
     result: {

@@ -6,7 +6,7 @@ import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PublicationCard } from '../publications/components/PublicationCard';
 
 export function UseFeed() {
-  const { data, error, loading, hasMore, observeRef, prev } = useInfiniteScroll(
+  const { data, error, loading, hasMore, beforeCount, observeRef, prev } = useInfiniteScroll(
     useFeed({
       where: {
         for: profileId('0x04'),
@@ -26,7 +26,7 @@ export function UseFeed() {
 
         {error && <ErrorMessage error={error} />}
 
-        <button disabled={loading} onClick={prev}>
+        <button disabled={loading || beforeCount === 0} onClick={prev}>
           Fetch newer
         </button>
 

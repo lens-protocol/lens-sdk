@@ -23,9 +23,13 @@ import {
   UseSearchProfiles,
   UseSearchPublications,
 } from './discovery';
-import { MiscPage, UseCurrencies, UseNotifications } from './misc';
-import { UseApproveModule } from './misc/UseApproveModule';
-import { UseClaimHandle } from './misc/UseClaimHandle';
+import {
+  MiscPage,
+  UseApproveModule,
+  UseClaimHandle,
+  UseCurrencies,
+  UseNotifications,
+} from './misc';
 import {
   ProfilesPage,
   UseFollowAndUnfollow,
@@ -50,8 +54,10 @@ import {
   UseBookmarkToggle,
   UseCreateComment,
   UseCreatePost,
+  UseCreateQuote,
   UseHidePublication,
   UseMyBookmarks,
+  UseNotInterestedToggle,
   UseOpenAction,
   UsePublication,
   UsePublications,
@@ -59,7 +65,6 @@ import {
   UseReportPublication,
   UseWhoReactedToPublication,
 } from './publications';
-import { UseNotInterestedToggle } from './publications/UseNotInterestedToggle';
 import {
   RevenuePage,
   UseRevenueFromFollow,
@@ -108,6 +113,7 @@ export function App() {
                       <Route index element={<PublicationsPage />} />
                       <Route path="useCreatePost" element={<UseCreatePost />} />
                       <Route path="useCreateComment" element={<UseCreateComment />} />
+                      <Route path="useCreateQuote" element={<UseCreateQuote />} />
                       <Route path="usePublication" element={<UsePublication />} />
                       <Route path="usePublications" element={<UsePublications />} />
                       <Route
