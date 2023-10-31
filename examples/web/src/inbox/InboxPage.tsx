@@ -6,11 +6,11 @@ const inboxHooks = [
     description: `List all conversations. Show a conversation with messages. Send a message.`,
     path: '/inbox/useConversations',
   },
-  // {
-  //   label: 'useCreateConversation',
-  //   description: `Start a new conversation.`,
-  //   path: '/inbox/useCreateConversation',
-  // },
+  {
+    label: 'useCreateConversation',
+    description: `Start a new conversation.`,
+    path: '/inbox/useCreateConversation',
+  },
 ];
 
 export function InboxPage() {

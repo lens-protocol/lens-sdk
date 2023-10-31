@@ -1,21 +1,60 @@
-import { Profile } from '@lens-protocol/react-web';
-import { useClient } from '@xmtp/react-sdk';
+import { Profile, ProfileSession } from '@lens-protocol/react-web';
+import { useEnhanceConversations, useXmtpClient } from '@lens-protocol/react-web/inbox';
+import { useConversations } from '@xmtp/react-sdk';
+import { Link } from 'react-router-dom';
 
-import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
+import { RequireProfileSession } from '../components/auth';
+import { ErrorMessage } from '../components/error/ErrorMessage';
+import { Loading } from '../components/loading/Loading';
+import { ConversationCard } from './components/ConversationCard';
 import { EnableConversationsButton } from './components/EnableConversationsButton';
 
-type EnableConversationsProps = {
+type UseConversationsInnerProps = {
   profile: Profile;
 };
 
-function EnableConversations(_: EnableConversationsProps) {
-  const { client } = useClient();
+function UseConversationsInner({ profile }: UseConversationsInnerProps) {
+  const {
+    data: conversations,
+    error,
+    loading,
+  } = useEnhanceConversations(useConversations(), {
+    profile,
+  });
+
+  if (error) return <ErrorMessage error={error} />;
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  return (
+    <div>
+      {conversations?.length === 0 && <p>No items</p>}
+
+      {conversations?.map((conversation) => (
+        <ConversationCard key={conversation.topic} conversation={conversation}>
+          <Link to={`/inbox/useConversations/${encodeURIComponent(conversation.topic)}`}>
+            Show details
+          </Link>
+        </ConversationCard>
+      ))}
+    </div>
+  );
+}
+
+type EnableConversationsProps = {
+  session: ProfileSession;
+};
+
+function EnableConversations({ session }: EnableConversationsProps) {
+  const { client } = useXmtpClient();
 
   if (!client) {
     return <EnableConversationsButton />;
   }
 
-  return <div>Success!!</div>;
+  return <UseConversationsInner profile={session.profile} />;
 }
 
 export function UseConversations() {
@@ -24,8 +63,9 @@ export function UseConversations() {
       <h1>
         <code>useConversations</code>
       </h1>
-      <WhenLoggedIn>{({ profile }) => <EnableConversations profile={profile} />}</WhenLoggedIn>
-      <UnauthenticatedFallback />
+      <RequireProfileSession message="Log in to view this example.">
+        {(session) => <EnableConversations session={session} />}
+      </RequireProfileSession>
     </>
   );
 }

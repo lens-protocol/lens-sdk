@@ -136,6 +136,7 @@ export {
   InsufficientAllowanceError,
   InsufficientFundsError,
 } from '@lens-protocol/domain/use-cases/wallets';
+export { UnspecifiedError } from '@lens-protocol/api-bindings';
 
 /**
  * Helpers

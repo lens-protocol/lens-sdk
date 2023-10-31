@@ -1,6 +1,6 @@
 import { Profile } from '@lens-protocol/react';
-import { Conversation } from '@xmtp/react-sdk';
+import { CachedConversation } from '@xmtp/react-sdk';
 
-export type EnhancedConversation = Conversation & {
+export type EnhancedConversation = CachedConversation & {
   peerProfile?: Profile;
 };

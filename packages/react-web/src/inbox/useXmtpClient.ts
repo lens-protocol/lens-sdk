@@ -48,6 +48,26 @@ const defaultOptions: InitXmtpClientOptions = {
  * @category Inbox
  * @group Hooks
  * @experimental
+ *
+ * @example
+ * ```tsx
+ * const { client, disconnect, isLoading, error, initialize } = useXmtpClient();
+ *
+ * const handleConnect = async () => {
+ *   await initialize();
+ * };
+ *
+ * if (isLoading) return 'Loading...';
+ * if (error) return 'Error';
+ *
+ * if (!client) {
+ *   return (
+ *     <button type="button" onClick={handleConnect}>
+ *       Connect to XMTP
+ *     </button>
+ *   );
+ * }
+ * ```
  */
 export function useXmtpClient(): UseXmtpClientResult {
   const { client, disconnect, isLoading: clientIsLoading, initialize } = useClient();
