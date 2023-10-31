@@ -141,4 +141,5 @@ export {
  * Helpers
  */
 export * from './utils';
+export { useSharedDependencies } from './shared';
 export { isValidHandle, resolveFollowPolicy } from '@lens-protocol/api-bindings';

@@ -57,7 +57,6 @@
     "@types/jest": "29.5.3",
     "@types/jest-when": "^3.5.5",
     "@types/react": "^18.2.38",
-    "@xmtp/react-sdk": "1.0.0-preview.40",
     "eslint": "^8.54.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",

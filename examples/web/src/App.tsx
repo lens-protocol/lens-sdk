@@ -23,6 +23,7 @@ import {
   UseSearchProfiles,
   UseSearchPublications,
 } from './discovery';
+import { InboxPage, UseConversations } from './inbox';
 import {
   MiscPage,
   UseApproveModule,
@@ -196,6 +197,11 @@ export function App() {
                       <Route path="useApproveModule" element={<UseApproveModule />} />
                       <Route path="useClaimHandle" element={<UseClaimHandle />} />
                       <Route path="useInviteWallets" element={<UseInviteWallets />} />
+                    </Route>
+
+                    <Route path="/inbox">
+                      <Route index element={<InboxPage />} />
+                      <Route path="useConversations" element={<UseConversations />} />
                     </Route>
                   </Route>
 
