@@ -52,6 +52,11 @@ jobs:
     needs: install
 
     steps:
+      - name: Set swap space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 8
+
       - uses: actions/checkout@v3
 
       - name: Setup pnpm

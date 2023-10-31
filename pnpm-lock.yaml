@@ -170,8 +170,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/wagmi
       '@xmtp/react-sdk':
-        specifier: 1.0.0-preview.40
-        version: 1.0.0-preview.40(react@18.2.0)
+        specifier: ^3.0.0
+        version: 3.0.0(@types/react@18.2.38)(react@18.2.0)(typescript@5.2.2)
       example-shared:
         specifier: workspace:*
         version: link:../shared
@@ -1300,6 +1300,9 @@ importers:
       '@types/react':
         specifier: ^18.2.38
         version: 18.2.38
+      '@xmtp/react-sdk':
+        specifier: ^3.0.0
+        version: 3.0.0(@types/react@18.2.38)(react@18.2.0)(typescript@5.2.2)
       eslint:
         specifier: ^8.54.0
         version: 8.54.0
@@ -1394,9 +1397,6 @@ importers:
       '@types/react':
         specifier: ^18.2.38
         version: 18.2.38
-      '@xmtp/react-sdk':
-        specifier: 1.0.0-preview.40
-        version: 1.0.0-preview.40(react@18.2.0)
       eslint:
         specifier: ^8.54.0
         version: 8.54.0
@@ -8942,6 +8942,42 @@ packages:
     dependencies:
       tslib: 2.6.2
 
+  /@xmtp/content-type-reaction@1.1.3:
+    resolution: {integrity: sha512-dGqySD/TwrDkRB5zm46EIS1tViKv0y5urPKy94W93cbcCxFOODRiGPHcyty7ouif/b0CA53NNnG2sjbkxYsLEg==}
+    dependencies:
+      '@xmtp/xmtp-js': 11.2.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  /@xmtp/content-type-read-receipt@1.1.5:
+    resolution: {integrity: sha512-/CM/JAuEo+lnUQGJFG3UZ+t5rqql8sA/eLzPc0sJJMzGLCCfogd/SngS8rNkz4KI7yI5SXrXaksAsv5/zqXUHA==}
+    dependencies:
+      '@xmtp/proto': 3.34.0
+      '@xmtp/xmtp-js': 11.2.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  /@xmtp/content-type-remote-attachment@1.1.4:
+    resolution: {integrity: sha512-t/ivPqroNYobttxCrJMLOg/b3hAQT0knTw2hio/c5rQ0XyJd9UDP2eDWnmxchlabhdxnnfu9jP9YI05qL7tzWA==}
+    dependencies:
+      '@noble/secp256k1': 1.7.1
+      '@xmtp/proto': 3.34.0
+      '@xmtp/xmtp-js': 11.2.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  /@xmtp/content-type-reply@1.1.5:
+    resolution: {integrity: sha512-ug2oBAwgmB/cRwIKjrsRFApAkzQbTJ6MPEVKmRVuXNjZa1/Hzl7VHEpKfiZdJ79PZrHZpruhNnU19bDyViyuTw==}
+    dependencies:
+      '@xmtp/proto': 3.34.0
+      '@xmtp/xmtp-js': 11.2.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   /@xmtp/proto@3.34.0:
     resolution: {integrity: sha512-UJ0doz01peGEi5+fJ6th6JsUXFLMHaVk9L9avrv7L7FhfmAzM/V5iqHao8YpIKyMrJ7BelsGrbDcTfe28SsxFg==}
     dependencies:
@@ -8950,22 +8986,33 @@ packages:
       rxjs: 7.8.1
       undici: 5.27.2
 
-  /@xmtp/react-sdk@1.0.0-preview.40(react@18.2.0):
-    resolution: {integrity: sha512-WNkzVaONaRqhAlxoMd2gY17fa36KcuJHutPtOaoVGzP2QZWpLfiymDe8tm2IVxQdud4EMX4wjxtGRL+hBE3pTQ==}
+  /@xmtp/react-sdk@3.0.0(@types/react@18.2.38)(react@18.2.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-xaMQo5N82mSyC551Ktztp+N8aN/kMdZQ6qu/8BJCCErigWV1XXzOHCZr1tgONQHRFjnasmRdqsaTdiGZNatCbg==}
     engines: {node: '>=18'}
     peerDependencies:
       react: '>=16.14'
     dependencies:
-      '@xmtp/xmtp-js': 9.4.1
+      '@xmtp/content-type-reaction': 1.1.3
+      '@xmtp/content-type-read-receipt': 1.1.5
+      '@xmtp/content-type-remote-attachment': 1.1.4
+      '@xmtp/content-type-reply': 1.1.5
+      '@xmtp/xmtp-js': 11.2.1
+      async-mutex: 0.4.0
       date-fns: 2.30.0
       dexie: 3.2.4
+      dexie-react-hooks: 1.1.7(@types/react@18.2.38)(dexie@3.2.4)(react@18.2.0)
       react: 18.2.0
+      uuid: 9.0.1
+      viem: 1.19.7(typescript@5.2.2)(zod@3.22.4)
+      zod: 3.22.4
     transitivePeerDependencies:
+      - '@types/react'
       - bufferutil
+      - typescript
       - utf-8-validate
 
-  /@xmtp/xmtp-js@9.4.1:
-    resolution: {integrity: sha512-NNK7HcR2aiQhZkHRWGUp1gRJcqzkcyE8g7gCatbyZaNDd0JQBo/wLmiCZ3aibXOHOKLj39eIwVfqCRDejMNflw==}
+  /@xmtp/xmtp-js@11.2.1:
+    resolution: {integrity: sha512-LVYuJV4a/6poKDgJd4Zkt9esWPHcxxmjWSe4J6A5lNwVAgqSTjb4B0Yiw9Y3IVwynNRy6SXRttpf++mul7Zcnw==}
     engines: {node: '>=18'}
     dependencies:
       '@noble/secp256k1': 1.7.1
@@ -11372,6 +11419,17 @@ packages:
   /detect-newline@3.1.0:
     resolution: {integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==}
     engines: {node: '>=8'}
+
+  /dexie-react-hooks@1.1.7(@types/react@18.2.38)(dexie@3.2.4)(react@18.2.0):
+    resolution: {integrity: sha512-Lwv5W0Hk+uOW3kGnsU9GZoR1er1B7WQ5DSdonoNG+focTNeJbHW6vi6nBoX534VKI3/uwHebYzSw1fwY6a7mTw==}
+    peerDependencies:
+      '@types/react': '>=16'
+      dexie: ^3.2 || ^4.0.1-alpha
+      react: '>=16'
+    dependencies:
+      '@types/react': 18.2.38
+      dexie: 3.2.4
+      react: 18.2.0
 
   /dexie@3.2.4:
     resolution: {integrity: sha512-VKoTQRSv7+RnffpOJ3Dh6ozknBqzWw/F3iqMdsZg958R0AS8AnY9x9d1lbwENr0gzeGJHXKcGhAMRaqys6SxqA==}
