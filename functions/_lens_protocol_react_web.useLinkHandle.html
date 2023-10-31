@@ -32,7 +32,7 @@
 <section class="tsd-panel">
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="useLinkHandle"><span class="tsd-kind-call-signature">use<wbr/>Link<wbr/>Handle</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/_lens_protocol_react_web.UseDeferredTask.html" class="tsd-signature-type tsd-kind-type-alias">UseDeferredTask</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">AsyncTransactionResult</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><a href="../classes/_lens_protocol_react_web.BroadcastingError.html" class="tsd-signature-type tsd-kind-class">BroadcastingError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react_web.PendingSigningRequestError.html" class="tsd-signature-type tsd-kind-class">PendingSigningRequestError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react_web.UserRejectedError.html" class="tsd-signature-type tsd-kind-class">UserRejectedError</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_lens_protocol_react_web.WalletConnectionError.html" class="tsd-signature-type tsd-kind-class">WalletConnectionError</a><span class="tsd-signature-symbol">, </span><a href="../types/_lens_protocol_react_web.LinkHandleArgs.html" class="tsd-signature-type tsd-kind-type-alias">LinkHandleArgs</a><span class="tsd-signature-symbol">&gt;</span><a href="#useLinkHandle" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
-<li class="tsd-description"><code class="tsd-tag ts-flagExperimental">Experimental</code> 
+<li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p><code>useLinkHandle</code> allows you to link an owned handle to your Profile.</p>
 <p>You MUST be authenticated via <a href="_lens_protocol_react_web.useLogin.html" class="tsd-kind-function">useLogin</a> to use this hook.</p>
 </div>
@@ -220,6 +220,9 @@
 <li><a href="../types/_lens_protocol_react_web.CreatePostArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Create<wbr/>Post<wbr/>Args
 <div class="menu-item-desc">Create new post details.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react_web.CreateQuoteArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Create<wbr/>Quote<wbr/>Args
+<div class="menu-item-desc">Create new quote details.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.CryptoAmount.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Crypto<wbr/>Amount
 <div class="menu-item-desc">A convenience type to specify a crypto amount.</div></div></a></li>
@@ -443,6 +446,9 @@
 <div class="menu-item-desc">The common query parameters used across any query.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.Quote.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Quote</div></a></li>
+<li><a href="../types/_lens_protocol_react_web.QuoteAsyncResult.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Quote<wbr/>Async<wbr/>Result
+<div class="menu-item-desc">An object representing the result of a quote creation.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react_web.QuoteNotification.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Quote<wbr/>Notification</div></a></li>
 <li><a href="../types/_lens_protocol_react_web.ReactionNotification.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -681,6 +687,9 @@
 <li><a href="_lens_protocol_react_web.useCreatePost.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Create<wbr/>Post
 <div class="menu-item-desc">`useCreatePost` is a React Hook that allows you to create a new Lens Post.</div></div></a></li>
+<li><a href="_lens_protocol_react_web.useCreateQuote.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Create<wbr/>Quote
+<div class="menu-item-desc">`useCreateQuote` is React Hook that allows you to create a new Lens Quote.</div></div></a></li>
 <li><a href="_lens_protocol_react_web.useCurrencies.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Currencies
 <div class="menu-item-desc">`useCurrencies` is a paginated hook that lets you fetch ERC20 tokens that are enabled on the Lens protocol.</div></div></a></li>
@@ -991,6 +1000,9 @@
 <li><a href="../types/_lens_protocol_react.CreatePostArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Create<wbr/>Post<wbr/>Args
 <div class="menu-item-desc">Create new post details.</div></div></a></li>
+<li><a href="../types/_lens_protocol_react.CreateQuoteArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Create<wbr/>Quote<wbr/>Args
+<div class="menu-item-desc">Create new quote details.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.CryptoAmount.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Crypto<wbr/>Amount
 <div class="menu-item-desc">A convenience type to specify a crypto amount.</div></div></a></li>
@@ -1208,6 +1220,9 @@
 <div class="menu-item-desc">The common query parameters used across any query.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.Quote.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Quote</div></a></li>
+<li><a href="../types/_lens_protocol_react.QuoteAsyncResult.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Quote<wbr/>Async<wbr/>Result
+<div class="menu-item-desc">An object representing the result of a quote creation.</div></div></a></li>
 <li><a href="../types/_lens_protocol_react.QuoteNotification.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Quote<wbr/>Notification</div></a></li>
 <li><a href="../types/_lens_protocol_react.ReactionNotification.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
@@ -1446,6 +1461,9 @@
 <li><a href="_lens_protocol_react.useCreatePost.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Create<wbr/>Post
 <div class="menu-item-desc">`useCreatePost` is a React Hook that allows you to create a new Lens Post.</div></div></a></li>
+<li><a href="_lens_protocol_react.useCreateQuote.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
+<div>use<wbr/>Create<wbr/>Quote
+<div class="menu-item-desc">`useCreateQuote` is React Hook that allows you to create a new Lens Quote.</div></div></a></li>
 <li><a href="_lens_protocol_react.useCurrencies.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg>
 <div>use<wbr/>Currencies
 <div class="menu-item-desc">`useCurrencies` is a paginated hook that lets you fetch ERC20 tokens that are enabled on the Lens protocol.</div></div></a></li>
