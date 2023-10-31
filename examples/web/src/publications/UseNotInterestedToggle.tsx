@@ -63,7 +63,7 @@ export function UseNotInterestedToggle() {
       <WhenLoggedIn>
         <UseNotInterestedToggleInner />
       </WhenLoggedIn>
-      <UnauthenticatedFallback message="Log in mark publications as not interesting." />
+      <UnauthenticatedFallback />
     </>
   );
 }

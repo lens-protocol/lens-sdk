@@ -97,13 +97,15 @@ export const SetProfileMetadataRequestSchema = z.object({
 });
 
 export const LinkHandleRequestSchema = z.object({
-  handle: z.string(),
+  fullHandle: z.string(),
+  profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.LINK_HANDLE),
   delegate: z.boolean(),
 });
 
 export const UnlinkHandleRequestSchema = z.object({
-  handle: z.string(),
+  fullHandle: z.string(),
+  profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.UNLINK_HANDLE),
   delegate: z.boolean(),
 });

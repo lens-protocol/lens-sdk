@@ -39,7 +39,7 @@ export function UseMyBookmarks() {
       </h1>
 
       <WhenLoggedIn>{() => <MyBookmarks />}</WhenLoggedIn>
-      <UnauthenticatedFallback message="Log in to run this demo." />
+      <UnauthenticatedFallback />
     </div>
   );
 }

@@ -78,7 +78,7 @@ export class UnlinkHandleGateway
       mutation: UnlinkHandleFromProfileDocument,
       variables: {
         request: {
-          handle: request.handle,
+          handle: request.fullHandle,
         },
       },
     });
@@ -101,7 +101,7 @@ export class UnlinkHandleGateway
       mutation: CreateUnlinkHandleFromProfileTypedDataDocument,
       variables: {
         request: {
-          handle: request.handle,
+          handle: request.fullHandle,
         },
         options: nonce ? { overrideSigNonce: nonce } : undefined,
       },

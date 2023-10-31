@@ -78,7 +78,7 @@ export class LinkHandleGateway
       mutation: LinkHandleToProfileDocument,
       variables: {
         request: {
-          handle: request.handle,
+          handle: request.fullHandle,
         },
       },
     });
@@ -101,7 +101,7 @@ export class LinkHandleGateway
       mutation: CreateLinkHandleToProfileTypedDataDocument,
       variables: {
         request: {
-          handle: request.handle,
+          handle: request.fullHandle,
         },
         options: nonce ? { overrideSigNonce: nonce } : undefined,
       },

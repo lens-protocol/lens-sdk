@@ -1,47 +1,71 @@
 import {
   EvmAddress,
+  HandleInfo,
   Profile,
+  ProfileId,
   useLinkHandle,
   useOwnedHandles,
   useProfiles,
   useUnlinkHandle,
 } from '@lens-protocol/react-web';
+import toast from 'react-hot-toast';
 
-import { UnauthenticatedFallback, WhenLoggedIn, WhenLoggedOut } from '../components/auth';
+import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 
 type LinkHandleButtonProps = {
-  handle: string;
+  handle: HandleInfo;
 };
 
 function LinkHandleButton({ handle }: LinkHandleButtonProps) {
   const { execute, error, loading } = useLinkHandle();
 
-  return (
-    <>
-      <button onClick={() => execute({ handle })} disabled={loading} style={{ padding: '1px 6px' }}>
+  if (error) {
+    toast.error(error.message);
+  }
+
+  const isLinkable = !handle.linkedTo;
+
+  if (isLinkable) {
+    return (
+      <button
+        onClick={() => execute({ handle })}
+        disabled={loading}
+        style={{ padding: '1px 6px', margin: 0 }}
+      >
         Link
       </button>
-      {error && <p>{error.message}</p>}
-    </>
-  );
+    );
+  }
+
+  return null;
 }
 
 type UnlinkHandleButtonProps = {
-  handle: string;
+  handle: HandleInfo;
+  profileId: ProfileId;
 };
 
-function UnlinkHandleButton({ handle }: UnlinkHandleButtonProps) {
+function UnlinkHandleButton({ handle, profileId }: UnlinkHandleButtonProps) {
   const { execute, error, loading } = useUnlinkHandle();
 
+  if (error) {
+    toast.error(error.message);
+  }
+
+  const isUnlinkable = handle.linkedTo?.nftTokenId === profileId;
+
+  if (!isUnlinkable) return null;
+
   return (
-    <>
-      <button onClick={() => execute({ handle })} disabled={loading} style={{ padding: '1px 6px' }}>
-        Unlink
-      </button>
-      {error && <p>{error.message}</p>}
-    </>
+    <button
+      onClick={() => execute({ handle })}
+      disabled={loading}
+      style={{ padding: '1px 6px', margin: 0 }}
+    >
+      Unlink
+    </button>
   );
 }
 
@@ -74,8 +98,13 @@ function UseOwnedProfiles({ address }: { address: EvmAddress }) {
   );
 }
 
-// eslint-disable-next-line
-function UseOwnedHandlesInner({ address }: { address: EvmAddress }) {
+function UseOwnedHandlesInner({
+  address,
+  profileId,
+}: {
+  address: EvmAddress;
+  profileId: ProfileId;
+}) {
   const {
     data: handleResult,
     loading,
@@ -94,9 +123,12 @@ function UseOwnedHandlesInner({ address }: { address: EvmAddress }) {
       <ul>
         {handleResult.map((handle, index) => (
           <li key={index}>
-            <div>{handle.fullHandle}</div>
-            <LinkHandleButton handle={handle.fullHandle} />{' '}
-            <UnlinkHandleButton handle={handle.fullHandle} />
+            <span>
+              {handle.fullHandle}{' '}
+              {handle.linkedTo ? `linked to ${handle.linkedTo.nftTokenId}` : 'NOT LINKED'}
+            </span>{' '}
+            <LinkHandleButton handle={handle} />{' '}
+            <UnlinkHandleButton handle={handle} profileId={profileId} />
           </li>
         ))}
       </ul>
@@ -112,13 +144,16 @@ type ContentProps = {
 function Content({ address, profile }: ContentProps) {
   return (
     <div>
-      <p>Wallet address: {address}.</p>
       <p>
-        Active profile: {profile.id}. Current handle {profile.handle?.fullHandle || 'NOT LINKED'}
+        Wallet address: <strong>{address}</strong>.
+      </p>
+      <p>
+        Active profile: <strong>{profile.id}</strong>. Current handle{' '}
+        <strong>{profile.handle?.fullHandle || 'NOT LINKED'}</strong>.
       </p>
       <div style={{ display: 'flex' }}>
         <UseOwnedProfiles address={address} />
-        {/* <UseOwnedHandlesInner address={address} /> */}
+        <UseOwnedHandlesInner address={address} profileId={profile.id} />
       </div>
     </div>
   );
@@ -128,17 +163,13 @@ export function UseOwnedHandles() {
   return (
     <div>
       <h1>
-        {/* <code>useOwnedHandles & useLinkHandle & useUnlinkHandle</code> */}
-        <code>useOwnedHandles</code>
+        <code>useOwnedHandles & useLinkHandle & useUnlinkHandle</code>
       </h1>
 
       <WhenLoggedIn>
         {({ address, profile }) => <Content address={address} profile={profile} />}
       </WhenLoggedIn>
-
-      <WhenLoggedOut>
-        <UnauthenticatedFallback />
-      </WhenLoggedOut>
+      <UnauthenticatedFallback />
     </div>
   );
 }

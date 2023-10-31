@@ -8,7 +8,7 @@ import {
   useReactionToggle,
 } from '@lens-protocol/react-web';
 
-import { WhenLoggedIn, WhenLoggedOut } from '../components/auth';
+import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { invariant } from '../utils';
@@ -78,9 +78,7 @@ export function UseReactionToggle() {
       <WhenLoggedIn>
         <UseReactionToggleInner />
       </WhenLoggedIn>
-      <WhenLoggedOut>
-        <p>You must be logged in to use this example.</p>
-      </WhenLoggedOut>
+      <UnauthenticatedFallback />
     </div>
   );
 }

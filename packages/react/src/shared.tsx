@@ -39,6 +39,7 @@ import { PendingTransactionGateway } from './transactions/adapters/PendingTransa
 import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
 import { BlockProfilesResponder } from './transactions/adapters/responders/BlockProfilesResponder';
 import { FollowProfileResponder } from './transactions/adapters/responders/FollowProfileResponder';
+import { LinkHandleResponder } from './transactions/adapters/responders/LinkHandleResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
 import { RefreshCurrentProfileResponder } from './transactions/adapters/responders/RefreshCurrentProfileResponder';
 import { RefreshPublicationResponder } from './transactions/adapters/responders/RefreshPublicationResponder';
@@ -121,11 +122,11 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     [TransactionKind.CREATE_PROFILE]: new NoopResponder(),
     [TransactionKind.CREATE_QUOTE]: new NoopResponder(), // TODO update profile for new stats
     [TransactionKind.FOLLOW_PROFILE]: new FollowProfileResponder(profileCacheManager),
-    [TransactionKind.LINK_HANDLE]: new RefreshCurrentProfileResponder(profileCacheManager),
+    [TransactionKind.LINK_HANDLE]: new LinkHandleResponder(apolloClient, profileCacheManager),
     [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(), // TODO update profile for new stats
     [TransactionKind.UNBLOCK_PROFILE]: new UnblockProfilesResponder(profileCacheManager),
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(profileCacheManager),
-    [TransactionKind.UNLINK_HANDLE]: new RefreshCurrentProfileResponder(profileCacheManager),
+    [TransactionKind.UNLINK_HANDLE]: new LinkHandleResponder(apolloClient, profileCacheManager),
     [TransactionKind.UPDATE_FOLLOW_POLICY]: new RefreshCurrentProfileResponder(profileCacheManager),
     [TransactionKind.UPDATE_PROFILE_DETAILS]: new RefreshCurrentProfileResponder(
       profileCacheManager,

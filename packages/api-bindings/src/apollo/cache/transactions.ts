@@ -7,9 +7,11 @@ import {
   TransactionKind,
 } from '@lens-protocol/domain/entities';
 import {
-  UnblockProfilesRequest,
   FollowRequest,
+  LinkHandleRequest,
+  UnblockProfilesRequest,
   UnfollowRequest,
+  UnlinkHandleRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import { OpenActionRequest, AllOpenActionType } from '@lens-protocol/domain/use-cases/publications';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
@@ -209,4 +211,38 @@ export function countPendingUnfollowFor(profileId: ProfileId) {
         : 0),
     0,
   );
+}
+
+function isPendingLinkHandleTransaction(
+  transaction: TransactionState<AnyTransactionRequest>,
+): transaction is TransactionState<LinkHandleRequest> {
+  return (
+    transaction.request.kind === TransactionKind.LINK_HANDLE &&
+    transaction.status === TxStatus.PENDING
+  );
+}
+
+export function getPendingLinkHandleTxFor(profileId: ProfileId) {
+  return recentTransactionsVar().find((transaction) => {
+    return (
+      isPendingLinkHandleTransaction(transaction) && transaction.request.profileId === profileId
+    );
+  }) as TransactionState<LinkHandleRequest> | undefined;
+}
+
+function isPendingUnlinkHandleTransaction(
+  transaction: TransactionState<AnyTransactionRequest>,
+): transaction is TransactionState<UnlinkHandleRequest> {
+  return (
+    transaction.request.kind === TransactionKind.UNLINK_HANDLE &&
+    transaction.status === TxStatus.PENDING
+  );
+}
+
+export function getPendingUnlinkHandleTxFor(profileId: ProfileId) {
+  return recentTransactionsVar().find((transaction) => {
+    return (
+      isPendingUnlinkHandleTransaction(transaction) && transaction.request.profileId === profileId
+    );
+  }) as TransactionState<UnlinkHandleRequest> | undefined;
 }

@@ -1,3 +1,4 @@
+import { HandleInfo } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -16,7 +17,7 @@ export type UnlinkHandleArgs = {
   /**
    * The handle to unlink from the currently authenticated Profile.
    */
-  handle: string;
+  handle: HandleInfo;
 };
 
 /**
@@ -35,7 +36,6 @@ export type UnlinkHandleArgs = {
  *
  * @category Profiles
  * @group Hooks
- * @experimental This hook is experimental and may change in future releases.
  */
 export function useUnlinkHandle(): UseDeferredTask<
   AsyncTransactionResult<void>,
@@ -54,10 +54,15 @@ export function useUnlinkHandle(): UseDeferredTask<
       session.type === SessionType.WithProfile,
       'You must have a profile to use this operation.',
     );
+    invariant(
+      args.handle.linkedTo?.nftTokenId === session.profile.id,
+      `You can't unlink handle that is not linked to current profile.`,
+    );
 
     return unlinkHandle({
       kind: TransactionKind.UNLINK_HANDLE,
-      handle: args.handle,
+      fullHandle: args.handle.fullHandle,
+      profileId: session.profile.id,
       delegate: session.profile.signless,
     });
   });

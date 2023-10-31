@@ -9,7 +9,7 @@ import {
 } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
-import { UnauthenticatedFallback, WhenLoggedIn, WhenLoggedOut } from '../components/auth';
+import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { invariant, never } from '../utils';
@@ -221,9 +221,7 @@ export function UseUpdateFollowPolicy() {
         <code>useUpdateFollowPolicy</code>
       </h1>
       <WhenLoggedIn>{({ profile }) => <UpdateFollowPolicy profile={profile} />}</WhenLoggedIn>
-      <WhenLoggedOut>
-        <UnauthenticatedFallback />
-      </WhenLoggedOut>
+      <UnauthenticatedFallback />
     </>
   );
 }

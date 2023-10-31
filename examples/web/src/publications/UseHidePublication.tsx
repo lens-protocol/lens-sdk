@@ -7,7 +7,7 @@ import {
   usePublications,
 } from '@lens-protocol/react-web';
 
-import { LoginButton, WhenLoggedIn, WhenLoggedOut } from '../components/auth';
+import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
@@ -90,12 +90,7 @@ export function UseHidePublication() {
       <WhenLoggedIn>
         {({ profile, address }) => <Feed profile={profile} address={address} />}
       </WhenLoggedIn>
-      <WhenLoggedOut>
-        <div>
-          <p>You must be logged in to use this example.</p>
-          <LoginButton />
-        </div>
-      </WhenLoggedOut>
+      <UnauthenticatedFallback />
     </>
   );
 }

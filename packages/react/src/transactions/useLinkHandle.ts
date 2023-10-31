@@ -1,3 +1,4 @@
+import { HandleInfo } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -16,7 +17,7 @@ export type LinkHandleArgs = {
   /**
    * The owned handle to link to the currently authenticated Profile.
    */
-  handle: string;
+  handle: HandleInfo;
 };
 
 /**
@@ -35,7 +36,6 @@ export type LinkHandleArgs = {
  *
  * @category Profiles
  * @group Hooks
- * @experimental This hook is experimental and may change in future releases.
  */
 export function useLinkHandle(): UseDeferredTask<
   AsyncTransactionResult<void>,
@@ -54,10 +54,15 @@ export function useLinkHandle(): UseDeferredTask<
       session.type === SessionType.WithProfile,
       'You must have a profile to use this operation.',
     );
+    invariant(
+      !args.handle.linkedTo,
+      `The handle is already linked to profile ${args.handle.linkedTo?.nftTokenId}.`,
+    );
 
     return linkHandle({
       kind: TransactionKind.LINK_HANDLE,
-      handle: args.handle,
+      fullHandle: args.handle.fullHandle,
+      profileId: session.profile.id,
       delegate: session.profile.signless,
     });
   });

@@ -1,6 +1,6 @@
 import { Profile, useUpdateProfileManagers, useProfileManagers } from '@lens-protocol/react-web';
 
-import { UnauthenticatedFallback, WhenLoggedIn, WhenLoggedOut } from '../components/auth';
+import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 
 function UpdateProfileManagersForm({ profile }: { profile: Profile }) {
@@ -71,10 +71,7 @@ export function UseUpdateProfileManagers() {
       <WhenLoggedIn>
         {({ profile }) => <UpdateProfileManagersForm profile={profile} />}
       </WhenLoggedIn>
-
-      <WhenLoggedOut>
-        <UnauthenticatedFallback />
-      </WhenLoggedOut>
+      <UnauthenticatedFallback />
     </div>
   );
 }

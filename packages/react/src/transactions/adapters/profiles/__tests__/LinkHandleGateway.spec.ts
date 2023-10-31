@@ -33,7 +33,7 @@ describe(`Given an instance of ${LinkHandleGateway.name}`, () => {
         mockCreateLinkHandleToProfileTypedDataResponse({
           variables: {
             request: {
-              handle: request.handle,
+              handle: request.fullHandle,
             },
           },
           data,
@@ -54,7 +54,7 @@ describe(`Given an instance of ${LinkHandleGateway.name}`, () => {
         mockLinkHandleToProfileResponse({
           variables: {
             request: {
-              handle: request.handle,
+              handle: request.fullHandle,
             },
           },
           data: {
