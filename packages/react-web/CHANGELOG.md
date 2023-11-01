@@ -1,5 +1,24 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.16
+
+### Minor Changes
+
+- cf250df4: implements `useUnblockProfiles`
+- 9490db8e: Added useLinkHandle and useUnlinkHandle hooks
+- cf250df4: adds `useBlockProfiles` hook
+
+### Patch Changes
+
+- Updated dependencies [91bd7229]
+- Updated dependencies [cf250df4]
+- Updated dependencies [1f28c6d6]
+- Updated dependencies [9490db8e]
+- Updated dependencies [cf250df4]
+  - @lens-protocol/api-bindings@0.11.0-alpha.16
+  - @lens-protocol/react@2.0.0-alpha.16
+  - @lens-protocol/domain@0.11.0-alpha.11
+
 ## 2.0.0-alpha.15
 
 ### Patch Changes
