@@ -579,7 +579,7 @@
 <section class="tsd-panel tsd-member"><a id="postOnchain" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>post<wbr/>Onchain</span><a href="#postOnchain" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="postOnchain.postOnchain-1"><span class="tsd-kind-call-signature">post<wbr/>Onchain</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">request</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/_lens_protocol_client.Base.PromiseResult.html" class="tsd-signature-type tsd-kind-type-alias">PromiseResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/_lens_protocol_client.Base.RelaySuccessFragment.html" class="tsd-signature-type tsd-kind-type-alias">RelaySuccessFragment</a><span class="tsd-signature-symbol"> | </span><a href="../types/_lens_protocol_client.Base.LensProfileManagerRelayErrorFragment.html" class="tsd-signature-type tsd-kind-type-alias">LensProfileManagerRelayErrorFragment</a><span class="tsd-signature-symbol">, </span><a href="_lens_protocol_client.Base.NotAuthenticatedError.html" class="tsd-signature-type tsd-kind-class">NotAuthenticatedError</a><span class="tsd-signature-symbol"> | </span><a href="_lens_protocol_client.Base.CredentialsExpiredError.html" class="tsd-signature-type tsd-kind-class">CredentialsExpiredError</a><span class="tsd-signature-symbol">&gt;</span><a href="#postOnchain.postOnchain-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="postOnchain.postOnchain-1"><span class="tsd-kind-call-signature">post<wbr/>Onchain</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">request</span>, <span class="tsd-kind-parameter">overwrites</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/_lens_protocol_client.Base.PromiseResult.html" class="tsd-signature-type tsd-kind-type-alias">PromiseResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/_lens_protocol_client.Base.RelaySuccessFragment.html" class="tsd-signature-type tsd-kind-type-alias">RelaySuccessFragment</a><span class="tsd-signature-symbol"> | </span><a href="../types/_lens_protocol_client.Base.LensProfileManagerRelayErrorFragment.html" class="tsd-signature-type tsd-kind-type-alias">LensProfileManagerRelayErrorFragment</a><span class="tsd-signature-symbol">, </span><a href="_lens_protocol_client.Base.NotAuthenticatedError.html" class="tsd-signature-type tsd-kind-class">NotAuthenticatedError</a><span class="tsd-signature-symbol"> | </span><a href="_lens_protocol_client.Base.CredentialsExpiredError.html" class="tsd-signature-type tsd-kind-class">CredentialsExpiredError</a><span class="tsd-signature-symbol">&gt;</span><a href="#postOnchain.postOnchain-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Create a post onchain using Profile Manager. Profile has to have a Profile Manager enabled.</p>
 <p>⚠️ Requires authenticated LensClient.</p>
@@ -591,7 +591,9 @@
 <h5><span class="tsd-kind-parameter">request</span>: <a href="../types/_lens_protocol_client.Base.OnchainPostRequest.html" class="tsd-signature-type tsd-kind-type-alias">OnchainPostRequest</a></h5>
 <div class="tsd-comment tsd-typography"><p>Request object for the mutation</p>
 </div>
-<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<div class="tsd-comment tsd-typography"></div></li>
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">overwrites</span>: <a href="../types/_lens_protocol_client.Base.RequestOverwrites.html" class="tsd-signature-type tsd-kind-type-alias">RequestOverwrites</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../types/_lens_protocol_client.Base.PromiseResult.html" class="tsd-signature-type tsd-kind-type-alias">PromiseResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/_lens_protocol_client.Base.RelaySuccessFragment.html" class="tsd-signature-type tsd-kind-type-alias">RelaySuccessFragment</a><span class="tsd-signature-symbol"> | </span><a href="../types/_lens_protocol_client.Base.LensProfileManagerRelayErrorFragment.html" class="tsd-signature-type tsd-kind-type-alias">LensProfileManagerRelayErrorFragment</a><span class="tsd-signature-symbol">, </span><a href="_lens_protocol_client.Base.NotAuthenticatedError.html" class="tsd-signature-type tsd-kind-class">NotAuthenticatedError</a><span class="tsd-signature-symbol"> | </span><a href="_lens_protocol_client.Base.CredentialsExpiredError.html" class="tsd-signature-type tsd-kind-class">CredentialsExpiredError</a><span class="tsd-signature-symbol">&gt;</span></h4><p><a href="../types/_lens_protocol_client.Base.PromiseResult.html" class="tsd-kind-type-alias">PromiseResult</a> with <a href="../types/_lens_protocol_client.Base.RelaySuccessFragment.html" class="tsd-kind-type-alias">RelaySuccessFragment</a> or <a href="../types/_lens_protocol_client.Base.LensProfileManagerRelayErrorFragment.html" class="tsd-kind-type-alias">LensProfileManagerRelayErrorFragment</a></p>
 
 <div class="tsd-comment tsd-typography">
@@ -3091,6 +3093,9 @@
 <div>Report<wbr/>Publication<wbr/>Request</div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.ReportingReasonInput.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Reporting<wbr/>Reason<wbr/>Input</div></a></li>
+<li><a href="../types/_lens_protocol_client.Base.RequestOverwrites.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
+<div>Request<wbr/>Overwrites
+<div class="menu-item-desc">This is experimental and might change or be removed in future versions.</div></div></a></li>
 <li><a href="../types/_lens_protocol_client.Base.Result.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2097152"></use></svg>
 <div>Result
 <div class="menu-item-desc">A `Result` type represents either `Success` or `Failure`.</div></div></a></li>
@@ -3903,6 +3908,8 @@
 <div>Report<wbr/>Publication<wbr/>Request</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#ReportingReasonInput"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
 <div>Reporting<wbr/>Reason<wbr/>Input</div></a></li>
+<li><a href="../modules/_lens_protocol_client.Gated.html#RequestOverwrites"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
+<div>Request<wbr/>Overwrites</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#Result"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
 <div>Result</div></a></li>
 <li><a href="../modules/_lens_protocol_client.Gated.html#Revenue"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg>
