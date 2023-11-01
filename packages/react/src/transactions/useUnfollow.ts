@@ -69,8 +69,3 @@ export function useUnfollow(): UseDeferredTask<
     });
   });
 }
-
-/**
- * @deprecated use useUnfollow instead, this will be removed soon.
- */
-export const useUnfollowProfile = useUnfollow;
