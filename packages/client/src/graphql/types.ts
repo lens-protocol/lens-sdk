@@ -20,6 +20,9 @@ import {
   ThreeDMetadataV3Fragment,
   TransactionMetadataV3Fragment,
   VideoMetadataV3Fragment,
+  PublicationMetadataMediaAudioFragment,
+  PublicationMetadataMediaImageFragment,
+  PublicationMetadataMediaVideoFragment,
 } from './fragments.generated';
 
 export type AnyPublicationFragment =
@@ -30,7 +33,7 @@ export type AnyPublicationFragment =
 
 export type PrimaryPublicationFragment = PostFragment | CommentFragment | QuoteFragment;
 
-export type AnyPublicationMetadataFragment =
+export type PublicationMetadataFragment =
   | ArticleMetadataV3Fragment
   | AudioMetadataV3Fragment
   | CheckingInMetadataV3Fragment
@@ -47,8 +50,13 @@ export type AnyPublicationMetadataFragment =
   | TransactionMetadataV3Fragment
   | VideoMetadataV3Fragment;
 
+export type PublicationMetadataMediaFragment =
+  | PublicationMetadataMediaAudioFragment
+  | PublicationMetadataMediaImageFragment
+  | PublicationMetadataMediaVideoFragment;
+
 /**
  * Any encrypted publication metadata regardless of its type, or capabilities
  */
 export type AnyEncryptablePublicationMetadataFragment =
-  EncryptedFragmentOf<AnyPublicationMetadataFragment>;
+  EncryptedFragmentOf<PublicationMetadataFragment>;

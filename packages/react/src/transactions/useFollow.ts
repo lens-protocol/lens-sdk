@@ -135,8 +135,3 @@ export function useFollow(): UseDeferredTask<
     },
   );
 }
-
-/**
- * @deprecated use useFollow instead, this will be removed soon.
- */
-export const useFollowProfile = useFollow;
