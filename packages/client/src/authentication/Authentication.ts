@@ -14,6 +14,7 @@ import type {
   RevokeAuthenticationRequest,
   SignedAuthChallenge,
 } from '../graphql/types.generated';
+import { buildAuthorizationHeader } from '../helpers/buildAuthorizationHeader';
 import { requireAuthHeaders } from '../helpers/requireAuthHeaders';
 import type { IAuthentication } from './IAuthentication';
 import { AuthenticationApi } from './adapters/AuthenticationApi';
@@ -152,13 +153,13 @@ export class Authentication implements IAuthentication {
     }
 
     if (!credentials.shouldRefresh()) {
-      return success(this.buildHeader(credentials.accessToken));
+      return success(buildAuthorizationHeader(credentials.accessToken));
     }
 
     if (credentials.canRefresh()) {
       const newCredentials = await this.api.refresh(credentials.refreshToken);
       await this.credentials.set(newCredentials);
-      return success(this.buildHeader(newCredentials.accessToken));
+      return success(buildAuthorizationHeader(newCredentials.accessToken));
     }
 
     return failure(new CredentialsExpiredError());
@@ -178,9 +179,5 @@ export class Authentication implements IAuthentication {
       return failure(new CredentialsExpiredError());
     }
     return success(credentials);
-  }
-
-  private buildHeader(accessToken: string | undefined) {
-    return { authorization: `Bearer ${accessToken || ''}` };
   }
 }

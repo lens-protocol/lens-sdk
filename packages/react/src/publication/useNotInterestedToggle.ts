@@ -4,11 +4,6 @@ import { success } from '@lens-protocol/shared-kernel';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useNotInterestedController } from './adapters/useNotInterestedController';
 
-/**
- * @deprecated Use {@link useNotInterestedToggle} instead.
- */
-export const useNotInterested = useNotInterestedToggle;
-
 export type UseNotInterestedToggleArgs = {
   publication: AnyPublication;
 };

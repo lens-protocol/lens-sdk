@@ -30,8 +30,15 @@ export class Credentials {
     invariant(decodedToken.iat, 'Issued at date should be provided by JWT token');
 
     // check if local time is not too far off from server time
-    if (Math.abs(DateUtils.secondsToMs(decodedToken.iat) - Date.now()) > CLOCK_SKEWED_THRESHOLD) {
-      throw new ClockSkewedError();
+    const diff = Math.abs(DateUtils.secondsToMs(decodedToken.iat) - Date.now());
+    if (diff > CLOCK_SKEWED_THRESHOLD) {
+      // throw new ClockSkewedError();
+
+      // eslint-disable-next-line no-console
+      console.info(
+        'ClockSkewedError: Your system clock is skewed compared to the API clock by: ',
+        diff,
+      );
     }
   }
 

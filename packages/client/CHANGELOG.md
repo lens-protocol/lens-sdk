@@ -1,5 +1,13 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.19
+
+### Patch Changes
+
+- c1e6ada2: Allowed to overwrite accessToken for publication.postOnchain
+- b014f5ce: Disabled clock check
+- 91bd7229: Renamed `AnyPublicationMetadataFragment` to `PublicationMetadataFragment`
+
 ## 2.0.0-alpha.18
 
 ### Patch Changes

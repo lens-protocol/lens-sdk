@@ -1,5 +1,17 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.11
+
+### Minor Changes
+
+- cf250df4: implements `useUnblockProfiles`
+- 9490db8e: Added useLinkHandle and useUnlinkHandle hooks
+- cf250df4: adds `useBlockProfiles` hook
+
+### Patch Changes
+
+- 1f28c6d6: Added useCreateQuote hook
+
 ## 0.11.0-alpha.10
 
 ### Minor Changes

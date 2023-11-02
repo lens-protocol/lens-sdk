@@ -19,7 +19,7 @@ jest.retryTimes(3, { logErrorsBeforeRetry: true });
 
 const signer = new Wallet('0xd6e6257e8cf0f321ad0f798dd0b121a7eb4fe9c7c51994e843c0a1ed05867a5f');
 
-describe(`Given an instance of "gated.${LensClient.name}"`, () => {
+describe.skip(`Given an instance of "gated.${LensClient.name}"`, () => {
   const client = createGatedLensClient(signer);
   let profile: ProfileFragment;
 

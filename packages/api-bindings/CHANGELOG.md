@@ -1,5 +1,24 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.16
+
+### Minor Changes
+
+- cf250df4: implements `useUnblockProfiles`
+- 9490db8e: Added useLinkHandle and useUnlinkHandle hooks
+
+### Patch Changes
+
+- 91bd7229: Removed deprecated `useNotInterested`, use `useNotInterestedToggle` instead
+  Removed deprecated `useFollowProfile`, use `useFollow` instead
+  Removed deprecated `useUnfollowProfile`, use `useUnfollow` instead
+- 1f28c6d6: Added useCreateQuote hook
+- Updated dependencies [cf250df4]
+- Updated dependencies [1f28c6d6]
+- Updated dependencies [9490db8e]
+- Updated dependencies [cf250df4]
+  - @lens-protocol/domain@0.11.0-alpha.11
+
 ## 0.11.0-alpha.15
 
 ### Patch Changes
