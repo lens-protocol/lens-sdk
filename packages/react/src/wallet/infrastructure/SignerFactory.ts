@@ -29,7 +29,9 @@ export class SignerFactory implements ISignerFactory {
     address,
     chainType,
   }: CreateSignerConfig): PromiseResult<RequiredSigner, WalletConnectionError> {
+    console.log({ address, chainType });
     const chainId = chainType ? this.chains[chainType].chainId : undefined;
+    console.log({ bindings: this.bindings, chainId });
     const signer = await this.bindings.getSigner({ chainId });
 
     const signerAddress = await signer.getAddress();
@@ -45,6 +47,8 @@ export class SignerFactory implements ISignerFactory {
         if (signerChainId !== chainId) {
           const chainConfig = this.createAddEthereumChainParameter(chainType);
 
+          console.log({ chainConfig, signerChainId });
+
           await this.addChain(signer, chainConfig);
 
           const result = await this.switchChain(signer, chainConfig);
@@ -54,6 +58,7 @@ export class SignerFactory implements ISignerFactory {
           }
         }
       } catch (err) {
+        console.log({ err });
         assertErrorObjectWithCode<errors>(err);
 
         if (err.code === errors.UNSUPPORTED_OPERATION) {
@@ -101,7 +106,8 @@ export class SignerFactory implements ISignerFactory {
 
         return success();
       }
-    } catch {
+    } catch (e) {
+      console.log({ e });
       // noop
     }
 
