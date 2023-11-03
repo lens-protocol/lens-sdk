@@ -32,7 +32,7 @@ export class WalletGateway
       return this.inMemoryCache[address] ?? never();
     }
     const wallets = await this.getAll();
-    const wallet = wallets.find((w) => w.address === address) ?? null;
+    const wallet = wallets.find((w) => w.address.toLowerCase() === address.toLowerCase()) ?? null;
 
     if (wallet) {
       this.inMemoryCache[address] = wallet;

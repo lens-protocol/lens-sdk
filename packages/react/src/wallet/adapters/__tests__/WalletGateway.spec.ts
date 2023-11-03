@@ -42,6 +42,17 @@ describe(`Given an instance of the ${WalletGateway.name}`, () => {
         await gateway.getByAddress(wallet2.address),
       );
     });
+
+    it(`should retrieve the ${Wallet.name} instance even if address is in a different format`, async () => {
+      const wallet1 = mockConcreteWallet();
+      const storage = mockStorage<WalletStorageSchema>([wallet1]);
+
+      const gateway = setupWalletGateway({ storage });
+
+      const retrievedWallet = await gateway.getByAddress(wallet1.address.toUpperCase());
+
+      expect(retrievedWallet?.address).toEqual(wallet1.address);
+    });
   });
 
   describe(`when "${WalletGateway.prototype.reset.name}" method is invoked`, () => {
