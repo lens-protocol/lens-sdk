@@ -1,5 +1,12 @@
 # @lens-protocol/wagmi
 
+## 3.0.0-alpha.14
+
+### Patch Changes
+
+- Updated dependencies [0a7b26ff]
+  - @lens-protocol/react-web@2.0.0-alpha.17
+
 ## 3.0.0-alpha.13
 
 ### Patch Changes
