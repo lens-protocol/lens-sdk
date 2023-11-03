@@ -1,5 +1,11 @@
 # @lens-protocol/react
 
+## 2.0.0-alpha.17
+
+### Patch Changes
+
+- 0a7b26ff: Fixed address format mismatch when retrieving active wallet
+
 ## 2.0.0-alpha.16
 
 ### Minor Changes
