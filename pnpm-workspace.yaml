@@ -5,3 +5,4 @@ packages:
   - "examples/shared"
   - "examples/nextjs"
   - "examples/node"
+  - "examples/nextjs-app-dir"
