@@ -1,5 +1,13 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.18
+
+### Patch Changes
+
+- a4e191700: Upgraded credentials storage to ignore v1 refreshTokens
+- Updated dependencies [a4e191700]
+  - @lens-protocol/react@2.0.0-alpha.18
+
 ## 2.0.0-alpha.17
 
 ### Patch Changes
