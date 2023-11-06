@@ -21,14 +21,6 @@ import { print } from 'graphql';
 import { DocumentNode } from 'graphql';
 export type ProfileManagerFragment = { address: string; isLensManager: boolean };
 
-export type CreateProfileWithHandleErrorResultFragment = {
-  reason: Types.CreateProfileWithHandleErrorReasonType;
-};
-
-export type ClaimProfileWithHandleErrorResultFragment = {
-  reason: Types.ClaimProfileWithHandleErrorReasonType;
-};
-
 export type CreateOnchainSetProfileMetadataBroadcastItemResultFragment = {
   id: string;
   expiresAt: string;
@@ -281,12 +273,8 @@ export type ProfileActionHistoryQuery = {
   result: { items: Array<ProfileActionHistoryFragment>; pageInfo: PaginatedResultInfoFragment };
 };
 
-export type ClaimProfileWithHandleMutationVariables = Types.Exact<{
-  request: Types.ClaimProfileWithHandleRequest;
-}>;
-
-export type ClaimProfileWithHandleMutation = {
-  result: ClaimProfileWithHandleErrorResultFragment | RelaySuccessFragment;
+export type CreateProfileWithHandleErrorResultFragment = {
+  reason: Types.CreateProfileWithHandleErrorReasonType;
 };
 
 export type CreateProfileWithHandleMutationVariables = Types.Exact<{
@@ -473,40 +461,6 @@ export const ProfileManagerFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'address' } },
           { kind: 'Field', name: { kind: 'Name', value: 'isLensManager' } },
         ],
-      },
-    },
-  ],
-} as unknown as DocumentNode;
-export const CreateProfileWithHandleErrorResultFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'CreateProfileWithHandleErrorResult' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'CreateProfileWithHandleErrorResult' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [{ kind: 'Field', name: { kind: 'Name', value: 'reason' } }],
-      },
-    },
-  ],
-} as unknown as DocumentNode;
-export const ClaimProfileWithHandleErrorResultFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'ClaimProfileWithHandleErrorResult' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'ClaimProfileWithHandleErrorResult' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [{ kind: 'Field', name: { kind: 'Name', value: 'reason' } }],
       },
     },
   ],
@@ -1370,6 +1324,23 @@ export const ProfileActionHistoryFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'actionedOn' } },
         ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const CreateProfileWithHandleErrorResultFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CreateProfileWithHandleErrorResult' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'CreateProfileWithHandleErrorResult' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [{ kind: 'Field', name: { kind: 'Name', value: 'reason' } }],
       },
     },
   ],
@@ -9031,105 +9002,6 @@ export const ProfileActionHistoryDocument = {
     },
   ],
 } as unknown as DocumentNode;
-export const ClaimProfileWithHandleDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'ClaimProfileWithHandle' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'ClaimProfileWithHandleRequest' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'result' },
-            name: { kind: 'Name', value: 'claimProfileWithHandle' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'InlineFragment',
-                  typeCondition: {
-                    kind: 'NamedType',
-                    name: { kind: 'Name', value: 'RelaySuccess' },
-                  },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'RelaySuccess' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'InlineFragment',
-                  typeCondition: {
-                    kind: 'NamedType',
-                    name: { kind: 'Name', value: 'ClaimProfileWithHandleErrorResult' },
-                  },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'ClaimProfileWithHandleErrorResult' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'ClaimProfileWithHandleErrorResult' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'ClaimProfileWithHandleErrorResult' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [{ kind: 'Field', name: { kind: 'Name', value: 'reason' } }],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'RelaySuccess' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'RelaySuccess' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'txId' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode;
 export const CreateProfileWithHandleDocument = {
   kind: 'Document',
   definitions: [
@@ -11516,7 +11388,6 @@ const FollowersDocumentString = print(FollowersDocument);
 const MutualFollowersDocumentString = print(MutualFollowersDocument);
 const WhoActedOnPublicationDocumentString = print(WhoActedOnPublicationDocument);
 const ProfileActionHistoryDocumentString = print(ProfileActionHistoryDocument);
-const ClaimProfileWithHandleDocumentString = print(ClaimProfileWithHandleDocument);
 const CreateProfileWithHandleDocumentString = print(CreateProfileWithHandleDocument);
 const AddProfileInterestsDocumentString = print(AddProfileInterestsDocument);
 const RemoveProfileInterestsDocumentString = print(RemoveProfileInterestsDocument);
@@ -11720,26 +11591,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
           ),
         'ProfileActionHistory',
         'query',
-      );
-    },
-    ClaimProfileWithHandle(
-      variables: ClaimProfileWithHandleMutationVariables,
-      requestHeaders?: GraphQLClientRequestHeaders,
-    ): Promise<{
-      data: ClaimProfileWithHandleMutation;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<ClaimProfileWithHandleMutation>(
-            ClaimProfileWithHandleDocumentString,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'ClaimProfileWithHandle',
-        'mutation',
       );
     },
     CreateProfileWithHandle(
