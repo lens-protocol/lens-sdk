@@ -32,7 +32,7 @@ export type UseProfileManagersArgs = PaginatedArgs<{
  *
  *   return (
  *     <ul>
- *       {managers?.items.map(({ address }) => (
+ *       {managers.map(({ address }) => (
  *         <li key={address}>{address}</li>
  *       ))}
  *     </ul>
