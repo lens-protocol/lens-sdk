@@ -63,7 +63,7 @@
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
-    "@types/jest": "29.5.3",
+    "@types/jest": "29.5.7",
     "@types/node": "^18.15.11",
     "babel-plugin-graphql-tag": "^3.3.0",
     "eslint": "^8.34.0",
