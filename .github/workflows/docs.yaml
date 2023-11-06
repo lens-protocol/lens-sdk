@@ -2,7 +2,7 @@ name: "Create & publish documentation"
 
 on:
   pull_request:
-    branches: [main, "lens-v2"]
+    branches: [main]
     types:
       - closed
 
@@ -24,21 +24,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm build
-
       - run: pnpm lint
-
-      - name: Run tests
-        run: pnpm test
-        env:
-          SDK_GATED_TEST_PK: ${{secrets.SDK_GATED_TEST_PK}}
-          SDK_GATED_TEST_PROFILE_ID: ${{secrets.SDK_GATED_TEST_PROFILE_ID}}
-          SDK_GATED_TEST_PUBLICATION_ID: ${{secrets.SDK_GATED_TEST_PUBLICATION_ID}}
-          TESTING_ENV_URL: ${{secrets.TESTING_ENV_URL}}
-          TESTING_HEADER_KEY: ${{secrets.TESTING_HEADER_KEY}}
-          TESTING_HEADER_VALUE: ${{secrets.TESTING_HEADER_VALUE}}
-
-      - run: pnpm lint:examples
 
   docs:
     if: github.event.pull_request.merged == true
@@ -54,8 +40,8 @@ jobs:
       - name: Use Node.js for docs
         uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'
-          cache: 'pnpm'
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
 
       - run: pnpm install --frozen-lockfile
 
