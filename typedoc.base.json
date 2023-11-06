@@ -7,6 +7,6 @@
   "excludePrivate": true,
   "excludeProtected": true,
   "disableSources": true,
-  "gitRevision": "lens-v2",
+  "gitRevision": "develop",
   "hideGenerator": true
 }

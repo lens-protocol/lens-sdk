@@ -1,20 +1,13 @@
 import {
-  BaseStorageSchema,
   IStorage,
   IStorageProvider,
   Storage,
   StorageSubscriber,
   StorageSubscription,
 } from '@lens-protocol/storage';
-import { z } from 'zod';
 
 import { Credentials } from './Credentials';
-
-const AuthData = z.object({
-  refreshToken: z.string(),
-});
-
-type AuthData = z.infer<typeof AuthData>;
+import { AuthData, CredentialsStorageSchema } from './CredentialsStorageSchema';
 
 /**
  * Stores auth credentials.
@@ -26,7 +19,7 @@ export class CredentialsStorage implements IStorage<Credentials> {
   accessToken: string | null = null;
 
   constructor(storageProvider: IStorageProvider, namespace: string) {
-    const authStorageSchema = new BaseStorageSchema(`lens.${namespace}.credentials`, AuthData);
+    const authStorageSchema = new CredentialsStorageSchema(`lens.${namespace}.credentials`);
     this.refreshTokenStorage = Storage.createForSchema(authStorageSchema, storageProvider);
   }
 

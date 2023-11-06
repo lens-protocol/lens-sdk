@@ -18,7 +18,7 @@ export class BundlrUploader {
     const balance = bundlr.utils.fromAtomic(atomicBalance);
 
     // fund bundlr balance if empty
-    if (balance.eq(0)) {
+    if (balance.lte(0.001)) {
       try {
         await bundlr.fund(0.1e18); // 0.1 MUMBAI MATIC
       } catch (error) {
