@@ -37,6 +37,36 @@ export type BlockOperation = UseDeferredTask<
   BlockProfileArgs
 >;
 
+/**
+ * Block one or many profiles.
+ *
+ * You MUST be authenticated via {@link useLogin} to use this hook.
+ *
+ * @category Profiles
+ * @group Hooks
+ * @param args - {@link BlockProfileArgs}
+ *
+ * @example
+ * ```tsx
+ * import { useBlockProfiles, ProfileId } from '@lens-protocol/react';
+ *
+ * function BlockProfile({ profileId }: { profileId: ProfileId }) {
+ *   const { execute: block, loading: blockLoading, error: blockError } = useBlockProfiles();
+ *
+ *   async function handleBlock() {
+ *    await block({
+ *     profiles: [profileId],
+ *    });
+ *   }
+ *
+ *   return (
+ *     <button onClick={handleBlock}>
+ *      Block profile
+ *     </button>
+ *   );
+ * }
+ * ```
+ */
 export function useBlockProfiles(): BlockOperation {
   const { data: session } = useSession();
   const blockProfile = useBlockProfilesController();
