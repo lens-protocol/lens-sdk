@@ -1,4 +1,5 @@
 export * from './ProfilesPage';
+export * from './UseBlockAndUnblockProfiles';
 export * from './UseFollowAndUnfollow';
 export * from './UseLazyProfile';
 export * from './UseMutualFollowers';
@@ -9,6 +10,7 @@ export * from './UseProfileFollowers';
 export * from './UseProfileFollowing';
 export * from './UseProfileManagers';
 export * from './UseProfiles';
+export * from './UseProfilesManaged';
 export * from './UseRecommendedProfiles';
 export * from './UseSetProfileMetadata';
 export * from './UseUpdateFollowPolicy';

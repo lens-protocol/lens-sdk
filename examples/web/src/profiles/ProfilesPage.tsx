@@ -62,6 +62,11 @@ const profileHooks = [
     path: '/profiles/useUpdateProfileManagers',
   },
   {
+    label: 'useProfilesManaged',
+    description: 'Fetch a list of profiles managed by a wallet',
+    path: '/profiles/useProfilesManaged',
+  },
+  {
     label: 'useSetProfileMetadata',
     description: 'Set the metadata for the authenticated Profile.',
     path: '/profiles/useSetProfileMetadata',

@@ -4227,7 +4227,10 @@ export type OwnedHandlesData = {
 };
 
 export type ProfilesManagedVariables = Exact<{
-  request: ProfilesManagedRequest;
+  for: Scalars['EvmAddress'];
+  includeOwned?: InputMaybe<Scalars['Boolean']>;
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
   profileCoverSize?: InputMaybe<ImageTransform>;
   profilePictureSize?: InputMaybe<ImageTransform>;
   activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
@@ -12866,13 +12869,18 @@ export type OwnedHandlesLazyQueryHookResult = ReturnType<typeof useOwnedHandlesL
 export type OwnedHandlesQueryResult = Apollo.QueryResult<OwnedHandlesData, OwnedHandlesVariables>;
 export const ProfilesManagedDocument = /*#__PURE__*/ gql`
   query ProfilesManaged(
-    $request: ProfilesManagedRequest!
+    $for: EvmAddress!
+    $includeOwned: Boolean
+    $limit: LimitType
+    $cursor: Cursor
     $profileCoverSize: ImageTransform = {}
     $profilePictureSize: ImageTransform = {}
     $activityOn: [AppId!]
     $fxRateFor: SupportedFiatType = USD
   ) {
-    result: profilesManaged(request: $request) {
+    result: profilesManaged(
+      request: { for: $for, includeOwned: $includeOwned, limit: $limit, cursor: $cursor }
+    ) {
       items {
         ...Profile
       }
@@ -12897,7 +12905,10 @@ export const ProfilesManagedDocument = /*#__PURE__*/ gql`
  * @example
  * const { data, loading, error } = useProfilesManaged({
  *   variables: {
- *      request: // value for 'request'
+ *      for: // value for 'for'
+ *      includeOwned: // value for 'includeOwned'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *      profileCoverSize: // value for 'profileCoverSize'
  *      profilePictureSize: // value for 'profilePictureSize'
  *      activityOn: // value for 'activityOn'

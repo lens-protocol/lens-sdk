@@ -32,23 +32,24 @@ import {
 } from './misc';
 import {
   ProfilesPage,
+  UseBlockAndUnblockProfiles,
   UseFollowAndUnfollow,
   UseLazyProfile,
   UseMutualFollowers,
+  UseOwnedHandles,
   UseProfile,
   UseProfileActionHistory,
   UseProfileFollowers,
   UseProfileFollowing,
   UseProfileManagers,
   UseProfiles,
+  UseProfilesManaged,
   UseRecommendedProfiles,
+  UseSetProfileMetadata,
   UseUpdateFollowPolicy,
   UseUpdateProfileManagers,
   UseWhoActedOnPublication,
-  UseSetProfileMetadata,
-  UseOwnedHandles,
 } from './profiles';
-import { UseBlockAndUnblockProfiles } from './profiles/UseBlockAndUnblockProfiles';
 import {
   PublicationsPage,
   UseBookmarkToggle,
@@ -144,6 +145,7 @@ export function App() {
                         path="useUpdateProfileManagers"
                         element={<UseUpdateProfileManagers />}
                       />
+                      <Route path="useProfilesManaged" element={<UseProfilesManaged />} />
                       <Route
                         path="useWhoActedOnPublication"
                         element={<UseWhoActedOnPublication />}

@@ -10,13 +10,18 @@ query OwnedHandles($for: EvmAddress!, $limit: LimitType, $cursor: Cursor) {
 }
 
 query ProfilesManaged(
-  $request: ProfilesManagedRequest!
+  $for: EvmAddress!
+  $includeOwned: Boolean
+  $limit: LimitType
+  $cursor: Cursor
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
   $activityOn: [AppId!]
   $fxRateFor: SupportedFiatType = USD
 ) {
-  result: profilesManaged(request: $request) {
+  result: profilesManaged(
+    request: { for: $for, includeOwned: $includeOwned, limit: $limit, cursor: $cursor }
+  ) {
     items {
       ...Profile
     }
