@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 /**
  * An deferrable task is a function that can be executed multiple times and that can be in a pending state.
  */
-export type DeferrableTask<TData = void, TError extends IEquatableError = never, TInput = void> = (
+export type DeferrableTask<TData, TError extends IEquatableError = never, TInput = void> = (
   input: TInput,
 ) => PromiseResult<TData, TError>;
 
@@ -103,7 +103,7 @@ export type DeferredTaskState<TData, TError extends IEquatableError> =
  * ```
  */
 export type UseDeferredTask<
-  TData = void | undefined,
+  TData = void,
   TError extends IEquatableError = never,
   TInput = void,
 > = DeferredTaskState<TData, TError> & {
