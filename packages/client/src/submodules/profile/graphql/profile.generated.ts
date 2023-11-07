@@ -19,7 +19,7 @@ import { GraphQLClient } from 'graphql-request';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import { print } from 'graphql';
 import { DocumentNode } from 'graphql';
-export type ProfileManagerFragment = { address: string };
+export type ProfileManagerFragment = { address: string; isLensManager: boolean };
 
 export type CreateProfileWithHandleErrorResultFragment = {
   reason: Types.CreateProfileWithHandleErrorReasonType;
@@ -469,7 +469,10 @@ export const ProfileManagerFragmentDoc = {
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfilesManagedResult' } },
       selectionSet: {
         kind: 'SelectionSet',
-        selections: [{ kind: 'Field', name: { kind: 'Name', value: 'address' } }],
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'address' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isLensManager' } },
+        ],
       },
     },
   ],
@@ -4194,7 +4197,10 @@ export const ProfileManagersDocument = {
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfilesManagedResult' } },
       selectionSet: {
         kind: 'SelectionSet',
-        selections: [{ kind: 'Field', name: { kind: 'Name', value: 'address' } }],
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'address' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isLensManager' } },
+        ],
       },
     },
     {

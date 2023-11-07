@@ -1,5 +1,6 @@
 fragment ProfileManager on ProfilesManagedResult {
   address
+  isLensManager
 }
 
 fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
