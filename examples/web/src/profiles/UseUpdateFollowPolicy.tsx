@@ -74,8 +74,7 @@ type UpdateFollowPolicyFormProps = {
 function UpdateFollowPolicyForm({ profile, currencies }: UpdateFollowPolicyFormProps) {
   const followPolicy = resolveFollowPolicy(profile);
 
-  const { execute: updateFollowPolicy, loading, error, called } = useUpdateFollowPolicy();
-  console.log({ followPolicy, loading, error, called });
+  const { execute: updateFollowPolicy, loading, error } = useUpdateFollowPolicy();
   const [selectedFollowPolicyType, setSelectedFollowPolicyType] = useState<FollowPolicyType | null>(
     followPolicy.type,
   );
