@@ -2,11 +2,10 @@ import { from } from '@apollo/client';
 import { ILogger } from '@lens-protocol/shared-kernel';
 
 import { LENS_API_MINIMAL_SUPPORTED_VERSION } from '../constants';
-import type { IAccessTokenStorage } from './IAccessTokenStorage';
 import { SafeApolloClient } from './SafeApolloClient';
 import { createSnapshotCache } from './cache';
 import { createLensCache, QueryParams } from './cache/createLensCache';
-import { createAuthLink, createLensLink, createSnapshotLink } from './links';
+import { createLensLink, IAccessTokenStorage, createAuthLink, createSnapshotLink } from './links';
 
 export type { ContentInsightMatcher } from './cache/utils/ContentInsight';
 export { snapshotPoll, demoSnapshotPoll } from './cache/utils/ContentInsight';

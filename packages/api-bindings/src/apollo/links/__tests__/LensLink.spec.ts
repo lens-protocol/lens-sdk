@@ -2,9 +2,9 @@ import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 import { ILogger } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
-import { semVer } from '../../SemVer';
-import { createHttpJsonResponse } from '../__helpers__/mocks';
-import { createLensLink } from '../links';
+import { semVer } from '../../../SemVer';
+import { createHttpJsonResponse } from '../../__helpers__/mocks';
+import { createLensLink } from '../LensLink';
 
 const query = gql`
   query Ping {
@@ -13,7 +13,7 @@ const query = gql`
 `;
 
 describe(`Given an instance of the ${ApolloClient.name}`, () => {
-  describe('wired with our custom LensLink', () => {
+  describe('wired with LensLink', () => {
     const supportedVersion = semVer('2.0.0');
 
     describe(`when the response 'x-api-version' is ahead by a major version or more compared to the SDK supported range`, () => {
