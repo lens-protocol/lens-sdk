@@ -180,6 +180,13 @@ export type OpenActionArgs = {
  *
  * The referrers will split the referral reward of any collect fee paid by the collector.
  *
+ * ## Public Collect
+ *
+ * You can use the `useOpenAction` hook to collect a publication with just a wallet.
+ * First make sure you logged-in via {@link useLogin} with just an EVM address.
+ *
+ * Then you can use the `useOpenAction` to collect a publication as mentioned above.
+ *
  * ## Custom Open Action
  *
  * You can use the `useOpenAction` hook to execute a custom Open Action.
@@ -226,17 +233,13 @@ export function useOpenAction(
       'You must be authenticated to execute an Open Action a post. Use `useLogin` hook to authenticate.',
     );
     invariant(
-      session.type === SessionType.WithProfile,
-      'You must have a profile to execute an Open Action.',
-    );
-    invariant(
       publication.momoka === null,
       'You cannot execute an Open Action on a Momoka publication.',
     );
 
     const request = resolveOpenActionRequestFor(publication, {
       action: args.action,
-      delegate: session.profile.signless,
+      delegate: session.type === SessionType.WithProfile ? session.profile.signless : false, // cannot use Lens Manager with Public Collect
     });
 
     return openAction(request);
