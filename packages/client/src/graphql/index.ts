@@ -107,6 +107,7 @@ export type {
   BroadcastRequest,
   ChallengeRequest,
   ChangeProfileManagersRequest,
+  ClaimProfileWithHandleRequest,
   CreateProfileWithHandleRequest,
   DefaultProfileRequest,
   DismissRecommendedProfilesRequest,
@@ -180,6 +181,7 @@ export type {
   UserPoapsQueryRequest,
   ValidatePublicationMetadataRequest,
   WhoActedOnPublicationRequest,
+  WhoHaveBlockedRequest,
   WhoReactedPublicationRequest,
 
   // where
@@ -258,6 +260,7 @@ export type {
 // enums
 export {
   ChangeProfileManagerActionType,
+  ClaimProfileWithHandleErrorReasonType,
   CollectOpenActionModuleType,
   CommentRankingFilterType,
   ComparisonOperatorConditionType,

@@ -34,6 +34,7 @@ import type {
   UnfollowRequest,
   UnlinkHandleFromProfileRequest,
   WhoActedOnPublicationRequest,
+  WhoHaveBlockedRequest,
 } from '../../graphql/types.generated';
 import {
   PaginatedResult,
@@ -356,6 +357,40 @@ export class Profile {
 
       return result.data.result;
     }, request);
+  }
+
+  /**
+   * Fetch profiles that the authenticated profile has blocked.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the query
+   * @returns Profiles wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.whoHaveBeenBlocked();
+   * ```
+   */
+  async whoHaveBeenBlocked(
+    request: WhoHaveBlockedRequest = {},
+  ): PromiseResult<
+    PaginatedResult<ProfileFragment>,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      return buildPaginatedQueryResult(async (currRequest) => {
+        const result = await this.sdk.WhoHaveBlocked(
+          {
+            request: currRequest,
+            ...buildRequestFromConfig(this.context),
+          },
+          headers,
+        );
+
+        return result.data.result;
+      }, request);
+    });
   }
 
   /**

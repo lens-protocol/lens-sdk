@@ -172,7 +172,7 @@ export type PaginatedArgs<T> = Prettify<
       /**
        * The number of items to return.
        *
-       * @defaultValue LimitType.Ten
+       * @defaultValue Default value is set by the API and it might differ between queries.
        */
       limit?: LimitType;
     }

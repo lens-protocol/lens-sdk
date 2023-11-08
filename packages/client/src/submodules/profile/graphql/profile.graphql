@@ -372,6 +372,24 @@ query ProfileActionHistory($request: ProfileActionHistoryRequest!) {
   }
 }
 
+query WhoHaveBlocked(
+  $request: WhoHaveBlockedRequest!
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
+) {
+  result: whoHaveBlocked(request: $request) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
 # TODO remove, this mutation was moved to `wallet` submodule
 fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
   reason
