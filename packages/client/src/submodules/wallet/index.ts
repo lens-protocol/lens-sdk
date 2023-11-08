@@ -1,3 +1,9 @@
 export * from './Wallet';
 
-export type { UserSigNoncesFragment } from './graphql/wallet.generated';
+export type {
+  ClaimableProfilesResultFragment,
+  ClaimProfileWithHandleErrorResultFragment,
+  CreateProfileWithHandleErrorResultFragment,
+  ReservedClaimableFragment,
+  UserSigNoncesFragment,
+} from './graphql/wallet.generated';

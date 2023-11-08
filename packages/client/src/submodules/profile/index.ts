@@ -9,7 +9,6 @@ export type {
   CreateLinkHandleToProfileBroadcastItemResultFragment,
   CreateUnlinkHandleFromProfileBroadcastItemResultFragment,
   CreateOnchainSetProfileMetadataBroadcastItemResultFragment,
-  CreateProfileWithHandleErrorResultFragment,
   CreateSetFollowModuleBroadcastItemResultFragment,
   CreateUnblockProfilesBroadcastItemResultFragment,
   CreateUnfollowBroadcastItemResultFragment,
