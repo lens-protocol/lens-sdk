@@ -1,48 +1,9 @@
 // eslint-disable-next-line no-restricted-imports
-import { from, fromPromise, HttpLink } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
-import { onError } from '@apollo/client/link/error';
+import { HttpLink } from '@apollo/client';
 import { maybe } from '@apollo/client/utilities';
 import { ILogger, never } from '@lens-protocol/shared-kernel';
 
-import { SemVer } from '../SemVer';
-import { IAccessTokenStorage } from './IAccessTokenStorage';
-
-/**
- * An error code that's coming from `apollo-server-errors` `AuthenticationError`
- */
-const AUTHENTICATION_ERROR_CODE = 'UNAUTHENTICATED';
-
-export function createAuthLink(accessTokenStorage: IAccessTokenStorage) {
-  const errorLink = onError(({ graphQLErrors, operation, forward }) => {
-    if (
-      graphQLErrors &&
-      graphQLErrors.some((error) => error.extensions?.code === AUTHENTICATION_ERROR_CODE)
-    ) {
-      return fromPromise(accessTokenStorage.refreshToken()).flatMap(() => forward(operation));
-    }
-    return;
-  });
-
-  const authHeaderLink = setContext((_, prevContext) => {
-    const token = accessTokenStorage.getAccessToken();
-
-    if (token) {
-      return {
-        ...prevContext,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        headers: {
-          authorization: `Bearer ${token}`,
-          ...('headers' in prevContext && prevContext.headers),
-        },
-      };
-    }
-
-    return prevContext;
-  });
-
-  return from([errorLink, authHeaderLink]);
-}
+import { SemVer } from '../../SemVer';
 
 const backupFetch = maybe(() => fetch);
 

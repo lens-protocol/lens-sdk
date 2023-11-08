@@ -1,6 +1,6 @@
 import { IAccessTokenStorage } from '@lens-protocol/api-bindings';
 import { CredentialsExpiredError } from '@lens-protocol/domain/use-cases/authentication';
-import { Deferred } from '@lens-protocol/shared-kernel';
+import { PromiseResult, failure, invariant, success } from '@lens-protocol/shared-kernel';
 
 import { AuthApi } from './AuthApi';
 import { Credentials } from './Credentials';
@@ -9,7 +9,6 @@ import { CredentialsStorage } from './CredentialsStorage';
 
 export class AccessTokenStorage implements IAccessTokenStorage, ICredentialsExpiryEmitter {
   private isRefreshing = false;
-  private pendingRequests: Deferred<void>[] = [];
 
   private listeners: Set<Callback> = new Set();
 
@@ -27,38 +26,24 @@ export class AccessTokenStorage implements IAccessTokenStorage, ICredentialsExpi
     return this.credentialsStorage.getAccessToken();
   }
 
-  async refreshToken(): Promise<void> {
-    if (this.isRefreshing) {
-      const deferredPromise = new Deferred<void>();
-      this.pendingRequests.push(deferredPromise);
-      return deferredPromise.promise;
-    }
-
+  async refreshToken(): PromiseResult<void, CredentialsExpiredError> {
+    invariant(this.isRefreshing === false, 'Cannot refresh token while refreshing');
     this.isRefreshing = true;
     const credentials = await this.credentialsStorage.get();
 
     if (credentials && credentials.canRefresh()) {
       await this.refreshCredentials(credentials);
       this.isRefreshing = false;
-      return;
+      return success();
     }
-
-    this.rejectPendingRequests();
     this.isRefreshing = false;
     this.emitExpiryEvent();
-    throw new CredentialsExpiredError();
+    return failure(new CredentialsExpiredError());
   }
 
   private async refreshCredentials(credentials: Credentials) {
     const newCredentials = await this.authApi.refreshCredentials(credentials.refreshToken);
     await this.credentialsStorage.set(newCredentials);
-    this.pendingRequests.map((request) => request.resolve());
-    this.pendingRequests = [];
-  }
-
-  private rejectPendingRequests() {
-    this.pendingRequests.map((request) => request.reject(new CredentialsExpiredError()));
-    this.pendingRequests = [];
   }
 
   private emitExpiryEvent() {
