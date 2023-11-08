@@ -13,7 +13,7 @@ async function main() {
 
   console.log(`Creating a new profile for ${address} with handle "${handle}"`);
 
-  const profileCreateResult = await client.profile.create({
+  const profileCreateResult = await client.wallet.createProfile({
     handle: handle,
     to: address,
   });

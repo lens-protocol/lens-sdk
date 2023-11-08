@@ -3,14 +3,6 @@ fragment ProfileManager on ProfilesManagedResult {
   isLensManager
 }
 
-fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
-  reason
-}
-
-fragment ClaimProfileWithHandleErrorResult on ClaimProfileWithHandleErrorResult {
-  reason
-}
-
 fragment CreateOnchainSetProfileMetadataBroadcastItemResult on CreateOnchainSetProfileMetadataBroadcastItemResult {
   id
   expiresAt
@@ -380,16 +372,9 @@ query ProfileActionHistory($request: ProfileActionHistoryRequest!) {
   }
 }
 
-# mutations
-mutation ClaimProfileWithHandle($request: ClaimProfileWithHandleRequest!) {
-  result: claimProfileWithHandle(request: $request) {
-    ... on RelaySuccess {
-      ...RelaySuccess
-    }
-    ... on ClaimProfileWithHandleErrorResult {
-      ...ClaimProfileWithHandleErrorResult
-    }
-  }
+# TODO remove, this mutation was moved to `wallet` submodule
+fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
+  reason
 }
 
 mutation CreateProfileWithHandle($request: CreateProfileWithHandleRequest!) {
@@ -403,6 +388,7 @@ mutation CreateProfileWithHandle($request: CreateProfileWithHandleRequest!) {
   }
 }
 
+# mutations
 mutation AddProfileInterests($request: ProfileInterestsRequest!) {
   result: addProfileInterests(request: $request)
 }
