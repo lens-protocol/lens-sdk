@@ -46,9 +46,17 @@ export type LensClientConfig = {
   mediaTransforms?: MediaTransformsConfig;
 
   /**
-   * The origin to be sent in the `Origin` header when making requests to the Lens API.
+   * The origin to be sent in the `origin` header when making requests to the Lens API.
+   *
+   * @deprecated Use the `headers` option instead. This will be removed in a future release.
    */
   origin?: string;
+
+  /**
+   * Allows to define extra headers to be sent when making requests to the Lens API.
+   * You can set the `origin` or `user-agent` headers here.
+   */
+  headers?: Record<string, string>;
 };
 
 /**
@@ -80,6 +88,7 @@ export class LensClient {
       storage: config.storage || new InMemoryStorageProvider(),
       mediaTransforms: config.mediaTransforms || {},
       origin: config.origin,
+      headers: config.headers,
     };
     this._authentication = new Authentication(this.context);
   }
