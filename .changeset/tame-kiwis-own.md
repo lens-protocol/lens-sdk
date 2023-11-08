@@ -4,4 +4,4 @@
 "@lens-protocol/react-web": patch
 ---
 
-Added `useProfilesManaged` hook
+**feat:** Added `useProfilesManaged` hook
