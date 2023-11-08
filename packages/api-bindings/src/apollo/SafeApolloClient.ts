@@ -20,8 +20,7 @@ import {
   GraphQLClientQueryResult,
   IGraphQLClient,
 } from './IGraphQLClient';
-import { UnspecifiedError, ValidationError } from './errors';
-import { isGraphQLValidationError } from './isGraphQLValidationError';
+import { UnspecifiedError, ValidationError, isValidationApolloError } from './errors';
 
 const clientName = 'lens-sdk';
 const defaultPollingInterval = 3000;
@@ -29,7 +28,7 @@ const defaultPollingInterval = 3000;
 function resolveError(error: unknown) {
   assertError(error);
 
-  if (isGraphQLValidationError(error)) {
+  if (isValidationApolloError(error)) {
     return new ValidationError(error);
   }
   return new UnspecifiedError(error);
