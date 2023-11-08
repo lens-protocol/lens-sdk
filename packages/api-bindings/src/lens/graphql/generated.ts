@@ -1515,16 +1515,6 @@ export enum RelayRoleKey {
   LensManager_8 = 'LENS_MANAGER_8',
   LensManager_9 = 'LENS_MANAGER_9',
   LensManager_10 = 'LENS_MANAGER_10',
-  LensManager_11 = 'LENS_MANAGER_11',
-  LensManager_12 = 'LENS_MANAGER_12',
-  LensManager_13 = 'LENS_MANAGER_13',
-  LensManager_14 = 'LENS_MANAGER_14',
-  LensManager_15 = 'LENS_MANAGER_15',
-  LensManager_16 = 'LENS_MANAGER_16',
-  LensManager_17 = 'LENS_MANAGER_17',
-  LensManager_18 = 'LENS_MANAGER_18',
-  LensManager_19 = 'LENS_MANAGER_19',
-  LensManager_20 = 'LENS_MANAGER_20',
   WithSig_1 = 'WITH_SIG_1',
   WithSig_2 = 'WITH_SIG_2',
   WithSig_3 = 'WITH_SIG_3',
@@ -3197,7 +3187,7 @@ export type NotificationsData = {
   };
 } & InjectCommonQueryParams;
 
-export type ProfileManager = { address: EvmAddress };
+export type ProfileManager = { address: EvmAddress; isLensManager: boolean };
 
 export type ClaimProfileWithHandleErrorResult = {
   __typename: 'ClaimProfileWithHandleErrorResult';
@@ -6961,6 +6951,7 @@ export const FragmentNotification = /*#__PURE__*/ gql`
 export const FragmentProfileManager = /*#__PURE__*/ gql`
   fragment ProfileManager on ProfilesManagedResult {
     address
+    isLensManager
   }
 `;
 export const FragmentClaimProfileWithHandleErrorResult = /*#__PURE__*/ gql`
@@ -14377,6 +14368,7 @@ export type EventMetadataV3KeySpecifier = (
   | 'appId'
   | 'attachments'
   | 'attributes'
+  | 'content'
   | 'contentWarning'
   | 'encryptedWith'
   | 'endsAt'
@@ -14390,6 +14382,7 @@ export type EventMetadataV3KeySpecifier = (
   | 'rawURI'
   | 'startsAt'
   | 'tags'
+  | 'title'
   | EventMetadataV3KeySpecifier
 )[];
 export type EventMetadataV3FieldPolicy = {
@@ -14397,6 +14390,7 @@ export type EventMetadataV3FieldPolicy = {
   appId?: FieldPolicy<any> | FieldReadFunction<any>;
   attachments?: FieldPolicy<any> | FieldReadFunction<any>;
   attributes?: FieldPolicy<any> | FieldReadFunction<any>;
+  content?: FieldPolicy<any> | FieldReadFunction<any>;
   contentWarning?: FieldPolicy<any> | FieldReadFunction<any>;
   encryptedWith?: FieldPolicy<any> | FieldReadFunction<any>;
   endsAt?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -14410,6 +14404,7 @@ export type EventMetadataV3FieldPolicy = {
   rawURI?: FieldPolicy<any> | FieldReadFunction<any>;
   startsAt?: FieldPolicy<any> | FieldReadFunction<any>;
   tags?: FieldPolicy<any> | FieldReadFunction<any>;
+  title?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type FeeFollowModuleSettingsKeySpecifier = (
   | 'amount'
@@ -16023,9 +16018,14 @@ export type ProfileWhoReactedResultFieldPolicy = {
   profile?: FieldPolicy<any> | FieldReadFunction<any>;
   reactions?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type ProfilesManagedResultKeySpecifier = ('address' | ProfilesManagedResultKeySpecifier)[];
+export type ProfilesManagedResultKeySpecifier = (
+  | 'address'
+  | 'isLensManager'
+  | ProfilesManagedResultKeySpecifier
+)[];
 export type ProfilesManagedResultFieldPolicy = {
   address?: FieldPolicy<any> | FieldReadFunction<any>;
+  isLensManager?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type PublicationMarketplaceMetadataAttributeKeySpecifier = (
   | 'displayType'

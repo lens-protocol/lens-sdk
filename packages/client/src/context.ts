@@ -33,4 +33,5 @@ export type LensContext = {
   storage: IStorageProvider;
   mediaTransforms: MediaTransformsConfig;
   origin?: string;
+  headers?: Record<string, string>;
 };
