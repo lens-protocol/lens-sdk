@@ -394,8 +394,12 @@ export class Profile {
   /**
    * Create a new profile.
    *
+   * ⚠️ Only available in development environment.
+   *
    * @param request - Request object for the mutation
    * @returns Status of the transaction
+   *
+   * @deprecated Use {@link Wallet.createProfile} instead
    *
    * @example
    * ```ts
@@ -408,6 +412,9 @@ export class Profile {
   async create(
     request: CreateProfileWithHandleRequest,
   ): Promise<RelaySuccessFragment | CreateProfileWithHandleErrorResultFragment> {
+    if (this.context.environment.name === 'production') {
+      throw new Error('Cannot create profile in production environment');
+    }
     const result = await this.sdk.CreateProfileWithHandle({ request });
     return result.data.result;
   }

@@ -1,3 +1,4 @@
+# queries
 query OwnedHandles($request: OwnedHandlesRequest!) {
   result: ownedHandles(request: $request) {
     items {
@@ -35,5 +36,56 @@ fragment UserSigNonces on UserSigNonces {
 query UserSigNonces {
   result: userSigNonces {
     ...UserSigNonces
+  }
+}
+
+fragment ReservedClaimable on ReservedClaimable {
+  id
+  withHandle
+  source
+  expiry
+}
+
+fragment ClaimableProfilesResult on ClaimableProfilesResult {
+  reserved {
+    ...ReservedClaimable
+  }
+  canMintProfileWithFreeTextHandle
+}
+
+query ClaimableProfiles {
+  result: claimableProfiles {
+    ...ClaimableProfilesResult
+  }
+}
+
+# mutations
+fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
+  reason
+}
+
+fragment ClaimProfileWithHandleErrorResult on ClaimProfileWithHandleErrorResult {
+  reason
+}
+
+mutation ClaimProfileWithHandle($request: ClaimProfileWithHandleRequest!) {
+  result: claimProfileWithHandle(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on ClaimProfileWithHandleErrorResult {
+      ...ClaimProfileWithHandleErrorResult
+    }
+  }
+}
+
+mutation CreateProfileWithHandle($request: CreateProfileWithHandleRequest!) {
+  result: createProfileWithHandle(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on CreateProfileWithHandleErrorResult {
+      ...CreateProfileWithHandleErrorResult
+    }
   }
 }
