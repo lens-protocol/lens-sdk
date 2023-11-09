@@ -15,15 +15,15 @@ async function main() {
   const wallet = setupWallet();
   const address = await wallet.getAddress();
 
-  const ownedProfiles = await client.profile.fetchAll({ where: { ownedBy: [address] } });
+  const managedProfiles = await client.wallet.profilesManaged({ for: wallet.address });
 
-  if (ownedProfiles.items.length === 0) {
-    throw new Error(`You don't have any profiles, create one first`);
+  if (managedProfiles.items.length === 0) {
+    throw new Error(`You don't manage any profiles, create one first`);
   }
 
   const { id, text } = await client.authentication.generateChallenge({
     signedBy: address,
-    for: ownedProfiles.items[0].id,
+    for: managedProfiles.items[0].id,
   });
 
   console.log(`Challenge: `, text);

@@ -1,4 +1,4 @@
-import { profileId, useLogin, useProfiles } from '@lens-protocol/react-web';
+import { profileId, useLogin, useProfilesManaged } from '@lens-protocol/react-web';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useAccount, useConnect } from 'wagmi';
@@ -11,7 +11,7 @@ import { never } from './utils';
 function ProfilesList({ owner }: { owner: string }) {
   const navigate = useNavigate();
   const { execute: login, loading: isLoginPending } = useLogin();
-  const { data: profiles, error, loading } = useProfiles({ where: { ownedBy: [owner] } });
+  const { data: profiles, error, loading } = useProfilesManaged({ for: owner });
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

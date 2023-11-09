@@ -19,7 +19,7 @@ export type { LoginError, LoginRequest };
  * Optionally you can login just with an EVM address. In this case the authenticated session
  * returned by {@link useSession} will be of type {@link SessionType.JustWallet} type and will not
  * contain any Profile information. The credentials associated with this session are limited to:
- * - claim a Profile with new Handle via the {@link useClaimProfile} hook
+ * - claim a Profile with new Handle via the {@link useClaimHandle} hook
  * - collect a publication via the {@link useOpenAction} hook
  *
  * See the respective hooks documentation for more information.
