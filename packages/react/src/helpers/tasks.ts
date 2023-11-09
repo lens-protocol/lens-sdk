@@ -50,16 +50,6 @@ export type DeferredTaskSuccess<TData> = {
 };
 
 /**
- * The state of a deferred task after a successful call with no data.
- */
-export type DeferredTaskSuccessWithNoData = {
-  called: true;
-  loading: false;
-  data: undefined;
-  error: undefined;
-};
-
-/**
  * The state of a deferred task after a failed call.
  */
 export type DeferredTaskFailed<TError extends IEquatableError> = {
@@ -77,7 +67,6 @@ export type DeferredTaskState<TData, TError extends IEquatableError> =
   | DeferredTaskFirstCall
   | DeferredTaskNthCall<TData>
   | DeferredTaskSuccess<TData>
-  | DeferredTaskSuccessWithNoData
   | DeferredTaskFailed<TError>;
 
 /**
@@ -173,42 +162,16 @@ export function useDeferredTask<TData, TError extends IEquatableError, TInput = 
         }
 
         return result;
-      } finally {
-        setState(({ data, error }) => {
-          if (data !== undefined) {
-            return {
-              called: true,
-              data,
-              error: undefined,
-              loading: false,
-            };
-          }
-
-          if (error) {
-            return {
-              called: true,
-              data: undefined,
-              error,
-              loading: false,
-            };
-          }
-
-          if (error === undefined && data === undefined) {
-            return {
-              called: true,
-              data: undefined,
-              error: undefined,
-              loading: false,
-            };
-          }
-
+      } catch (err) {
+        setState(() => {
           return {
+            loading: false,
             called: false,
             data: undefined,
             error: undefined,
-            loading: false,
           };
         });
+        throw err;
       }
     },
     [handler],
