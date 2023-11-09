@@ -101,7 +101,7 @@ export class SignerFactory implements ISignerFactory {
 
         return success();
       }
-    } catch (e) {
+    } catch {
       // noop
     }
 
