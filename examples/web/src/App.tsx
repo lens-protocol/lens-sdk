@@ -33,6 +33,7 @@ import {
 import {
   ProfilesPage,
   UseBlockAndUnblockProfiles,
+  UseBlockedProfiles,
   UseFollowAndUnfollow,
   UseLazyProfile,
   UseMutualFollowers,
@@ -155,6 +156,7 @@ export function App() {
                       <Route path="useUpdateFollowPolicy" element={<UseUpdateFollowPolicy />} />
                       <Route path="useOwnedHandles" element={<UseOwnedHandles />} />
                       <Route path="useBlockProfiles" element={<UseBlockAndUnblockProfiles />} />
+                      <Route path="useBlockedProfiles" element={<UseBlockedProfiles />} />
                     </Route>
 
                     <Route path="/discovery">

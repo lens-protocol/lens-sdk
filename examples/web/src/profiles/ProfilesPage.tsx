@@ -58,7 +58,7 @@ const profileHooks = [
   },
   {
     label: 'useUpdateProfileManagers',
-    description: 'Update the Profile Manager configuration for the logged-in Profile.',
+    description: 'Update the profile manager configuration.',
     path: '/profiles/useUpdateProfileManagers',
   },
   {
@@ -73,7 +73,7 @@ const profileHooks = [
   },
   {
     label: 'useUpdateFollowPolicy',
-    description: 'Update the follow policy for the logged-in Profile.',
+    description: 'Update the follow policy.',
     path: '/profiles/useUpdateFollowPolicy',
   },
   {
@@ -83,8 +83,13 @@ const profileHooks = [
   },
   {
     label: 'useBlockProfiles & useUnblockProfiles',
-    description: 'Block and unblock profiles from the active profile.',
+    description: 'Block and unblock profiles.',
     path: '/profiles/useBlockProfiles',
+  },
+  {
+    label: 'useBlockedProfiles',
+    description: 'Fetch profiles that have been blocked.',
+    path: '/profiles/useBlockedProfiles',
   },
 ];
 

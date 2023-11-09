@@ -53,7 +53,7 @@ const publicationHooks = [
   },
   {
     label: 'useBookmarks',
-    description: `Fetch a list of publications that the current user has bookmarked.`,
+    description: `Fetch bookmarked publications.`,
     path: '/publications/useBookmarks',
   },
   {

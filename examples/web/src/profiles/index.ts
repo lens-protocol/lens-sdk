@@ -1,5 +1,6 @@
 export * from './ProfilesPage';
 export * from './UseBlockAndUnblockProfiles';
+export * from './UseBlockedProfiles';
 export * from './UseFollowAndUnfollow';
 export * from './UseLazyProfile';
 export * from './UseMutualFollowers';
