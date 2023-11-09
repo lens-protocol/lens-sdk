@@ -3442,6 +3442,19 @@ export type WhoActedOnPublicationData = {
   result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
 } & InjectCommonQueryParams;
 
+export type WhoHaveBlockedVariables = Exact<{
+  limit?: InputMaybe<LimitType>;
+  cursor?: InputMaybe<Scalars['Cursor']>;
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
+}>;
+
+export type WhoHaveBlockedData = {
+  result: { items: Array<Profile>; pageInfo: PaginatedResultInfo };
+};
+
 export type ProfileActionHistory = {
   id: number;
   actionType: ProfileActionHistoryType;
@@ -9306,6 +9319,73 @@ export type WhoActedOnPublicationLazyQueryHookResult = ReturnType<
 export type WhoActedOnPublicationQueryResult = Apollo.QueryResult<
   WhoActedOnPublicationData,
   WhoActedOnPublicationVariables
+>;
+export const WhoHaveBlockedDocument = /*#__PURE__*/ gql`
+  query WhoHaveBlocked(
+    $limit: LimitType
+    $cursor: Cursor
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
+  ) {
+    result: whoHaveBlocked(request: { limit: $limit, cursor: $cursor }) {
+      items {
+        ...Profile
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  ${FragmentProfile}
+  ${FragmentPaginatedResultInfo}
+`;
+
+/**
+ * __useWhoHaveBlocked__
+ *
+ * To run a query within a React component, call `useWhoHaveBlocked` and pass it any options that fit your needs.
+ * When your component renders, `useWhoHaveBlocked` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useWhoHaveBlocked({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
+ *   },
+ * });
+ */
+export function useWhoHaveBlocked(
+  baseOptions?: Apollo.QueryHookOptions<WhoHaveBlockedData, WhoHaveBlockedVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<WhoHaveBlockedData, WhoHaveBlockedVariables>(
+    WhoHaveBlockedDocument,
+    options,
+  );
+}
+export function useWhoHaveBlockedLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<WhoHaveBlockedData, WhoHaveBlockedVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<WhoHaveBlockedData, WhoHaveBlockedVariables>(
+    WhoHaveBlockedDocument,
+    options,
+  );
+}
+export type WhoHaveBlockedHookResult = ReturnType<typeof useWhoHaveBlocked>;
+export type WhoHaveBlockedLazyQueryHookResult = ReturnType<typeof useWhoHaveBlockedLazyQuery>;
+export type WhoHaveBlockedQueryResult = Apollo.QueryResult<
+  WhoHaveBlockedData,
+  WhoHaveBlockedVariables
 >;
 export const ProfileActionHistoryDocument = /*#__PURE__*/ gql`
   query ProfileActionHistory($limit: LimitType, $cursor: Cursor) {

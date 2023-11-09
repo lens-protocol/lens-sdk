@@ -1,6 +1,7 @@
 import { AnyPublication, isMirrorPublication } from '@lens-protocol/api-bindings';
-import { success } from '@lens-protocol/shared-kernel';
+import { invariant, success } from '@lens-protocol/shared-kernel';
 
+import { useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useNotInterestedController } from './adapters/useNotInterestedController';
 
@@ -37,9 +38,15 @@ export type NotInterestedOperation = UseDeferredTask<void, never, UseNotInterest
  * ```
  */
 export function useNotInterestedToggle(): NotInterestedOperation {
+  const { data: session } = useSession();
   const { add, remove } = useNotInterestedController();
 
   return useDeferredTask(async ({ publication }) => {
+    invariant(
+      session?.authenticated,
+      'You must be authenticated to use this operation. Use `useLogin` hook to authenticate.',
+    );
+
     const {
       id: publicationId,
       operations: { isNotInterested },

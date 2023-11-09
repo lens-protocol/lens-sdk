@@ -2,7 +2,7 @@ import { mockPostFragment, mockProfileBookmarksResponse } from '@lens-protocol/a
 import { waitFor } from '@testing-library/react';
 
 import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
-import { useMyBookmarks } from '../useMyBookmarks';
+import { useMyBookmarks } from '../useBookmarks';
 
 describe(`Given the ${useMyBookmarks.name} hook`, () => {
   const publications = [mockPostFragment()];
