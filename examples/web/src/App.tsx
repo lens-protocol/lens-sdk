@@ -57,7 +57,7 @@ import {
   UseCreatePost,
   UseCreateQuote,
   UseHidePublication,
-  UseMyBookmarks,
+  UseBookmarks,
   UseNotInterestedToggle,
   UseOpenAction,
   UsePublication,
@@ -125,7 +125,7 @@ export function App() {
                       <Route path="useReportPublication" element={<UseReportPublication />} />
                       <Route path="useReactionToggle" element={<UseReactionToggle />} />
                       <Route path="useBookmarkToggle" element={<UseBookmarkToggle />} />
-                      <Route path="useMyBookmarks" element={<UseMyBookmarks />} />
+                      <Route path="useBookmarks" element={<UseBookmarks />} />
                       <Route path="useOpenAction" element={<UseOpenAction />} />
                       <Route path="useNotInterestedToggle" element={<UseNotInterestedToggle />} />
                     </Route>

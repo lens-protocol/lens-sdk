@@ -18,7 +18,7 @@ export type UseBookmarksArgs = PaginatedArgs<PublicationBookmarksRequest>;
  *
  * @category Bookmarks
  * @group Hooks
- * @param args - {@link useBookmarksArgs}
+ * @param args - {@link UseBookmarksArgs}
  *
  * @example
  * ```tsx

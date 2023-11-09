@@ -2,9 +2,9 @@ import { mockPostFragment, mockProfileBookmarksResponse } from '@lens-protocol/a
 import { waitFor } from '@testing-library/react';
 
 import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
-import { useMyBookmarks } from '../useBookmarks';
+import { useBookmarks } from '../useBookmarks';
 
-describe(`Given the ${useMyBookmarks.name} hook`, () => {
+describe(`Given the ${useBookmarks.name} hook`, () => {
   const publications = [mockPostFragment()];
   const expectations = publications.map(({ __typename, id }) => ({ __typename, id }));
 
@@ -19,7 +19,7 @@ describe(`Given the ${useMyBookmarks.name} hook`, () => {
         }),
       ]);
 
-      const { result } = renderHook(() => useMyBookmarks());
+      const { result } = renderHook(() => useBookmarks());
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
       expect(result.current.data).toMatchObject(expectations);
