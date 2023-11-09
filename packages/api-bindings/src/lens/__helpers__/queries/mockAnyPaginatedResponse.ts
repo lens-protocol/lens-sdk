@@ -19,6 +19,7 @@ export function mockAnyResponse(bulk: MockedResponse) {
         imageSmallSize: {},
         profileCoverSize: {},
         profilePictureSize: {},
+        profileMetadataSource: null,
       },
     },
     result: bulk.result,
@@ -52,6 +53,7 @@ export function mockAnyPaginatedResponse<V extends OperationVariables, I>({
         imageSmallSize: {},
         profileCoverSize: {},
         profilePictureSize: {},
+        profileMetadataSource: null,
       },
     },
     result: {

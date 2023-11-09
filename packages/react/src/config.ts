@@ -17,7 +17,7 @@ export type {
   IStorageProvider,
 };
 
-export { defaultQueryParams } from '@lens-protocol/api-bindings';
+export { defaultQueryParams, SupportedFiatType } from '@lens-protocol/api-bindings';
 
 export interface IBindings extends ISignerBinding, IProviderBinding {}
 
@@ -55,7 +55,7 @@ export type LensConfig = {
   /**
    * The common query params allows you customize some aspect of the returned data.
    *
-   * If not provided {@link defaultQueryParams} will be used instead.
+   * @defaultValue see individual fields of {@link QueryParams}
    */
   params?: QueryParams;
 };

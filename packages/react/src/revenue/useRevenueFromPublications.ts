@@ -24,6 +24,7 @@ export type UseRevenueFromPublicationsArgs = PaginatedArgs<RevenueFromPublicatio
  *
  * @category Revenue
  * @group Hooks
+ * @param args - {@link UseRevenueFromPublicationsArgs}
  */
 export function useRevenueFromPublications(
   args: UseRevenueFromPublicationsArgs,
@@ -31,7 +32,7 @@ export function useRevenueFromPublications(
   return usePaginatedReadResult(
     useRevenueFromPublicationsHook(
       useLensApolloClient({
-        variables: args,
+        variables: { ...args, statsFor: args.publishedOn },
       }),
     ),
   );

@@ -63,6 +63,7 @@ export function useFeedHighlights({
       useLensApolloClient({
         variables: {
           where,
+          statsFor: where?.metadata?.publishedOn,
         },
       }),
     ),

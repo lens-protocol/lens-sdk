@@ -57,6 +57,7 @@ export function useFeed({ where }: UseFeedArgs): PaginatedReadResult<FeedItem[]>
       useLensApolloClient({
         variables: {
           where,
+          statsFor: where?.metadata?.publishedOn,
         },
       }),
     ),

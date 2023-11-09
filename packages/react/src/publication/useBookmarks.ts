@@ -39,6 +39,7 @@ export function useBookmarks(args: UseBookmarksArgs = {}): PaginatedReadResult<A
       useLensApolloClient({
         variables: {
           request: args,
+          statsFor: args.where?.metadata?.publishedOn,
         },
       }),
     ),

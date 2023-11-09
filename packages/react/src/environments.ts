@@ -71,7 +71,7 @@ export const production: EnvironmentConfig = {
   },
   handleResolver: (localName) => `lens/${localName}`,
   snapshot: {
-    hub: 'https://hub.snapshot.org' as URL,
+    hub: 'https://hub.snapshot.org/graphql' as URL,
     matcher: snapshotPoll,
     sequencer: 'https://seq.snapshot.org' as URL,
   },
@@ -102,7 +102,7 @@ export const development: EnvironmentConfig = {
   },
   handleResolver: (localName) => `test/${localName}`,
   snapshot: {
-    hub: 'https://testnet.snapshot.org' as URL,
+    hub: 'https://testnet.snapshot.org/graphql' as URL,
     matcher: demoSnapshotPoll,
     sequencer: 'https://testnet.seq.snapshot.org' as URL,
   },

@@ -35,6 +35,7 @@ export function useRevenueFromPublication(
       useLensApolloClient({
         variables: {
           request: args,
+          statsFor: args.publishedOn,
         },
       }),
     ),

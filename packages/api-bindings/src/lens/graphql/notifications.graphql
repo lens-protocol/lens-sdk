@@ -166,10 +166,11 @@ query Notifications(
   $imageMediumSize: ImageTransform = {}
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
-  $activityOn: [AppId!]
+  $statsFor: [AppId!]
   $fxRateFor: SupportedFiatType = USD
+  $profileMetadataSource: AppId = null
 ) {
-  ...InjectCommonQueryParams
+  ...InjectQueryParams
   result: notifications(request: { where: $where, cursor: $cursor }) {
     items {
       ... on ReactionNotification {

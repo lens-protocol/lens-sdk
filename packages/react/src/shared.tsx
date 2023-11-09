@@ -87,7 +87,6 @@ export function createSharedDependencies(userConfig: LensConfig): SharedDependen
     accessTokenStorage,
     pollingInterval: config.environment.timings.pollingInterval,
     logger: config.logger,
-    // contentMatchers: [config.environment.snapshot.matcher], // TODO is it in use?
   });
 
   // infrastructure

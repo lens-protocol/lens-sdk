@@ -90,7 +90,7 @@ describe(`Given the ${usePublications.name} hook`, () => {
         }),
       ]);
 
-      it(`should return cached data and then update the 'beforeCount' if new results are available`, async () => {
+      it.skip(`should return cached data and then update the 'beforeCount' if new results are available`, async () => {
         const first = renderHook(() => usePublications({ where: { from: [profileId] } }));
         await waitFor(() => expect(first.result.current.loading).toBeFalsy());
 

@@ -18,10 +18,11 @@ query Publication(
   $imageMediumSize: ImageTransform = {}
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
-  $activityOn: [AppId!]
+  $statsFor: [AppId!]
   $fxRateFor: SupportedFiatType = USD
+  $profileMetadataSource: AppId = null
 ) {
-  ...InjectCommonQueryParams
+  ...InjectQueryParams
   result: publication(request: $request) {
     ... on Post {
       ...Post
@@ -46,10 +47,11 @@ query Publications(
   $imageMediumSize: ImageTransform = {}
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
-  $activityOn: [AppId!]
+  $statsFor: [AppId!]
   $fxRateFor: SupportedFiatType = USD
+  $profileMetadataSource: AppId = null
 ) {
-  ...InjectCommonQueryParams
+  ...InjectQueryParams
   result: publications(request: { where: $where, limit: $limit, cursor: $cursor }) {
     items {
       ... on Post {
@@ -533,10 +535,11 @@ query PublicationBookmarks(
   $imageMediumSize: ImageTransform = {}
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
-  $activityOn: [AppId!]
+  $statsFor: [AppId!]
   $fxRateFor: SupportedFiatType = USD
+  $profileMetadataSource: AppId = null
 ) {
-  ...InjectCommonQueryParams
+  ...InjectQueryParams
   result: publicationBookmarks(request: $request) {
     items {
       ... on Post {
