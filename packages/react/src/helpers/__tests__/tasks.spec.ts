@@ -11,20 +11,6 @@ import {
 } from '../tasks';
 
 describe('Given the useDeferredTask hook', () => {
-  // idle
-
-  //first call
-  // loading
-  // result.success
-  // result.failure
-  // exception
-
-  // n-th call
-  // loading
-  // result.success
-  // result.failure
-  // exception
-
   describe('when the hook is idle', () => {
     it('should return state inline with type of "DeferredTaskIdle"', async () => {
       const { result } = renderHook(() =>
