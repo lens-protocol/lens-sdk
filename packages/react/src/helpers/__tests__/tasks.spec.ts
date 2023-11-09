@@ -55,25 +55,49 @@ describe('Given the useDeferredTask hook', () => {
     });
 
     describe(`and the execution of the hook callback is successful`, () => {
-      it('should return the state inline with type of "DeferredTaskSuccess"', async () => {
-        const { result } = renderHook(() =>
-          useDeferredTask(async (input: string) => {
-            return success(input);
-          }),
-        );
+      describe('and the hook callback returns data', () => {
+        it('should return the state inline with type of "DeferredTaskSuccess"', async () => {
+          const { result } = renderHook(() =>
+            useDeferredTask(async (input: string) => {
+              return success(input);
+            }),
+          );
 
-        await act(async () => {
-          await result.current.execute('test');
+          await act(async () => {
+            await result.current.execute('test');
+          });
+
+          const expectation: DeferredTaskSuccess<string> = {
+            called: true,
+            loading: false,
+            data: 'test',
+            error: undefined,
+          };
+
+          expect(result.current).toMatchObject(expectation);
         });
+      });
+      describe('and the hook callback returns void', () => {
+        it('should return the state inline with type of "DeferredTaskSuccess"', async () => {
+          const { result } = renderHook(() =>
+            useDeferredTask(async (_: string) => {
+              return success();
+            }),
+          );
 
-        const expectation: DeferredTaskSuccess<string> = {
-          called: true,
-          loading: false,
-          data: 'test',
-          error: undefined,
-        };
+          await act(async () => {
+            await result.current.execute('test');
+          });
 
-        expect(result.current).toMatchObject(expectation);
+          const expectation: DeferredTaskSuccess<void> = {
+            called: true,
+            loading: false,
+            data: undefined,
+            error: undefined,
+          };
+
+          expect(result.current).toMatchObject(expectation);
+        });
       });
     });
 
@@ -240,10 +264,10 @@ describe('Given the useDeferredTask hook', () => {
           }
         });
 
-        const expectation: DeferredTaskIdle = {
-          called: false,
+        const expectation: DeferredTaskSuccess<string> = {
+          called: true,
           loading: false,
-          data: undefined,
+          data: 'one',
           error: undefined,
         };
 
