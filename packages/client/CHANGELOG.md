@@ -1,5 +1,20 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.20
+
+### Patch Changes
+
+- 297e814dc: **feat:** Added `wallet.claimableProfiles` and `wallet.claimProfile`.
+  **chore:** Moved `profile.create` to `wallet.createProfile`.
+  **chore:** Deprecated `profile.create`.
+- 7ae662389: **feat:** Added `profile.whoHaveBeenBlocked`
+- 4b10c58f8: **feat:** Added custom headers option to LensClientConfig
+- 3a9720968: **feat:** Added `isLensManager` to `ProfileManager` fragment
+- Updated dependencies [2f5360796]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.7
+  - @lens-protocol/gated-content@0.3.3-alpha.14
+  - @lens-protocol/storage@0.7.5-alpha.5
+
 ## 2.0.0-alpha.19
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.17
+
+### Patch Changes
+
+- 2f5360796: **fix:** fixes silent token-refresh logic so that, if refresh token is still valid, a silent refresh of tokens takes places and failed requests are retried seamlessly
+- 3a9720968: **feat:** Added `isLensManager` to `ProfileManager` fragment
+- 5d95eccd2: **feat:** Added `useProfilesManaged` hook
+- Updated dependencies [2f5360796]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.7
+  - @lens-protocol/domain@0.11.0-alpha.12
+
 ## 0.11.0-alpha.16
 
 ### Minor Changes

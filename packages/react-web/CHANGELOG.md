@@ -1,5 +1,21 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.19
+
+### Patch Changes
+
+- 2f5360796: **fix:** fixes silent token-refresh logic so that, if refresh token is still valid, a silent refresh of tokens takes places and failed requests are retried seamlessly
+- 3a9720968: **feat:** Added `isLensManager` to `ProfileManager` fragment
+- 5d95eccd2: **feat:** Added `useProfilesManaged` hook
+- Updated dependencies [2f5360796]
+- Updated dependencies [3a9720968]
+- Updated dependencies [5d95eccd2]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.7
+  - @lens-protocol/api-bindings@0.11.0-alpha.17
+  - @lens-protocol/react@2.0.0-alpha.19
+  - @lens-protocol/domain@0.11.0-alpha.12
+  - @lens-protocol/storage@0.7.5-alpha.5
+
 ## 2.0.0-alpha.18
 
 ### Patch Changes
