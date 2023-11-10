@@ -1,7 +1,7 @@
 import { mockPostFragment, mockProfileBookmarksResponse } from '@lens-protocol/api-bindings/mocks';
 import { waitFor } from '@testing-library/react';
 
-import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
+import { setupHookTestScenarioWithSession } from '../../__helpers__/setupHookTestScenarioWithSession';
 import { useBookmarks } from '../useBookmarks';
 
 describe(`Given the ${useBookmarks.name} hook`, () => {
@@ -10,7 +10,7 @@ describe(`Given the ${useBookmarks.name} hook`, () => {
 
   describe('when a profile is provided', () => {
     it('should settle with the bookmarked publications', async () => {
-      const { renderHook } = setupHookTestScenario([
+      const { renderHook } = await setupHookTestScenarioWithSession([
         mockProfileBookmarksResponse({
           variables: {
             request: {},
