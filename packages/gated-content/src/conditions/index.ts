@@ -171,7 +171,7 @@ function toRawSimpleCondition(gqlCondition: gql.ThirdTierCondition): raw.SimpleC
         case gql.NftContractType.Erc721:
           return raw.erc721OwnershipCondition({
             contract: toRawNetworkAddress(gqlCondition.contract),
-            tokenIds: gqlCondition.tokenIds?.map(raw.toTokenId),
+            tokenIds: gqlCondition.tokenIds?.map(raw.toTokenId) ?? undefined,
           });
 
         case gql.NftContractType.Erc1155:
