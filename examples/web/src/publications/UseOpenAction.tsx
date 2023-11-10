@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 import { Logs } from '../components/Logs';
+import { RequireProfileSession, RequireWalletSession } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useLogs } from '../hooks/useLogs';
@@ -59,9 +60,17 @@ function TestScenario({ id }: { id: PublicationId }) {
   return (
     <div>
       <PublicationCard publication={publication} />
-      <button onClick={collect} disabled={publication.operations.canCollect === TriStateValue.No}>
-        Collect
-      </button>
+      <RequireProfileSession>
+        <button onClick={collect} disabled={publication.operations.canCollect === TriStateValue.No}>
+          Collect w/ Profile
+        </button>
+      </RequireProfileSession>
+      &nbsp;OR&nbsp;
+      <RequireWalletSession>
+        <button onClick={collect} disabled={publication.operations.canCollect === TriStateValue.No}>
+          Collect w/ Wallet
+        </button>
+      </RequireWalletSession>
       <div className="notice">
         <p>
           At the time of this example writing there is a known API issue resulting in{' '}
@@ -126,14 +135,18 @@ export function UseOpenAction() {
       </h1>
 
       {!id && (
-        <>
-          {logs.length === 0 && (
-            <button type="button" onClick={prepare}>
-              Prepare example
-            </button>
+        <RequireProfileSession>
+          {!id && (
+            <>
+              {logs.length === 0 && (
+                <button type="button" onClick={prepare}>
+                  Prepare example
+                </button>
+              )}
+              <Logs logs={logs} />
+            </>
           )}
-          <Logs logs={logs} />
-        </>
+        </RequireProfileSession>
       )}
 
       {id && <TestScenario id={id} />}

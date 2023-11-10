@@ -7,7 +7,7 @@ import {
   useExplorePublications,
 } from '@lens-protocol/react-web';
 
-import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
+import { RequireProfileSession } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { PublicationCard } from './components/PublicationCard';
@@ -61,10 +61,9 @@ export function UseBookmarkToggleInner() {
 export function UseBookmarkToggle() {
   return (
     <>
-      <WhenLoggedIn>
+      <RequireProfileSession message="Log in to view this example.">
         <UseBookmarkToggleInner />
-      </WhenLoggedIn>
-      <UnauthenticatedFallback />
+      </RequireProfileSession>
     </>
   );
 }

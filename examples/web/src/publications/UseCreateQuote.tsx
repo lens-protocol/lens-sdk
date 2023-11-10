@@ -2,7 +2,7 @@ import { textOnly } from '@lens-protocol/metadata';
 import { publicationId, useCreateQuote, usePublication } from '@lens-protocol/react-web';
 import { toast } from 'react-hot-toast';
 
-import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
+import { RequireProfileSession } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { uploadJson } from '../upload';
@@ -90,10 +90,9 @@ export function UseCreateQuote() {
         <code>useCreateQuote</code>
       </h1>
 
-      <WhenLoggedIn>
+      <RequireProfileSession message="Log in to create a quote.">
         <QuoteComposer />
-      </WhenLoggedIn>
-      <UnauthenticatedFallback message="Log in to create a quote." />
+      </RequireProfileSession>
     </div>
   );
 }

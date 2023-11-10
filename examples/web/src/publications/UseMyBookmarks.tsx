@@ -1,6 +1,6 @@
 import { useMyBookmarks } from '@lens-protocol/react-web';
 
-import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
+import { RequireProfileSession } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
@@ -38,8 +38,9 @@ export function UseMyBookmarks() {
         <code>useMyBookmarks</code>
       </h1>
 
-      <WhenLoggedIn>{() => <MyBookmarks />}</WhenLoggedIn>
-      <UnauthenticatedFallback />
+      <RequireProfileSession message="Log in to view this example.">
+        {() => <MyBookmarks />}
+      </RequireProfileSession>
     </div>
   );
 }
