@@ -4,6 +4,7 @@ import {
   resolveOpenActionRequestFor,
 } from '@lens-protocol/api-bindings';
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
@@ -115,6 +116,13 @@ export type OpenActionArgs = {
  *         );
  *         break;
  *
+ *       case 'InsufficientGasError':
+ *         const asset = result.error.asset;
+ *         console.log(
+ *           `You do not have enough ${asset.symbol} to pay for the transaction gas cost.`
+ *         );
+ *         break;
+ *
  *       case 'InsufficientFundsError':
  *         const requestedAmount = result.error.requestedAmount;
  *         console.log(
@@ -219,6 +227,7 @@ export function useOpenAction(
   | BroadcastingError
   | InsufficientAllowanceError
   | InsufficientFundsError
+  | InsufficientGasError
   | PendingSigningRequestError
   | UserRejectedError
   | WalletConnectionError,
@@ -240,6 +249,7 @@ export function useOpenAction(
     const request = resolveOpenActionRequestFor(publication, {
       action: args.action,
       delegate: session.type === SessionType.WithProfile ? session.profile.signless : false, // cannot use Lens Manager with Public Collect
+      public: session.type === SessionType.JustWallet,
     });
 
     return openAction(request);

@@ -44,7 +44,7 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
       },
     },
   ])(`and the $settings.__typename`, ({ expected, settings }) => {
-    describe(`when invoke for a PrimaryPublication configured with it`, () => {
+    describe(`when invoked with a PrimaryPublication configured with it`, () => {
       const publication = mockPostFragment({
         openActionModules: [settings],
       });
@@ -53,6 +53,7 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
         const result = resolveOpenActionRequestFor(publication, {
           action: { kind: OpenActionKind.COLLECT },
           delegate: true,
+          public: false,
         });
 
         expect(result).toMatchObject({
@@ -62,9 +63,18 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
         });
         expect(result).toMatchObject(expected);
       });
+
+      it(`should throw an ${InvariantError.name} if attempted to execute as public act`, () => {
+        expect(() =>
+          resolveOpenActionRequestFor(publication, {
+            action: { kind: OpenActionKind.COLLECT },
+            public: true,
+          }),
+        ).toThrow(InvariantError);
+      });
     });
 
-    describe(`when invoked for a Mirror of a publication configured with it`, () => {
+    describe(`when invoked with a Mirror of a publication configured with it`, () => {
       const mirror = mockMirrorFragment({
         mirrorOn: mockPostFragment({
           openActionModules: [settings],
@@ -75,6 +85,7 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
         const result = resolveOpenActionRequestFor(mirror, {
           action: { kind: OpenActionKind.COLLECT },
           delegate: true,
+          public: false,
         });
 
         expect(result).toMatchObject({
@@ -86,18 +97,21 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
     });
   });
 
-  describe('when called for a publication with LegacyRevertCollectModuleSettingsFragment', () => {
-    const publication = mockPostFragment({
-      openActionModules: [mockLegacyRevertCollectModuleSettingsFragment()],
-    });
+  describe('and the LegacyRevertCollectModuleSettings', () => {
+    describe('when called for a publication setup with it', () => {
+      const publication = mockPostFragment({
+        openActionModules: [mockLegacyRevertCollectModuleSettingsFragment()],
+      });
 
-    it(`should throw an ${InvariantError.name}`, () => {
-      expect(() =>
-        resolveOpenActionRequestFor(publication, {
-          action: { kind: OpenActionKind.COLLECT },
-          delegate: false,
-        }),
-      ).toThrow(InvariantError);
+      it(`should throw an ${InvariantError.name}`, () => {
+        expect(() =>
+          resolveOpenActionRequestFor(publication, {
+            action: { kind: OpenActionKind.COLLECT },
+            delegate: false,
+            public: false,
+          }),
+        ).toThrow(InvariantError);
+      });
     });
   });
 
@@ -115,8 +129,8 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
           amount: fee,
           contractAddress,
         },
-        delegate: true,
       },
+      expectedRequest: 'SimpleCollectRequest',
     },
     {
       settings: mockMultirecipientFeeCollectOpenActionSettingsFragment({
@@ -132,10 +146,11 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
           contractAddress,
         },
       },
+      expectedRequest: 'MultirecipientCollectRequest',
     },
-  ])(`and the $settings.__typename`, ({ expected, settings }) => {
-    describe(`when invoke for a PrimaryPublication configured with it`, () => {
-      it(`should return the expected SimpleCollectRequest`, () => {
+  ])(`and the $settings.__typename`, ({ expected, expectedRequest, settings }) => {
+    describe(`when invoked with a PrimaryPublication configured with it`, () => {
+      it(`should return the expected ${expectedRequest}`, () => {
         const publication = mockPostFragment({
           openActionModules: [settings],
         });
@@ -143,6 +158,7 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
         const result = resolveOpenActionRequestFor(publication, {
           action: { kind: OpenActionKind.COLLECT, referrers },
           delegate: true,
+          public: false,
         });
 
         expect(result).toMatchObject({
@@ -151,9 +167,29 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
         });
         expect(result).toMatchObject(expected);
       });
+
+      it(`should support public ${expectedRequest}`, () => {
+        const publication = mockPostFragment({
+          openActionModules: [settings],
+        });
+        const referrers = [mockPublicationId(), mockProfileId()];
+        const result = resolveOpenActionRequestFor(publication, {
+          action: { kind: OpenActionKind.COLLECT, referrers },
+          public: true,
+        });
+
+        expect(result).toMatchObject({
+          publicationId: publication.id,
+          referrers,
+        });
+        expect(result).toMatchObject({
+          ...expected,
+          public: true,
+        });
+      });
     });
 
-    describe(`when invoked for a Mirror of a publication configured with it`, () => {
+    describe(`when invoked with a Mirror of a publication configured with it`, () => {
       it('should default the `referrers` to the mirror ID', () => {
         const mirror = mockMirrorFragment({
           mirrorOn: mockPostFragment({
@@ -164,6 +200,7 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
         const result = resolveOpenActionRequestFor(mirror, {
           action: { kind: OpenActionKind.COLLECT },
           delegate: true,
+          public: false,
         });
 
         expect(result).toMatchObject({
@@ -174,14 +211,14 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
     });
   });
 
-  describe(`and the $settings.__typename`, () => {
+  describe(`and the UnknownOpenActionModuleSettings`, () => {
     const settings = mockUnknownOpenActionModuleSettingsFragment({
       contract: mockNetworkAddressFragment({
         address: contractAddress,
       }),
     });
 
-    describe(`when invoke for a PrimaryPublication configured with it`, () => {
+    describe(`when invoked with a PrimaryPublication configured with it`, () => {
       it(`should return the expected UnknownActionRequest`, () => {
         const publication = mockPostFragment({
           openActionModules: [settings],
@@ -193,6 +230,7 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
             data: '0x' as Data,
           },
           delegate: true,
+          public: false,
         });
 
         expect(result).toMatchObject({
@@ -201,6 +239,30 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
           address: settings.contract.address,
           data: '0x',
           delegate: true,
+          public: false,
+        });
+      });
+
+      it(`should support public UnknownActionRequest`, () => {
+        const publication = mockPostFragment({
+          openActionModules: [settings],
+        });
+        const result = resolveOpenActionRequestFor(publication, {
+          action: {
+            kind: OpenActionKind.UNKNOWN,
+            address: settings.contract.address,
+            data: '0x' as Data,
+          },
+          public: true,
+        });
+
+        expect(result).toMatchObject({
+          type: AllOpenActionType.UNKNOWN_OPEN_ACTION,
+          publicationId: publication.id,
+          address: settings.contract.address,
+          data: '0x',
+          delegate: false,
+          public: true,
         });
       });
 
@@ -220,6 +282,7 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
             data: '0x' as Data,
           },
           delegate: true,
+          public: false,
         });
 
         expect(result).toMatchObject({

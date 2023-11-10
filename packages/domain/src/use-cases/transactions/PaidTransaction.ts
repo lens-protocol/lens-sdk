@@ -11,30 +11,30 @@ import { ActiveWallet } from '../authentication/ActiveWallet';
 import { ITransactionResultPresenter } from './ITransactionResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
-export interface IPayTransactionGateway<T extends AnyTransactionRequestModel> {
-  prepareSelfFundedTransaction(request: T, wallet: Wallet): Promise<UnsignedTransaction<T>>;
+export interface IPaidTransactionGateway<T extends AnyTransactionRequestModel> {
+  createUnsignedTransaction(request: T, wallet: Wallet): Promise<UnsignedTransaction<T>>;
 }
 
-export type IPayTransactionPresenter<T extends AnyTransactionRequestModel> =
+export type IPaidTransactionPresenter<T extends AnyTransactionRequestModel> =
   ITransactionResultPresenter<
     T,
     PendingSigningRequestError | InsufficientGasError | UserRejectedError | WalletConnectionError
   >;
 
-export class PayTransaction<T extends AnyTransactionRequestModel> {
+export class PaidTransaction<T extends AnyTransactionRequestModel> {
   constructor(
     private readonly activeWallet: ActiveWallet,
-    private readonly gateway: IPayTransactionGateway<T>,
-    private readonly presenter: IPayTransactionPresenter<T>,
+    private readonly gateway: IPaidTransactionGateway<T>,
+    private readonly presenter: IPaidTransactionPresenter<T>,
     private readonly queue: TransactionQueue<AnyTransactionRequestModel>,
   ) {}
 
   async execute(request: T) {
     const wallet = await this.activeWallet.requireActiveWallet();
 
-    const approveTransaction = await this.gateway.prepareSelfFundedTransaction(request, wallet);
+    const unsigned = await this.gateway.createUnsignedTransaction(request, wallet);
 
-    const result = await wallet.sendTransaction(approveTransaction);
+    const result = await wallet.sendTransaction(unsigned);
 
     if (result.isFailure()) {
       this.presenter.present(result);

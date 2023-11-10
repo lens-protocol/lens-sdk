@@ -141,6 +141,7 @@ export function mockSimpleCollectRequest(
   return {
     delegate: true,
     publicationId: mockPublicationId(),
+    public: false,
     ...overrides,
     type: AllOpenActionType.SIMPLE_COLLECT,
     kind: TransactionKind.ACT_ON_PUBLICATION,
@@ -153,6 +154,7 @@ export function mockMultirecipientCollectRequest(
   return {
     publicationId: mockPublicationId(),
     fee: mockCollectFee(),
+    public: false,
     ...overrides,
     type: AllOpenActionType.MULTIRECIPIENT_COLLECT,
     kind: TransactionKind.ACT_ON_PUBLICATION,
@@ -167,6 +169,7 @@ export function mockUnknownActionRequest(
     publicationId: mockPublicationId(),
     address: mockEvmAddress(),
     data: '0x' as Data,
+    public: false,
     ...overrides,
     type: AllOpenActionType.UNKNOWN_OPEN_ACTION,
     kind: TransactionKind.ACT_ON_PUBLICATION,

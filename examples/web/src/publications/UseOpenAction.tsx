@@ -64,16 +64,10 @@ function TestScenario({ id }: { id: PublicationId }) {
       </button>
       <div className="notice">
         <p>
-          At the time of this example writing there 2 known API issues:<br></br>
+          At the time of this example writing there is a known API issue resulting in{' '}
+          <code>PublicationOperations.canCollect</code> (SDK alias of <code>canAct</code>) returning
+          always <code>'NO'</code>.
         </p>
-        <ul>
-          <li>
-            <code>PublicationStats.collects</code> (alias) returns <code>0</code> when mined.
-          </li>
-          <li>
-            <code>PublicationOperations.canCollect</code> (alias) returns always <code>false</code>
-          </li>
-        </ul>
       </div>
     </div>
   );
