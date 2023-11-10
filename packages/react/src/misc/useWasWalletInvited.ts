@@ -1,0 +1,91 @@
+import {
+  AlreadyInvitedCheckRequest,
+  UnspecifiedError,
+  useProfileAlreadyInvited,
+  useProfileAlreadyInvitedLazyQuery,
+} from '@lens-protocol/api-bindings';
+import { PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
+
+import { NotFoundError } from '../NotFoundError';
+import { useLensApolloClient } from '../helpers/arguments';
+import { ReadResult, useReadResult } from '../helpers/reads';
+import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
+
+/**
+ * {@link useProfileAlreadyInvited} hook arguments
+ */
+export type UseWasWalletInvitedArgs = AlreadyInvitedCheckRequest;
+
+/**
+ * Check if a wallet was already invited.
+ *
+ * @example
+ * ```tsx
+ * const { data, error, loading } = useWasWalletInvited({
+ *   for: '0x1234567890123456789012345678901234567890',
+ * });
+ * ```
+ *
+ * @category Misc
+ * @group Hooks
+ */
+export function useWasWalletInvited(args: UseWasWalletInvitedArgs): ReadResult<boolean> {
+  return useReadResult(
+    useProfileAlreadyInvited(
+      useLensApolloClient({
+        variables: {
+          request: args,
+        },
+      }),
+    ),
+  );
+}
+
+/**
+ * Check if a wallet was already invited in a lazy way.
+ *
+ * This hook will not execute until the returned function is called.
+ *
+ * @experimental This hook is experimental and may change in the future.
+ * @example
+ * ```ts
+ * const { called, data, error, loading, execute } = useLazyWasWalletInvited();
+ *
+ * const callback = async () => {
+ *   const result = await execute({ for: '0x1234567890123456789012345678901234567890' });
+ *
+ *   if (result.isFailure()) {
+ *     toast.error(result.error.message);
+ *     return;
+ *   }
+ *
+ *   const wasInvited = result.value;
+ *
+ *   // continue
+ * }
+ * ```
+ *
+ * @category Misc
+ * @group Hooks
+ */
+export function useLazyWasWalletInvited(): UseDeferredTask<
+  boolean,
+  NotFoundError | UnspecifiedError,
+  UseWasWalletInvitedArgs
+> {
+  const [fetch] = useProfileAlreadyInvitedLazyQuery(useLensApolloClient());
+
+  return useDeferredTask(async (args): PromiseResult<boolean, NotFoundError | UnspecifiedError> => {
+    const { data, error } = await fetch({ variables: { request: args } });
+
+    if (error) {
+      return failure(new UnspecifiedError(error));
+    }
+
+    if (!data) {
+      return failure(new NotFoundError('No result was returned.'));
+    }
+
+    return success(data.result);
+  });
+}

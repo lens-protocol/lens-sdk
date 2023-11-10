@@ -28,7 +28,7 @@ export class Invites {
   }
 
   /**
-   * Get all invited profiles.
+   * Fetch all invited profiles.
    *
    * ⚠️ Requires authenticated LensClient.
    *
@@ -46,12 +46,12 @@ export class Invites {
     return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.InvitedProfiles(buildRequestFromConfig(this.context), headers);
 
-      return result.data.invitedProfiles;
+      return result.data.result;
     });
   }
 
   /**
-   * Check if a profile is already invited.
+   * Check if a wallet was already invited.
    *
    * @param request - Request object for the query
    * @returns boolean
@@ -59,7 +59,7 @@ export class Invites {
    * @example
    * ```
    * const result = await client.invites.profileAlreadyInvited({
-   *   address: '0x1234567890123456789012345678901234567890',
+   *   for: '0x1234567890123456789012345678901234567890',
    * });
    * ```
    */
@@ -80,7 +80,6 @@ export class Invites {
    * ```ts
    * const result = await client.invites.inviteProfile({
    *   invites: ['0x1234567890123456789012345678901234567890'],
-   *   secret: 'secret',
    * });
    * ```
    */
