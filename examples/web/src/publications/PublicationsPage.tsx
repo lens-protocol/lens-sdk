@@ -52,9 +52,9 @@ const publicationHooks = [
     path: '/publications/useBookmarkToggle',
   },
   {
-    label: 'useMyBookmarks',
-    description: `Fetch a list of publications that the current user has bookmarked.`,
-    path: '/publications/useMyBookmarks',
+    label: 'useBookmarks',
+    description: `Fetch bookmarked publications.`,
+    path: '/publications/useBookmarks',
   },
   {
     label: 'useOpenAction',

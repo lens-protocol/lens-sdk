@@ -74,6 +74,8 @@ import {
   RemovePublicationBookmarkData,
   RemovePublicationBookmarkDocument,
   RemovePublicationBookmarkVariables,
+  RemoveReactionDocument,
+  RemoveReactionVariables,
   ReportPublicationData,
   ReportPublicationDocument,
   ReportPublicationVariables,
@@ -121,6 +123,18 @@ export function mockAddReactionResponse({ variables }: { variables: AddReactionV
     },
     result: {
       data: { addReaction: null },
+    },
+  };
+}
+
+export function mockRemoveReactionResponse({ variables }: { variables: RemoveReactionVariables }) {
+  return {
+    request: {
+      query: RemoveReactionDocument,
+      variables,
+    },
+    result: {
+      data: { removeReaction: null },
     },
   };
 }

@@ -33,6 +33,7 @@ import {
 import {
   ProfilesPage,
   UseBlockAndUnblockProfiles,
+  UseBlockedProfiles,
   UseFollowAndUnfollow,
   UseLazyProfile,
   UseMutualFollowers,
@@ -57,7 +58,7 @@ import {
   UseCreatePost,
   UseCreateQuote,
   UseHidePublication,
-  UseMyBookmarks,
+  UseBookmarks,
   UseNotInterestedToggle,
   UseOpenAction,
   UsePublication,
@@ -125,7 +126,7 @@ export function App() {
                       <Route path="useReportPublication" element={<UseReportPublication />} />
                       <Route path="useReactionToggle" element={<UseReactionToggle />} />
                       <Route path="useBookmarkToggle" element={<UseBookmarkToggle />} />
-                      <Route path="useMyBookmarks" element={<UseMyBookmarks />} />
+                      <Route path="useBookmarks" element={<UseBookmarks />} />
                       <Route path="useOpenAction" element={<UseOpenAction />} />
                       <Route path="useNotInterestedToggle" element={<UseNotInterestedToggle />} />
                     </Route>
@@ -155,6 +156,7 @@ export function App() {
                       <Route path="useUpdateFollowPolicy" element={<UseUpdateFollowPolicy />} />
                       <Route path="useOwnedHandles" element={<UseOwnedHandles />} />
                       <Route path="useBlockProfiles" element={<UseBlockAndUnblockProfiles />} />
+                      <Route path="useBlockedProfiles" element={<UseBlockedProfiles />} />
                     </Route>
 
                     <Route path="/discovery">

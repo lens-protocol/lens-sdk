@@ -43,7 +43,7 @@ export function useHidePublication(): UseDeferredTask<void, never, UseHidePublic
   const hide = useHidePublicationController();
 
   return useDeferredTask(async ({ publication }) => {
-    invariant(session?.authenticated, 'Must be authenticated to hide a publication');
+    invariant(session?.authenticated, 'You must be authenticated to hide a publication');
     invariant(
       publication.by.ownedBy.address === session.address,
       'Publication not owned by the active wallet. Make sure that publication is owned by the wallet before trying to hide it.',

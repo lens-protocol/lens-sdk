@@ -1,4 +1,4 @@
-import { useMyBookmarks } from '@lens-protocol/react-web';
+import { useBookmarks } from '@lens-protocol/react-web';
 
 import { RequireProfileSession } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
@@ -13,7 +13,7 @@ export function MyBookmarks() {
     loading,
     hasMore,
     observeRef,
-  } = useInfiniteScroll(useMyBookmarks());
+  } = useInfiniteScroll(useBookmarks());
 
   if (loading) return <Loading />;
 
@@ -31,11 +31,11 @@ export function MyBookmarks() {
   );
 }
 
-export function UseMyBookmarks() {
+export function UseBookmarks() {
   return (
     <div>
       <h1>
-        <code>useMyBookmarks</code>
+        <code>useBookmarks</code>
       </h1>
 
       <RequireProfileSession message="Log in to view this example.">
