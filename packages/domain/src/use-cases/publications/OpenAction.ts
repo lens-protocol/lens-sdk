@@ -10,6 +10,7 @@ import {
 } from '../../entities';
 import { DelegableSigning } from '../transactions/DelegableSigning';
 import { ITransactionResultPresenter } from '../transactions/ITransactionResultPresenter';
+import { PaidTransaction } from '../transactions/PaidTransaction';
 import { SignedOnChain } from '../transactions/SignedOnChain';
 import {
   InsufficientAllowanceError,
@@ -47,6 +48,7 @@ export type SimpleCollectRequest = {
   publicationId: PublicationId;
   referrers?: Referrers;
   fee?: CollectFee;
+  public: boolean;
 };
 
 export type MultirecipientCollectRequest = {
@@ -55,6 +57,7 @@ export type MultirecipientCollectRequest = {
   publicationId: PublicationId;
   referrers?: Referrers;
   fee: CollectFee;
+  public: boolean;
 };
 
 export type UnknownActionRequest = {
@@ -64,6 +67,7 @@ export type UnknownActionRequest = {
   publicationId: PublicationId;
   address: EvmAddress;
   data: Data;
+  public: boolean;
 };
 
 export type CollectRequest =
@@ -92,6 +96,12 @@ export function isPaidCollectRequest(request: OpenActionRequest): request is Pai
   return isCollectRequest(request) && request.fee !== undefined;
 }
 
+function isPublicOpenActionRequest(
+  request: OpenActionRequest,
+): request is SimpleCollectRequest | MultirecipientCollectRequest | UnknownActionRequest {
+  return 'public' in request && request.public;
+}
+
 export type IOpenActionPresenter = ITransactionResultPresenter<
   OpenActionRequest,
   | InsufficientAllowanceError
@@ -106,10 +116,15 @@ export class OpenAction {
     private readonly tokenAvailability: TokenAvailability,
     private readonly signedExecution: SignedOnChain<OpenActionRequest>,
     private readonly delegableExecution: DelegableSigning<OpenActionRequest>,
+    private readonly paidExecution: PaidTransaction<OpenActionRequest>,
     private readonly presenter: IOpenActionPresenter,
   ) {}
 
   async execute(request: OpenActionRequest) {
+    if (isPublicOpenActionRequest(request)) {
+      await this.paidExecution.execute(request);
+      return;
+    }
     if (isPaidCollectRequest(request)) {
       const result = await this.tokenAvailability.checkAvailability({
         amount: request.fee.amount,

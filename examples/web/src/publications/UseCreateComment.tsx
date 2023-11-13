@@ -2,7 +2,7 @@ import { textOnly } from '@lens-protocol/metadata';
 import { publicationId, useCreateComment, usePublication } from '@lens-protocol/react-web';
 import { toast } from 'react-hot-toast';
 
-import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
+import { RequireProfileSession } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { uploadJson } from '../upload';
@@ -90,10 +90,9 @@ export function UseCreateComment() {
         <code>useCreateComment</code>
       </h1>
 
-      <WhenLoggedIn>
+      <RequireProfileSession message="Log in to create a comment.">
         <CommentComposer />
-      </WhenLoggedIn>
-      <UnauthenticatedFallback message="Log in to create a comment." />
+      </RequireProfileSession>
     </div>
   );
 }

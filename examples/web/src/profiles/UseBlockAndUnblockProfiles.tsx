@@ -6,7 +6,7 @@ import {
   useUnblockProfiles,
 } from '@lens-protocol/react-web';
 
-import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
+import { RequireProfileSession } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
@@ -91,10 +91,9 @@ function UseBlockAndUnblockProfilesInner() {
 export function UseBlockAndUnblockProfiles() {
   return (
     <>
-      <WhenLoggedIn>
+      <RequireProfileSession message="Please login to unblock profiles">
         <UseBlockAndUnblockProfilesInner />
-      </WhenLoggedIn>
-      <UnauthenticatedFallback message="Please login to unblock profiles" />
+      </RequireProfileSession>
     </>
   );
 }

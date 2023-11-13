@@ -10,7 +10,7 @@ import {
 } from '@lens-protocol/react-web';
 import toast from 'react-hot-toast';
 
-import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
+import { RequireProfileSession } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 
@@ -166,10 +166,9 @@ export function UseOwnedHandles() {
         <code>useOwnedHandles & useLinkHandle & useUnlinkHandle</code>
       </h1>
 
-      <WhenLoggedIn>
+      <RequireProfileSession message="Log in to view this example.">
         {({ address, profile }) => <Content address={address} profile={profile} />}
-      </WhenLoggedIn>
-      <UnauthenticatedFallback />
+      </RequireProfileSession>
     </div>
   );
 }

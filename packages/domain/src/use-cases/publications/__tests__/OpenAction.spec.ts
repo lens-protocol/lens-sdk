@@ -1,7 +1,7 @@
 import { failure, invariant, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
-import { DelegableSigning } from '../../transactions';
+import { DelegableSigning, PaidTransaction } from '../../transactions';
 import { SignedOnChain } from '../../transactions/SignedOnChain';
 import {
   InsufficientAllowanceError,
@@ -32,6 +32,7 @@ function setupCollectPublication({
   tokenAvailability?: TokenAvailability;
 } = {}) {
   const presenter = mock<IOpenActionPresenter>();
+  const paidExecution = mock<PaidTransaction<OpenActionRequest>>();
   const signedExecution = mock<SignedOnChain<OpenActionRequest>>();
   const delegableExecution =
     mock<DelegableSigning<LegacyCollectRequest | SimpleCollectRequest | UnknownActionRequest>>();
@@ -39,6 +40,7 @@ function setupCollectPublication({
     tokenAvailability,
     signedExecution,
     delegableExecution,
+    paidExecution,
     presenter,
   );
 
@@ -47,6 +49,7 @@ function setupCollectPublication({
     openAction,
     presenter,
     signedExecution,
+    paidExecution,
   };
 }
 
@@ -55,12 +58,12 @@ describe(`Given the ${OpenAction.name} use-case interactor`, () => {
     describe.each([
       {
         type: 'LegacyCollectRequest',
-        description: 'with a LegacyCollectRequest w/o a fee',
+        description: 'with a LegacyCollectRequest w/o fee',
         request: mockLegacyCollectRequest({ fee: undefined }),
       },
       {
         type: 'SimpleCollectRequest',
-        description: 'with a SimpleCollectRequest w/o a fee',
+        description: 'with a SimpleCollectRequest w/o fee',
         request: mockSimpleCollectRequest({ fee: undefined }),
       },
       {
@@ -144,6 +147,35 @@ describe(`Given the ${OpenAction.name} use-case interactor`, () => {
           expect(presenter.present).toHaveBeenLastCalledWith(failure(error));
         },
       );
+    });
+
+    describe.each([
+      {
+        type: 'SimpleCollectRequest',
+        description: 'with a public SimpleCollectRequest',
+        request: mockSimpleCollectRequest({ fee: undefined, public: true }),
+      },
+      {
+        type: 'UnknownActionRequest',
+        description: 'with a public UnknownActionRequest',
+        request: mockUnknownActionRequest({ public: true }),
+      },
+      {
+        type: 'MultirecipientCollectRequest',
+        description: 'with a SimpleCollectRequest (always w/ fee)',
+        request: mockMultirecipientCollectRequest({ public: true }),
+      },
+    ])('with a $description', ({ request, type }) => {
+      it(`should execute the ${PaidTransaction.name}<${type}> strategy`, async () => {
+        const { openAction, signedExecution, delegableExecution, paidExecution } =
+          setupCollectPublication();
+
+        await openAction.execute(request);
+
+        expect(paidExecution.execute).toHaveBeenCalledWith(request);
+        expect(delegableExecution.execute).not.toHaveBeenCalledWith(request);
+        expect(signedExecution.execute).not.toHaveBeenCalled();
+      });
     });
   });
 });

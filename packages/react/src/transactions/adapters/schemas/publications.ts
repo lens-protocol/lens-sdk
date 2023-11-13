@@ -173,6 +173,7 @@ export const SimpleCollectRequestSchema = BaseCollectRequestSchema.extend({
   delegate: z.boolean(),
   publicationId: PublicationIdSchema,
   referrers: z.union([PublicationIdSchema, ProfileIdSchema]).array().min(1).optional(),
+  public: z.boolean(),
   fee: CollectFeeSchema.optional(),
 });
 
@@ -181,6 +182,7 @@ export const MultirecipientCollectRequestSchema = BaseCollectRequestSchema.exten
   publicationId: PublicationIdSchema,
   referrers: z.union([PublicationIdSchema, ProfileIdSchema]).array().min(1).optional(),
   fee: CollectFeeSchema,
+  public: z.boolean(),
 });
 
 export const UnknownActionRequestSchema = BaseCollectRequestSchema.extend({
@@ -189,6 +191,7 @@ export const UnknownActionRequestSchema = BaseCollectRequestSchema.extend({
   publicationId: PublicationIdSchema,
   address: EvmAddressSchema,
   data: DataSchema,
+  public: z.boolean(),
 });
 
 export const CollectRequestSchema = z.discriminatedUnion('type', [

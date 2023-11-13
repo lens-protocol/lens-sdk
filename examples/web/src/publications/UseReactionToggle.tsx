@@ -8,7 +8,7 @@ import {
   useReactionToggle,
 } from '@lens-protocol/react-web';
 
-import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
+import { RequireProfileSession } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { invariant } from '../utils';
@@ -75,10 +75,9 @@ export function UseReactionToggle() {
         <code>useReactionToggle</code>
       </h1>
 
-      <WhenLoggedIn>
+      <RequireProfileSession message="Log in to view this example.">
         <UseReactionToggleInner />
-      </WhenLoggedIn>
-      <UnauthenticatedFallback />
+      </RequireProfileSession>
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { textOnly } from '@lens-protocol/metadata';
 import { useCreatePost } from '@lens-protocol/react-web';
 import { toast } from 'react-hot-toast';
 
-import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
+import { RequireProfileSession } from '../components/auth';
 import { uploadJson } from '../upload';
 
 function PostComposer() {
@@ -73,10 +73,9 @@ export function UseCreatePost() {
         <code>useCreatePost</code>
       </h1>
 
-      <WhenLoggedIn>
+      <RequireProfileSession message="Log in to create a post.">
         <PostComposer />
-      </WhenLoggedIn>
-      <UnauthenticatedFallback message="Log in to create a post." />
+      </RequireProfileSession>
     </div>
   );
 }

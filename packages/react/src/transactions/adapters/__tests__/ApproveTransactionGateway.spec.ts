@@ -7,7 +7,6 @@ import {
   TokenAllowanceLimit,
   TokenAllowanceRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { MockProvider } from 'ethereum-waffle';
 import { BigNumber, constants, providers, utils } from 'ethers';
 
 import { mockIProviderFactory } from '../../../wallet/adapters/__helpers__/mocks';
@@ -15,6 +14,7 @@ import {
   ApproveTransactionGateway,
   UnsignedApproveTransaction,
 } from '../ApproveTransactionGateway';
+import { mockJsonRpcProvider } from '../__helpers__/mocks';
 
 function setupApproveTransactionGateway({
   request,
@@ -31,10 +31,6 @@ function setupApproveTransactionGateway({
   return new ApproveTransactionGateway(providerFactory);
 }
 
-async function mineNBlocks(provider: MockProvider, blocks: number) {
-  return provider.send('evm_mine', [{ blocks }]);
-}
-
 describe(`Given an instance of the ${ApproveTransactionGateway.name}`, () => {
   const wallet = mockWallet();
 
@@ -43,14 +39,7 @@ describe(`Given an instance of the ${ApproveTransactionGateway.name}`, () => {
       const request = mockTokenAllowanceRequest({
         limit: TokenAllowanceLimit.EXACT,
       });
-      const provider = new MockProvider({
-        ganacheOptions: {
-          chain: {
-            hardfork: 'london',
-          },
-        },
-      });
-      await mineNBlocks(provider, 20);
+      const provider = await mockJsonRpcProvider();
       const approveTransactionGateway = setupApproveTransactionGateway({
         request,
         provider,
@@ -86,14 +75,7 @@ describe(`Given an instance of the ${ApproveTransactionGateway.name}`, () => {
       const request = mockTokenAllowanceRequest({
         limit: TokenAllowanceLimit.INFINITE,
       });
-      const provider = new MockProvider({
-        ganacheOptions: {
-          chain: {
-            hardfork: 'london',
-          },
-        },
-      });
-      await mineNBlocks(provider, 20);
+      const provider = await mockJsonRpcProvider();
       const approveTransactionGateway = setupApproveTransactionGateway({
         request,
         provider,
