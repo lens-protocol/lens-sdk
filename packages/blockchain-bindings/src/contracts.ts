@@ -15,7 +15,7 @@ import type {
   PublicActProxy,
 } from './types';
 
-export function erc20(address: EvmAddress, provider: Provider) {
+export function erc20(address: EvmAddress, provider?: Provider) {
   return new Contract(address, erc20Abi, provider) as Erc20;
 }
 
