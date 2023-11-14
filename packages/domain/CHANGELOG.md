@@ -1,5 +1,14 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.13
+
+### Patch Changes
+
+- d71f981cc: **chore:** simplifies useApproveModule implementation
+- c9b5c8d88: **feat:** seamless support for public collect/act in `useOpenAction`
+- Updated dependencies [d71f981cc]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.8
+
 ## 0.11.0-alpha.12
 
 ### Patch Changes
