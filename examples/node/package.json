@@ -11,17 +11,21 @@
     "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix && pnpm run tsc",
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "typechain": "typechain --target ethers-v5 --out-dir ./contracts './abi/*.json'"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@bundlr-network/client": "^0.11.17",
+    "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/providers": "^5.7.2",
     "@lens-protocol/client": "workspace:*",
     "@lens-protocol/metadata": "^1.0.5",
     "dotenv": "^16.3.1",
     "ethers": "^5.7.2",
+    "typechain": "^8.3.2",
     "uuid": "^9.0.1",
     "viem": "^1.19.7",
     "zod": "^3.22.4"
