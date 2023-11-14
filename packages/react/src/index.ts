@@ -84,14 +84,55 @@ export type {
   ReadResultWithError,
   ReadResultWithoutError,
 } from './helpers/reads';
-export { LimitType } from './helpers/reads';
 export * from './helpers/tasks';
 
 /**
  * GQL common types
  */
 export type { App } from '@lens-protocol/api-bindings';
-export { TriStateValue } from '@lens-protocol/api-bindings';
+
+// GQL enums
+export {
+  ChangeProfileManagerActionType,
+  ClaimProfileWithHandleErrorReasonType,
+  CollectOpenActionModuleType,
+  CommentRankingFilterType,
+  ComparisonOperatorConditionType,
+  CreateProfileWithHandleErrorReasonType,
+  CustomFiltersType,
+  DecryptFailReasonType,
+  ExploreProfilesOrderByType,
+  ExplorePublicationsOrderByType,
+  ExplorePublicationType,
+  FeedEventItemType,
+  FollowModuleType,
+  LensProfileManagerRelayErrorReasonType,
+  LensTransactionFailureType,
+  LensTransactionStatusType,
+  LimitType,
+  MarketplaceMetadataAttributeDisplayType,
+  MomokaValidatorError,
+  NftContractType,
+  NotificationType,
+  OpenActionCategoryType,
+  OpenActionModuleType,
+  PoapTokenLayerType,
+  ProfileActionHistoryType,
+  ProfileInterestTypes,
+  PublicationContentWarningType,
+  PublicationMetadataLicenseType,
+  PublicationMetadataMainFocusType,
+  PublicationMetadataTransactionType,
+  PublicationReactionType,
+  PublicationType,
+  ReferenceModuleType,
+  RefreshPublicationMetadataResultType,
+  RelayErrorReasonType,
+  RelayRoleKey,
+  SearchPublicationType,
+  TagSortCriteriaType,
+  TriStateValue,
+} from '@lens-protocol/api-bindings';
 
 /**
  * Common errors
