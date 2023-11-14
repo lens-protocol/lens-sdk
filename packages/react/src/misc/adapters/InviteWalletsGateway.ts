@@ -7,10 +7,10 @@ import {
   ProfileAlreadyInvitedVariables,
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
+import { Invite } from '@lens-protocol/domain/entities';
 import {
   IInviteWalletsFactory,
   IInviteWalletsGateway,
-  Invite,
   InviteWalletsRequest,
 } from '@lens-protocol/domain/use-cases/wallets';
 

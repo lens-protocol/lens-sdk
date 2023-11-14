@@ -4,7 +4,7 @@ import {
   useProfileAlreadyInvited,
   useProfileAlreadyInvitedLazyQuery,
 } from '@lens-protocol/api-bindings';
-import { PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
+import { PromiseResult, failure, invariant, success } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
 import { useLensApolloClient } from '../helpers/arguments';
@@ -82,9 +82,7 @@ export function useLazyWasWalletInvited(): UseDeferredTask<
       return failure(new UnspecifiedError(error));
     }
 
-    if (!data) {
-      return failure(new NotFoundError('No result was returned.'));
-    }
+    invariant(data, 'Data must be defined');
 
     return success(data.result);
   });

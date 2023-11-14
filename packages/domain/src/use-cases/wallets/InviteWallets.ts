@@ -1,10 +1,7 @@
 import { EvmAddress, failure, success } from '@lens-protocol/shared-kernel';
 
+import { Invite } from '../../entities';
 import { IGenericResultPresenter } from '../transactions';
-
-export type Invite = {
-  address: EvmAddress;
-};
 
 export type InviteWalletsRequest = {
   wallets: EvmAddress[];
