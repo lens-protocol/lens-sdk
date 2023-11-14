@@ -1,5 +1,11 @@
 # @lens-protocol/shared-kernel
 
+## 0.11.0-alpha.8
+
+### Patch Changes
+
+- d71f981cc: **chore:** simplifies useApproveModule implementation
+
 ## 0.11.0-alpha.7
 
 ### Patch Changes

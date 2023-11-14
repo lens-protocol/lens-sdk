@@ -1,5 +1,18 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.18
+
+### Patch Changes
+
+- 3bf2e33dc: **feat:** Added `useBlockedProfiles` hook
+  **chore:** Renamed `useMyBookmarks` to `useBookmarks`, deprecated `useMyBookmarks`
+  **feat:** Added authentication checks to many hooks that require it on the API side
+- c9b5c8d88: **feat:** seamless support for public collect/act in `useOpenAction`
+- Updated dependencies [d71f981cc]
+- Updated dependencies [c9b5c8d88]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.8
+  - @lens-protocol/domain@0.11.0-alpha.13
+
 ## 0.11.0-alpha.17
 
 ### Patch Changes

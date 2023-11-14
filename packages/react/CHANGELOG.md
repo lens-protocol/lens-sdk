@@ -1,5 +1,25 @@
 # @lens-protocol/react
 
+## 2.0.0-alpha.20
+
+### Patch Changes
+
+- c9b5c8d88: **feat:** seamless support for public collect/act in `useOpenAction`
+- ac17aa775: **fix** fully support Public Collect
+- d6a8061e8: **fix:** Exported missing enums used in hooks args
+- 3bf2e33dc: **feat:** Added `useBlockedProfiles` hook
+  **chore:** Renamed `useMyBookmarks` to `useBookmarks`, deprecated `useMyBookmarks`
+  **feat:** Added authentication checks to many hooks that require it on the API side
+- d71f981cc: **chore:** simplifies useApproveModule implementation
+- Updated dependencies [3bf2e33dc]
+- Updated dependencies [d71f981cc]
+- Updated dependencies [c9b5c8d88]
+  - @lens-protocol/api-bindings@0.11.0-alpha.18
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.13
+  - @lens-protocol/shared-kernel@0.11.0-alpha.8
+  - @lens-protocol/domain@0.11.0-alpha.13
+  - @lens-protocol/storage@0.7.5-alpha.6
+
 ## 2.0.0-alpha.19
 
 ### Patch Changes
