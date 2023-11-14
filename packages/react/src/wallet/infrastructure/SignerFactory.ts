@@ -30,7 +30,7 @@ export class SignerFactory implements ISignerFactory {
     chainType,
   }: CreateSignerConfig): PromiseResult<RequiredSigner, WalletConnectionError> {
     const chainId = chainType ? this.chains[chainType].chainId : undefined;
-    const signer = await this.bindings.getSigner({});
+    const signer = await this.bindings.getSigner({ chainId });
 
     const signerAddress = await signer.getAddress();
 

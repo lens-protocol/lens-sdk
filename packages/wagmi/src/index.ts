@@ -1,8 +1,8 @@
 import { IBindings } from '@lens-protocol/react-web';
 import { invariant } from '@lens-protocol/shared-kernel';
 import { providers } from 'ethers';
-import { PublicClient, SwitchChainNotSupportedError, WalletClient } from 'wagmi';
-import { getNetwork, getPublicClient, getWalletClient, switchNetwork } from 'wagmi/actions';
+import { PublicClient, WalletClient } from 'wagmi';
+import { getPublicClient, getWalletClient } from 'wagmi/actions';
 
 function providerFromPublicClient({
   publicClient,
@@ -18,22 +18,11 @@ function providerFromPublicClient({
   return new providers.Web3Provider(transport, network);
 }
 
-async function signerFromWalletClient({
-  walletClient,
-  chainId,
-}: {
-  walletClient: WalletClient;
-  chainId?: number;
-}): Promise<providers.JsonRpcSigner> {
-  const { account, chain, transport } = walletClient;
-  const network = chain
-    ? {
-        chainId: chain.id,
-        name: chain.name,
-        ensAddress: chain.contracts?.ensRegistry?.address,
-      }
-    : chainId;
-  const provider = new providers.Web3Provider(transport, network);
+async function signerFromWalletClient(
+  walletClient: WalletClient,
+): Promise<providers.JsonRpcSigner> {
+  const { account, transport } = walletClient;
+  const provider = new providers.Web3Provider(transport, 'any');
   const signer = provider.getSigner(account.address);
   return signer;
 }
@@ -45,26 +34,11 @@ export function bindings(): IBindings {
       return providerFromPublicClient({ publicClient });
     },
     getSigner: async ({ chainId }) => {
-      if (chainId) {
-        const { chain } = getNetwork();
-
-        if (chain?.id !== chainId) {
-          try {
-            await switchNetwork({ chainId });
-          } catch (err) {
-            // best effort to switch network, if it fails, we just ignore it
-            if (!(err instanceof SwitchChainNotSupportedError)) {
-              throw err;
-            }
-          }
-        }
-      }
-
       const walletClient = await getWalletClient({ chainId });
 
       invariant(walletClient, 'Wallet client not found');
 
-      return signerFromWalletClient({ walletClient, chainId });
+      return signerFromWalletClient(walletClient);
     },
   };
 }
