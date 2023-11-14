@@ -46,11 +46,9 @@ export type {
 } from '@lens-protocol/api-bindings';
 
 export {
-  PublicationType,
   isPostPublication,
   isCommentPublication,
   isMirrorPublication,
   isQuotePublication,
   isPrimaryPublication,
-  PublicationReactionType,
 } from '@lens-protocol/api-bindings';

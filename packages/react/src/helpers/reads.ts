@@ -27,8 +27,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useSharedDependencies } from '../shared';
 
-export { LimitType };
-
 /**
  * A discriminated union of the possible results of a read operation with no errors.
  *
