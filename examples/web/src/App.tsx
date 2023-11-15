@@ -68,6 +68,7 @@ import {
   UseReactionToggle,
   UseReportPublication,
   UseWhoReactedToPublication,
+  UseLazyPublications,
 } from './publications';
 import {
   RevenuePage,
@@ -120,6 +121,7 @@ export function App() {
                       <Route path="useCreateQuote" element={<UseCreateQuote />} />
                       <Route path="usePublication" element={<UsePublication />} />
                       <Route path="usePublications" element={<UsePublications />} />
+                      <Route path="useLazyPublications" element={<UseLazyPublications />} />
                       <Route
                         path="useWhoReactedToPublication"
                         element={<UseWhoReactedToPublication />}

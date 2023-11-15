@@ -1,8 +1,8 @@
 import {
-  Profile,
-  ProfilesRequest,
+  AnyPublication,
+  PublicationsRequest,
   UnspecifiedError,
-  useProfilesLazyQuery,
+  usePublicationsLazyQuery,
 } from '@lens-protocol/api-bindings';
 import { failure, invariant, PromiseResult, success } from '@lens-protocol/shared-kernel';
 
@@ -11,27 +11,27 @@ import { PaginatedArgs } from '../helpers/reads';
 import { useDeferredTask, UseDeferredTask } from '../helpers/tasks';
 
 /**
- * {@link useLazyProfiles} callback hook arguments
+ * {@link useLazyPublications} callback hook arguments
  */
-export type FetchProfilesArgs = PaginatedArgs<ProfilesRequest>;
+export type FetchPublicationsArgs = PaginatedArgs<PublicationsRequest>;
 
 /**
- * `useLazyProfiles` is a lazy version of {@link useProfiles} React Hook.
+ * `useLazyPublications` is a lazy version of {@link usePublications} React Hook.
  *
  * This version doesn't support pagination!
  *
- * This hook will not fetch profiles until the returned function is called.
+ * This hook will not fetch publications until the returned function is called.
  *
  * @experimental This hook is experimental and may change in the future.
  * @example
  * ```ts
- * const { called, data, error, loading, execute } = useLazyProfiles();
+ * const { called, data, error, loading, execute } = useLazyPublications();
  *
  * const callback = async () => {
  *   const result = await execute({
  *     where: {
- *       profileIds: ['0x01', '0x02'],
- *     },
+ *       publicationTypes: [PublicationType.Post]
+ *     }
  *   });
  *
  *   if (result.isFailure()) {
@@ -39,19 +39,23 @@ export type FetchProfilesArgs = PaginatedArgs<ProfilesRequest>;
  *     return;
  *   }
  *
- *   const profiles = result.value;
+ *   const publications = result.value;
  *
- *   // do something with the profiles
+ *   // do something with the publications
  * }
  * ```
  *
- * @category Profiles
+ * @category Publications
  * @group Hooks
  */
-export function useLazyProfiles(): UseDeferredTask<Profile[], UnspecifiedError, FetchProfilesArgs> {
-  const [fetch] = useProfilesLazyQuery(useLensApolloClient({ fetchPolicy: 'no-cache' }));
+export function useLazyPublications(): UseDeferredTask<
+  AnyPublication[],
+  UnspecifiedError,
+  FetchPublicationsArgs
+> {
+  const [fetch] = usePublicationsLazyQuery(useLensApolloClient({ fetchPolicy: 'no-cache' }));
 
-  return useDeferredTask(async (args): PromiseResult<Profile[], UnspecifiedError> => {
+  return useDeferredTask(async (args): PromiseResult<AnyPublication[], UnspecifiedError> => {
     const { data, error } = await fetch({ variables: args });
 
     if (error) {

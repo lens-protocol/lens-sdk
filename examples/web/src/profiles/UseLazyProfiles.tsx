@@ -31,7 +31,7 @@ export function UseLazyProfiles() {
     <div>
       <div>
         <button disabled={loading || called} type="button" onClick={handleClick}>
-          {called ? 'Profiles loaded' : loading ? 'Loading...' : 'Load profiles'}
+          {loading ? 'Loading...' : called ? 'Profiles loaded' : 'Load profiles'}
         </button>
       </div>
 

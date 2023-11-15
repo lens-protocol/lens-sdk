@@ -27,6 +27,11 @@ const publicationHooks = [
     path: '/publications/usePublications',
   },
   {
+    label: 'useLazyPublications',
+    description: `Lazy fetch a list of publications.`,
+    path: '/publications/useLazyPublications',
+  },
+  {
     label: 'useWhoReactedToPublication',
     description: `Fetch a list of profiles who reacted to a publication.`,
     path: '/publications/useWhoReactedToPublication',
