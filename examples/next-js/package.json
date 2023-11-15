@@ -1,5 +1,5 @@
 {
-  "name": "nextjs-app-dir",
+  "name": "example-next-js",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@lens-protocol/react-web": "2.0.0-alpha.17",
-    "@lens-protocol/wagmi": "3.0.0-alpha.14",
+    "@lens-protocol/react-web": "workspace:*",
+    "@lens-protocol/wagmi": "workspace:*",
     "react": "^18",
     "react-dom": "^18",
     "next": "14.0.1",
