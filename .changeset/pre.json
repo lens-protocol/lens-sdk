@@ -27,6 +27,7 @@
     "react-web-v1": "1.3.1"
   },
   "changesets": [
+    "afraid-lemons-bathe",
     "breezy-lizards-sell",
     "brown-bears-repair",
     "brown-flies-pump",
@@ -54,6 +55,7 @@
     "fuzzy-pillows-unite",
     "gorgeous-pigs-kneel",
     "grumpy-coats-scream",
+    "happy-donuts-boil",
     "happy-pumpkins-clean",
     "heavy-dodos-raise",
     "heavy-terms-prove",
