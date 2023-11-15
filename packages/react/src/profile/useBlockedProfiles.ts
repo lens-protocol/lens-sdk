@@ -15,7 +15,6 @@ export type UseBlockedProfilesArgs = PaginatedArgs<WhoHaveBlockedRequest>;
  *
  * You MUST be authenticated via {@link useLogin} to use this hook.
  *
- *
  * @category Profiles
  * @group Hooks
  *

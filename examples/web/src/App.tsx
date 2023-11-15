@@ -37,6 +37,7 @@ import {
   UseBlockedProfiles,
   UseFollowAndUnfollow,
   UseLazyProfile,
+  UseLazyProfiles,
   UseMutualFollowers,
   UseOwnedHandles,
   UseProfile,
@@ -67,6 +68,7 @@ import {
   UseReactionToggle,
   UseReportPublication,
   UseWhoReactedToPublication,
+  UseLazyPublications,
 } from './publications';
 import {
   RevenuePage,
@@ -119,6 +121,7 @@ export function App() {
                       <Route path="useCreateQuote" element={<UseCreateQuote />} />
                       <Route path="usePublication" element={<UsePublication />} />
                       <Route path="usePublications" element={<UsePublications />} />
+                      <Route path="useLazyPublications" element={<UseLazyPublications />} />
                       <Route
                         path="useWhoReactedToPublication"
                         element={<UseWhoReactedToPublication />}
@@ -137,6 +140,7 @@ export function App() {
                       <Route path="useProfile" element={<UseProfile />} />
                       <Route path="useLazyProfile" element={<UseLazyProfile />} />
                       <Route path="useProfiles" element={<UseProfiles />} />
+                      <Route path="useLazyProfiles" element={<UseLazyProfiles />} />
                       <Route path="useProfileFollowers" element={<UseProfileFollowers />} />
                       <Route path="useProfileFollowing" element={<UseProfileFollowing />} />
                       <Route path="useMutualFollowers" element={<UseMutualFollowers />} />

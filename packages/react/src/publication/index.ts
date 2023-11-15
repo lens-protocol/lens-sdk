@@ -5,6 +5,7 @@ export * from './useBookmarks';
 export * from './useBookmarkToggle';
 export * from './useHidePublication';
 export * from './useLazyPublication';
+export * from './useLazyPublications';
 export * from './useNotInterestedToggle';
 export * from './usePublication';
 export * from './usePublications';

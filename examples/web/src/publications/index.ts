@@ -5,6 +5,7 @@ export * from './UseCreateComment';
 export * from './UseCreatePost';
 export * from './UseCreateQuote';
 export * from './UseHidePublication';
+export * from './UseLazyPublications';
 export * from './UseNotInterestedToggle';
 export * from './UseOpenAction';
 export * from './UsePublication';

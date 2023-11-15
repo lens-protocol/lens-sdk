@@ -17,6 +17,11 @@ const profileHooks = [
     path: '/profiles/useProfiles',
   },
   {
+    label: 'useLazyProfiles',
+    description: 'Lazy fetch a list of profiles.',
+    path: '/profiles/useLazyProfiles',
+  },
+  {
     label: 'useProfileFollowers',
     description: 'Fetch a list of profile followers.',
     path: '/profiles/useProfileFollowers',
