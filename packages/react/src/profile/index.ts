@@ -3,6 +3,7 @@
  */
 export * from './useBlockedProfiles';
 export * from './useLazyProfile';
+export * from './useLazyProfiles';
 export * from './useMutualFollowers';
 export * from './useProfile';
 export * from './useProfileActionHistory';

@@ -6,7 +6,6 @@ import {
 } from '@lens-protocol/api-bindings';
 import { PromiseResult, failure, invariant, success } from '@lens-protocol/shared-kernel';
 
-import { NotFoundError } from '../NotFoundError';
 import { useLensApolloClient } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
@@ -70,12 +69,12 @@ export function useWasWalletInvited(args: UseWasWalletInvitedArgs): ReadResult<b
  */
 export function useLazyWasWalletInvited(): UseDeferredTask<
   boolean,
-  NotFoundError | UnspecifiedError,
+  UnspecifiedError,
   UseWasWalletInvitedArgs
 > {
   const [fetch] = useProfileAlreadyInvitedLazyQuery(useLensApolloClient());
 
-  return useDeferredTask(async (args): PromiseResult<boolean, NotFoundError | UnspecifiedError> => {
+  return useDeferredTask(async (args): PromiseResult<boolean, UnspecifiedError> => {
     const { data, error } = await fetch({ variables: { request: args } });
 
     if (error) {

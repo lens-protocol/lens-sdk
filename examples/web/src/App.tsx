@@ -37,6 +37,7 @@ import {
   UseBlockedProfiles,
   UseFollowAndUnfollow,
   UseLazyProfile,
+  UseLazyProfiles,
   UseMutualFollowers,
   UseOwnedHandles,
   UseProfile,
@@ -137,6 +138,7 @@ export function App() {
                       <Route path="useProfile" element={<UseProfile />} />
                       <Route path="useLazyProfile" element={<UseLazyProfile />} />
                       <Route path="useProfiles" element={<UseProfiles />} />
+                      <Route path="useLazyProfiles" element={<UseLazyProfiles />} />
                       <Route path="useProfileFollowers" element={<UseProfileFollowers />} />
                       <Route path="useProfileFollowing" element={<UseProfileFollowing />} />
                       <Route path="useMutualFollowers" element={<UseMutualFollowers />} />
