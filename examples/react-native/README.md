@@ -1,108 +1,79 @@
-# Lens SDK + react-native
+This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-This package is an example app showcasing the `@lens-protocol/react` integration with [react-native](https://reactnative.dev/).
+# Getting Started
 
-The example app is using a wonderful [`react-native-mmkv`](https://github.com/mrousavy/react-native-mmkv) as a storage provider and very basic wallet implementation.
+>**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
-It is not published or released anywhere directly.
+## Step 1: Start the Metro Server
 
-## Integrating with `@lens-protocol/react`
+First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
 
-`@lens-protocol/react` was designed to work both with web and mobile. For the web it works by default without much of the configuration but due to the `react-native` nature we require some additional setup.
-
-### Implement storage provider
-
-`react-native` storage needs are different from the web apps and developers have more freedom to choose between the storage implementations ([@react-native-async-storage/async-storage](https://react-native-async-storage.github.io/async-storage/docs/install), [react-native-mmkv](https://github.com/mrousavy/react-native-mmkv), etc.).
-Given the above we don't include any build in storage provider in the `@lens-procol/react` package and require the developers to choose the storage implementation that fits their needs.
-
-We provide an example storage provider implementation on top of [react-native-mmkv](https://github.com/mrousavy/react-native-mmkv) that can be used as a starting point (or just blindly copied 🫣).
-The source of the `MmkvStorageProvider` can be found under `./src/mmkvStorageProvider.ts`.
-
-### Implement wallet bindings
-
-Implementing secure wallet is a challenge in it own and is out of scope of the example app.
-
-The example app has a very simple in memory wallet implementation that is good for initial hacking (check the `./src/wallet.ts`) but it should not be used as base for any production app.
-
-It's a developer responsibility to build a secure wallet and provide a proper implementation for `IBindings` interface so `@lens-protocol/react` can access the `ethers` `Provider` and `Signer` when needed.
-
-### Install required shims
+To start Metro, run the following command from the _root_ of your React Native project:
 
 ```bash
-npm install react-native-get-random-values @ethersproject/shims
+# using npm
+npm start
+
+# OR using Yarn
+yarn start
 ```
 
-Import all the packages installed above BEFORE any `@lens-protocol/react` imports.
+## Step 2: Start your Application
 
-```ts
-// Import the crypto getRandomValues shim (**BEFORE** the shims)
-import 'react-native-get-random-values';
-// Import the the ethers shims (**BEFORE** ethers)
-import '@ethersproject/shims';
+Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
 
-import {LensProvider} from '@lens-protocol/react';
-```
-
-### Create `LensConfig` and wrap app with `LensProvider`
-
-```tsx
-import {LensConfig, LensProvider, staging} from '@lens-protocol/react';
-
-import {mmkvStorageProvider} from './src/mmkvStorageProvider';
-import {bindings} from './src/wallet';
-
-const lensConfig: LensConfig = {
-  bindings: bindings(),
-  environment: staging,
-  storage: mmkvStorageProvider(),
-};
-
-export function App() {
-  return (
-    <LensProvider config={lensConfig}>
-      <YourApp />
-    </LensProvider>
-  );
-}
-```
-
-### Happy hacking 🌿
-
-Refer to our documentation to get a list of available hooks - https://docs.lens.xyz/docs/sdk-react-intro
-
-#### Having troubles?
-
-Ask on the Lens API and SDK channel in our [Discord](https://discord.gg/lensprotocol)
-
-## Running locally
-
-Install example dependencies via (should be run from the `examples/react-native` folder:
+### For Android
 
 ```bash
-pnpm install
+# using npm
+npm run android
+
+# OR using Yarn
+yarn android
 ```
 
-Make sure your development environment is ready to start locally `react-native` app by following the [official docs](https://reactnative.dev/docs/environment-setup).
-
-You can run the dev server via:
+### For iOS
 
 ```bash
-pnpm start
+# using npm
+npm run ios
+
+# OR using Yarn
+yarn ios
 ```
 
-Run the android/ios simulators via:
+If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
 
-```bash
-cd ios
+This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
 
-bundle install
-bundle exec pod install
+## Step 3: Modifying your App
 
-pnpm ios
+Now that you have successfully run the app, let's modify it.
 
-# or
+1. Open `App.tsx` in your text editor of choice and edit some lines.
+2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
 
-pnpm android
-```
+   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
 
-Ensure you previously built all the dependencies. See [main setup](../../README.md#setup).
+## Congratulations! :tada:
+
+You've successfully run and modified your React Native App. :partying_face:
+
+### Now what?
+
+- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
+- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+
+# Troubleshooting
+
+If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+
+# Learn More
+
+To learn more about React Native, take a look at the following resources:
+
+- [React Native Website](https://reactnative.dev) - learn more about React Native.
+- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
+- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
+- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
+- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
