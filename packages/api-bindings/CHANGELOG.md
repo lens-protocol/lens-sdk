@@ -1,5 +1,14 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.19
+
+### Patch Changes
+
+- 4166f51f8: **feat:** Added experimental `useLazyProfiles` and `useLazyPublications` hooks
+- 5c429a0d7: **feat:** Added new invite hooks: `useInvitedProfiles`, `useWasWalletInvited`, `useLazyWasWalletInvited` and `useInviteWallets`
+- Updated dependencies [5c429a0d7]
+  - @lens-protocol/domain@0.11.0-alpha.14
+
 ## 0.11.0-alpha.18
 
 ### Patch Changes

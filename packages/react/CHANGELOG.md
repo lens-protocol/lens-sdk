@@ -1,5 +1,17 @@
 # @lens-protocol/react
 
+## 2.0.0-alpha.21
+
+### Patch Changes
+
+- 4166f51f8: **feat:** Added experimental `useLazyProfiles` and `useLazyPublications` hooks
+- 5c429a0d7: **feat:** Added new invite hooks: `useInvitedProfiles`, `useWasWalletInvited`, `useLazyWasWalletInvited` and `useInviteWallets`
+- Updated dependencies [4166f51f8]
+- Updated dependencies [5c429a0d7]
+  - @lens-protocol/api-bindings@0.11.0-alpha.19
+  - @lens-protocol/domain@0.11.0-alpha.14
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.14
+
 ## 2.0.0-alpha.20
 
 ### Patch Changes
