@@ -2979,6 +2979,29 @@ export type InjectCommonQueryParams = {
   imageMediumSize: ImageTransformParam | null;
 };
 
+export type InvitedResult = { by: EvmAddress; when: string; profileMinted: Profile | null };
+
+export type InvitedProfilesVariables = Exact<{
+  profileCoverSize?: InputMaybe<ImageTransform>;
+  profilePictureSize?: InputMaybe<ImageTransform>;
+  activityOn?: InputMaybe<Array<Scalars['AppId']> | Scalars['AppId']>;
+  fxRateFor?: InputMaybe<SupportedFiatType>;
+}>;
+
+export type InvitedProfilesData = { result: Array<InvitedResult> };
+
+export type ProfileAlreadyInvitedVariables = Exact<{
+  request: AlreadyInvitedCheckRequest;
+}>;
+
+export type ProfileAlreadyInvitedData = { result: boolean };
+
+export type InviteVariables = Exact<{
+  request: InviteRequest;
+}>;
+
+export type InviteData = { invite: void | null };
+
 export type ModuleInfo = { name: string; type: string };
 
 export type KnownSupportedModule = {
@@ -6681,6 +6704,16 @@ export const FragmentInjectCommonQueryParams = /*#__PURE__*/ gql`
   }
   ${FragmentImageTransformParam}
 `;
+export const FragmentInvitedResult = /*#__PURE__*/ gql`
+  fragment InvitedResult on InvitedResult {
+    by
+    profileMinted {
+      ...Profile
+    }
+    when
+  }
+  ${FragmentProfile}
+`;
 export const FragmentModuleInfo = /*#__PURE__*/ gql`
   fragment ModuleInfo on ModuleInfo {
     name
@@ -8244,6 +8277,145 @@ export type FeedHighlightsQueryResult = Apollo.QueryResult<
   FeedHighlightsData,
   FeedHighlightsVariables
 >;
+export const InvitedProfilesDocument = /*#__PURE__*/ gql`
+  query InvitedProfiles(
+    $profileCoverSize: ImageTransform = {}
+    $profilePictureSize: ImageTransform = {}
+    $activityOn: [AppId!]
+    $fxRateFor: SupportedFiatType = USD
+  ) {
+    result: invitedProfiles {
+      ...InvitedResult
+    }
+  }
+  ${FragmentInvitedResult}
+`;
+
+/**
+ * __useInvitedProfiles__
+ *
+ * To run a query within a React component, call `useInvitedProfiles` and pass it any options that fit your needs.
+ * When your component renders, `useInvitedProfiles` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useInvitedProfiles({
+ *   variables: {
+ *      profileCoverSize: // value for 'profileCoverSize'
+ *      profilePictureSize: // value for 'profilePictureSize'
+ *      activityOn: // value for 'activityOn'
+ *      fxRateFor: // value for 'fxRateFor'
+ *   },
+ * });
+ */
+export function useInvitedProfiles(
+  baseOptions?: Apollo.QueryHookOptions<InvitedProfilesData, InvitedProfilesVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<InvitedProfilesData, InvitedProfilesVariables>(
+    InvitedProfilesDocument,
+    options,
+  );
+}
+export function useInvitedProfilesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<InvitedProfilesData, InvitedProfilesVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<InvitedProfilesData, InvitedProfilesVariables>(
+    InvitedProfilesDocument,
+    options,
+  );
+}
+export type InvitedProfilesHookResult = ReturnType<typeof useInvitedProfiles>;
+export type InvitedProfilesLazyQueryHookResult = ReturnType<typeof useInvitedProfilesLazyQuery>;
+export type InvitedProfilesQueryResult = Apollo.QueryResult<
+  InvitedProfilesData,
+  InvitedProfilesVariables
+>;
+export const ProfileAlreadyInvitedDocument = /*#__PURE__*/ gql`
+  query ProfileAlreadyInvited($request: AlreadyInvitedCheckRequest!) {
+    result: profileAlreadyInvited(request: $request)
+  }
+`;
+
+/**
+ * __useProfileAlreadyInvited__
+ *
+ * To run a query within a React component, call `useProfileAlreadyInvited` and pass it any options that fit your needs.
+ * When your component renders, `useProfileAlreadyInvited` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfileAlreadyInvited({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useProfileAlreadyInvited(
+  baseOptions: Apollo.QueryHookOptions<ProfileAlreadyInvitedData, ProfileAlreadyInvitedVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfileAlreadyInvitedData, ProfileAlreadyInvitedVariables>(
+    ProfileAlreadyInvitedDocument,
+    options,
+  );
+}
+export function useProfileAlreadyInvitedLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ProfileAlreadyInvitedData,
+    ProfileAlreadyInvitedVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProfileAlreadyInvitedData, ProfileAlreadyInvitedVariables>(
+    ProfileAlreadyInvitedDocument,
+    options,
+  );
+}
+export type ProfileAlreadyInvitedHookResult = ReturnType<typeof useProfileAlreadyInvited>;
+export type ProfileAlreadyInvitedLazyQueryHookResult = ReturnType<
+  typeof useProfileAlreadyInvitedLazyQuery
+>;
+export type ProfileAlreadyInvitedQueryResult = Apollo.QueryResult<
+  ProfileAlreadyInvitedData,
+  ProfileAlreadyInvitedVariables
+>;
+export const InviteDocument = /*#__PURE__*/ gql`
+  mutation Invite($request: InviteRequest!) {
+    invite(request: $request)
+  }
+`;
+export type InviteMutationFn = Apollo.MutationFunction<InviteData, InviteVariables>;
+
+/**
+ * __useInvite__
+ *
+ * To run a mutation, you first call `useInvite` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInvite` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [invite, { data, loading, error }] = useInvite({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useInvite(baseOptions?: Apollo.MutationHookOptions<InviteData, InviteVariables>) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<InviteData, InviteVariables>(InviteDocument, options);
+}
+export type InviteHookResult = ReturnType<typeof useInvite>;
+export type InviteMutationResult = Apollo.MutationResult<InviteData>;
+export type InviteMutationOptions = Apollo.BaseMutationOptions<InviteData, InviteVariables>;
 export const CurrenciesDocument = /*#__PURE__*/ gql`
   query Currencies($limit: LimitType, $cursor: Cursor) {
     result: currencies(request: { limit: $limit, cursor: $cursor }) {

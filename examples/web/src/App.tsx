@@ -28,6 +28,7 @@ import {
   UseApproveModule,
   UseClaimHandle,
   UseCurrencies,
+  UseInviteWallets,
   UseNotifications,
 } from './misc';
 import {
@@ -188,6 +189,7 @@ export function App() {
                       <Route path="useCurrencies" element={<UseCurrencies />} />
                       <Route path="useApproveModule" element={<UseApproveModule />} />
                       <Route path="useClaimHandle" element={<UseClaimHandle />} />
+                      <Route path="useInviteWallets" element={<UseInviteWallets />} />
                     </Route>
                   </Route>
 

@@ -21,6 +21,11 @@ const hooks = [
     description: `Allows to claim an handle for a whitelisted address.`,
     path: '/misc/useClaimHandle',
   },
+  {
+    label: 'useInviteWallets & useInvitedProfiles',
+    description: `Invite wallets to Lens and check the invite status.`,
+    path: '/misc/useInviteWallets',
+  },
 ];
 
 export function MiscPage() {
