@@ -53,6 +53,18 @@ export type OpenActionArgs = {
    * The publication to perform the Open Action on.
    */
   publication: AnyPublication;
+  /**
+   * Whether the transaction gas costs should be sponsored by the Lens API or
+   * should be paid by the authenticated wallet.
+   *
+   * Although the request is marked as sponsored there are scenarios where the
+   * sponsorship will not be denied. See {@link BroadcastingError} with:
+   * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
+   * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
+   *
+   * @defaultValue true, the request will be attempted to be sponsored by the Lens API.
+   */
+  sponsored?: boolean;
 };
 
 /**
@@ -236,7 +248,7 @@ export function useOpenAction(
   const { data: session } = useSession();
   const openAction = useOpenActionController();
 
-  return useDeferredTask(async ({ publication }: OpenActionArgs) => {
+  return useDeferredTask(async ({ publication, sponsored = true }: OpenActionArgs) => {
     invariant(
       session?.authenticated,
       'You must be authenticated to execute an Open Action a post. Use `useLogin` hook to authenticate.',
@@ -248,8 +260,9 @@ export function useOpenAction(
 
     const request = resolveOpenActionRequestFor(publication, {
       action: args.action,
-      delegate: session.type === SessionType.WithProfile ? session.profile.signless : false, // cannot use Lens Manager with Public Collect
+      signless: session.type === SessionType.WithProfile ? session.profile.signless : false, // cannot use Lens Manager with Public Collect
       public: session.type === SessionType.JustWallet,
+      sponsored: session.type === SessionType.JustWallet ? sponsored : false, // cannot use gasless with Public Collect
     });
 
     return openAction(request);

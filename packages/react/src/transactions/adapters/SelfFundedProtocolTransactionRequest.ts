@@ -10,5 +10,8 @@ type RawTransactionDetails = {
   encodedData: Data;
 };
 
+/**
+ * @deprecated this is going to be removed soon
+ */
 export type SelfFundedProtocolTransactionRequest<T extends ProtocolTransactionRequestModel> =
   Distribute<T, RawTransactionDetails>;

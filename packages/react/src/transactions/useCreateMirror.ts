@@ -152,7 +152,7 @@ export function useCreateMirror(): UseDeferredTask<
     );
 
     const request = createMirrorRequest({
-      delegate: session.profile.signless,
+      signless: session.profile.signless,
       ...args,
     });
 

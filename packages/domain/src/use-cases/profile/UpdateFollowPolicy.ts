@@ -5,7 +5,7 @@ import { FollowPolicyConfig } from './FollowPolicy';
 export type UpdateFollowPolicyRequest = {
   policy: FollowPolicyConfig;
   kind: TransactionKind.UPDATE_FOLLOW_POLICY;
-  delegate: boolean;
+  signless: boolean;
 };
 
 export class UpdateFollowPolicy extends DelegableSigning<UpdateFollowPolicyRequest> {}

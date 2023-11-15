@@ -39,8 +39,8 @@ function setupDelegableSigning<T extends DelegableProtocolTransactionRequestMode
 
 describe(`Given an instance of the ${DelegableSigning.name}<T> interactor`, () => {
   describe(`when calling the "${DelegableSigning.prototype.execute.name}" method`, () => {
-    describe('with a request that has the "delegate" flag unset', () => {
-      const request = mockDelegableProtocolTransactionRequestModel({ delegate: false });
+    describe('with a request that has the "signless" flag unset', () => {
+      const request = mockDelegableProtocolTransactionRequestModel({ signless: false });
 
       it(`should execute the ISignedOperation<T>`, async () => {
         const signedOperation = mock<ISignedOperation<ProtocolTransactionRequestModel>>();
@@ -54,8 +54,8 @@ describe(`Given an instance of the ${DelegableSigning.name}<T> interactor`, () =
       });
     });
 
-    describe('with a request that has the "delegate" flag set', () => {
-      const request = mockDelegableProtocolTransactionRequestModel({ delegate: true });
+    describe('with a request that has the "signless" flag set', () => {
+      const request = mockDelegableProtocolTransactionRequestModel({ signless: true });
 
       it(`should:
           - create a ${NativeTransaction.name}<T>

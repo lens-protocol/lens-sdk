@@ -13,7 +13,7 @@ export type CreateQuoteRequest = {
   /**
    * Whether is possible to delegate the publication signing to the profile's dispatcher.
    */
-  delegate: boolean;
+  signless: boolean;
   /**
    * The publication ID that is being quoted.
    */

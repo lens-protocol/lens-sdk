@@ -5,7 +5,7 @@ export type UnlinkHandleRequest = {
   fullHandle: string;
   profileId: ProfileId;
   kind: TransactionKind.UNLINK_HANDLE;
-  delegate: boolean;
+  signless: boolean;
 };
 
 export class UnlinkHandle extends DelegableSigning<UnlinkHandleRequest> {}

@@ -71,7 +71,7 @@ export class OnChainRelayer implements IOnChainRelayer<ProtocolTransactionReques
       });
 
       if (data.result.__typename === 'RelayError') {
-        return handleRelayError(data.result, signedCall.fallback);
+        return handleRelayError(data.result);
       }
 
       return success(data.result);

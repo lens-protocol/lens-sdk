@@ -80,7 +80,7 @@ export function useBlockProfiles(): BlockOperation {
     return blockProfile({
       profileIds: profiles.map((profile) => profile.id),
       kind: TransactionKind.BLOCK_PROFILE,
-      delegate: session.profile.signless,
+      signless: session.profile.signless,
     });
   });
 }

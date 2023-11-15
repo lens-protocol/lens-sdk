@@ -4,7 +4,7 @@ import { DelegableSigning } from '../transactions/DelegableSigning';
 export type UnfollowRequest = {
   profileId: ProfileId;
   kind: TransactionKind.UNFOLLOW_PROFILE;
-  delegate: boolean;
+  signless: boolean;
 };
 
 export class UnfollowProfile extends DelegableSigning<UnfollowRequest> {}

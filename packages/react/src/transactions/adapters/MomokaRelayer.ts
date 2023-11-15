@@ -67,7 +67,7 @@ export class MomokaRelayer implements IMomokaRelayer<CreatePostRequest> {
       });
 
       if (data.result.__typename === 'RelayError') {
-        return handleRelayError(data.result, signedCall.fallback);
+        return handleRelayError(data.result);
       }
 
       return success(data.result);

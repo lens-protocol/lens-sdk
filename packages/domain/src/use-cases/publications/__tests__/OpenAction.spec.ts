@@ -26,7 +26,7 @@ import {
   mockUnknownActionRequest,
 } from '../__helpers__/mocks';
 
-function setupCollectPublication({
+function setupOpenAction({
   tokenAvailability = mock<TokenAvailability>(),
 }: {
   tokenAvailability?: TokenAvailability;
@@ -54,82 +54,36 @@ function setupCollectPublication({
 }
 
 describe(`Given the ${OpenAction.name} use-case interactor`, () => {
-  describe(`when "${OpenAction.prototype.execute.name}" method is invoked`, () => {
-    describe.each([
-      {
-        type: 'LegacyCollectRequest',
-        description: 'with a LegacyCollectRequest w/o fee',
-        request: mockLegacyCollectRequest({ fee: undefined }),
-      },
-      {
-        type: 'SimpleCollectRequest',
-        description: 'with a SimpleCollectRequest w/o fee',
-        request: mockSimpleCollectRequest({ fee: undefined }),
-      },
-      {
-        type: 'UnknownActionRequest',
-        description: 'with a UnknownActionRequest',
-        request: mockUnknownActionRequest(),
-      },
-    ])('with a $description', ({ request, type }) => {
-      it(`should execute the ${DelegableSigning.name}<${type}> strategy`, async () => {
-        const { openAction, signedExecution, delegableExecution } = setupCollectPublication();
+  describe.only.each([
+    {
+      description: 'LegacyCollectRequest',
+      request: mockLegacyCollectRequest({ fee: mockCollectFee() }),
+    },
+    {
+      description: 'SimpleCollectRequest',
+      request: mockSimpleCollectRequest({ fee: mockCollectFee() }),
+    },
+    {
+      description: 'MultirecipientCollectRequest',
+      request: mockMultirecipientCollectRequest(),
+    },
+    {
+      description: 'public SimpleCollectRequest',
+      request: mockSimpleCollectRequest({ fee: mockCollectFee(), public: true }),
+    },
+    {
+      description: 'public MultirecipientCollectRequest',
+      request: mockMultirecipientCollectRequest({ public: true }),
+    },
+  ])(`when executed with a request that requires a fee`, ({ request, description }) => {
+    invariant(isPaidCollectRequest(request), 'Test misconfiguration.');
 
-        await openAction.execute(request);
-
-        expect(delegableExecution.execute).toHaveBeenCalledWith(request);
-        expect(signedExecution.execute).not.toHaveBeenCalled();
-      });
-    });
-
-    describe.each([
-      {
-        type: 'LegacyCollectRequest',
-        description: 'with a LegacyCollectRequest w/ fee',
-        request: mockLegacyCollectRequest({ fee: mockCollectFee() }),
-      },
-      {
-        type: 'SimpleCollectRequest',
-        description: 'with a SimpleCollectRequest w/ fee',
-        request: mockSimpleCollectRequest({ fee: mockCollectFee() }),
-      },
-      {
-        type: 'MultirecipientCollectRequest',
-        description: 'with a SimpleCollectRequest (always w/ fee)',
-        request: mockMultirecipientCollectRequest(),
-      },
-    ])('with a $description', ({ request, type }) => {
-      invariant(isPaidCollectRequest(request), 'Test misconfiguration.');
-
-      it(`should execute the ${DelegableSigning.name}<${type}> strategy`, async () => {
-        const tokenAvailability = mockTokeAvailability({
-          request: {
-            amount: request.fee.amount,
-            spender: request.fee.contractAddress,
-          },
-          result: success(),
-        });
-
-        const { openAction, signedExecution, delegableExecution } = setupCollectPublication({
-          tokenAvailability,
-        });
-
-        await openAction.execute(request);
-
-        expect(delegableExecution.execute).not.toHaveBeenCalled();
-        expect(signedExecution.execute).toHaveBeenCalledWith(request);
-      });
-
-      it.each([
-        {
-          error: new InsufficientAllowanceError(request.fee.amount),
-        },
-        {
-          error: new InsufficientFundsError(request.fee.amount),
-        },
-      ])(
-        `should present an $error.name if the token availability checks fails with it and abort the operation`,
-        async ({ error }) => {
+    it(`should check the token availability for ${description}`, async () => {
+      return Promise.all(
+        [
+          new InsufficientAllowanceError(request.fee.amount),
+          new InsufficientFundsError(request.fee.amount),
+        ].map(async (error) => {
           const tokenAvailability = mockTokeAvailability({
             request: {
               amount: request.fee.amount,
@@ -138,37 +92,136 @@ describe(`Given the ${OpenAction.name} use-case interactor`, () => {
             result: failure(error),
           });
 
-          const { openAction, presenter } = setupCollectPublication({
+          const { openAction, presenter } = setupOpenAction({
             tokenAvailability,
           });
 
           await openAction.execute(request);
 
           expect(presenter.present).toHaveBeenLastCalledWith(failure(error));
-        },
+        }),
       );
     });
+  });
 
-    describe.each([
-      {
-        type: 'SimpleCollectRequest',
-        description: 'with a public SimpleCollectRequest',
-        request: mockSimpleCollectRequest({ fee: undefined, public: true }),
-      },
-      {
-        type: 'UnknownActionRequest',
-        description: 'with a public UnknownActionRequest',
-        request: mockUnknownActionRequest({ public: true }),
-      },
-      {
-        type: 'MultirecipientCollectRequest',
-        description: 'with a SimpleCollectRequest (always w/ fee)',
-        request: mockMultirecipientCollectRequest({ public: true }),
-      },
-    ])('with a $description', ({ request, type }) => {
-      it(`should execute the ${PaidTransaction.name}<${type}> strategy`, async () => {
+  describe.only.each([
+    {
+      type: 'LegacyCollectRequest',
+      request: mockLegacyCollectRequest({ fee: mockCollectFee() }),
+    },
+    {
+      type: 'SimpleCollectRequest',
+      request: mockSimpleCollectRequest({ fee: mockCollectFee() }),
+    },
+    {
+      type: 'MultirecipientCollectRequest',
+      request: mockMultirecipientCollectRequest(),
+    },
+  ])(`when executed with a request that requires a fee`, ({ request, type }) => {
+    invariant(isPaidCollectRequest(request), 'Test misconfiguration.');
+
+    it(`should support the ${SignedOnChain.name}<${type}> strategy`, async () => {
+      const tokenAvailability = mockTokeAvailability({
+        request: {
+          amount: request.fee.amount,
+          spender: request.fee.contractAddress,
+        },
+        result: success(),
+      });
+
+      const { openAction, signedExecution, delegableExecution } = setupOpenAction({
+        tokenAvailability,
+      });
+
+      await openAction.execute(request);
+
+      expect(signedExecution.execute).toHaveBeenCalledWith(request);
+      expect(delegableExecution.execute).not.toHaveBeenCalled();
+    });
+  });
+
+  describe.only.each([
+    {
+      type: 'SimpleCollectRequest',
+      request: mockSimpleCollectRequest({ fee: undefined, public: true }),
+      tokenAvailability: mock<TokenAvailability>(),
+    },
+    {
+      type: 'UnknownActionRequest',
+      request: mockUnknownActionRequest({ public: true }),
+      tokenAvailability: mock<TokenAvailability>(),
+    },
+    {
+      type: 'MultirecipientCollectRequest',
+      request: mockMultirecipientCollectRequest({ public: true }),
+      tokenAvailability: mockTokeAvailability({ result: success() }),
+    },
+  ])(`when executed with a request flagged as "public"`, ({ request, type, tokenAvailability }) => {
+    it(`should support the ${PaidTransaction.name}<${type}> strategy`, async () => {
+      const { openAction, signedExecution, delegableExecution, paidExecution } = setupOpenAction({
+        tokenAvailability,
+      });
+
+      await openAction.execute(request);
+
+      expect(paidExecution.execute).toHaveBeenCalledWith(request);
+      expect(delegableExecution.execute).not.toHaveBeenCalledWith(request);
+      expect(signedExecution.execute).not.toHaveBeenCalled();
+    });
+  });
+
+  describe.only.each([
+    {
+      type: 'LegacyCollectRequest',
+      request: mockLegacyCollectRequest({ fee: undefined }),
+    },
+    {
+      type: 'SimpleCollectRequest',
+      request: mockSimpleCollectRequest({ fee: undefined }),
+    },
+    {
+      type: 'UnknownActionRequest',
+      request: mockUnknownActionRequest(),
+    },
+  ])(
+    `when executed with a request without fee or for which is not possible to determine (e.g. unknown open action)`,
+    ({ request, type }) => {
+      it(`should support the ${DelegableSigning.name}<${type}> strategy`, async () => {
         const { openAction, signedExecution, delegableExecution, paidExecution } =
-          setupCollectPublication();
+          setupOpenAction();
+
+        await openAction.execute(request);
+
+        expect(delegableExecution.execute).toHaveBeenCalledWith(request);
+        expect(signedExecution.execute).not.toHaveBeenCalled();
+        expect(paidExecution.execute).not.toHaveBeenCalledWith(request);
+      });
+    },
+  );
+
+  describe.only.each([
+    {
+      type: 'LegacyCollectRequest',
+      request: mockLegacyCollectRequest({ sponsored: false }),
+    },
+    {
+      type: 'SimpleCollectRequest',
+      request: mockSimpleCollectRequest({ sponsored: false }),
+    },
+    {
+      type: 'UnknownActionRequest',
+      request: mockUnknownActionRequest({ sponsored: false }),
+    },
+    {
+      type: 'MultirecipientCollectRequest',
+      request: mockMultirecipientCollectRequest({ sponsored: false }),
+    },
+  ])(
+    'when executed with a request that has the "sponsored" flag set to false',
+    ({ request, type }) => {
+      it(`should support the ${PaidTransaction.name}<${type}> strategy`, async () => {
+        const { openAction, signedExecution, delegableExecution, paidExecution } =
+          setupOpenAction();
 
         await openAction.execute(request);
 
@@ -176,6 +229,6 @@ describe(`Given the ${OpenAction.name} use-case interactor`, () => {
         expect(delegableExecution.execute).not.toHaveBeenCalledWith(request);
         expect(signedExecution.execute).not.toHaveBeenCalled();
       });
-    });
-  });
+    },
+  );
 });

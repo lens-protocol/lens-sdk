@@ -369,7 +369,7 @@ export function useCreateComment(): UseDeferredTask<
     );
 
     const request = createCommentRequest({
-      delegate: session.profile.signless,
+      signless: session.profile.signless,
       ...args,
     });
 

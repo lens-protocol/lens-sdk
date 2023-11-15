@@ -60,10 +60,10 @@ export function mockTokenAvailabilityRequest(
 }
 
 export function mockTokeAvailability({
-  request,
+  request = expect.any(Object),
   result,
 }: {
-  request: TokenAvailabilityRequest;
+  request?: TokenAvailabilityRequest;
   result: Result<void, TokenAvailabilityError>;
 }): TokenAvailability {
   const tokenAvailability = mock<TokenAvailability>();
