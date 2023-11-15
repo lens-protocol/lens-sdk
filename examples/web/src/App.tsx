@@ -28,27 +28,31 @@ import {
   UseApproveModule,
   UseClaimHandle,
   UseCurrencies,
+  UseInviteWallets,
   UseNotifications,
 } from './misc';
 import {
   ProfilesPage,
+  UseBlockAndUnblockProfiles,
+  UseBlockedProfiles,
   UseFollowAndUnfollow,
   UseLazyProfile,
+  UseLazyProfiles,
   UseMutualFollowers,
+  UseOwnedHandles,
   UseProfile,
   UseProfileActionHistory,
   UseProfileFollowers,
   UseProfileFollowing,
   UseProfileManagers,
   UseProfiles,
+  UseProfilesManaged,
   UseRecommendedProfiles,
+  UseSetProfileMetadata,
   UseUpdateFollowPolicy,
   UseUpdateProfileManagers,
   UseWhoActedOnPublication,
-  UseSetProfileMetadata,
-  UseOwnedHandles,
 } from './profiles';
-import { UseBlockAndUnblockProfiles } from './profiles/UseBlockAndUnblockProfiles';
 import {
   PublicationsPage,
   UseBookmarkToggle,
@@ -56,7 +60,7 @@ import {
   UseCreatePost,
   UseCreateQuote,
   UseHidePublication,
-  UseMyBookmarks,
+  UseBookmarks,
   UseNotInterestedToggle,
   UseOpenAction,
   UsePublication,
@@ -64,6 +68,7 @@ import {
   UseReactionToggle,
   UseReportPublication,
   UseWhoReactedToPublication,
+  UseLazyPublications,
 } from './publications';
 import {
   RevenuePage,
@@ -116,6 +121,7 @@ export function App() {
                       <Route path="useCreateQuote" element={<UseCreateQuote />} />
                       <Route path="usePublication" element={<UsePublication />} />
                       <Route path="usePublications" element={<UsePublications />} />
+                      <Route path="useLazyPublications" element={<UseLazyPublications />} />
                       <Route
                         path="useWhoReactedToPublication"
                         element={<UseWhoReactedToPublication />}
@@ -124,7 +130,7 @@ export function App() {
                       <Route path="useReportPublication" element={<UseReportPublication />} />
                       <Route path="useReactionToggle" element={<UseReactionToggle />} />
                       <Route path="useBookmarkToggle" element={<UseBookmarkToggle />} />
-                      <Route path="useMyBookmarks" element={<UseMyBookmarks />} />
+                      <Route path="useBookmarks" element={<UseBookmarks />} />
                       <Route path="useOpenAction" element={<UseOpenAction />} />
                       <Route path="useNotInterestedToggle" element={<UseNotInterestedToggle />} />
                     </Route>
@@ -134,6 +140,7 @@ export function App() {
                       <Route path="useProfile" element={<UseProfile />} />
                       <Route path="useLazyProfile" element={<UseLazyProfile />} />
                       <Route path="useProfiles" element={<UseProfiles />} />
+                      <Route path="useLazyProfiles" element={<UseLazyProfiles />} />
                       <Route path="useProfileFollowers" element={<UseProfileFollowers />} />
                       <Route path="useProfileFollowing" element={<UseProfileFollowing />} />
                       <Route path="useMutualFollowers" element={<UseMutualFollowers />} />
@@ -144,6 +151,7 @@ export function App() {
                         path="useUpdateProfileManagers"
                         element={<UseUpdateProfileManagers />}
                       />
+                      <Route path="useProfilesManaged" element={<UseProfilesManaged />} />
                       <Route
                         path="useWhoActedOnPublication"
                         element={<UseWhoActedOnPublication />}
@@ -153,6 +161,7 @@ export function App() {
                       <Route path="useUpdateFollowPolicy" element={<UseUpdateFollowPolicy />} />
                       <Route path="useOwnedHandles" element={<UseOwnedHandles />} />
                       <Route path="useBlockProfiles" element={<UseBlockAndUnblockProfiles />} />
+                      <Route path="useBlockedProfiles" element={<UseBlockedProfiles />} />
                     </Route>
 
                     <Route path="/discovery">
@@ -184,6 +193,7 @@ export function App() {
                       <Route path="useCurrencies" element={<UseCurrencies />} />
                       <Route path="useApproveModule" element={<UseApproveModule />} />
                       <Route path="useClaimHandle" element={<UseClaimHandle />} />
+                      <Route path="useInviteWallets" element={<UseInviteWallets />} />
                     </Route>
                   </Route>
 

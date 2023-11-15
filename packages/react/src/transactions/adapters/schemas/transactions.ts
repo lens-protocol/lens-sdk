@@ -41,7 +41,6 @@ function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) 
       return CollectRequestSchema;
     case TransactionKind.BLOCK_PROFILE:
       return BlockProfilesRequestSchema;
-
     case TransactionKind.CLAIM_HANDLE:
       return ClaimHandleRequestSchema;
     case TransactionKind.CREATE_COMMENT:

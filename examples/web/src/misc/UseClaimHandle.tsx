@@ -2,18 +2,14 @@ import {
   ClaimHandleArgs,
   ClaimProfileWithHandleErrorReasonType,
   ReservedClaimable,
-  SessionType,
   useCanClaimHandle,
   useClaimHandle,
-  useLogin,
-  useSession,
   useUpgradeCredentials,
 } from '@lens-protocol/react-web';
 import React from 'react';
 import toast from 'react-hot-toast';
-import { useAccount, useConnect } from 'wagmi';
-import { InjectedConnector } from 'wagmi/connectors/injected';
 
+import { RequireWalletSession } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 
@@ -137,36 +133,15 @@ function ClaimHandleOptions() {
 }
 
 export function UseClaimHandle() {
-  const { data: session } = useSession();
-  const { execute: login, loading: isLoginPending } = useLogin();
-  const { address, isConnected, isConnecting } = useAccount();
-
-  const { connect } = useConnect({
-    connector: new InjectedConnector(),
-  });
-
   return (
     <div>
       <h1>
         <code>useClaimHandle</code>
       </h1>
       <div>
-        {!isConnected && (
-          <button disabled={isConnecting} onClick={() => connect()}>
-            Connect first
-          </button>
-        )}
-
-        {address && session?.type !== SessionType.JustWallet && (
-          <>
-            <p>To try this example you need to login with with just a wallet session.</p>
-            <button type="button" onClick={() => login({ address })} disabled={isLoginPending}>
-              Login with wallet only
-            </button>
-          </>
-        )}
-
-        {session?.type === SessionType.JustWallet && <ClaimHandleOptions />}
+        <RequireWalletSession message="To try this example you need to login with with just a wallet session.">
+          <ClaimHandleOptions />
+        </RequireWalletSession>
       </div>
     </div>
   );

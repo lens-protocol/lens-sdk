@@ -65,9 +65,16 @@ export type CollectParams = {
 export type OpenActionParams = CollectParams | UnknownActionParams;
 
 export type OpenActionContext<TAction extends OpenActionParams = OpenActionParams> = {
-  delegate: boolean;
   action: TAction;
-};
+} & (
+  | {
+      public: true;
+    }
+  | {
+      public: false;
+      delegate: boolean;
+    }
+);
 
 function resolveCollectRequestFor(
   publication: AnyPublication,
@@ -87,6 +94,7 @@ function resolveCollectRequestFor(
     case 'LegacyMultirecipientFeeCollectModuleSettings':
     case 'LegacyTimedFeeCollectModuleSettings':
     case 'LegacySimpleCollectModuleSettings':
+      invariant(context.public === false, 'Legacy collect cannot be collected with just a wallet');
       return {
         kind: TransactionKind.ACT_ON_PUBLICATION,
         type: AllOpenActionType.LEGACY_COLLECT,
@@ -100,6 +108,7 @@ function resolveCollectRequestFor(
       };
 
     case 'LegacyFreeCollectModuleSettings':
+      invariant(context.public === false, 'Legacy collect cannot be collected with just a wallet');
       return {
         kind: TransactionKind.ACT_ON_PUBLICATION,
         type: AllOpenActionType.LEGACY_COLLECT,
@@ -123,7 +132,8 @@ function resolveCollectRequestFor(
               amount,
               contractAddress: settings.contract.address,
             },
-        delegate: context.delegate,
+        delegate: context.public === false && context.delegate,
+        public: context.public,
       };
 
     case 'MultirecipientFeeCollectOpenActionSettings':
@@ -137,6 +147,7 @@ function resolveCollectRequestFor(
           amount: erc20Amount({ from: settings.amount }),
           contractAddress: settings.contract.address,
         },
+        public: context.public,
       };
 
     default:
@@ -172,7 +183,8 @@ function resolveUnknownRequestFor(
     publicationId: target.id,
     address: settings.contract.address,
     data: context.action.data,
-    delegate: context.delegate,
+    delegate: context.public === false && context.delegate,
+    public: context.public,
   };
 }
 

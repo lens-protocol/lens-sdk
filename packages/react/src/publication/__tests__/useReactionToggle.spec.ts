@@ -3,11 +3,12 @@ import {
   mockAddReactionResponse,
   mockPostFragment,
   mockPublicationResponse,
+  mockRemoveReactionResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { invariant } from '@lens-protocol/shared-kernel';
 import { act, waitFor } from '@testing-library/react';
 
-import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
+import { setupHookTestScenarioWithSession } from '../../__helpers__/setupHookTestScenarioWithSession';
 import { usePublication } from '../usePublication';
 import { useReactionToggle } from '../useReactionToggle';
 
@@ -16,7 +17,7 @@ describe(`Given the ${useReactionToggle.name} hook`, () => {
 
   describe('when calling the execute method', () => {
     it('should call correct mutation', async () => {
-      const { renderHook } = setupHookTestScenario([
+      const { renderHook } = await setupHookTestScenarioWithSession([
         mockPublicationResponse({
           variables: {
             request: { forId: publication.id },
@@ -24,6 +25,14 @@ describe(`Given the ${useReactionToggle.name} hook`, () => {
           result: publication,
         }),
         mockAddReactionResponse({
+          variables: {
+            request: {
+              for: publication.id,
+              reaction: PublicationReactionType.Upvote,
+            },
+          },
+        }),
+        mockRemoveReactionResponse({
           variables: {
             request: {
               for: publication.id,
@@ -49,9 +58,15 @@ describe(`Given the ${useReactionToggle.name} hook`, () => {
 
       // add reaction
       await act(async () => {
+        invariant(publicationResult.current.data, 'publication not found');
+        invariant(
+          isPrimaryPublication(publicationResult.current.data),
+          'not a primary publication',
+        );
+
         await result.current.execute({
           reaction: PublicationReactionType.Upvote,
-          publication,
+          publication: publicationResult.current.data,
         });
       });
 
@@ -60,6 +75,26 @@ describe(`Given the ${useReactionToggle.name} hook`, () => {
       // check publication stats and operations
       expect(publicationResult.current.data.operations.hasUpvoted).toBe(true);
       expect(publicationResult.current.data.stats.upvotes).toEqual(upvotes + 1);
+
+      // remove reaction
+      await act(async () => {
+        invariant(publicationResult.current.data, 'publication not found');
+        invariant(
+          isPrimaryPublication(publicationResult.current.data),
+          'not a primary publication',
+        );
+
+        await result.current.execute({
+          reaction: PublicationReactionType.Upvote,
+          publication: publicationResult.current.data,
+        });
+      });
+
+      expect(result.current.loading).toBe(false);
+
+      // check publication stats and operations
+      expect(publicationResult.current.data.operations.hasUpvoted).toBe(false);
+      expect(publicationResult.current.data.stats.upvotes).toEqual(upvotes);
     });
   });
 });

@@ -5,6 +5,7 @@ import {
 } from '@lens-protocol/api-bindings';
 import { invariant, success } from '@lens-protocol/shared-kernel';
 
+import { useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useReactionToggleController } from './adapters/useReactionToggleController';
 
@@ -78,10 +79,16 @@ export type ReactionToggleArgs = {
  * @group Hooks
  */
 export function useReactionToggle(): UseDeferredTask<void, never, ReactionToggleArgs> {
+  const { data: session } = useSession();
   const { add, remove } = useReactionToggleController();
 
   return useDeferredTask(async ({ reaction, publication }) => {
     invariant(isPrimaryPublication(publication), 'Publication is not a primary publication');
+
+    invariant(
+      session?.authenticated,
+      'You must be authenticated to use this operation. Use `useLogin` hook to authenticate.',
+    );
 
     if (hasReacted({ publication, reaction })) {
       await remove({

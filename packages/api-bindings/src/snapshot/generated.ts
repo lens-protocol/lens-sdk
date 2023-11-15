@@ -148,6 +148,12 @@ export type RolesWhere = {
 };
 
 export type SpaceWhere = {
+  created?: InputMaybe<Scalars['Int']>;
+  created_gt?: InputMaybe<Scalars['Int']>;
+  created_gte?: InputMaybe<Scalars['Int']>;
+  created_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  created_lt?: InputMaybe<Scalars['Int']>;
+  created_lte?: InputMaybe<Scalars['Int']>;
   id?: InputMaybe<Scalars['String']>;
   id_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };

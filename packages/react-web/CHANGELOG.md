@@ -1,5 +1,55 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.21
+
+### Patch Changes
+
+- 4166f51f8: **feat:** Added experimental `useLazyProfiles` and `useLazyPublications` hooks
+- 5c429a0d7: **feat:** Added new invite hooks: `useInvitedProfiles`, `useWasWalletInvited`, `useLazyWasWalletInvited` and `useInviteWallets`
+- Updated dependencies [4166f51f8]
+- Updated dependencies [5c429a0d7]
+  - @lens-protocol/api-bindings@0.11.0-alpha.19
+  - @lens-protocol/react@2.0.0-alpha.21
+  - @lens-protocol/domain@0.11.0-alpha.14
+
+## 2.0.0-alpha.20
+
+### Patch Changes
+
+- c9b5c8d88: **feat:** seamless support for public collect/act in `useOpenAction`
+- ac17aa775: **fix** fully support Public Collect
+- d6a8061e8: **fix:** Exported missing enums used in hooks args
+- 3bf2e33dc: **feat:** Added `useBlockedProfiles` hook
+  **chore:** Renamed `useMyBookmarks` to `useBookmarks`, deprecated `useMyBookmarks`
+  **feat:** Added authentication checks to many hooks that require it on the API side
+- d71f981cc: **chore:** simplifies useApproveModule implementation
+- Updated dependencies [ac17aa775]
+- Updated dependencies [d6a8061e8]
+- Updated dependencies [3bf2e33dc]
+- Updated dependencies [d71f981cc]
+- Updated dependencies [c9b5c8d88]
+  - @lens-protocol/react@2.0.0-alpha.20
+  - @lens-protocol/api-bindings@0.11.0-alpha.18
+  - @lens-protocol/shared-kernel@0.11.0-alpha.8
+  - @lens-protocol/domain@0.11.0-alpha.13
+  - @lens-protocol/storage@0.7.5-alpha.6
+
+## 2.0.0-alpha.19
+
+### Patch Changes
+
+- 2f5360796: **fix:** fixes silent token-refresh logic so that, if refresh token is still valid, a silent refresh of tokens takes places and failed requests are retried seamlessly
+- 3a9720968: **feat:** Added `isLensManager` to `ProfileManager` fragment
+- 5d95eccd2: **feat:** Added `useProfilesManaged` hook
+- Updated dependencies [2f5360796]
+- Updated dependencies [3a9720968]
+- Updated dependencies [5d95eccd2]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.7
+  - @lens-protocol/api-bindings@0.11.0-alpha.17
+  - @lens-protocol/react@2.0.0-alpha.19
+  - @lens-protocol/domain@0.11.0-alpha.12
+  - @lens-protocol/storage@0.7.5-alpha.5
+
 ## 2.0.0-alpha.18
 
 ### Patch Changes

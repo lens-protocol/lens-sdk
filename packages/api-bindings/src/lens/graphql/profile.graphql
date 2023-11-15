@@ -2,6 +2,7 @@
 fragment ProfileManager on ProfilesManagedResult {
   # __typename omitted on purpose to hide odd name, not needed anyway here
   address
+  isLensManager
 }
 
 fragment ClaimProfileWithHandleErrorResult on ClaimProfileWithHandleErrorResult {
@@ -373,6 +374,24 @@ query WhoActedOnPublication(
   result: whoActedOnPublication(
     request: { on: $on, where: $where, limit: $limit, cursor: $cursor }
   ) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query WhoHaveBlocked(
+  $limit: LimitType
+  $cursor: Cursor
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
+) {
+  result: whoHaveBlocked(request: { limit: $limit, cursor: $cursor }) {
     items {
       ...Profile
     }

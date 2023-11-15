@@ -1,5 +1,7 @@
 import { FeedItem, FeedRequest, useFeed as useBaseFeedQuery } from '@lens-protocol/api-bindings';
+import { invariant } from '@lens-protocol/shared-kernel';
 
+import { SessionType, useSession } from '../authentication';
 import { useLensApolloClient } from '../helpers/arguments';
 import { OmitCursor, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 
@@ -42,6 +44,14 @@ export type UseFeedArgs = OmitCursor<FeedRequest>;
  * ```
  */
 export function useFeed({ where }: UseFeedArgs): PaginatedReadResult<FeedItem[]> {
+  const { data: session } = useSession();
+
+  invariant(session?.authenticated, 'You must be authenticated.');
+  invariant(
+    session.type === SessionType.WithProfile,
+    'You must be authenticated with a profile to use this query. Use `useLogin` hook to authenticate.',
+  );
+
   return usePaginatedReadResult(
     useBaseFeedQuery(
       useLensApolloClient({

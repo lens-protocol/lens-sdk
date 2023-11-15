@@ -1,10 +1,10 @@
-import { NormalizedCacheObject } from '@apollo/client';
+import { GraphQLRequest, NormalizedCacheObject, OperationVariables } from '@apollo/client';
 import { MockedResponse, mockSingleLink } from '@apollo/client/testing';
 import { DocumentNode, ExecutionResult, GraphQLError } from 'graphql';
 
 import { SafeApolloClient } from '../SafeApolloClient';
 import { createLensCache, createSnapshotCache } from '../cache';
-import { ApolloServerErrorCode } from '../isGraphQLValidationError';
+import { ApolloServerErrorCode } from '../errors';
 
 export function mockLensApolloClient(
   mocks: ReadonlyArray<MockedResponse<unknown>> = [],
@@ -34,7 +34,25 @@ export function mockSnapshotApolloClient(
   });
 }
 
-export function createGraphQLError({
+function createUnauthenticatedApolloError(): GraphQLError {
+  return createGraphQLError({
+    message: 'Authentication required',
+    code: ApolloServerErrorCode.UNAUTHENTICATED,
+  });
+}
+
+export function mockAuthenticationErrorResponse<T extends OperationVariables>(
+  request: GraphQLRequest<T>,
+): MockedResponse<unknown, T> {
+  return {
+    request,
+    result: {
+      errors: [createUnauthenticatedApolloError()],
+    },
+  };
+}
+
+function createGraphQLError({
   code,
   message = 'No pings please!',
 }: {
@@ -48,7 +66,10 @@ export function createGraphQLError({
   });
 }
 
-export function createGraphQLValidationError(message = 'No pings please!'): GraphQLError {
+function createValidationGraphQLError(message = 'No pings please!'): GraphQLError {
+  // why GraphQLError and not ApolloError? Cause GraphQLError responses are rehydrated by ApolloClient
+  // into ApolloError instances, and this dummy error is used to test the error logic of SafeApolloClient
+  // which has a proper HttpLink instance (instead of mockSingleLink) that will rehydrate the error.
   return createGraphQLError({
     message,
     code: ApolloServerErrorCode.GRAPHQL_VALIDATION_FAILED,
@@ -61,7 +82,7 @@ export function mockValidationErrorResponse(document: DocumentNode): MockedRespo
       query: document,
     },
     result: {
-      errors: [createGraphQLValidationError()],
+      errors: [createValidationGraphQLError()],
     },
   };
 }

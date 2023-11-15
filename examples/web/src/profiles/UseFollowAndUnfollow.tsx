@@ -6,7 +6,7 @@ import {
   useUnfollow,
 } from '@lens-protocol/react-web';
 
-import { UnauthenticatedFallback, WhenLoggedIn } from '../components/auth';
+import { RequireProfileSession } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
@@ -71,10 +71,9 @@ export function UseFollowAndUnfollow() {
       <h1>
         <code>useFollow / useUnfollow</code>
       </h1>
-      <WhenLoggedIn>
+      <RequireProfileSession message="Log in to view this example.">
         <UseFollowInner />
-      </WhenLoggedIn>
-      <UnauthenticatedFallback />
+      </RequireProfileSession>
     </>
   );
 }

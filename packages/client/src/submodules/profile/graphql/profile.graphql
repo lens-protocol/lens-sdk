@@ -1,13 +1,6 @@
 fragment ProfileManager on ProfilesManagedResult {
   address
-}
-
-fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
-  reason
-}
-
-fragment ClaimProfileWithHandleErrorResult on ClaimProfileWithHandleErrorResult {
-  reason
+  isLensManager
 }
 
 fragment CreateOnchainSetProfileMetadataBroadcastItemResult on CreateOnchainSetProfileMetadataBroadcastItemResult {
@@ -379,16 +372,27 @@ query ProfileActionHistory($request: ProfileActionHistoryRequest!) {
   }
 }
 
-# mutations
-mutation ClaimProfileWithHandle($request: ClaimProfileWithHandleRequest!) {
-  result: claimProfileWithHandle(request: $request) {
-    ... on RelaySuccess {
-      ...RelaySuccess
+query WhoHaveBlocked(
+  $request: WhoHaveBlockedRequest!
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
+) {
+  result: whoHaveBlocked(request: $request) {
+    items {
+      ...Profile
     }
-    ... on ClaimProfileWithHandleErrorResult {
-      ...ClaimProfileWithHandleErrorResult
+    pageInfo {
+      ...PaginatedResultInfo
     }
   }
+}
+
+# TODO remove, this mutation was moved to `wallet` submodule
+fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
+  reason
 }
 
 mutation CreateProfileWithHandle($request: CreateProfileWithHandleRequest!) {
@@ -402,6 +406,7 @@ mutation CreateProfileWithHandle($request: CreateProfileWithHandleRequest!) {
   }
 }
 
+# mutations
 mutation AddProfileInterests($request: ProfileInterestsRequest!) {
   result: addProfileInterests(request: $request)
 }

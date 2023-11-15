@@ -4,6 +4,7 @@ import {
   resolveOpenActionRequestFor,
 } from '@lens-protocol/api-bindings';
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
@@ -115,6 +116,13 @@ export type OpenActionArgs = {
  *         );
  *         break;
  *
+ *       case 'InsufficientGasError':
+ *         const asset = result.error.asset;
+ *         console.log(
+ *           `You do not have enough ${asset.symbol} to pay for the transaction gas cost.`
+ *         );
+ *         break;
+ *
  *       case 'InsufficientFundsError':
  *         const requestedAmount = result.error.requestedAmount;
  *         console.log(
@@ -180,6 +188,13 @@ export type OpenActionArgs = {
  *
  * The referrers will split the referral reward of any collect fee paid by the collector.
  *
+ * ## Public Collect
+ *
+ * You can use the `useOpenAction` hook to collect a publication with just a wallet.
+ * First make sure you logged-in via {@link useLogin} with just an EVM address.
+ *
+ * Then you can use the `useOpenAction` to collect a publication as mentioned above.
+ *
  * ## Custom Open Action
  *
  * You can use the `useOpenAction` hook to execute a custom Open Action.
@@ -212,6 +227,7 @@ export function useOpenAction(
   | BroadcastingError
   | InsufficientAllowanceError
   | InsufficientFundsError
+  | InsufficientGasError
   | PendingSigningRequestError
   | UserRejectedError
   | WalletConnectionError,
@@ -226,17 +242,14 @@ export function useOpenAction(
       'You must be authenticated to execute an Open Action a post. Use `useLogin` hook to authenticate.',
     );
     invariant(
-      session.type === SessionType.WithProfile,
-      'You must have a profile to execute an Open Action.',
-    );
-    invariant(
       publication.momoka === null,
       'You cannot execute an Open Action on a Momoka publication.',
     );
 
     const request = resolveOpenActionRequestFor(publication, {
       action: args.action,
-      delegate: session.profile.signless,
+      delegate: session.type === SessionType.WithProfile ? session.profile.signless : false, // cannot use Lens Manager with Public Collect
+      public: session.type === SessionType.JustWallet,
     });
 
     return openAction(request);

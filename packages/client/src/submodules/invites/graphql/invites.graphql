@@ -13,7 +13,7 @@ query InvitedProfiles(
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
   $rateRequest: RateRequest = { for: USD }
 ) {
-  invitedProfiles {
+  result: invitedProfiles {
     ...InvitedResult
   }
 }

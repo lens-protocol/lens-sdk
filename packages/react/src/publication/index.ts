@@ -1,16 +1,17 @@
 /**
  * Hooks
  */
+export * from './useBookmarks';
+export * from './useBookmarkToggle';
+export * from './useHidePublication';
 export * from './useLazyPublication';
+export * from './useLazyPublications';
+export * from './useNotInterestedToggle';
 export * from './usePublication';
 export * from './usePublications';
 export * from './useReactionToggle';
-export * from './useWhoReactedToPublication';
-export * from './useHidePublication';
 export * from './useReportPublication';
-export * from './useBookmarkToggle';
-export * from './useMyBookmarks';
-export * from './useNotInterestedToggle';
+export * from './useWhoReactedToPublication';
 
 /**
  * Fragments
@@ -46,11 +47,9 @@ export type {
 } from '@lens-protocol/api-bindings';
 
 export {
-  PublicationType,
   isPostPublication,
   isCommentPublication,
   isMirrorPublication,
   isQuotePublication,
   isPrimaryPublication,
-  PublicationReactionType,
 } from '@lens-protocol/api-bindings';

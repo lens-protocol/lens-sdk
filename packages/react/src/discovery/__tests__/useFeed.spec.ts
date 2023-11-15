@@ -2,7 +2,7 @@ import { mockFeedItemFragment, mockFeedResponse } from '@lens-protocol/api-bindi
 import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
-import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
+import { setupHookTestScenarioWithSession } from '../../__helpers__/setupHookTestScenarioWithSession';
 import { UseFeedArgs, useFeed } from '../useFeed';
 
 describe(`Given the ${useFeed.name} hook`, () => {
@@ -16,7 +16,7 @@ describe(`Given the ${useFeed.name} hook`, () => {
     };
 
     it('should return the feed', async () => {
-      const { renderHook } = setupHookTestScenario([
+      const { renderHook } = await setupHookTestScenarioWithSession([
         mockFeedResponse({
           variables: args,
           items,

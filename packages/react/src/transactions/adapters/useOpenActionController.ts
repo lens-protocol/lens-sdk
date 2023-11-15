@@ -1,4 +1,5 @@
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
@@ -7,6 +8,7 @@ import { OpenAction, OpenActionRequest } from '@lens-protocol/domain/use-cases/p
 import {
   BroadcastingError,
   DelegableSigning,
+  PaidTransaction,
   SignedOnChain,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
@@ -23,6 +25,7 @@ export function useOpenActionController() {
     activeWallet,
     apolloClient,
     onChainRelayer,
+    providerFactory,
     tokenAvailability,
     transactionGateway,
     transactionFactory,
@@ -35,12 +38,13 @@ export function useOpenActionController() {
       | BroadcastingError
       | InsufficientAllowanceError
       | InsufficientFundsError
+      | InsufficientGasError
       | PendingSigningRequestError
       | UserRejectedError
       | WalletConnectionError
     >();
 
-    const onChainGateway = new OpenActionGateway(apolloClient, transactionFactory);
+    const onChainGateway = new OpenActionGateway(apolloClient, transactionFactory, providerFactory);
 
     const signedExecution = new SignedOnChain(
       activeWallet,
@@ -58,10 +62,18 @@ export function useOpenActionController() {
       presenter,
     );
 
+    const paidExecution = new PaidTransaction(
+      activeWallet,
+      onChainGateway,
+      presenter,
+      transactionQueue,
+    );
+
     const openAction = new OpenAction(
       tokenAvailability,
       signedExecution,
       delegableExecution,
+      paidExecution,
       presenter,
     );
 

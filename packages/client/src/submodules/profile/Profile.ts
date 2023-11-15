@@ -34,6 +34,7 @@ import type {
   UnfollowRequest,
   UnlinkHandleFromProfileRequest,
   WhoActedOnPublicationRequest,
+  WhoHaveBlockedRequest,
 } from '../../graphql/types.generated';
 import {
   PaginatedResult,
@@ -359,6 +360,40 @@ export class Profile {
   }
 
   /**
+   * Fetch profiles that the authenticated profile has blocked.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the query
+   * @returns Profiles wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.whoHaveBeenBlocked();
+   * ```
+   */
+  async whoHaveBeenBlocked(
+    request: WhoHaveBlockedRequest = {},
+  ): PromiseResult<
+    PaginatedResult<ProfileFragment>,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      return buildPaginatedQueryResult(async (currRequest) => {
+        const result = await this.sdk.WhoHaveBlocked(
+          {
+            request: currRequest,
+            ...buildRequestFromConfig(this.context),
+          },
+          headers,
+        );
+
+        return result.data.result;
+      }, request);
+    });
+  }
+
+  /**
    * Fetch profile action history.
    *
    * ⚠️ Requires authenticated LensClient.
@@ -394,8 +429,12 @@ export class Profile {
   /**
    * Create a new profile.
    *
+   * ⚠️ Only available in development environment.
+   *
    * @param request - Request object for the mutation
    * @returns Status of the transaction
+   *
+   * @deprecated Use {@link Wallet.createProfile} instead
    *
    * @example
    * ```ts
@@ -408,6 +447,9 @@ export class Profile {
   async create(
     request: CreateProfileWithHandleRequest,
   ): Promise<RelaySuccessFragment | CreateProfileWithHandleErrorResultFragment> {
+    if (this.context.environment.name === 'production') {
+      throw new Error('Cannot create profile in production environment');
+    }
     const result = await this.sdk.CreateProfileWithHandle({ request });
     return result.data.result;
   }

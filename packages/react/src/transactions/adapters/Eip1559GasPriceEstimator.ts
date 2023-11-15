@@ -45,7 +45,7 @@ function computeFeeHistoryStats(result: FeeHistoryResult) {
   let blockNum = oldestBlock;
   let index = 0;
   const blocks = [];
-  while (blockNum < oldestBlock + BLOCK_COUNT) {
+  while (blockNum < oldestBlock + result.reward.length) {
     blocks.push({
       number: blockNum,
       baseFeePerGas: BigDecimal.from(
