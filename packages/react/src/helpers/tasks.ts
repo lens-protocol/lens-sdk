@@ -162,31 +162,16 @@ export function useDeferredTask<TData, TError extends IEquatableError, TInput = 
         }
 
         return result;
-      } finally {
-        setState(({ data, error }) => {
-          if (data !== undefined) {
-            return {
-              called: true,
-              data,
-              error: undefined,
-              loading: false,
-            };
-          }
-          if (error) {
-            return {
-              called: true,
-              data: undefined,
-              error,
-              loading: false,
-            };
-          }
+      } catch (err) {
+        setState(({ data, called }) => {
           return {
-            called: false,
-            data: undefined,
-            error: undefined,
             loading: false,
-          };
+            called: !data ? false : called,
+            data: data,
+            error: undefined,
+          } as DeferredTaskState<TData, TError>;
         });
+        throw err;
       }
     },
     [handler],
