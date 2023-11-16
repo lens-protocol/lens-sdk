@@ -1,6 +1,8 @@
 import { ReportReason } from '@lens-protocol/domain/entities';
 import { ReportPublicationRequest } from '@lens-protocol/domain/use-cases/publications';
+import { invariant } from '@lens-protocol/shared-kernel';
 
+import { useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useReportPublicationController } from './adapters/useReportPublicationController';
 
@@ -95,9 +97,15 @@ export type ReportPublicationArgs = ReportPublicationRequest;
  * @group Hooks
  */
 export function useReportPublication(): UseDeferredTask<void, never, ReportPublicationArgs> {
+  const { data: session } = useSession();
   const reportPublication = useReportPublicationController();
 
   return useDeferredTask(async ({ publicationId, reason, additionalComments }) => {
+    invariant(
+      session?.authenticated,
+      'You must be authenticated to use this operation. Use `useLogin` hook to authenticate.',
+    );
+
     return reportPublication({ publicationId, reason, additionalComments });
   });
 }

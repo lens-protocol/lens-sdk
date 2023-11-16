@@ -29,7 +29,7 @@ export type InvitedProfilesQueryVariables = Types.Exact<{
   rateRequest?: Types.InputMaybe<Types.RateRequest>;
 }>;
 
-export type InvitedProfilesQuery = { invitedProfiles: Array<InvitedResultFragment> };
+export type InvitedProfilesQuery = { result: Array<InvitedResultFragment> };
 
 export type ProfileAlreadyInvitedQueryVariables = Types.Exact<{
   request: Types.AlreadyInvitedCheckRequest;
@@ -947,6 +947,7 @@ export const InvitedProfilesDocument = {
         selections: [
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'result' },
             name: { kind: 'Name', value: 'invitedProfiles' },
             selectionSet: {
               kind: 'SelectionSet',

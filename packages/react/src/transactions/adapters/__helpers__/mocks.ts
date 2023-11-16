@@ -13,6 +13,7 @@ import {
 } from '@lens-protocol/domain/mocks';
 import { ChainType, Data } from '@lens-protocol/shared-kernel';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
+import { MockProvider } from 'ethereum-waffle';
 import { mock } from 'jest-mock-extended';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
@@ -104,4 +105,20 @@ export function assertUnsignedProtocolCallCorrectness<T extends ProtocolTransact
 ) {
   expect(unsignedProtocolCall.id).toEqual(broadcastResult.id);
   expect(unsignedProtocolCall.typedData).toEqual(omitTypename(broadcastResult.typedData));
+}
+
+async function mineNBlocks(provider: MockProvider, blocks: number) {
+  return provider.send('evm_mine', [{ blocks }]);
+}
+
+export async function mockJsonRpcProvider() {
+  const provider = new MockProvider({
+    ganacheOptions: {
+      chain: {
+        hardfork: 'london',
+      },
+    },
+  });
+  await mineNBlocks(provider, 20);
+  return provider;
 }

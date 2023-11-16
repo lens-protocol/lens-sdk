@@ -2,7 +2,7 @@ import { mockFeedHighlightsResponse, mockPostFragment } from '@lens-protocol/api
 import { mockProfileId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
-import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
+import { setupHookTestScenarioWithSession } from '../../__helpers__/setupHookTestScenarioWithSession';
 import { UseFeedHighlightsArgs, useFeedHighlights } from '../useFeedHighlights';
 
 describe(`Given the ${useFeedHighlights.name} hook`, () => {
@@ -16,7 +16,7 @@ describe(`Given the ${useFeedHighlights.name} hook`, () => {
         where: { for: profileId },
       };
 
-      const { renderHook } = setupHookTestScenario([
+      const { renderHook } = await setupHookTestScenarioWithSession([
         mockFeedHighlightsResponse({
           variables: args,
           items,

@@ -41,7 +41,7 @@ export function useTokenAllowanceController() {
       transactionQueue,
     );
 
-    await tokenAllowance.increaseAllowance(request);
+    await tokenAllowance.execute(request);
 
     const result = presenter.asResult();
 

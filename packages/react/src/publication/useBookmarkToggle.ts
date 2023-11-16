@@ -1,6 +1,7 @@
 import { AnyPublication, isMirrorPublication } from '@lens-protocol/api-bindings';
-import { success } from '@lens-protocol/shared-kernel';
+import { invariant, success } from '@lens-protocol/shared-kernel';
 
+import { useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useBookmarkToggleController } from './adapters/useBookmarkToggleController';
 
@@ -38,9 +39,15 @@ export type BookmarkOperation = UseDeferredTask<void, never, UseBookmarkToggleAr
  * ```
  */
 export function useBookmarkToggle(): UseDeferredTask<void, never, UseBookmarkToggleArgs> {
+  const { data: session } = useSession();
   const { add, remove } = useBookmarkToggleController();
 
   return useDeferredTask(async ({ publication }) => {
+    invariant(
+      session?.authenticated,
+      'You must be authenticated to use this operation. Use `useLogin` hook to authenticate.',
+    );
+
     const target = isMirrorPublication(publication) ? publication.mirrorOn : publication;
 
     if (target.operations.hasBookmarked) {

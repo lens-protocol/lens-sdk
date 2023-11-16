@@ -1,144 +1,69 @@
-import { DocumentNode } from '@apollo/client';
-import {
-  AnyPublication,
-  FragmentMirror,
-  FragmentPost,
-  Profile,
-  isPrimaryPublication,
-} from '@lens-protocol/api-bindings';
+import { isPrimaryPublication } from '@lens-protocol/api-bindings';
 import {
   mockAddToMyBookmarksResponse,
-  mockLensApolloClient,
-  mockMirrorFragment,
   mockPostFragment,
-  mockProfileFragment,
-  mockPublicationOperationsFragment,
+  mockPublicationResponse,
   mockRemoveFromMyBookmarksResponse,
 } from '@lens-protocol/api-bindings/mocks';
-import { RenderHookResult, act, waitFor } from '@testing-library/react';
+import { invariant } from '@lens-protocol/shared-kernel';
+import { act, waitFor } from '@testing-library/react';
 
-import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { PublicationCacheManager } from '../infrastructure/PublicationCacheManager';
+import { setupHookTestScenarioWithSession } from '../../__helpers__/setupHookTestScenarioWithSession';
 import { useBookmarkToggle } from '../useBookmarkToggle';
-
-function setupTestScenario({
-  fragment,
-  publication,
-}: {
-  fragment: DocumentNode;
-  profile: Profile;
-  publication: AnyPublication;
-}) {
-  const publicationId = !isPrimaryPublication(publication)
-    ? publication.mirrorOn.id
-    : publication.id;
-
-  const apolloClient = mockLensApolloClient([
-    mockAddToMyBookmarksResponse({
-      request: { on: publicationId },
-    }),
-    mockRemoveFromMyBookmarksResponse({
-      request: { on: publicationId },
-    }),
-  ]);
-
-  apolloClient.cache.writeFragment({
-    id: apolloClient.cache.identify(publication),
-    fragment,
-    fragmentName: publication.__typename,
-    data: publication,
-  });
-
-  const cacheManager = new PublicationCacheManager(apolloClient);
-
-  return {
-    renderHook<TProps, TResult>(
-      callback: (props: TProps) => TResult,
-    ): RenderHookResult<TResult, TProps> {
-      return renderHookWithMocks(callback, {
-        mocks: {
-          apolloClient: apolloClient,
-          publicationCacheManager: cacheManager,
-        },
-      });
-    },
-
-    get updatedPublicationFragment() {
-      return apolloClient.cache.readFragment({
-        id: apolloClient.cache.identify(publication),
-        fragment,
-        fragmentName: publication.__typename,
-      });
-    },
-  };
-}
+import { usePublication } from '../usePublication';
 
 describe(`Given the ${useBookmarkToggle.name} hook`, () => {
-  describe('when invoking the hook callback', () => {
-    const profile = mockProfileFragment();
+  const publication = mockPostFragment();
 
-    it.each([
-      {
-        initial: true,
-        expected: false,
-      },
-      {
-        initial: false,
-        expected: true,
-      },
-    ])(
-      'should toggle the `publication.bookmarked` from "$initial" to "$expected"',
-      async ({ initial, expected }) => {
-        const publication = mockPostFragment({
-          operations: mockPublicationOperationsFragment({ hasBookmarked: initial }),
-        });
-        const scenario = setupTestScenario({
-          fragment: FragmentPost,
-          profile,
-          publication,
-        });
-
-        const { result } = scenario.renderHook(() => useBookmarkToggle());
-
-        act(() => {
-          void result.current.execute({ publication });
-        });
-
-        expect(result.current).toMatchObject({
-          loading: true,
-        });
-
-        await waitFor(() => expect(result.current.loading).toBe(false));
-        expect(scenario.updatedPublicationFragment).toMatchObject({
-          operations: {
-            hasBookmarked: expected,
+  describe('when calling the execute method', () => {
+    it('should call correct mutation', async () => {
+      const { renderHook } = await setupHookTestScenarioWithSession([
+        mockPublicationResponse({
+          variables: {
+            request: { forId: publication.id },
           },
-        });
-      },
-    );
-
-    it('should update the `publication.mirrorOn.operations.hasBookmarked` in case the `publication` is a Mirror', async () => {
-      const publication = mockMirrorFragment({
-        mirrorOn: mockPostFragment({
-          operations: mockPublicationOperationsFragment({ hasBookmarked: false }),
+          result: publication,
         }),
-      });
-      const scenario = setupTestScenario({ fragment: FragmentMirror, profile, publication });
+        mockAddToMyBookmarksResponse({
+          request: { on: publication.id },
+        }),
+        mockRemoveFromMyBookmarksResponse({
+          request: { on: publication.id },
+        }),
+      ]);
 
-      const { result } = scenario.renderHook(() => useBookmarkToggle());
+      const { result: publicationResult } = renderHook(() =>
+        usePublication({ forId: publication.id }),
+      );
+      const { result } = renderHook(() => useBookmarkToggle());
 
-      act(() => {
-        void result.current.execute({ publication });
-      });
+      // put publication in cache
+      await waitFor(() => expect(publicationResult.current.loading).toBeFalsy());
 
-      await waitFor(() => expect(result.current.loading).toBe(false));
-      expect(scenario.updatedPublicationFragment).toMatchObject({
-        mirrorOn: {
-          operations: {
-            hasBookmarked: true,
-          },
-        },
+      invariant(publicationResult.current.data, 'publication not found');
+      invariant(isPrimaryPublication(publicationResult.current.data), 'not a primary publication');
+
+      expect(publicationResult.current.data.operations.hasBookmarked).toBe(false);
+
+      // add bookmark
+      await act(async () => {
+        invariant(publicationResult.current.data, 'publication not found');
+        await result.current.execute({ publication: publicationResult.current.data });
       });
+      expect(result.current.loading).toBe(false);
+
+      // check publication operations
+      expect(publicationResult.current.data.operations.hasBookmarked).toBe(true);
+
+      // remove bookmark
+      await act(async () => {
+        invariant(publicationResult.current.data, 'publication not found');
+        await result.current.execute({ publication: publicationResult.current.data });
+      });
+      expect(result.current.loading).toBe(false);
+
+      // check publication operations
+      expect(publicationResult.current.data.operations.hasBookmarked).toBe(false);
     });
   });
 });

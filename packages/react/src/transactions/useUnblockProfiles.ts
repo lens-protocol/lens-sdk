@@ -35,6 +35,36 @@ export type UnblockOperation = UseDeferredTask<
   UnblockProfileArgs
 >;
 
+/**
+ * Unblock one or many profiles.
+ *
+ * You MUST be authenticated via {@link useLogin} to use this hook.
+ *
+ * @category Profiles
+ * @group Hooks
+ * @param args - {@link UnblockProfileArgs}
+ *
+ * @example
+ * ```tsx
+ * import { useUnblockProfiles, ProfileId } from '@lens-protocol/react';
+ *
+ * function UnblockProfile({ profileId }: { profileId: ProfileId }) {
+ *   const { execute: unblock, loading: blockLoading, error: blockError } = useUnblockProfiles();
+ *
+ *   async function handleUnblock() {
+ *    await unblock({
+ *     profiles: [profileId],
+ *    });
+ *   }
+ *
+ *   return (
+ *     <button onClick={handleUnblock}>
+ *      Unblock profile
+ *     </button>
+ *   );
+ * }
+ * ```
+ */
 export function useUnblockProfiles(): UnblockOperation {
   const { data: session } = useSession();
   const unblockProfile = useUnblockProfilesController();

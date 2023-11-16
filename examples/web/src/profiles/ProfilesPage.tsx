@@ -17,6 +17,11 @@ const profileHooks = [
     path: '/profiles/useProfiles',
   },
   {
+    label: 'useLazyProfiles',
+    description: 'Lazy fetch a list of profiles.',
+    path: '/profiles/useLazyProfiles',
+  },
+  {
     label: 'useProfileFollowers',
     description: 'Fetch a list of profile followers.',
     path: '/profiles/useProfileFollowers',
@@ -58,8 +63,13 @@ const profileHooks = [
   },
   {
     label: 'useUpdateProfileManagers',
-    description: 'Update the Profile Manager configuration for the logged-in Profile.',
+    description: 'Update the profile manager configuration.',
     path: '/profiles/useUpdateProfileManagers',
+  },
+  {
+    label: 'useProfilesManaged',
+    description: 'Fetch a list of profiles managed by a wallet',
+    path: '/profiles/useProfilesManaged',
   },
   {
     label: 'useSetProfileMetadata',
@@ -68,7 +78,7 @@ const profileHooks = [
   },
   {
     label: 'useUpdateFollowPolicy',
-    description: 'Update the follow policy for the logged-in Profile.',
+    description: 'Update the follow policy.',
     path: '/profiles/useUpdateFollowPolicy',
   },
   {
@@ -78,8 +88,13 @@ const profileHooks = [
   },
   {
     label: 'useBlockProfiles & useUnblockProfiles',
-    description: 'Block and unblock profiles from the active profile.',
+    description: 'Block and unblock profiles.',
     path: '/profiles/useBlockProfiles',
+  },
+  {
+    label: 'useBlockedProfiles',
+    description: 'Fetch profiles that have been blocked.',
+    path: '/profiles/useBlockedProfiles',
   },
 ];
 

@@ -4,6 +4,7 @@
 export type { LensFollowNFT } from './LensFollowNFT';
 export type { LensHub } from './LensHub';
 export type { LensTokenHandleRegistry } from './LensTokenHandleRegistry';
+export type { PublicActProxy } from './PublicActProxy';
 export type { Erc20 } from './Erc20';
 
 export type ChainId = number;

@@ -11,7 +11,7 @@ import {
   LegacyCollectDocument,
 } from '@lens-protocol/api-bindings';
 import * as gql from '@lens-protocol/api-bindings';
-import { lensHub } from '@lens-protocol/blockchain-bindings';
+import { lensHub, publicActProxy } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
 import {
   AllOpenActionType,
@@ -26,12 +26,15 @@ import {
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
+  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
+import { IProviderFactory } from '../../wallet/adapters/IProviderFactory';
+import { AbstractContractCallGateway, ContractCallDetails } from './AbstractContractCallGateway';
 import { ITransactionFactory } from './ITransactionFactory';
 import { SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 import { handleRelayError } from './relayer';
@@ -42,14 +45,19 @@ type NewOpenActionRequest =
   | UnknownActionRequest;
 
 export class OpenActionGateway
+  extends AbstractContractCallGateway<NewOpenActionRequest>
   implements
     ISignedOnChainGateway<OpenActionRequest>,
-    IDelegatedTransactionGateway<DelegableOpenActionRequest>
+    IDelegatedTransactionGateway<DelegableOpenActionRequest>,
+    IPaidTransactionGateway<NewOpenActionRequest>
 {
   constructor(
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<OpenActionRequest>,
-  ) {}
+    providerFactory: IProviderFactory,
+  ) {
+    super(providerFactory);
+  }
 
   async createDelegatedTransaction(
     request: DelegableOpenActionRequest,
@@ -148,7 +156,7 @@ export class OpenActionGateway
   }
 
   private async createOpenActionUnsignedProtocolCall(
-    request: SimpleCollectRequest | MultirecipientCollectRequest | UnknownActionRequest,
+    request: NewOpenActionRequest,
     nonce?: number,
   ) {
     const input = this.resolveActOnOpenActionRequest(request);
@@ -230,6 +238,17 @@ export class OpenActionGateway
     return data.result;
   }
 
+  protected override async createEncodedData(
+    request: NewOpenActionRequest,
+  ): Promise<ContractCallDetails> {
+    if (request.public) {
+      const input = this.resolveActOnOpenActionRequest(request);
+      const result = await this.createActOnOpenActionTypedData(input);
+      return this.createPublicActProxyCallDetails(request, result);
+    }
+    throw new Error('Method not implemented.');
+  }
+
   private async createActOnOpenActionTypedData(
     request: gql.ActOnOpenActionRequest,
     nonce?: Nonce,
@@ -287,6 +306,61 @@ export class OpenActionGateway
     ]);
     return {
       ...request,
+      contractAddress: result.typedData.domain.verifyingContract,
+      encodedData: encodedData as Data,
+    };
+  }
+
+  private createPublicActProxyCallDetails(
+    request: NewOpenActionRequest,
+    result: gql.CreateActOnOpenActionBroadcastItemResult,
+  ): ContractCallDetails {
+    if (
+      request.type == AllOpenActionType.UNKNOWN_OPEN_ACTION ||
+      (request.type == AllOpenActionType.SIMPLE_COLLECT && !request.fee)
+    ) {
+      return this.createPublicFreeActCallDetails(result);
+    }
+    return this.createPublicCollectCallDetails(result);
+  }
+
+  private createPublicFreeActCallDetails(
+    result: gql.CreateActOnOpenActionBroadcastItemResult,
+  ): ContractCallDetails {
+    const contract = publicActProxy(result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('publicFreeAct', [
+      {
+        publicationActedProfileId: result.typedData.message.publicationActedProfileId,
+        publicationActedId: result.typedData.message.publicationActedId,
+        actorProfileId: result.typedData.message.actorProfileId,
+        referrerProfileIds: result.typedData.message.referrerProfileIds,
+        referrerPubIds: result.typedData.message.referrerPubIds,
+        actionModuleAddress: result.typedData.message.actionModuleAddress,
+        actionModuleData: result.typedData.message.actionModuleData,
+      },
+    ]);
+    return {
+      contractAddress: result.typedData.domain.verifyingContract,
+      encodedData: encodedData as Data,
+    };
+  }
+
+  private createPublicCollectCallDetails(
+    result: gql.CreateActOnOpenActionBroadcastItemResult,
+  ): ContractCallDetails {
+    const contract = publicActProxy(result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('publicCollect', [
+      {
+        publicationActedProfileId: result.typedData.message.publicationActedProfileId,
+        publicationActedId: result.typedData.message.publicationActedId,
+        actorProfileId: result.typedData.message.actorProfileId,
+        referrerProfileIds: result.typedData.message.referrerProfileIds,
+        referrerPubIds: result.typedData.message.referrerPubIds,
+        actionModuleAddress: result.typedData.message.actionModuleAddress,
+        actionModuleData: result.typedData.message.actionModuleData,
+      },
+    ]);
+    return {
       contractAddress: result.typedData.domain.verifyingContract,
       encodedData: encodedData as Data,
     };

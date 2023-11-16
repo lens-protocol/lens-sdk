@@ -1,136 +1,99 @@
-import { DocumentNode } from '@apollo/client';
-import {
-  AnyPublication,
-  FragmentMirror,
-  FragmentPost,
-  isMirrorPublication,
-} from '@lens-protocol/api-bindings';
+import { isPrimaryPublication } from '@lens-protocol/api-bindings';
 import {
   mockAddPublicationNotInterestedResponse,
-  mockLensApolloClient,
-  mockMirrorFragment,
   mockPostFragment,
   mockPublicationOperationsFragment,
+  mockPublicationResponse,
   mockUndoPublicationNotInterestedResponse,
 } from '@lens-protocol/api-bindings/mocks';
-import { RenderHookResult, act, waitFor } from '@testing-library/react';
+import { invariant } from '@lens-protocol/shared-kernel';
+import { act, waitFor } from '@testing-library/react';
 
-import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import { PublicationCacheManager } from '../infrastructure/PublicationCacheManager';
+import { setupHookTestScenarioWithSession } from '../../__helpers__/setupHookTestScenarioWithSession';
 import { useNotInterestedToggle } from '../useNotInterestedToggle';
-
-function setupTestScenario({
-  fragment,
-  publication,
-}: {
-  fragment: DocumentNode;
-  publication: AnyPublication;
-}) {
-  const publicationId = isMirrorPublication(publication) ? publication.mirrorOn.id : publication.id;
-
-  const apolloClient = mockLensApolloClient([
-    mockAddPublicationNotInterestedResponse({
-      request: { on: publicationId },
-    }),
-    mockUndoPublicationNotInterestedResponse({
-      request: { on: publicationId },
-    }),
-  ]);
-
-  apolloClient.cache.writeFragment({
-    id: apolloClient.cache.identify(publication),
-    fragment,
-    fragmentName: publication.__typename,
-    data: publication,
-  });
-
-  const cacheManager = new PublicationCacheManager(apolloClient);
-
-  return {
-    renderHook<TProps, TResult>(
-      callback: (props: TProps) => TResult,
-    ): RenderHookResult<TResult, TProps> {
-      return renderHookWithMocks(callback, {
-        mocks: {
-          apolloClient: apolloClient,
-          publicationCacheManager: cacheManager,
-        },
-      });
-    },
-
-    get updatedPublicationFragment() {
-      return apolloClient.cache.readFragment({
-        id: apolloClient.cache.identify(publication),
-        fragment,
-        fragmentName: publication.__typename,
-      });
-    },
-  };
-}
+import { usePublication } from '../usePublication';
 
 describe(`Given the ${useNotInterestedToggle.name} hook`, () => {
-  describe('when invoking the hook callback', () => {
-    it.each([
-      {
-        initial: true,
-        expected: false,
-      },
-      {
-        initial: false,
-        expected: true,
-      },
-    ])(
-      'should toggle the `publication.notInterested` from "$initial" to "$expected"',
-      async ({ initial, expected }) => {
-        const publication = mockPostFragment({
-          operations: mockPublicationOperationsFragment({ isNotInterested: initial }),
-        });
-        const scenario = setupTestScenario({
-          fragment: FragmentPost,
-          publication,
-        });
-
-        const { result } = scenario.renderHook(() => useNotInterestedToggle());
-
-        act(() => {
-          void result.current.execute({ publication });
-        });
-
-        expect(result.current).toMatchObject({
-          loading: true,
-        });
-
-        await waitFor(() => expect(result.current.loading).toBe(false));
-        expect(scenario.updatedPublicationFragment).toMatchObject({
-          operations: {
-            isNotInterested: expected,
+  describe('when calling the execute method on a publication', () => {
+    it('should call correct mutation', async () => {
+      const publication = mockPostFragment();
+      const { renderHook } = await setupHookTestScenarioWithSession([
+        mockPublicationResponse({
+          variables: {
+            request: { forId: publication.id },
           },
-        });
-      },
-    );
-
-    it('should update the `publication.mirrorOf.notInterested` in case the `publication` is a Mirror', async () => {
-      const publication = mockMirrorFragment({
-        mirrorOn: mockPostFragment({
-          operations: mockPublicationOperationsFragment({ isNotInterested: false }),
+          result: publication,
         }),
+        mockAddPublicationNotInterestedResponse({
+          request: { on: publication.id },
+        }),
+      ]);
+
+      const { result: publicationResult } = renderHook(() =>
+        usePublication({ forId: publication.id }),
+      );
+      const { result } = renderHook(() => useNotInterestedToggle());
+
+      // put publication in cache
+      await waitFor(() => expect(publicationResult.current.loading).toBeFalsy());
+
+      invariant(publicationResult.current.data, 'publication not found');
+      invariant(isPrimaryPublication(publicationResult.current.data), 'not a primary publication');
+
+      expect(publicationResult.current.data.operations.isNotInterested).toBe(false);
+
+      // mark as not interested
+      await act(async () => {
+        invariant(publicationResult.current.data, 'publication not found');
+        await result.current.execute({ publication: publicationResult.current.data });
       });
-      const scenario = setupTestScenario({ fragment: FragmentMirror, publication });
+      expect(result.current.loading).toBe(false);
 
-      const { result } = scenario.renderHook(() => useNotInterestedToggle());
+      // check publication operations
+      expect(publicationResult.current.data.operations.isNotInterested).toBe(true);
+    });
+  });
 
-      act(() => {
-        void result.current.execute({ publication });
+  describe('when calling the execute method on already not interested publication', () => {
+    it('should call correct mutation', async () => {
+      const operations = mockPublicationOperationsFragment({ isNotInterested: true });
+      const publication = mockPostFragment({
+        operations,
       });
-
-      await waitFor(() => expect(result.current.loading).toBe(false));
-      expect(scenario.updatedPublicationFragment).toMatchObject({
-        mirrorOn: {
-          operations: {
-            isNotInterested: true,
+      const { renderHook } = await setupHookTestScenarioWithSession([
+        mockPublicationResponse({
+          variables: {
+            request: { forId: publication.id },
           },
-        },
+          result: publication,
+        }),
+        mockUndoPublicationNotInterestedResponse({
+          request: { on: publication.id },
+        }),
+      ]);
+
+      const { result: publicationResult } = renderHook(() =>
+        usePublication({ forId: publication.id }),
+      );
+      const { result } = renderHook(() => useNotInterestedToggle());
+
+      // put publication in cache
+      await waitFor(() => expect(publicationResult.current.loading).toBeFalsy());
+
+      invariant(publicationResult.current.data, 'publication not found');
+      invariant(isPrimaryPublication(publicationResult.current.data), 'not a primary publication');
+
+      expect(publicationResult.current.data.operations.isNotInterested).toBe(true);
+
+      // undo mark as not interested
+      await act(async () => {
+        invariant(publicationResult.current.data, 'publication not found');
+        await result.current.execute({ publication: publicationResult.current.data });
       });
+      expect(result.current.loading).toBe(false);
+
+      // check publication operations
+      expect(publicationResult.current.data.operations.isNotInterested).toBe(false);
     });
   });
 });

@@ -27,8 +27,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useSharedDependencies } from '../shared';
 
-export { LimitType };
-
 /**
  * A discriminated union of the possible results of a read operation with no errors.
  *
@@ -172,7 +170,7 @@ export type PaginatedArgs<T> = Prettify<
       /**
        * The number of items to return.
        *
-       * @defaultValue LimitType.Ten
+       * @defaultValue Default value is set by the API and it might differ between queries.
        */
       limit?: LimitType;
     }

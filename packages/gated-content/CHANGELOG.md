@@ -1,5 +1,22 @@
 # @lens-protocol/gated-content
 
+## 0.3.3-alpha.15
+
+### Patch Changes
+
+- 9a9f3130d: **fix** robust handling of legacy token-gated publication with empty `tokenIds` as ERC-721 NFT Ownership condition
+- Updated dependencies [d71f981cc]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.8
+  - @lens-protocol/storage@0.7.5-alpha.6
+
+## 0.3.3-alpha.14
+
+### Patch Changes
+
+- Updated dependencies [2f5360796]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.7
+  - @lens-protocol/storage@0.7.5-alpha.5
+
 ## 0.3.3-alpha.13
 
 ### Patch Changes

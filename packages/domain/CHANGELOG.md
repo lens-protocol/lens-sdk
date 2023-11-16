@@ -1,5 +1,27 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.14
+
+### Patch Changes
+
+- 5c429a0d7: **feat:** Added new invite hooks: `useInvitedProfiles`, `useWasWalletInvited`, `useLazyWasWalletInvited` and `useInviteWallets`
+
+## 0.11.0-alpha.13
+
+### Patch Changes
+
+- d71f981cc: **chore:** simplifies useApproveModule implementation
+- c9b5c8d88: **feat:** seamless support for public collect/act in `useOpenAction`
+- Updated dependencies [d71f981cc]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.8
+
+## 0.11.0-alpha.12
+
+### Patch Changes
+
+- Updated dependencies [2f5360796]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.7
+
 ## 0.11.0-alpha.11
 
 ### Minor Changes

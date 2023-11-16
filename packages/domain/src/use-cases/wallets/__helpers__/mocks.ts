@@ -4,7 +4,7 @@ import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import { Wallet, AnyTransactionRequestModel, UnsignedTransaction } from '../../../entities';
-import { IPayTransactionGateway } from '../../transactions/PayTransaction';
+import { IPaidTransactionGateway } from '../../transactions/PaidTransaction';
 import {
   IBalanceGateway,
   ITokenGateway,
@@ -81,10 +81,10 @@ export function mockIPayTransactionGateway<T extends AnyTransactionRequestModel>
   request: T;
   wallet: Wallet;
   unsignedTransaction: UnsignedTransaction<T>;
-}): IPayTransactionGateway<T> {
-  const gateway = mock<IPayTransactionGateway<T>>();
+}): IPaidTransactionGateway<T> {
+  const gateway = mock<IPaidTransactionGateway<T>>();
 
-  when(gateway.prepareSelfFundedTransaction)
+  when(gateway.createUnsignedTransaction)
     .calledWith(request, wallet)
     .mockResolvedValue(unsignedTransaction);
 

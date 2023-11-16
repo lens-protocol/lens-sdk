@@ -27,6 +27,11 @@ const publicationHooks = [
     path: '/publications/usePublications',
   },
   {
+    label: 'useLazyPublications',
+    description: `Lazy fetch a list of publications.`,
+    path: '/publications/useLazyPublications',
+  },
+  {
     label: 'useWhoReactedToPublication',
     description: `Fetch a list of profiles who reacted to a publication.`,
     path: '/publications/useWhoReactedToPublication',
@@ -52,9 +57,9 @@ const publicationHooks = [
     path: '/publications/useBookmarkToggle',
   },
   {
-    label: 'useMyBookmarks',
-    description: `Fetch a list of publications that the current user has bookmarked.`,
-    path: '/publications/useMyBookmarks',
+    label: 'useBookmarks',
+    description: `Fetch bookmarked publications.`,
+    path: '/publications/useBookmarks',
   },
   {
     label: 'useOpenAction',

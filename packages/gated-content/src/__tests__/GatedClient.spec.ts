@@ -48,7 +48,7 @@ const rawAccessCondition: raw.AccessCondition = raw.orCondition([
   }),
 ]);
 
-describe.skip(`Given an instance of the ${GatedClient.name}`, () => {
+describe(`Given an instance of the ${GatedClient.name}`, () => {
   describe(`when calling the "${GatedClient.prototype.encryptPublicationMetadata.name}" method`, () => {
     it(`should return the expected raw PublicationMetadata`, async () => {
       const { client } = setupTestScenario();

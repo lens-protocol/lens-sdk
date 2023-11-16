@@ -7,14 +7,12 @@ import {
   TokenAllowanceLimit,
   TokenAllowanceRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { MockProvider } from 'ethereum-waffle';
 import { BigNumber, constants, providers, utils } from 'ethers';
 
 import { mockIProviderFactory } from '../../../wallet/adapters/__helpers__/mocks';
-import {
-  ApproveTransactionGateway,
-  UnsignedApproveTransaction,
-} from '../ApproveTransactionGateway';
+import { UnsignedContractCallTransaction } from '../AbstractContractCallGateway';
+import { ApproveTransactionGateway } from '../ApproveTransactionGateway';
+import { mockJsonRpcProvider } from '../__helpers__/mocks';
 
 function setupApproveTransactionGateway({
   request,
@@ -31,46 +29,35 @@ function setupApproveTransactionGateway({
   return new ApproveTransactionGateway(providerFactory);
 }
 
-async function mineNBlocks(provider: MockProvider, blocks: number) {
-  return provider.send('evm_mine', [{ blocks }]);
-}
-
 describe(`Given an instance of the ${ApproveTransactionGateway.name}`, () => {
   const wallet = mockWallet();
 
   describe(`when creating an approve transaction for an exact amount`, () => {
-    it(`should succeed with the expected ${UnsignedApproveTransaction.name}`, async () => {
+    it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
       const request = mockTokenAllowanceRequest({
         limit: TokenAllowanceLimit.EXACT,
       });
-      const provider = new MockProvider({
-        ganacheOptions: {
-          chain: {
-            hardfork: 'london',
-          },
-        },
-      });
-      await mineNBlocks(provider, 20);
+      const provider = await mockJsonRpcProvider();
       const approveTransactionGateway = setupApproveTransactionGateway({
         request,
         provider,
       });
 
-      const unsignedTransaction = await approveTransactionGateway.createApproveTransaction(
+      const unsignedTransaction = await approveTransactionGateway.createUnsignedTransaction(
         request,
         wallet,
       );
 
-      expect(unsignedTransaction).toBeInstanceOf(UnsignedApproveTransaction);
+      expect(unsignedTransaction).toBeInstanceOf(UnsignedContractCallTransaction);
       expect(unsignedTransaction).toEqual({
         chainType: request.amount.asset.chainType,
         id: expect.any(String),
         request,
         transactionRequest: expect.objectContaining({
-          data: erc20(request.amount.asset.address, provider).interface.encodeFunctionData(
-            'approve',
-            [request.spender, utils.parseEther(request.amount.toSignificantDigits())],
-          ),
+          data: erc20(request.amount.asset.address).interface.encodeFunctionData('approve', [
+            request.spender,
+            utils.parseEther(request.amount.toSignificantDigits()),
+          ]),
           gasLimit: expect.any(BigNumber),
           maxFeePerGas: expect.any(BigNumber),
           maxPriorityFeePerGas: expect.any(BigNumber),
@@ -82,38 +69,31 @@ describe(`Given an instance of the ${ApproveTransactionGateway.name}`, () => {
   });
 
   describe(`when creating an infinite approve transaction`, () => {
-    it(`should succeed with the expected ${UnsignedApproveTransaction.name}`, async () => {
+    it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
       const request = mockTokenAllowanceRequest({
         limit: TokenAllowanceLimit.INFINITE,
       });
-      const provider = new MockProvider({
-        ganacheOptions: {
-          chain: {
-            hardfork: 'london',
-          },
-        },
-      });
-      await mineNBlocks(provider, 20);
+      const provider = await mockJsonRpcProvider();
       const approveTransactionGateway = setupApproveTransactionGateway({
         request,
         provider,
       });
 
-      const unsignedTransaction = await approveTransactionGateway.createApproveTransaction(
+      const unsignedTransaction = await approveTransactionGateway.createUnsignedTransaction(
         request,
         wallet,
       );
 
-      expect(unsignedTransaction).toBeInstanceOf(UnsignedApproveTransaction);
+      expect(unsignedTransaction).toBeInstanceOf(UnsignedContractCallTransaction);
       expect(unsignedTransaction).toEqual({
         chainType: request.amount.asset.chainType,
         id: expect.any(String),
         request,
         transactionRequest: expect.objectContaining({
-          data: erc20(request.amount.asset.address, provider).interface.encodeFunctionData(
-            'approve',
-            [request.spender, constants.MaxUint256],
-          ),
+          data: erc20(request.amount.asset.address).interface.encodeFunctionData('approve', [
+            request.spender,
+            constants.MaxUint256,
+          ]),
           gasLimit: expect.any(BigNumber),
           maxFeePerGas: expect.any(BigNumber),
           maxPriorityFeePerGas: expect.any(BigNumber),

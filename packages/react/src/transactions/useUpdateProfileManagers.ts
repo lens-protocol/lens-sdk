@@ -6,8 +6,9 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { AtLeastOneOf, EvmAddress } from '@lens-protocol/shared-kernel';
+import { AtLeastOneOf, EvmAddress, invariant } from '@lens-protocol/shared-kernel';
 
+import { useSession } from '../authentication';
 import { useDeferredTask, UseDeferredTask } from '../helpers/tasks';
 import { useUpdateProfileManagersController } from './adapters/useUpdateProfileManagersController';
 
@@ -78,9 +79,15 @@ export function useUpdateProfileManagers(): UseDeferredTask<
   | TransactionError,
   UpdateProfileManagersArgs
 > {
+  const { data: session } = useSession();
   const updateProfileManagers = useUpdateProfileManagersController();
 
   return useDeferredTask(async (args) => {
+    invariant(
+      session?.authenticated,
+      'You must be authenticated to use this operation. Use `useLogin` hook to authenticate.',
+    );
+
     return updateProfileManagers({
       kind: TransactionKind.UPDATE_PROFILE_MANAGERS,
       ...args,

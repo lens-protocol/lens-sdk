@@ -1,6 +1,5 @@
 import { LensClient, development } from '@lens-protocol/client';
 
-import { getOwnedProfileId } from '../shared/getOwnedProfileId';
 import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
@@ -9,7 +8,14 @@ async function main() {
   });
 
   const wallet = setupWallet();
-  const profileId = await getOwnedProfileId(client, wallet.address);
+  const ownedProfiles = await client.profile.fetchAll({ where: { ownedBy: [wallet.address] } });
+
+  console.log(
+    `Owned profiles: `,
+    ownedProfiles.items.map((profile) => profile.id),
+  );
+
+  const profileId = ownedProfiles.items[0].id;
 
   const result = await client.profile.managers({
     for: profileId,

@@ -1,5 +1,38 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.19
+
+### Patch Changes
+
+- 4166f51f8: **feat:** Added experimental `useLazyProfiles` and `useLazyPublications` hooks
+- 5c429a0d7: **feat:** Added new invite hooks: `useInvitedProfiles`, `useWasWalletInvited`, `useLazyWasWalletInvited` and `useInviteWallets`
+- Updated dependencies [5c429a0d7]
+  - @lens-protocol/domain@0.11.0-alpha.14
+
+## 0.11.0-alpha.18
+
+### Patch Changes
+
+- 3bf2e33dc: **feat:** Added `useBlockedProfiles` hook
+  **chore:** Renamed `useMyBookmarks` to `useBookmarks`, deprecated `useMyBookmarks`
+  **feat:** Added authentication checks to many hooks that require it on the API side
+- c9b5c8d88: **feat:** seamless support for public collect/act in `useOpenAction`
+- Updated dependencies [d71f981cc]
+- Updated dependencies [c9b5c8d88]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.8
+  - @lens-protocol/domain@0.11.0-alpha.13
+
+## 0.11.0-alpha.17
+
+### Patch Changes
+
+- 2f5360796: **fix:** fixes silent token-refresh logic so that, if refresh token is still valid, a silent refresh of tokens takes places and failed requests are retried seamlessly
+- 3a9720968: **feat:** Added `isLensManager` to `ProfileManager` fragment
+- 5d95eccd2: **feat:** Added `useProfilesManaged` hook
+- Updated dependencies [2f5360796]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.7
+  - @lens-protocol/domain@0.11.0-alpha.12
+
 ## 0.11.0-alpha.16
 
 ### Minor Changes

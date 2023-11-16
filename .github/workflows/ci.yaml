@@ -2,9 +2,9 @@ name: "CI actions: Build, Lint and Test"
 
 on:
   push:
-    branches: [main, "lens-v2"]
+    branches: [main, "develop"]
   pull_request:
-    branches: [main, "lens-v2"]
+    branches: [main, "develop"]
 
 jobs:
   build:

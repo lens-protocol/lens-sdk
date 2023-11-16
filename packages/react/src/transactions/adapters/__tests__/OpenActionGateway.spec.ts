@@ -1,3 +1,6 @@
+/*
+ * @jest-environment node
+ */
 import {
   LensProfileManagerRelayErrorReasonType,
   SafeApolloClient,
@@ -13,7 +16,7 @@ import {
   mockLensProfileManagerRelayError,
   mockRelaySuccessFragment,
 } from '@lens-protocol/api-bindings/mocks';
-import { NativeTransaction } from '@lens-protocol/domain/entities';
+import { NativeTransaction, UnsignedTransaction } from '@lens-protocol/domain/entities';
 import {
   mockLegacyCollectRequest,
   mockMultirecipientCollectRequest,
@@ -22,6 +25,7 @@ import {
   mockPublicationId,
   mockSimpleCollectRequest,
   mockUnknownActionRequest,
+  mockWallet,
 } from '@lens-protocol/domain/mocks';
 import {
   BroadcastingError,
@@ -29,19 +33,34 @@ import {
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data } from '@lens-protocol/shared-kernel';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
+import { providers } from 'ethers';
+import { mock } from 'jest-mock-extended';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { mockIProviderFactory } from '../../../wallet/adapters/__helpers__/mocks';
+import { UnsignedContractCallTransaction } from '../AbstractContractCallGateway';
 import { OpenActionGateway } from '../OpenActionGateway';
 import {
   assertBroadcastingErrorWithReason,
   assertUnsignedProtocolCallCorrectness,
 } from '../__helpers__/assertions';
-import { mockITransactionFactory } from '../__helpers__/mocks';
+import { mockITransactionFactory, mockJsonRpcProvider } from '../__helpers__/mocks';
 
-function setupTestScenario({ apolloClient }: { apolloClient: SafeApolloClient }) {
+function setupTestScenario({
+  apolloClient,
+  provider = mock<providers.JsonRpcProvider>(),
+}: {
+  apolloClient: SafeApolloClient;
+  provider?: providers.JsonRpcProvider;
+}) {
   const transactionFactory = mockITransactionFactory();
 
-  const gateway = new OpenActionGateway(apolloClient, transactionFactory);
+  const providerFactory = mockIProviderFactory({
+    chainType: ChainType.POLYGON,
+    provider,
+  });
+
+  const gateway = new OpenActionGateway(apolloClient, transactionFactory, providerFactory);
 
   return { gateway };
 }
@@ -385,6 +404,72 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
           assertBroadcastingErrorWithReason(result, reason);
         },
       );
+    });
+  });
+
+  describe.each([
+    {
+      description: 'public SimpleCollectRequest',
+      request: mockSimpleCollectRequest({ publicationId, referrers, public: true }),
+      expectedRequest: {
+        for: publicationId,
+        actOn: {
+          simpleCollectOpenAction: true,
+        },
+        referrers: expectedOnChainReferrers,
+      },
+    },
+    {
+      description: 'public MultirecipientCollectRequest',
+      request: mockMultirecipientCollectRequest({ publicationId, referrers, public: true }),
+      expectedRequest: {
+        for: publicationId,
+        actOn: {
+          multirecipientCollectOpenAction: true,
+        },
+        referrers: expectedOnChainReferrers,
+      },
+    },
+    {
+      description: 'public UnknownActionRequest',
+      request: mockUnknownActionRequest({
+        publicationId,
+        address: unknownActionContractAddress,
+        data: unknownActionData,
+        public: true,
+      }),
+      expectedRequest: {
+        for: publicationId,
+        actOn: {
+          unknownOpenAction: {
+            address: unknownActionContractAddress,
+            data: unknownActionData,
+          },
+        },
+      },
+    },
+  ])(`and a $description`, ({ request, expectedRequest }) => {
+    describe(`when creating an ${UnsignedTransaction.name}<T>`, () => {
+      const wallet = mockWallet();
+      const data = mockCreateActOnOpenActionTypedDataData();
+
+      it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+        const provider = await mockJsonRpcProvider();
+
+        const apolloClient = mockLensApolloClient([
+          mockCreateActOnOpenActionTypedDataResponse({
+            variables: {
+              request: expectedRequest,
+            },
+            data,
+          }),
+        ]);
+        const { gateway } = setupTestScenario({ apolloClient, provider });
+
+        const unsignedTransaction = await gateway.createUnsignedTransaction(request, wallet);
+
+        expect(unsignedTransaction).toBeInstanceOf(UnsignedContractCallTransaction);
+      });
     });
   });
 });
