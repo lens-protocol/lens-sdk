@@ -1,4 +1,4 @@
 module.exports = {
   root: true,
-  extends: '@react-native',
+  extends: ['@lens-protocol', '@react-native'],
 };
