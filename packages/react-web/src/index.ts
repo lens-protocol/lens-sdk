@@ -81,5 +81,3 @@ export type { LensConfig, LensProviderProps };
 
 // Shadows the types from @lens-protocol/react so that they cannot be used nor surfaced in reference docs for @lens-protocol/react-web
 export type EncryptionConfig = never;
-export type IStorageProvider = never;
-export type IObservableStorageProvider = never;

@@ -1,8 +1,8 @@
-# `@lens-protocol/react-web`
+# `@lens-protocol/react-native`
 
-The official Lens Protocol React bindings for web applications.
+The official Lens Protocol React bindings for React Native.
 
-This package enables you to build web applications on top of the Lens Protocol using React.
+This package enables you to build mobile applications on top of the Lens Protocol using React Native.
 
 ## Documentation
 

@@ -62,6 +62,7 @@
       "packages/domain",
       "packages/gated-content",
       "packages/react-web",
+      "packages/react-native",
       "packages/react",
       "packages/shared-kernel",
       "packages/storage",
