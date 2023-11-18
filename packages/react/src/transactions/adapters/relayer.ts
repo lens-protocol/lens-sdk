@@ -7,15 +7,12 @@ import {
 import {
   BroadcastingError,
   BroadcastingErrorReason,
-  ProtocolTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { failure, Failure, InvariantError } from '@lens-protocol/shared-kernel';
 
-import { SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
-
 export function handleRelayError(
   error: RelayError | LensProfileManagerRelayError,
-  _fallback?: SelfFundedProtocolTransactionRequest<ProtocolTransactionRequest>,
+  _?: unknown,
 ): Failure<BroadcastingError> {
   switch (error.reason) {
     case RelayErrorReasonType.AppNotAllowed:

@@ -66,15 +66,10 @@ export type OpenActionParams = CollectParams | UnknownActionParams;
 
 export type OpenActionContext<TAction extends OpenActionParams = OpenActionParams> = {
   action: TAction;
-} & (
-  | {
-      public: true;
-    }
-  | {
-      public: false;
-      delegate: boolean;
-    }
-);
+  public: boolean;
+  signless: boolean;
+  sponsored: boolean;
+};
 
 function resolveCollectRequestFor(
   publication: AnyPublication,
@@ -104,7 +99,9 @@ function resolveCollectRequestFor(
           amount: erc20Amount({ from: settings.amount }),
           contractAddress: settings.contract.address,
         },
-        delegate: context.delegate,
+        public: false,
+        signless: context.signless,
+        sponsored: context.sponsored,
       };
 
     case 'LegacyFreeCollectModuleSettings':
@@ -114,7 +111,9 @@ function resolveCollectRequestFor(
         type: AllOpenActionType.LEGACY_COLLECT,
         publicationId: collectable.id,
         referrer: publication !== collectable ? publication.id : undefined,
-        delegate: context.delegate,
+        public: false,
+        signless: context.signless,
+        sponsored: context.sponsored,
       };
 
     case 'SimpleCollectOpenActionSettings':
@@ -132,8 +131,9 @@ function resolveCollectRequestFor(
               amount,
               contractAddress: settings.contract.address,
             },
-        delegate: context.public === false && context.delegate,
+        signless: context.signless,
         public: context.public,
+        sponsored: context.sponsored,
       };
 
     case 'MultirecipientFeeCollectOpenActionSettings':
@@ -148,6 +148,8 @@ function resolveCollectRequestFor(
           contractAddress: settings.contract.address,
         },
         public: context.public,
+        signless: context.signless,
+        sponsored: context.sponsored,
       };
 
     default:
@@ -183,8 +185,9 @@ function resolveUnknownRequestFor(
     publicationId: target.id,
     address: settings.contract.address,
     data: context.action.data,
-    delegate: context.public === false && context.delegate,
     public: context.public,
+    signless: context.signless,
+    sponsored: context.sponsored,
   };
 }
 

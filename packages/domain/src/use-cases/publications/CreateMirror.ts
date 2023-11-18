@@ -4,7 +4,7 @@ import { MomokaCapable } from '../transactions/MomokaCapable';
 export type CreateMirrorRequest = {
   mirrorOn: PublicationId;
   kind: TransactionKind.MIRROR_PUBLICATION;
-  delegate: boolean;
+  signless: boolean;
 };
 
 export class CreateMirror extends MomokaCapable<CreateMirrorRequest> {

@@ -10,7 +10,7 @@ import { ITransactionResultPresenter } from './ITransactionResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
 type WithDelegateFlag<T extends ProtocolTransactionRequestModel> = T & {
-  delegate: boolean;
+  signless: boolean;
 };
 
 export type DelegableProtocolTransactionRequestModel =
@@ -41,7 +41,7 @@ export class DelegableSigning<
   ) {}
 
   async execute(request: TDelegable): Promise<void> {
-    if (request.delegate) {
+    if (request.signless) {
       const result = await this.transactionGateway.createDelegatedTransaction(request);
 
       if (result.isFailure()) {

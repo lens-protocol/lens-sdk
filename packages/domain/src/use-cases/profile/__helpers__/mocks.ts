@@ -81,7 +81,7 @@ export function mockUpdateFollowPolicyRequest(
 ): UpdateFollowPolicyRequest {
   return {
     policy: mockChargeFollowConfig(),
-    delegate: true,
+    signless: true,
     ...overrides,
     kind: TransactionKind.UPDATE_FOLLOW_POLICY,
   };
@@ -91,7 +91,7 @@ export function mockSetProfileMetadataRequest(
   overrides?: Partial<SetProfileMetadataRequest>,
 ): SetProfileMetadataRequest {
   return {
-    delegate: true,
+    signless: true,
     metadataURI: faker.internet.url(),
     ...overrides,
     kind: TransactionKind.UPDATE_PROFILE_DETAILS,
@@ -111,7 +111,7 @@ export function mockUpdateProfileManagersRequest(
 export function mockFreeFollowRequest(overrides?: Partial<FreeFollowRequest>): FreeFollowRequest {
   return {
     profileId: mockProfileId(),
-    delegate: true,
+    signless: true,
     ...overrides,
     kind: TransactionKind.FOLLOW_PROFILE,
   };
@@ -133,7 +133,7 @@ export function mockUnfollowRequest(): UnfollowRequest {
   return {
     profileId: mockProfileId(),
     kind: TransactionKind.UNFOLLOW_PROFILE,
-    delegate: true,
+    signless: true,
   };
 }
 
@@ -181,7 +181,7 @@ export function mockLinkHandleRequest(overrides?: Partial<LinkHandleRequest>): L
   return {
     fullHandle: mockFullHandle(),
     profileId: mockProfileId(),
-    delegate: true,
+    signless: true,
     ...overrides,
     kind: TransactionKind.LINK_HANDLE,
   };
@@ -193,7 +193,7 @@ export function mockUnlinkHandleRequest(
   return {
     fullHandle: mockFullHandle(),
     profileId: mockProfileId(),
-    delegate: true,
+    signless: true,
     ...overrides,
     kind: TransactionKind.UNLINK_HANDLE,
   };
@@ -210,7 +210,7 @@ export function mockBlockProfilesRequest(
   overrides?: Partial<BlockProfilesRequest>,
 ): BlockProfilesRequest {
   return {
-    delegate: true,
+    signless: true,
     profileIds: [mockProfileId()],
     ...overrides,
     kind: TransactionKind.BLOCK_PROFILE,
@@ -221,7 +221,7 @@ export function mockUnblockProfilesRequest(
   overrides?: Partial<UnblockProfilesRequest>,
 ): UnblockProfilesRequest {
   return {
-    delegate: true,
+    signless: true,
     profileIds: [mockProfileId()],
     ...overrides,
     kind: TransactionKind.UNBLOCK_PROFILE,
