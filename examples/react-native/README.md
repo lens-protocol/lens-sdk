@@ -11,8 +11,6 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 After having setup the Lens monorepo (see [main README](../../README.md#setup)), install the dependencies for this example:
 
 ```bash
-cd examples/react-native
-
 pnpm install
 ```
 
@@ -37,6 +35,14 @@ pnpm run android
 ```
 
 ### For iOS
+
+The first time you run this example on iOS, you will need to install the _CocoaPods_ dependencies. To do so, run the following command:
+
+```bash
+pnpm run pod:install
+```
+
+then run the following command to start the app:
 
 ```bash
 pnpm run ios

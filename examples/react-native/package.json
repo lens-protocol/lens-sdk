@@ -6,6 +6,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "lint": "eslint .",
+    "pod:install": "cd ios && bundle exec pod install && cd ..",
     "start": "react-native start",
     "test": "echo \"Not in scope for this example\""
   },
