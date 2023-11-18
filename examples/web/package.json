@@ -27,7 +27,7 @@
     "react-cool-inview": "^3.0.1",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.0",
-    "react-router-dom": "^6.8.1",
+    "react-router-dom": "^6.19.0",
     "readable-web-to-node-stream": "^3.0.2",
     "viem": "^1.16.6",
     "wagmi": "^1.4.4"

@@ -31,6 +31,9 @@
     "tsc": "tsc --noEmit"
   },
   "license": "MIT",
+  "dependencies": {
+    "@lens-protocol/shared-kernel": "workspace:*"
+  },
   "devDependencies": {
     "@babel/core": "^7.20.12",
     "@babel/preset-env": "^7.20.2",
@@ -55,9 +58,6 @@
     "wagmi": "^1.1.0"
   },
   "prettier": "@lens-protocol/prettier-config",
-  "dependencies": {
-    "@lens-protocol/shared-kernel": "workspace:*"
-  },
   "babel": {
     "presets": [
       "@babel/preset-env",
