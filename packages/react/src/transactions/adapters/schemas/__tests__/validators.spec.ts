@@ -20,13 +20,13 @@ describe(`when testing the "validateUpdateFollowPolicyRequest"`, () => {
         signless: true,
       }),
     ).toThrowErrorMatchingInlineSnapshot(`
-        "fix the following issues
-        · "policy.amount": expected to match one of the following groups:
-        		"policy.amount": Expected object, received number
-        	OR:
-        		"policy.amount": Input not instance of Amount
-        · "policy.recipient": Required
-      `);
+      "fix the following issues
+      · "policy.amount": expected to match one of the following groups:
+      		"policy.amount": Expected object, received number
+      	OR:
+      		"policy.amount": Input not instance of Amount
+      · "policy.recipient": Required"
+    `);
   });
 });
 

@@ -58,7 +58,7 @@ export type OpenActionArgs = {
    * should be paid by the authenticated wallet.
    *
    * Although the request is marked as sponsored there are scenarios where the
-   * sponsorship will not be denied. See {@link BroadcastingError} with:
+   * sponsorship will be denied. See {@link BroadcastingError} with:
    * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
    * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
    *
