@@ -88,7 +88,7 @@
     "ts-jest": "^29.0.5",
     "typescript": "^5.2.2",
     "wait-for-expect": "^3.0.2",
-    "zod": "^3.22.0"
+    "zod": "^3.22.4"
   },
   "peerDependencies": {
     "@ethersproject/address": "^5.7.0",
