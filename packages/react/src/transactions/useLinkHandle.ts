@@ -63,7 +63,7 @@ export function useLinkHandle(): UseDeferredTask<
       kind: TransactionKind.LINK_HANDLE,
       fullHandle: args.handle.fullHandle,
       profileId: session.profile.id,
-      delegate: session.profile.signless,
+      signless: session.profile.signless,
     });
   });
 }

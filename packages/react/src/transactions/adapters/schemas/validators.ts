@@ -6,17 +6,14 @@ import {
   UnlinkHandleRequest,
   LinkHandleRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { TokenAllowanceRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { formatZodError } from '@lens-protocol/metadata';
 import { never } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
-import { TokenAllowanceRequestSchema } from './erc20';
 import {
   FollowRequestSchema,
   UnfollowRequestSchema,
   UpdateFollowPolicyRequestSchema,
-  SetProfileMetadataRequestSchema,
   UpdateProfileManagersRequestSchema,
   LinkHandleRequestSchema,
   UnlinkHandleRequestSchema,
@@ -36,14 +33,8 @@ function createRequestValidator<T extends z.ZodType<unknown>>(schema: T) {
   };
 }
 
-export const validateTokenAllowanceRequest: Validator<TokenAllowanceRequest> =
-  createRequestValidator(TokenAllowanceRequestSchema);
-
 export const validateUpdateFollowPolicyRequest: Validator<UpdateFollowPolicyRequest> =
   createRequestValidator(UpdateFollowPolicyRequestSchema);
-
-export const validateSetProfileMetadataRequest: Validator<SetProfileMetadataRequest> =
-  createRequestValidator(SetProfileMetadataRequestSchema);
 
 export const validateUpdateProfileManagersRequest: Validator<SetProfileMetadataRequest> =
   createRequestValidator(UpdateProfileManagersRequestSchema);

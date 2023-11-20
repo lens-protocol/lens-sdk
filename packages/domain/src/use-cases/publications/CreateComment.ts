@@ -13,7 +13,7 @@ export type CreateCommentRequest = {
   /**
    * Whether is possible to delegate the publication signing to the profile's dispatcher.
    */
-  delegate: boolean;
+  signless: boolean;
   /**
    * The publication ID to comment on.
    */

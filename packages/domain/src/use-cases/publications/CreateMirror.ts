@@ -15,7 +15,7 @@ export type CreateMirrorRequest = {
   /**
    * Whether is possible to delegate the publication signing to the profile's chosen profile manager.
    */
-  delegate: boolean;
+  signless: boolean;
   /**
    * The metadata URI.
    */

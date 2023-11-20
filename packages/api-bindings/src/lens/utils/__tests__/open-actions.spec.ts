@@ -21,6 +21,23 @@ const fee = mockDaiAmount(42);
 const contractAddress = mockEvmAddress();
 
 describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
+  describe('when trying to act on a publication configured w/ LegacyRevertCollectModuleSettings', () => {
+    const publication = mockPostFragment({
+      openActionModules: [mockLegacyRevertCollectModuleSettingsFragment()],
+    });
+
+    it(`should throw an ${InvariantError.name}`, () => {
+      expect(() =>
+        resolveOpenActionRequestFor(publication, {
+          action: { kind: OpenActionKind.COLLECT },
+          public: false,
+          signless: true,
+          sponsored: true,
+        }),
+      ).toThrow(InvariantError);
+    });
+  });
+
   describe.each([
     {
       settings: mockLegacyAaveFeeCollectModuleSettingsFragment({
@@ -43,74 +60,73 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
         type: AllOpenActionType.LEGACY_COLLECT,
       },
     },
-  ])(`and the $settings.__typename`, ({ expected, settings }) => {
-    describe(`when invoked with a PrimaryPublication configured with it`, () => {
-      const publication = mockPostFragment({
-        openActionModules: [settings],
-      });
+  ])(`when performing a legacy collect`, ({ expected, settings }) => {
+    const expectedRequest = 'LegacyCollectRequest';
+    const publication = mockPostFragment({
+      openActionModules: [settings],
+    });
 
-      it(`should return the expected LegacyCollectRequest`, () => {
+    describe(`on a PrimaryPublication`, () => {
+      it(`should support signless ${expectedRequest}`, () => {
         const result = resolveOpenActionRequestFor(publication, {
           action: { kind: OpenActionKind.COLLECT },
-          delegate: true,
           public: false,
+          signless: true,
+          sponsored: true,
         });
 
         expect(result).toMatchObject({
           publicationId: publication.id,
           referrer: undefined,
-          delegate: true,
+          signless: true,
+          sponsored: true,
         });
         expect(result).toMatchObject(expected);
       });
 
-      it(`should throw an ${InvariantError.name} if attempted to execute as public act`, () => {
+      it(`should support non-sponsored ${expectedRequest}`, () => {
+        const result = resolveOpenActionRequestFor(publication, {
+          action: { kind: OpenActionKind.COLLECT },
+          public: false,
+          signless: true,
+          sponsored: false,
+        });
+
+        expect(result).toMatchObject({
+          publicationId: publication.id,
+          sponsored: false,
+        });
+      });
+
+      it(`should throw an ${InvariantError.name} if attempted to execute as public ${expectedRequest}`, () => {
         expect(() =>
           resolveOpenActionRequestFor(publication, {
             action: { kind: OpenActionKind.COLLECT },
             public: true,
+            signless: true,
+            sponsored: true,
           }),
         ).toThrow(InvariantError);
       });
     });
 
-    describe(`when invoked with a Mirror of a publication configured with it`, () => {
+    describe(`on a Mirror`, () => {
       const mirror = mockMirrorFragment({
-        mirrorOn: mockPostFragment({
-          openActionModules: [settings],
-        }),
+        mirrorOn: publication,
       });
 
-      it(`should collect the original Publication Id passing the Mirror Id as the 'referrer'`, () => {
+      it(`should use the Mirror ID as the "referrer" for the ${expectedRequest}`, () => {
         const result = resolveOpenActionRequestFor(mirror, {
           action: { kind: OpenActionKind.COLLECT },
-          delegate: true,
           public: false,
+          signless: true,
+          sponsored: true,
         });
 
         expect(result).toMatchObject({
           publicationId: mirror.mirrorOn.id,
           referrer: mirror.id,
-          delegate: true,
         });
-      });
-    });
-  });
-
-  describe('and the LegacyRevertCollectModuleSettings', () => {
-    describe('when called for a publication setup with it', () => {
-      const publication = mockPostFragment({
-        openActionModules: [mockLegacyRevertCollectModuleSettingsFragment()],
-      });
-
-      it(`should throw an ${InvariantError.name}`, () => {
-        expect(() =>
-          resolveOpenActionRequestFor(publication, {
-            action: { kind: OpenActionKind.COLLECT },
-            delegate: false,
-            public: false,
-          }),
-        ).toThrow(InvariantError);
       });
     });
   });
@@ -148,34 +164,51 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
       },
       expectedRequest: 'MultirecipientCollectRequest',
     },
-  ])(`and the $settings.__typename`, ({ expected, expectedRequest, settings }) => {
-    describe(`when invoked with a PrimaryPublication configured with it`, () => {
-      it(`should return the expected ${expectedRequest}`, () => {
-        const publication = mockPostFragment({
-          openActionModules: [settings],
-        });
+  ])(`when performing a Collect Open Action`, ({ expected, expectedRequest, settings }) => {
+    const publication = mockPostFragment({
+      openActionModules: [settings],
+    });
+
+    describe(`on a PrimaryPublication`, () => {
+      it(`should support signless ${expectedRequest}`, () => {
         const referrers = [mockPublicationId(), mockProfileId()];
         const result = resolveOpenActionRequestFor(publication, {
           action: { kind: OpenActionKind.COLLECT, referrers },
-          delegate: true,
           public: false,
+          signless: true,
+          sponsored: true,
         });
 
         expect(result).toMatchObject({
           publicationId: publication.id,
           referrers,
+          signless: true,
+          sponsored: true,
         });
         expect(result).toMatchObject(expected);
       });
 
-      it(`should support public ${expectedRequest}`, () => {
-        const publication = mockPostFragment({
-          openActionModules: [settings],
+      it(`should support non-sponsored ${expectedRequest}`, () => {
+        const result = resolveOpenActionRequestFor(publication, {
+          action: { kind: OpenActionKind.COLLECT },
+          public: false,
+          signless: true,
+          sponsored: false,
         });
+
+        expect(result).toMatchObject({
+          publicationId: publication.id,
+          sponsored: false,
+        });
+      });
+
+      it(`should support public ${expectedRequest}`, () => {
         const referrers = [mockPublicationId(), mockProfileId()];
         const result = resolveOpenActionRequestFor(publication, {
           action: { kind: OpenActionKind.COLLECT, referrers },
           public: true,
+          signless: true,
+          sponsored: true,
         });
 
         expect(result).toMatchObject({
@@ -189,18 +222,17 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
       });
     });
 
-    describe(`when invoked with a Mirror of a publication configured with it`, () => {
-      it('should default the `referrers` to the mirror ID', () => {
+    describe(`on a Mirror`, () => {
+      it(`should use the Mirror ID as default "referrers" for the ${expectedRequest}`, () => {
         const mirror = mockMirrorFragment({
-          mirrorOn: mockPostFragment({
-            openActionModules: [settings],
-          }),
+          mirrorOn: publication,
         });
 
         const result = resolveOpenActionRequestFor(mirror, {
           action: { kind: OpenActionKind.COLLECT },
-          delegate: true,
+          signless: true,
           public: false,
+          sponsored: true,
         });
 
         expect(result).toMatchObject({
@@ -211,84 +243,91 @@ describe(`Given the ${resolveOpenActionRequestFor.name} predicate`, () => {
     });
   });
 
-  describe(`and the UnknownOpenActionModuleSettings`, () => {
+  describe(`when performing an Unknown Open Action`, () => {
     const settings = mockUnknownOpenActionModuleSettingsFragment({
       contract: mockNetworkAddressFragment({
         address: contractAddress,
       }),
     });
+    const action = {
+      kind: OpenActionKind.UNKNOWN,
+      address: settings.contract.address,
+      data: '0x' as Data,
+    };
+    const expectedRequest = 'UnknownOpenActionRequest';
+    const publication = mockPostFragment({
+      openActionModules: [settings],
+    });
 
-    describe(`when invoked with a PrimaryPublication configured with it`, () => {
-      it(`should return the expected UnknownActionRequest`, () => {
-        const publication = mockPostFragment({
-          openActionModules: [settings],
-        });
-        const result = resolveOpenActionRequestFor(publication, {
-          action: {
-            kind: OpenActionKind.UNKNOWN,
-            address: settings.contract.address,
-            data: '0x' as Data,
-          },
-          delegate: true,
-          public: false,
-        });
-
-        expect(result).toMatchObject({
-          type: AllOpenActionType.UNKNOWN_OPEN_ACTION,
-          publicationId: publication.id,
-          address: settings.contract.address,
-          data: '0x',
-          delegate: true,
-          public: false,
-        });
+    it(`should support signless ${expectedRequest}`, () => {
+      const result = resolveOpenActionRequestFor(publication, {
+        action,
+        public: false,
+        signless: true,
+        sponsored: true,
       });
 
-      it(`should support public UnknownActionRequest`, () => {
-        const publication = mockPostFragment({
-          openActionModules: [settings],
-        });
-        const result = resolveOpenActionRequestFor(publication, {
-          action: {
-            kind: OpenActionKind.UNKNOWN,
-            address: settings.contract.address,
-            data: '0x' as Data,
-          },
-          public: true,
-        });
+      expect(result).toMatchObject({
+        type: AllOpenActionType.UNKNOWN_OPEN_ACTION,
+        publicationId: publication.id,
+        address: settings.contract.address,
+        data: '0x',
+        public: false,
+        signless: true,
+        sponsored: true,
+      });
+    });
 
-        expect(result).toMatchObject({
-          type: AllOpenActionType.UNKNOWN_OPEN_ACTION,
-          publicationId: publication.id,
-          address: settings.contract.address,
-          data: '0x',
-          delegate: false,
-          public: true,
-        });
+    it(`should support non-sponsored ${expectedRequest}`, () => {
+      const result = resolveOpenActionRequestFor(publication, {
+        action,
+        public: false,
+        signless: false,
+        sponsored: false,
       });
 
-      it('should work among many open action modules', () => {
-        const publication = mockPostFragment({
-          openActionModules: [
-            mockSimpleCollectOpenActionSettingsFragment(),
-            mockUnknownOpenActionModuleSettingsFragment(),
-            mockUnknownOpenActionModuleSettingsFragment(),
-            settings,
-          ],
-        });
-        const result = resolveOpenActionRequestFor(publication, {
-          action: {
-            kind: OpenActionKind.UNKNOWN,
-            address: settings.contract.address,
-            data: '0x' as Data,
-          },
-          delegate: true,
-          public: false,
-        });
+      expect(result).toMatchObject({
+        publicationId: publication.id,
+        sponsored: false,
+      });
+    });
 
-        expect(result).toMatchObject({
-          type: AllOpenActionType.UNKNOWN_OPEN_ACTION,
-          address: settings.contract.address,
-        });
+    it(`should support public ${expectedRequest}`, () => {
+      const result = resolveOpenActionRequestFor(publication, {
+        action,
+        public: true,
+        sponsored: true,
+        signless: true,
+      });
+
+      expect(result).toMatchObject({
+        type: AllOpenActionType.UNKNOWN_OPEN_ACTION,
+        publicationId: publication.id,
+        address: settings.contract.address,
+        data: '0x',
+        public: true,
+      });
+    });
+
+    it(`should figure out the correct ${expectedRequest} among many Open Action modules`, () => {
+      const publication = mockPostFragment({
+        openActionModules: [
+          mockSimpleCollectOpenActionSettingsFragment(),
+          mockUnknownOpenActionModuleSettingsFragment(),
+          mockUnknownOpenActionModuleSettingsFragment(),
+          settings,
+        ],
+      });
+      const result = resolveOpenActionRequestFor(publication, {
+        action,
+        public: false,
+        signless: true,
+        sponsored: true,
+      });
+
+      expect(result).toMatchObject({
+        type: AllOpenActionType.UNKNOWN_OPEN_ACTION,
+        address: settings.contract.address,
       });
     });
   });

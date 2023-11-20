@@ -37,8 +37,8 @@ function TestScenario({ id }: { id: PublicationId }) {
     return <ErrorMessage error={error} />;
   }
 
-  const collect = async () => {
-    const result = await execute({ publication });
+  const collect = async (sponsored?: boolean) => {
+    const result = await execute({ publication, sponsored });
 
     if (result.isFailure()) {
       toast.error(result.error.message);
@@ -60,17 +60,35 @@ function TestScenario({ id }: { id: PublicationId }) {
   return (
     <div>
       <PublicationCard publication={publication} />
-      <RequireProfileSession>
-        <button onClick={collect} disabled={publication.operations.canCollect === TriStateValue.No}>
-          Collect w/ Profile
-        </button>
-      </RequireProfileSession>
-      &nbsp;OR&nbsp;
-      <RequireWalletSession>
-        <button onClick={collect} disabled={publication.operations.canCollect === TriStateValue.No}>
-          Collect w/ Wallet
-        </button>
-      </RequireWalletSession>
+      <div>
+        <RequireProfileSession message="Login with a profile to explore more options">
+          <p>As Lens Profile you can perform:</p>
+          <button
+            onClick={() => collect(false)}
+            disabled={publication.operations.canCollect === TriStateValue.No}
+          >
+            Self-funded collect
+          </button>
+          &nbsp;
+          <button
+            onClick={() => collect(true)}
+            disabled={publication.operations.canCollect === TriStateValue.No}
+          >
+            Gasless collect
+          </button>
+        </RequireProfileSession>
+      </div>
+      <div>
+        <RequireWalletSession message="Login with just a wallet to explore more options">
+          <p>As wallet you can perform:</p>
+          <button
+            onClick={() => collect()}
+            disabled={publication.operations.canCollect === TriStateValue.No}
+          >
+            Public collect
+          </button>
+        </RequireWalletSession>
+      </div>
       <div className="notice">
         <p>
           At the time of this example writing there is a known API issue resulting in{' '}

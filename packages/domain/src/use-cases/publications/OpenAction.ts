@@ -12,6 +12,7 @@ import { DelegableSigning } from '../transactions/DelegableSigning';
 import { ITransactionResultPresenter } from '../transactions/ITransactionResultPresenter';
 import { PaidTransaction } from '../transactions/PaidTransaction';
 import { SignedOnChain } from '../transactions/SignedOnChain';
+import { SponsorshipReady } from '../transactions/SponsorshipReady';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -33,23 +34,15 @@ export type CollectFee = {
 export type LegacyCollectRequest = {
   kind: TransactionKind.ACT_ON_PUBLICATION;
   type: AllOpenActionType.LEGACY_COLLECT;
-  delegate: boolean;
   publicationId: PublicationId;
+  public: false;
+  signless: boolean;
+  sponsored: boolean;
   referrer?: PublicationId;
   fee?: CollectFee;
 };
 
 export type Referrers = ReadonlyArray<PublicationId | ProfileId>;
-
-export type SimpleCollectRequest = {
-  kind: TransactionKind.ACT_ON_PUBLICATION;
-  type: AllOpenActionType.SIMPLE_COLLECT;
-  delegate: boolean;
-  publicationId: PublicationId;
-  referrers?: Referrers;
-  fee?: CollectFee;
-  public: boolean;
-};
 
 export type MultirecipientCollectRequest = {
   kind: TransactionKind.ACT_ON_PUBLICATION;
@@ -58,22 +51,36 @@ export type MultirecipientCollectRequest = {
   referrers?: Referrers;
   fee: CollectFee;
   public: boolean;
+  signless: boolean;
+  sponsored: boolean;
+};
+
+export type SimpleCollectRequest = {
+  kind: TransactionKind.ACT_ON_PUBLICATION;
+  type: AllOpenActionType.SIMPLE_COLLECT;
+  publicationId: PublicationId;
+  referrers?: Referrers;
+  fee?: CollectFee;
+  public: boolean;
+  signless: boolean;
+  sponsored: boolean;
 };
 
 export type UnknownActionRequest = {
   kind: TransactionKind.ACT_ON_PUBLICATION;
   type: AllOpenActionType.UNKNOWN_OPEN_ACTION;
-  delegate: boolean;
   publicationId: PublicationId;
   address: EvmAddress;
   data: Data;
   public: boolean;
+  signless: boolean;
+  sponsored: boolean;
 };
 
 export type CollectRequest =
   | LegacyCollectRequest
-  | SimpleCollectRequest
-  | MultirecipientCollectRequest;
+  | MultirecipientCollectRequest
+  | SimpleCollectRequest;
 
 export type OpenActionRequest = CollectRequest | UnknownActionRequest;
 
@@ -111,20 +118,22 @@ export type IOpenActionPresenter = ITransactionResultPresenter<
   | WalletConnectionError
 >;
 
-export class OpenAction {
+export class OpenAction extends SponsorshipReady<OpenActionRequest> {
   constructor(
     private readonly tokenAvailability: TokenAvailability,
     private readonly signedExecution: SignedOnChain<OpenActionRequest>,
     private readonly delegableExecution: DelegableSigning<OpenActionRequest>,
     private readonly paidExecution: PaidTransaction<OpenActionRequest>,
     private readonly presenter: IOpenActionPresenter,
-  ) {}
+  ) {
+    super();
+  }
 
-  async execute(request: OpenActionRequest) {
-    if (isPublicOpenActionRequest(request)) {
-      await this.paidExecution.execute(request);
-      return;
-    }
+  protected async charged(request: OpenActionRequest): Promise<void> {
+    await this.paidExecution.execute(request);
+  }
+
+  protected async sponsored(request: OpenActionRequest): Promise<void> {
     if (isPaidCollectRequest(request)) {
       const result = await this.tokenAvailability.checkAvailability({
         amount: request.fee.amount,
@@ -136,8 +145,16 @@ export class OpenAction {
         return;
       }
 
+      if (isPublicOpenActionRequest(request)) {
+        return this.charged(request);
+      }
+
       await this.signedExecution.execute(request);
       return;
+    }
+
+    if (isPublicOpenActionRequest(request)) {
+      return this.charged(request);
     }
 
     await this.delegableExecution.execute(request);

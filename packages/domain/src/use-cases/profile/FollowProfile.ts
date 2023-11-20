@@ -27,7 +27,7 @@ export type FollowRequestFee = {
 export type FreeFollowRequest = {
   profileId: ProfileId;
   kind: TransactionKind.FOLLOW_PROFILE;
-  delegate: boolean;
+  signless: boolean;
 };
 
 export type PaidFollowRequest = {

@@ -57,12 +57,7 @@ export type WalletDataSchema = z.infer<typeof WalletDataSchema>;
 export class UnsignedProtocolCall<T extends ProtocolTransactionRequestModel>
   implements IUnsignedProtocolCall<T>
 {
-  private constructor(
-    readonly id: string,
-    readonly request: T,
-    readonly typedData: TypedData,
-    readonly fallback: SelfFundedProtocolTransactionRequest<T>,
-  ) {}
+  private constructor(readonly id: string, readonly request: T, readonly typedData: TypedData) {}
 
   get nonce() {
     invariant(typeof this.typedData.message.nonce === 'number', 'Nonce is not defined');
@@ -73,14 +68,13 @@ export class UnsignedProtocolCall<T extends ProtocolTransactionRequestModel>
     id,
     request,
     typedData,
-    fallback,
   }: {
     id: string;
     request: T;
     typedData: TypedData;
-    fallback: SelfFundedProtocolTransactionRequest<T>;
+    fallback?: SelfFundedProtocolTransactionRequest<T>; // TODO remove fallback
   }): UnsignedProtocolCall<T> {
-    return new UnsignedProtocolCall(id, request, typedData, fallback);
+    return new UnsignedProtocolCall(id, request, typedData);
   }
 }
 
@@ -92,7 +86,6 @@ export class SignedProtocolCall<T extends ProtocolTransactionRequestModel>
     readonly request: T,
     readonly signature: Signature,
     readonly nonce: number,
-    readonly fallback: SelfFundedProtocolTransactionRequest<T>,
   ) {}
 
   static create<T extends ProtocolTransactionRequestModel>({
@@ -107,7 +100,6 @@ export class SignedProtocolCall<T extends ProtocolTransactionRequestModel>
       unsignedCall.request,
       signature as Signature,
       unsignedCall.nonce,
-      unsignedCall.fallback,
     );
   }
 }

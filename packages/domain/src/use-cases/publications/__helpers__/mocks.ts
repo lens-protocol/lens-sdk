@@ -27,7 +27,7 @@ export function mockCreateMirrorRequest(
 ): CreateMirrorRequest {
   return {
     mirrorOn: mockPublicationId(),
-    delegate: false,
+    signless: false,
     metadata: faker.internet.url() as URI,
     ...overrides,
     kind: TransactionKind.MIRROR_PUBLICATION,
@@ -36,7 +36,7 @@ export function mockCreateMirrorRequest(
 
 export function mockCreatePostRequest(overrides?: Partial<CreatePostRequest>): CreatePostRequest {
   return {
-    delegate: false,
+    signless: false,
     metadata: faker.internet.url() as URI,
     actions: [mockUnknownOpenActionConfig()],
     reference: mockAnyoneReferencePolicyConfig(),
@@ -49,7 +49,7 @@ export function mockCreateCommentRequest(
   overrides?: Partial<CreateCommentRequest>,
 ): CreateCommentRequest {
   return {
-    delegate: false,
+    signless: false,
     metadata: faker.internet.url() as URI,
     actions: [mockUnknownOpenActionConfig()],
     reference: mockAnyoneReferencePolicyConfig(),
@@ -63,7 +63,7 @@ export function mockCreateQuoteRequest(
   overrides?: Partial<CreateQuoteRequest>,
 ): CreateQuoteRequest {
   return {
-    delegate: false,
+    signless: false,
     metadata: faker.internet.url() as URI,
     actions: [mockUnknownOpenActionConfig()],
     reference: mockAnyoneReferencePolicyConfig(),
@@ -128,8 +128,10 @@ export function mockLegacyCollectRequest(
   overrides?: Partial<LegacyCollectRequest>,
 ): LegacyCollectRequest {
   return {
-    delegate: true,
     publicationId: mockPublicationId(),
+    public: false,
+    signless: true,
+    sponsored: true,
     ...overrides,
     type: AllOpenActionType.LEGACY_COLLECT,
     kind: TransactionKind.ACT_ON_PUBLICATION,
@@ -140,9 +142,10 @@ export function mockSimpleCollectRequest(
   overrides?: Partial<SimpleCollectRequest>,
 ): SimpleCollectRequest {
   return {
-    delegate: true,
     publicationId: mockPublicationId(),
     public: false,
+    signless: true,
+    sponsored: true,
     ...overrides,
     type: AllOpenActionType.SIMPLE_COLLECT,
     kind: TransactionKind.ACT_ON_PUBLICATION,
@@ -156,6 +159,8 @@ export function mockMultirecipientCollectRequest(
     publicationId: mockPublicationId(),
     fee: mockCollectFee(),
     public: false,
+    signless: true,
+    sponsored: true,
     ...overrides,
     type: AllOpenActionType.MULTIRECIPIENT_COLLECT,
     kind: TransactionKind.ACT_ON_PUBLICATION,
@@ -166,11 +171,12 @@ export function mockUnknownActionRequest(
   overrides?: Partial<UnknownActionRequest>,
 ): UnknownActionRequest {
   return {
-    delegate: true,
     publicationId: mockPublicationId(),
     address: mockEvmAddress(),
     data: '0x' as Data,
     public: false,
+    signless: true,
+    sponsored: true,
     ...overrides,
     type: AllOpenActionType.UNKNOWN_OPEN_ACTION,
     kind: TransactionKind.ACT_ON_PUBLICATION,

@@ -4,7 +4,7 @@ import { DelegableSigning } from '../transactions/DelegableSigning';
 export type SetProfileMetadataRequest = {
   metadataURI: string;
   kind: TransactionKind.UPDATE_PROFILE_DETAILS;
-  delegate: boolean;
+  signless: boolean;
 };
 
 export class SetProfileMetadata extends DelegableSigning<SetProfileMetadataRequest> {}
