@@ -29,7 +29,7 @@ export type CreatePostRequest = {
    */
   reference?: ReferencePolicyConfig;
   /**
-   * Whether the transaction gas costs should be sponsored by the Lens API or not.
+   * Whether the transaction costs should be sponsored by the Lens API or not.
    */
   sponsored: boolean;
 };

@@ -139,6 +139,7 @@ export const CreateQuoteRequestSchema: z.ZodType<CreateQuoteRequest, z.ZodTypeDe
     actions: OpenActionConfigSchema.array()
       .min(1, 'You must provide at least one open action')
       .optional(),
+    sponsored: z.boolean(),
   });
 
 export const CreateMirrorRequestSchema: z.ZodType<

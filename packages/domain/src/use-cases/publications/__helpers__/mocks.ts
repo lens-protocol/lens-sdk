@@ -64,6 +64,7 @@ export function mockCreateQuoteRequest(
 ): CreateQuoteRequest {
   return {
     signless: false,
+    sponsored: true,
     metadata: faker.internet.url() as URI,
     actions: [mockUnknownOpenActionConfig()],
     reference: mockAnyoneReferencePolicyConfig(),

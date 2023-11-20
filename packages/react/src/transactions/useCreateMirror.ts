@@ -91,7 +91,7 @@ export type CreateMirrorArgs = {
  * };
  * ```
  * At this point the mirror creation is completed from an end-user perspective but,
- * in case of on-chain TX, this not necessarily mined and indexed. See the following section.
+ * in case of on-chain TX, this is not necessarily mined and indexed (yet). See the following section.
  *
  * ## Wait for completion
  *

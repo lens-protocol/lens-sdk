@@ -99,6 +99,7 @@ export type CreateCommentArgs = {
  *
  *   // invoke the `execute` function to create the comment
  *   const result = await execute({
+ *
  *     metadata: uri,
  *   });
  *
@@ -128,7 +129,7 @@ export type CreateCommentArgs = {
  * };
  * ```
  * At this point the comment creation is completed from an end-user perspective but,
- * in case of on-chain TX, this not necessarily mined and indexed. See the following section.
+ * in case of on-chain TX, this is not necessarily mined and indexed (yet). See the following section.
  *
  * ## Wait for completion
  *
@@ -179,7 +180,7 @@ export type CreateCommentArgs = {
  * {@link Amount} helper with currencies from the {@link useCurrencies} hook to
  * create the desired amounts.
  *
- * Create a comment with a SimpleCollectOpenAction module:
+ * Create a comment with a `SimpleCollectOpenAction` module:
  * ```tsx
  * const wmatic = ... // from useCurrencies hook
  *
@@ -200,7 +201,7 @@ export type CreateCommentArgs = {
  * ```
  * See {@link SimpleCollectActionConfig} for more details.
  *
- * Create a comment with a multirecipient collect open action:
+ * Create a comment with a `MultirecipientCollectOpenAction` module:
  * ```tsx
  * const wmatic = ... // from useCurrencies hook
  *
