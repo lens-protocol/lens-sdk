@@ -58,6 +58,54 @@ export type CreateQuoteArgs = {
  *
  * You MUST be authenticated via {@link useLogin} to use this hook.
  *
+ * @example
+ * ```ts
+ * const { execute, error, loading } = useCreateQuote();
+ * ```
+ *
+ * ## Basic usage
+ *
+ * Create a text-only quote:
+ *
+ * ```ts
+ * const { execute, error, loading } = useCreateQuote();
+ *
+ * const quote = async () => {
+ *  // create the desired metadata via the `@lens-protocol/metadata` package helpers
+ *  const metadata = textOnly({ content: 'Quote content' });
+ *
+ *  // upload the metadata to a storage provider of your choice, IPFS in this example
+ *  const uri = await uploadToIpfs(metadata);
+ *
+ *  const result = await execute({
+ *    quoteOn: publicationId, // the publication ID to quote
+ *    metadata: uri
+ *  });
+ * }
+ *```
+ *
+ * See the [`@lens-protocol/metadata` package](https://github.com/lens-protocol/metadata) for more
+ * information on how to create metadata for other types of publications.
+ *
+ * ## Create an app-specific quote
+ *
+ * You can create a comment that is specific to an app by defining the `appId` when creating the comment metadata.
+ *
+ * This allows apps to build custom experiences by only surfacing publications that were created in their app.
+ *
+ * ```tsx
+ * const metadata = textOnly({
+ *  content: 'Quote content',
+ *  appId: 'my-app-id',
+ * });
+ *
+ * const uri = await uploadToIpfs(metadata);
+ *
+ * const result = await execute({
+ *  quoteOn: publicationId, // the publication ID to quote
+ *  metadata: uri
+ * });
+ * ```
  * @category Publications
  * @group Hooks
  */

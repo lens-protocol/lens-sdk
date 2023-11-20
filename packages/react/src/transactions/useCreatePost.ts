@@ -308,6 +308,25 @@ export type CreatePostArgs = {
  *
  * See {@link DegreesOfSeparationReferencePolicyConfig} for more details.
  *
+ * ## Creating an app-specific post
+ *
+ * You can create a post that is specific to an app by defining the `appId` when creating the post metadata.
+ *
+ * This allows apps to build custom experiences by only surfacing publications that were created in their app.
+ *
+ * ```tsx
+ * const metadata = textOnly({
+ *  content: `Hello world!`,
+ *  appId: 'my-app-id',
+ * });
+ *
+ * const uri = await uploadToIpfs(metadata);
+ *
+ * const result = await execute({
+ *  metadata: uri,
+ * });
+ * ```
+ *
  * ## Upgrading from v1
  *
  * Replace the `useCreatePost` hook with `useCreatePost` like in the following diff:
