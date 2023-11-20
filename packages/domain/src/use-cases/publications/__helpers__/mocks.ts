@@ -28,6 +28,7 @@ export function mockCreateMirrorRequest(
   return {
     mirrorOn: mockPublicationId(),
     delegate: false,
+    metadata: faker.internet.url() as URI,
     ...overrides,
     kind: TransactionKind.MIRROR_PUBLICATION,
   };

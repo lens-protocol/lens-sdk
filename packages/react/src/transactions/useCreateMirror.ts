@@ -29,6 +29,11 @@ export type CreateMirrorArgs = {
    * The publication ID to mirror.
    */
   mirrorOn: PublicationId;
+
+  /**
+   * The metadata URI.
+   */
+  metadata?: string;
 };
 
 /**
@@ -46,7 +51,7 @@ export type CreateMirrorArgs = {
  * ```tsx
  * const { execute, error, loading } = useCreateMirror();
  *
- * const mirror = () => {
+ * const mirror = async () => {
  *   const result = await execute({
  *     mirrorOn: publicationId, // the publication ID to mirror
  *   });
@@ -128,6 +133,29 @@ export type CreateMirrorArgs = {
  *   const mirror = completion.value;
  *   console.log('Mirror created', mirror);
  * };
+ * ```
+ *
+ * ## Creating an app-specific mirror
+ *
+ * You can create a mirror that is specific to an app by defining the `appId` when creating the mirror metadata. For a mirror, this is optional as if not provided the metadata of the original publication will be used.
+ *
+ * This allows apps to build custom experiences by only surfacing publications that were created in their app.
+ *
+ * ```tsx
+ * const { execute, error, loading } = useCreateMirror();
+ *
+ * const mirror = async () => {
+ *  // construct the mirror metadata via the `@lens-protocol/metadata` package helper
+ *  const metadata = await mirror({
+ *    appId: 'my-app-id',
+ *  });
+ *
+ *  const uri = await uploadToIpfs(metadata);
+ *
+ *  const result = await execute({
+ *    mirrorOn: publicationId, // the publication ID to mirror
+ *    metadata: metadata.uri,
+ *  });
  * ```
  *
  * @category Publications

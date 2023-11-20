@@ -112,6 +112,7 @@ export class CreateOnChainMirrorGateway
   private resolveOnchainMirrorRequest(request: CreateMirrorRequest): OnchainMirrorRequest {
     return {
       mirrorOn: request.mirrorOn,
+      metadataURI: request.metadata,
     };
   }
 
