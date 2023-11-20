@@ -21,6 +21,7 @@ function PostComposer() {
     // publish post
     const result = await execute({
       metadata: await uploadJson(metadata),
+      sponsored: formData.get('sponsored') === 'on',
     });
 
     // check for failure scenarios
@@ -55,6 +56,17 @@ function PostComposer() {
           style={{ resize: 'none' }}
           disabled={loading}
         ></textarea>
+
+        <label>
+          <input
+            type="checkbox"
+            name="sponsored"
+            disabled={loading}
+            value="on"
+            defaultChecked={true}
+          />
+          sponsored
+        </label>
 
         <button type="submit" disabled={loading}>
           Post

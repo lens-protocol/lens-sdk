@@ -1,5 +1,6 @@
 import { Post } from '@lens-protocol/api-bindings';
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
@@ -46,6 +47,19 @@ export type CreatePostArgs = {
    * @defaultValue `{ type: ReferencePolicyType.ANYONE }`
    */
   reference?: ReferencePolicyConfig;
+  /**
+   * Whether the transaction costs should be sponsored by the Lens API or
+   * should be paid by the authenticated wallet.
+   *
+   * There are scenarios where the sponsorship will be denied regardless of this value.
+   * See {@link BroadcastingError} with:
+   * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
+   * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
+   * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
+   *
+   * @defaultValue true, the request will be attempted to be sponsored by the Lens API.
+   */
+  sponsored?: boolean;
 };
 
 /**
@@ -308,6 +322,78 @@ export type CreatePostArgs = {
  *
  * See {@link DegreesOfSeparationReferencePolicyConfig} for more details.
  *
+ * ## Self-funded Posts
+ *
+ * In case you want to pay for the transaction gas costs yourself, you can do so by setting the
+ * `sponsored` parameter to `false`:
+ *
+ * ```ts
+ * const post = async (content: string) => {
+ *   // create and upload metadata as before
+ *
+ *   const result = await execute({
+ *     metadata: uri,
+ *     sponsored: false,
+ *   });
+ *
+ *   if (result.isFailure()) {
+ *     switch (result.error.name) {
+ *       case 'InsufficientGasError':
+ *         console.log('You do not have enough funds to pay for the transaction gas cost.');
+ *         break;
+ *
+ *       // ...
+ *     }
+ *     return;
+ *   }
+ *
+ *   // ...
+ * }
+ * ```
+ *
+ * In this case you might want to handle the {@link InsufficientGasError} error like in the example above.
+ *
+ * ## Self-funded Fallback
+ *
+ * If for some reason the Lens API cannot sponsor the transaction, the hook will fail with a {@link BroadcastingError} with one of the following reasons:
+ * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
+ * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
+ * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
+ *
+ * In those cases you can retry the transaction as self-funded like in the following example:
+ *
+ * ```ts
+ * const post = async (content: string) => {
+ *   // create and upload metadata as before
+ *
+ *   const sponsoredResult = await execute({
+ *     metadata: uri,
+ *   });
+ *
+ *   if (sponsoredResult.isFailure()) {
+ *     switch (sponsoredResult.error.name) {
+ *       case 'BroadcastingError':
+ *         if ([BroadcastingErrorReason.NOT_SPONSORED, BroadcastingErrorReason.RATE_LIMITED].includes(sponsoredResult.error.reason)) {
+ *
+ *           const chargedResult = = await execute({
+ *             metadata: uri,
+ *             sponsored: false,
+ *           });
+ *
+ *           // continue with chargedResult as in the previous example
+ *         }
+ *         break;
+ *
+ *      // ...
+ *   }
+ * }
+ * ```
+ *
+ * We omitted the handling of the {@link BroadcastingErrorReason.APP_NOT_ALLOWED} error because it's usually
+ * something that builder will face when deploying their app to production using the Production Lens API.
+ *
+ * It just requires the app to apply for whitelisting. See https://docs.lens.xyz/docs/gasless-and-signless#whitelisting-your-app.
+ *
  * ## Upgrading from v1
  *
  * Replace the `useCreatePost` hook with `useCreatePost` like in the following diff:
@@ -338,7 +424,11 @@ export type CreatePostArgs = {
  */
 export function useCreatePost(): UseDeferredTask<
   PostAsyncResult,
-  BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
+  | BroadcastingError
+  | InsufficientGasError
+  | PendingSigningRequestError
+  | UserRejectedError
+  | WalletConnectionError,
   CreatePostArgs
 > {
   const { data: session } = useSession();
@@ -356,6 +446,7 @@ export function useCreatePost(): UseDeferredTask<
 
     const request = createPostRequest({
       signless: session.profile.signless,
+      sponsored: args.sponsored ?? true,
       ...args,
     });
 

@@ -1,7 +1,9 @@
 import { URI } from '@lens-protocol/shared-kernel';
 
 import { TransactionKind } from '../../entities';
-import { MomokaCapable } from '../transactions/MomokaCapable';
+import { DelegableSigning } from '../transactions/DelegableSigning';
+import { PaidTransaction } from '../transactions/PaidTransaction';
+import { SponsorshipReady } from '../transactions/SponsorshipReady';
 import { OpenActionConfig } from './OpenActionConfig';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
 
@@ -26,13 +28,29 @@ export type CreatePostRequest = {
    * The post reference policy.
    */
   reference?: ReferencePolicyConfig;
+  /**
+   * Whether the transaction gas costs should be sponsored by the Lens API or not.
+   */
+  sponsored: boolean;
 };
 
-export class CreatePost extends MomokaCapable<CreatePostRequest> {
-  override async execute(request: CreatePostRequest): Promise<void> {
+export class CreatePost extends SponsorshipReady<CreatePostRequest> {
+  constructor(
+    protected readonly sponsoredOnChain: DelegableSigning<CreatePostRequest>,
+    protected readonly sponsoredOnMomoka: DelegableSigning<CreatePostRequest>,
+    protected readonly paidOnChain: PaidTransaction<CreatePostRequest>,
+  ) {
+    super();
+  }
+
+  protected override async charged(request: CreatePostRequest): Promise<void> {
+    return this.paidOnChain.execute(request);
+  }
+
+  protected override async sponsored(request: CreatePostRequest): Promise<void> {
     if (['actions', 'reference'].some((key) => key in request)) {
-      return this.onChain.execute(request);
+      return this.sponsoredOnChain.execute(request);
     }
-    return this.momoka.execute(request);
+    return this.sponsoredOnMomoka.execute(request);
   }
 }

@@ -4,6 +4,7 @@ import {
   SubsidizeOffChain,
   SignedOnChain,
   TransactionData,
+  PaidTransaction,
 } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
@@ -17,6 +18,7 @@ export function useCreatePostController() {
     apolloClient,
     momokaRelayer,
     onChainRelayer,
+    providerFactory,
     publicationCacheManager,
     transactionFactory,
     transactionGateway,
@@ -28,7 +30,11 @@ export function useCreatePostController() {
       publicationCacheManager.fetchNewPost(tx),
     );
 
-    const onChainGateway = new CreateOnChainPostGateway(apolloClient, transactionFactory);
+    const onChainGateway = new CreateOnChainPostGateway(
+      providerFactory,
+      apolloClient,
+      transactionFactory,
+    );
 
     const onChainPost = new SignedOnChain(
       activeWallet,
@@ -56,14 +62,21 @@ export function useCreatePostController() {
       presenter,
     );
 
-    const delegableOffChainPost = new DelegableSigning(
+    const delegableMomokaPost = new DelegableSigning(
       momokaPost,
       offChainGateway,
       transactionQueue,
       presenter,
     );
 
-    const createPost = new CreatePost(delegableOnChainPost, delegableOffChainPost);
+    const paidOnChainPost = new PaidTransaction(
+      activeWallet,
+      onChainGateway,
+      presenter,
+      transactionQueue,
+    );
+
+    const createPost = new CreatePost(delegableOnChainPost, delegableMomokaPost, paidOnChainPost);
 
     await createPost.execute(request);
 

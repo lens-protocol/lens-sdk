@@ -106,6 +106,7 @@ export const CreatePostRequestSchema: z.ZodType<CreatePostRequest, z.ZodTypeDef,
   z.object({
     kind: z.literal(TransactionKind.CREATE_POST),
     signless: z.boolean(),
+    sponsored: z.boolean(),
     metadata: UriSchema,
     reference: ReferencePolicyConfigSchema.optional(),
     actions: OpenActionConfigSchema.array()

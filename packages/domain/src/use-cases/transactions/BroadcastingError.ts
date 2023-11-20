@@ -33,7 +33,11 @@ export enum BroadcastingErrorReason {
 export class BroadcastingError extends CausedError implements IEquatableError {
   name = 'BroadcastingError' as const;
 
-  constructor(readonly reason: BroadcastingErrorReason, options?: { cause?: Error }) {
-    super(`failed to broadcast transaction due to: ${reason}`, options);
+  constructor(
+    readonly reason: BroadcastingErrorReason,
+    { cause, details }: { cause?: Error; details?: string } = {},
+  ) {
+    const message = `failed to broadcast transaction due to: ${reason}` + (details ? details : '');
+    super(message, { cause });
   }
 }
