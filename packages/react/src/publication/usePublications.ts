@@ -23,7 +23,7 @@ export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
  * ```tsx
  * const { data, loading, error } = usePublications({
  *   where: {
- *     publicationTypes: [PublicationType.Post]
+ *     publicationTypes: [PublicationType.Post],
  *   }
  * });
  * ```
@@ -46,39 +46,61 @@ export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
  * ```tsx
  * const { data, loading, error } = usePublications({
  *   where: {
- *     publicationTypes: [PublicationType.Comment]
- *     publicationIds: ['0x1b-0x012b']
+ *     commentOn: {
+ *       id: publicationId('0x03-0x24'),
+ *     },
  *   }
  * });
  * ```
  *
  * @example
- * Fetch all mirrors made by a specified profile
+ * Fetch all mirrors of a specified publication
  * ```tsx
  * const { data, loading, error } = usePublications({
  *   where: {
- *     publicationTypes: [PublicationType.Mirror]
- *     from: [profileId('0x0635')]
+ *     mirrorOn: publicationId('0x03-0x24'),
  *   }
  * });
  * ```
  *
  * @example
- * Fetch all publications by a Profile ID
+ * Fetch all quotes of a specified publication
  * ```tsx
  * const { data, loading, error } = usePublications({
  *   where: {
- *     from: [profileId('0x0635')]
+ *     quoteOn: publicationId('0x03-0x24'),
  *   }
  * });
  * ```
  *
  * @example
- * Fetch publications by several Profile IDs
+ * Fetch all publications by an author's Profile ID
  * ```tsx
  * const { data, loading, error } = usePublications({
  *   where: {
- *     from: [profileId('0x0635'), profileId('0x0f')]
+ *     from: [profileId('0x01')],
+ *   }
+ * });
+ * ```
+ *
+ * @example
+ * Fetch publications mirrored by a Profile ID
+ * ```tsx
+ * const { data, loading, error } = usePublications({
+ *   where: {
+ *     from: [profileId('0x01')],
+ *     publicationTypes: [PublicationType.Mirror],
+ *   }
+ * });
+ * ```
+ *
+ * @example
+ * Fetch publications quoted by a Profile ID
+ * ```tsx
+ * const { data, loading, error } = usePublications({
+ *   where: {
+ *     from: [profileId('0x01')],
+ *     publicationTypes: [PublicationType.Quote],
  *   }
  * });
  * ```
