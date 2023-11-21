@@ -121,6 +121,7 @@ export const CreateCommentRequestSchema: z.ZodType<
 > = z.object({
   kind: z.literal(TransactionKind.CREATE_COMMENT),
   signless: z.boolean(),
+  sponsored: z.boolean(),
   metadata: UriSchema,
   commentOn: PublicationIdSchema,
   reference: ReferencePolicyConfigSchema.optional(),
@@ -133,13 +134,13 @@ export const CreateQuoteRequestSchema: z.ZodType<CreateQuoteRequest, z.ZodTypeDe
   z.object({
     kind: z.literal(TransactionKind.CREATE_QUOTE),
     signless: z.boolean(),
+    sponsored: z.boolean(),
     metadata: UriSchema,
     quoteOn: PublicationIdSchema,
     reference: ReferencePolicyConfigSchema.optional(),
     actions: OpenActionConfigSchema.array()
       .min(1, 'You must provide at least one open action')
       .optional(),
-    sponsored: z.boolean(),
   });
 
 export const CreateMirrorRequestSchema: z.ZodType<

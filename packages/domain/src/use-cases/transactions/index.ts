@@ -5,7 +5,6 @@ export * from './SignedOnChain';
 export * from './SupportedTransactionRequest';
 export * from './TransactionQueue';
 export * from './BroadcastingError';
-export * from './MomokaCapable';
 export * from './PaidTransaction';
 export * from './ITransactionResultPresenter';
 export * from './TokenAllowance';
