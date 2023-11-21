@@ -1,29 +1,42 @@
-import { RelayError, RelayErrorReasons } from '@lens-protocol/api-bindings';
+import {
+  LensProfileManagerRelayError,
+  LensProfileManagerRelayErrorReasonType,
+  RelayError,
+  RelayErrorReasonType,
+} from '@lens-protocol/api-bindings';
 import {
   BroadcastingError,
+  BroadcastingErrorReason,
   ProtocolTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { failure, Failure, InvariantError } from '@lens-protocol/shared-kernel';
 
 import { SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 
-export type OnChainBroadcastReceipt = {
-  indexingId: string;
-  txHash: string;
-};
-
-export type OffChainBroadcastReceipt = {
-  id: string;
-};
-
 export function handleRelayError(
-  error: RelayError,
-  fallback?: SelfFundedProtocolTransactionRequest<ProtocolTransactionRequest>,
-): Failure<never, BroadcastingError> {
+  error: RelayError | LensProfileManagerRelayError,
+  _fallback?: SelfFundedProtocolTransactionRequest<ProtocolTransactionRequest>,
+): Failure<BroadcastingError> {
   switch (error.reason) {
-    case RelayErrorReasons.NotAllowed:
-    case RelayErrorReasons.Rejected:
-      return failure(new BroadcastingError(error.reason, fallback));
+    case RelayErrorReasonType.AppNotAllowed:
+    case LensProfileManagerRelayErrorReasonType.AppNotAllowed:
+      return failure(new BroadcastingError(BroadcastingErrorReason.APP_NOT_ALLOWED));
+
+    case RelayErrorReasonType.RateLimited:
+    case LensProfileManagerRelayErrorReasonType.RateLimited:
+      return failure(new BroadcastingError(BroadcastingErrorReason.RATE_LIMITED));
+
+    case RelayErrorReasonType.NotSponsored:
+    case LensProfileManagerRelayErrorReasonType.NotSponsored:
+      return failure(new BroadcastingError(BroadcastingErrorReason.NOT_SPONSORED));
+
+    case RelayErrorReasonType.Failed:
+    case LensProfileManagerRelayErrorReasonType.Failed:
+      return failure(new BroadcastingError(BroadcastingErrorReason.UNKNOWN));
+
+    case LensProfileManagerRelayErrorReasonType.NoLensManagerEnabled:
+      return failure(new BroadcastingError(BroadcastingErrorReason.NO_LENS_MANAGER_ENABLED));
+
     default:
       throw new InvariantError(`Unexpected relay error reason: ${error.reason}`);
   }

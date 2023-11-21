@@ -1,110 +1,81 @@
-import { Profile } from '@lens-protocol/api-bindings';
 import {
-  mockGetAllProfilesResponse,
-  mockLensApolloClient,
+  mockCursor,
+  mockPaginatedResultInfo,
   mockProfileFragment,
-  mockSources,
-  simulateAuthenticatedProfile,
-  simulateNotAuthenticated,
+  mockProfilesResponse,
 } from '@lens-protocol/api-bindings/mocks';
-import { ProfileId } from '@lens-protocol/domain/entities';
-import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
+import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { waitFor } from '@testing-library/react';
 
-import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import {
-  defaultMediaTransformsConfig,
-  mediaTransformConfigToQueryVariables,
-} from '../../mediaTransforms';
-import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../../utils';
-import { useProfiles, UseProfilesArgs } from '../useProfiles';
-
-function setupTestScenario({
-  expectedObserverId,
-  result,
-  ...args
-}: UseProfilesArgs & { result: Profile[]; expectedObserverId?: ProfileId }) {
-  const sources = mockSources();
-
-  return renderHookWithMocks(() => useProfiles(args), {
-    mocks: {
-      sources,
-      mediaTransforms: defaultMediaTransformsConfig,
-      apolloClient: mockLensApolloClient([
-        mockGetAllProfilesResponse({
-          variables: {
-            byHandles: args.handles,
-            byProfileIds: args.profileIds,
-            limit: DEFAULT_PAGINATED_QUERY_LIMIT,
-            sources,
-            observerId: expectedObserverId ?? null,
-            ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
-          },
-          profiles: result,
-        }),
-      ]),
-    },
-  });
-}
+import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
+import { UseProfilesArgs, useProfiles } from '../useProfiles';
 
 describe(`Given the ${useProfiles.name} hook`, () => {
+  const evmAddress = mockEvmAddress();
   const profiles = [mockProfileFragment()];
-  const expectations = profiles.map(({ id }) => ({ __typename: 'Profile', id }));
+  const expectations = profiles.map(({ __typename, id }) => ({ __typename, id }));
 
-  beforeAll(() => {
-    simulateNotAuthenticated();
+  describe('when the query returns data successfully', () => {
+    it('should settle with the profiles', async () => {
+      const { renderHook } = setupHookTestScenario([
+        mockProfilesResponse({
+          variables: {
+            where: {
+              ownedBy: [evmAddress],
+            },
+          },
+          items: profiles,
+        }),
+      ]);
+
+      const args: UseProfilesArgs = {
+        where: { ownedBy: [evmAddress] },
+      };
+
+      const { result } = renderHook(() => useProfiles(args));
+
+      await waitFor(() => expect(result.current.loading).toBeFalsy());
+      expect(result.current.data).toMatchObject(expectations);
+    });
   });
 
-  describe.each([
-    {
-      precondition: 'and NO Active Profile set',
-      activeProfileValue: null,
-    },
-    {
-      precondition: 'and an Active Profile set',
-      activeProfileValue: mockProfile(),
-    },
-  ])('$precondition', ({ activeProfileValue }) => {
-    describe.each([
-      {
-        description: 'when invoked with a list of profile IDs',
-        args: { profileIds: profiles.map(({ id }) => id) },
-      },
-      {
-        description: 'when invoked with a list of profile handles',
-        args: { handles: profiles.map(({ handle }) => handle) },
-      },
-    ])('$description', ({ args }) => {
-      beforeAll(() => {
-        if (activeProfileValue) {
-          simulateAuthenticatedProfile(activeProfileValue);
-        }
+  describe(`when re-rendered`, () => {
+    const initialPageInfo = mockPaginatedResultInfo({ prev: mockCursor() });
+
+    const { renderHook } = setupHookTestScenario([
+      mockProfilesResponse({
+        variables: {
+          where: {
+            ownedBy: [evmAddress],
+          },
+        },
+        items: profiles,
+        info: initialPageInfo,
+      }),
+
+      mockProfilesResponse({
+        variables: {
+          where: {
+            ownedBy: [evmAddress],
+          },
+          cursor: initialPageInfo.prev,
+        },
+        items: [mockProfileFragment()],
+      }),
+    ]);
+
+    it(`should return cached data and then update the 'beforeCount' if new results are available`, async () => {
+      const first = renderHook(() => useProfiles({ where: { ownedBy: [evmAddress] } }));
+      await waitFor(() => expect(first.result.current.loading).toBeFalsy());
+
+      const second = renderHook(() => useProfiles({ where: { ownedBy: [evmAddress] } }));
+
+      expect(second.result.current).toMatchObject({
+        data: expectations,
+        loading: false,
       });
 
-      it('should return list of profiles', async () => {
-        const { result } = setupTestScenario({
-          ...args,
-          result: profiles,
-          expectedObserverId: activeProfileValue?.id,
-        });
-
-        await waitFor(() => expect(result.current.loading).toBeFalsy());
-        expect(result.current.data).toMatchObject(expectations);
-      });
-
-      it('should allow to override the "observerId" on a per-call basis', async () => {
-        const observerId = mockProfileId();
-
-        const { result } = setupTestScenario({
-          ...args,
-          observerId,
-          result: profiles,
-          expectedObserverId: observerId,
-        });
-
-        await waitFor(() => expect(result.current.loading).toBeFalsy());
-        expect(result.current.data).toMatchObject(expectations);
-      });
+      await waitFor(() => expect(second.result.current.beforeCount).toEqual(1));
     });
   });
 });

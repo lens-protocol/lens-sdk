@@ -1,9 +1,4 @@
-import {
-  isFollowTransactionFor,
-  Profile,
-  ProfileOwnedByMe,
-  useHasPendingTransaction,
-} from '@lens-protocol/api-bindings';
+import { Profile } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -11,62 +6,66 @@ import {
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
+import { invariant } from '@lens-protocol/shared-kernel';
 
-import { Operation, useOperation } from '../helpers/operations';
+import { SessionType, useSession } from '../authentication';
+import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useUnfollowController } from './adapters/useUnfollowController';
 
-export class PrematureUnfollowError extends Error {
-  name = 'PrematureUnfollowError' as const;
-}
+/**
+ * An object representing the result of an unfollow operation.
+ *
+ * It allows to wait for the transaction to be processed and indexed.
+ */
+export type UnfollowAsyncResult = AsyncTransactionResult<void>;
 
-export type UseUnfollowArgs = {
-  followee: Profile;
-  follower: ProfileOwnedByMe;
+export type UnfollowArgs = {
+  /**
+   * The profile to unfollow
+   */
+  profile: Profile;
 };
 
-export type UnfollowOperation = Operation<
-  AsyncTransactionResult<void>,
-  | BroadcastingError
-  | PendingSigningRequestError
-  | PrematureUnfollowError
-  | UserRejectedError
-  | WalletConnectionError
->;
-
 /**
+ * `useUnfollow` allows you to unfollow a Profile.
+ *
+ * You MUST be authenticated via {@link useLogin} to use this hook.
+ *
+ * @example
+ * ```tsx
+ * const { execute: unfollow, error, loading } = useUnfollow();
+ *
+ * <button onClick={() => unfollow({ profile })} disabled={loading}>
+ *   Unfollow
+ * </button>
+ * ```
+ *
  * @category Profiles
  * @group Hooks
  */
-export function useUnfollow({ followee, follower }: UseUnfollowArgs): UnfollowOperation {
-  const unfollow = useUnfollowController();
+export function useUnfollow(): UseDeferredTask<
+  UnfollowAsyncResult,
+  BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
+  UnfollowArgs
+> {
+  const { data: session } = useSession();
+  const unfollowProfile = useUnfollowController();
 
-  const hasPendingFollowTx = useHasPendingTransaction(
-    isFollowTransactionFor({ profileId: followee.id, followerAddress: follower.ownedBy }),
-  );
+  return useDeferredTask(async (args) => {
+    invariant(
+      session?.authenticated,
+      'You must be authenticated to use this operation. Use `useLogin` hook to authenticate.',
+    );
+    invariant(
+      session.type === SessionType.WithProfile,
+      'You must have a profile to use this operation.',
+    );
 
-  return useOperation(
-    async (): PromiseResult<
-      AsyncTransactionResult<void>,
-      | BroadcastingError
-      | PendingSigningRequestError
-      | PrematureUnfollowError
-      | UserRejectedError
-      | WalletConnectionError
-    > => {
-      if (hasPendingFollowTx) {
-        return failure(
-          new PrematureUnfollowError(
-            `A previous follow request for ${followee.handle} is still pending. Make sure you check 'followee.followStatus.canUnfollow' beforehand.`,
-          ),
-        );
-      }
-
-      return unfollow({
-        kind: TransactionKind.UNFOLLOW_PROFILE,
-        profileId: followee.id,
-      });
-    },
-  );
+    return unfollowProfile({
+      kind: TransactionKind.UNFOLLOW_PROFILE,
+      profileId: args.profile.id,
+      delegate: session.profile.signless,
+    });
+  });
 }

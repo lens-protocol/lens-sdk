@@ -1,7 +1,8 @@
 import {
-  BroadcastOnChainData,
-  BroadcastOnChainDocument,
-  BroadcastOnChainVariables,
+  BroadcastOnchainData,
+  BroadcastOnchainDocument,
+  BroadcastOnchainVariables,
+  RelaySuccess,
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import { MetaTransaction } from '@lens-protocol/domain/entities';
@@ -9,6 +10,7 @@ import {
   IOnChainRelayer,
   BroadcastingError,
   ProtocolTransactionRequest,
+  BroadcastingErrorReason,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
   assertError,
@@ -21,7 +23,7 @@ import {
 
 import { SignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from './ITransactionFactory';
-import { handleRelayError, OnChainBroadcastReceipt } from './relayer';
+import { handleRelayError } from './relayer';
 
 export class OnChainRelayer implements IOnChainRelayer<ProtocolTransactionRequest> {
   constructor(
@@ -35,7 +37,7 @@ export class OnChainRelayer implements IOnChainRelayer<ProtocolTransactionReques
   ): PromiseResult<MetaTransaction<T>, BroadcastingError> {
     const result = await this.broadcast(signedCall);
 
-    if (result.isFailure()) return failure(result.error);
+    if (result.isFailure()) return result;
 
     const receipt = result.value;
 
@@ -44,7 +46,7 @@ export class OnChainRelayer implements IOnChainRelayer<ProtocolTransactionReques
       id: signedCall.id,
       request: signedCall.request,
       nonce: signedCall.nonce,
-      indexingId: receipt.indexingId,
+      indexingId: receipt.txId,
       txHash: receipt.txHash,
     });
 
@@ -53,13 +55,13 @@ export class OnChainRelayer implements IOnChainRelayer<ProtocolTransactionReques
 
   private async broadcast<T extends ProtocolTransactionRequest>(
     signedCall: SignedProtocolCall<T>,
-  ): PromiseResult<OnChainBroadcastReceipt, BroadcastingError> {
+  ): PromiseResult<RelaySuccess, BroadcastingError> {
     try {
       const { data } = await this.apolloClient.mutate<
-        BroadcastOnChainData,
-        BroadcastOnChainVariables
+        BroadcastOnchainData,
+        BroadcastOnchainVariables
       >({
-        mutation: BroadcastOnChainDocument,
+        mutation: BroadcastOnchainDocument,
         variables: {
           request: {
             id: signedCall.id,
@@ -72,14 +74,11 @@ export class OnChainRelayer implements IOnChainRelayer<ProtocolTransactionReques
         return handleRelayError(data.result, signedCall.fallback);
       }
 
-      return success({
-        indexingId: data.result.txId,
-        txHash: data.result.txHash,
-      });
+      return success(data.result);
     } catch (err) {
-      this.logger.error(err, `It was not possible to relay the transaction for ${signedCall.id}`);
       assertError(err);
-      return failure(new BroadcastingError(err.message));
+      this.logger.error(err, `It was not possible to relay the transaction for ${signedCall.id}`);
+      return failure(new BroadcastingError(BroadcastingErrorReason.UNKNOWN, { cause: err }));
     }
   }
 }

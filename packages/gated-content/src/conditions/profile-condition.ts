@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber';
-import { ProfileOwnershipInput } from '@lens-protocol/api-bindings';
+import { ProfileOwnershipCondition } from '@lens-protocol/metadata';
 
 import { EnvironmentConfig } from '../environments';
 import {
@@ -13,7 +13,7 @@ import { toLitSupportedChainName } from './utils';
 import { assertValidProfileId } from './validators';
 
 export const transformProfileCondition = (
-  condition: ProfileOwnershipInput,
+  condition: ProfileOwnershipCondition,
   env: EnvironmentConfig,
 ): Array<LitEvmAccessCondition> => {
   assertValidProfileId(condition.profileId);

@@ -1,0 +1,155 @@
+import { textOnly } from '@lens-protocol/metadata';
+import {
+  isPostPublication,
+  OpenActionKind,
+  OpenActionType,
+  PublicationId,
+  TriStateValue,
+  useCreatePost,
+  useOpenAction,
+  usePublication,
+} from '@lens-protocol/react-web';
+import { useState } from 'react';
+import { toast } from 'react-hot-toast';
+
+import { Logs } from '../components/Logs';
+import { RequireProfileSession, RequireWalletSession } from '../components/auth';
+import { ErrorMessage } from '../components/error/ErrorMessage';
+import { Loading } from '../components/loading/Loading';
+import { useLogs } from '../hooks/useLogs';
+import { uploadJson } from '../upload';
+import { invariant } from '../utils';
+import { PublicationCard } from './components/PublicationCard';
+
+function TestScenario({ id }: { id: PublicationId }) {
+  const { data: publication, loading, error } = usePublication({ forId: id });
+  const { execute } = useOpenAction({
+    action: {
+      kind: OpenActionKind.COLLECT,
+    },
+  });
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <ErrorMessage error={error} />;
+  }
+
+  const collect = async () => {
+    const result = await execute({ publication });
+
+    if (result.isFailure()) {
+      toast.error(result.error.message);
+      return;
+    }
+
+    const completion = await result.value.waitForCompletion();
+
+    if (completion.isFailure()) {
+      toast.error(completion.error.message);
+      return;
+    }
+
+    toast.success(`You successfully collected: ${publication.id}`);
+  };
+
+  invariant(isPostPublication(publication), 'Publication is not a post');
+
+  return (
+    <div>
+      <PublicationCard publication={publication} />
+      <RequireProfileSession>
+        <button onClick={collect} disabled={publication.operations.canCollect === TriStateValue.No}>
+          Collect w/ Profile
+        </button>
+      </RequireProfileSession>
+      &nbsp;OR&nbsp;
+      <RequireWalletSession>
+        <button onClick={collect} disabled={publication.operations.canCollect === TriStateValue.No}>
+          Collect w/ Wallet
+        </button>
+      </RequireWalletSession>
+      <div className="notice">
+        <p>
+          At the time of this example writing there is a known API issue resulting in{' '}
+          <code>PublicationOperations.canCollect</code> (SDK alias of <code>canAct</code>) returning
+          always <code>'NO'</code>.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export function UseOpenAction() {
+  const { logs, clear, log } = useLogs();
+  const [id, setId] = useState<PublicationId | undefined>();
+
+  const { execute: post } = useCreatePost();
+
+  const prepare = async () => {
+    setId(undefined);
+    clear();
+
+    log('Creating metadata for test post...');
+    const metadata = textOnly({
+      content: 'Hello, world!',
+    });
+
+    log('Uploading metadata...');
+    const uri = await uploadJson(metadata);
+
+    log('Creating collectable test post...');
+    const result = await post({
+      metadata: uri,
+      actions: [
+        {
+          type: OpenActionType.SIMPLE_COLLECT,
+          followerOnly: false,
+          collectLimit: 5,
+        },
+      ],
+    });
+
+    if (result.isFailure()) {
+      log(result.error.message);
+      return;
+    }
+
+    log('Waiting for tx to be mined and indexed...');
+    const completion = await result.value.waitForCompletion();
+
+    if (completion.isFailure()) {
+      log(completion.error.message);
+      return;
+    }
+
+    setId(completion.value.id);
+  };
+
+  return (
+    <div>
+      <h1>
+        <code>useOpenAction</code>
+      </h1>
+
+      {!id && (
+        <RequireProfileSession>
+          {!id && (
+            <>
+              {logs.length === 0 && (
+                <button type="button" onClick={prepare}>
+                  Prepare example
+                </button>
+              )}
+              <Logs logs={logs} />
+            </>
+          )}
+        </RequireProfileSession>
+      )}
+
+      {id && <TestScenario id={id} />}
+    </div>
+  );
+}

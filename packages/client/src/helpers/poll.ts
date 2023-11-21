@@ -7,7 +7,7 @@ type PollArgs<T> = {
 };
 
 const POLL_INTERVAL = 1000;
-const POLL_MAX_ATTEMPTS = 20; // try for 20 sec
+const POLL_MAX_ATTEMPTS = 60; // try for 60 sec
 
 export async function poll<T>({
   fn,

@@ -1,9 +1,9 @@
 import {
   IReadableWalletGateway,
-  IResettableWalletGateway,
   IWritableWalletGateway,
-} from '@lens-protocol/domain/use-cases/wallets';
-import { EthereumAddress, never } from '@lens-protocol/shared-kernel';
+  IResettableWalletGateway,
+} from '@lens-protocol/domain/use-cases/authentication';
+import { EvmAddress, never } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
 import { z } from 'zod';
 
@@ -20,19 +20,19 @@ export type WalletStorageSchema = z.infer<typeof WalletStorageSchema>;
 export class WalletGateway
   implements IReadableWalletGateway, IResettableWalletGateway, IWritableWalletGateway
 {
-  private inMemoryCache: Record<EthereumAddress, ConcreteWallet> = {};
+  private inMemoryCache: Record<EvmAddress, ConcreteWallet> = {};
 
   constructor(
     private readonly storage: IStorage<WalletStorageSchema>,
     private readonly factory: IWalletUnmarshaller,
   ) {}
 
-  async getByAddress(address: EthereumAddress): Promise<ConcreteWallet | null> {
+  async getByAddress(address: EvmAddress): Promise<ConcreteWallet | null> {
     if (this.inMemoryCache[address]) {
       return this.inMemoryCache[address] ?? never();
     }
     const wallets = await this.getAll();
-    const wallet = wallets.find((w) => w.address === address) ?? null;
+    const wallet = wallets.find((w) => w.address.toLowerCase() === address.toLowerCase()) ?? null;
 
     if (wallet) {
       this.inMemoryCache[address] = wallet;

@@ -1,5 +1,96 @@
 # @lens-protocol/gated-content
 
+## 0.3.3-alpha.15
+
+### Patch Changes
+
+- 9a9f3130d: **fix** robust handling of legacy token-gated publication with empty `tokenIds` as ERC-721 NFT Ownership condition
+- Updated dependencies [d71f981cc]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.8
+  - @lens-protocol/storage@0.7.5-alpha.6
+
+## 0.3.3-alpha.14
+
+### Patch Changes
+
+- Updated dependencies [2f5360796]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.7
+  - @lens-protocol/storage@0.7.5-alpha.5
+
+## 0.3.3-alpha.13
+
+### Patch Changes
+
+- 7ed02dd93: **fix:** decryption of undefined metadata fields that are exposed as empty strings in GQL schemas
+
+## 0.3.3-alpha.12
+
+### Patch Changes
+
+- 1bd69391: **chore:** updates `@lens-protocol/metadata` package to 1.0.0
+
+## 0.3.3-alpha.11
+
+### Patch Changes
+
+- Updated dependencies [061df834]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.6
+  - @lens-protocol/storage@0.7.5-alpha.4
+
+## 0.3.3-alpha.10
+
+### Patch Changes
+
+- 5f93ea77: **fix:** support `Profile.lensManager` into `Profile.signless` renaming
+- 5f93ea77: **fix:** support new `HandleInfo`
+- 5f93ea77: **fix:** renames of `handleLinkToProfile`, `handleUnlinkToProfile` and correlated mutations, types
+- 5f93ea77: **fix:** adds `type` to Open Action module settings types
+
+## 0.3.3-alpha.9
+
+### Patch Changes
+
+- Updated dependencies [9481f48b]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.5
+  - @lens-protocol/storage@0.7.5-alpha.3
+
+## 0.3.3-alpha.8
+
+### Patch Changes
+
+- 01b2c2cb: Updated to support the latest API schema
+
+## 0.3.3-alpha.7
+
+### Patch Changes
+
+- 8c4da31a: Updated to latest api schema, used TypedDocumentNode to improve startup time
+- Updated dependencies [a929c0f6]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.4
+  - @lens-protocol/storage@0.7.5-alpha.2
+
+## 0.3.3-alpha.6
+
+### Patch Changes
+
+- Updated dependencies [734d6823]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.3
+  - @lens-protocol/storage@0.7.5-alpha.1
+
+## 0.3.3-alpha.5
+
+### Patch Changes
+
+- Updated dependencies [6d0d62dd]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.2
+  - @lens-protocol/storage@0.7.5-alpha.0
+
+## 0.3.3-alpha.4
+
+### Patch Changes
+
+- c043b1d2: **feat:** token-gated support for LIP-2 metadata spec
+
 ## 0.3.3
 
 ### Patch Changes

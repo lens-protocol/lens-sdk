@@ -11,7 +11,7 @@ import {
 import { AppId, PollId } from '@lens-protocol/domain/entities';
 import { mockAppId, mockCreateUnsignedVoteRequest, mockWallet } from '@lens-protocol/domain/mocks';
 import { InvariantError, never } from '@lens-protocol/shared-kernel';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
+import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { getAddress } from 'ethers/lib/utils';
 
 import { SnapshotVoteFactory, UnsignedVote } from '../SnapshotVoteFactory';
@@ -26,7 +26,7 @@ function setupTestScenario({ appId, proposal }: { appId?: AppId; proposal: Snaps
 describe(`Given an instance of the ${SnapshotVoteFactory.name}`, () => {
   const voter = mockWallet({
     // ensures `from` has EIP-55 checksum
-    address: mockEthereumAddress().toLowerCase(),
+    address: mockEvmAddress().toLowerCase(),
   });
 
   const appId = mockAppId();

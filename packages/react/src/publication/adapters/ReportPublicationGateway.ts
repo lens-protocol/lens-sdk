@@ -5,7 +5,7 @@ import {
   PublicationReportingReason,
   PublicationReportingSensitiveSubreason,
   PublicationReportingSpamSubreason,
-  ReportingReasonInputParams,
+  ReportingReasonInput,
   ReportPublicationDocument,
   ReportPublicationData,
   ReportPublicationVariables,
@@ -17,7 +17,7 @@ import {
 } from '@lens-protocol/domain/use-cases/publications';
 import { assertNever } from '@lens-protocol/shared-kernel';
 
-const mapReportReasonToInput = (reason: ReportReason): ReportingReasonInputParams => {
+const mapReportReasonToInput = (reason: ReportReason): ReportingReasonInput => {
   switch (reason) {
     case ReportReason.VIOLENCE:
       return {
@@ -145,10 +145,12 @@ export class ReportPublicationGateway implements IReportPublicationGateway {
     await this.apolloClient.mutate<ReportPublicationData, ReportPublicationVariables>({
       mutation: ReportPublicationDocument,
       variables: {
-        publicationId,
-        additionalComments,
-        reason: {
-          ...mapReportReasonToInput(reason),
+        request: {
+          for: publicationId,
+          additionalComments,
+          reason: {
+            ...mapReportReasonToInput(reason),
+          },
         },
       },
     });

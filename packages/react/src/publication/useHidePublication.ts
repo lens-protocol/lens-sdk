@@ -1,33 +1,58 @@
-import { PublicationOwnedByMe } from '@lens-protocol/api-bindings';
+import { AnyPublication } from '@lens-protocol/api-bindings';
 import { invariant, success } from '@lens-protocol/shared-kernel';
 
-import { Operation, useOperation } from '../helpers/operations';
+import { useSession } from '../authentication';
+import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useHidePublicationController } from './adapters/useHidePublicationController';
 
 export type UseHidePublicationArgs = {
-  publication: PublicationOwnedByMe;
+  publication: AnyPublication;
 };
 
-export type HidePublicationOperation = Operation<void>;
-
 /**
+ * Hide a publication posted by the authenticated profile to prevent other profiles from seeing it.
+ *
+ * You MUST be authenticated via {@link useLogin} to use this hook.
+ *
+ * @example
+ * ```tsx
+ * import { useHidePublication, AnyPublication } from '@lens-protocol/react';
+ *
+ * function HidePublication({ publication }: { publication: AnyPublication }) {
+ *   const { execute: hide, loading } = useHidePublication();
+ *
+ *   if (publication.isHidden) {
+ *    return <span>Publication is hidden</span>;
+ *   }
+ *
+ *   return (
+ *     <button onClick={() => hide({ publication })} disabled={loading}>
+ *       Hide publication
+ *     </button>
+ *   );
+ * }
+ * ```
+ *
  * @category Publications
  * @group Hooks
+ * @param args - {@link UseHidePublicationArgs}
  */
-export function useHidePublication({
-  publication,
-}: UseHidePublicationArgs): HidePublicationOperation {
+export function useHidePublication(): UseDeferredTask<void, never, UseHidePublicationArgs> {
+  const { data: session } = useSession();
+
   const hide = useHidePublicationController();
 
-  return useOperation(async () => {
+  return useDeferredTask(async ({ publication }) => {
+    invariant(session?.authenticated, 'You must be authenticated to hide a publication');
     invariant(
-      publication.profile.ownedByMe,
-      'Publication not owned by the active wallet. Make sure that publication is owned by the wallet (for .e.g. by calling `isPublicationOwnedByMe`) before trying to hide it?',
+      publication.by.ownedBy.address === session.address,
+      'Publication not owned by the active wallet. Make sure that publication is owned by the wallet before trying to hide it.',
     );
 
     await hide({
       publicationId: publication.id,
     });
+
     return success();
   });
 }

@@ -1,38 +1,25 @@
 import { faker } from '@faker-js/faker';
-import { omitTypename, Profile } from '@lens-protocol/api-bindings';
+import { omitTypename } from '@lens-protocol/api-bindings';
 import { TypedData } from '@lens-protocol/blockchain-bindings';
 import {
-  ProtocolTransactionRequestModel,
-  ProxyActionStatus,
   AnyTransactionRequestModel,
-  ProfileId,
+  ProtocolTransactionRequestModel,
 } from '@lens-protocol/domain/entities';
 import {
-  mockNonce,
-  mockTransactionHash,
   mockAnyTransactionRequestModel,
+  mockNonce,
   mockProtocolTransactionRequestModel,
+  mockTransactionHash,
 } from '@lens-protocol/domain/mocks';
-import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { assertFailure, ChainType, never, Result, Url } from '@lens-protocol/shared-kernel';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
+import { ChainType, Data } from '@lens-protocol/shared-kernel';
+import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
+import { MockProvider } from 'ethereum-waffle';
 import { mock } from 'jest-mock-extended';
-import { when } from 'jest-when';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ITransactionObserver, TransactionFactory } from '../../infrastructure/TransactionFactory';
-import { IMetadataUploader } from '../IMetadataUploader';
-import { IProfileCacheManager } from '../IProfileCacheManager';
-import {
-  MetaTransactionData,
-  NativeTransactionData,
-  ProxyTransactionData,
-} from '../ITransactionFactory';
-import {
-  Data,
-  SelfFundedProtocolTransactionRequest,
-} from '../SelfFundedProtocolTransactionRequest';
-import { OnChainBroadcastReceipt } from '../relayer';
+import { MetaTransactionData, NativeTransactionData } from '../ITransactionFactory';
+import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 
 export function mockITransactionFactory(
   transactionObserver: ITransactionObserver = mock<ITransactionObserver>(),
@@ -40,13 +27,6 @@ export function mockITransactionFactory(
   // we create a TransactionFactory instance so to minimize the amount of mocking required,
   // although consumers can still rely solely on the ITransactionFactory interface
   return new TransactionFactory(transactionObserver);
-}
-
-export function mockRelayReceipt(): OnChainBroadcastReceipt {
-  return {
-    indexingId: faker.datatype.uuid(),
-    txHash: mockTransactionHash(),
-  };
 }
 
 export function mockTypedData(): TypedData {
@@ -58,7 +38,7 @@ export function mockTypedData(): TypedData {
       name: 'none',
       version: '1',
       chainId: 1,
-      verifyingContract: mockEthereumAddress(),
+      verifyingContract: mockEvmAddress(),
     },
     message: {
       nonce: 0,
@@ -106,31 +86,14 @@ export function mockNativeTransactionDataWithIndexingId<
   };
 }
 
-export function mockProxyTransactionData<T extends AnyTransactionRequestModel>({
-  request = mockAnyTransactionRequestModel() as T,
-  ...others
-}: Partial<ProxyTransactionData<T>> = {}): ProxyTransactionData<T> {
+export function mockSelfFundedProtocolTransactionRequest<
+  TRequest extends ProtocolTransactionRequestModel,
+>(): SelfFundedProtocolTransactionRequest<TRequest> {
   return {
-    status: ProxyActionStatus.MINTING,
-    chainType: ChainType.ETHEREUM,
-    proxyId: faker.datatype.uuid(),
-    id: faker.datatype.uuid(),
-    request,
-    txHash: mockTransactionHash(),
-    ...others,
-  };
-}
-
-export function mockIMetadataUploader(urlOrError: Url | Error): IMetadataUploader<unknown> {
-  const uploader = mock<IMetadataUploader<unknown>>();
-
-  if (urlOrError instanceof Error) {
-    when(uploader.upload).mockRejectedValue(urlOrError);
-  } else {
-    when(uploader.upload).mockResolvedValue(urlOrError);
-  }
-
-  return uploader;
+    contractAddress: mockEvmAddress(),
+    encodedData: faker.datatype.hexadecimal({ length: 32 }) as Data,
+    ...mockAnyTransactionRequestModel(),
+  } as SelfFundedProtocolTransactionRequest<TRequest>;
 }
 
 export function assertUnsignedProtocolCallCorrectness<T extends ProtocolTransactionRequestModel>(
@@ -144,46 +107,18 @@ export function assertUnsignedProtocolCallCorrectness<T extends ProtocolTransact
   expect(unsignedProtocolCall.typedData).toEqual(omitTypename(broadcastResult.typedData));
 }
 
-export function assertBroadcastingErrorResultWithRequestFallback(
-  result: Result<unknown, BroadcastingError>,
-  typedData: TypedData,
-) {
-  assertFailure(result);
-  expect(result.error).toBeInstanceOf(BroadcastingError);
-  expect(result.error.fallback).toMatchObject({
-    contractAddress: typedData.domain.verifyingContract,
-    encodedData: expect.any(String),
+async function mineNBlocks(provider: MockProvider, blocks: number) {
+  return provider.send('evm_mine', [{ blocks }]);
+}
+
+export async function mockJsonRpcProvider() {
+  const provider = new MockProvider({
+    ganacheOptions: {
+      chain: {
+        hardfork: 'london',
+      },
+    },
   });
-}
-
-export function mockSelfFundedProtocolTransactionRequest<
-  TRequest extends ProtocolTransactionRequestModel,
->(): SelfFundedProtocolTransactionRequest<TRequest> {
-  return {
-    contractAddress: mockEthereumAddress(),
-    encodedData: faker.datatype.hexadecimal({ length: 32 }) as Data,
-    ...mockAnyTransactionRequestModel(),
-  } as SelfFundedProtocolTransactionRequest<TRequest>;
-}
-
-class MockedProfileCacheManager implements IProfileCacheManager {
-  constructor(profile: Profile) {
-    this.latestProfile = profile;
-  }
-
-  latestProfile: Profile;
-
-  fetchProfile = jest.fn().mockImplementation(async () => this.latestProfile);
-
-  fetchNewProfile = jest.fn().mockImplementation(async () => this.latestProfile);
-
-  refreshProfile = jest.fn().mockImplementation(async () => this.latestProfile);
-
-  updateProfile = jest.fn((_: ProfileId, updateFn: (current: Profile) => Profile) => {
-    this.latestProfile = updateFn(this.latestProfile ?? never());
-  });
-}
-
-export function mockIProfileCacheManager(profile: Profile) {
-  return new MockedProfileCacheManager(profile);
+  await mineNBlocks(provider, 20);
+  return provider;
 }

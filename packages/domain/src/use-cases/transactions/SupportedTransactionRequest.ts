@@ -1,29 +1,39 @@
 import { JustProtocolRequest } from '../../entities';
+import { ClaimHandleRequest } from '../profile';
+import { BlockProfilesRequest } from '../profile/BlockProfiles';
 import { CreateProfileRequest } from '../profile/CreateProfile';
-import { FollowRequest } from '../profile/FollowProfiles';
+import { FollowRequest } from '../profile/FollowProfile';
+import { LinkHandleRequest } from '../profile/LinkHandle';
+import { SetProfileMetadataRequest } from '../profile/SetProfileMetadata';
+import { UnblockProfilesRequest } from '../profile/UnblockProfiles';
 import { UnfollowRequest } from '../profile/UnfollowProfile';
-import { UpdateDispatcherConfigRequest } from '../profile/UpdateDispatcherConfig';
+import { UnlinkHandleRequest } from '../profile/UnlinkHandle';
 import { UpdateFollowPolicyRequest } from '../profile/UpdateFollowPolicy';
-import { UpdateProfileDetailsRequest } from '../profile/UpdateProfileDetails';
-import { UpdateProfileImageRequest } from '../profile/UpdateProfileImage';
-import { CollectRequest } from '../publications/CollectPublication';
+import { UpdateProfileManagersRequest } from '../profile/UpdateProfileManagers';
 import { CreateCommentRequest } from '../publications/CreateComment';
 import { CreateMirrorRequest } from '../publications/CreateMirror';
 import { CreatePostRequest } from '../publications/CreatePost';
-import { TokenAllowanceRequest } from '../wallets/TokenAllowance';
+import { CreateQuoteRequest } from '../publications/CreateQuote';
+import { OpenActionRequest } from '../publications/OpenAction';
+import { TokenAllowanceRequest } from './TokenAllowance';
 
 export type AnyTransactionRequest =
-  | CollectRequest
+  | BlockProfilesRequest
+  | OpenActionRequest
+  | ClaimHandleRequest
   | CreateCommentRequest
   | CreateMirrorRequest
   | CreatePostRequest
+  | CreateQuoteRequest
   | CreateProfileRequest
   | FollowRequest
   | TokenAllowanceRequest
+  | UnblockProfilesRequest
   | UnfollowRequest
-  | UpdateDispatcherConfigRequest
+  | UpdateProfileManagersRequest
   | UpdateFollowPolicyRequest
-  | UpdateProfileDetailsRequest
-  | UpdateProfileImageRequest;
+  | SetProfileMetadataRequest
+  | LinkHandleRequest
+  | UnlinkHandleRequest;
 
 export type ProtocolTransactionRequest = JustProtocolRequest<AnyTransactionRequest>;

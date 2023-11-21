@@ -1,13 +1,13 @@
 import { TransactionKind } from '@lens-protocol/domain/entities';
-import { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
+import {
+  FollowPolicyType,
+  UpdateFollowPolicyRequest,
+  UpdateProfileManagersRequest,
+} from '@lens-protocol/domain/use-cases/profile';
+import { UnknownObject } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
-import {
-  Erc20AmountSchema,
-  ProfileIdSchema,
-  SerializedErc20AmountSchema,
-  SignatureSchema,
-} from './common';
+import { Erc20AmountSchema, EvmAddressSchema, ProfileIdSchema } from './common';
 
 export const CreateProfileRequestSchema = z.object({
   handle: z.string(),
@@ -15,108 +15,123 @@ export const CreateProfileRequestSchema = z.object({
 });
 
 const FollowRequestFeeSchema = z.object({
-  amount: SerializedErc20AmountSchema,
+  amount: Erc20AmountSchema,
   contractAddress: z.string(),
   recipient: z.string(),
 });
 
-export const UnconstrainedFollowRequestSchema = z.object({
-  followerAddress: z.string(),
+export const FreeFollowRequestSchema = z.object({
   profileId: ProfileIdSchema,
-  kind: z.literal(TransactionKind.FOLLOW_PROFILES),
+  kind: z.literal(TransactionKind.FOLLOW_PROFILE),
+  delegate: z.boolean(),
 });
 
 export const PaidFollowRequestSchema = z.object({
-  followerAddress: z.string(),
   profileId: ProfileIdSchema,
-  kind: z.literal(TransactionKind.FOLLOW_PROFILES),
+  kind: z.literal(TransactionKind.FOLLOW_PROFILE),
   fee: FollowRequestFeeSchema,
 });
 
-export const ProfileOwnerFollowRequestSchema = z.object({
-  followerAddress: z.string(),
-  profileId: ProfileIdSchema,
-  kind: z.literal(TransactionKind.FOLLOW_PROFILES),
-  followerProfileId: z.string(),
-});
+export const FollowRequestSchema = z.union([PaidFollowRequestSchema, FreeFollowRequestSchema]);
 
 export const UnfollowRequestSchema = z.object({
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.UNFOLLOW_PROFILE),
+  delegate: z.boolean(),
 });
 
-export const UpdateDispatcherConfigRequestSchema = z.object({
-  profileId: ProfileIdSchema,
-  enabled: z.boolean(),
-  kind: z.literal(TransactionKind.UPDATE_DISPATCHER_CONFIG),
-});
+export const UpdateProfileManagersRequestSchema = z
+  .object({
+    approveSignless: z.boolean().optional(),
+    add: EvmAddressSchema.array().min(1).optional(),
+    remove: EvmAddressSchema.array().min(1).optional(),
+    kind: z.literal(TransactionKind.UPDATE_PROFILE_MANAGERS),
+  })
+  .superRefine((val, ctx): val is UpdateProfileManagersRequest => {
+    if (['add', 'remove', 'approveSignless'].every((key) => !(key in val))) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `At least one of 'add', 'remove', or 'approveSignless' must be present.`,
+      });
+      return z.NEVER;
+    }
+    // TODO add further checks needed
 
-function chargeFollowPolicyConfigSchema<TAmountSchema extends Erc20AmountSchema>(
-  amountSchema: TAmountSchema,
-) {
-  return z.object({
-    type: z.literal(FollowPolicyType.CHARGE),
-    amount: amountSchema,
-    recipient: z.string(),
+    return z.NEVER;
   });
-}
+
+const ChargeFollowPolicyConfigSchema = z.object({
+  type: z.literal(FollowPolicyType.CHARGE),
+  amount: Erc20AmountSchema,
+  recipient: z.string(),
+});
 
 const AnyoneFollowPolicyConfigSchema = z.object({
   type: z.literal(FollowPolicyType.ANYONE),
-});
-
-const OnlyProfileOwnersFollowPolicyConfigSchema = z.object({
-  type: z.literal(FollowPolicyType.ONLY_PROFILE_OWNERS),
 });
 
 const NoOneFollowPolicyConfigSchema = z.object({
   type: z.literal(FollowPolicyType.NO_ONE),
 });
 
-export function updateFollowPolicyRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  amountSchema: TAmountSchema,
-) {
-  return z.object({
-    profileId: ProfileIdSchema,
-    policy: z.discriminatedUnion('type', [
-      chargeFollowPolicyConfigSchema(amountSchema),
-      AnyoneFollowPolicyConfigSchema,
-      OnlyProfileOwnersFollowPolicyConfigSchema,
-      NoOneFollowPolicyConfigSchema,
-    ]),
-    kind: z.literal(TransactionKind.UPDATE_FOLLOW_POLICY),
-  });
-}
+const FollowPolicyConfigSchema = z.discriminatedUnion('type', [
+  ChargeFollowPolicyConfigSchema,
+  AnyoneFollowPolicyConfigSchema,
+  NoOneFollowPolicyConfigSchema,
+]);
 
-const PartialAttributesUpdateSchema = z.record(
-  z.union([z.boolean(), z.coerce.date(), z.number(), z.string(), z.null()]),
-);
+export const UpdateFollowPolicyRequestSchema: z.ZodType<
+  UpdateFollowPolicyRequest,
+  z.ZodTypeDef,
+  UnknownObject
+> = z.object({
+  policy: FollowPolicyConfigSchema,
+  kind: z.literal(TransactionKind.UPDATE_FOLLOW_POLICY),
+  delegate: z.boolean(),
+});
 
-export const UpdateProfileDetailsRequestSchema = z.object({
-  attributes: PartialAttributesUpdateSchema.optional(),
-  bio: z.string().nullable().optional(),
-  coverPicture: z.string().nullable().optional(),
-  name: z.string(),
-  profileId: ProfileIdSchema,
+export const SetProfileMetadataRequestSchema = z.object({
+  metadataURI: z.string().url(),
   kind: z.literal(TransactionKind.UPDATE_PROFILE_DETAILS),
   delegate: z.boolean(),
 });
 
-const NftOwnershipSignatureSchema = z.object({
-  id: z.string(),
-  signature: SignatureSchema,
-});
-
-export const UpdateNftProfileImageRequestSchema = z.object({
-  kind: z.literal(TransactionKind.UPDATE_PROFILE_IMAGE),
+export const LinkHandleRequestSchema = z.object({
+  fullHandle: z.string(),
   profileId: ProfileIdSchema,
-  signature: NftOwnershipSignatureSchema,
+  kind: z.literal(TransactionKind.LINK_HANDLE),
   delegate: z.boolean(),
 });
 
-export const UpdateOffChainProfileImageRequestSchema = z.object({
-  url: z.string(),
-  kind: z.literal(TransactionKind.UPDATE_PROFILE_IMAGE),
+export const UnlinkHandleRequestSchema = z.object({
+  fullHandle: z.string(),
   profileId: ProfileIdSchema,
+  kind: z.literal(TransactionKind.UNLINK_HANDLE),
+  delegate: z.boolean(),
+});
+
+export const UnblockProfilesRequestSchema = z.object({
+  profileIds: ProfileIdSchema.array().min(1),
+  kind: z.literal(TransactionKind.UNBLOCK_PROFILE),
+  delegate: z.boolean(),
+});
+
+export const ClaimHandleRequestSchema = z.union([
+  z.object({
+    kind: z.literal(TransactionKind.CLAIM_HANDLE),
+    localName: z.string(),
+    followPolicy: FollowPolicyConfigSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal(TransactionKind.CLAIM_HANDLE),
+    id: z.string(),
+    handle: z.string(),
+    followPolicy: FollowPolicyConfigSchema.optional(),
+  }),
+]);
+
+export const BlockProfilesRequestSchema = z.object({
+  profileIds: ProfileIdSchema.array().min(1),
+  kind: z.literal(TransactionKind.BLOCK_PROFILE),
   delegate: z.boolean(),
 });

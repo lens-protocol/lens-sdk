@@ -1,10 +1,10 @@
 import { TypedData } from '@lens-protocol/blockchain-bindings';
 import { ISignedVote } from '@lens-protocol/domain/entities';
 import { IPollVoteRelayer } from '@lens-protocol/domain/use-cases/polls';
-import { EthereumAddress, Url } from '@lens-protocol/shared-kernel';
+import { EvmAddress, Url } from '@lens-protocol/shared-kernel';
 
 export interface ISnapshotVote extends ISignedVote {
-  voter: EthereumAddress;
+  voter: EvmAddress;
   data: TypedData;
 }
 

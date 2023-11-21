@@ -1,124 +1,48 @@
 export * from './useApproveModule';
-export * from './useCollect';
+export * from './useClaimHandle';
 export * from './useCreateComment';
-export * from './useCreateEncryptedPost';
-export * from './useCreateEncryptedComment';
 export * from './useCreateMirror';
 export * from './useCreatePost';
+export * from './useCreateQuote';
 export * from './useFollow';
-export * from './useRecentPosts';
-export * from './useRecentTransactions';
-export * from './useSelfFundedFallback';
+export * from './useLinkHandle';
+export * from './useOpenAction';
+export * from './useSetProfileMetadata';
 export * from './useUnfollow';
-export * from './useUpdateDispatcherConfig';
+export * from './useUnlinkHandle';
 export * from './useUpdateFollowPolicy';
-export * from './useUpdateProfileDetails';
-export * from './useUpdateProfileImage';
-export * from './useClearRecentPosts';
+export * from './useUpdateProfileManagers';
+export * from './useUnblockProfiles';
+export * from './useBlockProfiles';
 
-/**
- * Domain
- */
-export {
-  TransactionError,
-  TransactionErrorReason,
-  TransactionKind,
-} from '@lens-protocol/domain/entities';
 export type {
-  JustProtocolRequest,
-  PickByKind,
-  ProtocolTransactionKind,
-  ProtocolTransactionKinds,
-  Signature,
-} from '@lens-protocol/domain/entities';
-
-/**
- * Request models
- */
-export type {
-  AnyTransactionRequest,
-  ProtocolTransactionRequest,
-} from '@lens-protocol/domain/use-cases/transactions';
-export type {
-  CreateProfileRequest,
-  FollowRequest,
-  FollowRequestFee,
-  NftOwnershipSignature,
-  PaidFollowRequest,
-  PartialAttributesUpdate,
-  ProfileAttributeValue,
-  ProfileOwnerFollowRequest,
-  UnconstrainedFollowRequest,
-  UnfollowRequest,
-  UpdateDispatcherConfigRequest,
-  UpdateFollowPolicyRequest,
-  UpdateNftProfileImageRequest,
-  UpdateOffChainProfileImageRequest,
-  UpdateProfileDetailsRequest,
-  UpdateProfileImageRequest,
-} from '@lens-protocol/domain/use-cases/profile';
-export type { TokenAllowanceRequest } from '@lens-protocol/domain/use-cases/wallets';
-export type {
-  AaveChargeCollectPolicyConfig,
   AnyoneReferencePolicyConfig,
-  BaseCommentRequest,
-  BasePostRequest,
-  ChargeCollectPolicyConfig,
-  CollectablePolicyConfig,
-  CollectFee,
-  CollectPolicyConfig,
-  CollectRequest,
-  CreateCommentRequest,
-  CreateEmbedCommentRequest,
-  CreateEmbedPostRequest,
-  CreateMediaCommentRequest,
-  CreateMediaPostRequest,
-  CreateMirrorRequest,
-  CreatePostRequest,
-  CreateTextualCommentRequest,
-  CreateTextualPostRequest,
+  CollectActionConfig,
   DegreesOfSeparationReferencePolicyConfig,
   FollowersOnlyReferencePolicyConfig,
-  FreeCollectPolicyConfig,
-  FreeCollectRequest,
-  Locale,
-  MediaObject,
-  MultirecipientChargeCollectPolicyConfig,
-  MetadataAttribute,
-  NftMetadata,
-  NoCollectPolicyConfig,
-  PaidCollectRequest,
+  MultirecipientCollectActionConfig,
+  NoReferencePolicyConfig,
+  OpenActionConfig,
   RecipientWithSplit,
   ReferencePolicyConfig,
-  SimpleChargeCollectPolicyConfig,
-  SupportedPublicationMediaType,
-  VaultChargeCollectPolicyConfig,
-} from '@lens-protocol/domain/use-cases/publications';
-export {
-  AudioType,
-  CollectPolicyType,
-  CollectType,
-  ContentFocus,
-  ContentWarning,
-  ImageType,
-  MetadataAttributeDisplayType,
-  ReferencePolicyType,
-  SupportedFileType,
-  VideoType,
+  SimpleCollectActionConfig,
+  UnknownOpenActionConfig,
 } from '@lens-protocol/domain/use-cases/publications';
 
-/**
- * Domain errors
- */
-export {
-  InsufficientAllowanceError,
-  InsufficientFundsError,
-} from '@lens-protocol/domain/use-cases/wallets';
+export type {
+  ChargeFollowConfig,
+  ChargeFollowPolicy,
+  FollowPolicy,
+  FollowPolicyConfig,
+  NoFeeFollowConfig,
+  NoFeeFollowPolicy,
+  OpenFollowPolicy,
+} from '@lens-protocol/domain/use-cases/profile';
+
+export type { FollowModule } from '@lens-protocol/api-bindings';
 
 /**
- * Helpers
+ * Enums
  */
-export type { TransactionData } from '@lens-protocol/domain/use-cases/transactions';
-export type { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
-export type { MetadataUploadHandler } from './adapters/MetadataUploadHandler';
-export { FailedUploadError } from './adapters/IMetadataUploader';
+export { OpenActionType, ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
+export { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';

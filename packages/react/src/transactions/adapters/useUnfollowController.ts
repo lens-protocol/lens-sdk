@@ -1,37 +1,59 @@
 import {
   PendingSigningRequestError,
-  WalletConnectionError,
   UserRejectedError,
+  WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { UnfollowProfile, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
+import { BroadcastingError, SignedOnChain } from '@lens-protocol/domain/use-cases/transactions';
+import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
+import { AsyncTransactionResult } from './AsyncTransactionResult';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
-import { UnfollowProfileCallGateway } from './UnfollowProfileCallGateway';
+import { UnfollowProfileGateway } from './profiles/UnfollowProfileGateway';
+import { validateUnfollowRequest } from './schemas/validators';
 
 export function useUnfollowController() {
-  const { activeWallet, apolloClient, transactionGateway, onChainRelayer, transactionQueue } =
-    useSharedDependencies();
+  const {
+    activeWallet,
+    apolloClient,
+    onChainRelayer,
+    transactionFactory,
+    transactionGateway,
+    transactionQueue,
+  } = useSharedDependencies();
 
-  return async (request: UnfollowRequest) => {
+  return async (
+    request: UnfollowRequest,
+  ): PromiseResult<
+    AsyncTransactionResult<void>,
+    BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
+  > => {
+    validateUnfollowRequest(request);
+
     const presenter = new TransactionResultPresenter<
       UnfollowRequest,
-      BroadcastingError | PendingSigningRequestError | WalletConnectionError | UserRejectedError
+      BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
+    const gateway = new UnfollowProfileGateway(apolloClient, transactionFactory);
 
-    const unfollowProfileCallGateway = new UnfollowProfileCallGateway(apolloClient);
-
-    const unfollowProfiles = new UnfollowProfile(
+    const signedUnfollow = new SignedOnChain(
       activeWallet,
       transactionGateway,
-      unfollowProfileCallGateway,
+      gateway,
       onChainRelayer,
       transactionQueue,
       presenter,
     );
 
-    await unfollowProfiles.execute(request);
+    const unfollowProfile = new UnfollowProfile(
+      signedUnfollow,
+      gateway,
+      transactionQueue,
+      presenter,
+    );
+
+    await unfollowProfile.execute(request);
 
     return presenter.asResult();
   };

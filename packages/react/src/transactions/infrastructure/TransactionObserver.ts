@@ -1,20 +1,13 @@
 import {
-  HasTxHashBeenIndexedDocument,
-  HasTxHashBeenIndexedData,
-  HasTxHashBeenIndexedVariables,
   SafeApolloClient,
-  ProxyActionStatusDocument,
-  ProxyActionStatusData,
-  ProxyActionStatusVariables,
-  ProxyActionStatusTypes,
-  TransactionErrorReasons,
+  LensTransactionStatusDocument,
+  LensTransactionStatusData,
+  LensTransactionStatusVariables,
+  LensTransactionFailureType,
+  LensTransactionStatusType,
 } from '@lens-protocol/api-bindings';
-import {
-  ProxyActionStatus,
-  TransactionError,
-  TransactionErrorReason,
-} from '@lens-protocol/domain/entities';
-import { failure, PromiseResult, Result, success } from '@lens-protocol/shared-kernel';
+import { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
+import { failure, never, PromiseResult, Result, success } from '@lens-protocol/shared-kernel';
 
 import { IProviderFactory } from '../../wallet/adapters/IProviderFactory';
 import {
@@ -22,7 +15,6 @@ import {
   IndexingEvent,
   IndexingEventRequest,
   ITransactionObserver,
-  ProxyActionStatusEvent,
 } from './TransactionFactory';
 
 const ONE_SECOND = 1000; // ms
@@ -42,9 +34,9 @@ function delay(waitInMs: number) {
   return new Promise((resolve) => setTimeout(resolve, waitInMs));
 }
 
-function resolveTransactionErrorReason(reason: TransactionErrorReasons) {
+function resolveTransactionErrorReason(reason: LensTransactionFailureType) {
   switch (reason) {
-    case TransactionErrorReasons.Reverted:
+    case LensTransactionFailureType.Reverted:
       return TransactionErrorReason.REVERTED;
     default:
       return TransactionErrorReason.UNKNOWN;
@@ -93,17 +85,17 @@ export class TransactionObserver implements ITransactionObserver {
   ): PromiseResult<IndexingEvent, TransactionError> {
     const startedAt = Date.now();
     const observable = this.apolloClient.poll<
-      HasTxHashBeenIndexedData,
-      HasTxHashBeenIndexedVariables
+      LensTransactionStatusData,
+      LensTransactionStatusVariables
     >({
-      query: HasTxHashBeenIndexedDocument,
+      query: LensTransactionStatusDocument,
       variables: {
         request: request.indexingId
           ? {
-              txId: request.indexingId,
+              forTxId: request.indexingId,
             }
           : {
-              txHash: request.txHash,
+              forTxHash: request.txHash,
             },
       },
     });
@@ -112,80 +104,48 @@ export class TransactionObserver implements ITransactionObserver {
     return new Promise<Result<IndexingEvent, TransactionError>>((resolve, reject) => {
       const subscription = observable.subscribe({
         next: async ({ result }) => {
-          switch (result.__typename) {
-            case 'TransactionIndexedResult':
-              if (previousTxHash === null) {
-                previousTxHash = result.txHash;
-              }
+          // if (request.indexingId && result === null) {
+          //   return; // keep trying for now until API race condition is solved
+          //   subscription.unsubscribe();
 
-              if (previousTxHash !== result.txHash || result.indexed) {
-                subscription.unsubscribe();
-                resolve(
-                  success({
-                    indexed: result.indexed,
-                    txHash: result.txHash,
-                  }),
-                );
-                return;
-              }
-              break;
+          //   reject(new InvariantError(`Transaction ${String(request.indexingId)} not found`));
+          // }
 
-            case 'TransactionError':
-              subscription.unsubscribe();
-              resolve(failure(new TransactionError(resolveTransactionErrorReason(result.reason))));
+          // keep trying for now until API race condition is solved
+          if (result === null) {
+            return;
           }
 
-          if (Date.now() - startedAt > this.timings.maxIndexingWaitTime) {
+          if (result.status === LensTransactionStatusType.Failed) {
             subscription.unsubscribe();
-
-            resolve(failure(new TransactionError(TransactionErrorReason.INDEXING_TIMEOUT)));
-          }
-        },
-        error: reject,
-      });
-    });
-  }
-
-  async waitForProxyTransactionStatus(
-    proxyId: string,
-  ): PromiseResult<ProxyActionStatusEvent, TransactionError> {
-    const startedAt = Date.now();
-    const observable = this.apolloClient.poll<ProxyActionStatusData, ProxyActionStatusVariables>({
-      query: ProxyActionStatusDocument,
-      variables: { proxyActionId: proxyId },
-    });
-    let previousTxHash: string | null = null;
-
-    return new Promise<Result<ProxyActionStatusEvent, TransactionError>>((resolve, reject) => {
-      const subscription = observable.subscribe({
-        next: async ({ result }) => {
-          switch (result.__typename) {
-            case 'ProxyActionStatusResult':
-              if (previousTxHash === null) {
-                previousTxHash = result.txHash;
-              }
-
-              if (
-                previousTxHash !== result.txHash ||
-                result.status === ProxyActionStatusTypes.Complete
-              ) {
-                subscription.unsubscribe();
-                resolve(
-                  success({
-                    txHash: result.txHash,
-                    status: ProxyActionStatus.COMPLETE,
-                  }),
-                );
-                return;
-              }
-              break;
-
-            case 'ProxyActionError':
-              subscription.unsubscribe();
-              resolve(failure(new TransactionError(TransactionErrorReason.UNKNOWN)));
+            resolve(
+              failure(
+                new TransactionError(
+                  resolveTransactionErrorReason(result.reason ?? never(`Missing reason`)),
+                ),
+              ),
+            );
+            return;
           }
 
-          // handle timeout as the last possible case, otherwise can fail with timeout on Complete tx
+          if (previousTxHash === null) {
+            previousTxHash = result.txHash;
+          }
+
+          if (
+            previousTxHash !== result.txHash ||
+            result.status === LensTransactionStatusType.Complete
+          ) {
+            subscription.unsubscribe();
+            resolve(
+              success({
+                indexed: result.status === LensTransactionStatusType.Complete,
+                txHash: result.txHash,
+              }),
+            );
+            return;
+          }
+
           if (Date.now() - startedAt > this.timings.maxIndexingWaitTime) {
             subscription.unsubscribe();
 

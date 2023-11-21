@@ -66,12 +66,19 @@ export type XOR<T extends UnknownObject, U extends UnknownObject> =
  * OneOf<RouteProps, "component" | "render" | "children">;
  * ```
  */
-export type OneOf<T, K extends keyof T = keyof T> = Omit<T, K> &
-  {
-    [k in K]: Pick<Required<T>, k> & {
-      [k1 in Exclude<K, k>]?: never;
-    };
-  }[K];
+export type OneOf<T, K extends keyof T = keyof T> = Prettify<
+  Omit<T, K> &
+    {
+      [k in K]: Pick<Required<T>, k> & {
+        [k1 in Exclude<K, k>]?: never;
+      };
+    }[K]
+>;
+
+/**
+ * At least one of the properties must be provided
+ */
+export type AtLeastOneOf<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
 
 /**
  * Ask TS to re-check that A1 extends A2. And if it fails, A2 will be enforced anyway.
@@ -156,11 +163,24 @@ export type Prettify<T> = {
   // eslint-disable-next-line @typescript-eslint/ban-types
 } & {};
 
-declare const brand: unique symbol;
-
 /**
  * Branding function
  *
  * @internal
  */
-export type Brand<T, TBrand> = T & { [brand]: TBrand };
+export type Brand<T, TBrand, ReservedName extends string = '__type__'> = T & {
+  [K in ReservedName]: TBrand;
+};
+
+/**
+ * @internal
+ */
+type BrandOf<A> = [A] extends [Brand<unknown, infer R>] ? R : never;
+/**
+ * @internal
+ */
+export type RecursiveUnbrand<T> = T extends Brand<infer R, BrandOf<T>>
+  ? R
+  : {
+      [K in keyof T]: RecursiveUnbrand<T[K]>;
+    };

@@ -4,8 +4,6 @@ import {
   NativeTransaction,
   Nonce,
   ProtocolTransactionKinds,
-  ProxyActionStatus,
-  ProxyTransaction,
   TransactionError,
   TransactionEvent,
   TransactionKind,
@@ -14,18 +12,16 @@ import {
   ProtocolTransactionRequest,
   AnyTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, failure, PromiseResult, success, XOR } from '@lens-protocol/shared-kernel';
+import { ChainType, never, PromiseResult, success, XOR } from '@lens-protocol/shared-kernel';
 
 import {
   DataTransactionData,
   MetaTransactionData,
   NativeTransactionData,
-  ProxyTransactionData,
 } from '../adapters/ITransactionFactory';
 import {
   ISerializableMetaTransaction,
   ISerializableNativeTransaction,
-  ISerializableProxyTransaction,
   ISerializableTransactionFactory,
 } from '../adapters/PendingTransactionGateway';
 import { ISerializableDataTransaction } from '../adapters/PendingTransactionGateway/ISerializableTransactionFactory';
@@ -34,12 +30,6 @@ export type IndexingEvent = {
   indexed: boolean;
   txHash: string;
 };
-
-export type ProxyActionStatusEvent = {
-  txHash: string;
-  status: ProxyActionStatus;
-};
-
 export type ConfirmationRequest = {
   txHash: string;
   chainType: ChainType;
@@ -53,10 +43,6 @@ export interface ITransactionObserver {
   waitForNextIndexingEvent(
     request: IndexingEventRequest,
   ): PromiseResult<IndexingEvent, TransactionError>;
-
-  waitForProxyTransactionStatus(
-    proxyId: string,
-  ): PromiseResult<ProxyActionStatusEvent, TransactionError>;
 }
 
 type StateUpdate<T> = {
@@ -66,22 +52,13 @@ type StateUpdate<T> = {
 
 type StateReducer<T> = (state: T) => PromiseResult<StateUpdate<T>, TransactionError>;
 
-type MetaTransactionState<T extends AnyTransactionRequest> = {
-  chainType: ChainType;
-  id: string;
-  indexingId: string;
-  nonce: Nonce;
-  request: T;
-  txHash: string;
-};
-
 class SerializableMetaTransaction<T extends ProtocolTransactionRequest>
   extends MetaTransaction<T>
   implements ISerializableMetaTransaction<T>
 {
   constructor(
-    private state: MetaTransactionState<T>,
-    private readonly reduce: StateReducer<MetaTransactionState<T>>,
+    private state: MetaTransactionData<T>,
+    private readonly reduce: StateReducer<MetaTransactionData<T>>,
   ) {
     super();
   }
@@ -113,7 +90,7 @@ class SerializableMetaTransaction<T extends ProtocolTransactionRequest>
     return this.state.nonce;
   }
 
-  get hash(): string {
+  get hash(): string | null {
     return this.state.txHash;
   }
 
@@ -124,87 +101,17 @@ class SerializableMetaTransaction<T extends ProtocolTransactionRequest>
       this.state = result.value.state;
       return success(result.value.event);
     }
-    return failure(result.error);
+    return result;
   }
 }
-
-type ProxyTransactionState<T extends AnyTransactionRequest> = {
-  chainType: ChainType;
-  id: string;
-  proxyId: string;
-  request: T;
-  txHash?: string;
-  status?: ProxyActionStatus;
-};
-
-class SerializableProxyTransaction<T extends ProtocolTransactionRequest>
-  extends ProxyTransaction<T>
-  implements ISerializableProxyTransaction<T>
-{
-  constructor(
-    private state: ProxyTransactionState<T>,
-    private readonly reduce: StateReducer<ProxyTransactionState<T>>,
-  ) {
-    super();
-  }
-
-  toTransactionData(): ProxyTransactionData<T> {
-    return {
-      chainType: this.state.chainType,
-      id: this.state.id,
-      proxyId: this.state.proxyId,
-      request: this.state.request,
-      txHash: this.state.txHash,
-      status: this.state.status,
-    };
-  }
-
-  get chainType(): ChainType {
-    return this.state.chainType;
-  }
-
-  get id(): string {
-    return this.state.id;
-  }
-
-  get request(): T {
-    return this.state.request;
-  }
-
-  get hash(): string | undefined {
-    return this.state.txHash;
-  }
-
-  get status(): ProxyActionStatus | undefined {
-    return this.state.status;
-  }
-
-  async waitNextEvent(): PromiseResult<TransactionEvent, TransactionError> {
-    const result = await this.reduce(this.state);
-
-    if (result.isSuccess()) {
-      this.state = result.value.state;
-      return success(result.value.event);
-    }
-    return failure(result.error);
-  }
-}
-
-type NativeTransactionState<T extends AnyTransactionRequest> = {
-  chainType: ChainType;
-  id: string;
-  indexingId?: string;
-  request: T;
-  txHash: string;
-};
 
 class SerializableNativeTransaction<T extends AnyTransactionRequest>
   extends NativeTransaction<T>
   implements ISerializableNativeTransaction<T>
 {
   constructor(
-    private state: NativeTransactionState<T>,
-    private readonly reduce: StateReducer<NativeTransactionState<T>>,
+    private state: NativeTransactionData<T>,
+    private readonly reduce: StateReducer<NativeTransactionData<T>>,
   ) {
     super();
   }
@@ -235,8 +142,8 @@ class SerializableNativeTransaction<T extends AnyTransactionRequest>
     return this.state.request;
   }
 
-  get hash(): string {
-    return this.state?.txHash;
+  get hash(): string | null {
+    return this.state.txHash;
   }
 
   async waitNextEvent(): PromiseResult<TransactionEvent, TransactionError> {
@@ -246,7 +153,7 @@ class SerializableNativeTransaction<T extends AnyTransactionRequest>
       this.state = result.value.state;
       return success(result.value.event);
     }
-    return failure(result.error);
+    return result;
   }
 }
 
@@ -323,22 +230,6 @@ export class TransactionFactory implements ISerializableTransactionFactory {
     );
   }
 
-  createProxyTransaction<T extends ProtocolTransactionRequest>(
-    init: ProxyTransactionData<T>,
-  ): ISerializableProxyTransaction<T> {
-    return new SerializableProxyTransaction(
-      {
-        chainType: init.chainType,
-        id: init.id,
-        proxyId: init.proxyId,
-        request: init.request,
-        txHash: init.txHash,
-        status: init.status,
-      },
-      this.createProxyActionStateReducer(),
-    );
-  }
-
   createDataTransaction<T extends ProtocolTransactionRequest>(
     init: DataTransactionData<T>,
   ): ISerializableDataTransaction<T> {
@@ -347,17 +238,17 @@ export class TransactionFactory implements ISerializableTransactionFactory {
 
   private createProtocolCallStateReducer<
     T extends AnyTransactionRequest,
-    S extends MetaTransactionState<T> | NativeTransactionState<T>,
+    S extends MetaTransactionData<T> | NativeTransactionData<T>,
   >(): StateReducer<S> {
     return async (state) => {
       const request = state.indexingId
         ? { indexingId: state.indexingId }
-        : { txHash: state.txHash };
+        : { txHash: state.txHash ?? never() };
 
       const indexingEventResult = await this.transactionObserver.waitForNextIndexingEvent(request);
 
       if (indexingEventResult.isFailure()) {
-        return failure(indexingEventResult.error);
+        return indexingEventResult;
       }
 
       if (indexingEventResult.value.indexed) {
@@ -381,71 +272,24 @@ export class TransactionFactory implements ISerializableTransactionFactory {
 
   private createPureBlockchainStateReducer<
     T extends AnyTransactionRequest,
-    S extends NativeTransactionState<T>,
+    S extends NativeTransactionData<T>,
   >(): StateReducer<S> {
     return async (state) => {
       const result = await this.transactionObserver.waitForConfirmation({
-        txHash: state.txHash,
+        txHash:
+          state.txHash ??
+          never(`Cannot observe ${NativeTransaction.name} on-chain without a TX hash`),
         chainType: state.chainType,
       });
 
       if (result.isFailure()) {
-        return failure(result.error);
+        return result;
       }
 
       return success({
         event: TransactionEvent.SETTLED,
         state,
       });
-    };
-  }
-
-  private createProxyActionStateReducer<
-    T extends AnyTransactionRequest,
-    S extends ProxyTransactionState<T>,
-  >(): StateReducer<S> {
-    return async (state) => {
-      const result = await this.transactionObserver.waitForProxyTransactionStatus(state.proxyId);
-
-      if (result.isFailure()) {
-        return failure(result.error);
-      }
-
-      switch (result.value.status) {
-        case ProxyActionStatus.MINTING:
-          return success({
-            event:
-              state.status === ProxyActionStatus.MINTING
-                ? TransactionEvent.UPGRADED
-                : TransactionEvent.BROADCASTED,
-            state: {
-              ...state,
-              status: ProxyActionStatus.MINTING,
-              txHash: result.value.txHash,
-            },
-          });
-        case ProxyActionStatus.TRANSFERRING:
-          return success({
-            event:
-              state.status === ProxyActionStatus.TRANSFERRING
-                ? TransactionEvent.UPGRADED
-                : TransactionEvent.BROADCASTED,
-            state: {
-              ...state,
-              status: ProxyActionStatus.TRANSFERRING,
-              txHash: result.value.txHash,
-            },
-          });
-        case ProxyActionStatus.COMPLETE:
-          return success({
-            event: TransactionEvent.SETTLED,
-            state: {
-              ...state,
-              status: ProxyActionStatus.COMPLETE,
-              txHash: result.value.txHash,
-            },
-          });
-      }
     };
   }
 }

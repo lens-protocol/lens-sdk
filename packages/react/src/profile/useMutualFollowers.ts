@@ -1,34 +1,36 @@
-import { Profile, useMutualFollowersProfiles } from '@lens-protocol/api-bindings';
-import { ProfileId } from '@lens-protocol/domain/entities';
-
 import {
-  useLensApolloClient,
-  useMediaTransformFromConfig,
-  useSourcesFromConfig,
-} from '../helpers/arguments';
-import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
-import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
+  Profile,
+  MutualFollowersRequest,
+  useMutualFollowers as useMutualFollowersHook,
+} from '@lens-protocol/api-bindings';
 
-export type UseMutualFollowersArgs = PaginatedArgs<{
-  observerId: ProfileId;
-  viewingProfileId: ProfileId;
-}>;
+import { useLensApolloClient } from '../helpers/arguments';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 
 /**
+ * {@link useMutualFollowers} hook arguments
+ */
+export type UseMutualFollowersArgs = PaginatedArgs<MutualFollowersRequest>;
+
+/**
+ * `useMutualFollowers` is a paginated hook that lets you fetch mutual followers between two profiles.
+ *
  * @category Profiles
  * @group Hooks
+ *
+ * @example
+ * ```tsx
+ * const { data, loading, error } = useMutualFollowers({
+ *   observer: '0x123',
+ *   viewing: '0x456',
+ * });
+ * ```
  */
-export function useMutualFollowers({
-  observerId,
-  viewingProfileId,
-  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-}: UseMutualFollowersArgs): PaginatedReadResult<Profile[]> {
+export function useMutualFollowers(args: UseMutualFollowersArgs): PaginatedReadResult<Profile[]> {
   return usePaginatedReadResult(
-    useMutualFollowersProfiles(
+    useMutualFollowersHook(
       useLensApolloClient({
-        variables: useMediaTransformFromConfig(
-          useSourcesFromConfig({ limit, observerId, viewingProfileId }),
-        ),
+        variables: args,
       }),
     ),
   );

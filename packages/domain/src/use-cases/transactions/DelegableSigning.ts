@@ -1,4 +1,4 @@
-import { failure, PromiseResult } from '@lens-protocol/shared-kernel';
+import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import {
   ProtocolTransactionRequestModel,
@@ -9,37 +9,43 @@ import { BroadcastingError } from './BroadcastingError';
 import { ITransactionResultPresenter } from './ITransactionResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
 
-export type WithDelegateFlag<T extends ProtocolTransactionRequestModel> = T extends {
+type WithDelegateFlag<T extends ProtocolTransactionRequestModel> = T & {
   delegate: boolean;
-}
-  ? T
-  : never;
+};
 
-export interface ISignedOperation<T extends ProtocolTransactionRequestModel> {
-  execute(request: T): Promise<void>;
-}
+export type DelegableProtocolTransactionRequestModel =
+  WithDelegateFlag<ProtocolTransactionRequestModel>;
 
-export interface IDelegatedTransactionGateway<T extends ProtocolTransactionRequestModel> {
-  createDelegatedTransaction(request: T): PromiseResult<Transaction<T>, BroadcastingError>;
+export interface ISignedOperation<TRequest extends ProtocolTransactionRequestModel> {
+  execute(request: TRequest): Promise<void>;
 }
 
-export type IDelegatedTransactionPresenter<T extends ProtocolTransactionRequestModel> =
-  ITransactionResultPresenter<T, BroadcastingError>;
+export interface IDelegatedTransactionGateway<TDelegable extends ProtocolTransactionRequestModel> {
+  createDelegatedTransaction(
+    request: TDelegable,
+  ): PromiseResult<Transaction<TDelegable>, BroadcastingError>;
+}
 
-export class DelegableSigning<T extends ProtocolTransactionRequestModel> {
+export type IDelegatedTransactionPresenter<TDelegable extends ProtocolTransactionRequestModel> =
+  ITransactionResultPresenter<TDelegable, BroadcastingError>;
+
+export class DelegableSigning<
+  TRequest extends ProtocolTransactionRequestModel,
+  TDelegable extends WithDelegateFlag<TRequest> = WithDelegateFlag<TRequest>,
+> {
   constructor(
-    private readonly signedOperation: ISignedOperation<T>,
-    private readonly transactionGateway: IDelegatedTransactionGateway<T>,
+    private readonly signedOperation: ISignedOperation<TRequest>,
+    private readonly transactionGateway: IDelegatedTransactionGateway<TDelegable>,
     private readonly transactionQueue: TransactionQueue<AnyTransactionRequestModel>,
-    private readonly presenter: IDelegatedTransactionPresenter<T>,
+    private readonly presenter: IDelegatedTransactionPresenter<TDelegable>,
   ) {}
 
-  async execute(request: WithDelegateFlag<T>): Promise<void> {
+  async execute(request: TDelegable): Promise<void> {
     if (request.delegate) {
       const result = await this.transactionGateway.createDelegatedTransaction(request);
 
       if (result.isFailure()) {
-        this.presenter.present(failure(result.error));
+        this.presenter.present(result);
         return;
       }
 

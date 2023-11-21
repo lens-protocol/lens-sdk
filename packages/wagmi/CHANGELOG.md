@@ -1,5 +1,187 @@
 # @lens-protocol/wagmi
 
+## 3.0.0-alpha.18
+
+### Patch Changes
+
+- Updated dependencies [4166f51f8]
+- Updated dependencies [5c429a0d7]
+  - @lens-protocol/react-web@2.0.0-alpha.21
+
+## 3.0.0-alpha.17
+
+### Patch Changes
+
+- Updated dependencies [ac17aa775]
+- Updated dependencies [d6a8061e8]
+- Updated dependencies [3bf2e33dc]
+- Updated dependencies [d71f981cc]
+- Updated dependencies [c9b5c8d88]
+  - @lens-protocol/react-web@2.0.0-alpha.20
+  - @lens-protocol/shared-kernel@0.11.0-alpha.8
+
+## 3.0.0-alpha.16
+
+### Patch Changes
+
+- Updated dependencies [2f5360796]
+- Updated dependencies [3a9720968]
+- Updated dependencies [5d95eccd2]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.7
+  - @lens-protocol/react-web@2.0.0-alpha.19
+
+## 3.0.0-alpha.15
+
+### Patch Changes
+
+- Updated dependencies [a4e191700]
+  - @lens-protocol/react-web@2.0.0-alpha.18
+
+## 3.0.0-alpha.14
+
+### Patch Changes
+
+- Updated dependencies [0a7b26ff]
+  - @lens-protocol/react-web@2.0.0-alpha.17
+
+## 3.0.0-alpha.13
+
+### Patch Changes
+
+- Updated dependencies [cf250df4]
+- Updated dependencies [9490db8e]
+- Updated dependencies [cf250df4]
+  - @lens-protocol/react-web@2.0.0-alpha.16
+
+## 3.0.0-alpha.12
+
+### Patch Changes
+
+- Updated dependencies [672c85e6]
+- Updated dependencies [1bd69391]
+- Updated dependencies [86fa12e0]
+  - @lens-protocol/react-web@2.0.0-alpha.15
+
+## 3.0.0-alpha.11
+
+### Patch Changes
+
+- Updated dependencies [8120f676]
+- Updated dependencies [8120f676]
+- Updated dependencies [061df834]
+- Updated dependencies [8120f676]
+  - @lens-protocol/react-web@2.0.0-alpha.14
+  - @lens-protocol/shared-kernel@0.11.0-alpha.6
+
+## 3.0.0-alpha.10
+
+### Patch Changes
+
+- 50b546c5: **fix:** wagmi peer dep
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+  - @lens-protocol/react-web@2.0.0-alpha.13
+
+## 3.0.0-alpha.9
+
+### Patch Changes
+
+- Update dependencies
+- Updated dependencies
+  - @lens-protocol/react-web@2.0.0-alpha.12
+
+## 3.0.0-alpha.8
+
+### Patch Changes
+
+- Updated dependencies
+  - @lens-protocol/react-web@2.0.0-alpha.11
+
+## 3.0.0-alpha.7
+
+### Patch Changes
+
+- Updated dependencies [fa49d587]
+- Updated dependencies [c09c5fdc]
+- Updated dependencies [0687207b]
+  - @lens-protocol/react-web@2.0.0-alpha.10
+
+## 3.0.0-alpha.6
+
+### Minor Changes
+
+- 9481f48b: **feat:** implements `useApproveModule` hook. It also upgrades viem and wagmi peer deps.
+
+### Patch Changes
+
+- Updated dependencies [cfc03dff]
+- Updated dependencies [9481f48b]
+- Updated dependencies [fca2473b]
+- Updated dependencies [6ab0e99a]
+- Updated dependencies [f997e3f0]
+- Updated dependencies [cfc03dff]
+- Updated dependencies [bdf81299]
+  - @lens-protocol/react-web@2.0.0-alpha.9
+  - @lens-protocol/shared-kernel@0.11.0-alpha.5
+
+## 3.0.0-alpha.5
+
+### Patch Changes
+
+- Updated dependencies [30ccf19d]
+- Updated dependencies [a42e90e7]
+  - @lens-protocol/react-web@2.0.0-alpha.8
+
+## 3.0.0-alpha.4
+
+### Patch Changes
+
+- Updated dependencies [a929c0f6]
+- Updated dependencies [5bc7e430]
+- Updated dependencies [8b86832f]
+- Updated dependencies [d1414eda]
+- Updated dependencies [2f618240]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.4
+  - @lens-protocol/react-web@2.0.0-alpha.7
+
+## 3.0.0-alpha.3
+
+### Patch Changes
+
+- Updated dependencies [4630efb9]
+- Updated dependencies [25b7ef51]
+  - @lens-protocol/react-web@2.0.0-alpha.6
+
+## 3.0.0-alpha.2
+
+### Patch Changes
+
+- Updated dependencies [734d6823]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.3
+  - @lens-protocol/react-web@2.0.0-alpha.5
+
+## 3.0.0-alpha.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @lens-protocol/react-web@2.0.0-alpha.4
+
+## 3.0.0-alpha.0
+
+### Major Changes
+
+- 9df5730b: **feat:** updateds peer dep on `@lens-protocol/react@2.x`
+
+### Patch Changes
+
+- Updated dependencies [6d0d62dd]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.2
+  - @lens-protocol/react-web@2.0.0-alpha.3
+
 ## 2.1.1
 
 ### Patch Changes

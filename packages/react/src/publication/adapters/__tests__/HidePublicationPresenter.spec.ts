@@ -1,13 +1,7 @@
-import { Post, FragmentPost } from '@lens-protocol/api-bindings';
-import {
-  mockLensApolloClient,
-  mockPostFragment,
-  mockPublicationStatsFragment,
-  mockSources,
-} from '@lens-protocol/api-bindings/mocks';
+import { FragmentPost, Post } from '@lens-protocol/api-bindings';
+import { mockLensApolloClient, mockPostFragment } from '@lens-protocol/api-bindings/mocks';
 
-import { defaultMediaTransformsConfig } from '../../../mediaTransforms';
-import { PublicationCacheManager } from '../../../transactions/adapters/PublicationCacheManager';
+import { PublicationCacheManager } from '../../infrastructure/PublicationCacheManager';
 import { HidePublicationPresenter } from '../HidePublicationPresenter';
 
 function setupTestScenario({ post }: { post: Post }) {
@@ -23,11 +17,7 @@ function setupTestScenario({ post }: { post: Post }) {
     data: post,
   });
 
-  const publicationCacheManager = new PublicationCacheManager(
-    client,
-    mockSources(),
-    defaultMediaTransformsConfig,
-  );
+  const publicationCacheManager = new PublicationCacheManager(client);
   const presenter = new HidePublicationPresenter(publicationCacheManager);
 
   return {
@@ -50,8 +40,7 @@ describe(`Given the ${HidePublicationPresenter.name}`, () => {
   describe(`when "${HidePublicationPresenter.prototype.present.name}" method is invoked`, () => {
     it(`should update apollo cache by flagging publication as hidden`, async () => {
       const post = mockPostFragment({
-        reaction: null,
-        stats: mockPublicationStatsFragment({ totalUpvotes: 1 }),
+        isHidden: false,
       });
 
       const scenario = setupTestScenario({
@@ -62,7 +51,7 @@ describe(`Given the ${HidePublicationPresenter.name}`, () => {
 
       expect(scenario.updatedPostFragment).toEqual(
         expect.objectContaining({
-          hidden: true,
+          isHidden: true,
         }),
       );
     });

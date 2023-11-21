@@ -1,258 +1,76 @@
+import { TransactionKind } from '@lens-protocol/domain/entities';
 import {
-  AppId,
-  DecryptionCriteriaType,
-  Erc20ComparisonOperator,
-  NftContractType,
-  TransactionKind,
-} from '@lens-protocol/domain/entities';
-import {
-  SupportedFileType,
-  CollectPolicyType,
-  CollectType,
-  ContentFocus,
-  MetadataAttributeDisplayType,
+  CreateQuoteRequest,
+  AllOpenActionType,
+  CreateCommentRequest,
+  CreateMirrorRequest,
+  CreatePostRequest,
+  OpenActionConfig,
+  OpenActionType,
+  RecipientWithSplit,
   ReferencePolicyType,
-  ContentWarning,
-  ImageType,
 } from '@lens-protocol/domain/use-cases/publications';
+import { UnknownObject } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
-import { appId } from '../../../utils';
 import {
   Erc20AmountSchema,
-  SerializedErc20AmountSchema,
   ProfileIdSchema,
   PublicationIdSchema,
+  UriSchema,
+  EvmAddressSchema,
+  DataSchema,
 } from './common';
 
-const NftOwnershipCriterionSchema = z.object({
-  type: z.literal(DecryptionCriteriaType.NFT_OWNERSHIP),
-  contractAddress: z.string(),
-  chainId: z.number(),
-  contractType: z.nativeEnum(NftContractType),
-  tokenIds: z.array(z.string()).min(1).max(30).optional(),
-});
-
-function erc20OwnershipCriterionSchema<TAmountSchema extends Erc20AmountSchema>(
-  amountSchema: TAmountSchema,
-) {
-  return z.object({
-    type: z.literal(DecryptionCriteriaType.ERC20_OWNERSHIP),
-    amount: amountSchema,
-    condition: z.nativeEnum(Erc20ComparisonOperator),
-  });
-}
-
-const AddressOwnershipCriterionSchema = z.object({
-  type: z.literal(DecryptionCriteriaType.ADDRESS_OWNERSHIP),
-  address: z.string(),
-});
-
-const ProfileOwnershipCriterionSchema = z.object({
-  type: z.literal(DecryptionCriteriaType.PROFILE_OWNERSHIP),
-  profileId: ProfileIdSchema,
-});
-
-const FollowOwnershipCriterionSchema = z.object({
-  type: z.literal(DecryptionCriteriaType.FOLLOW_PROFILE),
-  profileId: ProfileIdSchema,
-});
-
-const CollectPublicationCriterionSchema = z.object({
-  type: z.literal(DecryptionCriteriaType.COLLECT_PUBLICATION),
-  publicationId: PublicationIdSchema,
-});
-
-const CollectThisPublicationCriterionSchema = z.object({
-  type: z.literal(DecryptionCriteriaType.COLLECT_THIS_PUBLICATION),
-});
-
-function simpleCriterionSchema<TAmountSchema extends Erc20AmountSchema>(
-  amountSchema: TAmountSchema,
-) {
-  return z.discriminatedUnion('type', [
-    NftOwnershipCriterionSchema,
-    erc20OwnershipCriterionSchema(amountSchema),
-    AddressOwnershipCriterionSchema,
-    ProfileOwnershipCriterionSchema,
-    FollowOwnershipCriterionSchema,
-    CollectPublicationCriterionSchema,
-    CollectThisPublicationCriterionSchema,
-  ]);
-}
-
-function unique(items: Array<unknown>) {
-  return new Set(items.map((item) => JSON.stringify(item))).size === items.length;
-}
-
-function orCriterionSchema<TAmountSchema extends Erc20AmountSchema>(amountSchema: TAmountSchema) {
-  return z.object({
-    type: z.literal(DecryptionCriteriaType.OR),
-    or: z.array(simpleCriterionSchema(amountSchema)).min(2).max(5).refine(unique, {
-      message: 'Must be an array of unique criteria',
-    }),
-  });
-}
-
-function andCriterionSchema<TAmountSchema extends Erc20AmountSchema>(amountSchema: TAmountSchema) {
-  return z.object({
-    type: z.literal(DecryptionCriteriaType.AND),
-    and: z.array(simpleCriterionSchema(amountSchema)).min(2).max(5).refine(unique, {
-      message: 'Must be an array of unique criteria',
-    }),
-  });
-}
-
-function decryptionCriteriaSchema<TAmountSchema extends Erc20AmountSchema>(
-  amountSchema: TAmountSchema,
-) {
-  return z
-    .discriminatedUnion('type', [
-      orCriterionSchema(amountSchema),
-      andCriterionSchema(amountSchema),
-      NftOwnershipCriterionSchema,
-      erc20OwnershipCriterionSchema(amountSchema),
-      AddressOwnershipCriterionSchema,
-      ProfileOwnershipCriterionSchema,
-      FollowOwnershipCriterionSchema,
-      CollectPublicationCriterionSchema,
-      CollectThisPublicationCriterionSchema,
-    ])
-    .optional();
-}
-
-const MetadataAttributeSchema = z.discriminatedUnion('displayType', [
+const RecipientWithSplitSchema: z.ZodType<RecipientWithSplit, z.ZodTypeDef, UnknownObject> =
   z.object({
-    displayType: z.literal(MetadataAttributeDisplayType.Date),
-    value: z.coerce.date(),
-    traitType: z.string(),
-  }),
-  z.object({
-    displayType: z.literal(MetadataAttributeDisplayType.Number),
-    value: z.number(),
-    traitType: z.string(),
-  }),
-  z.object({
-    displayType: z.literal(MetadataAttributeDisplayType.String),
-    value: z.string(),
-    traitType: z.string(),
-  }),
-]);
-
-const NftMetadataSchema = z.object({
-  name: z.string().optional(),
-  description: z.string().optional(),
-  attributes: z.array(MetadataAttributeSchema).optional(),
-  externalUrl: z.string().optional(),
-  image: z.string().optional(),
-  imageMimeType: z.nativeEnum(ImageType).optional(),
-});
-
-const RecipientWithSplitSchema = z.object({
-  recipient: z.string(),
-  split: z.number(),
-});
-
-function aaveChargeCollectPolicyConfigSchema<TAmountSchema extends Erc20AmountSchema>(
-  feeSchema: TAmountSchema,
-) {
-  return z.object({
-    type: z.literal(CollectPolicyType.CHARGE),
-    fee: feeSchema,
-    followersOnly: z.boolean(),
-    metadata: NftMetadataSchema,
-    mirrorReward: z.number(),
-    collectLimit: z.number().optional(),
-
-    recipient: z.string(),
-    depositToAave: z.literal(true),
-    endTimestamp: z.number().optional(),
+    recipient: EvmAddressSchema,
+    split: z.number(),
   });
-}
 
-function vaultChargeCollectPolicyConfigSchema<TAmountSchema extends Erc20AmountSchema>(
-  feeSchema: TAmountSchema,
-) {
-  return z.object({
-    type: z.literal(CollectPolicyType.CHARGE),
-    fee: feeSchema,
-    followersOnly: z.boolean(),
-    metadata: NftMetadataSchema,
-    mirrorReward: z.number(),
-    collectLimit: z.number().optional(),
+const SimpleCollectActionConfigSchema = z.object({
+  type: z.literal(OpenActionType.SIMPLE_COLLECT),
+  amount: Erc20AmountSchema.optional(),
+  followerOnly: z.boolean(),
+  referralFee: z.number().optional(),
+  collectLimit: z.number().optional(),
+  recipient: EvmAddressSchema.optional(),
+  endsAt: z.coerce.date().min(new Date()).optional(),
+});
 
-    recipient: z.string(),
-    vault: z.string(),
-    endTimestamp: z.number().optional(),
+const MultirecipientCollectActionConfigSchema = z.object({
+  type: z.literal(OpenActionType.MULTIRECIPIENT_COLLECT),
+  amount: Erc20AmountSchema,
+  followerOnly: z.boolean(),
+  referralFee: z.number().optional(),
+  collectLimit: z.number().optional(),
+  recipients: z.array(RecipientWithSplitSchema),
+  endsAt: z.coerce.date().min(new Date()).optional(),
+});
+
+const UnknownOpenActionConfigSchema = z.object({
+  type: z.literal(OpenActionType.UNKNOWN_OPEN_ACTION),
+  address: EvmAddressSchema,
+  data: DataSchema,
+});
+
+const OpenActionConfigSchema: z.ZodType<OpenActionConfig, z.ZodTypeDef, UnknownObject> = z
+  .discriminatedUnion('type', [
+    SimpleCollectActionConfigSchema,
+    MultirecipientCollectActionConfigSchema,
+    UnknownOpenActionConfigSchema,
+  ])
+  .superRefine((val, ctx) => {
+    if (val.type === OpenActionType.SIMPLE_COLLECT) {
+      if (val.amount && !val.recipient) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'You must provide a recipient when specifying an amount',
+          path: ['recipient'],
+        });
+      }
+    }
   });
-}
-
-function multirecipientChargeCollectPolicyConfigSchema<TAmountSchema extends Erc20AmountSchema>(
-  feeSchema: TAmountSchema,
-) {
-  return z.object({
-    type: z.literal(CollectPolicyType.CHARGE),
-    fee: feeSchema,
-    followersOnly: z.boolean(),
-    metadata: NftMetadataSchema,
-    mirrorReward: z.number(),
-    collectLimit: z.number().optional(),
-
-    recipients: z.array(RecipientWithSplitSchema),
-    endTimestamp: z.number().optional(),
-  });
-}
-
-function simpleChargeCollectPolicyConfigSchema<TAmountSchema extends Erc20AmountSchema>(
-  feeSchema: TAmountSchema,
-) {
-  return z.object({
-    type: z.literal(CollectPolicyType.CHARGE),
-    fee: feeSchema,
-    followersOnly: z.boolean(),
-    metadata: NftMetadataSchema,
-    mirrorReward: z.number(),
-    collectLimit: z.number().optional(),
-
-    recipient: z.string(),
-    timeLimited: z.boolean(),
-  });
-}
-
-const FreeCollectPolicyConfigSchema = z.object({
-  type: z.literal(CollectPolicyType.FREE),
-  metadata: NftMetadataSchema,
-  followersOnly: z.boolean(),
-});
-
-const NoCollectPolicyConfigSchema = z.object({
-  type: z.literal(CollectPolicyType.NO_COLLECT),
-});
-
-function collectPolicyConfigSchema<TAmountSchema extends Erc20AmountSchema>(
-  feeSchema: TAmountSchema,
-) {
-  return z.union([
-    simpleChargeCollectPolicyConfigSchema(feeSchema),
-    multirecipientChargeCollectPolicyConfigSchema(feeSchema),
-    vaultChargeCollectPolicyConfigSchema(feeSchema),
-    aaveChargeCollectPolicyConfigSchema(feeSchema),
-    FreeCollectPolicyConfigSchema,
-    NoCollectPolicyConfigSchema,
-  ]);
-}
-
-const MediaObjectSchema = z.object({
-  altTag: z.string().optional(),
-  cover: z.string().optional(),
-  mimeType: z.nativeEnum(SupportedFileType),
-  url: z.string(),
-});
-
-const MetadataImageSchema = z.object({
-  mimeType: z.nativeEnum(ImageType),
-  url: z.string(),
-});
 
 const AnyoneReferencePolicyConfigSchema = z.object({
   type: z.literal(ReferencePolicyType.ANYONE),
@@ -264,6 +82,8 @@ const DegreesOfSeparationReferencePolicyConfigSchema = z.object({
     commentsRestricted: z.boolean(),
     mirrorsRestricted: z.boolean(),
     degreesOfSeparation: z.number(),
+    quotesRestricted: z.boolean(),
+    sourceProfileId: ProfileIdSchema.optional(),
   }),
 });
 
@@ -271,138 +91,112 @@ const FollowersOnlyReferencePolicyConfigSchema = z.object({
   type: z.literal(ReferencePolicyType.FOLLOWERS_ONLY),
 });
 
+const NoReferencePolicyConfigSchema = z.object({
+  type: z.literal(ReferencePolicyType.NO_ONE),
+});
+
 const ReferencePolicyConfigSchema = z.discriminatedUnion('type', [
   AnyoneReferencePolicyConfigSchema,
   DegreesOfSeparationReferencePolicyConfigSchema,
   FollowersOnlyReferencePolicyConfigSchema,
+  NoReferencePolicyConfigSchema,
 ]);
 
-const AppIdSchema: z.Schema<AppId, z.ZodTypeDef, string> = z.any().transform(appId);
-
-function createCommonPublicationRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  amountSchema: TAmountSchema,
-) {
-  return z.object({
-    appId: AppIdSchema.optional(),
-    attributes: z.array(MetadataAttributeSchema).optional(),
-    collect: collectPolicyConfigSchema(amountSchema),
-    contentWarning: z.nativeEnum(ContentWarning).optional(),
-    decryptionCriteria: decryptionCriteriaSchema(amountSchema),
-    delegate: z.boolean(),
-    image: MetadataImageSchema.optional(),
-    name: z.string().optional(),
-    locale: z.string(),
-    offChain: z.boolean(),
-    profileId: ProfileIdSchema,
-    reference: ReferencePolicyConfigSchema,
-    tags: z.array(z.string()).optional(),
-  });
-}
-
-function createBasePostRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  amountSchema: TAmountSchema,
-) {
-  return createCommonPublicationRequestSchema(amountSchema).extend({
+export const CreatePostRequestSchema: z.ZodType<CreatePostRequest, z.ZodTypeDef, UnknownObject> =
+  z.object({
     kind: z.literal(TransactionKind.CREATE_POST),
+    delegate: z.boolean(),
+    metadata: UriSchema,
+    reference: ReferencePolicyConfigSchema.optional(),
+    actions: OpenActionConfigSchema.array()
+      .min(1, 'You must provide at least one open action')
+      .optional(),
   });
-}
 
-export function createTextualPostRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  amountSchema: TAmountSchema,
-) {
-  return createBasePostRequestSchema(amountSchema).extend({
-    content: z.string(),
-    contentFocus: z.enum([ContentFocus.ARTICLE, ContentFocus.LINK, ContentFocus.TEXT_ONLY]),
-    media: z.array(MediaObjectSchema).optional(),
+export const CreateCommentRequestSchema: z.ZodType<
+  CreateCommentRequest,
+  z.ZodTypeDef,
+  UnknownObject
+> = z.object({
+  kind: z.literal(TransactionKind.CREATE_COMMENT),
+  delegate: z.boolean(),
+  metadata: UriSchema,
+  commentOn: PublicationIdSchema,
+  reference: ReferencePolicyConfigSchema.optional(),
+  actions: OpenActionConfigSchema.array()
+    .min(1, 'You must provide at least one open action')
+    .optional(),
+});
+
+export const CreateQuoteRequestSchema: z.ZodType<CreateQuoteRequest, z.ZodTypeDef, UnknownObject> =
+  z.object({
+    kind: z.literal(TransactionKind.CREATE_QUOTE),
+    delegate: z.boolean(),
+    metadata: UriSchema,
+    quoteOn: PublicationIdSchema,
+    reference: ReferencePolicyConfigSchema.optional(),
+    actions: OpenActionConfigSchema.array()
+      .min(1, 'You must provide at least one open action')
+      .optional(),
   });
-}
 
-export function createMediaPostRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  amountSchema: TAmountSchema,
-) {
-  return createBasePostRequestSchema(amountSchema).extend({
-    content: z.string().optional(),
-    contentFocus: z.enum([ContentFocus.AUDIO, ContentFocus.IMAGE, ContentFocus.VIDEO]),
-    media: z.array(MediaObjectSchema),
-  });
-}
-
-export function createEmbedPostRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  amountSchema: TAmountSchema,
-) {
-  return createBasePostRequestSchema(amountSchema).extend({
-    animationUrl: z.string(),
-    content: z.string().optional(),
-    contentFocus: z.enum([ContentFocus.EMBED]),
-    media: z.array(MediaObjectSchema).optional(),
-  });
-}
-
-function createBaseCommentRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  amountSchema: TAmountSchema,
-) {
-  return createCommonPublicationRequestSchema(amountSchema).extend({
-    publicationId: PublicationIdSchema,
-    kind: z.literal(TransactionKind.CREATE_COMMENT),
-  });
-}
-
-export function createTextualCommentRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  amountSchema: TAmountSchema,
-) {
-  return createBaseCommentRequestSchema(amountSchema).extend({
-    content: z.string(),
-    contentFocus: z.enum([ContentFocus.ARTICLE, ContentFocus.LINK, ContentFocus.TEXT_ONLY]),
-    media: z.array(MediaObjectSchema).optional(),
-  });
-}
-
-export function createMediaCommentRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  amountSchema: TAmountSchema,
-) {
-  return createBaseCommentRequestSchema(amountSchema).extend({
-    content: z.string().optional(),
-    contentFocus: z.enum([ContentFocus.AUDIO, ContentFocus.IMAGE, ContentFocus.VIDEO]),
-    media: z.array(MediaObjectSchema),
-  });
-}
-
-export function createEmbedCommentRequestSchema<TAmountSchema extends Erc20AmountSchema>(
-  amountSchema: TAmountSchema,
-) {
-  return createBaseCommentRequestSchema(amountSchema).extend({
-    animationUrl: z.string(),
-    content: z.string().optional(),
-    contentFocus: z.enum([ContentFocus.EMBED]),
-    media: z.array(MediaObjectSchema).optional(),
-  });
-}
-
-export const CreateMirrorRequestSchema = z.object({
-  profileId: ProfileIdSchema,
-  publicationId: PublicationIdSchema,
+export const CreateMirrorRequestSchema: z.ZodType<
+  CreateMirrorRequest,
+  z.ZodTypeDef,
+  UnknownObject
+> = z.object({
+  mirrorOn: PublicationIdSchema,
   kind: z.literal(TransactionKind.MIRROR_PUBLICATION),
   delegate: z.boolean(),
-  offChain: z.boolean(),
-});
-
-const BaseCollectRequestSchema = z.object({
-  kind: z.literal(TransactionKind.COLLECT_PUBLICATION),
-  profileId: ProfileIdSchema,
-  publicationId: PublicationIdSchema,
-});
-
-export const FreeCollectRequestSchema = BaseCollectRequestSchema.extend({
-  type: z.literal(CollectType.FREE),
-  followerOnly: z.boolean(),
 });
 
 const CollectFeeSchema = z.object({
-  amount: SerializedErc20AmountSchema,
-  contractAddress: z.string(),
+  amount: Erc20AmountSchema,
+  contractAddress: EvmAddressSchema,
 });
 
-export const PaidCollectRequestSchema = BaseCollectRequestSchema.extend({
-  type: z.literal(CollectType.PAID),
-  fee: CollectFeeSchema,
+const BaseCollectRequestSchema = z.object({
+  kind: z.literal(TransactionKind.ACT_ON_PUBLICATION),
+  publicationId: PublicationIdSchema,
 });
+
+export const LegacyCollectRequestSchema = BaseCollectRequestSchema.extend({
+  type: z.literal(AllOpenActionType.LEGACY_COLLECT),
+  delegate: z.boolean(),
+  publicationId: PublicationIdSchema,
+  referrer: PublicationIdSchema.optional(),
+  fee: CollectFeeSchema.optional(),
+});
+
+export const SimpleCollectRequestSchema = BaseCollectRequestSchema.extend({
+  type: z.literal(AllOpenActionType.SIMPLE_COLLECT),
+  delegate: z.boolean(),
+  publicationId: PublicationIdSchema,
+  referrers: z.union([PublicationIdSchema, ProfileIdSchema]).array().min(1).optional(),
+  public: z.boolean(),
+  fee: CollectFeeSchema.optional(),
+});
+
+export const MultirecipientCollectRequestSchema = BaseCollectRequestSchema.extend({
+  type: z.literal(AllOpenActionType.MULTIRECIPIENT_COLLECT),
+  publicationId: PublicationIdSchema,
+  referrers: z.union([PublicationIdSchema, ProfileIdSchema]).array().min(1).optional(),
+  fee: CollectFeeSchema,
+  public: z.boolean(),
+});
+
+export const UnknownActionRequestSchema = BaseCollectRequestSchema.extend({
+  type: z.literal(AllOpenActionType.UNKNOWN_OPEN_ACTION),
+  delegate: z.boolean(),
+  publicationId: PublicationIdSchema,
+  address: EvmAddressSchema,
+  data: DataSchema,
+  public: z.boolean(),
+});
+
+export const CollectRequestSchema = z.discriminatedUnion('type', [
+  LegacyCollectRequestSchema,
+  SimpleCollectRequestSchema,
+  MultirecipientCollectRequestSchema,
+  UnknownActionRequestSchema,
+]);

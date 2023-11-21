@@ -1,5 +1,54 @@
 # @lens-protocol/storage
 
+## 0.7.5-alpha.6
+
+### Patch Changes
+
+- Updated dependencies [d71f981cc]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.8
+
+## 0.7.5-alpha.5
+
+### Patch Changes
+
+- Updated dependencies [2f5360796]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.7
+
+## 0.7.5-alpha.4
+
+### Patch Changes
+
+- Updated dependencies [061df834]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.6
+
+## 0.7.5-alpha.3
+
+### Patch Changes
+
+- Updated dependencies [9481f48b]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.5
+
+## 0.7.5-alpha.2
+
+### Patch Changes
+
+- Updated dependencies [a929c0f6]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.4
+
+## 0.7.5-alpha.1
+
+### Patch Changes
+
+- Updated dependencies [734d6823]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.3
+
+## 0.7.5-alpha.0
+
+### Patch Changes
+
+- Updated dependencies [6d0d62dd]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.2
+
 ## 0.7.4
 
 ### Patch Changes

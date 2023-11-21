@@ -1,8 +1,0 @@
-query GetProfilesForAddress($address: EthereumAddress!) {
-  profiles(request: { ownedBy: [$address] }) {
-    items {
-      id
-      handle
-    }
-  }
-}

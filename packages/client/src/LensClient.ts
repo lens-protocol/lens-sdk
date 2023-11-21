@@ -1,23 +1,67 @@
+import { InMemoryStorageProvider, IStorageProvider } from '@lens-protocol/storage';
+
 import { Authentication, IAuthentication } from './authentication';
-import { Bookmarks } from './bookmarks';
-import { LensConfig } from './consts/config';
-import { Explore } from './explore';
-import { Feed } from './feed';
-import { Modules } from './modules';
-import { Nfts } from './nfts';
-import { Nonces } from './nonces';
-import { Notifications } from './notifications';
-import { Profile } from './profile';
-import { ProxyAction } from './proxy-action';
-import { Publication } from './publication';
-import { Reactions } from './reactions';
-import { Revenue } from './revenue';
-import { Search } from './search';
-import { Stats } from './stats';
-import { Transaction } from './transaction';
+import { LensContext, MediaTransformsConfig } from './context';
+import { Environment } from './environments';
+import {
+  Explore,
+  Feed,
+  Invites,
+  Modules,
+  Momoka,
+  Nfts,
+  Notifications,
+  Poaps,
+  Profile,
+  Publication,
+  Revenue,
+  Search,
+  Transaction,
+  Wallet,
+} from './submodules';
+
+/**
+ * LensClient configuration
+ */
+export type LensClientConfig = {
+  /**
+   * The environment to use. See {@link production} or {@link development}.
+   */
+  environment: Environment;
+
+  /**
+   * The storage provider to use.
+   *
+   * @defaultValue {@link InMemoryStorageProvider}
+   */
+  storage?: IStorageProvider;
+
+  /**
+   * Media returned from the publication and profile queries can be transformed
+   * to sizes needed by the SDK consuming application.
+   * To overwrite default transformation values, provide a `mediaTransforms` object.
+   *
+   * @see {@link MediaTransformsConfig} for more information
+   */
+  mediaTransforms?: MediaTransformsConfig;
+
+  /**
+   * The origin to be sent in the `origin` header when making requests to the Lens API.
+   *
+   * @deprecated Use the `headers` option instead. This will be removed in a future release.
+   */
+  origin?: string;
+
+  /**
+   * Allows to define extra headers to be sent when making requests to the Lens API.
+   * You can set the `origin` or `user-agent` headers here.
+   */
+  headers?: Record<string, string>;
+};
 
 /**
  * The LensClient is the main entry point for the LensClient SDK.
+ *
  * It provides access to all the different modules.
  *
  * @group LensClient
@@ -32,123 +76,125 @@ import { Transaction } from './transaction';
  * ```
  */
 export class LensClient {
-  private readonly _authentication: Authentication;
-  private readonly config: LensConfig;
+  protected readonly context: LensContext;
+  protected readonly _authentication: Authentication;
 
   /**
    * @param config - The configuration for the LensClient
    */
-  constructor(config: LensConfig) {
-    this._authentication = new Authentication(config);
-    this.config = config;
-  }
-
-  get authentication(): IAuthentication {
-    return this._authentication;
+  constructor(public readonly config: LensClientConfig) {
+    this.context = {
+      environment: config.environment,
+      storage: config.storage || new InMemoryStorageProvider(),
+      mediaTransforms: config.mediaTransforms || {},
+      origin: config.origin,
+      headers: config.headers,
+    };
+    this._authentication = new Authentication(this.context);
   }
 
   /**
-   * The Bookmarks module
+   * The authentication module
    */
-  get bookmarks(): Bookmarks {
-    return new Bookmarks(this.config, this._authentication);
+  get authentication(): IAuthentication {
+    return this._authentication;
   }
 
   /**
    * The Explore module
    */
   get explore(): Explore {
-    return new Explore(this.config, this._authentication);
+    return new Explore(this.context, this._authentication);
   }
 
   /**
    * The Feed module
    */
   get feed(): Feed {
-    return new Feed(this.config, this._authentication);
+    return new Feed(this.context, this._authentication);
+  }
+
+  /**
+   * The Invites module
+   */
+  get invites(): Invites {
+    return new Invites(this.context, this._authentication);
   }
 
   /**
    * The Modules module
    */
   get modules(): Modules {
-    return new Modules(this.config, this._authentication);
+    return new Modules(this.context, this._authentication);
+  }
+
+  /**
+   * The Momoka module
+   */
+  get momoka(): Momoka {
+    return new Momoka(this.context, this._authentication);
   }
 
   /**
    * The Nfts module
    */
   get nfts(): Nfts {
-    return new Nfts(this.config, this._authentication);
-  }
-
-  /**
-   * The Nonces module
-   */
-  get nonces(): Nonces {
-    return new Nonces(this.config, this._authentication);
+    return new Nfts(this.context, this._authentication);
   }
 
   /**
    * The Notifications module
    */
   get notifications(): Notifications {
-    return new Notifications(this.config, this._authentication);
+    return new Notifications(this.context, this._authentication);
+  }
+
+  /**
+   * The Poaps module
+   */
+  get poaps(): Poaps {
+    return new Poaps(this.context, this._authentication);
   }
 
   /**
    * The Profile module
    */
   get profile(): Profile {
-    return new Profile(this.config, this._authentication);
-  }
-
-  /**
-   * The ProxyAction module
-   */
-  get proxyAction(): ProxyAction {
-    return new ProxyAction(this.config, this._authentication);
+    return new Profile(this.context, this._authentication);
   }
 
   /**
    * The Publication module
    */
   get publication(): Publication {
-    return new Publication(this.config, this._authentication);
-  }
-
-  /**
-   * The Reactions module
-   */
-  get reactions(): Reactions {
-    return new Reactions(this.config, this._authentication);
+    return new Publication(this.context, this._authentication);
   }
 
   /**
    * The Revenue module
    */
   get revenue(): Revenue {
-    return new Revenue(this.config, this._authentication);
+    return new Revenue(this.context, this._authentication);
   }
 
   /**
    * The Search module
    */
   get search(): Search {
-    return new Search(this.config, this._authentication);
-  }
-
-  /**
-   * The Stats module
-   */
-  get stats(): Stats {
-    return new Stats(this.config);
+    return new Search(this.context, this._authentication);
   }
 
   /**
    * The Transaction module
    */
   get transaction(): Transaction {
-    return new Transaction(this.config, this._authentication);
+    return new Transaction(this.context, this._authentication);
+  }
+
+  /**
+   * The Wallet module
+   */
+  get wallet(): Wallet {
+    return new Wallet(this.context, this._authentication);
   }
 }

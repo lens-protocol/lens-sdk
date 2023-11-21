@@ -1,11 +1,11 @@
-import { ProfileId, TransactionKind } from '../../entities';
-import { SubsidizeOnChain } from '../transactions/SubsidizeOnChain';
-import { FollowPolicyConfig } from './types';
+import { TransactionKind } from '../../entities';
+import { DelegableSigning } from '../transactions/DelegableSigning';
+import { FollowPolicyConfig } from './FollowPolicy';
 
 export type UpdateFollowPolicyRequest = {
-  profileId: ProfileId;
   policy: FollowPolicyConfig;
   kind: TransactionKind.UPDATE_FOLLOW_POLICY;
+  delegate: boolean;
 };
 
-export class UpdateFollowPolicy extends SubsidizeOnChain<UpdateFollowPolicyRequest> {}
+export class UpdateFollowPolicy extends DelegableSigning<UpdateFollowPolicyRequest> {}

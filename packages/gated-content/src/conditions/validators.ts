@@ -1,16 +1,15 @@
 import { isAddress } from '@ethersproject/address';
 import { BigNumber } from '@ethersproject/bignumber';
-import { ContractType } from '@lens-protocol/api-bindings';
-import { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
-import { EthereumAddress, TwoAtLeastArray } from '@lens-protocol/shared-kernel';
+import { ProfileId, PublicationId } from '@lens-protocol/metadata';
+import { EvmAddress, IEquatableError, TwoAtLeastArray } from '@lens-protocol/shared-kernel';
 
 import { isSupportedChainId, SupportedChainId } from './types';
 
-export class InvalidAccessCriteriaError extends Error {
+export class InvalidAccessCriteriaError extends Error implements IEquatableError {
   name = 'InvalidAccessCriteriaError' as const;
 }
 
-export function assertValidAddress(address: string): asserts address is EthereumAddress {
+export function assertValidAddress(address: string): asserts address is EvmAddress {
   if (isAddress(address)) return;
 
   throw new InvalidAccessCriteriaError(`Invalid address: ${address}`);
@@ -20,14 +19,6 @@ export function assertSupportedChainId(chainID: number): asserts chainID is Supp
   if (isSupportedChainId(chainID)) return;
 
   throw new InvalidAccessCriteriaError(`Invalid chain ID: ${chainID}`);
-}
-
-export function assertSupportedNftContractType(
-  contractType: string,
-): asserts contractType is ContractType.Erc721 | ContractType.Erc1155 {
-  if (contractType === ContractType.Erc721 || contractType === ContractType.Erc1155) return;
-
-  throw new InvalidAccessCriteriaError(`Invalid contract type: ${contractType}`);
 }
 
 export const assertValidTokenIds = (tokenIds?: string[] | null) => {
@@ -62,7 +53,9 @@ export function assertValidPublicationId(
   throw new InvalidAccessCriteriaError(`Invalid publication id: ${publicationId}`);
 }
 
-export function assertAtLeastTwoCriteria<T>(criteria: T[]): asserts criteria is TwoAtLeastArray<T> {
+export function assertAtLeastTwoCriteria<T>(
+  criteria: readonly T[],
+): asserts criteria is TwoAtLeastArray<T> {
   if (criteria.length < 2) {
     throw new InvalidAccessCriteriaError('Compound condition must have at least 2 criteria.');
   }

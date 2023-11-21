@@ -1,0 +1,50 @@
+{
+  "name": "example-web",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:with-packages": "turbo run build --filter=...example-web",
+    "preview": "vite preview",
+    "eslint:fix": "pnpm run eslint --fix",
+    "eslint": "eslint src",
+    "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
+    "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix && pnpm run tsc",
+    "prettier:fix": "prettier --write .",
+    "prettier": "prettier --check .",
+    "tsc": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@bundlr-network/client": "^0.11.9",
+    "@ethersproject/providers": "^5.7.2",
+    "@lens-protocol/metadata": "^1.0.0",
+    "@lens-protocol/react-web": "workspace:*",
+    "@lens-protocol/wagmi": "workspace:*",
+    "@xmtp/react-sdk": "1.0.0-preview.40",
+    "example-shared": "workspace:*",
+    "react": "^18.2.0",
+    "react-cool-inview": "^3.0.1",
+    "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.0",
+    "react-router-dom": "^6.8.1",
+    "readable-web-to-node-stream": "^3.0.2",
+    "viem": "^1.16.6",
+    "wagmi": "^1.4.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.12",
+    "@lens-protocol/eslint-config": "workspace:*",
+    "@lens-protocol/prettier-config": "workspace:*",
+    "@types/node": "^18.15.11",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@vitejs/plugin-react": "^4.0.3",
+    "prettier": "^2.8.4",
+    "rollup-plugin-visualizer": "^5.9.2",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.3",
+    "vite-plugin-node-polyfills": "^0.9.0"
+  },
+  "prettier": "@lens-protocol/prettier-config"
+}

@@ -2,7 +2,6 @@ import {
   MetaTransaction,
   NativeTransaction,
   JustProtocolRequest,
-  ProxyTransaction,
   TransactionKind,
   DataTransaction,
 } from '@lens-protocol/domain/entities';
@@ -25,38 +24,42 @@ import {
   ISerializableDataTransaction,
   ISerializableMetaTransaction,
   ISerializableNativeTransaction,
-  ISerializableProxyTransaction,
   ISerializableTransactionFactory,
 } from './ISerializableTransactionFactory';
 
 const lensHubTransactionKinds = [
-  TransactionKind.COLLECT_PUBLICATION,
+  TransactionKind.ACT_ON_PUBLICATION,
   TransactionKind.CREATE_COMMENT,
   TransactionKind.CREATE_POST,
-  TransactionKind.FOLLOW_PROFILES,
+  TransactionKind.CREATE_QUOTE,
+  TransactionKind.FOLLOW_PROFILE,
   TransactionKind.MIRROR_PUBLICATION,
-  TransactionKind.UPDATE_DISPATCHER_CONFIG,
-  TransactionKind.UPDATE_PROFILE_IMAGE,
+  TransactionKind.UPDATE_PROFILE_MANAGERS,
   TransactionKind.UPDATE_FOLLOW_POLICY,
+  TransactionKind.UPDATE_PROFILE_DETAILS,
 ];
 
-const lensPeripheryTransactionKinds = [TransactionKind.UPDATE_PROFILE_DETAILS];
+// const tokenHandleRegistryTransactionKinds = []; // not used yet
 
 const transactionKindToFilterGroup: { [k in TransactionKind]: TransactionKind[] } = {
-  [TransactionKind.COLLECT_PUBLICATION]: lensHubTransactionKinds,
+  [TransactionKind.ACT_ON_PUBLICATION]: lensHubTransactionKinds,
+  [TransactionKind.BLOCK_PROFILE]: lensHubTransactionKinds,
+  [TransactionKind.UNBLOCK_PROFILE]: lensHubTransactionKinds,
   [TransactionKind.CREATE_COMMENT]: lensHubTransactionKinds,
   [TransactionKind.CREATE_POST]: lensHubTransactionKinds,
-  [TransactionKind.FOLLOW_PROFILES]: lensHubTransactionKinds,
+  [TransactionKind.CREATE_QUOTE]: lensHubTransactionKinds,
+  [TransactionKind.FOLLOW_PROFILE]: lensHubTransactionKinds,
   [TransactionKind.MIRROR_PUBLICATION]: lensHubTransactionKinds,
-  [TransactionKind.UPDATE_DISPATCHER_CONFIG]: lensHubTransactionKinds,
-  [TransactionKind.UPDATE_PROFILE_IMAGE]: lensHubTransactionKinds,
+  [TransactionKind.UPDATE_PROFILE_MANAGERS]: lensHubTransactionKinds,
   [TransactionKind.UPDATE_FOLLOW_POLICY]: lensHubTransactionKinds,
+  [TransactionKind.UPDATE_PROFILE_DETAILS]: lensHubTransactionKinds,
 
-  [TransactionKind.UPDATE_PROFILE_DETAILS]: lensPeripheryTransactionKinds,
-
+  [TransactionKind.CLAIM_HANDLE]: [],
   [TransactionKind.APPROVE_MODULE]: [],
   [TransactionKind.CREATE_PROFILE]: [],
   [TransactionKind.UNFOLLOW_PROFILE]: [],
+  [TransactionKind.LINK_HANDLE]: [],
+  [TransactionKind.UNLINK_HANDLE]: [],
 };
 
 function isSerializableMetaTransaction<T extends AnyTransactionRequest>(
@@ -68,7 +71,6 @@ function isSerializableMetaTransaction<T extends AnyTransactionRequest>(
 type ISerializableTransaction<T extends AnyTransactionRequest> =
   | ISerializableNativeTransaction<T>
   | ISerializableMetaTransaction<JustProtocolRequest<T>>
-  | ISerializableProxyTransaction<JustProtocolRequest<T>>
   | ISerializableDataTransaction<JustProtocolRequest<T>>;
 
 function toTransactionSchema(
@@ -84,13 +86,6 @@ function toTransactionSchema(
   if (tx instanceof NativeTransaction) {
     return {
       type: TransactionType.Native,
-      ...tx.toTransactionData(),
-    };
-  }
-
-  if (tx instanceof ProxyTransaction) {
-    return {
-      type: TransactionType.Proxy,
       ...tx.toTransactionData(),
     };
   }
@@ -210,8 +205,6 @@ export class PendingTransactionGateway
         return this.transactionFactory.createMetaTransaction(data);
       case TransactionType.Native:
         return this.transactionFactory.createNativeTransaction(data);
-      case TransactionType.Proxy:
-        return this.transactionFactory.createProxyTransaction(data);
       case TransactionType.Data:
         return this.transactionFactory.createDataTransaction(data);
       default:

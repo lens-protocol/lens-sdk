@@ -3,15 +3,23 @@ import { DateUtils } from '@lens-protocol/shared-kernel';
 import { Credentials } from './Credentials';
 
 const accessToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB4YjE5QzI4OTBjZjk0N0FEM2YwYjdkN0U1QTlmZkJjZTM2ZDNmOWJkMiIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE2Mzc3NTQ2ODEsImV4cCI6MTYzNzc1NDc0MX0.Be1eGBvVuFL4fj4pHHqc0yWDledsgS2GP3Jgonmy-xw';
-const accessTokenExp = 1637754741000;
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB4MWEiLCJldm1BZGRyZXNzIjoiMHhhNTY1M2U4OEQ5YzM1MjM4N2RlRGRDNzliY2Y5OWYwYWRhNjJlOWM2Iiwicm9sZSI6Im5vcm1hbCIsImlhdCI6MTY5NTEzMzMxNywiZXhwIjoxNjk1MTM1MTE3fQ.6s4-ClaPmUMuvYhZ7MaVrSwu-Axzkv1vCkKGtIqnnGo';
+const accessTokenExp = 1695135117000;
 const refreshToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB4YjE5QzI4OTBjZjk0N0FEM2YwYjdkN0U1QTlmZkJjZTM2ZDNmOWJkMiIsInJvbGUiOiJyZWZyZXNoIiwiaWF0IjoxNjM3NzU0NjgxLCJleHAiOjE2Mzc3NTQ5ODF9.3SqgsVMyqFPBcem2W9Iog91SWC8cIAFixXBkDue73Rc';
-const refreshTokenExp = 1637754981000;
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB4MWEiLCJldm1BZGRyZXNzIjoiMHhhNTY1M2U4OEQ5YzM1MjM4N2RlRGRDNzliY2Y5OWYwYWRhNjJlOWM2Iiwicm9sZSI6InJlZnJlc2giLCJpYXQiOjE2OTUxMzMzMTcsImV4cCI6MTY5NTczODExN30.wgdJ_bJs50CL1lGs_sjaBYrYEvsh-h8Qj0Yv1CLpQR4';
+const refreshTokenExp = 1695738117000;
 
 describe(`Given the ${Credentials.name} class`, () => {
   afterAll(() => {
     jest.useRealTimers();
+  });
+
+  describe(`when ${Credentials.prototype.getProfileId.name} is invoked`, () => {
+    it(`should return a profile id`, async () => {
+      const credentials = new Credentials(undefined, refreshToken);
+
+      expect(credentials.getProfileId()).toBe('0x1a');
+    });
   });
 
   describe(`when ${Credentials.prototype.canRefresh.name} is invoked`, () => {

@@ -1,5 +1,59 @@
 # @lens-protocol/shared-kernel
 
+## 0.11.0-alpha.8
+
+### Patch Changes
+
+- d71f981cc: **chore:** simplifies useApproveModule implementation
+
+## 0.11.0-alpha.7
+
+### Patch Changes
+
+- 2f5360796: **fix:** fixes silent token-refresh logic so that, if refresh token is still valid, a silent refresh of tokens takes places and failed requests are retried seamlessly
+
+## 0.11.0-alpha.6
+
+### Patch Changes
+
+- 061df834: **chore:** configure Lens API v2 production URL
+
+## 0.11.0-alpha.5
+
+### Patch Changes
+
+- 9481f48b: **feat:** implements `useApproveModule` hook. It also upgrades viem and wagmi peer deps.
+
+## 0.11.0-alpha.4
+
+### Minor Changes
+
+- a929c0f6: **feat:** implements `useCreatePost` hook
+
+## 0.11.0-alpha.3
+
+### Patch Changes
+
+- 734d6823: **feat:** adds `useProfileManagers` and `useUpdateProfileManagers` hooks
+
+## 0.11.0-alpha.2
+
+### Patch Changes
+
+- 6d0d62dd: **feat:** new `useLogin` and `useSession` hooks
+
+## 0.11.0-alpha.1
+
+### Patch Changes
+
+- 25fe9a46: Support for new v2 hooks
+
+## 0.11.0-alpha.0
+
+### Minor Changes
+
+- 731ff1d0: Added support for Lens Protocol v2
+
 ## 0.10.0
 
 ### Minor Changes

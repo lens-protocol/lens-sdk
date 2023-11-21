@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { failure, Result, success } from '@lens-protocol/shared-kernel';
+import { ChainType, failure, Result, success } from '@lens-protocol/shared-kernel';
+import { mockDaiAmount, mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 import waitFor from 'wait-for-expect';
@@ -9,7 +10,6 @@ import {
   MetaTransaction,
   NativeTransaction,
   Nonce,
-  ProxyTransaction,
   ISignedProtocolCall,
   TransactionKind,
   AnyTransactionRequestModel,
@@ -17,17 +17,20 @@ import {
   DataTransaction,
   TransactionError,
 } from '../../../entities';
-import { MockedProxyTransaction, mockNonce } from '../../../entities/__helpers__/mocks';
-import { BroadcastingError } from '../BroadcastingError';
-import { IDelegatedTransactionGateway, WithDelegateFlag } from '../DelegableSigning';
-import { ISignlessSubsidizedCallRelayer } from '../SignlessSubsidizeOnChain';
-import { IOffChainRelayer, IOffChainProtocolCallGateway } from '../SubsidizeOffChain';
+import { mockNonce } from '../../../entities/__helpers__/mocks';
+import { BroadcastingError, BroadcastingErrorReason } from '../BroadcastingError';
+import {
+  DelegableProtocolTransactionRequestModel,
+  IDelegatedTransactionGateway,
+} from '../DelegableSigning';
+import { IMomokaRelayer, ISignedMomokaGateway } from '../SignedMomoka';
 import {
   IMetaTransactionNonceGateway,
   IOnChainRelayer,
-  IOnChainProtocolCallGateway,
-} from '../SubsidizeOnChain';
+  ISignedOnChainGateway,
+} from '../SignedOnChain';
 import { AnyTransactionRequest } from '../SupportedTransactionRequest';
+import { TokenAllowanceLimit, TokenAllowanceRequest } from '../TokenAllowance';
 import { TransactionData, TransactionQueue } from '../TransactionQueue';
 
 export function mockIOnChainRelayer<T extends ProtocolTransactionRequestModel>({
@@ -44,16 +47,16 @@ export function mockIOnChainRelayer<T extends ProtocolTransactionRequestModel>({
   return relayer;
 }
 
-export function mockIOffChainRelayer<T extends ProtocolTransactionRequestModel>({
+export function mockIMomokaRelayer<T extends ProtocolTransactionRequestModel>({
   signedCall,
   result,
 }: {
   signedCall: ISignedProtocolCall<T>;
   result: Result<DataTransaction<T>, BroadcastingError>;
 }) {
-  const relayer = mock<IOffChainRelayer<T>>();
+  const relayer = mock<IMomokaRelayer<T>>();
 
-  when(relayer.relayProtocolCall).calledWith(signedCall).mockResolvedValue(result);
+  when(relayer.relaySignedMomoka).calledWith(signedCall).mockResolvedValue(result);
 
   return relayer;
 }
@@ -82,7 +85,7 @@ export function mockIMetaTransactionNonceGateway({
   return gateway;
 }
 
-export function mockIOnChainProtocolCallGateway<T extends ProtocolTransactionRequestModel>({
+export function mockISignedOnChainGateway<T extends ProtocolTransactionRequestModel>({
   request,
   nonce,
   unsignedCall,
@@ -90,8 +93,8 @@ export function mockIOnChainProtocolCallGateway<T extends ProtocolTransactionReq
   request: T;
   nonce: Nonce | undefined;
   unsignedCall: IUnsignedProtocolCall<T>;
-}): IOnChainProtocolCallGateway<T> {
-  const gateway = mock<IOnChainProtocolCallGateway<T>>();
+}): ISignedOnChainGateway<T> {
+  const gateway = mock<ISignedOnChainGateway<T>>();
 
   when(gateway.createUnsignedProtocolCall)
     .calledWith(request, nonce)
@@ -100,15 +103,15 @@ export function mockIOnChainProtocolCallGateway<T extends ProtocolTransactionReq
   return gateway;
 }
 
-export function mockIOffChainProtocolCallGateway<T extends ProtocolTransactionRequestModel>({
+export function mockISignedMomokaGateway<T extends ProtocolTransactionRequestModel>({
   request,
 
   unsignedCall,
 }: {
   request: T;
   unsignedCall: IUnsignedProtocolCall<T>;
-}): IOnChainProtocolCallGateway<T> {
-  const gateway = mock<IOffChainProtocolCallGateway<T>>();
+}): ISignedOnChainGateway<T> {
+  const gateway = mock<ISignedMomokaGateway<T>>();
 
   when(gateway.createUnsignedProtocolCall).calledWith(request).mockResolvedValue(unsignedCall);
 
@@ -129,33 +132,15 @@ export function mockIDelegatedTransactionGateway<T extends ProtocolTransactionRe
   return gateway;
 }
 
-export function mockISignlessSubsidizedCallRelayer<
-  T extends ProtocolTransactionRequestModel,
->(instructions: {
-  request: T;
-  transaction?: ProxyTransaction<T>;
-}): ISignlessSubsidizedCallRelayer<T> {
-  const relayer = mock<ISignlessSubsidizedCallRelayer<T>>();
-
-  if (instructions) {
-    const { request, transaction = MockedProxyTransaction.fromRequest(request) } = instructions;
-    when(relayer.createProxyTransaction)
-      .calledWith(request)
-      .mockResolvedValue(success(transaction));
-  }
-
-  return relayer;
-}
-
-export function mockProtocolTransactionRequestModelWithDelegateFlag({
+export function mockDelegableProtocolTransactionRequestModel({
   delegate,
 }: {
   delegate: boolean;
-}): WithDelegateFlag<ProtocolTransactionRequestModel> {
+}): DelegableProtocolTransactionRequestModel {
   return {
     kind: TransactionKind.CREATE_POST,
     delegate,
-  } as WithDelegateFlag<ProtocolTransactionRequestModel>;
+  };
 }
 
 export function mockProtocolTransactionRequestModelWithOffChainFlag(): ProtocolTransactionRequestModel {
@@ -181,4 +166,20 @@ export function mockITransactionCompletionPresenter() {
       });
     },
   };
+}
+
+export function mockTokenAllowanceRequest(
+  override: Partial<TokenAllowanceRequest> = {},
+): TokenAllowanceRequest {
+  return {
+    amount: mockDaiAmount(1, ChainType.POLYGON),
+    spender: mockEvmAddress(),
+    limit: TokenAllowanceLimit.EXACT,
+    ...override,
+    kind: TransactionKind.APPROVE_MODULE,
+  };
+}
+
+export function mockAnyBroadcastingError() {
+  return new BroadcastingError(BroadcastingErrorReason.UNKNOWN);
 }

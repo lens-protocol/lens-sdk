@@ -1,17 +1,22 @@
-import { LensClient, development } from "@lens-protocol/client";
-import { Wallet } from "ethers";
+import { LensClient, development } from '@lens-protocol/client';
+import { Wallet } from 'ethers';
+
+import { getOwnedProfileId } from './getOwnedProfileId';
 
 export async function getAuthenticatedClient(wallet: Wallet): Promise<LensClient> {
-  const lensClient = new LensClient({
+  const client = new LensClient({
     environment: development,
   });
-
   const address = await wallet.getAddress();
+  const profileId = await getOwnedProfileId(client, address);
 
-  const challenge = await lensClient.authentication.generateChallenge(address);
-  const signature = await wallet.signMessage(challenge);
+  const { id, text } = await client.authentication.generateChallenge({
+    signedBy: address,
+    for: profileId,
+  });
+  const signature = await wallet.signMessage(text);
 
-  await lensClient.authentication.authenticate(address, signature);
+  await client.authentication.authenticate({ id, signature });
 
-  return lensClient;
+  return client;
 }

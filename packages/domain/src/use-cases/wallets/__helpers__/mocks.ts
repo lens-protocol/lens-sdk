@@ -1,24 +1,10 @@
-import { Amount, Erc20, EthereumAddress, Result } from '@lens-protocol/shared-kernel';
-import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
+import { Amount, Erc20, EvmAddress, Result } from '@lens-protocol/shared-kernel';
+import { mockDaiAmount, mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import {
-  Wallet,
-  TransactionKind,
-  AnyTransactionRequestModel,
-  UnsignedTransaction,
-} from '../../../entities';
-import { mockWallet } from '../../../entities/__helpers__/mocks';
-import { WalletData } from '../../lifecycle';
-import { IPayTransactionGateway } from '../../transactions/PayTransaction';
-import { ActiveWallet } from '../ActiveWallet';
-import {
-  IApproveTransactionGateway,
-  TokenAllowanceRequest,
-  TokenAllowanceLimit,
-  UnsignedTokenAllowanceTransaction,
-} from '../TokenAllowance';
+import { Wallet, AnyTransactionRequestModel, UnsignedTransaction } from '../../../entities';
+import { IPaidTransactionGateway } from '../../transactions/PaidTransaction';
 import {
   IBalanceGateway,
   ITokenGateway,
@@ -26,22 +12,6 @@ import {
   TokenAvailabilityError,
   TokenAvailabilityRequest,
 } from '../TokenAvailability';
-import { WalletLoginRequest } from '../WalletLogin';
-
-export function mockWalletData(override: Partial<WalletData> = {}): WalletData {
-  // Currently leverages structural typing matching the type of WalletData
-  // this might not hold true in the future
-  return mockWallet(override);
-}
-
-export function mockActiveWallet({ wallet = mockWallet() }: { wallet?: Wallet } = {}) {
-  const activeWallet = mock<ActiveWallet>();
-
-  when(activeWallet.requireActiveWallet).mockResolvedValue(wallet);
-  when(activeWallet.getActiveWallet).mockResolvedValue(wallet);
-
-  return activeWallet;
-}
 
 export function mockIBalanceGateway<T extends Erc20>({
   wallet,
@@ -67,7 +37,7 @@ export function mockITokenGateway<T extends Erc20>({
 }: {
   owner: Wallet;
   asset: T;
-  spender: EthereumAddress;
+  spender: EvmAddress;
   allowance: Amount<T>;
 }): ITokenGateway {
   const gateway = mock<ITokenGateway>();
@@ -84,39 +54,9 @@ export function mockTokenAvailabilityRequest(
 ): TokenAvailabilityRequest {
   return {
     amount: mockDaiAmount(1),
-    spender: mockEthereumAddress(),
+    spender: mockEvmAddress(),
     ...override,
   };
-}
-
-export function mockTokenAllowanceRequest(
-  override: Partial<TokenAllowanceRequest> = {},
-): TokenAllowanceRequest {
-  return {
-    amount: mockDaiAmount(1),
-    spender: mockEthereumAddress(),
-    limit: TokenAllowanceLimit.EXACT,
-    ...override,
-    kind: TransactionKind.APPROVE_MODULE,
-  };
-}
-
-export function mockIApproveTransactionGateway({
-  request,
-  wallet,
-  unsignedTransaction,
-}: {
-  request: TokenAllowanceRequest;
-  wallet: Wallet;
-  unsignedTransaction: UnsignedTokenAllowanceTransaction;
-}): IApproveTransactionGateway {
-  const gateway = mock<IApproveTransactionGateway>();
-
-  when(gateway.createApproveTransaction)
-    .calledWith(request, wallet)
-    .mockResolvedValue(unsignedTransaction);
-
-  return gateway;
 }
 
 export function mockTokeAvailability({
@@ -133,15 +73,6 @@ export function mockTokeAvailability({
   return tokenAvailability;
 }
 
-export function mockWalletLoginRequest(
-  overrides?: Partial<WalletLoginRequest>,
-): WalletLoginRequest {
-  return {
-    address: mockEthereumAddress(),
-    ...overrides,
-  };
-}
-
 export function mockIPayTransactionGateway<T extends AnyTransactionRequestModel>({
   request,
   wallet,
@@ -150,10 +81,10 @@ export function mockIPayTransactionGateway<T extends AnyTransactionRequestModel>
   request: T;
   wallet: Wallet;
   unsignedTransaction: UnsignedTransaction<T>;
-}): IPayTransactionGateway<T> {
-  const gateway = mock<IPayTransactionGateway<T>>();
+}): IPaidTransactionGateway<T> {
+  const gateway = mock<IPaidTransactionGateway<T>>();
 
-  when(gateway.prepareSelfFundedTransaction)
+  when(gateway.createUnsignedTransaction)
     .calledWith(request, wallet)
     .mockResolvedValue(unsignedTransaction);
 

@@ -1,30 +1,15 @@
-import { ApolloCache, NormalizedCacheObject } from '@apollo/client';
-import { Profile } from '@lens-protocol/api-bindings';
 import { UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   TransactionData,
   ITransactionResponder,
 } from '@lens-protocol/domain/use-cases/transactions';
 
+import { IProfileCacheManager } from '../../../profile/adapters/IProfileCacheManager';
+
 export class UnfollowProfileResponder implements ITransactionResponder<UnfollowRequest> {
-  constructor(private apolloCache: ApolloCache<NormalizedCacheObject>) {}
+  constructor(private readonly profileCacheManager: IProfileCacheManager) {}
 
   async commit({ request }: TransactionData<UnfollowRequest>) {
-    const profileIdentifier = this.apolloCache.identify({
-      __typename: 'Profile',
-      id: request.profileId,
-    });
-    this.apolloCache.modify({
-      id: profileIdentifier,
-      fields: {
-        isFollowedByMe: () => false,
-        stats(oldStats: Profile['stats']) {
-          return {
-            ...oldStats,
-            totalFollowers: oldStats.totalFollowers - 1,
-          };
-        },
-      },
-    });
+    await this.profileCacheManager.fetchProfileById(request.profileId);
   }
 }

@@ -4,23 +4,18 @@
 
 import { faker } from '@faker-js/faker';
 import {
+  LensTransactionFailureType,
+  LensTransactionStatusType,
   SafeApolloClient,
-  ProxyActionStatusTypes,
-  TransactionErrorReasons,
 } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
-  mockHasTxHashBeenIndexedData,
-  mockHasTxHashBeenIndexedResponse,
-  mockProxyActionStatusResponse,
+  mockLensTransactionStatusDataResponse,
+  mockLensTransactionResult,
 } from '@lens-protocol/api-bindings/mocks';
-import {
-  ProxyActionStatus,
-  TransactionError,
-  TransactionErrorReason,
-} from '@lens-protocol/domain/entities';
+import { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
 import { mockTransactionHash } from '@lens-protocol/domain/mocks';
-import { ChainType } from '@lens-protocol/shared-kernel';
+import { ChainType, InvariantError } from '@lens-protocol/shared-kernel';
 import { MockProvider } from 'ethereum-waffle';
 import { providers, utils, Wallet } from 'ethers';
 import { mock } from 'jest-mock-extended';
@@ -92,7 +87,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
       const provider = new MockProvider({
         ganacheOptions: {
           miner: {
-            blockTime: 60, // seconds
+            blockTime: 60, // seconds // this used to be enough to simulate a stale tx
           },
         },
       });
@@ -113,349 +108,236 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
     }, 15_000);
   });
 
-  describe(`when invoking ${TransactionObserver.prototype.waitForNextIndexingEvent.name} with a tx hash"`, () => {
-    const txHash = mockTransactionHash();
-
-    it('should succeed with indexed=true if the tx has been indexed by the BE', async () => {
-      const responses = [
-        mockHasTxHashBeenIndexedResponse({
-          variables: {
-            request: { txHash },
-          },
-          data: mockHasTxHashBeenIndexedData({
-            indexed: true,
-            txHash,
-          }),
-        }),
-      ];
-      const apolloClient = mockLensApolloClient(responses);
-      const transaction = setupTransactionObserver({
-        apolloClient,
-      });
-
-      const event = await transaction.waitForNextIndexingEvent({ txHash });
-      expect(event.unwrap()).toEqual({
-        indexed: true,
-        txHash,
-      });
-    });
-
-    it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.REVERTED}] if the tx gets reverted`, async () => {
-      const apolloClient = mockLensApolloClient([
-        mockHasTxHashBeenIndexedResponse({
-          variables: {
-            request: { txHash },
-          },
-          data: mockHasTxHashBeenIndexedData({
-            reason: TransactionErrorReasons.Reverted,
-          }),
-        }),
-      ]);
-      const transaction = setupTransactionObserver({
-        apolloClient,
-      });
-
-      const result = await transaction.waitForNextIndexingEvent({ txHash });
-
-      expect(() => result.unwrap()).toThrow(TransactionError);
-      expect(result.isFailure() && result.error.reason).toBe(TransactionErrorReason.REVERTED);
-    });
-
-    it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.INDEXING_TIMEOUT}] if the tx is not indexed within a reasonable time`, async () => {
+  describe(`when invoking ${TransactionObserver.prototype.waitForNextIndexingEvent.name}`, () => {
+    describe(`with a tx hash`, () => {
       const txHash = mockTransactionHash();
-      const apolloClient = mockLensApolloClient([
-        mockHasTxHashBeenIndexedResponse({
-          variables: {
-            request: { txHash },
-          },
-          data: mockHasTxHashBeenIndexedData({
-            indexed: false,
-            txHash,
+
+      it('should succeed with indexed=true if the tx has been indexed by the BE', async () => {
+        const responses = [
+          mockLensTransactionStatusDataResponse({
+            request: { forTxHash: txHash },
+            result: null, // simulates a tx not reached the nodes used by the indexer to monitor on-chain events
           }),
-        }),
-      ]);
-
-      const transaction = setupTransactionObserver({
-        apolloClient,
-        timings: {
-          pollingInterval: 1,
-          maxMiningWaitTime: 1000, // ms
-          maxIndexingWaitTime: 1, // ms
-        },
-      });
-      const result = await transaction.waitForNextIndexingEvent({ txHash });
-
-      expect(() => result.unwrap()).toThrow(TransactionError);
-      expect(result.isFailure() && result.error.reason).toBe(
-        TransactionErrorReason.INDEXING_TIMEOUT,
-      );
-    });
-  });
-
-  describe(`when invoking ${TransactionObserver.prototype.waitForNextIndexingEvent.name} with an indexing ID`, () => {
-    const indexingId = faker.datatype.uuid();
-
-    it('should succeed with indexed=true if the tx has been indexed by the BE', async () => {
-      const txHash = mockTransactionHash();
-      const responses = [
-        mockHasTxHashBeenIndexedResponse({
-          variables: {
-            request: { txId: indexingId },
-          },
-          data: mockHasTxHashBeenIndexedData({
-            indexed: true,
-            txHash,
+          mockLensTransactionStatusDataResponse({
+            request: { forTxHash: txHash },
+            result: mockLensTransactionResult({
+              status: LensTransactionStatusType.Complete,
+              txHash,
+            }),
           }),
-        }),
-      ];
-      const apolloClient = mockLensApolloClient(responses);
-      const transaction = setupTransactionObserver({
-        apolloClient,
+        ];
+        const apolloClient = mockLensApolloClient(responses);
+        const transaction = setupTransactionObserver({
+          apolloClient,
+        });
+
+        const event = await transaction.waitForNextIndexingEvent({ txHash });
+        expect(event.unwrap()).toEqual({
+          indexed: true,
+          txHash,
+        });
       });
 
-      const event = await transaction.waitForNextIndexingEvent({ indexingId });
-      expect(event.unwrap()).toEqual({
-        indexed: true,
-        txHash,
-      });
-    });
+      it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.REVERTED}] if the tx gets reverted`, async () => {
+        const apolloClient = mockLensApolloClient([
+          mockLensTransactionStatusDataResponse({
+            request: { forTxHash: txHash },
+            result: mockLensTransactionResult({
+              status: LensTransactionStatusType.Failed,
+              reason: LensTransactionFailureType.Reverted,
+            }),
+          }),
+        ]);
+        const transaction = setupTransactionObserver({
+          apolloClient,
+        });
 
-    it('should succeed with any new txHash if the it changes before being indexed', async () => {
-      const upgradedTxHash = mockTransactionHash();
-      const responses = [
-        mockHasTxHashBeenIndexedResponse({
-          variables: {
-            request: { txId: indexingId },
-          },
-          data: mockHasTxHashBeenIndexedData({
-            indexed: false,
-            txHash: mockTransactionHash(),
-          }),
-        }),
-        mockHasTxHashBeenIndexedResponse({
-          variables: {
-            request: { txId: indexingId },
-          },
-          data: mockHasTxHashBeenIndexedData({
-            indexed: false,
-            txHash: upgradedTxHash,
-          }),
-        }),
-      ];
-      const apolloClient = mockLensApolloClient(responses);
-      const transaction = setupTransactionObserver({
-        apolloClient,
+        const result = await transaction.waitForNextIndexingEvent({ txHash });
+
+        expect(() => result.unwrap()).toThrow(TransactionError);
+        expect(result.isFailure() && result.error.reason).toBe(TransactionErrorReason.REVERTED);
       });
 
-      const event = await transaction.waitForNextIndexingEvent({ indexingId });
-      expect(event.unwrap()).toEqual({
-        indexed: false,
-        txHash: upgradedTxHash,
+      it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.INDEXING_TIMEOUT}] if the tx is not indexed within a reasonable time`, async () => {
+        const txHash = mockTransactionHash();
+        const apolloClient = mockLensApolloClient([
+          mockLensTransactionStatusDataResponse({
+            request: { forTxHash: txHash },
+            result: mockLensTransactionResult({
+              status: LensTransactionStatusType.Processing,
+            }),
+          }),
+        ]);
+
+        const transaction = setupTransactionObserver({
+          apolloClient,
+          timings: {
+            pollingInterval: 1,
+            maxMiningWaitTime: 1000, // ms
+            maxIndexingWaitTime: 1, // ms
+          },
+        });
+        const result = await transaction.waitForNextIndexingEvent({ txHash });
+
+        expect(() => result.unwrap()).toThrow(TransactionError);
+        expect(result.isFailure() && result.error.reason).toBe(
+          TransactionErrorReason.INDEXING_TIMEOUT,
+        );
       });
     });
 
-    it('should succeed return any new txHash also as the tx is flagged as indexed by the BE', async () => {
-      const initialTxHash = mockTransactionHash();
-      const upgradedTxHash = mockTransactionHash();
-      const responses = [
-        mockHasTxHashBeenIndexedResponse({
-          variables: {
-            request: { txId: indexingId },
-          },
-          data: mockHasTxHashBeenIndexedData({
-            indexed: false,
-            txHash: initialTxHash,
-          }),
-        }),
-        mockHasTxHashBeenIndexedResponse({
-          variables: {
-            request: { txId: indexingId },
-          },
-          data: mockHasTxHashBeenIndexedData({
-            indexed: true,
-            txHash: upgradedTxHash,
-          }),
-        }),
-      ];
-      const apolloClient = mockLensApolloClient(responses);
-      const transaction = setupTransactionObserver({
-        apolloClient,
-      });
-
-      const event = await transaction.waitForNextIndexingEvent({ indexingId });
-      expect(event.unwrap()).toEqual({
-        indexed: true,
-        txHash: upgradedTxHash,
-      });
-    });
-
-    it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.REVERTED}] if the tx gets reverted`, async () => {
-      const apolloClient = mockLensApolloClient([
-        mockHasTxHashBeenIndexedResponse({
-          variables: {
-            request: { txId: indexingId },
-          },
-          data: mockHasTxHashBeenIndexedData({
-            reason: TransactionErrorReasons.Reverted,
-          }),
-        }),
-      ]);
-      const transaction = setupTransactionObserver({
-        apolloClient,
-      });
-
-      const result = await transaction.waitForNextIndexingEvent({ indexingId });
-
-      expect(() => result.unwrap()).toThrow(TransactionError);
-      expect(result.isFailure() && result.error.reason).toBe(TransactionErrorReason.REVERTED);
-    });
-
-    it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.INDEXING_TIMEOUT}] if the tx is not indexed within a reasonable time`, async () => {
-      const txHash = mockTransactionHash();
-      const apolloClient = mockLensApolloClient([
-        mockHasTxHashBeenIndexedResponse({
-          variables: {
-            request: { txId: indexingId },
-          },
-          data: mockHasTxHashBeenIndexedData({
-            indexed: false,
-            txHash,
-          }),
-        }),
-      ]);
-
-      const transaction = setupTransactionObserver({
-        apolloClient,
-        timings: {
-          pollingInterval: 1,
-          maxMiningWaitTime: 1000, // ms
-          maxIndexingWaitTime: 1, // ms
-        },
-      });
-      const result = await transaction.waitForNextIndexingEvent({ indexingId });
-
-      expect(() => result.unwrap()).toThrow(TransactionError);
-      expect(result.isFailure() && result.error.reason).toBe(
-        TransactionErrorReason.INDEXING_TIMEOUT,
-      );
-    });
-  });
-
-  describe(`when invoking ${TransactionObserver.prototype.waitForProxyTransactionStatus.name} with a proxy ID`, () => {
-    const proxyId = 'proxyId';
-
-    it(`should succeed with the expected ProxyActionStatusEvent if the action has ${ProxyActionStatusTypes.Complete} status`, async () => {
-      const txHash = mockTransactionHash();
+    describe(`with an tx ID`, () => {
       const txId = faker.datatype.uuid();
-      const responses = [
-        mockProxyActionStatusResponse({
-          variables: { proxyActionId: proxyId },
-          result: { status: ProxyActionStatusTypes.Complete, txHash, txId },
-        }),
-      ];
-      const apolloClient = mockLensApolloClient(responses);
-      const transaction = setupTransactionObserver({
-        apolloClient,
+
+      it('should succeed with indexed=true if the tx has been indexed by the BE', async () => {
+        const txHash = mockTransactionHash();
+        const responses = [
+          mockLensTransactionStatusDataResponse({
+            request: { forTxId: txId },
+            result: mockLensTransactionResult({
+              status: LensTransactionStatusType.Complete,
+              txHash,
+            }),
+          }),
+        ];
+        const apolloClient = mockLensApolloClient(responses);
+        const transaction = setupTransactionObserver({
+          apolloClient,
+        });
+
+        const event = await transaction.waitForNextIndexingEvent({ indexingId: txId });
+        expect(event.unwrap()).toEqual({
+          indexed: true,
+          txHash,
+        });
       });
 
-      const event = await transaction.waitForProxyTransactionStatus(proxyId);
-      expect(event.unwrap()).toEqual({
-        status: ProxyActionStatus.COMPLETE,
-        txHash,
-      });
-    });
+      it('should succeed with any new txHash if the it changes before being indexed', async () => {
+        const upgradedTxHash = mockTransactionHash();
+        const responses = [
+          mockLensTransactionStatusDataResponse({
+            request: { forTxId: txId },
+            result: mockLensTransactionResult({
+              status: LensTransactionStatusType.Processing,
+              txHash: mockTransactionHash(),
+            }),
+          }),
+          mockLensTransactionStatusDataResponse({
+            request: { forTxId: txId },
+            result: mockLensTransactionResult({
+              status: LensTransactionStatusType.Processing,
+              txHash: upgradedTxHash,
+            }),
+          }),
+        ];
+        const apolloClient = mockLensApolloClient(responses);
+        const transaction = setupTransactionObserver({
+          apolloClient,
+        });
 
-    it(`should succeed with the expected ProxyActionStatusEvent if the txHash changes before the action reaches ${ProxyActionStatusTypes.Complete} status`, async () => {
-      const txId = faker.datatype.uuid();
-      const initialTxHash = mockTransactionHash();
-      const upgradedTxHash = mockTransactionHash();
-      const lastTxHash = mockTransactionHash();
-      const responses = [
-        mockProxyActionStatusResponse({
-          variables: { proxyActionId: proxyId },
-          result: {
-            status: ProxyActionStatusTypes.Minting,
-            txHash: initialTxHash,
-            txId,
+        const event = await transaction.waitForNextIndexingEvent({ indexingId: txId });
+        expect(event.unwrap()).toEqual({
+          indexed: false,
+          txHash: upgradedTxHash,
+        });
+      });
+
+      it('should succeed return any new txHash also as the tx is flagged as indexed by the BE', async () => {
+        const initialTxHash = mockTransactionHash();
+        const upgradedTxHash = mockTransactionHash();
+        const responses = [
+          mockLensTransactionStatusDataResponse({
+            request: { forTxId: txId },
+            result: mockLensTransactionResult({
+              status: LensTransactionStatusType.Processing,
+              txHash: initialTxHash,
+            }),
+          }),
+          mockLensTransactionStatusDataResponse({
+            request: { forTxId: txId },
+            result: mockLensTransactionResult({
+              status: LensTransactionStatusType.Complete,
+              txHash: upgradedTxHash,
+            }),
+          }),
+        ];
+        const apolloClient = mockLensApolloClient(responses);
+        const transaction = setupTransactionObserver({
+          apolloClient,
+        });
+
+        const event = await transaction.waitForNextIndexingEvent({ indexingId: txId });
+        expect(event.unwrap()).toEqual({
+          indexed: true,
+          txHash: upgradedTxHash,
+        });
+      });
+
+      // skipped until api race condition is solved
+      it.skip(`should fail with an ${InvariantError.name} if the tx is not found`, async () => {
+        const responses = [
+          mockLensTransactionStatusDataResponse({
+            request: { forTxId: txId },
+            result: null,
+          }),
+        ];
+        const apolloClient = mockLensApolloClient(responses);
+        const transaction = setupTransactionObserver({
+          apolloClient,
+        });
+
+        await expect(() =>
+          transaction.waitForNextIndexingEvent({ indexingId: txId }),
+        ).rejects.toThrow(InvariantError);
+      });
+
+      it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.REVERTED}] if the tx gets reverted`, async () => {
+        const apolloClient = mockLensApolloClient([
+          mockLensTransactionStatusDataResponse({
+            request: { forTxId: txId },
+            result: mockLensTransactionResult({
+              status: LensTransactionStatusType.Failed,
+              reason: LensTransactionFailureType.Reverted,
+            }),
+          }),
+        ]);
+        const transaction = setupTransactionObserver({
+          apolloClient,
+        });
+
+        const result = await transaction.waitForNextIndexingEvent({ indexingId: txId });
+
+        expect(() => result.unwrap());
+        expect(result.isFailure() && result.error.reason).toBe(TransactionErrorReason.REVERTED);
+      });
+
+      it(`should fail with ${TransactionError.name}[reason: ${TransactionErrorReason.INDEXING_TIMEOUT}] if the tx is not indexed within a reasonable time`, async () => {
+        const txHash = mockTransactionHash();
+        const apolloClient = mockLensApolloClient([
+          mockLensTransactionStatusDataResponse({
+            request: { forTxId: txId },
+            result: mockLensTransactionResult({
+              status: LensTransactionStatusType.Processing,
+              txHash,
+            }),
+          }),
+        ]);
+
+        const transaction = setupTransactionObserver({
+          apolloClient,
+          timings: {
+            pollingInterval: 1,
+            maxMiningWaitTime: 1000, // ms
+            maxIndexingWaitTime: 1, // ms
           },
-        }),
-        mockProxyActionStatusResponse({
-          variables: { proxyActionId: proxyId },
-          result: {
-            status: ProxyActionStatusTypes.Minting,
-            txHash: upgradedTxHash,
-            txId,
-          },
-        }),
-        mockProxyActionStatusResponse({
-          variables: { proxyActionId: proxyId },
-          result: {
-            status: ProxyActionStatusTypes.Complete,
-            txHash: lastTxHash,
-            txId,
-          },
-        }),
-      ];
-      const apolloClient = mockLensApolloClient(responses);
-      const transaction = setupTransactionObserver({
-        apolloClient,
+        });
+        const result = await transaction.waitForNextIndexingEvent({ indexingId: txId });
+
+        expect(() => result.unwrap()).toThrow(TransactionError);
+        expect(result.isFailure() && result.error.reason).toBe(
+          TransactionErrorReason.INDEXING_TIMEOUT,
+        );
       });
-
-      const event = await transaction.waitForProxyTransactionStatus(proxyId);
-
-      expect(event.unwrap()).toEqual({
-        status: ProxyActionStatus.COMPLETE,
-        txHash: upgradedTxHash,
-      });
-    });
-
-    it(`should fail with ${TransactionError.name} for ${TransactionErrorReason.UNKNOWN} reason if the proxy action returns an error`, async () => {
-      const apolloClient = mockLensApolloClient([
-        mockProxyActionStatusResponse({
-          variables: { proxyActionId: proxyId },
-          result: {
-            reason: 'UNKNOWN_ERROR',
-            lastKnownTxId: faker.datatype.uuid(),
-          },
-        }),
-      ]);
-      const transaction = setupTransactionObserver({
-        apolloClient,
-      });
-
-      const result = await transaction.waitForProxyTransactionStatus(proxyId);
-
-      expect(() => result.unwrap()).toThrow(TransactionError);
-      expect(result.isFailure() && result.error.reason).toBe(TransactionErrorReason.UNKNOWN);
-    });
-
-    it(`should fail with ${TransactionError.name} for ${TransactionErrorReason.INDEXING_TIMEOUT} reason if the action is not completed within a reasonable time frame`, async () => {
-      const txHash = mockTransactionHash();
-      const apolloClient = mockLensApolloClient([
-        mockProxyActionStatusResponse({
-          variables: { proxyActionId: proxyId },
-          result: {
-            status: ProxyActionStatusTypes.Minting,
-            txHash: txHash,
-            txId: faker.datatype.uuid(),
-          },
-        }),
-      ]);
-
-      const transaction = setupTransactionObserver({
-        apolloClient,
-        timings: {
-          pollingInterval: 1,
-          maxMiningWaitTime: 1000, // ms
-          maxIndexingWaitTime: 0.5, // ms
-        },
-      });
-      const result = await transaction.waitForProxyTransactionStatus(proxyId);
-
-      expect(() => result.unwrap()).toThrow(TransactionError);
-      expect(result.isFailure() && result.error.reason).toBe(
-        TransactionErrorReason.INDEXING_TIMEOUT,
-      );
     });
   });
 });

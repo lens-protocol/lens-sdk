@@ -3,7 +3,7 @@
  */
 
 import { faker } from '@faker-js/faker';
-import { mock32BytesHexString, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
+import { mock32BytesHexString, mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { when } from 'jest-when';
 
 import { production } from '../../../environments';
@@ -33,7 +33,7 @@ function createSuccessfulResponse() {
       id: mock32BytesHexString(),
       ipfs: faker.random.alphaNumeric(10),
       relayer: {
-        address: mockEthereumAddress(),
+        address: mockEvmAddress(),
         receipt: faker.datatype.hexadecimal({ length: 65 }),
       },
     }),

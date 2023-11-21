@@ -1,15 +1,29 @@
-import { Amount, ChainType, Erc20, erc20, Erc20Amount } from '@lens-protocol/shared-kernel';
+import { Amount, ChainType, erc20, Erc20Amount } from '@lens-protocol/shared-kernel';
 
-import { Erc20AmountFields, ModuleFeeAmount, ModuleFeeAmountParams } from '../generated';
+import { Amount as ApiAmount } from '../graphql/generated';
 
-export function erc20Amount({ from }: { from: Erc20AmountFields | ModuleFeeAmount }): Erc20Amount {
-  const asset = erc20({ chainType: ChainType.POLYGON, ...from.asset });
-  return Amount.erc20(asset, from.value);
+export function chainType(chainId: number): ChainType {
+  switch (chainId) {
+    case 1:
+    case 5:
+      return ChainType.ETHEREUM;
+    case 137:
+    case 80001:
+      return ChainType.POLYGON;
+    default:
+      throw new Error(`Not supported chainId: ${chainId}`);
+  }
 }
 
-export function moduleFeeAmountParams({ from }: { from: Amount<Erc20> }): ModuleFeeAmountParams {
-  return {
-    currency: from.asset.address,
-    value: from.toFixed(),
-  };
+export function erc20Amount({ from }: { from: ApiAmount }): Erc20Amount {
+  const { asset, value } = from;
+
+  const erc20Asset = erc20({
+    name: asset.name,
+    decimals: asset.decimals,
+    symbol: asset.symbol,
+    address: asset.contract.address,
+    chainType: chainType(asset.contract.chainId),
+  });
+  return Amount.erc20(erc20Asset, value);
 }

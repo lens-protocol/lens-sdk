@@ -7,62 +7,55 @@ config:
   strictScalars: true
 
   scalars:
-    Attach: string
+    AppId: string
     BlockchainData: string
     BroadcastId: string
     ChainId: number
-    CollectModuleData: string
+    ChallengeId: string
     ContentEncryptionKey: string
-    ContractAddress: string
     CreateHandle: string
     Cursor: string
-    DataAvailabilityId: string
     DateTime: string
-    EncryptedValueScalar: string
+    EncryptableDateTime: string
+    EncryptableMarkdown: string
+    EncryptableString: string
+    EncryptableTxHash: string
+    EncryptableURI: string
+    EncryptedPath: string
+    EncryptedValue: string
     Ens: string
-    EthereumAddress: string
-    FollowModuleData: string
+    EvmAddress: string
     Handle: string
-    HandleClaimIdScalar: string
     ImageSizeTransform: ImageSizeTransform
-    InternalPublicationId: string
-    IpfsCid: string
     Jwt: string
-    LimitScalar: number
     Locale: string
     Markdown: string
-    Media: string
     MimeType: string
+    MomokaId: string
+    MomokaProof: string
     NftGalleryId: string
     NftGalleryName: string
-    NftOwnershipId: string
     Nonce: number
-    NotificationId: string
+    OnchainPublicationId: string
+    PoapEventId: string
     ProfileId: string
-    ProfileInterest: string
-    ProxyActionId: string
     PublicationId: string
-    PublicationTag: string
-    PublicationUrl: string
-    ReactionId: string
-    ReferenceModuleData: string
-    Search: string
     Signature: string
-    Sources: string
-    String: string
-    TimestampScalar: string
     TokenId: string
     TxHash: string
     TxId: string
-    UnixTimestamp: string
-    Url: string
-    Void: void
+    UnixTimestamp: number
+    URI: string
+    URL: string
+    UUID: string
+    Void: string
 
   avoidOptionals:
     field: true
 
 schema:
-  - https://api-mumbai.lens.dev/graphql
+  - https://api-v2-mumbai.lens.dev/graphql
+  # - http://localhost:4000/
 documents:
   - src/**/*.graphql
 generates:
@@ -72,6 +65,7 @@ generates:
           content: ["import type { ImageSizeTransform } from './ImageSizeTransform';"]
       - 'typescript':
           nonOptionalTypename: true
+          onlyOperationTypes: true # scalars and enums
   ./:
     preset: near-operation-file
     presetConfig:
@@ -85,3 +79,4 @@ generates:
           inlineFragmentTypes: combine
       - 'typescript-graphql-request':
           rawRequest: true
+          documentMode: documentNode

@@ -1,14 +1,14 @@
 import {
   Amount,
   Erc20,
-  EthereumAddress,
+  EvmAddress,
   failure,
   PromiseResult,
   success,
 } from '@lens-protocol/shared-kernel';
 
 import { Wallet } from '../../entities';
-import { ActiveWallet } from './ActiveWallet';
+import { ActiveWallet } from '../authentication/ActiveWallet';
 
 export interface IBalanceGateway {
   getBalanceFor<T extends Erc20>(wallet: Wallet, asset: T): Promise<Amount<T>>;
@@ -18,7 +18,7 @@ export interface ITokenGateway {
   getTransferAllowanceFor<T extends Erc20>(
     asset: T,
     owner: Wallet,
-    spender: EthereumAddress,
+    spender: EvmAddress,
   ): Promise<Amount<T>>;
 }
 
@@ -26,7 +26,7 @@ export class InsufficientAllowanceError extends Error {
   name = 'InsufficientAllowanceError' as const;
 
   constructor(readonly requestedAmount: Amount<Erc20>) {
-    super(`Insufficient allowance to cover the requested ${requestedAmount.asset.toString()}`);
+    super(`Insufficient allowance ${requestedAmount.toString()}`);
   }
 }
 
@@ -34,13 +34,13 @@ export class InsufficientFundsError extends Error {
   name = 'InsufficientFundsError' as const;
 
   constructor(readonly requestedAmount: Amount<Erc20>) {
-    super(`Insufficient funds to cover the requested ${requestedAmount.asset.toString()}`);
+    super(`Insufficient funds ${requestedAmount.toString()}`);
   }
 }
 
 export type TokenAvailabilityRequest = {
   amount: Amount<Erc20>;
-  spender: EthereumAddress;
+  spender: EvmAddress;
 };
 
 export type TokenAvailabilityError = InsufficientAllowanceError | InsufficientFundsError;

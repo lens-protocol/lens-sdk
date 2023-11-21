@@ -1,23 +1,62 @@
-query AuthChallenge($address: EthereumAddress!) {
-  result: challenge(request: { address: $address }) {
-    text
+fragment AuthChallenge on AuthChallengeResult {
+  __typename
+  id
+  text
+}
+
+fragment ApprovedAuthentication on ApprovedAuthentication {
+  __typename
+  authorizationId
+  browser
+  device
+  os
+  origin
+  expiresAt
+  createdAt
+  updatedAt
+}
+
+query AuthChallenge($request: ChallengeRequest!) {
+  result: challenge(request: $request) {
+    ...AuthChallenge
   }
 }
 
-query AuthVerify($accessToken: Jwt!) {
-  result: verify(request: { accessToken: $accessToken })
+query AuthVerify($request: VerifyRequest!) {
+  result: verify(request: $request)
 }
 
-mutation AuthAuthenticate($address: EthereumAddress!, $signature: Signature!) {
-  result: authenticate(request: { address: $address, signature: $signature }) {
+query CurrentSession {
+  result: currentSession {
+    ...ApprovedAuthentication
+  }
+}
+
+query ApprovedAuthentications($request: ApprovedAuthenticationRequest!) {
+  result: approvedAuthentications(request: $request) {
+    items {
+      ...ApprovedAuthentication
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+mutation AuthAuthenticate($request: SignedAuthChallenge!) {
+  result: authenticate(request: $request) {
     accessToken
     refreshToken
   }
 }
 
-mutation AuthRefresh($refreshToken: Jwt!) {
-  result: refresh(request: { refreshToken: $refreshToken }) {
+mutation AuthRefresh($request: RefreshRequest!) {
+  result: refresh(request: $request) {
     accessToken
     refreshToken
   }
+}
+
+mutation RevokeAuthentication($request: RevokeAuthenticationRequest!) {
+  revokeAuthentication(request: $request)
 }

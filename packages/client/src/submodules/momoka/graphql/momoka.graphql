@@ -1,0 +1,184 @@
+# fragments
+fragment MomokaVerificationStatusSuccess on MomokaVerificationStatusSuccess {
+  verified
+}
+
+fragment MomokaVerificationStatusFailure on MomokaVerificationStatusFailure {
+  status
+}
+
+fragment MomokaPostTransaction on MomokaPostTransaction {
+  transactionId
+  submitter
+  createdAt
+  app {
+    ...App
+  }
+  publication {
+    id
+  }
+  verificationStatus {
+    ... on MomokaVerificationStatusSuccess {
+      ...MomokaVerificationStatusSuccess
+    }
+    ... on MomokaVerificationStatusFailure {
+      ...MomokaVerificationStatusFailure
+    }
+  }
+}
+
+fragment MomokaCommentTransaction on MomokaCommentTransaction {
+  transactionId
+  submitter
+  createdAt
+  app {
+    ...App
+  }
+  verificationStatus {
+    ... on MomokaVerificationStatusSuccess {
+      ...MomokaVerificationStatusSuccess
+    }
+    ... on MomokaVerificationStatusFailure {
+      ...MomokaVerificationStatusFailure
+    }
+  }
+  publication {
+    id
+  }
+  commentOn {
+    ... on Post {
+      id
+    }
+    ... on Comment {
+      id
+    }
+    ... on Quote {
+      id
+    }
+  }
+}
+
+fragment MomokaMirrorTransaction on MomokaMirrorTransaction {
+  transactionId
+  submitter
+  createdAt
+  app {
+    ...App
+  }
+  verificationStatus {
+    ... on MomokaVerificationStatusSuccess {
+      ...MomokaVerificationStatusSuccess
+    }
+    ... on MomokaVerificationStatusFailure {
+      ...MomokaVerificationStatusFailure
+    }
+  }
+  publication {
+    id
+  }
+  mirrorOn {
+    ... on Post {
+      id
+    }
+    ... on Comment {
+      id
+    }
+    ... on Quote {
+      id
+    }
+  }
+}
+
+fragment MomokaQuoteTransaction on MomokaQuoteTransaction {
+  transactionId
+  submitter
+  createdAt
+  app {
+    ...App
+  }
+  verificationStatus {
+    ... on MomokaVerificationStatusSuccess {
+      ...MomokaVerificationStatusSuccess
+    }
+    ... on MomokaVerificationStatusFailure {
+      ...MomokaVerificationStatusFailure
+    }
+  }
+  publication {
+    id
+  }
+  quoteOn {
+    ... on Post {
+      id
+    }
+    ... on Comment {
+      id
+    }
+    ... on Quote {
+      id
+    }
+  }
+}
+
+fragment MomokaSubmitterResult on MomokaSubmitterResult {
+  address
+  name
+  totalTransactions
+}
+
+# queries
+query MomokaSubmitters {
+  result: momokaSubmitters {
+    items {
+      ...MomokaSubmitterResult
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query MomokaSummary {
+  result: momokaSummary {
+    totalTransactions
+  }
+}
+
+query MomokaTransaction($request: MomokaTransactionRequest!) {
+  result: momokaTransaction(request: $request) {
+    ... on MomokaPostTransaction {
+      ...MomokaPostTransaction
+    }
+    ... on MomokaCommentTransaction {
+      ...MomokaCommentTransaction
+    }
+    ... on MomokaMirrorTransaction {
+      ...MomokaMirrorTransaction
+    }
+    ... on MomokaQuoteTransaction {
+      ...MomokaQuoteTransaction
+    }
+  }
+}
+
+query momokaTransactions($request: MomokaTransactionsRequest!) {
+  result: momokaTransactions(request: $request) {
+    items {
+      ... on MomokaPostTransaction {
+        ...MomokaPostTransaction
+      }
+      ... on MomokaCommentTransaction {
+        ...MomokaCommentTransaction
+      }
+      ... on MomokaMirrorTransaction {
+        ...MomokaMirrorTransaction
+      }
+      ... on MomokaQuoteTransaction {
+        ...MomokaQuoteTransaction
+      }
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}

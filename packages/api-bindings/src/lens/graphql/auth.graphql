@@ -1,0 +1,38 @@
+fragment AuthChallengeResult on AuthChallengeResult {
+  __typename
+  id
+  text
+}
+
+query AuthChallenge($request: ChallengeRequest!) {
+  result: challenge(request: $request) {
+    ...AuthChallengeResult
+  }
+}
+
+query AuthVerify($request: VerifyRequest!) {
+  result: verify(request: $request)
+}
+
+mutation AuthAuthenticate($request: SignedAuthChallenge!) {
+  result: authenticate(request: $request) {
+    accessToken
+    refreshToken
+  }
+}
+
+mutation AuthRefresh($request: RefreshRequest!) {
+  result: refresh(request: $request) {
+    accessToken
+    refreshToken
+  }
+}
+
+mutation WalletAuthenticationToProfileAuthentication(
+  $request: WalletAuthenticationToProfileAuthenticationRequest!
+) {
+  result: walletAuthenticationToProfileAuthentication(request: $request) {
+    accessToken
+    refreshToken
+  }
+}

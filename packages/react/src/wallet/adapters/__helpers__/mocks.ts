@@ -2,19 +2,19 @@ import { TransactionRequest } from '@ethersproject/providers';
 import { faker } from '@faker-js/faker';
 import { TypedData } from '@lens-protocol/blockchain-bindings';
 import {
-  ProtocolTransactionRequestModel,
   AnyTransactionRequestModel,
+  ProtocolTransactionRequestModel,
   UnsignedTransaction,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import {
-  mockSignature,
   mockAnyTransactionRequestModel,
-  mockProtocolTransactionRequestModel,
   mockPollId,
+  mockProtocolTransactionRequestModel,
+  mockSignature,
 } from '@lens-protocol/domain/mocks';
-import { ChainType, EthereumAddress, Result } from '@lens-protocol/shared-kernel';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
+import { ChainType, EvmAddress, Result } from '@lens-protocol/shared-kernel';
+import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { providers } from 'ethers';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
@@ -32,48 +32,26 @@ import {
   SignedVote,
   UnsignedProtocolCall,
 } from '../ConcreteWallet';
-import { Credentials } from '../Credentials';
 import { IProviderFactory } from '../IProviderFactory';
 
-type MockedISignerFactoryConfig = {
-  address: EthereumAddress;
-  chainType?: ChainType;
-  signerResult: Result<providers.JsonRpcSigner, WalletConnectionError>;
-};
-
-export function mockISignerFactory({
-  signerResult,
-  ...config
-}: MockedISignerFactoryConfig): ISignerFactory {
-  const factory = mock<ISignerFactory>();
-
-  when(factory.createSigner)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    .calledWith(expect.objectContaining(config))
-    .mockResolvedValue(signerResult);
-
-  return factory;
+export function mockConcreteWallet() {
+  return ConcreteWallet.create(
+    mockEvmAddress(),
+    mock<ISignerFactory>(),
+    mock<ITransactionFactory<AnyTransactionRequestModel>>(),
+  );
 }
 
-type MockedIProviderFactoryConfig = {
-  chainType: ChainType;
-  provider: providers.JsonRpcProvider;
-};
+class ErrorWithCode<T extends number | string> extends Error {
+  name = 'ErrorWithCode' as const;
 
-export function mockIProviderFactory({
-  chainType,
-  provider,
-}: MockedIProviderFactoryConfig): IProviderFactory {
-  const factory = mock<IProviderFactory>();
+  constructor(readonly code: T) {
+    super();
+  }
+}
 
-  when(factory.createProvider)
-    .calledWith(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      expect.objectContaining({ chainType }),
-    )
-    .mockResolvedValue(provider);
-
-  return factory;
+export function mockErrorWithCode<T extends number | string>(code: T) {
+  return new ErrorWithCode(code);
 }
 
 export function mockUnsignedProtocolCall<T extends ProtocolTransactionRequestModel>({
@@ -88,16 +66,6 @@ export function mockUnsignedProtocolCall<T extends ProtocolTransactionRequestMod
     request,
     typedData,
     fallback: mockSelfFundedProtocolTransactionRequest<T>(),
-  });
-}
-
-export function mockSignedProtocolCall<T extends ProtocolTransactionRequestModel>() {
-  return SignedProtocolCall.create({
-    unsignedCall: mockUnsignedProtocolCall({
-      typedData: mockTypedData(),
-      request: mockProtocolTransactionRequestModel() as T,
-    }),
-    signature: mockSignature(),
   });
 }
 
@@ -124,33 +92,57 @@ export function mockUnsignedTransactionRequest({
   );
 }
 
-export function mockConcreteWallet() {
-  return ConcreteWallet.create(
-    { address: mockEthereumAddress() },
-    mock<ISignerFactory>(),
-    mock<ITransactionFactory<AnyTransactionRequestModel>>(),
-  );
-}
+type MockedISignerFactoryConfig = {
+  address: EvmAddress;
+  chainType?: ChainType;
+  signerResult: Result<providers.JsonRpcSigner, WalletConnectionError>;
+};
 
-class ErrorWithCode<T extends number | string> extends Error {
-  name = 'ErrorWithCode' as const;
+export function mockISignerFactory({
+  signerResult,
+  ...config
+}: MockedISignerFactoryConfig): ISignerFactory {
+  const factory = mock<ISignerFactory>();
 
-  constructor(readonly code: T) {
-    super();
-  }
-}
+  when(factory.createSigner)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    .calledWith(expect.objectContaining(config))
+    .mockResolvedValue(signerResult);
 
-export function mockErrorWithCode<T extends number | string>(code: T) {
-  return new ErrorWithCode(code);
-}
-
-export function mockCredentials(): Credentials {
-  return new Credentials(
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB4YjE5QzI4OTBjZjk0N0FEM2YwYjdkN0U1QTlmZkJjZTM2ZDNmOWJkMiIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE2Mzc3NTQ2ODEsImV4cCI6MTYzNzc1NDc0MX0.Be1eGBvVuFL4fj4pHHqc0yWDledsgS2GP3Jgonmy-xw',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB4YjE5QzI4OTBjZjk0N0FEM2YwYjdkN0U1QTlmZkJjZTM2ZDNmOWJkMiIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE2Mzc3NTQ2ODEsImV4cCI6MTYzNzc1NDc0MX0.Be1eGBvVuFL4fj4pHHqc0yWDledsgS2GP3Jgonmy-xw',
-  );
+  return factory;
 }
 
 export function mockSignedVote(): SignedVote {
-  return new SignedVote(mockPollId(), mockSignature(), mockTypedData(), mockEthereumAddress());
+  return new SignedVote(mockPollId(), mockSignature(), mockTypedData(), mockEvmAddress());
+}
+
+type MockedIProviderFactoryConfig = {
+  chainType: ChainType;
+  provider: providers.JsonRpcProvider;
+};
+
+export function mockIProviderFactory({
+  chainType,
+  provider,
+}: MockedIProviderFactoryConfig): IProviderFactory {
+  const factory = mock<IProviderFactory>();
+
+  when(factory.createProvider)
+    .calledWith(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      expect.objectContaining({ chainType }),
+    )
+    .mockResolvedValue(provider);
+
+  return factory;
+}
+
+export function mockSignedProtocolCall<T extends ProtocolTransactionRequestModel>() {
+  return SignedProtocolCall.create({
+    unsignedCall: mockUnsignedProtocolCall({
+      typedData: mockTypedData(),
+      request: mockProtocolTransactionRequestModel() as T,
+    }),
+    signature: mockSignature(),
+  });
 }

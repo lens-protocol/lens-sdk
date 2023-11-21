@@ -1,41 +1,72 @@
-import { CreateCommentRequest } from '@lens-protocol/domain/use-cases/publications';
+import { CreateComment, CreateCommentRequest } from '@lens-protocol/domain/use-cases/publications';
+import {
+  DelegableSigning,
+  SubsidizeOffChain,
+  SignedOnChain,
+  TransactionData,
+} from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
-import { PublicationMetadataUploader } from '../infrastructure/PublicationMetadataUploader';
-import { CreateCommentController } from './CreateCommentController';
-import { MetadataUploadHandler } from './MetadataUploadHandler';
-import { validateCreateCommentRequest } from './schemas/validators';
+import { NewPublicationPresenter } from './NewPublicationPresenter';
+import { CreateMomokaCommentGateway } from './publications/CreateMomokaCommentGateway';
+import { CreateOnChainCommentGateway } from './publications/CreateOnChainCommentGateway';
 
-export type UseCreateCommentArgs = {
-  upload: MetadataUploadHandler;
-};
-
-export function useCreateCommentController({ upload }: UseCreateCommentArgs) {
+export function useCreateCommentController() {
   const {
     activeWallet,
     apolloClient,
-    offChainRelayer,
+    momokaRelayer,
     onChainRelayer,
+    publicationCacheManager,
     transactionFactory,
     transactionGateway,
     transactionQueue,
   } = useSharedDependencies();
 
   return async (request: CreateCommentRequest) => {
-    validateCreateCommentRequest(request);
+    const presenter = new NewPublicationPresenter((tx: TransactionData<CreateCommentRequest>) =>
+      publicationCacheManager.fetchNewComment(tx),
+    );
 
-    const uploader = PublicationMetadataUploader.create(upload);
-    const controller = new CreateCommentController<CreateCommentRequest>({
+    const onChainGateway = new CreateOnChainCommentGateway(apolloClient, transactionFactory);
+
+    const onChainComment = new SignedOnChain(
       activeWallet,
-      apolloClient,
-      offChainRelayer,
-      onChainRelayer,
-      transactionFactory,
       transactionGateway,
+      onChainGateway,
+      onChainRelayer,
       transactionQueue,
-      uploader,
-    });
+      presenter,
+    );
 
-    return controller.execute(request);
+    const delegableOnChainComment = new DelegableSigning(
+      onChainComment,
+      onChainGateway,
+      transactionQueue,
+      presenter,
+    );
+
+    const offChainGateway = new CreateMomokaCommentGateway(apolloClient, transactionFactory);
+
+    const momokaComment = new SubsidizeOffChain(
+      activeWallet,
+      offChainGateway,
+      momokaRelayer,
+      transactionQueue,
+      presenter,
+    );
+
+    const delegableOffChainComment = new DelegableSigning(
+      momokaComment,
+      offChainGateway,
+      transactionQueue,
+      presenter,
+    );
+
+    const createComment = new CreateComment(delegableOnChainComment, delegableOffChainComment);
+
+    await createComment.execute(request);
+
+    return presenter.asResult();
   };
 }

@@ -1,5 +1,6 @@
+import { IWalletFactory } from '@lens-protocol/domain/use-cases/authentication';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
-import { IWalletFactory, WalletLoginRequest } from '@lens-protocol/domain/use-cases/wallets';
+import { EvmAddress } from '@lens-protocol/shared-kernel';
 
 import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
 import { ConcreteWallet, ISignerFactory, WalletDataSchema } from './ConcreteWallet';
@@ -11,11 +12,11 @@ export class WalletFactory implements IWalletUnmarshaller, IWalletFactory {
     private readonly transactionFactory: ITransactionFactory<AnyTransactionRequest>,
   ) {}
 
-  async create(request: WalletLoginRequest): Promise<ConcreteWallet> {
-    return ConcreteWallet.create(request, this.signerFactory, this.transactionFactory);
+  async create(address: EvmAddress): Promise<ConcreteWallet> {
+    return ConcreteWallet.create(address, this.signerFactory, this.transactionFactory);
   }
 
   rehydrate(data: WalletDataSchema) {
-    return ConcreteWallet.create(data, this.signerFactory, this.transactionFactory);
+    return ConcreteWallet.create(data.address, this.signerFactory, this.transactionFactory);
   }
 }

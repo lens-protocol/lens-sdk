@@ -20,7 +20,7 @@ import {
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import {
   ChainType,
-  EthereumAddress,
+  EvmAddress,
   failure,
   invariant,
   matic,
@@ -40,7 +40,7 @@ import { assertErrorObjectWithCode } from './errors';
 export type RequiredSigner = Signer & TypedDataSigner;
 
 export type CreateSignerConfig = {
-  address: EthereumAddress;
+  address: EvmAddress;
   chainType?: ChainType;
 };
 
@@ -117,7 +117,7 @@ export class SignedVote implements ISnapshotVote {
     readonly pollId: PollId,
     readonly signature: Signature,
     readonly data: TypedData,
-    readonly voter: EthereumAddress,
+    readonly voter: EvmAddress,
   ) {}
 }
 
@@ -129,11 +129,11 @@ export class ConcreteWallet extends Wallet {
   private signingInProgress = false;
 
   private constructor(
-    data: WalletDataSchema,
+    address: EvmAddress,
     private readonly signerFactory: ISignerFactory,
     private readonly transactionFactory: ITransactionFactory<AnyTransactionRequestModel>,
   ) {
-    super(data.address);
+    super(address);
   }
 
   async signProtocolCall<T extends ProtocolTransactionRequestModel>(
@@ -148,7 +148,7 @@ export class ConcreteWallet extends Wallet {
     });
 
     if (result.isFailure()) {
-      return failure(result.error);
+      return result;
     }
 
     if (this.signingInProgress) {
@@ -190,7 +190,7 @@ export class ConcreteWallet extends Wallet {
     });
 
     if (result.isFailure()) {
-      return failure(result.error);
+      return result;
     }
 
     if (this.signingInProgress) {
@@ -226,7 +226,7 @@ export class ConcreteWallet extends Wallet {
     });
 
     if (result.isFailure()) {
-      return failure(result.error);
+      return result;
     }
 
     if (this.signingInProgress) {
@@ -273,7 +273,7 @@ export class ConcreteWallet extends Wallet {
     });
 
     if (result.isFailure()) {
-      return failure(result.error);
+      return result;
     }
 
     if (this.signingInProgress) {
@@ -315,10 +315,10 @@ export class ConcreteWallet extends Wallet {
   }
 
   static create(
-    data: WalletDataSchema,
+    address: EvmAddress,
     signerFactory: ISignerFactory,
     transactionFactory: ITransactionFactory<AnyTransactionRequest>,
   ) {
-    return new ConcreteWallet(data, signerFactory, transactionFactory);
+    return new ConcreteWallet(address, signerFactory, transactionFactory);
   }
 }

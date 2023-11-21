@@ -5,30 +5,12 @@ import {
   AnyTransactionRequest,
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { CausedError } from '@lens-protocol/shared-kernel';
-
-import { ErrorHandler } from '../../ErrorHandler';
-
-/**
- * Error thrown when a transaction fails
- */
-export class FailedTransactionError extends CausedError {
-  readonly data?: TransactionData<AnyTransactionRequest>;
-
-  constructor(cause: TransactionError, data: TransactionData<AnyTransactionRequest>) {
-    super(`Failed ${data.request.kind} transaction due to ${cause.reason}`, { cause });
-
-    this.data = data;
-  }
-}
 
 type PartialTransactionStateUpdate<T extends AnyTransactionRequest> = Partial<TransactionState<T>>;
 
 export class TransactionQueuePresenter<T extends AnyTransactionRequest>
   implements ITransactionQueuePresenter<T>
 {
-  constructor(private readonly errorHandler: ErrorHandler<FailedTransactionError>) {}
-
   clearRecent(): void {
     const transactions = recentTransactionsVar();
     const filteredTransactions = transactions.filter(
@@ -42,12 +24,12 @@ export class TransactionQueuePresenter<T extends AnyTransactionRequest>
     if (recentTransactionsVar().find(({ id }) => id === data.id)) {
       this.updateById(data.id, {
         ...data,
-        status: TxStatus.MINING,
+        status: TxStatus.PENDING,
       });
     } else {
       this.addTransaction({
         id: data.id,
-        status: TxStatus.MINING,
+        status: TxStatus.PENDING,
         request: data.request,
         txHash: data.txHash,
       });
@@ -59,8 +41,7 @@ export class TransactionQueuePresenter<T extends AnyTransactionRequest>
   }
 
   failed(error: TransactionError, data: TransactionData<T>): void {
-    this.errorHandler(new FailedTransactionError(error, data));
-    this.updateById(data.id, { status: TxStatus.FAILED });
+    this.updateById(data.id, { status: TxStatus.FAILED, error });
   }
 
   private addTransaction(data: TransactionState<AnyTransactionRequest>) {

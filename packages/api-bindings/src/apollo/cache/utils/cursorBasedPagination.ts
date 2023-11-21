@@ -19,7 +19,7 @@ export function cursorBasedPagination<TResult extends CursorBasedPaginatedResult
   return {
     keyArgs,
 
-    read(existing: SafeReadonly<TResult> | undefined, { canRead }) {
+    read(existing: SafeReadonly<TResult> | undefined) {
       if (!existing) {
         return existing;
       }
@@ -27,17 +27,12 @@ export function cursorBasedPagination<TResult extends CursorBasedPaginatedResult
       const { items, pageInfo } = existing;
 
       // items that are not in the cache anymore (for .e.g deleted publication)
-      const danglingItems = items.filter((item) => !canRead(item));
       const readRes: SafeReadonly<TResult> = {
         ...existing,
         items,
         pageInfo: {
           ...pageInfo,
           moreAfter: existing.pageInfo.moreAfter ?? existing.pageInfo.next !== null,
-          // reduce total count by excluding dangling items so it won't cause a new page query
-          // after item was removed from the cache (for .e.g deleted publication)
-          totalCount:
-            pageInfo.totalCount !== null ? pageInfo.totalCount - danglingItems.length : null,
         },
       };
 

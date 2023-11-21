@@ -2,8 +2,9 @@ import { gql } from '@apollo/client';
 import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
 
-import { Cursor, CursorBasedPaginatedResult, FragmentPaginatedResultInfo } from '../../../../lens';
+import { Cursor, CursorBasedPaginatedResult } from '../../../../lens';
 import { mockPaginatedResultInfo } from '../../../../lens/__helpers__/fragments';
+import { FragmentPaginatedResultInfo } from '../../../../lens/graphql/generated';
 
 export const AnyPaginatedQueryDocument = gql`
   query GetHero($cursor: String!) {

@@ -2,45 +2,25 @@ import { faker } from '@faker-js/faker';
 import { jest } from '@jest/globals';
 import {
   ChainType,
-  EthereumAddress,
+  EvmAddress,
   failure,
   PromiseResult,
   success,
 } from '@lens-protocol/shared-kernel';
-import {
-  mock32BytesHexString,
-  mockDaiAmount,
-  mockEthereumAddress,
-} from '@lens-protocol/shared-kernel/mocks';
+import { mock32BytesHexString, mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 
 import { AppId } from '../AppId';
 import { ICredentials } from '../Credentials';
-import { Challenge, NftContractType, NftOwnershipChallenge } from '../Nft';
+import { Challenge, NftOwnershipChallenge } from '../Nft';
 import { Profile, ProfileId } from '../Profile';
-import {
-  NftOwnershipCriterion,
-  Erc20OwnershipCriterion,
-  AddressOwnershipCriterion,
-  ProfileOwnershipCriterion,
-  FollowProfileCriterion,
-  CollectPublicationCriterion,
-  CollectThisPublicationCriterion,
-  OrCriterion,
-  AndCriterion,
-  Erc20ComparisonOperator,
-  DecryptionCriteriaType,
-  AnyCriterion,
-  PublicationId,
-} from '../Publication';
+import { PublicationId } from '../Publication';
 import { Signature } from '../Signature';
 import {
   IUnsignedProtocolCall,
   MetaTransaction,
   NativeTransaction,
   Nonce,
-  ProxyActionStatus,
-  ProxyTransaction,
   ISignedProtocolCall,
   TransactionError,
   TransactionErrorReason,
@@ -66,15 +46,14 @@ export function mockPublicationId(profileId: ProfileId = mockProfileId()): Publi
   return `${profileId}-${faker.datatype.hexadecimal({ length: 2 })}` as PublicationId;
 }
 
-export function mockWallet({
-  address = mockEthereumAddress(),
-}: { address?: EthereumAddress } = {}) {
+export function mockWallet({ address = mockEvmAddress() }: { address?: EvmAddress } = {}) {
   return mock<Wallet>({ address });
 }
 
-export function mockCredentials(overrides?: Partial<ICredentials>) {
+export function mockICredentials(overrides?: Partial<ICredentials>) {
   return mock<ICredentials>({
-    address: mockEthereumAddress(),
+    address: mockEvmAddress(),
+    profileId: mockProfileId(),
     ...overrides,
   });
 }
@@ -307,60 +286,6 @@ export function mockNftOwnershipChallenge(): NftOwnershipChallenge {
   };
 }
 
-type MockedProxyTransactionInit<T extends ProtocolTransactionRequestModel> = {
-  request: T;
-  chainType?: ChainType;
-  hash?: string;
-  id?: string;
-  status: ProxyActionStatus;
-};
-
-export class MockedProxyTransaction<
-  T extends ProtocolTransactionRequestModel,
-> extends ProxyTransaction<T> {
-  readonly chainType: ChainType;
-  readonly id: string;
-  readonly request: T;
-  hash: string | undefined;
-  status: ProxyActionStatus;
-
-  private constructor(
-    {
-      chainType = ChainType.POLYGON,
-      id = faker.datatype.uuid(),
-      hash,
-      request,
-      status,
-    }: MockedProxyTransactionInit<T>,
-    private instructions: MockedTransactionInstructions = { withUpdatesSequence: [] },
-  ) {
-    super();
-
-    this.chainType = chainType;
-    this.id = id;
-    this.request = request;
-    this.hash = hash;
-    this.status = status;
-  }
-
-  async waitNextEvent(): PromiseResult<TransactionEvent, TransactionError> {
-    const item = this.instructions.withUpdatesSequence.shift();
-    if (!item) {
-      return success(TransactionEvent.SETTLED);
-    }
-
-    if ('error' in item) {
-      return failure(item.error);
-    }
-    this.hash = item.txHash ?? this.hash;
-    return success(item.event);
-  }
-
-  static fromRequest<T extends ProtocolTransactionRequestModel>(request: T): ProxyTransaction<T> {
-    return new MockedProxyTransaction({ request, status: ProxyActionStatus.MINTING });
-  }
-}
-
 type MockedDataTransactionInit<T extends ProtocolTransactionRequestModel> = {
   request: T;
   id?: string;
@@ -390,90 +315,6 @@ export class MockedDataTransaction<
       request: signedCall.request,
     });
   }
-}
-
-export function mockNftOwnershipCriterion(
-  overrides?: Partial<NftOwnershipCriterion>,
-): NftOwnershipCriterion {
-  return {
-    contractAddress: mockEthereumAddress(),
-    chainId: 1,
-    contractType: NftContractType.Erc721,
-    tokenIds: ['0x1', '0x2', '0x3'],
-    ...overrides,
-    type: DecryptionCriteriaType.NFT_OWNERSHIP,
-  };
-}
-
-export function mockErc20OwnershipCriterion(
-  overrides?: Partial<Erc20OwnershipCriterion>,
-): Erc20OwnershipCriterion {
-  return {
-    amount: mockDaiAmount(1),
-    condition: Erc20ComparisonOperator.GreaterThan,
-    ...overrides,
-    type: DecryptionCriteriaType.ERC20_OWNERSHIP,
-  };
-}
-
-export function mockAddressOwnershipCriterion(
-  overrides?: Partial<AddressOwnershipCriterion>,
-): AddressOwnershipCriterion {
-  return {
-    address: mockEthereumAddress(),
-    ...overrides,
-    type: DecryptionCriteriaType.ADDRESS_OWNERSHIP,
-  };
-}
-
-export function mockProfileOwnershipCriterion(
-  overrides?: Partial<ProfileOwnershipCriterion>,
-): ProfileOwnershipCriterion {
-  return {
-    profileId: mockProfileId(),
-    ...overrides,
-    type: DecryptionCriteriaType.PROFILE_OWNERSHIP,
-  };
-}
-
-export function mockFollowProfileCriterion(
-  overrides?: Partial<FollowProfileCriterion>,
-): FollowProfileCriterion {
-  return {
-    profileId: mockProfileId(),
-    ...overrides,
-    type: DecryptionCriteriaType.FOLLOW_PROFILE,
-  };
-}
-
-export function mockCollectPublicationCriterion(
-  overrides?: Partial<CollectPublicationCriterion>,
-): CollectPublicationCriterion {
-  return {
-    publicationId: mockPublicationId(),
-    ...overrides,
-    type: DecryptionCriteriaType.COLLECT_PUBLICATION,
-  };
-}
-
-export function mockCollectThisPublicationCriterion(): CollectThisPublicationCriterion {
-  return {
-    type: DecryptionCriteriaType.COLLECT_THIS_PUBLICATION,
-  };
-}
-
-export function mockOrCriterion<T extends AnyCriterion[]>(criteria: T): OrCriterion<T> {
-  return {
-    or: criteria,
-    type: DecryptionCriteriaType.OR,
-  };
-}
-
-export function mockAndCriterion<T extends AnyCriterion[]>(criteria: T): AndCriterion<T> {
-  return {
-    and: criteria,
-    type: DecryptionCriteriaType.AND,
-  };
 }
 
 export function mockIUnsignedVote(overrides?: Partial<IUnsignedVote>): IUnsignedVote {

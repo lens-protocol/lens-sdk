@@ -19,7 +19,7 @@ export class TransactionResultPresenter<
   TError extends IEquatableError,
 > implements ITransactionResultPresenter<TRequest, TError>
 {
-  private earlyFailure: Failure<never, TError> | null = null;
+  private earlyFailure: Failure<TError> | null = null;
 
   private deferredResult = new Deferred<Result<void, TransactionError>>();
 

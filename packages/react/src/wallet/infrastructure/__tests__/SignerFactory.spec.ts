@@ -1,6 +1,6 @@
 import { WalletConnectionError, WalletConnectionErrorReason } from '@lens-protocol/domain/entities';
 import { ChainType } from '@lens-protocol/shared-kernel';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
+import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { errors, Wallet, logger, providers, utils, VoidSigner } from 'ethers';
 import { when } from 'jest-when';
 
@@ -9,7 +9,7 @@ import { RequiredSigner } from '../../adapters/ConcreteWallet';
 import { SignerFactory } from '../SignerFactory';
 import { mockISignerBinding, VoidJsonRpcProvider } from '../__helpers__/mocks';
 
-const address = mockEthereumAddress();
+const address = mockEvmAddress();
 
 function setupTestScenario({
   signer,
@@ -48,7 +48,7 @@ describe(`Given an instance of the ${SignerFactory.name}`, () => {
     });
 
     it(`should fail with ${WalletConnectionError.name}(${WalletConnectionErrorReason.WRONG_ACCOUNT}) in case of address mismatch`, async () => {
-      const signer = new VoidSignerWithJsonRpcProvider(mockEthereumAddress());
+      const signer = new VoidSignerWithJsonRpcProvider(mockEvmAddress());
       const { signerFactory } = setupTestScenario({ signer });
 
       const result = await signerFactory.createSigner({ address });
@@ -118,7 +118,7 @@ describe(`Given an instance of the ${SignerFactory.name}`, () => {
       });
     });
 
-    describe('with a wallet', () => {
+    describe('with a wallet address', () => {
       // This is the private key of the `@jsisthebest.test` profile
       // It's a public private key so anyone can modify the profile
       // For your own convenience change to the private key of a new wallet

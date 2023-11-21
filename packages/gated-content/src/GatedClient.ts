@@ -1,43 +1,86 @@
+/* eslint-disable no-case-declarations */
+import { verifyMessage } from '@ethersproject/wallet';
+import * as raw from '@lens-protocol/metadata';
 import {
-  PublicationMetadata,
-  GatedPublicationMetadata,
-  EncryptionProvider,
-  ContentEncryptionKey,
-  AccessCondition,
-  EncryptionParamsOutput,
-  OmitTypename,
-  RootConditionOutput,
-} from '@lens-protocol/api-bindings';
-import { PromiseResult, success } from '@lens-protocol/shared-kernel';
+  assertError,
+  assertNever,
+  failure,
+  PromiseResult,
+  success,
+} from '@lens-protocol/shared-kernel';
 import { IStorage, IStorageProvider } from '@lens-protocol/storage';
 import { NodeClient } from '@lit-protocol/node-client';
-import { JsonEncryptionRetrieveRequest, JsonSaveEncryptionKeyRequest } from '@lit-protocol/types';
-import { Signer, utils } from 'ethers';
+import {
+  JsonAuthSig,
+  JsonEncryptionRetrieveRequest,
+  JsonSaveEncryptionKeyRequest,
+} from '@lit-protocol/types';
 import { SiweMessage } from 'siwe';
 
-import { AuthSig, createAuthStorage } from './AuthStorage';
+import { createAuthStorage } from './AuthStorage';
+import { CannotDecryptError } from './CannotDecryptError';
 import { ICipher, IEncryptionProvider } from './IEncryptionProvider';
-import { transform } from './conditions';
-import {
-  EncryptedPublicationMetadata,
-  PublicationMetadataDecryptor,
-  PublicationMetadataEncryptor,
-} from './encryption';
+import { DecryptionContext, transformFromGql, transformFromRaw } from './conditions';
+import { PublicationMetadataDecryptor, PublicationMetadataEncryptor } from './encryption';
 import { EnvironmentConfig } from './environments';
+import * as gql from './graphql';
+import { isLitError } from './types';
 
 /**
- * The LIT Protocol authentication configuration
+ * As per [EIP-4361](https://eips.ethereum.org/EIPS/eip-4361) the information
+ * provided will be used to create a SIWE message.
+ *
+ * @example
+ * ```
+ * ${domain} wants you to sign in with your Ethereum account:
+ * ${address}
+ *
+ * ${statement}
+ *
+ * URI: ${uri}
+ * ...
+ * ```
  */
 export type AuthenticationConfig = {
+  /**
+   * The domain that is requesting the signing.
+   *
+   * This will be displayed to the user as well as used by compliant wallets to
+   * avoid phishing attacks.
+   */
   domain: string;
+  /**
+   * A human-readable ASCII assertion that the user will sign which MUST NOT include `\n` (the byte `0x0a`).
+   *
+   * This will be displayed to the user if signed using the user's wallet.
+   */
   statement?: string;
+  /**
+   * The subject of the signing claim.
+   */
   uri: string;
 };
+
+/**
+ * An object implementing basic signer functionality.
+ *
+ * This is structurally compatible with the `ethers` `Signer` interface.
+ */
+export interface ISigner {
+  /**
+   * Returns the address of the signer.
+   */
+  getAddress(): Promise<string>;
+  /**
+   * Signs a message.
+   */
+  signMessage(message: string): Promise<string>;
+}
 
 export type GatedClientConfig = {
   authentication: AuthenticationConfig;
   environment: EnvironmentConfig;
-  signer: Signer;
+  signer: ISigner;
   storageProvider: IStorageProvider;
   encryptionProvider: IEncryptionProvider;
 };
@@ -49,20 +92,20 @@ export interface ILitNodeClient {
   getEncryptionKey(request: JsonEncryptionRetrieveRequest): Promise<Uint8Array>;
 }
 
+export type { DecryptionContext };
+
 function uint8arrayToHexString(buffer: Uint8Array): string {
   return buffer.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
 }
-
-export type EncryptionParams = OmitTypename<EncryptionParamsOutput>;
 
 export class GatedClient {
   private readonly authentication: AuthenticationConfig;
 
   private readonly environment: EnvironmentConfig;
 
-  private readonly storage: IStorage<AuthSig>;
+  private readonly storage: IStorage<JsonAuthSig>;
 
-  private readonly signer: Signer;
+  private readonly signer: ISigner;
 
   protected litClient: ILitNodeClient;
 
@@ -83,10 +126,10 @@ export class GatedClient {
     this.litClient = new NodeClient({ debug: false });
   }
 
-  async encryptPublication(
-    metadata: PublicationMetadata,
-    accessCondition: AccessCondition,
-  ): PromiseResult<GatedPublicationMetadata, never> {
+  async encryptPublicationMetadata<T extends raw.PublicationMetadata>(
+    metadata: T,
+    accessCondition: raw.AccessCondition,
+  ): PromiseResult<T, never> {
     await this.ensureLitConnection();
 
     const cipher = await this.encryptionProvider.createCipher();
@@ -95,42 +138,73 @@ export class GatedClient {
 
     const enc = new PublicationMetadataEncryptor(cipher);
 
-    const { obfuscated, encryptedFields } = await enc.encrypt(metadata);
+    const { encrypted, paths } = await enc.encrypt(metadata);
 
-    const encryptedMetadata: GatedPublicationMetadata = {
-      ...obfuscated,
-      encryptionParams: {
-        providerSpecificParams: {
+    return success({
+      ...encrypted,
+      lens: {
+        ...encrypted.lens,
+        encryptedWith: {
           encryptionKey,
+          accessCondition,
+          provider: raw.EncryptionProvider.LIT_PROTOCOL,
+          encryptedPaths: paths,
         },
-        encryptionProvider: EncryptionProvider.LitProtocol,
-        accessCondition,
-        encryptedFields,
       },
-    };
-
-    return success(encryptedMetadata);
+    });
   }
 
-  async decryptPublication<T extends EncryptedPublicationMetadata, P extends EncryptionParams>(
-    encrypted: T,
-    using: P,
-  ): PromiseResult<T, never> {
+  async decryptPublicationMetadataFragment<T extends gql.EncryptedFragmentOfAnyPublicationMetadata>(
+    encryptedMetadata: T,
+    context: DecryptionContext,
+  ): PromiseResult<T, CannotDecryptError> {
     await this.ensureLitConnection();
 
-    const cipher = await this.retrieveEncryptionKey(
-      using.providerSpecificParams.encryptionKey,
-      using.accessCondition,
-    );
-
-    const enc = new PublicationMetadataDecryptor(cipher);
-
-    const decrypted = await enc.decrypt(encrypted, using.encryptedFields);
-
-    return success(decrypted);
+    try {
+      const decrypted = await this.decrypt(encryptedMetadata, context);
+      return success(decrypted);
+    } catch (error: unknown) {
+      if (isLitError(error)) {
+        return failure(new CannotDecryptError(error.message, { cause: error }));
+      }
+      assertError(error);
+      return failure(new CannotDecryptError('Cannot decrypt the metadata', { cause: error }));
+    }
   }
 
-  private async getOrCreateAuthSig(): Promise<AuthSig> {
+  private async decrypt<T extends gql.EncryptedFragmentOfAnyPublicationMetadata>(
+    encryptedMetadata: T,
+    context: DecryptionContext,
+  ): Promise<T> {
+    const cipher = await this.retrieveCipher(
+      encryptedMetadata.encryptedWith.encryptionKey,
+      encryptedMetadata.encryptedWith.accessCondition,
+      context,
+    );
+
+    switch (encryptedMetadata.__typename) {
+      case 'ArticleMetadataV3':
+      case 'AudioMetadataV3':
+      case 'CheckingInMetadataV3':
+      case 'EmbedMetadataV3':
+      case 'EventMetadataV3':
+      case 'ImageMetadataV3':
+      case 'LinkMetadataV3':
+      case 'LiveStreamMetadataV3':
+      case 'MintMetadataV3':
+      case 'SpaceMetadataV3':
+      case 'StoryMetadataV3':
+      case 'TextOnlyMetadataV3':
+      case 'ThreeDMetadataV3':
+      case 'TransactionMetadataV3':
+      case 'VideoMetadataV3':
+        return new PublicationMetadataDecryptor(cipher).decrypt(encryptedMetadata);
+    }
+
+    assertNever(encryptedMetadata, `Not supported metadata type`);
+  }
+
+  private async getOrCreateAuthSig(): Promise<JsonAuthSig> {
     const authSig = await this.storage.get();
 
     if (authSig) {
@@ -142,7 +216,7 @@ export class GatedClient {
 
     const signature = await this.signer.signMessage(messageToSign);
 
-    const recoveredAddress = utils.verifyMessage(messageToSign, signature);
+    const recoveredAddress = verifyMessage(messageToSign, signature);
 
     const newAuthSig = {
       sig: signature,
@@ -164,8 +238,8 @@ export class GatedClient {
 
   private async saveEncryptionKey(
     cipher: ICipher,
-    accessCondition: AccessCondition,
-  ): Promise<ContentEncryptionKey> {
+    accessCondition: raw.AccessCondition,
+  ): Promise<raw.LitEncryptionKey> {
     const symmetricKey = await cipher.exportKey();
 
     const authSig = await this.getOrCreateAuthSig();
@@ -174,18 +248,16 @@ export class GatedClient {
       authSig,
       chain: this.environment.chainName,
       symmetricKey,
-      unifiedAccessControlConditions: transform(
-        accessCondition as RootConditionOutput,
-        this.environment,
-      ),
+      unifiedAccessControlConditions: transformFromRaw(accessCondition, this.environment),
     });
 
-    return uint8arrayToHexString(encryptedSymmetricKey);
+    return raw.toLitEncryptionKey(uint8arrayToHexString(encryptedSymmetricKey));
   }
 
-  private async retrieveEncryptionKey(
-    encryptedEncryptionKey: ContentEncryptionKey,
-    accessCondition: RootConditionOutput,
+  private async retrieveCipher(
+    encryptedEncryptionKey: gql.Scalars['ContentEncryptionKey'],
+    accessCondition: gql.RootCondition,
+    context: DecryptionContext,
   ): Promise<ICipher> {
     const authSig = await this.getOrCreateAuthSig();
 
@@ -193,7 +265,7 @@ export class GatedClient {
       authSig,
       chain: this.environment.chainName,
       toDecrypt: encryptedEncryptionKey,
-      unifiedAccessControlConditions: transform(accessCondition, this.environment),
+      unifiedAccessControlConditions: transformFromGql(accessCondition, this.environment, context),
     });
 
     return this.encryptionProvider.importCipher(encryptionKey);

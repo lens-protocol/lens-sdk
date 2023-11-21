@@ -14,7 +14,7 @@ import {
 } from '@lens-protocol/domain/entities';
 import { mockProtocolTransactionRequestModel, mockSignature } from '@lens-protocol/domain/mocks';
 import { ChainType, failure, success } from '@lens-protocol/shared-kernel';
-import { mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
+import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { MockProvider } from 'ethereum-waffle';
 import { errors, providers, utils, Wallet } from 'ethers';
 import { mock } from 'jest-mock-extended';
@@ -39,18 +39,12 @@ import {
   mockUnsignedTransactionRequest,
 } from '../__helpers__/mocks';
 
-const address = mockEthereumAddress();
+const address = mockEvmAddress();
 const chainType = ChainType.POLYGON;
 
 function setupWalletInstance({ signerFactory }: { signerFactory: ISignerFactory }) {
   const transactionFactory = mockITransactionFactory();
-  return ConcreteWallet.create(
-    {
-      address,
-    },
-    signerFactory,
-    transactionFactory,
-  );
+  return ConcreteWallet.create(address, signerFactory, transactionFactory);
 }
 
 describe(`Given an instance of ${ConcreteWallet.name}`, () => {

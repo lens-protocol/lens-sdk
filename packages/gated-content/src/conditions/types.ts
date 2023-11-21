@@ -1,22 +1,3 @@
-import { ContractType } from '@lens-protocol/api-bindings';
-
-export enum AccessConditionType {
-  And = 'and',
-  Or = 'or',
-  Eoa = 'eoa',
-  Token = 'token',
-  Nft = 'nft',
-  Profile = 'profile',
-  Follow = 'follow',
-  Collect = 'collect',
-}
-
-const SUPPORTED_ACCESS_CONDITION_KEYS = Object.values(AccessConditionType);
-
-export function isAccessConditionType(key: string | symbol | number): key is AccessConditionType {
-  return SUPPORTED_ACCESS_CONDITION_KEYS.includes(key as AccessConditionType);
-}
-
 export enum LitScalarOperator {
   EQUAL = '=',
   NOT_EQUAL = '!=',
@@ -26,16 +7,21 @@ export enum LitScalarOperator {
   LESS_THAN_OR_EQUAL = '<=',
 }
 
-export const enum LitConditionType {
+export enum LitConditionType {
   EVM_BASIC = 'evmBasic',
   EVM_CONTRACT = 'evmContract',
 }
 
+export enum LitOperatorType {
+  AND = 'and',
+  OR = 'or',
+}
+
 export type LitOperator = {
-  operator: 'and' | 'or';
+  operator: LitOperatorType;
 };
 
-export const enum LitKnownMethods {
+export enum LitKnownMethods {
   OWNER_OF = 'ownerOf',
   BALANCE_OF = 'balanceOf',
   BALANCE_OF_BATCH = 'balanceOfBatch',
@@ -44,12 +30,18 @@ export const enum LitKnownMethods {
   HAS_COLLECTED = 'hasCollected',
 }
 
-export const enum LitKnownParams {
+export enum LitKnownParams {
   USER_ADDRESS = ':userAddress',
   ZERO = '0',
 }
 
-export const enum SupportedChains {
+export enum LitContractType {
+  ERC20 = 'ERC20',
+  ERC721 = 'ERC721',
+  ERC1155 = 'ERC1155',
+}
+
+export enum SupportedChains {
   ETHEREUM = 'ethereum',
   POLYGON = 'polygon',
   MUMBAI = 'mumbai',
@@ -72,7 +64,7 @@ export function isSupportedChainId(chainId: number): chainId is SupportedChainId
 export type LitAccessCondition = {
   conditionType: LitConditionType;
   contractAddress: string;
-  standardContractType: ContractType | '';
+  standardContractType: LitContractType | '';
   chain: SupportedChains;
   method: LitKnownMethods | '';
   parameters: string[];
@@ -99,3 +91,14 @@ export type LitEvmAccessCondition = {
 export type LitAccessControlCondition = LitAccessCondition | LitEvmAccessCondition | LitOperator;
 
 export type LitNestedAccessControlCondition<T> = T | Array<LitNestedAccessControlCondition<T>>;
+
+export type DecryptionContext = {
+  /**
+   * Identifies the Profile ID of the user who is trying to decrypt the metadata.
+   *
+   * This is used to determine whether the user has access to the metadata.
+   * The {@link Signer} provided in the constructor MUST be the owner OR
+   * an authorized Profile Manager of the specified Profile.
+   */
+  profileId: string;
+};

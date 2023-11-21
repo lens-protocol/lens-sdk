@@ -1,5 +1,146 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.14
+
+### Patch Changes
+
+- 5c429a0d7: **feat:** Added new invite hooks: `useInvitedProfiles`, `useWasWalletInvited`, `useLazyWasWalletInvited` and `useInviteWallets`
+
+## 0.11.0-alpha.13
+
+### Patch Changes
+
+- d71f981cc: **chore:** simplifies useApproveModule implementation
+- c9b5c8d88: **feat:** seamless support for public collect/act in `useOpenAction`
+- Updated dependencies [d71f981cc]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.8
+
+## 0.11.0-alpha.12
+
+### Patch Changes
+
+- Updated dependencies [2f5360796]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.7
+
+## 0.11.0-alpha.11
+
+### Minor Changes
+
+- cf250df4: implements `useUnblockProfiles`
+- 9490db8e: Added useLinkHandle and useUnlinkHandle hooks
+- cf250df4: adds `useBlockProfiles` hook
+
+### Patch Changes
+
+- 1f28c6d6: Added useCreateQuote hook
+
+## 0.11.0-alpha.10
+
+### Minor Changes
+
+- 8120f676: **feat:** reintroduces `useAccessToken` and `useApolloClient` hooks
+- 8120f676: **feat:** implements `useClaimHandle`, `useCanClaimHandle`, and `useUpgradeCredentials`
+
+### Patch Changes
+
+- 8120f676: **feat:** allow wallet-only authentication via `useLogin`
+- 061df834: **chore:** configure Lens API v2 production URL
+- Updated dependencies [061df834]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.6
+
+## 0.11.0-alpha.9
+
+### Patch Changes
+
+- 5f93ea77: **fix:** support `Profile.lensManager` into `Profile.signless` renaming
+- 5f93ea77: **fix:** renames of `handleLinkToProfile`, `handleUnlinkToProfile` and correlated mutations, types
+
+## 0.11.0-alpha.8
+
+### Patch Changes
+
+- Update dependencies
+
+## 0.11.0-alpha.7
+
+### Patch Changes
+
+- 0687207b: Added LinkHandle and UnlinkHandle use-cases
+
+## 0.11.0-alpha.6
+
+### Minor Changes
+
+- cfc03dff: **feat:** implements `useOpenAction` hook
+
+### Patch Changes
+
+- 9481f48b: **feat:** implements `useApproveModule` hook. It also upgrades viem and wagmi peer deps.
+- Updated dependencies [9481f48b]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.5
+
+## 0.11.0-alpha.5
+
+### Minor Changes
+
+- 30ccf19d: **Added** useMyBookmarks hook
+- a42e90e7: **Added** useSetProfileMetadata hook
+- 9dd33b03:
+  **Renamed** useFollowProfile to useFollow
+  **Renamed** useUnfollowProfile to useUnfollow
+  **Added** support for LensProfileManager to useFollow, useUnfollow and useUpdateFollowPolicy hooks
+
+## 0.11.0-alpha.4
+
+### Minor Changes
+
+- a929c0f6: **feat:** implements `useCreatePost` hook
+- 5bc7e430: **feat:** implements `useCreateComment` hook
+
+### Patch Changes
+
+- f82b90a5: Added `useUpdateFollowPolicy` hook
+- d1414eda: **feat:** implements `useCreateMirror` hook
+- 2f618240: Added `useFollowProfile` and `useUnfollowProfile` hooks
+- Updated dependencies [a929c0f6]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.4
+
+## 0.11.0-alpha.3
+
+### Patch Changes
+
+- 734d6823: **feat:** adds `useProfileManagers` and `useUpdateProfileManagers` hooks
+- 51f8cec6: **Added** useReactionToggle hook
+- Updated dependencies [734d6823]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.3
+
+## 0.11.0-alpha.2
+
+### Patch Changes
+
+- 6d0d62dd: **feat:** new `useLogin` and `useSession` hooks
+- Updated dependencies [6d0d62dd]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.2
+
+## 0.11.0-alpha.1
+
+### Patch Changes
+
+- 25fe9a46: Support for new v2 hooks
+- Updated dependencies [25fe9a46]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.1
+
+## 0.11.0-alpha.0
+
+### Minor Changes
+
+- 731ff1d0: Added support for Lens Protocol v2
+
+### Patch Changes
+
+- Updated dependencies [731ff1d0]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.0
+
 ## 0.10.1
 
 ### Patch Changes

@@ -1,5 +1,5 @@
-export * from './useProfileFollowRevenue';
-export * from './usePublicationRevenue';
-export * from './useProfilePublicationRevenue';
+export * from './useRevenueFromFollow';
+export * from './useRevenueFromPublication';
+export * from './useRevenueFromPublications';
 
-export type { PublicationRevenue } from '@lens-protocol/api-bindings';
+export type { PublicationRevenue, RevenueAggregate } from '@lens-protocol/api-bindings';

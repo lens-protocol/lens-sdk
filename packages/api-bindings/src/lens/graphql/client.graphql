@@ -1,0 +1,17 @@
+extend type PaginatedResultInfo {
+  moreAfter: Boolean!
+}
+
+type ImageTransformParam {
+  height: ImageSizeTransform
+  width: ImageSizeTransform
+  keepAspectRatio: Boolean
+}
+
+extend type Query {
+  fxRateFor: SupportedFiatType
+  profileCoverSize: ImageTransformParam
+  profilePictureSize: ImageTransformParam
+  imageSmallSize: ImageTransformParam
+  imageMediumSize: ImageTransformParam
+}

@@ -5,7 +5,10 @@ import { NativeTransaction } from '../../../entities';
 import { MockedNativeTransaction } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError } from '../../transactions';
 import { TransactionQueue } from '../../transactions/TransactionQueue';
-import { mockTransactionQueue } from '../../transactions/__helpers__/mocks';
+import {
+  mockAnyBroadcastingError,
+  mockTransactionQueue,
+} from '../../transactions/__helpers__/mocks';
 import {
   CreateProfile,
   CreateProfileRequest,
@@ -60,7 +63,7 @@ describe(`Given an instance of the ${CreateProfile.name} interactor`, () => {
       },
       {
         ErrorCtor: BroadcastingError,
-        error: new BroadcastingError('some reason'),
+        error: mockAnyBroadcastingError(),
       },
     ])(`should present any $ErrorCtor might occur`, async ({ error }) => {
       const transactionFactory = mockIProfileTransactionGateway({

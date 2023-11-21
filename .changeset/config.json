@@ -5,7 +5,7 @@
   "fixed": [["@lens-protocol/react", "@lens-protocol/react-web"]],
   "linked": [],
   "access": "public",
-  "baseBranch": "main",
+  "baseBranch": "develop",
   "updateInternalDependencies": "patch",
   "ignore": ["example-*"]
 }

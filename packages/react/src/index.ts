@@ -1,4 +1,16 @@
 /**
+ * The official Lens Protocol bindings for React applications.
+ *
+ * This package enables you to build applications on top of the Lens Protocol using React.
+ *
+ * **Note**
+ *
+ * This is a low-level package, if you are building a web application you might want to look into `@lens-protocol/react-web` package instead.
+ *
+ * @module
+ */
+
+/**
  * Components
  */
 export * from './LensProvider';
@@ -6,12 +18,11 @@ export * from './LensProvider';
 /**
  * Hooks
  */
+export * from './authentication';
+export * from './discovery';
 export * from './experimental';
-export * from './feed';
-export * from './lifecycle';
-export * from './modules';
+export * from './misc';
 export * from './notifications';
-export * from './polls';
 export * from './profile';
 export * from './publication';
 export * from './revenue';
@@ -19,76 +30,18 @@ export * from './transactions';
 export * from './wallet';
 
 /**
- * Config
- */
-export * from './chains';
-export * from './environments';
-export type {
-  Digit,
-  ImageSizeTransform,
-  MediaTransformsConfig,
-  MediaTransformParams,
-  Percentage,
-  Pixel,
-} from './mediaTransforms';
-export type {
-  AuthenticationConfig,
-  EncryptionConfig,
-  GetProvider,
-  GetSigner,
-  IBindings,
-  ICipher,
-  IEncryptionProvider,
-  ILogger,
-  LensConfig,
-} from './config';
-
-/**
- * Hooks helpers types
- */
-export type { WithObserverIdOverride, Skippable } from './helpers/arguments';
-export type { Operation } from './helpers/operations';
-export type {
-  PaginatedArgs,
-  PaginatedReadResult,
-  ReadResult,
-  ReadResultWithError,
-  ReadResultWithoutError,
-} from './helpers/reads';
-
-/**
- * Storage
- */
-export type {
-  IObservableStorageProvider,
-  IStorage,
-  IStorageProvider,
-  StorageProviderSubscriber,
-  StorageSubscriber,
-  StorageSubscription,
-} from '@lens-protocol/storage';
-
-/**
- * Domain errors
- */
-export {
-  InsufficientGasError,
-  PendingSigningRequestError,
-  UserRejectedError,
-  WalletConnectionError,
-  WalletConnectionErrorReason,
-} from '@lens-protocol/domain/entities';
-export { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-
-/**
  * Domain essentials
  */
-export type { AppId, NftId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
-export type { ChainType, EthereumAddress, Url } from '@lens-protocol/shared-kernel';
-
-/**
- * Common Types
- */
+export {
+  Amount,
+  WellKnownSymbols,
+  ChainType,
+  ether,
+  matic,
+  erc20,
+  usd,
+} from '@lens-protocol/shared-kernel';
+export type { EvmAddress, Url } from '@lens-protocol/shared-kernel';
 export type {
   AmountValue,
   Asset,
@@ -107,49 +60,85 @@ export type {
   Fiat,
   FiatAmount,
   IEquatableError,
-  InvariantError,
   Matic,
   PromiseResult,
   Result,
   Success,
 } from '@lens-protocol/shared-kernel';
+export type { AppId, NftId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
 
 /**
- * Common fragments
+ * Config
  */
-export type { Erc20Fields, Erc20AmountFields, ModuleFeeAmount } from '@lens-protocol/api-bindings';
+export * from './chains';
+export * from './environments';
+export * from './config';
+
+/**
+ * Hooks helpers types
+ */
+export type {
+  PaginatedArgs,
+  PaginatedReadResult,
+  ReadResult,
+  ReadResultWithError,
+  ReadResultWithoutError,
+} from './helpers/reads';
+export * from './helpers/tasks';
+
+/**
+ * GQL common types
+ */
+export type { App } from '@lens-protocol/api-bindings';
+
+// GQL enums
+export {
+  CommentRankingFilterType,
+  ComparisonOperatorConditionType,
+  CustomFiltersType,
+  ExploreProfilesOrderByType,
+  ExplorePublicationsOrderByType,
+  ExplorePublicationType,
+  FeedEventItemType,
+  FollowModuleType,
+  LimitType,
+  MarketplaceMetadataAttributeDisplayType,
+  NftContractType,
+  NotificationType,
+  OpenActionCategoryType,
+  OpenActionModuleType,
+  ProfileActionHistoryType,
+  ProfileInterestTypes,
+  PublicationContentWarningType,
+  PublicationMetadataLicenseType,
+  PublicationMetadataMainFocusType,
+  PublicationMetadataTransactionType,
+  PublicationReactionType,
+  PublicationType,
+  SearchPublicationType,
+  TriStateValue,
+} from '@lens-protocol/api-bindings';
 
 /**
  * Common errors
  */
+export { InvariantError } from '@lens-protocol/shared-kernel';
+export {
+  InsufficientGasError,
+  PendingSigningRequestError,
+  TransactionError,
+  UserRejectedError,
+  WalletConnectionError,
+} from '@lens-protocol/domain/entities';
+export { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 export { NotFoundError } from './NotFoundError';
-export { UnspecifiedError } from '@lens-protocol/api-bindings';
+export {
+  InsufficientAllowanceError,
+  InsufficientFundsError,
+} from '@lens-protocol/domain/use-cases/wallets';
 
 /**
  * Helpers
  */
-export { Amount, WellKnownSymbols, ether, matic, erc20, usd } from '@lens-protocol/shared-kernel';
-export { useSharedDependencies } from './shared';
-export * from './sources';
 export * from './utils';
-export { isValidHandle } from '@lens-protocol/api-bindings';
-
-/**
- * Helpers types
- */
-export type {
-  Brand,
-  Cast,
-  Distribute,
-  DistributiveOmit,
-  Narrow,
-  Overwrite,
-  Prettify,
-  Primitive,
-  TwoAtLeastArray,
-  UnknownObject,
-  Without,
-  XOR,
-} from '@lens-protocol/shared-kernel';
-export type { Typename, PickByTypename } from '@lens-protocol/api-bindings';
-export * from './deprecated';
+export { isValidHandle, resolveFollowPolicy } from '@lens-protocol/api-bindings';

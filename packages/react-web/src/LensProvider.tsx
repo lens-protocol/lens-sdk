@@ -1,14 +1,12 @@
 import {
-  AppId,
   EnvironmentConfig,
-  ErrorHandler,
-  FailedTransactionError,
   IBindings,
   LensProvider as LensProviderBase,
-  LogoutHandler,
+  QueryParams,
 } from '@lens-protocol/react';
 import type { LensConfig as LensConfigBase } from '@lens-protocol/react';
 import { ILogger } from '@lens-protocol/shared-kernel';
+import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/storage';
 import { ReactNode, useState } from 'react';
 
 import { localStorage } from './storage';
@@ -22,33 +20,30 @@ export type LensConfig = {
    */
   bindings: IBindings;
   /**
-   * The environment to use. See {@link production}, {@link development}, and {@link sandbox}.
+   * The environment to use. See {@link production} or {@link development}.
    */
   environment: EnvironmentConfig;
   /**
    * The logger interface to use when something worth logging happens
    *
-   * @defaultValue `ConsoleLogger`, an internal implementation of {@link ILogger} that logs to the console
+   * @defaultValue `ConsoleLogger`, an internal implementation of `ILogger` interface that logs to the console
    */
   logger?: ILogger;
   /**
-   * The `sources` determines the sources of posts and comments that will be fetched
+   * The storage provider to use.
    *
-   * It also determines some Profile related statistics, such as the number of posts and comments
+   * If an implementation of {@link IObservableStorageProvider} is provided,
+   * the provider will be used to subscribe to changes in the storage.
    *
-   * @defaultValue any sources, not restricted.
+   * @defaultValue an implementation based on `window.localStorage` and `StorageEvent`.
    */
-  sources?: AppId[];
+  storage?: IStorageProvider | IObservableStorageProvider;
   /**
-   * The `appId` identifies post and comment created from the SDK
+   * The common query params allows you customize some aspect of the returned data.
    *
-   * The `appId`, if provided, MUST be included in the `sources` array.
-   *
-   * @defaultValue not set
-   *
-   * @see {@link appId} helper
+   * If not provided {@link defaultQueryParams} will be used instead.
    */
-  appId?: AppId;
+  params?: QueryParams;
 };
 
 /**
@@ -63,18 +58,6 @@ export type LensProviderProps = {
    * The configuration for the Lens SDK
    */
   config: LensConfig;
-  /**
-   * A callback that is called when the user logs out
-   *
-   * @defaultValue no-op
-   */
-  onLogout?: LogoutHandler;
-  /**
-   * A callback that is called when a transaction fails
-   *
-   * @defaultValue no-op
-   */
-  onError?: ErrorHandler<FailedTransactionError>;
 };
 
 const storage = localStorage();
@@ -107,7 +90,7 @@ const storage = localStorage();
 export function LensProvider({ config, ...props }: LensProviderProps) {
   const [resolvedConfig] = useState<LensConfigBase>(() => ({
     ...config,
-    storage,
+    storage: config.storage ?? storage,
   }));
 
   return <LensProviderBase config={resolvedConfig} {...props} />;

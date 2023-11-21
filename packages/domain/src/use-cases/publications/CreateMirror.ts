@@ -1,25 +1,17 @@
-import { ProfileId, PublicationId, TransactionKind } from '../../entities';
-import { DelegableSigning } from '../transactions/DelegableSigning';
+import { isMomokaPublicationId, PublicationId, TransactionKind } from '../../entities';
+import { MomokaCapable } from '../transactions/MomokaCapable';
 
 export type CreateMirrorRequest = {
-  profileId: ProfileId;
-  publicationId: PublicationId;
+  mirrorOn: PublicationId;
   kind: TransactionKind.MIRROR_PUBLICATION;
   delegate: boolean;
-  offChain: boolean;
 };
 
-export class CreateMirror {
-  constructor(
-    private readonly createOnChainPost: DelegableSigning<CreateMirrorRequest>,
-    private readonly createOffChainPost: DelegableSigning<CreateMirrorRequest>,
-  ) {}
-
-  async execute(request: CreateMirrorRequest) {
-    if (request.offChain) {
-      await this.createOffChainPost.execute(request);
-    } else {
-      await this.createOnChainPost.execute(request);
+export class CreateMirror extends MomokaCapable<CreateMirrorRequest> {
+  override async execute(request: CreateMirrorRequest): Promise<void> {
+    if (isMomokaPublicationId(request.mirrorOn)) {
+      return this.momoka.execute(request);
     }
+    return this.onChain.execute(request);
   }
 }

@@ -1,20 +1,21 @@
-import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
+import { CreatePost, CreatePostRequest } from '@lens-protocol/domain/use-cases/publications';
+import {
+  DelegableSigning,
+  SubsidizeOffChain,
+  SignedOnChain,
+  TransactionData,
+} from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
-import { PublicationMetadataUploader } from '../infrastructure/PublicationMetadataUploader';
-import { CreatePostController } from './CreatePostController';
-import { MetadataUploadHandler } from './MetadataUploadHandler';
-import { validateCreatePostRequest } from './schemas/validators';
+import { NewPublicationPresenter } from './NewPublicationPresenter';
+import { CreateMomokaPostGateway } from './publications/CreateMomokaPostGateway';
+import { CreateOnChainPostGateway } from './publications/CreateOnChainPostGateway';
 
-export type UseCreatePostArgs = {
-  upload: MetadataUploadHandler;
-};
-
-export function useCreatePostController({ upload }: UseCreatePostArgs) {
+export function useCreatePostController() {
   const {
     activeWallet,
     apolloClient,
-    offChainRelayer,
+    momokaRelayer,
     onChainRelayer,
     publicationCacheManager,
     transactionFactory,
@@ -23,21 +24,49 @@ export function useCreatePostController({ upload }: UseCreatePostArgs) {
   } = useSharedDependencies();
 
   return async (request: CreatePostRequest) => {
-    validateCreatePostRequest(request);
+    const presenter = new NewPublicationPresenter((tx: TransactionData<CreatePostRequest>) =>
+      publicationCacheManager.fetchNewPost(tx),
+    );
 
-    const uploader = PublicationMetadataUploader.create(upload);
-    const controller = new CreatePostController({
+    const onChainGateway = new CreateOnChainPostGateway(apolloClient, transactionFactory);
+
+    const onChainPost = new SignedOnChain(
       activeWallet,
-      apolloClient,
-      offChainRelayer,
-      onChainRelayer,
-      publicationCacheManager,
-      transactionFactory,
       transactionGateway,
+      onChainGateway,
+      onChainRelayer,
       transactionQueue,
-      uploader,
-    });
+      presenter,
+    );
 
-    return controller.execute(request);
+    const delegableOnChainPost = new DelegableSigning(
+      onChainPost,
+      onChainGateway,
+      transactionQueue,
+      presenter,
+    );
+
+    const offChainGateway = new CreateMomokaPostGateway(apolloClient, transactionFactory);
+
+    const momokaPost = new SubsidizeOffChain(
+      activeWallet,
+      offChainGateway,
+      momokaRelayer,
+      transactionQueue,
+      presenter,
+    );
+
+    const delegableOffChainPost = new DelegableSigning(
+      momokaPost,
+      offChainGateway,
+      transactionQueue,
+      presenter,
+    );
+
+    const createPost = new CreatePost(delegableOnChainPost, delegableOffChainPost);
+
+    await createPost.execute(request);
+
+    return presenter.asResult();
   };
 }

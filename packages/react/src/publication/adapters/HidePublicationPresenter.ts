@@ -1,12 +1,15 @@
 import { PublicationId } from '@lens-protocol/domain/entities';
 import { IHidePublicationPresenter } from '@lens-protocol/domain/use-cases/publications';
 
-import { PublicationCacheManager } from '../../transactions/adapters/PublicationCacheManager';
+import { IPublicationCacheManager } from './IPublicationCacheManager';
 
 export class HidePublicationPresenter implements IHidePublicationPresenter {
-  constructor(private readonly publicationCacheManager: PublicationCacheManager) {}
+  constructor(private readonly publicationCacheManager: IPublicationCacheManager) {}
 
   present(publicationId: PublicationId) {
-    this.publicationCacheManager.update(publicationId, (current) => ({ ...current, hidden: true }));
+    this.publicationCacheManager.update(publicationId, (current) => ({
+      ...current,
+      isHidden: true,
+    }));
   }
 }

@@ -20,8 +20,7 @@ import {
   GraphQLClientQueryResult,
   IGraphQLClient,
 } from './IGraphQLClient';
-import { UnspecifiedError, ValidationError } from './errors';
-import { isGraphQLValidationError } from './isGraphQLValidationError';
+import { UnspecifiedError, ValidationError, isValidationApolloError } from './errors';
 
 const clientName = 'lens-sdk';
 const defaultPollingInterval = 3000;
@@ -29,7 +28,7 @@ const defaultPollingInterval = 3000;
 function resolveError(error: unknown) {
   assertError(error);
 
-  if (isGraphQLValidationError(error)) {
+  if (isValidationApolloError(error)) {
     return new ValidationError(error);
   }
   return new UnspecifiedError(error);
@@ -89,7 +88,7 @@ export class SafeApolloClient<TCacheShape extends NormalizedCacheObject = Normal
     this.pollingInterval = pollingInterval;
   }
 
-  async query<TData = unknown, TVariables = OperationVariables>(
+  async query<TData = unknown, TVariables extends OperationVariables = OperationVariables>(
     options: QueryOptions<TVariables, TData>,
   ): Promise<GraphQLClientQueryResult<TData>> {
     try {
@@ -103,7 +102,11 @@ export class SafeApolloClient<TCacheShape extends NormalizedCacheObject = Normal
     }
   }
 
-  async mutate<TData = unknown, TVariables = OperationVariables, TContext = DefaultContext>(
+  async mutate<
+    TData = unknown,
+    TVariables extends OperationVariables = OperationVariables,
+    TContext extends DefaultContext = DefaultContext,
+  >(
     options: MutationOptions<TData, TVariables, TContext, ApolloCache<TCacheShape>>,
   ): Promise<GraphQLClientMutationResult<TData>> {
     try {
@@ -117,7 +120,7 @@ export class SafeApolloClient<TCacheShape extends NormalizedCacheObject = Normal
     }
   }
 
-  poll<TData = unknown, TVariables = OperationVariables>(
+  poll<TData = unknown, TVariables extends OperationVariables = OperationVariables>(
     options: QueryOptions<TVariables, TData>,
   ): Observable<TData> {
     const observable = super.watchQuery<TData, TVariables>(options);

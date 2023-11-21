@@ -1,41 +1,33 @@
 import { faker } from '@faker-js/faker';
 import { ChainType, Result } from '@lens-protocol/shared-kernel';
-import {
-  mockEthereumAddress,
-  mockDaiAmount,
-  mockUsdcAmount,
-} from '@lens-protocol/shared-kernel/mocks';
+import { mockEvmAddress, mockDaiAmount, mockUsdcAmount } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import { TransactionKind, NftOwnershipChallenge, NativeTransaction } from '../../../entities';
 import { mockProfileId, mockSignature } from '../../../entities/__helpers__/mocks';
-import { ProfileIdentifier } from '../../lifecycle';
 import { BroadcastingError } from '../../transactions';
+import { BlockProfilesRequest } from '../BlockProfiles';
+import { ClaimHandleRequest } from '../ClaimHandle';
 import {
   CreateProfileRequest,
   DuplicatedHandleError,
   IProfileTransactionGateway,
 } from '../CreateProfile';
-import {
-  UnconstrainedFollowRequest,
-  PaidFollowRequest,
-  ProfileOwnerFollowRequest,
-} from '../FollowProfiles';
+import { ChargeFollowConfig, FollowPolicyType, NoFeeFollowConfig } from '../FollowPolicy';
+import { FreeFollowRequest, PaidFollowRequest } from '../FollowProfile';
+import { LinkHandleRequest } from '../LinkHandle';
 import {
   INftOwnershipChallengeGateway,
   NftOwnershipSignature,
   ProveNftOwnershipRequest,
 } from '../ProveNftOwnership';
+import { SetProfileMetadataRequest } from '../SetProfileMetadata';
+import { UnblockProfilesRequest } from '../UnblockProfiles';
 import { UnfollowRequest } from '../UnfollowProfile';
-import { UpdateDispatcherConfigRequest } from '../UpdateDispatcherConfig';
+import { UnlinkHandleRequest } from '../UnlinkHandle';
 import { UpdateFollowPolicyRequest } from '../UpdateFollowPolicy';
-import { UpdateProfileDetailsRequest } from '../UpdateProfileDetails';
-import {
-  UpdateNftProfileImageRequest,
-  UpdateOffChainProfileImageRequest,
-} from '../UpdateProfileImage';
-import { ChargeFollowConfig, FollowPolicyType, NoFeeFollowConfig } from '../types';
+import { UpdateProfileManagersRequest } from '../UpdateProfileManagers';
 
 export function mockCreateProfileRequest(
   overrides?: Partial<CreateProfileRequest>,
@@ -66,20 +58,12 @@ export function mockIProfileTransactionGateway({
   return profileTransactionGateway;
 }
 
-export function mockProfileIdentifier(overrides?: Partial<ProfileIdentifier>): ProfileIdentifier {
-  return {
-    id: mockProfileId(),
-    handle: faker.internet.userName(),
-    ...overrides,
-  };
-}
-
 export function mockChargeFollowConfig(
   overrides?: Partial<ChargeFollowConfig>,
 ): ChargeFollowConfig {
   return {
     amount: mockUsdcAmount(42),
-    recipient: mockEthereumAddress(),
+    recipient: mockEvmAddress(),
     ...overrides,
     type: FollowPolicyType.CHARGE,
   };
@@ -96,85 +80,68 @@ export function mockUpdateFollowPolicyRequest(
   overrides?: Partial<UpdateFollowPolicyRequest>,
 ): UpdateFollowPolicyRequest {
   return {
-    profileId: mockProfileId(),
     policy: mockChargeFollowConfig(),
+    delegate: true,
     ...overrides,
     kind: TransactionKind.UPDATE_FOLLOW_POLICY,
   };
 }
 
-export function mockUpdateProfileDetailsRequest(
-  overrides?: Partial<UpdateProfileDetailsRequest>,
-): UpdateProfileDetailsRequest {
+export function mockSetProfileMetadataRequest(
+  overrides?: Partial<SetProfileMetadataRequest>,
+): SetProfileMetadataRequest {
   return {
-    attributes: {},
-    bio: faker.lorem.sentence(),
-    coverPicture: faker.image.imageUrl(),
-    name: faker.name.firstName(),
-    profileId: mockProfileId(),
     delegate: true,
+    metadataURI: faker.internet.url(),
     ...overrides,
     kind: TransactionKind.UPDATE_PROFILE_DETAILS,
   };
 }
 
-export function mockUpdateDispatcherConfigRequest(
-  overrides?: Partial<UpdateDispatcherConfigRequest>,
-): UpdateDispatcherConfigRequest {
+export function mockUpdateProfileManagersRequest(
+  overrides?: Partial<UpdateProfileManagersRequest>,
+): UpdateProfileManagersRequest {
   return {
-    profileId: mockProfileId(),
-    enabled: true,
+    approveSignless: true,
     ...overrides,
-    kind: TransactionKind.UPDATE_DISPATCHER_CONFIG,
+    kind: TransactionKind.UPDATE_PROFILE_MANAGERS,
   };
 }
 
-export function mockUnconstrainedFollowRequest(
-  overrides?: Partial<UnconstrainedFollowRequest>,
-): UnconstrainedFollowRequest {
+export function mockFreeFollowRequest(overrides?: Partial<FreeFollowRequest>): FreeFollowRequest {
   return {
-    followerAddress: mockEthereumAddress(),
     profileId: mockProfileId(),
+    delegate: true,
     ...overrides,
-    kind: TransactionKind.FOLLOW_PROFILES,
+    kind: TransactionKind.FOLLOW_PROFILE,
   };
 }
 
 export function mockPaidFollowRequest(): PaidFollowRequest {
   return {
-    followerAddress: mockEthereumAddress(),
     profileId: mockProfileId(),
     fee: {
       amount: mockDaiAmount(1, ChainType.POLYGON),
-      contractAddress: mockEthereumAddress(),
-      recipient: mockEthereumAddress(),
+      contractAddress: mockEvmAddress(),
+      recipient: mockEvmAddress(),
     },
-    kind: TransactionKind.FOLLOW_PROFILES,
+    kind: TransactionKind.FOLLOW_PROFILE,
   };
 }
 
-export function mockProfileOwnerFollowRequest(): ProfileOwnerFollowRequest {
-  return {
-    followerAddress: mockEthereumAddress(),
-    profileId: mockProfileId(),
-    followerProfileId: mockProfileId(),
-    kind: TransactionKind.FOLLOW_PROFILES,
-  };
-}
-
-export function mockUnfollowRequest(overrides?: Partial<UnfollowRequest>): UnfollowRequest {
+export function mockUnfollowRequest(): UnfollowRequest {
   return {
     profileId: mockProfileId(),
-    ...overrides,
     kind: TransactionKind.UNFOLLOW_PROFILE,
+    delegate: true,
   };
 }
 
 export function mockProveNftOwnershipRequest(): ProveNftOwnershipRequest {
   return {
-    contractAddress: mockEthereumAddress(),
+    contractAddress: mockEvmAddress(),
     chainId: faker.datatype.number(),
-    ownerAddress: mockEthereumAddress(),
+    ownerAddress: mockEvmAddress(),
     tokenId: faker.datatype.uuid(),
   };
 }
@@ -203,26 +170,60 @@ export function mockINftOwnershipChallengeGateway({
   return gateway;
 }
 
-export function mockUpdateNftProfileImageRequest(
-  overrides?: Partial<UpdateNftProfileImageRequest>,
-): UpdateNftProfileImageRequest {
+function mockFullHandle(): string {
+  const localName = faker.internet.userName();
+  const namespace = faker.internet.domainWord();
+
+  return `${localName}/${namespace}`;
+}
+
+export function mockLinkHandleRequest(overrides?: Partial<LinkHandleRequest>): LinkHandleRequest {
   return {
+    fullHandle: mockFullHandle(),
     profileId: mockProfileId(),
     delegate: true,
-    signature: mockNftOwnershipSignature(),
     ...overrides,
-    kind: TransactionKind.UPDATE_PROFILE_IMAGE,
+    kind: TransactionKind.LINK_HANDLE,
   };
 }
 
-export function mockUpdateOffChainProfileImageRequest(
-  overrides?: Partial<UpdateOffChainProfileImageRequest>,
-): UpdateOffChainProfileImageRequest {
+export function mockUnlinkHandleRequest(
+  overrides?: Partial<UnlinkHandleRequest>,
+): UnlinkHandleRequest {
   return {
+    fullHandle: mockFullHandle(),
     profileId: mockProfileId(),
-    url: faker.image.imageUrl(),
     delegate: true,
     ...overrides,
-    kind: TransactionKind.UPDATE_PROFILE_IMAGE,
+    kind: TransactionKind.UNLINK_HANDLE,
+  };
+}
+
+export function mockClaimHandleRequest(): ClaimHandleRequest {
+  return {
+    localName: faker.internet.userName(),
+    kind: TransactionKind.CLAIM_HANDLE,
+  };
+}
+
+export function mockBlockProfilesRequest(
+  overrides?: Partial<BlockProfilesRequest>,
+): BlockProfilesRequest {
+  return {
+    delegate: true,
+    profileIds: [mockProfileId()],
+    ...overrides,
+    kind: TransactionKind.BLOCK_PROFILE,
+  };
+}
+
+export function mockUnblockProfilesRequest(
+  overrides?: Partial<UnblockProfilesRequest>,
+): UnblockProfilesRequest {
+  return {
+    delegate: true,
+    profileIds: [mockProfileId()],
+    ...overrides,
+    kind: TransactionKind.UNBLOCK_PROFILE,
   };
 }

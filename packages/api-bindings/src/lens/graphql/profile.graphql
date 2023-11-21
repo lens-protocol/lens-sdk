@@ -1,0 +1,622 @@
+# API node has an odd name, masking it here
+fragment ProfileManager on ProfilesManagedResult {
+  # __typename omitted on purpose to hide odd name, not needed anyway here
+  address
+  isLensManager
+}
+
+fragment ClaimProfileWithHandleErrorResult on ClaimProfileWithHandleErrorResult {
+  __typename
+  reason
+}
+
+fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
+  __typename
+  reason
+}
+
+fragment CreateOnchainSetProfileMetadataBroadcastItemResult on CreateOnchainSetProfileMetadataBroadcastItemResult {
+  __typename
+  id
+  expiresAt
+  typedData {
+    types {
+      SetProfileMetadataURI {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    message: value {
+      nonce
+      deadline
+      profileId
+      metadataURI
+    }
+  }
+}
+
+fragment CreateChangeProfileManagersBroadcastItemResult on CreateChangeProfileManagersBroadcastItemResult {
+  __typename
+  id
+  expiresAt
+  typedData {
+    types {
+      ChangeDelegatedExecutorsConfig {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    message: value {
+      nonce
+      deadline
+      delegatorProfileId
+      delegatedExecutors
+      approvals
+      configNumber
+      switchToGivenConfig
+    }
+  }
+}
+
+fragment CreateBlockProfilesBroadcastItemResult on CreateBlockProfilesBroadcastItemResult {
+  __typename
+  id
+  expiresAt
+  typedData {
+    types {
+      SetBlockStatus {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    message: value {
+      nonce
+      deadline
+      byProfileId
+      idsOfProfilesToSetBlockStatus
+      blockStatus
+    }
+  }
+}
+
+fragment CreateUnblockProfilesBroadcastItemResult on CreateUnblockProfilesBroadcastItemResult {
+  __typename
+  id
+  expiresAt
+  typedData {
+    types {
+      SetBlockStatus {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    message: value {
+      nonce
+      deadline
+      byProfileId
+      idsOfProfilesToSetBlockStatus
+      blockStatus
+    }
+  }
+}
+
+fragment CreateFollowBroadcastItemResult on CreateFollowBroadcastItemResult {
+  __typename
+  id
+  expiresAt
+  typedData {
+    types {
+      Follow {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    message: value {
+      nonce
+      deadline
+      followerProfileId
+      idsOfProfilesToFollow
+      followTokenIds
+      datas
+    }
+  }
+}
+
+fragment CreateUnfollowBroadcastItemResult on CreateUnfollowBroadcastItemResult {
+  __typename
+  id
+  expiresAt
+  typedData {
+    types {
+      Unfollow {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    message: value {
+      nonce
+      deadline
+      unfollowerProfileId
+      idsOfProfilesToUnfollow
+    }
+  }
+}
+
+fragment CreateSetFollowModuleBroadcastItemResult on CreateSetFollowModuleBroadcastItemResult {
+  __typename
+  id
+  expiresAt
+  typedData {
+    types {
+      SetFollowModule {
+        name
+        type
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    message: value {
+      nonce
+      deadline
+      profileId
+      followModule
+      followModuleInitData
+    }
+  }
+}
+
+fragment CreateLinkHandleToProfileBroadcastItemResult on CreateLinkHandleToProfileBroadcastItemResult {
+  __typename
+  id
+  expiresAt
+  typedData {
+    types {
+      Link {
+        ...EIP712TypedDataField
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    message: value {
+      nonce
+      deadline
+      profileId
+      handleId
+    }
+  }
+}
+
+fragment CreateUnlinkHandleFromProfileBroadcastItemResult on CreateUnlinkHandleFromProfileBroadcastItemResult {
+  __typename
+  id
+  expiresAt
+  typedData {
+    types {
+      Unlink {
+        ...EIP712TypedDataField
+      }
+    }
+    domain {
+      ...EIP712TypedDataDomain
+    }
+    message: value {
+      nonce
+      deadline
+      profileId
+      handleId
+    }
+  }
+}
+
+# queries
+query Profile(
+  $request: ProfileRequest!
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
+) {
+  ...InjectCommonQueryParams
+  result: profile(request: $request) {
+    ...Profile
+  }
+}
+
+query Profiles(
+  $where: ProfilesRequestWhere!
+  $limit: LimitType
+  $cursor: Cursor
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
+) {
+  ...InjectCommonQueryParams
+  result: profiles(request: { where: $where, limit: $limit, cursor: $cursor }) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query ProfileManagers($request: ProfileManagersRequest!) {
+  result: profileManagers(request: $request) {
+    items {
+      ...ProfileManager
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query ProfileRecommendations(
+  $for: ProfileId!
+  $disableML: Boolean
+  $shuffle: Boolean
+  $limit: LimitType
+  $cursor: Cursor
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
+) {
+  ...InjectCommonQueryParams
+  result: profileRecommendations(
+    request: { for: $for, disableML: $disableML, shuffle: $shuffle, limit: $limit, cursor: $cursor }
+  ) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query Following(
+  $for: ProfileId!
+  $limit: LimitType
+  $cursor: Cursor
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
+) {
+  ...InjectCommonQueryParams
+  result: following(request: { for: $for, limit: $limit, cursor: $cursor }) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query Followers(
+  $of: ProfileId!
+  $limit: LimitType
+  $cursor: Cursor
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
+) {
+  ...InjectCommonQueryParams
+  result: followers(request: { of: $of, limit: $limit, cursor: $cursor }) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query MutualFollowers(
+  $observer: ProfileId!
+  $viewing: ProfileId!
+  $limit: LimitType
+  $cursor: Cursor
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
+) {
+  ...InjectCommonQueryParams
+  result: mutualFollowers(
+    request: { observer: $observer, viewing: $viewing, limit: $limit, cursor: $cursor }
+  ) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query WhoActedOnPublication(
+  $on: PublicationId!
+  $where: WhoActedOnPublicationWhere
+  $limit: LimitType
+  $cursor: Cursor
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
+) {
+  ...InjectCommonQueryParams
+  result: whoActedOnPublication(
+    request: { on: $on, where: $where, limit: $limit, cursor: $cursor }
+  ) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query WhoHaveBlocked(
+  $limit: LimitType
+  $cursor: Cursor
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
+) {
+  result: whoHaveBlocked(request: { limit: $limit, cursor: $cursor }) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+fragment ProfileActionHistory on ProfileActionHistory {
+  id
+  actionType
+  who
+  txHash
+  actionedOn
+}
+
+query ProfileActionHistory($limit: LimitType, $cursor: Cursor) {
+  result: profileActionHistory(request: { limit: $limit, cursor: $cursor }) {
+    items {
+      ...ProfileActionHistory
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+fragment ReservedClaimable on ReservedClaimable {
+  id
+  withHandle
+  source
+  expiry
+}
+
+fragment ClaimableProfilesResult on ClaimableProfilesResult {
+  reserved {
+    ...ReservedClaimable
+  }
+  canMintProfileWithFreeTextHandle
+}
+
+query ClaimableProfiles {
+  result: claimableProfiles {
+    ...ClaimableProfilesResult
+  }
+}
+
+# mutations
+mutation ClaimProfileWithHandle($request: ClaimProfileWithHandleRequest!) {
+  result: claimProfileWithHandle(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on ClaimProfileWithHandleErrorResult {
+      ...ClaimProfileWithHandleErrorResult
+    }
+  }
+}
+
+mutation AddProfileInterests($request: ProfileInterestsRequest!) {
+  result: addProfileInterests(request: $request)
+}
+
+mutation RemoveProfileInterests($request: ProfileInterestsRequest!) {
+  result: removeProfileInterests(request: $request)
+}
+
+mutation SetProfileMetadata($request: OnchainSetProfileMetadataRequest!) {
+  result: setProfileMetadata(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation Block($request: BlockRequest!) {
+  result: block(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation Unblock($request: UnblockRequest!) {
+  result: unblock(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation Follow($request: FollowLensManagerRequest!) {
+  result: follow(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation Unfollow($request: UnfollowRequest!) {
+  result: unfollow(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation DismissRecommendedProfiles($request: DismissRecommendedProfilesRequest!) {
+  result: dismissRecommendedProfiles(request: $request)
+}
+
+mutation CreateOnchainSetProfileMetadataTypedData(
+  $request: OnchainSetProfileMetadataRequest!
+  $options: TypedDataOptions
+) {
+  result: createOnchainSetProfileMetadataTypedData(request: $request, options: $options) {
+    ...CreateOnchainSetProfileMetadataBroadcastItemResult
+  }
+}
+
+mutation CreateChangeProfileManagersTypedData(
+  $request: ChangeProfileManagersRequest!
+  $options: TypedDataOptions
+) {
+  result: createChangeProfileManagersTypedData(request: $request, options: $options) {
+    ...CreateChangeProfileManagersBroadcastItemResult
+  }
+}
+
+mutation CreateBlockProfilesTypedData($request: BlockRequest!, $options: TypedDataOptions) {
+  result: createBlockProfilesTypedData(request: $request, options: $options) {
+    ...CreateBlockProfilesBroadcastItemResult
+  }
+}
+
+mutation CreateUnblockProfilesTypedData($request: UnblockRequest!, $options: TypedDataOptions) {
+  result: createUnblockProfilesTypedData(request: $request, options: $options) {
+    ...CreateUnblockProfilesBroadcastItemResult
+  }
+}
+
+mutation CreateFollowTypedData($request: FollowRequest!, $options: TypedDataOptions) {
+  result: createFollowTypedData(request: $request, options: $options) {
+    ...CreateFollowBroadcastItemResult
+  }
+}
+
+mutation CreateUnfollowTypedData($request: UnfollowRequest!, $options: TypedDataOptions) {
+  result: createUnfollowTypedData(request: $request, options: $options) {
+    ...CreateUnfollowBroadcastItemResult
+  }
+}
+
+mutation SetFollowModule($request: SetFollowModuleRequest!) {
+  result: setFollowModule(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation CreateSetFollowModuleTypedData(
+  $request: SetFollowModuleRequest!
+  $options: TypedDataOptions
+) {
+  result: createSetFollowModuleTypedData(request: $request, options: $options) {
+    ...CreateSetFollowModuleBroadcastItemResult
+  }
+}
+
+mutation LinkHandleToProfile($request: LinkHandleToProfileRequest!) {
+  result: linkHandleToProfile(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation UnlinkHandleFromProfile($request: UnlinkHandleFromProfileRequest!) {
+  result: unlinkHandleFromProfile(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation CreateLinkHandleToProfileTypedData(
+  $request: LinkHandleToProfileRequest!
+  $options: TypedDataOptions
+) {
+  result: createLinkHandleToProfileTypedData(request: $request, options: $options) {
+    ...CreateLinkHandleToProfileBroadcastItemResult
+  }
+}
+
+mutation CreateUnlinkHandleFromProfileTypedData(
+  $request: UnlinkHandleFromProfileRequest!
+  $options: TypedDataOptions
+) {
+  result: createUnlinkHandleFromProfileTypedData(request: $request, options: $options) {
+    ...CreateUnlinkHandleFromProfileBroadcastItemResult
+  }
+}

@@ -1,6 +1,8 @@
 /** Code generated. DO NOT EDIT. */
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 /* eslint-disable import/no-default-export */
 /* eslint-disable no-restricted-imports */
+/* eslint-disable tsdoc/syntax */
 import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
@@ -54,6 +56,8 @@ export type FollowWhere = {
 };
 
 export type MessageWhere = {
+  address?: InputMaybe<Scalars['String']>;
+  address_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   id?: InputMaybe<Scalars['String']>;
   id_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   mci?: InputMaybe<Scalars['Int']>;
@@ -122,6 +126,12 @@ export type ProposalWhere = {
   title_contains?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<Scalars['String']>;
   type_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  updated?: InputMaybe<Scalars['Int']>;
+  updated_gt?: InputMaybe<Scalars['Int']>;
+  updated_gte?: InputMaybe<Scalars['Int']>;
+  updated_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  updated_lt?: InputMaybe<Scalars['Int']>;
+  updated_lte?: InputMaybe<Scalars['Int']>;
   validation?: InputMaybe<Scalars['String']>;
 };
 
@@ -133,7 +143,17 @@ export type RankingWhere = {
   search?: InputMaybe<Scalars['String']>;
 };
 
+export type RolesWhere = {
+  address?: InputMaybe<Scalars['String']>;
+};
+
 export type SpaceWhere = {
+  created?: InputMaybe<Scalars['Int']>;
+  created_gt?: InputMaybe<Scalars['Int']>;
+  created_gte?: InputMaybe<Scalars['Int']>;
+  created_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  created_lt?: InputMaybe<Scalars['Int']>;
+  created_lte?: InputMaybe<Scalars['Int']>;
   id?: InputMaybe<Scalars['String']>;
   id_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };

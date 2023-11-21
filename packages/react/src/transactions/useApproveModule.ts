@@ -1,124 +1,237 @@
-import { TransactionState, useWaitUntilTransactionSettled } from '@lens-protocol/api-bindings';
+import { AnyPublication, Profile, resolveTokenAllowanceRequest } from '@lens-protocol/api-bindings';
 import {
   InsufficientGasError,
   PendingSigningRequestError,
   TransactionError,
-  TransactionKind,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import {
-  TokenAllowanceLimit,
-  TokenAllowanceRequest,
-} from '@lens-protocol/domain/use-cases/wallets';
-import {
-  Amount,
-  Erc20,
-  EthereumAddress,
-  failure,
-  PromiseResult,
-} from '@lens-protocol/shared-kernel';
+import { TokenAllowanceLimit } from '@lens-protocol/domain/use-cases/transactions';
 
-import { Operation, useOperation } from '../helpers/operations';
-import { useApproveModuleController } from './adapters/useApproveModuleController';
-
-export type ApproveModuleArgs = {
-  amount: Amount<Erc20>;
-  limit: TokenAllowanceLimit;
-  spender: EthereumAddress;
-};
+import { useDeferredTask, UseDeferredTask } from '../helpers/tasks';
+import { useTokenAllowanceController } from './adapters/useTokenAllowanceController';
 
 export { TokenAllowanceLimit };
 
-export type ApproveModuleOperation = Operation<
+/**
+ * Arguments for the {@link useApproveModule} hook.
+ */
+export type UseApproveModuleArgs = {
+  /**
+   * The type of pre-approval to perform.
+   *
+   * @defaultValue TokenAllowanceLimit.EXACT
+   */
+  limit: TokenAllowanceLimit;
+};
+
+/**
+ * Arguments for the {@link useApproveModule} hook callback.
+ */
+export type ApproveModuleArgs = {
+  /**
+   * The Profile or Publication requiring the pre-approval.
+   */
+  on: AnyPublication | Profile;
+};
+
+/**
+ * `useApproveModule` is a React Hook that allows to perform an ERC20 pre-approval
+ * for any Profile Follow modules requiring a fee, or any Publication Collect
+ * modules with a fee.
+ *
+ * @example
+ * ```ts
+ * const { execute, error, loading } = useApproveModule();
+ * ```
+ *
+ * A pre-approval does not touch the user's ERC20 but allows the module to withdraw
+ * the authorized amount at a later time with an additional transaction.
+ *
+ * In the case of Collect Open Action modules the additional transaction is the one
+ * performed via {@link useOpenAction} hook.
+ *
+ * In the case of Profile Follow modules the additional transaction is the one
+ * performed via {@link useFollow} hook.
+ *
+ * In both case the additional transaction can be user's signed or can be delegated to
+ * a Profile Manager (see {@link useUpdateProfileManagers} hook).
+ *
+ *
+ * ## Pre-approve a Profile Follow module
+ *
+ * Assuming you integrated the {@link useFollow} hook in your application, you might
+ * find that, in case of paid follows the result might fail with an {@link InsufficientAllowanceError}.
+ *
+ * ```ts
+ * const follow = useFollow();
+ *
+ * const followProfile = async (profile: Profile) => {
+ *   const result = await follow.execute({ profile });
+ *
+ *   if (result.isFailure()) {
+ *     switch (result.error.name) {
+ *       case 'InsufficientAllowanceError':
+ *         // not enough allowance
+ *         // pre-approve the module
+ *         break;
+ *
+ *       // others
+ *     }
+ *   }
+ * };
+ * ```
+ *
+ * You can use the `useApproveModule` hook to pre-approve the module and,
+ * according to the desired UX, try again the follow operation.
+ *
+ *
+ * ```ts
+ * const approve = useApproveModule();
+ * const follow = useFollow();
+ *
+ * const approveFollowModuleFor = async (profile: Profile) => {
+ *   const result = await approve.execute({ on: profile });
+ *
+ *   if (result.isFailure()) {
+ *     console.log(result.error.message);
+ *     return;
+ *   }
+ *
+ *   // try again the follow operation
+ *   return followProfile(profile);
+ * };
+ *
+ * const followProfile = async (profile: Profile) => {
+ *   const result = await follow.execute({ profile });
+ *
+ *   if (result.isFailure()) {
+ *     switch (result.error.name) {
+ *       case 'InsufficientAllowanceError':
+ *         return approveFollowModuleFor(profile);
+ *
+ *       // others
+ *     }
+ *   }
+ *
+ *   // ...
+ * };
+ * ```
+ *
+ * ## Pre-approve a Publication Collect module
+ *
+ * Similarly to the Profile Follow module, you can use the `useApproveModule` hook
+ * to pre-approve a Publication Collect module (legacy or Open Action based).
+ *
+ * ```ts
+ * const approve = useApproveModule();
+ * const collect = useOpenAction({
+ *   action: {
+ *     kind: OpenActionKind.COLLECT,
+ *   }
+ * });
+ *
+ * const approveCollectModuleFor = async (publication: AnyPublication) => {
+ *   const result = await approve.execute({ on: publication });
+ *
+ *   if (result.isFailure()) {
+ *     console.log(result.error.message);
+ *     return;
+ *   }
+ *
+ *   // try again the collect operation
+ *   return collectPublication(publication);
+ * };
+ *
+ * const collectPublication = async (publication: AnyPublication) => {
+ *   const result = collect.execute({ publication });
+ *
+ *   if (result.isFailure()) {
+ *     switch (result.error.name) {
+ *       case 'InsufficientAllowanceError':
+ *         return approveCollectModuleFor(publication);
+ *
+ *       // others
+ *     }
+ *   }
+ *
+ *   // ...
+ * };
+ * ```
+ *
+ * ## Failure scenarios
+ *
+ * Like many other SDK hooks there are some failure scenarios that you might want to handle.
+ *
+ * ```ts
+ * const { execute, error, loading } = useApproveModule();
+ *
+ * const approve = async (item: AnyPublication | Profile) => {
+ *   const result = await approve.execute({ on: publication });
+ *
+ *   if (result.isFailure()) {
+ *     switch (result.error.name) {
+ *       case 'InsufficientGasError':
+ *         console.log(`The user's wallet does not have enough MATIC to pay for the transaction`);
+ *         break;
+ *
+ *       case 'PendingSigningRequestError':
+ *         console.log(
+ *           'There is a pending signing request in your wallet. ' +
+ *             'Approve it or discard it and try again.'
+ *         );
+ *         break;
+ *
+ *       case 'TransactionError':
+ *         console.log('There was an processing the transaction', completion.error.message);
+ *         break;
+ *
+ *       case 'WalletConnectionError':
+ *         console.log('There was an error connecting to your wallet', error.message);
+ *         break;
+ *
+ *       case 'UserRejectedError':
+ *         // the user decided to not sign, usually this is silently ignored by UIs
+ *         break;
+ *     }
+ *     return;
+ *   }
+ *
+ *   // ...
+ * };
+ * ```
+ *
+ * ## Infinite approval
+ *
+ * By default the `useApproveModule` hook will pre-approve the exact amount required.
+ *
+ * You can still pre-approve an infinite amount by passing the `limit` argument:
+ *
+ * ```ts
+ * const { execute, error, loading } = useApproveModule({
+ *   limit: TokenAllowanceLimit.INFINITE
+ * });
+ * ```
+ *
+ * @category Modules
+ * @group Hooks
+ */
+export function useApproveModule(
+  args: UseApproveModuleArgs = { limit: TokenAllowanceLimit.EXACT },
+): UseDeferredTask<
   void,
   | InsufficientGasError
   | PendingSigningRequestError
   | TransactionError
   | UserRejectedError
   | WalletConnectionError,
-  [ApproveModuleArgs]
->;
+  ApproveModuleArgs
+> {
+  const increaseAllowance = useTokenAllowanceController();
 
-/**
- * `useApproveModule` is a hook that lets you approve a Lens module to access the authenticated wallet Erc20 for the purpose of paying a fee
- *
- * You MUST be authenticated via {@link useWalletLogin} to use this hook.
- *
- * @category Misc
- * @group Hooks
- *
- * @example
- * Approve a collect module for the amount specified in the publication collect policy
- * ```tsx
- * import { useApproveModule, CollectPolicyType, CollectablePublication, TokenAllowanceLimit } from '@lens-protocol/react-web';
- *
- * function ApproveCollect({ publication }: { publication: CollectablePublication }) {
- *   const { execute: approve, error, loading } = useApproveModule();
- *
- *   const handleClick = async () => {
- *     if (publication.collectPolicy.type === CollectPolicyType.CHARGE) {
- *       const result = await approve({
- *         // The collect fee amount
- *         amount: publication.collectPolicy.amount,
- *
- *         // The collect module contract address
- *         spender: publication.collectPolicy.contractAddress,
- *
- *         // In this case we want to  approve the exact amount
- *         limit: TokenAllowanceLimit.EXACT,
- *       })
- *     }
- *   };
- *
- *   return (
- *     <button onClick={handleClick}>Approve collect module</button>
- *   );
- * }
- * ```
- */
-export function useApproveModule(): ApproveModuleOperation {
-  const setAllowance = useApproveModuleController();
+  return useDeferredTask(async ({ on }) => {
+    const request = resolveTokenAllowanceRequest(on, args.limit);
 
-  const waitUntilTransactionIsSettled = useWaitUntilTransactionSettled();
-
-  return useOperation(
-    async ({
-      amount,
-      limit,
-      spender,
-    }: ApproveModuleArgs): PromiseResult<
-      void,
-      | InsufficientGasError
-      | PendingSigningRequestError
-      | TransactionError
-      | UserRejectedError
-      | WalletConnectionError
-    > => {
-      try {
-        const result = await setAllowance({
-          amount,
-          kind: TransactionKind.APPROVE_MODULE,
-          limit,
-          spender,
-        });
-
-        if (result.isSuccess()) {
-          await waitUntilTransactionIsSettled(
-            (transaction): transaction is TransactionState<TokenAllowanceRequest> =>
-              transaction.request.kind === TransactionKind.APPROVE_MODULE &&
-              transaction.request.spender === spender &&
-              transaction.request.amount.asset === amount.asset,
-          );
-        }
-
-        return result;
-      } catch (e) {
-        if (e instanceof TransactionError) {
-          return failure(e);
-        }
-        throw e;
-      }
-    },
-  );
+    return increaseAllowance(request);
+  });
 }

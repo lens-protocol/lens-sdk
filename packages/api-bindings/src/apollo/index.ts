@@ -2,33 +2,29 @@ import { from } from '@apollo/client';
 import { ILogger } from '@lens-protocol/shared-kernel';
 
 import { LENS_API_MINIMAL_SUPPORTED_VERSION } from '../constants';
-import type { IAccessTokenStorage } from './IAccessTokenStorage';
 import { SafeApolloClient } from './SafeApolloClient';
 import { createSnapshotCache } from './cache';
-import { createLensCache } from './cache/createLensCache';
-import { ContentInsightMatcher } from './cache/utils/ContentInsight';
-import { createAuthLink, createLensLink, createSnapshotLink } from './links';
+import { createLensCache, QueryParams } from './cache/createLensCache';
+import { createLensLink, IAccessTokenStorage, createAuthLink, createSnapshotLink } from './links';
 
 export type { ContentInsightMatcher } from './cache/utils/ContentInsight';
 export { snapshotPoll, demoSnapshotPoll } from './cache/utils/ContentInsight';
 
 export type ApolloClientConfig = {
   accessTokenStorage: IAccessTokenStorage;
-  backendURL: string;
+  uri: string;
   logger: ILogger;
   pollingInterval: number;
-  contentMatchers: ContentInsightMatcher[];
+  queryParams: QueryParams;
 };
 
 export function createLensApolloClient({
   accessTokenStorage,
-  backendURL,
+  uri,
   logger,
   pollingInterval,
-  contentMatchers,
+  queryParams,
 }: ApolloClientConfig) {
-  const uri = `${backendURL}/graphql`;
-
   const authLink = createAuthLink(accessTokenStorage);
 
   const httpLink = createLensLink({
@@ -39,7 +35,7 @@ export function createLensApolloClient({
 
   return new SafeApolloClient({
     connectToDevTools: true,
-    cache: createLensCache({ contentMatchers }),
+    cache: createLensCache(queryParams),
     link: from([authLink, httpLink]),
     pollingInterval,
     version: LENS_API_MINIMAL_SUPPORTED_VERSION,
@@ -47,13 +43,11 @@ export function createLensApolloClient({
 }
 
 export type AuthApolloClientConfig = {
-  backendURL: string;
+  uri: string;
   logger: ILogger;
 };
 
-export function createAuthApolloClient({ backendURL, logger }: AuthApolloClientConfig) {
-  const uri = `${backendURL}/graphql`;
-
+export function createAuthApolloClient({ uri, logger }: AuthApolloClientConfig) {
   return new SafeApolloClient({
     cache: createLensCache(),
     link: createLensLink({ uri, logger, supportedVersion: LENS_API_MINIMAL_SUPPORTED_VERSION }),
@@ -62,19 +56,19 @@ export function createAuthApolloClient({ backendURL, logger }: AuthApolloClientC
 }
 
 export type SnapshotApolloClientConfig = {
-  backendURL: string;
+  uri: string;
 };
 
-export function createSnapshotApolloClient({ backendURL }: SnapshotApolloClientConfig) {
+export function createSnapshotApolloClient({ uri }: SnapshotApolloClientConfig) {
   return new SafeApolloClient({
     cache: createSnapshotCache(),
-    link: createSnapshotLink({
-      uri: `${backendURL}/graphql`,
-    }),
+    link: createSnapshotLink({ uri }),
   });
 }
 
 export type { IAccessTokenStorage };
+export { defaultQueryParams } from './cache/createLensCache';
+export type { QueryParams };
 export type { IGraphQLClient } from './IGraphQLClient';
 export * from './errors';
 export * from './cache/transactions';

@@ -1,10 +1,7 @@
-import { CommonPaginatedResultInfoFragment } from '../graphql/fragments.generated';
+import { PaginatedResultInfoFragment } from '../graphql/fragments.generated';
 
-/**
- * @internal
- */
 export type PaginatedQueryData<Item> = {
-  pageInfo: CommonPaginatedResultInfoFragment;
+  pageInfo: PaginatedResultInfoFragment;
   items: Item[];
 };
 
@@ -13,13 +10,13 @@ export type PaginatedQueryData<Item> = {
  */
 export type PaginatedResult<T> = PaginatedQueryData<T> & {
   /**
-   * Fetches the next page of items.
+   * Fetch the next page of items.
    *
    * @returns A promise that resolves when the next page of items has been fetched.
    */
   next(): Promise<PaginatedResult<T> | null>;
   /**
-   * Fetches the previous page of items.
+   * Fetch the previous page of items.
    *
    * @returns A promise that resolves when the previous page of items has been fetched.
    */

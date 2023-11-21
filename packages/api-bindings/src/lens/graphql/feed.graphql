@@ -1,0 +1,108 @@
+fragment ReactionEvent on ReactionEvent {
+  by {
+    ...Profile
+  }
+  reaction
+  createdAt
+}
+
+fragment FeedItem on FeedItem {
+  __typename
+  id
+  root {
+    ... on Post {
+      ...Post
+    }
+    ... on Comment {
+      ...Comment
+    }
+    ... on Quote {
+      ...Quote
+    }
+  }
+  mirrors {
+    ...Mirror
+  }
+  reactions {
+    ...ReactionEvent
+  }
+  comments {
+    ...Comment
+  }
+}
+
+query Feed(
+  $where: FeedWhere
+  $cursor: Cursor
+  $imageSmallSize: ImageTransform = {}
+  $imageMediumSize: ImageTransform = {}
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
+) {
+  result: feed(request: { where: $where, cursor: $cursor }) {
+    items {
+      ...FeedItem
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+fragment FeedHighlight on FeedHighlight {
+  ... on Post {
+    ...Post
+  }
+  ... on Quote {
+    ...Quote
+  }
+}
+
+query FeedHighlights(
+  $where: FeedHighlightsWhere
+  $limit: LimitType
+  $cursor: Cursor
+  $imageSmallSize: ImageTransform = {}
+  $imageMediumSize: ImageTransform = {}
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
+) {
+  ...InjectCommonQueryParams
+  result: feedHighlights(request: { where: $where, limit: $limit, cursor: $cursor }) {
+    items {
+      ...FeedHighlight
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+# Not yet ready for production use
+#query ForYou(
+#  $request: PublicationForYouRequest!
+#  $imageSmallSize: ImageTransform = {}
+#  $imageMediumSize: ImageTransform = {}
+#  $profileCoverSize: ImageTransform = {}
+#  $profilePictureSize: ImageTransform = {}
+#  $fxRateFor: SupportedFiatType = USD
+#) {
+#  ...InjectCommonQueryParams
+#  result: forYou(request: $request) {
+#    items {
+#      ... on Post {
+#        ...Post
+#      }
+#      ... on Quote {
+#        ...Quote
+#      }
+#    }
+#    pageInfo {
+#      ...PaginatedResultInfo
+#    }
+#  }
+#}

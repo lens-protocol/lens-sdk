@@ -1,17 +1,22 @@
 import { MetaTransaction, TransactionKind } from '@lens-protocol/domain/entities';
 import {
   mockCreateProfileRequest,
-  mockUnconstrainedFollowRequest,
+  mockFreeFollowRequest,
   mockUnfollowRequest,
-  mockUpdateDispatcherConfigRequest,
   mockUpdateFollowPolicyRequest,
-  mockUpdateOffChainProfileImageRequest,
-  mockUpdateProfileDetailsRequest,
+  mockSetProfileMetadataRequest,
   mockCreateCommentRequest,
   mockCreateMirrorRequest,
   mockCreatePostRequest,
-  mockFreeCollectRequest,
   mockTokenAllowanceRequest,
+  mockUpdateProfileManagersRequest,
+  mockCreateQuoteRequest,
+  mockBlockProfilesRequest,
+  mockUnblockProfilesRequest,
+  mockSimpleCollectRequest,
+  mockLinkHandleRequest,
+  mockUnlinkHandleRequest,
+  mockClaimHandleRequest,
 } from '@lens-protocol/domain/mocks';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import { InvariantError } from '@lens-protocol/shared-kernel';
@@ -42,32 +47,38 @@ type TransactionRequest = {
 };
 
 const requests: TransactionRequest = {
+  [TransactionKind.ACT_ON_PUBLICATION]: mockSimpleCollectRequest(),
   [TransactionKind.APPROVE_MODULE]: mockTokenAllowanceRequest(),
-  [TransactionKind.COLLECT_PUBLICATION]: mockFreeCollectRequest(),
+  [TransactionKind.BLOCK_PROFILE]: mockBlockProfilesRequest(),
+  [TransactionKind.UNBLOCK_PROFILE]: mockUnblockProfilesRequest(),
+  [TransactionKind.CLAIM_HANDLE]: mockClaimHandleRequest(),
   [TransactionKind.CREATE_COMMENT]: mockCreateCommentRequest(),
   [TransactionKind.CREATE_POST]: mockCreatePostRequest(),
-  [TransactionKind.FOLLOW_PROFILES]: mockUnconstrainedFollowRequest(),
-  [TransactionKind.MIRROR_PUBLICATION]: mockCreateMirrorRequest(),
-  [TransactionKind.UPDATE_FOLLOW_POLICY]: mockUpdateFollowPolicyRequest(),
-  [TransactionKind.UPDATE_PROFILE_DETAILS]: mockUpdateProfileDetailsRequest(),
-  [TransactionKind.UPDATE_PROFILE_IMAGE]: mockUpdateOffChainProfileImageRequest(),
   [TransactionKind.CREATE_PROFILE]: mockCreateProfileRequest(),
+  [TransactionKind.CREATE_QUOTE]: mockCreateQuoteRequest(),
+  [TransactionKind.FOLLOW_PROFILE]: mockFreeFollowRequest(),
+  [TransactionKind.LINK_HANDLE]: mockLinkHandleRequest(),
+  [TransactionKind.MIRROR_PUBLICATION]: mockCreateMirrorRequest(),
   [TransactionKind.UNFOLLOW_PROFILE]: mockUnfollowRequest(),
-  [TransactionKind.UPDATE_DISPATCHER_CONFIG]: mockUpdateDispatcherConfigRequest(),
+  [TransactionKind.UNLINK_HANDLE]: mockUnlinkHandleRequest(),
+  [TransactionKind.UPDATE_FOLLOW_POLICY]: mockUpdateFollowPolicyRequest(),
+  [TransactionKind.UPDATE_PROFILE_DETAILS]: mockSetProfileMetadataRequest(),
+  [TransactionKind.UPDATE_PROFILE_MANAGERS]: mockUpdateProfileManagersRequest(),
 };
 
 const lensHubTransactionKinds = [
-  TransactionKind.COLLECT_PUBLICATION,
+  TransactionKind.ACT_ON_PUBLICATION,
   TransactionKind.CREATE_COMMENT,
   TransactionKind.CREATE_POST,
-  TransactionKind.FOLLOW_PROFILES,
+  TransactionKind.CREATE_QUOTE,
+  TransactionKind.FOLLOW_PROFILE,
   TransactionKind.MIRROR_PUBLICATION,
-  TransactionKind.UPDATE_DISPATCHER_CONFIG,
+  TransactionKind.UPDATE_PROFILE_MANAGERS,
   TransactionKind.UPDATE_FOLLOW_POLICY,
-  TransactionKind.UPDATE_PROFILE_IMAGE,
+  TransactionKind.UPDATE_PROFILE_DETAILS,
 ] as const;
 
-const lensPeripheryTransactionKinds = [TransactionKind.UPDATE_PROFILE_DETAILS] as const;
+const tokenHandleRegistryTransactionKinds = [] as const;
 
 describe(`Given an instance of the ${PendingTransactionGateway.name}`, () => {
   const factory = mockITransactionFactory();
@@ -230,8 +241,9 @@ describe(`Given an instance of the ${PendingTransactionGateway.name}`, () => {
         }
       });
 
-      it(`should not be affected by ${MetaTransaction.name} for methods exposed on LensPeriphery.sol contract`, async () => {
-        const request = mockUpdateProfileDetailsRequest();
+      // TODO update with Link/Unlink tx types once ready
+      it.skip(`should not be affected by ${MetaTransaction.name} for methods exposed on TokenHandleRegistry.sol contract`, async () => {
+        const request = mockSetProfileMetadataRequest();
         const gateway = setupPendingTransactionGateway({ factory });
         const init = mockMetaTransactionData({ request });
         const tx = factory.createMetaTransaction(init);
@@ -243,12 +255,13 @@ describe(`Given an instance of the ${PendingTransactionGateway.name}`, () => {
       });
     });
 
-    describe('for a TransactionKind corresponding to a protocol method exposed on the LensPeriphery.sol contract', () => {
+    // TODO update with Link/Unlink tx types once ready
+    describe.skip('for a TransactionKind corresponding to a protocol method exposed on the TokenHandleRegistry.sol contract', () => {
       it(`should compute the next Nonce based on the most recent ${MetaTransaction.name} exposed from the same contract`, async () => {
         const gateway = setupPendingTransactionGateway({ factory });
 
-        for (let idx = 0; idx < lensPeripheryTransactionKinds.length; idx++) {
-          const kind = lensPeripheryTransactionKinds[idx];
+        for (let idx = 0; idx < tokenHandleRegistryTransactionKinds.length; idx++) {
+          const kind = tokenHandleRegistryTransactionKinds[idx];
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           const init = mockMetaTransactionData({ request: requests[kind!], nonce: idx });
           const tx = factory.createMetaTransaction(init);

@@ -1,4 +1,11 @@
-import { ProxyActionStatus } from '@lens-protocol/domain/entities';
+/* eslint-disable no-fallthrough */
+import {
+  AnyTransactionRequestModel,
+  ProtocolTransactionKind,
+  ProtocolTransactionKinds,
+  ProtocolTransactionRequestModel,
+  TransactionKind,
+} from '@lens-protocol/domain/entities';
 import {
   AnyTransactionRequest,
   ProtocolTransactionRequest,
@@ -6,121 +13,141 @@ import {
 import { ChainType, UnknownObject } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
-import { SerializedErc20AmountSchema } from './common';
-import { tokenAllowanceRequestSchema } from './erc20';
+import { TokenAllowanceRequestSchema } from './erc20';
 import {
   CreateProfileRequestSchema,
-  PaidFollowRequestSchema,
-  ProfileOwnerFollowRequestSchema,
-  UnconstrainedFollowRequestSchema,
   UnfollowRequestSchema,
-  UpdateDispatcherConfigRequestSchema,
-  updateFollowPolicyRequestSchema,
-  UpdateNftProfileImageRequestSchema,
-  UpdateOffChainProfileImageRequestSchema,
-  UpdateProfileDetailsRequestSchema,
+  UpdateProfileManagersRequestSchema,
+  SetProfileMetadataRequestSchema,
+  UpdateFollowPolicyRequestSchema,
+  FollowRequestSchema,
+  LinkHandleRequestSchema,
+  UnlinkHandleRequestSchema,
+  UnblockProfilesRequestSchema,
+  ClaimHandleRequestSchema,
+  BlockProfilesRequestSchema,
 } from './profiles';
 import {
-  createEmbedCommentRequestSchema,
-  createEmbedPostRequestSchema,
-  createMediaCommentRequestSchema,
-  createMediaPostRequestSchema,
+  CollectRequestSchema,
+  CreateCommentRequestSchema,
   CreateMirrorRequestSchema,
-  createTextualCommentRequestSchema,
-  createTextualPostRequestSchema,
-  FreeCollectRequestSchema,
-  PaidCollectRequestSchema,
+  CreatePostRequestSchema,
+  CreateQuoteRequestSchema,
 } from './publications';
 
-// the repetition of the schemas compared to AnyTransactionRequestSchema
-// is intentional due to https://github.com/colinhacks/zod/issues/2106
-const ProtocolTransactionRequestSchema: z.Schema<
+function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) {
+  switch (kind) {
+    case TransactionKind.ACT_ON_PUBLICATION:
+      return CollectRequestSchema;
+    case TransactionKind.BLOCK_PROFILE:
+      return BlockProfilesRequestSchema;
+    case TransactionKind.CLAIM_HANDLE:
+      return ClaimHandleRequestSchema;
+    case TransactionKind.CREATE_COMMENT:
+      return CreateCommentRequestSchema;
+    case TransactionKind.CREATE_POST:
+      return CreatePostRequestSchema;
+    case TransactionKind.CREATE_PROFILE:
+      return CreateProfileRequestSchema;
+    case TransactionKind.CREATE_QUOTE:
+      return CreateQuoteRequestSchema;
+    case TransactionKind.FOLLOW_PROFILE:
+      return FollowRequestSchema;
+    case TransactionKind.LINK_HANDLE:
+      return LinkHandleRequestSchema;
+    case TransactionKind.MIRROR_PUBLICATION:
+      return CreateMirrorRequestSchema;
+    case TransactionKind.UNFOLLOW_PROFILE:
+      return UnfollowRequestSchema;
+    case TransactionKind.UNLINK_HANDLE:
+      return UnlinkHandleRequestSchema;
+    case TransactionKind.UPDATE_FOLLOW_POLICY:
+      return UpdateFollowPolicyRequestSchema;
+    case TransactionKind.UPDATE_PROFILE_DETAILS:
+      return SetProfileMetadataRequestSchema;
+    case TransactionKind.UPDATE_PROFILE_MANAGERS:
+      return UpdateProfileManagersRequestSchema;
+    case TransactionKind.UNBLOCK_PROFILE:
+      return UnblockProfilesRequestSchema;
+
+    default:
+      throw new Error('Not implemented');
+  }
+}
+
+function resolveAnyTransactionRequestSchema(kind: TransactionKind) {
+  switch (kind) {
+    case TransactionKind.APPROVE_MODULE:
+      return TokenAllowanceRequestSchema;
+
+    default:
+      return resolveProtocolTransactionRequestSchema(kind);
+  }
+}
+
+function refineProtocolTransactionRequest(
+  val: ProtocolTransactionRequestModel,
+  ctx: z.RefinementCtx,
+): val is ProtocolTransactionRequest {
+  const schema = resolveProtocolTransactionRequestSchema(val.kind);
+  const result = schema.safeParse(val);
+
+  if (!result.success) {
+    result.error.issues.forEach((issue) => ctx.addIssue(issue));
+  }
+  return z.NEVER;
+}
+
+function toProtocolTransactionRequest(
+  val: ProtocolTransactionRequestModel,
+): ProtocolTransactionRequest {
+  const schema = resolveProtocolTransactionRequestSchema(val.kind);
+
+  return schema.parse(val);
+}
+
+const ProtocolTransactionRequestSchema: z.ZodType<
   ProtocolTransactionRequest,
   z.ZodTypeDef,
   UnknownObject
-> = z.union([
-  // CollectRequest schemas
-  FreeCollectRequestSchema,
-  PaidCollectRequestSchema,
+> = z
+  .object({
+    kind: z.enum(ProtocolTransactionKinds),
+  })
+  .passthrough()
+  .superRefine(refineProtocolTransactionRequest)
+  .transform(toProtocolTransactionRequest);
 
-  // FollowRequest schemas
-  PaidFollowRequestSchema,
-  ProfileOwnerFollowRequestSchema,
-  UnconstrainedFollowRequestSchema,
+function refineAnyTransactionRequest(
+  val: AnyTransactionRequestModel,
+  ctx: z.RefinementCtx,
+): val is ProtocolTransactionRequest {
+  const schema = resolveAnyTransactionRequestSchema(val.kind);
+  const result = schema.safeParse(val);
 
-  // CreatePostRequest schemas
-  createEmbedPostRequestSchema(SerializedErc20AmountSchema),
-  createMediaPostRequestSchema(SerializedErc20AmountSchema),
-  createTextualPostRequestSchema(SerializedErc20AmountSchema),
+  if (!result.success) {
+    result.error.issues.forEach((issue) => ctx.addIssue(issue));
+  }
+  return z.NEVER;
+}
 
-  // CreateCommentRequest schemas
-  createEmbedCommentRequestSchema(SerializedErc20AmountSchema),
-  createMediaCommentRequestSchema(SerializedErc20AmountSchema),
-  createTextualCommentRequestSchema(SerializedErc20AmountSchema),
+function toAnyTransactionRequest(val: AnyTransactionRequestModel): AnyTransactionRequest {
+  const schema = resolveAnyTransactionRequestSchema(val.kind);
 
-  CreateMirrorRequestSchema,
+  return schema.parse(val);
+}
 
-  CreateProfileRequestSchema,
-
-  UnfollowRequestSchema,
-
-  UpdateDispatcherConfigRequestSchema,
-
-  updateFollowPolicyRequestSchema(SerializedErc20AmountSchema),
-
-  UpdateProfileDetailsRequestSchema,
-
-  // UpdateProfileImageRequest schemas
-  UpdateNftProfileImageRequestSchema,
-  UpdateOffChainProfileImageRequestSchema,
-]);
-
-// the repetition of the schemas compared to ProtocolTransactionRequestSchema
-// is intentional due to https://github.com/colinhacks/zod/issues/2106
-const AnyTransactionRequestSchema: z.Schema<AnyTransactionRequest, z.ZodTypeDef, UnknownObject> =
-  z.union([
-    tokenAllowanceRequestSchema(SerializedErc20AmountSchema),
-
-    // CollectRequest schemas
-    FreeCollectRequestSchema,
-    PaidCollectRequestSchema,
-
-    // FollowRequest schemas
-    PaidFollowRequestSchema,
-    ProfileOwnerFollowRequestSchema,
-    UnconstrainedFollowRequestSchema,
-
-    // CreatePostRequest schemas
-    createEmbedPostRequestSchema(SerializedErc20AmountSchema),
-    createMediaPostRequestSchema(SerializedErc20AmountSchema),
-    createTextualPostRequestSchema(SerializedErc20AmountSchema),
-
-    // CreateCommentRequest schemas
-    createEmbedCommentRequestSchema(SerializedErc20AmountSchema),
-    createMediaCommentRequestSchema(SerializedErc20AmountSchema),
-    createTextualCommentRequestSchema(SerializedErc20AmountSchema),
-
-    CreateMirrorRequestSchema,
-
-    CreateProfileRequestSchema,
-
-    UnfollowRequestSchema,
-
-    UpdateDispatcherConfigRequestSchema,
-
-    updateFollowPolicyRequestSchema(SerializedErc20AmountSchema),
-
-    UpdateProfileDetailsRequestSchema,
-
-    // UpdateProfileImageRequest schemas
-    UpdateNftProfileImageRequestSchema,
-    UpdateOffChainProfileImageRequestSchema,
-  ]);
+const AnyTransactionRequestSchema: z.Schema<AnyTransactionRequest, z.ZodTypeDef, UnknownObject> = z
+  .object({
+    kind: z.nativeEnum(TransactionKind),
+  })
+  .passthrough()
+  .superRefine(refineAnyTransactionRequest)
+  .transform(toAnyTransactionRequest);
 
 export enum TransactionType {
   Native,
   Meta,
-  Proxy,
   Data,
 }
 
@@ -129,7 +156,7 @@ const MetaTransactionSchema = z.object({
   chainType: z.nativeEnum(ChainType),
   id: z.string(),
   indexingId: z.string(),
-  txHash: z.string(),
+  txHash: z.string().nullable(),
   nonce: z.number(),
   request: ProtocolTransactionRequestSchema,
 });
@@ -141,23 +168,11 @@ const NativeTransactionSchema = z.object({
   chainType: z.nativeEnum(ChainType),
   id: z.string(),
   indexingId: z.string().optional(),
-  txHash: z.string(),
+  txHash: z.string().nullable(),
   request: AnyTransactionRequestSchema,
 });
 
 type NativeTransactionSchema = z.infer<typeof NativeTransactionSchema>;
-
-const ProxyTransactionSchema = z.object({
-  type: z.literal(TransactionType.Proxy),
-  chainType: z.nativeEnum(ChainType),
-  id: z.string(),
-  proxyId: z.string(),
-  txHash: z.string().optional(),
-  status: z.nativeEnum(ProxyActionStatus).optional(),
-  request: ProtocolTransactionRequestSchema,
-});
-
-type ProxyTransactionSchema = z.infer<typeof ProxyTransactionSchema>;
 
 const DataTransactionSchema = z.object({
   type: z.literal(TransactionType.Data),
@@ -170,7 +185,6 @@ type DataTransactionSchema = z.infer<typeof DataTransactionSchema>;
 export const TransactionSchema = z.discriminatedUnion('type', [
   MetaTransactionSchema,
   NativeTransactionSchema,
-  ProxyTransactionSchema,
   DataTransactionSchema,
 ]);
 

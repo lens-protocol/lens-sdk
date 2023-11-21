@@ -3,30 +3,28 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import {
-  FollowProfiles,
-  FollowRequest,
-  UnconstrainedFollowRequest,
-} from '@lens-protocol/domain/use-cases/profile';
+import { FollowProfile, FollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastingError,
-  SignlessSubsidizeOnChain,
-  SubsidizeOnChain,
+  DelegableSigning,
+  SignedOnChain,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
 } from '@lens-protocol/domain/use-cases/wallets';
+import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
-import { FollowProfilesGateway } from './FollowProfilesGateway';
+import { AsyncTransactionResult } from './AsyncTransactionResult';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
+import { FollowProfileGateway } from './profiles/FollowProfileGateway';
+import { validateFollowRequest } from './schemas/validators';
 
 export function useFollowController() {
   const {
     activeWallet,
     apolloClient,
-    logger,
     onChainRelayer,
     tokenAvailability,
     transactionFactory,
@@ -34,7 +32,19 @@ export function useFollowController() {
     transactionQueue,
   } = useSharedDependencies();
 
-  return async (request: FollowRequest) => {
+  return async (
+    request: FollowRequest,
+  ): PromiseResult<
+    AsyncTransactionResult<void>,
+    | BroadcastingError
+    | InsufficientAllowanceError
+    | InsufficientFundsError
+    | PendingSigningRequestError
+    | UserRejectedError
+    | WalletConnectionError
+  > => {
+    validateFollowRequest(request);
+
     const presenter = new TransactionResultPresenter<
       FollowRequest,
       | BroadcastingError
@@ -44,36 +54,32 @@ export function useFollowController() {
       | UserRejectedError
       | WalletConnectionError
     >();
+    const gateway = new FollowProfileGateway(apolloClient, transactionFactory);
 
-    const followProfilesGateway = new FollowProfilesGateway(
-      apolloClient,
-      transactionFactory,
-      logger,
-    );
-
-    const signedFollow = new SubsidizeOnChain<FollowRequest>(
+    const signedFollow = new SignedOnChain(
       activeWallet,
       transactionGateway,
-      followProfilesGateway,
+      gateway,
       onChainRelayer,
       transactionQueue,
       presenter,
     );
 
-    const signlessFollow = new SignlessSubsidizeOnChain<UnconstrainedFollowRequest>(
-      followProfilesGateway,
+    const delegableFollow = new DelegableSigning(
+      signedFollow,
+      gateway,
       transactionQueue,
       presenter,
     );
 
-    const followProfiles = new FollowProfiles(
+    const followProfile = new FollowProfile(
       tokenAvailability,
       signedFollow,
-      signlessFollow,
+      delegableFollow,
       presenter,
     );
 
-    void followProfiles.execute(request);
+    await followProfile.execute(request);
 
     return presenter.asResult();
   };

@@ -1,5 +1,334 @@
 # @lens-protocol/react
 
+## 2.0.0-alpha.21
+
+### Patch Changes
+
+- 4166f51f8: **feat:** Added experimental `useLazyProfiles` and `useLazyPublications` hooks
+- 5c429a0d7: **feat:** Added new invite hooks: `useInvitedProfiles`, `useWasWalletInvited`, `useLazyWasWalletInvited` and `useInviteWallets`
+- Updated dependencies [4166f51f8]
+- Updated dependencies [5c429a0d7]
+  - @lens-protocol/api-bindings@0.11.0-alpha.19
+  - @lens-protocol/domain@0.11.0-alpha.14
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.14
+
+## 2.0.0-alpha.20
+
+### Patch Changes
+
+- c9b5c8d88: **feat:** seamless support for public collect/act in `useOpenAction`
+- ac17aa775: **fix** fully support Public Collect
+- d6a8061e8: **fix:** Exported missing enums used in hooks args
+- 3bf2e33dc: **feat:** Added `useBlockedProfiles` hook
+  **chore:** Renamed `useMyBookmarks` to `useBookmarks`, deprecated `useMyBookmarks`
+  **feat:** Added authentication checks to many hooks that require it on the API side
+- d71f981cc: **chore:** simplifies useApproveModule implementation
+- Updated dependencies [3bf2e33dc]
+- Updated dependencies [d71f981cc]
+- Updated dependencies [c9b5c8d88]
+  - @lens-protocol/api-bindings@0.11.0-alpha.18
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.13
+  - @lens-protocol/shared-kernel@0.11.0-alpha.8
+  - @lens-protocol/domain@0.11.0-alpha.13
+  - @lens-protocol/storage@0.7.5-alpha.6
+
+## 2.0.0-alpha.19
+
+### Patch Changes
+
+- 2f5360796: **fix:** fixes silent token-refresh logic so that, if refresh token is still valid, a silent refresh of tokens takes places and failed requests are retried seamlessly
+- 3a9720968: **feat:** Added `isLensManager` to `ProfileManager` fragment
+- 5d95eccd2: **feat:** Added `useProfilesManaged` hook
+- Updated dependencies [2f5360796]
+- Updated dependencies [3a9720968]
+- Updated dependencies [5d95eccd2]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.7
+  - @lens-protocol/api-bindings@0.11.0-alpha.17
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.12
+  - @lens-protocol/domain@0.11.0-alpha.12
+  - @lens-protocol/storage@0.7.5-alpha.5
+
+## 2.0.0-alpha.18
+
+### Patch Changes
+
+- a4e191700: Upgraded credentials storage to ignore v1 refreshTokens
+
+## 2.0.0-alpha.17
+
+### Patch Changes
+
+- 0a7b26ff: Fixed address format mismatch when retrieving active wallet
+
+## 2.0.0-alpha.16
+
+### Minor Changes
+
+- cf250df4: implements `useUnblockProfiles`
+- 9490db8e: Added useLinkHandle and useUnlinkHandle hooks
+- cf250df4: adds `useBlockProfiles` hook
+
+### Patch Changes
+
+- 91bd7229: Removed deprecated `useNotInterested`, use `useNotInterestedToggle` instead
+  Removed deprecated `useFollowProfile`, use `useFollow` instead
+  Removed deprecated `useUnfollowProfile`, use `useUnfollow` instead
+- 1f28c6d6: Added useCreateQuote hook
+- Updated dependencies [91bd7229]
+- Updated dependencies [cf250df4]
+- Updated dependencies [1f28c6d6]
+- Updated dependencies [9490db8e]
+- Updated dependencies [cf250df4]
+  - @lens-protocol/api-bindings@0.11.0-alpha.16
+  - @lens-protocol/domain@0.11.0-alpha.11
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.11
+
+## 2.0.0-alpha.15
+
+### Patch Changes
+
+- 672c85e6: **fix:** `useClaimHandle` types
+- 1bd69391: **chore:** updates `@lens-protocol/metadata` package to 1.0.0
+- becb6338: Updated to latest API schema to use correct legacy collect typed data
+- 86fa12e0: **fix:** all paginated queries that accidentally overwrite each other when using same hook twice
+- Updated dependencies [becb6338]
+- Updated dependencies [86fa12e0]
+  - @lens-protocol/api-bindings@0.11.0-alpha.15
+
+## 2.0.0-alpha.14
+
+### Minor Changes
+
+- 8120f676: **feat:** reintroduces `useAccessToken` and `useApolloClient` hooks
+- 8120f676: **feat:** implements `useClaimHandle`, `useCanClaimHandle`, and `useUpgradeCredentials`
+
+### Patch Changes
+
+- 8120f676: **feat:** allow wallet-only authentication via `useLogin`
+- 061df834: **chore:** configure Lens API v2 production URL
+- Updated dependencies [8120f676]
+- Updated dependencies [8120f676]
+- Updated dependencies [061df834]
+- Updated dependencies [8120f676]
+  - @lens-protocol/domain@0.11.0-alpha.10
+  - @lens-protocol/api-bindings@0.11.0-alpha.14
+  - @lens-protocol/shared-kernel@0.11.0-alpha.6
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.10
+  - @lens-protocol/storage@0.7.5-alpha.4
+
+## 2.0.0-alpha.13
+
+### Patch Changes
+
+- 5f93ea77: **fix:** support `Profile.lensManager` into `Profile.signless` renaming
+- 5f93ea77: **fix:** support new `HandleInfo`
+- 5f93ea77: **fix:** renames of `handleLinkToProfile`, `handleUnlinkToProfile` and correlated mutations, types
+- 09975f6f: Exported useNotifications + example
+- 5f93ea77: **fix:** supports `MetadataAttribute.type`
+- 5f93ea77: **fix:** adds `type` to Open Action module settings types
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+  - @lens-protocol/api-bindings@0.11.0-alpha.13
+  - @lens-protocol/domain@0.11.0-alpha.9
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.9
+
+## 2.0.0-alpha.12
+
+### Patch Changes
+
+- Update dependencies
+- Updated dependencies
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.8
+  - @lens-protocol/api-bindings@0.11.0-alpha.12
+  - @lens-protocol/domain@0.11.0-alpha.8
+
+## 2.0.0-alpha.11
+
+### Patch Changes
+
+- Update dependencies
+- Updated dependencies
+  - @lens-protocol/api-bindings@0.11.0-alpha.11
+  - @lens-protocol/domain@0.11.0-alpha.7
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.7
+
+## 2.0.0-alpha.10
+
+### Minor Changes
+
+- fa49d587: refactors hook arguments to be passed to the callback
+- c09c5fdc: Added `useNotInterestedToggle` hook
+- 0687207b: Added `useOwnedHandles` hook
+
+### Patch Changes
+
+- Updated dependencies [c09c5fdc]
+- Updated dependencies [0687207b]
+  - @lens-protocol/api-bindings@0.11.0-alpha.10
+
+## 2.0.0-alpha.9
+
+### Minor Changes
+
+- cfc03dff: **feat:** implements `useOpenAction` hook
+- 9481f48b: **feat:** implements `useApproveModule` hook. It also upgrades viem and wagmi peer deps.
+- fca2473b: **feat:** implements `useLogout` hook
+- 6ab0e99a: **Added** revenue hooks: useRevenueFromFollow, useRevenueFromPublication, useRevenueFromPublications
+- cfc03dff: **feat:** implements experimental `useLazyPublication` hook
+- bdf81299: implements `useBookmarkToggle`
+
+### Patch Changes
+
+- Updated dependencies [cfc03dff]
+- Updated dependencies [9481f48b]
+- Updated dependencies [6ab0e99a]
+- Updated dependencies [bdf81299]
+  - @lens-protocol/api-bindings@0.11.0-alpha.9
+  - @lens-protocol/domain@0.11.0-alpha.6
+  - @lens-protocol/shared-kernel@0.11.0-alpha.5
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.6
+  - @lens-protocol/storage@0.7.5-alpha.3
+
+## 2.0.0-alpha.8
+
+### Minor Changes
+
+- 30ccf19d: **Added** useMyBookmarks hook
+- a42e90e7: **Added** useSetProfileMetadata hook
+- 9dd33b03:
+  **Renamed** useFollowProfile to useFollow
+  **Renamed** useUnfollowProfile to useUnfollow
+  **Added** support for LensProfileManager to useFollow, useUnfollow and useUpdateFollowPolicy hooks
+
+### Patch Changes
+
+- 01b2c2cb: Updated to support the latest API schema
+- Updated dependencies [30ccf19d]
+- Updated dependencies [a42e90e7]
+- Updated dependencies [9dd33b03]
+- Updated dependencies [01b2c2cb]
+  - @lens-protocol/api-bindings@0.11.0-alpha.8
+  - @lens-protocol/domain@0.11.0-alpha.5
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.5
+
+## 2.0.0-alpha.7
+
+### Minor Changes
+
+- a929c0f6: **feat:** implements `useCreatePost` hook
+- 5bc7e430: **feat:** implements `useCreateComment` hook
+- 8b86832f: **fix:** logs out user on failed on-the-fly token refresh
+
+### Patch Changes
+
+- f82b90a5: Added `useUpdateFollowPolicy` hook
+- d1414eda: **feat:** implements `useCreateMirror` hook
+- 2f618240: Added `useFollowProfile` and `useUnfollowProfile` hooks
+- Updated dependencies [a929c0f6]
+- Updated dependencies [f82b90a5]
+- Updated dependencies [5bc7e430]
+- Updated dependencies [d1414eda]
+- Updated dependencies [2f618240]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.4
+  - @lens-protocol/api-bindings@0.11.0-alpha.7
+  - @lens-protocol/domain@0.11.0-alpha.4
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.4
+  - @lens-protocol/storage@0.7.5-alpha.2
+
+## 2.0.0-alpha.6
+
+### Minor Changes
+
+- 4630efb9: add report publication
+- 25b7ef51: add hide publicaiton
+
+### Patch Changes
+
+- Updated dependencies [4630efb9]
+- Updated dependencies [25b7ef51]
+  - @lens-protocol/api-bindings@0.11.0-alpha.6
+
+## 2.0.0-alpha.5
+
+### Patch Changes
+
+- 734d6823: Added `useProfileManagers` and `useUpdateProfileManagers` hooks
+- 51f8cec6: Added `useReactionToggle` hook
+- d7129e39: Added `useCurrencies` hook
+- Updated dependencies [734d6823]
+- Updated dependencies [51f8cec6]
+- Updated dependencies [d7129e39]
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.3
+  - @lens-protocol/shared-kernel@0.11.0-alpha.3
+  - @lens-protocol/api-bindings@0.11.0-alpha.5
+  - @lens-protocol/domain@0.11.0-alpha.3
+  - @lens-protocol/storage@0.7.5-alpha.1
+
+## 2.0.0-alpha.4
+
+### Minor Changes
+
+- 38a40c70: add explore profiles
+- 1c3a10c3: add explore publications
+- reintroduce notifications for v2
+
+### Patch Changes
+
+- 6762b170: add feed highlights
+- Updated dependencies [38a40c70]
+- Updated dependencies [1c3a10c3]
+- Updated dependencies [6762b170]
+- Updated dependencies
+  - @lens-protocol/api-bindings@0.11.0-alpha.4
+
+## 2.0.0-alpha.3
+
+### Patch Changes
+
+- 6d0d62dd: **feat:** new `useLogin` and `useSession` hooks
+- Updated dependencies [6d0d62dd]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.2
+  - @lens-protocol/api-bindings@0.11.0-alpha.3
+  - @lens-protocol/domain@0.11.0-alpha.2
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.2
+  - @lens-protocol/storage@0.7.5-alpha.0
+
+## 2.0.0-alpha.2
+
+### Patch Changes
+
+- 6f51659c: **fix:** adds missing `__typename` and expose `ProfileFields` from `Profile.invitedBy`
+- Updated dependencies [6f51659c]
+  - @lens-protocol/api-bindings@0.11.0-alpha.2
+
+## 2.0.0-alpha.1
+
+### Patch Changes
+
+- 25fe9a46: **Added** new hooks: useFeed, useSearchProfiles, useSearchPublications, useProfiles, usePublications, useProfileFollowing, useProfileFollowers, useMutualFollowers, useRecommendedProfiles, useProfileActionHistory, useWhoReactedToPublication, useWhoActedOnPublication
+- Updated dependencies [25fe9a46]
+  - @lens-protocol/api-bindings@0.11.0-alpha.1
+  - @lens-protocol/domain@0.11.0-alpha.1
+  - @lens-protocol/shared-kernel@0.11.0-alpha.1
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.1
+
+## 2.0.0-alpha.0
+
+### Major Changes
+
+- 731ff1d0: Added support for Lens Protocol v2
+
+### Patch Changes
+
+- Updated dependencies [731ff1d0]
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.0
+  - @lens-protocol/shared-kernel@0.11.0-alpha.0
+  - @lens-protocol/api-bindings@0.11.0-alpha.0
+  - @lens-protocol/domain@0.11.0-alpha.0
+
 ## 1.3.1
 
 ### Patch Changes

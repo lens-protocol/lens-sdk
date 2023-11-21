@@ -1,19 +1,16 @@
 import { recentTransactionsVar, TxStatus } from '@lens-protocol/api-bindings';
-import { TransactionError, TransactionErrorReason } from '@lens-protocol/domain/entities';
 import { mockTransactionError, mockTransactionData } from '@lens-protocol/domain/mocks';
 import {
   AnyTransactionRequest,
   TransactionData,
 } from '@lens-protocol/domain/use-cases/transactions';
 
-import { FailedTransactionError, TransactionQueuePresenter } from '../TransactionQueuePresenter';
+import { TransactionQueuePresenter } from '../TransactionQueuePresenter';
 
 function setupTransactionQueuePresenter() {
-  const errorHandler = jest.fn();
+  const presenter = new TransactionQueuePresenter();
 
-  const presenter = new TransactionQueuePresenter(errorHandler);
-
-  return { presenter, errorHandler };
+  return { presenter };
 }
 
 describe(`Given the ${TransactionQueuePresenter.name}`, () => {
@@ -63,20 +60,10 @@ describe(`Given the ${TransactionQueuePresenter.name}`, () => {
       const { presenter } = setupTransactionQueuePresenter();
       presenter.pending(transaction);
 
-      presenter.failed(mockTransactionError(), transaction);
-
-      expect(recentTransactionsVar()).toEqual([{ status: TxStatus.FAILED, ...transaction }]);
-    });
-
-    it(`should use the provided errorHandler to propagate the error to the user`, () => {
-      const { presenter, errorHandler } = setupTransactionQueuePresenter();
-      presenter.pending(transaction);
-
-      const error = new TransactionError(TransactionErrorReason.UNKNOWN);
+      const error = mockTransactionError();
       presenter.failed(error, transaction);
 
-      const expectedError = new FailedTransactionError(error, transaction);
-      expect(errorHandler).toHaveBeenCalledWith(expectedError);
+      expect(recentTransactionsVar()).toEqual([{ status: TxStatus.FAILED, error, ...transaction }]);
     });
   });
 

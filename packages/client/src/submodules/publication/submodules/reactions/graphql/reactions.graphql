@@ -1,0 +1,39 @@
+mutation AddReaction($request: ReactionRequest!) {
+  addReaction(request: $request)
+}
+
+mutation RemoveReaction($request: ReactionRequest!) {
+  removeReaction(request: $request)
+}
+
+fragment ProfileReactionResult on ProfileReactionResult {
+  reaction
+  reactionAt
+}
+
+fragment ProfileWhoReactedResult on ProfileWhoReactedResult {
+  profile {
+    ...Profile
+  }
+  reactions {
+    ...ProfileReactionResult
+  }
+}
+
+query WhoReactedPublication(
+  $request: WhoReactedPublicationRequest!
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
+) {
+  result: whoReactedPublication(request: $request) {
+    items {
+      ...ProfileWhoReactedResult
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}

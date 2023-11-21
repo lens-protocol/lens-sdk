@@ -1,66 +1,105 @@
-import { isContentPublication, ReactionTypes } from '@lens-protocol/api-bindings';
+import {
+  PublicationReactionType,
+  PublicationStats,
+  isPrimaryPublication,
+} from '@lens-protocol/api-bindings';
 import { ITogglablePropertyPresenter } from '@lens-protocol/domain/use-cases/publications';
-import { assertNever, invariant } from '@lens-protocol/shared-kernel';
 
-import { PublicationCacheManager } from '../../transactions/adapters/PublicationCacheManager';
+import { IPublicationCacheManager } from './IPublicationCacheManager';
 import { ReactionRequest } from './ReactionGateway';
 
-const getReactionStatKey = (reactionType: ReactionTypes) => {
-  switch (reactionType) {
-    case ReactionTypes.Upvote:
-      return 'totalUpvotes' as const;
-    case ReactionTypes.Downvote:
-      return 'totalDownvotes' as const;
-    default:
-      assertNever(reactionType, 'Invalid reaction type');
+function updateOperationsOnAdd(reaction: PublicationReactionType) {
+  switch (reaction) {
+    case PublicationReactionType.Upvote:
+      return {
+        hasUpvoted: true,
+      };
+    case PublicationReactionType.Downvote:
+      return {
+        hasDownvoted: true,
+      };
   }
-};
+}
+
+function updateOperationsOnRemove(reaction: PublicationReactionType) {
+  switch (reaction) {
+    case PublicationReactionType.Upvote:
+      return {
+        hasUpvoted: false,
+      };
+    case PublicationReactionType.Downvote:
+      return {
+        hasDownvoted: false,
+      };
+  }
+}
+
+function updateStatsOnAdd(stats: PublicationStats, reaction: PublicationReactionType) {
+  switch (reaction) {
+    case PublicationReactionType.Upvote:
+      return {
+        upvotes: stats.upvotes + 1,
+      };
+    case PublicationReactionType.Downvote:
+      return {
+        downvotes: stats.downvotes + 1,
+      };
+  }
+}
+
+function updateStatsOnRemove(stats: PublicationStats, reaction: PublicationReactionType) {
+  switch (reaction) {
+    case PublicationReactionType.Upvote:
+      return {
+        upvotes: stats.upvotes - 1,
+      };
+    case PublicationReactionType.Downvote:
+      return {
+        downvotes: stats.downvotes - 1,
+      };
+  }
+}
 
 export class ReactionPresenter implements ITogglablePropertyPresenter<ReactionRequest> {
-  constructor(private readonly publicationCacheManager: PublicationCacheManager) {}
+  constructor(private readonly publicationCacheManager: IPublicationCacheManager) {}
 
   async add(request: ReactionRequest): Promise<void> {
     this.publicationCacheManager.update(request.publicationId, (current) => {
-      invariant(
-        isContentPublication(current),
-        `Reactions are not supported on ${current.__typename}`,
-      );
+      if (isPrimaryPublication(current)) {
+        return {
+          ...current,
+          stats: {
+            ...current.stats,
+            ...updateStatsOnAdd(current.stats, request.reaction),
+          },
+          operations: {
+            ...current.operations,
+            ...updateOperationsOnAdd(request.reaction),
+          },
+        };
+      }
 
-      const removedStatKey = current.reaction ? getReactionStatKey(current.reaction) : undefined;
-
-      const currentStatsValue = current.stats[getReactionStatKey(request.reactionType)];
-
-      invariant(typeof currentStatsValue === 'number', 'Invalid stats value');
-
-      return {
-        ...current,
-        stats: {
-          ...current.stats,
-          ...(removedStatKey && { [removedStatKey]: current.stats[removedStatKey] - 1 }),
-          [getReactionStatKey(request.reactionType)]: currentStatsValue + 1,
-        },
-        reaction: request.reactionType,
-      };
+      return current;
     });
   }
 
   async remove(request: ReactionRequest): Promise<void> {
-    const statKey = getReactionStatKey(request.reactionType);
-
     this.publicationCacheManager.update(request.publicationId, (current) => {
-      invariant(
-        isContentPublication(current),
-        `Reactions are not supported on ${current.__typename}`,
-      );
+      if (isPrimaryPublication(current)) {
+        return {
+          ...current,
+          stats: {
+            ...current.stats,
+            ...updateStatsOnRemove(current.stats, request.reaction),
+          },
+          operations: {
+            ...current.operations,
+            ...updateOperationsOnRemove(request.reaction),
+          },
+        };
+      }
 
-      return {
-        ...current,
-        stats: {
-          ...current.stats,
-          [statKey]: current.stats[statKey] - 1,
-        },
-        reaction: null,
-      };
+      return current;
     });
   }
 }

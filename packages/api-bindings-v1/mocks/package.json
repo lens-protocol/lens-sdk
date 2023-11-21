@@ -1,0 +1,5 @@
+{
+  "type": "module",
+  "main": "dist/lens-protocol-api-bindings-mocks.cjs.js",
+  "module": "dist/lens-protocol-api-bindings-mocks.esm.js"
+}

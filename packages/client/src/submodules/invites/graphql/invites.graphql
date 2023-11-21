@@ -1,0 +1,27 @@
+fragment InvitedResult on InvitedResult {
+  by
+  profileMinted {
+    ...Profile
+  }
+  when
+}
+
+query InvitedProfiles(
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
+) {
+  result: invitedProfiles {
+    ...InvitedResult
+  }
+}
+
+query ProfileAlreadyInvited($request: AlreadyInvitedCheckRequest!) {
+  result: profileAlreadyInvited(request: $request)
+}
+
+mutation Invite($request: InviteRequest!) {
+  invite(request: $request)
+}

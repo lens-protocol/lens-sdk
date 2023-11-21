@@ -1,272 +1,215 @@
 import {
   createAuthApolloClient,
   createLensApolloClient,
+  defaultQueryParams,
   SafeApolloClient,
-  Sources,
 } from '@lens-protocol/api-bindings';
-import { AppId, TransactionKind } from '@lens-protocol/domain/entities';
+import { TransactionKind } from '@lens-protocol/domain/entities';
+import {
+  ActiveWallet,
+  IConversationsGateway,
+  Logout,
+} from '@lens-protocol/domain/use-cases/authentication';
 import {
   AnyTransactionRequest,
   TransactionQueue,
   TransactionResponders,
 } from '@lens-protocol/domain/use-cases/transactions';
-import {
-  ActiveWallet,
-  TokenAvailability,
-  WalletLogout,
-} from '@lens-protocol/domain/use-cases/wallets';
+import { TokenAvailability } from '@lens-protocol/domain/use-cases/wallets';
 import { ILogger, invariant } from '@lens-protocol/shared-kernel';
-import { IStorage, IStorageProvider } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
 
 import { ConsoleLogger } from './ConsoleLogger';
-import { ErrorHandler } from './ErrorHandler';
-import { IBindings, LensConfig } from './config';
+import { AccessTokenStorage } from './authentication/adapters/AccessTokenStorage';
+import { AuthApi } from './authentication/adapters/AuthApi';
+import { CredentialsExpiryController } from './authentication/adapters/CredentialsExpiryController';
+import { CredentialsFactory } from './authentication/adapters/CredentialsFactory';
+import { CredentialsGateway } from './authentication/adapters/CredentialsGateway';
+import { CredentialsStorage } from './authentication/adapters/CredentialsStorage';
+import { LogoutPresenter } from './authentication/adapters/LogoutPresenter';
+import { LensConfig } from './config';
 import { EnvironmentConfig } from './environments';
-import { DisableConversationsGateway } from './inbox/adapters/DisableConversationsGateway';
-import { createInboxKeyStorage } from './inbox/infrastructure/InboxKeyStorage';
-import { LogoutHandler, SessionPresenter } from './lifecycle/adapters/SessionPresenter';
-import { defaultMediaTransformsConfig, MediaTransformsConfig } from './mediaTransforms';
-import { ActiveProfileGateway } from './profile/adapters/ActiveProfileGateway';
-import { ProfileGateway } from './profile/adapters/ProfileGateway';
-import { createActiveProfileStorage } from './profile/infrastructure/ActiveProfileStorage';
-import { FollowPolicyCallGateway } from './transactions/adapters/FollowPolicyCallGateway';
-import { OffChainRelayer } from './transactions/adapters/OffChainRelayer';
+import { IProfileCacheManager } from './profile/adapters/IProfileCacheManager';
+import { ProfileCacheManager } from './profile/infrastructure/ProfileCacheManager';
+import { PublicationCacheManager } from './publication/infrastructure/PublicationCacheManager';
+import { ITransactionFactory } from './transactions/adapters/ITransactionFactory';
+import { MomokaRelayer } from './transactions/adapters/MomokaRelayer';
 import { OnChainRelayer } from './transactions/adapters/OnChainRelayer';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
-import { PublicationCacheManager } from './transactions/adapters/PublicationCacheManager';
-import {
-  FailedTransactionError,
-  TransactionQueuePresenter,
-} from './transactions/adapters/TransactionQueuePresenter';
-import { CollectPublicationResponder } from './transactions/adapters/responders/CollectPublicationResponder';
-import { CreateMirrorResponder } from './transactions/adapters/responders/CreateMirrorResponder';
-import { CreatePostResponder } from './transactions/adapters/responders/CreatePostResponder';
-import { CreateProfileResponder } from './transactions/adapters/responders/CreateProfileResponder';
-import { FollowProfilesResponder } from './transactions/adapters/responders/FollowProfilesResponder';
+import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
+import { BlockProfilesResponder } from './transactions/adapters/responders/BlockProfilesResponder';
+import { FollowProfileResponder } from './transactions/adapters/responders/FollowProfileResponder';
+import { LinkHandleResponder } from './transactions/adapters/responders/LinkHandleResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
+import { RefreshCurrentProfileResponder } from './transactions/adapters/responders/RefreshCurrentProfileResponder';
+import { RefreshPublicationResponder } from './transactions/adapters/responders/RefreshPublicationResponder';
+import { UnblockProfilesResponder } from './transactions/adapters/responders/UnblockProfilesResponder';
 import { UnfollowProfileResponder } from './transactions/adapters/responders/UnfollowProfileResponder';
-import { UpdateDispatcherConfigResponder } from './transactions/adapters/responders/UpdateDispatcherConfigResponder';
-import { UpdateFollowPolicyResponder } from './transactions/adapters/responders/UpdateFollowPolicyResponder';
-import { UpdateProfileImageResponder } from './transactions/adapters/responders/UpdateProfileImageResponder';
-import { UpdateProfileMetadataResponder } from './transactions/adapters/responders/UpdateProfileMetadataResponder';
-import { ProfileCacheManager } from './transactions/infrastructure/ProfileCacheManager';
+import { UpdateProfileManagersResponder } from './transactions/adapters/responders/UpdateProfileManagersResponder';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
 import { BalanceGateway } from './wallet/adapters/BalanceGateway';
-import { CredentialsExpiryController } from './wallet/adapters/CredentialsExpiryController';
-import { CredentialsFactory } from './wallet/adapters/CredentialsFactory';
-import { CredentialsGateway } from './wallet/adapters/CredentialsGateway';
+import { IProviderFactory } from './wallet/adapters/IProviderFactory';
 import { TokenGateway } from './wallet/adapters/TokenGateway';
 import { WalletFactory } from './wallet/adapters/WalletFactory';
 import { WalletGateway } from './wallet/adapters/WalletGateway';
-import { AccessTokenStorage } from './wallet/infrastructure/AccessTokenStorage';
-import { AuthApi } from './wallet/infrastructure/AuthApi';
-import { CredentialsStorage } from './wallet/infrastructure/CredentialsStorage';
-import {
-  createNotificationStorage,
-  UnreadNotificationsData,
-} from './wallet/infrastructure/NotificationStorage';
 import { ProviderFactory } from './wallet/infrastructure/ProviderFactory';
 import { SignerFactory } from './wallet/infrastructure/SignerFactory';
 import { createWalletStorage } from './wallet/infrastructure/WalletStorage';
 
-export type Handlers = {
-  onLogout: LogoutHandler;
-  onError: ErrorHandler<FailedTransactionError>;
-};
-
-export type SharedDependencies = {
-  accessTokenStorage: AccessTokenStorage;
-  activeProfileGateway: ActiveProfileGateway;
-  activeWallet: ActiveWallet;
-  apolloClient: SafeApolloClient;
-  appId?: AppId;
-  bindings: IBindings;
-  credentialsFactory: CredentialsFactory;
-  credentialsGateway: CredentialsGateway;
-  environment: EnvironmentConfig;
-  followPolicyCallGateway: FollowPolicyCallGateway;
-  inboxKeyStorage: IStorage<string>;
-  logger: ILogger;
-  mediaTransforms: MediaTransformsConfig;
-  notificationStorage: IStorage<UnreadNotificationsData>;
-  offChainRelayer: OffChainRelayer;
-  onChainRelayer: OnChainRelayer;
-  onError: Handlers['onError'];
-  profileCacheManager: ProfileCacheManager;
-  profileGateway: ProfileGateway;
-  providerFactory: ProviderFactory;
-  publicationCacheManager: PublicationCacheManager;
-  sessionPresenter: SessionPresenter;
-  sources: Sources;
-  storageProvider: IStorageProvider;
-  tokenAvailability: TokenAvailability;
-  transactionFactory: TransactionFactory;
-  transactionGateway: PendingTransactionGateway;
-  transactionQueue: TransactionQueue<AnyTransactionRequest>;
-  walletLogout: WalletLogout;
-  walletFactory: WalletFactory;
-  walletGateway: WalletGateway;
-};
-
-export function createSharedDependencies(
-  config: LensConfig,
-  { onLogout, onError }: Handlers,
-): SharedDependencies {
-  const sources = (config.sources as Sources) ?? [];
+/**
+ * @internal
+ */
+export function createSharedDependencies(config: LensConfig): SharedDependencies {
   const logger = config.logger ?? new ConsoleLogger();
-  const mediaTransforms = config.mediaTransforms ?? defaultMediaTransformsConfig;
 
-  // storages
-  const activeProfileStorage = createActiveProfileStorage(config.storage, config.environment.name);
-  const credentialsStorage = new CredentialsStorage(config.storage, config.environment.name);
-  const walletStorage = createWalletStorage(config.storage, config.environment.name);
-  const notificationStorage = createNotificationStorage(config.storage, config.environment.name);
-  const transactionStorage = createTransactionStorage(config.storage, config.environment.name);
-  const inboxKeyStorage = createInboxKeyStorage(config.storage, config.environment.name);
-
-  // apollo client
+  // auth api
   const anonymousApolloClient = createAuthApolloClient({
-    backendURL: config.environment.backend,
+    uri: config.environment.backend,
     logger,
   });
   const authApi = new AuthApi(anonymousApolloClient);
+
+  // storages
+  const credentialsStorage = new CredentialsStorage(config.storage, config.environment.name);
   const accessTokenStorage = new AccessTokenStorage(authApi, credentialsStorage);
+  const walletStorage = createWalletStorage(config.storage, config.environment.name);
+  const transactionStorage = createTransactionStorage(config.storage, config.environment.name);
+
+  // apollo client
   const apolloClient = createLensApolloClient({
-    backendURL: config.environment.backend,
+    queryParams: config.params ?? defaultQueryParams,
+    uri: config.environment.backend,
     accessTokenStorage,
     pollingInterval: config.environment.timings.pollingInterval,
     logger,
-    contentMatchers: [config.environment.snapshot.matcher],
+    // contentMatchers: [config.environment.snapshot.matcher], // TODO is it in use?
   });
-  const publicationCacheManager = new PublicationCacheManager(
-    apolloClient,
-    sources,
-    mediaTransforms,
-  );
-  const profileCacheManager = new ProfileCacheManager(
-    apolloClient,
-    sources,
-    mediaTransforms,
-    config.environment.handleResolver,
-  );
 
-  // adapters
+  // infrastructure
+  const signerFactory = new SignerFactory(config.bindings, config.environment.chains);
   const providerFactory = new ProviderFactory(config.bindings, config.environment.chains);
   const transactionObserver = new TransactionObserver(
     providerFactory,
     apolloClient,
     config.environment.timings,
   );
+
+  // common adapters
   const transactionFactory = new TransactionFactory(transactionObserver);
-  const transactionGateway = new PendingTransactionGateway(transactionStorage, transactionFactory);
-  const signerFactory = new SignerFactory(config.bindings, config.environment.chains);
   const credentialsFactory = new CredentialsFactory(authApi);
   const credentialsGateway = new CredentialsGateway(credentialsStorage);
+  const profileCacheManager = new ProfileCacheManager(apolloClient);
+  const publicationCacheManager = new PublicationCacheManager(apolloClient);
   const walletFactory = new WalletFactory(signerFactory, transactionFactory);
   const walletGateway = new WalletGateway(walletStorage, walletFactory);
-  const balanceGateway = new BalanceGateway(providerFactory);
-  const tokenGateway = new TokenGateway(providerFactory);
-  const followPolicyCallGateway = new FollowPolicyCallGateway(apolloClient);
-
-  const profileGateway = new ProfileGateway(apolloClient, mediaTransforms);
-  const activeProfileGateway = new ActiveProfileGateway(activeProfileStorage);
-  const sessionPresenter = new SessionPresenter(onLogout);
+  const transactionGateway = new PendingTransactionGateway(transactionStorage, transactionFactory);
+  const onChainRelayer = new OnChainRelayer(apolloClient, transactionFactory, logger);
+  const momokaRelayer = new MomokaRelayer(apolloClient, transactionFactory, logger);
+  const conversationsGateway: IConversationsGateway = {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    async reset() {},
+  };
 
   const responders: TransactionResponders<AnyTransactionRequest> = {
+    [TransactionKind.ACT_ON_PUBLICATION]: new RefreshPublicationResponder(publicationCacheManager),
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
-    [TransactionKind.COLLECT_PUBLICATION]: new CollectPublicationResponder(
-      apolloClient,
-      sources,
-      mediaTransforms,
-    ),
-    [TransactionKind.CREATE_COMMENT]: new NoopResponder(),
-    [TransactionKind.CREATE_POST]: new CreatePostResponder(
-      profileCacheManager,
-      apolloClient,
-      sources,
-      mediaTransforms,
-    ),
-    [TransactionKind.CREATE_PROFILE]: new CreateProfileResponder(profileCacheManager),
-    [TransactionKind.FOLLOW_PROFILES]: new FollowProfilesResponder(apolloClient.cache),
-    [TransactionKind.MIRROR_PUBLICATION]: new CreateMirrorResponder(
-      apolloClient,
-      sources,
-      mediaTransforms,
-    ),
-    [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(apolloClient.cache),
-    [TransactionKind.UPDATE_DISPATCHER_CONFIG]: new UpdateDispatcherConfigResponder(
+    [TransactionKind.BLOCK_PROFILE]: new BlockProfilesResponder(profileCacheManager),
+    [TransactionKind.CLAIM_HANDLE]: new NoopResponder(),
+    [TransactionKind.CREATE_COMMENT]: new NoopResponder(), // TODO update profile for new stats
+    [TransactionKind.CREATE_POST]: new NoopResponder(), // TODO update profile for new stats
+    [TransactionKind.CREATE_PROFILE]: new NoopResponder(),
+    [TransactionKind.CREATE_QUOTE]: new NoopResponder(), // TODO update profile for new stats
+    [TransactionKind.FOLLOW_PROFILE]: new FollowProfileResponder(profileCacheManager),
+    [TransactionKind.LINK_HANDLE]: new LinkHandleResponder(apolloClient, profileCacheManager),
+    [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(), // TODO update profile for new stats
+    [TransactionKind.UNBLOCK_PROFILE]: new UnblockProfilesResponder(profileCacheManager),
+    [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(profileCacheManager),
+    [TransactionKind.UNLINK_HANDLE]: new LinkHandleResponder(apolloClient, profileCacheManager),
+    [TransactionKind.UPDATE_FOLLOW_POLICY]: new RefreshCurrentProfileResponder(profileCacheManager),
+    [TransactionKind.UPDATE_PROFILE_DETAILS]: new RefreshCurrentProfileResponder(
       profileCacheManager,
     ),
-    [TransactionKind.UPDATE_FOLLOW_POLICY]: new UpdateFollowPolicyResponder(profileCacheManager),
-    [TransactionKind.UPDATE_PROFILE_DETAILS]: new UpdateProfileMetadataResponder(
+    [TransactionKind.UPDATE_PROFILE_MANAGERS]: new UpdateProfileManagersResponder(
+      apolloClient,
       profileCacheManager,
     ),
-    [TransactionKind.UPDATE_PROFILE_IMAGE]: new UpdateProfileImageResponder(profileCacheManager),
   };
-  const transactionQueuePresenter = new TransactionQueuePresenter(onError);
+  const transactionQueuePresenter = new TransactionQueuePresenter();
 
-  const onChainRelayer = new OnChainRelayer(apolloClient, transactionFactory, logger);
-  const offChainRelayer = new OffChainRelayer(apolloClient, transactionFactory, logger);
+  const balanceGateway = new BalanceGateway(providerFactory);
+  const tokenGateway = new TokenGateway(providerFactory);
 
   // common interactors
   const activeWallet = new ActiveWallet(credentialsGateway, walletGateway);
+  const tokenAvailability = new TokenAvailability(balanceGateway, tokenGateway, activeWallet);
   const transactionQueue = TransactionQueue.create(
     responders,
     transactionGateway,
     transactionQueuePresenter,
   );
-  const tokenAvailability = new TokenAvailability(balanceGateway, tokenGateway, activeWallet);
-  const conversationGateway = new DisableConversationsGateway(inboxKeyStorage);
-  const walletLogout = new WalletLogout(
+
+  // logout
+  const logoutPresenter = new LogoutPresenter();
+  const logout = new Logout(
     walletGateway,
     credentialsGateway,
-    activeWallet,
-    activeProfileGateway,
-    conversationGateway,
-    sessionPresenter,
+    conversationsGateway,
+    logoutPresenter,
   );
 
   // controllers
-  const credentialsExpiryController = new CredentialsExpiryController(walletLogout);
+  const credentialsExpiryController = new CredentialsExpiryController(logout);
   credentialsExpiryController.subscribe(accessTokenStorage);
 
   return {
     accessTokenStorage,
-    activeProfileGateway,
     activeWallet,
     apolloClient,
-    appId: config.appId,
-    bindings: config.bindings,
     credentialsFactory,
     credentialsGateway,
     environment: config.environment,
-    followPolicyCallGateway,
-    inboxKeyStorage,
     logger,
-    mediaTransforms,
-    notificationStorage,
-    offChainRelayer,
+    logout,
     onChainRelayer,
-    onError,
+    momokaRelayer,
     profileCacheManager,
-    profileGateway,
     providerFactory,
     publicationCacheManager,
-    sessionPresenter,
-    sources,
-    storageProvider: config.storage,
     tokenAvailability,
     transactionFactory,
     transactionGateway,
     transactionQueue,
-    walletLogout,
     walletFactory,
     walletGateway,
   };
 }
+
+/**
+ * @internal
+ */
+export type SharedDependencies = {
+  accessTokenStorage: AccessTokenStorage;
+  activeWallet: ActiveWallet;
+  apolloClient: SafeApolloClient;
+  credentialsFactory: CredentialsFactory;
+  credentialsGateway: CredentialsGateway;
+  environment: EnvironmentConfig;
+  logger: ILogger;
+  logout: Logout;
+  momokaRelayer: MomokaRelayer;
+  onChainRelayer: OnChainRelayer;
+  profileCacheManager: IProfileCacheManager;
+  providerFactory: IProviderFactory;
+  publicationCacheManager: PublicationCacheManager;
+  tokenAvailability: TokenAvailability;
+  transactionFactory: ITransactionFactory<AnyTransactionRequest>;
+  transactionGateway: PendingTransactionGateway;
+  transactionQueue: TransactionQueue<AnyTransactionRequest>;
+  walletFactory: WalletFactory;
+  walletGateway: WalletGateway;
+};
 
 const SharedDependenciesContext = React.createContext<SharedDependencies | null>(null);
 
@@ -275,6 +218,9 @@ type SharedDependenciesProviderProps = {
   dependencies: SharedDependencies;
 };
 
+/**
+ * @internal
+ */
 export function SharedDependenciesProvider({
   children,
   dependencies: context,

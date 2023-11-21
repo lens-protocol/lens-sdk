@@ -1,0 +1,53 @@
+fragment CreateActOnOpenActionEIP712TypedData on CreateActOnOpenActionEIP712TypedData {
+  # __typename omitted to ease the signing process
+  types {
+    # __typename omitted to ease the signing process
+    Act {
+      ...EIP712TypedDataField
+    }
+  }
+  domain {
+    ...EIP712TypedDataDomain
+  }
+  message: value {
+    # __typename omitted to ease the signing process
+    nonce
+    deadline
+    publicationActedProfileId
+    publicationActedId
+    actorProfileId
+    referrerProfileIds
+    referrerPubIds
+    actionModuleAddress
+    actionModuleData
+  }
+}
+
+fragment CreateActOnOpenActionBroadcastItemResult on CreateActOnOpenActionBroadcastItemResult {
+  __typename
+  id
+  expiresAt
+  typedData {
+    ...CreateActOnOpenActionEIP712TypedData
+  }
+}
+
+mutation ActOnOpenAction($request: ActOnOpenActionLensManagerRequest!) {
+  result: actOnOpenAction(request: $request) {
+    ... on RelaySuccess {
+      ...RelaySuccess
+    }
+    ... on LensProfileManagerRelayError {
+      ...LensProfileManagerRelayError
+    }
+  }
+}
+
+mutation CreateActOnOpenActionTypedData(
+  $request: ActOnOpenActionRequest!
+  $options: TypedDataOptions
+) {
+  result: createActOnOpenActionTypedData(request: $request, options: $options) {
+    ...CreateActOnOpenActionBroadcastItemResult
+  }
+}

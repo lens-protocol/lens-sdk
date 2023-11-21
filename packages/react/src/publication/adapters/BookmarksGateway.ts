@@ -1,10 +1,10 @@
 import {
-  AddToMyBookmarksData,
-  AddToMyBookmarksDocument,
-  AddToMyBookmarksVariables,
-  RemoveFromMyBookmarksData,
-  RemoveFromMyBookmarksDocument,
-  RemoveFromMyBookmarksVariables,
+  AddPublicationBookmarkData,
+  AddPublicationBookmarkDocument,
+  AddPublicationBookmarkVariables,
+  RemovePublicationBookmarkData,
+  RemovePublicationBookmarkDocument,
+  RemovePublicationBookmarkVariables,
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
@@ -17,25 +17,26 @@ export type BookmarkRequest = TogglePropertyRequest;
 export class BookmarksGateway implements ITogglablePropertyGateway<BookmarkRequest> {
   constructor(private apolloClient: SafeApolloClient) {}
 
-  async add({ publicationId, profileId }: BookmarkRequest): Promise<void> {
-    await this.apolloClient.mutate<AddToMyBookmarksData, AddToMyBookmarksVariables>({
-      mutation: AddToMyBookmarksDocument,
+  async add({ publicationId }: BookmarkRequest): Promise<void> {
+    await this.apolloClient.mutate<AddPublicationBookmarkData, AddPublicationBookmarkVariables>({
+      mutation: AddPublicationBookmarkDocument,
       variables: {
         request: {
-          publicationId,
-          profileId,
+          on: publicationId,
         },
       },
     });
   }
 
-  async remove({ publicationId, profileId }: BookmarkRequest): Promise<void> {
-    await this.apolloClient.mutate<RemoveFromMyBookmarksData, RemoveFromMyBookmarksVariables>({
-      mutation: RemoveFromMyBookmarksDocument,
+  async remove({ publicationId }: BookmarkRequest): Promise<void> {
+    await this.apolloClient.mutate<
+      RemovePublicationBookmarkData,
+      RemovePublicationBookmarkVariables
+    >({
+      mutation: RemovePublicationBookmarkDocument,
       variables: {
         request: {
-          publicationId,
-          profileId,
+          on: publicationId,
         },
       },
     });

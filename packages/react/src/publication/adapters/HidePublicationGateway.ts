@@ -16,7 +16,9 @@ export class HidePublicationGateway implements IHidePublicationGateway {
     await this.apolloClient.mutate<HidePublicationData, HidePublicationVariables>({
       mutation: HidePublicationDocument,
       variables: {
-        publicationId: request.publicationId,
+        request: {
+          for: request.publicationId,
+        },
       },
     });
   }

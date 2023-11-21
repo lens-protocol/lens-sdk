@@ -1,15 +1,19 @@
 import { Amount, ChainType, Erc20 } from '@lens-protocol/shared-kernel';
-import { mockDaiAmount, mockEthereumAddress } from '@lens-protocol/shared-kernel/mocks';
+import { mockDaiAmount, mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import { Wallet } from '../../../entities';
-import { mockWallet } from '../../../entities/__helpers__/mocks';
+import {
+  mockWallet,
+  mockActiveWallet,
+  mockIBalanceGateway,
+  mockITokenGateway,
+} from '../../../mocks';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
   TokenAvailability,
   TokenAvailabilityRequest,
 } from '../TokenAvailability';
-import { mockActiveWallet, mockIBalanceGateway, mockITokenGateway } from '../__helpers__/mocks';
 
 function setupTokenAvailability<T extends Erc20>({
   request,
@@ -43,7 +47,7 @@ function setupTokenAvailability<T extends Erc20>({
 function mockTokenAvailabilityRequest(): TokenAvailabilityRequest {
   return {
     amount: mockDaiAmount(1, ChainType.POLYGON),
-    spender: mockEthereumAddress(),
+    spender: mockEvmAddress(),
   };
 }
 

@@ -1,5 +1,5 @@
 import { DateUtils, invariant } from '@lens-protocol/shared-kernel';
-import jwtDecode, { JwtPayload } from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 
 export class ClockSkewedError extends Error {
   name = 'ClockSkewedError' as const;
@@ -11,16 +11,34 @@ const TOKEN_EXP_THRESHOLD = DateUtils.secondsToMs(30);
 
 const CLOCK_SKEWED_THRESHOLD = DateUtils.secondsToMs(10);
 
+type LensJwtPayload = {
+  id: string;
+  evmAddress: string;
+  role: string;
+  iat: number;
+  exp: number;
+};
+
 export class Credentials {
-  constructor(readonly accessToken: string | undefined, readonly refreshToken: string) {}
+  constructor(
+    readonly accessToken: string | undefined,
+    readonly refreshToken: string,
+  ) {}
 
   checkClock() {
-    const decodedToken = jwtDecode<JwtPayload>(this.refreshToken);
+    const decodedToken = jwtDecode<LensJwtPayload>(this.refreshToken);
     invariant(decodedToken.iat, 'Issued at date should be provided by JWT token');
 
     // check if local time is not too far off from server time
-    if (Math.abs(DateUtils.secondsToMs(decodedToken.iat) - Date.now()) > CLOCK_SKEWED_THRESHOLD) {
-      throw new ClockSkewedError();
+    const diff = Math.abs(DateUtils.secondsToMs(decodedToken.iat) - Date.now());
+    if (diff > CLOCK_SKEWED_THRESHOLD) {
+      // throw new ClockSkewedError();
+
+      // eslint-disable-next-line no-console
+      console.info(
+        'ClockSkewedError: Your system clock is skewed compared to the API clock by: ',
+        diff,
+      );
     }
   }
 
@@ -44,8 +62,15 @@ export class Credentials {
     return now >= tokenExpTimestamp - TOKEN_EXP_THRESHOLD;
   }
 
+  getProfileId(): string {
+    const decodedToken = jwtDecode<LensJwtPayload>(this.refreshToken);
+    invariant(decodedToken.id, 'ProfileId should be provided by JWT token');
+
+    return decodedToken.id;
+  }
+
   private getTokenExpTimestamp(token: string) {
-    const decodedToken = jwtDecode<JwtPayload>(token);
+    const decodedToken = jwtDecode<LensJwtPayload>(token);
 
     invariant(decodedToken.exp, 'Exp date should be provided by JWT token');
 

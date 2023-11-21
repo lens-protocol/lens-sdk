@@ -1,5 +1,142 @@
 # @lens-protocol/blockchain-bindings
 
+## 0.10.0-alpha.14
+
+### Patch Changes
+
+- Updated dependencies [5c429a0d7]
+  - @lens-protocol/domain@0.11.0-alpha.14
+
+## 0.10.0-alpha.13
+
+### Patch Changes
+
+- d71f981cc: **chore:** simplifies useApproveModule implementation
+- c9b5c8d88: **feat:** seamless support for public collect/act in `useOpenAction`
+- Updated dependencies [d71f981cc]
+- Updated dependencies [c9b5c8d88]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.8
+  - @lens-protocol/domain@0.11.0-alpha.13
+
+## 0.10.0-alpha.12
+
+### Patch Changes
+
+- Updated dependencies [2f5360796]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.7
+  - @lens-protocol/domain@0.11.0-alpha.12
+
+## 0.10.0-alpha.11
+
+### Patch Changes
+
+- Updated dependencies [cf250df4]
+- Updated dependencies [1f28c6d6]
+- Updated dependencies [9490db8e]
+- Updated dependencies [cf250df4]
+  - @lens-protocol/domain@0.11.0-alpha.11
+
+## 0.10.0-alpha.10
+
+### Patch Changes
+
+- Updated dependencies [8120f676]
+- Updated dependencies [8120f676]
+- Updated dependencies [061df834]
+- Updated dependencies [8120f676]
+  - @lens-protocol/domain@0.11.0-alpha.10
+  - @lens-protocol/shared-kernel@0.11.0-alpha.6
+
+## 0.10.0-alpha.9
+
+### Patch Changes
+
+- Updated dependencies [5f93ea77]
+- Updated dependencies [5f93ea77]
+  - @lens-protocol/domain@0.11.0-alpha.9
+
+## 0.10.0-alpha.8
+
+### Patch Changes
+
+- Update dependencies
+- Updated dependencies
+  - @lens-protocol/domain@0.11.0-alpha.8
+
+## 0.10.0-alpha.7
+
+### Patch Changes
+
+- Updated dependencies
+  - @lens-protocol/domain@0.11.0-alpha.7
+
+## 0.10.0-alpha.6
+
+### Patch Changes
+
+- Updated dependencies [cfc03dff]
+- Updated dependencies [9481f48b]
+  - @lens-protocol/domain@0.11.0-alpha.6
+  - @lens-protocol/shared-kernel@0.11.0-alpha.5
+
+## 0.10.0-alpha.5
+
+### Patch Changes
+
+- Updated dependencies [a42e90e7]
+- Updated dependencies [9dd33b03]
+  - @lens-protocol/domain@0.11.0-alpha.5
+
+## 0.10.0-alpha.4
+
+### Patch Changes
+
+- Updated dependencies [a929c0f6]
+- Updated dependencies [f82b90a5]
+- Updated dependencies [5bc7e430]
+- Updated dependencies [d1414eda]
+- Updated dependencies [2f618240]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.4
+  - @lens-protocol/domain@0.11.0-alpha.4
+
+## 0.10.0-alpha.3
+
+### Patch Changes
+
+- 734d6823: **feat:** adds `useProfileManagers` and `useUpdateProfileManagers` hooks
+- Updated dependencies [734d6823]
+- Updated dependencies [51f8cec6]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.3
+  - @lens-protocol/domain@0.11.0-alpha.3
+
+## 0.10.0-alpha.2
+
+### Patch Changes
+
+- Updated dependencies [6d0d62dd]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.2
+  - @lens-protocol/domain@0.11.0-alpha.2
+
+## 0.10.0-alpha.1
+
+### Patch Changes
+
+- Updated dependencies [25fe9a46]
+  - @lens-protocol/domain@0.11.0-alpha.1
+  - @lens-protocol/shared-kernel@0.11.0-alpha.1
+
+## 0.10.0-alpha.0
+
+### Minor Changes
+
+- 731ff1d0: Added support for Lens Protocol v2
+
+### Patch Changes
+
+- Updated dependencies [731ff1d0]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.0
+  - @lens-protocol/domain@0.11.0-alpha.0
+
 ## 0.9.2
 
 ### Patch Changes

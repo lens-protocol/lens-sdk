@@ -11,64 +11,59 @@ config:
     field: true
 
 generates:
-  src/lens/generated.ts:
+  src/lens/graphql/generated.ts:
     config:
-      defaultScalarType: unknown
+      strictScalars: true
       scalars:
-        Attach: string
-        BroadcastId: string
+        AppId: AppId
         BlockchainData: string
+        BroadcastId: string
         ChainId: number
-        ClientErc20Amount: ClientErc20Amount
-        CollectModuleData: string
-        CollectPolicy: CollectPolicy
+        ChallengeId: string
         ContentEncryptionKey: ContentEncryptionKey
-        ContentInsight: ContentInsight
-        ContractAddress: string
+        CreateHandle: string
         Cursor: Cursor
-        DataAvailabilityId: string
         DateTime: string
-        DecryptionCriteria: DecryptionCriteria
-        EncryptedValueScalar: string
-        EthereumAddress: EthereumAddress
-        FollowModuleData: string
-        FollowPolicy: FollowPolicy
-        FollowStatus: FollowStatus
+        EncryptableDateTime: string
+        EncryptableMarkdown: string
+        EncryptableString: string
+        EncryptableTxHash: string
+        EncryptableURI: string
+        EncryptedPath: string
+        EncryptedValue: string
+        Ens: string
+        EvmAddress: EvmAddress
         Handle: string
         ImageSizeTransform: ImageSizeTransform
-        InternalPublicationId: PublicationId
         Jwt: string
         LimitScalar: number
         Locale: string
         Markdown: string
-        Media: string
         MimeType: string
-        NftOwnershipId: string
+        MomokaId: string
+        MomokaProof: string
+        NftGalleryId: string
+        NftGalleryName: string
         Nonce: number
-        NotificationId: string
-        PendingPublicationId: string
-        ProfileAttributes: ProfileAttributes
+        OnchainPublicationId: string
+        PoapEventId: string
         ProfileId: ProfileId
-        ProfileInterest: string
-        ProxyActionId: string
-        PublicationId: string
-        PublicationUrl: Url
-        ReferenceModuleData: string
-        ReferencePolicy: ReferencePolicy
-        Search: string
+        PublicationId: PublicationId
         Signature: string
-        Sources: AppId
-        String: string
         TokenId: string
         TxHash: string
         TxId: string
-        Url: Url
+        UnixTimestamp: number
+        URI: string
+        URL: Url
+        UUID: string
         Void: void
     schema:
-      - https://api-mumbai.lens.dev/graphql
-      - src/lens/client.graphql
+      - https://api-v2-mumbai.lens.dev/graphql
+      # - http://localhost:4000
+      - src/lens/graphql/client.graphql
     documents:
-      - src/lens/*.graphql
+      - src/lens/graphql/*.graphql
     plugins:
       - 'typescript':
           onlyOperationTypes: true # scalars and enums
@@ -81,24 +76,20 @@ generates:
               '/* eslint-disable @typescript-eslint/naming-convention */', # interface PossibleTypesResultData not starting with I
               '/* eslint-disable no-restricted-imports */', # import * from @apollo/client
               '/* eslint-disable tsdoc/syntax */',
-              "import type { AppId, DecryptionCriteria, ProfileId, PublicationId } from '@lens-protocol/domain/entities';",
-              "import type { CollectPolicy } from './CollectPolicy';",
-              "import type { ContentEncryptionKey } from './ContentEncryptionKey';",
-              "import type { ContentInsight } from './ContentInsight';",
-              "import type { Cursor } from './Cursor';",
-              "import type { Erc20Amount as ClientErc20Amount, EthereumAddress, Url } from '@lens-protocol/shared-kernel';",
-              "import type { FollowPolicy } from './FollowPolicy';",
-              "import type { FollowStatus } from './FollowStatus';",
-              "import type { ImageSizeTransform } from './ImageSizeTransform';",
-              "import type { ProfileAttributes } from './ProfileAttributes';",
-              "import type { ReferencePolicy } from './ReferencePolicy';",
+              "import type { AppId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';",
+              "import type { EvmAddress, Url } from '@lens-protocol/shared-kernel';",
+              "import type { ContentEncryptionKey } from '../ContentEncryptionKey';",
+              "import type { Cursor } from '../Cursor';",
+              "import type { ImageSizeTransform } from '../ImageTransform';",
             ]
       - 'typescript-operations':
           skipTypename: true
           immutableTypes: false
           inlineFragmentTypes: combine
+          exportFragmentSpreadSubTypes: false # we do not want odd named fragment types ProfilePicture_ImageSet_
           omitOperationSuffix: true
           operationResultSuffix: 'Data'
+          dedupeFragments: true
       - 'typescript-react-apollo':
           pureMagicComment: true # keep
           omitOperationSuffix: true # MUST goes with typescript-operations.omitOperationSuffix
@@ -121,8 +112,10 @@ generates:
       - add:
           content: [
               '/** Code generated. DO NOT EDIT. */',
+              '/* eslint-disable @typescript-eslint/no-redundant-type-constituents */',
               '/* eslint-disable import/no-default-export */', # generatedTypes default export
               '/* eslint-disable no-restricted-imports */', # import * from @apollo/client
+              '/* eslint-disable tsdoc/syntax */',
             ]
       - 'typescript-operations':
           skipTypename: true

@@ -1,170 +1,108 @@
-import { MockedResponse } from '@apollo/client/testing';
+import { LimitType } from '@lens-protocol/api-bindings';
 import {
-  mockLensApolloClient,
-  mockPostFragment,
-  mockGetPublicationsResponse,
-  mockSources,
-  simulateAuthenticatedProfile,
-  simulateNotAuthenticated,
-  mockPaginatedResultInfo,
   mockCursor,
+  mockPublicationsResponse,
+  mockPaginatedResultInfo,
+  mockPostFragment,
 } from '@lens-protocol/api-bindings/mocks';
-import { mockProfile, mockProfileId } from '@lens-protocol/domain/mocks';
-import { RenderHookResult, waitFor } from '@testing-library/react';
+import { mockProfileId } from '@lens-protocol/domain/mocks';
+import { waitFor } from '@testing-library/react';
 
-import { renderHookWithMocks } from '../../__helpers__/testing-library';
-import {
-  defaultMediaTransformsConfig,
-  mediaTransformConfigToQueryVariables,
-} from '../../mediaTransforms';
-import { usePublications } from '../usePublications';
-
-const sources = mockSources();
-
-function setupTestScenario(mocks: MockedResponse[]) {
-  const client = mockLensApolloClient(mocks);
-
-  return {
-    renderHook<TProps, TResult>(
-      callback: (props: TProps) => TResult,
-    ): RenderHookResult<TResult, TProps> {
-      return renderHookWithMocks(callback, {
-        mocks: {
-          sources,
-          mediaTransforms: defaultMediaTransformsConfig,
-          apolloClient: client,
-        },
-      });
-    },
-  };
-}
+import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
+import { UsePublicationsArgs, usePublications } from '../usePublications';
 
 describe(`Given the ${usePublications.name} hook`, () => {
   const profileId = mockProfileId();
   const publications = [mockPostFragment()];
   const expectations = publications.map(({ __typename, id }) => ({ __typename, id }));
 
-  beforeAll(() => {
-    simulateNotAuthenticated();
-  });
-
   describe('when the query returns data successfully', () => {
-    const { renderHook } = setupTestScenario([
-      mockGetPublicationsResponse({
-        variables: {
-          profileId,
-          observerId: null,
-          limit: 10,
-          sources,
-          ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
-        },
-        publications,
-      }),
-    ]);
-
     it('should settle with the publications', async () => {
-      const { result } = renderHook(() => usePublications({ profileId }));
+      const { renderHook } = setupHookTestScenario([
+        mockPublicationsResponse({
+          variables: {
+            where: {
+              actedBy: profileId,
+            },
+          },
+          items: publications,
+        }),
+      ]);
+
+      const args: UsePublicationsArgs = {
+        where: { actedBy: profileId },
+      };
+
+      const { result } = renderHook(() => usePublications(args));
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
       expect(result.current.data).toMatchObject(expectations);
     });
-  });
 
-  describe('when a session with an Active Profile is set', () => {
-    const activeProfile = mockProfile();
-    const { renderHook } = setupTestScenario([
-      mockGetPublicationsResponse({
-        variables: {
-          profileId,
-          observerId: activeProfile.id,
-          limit: 10,
-          sources,
-          ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
-        },
-        publications,
-      }),
-    ]);
+    describe('when limit is provided', () => {
+      it('should override the default limit', async () => {
+        const { renderHook } = setupHookTestScenario([
+          mockPublicationsResponse({
+            variables: {
+              where: {
+                actedBy: profileId,
+              },
+              limit: LimitType.Fifty,
+            },
+            items: publications,
+          }),
+        ]);
 
-    beforeAll(() => {
-      simulateAuthenticatedProfile(activeProfile);
-    });
+        const { result } = renderHook(() =>
+          usePublications({
+            where: { actedBy: profileId },
+            limit: LimitType.Fifty,
+          }),
+        );
 
-    afterAll(() => {
-      simulateNotAuthenticated();
-    });
-
-    it('should use the Active Profile as the queried publication observer', async () => {
-      const { result } = renderHook(() => usePublications({ profileId }));
-
-      await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toMatchObject(expectations);
-    });
-  });
-
-  describe('when an "observerId" is provided', () => {
-    const observerId = mockProfileId();
-    const { renderHook } = setupTestScenario([
-      mockGetPublicationsResponse({
-        variables: {
-          profileId,
-          observerId,
-          limit: 10,
-          sources,
-          ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
-        },
-        publications,
-      }),
-    ]);
-
-    it('should allow to override the "observerId" on a per-call basis', async () => {
-      const { result } = renderHook(() => usePublications({ profileId, observerId }));
-
-      await waitFor(() => expect(result.current.loading).toBeFalsy());
-      expect(result.current.data).toMatchObject(expectations);
-    });
-  });
-
-  describe(`when re-rendered`, () => {
-    const initialPageInfo = mockPaginatedResultInfo({ prev: mockCursor() });
-
-    const { renderHook } = setupTestScenario([
-      mockGetPublicationsResponse({
-        variables: {
-          profileId,
-          observerId: null,
-          limit: 10,
-          sources,
-          ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
-        },
-        publications,
-        info: initialPageInfo,
-      }),
-
-      mockGetPublicationsResponse({
-        variables: {
-          profileId,
-          observerId: null,
-          cursor: initialPageInfo.prev,
-          limit: 10,
-          sources,
-          ...mediaTransformConfigToQueryVariables(defaultMediaTransformsConfig),
-        },
-        publications: [mockPostFragment()],
-      }),
-    ]);
-
-    it(`should return cached data and then update the 'beforeCount' if new results are available`, async () => {
-      const first = renderHook(() => usePublications({ profileId }));
-      await waitFor(() => expect(first.result.current.loading).toBeFalsy());
-
-      const second = renderHook(() => usePublications({ profileId }));
-
-      expect(second.result.current).toMatchObject({
-        data: expectations,
-        loading: false,
+        await waitFor(() => expect(result.current.loading).toBeFalsy());
+        expect(result.current.data).toMatchObject(expectations);
       });
+    });
 
-      await waitFor(() => expect(second.result.current.beforeCount).toEqual(1));
+    describe(`when re-rendered`, () => {
+      const initialPageInfo = mockPaginatedResultInfo({ prev: mockCursor() });
+
+      const { renderHook } = setupHookTestScenario([
+        mockPublicationsResponse({
+          variables: {
+            where: {
+              from: [profileId],
+            },
+          },
+          items: publications,
+          info: initialPageInfo,
+        }),
+
+        mockPublicationsResponse({
+          variables: {
+            where: {
+              from: [profileId],
+            },
+            cursor: initialPageInfo.prev,
+          },
+          items: [mockPostFragment()],
+        }),
+      ]);
+
+      it(`should return cached data and then update the 'beforeCount' if new results are available`, async () => {
+        const first = renderHook(() => usePublications({ where: { from: [profileId] } }));
+        await waitFor(() => expect(first.result.current.loading).toBeFalsy());
+
+        const second = renderHook(() => usePublications({ where: { from: [profileId] } }));
+
+        expect(second.result.current).toMatchObject({
+          data: expectations,
+          loading: false,
+        });
+
+        await waitFor(() => expect(second.result.current.beforeCount).toEqual(1));
+      });
     });
   });
 });

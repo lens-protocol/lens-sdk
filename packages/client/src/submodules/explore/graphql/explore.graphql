@@ -1,0 +1,45 @@
+query ExplorePublications(
+  $request: ExplorePublicationRequest!
+  $publicationImageTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $publicationStatsInput: PublicationStatsInput! = {}
+  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
+) {
+  result: explorePublications(request: $request) {
+    items {
+      ... on Post {
+        ...Post
+      }
+      ... on Quote {
+        ...Quote
+      }
+    }
+    pageInfo {
+      prev
+      next
+    }
+  }
+}
+
+query ExploreProfiles(
+  $request: ExploreProfilesRequest!
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
+) {
+  result: exploreProfiles(request: $request) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}

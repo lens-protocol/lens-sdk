@@ -1,0 +1,44 @@
+query OwnedHandles($for: EvmAddress!, $limit: LimitType, $cursor: Cursor) {
+  result: ownedHandles(request: { for: $for, limit: $limit, cursor: $cursor }) {
+    items {
+      ...HandleInfo
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query ProfilesManaged(
+  $for: EvmAddress!
+  $includeOwned: Boolean
+  $limit: LimitType
+  $cursor: Cursor
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
+) {
+  result: profilesManaged(
+    request: { for: $for, includeOwned: $includeOwned, limit: $limit, cursor: $cursor }
+  ) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+fragment UserSigNonces on UserSigNonces {
+  __typename
+  lensHubOnchainSigNonce
+  lensTokenHandleRegistryOnchainSigNonce
+}
+
+query UserSigNonces {
+  result: userSigNonces {
+    ...UserSigNonces
+  }
+}

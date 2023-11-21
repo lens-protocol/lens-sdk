@@ -1,0 +1,8 @@
+import { Credentials } from '../Credentials';
+
+export function mockCredentials(): Credentials {
+  return new Credentials(
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB4MzMiLCJldm1BZGRyZXNzIjoiMHhEOWVDYkRmMzIyQTkzNGY5OWQ4NTI2OGQ1MDZDMDc5OTk3ZUE1NGU3Iiwicm9sZSI6InByb2ZpbGUiLCJpYXQiOjE2OTY0NDIzMDQsImV4cCI6MTY5NjQ0NDEwNH0.TIAwY3VTDUxEmmgmAu4CkyAqu2safnIWfFTrNvlY6Qo',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB4MzMiLCJldm1BZGRyZXNzIjoiMHhEOWVDYkRmMzIyQTkzNGY5OWQ4NTI2OGQ1MDZDMDc5OTk3ZUE1NGU3Iiwicm9sZSI6InByb2ZpbGVfcmVmcmVzaCIsImlhdCI6MTY5NjQ0MjMwNCwiZXhwIjoxNjk2NDQ0MTA0fQ.0-ibLaG8i3wQoyzcijKa2PId9ko4PZmItgc3_F8Kk9g',
+  );
+}

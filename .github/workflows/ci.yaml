@@ -2,9 +2,9 @@ name: "CI actions: Build, Lint and Test"
 
 on:
   push:
-    branches: [main]
+    branches: [main, "develop"]
   pull_request:
-    branches: [main]
+    branches: [main, "develop"]
 
 jobs:
   build:
@@ -19,12 +19,10 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'
-          cache: 'pnpm'
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
 
       - run: pnpm install --frozen-lockfile
-
-      - run: pnpm build
 
       - run: pnpm lint
 
@@ -39,3 +37,5 @@ jobs:
           TESTING_HEADER_VALUE: ${{secrets.TESTING_HEADER_VALUE}}
 
       - run: pnpm lint:examples
+
+      - run: pnpm build

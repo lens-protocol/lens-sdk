@@ -1,13 +1,11 @@
-import { PublicationId } from '@lens-protocol/domain/entities';
-import { mockPublicationId } from '@lens-protocol/domain/mocks';
-import { InvariantError } from '@lens-protocol/shared-kernel';
+import { toPublicationId } from '@lens-protocol/metadata';
 import { BigNumber } from 'ethers';
 
 import { testing } from '../../__helpers__/env';
-import { mockCollectConditionInput } from '../__helpers__/mocks';
+import { mockCollectCondition, mockProfileId, mockPublicationId } from '../../__helpers__/mocks';
 import { transformCollectCondition } from '../collect-condition';
-import { transform } from '../index';
 import {
+  DecryptionContext,
   LitConditionType,
   LitKnownMethods,
   LitKnownParams,
@@ -16,12 +14,12 @@ import {
 } from '../types';
 import { InvalidAccessCriteriaError } from '../validators';
 
-describe(`Given the "${transform.name}" function`, () => {
+describe(`Given the "${transformCollectCondition.name}" function`, () => {
   describe('when called with a Collect Publication condition', () => {
     const publicationId = mockPublicationId();
 
     it('should return the expected Lit AccessControlCondition for a given publication Id', () => {
-      const condition = mockCollectConditionInput({ publicationId });
+      const condition = mockCollectCondition({ publicationId });
 
       const actual = transformCollectCondition(condition, testing);
 
@@ -85,20 +83,36 @@ describe(`Given the "${transform.name}" function`, () => {
       expect(actual).toEqual(expectedLitAccessConditions);
     });
 
+    it('should include the `collectorProfileId parameter if provided in the `context`', () => {
+      const context: DecryptionContext = {
+        profileId: mockProfileId(),
+      };
+      const condition = mockCollectCondition({ publicationId });
+
+      const actual = transformCollectCondition(condition, testing, context);
+
+      const publicationIdParts = publicationId
+        .split('-')
+        .map((part) => BigNumber.from(part).toString());
+      expect(actual).toMatchObject([
+        {
+          functionParams: [
+            LitKnownParams.USER_ADDRESS,
+            ...publicationIdParts,
+            context.profileId,
+            '0x',
+          ],
+        },
+      ]);
+    });
+
     it.each([
       {
         description: 'if with invalid publication Id',
-        condition: mockCollectConditionInput({
-          publicationId: 'a' as PublicationId,
+        condition: mockCollectCondition({
+          publicationId: toPublicationId('a'),
         }),
         expectedErrorCtor: InvalidAccessCriteriaError,
-      },
-      {
-        description: 'if with missing publication Id',
-        condition: mockCollectConditionInput({
-          thisPublication: null,
-        }),
-        expectedErrorCtor: InvariantError,
       },
     ])(
       `should throw an $expectedErrorCtor.name $description`,

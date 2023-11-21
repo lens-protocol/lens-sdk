@@ -3,25 +3,19 @@ import {
   ProfileId,
   PublicationId,
   TransactionError,
-  TransactionErrorReason,
   TransactionKind,
 } from '@lens-protocol/domain/entities';
-import { FollowRequest, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
-import { CollectRequest, CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
+import {
+  FollowRequest,
+  LinkHandleRequest,
+  UnblockProfilesRequest,
+  UnfollowRequest,
+  UnlinkHandleRequest,
+} from '@lens-protocol/domain/use-cases/profile';
+import { OpenActionRequest, AllOpenActionType } from '@lens-protocol/domain/use-cases/publications';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
-import { DateUtils, EthereumAddress } from '@lens-protocol/shared-kernel';
 
 export enum TxStatus {
-  /**
-   * @deprecated Use {@link TxStatus.PENDING} instead. It will be removed in the next major version.
-   */
-  BROADCASTING = 'pending',
-
-  /**
-   * @deprecated Use {@link TxStatus.PENDING} instead. It will be removed in the next major version.
-   */
-  MINING = 'pending',
-
   /**
    * A pending transaction is a transaction that is either mining or it's mined but not indexed yet.
    */
@@ -38,148 +32,169 @@ export enum TxStatus {
   FAILED = 'failed',
 }
 
-const PENDING_STATUSES = [TxStatus.BROADCASTING, TxStatus.MINING];
-
-/**
- * @deprecated Use {@link TransactionState} instead. It will be removed in the next major version.
- */
-export type PendingTransactionState<T extends AnyTransactionRequest> = {
-  status: TxStatus.BROADCASTING | TxStatus.FAILED;
-  id: string;
-  request: T;
-};
-
-/**
- * @deprecated Use {@link TransactionState} instead. It will be removed in the next major version.
- */
-export type BroadcastedTransactionState<T extends AnyTransactionRequest> = {
-  status: TxStatus.MINING | TxStatus.SETTLED | TxStatus.FAILED;
-  id: string;
-  request: T;
-  txHash: string;
-};
-
 /**
  * Describe the state of a transaction and the originating request.
  */
-export type TransactionState<T extends AnyTransactionRequest> = {
-  status: TxStatus;
-  id: string;
-  request: T;
-  txHash?: string;
-};
+export type TransactionState<T extends AnyTransactionRequest> =
+  | {
+      status: TxStatus.PENDING | TxStatus.SETTLED;
+      id: string;
+      request: T;
+      txHash?: string;
+    }
+  | {
+      status: TxStatus.FAILED;
+      id: string;
+      request: T;
+      txHash?: string;
+      error: TransactionError;
+    };
 
 export const recentTransactionsVar = makeVar<TransactionState<AnyTransactionRequest>[]>([]);
 
-type TransactionStatusPredicate<T extends AnyTransactionRequest> = (
+export type TransactionStatusPredicate<T extends AnyTransactionRequest> = (
   txState: TransactionState<AnyTransactionRequest>,
 ) => txState is TransactionState<T>;
-
-function hasTransactionWith<T extends AnyTransactionRequest>(
-  transactions: TransactionState<AnyTransactionRequest>[],
-  statuses: ReadonlyArray<TxStatus>,
-  predicate: TransactionStatusPredicate<T>,
-) {
-  return transactions.some((txState) => statuses.includes(txState.status) && predicate(txState));
-}
-
-export function hasPendingTransactionWith<T extends AnyTransactionRequest>(
-  predicate: TransactionStatusPredicate<T>,
-) {
-  return hasTransactionWith(recentTransactionsVar(), PENDING_STATUSES, predicate);
-}
-
-export function hasSettledTransactionWith<T extends AnyTransactionRequest>(
-  predicate: TransactionStatusPredicate<T>,
-) {
-  return hasTransactionWith(recentTransactionsVar(), [TxStatus.SETTLED], predicate);
-}
-
-export function getAllPendingTransactions() {
-  return recentTransactionsVar().filter((txState) => PENDING_STATUSES.includes(txState.status));
-}
-
-function delay(waitInMs: number) {
-  return new Promise((resolve) => setTimeout(resolve, waitInMs));
-}
 
 export function useRecentTransactionsVar() {
   return useReactiveVar(recentTransactionsVar);
 }
 
-export function useHasPendingTransaction<T extends AnyTransactionRequest>(
-  predicate: TransactionStatusPredicate<T>,
-) {
-  const transactions = useRecentTransactionsVar();
-
-  return hasTransactionWith(transactions, PENDING_STATUSES, predicate);
+function isCollectTransaction(
+  transaction: TransactionState<AnyTransactionRequest>,
+): transaction is TransactionState<OpenActionRequest> {
+  return (
+    transaction.request.kind === TransactionKind.ACT_ON_PUBLICATION &&
+    [
+      AllOpenActionType.LEGACY_COLLECT,
+      AllOpenActionType.SIMPLE_COLLECT,
+      AllOpenActionType.MULTIRECIPIENT_COLLECT,
+    ].includes(transaction.request.type)
+  );
 }
 
-const FIFTEEN_SECONDS = DateUtils.secondsToMs(30);
-
-export function useWaitUntilTransactionSettled(waitTimeInMs: number = FIFTEEN_SECONDS) {
-  return async <T extends AnyTransactionRequest>(predicate: TransactionStatusPredicate<T>) => {
-    const resolveWhenNoPendingTransactions = new Promise<void>((resolve) => {
-      const resolver = (value: TransactionState<AnyTransactionRequest>[]) => {
-        if (hasTransactionWith(value, [TxStatus.SETTLED], predicate)) {
-          return resolve();
-        }
-        return recentTransactionsVar.onNextChange(resolver);
-      };
-      recentTransactionsVar.onNextChange(resolver);
-    });
-    const waitForSpecifiedTime = delay(waitTimeInMs).then(() => {
-      throw new TransactionError(TransactionErrorReason.INDEXING_TIMEOUT);
-    });
-    await Promise.race([resolveWhenNoPendingTransactions, waitForSpecifiedTime]);
-  };
+export function countAnyPendingCollectFor(publicationId: PublicationId) {
+  return recentTransactionsVar().reduce(
+    (count, transaction) =>
+      count +
+      (isCollectTransaction(transaction) &&
+      transaction.status === TxStatus.PENDING &&
+      transaction.request.publicationId === publicationId
+        ? 1
+        : 0),
+    0,
+  );
 }
 
-export function isFollowTransactionFor({
-  profileId,
-  followerAddress,
-}: {
-  profileId: ProfileId;
-  followerAddress: EthereumAddress;
-}): TransactionStatusPredicate<FollowRequest> {
-  return (transaction): transaction is TransactionState<FollowRequest> =>
-    transaction.request.kind === TransactionKind.FOLLOW_PROFILES &&
-    transaction.request.profileId === profileId &&
-    transaction.request.followerAddress === followerAddress;
+export function countAnyPendingCollect() {
+  return recentTransactionsVar().reduce(
+    (count, transaction) =>
+      count +
+      (isCollectTransaction(transaction) && transaction.status === TxStatus.PENDING ? 1 : 0),
+    0,
+  );
 }
 
-export function isUnfollowTransactionFor({
-  profileId,
-}: {
-  profileId: ProfileId;
-}): TransactionStatusPredicate<UnfollowRequest> {
-  return (transaction): transaction is TransactionState<UnfollowRequest> =>
-    transaction.request.kind === TransactionKind.UNFOLLOW_PROFILE &&
-    transaction.request.profileId === profileId;
+function isUnblockTransaction(
+  transaction: TransactionState<AnyTransactionRequest>,
+): transaction is TransactionState<UnblockProfilesRequest> {
+  return transaction.request.kind === TransactionKind.UNBLOCK_PROFILE;
 }
 
-export function isCollectTransactionFor({
-  publicationId,
-  profileId,
-}: {
-  publicationId: PublicationId;
-  profileId: ProfileId;
-}): TransactionStatusPredicate<CollectRequest> {
-  return (transaction): transaction is TransactionState<CollectRequest> =>
-    transaction.request.kind === TransactionKind.COLLECT_PUBLICATION &&
-    transaction.request.profileId === profileId &&
-    transaction.request.publicationId === publicationId;
+export function hasPendingUnblockForProfile(profileId: ProfileId) {
+  return recentTransactionsVar().some((transaction) => {
+    return (
+      isUnblockTransaction(transaction) &&
+      transaction.status === TxStatus.PENDING &&
+      transaction.request.profileIds.includes(profileId)
+    );
+  });
 }
 
-export function isMirrorTransactionFor({
-  publicationId,
-  profileId,
-}: {
-  publicationId: PublicationId;
-  profileId: ProfileId;
-}): TransactionStatusPredicate<CreateMirrorRequest> {
-  return (transaction): transaction is TransactionState<CreateMirrorRequest> =>
-    transaction.request.kind === TransactionKind.MIRROR_PUBLICATION &&
-    transaction.request.profileId === profileId &&
-    transaction.request.publicationId === publicationId;
+function isBlockTransaction(
+  transaction: TransactionState<AnyTransactionRequest>,
+): transaction is TransactionState<UnblockProfilesRequest> {
+  return transaction.request.kind === TransactionKind.BLOCK_PROFILE;
+}
+
+export function hasPendingBlockForProfile(profileId: ProfileId) {
+  return recentTransactionsVar().some((transaction) => {
+    return (
+      isBlockTransaction(transaction) &&
+      transaction.status === TxStatus.PENDING &&
+      transaction.request.profileIds.includes(profileId)
+    );
+  });
+}
+
+function isFollowTransaction(
+  transaction: TransactionState<AnyTransactionRequest>,
+): transaction is TransactionState<FollowRequest> {
+  return transaction.request.kind === TransactionKind.FOLLOW_PROFILE;
+}
+
+export function countPendingFollowFor(profileId: ProfileId) {
+  return recentTransactionsVar().reduce(
+    (count, transaction) =>
+      count +
+      (isFollowTransaction(transaction) &&
+      transaction.request.profileId === profileId &&
+      transaction.status === TxStatus.PENDING
+        ? 1
+        : 0),
+    0,
+  );
+}
+
+function isUnfollowTransaction(
+  transaction: TransactionState<AnyTransactionRequest>,
+): transaction is TransactionState<UnfollowRequest> {
+  return transaction.request.kind === TransactionKind.UNFOLLOW_PROFILE;
+}
+
+export function countPendingUnfollowFor(profileId: ProfileId) {
+  return recentTransactionsVar().reduce(
+    (count, transaction) =>
+      count +
+      (isUnfollowTransaction(transaction) &&
+      transaction.request.profileId === profileId &&
+      transaction.status === TxStatus.PENDING
+        ? 1
+        : 0),
+    0,
+  );
+}
+
+function isPendingLinkHandleTransaction(
+  transaction: TransactionState<AnyTransactionRequest>,
+): transaction is TransactionState<LinkHandleRequest> {
+  return (
+    transaction.request.kind === TransactionKind.LINK_HANDLE &&
+    transaction.status === TxStatus.PENDING
+  );
+}
+
+export function getPendingLinkHandleTxFor(profileId: ProfileId) {
+  return recentTransactionsVar().find((transaction) => {
+    return (
+      isPendingLinkHandleTransaction(transaction) && transaction.request.profileId === profileId
+    );
+  }) as TransactionState<LinkHandleRequest> | undefined;
+}
+
+function isPendingUnlinkHandleTransaction(
+  transaction: TransactionState<AnyTransactionRequest>,
+): transaction is TransactionState<UnlinkHandleRequest> {
+  return (
+    transaction.request.kind === TransactionKind.UNLINK_HANDLE &&
+    transaction.status === TxStatus.PENDING
+  );
+}
+
+export function getPendingUnlinkHandleTxFor(profileId: ProfileId) {
+  return recentTransactionsVar().find((transaction) => {
+    return (
+      isPendingUnlinkHandleTransaction(transaction) && transaction.request.profileId === profileId
+    );
+  }) as TransactionState<UnlinkHandleRequest> | undefined;
 }

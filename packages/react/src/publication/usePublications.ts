@@ -1,41 +1,75 @@
-import { AnyPublication, PublicationTypes, useGetPublications } from '@lens-protocol/api-bindings';
-import { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
-import { OneOf, XOR } from '@lens-protocol/shared-kernel';
-
 import {
-  useActiveProfileAsDefaultObserver,
-  useLensApolloClient,
-  useMediaTransformFromConfig,
-  useSourcesFromConfig,
-  WithObserverIdOverride,
-} from '../helpers/arguments';
-import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
-import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
-import { createPublicationMetadataFilters, PublicationMetadataFilters } from './filters';
+  AnyPublication,
+  PublicationsRequest,
+  usePublications as usePublicationsBase,
+} from '@lens-protocol/api-bindings';
 
-export type UsePublicationsArgs = PaginatedArgs<
-  WithObserverIdOverride<{
-    metadataFilter?: PublicationMetadataFilters;
-  }> &
-    XOR<
-      OneOf<{ profileId: ProfileId; profileIds: ProfileId[] }> & {
-        publicationTypes?: PublicationTypes[];
-      },
-      { publicationIds: PublicationId[] }
-    >
->;
+import { useLensApolloClient } from '../helpers/arguments';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 
 /**
- * `usePublications` is a paginated hook that lets you fetch publications based on a set of filters.
+ * {@link usePublications} hook arguments
+ */
+export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
+
+/**
+ * Fetch a paginated result of publications based on a set of filters.
  *
  * @category Publications
  * @group Hooks
  *
  * @example
- * Fetch publications by a Profile ID
+ * Fetch post publications
  * ```tsx
  * const { data, loading, error } = usePublications({
- *   profileId: profileId('0x0635')
+ *   where: {
+ *     publicationTypes: [PublicationType.Post]
+ *   }
+ * });
+ * ```
+ *
+ * @example
+ * Fetch all short form video post publications
+ * ```tsx
+ * const { data, loading, error } = usePublications({
+ *   where: {
+ *     publicationTypes: [PublicationType.Post]
+ *     metadata: {
+ *       mainContentFocus: [PublicationMetadataMainFocusType.ShortVideo],
+ *     }
+ *   }
+ * });
+ * ```
+ *
+ * @example
+ * Fetch all comments for a specified publication
+ * ```tsx
+ * const { data, loading, error } = usePublications({
+ *   where: {
+ *     publicationTypes: [PublicationType.Comment]
+ *     publicationIds: ['0x1b-0x012b']
+ *   }
+ * });
+ * ```
+ *
+ * @example
+ * Fetch all mirrors made by a specified profile
+ * ```tsx
+ * const { data, loading, error } = usePublications({
+ *   where: {
+ *     publicationTypes: [PublicationType.Mirror]
+ *     from: [profileId('0x0635')]
+ *   }
+ * });
+ * ```
+ *
+ * @example
+ * Fetch all publications by a Profile ID
+ * ```tsx
+ * const { data, loading, error } = usePublications({
+ *   where: {
+ *     from: [profileId('0x0635')]
+ *   }
  * });
  * ```
  *
@@ -43,45 +77,18 @@ export type UsePublicationsArgs = PaginatedArgs<
  * Fetch publications by several Profile IDs
  * ```tsx
  * const { data, loading, error } = usePublications({
- *   profileIds: [ profileId('0x0635'), profileId('0x0f') ]
- * });
- * ```
- *
- * @example
- * Filter publications by type
- * ```tsx
- * const { data, loading, error } = usePublications({
- *   profileId: profileId('0x0635')
- *   publicationTypes: [ PublicationTypes.Post ]
+ *   where: {
+ *     from: [profileId('0x0635'), profileId('0x0f')]
+ *   }
  * });
  * ```
  */
-export function usePublications({
-  metadataFilter,
-  observerId,
-  profileId,
-  profileIds,
-  publicationIds,
-  publicationTypes,
-  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-}: UsePublicationsArgs): PaginatedReadResult<AnyPublication[]> {
+export function usePublications(args: UsePublicationsArgs): PaginatedReadResult<AnyPublication[]> {
   return usePaginatedReadResult(
-    useGetPublications(
-      useLensApolloClient(
-        useActiveProfileAsDefaultObserver({
-          variables: useMediaTransformFromConfig(
-            useSourcesFromConfig({
-              limit,
-              metadata: createPublicationMetadataFilters(metadataFilter),
-              observerId,
-              profileId,
-              profileIds,
-              publicationIds,
-              publicationTypes,
-            }),
-          ),
-        }),
-      ),
+    usePublicationsBase(
+      useLensApolloClient({
+        variables: args,
+      }),
     ),
   );
 }

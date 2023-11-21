@@ -1,4 +1,4 @@
-import { EthereumAddress, failure, success } from '@lens-protocol/shared-kernel';
+import { EvmAddress, success } from '@lens-protocol/shared-kernel';
 
 import {
   NftOwnershipChallenge,
@@ -7,13 +7,13 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '../../entities';
+import { ActiveWallet } from '../authentication/ActiveWallet';
 import { IGenericResultPresenter } from '../transactions/IGenericResultPresenter';
-import { ActiveWallet } from '../wallets/ActiveWallet';
 
 export type ProveNftOwnershipRequest = {
   chainId: number;
-  contractAddress: EthereumAddress;
-  ownerAddress: EthereumAddress;
+  contractAddress: EvmAddress;
+  ownerAddress: EvmAddress;
   tokenId: string;
 };
 
@@ -46,16 +46,16 @@ export class ProveNftOwnership {
 
     const wallet = await this.activeWallet.requireActiveWallet();
 
-    const signatureResult = await wallet.signMessage(challenge.message);
+    const result = await wallet.signMessage(challenge.message);
 
-    if (signatureResult.isFailure()) {
-      this.presenter.present(failure(signatureResult.error));
+    if (result.isFailure()) {
+      this.presenter.present(result);
       return;
     }
     this.presenter.present(
       success({
         id: challenge.id,
-        signature: signatureResult.value,
+        signature: result.value,
       }),
     );
   }

@@ -1,53 +1,13 @@
-import { TransactionRequest } from '@ethersproject/providers';
 import { erc20, bigNumber } from '@lens-protocol/blockchain-bindings';
-import { Wallet, UnsignedTransaction } from '@lens-protocol/domain/entities';
 import {
-  IApproveTransactionGateway,
+  IPaidTransactionGateway,
   TokenAllowanceLimit,
   TokenAllowanceRequest,
-} from '@lens-protocol/domain/use-cases/wallets';
-import {
-  Amount,
-  BigDecimal,
-  ChainType,
-  CryptoAsset,
-  CryptoNativeAsset,
-  getID,
-} from '@lens-protocol/shared-kernel';
+} from '@lens-protocol/domain/use-cases/transactions';
+import { Amount, BigDecimal, CryptoNativeAsset, Data } from '@lens-protocol/shared-kernel';
 import { BigNumber, constants } from 'ethers';
 
-import { ITransactionRequest } from '../../wallet/adapters/ConcreteWallet';
-import { IProviderFactory } from '../../wallet/adapters/IProviderFactory';
-import {
-  Eip1559GasPriceEstimator,
-  TransactionExecutionSpeed,
-} from '../infrastructure/Eip1559GasPriceEstimator';
-
-export class UnsignedApproveTransaction<
-    Request extends TokenAllowanceRequest = TokenAllowanceRequest,
-  >
-  extends UnsignedTransaction<Request>
-  implements ITransactionRequest
-{
-  constructor(
-    chainType: ChainType,
-    request: Request,
-    readonly transactionRequest: TransactionRequest,
-  ) {
-    super(getID(), chainType, request);
-  }
-}
-
-function createCryptoNativeAmountFactoryFor(
-  asset: CryptoAsset,
-): CryptoNativeAmountFactory<CryptoNativeAsset> {
-  switch (asset.chainType) {
-    case ChainType.ETHEREUM:
-      return (value) => Amount.ether(value);
-    case ChainType.POLYGON:
-      return (value) => Amount.matic(value);
-  }
-}
+import { AbstractContractCallGateway, ContractCallDetails } from './AbstractContractCallGateway';
 
 export type CryptoNativeAmountFactory<T extends CryptoNativeAsset> = (
   value: BigDecimal,
@@ -62,43 +22,20 @@ function resolveApproveAmount(request: TokenAllowanceRequest): BigNumber {
   }
 }
 
-export class ApproveTransactionGateway implements IApproveTransactionGateway {
-  constructor(private readonly providerFactory: IProviderFactory) {}
-
-  async createApproveTransaction(
-    request: TokenAllowanceRequest,
-    wallet: Wallet,
-  ): Promise<UnsignedApproveTransaction> {
-    const provider = await this.providerFactory.createProvider({
-      chainType: request.amount.asset.chainType,
-    });
-    const contract = erc20(request.amount.asset.address, provider);
+export class ApproveTransactionGateway
+  extends AbstractContractCallGateway<TokenAllowanceRequest>
+  implements IPaidTransactionGateway<TokenAllowanceRequest>
+{
+  protected async createEncodedData(request: TokenAllowanceRequest): Promise<ContractCallDetails> {
+    const contract = erc20(request.amount.asset.address);
 
     const amount = resolveApproveAmount(request);
 
-    const gasLimit = await contract.estimateGas.approve(request.spender, amount, {
-      from: wallet.address,
-    });
+    const encodedData = contract.interface.encodeFunctionData('approve', [request.spender, amount]);
 
-    const gasEstimator = new Eip1559GasPriceEstimator(
-      provider,
-      createCryptoNativeAmountFactoryFor(request.amount.asset),
-    );
-
-    const gasPriceEstimate = await gasEstimator.estimate(TransactionExecutionSpeed.FAST);
-
-    const transactionRequest = await contract.populateTransaction.approve(request.spender, amount, {
-      from: wallet.address,
-      gasLimit,
-      maxFeePerGas: bigNumber(gasPriceEstimate.maxFeePerGas),
-      maxPriorityFeePerGas: bigNumber(gasPriceEstimate.maxPriorityFeePerGas),
-      type: 2, // EIP-1559
-    });
-
-    return new UnsignedApproveTransaction(
-      request.amount.asset.chainType,
-      request,
-      transactionRequest,
-    );
+    return {
+      contractAddress: request.amount.asset.address,
+      encodedData: encodedData as Data,
+    };
   }
 }

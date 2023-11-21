@@ -1,43 +1,36 @@
-import { Following, useProfileFollowing as useUnderlyingQuery } from '@lens-protocol/api-bindings';
-
 import {
-  useActiveProfileAsDefaultObserver,
-  useLensApolloClient,
-  useMediaTransformFromConfig,
-  useSourcesFromConfig,
-  WithObserverIdOverride,
-} from '../helpers/arguments';
-import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
-import { DEFAULT_PAGINATED_QUERY_LIMIT } from '../utils';
+  Profile,
+  FollowingRequest,
+  useFollowing as useFollowingHook,
+} from '@lens-protocol/api-bindings';
 
-export type UseProfileFollowingArgs = PaginatedArgs<
-  WithObserverIdOverride<{
-    walletAddress: string;
-  }>
->;
+import { useLensApolloClient } from '../helpers/arguments';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 
 /**
+ * {@link useProfileFollowing} hook arguments
+ */
+export type UseProfileFollowingArgs = PaginatedArgs<FollowingRequest>;
+
+/**
+ * `useProfileFollowing` is a paginated hook that lets you fetch profiles that are followed by a requested profile.
+ *
  * @category Profiles
  * @group Hooks
+ *
+ * @example
+ * ```tsx
+ * const { data, loading, error } = useProfileFollowing({
+ *   for: '0x123',
+ * });
+ * ```
  */
-export function useProfileFollowing({
-  limit = DEFAULT_PAGINATED_QUERY_LIMIT,
-  observerId,
-  walletAddress,
-}: UseProfileFollowingArgs): PaginatedReadResult<Following[]> {
+export function useProfileFollowing(args: UseProfileFollowingArgs): PaginatedReadResult<Profile[]> {
   return usePaginatedReadResult(
-    useUnderlyingQuery(
-      useLensApolloClient(
-        useActiveProfileAsDefaultObserver({
-          variables: useMediaTransformFromConfig(
-            useSourcesFromConfig({
-              walletAddress,
-              limit,
-              observerId,
-            }),
-          ),
-        }),
-      ),
+    useFollowingHook(
+      useLensApolloClient({
+        variables: args,
+      }),
     ),
   );
 }

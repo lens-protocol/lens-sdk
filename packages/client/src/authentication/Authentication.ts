@@ -1,82 +1,54 @@
-import { EthereumAddress, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
-import { InMemoryStorageProvider } from '@lens-protocol/storage';
+import {
+  failure,
+  IEquatableError,
+  PromiseResult,
+  Result,
+  success,
+} from '@lens-protocol/shared-kernel';
 
-import { LensConfig } from '../consts/config';
-import { CredentialsExpiredError, NotAuthenticatedError } from '../consts/errors';
+import type { LensContext } from '../context';
+import { CredentialsExpiredError, NotAuthenticatedError } from '../errors';
+import type {
+  ApprovedAuthenticationRequest,
+  ChallengeRequest,
+  RevokeAuthenticationRequest,
+  SignedAuthChallenge,
+} from '../graphql/types.generated';
+import { buildAuthorizationHeader } from '../helpers/buildAuthorizationHeader';
+import { requireAuthHeaders } from '../helpers/requireAuthHeaders';
+import type { IAuthentication } from './IAuthentication';
 import { AuthenticationApi } from './adapters/AuthenticationApi';
+import { Credentials } from './adapters/Credentials';
 import { CredentialsStorage } from './adapters/CredentialsStorage';
-
-/**
- * Authentication for Lens API.
- *
- * @group LensClient Modules
- */
-export interface IAuthentication {
-  /**
-   * Generate a challenge string for the wallet to sign.
-   *
-   * @param address - The wallet address
-   * @returns A challenge string
-   */
-  generateChallenge(address: EthereumAddress): Promise<string>;
-
-  /**
-   * Authenticate the user with the wallet address and signature of the challenge.
-   *
-   * @param address - The wallet address
-   * @param signature - The signature of the challenge
-   */
-  authenticate(address: EthereumAddress, signature: string): Promise<void>;
-
-  /**
-   * Check if the user is authenticated. If the credentials are expired, try to refresh them.
-   *
-   * @returns Whether the user is authenticated
-   */
-  isAuthenticated(): Promise<boolean>;
-
-  /**
-   * Verify that the access token is signed by the server and the user.
-   *
-   * @param accessToken - The access token to verify
-   * @returns Whether the access token is valid
-   */
-  verify(accessToken: string): Promise<boolean>;
-
-  /**
-   * Get the access token. If it expired, try to refresh it.
-   *
-   * @returns The access token
-   */
-  getAccessToken(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError>;
-}
+import type { AuthChallengeFragment } from './graphql/auth.generated';
 
 /**
  * Authentication for Lens API. Request challenge, authenticate, manage credentials.
  */
 export class Authentication implements IAuthentication {
   private readonly api: AuthenticationApi;
-  private readonly storage: CredentialsStorage;
+  private readonly credentials: CredentialsStorage;
 
-  constructor(config: LensConfig) {
-    this.api = new AuthenticationApi(config);
-    this.storage = new CredentialsStorage(
-      config.storage || new InMemoryStorageProvider(),
-      config.environment.name,
-    );
+  constructor(context: LensContext) {
+    this.api = new AuthenticationApi(context);
+    this.credentials = new CredentialsStorage(context.storage, context.environment.name);
   }
 
-  async generateChallenge(address: EthereumAddress): Promise<string> {
-    return this.api.challenge(address);
+  async generateChallenge(request: ChallengeRequest): Promise<AuthChallengeFragment> {
+    return this.api.challenge(request);
   }
 
-  async authenticate(address: EthereumAddress, signature: string): Promise<void> {
-    const credentials = await this.api.authenticate(address, signature);
-    await this.storage.set(credentials);
+  async authenticate(request: SignedAuthChallenge): Promise<void> {
+    const credentials = await this.api.authenticate(request);
+    await this.credentials.set(credentials);
+  }
+
+  async verify(accessToken: string): Promise<boolean> {
+    return this.api.verify(accessToken);
   }
 
   async isAuthenticated(): Promise<boolean> {
-    const credentials = await this.storage.get();
+    const credentials = await this.credentials.get();
 
     if (!credentials) {
       return false;
@@ -88,7 +60,7 @@ export class Authentication implements IAuthentication {
 
     if (credentials.canRefresh()) {
       const newCredentials = await this.api.refresh(credentials.refreshToken);
-      await this.storage.set(newCredentials);
+      await this.credentials.set(newCredentials);
       return true;
     }
 
@@ -96,12 +68,8 @@ export class Authentication implements IAuthentication {
     return false;
   }
 
-  async verify(accessToken: string): Promise<boolean> {
-    return this.api.verify(accessToken);
-  }
-
   async getAccessToken(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError> {
-    const credentials = await this.storage.get();
+    const credentials = await this.credentials.get();
 
     if (!credentials) {
       return failure(new NotAuthenticatedError());
@@ -113,7 +81,7 @@ export class Authentication implements IAuthentication {
 
     if (credentials.canRefresh()) {
       const newCredentials = await this.api.refresh(credentials.refreshToken);
-      await this.storage.set(newCredentials);
+      await this.credentials.set(newCredentials);
 
       if (!newCredentials.accessToken) {
         return failure(new CredentialsExpiredError());
@@ -125,30 +93,91 @@ export class Authentication implements IAuthentication {
     return failure(new CredentialsExpiredError());
   }
 
+  async getProfileId(): Promise<string | null> {
+    const result = await this.getCredentials();
+
+    if (result.isFailure()) {
+      return null;
+    }
+
+    return result.value.getProfileId();
+  }
+
+  async logout(): Promise<void> {
+    await this.credentials.reset();
+  }
+
+  async fetch() {
+    return requireAuthHeaders(this, async (headers) => {
+      return this.api.currentSession(headers);
+    });
+  }
+
+  async fetchAll(request: ApprovedAuthenticationRequest = {}) {
+    return requireAuthHeaders(this, async (headers) => {
+      return this.api.approvedAuthentications(request, headers);
+    });
+  }
+
+  async revoke(request: RevokeAuthenticationRequest) {
+    return requireAuthHeaders(this, async (headers) => {
+      await this.api.revoke(request, headers);
+    });
+  }
+
+  // privileged methods
+  async requireAuthentication<
+    TResult extends Result<TValue, TError>,
+    TValue,
+    TError extends IEquatableError,
+  >(
+    handler: (profileId: string) => Promise<TResult>,
+  ): PromiseResult<TValue, TError | CredentialsExpiredError | NotAuthenticatedError> {
+    const result = await this.getCredentials();
+
+    if (result.isFailure()) {
+      return result;
+    }
+
+    return handler(result.value.getProfileId());
+  }
+
   async getRequestHeader(): PromiseResult<
     Record<string, string>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    const credentials = await this.storage.get();
+    const credentials = await this.credentials.get();
 
     if (!credentials) {
       return failure(new NotAuthenticatedError());
     }
 
     if (!credentials.shouldRefresh()) {
-      return success(this.buildHeader(credentials.accessToken));
+      return success(buildAuthorizationHeader(credentials.accessToken));
     }
 
     if (credentials.canRefresh()) {
       const newCredentials = await this.api.refresh(credentials.refreshToken);
-      await this.storage.set(newCredentials);
-      return success(this.buildHeader(newCredentials.accessToken));
+      await this.credentials.set(newCredentials);
+      return success(buildAuthorizationHeader(newCredentials.accessToken));
     }
 
     return failure(new CredentialsExpiredError());
   }
 
-  private buildHeader(accessToken: string | undefined) {
-    return { authorization: `Bearer ${accessToken || ''}` };
+  private async getCredentials(): PromiseResult<
+    Credentials,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    const credentials = await this.credentials.get();
+
+    if (!credentials) {
+      return failure(new NotAuthenticatedError());
+    }
+
+    if (!credentials.canRefresh()) {
+      return failure(new CredentialsExpiredError());
+    }
+    return success(credentials);
   }
 }

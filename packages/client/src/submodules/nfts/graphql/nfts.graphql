@@ -1,0 +1,114 @@
+fragment Owner on Owner {
+  amount
+  address
+}
+
+fragment NftCollection on NftCollection {
+  contract {
+    ...NetworkAddress
+  }
+  name
+  symbol
+  baseUri
+  contractType
+}
+
+fragment NftMetadata on NftMetadata {
+  name
+  description
+  image {
+    raw {
+      ...Image
+    }
+    optimized {
+      ...Image
+    }
+  }
+}
+
+fragment Nft on Nft {
+  tokenId
+  owner {
+    ...Owner
+  }
+  contentURI
+  contract {
+    ...NetworkAddress
+  }
+  contractType
+  collection {
+    ...NftCollection
+  }
+  metadata {
+    ...NftMetadata
+  }
+}
+
+fragment NftGallery on NftGallery {
+  id
+  name
+  createdAt
+  updatedAt
+  items {
+    ...Nft
+  }
+}
+
+fragment PaginatedNftGalleriesResult on PaginatedNftGalleriesResult {
+  items {
+    ...NftGallery
+  }
+  pageInfo {
+    ...PaginatedResultInfo
+  }
+}
+
+fragment NftOwnershipChallengeResult on NftOwnershipChallengeResult {
+  success
+  info
+}
+
+# queries
+query Nfts($request: NftsRequest!) {
+  result: nfts(request: $request) {
+    items {
+      ...Nft
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query ProfileGalleries($request: NftGalleriesRequest!) {
+  result: nftGalleries(request: $request) {
+    ...PaginatedNftGalleriesResult
+  }
+}
+
+# mutations
+mutation NftOwnershipChallenge($request: NftOwnershipChallengeRequest!) {
+  result: nftOwnershipChallenge(request: $request) {
+    ...NftOwnershipChallengeResult
+  }
+}
+
+mutation CreateNFTGallery($request: NftGalleryCreateRequest!) {
+  result: createNftGallery(request: $request)
+}
+
+mutation UpdateNFTGalleryInfo($request: NftGalleryUpdateInfoRequest!) {
+  updateNftGalleryInfo(request: $request)
+}
+
+mutation UpdateNFTGalleryOrder($request: NftGalleryUpdateItemOrderRequest!) {
+  updateNftGalleryOrder(request: $request)
+}
+
+mutation UpdateNFTGalleryItems($request: NftGalleryUpdateItemsRequest!) {
+  updateNftGalleryItems(request: $request)
+}
+
+mutation DeleteNFTGallery($request: NftGalleryDeleteRequest!) {
+  deleteNftGallery(request: $request)
+}

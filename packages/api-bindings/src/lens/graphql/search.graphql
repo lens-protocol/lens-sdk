@@ -1,0 +1,55 @@
+query SearchPublications(
+  $query: String!
+  $where: PublicationSearchWhere
+  $limit: LimitType
+  $cursor: Cursor
+  $imageSmallSize: ImageTransform = {}
+  $imageMediumSize: ImageTransform = {}
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
+) {
+  ...InjectCommonQueryParams
+  result: searchPublications(
+    request: { query: $query, where: $where, cursor: $cursor, limit: $limit }
+  ) {
+    items {
+      ... on Post {
+        ...Post
+      }
+      ... on Comment {
+        ...Comment
+      }
+      ... on Quote {
+        ...Quote
+      }
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query SearchProfiles(
+  $query: String!
+  $where: ProfileSearchWhere
+  $limit: LimitType
+  $cursor: Cursor
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
+) {
+  ...InjectCommonQueryParams
+  result: searchProfiles(
+    request: { query: $query, where: $where, limit: $limit, cursor: $cursor }
+  ) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}

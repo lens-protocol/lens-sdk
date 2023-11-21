@@ -5,66 +5,45 @@ import {
   RemoveReactionDocument,
   RemoveReactionData,
   RemoveReactionVariables,
-  ValidationError,
   SafeApolloClient,
-  ReactionTypes,
+  PublicationReactionType,
 } from '@lens-protocol/api-bindings';
 import {
   TogglePropertyRequest,
   ITogglablePropertyGateway,
 } from '@lens-protocol/domain/use-cases/publications';
-import { assertError } from '@lens-protocol/shared-kernel';
+import { Prettify } from '@lens-protocol/shared-kernel';
 
-export type ReactionRequest = TogglePropertyRequest & {
-  reactionType: ReactionTypes;
-  existingReactionType?: ReactionTypes | null;
-};
+export type ReactionRequest = Prettify<
+  TogglePropertyRequest & {
+    reaction: PublicationReactionType;
+  }
+>;
 
 export class ReactionGateway implements ITogglablePropertyGateway<ReactionRequest> {
   constructor(private apolloClient: SafeApolloClient) {}
 
-  async add({
-    profileId,
-    publicationId,
-    reactionType: reactionType,
-    existingReactionType,
-  }: ReactionRequest) {
-    if (existingReactionType === reactionType) {
-      return;
-    }
-
-    if (existingReactionType && existingReactionType !== reactionType) {
-      await this.remove({ profileId, publicationId, reactionType: existingReactionType });
-    }
-
+  async add(request: ReactionRequest): Promise<void> {
     await this.apolloClient.mutate<AddReactionData, AddReactionVariables>({
       mutation: AddReactionDocument,
       variables: {
-        publicationId,
-        profileId,
-        reaction: reactionType,
+        request: {
+          for: request.publicationId,
+          reaction: request.reaction,
+        },
       },
     });
   }
 
-  async remove({ profileId, publicationId, reactionType }: ReactionRequest) {
-    try {
-      await this.apolloClient.mutate<RemoveReactionData, RemoveReactionVariables>({
-        mutation: RemoveReactionDocument,
-        variables: {
-          publicationId,
-          profileId,
-          reaction: reactionType,
+  async remove(request: ReactionRequest): Promise<void> {
+    await this.apolloClient.mutate<RemoveReactionData, RemoveReactionVariables>({
+      mutation: RemoveReactionDocument,
+      variables: {
+        request: {
+          for: request.publicationId,
+          reaction: request.reaction,
         },
-      });
-    } catch (e) {
-      assertError(e);
-
-      if (e instanceof ValidationError) {
-        return;
-      }
-
-      throw e;
-    }
+      },
+    });
   }
 }

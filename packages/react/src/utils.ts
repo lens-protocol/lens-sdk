@@ -1,7 +1,5 @@
 import { AppId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
 
-export const DEFAULT_PAGINATED_QUERY_LIMIT = 10;
-
 /**
  * Ensures that the given value is a valid AppId
  *

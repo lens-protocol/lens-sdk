@@ -3,8 +3,6 @@ import {
   MetaTransaction,
   NativeTransaction,
   Nonce,
-  ProxyTransaction,
-  ProxyActionStatus,
   JustProtocolRequest,
   DataTransaction,
 } from '@lens-protocol/domain/entities';
@@ -15,7 +13,7 @@ export type NativeTransactionData<T extends AnyTransactionRequestModel> = {
   id: string;
   indexingId?: string;
   request: T;
-  txHash: string;
+  txHash: string | null;
 };
 
 export type MetaTransactionData<T extends AnyTransactionRequestModel> = {
@@ -24,16 +22,7 @@ export type MetaTransactionData<T extends AnyTransactionRequestModel> = {
   indexingId: string;
   nonce: Nonce;
   request: T;
-  txHash: string;
-};
-
-export type ProxyTransactionData<T extends AnyTransactionRequestModel> = {
-  chainType: ChainType;
-  id: string;
-  request: T;
-  proxyId: string;
-  txHash?: string;
-  status?: ProxyActionStatus;
+  txHash: string | null;
 };
 
 export type DataTransactionData<T extends AnyTransactionRequestModel> = {
@@ -49,10 +38,6 @@ export interface ITransactionFactory<Supported extends AnyTransactionRequestMode
   createNativeTransaction<T extends Supported>(
     init: NativeTransactionData<T>,
   ): NativeTransaction<T>;
-
-  createProxyTransaction<T extends JustProtocolRequest<Supported>>(
-    init: ProxyTransactionData<T>,
-  ): ProxyTransaction<T>;
 
   createDataTransaction<T extends JustProtocolRequest<Supported>>(
     init: DataTransactionData<T>,

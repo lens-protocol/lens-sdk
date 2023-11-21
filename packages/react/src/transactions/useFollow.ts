@@ -1,9 +1,4 @@
-import {
-  ProfileOwnedByMe,
-  Profile,
-  isUnfollowTransactionFor,
-  useHasPendingTransaction,
-} from '@lens-protocol/api-bindings';
+import { Profile, TriStateValue, resolveFollowPolicy } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   TransactionKind,
@@ -16,9 +11,10 @@ import {
   InsufficientAllowanceError,
   InsufficientFundsError,
 } from '@lens-protocol/domain/use-cases/wallets';
-import { failure, invariant, InvariantError, PromiseResult } from '@lens-protocol/shared-kernel';
+import { InvariantError, PromiseResult, failure, invariant } from '@lens-protocol/shared-kernel';
 
-import { Operation, useOperation } from '../helpers/operations';
+import { Session, SessionType, useSession } from '../authentication';
+import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useFollowController } from './adapters/useFollowController';
 
@@ -26,8 +22,18 @@ export class PrematureFollowError extends Error {
   name = 'PrematureFollowError' as const;
 }
 
-function createFollowRequest(followee: Profile, follower: Profile): FollowRequest {
-  const followPolicy = followee.followPolicy;
+function createFollowRequest(profile: Profile, session?: Session): FollowRequest {
+  invariant(
+    session?.authenticated,
+    'You must be authenticated to use this operation. Use `useLogin` hook to authenticate.',
+  );
+  invariant(
+    session.type === SessionType.WithProfile,
+    'You must have a profile to use this operation.',
+  );
+
+  const followPolicy = resolveFollowPolicy(profile);
+
   switch (followPolicy.type) {
     case FollowPolicyType.CHARGE:
       return {
@@ -36,118 +42,72 @@ function createFollowRequest(followee: Profile, follower: Profile): FollowReques
           contractAddress: followPolicy.contractAddress,
           recipient: followPolicy.recipient,
         },
-        kind: TransactionKind.FOLLOW_PROFILES,
-        profileId: followee.id,
-        followerAddress: follower.ownedBy,
-      };
-    case FollowPolicyType.ONLY_PROFILE_OWNERS:
-      return {
-        kind: TransactionKind.FOLLOW_PROFILES,
-        profileId: followee.id,
-        followerAddress: follower.ownedBy,
-        followerProfileId: follower.id,
+        kind: TransactionKind.FOLLOW_PROFILE,
+        profileId: profile.id,
       };
     case FollowPolicyType.ANYONE:
       return {
-        kind: TransactionKind.FOLLOW_PROFILES,
-        profileId: followee.id,
-        followerAddress: follower.ownedBy,
+        kind: TransactionKind.FOLLOW_PROFILE,
+        profileId: profile.id,
+        delegate: session.profile.signless,
       };
     case FollowPolicyType.NO_ONE:
-      throw new InvariantError(
-        `The profile is configured so that nobody can follow it. Check 'profile.followPolicy.type' beforehand.`,
-      );
+      throw new InvariantError(`The profile is configured so that nobody can follow it.`);
     case FollowPolicyType.UNKNOWN:
-      throw new InvariantError(
-        `The profile is configured with an unknown follow module. Check 'profile.followPolicy.type' beforehand.`,
-      );
+      throw new InvariantError(`The profile is configured with an unknown follow module.`);
   }
 }
 
-export type UseFollowArgs = {
+/**
+ * An object representing the result of a follow operation.
+ *
+ * It allows to wait for the transaction to be processed and indexed.
+ */
+export type FollowAsyncResult = AsyncTransactionResult<void>;
+
+export type FollowArgs = {
   /**
    * The profile to follow
    */
-  followee: Profile;
-
-  /**
-   * The profile that follows
-   */
-  follower: ProfileOwnedByMe;
+  profile: Profile;
 };
 
-export type FollowOperation = Operation<
-  AsyncTransactionResult<void>,
+/**
+ * `useFollow` allows you to follow another Profile.
+ *
+ * You MUST be authenticated via {@link useLogin} to use this hook.
+ *
+ * @example
+ * ```tsx
+ * const { execute: follow, error, loading } = useFollow();
+ *
+ * <button onClick={() => follow({ profile })} disabled={loading}>
+ *   Follow
+ * </button>
+ * ```
+ *
+ * @category Profiles
+ * @group Hooks
+ */
+export function useFollow(): UseDeferredTask<
+  FollowAsyncResult,
   | BroadcastingError
   | InsufficientAllowanceError
   | InsufficientFundsError
   | PendingSigningRequestError
   | PrematureFollowError
   | UserRejectedError
-  | WalletConnectionError
->;
+  | WalletConnectionError,
+  FollowArgs
+> {
+  const { data: session } = useSession();
+  const followProfile = useFollowController();
 
-/**
- * `useFollow` is a hook that lets you follow a profile
- *
- * You MUST be authenticated via {@link useWalletLogin} to use this hook.
- *
- * The hook `execute` function resolves with a {@link Result} when the corresponding operation is queued.
- * You can use the {@link Success.isSuccess | `Result.isSuccess`} (or {@link Failure.isFailure | `Result.isFailure`}) method
- * to check if the operation queuing was successful and determine the next step if not.
- *
- * **Pro-tip**: use the {@link ProfileOwnedByMe} instance from {@link useActiveProfile} (or {@link useProfilesOwnedByMe}) as the `follower` argument.
- *
- * You can use the {@link FollowStatus | `followee.followStatus`} property to determine the status of the follow request and if you should show the follow button.
- *
- * @category Profiles
- * @group Hooks
- * @param args - {@link UseFollowArgs}
- *
- * @example
- * Follow a profile with {@link OpenFollowPolicy}
- * ```ts
- * import { useFollow, Profile, ProfileOwnedByMe } from '@lens-protocol/react-web';
- *
- * function FollowButton({ followee, follower }: { followee: Profile; follower: ProfileOwnedByMe }) {
- *   const { execute, error, isPending } = useFollow({ followee, follower });
- *
- *   const follow = async () => {
- *     const result = await execute();
- *
- *     if (result.isFailure()) {
- *       console.error(result.error);
- *     }
- *   }
- *
- *   if (followee.followStatus.canFollow === false) {
- *     return null;
- *   }
- *
- *   if (followee.followStatus.isFollowedByMe) {
- *     return (
- *       <p>You are following this profile</p>
- *     )
- *   }
- *
- *   return (
- *     <button onClick={follow} disabled={isPending}>
- *       Follow
- *     </button>
- *   );
- * }
- * ```
- */
-export function useFollow({ followee, follower }: UseFollowArgs): FollowOperation {
-  const follow = useFollowController();
-
-  const hasPendingUnfollowTx = useHasPendingTransaction(
-    isUnfollowTransactionFor({ profileId: followee.id }),
-  );
-
-  return useOperation(
-    async (): PromiseResult<
-      AsyncTransactionResult<void>,
+  return useDeferredTask(
+    async ({
+      profile,
+    }): PromiseResult<
+      FollowAsyncResult,
       | BroadcastingError
       | InsufficientAllowanceError
       | InsufficientFundsError
@@ -156,21 +116,22 @@ export function useFollow({ followee, follower }: UseFollowArgs): FollowOperatio
       | UserRejectedError
       | WalletConnectionError
     > => {
-      if (hasPendingUnfollowTx) {
+      invariant(
+        profile.operations.canFollow === TriStateValue.Yes,
+        "You can't follow this profile. Check the `profile.operations.canFollow` beforehand.",
+      );
+
+      if (!profile.operations.isFollowedByMe.isFinalisedOnchain) {
         return failure(
           new PrematureFollowError(
-            `A previous unfollow request for ${followee.handle} is still pending. Make sure you check 'followee.followStatus.canFollow' beforehand.`,
+            `A previous unfollow request for ${profile.id} is still pending.
+          Check 'profile.operations.isFollowedByMe.isFinalisedOnchain' beforehand.`,
           ),
         );
       }
 
-      invariant(
-        followee.followStatus?.canFollow,
-        "You're already following this profile. Check the `followee.followStatus.canFollow` to determine if you can call `useFollow`.",
-      );
-
-      const request = createFollowRequest(followee, follower);
-      return follow(request);
+      const request = createFollowRequest(profile, session);
+      return followProfile(request);
     },
   );
 }

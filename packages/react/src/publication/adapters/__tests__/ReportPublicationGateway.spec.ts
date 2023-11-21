@@ -189,9 +189,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         const apolloClient = mockLensApolloClient([
           mockReportPublicationResponse({
             variables: {
-              publicationId,
-              reason: expectedRequestReason,
-              additionalComments,
+              request: { for: publicationId, reason: expectedRequestReason, additionalComments },
             },
           }),
         ]);
