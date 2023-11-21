@@ -1,7 +1,9 @@
 import { URI } from '@lens-protocol/shared-kernel';
 
 import { isMomokaPublicationId, PublicationId, TransactionKind } from '../../entities';
-import { MomokaCapable } from '../transactions/MomokaCapable';
+import { DelegableSigning } from '../transactions/DelegableSigning';
+import { PaidTransaction } from '../transactions/PaidTransaction';
+import { SponsorshipReady } from '../transactions/SponsorshipReady';
 import { OpenActionConfig } from './OpenActionConfig';
 import { ReferencePolicyConfig } from './ReferencePolicyConfig';
 
@@ -30,16 +32,32 @@ export type CreateCommentRequest = {
    * The post reference policy.
    */
   reference?: ReferencePolicyConfig;
+  /**
+   * Whether the transaction costs should be sponsored by the Lens API or not.
+   */
+  sponsored: boolean;
 };
 
-export class CreateComment extends MomokaCapable<CreateCommentRequest> {
-  override async execute(request: CreateCommentRequest): Promise<void> {
+export class CreateComment extends SponsorshipReady<CreateCommentRequest> {
+  constructor(
+    protected readonly sponsoredOnChain: DelegableSigning<CreateCommentRequest>,
+    protected readonly sponsoredOnMomoka: DelegableSigning<CreateCommentRequest>,
+    protected readonly paidOnChain: PaidTransaction<CreateCommentRequest>,
+  ) {
+    super();
+  }
+
+  protected override async charged(request: CreateCommentRequest): Promise<void> {
+    return this.paidOnChain.execute(request);
+  }
+
+  protected override async sponsored(request: CreateCommentRequest): Promise<void> {
     if (
       ['actions', 'reference'].some((key) => key in request) ||
       !isMomokaPublicationId(request.commentOn)
     ) {
-      return this.onChain.execute(request);
+      return this.sponsoredOnChain.execute(request);
     }
-    return this.momoka.execute(request);
+    return this.sponsoredOnMomoka.execute(request);
   }
 }

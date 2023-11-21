@@ -4,6 +4,7 @@ import {
   SubsidizeOffChain,
   SignedOnChain,
   TransactionData,
+  PaidTransaction,
 } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
@@ -17,6 +18,7 @@ export function useCreateMirrorController() {
     apolloClient,
     momokaRelayer,
     onChainRelayer,
+    providerFactory,
     publicationCacheManager,
     transactionFactory,
     transactionGateway,
@@ -28,7 +30,11 @@ export function useCreateMirrorController() {
       publicationCacheManager.fetchNewMirror(tx),
     );
 
-    const onChainGateway = new CreateOnChainMirrorGateway(apolloClient, transactionFactory);
+    const onChainGateway = new CreateOnChainMirrorGateway(
+      providerFactory,
+      apolloClient,
+      transactionFactory,
+    );
 
     const onChainMirror = new SignedOnChain(
       activeWallet,
@@ -56,14 +62,25 @@ export function useCreateMirrorController() {
       presenter,
     );
 
-    const delegableOffChainMirror = new DelegableSigning(
+    const delegableMomokaMirror = new DelegableSigning(
       momokaMirror,
       offChainGateway,
       transactionQueue,
       presenter,
     );
 
-    const createMirror = new CreateMirror(delegableOnChainMirror, delegableOffChainMirror);
+    const paidOnChainQuote = new PaidTransaction(
+      activeWallet,
+      onChainGateway,
+      presenter,
+      transactionQueue,
+    );
+
+    const createMirror = new CreateMirror(
+      delegableOnChainMirror,
+      delegableMomokaMirror,
+      paidOnChainQuote,
+    );
 
     await createMirror.execute(request);
 

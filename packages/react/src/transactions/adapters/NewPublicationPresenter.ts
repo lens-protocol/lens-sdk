@@ -1,5 +1,6 @@
 import { AnyPublication } from '@lens-protocol/api-bindings';
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   TransactionError,
   UserRejectedError,
@@ -31,6 +32,7 @@ type AnyCreatePublicationRequest =
 type EarlyFailureError =
   | BroadcastingError
   | PendingSigningRequestError
+  | InsufficientGasError
   | UserRejectedError
   | WalletConnectionError;
 

@@ -28,6 +28,7 @@ export function mockCreateMirrorRequest(
   return {
     mirrorOn: mockPublicationId(),
     signless: false,
+    sponsored: true,
     ...overrides,
     kind: TransactionKind.MIRROR_PUBLICATION,
   };
@@ -36,6 +37,7 @@ export function mockCreateMirrorRequest(
 export function mockCreatePostRequest(overrides?: Partial<CreatePostRequest>): CreatePostRequest {
   return {
     signless: false,
+    sponsored: true,
     metadata: faker.internet.url() as URI,
     actions: [mockUnknownOpenActionConfig()],
     reference: mockAnyoneReferencePolicyConfig(),
@@ -49,6 +51,7 @@ export function mockCreateCommentRequest(
 ): CreateCommentRequest {
   return {
     signless: false,
+    sponsored: true,
     metadata: faker.internet.url() as URI,
     actions: [mockUnknownOpenActionConfig()],
     reference: mockAnyoneReferencePolicyConfig(),
@@ -63,6 +66,7 @@ export function mockCreateQuoteRequest(
 ): CreateQuoteRequest {
   return {
     signless: false,
+    sponsored: true,
     metadata: faker.internet.url() as URI,
     actions: [mockUnknownOpenActionConfig()],
     reference: mockAnyoneReferencePolicyConfig(),

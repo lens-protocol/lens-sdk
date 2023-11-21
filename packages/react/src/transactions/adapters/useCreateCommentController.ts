@@ -4,6 +4,7 @@ import {
   SubsidizeOffChain,
   SignedOnChain,
   TransactionData,
+  PaidTransaction,
 } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
@@ -17,6 +18,7 @@ export function useCreateCommentController() {
     apolloClient,
     momokaRelayer,
     onChainRelayer,
+    providerFactory,
     publicationCacheManager,
     transactionFactory,
     transactionGateway,
@@ -28,7 +30,11 @@ export function useCreateCommentController() {
       publicationCacheManager.fetchNewComment(tx),
     );
 
-    const onChainGateway = new CreateOnChainCommentGateway(apolloClient, transactionFactory);
+    const onChainGateway = new CreateOnChainCommentGateway(
+      providerFactory,
+      apolloClient,
+      transactionFactory,
+    );
 
     const onChainComment = new SignedOnChain(
       activeWallet,
@@ -56,14 +62,25 @@ export function useCreateCommentController() {
       presenter,
     );
 
-    const delegableOffChainComment = new DelegableSigning(
+    const delegableMomokaComment = new DelegableSigning(
       momokaComment,
       offChainGateway,
       transactionQueue,
       presenter,
     );
 
-    const createComment = new CreateComment(delegableOnChainComment, delegableOffChainComment);
+    const paidOnChainQuote = new PaidTransaction(
+      activeWallet,
+      onChainGateway,
+      presenter,
+      transactionQueue,
+    );
+
+    const createComment = new CreateComment(
+      delegableOnChainComment,
+      delegableMomokaComment,
+      paidOnChainQuote,
+    );
 
     await createComment.execute(request);
 

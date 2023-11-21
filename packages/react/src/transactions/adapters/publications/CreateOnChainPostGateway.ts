@@ -17,27 +17,34 @@ import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications'
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
+  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
+import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
 import { ITransactionFactory } from '../ITransactionFactory';
-import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError } from '../relayer';
 import { resolveOpenActionModuleInput } from './resolveOpenActionModuleInput';
 import { resolveReferenceModuleInput } from './resolveReferenceModuleInput';
 
 export class CreateOnChainPostGateway
+  extends AbstractContractCallGateway<CreatePostRequest>
   implements
     IDelegatedTransactionGateway<CreatePostRequest>,
-    ISignedOnChainGateway<CreatePostRequest>
+    ISignedOnChainGateway<CreatePostRequest>,
+    IPaidTransactionGateway<CreatePostRequest>
 {
   constructor(
+    providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<CreatePostRequest>,
-  ) {}
+  ) {
+    super(providerFactory);
+  }
 
   async createDelegatedTransaction(
     request: CreatePostRequest,
@@ -68,8 +75,15 @@ export class CreateOnChainPostGateway
       id: result.id,
       request,
       typedData: omitTypename(result.typedData),
-      fallback: this.createRequestFallback(request, result),
     });
+  }
+
+  protected override async createEncodedData(
+    request: CreatePostRequest,
+  ): Promise<ContractCallDetails> {
+    const input = this.resolveOnchainPostRequest(request);
+    const result = await this.createTypedData(input);
+    return this.createPostCallDetails(result);
   }
 
   private async broadcast(
@@ -85,13 +99,28 @@ export class CreateOnChainPostGateway
     });
 
     if (data.result.__typename === 'LensProfileManagerRelayError') {
-      const result = await this.createTypedData(input);
-      const fallback = this.createRequestFallback(request, result);
-
-      return handleRelayError(data.result, fallback);
+      return handleRelayError(data.result);
     }
 
     return success(data.result);
+  }
+
+  private createPostCallDetails(result: CreateOnchainPostBroadcastItemResult): ContractCallDetails {
+    const contract = lensHub(result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('post', [
+      {
+        profileId: result.typedData.message.profileId,
+        contentURI: result.typedData.message.contentURI,
+        actionModules: result.typedData.message.actionModules,
+        actionModulesInitDatas: result.typedData.message.actionModulesInitDatas,
+        referenceModule: result.typedData.message.referenceModule,
+        referenceModuleInitData: result.typedData.message.referenceModuleInitData,
+      },
+    ]);
+    return {
+      contractAddress: result.typedData.domain.verifyingContract,
+      encodedData: encodedData as Data,
+    };
   }
 
   private async createTypedData(
@@ -116,28 +145,6 @@ export class CreateOnChainPostGateway
       contentURI: request.metadata,
       openActionModules: request.actions?.map(resolveOpenActionModuleInput),
       referenceModule: request.reference && resolveReferenceModuleInput(request.reference),
-    };
-  }
-
-  private createRequestFallback(
-    request: CreatePostRequest,
-    result: CreateOnchainPostBroadcastItemResult,
-  ): SelfFundedProtocolTransactionRequest<CreatePostRequest> {
-    const contract = lensHub(result.typedData.domain.verifyingContract);
-    const encodedData = contract.interface.encodeFunctionData('post', [
-      {
-        profileId: result.typedData.message.profileId,
-        contentURI: result.typedData.message.contentURI,
-        actionModules: result.typedData.message.actionModules,
-        actionModulesInitDatas: result.typedData.message.actionModulesInitDatas,
-        referenceModule: result.typedData.message.referenceModule,
-        referenceModuleInitData: result.typedData.message.referenceModuleInitData,
-      },
-    ]);
-    return {
-      ...request,
-      contractAddress: result.typedData.domain.verifyingContract,
-      encodedData: encodedData as Data,
     };
   }
 }

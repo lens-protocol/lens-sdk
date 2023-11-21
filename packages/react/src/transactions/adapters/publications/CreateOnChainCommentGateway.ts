@@ -17,27 +17,34 @@ import { CreateCommentRequest } from '@lens-protocol/domain/use-cases/publicatio
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
+  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
+import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
 import { ITransactionFactory } from '../ITransactionFactory';
-import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError } from '../relayer';
 import { resolveOpenActionModuleInput } from './resolveOpenActionModuleInput';
 import { resolveReferenceModuleInput } from './resolveReferenceModuleInput';
 
 export class CreateOnChainCommentGateway
+  extends AbstractContractCallGateway<CreateCommentRequest>
   implements
     IDelegatedTransactionGateway<CreateCommentRequest>,
-    ISignedOnChainGateway<CreateCommentRequest>
+    ISignedOnChainGateway<CreateCommentRequest>,
+    IPaidTransactionGateway<CreateCommentRequest>
 {
   constructor(
+    providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<CreateCommentRequest>,
-  ) {}
+  ) {
+    super(providerFactory);
+  }
 
   async createDelegatedTransaction(
     request: CreateCommentRequest,
@@ -68,8 +75,15 @@ export class CreateOnChainCommentGateway
       id: result.id,
       request,
       typedData: omitTypename(result.typedData),
-      fallback: this.createRequestFallback(request, result),
     });
+  }
+
+  protected override async createEncodedData(
+    request: CreateCommentRequest,
+  ): Promise<ContractCallDetails> {
+    const input = this.resolveOnchainCommentRequest(request);
+    const result = await this.createTypedData(input);
+    return this.createCommentCallDetails(result);
   }
 
   private async broadcast(
@@ -85,13 +99,35 @@ export class CreateOnChainCommentGateway
     });
 
     if (data.result.__typename === 'LensProfileManagerRelayError') {
-      const result = await this.createTypedData(input);
-      const fallback = this.createRequestFallback(request, result);
-
-      return handleRelayError(data.result, fallback);
+      return handleRelayError(data.result);
     }
 
     return success(data.result);
+  }
+
+  private createCommentCallDetails(
+    result: CreateOnchainCommentBroadcastItemResult,
+  ): ContractCallDetails {
+    const contract = lensHub(result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('comment', [
+      {
+        profileId: result.typedData.message.profileId,
+        contentURI: result.typedData.message.contentURI,
+        pointedProfileId: result.typedData.message.pointedProfileId,
+        pointedPubId: result.typedData.message.pointedPubId,
+        referrerProfileIds: result.typedData.message.referrerProfileIds,
+        referrerPubIds: result.typedData.message.referrerPubIds,
+        referenceModuleData: result.typedData.message.referenceModuleData,
+        actionModules: result.typedData.message.actionModules,
+        actionModulesInitDatas: result.typedData.message.actionModulesInitDatas,
+        referenceModule: result.typedData.message.referenceModule,
+        referenceModuleInitData: result.typedData.message.referenceModuleInitData,
+      },
+    ]);
+    return {
+      contractAddress: result.typedData.domain.verifyingContract,
+      encodedData: encodedData as Data,
+    };
   }
 
   private async createTypedData(
@@ -117,33 +153,6 @@ export class CreateOnChainCommentGateway
       commentOn: request.commentOn,
       openActionModules: request.actions?.map(resolveOpenActionModuleInput),
       referenceModule: request.reference && resolveReferenceModuleInput(request.reference),
-    };
-  }
-
-  private createRequestFallback(
-    request: CreateCommentRequest,
-    result: CreateOnchainCommentBroadcastItemResult,
-  ): SelfFundedProtocolTransactionRequest<CreateCommentRequest> {
-    const contract = lensHub(result.typedData.domain.verifyingContract);
-    const encodedData = contract.interface.encodeFunctionData('comment', [
-      {
-        profileId: result.typedData.message.profileId,
-        contentURI: result.typedData.message.contentURI,
-        pointedProfileId: result.typedData.message.pointedProfileId,
-        pointedPubId: result.typedData.message.pointedPubId,
-        referrerProfileIds: result.typedData.message.referrerProfileIds,
-        referrerPubIds: result.typedData.message.referrerPubIds,
-        referenceModuleData: result.typedData.message.referenceModuleData,
-        actionModules: result.typedData.message.actionModules,
-        actionModulesInitDatas: result.typedData.message.actionModulesInitDatas,
-        referenceModule: result.typedData.message.referenceModule,
-        referenceModuleInitData: result.typedData.message.referenceModuleInitData,
-      },
-    ]);
-    return {
-      ...request,
-      contractAddress: result.typedData.domain.verifyingContract,
-      encodedData: encodedData as Data,
     };
   }
 }

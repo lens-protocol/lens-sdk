@@ -17,7 +17,11 @@ export function handleRelayError(
   switch (error.reason) {
     case RelayErrorReasonType.AppNotAllowed:
     case LensProfileManagerRelayErrorReasonType.AppNotAllowed:
-      return failure(new BroadcastingError(BroadcastingErrorReason.APP_NOT_ALLOWED));
+      return failure(
+        new BroadcastingError(BroadcastingErrorReason.APP_NOT_ALLOWED, {
+          details: 'See https://docs.lens.xyz/docs/gasless-and-signless#whitelisting-your-app',
+        }),
+      );
 
     case RelayErrorReasonType.RateLimited:
     case LensProfileManagerRelayErrorReasonType.RateLimited:
