@@ -146,7 +146,6 @@ export const CreateMirrorRequestSchema: z.ZodType<
   UnknownObject
 > = z.object({
   mirrorOn: PublicationIdSchema,
-  metadata: UriSchema.optional(),
   kind: z.literal(TransactionKind.MIRROR_PUBLICATION),
   signless: z.boolean(),
 });

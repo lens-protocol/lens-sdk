@@ -51,7 +51,6 @@ export function mockMomokaCommentRequest(request: CreateCommentRequest): MomokaC
 export function mockOnchainMirrorRequest(request: CreateMirrorRequest): OnchainMirrorRequest {
   return {
     mirrorOn: request.mirrorOn,
-    metadataURI: request.metadata,
   };
 }
 

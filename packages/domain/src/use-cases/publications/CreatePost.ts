@@ -11,7 +11,7 @@ export type CreatePostRequest = {
    */
   kind: TransactionKind.CREATE_POST;
   /**
-   * Whether is possible to delegate the publication signing to the profile's chosen profile manager.
+   * Whether is possible to delegate the publication signing to the profile's dispatcher.
    */
   signless: boolean;
   /**
