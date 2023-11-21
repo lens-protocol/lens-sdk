@@ -362,7 +362,7 @@ export type CreateQuoteArgs = {
  * }
  * ```
  *
- * In this case you might want to handle the {@link InsufficientGasError} error like in the example above.
+ * The example above shows how to detect when the user does not have enough funds to pay for the transaction cost.
  *
  * ## Self-funded Fallback
  *

@@ -1,5 +1,6 @@
 import { Mirror } from '@lens-protocol/api-bindings';
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   PublicationId,
   UserRejectedError,
@@ -29,6 +30,19 @@ export type CreateMirrorArgs = {
    * The publication ID to mirror.
    */
   mirrorOn: PublicationId;
+  /**
+   * Whether the transaction costs should be sponsored by the Lens API or
+   * should be paid by the authenticated wallet.
+   *
+   * There are scenarios where the sponsorship will be denied regardless of this value.
+   * See {@link BroadcastingError} with:
+   * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
+   * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
+   * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
+   *
+   * @defaultValue true, the request will be attempted to be sponsored by the Lens API.
+   */
+  sponsored?: boolean;
 };
 
 /**
@@ -130,12 +144,86 @@ export type CreateMirrorArgs = {
  * };
  * ```
  *
+ * ## Self-funded Mirror
+ *
+ * In case you want to pay for the transaction gas costs yourself, you can do so by setting the
+ * `sponsored` parameter to `false`:
+ *
+ * ```ts
+ * const mirror = async (publicationId: PublicationId) => {
+ *   const result = await execute({
+ *     mirrorOn: publicationId,
+ *     sponsored: false,
+ *   });
+ *
+ *   if (result.isFailure()) {
+ *     switch (result.error.name) {
+ *       case 'InsufficientGasError':
+ *         console.log('You do not have enough funds to pay for the transaction cost.');
+ *         break;
+ *
+ *       // ...
+ *     }
+ *     return;
+ *   }
+ *
+ *   // ...
+ * }
+ * ```
+ *
+ * The example above shows how to detect when the user does not have enough funds to pay for the transaction cost.
+ *
+ * ## Self-funded Fallback
+ *
+ * If for some reason the Lens API cannot sponsor the transaction, the hook will fail with a {@link BroadcastingError} with one of the following reasons:
+ * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
+ * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
+ * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
+ *
+ * In those cases you can retry the transaction as self-funded like in the following example:
+ *
+ * ```ts
+ * const mirror = async (publicationId: PublicationId) => {
+ *   const sponsoredResult = await execute({
+ *     mirrorOn: publicationId,
+ *     sponsored: false,
+ *   });
+ *
+ *   if (sponsoredResult.isFailure()) {
+ *     switch (sponsoredResult.error.name) {
+ *       case 'BroadcastingError':
+ *         if ([BroadcastingErrorReason.NOT_SPONSORED, BroadcastingErrorReason.RATE_LIMITED].includes(sponsoredResult.error.reason)) {
+ *
+ *           const chargedResult = = await execute({
+ *             mirrorOn: publicationId,
+ *             sponsored: false,
+ *           });
+ *
+ *           // continue with chargedResult as in the previous example
+ *         }
+ *         break;
+ *
+ *      // ...
+ *   }
+ * }
+ * ```
+ *
+ * We omitted the handling of the {@link BroadcastingErrorReason.APP_NOT_ALLOWED} error because it's usually
+ * something that builder will face when deploying their app to production using the Production Lens API.
+ *
+ * It just requires the app to apply for whitelisting. See https://docs.lens.xyz/docs/gasless-and-signless#whitelisting-your-app.
+ *
+ *
  * @category Publications
  * @group Hooks
  */
 export function useCreateMirror(): UseDeferredTask<
   MirrorAsyncResult,
-  BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
+  | BroadcastingError
+  | InsufficientGasError
+  | PendingSigningRequestError
+  | UserRejectedError
+  | WalletConnectionError,
   CreateMirrorArgs
 > {
   const { data: session } = useSession();
@@ -153,6 +241,7 @@ export function useCreateMirror(): UseDeferredTask<
 
     const request = createMirrorRequest({
       signless: session.profile.signless,
+      sponsored: args.sponsored ?? true,
       ...args,
     });
 

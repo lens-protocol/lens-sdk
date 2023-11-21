@@ -322,7 +322,7 @@ export type CreatePostArgs = {
  *
  * See {@link DegreesOfSeparationReferencePolicyConfig} for more details.
  *
- * ## Self-funded Posts
+ * ## Self-funded Post
  *
  * In case you want to pay for the transaction gas costs yourself, you can do so by setting the
  * `sponsored` parameter to `false`:
@@ -351,7 +351,7 @@ export type CreatePostArgs = {
  * }
  * ```
  *
- * In this case you might want to handle the {@link InsufficientGasError} error like in the example above.
+ * The example above shows how to detect when the user does not have enough funds to pay for the transaction cost.
  *
  * ## Self-funded Fallback
  *

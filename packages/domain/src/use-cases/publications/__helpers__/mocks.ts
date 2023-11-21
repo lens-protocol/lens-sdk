@@ -28,6 +28,7 @@ export function mockCreateMirrorRequest(
   return {
     mirrorOn: mockPublicationId(),
     signless: false,
+    sponsored: true,
     ...overrides,
     kind: TransactionKind.MIRROR_PUBLICATION,
   };

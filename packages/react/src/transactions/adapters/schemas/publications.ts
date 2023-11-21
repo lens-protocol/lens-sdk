@@ -150,6 +150,7 @@ export const CreateMirrorRequestSchema: z.ZodType<
   mirrorOn: PublicationIdSchema,
   kind: z.literal(TransactionKind.MIRROR_PUBLICATION),
   signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 const CollectFeeSchema = z.object({
