@@ -11,7 +11,7 @@ export type CreateQuoteRequest = {
    */
   kind: TransactionKind.CREATE_QUOTE;
   /**
-   * Whether is possible to delegate the publication signing to the profile's dispatcher.
+   * Whether is possible to delegate the publication signing to the profile's chosen profile manager.
    */
   signless: boolean;
   /**
