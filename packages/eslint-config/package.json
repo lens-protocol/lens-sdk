@@ -14,7 +14,7 @@
     "@lens-protocol/prettier-config": "workspace:*",
     "eslint": "^8.54.0",
     "prettier": "^2.8.8",
-    "typescript": "^5.3.2"
+    "typescript": "5.2.2"
   },
   "peerDependencies": {
     "eslint": "^8.54.0"

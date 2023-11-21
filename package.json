@@ -27,7 +27,7 @@
     "rimraf": "^4.4.1",
     "turbo": "^1.10.16",
     "typedoc": "^0.25.3",
-    "typescript": "^5.3.2"
+    "typescript": "5.2.2"
   },
   "resolutions": {
     "ethereumjs-abi": "https://registry.npmjs.org/ethereumjs-abi/-/ethereumjs-abi-0.6.8.tgz"

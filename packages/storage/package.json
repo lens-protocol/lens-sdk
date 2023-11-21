@@ -50,12 +50,12 @@
     "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
     "@types/jest": "29.5.3",
-    "@types/node": "^18.18.11",
+    "@types/node": "^18.18.12",
     "eslint": "^8.54.0",
     "jest": "^29.7.0",
     "prettier": "^2.8.8",
     "ts-jest": "^29.1.1",
-    "typescript": "^5.3.2"
+    "typescript": "5.2.2"
   },
   "prettier": "@lens-protocol/prettier-config",
   "babel": {
