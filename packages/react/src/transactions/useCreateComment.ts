@@ -84,7 +84,7 @@ export type CreateCommentArgs = {
  * ```tsx
  * const { execute, error, loading } = useCreateComment();
  *
- * const comment = (content: string) => {
+ * const comment = async (content: string) => {
  *   // create the desired metadata via the `@lens-protocol/metadata` package helpers
  *   const metadata = textOnly({ content });
  *
@@ -93,6 +93,7 @@ export type CreateCommentArgs = {
  *
  *   // invoke the `execute` function to create the comment
  *   const result = await execute({
+ *     commentOn: publicationId, // the publication ID to comment on
  *     metadata: uri,
  *   });
  * }
@@ -115,6 +116,7 @@ export type CreateCommentArgs = {
  *   const result = await execute({
  *
  *     metadata: uri,
+ *     commentOn: publicationId,
  *   });
  *
  *   if (result.isFailure()) {
@@ -162,7 +164,7 @@ export type CreateCommentArgs = {
  *
  *   // invoke the `execute` function to create the comment
  *   const result = await execute({
- *     commentOn: publicationId, // the publication ID to comment on
+ *     commentOn: publicationId,
  *     metadata: uri,
  *   });
  *
@@ -335,6 +337,26 @@ export type CreateCommentArgs = {
  * ```
  *
  * See {@link DegreesOfSeparationReferencePolicyConfig} for more details.
+ *
+ * ## Creating an app-specific comment
+ *
+ * You can create a comment that is specific to an app by defining the `appId` when creating the comment metadata.
+ *
+ * This allows apps to build custom experiences by only surfacing publications that were created in their app.
+ *
+ * ```tsx
+ * const metadata = textOnly({
+ *  content: `Hello world!`,
+ *  appId: 'my-app-id',
+ * });
+ *
+ * const uri = await uploadToIpfs(metadata);
+ *
+ * const result = await execute({
+ *  commentOn: publicationId,
+ *  metadata: uri,
+ * });
+ * ```
  *
  * ## Self-funded Comment
  *

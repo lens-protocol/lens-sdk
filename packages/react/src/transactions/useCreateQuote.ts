@@ -407,6 +407,25 @@ export type CreateQuoteArgs = {
  *
  * It just requires the app to apply for whitelisting. See https://docs.lens.xyz/docs/gasless-and-signless#whitelisting-your-app.
  *
+ * ## Create an app-specific quote
+ *
+ * You can create a comment that is specific to an app by defining the `appId` when creating the comment metadata.
+ *
+ * This allows apps to build custom experiences by only surfacing publications that were created in their app.
+ *
+ * ```tsx
+ * const metadata = textOnly({
+ *  content: 'Quote content',
+ *  appId: 'my-app-id',
+ * });
+ *
+ * const uri = await uploadToIpfs(metadata);
+ *
+ * const result = await execute({
+ *  quoteOn: publicationId, // the publication ID to quote
+ *  metadata: uri
+ * });
+ * ```
  * @category Publications
  * @group Hooks
  */
