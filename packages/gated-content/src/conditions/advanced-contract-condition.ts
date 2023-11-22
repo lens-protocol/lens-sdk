@@ -49,7 +49,7 @@ function assertValidAbi(humanReadableAbi: string, functionName: string): void {
 
     // assert output is boolean or uint
     invariant(
-      fn.outputs[0] && (fn.outputs[0].type === 'bool' || fn.outputs[0].type === 'uint256'),
+      fn.outputs[0] && (fn.outputs[0].type === 'bool' || /^uint(8|16|32|64|128|256)$/.test(fn.outputs[0].type),
       'unsupported',
     );
   } catch (e: unknown) {
