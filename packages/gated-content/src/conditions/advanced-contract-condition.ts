@@ -100,7 +100,7 @@ function assertValidFunctionParams(condition: AdvancedContractCondition): void {
           `param ${input.name} is invalid, must be a boolean)`,
         );
       } else if (input.baseType === 'bytes') {
-        invariant(param.startsWith('0x'), `param ${input.name} is invalid, must be a hex string)`);
+        invariant(/^0x[0-9A-Fa-f]+$/.test(param), `param ${input.name} is invalid, must be a hex string)`);
       }
     });
 
