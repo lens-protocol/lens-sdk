@@ -1,27 +1,25 @@
 import './shims';
 
+import { LensConfig, LensProvider, development } from '@lens-protocol/react-native';
+import { storage } from '@lens-protocol/react-native/storage/mmkv';
 import React from 'react';
-import {LensConfig, LensProvider, development} from '@lens-protocol/react';
-import {View, StyleSheet, SafeAreaView} from 'react-native';
+import { View, StyleSheet, SafeAreaView } from 'react-native';
 
-import {ExplorePublications} from './src/ExplorePublications';
-import {mmkvStorageProvider} from './src/mmkvStorageProvider';
-import {bindings} from './src/wallet';
-import {LoginButton} from './src/LoginButton';
+import { LoginButton } from './LoginButton';
+import { bindings } from './wallet';
 
 const lensConfig: LensConfig = {
   bindings: bindings(),
   environment: development,
-  storage: mmkvStorageProvider(),
+  storage: storage(),
 };
 
-export default function App() {
+export function App() {
   return (
     <LensProvider config={lensConfig}>
       <SafeAreaView style={styles.wrapper}>
         <View style={styles.container}>
           <LoginButton />
-          <ExplorePublications />
         </View>
       </SafeAreaView>
     </LensProvider>

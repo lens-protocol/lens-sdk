@@ -1,31 +1,42 @@
+import { useSession, useLogin, useLogout, SessionType } from '@lens-protocol/react-native';
 import React from 'react';
-import {useActiveProfile, useWalletLogin, useWalletLogout} from '@lens-protocol/react';
-import {Button, Text, View} from 'react-native';
+import { Button, Text, View } from 'react-native';
 
-import {wallet} from './wallet';
+import { wallet } from './wallet';
 
 export function LoginButton() {
-  const {execute: login, isPending: loginPending} = useWalletLogin();
-  const {execute: logout, isPending: logoutPending} = useWalletLogout();
-  const {data: profile} = useActiveProfile();
+  const { execute: login, loading: loginLoading } = useLogin();
+  const { execute: logout, loading: logoutLoading } = useLogout();
+  const { data: session } = useSession();
 
   const onLoginPress = async () => {
-    await login(wallet);
+    const result = await login(wallet);
+
+    if (result.isFailure()) {
+    }
   };
 
   const onLogoutPress = async () => {
     await logout();
   };
 
+  if (session?.authenticated) {
+    return (
+      <View>
+        <Text>
+          Welcome{' '}
+          {session.type === SessionType.WithProfile
+            ? session.profile.metadata?.displayName ?? session.profile.handle?.fullHandle
+            : session.address}
+        </Text>
+        <Button disabled={logoutLoading} onPress={onLogoutPress} title="Log out" />
+      </View>
+    );
+  }
+
   return (
     <View>
-      {profile && (
-        <View>
-          <Text>Welcome @{profile.handle}</Text>
-          <Button disabled={logoutPending} onPress={onLogoutPress} title="Log out" />
-        </View>
-      )}
-      {!profile && <Button disabled={loginPending} onPress={onLoginPress} title="Log in" />}
+      <Button disabled={loginLoading} onPress={onLoginPress} title="Log in" />
     </View>
   );
 }

@@ -95,6 +95,7 @@ generates:
           omitOperationSuffix: true # MUST goes with typescript-operations.omitOperationSuffix
           operationResultSuffix: 'Data' # goes with typescript-operations.operationResultSuffix
           fragmentVariablePrefix: Fragment # because FragmentDoc suffix is removed by omitOperationSuffix we need to add a prefix to differentiate fragment types from fragment documents
+          documentMode: documentNode
       - 'typescript-apollo-client-helpers'
       - 'fragment-matcher'
 
@@ -128,3 +129,4 @@ generates:
           omitOperationSuffix: true # MUST goes with typescript-operations.omitOperationSuffix
           operationResultSuffix: 'Data' # goes with typescript-operations.operationResultSuffix
           fragmentVariablePrefix: Fragment # because FragmentDoc suffix is removed by omitOperationSuffix we need to add a prefix to differentiate fragment types from fragment documents
+          documentMode: documentNode

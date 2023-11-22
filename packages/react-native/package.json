@@ -1,0 +1,116 @@
+{
+  "name": "@lens-protocol/react-native",
+  "version": "0.0.1",
+  "description": "Lens Protocol SDK for React Native",
+  "main": "dist/lens-protocol-react-native.cjs.js",
+  "module": "dist/lens-protocol-react-native.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/lens-protocol-react-native.esm.js",
+      "default": "./dist/lens-protocol-react-native.cjs.js"
+    },
+    "./storage/mmkv": {
+      "module": "./storage/mmkv/dist/lens-protocol-react-native-storage-mmkv.esm.js",
+      "default": "./storage/mmkv/dist/lens-protocol-react-native-storage-mmkv.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": {
+    "directory": "packages/react-native",
+    "type": "git",
+    "url": "git://github.com/lens-protocol/lens-sdk.git"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "storage"
+  ],
+  "keywords": [
+    "react-native",
+    "lens-protocol",
+    "lens-protocol-sdk"
+  ],
+  "scripts": {
+    "build": "preconstruct build",
+    "eslint:fix": "pnpm run eslint --fix",
+    "eslint": "eslint src",
+    "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
+    "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix && pnpm run tsc",
+    "prettier:fix": "prettier --write .",
+    "prettier": "prettier --check .",
+    "test": "jest --passWithNoTests",
+    "test:watch": "jest --watch",
+    "tsc": "tsc --noEmit"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@lens-protocol/api-bindings": "workspace:*",
+    "@lens-protocol/domain": "workspace:*",
+    "@lens-protocol/react": "workspace:*",
+    "@lens-protocol/shared-kernel": "workspace:*",
+    "@lens-protocol/storage": "workspace:*",
+    "tslib": "^2.6.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/preset-typescript": "^7.18.6",
+    "@lens-protocol/eslint-config": "workspace:*",
+    "@lens-protocol/metadata": "^1.0.0",
+    "@lens-protocol/prettier-config": "workspace:*",
+    "@lens-protocol/tsconfig": "workspace:*",
+    "@types/jest": "29.5.3",
+    "@types/jest-when": "^3.5.2",
+    "@types/react": "^18.2.37",
+    "eslint": "^8.34.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "jest": "^29.4.3",
+    "jest-environment-jsdom": "^29.4.3",
+    "jest-mock-extended": "^3.0.5",
+    "jest-when": "^3.5.2",
+    "prettier": "^2.8.4",
+    "react": "~18.2.0",
+    "react-native": "~0.72.7",
+    "react-native-mmkv": "~2.11.0",
+    "ts-jest": "^29.0.5",
+    "typescript": "^5.2.2"
+  },
+  "peerDependencies": {
+    "@lens-protocol/metadata": "^1.0.0",
+    "@types/react": "^18.0.0",
+    "ethers": "^5.7.2",
+    "react": "~18.2.0",
+    "react-native": "~0.72.7",
+    "react-native-mmkv": "~2.11.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    },
+    "react-native-mmkv": {
+      "optional": true
+    }
+  },
+  "prettier": "@lens-protocol/prettier-config",
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      [
+        "@babel/preset-react",
+        {
+          "runtime": "automatic"
+        }
+      ],
+      "@babel/preset-typescript"
+    ]
+  },
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts",
+      "storage/mmkv.ts"
+    ],
+    "exports": true
+  }
+}
