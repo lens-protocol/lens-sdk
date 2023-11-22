@@ -1,3 +1,6 @@
+/*
+ * @jest-environment node
+ */
 import {
   LensProfileManagerRelayErrorReasonType,
   SafeApolloClient,
@@ -11,26 +14,40 @@ import {
   mockRelaySuccessFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
-import { mockNonce, mockCreateQuoteRequest } from '@lens-protocol/domain/mocks';
+import { mockNonce, mockCreateQuoteRequest, mockWallet } from '@lens-protocol/domain/mocks';
 import {
   BroadcastingError,
   BroadcastingErrorReason,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType } from '@lens-protocol/shared-kernel';
+import { providers } from 'ethers';
+import { mock } from 'jest-mock-extended';
 
 import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
+import { mockIProviderFactory } from '../../../../wallet/adapters/__helpers__/mocks';
+import { UnsignedContractCallTransaction } from '../../AbstractContractCallGateway';
 import {
   assertBroadcastingErrorWithReason,
   assertUnsignedProtocolCallCorrectness,
 } from '../../__helpers__/assertions';
-import { mockITransactionFactory } from '../../__helpers__/mocks';
+import { mockITransactionFactory, mockJsonRpcProvider } from '../../__helpers__/mocks';
 import { CreateOnChainQuoteGateway } from '../CreateOnChainQuoteGateway';
 import { mockOnchainQuoteRequest } from '../__helpers__/mocks';
 
-function setupTestScenario({ apolloClient }: { apolloClient: SafeApolloClient }) {
+function setupTestScenario({
+  apolloClient,
+  provider = mock<providers.JsonRpcProvider>(),
+}: {
+  apolloClient: SafeApolloClient;
+  provider?: providers.JsonRpcProvider;
+}) {
   const transactionFactory = mockITransactionFactory();
+  const providerFactory = mockIProviderFactory({
+    chainType: ChainType.POLYGON,
+    provider,
+  });
 
-  const gateway = new CreateOnChainQuoteGateway(apolloClient, transactionFactory);
+  const gateway = new CreateOnChainQuoteGateway(providerFactory, apolloClient, transactionFactory);
 
   return { gateway };
 }
@@ -75,6 +92,27 @@ describe(`Given an instance of ${CreateOnChainQuoteGateway.name}`, () => {
       const unsignedCall = await gateway.createUnsignedProtocolCall(request, nonce);
 
       expect(unsignedCall.nonce).toEqual(nonce);
+    });
+  });
+
+  describe(`when creating an UnsignedTransaction<CreateQuoteRequest>`, () => {
+    const wallet = mockWallet();
+
+    it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+      const provider = await mockJsonRpcProvider();
+      const apolloClient = mockLensApolloClient([
+        mockCreateOnchainQuoteTypedDataResponse({
+          variables: {
+            request: onchainQuoteRequest,
+          },
+          data,
+        }),
+      ]);
+      const { gateway } = setupTestScenario({ apolloClient, provider });
+
+      const unsignedTransaction = await gateway.createUnsignedTransaction(request, wallet);
+
+      expect(unsignedTransaction).toBeInstanceOf(UnsignedContractCallTransaction);
     });
   });
 

@@ -106,6 +106,7 @@ export const CreatePostRequestSchema: z.ZodType<CreatePostRequest, z.ZodTypeDef,
   z.object({
     kind: z.literal(TransactionKind.CREATE_POST),
     signless: z.boolean(),
+    sponsored: z.boolean(),
     metadata: UriSchema,
     reference: ReferencePolicyConfigSchema.optional(),
     actions: OpenActionConfigSchema.array()
@@ -120,6 +121,7 @@ export const CreateCommentRequestSchema: z.ZodType<
 > = z.object({
   kind: z.literal(TransactionKind.CREATE_COMMENT),
   signless: z.boolean(),
+  sponsored: z.boolean(),
   metadata: UriSchema,
   commentOn: PublicationIdSchema,
   reference: ReferencePolicyConfigSchema.optional(),
@@ -132,6 +134,7 @@ export const CreateQuoteRequestSchema: z.ZodType<CreateQuoteRequest, z.ZodTypeDe
   z.object({
     kind: z.literal(TransactionKind.CREATE_QUOTE),
     signless: z.boolean(),
+    sponsored: z.boolean(),
     metadata: UriSchema,
     quoteOn: PublicationIdSchema,
     reference: ReferencePolicyConfigSchema.optional(),
@@ -148,6 +151,7 @@ export const CreateMirrorRequestSchema: z.ZodType<
   mirrorOn: PublicationIdSchema,
   kind: z.literal(TransactionKind.MIRROR_PUBLICATION),
   signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 const CollectFeeSchema = z.object({

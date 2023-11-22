@@ -94,14 +94,16 @@ export class OpenActionGateway
       const result = await this.createActOnOpenActionTypedData(input);
       return this.createPublicActProxyCallDetails(request, result);
     }
+
     if (request.type === AllOpenActionType.LEGACY_COLLECT) {
       const input = this.resolveLegacyCollectRequest(request);
       const result = await this.createLegacyCollectTypedData(input);
-      return this.createCollectCallDetails(request, result);
+      return this.createLegacyCollectCallDetails(result);
     }
+
     const input = this.resolveActOnOpenActionRequest(request);
     const result = await this.createActOnOpenActionTypedData(input);
-    return this.createActCallDetails(request, result);
+    return this.createActCallDetails(result);
   }
 
   private async createLegacyCollectUnsignedProtocolCall(
@@ -266,8 +268,7 @@ export class OpenActionGateway
     return data.result;
   }
 
-  private createCollectCallDetails(
-    request: LegacyCollectRequest,
+  private createLegacyCollectCallDetails(
     result: gql.CreateLegacyCollectBroadcastItemResult,
   ): ContractCallDetails {
     const contract = lensHub(result.typedData.domain.verifyingContract);
@@ -282,14 +283,12 @@ export class OpenActionGateway
       },
     ]);
     return {
-      ...request,
       contractAddress: result.typedData.domain.verifyingContract,
       encodedData: encodedData as Data,
     };
   }
 
   private createActCallDetails(
-    request: NewOpenActionRequest,
     result: gql.CreateActOnOpenActionBroadcastItemResult,
   ): ContractCallDetails {
     const contract = lensHub(result.typedData.domain.verifyingContract);
@@ -305,7 +304,6 @@ export class OpenActionGateway
       },
     ]);
     return {
-      ...request,
       contractAddress: result.typedData.domain.verifyingContract,
       encodedData: encodedData as Data,
     };

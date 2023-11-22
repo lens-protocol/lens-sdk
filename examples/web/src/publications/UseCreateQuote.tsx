@@ -32,6 +32,7 @@ function QuoteComposer() {
     const result = await execute({
       quoteOn: publication?.id ?? never('publication is not loaded'),
       metadata: await uploadJson(metadata),
+      sponsored: formData.get('sponsored') === 'on',
     });
 
     // check for failure scenarios
@@ -72,6 +73,17 @@ function QuoteComposer() {
           style={{ resize: 'none' }}
           disabled={loading}
         ></textarea>
+
+        <label>
+          <input
+            type="checkbox"
+            name="sponsored"
+            disabled={loading}
+            value="on"
+            defaultChecked={true}
+          />
+          sponsored
+        </label>
 
         <button type="submit" disabled={loading}>
           Quote
