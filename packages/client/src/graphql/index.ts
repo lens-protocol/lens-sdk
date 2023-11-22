@@ -120,6 +120,7 @@ export type {
   FollowRequest,
   FollowRevenueRequest,
   GenerateModuleCurrencyApprovalDataRequest,
+  LastLoggedInProfileRequest,
   LinkHandleToProfileRequest,
   UnlinkHandleFromProfileRequest,
   HidePublicationRequest,
