@@ -5,4 +5,4 @@ export * from './useSearchPublications';
 export * from './useExploreProfiles';
 export * from './useExplorePublications';
 
-export type { FeedItem, FeedHighlight } from '@lens-protocol/api-bindings';
+export type { FeedItem, FeedHighlight, ExplorePublication } from '@lens-protocol/api-bindings';
