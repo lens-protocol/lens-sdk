@@ -96,6 +96,11 @@ const profileHooks = [
     description: 'Fetch profiles that have been blocked.',
     path: '/profiles/useBlockedProfiles',
   },
+  {
+    label: 'useLastLoggedInProfile',
+    description: 'Fetch the last logged in profile for a wallet address.',
+    path: '/profiles/useLastLoggedInProfile',
+  },
 ];
 
 export function ProfilesPage() {

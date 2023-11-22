@@ -50,7 +50,7 @@ export class Wallet {
   }
 
   /**
-   * Get all owned handles by a wallet address.
+   * Fetch all owned handles by a wallet address.
    *
    * @param request - Request object for the query
    * @returns Handles wrapped with {@link PaginatedResult}
@@ -73,7 +73,7 @@ export class Wallet {
   }
 
   /**
-   * Get all profiles managed by a wallet address.
+   * Fetch all profiles managed by a wallet address.
    *
    * @param request - Request object for the query
    * @returns Profiles wrapped with {@link PaginatedResult}
@@ -188,7 +188,7 @@ export class Wallet {
   }
 
   /**
-   * Get the last logged in profile for a wallet address.
+   * Fetch the last logged in profile for a wallet address.
    *
    * @param request - Request object for the query
    * @returns Profile
