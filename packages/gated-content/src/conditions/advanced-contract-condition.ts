@@ -140,7 +140,7 @@ function assertValidComparison(condition: AdvancedContractCondition): void {
     }
 
     // for uint results we allow all comparisons but we check the provided value
-    if (fn.outputs[0].baseType.includes('int')) {
+    if (/^uint(8|16|32|64|128|256)$/.test(fn.outputs[0].baseType)) {
       BigNumber.from(condition.value);
     }
   } catch (e: unknown) {
