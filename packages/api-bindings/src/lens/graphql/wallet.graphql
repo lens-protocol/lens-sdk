@@ -42,3 +42,15 @@ query UserSigNonces {
     ...UserSigNonces
   }
 }
+
+query LastLoggedInProfile(
+  $request: LastLoggedInProfileRequest!
+  $profileCoverSize: ImageTransform = {}
+  $profilePictureSize: ImageTransform = {}
+  $activityOn: [AppId!]
+  $fxRateFor: SupportedFiatType = USD
+) {
+  result: lastLoggedInProfile(request: $request) {
+    ...Profile
+  }
+}

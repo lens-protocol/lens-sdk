@@ -35,11 +35,11 @@ export type PoapEventFragment = {
   startDate: string | null;
   endDate: string | null;
   expiryDate: string | null;
-  virtualEvent: boolean | null;
-  fromAdmin: boolean | null;
+  virtualEvent: boolean;
+  fromAdmin: boolean;
   animationUrl: string | null;
   eventTemplateId: number | null;
-  privateEvent: boolean | null;
+  privateEvent: boolean;
 };
 
 export type PoapTokenFragment = {
@@ -1292,6 +1292,139 @@ export const PoapHoldersDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'publications' } },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'upvotes' },
+            name: { kind: 'Name', value: 'reactions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'type' },
+                      value: { kind: 'EnumValue', value: 'UPVOTE' },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'downvotes' },
+            name: { kind: 'Name', value: 'reactions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'type' },
+                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'upvoted' },
+            name: { kind: 'Name', value: 'reacted' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'type' },
+                      value: { kind: 'EnumValue', value: 'UPVOTE' },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'downvoted' },
+            name: { kind: 'Name', value: 'reacted' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'type' },
+                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'collects' },
+            name: { kind: 'Name', value: 'countOpenActions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'anyOf' },
+                      value: {
+                        kind: 'ListValue',
+                        values: [
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: 'category' },
+                                value: { kind: 'EnumValue', value: 'COLLECT' },
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'countOpenActions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profileStatsCountOpenActionArgs' },
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
             alias: { kind: 'Name', value: 'upvoteReactions' },
             name: { kind: 'Name', value: 'reactions' },
             arguments: [
@@ -1370,20 +1503,6 @@ export const PoapHoldersDocument = {
                       value: { kind: 'EnumValue', value: 'DOWNVOTE' },
                     },
                   ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'countOpenActions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profileStatsCountOpenActionArgs' },
                 },
               },
             ],

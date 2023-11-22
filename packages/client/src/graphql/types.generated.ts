@@ -283,7 +283,7 @@ export type ExploreProfilesRequest = {
 
 export type ExploreProfilesWhere = {
   /** Array of custom filters for exploring profiles */
-  customFilters?: InputMaybe<Array<CustomFiltersType>>;
+  customFilters?: Array<CustomFiltersType>;
   /** Filter profiles created since the specified timestamp */
   since?: InputMaybe<Scalars['UnixTimestamp']['input']>;
 };
@@ -437,7 +437,7 @@ export type GetProfileMetadataArgs = {
   /** The app id to query the profile's metadata */
   appId?: InputMaybe<Scalars['AppId']['input']>;
   /** If true, will fallback to global profile metadata, if there is no metadata set for that specific app id */
-  useFallback?: InputMaybe<Scalars['Boolean']['input']>;
+  useFallback?: Scalars['Boolean']['input'];
 };
 
 export type HidePublicationRequest = {
@@ -461,11 +461,11 @@ export type IllegalReasonInput = {
 
 export type ImageTransform = {
   /** Set the transformed image's height */
-  height?: InputMaybe<Scalars['ImageSizeTransform']['input']>;
+  height?: Scalars['ImageSizeTransform']['input'];
   /** Set if you want to keep the image's original aspect ratio. True by default. If explicitly set to false, the image will stretch based on the width and height values. */
-  keepAspectRatio?: InputMaybe<Scalars['Boolean']['input']>;
+  keepAspectRatio?: Scalars['Boolean']['input'];
   /** Set the transformed image's width */
-  width?: InputMaybe<Scalars['ImageSizeTransform']['input']>;
+  width?: Scalars['ImageSizeTransform']['input'];
 };
 
 export type InternalAddCuratedTagRequest = {
@@ -700,7 +700,7 @@ export type MultirecipientFeeCollectModuleInput = {
   endsAt?: InputMaybe<Scalars['DateTime']['input']>;
   followerOnly: Scalars['Boolean']['input'];
   recipients: Array<RecipientDataInput>;
-  referralFee?: InputMaybe<Scalars['Float']['input']>;
+  referralFee?: Scalars['Float']['input'];
 };
 
 export type MutualFollowersRequest = {
@@ -983,7 +983,7 @@ export type PopularNftCollectionsRequest = {
   /** Include only verified collections */
   onlyVerified?: InputMaybe<Scalars['Boolean']['input']>;
   /** The ordering of Nft collection owners. Defaults to Total Lens Profile owners */
-  orderBy?: InputMaybe<PopularNftCollectionsOrder>;
+  orderBy?: PopularNftCollectionsOrder;
 };
 
 export type ProfileActionHistoryRequest = {
@@ -1093,12 +1093,12 @@ export type ProfileManagersRequest = {
 export type ProfileRecommendationsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   /** Disable machine learning recommendations (default: false) */
-  disableML?: InputMaybe<Scalars['Boolean']['input']>;
+  disableML?: Scalars['Boolean']['input'];
   /** Filter based on a specific profile ID */
   for: Scalars['ProfileId']['input'];
   limit?: InputMaybe<LimitType>;
   /** Shuffle the recommendations (default: false) */
-  shuffle?: InputMaybe<Scalars['Boolean']['input']>;
+  shuffle?: Scalars['Boolean']['input'];
 };
 
 export type ProfileRequest = {
@@ -1541,7 +1541,7 @@ export type SimpleCollectOpenActionModuleInput = {
   endsAt?: InputMaybe<Scalars['DateTime']['input']>;
   followerOnly: Scalars['Boolean']['input'];
   recipient?: InputMaybe<Scalars['EvmAddress']['input']>;
-  referralFee?: InputMaybe<Scalars['Float']['input']>;
+  referralFee?: Scalars['Float']['input'];
 };
 
 export type SpamReasonInput = {
@@ -1557,7 +1557,7 @@ export enum SupportedFiatType {
 
 export type SupportedModulesRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  includeUnknown?: InputMaybe<Scalars['Boolean']['input']>;
+  includeUnknown?: Scalars['Boolean']['input'];
   limit?: InputMaybe<LimitType>;
 };
 

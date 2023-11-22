@@ -205,11 +205,18 @@ fragment ProfileStats on ProfileStats {
   mirrors
   quotes
   publications
+  upvotes: reactions(request: { type: UPVOTE })
+  downvotes: reactions(request: { type: DOWNVOTE })
+  upvoted: reacted(request: { type: UPVOTE })
+  downvoted: reacted(request: { type: DOWNVOTE })
+  collects: countOpenActions(request: { anyOf: [{ category: COLLECT }] })
+  countOpenActions(request: $profileStatsCountOpenActionArgs)
+
+  # @deprecated
   upvoteReactions: reactions(request: { type: UPVOTE })
   downvoteReactions: reactions(request: { type: DOWNVOTE })
   upvoteReacted: reacted(request: { type: UPVOTE })
   downvoteReacted: reacted(request: { type: DOWNVOTE })
-  countOpenActions(request: $profileStatsCountOpenActionArgs)
 }
 
 fragment HandleInfo on HandleInfo {
@@ -1430,9 +1437,14 @@ fragment PublicationStats on PublicationStats {
   mirrors
   quotes
   bookmarks
+  upvotes: reactions(request: { type: UPVOTE })
+  downvotes: reactions(request: { type: DOWNVOTE })
+  collects: countOpenActions(request: { anyOf: [{ category: COLLECT }] })
+  countOpenActions(request: $publicationStatsCountOpenActionArgs)
+
+  # @deprecated
   upvoteReactions: reactions(request: { type: UPVOTE })
   downvoteReactions: reactions(request: { type: DOWNVOTE })
-  countOpenActions(request: $publicationStatsCountOpenActionArgs)
 }
 
 fragment Post on Post {
