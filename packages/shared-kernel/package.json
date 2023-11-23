@@ -49,7 +49,7 @@
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
-    "@types/jest": "29.5.3",
+    "@types/jest": "29.5.10",
     "@types/lodash": "^4.14.202",
     "@types/uuid": "^9.0.7",
     "eslint": "^8.54.0",
