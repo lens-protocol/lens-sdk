@@ -911,8 +911,8 @@ importers:
         specifier: 0.6.2
         version: 0.6.2
       '@ensdomains/resolver':
-        specifier: 0.2.4
-        version: 0.2.4
+        specifier: 0.3.1
+        version: 0.3.1
       '@ethersproject/abi':
         specifier: ^5.7.0
         version: 5.7.0
@@ -963,7 +963,7 @@ importers:
         version: 4.6.0(eslint@8.54.0)
       ethereum-waffle:
         specifier: ^4.0.10
-        version: 4.0.10(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.2.4)(@ethersproject/abi@5.7.0)(@ethersproject/providers@5.7.2)(ethers@5.7.2)(typescript@5.2.2)
+        version: 4.0.10(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.3.1)(@ethersproject/abi@5.7.0)(@ethersproject/providers@5.7.2)(ethers@5.7.2)(typescript@5.2.2)
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -1156,8 +1156,8 @@ importers:
         specifier: 0.6.2
         version: 0.6.2
       '@ensdomains/resolver':
-        specifier: 0.2.4
-        version: 0.2.4
+        specifier: 0.3.1
+        version: 0.3.1
       '@ethersproject/abi':
         specifier: ^5.7.0
         version: 5.7.0
@@ -1205,7 +1205,7 @@ importers:
         version: 4.6.0(eslint@8.54.0)
       ethereum-waffle:
         specifier: ^4.0.10
-        version: 4.0.10(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.2.4)(@ethersproject/abi@5.7.0)(@ethersproject/providers@5.7.2)(ethers@5.7.2)(typescript@5.2.2)
+        version: 4.0.10(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.3.1)(@ethersproject/abi@5.7.0)(@ethersproject/providers@5.7.2)(ethers@5.7.2)(typescript@5.2.2)
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -3408,8 +3408,8 @@ packages:
       testrpc: 0.0.1
     dev: true
 
-  /@ensdomains/resolver@0.2.4:
-    resolution: {integrity: sha512-bvaTH34PMCbv6anRa9I/0zjLJgY4EuznbEMgbV77JBCQ9KNC46rzi0avuxpOfu+xDjPEtSFGqVEOr5GlUSGudA==}
+  /@ensdomains/resolver@0.3.1:
+    resolution: {integrity: sha512-cXY7nomODddJ59pvkwkxp7StgKcv8Xb0OhQE/pCe80448T8tELPGEghf2thtjz4+4f+c7mt8XJQ04Y0Guc0lnA==}
     deprecated: Please use @ensdomains/ens-contracts
     dev: true
 
@@ -3644,13 +3644,13 @@ packages:
     resolution: {integrity: sha512-ut5V+D+fOoWPgGGNj83GGjnntO39xDy6DWxO0wb7Jp3DcMX0TfIqdzHF85VTQkerdyGmuuMD9AKAo5KiNlf/AQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  /@ethereum-waffle/chai@4.0.10(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.2.4)(ethers@5.7.2):
+  /@ethereum-waffle/chai@4.0.10(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.3.1)(ethers@5.7.2):
     resolution: {integrity: sha512-X5RepE7Dn8KQLFO7HHAAe+KeGaX/by14hn90wePGBhzL54tq4Y8JscZFu+/LCwCl6TnkAAy5ebiMoqJ37sFtWw==}
     engines: {node: '>=10.0'}
     peerDependencies:
       ethers: '*'
     dependencies:
-      '@ethereum-waffle/provider': 4.0.5(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.2.4)(ethers@5.7.2)
+      '@ethereum-waffle/provider': 4.0.5(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.3.1)(ethers@5.7.2)
       debug: 4.3.4
       ethers: 5.7.2
       json-bigint: 1.0.0
@@ -3686,7 +3686,7 @@ packages:
       - typescript
     dev: true
 
-  /@ethereum-waffle/ens@4.0.3(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.2.4)(ethers@5.7.2):
+  /@ethereum-waffle/ens@4.0.3(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.3.1)(ethers@5.7.2):
     resolution: {integrity: sha512-PVLcdnTbaTfCrfSOrvtlA9Fih73EeDvFS28JQnT5M5P4JMplqmchhcZB1yg/fCtx4cvgHlZXa0+rOCAk2Jk0Jw==}
     engines: {node: '>=10.0'}
     peerDependencies:
@@ -3695,7 +3695,7 @@ packages:
       ethers: '*'
     dependencies:
       '@ensdomains/ens': 0.6.2
-      '@ensdomains/resolver': 0.2.4
+      '@ensdomains/resolver': 0.3.1
       ethers: 5.7.2
     dev: true
 
@@ -3708,13 +3708,13 @@ packages:
       ethers: 5.7.2
     dev: true
 
-  /@ethereum-waffle/provider@4.0.5(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.2.4)(ethers@5.7.2):
+  /@ethereum-waffle/provider@4.0.5(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.3.1)(ethers@5.7.2):
     resolution: {integrity: sha512-40uzfyzcrPh+Gbdzv89JJTMBlZwzya1YLDyim8mVbEqYLP5VRYWoGp0JMyaizgV3hMoUFRqJKVmIUw4v7r3hYw==}
     engines: {node: '>=10.0'}
     peerDependencies:
       ethers: '*'
     dependencies:
-      '@ethereum-waffle/ens': 4.0.3(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.2.4)(ethers@5.7.2)
+      '@ethereum-waffle/ens': 4.0.3(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.3.1)(ethers@5.7.2)
       '@ganache/ethereum-options': 0.1.4
       debug: 4.3.4
       ethers: 5.7.2
@@ -11788,17 +11788,17 @@ packages:
       setimmediate: 1.0.5
     dev: true
 
-  /ethereum-waffle@4.0.10(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.2.4)(@ethersproject/abi@5.7.0)(@ethersproject/providers@5.7.2)(ethers@5.7.2)(typescript@5.2.2):
+  /ethereum-waffle@4.0.10(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.3.1)(@ethersproject/abi@5.7.0)(@ethersproject/providers@5.7.2)(ethers@5.7.2)(typescript@5.2.2):
     resolution: {integrity: sha512-iw9z1otq7qNkGDNcMoeNeLIATF9yKl1M8AIeu42ElfNBplq0e+5PeasQmm8ybY/elkZ1XyRO0JBQxQdVRb8bqQ==}
     engines: {node: '>=10.0'}
     hasBin: true
     peerDependencies:
       ethers: '*'
     dependencies:
-      '@ethereum-waffle/chai': 4.0.10(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.2.4)(ethers@5.7.2)
+      '@ethereum-waffle/chai': 4.0.10(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.3.1)(ethers@5.7.2)
       '@ethereum-waffle/compiler': 4.0.3(@ethersproject/abi@5.7.0)(@ethersproject/providers@5.7.2)(ethers@5.7.2)(solc@0.8.15)(typechain@8.3.2)(typescript@5.2.2)
       '@ethereum-waffle/mock-contract': 4.0.4(ethers@5.7.2)
-      '@ethereum-waffle/provider': 4.0.5(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.2.4)(ethers@5.7.2)
+      '@ethereum-waffle/provider': 4.0.5(@ensdomains/ens@0.6.2)(@ensdomains/resolver@0.3.1)(ethers@5.7.2)
       ethers: 5.7.2
       solc: 0.8.15
       typechain: 8.3.2(typescript@5.2.2)

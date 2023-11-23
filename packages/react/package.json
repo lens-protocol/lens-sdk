@@ -61,7 +61,7 @@
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
     "@ensdomains/ens": "0.6.2",
-    "@ensdomains/resolver": "0.2.4",
+    "@ensdomains/resolver": "0.3.1",
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/bytes": "^5.7.0",
     "@faker-js/faker": "^7.6.0",
