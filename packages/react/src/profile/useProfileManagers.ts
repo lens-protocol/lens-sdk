@@ -1,8 +1,11 @@
-import { useProfileManagers as useProfileManagersQuery } from '@lens-protocol/api-bindings';
+import {
+  ProfileManager,
+  useProfileManagers as useProfileManagersQuery,
+} from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/domain/entities';
 
 import { useLensApolloClient } from '../helpers/arguments';
-import { PaginatedArgs, usePaginatedReadResult } from '../helpers/reads';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 
 export type UseProfileManagersArgs = PaginatedArgs<{
   /**
@@ -43,7 +46,9 @@ export type UseProfileManagersArgs = PaginatedArgs<{
  * @category Profiles
  * @group Hooks
  */
-export function useProfileManagers(args: UseProfileManagersArgs) {
+export function useProfileManagers(
+  args: UseProfileManagersArgs,
+): PaginatedReadResult<ProfileManager[]> {
   return usePaginatedReadResult(
     useProfileManagersQuery(
       useLensApolloClient({
