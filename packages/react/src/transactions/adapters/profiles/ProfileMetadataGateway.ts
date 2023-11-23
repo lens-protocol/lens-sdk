@@ -16,25 +16,32 @@ import { SetProfileMetadataRequest } from '@lens-protocol/domain/use-cases/profi
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
+  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
+import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
 import { ITransactionFactory } from '../ITransactionFactory';
-import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError } from '../relayer';
 
 export class ProfileMetadataGateway
+  extends AbstractContractCallGateway<SetProfileMetadataRequest>
   implements
     IDelegatedTransactionGateway<SetProfileMetadataRequest>,
-    ISignedOnChainGateway<SetProfileMetadataRequest>
+    ISignedOnChainGateway<SetProfileMetadataRequest>,
+    IPaidTransactionGateway<SetProfileMetadataRequest>
 {
   constructor(
+    providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<SetProfileMetadataRequest>,
-  ) {}
+  ) {
+    super(providerFactory);
+  }
 
   async createDelegatedTransaction(
     request: SetProfileMetadataRequest,
@@ -67,8 +74,14 @@ export class ProfileMetadataGateway
       id: data.id,
       request,
       typedData: omitTypename(data.typedData),
-      fallback: this.createRequestFallback(request, data),
     });
+  }
+
+  protected override async createEncodedData(
+    request: SetProfileMetadataRequest,
+  ): Promise<ContractCallDetails> {
+    const result = await this.createTypedData(request);
+    return this.createSetProfileMetadataUriCallDetails(result);
   }
 
   private async broadcast(
@@ -87,10 +100,7 @@ export class ProfileMetadataGateway
     });
 
     if (data.result.__typename === 'LensProfileManagerRelayError') {
-      const result = await this.createTypedData(request);
-      const fallback = this.createRequestFallback(request, result);
-
-      return handleRelayError(data.result, fallback);
+      return handleRelayError(data.result);
     }
 
     return success(data.result);
@@ -116,17 +126,15 @@ export class ProfileMetadataGateway
     return data.result;
   }
 
-  private createRequestFallback(
-    request: SetProfileMetadataRequest,
+  private createSetProfileMetadataUriCallDetails(
     result: CreateOnchainSetProfileMetadataBroadcastItemResult,
-  ): SelfFundedProtocolTransactionRequest<SetProfileMetadataRequest> {
+  ): ContractCallDetails {
     const contract = lensHub(result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('setProfileMetadataURI', [
       result.typedData.message.profileId,
-      request.metadataURI,
+      result.typedData.message.metadataURI,
     ]);
     return {
-      ...request,
       contractAddress: result.typedData.domain.verifyingContract,
       encodedData: encodedData as Data,
     };
