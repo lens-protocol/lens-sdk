@@ -24,12 +24,14 @@ export const FreeFollowRequestSchema = z.object({
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.FOLLOW_PROFILE),
   signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 export const PaidFollowRequestSchema = z.object({
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.FOLLOW_PROFILE),
   fee: FollowRequestFeeSchema,
+  sponsored: z.boolean(),
 });
 
 export const FollowRequestSchema = z.union([PaidFollowRequestSchema, FreeFollowRequestSchema]);

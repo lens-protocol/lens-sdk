@@ -112,12 +112,13 @@ export function mockFreeFollowRequest(overrides?: Partial<FreeFollowRequest>): F
   return {
     profileId: mockProfileId(),
     signless: true,
+    sponsored: true,
     ...overrides,
     kind: TransactionKind.FOLLOW_PROFILE,
   };
 }
 
-export function mockPaidFollowRequest(): PaidFollowRequest {
+export function mockPaidFollowRequest(overrides?: Partial<PaidFollowRequest>): PaidFollowRequest {
   return {
     profileId: mockProfileId(),
     fee: {
@@ -125,6 +126,8 @@ export function mockPaidFollowRequest(): PaidFollowRequest {
       contractAddress: mockEvmAddress(),
       recipient: mockEvmAddress(),
     },
+    sponsored: true,
+    ...overrides,
     kind: TransactionKind.FOLLOW_PROFILE,
   };
 }

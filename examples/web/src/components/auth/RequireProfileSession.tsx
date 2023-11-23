@@ -13,21 +13,21 @@ export type RequireProfileSessionProps = {
 export function RequireProfileSession({ children, message }: RequireProfileSessionProps) {
   const [showForm, setShowForm] = useState(false);
   return (
-    <RequireConnectedWallet>
-      {(address) => (
-        <WhenLoggedIn
-          with={SessionType.WithProfile}
-          fallback={
+    <WhenLoggedIn
+      with={SessionType.WithProfile}
+      fallback={
+        <RequireConnectedWallet>
+          {(address) => (
             <>
               {message && <p>{message}</p>}
               {!showForm && <button onClick={() => setShowForm(true)}>Login as Profile</button>}
               {showForm && <LoginForm owner={address} />}
             </>
-          }
-        >
-          {children}
-        </WhenLoggedIn>
-      )}
-    </RequireConnectedWallet>
+          )}
+        </RequireConnectedWallet>
+      }
+    >
+      {children}
+    </WhenLoggedIn>
   );
 }

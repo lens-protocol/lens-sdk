@@ -129,13 +129,6 @@ export type OpenActionArgs = {
  *         );
  *         break;
  *
- *       case 'InsufficientGasError':
- *         const asset = result.error.asset;
- *         console.log(
- *           `You do not have enough ${asset.symbol} to pay for the transaction gas cost.`
- *         );
- *         break;
- *
  *       case 'InsufficientFundsError':
  *         const requestedAmount = result.error.requestedAmount;
  *         console.log(
@@ -162,7 +155,7 @@ export type OpenActionArgs = {
  * You can always wait the operation to be fully processed and indexed by Lens API.
  *
  * ```ts
- * const run = async (publication: AnyPublication) => {
+ * const collect = async (publication: AnyPublication) => {
  *   const result = await execute({ publication });
  *
  *   if (result.isFailure()) {

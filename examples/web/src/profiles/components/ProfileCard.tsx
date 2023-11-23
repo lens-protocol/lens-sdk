@@ -1,4 +1,4 @@
-import { Profile } from '@lens-protocol/react-web';
+import { Profile, ProfileStats } from '@lens-protocol/react-web';
 import { ReactNode } from 'react';
 
 import { ProfilePicture } from './ProfilePicture';
@@ -7,6 +7,29 @@ type ProfileCardProps = {
   profile: Profile;
   children?: ReactNode;
 };
+
+function ProfileTickers({ stats }: { stats: ProfileStats }) {
+  return (
+    <p
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        gap: '2rem',
+        justifyContent: 'space-between',
+      }}
+    >
+      <span>
+        Followers:&nbsp;<strong>{stats.followers}</strong>
+      </span>
+      <span>
+        Following:&nbsp;<strong>{stats.following}</strong>
+      </span>
+      <span>
+        Collects:&nbsp;<strong>{stats.collects}</strong>
+      </span>
+    </p>
+  );
+}
 
 export function ProfileCard({ profile, children }: ProfileCardProps) {
   const { metadata } = profile;
@@ -19,18 +42,27 @@ export function ProfileCard({ profile, children }: ProfileCardProps) {
       {metadata && (
         <div>
           <ProfilePicture picture={metadata.picture} />
-          <p>Name: {metadata.displayName}</p>
-          <p>Bio: {metadata.bio}</p>
-          <ul>
-            {(metadata.attributes ?? []).map((attribute) => (
-              <li key={attribute.key}>
-                <b>{attribute.key}:</b>&nbsp;
-                {attribute.value}
-              </li>
-            ))}
-          </ul>
+          {metadata.displayName && <p>Name: {metadata.displayName}</p>}
+          {metadata.bio && <p>Bio: {metadata.bio}</p>}
+
+          {metadata.attributes && (
+            <>
+              <p>Attributes</p>
+              <ul>
+                {(metadata.attributes ?? []).map((attribute, idx) => (
+                  <li key={`${attribute.key}-${idx}`}>
+                    <b>{attribute.key}:</b>&nbsp;
+                    {attribute.value}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </div>
       )}
+
+      <hr />
+      <ProfileTickers stats={profile.stats} />
 
       {children}
     </article>

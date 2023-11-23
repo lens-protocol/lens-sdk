@@ -1,4 +1,5 @@
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
@@ -7,16 +8,15 @@ import { FollowProfile, FollowRequest } from '@lens-protocol/domain/use-cases/pr
 import {
   BroadcastingError,
   DelegableSigning,
+  PaidTransaction,
   SignedOnChain,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
 } from '@lens-protocol/domain/use-cases/wallets';
-import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
-import { AsyncTransactionResult } from './AsyncTransactionResult';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
 import { FollowProfileGateway } from './profiles/FollowProfileGateway';
 import { validateFollowRequest } from './schemas/validators';
@@ -26,23 +26,14 @@ export function useFollowController() {
     activeWallet,
     apolloClient,
     onChainRelayer,
+    providerFactory,
     tokenAvailability,
     transactionFactory,
     transactionGateway,
     transactionQueue,
   } = useSharedDependencies();
 
-  return async (
-    request: FollowRequest,
-  ): PromiseResult<
-    AsyncTransactionResult<void>,
-    | BroadcastingError
-    | InsufficientAllowanceError
-    | InsufficientFundsError
-    | PendingSigningRequestError
-    | UserRejectedError
-    | WalletConnectionError
-  > => {
+  return async (request: FollowRequest) => {
     validateFollowRequest(request);
 
     const presenter = new TransactionResultPresenter<
@@ -50,13 +41,14 @@ export function useFollowController() {
       | BroadcastingError
       | InsufficientAllowanceError
       | InsufficientFundsError
+      | InsufficientGasError
       | PendingSigningRequestError
       | UserRejectedError
       | WalletConnectionError
     >();
-    const gateway = new FollowProfileGateway(apolloClient, transactionFactory);
+    const gateway = new FollowProfileGateway(providerFactory, apolloClient, transactionFactory);
 
-    const signedFollow = new SignedOnChain(
+    const signedExecution = new SignedOnChain(
       activeWallet,
       transactionGateway,
       gateway,
@@ -65,17 +57,20 @@ export function useFollowController() {
       presenter,
     );
 
-    const delegableFollow = new DelegableSigning(
-      signedFollow,
+    const delegableExecution = new DelegableSigning(
+      signedExecution,
       gateway,
       transactionQueue,
       presenter,
     );
 
+    const paidExecution = new PaidTransaction(activeWallet, gateway, presenter, transactionQueue);
+
     const followProfile = new FollowProfile(
       tokenAvailability,
-      signedFollow,
-      delegableFollow,
+      signedExecution,
+      delegableExecution,
+      paidExecution,
       presenter,
     );
 
