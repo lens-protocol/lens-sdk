@@ -42,15 +42,19 @@ function assertValidAbi(humanReadableAbi: string, functionName: string): void {
     const fn = new Interface([humanReadableAbi]).getFunction(functionName);
 
     // assert view function
-    invariant(fn.stateMutability === 'view', 'unsupported');
+    invariant(fn.stateMutability === 'view', 'You can only use view functions');
 
     // assert single output
-    invariant(Array.isArray(fn.outputs) && fn.outputs.length === 1, 'unsupported');
+    invariant(
+      Array.isArray(fn.outputs) && fn.outputs.length === 1,
+      'The function must return 1 value',
+    );
 
     // assert output is boolean or uint
     invariant(
-      fn.outputs[0] && (fn.outputs[0].type === 'bool' || /^uint(8|16|32|64|128|256)$/.test(fn.outputs[0].type),
-      'unsupported',
+      fn.outputs[0] &&
+        (fn.outputs[0].type === 'bool' || /^uint(8|16|32|64|128|256)$/.test(fn.outputs[0].type)),
+      'The function must return a boolean or uint[8|16|32|64|128|256]',
     );
   } catch (e: unknown) {
     throw new InvalidAccessCriteriaError(
@@ -100,7 +104,10 @@ function assertValidFunctionParams(condition: AdvancedContractCondition): void {
           `param ${input.name} is invalid, must be a boolean)`,
         );
       } else if (input.baseType === 'bytes') {
-        invariant(/^0x[0-9A-Fa-f]+$/.test(param), `param ${input.name} is invalid, must be a hex string)`);
+        invariant(
+          /^0x[0-9A-Fa-f]+$/.test(param),
+          `param ${input.name} is invalid, must be a hex string)`,
+        );
       }
     });
 
