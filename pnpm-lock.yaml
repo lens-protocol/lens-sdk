@@ -1392,8 +1392,8 @@ importers:
         specifier: ^18.2.38
         version: 18.2.38
       '@xmtp/react-sdk':
-        specifier: 1.0.0-preview.40
-        version: 1.0.0-preview.40(react@18.2.0)
+        specifier: 1.4.0
+        version: 1.4.0(@types/react@18.2.38)(react@18.2.0)(typescript@5.2.2)
       eslint:
         specifier: ^8.54.0
         version: 8.54.0
@@ -6738,6 +6738,7 @@ packages:
     dependencies:
       is-glob: 4.0.3
       micromatch: 4.0.5
+      napi-wasm: 1.1.0
     bundledDependencies:
       - napi-wasm
 
@@ -7637,6 +7638,14 @@ packages:
   /@tootallnate/once@2.0.0:
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
     engines: {node: '>= 10'}
+    dev: true
+
+  /@trufflesuite/bigint-buffer@1.1.10:
+    resolution: {integrity: sha512-pYIQC5EcMmID74t26GCC67946mgTJFiLXOT/BYozgrd4UEY2JHEGLhWi9cMiQCt5BSqFEvKkCHNnoj82SRjiEw==}
+    engines: {node: '>= 14.0.0'}
+    requiresBuild: true
+    dependencies:
+      node-gyp-build: 4.4.0
     dev: true
 
   /@trufflesuite/bigint-buffer@1.1.9:
@@ -8966,6 +8975,46 @@ packages:
     dependencies:
       tslib: 2.6.2
 
+  /@xmtp/content-type-reaction@1.1.3:
+    resolution: {integrity: sha512-dGqySD/TwrDkRB5zm46EIS1tViKv0y5urPKy94W93cbcCxFOODRiGPHcyty7ouif/b0CA53NNnG2sjbkxYsLEg==}
+    dependencies:
+      '@xmtp/xmtp-js': 11.2.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: true
+
+  /@xmtp/content-type-read-receipt@1.1.5:
+    resolution: {integrity: sha512-/CM/JAuEo+lnUQGJFG3UZ+t5rqql8sA/eLzPc0sJJMzGLCCfogd/SngS8rNkz4KI7yI5SXrXaksAsv5/zqXUHA==}
+    dependencies:
+      '@xmtp/proto': 3.34.0
+      '@xmtp/xmtp-js': 11.2.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: true
+
+  /@xmtp/content-type-remote-attachment@1.1.4:
+    resolution: {integrity: sha512-t/ivPqroNYobttxCrJMLOg/b3hAQT0knTw2hio/c5rQ0XyJd9UDP2eDWnmxchlabhdxnnfu9jP9YI05qL7tzWA==}
+    dependencies:
+      '@noble/secp256k1': 1.7.1
+      '@xmtp/proto': 3.34.0
+      '@xmtp/xmtp-js': 11.2.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: true
+
+  /@xmtp/content-type-reply@1.1.5:
+    resolution: {integrity: sha512-ug2oBAwgmB/cRwIKjrsRFApAkzQbTJ6MPEVKmRVuXNjZa1/Hzl7VHEpKfiZdJ79PZrHZpruhNnU19bDyViyuTw==}
+    dependencies:
+      '@xmtp/proto': 3.34.0
+      '@xmtp/xmtp-js': 11.2.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: true
+
   /@xmtp/proto@3.34.0:
     resolution: {integrity: sha512-UJ0doz01peGEi5+fJ6th6JsUXFLMHaVk9L9avrv7L7FhfmAzM/V5iqHao8YpIKyMrJ7BelsGrbDcTfe28SsxFg==}
     dependencies:
@@ -8987,6 +9036,48 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+    dev: false
+
+  /@xmtp/react-sdk@1.4.0(@types/react@18.2.38)(react@18.2.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-Ubx+nO2hmaauMO0dzDq/IebPKItiWcyobQCcEnq9jAXv5V8Ac1V+csGpESrKhosTpA4Y7A58u8hVv3jAQ9lGSQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      react: '>=16.14'
+    dependencies:
+      '@xmtp/content-type-reaction': 1.1.3
+      '@xmtp/content-type-read-receipt': 1.1.5
+      '@xmtp/content-type-remote-attachment': 1.1.4
+      '@xmtp/content-type-reply': 1.1.5
+      '@xmtp/xmtp-js': 11.2.1
+      async-mutex: 0.4.0
+      date-fns: 2.30.0
+      dexie: 3.2.4
+      dexie-react-hooks: 1.1.7(@types/react@18.2.38)(dexie@3.2.4)(react@18.2.0)
+      react: 18.2.0
+      uuid: 9.0.1
+      viem: 1.19.7(typescript@5.2.2)(zod@3.22.4)
+      zod: 3.22.4
+    transitivePeerDependencies:
+      - '@types/react'
+      - bufferutil
+      - typescript
+      - utf-8-validate
+    dev: true
+
+  /@xmtp/xmtp-js@11.2.1:
+    resolution: {integrity: sha512-LVYuJV4a/6poKDgJd4Zkt9esWPHcxxmjWSe4J6A5lNwVAgqSTjb4B0Yiw9Y3IVwynNRy6SXRttpf++mul7Zcnw==}
+    engines: {node: '>=18'}
+    dependencies:
+      '@noble/secp256k1': 1.7.1
+      '@xmtp/proto': 3.34.0
+      async-mutex: 0.4.0
+      elliptic: 6.5.4
+      ethers: 5.7.2
+      long: 5.2.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: true
 
   /@xmtp/xmtp-js@9.4.1:
     resolution: {integrity: sha512-NNK7HcR2aiQhZkHRWGUp1gRJcqzkcyE8g7gCatbyZaNDd0JQBo/wLmiCZ3aibXOHOKLj39eIwVfqCRDejMNflw==}
@@ -9001,6 +9092,7 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+    dev: false
 
   /JSONStream@1.3.5:
     resolution: {integrity: sha512-E+iruNOY8VV9s4JEbe1aNEm6MiszPRr/UfcHMz0TQh1BXSxHK+ASV1R6W4HpjBhSeS+54PIsAMCBmwD06LLsqQ==}
@@ -11361,6 +11453,18 @@ packages:
     resolution: {integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==}
     engines: {node: '>=8'}
 
+  /dexie-react-hooks@1.1.7(@types/react@18.2.38)(dexie@3.2.4)(react@18.2.0):
+    resolution: {integrity: sha512-Lwv5W0Hk+uOW3kGnsU9GZoR1er1B7WQ5DSdonoNG+focTNeJbHW6vi6nBoX534VKI3/uwHebYzSw1fwY6a7mTw==}
+    peerDependencies:
+      '@types/react': '>=16'
+      dexie: ^3.2 || ^4.0.1-alpha
+      react: '>=16'
+    dependencies:
+      '@types/react': 18.2.38
+      dexie: 3.2.4
+      react: 18.2.0
+    dev: true
+
   /dexie@3.2.4:
     resolution: {integrity: sha512-VKoTQRSv7+RnffpOJ3Dh6ozknBqzWw/F3iqMdsZg958R0AS8AnY9x9d1lbwENr0gzeGJHXKcGhAMRaqys6SxqA==}
     engines: {node: '>=6.0'}
@@ -12892,6 +12996,7 @@ packages:
     resolution: {integrity: sha512-ies0uaFAnHrTzCJaCg/FYFVD4B9DFouKkWpEmQDCQRYwT4n5SqbZDR7aIDy/iATtBzkJJsQ6RptE9Ovr32Dmpw==}
     hasBin: true
     dependencies:
+      '@trufflesuite/bigint-buffer': 1.1.10
       '@types/bn.js': 5.1.5
       '@types/lru-cache': 5.1.1
       '@types/seedrandom': 3.0.1
@@ -12899,6 +13004,9 @@ packages:
       abstract-leveldown: 7.2.0
       async-eventemitter: 0.2.4
       emittery: 0.10.0
+      keccak: 3.0.2
+      leveldown: 6.1.0
+      secp256k1: 4.0.3
     optionalDependencies:
       bufferutil: 4.0.5
       utf-8-validate: 5.0.7
@@ -15046,6 +15154,16 @@ packages:
       node-gyp-build: 4.7.0
     dev: true
 
+  /keccak@3.0.2:
+    resolution: {integrity: sha512-PyKKjkH53wDMLGrvmRGSNWgmSxZOUqbnXwKL9tmgbFYA1iAYqW21kfR7mZXV0MlESiefxQQE9X9fTa3X+2MPDQ==}
+    engines: {node: '>=10.0.0'}
+    requiresBuild: true
+    dependencies:
+      node-addon-api: 2.0.2
+      node-gyp-build: 4.7.0
+      readable-stream: 3.6.2
+    dev: true
+
   /keccak@3.0.4:
     resolution: {integrity: sha512-3vKuW0jV8J3XNTzvfyicFR5qvxrSAGl7KIhvgOu5cmWwM7tZRj3fMbj/pfIf4be7aznbc+prBWGjywox/g2Y6Q==}
     engines: {node: '>=10.0.0'}
@@ -15205,6 +15323,16 @@ packages:
       inherits: 2.0.4
       readable-stream: 3.6.2
       xtend: 4.0.2
+    dev: true
+
+  /leveldown@6.1.0:
+    resolution: {integrity: sha512-8C7oJDT44JXxh04aSSsfcMI8YiaGRhOFI9/pMEL7nWJLVsWajDPTRxsSHTM2WcTVY5nXM+SuRHzPPi0GbnDX+w==}
+    engines: {node: '>=10.12.0'}
+    requiresBuild: true
+    dependencies:
+      abstract-leveldown: 7.2.0
+      napi-macros: 2.0.0
+      node-gyp-build: 4.7.0
     dev: true
 
   /levelup@4.4.0:
@@ -16289,6 +16417,13 @@ packages:
     dev: true
     optional: true
 
+  /napi-macros@2.0.0:
+    resolution: {integrity: sha512-A0xLykHtARfueITVDernsAWdtIMbOJgKgcluwENp3AlsKN/PloyO10HtmoqnFAQAcxPkgZN7wdfPfEd0zNGxbg==}
+    dev: true
+
+  /napi-wasm@1.1.0:
+    resolution: {integrity: sha512-lHwIAJbmLSjF9VDRm9GoVOy9AGp3aIvkjv+Kvz9h16QR3uSVYH78PNQUnT2U4X53mhlnV2M7wrhibQ3GHicDmg==}
+
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
@@ -16415,6 +16550,11 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /node-gyp-build@4.4.0:
+    resolution: {integrity: sha512-amJnQCcgtRVw9SvoebO3BKGESClrfXGCUTX9hSn1OuGQTQBOZmVd0Z0OlecpuRksKvbsUqALE8jls/ErClAPuQ==}
+    hasBin: true
+    dev: true
 
   /node-gyp-build@4.7.0:
     resolution: {integrity: sha512-PbZERfeFdrHQOOXiAKOY0VPbykZy90ndPKk0d+CFDegTKmWp1VgOTz2xACVbr1BjCWxrQp68CXtvNsveFhqDJg==}
