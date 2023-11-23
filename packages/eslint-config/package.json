@@ -4,20 +4,20 @@
   "private": true,
   "main": "./index.cjs",
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.8.0",
-    "@typescript-eslint/parser": "^6.8.0",
+    "@typescript-eslint/eslint-plugin": "^6.12.0",
+    "@typescript-eslint/parser": "^6.12.0",
     "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-tsdoc": "^0.2.17"
   },
   "devDependencies": {
     "@lens-protocol/prettier-config": "workspace:*",
-    "eslint": "^8.34.0",
-    "prettier": "^2.8.4",
-    "typescript": "^5.2.2"
+    "eslint": "^8.54.0",
+    "prettier": "^2.8.8",
+    "typescript": "5.2.2"
   },
   "peerDependencies": {
-    "eslint": "^8.28.0"
+    "eslint": "^8.54.0"
   },
   "prettier": "@lens-protocol/prettier-config"
 }
