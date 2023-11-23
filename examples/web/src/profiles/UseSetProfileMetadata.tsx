@@ -42,7 +42,10 @@ function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
 
     const metadataURI = await uploadJson(metadata);
 
-    const result = await update({ metadataURI });
+    const result = await update({
+      metadataURI,
+      sponsored: formData.get('sponsored') === 'on',
+    });
 
     if (result.isFailure()) {
       toast.error(result.error.message);
@@ -117,6 +120,17 @@ function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
           name="website"
           defaultValue={website?.value ?? undefined}
         />
+      </label>
+
+      <label>
+        <input
+          type="checkbox"
+          name="sponsored"
+          disabled={loading}
+          value="on"
+          defaultChecked={true}
+        />
+        sponsored
       </label>
 
       <button type="submit" disabled={loading}>

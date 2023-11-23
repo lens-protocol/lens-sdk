@@ -96,6 +96,7 @@ export const SetProfileMetadataRequestSchema = z.object({
   metadataURI: z.string().url(),
   kind: z.literal(TransactionKind.UPDATE_PROFILE_DETAILS),
   signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 export const LinkHandleRequestSchema = z.object({

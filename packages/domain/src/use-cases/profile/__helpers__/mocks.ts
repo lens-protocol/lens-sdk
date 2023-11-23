@@ -92,6 +92,7 @@ export function mockSetProfileMetadataRequest(
 ): SetProfileMetadataRequest {
   return {
     signless: true,
+    sponsored: true,
     metadataURI: faker.internet.url(),
     ...overrides,
     kind: TransactionKind.UPDATE_PROFILE_DETAILS,
