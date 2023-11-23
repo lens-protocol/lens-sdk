@@ -2,6 +2,7 @@
 import { failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
+import { PaidTransaction } from '../../transactions';
 import { DelegableSigning } from '../../transactions/DelegableSigning';
 import { SignedOnChain } from '../../transactions/SignedOnChain';
 import {
@@ -26,18 +27,30 @@ function mockDelegableSigningCall<T extends FreeFollowRequest>() {
   return mock<DelegableSigning<T>>();
 }
 
-function setupFollowProfile({
+function setupTestScenario({
   tokenAvailability = mock<TokenAvailability>(),
-  presenter = mock<IFollowProfilePresenter>(),
-  signedCall = mockSubsidizedCall<FollowRequest>(),
-  delegableCall = mockDelegableSigningCall<FreeFollowRequest>(),
 }: {
   tokenAvailability?: TokenAvailability;
-  presenter?: IFollowProfilePresenter;
-  signedCall?: SignedOnChain<FollowRequest>;
-  delegableCall?: DelegableSigning<FreeFollowRequest>;
-}) {
-  return new FollowProfile(tokenAvailability, signedCall, delegableCall, presenter);
+} = {}) {
+  const presenter = mock<IFollowProfilePresenter>();
+  const signedExecution = mockSubsidizedCall<FollowRequest>();
+  const delegableExecution = mockDelegableSigningCall<FreeFollowRequest>();
+  const paidExecution = mock<PaidTransaction<FollowRequest>>();
+  const followProfile = new FollowProfile(
+    tokenAvailability,
+    signedExecution,
+    delegableExecution,
+    paidExecution,
+    presenter,
+  );
+
+  return {
+    followProfile,
+    presenter,
+    signedExecution,
+    delegableExecution,
+    paidExecution,
+  };
 }
 
 describe(`Given an instance of the ${FollowProfile.name} interactor`, () => {
@@ -46,18 +59,12 @@ describe(`Given an instance of the ${FollowProfile.name} interactor`, () => {
       const request = mockFreeFollowRequest();
 
       it(`should execute the ${DelegableSigning.name}<FreeFollowRequest> strategy`, async () => {
-        const signedCall = mockSubsidizedCall<FollowRequest>();
-        const delegableCall = mockDelegableSigningCall<FreeFollowRequest>();
-
-        const followProfile = setupFollowProfile({
-          signedCall,
-          delegableCall,
-        });
+        const { followProfile, signedExecution, delegableExecution } = setupTestScenario();
 
         await followProfile.execute(request);
 
-        expect(delegableCall.execute).toHaveBeenCalledWith(request);
-        expect(signedCall.execute).not.toHaveBeenCalled();
+        expect(delegableExecution.execute).toHaveBeenCalledWith(request);
+        expect(signedExecution.execute).not.toHaveBeenCalled();
       });
     });
 
@@ -72,19 +79,14 @@ describe(`Given an instance of the ${FollowProfile.name} interactor`, () => {
           },
           result: success(),
         });
-        const signedCall = mockSubsidizedCall<FollowRequest>();
-        const delegableCall = mockDelegableSigningCall<FreeFollowRequest>();
-
-        const followProfile = setupFollowProfile({
-          signedCall,
-          delegableCall,
+        const { followProfile, signedExecution, delegableExecution } = setupTestScenario({
           tokenAvailability,
         });
 
         await followProfile.execute(request);
 
-        expect(signedCall.execute).toHaveBeenCalledWith(request);
-        expect(delegableCall.execute).not.toHaveBeenCalled();
+        expect(signedExecution.execute).toHaveBeenCalledWith(request);
+        expect(delegableExecution.execute).not.toHaveBeenCalled();
       });
 
       it.each([
@@ -104,11 +106,8 @@ describe(`Given an instance of the ${FollowProfile.name} interactor`, () => {
             },
             result: failure(error),
           });
-          const presenter = mock<IFollowProfilePresenter>();
-
-          const followProfile = setupFollowProfile({
+          const { followProfile, presenter } = setupTestScenario({
             tokenAvailability,
-            presenter,
           });
 
           await followProfile.execute(request);
@@ -116,6 +115,29 @@ describe(`Given an instance of the ${FollowProfile.name} interactor`, () => {
           expect(presenter.present).toHaveBeenCalledWith(failure(error));
         },
       );
+    });
+  });
+
+  describe(`when executed with a request that has the "sponsored" flag set to false`, () => {
+    it(`should support the ${PaidTransaction.name}<T> strategy`, async () => {
+      const request = mockPaidFollowRequest({ sponsored: false });
+      const tokenAvailability = mockTokeAvailability({
+        request: {
+          amount: request.fee.amount,
+          spender: request.fee.contractAddress,
+        },
+        result: success(),
+      });
+      const { followProfile, signedExecution, delegableExecution, paidExecution } =
+        setupTestScenario({
+          tokenAvailability,
+        });
+
+      await followProfile.execute(request);
+
+      expect(paidExecution.execute).toHaveBeenCalledWith(request);
+      expect(signedExecution.execute).not.toHaveBeenCalled();
+      expect(delegableExecution.execute).not.toHaveBeenCalled();
     });
   });
 });

@@ -1,5 +1,6 @@
 import { Profile, TriStateValue, resolveFollowPolicy } from '@lens-protocol/api-bindings';
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   TransactionKind,
   UserRejectedError,
@@ -22,7 +23,7 @@ export class PrematureFollowError extends Error {
   name = 'PrematureFollowError' as const;
 }
 
-function createFollowRequest(profile: Profile, session?: Session): FollowRequest {
+function createFollowRequest(args: FollowArgs, session?: Session): FollowRequest {
   invariant(
     session?.authenticated,
     'You must be authenticated to use this operation. Use `useLogin` hook to authenticate.',
@@ -32,24 +33,26 @@ function createFollowRequest(profile: Profile, session?: Session): FollowRequest
     'You must have a profile to use this operation.',
   );
 
-  const followPolicy = resolveFollowPolicy(profile);
+  const followPolicy = resolveFollowPolicy(args.profile);
 
   switch (followPolicy.type) {
     case FollowPolicyType.CHARGE:
       return {
+        kind: TransactionKind.FOLLOW_PROFILE,
         fee: {
           amount: followPolicy.amount,
           contractAddress: followPolicy.contractAddress,
           recipient: followPolicy.recipient,
         },
-        kind: TransactionKind.FOLLOW_PROFILE,
-        profileId: profile.id,
+        profileId: args.profile.id,
+        sponsored: args.sponsored ?? true,
       };
     case FollowPolicyType.ANYONE:
       return {
         kind: TransactionKind.FOLLOW_PROFILE,
-        profileId: profile.id,
+        profileId: args.profile.id,
         signless: session.profile.signless,
+        sponsored: args.sponsored ?? true,
       };
     case FollowPolicyType.NO_ONE:
       throw new InvariantError(`The profile is configured so that nobody can follow it.`);
@@ -70,6 +73,19 @@ export type FollowArgs = {
    * The profile to follow
    */
   profile: Profile;
+  /**
+   * Whether the transaction costs should be sponsored by the Lens API or
+   * should be paid by the authenticated wallet.
+   *
+   * There are scenarios where the sponsorship will be denied regardless of this value.
+   * See {@link BroadcastingError} with:
+   * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
+   * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
+   * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
+   *
+   * @defaultValue true, the request will be attempted to be sponsored by the Lens API.
+   */
+  sponsored?: boolean;
 };
 
 /**
@@ -78,13 +94,164 @@ export type FollowArgs = {
  * You MUST be authenticated via {@link useLogin} to use this hook.
  *
  * @example
- * ```tsx
+ * ```ts
  * const { execute: follow, error, loading } = useFollow();
- *
- * <button onClick={() => follow({ profile })} disabled={loading}>
- *   Follow
- * </button>
  * ```
+ *
+ * ## Follow a profile
+ *
+ * Given you have an instance of a {@link Profile} from fetched data, you can follow with:
+ *
+ * ```ts
+ * const { execute, error, loading } = useFollow();
+ *
+ * const follow = async (profile: Profile) => {
+ *   const result = await execute({ profile });
+ *
+ *   // ...
+ * }
+ * ```
+ *
+ * ## Failure scenarios
+ *
+ * You can handle possible failure scenarios by checking the `result` value.
+ *
+ * ```ts
+ * const follow = async (profile: Profile) => {
+ *   const result = await execute({ profile });
+ *
+ *   if (result.isFailure()) {
+ *     switch (result.error.name) {
+ *       case 'BroadcastingError':
+ *         console.log('There was an error broadcasting the transaction', error.message);
+ *         break;
+ *
+ *       case 'PendingSigningRequestError':
+ *         console.log(
+ *           'There is a pending signing request in your wallet. ' +
+ *             'Approve it or discard it and try again.'
+ *         );
+ *         break;
+ *
+ *       case 'InsufficientAllowanceError':
+ *         const requestedAmount = result.error.requestedAmount;
+ *         console.log(
+ *           'You must approve the contract to spend at least: '+
+ *             `${requestedAmount.asset.symbol} ${requestedAmount.toSignificantDigits(6)}`
+ *         );
+ *         break;
+ *
+ *       case 'InsufficientFundsError':
+ *         const requestedAmount = result.error.requestedAmount;
+ *         console.log(
+ *           'You do not have enough funds to pay for this follow fee: '+
+ *             `${requestedAmount.asset.symbol} ${requestedAmount.toSignificantDigits(6)}`
+ *         );
+ *         break;
+ *
+ *       case 'WalletConnectionError':
+ *         console.log('There was an error connecting to your wallet', error.message);
+ *         break;
+ *
+ *       case 'PrematureFollowError':
+ *         console.log('There is a pending unfollow request for this profile.');
+ *         break;
+ *
+ *       case 'UserRejectedError':
+ *         // the user decided to not sign, usually this is silently ignored by UIs
+ *         break;
+ *     }
+ *     return;
+ *   }
+ * }
+ * ```
+ *
+ *
+ * ## Wait for completion
+ *
+ * You can always wait the operation to be fully processed and indexed by Lens API.
+ *
+ * ```ts
+ * const follow = async (profile: Profile) => {
+ *   const result = await execute({ profile });
+ *
+ *   if (result.isFailure()) {
+ *     // handle failure scenarios
+ *     return;
+ *   }
+ *
+ *   // this might take a while depending on the congestion of the network
+ *   const completion = await result.value.waitForCompletion();
+ *
+ *   if (completion.isFailure()) {
+ *     console.log('There was an processing the transaction', completion.error.message);
+ *     return;
+ *   }
+ *
+ *   console.log('Follow executed successfully');
+ * };
+ * ```
+ *
+ * ## Self-funded Follow
+ *
+ * It just takes a single parameter to disable the sponsorship of the transaction gas costs.
+ *
+ * ```ts
+ * const follow = async (profile: Profile) => {
+ *   const result = await execute({ profile });
+ *
+ *   if (result.isFailure()) {
+ *     switch (result.error.name) {
+ *       case 'InsufficientGasError':
+ *         console.log('You do not have enough funds to pay for the transaction gas cost.');
+ *         break;
+ *
+ *       // ...
+ *     }
+ *     return;
+ *   }
+ *
+ *   // ...
+ * }
+ * ```
+ * In this example you can also see a new error type: {@link InsufficientGasError}. This
+ * error happens only with self-funded transactions and it means that the wallet does not
+ * have enough funds to pay for the transaction gas costs.
+ *
+ * ## Self-funded Fallback
+ *
+ * If for some reason the Lens API cannot sponsor the transaction, the hook will fail with a {@link BroadcastingError} with one of the following reasons:
+ * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
+ * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
+ * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
+ *
+ * In those cases you can retry the transaction as self-funded like in the following example:
+ *
+ * ```ts
+ * const follow = async (profile: Profile) => {
+ *   const sponsoredResult = await execute({ profile });
+ *
+ *   if (sponsoredResult.isFailure()) {
+ *     switch (sponsoredResult.error.name) {
+ *       case 'BroadcastingError':
+ *         if ([BroadcastingErrorReason.NOT_SPONSORED, BroadcastingErrorReason.RATE_LIMITED].includes(sponsoredResult.error.reason)) {
+ *
+ *           const selfFundedResult = await execute({ profile, sponsored: false });
+ *
+ *           // continue with selfFundedResult as in the previous example
+ *         }
+ *         break;
+ *
+ *      // ...
+ *   }
+ * }
+ * ```
+ *
+ * In this example we omitted {@link BroadcastingErrorReason.APP_NOT_ALLOWED} as it's not normally a problem per-se.
+ * It just requires the app to apply for whitelisting. See https://docs.lens.xyz/docs/gasless-and-signless#whitelisting-your-app.
+ *
+ * You can still include it in your fallback logic if you want to. For example to unblock testing your app from a domain that is not the
+ * whitelisted one (e.g. localhost).
  *
  * @category Profiles
  * @group Hooks
@@ -94,6 +261,7 @@ export function useFollow(): UseDeferredTask<
   | BroadcastingError
   | InsufficientAllowanceError
   | InsufficientFundsError
+  | InsufficientGasError
   | PendingSigningRequestError
   | PrematureFollowError
   | UserRejectedError
@@ -104,33 +272,34 @@ export function useFollow(): UseDeferredTask<
   const followProfile = useFollowController();
 
   return useDeferredTask(
-    async ({
-      profile,
-    }): PromiseResult<
+    async (
+      args,
+    ): PromiseResult<
       FollowAsyncResult,
       | BroadcastingError
       | InsufficientAllowanceError
       | InsufficientFundsError
+      | InsufficientGasError
       | PendingSigningRequestError
       | PrematureFollowError
       | UserRejectedError
       | WalletConnectionError
     > => {
       invariant(
-        profile.operations.canFollow === TriStateValue.Yes,
+        args.profile.operations.canFollow === TriStateValue.Yes,
         "You can't follow this profile. Check the `profile.operations.canFollow` beforehand.",
       );
 
-      if (!profile.operations.isFollowedByMe.isFinalisedOnchain) {
+      if (!args.profile.operations.isFollowedByMe.isFinalisedOnchain) {
         return failure(
           new PrematureFollowError(
-            `A previous unfollow request for ${profile.id} is still pending.
+            `A previous unfollow request for ${args.profile.id} is still pending.
           Check 'profile.operations.isFollowedByMe.isFinalisedOnchain' beforehand.`,
           ),
         );
       }
 
-      const request = createFollowRequest(profile, session);
+      const request = createFollowRequest(args, session);
       return followProfile(request);
     },
   );
