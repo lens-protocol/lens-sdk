@@ -244,6 +244,16 @@ export type BroadcastRequest = {
   readonly signature: Scalars['Signature'];
 };
 
+export type CanClaimRequest = {
+  readonly addresses: ReadonlyArray<Scalars['EvmAddress']>;
+};
+
+export type CanClaimResult = {
+  readonly __typename: 'CanClaimResult';
+  readonly address: Scalars['EvmAddress'];
+  readonly canClaim: Scalars['Boolean'];
+};
+
 export type CanDecryptResponse = {
   readonly __typename: 'CanDecryptResponse';
   readonly extraDetails?: Maybe<Scalars['String']>;
@@ -370,7 +380,7 @@ export type Comment = {
   readonly isHidden: Scalars['Boolean'];
   readonly metadata: PublicationMetadata;
   readonly momoka?: Maybe<MomokaInfo>;
-  readonly openActionModules?: Maybe<ReadonlyArray<OpenActionModule>>;
+  readonly openActionModules: ReadonlyArray<OpenActionModule>;
   readonly operations: PublicationOperations;
   readonly profilesMentioned: ReadonlyArray<ProfileMentioned>;
   readonly publishedOn?: Maybe<App>;
@@ -560,7 +570,34 @@ export type CreateLegacyCollectBroadcastItemResult = {
   /** This broadcast item ID */
   readonly id: Scalars['BroadcastId'];
   /** The typed data */
-  readonly typedData: CreateActOnOpenActionEip712TypedData;
+  readonly typedData: CreateLegacyCollectEip712TypedData;
+};
+
+export type CreateLegacyCollectEip712TypedData = {
+  readonly __typename: 'CreateLegacyCollectEIP712TypedData';
+  /** The typed data domain */
+  readonly domain: Eip712TypedDataDomain;
+  /** The types */
+  readonly types: CreateLegacyCollectEip712TypedDataTypes;
+  /** The values */
+  readonly value: CreateLegacyCollectEip712TypedDataValue;
+};
+
+export type CreateLegacyCollectEip712TypedDataTypes = {
+  readonly __typename: 'CreateLegacyCollectEIP712TypedDataTypes';
+  readonly CollectLegacy: ReadonlyArray<Eip712TypedDataField>;
+};
+
+export type CreateLegacyCollectEip712TypedDataValue = {
+  readonly __typename: 'CreateLegacyCollectEIP712TypedDataValue';
+  readonly collectModuleData: Scalars['BlockchainData'];
+  readonly collectorProfileId: Scalars['ProfileId'];
+  readonly deadline: Scalars['UnixTimestamp'];
+  readonly nonce: Scalars['Nonce'];
+  readonly publicationCollectedId: Scalars['OnchainPublicationId'];
+  readonly publicationCollectedProfileId: Scalars['ProfileId'];
+  readonly referrerProfileId: Scalars['ProfileId'];
+  readonly referrerPubId: Scalars['OnchainPublicationId'];
 };
 
 export type CreateLinkHandleToProfileBroadcastItemResult = {
@@ -1287,6 +1324,8 @@ export type EventMetadataV3 = {
   readonly appId?: Maybe<Scalars['AppId']>;
   readonly attachments?: Maybe<ReadonlyArray<PublicationMetadataMedia>>;
   readonly attributes?: Maybe<ReadonlyArray<MetadataAttribute>>;
+  /** Optional content. Empty if not set. */
+  readonly content: Scalars['EncryptableMarkdown'];
   readonly contentWarning?: Maybe<PublicationContentWarningType>;
   readonly encryptedWith?: Maybe<PublicationMetadataEncryptionStrategy>;
   readonly endsAt: Scalars['EncryptableDateTime'];
@@ -1300,6 +1339,8 @@ export type EventMetadataV3 = {
   readonly rawURI: Scalars['URI'];
   readonly startsAt: Scalars['EncryptableDateTime'];
   readonly tags?: Maybe<ReadonlyArray<Scalars['String']>>;
+  /** The optional title of the event. Empty if not set. */
+  readonly title: Scalars['String'];
 };
 
 /** Possible sort criteria for exploring profiles */
@@ -3384,7 +3425,7 @@ export type Post = {
   readonly isHidden: Scalars['Boolean'];
   readonly metadata: PublicationMetadata;
   readonly momoka?: Maybe<MomokaInfo>;
-  readonly openActionModules?: Maybe<ReadonlyArray<OpenActionModule>>;
+  readonly openActionModules: ReadonlyArray<OpenActionModule>;
   readonly operations: PublicationOperations;
   readonly profilesMentioned: ReadonlyArray<ProfileMentioned>;
   readonly publishedOn?: Maybe<App>;
@@ -3618,6 +3659,7 @@ export type ProfileOperations = {
   readonly canFollow: TriStateValue;
   readonly canUnblock: Scalars['Boolean'];
   readonly canUnfollow: Scalars['Boolean'];
+  readonly hasBlockedMe: OptimisticStatusResult;
   readonly id: Scalars['ProfileId'];
   readonly isBlockedByMe: OptimisticStatusResult;
   readonly isFollowedByMe: OptimisticStatusResult;
@@ -3741,6 +3783,7 @@ export type ProfilesManagedRequest = {
 export type ProfilesManagedResult = {
   readonly __typename: 'ProfilesManagedResult';
   readonly address: Scalars['EvmAddress'];
+  readonly isLensManager: Scalars['Boolean'];
 };
 
 export type ProfilesRequest = {
@@ -4138,6 +4181,7 @@ export type Query = {
   readonly __typename: 'Query';
   readonly approvedAuthentications: PaginatedApprovedAuthenticationResult;
   readonly approvedModuleAllowanceAmount: ReadonlyArray<ApprovedAllowanceAmountResult>;
+  readonly canClaim: ReadonlyArray<CanClaimResult>;
   readonly challenge: AuthChallengeResult;
   readonly claimableProfiles: ClaimableProfilesResult;
   readonly claimableStatus: ClaimProfileStatusType;
@@ -4226,6 +4270,10 @@ export type QueryApprovedAuthenticationsArgs = {
 
 export type QueryApprovedModuleAllowanceAmountArgs = {
   request: ApprovedModuleAllowanceAmountRequest;
+};
+
+export type QueryCanClaimArgs = {
+  request: CanClaimRequest;
 };
 
 export type QueryChallengeArgs = {
@@ -4478,7 +4526,7 @@ export type Quote = {
   readonly isHidden: Scalars['Boolean'];
   readonly metadata: PublicationMetadata;
   readonly momoka?: Maybe<MomokaInfo>;
-  readonly openActionModules?: Maybe<ReadonlyArray<OpenActionModule>>;
+  readonly openActionModules: ReadonlyArray<OpenActionModule>;
   readonly operations: PublicationOperations;
   readonly profilesMentioned: ReadonlyArray<ProfileMentioned>;
   readonly publishedOn?: Maybe<App>;
@@ -4621,16 +4669,6 @@ export enum RelayRoleKey {
   LensManager_8 = 'LENS_MANAGER_8',
   LensManager_9 = 'LENS_MANAGER_9',
   LensManager_10 = 'LENS_MANAGER_10',
-  LensManager_11 = 'LENS_MANAGER_11',
-  LensManager_12 = 'LENS_MANAGER_12',
-  LensManager_13 = 'LENS_MANAGER_13',
-  LensManager_14 = 'LENS_MANAGER_14',
-  LensManager_15 = 'LENS_MANAGER_15',
-  LensManager_16 = 'LENS_MANAGER_16',
-  LensManager_17 = 'LENS_MANAGER_17',
-  LensManager_18 = 'LENS_MANAGER_18',
-  LensManager_19 = 'LENS_MANAGER_19',
-  LensManager_20 = 'LENS_MANAGER_20',
   WithSig_1 = 'WITH_SIG_1',
   WithSig_2 = 'WITH_SIG_2',
   WithSig_3 = 'WITH_SIG_3',
@@ -5129,8 +5167,6 @@ export type WhoReactedPublicationRequest = {
 
 export type WhoReactedPublicationWhere = {
   readonly anyOf?: InputMaybe<ReadonlyArray<PublicationReactionType>>;
-  readonly cursor?: InputMaybe<Scalars['Cursor']>;
-  readonly limit?: InputMaybe<LimitType>;
 };
 
 export type WorldcoinIdentity = {

@@ -1,5 +1,5 @@
 import { parseFixed } from '@ethersproject/bignumber';
-import { Erc20OwnershipCondition, ConditionComparisonOperator } from '@lens-protocol/metadata';
+import { Erc20OwnershipCondition } from '@lens-protocol/metadata';
 
 import {
   LitAccessCondition,
@@ -7,22 +7,13 @@ import {
   LitContractType,
   LitKnownMethods,
   LitKnownParams,
-  LitScalarOperator,
 } from './types';
-import { toLitSupportedChainName } from './utils';
+import { toLitSupportedChainName, resolveScalarOperatorSymbol } from './utils';
 import {
   assertValidAddress,
   assertSupportedChainId,
   InvalidAccessCriteriaError,
 } from './validators';
-
-export const resolveScalarOperatorSymbol = (
-  operator: ConditionComparisonOperator,
-): LitScalarOperator => {
-  if (operator in LitScalarOperator) return LitScalarOperator[operator];
-
-  throw new InvalidAccessCriteriaError(`Invalid operator: ${String(operator)}`);
-};
 
 function parseConditionAmount(condition: Erc20OwnershipCondition): string {
   try {
