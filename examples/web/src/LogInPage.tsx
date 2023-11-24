@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useAccount, useConnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
@@ -10,6 +11,9 @@ export function LogInPage() {
 
   const { connect } = useConnect({
     connector: new InjectedConnector(),
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
   return (
