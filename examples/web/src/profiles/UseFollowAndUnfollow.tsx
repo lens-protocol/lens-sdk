@@ -47,9 +47,13 @@ function handleFollowError(
 
     case 'InsufficientFundsError':
       toast.error(
-        'You do not have enough funds to pay for this collect fee: ' +
+        'You do not have enough funds to pay for this follow fee: ' +
           `${error.requestedAmount.asset.symbol} ${error.requestedAmount.toSignificantDigits(6)}`,
       );
+      break;
+
+    case 'InsufficientGasError':
+      toast.error('You do not have enough funds to pay for this tx gas.');
       break;
 
     case 'UserRejectedError':
@@ -64,7 +68,7 @@ function FollowButton({ profile }: FollowButtonProps) {
   const { execute: executeFollow, error: followError, loading: isFollowLoading } = useFollow();
 
   const {
-    execute: exectuteUnfollow,
+    execute: executeUnfollow,
     error: unfollowError,
     loading: isUnfollowLoading,
   } = useUnfollow();
@@ -88,7 +92,7 @@ function FollowButton({ profile }: FollowButtonProps) {
     const result = await executeFollow({ profile });
 
     if (result.isFailure()) {
-      if (result.error instanceof InsufficientGasError) {
+      if (result.error instanceof BroadcastingError) {
         return paidFollow();
       }
       return handleFollowError(result.error);
@@ -103,7 +107,7 @@ function FollowButton({ profile }: FollowButtonProps) {
   };
 
   const unfollow = async () => {
-    const result = await exectuteUnfollow({ profile });
+    const result = await executeUnfollow({ profile });
 
     if (result.isFailure()) {
       return handleFollowError(result.error);
