@@ -57,7 +57,7 @@ config:
     Void: string
 
 schema:
-  - https://api-v2-mumbai.lens.dev/graphql
+  - https://api-v2-mumbai-live.lens.dev/graphql
   # - http://localhost:4000/graphql
 
 generates:

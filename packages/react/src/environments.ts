@@ -83,14 +83,14 @@ export const production: EnvironmentConfig = {
  *
  * This is the environment to be used when you develop and test your application (test users, test profiles, test data)
  *
- * - Endpoint: https://api-v2-mumbai.lens.dev
+ * - Endpoint: https://api-v2-mumbai-live.lens.dev
  * - Chain IDs: 80001 (Mumbai), 5 (Goerli)
  * - Profile handle namespace: `test/`
  * - Environment specific timings
  */
 export const development: EnvironmentConfig = {
   name: 'development',
-  backend: 'https://api-v2-mumbai.lens.dev' as URL,
+  backend: 'https://api-v2-mumbai-live.lens.dev' as URL,
   chains: {
     [ChainType.ETHEREUM]: goerli,
     [ChainType.POLYGON]: mumbai,
