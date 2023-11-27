@@ -46,7 +46,7 @@ export class OnChainRelayer implements IOnChainRelayer<ProtocolTransactionReques
       id: signedCall.id,
       request: signedCall.request,
       nonce: signedCall.nonce,
-      indexingId: receipt.txId,
+      relayerTxId: receipt.txId,
       txHash: receipt.txHash,
     });
 

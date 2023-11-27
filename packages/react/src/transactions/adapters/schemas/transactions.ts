@@ -155,7 +155,7 @@ const MetaTransactionSchema = z.object({
   type: z.literal(TransactionType.Meta),
   chainType: z.nativeEnum(ChainType),
   id: z.string(),
-  indexingId: z.string(),
+  relayerTxId: z.string(),
   txHash: z.string().nullable(),
   nonce: z.number(),
   request: ProtocolTransactionRequestSchema,
@@ -167,7 +167,7 @@ const NativeTransactionSchema = z.object({
   type: z.literal(TransactionType.Native),
   chainType: z.nativeEnum(ChainType),
   id: z.string(),
-  indexingId: z.string().optional(),
+  relayerTxId: z.string().optional(),
   txHash: z.string().nullable(),
   request: AnyTransactionRequestSchema,
 });
@@ -190,6 +190,8 @@ export const TransactionSchema = z.discriminatedUnion('type', [
 
 export type TransactionSchema = z.infer<typeof TransactionSchema>;
 
-export const TransactionStorageSchema = z.array(TransactionSchema);
+export const TransactionListSchema = z.array(TransactionSchema);
 
-export type TransactionStorageSchema = z.infer<typeof TransactionStorageSchema>;
+export type TransactionListSchema = typeof TransactionListSchema;
+
+export type TransactionList = z.infer<typeof TransactionListSchema>;

@@ -11,7 +11,7 @@ import { ChainType } from '@lens-protocol/shared-kernel';
 export type NativeTransactionData<T extends AnyTransactionRequestModel> = {
   chainType: ChainType;
   id: string;
-  indexingId?: string;
+  relayerTxId?: string;
   request: T;
   txHash: string | null;
 };
@@ -19,7 +19,7 @@ export type NativeTransactionData<T extends AnyTransactionRequestModel> = {
 export type MetaTransactionData<T extends AnyTransactionRequestModel> = {
   chainType: ChainType;
   id: string;
-  indexingId: string;
+  relayerTxId: string;
   nonce: Nonce;
   request: T;
   txHash: string | null;

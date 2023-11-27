@@ -56,7 +56,7 @@ export class ProfileMetadataGateway
     const transaction = this.transactionFactory.createNativeTransaction({
       chainType: ChainType.POLYGON,
       id: v4(),
-      indexingId: receipt.txId,
+      relayerTxId: receipt.txId,
       txHash: receipt.txHash,
       request,
     });

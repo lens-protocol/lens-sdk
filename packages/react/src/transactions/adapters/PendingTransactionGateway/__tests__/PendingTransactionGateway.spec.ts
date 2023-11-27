@@ -29,15 +29,15 @@ import {
   mockMetaTransactionData,
   mockNativeTransactionData,
 } from '../../__helpers__/mocks';
-import { TransactionStorageSchema } from '../../schemas/transactions';
+import { TransactionListSchema } from '../../schemas/transactions';
 import { PendingTransactionGateway } from '../PendingTransactionGateway';
 
 function setupPendingTransactionGateway({
   factory = mockITransactionFactory(),
-  storage = mockStorage<TransactionStorageSchema>(),
+  storage = mockStorage<TransactionListSchema>(),
 }: {
   factory?: TransactionFactory;
-  storage?: IStorage<TransactionStorageSchema>;
+  storage?: IStorage<TransactionListSchema>;
 }) {
   return new PendingTransactionGateway(storage, factory);
 }
@@ -145,7 +145,7 @@ describe(`Given an instance of the ${PendingTransactionGateway.name}`, () => {
     const request = mockCreatePostRequest();
     const init = mockNativeTransactionData({ request });
     const tx = factory.createNativeTransaction(init);
-    const mainStorage = mockStorage<TransactionStorageSchema>();
+    const mainStorage = mockStorage<TransactionListSchema>();
     const mainGateway = setupPendingTransactionGateway({ factory, storage: mainStorage });
 
     beforeAll(async () => {
@@ -153,7 +153,7 @@ describe(`Given an instance of the ${PendingTransactionGateway.name}`, () => {
     });
 
     it('should emit new transactions', async () => {
-      const secondaryStorage = mockStorage<TransactionStorageSchema>();
+      const secondaryStorage = mockStorage<TransactionListSchema>();
       const underTestGateway = setupPendingTransactionGateway({
         factory,
         storage: secondaryStorage,
@@ -186,7 +186,7 @@ describe(`Given an instance of the ${PendingTransactionGateway.name}`, () => {
     });
 
     it('should not emit in case of cleared storage event', async () => {
-      const storage = mockStorage<TransactionStorageSchema>();
+      const storage = mockStorage<TransactionListSchema>();
       const underTestGateway = setupPendingTransactionGateway({
         factory,
         storage,
