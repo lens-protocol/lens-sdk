@@ -198,7 +198,7 @@ export type FollowArgs = {
  *
  * ```ts
  * const follow = async (profile: Profile) => {
- *   const result = await execute({ profile });
+ *   const result = await execute({ profile, sponsored: false });
  *
  *   if (result.isFailure()) {
  *     switch (result.error.name) {
