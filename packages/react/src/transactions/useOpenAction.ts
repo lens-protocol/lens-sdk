@@ -317,7 +317,7 @@ export function useOpenAction(
       action: args.action,
       signless: session.type === SessionType.WithProfile ? session.profile.signless : false, // cannot use Lens Manager with Public Collect
       public: session.type === SessionType.JustWallet,
-      sponsored: session.type === SessionType.JustWallet ? sponsored : false, // cannot use gasless with Public Collect
+      sponsored: session.type === SessionType.WithProfile ? sponsored : false, // cannot use gasless with Public Collect
     });
 
     return openAction(request);
