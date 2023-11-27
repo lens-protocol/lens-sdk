@@ -37,7 +37,7 @@ export class CreateMomokaMirrorGateway
   async createDelegatedTransaction(
     request: CreateMirrorRequest,
   ): PromiseResult<DataTransaction<CreateMirrorRequest>, BroadcastingError> {
-    const result = await this.broadcast(request);
+    const result = await this.relayWithProfileManager(request);
 
     if (result.isFailure()) return result;
 
@@ -62,7 +62,7 @@ export class CreateMomokaMirrorGateway
     });
   }
 
-  private async broadcast(
+  private async relayWithProfileManager(
     request: CreateMirrorRequest,
   ): PromiseResult<CreateMomokaPublicationResult, BroadcastingError> {
     const input = this.resolveMomokaMirrorRequest(request);

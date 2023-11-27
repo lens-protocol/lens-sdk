@@ -39,7 +39,7 @@ export class BlockProfilesGateway
   async createDelegatedTransaction(
     request: BlockProfilesRequest,
   ): PromiseResult<Transaction<BlockProfilesRequest>, BroadcastingError> {
-    const result = await this.broadcast(request);
+    const result = await this.relayWithProfileManager(request);
 
     if (result.isFailure()) {
       return result;
@@ -70,7 +70,7 @@ export class BlockProfilesGateway
     });
   }
 
-  private async broadcast(
+  private async relayWithProfileManager(
     request: BlockProfilesRequest,
   ): PromiseResult<RelaySuccess, BroadcastingError> {
     const { data } = await this.apolloClient.mutate<BlockData, BlockVariables>({

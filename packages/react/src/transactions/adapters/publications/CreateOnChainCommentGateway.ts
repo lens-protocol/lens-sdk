@@ -49,7 +49,7 @@ export class CreateOnChainCommentGateway
   async createDelegatedTransaction(
     request: CreateCommentRequest,
   ): PromiseResult<NativeTransaction<CreateCommentRequest>, BroadcastingError> {
-    const result = await this.broadcast(request);
+    const result = await this.relayWithProfileManager(request);
 
     if (result.isFailure()) return result;
 
@@ -86,7 +86,7 @@ export class CreateOnChainCommentGateway
     return this.createCommentCallDetails(result);
   }
 
-  private async broadcast(
+  private async relayWithProfileManager(
     request: CreateCommentRequest,
   ): PromiseResult<RelaySuccess, BroadcastingError> {
     const input = this.resolveOnchainCommentRequest(request);
