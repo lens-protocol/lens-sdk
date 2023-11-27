@@ -2,6 +2,7 @@ import { Quote } from '@lens-protocol/api-bindings';
 import {
   InsufficientGasError,
   PendingSigningRequestError,
+  PublicationId,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
@@ -10,7 +11,6 @@ import {
   ReferencePolicyConfig,
 } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { PublicationId } from '@lens-protocol/metadata';
 import { invariant } from '@lens-protocol/shared-kernel';
 
 import { SessionType, useSession } from '../authentication';
