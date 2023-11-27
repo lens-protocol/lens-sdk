@@ -8,6 +8,7 @@ on:
 
 jobs:
   install:
+    name: Install Dependencies
     runs-on: ubuntu-latest
 
     steps:
@@ -25,6 +26,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
   lint:
+    name: Lint
     runs-on: ubuntu-latest
     needs: install
 
@@ -45,6 +47,7 @@ jobs:
       - run: pnpm lint
 
   test:
+    name: Test
     runs-on: ubuntu-latest
     needs: install
 
@@ -73,6 +76,7 @@ jobs:
           TESTING_HEADER_VALUE: ${{secrets.TESTING_HEADER_VALUE}}
 
   build:
+    name: Build
     runs-on: ubuntu-latest
     needs: [install, lint, test]
 
@@ -93,6 +97,7 @@ jobs:
       - run: pnpm build
 
   examples:
+    name: Verify Examples
     runs-on: ubuntu-latest
     needs: [install, lint, test]
 
