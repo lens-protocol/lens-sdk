@@ -1,5 +1,11 @@
 # @lens-protocol/react
 
+## 2.0.0-alpha.22
+
+### Patch Changes
+
+- 89f345ba6: **chore:** updates development environment config
+
 ## 2.0.0-alpha.21
 
 ### Patch Changes
