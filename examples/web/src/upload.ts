@@ -1,7 +1,7 @@
 import { Readable } from 'stream';
 
-import { WebBundlr } from '@bundlr-network/client';
 import { Web3Provider } from '@ethersproject/providers';
+import { WebIrys } from '@irys/sdk';
 import { MediaImageMimeType } from '@lens-protocol/metadata';
 import { ReadableWebToNodeStream } from 'readable-web-to-node-stream';
 import { getWalletClient } from 'wagmi/actions';
@@ -12,27 +12,28 @@ import { never } from './utils';
 const TOP_UP = '200000000000000000'; // 0.2 MATIC
 const MIN_FUNDS = 0.05;
 
-async function getBundlr() {
+async function getWebIrys() {
   const walletClient = (await getWalletClient()) ?? never('Wallet client not found');
 
-  const bundlr = new WebBundlr(
-    'https://devnet.bundlr.network',
-    'matic',
-    new Web3Provider(walletClient.transport),
-    {
-      providerUrl: 'https://rpc-mumbai.maticvigil.com/',
+  const webIrys = new WebIrys({
+    url: 'https://devnet.irys.xyz',
+    token: 'matic',
+    wallet: {
+      rpcUrl: 'https://rpc-mumbai.maticvigil.com/',
+      name: 'ethersv5',
+      provider: new Web3Provider(walletClient.transport),
     },
-  );
+  });
 
-  await bundlr.ready();
+  await webIrys.ready();
 
-  const balance = await bundlr.getBalance(walletClient.account.address);
+  const balance = await webIrys.getBalance(walletClient.account.address);
 
-  if (bundlr.utils.unitConverter(balance).toNumber() < MIN_FUNDS) {
-    await bundlr.fund(TOP_UP);
+  if (webIrys.utils.fromAtomic(balance).toNumber() < MIN_FUNDS) {
+    await webIrys.fund(TOP_UP);
   }
 
-  return bundlr;
+  return webIrys;
 }
 
 export async function uploadJson(data: unknown): Promise<string> {
@@ -48,7 +49,7 @@ You can get some Mumbai MATIC from the Mumbai Faucet: https://mumbaifaucet.com/`
     throw new Error('User cancelled');
   }
 
-  const bundlr = await getBundlr();
+  const bundlr = await getWebIrys();
 
   const serialized = JSON.stringify(data);
   const tx = await bundlr.upload(serialized, {
@@ -71,7 +72,7 @@ You can get some Mumbai MATIC from the Mumbai Faucet: https://mumbaifaucet.com/`
     throw new Error('User cancelled');
   }
 
-  const bundlr = await getBundlr();
+  const bundlr = await getWebIrys();
 
   const webStream = file.stream();
   const nodeStream = new ReadableWebToNodeStream(webStream);
