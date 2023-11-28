@@ -1,4 +1,5 @@
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   TransactionError,
   TransactionKind,
@@ -14,7 +15,27 @@ import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useUpdateFollowPolicyController } from './adapters/useUpdateFollowPolicyController';
 
 export type UpdateFollowPolicyArgs = {
+  /**
+   * The follow policy to be set.
+   *
+   * See {@link FollowPolicyConfig} with types:
+   * - {@link FollowPolicyType.ANYONE} - anyone can follow
+   * - {@link FollowPolicyType.CHARGE} - anyone can follow, but they must pay a fee
+   */
   followPolicy: FollowPolicyConfig;
+  /**
+   * Whether the transaction costs should be sponsored by the Lens API or
+   * should be paid by the authenticated wallet.
+   *
+   * There are scenarios where the sponsorship will be denied regardless of this value.
+   * See {@link BroadcastingError} with:
+   * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
+   * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
+   * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
+   *
+   * @defaultValue true, the request will be attempted to be sponsored by the Lens API.
+   */
+  sponsored?: boolean;
 };
 
 /**
@@ -77,7 +98,8 @@ export function useUpdateFollowPolicy(): UseDeferredTask<
   | PendingSigningRequestError
   | UserRejectedError
   | WalletConnectionError
-  | TransactionError,
+  | TransactionError
+  | InsufficientGasError,
   UpdateFollowPolicyArgs
 > {
   const { data: session } = useSession();
@@ -97,6 +119,7 @@ export function useUpdateFollowPolicy(): UseDeferredTask<
       kind: TransactionKind.UPDATE_FOLLOW_POLICY,
       policy: args.followPolicy,
       signless: session.profile.signless,
+      sponsored: args.sponsored ?? false,
     });
   });
 }
