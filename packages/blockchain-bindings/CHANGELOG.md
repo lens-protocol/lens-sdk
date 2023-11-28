@@ -1,5 +1,18 @@
 # @lens-protocol/blockchain-bindings
 
+## 0.10.0-alpha.15
+
+### Patch Changes
+
+- Updated dependencies [493895b8]
+- Updated dependencies [fdd0073d]
+- Updated dependencies [5d243a83]
+- Updated dependencies [b37f6f4e]
+- Updated dependencies [2698fc65]
+- Updated dependencies [6a25dc02]
+- Updated dependencies [40abddd9]
+  - @lens-protocol/domain@0.11.0-alpha.15
+
 ## 0.10.0-alpha.14
 
 ### Patch Changes
