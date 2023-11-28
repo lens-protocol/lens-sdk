@@ -2,9 +2,12 @@
 
 ## 2.0.0-alpha.23
 
-### Patch Changes
+### Minor Changes
 
 - 0a3a61fb: **feat:** advanced contract condition for token-gated publications
+
+### Patch Changes
+
 - d0bad262: **feat:** Added `wallet.lastLoggedInProfile` method
 - Updated dependencies [0a3a61fb]
   - @lens-protocol/gated-content@0.3.3-alpha.17

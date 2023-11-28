@@ -1,12 +1,15 @@
 # @lens-protocol/react-native
 
-## 0.1.1-alpha.0
+## 0.1.0-alpha.0
 
-### Patch Changes
+### Minor Changes
 
 - acfad683: **feat:** initial version of `@lens-protocol/react-native` package
 - 493895b8: **feat:** self-funded `useFollow`
 - b37f6f4e: **feat:** self-funded `useSetProfileMetadata`
+
+### Patch Changes
+
 - Updated dependencies [acfad683]
 - Updated dependencies [493895b8]
 - Updated dependencies [acfad683]
