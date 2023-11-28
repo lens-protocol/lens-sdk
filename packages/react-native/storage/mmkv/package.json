@@ -1,0 +1,4 @@
+{
+  "main": "dist/lens-protocol-react-native-storage-mmkv.cjs.js",
+  "module": "dist/lens-protocol-react-native-storage-mmkv.esm.js"
+}

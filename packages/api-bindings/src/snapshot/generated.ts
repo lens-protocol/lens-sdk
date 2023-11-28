@@ -4,7 +4,7 @@
 /* eslint-disable no-restricted-imports */
 /* eslint-disable tsdoc/syntax */
 import * as Apollo from '@apollo/client';
-import gql from 'graphql-tag';
+import { DocumentNode } from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -279,69 +279,327 @@ export type GetSnapshotProposalData = {
   vp?: SnapshotVotePower | null;
 };
 
-export const FragmentSnapshotProposal = /*#__PURE__*/ gql`
-  fragment SnapshotProposal on Proposal {
-    __typename
-    id
-    author
-    state
-    title
-    choices
-    scores
-    scores_total
-    snapshot
-    symbol
-    network
-    type
-    privacy
-    start
-    end
-    quorum
-    space {
-      id
-      name
-    }
-    strategies {
-      network
-      name
-      params
-    }
-    flagged
-  }
-`;
-export const FragmentSnapshotVote = /*#__PURE__*/ gql`
-  fragment SnapshotVote on Vote {
-    __typename
-    choice
-  }
-`;
-export const FragmentSnapshotVotePower = /*#__PURE__*/ gql`
-  fragment SnapshotVotePower on Vp {
-    __typename
-    value: vp
-  }
-`;
-export const GetSnapshotProposalDocument = /*#__PURE__*/ gql`
-  query GetSnapshotProposal(
-    $spaceId: String!
-    $proposalId: String!
-    $voterAddress: String!
-    $includeVotes: Boolean!
-  ) {
-    proposal(id: $proposalId) {
-      ...SnapshotProposal
-    }
-    votes(where: { proposal: $proposalId, voter: $voterAddress }) @include(if: $includeVotes) {
-      ...SnapshotVote
-    }
-    vp(voter: $voterAddress, space: $spaceId, proposal: $proposalId) @include(if: $includeVotes) {
-      ...SnapshotVotePower
-    }
-  }
-  ${FragmentSnapshotProposal}
-  ${FragmentSnapshotVote}
-  ${FragmentSnapshotVotePower}
-`;
+export const FragmentSnapshotProposal = /*#__PURE__*/ {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'SnapshotProposal' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Proposal' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'author' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'state' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'choices' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'scores' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'scores_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'snapshot' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'symbol' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'network' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'privacy' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'start' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'end' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quorum' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'space' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'strategies' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'network' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'flagged' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const FragmentSnapshotVote = /*#__PURE__*/ {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'SnapshotVote' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Vote' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'choice' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const FragmentSnapshotVotePower = /*#__PURE__*/ {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'SnapshotVotePower' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Vp' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'value' },
+            name: { kind: 'Name', value: 'vp' },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const GetSnapshotProposalDocument = /*#__PURE__*/ {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetSnapshotProposal' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'spaceId' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'proposalId' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'voterAddress' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'includeVotes' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'proposal' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'proposalId' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'SnapshotProposal' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'votes' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'proposal' },
+                      value: { kind: 'Variable', name: { kind: 'Name', value: 'proposalId' } },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'voter' },
+                      value: { kind: 'Variable', name: { kind: 'Name', value: 'voterAddress' } },
+                    },
+                  ],
+                },
+              },
+            ],
+            directives: [
+              {
+                kind: 'Directive',
+                name: { kind: 'Name', value: 'include' },
+                arguments: [
+                  {
+                    kind: 'Argument',
+                    name: { kind: 'Name', value: 'if' },
+                    value: { kind: 'Variable', name: { kind: 'Name', value: 'includeVotes' } },
+                  },
+                ],
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'SnapshotVote' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'vp' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'voter' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'voterAddress' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'space' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'spaceId' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'proposal' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'proposalId' } },
+              },
+            ],
+            directives: [
+              {
+                kind: 'Directive',
+                name: { kind: 'Name', value: 'include' },
+                arguments: [
+                  {
+                    kind: 'Argument',
+                    name: { kind: 'Name', value: 'if' },
+                    value: { kind: 'Variable', name: { kind: 'Name', value: 'includeVotes' } },
+                  },
+                ],
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'SnapshotVotePower' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'SnapshotProposal' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Proposal' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'author' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'state' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'choices' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'scores' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'scores_total' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'snapshot' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'symbol' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'network' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'privacy' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'start' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'end' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quorum' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'space' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'strategies' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'network' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'flagged' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'SnapshotVote' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Vote' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'choice' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'SnapshotVotePower' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Vp' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'value' },
+            name: { kind: 'Name', value: 'vp' },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
 
 /**
  * __useGetSnapshotProposal__

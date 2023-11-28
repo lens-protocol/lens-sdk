@@ -36,7 +36,6 @@ import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from './AbstractContractCallGateway';
 import { ITransactionFactory } from './ITransactionFactory';
-import { SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
 import { handleRelayError } from './relayer';
 
 type NewOpenActionRequest =
@@ -45,11 +44,11 @@ type NewOpenActionRequest =
   | UnknownActionRequest;
 
 export class OpenActionGateway
-  extends AbstractContractCallGateway<NewOpenActionRequest>
+  extends AbstractContractCallGateway<OpenActionRequest>
   implements
     ISignedOnChainGateway<OpenActionRequest>,
     IDelegatedTransactionGateway<DelegableOpenActionRequest>,
-    IPaidTransactionGateway<NewOpenActionRequest>
+    IPaidTransactionGateway<OpenActionRequest>
 {
   constructor(
     private readonly apolloClient: SafeApolloClient,
@@ -87,6 +86,26 @@ export class OpenActionGateway
     return this.createOpenActionUnsignedProtocolCall(request, nonce);
   }
 
+  protected override async createEncodedData(
+    request: OpenActionRequest,
+  ): Promise<ContractCallDetails> {
+    if (request.public) {
+      const input = this.resolveActOnOpenActionRequest(request);
+      const result = await this.createActOnOpenActionTypedData(input);
+      return this.createPublicActProxyCallDetails(request, result);
+    }
+
+    if (request.type === AllOpenActionType.LEGACY_COLLECT) {
+      const input = this.resolveLegacyCollectRequest(request);
+      const result = await this.createLegacyCollectTypedData(input);
+      return this.createLegacyCollectCallDetails(result);
+    }
+
+    const input = this.resolveActOnOpenActionRequest(request);
+    const result = await this.createActOnOpenActionTypedData(input);
+    return this.createActCallDetails(result);
+  }
+
   private async createLegacyCollectUnsignedProtocolCall(
     request: LegacyCollectRequest,
     nonce?: number,
@@ -98,7 +117,6 @@ export class OpenActionGateway
       id: result.id,
       request,
       typedData: omitTypename(result.typedData),
-      fallback: this.createLegacyCollectFallback(request, result),
     });
   }
 
@@ -124,10 +142,7 @@ export class OpenActionGateway
     });
 
     if (data.result.__typename === 'LensProfileManagerRelayError') {
-      const result = await this.createLegacyCollectTypedData(input);
-      const fallback = this.createLegacyCollectFallback(request, result);
-
-      return handleRelayError(data.result, fallback);
+      return handleRelayError(data.result);
     }
 
     return success(data.result);
@@ -146,10 +161,7 @@ export class OpenActionGateway
     });
 
     if (data.result.__typename === 'LensProfileManagerRelayError') {
-      const result = await this.createActOnOpenActionTypedData(input);
-      const fallback = this.createActOnOpenActionFallback(request, result);
-
-      return handleRelayError(data.result, fallback);
+      return handleRelayError(data.result);
     }
 
     return success(data.result);
@@ -166,7 +178,6 @@ export class OpenActionGateway
       id: result.id,
       request,
       typedData: omitTypename(result.typedData),
-      fallback: this.createActOnOpenActionFallback(request, result),
     });
   }
 
@@ -208,7 +219,9 @@ export class OpenActionGateway
     }
   }
 
-  resolveOnchainReferrers(referrers: Referrers | undefined): gql.OnchainReferrer[] | undefined {
+  private resolveOnchainReferrers(
+    referrers: Referrers | undefined,
+  ): gql.OnchainReferrer[] | undefined {
     return referrers?.map((value) => {
       if (isPublicationId(value)) {
         return {
@@ -238,17 +251,6 @@ export class OpenActionGateway
     return data.result;
   }
 
-  protected override async createEncodedData(
-    request: NewOpenActionRequest,
-  ): Promise<ContractCallDetails> {
-    if (request.public) {
-      const input = this.resolveActOnOpenActionRequest(request);
-      const result = await this.createActOnOpenActionTypedData(input);
-      return this.createPublicActProxyCallDetails(request, result);
-    }
-    throw new Error('Method not implemented.');
-  }
-
   private async createActOnOpenActionTypedData(
     request: gql.ActOnOpenActionRequest,
     nonce?: Nonce,
@@ -266,10 +268,9 @@ export class OpenActionGateway
     return data.result;
   }
 
-  private createLegacyCollectFallback(
-    request: LegacyCollectRequest,
+  private createLegacyCollectCallDetails(
     result: gql.CreateLegacyCollectBroadcastItemResult,
-  ): SelfFundedProtocolTransactionRequest<LegacyCollectRequest> {
+  ): ContractCallDetails {
     const contract = lensHub(result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('collect', [
       {
@@ -282,16 +283,14 @@ export class OpenActionGateway
       },
     ]);
     return {
-      ...request,
       contractAddress: result.typedData.domain.verifyingContract,
       encodedData: encodedData as Data,
     };
   }
 
-  private createActOnOpenActionFallback(
-    request: NewOpenActionRequest,
+  private createActCallDetails(
     result: gql.CreateActOnOpenActionBroadcastItemResult,
-  ): SelfFundedProtocolTransactionRequest<NewOpenActionRequest> {
+  ): ContractCallDetails {
     const contract = lensHub(result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('act', [
       {
@@ -305,7 +304,6 @@ export class OpenActionGateway
       },
     ]);
     return {
-      ...request,
       contractAddress: result.typedData.domain.verifyingContract,
       encodedData: encodedData as Data,
     };

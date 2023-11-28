@@ -23,13 +23,15 @@ const FollowRequestFeeSchema = z.object({
 export const FreeFollowRequestSchema = z.object({
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.FOLLOW_PROFILE),
-  delegate: z.boolean(),
+  signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 export const PaidFollowRequestSchema = z.object({
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.FOLLOW_PROFILE),
   fee: FollowRequestFeeSchema,
+  sponsored: z.boolean(),
 });
 
 export const FollowRequestSchema = z.union([PaidFollowRequestSchema, FreeFollowRequestSchema]);
@@ -37,7 +39,7 @@ export const FollowRequestSchema = z.union([PaidFollowRequestSchema, FreeFollowR
 export const UnfollowRequestSchema = z.object({
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.UNFOLLOW_PROFILE),
-  delegate: z.boolean(),
+  signless: z.boolean(),
 });
 
 export const UpdateProfileManagersRequestSchema = z
@@ -87,33 +89,34 @@ export const UpdateFollowPolicyRequestSchema: z.ZodType<
 > = z.object({
   policy: FollowPolicyConfigSchema,
   kind: z.literal(TransactionKind.UPDATE_FOLLOW_POLICY),
-  delegate: z.boolean(),
+  signless: z.boolean(),
 });
 
 export const SetProfileMetadataRequestSchema = z.object({
   metadataURI: z.string().url(),
   kind: z.literal(TransactionKind.UPDATE_PROFILE_DETAILS),
-  delegate: z.boolean(),
+  signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 export const LinkHandleRequestSchema = z.object({
   fullHandle: z.string(),
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.LINK_HANDLE),
-  delegate: z.boolean(),
+  signless: z.boolean(),
 });
 
 export const UnlinkHandleRequestSchema = z.object({
   fullHandle: z.string(),
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.UNLINK_HANDLE),
-  delegate: z.boolean(),
+  signless: z.boolean(),
 });
 
 export const UnblockProfilesRequestSchema = z.object({
   profileIds: ProfileIdSchema.array().min(1),
   kind: z.literal(TransactionKind.UNBLOCK_PROFILE),
-  delegate: z.boolean(),
+  signless: z.boolean(),
 });
 
 export const ClaimHandleRequestSchema = z.union([
@@ -133,5 +136,5 @@ export const ClaimHandleRequestSchema = z.union([
 export const BlockProfilesRequestSchema = z.object({
   profileIds: ProfileIdSchema.array().min(1),
   kind: z.literal(TransactionKind.BLOCK_PROFILE),
-  delegate: z.boolean(),
+  signless: z.boolean(),
 });

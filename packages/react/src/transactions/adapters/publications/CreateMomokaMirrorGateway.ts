@@ -11,7 +11,6 @@ import {
   omitTypename,
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
-import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { DataTransaction } from '@lens-protocol/domain/entities';
 import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publications';
 import {
@@ -19,11 +18,10 @@ import {
   IDelegatedTransactionGateway,
   ISignedMomokaGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { PromiseResult, success } from '@lens-protocol/shared-kernel';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ITransactionFactory } from '../ITransactionFactory';
-import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError } from '../relayer';
 
 export class CreateMomokaMirrorGateway
@@ -61,7 +59,6 @@ export class CreateMomokaMirrorGateway
       id: result.id,
       request,
       typedData: omitTypename(result.typedData),
-      fallback: this.createRequestFallback(request, result),
     });
   }
 
@@ -78,10 +75,7 @@ export class CreateMomokaMirrorGateway
     });
 
     if (data.result.__typename === 'LensProfileManagerRelayError') {
-      const result = await this.createTypedData(input);
-      const fallback = this.createRequestFallback(request, result);
-
-      return handleRelayError(data.result, fallback);
+      return handleRelayError(data.result);
     }
 
     return success(data.result);
@@ -104,28 +98,5 @@ export class CreateMomokaMirrorGateway
       variables: { request },
     });
     return data.result;
-  }
-
-  private createRequestFallback(
-    request: CreateMirrorRequest,
-    result: CreateMomokaMirrorBroadcastItemResult,
-  ): SelfFundedProtocolTransactionRequest<CreateMirrorRequest> {
-    const contract = lensHub(result.typedData.domain.verifyingContract);
-    const encodedData = contract.interface.encodeFunctionData('mirror', [
-      {
-        profileId: result.typedData.message.profileId,
-        metadataURI: result.typedData.message.metadataURI,
-        pointedProfileId: result.typedData.message.pointedProfileId,
-        pointedPubId: result.typedData.message.pointedPubId,
-        referrerProfileIds: result.typedData.message.referrerProfileIds,
-        referrerPubIds: result.typedData.message.referrerPubIds,
-        referenceModuleData: result.typedData.message.referenceModuleData,
-      },
-    ]);
-    return {
-      ...request,
-      contractAddress: result.typedData.domain.verifyingContract,
-      encodedData: encodedData as Data,
-    };
   }
 }

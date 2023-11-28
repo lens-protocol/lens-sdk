@@ -7,7 +7,15 @@ import { RequiredSigner } from './wallet/adapters/ConcreteWallet';
 import { IProviderBinding, GetProvider } from './wallet/infrastructure/ProviderFactory';
 import { ISignerBinding, GetSigner } from './wallet/infrastructure/SignerFactory';
 
-export type { QueryParams, ILogger, GetProvider, GetSigner, RequiredSigner };
+export type {
+  QueryParams,
+  ILogger,
+  GetProvider,
+  GetSigner,
+  RequiredSigner,
+  IObservableStorageProvider,
+  IStorageProvider,
+};
 
 export { defaultQueryParams } from '@lens-protocol/api-bindings';
 

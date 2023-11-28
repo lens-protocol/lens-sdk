@@ -4,6 +4,7 @@ import {
   SubsidizeOffChain,
   SignedOnChain,
   TransactionData,
+  PaidTransaction,
 } from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
@@ -17,6 +18,7 @@ export function useCreateQuoteController() {
     apolloClient,
     momokaRelayer,
     onChainRelayer,
+    providerFactory,
     publicationCacheManager,
     transactionFactory,
     transactionGateway,
@@ -28,7 +30,11 @@ export function useCreateQuoteController() {
       publicationCacheManager.fetchNewQuote(tx),
     );
 
-    const onChainGateway = new CreateOnChainQuoteGateway(apolloClient, transactionFactory);
+    const onChainGateway = new CreateOnChainQuoteGateway(
+      providerFactory,
+      apolloClient,
+      transactionFactory,
+    );
 
     const onChainQuote = new SignedOnChain(
       activeWallet,
@@ -56,14 +62,25 @@ export function useCreateQuoteController() {
       presenter,
     );
 
-    const delegableOffChainQuote = new DelegableSigning(
+    const delegableMomokaQuote = new DelegableSigning(
       momokaQuote,
       offChainGateway,
       transactionQueue,
       presenter,
     );
 
-    const createQuote = new CreateQuote(delegableOnChainQuote, delegableOffChainQuote);
+    const paidOnChainQuote = new PaidTransaction(
+      activeWallet,
+      onChainGateway,
+      presenter,
+      transactionQueue,
+    );
+
+    const createQuote = new CreateQuote(
+      delegableOnChainQuote,
+      delegableMomokaQuote,
+      paidOnChainQuote,
+    );
 
     await createQuote.execute(request);
 

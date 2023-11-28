@@ -1,5 +1,11 @@
 # @lens-protocol/gated-content
 
+## 0.3.3-alpha.17
+
+### Patch Changes
+
+- 0a3a61fb: **feat:** advanced contract condition for token-gated publications
+
 ## 0.3.3-alpha.16
 
 ### Patch Changes

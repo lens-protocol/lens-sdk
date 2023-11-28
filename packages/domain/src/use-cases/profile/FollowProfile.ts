@@ -11,12 +11,21 @@ import {
 import { BroadcastingError } from '../transactions/BroadcastingError';
 import { DelegableSigning } from '../transactions/DelegableSigning';
 import { ITransactionResultPresenter } from '../transactions/ITransactionResultPresenter';
+import { PaidTransaction } from '../transactions/PaidTransaction';
 import { SignedOnChain } from '../transactions/SignedOnChain';
+import { SponsorshipReady } from '../transactions/SponsorshipReady';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
   TokenAvailability,
 } from '../wallets/TokenAvailability';
+
+export type FreeFollowRequest = {
+  profileId: ProfileId;
+  kind: TransactionKind.FOLLOW_PROFILE;
+  signless: boolean;
+  sponsored: boolean;
+};
 
 export type FollowRequestFee = {
   amount: Amount<Erc20>;
@@ -24,16 +33,11 @@ export type FollowRequestFee = {
   recipient: EvmAddress;
 };
 
-export type FreeFollowRequest = {
-  profileId: ProfileId;
-  kind: TransactionKind.FOLLOW_PROFILE;
-  delegate: boolean;
-};
-
 export type PaidFollowRequest = {
   profileId: ProfileId;
   kind: TransactionKind.FOLLOW_PROFILE;
   fee: FollowRequestFee;
+  sponsored: boolean;
 };
 
 export type FollowRequest = FreeFollowRequest | PaidFollowRequest;
@@ -53,15 +57,22 @@ export type IFollowProfilePresenter = ITransactionResultPresenter<
   | WalletConnectionError
 >;
 
-export class FollowProfile {
+export class FollowProfile extends SponsorshipReady<FollowRequest> {
   constructor(
     private readonly tokenAvailability: TokenAvailability,
-    private readonly signedFollow: SignedOnChain<FollowRequest>,
-    private readonly delegableFollow: DelegableSigning<FreeFollowRequest>,
+    private readonly signedExecution: SignedOnChain<FollowRequest>,
+    private readonly delegableExecution: DelegableSigning<FreeFollowRequest>,
+    private readonly paidExecution: PaidTransaction<FollowRequest>,
     private readonly presenter: IFollowProfilePresenter,
-  ) {}
+  ) {
+    super();
+  }
 
-  async execute(request: FollowRequest) {
+  protected override async charged(request: FollowRequest): Promise<void> {
+    await this.paidExecution.execute(request);
+  }
+
+  protected override async sponsored(request: FollowRequest): Promise<void> {
     if (isPaidFollowRequest(request)) {
       const result = await this.tokenAvailability.checkAvailability({
         amount: request.fee.amount,
@@ -72,10 +83,10 @@ export class FollowProfile {
         this.presenter.present(result);
         return;
       }
-      await this.signedFollow.execute(request);
+      await this.signedExecution.execute(request);
       return;
     }
 
-    await this.delegableFollow.execute(request);
+    await this.delegableExecution.execute(request);
   }
 }

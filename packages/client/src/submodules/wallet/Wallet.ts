@@ -12,6 +12,7 @@ import type {
 import type {
   ClaimProfileWithHandleRequest,
   CreateProfileWithHandleRequest,
+  LastLoggedInProfileRequest,
   OwnedHandlesRequest,
   ProfilesManagedRequest,
 } from '../../graphql/types.generated';
@@ -49,7 +50,7 @@ export class Wallet {
   }
 
   /**
-   * Get all owned handles by a wallet address.
+   * Fetch all owned handles by a wallet address.
    *
    * @param request - Request object for the query
    * @returns Handles wrapped with {@link PaginatedResult}
@@ -72,7 +73,7 @@ export class Wallet {
   }
 
   /**
-   * Get all profiles managed by a wallet address.
+   * Fetch all profiles managed by a wallet address.
    *
    * @param request - Request object for the query
    * @returns Profiles wrapped with {@link PaginatedResult}
@@ -183,6 +184,28 @@ export class Wallet {
       throw new Error('Cannot create profile in production environment');
     }
     const result = await this.sdk.CreateProfileWithHandle({ request });
+    return result.data.result;
+  }
+
+  /**
+   * Fetch the last logged in profile for a wallet address.
+   *
+   * @param request - Request object for the query
+   * @returns Profile
+   *
+   * @example
+   * ```ts
+   * const result = await client.wallet.lastLoggedInProfile({
+   *   for: '0xa5653e88D9c352387deDdC79bcf99f0ada62e9c6',
+   * });
+   * ```
+   */
+  async lastLoggedInProfile(request: LastLoggedInProfileRequest): Promise<ProfileFragment | null> {
+    const result = await this.sdk.LastLoggedInProfile({
+      request,
+      ...buildRequestFromConfig(this.context),
+    });
+
     return result.data.result;
   }
 }

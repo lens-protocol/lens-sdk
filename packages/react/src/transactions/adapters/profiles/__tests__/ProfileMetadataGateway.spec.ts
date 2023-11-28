@@ -1,74 +1,84 @@
-import { MockedResponse } from '@apollo/client/testing';
-import { faker } from '@faker-js/faker';
-import { Profile } from '@lens-protocol/api-bindings';
+/*
+ * @jest-environment node
+ */
+import { SafeApolloClient } from '@lens-protocol/api-bindings';
 import {
   mockCreateSetProfileMetadataTypedDataData,
   mockCreateSetProfileMetadataTypedDataResponse,
   mockLensApolloClient,
-  mockProfileFragment,
-  mockProfileResponse,
 } from '@lens-protocol/api-bindings/mocks';
-import { mockNonce, mockSetProfileMetadataRequest } from '@lens-protocol/domain/mocks';
+import { UnsignedTransaction } from '@lens-protocol/domain/entities';
+import { mockNonce, mockSetProfileMetadataRequest, mockWallet } from '@lens-protocol/domain/mocks';
+import { ChainType } from '@lens-protocol/shared-kernel';
+import { providers } from 'ethers';
+import { mock } from 'jest-mock-extended';
 
 import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
+import { mockIProviderFactory } from '../../../../wallet/adapters/__helpers__/mocks';
+import { UnsignedContractCallTransaction } from '../../AbstractContractCallGateway';
 import {
   assertUnsignedProtocolCallCorrectness,
   mockITransactionFactory,
+  mockJsonRpcProvider,
 } from '../../__helpers__/mocks';
 import { ProfileMetadataGateway } from '../ProfileMetadataGateway';
 
 function setupTestScenario({
-  existingProfile,
-  otherMockedResponses = [],
+  apolloClient,
+  provider = mock<providers.JsonRpcProvider>(),
 }: {
-  existingProfile: Profile;
-  otherMockedResponses?: MockedResponse<unknown>[];
+  apolloClient: SafeApolloClient;
+  provider?: providers.JsonRpcProvider;
 }) {
-  const getProfilesByIdQueryMockedResponse = mockProfileResponse({
-    variables: {
-      request: { forProfileId: existingProfile.id },
-    },
-    result: existingProfile,
+  const transactionFactory = mockITransactionFactory();
+  const providerFactory = mockIProviderFactory({
+    chainType: ChainType.POLYGON,
+    provider,
   });
 
-  const apolloClient = mockLensApolloClient([
-    getProfilesByIdQueryMockedResponse,
-    ...otherMockedResponses,
-  ]);
-
-  const transactionFactory = mockITransactionFactory();
-
-  const gateway = new ProfileMetadataGateway(apolloClient, transactionFactory);
+  const gateway = new ProfileMetadataGateway(providerFactory, apolloClient, transactionFactory);
 
   return { gateway };
 }
 
-const uploadUrl = faker.internet.url();
-
 describe(`Given an instance of the ${ProfileMetadataGateway.name}`, () => {
-  const existingProfile = mockProfileFragment();
-  const request = mockSetProfileMetadataRequest({
-    metadataURI: uploadUrl,
+  const request = mockSetProfileMetadataRequest();
+  const data = mockCreateSetProfileMetadataTypedDataData({ metadataURI: request.metadataURI });
+
+  describe(`when creating an ${UnsignedTransaction.name}<SetProfileMetadataRequest>`, () => {
+    const wallet = mockWallet();
+
+    it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+      const provider = await mockJsonRpcProvider();
+      const apolloClient = mockLensApolloClient([
+        mockCreateSetProfileMetadataTypedDataResponse({
+          request: {
+            metadataURI: request.metadataURI,
+          },
+          data,
+        }),
+      ]);
+      const { gateway } = setupTestScenario({ apolloClient, provider });
+
+      const unsignedTransaction = await gateway.createUnsignedTransaction(request, wallet);
+
+      expect(unsignedTransaction).toBeInstanceOf(UnsignedContractCallTransaction);
+    });
   });
 
   describe(`when creating an IUnsignedProtocolCall<SetProfileMetadataRequest> via the "${ProfileMetadataGateway.prototype.createUnsignedProtocolCall.name}" method`, () => {
-    const data = mockCreateSetProfileMetadataTypedDataData({ metadataURI: uploadUrl });
-
     it(`should:
         - create a new Profile Metadata updating the profile details
-        - upload it via the IMetadataUploader<ProfileMetadata>
         - create an instance of the ${UnsignedProtocolCall.name} w/ the expected typed data`, async () => {
-      const { gateway } = setupTestScenario({
-        existingProfile,
-        otherMockedResponses: [
-          mockCreateSetProfileMetadataTypedDataResponse({
-            request: {
-              metadataURI: uploadUrl,
-            },
-            data,
-          }),
-        ],
-      });
+      const apolloClient = mockLensApolloClient([
+        mockCreateSetProfileMetadataTypedDataResponse({
+          request: {
+            metadataURI: request.metadataURI,
+          },
+          data,
+        }),
+      ]);
+      const { gateway } = setupTestScenario({ apolloClient });
 
       const unsignedCall = await gateway.createUnsignedProtocolCall(request);
 
@@ -77,17 +87,15 @@ describe(`Given an instance of the ${ProfileMetadataGateway.name}`, () => {
 
     it(`should override the signature nonce when provided`, async () => {
       const nonce = mockNonce();
-      const { gateway } = setupTestScenario({
-        existingProfile,
-        otherMockedResponses: [
-          mockCreateSetProfileMetadataTypedDataResponse({
-            request: {
-              metadataURI: uploadUrl,
-            },
-            overrideSigNonce: nonce,
-          }),
-        ],
-      });
+      const apolloClient = mockLensApolloClient([
+        mockCreateSetProfileMetadataTypedDataResponse({
+          request: {
+            metadataURI: request.metadataURI,
+          },
+          overrideSigNonce: nonce,
+        }),
+      ]);
+      const { gateway } = setupTestScenario({ apolloClient });
 
       const unsignedCall = await gateway.createUnsignedProtocolCall(request, nonce);
 

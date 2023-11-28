@@ -36,6 +36,7 @@ import {
   UseBlockAndUnblockProfiles,
   UseBlockedProfiles,
   UseFollowAndUnfollow,
+  UseLastLoggedInProfile,
   UseLazyProfile,
   UseLazyProfiles,
   UseMutualFollowers,
@@ -162,6 +163,7 @@ export function App() {
                       <Route path="useOwnedHandles" element={<UseOwnedHandles />} />
                       <Route path="useBlockProfiles" element={<UseBlockAndUnblockProfiles />} />
                       <Route path="useBlockedProfiles" element={<UseBlockedProfiles />} />
+                      <Route path="useLastLoggedInProfile" element={<UseLastLoggedInProfile />} />
                     </Route>
 
                     <Route path="/discovery">

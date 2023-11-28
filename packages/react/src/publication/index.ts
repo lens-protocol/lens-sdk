@@ -36,6 +36,7 @@ export type {
   MultirecipientFeeCollectOpenActionSettings,
   Post,
   PrimaryPublication,
+  ProfileWhoReactedResult,
   PublicationMetadata,
   PublicationMetadataMedia,
   PublicationOperations,

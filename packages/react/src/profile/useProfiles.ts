@@ -33,7 +33,7 @@ export type UseProfilesArgs = PaginatedArgs<ProfilesRequest>;
  * ```tsx
  * const { data, loading, error } = useProfiles({
  *   where: {
- *     profileIds: ['0x01', '0x02'],
+ *     profileIds: [profileId('0x01'), profileId('0x02')],
  *   },
  * });
  * ```
@@ -53,7 +53,7 @@ export type UseProfilesArgs = PaginatedArgs<ProfilesRequest>;
  * ```tsx
  * const { data, loading, error } = useProfiles({
  *   where: {
- *     whoCommentedOn: '0x1b-0x012b',
+ *     whoCommentedOn: publicationId('0x1b-0x012b'),
  *   },
  * });
  * ```
@@ -63,7 +63,7 @@ export type UseProfilesArgs = PaginatedArgs<ProfilesRequest>;
  * ```tsx
  * const { data, loading, error } = useProfiles({
  *   where: {
- *     whoMirroredPublication: '0x1b-0x012b',
+ *     whoMirroredPublication: publicationId('0x1b-0x012b'),
  *   },
  * });
  * ```
@@ -73,7 +73,7 @@ export type UseProfilesArgs = PaginatedArgs<ProfilesRequest>;
  * ```tsx
  * const { data, loading, error } = useProfiles({
  *   where: {
- *     whoQuotedPublication: '0x1b-0x012b',
+ *     whoQuotedPublication: publicationId('0x1b-0x012b'),
  *   },
  * });
  * ```

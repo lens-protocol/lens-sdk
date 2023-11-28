@@ -2,9 +2,16 @@
 // They are NOT needed when using `@lens-protocol/react` outside our monorepo
 
 const path = require('path');
-const {makeMetroConfig} = require('@rnx-kit/metro-config');
+
+const { makeMetroConfig } = require('@rnx-kit/metro-config');
 const MetroSymlinksResolver = require('@rnx-kit/metro-resolver-symlinks');
 
+/**
+ * Metro configuration
+ * https://facebook.github.io/metro/docs/configuration
+ *
+ * @type {import('metro-config').MetroConfig}
+ */
 const config = makeMetroConfig({
   resetCache: true,
   projectRoot: __dirname,

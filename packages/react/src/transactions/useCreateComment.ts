@@ -1,6 +1,8 @@
 import { Comment } from '@lens-protocol/api-bindings';
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
+  PublicationId,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
@@ -9,7 +11,6 @@ import {
   ReferencePolicyConfig,
 } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { PublicationId } from '@lens-protocol/metadata';
 import { invariant } from '@lens-protocol/shared-kernel';
 
 import { SessionType, useSession } from '../authentication';
@@ -51,6 +52,19 @@ export type CreateCommentArgs = {
    * @defaultValue `{ type: ReferencePolicyType.ANYONE }`
    */
   reference?: ReferencePolicyConfig;
+  /**
+   * Whether the transaction costs should be sponsored by the Lens API or
+   * should be paid by the authenticated wallet.
+   *
+   * There are scenarios where the sponsorship will be denied regardless of this value.
+   * See {@link BroadcastingError} with:
+   * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
+   * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
+   * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
+   *
+   * @defaultValue true, the request will be attempted to be sponsored by the Lens API.
+   */
+  sponsored?: boolean;
 };
 
 /**
@@ -70,7 +84,7 @@ export type CreateCommentArgs = {
  * ```tsx
  * const { execute, error, loading } = useCreateComment();
  *
- * const comment = (content: string) => {
+ * const comment = async (content: string) => {
  *   // create the desired metadata via the `@lens-protocol/metadata` package helpers
  *   const metadata = textOnly({ content });
  *
@@ -79,6 +93,7 @@ export type CreateCommentArgs = {
  *
  *   // invoke the `execute` function to create the comment
  *   const result = await execute({
+ *     commentOn: publicationId, // the publication ID to comment on
  *     metadata: uri,
  *   });
  * }
@@ -99,7 +114,9 @@ export type CreateCommentArgs = {
  *
  *   // invoke the `execute` function to create the comment
  *   const result = await execute({
+ *
  *     metadata: uri,
+ *     commentOn: publicationId,
  *   });
  *
  *   if (result.isFailure()) {
@@ -128,7 +145,7 @@ export type CreateCommentArgs = {
  * };
  * ```
  * At this point the comment creation is completed from an end-user perspective but,
- * in case of on-chain TX, this not necessarily mined and indexed. See the following section.
+ * in case of on-chain TX, this is not necessarily mined and indexed (yet). See the following section.
  *
  * ## Wait for completion
  *
@@ -147,7 +164,7 @@ export type CreateCommentArgs = {
  *
  *   // invoke the `execute` function to create the comment
  *   const result = await execute({
- *     commentOn: publicationId, // the publication ID to comment on
+ *     commentOn: publicationId,
  *     metadata: uri,
  *   });
  *
@@ -179,7 +196,7 @@ export type CreateCommentArgs = {
  * {@link Amount} helper with currencies from the {@link useCurrencies} hook to
  * create the desired amounts.
  *
- * Create a comment with a SimpleCollectOpenAction module:
+ * Create a comment with a `SimpleCollectOpenAction` module:
  * ```tsx
  * const wmatic = ... // from useCurrencies hook
  *
@@ -200,7 +217,7 @@ export type CreateCommentArgs = {
  * ```
  * See {@link SimpleCollectActionConfig} for more details.
  *
- * Create a comment with a multirecipient collect open action:
+ * Create a comment with a `MultirecipientCollectOpenAction` module:
  * ```tsx
  * const wmatic = ... // from useCurrencies hook
  *
@@ -321,6 +338,102 @@ export type CreateCommentArgs = {
  *
  * See {@link DegreesOfSeparationReferencePolicyConfig} for more details.
  *
+ * ## Creating an app-specific comment
+ *
+ * You can create a comment that is specific to an app by defining the `appId` when creating the comment metadata.
+ *
+ * This allows apps to build custom experiences by only surfacing publications that were created in their app.
+ *
+ * ```tsx
+ * const metadata = textOnly({
+ *  content: `Hello world!`,
+ *  appId: 'my-app-id',
+ * });
+ *
+ * const uri = await uploadToIpfs(metadata);
+ *
+ * const result = await execute({
+ *  commentOn: publicationId,
+ *  metadata: uri,
+ * });
+ * ```
+ *
+ * ## Self-funded Comment
+ *
+ * In case you want to pay for the transaction gas costs yourself, you can do so by setting the
+ * `sponsored` parameter to `false`:
+ *
+ * ```ts
+ * const comment = async (content: string) => {
+ *   // create and upload metadata as before
+ *
+ *   const result = await execute({
+ *     metadata: uri,
+ *     commentOn: : publicationId,
+ *     sponsored: false,
+ *   });
+ *
+ *   if (result.isFailure()) {
+ *     switch (result.error.name) {
+ *       case 'InsufficientGasError':
+ *         console.log('You do not have enough funds to pay for the transaction cost.');
+ *         break;
+ *
+ *       // ...
+ *     }
+ *     return;
+ *   }
+ *
+ *   // ...
+ * }
+ * ```
+ *
+ * The example above shows how to detect when the user does not have enough funds to pay for the transaction cost.
+ *
+ * ## Self-funded Fallback
+ *
+ * If for some reason the Lens API cannot sponsor the transaction, the hook will fail with a {@link BroadcastingError} with one of the following reasons:
+ * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
+ * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
+ * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
+ *
+ * In those cases you can retry the transaction as self-funded like in the following example:
+ *
+ * ```ts
+ * const comment = async (content: string) => {
+ *   // create and upload metadata as before
+ *
+ *   const sponsoredResult = await execute({
+ *     metadata: uri,
+ *     commentOn: : publicationId,
+ *   });
+ *
+ *   if (sponsoredResult.isFailure()) {
+ *     switch (sponsoredResult.error.name) {
+ *       case 'BroadcastingError':
+ *         if ([BroadcastingErrorReason.NOT_SPONSORED, BroadcastingErrorReason.RATE_LIMITED].includes(sponsoredResult.error.reason)) {
+ *
+ *           const chargedResult = = await execute({
+ *             metadata: uri,
+ *             commentOn: : publicationId,
+ *             sponsored: false,
+ *           });
+ *
+ *           // continue with chargedResult as in the previous example
+ *         }
+ *         break;
+ *
+ *      // ...
+ *   }
+ * }
+ * ```
+ *
+ * We omitted the handling of the {@link BroadcastingErrorReason.APP_NOT_ALLOWED} error because it's usually
+ * something that builder will face when deploying their app to production using the Production Lens API.
+ *
+ * It just requires the app to apply for whitelisting. See https://docs.lens.xyz/docs/gasless-and-signless#whitelisting-your-app.
+ *
+ *
  * ## Upgrading from v1
  *
  * Replace the `useCreateComment` hook with `useCreateComment` like in the following diff:
@@ -352,7 +465,11 @@ export type CreateCommentArgs = {
  */
 export function useCreateComment(): UseDeferredTask<
   CommentAsyncResult,
-  BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
+  | BroadcastingError
+  | InsufficientGasError
+  | PendingSigningRequestError
+  | UserRejectedError
+  | WalletConnectionError,
   CreateCommentArgs
 > {
   const { data: session } = useSession();
@@ -369,7 +486,8 @@ export function useCreateComment(): UseDeferredTask<
     );
 
     const request = createCommentRequest({
-      delegate: session.profile.signless,
+      signless: session.profile.signless,
+      sponsored: args.sponsored ?? true,
       ...args,
     });
 

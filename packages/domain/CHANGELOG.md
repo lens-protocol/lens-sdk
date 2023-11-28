@@ -1,5 +1,17 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.15
+
+### Patch Changes
+
+- 493895b8: **feat:** self-funded `useFollow`
+- fdd0073d: **feat:** support for self-funded `useCreateQuote`
+- 5d243a83: **feat:** support for self-funded `useCreateMirror`
+- b37f6f4e: **feat:** self-funded `useSetProfileMetadata`
+- 2698fc65: **feat:** support for self-funded `useCreatePost`
+- 6a25dc02: **feat:** support self-funded `useOpenAction`
+- 40abddd9: **feat:** support for self-funded `useCreateComment`
+
 ## 0.11.0-alpha.14
 
 ### Patch Changes

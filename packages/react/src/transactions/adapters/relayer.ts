@@ -7,20 +7,21 @@ import {
 import {
   BroadcastingError,
   BroadcastingErrorReason,
-  ProtocolTransactionRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { failure, Failure, InvariantError } from '@lens-protocol/shared-kernel';
 
-import { SelfFundedProtocolTransactionRequest } from './SelfFundedProtocolTransactionRequest';
-
 export function handleRelayError(
   error: RelayError | LensProfileManagerRelayError,
-  _fallback?: SelfFundedProtocolTransactionRequest<ProtocolTransactionRequest>,
+  _?: unknown,
 ): Failure<BroadcastingError> {
   switch (error.reason) {
     case RelayErrorReasonType.AppNotAllowed:
     case LensProfileManagerRelayErrorReasonType.AppNotAllowed:
-      return failure(new BroadcastingError(BroadcastingErrorReason.APP_NOT_ALLOWED));
+      return failure(
+        new BroadcastingError(BroadcastingErrorReason.APP_NOT_ALLOWED, {
+          details: 'See https://docs.lens.xyz/docs/gasless-and-signless#whitelisting-your-app',
+        }),
+      );
 
     case RelayErrorReasonType.RateLimited:
     case LensProfileManagerRelayErrorReasonType.RateLimited:

@@ -13,7 +13,7 @@ export function resolveOpenActionModuleInput(config: OpenActionConfig): OpenActi
                 value: config.amount.toSignificantDigits(),
               },
 
-              referralFee: config.referralFee ?? null,
+              referralFee: config.referralFee,
 
               recipient: config.recipient ?? null,
             }),
@@ -37,7 +37,7 @@ export function resolveOpenActionModuleInput(config: OpenActionConfig): OpenActi
                 value: config.amount.toSignificantDigits(),
               },
 
-              referralFee: config.referralFee ?? null,
+              referralFee: config.referralFee,
 
               recipients: config.recipients.map(({ recipient, split }) => ({
                 recipient,

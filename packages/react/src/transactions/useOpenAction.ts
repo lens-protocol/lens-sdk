@@ -53,6 +53,19 @@ export type OpenActionArgs = {
    * The publication to perform the Open Action on.
    */
   publication: AnyPublication;
+  /**
+   * Whether the transaction gas costs should be sponsored by the Lens API or
+   * should be paid by the authenticated wallet.
+   *
+   * There are scenarios where the sponsorship will be denied regardless of this value.
+   * See {@link BroadcastingError} with:
+   * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
+   * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
+   * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
+   *
+   * @defaultValue true, the request will be attempted to be sponsored by the Lens API.
+   */
+  sponsored?: boolean;
 };
 
 /**
@@ -116,13 +129,6 @@ export type OpenActionArgs = {
  *         );
  *         break;
  *
- *       case 'InsufficientGasError':
- *         const asset = result.error.asset;
- *         console.log(
- *           `You do not have enough ${asset.symbol} to pay for the transaction gas cost.`
- *         );
- *         break;
- *
  *       case 'InsufficientFundsError':
  *         const requestedAmount = result.error.requestedAmount;
  *         console.log(
@@ -149,7 +155,7 @@ export type OpenActionArgs = {
  * You can always wait the operation to be fully processed and indexed by Lens API.
  *
  * ```ts
- * const run = async (publication: AnyPublication) => {
+ * const collect = async (publication: AnyPublication) => {
  *   const result = await execute({ publication });
  *
  *   if (result.isFailure()) {
@@ -217,6 +223,67 @@ export type OpenActionArgs = {
  * }
  * ```
  *
+ * ## Self-funded Open Action
+ *
+ * It just takes a single parameter to disable the sponsorship of the transaction gas costs.
+ *
+ * ```ts
+ * const collect = async (publication: AnyPublication) => {
+ *   const result = await execute({ publication });
+ *
+ *   if (result.isFailure()) {
+ *     switch (result.error.name) {
+ *       case 'InsufficientGasError':
+ *         console.log('You do not have enough funds to pay for the transaction gas cost.');
+ *         break;
+ *
+ *       // ...
+ *     }
+ *     return;
+ *   }
+ *
+ *   // ...
+ * }
+ * ```
+ * In this example you can also see a new error type: {@link InsufficientGasError}. This
+ * error happens only with self-funded transactions and it means that the wallet does not
+ * have enough funds to pay for the transaction gas costs.
+ *
+ * ## Self-funded Fallback
+ *
+ * If for some reason the Lens API cannot sponsor the transaction, the hook will fail with a {@link BroadcastingError} with one of the following reasons:
+ * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
+ * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
+ * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
+ *
+ * In those cases you can retry the transaction as self-funded like in the following example:
+ *
+ * ```ts
+ * const collect = async (publication: AnyPublication) => {
+ *   const sponsoredResult = await execute({ publication });
+ *
+ *   if (sponsoredResult.isFailure()) {
+ *     switch (sponsoredResult.error.name) {
+ *       case 'BroadcastingError':
+ *         if ([BroadcastingErrorReason.NOT_SPONSORED, BroadcastingErrorReason.RATE_LIMITED].includes(sponsoredResult.error.reason)) {
+ *
+ *           const selfFundedResult = await execute({ publication, sponsored: false });
+ *
+ *           // continue with selfFundedResult as in the previous example
+ *         }
+ *         break;
+ *
+ *      // ...
+ *   }
+ * }
+ * ```
+ *
+ * In this example we omitted {@link BroadcastingErrorReason.APP_NOT_ALLOWED} as it's not normally a problem per-se.
+ * It just requires the app to apply for whitelisting. See https://docs.lens.xyz/docs/gasless-and-signless#whitelisting-your-app.
+ *
+ * You can still include it in your fallback logic if you want to. For example to unblock testing your app from a domain that is not the
+ * whitelisted one (e.g. localhost).
+ *
  * @category Publications
  * @group Hooks
  */
@@ -236,7 +303,7 @@ export function useOpenAction(
   const { data: session } = useSession();
   const openAction = useOpenActionController();
 
-  return useDeferredTask(async ({ publication }: OpenActionArgs) => {
+  return useDeferredTask(async ({ publication, sponsored = true }: OpenActionArgs) => {
     invariant(
       session?.authenticated,
       'You must be authenticated to execute an Open Action a post. Use `useLogin` hook to authenticate.',
@@ -248,8 +315,9 @@ export function useOpenAction(
 
     const request = resolveOpenActionRequestFor(publication, {
       action: args.action,
-      delegate: session.type === SessionType.WithProfile ? session.profile.signless : false, // cannot use Lens Manager with Public Collect
+      signless: session.type === SessionType.WithProfile ? session.profile.signless : false, // cannot use Lens Manager with Public Collect
       public: session.type === SessionType.JustWallet,
+      sponsored: session.type === SessionType.WithProfile ? sponsored : false, // cannot use gasless with Public Collect
     });
 
     return openAction(request);

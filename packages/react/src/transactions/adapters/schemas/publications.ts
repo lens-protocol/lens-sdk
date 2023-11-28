@@ -105,7 +105,8 @@ const ReferencePolicyConfigSchema = z.discriminatedUnion('type', [
 export const CreatePostRequestSchema: z.ZodType<CreatePostRequest, z.ZodTypeDef, UnknownObject> =
   z.object({
     kind: z.literal(TransactionKind.CREATE_POST),
-    delegate: z.boolean(),
+    signless: z.boolean(),
+    sponsored: z.boolean(),
     metadata: UriSchema,
     reference: ReferencePolicyConfigSchema.optional(),
     actions: OpenActionConfigSchema.array()
@@ -119,7 +120,8 @@ export const CreateCommentRequestSchema: z.ZodType<
   UnknownObject
 > = z.object({
   kind: z.literal(TransactionKind.CREATE_COMMENT),
-  delegate: z.boolean(),
+  signless: z.boolean(),
+  sponsored: z.boolean(),
   metadata: UriSchema,
   commentOn: PublicationIdSchema,
   reference: ReferencePolicyConfigSchema.optional(),
@@ -131,7 +133,8 @@ export const CreateCommentRequestSchema: z.ZodType<
 export const CreateQuoteRequestSchema: z.ZodType<CreateQuoteRequest, z.ZodTypeDef, UnknownObject> =
   z.object({
     kind: z.literal(TransactionKind.CREATE_QUOTE),
-    delegate: z.boolean(),
+    signless: z.boolean(),
+    sponsored: z.boolean(),
     metadata: UriSchema,
     quoteOn: PublicationIdSchema,
     reference: ReferencePolicyConfigSchema.optional(),
@@ -147,7 +150,8 @@ export const CreateMirrorRequestSchema: z.ZodType<
 > = z.object({
   mirrorOn: PublicationIdSchema,
   kind: z.literal(TransactionKind.MIRROR_PUBLICATION),
-  delegate: z.boolean(),
+  signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 const CollectFeeSchema = z.object({
@@ -162,19 +166,22 @@ const BaseCollectRequestSchema = z.object({
 
 export const LegacyCollectRequestSchema = BaseCollectRequestSchema.extend({
   type: z.literal(AllOpenActionType.LEGACY_COLLECT),
-  delegate: z.boolean(),
   publicationId: PublicationIdSchema,
   referrer: PublicationIdSchema.optional(),
   fee: CollectFeeSchema.optional(),
+  public: z.literal(false),
+  signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 export const SimpleCollectRequestSchema = BaseCollectRequestSchema.extend({
   type: z.literal(AllOpenActionType.SIMPLE_COLLECT),
-  delegate: z.boolean(),
   publicationId: PublicationIdSchema,
   referrers: z.union([PublicationIdSchema, ProfileIdSchema]).array().min(1).optional(),
-  public: z.boolean(),
   fee: CollectFeeSchema.optional(),
+  public: z.boolean(),
+  signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 export const MultirecipientCollectRequestSchema = BaseCollectRequestSchema.extend({
@@ -183,15 +190,18 @@ export const MultirecipientCollectRequestSchema = BaseCollectRequestSchema.exten
   referrers: z.union([PublicationIdSchema, ProfileIdSchema]).array().min(1).optional(),
   fee: CollectFeeSchema,
   public: z.boolean(),
+  signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 export const UnknownActionRequestSchema = BaseCollectRequestSchema.extend({
   type: z.literal(AllOpenActionType.UNKNOWN_OPEN_ACTION),
-  delegate: z.boolean(),
   publicationId: PublicationIdSchema,
   address: EvmAddressSchema,
   data: DataSchema,
   public: z.boolean(),
+  signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 export const CollectRequestSchema = z.discriminatedUnion('type', [

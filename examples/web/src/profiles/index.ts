@@ -2,6 +2,7 @@ export * from './ProfilesPage';
 export * from './UseBlockAndUnblockProfiles';
 export * from './UseBlockedProfiles';
 export * from './UseFollowAndUnfollow';
+export * from './UseLastLoggedInProfile';
 export * from './UseLazyProfile';
 export * from './UseLazyProfiles';
 export * from './UseMutualFollowers';

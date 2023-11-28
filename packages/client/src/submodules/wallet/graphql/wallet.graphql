@@ -59,6 +59,19 @@ query ClaimableProfiles {
   }
 }
 
+query LastLoggedInProfile(
+  $request: LastLoggedInProfileRequest!
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
+) {
+  result: lastLoggedInProfile(request: $request) {
+    ...Profile
+  }
+}
+
 # mutations
 fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
   reason

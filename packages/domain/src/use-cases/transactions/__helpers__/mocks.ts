@@ -133,13 +133,13 @@ export function mockIDelegatedTransactionGateway<T extends ProtocolTransactionRe
 }
 
 export function mockDelegableProtocolTransactionRequestModel({
-  delegate,
+  signless,
 }: {
-  delegate: boolean;
+  signless: boolean;
 }): DelegableProtocolTransactionRequestModel {
   return {
     kind: TransactionKind.CREATE_POST,
-    delegate,
+    signless,
   };
 }
 

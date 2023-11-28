@@ -1,4 +1,5 @@
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
@@ -7,7 +8,12 @@ import {
   SetProfileMetadata,
   SetProfileMetadataRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError, SignedOnChain } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  BroadcastingError,
+  DelegableSigning,
+  PaidTransaction,
+  SignedOnChain,
+} from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
@@ -17,21 +23,26 @@ export function useSetProfileMetadataController() {
   const {
     activeWallet,
     apolloClient,
+    onChainRelayer,
+    providerFactory,
     transactionGateway,
     transactionQueue,
     transactionFactory,
-    onChainRelayer,
   } = useSharedDependencies();
 
   return async (request: SetProfileMetadataRequest) => {
     const presenter = new TransactionResultPresenter<
       SetProfileMetadataRequest,
-      BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
+      | BroadcastingError
+      | InsufficientGasError
+      | PendingSigningRequestError
+      | UserRejectedError
+      | WalletConnectionError
     >();
 
-    const gateway = new ProfileMetadataGateway(apolloClient, transactionFactory);
+    const gateway = new ProfileMetadataGateway(providerFactory, apolloClient, transactionFactory);
 
-    const signedSetProfileMetadata = new SignedOnChain<SetProfileMetadataRequest>(
+    const signedExecution = new SignedOnChain<SetProfileMetadataRequest>(
       activeWallet,
       transactionGateway,
       gateway,
@@ -40,12 +51,16 @@ export function useSetProfileMetadataController() {
       presenter,
     );
 
-    const setProfileMetadata = new SetProfileMetadata(
-      signedSetProfileMetadata,
+    const delegableExecution = new DelegableSigning(
+      signedExecution,
       gateway,
       transactionQueue,
       presenter,
     );
+
+    const paidExecution = new PaidTransaction(activeWallet, gateway, presenter, transactionQueue);
+
+    const setProfileMetadata = new SetProfileMetadata(delegableExecution, paidExecution);
 
     await setProfileMetadata.execute(request);
 

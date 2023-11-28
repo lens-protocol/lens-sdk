@@ -23,14 +23,16 @@ import {
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
+  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
+import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
 import { ITransactionFactory } from '../ITransactionFactory';
-import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError } from '../relayer';
 
 function resolveProfileFollow(request: FollowRequest): Follow[] {
@@ -54,12 +56,19 @@ function resolveProfileFollow(request: FollowRequest): Follow[] {
 }
 
 export class FollowProfileGateway
-  implements IDelegatedTransactionGateway<FreeFollowRequest>, ISignedOnChainGateway<FollowRequest>
+  extends AbstractContractCallGateway<FollowRequest>
+  implements
+    IDelegatedTransactionGateway<FreeFollowRequest>,
+    ISignedOnChainGateway<FollowRequest>,
+    IPaidTransactionGateway<FollowRequest>
 {
   constructor(
+    providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<FreeFollowRequest>,
-  ) {}
+  ) {
+    super(providerFactory);
+  }
 
   async createDelegatedTransaction(
     request: FreeFollowRequest,
@@ -89,8 +98,12 @@ export class FollowProfileGateway
       id: result.id,
       request,
       typedData: omitTypename(result.typedData),
-      fallback: this.createRequestFallback(request, result),
     });
+  }
+
+  protected override async createEncodedData(request: FollowRequest): Promise<ContractCallDetails> {
+    const result = await this.createTypedData(request);
+    return this.createFollowCallDetails(result);
   }
 
   private async relayWithProfileManager(
@@ -104,10 +117,7 @@ export class FollowProfileGateway
     });
 
     if (data.result.__typename === 'LensProfileManagerRelayError') {
-      const result = await this.createTypedData(request);
-      const fallback = this.createRequestFallback(request, result);
-
-      return handleRelayError(data.result, fallback);
+      return handleRelayError(data.result);
     }
 
     return success(data.result);
@@ -139,10 +149,7 @@ export class FollowProfileGateway
     };
   }
 
-  private createRequestFallback(
-    request: FollowRequest,
-    result: CreateFollowBroadcastItemResult,
-  ): SelfFundedProtocolTransactionRequest<FollowRequest> {
+  private createFollowCallDetails(result: CreateFollowBroadcastItemResult): ContractCallDetails {
     const contract = lensHub(result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('follow', [
       result.typedData.message.followerProfileId,
@@ -151,7 +158,6 @@ export class FollowProfileGateway
       result.typedData.message.datas,
     ]);
     return {
-      ...request,
       contractAddress: result.typedData.domain.verifyingContract,
       encodedData: encodedData as Data,
     };

@@ -17,25 +17,32 @@ import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publication
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
+  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
+import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
 import { ITransactionFactory } from '../ITransactionFactory';
-import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError } from '../relayer';
 
 export class CreateOnChainMirrorGateway
+  extends AbstractContractCallGateway<CreateMirrorRequest>
   implements
     IDelegatedTransactionGateway<CreateMirrorRequest>,
-    ISignedOnChainGateway<CreateMirrorRequest>
+    ISignedOnChainGateway<CreateMirrorRequest>,
+    IPaidTransactionGateway<CreateMirrorRequest>
 {
   constructor(
+    providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<CreateMirrorRequest>,
-  ) {}
+  ) {
+    super(providerFactory);
+  }
 
   async createDelegatedTransaction(
     request: CreateMirrorRequest,
@@ -66,8 +73,15 @@ export class CreateOnChainMirrorGateway
       id: result.id,
       request,
       typedData: omitTypename(result.typedData),
-      fallback: this.createRequestFallback(request, result),
     });
+  }
+
+  protected override async createEncodedData(
+    request: CreateMirrorRequest,
+  ): Promise<ContractCallDetails> {
+    const input = this.resolveOnchainMirrorRequest(request);
+    const result = await this.createTypedData(input);
+    return this.createMirrorCallDetails(result);
   }
 
   private async broadcast(
@@ -83,13 +97,31 @@ export class CreateOnChainMirrorGateway
     });
 
     if (data.result.__typename === 'LensProfileManagerRelayError') {
-      const result = await this.createTypedData(input);
-      const fallback = this.createRequestFallback(request, result);
-
-      return handleRelayError(data.result, fallback);
+      return handleRelayError(data.result);
     }
 
     return success(data.result);
+  }
+
+  private createMirrorCallDetails(
+    result: CreateOnchainMirrorBroadcastItemResult,
+  ): ContractCallDetails {
+    const contract = lensHub(result.typedData.domain.verifyingContract);
+    const encodedData = contract.interface.encodeFunctionData('mirror', [
+      {
+        profileId: result.typedData.message.profileId,
+        metadataURI: result.typedData.message.metadataURI,
+        pointedProfileId: result.typedData.message.pointedProfileId,
+        pointedPubId: result.typedData.message.pointedPubId,
+        referrerProfileIds: result.typedData.message.referrerProfileIds,
+        referrerPubIds: result.typedData.message.referrerPubIds,
+        referenceModuleData: result.typedData.message.referenceModuleData,
+      },
+    ]);
+    return {
+      contractAddress: result.typedData.domain.verifyingContract,
+      encodedData: encodedData as Data,
+    };
   }
 
   private async createTypedData(
@@ -112,29 +144,6 @@ export class CreateOnChainMirrorGateway
   private resolveOnchainMirrorRequest(request: CreateMirrorRequest): OnchainMirrorRequest {
     return {
       mirrorOn: request.mirrorOn,
-    };
-  }
-
-  private createRequestFallback(
-    request: CreateMirrorRequest,
-    result: CreateOnchainMirrorBroadcastItemResult,
-  ): SelfFundedProtocolTransactionRequest<CreateMirrorRequest> {
-    const contract = lensHub(result.typedData.domain.verifyingContract);
-    const encodedData = contract.interface.encodeFunctionData('mirror', [
-      {
-        profileId: result.typedData.message.profileId,
-        metadataURI: result.typedData.message.metadataURI,
-        pointedProfileId: result.typedData.message.pointedProfileId,
-        pointedPubId: result.typedData.message.pointedPubId,
-        referrerProfileIds: result.typedData.message.referrerProfileIds,
-        referrerPubIds: result.typedData.message.referrerPubIds,
-        referenceModuleData: result.typedData.message.referenceModuleData,
-      },
-    ]);
-    return {
-      ...request,
-      contractAddress: result.typedData.domain.verifyingContract,
-      encodedData: encodedData as Data,
     };
   }
 }
