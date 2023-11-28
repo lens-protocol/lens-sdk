@@ -1,5 +1,3 @@
-'use client';
-
 /**
  * ## Quick start
  *
@@ -70,9 +68,12 @@
  *
  * @module
  */
+'use client';
+
 import { LensConfig, LensProvider, LensProviderProps } from './LensProvider';
 
 export * from '@lens-protocol/react';
+export * from './storage';
 
 // NOTE: local exports takes priority over package exports, basically overriding the hooks with same names from @lens-protocol/react
 // see https://github.com/systemjs/systemjs/issues/1031#issuecomment-171262430

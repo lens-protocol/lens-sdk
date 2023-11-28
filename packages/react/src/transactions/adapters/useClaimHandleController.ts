@@ -12,7 +12,7 @@ import { NewProfilePresenter } from './NewProfilePresenter';
 import { ClaimProfileGateway } from './profiles/ClaimProfileGateway';
 
 export function useClaimHandleController() {
-  const { apolloClient, environment, profileCacheManager, transactionFactory, transactionQueue } =
+  const { apolloClient, config, profileCacheManager, transactionFactory, transactionQueue } =
     useSharedDependencies();
 
   return async (
@@ -22,7 +22,10 @@ export function useClaimHandleController() {
     ClaimHandleError<ClaimProfileWithHandleErrorReasonType> | TransactionError
   > => {
     const gateway = new ClaimProfileGateway(apolloClient, transactionFactory);
-    const presenter = new NewProfilePresenter(profileCacheManager, environment.handleResolver);
+    const presenter = new NewProfilePresenter(
+      profileCacheManager,
+      config.environment.handleResolver,
+    );
 
     const claimHandle = new ClaimHandle(gateway, transactionQueue, presenter);
 

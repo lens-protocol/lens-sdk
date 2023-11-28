@@ -157,6 +157,9 @@ importers:
       '@irys/sdk':
         specifier: ^0.0.4
         version: 0.0.4
+      '@lens-protocol/client':
+        specifier: workspace:*
+        version: link:../../packages/client
       '@lens-protocol/metadata':
         specifier: ^1.0.5
         version: 1.0.5(zod@3.22.4)
@@ -8984,6 +8987,7 @@ packages:
 
   /abab@2.0.6:
     resolution: {integrity: sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==}
+    deprecated: Use your platform's native atob() and btoa() methods instead
     dev: true
 
   /abitype@0.8.7(typescript@5.2.2):
@@ -11436,6 +11440,7 @@ packages:
   /domexception@4.0.0:
     resolution: {integrity: sha512-A2is4PLG+eeSfoTMA95/s4pvAoSo2mKtiM5jlHkAVewmiO8ISFTFKZjH7UAM1Atli/OT/7JHOrJRJiMKUZKYBw==}
     engines: {node: '>=12'}
+    deprecated: Use your platform's native DOMException instead
     dependencies:
       webidl-conversions: 7.0.0
     dev: true
