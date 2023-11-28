@@ -2,7 +2,7 @@
 
 ## 2.0.0-alpha.23
 
-### Minor Changes
+### Patch Changes
 
 - 493895b8: **feat:** self-funded `useFollow`
 - fdd0073d: **feat:** support for self-funded `useCreateQuote`
@@ -12,9 +12,6 @@
 - 2698fc65: **feat:** support for self-funded `useCreatePost`
 - 6a25dc02: **feat:** support self-funded `useOpenAction`
 - 40abddd9: **feat:** support for self-funded `useCreateComment`
-
-### Patch Changes
-
 - acfad683: **feat:** initial version of `@lens-protocol/react-native` package
 - acfad683: **fix:** React Hooks SDK startup time. 20x faster than before.
 - b29efcb2: **chore:** Exported missing return types like `ProfileWhoReactedResult` and more.
