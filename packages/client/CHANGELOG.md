@@ -1,5 +1,13 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.22
+
+### Patch Changes
+
+- 89f345ba6: **chore:** updates development environment config
+- Updated dependencies [89f345ba6]
+  - @lens-protocol/gated-content@0.3.3-alpha.16
+
 ## 2.0.0-alpha.21
 
 ### Patch Changes
