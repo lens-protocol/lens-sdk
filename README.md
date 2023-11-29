@@ -102,6 +102,8 @@ git push --follow-tags
 
 7. It's important that the last commit, from which the release was made and the git tags are associated with, is correctly merged to the `main` branch. Use `"Create a merge commit"` option when merging the release branch to the `main`.
 
+8. Finally, to avoid any differences between merge commit hashes, merge `main` to `develop` branch.
+
 ## License
 
 Lens SDK is [MIT licensed](./LICENSE)
