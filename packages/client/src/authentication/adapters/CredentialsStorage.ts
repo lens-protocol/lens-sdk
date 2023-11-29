@@ -1,20 +1,14 @@
 import {
-  BaseStorageSchema,
+  CredentialsStorageSchema,
   IStorage,
   IStorageProvider,
+  PersistedCredentials,
   Storage,
   StorageSubscriber,
   StorageSubscription,
 } from '@lens-protocol/storage';
-import { z } from 'zod';
 
 import { Credentials } from './Credentials';
-
-const AuthData = z.object({
-  refreshToken: z.string(),
-});
-
-type AuthData = z.infer<typeof AuthData>;
 
 /**
  * Stores auth credentials.
@@ -22,11 +16,11 @@ type AuthData = z.infer<typeof AuthData>;
  * Refresh token is persisted permanently.
  */
 export class CredentialsStorage implements IStorage<Credentials> {
-  private refreshTokenStorage: IStorage<AuthData>;
+  private refreshTokenStorage: IStorage<PersistedCredentials>;
   private accessToken: string | undefined;
 
   constructor(storageProvider: IStorageProvider, namespace: string) {
-    const authStorageSchema = new BaseStorageSchema(`lens.${namespace}.credentials`, AuthData);
+    const authStorageSchema = new CredentialsStorageSchema(`lens.${namespace}.credentials`);
     this.refreshTokenStorage = Storage.createForSchema(authStorageSchema, storageProvider);
   }
 
