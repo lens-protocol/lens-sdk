@@ -39,7 +39,7 @@ export class UnblockProfilesGateway
   async createDelegatedTransaction(
     request: UnblockProfilesRequest,
   ): PromiseResult<Transaction<UnblockProfilesRequest>, BroadcastingError> {
-    const result = await this.broadcast(request);
+    const result = await this.relayWithProfileManager(request);
 
     if (result.isFailure()) {
       return failure(result.error);
@@ -49,7 +49,7 @@ export class UnblockProfilesGateway
       chainType: ChainType.POLYGON,
       id: v4(),
       request,
-      indexingId: result.value.txId,
+      relayerTxId: result.value.txId,
       txHash: result.value.txHash,
     });
 
@@ -70,7 +70,7 @@ export class UnblockProfilesGateway
     });
   }
 
-  private async broadcast(
+  private async relayWithProfileManager(
     request: UnblockProfilesRequest,
   ): PromiseResult<RelaySuccess, BroadcastingError> {
     const { data } = await this.apolloClient.mutate<UnblockData, UnblockVariables>({

@@ -35,7 +35,7 @@ export type ConfirmationRequest = {
   chainType: ChainType;
 };
 
-export type IndexingEventRequest = XOR<{ txHash: string }, { indexingId: string }>;
+export type IndexingEventRequest = XOR<{ txHash: string }, { relayerTxId: string }>;
 
 export interface ITransactionObserver {
   waitForConfirmation(request: ConfirmationRequest): PromiseResult<void, TransactionError>;
@@ -67,7 +67,7 @@ class SerializableMetaTransaction<T extends ProtocolTransactionRequest>
     return {
       chainType: this.state.chainType,
       id: this.state.id,
-      indexingId: this.state.indexingId,
+      relayerTxId: this.state.relayerTxId,
       nonce: this.state.nonce,
       request: this.state.request,
       txHash: this.state.txHash,
@@ -120,14 +120,10 @@ class SerializableNativeTransaction<T extends AnyTransactionRequest>
     return {
       chainType: this.state.chainType,
       id: this.state.id,
-      indexingId: this.state.indexingId,
+      relayerTxId: this.state.relayerTxId,
       request: this.state.request,
       txHash: this.state.txHash,
     };
-  }
-
-  get nonce(): number {
-    throw new Error('Method not implemented.');
   }
 
   get chainType(): ChainType {
@@ -185,7 +181,7 @@ export class TransactionFactory implements ISerializableTransactionFactory {
       {
         chainType: init.chainType,
         id: init.id,
-        indexingId: init.indexingId,
+        relayerTxId: init.relayerTxId,
         nonce: init.nonce,
         request: init.request,
         txHash: init.txHash,
@@ -195,12 +191,12 @@ export class TransactionFactory implements ISerializableTransactionFactory {
   }
 
   createNativeTransaction<T extends AnyTransactionRequest>(init: NativeTransactionData<T>) {
-    if (init.indexingId) {
+    if (init.relayerTxId) {
       return new SerializableNativeTransaction(
         {
           chainType: init.chainType,
           id: init.id,
-          indexingId: init.indexingId,
+          relayerTxId: init.relayerTxId,
           request: init.request,
           txHash: init.txHash,
         },
@@ -241,8 +237,8 @@ export class TransactionFactory implements ISerializableTransactionFactory {
     S extends MetaTransactionData<T> | NativeTransactionData<T>,
   >(): StateReducer<S> {
     return async (state) => {
-      const request = state.indexingId
-        ? { indexingId: state.indexingId }
+      const request = state.relayerTxId
+        ? { relayerTxId: state.relayerTxId }
         : { txHash: state.txHash ?? never() };
 
       const indexingEventResult = await this.transactionObserver.waitForNextIndexingEvent(request);

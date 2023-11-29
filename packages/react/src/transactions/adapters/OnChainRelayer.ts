@@ -35,7 +35,7 @@ export class OnChainRelayer implements IOnChainRelayer<ProtocolTransactionReques
   async relayProtocolCall<T extends ProtocolTransactionRequest>(
     signedCall: SignedProtocolCall<T>,
   ): PromiseResult<MetaTransaction<T>, BroadcastingError> {
-    const result = await this.broadcast(signedCall);
+    const result = await this.relayWithProfileManager(signedCall);
 
     if (result.isFailure()) return result;
 
@@ -46,14 +46,14 @@ export class OnChainRelayer implements IOnChainRelayer<ProtocolTransactionReques
       id: signedCall.id,
       request: signedCall.request,
       nonce: signedCall.nonce,
-      indexingId: receipt.txId,
+      relayerTxId: receipt.txId,
       txHash: receipt.txHash,
     });
 
     return success(transaction);
   }
 
-  private async broadcast<T extends ProtocolTransactionRequest>(
+  private async relayWithProfileManager<T extends ProtocolTransactionRequest>(
     signedCall: SignedProtocolCall<T>,
   ): PromiseResult<RelaySuccess, BroadcastingError> {
     try {

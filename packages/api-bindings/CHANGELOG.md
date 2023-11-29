@@ -1,5 +1,22 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.20
+
+### Patch Changes
+
+- acfad683: **fix:** React Hooks SDK startup time. 20x faster than before.
+- 0a3a61fb: **feat:** advanced contract condition for token-gated publications
+- 6a25dc02: **feat:** support self-funded `useOpenAction`
+- d0bad262: **feat:** Added `useLastLoggedInProfile` hook
+- Updated dependencies [493895b8]
+- Updated dependencies [fdd0073d]
+- Updated dependencies [5d243a83]
+- Updated dependencies [b37f6f4e]
+- Updated dependencies [2698fc65]
+- Updated dependencies [6a25dc02]
+- Updated dependencies [40abddd9]
+  - @lens-protocol/domain@0.11.0-alpha.15
+
 ## 0.11.0-alpha.19
 
 ### Patch Changes

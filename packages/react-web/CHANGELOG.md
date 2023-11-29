@@ -1,5 +1,50 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.23
+
+### Minor Changes
+
+- 493895b8: **feat:** self-funded `useFollow`
+- fdd0073d: **feat:** support for self-funded `useCreateQuote`
+- 5d243a83: **feat:** support for self-funded `useCreateMirror`
+- b37f6f4e: **feat:** self-funded `useSetProfileMetadata`
+- 2e351a8c: fixes called property of hooks to update correctly when hook returns void
+- 2698fc65: **feat:** support for self-funded `useCreatePost`
+- 6a25dc02: **feat:** support self-funded `useOpenAction`
+- 40abddd9: **feat:** support for self-funded `useCreateComment`
+
+### Patch Changes
+
+- acfad683: **feat:** initial version of `@lens-protocol/react-native` package
+- 1c24ae00: fix: adds use client directive to entry point
+- acfad683: **fix:** React Hooks SDK startup time. 20x faster than before.
+- b29efcb2: **chore:** Exported missing return types like `ProfileWhoReactedResult` and more.
+- d0bad262: **feat:** Added `useLastLoggedInProfile` hook
+- Updated dependencies [acfad683]
+- Updated dependencies [493895b8]
+- Updated dependencies [acfad683]
+- Updated dependencies [fdd0073d]
+- Updated dependencies [5d243a83]
+- Updated dependencies [b29efcb2]
+- Updated dependencies [0a3a61fb]
+- Updated dependencies [b37f6f4e]
+- Updated dependencies [2e351a8c]
+- Updated dependencies [2698fc65]
+- Updated dependencies [6a25dc02]
+- Updated dependencies [40abddd9]
+- Updated dependencies [d0bad262]
+  - @lens-protocol/react@2.0.0-alpha.23
+  - @lens-protocol/domain@0.11.0-alpha.15
+  - @lens-protocol/api-bindings@0.11.0-alpha.20
+
+## 2.0.0-alpha.22
+
+### Patch Changes
+
+- 89f345ba6: **chore:** updates development environment config
+- Updated dependencies [89f345ba6]
+  - @lens-protocol/react@2.0.0-alpha.22
+
 ## 2.0.0-alpha.21
 
 ### Patch Changes

@@ -49,7 +49,7 @@ export class CreateOnChainQuoteGateway
   async createDelegatedTransaction(
     request: CreateQuoteRequest,
   ): PromiseResult<NativeTransaction<CreateQuoteRequest>, BroadcastingError> {
-    const result = await this.broadcast(request);
+    const result = await this.relayWithProfileManager(request);
 
     if (result.isFailure()) return result;
 
@@ -57,7 +57,7 @@ export class CreateOnChainQuoteGateway
       chainType: ChainType.POLYGON,
       id: v4(),
       request,
-      indexingId: result.value.txId,
+      relayerTxId: result.value.txId,
       txHash: result.value.txHash,
     });
 
@@ -86,7 +86,7 @@ export class CreateOnChainQuoteGateway
     return this.createQuoteCallDetails(result);
   }
 
-  private async broadcast(
+  private async relayWithProfileManager(
     request: CreateQuoteRequest,
   ): PromiseResult<RelaySuccess, BroadcastingError> {
     const input = this.resolveOnchainQuoteRequest(request);

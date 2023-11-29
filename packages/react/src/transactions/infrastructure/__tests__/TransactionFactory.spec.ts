@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import {
   MetaTransaction,
   NativeTransaction,
@@ -18,7 +19,7 @@ import { mock } from 'jest-mock-extended';
 import {
   mockMetaTransactionData,
   mockNativeTransactionData,
-  mockNativeTransactionDataWithIndexingId,
+  mockNativeTransactionDataWithRelayerTxId,
 } from '../../adapters/__helpers__/mocks';
 import { IndexingEvent, ITransactionObserver, TransactionFactory } from '../TransactionFactory';
 import { MockedTransactionObserver } from '../__helpers__/mocks';
@@ -48,7 +49,7 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
         const indexingEvent = mockIndexingEvent({ indexed: false });
         const observer = MockedTransactionObserver.withIndexingEventSequence({
           request: {
-            indexingId: init.indexingId,
+            relayerTxId: init.relayerTxId,
           },
           events: [indexingEvent],
         });
@@ -68,7 +69,7 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
         const indexingEvent = mockIndexingEvent({ indexed: true });
         const observer = MockedTransactionObserver.withIndexingEventSequence({
           request: {
-            indexingId: init.indexingId,
+            relayerTxId: init.relayerTxId,
           },
           events: [indexingEvent],
         });
@@ -86,7 +87,7 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
         const error = new TransactionError(TransactionErrorReason.MINING_TIMEOUT);
         const observer = MockedTransactionObserver.withIndexingEventSequence({
           request: {
-            indexingId: init.indexingId,
+            relayerTxId: init.relayerTxId,
           },
           events: [error],
         });
@@ -101,9 +102,9 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
     });
   });
 
-  describe(`and a ${NativeTransaction.name} instance created via NativeTransactionData<T>`, () => {
-    describe(`with "indexingId"`, () => {
-      const init = mockNativeTransactionDataWithIndexingId<AnyTransactionRequest>();
+  describe(`and a ${NativeTransaction.name} instance created via NativeTransactionData<ProtocolTransactionRequest>`, () => {
+    describe(`with "relayerTxId"`, () => {
+      const init = mockNativeTransactionDataWithRelayerTxId<AnyTransactionRequest>();
 
       describe(`when invoking the "waitNextEvent" method`, () => {
         it(`should
@@ -112,7 +113,7 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
           const indexingEvent = mockIndexingEvent({ indexed: false });
           const observer = MockedTransactionObserver.withIndexingEventSequence({
             request: {
-              indexingId: init.indexingId,
+              relayerTxId: init.relayerTxId,
             },
             events: [indexingEvent],
           });
@@ -131,7 +132,7 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
           const indexingEvent = mockIndexingEvent({ indexed: true });
           const observer = MockedTransactionObserver.withIndexingEventSequence({
             request: {
-              indexingId: init.indexingId,
+              relayerTxId: init.relayerTxId,
             },
             events: [indexingEvent],
           });
@@ -148,7 +149,7 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
           const error = new TransactionError(TransactionErrorReason.MINING_TIMEOUT);
           const observer = MockedTransactionObserver.withIndexingEventSequence({
             request: {
-              indexingId: init.indexingId,
+              relayerTxId: init.relayerTxId,
             },
             events: [error],
           });
@@ -162,56 +163,52 @@ describe(`Given an instance of the ${TransactionFactory.name}`, () => {
       });
     });
 
-    describe(`with NO "indexingId"`, () => {
-      describe.each(ProtocolTransactionKinds)(
-        `and the transaction request is for an "%s" transaction`,
-        (kind) => {
-          describe(`when invoking the "waitNextEvent" method`, () => {
-            const init = mockNativeTransactionData({
-              request: mockAnyTransactionRequestModel({ kind }) as AnyTransactionRequest,
-            });
-
-            it(`should resolve with Success<TransactionEvent.SETTLED> as soon as indexed by the BE`, async () => {
-              const indexingEvent = mockIndexingEvent({ indexed: true });
-              const observer = MockedTransactionObserver.withIndexingEventSequence({
-                request: {
-                  txHash: init.txHash ?? never(),
-                },
-                events: [indexingEvent],
-              });
-              const factory = setupTransactionFactory({ observer });
-
-              const transaction = factory.createNativeTransaction(init);
-              const result = await transaction.waitNextEvent();
-
-              expect(result.unwrap()).toBe(TransactionEvent.SETTLED);
-            });
-          });
-        },
-      );
-
-      describe(`and the transaction request is for an "${TransactionKind.APPROVE_MODULE}" transaction`, () => {
-        describe(`when invoking the "waitNextEvent" method`, () => {
-          const init = mockNativeTransactionData({
-            request: mockAnyTransactionRequestModel({
-              kind: TransactionKind.APPROVE_MODULE,
-            }) as AnyTransactionRequest,
-          });
-
-          it(`should resolve with Success<TransactionEvent.SETTLED> as soon as the transaction is executed`, async () => {
-            const observer = MockedTransactionObserver.withExecutedOutcome({
-              txHash: init.txHash ?? never(),
-              chainType: init.chainType,
-              result: success(),
-            });
-            const factory = setupTransactionFactory({ observer });
-
-            const transaction = factory.createNativeTransaction(init);
-            const result = await transaction.waitNextEvent();
-
-            expect(result.unwrap()).toBe(TransactionEvent.SETTLED);
-          });
+    describe(`with NO "relayerTxId"`, () => {
+      describe(`when invoking the "waitNextEvent" method`, () => {
+        const anyKind = faker.helpers.arrayElement(Object.values(ProtocolTransactionKinds));
+        const init = mockNativeTransactionData({
+          request: mockAnyTransactionRequestModel({ kind: anyKind }) as AnyTransactionRequest,
         });
+
+        it(`should resolve with Success<TransactionEvent.SETTLED> as soon as indexed by the BE`, async () => {
+          const indexingEvent = mockIndexingEvent({ indexed: true });
+          const observer = MockedTransactionObserver.withIndexingEventSequence({
+            request: {
+              txHash: init.txHash ?? never(),
+            },
+            events: [indexingEvent],
+          });
+          const factory = setupTransactionFactory({ observer });
+
+          const transaction = factory.createNativeTransaction(init);
+          const result = await transaction.waitNextEvent();
+
+          expect(result.unwrap()).toBe(TransactionEvent.SETTLED);
+        });
+      });
+    });
+  });
+
+  describe(`and a ${NativeTransaction.name} instance created via NativeTransactionData<TokenAllowanceRequest>`, () => {
+    describe(`when invoking the "waitNextEvent" method`, () => {
+      const init = mockNativeTransactionData({
+        request: mockAnyTransactionRequestModel({
+          kind: TransactionKind.APPROVE_MODULE,
+        }) as AnyTransactionRequest,
+      });
+
+      it(`should resolve with Success<TransactionEvent.SETTLED> as soon as the transaction is executed`, async () => {
+        const observer = MockedTransactionObserver.withExecutedOutcome({
+          txHash: init.txHash ?? never(),
+          chainType: init.chainType,
+          result: success(),
+        });
+        const factory = setupTransactionFactory({ observer });
+
+        const transaction = factory.createNativeTransaction(init);
+        const result = await transaction.waitNextEvent();
+
+        expect(result.unwrap()).toBe(TransactionEvent.SETTLED);
       });
     });
   });

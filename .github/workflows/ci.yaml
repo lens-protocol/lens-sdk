@@ -1,4 +1,4 @@
-name: "CI actions: Build, Lint and Test"
+name: "CI"
 
 on:
   push:
@@ -7,8 +7,28 @@ on:
     branches: [main, "develop"]
 
 jobs:
-  build:
+  install:
+    name: Install Dependencies
     runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.4.0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    needs: install
 
     steps:
       - uses: actions/checkout@v3
@@ -26,6 +46,25 @@ jobs:
 
       - run: pnpm lint
 
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: install
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.4.0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
       - name: Run tests
         run: pnpm test
         env:
@@ -36,6 +75,44 @@ jobs:
           TESTING_HEADER_KEY: ${{secrets.TESTING_HEADER_KEY}}
           TESTING_HEADER_VALUE: ${{secrets.TESTING_HEADER_VALUE}}
 
-      - run: pnpm lint:examples
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [install, lint, test]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.4.0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
 
       - run: pnpm build
+
+  examples:
+    name: Verify Examples
+    runs-on: ubuntu-latest
+    needs: [install, lint, test]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.4.0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm lint:examples
