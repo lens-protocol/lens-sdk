@@ -27,7 +27,6 @@ function EnhanceConversation({ conversation, walletAddress }: EnhanceConversatio
       <div>
         <ConversationCard conversation={enhancedConversation} />
         <MessageComposer conversation={conversation} />
-        {/* useMessages from @xmtp/react-sdk is causing constant rerender of this component */}
         <MessagesCard conversation={conversation} walletAddress={walletAddress} />
       </div>
     );
@@ -46,7 +45,8 @@ function FetchConversations({ conversationId, walletAddress }: FetchConversation
 
   const requestedConversation = useMemo(
     () => conversations?.find((c) => c.topic === conversationId),
-    [conversations, conversationId],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [conversations.length, conversationId],
   );
 
   if (isLoading) return <Loading />;

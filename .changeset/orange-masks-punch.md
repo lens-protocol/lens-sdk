@@ -1,7 +1,6 @@
 ---
-"@lens-protocol/react-native": patch
-"@lens-protocol/react-web": patch
-"@lens-protocol/react": patch
+"@lens-protocol/react-web": minor
+"@lens-protocol/react": minor
 ---
 
 **feat:** Added experimental hooks to integrate with XMTP: `useXmtpClient`, `useStartLensConversation`, `useEnhanceConversation`, and `useEnhanceConversations`
