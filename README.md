@@ -104,8 +104,6 @@ git push --follow-tags
 
 8. Finally, to avoid any differences between merge commit hashes, merge `main` to `develop` branch.
 
-```bash
-
 ## License
 
 Lens SDK is [MIT licensed](./LICENSE)
