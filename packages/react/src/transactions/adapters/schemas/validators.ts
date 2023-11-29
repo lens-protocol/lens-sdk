@@ -6,10 +6,10 @@ import {
   UnlinkHandleRequest,
   LinkHandleRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { formatZodError } from '@lens-protocol/metadata';
 import { never } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
+import { formatZodError } from './formatters';
 import {
   FollowRequestSchema,
   UnfollowRequestSchema,
