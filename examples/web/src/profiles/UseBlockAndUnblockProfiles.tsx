@@ -11,6 +11,15 @@ import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
 
+function SponsoredFlag() {
+  return (
+    <label>
+      <input type="checkbox" name="sponsored" value="on" defaultChecked={true} />
+      sponsored
+    </label>
+  );
+}
+
 function BlockOrUnblockProfileCard({ profile }: { profile: Profile }) {
   const { execute: block, loading: blockLoading, error: blockError } = useBlockProfiles();
   const { execute: unblock, loading: unblockLoading, error: unblockError } = useUnblockProfiles();
@@ -40,21 +49,25 @@ function BlockOrUnblockProfileCard({ profile }: { profile: Profile }) {
   if (profile.operations.canBlock === true || profile.operations.isBlockedByMe.value === false) {
     return (
       <ProfileCard profile={profile}>
-        <button
-          onClick={() => {
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            const formData = new FormData(event.currentTarget);
             if (profile.operations.isBlockedByMe.isFinalisedOnchain === false) {
               alert(
                 'You cannot block this profile until the pending unblock operation is finalised onchain',
               );
               return;
             }
-            return block({ profiles: [profile] });
+            return block({ profiles: [profile], sponsored: formData.get('sponsored') === 'on' });
           }}
-          disabled={blockLoading}
         >
-          Block
-        </button>
-        {blockError && <p>Error blocking profile: {blockError.message}</p>}
+          <button onClick={() => {}} disabled={blockLoading}>
+            Block
+          </button>
+          <SponsoredFlag />
+          {blockError && <p>Error blocking profile: {blockError.message}</p>}
+        </form>
       </ProfileCard>
     );
   }

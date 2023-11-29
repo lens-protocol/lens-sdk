@@ -1,5 +1,6 @@
 import { Profile } from '@lens-protocol/api-bindings';
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   TransactionError,
   TransactionKind,
@@ -23,6 +24,19 @@ export type BlockProfileArgs = {
    * The profiles to block
    */
   profiles: Profile[];
+  /**
+   * Whether the transaction costs should be sponsored by the Lens API or
+   * should be paid by the authenticated wallet.
+   *
+   * There are scenarios where the sponsorship will be denied regardless of this value.
+   * See {@link BroadcastingError} with:
+   * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
+   * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
+   * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
+   *
+   * @defaultValue true, the request will be attempted to be sponsored by the Lens API.
+   */
+  sponsored?: boolean;
 };
 
 export type BlockOperation = UseDeferredTask<
@@ -30,10 +44,11 @@ export type BlockOperation = UseDeferredTask<
   | BroadcastingError
   | InsufficientAllowanceError
   | InsufficientFundsError
+  | InsufficientGasError
   | PendingSigningRequestError
+  | TransactionError
   | UserRejectedError
-  | WalletConnectionError
-  | TransactionError,
+  | WalletConnectionError,
   BlockProfileArgs
 >;
 
@@ -71,7 +86,7 @@ export function useBlockProfiles(): BlockOperation {
   const { data: session } = useSession();
   const blockProfile = useBlockProfilesController();
 
-  return useDeferredTask(async ({ profiles }: BlockProfileArgs) => {
+  return useDeferredTask(async ({ profiles, sponsored }: BlockProfileArgs) => {
     invariant(
       session?.type === SessionType.WithProfile,
       'You must be authenticated with a profile to block a profile. Use `useLogin` hook to authenticate.',
@@ -81,6 +96,7 @@ export function useBlockProfiles(): BlockOperation {
       profileIds: profiles.map((profile) => profile.id),
       kind: TransactionKind.BLOCK_PROFILE,
       signless: session.profile.signless,
+      sponsored: sponsored ?? false,
     });
   });
 }

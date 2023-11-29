@@ -137,4 +137,5 @@ export const BlockProfilesRequestSchema = z.object({
   profileIds: ProfileIdSchema.array().min(1),
   kind: z.literal(TransactionKind.BLOCK_PROFILE),
   signless: z.boolean(),
+  sponsored: z.boolean(),
 });
