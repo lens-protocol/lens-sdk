@@ -4,10 +4,11 @@ import {
   Storage,
   StorageSubscriber,
   StorageSubscription,
+  CredentialsStorageSchema,
+  PersistedCredentials,
 } from '@lens-protocol/storage';
 
 import { Credentials } from './Credentials';
-import { AuthData, CredentialsStorageSchema } from './CredentialsStorageSchema';
 
 /**
  * Stores auth credentials.
@@ -15,7 +16,7 @@ import { AuthData, CredentialsStorageSchema } from './CredentialsStorageSchema';
  * Refresh token is persisted permanently.
  */
 export class CredentialsStorage implements IStorage<Credentials> {
-  refreshTokenStorage: IStorage<AuthData>;
+  refreshTokenStorage: IStorage<PersistedCredentials>;
   accessToken: string | null = null;
 
   constructor(storageProvider: IStorageProvider, namespace: string) {
