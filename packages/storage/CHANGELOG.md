@@ -1,5 +1,11 @@
 # @lens-protocol/storage
 
+## 0.7.5-alpha.7
+
+### Patch Changes
+
+- f2010c008: **fix:** `LensClient` and Lens React Hooks interoperability
+
 ## 0.7.5-alpha.6
 
 ### Patch Changes
