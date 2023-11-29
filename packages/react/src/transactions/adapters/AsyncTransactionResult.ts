@@ -10,7 +10,7 @@ import { PromiseResult } from '@lens-protocol/shared-kernel';
  */
 export type AsyncTransactionResult<TValue> = {
   /**
-   * Allows to wait for the transaction until it's full completion.
+   * Allows to wait for the transaction until its full completion.
    *
    * For Lens Transactions this means that the transaction has been mined and indexed.
    *

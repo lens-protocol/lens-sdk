@@ -15,11 +15,7 @@ import { assertNever, invariant } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
 import differenceBy from 'lodash/differenceBy.js';
 
-import {
-  TransactionSchema,
-  TransactionStorageSchema,
-  TransactionType,
-} from '../schemas/transactions';
+import { TransactionList, TransactionSchema, TransactionType } from '../schemas/transactions';
 import {
   ISerializableDataTransaction,
   ISerializableMetaTransaction,
@@ -106,7 +102,7 @@ export class PendingTransactionGateway
   private cache?: ISerializableTransaction<AnyTransactionRequest>[];
 
   constructor(
-    private readonly storage: IStorage<TransactionStorageSchema>,
+    private readonly storage: IStorage<TransactionList>,
     private readonly transactionFactory: ISerializableTransactionFactory,
   ) {}
 

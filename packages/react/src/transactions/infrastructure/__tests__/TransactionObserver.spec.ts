@@ -205,7 +205,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
           apolloClient,
         });
 
-        const event = await transaction.waitForNextIndexingEvent({ indexingId: txId });
+        const event = await transaction.waitForNextIndexingEvent({ relayerTxId: txId });
         expect(event.unwrap()).toEqual({
           indexed: true,
           txHash,
@@ -235,7 +235,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
           apolloClient,
         });
 
-        const event = await transaction.waitForNextIndexingEvent({ indexingId: txId });
+        const event = await transaction.waitForNextIndexingEvent({ relayerTxId: txId });
         expect(event.unwrap()).toEqual({
           indexed: false,
           txHash: upgradedTxHash,
@@ -266,7 +266,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
           apolloClient,
         });
 
-        const event = await transaction.waitForNextIndexingEvent({ indexingId: txId });
+        const event = await transaction.waitForNextIndexingEvent({ relayerTxId: txId });
         expect(event.unwrap()).toEqual({
           indexed: true,
           txHash: upgradedTxHash,
@@ -287,7 +287,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
         });
 
         await expect(() =>
-          transaction.waitForNextIndexingEvent({ indexingId: txId }),
+          transaction.waitForNextIndexingEvent({ relayerTxId: txId }),
         ).rejects.toThrow(InvariantError);
       });
 
@@ -305,7 +305,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
           apolloClient,
         });
 
-        const result = await transaction.waitForNextIndexingEvent({ indexingId: txId });
+        const result = await transaction.waitForNextIndexingEvent({ relayerTxId: txId });
 
         expect(() => result.unwrap());
         expect(result.isFailure() && result.error.reason).toBe(TransactionErrorReason.REVERTED);
@@ -331,7 +331,7 @@ describe(`Given an instance of the ${TransactionObserver.name}`, () => {
             maxIndexingWaitTime: 1, // ms
           },
         });
-        const result = await transaction.waitForNextIndexingEvent({ indexingId: txId });
+        const result = await transaction.waitForNextIndexingEvent({ relayerTxId: txId });
 
         expect(() => result.unwrap()).toThrow(TransactionError);
         expect(result.isFailure() && result.error.reason).toBe(

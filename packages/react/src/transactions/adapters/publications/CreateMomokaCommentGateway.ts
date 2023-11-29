@@ -37,7 +37,7 @@ export class CreateMomokaCommentGateway
   async createDelegatedTransaction(
     request: CreateCommentRequest,
   ): PromiseResult<DataTransaction<CreateCommentRequest>, BroadcastingError> {
-    const result = await this.broadcast(request);
+    const result = await this.relayWithProfileManager(request);
 
     if (result.isFailure()) return result;
 
@@ -62,7 +62,7 @@ export class CreateMomokaCommentGateway
     });
   }
 
-  private async broadcast(
+  private async relayWithProfileManager(
     request: CreateCommentRequest,
   ): PromiseResult<CreateMomokaPublicationResult, BroadcastingError> {
     const input = this.resolveMomokaCommentRequest(request);

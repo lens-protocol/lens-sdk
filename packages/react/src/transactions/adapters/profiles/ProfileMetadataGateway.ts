@@ -46,7 +46,7 @@ export class ProfileMetadataGateway
   async createDelegatedTransaction(
     request: SetProfileMetadataRequest,
   ): PromiseResult<Transaction<SetProfileMetadataRequest>, BroadcastingError> {
-    const result = await this.broadcast(request);
+    const result = await this.relayWithProfileManager(request);
 
     if (result.isFailure()) {
       return result;
@@ -56,7 +56,7 @@ export class ProfileMetadataGateway
     const transaction = this.transactionFactory.createNativeTransaction({
       chainType: ChainType.POLYGON,
       id: v4(),
-      indexingId: receipt.txId,
+      relayerTxId: receipt.txId,
       txHash: receipt.txHash,
       request,
     });
@@ -84,7 +84,7 @@ export class ProfileMetadataGateway
     return this.createSetProfileMetadataUriCallDetails(result);
   }
 
-  private async broadcast(
+  private async relayWithProfileManager(
     request: SetProfileMetadataRequest,
   ): PromiseResult<RelaySuccess, BroadcastingError> {
     const { data } = await this.apolloClient.mutate<

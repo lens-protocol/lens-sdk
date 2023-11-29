@@ -53,7 +53,7 @@ export function mockMetaTransactionData<T extends ProtocolTransactionRequestMode
   return {
     chainType: ChainType.ETHEREUM,
     id: faker.datatype.uuid(),
-    indexingId: faker.datatype.uuid(),
+    relayerTxId: faker.datatype.uuid(),
     nonce: mockNonce(),
     request,
     txHash: mockTransactionHash(),
@@ -74,13 +74,13 @@ export function mockNativeTransactionData<T extends AnyTransactionRequestModel>(
   };
 }
 
-export function mockNativeTransactionDataWithIndexingId<
+export function mockNativeTransactionDataWithRelayerTxId<
   T extends AnyTransactionRequestModel,
 >(): Required<NativeTransactionData<T>> {
   return {
     chainType: ChainType.ETHEREUM,
     id: faker.datatype.uuid(),
-    indexingId: faker.datatype.uuid(),
+    relayerTxId: faker.datatype.uuid(),
     request: mockAnyTransactionRequestModel() as T,
     txHash: mockTransactionHash(),
   };
