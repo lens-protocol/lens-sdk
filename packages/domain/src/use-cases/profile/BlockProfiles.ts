@@ -1,5 +1,6 @@
 import { ProfileId, TransactionKind } from '../../entities';
-import { DelegableSigning, PaidTransaction } from '../transactions';
+import { DelegableSigning } from '../transactions/DelegableSigning';
+import { PaidTransaction } from '../transactions/PaidTransaction';
 import { SponsorshipReady } from '../transactions/SponsorshipReady';
 
 export type BlockProfilesRequest = {
