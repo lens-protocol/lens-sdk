@@ -74,7 +74,7 @@ export class UpdateFollowPolicyGateway
   async createDelegatedTransaction(
     request: UpdateFollowPolicyRequest,
   ): PromiseResult<NativeTransaction<UpdateFollowPolicyRequest>, BroadcastingError> {
-    const result = await this.broadcast(request);
+    const result = await this.relayWithProfileManager(request);
 
     if (result.isFailure()) return result;
 
@@ -109,7 +109,7 @@ export class UpdateFollowPolicyGateway
     return this.createSetFollowModuleCallDetails(result);
   }
 
-  private async broadcast(
+  private async relayWithProfileManager(
     request: UpdateFollowPolicyRequest,
   ): PromiseResult<RelaySuccess, BroadcastingError> {
     const { data } = await this.apolloClient.mutate<SetFollowModuleData, SetFollowModuleVariables>({

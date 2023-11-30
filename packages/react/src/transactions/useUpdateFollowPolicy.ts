@@ -43,6 +43,16 @@ export type UpdateFollowPolicyArgs = {
  *
  * You MUST be authenticated via {@link useLogin} to use this hook.
  *
+ * @category Profiles
+ * @group Hooks
+ * @param args - {@link UpdateFollowPolicyArgs}
+ *
+ * @example
+ *
+ * ```tsx
+ * const { execute, loading, error } = useUpdateFollowPolicy();
+ * ```
+ *
  * @example
  * Anyone can follow.
  * ```tsx
@@ -89,8 +99,72 @@ export type UpdateFollowPolicyArgs = {
  * });
  * ```
  *
- * @category Profiles
- * @group Hooks
+ * ## Self-funded approach
+ *
+ * It just takes a single parameter to disable the sponsorship of the transaction gas costs.
+ *
+ * ```ts
+ * await execute({
+ *   followPolicy: {
+ *     type: FollowPolicyType.CHARGE,
+ *     amount: Amount.erc20(wmatic, 100), // 100 WMATIC
+ *     recipient: '0x1234123412341234123412341234123412341234',
+ *   },
+ *   sponsored: false, // <--- this is the only difference
+ * });
+ * ```
+ * In this example you can also see a new error type: {@link InsufficientGasError}. This
+ * error happens only with self-funded transactions and it means that the wallet does not
+ * have enough funds to pay for the transaction gas costs.
+ *
+ * ## Self-funded fallback
+ *
+ * If for some reason the Lens API cannot sponsor the transaction, the hook will fail with a {@link BroadcastingError} with one of the following reasons:
+ * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
+ * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
+ * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
+ *
+ * In those cases you can retry the transaction as self-funded like in the following example:
+ *
+ * ```ts
+ * const update = async () => {
+ *   // the first part is the same as in the initial example
+ *
+ *   // sponsored attempt
+ *   const sponsoredResult = await execute({
+ *     followPolicy: {
+ *       type: FollowPolicyType.CHARGE,
+ *       amount: Amount.erc20(wmatic, 100), // 100 WMATIC
+ *       recipient: '0x1234123412341234123412341234123412341234',
+ *     },
+ *     sponsored: false,
+ *   });
+ *
+ *   if (sponsoredResult.isFailure()) {
+ *     switch (sponsoredResult.error.name) {
+ *       case 'BroadcastingError':
+ *         if ([BroadcastingErrorReason.NOT_SPONSORED, BroadcastingErrorReason.RATE_LIMITED].includes(sponsoredResult.error.reason)) {
+ *
+ *           const selfFundedResult = await execute({
+ *             metadataURI: uri,
+ *             sponsored: false
+ *           });
+ *
+ *           // continue with selfFundedResult as in the previous example
+ *         }
+ *         break;
+ *
+ *      // ...
+ *   }
+ * }
+ * ```
+ *
+ * In this example we omitted {@link BroadcastingErrorReason.APP_NOT_ALLOWED} as it's not normally a problem per-se.
+ * It just requires the app to apply for whitelisting. See https://docs.lens.xyz/docs/gasless-and-signless#whitelisting-your-app.
+ *
+ * You can still include it in your fallback logic if you want to. For example to unblock testing your app from a domain that is not the
+ * whitelisted one (e.g. localhost).
+ *
  */
 export function useUpdateFollowPolicy(): UseDeferredTask<
   void,
