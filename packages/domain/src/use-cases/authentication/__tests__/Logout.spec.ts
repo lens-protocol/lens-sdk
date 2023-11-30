@@ -10,6 +10,7 @@ import {
   LogoutReason,
   Logout,
   ILogoutPresenter,
+  IResettableTransactionGateway,
 } from '../Logout';
 
 const wallet = mockWallet();
@@ -17,10 +18,17 @@ const wallet = mockWallet();
 function setupTestScenario() {
   const walletGateway = mock<IResettableWalletGateway>();
   const credentialsGateway = mock<IResettableCredentialsGateway>();
-  const presenter = mock<ILogoutPresenter>();
+  const transactionGateway = mock<IResettableTransactionGateway>();
   const conversationGateway = mock<IConversationsGateway>();
+  const presenter = mock<ILogoutPresenter>();
 
-  const interactor = new Logout(walletGateway, credentialsGateway, conversationGateway, presenter);
+  const interactor = new Logout(
+    walletGateway,
+    credentialsGateway,
+    transactionGateway,
+    conversationGateway,
+    presenter,
+  );
 
   return {
     walletGateway,

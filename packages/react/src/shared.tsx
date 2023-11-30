@@ -154,6 +154,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   const logout = new Logout(
     walletGateway,
     credentialsGateway,
+    transactionGateway,
     conversationsGateway,
     logoutPresenter,
   );
