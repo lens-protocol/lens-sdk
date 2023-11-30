@@ -1,7 +1,7 @@
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { mockWallet } from '../../../entities/__helpers__/mocks';
+import { mockICredentials, mockWallet } from '../../../entities/__helpers__/mocks';
 import { ActiveWallet } from '../ActiveWallet';
 import {
   IConversationsGateway,
@@ -49,8 +49,10 @@ describe(`Given the "${Logout.name}" interactor`, () => {
 
   describe(`when "${Logout.prototype.execute.name}" is invoked`, () => {
     it(`should:
+        - revoke the session 
         - clear wallets from storage
         - clear DM conversations from storage
+        - clear transactions from storage
         - clear credentials from storage
         - present the logout reason`, async () => {
       const activeWallet = mock<ActiveWallet>();
@@ -66,6 +68,10 @@ describe(`Given the "${Logout.name}" interactor`, () => {
         presenter,
         interactor,
       } = setupTestScenario();
+
+      const credentials = mockICredentials({ address: wallet.address });
+
+      when(credentialsGateway.getCredentials).calledWith().mockResolvedValue(credentials);
 
       await interactor.execute(LogoutReason.USER_INITIATED);
 

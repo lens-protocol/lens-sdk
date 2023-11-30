@@ -54,6 +54,7 @@ export function mockICredentials(overrides?: Partial<ICredentials>) {
   return mock<ICredentials>({
     address: mockEvmAddress(),
     profileId: mockProfileId(),
+    authorizationId: faker.datatype.uuid(),
     ...overrides,
   });
 }
