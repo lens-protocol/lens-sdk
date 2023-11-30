@@ -3,4 +3,4 @@
 "@lens-protocol/react": minor
 ---
 
-adds support for self-funded `useBlockProfiles`
+**feat:** adds support for self-funded `useBlockProfiles`
