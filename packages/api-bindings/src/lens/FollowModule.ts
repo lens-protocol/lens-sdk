@@ -5,17 +5,20 @@ import { erc20Amount } from './utils';
 
 export type FollowModule = NonNullable<Profile['followModule']>;
 
+/**
+ * @deprecated not longer in use - removal slated for stable 2.x release
+ */
 export type ResolveFollowPolicy = {
   followModule: FollowModule | null;
 };
 
 /**
- * Resolve API FollowModule to more user friendly FollowPolicy
+ * Resolve API {@link FollowModule} to more user friendly {@link FollowPolicy}.
  *
- * @param args - {@link ResolveFollowPolicy}
+ * @param args - The {@link Profile} to resolve {@link FollowPolicy} from
  * @returns {@link FollowPolicy}
  */
-export function resolveFollowPolicy({ followModule }: ResolveFollowPolicy): FollowPolicy {
+export function resolveFollowPolicy({ followModule }: Profile): FollowPolicy {
   if (followModule === null) {
     return {
       type: FollowPolicyType.ANYONE,

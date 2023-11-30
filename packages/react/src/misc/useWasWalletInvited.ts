@@ -11,7 +11,7 @@ import { ReadResult, useReadResult } from '../helpers/reads';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 
 /**
- * {@link useProfileAlreadyInvited} hook arguments
+ * {@link useWasWalletInvited} hook arguments
  */
 export type UseWasWalletInvitedArgs = AlreadyInvitedCheckRequest;
 
