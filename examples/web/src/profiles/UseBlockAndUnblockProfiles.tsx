@@ -54,7 +54,7 @@ function BlockOrUnblockProfileCard({ profile }: { profile: Profile }) {
     return (
       <ProfileCard profile={profile}>
         <form onSubmit={handleBlockSubmit}>
-          <button onClick={() => {}} disabled={blockLoading}>
+          <button type="submit" disabled={blockLoading}>
             Block
           </button>
           <label>
