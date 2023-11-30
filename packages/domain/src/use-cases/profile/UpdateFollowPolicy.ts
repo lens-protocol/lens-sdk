@@ -1,6 +1,6 @@
 import { TransactionKind } from '../../entities';
-import { PaidTransaction } from '../transactions';
 import { DelegableSigning } from '../transactions/DelegableSigning';
+import { PaidTransaction } from '../transactions/PaidTransaction';
 import { SponsorshipReady } from '../transactions/SponsorshipReady';
 import { FollowPolicyConfig } from './FollowPolicy';
 

@@ -82,6 +82,7 @@ export function mockUpdateFollowPolicyRequest(
   return {
     policy: mockChargeFollowConfig(),
     signless: true,
+    sponsored: true,
     ...overrides,
     kind: TransactionKind.UPDATE_FOLLOW_POLICY,
   };
