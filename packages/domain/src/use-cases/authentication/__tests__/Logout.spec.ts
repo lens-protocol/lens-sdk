@@ -1,7 +1,7 @@
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { mockWallet } from '../../../entities/__helpers__/mocks';
+import { mockICredentials, mockWallet } from '../../../entities/__helpers__/mocks';
 import { ActiveWallet } from '../ActiveWallet';
 import {
   IConversationsGateway,
@@ -10,21 +10,34 @@ import {
   LogoutReason,
   Logout,
   ILogoutPresenter,
+  IResettableTransactionGateway,
+  IRevokeSessionGateway,
 } from '../Logout';
 
 const wallet = mockWallet();
 
 function setupTestScenario() {
+  const sessionGateway = mock<IRevokeSessionGateway>();
   const walletGateway = mock<IResettableWalletGateway>();
   const credentialsGateway = mock<IResettableCredentialsGateway>();
-  const presenter = mock<ILogoutPresenter>();
+  const transactionGateway = mock<IResettableTransactionGateway>();
   const conversationGateway = mock<IConversationsGateway>();
+  const presenter = mock<ILogoutPresenter>();
 
-  const interactor = new Logout(walletGateway, credentialsGateway, conversationGateway, presenter);
-
-  return {
+  const interactor = new Logout(
+    sessionGateway,
     walletGateway,
     credentialsGateway,
+    transactionGateway,
+    conversationGateway,
+    presenter,
+  );
+
+  return {
+    sessionGateway,
+    walletGateway,
+    credentialsGateway,
+    transactionGateway,
     conversationGateway,
     presenter,
     interactor,
@@ -36,21 +49,36 @@ describe(`Given the "${Logout.name}" interactor`, () => {
 
   describe(`when "${Logout.prototype.execute.name}" is invoked`, () => {
     it(`should:
+        - revoke the session 
         - clear wallets from storage
         - clear DM conversations from storage
+        - clear transactions from storage
         - clear credentials from storage
         - present the logout reason`, async () => {
       const activeWallet = mock<ActiveWallet>();
 
       when(activeWallet.requireActiveWallet).calledWith().mockResolvedValue(wallet);
 
-      const { interactor, credentialsGateway, conversationGateway, walletGateway, presenter } =
-        setupTestScenario();
+      const {
+        sessionGateway,
+        walletGateway,
+        credentialsGateway,
+        transactionGateway,
+        conversationGateway,
+        presenter,
+        interactor,
+      } = setupTestScenario();
+
+      const credentials = mockICredentials({ address: wallet.address });
+
+      when(credentialsGateway.getCredentials).calledWith().mockResolvedValue(credentials);
 
       await interactor.execute(LogoutReason.USER_INITIATED);
 
-      expect(conversationGateway.reset).toHaveBeenCalled();
+      expect(sessionGateway.revoke).toHaveBeenCalled();
       expect(walletGateway.reset).toHaveBeenCalled();
+      expect(conversationGateway.reset).toHaveBeenCalled();
+      expect(transactionGateway.reset).toHaveBeenCalled();
       expect(credentialsGateway.invalidate).toHaveBeenCalled();
       expect(presenter.logout).toHaveBeenCalledWith(reason);
     });
