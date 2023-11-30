@@ -5,6 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
+  ethereumjs-abi: https://registry.npmjs.org/ethereumjs-abi/-/ethereumjs-abi-0.6.8.tgz
   ganache: 7.7.4
 
 importers:
