@@ -103,6 +103,26 @@ export class Authentication implements IAuthentication {
     return result.value.getProfileId();
   }
 
+  async getWalletAddress(): Promise<string | null> {
+    const result = await this.getCredentials();
+
+    if (result.isFailure()) {
+      return null;
+    }
+
+    return result.value.getWalletAddress();
+  }
+
+  async getAuthorizationId(): Promise<string | null> {
+    const result = await this.getCredentials();
+
+    if (result.isFailure()) {
+      return null;
+    }
+
+    return result.value.getAuthorizationId();
+  }
+
   async logout(): Promise<void> {
     await this.credentials.reset();
   }
@@ -139,7 +159,13 @@ export class Authentication implements IAuthentication {
       return result;
     }
 
-    return handler(result.value.getProfileId());
+    const profileId = result.value.getProfileId();
+
+    if (!profileId) {
+      return failure(new NotAuthenticatedError()); // authenticated with wallet only
+    }
+
+    return handler(profileId);
   }
 
   async getRequestHeader(): PromiseResult<

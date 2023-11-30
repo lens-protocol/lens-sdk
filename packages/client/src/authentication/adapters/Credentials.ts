@@ -1,23 +1,45 @@
-import { DateUtils, invariant } from '@lens-protocol/shared-kernel';
+import { DateUtils, invariant, never } from '@lens-protocol/shared-kernel';
 import jwtDecode from 'jwt-decode';
 
 export class ClockSkewedError extends Error {
   name = 'ClockSkewedError' as const;
   message = 'Your system clock is skewed compared to the API clock';
 }
+
 // Threshold in seconds that will mark token as expired even it's still valid
 // Adds some time for all communications that's required to refresh tokens
 const TOKEN_EXP_THRESHOLD = DateUtils.secondsToMs(30);
 
 const CLOCK_SKEWED_THRESHOLD = DateUtils.secondsToMs(10);
 
-type LensJwtPayload = {
-  id: string;
-  evmAddress: string;
-  role: string;
+type WalletJwtPayload = {
+  authorizationId: string;
+  id: string; // EvmAddress;
+  role: 'wallet_refresh';
   iat: number;
   exp: number;
 };
+
+type ProfileJwtPayload = {
+  authorizationId: string;
+  id: string; // ProfileId
+  evmAddress: string;
+  role: 'profile_refresh';
+  iat: number;
+  exp: number;
+};
+
+type JwtPayload = WalletJwtPayload | ProfileJwtPayload;
+
+type DecodedJwt = { [key: string]: string | number };
+
+function isWalletJwtContent(decodedJwt: DecodedJwt): decodedJwt is WalletJwtPayload {
+  return 'role' in decodedJwt && decodedJwt.role === 'wallet_refresh';
+}
+
+function isProfileJwtContent(decodedJwt: DecodedJwt): decodedJwt is ProfileJwtPayload {
+  return 'role' in decodedJwt && decodedJwt.role === 'profile_refresh';
+}
 
 export class Credentials {
   constructor(
@@ -26,7 +48,7 @@ export class Credentials {
   ) {}
 
   checkClock() {
-    const decodedToken = jwtDecode<LensJwtPayload>(this.refreshToken);
+    const decodedToken = jwtDecode<JwtPayload>(this.refreshToken);
     invariant(decodedToken.iat, 'Issued at date should be provided by JWT token');
 
     // check if local time is not too far off from server time
@@ -62,16 +84,39 @@ export class Credentials {
     return now >= tokenExpTimestamp - TOKEN_EXP_THRESHOLD;
   }
 
-  getProfileId(): string {
-    const decodedToken = jwtDecode<LensJwtPayload>(this.refreshToken);
-    invariant(decodedToken.id, 'ProfileId should be provided by JWT token');
+  getProfileId(): string | null {
+    const decodedToken = jwtDecode<JwtPayload>(this.refreshToken);
 
-    return decodedToken.id;
+    if (isProfileJwtContent(decodedToken)) {
+      return decodedToken.id;
+    }
+
+    return null;
+  }
+
+  getWalletAddress(): string {
+    const decodedToken = jwtDecode<JwtPayload>(this.refreshToken);
+
+    if (isWalletJwtContent(decodedToken)) {
+      return decodedToken.id;
+    }
+
+    if (isProfileJwtContent(decodedToken)) {
+      return decodedToken.evmAddress;
+    }
+
+    never('Invalid JWT format');
+  }
+
+  getAuthorizationId(): string {
+    const decodedToken = jwtDecode<JwtPayload>(this.refreshToken);
+    invariant(decodedToken.authorizationId, 'Wrong JWT token');
+
+    return decodedToken.authorizationId;
   }
 
   private getTokenExpTimestamp(token: string) {
-    const decodedToken = jwtDecode<LensJwtPayload>(token);
-
+    const decodedToken = jwtDecode<JwtPayload>(token);
     invariant(decodedToken.exp, 'Exp date should be provided by JWT token');
 
     return DateUtils.secondsToMs(decodedToken.exp);
