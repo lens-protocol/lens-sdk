@@ -11,11 +11,13 @@ import {
   Logout,
   ILogoutPresenter,
   IResettableTransactionGateway,
+  IRevokeSessionGateway,
 } from '../Logout';
 
 const wallet = mockWallet();
 
 function setupTestScenario() {
+  const sessionGateway = mock<IRevokeSessionGateway>();
   const walletGateway = mock<IResettableWalletGateway>();
   const credentialsGateway = mock<IResettableCredentialsGateway>();
   const transactionGateway = mock<IResettableTransactionGateway>();
@@ -23,6 +25,7 @@ function setupTestScenario() {
   const presenter = mock<ILogoutPresenter>();
 
   const interactor = new Logout(
+    sessionGateway,
     walletGateway,
     credentialsGateway,
     transactionGateway,
@@ -31,8 +34,10 @@ function setupTestScenario() {
   );
 
   return {
+    sessionGateway,
     walletGateway,
     credentialsGateway,
+    transactionGateway,
     conversationGateway,
     presenter,
     interactor,
@@ -52,13 +57,22 @@ describe(`Given the "${Logout.name}" interactor`, () => {
 
       when(activeWallet.requireActiveWallet).calledWith().mockResolvedValue(wallet);
 
-      const { interactor, credentialsGateway, conversationGateway, walletGateway, presenter } =
-        setupTestScenario();
+      const {
+        sessionGateway,
+        walletGateway,
+        credentialsGateway,
+        transactionGateway,
+        conversationGateway,
+        presenter,
+        interactor,
+      } = setupTestScenario();
 
       await interactor.execute(LogoutReason.USER_INITIATED);
 
-      expect(conversationGateway.reset).toHaveBeenCalled();
+      expect(sessionGateway.revoke).toHaveBeenCalled();
       expect(walletGateway.reset).toHaveBeenCalled();
+      expect(conversationGateway.reset).toHaveBeenCalled();
+      expect(transactionGateway.reset).toHaveBeenCalled();
       expect(credentialsGateway.invalidate).toHaveBeenCalled();
       expect(presenter.logout).toHaveBeenCalledWith(reason);
     });
