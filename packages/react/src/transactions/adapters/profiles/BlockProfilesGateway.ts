@@ -44,7 +44,7 @@ export class BlockProfilesGateway
   async createDelegatedTransaction(
     request: BlockProfilesRequest,
   ): PromiseResult<Transaction<BlockProfilesRequest>, BroadcastingError> {
-    const result = await this.broadcast(request);
+    const result = await this.relayWithProfileManager(request);
 
     if (result.isFailure()) {
       return result;
@@ -74,7 +74,7 @@ export class BlockProfilesGateway
     });
   }
 
-  private async broadcast(
+  private async relayWithProfileManager(
     request: BlockProfilesRequest,
   ): PromiseResult<RelaySuccess, BroadcastingError> {
     const { data } = await this.apolloClient.mutate<BlockData, BlockVariables>({
@@ -87,10 +87,7 @@ export class BlockProfilesGateway
     });
 
     if (data.result.__typename === 'LensProfileManagerRelayError') {
-      const result = await this.createTypedData(request);
-      const fallback = this.createSetBlockStatusCallDetails(result);
-
-      return handleRelayError(data.result, fallback);
+      return handleRelayError(data.result);
     }
 
     return success(data.result);
