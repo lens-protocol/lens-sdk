@@ -1,10 +1,11 @@
 import {
+  ChangeProfileManagerActionType,
+  CreateChangeProfileManagersBroadcastItemResult,
+  CreateChangeProfileManagersTypedDataData,
+  CreateChangeProfileManagersTypedDataDocument,
+  CreateChangeProfileManagersTypedDataVariables,
   SafeApolloClient,
   omitTypename,
-  CreateChangeProfileManagersTypedDataData,
-  CreateChangeProfileManagersTypedDataVariables,
-  CreateChangeProfileManagersTypedDataDocument,
-  ChangeProfileManagerActionType,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
@@ -13,17 +14,38 @@ import { ISignedOnChainGateway } from '@lens-protocol/domain/use-cases/transacti
 import { Data } from '@lens-protocol/shared-kernel';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
-import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
+import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
+import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
 
 export class UpdateProfileManagersGateway
+  extends AbstractContractCallGateway<UpdateProfileManagersRequest>
   implements ISignedOnChainGateway<UpdateProfileManagersRequest>
 {
-  constructor(private apolloClient: SafeApolloClient) {}
+  constructor(providerFactory: IProviderFactory, private apolloClient: SafeApolloClient) {
+    super(providerFactory);
+  }
 
   async createUnsignedProtocolCall(
     request: UpdateProfileManagersRequest,
-    nonce?: Nonce,
+    nonceOverride?: Nonce,
   ): Promise<UnsignedProtocolCall<UpdateProfileManagersRequest>> {
+    const result = await this.createTypedData(request, nonceOverride);
+
+    return UnsignedProtocolCall.create({
+      id: result.id,
+      request,
+      typedData: omitTypename(result.typedData),
+    });
+  }
+
+  protected async createEncodedData(
+    request: UpdateProfileManagersRequest,
+  ): Promise<ContractCallDetails> {
+    const result = await this.createTypedData(request);
+    return this.createChangeDelegatedExecutorsConfigCallDetails(result);
+  }
+
+  private async createTypedData(request: UpdateProfileManagersRequest, nonce?: Nonce) {
     const { data } = await this.apolloClient.mutate<
       CreateChangeProfileManagersTypedDataData,
       CreateChangeProfileManagersTypedDataVariables
@@ -47,32 +69,25 @@ export class UpdateProfileManagersGateway
       },
     });
 
-    return UnsignedProtocolCall.create({
-      id: data.result.id,
-      request,
-      typedData: omitTypename(data.result.typedData),
-      fallback: this.createRequestFallback(request, data),
-    });
+    return data.result;
   }
 
-  private createRequestFallback(
-    request: UpdateProfileManagersRequest,
-    data: CreateChangeProfileManagersTypedDataData,
-  ): SelfFundedProtocolTransactionRequest<UpdateProfileManagersRequest> {
-    const contract = lensHub(data.result.typedData.domain.verifyingContract);
+  private createChangeDelegatedExecutorsConfigCallDetails(
+    data: CreateChangeProfileManagersBroadcastItemResult,
+  ): ContractCallDetails {
+    const contract = lensHub(data.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData(
       'changeDelegatedExecutorsConfig(uint256,address[],bool[],uint64,bool)',
       [
-        data.result.typedData.message.delegatorProfileId,
-        data.result.typedData.message.delegatedExecutors,
-        data.result.typedData.message.approvals,
-        data.result.typedData.message.configNumber,
-        data.result.typedData.message.switchToGivenConfig,
+        data.typedData.message.delegatorProfileId,
+        data.typedData.message.delegatedExecutors,
+        data.typedData.message.approvals,
+        data.typedData.message.configNumber,
+        data.typedData.message.switchToGivenConfig,
       ],
     );
     return {
-      ...request,
-      contractAddress: data.result.typedData.domain.verifyingContract,
+      contractAddress: data.typedData.domain.verifyingContract,
       encodedData: encodedData as Data,
     };
   }

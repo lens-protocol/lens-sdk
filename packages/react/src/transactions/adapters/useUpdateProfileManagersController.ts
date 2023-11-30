@@ -1,4 +1,5 @@
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   TransactionError,
   UserRejectedError,
@@ -8,7 +9,11 @@ import {
   UpdateProfileManagers,
   UpdateProfileManagersRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  BroadcastingError,
+  PaidTransaction,
+  SignedOnChain,
+} from '@lens-protocol/domain/use-cases/transactions';
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
@@ -17,28 +22,46 @@ import { UpdateProfileManagersGateway } from './profiles/UpdateProfileManagersGa
 import { validateUpdateProfileManagersRequest } from './schemas/validators';
 
 export function useUpdateProfileManagersController() {
-  const { activeWallet, apolloClient, onChainRelayer, transactionGateway, transactionQueue } =
-    useSharedDependencies();
+  const {
+    activeWallet,
+    apolloClient,
+    onChainRelayer,
+    providerFactory,
+    transactionGateway,
+    transactionQueue,
+  } = useSharedDependencies();
 
   return async (
     request: UpdateProfileManagersRequest,
   ): PromiseResult<
     void,
     | BroadcastingError
+    | InsufficientGasError
     | PendingSigningRequestError
+    | TransactionError
     | UserRejectedError
     | WalletConnectionError
-    | TransactionError
   > => {
     validateUpdateProfileManagersRequest(request);
 
     const presenter = new TransactionResultPresenter<
       UpdateProfileManagersRequest,
-      BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
+      | BroadcastingError
+      | InsufficientGasError
+      | PendingSigningRequestError
+      | UserRejectedError
+      | WalletConnectionError
     >();
-    const gateway = new UpdateProfileManagersGateway(apolloClient);
+    const gateway = new UpdateProfileManagersGateway(providerFactory, apolloClient);
 
-    const updateProfileManagers = new UpdateProfileManagers(
+    const paidExecution = new PaidTransaction<UpdateProfileManagersRequest>(
+      activeWallet,
+      gateway,
+      presenter,
+      transactionQueue,
+    );
+
+    const sponsoredExecution = new SignedOnChain<UpdateProfileManagersRequest>(
       activeWallet,
       transactionGateway,
       gateway,
@@ -46,6 +69,8 @@ export function useUpdateProfileManagersController() {
       transactionQueue,
       presenter,
     );
+
+    const updateProfileManagers = new UpdateProfileManagers(sponsoredExecution, paidExecution);
 
     await updateProfileManagers.execute(request);
 

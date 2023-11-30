@@ -26,7 +26,7 @@ export function UseProfileManagers() {
   return (
     <div>
       <h1>
-        <code>useProfileFollowing</code>
+        <code>useProfileManagers</code>
       </h1>
       <p>
         List of profile managers for: <code>{target}</code>
