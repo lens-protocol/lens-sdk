@@ -20,7 +20,7 @@ async function main() {
   const accessTokenResult = await client.authentication.getAccessToken();
   const accessToken = accessTokenResult.unwrap();
 
-  const walletAddress = await client.authentication.getProfileId();
+  const walletAddress = await client.authentication.getWalletAddress();
 
   console.log(`Is LensClient authenticated? `, await client.authentication.isAuthenticated());
   console.log(`Authenticated wallet: `, walletAddress);
