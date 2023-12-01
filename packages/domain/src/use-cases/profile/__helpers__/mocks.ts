@@ -216,6 +216,7 @@ export function mockBlockProfilesRequest(
   return {
     signless: true,
     profileIds: [mockProfileId()],
+    sponsored: true,
     ...overrides,
     kind: TransactionKind.BLOCK_PROFILE,
   };
