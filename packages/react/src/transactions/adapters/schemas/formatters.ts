@@ -1,11 +1,10 @@
 // Heavily customized and simplified version of https://www.npmjs.com/package/zod-validation-error
-
-import { assertNonEmptyArray, hasAtLeastOne, NonEmptyArray } from '@lens-protocol/shared-kernel';
+import { hasAtLeastOne, hasTwoOrMore, NonEmptyArray } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
 const maxIssuesInMessage = 99;
 const issueSeparator = '\n';
-const prefix = '· ';
+const bulletPoint = '· ';
 
 function escapeQuotes(str: string): string {
   return str.replace(/"/g, '\\"');
@@ -43,45 +42,59 @@ function formatPath(path: NonEmptyArray<string | number>): string {
   }, '');
 }
 
-function formatZozInvalidUnionIssue(issue: z.ZodInvalidUnionIssue): string {
-  const groups = issue.unionErrors.reduce<string[]>((acc, zodError) => {
-    const newIssues = zodError.issues
-      .map((nested) => {
-        if (hasAtLeastOne(nested.path)) {
-          return `\t\t${prefix}"${formatPath(nested.path)}": ${nested.message}`;
-        }
-        return issue.message;
-      })
-      .join(issueSeparator);
+function formatZodInvalidUnionIssue(issue: z.ZodInvalidUnionIssue): string {
+  const groups = issue.unionErrors.map<string[]>((zodError) =>
+    zodError.issues.map((nested) => {
+      if (hasAtLeastOne(nested.path)) {
+        return `"${formatPath(nested.path)}": ${nested.message}`;
+      }
+      return nested.message;
+    }),
+  );
 
-    if (!acc.includes(newIssues)) {
-      acc.push(newIssues);
-    }
-
-    return acc;
-  }, []);
+  const uniqueGroups = [...new Set(groups.map((group) => group.join('; ')))];
 
   const path = Array.isArray(issue.path) ? issue.path : [issue.path];
-  assertNonEmptyArray(path);
+  const prefix = hasAtLeastOne(path) ? `"${formatPath(path)}": ` : '';
 
-  return (
-    `${prefix}"${formatPath(path)}" expected to match one of the following groups:\n` +
-    `${groups.join(`${issueSeparator}\tOR:${issueSeparator}`)}`
-  );
+  if (hasTwoOrMore(uniqueGroups)) {
+    return (
+      `${bulletPoint}${prefix}expected to match one of the following groups:\n` +
+      `\t\t${uniqueGroups.join(`${issueSeparator}\tOR:${issueSeparator}\t\t`)}`
+    );
+  }
+
+  return `${bulletPoint}${prefix}${uniqueGroups[0]}`;
 }
 
 function formatZodIssue(issue: z.ZodIssue): string {
   if (issue.code === z.ZodIssueCode.invalid_union) {
-    return formatZozInvalidUnionIssue(issue);
+    return formatZodInvalidUnionIssue(issue);
   }
 
   if (hasAtLeastOne(issue.path)) {
-    return `${prefix}"${formatPath(issue.path)}": ${issue.message}`;
+    return `${bulletPoint}"${formatPath(issue.path)}": ${issue.message}`;
   }
 
   return issue.message;
 }
 
+/**
+ * Formats a Zod parsing error into a human-readable string.
+ *
+ * The formatting is tailored to the Lens Protocol Metadata use case. It may not be suitable for other use cases.
+ *
+ * @category Helpers
+ *
+ * @example
+ * ```ts
+ * const result = PublicationMetadataSchema.safeParse(invalid);
+ *
+ * if (!result.success) {
+ *   throw new Error(formatZodError(result.error));
+ * }
+ * ```
+ */
 export function formatZodError(zodError: z.ZodError): string {
   const reason = zodError.errors
     // limit max number of issues printed in the reason section

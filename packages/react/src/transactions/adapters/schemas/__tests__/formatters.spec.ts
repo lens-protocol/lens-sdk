@@ -43,12 +43,12 @@ describe(`Given the schema formatters`, () => {
         · "required": Required
         · "empty": Array must contain at least 1 element(s)
         · "array[1]": Expected string, received number
-        · "union" expected to match one of the following groups:
-        		· "union": Expected string, received boolean
+        · "union": expected to match one of the following groups:
+        		"union": Expected string, received boolean
         	OR:
-        		· "union": Expected number, received boolean
+        		"union": Expected number, received boolean
         	OR:
-        		· "union": Expected object, received boolean
+        		"union": Expected object, received boolean
         · "tuple[0]": Expected string, received number
         · "tuple[1]": Expected number, received string"
       `);
