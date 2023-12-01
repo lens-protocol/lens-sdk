@@ -1,5 +1,12 @@
 # @lens-protocol/storage
 
+## 0.7.5-alpha.7
+
+### Patch Changes
+
+- 9b0ad4a1a: **fix:** Added session revoke on logout + more logout improvements
+- f2010c008: **fix:** `LensClient` and Lens React Hooks interoperability
+
 ## 0.7.5-alpha.6
 
 ### Patch Changes
