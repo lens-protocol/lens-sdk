@@ -1,5 +1,20 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.24
+
+### Minor Changes
+
+- 8206feb84: **feat:** Added `client.authentication.getWalletAddress` and `client.authentication.getAuthorizationId` methods to retrieve data from the refresh token. Fixed `client.authentication.getProfileId` method to return the profileId only if authenticated with profile.
+
+### Patch Changes
+
+- dd2ab15a5: **feat:** Ensured interoperability between Client and React SDKs, exported `localStorage()`, added new hook `useStorage`
+- f2010c008: **fix:** `LensClient` and Lens React Hooks interoperability
+- Updated dependencies [9b0ad4a1a]
+- Updated dependencies [f2010c008]
+  - @lens-protocol/storage@0.7.5-alpha.7
+  - @lens-protocol/gated-content@0.3.3-alpha.18
+
 ## 2.0.0-alpha.23
 
 ### Minor Changes

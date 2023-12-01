@@ -82,6 +82,7 @@ export function mockUpdateFollowPolicyRequest(
   return {
     policy: mockChargeFollowConfig(),
     signless: true,
+    sponsored: true,
     ...overrides,
     kind: TransactionKind.UPDATE_FOLLOW_POLICY,
   };
@@ -216,6 +217,7 @@ export function mockBlockProfilesRequest(
   return {
     signless: true,
     profileIds: [mockProfileId()],
+    sponsored: true,
     ...overrides,
     kind: TransactionKind.BLOCK_PROFILE,
   };

@@ -24,6 +24,7 @@ import {
   UseSearchPublications,
 } from './discovery';
 import {
+  LensClientInteroperability,
   MiscPage,
   UseApproveModule,
   UseClaimHandle,
@@ -196,6 +197,10 @@ export function App() {
                       <Route path="useApproveModule" element={<UseApproveModule />} />
                       <Route path="useClaimHandle" element={<UseClaimHandle />} />
                       <Route path="useInviteWallets" element={<UseInviteWallets />} />
+                      <Route
+                        path="lensClientInteroperability"
+                        element={<LensClientInteroperability />}
+                      />
                     </Route>
                   </Route>
 

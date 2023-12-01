@@ -65,7 +65,7 @@ async function main() {
     followBroadcastResultValue.txId,
   );
 
-  // wait for follow to be indexed
+  console.log(`Waiting for the transaction to be indexed...`);
   await client.transaction.waitUntilComplete({ forTxId: followBroadcastResultValue.txId });
 }
 

@@ -81,7 +81,7 @@ export class FollowProfileGateway
       chainType: ChainType.POLYGON,
       id: v4(),
       request,
-      indexingId: result.value.txId,
+      relayerTxId: result.value.txId,
       txHash: result.value.txHash,
     });
 

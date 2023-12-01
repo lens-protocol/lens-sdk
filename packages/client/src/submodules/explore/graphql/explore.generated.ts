@@ -34,10 +34,7 @@ export type ExplorePublicationsQueryVariables = Types.Exact<{
 }>;
 
 export type ExplorePublicationsQuery = {
-  result: {
-    items: Array<PostFragment | QuoteFragment>;
-    pageInfo: { prev: string | null; next: string | null };
-  };
+  result: { items: Array<PostFragment | QuoteFragment>; pageInfo: PaginatedResultInfoFragment };
 };
 
 export type ExploreProfilesQueryVariables = Types.Exact<{
@@ -215,8 +212,10 @@ export const ExplorePublicationsDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'prev' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'next' } },
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'PaginatedResultInfo' },
+                      },
                     ],
                   },
                 },
@@ -6662,6 +6661,18 @@ export const ExplorePublicationsDocument = {
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'PaginatedResultInfo' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'PaginatedResultInfo' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'prev' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'next' } },
         ],
       },
     },

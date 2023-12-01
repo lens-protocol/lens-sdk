@@ -94,7 +94,7 @@ export class ClaimProfileGateway
       chainType: ChainType.POLYGON,
       id: v4(),
       request,
-      indexingId: data.result.txId,
+      relayerTxId: data.result.txId,
       txHash: data.result.txHash,
     });
 

@@ -58,11 +58,25 @@ export interface IAuthentication {
   getAccessToken(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError>;
 
   /**
-   * Get the authentication profile id.
+   * Get the authenticated profile id.
    *
-   * @returns The profile id or null if not authenticated
+   * @returns The profile id or null if not authenticated or authenticated with wallet only
    */
   getProfileId(): Promise<string | null>;
+
+  /**
+   * Get the authenticated wallet address.
+   *
+   * @returns The wallet address or null if not authenticated
+   */
+  getWalletAddress(): Promise<string | null>;
+
+  /**
+   * Get the authorization id needed to revoke the active authentication session.
+   *
+   * @returns The authorization id or null if not authenticated
+   */
+  getAuthorizationId(): Promise<string | null>;
 
   /**
    * Logout the authenticated profile. Cleanup the storage.

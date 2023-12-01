@@ -1,5 +1,22 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.24
+
+### Patch Changes
+
+- 9b0ad4a1a: **fix:** Added session revoke on logout + more logout improvements
+- dd2ab15a5: **feat:** Ensured interoperability between Client and React SDKs, exported `localStorage()`, added new hook `useStorage`
+- f2010c008: **fix:** `LensClient` and Lens React Hooks interoperability
+- Updated dependencies [2becf4650]
+- Updated dependencies [336c19f09]
+- Updated dependencies [9b0ad4a1a]
+- Updated dependencies [dd2ab15a5]
+- Updated dependencies [f2010c008]
+  - @lens-protocol/domain@0.11.0-alpha.16
+  - @lens-protocol/react@2.0.0-alpha.24
+  - @lens-protocol/api-bindings@0.11.0-alpha.21
+  - @lens-protocol/storage@0.7.5-alpha.7
+
 ## 2.0.0-alpha.23
 
 ### Minor Changes

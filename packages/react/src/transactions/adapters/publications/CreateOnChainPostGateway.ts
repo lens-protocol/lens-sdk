@@ -49,7 +49,7 @@ export class CreateOnChainPostGateway
   async createDelegatedTransaction(
     request: CreatePostRequest,
   ): PromiseResult<NativeTransaction<CreatePostRequest>, BroadcastingError> {
-    const result = await this.broadcast(request);
+    const result = await this.relayWithProfileManager(request);
 
     if (result.isFailure()) return result;
 
@@ -57,7 +57,7 @@ export class CreateOnChainPostGateway
       chainType: ChainType.POLYGON,
       id: v4(),
       request,
-      indexingId: result.value.txId,
+      relayerTxId: result.value.txId,
       txHash: result.value.txHash,
     });
 
@@ -86,7 +86,7 @@ export class CreateOnChainPostGateway
     return this.createPostCallDetails(result);
   }
 
-  private async broadcast(
+  private async relayWithProfileManager(
     request: CreatePostRequest,
   ): PromiseResult<RelaySuccess, BroadcastingError> {
     const input = this.resolveOnchainPostRequest(request);

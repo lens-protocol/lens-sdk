@@ -5,6 +5,7 @@ import {
   TransactionKind,
   DataTransaction,
 } from '@lens-protocol/domain/entities';
+import { IResettableTransactionGateway } from '@lens-protocol/domain/use-cases/authentication';
 import {
   IMetaTransactionNonceGateway,
   IPendingTransactionGateway,
@@ -15,11 +16,7 @@ import { assertNever, invariant } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
 import differenceBy from 'lodash/differenceBy.js';
 
-import {
-  TransactionSchema,
-  TransactionStorageSchema,
-  TransactionType,
-} from '../schemas/transactions';
+import { TransactionList, TransactionSchema, TransactionType } from '../schemas/transactions';
 import {
   ISerializableDataTransaction,
   ISerializableMetaTransaction,
@@ -101,12 +98,15 @@ function toTransactionSchema(
 }
 
 export class PendingTransactionGateway
-  implements IPendingTransactionGateway<AnyTransactionRequest>, IMetaTransactionNonceGateway
+  implements
+    IPendingTransactionGateway<AnyTransactionRequest>,
+    IMetaTransactionNonceGateway,
+    IResettableTransactionGateway
 {
   private cache?: ISerializableTransaction<AnyTransactionRequest>[];
 
   constructor(
-    private readonly storage: IStorage<TransactionStorageSchema>,
+    private readonly storage: IStorage<TransactionList>,
     private readonly transactionFactory: ISerializableTransactionFactory,
   ) {}
 
@@ -139,6 +139,10 @@ export class PendingTransactionGateway
   async remove(id: string): Promise<void> {
     const transactions = await this.getAll();
     await this.update(transactions.filter((tx) => tx.id !== id));
+  }
+
+  async reset(): Promise<void> {
+    void this.storage.reset();
   }
 
   async getAll(): Promise<readonly ISerializableTransaction<AnyTransactionRequest>[]> {

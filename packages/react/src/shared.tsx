@@ -28,7 +28,6 @@ import { CredentialsGateway } from './authentication/adapters/CredentialsGateway
 import { CredentialsStorage } from './authentication/adapters/CredentialsStorage';
 import { LogoutPresenter } from './authentication/adapters/LogoutPresenter';
 import { LensConfig } from './config';
-import { EnvironmentConfig } from './environments';
 import { IProfileCacheManager } from './profile/adapters/IProfileCacheManager';
 import { ProfileCacheManager } from './profile/infrastructure/ProfileCacheManager';
 import { PublicationCacheManager } from './publication/infrastructure/PublicationCacheManager';
@@ -99,7 +98,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   // common adapters
   const transactionFactory = new TransactionFactory(transactionObserver);
   const credentialsFactory = new CredentialsFactory(authApi);
-  const credentialsGateway = new CredentialsGateway(credentialsStorage);
+  const credentialsGateway = new CredentialsGateway(credentialsStorage, apolloClient);
   const profileCacheManager = new ProfileCacheManager(apolloClient);
   const publicationCacheManager = new PublicationCacheManager(apolloClient);
   const walletFactory = new WalletFactory(signerFactory, transactionFactory);
@@ -155,6 +154,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   const logout = new Logout(
     walletGateway,
     credentialsGateway,
+    transactionGateway,
     conversationsGateway,
     logoutPresenter,
   );
@@ -167,9 +167,9 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     accessTokenStorage,
     activeWallet,
     apolloClient,
+    config,
     credentialsFactory,
     credentialsGateway,
-    environment: config.environment,
     logger,
     logout,
     onChainRelayer,
@@ -193,9 +193,9 @@ export type SharedDependencies = {
   accessTokenStorage: AccessTokenStorage;
   activeWallet: ActiveWallet;
   apolloClient: SafeApolloClient;
+  config: LensConfig;
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
-  environment: EnvironmentConfig;
   logger: ILogger;
   logout: Logout;
   momokaRelayer: MomokaRelayer;

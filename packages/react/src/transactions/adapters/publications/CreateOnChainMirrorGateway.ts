@@ -47,7 +47,7 @@ export class CreateOnChainMirrorGateway
   async createDelegatedTransaction(
     request: CreateMirrorRequest,
   ): PromiseResult<NativeTransaction<CreateMirrorRequest>, BroadcastingError> {
-    const result = await this.broadcast(request);
+    const result = await this.relayWithProfileManager(request);
 
     if (result.isFailure()) return result;
 
@@ -55,7 +55,7 @@ export class CreateOnChainMirrorGateway
       chainType: ChainType.POLYGON,
       id: v4(),
       request,
-      indexingId: result.value.txId,
+      relayerTxId: result.value.txId,
       txHash: result.value.txHash,
     });
 
@@ -84,7 +84,7 @@ export class CreateOnChainMirrorGateway
     return this.createMirrorCallDetails(result);
   }
 
-  private async broadcast(
+  private async relayWithProfileManager(
     request: CreateMirrorRequest,
   ): PromiseResult<RelaySuccess, BroadcastingError> {
     const input = this.resolveOnchainMirrorRequest(request);

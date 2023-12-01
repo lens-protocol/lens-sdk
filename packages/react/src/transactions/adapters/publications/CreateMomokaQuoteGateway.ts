@@ -37,7 +37,7 @@ export class CreateMomokaQuoteGateway
   async createDelegatedTransaction(
     request: CreateQuoteRequest,
   ): PromiseResult<DataTransaction<CreateQuoteRequest>, BroadcastingError> {
-    const result = await this.broadcast(request);
+    const result = await this.relayWithProfileManager(request);
 
     if (result.isFailure()) return result;
 
@@ -62,7 +62,7 @@ export class CreateMomokaQuoteGateway
     });
   }
 
-  private async broadcast(
+  private async relayWithProfileManager(
     request: CreateQuoteRequest,
   ): PromiseResult<CreateMomokaPublicationResult, BroadcastingError> {
     const input = this.resolveMomokaQuoteRequest(request);

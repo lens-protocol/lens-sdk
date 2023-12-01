@@ -229,7 +229,10 @@ export type OpenActionArgs = {
  *
  * ```ts
  * const collect = async (publication: AnyPublication) => {
- *   const result = await execute({ publication });
+ *   const result = await execute({
+ *     publication,
+ *     sponsored: false,
+ *   });
  *
  *   if (result.isFailure()) {
  *     switch (result.error.name) {
