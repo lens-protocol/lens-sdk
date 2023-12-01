@@ -1,5 +1,15 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.21
+
+### Patch Changes
+
+- 9b0ad4a1a: **fix:** Added session revoke on logout + more logout improvements
+- Updated dependencies [2becf4650]
+- Updated dependencies [336c19f09]
+- Updated dependencies [9b0ad4a1a]
+  - @lens-protocol/domain@0.11.0-alpha.16
+
 ## 0.11.0-alpha.20
 
 ### Patch Changes
