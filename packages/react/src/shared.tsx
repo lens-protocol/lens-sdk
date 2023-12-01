@@ -27,7 +27,6 @@ import { CredentialsFactory } from './authentication/adapters/CredentialsFactory
 import { CredentialsGateway } from './authentication/adapters/CredentialsGateway';
 import { CredentialsStorage } from './authentication/adapters/CredentialsStorage';
 import { LogoutPresenter } from './authentication/adapters/LogoutPresenter';
-import { RevokeSessionGateway } from './authentication/adapters/RevokeSessionGateway';
 import { LensConfig } from './config';
 import { IProfileCacheManager } from './profile/adapters/IProfileCacheManager';
 import { ProfileCacheManager } from './profile/infrastructure/ProfileCacheManager';
@@ -99,7 +98,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   // common adapters
   const transactionFactory = new TransactionFactory(transactionObserver);
   const credentialsFactory = new CredentialsFactory(authApi);
-  const credentialsGateway = new CredentialsGateway(credentialsStorage);
+  const credentialsGateway = new CredentialsGateway(credentialsStorage, apolloClient);
   const profileCacheManager = new ProfileCacheManager(apolloClient);
   const publicationCacheManager = new PublicationCacheManager(apolloClient);
   const walletFactory = new WalletFactory(signerFactory, transactionFactory);
@@ -152,9 +151,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
 
   // logout
   const logoutPresenter = new LogoutPresenter();
-  const sessionGateway = new RevokeSessionGateway(apolloClient);
   const logout = new Logout(
-    sessionGateway,
     walletGateway,
     credentialsGateway,
     transactionGateway,

@@ -1,7 +1,7 @@
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { mockICredentials, mockWallet } from '../../../entities/__helpers__/mocks';
+import { mockWallet } from '../../../entities/__helpers__/mocks';
 import { ActiveWallet } from '../ActiveWallet';
 import {
   IConversationsGateway,
@@ -11,13 +11,11 @@ import {
   Logout,
   ILogoutPresenter,
   IResettableTransactionGateway,
-  IRevokeSessionGateway,
 } from '../Logout';
 
 const wallet = mockWallet();
 
 function setupTestScenario() {
-  const sessionGateway = mock<IRevokeSessionGateway>();
   const walletGateway = mock<IResettableWalletGateway>();
   const credentialsGateway = mock<IResettableCredentialsGateway>();
   const transactionGateway = mock<IResettableTransactionGateway>();
@@ -25,7 +23,6 @@ function setupTestScenario() {
   const presenter = mock<ILogoutPresenter>();
 
   const interactor = new Logout(
-    sessionGateway,
     walletGateway,
     credentialsGateway,
     transactionGateway,
@@ -34,7 +31,6 @@ function setupTestScenario() {
   );
 
   return {
-    sessionGateway,
     walletGateway,
     credentialsGateway,
     transactionGateway,
@@ -49,7 +45,6 @@ describe(`Given the "${Logout.name}" interactor`, () => {
 
   describe(`when "${Logout.prototype.execute.name}" is invoked`, () => {
     it(`should:
-        - revoke the session 
         - clear wallets from storage
         - clear DM conversations from storage
         - clear transactions from storage
@@ -60,7 +55,6 @@ describe(`Given the "${Logout.name}" interactor`, () => {
       when(activeWallet.requireActiveWallet).calledWith().mockResolvedValue(wallet);
 
       const {
-        sessionGateway,
         walletGateway,
         credentialsGateway,
         transactionGateway,
@@ -69,13 +63,8 @@ describe(`Given the "${Logout.name}" interactor`, () => {
         interactor,
       } = setupTestScenario();
 
-      const credentials = mockICredentials({ address: wallet.address });
-
-      when(credentialsGateway.getCredentials).calledWith().mockResolvedValue(credentials);
-
       await interactor.execute(LogoutReason.USER_INITIATED);
 
-      expect(sessionGateway.revoke).toHaveBeenCalled();
       expect(walletGateway.reset).toHaveBeenCalled();
       expect(conversationGateway.reset).toHaveBeenCalled();
       expect(transactionGateway.reset).toHaveBeenCalled();

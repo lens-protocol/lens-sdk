@@ -1,7 +1,3 @@
-import { never } from '@lens-protocol/shared-kernel';
-
-import { ICredentials } from '../../entities';
-
 /**
  * The reason for logging out
  */
@@ -10,16 +6,7 @@ export enum LogoutReason {
   USER_INITIATED = 'user-initiated',
 }
 
-export type RevokeSessionRequest = {
-  authorizationId: string;
-};
-
-export interface IRevokeSessionGateway {
-  revoke(request: RevokeSessionRequest): Promise<void>;
-}
-
 export interface IResettableCredentialsGateway {
-  getCredentials(): Promise<ICredentials | null>;
   invalidate(): Promise<void>;
 }
 
@@ -41,7 +28,6 @@ export interface ILogoutPresenter {
 
 export class Logout {
   constructor(
-    private sessionGateway: IRevokeSessionGateway,
     private walletGateway: IResettableWalletGateway,
     private credentialsGateway: IResettableCredentialsGateway,
     private transactionGateway: IResettableTransactionGateway,
@@ -50,13 +36,6 @@ export class Logout {
   ) {}
 
   async execute(reason: LogoutReason): Promise<void> {
-    const credentials = await this.credentialsGateway.getCredentials();
-
-    if (!credentials) {
-      never('User is not authenticated');
-    }
-
-    await this.sessionGateway.revoke({ authorizationId: credentials.authorizationId });
     await this.walletGateway.reset();
     await this.conversationsGateway.reset();
     await this.transactionGateway.reset();
