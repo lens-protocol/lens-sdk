@@ -43,7 +43,7 @@ function setupTestScenario({
 describe(`Given an instance of ${UpdateFollowPolicyGateway.name}`, () => {
   const request = mockUpdateFollowPolicyRequest();
 
-  describe(`when creating an ${UnsignedTransaction.name}<BlockProfilesRequest>`, () => {
+  describe(`when creating an ${UnsignedTransaction.name}<UpdateFollowPolicyRequest>`, () => {
     const wallet = mockWallet();
     const data = mockCreateSetFollowModuleTypedDataData();
 
