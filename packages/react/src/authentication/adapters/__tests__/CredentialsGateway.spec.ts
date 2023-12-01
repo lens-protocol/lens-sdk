@@ -1,3 +1,7 @@
+import {
+  mockLensApolloClient,
+  mockRevokeAuthenticationResponse,
+} from '@lens-protocol/api-bindings/mocks';
 import { mockStorage } from '@lens-protocol/storage/mocks';
 
 import { Credentials } from '../Credentials';
@@ -8,7 +12,15 @@ const credentials = mockCredentials();
 
 const setupGateway = () => {
   const storage = mockStorage<Credentials>();
-  return new CredentialsGateway(storage);
+  const authorizationId = credentials.authorizationId;
+  const apolloClient = mockLensApolloClient([
+    mockRevokeAuthenticationResponse({
+      request: {
+        authorizationId,
+      },
+    }),
+  ]);
+  return new CredentialsGateway(storage, apolloClient);
 };
 
 describe(`Given an instance of the ${CredentialsGateway.name}`, () => {
