@@ -90,6 +90,7 @@ export const UpdateFollowPolicyRequestSchema: z.ZodType<
   policy: FollowPolicyConfigSchema,
   kind: z.literal(TransactionKind.UPDATE_FOLLOW_POLICY),
   signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 export const SetProfileMetadataRequestSchema = z.object({

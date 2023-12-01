@@ -97,6 +97,7 @@ function UpdateFollowPolicyForm({ profile, currencies }: UpdateFollowPolicyFormP
           amount: fee,
           recipient,
         },
+        sponsored: formData.get('sponsored') === 'on',
       });
 
       return;
@@ -179,6 +180,17 @@ function UpdateFollowPolicyForm({ profile, currencies }: UpdateFollowPolicyFormP
           />
         </div>
       )}
+
+      <label>
+        <input
+          type="checkbox"
+          name="sponsored"
+          disabled={loading}
+          value="on"
+          defaultChecked={true}
+        />
+        Should use sponsored approach?
+      </label>
 
       <button disabled={followPolicy.type === selectedFollowPolicyType || loading} type="submit">
         <UpdateButtonText

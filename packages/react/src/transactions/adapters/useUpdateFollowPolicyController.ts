@@ -1,4 +1,5 @@
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   TransactionError,
   UserRejectedError,
@@ -8,7 +9,12 @@ import {
   UpdateFollowPolicy,
   UpdateFollowPolicyRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError, SignedOnChain } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  BroadcastingError,
+  DelegableSigning,
+  PaidTransaction,
+  SignedOnChain,
+} from '@lens-protocol/domain/use-cases/transactions';
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
@@ -23,6 +29,7 @@ export function useUpdateFollowPolicyController() {
     onChainRelayer,
     transactionFactory,
     transactionGateway,
+    providerFactory,
     transactionQueue,
   } = useSharedDependencies();
 
@@ -35,6 +42,7 @@ export function useUpdateFollowPolicyController() {
     | TransactionError
     | UserRejectedError
     | WalletConnectionError
+    | InsufficientGasError
   > => {
     validateUpdateFollowPolicyRequest(request);
 
@@ -45,11 +53,16 @@ export function useUpdateFollowPolicyController() {
       | TransactionError
       | UserRejectedError
       | WalletConnectionError
+      | InsufficientGasError
     >();
 
-    const gateway = new UpdateFollowPolicyGateway(apolloClient, transactionFactory);
+    const gateway = new UpdateFollowPolicyGateway(
+      providerFactory,
+      apolloClient,
+      transactionFactory,
+    );
 
-    const signedUpdate = new SignedOnChain(
+    const signedExecution = new SignedOnChain<UpdateFollowPolicyRequest>(
       activeWallet,
       transactionGateway,
       gateway,
@@ -58,12 +71,16 @@ export function useUpdateFollowPolicyController() {
       presenter,
     );
 
-    const updateFollowPolicy = new UpdateFollowPolicy(
-      signedUpdate,
+    const delegableExecution = new DelegableSigning(
+      signedExecution,
       gateway,
       transactionQueue,
       presenter,
     );
+
+    const paidExecution = new PaidTransaction(activeWallet, gateway, presenter, transactionQueue);
+
+    const updateFollowPolicy = new UpdateFollowPolicy(delegableExecution, paidExecution);
 
     await updateFollowPolicy.execute(request);
 
