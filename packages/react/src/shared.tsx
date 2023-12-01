@@ -28,7 +28,6 @@ import { CredentialsGateway } from './authentication/adapters/CredentialsGateway
 import { CredentialsStorage } from './authentication/adapters/CredentialsStorage';
 import { LogoutPresenter } from './authentication/adapters/LogoutPresenter';
 import { LensConfig } from './config';
-import { EnvironmentConfig } from './environments';
 import { IProfileCacheManager } from './profile/adapters/IProfileCacheManager';
 import { ProfileCacheManager } from './profile/infrastructure/ProfileCacheManager';
 import { PublicationCacheManager } from './publication/infrastructure/PublicationCacheManager';
@@ -167,9 +166,9 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     accessTokenStorage,
     activeWallet,
     apolloClient,
+    config,
     credentialsFactory,
     credentialsGateway,
-    environment: config.environment,
     logger,
     logout,
     onChainRelayer,
@@ -193,9 +192,9 @@ export type SharedDependencies = {
   accessTokenStorage: AccessTokenStorage;
   activeWallet: ActiveWallet;
   apolloClient: SafeApolloClient;
+  config: LensConfig;
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
-  environment: EnvironmentConfig;
   logger: ILogger;
   logout: Logout;
   momokaRelayer: MomokaRelayer;

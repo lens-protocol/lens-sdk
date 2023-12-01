@@ -23,6 +23,6 @@ export const production = new Environment(
 
 export const development = new Environment(
   'development',
-  'https://api-v2-mumbai-live.lens.dev/graphql',
+  'https://api-v2-mumbai-live.lens.dev',
   GatedEnvironments.development,
 );
