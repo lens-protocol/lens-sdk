@@ -36,7 +36,3 @@ mutation WalletAuthenticationToProfileAuthentication(
     refreshToken
   }
 }
-
-mutation RevokeAuthentication($request: RevokeAuthenticationRequest!) {
-  revokeAuthentication(request: $request)
-}

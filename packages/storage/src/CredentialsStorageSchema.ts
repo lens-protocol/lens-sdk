@@ -20,6 +20,13 @@ export class CredentialsStorageSchema extends BaseStorageSchema<PersistedCredent
   protected override migrate(
     storageItem: IStorageItem<PersistedCredentials>,
   ): PersistedCredentials {
+    const storageVersion = storageItem.metadata.version;
+
+    if (this.version > storageVersion) {
+      return this.parseData({
+        refreshToken: '',
+      });
+    }
     return this.parseData(storageItem.data);
   }
 }

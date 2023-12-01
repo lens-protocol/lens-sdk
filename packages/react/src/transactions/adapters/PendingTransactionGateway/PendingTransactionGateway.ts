@@ -5,7 +5,6 @@ import {
   TransactionKind,
   DataTransaction,
 } from '@lens-protocol/domain/entities';
-import { IResettableTransactionGateway } from '@lens-protocol/domain/use-cases/authentication';
 import {
   IMetaTransactionNonceGateway,
   IPendingTransactionGateway,
@@ -98,10 +97,7 @@ function toTransactionSchema(
 }
 
 export class PendingTransactionGateway
-  implements
-    IPendingTransactionGateway<AnyTransactionRequest>,
-    IMetaTransactionNonceGateway,
-    IResettableTransactionGateway
+  implements IPendingTransactionGateway<AnyTransactionRequest>, IMetaTransactionNonceGateway
 {
   private cache?: ISerializableTransaction<AnyTransactionRequest>[];
 
@@ -139,10 +135,6 @@ export class PendingTransactionGateway
   async remove(id: string): Promise<void> {
     const transactions = await this.getAll();
     await this.update(transactions.filter((tx) => tx.id !== id));
-  }
-
-  async reset(): Promise<void> {
-    void this.storage.reset();
   }
 
   async getAll(): Promise<readonly ISerializableTransaction<AnyTransactionRequest>[]> {

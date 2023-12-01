@@ -14,10 +14,6 @@ export interface IResettableWalletGateway {
   reset(): Promise<void>;
 }
 
-export interface IResettableTransactionGateway {
-  reset(): Promise<void>;
-}
-
 export interface IConversationsGateway {
   reset(): Promise<void>;
 }
@@ -30,15 +26,15 @@ export class Logout {
   constructor(
     private walletGateway: IResettableWalletGateway,
     private credentialsGateway: IResettableCredentialsGateway,
-    private transactionGateway: IResettableTransactionGateway,
     private conversationsGateway: IConversationsGateway,
     private presenter: ILogoutPresenter,
   ) {}
 
   async execute(reason: LogoutReason): Promise<void> {
+    // TODO reset transactions gateway storage
     await this.walletGateway.reset();
     await this.conversationsGateway.reset();
-    await this.transactionGateway.reset();
+
     await this.credentialsGateway.invalidate();
 
     this.presenter.logout(reason);
