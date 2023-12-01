@@ -120,7 +120,7 @@ export type UseSetProfileMetadataArgs = {
  *     metadataURI: uri,
  *   });
  *
- * if (result.isFailure()) {
+ *   if (result.isFailure()) {
  *     // handle failure scenarios
  *     return;
  *   }
