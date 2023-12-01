@@ -10,6 +10,7 @@ import {
   LogoutReason,
   Logout,
   ILogoutPresenter,
+  IResettableTransactionGateway,
 } from '../Logout';
 
 const wallet = mockWallet();
@@ -17,14 +18,22 @@ const wallet = mockWallet();
 function setupTestScenario() {
   const walletGateway = mock<IResettableWalletGateway>();
   const credentialsGateway = mock<IResettableCredentialsGateway>();
-  const presenter = mock<ILogoutPresenter>();
+  const transactionGateway = mock<IResettableTransactionGateway>();
   const conversationGateway = mock<IConversationsGateway>();
+  const presenter = mock<ILogoutPresenter>();
 
-  const interactor = new Logout(walletGateway, credentialsGateway, conversationGateway, presenter);
+  const interactor = new Logout(
+    walletGateway,
+    credentialsGateway,
+    transactionGateway,
+    conversationGateway,
+    presenter,
+  );
 
   return {
     walletGateway,
     credentialsGateway,
+    transactionGateway,
     conversationGateway,
     presenter,
     interactor,
@@ -38,19 +47,27 @@ describe(`Given the "${Logout.name}" interactor`, () => {
     it(`should:
         - clear wallets from storage
         - clear DM conversations from storage
+        - clear transactions from storage
         - clear credentials from storage
         - present the logout reason`, async () => {
       const activeWallet = mock<ActiveWallet>();
 
       when(activeWallet.requireActiveWallet).calledWith().mockResolvedValue(wallet);
 
-      const { interactor, credentialsGateway, conversationGateway, walletGateway, presenter } =
-        setupTestScenario();
+      const {
+        walletGateway,
+        credentialsGateway,
+        transactionGateway,
+        conversationGateway,
+        presenter,
+        interactor,
+      } = setupTestScenario();
 
       await interactor.execute(LogoutReason.USER_INITIATED);
 
-      expect(conversationGateway.reset).toHaveBeenCalled();
       expect(walletGateway.reset).toHaveBeenCalled();
+      expect(conversationGateway.reset).toHaveBeenCalled();
+      expect(transactionGateway.reset).toHaveBeenCalled();
       expect(credentialsGateway.invalidate).toHaveBeenCalled();
       expect(presenter.logout).toHaveBeenCalledWith(reason);
     });

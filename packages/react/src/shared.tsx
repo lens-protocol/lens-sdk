@@ -98,7 +98,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   // common adapters
   const transactionFactory = new TransactionFactory(transactionObserver);
   const credentialsFactory = new CredentialsFactory(authApi);
-  const credentialsGateway = new CredentialsGateway(credentialsStorage);
+  const credentialsGateway = new CredentialsGateway(credentialsStorage, apolloClient);
   const profileCacheManager = new ProfileCacheManager(apolloClient);
   const publicationCacheManager = new PublicationCacheManager(apolloClient);
   const walletFactory = new WalletFactory(signerFactory, transactionFactory);
@@ -154,6 +154,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   const logout = new Logout(
     walletGateway,
     credentialsGateway,
+    transactionGateway,
     conversationsGateway,
     logoutPresenter,
   );

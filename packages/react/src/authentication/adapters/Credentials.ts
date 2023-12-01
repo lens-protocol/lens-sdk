@@ -35,18 +35,21 @@ const TOKEN_EXP_THRESHOLD = DateUtils.secondsToMs(3);
 export class Credentials implements ICredentials {
   readonly address: EvmAddress;
   readonly profileId?: ProfileId;
+  readonly authorizationId: string;
 
   constructor(readonly accessToken: string | null, readonly refreshToken: string) {
     const decodedRefreshToken = jwtDecode(refreshToken);
 
     if (isWalletJwtContent(decodedRefreshToken)) {
       this.address = decodedRefreshToken.id;
+      this.authorizationId = decodedRefreshToken.authorizationId;
       return;
     }
 
     if (isProfileJwtContent(decodedRefreshToken)) {
       this.address = decodedRefreshToken.evmAddress;
       this.profileId = decodedRefreshToken.id;
+      this.authorizationId = decodedRefreshToken.authorizationId;
       return;
     }
 
