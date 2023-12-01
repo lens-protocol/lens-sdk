@@ -52,4 +52,24 @@ describe(`Given the "${poll.name}" helper`, () => {
       }
     });
   });
+
+  describe(`when the fn throws`, () => {
+    it(`should throw the same error`, async () => {
+      const mockApi = async () => {
+        throw new Error('Some error');
+      };
+
+      const result = poll({
+        fn: () => mockApi(),
+        validate: (r: { indexed: boolean }) => {
+          return r && r.indexed;
+        },
+        onMaxAttempts,
+        interval: 1,
+        maxAttempts: 3,
+      });
+
+      await expect(result).rejects.toThrow('Some error');
+    });
+  });
 });

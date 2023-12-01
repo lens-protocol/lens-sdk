@@ -18,6 +18,7 @@ async function main() {
     return;
   }
 
+  console.log(`Waiting for the transaction to be indexed...`);
   await client.transaction.waitUntilComplete({ forTxId: data.txId });
 }
 

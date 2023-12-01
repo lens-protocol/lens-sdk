@@ -22,15 +22,19 @@ export async function poll<T>({
     resolve: (value?: T | PromiseLike<T>) => void,
     reject: (reason?: unknown) => void,
   ) => {
-    const result = await fn();
-    attempts++;
+    try {
+      const result = await fn();
+      attempts++;
 
-    if (validate(result)) {
-      return resolve(result);
-    } else if (maxAttempts && attempts === maxAttempts) {
-      return reject(onMaxAttempts());
-    } else {
-      setTimeout(executePoll, interval, resolve, reject);
+      if (validate(result)) {
+        return resolve(result);
+      } else if (maxAttempts && attempts === maxAttempts) {
+        return reject(onMaxAttempts());
+      } else {
+        setTimeout(executePoll, interval, resolve, reject);
+      }
+    } catch (e) {
+      return reject(e);
     }
   };
 
