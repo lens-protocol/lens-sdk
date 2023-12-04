@@ -36,6 +36,7 @@ describe(`when testing the "validateUpdateProfileManagersRequest"`, () => {
       validateUpdateProfileManagersRequest({
         kind: TransactionKind.UPDATE_PROFILE_MANAGERS,
         profileId: mockProfileId(),
+        sponsored: true,
       }),
     ).toThrowErrorMatchingInlineSnapshot(`
         "fix the following issues
