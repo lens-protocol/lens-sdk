@@ -193,7 +193,7 @@ export function useUpdateFollowPolicy(): UseDeferredTask<
       kind: TransactionKind.UPDATE_FOLLOW_POLICY,
       policy: args.followPolicy,
       signless: session.profile.signless,
-      sponsored: args.sponsored ?? false,
+      sponsored: args.sponsored ?? true,
     });
   });
 }
