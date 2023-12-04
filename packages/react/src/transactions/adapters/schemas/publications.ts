@@ -108,10 +108,8 @@ export const CreatePostRequestSchema: z.ZodType<CreatePostRequest, z.ZodTypeDef,
     signless: z.boolean(),
     sponsored: z.boolean(),
     metadata: UriSchema,
-    reference: ReferencePolicyConfigSchema.optional(),
-    actions: OpenActionConfigSchema.array()
-      .min(1, 'You must provide at least one open action')
-      .optional(),
+    reference: ReferencePolicyConfigSchema.catch({ type: ReferencePolicyType.ANYONE }),
+    actions: OpenActionConfigSchema.array().catch([]),
   });
 
 export const CreateCommentRequestSchema: z.ZodType<
@@ -124,10 +122,8 @@ export const CreateCommentRequestSchema: z.ZodType<
   sponsored: z.boolean(),
   metadata: UriSchema,
   commentOn: PublicationIdSchema,
-  reference: ReferencePolicyConfigSchema.optional(),
-  actions: OpenActionConfigSchema.array()
-    .min(1, 'You must provide at least one open action')
-    .optional(),
+  reference: ReferencePolicyConfigSchema.catch({ type: ReferencePolicyType.ANYONE }),
+  actions: OpenActionConfigSchema.array().catch([]),
 });
 
 export const CreateQuoteRequestSchema: z.ZodType<CreateQuoteRequest, z.ZodTypeDef, UnknownObject> =
@@ -137,10 +133,8 @@ export const CreateQuoteRequestSchema: z.ZodType<CreateQuoteRequest, z.ZodTypeDe
     sponsored: z.boolean(),
     metadata: UriSchema,
     quoteOn: PublicationIdSchema,
-    reference: ReferencePolicyConfigSchema.optional(),
-    actions: OpenActionConfigSchema.array()
-      .min(1, 'You must provide at least one open action')
-      .optional(),
+    reference: ReferencePolicyConfigSchema.catch({ type: ReferencePolicyType.ANYONE }),
+    actions: OpenActionConfigSchema.array().catch([]),
   });
 
 export const CreateMirrorRequestSchema: z.ZodType<

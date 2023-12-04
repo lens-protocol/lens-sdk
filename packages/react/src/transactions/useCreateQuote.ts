@@ -41,7 +41,7 @@ export type CreateQuoteArgs = {
   /**
    * The Open Actions associated with the publication.
    *
-   * If none provided the quote will be automatically hosted on Momoka.
+   * @defaultValue empty, no open actions
    */
   actions?: OpenActionConfig[];
   /**
@@ -426,6 +426,17 @@ export type CreateQuoteArgs = {
  *  metadata: uri
  * });
  * ```
+ *
+ * ## Momoka quotes
+ *
+ * For a quote to be hosted on Momoka it must meet the following criteria:
+ * - it must be a quote of a Momoka publication
+ * - reference policy `ANYONE` (which is also the default value in case it's not specified)
+ * - no open actions
+ * - sponsored by the Lens API (which is also the default value in case it's not specified)
+ *
+ * If the quote does not meet the above criteria, it will be hosted on-chain.
+ *
  * @category Publications
  * @group Hooks
  */

@@ -36,7 +36,7 @@ export type CreatePostArgs = {
   /**
    * The Open Actions associated with the publication.
    *
-   * If none provided the post will be automatically hosted on Momoka.
+   * @defaultValue empty, no open actions
    */
   actions?: OpenActionConfig[];
   /**
@@ -258,10 +258,6 @@ export type CreatePostArgs = {
  *
  * Contextually to the post creation you can configure the reference policy.
  *
- * A post with reference policy other than `ANYONE` will be hosted on-chain.
- * If the post has reference policy `ANYONE` (which is also the default value) and does not have
- * any open actions, it will be hosted on Momoka.
- *
  * No one can comment, quote, or mirror the post:
  * ```tsx
  * const result = await execute({
@@ -412,6 +408,15 @@ export type CreatePostArgs = {
  * something that builder will face when deploying their app to production using the Production Lens API.
  *
  * It just requires the app to apply for whitelisting. See https://docs.lens.xyz/docs/gasless-and-signless#whitelisting-your-app.
+ *
+ * ## Momoka posts
+ *
+ * For a post to be hosted on Momoka it must meet the following criteria:
+ * - reference policy `ANYONE` (which is also the default value in case it's not specified)
+ * - no open actions
+ * - sponsored by the Lens API (which is also the default value in case it's not specified)
+ *
+ * If the post does not meet the above criteria, it will be hosted on-chain.
  *
  * ## Upgrading from v1
  *

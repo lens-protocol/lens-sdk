@@ -5,7 +5,7 @@ import { DelegableSigning } from '../transactions/DelegableSigning';
 import { PaidTransaction } from '../transactions/PaidTransaction';
 import { SponsorshipReady } from '../transactions/SponsorshipReady';
 import { OpenActionConfig } from './OpenActionConfig';
-import { ReferencePolicyConfig } from './ReferencePolicyConfig';
+import { ReferencePolicyConfig, ReferencePolicyType } from './ReferencePolicyConfig';
 
 export type CreateQuoteRequest = {
   /**
@@ -27,11 +27,11 @@ export type CreateQuoteRequest = {
   /**
    * The Open Actions associated with the publication.
    */
-  actions?: OpenActionConfig[];
+  actions: OpenActionConfig[];
   /**
    * The post reference policy.
    */
-  reference?: ReferencePolicyConfig;
+  reference: ReferencePolicyConfig;
   /**
    * Whether the transaction costs should be sponsored by the Lens API or not.
    */
@@ -53,11 +53,12 @@ export class CreateQuote extends SponsorshipReady<CreateQuoteRequest> {
 
   protected override async sponsored(request: CreateQuoteRequest): Promise<void> {
     if (
-      ['actions', 'reference'].some((key) => key in request) ||
-      !isMomokaPublicationId(request.quoteOn)
+      request.reference.type === ReferencePolicyType.ANYONE &&
+      request.actions.length === 0 &&
+      isMomokaPublicationId(request.quoteOn)
     ) {
-      return this.sponsoredOnChain.execute(request);
+      return this.sponsoredOnMomoka.execute(request);
     }
-    return this.sponsoredOnMomoka.execute(request);
+    return this.sponsoredOnChain.execute(request);
   }
 }
