@@ -10,6 +10,5 @@ export * from './UnfollowProfile';
 export * from './UnfollowProfile';
 export * from './UnlinkHandle';
 export * from './UpdateFollowPolicy';
-export * from './UpdateFollowPolicy';
 export * from './UpdateProfileManagers';
 export * from './UnblockProfiles';

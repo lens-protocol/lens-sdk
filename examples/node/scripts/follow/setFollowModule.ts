@@ -46,6 +46,7 @@ async function main() {
     throw new Error('Failed to set follow module');
   }
 
+  console.log(`Waiting for the transaction to be indexed...`);
   await client.transaction.waitUntilComplete({ forTxId: followModuleResultValue.txId });
 }
 

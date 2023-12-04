@@ -39,6 +39,8 @@
  * | yarn            | `yarn add react-native-mmkv` |
  * | pnpm            | `pnpm add react-native-mmkv` |
  *
+ * Create the `LensConfig` object:
+ *
  * ```ts
  * import { LensConfig, development } from '@lens-protocol/react-web';
  * import { storage } from '@lens-protocol/react-web/storage/mmkv';

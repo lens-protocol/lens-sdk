@@ -1,11 +1,17 @@
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   TransactionError,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { BlockProfiles, BlockProfilesRequest } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError, SignedOnChain } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  BroadcastingError,
+  DelegableSigning,
+  PaidTransaction,
+  SignedOnChain,
+} from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
@@ -18,36 +24,47 @@ export function useBlockProfilesController() {
     transactionGateway,
     transactionQueue,
     transactionFactory,
+    providerFactory,
     onChainRelayer,
   } = useSharedDependencies();
 
-  const presenter = new TransactionResultPresenter<
-    BlockProfilesRequest,
-    | BroadcastingError
-    | PendingSigningRequestError
-    | UserRejectedError
-    | WalletConnectionError
-    | TransactionError
-  >();
-
-  const gateway = new BlockProfilesGateway(apolloClient, transactionFactory);
-
-  const signedBlockProfiles = new SignedOnChain<BlockProfilesRequest>(
-    activeWallet,
-    transactionGateway,
-    gateway,
-    onChainRelayer,
-    transactionQueue,
-    presenter,
-  );
-
   return async (request: BlockProfilesRequest) => {
-    const blockProfile = new BlockProfiles(
-      signedBlockProfiles,
+    const presenter = new TransactionResultPresenter<
+      BlockProfilesRequest,
+      | BroadcastingError
+      | InsufficientGasError
+      | PendingSigningRequestError
+      | TransactionError
+      | UserRejectedError
+      | WalletConnectionError
+    >();
+
+    const gateway = new BlockProfilesGateway(providerFactory, apolloClient, transactionFactory);
+
+    const signedExecution = new SignedOnChain<BlockProfilesRequest>(
+      activeWallet,
+      transactionGateway,
+      gateway,
+      onChainRelayer,
+      transactionQueue,
+      presenter,
+    );
+
+    const delegableExecution = new DelegableSigning<BlockProfilesRequest>(
+      signedExecution,
       gateway,
       transactionQueue,
       presenter,
     );
+
+    const paidExecution = new PaidTransaction<BlockProfilesRequest>(
+      activeWallet,
+      gateway,
+      presenter,
+      transactionQueue,
+    );
+
+    const blockProfile = new BlockProfiles(delegableExecution, paidExecution);
 
     await blockProfile.execute(request);
 

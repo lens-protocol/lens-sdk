@@ -19,8 +19,12 @@ export class CredentialsFactory implements ICredentialsIssuer, ICredentialsRenew
     if (!credentials.canRefresh()) {
       return failure(new CredentialsExpiredError());
     }
-    const newCredentials = await this.auth.refreshCredentials(credentials.refreshToken);
-    return success(newCredentials);
+    try {
+      const newCredentials = await this.auth.refreshCredentials(credentials.refreshToken);
+      return success(newCredentials);
+    } catch (error) {
+      return failure(new CredentialsExpiredError());
+    }
   }
 
   async issueCredentials(

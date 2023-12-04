@@ -50,7 +50,7 @@ export type UseSetProfileMetadataArgs = {
  * ```tsx
  * const { execute, error, loading } = useSetProfileMetadata();
  *
- * const update = (name: string, bio: string) => {
+ * const update = async (name: string, bio: string) => {
  *   // create the desired metadata via the `@lens-protocol/metadata` package helpers
  *   const metadata = profile({ name, bio });
  *
@@ -71,8 +71,8 @@ export type UseSetProfileMetadataArgs = {
  * You can handle possible failure scenarios by checking the `result` value.
  *
  * ```tsx
- * const update = (name: string, bio: string) => {
- *   // first part is the same as in the initial example
+ * const update = async (name: string, bio: string) => {
+ *   // the first part is the same as in the initial example
  *
  *   // invoke the `execute` function
  *   const result = await execute({
@@ -112,8 +112,8 @@ export type UseSetProfileMetadataArgs = {
  * In case of successful submission, the `result` value can be used to wait for the profile metadata to be fully processed.
  *
  * ```tsx
- * const update = (name: string, bio: string) => {
- *   // first part is the same as in the initial example
+ * const update = async (name: string, bio: string) => {
+ *   // the first part is the same as in the initial example
  *
  *   // invoke the `execute` function
  *   const result = await execute({
@@ -137,18 +137,18 @@ export type UseSetProfileMetadataArgs = {
  * };
  * ```
  *
- * ## Self-funded Follow
+ * ## Self-funded approach
  *
  * It just takes a single parameter to disable the sponsorship of the transaction gas costs.
  *
  * ```ts
- * const update = (name: string, bio: string) => {
- * // first part is the same as in the initial example
+ * const update = async (name: string, bio: string) => {
+ *   // the first part is the same as in the initial example
  *
  *   // invoke the `execute` function
  *   const result = await execute({
  *     metadataURI: uri,
- *     sponsored: false
+ *     sponsored: false // <--- this is the only difference
  *   });
  *
  *   if (result.isFailure()) {
@@ -169,7 +169,7 @@ export type UseSetProfileMetadataArgs = {
  * error happens only with self-funded transactions and it means that the wallet does not
  * have enough funds to pay for the transaction gas costs.
  *
- * ## Self-funded Fallback
+ * ## Self-funded fallback
  *
  * If for some reason the Lens API cannot sponsor the transaction, the hook will fail with a {@link BroadcastingError} with one of the following reasons:
  * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
@@ -179,8 +179,8 @@ export type UseSetProfileMetadataArgs = {
  * In those cases you can retry the transaction as self-funded like in the following example:
  *
  * ```ts
- * const update = (name: string, bio: string) => {
- *   // first part is the same as in the initial example
+ * const update = async (name: string, bio: string) => {
+ *   // the first part is the same as in the initial example
  *
  *   // sponsored attempt
  *   const sponsoredResult = await execute({

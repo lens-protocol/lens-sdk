@@ -16,6 +16,7 @@ describe(`when testing the "validateUpdateFollowPolicyRequest"`, () => {
           type: FollowPolicyType.CHARGE,
           amount: 42,
         },
+        sponsored: true,
         profileId: mockProfileId(),
         signless: true,
       }),

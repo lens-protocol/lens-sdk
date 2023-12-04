@@ -1,5 +1,16 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.16
+
+### Minor Changes
+
+- 2becf4650: **feat:** adds support for self-funded `useBlockProfiles`
+- 336c19f09: **feat:** adds support for self-funded `useUpdateFollowPolicy`
+
+### Patch Changes
+
+- 9b0ad4a1a: **fix:** Added session revoke on logout + more logout improvements
+
 ## 0.11.0-alpha.15
 
 ### Patch Changes

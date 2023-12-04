@@ -157,6 +157,9 @@ importers:
       '@irys/sdk':
         specifier: ^0.0.4
         version: 0.0.4
+      '@lens-protocol/client':
+        specifier: workspace:*
+        version: link:../../packages/client
       '@lens-protocol/metadata':
         specifier: ^1.0.5
         version: 1.0.5(zod@3.22.4)
@@ -934,9 +937,6 @@ importers:
       '@lens-protocol/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@lens-protocol/metadata':
-        specifier: ^1.0.5
-        version: 1.0.5(zod@3.22.4)
       '@lens-protocol/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
@@ -1043,9 +1043,6 @@ importers:
       '@lens-protocol/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@lens-protocol/metadata':
-        specifier: ^1.0.5
-        version: 1.0.5(zod@3.22.4)
       '@lens-protocol/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
@@ -1285,9 +1282,6 @@ importers:
       '@lens-protocol/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@lens-protocol/metadata':
-        specifier: ^1.0.5
-        version: 1.0.5(zod@3.22.4)
       '@lens-protocol/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config

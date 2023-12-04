@@ -26,6 +26,11 @@ const hooks = [
     description: `Invite wallets to Lens and check the invite status.`,
     path: '/misc/useInviteWallets',
   },
+  {
+    label: 'LensClient interoperability',
+    description: `Test ReactHooks SDK and Client SDK interoperability.`,
+    path: '/misc/lensClientInteroperability',
+  },
 ];
 
 export function MiscPage() {

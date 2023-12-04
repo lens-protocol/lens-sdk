@@ -4,22 +4,21 @@ import { setupWallet } from '../shared/setupWallet';
 async function main() {
   const wallet = setupWallet();
   const client = await getAuthenticatedClient(wallet);
-  const profileId = await client.authentication.getProfileId();
+  const authorizationId = await client.authentication.getAuthorizationId();
 
-  const result = await client.authentication.fetchAll();
-  const value = result.unwrap();
+  if (!authorizationId) {
+    throw new Error(`Not authenticated`);
+  }
 
-  console.log(`All active sessions for ${profileId}: `, value.items);
-
-  // revoke the oldest session
   await client.authentication.revoke({
-    authorizationId: value.items[value.items.length - 1].authorizationId,
+    authorizationId,
   });
 
-  const after = await client.authentication.fetchAll();
+  // fetch current session
+  const after = await client.authentication.fetch();
   const afterValue = after.unwrap();
 
-  console.log(`All active sessions: `, afterValue.items);
+  console.log(`Active session: `, afterValue);
 }
 
 main();

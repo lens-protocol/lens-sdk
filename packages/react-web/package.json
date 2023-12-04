@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/react-web",
-  "version": "2.0.0-alpha.23",
+  "version": "2.0.0-alpha.24",
   "description": "Lens Protocol SDK for React web applications",
   "main": "dist/lens-protocol-react-web.cjs.js",
   "module": "dist/lens-protocol-react-web.esm.js",
@@ -52,7 +52,6 @@
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
     "@lens-protocol/eslint-config": "workspace:*",
-    "@lens-protocol/metadata": "^1.0.5",
     "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
     "@testing-library/react": "^13.4.0",
@@ -73,7 +72,6 @@
     "typescript": "5.2.2"
   },
   "peerDependencies": {
-    "@lens-protocol/metadata": "^1.0.0",
     "@types/react": "^18.0.0",
     "ethers": "^5.7.2",
     "react": "^18.2.0"
