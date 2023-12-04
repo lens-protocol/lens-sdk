@@ -24,7 +24,7 @@ function evaluate<Input, Output>(result: z.SafeParseReturnType<Input, Output>): 
 }
 
 export function createCommentRequest(
-  input: RecursiveUnbrand<Omit<CreateCommentRequest, 'kind'>>,
+  input: Partial<RecursiveUnbrand<Omit<CreateCommentRequest, 'kind'>>>,
 ): CreateCommentRequest {
   return evaluate(
     CreateCommentRequestSchema.safeParse({
@@ -35,7 +35,7 @@ export function createCommentRequest(
 }
 
 export function createPostRequest(
-  input: RecursiveUnbrand<Omit<CreatePostRequest, 'kind'>>,
+  input: Partial<RecursiveUnbrand<Omit<CreatePostRequest, 'kind'>>>,
 ): CreatePostRequest {
   return evaluate(
     CreatePostRequestSchema.safeParse({
@@ -57,7 +57,7 @@ export function createMirrorRequest(
 }
 
 export function createQuoteRequest(
-  input: RecursiveUnbrand<Omit<CreateQuoteRequest, 'kind'>>,
+  input: Partial<RecursiveUnbrand<Omit<CreateQuoteRequest, 'kind'>>>,
 ): CreateQuoteRequest {
   return evaluate(
     CreateQuoteRequestSchema.safeParse({
