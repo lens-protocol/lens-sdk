@@ -1,5 +1,6 @@
 import { Profile } from '@lens-protocol/api-bindings';
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   TransactionKind,
   UserRejectedError,
@@ -22,6 +23,19 @@ export type UnblockProfileArgs = {
    * The profiles to unblock
    */
   profiles: Profile[];
+  /**
+   * Whether the transaction costs should be sponsored by the Lens API or
+   * should be paid by the authenticated wallet.
+   *
+   * There are scenarios where the sponsorship will be denied regardless of this value.
+   * See {@link BroadcastingError} with:
+   * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
+   * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
+   * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
+   *
+   * @defaultValue true, the request will be attempted to be sponsored by the Lens API.
+   */
+  sponsored?: boolean;
 };
 
 export type UnblockOperation = UseDeferredTask<
@@ -29,6 +43,7 @@ export type UnblockOperation = UseDeferredTask<
   | BroadcastingError
   | InsufficientAllowanceError
   | InsufficientFundsError
+  | InsufficientGasError
   | PendingSigningRequestError
   | UserRejectedError
   | WalletConnectionError,
@@ -69,7 +84,7 @@ export function useUnblockProfiles(): UnblockOperation {
   const { data: session } = useSession();
   const unblockProfile = useUnblockProfilesController();
 
-  return useDeferredTask(async ({ profiles }: UnblockProfileArgs) => {
+  return useDeferredTask(async ({ profiles, sponsored }: UnblockProfileArgs) => {
     invariant(
       session?.type === SessionType.WithProfile,
       'You must be authenticated with a profile to unblock a profile. Use `useLogin` hook to authenticate.',
@@ -79,6 +94,7 @@ export function useUnblockProfiles(): UnblockOperation {
       profileIds: profiles.map((profile) => profile.id),
       kind: TransactionKind.UNBLOCK_PROFILE,
       signless: session.profile.signless,
+      sponsored: sponsored ?? true,
     });
   });
 }

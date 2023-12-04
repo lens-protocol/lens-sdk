@@ -118,6 +118,7 @@ export const UnblockProfilesRequestSchema = z.object({
   profileIds: ProfileIdSchema.array().min(1),
   kind: z.literal(TransactionKind.UNBLOCK_PROFILE),
   signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 export const ClaimHandleRequestSchema = z.union([
