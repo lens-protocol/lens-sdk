@@ -14,7 +14,6 @@
     "tsc": "tsc --noEmit",
     "typechain": "typechain --target ethers-v5 --out-dir ./contracts './abi/*.json'"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {

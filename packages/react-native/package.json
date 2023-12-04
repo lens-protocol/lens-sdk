@@ -26,9 +26,15 @@
     "storage"
   ],
   "keywords": [
-    "react-native",
+    "lens-api",
+    "lens-protocol-sdk",
     "lens-protocol",
-    "lens-protocol-sdk"
+    "lens",
+    "react-native",
+    "sdk",
+    "social",
+    "web3-social",
+    "web3"
   ],
   "scripts": {
     "build": "preconstruct build",
