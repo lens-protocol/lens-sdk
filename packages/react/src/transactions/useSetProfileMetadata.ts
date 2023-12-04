@@ -143,7 +143,7 @@ export type UseSetProfileMetadataArgs = {
  *
  * ```ts
  * const update = (name: string, bio: string) => {
- *   // first part is the same as in the initial example
+ * // first part is the same as in the initial example
  *
  *   // invoke the `execute` function
  *   const result = await execute({
