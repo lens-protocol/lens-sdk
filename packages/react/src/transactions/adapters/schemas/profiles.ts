@@ -48,6 +48,7 @@ export const UpdateProfileManagersRequestSchema = z
     add: EvmAddressSchema.array().min(1).optional(),
     remove: EvmAddressSchema.array().min(1).optional(),
     kind: z.literal(TransactionKind.UPDATE_PROFILE_MANAGERS),
+    sponsored: z.boolean(),
   })
   .superRefine((val, ctx): val is UpdateProfileManagersRequest => {
     if (['add', 'remove', 'approveSignless'].every((key) => !(key in val))) {
