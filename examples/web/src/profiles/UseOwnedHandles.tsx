@@ -24,7 +24,7 @@ function LinkHandleButton({ handle }: LinkHandleButtonProps) {
   const linkHandle = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    await execute({ handle, sponsored: formData.get('sponsored') === 'on'  });
+    await execute({ handle, sponsored: formData.get('sponsored') === 'on' });
   };
 
   if (error) {
