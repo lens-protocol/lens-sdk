@@ -1,10 +1,16 @@
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { LinkHandleRequest, LinkHandle } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError, SignedOnChain } from '@lens-protocol/domain/use-cases/transactions';
+import { LinkHandle, LinkHandleRequest } from '@lens-protocol/domain/use-cases/profile';
+import {
+  BroadcastingError,
+  DelegableSigning,
+  PaidTransaction,
+  SignedOnChain,
+} from '@lens-protocol/domain/use-cases/transactions';
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
@@ -21,23 +27,32 @@ export function useLinkHandleController() {
     transactionFactory,
     transactionGateway,
     transactionQueue,
+    providerFactory,
   } = useSharedDependencies();
 
   return async (
     request: LinkHandleRequest,
   ): PromiseResult<
     AsyncTransactionResult<void>,
-    BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
+    | BroadcastingError
+    | InsufficientGasError
+    | PendingSigningRequestError
+    | UserRejectedError
+    | WalletConnectionError
   > => {
     validateLinkHandleRequest(request);
 
     const presenter = new TransactionResultPresenter<
       LinkHandleRequest,
-      BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
+      | BroadcastingError
+      | InsufficientGasError
+      | PendingSigningRequestError
+      | UserRejectedError
+      | WalletConnectionError
     >();
-    const gateway = new LinkHandleGateway(apolloClient, transactionFactory);
+    const gateway = new LinkHandleGateway(providerFactory, apolloClient, transactionFactory);
 
-    const signedLink = new SignedOnChain(
+    const signedExecution = new SignedOnChain(
       activeWallet,
       transactionGateway,
       gateway,
@@ -46,7 +61,21 @@ export function useLinkHandleController() {
       presenter,
     );
 
-    const linkHandle = new LinkHandle(signedLink, gateway, transactionQueue, presenter);
+    const delegableExecution = new DelegableSigning<LinkHandleRequest>(
+      signedExecution,
+      gateway,
+      transactionQueue,
+      presenter,
+    );
+
+    const paidExecution = new PaidTransaction<LinkHandleRequest>(
+      activeWallet,
+      gateway,
+      presenter,
+      transactionQueue,
+    );
+
+    const linkHandle = new LinkHandle(delegableExecution, paidExecution);
 
     await linkHandle.execute(request);
 
