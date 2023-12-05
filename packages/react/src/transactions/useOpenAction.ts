@@ -194,14 +194,14 @@ export type OpenActionArgs = {
  *
  * The referrers will split the referral reward of any collect fee paid by the collector.
  *
- * ## Public Collect
+ * ## Public collect
  *
  * You can use the `useOpenAction` hook to collect a publication with just a wallet.
  * First make sure you logged-in via {@link useLogin} with just an EVM address.
  *
  * Then you can use the `useOpenAction` to collect a publication as mentioned above.
  *
- * ## Custom Open Action
+ * ## Custom open action
  *
  * You can use the `useOpenAction` hook to execute a custom Open Action.
  *
@@ -223,7 +223,7 @@ export type OpenActionArgs = {
  * }
  * ```
  *
- * ## Self-funded Open Action
+ * ## Self-funded approach
  *
  * It just takes a single parameter to disable the sponsorship of the transaction gas costs.
  *
@@ -252,7 +252,7 @@ export type OpenActionArgs = {
  * error happens only with self-funded transactions and it means that the wallet does not
  * have enough funds to pay for the transaction gas costs.
  *
- * ## Self-funded Fallback
+ * ## Self-funded fallback
  *
  * If for some reason the Lens API cannot sponsor the transaction, the hook will fail with a {@link BroadcastingError} with one of the following reasons:
  * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored

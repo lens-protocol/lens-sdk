@@ -192,7 +192,7 @@ export type FollowArgs = {
  * };
  * ```
  *
- * ## Self-funded Follow
+ * ## Self-funded approach
  *
  * It just takes a single parameter to disable the sponsorship of the transaction gas costs.
  *
@@ -221,7 +221,7 @@ export type FollowArgs = {
  * error happens only with self-funded transactions and it means that the wallet does not
  * have enough funds to pay for the transaction gas costs.
  *
- * ## Self-funded Fallback
+ * ## Self-funded fallback
  *
  * If for some reason the Lens API cannot sponsor the transaction, the hook will fail with a {@link BroadcastingError} with one of the following reasons:
  * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored

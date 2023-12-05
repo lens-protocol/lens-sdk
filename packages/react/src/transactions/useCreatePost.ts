@@ -337,7 +337,7 @@ export type CreatePostArgs = {
  * });
  * ```
  *
- * ## Self-funded Post
+ * ## Self-funded approach
  *
  * In case you want to pay for the transaction gas costs yourself, you can do so by setting the
  * `sponsored` parameter to `false`:
@@ -368,7 +368,7 @@ export type CreatePostArgs = {
  *
  * The example above shows how to detect when the user does not have enough funds to pay for the transaction cost.
  *
- * ## Self-funded Fallback
+ * ## Self-funded fallback
  *
  * If for some reason the Lens API cannot sponsor the transaction, the hook will fail with a {@link BroadcastingError} with one of the following reasons:
  * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
