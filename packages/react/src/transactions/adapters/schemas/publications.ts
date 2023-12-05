@@ -108,8 +108,8 @@ export const CreatePostRequestSchema: z.ZodType<CreatePostRequest, z.ZodTypeDef,
     signless: z.boolean(),
     sponsored: z.boolean(),
     metadata: UriSchema,
-    reference: ReferencePolicyConfigSchema.catch({ type: ReferencePolicyType.ANYONE }),
-    actions: OpenActionConfigSchema.array().catch([]),
+    reference: ReferencePolicyConfigSchema.default({ type: ReferencePolicyType.ANYONE }),
+    actions: OpenActionConfigSchema.array().default([]),
   });
 
 export const CreateCommentRequestSchema: z.ZodType<
@@ -122,8 +122,8 @@ export const CreateCommentRequestSchema: z.ZodType<
   sponsored: z.boolean(),
   metadata: UriSchema,
   commentOn: PublicationIdSchema,
-  reference: ReferencePolicyConfigSchema.catch({ type: ReferencePolicyType.ANYONE }),
-  actions: OpenActionConfigSchema.array().catch([]),
+  reference: ReferencePolicyConfigSchema.default({ type: ReferencePolicyType.ANYONE }),
+  actions: OpenActionConfigSchema.array().default([]),
 });
 
 export const CreateQuoteRequestSchema: z.ZodType<CreateQuoteRequest, z.ZodTypeDef, UnknownObject> =
@@ -133,8 +133,8 @@ export const CreateQuoteRequestSchema: z.ZodType<CreateQuoteRequest, z.ZodTypeDe
     sponsored: z.boolean(),
     metadata: UriSchema,
     quoteOn: PublicationIdSchema,
-    reference: ReferencePolicyConfigSchema.catch({ type: ReferencePolicyType.ANYONE }),
-    actions: OpenActionConfigSchema.array().catch([]),
+    reference: ReferencePolicyConfigSchema.default({ type: ReferencePolicyType.ANYONE }),
+    actions: OpenActionConfigSchema.array().default([]),
   });
 
 export const CreateMirrorRequestSchema: z.ZodType<
