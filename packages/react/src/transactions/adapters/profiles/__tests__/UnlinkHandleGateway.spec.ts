@@ -1,3 +1,6 @@
+/*
+ * @jest-environment node
+ */
 import { SafeApolloClient } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
