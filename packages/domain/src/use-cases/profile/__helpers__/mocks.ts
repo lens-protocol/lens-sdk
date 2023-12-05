@@ -188,6 +188,7 @@ export function mockLinkHandleRequest(overrides?: Partial<LinkHandleRequest>): L
     fullHandle: mockFullHandle(),
     profileId: mockProfileId(),
     signless: true,
+    sponsored: true,
     ...overrides,
     kind: TransactionKind.LINK_HANDLE,
   };

@@ -106,6 +106,7 @@ export const LinkHandleRequestSchema = z.object({
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.LINK_HANDLE),
   signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 export const UnlinkHandleRequestSchema = z.object({
