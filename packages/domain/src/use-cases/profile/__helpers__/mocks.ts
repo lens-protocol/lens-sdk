@@ -105,6 +105,7 @@ export function mockUpdateProfileManagersRequest(
 ): UpdateProfileManagersRequest {
   return {
     approveSignless: true,
+    sponsored: true,
     ...overrides,
     kind: TransactionKind.UPDATE_PROFILE_MANAGERS,
   };

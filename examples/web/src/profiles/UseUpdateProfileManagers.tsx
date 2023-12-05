@@ -19,6 +19,7 @@ function UpdateProfileManagersForm({ profile }: { profile: Profile }) {
 
     await execute({
       approveSignless: enabled,
+      sponsored: formData.get('sponsored') === 'on',
     });
   };
 
@@ -55,6 +56,11 @@ function UpdateProfileManagersForm({ profile }: { profile: Profile }) {
           </button>
         </div>
       </fieldset>
+
+      <label>
+        <input type="checkbox" name="sponsored" value="on" defaultChecked={true} />
+        sponsored
+      </label>
 
       {error && <ErrorMessage error={error} />}
     </form>
