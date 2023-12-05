@@ -1,10 +1,16 @@
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { UnblockProfiles, UnblockProfilesRequest } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError, SignedOnChain } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  BroadcastingError,
+  DelegableSigning,
+  PaidTransaction,
+  SignedOnChain,
+} from '@lens-protocol/domain/use-cases/transactions';
 
 import { useSharedDependencies } from '../../shared';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
@@ -18,31 +24,45 @@ export function useUnblockProfilesController() {
     transactionQueue,
     transactionFactory,
     onChainRelayer,
+    providerFactory,
   } = useSharedDependencies();
 
-  const presenter = new TransactionResultPresenter<
-    UnblockProfilesRequest,
-    BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
-  >();
-
-  const gateway = new UnblockProfilesGateway(apolloClient, transactionFactory);
-
-  const signedBlockProfiles = new SignedOnChain<UnblockProfilesRequest>(
-    activeWallet,
-    transactionGateway,
-    gateway,
-    onChainRelayer,
-    transactionQueue,
-    presenter,
-  );
-
   return async (request: UnblockProfilesRequest) => {
-    const blockProfile = new UnblockProfiles(
-      signedBlockProfiles,
+    const presenter = new TransactionResultPresenter<
+      UnblockProfilesRequest,
+      | BroadcastingError
+      | PendingSigningRequestError
+      | UserRejectedError
+      | WalletConnectionError
+      | InsufficientGasError
+    >();
+
+    const gateway = new UnblockProfilesGateway(providerFactory, apolloClient, transactionFactory);
+
+    const signedExecution = new SignedOnChain<UnblockProfilesRequest>(
+      activeWallet,
+      transactionGateway,
+      gateway,
+      onChainRelayer,
+      transactionQueue,
+      presenter,
+    );
+
+    const delegableExecution = new DelegableSigning<UnblockProfilesRequest>(
+      signedExecution,
       gateway,
       transactionQueue,
       presenter,
     );
+
+    const paidExecution = new PaidTransaction<UnblockProfilesRequest>(
+      activeWallet,
+      gateway,
+      presenter,
+      transactionQueue,
+    );
+
+    const blockProfile = new UnblockProfiles(delegableExecution, paidExecution);
 
     await blockProfile.execute(request);
 

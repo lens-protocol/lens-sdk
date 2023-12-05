@@ -230,6 +230,7 @@ export function mockUnblockProfilesRequest(
   return {
     signless: true,
     profileIds: [mockProfileId()],
+    sponsored: true,
     ...overrides,
     kind: TransactionKind.UNBLOCK_PROFILE,
   };

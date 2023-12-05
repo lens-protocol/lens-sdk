@@ -28,24 +28,31 @@ function BlockOrUnblockProfileCard({ profile }: { profile: Profile }) {
     await block({ profiles: [profile], sponsored: formData.get('sponsored') === 'on' });
   };
 
+  const handleUnblockSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    if (profile.operations.isBlockedByMe.isFinalisedOnchain === false) {
+      alert(
+        'You cannot unblock this profile until the pending block operation is finalised onchain',
+      );
+      return;
+    }
+    await unblock({ profiles: [profile], sponsored: formData.get('sponsored') === 'on' });
+  };
+
   if (profile.operations.canUnblock === true || profile.operations.isBlockedByMe.value === true) {
     return (
       <ProfileCard profile={profile}>
-        <button
-          onClick={() => {
-            if (profile.operations.isBlockedByMe.isFinalisedOnchain === false) {
-              alert(
-                'You cannot unblock this profile until the pending block operation is finalised onchain',
-              );
-              return;
-            }
-            return unblock({ profiles: [profile] });
-          }}
-          disabled={unblockLoading}
-        >
-          Unblock
-        </button>
-        {unblockError && <p>Error unblocking profile: {unblockError.message}</p>}
+        <form onSubmit={handleUnblockSubmit}>
+          <button type="submit" disabled={unblockLoading}>
+            Unblock
+          </button>
+          <label>
+            <input type="checkbox" name="sponsored" value="on" defaultChecked={true} />
+            sponsored
+          </label>
+          {unblockError && <p>Error unblocking profile: {unblockError.message}</p>}
+        </form>
       </ProfileCard>
     );
   }
