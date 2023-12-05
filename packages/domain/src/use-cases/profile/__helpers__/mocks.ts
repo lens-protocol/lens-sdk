@@ -199,6 +199,7 @@ export function mockUnlinkHandleRequest(
     fullHandle: mockFullHandle(),
     profileId: mockProfileId(),
     signless: true,
+    sponsored: true,
     ...overrides,
     kind: TransactionKind.UNLINK_HANDLE,
   };

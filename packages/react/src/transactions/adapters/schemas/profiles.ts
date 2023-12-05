@@ -112,6 +112,7 @@ export const UnlinkHandleRequestSchema = z.object({
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.UNLINK_HANDLE),
   signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 export const UnblockProfilesRequestSchema = z.object({

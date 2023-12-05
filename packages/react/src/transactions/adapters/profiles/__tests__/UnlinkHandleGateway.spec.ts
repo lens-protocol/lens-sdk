@@ -6,24 +6,63 @@ import {
   mockCreateUnlinkHandleFromProfileTypedDataResponse,
   mockUnlinkHandleFromProfileResponse,
 } from '@lens-protocol/api-bindings/mocks';
-import { NativeTransaction } from '@lens-protocol/domain/entities';
-import { mockUnlinkHandleRequest } from '@lens-protocol/domain/mocks';
+import { NativeTransaction, UnsignedTransaction } from '@lens-protocol/domain/entities';
+import { mockUnlinkHandleRequest, mockWallet } from '@lens-protocol/domain/mocks';
+import { ChainType } from '@lens-protocol/shared-kernel';
+import { providers } from 'ethers';
+import { mock } from 'jest-mock-extended';
 
 import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
+import { mockIProviderFactory } from '../../../../wallet/adapters/__helpers__/mocks';
+import { UnsignedContractCallTransaction } from '../../AbstractContractCallGateway';
 import { assertUnsignedProtocolCallCorrectness } from '../../__helpers__/assertions';
-import { mockITransactionFactory } from '../../__helpers__/mocks';
+import { mockITransactionFactory, mockJsonRpcProvider } from '../../__helpers__/mocks';
 import { UnlinkHandleGateway } from '../UnlinkHandleGateway';
 
-function setupTestScenario({ apolloClient }: { apolloClient: SafeApolloClient }) {
+function setupTestScenario({
+  apolloClient,
+  provider = mock<providers.JsonRpcProvider>(),
+}: {
+  apolloClient: SafeApolloClient;
+  provider?: providers.JsonRpcProvider;
+}) {
   const transactionFactory = mockITransactionFactory();
+  const providerFactory = mockIProviderFactory({
+    chainType: ChainType.POLYGON,
+    provider,
+  });
 
-  const gateway = new UnlinkHandleGateway(apolloClient, transactionFactory);
+  const gateway = new UnlinkHandleGateway(providerFactory, apolloClient, transactionFactory);
 
   return { gateway };
 }
 
 describe(`Given an instance of ${UnlinkHandleGateway.name}`, () => {
   const request = mockUnlinkHandleRequest();
+
+  describe(`when creating an ${UnsignedTransaction.name}<UnlinkHandleRequest>`, () => {
+    const wallet = mockWallet();
+    const data = mockCreateUnlinkHandleFromProfileTypedDataData();
+
+    it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+      const provider = await mockJsonRpcProvider();
+      const apolloClient = mockLensApolloClient([
+        mockCreateUnlinkHandleFromProfileTypedDataResponse({
+          variables: {
+            request: {
+              handle: request.fullHandle,
+            },
+          },
+          data,
+        }),
+      ]);
+      const { gateway } = setupTestScenario({ apolloClient, provider });
+
+      const unsignedTransaction = await gateway.createUnsignedTransaction(request, wallet);
+
+      expect(unsignedTransaction).toBeInstanceOf(UnsignedContractCallTransaction);
+    });
+  });
 
   describe(`when creating an IUnsignedProtocolCall<UnlinkHandleRequest>`, () => {
     it(`should create an instance of the ${UnsignedProtocolCall.name} with the expected typed data`, async () => {
