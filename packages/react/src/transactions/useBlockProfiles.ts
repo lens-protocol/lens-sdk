@@ -216,7 +216,6 @@ export type BlockOperation = UseDeferredTask<
  *   // sponsored attempt
  *   const sponsoredResult = await execute({
  *     profiles: [profileId],
- *     sponsored: false
  *   });
  *
  *   if (sponsoredResult.isFailure()) {
@@ -259,7 +258,7 @@ export function useBlockProfiles(): BlockOperation {
       profileIds: profiles.map((profile) => profile.id),
       kind: TransactionKind.BLOCK_PROFILE,
       signless: session.profile.signless,
-      sponsored: sponsored ?? false,
+      sponsored: sponsored ?? true,
     });
   });
 }
