@@ -91,10 +91,6 @@ export type Session = AnonymousSession | ProfileSession | WalletOnlySession;
 /**
  * `useSession` is a hook that lets you access the current {@link Session}
  *
- * **WARNING:** the {@link Session} type is a union type of {@link AnonymousSession}, {@link ProfileSession}, and {@link WalletOnlySession}.
- * At the moment only {@link AnonymousSession} and {@link ProfileSession} are supported. {@link WalletOnlySession} will be supported soon
- * after the official Lens Protocol v2 switch.
- *
  * @example
  * Use this hook to determine if the user is authenticated or not.
  * ```tsx
@@ -107,6 +103,10 @@ export type Session = AnonymousSession | ProfileSession | WalletOnlySession;
  *     case SessionType.Anonymous:
  *       // session is a AnonymousSession
  *       return <Login />;
+ *
+ *     case SessionType.JustWallet:
+ *       // session is a WalletOnlySession
+ *       return <MyWallet address={session.address} />;
  *
  *     case SessionType.WithProfile:
  *       // session is a ProfileSession
