@@ -214,7 +214,7 @@ export function useUpdateProfileManagers(): UseDeferredTask<
 
     return updateProfileManagers({
       kind: TransactionKind.UPDATE_PROFILE_MANAGERS,
-      sponsored: args.sponsored ?? false,
+      sponsored: args.sponsored ?? true,
       ...args,
     });
   });
