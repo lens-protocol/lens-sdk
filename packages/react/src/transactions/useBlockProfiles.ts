@@ -216,7 +216,6 @@ export type BlockOperation = UseDeferredTask<
  *   // sponsored attempt
  *   const sponsoredResult = await execute({
  *     profiles: [profileId],
- *     sponsored: false
  *   });
  *
  *   if (sponsoredResult.isFailure()) {
