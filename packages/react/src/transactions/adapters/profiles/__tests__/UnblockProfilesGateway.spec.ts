@@ -41,7 +41,7 @@ function setupTestScenario({
 }
 
 describe(`Given an instance of ${UnblockProfilesGateway.name}`, () => {
-  describe(`when creating an ${UnsignedTransaction.name}<BlockProfilesRequest>`, () => {
+  describe(`when creating an ${UnsignedTransaction.name}<UnblockProfilesRequest>`, () => {
     const wallet = mockWallet();
     const request = mockUnblockProfilesRequest();
     const data = mockUnblockProfilesTypedDataData();
