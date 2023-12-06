@@ -1,17 +1,17 @@
 import { toProfileId } from '@lens-protocol/metadata';
 import { BigNumber } from 'ethers';
 
-import { testing } from '../../__helpers__/env';
-import { mockFollowCondition, mockProfileId } from '../../__helpers__/mocks';
-import { transformFollowCondition } from '../follow-condition';
 import {
-  LitConditionType,
-  LitKnownMethods,
-  LitKnownParams,
-  LitScalarOperator,
-  SupportedChains,
-} from '../types';
+  mockAccessControlContract,
+  mockFollowCondition,
+  mockProfileId,
+} from '../../__helpers__/mocks';
+import { transformFollowCondition } from '../follow-condition';
+import { LitConditionType, LitKnownMethods, LitKnownParams, LitScalarOperator } from '../types';
+import { toLitSupportedChainName } from '../utils';
 import { InvalidAccessCriteriaError } from '../validators';
+
+const contract = mockAccessControlContract();
 
 describe(`Given the "${transformFollowCondition.name}" function`, () => {
   describe('when called with a Follow Profile condition', () => {
@@ -20,13 +20,13 @@ describe(`Given the "${transformFollowCondition.name}" function`, () => {
     it('should return the expected Lit AccessControlCondition', () => {
       const condition = mockFollowCondition({ follow: profileId });
 
-      const actual = transformFollowCondition(condition, testing);
+      const actual = transformFollowCondition(condition, contract);
 
       const expectedLitAccessConditions = [
         {
           conditionType: LitConditionType.EVM_CONTRACT,
-          chain: SupportedChains.MUMBAI,
-          contractAddress: '0xcc44c4e8066fFA4acfb619A82dCF918263045c87',
+          chain: toLitSupportedChainName(contract.chainId),
+          contractAddress: contract.address,
           functionName: LitKnownMethods.IS_FOLLOWING,
           functionParams: [
             LitKnownParams.USER_ADDRESS,
@@ -87,7 +87,7 @@ describe(`Given the "${transformFollowCondition.name}" function`, () => {
         }),
       },
     ])(`should throw an ${InvalidAccessCriteriaError.name} $description`, ({ condition }) => {
-      expect(() => transformFollowCondition(condition, testing)).toThrow(
+      expect(() => transformFollowCondition(condition, contract)).toThrow(
         InvalidAccessCriteriaError,
       );
     });

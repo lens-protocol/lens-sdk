@@ -2,8 +2,8 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { CollectCondition } from '@lens-protocol/metadata';
 import { invariant, isNonNullable } from '@lens-protocol/shared-kernel';
 
-import { EnvironmentConfig } from '../environments';
 import {
+  AccessControlContract,
   DecryptionContext,
   LitConditionType,
   LitEvmAccessCondition,
@@ -16,7 +16,7 @@ import { assertValidPublicationId } from './validators';
 
 export const transformCollectCondition = (
   condition: CollectCondition,
-  env: EnvironmentConfig,
+  accessControlContract: AccessControlContract,
   context?: DecryptionContext,
 ): Array<LitEvmAccessCondition> => {
   invariant(isNonNullable(condition.publicationId), 'publicationId is missing');
@@ -27,8 +27,8 @@ export const transformCollectCondition = (
   return [
     {
       conditionType: LitConditionType.EVM_CONTRACT,
-      contractAddress: env.contractAddress,
-      chain: toLitSupportedChainName(env.chainId),
+      contractAddress: accessControlContract.address,
+      chain: toLitSupportedChainName(accessControlContract.chainId),
       functionName: LitKnownMethods.HAS_COLLECTED,
       functionParams: [
         LitKnownParams.USER_ADDRESS,

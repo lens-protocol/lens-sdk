@@ -1,8 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { FollowCondition } from '@lens-protocol/metadata';
 
-import { EnvironmentConfig } from '../environments';
 import {
+  AccessControlContract,
   LitConditionType,
   LitEvmAccessCondition,
   LitKnownMethods,
@@ -14,15 +14,15 @@ import { assertValidProfileId } from './validators';
 
 export const transformFollowCondition = (
   condition: FollowCondition,
-  env: EnvironmentConfig,
+  accessControlContract: AccessControlContract,
 ): Array<LitEvmAccessCondition> => {
   assertValidProfileId(condition.follow);
 
   return [
     {
       conditionType: LitConditionType.EVM_CONTRACT,
-      contractAddress: env.contractAddress,
-      chain: toLitSupportedChainName(env.chainId),
+      contractAddress: accessControlContract.address,
+      chain: toLitSupportedChainName(accessControlContract.chainId),
       functionName: LitKnownMethods.IS_FOLLOWING,
       functionParams: [
         LitKnownParams.USER_ADDRESS,

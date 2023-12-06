@@ -2,7 +2,6 @@ import * as raw from '@lens-protocol/metadata';
 import { assertNever, InvariantError, never } from '@lens-protocol/shared-kernel';
 import type { UnifiedAccessControlConditions } from '@lit-protocol/types';
 
-import { EnvironmentConfig } from '../environments';
 import * as gql from '../graphql';
 import { transformAdvancedContractCondition } from './advanced-contract-condition';
 import { transformCollectCondition } from './collect-condition';
@@ -12,6 +11,7 @@ import { transformFollowCondition } from './follow-condition';
 import { transformNftCondition } from './nft-condition';
 import { transformProfileCondition } from './profile-condition';
 import {
+  AccessControlContract,
   DecryptionContext,
   LitAccessControlCondition,
   LitNestedAccessControlCondition,
@@ -24,7 +24,8 @@ import {
   InvalidAccessCriteriaError,
 } from './validators';
 
-export type { DecryptionContext };
+export type { AccessControlContract, DecryptionContext };
+export { SupportedChainId, SupportedChains } from './types';
 
 /**
  * Bespoke implementation of flatten that only flattens one level of nesting
@@ -44,7 +45,7 @@ function flatten<T>(conditions: T[]): T[] {
 
 function transformSimpleCondition(
   condition: raw.SimpleCondition,
-  env: EnvironmentConfig,
+  accessControlContract: AccessControlContract,
   context?: DecryptionContext,
 ): LitNestedAccessControlCondition<LitAccessControlCondition> {
   switch (condition.type) {
@@ -55,11 +56,11 @@ function transformSimpleCondition(
     case raw.ConditionType.NFT_OWNERSHIP:
       return transformNftCondition(condition);
     case raw.ConditionType.PROFILE_OWNERSHIP:
-      return transformProfileCondition(condition, env);
+      return transformProfileCondition(condition, accessControlContract);
     case raw.ConditionType.COLLECT:
-      return transformCollectCondition(condition, env, context);
+      return transformCollectCondition(condition, accessControlContract, context);
     case raw.ConditionType.FOLLOW:
-      return transformFollowCondition(condition, env);
+      return transformFollowCondition(condition, accessControlContract);
     case raw.ConditionType.ADVANCED_CONTRACT:
       return transformAdvancedContractCondition(condition);
     default:
@@ -71,7 +72,7 @@ function transformSimpleCondition(
 
 function transformCompoundCondition(
   condition: raw.AnyCondition,
-  env: EnvironmentConfig,
+  accessControlContract: AccessControlContract,
   context?: DecryptionContext,
 ): LitNestedAccessControlCondition<LitAccessControlCondition> {
   if (condition.type === raw.ConditionType.AND || condition.type === raw.ConditionType.OR) {
@@ -80,7 +81,9 @@ function transformCompoundCondition(
 
     try {
       const flat = flatten(
-        condition.criteria.map((criterion) => transformSimpleCondition(criterion, env)),
+        condition.criteria.map((criterion) =>
+          transformSimpleCondition(criterion, accessControlContract, context),
+        ),
       );
       return insertObjectInBetweenArrayElements(flat, {
         operator: LitOperatorType[condition.type],
@@ -92,12 +95,12 @@ function transformCompoundCondition(
       throw err;
     }
   }
-  return transformSimpleCondition(condition, env, context);
+  return transformSimpleCondition(condition, accessControlContract, context);
 }
 
 function createUnifiedAccessControlConditions(
   condition: raw.AccessCondition,
-  env: EnvironmentConfig,
+  accessControlContract: AccessControlContract,
   context?: DecryptionContext,
 ): UnifiedAccessControlConditions {
   if (condition.type !== raw.ConditionType.OR) {
@@ -121,7 +124,9 @@ function createUnifiedAccessControlConditions(
   }
 
   const flat = flatten(
-    condition.criteria.map((criterion) => transformCompoundCondition(criterion, env, context)),
+    condition.criteria.map((criterion) =>
+      transformCompoundCondition(criterion, accessControlContract, context),
+    ),
   );
 
   // the type assertion is needed because the Lit SDK typedef suggests nested conditions are not allowed but they are
@@ -132,9 +137,9 @@ function createUnifiedAccessControlConditions(
 
 export function transformFromRaw(
   condition: raw.AccessCondition,
-  env: EnvironmentConfig,
+  accessControlContract: AccessControlContract,
 ): UnifiedAccessControlConditions {
-  return createUnifiedAccessControlConditions(condition, env);
+  return createUnifiedAccessControlConditions(condition, accessControlContract);
 }
 
 function toRawNetworkAddress({ address, chainId }: gql.NetworkAddress): raw.NetworkAddress {
@@ -231,11 +236,11 @@ function toRawAccessCondition(gqlCondition: gql.RootCondition): raw.AccessCondit
 }
 
 export function transformFromGql(
-  condition: gql.RootCondition,
-  env: EnvironmentConfig,
+  strategy: gql.PublicationMetadataLitEncryption,
+  accessControlContract: AccessControlContract,
   context: DecryptionContext,
 ): UnifiedAccessControlConditions {
-  const transformed = toRawAccessCondition(condition);
+  const transformed = toRawAccessCondition(strategy.accessCondition);
 
-  return createUnifiedAccessControlConditions(transformed, env, context);
+  return createUnifiedAccessControlConditions(transformed, accessControlContract, context);
 }

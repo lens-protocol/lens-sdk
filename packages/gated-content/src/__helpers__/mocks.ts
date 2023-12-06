@@ -28,6 +28,8 @@ import {
 } from '@lens-protocol/metadata';
 import * as mocks from '@lens-protocol/shared-kernel/mocks';
 
+import { AccessControlContract, SupportedChainId } from '../conditions/types';
+
 export function mockPublicationMetadata(): PublicationMetadata {
   return {
     $schema: PublicationSchemaId.ARTICLE_LATEST,
@@ -146,6 +148,16 @@ export function mockAdvancedContractCondition(
     params: [':userAddress'],
     comparison: ConditionComparisonOperator.EQUAL,
     value: '1',
+    ...overrides,
+  };
+}
+
+export function mockAccessControlContract(
+  overrides?: Partial<AccessControlContract>,
+): AccessControlContract {
+  return {
+    address: mockEvmAddress(),
+    chainId: SupportedChainId.MUMBAI,
     ...overrides,
   };
 }

@@ -1,3 +1,5 @@
+import { EvmAddress } from '@lens-protocol/shared-kernel';
+
 export enum LitScalarOperator {
   EQUAL = '=',
   NOT_EQUAL = '!=',
@@ -100,5 +102,13 @@ export type DecryptionContext = {
    * The {@link Signer} provided in the constructor MUST be the owner OR
    * an authorized Profile Manager of the specified Profile.
    */
-  profileId: string;
+  profileId?: string;
+};
+
+/**
+ * @internal
+ */
+export type AccessControlContract = {
+  address: EvmAddress;
+  chainId: SupportedChainId;
 };
