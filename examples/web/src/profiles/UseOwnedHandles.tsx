@@ -60,7 +60,8 @@ function UnlinkHandleButton({ handle, profileId }: UnlinkHandleButtonProps) {
 
   const unlinkHandle = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await execute({ handle });
+    const formData = new FormData(e.currentTarget);
+    await execute({ handle, sponsored: formData.get('sponsored') === 'on' });
   };
 
   if (error) {
@@ -76,6 +77,10 @@ function UnlinkHandleButton({ handle, profileId }: UnlinkHandleButtonProps) {
       <button type="submit" disabled={loading}>
         Unlink
       </button>
+      <label>
+        <input type="checkbox" name="sponsored" value="on" defaultChecked={true} />
+        sponsored
+      </label>
     </form>
   );
 }

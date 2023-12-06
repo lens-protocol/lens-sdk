@@ -1,14 +1,14 @@
 import {
-  SafeApolloClient,
-  omitTypename,
-  RelaySuccess,
-  UnlinkHandleFromProfileDocument,
-  UnlinkHandleFromProfileData,
-  UnlinkHandleFromProfileVariables,
-  CreateUnlinkHandleFromProfileTypedDataData,
-  CreateUnlinkHandleFromProfileTypedDataVariables,
-  CreateUnlinkHandleFromProfileTypedDataDocument,
   CreateUnlinkHandleFromProfileBroadcastItemResult,
+  CreateUnlinkHandleFromProfileTypedDataData,
+  CreateUnlinkHandleFromProfileTypedDataDocument,
+  CreateUnlinkHandleFromProfileTypedDataVariables,
+  RelaySuccess,
+  SafeApolloClient,
+  UnlinkHandleFromProfileData,
+  UnlinkHandleFromProfileDocument,
+  UnlinkHandleFromProfileVariables,
+  omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensTokenHandleRegistry } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -22,19 +22,24 @@ import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-k
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
+import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
 import { ITransactionFactory } from '../ITransactionFactory';
-import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError } from '../relayer';
 
 export class UnlinkHandleGateway
+  extends AbstractContractCallGateway<UnlinkHandleRequest>
   implements
     IDelegatedTransactionGateway<UnlinkHandleRequest>,
     ISignedOnChainGateway<UnlinkHandleRequest>
 {
   constructor(
+    providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<UnlinkHandleRequest>,
-  ) {}
+  ) {
+    super(providerFactory);
+  }
 
   async createDelegatedTransaction(
     request: UnlinkHandleRequest,
@@ -64,8 +69,12 @@ export class UnlinkHandleGateway
       id: result.id,
       request,
       typedData: omitTypename(result.typedData),
-      fallback: this.createRequestFallback(request, result),
     });
+  }
+
+  protected async createEncodedData(request: UnlinkHandleRequest): Promise<ContractCallDetails> {
+    const result = await this.createTypedData(request);
+    return this.createUnlinkCallData(result);
   }
 
   private async relayWithProfileManager(
@@ -85,7 +94,7 @@ export class UnlinkHandleGateway
 
     if (data.result.__typename === 'LensProfileManagerRelayError') {
       const result = await this.createTypedData(request);
-      const fallback = this.createRequestFallback(request, result);
+      const fallback = this.createUnlinkCallData(result);
 
       return handleRelayError(data.result, fallback);
     }
@@ -110,17 +119,15 @@ export class UnlinkHandleGateway
     return data.result;
   }
 
-  private createRequestFallback(
-    request: UnlinkHandleRequest,
+  private createUnlinkCallData(
     result: CreateUnlinkHandleFromProfileBroadcastItemResult,
-  ): SelfFundedProtocolTransactionRequest<UnlinkHandleRequest> {
+  ): ContractCallDetails {
     const contract = lensTokenHandleRegistry(result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('unlink', [
       result.typedData.message.handleId,
       result.typedData.message.profileId,
     ]);
     return {
-      ...request,
       contractAddress: result.typedData.domain.verifyingContract,
       encodedData: encodedData as Data,
     };
