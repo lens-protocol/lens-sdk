@@ -1,5 +1,25 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.25
+
+### Minor Changes
+
+- d255b3627: **feat:** Added `useDismissRecommendedProfiles` hook
+
+### Patch Changes
+
+- daf688200: **fixed:** logic that infers when to create Momoka publications
+- dd5088811: feat: adds support for self-funedd updating profile managers
+- c6da5071d: feat: add self-funded support for unblocking profiles
+- Updated dependencies [daf688200]
+- Updated dependencies [d255b3627]
+- Updated dependencies [dd5088811]
+- Updated dependencies [c6da5071d]
+- Updated dependencies [b8279c3bd]
+  - @lens-protocol/react@2.0.0-alpha.25
+  - @lens-protocol/domain@0.11.0-alpha.17
+  - @lens-protocol/api-bindings@0.11.0-alpha.22
+
 ## 2.0.0-alpha.24
 
 ### Patch Changes
