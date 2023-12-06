@@ -283,7 +283,7 @@ export type ExploreProfilesRequest = {
 
 export type ExploreProfilesWhere = {
   /** Array of custom filters for exploring profiles */
-  customFilters?: Array<CustomFiltersType>;
+  customFilters?: InputMaybe<Array<CustomFiltersType>>;
   /** Filter profiles created since the specified timestamp */
   since?: InputMaybe<Scalars['UnixTimestamp']['input']>;
 };
@@ -307,6 +307,7 @@ export enum ExplorePublicationsOrderByType {
   TopCommented = 'TOP_COMMENTED',
   TopMirrored = 'TOP_MIRRORED',
   TopQuoted = 'TOP_QUOTED',
+  TopReacted = 'TOP_REACTED',
 }
 
 export type ExplorePublicationsWhere = {
@@ -437,7 +438,7 @@ export type GetProfileMetadataArgs = {
   /** The app id to query the profile's metadata */
   appId?: InputMaybe<Scalars['AppId']['input']>;
   /** If true, will fallback to global profile metadata, if there is no metadata set for that specific app id */
-  useFallback?: Scalars['Boolean']['input'];
+  useFallback?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type HidePublicationRequest = {
@@ -461,11 +462,11 @@ export type IllegalReasonInput = {
 
 export type ImageTransform = {
   /** Set the transformed image's height */
-  height?: Scalars['ImageSizeTransform']['input'];
+  height?: InputMaybe<Scalars['ImageSizeTransform']['input']>;
   /** Set if you want to keep the image's original aspect ratio. True by default. If explicitly set to false, the image will stretch based on the width and height values. */
-  keepAspectRatio?: Scalars['Boolean']['input'];
+  keepAspectRatio?: InputMaybe<Scalars['Boolean']['input']>;
   /** Set the transformed image's width */
-  width?: Scalars['ImageSizeTransform']['input'];
+  width?: InputMaybe<Scalars['ImageSizeTransform']['input']>;
 };
 
 export type InternalAddCuratedTagRequest = {
@@ -700,7 +701,7 @@ export type MultirecipientFeeCollectModuleInput = {
   endsAt?: InputMaybe<Scalars['DateTime']['input']>;
   followerOnly: Scalars['Boolean']['input'];
   recipients: Array<RecipientDataInput>;
-  referralFee?: Scalars['Float']['input'];
+  referralFee?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type MutualFollowersRequest = {
@@ -1093,12 +1094,12 @@ export type ProfileManagersRequest = {
 export type ProfileRecommendationsRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   /** Disable machine learning recommendations (default: false) */
-  disableML?: Scalars['Boolean']['input'];
+  disableML?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter based on a specific profile ID */
   for: Scalars['ProfileId']['input'];
   limit?: InputMaybe<LimitType>;
   /** Shuffle the recommendations (default: false) */
-  shuffle?: Scalars['Boolean']['input'];
+  shuffle?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type ProfileRequest = {
@@ -1541,7 +1542,7 @@ export type SimpleCollectOpenActionModuleInput = {
   endsAt?: InputMaybe<Scalars['DateTime']['input']>;
   followerOnly: Scalars['Boolean']['input'];
   recipient?: InputMaybe<Scalars['EvmAddress']['input']>;
-  referralFee?: Scalars['Float']['input'];
+  referralFee?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type SpamReasonInput = {
@@ -1557,7 +1558,7 @@ export enum SupportedFiatType {
 
 export type SupportedModulesRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
-  includeUnknown?: Scalars['Boolean']['input'];
+  includeUnknown?: InputMaybe<Scalars['Boolean']['input']>;
   limit?: InputMaybe<LimitType>;
 };
 
