@@ -1,7 +1,7 @@
 ---
-"@lens-protocol/domain": patch
-"@lens-protocol/react": patch
-"@lens-protocol/react-web": patch
+"@lens-protocol/domain": minor
+"@lens-protocol/react": minor
+"@lens-protocol/react-web": minor
 ---
 
 feat: implements self-funded unlink handle
