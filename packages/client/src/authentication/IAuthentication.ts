@@ -6,6 +6,7 @@ import type {
   ChallengeRequest,
   RevokeAuthenticationRequest,
   SignedAuthChallenge,
+  WalletAuthenticationToProfileAuthenticationRequest,
 } from '../graphql/types.generated';
 import type { PaginatedResult } from '../helpers/buildPaginatedQueryResult';
 import type {
@@ -34,6 +35,20 @@ export interface IAuthentication {
    * @param signature - The signature of the challenge
    */
   authenticate(request: SignedAuthChallenge): Promise<void>;
+
+  /**
+   * Upgrade the credentials from wallet only to profile authentication.
+   *
+   * ⚠️ Requires authenticated LensClient with wallet only.
+   *
+   * @example
+   * ```ts
+   * await client.authentication.upgradeCredentials();
+   * ```
+   */
+  upgradeCredentials(
+    request: WalletAuthenticationToProfileAuthenticationRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError>;
 
   /**
    * Verify that the access token is signed by the server and the user.

@@ -181,6 +181,7 @@ export type {
   UnfollowRequest,
   UserPoapsQueryRequest,
   ValidatePublicationMetadataRequest,
+  WalletAuthenticationToProfileAuthenticationRequest,
   WhoActedOnPublicationRequest,
   WhoHaveBlockedRequest,
   WhoReactedPublicationRequest,
