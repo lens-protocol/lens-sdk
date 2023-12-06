@@ -1,41 +1,51 @@
-import { profileId, useFeedHighlights } from '@lens-protocol/react-web';
+import { ProfileId, useFeedHighlights } from '@lens-protocol/react-web';
 
+import { RequireProfileSession } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { PublicationCard } from '../publications/components/PublicationCard';
 
-export function UseFeedHighlights() {
+function UseFeedHighlightsInner({ profileId }: { profileId: ProfileId }) {
   const { data, error, loading, hasMore, beforeCount, observeRef, prev } = useInfiniteScroll(
     useFeedHighlights({
       where: {
-        for: profileId('0x04'),
+        for: profileId,
       },
     }),
   );
 
   return (
-    <>
+    <div>
+      {data?.length === 0 && <p>No items</p>}
+
+      {loading && <Loading />}
+
+      {error && <ErrorMessage error={error} />}
+
+      <button disabled={loading || beforeCount === 0} onClick={prev}>
+        Fetch newer
+      </button>
+
+      {data?.map((item) => (
+        <PublicationCard key={`${item.id}`} publication={item} />
+      ))}
+
+      {hasMore && <p ref={observeRef}>Loading more...</p>}
+    </div>
+  );
+}
+
+export function UseFeedHighlights() {
+  return (
+    <div>
       <h1>
         <code>useFeedHighlights</code>
       </h1>
-      <div>
-        {data?.length === 0 && <p>No items</p>}
 
-        {loading && <Loading />}
-
-        {error && <ErrorMessage error={error} />}
-
-        <button disabled={loading || beforeCount === 0} onClick={prev}>
-          Fetch newer
-        </button>
-
-        {data?.map((item) => (
-          <PublicationCard key={`${item.id}`} publication={item} />
-        ))}
-
-        {hasMore && <p ref={observeRef}>Loading more...</p>}
-      </div>
-    </>
+      <RequireProfileSession message="Log in to view this example.">
+        {({ profile }) => <UseFeedHighlightsInner profileId={profile.id} />}
+      </RequireProfileSession>
+    </div>
   );
 }

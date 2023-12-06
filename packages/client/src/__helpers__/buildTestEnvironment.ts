@@ -9,5 +9,5 @@ dotenv.config();
 export const buildTestEnvironment = (): Environment => {
   invariant(process.env.TESTING_ENV_URL, 'TESTING_ENV_URL is not defined in .env file');
 
-  return new Environment('testing', process.env.TESTING_ENV_URL, GatedEnvironments.sandbox);
+  return new Environment('testing', process.env.TESTING_ENV_URL, GatedEnvironments.development);
 };

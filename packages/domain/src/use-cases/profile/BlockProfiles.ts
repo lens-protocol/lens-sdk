@@ -21,6 +21,7 @@ export class BlockProfiles extends SponsorshipReady<BlockProfilesRequest> {
   protected override async charged(request: BlockProfilesRequest): Promise<void> {
     await this.paidExecution.execute(request);
   }
+
   protected override async sponsored(request: BlockProfilesRequest): Promise<void> {
     await this.delegableExecution.execute(request);
   }

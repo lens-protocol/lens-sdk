@@ -35,11 +35,11 @@ export type PoapEventFragment = {
   startDate: string | null;
   endDate: string | null;
   expiryDate: string | null;
-  virtualEvent: boolean;
-  fromAdmin: boolean;
+  virtualEvent: boolean | null;
+  fromAdmin: boolean | null;
   animationUrl: string | null;
   eventTemplateId: number | null;
-  privateEvent: boolean;
+  privateEvent: boolean | null;
 };
 
 export type PoapTokenFragment = {

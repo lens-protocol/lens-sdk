@@ -5,6 +5,7 @@ import type {
   ChallengeRequest,
   RevokeAuthenticationRequest,
   SignedAuthChallenge,
+  WalletAuthenticationToProfileAuthenticationRequest,
 } from '../../graphql/types.generated';
 import {
   buildPaginatedQueryResult,
@@ -54,6 +55,18 @@ export class AuthenticationApi {
 
     const credentials = new Credentials(newAccessToken, newRefreshToken);
     credentials.checkClock();
+
+    return credentials;
+  }
+
+  async upgrade(
+    request: WalletAuthenticationToProfileAuthenticationRequest,
+    headers?: Record<string, string>,
+  ): Promise<Credentials> {
+    const result = await this.sdk.WalletAuthenticationToProfileAuthentication({ request }, headers);
+    const { accessToken, refreshToken } = result.data.result;
+
+    const credentials = new Credentials(accessToken, refreshToken);
 
     return credentials;
   }

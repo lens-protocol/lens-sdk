@@ -105,6 +105,7 @@ export function mockUpdateProfileManagersRequest(
 ): UpdateProfileManagersRequest {
   return {
     approveSignless: true,
+    sponsored: true,
     ...overrides,
     kind: TransactionKind.UPDATE_PROFILE_MANAGERS,
   };
@@ -187,6 +188,7 @@ export function mockLinkHandleRequest(overrides?: Partial<LinkHandleRequest>): L
     fullHandle: mockFullHandle(),
     profileId: mockProfileId(),
     signless: true,
+    sponsored: true,
     ...overrides,
     kind: TransactionKind.LINK_HANDLE,
   };
@@ -229,6 +231,7 @@ export function mockUnblockProfilesRequest(
   return {
     signless: true,
     profileIds: [mockProfileId()],
+    sponsored: true,
     ...overrides,
     kind: TransactionKind.UNBLOCK_PROFILE,
   };

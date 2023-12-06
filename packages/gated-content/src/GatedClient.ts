@@ -20,11 +20,15 @@ import { SiweMessage } from 'siwe';
 import { createAuthStorage } from './AuthStorage';
 import { CannotDecryptError } from './CannotDecryptError';
 import { ICipher, IEncryptionProvider } from './IEncryptionProvider';
-import { DecryptionContext, transformFromGql, transformFromRaw } from './conditions';
+import { transformFromGql, transformFromRaw, DecryptionContext } from './conditions';
 import { PublicationMetadataDecryptor, PublicationMetadataEncryptor } from './encryption';
 import { EnvironmentConfig } from './environments';
 import * as gql from './graphql';
 import { isLitError } from './types';
+
+function isIncorrectAccessControlConditionsError(error: unknown): boolean {
+  return isLitError(error) && error.errorCode === 'incorrect_access_control_conditions';
+}
 
 /**
  * As per [EIP-4361](https://eips.ethereum.org/EIPS/eip-4361) the information
@@ -176,11 +180,7 @@ export class GatedClient {
     encryptedMetadata: T,
     context: DecryptionContext,
   ): Promise<T> {
-    const cipher = await this.retrieveCipher(
-      encryptedMetadata.encryptedWith.encryptionKey,
-      encryptedMetadata.encryptedWith.accessCondition,
-      context,
-    );
+    const cipher = await this.retrieveCipher(encryptedMetadata, context);
 
     switch (encryptedMetadata.__typename) {
       case 'ArticleMetadataV3':
@@ -248,27 +248,56 @@ export class GatedClient {
       authSig,
       chain: this.environment.chainName,
       symmetricKey,
-      unifiedAccessControlConditions: transformFromRaw(accessCondition, this.environment),
+      unifiedAccessControlConditions: transformFromRaw(
+        accessCondition,
+        this.environment.accessControlContract,
+      ),
     });
 
     return raw.toLitEncryptionKey(uint8arrayToHexString(encryptedSymmetricKey));
   }
 
-  private async retrieveCipher(
-    encryptedEncryptionKey: gql.Scalars['ContentEncryptionKey'],
-    accessCondition: gql.RootCondition,
+  private async retrieveCipher<T extends gql.EncryptedFragmentOfAnyPublicationMetadata>(
+    encryptedMetadata: T,
     context: DecryptionContext,
   ): Promise<ICipher> {
-    const authSig = await this.getOrCreateAuthSig();
-
-    const encryptionKey = await this.litClient.getEncryptionKey({
-      authSig,
-      chain: this.environment.chainName,
-      toDecrypt: encryptedEncryptionKey,
-      unifiedAccessControlConditions: transformFromGql(accessCondition, this.environment, context),
-    });
+    const encryptionKey = await this.retrieveEncryptionKey(encryptedMetadata, context);
 
     return this.encryptionProvider.importCipher(encryptionKey);
+  }
+
+  private async retrieveEncryptionKey<T extends gql.EncryptedFragmentOfAnyPublicationMetadata>(
+    encryptedMetadata: T,
+    context: DecryptionContext,
+  ): Promise<Uint8Array> {
+    const authSig = await this.getOrCreateAuthSig();
+
+    try {
+      return await this.litClient.getEncryptionKey({
+        authSig,
+        chain: this.environment.chainName,
+        toDecrypt: encryptedMetadata.encryptedWith.encryptionKey,
+        unifiedAccessControlConditions: transformFromGql(
+          encryptedMetadata.encryptedWith,
+          this.environment.accessControlContract,
+          context,
+        ),
+      });
+    } catch (error: unknown) {
+      if (isIncorrectAccessControlConditionsError(error) && this.environment.patches) {
+        return await this.litClient.getEncryptionKey({
+          authSig,
+          chain: this.environment.chainName,
+          toDecrypt: encryptedMetadata.encryptedWith.encryptionKey,
+          unifiedAccessControlConditions: transformFromGql(
+            encryptedMetadata.encryptedWith,
+            this.environment.patches.accessControlContract,
+            context,
+          ),
+        });
+      }
+      throw error;
+    }
   }
 
   private async createSiweMessage() {

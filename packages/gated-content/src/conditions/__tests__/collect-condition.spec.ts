@@ -1,8 +1,12 @@
 import { toPublicationId } from '@lens-protocol/metadata';
 import { BigNumber } from 'ethers';
 
-import { testing } from '../../__helpers__/env';
-import { mockCollectCondition, mockProfileId, mockPublicationId } from '../../__helpers__/mocks';
+import {
+  mockAccessControlContract,
+  mockCollectCondition,
+  mockProfileId,
+  mockPublicationId,
+} from '../../__helpers__/mocks';
 import { transformCollectCondition } from '../collect-condition';
 import {
   DecryptionContext,
@@ -10,9 +14,11 @@ import {
   LitKnownMethods,
   LitKnownParams,
   LitScalarOperator,
-  SupportedChains,
 } from '../types';
+import { toLitSupportedChainName } from '../utils';
 import { InvalidAccessCriteriaError } from '../validators';
+
+const contract = mockAccessControlContract();
 
 describe(`Given the "${transformCollectCondition.name}" function`, () => {
   describe('when called with a Collect Publication condition', () => {
@@ -21,7 +27,7 @@ describe(`Given the "${transformCollectCondition.name}" function`, () => {
     it('should return the expected Lit AccessControlCondition for a given publication Id', () => {
       const condition = mockCollectCondition({ publicationId });
 
-      const actual = transformCollectCondition(condition, testing);
+      const actual = transformCollectCondition(condition, contract);
 
       const publicationIdParts = publicationId
         .split('-')
@@ -29,8 +35,8 @@ describe(`Given the "${transformCollectCondition.name}" function`, () => {
       const expectedLitAccessConditions = [
         {
           conditionType: LitConditionType.EVM_CONTRACT,
-          chain: SupportedChains.MUMBAI,
-          contractAddress: testing.contractAddress,
+          chain: toLitSupportedChainName(contract.chainId),
+          contractAddress: contract.address,
           functionName: LitKnownMethods.HAS_COLLECTED,
           functionParams: [LitKnownParams.USER_ADDRESS, ...publicationIdParts, '0', '0x'],
           functionAbi: {
@@ -89,7 +95,7 @@ describe(`Given the "${transformCollectCondition.name}" function`, () => {
       };
       const condition = mockCollectCondition({ publicationId });
 
-      const actual = transformCollectCondition(condition, testing, context);
+      const actual = transformCollectCondition(condition, contract, context);
 
       const publicationIdParts = publicationId
         .split('-')
@@ -117,7 +123,7 @@ describe(`Given the "${transformCollectCondition.name}" function`, () => {
     ])(
       `should throw an $expectedErrorCtor.name $description`,
       ({ condition, expectedErrorCtor }) => {
-        expect(() => transformCollectCondition(condition, testing)).toThrow(expectedErrorCtor);
+        expect(() => transformCollectCondition(condition, contract)).toThrow(expectedErrorCtor);
       },
     );
   });

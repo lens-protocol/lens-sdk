@@ -38,6 +38,9 @@ export function handleRelayError(
     case LensProfileManagerRelayErrorReasonType.NoLensManagerEnabled:
       return failure(new BroadcastingError(BroadcastingErrorReason.NO_LENS_MANAGER_ENABLED));
 
+    case LensProfileManagerRelayErrorReasonType.RequiresSignature:
+      return failure(new BroadcastingError(BroadcastingErrorReason.REQUIRES_SIGNATURE));
+
     default:
       throw new InvariantError(`Unexpected relay error reason: ${error.reason}`);
   }

@@ -41,7 +41,7 @@ export type CreateQuoteArgs = {
   /**
    * The Open Actions associated with the publication.
    *
-   * If none provided the quote will be automatically hosted on Momoka.
+   * @defaultValue empty, no open actions
    */
   actions?: OpenActionConfig[];
   /**
@@ -332,7 +332,7 @@ export type CreateQuoteArgs = {
  *
  * See {@link DegreesOfSeparationReferencePolicyConfig} for more details.
  *
- * ## Self-funded Quote
+ * ## Self-funded approach
  *
  * In case you want to pay for the transaction gas costs yourself, you can do so by setting the
  * `sponsored` parameter to `false`:
@@ -364,7 +364,7 @@ export type CreateQuoteArgs = {
  *
  * The example above shows how to detect when the user does not have enough funds to pay for the transaction cost.
  *
- * ## Self-funded Fallback
+ * ## Self-funded fallback
  *
  * If for some reason the Lens API cannot sponsor the transaction, the hook will fail with a {@link BroadcastingError} with one of the following reasons:
  * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
@@ -426,6 +426,17 @@ export type CreateQuoteArgs = {
  *  metadata: uri
  * });
  * ```
+ *
+ * ## Momoka quotes
+ *
+ * For a quote to be hosted on Momoka it must meet the following criteria:
+ * - it must be a quote of a Momoka publication
+ * - reference policy `ANYONE` (which is also the default value in case it's not specified)
+ * - no open actions
+ * - sponsored by the Lens API (which is also the default value in case it's not specified)
+ *
+ * If the quote does not meet the above criteria, it will be hosted on-chain.
+ *
  * @category Publications
  * @group Hooks
  */

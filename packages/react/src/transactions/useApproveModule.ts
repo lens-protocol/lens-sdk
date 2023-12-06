@@ -58,7 +58,7 @@ export type ApproveModuleArgs = {
  * a Profile Manager (see {@link useUpdateProfileManagers} hook).
  *
  *
- * ## Pre-approve a Profile Follow module
+ * ## Pre-approve a profile follow module
  *
  * Assuming you integrated the {@link useFollow} hook in your application, you might
  * find that, in case of paid follows the result might fail with an {@link InsufficientAllowanceError}.
@@ -118,7 +118,7 @@ export type ApproveModuleArgs = {
  * };
  * ```
  *
- * ## Pre-approve a Publication Collect module
+ * ## Pre-approve a publication collect module
  *
  * Similarly to the Profile Follow module, you can use the `useApproveModule` hook
  * to pre-approve a Publication Collect module (legacy or Open Action based).

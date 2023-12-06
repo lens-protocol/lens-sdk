@@ -48,6 +48,7 @@ export const UpdateProfileManagersRequestSchema = z
     add: EvmAddressSchema.array().min(1).optional(),
     remove: EvmAddressSchema.array().min(1).optional(),
     kind: z.literal(TransactionKind.UPDATE_PROFILE_MANAGERS),
+    sponsored: z.boolean(),
   })
   .superRefine((val, ctx): val is UpdateProfileManagersRequest => {
     if (['add', 'remove', 'approveSignless'].every((key) => !(key in val))) {
@@ -105,6 +106,7 @@ export const LinkHandleRequestSchema = z.object({
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.LINK_HANDLE),
   signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 export const UnlinkHandleRequestSchema = z.object({
@@ -118,6 +120,7 @@ export const UnblockProfilesRequestSchema = z.object({
   profileIds: ProfileIdSchema.array().min(1),
   kind: z.literal(TransactionKind.UNBLOCK_PROFILE),
   signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 export const ClaimHandleRequestSchema = z.union([

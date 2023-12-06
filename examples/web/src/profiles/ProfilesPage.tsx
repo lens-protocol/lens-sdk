@@ -42,11 +42,6 @@ const profileHooks = [
     path: '/profiles/useFollow',
   },
   {
-    label: 'useRecommendedProfiles',
-    description: 'Fetch a list of recommended profiles.',
-    path: '/profiles/useRecommendedProfiles',
-  },
-  {
     label: 'useWhoActedOnPublication',
     description: 'Fetch a list of profiles who acted on a publication.',
     path: '/profiles/useWhoActedOnPublication',
