@@ -21,6 +21,12 @@ type LinkHandleButtonProps = {
 function LinkHandleButton({ handle }: LinkHandleButtonProps) {
   const { execute, error, loading } = useLinkHandle();
 
+  const linkHandle = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    await execute({ handle, sponsored: formData.get('sponsored') === 'on' });
+  };
+
   if (error) {
     toast.error(error.message);
   }
@@ -29,13 +35,15 @@ function LinkHandleButton({ handle }: LinkHandleButtonProps) {
 
   if (isLinkable) {
     return (
-      <button
-        onClick={() => execute({ handle })}
-        disabled={loading}
-        style={{ padding: '1px 6px', margin: 0 }}
-      >
-        Link
-      </button>
+      <form onSubmit={linkHandle}>
+        <button type="submit" disabled={loading}>
+          Link
+        </button>
+        <label>
+          <input type="checkbox" name="sponsored" value="on" defaultChecked={true} />
+          sponsored
+        </label>
+      </form>
     );
   }
 
@@ -128,18 +136,20 @@ function UseOwnedHandlesInner({
   return (
     <div>
       <h4>Owned handles</h4>
-      <ul>
-        {handleResult.map((handle, index) => (
-          <li key={index}>
+      <div>
+        {handleResult.map((handle) => (
+          <article key={handle.id}>
+            <p>
+              <strong> {handle.fullHandle}</strong>
+            </p>
             <span>
-              {handle.fullHandle}{' '}
-              {handle.linkedTo ? `linked to ${handle.linkedTo.nftTokenId}` : 'NOT LINKED'}
-            </span>{' '}
+              Status: {handle.linkedTo ? `linked to ${handle.linkedTo.nftTokenId}` : 'NOT LINKED'}
+            </span>
             <LinkHandleButton handle={handle} />{' '}
             <UnlinkHandleButton handle={handle} profileId={profileId} />
-          </li>
+          </article>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
@@ -159,7 +169,7 @@ function Content({ address, profile }: ContentProps) {
         Active profile: <strong>{profile.id}</strong>. Current handle{' '}
         <strong>{profile.handle?.fullHandle || 'NOT LINKED'}</strong>.
       </p>
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
         <UseOwnedProfiles address={address} />
         <UseOwnedHandlesInner address={address} profileId={profile.id} />
       </div>

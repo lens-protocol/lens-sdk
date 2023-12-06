@@ -29,7 +29,7 @@ export type { LoginError, LoginRequest };
  * const { execute, loading, data, error } = useLogin();
  * ```
  *
- * ## Login with a Profile Id
+ * ## Login with a profile Id
  *
  * ```tsx
  * const { execute, loading, data, error } = useLogin();
@@ -56,7 +56,7 @@ export type { LoginError, LoginRequest };
  * }
  * ```
  *
- * ## Login with a Profile Handle
+ * ## Login with a profile handle
  *
  * Combine with `useLazyProfile` to login with Profile handle
  * ```tsx

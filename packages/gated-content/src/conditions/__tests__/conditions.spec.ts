@@ -8,11 +8,11 @@ import {
 } from '@lens-protocol/metadata';
 import { BigNumber } from 'ethers';
 
-import { testing } from '../../__helpers__/env';
 import * as metadata from '../../__helpers__/mocks';
 import * as gql from '../../graphql/__helpers__/mocks';
-import { DecryptionContext, transformFromGql, transformFromRaw } from '../index';
+import { transformFromGql, transformFromRaw } from '../index';
 import {
+  DecryptionContext,
   LitConditionType,
   LitContractType,
   LitKnownMethods,
@@ -20,10 +20,12 @@ import {
   LitScalarOperator,
   SupportedChains,
 } from '../types';
+import { toLitSupportedChainName } from '../utils';
 import { InvalidAccessCriteriaError } from '../validators';
 
 const ownerProfileId = metadata.mockProfileId();
 const knownAddress = metadata.mockEvmAddress();
+const contract = metadata.mockAccessControlContract();
 
 describe(`Given the conditions helpers`, () => {
   describe.each([
@@ -33,7 +35,7 @@ describe(`Given the conditions helpers`, () => {
         metadata.mockProfileOwnershipCondition({ profileId: ownerProfileId }),
         metadata.mockEoaOwnershipCondition({ address: knownAddress }),
       ]),
-      gql: gql.mockRootCondition({
+      api: gql.mockRootCondition({
         criteria: [
           gql.mockProfileOwnershipCondition({ profileId: ownerProfileId }),
           gql.mockEoaOwnershipCondition({ address: knownAddress }),
@@ -42,8 +44,8 @@ describe(`Given the conditions helpers`, () => {
       expectedLitAccessConditions: [
         {
           conditionType: LitConditionType.EVM_CONTRACT,
-          chain: SupportedChains.MUMBAI,
-          contractAddress: testing.contractAddress,
+          chain: toLitSupportedChainName(contract.chainId),
+          contractAddress: contract.address,
           functionName: LitKnownMethods.HAS_ACCESS,
           functionParams: [
             LitKnownParams.USER_ADDRESS,
@@ -112,7 +114,7 @@ describe(`Given the conditions helpers`, () => {
           }),
         ]),
       ]),
-      gql: gql.mockRootCondition({
+      api: gql.mockRootCondition({
         criteria: [
           gql.mockProfileOwnershipCondition({ profileId: ownerProfileId }),
           gql.mockOrCondition({
@@ -128,8 +130,8 @@ describe(`Given the conditions helpers`, () => {
       expectedLitAccessConditions: [
         {
           conditionType: LitConditionType.EVM_CONTRACT,
-          chain: SupportedChains.MUMBAI,
-          contractAddress: testing.contractAddress,
+          chain: toLitSupportedChainName(contract.chainId),
+          contractAddress: contract.address,
           functionName: LitKnownMethods.HAS_ACCESS,
           functionParams: [
             LitKnownParams.USER_ADDRESS,
@@ -213,7 +215,7 @@ describe(`Given the conditions helpers`, () => {
           }),
         ]),
       ]),
-      gql: gql.mockRootCondition({
+      api: gql.mockRootCondition({
         criteria: [
           gql.mockProfileOwnershipCondition({ profileId: ownerProfileId }),
           gql.mockAndCondition({
@@ -229,8 +231,8 @@ describe(`Given the conditions helpers`, () => {
       expectedLitAccessConditions: [
         {
           conditionType: LitConditionType.EVM_CONTRACT,
-          chain: SupportedChains.MUMBAI,
-          contractAddress: testing.contractAddress,
+          chain: toLitSupportedChainName(contract.chainId),
+          contractAddress: contract.address,
           functionName: LitKnownMethods.HAS_ACCESS,
           functionParams: [
             LitKnownParams.USER_ADDRESS,
@@ -303,10 +305,10 @@ describe(`Given the conditions helpers`, () => {
         ],
       ],
     },
-  ])(`and $description`, ({ raw, gql, expectedLitAccessConditions }) => {
+  ])(`and $description`, ({ raw, api, expectedLitAccessConditions }) => {
     describe(`when calling "${transformFromRaw.name}"`, () => {
       it('should return the expected Lit AccessControlCondition', () => {
-        const actual = transformFromRaw(raw, testing);
+        const actual = transformFromRaw(raw, contract);
 
         expect(actual).toMatchObject(expectedLitAccessConditions);
       });
@@ -318,7 +320,10 @@ describe(`Given the conditions helpers`, () => {
       };
 
       it('should return the expected Lit AccessControlCondition', () => {
-        const actual = transformFromGql(gql, testing, context);
+        const strategy = gql.mockPublicationMetadataLitEncryption({
+          accessCondition: api,
+        });
+        const actual = transformFromGql(strategy, contract, context);
 
         expect(actual).toMatchObject(expectedLitAccessConditions);
       });
@@ -435,7 +440,7 @@ describe(`Given the conditions helpers`, () => {
     },
   ])(`when calling "${transformFromRaw.name}" with $description`, ({ condition }) => {
     it(`should throw a ${InvalidAccessCriteriaError.name}`, () => {
-      expect(() => transformFromRaw(condition as AccessCondition, testing)).toThrow(
+      expect(() => transformFromRaw(condition as AccessCondition, contract)).toThrow(
         InvalidAccessCriteriaError,
       );
     });

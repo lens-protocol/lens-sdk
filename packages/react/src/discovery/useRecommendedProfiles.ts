@@ -15,7 +15,7 @@ export type UseRecommendedProfilesArgs = PaginatedArgs<ProfileRecommendationsReq
 /**
  * `useRecommendedProfiles` is a paginated hook that lets you fetch recommended profiles.
  *
- * @category Profiles
+ * @category Discovery
  * @group Hooks
  *
  * @example

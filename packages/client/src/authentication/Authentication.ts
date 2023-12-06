@@ -13,6 +13,7 @@ import type {
   ChallengeRequest,
   RevokeAuthenticationRequest,
   SignedAuthChallenge,
+  WalletAuthenticationToProfileAuthenticationRequest,
 } from '../graphql/types.generated';
 import { buildAuthorizationHeader } from '../helpers/buildAuthorizationHeader';
 import { requireAuthHeaders } from '../helpers/requireAuthHeaders';
@@ -41,6 +42,13 @@ export class Authentication implements IAuthentication {
   async authenticate(request: SignedAuthChallenge): Promise<void> {
     const credentials = await this.api.authenticate(request);
     await this.credentials.set(credentials);
+  }
+
+  async upgradeCredentials(request: WalletAuthenticationToProfileAuthenticationRequest) {
+    return requireAuthHeaders(this, async (headers) => {
+      const credentials = await this.api.upgrade(request, headers);
+      await this.credentials.set(credentials);
+    });
   }
 
   async verify(accessToken: string): Promise<boolean> {

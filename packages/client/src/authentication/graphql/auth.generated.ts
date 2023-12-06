@@ -56,6 +56,14 @@ export type AuthRefreshMutationVariables = Types.Exact<{
 
 export type AuthRefreshMutation = { result: { accessToken: string; refreshToken: string } };
 
+export type WalletAuthenticationToProfileAuthenticationMutationVariables = Types.Exact<{
+  request: Types.WalletAuthenticationToProfileAuthenticationRequest;
+}>;
+
+export type WalletAuthenticationToProfileAuthenticationMutation = {
+  result: { accessToken: string; refreshToken: string };
+};
+
 export type RevokeAuthenticationMutationVariables = Types.Exact<{
   request: Types.RevokeAuthenticationRequest;
 }>;
@@ -432,6 +440,53 @@ export const AuthRefreshDocument = {
     },
   ],
 } as unknown as DocumentNode;
+export const WalletAuthenticationToProfileAuthenticationDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'WalletAuthenticationToProfileAuthentication' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'WalletAuthenticationToProfileAuthenticationRequest' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'result' },
+            name: { kind: 'Name', value: 'walletAuthenticationToProfileAuthentication' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'accessToken' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'refreshToken' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
 export const RevokeAuthenticationDocument = {
   kind: 'Document',
   definitions: [
@@ -485,6 +540,9 @@ const CurrentSessionDocumentString = print(CurrentSessionDocument);
 const ApprovedAuthenticationsDocumentString = print(ApprovedAuthenticationsDocument);
 const AuthAuthenticateDocumentString = print(AuthAuthenticateDocument);
 const AuthRefreshDocumentString = print(AuthRefreshDocument);
+const WalletAuthenticationToProfileAuthenticationDocumentString = print(
+  WalletAuthenticationToProfileAuthenticationDocument,
+);
 const RevokeAuthenticationDocumentString = print(RevokeAuthenticationDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
@@ -595,6 +653,26 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'AuthRefresh',
+        'mutation',
+      );
+    },
+    WalletAuthenticationToProfileAuthentication(
+      variables: WalletAuthenticationToProfileAuthenticationMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: WalletAuthenticationToProfileAuthenticationMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<WalletAuthenticationToProfileAuthenticationMutation>(
+            WalletAuthenticationToProfileAuthenticationDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'WalletAuthenticationToProfileAuthentication',
         'mutation',
       );
     },

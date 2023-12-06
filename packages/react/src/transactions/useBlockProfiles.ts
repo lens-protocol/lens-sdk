@@ -151,7 +151,7 @@ export type BlockOperation = UseDeferredTask<
  *     profiles: [profileId],
  *   });
  *
- * if (result.isFailure()) {
+ *   if (result.isFailure()) {
  *     // handle failure scenarios
  *     return;
  *   }
@@ -224,8 +224,8 @@ export type BlockOperation = UseDeferredTask<
  *         if ([BroadcastingErrorReason.NOT_SPONSORED, BroadcastingErrorReason.RATE_LIMITED].includes(sponsoredResult.error.reason)) {
  *
  *           const selfFundedResult = await execute({
- *             metadataURI: uri,
- *             sponsored: false
+ *              profiles: [profileId],
+ *              sponsored: false
  *           });
  *
  *           // continue with selfFundedResult as in the previous example
