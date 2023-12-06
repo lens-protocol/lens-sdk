@@ -1,17 +1,17 @@
 import { toProfileId } from '@lens-protocol/metadata';
 import { BigNumber } from 'ethers';
 
-import { testing } from '../../__helpers__/env';
-import { mockProfileId, mockProfileOwnershipCondition } from '../../__helpers__/mocks';
-import { transformProfileCondition } from '../profile-condition';
 import {
-  LitConditionType,
-  LitKnownMethods,
-  LitKnownParams,
-  LitScalarOperator,
-  SupportedChains,
-} from '../types';
+  mockAccessControlContract,
+  mockProfileId,
+  mockProfileOwnershipCondition,
+} from '../../__helpers__/mocks';
+import { transformProfileCondition } from '../profile-condition';
+import { LitConditionType, LitKnownMethods, LitKnownParams, LitScalarOperator } from '../types';
+import { toLitSupportedChainName } from '../utils';
 import { InvalidAccessCriteriaError } from '../validators';
+
+const contract = mockAccessControlContract();
 
 describe(`Given the "${transformProfileCondition.name}" function`, () => {
   describe('when called with a Profile Ownership condition', () => {
@@ -20,13 +20,13 @@ describe(`Given the "${transformProfileCondition.name}" function`, () => {
     it('should return the expected Lit AccessControlCondition', () => {
       const condition = mockProfileOwnershipCondition({ profileId });
 
-      const actual = transformProfileCondition(condition, testing);
+      const actual = transformProfileCondition(condition, contract);
 
       const expectedLitAccessConditions = [
         {
           conditionType: LitConditionType.EVM_CONTRACT,
-          chain: SupportedChains.MUMBAI,
-          contractAddress: testing.contractAddress,
+          chain: toLitSupportedChainName(contract.chainId),
+          contractAddress: contract.address,
           functionName: LitKnownMethods.HAS_ACCESS,
           functionParams: [LitKnownParams.USER_ADDRESS, BigNumber.from(profileId).toString(), '0x'],
           functionAbi: {
@@ -77,7 +77,7 @@ describe(`Given the "${transformProfileCondition.name}" function`, () => {
         }),
       },
     ])(`should throw an ${InvalidAccessCriteriaError.name} $description`, ({ condition }) => {
-      expect(() => transformProfileCondition(condition, testing)).toThrow(
+      expect(() => transformProfileCondition(condition, contract)).toThrow(
         InvalidAccessCriteriaError,
       );
     });

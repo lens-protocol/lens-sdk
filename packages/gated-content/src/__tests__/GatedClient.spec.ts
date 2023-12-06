@@ -7,13 +7,13 @@ import { Wallet } from 'ethers';
 
 import { CannotDecryptError } from '../CannotDecryptError';
 import { DecryptionContext, GatedClient } from '../GatedClient';
-import { testing } from '../__helpers__/env';
 import {
   mockEoaOwnershipCondition,
   mockProfileId,
   mockProfileOwnershipCondition,
   mockPublicationMetadata,
 } from '../__helpers__/mocks';
+import { development } from '../environments';
 import { EncryptedFragmentOfAnyPublicationMetadata } from '../graphql';
 import * as gql from '../graphql/__helpers__/mocks';
 import { webCryptoProvider } from '../web';
@@ -34,7 +34,7 @@ function setupTestScenario() {
       uri: 'https://localhost/login',
     },
     signer,
-    environment: testing,
+    environment: development,
     storageProvider: new InMemoryStorageProvider(),
     encryptionProvider: webCryptoProvider(),
   });
