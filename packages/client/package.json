@@ -25,6 +25,18 @@
     "dist",
     "gated"
   ],
+  "keywords": [
+    "lens-api",
+    "lens-protocol-sdk",
+    "lens-protocol",
+    "lens",
+    "node",
+    "nodejs",
+    "sdk",
+    "social",
+    "web3-social",
+    "web3"
+  ],
   "scripts": {
     "build": "preconstruct build",
     "eslint:fix": "pnpm run eslint --fix",
