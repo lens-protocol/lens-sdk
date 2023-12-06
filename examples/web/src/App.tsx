@@ -20,6 +20,7 @@ import {
   UseExplorePublications,
   UseFeed,
   UseFeedHighlights,
+  UseRecommendedProfiles,
   UseSearchProfiles,
   UseSearchPublications,
 } from './discovery';
@@ -49,7 +50,6 @@ import {
   UseProfileManagers,
   UseProfiles,
   UseProfilesManaged,
-  UseRecommendedProfiles,
   UseSetProfileMetadata,
   UseUpdateFollowPolicy,
   UseUpdateProfileManagers,
@@ -147,7 +147,6 @@ export function App() {
                       <Route path="useProfileFollowing" element={<UseProfileFollowing />} />
                       <Route path="useMutualFollowers" element={<UseMutualFollowers />} />
                       <Route path="useFollow" element={<UseFollowAndUnfollow />} />
-                      <Route path="useRecommendedProfiles" element={<UseRecommendedProfiles />} />
                       <Route path="useProfileManagers" element={<UseProfileManagers />} />
                       <Route
                         path="useUpdateProfileManagers"
@@ -175,6 +174,7 @@ export function App() {
                       <Route path="useSearchProfiles" element={<UseSearchProfiles />} />
                       <Route path="useExploreProfiles" element={<UseExploreProfiles />} />
                       <Route path="useExplorePublications" element={<UseExplorePublications />} />
+                      <Route path="useRecommendedProfiles" element={<UseRecommendedProfiles />} />
                     </Route>
 
                     <Route path="/revenue">

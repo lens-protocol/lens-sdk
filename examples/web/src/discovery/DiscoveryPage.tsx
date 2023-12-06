@@ -31,6 +31,11 @@ const discoveryHooks = [
     description: 'Explore publications using filters.',
     path: '/discovery/useExplorePublications',
   },
+  {
+    label: 'useRecommendedProfiles & useDismissRecommendedProfiles',
+    description: 'Fetch a list of recommended profiles. Dismiss a recommendation.',
+    path: '/discovery/useRecommendedProfiles',
+  },
 ];
 
 export function DiscoveryPage() {
