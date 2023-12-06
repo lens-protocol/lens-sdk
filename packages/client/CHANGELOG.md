@@ -1,5 +1,17 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.25
+
+### Minor Changes
+
+- 6ec00c5a6: **feat:** Added `client.authentication.upgradeCredentials` method
+
+### Patch Changes
+
+- 913bc91af: **fixed:** misconfiguration of Lit Access Control contract address
+- Updated dependencies [913bc91af]
+  - @lens-protocol/gated-content@0.3.3-alpha.19
+
 ## 2.0.0-alpha.24
 
 ### Minor Changes

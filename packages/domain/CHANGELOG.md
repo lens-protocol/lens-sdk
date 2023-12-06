@@ -1,5 +1,17 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.17
+
+### Minor Changes
+
+- d255b3627: **feat:** Added `useDismissRecommendedProfiles` hook
+
+### Patch Changes
+
+- dd5088811: feat: adds support for self-funedd updating profile managers
+- c6da5071d: feat: add self-funded support for unblocking profiles
+- b8279c3bd: **fix:** Added support for missing LensProfileManagerRelayErrorReasonType.RequiresSignature
+
 ## 0.11.0-alpha.16
 
 ### Minor Changes

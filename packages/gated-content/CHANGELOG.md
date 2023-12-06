@@ -1,5 +1,11 @@
 # @lens-protocol/gated-content
 
+## 0.3.3-alpha.19
+
+### Patch Changes
+
+- 913bc91af: **fixed:** misconfiguration of Lit Access Control contract address
+
 ## 0.3.3-alpha.18
 
 ### Patch Changes
