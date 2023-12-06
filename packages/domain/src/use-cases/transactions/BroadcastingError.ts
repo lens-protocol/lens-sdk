@@ -22,6 +22,10 @@ export enum BroadcastingErrorReason {
    */
   NO_LENS_MANAGER_ENABLED = 'NO_LENS_MANAGER_ENABLED',
   /**
+   * The transaction requires a signature.
+   */
+  REQUIRES_SIGNATURE = 'REQUIRES_SIGNATURE',
+  /**
    * A not recognized failure
    */
   UNKNOWN = 'UNKNOWN',
