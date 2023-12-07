@@ -1,5 +1,6 @@
 import { Profile } from '@lens-protocol/api-bindings';
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   TransactionKind,
   UserRejectedError,
@@ -25,6 +26,19 @@ export type UnfollowArgs = {
    * The profile to unfollow
    */
   profile: Profile;
+  /**
+   * Whether the transaction costs should be sponsored by the Lens API or
+   * should be paid by the authenticated wallet.
+   *
+   * There are scenarios where the sponsorship will be denied regardless of this value.
+   * See {@link BroadcastingError} with:
+   * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
+   * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
+   * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
+   *
+   * @defaultValue true, the request will be attempted to be sponsored by the Lens API.
+   */
+  sponsored?: boolean;
 };
 
 /**
@@ -46,7 +60,11 @@ export type UnfollowArgs = {
  */
 export function useUnfollow(): UseDeferredTask<
   UnfollowAsyncResult,
-  BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError,
+  | BroadcastingError
+  | InsufficientGasError
+  | PendingSigningRequestError
+  | UserRejectedError
+  | WalletConnectionError,
   UnfollowArgs
 > {
   const { data: session } = useSession();
@@ -66,6 +84,7 @@ export function useUnfollow(): UseDeferredTask<
       kind: TransactionKind.UNFOLLOW_PROFILE,
       profileId: args.profile.id,
       signless: session.profile.signless,
+      sponsored: args.sponsored ?? true,
     });
   });
 }

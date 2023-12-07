@@ -1,14 +1,14 @@
 import {
-  CreateUnfollowTypedDataDocument,
-  CreateUnfollowTypedDataData,
-  CreateUnfollowTypedDataVariables,
-  SafeApolloClient,
-  omitTypename,
-  RelaySuccess,
-  UnfollowData,
-  UnfollowVariables,
-  UnfollowDocument,
   CreateUnfollowBroadcastItemResult,
+  CreateUnfollowTypedDataData,
+  CreateUnfollowTypedDataDocument,
+  CreateUnfollowTypedDataVariables,
+  RelaySuccess,
+  SafeApolloClient,
+  UnfollowData,
+  UnfollowDocument,
+  UnfollowVariables,
+  omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -22,17 +22,22 @@ import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-k
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
+import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
+import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
 import { ITransactionFactory } from '../ITransactionFactory';
-import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 import { handleRelayError } from '../relayer';
 
 export class UnfollowProfileGateway
+  extends AbstractContractCallGateway<UnfollowRequest>
   implements IDelegatedTransactionGateway<UnfollowRequest>, ISignedOnChainGateway<UnfollowRequest>
 {
   constructor(
+    providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<UnfollowRequest>,
-  ) {}
+  ) {
+    super(providerFactory);
+  }
 
   async createDelegatedTransaction(
     request: UnfollowRequest,
@@ -62,8 +67,12 @@ export class UnfollowProfileGateway
       id: result.id,
       request,
       typedData: omitTypename(result.typedData),
-      fallback: this.createRequestFallback(request, result),
     });
+  }
+
+  protected async createEncodedData(request: UnfollowRequest): Promise<ContractCallDetails> {
+    const result = await this.createTypedData(request);
+    return this.createUnfollowCallData(result);
   }
 
   private async relayWithProfileManager(
@@ -79,10 +88,7 @@ export class UnfollowProfileGateway
     });
 
     if (data.result.__typename === 'LensProfileManagerRelayError') {
-      const result = await this.createTypedData(request);
-      const fallback = this.createRequestFallback(request, result);
-
-      return handleRelayError(data.result, fallback);
+      return handleRelayError(data.result);
     }
 
     return success(data.result);
@@ -105,17 +111,13 @@ export class UnfollowProfileGateway
     return data.result;
   }
 
-  private createRequestFallback(
-    request: UnfollowRequest,
-    result: CreateUnfollowBroadcastItemResult,
-  ): SelfFundedProtocolTransactionRequest<UnfollowRequest> {
+  private createUnfollowCallData(result: CreateUnfollowBroadcastItemResult): ContractCallDetails {
     const contract = lensHub(result.typedData.domain.verifyingContract);
     const encodedData = contract.interface.encodeFunctionData('unfollow', [
       result.typedData.message.unfollowerProfileId,
       result.typedData.message.idsOfProfilesToUnfollow,
     ]);
     return {
-      ...request,
       contractAddress: result.typedData.domain.verifyingContract,
       encodedData: encodedData as Data,
     };
