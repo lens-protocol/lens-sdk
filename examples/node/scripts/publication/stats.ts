@@ -6,7 +6,7 @@ async function main() {
   });
 
   const result = await client.publication.fetch({
-    forId: '0x04-0x0b',
+    forId: '0x05-0x02',
   });
 
   if (result && isMirrorPublication(result)) {

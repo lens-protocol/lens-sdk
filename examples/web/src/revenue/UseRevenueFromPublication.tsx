@@ -6,7 +6,7 @@ import { PublicationRevenueCard } from './components/PublicationRevenueCard';
 
 export function UseRevenueFromPublication() {
   const { data, error, loading } = useRevenueFromPublication({
-    for: publicationId('0x04-0x0b'),
+    for: publicationId('0x05-0x02'),
   });
 
   if (loading) return <Loading />;
