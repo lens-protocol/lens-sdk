@@ -5,7 +5,14 @@ import {
   AnyTransactionRequest,
   IPaidTransactionGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { Amount, ChainType, Data, EvmAddress, ILogger } from '@lens-protocol/shared-kernel';
+import {
+  Amount,
+  ChainType,
+  Data,
+  EvmAddress,
+  ILogger,
+  LoggerLevel,
+} from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { ITransactionRequest } from '../../wallet/adapters/ConcreteWallet';
@@ -42,9 +49,7 @@ export abstract class AbstractContractCallGateway<TRequest extends AnyTransactio
     const { contractAddress, encodedData } = await this.createEncodedData(request);
 
     // skip gas estimation if debug mode is enabled
-    const skipEstimation = true; // TODO use logger.level === 'debug' instead
-
-    if (skipEstimation) {
+    if (this.logger.level === LoggerLevel.Debug) {
       const transactionRequest = {
         to: contractAddress,
         from: wallet.address,

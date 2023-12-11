@@ -12,11 +12,11 @@ import {
   TransactionResponders,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { TokenAvailability } from '@lens-protocol/domain/use-cases/wallets';
-import { ILogger, invariant } from '@lens-protocol/shared-kernel';
+import { ILogger, invariant, LoggerLevel } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
 
-import { ConsoleLogger, ConsoleLoggerLevel } from './ConsoleLogger';
+import { ConsoleLogger } from './ConsoleLogger';
 import { AccessTokenStorage } from './authentication/adapters/AccessTokenStorage';
 import { AuthApi } from './authentication/adapters/AuthApi';
 import { CredentialsExpiryController } from './authentication/adapters/CredentialsExpiryController';
@@ -63,7 +63,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   const logger =
     config.logger ??
     new ConsoleLogger({
-      level: debug ? ConsoleLoggerLevel.Debug : ConsoleLoggerLevel.Error,
+      level: debug ? LoggerLevel.Debug : LoggerLevel.Error,
     });
 
   // auth api
