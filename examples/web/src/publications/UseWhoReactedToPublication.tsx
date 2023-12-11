@@ -14,7 +14,7 @@ export function UseWhoReactedToPublication() {
     observeRef,
   } = useInfiniteScroll(
     useWhoReactedToPublication({
-      for: publicationId('0x05-0x02'),
+      for: publicationId('0x56-0x02'),
     }),
   );
 

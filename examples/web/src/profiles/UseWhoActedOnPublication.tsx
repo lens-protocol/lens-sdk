@@ -14,7 +14,7 @@ export function UseWhoActedOnPublication() {
     observeRef,
   } = useInfiniteScroll(
     useWhoActedOnPublication({
-      on: publicationId('0x05-0x02'),
+      on: publicationId('0x56-0x02'),
     }),
   );
 

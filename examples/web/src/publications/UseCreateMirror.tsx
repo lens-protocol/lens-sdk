@@ -10,7 +10,7 @@ function CreateMirror() {
     data: publication,
     error: publicationError,
     loading: publicationLoading,
-  } = usePublication({ forId: publicationId('0x05-0x02') });
+  } = usePublication({ forId: publicationId('0x56-0x02') });
 
   const { execute: mirror, loading, error } = useCreateMirror();
 
