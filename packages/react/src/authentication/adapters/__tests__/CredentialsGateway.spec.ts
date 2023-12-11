@@ -4,6 +4,7 @@ import {
 } from '@lens-protocol/api-bindings/mocks';
 import { mockStorage } from '@lens-protocol/storage/mocks';
 
+import { LogoutReason } from '../../useSession';
 import { Credentials } from '../Credentials';
 import { CredentialsGateway } from '../CredentialsGateway';
 import { mockCredentials } from '../__helpers__/mocks';
@@ -44,7 +45,7 @@ describe(`Given an instance of the ${CredentialsGateway.name}`, () => {
       const gateway = setupGateway();
 
       await gateway.save(credentials);
-      await gateway.invalidate();
+      await gateway.invalidate(LogoutReason.USER_INITIATED);
 
       const result = await gateway.getCredentials();
       expect(result).toBe(null);
