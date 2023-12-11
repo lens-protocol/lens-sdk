@@ -31,7 +31,7 @@ import {
   BroadcastingError,
   BroadcastingErrorReason,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, Data } from '@lens-protocol/shared-kernel';
+import { ChainType, Data, ILogger } from '@lens-protocol/shared-kernel';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { providers } from 'ethers';
 import { mock } from 'jest-mock-extended';
@@ -53,6 +53,7 @@ function setupTestScenario({
   apolloClient: SafeApolloClient;
   provider?: providers.JsonRpcProvider;
 }) {
+  const logger = mock<ILogger>();
   const transactionFactory = mockITransactionFactory();
 
   const providerFactory = mockIProviderFactory({
@@ -60,7 +61,7 @@ function setupTestScenario({
     provider,
   });
 
-  const gateway = new OpenActionGateway(apolloClient, transactionFactory, providerFactory);
+  const gateway = new OpenActionGateway(logger, apolloClient, transactionFactory, providerFactory);
 
   return { gateway };
 }

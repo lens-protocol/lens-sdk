@@ -23,6 +23,7 @@ export function useSetProfileMetadataController() {
   const {
     activeWallet,
     apolloClient,
+    logger,
     onChainRelayer,
     providerFactory,
     transactionGateway,
@@ -40,7 +41,12 @@ export function useSetProfileMetadataController() {
       | WalletConnectionError
     >();
 
-    const gateway = new ProfileMetadataGateway(providerFactory, apolloClient, transactionFactory);
+    const gateway = new ProfileMetadataGateway(
+      logger,
+      providerFactory,
+      apolloClient,
+      transactionFactory,
+    );
 
     const signedExecution = new SignedOnChain<SetProfileMetadataRequest>(
       activeWallet,

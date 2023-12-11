@@ -16,7 +16,7 @@ import { ApproveTransactionGateway } from './ApproveTransactionGateway';
 import { TransactionResultPresenter } from './TransactionResultPresenter';
 
 export function useTokenAllowanceController() {
-  const { providerFactory, activeWallet, transactionQueue } = useSharedDependencies();
+  const { activeWallet, logger, providerFactory, transactionQueue } = useSharedDependencies();
 
   return async (
     request: TokenAllowanceRequest,
@@ -32,7 +32,7 @@ export function useTokenAllowanceController() {
       TokenAllowanceRequest,
       InsufficientGasError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
     >();
-    const approveTransactionGateway = new ApproveTransactionGateway(providerFactory);
+    const approveTransactionGateway = new ApproveTransactionGateway(logger, providerFactory);
 
     const tokenAllowance = new TokenAllowance(
       activeWallet,

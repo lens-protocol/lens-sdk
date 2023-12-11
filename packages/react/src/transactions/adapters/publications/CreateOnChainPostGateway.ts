@@ -20,7 +20,7 @@ import {
   IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { ChainType, Data, ILogger, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
@@ -39,11 +39,12 @@ export class CreateOnChainPostGateway
     IPaidTransactionGateway<CreatePostRequest>
 {
   constructor(
+    logger: ILogger,
     providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<CreatePostRequest>,
   ) {
-    super(providerFactory);
+    super(logger, providerFactory);
   }
 
   async createDelegatedTransaction(

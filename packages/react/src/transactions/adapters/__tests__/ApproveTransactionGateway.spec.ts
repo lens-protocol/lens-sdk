@@ -7,7 +7,9 @@ import {
   TokenAllowanceLimit,
   TokenAllowanceRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
+import { ILogger } from '@lens-protocol/shared-kernel';
 import { BigNumber, constants, providers, utils } from 'ethers';
+import { mock } from 'jest-mock-extended';
 
 import { mockIProviderFactory } from '../../../wallet/adapters/__helpers__/mocks';
 import { UnsignedContractCallTransaction } from '../AbstractContractCallGateway';
@@ -21,12 +23,13 @@ function setupApproveTransactionGateway({
   request: TokenAllowanceRequest;
   provider: providers.JsonRpcProvider;
 }) {
+  const logger = mock<ILogger>();
   const providerFactory = mockIProviderFactory({
     chainType: request.amount.asset.chainType,
     provider,
   });
 
-  return new ApproveTransactionGateway(providerFactory);
+  return new ApproveTransactionGateway(logger, providerFactory);
 }
 
 describe(`Given an instance of the ${ApproveTransactionGateway.name}`, () => {

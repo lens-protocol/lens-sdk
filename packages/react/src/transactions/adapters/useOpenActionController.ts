@@ -24,6 +24,7 @@ export function useOpenActionController() {
   const {
     activeWallet,
     apolloClient,
+    logger,
     onChainRelayer,
     providerFactory,
     tokenAvailability,
@@ -44,7 +45,12 @@ export function useOpenActionController() {
       | WalletConnectionError
     >();
 
-    const onChainGateway = new OpenActionGateway(apolloClient, transactionFactory, providerFactory);
+    const onChainGateway = new OpenActionGateway(
+      logger,
+      apolloClient,
+      transactionFactory,
+      providerFactory,
+    );
 
     const signedExecution = new SignedOnChain(
       activeWallet,

@@ -21,6 +21,7 @@ export function useBlockProfilesController() {
   const {
     activeWallet,
     apolloClient,
+    logger,
     transactionGateway,
     transactionQueue,
     transactionFactory,
@@ -39,7 +40,12 @@ export function useBlockProfilesController() {
       | WalletConnectionError
     >();
 
-    const gateway = new BlockProfilesGateway(providerFactory, apolloClient, transactionFactory);
+    const gateway = new BlockProfilesGateway(
+      logger,
+      providerFactory,
+      apolloClient,
+      transactionFactory,
+    );
 
     const signedExecution = new SignedOnChain<BlockProfilesRequest>(
       activeWallet,

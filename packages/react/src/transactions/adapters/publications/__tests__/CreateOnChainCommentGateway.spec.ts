@@ -19,7 +19,7 @@ import {
   BroadcastingError,
   BroadcastingErrorReason,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType } from '@lens-protocol/shared-kernel';
+import { ChainType, ILogger } from '@lens-protocol/shared-kernel';
 import { providers } from 'ethers';
 import { mock } from 'jest-mock-extended';
 
@@ -41,6 +41,7 @@ function setupTestScenario({
   apolloClient: SafeApolloClient;
   provider?: providers.JsonRpcProvider;
 }) {
+  const logger = mock<ILogger>();
   const transactionFactory = mockITransactionFactory();
   const providerFactory = mockIProviderFactory({
     chainType: ChainType.POLYGON,
@@ -48,6 +49,7 @@ function setupTestScenario({
   });
 
   const gateway = new CreateOnChainCommentGateway(
+    logger,
     providerFactory,
     apolloClient,
     transactionFactory,
