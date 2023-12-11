@@ -16,7 +16,7 @@ import { ILogger, invariant } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
 
-import { ConsoleLogger } from './ConsoleLogger';
+import { ConsoleLogger, ConsoleLoggerLevel } from './ConsoleLogger';
 import { AccessTokenStorage } from './authentication/adapters/AccessTokenStorage';
 import { AuthApi } from './authentication/adapters/AuthApi';
 import { CredentialsExpiryController } from './authentication/adapters/CredentialsExpiryController';
@@ -59,7 +59,12 @@ import { createWalletStorage } from './wallet/infrastructure/WalletStorage';
  * @internal
  */
 export function createSharedDependencies(config: LensConfig): SharedDependencies {
-  const logger = config.logger ?? new ConsoleLogger();
+  const debug = config.debug ?? false;
+  const logger =
+    config.logger ??
+    new ConsoleLogger({
+      level: debug ? ConsoleLoggerLevel.Debug : ConsoleLoggerLevel.Error,
+    });
 
   // auth api
   const anonymousApolloClient = createAuthApolloClient({
