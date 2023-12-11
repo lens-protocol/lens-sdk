@@ -5,11 +5,7 @@ import {
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import { TransactionKind } from '@lens-protocol/domain/entities';
-import {
-  ActiveWallet,
-  IConversationsGateway,
-  Logout,
-} from '@lens-protocol/domain/use-cases/authentication';
+import { ActiveWallet, Logout } from '@lens-protocol/domain/use-cases/authentication';
 import {
   AnyTransactionRequest,
   TransactionQueue,
@@ -17,6 +13,7 @@ import {
 } from '@lens-protocol/domain/use-cases/transactions';
 import { TokenAvailability } from '@lens-protocol/domain/use-cases/wallets';
 import { ILogger, invariant } from '@lens-protocol/shared-kernel';
+import { IStorage } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
 
 import { ConsoleLogger } from './ConsoleLogger';
@@ -28,6 +25,7 @@ import { CredentialsGateway } from './authentication/adapters/CredentialsGateway
 import { CredentialsStorage } from './authentication/adapters/CredentialsStorage';
 import { LogoutPresenter } from './authentication/adapters/LogoutPresenter';
 import { LensConfig } from './config';
+import { createInboxKeyStorage, DisableConversationsGateway } from './inbox';
 import { IProfileCacheManager } from './profile/adapters/IProfileCacheManager';
 import { ProfileCacheManager } from './profile/infrastructure/ProfileCacheManager';
 import { PublicationCacheManager } from './publication/infrastructure/PublicationCacheManager';
@@ -75,6 +73,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   const accessTokenStorage = new AccessTokenStorage(authApi, credentialsStorage);
   const walletStorage = createWalletStorage(config.storage, config.environment.name);
   const transactionStorage = createTransactionStorage(config.storage, config.environment.name);
+  const inboxKeyStorage = createInboxKeyStorage(config.storage, config.environment.name);
 
   // apollo client
   const apolloClient = createLensApolloClient({
@@ -106,10 +105,7 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   const transactionGateway = new PendingTransactionGateway(transactionStorage, transactionFactory);
   const onChainRelayer = new OnChainRelayer(apolloClient, transactionFactory, logger);
   const momokaRelayer = new MomokaRelayer(apolloClient, transactionFactory, logger);
-  const conversationsGateway: IConversationsGateway = {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    async reset() {},
-  };
+  const conversationsGateway = new DisableConversationsGateway(inboxKeyStorage);
 
   const responders: TransactionResponders<AnyTransactionRequest> = {
     [TransactionKind.ACT_ON_PUBLICATION]: new RefreshPublicationResponder(publicationCacheManager),
@@ -170,10 +166,11 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     config,
     credentialsFactory,
     credentialsGateway,
+    inboxKeyStorage,
     logger,
     logout,
-    onChainRelayer,
     momokaRelayer,
+    onChainRelayer,
     profileCacheManager,
     providerFactory,
     publicationCacheManager,
@@ -196,6 +193,7 @@ export type SharedDependencies = {
   config: LensConfig;
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
+  inboxKeyStorage: IStorage<string>;
   logger: ILogger;
   logout: Logout;
   momokaRelayer: MomokaRelayer;

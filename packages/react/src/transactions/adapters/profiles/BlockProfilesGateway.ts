@@ -12,7 +12,7 @@ import {
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce, Transaction } from '@lens-protocol/domain/entities';
-import { BlockProfilesRequest } from '@lens-protocol/domain/src/use-cases/profile/BlockProfiles';
+import { BlockProfilesRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,

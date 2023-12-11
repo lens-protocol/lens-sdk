@@ -1,4 +1,4 @@
-import { BlockProfilesRequest } from '@lens-protocol/domain/src/use-cases/profile/BlockProfiles';
+import { BlockProfilesRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   ITransactionResponder,
   TransactionData,
