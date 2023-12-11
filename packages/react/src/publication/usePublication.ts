@@ -74,8 +74,8 @@ export function usePublication({
       data: undefined,
       error: new NotFoundError(
         forId
-          ? `Publication with id: ${forId}`
-          : `Publication with txHash: ${forTxHash ? forTxHash : ''}`,
+          ? `Publication with id ${forId} was not found`
+          : `Publication with txHash ${forTxHash ? forTxHash : ''} was not found`,
       ),
       loading: false,
     };

@@ -57,12 +57,14 @@ import {
 } from './profiles';
 import {
   PublicationsPage,
+  UseBookmarks,
   UseBookmarkToggle,
   UseCreateComment,
+  UseCreateMirror,
   UseCreatePost,
   UseCreateQuote,
   UseHidePublication,
-  UseBookmarks,
+  UseLazyPublications,
   UseNotInterestedToggle,
   UseOpenAction,
   UsePublication,
@@ -70,7 +72,6 @@ import {
   UseReactionToggle,
   UseReportPublication,
   UseWhoReactedToPublication,
-  UseLazyPublications,
 } from './publications';
 import {
   RevenuePage,
@@ -120,6 +121,7 @@ export function App() {
                       <Route index element={<PublicationsPage />} />
                       <Route path="useCreatePost" element={<UseCreatePost />} />
                       <Route path="useCreateComment" element={<UseCreateComment />} />
+                      <Route path="useCreateMirror" element={<UseCreateMirror />} />
                       <Route path="useCreateQuote" element={<UseCreateQuote />} />
                       <Route path="usePublication" element={<UsePublication />} />
                       <Route path="usePublications" element={<UsePublications />} />

@@ -13,6 +13,7 @@ function MetadataSwitch({ metadata }: { metadata: PublicationMetadata }) {
   switch (metadata.__typename) {
     case 'ArticleMetadataV3':
     case 'TextOnlyMetadataV3':
+    case 'ImageMetadataV3':
       return <p>{metadata.content}</p>;
 
     default:
