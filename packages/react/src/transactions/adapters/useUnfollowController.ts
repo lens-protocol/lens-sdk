@@ -1,10 +1,16 @@
 import {
+  InsufficientGasError,
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { UnfollowProfile, UnfollowRequest } from '@lens-protocol/domain/use-cases/profile';
-import { BroadcastingError, SignedOnChain } from '@lens-protocol/domain/use-cases/transactions';
+import {
+  BroadcastingError,
+  DelegableSigning,
+  PaidTransaction,
+  SignedOnChain,
+} from '@lens-protocol/domain/use-cases/transactions';
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
@@ -21,23 +27,32 @@ export function useUnfollowController() {
     transactionFactory,
     transactionGateway,
     transactionQueue,
+    providerFactory,
   } = useSharedDependencies();
 
   return async (
     request: UnfollowRequest,
   ): PromiseResult<
     AsyncTransactionResult<void>,
-    BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
+    | BroadcastingError
+    | InsufficientGasError
+    | PendingSigningRequestError
+    | UserRejectedError
+    | WalletConnectionError
   > => {
     validateUnfollowRequest(request);
 
     const presenter = new TransactionResultPresenter<
       UnfollowRequest,
-      BroadcastingError | PendingSigningRequestError | UserRejectedError | WalletConnectionError
+      | BroadcastingError
+      | InsufficientGasError
+      | PendingSigningRequestError
+      | UserRejectedError
+      | WalletConnectionError
     >();
-    const gateway = new UnfollowProfileGateway(apolloClient, transactionFactory);
+    const gateway = new UnfollowProfileGateway(providerFactory, apolloClient, transactionFactory);
 
-    const signedUnfollow = new SignedOnChain(
+    const signedExecution = new SignedOnChain(
       activeWallet,
       transactionGateway,
       gateway,
@@ -46,12 +61,16 @@ export function useUnfollowController() {
       presenter,
     );
 
-    const unfollowProfile = new UnfollowProfile(
-      signedUnfollow,
+    const delegableExecution = new DelegableSigning<UnfollowRequest>(
+      signedExecution,
       gateway,
       transactionQueue,
       presenter,
     );
+
+    const paidExecution = new PaidTransaction(activeWallet, gateway, presenter, transactionQueue);
+
+    const unfollowProfile = new UnfollowProfile(delegableExecution, paidExecution);
 
     await unfollowProfile.execute(request);
 

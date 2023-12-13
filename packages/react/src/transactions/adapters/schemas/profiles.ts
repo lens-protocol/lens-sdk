@@ -40,6 +40,7 @@ export const UnfollowRequestSchema = z.object({
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.UNFOLLOW_PROFILE),
   signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 export const UpdateProfileManagersRequestSchema = z
