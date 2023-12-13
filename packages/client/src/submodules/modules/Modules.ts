@@ -8,6 +8,7 @@ import { Erc20Fragment } from '../../graphql/fragments.generated';
 import {
   ApprovedModuleAllowanceAmountRequest,
   GenerateModuleCurrencyApprovalDataRequest,
+  ModuleMetadataRequest,
   PaginatedOffsetRequest,
   SupportedModulesRequest,
 } from '../../graphql/types.generated';
@@ -21,6 +22,7 @@ import {
   ApprovedAllowanceAmountResultFragment,
   GenerateModuleCurrencyApprovalResultFragment,
   KnownSupportedModuleFragment,
+  ModuleMetadataResultFragment,
   Sdk,
   UnknownSupportedModuleFragment,
   getSdk,
@@ -213,5 +215,19 @@ export class Modules {
 
       return result.data.result;
     }, request);
+  }
+
+  /**
+   * Retrieve the Module Metadata for a given module
+   *
+   * @param request - The request object
+   * @returns Module Metadata and how this can be used (gasless, signless, etc.). Returns `null` if the module is not found.
+   */
+  async moduleMetadata(
+    request: ModuleMetadataRequest,
+  ): Promise<ModuleMetadataResultFragment | null> {
+    const result = await this.sdk.ModuleMetadata({ request });
+
+    return result.data.result;
   }
 }

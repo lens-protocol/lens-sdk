@@ -419,7 +419,13 @@ fragment UnknownOpenActionModuleSettings on UnknownOpenActionModuleSettings {
   contract {
     ...NetworkAddress
   }
-  openActionModuleReturnData
+  collectNft
+  openActionModuleReturnData # deprecated, kept for backwards compatibility, remove on 2.x stable
+  initializeCalldata
+  initializeResultData
+  signlessApproved
+  sponsoredApproved
+  verified
 }
 
 fragment LegacyFreeCollectModuleSettings on LegacyFreeCollectModuleSettings {

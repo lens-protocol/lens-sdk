@@ -17,6 +17,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
+  ABIJson: { input: string; output: string };
   AppId: { input: string; output: string };
   BlockchainData: { input: string; output: string };
   BroadcastId: { input: string; output: string };
@@ -368,7 +369,7 @@ export type FollowLensManager = {
   profileId: Scalars['ProfileId']['input'];
 };
 
-/** The lens manager will only support FREE follow modules, if you want your unknown module allowed to be signless please contact us */
+/** The lens manager will only support follow modules which are verified here - https://github.com/lens-protocol/verified-modules/blob/master/follow-modules.json */
 export type FollowLensManagerModuleRedeemInput = {
   unknownFollowModule?: InputMaybe<UnknownFollowModuleRedeemInput>;
 };
@@ -424,11 +425,6 @@ export type FollowingRequest = {
   limit?: InputMaybe<LimitType>;
 };
 
-export type FraudReasonInput = {
-  reason: PublicationReportingReason;
-  subreason: PublicationReportingFraudSubreason;
-};
-
 export type GenerateModuleCurrencyApprovalDataRequest = {
   allowance: AmountInput;
   module: ModuleCurrencyApproval;
@@ -454,11 +450,6 @@ export enum IdKitPhoneVerifyWebhookResultStatusType {
   AlreadyVerified = 'ALREADY_VERIFIED',
   Success = 'SUCCESS',
 }
-
-export type IllegalReasonInput = {
-  reason: PublicationReportingReason;
-  subreason: PublicationReportingIllegalSubreason;
-};
 
 export type ImageTransform = {
   /** Set the transformed image's height */
@@ -544,6 +535,14 @@ export type InternalRemoveCuratedTagRequest = {
   hhh: Scalars['String']['input'];
   secret: Scalars['String']['input'];
   ttt: Scalars['String']['input'];
+};
+
+export type InternalUpdateModuleOptionsRequest = {
+  i: Scalars['EvmAddress']['input'];
+  lma?: InputMaybe<Scalars['Boolean']['input']>;
+  secret: Scalars['String']['input'];
+  t: ModuleType;
+  v?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type InternalUpdateProfileStatusRequest = {
@@ -632,6 +631,16 @@ export type ModuleCurrencyApproval = {
   unknownOpenActionModule?: InputMaybe<Scalars['EvmAddress']['input']>;
   unknownReferenceModule?: InputMaybe<Scalars['EvmAddress']['input']>;
 };
+
+export type ModuleMetadataRequest = {
+  implementation: Scalars['EvmAddress']['input'];
+};
+
+export enum ModuleType {
+  Follow = 'FOLLOW',
+  OpenAction = 'OPEN_ACTION',
+  Reference = 'REFERENCE',
+}
 
 export type MomokaCommentRequest = {
   commentOn: Scalars['PublicationId']['input'];
@@ -953,6 +962,11 @@ export type PaginatedOffsetRequest = {
   limit?: InputMaybe<LimitType>;
 };
 
+export type PaginatedRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  limit?: InputMaybe<LimitType>;
+};
+
 export type PoapEventQueryRequest = {
   eventId: Scalars['PoapEventId']['input'];
 };
@@ -1011,6 +1025,11 @@ export enum ProfileActionHistoryType {
   Unfollow = 'UNFOLLOW',
   UnlinkHandle = 'UNLINK_HANDLE',
 }
+
+export type ProfileFraudReasonInput = {
+  reason: ProfileReportingReason;
+  subreason: ProfileReportingFraudSubreason;
+};
 
 /** Profile interests types */
 export enum ProfileInterestTypes {
@@ -1102,6 +1121,26 @@ export type ProfileRecommendationsRequest = {
   shuffle?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+export enum ProfileReportingFraudSubreason {
+  Impersonation = 'IMPERSONATION',
+  SomethingElse = 'SOMETHING_ELSE',
+}
+
+export enum ProfileReportingReason {
+  Fraud = 'FRAUD',
+  Spam = 'SPAM',
+}
+
+export type ProfileReportingReasonInput = {
+  fraudReason?: InputMaybe<ProfileFraudReasonInput>;
+  spamReason?: InputMaybe<ProfileSpamReasonInput>;
+};
+
+export enum ProfileReportingSpamSubreason {
+  Repetitive = 'REPETITIVE',
+  SomethingElse = 'SOMETHING_ELSE',
+}
+
 export type ProfileRequest = {
   /** The handle for profile you want to fetch - namespace/localname */
   forHandle?: InputMaybe<Scalars['Handle']['input']>;
@@ -1121,6 +1160,11 @@ export type ProfileSearchRequest = {
 export type ProfileSearchWhere = {
   /** Array of custom filters for profile search */
   customFilters?: InputMaybe<Array<CustomFiltersType>>;
+};
+
+export type ProfileSpamReasonInput = {
+  reason: ProfileReportingReason;
+  subreason: ProfileReportingSpamSubreason;
 };
 
 export type ProfileStatsArg = {
@@ -1194,6 +1238,16 @@ export enum PublicationContentWarningType {
   Sensitive = 'SENSITIVE',
   Spoiler = 'SPOILER',
 }
+
+export type PublicationFraudReasonInput = {
+  reason: PublicationReportingReason;
+  subreason: PublicationReportingFraudSubreason;
+};
+
+export type PublicationIllegalReasonInput = {
+  reason: PublicationReportingReason;
+  subreason: PublicationReportingIllegalSubreason;
+};
 
 export type PublicationMetadataContentWarningFilter = {
   oneOf: Array<PublicationContentWarningType>;
@@ -1313,6 +1367,13 @@ export enum PublicationReportingReason {
   Spam = 'SPAM',
 }
 
+export type PublicationReportingReasonInput = {
+  fraudReason?: InputMaybe<PublicationFraudReasonInput>;
+  illegalReason?: InputMaybe<PublicationIllegalReasonInput>;
+  sensitiveReason?: InputMaybe<PublicationSensitiveReasonInput>;
+  spamReason?: InputMaybe<PublicationSpamReasonInput>;
+};
+
 export enum PublicationReportingSensitiveSubreason {
   Nsfw = 'NSFW',
   Offensive = 'OFFENSIVE',
@@ -1345,6 +1406,16 @@ export type PublicationSearchWhere = {
   customFilters?: InputMaybe<Array<CustomFiltersType>>;
   metadata?: InputMaybe<PublicationMetadataFilters>;
   publicationTypes?: InputMaybe<Array<SearchPublicationType>>;
+};
+
+export type PublicationSensitiveReasonInput = {
+  reason: PublicationReportingReason;
+  subreason: PublicationReportingSensitiveSubreason;
+};
+
+export type PublicationSpamReasonInput = {
+  reason: PublicationReportingReason;
+  subreason: PublicationReportingSpamSubreason;
 };
 
 export type PublicationStatsCountOpenActionArgs = {
@@ -1477,17 +1548,16 @@ export enum RelayRoleKey {
   WithSig_10 = 'WITH_SIG_10',
 }
 
+export type ReportProfileRequest = {
+  additionalComments?: InputMaybe<Scalars['String']['input']>;
+  for: Scalars['ProfileId']['input'];
+  reason: ProfileReportingReasonInput;
+};
+
 export type ReportPublicationRequest = {
   additionalComments?: InputMaybe<Scalars['String']['input']>;
   for: Scalars['PublicationId']['input'];
-  reason: ReportingReasonInput;
-};
-
-export type ReportingReasonInput = {
-  fraudReason?: InputMaybe<FraudReasonInput>;
-  illegalReason?: InputMaybe<IllegalReasonInput>;
-  sensitiveReason?: InputMaybe<SensitiveReasonInput>;
-  spamReason?: InputMaybe<SpamReasonInput>;
+  reason: PublicationReportingReasonInput;
 };
 
 export type RevenueFromPublicationRequest = {
@@ -1516,11 +1586,6 @@ export enum SearchPublicationType {
   Quote = 'QUOTE',
 }
 
-export type SensitiveReasonInput = {
-  reason: PublicationReportingReason;
-  subreason: PublicationReportingSensitiveSubreason;
-};
-
 export type SetDefaultProfileRequest = {
   profileId: Scalars['ProfileId']['input'];
 };
@@ -1545,11 +1610,6 @@ export type SimpleCollectOpenActionModuleInput = {
   referralFee?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export type SpamReasonInput = {
-  reason: PublicationReportingReason;
-  subreason: PublicationReportingSpamSubreason;
-};
-
 export enum SupportedFiatType {
   Eur = 'EUR',
   Gbp = 'GBP',
@@ -1560,6 +1620,7 @@ export type SupportedModulesRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   includeUnknown?: InputMaybe<Scalars['Boolean']['input']>;
   limit?: InputMaybe<LimitType>;
+  onlyVerified?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export enum TagSortCriteriaType {

@@ -7,6 +7,7 @@ config:
   strictScalars: true
 
   scalars:
+    ABIJson: string
     AppId: string
     BlockchainData: string
     BroadcastId: string
@@ -54,7 +55,8 @@ config:
     field: true
 
 schema:
-  - https://api-v2-mumbai-live.lens.dev/graphql
+  # - https://api-mumbai.lens-v2.crtlkey.com/ # staging
+  - https://api-v2-mumbai-live.lens.dev/graphql # testnet
   # - http://localhost:4000/
 documents:
   - src/**/*.graphql
