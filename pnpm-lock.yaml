@@ -867,6 +867,9 @@ importers:
       '@ethersproject/hash':
         specifier: ^5.7.0
         version: 5.7.0
+      '@ethersproject/logger':
+        specifier: ^5.7.0
+        version: 5.7.0
       '@ethersproject/providers':
         specifier: ^5.7.2
         version: 5.7.2

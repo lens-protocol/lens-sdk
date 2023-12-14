@@ -27,8 +27,9 @@ import {
   PromiseResult,
   success,
 } from '@lens-protocol/shared-kernel';
-import { errors, Signer } from 'ethers';
+import { Signer } from '@ethersproject/abstract-signer';
 import { getAddress } from '@ethersproject/address';
+import { ErrorCode as errors } from '@ethersproject/logger';
 import { z } from 'zod';
 
 import { UnsignedVote } from '../../polls/adapters/SnapshotVoteFactory';
