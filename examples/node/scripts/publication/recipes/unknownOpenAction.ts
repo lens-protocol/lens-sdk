@@ -33,27 +33,27 @@ async function main() {
   }
 
   // fetch open action metadata
-  const metadata = await client.modules.fetchMetadata({
+  const result = await client.modules.fetchMetadata({
     implementation: openActionSettings.contract.address,
   });
 
-  if (!metadata) {
+  if (!result) {
     throw new Error('No metadata found');
   }
 
   // decode init data if needed
   if (openActionSettings.initializeCalldata) {
     const initData = decodeData(
-      JSON.parse(metadata.metadata.initializeCalldataABI) as ModuleParam[],
+      JSON.parse(result.metadata.initializeCalldataABI) as ModuleParam[],
       openActionSettings.initializeCalldata,
     );
     console.log('initData', initData);
   }
 
   // decode init result if needed
-  if (openActionSettings.initializeResultData && metadata.metadata.initializeResultDataABI) {
+  if (openActionSettings.initializeResultData && result.metadata.initializeResultDataABI) {
     const initResult = decodeData(
-      JSON.parse(metadata.metadata.initializeResultDataABI) as ModuleParam[],
+      JSON.parse(result.metadata.initializeResultDataABI) as ModuleParam[],
       openActionSettings.initializeResultData,
     );
     console.log('initResult', initResult);
@@ -62,12 +62,12 @@ async function main() {
   // Use initData and/or initResult to inform the user about the module
   // configuration. This depends on the specific module used.
 
-  const calldata = encodeData(JSON.parse(metadata.metadata.processCalldataABI) as ModuleParam[], [
+  const calldata = encodeData(JSON.parse(result.metadata.processCalldataABI) as ModuleParam[], [
     /* data according to ABI spec, might leverage initData and/or initResult */
   ]);
 
   // act on open action
-  const result = await client.publication.actions.actOn({
+  const actOnResult = await client.publication.actions.actOn({
     actOn: {
       unknownOpenAction: {
         address: openActionSettings.contract.address,
@@ -77,14 +77,14 @@ async function main() {
     for: publication.id,
   });
 
-  const resultValue = result.unwrap();
+  const actOnResultValue = actOnResult.unwrap();
 
-  if (!isRelaySuccess(resultValue)) {
-    console.log(`Something went wrong`, resultValue);
+  if (!isRelaySuccess(actOnResultValue)) {
+    console.log(`Something went wrong`, actOnResultValue);
     return;
   }
 
-  console.log(`Transaction was successfully broadcasted with txId`, resultValue.txId);
+  console.log(`Transaction was successfully broadcasted with txId`, actOnResultValue.txId);
 }
 
 main();
