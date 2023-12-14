@@ -65,6 +65,11 @@ fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
     ...NetworkAddress
   }
   followModuleReturnData
+  initializeCalldata
+  initializeResultData
+  signlessApproved
+  sponsoredApproved
+  verified
 }
 
 fragment NetworkAddress on NetworkAddress {
@@ -374,6 +379,11 @@ fragment UnknownReferenceModuleSettings on UnknownReferenceModuleSettings {
     ...NetworkAddress
   }
   referenceModuleReturnData
+  initializeCalldata
+  initializeResultData
+  signlessApproved
+  sponsoredApproved
+  verified
 }
 
 # open action modules
@@ -419,7 +429,13 @@ fragment UnknownOpenActionModuleSettings on UnknownOpenActionModuleSettings {
   contract {
     ...NetworkAddress
   }
-  openActionModuleReturnData
+  collectNft
+  openActionModuleReturnData # deprecated, kept for backwards compatibility, remove on 2.x stable
+  initializeCalldata
+  initializeResultData
+  signlessApproved
+  sponsoredApproved
+  verified
 }
 
 fragment LegacyFreeCollectModuleSettings on LegacyFreeCollectModuleSettings {

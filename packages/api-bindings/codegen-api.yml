@@ -15,6 +15,7 @@ generates:
     config:
       strictScalars: true
       scalars:
+        ABIJson: string
         AppId: AppId
         BlockchainData: string
         BroadcastId: string
@@ -59,8 +60,9 @@ generates:
         UUID: string
         Void: void
     schema:
-      - https://api-v2-mumbai-live.lens.dev/graphql
-      # - http://localhost:4000
+      # - https://api-mumbai.lens-v2.crtlkey.com/ # staging
+      - https://api-v2-mumbai-live.lens.dev/graphql # testnet
+      # - http://localhost:4000/
       - src/lens/graphql/client.graphql
     documents:
       - src/lens/graphql/*.graphql

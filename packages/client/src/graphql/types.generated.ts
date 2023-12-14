@@ -17,6 +17,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
+  ABIJson: { input: string; output: string };
   AppId: { input: string; output: string };
   BlockchainData: { input: string; output: string };
   BroadcastId: { input: string; output: string };
@@ -368,7 +369,7 @@ export type FollowLensManager = {
   profileId: Scalars['ProfileId']['input'];
 };
 
-/** The lens manager will only support FREE follow modules, if you want your unknown module allowed to be signless please contact us */
+/** The lens manager will only support follow modules which are verified here - https://github.com/lens-protocol/verified-modules/blob/master/follow-modules.json */
 export type FollowLensManagerModuleRedeemInput = {
   unknownFollowModule?: InputMaybe<UnknownFollowModuleRedeemInput>;
 };
@@ -546,6 +547,14 @@ export type InternalRemoveCuratedTagRequest = {
   ttt: Scalars['String']['input'];
 };
 
+export type InternalUpdateModuleOptionsRequest = {
+  i: Scalars['EvmAddress']['input'];
+  lma?: InputMaybe<Scalars['Boolean']['input']>;
+  secret: Scalars['String']['input'];
+  t: ModuleType;
+  v?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export type InternalUpdateProfileStatusRequest = {
   dd: Scalars['Boolean']['input'];
   hhh: Scalars['String']['input'];
@@ -632,6 +641,16 @@ export type ModuleCurrencyApproval = {
   unknownOpenActionModule?: InputMaybe<Scalars['EvmAddress']['input']>;
   unknownReferenceModule?: InputMaybe<Scalars['EvmAddress']['input']>;
 };
+
+export type ModuleMetadataRequest = {
+  implementation: Scalars['EvmAddress']['input'];
+};
+
+export enum ModuleType {
+  Follow = 'FOLLOW',
+  OpenAction = 'OPEN_ACTION',
+  Reference = 'REFERENCE',
+}
 
 export type MomokaCommentRequest = {
   commentOn: Scalars['PublicationId']['input'];
@@ -953,6 +972,11 @@ export type PaginatedOffsetRequest = {
   limit?: InputMaybe<LimitType>;
 };
 
+export type PaginatedRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  limit?: InputMaybe<LimitType>;
+};
+
 export type PoapEventQueryRequest = {
   eventId: Scalars['PoapEventId']['input'];
 };
@@ -1011,6 +1035,11 @@ export enum ProfileActionHistoryType {
   Unfollow = 'UNFOLLOW',
   UnlinkHandle = 'UNLINK_HANDLE',
 }
+
+export type ProfileFraudReasonInput = {
+  reason: ProfileReportingReason;
+  subreason: ProfileReportingFraudSubreason;
+};
 
 /** Profile interests types */
 export enum ProfileInterestTypes {
@@ -1102,6 +1131,26 @@ export type ProfileRecommendationsRequest = {
   shuffle?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+export enum ProfileReportingFraudSubreason {
+  Impersonation = 'IMPERSONATION',
+  SomethingElse = 'SOMETHING_ELSE',
+}
+
+export enum ProfileReportingReason {
+  Fraud = 'FRAUD',
+  Spam = 'SPAM',
+}
+
+export type ProfileReportingReasonInput = {
+  fraudReason?: InputMaybe<ProfileFraudReasonInput>;
+  spamReason?: InputMaybe<ProfileSpamReasonInput>;
+};
+
+export enum ProfileReportingSpamSubreason {
+  Repetitive = 'REPETITIVE',
+  SomethingElse = 'SOMETHING_ELSE',
+}
+
 export type ProfileRequest = {
   /** The handle for profile you want to fetch - namespace/localname */
   forHandle?: InputMaybe<Scalars['Handle']['input']>;
@@ -1121,6 +1170,11 @@ export type ProfileSearchRequest = {
 export type ProfileSearchWhere = {
   /** Array of custom filters for profile search */
   customFilters?: InputMaybe<Array<CustomFiltersType>>;
+};
+
+export type ProfileSpamReasonInput = {
+  reason: ProfileReportingReason;
+  subreason: ProfileReportingSpamSubreason;
 };
 
 export type ProfileStatsArg = {
@@ -1477,6 +1531,12 @@ export enum RelayRoleKey {
   WithSig_10 = 'WITH_SIG_10',
 }
 
+export type ReportProfileRequest = {
+  additionalComments?: InputMaybe<Scalars['String']['input']>;
+  for: Scalars['ProfileId']['input'];
+  reason: ProfileReportingReasonInput;
+};
+
 export type ReportPublicationRequest = {
   additionalComments?: InputMaybe<Scalars['String']['input']>;
   for: Scalars['PublicationId']['input'];
@@ -1560,6 +1620,7 @@ export type SupportedModulesRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   includeUnknown?: InputMaybe<Scalars['Boolean']['input']>;
   limit?: InputMaybe<LimitType>;
+  onlyVerified?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export enum TagSortCriteriaType {
