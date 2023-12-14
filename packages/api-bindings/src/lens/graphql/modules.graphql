@@ -135,3 +135,34 @@ query SupportedOpenActionCollectModules($request: SupportedModulesRequest!) {
     }
   }
 }
+
+fragment ModuleMetadata on ModuleMetadata {
+  attributes {
+    type
+    key
+    value
+  }
+  authors
+  description
+  initializeCalldataABI
+  initializeResultDataABI
+  name
+  processCalldataABI
+  title
+}
+
+fragment ModuleMetadataResult on GetModuleMetadataResult {
+  metadata {
+    ...ModuleMetadata
+  }
+  moduleType
+  signlessApproved
+  sponsoredApproved
+  verified
+}
+
+query ModuleMetadata($request: ModuleMetadataRequest!) {
+  result: moduleMetadata(request: $request) {
+    ...ModuleMetadataResult
+  }
+}

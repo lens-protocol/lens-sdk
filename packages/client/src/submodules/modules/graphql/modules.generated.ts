@@ -118,6 +118,29 @@ export type SupportedOpenActionCollectModulesQuery = {
   };
 };
 
+export type ModuleMetadataResultFragment = {
+  moduleType: Types.ModuleType;
+  signlessApproved: boolean;
+  sponsoredApproved: boolean;
+  verified: boolean;
+  metadata: {
+    authors: Array<string>;
+    description: string;
+    initializeCalldataABI: string;
+    initializeResultDataABI: string | null;
+    name: string;
+    processCalldataABI: string;
+    title: string;
+    attributes: Array<{ type: Types.MetadataAttributeType; key: string; value: string }>;
+  };
+};
+
+export type ModuleMetadataQueryVariables = Types.Exact<{
+  request: Types.ModuleMetadataRequest;
+}>;
+
+export type ModuleMetadataQuery = { result: ModuleMetadataResultFragment | null };
+
 export const ModuleInfoFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -408,6 +431,56 @@ export const GenerateModuleCurrencyApprovalResultFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'to' } },
           { kind: 'Field', name: { kind: 'Name', value: 'from' } },
           { kind: 'Field', name: { kind: 'Name', value: 'data' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const ModuleMetadataResultFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ModuleMetadataResult' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'GetModuleMetadataResult' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'metadata' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'attributes' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'authors' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldataABI' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'initializeResultDataABI' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'processCalldataABI' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'moduleType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sponsoredApproved' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
         ],
       },
     },
@@ -1614,6 +1687,94 @@ export const SupportedOpenActionCollectModulesDocument = {
     },
   ],
 } as unknown as DocumentNode;
+export const ModuleMetadataDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'ModuleMetadata' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ModuleMetadataRequest' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'result' },
+            name: { kind: 'Name', value: 'moduleMetadata' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ModuleMetadataResult' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ModuleMetadataResult' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'GetModuleMetadataResult' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'metadata' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'attributes' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'authors' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldataABI' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'initializeResultDataABI' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'processCalldataABI' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'moduleType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sponsoredApproved' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'verified' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -1633,6 +1794,7 @@ const SupportedOpenActionModulesDocumentString = print(SupportedOpenActionModule
 const SupportedOpenActionCollectModulesDocumentString = print(
   SupportedOpenActionCollectModulesDocument,
 );
+const ModuleMetadataDocumentString = print(ModuleMetadataDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Currencies(
@@ -1766,6 +1928,25 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'SupportedOpenActionCollectModules',
+        'query',
+      );
+    },
+    ModuleMetadata(
+      variables: ModuleMetadataQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: ModuleMetadataQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ModuleMetadataQuery>(ModuleMetadataDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'ModuleMetadata',
         'query',
       );
     },

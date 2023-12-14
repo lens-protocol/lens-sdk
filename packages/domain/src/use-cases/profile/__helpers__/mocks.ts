@@ -139,6 +139,7 @@ export function mockUnfollowRequest(): UnfollowRequest {
   return {
     profileId: mockProfileId(),
     kind: TransactionKind.UNFOLLOW_PROFILE,
+    sponsored: true,
     signless: true,
   };
 }
@@ -201,6 +202,7 @@ export function mockUnlinkHandleRequest(
     fullHandle: mockFullHandle(),
     profileId: mockProfileId(),
     signless: true,
+    sponsored: true,
     ...overrides,
     kind: TransactionKind.UNLINK_HANDLE,
   };

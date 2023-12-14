@@ -66,7 +66,7 @@
  * };
  * ```
  *
- * @module
+ * @module Index
  */
 'use client';
 

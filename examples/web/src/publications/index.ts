@@ -2,6 +2,7 @@ export * from './PublicationsPage';
 export * from './UseBookmarks';
 export * from './UseBookmarkToggle';
 export * from './UseCreateComment';
+export * from './UseCreateMirror';
 export * from './UseCreatePost';
 export * from './UseCreateQuote';
 export * from './UseHidePublication';

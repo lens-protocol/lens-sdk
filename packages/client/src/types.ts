@@ -14,3 +14,17 @@ export type TypedDataResponse = {
   typedData: TypedData;
   expiresAt: string;
 };
+
+/**
+ * @internal
+ */
+export type Typename<T> = { [key in '__typename']: T };
+
+/**
+ * @internal
+ */
+export type PickByTypename<T extends Typename<string>, P extends T['__typename']> = T extends {
+  __typename?: P;
+}
+  ? T
+  : never;

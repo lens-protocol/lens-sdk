@@ -1,7 +1,7 @@
 {
   "tsconfig": "./tsconfig.json",
   "extends": ["../../typedoc.base.json"],
-  "entryPoints": ["src/index.ts"],
+  "entryPoints": ["src/index.ts", "src/inbox/index.ts"],
   "readme": "none",
   "categorizeByGroup": true,
   "groupOrder": [

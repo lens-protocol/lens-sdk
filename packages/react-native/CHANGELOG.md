@@ -1,5 +1,24 @@
 # @lens-protocol/react-native
 
+## 0.1.0-alpha.3
+
+### Minor Changes
+
+- dd2f7d246: feat: adds self-funded support for unfollow
+- a21256702: **feat:** `useModuleMetadata`, `useLazyModuleMetadata` and surfaces new unknown modules fields
+
+### Patch Changes
+
+- 21c643d0c: **fix:** Revoke credentials only on user initiated logout
+- Updated dependencies [dd2f7d246]
+- Updated dependencies [a21256702]
+- Updated dependencies [750767231]
+- Updated dependencies [21c643d0c]
+- Updated dependencies [78d95a3d0]
+  - @lens-protocol/domain@0.11.0-alpha.18
+  - @lens-protocol/react@2.0.0-alpha.26
+  - @lens-protocol/api-bindings@0.11.0-alpha.23
+
 ## 0.1.0-alpha.2
 
 ### Minor Changes

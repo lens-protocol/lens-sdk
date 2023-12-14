@@ -45,7 +45,7 @@ function UseReactionToggleInner() {
     data: publication,
     error,
     loading,
-  } = usePublication({ forId: publicationId('0x04-0x0b') });
+  } = usePublication({ forId: publicationId('0x56-0x02') });
 
   if (loading) return <Loading />;
 

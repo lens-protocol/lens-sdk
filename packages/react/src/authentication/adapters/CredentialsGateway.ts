@@ -8,6 +8,7 @@ import {
   ICredentialsWriter,
   ICredentialsReader,
   IResettableCredentialsGateway,
+  LogoutReason,
 } from '@lens-protocol/domain/use-cases/authentication';
 import { never } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
@@ -34,14 +35,17 @@ export class CredentialsGateway
     await this.credentialsStorage.set(credentials);
   }
 
-  async invalidate() {
+  async invalidate(reason: LogoutReason) {
     const credentials = await this.getCredentials();
 
     if (!credentials) {
       never('User is not authenticated');
     }
 
-    await this.revoke({ authorizationId: credentials.authorizationId });
+    if (reason === LogoutReason.USER_INITIATED) {
+      await this.revoke({ authorizationId: credentials.authorizationId });
+    }
+
     await this.credentialsStorage.reset();
   }
 

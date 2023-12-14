@@ -7,7 +7,7 @@ export enum LogoutReason {
 }
 
 export interface IResettableCredentialsGateway {
-  invalidate(): Promise<void>;
+  invalidate(reason: LogoutReason): Promise<void>;
 }
 
 export interface IResettableWalletGateway {
@@ -39,7 +39,7 @@ export class Logout {
     await this.walletGateway.reset();
     await this.conversationsGateway.reset();
     await this.transactionGateway.reset();
-    await this.credentialsGateway.invalidate();
+    await this.credentialsGateway.invalidate(reason);
 
     this.presenter.logout(reason);
   }

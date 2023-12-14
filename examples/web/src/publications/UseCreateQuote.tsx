@@ -14,7 +14,7 @@ function QuoteComposer() {
     data: publication,
     error: publicationError,
     loading: publicationLoading,
-  } = usePublication({ forId: publicationId('0x04-0x0b') });
+  } = usePublication({ forId: publicationId('0x56-0x02') });
 
   const { execute, loading, error } = useCreateQuote();
 

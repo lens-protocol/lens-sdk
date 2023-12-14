@@ -40,6 +40,7 @@ export const UnfollowRequestSchema = z.object({
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.UNFOLLOW_PROFILE),
   signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 export const UpdateProfileManagersRequestSchema = z
@@ -114,6 +115,7 @@ export const UnlinkHandleRequestSchema = z.object({
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.UNLINK_HANDLE),
   signless: z.boolean(),
+  sponsored: z.boolean(),
 });
 
 export const UnblockProfilesRequestSchema = z.object({
