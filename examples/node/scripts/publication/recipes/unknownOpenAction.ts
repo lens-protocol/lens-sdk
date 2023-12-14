@@ -23,9 +23,13 @@ async function main() {
     throw new Error('Publication is not a post publication');
   }
 
+  // the open action contract address we are interested in
+  const openActionContractAddress = '0x1234567890123456789012345678901234567890';
+
   // retrieve open action settings
   const openActionSettings = publication.openActionModules.find(
-    (module) => module.__typename === 'UnknownOpenActionModuleSettings',
+    (module) =>
+      module.contract.address.toLowerCase() === openActionContractAddress.toLocaleLowerCase(),
   );
 
   if (!openActionSettings || !isUnknownOpenActionModuleSettings(openActionSettings)) {
