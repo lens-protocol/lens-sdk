@@ -16,7 +16,7 @@ import { ProfileFragment } from '../../graphql';
 import { LensClient } from '../LensClient';
 import { createGatedLensClient } from '../__helpers/setup';
 
-// jest.retryTimes(3, { logErrorsBeforeRetry: true });
+jest.retryTimes(3, { logErrorsBeforeRetry: true });
 
 const signer = new Wallet('0xd6e6257e8cf0f321ad0f798dd0b121a7eb4fe9c7c51994e843c0a1ed05867a5f');
 
