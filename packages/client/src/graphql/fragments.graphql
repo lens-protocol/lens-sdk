@@ -65,6 +65,11 @@ fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
     ...NetworkAddress
   }
   followModuleReturnData
+  initializeCalldata
+  initializeResultData
+  signlessApproved
+  sponsoredApproved
+  verified
 }
 
 fragment NetworkAddress on NetworkAddress {
@@ -374,6 +379,11 @@ fragment UnknownReferenceModuleSettings on UnknownReferenceModuleSettings {
     ...NetworkAddress
   }
   referenceModuleReturnData
+  initializeCalldata
+  initializeResultData
+  signlessApproved
+  sponsoredApproved
+  verified
 }
 
 # open action modules

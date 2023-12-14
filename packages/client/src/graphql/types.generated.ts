@@ -425,6 +425,11 @@ export type FollowingRequest = {
   limit?: InputMaybe<LimitType>;
 };
 
+export type FraudReasonInput = {
+  reason: PublicationReportingReason;
+  subreason: PublicationReportingFraudSubreason;
+};
+
 export type GenerateModuleCurrencyApprovalDataRequest = {
   allowance: AmountInput;
   module: ModuleCurrencyApproval;
@@ -450,6 +455,11 @@ export enum IdKitPhoneVerifyWebhookResultStatusType {
   AlreadyVerified = 'ALREADY_VERIFIED',
   Success = 'SUCCESS',
 }
+
+export type IllegalReasonInput = {
+  reason: PublicationReportingReason;
+  subreason: PublicationReportingIllegalSubreason;
+};
 
 export type ImageTransform = {
   /** Set the transformed image's height */
@@ -1239,16 +1249,6 @@ export enum PublicationContentWarningType {
   Spoiler = 'SPOILER',
 }
 
-export type PublicationFraudReasonInput = {
-  reason: PublicationReportingReason;
-  subreason: PublicationReportingFraudSubreason;
-};
-
-export type PublicationIllegalReasonInput = {
-  reason: PublicationReportingReason;
-  subreason: PublicationReportingIllegalSubreason;
-};
-
 export type PublicationMetadataContentWarningFilter = {
   oneOf: Array<PublicationContentWarningType>;
 };
@@ -1367,13 +1367,6 @@ export enum PublicationReportingReason {
   Spam = 'SPAM',
 }
 
-export type PublicationReportingReasonInput = {
-  fraudReason?: InputMaybe<PublicationFraudReasonInput>;
-  illegalReason?: InputMaybe<PublicationIllegalReasonInput>;
-  sensitiveReason?: InputMaybe<PublicationSensitiveReasonInput>;
-  spamReason?: InputMaybe<PublicationSpamReasonInput>;
-};
-
 export enum PublicationReportingSensitiveSubreason {
   Nsfw = 'NSFW',
   Offensive = 'OFFENSIVE',
@@ -1406,16 +1399,6 @@ export type PublicationSearchWhere = {
   customFilters?: InputMaybe<Array<CustomFiltersType>>;
   metadata?: InputMaybe<PublicationMetadataFilters>;
   publicationTypes?: InputMaybe<Array<SearchPublicationType>>;
-};
-
-export type PublicationSensitiveReasonInput = {
-  reason: PublicationReportingReason;
-  subreason: PublicationReportingSensitiveSubreason;
-};
-
-export type PublicationSpamReasonInput = {
-  reason: PublicationReportingReason;
-  subreason: PublicationReportingSpamSubreason;
 };
 
 export type PublicationStatsCountOpenActionArgs = {
@@ -1557,7 +1540,14 @@ export type ReportProfileRequest = {
 export type ReportPublicationRequest = {
   additionalComments?: InputMaybe<Scalars['String']['input']>;
   for: Scalars['PublicationId']['input'];
-  reason: PublicationReportingReasonInput;
+  reason: ReportingReasonInput;
+};
+
+export type ReportingReasonInput = {
+  fraudReason?: InputMaybe<FraudReasonInput>;
+  illegalReason?: InputMaybe<IllegalReasonInput>;
+  sensitiveReason?: InputMaybe<SensitiveReasonInput>;
+  spamReason?: InputMaybe<SpamReasonInput>;
 };
 
 export type RevenueFromPublicationRequest = {
@@ -1586,6 +1576,11 @@ export enum SearchPublicationType {
   Quote = 'QUOTE',
 }
 
+export type SensitiveReasonInput = {
+  reason: PublicationReportingReason;
+  subreason: PublicationReportingSensitiveSubreason;
+};
+
 export type SetDefaultProfileRequest = {
   profileId: Scalars['ProfileId']['input'];
 };
@@ -1608,6 +1603,11 @@ export type SimpleCollectOpenActionModuleInput = {
   followerOnly: Scalars['Boolean']['input'];
   recipient?: InputMaybe<Scalars['EvmAddress']['input']>;
   referralFee?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type SpamReasonInput = {
+  reason: PublicationReportingReason;
+  subreason: PublicationReportingSpamSubreason;
 };
 
 export enum SupportedFiatType {
