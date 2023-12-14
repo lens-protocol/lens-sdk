@@ -1,5 +1,11 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.26
+
+### Minor Changes
+
+- a21256702: **feat:** support Open Action Module Metadata in `LensClient`
+
 ## 2.0.0-alpha.25
 
 ### Minor Changes

@@ -1,5 +1,16 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.18
+
+### Minor Changes
+
+- dd2f7d246: feat: adds self-funded support for unfollow
+- 78d95a3d0: feat: implements self-funded unlink handle
+
+### Patch Changes
+
+- 21c643d0c: **fix:** Revoke credentials only on user initiated logout
+
 ## 0.11.0-alpha.17
 
 ### Minor Changes
