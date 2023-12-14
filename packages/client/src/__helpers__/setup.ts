@@ -39,6 +39,16 @@ export async function authenticate(signer: Wallet, client: LensClient, profile: 
   await client.authentication.authenticate({ id, signature });
 }
 
+export async function authenticateWithOnlyWallet(signer: Wallet, client: LensClient) {
+  const { id, text } = await client.authentication.generateChallenge({
+    signedBy: signer.address,
+  });
+
+  const signature = await signer.signMessage(text);
+
+  await client.authentication.authenticate({ id, signature });
+}
+
 export async function enableLensProfileManager(
   signer: Wallet,
   client: LensClient,

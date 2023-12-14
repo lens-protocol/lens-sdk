@@ -176,6 +176,22 @@ export class Authentication implements IAuthentication {
     return handler(profileId);
   }
 
+  async requireOnlyWalletAuthentication<
+    TResult extends Result<TValue, TError>,
+    TValue,
+    TError extends IEquatableError,
+  >(
+    handler: (profileId: string | null) => Promise<TResult>,
+  ): PromiseResult<TValue, TError | CredentialsExpiredError | NotAuthenticatedError> {
+    const result = await this.getCredentials();
+
+    if (result.isFailure()) {
+      return result;
+    }
+
+    return handler(result.value.getProfileId());
+  }
+
   async getRequestHeader(): PromiseResult<
     Record<string, string>,
     CredentialsExpiredError | NotAuthenticatedError
