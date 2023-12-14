@@ -28,7 +28,7 @@ import {
   success,
 } from '@lens-protocol/shared-kernel';
 import { errors, Signer } from 'ethers';
-import { getAddress } from 'ethers/lib/utils';
+import { getAddress } from '@ethersproject/address';
 import { z } from 'zod';
 
 import { UnsignedVote } from '../../polls/adapters/SnapshotVoteFactory';
