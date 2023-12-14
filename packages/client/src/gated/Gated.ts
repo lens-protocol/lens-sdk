@@ -118,7 +118,7 @@ export class Gated {
   async decryptPublicationMetadataFragment<T extends AnyEncryptablePublicationMetadataFragment>(
     encryptedMetadata: T,
   ): PromiseResult<T, CannotDecryptError | CredentialsExpiredError | NotAuthenticatedError> {
-    return this.authentication.requireOnlyWalletAuthentication(async (profileId) => {
+    return this.authentication.requireAtLeastWalletAuthentication(async (profileId) => {
       const result = await this.client.decryptPublicationMetadataFragment(encryptedMetadata, {
         profileId: profileId ?? undefined,
       });

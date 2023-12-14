@@ -176,7 +176,7 @@ export class Authentication implements IAuthentication {
     return handler(profileId);
   }
 
-  async requireOnlyWalletAuthentication<
+  async requireAtLeastWalletAuthentication<
     TResult extends Result<TValue, TError>,
     TValue,
     TError extends IEquatableError,
