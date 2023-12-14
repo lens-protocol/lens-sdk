@@ -222,6 +222,13 @@ export class Modules {
    *
    * @param request - The request object
    * @returns Module Metadata and how this can be used (gasless, signless, etc.). Returns `null` if the module is not found.
+   *
+   * @example
+   * ```ts
+   * const result = await client.modules.fetchMetadata({
+   *   implementation: '0x1234567890123456789012345678901234567890',
+   * });
+   * ```
    */
   async fetchMetadata(
     request: ModuleMetadataRequest,
