@@ -1,3 +1,4 @@
+import { getAddress } from '@ethersproject/address';
 import {
   SafeApolloClient,
   GetSnapshotProposalDocument,
@@ -15,7 +16,6 @@ import {
   VoteChoice,
 } from '@lens-protocol/domain/use-cases/polls';
 import { invariant, InvariantError, never } from '@lens-protocol/shared-kernel';
-import { getAddress } from 'ethers/lib/utils';
 
 import { vote2Types, voteArray2Types, voteString2Types } from './types';
 

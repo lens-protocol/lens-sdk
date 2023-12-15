@@ -1,8 +1,8 @@
+import { Wallet } from '@ethersproject/wallet';
 import { faker } from '@faker-js/faker';
 import { isEncryptedPublicationMetadata } from '@lens-protocol/gated-content';
 import * as metadata from '@lens-protocol/metadata';
 import { invariant } from '@lens-protocol/shared-kernel';
-import { Wallet } from 'ethers';
 
 import {
   authenticate,

@@ -61,9 +61,6 @@
     "typescript": "5.2.2"
   },
   "prettier": "@lens-protocol/prettier-config",
-  "peerDependencies": {
-    "ethers": "^5.7.2"
-  },
   "babel": {
     "presets": [
       "@babel/preset-env",

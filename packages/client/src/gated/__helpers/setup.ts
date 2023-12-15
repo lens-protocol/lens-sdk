@@ -1,4 +1,4 @@
-import { Wallet } from 'ethers';
+import { Wallet } from '@ethersproject/wallet';
 
 import { buildTestEnvironment } from '../../__helpers__';
 import { LensClient } from '../LensClient';

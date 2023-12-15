@@ -1,4 +1,6 @@
-import { TypedDataSigner } from '@ethersproject/abstract-signer';
+import { TypedDataSigner, Signer } from '@ethersproject/abstract-signer';
+import { getAddress } from '@ethersproject/address';
+import { ErrorCode } from '@ethersproject/logger';
 import { TransactionRequest } from '@ethersproject/providers';
 import { TypedData } from '@lens-protocol/blockchain-bindings';
 import {
@@ -27,8 +29,6 @@ import {
   PromiseResult,
   success,
 } from '@lens-protocol/shared-kernel';
-import { errors, Signer } from 'ethers';
-import { getAddress } from 'ethers/lib/utils';
 import { z } from 'zod';
 
 import { UnsignedVote } from '../../polls/adapters/SnapshotVoteFactory';
@@ -159,9 +159,9 @@ export class ConcreteWallet extends Wallet {
       const signedCall = SignedProtocolCall.create({ unsignedCall, signature });
       return success(signedCall);
     } catch (err) {
-      assertErrorObjectWithCode<errors>(err);
+      assertErrorObjectWithCode<ErrorCode>(err);
 
-      if (err.code === errors.ACTION_REJECTED) {
+      if (err.code === ErrorCode.ACTION_REJECTED) {
         return failure(new UserRejectedError());
       }
 
@@ -195,9 +195,9 @@ export class ConcreteWallet extends Wallet {
       const signature = await signer.signMessage(message);
       return success(signature as Signature);
     } catch (err) {
-      assertErrorObjectWithCode<errors>(err);
+      assertErrorObjectWithCode<ErrorCode>(err);
 
-      if (err.code === errors.ACTION_REJECTED) {
+      if (err.code === ErrorCode.ACTION_REJECTED) {
         return failure(new UserRejectedError());
       }
       throw err;
@@ -239,12 +239,12 @@ export class ConcreteWallet extends Wallet {
 
       return success(transaction);
     } catch (err) {
-      assertErrorObjectWithCode<errors>(err);
+      assertErrorObjectWithCode<ErrorCode>(err);
 
       switch (err.code) {
-        case errors.ACTION_REJECTED:
+        case ErrorCode.ACTION_REJECTED:
           return failure(new UserRejectedError(err.message));
-        case errors.INSUFFICIENT_FUNDS:
+        case ErrorCode.INSUFFICIENT_FUNDS:
           return failure(new InsufficientGasError(matic()));
       }
 
@@ -289,9 +289,9 @@ export class ConcreteWallet extends Wallet {
       );
       return success(signedVote);
     } catch (err) {
-      assertErrorObjectWithCode<errors>(err);
+      assertErrorObjectWithCode<ErrorCode>(err);
 
-      if (err.code === errors.ACTION_REJECTED) {
+      if (err.code === ErrorCode.ACTION_REJECTED) {
         return failure(new UserRejectedError());
       }
       throw err;

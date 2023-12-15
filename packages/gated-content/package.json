@@ -52,7 +52,8 @@
     "@lit-protocol/encryption": "2.1.62",
     "@lit-protocol/node-client": "^2.1.62",
     "@lit-protocol/types": "2.1.62",
-    "siwe": "^1.1.6",
+    "@spruceid/siwe-parser": "^2.0.2",
+    "siwe": "^2.1.4",
     "traverse": "^0.6.7",
     "tslib": "^2.6.2"
   },

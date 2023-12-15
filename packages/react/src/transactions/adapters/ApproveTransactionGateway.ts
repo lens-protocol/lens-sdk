@@ -1,3 +1,5 @@
+import { BigNumber } from '@ethersproject/bignumber';
+import { MaxUint256 } from '@ethersproject/constants';
 import { erc20, bigNumber } from '@lens-protocol/blockchain-bindings';
 import {
   IPaidTransactionGateway,
@@ -5,7 +7,6 @@ import {
   TokenAllowanceRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { Amount, BigDecimal, CryptoNativeAsset, Data } from '@lens-protocol/shared-kernel';
-import { BigNumber, constants } from 'ethers';
 
 import { AbstractContractCallGateway, ContractCallDetails } from './AbstractContractCallGateway';
 
@@ -18,7 +19,7 @@ function resolveApproveAmount(request: TokenAllowanceRequest): BigNumber {
     case TokenAllowanceLimit.EXACT:
       return bigNumber(request.amount);
     case TokenAllowanceLimit.INFINITE:
-      return constants.MaxUint256;
+      return MaxUint256;
   }
 }
 

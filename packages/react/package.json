@@ -51,8 +51,11 @@
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/address": "^5.7.0",
     "@ethersproject/bignumber": "^5.7.0",
+    "@ethersproject/bytes": "^5.7.0",
+    "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/hash": "^5.7.0",
+    "@ethersproject/logger": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@ethersproject/wallet": "^5.7.0",
     "@lens-protocol/api-bindings": "workspace:*",
@@ -75,7 +78,6 @@
     "@ensdomains/ens": "0.4.4",
     "@ensdomains/resolver": "0.2.4",
     "@ethersproject/abi": "^5.7.0",
-    "@ethersproject/bytes": "^5.7.0",
     "@faker-js/faker": "^7.6.0",
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
@@ -104,7 +106,6 @@
   },
   "peerDependencies": {
     "@types/react": "^18.0.0",
-    "ethers": "^5.7.2",
     "react": "^18.2.0"
   },
   "peerDependenciesMeta": {

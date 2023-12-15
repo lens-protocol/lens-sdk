@@ -32,6 +32,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@ethersproject/providers": "^5.7.2",
     "@lens-protocol/shared-kernel": "workspace:*"
   },
   "devDependencies": {
@@ -43,7 +44,6 @@
     "@lens-protocol/react-web": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
     "@types/node": "^18.18.12",
-    "ethers": "^5.7.2",
     "prettier": "^2.8.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -53,7 +53,6 @@
   },
   "peerDependencies": {
     "@lens-protocol/react-web": "workspace:*",
-    "ethers": "^5.7.2",
     "viem": "^1.19.5",
     "wagmi": "^1.4.7"
   },

@@ -1,4 +1,4 @@
-import { utils } from 'ethers';
+import { getAddress } from '@ethersproject/address';
 
 import { Amount, Denomination } from '../Amount';
 import { erc20, Erc20 } from '../Asset';
@@ -17,7 +17,7 @@ export function mockUint256HexString() {
 }
 
 export function mockEvmAddress(): EvmAddress {
-  return utils.getAddress(`0x${genRanHex(20 * 2)}`);
+  return getAddress(`0x${genRanHex(20 * 2)}`);
 }
 
 export function mockEtherAmount(value: number | string) {

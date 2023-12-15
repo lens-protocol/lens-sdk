@@ -1,4 +1,4 @@
-import type { TypedDataDomain, TypedDataField } from 'ethers';
+import type { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer';
 
 export type TypedData = {
   domain: TypedDataDomain;
