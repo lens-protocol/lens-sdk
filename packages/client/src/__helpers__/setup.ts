@@ -28,20 +28,10 @@ export async function createOrGetProfile(signer: Wallet, client: LensClient, han
   return result ?? never('Profile not found');
 }
 
-export async function authenticate(signer: Wallet, client: LensClient, profile: ProfileFragment) {
+export async function authenticate(signer: Wallet, client: LensClient, profile?: ProfileFragment) {
   const { id, text } = await client.authentication.generateChallenge({
     signedBy: signer.address,
-    for: profile.id,
-  });
-
-  const signature = await signer.signMessage(text);
-
-  await client.authentication.authenticate({ id, signature });
-}
-
-export async function authenticateWithOnlyWallet(signer: Wallet, client: LensClient) {
-  const { id, text } = await client.authentication.generateChallenge({
-    signedBy: signer.address,
+    for: profile?.id,
   });
 
   const signature = await signer.signMessage(text);
