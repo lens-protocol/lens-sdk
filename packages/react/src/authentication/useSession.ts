@@ -95,22 +95,24 @@ export type Session = AnonymousSession | ProfileSession | WalletOnlySession;
  * Use this hook to determine if the user is authenticated or not.
  * ```tsx
  * function Page() {
- *   const { data, loading } = useSession();
+ *   const { data, error, loading } = useSession();
  *
  *   if (loading) return <p>Loading...</p>;
  *
+ *   if (error) return <p>Something went wrong.</p>;
+ *
  *   switch (data.type) {
  *     case SessionType.Anonymous:
- *       // session is a AnonymousSession
+ *       // data is a AnonymousSession
  *       return <Login />;
  *
  *     case SessionType.JustWallet:
- *       // session is a WalletOnlySession
- *       return <MyWallet address={session.address} />;
+ *       // data is a WalletOnlySession
+ *       return <MyWallet address={data.address} />;
  *
  *     case SessionType.WithProfile:
- *       // session is a ProfileSession
- *       return <MyProfile profile={session.profile} />;
+ *       // data is a ProfileSession
+ *       return <MyProfile profile={data.profile} />;
  *
  *     default:
  *       return <p>Something went wrong.</p>;
