@@ -18,6 +18,7 @@ import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
  * `useResolveAddress` is a hook that resolves n EVM address from a Lens Handle.
  *
  * This hook will not execute until the returned function is called.
+ *
  * @example
  * ```ts
  * const { called,  error, loading, execute } = useResolveAddress();
@@ -34,6 +35,7 @@ import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
  * }
  * ```
  *
+ * @experimental This hook is experimental and may change in the future.
  * @category Misc
  * @group Hooks
  */
