@@ -18,11 +18,11 @@ export type UseProfileManagersArgs = PaginatedArgs<{
  * `useProfileManagers` is a paginated React hook that lets you fetch profile manager details for a given profile.
  *
  * @example
- * Use this hook in combination with the Profile returned by the {@link useSession} to fetch the profile managers for the logged-in Profile
+ * Use this hook in combination with the ProfileSession returned by the {@link useSession} to fetch the profile managers for the logged-in Profile
  * ```tsx
  * function ProfileManagers({ session }: { session: ProfileSession }) {
  *   const { data: managers, error, loading } = useProfileManagers({
- *     for: session.profileId,
+ *     for: session.profile.id,
  *   });
  *
  *   if (loading) {

@@ -108,3 +108,27 @@ export const development: EnvironmentConfig = {
   },
   // gated: GatedEnvironments.development,
 };
+
+/**
+ * @internal
+ */
+export const staging: EnvironmentConfig = {
+  name: 'staging',
+  backend: 'https://api-mumbai.lens-v2.crtlkey.com' as URL,
+  chains: {
+    [ChainType.ETHEREUM]: goerli,
+    [ChainType.POLYGON]: mumbai,
+  },
+  timings: {
+    pollingInterval: 5000,
+    maxIndexingWaitTime: 240000,
+    maxMiningWaitTime: 2400000,
+  },
+  handleResolver: (localName) => `test/${localName}`,
+  snapshot: {
+    hub: 'https://testnet.snapshot.org' as URL,
+    matcher: demoSnapshotPoll,
+    sequencer: 'https://testnet.seq.snapshot.org' as URL,
+  },
+  // gated: GatedEnvironments.development,
+};

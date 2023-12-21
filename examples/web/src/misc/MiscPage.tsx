@@ -31,6 +31,11 @@ const hooks = [
     description: `Test ReactHooks SDK and Client SDK interoperability.`,
     path: '/misc/lensClientInteroperability',
   },
+  {
+    label: 'useResolveAddress',
+    description: `Resolves and EVM address from a Lens Handle.`,
+    path: '/misc/useResolveAddress',
+  },
 ];
 
 export function MiscPage() {

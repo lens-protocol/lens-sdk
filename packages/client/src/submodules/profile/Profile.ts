@@ -434,7 +434,7 @@ export class Profile {
    * @param request - Request object for the mutation
    * @returns Status of the transaction
    *
-   * @deprecated Use {@link Wallet.createProfile} instead
+   * @deprecated Use {@link Wallet.createProfile | `client.wallet.createProfile`} instead
    *
    * @example
    * ```ts
