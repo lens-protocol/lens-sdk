@@ -18,7 +18,7 @@ export function UseResolveAddress() {
   return (
     <div>
       <h1>
-        <code>useNotifications</code>
+        <code>useResolveAddress</code>
       </h1>
 
       <button onClick={resolve} disabled={loading}>
