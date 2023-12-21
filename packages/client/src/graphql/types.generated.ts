@@ -442,6 +442,11 @@ export type GetProfileMetadataArgs = {
   useFallback?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+export type HandleToAddressRequest = {
+  /** The full handle - namespace/localname */
+  handle: Scalars['Handle']['input'];
+};
+
 export type HidePublicationRequest = {
   for: Scalars['PublicationId']['input'];
 };

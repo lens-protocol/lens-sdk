@@ -1,5 +1,18 @@
 # @lens-protocol/react
 
+## 2.0.0-alpha.27
+
+### Minor Changes
+
+- 481e1d7aa: **feat:** adds `useResolveAddress` hook
+
+### Patch Changes
+
+- c074c4ded: **fixed:** issue #777
+- fa944c274: **fixed:** TSDocs typos/mistakes
+- Updated dependencies [481e1d7aa]
+  - @lens-protocol/api-bindings@0.11.0-alpha.24
+
 ## 2.0.0-alpha.26
 
 ### Minor Changes

@@ -19,6 +19,7 @@ import {
   Transaction,
   Wallet,
 } from './submodules';
+import { Handle } from './submodules/handle';
 
 /**
  * LensClient configuration
@@ -112,6 +113,13 @@ export class LensClient {
    */
   get feed(): Feed {
     return new Feed(this.context, this._authentication);
+  }
+
+  /**
+   * The Handle module
+   */
+  get handle(): Handle {
+    return new Handle(this.context, this._authentication);
   }
 
   /**

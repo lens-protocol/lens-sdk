@@ -61,7 +61,7 @@ export class Storage<Data> implements IStorage<Data> {
   private async getWithMetadata(): Promise<IStorageItem<Data> | null> {
     const json = await this.provider.getItem(this.getStorageKey());
 
-    if (json === null) {
+    if (!json) {
       return null;
     }
 

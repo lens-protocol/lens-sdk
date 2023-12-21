@@ -7,7 +7,7 @@ import { LoginForm } from './components/auth';
 
 export function LogInPage() {
   const navigate = useNavigate();
-  const { address, isConnected, isConnecting } = useAccount();
+  const { address, isConnecting, isDisconnected } = useAccount();
 
   const { connect } = useConnect({
     connector: new InjectedConnector(),
@@ -18,7 +18,7 @@ export function LogInPage() {
 
   return (
     <div>
-      {!isConnected && (
+      {isDisconnected && (
         <button disabled={isConnecting} onClick={() => connect()}>
           Connect first
         </button>

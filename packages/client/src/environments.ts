@@ -26,3 +26,12 @@ export const development = new Environment(
   'https://api-v2-mumbai-live.lens.dev',
   GatedEnvironments.development,
 );
+
+/**
+ * @internal
+ */
+export const staging = new Environment(
+  'staging',
+  'https://api-mumbai.lens-v2.crtlkey.com/',
+  GatedEnvironments.development,
+);
