@@ -731,9 +731,6 @@ importers:
       '@lit-protocol/types':
         specifier: 2.1.62
         version: 2.1.62
-      '@spruceid/siwe-parser':
-        specifier: ^2.0.2
-        version: 2.0.2
       siwe:
         specifier: ^2.1.4
         version: 2.1.4(ethers@5.7.2)
@@ -5086,7 +5083,7 @@ packages:
       isomorphic-ws: 5.0.0(ws@8.14.2)
       tslib: 2.6.2
       value-or-promise: 1.0.12
-      ws: 8.14.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.14.2
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -13801,7 +13798,7 @@ packages:
     peerDependencies:
       ws: '*'
     dependencies:
-      ws: 8.14.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.14.2
     dev: true
 
   /isows@1.0.3(ws@8.13.0):
@@ -19686,6 +19683,12 @@ packages:
     resolution: {integrity: sha512-WHN8KDQblxd32odxeIgo83rdVDE2bvdkb86it7bMhYZwWKJz0+O0RK/eZiHYnM+zgt/U7hAHOlCQGfjjvSkw2g==}
     dev: true
 
+  /use-sync-external-store@1.2.0:
+    resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dev: false
+
   /use-sync-external-store@1.2.0(react@18.2.0):
     resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
     peerDependencies:
@@ -19804,7 +19807,7 @@ packages:
         optional: true
     dependencies:
       proxy-compare: 2.5.1
-      use-sync-external-store: 1.2.0(react@18.2.0)
+      use-sync-external-store: 1.2.0
     dev: false
 
   /valtio@1.11.2(@types/react@18.2.38)(react@18.2.0):
@@ -20378,6 +20381,19 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+
+  /ws@8.14.2:
+    resolution: {integrity: sha512-wEBG1ftX4jcglPxgFCMJmZ2PLtSbJ2Peg6TmpJFTbe9GZYOQCDPdMYu/Tm0/bGZkw8paZnJY45J4K2PZrLYq8g==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+    dev: true
 
   /ws@8.14.2(bufferutil@4.0.8)(utf-8-validate@5.0.10):
     resolution: {integrity: sha512-wEBG1ftX4jcglPxgFCMJmZ2PLtSbJ2Peg6TmpJFTbe9GZYOQCDPdMYu/Tm0/bGZkw8paZnJY45J4K2PZrLYq8g==}
