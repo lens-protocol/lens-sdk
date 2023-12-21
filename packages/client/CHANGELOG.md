@@ -1,5 +1,17 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.27
+
+### Minor Changes
+
+- 75e2caea6: **feat:** support `handleToAddress` query
+- 61f0aedb6: **feat:** allow decryptable content with wallet-only auth
+
+### Patch Changes
+
+- c074c4ded: **fixed:** issue #777
+- fa944c274: **fixed:** TSDocs typos/mistakes
+
 ## 2.0.0-alpha.26
 
 ### Minor Changes
