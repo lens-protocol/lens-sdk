@@ -1,5 +1,11 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.24
+
+### Patch Changes
+
+- 481e1d7aa: **feat:** adds `useResolveAddress` hook
+
 ## 0.11.0-alpha.23
 
 ### Patch Changes
