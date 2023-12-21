@@ -1,5 +1,5 @@
 /**
- * @module Base
+ * @module Core
  *
  * @example
  * Development example:
