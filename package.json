@@ -35,6 +35,8 @@
   "pnpm": {
     "peerDependencyRules": {
       "ignoreMissing": [
+        "arweave",
+        "react",
         "react-native",
         "@tanstack/query-core",
         "csstype",

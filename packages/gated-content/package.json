@@ -116,5 +116,12 @@
       "web/index.ts"
     ],
     "exports": true
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "react"
+      ]
+    }
   }
 }
