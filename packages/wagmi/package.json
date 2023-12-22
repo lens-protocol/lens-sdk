@@ -44,6 +44,7 @@
     "@lens-protocol/react-web": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
     "@types/node": "^18.18.12",
+    "@types/react": "^18.2.38",
     "prettier": "^2.8.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
