@@ -1,5 +1,5 @@
+import { parseUnits } from '@ethersproject/units';
 import { CryptoAmount, EvmAddress } from '@lens-protocol/shared-kernel';
-import { utils } from 'ethers';
 
 export function hexToInt(hex: string): number {
   return parseInt(hex, 16);
@@ -11,5 +11,5 @@ export function isTheSameAddress(address1: EvmAddress, address2: EvmAddress) {
 }
 
 export function bigNumber(from: CryptoAmount) {
-  return utils.parseUnits(from.toFixed(), from.asset.decimals);
+  return parseUnits(from.toFixed(), from.asset.decimals);
 }

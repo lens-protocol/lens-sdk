@@ -1,6 +1,6 @@
+import { JsonRpcProvider, JsonRpcSigner, Web3Provider } from '@ethersproject/providers';
 import { IBindings } from '@lens-protocol/react-web';
 import { invariant } from '@lens-protocol/shared-kernel';
-import { providers } from 'ethers';
 import { PublicClient, WalletClient } from 'wagmi';
 import { getPublicClient, getWalletClient } from 'wagmi/actions';
 
@@ -8,21 +8,19 @@ function providerFromPublicClient({
   publicClient,
 }: {
   publicClient: PublicClient;
-}): providers.JsonRpcProvider {
+}): JsonRpcProvider {
   const { chain, transport } = publicClient;
   const network = {
     chainId: chain.id,
     name: chain.name,
     ensAddress: chain.contracts?.ensRegistry?.address,
   };
-  return new providers.Web3Provider(transport, network);
+  return new Web3Provider(transport, network);
 }
 
-async function signerFromWalletClient(
-  walletClient: WalletClient,
-): Promise<providers.JsonRpcSigner> {
+async function signerFromWalletClient(walletClient: WalletClient): Promise<JsonRpcSigner> {
   const { account, transport } = walletClient;
-  const provider = new providers.Web3Provider(transport, 'any');
+  const provider = new Web3Provider(transport, 'any');
   const signer = provider.getSigner(account.address);
   return signer;
 }

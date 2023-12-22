@@ -1,21 +1,23 @@
 /**
+ * @module Core
+ *
  * ## Quick start
  *
  * Install:
  *
  * | Package Manager | Command |
  * |:---------------:|:------- |
- * | npm             | `npm install @lens-protocol/react-web@alpha ethers@legacy-v5` |
- * | yarn            | `yarn add @lens-protocol/react-web@alpha ethers@legacy-v5` |
- * | pnpm            | `pnpm add @lens-protocol/react-web@alpha ethers@legacy-v5` |
+ * | npm             | `npm install @lens-protocol/react-web@latest` |
+ * | yarn            | `yarn add @lens-protocol/react-web@latest` |
+ * | pnpm            | `pnpm add @lens-protocol/react-web@latest` |
  *
  * If you use [wagmi](https://wagmi.sh/) you can install the companion package:
  *
  * | Package Manager | Command |
  * |:---------------:|:------- |
- * | npm             | `npm install @lens-protocol/wagmi@alpha` |
- * | yarn            | `yarn add @lens-protocol/wagmi@alpha` |
- * | pnpm            | `pnpm add @lens-protocol/wagmi@alpha` |
+ * | npm             | `npm install @lens-protocol/wagmi@latest` |
+ * | yarn            | `yarn add @lens-protocol/wagmi@latest` |
+ * | pnpm            | `pnpm add @lens-protocol/wagmi@latest` |
  *
  * In the following examples we will show you integration with wagmi and we will explain later how to use custom bindings.
  *
@@ -65,8 +67,6 @@
  *   getSigner: () => wallet
  * };
  * ```
- *
- * @module Index
  */
 'use client';
 

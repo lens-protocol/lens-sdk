@@ -1,8 +1,9 @@
+import { hexValue } from '@ethersproject/bytes';
+import { ErrorCode } from '@ethersproject/logger';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { AddEthereumChainParameter, isTheSameAddress } from '@lens-protocol/blockchain-bindings';
 import { WalletConnectionError, WalletConnectionErrorReason } from '@lens-protocol/domain/entities';
 import { ChainType, failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
-import { errors, utils } from 'ethers';
 
 import { ChainConfigRegistry } from '../../chains';
 import { CreateSignerConfig, ISignerFactory, RequiredSigner } from '../adapters/ConcreteWallet';
@@ -54,9 +55,9 @@ export class SignerFactory implements ISignerFactory {
           }
         }
       } catch (err) {
-        assertErrorObjectWithCode<errors>(err);
+        assertErrorObjectWithCode<ErrorCode>(err);
 
-        if (err.code === errors.UNSUPPORTED_OPERATION) {
+        if (err.code === ErrorCode.UNSUPPORTED_OPERATION) {
           return failure(new WalletConnectionError(WalletConnectionErrorReason.INCORRECT_CHAIN));
         }
       }
@@ -67,7 +68,7 @@ export class SignerFactory implements ISignerFactory {
   private createAddEthereumChainParameter(chainType: ChainType): AddEthereumChainParameter {
     const chainConfig = this.chains[chainType];
     return {
-      chainId: utils.hexValue(chainConfig.chainId),
+      chainId: hexValue(chainConfig.chainId),
       chainName: chainConfig.name,
       nativeCurrency: {
         name: chainConfig.nativeCurrency.name,
@@ -96,7 +97,7 @@ export class SignerFactory implements ISignerFactory {
     try {
       if (signer.provider && signer.provider instanceof JsonRpcProvider) {
         await signer.provider.send('wallet_switchEthereumChain', [
-          { chainId: utils.hexValue(chainConfig.chainId) },
+          { chainId: hexValue(chainConfig.chainId) },
         ]);
 
         return success();

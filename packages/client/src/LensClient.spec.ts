@@ -1,5 +1,5 @@
+import { Wallet } from '@ethersproject/wallet';
 import { InMemoryStorageProvider } from '@lens-protocol/storage';
-import { Wallet } from 'ethers';
 
 import { LensClient } from '.';
 import { buildTestEnvironment } from './__helpers__';

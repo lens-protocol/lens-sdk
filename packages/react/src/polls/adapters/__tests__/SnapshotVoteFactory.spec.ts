@@ -1,3 +1,4 @@
+import { getAddress } from '@ethersproject/address';
 import {
   SnapshotProposal,
   SnapshotSpaceId,
@@ -12,7 +13,6 @@ import { AppId, PollId } from '@lens-protocol/domain/entities';
 import { mockAppId, mockCreateUnsignedVoteRequest, mockWallet } from '@lens-protocol/domain/mocks';
 import { InvariantError, never } from '@lens-protocol/shared-kernel';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
-import { getAddress } from 'ethers/lib/utils';
 
 import { SnapshotVoteFactory, UnsignedVote } from '../SnapshotVoteFactory';
 import { vote2Types, voteArray2Types, voteString2Types } from '../types';

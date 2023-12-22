@@ -1,5 +1,5 @@
+import { Wallet } from '@ethersproject/wallet';
 import { invariant, never, UnknownObject } from '@lens-protocol/shared-kernel';
-import { Wallet } from 'ethers';
 
 import { LensClient } from '../LensClient';
 import { ProfileFragment } from '../graphql';

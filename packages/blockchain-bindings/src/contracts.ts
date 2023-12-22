@@ -1,6 +1,6 @@
+import { Contract } from '@ethersproject/contracts';
 import { Provider } from '@ethersproject/providers';
 import { EvmAddress } from '@lens-protocol/shared-kernel';
-import { Contract } from 'ethers';
 
 import lensFollowNftAbi from './abi/LensFollowNFT.json';
 import lensHubAbi from './abi/LensHub.json';

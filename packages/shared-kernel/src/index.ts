@@ -10,7 +10,6 @@ export * from './get';
 export * from './logger/ILogger';
 export * from './Result';
 export * from './Deferred';
-export * from './safeSetTimeout';
 export * from './ts-helpers/assertError';
 export * from './ts-helpers/assertNever';
 export * from './ts-helpers/invariant';
