@@ -34,7 +34,6 @@ import { z } from 'zod';
 import { UnsignedVote } from '../../polls/adapters/SnapshotVoteFactory';
 import { ISnapshotVote } from '../../polls/adapters/SnapshotVoteRelayer';
 import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
-import { SelfFundedProtocolTransactionRequest } from '../../transactions/adapters/SelfFundedProtocolTransactionRequest';
 import { assertErrorObjectWithCode } from './errors';
 
 export type RequiredSigner = Signer & TypedDataSigner;
@@ -72,7 +71,6 @@ export class UnsignedProtocolCall<T extends ProtocolTransactionRequestModel>
     id: string;
     request: T;
     typedData: TypedData;
-    fallback?: SelfFundedProtocolTransactionRequest<T>; // TODO remove fallback
   }): UnsignedProtocolCall<T> {
     return new UnsignedProtocolCall(id, request, typedData);
   }
