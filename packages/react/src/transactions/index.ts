@@ -1,3 +1,5 @@
+export type { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
+
 export * from './useApproveModule';
 export * from './useClaimHandle';
 export * from './useCreateComment';
