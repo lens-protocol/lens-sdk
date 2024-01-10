@@ -26,7 +26,7 @@ import {
   mockSimpleCollectOpenActionSettingsFragment,
 } from '../../__helpers__';
 import { AnyPublication } from '../../publication';
-import { KnownCollectModuleSettings } from '../KnownCollectModuleSettings';
+import { CollectModuleSettings } from '../CollectModuleSettings';
 import { resolveTokenAllowanceRequest } from '../token-allowance';
 
 const amount = mockDaiAmount(42);
@@ -61,7 +61,7 @@ describe(`Given the ${resolveTokenAllowanceRequest.name} helper`, () => {
 
   describe.each<{
     name: string;
-    mockPublicationWith: (settings: KnownCollectModuleSettings) => AnyPublication;
+    mockPublicationWith: (settings: CollectModuleSettings) => AnyPublication;
   }>([
     {
       name: 'Post',

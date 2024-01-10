@@ -10,7 +10,7 @@ import { Data, EvmAddress, invariant, never } from '@lens-protocol/shared-kernel
 
 import * as gql from '../graphql/generated';
 import { AnyPublication, OpenActionModuleSettings } from '../publication';
-import { findCollectActionModuleSettings } from './KnownCollectModuleSettings';
+import { findCollectModuleSettings } from './CollectModuleSettings';
 import { erc20Amount } from './amount';
 
 /**
@@ -76,7 +76,7 @@ function resolveCollectRequestFor(
   context: OpenActionContext<CollectParams>,
 ): CollectRequest {
   const collectable = publication.__typename === 'Mirror' ? publication.mirrorOn : publication;
-  const settings = findCollectActionModuleSettings(collectable);
+  const settings = findCollectModuleSettings(collectable);
 
   invariant(settings, 'No open action module settings found for publication');
 
