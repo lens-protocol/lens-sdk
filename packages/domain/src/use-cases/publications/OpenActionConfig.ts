@@ -8,7 +8,7 @@ export type RecipientWithSplit = {
   /**
    * The split of the collect fee.
    *
-   * Number between 0-1 with up to 2 decimals of precision (e.g. 0.5 for 50%)
+   * Number between 1-100 with up to 2 decimals of precision (e.g. 10.5 for 10.5%)
    */
   split: number;
 };

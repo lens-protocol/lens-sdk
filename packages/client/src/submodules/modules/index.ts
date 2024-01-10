@@ -6,5 +6,6 @@ export type {
   GenerateModuleCurrencyApprovalResultFragment,
   KnownSupportedModuleFragment,
   ModuleInfoFragment,
+  ModuleMetadataResultFragment,
   UnknownSupportedModuleFragment,
 } from './graphql/modules.generated';

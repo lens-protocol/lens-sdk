@@ -222,11 +222,11 @@ export type CreatePostArgs = {
  *       recipients: [
  *         {
  *           recipient: '0x4f94FAFEE38F545920485fC747467EFc85C302E0',
- *           split: 0.3, // 30%
+ *           split: 30, // 30%
  *         },
  *         {
  *           recipient: '0x097A4fE5cfFf0360438990b88549d4288748f6cB',
- *           split: 0.7, // 70%
+ *           split: 70, // 70%
  *         },
  *       ],
  *       endsAt: new Date('2025-12-31T00:00:00.000Z'),
@@ -390,7 +390,7 @@ export type CreatePostArgs = {
  *       case 'BroadcastingError':
  *         if ([BroadcastingErrorReason.NOT_SPONSORED, BroadcastingErrorReason.RATE_LIMITED].includes(sponsoredResult.error.reason)) {
  *
- *           const chargedResult = = await execute({
+ *           const chargedResult = await execute({
  *             metadata: uri,
  *             sponsored: false,
  *           });
@@ -460,17 +460,13 @@ export function useCreatePost(): UseDeferredTask<
 
   return useDeferredTask(async (args: CreatePostArgs) => {
     invariant(
-      session?.authenticated,
-      'You must be authenticated to create a post. Use `useLogin` hook to authenticate.',
-    );
-    invariant(
-      session.type === SessionType.WithProfile,
-      'You must have a profile to create a post.',
+      session?.type === SessionType.WithProfile,
+      'You must be authenticated with a Profile to post. Use `useLogin` hook to authenticate.',
     );
 
     const request = createPostRequest({
       signless: session.profile.signless,
-      sponsored: args.sponsored ?? true,
+      sponsored: args.sponsored ?? session.profile.sponsor,
       ...args,
     });
 
