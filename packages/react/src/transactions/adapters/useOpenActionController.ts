@@ -24,7 +24,7 @@ export function useOpenActionController() {
   const {
     activeWallet,
     apolloClient,
-    logger,
+    config,
     onChainRelayer,
     providerFactory,
     tokenAvailability,
@@ -46,7 +46,7 @@ export function useOpenActionController() {
     >();
 
     const onChainGateway = new OpenActionGateway(
-      logger,
+      config,
       apolloClient,
       transactionFactory,
       providerFactory,

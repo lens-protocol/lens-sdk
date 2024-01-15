@@ -9,10 +9,11 @@ import {
 } from '@lens-protocol/api-bindings/mocks';
 import { UnsignedTransaction } from '@lens-protocol/domain/entities';
 import { mockNonce, mockSetProfileMetadataRequest, mockWallet } from '@lens-protocol/domain/mocks';
-import { ChainType, ILogger } from '@lens-protocol/shared-kernel';
+import { ChainType } from '@lens-protocol/shared-kernel';
 import { providers } from 'ethers';
 import { mock } from 'jest-mock-extended';
 
+import { LensConfig } from '../../../../config';
 import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
 import { mockIProviderFactory } from '../../../../wallet/adapters/__helpers__/mocks';
 import { UnsignedContractCallTransaction } from '../../AbstractContractCallGateway';
@@ -30,7 +31,7 @@ function setupTestScenario({
   apolloClient: SafeApolloClient;
   provider?: providers.JsonRpcProvider;
 }) {
-  const logger = mock<ILogger>();
+  const config = mock<LensConfig>();
   const transactionFactory = mockITransactionFactory();
   const providerFactory = mockIProviderFactory({
     chainType: ChainType.POLYGON,
@@ -38,7 +39,7 @@ function setupTestScenario({
   });
 
   const gateway = new ProfileMetadataGateway(
-    logger,
+    config,
     providerFactory,
     apolloClient,
     transactionFactory,

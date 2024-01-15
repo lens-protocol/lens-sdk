@@ -16,7 +16,7 @@ export function useCreateQuoteController() {
   const {
     activeWallet,
     apolloClient,
-    logger,
+    config,
     momokaRelayer,
     onChainRelayer,
     providerFactory,
@@ -32,7 +32,7 @@ export function useCreateQuoteController() {
     );
 
     const onChainGateway = new CreateOnChainQuoteGateway(
-      logger,
+      config,
       providerFactory,
       apolloClient,
       transactionFactory,

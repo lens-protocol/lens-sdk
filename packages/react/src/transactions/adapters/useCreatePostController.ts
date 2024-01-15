@@ -16,7 +16,7 @@ export function useCreatePostController() {
   const {
     activeWallet,
     apolloClient,
-    logger,
+    config,
     momokaRelayer,
     onChainRelayer,
     providerFactory,
@@ -32,7 +32,7 @@ export function useCreatePostController() {
     );
 
     const onChainGateway = new CreateOnChainPostGateway(
-      logger,
+      config,
       providerFactory,
       apolloClient,
       transactionFactory,

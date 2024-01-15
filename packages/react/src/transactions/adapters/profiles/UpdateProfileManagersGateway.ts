@@ -11,8 +11,9 @@ import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { Nonce } from '@lens-protocol/domain/entities';
 import { UpdateProfileManagersRequest } from '@lens-protocol/domain/use-cases/profile';
 import { ISignedOnChainGateway } from '@lens-protocol/domain/use-cases/transactions';
-import { Data, ILogger } from '@lens-protocol/shared-kernel';
+import { Data } from '@lens-protocol/shared-kernel';
 
+import { LensConfig } from '../../../config';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
@@ -22,11 +23,11 @@ export class UpdateProfileManagersGateway
   implements ISignedOnChainGateway<UpdateProfileManagersRequest>
 {
   constructor(
-    logger: ILogger,
+    config: LensConfig,
     providerFactory: IProviderFactory,
     private apolloClient: SafeApolloClient,
   ) {
-    super(logger, providerFactory);
+    super(config, providerFactory);
   }
 
   async createUnsignedProtocolCall(

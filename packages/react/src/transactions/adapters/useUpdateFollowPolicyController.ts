@@ -26,7 +26,7 @@ export function useUpdateFollowPolicyController() {
   const {
     activeWallet,
     apolloClient,
-    logger,
+    config,
     onChainRelayer,
     providerFactory,
     transactionFactory,
@@ -58,7 +58,7 @@ export function useUpdateFollowPolicyController() {
     >();
 
     const gateway = new UpdateFollowPolicyGateway(
-      logger,
+      config,
       providerFactory,
       apolloClient,
       transactionFactory,

@@ -23,7 +23,7 @@ export function useSetProfileMetadataController() {
   const {
     activeWallet,
     apolloClient,
-    logger,
+    config,
     onChainRelayer,
     providerFactory,
     transactionGateway,
@@ -42,7 +42,7 @@ export function useSetProfileMetadataController() {
     >();
 
     const gateway = new ProfileMetadataGateway(
-      logger,
+      config,
       providerFactory,
       apolloClient,
       transactionFactory,

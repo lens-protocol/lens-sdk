@@ -20,7 +20,7 @@ export function useUnblockProfilesController() {
   const {
     activeWallet,
     apolloClient,
-    logger,
+    config,
     onChainRelayer,
     providerFactory,
     transactionFactory,
@@ -39,7 +39,7 @@ export function useUnblockProfilesController() {
     >();
 
     const gateway = new UnblockProfilesGateway(
-      logger,
+      config,
       providerFactory,
       apolloClient,
       transactionFactory,

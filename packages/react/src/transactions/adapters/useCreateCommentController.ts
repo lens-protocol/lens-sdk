@@ -16,7 +16,7 @@ export function useCreateCommentController() {
   const {
     activeWallet,
     apolloClient,
-    logger,
+    config,
     momokaRelayer,
     onChainRelayer,
     providerFactory,
@@ -32,7 +32,7 @@ export function useCreateCommentController() {
     );
 
     const onChainGateway = new CreateOnChainCommentGateway(
-      logger,
+      config,
       providerFactory,
       apolloClient,
       transactionFactory,

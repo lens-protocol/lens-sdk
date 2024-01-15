@@ -18,9 +18,10 @@ import {
   IDelegatedTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, Data, ILogger, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
+import { LensConfig } from '../../../config';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
@@ -34,12 +35,12 @@ export class BlockProfilesGateway
     ISignedOnChainGateway<BlockProfilesRequest>
 {
   constructor(
-    logger: ILogger,
+    config: LensConfig,
     providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<BlockProfilesRequest>,
   ) {
-    super(logger, providerFactory);
+    super(config, providerFactory);
   }
 
   async createDelegatedTransaction(

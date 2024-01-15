@@ -25,7 +25,7 @@ export function useFollowController() {
   const {
     activeWallet,
     apolloClient,
-    logger,
+    config,
     onChainRelayer,
     providerFactory,
     tokenAvailability,
@@ -48,7 +48,7 @@ export function useFollowController() {
       | WalletConnectionError
     >();
     const gateway = new FollowProfileGateway(
-      logger,
+      config,
       providerFactory,
       apolloClient,
       transactionFactory,

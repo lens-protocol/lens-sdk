@@ -23,11 +23,12 @@ export function useUnfollowController() {
   const {
     activeWallet,
     apolloClient,
+    config,
     onChainRelayer,
+    providerFactory,
     transactionFactory,
     transactionGateway,
     transactionQueue,
-    providerFactory,
   } = useSharedDependencies();
 
   return async (
@@ -50,7 +51,12 @@ export function useUnfollowController() {
       | UserRejectedError
       | WalletConnectionError
     >();
-    const gateway = new UnfollowProfileGateway(providerFactory, apolloClient, transactionFactory);
+    const gateway = new UnfollowProfileGateway(
+      config,
+      providerFactory,
+      apolloClient,
+      transactionFactory,
+    );
 
     const signedExecution = new SignedOnChain(
       activeWallet,

@@ -21,7 +21,7 @@ export function useBlockProfilesController() {
   const {
     activeWallet,
     apolloClient,
-    logger,
+    config,
     transactionGateway,
     transactionQueue,
     transactionFactory,
@@ -41,7 +41,7 @@ export function useBlockProfilesController() {
     >();
 
     const gateway = new BlockProfilesGateway(
-      logger,
+      config,
       providerFactory,
       apolloClient,
       transactionFactory,
