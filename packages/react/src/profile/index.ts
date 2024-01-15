@@ -21,6 +21,7 @@ export type {
   HandleInfo,
   NftImage,
   Profile,
+  ProfileFields,
   ProfileActionHistory,
   ProfileGuardianResult,
   ProfileManager,
