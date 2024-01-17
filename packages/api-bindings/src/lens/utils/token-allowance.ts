@@ -7,14 +7,14 @@ import { assertNever, invariant, never } from '@lens-protocol/shared-kernel';
 
 import { Profile } from '../graphql/generated';
 import { AnyPublication, PrimaryPublication } from '../publication';
-import { findCollectActionModuleSettings } from './KnownCollectModuleSettings';
+import { findCollectModuleSettings } from './CollectModuleSettings';
 import { erc20Amount } from './amount';
 
 export function resolveTokenAllowanceRequestForCollect(
   publication: PrimaryPublication,
   limit: TokenAllowanceLimit,
 ): TokenAllowanceRequest {
-  const module = findCollectActionModuleSettings(publication);
+  const module = findCollectModuleSettings(publication);
 
   invariant(module, `Publication ${publication.id} has no collect module`);
 

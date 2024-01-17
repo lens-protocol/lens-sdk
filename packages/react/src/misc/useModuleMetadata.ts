@@ -11,6 +11,8 @@ import { useLensApolloClient } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
 import { useDeferredTask, UseDeferredTask } from '../helpers/tasks';
 
+export type { ModuleMetadataResult };
+
 /**
  * {@link useModuleMetadata} hook arguments
  */
@@ -69,7 +71,7 @@ export type FetchModuleMetadataArgs = {
  * @group Hooks
  */
 export function useLazyModuleMetadata(): UseDeferredTask<
-  ModuleMetadataResult | null,
+  ModuleMetadataResult,
   NotFoundError | UnspecifiedError,
   UseModuleMetadataArgs
 > {

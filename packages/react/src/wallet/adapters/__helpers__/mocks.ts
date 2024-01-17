@@ -19,10 +19,7 @@ import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import { ITransactionFactory } from '../../../transactions/adapters/ITransactionFactory';
-import {
-  mockSelfFundedProtocolTransactionRequest,
-  mockTypedData,
-} from '../../../transactions/adapters/__helpers__/mocks';
+import { mockTypedData } from '../../../transactions/adapters/__helpers__/mocks';
 import {
   ConcreteWallet,
   ISignerFactory,
@@ -64,7 +61,6 @@ export function mockUnsignedProtocolCall<T extends ProtocolTransactionRequestMod
     id: faker.datatype.uuid(),
     request,
     typedData,
-    fallback: mockSelfFundedProtocolTransactionRequest<T>(),
   });
 }
 
