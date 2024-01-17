@@ -27,17 +27,17 @@ export enum OpenActionKind {
 export type UnknownActionParams = {
   kind: OpenActionKind.UNKNOWN;
   /**
-   * The address of the unknown open action to perform.
+   * The address of the Unknown Open Action  module contract.
    *
-   * MUST be within the publications' `openActionModules` list.
+   * It MUST be within the target publication's `openActionModules` list.
    */
   address: EvmAddress;
   /**
-   * The data required by the unknown Open Action contract address to operate.
+   * The data required by the Unknown Open Action to be executed.
    *
    * It's consumer responsibility to encode it correctly.
    */
-  data: Data;
+  data: string;
 };
 
 /**
@@ -184,7 +184,7 @@ function resolveUnknownRequestFor(
     type: AllOpenActionType.UNKNOWN_OPEN_ACTION,
     publicationId: target.id,
     address: settings.contract.address,
-    data: context.action.data,
+    data: context.action.data as Data,
     public: context.public,
     signless: context.signless,
     sponsored: context.sponsored,

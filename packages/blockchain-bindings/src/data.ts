@@ -1,14 +1,31 @@
-import { defaultAbiCoder, ParamType, Result } from '@ethersproject/abi';
+import { defaultAbiCoder, ParamType } from '@ethersproject/abi';
 import { invariant } from '@lens-protocol/shared-kernel';
 
+/**
+ * Module data.
+ */
+export type ModuleData = Array<string | boolean | string[] | string[][]>;
+
+/**
+ * A module parameter.
+ */
 export type ModuleParam = {
+  /**
+   * The local name of the parameter (of null if unbound)
+   */
   name: string;
+  /**
+   * The fully qualified type (e.g. "address", "tuple(address)", "uint256[3][]"
+   */
   type: string;
+  /**
+   * Tuples ONLY
+   */
   components?: ModuleParam[];
 };
 
 /**
- * Encode data for a contract method call
+ * Encode an array of values into a DataHexString according to the provided ABI.
  *
  * @param abi - array of types to encode
  * @param data - array of data to encode
@@ -16,16 +33,13 @@ export type ModuleParam = {
  *
  * @example
  * ```ts
- * const calldata = encodeData(
- *   JSON.parse(result.metadata.processCalldataABI) as ModuleParam[],
+ * const encoded = encodeData(
+ *   JSON.parse(module.metadata.processCalldataABI) as ModuleParam[],
  *   [ 'value1', 'value2' ]
  * );
  * ```
  */
-export function encodeData(
-  abi: ModuleParam[],
-  data: (string | boolean | string[] | string[][])[],
-): string {
+export function encodeData(abi: ModuleParam[], data: ModuleData): string {
   invariant(
     abi.length === data.length,
     'Please provide the same number of data items as required by the contract method',
@@ -48,6 +62,7 @@ export function encodeData(
 }
 
 /**
+ * Decode a DataHexString into an array of values according to the provided ABI.
  *
  * @param abi - array of types to decode
  * @param calldata - data to decode
@@ -55,13 +70,13 @@ export function encodeData(
  *
  * @example
  * ```ts
- * const result = decodeData(
- *   JSON.parse(result.metadata.initializeResultDataABI) as ModuleParam[],
+ * const decoded = decodeData(
+ *   JSON.parse(module.metadata.initializeResultDataABI) as ModuleParam[],
  *   openActionSettings.initializeResultData
  * );
  * ```
  */
-export function decodeData(abi: ModuleParam[], calldata: string): Result {
+export function decodeData(abi: ModuleParam[], calldata: string): ModuleData {
   const types = abi.map((param) => {
     return ParamType.fromObject({
       name: param.name,
@@ -70,5 +85,5 @@ export function decodeData(abi: ModuleParam[], calldata: string): Result {
     });
   });
 
-  return defaultAbiCoder.decode(types, calldata);
+  return defaultAbiCoder.decode(types, calldata) as ModuleData;
 }

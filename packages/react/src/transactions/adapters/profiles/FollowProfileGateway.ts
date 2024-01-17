@@ -18,7 +18,9 @@ import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
 import {
   FollowRequest,
   FreeFollowRequest,
+  UnknownFollowRequest,
   isPaidFollowRequest,
+  isUnknownFollowRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastingError,
@@ -52,6 +54,20 @@ function resolveProfileFollow(request: FollowRequest): Follow[] {
     ];
   }
 
+  if (isUnknownFollowRequest(request)) {
+    return [
+      {
+        profileId: request.profileId,
+        followModule: {
+          unknownFollowModule: {
+            address: request.address,
+            data: request.data,
+          },
+        },
+      },
+    ];
+  }
+
   return [{ profileId: request.profileId }];
 }
 
@@ -71,7 +87,7 @@ export class FollowProfileGateway
   }
 
   async createDelegatedTransaction(
-    request: FreeFollowRequest,
+    request: FreeFollowRequest | UnknownFollowRequest,
   ): PromiseResult<NativeTransaction<FreeFollowRequest>, BroadcastingError> {
     const result = await this.relayWithProfileManager(request);
 
