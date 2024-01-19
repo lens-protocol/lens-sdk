@@ -5,4 +5,4 @@
 "@lens-protocol/react-web": minor
 ---
 
-**feat:** Introduced `debug` mode. Extended ILogger interface.
+**feat:** Introduced `debug` mode. Exported `ConsoleLogger`.

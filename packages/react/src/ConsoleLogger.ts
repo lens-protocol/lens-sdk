@@ -1,39 +1,37 @@
 /* eslint-disable no-console */
-import { ILogger, LoggerLevel } from '@lens-protocol/shared-kernel';
+import { ILogger } from '@lens-protocol/shared-kernel';
 
-export type ConsoleLoggerOptions = {
-  level?: LoggerLevel;
-};
+export enum ConsoleLoggerLevel {
+  Info = 1,
+  Warn = 2,
+  Error = 3,
+  Fatal = 4,
+}
 
 export class ConsoleLogger implements ILogger {
-  readonly level: LoggerLevel;
+  readonly level: ConsoleLoggerLevel;
 
-  constructor(options: ConsoleLoggerOptions = {}) {
-    this.level = options.level ?? LoggerLevel.Info;
+  constructor({ level }: { level?: ConsoleLoggerLevel } = {}) {
+    this.level = level ?? ConsoleLoggerLevel.Warn;
   }
 
   info(message: string, data?: unknown): void {
-    if (this.level > LoggerLevel.Info) return;
-    console.info(message, data);
-  }
-
-  debug(message: string, data?: unknown): void {
-    if (this.level > LoggerLevel.Debug) return;
+    if (this.level > ConsoleLoggerLevel.Info) return;
     console.info(message, data);
   }
 
   warn(message: string, data?: unknown): void {
-    if (this.level > LoggerLevel.Warn) return;
+    if (this.level > ConsoleLoggerLevel.Warn) return;
     console.error(message, data);
   }
 
   error(error: Error, message?: string, data?: unknown): void {
-    if (this.level > LoggerLevel.Error) return;
+    if (this.level > ConsoleLoggerLevel.Error) return;
     console.error(message, error, data);
   }
 
   fatal(error: Error, message?: string, data?: unknown): void {
-    if (this.level > LoggerLevel.Fatal) return;
+    if (this.level > ConsoleLoggerLevel.Fatal) return;
     console.error(message, error, data);
   }
 }
