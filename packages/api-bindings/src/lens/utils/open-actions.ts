@@ -96,7 +96,7 @@ function resolveCollectRequestFor(
         publicationId: collectable.id,
         referrer: publication !== collectable ? publication.id : undefined,
         fee: {
-          amount: erc20Amount({ from: settings.amount }),
+          amount: erc20Amount(settings.amount),
           contractAddress: settings.contract.address,
         },
         public: false,
@@ -117,7 +117,7 @@ function resolveCollectRequestFor(
       };
 
     case 'SimpleCollectOpenActionSettings':
-      const amount = erc20Amount({ from: settings.amount });
+      const amount = erc20Amount(settings.amount);
 
       return {
         kind: TransactionKind.ACT_ON_PUBLICATION,
@@ -144,7 +144,7 @@ function resolveCollectRequestFor(
         referrers:
           context.action.referrers ?? (publication !== collectable ? [publication.id] : undefined),
         fee: {
-          amount: erc20Amount({ from: settings.amount }),
+          amount: erc20Amount(settings.amount),
           contractAddress: settings.contract.address,
         },
         public: context.public,

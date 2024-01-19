@@ -29,7 +29,7 @@ export function resolveFollowPolicy({ followModule }: Profile): FollowPolicy {
     case 'FeeFollowModuleSettings':
       return {
         type: FollowPolicyType.CHARGE,
-        amount: erc20Amount({ from: followModule.amount }),
+        amount: erc20Amount(followModule.amount),
         recipient: followModule.recipient,
         contractAddress: followModule.contract.address,
         chainId: followModule.contract.chainId,
