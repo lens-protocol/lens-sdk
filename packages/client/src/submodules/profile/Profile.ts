@@ -18,6 +18,7 @@ import type {
   FollowersRequest,
   FollowingRequest,
   FollowRequest,
+  FollowStatusBulkRequest,
   LinkHandleToProfileRequest,
   MutualFollowersRequest,
   OnchainSetProfileMetadataRequest,
@@ -59,6 +60,7 @@ import {
   ProfileManagerFragment,
   Sdk,
   getSdk,
+  FollowStatusBulkResultFragment,
 } from './graphql/profile.generated';
 import { FetchProfileOptions } from './types';
 
@@ -332,6 +334,38 @@ export class Profile {
 
       return result.data.result;
     }, request);
+  }
+
+  /**
+   * Check follow status between multiple profiles.
+   *
+   * @param request - Request object for the query
+   * @returns follow status bulk result
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.followStatusBulk({
+   *   followInfos: [
+   *     {
+   *       follower: '0x06', // is 0x06 following 0x38?
+   *       profileId: '0x38',
+   *     },
+   *     {
+   *       follower: '0x38', // is 0x38 following 0x06?
+   *       profileId: '0x06',
+   *     },
+   *   ],
+   * });
+   * ```
+   */
+  async followStatusBulk(
+    request: FollowStatusBulkRequest,
+  ): Promise<FollowStatusBulkResultFragment[]> {
+    const result = await this.sdk.FollowStatusBulk({
+      request,
+    });
+
+    return result.data.result;
   }
 
   /**

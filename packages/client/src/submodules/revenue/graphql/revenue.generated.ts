@@ -13,6 +13,7 @@ import {
   Eip712TypedDataFieldFragment,
   OpenActionResult_KnownCollectOpenActionResult_Fragment,
   OpenActionResult_UnknownOpenActionResult_Fragment,
+  OptimisticStatusResultFragment,
   RelaySuccessFragment,
   LensProfileManagerRelayErrorFragment,
   CreateMomokaPublicationResultFragment,

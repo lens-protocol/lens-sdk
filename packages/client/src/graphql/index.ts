@@ -119,6 +119,7 @@ export type {
   FollowingRequest,
   FollowRequest,
   FollowRevenueRequest,
+  FollowStatusBulkRequest,
   GenerateModuleCurrencyApprovalDataRequest,
   LastLoggedInProfileRequest,
   LinkHandleToProfileRequest,

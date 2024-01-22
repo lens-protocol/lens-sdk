@@ -12,6 +12,7 @@ import {
   MirrorFragment,
   OpenActionResult_KnownCollectOpenActionResult_Fragment,
   OpenActionResult_UnknownOpenActionResult_Fragment,
+  OptimisticStatusResultFragment,
   RelaySuccessFragment,
   LensProfileManagerRelayErrorFragment,
 } from '../../../graphql/fragments.generated';
@@ -243,6 +244,18 @@ export type MutualFollowersQueryVariables = Types.Exact<{
 export type MutualFollowersQuery = {
   result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
 };
+
+export type FollowStatusBulkResultFragment = {
+  follower: string;
+  profileId: string;
+  status: OptimisticStatusResultFragment;
+};
+
+export type FollowStatusBulkQueryVariables = Types.Exact<{
+  request: Types.FollowStatusBulkRequest;
+}>;
+
+export type FollowStatusBulkQuery = { result: Array<FollowStatusBulkResultFragment> };
 
 export type WhoActedOnPublicationQueryVariables = Types.Exact<{
   request: Types.WhoActedOnPublicationRequest;
@@ -1322,6 +1335,46 @@ export const CreateUnlinkHandleFromProfileBroadcastItemResultFragmentDoc = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const FollowStatusBulkResultFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FollowStatusBulkResult' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'FollowStatusBulkResult' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'follower' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'profileId' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'status' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OptimisticStatusResult' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'OptimisticStatusResult' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'OptimisticStatusResult' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isFinalisedOnchain' } },
         ],
       },
     },
@@ -8846,6 +8899,84 @@ export const MutualFollowersDocument = {
     },
   ],
 } as unknown as DocumentNode;
+export const FollowStatusBulkDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FollowStatusBulk' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'FollowStatusBulkRequest' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'result' },
+            name: { kind: 'Name', value: 'followStatusBulk' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'FollowStatusBulkResult' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FollowStatusBulkResult' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'FollowStatusBulkResult' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'follower' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'profileId' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'status' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OptimisticStatusResult' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'OptimisticStatusResult' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'OptimisticStatusResult' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isFinalisedOnchain' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
 export const WhoActedOnPublicationDocument = {
   kind: 'Document',
   definitions: [
@@ -13499,6 +13630,7 @@ const ProfileRecommendationsDocumentString = print(ProfileRecommendationsDocumen
 const FollowingDocumentString = print(FollowingDocument);
 const FollowersDocumentString = print(FollowersDocument);
 const MutualFollowersDocumentString = print(MutualFollowersDocument);
+const FollowStatusBulkDocumentString = print(FollowStatusBulkDocument);
 const WhoActedOnPublicationDocumentString = print(WhoActedOnPublicationDocument);
 const ProfileActionHistoryDocumentString = print(ProfileActionHistoryDocument);
 const WhoHaveBlockedDocumentString = print(WhoHaveBlockedDocument);
@@ -13665,6 +13797,25 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'MutualFollowers',
+        'query',
+      );
+    },
+    FollowStatusBulk(
+      variables: FollowStatusBulkQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: FollowStatusBulkQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<FollowStatusBulkQuery>(FollowStatusBulkDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'FollowStatusBulk',
         'query',
       );
     },

@@ -7,11 +7,12 @@ export type {
   CreateChangeProfileManagersBroadcastItemResultFragment,
   CreateFollowBroadcastItemResultFragment,
   CreateLinkHandleToProfileBroadcastItemResultFragment,
-  CreateUnlinkHandleFromProfileBroadcastItemResultFragment,
   CreateOnchainSetProfileMetadataBroadcastItemResultFragment,
   CreateSetFollowModuleBroadcastItemResultFragment,
   CreateUnblockProfilesBroadcastItemResultFragment,
   CreateUnfollowBroadcastItemResultFragment,
+  CreateUnlinkHandleFromProfileBroadcastItemResultFragment,
+  FollowStatusBulkResultFragment,
   ProfileActionHistoryFragment,
   ProfileManagerFragment,
 } from './graphql/profile.generated';

@@ -335,6 +335,20 @@ query MutualFollowers(
   }
 }
 
+fragment FollowStatusBulkResult on FollowStatusBulkResult {
+  follower
+  profileId
+  status {
+    ...OptimisticStatusResult
+  }
+}
+
+query FollowStatusBulk($request: FollowStatusBulkRequest!) {
+  result: followStatusBulk(request: $request) {
+    ...FollowStatusBulkResult
+  }
+}
+
 query WhoActedOnPublication(
   $request: WhoActedOnPublicationRequest!
   $profileCoverTransform: ImageTransform = {}

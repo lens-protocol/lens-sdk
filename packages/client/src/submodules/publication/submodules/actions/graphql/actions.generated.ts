@@ -12,6 +12,7 @@ import {
   MirrorFragment,
   OpenActionResult_KnownCollectOpenActionResult_Fragment,
   OpenActionResult_UnknownOpenActionResult_Fragment,
+  OptimisticStatusResultFragment,
   RelaySuccessFragment,
   LensProfileManagerRelayErrorFragment,
 } from '../../../../../graphql/fragments.generated';
