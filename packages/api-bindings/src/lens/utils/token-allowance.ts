@@ -31,7 +31,7 @@ export function resolveTokenAllowanceRequestForCollect(
     case 'SimpleCollectOpenActionSettings':
       return {
         kind: TransactionKind.APPROVE_MODULE,
-        amount: erc20Amount({ from: module.amount }),
+        amount: erc20Amount(module.amount),
         limit,
         spender: module.contract.address,
       };
@@ -51,7 +51,7 @@ export function resolveTokenAllowanceRequestForFollow(
     case 'FeeFollowModuleSettings':
       return {
         kind: TransactionKind.APPROVE_MODULE,
-        amount: erc20Amount({ from: profile.followModule.amount }),
+        amount: erc20Amount(profile.followModule.amount),
         limit,
         spender: profile.followModule.contract.address,
       };
