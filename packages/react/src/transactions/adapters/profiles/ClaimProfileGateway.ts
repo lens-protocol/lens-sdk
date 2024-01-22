@@ -3,16 +3,14 @@ import {
   ClaimProfileWithHandleData,
   ClaimProfileWithHandleVariables,
   ClaimProfileWithHandleDocument,
-  FollowModuleInput,
   ClaimProfileWithHandleErrorReasonType,
   ClaimProfileWithHandleRequest,
+  resolveFollowModuleInput,
 } from '@lens-protocol/api-bindings';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import {
   ClaimHandleError,
   ClaimHandleRequest,
-  FollowPolicyConfig,
-  FollowPolicyType,
   IClaimHandleGateway,
   isClaimReservedHandleRequest,
 } from '@lens-protocol/domain/use-cases/profile';
@@ -21,42 +19,18 @@ import { v4 } from 'uuid';
 
 import { ITransactionFactory } from '../ITransactionFactory';
 
-// TODO: duplicated from UpdateFollowPolicyGateway but I dunno where is the best place to put it
-export function resolveFollowModuleParams(policy: FollowPolicyConfig): FollowModuleInput {
-  switch (policy.type) {
-    case FollowPolicyType.CHARGE:
-      return {
-        feeFollowModule: {
-          amount: {
-            currency: policy.amount.asset.address,
-            value: policy.amount.toSignificantDigits(),
-          },
-          recipient: policy.recipient,
-        },
-      };
-    case FollowPolicyType.ANYONE:
-      return {
-        freeFollowModule: true,
-      };
-    case FollowPolicyType.NO_ONE:
-      return {
-        revertFollowModule: true,
-      };
-  }
-}
-
 function resolveClaimProfileWithHandleRequest(
   request: ClaimHandleRequest,
 ): ClaimProfileWithHandleRequest {
   if (isClaimReservedHandleRequest(request)) {
     return {
       id: request.id,
-      followModule: request.followPolicy ? resolveFollowModuleParams(request.followPolicy) : null,
+      followModule: request.followPolicy ? resolveFollowModuleInput(request.followPolicy) : null,
     };
   }
   return {
     freeTextHandle: request.localName,
-    followModule: request.followPolicy ? resolveFollowModuleParams(request.followPolicy) : null,
+    followModule: request.followPolicy ? resolveFollowModuleInput(request.followPolicy) : null,
   };
 }
 

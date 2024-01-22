@@ -108,11 +108,12 @@ export type CollectActionConfig = SimpleCollectActionConfig | MultirecipientColl
 export type UnknownOpenActionConfig = {
   type: OpenActionType.UNKNOWN_OPEN_ACTION;
   /**
-   * The address of the unknown open action contract.
+   * The address of the Unknown Open Action module contract.
    */
-  address: EvmAddress;
+  address: string;
   /**
-   * The data to configure the unknown open action contract.
+   * The data to initialize the Unknown Open Action contract logic
+   * for the given publication.
    *
    * It's consumer responsibility to encode it correctly.
    */

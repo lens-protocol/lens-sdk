@@ -36,9 +36,15 @@ export type {
   ChargeFollowPolicy,
   FollowPolicy,
   FollowPolicyConfig,
-  NoFeeFollowConfig,
-  NoFeeFollowPolicy,
+  NoFollowConfig,
+  NoFollowPolicy,
+  OpenFollowConfig,
   OpenFollowPolicy,
+  UnknownFollowConfig,
+  UnknownFollowPolicy,
+  // deprecated below
+  NoFeeFollowPolicy,
+  NoFeeFollowConfig,
 } from '@lens-protocol/domain/use-cases/profile';
 
 export type { FollowModule } from '@lens-protocol/api-bindings';

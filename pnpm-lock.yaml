@@ -524,6 +524,9 @@ importers:
       '@ethersproject/wallet':
         specifier: ^5.7.0
         version: 5.7.0
+      '@lens-protocol/blockchain-bindings':
+        specifier: workspace:*
+        version: link:../blockchain-bindings
       '@lens-protocol/gated-content':
         specifier: workspace:*
         version: link:../gated-content

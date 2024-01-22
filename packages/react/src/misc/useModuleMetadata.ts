@@ -13,6 +13,10 @@ import { useDeferredTask, UseDeferredTask } from '../helpers/tasks';
 
 export type { ModuleMetadataResult };
 
+// export helpers
+export { encodeData, decodeData } from '@lens-protocol/blockchain-bindings';
+export type { ModuleData, ModuleParam } from '@lens-protocol/blockchain-bindings';
+
 /**
  * {@link useModuleMetadata} hook arguments
  */

@@ -1,13 +1,15 @@
 import { TransactionKind } from '@lens-protocol/domain/entities';
 import {
+  FollowPolicyConfig,
   FollowPolicyType,
+  FollowRequest,
   UpdateFollowPolicyRequest,
   UpdateProfileManagersRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import { UnknownObject } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
-import { Erc20AmountSchema, EvmAddressSchema, ProfileIdSchema } from './common';
+import { DataSchema, Erc20AmountSchema, EvmAddressSchema, ProfileIdSchema } from './common';
 
 export const CreateProfileRequestSchema = z.object({
   handle: z.string(),
@@ -20,21 +22,34 @@ const FollowRequestFeeSchema = z.object({
   recipient: z.string(),
 });
 
-export const FreeFollowRequestSchema = z.object({
+const FreeFollowRequestSchema = z.object({
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.FOLLOW_PROFILE),
   signless: z.boolean(),
   sponsored: z.boolean(),
 });
 
-export const PaidFollowRequestSchema = z.object({
+const PaidFollowRequestSchema = z.object({
   profileId: ProfileIdSchema,
   kind: z.literal(TransactionKind.FOLLOW_PROFILE),
   fee: FollowRequestFeeSchema,
+  signless: z.literal(false),
+  sponsored: z.boolean(),
+});
+const UnknownFollowRequestSchema = z.object({
+  profileId: ProfileIdSchema,
+  kind: z.literal(TransactionKind.FOLLOW_PROFILE),
+  address: EvmAddressSchema,
+  data: DataSchema,
+  signless: z.boolean(),
   sponsored: z.boolean(),
 });
 
-export const FollowRequestSchema = z.union([PaidFollowRequestSchema, FreeFollowRequestSchema]);
+export const FollowRequestSchema: z.ZodType<FollowRequest, z.ZodTypeDef, UnknownObject> = z.union([
+  PaidFollowRequestSchema,
+  FreeFollowRequestSchema,
+  UnknownFollowRequestSchema,
+]);
 
 export const UnfollowRequestSchema = z.object({
   profileId: ProfileIdSchema,
@@ -78,11 +93,19 @@ const NoOneFollowPolicyConfigSchema = z.object({
   type: z.literal(FollowPolicyType.NO_ONE),
 });
 
-const FollowPolicyConfigSchema = z.discriminatedUnion('type', [
-  ChargeFollowPolicyConfigSchema,
-  AnyoneFollowPolicyConfigSchema,
-  NoOneFollowPolicyConfigSchema,
-]);
+const UnknownFollowPolicyConfigSchema = z.object({
+  type: z.literal(FollowPolicyType.UNKNOWN),
+  address: EvmAddressSchema,
+  data: DataSchema,
+});
+
+const FollowPolicyConfigSchema: z.ZodType<FollowPolicyConfig, z.ZodTypeDef, UnknownObject> =
+  z.discriminatedUnion('type', [
+    ChargeFollowPolicyConfigSchema,
+    AnyoneFollowPolicyConfigSchema,
+    NoOneFollowPolicyConfigSchema,
+    UnknownFollowPolicyConfigSchema,
+  ]);
 
 export const UpdateFollowPolicyRequestSchema: z.ZodType<
   UpdateFollowPolicyRequest,

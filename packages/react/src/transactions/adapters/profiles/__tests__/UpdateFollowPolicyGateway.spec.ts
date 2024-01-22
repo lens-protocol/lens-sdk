@@ -1,7 +1,7 @@
 /*
  * @jest-environment node
  */
-import { SafeApolloClient } from '@lens-protocol/api-bindings';
+import { SafeApolloClient, resolveFollowModuleInput } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   mockRelaySuccessFragment,
@@ -21,7 +21,7 @@ import { mockIProviderFactory } from '../../../../wallet/adapters/__helpers__/mo
 import { UnsignedContractCallTransaction } from '../../AbstractContractCallGateway';
 import { assertUnsignedProtocolCallCorrectness } from '../../__helpers__/assertions';
 import { mockITransactionFactory, mockJsonRpcProvider } from '../../__helpers__/mocks';
-import { UpdateFollowPolicyGateway, resolveFollowModuleParams } from '../UpdateFollowPolicyGateway';
+import { UpdateFollowPolicyGateway } from '../UpdateFollowPolicyGateway';
 
 function setupTestScenario({
   apolloClient,
@@ -60,7 +60,7 @@ describe(`Given an instance of ${UpdateFollowPolicyGateway.name}`, () => {
         mockCreateSetFollowModuleTypedDataResponse({
           variables: {
             request: {
-              followModule: resolveFollowModuleParams(request.policy),
+              followModule: resolveFollowModuleInput(request.policy),
             },
           },
           data,
@@ -82,7 +82,7 @@ describe(`Given an instance of ${UpdateFollowPolicyGateway.name}`, () => {
         mockCreateSetFollowModuleTypedDataResponse({
           variables: {
             request: {
-              followModule: resolveFollowModuleParams(request.policy),
+              followModule: resolveFollowModuleInput(request.policy),
             },
           },
           data,
@@ -103,7 +103,7 @@ describe(`Given an instance of ${UpdateFollowPolicyGateway.name}`, () => {
         mockSetFollowModuleResponse({
           variables: {
             request: {
-              followModule: resolveFollowModuleParams(request.policy),
+              followModule: resolveFollowModuleInput(request.policy),
             },
           },
           data: {

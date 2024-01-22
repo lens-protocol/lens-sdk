@@ -1,4 +1,4 @@
-import { Amount, Erc20, EvmAddress } from '@lens-protocol/shared-kernel';
+import { Amount, Data, Erc20, EvmAddress } from '@lens-protocol/shared-kernel';
 
 import {
   TransactionKind,
@@ -37,13 +37,27 @@ export type PaidFollowRequest = {
   profileId: ProfileId;
   kind: TransactionKind.FOLLOW_PROFILE;
   fee: FollowRequestFee;
+  signless: false;
   sponsored: boolean;
 };
 
-export type FollowRequest = FreeFollowRequest | PaidFollowRequest;
+export type UnknownFollowRequest = {
+  profileId: ProfileId;
+  kind: TransactionKind.FOLLOW_PROFILE;
+  address: EvmAddress;
+  data: Data;
+  signless: boolean;
+  sponsored: boolean;
+};
+
+export type FollowRequest = FreeFollowRequest | PaidFollowRequest | UnknownFollowRequest;
 
 export function isPaidFollowRequest(request: FollowRequest): request is PaidFollowRequest {
   return 'fee' in request && request.fee !== undefined;
+}
+
+export function isUnknownFollowRequest(request: FollowRequest): request is UnknownFollowRequest {
+  return 'address' in request;
 }
 
 export type IFollowProfilePresenter = ITransactionResultPresenter<
