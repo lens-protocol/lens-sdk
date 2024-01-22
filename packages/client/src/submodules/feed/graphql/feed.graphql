@@ -79,26 +79,64 @@ query FeedHighlights(
   }
 }
 
-# Not yet ready for production use
-#query ForYou(
-#  $request: PublicationForYouRequest!
-#  $publicationImageTransform: ImageTransform = {}
-#  $profileCoverTransform: ImageTransform = {}
-#  $profilePictureTransform: ImageTransform = {}
-#  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-#  $rateRequest: RateRequest = { for: USD }
-#) {
-#  result: forYou(request: $request) {
-#    items {
-#      ... on Post {
-#        ...Post
-#      }
-#      ... on Quote {
-#        ...Quote
-#      }
-#    }
-#    pageInfo {
-#      ...PaginatedResultInfo
-#    }
-#  }
-#}
+fragment LatestActed on LatestActed {
+  profile {
+    ...Profile
+  }
+  actedAt
+  txHash
+}
+
+fragment FollowPaidAction on FollowPaidAction {
+  __typename
+  latestActed {
+    ...LatestActed
+  }
+  followed {
+    ...Profile
+  }
+}
+
+fragment OpenActionPaidAction on OpenActionPaidAction {
+  __typename
+  latestActed {
+    ...LatestActed
+  }
+  actedOn {
+    ... on Post {
+      ...Post
+    }
+    ... on Comment {
+      ...Comment
+    }
+    ... on Quote {
+      ...Quote
+    }
+  }
+}
+
+query LatestPaidActions(
+  $publicationImageTransform: ImageTransform = {}
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
+  $publicationStatsInput: PublicationStatsInput! = {}
+  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
+) {
+  result: latestPaidActions {
+    items {
+      ... on FollowPaidAction {
+        ...FollowPaidAction
+      }
+      ... on OpenActionPaidAction {
+        ...OpenActionPaidAction
+      }
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
