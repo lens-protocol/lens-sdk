@@ -27,6 +27,7 @@ import type {
   ProfileRecommendationsRequest,
   ProfileRequest,
   ProfilesRequest,
+  ReportProfileRequest,
   SetDefaultProfileRequest,
   SetFollowModuleRequest,
   TypedDataOptions,
@@ -1065,6 +1066,38 @@ export class Profile {
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.RemoveProfileInterests({ request }, headers);
+    });
+  }
+
+  /**
+   * Report a profile with a reason
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * import { ProfileReportingReason, ProfileReportingSpamSubreason } from '@lens-protocol/client';
+   *
+   * await client.profile.report({
+   *   for: '0x014e',
+   *   reason: {
+   *     spamReason: {
+   *       reason: ProfileReportingReason.Spam,
+   *       subreason: ProfileReportingSpamSubreason.Repetitive,
+   *     },
+   *   },
+   *   additionalComments: 'comment',
+   * });
+   * ```
+   */
+  async report(
+    request: ReportProfileRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      await this.sdk.ReportProfile({ request }, headers);
     });
   }
 }

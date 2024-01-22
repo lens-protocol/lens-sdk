@@ -461,6 +461,12 @@ export type CreateUnlinkHandleFromProfileTypedDataMutation = {
   result: CreateUnlinkHandleFromProfileBroadcastItemResultFragment;
 };
 
+export type ReportProfileMutationVariables = Types.Exact<{
+  request: Types.ReportProfileRequest;
+}>;
+
+export type ReportProfileMutation = { reportProfile: string | null };
+
 export const ProfileManagerFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -13441,6 +13447,42 @@ export const CreateUnlinkHandleFromProfileTypedDataDocument = {
     },
   ],
 } as unknown as DocumentNode;
+export const ReportProfileDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'ReportProfile' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ReportProfileRequest' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'reportProfile' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -13490,6 +13532,7 @@ const CreateLinkHandleToProfileTypedDataDocumentString = print(
 const CreateUnlinkHandleFromProfileTypedDataDocumentString = print(
   CreateUnlinkHandleFromProfileTypedDataDocument,
 );
+const ReportProfileDocumentString = print(ReportProfileDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Profile(
@@ -14095,6 +14138,25 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'CreateUnlinkHandleFromProfileTypedData',
+        'mutation',
+      );
+    },
+    ReportProfile(
+      variables: ReportProfileMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: ReportProfileMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ReportProfileMutation>(ReportProfileDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'ReportProfile',
         'mutation',
       );
     },
