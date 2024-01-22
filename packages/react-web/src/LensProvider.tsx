@@ -30,6 +30,12 @@ export type LensConfig = {
    */
   logger?: ILogger;
   /**
+   * Enable debug mode. Disable gas estimation on self-funded transactions.
+   *
+   * @defaultValue `false`
+   */
+  debug?: boolean;
+  /**
    * The storage provider to use.
    *
    * If an implementation of {@link IObservableStorageProvider} is provided,

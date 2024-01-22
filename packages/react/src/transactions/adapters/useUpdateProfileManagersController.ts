@@ -25,6 +25,7 @@ export function useUpdateProfileManagersController() {
   const {
     activeWallet,
     apolloClient,
+    config,
     onChainRelayer,
     providerFactory,
     transactionGateway,
@@ -52,7 +53,7 @@ export function useUpdateProfileManagersController() {
       | UserRejectedError
       | WalletConnectionError
     >();
-    const gateway = new UpdateProfileManagersGateway(providerFactory, apolloClient);
+    const gateway = new UpdateProfileManagersGateway(config, providerFactory, apolloClient);
 
     const paidExecution = new PaidTransaction<UpdateProfileManagersRequest>(
       activeWallet,

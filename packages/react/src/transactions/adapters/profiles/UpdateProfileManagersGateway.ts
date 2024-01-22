@@ -13,6 +13,7 @@ import { UpdateProfileManagersRequest } from '@lens-protocol/domain/use-cases/pr
 import { ISignedOnChainGateway } from '@lens-protocol/domain/use-cases/transactions';
 import { Data } from '@lens-protocol/shared-kernel';
 
+import { LensConfig } from '../../../config';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
@@ -21,8 +22,12 @@ export class UpdateProfileManagersGateway
   extends AbstractContractCallGateway<UpdateProfileManagersRequest>
   implements ISignedOnChainGateway<UpdateProfileManagersRequest>
 {
-  constructor(providerFactory: IProviderFactory, private apolloClient: SafeApolloClient) {
-    super(providerFactory);
+  constructor(
+    config: LensConfig,
+    providerFactory: IProviderFactory,
+    private apolloClient: SafeApolloClient,
+  ) {
+    super(config, providerFactory);
   }
 
   async createUnsignedProtocolCall(

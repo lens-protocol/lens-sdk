@@ -36,6 +36,7 @@ import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { providers } from 'ethers';
 import { mock } from 'jest-mock-extended';
 
+import { LensConfig } from '../../../config';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { mockIProviderFactory } from '../../../wallet/adapters/__helpers__/mocks';
 import { UnsignedContractCallTransaction } from '../AbstractContractCallGateway';
@@ -53,6 +54,7 @@ function setupTestScenario({
   apolloClient: SafeApolloClient;
   provider?: providers.JsonRpcProvider;
 }) {
+  const config = mock<LensConfig>();
   const transactionFactory = mockITransactionFactory();
 
   const providerFactory = mockIProviderFactory({
@@ -60,7 +62,7 @@ function setupTestScenario({
     provider,
   });
 
-  const gateway = new OpenActionGateway(apolloClient, transactionFactory, providerFactory);
+  const gateway = new OpenActionGateway(config, apolloClient, transactionFactory, providerFactory);
 
   return { gateway };
 }

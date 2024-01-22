@@ -32,6 +32,7 @@ import {
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
+import { LensConfig } from '../../config';
 import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from './AbstractContractCallGateway';
@@ -51,11 +52,12 @@ export class OpenActionGateway
     IPaidTransactionGateway<OpenActionRequest>
 {
   constructor(
+    config: LensConfig,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<OpenActionRequest>,
     providerFactory: IProviderFactory,
   ) {
-    super(providerFactory);
+    super(config, providerFactory);
   }
 
   async createDelegatedTransaction(

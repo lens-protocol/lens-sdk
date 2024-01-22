@@ -12,7 +12,7 @@ import {
   TransactionResponders,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { TokenAvailability } from '@lens-protocol/domain/use-cases/wallets';
-import { ILogger, invariant } from '@lens-protocol/shared-kernel';
+import { invariant } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
 
@@ -58,13 +58,18 @@ import { createWalletStorage } from './wallet/infrastructure/WalletStorage';
 /**
  * @internal
  */
-export function createSharedDependencies(config: LensConfig): SharedDependencies {
-  const logger = config.logger ?? new ConsoleLogger();
+export function createSharedDependencies(userConfig: LensConfig): SharedDependencies {
+  const defaultConfig = {
+    debug: false,
+    logger: new ConsoleLogger(),
+    params: defaultQueryParams,
+  };
+  const config: Required<LensConfig> = { ...defaultConfig, ...userConfig };
 
   // auth api
   const anonymousApolloClient = createAuthApolloClient({
     uri: config.environment.backend,
-    logger,
+    logger: config.logger,
   });
   const authApi = new AuthApi(anonymousApolloClient);
 
@@ -77,11 +82,11 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
 
   // apollo client
   const apolloClient = createLensApolloClient({
-    queryParams: config.params ?? defaultQueryParams,
+    queryParams: config.params,
     uri: config.environment.backend,
     accessTokenStorage,
     pollingInterval: config.environment.timings.pollingInterval,
-    logger,
+    logger: config.logger,
     // contentMatchers: [config.environment.snapshot.matcher], // TODO is it in use?
   });
 
@@ -103,8 +108,8 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
   const walletFactory = new WalletFactory(signerFactory, transactionFactory);
   const walletGateway = new WalletGateway(walletStorage, walletFactory);
   const transactionGateway = new PendingTransactionGateway(transactionStorage, transactionFactory);
-  const onChainRelayer = new OnChainRelayer(apolloClient, transactionFactory, logger);
-  const momokaRelayer = new MomokaRelayer(apolloClient, transactionFactory, logger);
+  const onChainRelayer = new OnChainRelayer(apolloClient, transactionFactory, config.logger);
+  const momokaRelayer = new MomokaRelayer(apolloClient, transactionFactory, config.logger);
   const conversationsGateway = new DisableConversationsGateway(inboxKeyStorage);
 
   const responders: TransactionResponders<AnyTransactionRequest> = {
@@ -167,7 +172,6 @@ export function createSharedDependencies(config: LensConfig): SharedDependencies
     credentialsFactory,
     credentialsGateway,
     inboxKeyStorage,
-    logger,
     logout,
     momokaRelayer,
     onChainRelayer,
@@ -194,7 +198,6 @@ export type SharedDependencies = {
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
   inboxKeyStorage: IStorage<string>;
-  logger: ILogger;
   logout: Logout;
   momokaRelayer: MomokaRelayer;
   onChainRelayer: OnChainRelayer;
