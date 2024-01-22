@@ -2,9 +2,13 @@ import type { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import type { Authentication } from '../../authentication';
 import { LensContext } from '../../context';
-import type { CredentialsExpiredError, NotAuthenticatedError } from '../../errors';
+import { CredentialsExpiredError, NotAuthenticatedError } from '../../errors';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
+import { ProfileFragment } from '../../graphql/fragments.generated';
 import type {
+  MutualNftCollectionsRequest,
+  NftCollectionOwnersRequest,
+  NftCollectionsRequest,
   NftGalleriesRequest,
   NftGalleryCreateRequest,
   NftGalleryDeleteRequest,
@@ -13,6 +17,7 @@ import type {
   NftGalleryUpdateItemsRequest,
   NftOwnershipChallengeRequest,
   NftsRequest,
+  PopularNftCollectionsRequest,
 } from '../../graphql/types.generated';
 import {
   PaginatedResult,
@@ -26,6 +31,8 @@ import {
   Sdk,
   getSdk,
   NftGalleryFragment,
+  NftCollectionFragment,
+  NftCollectionWithOwnersFragment,
 } from './graphql/nfts.generated';
 
 /**
@@ -34,47 +41,177 @@ import {
  * @group LensClient Modules
  */
 export class Nfts {
-  private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
-  constructor(context: LensContext, authentication?: Authentication) {
+  constructor(
+    context: LensContext,
+    private readonly authentication: Authentication,
+  ) {
     const client = new FetchGraphQLClient(context);
-
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
-    this.authentication = authentication;
   }
 
   /**
-   * Fetch NFTs.
-   *
-   * ⚠️ Requires authenticated LensClient.
+   * Fetch NFTs for authenticated profile or for provided request params.
    *
    * If you are using `development` enviroment you can only query chainIds 5 and 80001.
    * If you are using `production` enviroment you can only query chainIds 1 and 137.
    *
    * @param request - Request object for the query
-   * @returns {@link PromiseResult} with NFTs wrapped in {@link PaginatedResult}
+   * @returns NFTs wrapped in {@link PaginatedResult}
    *
    * @example
+   * When authenticated
    * ```ts
    * const result = await client.nfts.fetch();
    * ```
+   *
+   * Without authentication
+   * ```ts
+   * const result = await client.nfts.fetch({
+   *   where {
+   *     profileId: '0x01',
+   *   }
+   * });
+   * ```
    */
-  async fetch(
-    request: NftsRequest = {},
-  ): PromiseResult<PaginatedResult<NftFragment>, CredentialsExpiredError | NotAuthenticatedError> {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      return buildPaginatedQueryResult(async (currRequest) => {
-        const result = await this.sdk.Nfts(
-          {
-            request: currRequest,
-          },
-          headers,
-        );
+  async fetch(request: NftsRequest = {}): Promise<PaginatedResult<NftFragment>> {
+    const buildRequest = async (): Promise<NftsRequest> => {
+      const profileId = await this.authentication.getProfileId();
 
-        return result.data.result;
-      }, request);
-    });
+      if (profileId) {
+        return {
+          where: {
+            forProfileId: profileId,
+          },
+        };
+      }
+
+      const walletAddress = await this.authentication.getWalletAddress();
+
+      return {
+        where: {
+          forAddress: walletAddress,
+        },
+      };
+    };
+
+    const isAuthenticated = await this.authentication.isAuthenticated();
+
+    if (!isAuthenticated && Object.keys(request).length === 0) {
+      throw new NotAuthenticatedError();
+    }
+
+    // if no request is provided, use authenticated profileId or wallet address
+    if (Object.keys(request).length === 0) {
+      request = await buildRequest();
+    }
+
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.Nfts({
+        request: currRequest,
+      });
+
+      return result.data.result;
+    }, request);
+  }
+
+  /**
+   * Fetch NFT collections.
+   *
+   * @param request - Request object for the query
+   * @returns NFT collections wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.nfts.collections();
+   * ```
+   */
+  async collections(
+    request: NftCollectionsRequest = {},
+  ): Promise<PaginatedResult<NftCollectionFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.NftCollections({
+        request: currRequest,
+      });
+
+      return result.data.result;
+    }, request);
+  }
+
+  /**
+   * Fetch mutual NFT collections between two profiles.
+   *
+   * @param request - Request object for the query
+   * @returns NFT collections wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.nfts.mutualCollections({
+   *   observer: '0x01',
+   *   viewing: '0x02',
+   * });
+   * ```
+   */
+  async mutualCollections(
+    request: MutualNftCollectionsRequest,
+  ): Promise<PaginatedResult<NftCollectionFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.MutualNftCollections({
+        request: currRequest,
+      });
+
+      return result.data.result;
+    }, request);
+  }
+
+  /**
+   * Fetch popular NFT collections together with total number of owners.
+   *
+   * @param request - Request object for the query
+   * @returns NFT collections with total owners wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.nfts.popularCollections();
+   * ```
+   */
+  async popularCollections(
+    request: PopularNftCollectionsRequest = {},
+  ): Promise<PaginatedResult<NftCollectionWithOwnersFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.PopularNftCollections({
+        request: currRequest,
+      });
+
+      return result.data.result;
+    }, request);
+  }
+
+  /**
+   * Fetch profiles who own a specific NFT collection.
+   *
+   * @param request - Request object for the query
+   * @returns Profiles wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.nfts.collectionOwners({
+   *   for: collection.contract.address,
+   *   chainId: collection.contract.chainId,
+   * });
+   * ```
+   */
+  async collectionOwners(
+    request: NftCollectionOwnersRequest,
+  ): Promise<PaginatedResult<ProfileFragment>> {
+    return buildPaginatedQueryResult(async (currRequest) => {
+      const result = await this.sdk.NftCollectionOwners({
+        request: currRequest,
+      });
+
+      return result.data.result;
+    }, request);
   }
 
   /**
@@ -87,6 +224,7 @@ export class Nfts {
    *
    * @param request - Request object for the query
    * @returns {@link PromiseResult} with {@link NftOwnershipChallengeResultFragment}
+   * @deprecated There is no use of this method in the Lens Protocol v2
    *
    * @example
    * ```ts
@@ -132,7 +270,7 @@ export class Nfts {
    */
   async fetchGalleries(request: NftGalleriesRequest): Promise<PaginatedResult<NftGalleryFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
-      const result = await this.sdk.ProfileGalleries({
+      const result = await this.sdk.NftGalleries({
         request: currRequest,
       });
 

@@ -11,6 +11,7 @@ fragment NftCollection on NftCollection {
   symbol
   baseUri
   contractType
+  verified
 }
 
 fragment NftMetadata on NftMetadata {
@@ -54,18 +55,16 @@ fragment NftGallery on NftGallery {
   }
 }
 
-fragment PaginatedNftGalleriesResult on PaginatedNftGalleriesResult {
-  items {
-    ...NftGallery
-  }
-  pageInfo {
-    ...PaginatedResultInfo
-  }
-}
-
 fragment NftOwnershipChallengeResult on NftOwnershipChallengeResult {
   success
   info
+}
+
+fragment NftCollectionWithOwners on NftCollectionWithOwners {
+  collection {
+    ...NftCollection
+  }
+  totalOwners
 }
 
 # queries
@@ -80,9 +79,65 @@ query Nfts($request: NftsRequest!) {
   }
 }
 
-query ProfileGalleries($request: NftGalleriesRequest!) {
+query NftGalleries($request: NftGalleriesRequest!) {
   result: nftGalleries(request: $request) {
-    ...PaginatedNftGalleriesResult
+    items {
+      ...NftGallery
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query NftCollectionOwners(
+  $request: NftCollectionOwnersRequest!
+  $profileCoverTransform: ImageTransform = {}
+  $profilePictureTransform: ImageTransform = {}
+  $profileStatsArg: ProfileStatsArg = {}
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $rateRequest: RateRequest = { for: USD }
+) {
+  result: nftCollectionOwners(request: $request) {
+    items {
+      ...Profile
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query NftCollections($request: NftCollectionsRequest!) {
+  result: nftCollections(request: $request) {
+    items {
+      ...NftCollection
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query MutualNftCollections($request: MutualNftCollectionsRequest!) {
+  result: mutualNftCollections(request: $request) {
+    items {
+      ...NftCollection
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
+query PopularNftCollections($request: PopularNftCollectionsRequest!) {
+  result: popularNftCollections(request: $request) {
+    items {
+      ...NftCollectionWithOwners
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
   }
 }
 
