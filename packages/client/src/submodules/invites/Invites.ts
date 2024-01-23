@@ -14,17 +14,14 @@ import { InvitedResultFragment, Sdk, getSdk } from './graphql/invites.generated'
  * @group LensClient Modules
  */
 export class Invites {
-  private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
   constructor(
     private readonly context: LensContext,
-    authentication?: Authentication,
+    private readonly authentication: Authentication,
   ) {
     const client = new FetchGraphQLClient(context);
-
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
-    this.authentication = authentication;
   }
 
   /**

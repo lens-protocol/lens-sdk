@@ -29,7 +29,7 @@ export class Revenue {
 
   constructor(
     private readonly context: LensContext,
-    authentication?: Authentication,
+    authentication: Authentication,
   ) {
     const client = new FetchGraphQLClient(context);
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
