@@ -35,6 +35,11 @@ export class Authentication implements IAuthentication {
     this.credentials = new CredentialsStorage(context.storage, context.environment.name);
   }
 
+  async authenticateWith({ refreshToken }: { refreshToken: string }): Promise<void> {
+    const credentials = new Credentials(undefined, refreshToken);
+    await this.credentials.set(credentials);
+  }
+
   async generateChallenge(request: ChallengeRequest): Promise<AuthChallengeFragment> {
     return this.api.challenge(request);
   }

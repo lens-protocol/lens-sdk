@@ -5,6 +5,9 @@ import { setupWallet } from '../shared/setupWallet';
 async function main() {
   const client = new LensClient({
     environment: development,
+    headers: {
+      origin: 'https://lens-scripts.example',
+    },
   });
 
   const wallet = setupWallet();
@@ -21,21 +24,13 @@ async function main() {
     for: managedProfiles.items[0].id,
   });
 
-  console.log(`Challenge: `, text);
+  console.log(`Challenge: `, text); // Notice the origin URL in the challenge message
 
   const signature = await wallet.signMessage(text);
 
   await client.authentication.authenticate({ id, signature });
 
-  const accessTokenResult = await client.authentication.getAccessToken();
-  const accessToken = accessTokenResult.unwrap();
-
-  const profileId = await client.authentication.getProfileId();
-
   console.log(`Is LensClient authenticated? `, await client.authentication.isAuthenticated());
-  console.log(`Authenticated profileId: `, profileId);
-  console.log(`Access token: `, accessToken);
-  console.log(`Is access token valid? `, await client.authentication.verify(accessToken));
 }
 
 main();
