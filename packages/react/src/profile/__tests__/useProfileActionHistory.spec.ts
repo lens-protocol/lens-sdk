@@ -15,7 +15,7 @@ describe.skip(`Given the ${useProfileActionHistory.name} hook`, () => {
 
   describe('when the query returns data successfully', () => {
     it('should settle with the data', async () => {
-      const { renderHook } = await setupHookTestScenarioWithSession([
+      const { renderHook } = setupHookTestScenarioWithSession([
         mockProfileActionHistoryResponse({
           variables: {
             limit: LimitType.Ten,

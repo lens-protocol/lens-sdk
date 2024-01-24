@@ -42,6 +42,7 @@ query Feed(
   $fxRateFor: SupportedFiatType = USD
   $profileMetadataSource: AppId = null
 ) {
+  ...InjectQueryParams
   result: feed(request: { where: $where, cursor: $cursor }) {
     items {
       ...FeedItem

@@ -4,11 +4,11 @@ import {
   TogglePropertyRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 
-import { PublicationCacheManager } from '../infrastructure/PublicationCacheManager';
+import { IPublicationCacheManager } from './IPublicationCacheManager';
 import { NotInterestedRequest } from './NotInterestedGateway';
 
 export class NotInterestedPresenter implements ITogglablePropertyPresenter<NotInterestedRequest> {
-  constructor(private readonly publicationCacheManager: PublicationCacheManager) {}
+  constructor(private readonly publicationCacheManager: IPublicationCacheManager) {}
 
   async add({ publicationId }: TogglePropertyRequest) {
     this.publicationCacheManager.update(publicationId, (current) => {

@@ -10,16 +10,20 @@ export function createPublicationFieldPolicy(): FieldPolicy<
   FieldFunctionOptions<{ request: PublicationRequest }>
 > {
   return {
-    read(_, { args, toReference }) {
+    read(_, { args, toReference, canRead }) {
       if (!args) {
         return undefined;
       }
 
       if (args.request?.forId) {
-        return toReference({
+        const ref = toReference({
           __typename: PUBLICATION_TYPENAME,
           id: args.request.forId,
         });
+
+        if (canRead(ref)) {
+          return ref;
+        }
       }
 
       return undefined;

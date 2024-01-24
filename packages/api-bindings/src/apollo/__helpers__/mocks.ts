@@ -2,26 +2,15 @@ import { GraphQLRequest, NormalizedCacheObject, OperationVariables } from '@apol
 import { MockedResponse, mockSingleLink } from '@apollo/client/testing';
 import { DocumentNode, ExecutionResult, GraphQLError } from 'graphql';
 
-import { SupportedFiatType } from '../../lens';
 import { SafeApolloClient } from '../SafeApolloClient';
-import { createLensCache, createSnapshotCache } from '../cache';
+import { createLensCache, createSnapshotCache, defaultQueryParams } from '../cache';
 import { ApolloServerErrorCode } from '../errors';
 
 export function mockLensApolloClient(
   mocks: ReadonlyArray<MockedResponse<unknown>> = [],
 ): SafeApolloClient<NormalizedCacheObject> {
   return new SafeApolloClient({
-    cache: createLensCache({
-      fxRateFor: SupportedFiatType.Usd,
-      image: {
-        medium: {},
-        small: {},
-      },
-      profile: {
-        cover: {},
-        thumbnail: {},
-      },
-    }),
+    cache: createLensCache(defaultQueryParams),
 
     link: mockSingleLink(...mocks).setOnError((error) => {
       throw error;

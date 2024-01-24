@@ -3,7 +3,6 @@ import {
   FeedHighlightsRequest,
   useFeedHighlights as useBaseFeedHighlightsQuery,
 } from '@lens-protocol/api-bindings';
-import { invariant } from '@lens-protocol/shared-kernel';
 
 import { SessionType, useSession } from '../authentication';
 import { useLensApolloClient } from '../helpers/arguments';
@@ -52,12 +51,6 @@ export function useFeedHighlights({
 }: UseFeedHighlightsArgs): PaginatedReadResult<FeedHighlight[]> {
   const { data: session } = useSession();
 
-  invariant(session?.authenticated, 'You must be authenticated.');
-  invariant(
-    session.type === SessionType.WithProfile,
-    'You must be authenticated with a profile to use this query. Use `useLogin` hook to authenticate.',
-  );
-
   return usePaginatedReadResult(
     useBaseFeedHighlightsQuery(
       useLensApolloClient({
@@ -65,6 +58,7 @@ export function useFeedHighlights({
           where,
           statsFor: where?.metadata?.publishedOn,
         },
+        skip: session?.type !== SessionType.WithProfile,
       }),
     ),
   );

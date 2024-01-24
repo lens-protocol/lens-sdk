@@ -46,6 +46,7 @@ export function createTypePolicies(
     Post: createPrimaryPublicationTypePolicy(),
     Comment: createPrimaryPublicationTypePolicy(),
     Quote: createPrimaryPublicationTypePolicy(),
+    ProfileMetadata: notNormalizedType(),
     PublicationMetadata: notNormalizedType(),
     PublicationStats: createPublicationStatsTypePolicy(),
     PublicationOperations: createPublicationOperationsTypePolicy(),

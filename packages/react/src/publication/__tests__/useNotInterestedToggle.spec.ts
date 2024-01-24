@@ -15,9 +15,9 @@ import { usePublication } from '../usePublication';
 
 describe(`Given the ${useNotInterestedToggle.name} hook`, () => {
   describe('when calling the execute method on a publication', () => {
-    it('should call correct mutation', async () => {
+    it('should set its `operations.isNotInterested` flag', async () => {
       const publication = mockPostFragment();
-      const { renderHook } = await setupHookTestScenarioWithSession([
+      const { renderHook } = setupHookTestScenarioWithSession([
         mockPublicationResponse({
           variables: {
             request: { forId: publication.id },
@@ -29,38 +29,36 @@ describe(`Given the ${useNotInterestedToggle.name} hook`, () => {
         }),
       ]);
 
-      const { result: publicationResult } = renderHook(() =>
-        usePublication({ forId: publication.id }),
+      const { result } = renderHook(() => ({
+        publication: usePublication({ forId: publication.id }),
+        toggle: useNotInterestedToggle(),
+      }));
+
+      // wait for publication to be fetched
+      await waitFor(() => expect(result.current.publication.loading).toBeFalsy());
+
+      invariant(
+        result.current.publication.data && isPrimaryPublication(result.current.publication.data),
+        'Not a primary publication',
       );
-      const { result } = renderHook(() => useNotInterestedToggle());
 
-      // put publication in cache
-      await waitFor(() => expect(publicationResult.current.loading).toBeFalsy());
-
-      invariant(publicationResult.current.data, 'publication not found');
-      invariant(isPrimaryPublication(publicationResult.current.data), 'not a primary publication');
-
-      expect(publicationResult.current.data.operations.isNotInterested).toBe(false);
+      expect(result.current.publication.data.operations.isNotInterested).toBe(false);
 
       // mark as not interested
-      await act(async () => {
-        invariant(publicationResult.current.data, 'publication not found');
-        await result.current.execute({ publication: publicationResult.current.data });
+      act(() => {
+        void result.current.toggle.execute({ publication });
       });
-      expect(result.current.loading).toBe(false);
+      await waitFor(() => expect(result.current.toggle.loading).toBeFalsy());
 
       // check publication operations
-      expect(publicationResult.current.data.operations.isNotInterested).toBe(true);
+      expect(result.current.publication.data.operations.isNotInterested).toBe(true);
     });
-  });
 
-  describe('when calling the execute method on already not interested publication', () => {
-    it('should call correct mutation', async () => {
-      const operations = mockPublicationOperationsFragment({ isNotInterested: true });
+    it('should undo previously flagged publications', async () => {
       const publication = mockPostFragment({
-        operations,
+        operations: mockPublicationOperationsFragment({ isNotInterested: true }),
       });
-      const { renderHook } = await setupHookTestScenarioWithSession([
+      const { renderHook } = setupHookTestScenarioWithSession([
         mockPublicationResponse({
           variables: {
             request: { forId: publication.id },
@@ -72,28 +70,29 @@ describe(`Given the ${useNotInterestedToggle.name} hook`, () => {
         }),
       ]);
 
-      const { result: publicationResult } = renderHook(() =>
-        usePublication({ forId: publication.id }),
+      const { result } = renderHook(() => ({
+        publication: usePublication({ forId: publication.id }),
+        toggle: useNotInterestedToggle(),
+      }));
+
+      // wait for publication to be fetched
+      await waitFor(() => expect(result.current.publication.loading).toBeFalsy());
+
+      invariant(
+        result.current.publication.data && isPrimaryPublication(result.current.publication.data),
+        'Not a primary publication',
       );
-      const { result } = renderHook(() => useNotInterestedToggle());
 
-      // put publication in cache
-      await waitFor(() => expect(publicationResult.current.loading).toBeFalsy());
-
-      invariant(publicationResult.current.data, 'publication not found');
-      invariant(isPrimaryPublication(publicationResult.current.data), 'not a primary publication');
-
-      expect(publicationResult.current.data.operations.isNotInterested).toBe(true);
+      expect(result.current.publication.data?.operations.isNotInterested).toBe(true);
 
       // undo mark as not interested
-      await act(async () => {
-        invariant(publicationResult.current.data, 'publication not found');
-        await result.current.execute({ publication: publicationResult.current.data });
+      act(() => {
+        void result.current.toggle.execute({ publication });
       });
-      expect(result.current.loading).toBe(false);
+      await waitFor(() => expect(result.current.toggle.loading).toBeFalsy());
 
       // check publication operations
-      expect(publicationResult.current.data.operations.isNotInterested).toBe(false);
+      expect(result.current.publication.data.operations.isNotInterested).toBe(false);
     });
   });
 });
