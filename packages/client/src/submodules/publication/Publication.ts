@@ -64,17 +64,14 @@ import { FetchPublicationOptions, RequestOverwrites } from './types';
  * @group LensClient Modules
  */
 export class Publication {
-  private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
   constructor(
     private readonly context: LensContext,
-    authentication?: Authentication,
+    private readonly authentication: Authentication,
   ) {
     const client = new FetchGraphQLClient(context);
-
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
-    this.authentication = authentication;
   }
 
   /**
