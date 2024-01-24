@@ -22,7 +22,7 @@ export type UseStartLensConversationResult = ReturnType<typeof useStartConversat
 /**
  * Start a new XMTP conversation between two Lens profiles.
  *
- * You MUST be authenticated via {@link useLogin} to use this hook.
+ * You MUST be authenticated via `useLogin` to use this hook.
  *
  * @example
  * ```tsx

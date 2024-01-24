@@ -2,4 +2,4 @@
 "@lens-protocol/client": minor
 ---
 
-**feat**: Added `authentication.fromRefreshToken` method to allow to authenticate LensClient from an existing refresh token
+**feat**: Added `authentication.authenticateWith` method to allow to authenticate LensClient with an existing refresh token
