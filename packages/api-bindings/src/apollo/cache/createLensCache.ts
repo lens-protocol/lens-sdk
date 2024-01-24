@@ -8,9 +8,9 @@ export type { QueryParams };
 
 export { defaultQueryParams } from './createQueryParamsLocalFields';
 
-export function createLensCache(options?: QueryParams): ApolloCache<NormalizedCacheObject> {
+export function createLensCache(params?: QueryParams): ApolloCache<NormalizedCacheObject> {
   return new InMemoryCache({
     possibleTypes: generatedIntrospection.possibleTypes,
-    typePolicies: createTypePolicies(options),
+    typePolicies: createTypePolicies(params),
   });
 }

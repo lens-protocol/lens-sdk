@@ -11,6 +11,7 @@ import {
 
 export function createProfileOperationsTypePolicy(): StrictTypedTypePolicies['ProfileOperations'] {
   return {
+    keyFields: false,
     fields: {
       canFollow: {
         read(

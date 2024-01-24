@@ -17,6 +17,7 @@ export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
  *
  * @category Publications
  * @group Hooks
+ * @param args - {@link UsePublicationsArgs}
  *
  * @example
  * Fetch post publications
@@ -105,11 +106,18 @@ export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
  * });
  * ```
  */
-export function usePublications(args: UsePublicationsArgs): PaginatedReadResult<AnyPublication[]> {
+export function usePublications({
+  where,
+  limit,
+}: UsePublicationsArgs): PaginatedReadResult<AnyPublication[]> {
   return usePaginatedReadResult(
     usePublicationsBase(
       useLensApolloClient({
-        variables: args,
+        variables: {
+          where,
+          limit,
+          statsFor: where?.metadata?.publishedOn,
+        },
       }),
     ),
   );

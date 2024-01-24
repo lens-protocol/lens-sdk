@@ -10,7 +10,7 @@ import { AnyPublication, PrimaryPublication } from '../publication';
 import { findCollectModuleSettings } from './CollectModuleSettings';
 import { erc20Amount } from './amount';
 
-export function resolveTokenAllowanceRequestForCollect(
+function resolveTokenAllowanceRequestForCollect(
   publication: PrimaryPublication,
   limit: TokenAllowanceLimit,
 ): TokenAllowanceRequest {
@@ -41,7 +41,7 @@ export function resolveTokenAllowanceRequestForCollect(
   }
 }
 
-export function resolveTokenAllowanceRequestForFollow(
+function resolveTokenAllowanceRequestForFollow(
   profile: Profile,
   limit: TokenAllowanceLimit,
 ): TokenAllowanceRequest {

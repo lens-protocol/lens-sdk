@@ -49,7 +49,11 @@ export function useExploreProfiles(
   return usePaginatedReadResult(
     useBaseExploreProfilesQuery(
       useLensApolloClient({
-        variables: { limit, where, orderBy },
+        variables: {
+          limit,
+          where,
+          orderBy,
+        },
       }),
     ),
   );

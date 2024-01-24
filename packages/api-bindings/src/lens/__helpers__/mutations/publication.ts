@@ -89,13 +89,13 @@ import {
   mockEIP712TypedDataField,
 } from './utils';
 
-export function mockHidePublicationResponse(args: {
-  variables: HidePublicationVariables;
-}): MockedResponse<HidePublicationData> {
+export function mockHidePublicationResponse(
+  variables: HidePublicationVariables,
+): MockedResponse<HidePublicationData> {
   return {
     request: {
       query: HidePublicationDocument,
-      variables: args.variables,
+      variables,
     },
     result: {
       data: { hidePublication: null },

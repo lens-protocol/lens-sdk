@@ -47,7 +47,7 @@ export type LensConfig = {
   /**
    * The common query params allows you customize some aspect of the returned data.
    *
-   * If not provided {@link defaultQueryParams} will be used instead.
+   * @defaultValue see individual fields of {@link QueryParams}
    */
   params?: QueryParams;
 };

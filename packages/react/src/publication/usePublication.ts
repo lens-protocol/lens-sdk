@@ -48,6 +48,7 @@ export function usePublication({
           },
         },
         fetchPolicy: 'cache-and-network',
+        // leverage cache content if possible
         nextFetchPolicy: 'cache-first',
       }),
     ),

@@ -50,7 +50,5 @@ export function isCollectModuleSettings(
 export function findCollectModuleSettings(
   collectable: PrimaryPublication,
 ): CollectModuleSettings | null {
-  if (!collectable.openActionModules) return null;
-
-  return collectable.openActionModules.find(isCollectModuleSettings) ?? null;
+  return collectable.openActionModules?.find(isCollectModuleSettings) ?? null;
 }

@@ -72,13 +72,20 @@ export type UseSearchPublicationsArgs = PaginatedArgs<PublicationSearchRequest>;
  * }
  * ```
  */
-export function useSearchPublications(
-  args: UseSearchPublicationsArgs,
-): PaginatedReadResult<PrimaryPublication[]> {
+export function useSearchPublications({
+  query,
+  limit,
+  where,
+}: UseSearchPublicationsArgs): PaginatedReadResult<PrimaryPublication[]> {
   return usePaginatedReadResult(
     useBaseSearchPublications(
       useLensApolloClient({
-        variables: args,
+        variables: {
+          query,
+          limit,
+          where,
+          statsFor: where?.metadata?.publishedOn,
+        },
       }),
     ),
   );
