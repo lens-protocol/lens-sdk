@@ -21,7 +21,7 @@ async function main() {
     additionalComments: 'comment',
   });
 
-  console.log(`Publication was hidden: `, result);
+  console.log(`Publication was reported: `, result);
 }
 
 main();

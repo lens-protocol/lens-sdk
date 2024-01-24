@@ -13,7 +13,13 @@ import {
   requireAuthHeaders,
   sdkAuthHeaderWrapper,
 } from '../../helpers';
-import { FeedItemFragment, getSdk, Sdk } from './graphql/feed.generated';
+import {
+  FeedItemFragment,
+  FollowPaidActionFragment,
+  getSdk,
+  OpenActionPaidActionFragment,
+  Sdk,
+} from './graphql/feed.generated';
 
 /**
  * Feed is one of the most fundamental element to create a successful social media site.
@@ -107,25 +113,33 @@ export class Feed {
     });
   }
 
-  // Not yet ready to be exposed on production
-  // async forYou(
-  //   request: PublicationForYouRequest,
-  // ): PromiseResult<
-  //   PaginatedResult<PostFragment | QuoteFragment>,
-  //   CredentialsExpiredError | NotAuthenticatedError
-  // > {
-  //   return requireAuthHeaders(this.authentication, async (headers) => {
-  //     return buildPaginatedQueryResult(async (currRequest) => {
-  //       const result = await this.sdk.ForYou(
-  //         {
-  //           request: currRequest,
-  //           ...buildRequestFromConfig(this.context),
-  //         },
-  //         headers,
-  //       );
-  //
-  //       return result.data.result;
-  //     }, request);
-  //   });
-  // }
+  /**
+   * Fetch latest paid actions.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @returns Array of paid actions wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.feed.latestPaidActions();
+   * ```
+   */
+  async latestPaidActions(): PromiseResult<
+    PaginatedResult<FollowPaidActionFragment | OpenActionPaidActionFragment>,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      return buildPaginatedQueryResult(async () => {
+        const result = await this.sdk.LatestPaidActions(
+          {
+            ...buildRequestFromConfig(this.context),
+          },
+          headers,
+        );
+
+        return result.data.result;
+      }, {});
+    });
+  }
 }

@@ -2,6 +2,7 @@ export * from './Nfts';
 
 export type {
   NftCollectionFragment,
+  NftCollectionWithOwnersFragment,
   NftFragment,
   NftGalleryFragment,
   NftMetadataFragment,
