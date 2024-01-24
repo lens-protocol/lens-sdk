@@ -4,4 +4,4 @@
 "@lens-protocol/react-web": patch
 ---
 
-**fix:** supports User Rejecion error from Wallet that despite returning correct error codes are recognized by ethers (v5)
+**fix:** supports User Rejection error from Wallet that despite returning correct error code are NOT recognized by `ethers` (v5)
