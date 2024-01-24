@@ -17,7 +17,7 @@ export type {
   IStorageProvider,
 };
 
-export { defaultQueryParams, SupportedFiatType } from '@lens-protocol/api-bindings';
+export { SupportedFiatType } from '@lens-protocol/api-bindings';
 
 export interface IBindings extends ISignerBinding, IProviderBinding {}
 
