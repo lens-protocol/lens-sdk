@@ -46,6 +46,8 @@ export type LensConfig = {
   storage?: IStorageProvider | IObservableStorageProvider;
   /**
    * The common query params allows you customize some aspect of the returned data.
+   *
+   * @defaultValue see individual fields of {@link QueryParams}
    */
   params?: QueryParams;
 };
