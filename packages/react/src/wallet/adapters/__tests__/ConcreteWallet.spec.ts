@@ -2,7 +2,6 @@
  * @jest-environment node
  */
 
-/* eslint-disable @typescript-eslint/unbound-method */
 import {
   NativeTransaction,
   UnsignedTransaction,
@@ -15,6 +14,7 @@ import {
 import { mockProtocolTransactionRequestModel, mockSignature } from '@lens-protocol/domain/mocks';
 import { ChainType, failure, success } from '@lens-protocol/shared-kernel';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
+import { errorCodes } from 'eth-rpc-errors';
 import { MockProvider } from 'ethereum-waffle';
 import { errors, providers, utils, Wallet } from 'ethers';
 import { mock } from 'jest-mock-extended';
@@ -96,20 +96,23 @@ describe(`Given an instance of ${ConcreteWallet.name}`, () => {
       expect(() => result.unwrap()).toThrow(PendingSigningRequestError);
     });
 
-    it(`should fail with ${UserRejectedError.name} in case the user refuse the operation`, async () => {
-      const signer = mock<providers.JsonRpcSigner>();
-      when(signer._signTypedData).mockRejectedValue(mockErrorWithCode(errors.ACTION_REJECTED));
+    it.each([errors.ACTION_REJECTED, errorCodes.provider.userRejectedRequest])(
+      `should fail with ${UserRejectedError.name} in case the wallet throws error with %p code`,
+      async (code) => {
+        const signer = mock<providers.JsonRpcSigner>();
+        when(signer._signTypedData).mockRejectedValue(mockErrorWithCode(code));
 
-      const signerFactory = mockISignerFactory({
-        address,
-        signerResult: success(signer),
-      });
+        const signerFactory = mockISignerFactory({
+          address,
+          signerResult: success(signer),
+        });
 
-      const wallet = setupWalletInstance({ signerFactory });
-      const result = await wallet.signProtocolCall(unsignedCall);
+        const wallet = setupWalletInstance({ signerFactory });
+        const result = await wallet.signProtocolCall(unsignedCall);
 
-      expect(() => result.unwrap()).toThrow(UserRejectedError);
-    });
+        expect(() => result.unwrap()).toThrow(UserRejectedError);
+      },
+    );
 
     it(`should forward any ${WalletConnectionError.name}`, async () => {
       const error = new WalletConnectionError(WalletConnectionErrorReason.INCORRECT_CHAIN);
@@ -161,22 +164,23 @@ describe(`Given an instance of ${ConcreteWallet.name}`, () => {
       expect(() => result.unwrap()).toThrow(PendingSigningRequestError);
     });
 
-    it(`should fail with ${UserRejectedError.name} if the user cancels the challenge message signing`, async () => {
-      const signer = mock<providers.JsonRpcSigner>();
-      when(signer.signMessage)
-        .calledWith(message)
-        .mockRejectedValue(mockErrorWithCode(errors.ACTION_REJECTED));
+    it.each([errors.ACTION_REJECTED, errorCodes.provider.userRejectedRequest])(
+      `should fail with ${UserRejectedError.name} if the user cancels the challenge message signing`,
+      async (code) => {
+        const signer = mock<providers.JsonRpcSigner>();
+        when(signer.signMessage).calledWith(message).mockRejectedValue(mockErrorWithCode(code));
 
-      const signerFactory = mockISignerFactory({
-        address,
-        signerResult: success(signer),
-      });
-      const wallet = setupWalletInstance({ signerFactory });
+        const signerFactory = mockISignerFactory({
+          address,
+          signerResult: success(signer),
+        });
+        const wallet = setupWalletInstance({ signerFactory });
 
-      const result = await wallet.signMessage(message);
+        const result = await wallet.signMessage(message);
 
-      expect(() => result.unwrap()).toThrow(UserRejectedError);
-    });
+        expect(() => result.unwrap()).toThrow(UserRejectedError);
+      },
+    );
   });
 
   describe(`when sending a ${UnsignedTransaction.name}`, () => {
@@ -254,26 +258,29 @@ describe(`Given an instance of ${ConcreteWallet.name}`, () => {
       expect(() => result.unwrap()).toThrow(InsufficientGasError);
     });
 
-    it(`should fail with ${UserRejectedError.name} in case the user refuse the operation`, async () => {
-      const signer = mock<providers.JsonRpcSigner>();
+    it.each([errors.ACTION_REJECTED, errorCodes.provider.userRejectedRequest])(
+      `should fail with ${UserRejectedError.name} in case the user refuse the operation`,
+      async (code) => {
+        const signer = mock<providers.JsonRpcSigner>();
 
-      when(signer.sendTransaction).mockRejectedValue(mockErrorWithCode(errors.ACTION_REJECTED));
+        when(signer.sendTransaction).mockRejectedValue(mockErrorWithCode(code));
 
-      const signerFactory = mockISignerFactory({
-        address,
-        chainType,
-        signerResult: success(signer),
-      });
-      const wallet = setupWalletInstance({ signerFactory });
+        const signerFactory = mockISignerFactory({
+          address,
+          chainType,
+          signerResult: success(signer),
+        });
+        const wallet = setupWalletInstance({ signerFactory });
 
-      const unsignedTransaction = mockUnsignedTransactionRequest({
-        chainType,
-        txRequest: {},
-      });
-      const result = await wallet.sendTransaction(unsignedTransaction);
+        const unsignedTransaction = mockUnsignedTransactionRequest({
+          chainType,
+          txRequest: {},
+        });
+        const result = await wallet.sendTransaction(unsignedTransaction);
 
-      expect(() => result.unwrap()).toThrow(UserRejectedError);
-    });
+        expect(() => result.unwrap()).toThrow(UserRejectedError);
+      },
+    );
 
     it(`should fail with ${WalletConnectionError.name} in case the ISignerFactory fails with it`, async () => {
       const signerFactory = mockISignerFactory({
@@ -339,20 +346,23 @@ describe(`Given an instance of ${ConcreteWallet.name}`, () => {
       expect(() => result.unwrap()).toThrow(PendingSigningRequestError);
     });
 
-    it(`should fail with ${UserRejectedError.name} if the user cancels the challenge message signing`, async () => {
-      const signer = mock<providers.JsonRpcSigner>();
-      when(signer._signTypedData).mockRejectedValue(mockErrorWithCode(errors.ACTION_REJECTED));
+    it.each([errors.ACTION_REJECTED, errorCodes.provider.userRejectedRequest])(
+      `should fail with ${UserRejectedError.name} if the user cancels the challenge message signing`,
+      async (code) => {
+        const signer = mock<providers.JsonRpcSigner>();
+        when(signer._signTypedData).mockRejectedValue(mockErrorWithCode(code));
 
-      const signerFactory = mockISignerFactory({
-        address,
-        signerResult: success(signer),
-      });
-      const wallet = setupWalletInstance({ signerFactory });
+        const signerFactory = mockISignerFactory({
+          address,
+          signerResult: success(signer),
+        });
+        const wallet = setupWalletInstance({ signerFactory });
 
-      const result = await wallet.signVote(unsignedVote);
+        const result = await wallet.signVote(unsignedVote);
 
-      expect(() => result.unwrap()).toThrow(UserRejectedError);
-    });
+        expect(() => result.unwrap()).toThrow(UserRejectedError);
+      },
+    );
 
     it(`should fail with ${WalletConnectionError.name} in case the ISignerFactory fails with it`, async () => {
       const signerFactory = mockISignerFactory({
