@@ -1,5 +1,6 @@
 export * from './explore';
 export * from './feed';
+export * from './handle';
 export * from './invites';
 export * from './modules';
 export * from './momoka';

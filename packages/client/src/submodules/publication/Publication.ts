@@ -879,12 +879,14 @@ export class Publication {
    * Predict the next onchain Publication id for a Profile.
    *
    * @param request - Request object for the method
-   * @param request.from - ProfileId of the profile to predict the next onchain publication id for
    * @returns Publication Id
    */
   async predictNextOnChainPublicationId({
     from,
   }: {
+    /**
+     * Profile Id of the profile to predict the next onchain Publication Id for
+     */
     from: Scalars['ProfileId']['input'];
   }): Promise<Scalars['PublicationId']['output']> {
     const result = await this.fetchAll({

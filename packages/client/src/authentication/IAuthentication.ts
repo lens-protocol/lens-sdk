@@ -21,6 +21,11 @@ import type {
  */
 export interface IAuthentication {
   /**
+   * Authenticate with an existing, valid refresh token.
+   */
+  authenticateWith({ refreshToken }: { refreshToken: string }): Promise<void>;
+
+  /**
    * Generate a challenge string for the wallet to sign.
    *
    * @param address - The wallet address

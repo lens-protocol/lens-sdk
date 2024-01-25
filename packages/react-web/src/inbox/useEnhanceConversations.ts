@@ -19,7 +19,7 @@ export type UseEnhanceConversationsResult = Prettify<
  * Enhance XMTP conversations with profiles of the conversations' peers,
  * if conversation is between two Lens profiles.
  *
- * You MUST be authenticated via {@link useLogin} to use this hook.
+ * You MUST be authenticated via `useLogin` to use this hook.
  *
  * @example
  * ```tsx
