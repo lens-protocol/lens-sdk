@@ -261,7 +261,7 @@ describe(`Given an instance of the ${TransactionQueue.name} interactor`, () => {
       expect(transactionQueuePresenter.settled).toHaveBeenCalledWith(expectedTxData);
     });
 
-    it('should avoid update loops with other threads by not re-saving straightaway the transaction back into the storage', async () => {
+    it('should avoid update loops with other threads by not re-saving straight away the transaction back into the storage', async () => {
       const { transactionGateway } = setupTestScenario({
         request,
       });
