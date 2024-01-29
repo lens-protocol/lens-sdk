@@ -137,6 +137,7 @@ query SupportedOpenActionCollectModules($request: SupportedModulesRequest!) {
 }
 
 fragment ModuleMetadata on ModuleMetadata {
+  __typename
   attributes {
     type
     key
@@ -152,6 +153,7 @@ fragment ModuleMetadata on ModuleMetadata {
 }
 
 fragment ModuleMetadataResult on GetModuleMetadataResult {
+  __typename
   metadata {
     ...ModuleMetadata
   }

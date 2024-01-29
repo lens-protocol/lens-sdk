@@ -1,4 +1,5 @@
 import { AppId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
+import { Data } from '@lens-protocol/shared-kernel';
 
 /**
  * Ensures that the given value is a valid AppId
@@ -28,4 +29,14 @@ export function profileId(id: string): ProfileId {
 export function publicationId(id: string): PublicationId {
   // for now just asserts the type, in future it will enforce a format
   return id as PublicationId;
+}
+
+/**
+ * Ensures that the given value is a DataHexString
+ *
+ * @group Helpers
+ */
+export function data(value: string): Data {
+  // for now just asserts the type, in future it will enforce a format
+  return value as Data;
 }

@@ -4,6 +4,7 @@ import { Cursor } from '../../Cursor';
 
 export * from './discovery';
 export * from './misc';
+export * from './modules';
 export * from './notifications';
 export * from './profile';
 export * from './publication';

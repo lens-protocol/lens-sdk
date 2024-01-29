@@ -1,5 +1,5 @@
 import { defaultAbiCoder, ParamType } from '@ethersproject/abi';
-import { invariant } from '@lens-protocol/shared-kernel';
+import { Data, invariant } from '@lens-protocol/shared-kernel';
 
 /**
  * Module data.
@@ -39,7 +39,7 @@ export type ModuleParam = {
  * );
  * ```
  */
-export function encodeData(abi: ModuleParam[], data: ModuleData): string {
+export function encodeData(abi: ModuleParam[], data: ModuleData): Data {
   invariant(
     abi.length === data.length,
     'Please provide the same number of data items as required by the contract method',
@@ -58,7 +58,7 @@ export function encodeData(abi: ModuleParam[], data: ModuleData): string {
     });
   });
 
-  return defaultAbiCoder.encode(types, data);
+  return defaultAbiCoder.encode(types, data) as Data;
 }
 
 /**
@@ -76,7 +76,7 @@ export function encodeData(abi: ModuleParam[], data: ModuleData): string {
  * );
  * ```
  */
-export function decodeData(abi: ModuleParam[], calldata: string): ModuleData {
+export function decodeData(abi: ModuleParam[], encoded: string): ModuleData {
   const types = abi.map((param) => {
     return ParamType.fromObject({
       name: param.name,
@@ -85,5 +85,5 @@ export function decodeData(abi: ModuleParam[], calldata: string): ModuleData {
     });
   });
 
-  return defaultAbiCoder.decode(types, calldata) as ModuleData;
+  return defaultAbiCoder.decode(types, encoded) as ModuleData;
 }
