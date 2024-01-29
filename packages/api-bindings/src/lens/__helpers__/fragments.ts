@@ -467,6 +467,7 @@ export function mockUnknownOpenActionModuleSettingsFragment(
   overrides?: Partial<gql.UnknownOpenActionModuleSettings>,
 ) {
   return mock<gql.UnknownOpenActionModuleSettings>({
+    contract: mockNetworkAddressFragment(),
     ...overrides,
     __typename: 'UnknownOpenActionModuleSettings',
   });

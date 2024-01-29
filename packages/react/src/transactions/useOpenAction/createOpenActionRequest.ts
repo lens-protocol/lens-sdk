@@ -24,19 +24,24 @@ import {
   UnknownActionParams,
 } from './types';
 
-type OpenActionContext<TAction extends OpenActionParams = OpenActionParams> = {
-  action: TAction;
-  public: boolean;
-  signless: boolean;
-  sponsored: boolean;
-};
+type RequiredOpenActionArgs = Required<OpenActionArgs>;
+
+function resolveTargetPublication(publication: AnyPublication) {
+  return publication.__typename === 'Mirror' ? publication.mirrorOn : publication;
+}
 
 function resolveCollectRequestFor(
-  publication: AnyPublication,
-  context: OpenActionContext<CollectParams>,
+  args: RequiredOpenActionArgs,
+  params: CollectParams,
+  session: ProfileSession | WalletOnlySession,
 ): CollectRequest {
-  const collectable = publication.__typename === 'Mirror' ? publication.mirrorOn : publication;
+  const collectable = resolveTargetPublication(args.publication);
   const settings = findCollectModuleSettings(collectable);
+
+  const sponsored = session.type === SessionType.WithProfile ? args.sponsored : false;
+  // technically profile.sponsor cannot be false if profile.signless is true, but we want to be explicit here
+  const signless =
+    session.type === SessionType.WithProfile && sponsored && session.profile.signless;
 
   invariant(settings, 'No open action module settings found for publication');
 
@@ -49,31 +54,37 @@ function resolveCollectRequestFor(
     case 'LegacyMultirecipientFeeCollectModuleSettings':
     case 'LegacyTimedFeeCollectModuleSettings':
     case 'LegacySimpleCollectModuleSettings':
-      invariant(context.public === false, 'Legacy collect cannot be collected with just a wallet');
+      invariant(
+        session.type === SessionType.WithProfile,
+        'Legacy collect cannot be collected with just a wallet',
+      );
       return {
         kind: TransactionKind.ACT_ON_PUBLICATION,
         type: AllOpenActionType.LEGACY_COLLECT,
         publicationId: collectable.id,
-        referrer: publication !== collectable ? publication.id : undefined,
+        referrer: args.publication !== collectable ? args.publication.id : undefined,
         fee: {
           amount: erc20Amount(settings.amount),
           contractAddress: settings.contract.address,
         },
         public: false,
-        signless: context.signless,
-        sponsored: context.sponsored,
+        signless,
+        sponsored,
       };
 
     case 'LegacyFreeCollectModuleSettings':
-      invariant(context.public === false, 'Legacy collect cannot be collected with just a wallet');
+      invariant(
+        session.type === SessionType.WithProfile,
+        'Legacy collect cannot be collected with just a wallet',
+      );
       return {
         kind: TransactionKind.ACT_ON_PUBLICATION,
         type: AllOpenActionType.LEGACY_COLLECT,
         publicationId: collectable.id,
-        referrer: publication !== collectable ? publication.id : undefined,
+        referrer: args.publication !== collectable ? args.publication.id : undefined,
         public: false,
-        signless: context.signless,
-        sponsored: context.sponsored,
+        signless,
+        sponsored,
       };
 
     case 'SimpleCollectOpenActionSettings':
@@ -84,16 +95,17 @@ function resolveCollectRequestFor(
         type: AllOpenActionType.SIMPLE_COLLECT,
         publicationId: collectable.id,
         referrers:
-          context.action.referrers ?? (publication !== collectable ? [publication.id] : undefined),
+          params.referrers ??
+          (args.publication !== collectable ? [args.publication.id] : undefined),
         fee: amount.isZero()
           ? undefined
           : {
               amount,
               contractAddress: settings.contract.address,
             },
-        signless: context.signless,
-        public: context.public,
-        sponsored: context.sponsored,
+        public: session.type === SessionType.JustWallet,
+        signless,
+        sponsored,
       };
 
     case 'MultirecipientFeeCollectOpenActionSettings':
@@ -102,14 +114,15 @@ function resolveCollectRequestFor(
         type: AllOpenActionType.MULTIRECIPIENT_COLLECT,
         publicationId: collectable.id,
         referrers:
-          context.action.referrers ?? (publication !== collectable ? [publication.id] : undefined),
+          params.referrers ??
+          (args.publication !== collectable ? [args.publication.id] : undefined),
         fee: {
           amount: erc20Amount(settings.amount),
           contractAddress: settings.contract.address,
         },
-        public: context.public,
-        signless: context.signless,
-        sponsored: context.sponsored,
+        public: session.type === SessionType.JustWallet,
+        signless,
+        sponsored,
       };
 
     default:
@@ -123,57 +136,73 @@ function isUnknownOpenActionModuleSettings(
   return settings.__typename === 'UnknownOpenActionModuleSettings';
 }
 
+function resolveExecutionDynamics(
+  args: RequiredOpenActionArgs,
+  session: ProfileSession | WalletOnlySession,
+  settings: UnknownOpenActionModuleSettings,
+): {
+  public: boolean;
+  signless: boolean;
+  sponsored: boolean;
+} {
+  if (session.type === SessionType.JustWallet) {
+    return {
+      public: true,
+      signless: false,
+      sponsored: false,
+    };
+  }
+
+  if (settings.sponsoredApproved) {
+    return {
+      public: false,
+      signless: settings.signlessApproved ? session.profile.signless : false,
+      sponsored: args.sponsored,
+    };
+  }
+
+  return {
+    public: false,
+    signless: false,
+    sponsored: false,
+  };
+}
+
 function resolveUnknownRequestFor(
-  publication: AnyPublication,
-  context: OpenActionContext<UnknownActionParams>,
+  args: RequiredOpenActionArgs,
+  params: UnknownActionParams,
+  session: ProfileSession | WalletOnlySession,
 ): UnknownActionRequest {
-  const target = publication.__typename === 'Mirror' ? publication.mirrorOn : publication;
+  const target = resolveTargetPublication(args.publication);
 
   const settings =
     target.openActionModules?.find(
       (entry): entry is UnknownOpenActionModuleSettings =>
-        isUnknownOpenActionModuleSettings(entry) &&
-        entry.contract.address === context.action.address,
-    ) ??
-    never(
-      `Cannot find Open Action settings ${context.action.address} fro publication ${target.id}`,
-    );
+        isUnknownOpenActionModuleSettings(entry) && entry.contract.address === params.address,
+    ) ?? never(`Cannot find Open Action settings ${params.address} fro publication ${target.id}`);
 
   return {
     kind: TransactionKind.ACT_ON_PUBLICATION,
     type: AllOpenActionType.UNKNOWN_OPEN_ACTION,
     publicationId: target.id,
     address: settings.contract.address,
-    data: context.action.data as Data,
-    public: context.public,
-    signless: context.signless,
-    sponsored: context.sponsored,
+    data: params.data as Data,
+
+    ...resolveExecutionDynamics(args, session, settings),
   };
-}
-
-function internal(publication: AnyPublication, context: OpenActionContext): OpenActionRequest {
-  switch (context.action.kind) {
-    case OpenActionKind.COLLECT:
-      return resolveCollectRequestFor(publication, context as OpenActionContext<CollectParams>);
-
-    case OpenActionKind.UNKNOWN:
-      return resolveUnknownRequestFor(
-        publication,
-        context as OpenActionContext<UnknownActionParams>,
-      );
-  }
 }
 
 export function createOpenActionRequest(
   { publication, sponsored = true }: OpenActionArgs,
   params: OpenActionParams,
   session: ProfileSession | WalletOnlySession,
-) {
-  const context: OpenActionContext = {
-    action: params,
-    signless: session.type === SessionType.WithProfile ? session.profile.signless : false, // cannot use Lens Manager with Public Collect
-    public: session.type === SessionType.JustWallet,
-    sponsored: session.type === SessionType.WithProfile ? sponsored : false, // cannot use gasless with Public Collect
-  };
-  return internal(publication, context);
+): OpenActionRequest {
+  const args = { publication, sponsored };
+  switch (params.kind) {
+    case OpenActionKind.COLLECT:
+      return resolveCollectRequestFor(args, params, session);
+
+    case OpenActionKind.UNKNOWN:
+      return resolveUnknownRequestFor(args, params, session);
+  }
 }
