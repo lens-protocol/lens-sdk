@@ -1,5 +1,23 @@
 # @lens-protocol/wagmi
 
+## 3.0.0-alpha.25
+
+### Patch Changes
+
+- 1a97c390a: **chore:** Removed peer dependency on ethers@5
+- Updated dependencies [bb9a8dd7b]
+- Updated dependencies [1a97c390a]
+- Updated dependencies [821d8c492]
+- Updated dependencies [c2b05bdf0]
+- Updated dependencies [b647eab70]
+- Updated dependencies [74751f359]
+- Updated dependencies [c2b05bdf0]
+- Updated dependencies [c2b05bdf0]
+- Updated dependencies [6a4df1bdb]
+- Updated dependencies [c2b05bdf0]
+  - @lens-protocol/react-web@2.0.0-alpha.28
+  - @lens-protocol/shared-kernel@0.11.0-alpha.9
+
 ## 3.0.0-alpha.24
 
 ### Patch Changes

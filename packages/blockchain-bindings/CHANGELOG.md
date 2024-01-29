@@ -1,5 +1,16 @@
 # @lens-protocol/blockchain-bindings
 
+## 0.10.0-alpha.19
+
+### Patch Changes
+
+- 1a97c390a: **chore:** Removed peer dependency on ethers@5
+- 6a4df1bdb: **feat:** support Unknown Follow Modules
+- Updated dependencies [1a97c390a]
+- Updated dependencies [b647eab70]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.9
+  - @lens-protocol/domain@0.11.0-alpha.19
+
 ## 0.10.0-alpha.18
 
 ### Patch Changes
