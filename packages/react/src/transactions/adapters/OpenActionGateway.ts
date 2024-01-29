@@ -217,6 +217,7 @@ export class OpenActionGateway
               data: request.data,
             },
           },
+          referrers: this.resolveOnchainReferrers(request.referrers),
         };
     }
   }

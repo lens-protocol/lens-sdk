@@ -72,6 +72,7 @@ export type UnknownActionRequest = {
   publicationId: PublicationId;
   address: EvmAddress;
   data: Data;
+  referrers?: Referrers;
   public: boolean;
   signless: boolean;
   sponsored: boolean;

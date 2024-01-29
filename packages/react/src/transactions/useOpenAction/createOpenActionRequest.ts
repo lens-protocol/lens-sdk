@@ -187,6 +187,7 @@ function resolveUnknownRequestFor(
     publicationId: target.id,
     address: settings.contract.address,
     data: params.data as Data,
+    referrers: params.referrers,
 
     ...resolveExecutionDynamics(args, session, settings),
   };

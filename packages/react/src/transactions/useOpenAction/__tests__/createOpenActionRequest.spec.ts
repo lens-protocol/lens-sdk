@@ -205,6 +205,19 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
           expect(result).toMatchObject(expected);
         });
 
+        it(`should forward the referrers list`, () => {
+          const referrers = [mockPublicationId(), mockProfileId()];
+          const result = createOpenActionRequest(
+            { publication },
+            { kind: OpenActionKind.COLLECT, referrers },
+            mockProfileSession({ profile }),
+          );
+
+          expect(result).toMatchObject({
+            referrers,
+          });
+        });
+
         it(`should support voluntary self-funded executions of ${expectedRequest} in a ${SessionType.WithProfile} session`, () => {
           const result = createOpenActionRequest(
             { publication, sponsored: false },
@@ -278,7 +291,27 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
       openActionModules: [signlessSettings, sponsoredOnlySettings, notSponsoredSettings],
     });
 
-    describe(`when executing the specific Open Action in a in a ${SessionType.WithProfile} session`, () => {
+    describe(`when executing the specific Open Action`, () => {
+      it(`should forward the referrers list`, () => {
+        const referrers = [mockPublicationId(), mockProfileId()];
+        const result = createOpenActionRequest(
+          { publication },
+          {
+            kind: OpenActionKind.UNKNOWN,
+            address: signlessSettings.contract.address,
+            data,
+            referrers,
+          },
+          mockProfileSession(),
+        );
+
+        expect(result).toMatchObject({
+          referrers,
+        });
+      });
+    });
+
+    describe(`when executing the specific Open Action in a ${SessionType.WithProfile} session`, () => {
       const profile = mockProfileFragment({
         sponsor: true,
         signless: true,

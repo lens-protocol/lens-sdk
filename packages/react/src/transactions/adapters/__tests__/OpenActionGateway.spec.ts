@@ -166,6 +166,7 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
         publicationId,
         address: unknownActionContractAddress,
         data: unknownActionData,
+        referrers,
       }),
       setupMocks: (nonce?: number) => {
         const data = mockCreateActOnOpenActionTypedDataData({ nonce });
@@ -179,6 +180,7 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
                   data: unknownActionData,
                 },
               },
+              referrers: expectedOnChainReferrers,
             },
             options: nonce
               ? {

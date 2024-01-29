@@ -27,6 +27,12 @@ export type UnknownActionParams = {
    * It's consumer responsibility to encode it correctly.
    */
   data: string;
+  /**
+   * The referrers list. It can be a list of Publication IDs or Profile IDs.
+   *
+   * The usage of referrers is determined by the specific Open Action module.
+   */
+  referrers?: ReadonlyArray<PublicationId | ProfileId>;
 };
 
 /**
