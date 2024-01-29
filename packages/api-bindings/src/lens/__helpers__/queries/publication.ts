@@ -11,7 +11,7 @@ import {
 } from '../../graphql/generated';
 import { AnyPublication, PrimaryPublication } from '../../publication';
 import { mockPaginatedResultInfo } from '../fragments';
-import { mockAnyPaginatedResponse, mockAnyResponse } from './mockAnyPaginatedResponse';
+import { mockAnyPaginatedResponse, mockAnyResponse } from './helpers';
 
 export function mockPublicationResponse({
   variables,

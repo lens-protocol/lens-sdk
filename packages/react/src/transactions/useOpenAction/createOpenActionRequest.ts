@@ -1,70 +1,30 @@
 /* eslint-disable no-case-declarations */
-import { ProfileId, PublicationId, TransactionKind } from '@lens-protocol/domain/entities';
+import {
+  AnyPublication,
+  OpenActionModuleSettings,
+  UnknownOpenActionModuleSettings,
+  erc20Amount,
+  findCollectModuleSettings,
+} from '@lens-protocol/api-bindings';
+import { TransactionKind } from '@lens-protocol/domain/entities';
 import {
   AllOpenActionType,
   CollectRequest,
   OpenActionRequest,
   UnknownActionRequest,
 } from '@lens-protocol/domain/use-cases/publications';
-import { Data, EvmAddress, invariant, never } from '@lens-protocol/shared-kernel';
+import { Data, invariant, never } from '@lens-protocol/shared-kernel';
 
-import * as gql from '../graphql/generated';
-import { AnyPublication, OpenActionModuleSettings } from '../publication';
-import { findCollectModuleSettings } from './CollectModuleSettings';
-import { erc20Amount } from './amount';
+import { ProfileSession, SessionType, WalletOnlySession } from '../../authentication';
+import {
+  CollectParams,
+  OpenActionArgs,
+  OpenActionKind,
+  OpenActionParams,
+  UnknownActionParams,
+} from './types';
 
-/**
- * The category of Open Actions to perform on a given publication.
- */
-export enum OpenActionKind {
-  COLLECT = 'COLLECT',
-  UNKNOWN = 'UNKNOWN',
-}
-
-/**
- * Execute the specified Unknown Open Action.
- */
-export type UnknownActionParams = {
-  kind: OpenActionKind.UNKNOWN;
-  /**
-   * The address of the Unknown Open Action  module contract.
-   *
-   * It MUST be within the target publication's `openActionModules` list.
-   */
-  address: EvmAddress;
-  /**
-   * The data required by the Unknown Open Action to be executed.
-   *
-   * It's consumer responsibility to encode it correctly.
-   */
-  data: string;
-};
-
-/**
- * Execute the Collect Open Action defined by the publication.
- */
-export type CollectParams = {
-  kind: OpenActionKind.COLLECT;
-
-  /**
-   * The referrers list. It can be a list of Publication IDs or Profile IDs.
-   *
-   * The referrers will be rewarded with a percentage of the referral reward fee.
-   * In case there are multiple referrers, they will split the referral reward fee equally.
-   *
-   * This field is ignored for legacy publications (pre-v2).
-   *
-   * @defaultValue if the publication is a Mirror the Mirror ID, empty otherwise.
-   */
-  referrers?: ReadonlyArray<PublicationId | ProfileId>;
-};
-
-/**
- * The Open Action to perform.
- */
-export type OpenActionParams = CollectParams | UnknownActionParams;
-
-export type OpenActionContext<TAction extends OpenActionParams = OpenActionParams> = {
+type OpenActionContext<TAction extends OpenActionParams = OpenActionParams> = {
   action: TAction;
   public: boolean;
   signless: boolean;
@@ -159,7 +119,7 @@ function resolveCollectRequestFor(
 
 function isUnknownOpenActionModuleSettings(
   settings: OpenActionModuleSettings,
-): settings is gql.UnknownOpenActionModuleSettings {
+): settings is UnknownOpenActionModuleSettings {
   return settings.__typename === 'UnknownOpenActionModuleSettings';
 }
 
@@ -171,7 +131,7 @@ function resolveUnknownRequestFor(
 
   const settings =
     target.openActionModules?.find(
-      (entry): entry is gql.UnknownOpenActionModuleSettings =>
+      (entry): entry is UnknownOpenActionModuleSettings =>
         isUnknownOpenActionModuleSettings(entry) &&
         entry.contract.address === context.action.address,
     ) ??
@@ -191,10 +151,7 @@ function resolveUnknownRequestFor(
   };
 }
 
-export function resolveOpenActionRequestFor(
-  publication: AnyPublication,
-  context: OpenActionContext,
-): OpenActionRequest {
+function internal(publication: AnyPublication, context: OpenActionContext): OpenActionRequest {
   switch (context.action.kind) {
     case OpenActionKind.COLLECT:
       return resolveCollectRequestFor(publication, context as OpenActionContext<CollectParams>);
@@ -205,4 +162,18 @@ export function resolveOpenActionRequestFor(
         context as OpenActionContext<UnknownActionParams>,
       );
   }
+}
+
+export function createOpenActionRequest(
+  { publication, sponsored = true }: OpenActionArgs,
+  params: OpenActionParams,
+  session: ProfileSession | WalletOnlySession,
+) {
+  const context: OpenActionContext = {
+    action: params,
+    signless: session.type === SessionType.WithProfile ? session.profile.signless : false, // cannot use Lens Manager with Public Collect
+    public: session.type === SessionType.JustWallet,
+    sponsored: session.type === SessionType.WithProfile ? sponsored : false, // cannot use gasless with Public Collect
+  };
+  return internal(publication, context);
 }

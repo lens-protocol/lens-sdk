@@ -24,7 +24,6 @@ import {
 
 import { Session, SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
-import { useLazyModuleMetadata } from '../misc';
 import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useFollowController } from './adapters/useFollowController';
 
@@ -32,74 +31,62 @@ export class PrematureFollowError extends Error {
   name = 'PrematureFollowError' as const;
 }
 
-function useFollowRequestFactory() {
-  const { execute: fetchModule } = useLazyModuleMetadata();
+/**
+ * @internal
+ */
+export function createFollowRequest(args: FollowArgs, session?: Session): FollowRequest {
+  invariant(
+    session?.authenticated,
+    'You must be authenticated to use this operation. Use `useLogin` hook to authenticate.',
+  );
+  invariant(
+    session.type === SessionType.WithProfile,
+    'You must have a profile to use this operation.',
+  );
 
-  return async (args: FollowArgs, session?: Session): Promise<FollowRequest> => {
-    invariant(
-      session?.authenticated,
-      'You must be authenticated to use this operation. Use `useLogin` hook to authenticate.',
-    );
-    invariant(
-      session.type === SessionType.WithProfile,
-      'You must have a profile to use this operation.',
-    );
+  const followPolicy = resolveFollowPolicy(args.profile);
 
-    const followPolicy = resolveFollowPolicy(args.profile);
+  switch (followPolicy.type) {
+    case FollowPolicyType.CHARGE:
+      return {
+        kind: TransactionKind.FOLLOW_PROFILE,
+        fee: {
+          amount: followPolicy.amount,
+          contractAddress: followPolicy.contractAddress,
+          recipient: followPolicy.recipient,
+        },
+        profileId: args.profile.id,
+        signless: false,
+        sponsored: args.sponsored ?? true,
+      };
 
-    switch (followPolicy.type) {
-      case FollowPolicyType.CHARGE:
-        return {
-          kind: TransactionKind.FOLLOW_PROFILE,
-          fee: {
-            amount: followPolicy.amount,
-            contractAddress: followPolicy.contractAddress,
-            recipient: followPolicy.recipient,
-          },
-          profileId: args.profile.id,
-          signless: false,
-          sponsored: args.sponsored ?? true,
-        };
+    case FollowPolicyType.ANYONE:
+      return {
+        kind: TransactionKind.FOLLOW_PROFILE,
+        profileId: args.profile.id,
+        signless: session.profile.signless,
+        sponsored: args.sponsored ?? true,
+      };
 
-      case FollowPolicyType.ANYONE:
-        return {
-          kind: TransactionKind.FOLLOW_PROFILE,
-          profileId: args.profile.id,
-          signless: session.profile.signless,
-          sponsored: args.sponsored ?? true,
-        };
+    case FollowPolicyType.UNKNOWN:
+      return {
+        kind: TransactionKind.FOLLOW_PROFILE,
+        profileId: args.profile.id,
+        address: followPolicy.contractAddress,
+        data:
+          (args.data as Data) ??
+          never(
+            `Profile ${args.profile.id} is configured with Unknown Follow Module ${followPolicy.contractAddress}. ` +
+              'You MUST provide `data` to execute Unknown Follow Modules. ' +
+              'If a module does not require processing calldata just use `0x` string.',
+          ),
+        signless: session.profile.signless && followPolicy.signlessApproved,
+        sponsored: (args.sponsored ?? true) && followPolicy.sponsoredApproved,
+      };
 
-      case FollowPolicyType.UNKNOWN:
-        const result = await fetchModule({ implementation: followPolicy.contractAddress });
-
-        if (result.isFailure()) {
-          throw new InvariantError(
-            `Profile ${args.profile.id} is configured with Unknown Follow Module ${followPolicy.contractAddress} ` +
-              `but the module metadata could not be fetched. ${result.error.message}`,
-          );
-        }
-
-        const module = result.value;
-
-        return {
-          kind: TransactionKind.FOLLOW_PROFILE,
-          profileId: args.profile.id,
-          address: followPolicy.contractAddress,
-          data:
-            (args.data as Data) ??
-            never(
-              `Profile ${args.profile.id} is configured with Unknown Follow Module ${followPolicy.contractAddress}. ` +
-                'You MUST provide `data` to execute Unknown Follow Modules. ' +
-                'If a module does not require processing calldata just use `0x` string.',
-            ),
-          signless: session.profile.signless && module.signlessApproved,
-          sponsored: (args.sponsored ?? true) && module.sponsoredApproved,
-        };
-
-      case FollowPolicyType.NO_ONE:
-        throw new InvariantError(`The profile is configured so that nobody can follow it.`);
-    }
-  };
+    case FollowPolicyType.NO_ONE:
+      throw new InvariantError(`The profile is configured so that nobody can follow it.`);
+  }
 }
 
 /**
@@ -124,7 +111,8 @@ export type FollowArgs = {
    * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
    * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
    *
-   * @defaultValue true, the request will be attempted to be sponsored by the Lens API.
+   * If not specified, or `true`, the hook will attempt a Signless Experience when possible;
+   * otherwise, it will fall back to a signed experience.
    */
   sponsored?: boolean;
   /**
@@ -321,7 +309,6 @@ export function useFollow(): UseDeferredTask<
 > {
   const { data: session } = useSession();
   const followProfile = useFollowController();
-  const createFollowRequest = useFollowRequestFactory();
 
   return useDeferredTask(
     async (
@@ -351,7 +338,7 @@ export function useFollow(): UseDeferredTask<
         );
       }
 
-      const request = await createFollowRequest(args, session);
+      const request = createFollowRequest(args, session);
       return followProfile(request);
     },
   );
