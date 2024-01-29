@@ -34,7 +34,7 @@ import { z } from 'zod';
 import { UnsignedVote } from '../../polls/adapters/SnapshotVoteFactory';
 import { ISnapshotVote } from '../../polls/adapters/SnapshotVoteRelayer';
 import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
-import { assertErrorObjectWithCode } from './errors';
+import { assertErrorObjectWithCode, isUserRejectedError } from './errors';
 
 export type RequiredSigner = Signer & TypedDataSigner;
 
@@ -157,9 +157,9 @@ export class ConcreteWallet extends Wallet {
       const signedCall = SignedProtocolCall.create({ unsignedCall, signature });
       return success(signedCall);
     } catch (err) {
-      assertErrorObjectWithCode<ErrorCode>(err);
+      assertErrorObjectWithCode(err);
 
-      if (err.code === ErrorCode.ACTION_REJECTED) {
+      if (isUserRejectedError(err)) {
         return failure(new UserRejectedError());
       }
 
@@ -193,9 +193,9 @@ export class ConcreteWallet extends Wallet {
       const signature = await signer.signMessage(message);
       return success(signature as Signature);
     } catch (err) {
-      assertErrorObjectWithCode<ErrorCode>(err);
+      assertErrorObjectWithCode(err);
 
-      if (err.code === ErrorCode.ACTION_REJECTED) {
+      if (isUserRejectedError(err)) {
         return failure(new UserRejectedError());
       }
       throw err;
@@ -237,13 +237,14 @@ export class ConcreteWallet extends Wallet {
 
       return success(transaction);
     } catch (err) {
-      assertErrorObjectWithCode<ErrorCode>(err);
+      assertErrorObjectWithCode(err);
 
-      switch (err.code) {
-        case ErrorCode.ACTION_REJECTED:
-          return failure(new UserRejectedError(err.message));
-        case ErrorCode.INSUFFICIENT_FUNDS:
-          return failure(new InsufficientGasError(matic()));
+      if (isUserRejectedError(err)) {
+        return failure(new UserRejectedError());
+      }
+
+      if (err.code === ErrorCode.INSUFFICIENT_FUNDS) {
+        return failure(new InsufficientGasError(matic()));
       }
 
       throw err;
@@ -287,11 +288,12 @@ export class ConcreteWallet extends Wallet {
       );
       return success(signedVote);
     } catch (err) {
-      assertErrorObjectWithCode<ErrorCode>(err);
+      assertErrorObjectWithCode(err);
 
-      if (err.code === ErrorCode.ACTION_REJECTED) {
+      if (isUserRejectedError(err)) {
         return failure(new UserRejectedError());
       }
+
       throw err;
     } finally {
       this.signingInProgress = false;
