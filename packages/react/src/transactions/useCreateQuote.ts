@@ -231,11 +231,11 @@ export type CreateQuoteArgs = {
  *       recipients: [
  *         {
  *           recipient: '0x4f94FAFEE38F545920485fC747467EFc85C302E0',
- *           split: 0.3, // 30%
+ *           split: 30, // 30%
  *         },
  *         {
  *           recipient: '0x097A4fE5cfFf0360438990b88549d4288748f6cB',
- *           split: 0.7, // 70%
+ *           split: 70, // 70%
  *         },
  *       ],
  *       endsAt: new Date('2025-12-31T00:00:00.000Z'),

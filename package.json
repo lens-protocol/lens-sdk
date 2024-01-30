@@ -35,6 +35,8 @@
   "pnpm": {
     "peerDependencyRules": {
       "ignoreMissing": [
+        "arweave",
+        "react",
         "react-native",
         "@tanstack/query-core",
         "csstype",
@@ -53,7 +55,7 @@
     "node": ">=18",
     "pnpm": ">=8"
   },
-  "packageManager": "pnpm@8.9.2",
+  "packageManager": "pnpm@8.12.1",
   "preconstruct": {
     "packages": [
       "packages/api-bindings",

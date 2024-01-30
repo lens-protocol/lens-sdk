@@ -53,4 +53,6 @@ export {
   isMirrorPublication,
   isQuotePublication,
   isPrimaryPublication,
+  findCollectModuleSettings,
+  isCollectModuleSettings,
 } from '@lens-protocol/api-bindings';

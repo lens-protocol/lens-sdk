@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/client",
-  "version": "2.0.0-alpha.27",
+  "version": "2.0.0-alpha.28",
   "description": "Low level Lens API client",
   "repository": {
     "directory": "packages/client",
@@ -53,12 +53,14 @@
   "license": "MIT",
   "dependencies": {
     "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/address": "^5.7.0",
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/hash": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@ethersproject/wallet": "^5.7.0",
+    "@lens-protocol/blockchain-bindings": "workspace:*",
     "@lens-protocol/gated-content": "workspace:*",
     "@lens-protocol/shared-kernel": "workspace:*",
     "@lens-protocol/storage": "workspace:*",
@@ -89,14 +91,13 @@
     "@types/node": "^18.18.12",
     "dotenv": "^16.3.1",
     "eslint": "^8.54.0",
-    "ethers": "^5.7.2",
     "jest": "^29.7.0",
     "prettier": "^3.1.0",
     "ts-jest": "^29.1.1",
     "typescript": "5.2.2"
   },
   "engines": {
-    "node": "^18.15.0"
+    "node": ">=18 <21"
   },
   "prettier": "@lens-protocol/prettier-config",
   "babel": {

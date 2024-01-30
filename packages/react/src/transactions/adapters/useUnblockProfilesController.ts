@@ -20,11 +20,12 @@ export function useUnblockProfilesController() {
   const {
     activeWallet,
     apolloClient,
-    transactionGateway,
-    transactionQueue,
-    transactionFactory,
+    config,
     onChainRelayer,
     providerFactory,
+    transactionFactory,
+    transactionGateway,
+    transactionQueue,
   } = useSharedDependencies();
 
   return async (request: UnblockProfilesRequest) => {
@@ -37,7 +38,12 @@ export function useUnblockProfilesController() {
       | InsufficientGasError
     >();
 
-    const gateway = new UnblockProfilesGateway(providerFactory, apolloClient, transactionFactory);
+    const gateway = new UnblockProfilesGateway(
+      config,
+      providerFactory,
+      apolloClient,
+      transactionFactory,
+    );
 
     const signedExecution = new SignedOnChain<UnblockProfilesRequest>(
       activeWallet,

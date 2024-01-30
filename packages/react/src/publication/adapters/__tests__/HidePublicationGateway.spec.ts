@@ -13,10 +13,8 @@ describe(`Given an instance of the ${HidePublicationGateway.name}`, () => {
 
       const apolloClient = mockLensApolloClient([
         mockHidePublicationResponse({
-          variables: {
-            request: {
-              for: publicationId,
-            },
+          request: {
+            for: publicationId,
           },
         }),
       ]);

@@ -233,10 +233,11 @@ query Profile(
   $request: ProfileRequest!
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
-  $activityOn: [AppId!]
+  $statsFor: [AppId!]
   $fxRateFor: SupportedFiatType = USD
+  $profileMetadataSource: AppId = null
 ) {
-  ...InjectCommonQueryParams
+  ...InjectQueryParams
   result: profile(request: $request) {
     ...Profile
   }
@@ -248,10 +249,11 @@ query Profiles(
   $cursor: Cursor
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
-  $activityOn: [AppId!]
+  $statsFor: [AppId!]
   $fxRateFor: SupportedFiatType = USD
+  $profileMetadataSource: AppId = null
 ) {
-  ...InjectCommonQueryParams
+  ...InjectQueryParams
   result: profiles(request: { where: $where, limit: $limit, cursor: $cursor }) {
     items {
       ...Profile
@@ -281,10 +283,11 @@ query ProfileRecommendations(
   $cursor: Cursor
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
-  $activityOn: [AppId!]
+  $statsFor: [AppId!]
   $fxRateFor: SupportedFiatType = USD
+  $profileMetadataSource: AppId = null
 ) {
-  ...InjectCommonQueryParams
+  ...InjectQueryParams
   result: profileRecommendations(
     request: { for: $for, disableML: $disableML, shuffle: $shuffle, limit: $limit, cursor: $cursor }
   ) {
@@ -303,10 +306,11 @@ query Following(
   $cursor: Cursor
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
-  $activityOn: [AppId!]
+  $statsFor: [AppId!]
   $fxRateFor: SupportedFiatType = USD
+  $profileMetadataSource: AppId = null
 ) {
-  ...InjectCommonQueryParams
+  ...InjectQueryParams
   result: following(request: { for: $for, limit: $limit, cursor: $cursor }) {
     items {
       ...Profile
@@ -323,10 +327,11 @@ query Followers(
   $cursor: Cursor
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
-  $activityOn: [AppId!]
+  $statsFor: [AppId!]
   $fxRateFor: SupportedFiatType = USD
+  $profileMetadataSource: AppId = null
 ) {
-  ...InjectCommonQueryParams
+  ...InjectQueryParams
   result: followers(request: { of: $of, limit: $limit, cursor: $cursor }) {
     items {
       ...Profile
@@ -344,10 +349,11 @@ query MutualFollowers(
   $cursor: Cursor
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
-  $activityOn: [AppId!]
+  $statsFor: [AppId!]
   $fxRateFor: SupportedFiatType = USD
+  $profileMetadataSource: AppId = null
 ) {
-  ...InjectCommonQueryParams
+  ...InjectQueryParams
   result: mutualFollowers(
     request: { observer: $observer, viewing: $viewing, limit: $limit, cursor: $cursor }
   ) {
@@ -367,10 +373,11 @@ query WhoActedOnPublication(
   $cursor: Cursor
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
-  $activityOn: [AppId!]
+  $statsFor: [AppId!]
   $fxRateFor: SupportedFiatType = USD
+  $profileMetadataSource: AppId = null
 ) {
-  ...InjectCommonQueryParams
+  ...InjectQueryParams
   result: whoActedOnPublication(
     request: { on: $on, where: $where, limit: $limit, cursor: $cursor }
   ) {
@@ -388,8 +395,9 @@ query WhoHaveBlocked(
   $cursor: Cursor
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
-  $activityOn: [AppId!]
+  $statsFor: [AppId!]
   $fxRateFor: SupportedFiatType = USD
+  $profileMetadataSource: AppId = null
 ) {
   result: whoHaveBlocked(request: { limit: $limit, cursor: $cursor }) {
     items {

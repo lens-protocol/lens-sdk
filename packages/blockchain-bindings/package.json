@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/blockchain-bindings",
-  "version": "0.10.0-alpha.18",
+  "version": "0.10.0-alpha.19",
   "description": "Utilities for interacting with the blockchain.",
   "repository": {
     "directory": "packages/blockchain-bindings",
@@ -40,7 +40,10 @@
   "license": "MIT",
   "dependencies": {
     "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/abstract-signer": "^5.7.0",
+    "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
+    "@ethersproject/units": "^5.7.0",
     "@lens-protocol/domain": "workspace:*",
     "@lens-protocol/shared-kernel": "workspace:*",
     "ethers": "^5.7.2",
@@ -61,9 +64,6 @@
     "typescript": "5.2.2"
   },
   "prettier": "@lens-protocol/prettier-config",
-  "peerDependencies": {
-    "ethers": "^5.7.2"
-  },
   "babel": {
     "presets": [
       "@babel/preset-env",

@@ -18,6 +18,7 @@ import type {
   FollowersRequest,
   FollowingRequest,
   FollowRequest,
+  FollowStatusBulkRequest,
   LinkHandleToProfileRequest,
   MutualFollowersRequest,
   OnchainSetProfileMetadataRequest,
@@ -27,6 +28,7 @@ import type {
   ProfileRecommendationsRequest,
   ProfileRequest,
   ProfilesRequest,
+  ReportProfileRequest,
   SetDefaultProfileRequest,
   SetFollowModuleRequest,
   TypedDataOptions,
@@ -58,6 +60,7 @@ import {
   ProfileManagerFragment,
   Sdk,
   getSdk,
+  FollowStatusBulkResultFragment,
 } from './graphql/profile.generated';
 import { FetchProfileOptions } from './types';
 
@@ -67,17 +70,15 @@ import { FetchProfileOptions } from './types';
  * @group LensClient Modules
  */
 export class Profile {
-  private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
   constructor(
     private readonly context: LensContext,
-    authentication?: Authentication,
+    private readonly authentication: Authentication,
   ) {
     const client = new FetchGraphQLClient(context);
 
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
-    this.authentication = authentication;
   }
 
   /**
@@ -331,6 +332,38 @@ export class Profile {
 
       return result.data.result;
     }, request);
+  }
+
+  /**
+   * Check follow status between multiple profiles.
+   *
+   * @param request - Request object for the query
+   * @returns follow status bulk result
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.followStatusBulk({
+   *   followInfos: [
+   *     {
+   *       follower: '0x06', // is 0x06 following 0x38?
+   *       profileId: '0x38',
+   *     },
+   *     {
+   *       follower: '0x38', // is 0x38 following 0x06?
+   *       profileId: '0x06',
+   *     },
+   *   ],
+   * });
+   * ```
+   */
+  async followStatusBulk(
+    request: FollowStatusBulkRequest,
+  ): Promise<FollowStatusBulkResultFragment[]> {
+    const result = await this.sdk.FollowStatusBulk({
+      request,
+    });
+
+    return result.data.result;
   }
 
   /**
@@ -1065,6 +1098,38 @@ export class Profile {
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.RemoveProfileInterests({ request }, headers);
+    });
+  }
+
+  /**
+   * Report a profile with a reason
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * import { ProfileReportingReason, ProfileReportingSpamSubreason } from '@lens-protocol/client';
+   *
+   * await client.profile.report({
+   *   for: '0x014e',
+   *   reason: {
+   *     spamReason: {
+   *       reason: ProfileReportingReason.Spam,
+   *       subreason: ProfileReportingSpamSubreason.Repetitive,
+   *     },
+   *   },
+   *   additionalComments: 'comment',
+   * });
+   * ```
+   */
+  async report(
+    request: ReportProfileRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      await this.sdk.ReportProfile({ request }, headers);
     });
   }
 }

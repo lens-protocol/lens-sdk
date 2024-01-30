@@ -1,7 +1,7 @@
 /*
  * @jest-environment node
  */
-import { SafeApolloClient } from '@lens-protocol/api-bindings';
+import { SafeApolloClient, resolveFollowModuleInput } from '@lens-protocol/api-bindings';
 import {
   mockLensApolloClient,
   mockRelaySuccessFragment,
@@ -15,12 +15,13 @@ import { ChainType } from '@lens-protocol/shared-kernel';
 import { providers } from 'ethers';
 import { mock } from 'jest-mock-extended';
 
+import { LensConfig } from '../../../../config';
 import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
 import { mockIProviderFactory } from '../../../../wallet/adapters/__helpers__/mocks';
 import { UnsignedContractCallTransaction } from '../../AbstractContractCallGateway';
 import { assertUnsignedProtocolCallCorrectness } from '../../__helpers__/assertions';
 import { mockITransactionFactory, mockJsonRpcProvider } from '../../__helpers__/mocks';
-import { UpdateFollowPolicyGateway, resolveFollowModuleParams } from '../UpdateFollowPolicyGateway';
+import { UpdateFollowPolicyGateway } from '../UpdateFollowPolicyGateway';
 
 function setupTestScenario({
   apolloClient,
@@ -29,13 +30,19 @@ function setupTestScenario({
   apolloClient: SafeApolloClient;
   provider?: providers.JsonRpcProvider;
 }) {
+  const config = mock<LensConfig>();
   const transactionFactory = mockITransactionFactory();
   const providerFactory = mockIProviderFactory({
     chainType: ChainType.POLYGON,
     provider,
   });
 
-  const gateway = new UpdateFollowPolicyGateway(providerFactory, apolloClient, transactionFactory);
+  const gateway = new UpdateFollowPolicyGateway(
+    config,
+    providerFactory,
+    apolloClient,
+    transactionFactory,
+  );
 
   return { gateway };
 }
@@ -53,7 +60,7 @@ describe(`Given an instance of ${UpdateFollowPolicyGateway.name}`, () => {
         mockCreateSetFollowModuleTypedDataResponse({
           variables: {
             request: {
-              followModule: resolveFollowModuleParams(request.policy),
+              followModule: resolveFollowModuleInput(request.policy),
             },
           },
           data,
@@ -75,7 +82,7 @@ describe(`Given an instance of ${UpdateFollowPolicyGateway.name}`, () => {
         mockCreateSetFollowModuleTypedDataResponse({
           variables: {
             request: {
-              followModule: resolveFollowModuleParams(request.policy),
+              followModule: resolveFollowModuleInput(request.policy),
             },
           },
           data,
@@ -96,7 +103,7 @@ describe(`Given an instance of ${UpdateFollowPolicyGateway.name}`, () => {
         mockSetFollowModuleResponse({
           variables: {
             request: {
-              followModule: resolveFollowModuleParams(request.policy),
+              followModule: resolveFollowModuleInput(request.policy),
             },
           },
           data: {

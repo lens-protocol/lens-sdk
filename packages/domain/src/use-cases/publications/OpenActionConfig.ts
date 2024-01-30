@@ -8,7 +8,7 @@ export type RecipientWithSplit = {
   /**
    * The split of the collect fee.
    *
-   * Number between 0-1 with up to 2 decimals of precision (e.g. 0.5 for 50%)
+   * Number between 1-100 with up to 2 decimals of precision (e.g. 10.5 for 10.5%)
    */
   split: number;
 };
@@ -108,11 +108,12 @@ export type CollectActionConfig = SimpleCollectActionConfig | MultirecipientColl
 export type UnknownOpenActionConfig = {
   type: OpenActionType.UNKNOWN_OPEN_ACTION;
   /**
-   * The address of the unknown open action contract.
+   * The address of the Unknown Open Action module contract.
    */
-  address: EvmAddress;
+  address: string;
   /**
-   * The data to configure the unknown open action contract.
+   * The data to initialize the Unknown Open Action contract logic
+   * for the given publication.
    *
    * It's consumer responsibility to encode it correctly.
    */

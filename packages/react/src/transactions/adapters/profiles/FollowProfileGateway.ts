@@ -18,7 +18,9 @@ import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
 import {
   FollowRequest,
   FreeFollowRequest,
+  UnknownFollowRequest,
   isPaidFollowRequest,
+  isUnknownFollowRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastingError,
@@ -29,6 +31,7 @@ import {
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
+import { LensConfig } from '../../../config';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
@@ -52,6 +55,20 @@ function resolveProfileFollow(request: FollowRequest): Follow[] {
     ];
   }
 
+  if (isUnknownFollowRequest(request)) {
+    return [
+      {
+        profileId: request.profileId,
+        followModule: {
+          unknownFollowModule: {
+            address: request.address,
+            data: request.data,
+          },
+        },
+      },
+    ];
+  }
+
   return [{ profileId: request.profileId }];
 }
 
@@ -63,15 +80,16 @@ export class FollowProfileGateway
     IPaidTransactionGateway<FollowRequest>
 {
   constructor(
+    config: LensConfig,
     providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<FreeFollowRequest>,
   ) {
-    super(providerFactory);
+    super(config, providerFactory);
   }
 
   async createDelegatedTransaction(
-    request: FreeFollowRequest,
+    request: FreeFollowRequest | UnknownFollowRequest,
   ): PromiseResult<NativeTransaction<FreeFollowRequest>, BroadcastingError> {
     const result = await this.relayWithProfileManager(request);
 

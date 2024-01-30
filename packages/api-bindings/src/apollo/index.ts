@@ -15,7 +15,7 @@ export type ApolloClientConfig = {
   uri: string;
   logger: ILogger;
   pollingInterval: number;
-  queryParams: QueryParams;
+  queryParams?: QueryParams;
 };
 
 export function createLensApolloClient({

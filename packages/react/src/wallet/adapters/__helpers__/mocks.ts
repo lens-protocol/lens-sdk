@@ -1,4 +1,4 @@
-import { TransactionRequest } from '@ethersproject/providers';
+import { TransactionRequest, JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
 import { faker } from '@faker-js/faker';
 import { TypedData } from '@lens-protocol/blockchain-bindings';
 import {
@@ -15,15 +15,11 @@ import {
 } from '@lens-protocol/domain/mocks';
 import { ChainType, EvmAddress, Result } from '@lens-protocol/shared-kernel';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
-import { providers } from 'ethers';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import { ITransactionFactory } from '../../../transactions/adapters/ITransactionFactory';
-import {
-  mockSelfFundedProtocolTransactionRequest,
-  mockTypedData,
-} from '../../../transactions/adapters/__helpers__/mocks';
+import { mockTypedData } from '../../../transactions/adapters/__helpers__/mocks';
 import {
   ConcreteWallet,
   ISignerFactory,
@@ -65,7 +61,6 @@ export function mockUnsignedProtocolCall<T extends ProtocolTransactionRequestMod
     id: faker.datatype.uuid(),
     request,
     typedData,
-    fallback: mockSelfFundedProtocolTransactionRequest<T>(),
   });
 }
 
@@ -95,7 +90,7 @@ export function mockUnsignedTransactionRequest({
 type MockedISignerFactoryConfig = {
   address: EvmAddress;
   chainType?: ChainType;
-  signerResult: Result<providers.JsonRpcSigner, WalletConnectionError>;
+  signerResult: Result<JsonRpcSigner, WalletConnectionError>;
 };
 
 export function mockISignerFactory({
@@ -118,7 +113,7 @@ export function mockSignedVote(): SignedVote {
 
 type MockedIProviderFactoryConfig = {
   chainType: ChainType;
-  provider: providers.JsonRpcProvider;
+  provider: JsonRpcProvider;
 };
 
 export function mockIProviderFactory({

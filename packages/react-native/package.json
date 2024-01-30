@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/react-native",
-  "version": "0.1.0-alpha.4",
+  "version": "0.1.0-alpha.5",
   "description": "Lens Protocol SDK for React Native",
   "main": "dist/lens-protocol-react-native.cjs.js",
   "module": "dist/lens-protocol-react-native.esm.js",
@@ -84,7 +84,6 @@
   },
   "peerDependencies": {
     "@types/react": "^18.0.0",
-    "ethers": "^5.7.2",
     "react": "~18.2.0",
     "react-native": "~0.72.7",
     "react-native-mmkv": "~2.11.0"

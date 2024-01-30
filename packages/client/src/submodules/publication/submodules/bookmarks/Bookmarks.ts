@@ -24,17 +24,14 @@ import { getSdk, Sdk } from './graphql/bookmarks.generated';
  * @group LensClient Modules
  */
 export class Bookmarks {
-  private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
   constructor(
     private readonly context: LensContext,
-    authentication?: Authentication,
+    private readonly authentication: Authentication,
   ) {
     const client = new FetchGraphQLClient(context);
-
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
-    this.authentication = authentication;
   }
 
   /**

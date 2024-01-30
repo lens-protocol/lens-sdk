@@ -4,11 +4,11 @@ import {
   TogglePropertyRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 
-import { PublicationCacheManager } from '../infrastructure/PublicationCacheManager';
 import { BookmarkRequest } from './BookmarksGateway';
+import { IPublicationCacheManager } from './IPublicationCacheManager';
 
 export class BookmarksPresenter implements ITogglablePropertyPresenter<BookmarkRequest> {
-  constructor(private readonly publicationCacheManager: PublicationCacheManager) {}
+  constructor(private readonly publicationCacheManager: IPublicationCacheManager) {}
 
   async add({ publicationId }: TogglePropertyRequest) {
     this.publicationCacheManager.update(publicationId, (current) => {

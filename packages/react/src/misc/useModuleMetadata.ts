@@ -11,6 +11,12 @@ import { useLensApolloClient } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
 import { useDeferredTask, UseDeferredTask } from '../helpers/tasks';
 
+export type { ModuleMetadataResult };
+
+// export helpers
+export { encodeData, decodeData } from '@lens-protocol/blockchain-bindings';
+export type { ModuleData, ModuleParam } from '@lens-protocol/blockchain-bindings';
+
 /**
  * {@link useModuleMetadata} hook arguments
  */
@@ -69,7 +75,7 @@ export type FetchModuleMetadataArgs = {
  * @group Hooks
  */
 export function useLazyModuleMetadata(): UseDeferredTask<
-  ModuleMetadataResult | null,
+  ModuleMetadataResult,
   NotFoundError | UnspecifiedError,
   UseModuleMetadataArgs
 > {

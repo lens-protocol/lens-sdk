@@ -29,7 +29,7 @@ export type UseEnhanceConversationResult = {
 /**
  * Enhance XMTP conversation with a profile of the conversation's peer
  *
- * You MUST be authenticated via {@link useLogin} to use this hook.
+ * You MUST be authenticated via `useLogin` to use this hook.
  *
  * @example
  * ```tsx

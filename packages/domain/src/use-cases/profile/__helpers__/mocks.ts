@@ -1,6 +1,11 @@
 import { faker } from '@faker-js/faker';
 import { ChainType, Result } from '@lens-protocol/shared-kernel';
-import { mockEvmAddress, mockDaiAmount, mockUsdcAmount } from '@lens-protocol/shared-kernel/mocks';
+import {
+  mockEvmAddress,
+  mockDaiAmount,
+  mockUsdcAmount,
+  mockData,
+} from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
@@ -14,8 +19,8 @@ import {
   DuplicatedHandleError,
   IProfileTransactionGateway,
 } from '../CreateProfile';
-import { ChargeFollowConfig, FollowPolicyType, NoFeeFollowConfig } from '../FollowPolicy';
-import { FreeFollowRequest, PaidFollowRequest } from '../FollowProfile';
+import { ChargeFollowConfig, FollowPolicyType } from '../FollowPolicy';
+import { FreeFollowRequest, PaidFollowRequest, UnknownFollowRequest } from '../FollowProfile';
 import { LinkHandleRequest } from '../LinkHandle';
 import {
   INftOwnershipChallengeGateway,
@@ -66,13 +71,6 @@ export function mockChargeFollowConfig(
     recipient: mockEvmAddress(),
     ...overrides,
     type: FollowPolicyType.CHARGE,
-  };
-}
-
-export function mockNoFeeFollowConfig(overrides?: Partial<NoFeeFollowConfig>): NoFeeFollowConfig {
-  return {
-    type: FollowPolicyType.ANYONE,
-    ...overrides,
   };
 }
 
@@ -130,6 +128,21 @@ export function mockPaidFollowRequest(overrides?: Partial<PaidFollowRequest>): P
       recipient: mockEvmAddress(),
     },
     sponsored: true,
+    signless: false,
+    ...overrides,
+    kind: TransactionKind.FOLLOW_PROFILE,
+  };
+}
+
+export function mockUnknownFollowRequest(
+  overrides?: Partial<UnknownFollowRequest>,
+): UnknownFollowRequest {
+  return {
+    profileId: mockProfileId(),
+    address: mockEvmAddress(),
+    data: mockData(),
+    sponsored: true,
+    signless: false,
     ...overrides,
     kind: TransactionKind.FOLLOW_PROFILE,
   };

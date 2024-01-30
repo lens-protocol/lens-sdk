@@ -23,6 +23,7 @@ export function useLinkHandleController() {
   const {
     activeWallet,
     apolloClient,
+    config,
     onChainRelayer,
     transactionFactory,
     transactionGateway,
@@ -50,7 +51,12 @@ export function useLinkHandleController() {
       | UserRejectedError
       | WalletConnectionError
     >();
-    const gateway = new LinkHandleGateway(providerFactory, apolloClient, transactionFactory);
+    const gateway = new LinkHandleGateway(
+      config,
+      providerFactory,
+      apolloClient,
+      transactionFactory,
+    );
 
     const signedExecution = new SignedOnChain(
       activeWallet,

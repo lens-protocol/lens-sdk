@@ -14,11 +14,13 @@ import {
   mockPaidFollowRequest,
   mockFreeFollowRequest,
   mockWallet,
+  mockUnknownFollowRequest,
 } from '@lens-protocol/domain/mocks';
 import { ChainType } from '@lens-protocol/shared-kernel';
 import { providers } from 'ethers';
 import { mock } from 'jest-mock-extended';
 
+import { LensConfig } from '../../../../config';
 import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
 import { mockIProviderFactory } from '../../../../wallet/adapters/__helpers__/mocks';
 import { UnsignedContractCallTransaction } from '../../AbstractContractCallGateway';
@@ -33,19 +35,26 @@ function setupTestScenario({
   apolloClient: SafeApolloClient;
   provider?: providers.JsonRpcProvider;
 }) {
+  const config = mock<LensConfig>();
   const transactionFactory = mockITransactionFactory();
   const providerFactory = mockIProviderFactory({
     chainType: ChainType.POLYGON,
     provider,
   });
 
-  const gateway = new FollowProfileGateway(providerFactory, apolloClient, transactionFactory);
+  const gateway = new FollowProfileGateway(
+    config,
+    providerFactory,
+    apolloClient,
+    transactionFactory,
+  );
 
   return { gateway };
 }
 
 const freeFollowRequest = mockFreeFollowRequest();
 const paidFollowRequest = mockPaidFollowRequest();
+const baseUnknownFollowRequest = mockUnknownFollowRequest();
 
 describe(`Given an instance of ${FollowProfileGateway.name}`, () => {
   describe.each([
@@ -63,6 +72,34 @@ describe(`Given an instance of ${FollowProfileGateway.name}`, () => {
                     currency: paidFollowRequest.fee.amount.asset.address,
                     value: paidFollowRequest.fee.amount.toSignificantDigits(),
                   },
+                },
+              },
+            },
+          ],
+        },
+      },
+    },
+    {
+      name: 'FreeFollowRequest',
+      request: freeFollowRequest,
+      variables: {
+        request: {
+          follow: [{ profileId: freeFollowRequest.profileId }],
+        },
+      },
+    },
+    {
+      name: 'UnknownFollowRequest',
+      request: baseUnknownFollowRequest,
+      variables: {
+        request: {
+          follow: [
+            {
+              profileId: baseUnknownFollowRequest.profileId,
+              followModule: {
+                unknownFollowModule: {
+                  address: baseUnknownFollowRequest.address,
+                  data: baseUnknownFollowRequest.data,
                 },
               },
             },
@@ -110,31 +147,58 @@ describe(`Given an instance of ${FollowProfileGateway.name}`, () => {
     });
   });
 
-  describe(`when creating a ${NativeTransaction.name}<FreeFollowRequest>`, () => {
-    it(`should create an instance of the ${NativeTransaction.name}`, async () => {
-      const apolloClient = mockLensApolloClient([
-        mockFollowResponse({
-          variables: {
-            request: {
-              follow: [{ profileId: freeFollowRequest.profileId }],
+  describe.each([
+    {
+      name: 'FreeFollowRequest',
+      request: freeFollowRequest,
+      variables: {
+        request: {
+          follow: [{ profileId: freeFollowRequest.profileId }],
+        },
+      },
+    },
+    {
+      name: 'UnknownFollowRequest',
+      request: baseUnknownFollowRequest,
+      variables: {
+        request: {
+          follow: [
+            {
+              profileId: baseUnknownFollowRequest.profileId,
+              followModule: {
+                unknownFollowModule: {
+                  address: baseUnknownFollowRequest.address,
+                  data: baseUnknownFollowRequest.data,
+                },
+              },
             },
-          },
-          data: {
-            result: mockRelaySuccessFragment(),
-          },
-        }),
-      ]);
-      const { gateway } = setupTestScenario({ apolloClient });
+          ],
+        },
+      },
+    },
+  ])('and a $name', ({ name, request, variables }) => {
+    describe(`when creating a ${NativeTransaction.name}<${name}>`, () => {
+      it(`should create an instance of the ${NativeTransaction.name}`, async () => {
+        const apolloClient = mockLensApolloClient([
+          mockFollowResponse({
+            variables,
+            data: {
+              result: mockRelaySuccessFragment(),
+            },
+          }),
+        ]);
+        const { gateway } = setupTestScenario({ apolloClient });
 
-      const result = await gateway.createDelegatedTransaction(freeFollowRequest);
+        const result = await gateway.createDelegatedTransaction(request);
 
-      expect(result.unwrap()).toBeInstanceOf(NativeTransaction);
-      expect(result.unwrap()).toEqual(
-        expect.objectContaining({
-          id: expect.any(String),
-          request: freeFollowRequest,
-        }),
-      );
+        expect(result.unwrap()).toBeInstanceOf(NativeTransaction);
+        expect(result.unwrap()).toEqual(
+          expect.objectContaining({
+            id: expect.any(String),
+            request: request,
+          }),
+        );
+      });
     });
   });
 });

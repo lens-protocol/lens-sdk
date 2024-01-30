@@ -26,10 +26,11 @@ export function useUpdateFollowPolicyController() {
   const {
     activeWallet,
     apolloClient,
+    config,
     onChainRelayer,
+    providerFactory,
     transactionFactory,
     transactionGateway,
-    providerFactory,
     transactionQueue,
   } = useSharedDependencies();
 
@@ -57,6 +58,7 @@ export function useUpdateFollowPolicyController() {
     >();
 
     const gateway = new UpdateFollowPolicyGateway(
+      config,
       providerFactory,
       apolloClient,
       transactionFactory,

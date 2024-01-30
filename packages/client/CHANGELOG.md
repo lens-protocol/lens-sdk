@@ -1,5 +1,35 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.28
+
+### Minor Changes
+
+- fea579acf: **feat**: Added `authentication.authenticateWith` method to allow to authenticate LensClient with an existing refresh token
+- a1c584448: **feat**: added new methods:
+
+  - `feed.latestPaidActions`
+  - `profile.report`
+  - `profile.followStatusBulk`
+  - `nfts.collections`
+  - `nfts.collectionOwners`
+  - `nfts.mutualCollections`
+  - `nfts.popularCollections`
+
+  **breaking**: `nfts.fetch` doesn't require authentication, returns `Promise<PaginatedResult<NftFragment>>`
+
+### Patch Changes
+
+- fea579acf: **chore**: Relax node version requirements to >18 <21
+- 1a97c390a: **chore:** Removed peer dependency on ethers@5
+- 6a4df1bdb: **feat:** support Unknown Follow Modules
+- Updated dependencies [1a97c390a]
+- Updated dependencies [b647eab70]
+- Updated dependencies [6a4df1bdb]
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.19
+  - @lens-protocol/gated-content@0.3.3-alpha.20
+  - @lens-protocol/shared-kernel@0.11.0-alpha.9
+  - @lens-protocol/storage@0.7.5-alpha.8
+
 ## 2.0.0-alpha.27
 
 ### Minor Changes

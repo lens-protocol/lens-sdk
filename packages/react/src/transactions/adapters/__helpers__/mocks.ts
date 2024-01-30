@@ -11,7 +11,7 @@ import {
   mockProtocolTransactionRequestModel,
   mockTransactionHash,
 } from '@lens-protocol/domain/mocks';
-import { ChainType, Data } from '@lens-protocol/shared-kernel';
+import { ChainType } from '@lens-protocol/shared-kernel';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { MockProvider } from 'ethereum-waffle';
 import { mock } from 'jest-mock-extended';
@@ -19,7 +19,6 @@ import { mock } from 'jest-mock-extended';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { ITransactionObserver, TransactionFactory } from '../../infrastructure/TransactionFactory';
 import { MetaTransactionData, NativeTransactionData } from '../ITransactionFactory';
-import { SelfFundedProtocolTransactionRequest } from '../SelfFundedProtocolTransactionRequest';
 
 export function mockITransactionFactory(
   transactionObserver: ITransactionObserver = mock<ITransactionObserver>(),
@@ -84,16 +83,6 @@ export function mockNativeTransactionDataWithRelayerTxId<
     request: mockAnyTransactionRequestModel() as T,
     txHash: mockTransactionHash(),
   };
-}
-
-export function mockSelfFundedProtocolTransactionRequest<
-  TRequest extends ProtocolTransactionRequestModel,
->(): SelfFundedProtocolTransactionRequest<TRequest> {
-  return {
-    contractAddress: mockEvmAddress(),
-    encodedData: faker.datatype.hexadecimal({ length: 32 }) as Data,
-    ...mockAnyTransactionRequestModel(),
-  } as SelfFundedProtocolTransactionRequest<TRequest>;
 }
 
 export function assertUnsignedProtocolCallCorrectness<T extends ProtocolTransactionRequestModel>(

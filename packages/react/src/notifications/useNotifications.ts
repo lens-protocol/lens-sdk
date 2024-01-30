@@ -71,6 +71,7 @@ export function useNotifications({ where }: UseNotificationsArgs = {}): Paginate
       useLensApolloClient({
         variables: {
           where,
+          statsFor: where?.publishedOn,
         },
       }),
     ),

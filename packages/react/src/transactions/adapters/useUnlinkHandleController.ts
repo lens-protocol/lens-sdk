@@ -23,6 +23,7 @@ export function useUnlinkHandleController() {
   const {
     activeWallet,
     apolloClient,
+    config,
     onChainRelayer,
     transactionFactory,
     transactionGateway,
@@ -50,7 +51,12 @@ export function useUnlinkHandleController() {
       | WalletConnectionError
       | InsufficientGasError
     >();
-    const gateway = new UnlinkHandleGateway(providerFactory, apolloClient, transactionFactory);
+    const gateway = new UnlinkHandleGateway(
+      config,
+      providerFactory,
+      apolloClient,
+      transactionFactory,
+    );
 
     const signedExecution = new SignedOnChain(
       activeWallet,

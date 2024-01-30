@@ -48,12 +48,12 @@ export type UpdateFollowPolicyArgs = {
  * @param args - {@link UpdateFollowPolicyArgs}
  *
  * @example
- *
  * ```tsx
  * const { execute, loading, error } = useUpdateFollowPolicy();
  * ```
  *
- * @example
+ * ## Follow policy types
+ *
  * Anyone can follow.
  * ```tsx
  * const { execute, loading, error } = useUpdateFollowPolicy();
@@ -65,7 +65,6 @@ export type UpdateFollowPolicyArgs = {
  * });
  * ```
  *
- * @example
  * No one can follow.
  * ```tsx
  * const { execute, loading, error } = useUpdateFollowPolicy();
@@ -77,7 +76,6 @@ export type UpdateFollowPolicyArgs = {
  * });
  * ```
  *
- * @example
  * Anyone can follow, but they must pay a fee.
  * To setup a {@link FollowPolicyType.CHARGE} you need to define an amount of a currency as a fee.
  *

@@ -2,16 +2,60 @@ extend type PaginatedResultInfo {
   moreAfter: Boolean!
 }
 
-type ImageTransformParam {
+type ImageTransformParams {
   height: ImageSizeTransform
   width: ImageSizeTransform
   keepAspectRatio: Boolean
 }
 
-extend type Query {
+type ImageQueryParams {
+  small: ImageTransformParams
+  medium: ImageTransformParams
+}
+
+type ProfileQueryParams {
+  cover: ImageTransformParams
+  thumbnail: ImageTransformParams
+  metadataSource: AppId
+}
+
+type QueryParams {
+  image: ImageQueryParams
+  profile: ProfileQueryParams
   fxRateFor: SupportedFiatType
-  profileCoverSize: ImageTransformParam
-  profilePictureSize: ImageTransformParam
-  imageSmallSize: ImageTransformParam
-  imageMediumSize: ImageTransformParam
+}
+
+extend type Query {
+  queryParams: QueryParams!
+}
+
+fragment InjectQueryParams on Query {
+  queryParams @client {
+    image {
+      small @export(as: "imageSmallSize") {
+        height
+        width
+        keepAspectRatio
+      }
+      medium @export(as: "imageMediumSize") {
+        height
+        width
+        keepAspectRatio
+      }
+    }
+    profile {
+      cover @export(as: "profileCoverSize") {
+        height
+        width
+        keepAspectRatio
+      }
+      thumbnail @export(as: "profilePictureSize") {
+        height
+        width
+        keepAspectRatio
+      }
+      metadataSource @export(as: "profileMetadataSource")
+    }
+    fxRateFor @export(as: "fxRateFor")
+  }
 }

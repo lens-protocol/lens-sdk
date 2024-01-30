@@ -19,6 +19,7 @@ function isCanCollectAlias(args: PublicationOperationsCanActArgs) {
 
 export function createPublicationOperationsTypePolicy(): StrictTypedTypePolicies['PublicationOperations'] {
   return {
+    keyFields: false,
     fields: {
       canAct: {
         read(

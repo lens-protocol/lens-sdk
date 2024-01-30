@@ -7,14 +7,14 @@ import { assertNever, invariant, never } from '@lens-protocol/shared-kernel';
 
 import { Profile } from '../graphql/generated';
 import { AnyPublication, PrimaryPublication } from '../publication';
-import { findCollectActionModuleSettings } from './KnownCollectModuleSettings';
+import { findCollectModuleSettings } from './CollectModuleSettings';
 import { erc20Amount } from './amount';
 
-export function resolveTokenAllowanceRequestForCollect(
+function resolveTokenAllowanceRequestForCollect(
   publication: PrimaryPublication,
   limit: TokenAllowanceLimit,
 ): TokenAllowanceRequest {
-  const module = findCollectActionModuleSettings(publication);
+  const module = findCollectModuleSettings(publication);
 
   invariant(module, `Publication ${publication.id} has no collect module`);
 
@@ -31,7 +31,7 @@ export function resolveTokenAllowanceRequestForCollect(
     case 'SimpleCollectOpenActionSettings':
       return {
         kind: TransactionKind.APPROVE_MODULE,
-        amount: erc20Amount({ from: module.amount }),
+        amount: erc20Amount(module.amount),
         limit,
         spender: module.contract.address,
       };
@@ -41,7 +41,7 @@ export function resolveTokenAllowanceRequestForCollect(
   }
 }
 
-export function resolveTokenAllowanceRequestForFollow(
+function resolveTokenAllowanceRequestForFollow(
   profile: Profile,
   limit: TokenAllowanceLimit,
 ): TokenAllowanceRequest {
@@ -51,7 +51,7 @@ export function resolveTokenAllowanceRequestForFollow(
     case 'FeeFollowModuleSettings':
       return {
         kind: TransactionKind.APPROVE_MODULE,
-        amount: erc20Amount({ from: profile.followModule.amount }),
+        amount: erc20Amount(profile.followModule.amount),
         limit,
         spender: profile.followModule.contract.address,
       };

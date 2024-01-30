@@ -1,6 +1,6 @@
 import { NodeBundlr } from '@bundlr-network/client';
+import { Wallet } from '@ethersproject/wallet';
 import { UnknownObject } from '@lens-protocol/shared-kernel';
-import { Wallet } from 'ethers';
 
 export class BundlrUploader {
   constructor(private readonly signer: Wallet) {}

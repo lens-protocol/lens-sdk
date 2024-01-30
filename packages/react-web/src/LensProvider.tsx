@@ -30,6 +30,12 @@ export type LensConfig = {
    */
   logger?: ILogger;
   /**
+   * Enable debug mode. Disable gas estimation on self-funded transactions.
+   *
+   * @defaultValue `false`
+   */
+  debug?: boolean;
+  /**
    * The storage provider to use.
    *
    * If an implementation of {@link IObservableStorageProvider} is provided,
@@ -41,7 +47,7 @@ export type LensConfig = {
   /**
    * The common query params allows you customize some aspect of the returned data.
    *
-   * If not provided {@link defaultQueryParams} will be used instead.
+   * @defaultValue see individual fields of {@link QueryParams}
    */
   params?: QueryParams;
 };

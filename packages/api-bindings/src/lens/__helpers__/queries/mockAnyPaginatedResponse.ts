@@ -2,6 +2,7 @@ import { OperationVariables } from '@apollo/client';
 import { MockedResponse } from '@apollo/client/testing';
 import { DocumentNode } from 'graphql';
 
+import { defaultQueryParams } from '../../../apollo';
 import { PaginatedResultInfo, SupportedFiatType } from '../../graphql/generated';
 import { mockPaginatedResultInfo } from '../fragments';
 
@@ -15,10 +16,11 @@ export function mockAnyResponse(bulk: MockedResponse) {
         // any query that needs such variables. The fact one query might use a subset of these
         // variables is irrelevant.
         fxRateFor: SupportedFiatType.Usd,
-        imageMediumSize: {},
-        imageSmallSize: {},
-        profileCoverSize: {},
-        profilePictureSize: {},
+        imageMediumSize: defaultQueryParams.image?.medium ?? {},
+        imageSmallSize: defaultQueryParams.image?.small ?? {},
+        profileCoverSize: defaultQueryParams.profile?.cover ?? {},
+        profilePictureSize: defaultQueryParams.profile?.thumbnail ?? {},
+        profileMetadataSource: null,
       },
     },
     result: bulk.result,
@@ -39,20 +41,10 @@ export function mockAnyPaginatedResponse<V extends OperationVariables, I>({
   info?: PaginatedResultInfo;
   query: DocumentNode;
 }) {
-  return {
+  return mockAnyResponse({
     request: {
       query,
-      variables: {
-        ...variables,
-        // The values below should match the superset of the variables default values used in
-        // any query that needs such variables. The fact one query might use a subset of these
-        // variables is irrelevant.
-        fxRateFor: SupportedFiatType.Usd,
-        imageMediumSize: {},
-        imageSmallSize: {},
-        profileCoverSize: {},
-        profilePictureSize: {},
-      },
+      variables,
     },
     result: {
       data: {
@@ -62,5 +54,5 @@ export function mockAnyPaginatedResponse<V extends OperationVariables, I>({
         },
       },
     },
-  };
+  });
 }

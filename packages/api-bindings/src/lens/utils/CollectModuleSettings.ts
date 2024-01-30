@@ -1,7 +1,7 @@
 import * as gql from '../graphql/generated';
 import { OpenActionModuleSettings, PrimaryPublication } from '../publication';
 
-export type KnownCollectModuleSettings =
+export type CollectModuleSettings =
   | gql.LegacyAaveFeeCollectModuleSettings
   | gql.LegacyErc4626FeeCollectModuleSettings
   | gql.LegacyFeeCollectModuleSettings
@@ -31,16 +31,24 @@ const ModulesWithKnownCollectCapability: Record<OpenActionModuleSettings['__type
   UnknownOpenActionModuleSettings: false,
 };
 
-export function isKnownCollectModuleSettings(
+/**
+ * Given an open action module settings, determine if it is a collect module
+ *
+ * @experimental This function is not yet stable and may be removed in a future release
+ */
+export function isCollectModuleSettings(
   settings: OpenActionModuleSettings,
-): settings is KnownCollectModuleSettings {
+): settings is CollectModuleSettings {
   return ModulesWithKnownCollectCapability[settings.__typename] ?? false;
 }
 
-export function findCollectActionModuleSettings(
+/**
+ * Given a publication, find the collect module settings if any
+ *
+ * @experimental This function is not yet stable and may be removed in a future release
+ */
+export function findCollectModuleSettings(
   collectable: PrimaryPublication,
-): KnownCollectModuleSettings | null {
-  if (!collectable.openActionModules) return null;
-
-  return collectable.openActionModules.find(isKnownCollectModuleSettings) ?? null;
+): CollectModuleSettings | null {
+  return collectable.openActionModules?.find(isCollectModuleSettings) ?? null;
 }

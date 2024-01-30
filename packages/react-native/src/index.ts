@@ -5,9 +5,9 @@
  *
  * | Package Manager | Command |
  * |:---------------:|:------- |
- * | npm             | `npm install @lens-protocol/react-native@latest ethers@legacy-v5` |
- * | yarn            | `yarn add @lens-protocol/react-native@latest ethers@legacy-v5` |
- * | pnpm            | `pnpm add @lens-protocol/react-native@latest ethers@legacy-v5` |
+ * | npm             | `npm install @lens-protocol/react-native@latest` |
+ * | yarn            | `yarn add @lens-protocol/react-native@latest` |
+ * | pnpm            | `pnpm add @lens-protocol/react-native@latest` |
  *
  * First we need to create so-called bindings. Bindings are just an object implementing the {@link IBindings} interface. This is used by the Lens SDK to access the Signer and the Provider.
  *

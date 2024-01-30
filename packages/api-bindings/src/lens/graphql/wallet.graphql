@@ -16,8 +16,9 @@ query ProfilesManaged(
   $cursor: Cursor
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
-  $activityOn: [AppId!]
+  $statsFor: [AppId!]
   $fxRateFor: SupportedFiatType = USD
+  $profileMetadataSource: AppId = null
 ) {
   result: profilesManaged(
     request: { for: $for, includeOwned: $includeOwned, limit: $limit, cursor: $cursor }
@@ -47,8 +48,9 @@ query LastLoggedInProfile(
   $request: LastLoggedInProfileRequest!
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
-  $activityOn: [AppId!]
+  $statsFor: [AppId!]
   $fxRateFor: SupportedFiatType = USD
+  $profileMetadataSource: AppId = null
 ) {
   result: lastLoggedInProfile(request: $request) {
     ...Profile

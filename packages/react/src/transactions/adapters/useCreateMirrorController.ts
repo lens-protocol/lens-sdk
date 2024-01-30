@@ -16,6 +16,7 @@ export function useCreateMirrorController() {
   const {
     activeWallet,
     apolloClient,
+    config,
     momokaRelayer,
     onChainRelayer,
     providerFactory,
@@ -31,6 +32,7 @@ export function useCreateMirrorController() {
     );
 
     const onChainGateway = new CreateOnChainMirrorGateway(
+      config,
       providerFactory,
       apolloClient,
       transactionFactory,

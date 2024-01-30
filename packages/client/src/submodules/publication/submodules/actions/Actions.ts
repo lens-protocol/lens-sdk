@@ -20,14 +20,14 @@ import {
  * @group LensClient Modules
  */
 export class Actions {
-  private readonly authentication: Authentication | undefined;
   private readonly sdk: Sdk;
 
-  constructor(context: LensContext, authentication?: Authentication) {
+  constructor(
+    context: LensContext,
+    private readonly authentication: Authentication,
+  ) {
     const client = new FetchGraphQLClient(context);
-
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
-    this.authentication = authentication;
   }
 
   /**

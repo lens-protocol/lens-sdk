@@ -6,6 +6,7 @@ import { Environment } from './environments';
 import {
   Explore,
   Feed,
+  Handle,
   Invites,
   Modules,
   Momoka,
@@ -19,7 +20,6 @@ import {
   Transaction,
   Wallet,
 } from './submodules';
-import { Handle } from './submodules/handle';
 
 /**
  * LensClient configuration

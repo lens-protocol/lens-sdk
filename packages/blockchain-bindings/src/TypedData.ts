@@ -1,4 +1,4 @@
-import { TypedDataField } from 'ethers';
+import { TypedDataField } from '@ethersproject/abstract-signer';
 
 export type Eip712TypedDataDomain = {
   name: string;

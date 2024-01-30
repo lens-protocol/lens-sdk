@@ -38,9 +38,11 @@ query Feed(
   $imageMediumSize: ImageTransform = {}
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
-  $activityOn: [AppId!]
+  $statsFor: [AppId!]
   $fxRateFor: SupportedFiatType = USD
+  $profileMetadataSource: AppId = null
 ) {
+  ...InjectQueryParams
   result: feed(request: { where: $where, cursor: $cursor }) {
     items {
       ...FeedItem
@@ -68,10 +70,11 @@ query FeedHighlights(
   $imageMediumSize: ImageTransform = {}
   $profileCoverSize: ImageTransform = {}
   $profilePictureSize: ImageTransform = {}
-  $activityOn: [AppId!]
+  $statsFor: [AppId!]
   $fxRateFor: SupportedFiatType = USD
+  $profileMetadataSource: AppId = null
 ) {
-  ...InjectCommonQueryParams
+  ...InjectQueryParams
   result: feedHighlights(request: { where: $where, limit: $limit, cursor: $cursor }) {
     items {
       ...FeedHighlight
@@ -91,7 +94,7 @@ query FeedHighlights(
 #  $profilePictureSize: ImageTransform = {}
 #  $fxRateFor: SupportedFiatType = USD
 #) {
-#  ...InjectCommonQueryParams
+#  ...InjectQueryParams
 #  result: forYou(request: $request) {
 #    items {
 #      ... on Post {

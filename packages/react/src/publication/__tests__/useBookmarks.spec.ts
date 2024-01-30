@@ -10,7 +10,7 @@ describe(`Given the ${useBookmarks.name} hook`, () => {
 
   describe('when a profile is provided', () => {
     it('should settle with the bookmarked publications', async () => {
-      const { renderHook } = await setupHookTestScenarioWithSession([
+      const { renderHook } = setupHookTestScenarioWithSession([
         mockProfileBookmarksResponse({
           variables: {
             request: {},

@@ -17,7 +17,7 @@ describe(`Given the ${useBookmarkToggle.name} hook`, () => {
 
   describe('when calling the execute method', () => {
     it('should call correct mutation', async () => {
-      const { renderHook } = await setupHookTestScenarioWithSession([
+      const { renderHook } = setupHookTestScenarioWithSession([
         mockPublicationResponse({
           variables: {
             request: { forId: publication.id },

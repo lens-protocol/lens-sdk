@@ -10,7 +10,7 @@ import { Data, EvmAddress, invariant, never } from '@lens-protocol/shared-kernel
 
 import * as gql from '../graphql/generated';
 import { AnyPublication, OpenActionModuleSettings } from '../publication';
-import { findCollectActionModuleSettings } from './KnownCollectModuleSettings';
+import { findCollectModuleSettings } from './CollectModuleSettings';
 import { erc20Amount } from './amount';
 
 /**
@@ -27,17 +27,17 @@ export enum OpenActionKind {
 export type UnknownActionParams = {
   kind: OpenActionKind.UNKNOWN;
   /**
-   * The address of the unknown open action to perform.
+   * The address of the Unknown Open Action  module contract.
    *
-   * MUST be within the publications' `openActionModules` list.
+   * It MUST be within the target publication's `openActionModules` list.
    */
   address: EvmAddress;
   /**
-   * The data required by the unknown Open Action contract address to operate.
+   * The data required by the Unknown Open Action to be executed.
    *
    * It's consumer responsibility to encode it correctly.
    */
-  data: Data;
+  data: string;
 };
 
 /**
@@ -76,7 +76,7 @@ function resolveCollectRequestFor(
   context: OpenActionContext<CollectParams>,
 ): CollectRequest {
   const collectable = publication.__typename === 'Mirror' ? publication.mirrorOn : publication;
-  const settings = findCollectActionModuleSettings(collectable);
+  const settings = findCollectModuleSettings(collectable);
 
   invariant(settings, 'No open action module settings found for publication');
 
@@ -96,7 +96,7 @@ function resolveCollectRequestFor(
         publicationId: collectable.id,
         referrer: publication !== collectable ? publication.id : undefined,
         fee: {
-          amount: erc20Amount({ from: settings.amount }),
+          amount: erc20Amount(settings.amount),
           contractAddress: settings.contract.address,
         },
         public: false,
@@ -117,7 +117,7 @@ function resolveCollectRequestFor(
       };
 
     case 'SimpleCollectOpenActionSettings':
-      const amount = erc20Amount({ from: settings.amount });
+      const amount = erc20Amount(settings.amount);
 
       return {
         kind: TransactionKind.ACT_ON_PUBLICATION,
@@ -144,7 +144,7 @@ function resolveCollectRequestFor(
         referrers:
           context.action.referrers ?? (publication !== collectable ? [publication.id] : undefined),
         fee: {
-          amount: erc20Amount({ from: settings.amount }),
+          amount: erc20Amount(settings.amount),
           contractAddress: settings.contract.address,
         },
         public: context.public,
@@ -184,7 +184,7 @@ function resolveUnknownRequestFor(
     type: AllOpenActionType.UNKNOWN_OPEN_ACTION,
     publicationId: target.id,
     address: settings.contract.address,
-    data: context.action.data,
+    data: context.action.data as Data,
     public: context.public,
     signless: context.signless,
     sponsored: context.sponsored,

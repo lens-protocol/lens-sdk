@@ -35,7 +35,9 @@ import {
   CreateQuoteRequestSchema,
 } from './publications';
 
-function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) {
+function resolveProtocolTransactionRequestSchema(
+  kind: ProtocolTransactionKind,
+): z.ZodType<ProtocolTransactionRequest, z.ZodTypeDef, UnknownObject> {
   switch (kind) {
     case TransactionKind.ACT_ON_PUBLICATION:
       return CollectRequestSchema;
@@ -75,7 +77,9 @@ function resolveProtocolTransactionRequestSchema(kind: ProtocolTransactionKind) 
   }
 }
 
-function resolveAnyTransactionRequestSchema(kind: TransactionKind) {
+function resolveAnyTransactionRequestSchema(
+  kind: TransactionKind,
+): z.ZodType<AnyTransactionRequest, z.ZodTypeDef, UnknownObject> {
   switch (kind) {
     case TransactionKind.APPROVE_MODULE:
       return TokenAllowanceRequestSchema;

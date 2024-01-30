@@ -29,5 +29,5 @@ export function useInvitedProfiles(): ReadResult<InvitedResult[]> {
     'You must be authenticated to use this query. Use `useLogin` hook to authenticate.',
   );
 
-  return useReadResult(useInvitedProfilesHook(useLensApolloClient({})));
+  return useReadResult(useInvitedProfilesHook(useLensApolloClient()));
 }

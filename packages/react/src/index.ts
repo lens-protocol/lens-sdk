@@ -130,7 +130,10 @@ export {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-export { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
+export {
+  BroadcastingError,
+  BroadcastingErrorReason,
+} from '@lens-protocol/domain/use-cases/transactions';
 export { NotFoundError } from './NotFoundError';
 export {
   InsufficientAllowanceError,
@@ -142,5 +145,6 @@ export { UnspecifiedError } from '@lens-protocol/api-bindings';
  * Helpers
  */
 export * from './utils';
+export * from './ConsoleLogger';
 export { useSharedDependencies } from './shared';
-export { isValidHandle, resolveFollowPolicy } from '@lens-protocol/api-bindings';
+export { isValidHandle, resolveFollowPolicy, erc20Amount } from '@lens-protocol/api-bindings';

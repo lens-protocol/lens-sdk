@@ -41,11 +41,11 @@ const defaultOptions: InitXmtpClientOptions = {
 };
 
 /**
- * Initialize XMTP client using the same Signer as the one provided with {@link LensConfig}.
+ * Initialize XMTP client using the same Signer as the one provided with `LensConfig`.
  * Store XMTP user's decryption key in storage to improve UX.
  * Be aware that XMTP user's key must be stored safely.
  *
- * You MUST be authenticated via {@link useLogin} to use this hook.
+ * You MUST be authenticated via `useLogin` to use this hook.
  *
  * @example
  * ```tsx

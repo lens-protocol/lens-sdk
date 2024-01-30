@@ -15,7 +15,13 @@ export function chainType(chainId: number): ChainType {
   }
 }
 
-export function erc20Amount({ from }: { from: ApiAmount }): Erc20Amount {
+/**
+ * Convert an Amount returned from the Lens API to an Erc20Amount
+ *
+ * @param from - Amount returned from the Lens API
+ * @returns Erc20Amount instance
+ */
+export function erc20Amount(from: ApiAmount): Erc20Amount {
   const { asset, value } = from;
 
   const erc20Asset = erc20({
@@ -25,5 +31,6 @@ export function erc20Amount({ from }: { from: ApiAmount }): Erc20Amount {
     address: asset.contract.address,
     chainType: chainType(asset.contract.chainId),
   });
+
   return Amount.erc20(erc20Asset, value);
 }

@@ -1,9 +1,9 @@
-import { utils } from 'ethers';
+import { getAddress } from '@ethersproject/address';
 
 import { Amount, Denomination } from '../Amount';
 import { erc20, Erc20 } from '../Asset';
 import { ChainType } from '../ChainType';
-import { EvmAddress } from '../types';
+import { Data, EvmAddress } from '../types';
 
 const genRanHex = (size: number) =>
   [...Array<string>(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
@@ -12,12 +12,12 @@ export function mock32BytesHexString() {
   return '0x' + genRanHex(32 * 2);
 }
 
-export function mockUint256HexString() {
-  return mock32BytesHexString();
+export function mockData(): Data {
+  return mock32BytesHexString() as Data;
 }
 
 export function mockEvmAddress(): EvmAddress {
-  return utils.getAddress(`0x${genRanHex(20 * 2)}`);
+  return getAddress(`0x${genRanHex(20 * 2)}`);
 }
 
 export function mockEtherAmount(value: number | string) {

@@ -89,13 +89,6 @@ function TestScenario({ id }: { id: PublicationId }) {
           </button>
         </RequireWalletSession>
       </div>
-      <div className="notice">
-        <p>
-          At the time of this example writing there is a known API issue resulting in{' '}
-          <code>PublicationOperations.canCollect</code> (SDK alias of <code>canAct</code>) returning
-          always <code>'NO'</code>.
-        </p>
-      </div>
     </div>
   );
 }

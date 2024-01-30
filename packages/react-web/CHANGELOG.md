@@ -1,5 +1,38 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.28
+
+### Minor Changes
+
+- bb9a8dd7b: **feat:** introduces `params.statsFor` and `params.profile.metadataSource` in `LensConfig`
+- b647eab70: **feat:** Introduced `debug` mode. Exported `ConsoleLogger`.
+- 6a4df1bdb: **feat:** support Unknown Follow Modules
+
+### Patch Changes
+
+- 1a97c390a: **chore:** Removed peer dependency on ethers@5
+- 821d8c492: **fix:** supports User Rejection error from Wallet that despite returning correct error code are NOT recognized by `ethers` (v5)
+- c2b05bdf0: **Fixed**: missing export of `findCollectModuleSettings` and `isCollectModuleSettings` helpers
+- 74751f359: feat: Expose `erc20Amount` helper to make working with API Amounts easier
+- c2b05bdf0: **fixed:** return type of `useLazyModuleMetadata`
+- c2b05bdf0: **fix:** exports missing `AsyncTransactionResult`
+- c2b05bdf0: **fix:** exports missing `ProfileFields` type
+- Updated dependencies [bb9a8dd7b]
+- Updated dependencies [1a97c390a]
+- Updated dependencies [821d8c492]
+- Updated dependencies [c2b05bdf0]
+- Updated dependencies [b647eab70]
+- Updated dependencies [74751f359]
+- Updated dependencies [c2b05bdf0]
+- Updated dependencies [c2b05bdf0]
+- Updated dependencies [6a4df1bdb]
+- Updated dependencies [c2b05bdf0]
+  - @lens-protocol/api-bindings@0.11.0-alpha.25
+  - @lens-protocol/react@2.0.0-alpha.28
+  - @lens-protocol/shared-kernel@0.11.0-alpha.9
+  - @lens-protocol/domain@0.11.0-alpha.19
+  - @lens-protocol/storage@0.7.5-alpha.8
+
 ## 2.0.0-alpha.27
 
 ### Minor Changes

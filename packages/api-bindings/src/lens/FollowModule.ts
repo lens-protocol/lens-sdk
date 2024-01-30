@@ -1,6 +1,11 @@
-import { FollowPolicy, FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
+import {
+  FollowPolicy,
+  FollowPolicyConfig,
+  FollowPolicyType,
+} from '@lens-protocol/domain/use-cases/profile';
+import { Data } from '@lens-protocol/shared-kernel';
 
-import { Profile } from './graphql/generated';
+import { FollowModuleInput, Profile } from './graphql/generated';
 import { erc20Amount } from './utils';
 
 export type FollowModule = NonNullable<Profile['followModule']>;
@@ -29,22 +34,67 @@ export function resolveFollowPolicy({ followModule }: Profile): FollowPolicy {
     case 'FeeFollowModuleSettings':
       return {
         type: FollowPolicyType.CHARGE,
-        amount: erc20Amount({ from: followModule.amount }),
+        amount: erc20Amount(followModule.amount),
         recipient: followModule.recipient,
         contractAddress: followModule.contract.address,
         chainId: followModule.contract.chainId,
       };
+
     case 'RevertFollowModuleSettings':
       return {
         type: FollowPolicyType.NO_ONE,
         contractAddress: followModule.contract.address,
         chainId: followModule.contract.chainId,
       };
+
     case 'UnknownFollowModuleSettings':
       return {
         type: FollowPolicyType.UNKNOWN,
         contractAddress: followModule.contract.address,
         chainId: followModule.contract.chainId,
+        initializeCalldata: followModule.initializeCalldata as Data,
+        initializeResultData: (followModule.initializeResultData as Data) ?? undefined,
+        signlessApproved: followModule.signlessApproved,
+        sponsoredApproved: followModule.sponsoredApproved,
+        verified: followModule.verified,
+      };
+  }
+}
+
+/**
+ * Given a {@link FollowPolicyConfig} resolve it to a {@link FollowModuleInput} to be used by the API.
+ *
+ * @internal
+ */
+export function resolveFollowModuleInput(policy: FollowPolicyConfig): FollowModuleInput {
+  switch (policy.type) {
+    case FollowPolicyType.CHARGE:
+      return {
+        feeFollowModule: {
+          amount: {
+            currency: policy.amount.asset.address,
+            value: policy.amount.toSignificantDigits(),
+          },
+          recipient: policy.recipient,
+        },
+      };
+
+    case FollowPolicyType.ANYONE:
+      return {
+        freeFollowModule: true,
+      };
+
+    case FollowPolicyType.NO_ONE:
+      return {
+        revertFollowModule: true,
+      };
+
+    case FollowPolicyType.UNKNOWN:
+      return {
+        unknownFollowModule: {
+          address: policy.address,
+          data: policy.data,
+        },
       };
   }
 }

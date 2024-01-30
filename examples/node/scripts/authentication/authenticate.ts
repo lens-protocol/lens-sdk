@@ -5,11 +5,6 @@ import { setupWallet } from '../shared/setupWallet';
 async function main() {
   const client = new LensClient({
     environment: development,
-    headers: {
-      origin: 'https://lens-scripts.example',
-      'user-agent':
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
-    },
   });
 
   const wallet = setupWallet();

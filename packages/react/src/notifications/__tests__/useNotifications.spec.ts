@@ -6,7 +6,7 @@ import { mockAppId } from '@lens-protocol/domain/mocks';
 import { waitFor } from '@testing-library/react';
 
 import { setupHookTestScenario } from '../../__helpers__/setupHookTestScenario';
-import { UseNotificationsArgs, useNotifications } from '../useNotifications';
+import { useNotifications } from '../useNotifications';
 
 describe(`Given the ${useNotifications.name} hook`, () => {
   const items = [mockMentionNotification(), mockMentionNotification()];
@@ -14,19 +14,26 @@ describe(`Given the ${useNotifications.name} hook`, () => {
 
   describe('when the query returns data successfully', () => {
     it('should return notifications', async () => {
-      const args: UseNotificationsArgs = {
-        where: {
-          publishedOn: [mockAppId()],
-        },
-      };
+      const appId = mockAppId();
       const { renderHook } = setupHookTestScenario([
         mockNotificationsResponse({
-          variables: args,
+          variables: {
+            where: {
+              publishedOn: [appId],
+            },
+            statsFor: [appId],
+          },
           items,
         }),
       ]);
 
-      const { result } = renderHook(() => useNotifications(args));
+      const { result } = renderHook(() =>
+        useNotifications({
+          where: {
+            publishedOn: [appId],
+          },
+        }),
+      );
 
       await waitFor(() => expect(result.current.loading).toBeFalsy());
       expect(result.current.data).toMatchObject(expectations);

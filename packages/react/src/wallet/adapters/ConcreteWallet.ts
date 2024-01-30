@@ -1,4 +1,6 @@
-import { TypedDataSigner } from '@ethersproject/abstract-signer';
+import { TypedDataSigner, Signer } from '@ethersproject/abstract-signer';
+import { getAddress } from '@ethersproject/address';
+import { ErrorCode } from '@ethersproject/logger';
 import { TransactionRequest } from '@ethersproject/providers';
 import { TypedData } from '@lens-protocol/blockchain-bindings';
 import {
@@ -27,15 +29,12 @@ import {
   PromiseResult,
   success,
 } from '@lens-protocol/shared-kernel';
-import { errors, Signer } from 'ethers';
-import { getAddress } from 'ethers/lib/utils';
 import { z } from 'zod';
 
 import { UnsignedVote } from '../../polls/adapters/SnapshotVoteFactory';
 import { ISnapshotVote } from '../../polls/adapters/SnapshotVoteRelayer';
 import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
-import { SelfFundedProtocolTransactionRequest } from '../../transactions/adapters/SelfFundedProtocolTransactionRequest';
-import { assertErrorObjectWithCode } from './errors';
+import { assertErrorObjectWithCode, isUserRejectedError } from './errors';
 
 export type RequiredSigner = Signer & TypedDataSigner;
 
@@ -72,7 +71,6 @@ export class UnsignedProtocolCall<T extends ProtocolTransactionRequestModel>
     id: string;
     request: T;
     typedData: TypedData;
-    fallback?: SelfFundedProtocolTransactionRequest<T>; // TODO remove fallback
   }): UnsignedProtocolCall<T> {
     return new UnsignedProtocolCall(id, request, typedData);
   }
@@ -159,9 +157,9 @@ export class ConcreteWallet extends Wallet {
       const signedCall = SignedProtocolCall.create({ unsignedCall, signature });
       return success(signedCall);
     } catch (err) {
-      assertErrorObjectWithCode<errors>(err);
+      assertErrorObjectWithCode(err);
 
-      if (err.code === errors.ACTION_REJECTED) {
+      if (isUserRejectedError(err)) {
         return failure(new UserRejectedError());
       }
 
@@ -195,9 +193,9 @@ export class ConcreteWallet extends Wallet {
       const signature = await signer.signMessage(message);
       return success(signature as Signature);
     } catch (err) {
-      assertErrorObjectWithCode<errors>(err);
+      assertErrorObjectWithCode(err);
 
-      if (err.code === errors.ACTION_REJECTED) {
+      if (isUserRejectedError(err)) {
         return failure(new UserRejectedError());
       }
       throw err;
@@ -239,13 +237,14 @@ export class ConcreteWallet extends Wallet {
 
       return success(transaction);
     } catch (err) {
-      assertErrorObjectWithCode<errors>(err);
+      assertErrorObjectWithCode(err);
 
-      switch (err.code) {
-        case errors.ACTION_REJECTED:
-          return failure(new UserRejectedError(err.message));
-        case errors.INSUFFICIENT_FUNDS:
-          return failure(new InsufficientGasError(matic()));
+      if (isUserRejectedError(err)) {
+        return failure(new UserRejectedError());
+      }
+
+      if (err.code === ErrorCode.INSUFFICIENT_FUNDS) {
+        return failure(new InsufficientGasError(matic()));
       }
 
       throw err;
@@ -289,11 +288,12 @@ export class ConcreteWallet extends Wallet {
       );
       return success(signedVote);
     } catch (err) {
-      assertErrorObjectWithCode<errors>(err);
+      assertErrorObjectWithCode(err);
 
-      if (err.code === errors.ACTION_REJECTED) {
+      if (isUserRejectedError(err)) {
         return failure(new UserRejectedError());
       }
+
       throw err;
     } finally {
       this.signingInProgress = false;

@@ -165,6 +165,7 @@ export type UseSetProfileMetadataArgs = {
  *   // ...
  * }
  * ```
+ *
  * In this example you can also see a new error type: {@link InsufficientGasError}. This
  * error happens only with self-funded transactions and it means that the wallet does not
  * have enough funds to pay for the transaction gas costs.

@@ -1,3 +1,4 @@
+import { JsonRpcProvider } from '@ethersproject/providers';
 import { FeeHistoryResult } from '@lens-protocol/blockchain-bindings';
 import {
   Amount,
@@ -6,7 +7,6 @@ import {
   Denomination,
   never,
 } from '@lens-protocol/shared-kernel';
-import { providers } from 'ethers';
 
 export class Eip1559GasPriceEstimate<T extends CryptoNativeAsset = CryptoNativeAsset> {
   constructor(readonly baseFee: Amount<T>, readonly maxPriorityFeePerGas: Amount<T>) {}
@@ -92,7 +92,7 @@ export type CryptoNativeAmountFactory<T extends CryptoNativeAsset> = (
 
 export class Eip1559GasPriceEstimator<T extends CryptoNativeAsset> {
   constructor(
-    private readonly provider: providers.JsonRpcProvider,
+    private readonly provider: JsonRpcProvider,
     private readonly createAmount: CryptoNativeAmountFactory<T>,
   ) {}
 

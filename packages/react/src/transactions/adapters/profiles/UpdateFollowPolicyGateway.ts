@@ -3,21 +3,17 @@ import {
   CreateSetFollowModuleTypedDataData,
   CreateSetFollowModuleTypedDataDocument,
   CreateSetFollowModuleTypedDataVariables,
-  FollowModuleInput,
   RelaySuccess,
   SafeApolloClient,
   SetFollowModuleData,
   SetFollowModuleDocument,
   SetFollowModuleVariables,
   omitTypename,
+  resolveFollowModuleInput,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
-import {
-  FollowPolicyConfig,
-  FollowPolicyType,
-  UpdateFollowPolicyRequest,
-} from '@lens-protocol/domain/use-cases/profile';
+import { UpdateFollowPolicyRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
@@ -27,34 +23,12 @@ import {
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
+import { LensConfig } from '../../../config';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
 import { ITransactionFactory } from '../ITransactionFactory';
 import { handleRelayError } from '../relayer';
-
-export function resolveFollowModuleParams(policy: FollowPolicyConfig): FollowModuleInput {
-  switch (policy.type) {
-    case FollowPolicyType.CHARGE:
-      return {
-        feeFollowModule: {
-          amount: {
-            currency: policy.amount.asset.address,
-            value: policy.amount.toSignificantDigits(),
-          },
-          recipient: policy.recipient,
-        },
-      };
-    case FollowPolicyType.ANYONE:
-      return {
-        freeFollowModule: true,
-      };
-    case FollowPolicyType.NO_ONE:
-      return {
-        revertFollowModule: true,
-      };
-  }
-}
 
 export class UpdateFollowPolicyGateway
   extends AbstractContractCallGateway<UpdateFollowPolicyRequest>
@@ -64,11 +38,12 @@ export class UpdateFollowPolicyGateway
     IPaidTransactionGateway<UpdateFollowPolicyRequest>
 {
   constructor(
+    config: LensConfig,
     providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<UpdateFollowPolicyRequest>,
   ) {
-    super(providerFactory);
+    super(config, providerFactory);
   }
 
   async createDelegatedTransaction(
@@ -116,7 +91,7 @@ export class UpdateFollowPolicyGateway
       mutation: SetFollowModuleDocument,
       variables: {
         request: {
-          followModule: resolveFollowModuleParams(request.policy),
+          followModule: resolveFollowModuleInput(request.policy),
         },
       },
     });
@@ -136,7 +111,7 @@ export class UpdateFollowPolicyGateway
       mutation: CreateSetFollowModuleTypedDataDocument,
       variables: {
         request: {
-          followModule: resolveFollowModuleParams(request.policy),
+          followModule: resolveFollowModuleInput(request.policy),
         },
         options: nonce ? { overrideSigNonce: nonce } : undefined,
       },

@@ -57,6 +57,7 @@ export function useExplorePublications(
         variables: {
           where,
           orderBy,
+          statsFor: where?.metadata?.publishedOn,
         },
       }),
     ),
