@@ -1,11 +1,11 @@
 import {
   AnyPublication,
-  ReportReason,
-  publicationId,
-  usePublication,
+  PublicationReportReason,
+  useExplorePublications,
   useReportPublication,
 } from '@lens-protocol/react-web';
 
+import { RequireProfileSession } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { never } from '../utils';
@@ -23,7 +23,7 @@ function ReportPublicationForm({ publication }: ReportPublicationFormProps) {
     const form = event.currentTarget;
 
     const formData = new FormData(form);
-    const reason = (formData.get('reason') as ReportReason | null) ?? never();
+    const reason = (formData.get('reason') as PublicationReportReason | null) ?? never();
     const additionalComments = (formData.get('additionalComments') as string | null) ?? never();
 
     const result = await report({ publicationId: publication.id, reason, additionalComments });
@@ -44,32 +44,34 @@ function ReportPublicationForm({ publication }: ReportPublicationFormProps) {
         <select name="reason" disabled={loading}>
           <option value="">Select one</option>
           <optgroup label="Illegal">
-            <option value={ReportReason.HARASSMENT}>Bullying or harassment</option>
-            <option value={ReportReason.VIOLENCE}>Violence</option>
-            <option value={ReportReason.SELF_HARM}>Self-harm or suicide</option>
-            <option value={ReportReason.HATE_SPEECH}>Hate speech or symbols</option>
-            <option value={ReportReason.DIRECT_THREAT}>Direct threat</option>
-            <option value={ReportReason.ANIMAL_ABUSE}>Animal abuse</option>
+            <option value={PublicationReportReason.HARASSMENT}>Bullying or harassment</option>
+            <option value={PublicationReportReason.VIOLENCE}>Violence</option>
+            <option value={PublicationReportReason.SELF_HARM}>Self-harm or suicide</option>
+            <option value={PublicationReportReason.HATE_SPEECH}>Hate speech or symbols</option>
+            <option value={PublicationReportReason.DIRECT_THREAT}>Direct threat</option>
+            <option value={PublicationReportReason.ANIMAL_ABUSE}>Animal abuse</option>
           </optgroup>
           <optgroup label="Fraud">
-            <option value={ReportReason.SCAM}>Scam</option>
-            <option value={ReportReason.UNAUTHORIZED_SALE}>
+            <option value={PublicationReportReason.SCAM}>Scam</option>
+            <option value={PublicationReportReason.UNAUTHORIZED_SALE}>
               Sale of unauthorized or illegal goods
             </option>
-            <option value={ReportReason.IMPERSONATION}>Impersonation</option>
+            <option value={PublicationReportReason.IMPERSONATION}>Impersonation</option>
           </optgroup>
           <optgroup label="Sensitive content">
-            <option value={ReportReason.NUDITY}>Nudity or sexual activity</option>
-            <option value={ReportReason.OFFENSIVE}>Offensive</option>
+            <option value={PublicationReportReason.NUDITY}>Nudity or sexual activity</option>
+            <option value={PublicationReportReason.OFFENSIVE}>Offensive</option>
           </optgroup>
           <optgroup label="Spam">
-            <option value={ReportReason.MISLEADING}>Misleading</option>
-            <option value={ReportReason.MISUSE_HASHTAGS}>Misuse of hashtags</option>
-            <option value={ReportReason.UNRELATED}>Unrelated</option>
-            <option value={ReportReason.REPETITIVE}>Repetitive</option>
-            <option value={ReportReason.FAKE_ENGAGEMENT}>Fake engagement</option>
-            <option value={ReportReason.MANIPULATION_ALGO}>Algorithm manipulation</option>
-            <option value={ReportReason.SOMETHING_ELSE}>Something else</option>
+            <option value={PublicationReportReason.MISLEADING}>Misleading</option>
+            <option value={PublicationReportReason.MISUSE_HASHTAGS}>Misuse of hashtags</option>
+            <option value={PublicationReportReason.UNRELATED}>Unrelated</option>
+            <option value={PublicationReportReason.REPETITIVE}>Repetitive</option>
+            <option value={PublicationReportReason.FAKE_ENGAGEMENT}>Fake engagement</option>
+            <option value={PublicationReportReason.MANIPULATION_ALGO}>
+              Algorithm manipulation
+            </option>
+            <option value={PublicationReportReason.SOMETHING_ELSE}>Something else</option>
           </optgroup>
         </select>
       </div>
@@ -91,13 +93,7 @@ function ReportPublicationForm({ publication }: ReportPublicationFormProps) {
 }
 
 export function UseReportPublication() {
-  const {
-    data: publication,
-    error,
-    loading,
-  } = usePublication({
-    forId: publicationId('0x1b-0x0118'),
-  });
+  const { data: publications, error, loading } = useExplorePublications();
 
   if (loading) return <Loading />;
 
@@ -108,11 +104,13 @@ export function UseReportPublication() {
       <h1>
         <code>useReportPublication</code>
       </h1>
-      <div>
-        <PublicationCard publication={publication} />
 
-        <ReportPublicationForm publication={publication} />
-      </div>
+      <RequireProfileSession message="Log in to view this example.">
+        <div>
+          <PublicationCard publication={publications[0]} />
+          <ReportPublicationForm publication={publications[0]} />
+        </div>
+      </RequireProfileSession>
     </div>
   );
 }

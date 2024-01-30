@@ -10,7 +10,7 @@ import {
   mockLensApolloClient,
   mockReportPublicationResponse,
 } from '@lens-protocol/api-bindings/mocks';
-import { ReportReason } from '@lens-protocol/domain/entities';
+import { PublicationReportReason } from '@lens-protocol/domain/entities';
 import { mockPublicationId, mockReportPublicationRequest } from '@lens-protocol/domain/mocks';
 
 import { ReportPublicationGateway } from '../ReportPublicationGateway';
@@ -19,7 +19,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
   describe(`when invoking the ${ReportPublicationGateway.prototype.report.name} method`, () => {
     it.each([
       {
-        reason: ReportReason.VIOLENCE,
+        reason: PublicationReportReason.VIOLENCE,
         expectedRequestReason: {
           illegalReason: {
             reason: PublicationReportingReason.Illegal,
@@ -28,7 +28,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         },
       },
       {
-        reason: ReportReason.SELF_HARM,
+        reason: PublicationReportReason.SELF_HARM,
         expectedRequestReason: {
           illegalReason: {
             reason: PublicationReportingReason.Illegal,
@@ -37,7 +37,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         },
       },
       {
-        reason: ReportReason.DIRECT_THREAT,
+        reason: PublicationReportReason.DIRECT_THREAT,
         expectedRequestReason: {
           illegalReason: {
             reason: PublicationReportingReason.Illegal,
@@ -46,7 +46,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         },
       },
       {
-        reason: ReportReason.HARASSMENT,
+        reason: PublicationReportReason.HARASSMENT,
         expectedRequestReason: {
           illegalReason: {
             reason: PublicationReportingReason.Illegal,
@@ -55,7 +55,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         },
       },
       {
-        reason: ReportReason.HATE_SPEECH,
+        reason: PublicationReportReason.HATE_SPEECH,
         expectedRequestReason: {
           illegalReason: {
             reason: PublicationReportingReason.Illegal,
@@ -64,7 +64,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         },
       },
       {
-        reason: ReportReason.ANIMAL_ABUSE,
+        reason: PublicationReportReason.ANIMAL_ABUSE,
         expectedRequestReason: {
           illegalReason: {
             reason: PublicationReportingReason.Illegal,
@@ -73,7 +73,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         },
       },
       {
-        reason: ReportReason.SCAM,
+        reason: PublicationReportReason.SCAM,
         expectedRequestReason: {
           fraudReason: {
             reason: PublicationReportingReason.Fraud,
@@ -82,7 +82,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         },
       },
       {
-        reason: ReportReason.UNAUTHORIZED_SALE,
+        reason: PublicationReportReason.UNAUTHORIZED_SALE,
         expectedRequestReason: {
           fraudReason: {
             reason: PublicationReportingReason.Fraud,
@@ -91,7 +91,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         },
       },
       {
-        reason: ReportReason.IMPERSONATION,
+        reason: PublicationReportReason.IMPERSONATION,
         expectedRequestReason: {
           fraudReason: {
             reason: PublicationReportingReason.Fraud,
@@ -100,7 +100,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         },
       },
       {
-        reason: ReportReason.NUDITY,
+        reason: PublicationReportReason.NUDITY,
         expectedRequestReason: {
           sensitiveReason: {
             reason: PublicationReportingReason.Sensitive,
@@ -109,7 +109,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         },
       },
       {
-        reason: ReportReason.OFFENSIVE,
+        reason: PublicationReportReason.OFFENSIVE,
         expectedRequestReason: {
           sensitiveReason: {
             reason: PublicationReportingReason.Sensitive,
@@ -118,7 +118,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         },
       },
       {
-        reason: ReportReason.MISLEADING,
+        reason: PublicationReportReason.MISLEADING,
         expectedRequestReason: {
           spamReason: {
             reason: PublicationReportingReason.Spam,
@@ -127,7 +127,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         },
       },
       {
-        reason: ReportReason.MISUSE_HASHTAGS,
+        reason: PublicationReportReason.MISUSE_HASHTAGS,
         expectedRequestReason: {
           spamReason: {
             reason: PublicationReportingReason.Spam,
@@ -136,7 +136,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         },
       },
       {
-        reason: ReportReason.UNRELATED,
+        reason: PublicationReportReason.UNRELATED,
         expectedRequestReason: {
           spamReason: {
             reason: PublicationReportingReason.Spam,
@@ -145,7 +145,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         },
       },
       {
-        reason: ReportReason.REPETITIVE,
+        reason: PublicationReportReason.REPETITIVE,
         expectedRequestReason: {
           spamReason: {
             reason: PublicationReportingReason.Spam,
@@ -154,7 +154,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         },
       },
       {
-        reason: ReportReason.FAKE_ENGAGEMENT,
+        reason: PublicationReportReason.FAKE_ENGAGEMENT,
         expectedRequestReason: {
           spamReason: {
             reason: PublicationReportingReason.Spam,
@@ -163,7 +163,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         },
       },
       {
-        reason: ReportReason.MANIPULATION_ALGO,
+        reason: PublicationReportReason.MANIPULATION_ALGO,
         expectedRequestReason: {
           spamReason: {
             reason: PublicationReportingReason.Spam,
@@ -172,7 +172,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         },
       },
       {
-        reason: ReportReason.SOMETHING_ELSE,
+        reason: PublicationReportReason.SOMETHING_ELSE,
         expectedRequestReason: {
           spamReason: {
             reason: PublicationReportingReason.Spam,
@@ -181,7 +181,7 @@ describe(`Given an instance of the ${ReportPublicationGateway.name}`, () => {
         },
       },
     ])(
-      `should report the publication mapping the ReportReason.$reason to the expected request`,
+      `should report the publication mapping the PublicationReportReason.$reason to the expected request`,
       async ({ reason, expectedRequestReason }) => {
         const publicationId = mockPublicationId();
         const additionalComments = faker.lorem.sentence();

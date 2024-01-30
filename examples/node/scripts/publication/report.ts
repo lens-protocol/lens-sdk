@@ -18,7 +18,7 @@ async function main() {
         subreason: PublicationReportingSpamSubreason.FakeEngagement,
       },
     },
-    additionalComments: 'comment',
+    additionalComments: 'Human readable comments, if any.',
   });
 
   console.log(`Publication was reported: `, result);

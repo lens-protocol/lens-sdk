@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { ChainType, Data, URI } from '@lens-protocol/shared-kernel';
 import { mockDaiAmount, mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
-import { ReportReason, TransactionKind } from '../../../entities';
+import { PublicationReportReason, TransactionKind } from '../../../entities';
 import { mockPublicationId } from '../../../entities/__helpers__/mocks';
 import { CreateCommentRequest } from '../CreateComment';
 import { CreateMirrorRequest } from '../CreateMirror';
@@ -99,7 +99,7 @@ export function mockReportPublicationRequest(
 ): ReportPublicationRequest {
   return {
     publicationId: mockPublicationId(),
-    reason: ReportReason.FAKE_ENGAGEMENT,
+    reason: PublicationReportReason.FAKE_ENGAGEMENT,
     additionalComments: faker.lorem.sentence(),
     ...overrides,
   };

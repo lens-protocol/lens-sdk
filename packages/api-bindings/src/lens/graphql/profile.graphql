@@ -628,3 +628,7 @@ mutation CreateUnlinkHandleFromProfileTypedData(
     ...CreateUnlinkHandleFromProfileBroadcastItemResult
   }
 }
+
+mutation ReportProfile($request: ReportProfileRequest!) {
+  reportProfile(request: $request)
+}
