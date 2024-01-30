@@ -37,7 +37,7 @@ export type BlockProfileArgs = {
    * If not specified, or `true`, the hook will attempt a Signless Experience when possible;
    * otherwise, it will fall back to a signed experience.
    */
-  sponsored?: false;
+  sponsored?: boolean;
 };
 
 export type BlockOperation = UseDeferredTask<

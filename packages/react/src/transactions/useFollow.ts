@@ -31,10 +31,7 @@ export class PrematureFollowError extends Error {
   name = 'PrematureFollowError' as const;
 }
 
-/**
- * @internal
- */
-export function createFollowRequest(args: FollowArgs, session?: Session): FollowRequest {
+function createFollowRequest(args: FollowArgs, session?: Session): FollowRequest {
   invariant(
     session?.authenticated,
     'You must be authenticated to use this operation. Use `useLogin` hook to authenticate.',
