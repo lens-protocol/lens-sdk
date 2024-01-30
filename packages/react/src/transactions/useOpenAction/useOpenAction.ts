@@ -1,9 +1,4 @@
 import {
-  AnyPublication,
-  OpenActionParams,
-  resolveOpenActionRequestFor,
-} from '@lens-protocol/api-bindings';
-import {
   InsufficientGasError,
   PendingSigningRequestError,
   UserRejectedError,
@@ -16,27 +11,12 @@ import {
 } from '@lens-protocol/domain/use-cases/wallets';
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { SessionType, useSession } from '../authentication';
-import { useDeferredTask, UseDeferredTask } from '../helpers/tasks';
-import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
-import { useOpenActionController } from './adapters/useOpenActionController';
-
-export { OpenActionKind } from '@lens-protocol/api-bindings';
-export type {
-  OpenActionParams,
-  CollectParams,
-  UnknownActionParams,
-} from '@lens-protocol/api-bindings';
-
-/**
- * Arguments for the `useOpenAction` hook.
- */
-export type UseOpenActionArgs = {
-  /**
-   * The action to perform on the publication.
-   */
-  action: OpenActionParams;
-};
+import { useSession } from '../../authentication';
+import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
+import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
+import { useOpenActionController } from '../adapters/useOpenActionController';
+import { createOpenActionRequest } from './createOpenActionRequest';
+import { OpenActionArgs, UseOpenActionArgs } from './types';
 
 /**
  * An object representing the result of an open action is finalized.
@@ -44,29 +24,6 @@ export type UseOpenActionArgs = {
  * It allows to wait for the action to be fully processed and indexed.
  */
 export type OpenActionAsyncResult = AsyncTransactionResult<void>;
-
-/**
- * Arguments for the `useOpenAction` hook callback.
- */
-export type OpenActionArgs = {
-  /**
-   * The publication to perform the Open Action on.
-   */
-  publication: AnyPublication;
-  /**
-   * Whether the transaction gas costs should be sponsored by the Lens API or
-   * should be paid by the authenticated wallet.
-   *
-   * There are scenarios where the sponsorship will be denied regardless of this value.
-   * See {@link BroadcastingError} with:
-   * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
-   * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
-   * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
-   *
-   * @defaultValue true, the request will be attempted to be sponsored by the Lens API.
-   */
-  sponsored?: boolean;
-};
 
 /**
  * `useOpenAction` is a React Hook that allows to perform an Open Action on a publication.
@@ -316,12 +273,7 @@ export function useOpenAction(
       'You cannot execute an Open Action on a Momoka publication.',
     );
 
-    const request = resolveOpenActionRequestFor(publication, {
-      action: args.action,
-      signless: session.type === SessionType.WithProfile ? session.profile.signless : false, // cannot use Lens Manager with Public Collect
-      public: session.type === SessionType.JustWallet,
-      sponsored: session.type === SessionType.WithProfile ? sponsored : false, // cannot use gasless with Public Collect
-    });
+    const request = createOpenActionRequest({ publication, sponsored }, args.action, session);
 
     return openAction(request);
   });

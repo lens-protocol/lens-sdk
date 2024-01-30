@@ -10,7 +10,7 @@ import {
   RevenueFromPublicationsVariables,
 } from '../../graphql/generated';
 import { mockPaginatedResultInfo } from '../fragments';
-import { mockAnyPaginatedResponse, mockAnyResponse } from './mockAnyPaginatedResponse';
+import { mockAnyPaginatedResponse, mockAnyResponse } from './helpers';
 
 export function mockFollowRevenuesResponse({
   variables,
