@@ -1,5 +1,21 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.25
+
+### Minor Changes
+
+- bb9a8dd7b: **feat:** introduces `params.statsFor` and `params.profile.metadataSource` in `LensConfig`
+
+### Patch Changes
+
+- c2b05bdf0: **Fixed**: missing export of `findCollectModuleSettings` and `isCollectModuleSettings` helpers
+- 74751f359: feat: Expose `erc20Amount` helper to make working with API Amounts easier
+- 6a4df1bdb: **feat:** support Unknown Follow Modules
+- Updated dependencies [1a97c390a]
+- Updated dependencies [b647eab70]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.9
+  - @lens-protocol/domain@0.11.0-alpha.19
+
 ## 0.11.0-alpha.24
 
 ### Patch Changes

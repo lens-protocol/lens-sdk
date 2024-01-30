@@ -1,5 +1,15 @@
 # @lens-protocol/shared-kernel
 
+## 0.11.0-alpha.9
+
+### Minor Changes
+
+- b647eab70: **feat:** Introduced `debug` mode. Exported `ConsoleLogger`.
+
+### Patch Changes
+
+- 1a97c390a: **chore:** Removed peer dependency on ethers@5
+
 ## 0.11.0-alpha.8
 
 ### Patch Changes

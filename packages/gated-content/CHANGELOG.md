@@ -1,5 +1,15 @@
 # @lens-protocol/gated-content
 
+## 0.3.3-alpha.20
+
+### Patch Changes
+
+- 1a97c390a: **chore:** Removed peer dependency on ethers@5
+- Updated dependencies [1a97c390a]
+- Updated dependencies [b647eab70]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.9
+  - @lens-protocol/storage@0.7.5-alpha.8
+
 ## 0.3.3-alpha.19
 
 ### Patch Changes
