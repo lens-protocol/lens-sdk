@@ -1,9 +1,5 @@
-import {
-  FollowPolicy,
-  FollowPolicyConfig,
-  FollowPolicyType,
-} from '@lens-protocol/domain/use-cases/profile';
-import { Data } from '@lens-protocol/shared-kernel';
+import { FollowPolicyConfig, FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
+import { Data, Erc20Amount, EvmAddress } from '@lens-protocol/shared-kernel';
 
 import { FollowModuleInput, Profile } from './graphql/generated';
 import { erc20Amount } from './utils';
@@ -16,6 +12,46 @@ export type FollowModule = NonNullable<Profile['followModule']>;
 export type ResolveFollowPolicy = {
   followModule: FollowModule | null;
 };
+
+export type ChargeFollowPolicy = {
+  type: FollowPolicyType.CHARGE;
+  amount: Erc20Amount;
+  recipient: string;
+  contractAddress: EvmAddress;
+  chainId: number;
+};
+
+export type NoFollowPolicy = {
+  type: FollowPolicyType.NO_ONE;
+  contractAddress: EvmAddress;
+  chainId: number;
+};
+
+/**
+ * @deprecated use {@link NoFollowPolicy} instead - removal slated for stable 2.x release
+ */
+export type NoFeeFollowPolicy = NoFollowPolicy;
+
+export type UnknownFollowPolicy = {
+  type: FollowPolicyType.UNKNOWN;
+  contractAddress: EvmAddress;
+  chainId: number;
+  initializeCalldata: Data;
+  initializeResultData?: Data;
+  signlessApproved: boolean;
+  sponsoredApproved: boolean;
+  verified: boolean;
+};
+
+export type OpenFollowPolicy = {
+  type: FollowPolicyType.ANYONE;
+};
+
+export type FollowPolicy =
+  | ChargeFollowPolicy
+  | NoFeeFollowPolicy
+  | OpenFollowPolicy
+  | UnknownFollowPolicy;
 
 /**
  * Resolve API {@link FollowModule} to more user friendly {@link FollowPolicy}.

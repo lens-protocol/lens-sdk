@@ -147,4 +147,4 @@ export { UnspecifiedError } from '@lens-protocol/api-bindings';
 export * from './utils';
 export * from './ConsoleLogger';
 export { useSharedDependencies } from './shared';
-export { isValidHandle, resolveFollowPolicy, erc20Amount } from '@lens-protocol/api-bindings';
+export { erc20Amount } from '@lens-protocol/api-bindings';

@@ -1,4 +1,4 @@
-import { Data, Erc20Amount, EvmAddress } from '@lens-protocol/shared-kernel';
+import { Erc20Amount, EvmAddress } from '@lens-protocol/shared-kernel';
 
 export enum FollowPolicyType {
   CHARGE = 'CHARGE',
@@ -50,46 +50,3 @@ export type FollowPolicyConfig =
   | NoFollowConfig
   | OpenFollowConfig
   | UnknownFollowConfig;
-
-export type ChargeFollowPolicy = {
-  type: FollowPolicyType.CHARGE;
-  amount: Erc20Amount;
-  recipient: string;
-  contractAddress: EvmAddress;
-  chainId: number;
-};
-
-export type NoFollowPolicy = {
-  type: FollowPolicyType.NO_ONE;
-  contractAddress: EvmAddress;
-  chainId: number;
-};
-
-/**
- * @deprecated use {@link NoFollowPolicy} instead - removal slated for stable 2.x release
- */
-export type NoFeeFollowPolicy = NoFollowPolicy;
-
-export type UnknownFollowPolicy = {
-  type: FollowPolicyType.UNKNOWN;
-  contractAddress: EvmAddress;
-  chainId: number;
-  initializeCalldata: Data;
-  initializeResultData?: Data;
-  signlessApproved: boolean;
-  sponsoredApproved: boolean;
-  verified: boolean;
-};
-
-export type OpenFollowPolicy = {
-  type: FollowPolicyType.ANYONE;
-};
-
-/**
- * Use when preparing a follow profile request.
- */
-export type FollowPolicy =
-  | ChargeFollowPolicy
-  | NoFeeFollowPolicy
-  | OpenFollowPolicy
-  | UnknownFollowPolicy;
