@@ -9,6 +9,7 @@ import {
   OpenActionType,
   RecipientWithSplit,
   ReferencePolicyType,
+  OpenActionRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 import { UnknownObject } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
@@ -193,14 +194,16 @@ export const UnknownActionRequestSchema = BaseCollectRequestSchema.extend({
   publicationId: PublicationIdSchema,
   address: EvmAddressSchema,
   data: DataSchema,
+  referrers: z.union([PublicationIdSchema, ProfileIdSchema]).array().min(1).optional(),
   public: z.boolean(),
   signless: z.boolean(),
   sponsored: z.boolean(),
 });
 
-export const CollectRequestSchema = z.discriminatedUnion('type', [
-  LegacyCollectRequestSchema,
-  SimpleCollectRequestSchema,
-  MultirecipientCollectRequestSchema,
-  UnknownActionRequestSchema,
-]);
+export const OpenActionRequestSchema: z.ZodType<OpenActionRequest, z.ZodTypeDef, UnknownObject> =
+  z.discriminatedUnion('type', [
+    LegacyCollectRequestSchema,
+    SimpleCollectRequestSchema,
+    MultirecipientCollectRequestSchema,
+    UnknownActionRequestSchema,
+  ]);
