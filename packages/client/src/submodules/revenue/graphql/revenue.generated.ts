@@ -1925,6 +1925,7 @@ export const PublicationRevenueFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -8785,6 +8786,7 @@ export const RevenueFromPublicationsDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -15632,6 +15634,7 @@ export const RevenueFromPublicationDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',

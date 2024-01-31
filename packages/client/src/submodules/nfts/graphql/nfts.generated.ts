@@ -41,7 +41,7 @@ export type NftMetadataFragment = {
 
 export type NftFragment = {
   tokenId: string;
-  contentURI: string;
+  contentURI: string | null;
   contractType: Types.NftContractType;
   owner: OwnerFragment;
   contract: NetworkAddressFragment;
