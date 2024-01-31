@@ -683,6 +683,7 @@ fragment PublicationOperations on PublicationOperations {
   hasDownvoted: hasReacted(request: { type: DOWNVOTE })
   canComment
   canMirror
+  canQuote
   hasMirrored
   canDecrypt {
     ...CanDecryptResponse
