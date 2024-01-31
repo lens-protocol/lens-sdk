@@ -1,13 +1,13 @@
 /**
  * The Gated module is a secondary entry point of the `@lens-protocol/client` package.
  * It provides an alternative {@link Gated.LensClient} class that supports all the
- * functionalities of the {@link Base.LensClient} plus the {@link Gated} module.
+ * functionalities of the {@link Core.LensClient} plus the {@link Gated} module.
  *
  * The reason for this separation is that token-gated feature requires extra 3rd party dependencies
  * that could potentially impact the bundle size of your application. This way the
  * developer have the choice to opt-in for token-gated support only when needed.
  *
- * The usage is the same as the {@link Base.LensClient} class, but with the addition of
+ * The usage is the same as the {@link Core.LensClient} class, but with the addition of
  * token gated configuration {@link Gated.LensClientConfig}: `authentication`, `signer`, and `encryption`.
  *
  * ## Quick start
@@ -121,7 +121,7 @@
  *
  * It's possible to define an access condition where one of the criteria is to collect the current publication.
  *
- * Because at the time of encryption the publication is not yet created, the {@link Base.Publication.predictNextOnChainPublicationId} can be
+ * Because at the time of encryption the publication is not yet created, the {@link Core.Publication.predictNextOnChainPublicationId} can be
  * used to predict the publication ID.
  *
  * ```ts

@@ -1,6 +1,6 @@
 import { JustProtocolRequest } from '../../entities';
-import { ClaimHandleRequest } from '../profile';
 import { BlockProfilesRequest } from '../profile/BlockProfiles';
+import { ClaimHandleRequest } from '../profile/ClaimHandle';
 import { CreateProfileRequest } from '../profile/CreateProfile';
 import { FollowRequest } from '../profile/FollowProfile';
 import { LinkHandleRequest } from '../profile/LinkHandle';

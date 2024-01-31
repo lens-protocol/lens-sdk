@@ -274,7 +274,7 @@ export class Publication {
    *       subreason: PublicationReportingSpamSubreason.FakeEngagement,
    *     },
    *   },
-   *   additionalComments: 'comment',
+   *   additionalComments: 'Human readable comments, if any.',
    * });
    * ```
    */

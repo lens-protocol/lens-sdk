@@ -1,4 +1,4 @@
-import { ReportReason } from '@lens-protocol/domain/entities';
+import { PublicationReportReason } from '@lens-protocol/domain/entities';
 import { ReportPublicationRequest } from '@lens-protocol/domain/use-cases/publications';
 import { invariant } from '@lens-protocol/shared-kernel';
 
@@ -6,7 +6,14 @@ import { useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useReportPublicationController } from './adapters/useReportPublicationController';
 
-export { ReportReason };
+export {
+  /**
+   * @deprecated Use {@link PublicationReportReason} instead.
+   */
+  PublicationReportReason as ReportReason,
+};
+
+export { PublicationReportReason };
 
 export type ReportPublicationArgs = ReportPublicationRequest;
 
@@ -16,81 +23,24 @@ export type ReportPublicationArgs = ReportPublicationRequest;
  * You MUST be authenticated via {@link useLogin} to use this hook.
  *
  * @example
- * Form to provide a reason and comments to report a publication.
  * ```tsx
- * function ReportPublicationForm({ publication }: ReportPublicationFormProps) {
- *   const { execute: report, loading } = useReportPublication({ publication });
- *   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
- *     event.preventDefault();
+ * const { execute: report, loading } = useReportPublication();
  *
- *     const form = event.currentTarget;
+ * const handleSubmit = async () => {
+ *   const result = await report({
+ *     publicationId: publicationId('0x014e-0x0a'),
+ *     reason: PublicationReportReason.FAKE_ENGAGEMENT,
+ *     additionalComments: 'Human readable comments, if any.',
+ *   });
  *
- *     const formData = new FormData(form);
- *     const reason = (formData.get('reason') as ReportReason | null) ?? never();
- *     const additionalComments = (formData.get('additionalComments') as string | null) ?? never();
+ *   if (result.isSuccess()) {
+ *     alert('Publication reported!');
+ *   }
+ * };
  *
- *     const result = await report({ reason, additionalComments });
- *
- *     if (result.isSuccess()) {
- *       alert('Publication reported!');
- *     }
- *
- *     form.reset();
- *   };
- *
- *   return (
- *     <form onSubmit={handleSubmit}>
- *       <h3>Report publication</h3>
- *
- *       <div>
- *         <p>Why are you reporting this publication?</p>
- *
- *         <select name="reason" disabled={loading}>
- *           <option value="">Select one</option>
- *           <optgroup label="Illegal">
- *             <option value={ReportReason.HARASSMENT}>Bullying or harassment</option>
- *             <option value={ReportReason.VIOLENCE}>Violence</option>
- *             <option value={ReportReason.SELF_HARM}>Self-harm or suicide</option>
- *             <option value={ReportReason.HATE_SPEECH}>Hate speech or symbols</option>
- *             <option value={ReportReason.DIRECT_THREAT}>Direct threat</option>
- *             <option value={ReportReason.ANIMAL_ABUSE}>Animal abuse</option>
- *           </optgroup>
- *           <optgroup label="Fraud">
- *             <option value={ReportReason.SCAM}>Scam</option>
- *             <option value={ReportReason.UNAUTHORIZED_SALE}>Sale of unauthorized or illegal goods</option>
- *             <option value={ReportReason.IMPERSONATION}>Impersonation</option>
- *           </optgroup>
- *           <optgroup label="Sensitive content">
- *             <option value={ReportReason.NUDITY}>Nudity or sexual activity</option>
- *             <option value={ReportReason.OFFENSIVE}>Offensive</option>
- *           </optgroup>
- *           <optgroup label="Spam">
- *             <option value={ReportReason.MISLEADING}>Misleading</option>
- *             <option value={ReportReason.MISUSE_HASHTAGS}>Misuse of hashtags</option>
- *             <option value={ReportReason.UNRELATED}>Unrelated</option>
- *             <option value={ReportReason.REPETITIVE}>Repetitive</option>
- *             <option value={ReportReason.FAKE_ENGAGEMENT}>Fake engagement</option>
- *             <option value={ReportReason.MANIPULATION_ALGO}>Algorithm manipulation</option>
- *             <option value={ReportReason.SOMETHING_ELSE}>Something else</option>
- *           </optgroup>
- *         </select>
- *       </div>
- *
- *       <div>
- *         <textarea
- *           name="additionalComments"
- *           rows={3}
- *           placeholder="Optional comment"
- *           disabled={loading}
- *         />
- *       </div>
- *
- *       <button type="submit" disabled={loading}>
- *         Report
- *       </button>
- *     </form>
- *   );
- * }
+ * <button onClick={handleSubmit} disabled={loading}>
+ *   Report
+ * </button>
  * ```
  *
  * @category Publications

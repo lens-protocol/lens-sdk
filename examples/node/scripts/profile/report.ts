@@ -15,7 +15,7 @@ async function main() {
         subreason: ProfileReportingSpamSubreason.Repetitive,
       },
     },
-    additionalComments: 'comment',
+    additionalComments: 'Human readable comments, if any.',
   });
 
   console.log(`Profile was reported: `, result);
