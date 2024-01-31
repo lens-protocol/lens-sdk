@@ -35,7 +35,6 @@ export class SignerFactory implements ISignerFactory {
 
     const signerAddress = await signer.getAddress();
 
-    // TODO fix: this condition is not necessarily true during authentication with a EIP-1271 wallet
     if (!isTheSameAddress(address, signerAddress)) {
       return failure(new WalletConnectionError(WalletConnectionErrorReason.WRONG_ACCOUNT));
     }

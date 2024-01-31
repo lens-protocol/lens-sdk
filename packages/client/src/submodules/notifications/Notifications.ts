@@ -31,8 +31,7 @@ export type NotificationFragment =
   | MentionNotificationFragment
   | MirrorNotificationFragment
   | QuoteNotificationFragment
-  | ReactionNotificationFragment
-  | Record<string, never>;
+  | ReactionNotificationFragment;
 
 /**
  * Notifications on many activities for a profile.
