@@ -1,21 +1,18 @@
 export type { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 
+export * from './publications';
 export * from './useApproveModule';
+export * from './useBlockProfiles';
 export * from './useClaimHandle';
-export * from './useCreateComment';
-export * from './useCreateMirror';
-export * from './useCreatePost';
-export * from './useCreateQuote';
 export * from './useFollow';
 export * from './useLinkHandle';
 export * from './useOpenAction';
 export * from './useSetProfileMetadata';
+export * from './useUnblockProfiles';
 export * from './useUnfollow';
 export * from './useUnlinkHandle';
 export * from './useUpdateFollowPolicy';
 export * from './useUpdateProfileManagers';
-export * from './useUnblockProfiles';
-export * from './useBlockProfiles';
 
 export type {
   AnyoneReferencePolicyConfig,

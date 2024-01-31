@@ -562,3 +562,34 @@ export function mockLegacyAaveFeeCollectModuleSettingsFragment(
     __typename: 'LegacyAaveFeeCollectModuleSettings',
   });
 }
+
+export function mockModuleMetadataFragment(
+  overrides?: Partial<gql.ModuleMetadata>,
+): gql.ModuleMetadata {
+  return {
+    __typename: 'ModuleMetadata',
+    authors: [],
+    description: '',
+    initializeCalldataABI: '[]',
+    initializeResultDataABI: null,
+    name: '',
+    processCalldataABI: '[]',
+    title: '',
+    attributes: [],
+    ...overrides,
+  };
+}
+
+export function mockModuleMetadataResultFragment(
+  overrides?: Partial<gql.ModuleMetadataResult>,
+): gql.ModuleMetadataResult {
+  return {
+    metadata: mockModuleMetadataFragment(),
+    moduleType: gql.ModuleType.Follow,
+    signlessApproved: true,
+    sponsoredApproved: true,
+    verified: true,
+    ...overrides,
+    __typename: 'GetModuleMetadataResult',
+  };
+}
