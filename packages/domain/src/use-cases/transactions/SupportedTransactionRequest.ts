@@ -1,4 +1,4 @@
-import { JustProtocolRequest } from '../../entities/Transactions';
+import { JustProtocolRequest } from '../../entities';
 import { BlockProfilesRequest } from '../profile/BlockProfiles';
 import { ClaimHandleRequest } from '../profile/ClaimHandle';
 import { CreateProfileRequest } from '../profile/CreateProfile';
