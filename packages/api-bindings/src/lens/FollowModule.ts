@@ -49,7 +49,7 @@ export type OpenFollowPolicy = {
 
 export type FollowPolicy =
   | ChargeFollowPolicy
-  | NoFeeFollowPolicy
+  | NoFollowPolicy
   | OpenFollowPolicy
   | UnknownFollowPolicy;
 
