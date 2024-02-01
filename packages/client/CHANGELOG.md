@@ -1,5 +1,14 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.29
+
+### Patch Changes
+
+- a3b29e541: **fix:** adds missing `publication.operations.canQuote` field
+- c64ad2e65: feat: added `isOpenActionModuleWithReferralFee` helper function
+- Updated dependencies [eb6a8f07c]
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.20
+
 ## 2.0.0-alpha.28
 
 ### Minor Changes
