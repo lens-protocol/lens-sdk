@@ -30,21 +30,13 @@ export type {
 
 export type {
   ChargeFollowConfig,
-  ChargeFollowPolicy,
-  FollowPolicy,
   FollowPolicyConfig,
   NoFollowConfig,
-  NoFollowPolicy,
   OpenFollowConfig,
-  OpenFollowPolicy,
   UnknownFollowConfig,
-  UnknownFollowPolicy,
   // deprecated below
-  NoFeeFollowPolicy,
   NoFeeFollowConfig,
 } from '@lens-protocol/domain/use-cases/profile';
-
-export type { FollowModule } from '@lens-protocol/api-bindings';
 
 /**
  * Enums

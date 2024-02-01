@@ -15,6 +15,7 @@ export * from './publication';
 export * from './FollowModule';
 export * from './ContentInsight';
 export * from './Cursor';
+export * from './ReferenceModule';
 
 export type CursorBasedPaginatedResult<T = StoreValue> = {
   items: T[];

@@ -1882,6 +1882,7 @@ export const SearchPublicationsDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',

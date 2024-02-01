@@ -47,6 +47,9 @@ export type {
   UnknownReferenceModuleSettings,
 } from '@lens-protocol/api-bindings';
 
+/**
+ * Utils
+ */
 export {
   isPostPublication,
   isCommentPublication,
@@ -55,4 +58,14 @@ export {
   isPrimaryPublication,
   findCollectModuleSettings,
   isCollectModuleSettings,
+  resolveReferencePolicy,
+} from '@lens-protocol/api-bindings';
+export type {
+  ReferenceModule,
+  ReferencePolicy,
+  FollowersOnlyReferencePolicy,
+  DegreesOfSeparationReferencePolicy,
+  NoReferencePolicy,
+  AnyoneReferencePolicy,
+  UnknownReferencePolicy,
 } from '@lens-protocol/api-bindings';
