@@ -1,5 +1,24 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.26
+
+### Minor Changes
+
+- 79068cd37: feat: added `useReportProfile` hook
+  chore: renamed `ReportReason` to `PublicationReportReason`, deprecate `ReportReason`
+
+### Patch Changes
+
+- a3b29e541: **feat:** adds `resolveReferencePolicy` helper to create developer friendly ReferencePolicy out of publication sparse ReferenceModule
+- a58d45417: **fix:** `useOpenAction` takes Unknown Open Action Modules' `sponsoredApproved` and `signlessApproved` flags
+- aa6669306: **fix:** supports `referrers` with Unknown Open Action module via `useOpenAction`
+- eb6a8f07c: **feat:** `useCreatePost` takes Open Action Modules Metadata into consideration when determining sponsored/signless experience
+- Updated dependencies [a3b29e541]
+- Updated dependencies [aa6669306]
+- Updated dependencies [eb6a8f07c]
+- Updated dependencies [79068cd37]
+  - @lens-protocol/domain@0.11.0-alpha.20
+
 ## 0.11.0-alpha.25
 
 ### Minor Changes

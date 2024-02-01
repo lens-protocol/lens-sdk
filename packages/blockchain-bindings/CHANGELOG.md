@@ -1,5 +1,16 @@
 # @lens-protocol/blockchain-bindings
 
+## 0.10.0-alpha.20
+
+### Patch Changes
+
+- eb6a8f07c: **feat:** `useCreatePost` takes Open Action Modules Metadata into consideration when determining sponsored/signless experience
+- Updated dependencies [a3b29e541]
+- Updated dependencies [aa6669306]
+- Updated dependencies [eb6a8f07c]
+- Updated dependencies [79068cd37]
+  - @lens-protocol/domain@0.11.0-alpha.20
+
 ## 0.10.0-alpha.19
 
 ### Patch Changes
