@@ -72,6 +72,9 @@ import { FetchProfileOptions } from './types';
 export class Profile {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     private readonly context: LensContext,
     private readonly authentication: Authentication,

@@ -38,6 +38,9 @@ import {
 export class Wallet {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     private readonly context: LensContext,
     private readonly authentication: Authentication,

@@ -29,6 +29,9 @@ import {
 export class Feed {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     private readonly context: LensContext,
     private readonly authentication: Authentication,

@@ -16,6 +16,9 @@ import { InvitedResultFragment, Sdk, getSdk } from './graphql/invites.generated'
 export class Invites {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     private readonly context: LensContext,
     private readonly authentication: Authentication,

@@ -41,6 +41,9 @@ export class TransactionPollingError extends Error {
 export class Transaction {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     context: LensContext,
     private readonly authentication: Authentication,

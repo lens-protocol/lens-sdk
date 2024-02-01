@@ -66,6 +66,9 @@ import { FetchPublicationOptions, RequestOverwrites } from './types';
 export class Publication {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     private readonly context: LensContext,
     private readonly authentication: Authentication,
