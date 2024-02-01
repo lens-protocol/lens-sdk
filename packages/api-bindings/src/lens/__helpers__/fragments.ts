@@ -267,6 +267,7 @@ export function mockPublicationOperationsFragment(
     canCollect: gql.TriStateValue.Unknown,
     canComment: gql.TriStateValue.Unknown,
     canMirror: gql.TriStateValue.Unknown,
+    canQuote: gql.TriStateValue.Unknown,
     hasMirrored: false,
     hasUpvoted: false,
     hasDownvoted: false,
