@@ -10,9 +10,9 @@ export function setupHookTestScenario(mocks: MockedResponse[]) {
   const client = mockLensApolloClient(mocks);
 
   return {
-    renderHook<TProps, TResult>(
+    renderHook: <TProps, TResult>(
       callback: (props: TProps) => TResult,
-    ): RenderHookResult<TResult, TProps> {
+    ): RenderHookResult<TResult, TProps> => {
       return renderHookWithMocks(callback, {
         mocks: {
           apolloClient: client,

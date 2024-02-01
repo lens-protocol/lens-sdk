@@ -64,7 +64,7 @@ fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
   contract {
     ...NetworkAddress
   }
-  followModuleReturnData
+  followModuleReturnData # slated for removal on 2.x stable
   initializeCalldata
   initializeResultData
   signlessApproved
@@ -391,7 +391,26 @@ fragment FollowOnlyReferenceModuleSettings on FollowOnlyReferenceModuleSettings 
   }
 }
 
+fragment LegacyFollowOnlyReferenceModuleSettings on LegacyFollowOnlyReferenceModuleSettings {
+  __typename
+  contract {
+    ...NetworkAddress
+  }
+}
+
 fragment DegreesOfSeparationReferenceModuleSettings on DegreesOfSeparationReferenceModuleSettings {
+  __typename
+  contract {
+    ...NetworkAddress
+  }
+  commentsRestricted
+  mirrorsRestricted
+  quotesRestricted
+  degreesOfSeparation
+  sourceProfileId
+}
+
+fragment LegacyDegreesOfSeparationReferenceModuleSettings on LegacyDegreesOfSeparationReferenceModuleSettings {
   __typename
   contract {
     ...NetworkAddress
@@ -406,7 +425,7 @@ fragment UnknownReferenceModuleSettings on UnknownReferenceModuleSettings {
   contract {
     ...NetworkAddress
   }
-  referenceModuleReturnData
+  referenceModuleReturnData # slated for removal on 2.x stable
   initializeCalldata
   initializeResultData
   signlessApproved
@@ -463,7 +482,7 @@ fragment UnknownOpenActionModuleSettings on UnknownOpenActionModuleSettings {
     ...NetworkAddress
   }
   collectNft
-  openActionModuleReturnData # deprecated, kept for backwards compatibility, remove on 2.x stable
+  openActionModuleReturnData # slated for removal on 2.x stable
   initializeCalldata
   initializeResultData
   signlessApproved
@@ -664,6 +683,7 @@ fragment PublicationOperations on PublicationOperations {
   hasDownvoted: hasReacted(request: { type: DOWNVOTE })
   canComment
   canMirror
+  canQuote
   hasMirrored
   canDecrypt {
     ...CanDecryptResponse
@@ -1581,8 +1601,14 @@ fragment Post on Post {
     ... on FollowOnlyReferenceModuleSettings {
       ...FollowOnlyReferenceModuleSettings
     }
+    ... on LegacyFollowOnlyReferenceModuleSettings {
+      ...LegacyFollowOnlyReferenceModuleSettings
+    }
     ... on DegreesOfSeparationReferenceModuleSettings {
       ...DegreesOfSeparationReferenceModuleSettings
+    }
+    ... on LegacyDegreesOfSeparationReferenceModuleSettings {
+      ...LegacyDegreesOfSeparationReferenceModuleSettings
     }
     ... on UnknownReferenceModuleSettings {
       ...UnknownReferenceModuleSettings
@@ -1711,8 +1737,14 @@ fragment CommentFields on Comment {
     ... on FollowOnlyReferenceModuleSettings {
       ...FollowOnlyReferenceModuleSettings
     }
+    ... on LegacyFollowOnlyReferenceModuleSettings {
+      ...LegacyFollowOnlyReferenceModuleSettings
+    }
     ... on DegreesOfSeparationReferenceModuleSettings {
       ...DegreesOfSeparationReferenceModuleSettings
+    }
+    ... on LegacyDegreesOfSeparationReferenceModuleSettings {
+      ...LegacyDegreesOfSeparationReferenceModuleSettings
     }
     ... on UnknownReferenceModuleSettings {
       ...UnknownReferenceModuleSettings
@@ -1882,8 +1914,14 @@ fragment QuoteFields on Quote {
     ... on FollowOnlyReferenceModuleSettings {
       ...FollowOnlyReferenceModuleSettings
     }
+    ... on LegacyFollowOnlyReferenceModuleSettings {
+      ...LegacyFollowOnlyReferenceModuleSettings
+    }
     ... on DegreesOfSeparationReferenceModuleSettings {
       ...DegreesOfSeparationReferenceModuleSettings
+    }
+    ... on LegacyDegreesOfSeparationReferenceModuleSettings {
+      ...LegacyDegreesOfSeparationReferenceModuleSettings
     }
     ... on UnknownReferenceModuleSettings {
       ...UnknownReferenceModuleSettings

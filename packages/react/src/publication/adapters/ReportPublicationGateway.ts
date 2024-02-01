@@ -10,123 +10,123 @@ import {
   ReportPublicationData,
   ReportPublicationVariables,
 } from '@lens-protocol/api-bindings';
-import { ReportReason } from '@lens-protocol/domain/entities';
+import { PublicationReportReason } from '@lens-protocol/domain/entities';
 import {
   IReportPublicationGateway,
   ReportPublicationRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 import { assertNever } from '@lens-protocol/shared-kernel';
 
-const mapReportReasonToInput = (reason: ReportReason): ReportingReasonInput => {
+const mapReportReasonToInput = (reason: PublicationReportReason): ReportingReasonInput => {
   switch (reason) {
-    case ReportReason.VIOLENCE:
+    case PublicationReportReason.VIOLENCE:
       return {
         illegalReason: {
           reason: PublicationReportingReason.Illegal,
           subreason: PublicationReportingIllegalSubreason.Violence,
         },
       };
-    case ReportReason.SELF_HARM:
+    case PublicationReportReason.SELF_HARM:
       return {
         illegalReason: {
           reason: PublicationReportingReason.Illegal,
           subreason: PublicationReportingIllegalSubreason.ThreatIndividual,
         },
       };
-    case ReportReason.DIRECT_THREAT:
+    case PublicationReportReason.DIRECT_THREAT:
       return {
         illegalReason: {
           reason: PublicationReportingReason.Illegal,
           subreason: PublicationReportingIllegalSubreason.DirectThreat,
         },
       };
-    case ReportReason.HARASSMENT:
-    case ReportReason.HATE_SPEECH:
+    case PublicationReportReason.HARASSMENT:
+    case PublicationReportReason.HATE_SPEECH:
       return {
         illegalReason: {
           reason: PublicationReportingReason.Illegal,
           subreason: PublicationReportingIllegalSubreason.HumanAbuse,
         },
       };
-    case ReportReason.ANIMAL_ABUSE:
+    case PublicationReportReason.ANIMAL_ABUSE:
       return {
         illegalReason: {
           reason: PublicationReportingReason.Illegal,
           subreason: PublicationReportingIllegalSubreason.AnimalAbuse,
         },
       };
-    case ReportReason.SCAM:
-    case ReportReason.UNAUTHORIZED_SALE:
+    case PublicationReportReason.SCAM:
+    case PublicationReportReason.UNAUTHORIZED_SALE:
       return {
         fraudReason: {
           reason: PublicationReportingReason.Fraud,
           subreason: PublicationReportingFraudSubreason.Scam,
         },
       };
-    case ReportReason.IMPERSONATION:
+    case PublicationReportReason.IMPERSONATION:
       return {
         fraudReason: {
           reason: PublicationReportingReason.Fraud,
           subreason: PublicationReportingFraudSubreason.Impersonation,
         },
       };
-    case ReportReason.NUDITY:
+    case PublicationReportReason.NUDITY:
       return {
         sensitiveReason: {
           reason: PublicationReportingReason.Sensitive,
           subreason: PublicationReportingSensitiveSubreason.Nsfw,
         },
       };
-    case ReportReason.OFFENSIVE:
+    case PublicationReportReason.OFFENSIVE:
       return {
         sensitiveReason: {
           reason: PublicationReportingReason.Sensitive,
           subreason: PublicationReportingSensitiveSubreason.Offensive,
         },
       };
-    case ReportReason.MISLEADING:
+    case PublicationReportReason.MISLEADING:
       return {
         spamReason: {
           reason: PublicationReportingReason.Spam,
           subreason: PublicationReportingSpamSubreason.Misleading,
         },
       };
-    case ReportReason.MISUSE_HASHTAGS:
+    case PublicationReportReason.MISUSE_HASHTAGS:
       return {
         spamReason: {
           reason: PublicationReportingReason.Spam,
           subreason: PublicationReportingSpamSubreason.MisuseHashtags,
         },
       };
-    case ReportReason.UNRELATED:
+    case PublicationReportReason.UNRELATED:
       return {
         spamReason: {
           reason: PublicationReportingReason.Spam,
           subreason: PublicationReportingSpamSubreason.Unrelated,
         },
       };
-    case ReportReason.REPETITIVE:
+    case PublicationReportReason.REPETITIVE:
       return {
         spamReason: {
           reason: PublicationReportingReason.Spam,
           subreason: PublicationReportingSpamSubreason.Repetitive,
         },
       };
-    case ReportReason.FAKE_ENGAGEMENT:
+    case PublicationReportReason.FAKE_ENGAGEMENT:
       return {
         spamReason: {
           reason: PublicationReportingReason.Spam,
           subreason: PublicationReportingSpamSubreason.FakeEngagement,
         },
       };
-    case ReportReason.MANIPULATION_ALGO:
+    case PublicationReportReason.MANIPULATION_ALGO:
       return {
         spamReason: {
           reason: PublicationReportingReason.Spam,
           subreason: PublicationReportingSpamSubreason.ManipulationAlgo,
         },
       };
-    case ReportReason.SOMETHING_ELSE:
+    case PublicationReportReason.SOMETHING_ELSE:
       return {
         spamReason: {
           reason: PublicationReportingReason.Spam,

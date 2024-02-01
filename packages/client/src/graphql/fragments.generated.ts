@@ -428,6 +428,7 @@ export type PublicationOperationsFragment = {
   canAct: Types.TriStateValue;
   canComment: Types.TriStateValue;
   canMirror: Types.TriStateValue;
+  canQuote: Types.TriStateValue;
   hasMirrored: boolean;
   hasUpvoted: boolean;
   hasDownvoted: boolean;
@@ -3501,6 +3502,7 @@ export const PublicationOperationsFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -28587,6 +28589,7 @@ export const PostFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -33875,6 +33878,7 @@ export const CommentBaseFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -39015,6 +39019,7 @@ export const QuoteBaseFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -43693,6 +43698,7 @@ export const CommentFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -50153,6 +50159,7 @@ export const QuoteFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -56624,6 +56631,7 @@ export const MirrorFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',

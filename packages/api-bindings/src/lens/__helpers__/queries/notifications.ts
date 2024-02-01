@@ -5,7 +5,7 @@ import {
   PaginatedResultInfo,
 } from '../../graphql/generated';
 import { mockPaginatedResultInfo } from '../fragments';
-import { mockAnyPaginatedResponse } from './mockAnyPaginatedResponse';
+import { mockAnyPaginatedResponse } from './helpers';
 
 export function mockNotificationsResponse({
   variables,

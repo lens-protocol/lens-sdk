@@ -1,6 +1,4 @@
-// No entity was required so far for this use case.
-
-export enum ReportReason {
+export enum PublicationReportReason {
   // Illegal
   ANIMAL_ABUSE = 'ANIMAL_ABUSE',
   HARASSMENT = 'HARASSMENT',

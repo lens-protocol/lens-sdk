@@ -28,7 +28,7 @@ import {
   BlockProfilesRequestSchema,
 } from './profiles';
 import {
-  CollectRequestSchema,
+  OpenActionRequestSchema,
   CreateCommentRequestSchema,
   CreateMirrorRequestSchema,
   CreatePostRequestSchema,
@@ -40,7 +40,7 @@ function resolveProtocolTransactionRequestSchema(
 ): z.ZodType<ProtocolTransactionRequest, z.ZodTypeDef, UnknownObject> {
   switch (kind) {
     case TransactionKind.ACT_ON_PUBLICATION:
-      return CollectRequestSchema;
+      return OpenActionRequestSchema;
     case TransactionKind.BLOCK_PROFILE:
       return BlockProfilesRequestSchema;
     case TransactionKind.CLAIM_HANDLE:

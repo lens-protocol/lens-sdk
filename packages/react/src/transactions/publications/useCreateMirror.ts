@@ -9,11 +9,11 @@ import {
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { SessionType, useSession } from '../authentication';
-import { useDeferredTask, UseDeferredTask } from '../helpers/tasks';
-import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
-import { createMirrorRequest } from './adapters/schemas/builders';
-import { useCreateMirrorController } from './adapters/useCreateMirrorController';
+import { SessionType, useSession } from '../../authentication';
+import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
+import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
+import { createMirrorRequest } from '../adapters/schemas/builders';
+import { useCreateMirrorController } from '../adapters/useCreateMirrorController';
 
 /**
  * An object representing the result of a mirror creation.
@@ -40,7 +40,8 @@ export type CreateMirrorArgs = {
    * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
    * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
    *
-   * @defaultValue true, the request will be attempted to be sponsored by the Lens API.
+   * If not specified, or `true`, the hook will attempt a Signless Experience when possible;
+   * otherwise, it will fall back to a signed experience.
    */
   sponsored?: boolean;
 };

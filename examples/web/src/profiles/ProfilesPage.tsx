@@ -96,6 +96,11 @@ const profileHooks = [
     description: 'Fetch the last logged in profile for a wallet address.',
     path: '/profiles/useLastLoggedInProfile',
   },
+  {
+    label: 'useReportProfile',
+    description: 'Report a profile.',
+    path: '/profiles/useReportProfile',
+  },
 ];
 
 export function ProfilesPage() {

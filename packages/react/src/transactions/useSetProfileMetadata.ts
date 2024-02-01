@@ -28,7 +28,8 @@ export type UseSetProfileMetadataArgs = {
    * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
    * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
    *
-   * @defaultValue true, the request will be attempted to be sponsored by the Lens API.
+   * If not specified, or `true`, the hook will attempt a Signless Experience when possible;
+   * otherwise, it will fall back to a signed experience.
    */
   sponsored?: boolean;
 };

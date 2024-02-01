@@ -12,7 +12,7 @@ import {
   ExplorePublication,
   Profile,
 } from '../../graphql/generated';
-import { mockAnyPaginatedResponse } from './mockAnyPaginatedResponse';
+import { mockAnyPaginatedResponse } from './helpers';
 
 export function mockFeedResponse({
   variables,

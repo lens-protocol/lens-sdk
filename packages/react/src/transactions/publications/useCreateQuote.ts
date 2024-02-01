@@ -1,7 +1,8 @@
-import { Post } from '@lens-protocol/api-bindings';
+import { Quote } from '@lens-protocol/api-bindings';
 import {
   InsufficientGasError,
   PendingSigningRequestError,
+  PublicationId,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
@@ -12,23 +13,27 @@ import {
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { SessionType, useSession } from '../authentication';
-import { useDeferredTask, UseDeferredTask } from '../helpers/tasks';
-import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
-import { createPostRequest } from './adapters/schemas/builders';
-import { useCreatePostController } from './adapters/useCreatePostController';
+import { SessionType, useSession } from '../../authentication';
+import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
+import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
+import { createQuoteRequest } from '../adapters/schemas/builders';
+import { useCreateQuoteController } from '../adapters/useCreateQuoteController';
 
 /**
- * An object representing the result of a post creation.
+ * An object representing the result of a quote creation.
  *
- * It allows to wait for the post to be fully processed and indexed.
+ * It allows to wait for the quote to be fully processed and indexed.
  */
-export type PostAsyncResult = AsyncTransactionResult<Post>;
+export type QuoteAsyncResult = AsyncTransactionResult<Quote>;
 
 /**
- * Create new post details.
+ * Create new quote details.
  */
-export type CreatePostArgs = {
+export type CreateQuoteArgs = {
+  /**
+   * The publication ID to quote on.
+   */
+  quoteOn: PublicationId;
   /**
    * The metadata URI.
    */
@@ -40,9 +45,9 @@ export type CreatePostArgs = {
    */
   actions?: OpenActionConfig[];
   /**
-   * The post reference policy.
+   * The quote reference policy.
    *
-   * Determines the criteria that must be met for a user to be able to comment, quote, or mirror the post.
+   * Determines the criteria that must be met for a user to be able to comment, quote, or mirror the quote.
    *
    * @defaultValue `{ type: ReferencePolicyType.ANYONE }`
    */
@@ -57,38 +62,40 @@ export type CreatePostArgs = {
    * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
    * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
    *
-   * @defaultValue true, the request will be attempted to be sponsored by the Lens API.
+   * If not specified, or `true`, the hook will attempt a Signless Experience when possible;
+   * otherwise, it will fall back to a signed experience.
    */
   sponsored?: boolean;
 };
 
 /**
- * `useCreatePost` is a React Hook that allows you to create a new Lens Post.
+ * `useCreateQuote` is React Hook that allows you to create a new Lens Quote.
  *
  * You MUST be authenticated via {@link useLogin} to use this hook.
  *
  * @example
  * ```ts
- * const { execute, error, loading } = useCreatePost();
+ * const { execute, error, loading } = useCreateQuote();
  * ```
  *
  * ## Basic usage
  *
- * Create a text-only post:
+ * Create a text-only quote:
  *
  * ```tsx
- * const { execute, error, loading } = useCreatePost();
+ * const { execute, error, loading } = useCreateQuote();
  *
- * const post = (content: string) => {
+ * const quote = (content: string) => {
  *   // create the desired metadata via the `@lens-protocol/metadata` package helpers
  *   const metadata = textOnly({ content });
  *
  *   // upload the metadata to a storage provider of your choice (IPFS in this example)
  *   const uri = await uploadToIpfs(metadata);
  *
- *   // invoke the `execute` function to create the post
+ *   // invoke the `execute` function to create the quote
  *   const result = await execute({
  *     metadata: uri,
+ *     quoteOn: : publicationId, // the publication ID to quote
  *   });
  * }
  * ```
@@ -101,14 +108,15 @@ export type CreatePostArgs = {
  * You can handle possible failure scenarios by checking the `result` value.
  *
  * ```tsx
- * const { execute, error, loading } = useCreatePost();
+ * const { execute, error, loading } = useCreateQuote();
  *
- * const post = async (content: string) => {
+ * const quote = async (content: string) => {
  *   // first part is the same as in the initial example
  *
- *   // invoke the `execute` function to create the post
+ *   // invoke the `execute` function to create the quote
  *   const result = await execute({
  *     metadata: uri,
+ *     quoteOn: : publicationId,
  *   });
  *
  *   if (result.isFailure()) {
@@ -136,27 +144,28 @@ export type CreatePostArgs = {
  *   }
  * };
  * ```
- * At this point the post creation is completed from an end-user perspective but,
+ * At this point the quote creation is completed from an end-user perspective but,
  * in case of on-chain TX, this is not necessarily mined and indexed (yet). See the following section.
  *
  * ## Wait for completion
  *
- * In case of successful submission, the `result` value can be used to wait for the post to be fully processed.
+ * In case of successful submission, the `result` value can be used to wait for the quote to be fully processed.
  *
  * This gives you an opportunity to decide what UX to provide to the end-user.
  *
- * For example if the post is on-chain it might take a while to be mined and indexed. So you might want to show a loading indicator or
+ * For example if the quote is on-chain it might take a while to be mined and indexed. So you might want to show a loading indicator or
  * let the user navigate away from the page.
  *
  * ```tsx
- * const { execute, error, loading } = useCreatePost();
+ * const { execute, error, loading } = useCreateQuote();
  *
- * const post = async (content: string) => {
+ * const quote = async (content: string) => {
  *   // first part is the same as in the initial example
  *
- *   // invoke the `execute` function to create the post
+ *   // invoke the `execute` function to create the quote
  *   const result = await execute({
  *     metadata: uri,
+ *     quoteOn: : publicationId,
  *   });
  *
  *   if (result.isFailure()) {
@@ -173,21 +182,21 @@ export type CreatePostArgs = {
  *     return;
  *   }
  *
- *   // the post is now ready to be used
- *   const post = completion.value;
- *   console.log('Post created', post);
+ *   // the quote is now ready to be used
+ *   const quote = completion.value;
+ *   console.log('quote created', quote);
  * };
  * ```
  *
  * ## Open actions
  *
- * Contextually to the post creation you can configure the open actions.
+ * Contextually to the quote creation you can configure the open actions.
  *
  * As with anything involving amounts in the Lens SDK you can use the
  * {@link Amount} helper with currencies from the {@link useCurrencies} hook to
  * create the desired amounts.
  *
- * Create a post with a `SimpleCollectOpenAction` module:
+ * Create a quote with a `SimpleCollectOpenAction` module:
  * ```tsx
  * const wmatic = ... // from useCurrencies hook
  *
@@ -207,12 +216,13 @@ export type CreatePostArgs = {
  * ```
  * See {@link SimpleCollectActionConfig} for more details.
  *
- * Create a post with a `MultirecipientCollectOpenAction` module:
+ * Create a quote with a `MultirecipientCollectOpenAction` module:
  * ```tsx
  * const wmatic = ... // from useCurrencies hook
  *
  * const result = await execute({
  *   metadata: uri,
+ *   quoteOn: : publicationId,
  *   actions: [
  *     {
  *       type: OpenActionType.MULTIRECIPIENT_COLLECT,
@@ -237,11 +247,12 @@ export type CreatePostArgs = {
  *
  * See {@link MultirecipientCollectActionConfig} for more details.
  *
- * Finally you can also create a post with a custom open action (AKA unknown open action):
+ * Finally you can also create a quote with a custom open action (AKA unknown open action):
  *
  * ```tsx
  * const result = await execute({
  *   metadata: uri,
+ *   quoteOn: : publicationId,
  *   actions: [
  *     {
  *       type: OpenActionType.UNKNOWN_OPEN_ACTION,
@@ -256,35 +267,39 @@ export type CreatePostArgs = {
  *
  * ## Reference policy
  *
- * Contextually to the post creation you can configure the reference policy.
+ * Contextually to the quote creation you can configure the reference policy.
  *
- * No one can comment, quote, or mirror the post:
+ * A quote with reference policy other than `ANYONE` will be hosted on-chain.
+ * If the quote has reference policy `ANYONE` (which is also the default value) and does not have
+ * any open actions, it will be hosted on Momoka.
+ *
+ * No one can comment, quote, or mirror the quote:
  * ```tsx
  * const result = await execute({
  *   metadata: uri,
- *
+ *   quoteOn: : publicationId,
  *   reference: {
  *     type: ReferencePolicyType.NO_ONE
  *   }
  * });
  * ```
  *
- * Only followers can comment, quote, or mirror the post:
+ * Only followers can comment, quote, or mirror the quote:
  * ```tsx
  * const result = await execute({
  *   metadata: uri,
- *
+ *   quoteOn: : publicationId,
  *   reference: {
  *     type: ReferencePolicyType.FOLLOWERS_ONLY
  *   }
  * });
  * ```
  *
- * You can have finer control over who can comment, quote, or mirror the post by using the `DEGREES_OF_SEPARATION` reference policy:
+ * You can have finer control over who can comment, quote, or mirror the quote by using the `DEGREES_OF_SEPARATION` reference policy:
  * ```tsx
  * const result = await execute({
  *   metadata: uri,
- *
+ *   quoteOn: : publicationId,
  *   reference: {
  *     type: ReferencePolicyType.DEGREES_OF_SEPARATION,
  *     params: {
@@ -301,7 +316,7 @@ export type CreatePostArgs = {
  * ```tsx
  * const result = await execute({
  *   metadata: uri,
- *
+ *   quoteOn: : publicationId,
  *   reference: {
  *     type: ReferencePolicyType.DEGREES_OF_SEPARATION,
  *     params: {
@@ -318,36 +333,18 @@ export type CreatePostArgs = {
  *
  * See {@link DegreesOfSeparationReferencePolicyConfig} for more details.
  *
- * ## Creating an app-specific post
- *
- * You can create a post that is specific to an app by defining the `appId` when creating the post metadata.
- *
- * This allows apps to build custom experiences by only surfacing publications that were created in their app.
- *
- * ```tsx
- * const metadata = textOnly({
- *  content: `Hello world!`,
- *  appId: 'my-app-id',
- * });
- *
- * const uri = await uploadToIpfs(metadata);
- *
- * const result = await execute({
- *  metadata: uri,
- * });
- * ```
- *
  * ## Self-funded approach
  *
  * In case you want to pay for the transaction gas costs yourself, you can do so by setting the
  * `sponsored` parameter to `false`:
  *
  * ```ts
- * const post = async (content: string) => {
+ * const quote = async (content: string) => {
  *   // create and upload metadata as before
  *
  *   const result = await execute({
  *     metadata: uri,
+ *     quoteOn: : publicationId,
  *     sponsored: false,
  *   });
  *
@@ -378,11 +375,12 @@ export type CreatePostArgs = {
  * In those cases you can retry the transaction as self-funded like in the following example:
  *
  * ```ts
- * const post = async (content: string) => {
+ * const quote = async (content: string) => {
  *   // create and upload metadata as before
  *
  *   const sponsoredResult = await execute({
  *     metadata: uri,
+ *     quoteOn: : publicationId,
  *   });
  *
  *   if (sponsoredResult.isFailure()) {
@@ -390,8 +388,9 @@ export type CreatePostArgs = {
  *       case 'BroadcastingError':
  *         if ([BroadcastingErrorReason.NOT_SPONSORED, BroadcastingErrorReason.RATE_LIMITED].includes(sponsoredResult.error.reason)) {
  *
- *           const chargedResult = await execute({
+ *           const chargedResult = = await execute({
  *             metadata: uri,
+ *             quoteOn: : publicationId,
  *             sponsored: false,
  *           });
  *
@@ -409,67 +408,67 @@ export type CreatePostArgs = {
  *
  * It just requires the app to apply for whitelisting. See https://docs.lens.xyz/docs/gasless-and-signless#whitelisting-your-app.
  *
- * ## Momoka posts
+ * ## Create an app-specific quote
  *
- * For a post to be hosted on Momoka it must meet the following criteria:
+ * You can create a comment that is specific to an app by defining the `appId` when creating the comment metadata.
+ *
+ * This allows apps to build custom experiences by only surfacing publications that were created in their app.
+ *
+ * ```tsx
+ * const metadata = textOnly({
+ *  content: 'Quote content',
+ *  appId: 'my-app-id',
+ * });
+ *
+ * const uri = await uploadToIpfs(metadata);
+ *
+ * const result = await execute({
+ *  quoteOn: publicationId, // the publication ID to quote
+ *  metadata: uri
+ * });
+ * ```
+ *
+ * ## Momoka quotes
+ *
+ * For a quote to be hosted on Momoka it must meet the following criteria:
+ * - it must be a quote of a Momoka publication
  * - reference policy `ANYONE` (which is also the default value in case it's not specified)
  * - no open actions
  * - sponsored by the Lens API (which is also the default value in case it's not specified)
  *
- * If the post does not meet the above criteria, it will be hosted on-chain.
- *
- * ## Upgrading from v1
- *
- * Replace the `useCreatePost` hook with `useCreatePost` like in the following diff:
- * ```diff
- * - const { execute, error, isPending } = useCreatePost({ publisher, upload: uploadToIpfs });
- * + const { execute, error, loading } = useCreatePost();
- * ```
- * Amend the code that used to call the `execute` function to:
- * ```ts
- * // first: create metadata using the `@lens-protocol/metadata` package
- * const metadata = textOnly({
- *   content: `Hello world!`,
- * });
- *
- * // second: upload it using the upload function you used to pass to `useCreatePost`:
- * const uri = await uploadToIpfs(metadata);
- *
- * // finally, invoke the `execute` function:
- * const result = await execute({
- *   metadata: uri,
- * })
- *
- * // continue as usual
- * ```
+ * If the quote does not meet the above criteria, it will be hosted on-chain.
  *
  * @category Publications
  * @group Hooks
  */
-export function useCreatePost(): UseDeferredTask<
-  PostAsyncResult,
+export function useCreateQuote(): UseDeferredTask<
+  QuoteAsyncResult,
   | BroadcastingError
   | InsufficientGasError
   | PendingSigningRequestError
   | UserRejectedError
   | WalletConnectionError,
-  CreatePostArgs
+  CreateQuoteArgs
 > {
   const { data: session } = useSession();
-  const createPost = useCreatePostController();
+  const createQuote = useCreateQuoteController();
 
-  return useDeferredTask(async (args: CreatePostArgs) => {
+  return useDeferredTask(async (args: CreateQuoteArgs) => {
     invariant(
-      session?.type === SessionType.WithProfile,
-      'You must be authenticated with a Profile to post. Use `useLogin` hook to authenticate.',
+      session?.authenticated,
+      'You must be authenticated to create a quote. Use `useLogin` hook to authenticate.',
+    );
+    invariant(
+      session.type === SessionType.WithProfile,
+      'You must have a profile to create a quote.',
     );
 
-    const request = createPostRequest({
+    const request = createQuoteRequest({
       signless: session.profile.signless,
-      sponsored: args.sponsored ?? session.profile.sponsor,
+      sponsored: args.sponsored ?? true,
       ...args,
     });
 
-    return createPost(request);
+    return createQuote(request);
   });
 }

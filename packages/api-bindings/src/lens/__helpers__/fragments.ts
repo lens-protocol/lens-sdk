@@ -267,6 +267,7 @@ export function mockPublicationOperationsFragment(
     canCollect: gql.TriStateValue.Unknown,
     canComment: gql.TriStateValue.Unknown,
     canMirror: gql.TriStateValue.Unknown,
+    canQuote: gql.TriStateValue.Unknown,
     hasMirrored: false,
     hasUpvoted: false,
     hasDownvoted: false,
@@ -467,6 +468,7 @@ export function mockUnknownOpenActionModuleSettingsFragment(
   overrides?: Partial<gql.UnknownOpenActionModuleSettings>,
 ) {
   return mock<gql.UnknownOpenActionModuleSettings>({
+    contract: mockNetworkAddressFragment(),
     ...overrides,
     __typename: 'UnknownOpenActionModuleSettings',
   });
@@ -560,4 +562,35 @@ export function mockLegacyAaveFeeCollectModuleSettingsFragment(
     ...overrides,
     __typename: 'LegacyAaveFeeCollectModuleSettings',
   });
+}
+
+export function mockModuleMetadataFragment(
+  overrides?: Partial<gql.ModuleMetadata>,
+): gql.ModuleMetadata {
+  return {
+    __typename: 'ModuleMetadata',
+    authors: [],
+    description: '',
+    initializeCalldataABI: '[]',
+    initializeResultDataABI: null,
+    name: '',
+    processCalldataABI: '[]',
+    title: '',
+    attributes: [],
+    ...overrides,
+  };
+}
+
+export function mockModuleMetadataResultFragment(
+  overrides?: Partial<gql.ModuleMetadataResult>,
+): gql.ModuleMetadataResult {
+  return {
+    metadata: mockModuleMetadataFragment(),
+    moduleType: gql.ModuleType.Follow,
+    signlessApproved: true,
+    sponsoredApproved: true,
+    verified: true,
+    ...overrides,
+    __typename: 'GetModuleMetadataResult',
+  };
 }

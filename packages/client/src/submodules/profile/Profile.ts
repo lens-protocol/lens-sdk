@@ -1121,7 +1121,7 @@ export class Profile {
    *       subreason: ProfileReportingSpamSubreason.Repetitive,
    *     },
    *   },
-   *   additionalComments: 'comment',
+   *   additionalComments: 'Human readable comments, if any.',
    * });
    * ```
    */

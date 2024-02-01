@@ -2802,6 +2802,7 @@ export const FeedItemFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -11466,6 +11467,7 @@ export const OpenActionPaidActionFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -18253,6 +18255,7 @@ export const FeedDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -25056,6 +25059,7 @@ export const FeedHighlightsDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -31801,6 +31805,7 @@ export const LatestPaidActionsDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',

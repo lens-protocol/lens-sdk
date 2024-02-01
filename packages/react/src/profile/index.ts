@@ -11,6 +11,7 @@ export * from './useProfileFollowers';
 export * from './useProfileFollowing';
 export * from './useProfileManagers';
 export * from './useProfiles';
+export * from './useReportProfile';
 export * from './useWhoActedOnPublication';
 
 /**
@@ -34,3 +35,17 @@ export type {
   RevertFollowModuleSettings,
   UnknownFollowModuleSettings,
 } from '@lens-protocol/api-bindings';
+
+/**
+ * Helpers
+ */
+export type {
+  FollowModule,
+  ChargeFollowPolicy,
+  FollowPolicy,
+  NoFollowPolicy,
+  OpenFollowPolicy,
+  UnknownFollowPolicy,
+  NoFeeFollowPolicy, // deprecated
+} from '@lens-protocol/api-bindings';
+export { isValidHandle, resolveFollowPolicy } from '@lens-protocol/api-bindings';

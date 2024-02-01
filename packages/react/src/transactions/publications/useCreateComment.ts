@@ -1,4 +1,4 @@
-import { Quote } from '@lens-protocol/api-bindings';
+import { Comment } from '@lens-protocol/api-bindings';
 import {
   InsufficientGasError,
   PendingSigningRequestError,
@@ -13,27 +13,27 @@ import {
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { SessionType, useSession } from '../authentication';
-import { useDeferredTask, UseDeferredTask } from '../helpers/tasks';
-import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
-import { createQuoteRequest } from './adapters/schemas/builders';
-import { useCreateQuoteController } from './adapters/useCreateQuoteController';
+import { SessionType, useSession } from '../../authentication';
+import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
+import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
+import { createCommentRequest } from '../adapters/schemas/builders';
+import { useCreateCommentController } from '../adapters/useCreateCommentController';
 
 /**
- * An object representing the result of a quote creation.
+ * An object representing the result of a comment creation.
  *
- * It allows to wait for the quote to be fully processed and indexed.
+ * It allows to wait for the comment to be fully processed and indexed.
  */
-export type QuoteAsyncResult = AsyncTransactionResult<Quote>;
+export type CommentAsyncResult = AsyncTransactionResult<Comment>;
 
 /**
- * Create new quote details.
+ * Create new comment details.
  */
-export type CreateQuoteArgs = {
+export type CreateCommentArgs = {
   /**
-   * The publication ID to quote on.
+   * The publication ID to comment on.
    */
-  quoteOn: PublicationId;
+  commentOn: PublicationId;
   /**
    * The metadata URI.
    */
@@ -45,9 +45,9 @@ export type CreateQuoteArgs = {
    */
   actions?: OpenActionConfig[];
   /**
-   * The quote reference policy.
+   * The comment reference policy.
    *
-   * Determines the criteria that must be met for a user to be able to comment, quote, or mirror the quote.
+   * Determines the criteria that must be met for a user to be able to comment, quote, or mirror the comment.
    *
    * @defaultValue `{ type: ReferencePolicyType.ANYONE }`
    */
@@ -62,39 +62,40 @@ export type CreateQuoteArgs = {
    * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
    * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
    *
-   * @defaultValue true, the request will be attempted to be sponsored by the Lens API.
+   * If not specified, or `true`, the hook will attempt a Signless Experience when possible;
+   * otherwise, it will fall back to a signed experience.
    */
   sponsored?: boolean;
 };
 
 /**
- * `useCreateQuote` is React Hook that allows you to create a new Lens Quote.
+ * `useCreateComment` is React Hook that allows you to create a new Lens Comment.
  *
  * You MUST be authenticated via {@link useLogin} to use this hook.
  *
  * @example
  * ```ts
- * const { execute, error, loading } = useCreateQuote();
+ * const { execute, error, loading } = useCreateComment();
  * ```
  *
  * ## Basic usage
  *
- * Create a text-only quote:
+ * Create a text-only comment:
  *
  * ```tsx
- * const { execute, error, loading } = useCreateQuote();
+ * const { execute, error, loading } = useCreateComment();
  *
- * const quote = (content: string) => {
+ * const comment = async (content: string) => {
  *   // create the desired metadata via the `@lens-protocol/metadata` package helpers
  *   const metadata = textOnly({ content });
  *
  *   // upload the metadata to a storage provider of your choice (IPFS in this example)
  *   const uri = await uploadToIpfs(metadata);
  *
- *   // invoke the `execute` function to create the quote
+ *   // invoke the `execute` function to create the comment
  *   const result = await execute({
+ *     commentOn: publicationId, // the publication ID to comment on
  *     metadata: uri,
- *     quoteOn: : publicationId, // the publication ID to quote
  *   });
  * }
  * ```
@@ -107,15 +108,16 @@ export type CreateQuoteArgs = {
  * You can handle possible failure scenarios by checking the `result` value.
  *
  * ```tsx
- * const { execute, error, loading } = useCreateQuote();
+ * const { execute, error, loading } = useCreateComment();
  *
- * const quote = async (content: string) => {
+ * const comment = async (content: string) => {
  *   // first part is the same as in the initial example
  *
- *   // invoke the `execute` function to create the quote
+ *   // invoke the `execute` function to create the comment
  *   const result = await execute({
+ *
  *     metadata: uri,
- *     quoteOn: : publicationId,
+ *     commentOn: publicationId,
  *   });
  *
  *   if (result.isFailure()) {
@@ -143,28 +145,28 @@ export type CreateQuoteArgs = {
  *   }
  * };
  * ```
- * At this point the quote creation is completed from an end-user perspective but,
+ * At this point the comment creation is completed from an end-user perspective but,
  * in case of on-chain TX, this is not necessarily mined and indexed (yet). See the following section.
  *
  * ## Wait for completion
  *
- * In case of successful submission, the `result` value can be used to wait for the quote to be fully processed.
+ * In case of successful submission, the `result` value can be used to wait for the comment to be fully processed.
  *
  * This gives you an opportunity to decide what UX to provide to the end-user.
  *
- * For example if the quote is on-chain it might take a while to be mined and indexed. So you might want to show a loading indicator or
+ * For example if the comment is on-chain it might take a while to be mined and indexed. So you might want to show a loading indicator or
  * let the user navigate away from the page.
  *
  * ```tsx
- * const { execute, error, loading } = useCreateQuote();
+ * const { execute, error, loading } = useCreateComment();
  *
- * const quote = async (content: string) => {
+ * const comment = async (content: string) => {
  *   // first part is the same as in the initial example
  *
- *   // invoke the `execute` function to create the quote
+ *   // invoke the `execute` function to create the comment
  *   const result = await execute({
+ *     commentOn: publicationId,
  *     metadata: uri,
- *     quoteOn: : publicationId,
  *   });
  *
  *   if (result.isFailure()) {
@@ -181,25 +183,26 @@ export type CreateQuoteArgs = {
  *     return;
  *   }
  *
- *   // the quote is now ready to be used
- *   const quote = completion.value;
- *   console.log('quote created', quote);
+ *   // the comment is now ready to be used
+ *   const comment = completion.value;
+ *   console.log('Comment created', comment);
  * };
  * ```
  *
  * ## Open actions
  *
- * Contextually to the quote creation you can configure the open actions.
+ * Contextually to the comment creation you can configure the open actions.
  *
  * As with anything involving amounts in the Lens SDK you can use the
  * {@link Amount} helper with currencies from the {@link useCurrencies} hook to
  * create the desired amounts.
  *
- * Create a quote with a `SimpleCollectOpenAction` module:
+ * Create a comment with a `SimpleCollectOpenAction` module:
  * ```tsx
  * const wmatic = ... // from useCurrencies hook
  *
  * const result = await execute({
+ *   commentOn: publicationId,
  *   metadata: uri,
  *   actions: [
  *     {
@@ -215,13 +218,13 @@ export type CreateQuoteArgs = {
  * ```
  * See {@link SimpleCollectActionConfig} for more details.
  *
- * Create a quote with a `MultirecipientCollectOpenAction` module:
+ * Create a comment with a `MultirecipientCollectOpenAction` module:
  * ```tsx
  * const wmatic = ... // from useCurrencies hook
  *
  * const result = await execute({
+ *   commentOn: publicationId,
  *   metadata: uri,
- *   quoteOn: : publicationId,
  *   actions: [
  *     {
  *       type: OpenActionType.MULTIRECIPIENT_COLLECT,
@@ -246,12 +249,12 @@ export type CreateQuoteArgs = {
  *
  * See {@link MultirecipientCollectActionConfig} for more details.
  *
- * Finally you can also create a quote with a custom open action (AKA unknown open action):
+ * Finally you can also create a comment with a custom open action (AKA unknown open action):
  *
  * ```tsx
  * const result = await execute({
+ *   commentOn: publicationId,
  *   metadata: uri,
- *   quoteOn: : publicationId,
  *   actions: [
  *     {
  *       type: OpenActionType.UNKNOWN_OPEN_ACTION,
@@ -266,39 +269,38 @@ export type CreateQuoteArgs = {
  *
  * ## Reference policy
  *
- * Contextually to the quote creation you can configure the reference policy.
+ * Contextually to the comment creation you can configure the reference policy.
  *
- * A quote with reference policy other than `ANYONE` will be hosted on-chain.
- * If the quote has reference policy `ANYONE` (which is also the default value) and does not have
- * any open actions, it will be hosted on Momoka.
- *
- * No one can comment, quote, or mirror the quote:
+ * No one can comment, quote, or mirror the comment:
  * ```tsx
  * const result = await execute({
+ *   commentOn: publicationId,
  *   metadata: uri,
- *   quoteOn: : publicationId,
+ *
  *   reference: {
  *     type: ReferencePolicyType.NO_ONE
  *   }
  * });
  * ```
  *
- * Only followers can comment, quote, or mirror the quote:
+ * Only followers can comment, quote, or mirror the comment:
  * ```tsx
  * const result = await execute({
+ *   commentOn: publicationId,
  *   metadata: uri,
- *   quoteOn: : publicationId,
+ *
  *   reference: {
  *     type: ReferencePolicyType.FOLLOWERS_ONLY
  *   }
  * });
  * ```
  *
- * You can have finer control over who can comment, quote, or mirror the quote by using the `DEGREES_OF_SEPARATION` reference policy:
+ * You can have finer control over who can comment, quote, or mirror the comment by using the `DEGREES_OF_SEPARATION` reference policy:
  * ```tsx
  * const result = await execute({
+ *   commentOn: publicationId,
  *   metadata: uri,
- *   quoteOn: : publicationId,
+ *
  *   reference: {
  *     type: ReferencePolicyType.DEGREES_OF_SEPARATION,
  *     params: {
@@ -314,8 +316,9 @@ export type CreateQuoteArgs = {
  * You can even set the `DEGREES_OF_SEPARATION` reference policy to follow someone elses graph:
  * ```tsx
  * const result = await execute({
+ *   commentOn: publicationId,
  *   metadata: uri,
- *   quoteOn: : publicationId,
+ *
  *   reference: {
  *     type: ReferencePolicyType.DEGREES_OF_SEPARATION,
  *     params: {
@@ -332,18 +335,38 @@ export type CreateQuoteArgs = {
  *
  * See {@link DegreesOfSeparationReferencePolicyConfig} for more details.
  *
+ * ## Creating an app-specific comment
+ *
+ * You can create a comment that is specific to an app by defining the `appId` when creating the comment metadata.
+ *
+ * This allows apps to build custom experiences by only surfacing publications that were created in their app.
+ *
+ * ```tsx
+ * const metadata = textOnly({
+ *  content: `Hello world!`,
+ *  appId: 'my-app-id',
+ * });
+ *
+ * const uri = await uploadToIpfs(metadata);
+ *
+ * const result = await execute({
+ *  commentOn: publicationId,
+ *  metadata: uri,
+ * });
+ * ```
+ *
  * ## Self-funded approach
  *
  * In case you want to pay for the transaction gas costs yourself, you can do so by setting the
  * `sponsored` parameter to `false`:
  *
  * ```ts
- * const quote = async (content: string) => {
+ * const comment = async (content: string) => {
  *   // create and upload metadata as before
  *
  *   const result = await execute({
  *     metadata: uri,
- *     quoteOn: : publicationId,
+ *     commentOn: : publicationId,
  *     sponsored: false,
  *   });
  *
@@ -374,12 +397,12 @@ export type CreateQuoteArgs = {
  * In those cases you can retry the transaction as self-funded like in the following example:
  *
  * ```ts
- * const quote = async (content: string) => {
+ * const comment = async (content: string) => {
  *   // create and upload metadata as before
  *
  *   const sponsoredResult = await execute({
  *     metadata: uri,
- *     quoteOn: : publicationId,
+ *     commentOn: : publicationId,
  *   });
  *
  *   if (sponsoredResult.isFailure()) {
@@ -389,7 +412,7 @@ export type CreateQuoteArgs = {
  *
  *           const chargedResult = = await execute({
  *             metadata: uri,
- *             quoteOn: : publicationId,
+ *             commentOn: : publicationId,
  *             sponsored: false,
  *           });
  *
@@ -407,67 +430,73 @@ export type CreateQuoteArgs = {
  *
  * It just requires the app to apply for whitelisting. See https://docs.lens.xyz/docs/gasless-and-signless#whitelisting-your-app.
  *
- * ## Create an app-specific quote
+ * ## Momoka comments
  *
- * You can create a comment that is specific to an app by defining the `appId` when creating the comment metadata.
- *
- * This allows apps to build custom experiences by only surfacing publications that were created in their app.
- *
- * ```tsx
- * const metadata = textOnly({
- *  content: 'Quote content',
- *  appId: 'my-app-id',
- * });
- *
- * const uri = await uploadToIpfs(metadata);
- *
- * const result = await execute({
- *  quoteOn: publicationId, // the publication ID to quote
- *  metadata: uri
- * });
- * ```
- *
- * ## Momoka quotes
- *
- * For a quote to be hosted on Momoka it must meet the following criteria:
- * - it must be a quote of a Momoka publication
+ * For a comment to be hosted on Momoka it must meet the following criteria:
+ * - it must be a comment for a Momoka publication
  * - reference policy `ANYONE` (which is also the default value in case it's not specified)
  * - no open actions
  * - sponsored by the Lens API (which is also the default value in case it's not specified)
  *
- * If the quote does not meet the above criteria, it will be hosted on-chain.
+ * If the comment does not meet the above criteria, it will be hosted on-chain.
+ *
+ * ## Upgrading from v1
+ *
+ * Replace the `useCreateComment` hook with `useCreateComment` like in the following diff:
+ * ```diff
+ * - const { execute, error, isPending } = useCreateComment({ publisher, upload: uploadToIpfs });
+ * + const { execute, error, loading } = useCreateComment();
+ * ```
+ * Amend the code that used to call the `execute` function to:
+ * ```ts
+ * // first: create metadata using the `@lens-protocol/metadata` package
+ * const metadata = textOnly({
+ *   content: `Hello world!`,
+ * });
+ *
+ * // second: upload it using the upload function you used to pass to `useCreateComment`:
+ * const uri = await uploadToIpfs(metadata);
+ *
+ * // finally, invoke the `execute` function:
+ * const result = await execute({
+ *   commentOn: publicationId,
+ *   metadata: uri,
+ * })
+ *
+ * // continue as usual
+ * ```
  *
  * @category Publications
  * @group Hooks
  */
-export function useCreateQuote(): UseDeferredTask<
-  QuoteAsyncResult,
+export function useCreateComment(): UseDeferredTask<
+  CommentAsyncResult,
   | BroadcastingError
   | InsufficientGasError
   | PendingSigningRequestError
   | UserRejectedError
   | WalletConnectionError,
-  CreateQuoteArgs
+  CreateCommentArgs
 > {
   const { data: session } = useSession();
-  const createQuote = useCreateQuoteController();
+  const createComment = useCreateCommentController();
 
-  return useDeferredTask(async (args: CreateQuoteArgs) => {
+  return useDeferredTask(async (args: CreateCommentArgs) => {
     invariant(
       session?.authenticated,
-      'You must be authenticated to create a quote. Use `useLogin` hook to authenticate.',
+      'You must be authenticated to create a comment. Use `useLogin` hook to authenticate.',
     );
     invariant(
       session.type === SessionType.WithProfile,
-      'You must have a profile to create a quote.',
+      'You must have a profile to create a comment.',
     );
 
-    const request = createQuoteRequest({
+    const request = createCommentRequest({
       signless: session.profile.signless,
       sponsored: args.sponsored ?? true,
       ...args,
     });
 
-    return createQuote(request);
+    return createComment(request);
   });
 }

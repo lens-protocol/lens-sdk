@@ -7,10 +7,10 @@ import {
 import { webCryptoProvider } from '@lens-protocol/gated-content/web';
 import { InMemoryStorageProvider } from '@lens-protocol/storage';
 
-import * as base from '../LensClient';
+import * as core from '../LensClient';
 import { Gated } from './Gated';
 
-export type LensClientConfig = base.LensClientConfig & {
+export type LensClientConfig = core.LensClientConfig & {
   /**
    * The authentication configuration to use for authenticating with the Lit Protocol network.
    */
@@ -30,7 +30,7 @@ export type LensClientConfig = base.LensClientConfig & {
 /**
  * Lens Protocol Client with token-gated content support.
  *
- * It provides access to all the base {@link Base.LensClient} modules and the {@link Gated} module.
+ * It provides access to all the core {@link Core.LensClient} modules and the {@link Gated} module.
  *
  * @example
  * NodeJS example:
@@ -74,7 +74,7 @@ export type LensClientConfig = base.LensClientConfig & {
  * });
  * ```
  */
-export class LensClient extends base.LensClient {
+export class LensClient extends core.LensClient {
   private _gated: Gated;
 
   constructor(config: LensClientConfig) {

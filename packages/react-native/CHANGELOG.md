@@ -1,5 +1,29 @@
 # @lens-protocol/react-native
 
+## 0.1.0-alpha.6
+
+### Minor Changes
+
+- a3b29e541: **feat:** adds `resolveReferencePolicy` helper to create developer friendly ReferencePolicy out of publication sparse ReferenceModule
+- eb6a8f07c: **feat:** `useCreatePost` takes Open Action Modules Metadata into consideration when determining sponsored/signless experience
+- 79068cd37: feat: added `useReportProfile` hook
+  chore: renamed `ReportReason` to `PublicationReportReason`, deprecate `ReportReason`
+
+### Patch Changes
+
+- a3b29e541: **fix:** adds missing `publication.operations.canQuote` field
+- a58d45417: **fix:** `useOpenAction` takes Unknown Open Action Modules' `sponsoredApproved` and `signlessApproved` flags
+- aa6669306: **fix:** supports `referrers` with Unknown Open Action module via `useOpenAction`
+- Updated dependencies [a3b29e541]
+- Updated dependencies [a3b29e541]
+- Updated dependencies [a58d45417]
+- Updated dependencies [aa6669306]
+- Updated dependencies [eb6a8f07c]
+- Updated dependencies [79068cd37]
+  - @lens-protocol/react@2.0.0-alpha.29
+  - @lens-protocol/api-bindings@0.11.0-alpha.26
+  - @lens-protocol/domain@0.11.0-alpha.20
+
 ## 0.1.0-alpha.5
 
 ### Minor Changes

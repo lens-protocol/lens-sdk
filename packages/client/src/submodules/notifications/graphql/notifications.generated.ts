@@ -1821,6 +1821,7 @@ export const ReactionNotificationFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -8384,6 +8385,7 @@ export const CommentNotificationFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -14932,6 +14934,7 @@ export const MirrorNotificationFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -21495,6 +21498,7 @@ export const QuoteNotificationFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -29105,6 +29109,7 @@ export const ActedNotificationFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -36742,6 +36747,7 @@ export const MentionNotificationFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -43902,6 +43908,7 @@ export const NotificationsDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',

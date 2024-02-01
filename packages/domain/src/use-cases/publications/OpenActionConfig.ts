@@ -110,7 +110,7 @@ export type UnknownOpenActionConfig = {
   /**
    * The address of the Unknown Open Action module contract.
    */
-  address: string;
+  address: EvmAddress;
   /**
    * The data to initialize the Unknown Open Action contract logic
    * for the given publication.

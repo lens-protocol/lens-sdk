@@ -1,8 +1,7 @@
-import { Comment } from '@lens-protocol/api-bindings';
+import { Post } from '@lens-protocol/api-bindings';
 import {
   InsufficientGasError,
   PendingSigningRequestError,
-  PublicationId,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
@@ -13,27 +12,23 @@ import {
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { invariant } from '@lens-protocol/shared-kernel';
 
-import { SessionType, useSession } from '../authentication';
-import { useDeferredTask, UseDeferredTask } from '../helpers/tasks';
-import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
-import { createCommentRequest } from './adapters/schemas/builders';
-import { useCreateCommentController } from './adapters/useCreateCommentController';
+import { SessionType, useSession } from '../../authentication';
+import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
+import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
+import { useCreatePostController } from '../adapters/useCreatePostController';
+import { useCreatePostRequest } from './useCreatePostRequest';
 
 /**
- * An object representing the result of a comment creation.
+ * An object representing the result of a post creation.
  *
- * It allows to wait for the comment to be fully processed and indexed.
+ * It allows to wait for the post to be fully processed and indexed.
  */
-export type CommentAsyncResult = AsyncTransactionResult<Comment>;
+export type PostAsyncResult = AsyncTransactionResult<Post>;
 
 /**
- * Create new comment details.
+ * Create new post details.
  */
-export type CreateCommentArgs = {
-  /**
-   * The publication ID to comment on.
-   */
-  commentOn: PublicationId;
+export type CreatePostArgs = {
   /**
    * The metadata URI.
    */
@@ -45,9 +40,9 @@ export type CreateCommentArgs = {
    */
   actions?: OpenActionConfig[];
   /**
-   * The comment reference policy.
+   * The post reference policy.
    *
-   * Determines the criteria that must be met for a user to be able to comment, quote, or mirror the comment.
+   * Determines the criteria that must be met for a user to be able to comment, quote, or mirror the post.
    *
    * @defaultValue `{ type: ReferencePolicyType.ANYONE }`
    */
@@ -62,38 +57,38 @@ export type CreateCommentArgs = {
    * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
    * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
    *
-   * @defaultValue true, the request will be attempted to be sponsored by the Lens API.
+   * If not specified, or `true`, the hook will attempt a Signless Experience when possible;
+   * otherwise, it will fall back to a signed experience.
    */
   sponsored?: boolean;
 };
 
 /**
- * `useCreateComment` is React Hook that allows you to create a new Lens Comment.
+ * `useCreatePost` is a React Hook that allows you to create a new Lens Post.
  *
  * You MUST be authenticated via {@link useLogin} to use this hook.
  *
  * @example
  * ```ts
- * const { execute, error, loading } = useCreateComment();
+ * const { execute, error, loading } = useCreatePost();
  * ```
  *
  * ## Basic usage
  *
- * Create a text-only comment:
+ * Create a text-only post:
  *
  * ```tsx
- * const { execute, error, loading } = useCreateComment();
+ * const { execute, error, loading } = useCreatePost();
  *
- * const comment = async (content: string) => {
+ * const post = (content: string) => {
  *   // create the desired metadata via the `@lens-protocol/metadata` package helpers
  *   const metadata = textOnly({ content });
  *
  *   // upload the metadata to a storage provider of your choice (IPFS in this example)
  *   const uri = await uploadToIpfs(metadata);
  *
- *   // invoke the `execute` function to create the comment
+ *   // invoke the `execute` function to create the post
  *   const result = await execute({
- *     commentOn: publicationId, // the publication ID to comment on
  *     metadata: uri,
  *   });
  * }
@@ -107,16 +102,14 @@ export type CreateCommentArgs = {
  * You can handle possible failure scenarios by checking the `result` value.
  *
  * ```tsx
- * const { execute, error, loading } = useCreateComment();
+ * const { execute, error, loading } = useCreatePost();
  *
- * const comment = async (content: string) => {
+ * const post = async (content: string) => {
  *   // first part is the same as in the initial example
  *
- *   // invoke the `execute` function to create the comment
+ *   // invoke the `execute` function to create the post
  *   const result = await execute({
- *
  *     metadata: uri,
- *     commentOn: publicationId,
  *   });
  *
  *   if (result.isFailure()) {
@@ -144,27 +137,26 @@ export type CreateCommentArgs = {
  *   }
  * };
  * ```
- * At this point the comment creation is completed from an end-user perspective but,
+ * At this point the post creation is completed from an end-user perspective but,
  * in case of on-chain TX, this is not necessarily mined and indexed (yet). See the following section.
  *
  * ## Wait for completion
  *
- * In case of successful submission, the `result` value can be used to wait for the comment to be fully processed.
+ * In case of successful submission, the `result` value can be used to wait for the post to be fully processed.
  *
  * This gives you an opportunity to decide what UX to provide to the end-user.
  *
- * For example if the comment is on-chain it might take a while to be mined and indexed. So you might want to show a loading indicator or
+ * For example if the post is on-chain it might take a while to be mined and indexed. So you might want to show a loading indicator or
  * let the user navigate away from the page.
  *
  * ```tsx
- * const { execute, error, loading } = useCreateComment();
+ * const { execute, error, loading } = useCreatePost();
  *
- * const comment = async (content: string) => {
+ * const post = async (content: string) => {
  *   // first part is the same as in the initial example
  *
- *   // invoke the `execute` function to create the comment
+ *   // invoke the `execute` function to create the post
  *   const result = await execute({
- *     commentOn: publicationId,
  *     metadata: uri,
  *   });
  *
@@ -182,26 +174,25 @@ export type CreateCommentArgs = {
  *     return;
  *   }
  *
- *   // the comment is now ready to be used
- *   const comment = completion.value;
- *   console.log('Comment created', comment);
+ *   // the post is now ready to be used
+ *   const post = completion.value;
+ *   console.log('Post created', post);
  * };
  * ```
  *
  * ## Open actions
  *
- * Contextually to the comment creation you can configure the open actions.
+ * Contextually to the post creation you can configure the open actions.
  *
  * As with anything involving amounts in the Lens SDK you can use the
  * {@link Amount} helper with currencies from the {@link useCurrencies} hook to
  * create the desired amounts.
  *
- * Create a comment with a `SimpleCollectOpenAction` module:
+ * Create a post with a `SimpleCollectOpenAction` module:
  * ```tsx
  * const wmatic = ... // from useCurrencies hook
  *
  * const result = await execute({
- *   commentOn: publicationId,
  *   metadata: uri,
  *   actions: [
  *     {
@@ -217,12 +208,11 @@ export type CreateCommentArgs = {
  * ```
  * See {@link SimpleCollectActionConfig} for more details.
  *
- * Create a comment with a `MultirecipientCollectOpenAction` module:
+ * Create a post with a `MultirecipientCollectOpenAction` module:
  * ```tsx
  * const wmatic = ... // from useCurrencies hook
  *
  * const result = await execute({
- *   commentOn: publicationId,
  *   metadata: uri,
  *   actions: [
  *     {
@@ -248,11 +238,10 @@ export type CreateCommentArgs = {
  *
  * See {@link MultirecipientCollectActionConfig} for more details.
  *
- * Finally you can also create a comment with a custom open action (AKA unknown open action):
+ * Finally you can also create a post with a custom open action (AKA unknown open action):
  *
  * ```tsx
  * const result = await execute({
- *   commentOn: publicationId,
  *   metadata: uri,
  *   actions: [
  *     {
@@ -268,12 +257,11 @@ export type CreateCommentArgs = {
  *
  * ## Reference policy
  *
- * Contextually to the comment creation you can configure the reference policy.
+ * Contextually to the post creation you can configure the reference policy.
  *
- * No one can comment, quote, or mirror the comment:
+ * No one can comment, quote, or mirror the post:
  * ```tsx
  * const result = await execute({
- *   commentOn: publicationId,
  *   metadata: uri,
  *
  *   reference: {
@@ -282,10 +270,9 @@ export type CreateCommentArgs = {
  * });
  * ```
  *
- * Only followers can comment, quote, or mirror the comment:
+ * Only followers can comment, quote, or mirror the post:
  * ```tsx
  * const result = await execute({
- *   commentOn: publicationId,
  *   metadata: uri,
  *
  *   reference: {
@@ -294,10 +281,9 @@ export type CreateCommentArgs = {
  * });
  * ```
  *
- * You can have finer control over who can comment, quote, or mirror the comment by using the `DEGREES_OF_SEPARATION` reference policy:
+ * You can have finer control over who can comment, quote, or mirror the post by using the `DEGREES_OF_SEPARATION` reference policy:
  * ```tsx
  * const result = await execute({
- *   commentOn: publicationId,
  *   metadata: uri,
  *
  *   reference: {
@@ -315,7 +301,6 @@ export type CreateCommentArgs = {
  * You can even set the `DEGREES_OF_SEPARATION` reference policy to follow someone elses graph:
  * ```tsx
  * const result = await execute({
- *   commentOn: publicationId,
  *   metadata: uri,
  *
  *   reference: {
@@ -334,9 +319,9 @@ export type CreateCommentArgs = {
  *
  * See {@link DegreesOfSeparationReferencePolicyConfig} for more details.
  *
- * ## Creating an app-specific comment
+ * ## Creating an app-specific post
  *
- * You can create a comment that is specific to an app by defining the `appId` when creating the comment metadata.
+ * You can create a post that is specific to an app by defining the `appId` when creating the post metadata.
  *
  * This allows apps to build custom experiences by only surfacing publications that were created in their app.
  *
@@ -349,7 +334,6 @@ export type CreateCommentArgs = {
  * const uri = await uploadToIpfs(metadata);
  *
  * const result = await execute({
- *  commentOn: publicationId,
  *  metadata: uri,
  * });
  * ```
@@ -360,12 +344,11 @@ export type CreateCommentArgs = {
  * `sponsored` parameter to `false`:
  *
  * ```ts
- * const comment = async (content: string) => {
+ * const post = async (content: string) => {
  *   // create and upload metadata as before
  *
  *   const result = await execute({
  *     metadata: uri,
- *     commentOn: : publicationId,
  *     sponsored: false,
  *   });
  *
@@ -396,12 +379,11 @@ export type CreateCommentArgs = {
  * In those cases you can retry the transaction as self-funded like in the following example:
  *
  * ```ts
- * const comment = async (content: string) => {
+ * const post = async (content: string) => {
  *   // create and upload metadata as before
  *
  *   const sponsoredResult = await execute({
  *     metadata: uri,
- *     commentOn: : publicationId,
  *   });
  *
  *   if (sponsoredResult.isFailure()) {
@@ -409,9 +391,8 @@ export type CreateCommentArgs = {
  *       case 'BroadcastingError':
  *         if ([BroadcastingErrorReason.NOT_SPONSORED, BroadcastingErrorReason.RATE_LIMITED].includes(sponsoredResult.error.reason)) {
  *
- *           const chargedResult = = await execute({
+ *           const chargedResult = await execute({
  *             metadata: uri,
- *             commentOn: : publicationId,
  *             sponsored: false,
  *           });
  *
@@ -429,22 +410,21 @@ export type CreateCommentArgs = {
  *
  * It just requires the app to apply for whitelisting. See https://docs.lens.xyz/docs/gasless-and-signless#whitelisting-your-app.
  *
- * ## Momoka comments
+ * ## Momoka posts
  *
- * For a comment to be hosted on Momoka it must meet the following criteria:
- * - it must be a comment for a Momoka publication
+ * For a post to be hosted on Momoka it must meet the following criteria:
  * - reference policy `ANYONE` (which is also the default value in case it's not specified)
  * - no open actions
  * - sponsored by the Lens API (which is also the default value in case it's not specified)
  *
- * If the comment does not meet the above criteria, it will be hosted on-chain.
+ * If the post does not meet the above criteria, it will be hosted on-chain.
  *
  * ## Upgrading from v1
  *
- * Replace the `useCreateComment` hook with `useCreateComment` like in the following diff:
+ * Replace the `useCreatePost` hook with `useCreatePost` like in the following diff:
  * ```diff
- * - const { execute, error, isPending } = useCreateComment({ publisher, upload: uploadToIpfs });
- * + const { execute, error, loading } = useCreateComment();
+ * - const { execute, error, isPending } = useCreatePost({ publisher, upload: uploadToIpfs });
+ * + const { execute, error, loading } = useCreatePost();
  * ```
  * Amend the code that used to call the `execute` function to:
  * ```ts
@@ -453,12 +433,11 @@ export type CreateCommentArgs = {
  *   content: `Hello world!`,
  * });
  *
- * // second: upload it using the upload function you used to pass to `useCreateComment`:
+ * // second: upload it using the upload function you used to pass to `useCreatePost`:
  * const uri = await uploadToIpfs(metadata);
  *
  * // finally, invoke the `execute` function:
  * const result = await execute({
- *   commentOn: publicationId,
  *   metadata: uri,
  * })
  *
@@ -468,34 +447,31 @@ export type CreateCommentArgs = {
  * @category Publications
  * @group Hooks
  */
-export function useCreateComment(): UseDeferredTask<
-  CommentAsyncResult,
+export function useCreatePost(): UseDeferredTask<
+  PostAsyncResult,
   | BroadcastingError
   | InsufficientGasError
   | PendingSigningRequestError
   | UserRejectedError
   | WalletConnectionError,
-  CreateCommentArgs
+  CreatePostArgs
 > {
   const { data: session } = useSession();
-  const createComment = useCreateCommentController();
+  const createPostRequest = useCreatePostRequest();
+  const createPost = useCreatePostController();
 
-  return useDeferredTask(async (args: CreateCommentArgs) => {
+  return useDeferredTask(async (args: CreatePostArgs) => {
     invariant(
-      session?.authenticated,
-      'You must be authenticated to create a comment. Use `useLogin` hook to authenticate.',
-    );
-    invariant(
-      session.type === SessionType.WithProfile,
-      'You must have a profile to create a comment.',
+      session?.type === SessionType.WithProfile,
+      'You must be authenticated with a Profile to post. Use `useLogin` hook to authenticate.',
     );
 
-    const request = createCommentRequest({
+    const request = await createPostRequest({
       signless: session.profile.signless,
-      sponsored: args.sponsored ?? true,
+      sponsored: args.sponsored ?? session.profile.sponsor,
       ...args,
     });
 
-    return createComment(request);
+    return createPost(request);
   });
 }
