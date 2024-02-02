@@ -108,6 +108,7 @@ export type {
   ChallengeRequest,
   ChangeProfileManagersRequest,
   ClaimProfileWithHandleRequest,
+  CreateProfileRequest,
   CreateProfileWithHandleRequest,
   DefaultProfileRequest,
   DismissRecommendedProfilesRequest,

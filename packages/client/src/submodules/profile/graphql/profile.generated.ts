@@ -299,18 +299,6 @@ export type WhoHaveBlockedQuery = {
   result: { items: Array<ProfileFragment>; pageInfo: PaginatedResultInfoFragment };
 };
 
-export type CreateProfileWithHandleErrorResultFragment = {
-  reason: Types.CreateProfileWithHandleErrorReasonType;
-};
-
-export type CreateProfileWithHandleMutationVariables = Types.Exact<{
-  request: Types.CreateProfileWithHandleRequest;
-}>;
-
-export type CreateProfileWithHandleMutation = {
-  result: CreateProfileWithHandleErrorResultFragment | RelaySuccessFragment;
-};
-
 export type AddProfileInterestsMutationVariables = Types.Exact<{
   request: Types.ProfileInterestsRequest;
 }>;
@@ -1396,23 +1384,6 @@ export const ProfileActionHistoryFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'actionedOn' } },
         ],
-      },
-    },
-  ],
-} as unknown as DocumentNode;
-export const CreateProfileWithHandleErrorResultFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'CreateProfileWithHandleErrorResult' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'CreateProfileWithHandleErrorResult' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [{ kind: 'Field', name: { kind: 'Name', value: 'reason' } }],
       },
     },
   ],
@@ -11210,105 +11181,6 @@ export const WhoHaveBlockedDocument = {
     },
   ],
 } as unknown as DocumentNode;
-export const CreateProfileWithHandleDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'CreateProfileWithHandle' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'CreateProfileWithHandleRequest' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'result' },
-            name: { kind: 'Name', value: 'createProfileWithHandle' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'InlineFragment',
-                  typeCondition: {
-                    kind: 'NamedType',
-                    name: { kind: 'Name', value: 'RelaySuccess' },
-                  },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'RelaySuccess' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'InlineFragment',
-                  typeCondition: {
-                    kind: 'NamedType',
-                    name: { kind: 'Name', value: 'CreateProfileWithHandleErrorResult' },
-                  },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'CreateProfileWithHandleErrorResult' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'CreateProfileWithHandleErrorResult' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'CreateProfileWithHandleErrorResult' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [{ kind: 'Field', name: { kind: 'Name', value: 'reason' } }],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'RelaySuccess' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'RelaySuccess' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'txId' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode;
 export const AddProfileInterestsDocument = {
   kind: 'Document',
   definitions: [
@@ -13634,7 +13506,6 @@ const FollowStatusBulkDocumentString = print(FollowStatusBulkDocument);
 const WhoActedOnPublicationDocumentString = print(WhoActedOnPublicationDocument);
 const ProfileActionHistoryDocumentString = print(ProfileActionHistoryDocument);
 const WhoHaveBlockedDocumentString = print(WhoHaveBlockedDocument);
-const CreateProfileWithHandleDocumentString = print(CreateProfileWithHandleDocument);
 const AddProfileInterestsDocumentString = print(AddProfileInterestsDocument);
 const RemoveProfileInterestsDocumentString = print(RemoveProfileInterestsDocument);
 const SetProfileMetadataDocumentString = print(SetProfileMetadataDocument);
@@ -13876,26 +13747,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
           }),
         'WhoHaveBlocked',
         'query',
-      );
-    },
-    CreateProfileWithHandle(
-      variables: CreateProfileWithHandleMutationVariables,
-      requestHeaders?: GraphQLClientRequestHeaders,
-    ): Promise<{
-      data: CreateProfileWithHandleMutation;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<CreateProfileWithHandleMutation>(
-            CreateProfileWithHandleDocumentString,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'CreateProfileWithHandle',
-        'mutation',
       );
     },
     AddProfileInterests(
