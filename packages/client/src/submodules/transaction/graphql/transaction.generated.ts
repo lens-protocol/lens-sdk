@@ -47,6 +47,10 @@ export type RelayQueuesQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type RelayQueuesQuery = { result: Array<RelayQueueResultFragment> };
 
+export type GenerateLensApiRelayAddressQueryVariables = Types.Exact<{ [key: string]: never }>;
+
+export type GenerateLensApiRelayAddressQuery = { result: string };
+
 export type LensTransactionStatusQueryVariables = Types.Exact<{
   request: Types.LensTransactionStatusRequest;
 }>;
@@ -222,6 +226,26 @@ export const RelayQueuesDocument = {
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'address' } },
           { kind: 'Field', name: { kind: 'Name', value: 'chainId' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const GenerateLensApiRelayAddressDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GenerateLensAPIRelayAddress' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'result' },
+            name: { kind: 'Name', value: 'generateLensAPIRelayAddress' },
+          },
         ],
       },
     },
@@ -485,6 +509,7 @@ export type SdkFunctionWrapper = <T>(
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const TxIdToTxHashDocumentString = print(TxIdToTxHashDocument);
 const RelayQueuesDocumentString = print(RelayQueuesDocument);
+const GenerateLensApiRelayAddressDocumentString = print(GenerateLensApiRelayAddressDocument);
 const LensTransactionStatusDocumentString = print(LensTransactionStatusDocument);
 const BroadcastOnchainDocumentString = print(BroadcastOnchainDocument);
 const BroadcastOnMomokaDocumentString = print(BroadcastOnMomokaDocument);
@@ -520,6 +545,26 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'RelayQueues',
+        'query',
+      );
+    },
+    GenerateLensAPIRelayAddress(
+      variables?: GenerateLensApiRelayAddressQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: GenerateLensApiRelayAddressQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<GenerateLensApiRelayAddressQuery>(
+            GenerateLensApiRelayAddressDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'GenerateLensAPIRelayAddress',
         'query',
       );
     },
