@@ -30,6 +30,31 @@ export type ValidateHandleRequest = {
 /**
  * Validate the proposed new handle, its format and availability.
  *
+ * This hook will not execute until the returned function is called.
+ *
+ * @example
+ * ```ts
+ * const { called,  error, loading, execute } = useValidateHandle();
+ * ```
+ *
+ * Simple example:
+ * ```ts
+ * const { called, error, loading, execute } = useValidateHandle();
+ *
+ * const callback = async () => {
+ *   const result = await execute({ handle: 'wagmi' });
+ *
+ *   if (result.isFailure()) {
+ *     console.error(result.error.message); // handle not valid or already taken
+ *     return;
+ *   }
+ *
+ *   if (result.value === true) {
+ *     // success - handle is available
+ *   }
+ * }
+ * ```
+ *
  * @experimental This hook is experimental and may change in the future.
  * @category Misc
  * @group Hooks

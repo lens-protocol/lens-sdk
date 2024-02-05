@@ -1,5 +1,5 @@
 import { profileId, useLogin, useProfilesManaged } from '@lens-protocol/react-web';
-import toast from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 import { never } from '../../utils';
 import { ErrorMessage } from '../error/ErrorMessage';
