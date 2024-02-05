@@ -39,6 +39,7 @@ import {
   UseInviteWallets,
   UseNotifications,
   UseResolveAddress,
+  UseValidateHandle,
 } from './misc';
 import {
   ProfilesPage,
@@ -202,6 +203,7 @@ export function App() {
                     <Route path="useClaimHandle" element={<UseClaimHandle />} />
                     <Route path="useInviteWallets" element={<UseInviteWallets />} />
                     <Route path="useResolveAddress" element={<UseResolveAddress />} />
+                    <Route path="useValidateHandle" element={<UseValidateHandle />} />
                     <Route
                       path="lensClientInteroperability"
                       element={<LensClientInteroperability />}

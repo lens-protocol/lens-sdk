@@ -36,6 +36,11 @@ const hooks = [
     description: `Resolves and EVM address from a Lens Handle.`,
     path: '/misc/useResolveAddress',
   },
+  {
+    label: 'useValidateHandle',
+    description: `Validate the proposed handle before profile creation.`,
+    path: '/misc/useValidateHandle',
+  },
 ];
 
 export function MiscPage() {

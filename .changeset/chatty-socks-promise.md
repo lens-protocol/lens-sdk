@@ -8,3 +8,4 @@
 ---
 
 **chore:** unified implementation and naming of `isValidHandle` helper among react and client SDKs. deprecated `isValidProfileHandle` in the client sdk.
+**feat:** added `useValidateHandle` hook
