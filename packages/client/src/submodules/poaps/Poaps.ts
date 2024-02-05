@@ -19,11 +19,15 @@ import { PoapEventFragment, PoapTokenFragment, Sdk, getSdk } from './graphql/poa
 /**
  * POAP is a protocol for the preservation of memories as digital records.
  *
+ * @experimental This module is not stable and may be removed in a future release
  * @group LensClient Modules
  */
 export class Poaps {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     private readonly context: LensContext,
     authentication: Authentication,
@@ -38,6 +42,7 @@ export class Poaps {
    *
    * @param request - The request object.
    * @returns POAP tokens wrapped in {@link PaginatedResult}
+   * @experimental This function is not stable and may be removed in a future release
    *
    * @example
    * ```ts
@@ -61,6 +66,7 @@ export class Poaps {
    *
    * @param request - The request object.
    * @returns Profiles wrapped in {@link PaginatedResult}
+   * @experimental This function is not stable and may be removed in a future release
    *
    * @example
    * ```ts
@@ -85,6 +91,7 @@ export class Poaps {
    *
    * @param request - The request object.
    * @returns POAP events wrapped in {@link PaginatedResult}
+   * @experimental This function is not stable and may be removed in a future release
    *
    * @example
    * ```ts
@@ -111,6 +118,7 @@ export class Poaps {
    *
    * @param request - The request object.
    * @returns POAP event.
+   * @experimental This function is not stable and may be removed in a future release
    *
    * @example
    * ```ts

@@ -30,6 +30,9 @@ export type MomokaTransaction =
 export class Momoka {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     private readonly context: LensContext,
     authentication: Authentication,

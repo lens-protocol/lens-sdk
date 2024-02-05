@@ -30,6 +30,9 @@ export class Authentication implements IAuthentication {
   private readonly api: AuthenticationApi;
   private readonly credentials: CredentialsStorage;
 
+  /**
+   * @internal
+   */
   constructor(context: LensContext) {
     this.api = new AuthenticationApi(context);
     this.credentials = new CredentialsStorage(context.storage, context.environment.name);
@@ -158,7 +161,9 @@ export class Authentication implements IAuthentication {
     });
   }
 
-  // privileged methods
+  /**
+   * @internal
+   */
   async requireAuthentication<
     TResult extends Result<TValue, TError>,
     TValue,
@@ -181,6 +186,9 @@ export class Authentication implements IAuthentication {
     return handler(profileId);
   }
 
+  /**
+   * @internal
+   */
   async requireAtLeastWalletAuthentication<
     TResult extends Result<TValue, TError>,
     TValue,
@@ -197,6 +205,9 @@ export class Authentication implements IAuthentication {
     return handler(result.value.getProfileId());
   }
 
+  /**
+   * @internal
+   */
   async getRequestHeader(): PromiseResult<
     Record<string, string>,
     CredentialsExpiredError | NotAuthenticatedError

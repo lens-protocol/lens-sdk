@@ -34,6 +34,9 @@ import {
 export class Modules {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     context: LensContext,
     private readonly authentication: Authentication,
