@@ -1,6 +1,4 @@
-import { faker } from '@faker-js/faker';
-
-import { isValidHandle } from '../isValidHandle';
+import { isValidHandle } from '../profile';
 
 describe(`Given the ${isValidHandle.name} predicate`, () => {
   describe('when called with a prospect Lens handle', () => {
@@ -13,7 +11,7 @@ describe(`Given the ${isValidHandle.name} predicate`, () => {
     });
 
     it('should return false if above 26 characters', () => {
-      expect(isValidHandle(faker.datatype.string(27))).toBe(false);
+      expect(isValidHandle('a'.repeat(27))).toBe(false);
     });
 
     it('should return false if with invalid characters', () => {
