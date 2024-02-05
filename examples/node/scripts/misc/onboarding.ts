@@ -1,5 +1,4 @@
 import {
-  CreateProfileWithHandleRequest,
   LensClient,
   LensTransactionStatusType,
   development,
@@ -24,7 +23,7 @@ async function main() {
   const userAddress = await wallet.getAddress();
 
   // prepare new handle
-  const requestedHandle = 'supercoolhandle'; // input from the user
+  const requestedHandle = 'janedoe'; // input from the user
 
   // check if the requested handle is in a valid format
   if (!isValidHandle(requestedHandle)) {
@@ -45,77 +44,64 @@ async function main() {
   // prepare a relayer address to enable signless experience
   // const lensRelayerAddress = await client.transaction.generateLensAPIRelayAddress();
 
-  // end
-  console.log('Onboarding complete!');
-  process.exit(1);
-
-  const profileId = await createProfileWithHandle({
+  // create a new profile with a handle
+  const createProfileResult = await client.wallet.createProfileWithHandle({
     handle: requestedHandle,
     to: userAddress,
   });
 
-  // authentication after the profile is minted
-  const challenge = await client.authentication.generateChallenge({
-    signedBy: userAddress,
-    for: profileId,
-  });
-  const signature = await wallet.signMessage(challenge.text);
-  await client.authentication.authenticate({ id: challenge.id, signature });
-
-  console.log(`Is LensClient authenticated? `, await client.authentication.isAuthenticated());
-
-  // create and set profile metadata
-  const metadataURI = await prepareProfileMetadata();
-
-  await setProfileMetadata(metadataURI);
-
-  console.log('Profile setup complete!');
-}
-
-main();
-
-/**
- * Create a new profile with a handle
- */
-async function createProfileWithHandle(request: CreateProfileWithHandleRequest): Promise<string> {
-  const result = await client.wallet.createProfileWithHandle(request);
-
-  if (!isRelaySuccess(result)) {
-    throw new Error(`Something went wrong: ${result.reason}`);
+  if (!isRelaySuccess(createProfileResult)) {
+    console.error(`Profile creation failed with the reason: ${createProfileResult.reason}`);
+    process.exit(1);
   }
 
   console.log(
-    `Transaction to create a new profile with handle "${request.handle}" was successfully broadcasted with txId`,
-    result.txId,
+    `Transaction to create new profile with handle "${requestedHandle}" was successfully broadcasted with txId`,
+    createProfileResult.txId,
   );
-
   console.log(`Waiting for the transaction to be indexed...`);
-  await client.transaction.waitUntilComplete({ forTxId: result.txId });
+  const createProfileTxCompletion = await client.transaction.waitUntilComplete({
+    forTxId: createProfileResult.txId,
+  });
+
+  // handle mining/indexing errors
+  if (createProfileTxCompletion?.status === LensTransactionStatusType.Failed) {
+    console.error(createProfileTxCompletion.reason);
+    process.exit(1);
+  }
 
   // now fetch the newly created profile to get the id
-  const fullHandle = `${HANDLE_NAMESPACE}/${request.handle}`;
+  const fullHandle = `${HANDLE_NAMESPACE}/${requestedHandle}`;
 
   const profile = await client.profile.fetch({
     forHandle: fullHandle,
   });
 
+  // this should never happen
   if (profile === null) {
-    throw new Error(`Profile with handle "${fullHandle}" not found`);
+    console.error(`Profile with handle "${fullHandle}" not found`);
+    process.exit(1);
   }
 
-  return profile.id;
-}
+  // the profile with handle is minted, let's now authenticate them
+  const challenge = await client.authentication.generateChallenge({
+    signedBy: userAddress,
+    for: profile.id,
+  });
+  const signature = await wallet.signMessage(challenge.text);
+  await client.authentication.authenticate({ id: challenge.id, signature });
 
-/**
- * Create and upload profile metadata json
- */
-async function prepareProfileMetadata(): Promise<string> {
+  console.log(
+    `Is new profile ${profile.id} authenticated? `,
+    await client.authentication.isAuthenticated(),
+  );
+
+  // now, prepare profile metadata using the metadata package
   const metadata = createProfileMetadata({
     name: 'Jane Doe',
     bio: 'I am a photographer based in New York City.',
     picture:
       'https://xirugirv3oxanetskoryfdjcnnmcz5isvjr2l2csy5s2sictfaza.arweave.net/uiNDIjXbrgaSclOjgo0ia1gs9RKqY6XoUsdlqSBTKDI',
-    coverPicture: '',
     attributes: [
       {
         key: 'twitter',
@@ -125,37 +111,48 @@ async function prepareProfileMetadata(): Promise<string> {
     ],
   });
 
-  const uri = await uploadWithBundlr(metadata);
+  // upload the metadata to Arweave
+  const metadataURI = await uploadWithBundlr(metadata);
+  console.log(`Metadata uploaded to Arweave with URI: ${metadataURI}`);
+  // https://arweave.net/cv2Rw4g9NhSEXFlq3Ekx1Xo7n76zQSnrx24uBODEkGg
 
-  return uri;
-}
+  // set the profile metadata on the Lens protocol
+  const setProfileMetadataResult = await client.profile.setProfileMetadata({ metadataURI });
 
-/**
- * Use uploaded metadata URI to set profile metadata on the Lens protocol
- */
-async function setProfileMetadata(metadataURI: string) {
-  const result = await client.profile.setProfileMetadata({ metadataURI });
-
-  // handle authentication errors
-  if (result.isFailure()) {
-    throw result.error; // CredentialsExpiredError or NotAuthenticatedError
+  if (setProfileMetadataResult.isFailure()) {
+    // should never happen as we are authenticated
+    console.error(setProfileMetadataResult.error.message);
+    process.exit(1);
   }
 
-  const data = result.value;
+  const setProfileMetadataValue = setProfileMetadataResult.value;
 
   // handle relay errors
-  if (!isRelaySuccess(data)) {
-    throw new Error(`Something went wrong: ${data.reason}`);
+  if (!isRelaySuccess(setProfileMetadataValue)) {
+    throw new Error(
+      `Setting profile metadata failed with the reason: ${setProfileMetadataValue.reason}`,
+    );
   }
 
-  // Optionally: wait for the tx to be mined and indexed
-  const completion = await client.transaction.waitUntilComplete({ forTxId: data.txId });
+  console.log(
+    `Transaction to set the profile metadata was successfully broadcasted with txId`,
+    setProfileMetadataValue.txId,
+  );
+
+  // optionally: wait for the tx to be mined and indexed
+  console.log(`Waiting for the transaction to be indexed...`);
+  const metadataTxCompletion = await client.transaction.waitUntilComplete({
+    forTxId: setProfileMetadataValue.txId,
+  });
 
   // handle mining/indexing errors
-  if (completion?.status === LensTransactionStatusType.Failed) {
-    console.error(completion.reason);
-    return;
+  if (metadataTxCompletion?.status === LensTransactionStatusType.Failed) {
+    console.error(metadataTxCompletion.reason);
+    process.exit(1);
   }
 
-  console.log('Profile Metadata updated!');
+  // end
+  console.log('Onboarding complete!');
 }
+
+main();
