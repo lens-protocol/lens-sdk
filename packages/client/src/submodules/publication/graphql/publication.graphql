@@ -491,6 +491,14 @@ mutation HidePublication($request: HidePublicationRequest!) {
   hidePublication(request: $request)
 }
 
+mutation HideComment($request: HideCommentRequest!) {
+  hideComment(request: $request)
+}
+
+mutation UnhideComment($request: UnhideCommentRequest!) {
+  unhideComment(request: $request)
+}
+
 mutation ReportPublication($request: ReportPublicationRequest!) {
   reportPublication(request: $request)
 }

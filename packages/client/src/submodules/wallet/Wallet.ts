@@ -11,6 +11,7 @@ import type {
 } from '../../graphql/fragments.generated';
 import type {
   ClaimProfileWithHandleRequest,
+  CreateProfileRequest,
   CreateProfileWithHandleRequest,
   LastLoggedInProfileRequest,
   OwnedHandlesRequest,
@@ -162,7 +163,33 @@ export class Wallet {
   }
 
   /**
-   * Create a new profile.
+   * Create a new profile with a handle.
+   *
+   * ⚠️ Only available in development environment.
+   *
+   * @param request - Request object for the mutation
+   * @returns Status of the transaction
+   *
+   * @example
+   * ```ts
+   * const result = await client.wallet.createProfileWithHandle({
+   *   handle: 'handle',
+   *   to: '0x1234567890123456789012345678901234567890',
+   * });
+   * ```
+   */
+  async createProfileWithHandle(
+    request: CreateProfileWithHandleRequest,
+  ): Promise<RelaySuccessFragment | CreateProfileWithHandleErrorResultFragment> {
+    if (this.context.environment.name === 'production') {
+      throw new Error('Cannot create profile in production environment');
+    }
+    const result = await this.sdk.CreateProfileWithHandle({ request });
+    return result.data.result;
+  }
+
+  /**
+   * Create a new profile only. No handle is created.
    *
    * ⚠️ Only available in development environment.
    *
@@ -172,18 +199,15 @@ export class Wallet {
    * @example
    * ```ts
    * const result = await client.wallet.createProfile({
-   *   handle: 'handle',
    *   to: '0x1234567890123456789012345678901234567890',
    * });
    * ```
    */
-  async createProfile(
-    request: CreateProfileWithHandleRequest,
-  ): Promise<RelaySuccessFragment | CreateProfileWithHandleErrorResultFragment> {
+  async createProfile(request: CreateProfileRequest): Promise<RelaySuccessFragment> {
     if (this.context.environment.name === 'production') {
       throw new Error('Cannot create profile in production environment');
     }
-    const result = await this.sdk.CreateProfileWithHandle({ request });
+    const result = await this.sdk.CreateProfile({ request });
     return result.data.result;
   }
 

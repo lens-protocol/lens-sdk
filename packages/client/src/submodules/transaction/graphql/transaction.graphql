@@ -25,6 +25,10 @@ query RelayQueues {
   }
 }
 
+query GenerateLensAPIRelayAddress {
+  result: generateLensAPIRelayAddress
+}
+
 query LensTransactionStatus($request: LensTransactionStatusRequest!) {
   result: lensTransactionStatus(request: $request) {
     ...LensTransactionResult

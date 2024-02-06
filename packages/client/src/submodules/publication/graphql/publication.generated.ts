@@ -411,6 +411,18 @@ export type HidePublicationMutationVariables = Types.Exact<{
 
 export type HidePublicationMutation = { hidePublication: string | null };
 
+export type HideCommentMutationVariables = Types.Exact<{
+  request: Types.HideCommentRequest;
+}>;
+
+export type HideCommentMutation = { hideComment: string | null };
+
+export type UnhideCommentMutationVariables = Types.Exact<{
+  request: Types.UnhideCommentRequest;
+}>;
+
+export type UnhideCommentMutation = { unhideComment: string | null };
+
 export type ReportPublicationMutationVariables = Types.Exact<{
   request: Types.ReportPublicationRequest;
 }>;
@@ -17245,6 +17257,78 @@ export const HidePublicationDocument = {
     },
   ],
 } as unknown as DocumentNode;
+export const HideCommentDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'HideComment' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'HideCommentRequest' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'hideComment' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const UnhideCommentDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UnhideComment' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'UnhideCommentRequest' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'unhideComment' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
 export const ReportPublicationDocument = {
   kind: 'Document',
   definitions: [
@@ -17625,6 +17709,8 @@ const CommentOnMomokaDocumentString = print(CommentOnMomokaDocument);
 const MirrorOnMomokaDocumentString = print(MirrorOnMomokaDocument);
 const QuoteOnMomokaDocumentString = print(QuoteOnMomokaDocument);
 const HidePublicationDocumentString = print(HidePublicationDocument);
+const HideCommentDocumentString = print(HideCommentDocument);
+const UnhideCommentDocumentString = print(UnhideCommentDocument);
 const ReportPublicationDocumentString = print(ReportPublicationDocument);
 const LegacyCollectDocumentString = print(LegacyCollectDocument);
 const CreateLegacyCollectTypedDataDocumentString = print(CreateLegacyCollectTypedDataDocument);
@@ -18031,6 +18117,44 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'HidePublication',
+        'mutation',
+      );
+    },
+    HideComment(
+      variables: HideCommentMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: HideCommentMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<HideCommentMutation>(HideCommentDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'HideComment',
+        'mutation',
+      );
+    },
+    UnhideComment(
+      variables: UnhideCommentMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: UnhideCommentMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<UnhideCommentMutation>(UnhideCommentDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'UnhideComment',
         'mutation',
       );
     },

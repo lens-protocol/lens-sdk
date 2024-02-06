@@ -98,6 +98,12 @@ export type CreateProfileWithHandleMutation = {
   result: CreateProfileWithHandleErrorResultFragment | RelaySuccessFragment;
 };
 
+export type CreateProfileMutationVariables = Types.Exact<{
+  request: Types.CreateProfileRequest;
+}>;
+
+export type CreateProfileMutation = { result: RelaySuccessFragment };
+
 export const UserSigNoncesFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -2756,6 +2762,62 @@ export const CreateProfileWithHandleDocument = {
     },
   ],
 } as unknown as DocumentNode;
+export const CreateProfileDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateProfile' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'CreateProfileRequest' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'result' },
+            name: { kind: 'Name', value: 'createProfile' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'RelaySuccess' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'RelaySuccess' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'RelaySuccess' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'txId' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -2771,6 +2833,7 @@ const ClaimableProfilesDocumentString = print(ClaimableProfilesDocument);
 const LastLoggedInProfileDocumentString = print(LastLoggedInProfileDocument);
 const ClaimProfileWithHandleDocumentString = print(ClaimProfileWithHandleDocument);
 const CreateProfileWithHandleDocumentString = print(CreateProfileWithHandleDocument);
+const CreateProfileDocumentString = print(CreateProfileDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     OwnedHandles(
@@ -2906,6 +2969,25 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'CreateProfileWithHandle',
+        'mutation',
+      );
+    },
+    CreateProfile(
+      variables: CreateProfileMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: CreateProfileMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<CreateProfileMutation>(CreateProfileDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'CreateProfile',
         'mutation',
       );
     },
