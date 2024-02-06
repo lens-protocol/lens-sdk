@@ -6,30 +6,47 @@ import {
   isValidHandle,
 } from '@lens-protocol/client';
 import { MetadataAttributeType, profile as createProfileMetadata } from '@lens-protocol/metadata';
+import * as dotenv from 'dotenv';
+import { ethers } from 'ethers';
 
-import { setupWallet } from '../shared/setupWallet';
+import abi from '../../abi/PermissonlessCreator.json';
+import type { PermissonlessCreator } from '../../contracts/PermissonlessCreator';
 import { uploadWithBundlr } from '../shared/uploadWithBundlr';
+
+dotenv.config();
+
+const typedAbi = abi as ethers.ContractInterface;
+
+const permissonlessCreatorAddress = {
+  development: '0x42b302BBB4fA27c21d32EdF602E4e2aA65746999',
+  production: 'TBD',
+};
+
+if (!process.env.INFURA_API_KEY) {
+  throw new Error('Infura API key is not defined in .env file');
+}
+
+const rpcUrl = {
+  development: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_API_KEY}`,
+  production: `https://polygon.infura.io/v3/${process.env.INFURA_API_KEY}`,
+};
 
 const HANDLE_NAMESPACE = 'test'; // use 'lens' namespace for production
 
-// init LensClient
-const client = new LensClient({
-  environment: development,
-});
-
 async function main() {
-  // prepare wallet of the new user
-  const wallet = setupWallet();
-  const userAddress = await wallet.getAddress();
-
   // prepare new handle
-  const requestedHandle = 'janedoe'; // input from the user
+  const requestedHandle = 'jane_doe'; // input from the user
 
   // check if the requested handle is in a valid format
   if (!isValidHandle(requestedHandle)) {
     console.error(`Invalid handle:  ${requestedHandle}`);
     process.exit(1);
   }
+
+  // init LensClient
+  const client = new LensClient({
+    environment: development,
+  });
 
   // check if the requested handle is available
   const handleOwnerAddress = await client.handle.resolveAddress({
@@ -41,34 +58,58 @@ async function main() {
     process.exit(1);
   }
 
-  // prepare a relayer address to enable signless experience
-  // const lensRelayerAddress = await client.transaction.generateLensAPIRelayAddress();
+  // init a provider to interact with the blockchain
+  const provider = new ethers.providers.JsonRpcProvider(rpcUrl.development);
 
-  // create a new profile with a handle
-  const createProfileResult = await client.wallet.createProfileWithHandle({
-    handle: requestedHandle,
-    to: userAddress,
-  });
-
-  if (!isRelaySuccess(createProfileResult)) {
-    console.error(`Profile creation failed with the reason: ${createProfileResult.reason}`);
-    process.exit(1);
+  // prepare wallet of the new user
+  if (!process.env.WALLET_PRIVATE_KEY) {
+    throw new Error('Private key is not defined in .env file');
   }
+  const wallet = new ethers.Wallet(process.env.WALLET_PRIVATE_KEY, provider);
+
+  // init a contract to mint a new profile with the handle
+  const permissonlessCreator = new ethers.Contract(
+    permissonlessCreatorAddress.development,
+    typedAbi,
+    wallet,
+  ) as PermissonlessCreator;
+
+  // prepare a relayer address to enable signless experience
+  const lensRelayerAddress = await client.transaction.generateLensAPIRelayAddress();
+
+  // get the price to mint a new profile
+  const price = await permissonlessCreator.getProfileWithHandleCreationPrice();
+
+  // submit a tx to mint a new profile with the handle
+  const tx = await permissonlessCreator.createProfileWithHandle(
+    {
+      to: wallet.address,
+      followModule: '0x0000000000000000000000000000000000000000',
+      followModuleInitData: '0x',
+    },
+    requestedHandle,
+    [lensRelayerAddress],
+    {
+      value: price,
+    },
+  );
 
   console.log(
-    `Transaction to create new profile with handle "${requestedHandle}" was successfully broadcasted with txId`,
-    createProfileResult.txId,
+    `Transaction to create a new profile with handle "${requestedHandle}" was successfully broadcasted with hash`,
+    tx.hash,
   );
+
   console.log(`Waiting for the transaction to be indexed...`);
-  const createProfileTxCompletion = await client.transaction.waitUntilComplete({
-    forTxId: createProfileResult.txId,
+  const outcome = await client.transaction.waitUntilComplete({
+    forTxHash: tx.hash,
   });
 
-  // handle mining/indexing errors
-  if (createProfileTxCompletion?.status === LensTransactionStatusType.Failed) {
-    console.error(createProfileTxCompletion.reason);
+  if (outcome === null) {
+    console.error(`The transaction with hash ${tx.hash} was lost.`);
     process.exit(1);
   }
+
+  console.log('A new profile has been successfully minted.');
 
   // now fetch the newly created profile to get the id
   const fullHandle = `${HANDLE_NAMESPACE}/${requestedHandle}`;
@@ -85,7 +126,7 @@ async function main() {
 
   // the profile with handle is minted, let's now authenticate them
   const challenge = await client.authentication.generateChallenge({
-    signedBy: userAddress,
+    signedBy: wallet.address,
     for: profile.id,
   });
   const signature = await wallet.signMessage(challenge.text);
@@ -113,8 +154,8 @@ async function main() {
 
   // upload the metadata to Arweave
   const metadataURI = await uploadWithBundlr(metadata);
+  // const metadataURI = 'https://arweave.net/cv2Rw4g9NhSEXFlq3Ekx1Xo7n76zQSnrx24uBODEkGg';
   console.log(`Metadata uploaded to Arweave with URI: ${metadataURI}`);
-  // https://arweave.net/cv2Rw4g9NhSEXFlq3Ekx1Xo7n76zQSnrx24uBODEkGg
 
   // set the profile metadata on the Lens protocol
   const setProfileMetadataResult = await client.profile.setProfileMetadata({ metadataURI });
