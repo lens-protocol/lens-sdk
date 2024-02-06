@@ -16,8 +16,7 @@ import { SetProfileMetadataRequest } from '@lens-protocol/domain/use-cases/profi
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IPaidTransactionGateway,
-  ISignedOnChainGateway,
+  ISignedOnChainGateway
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
@@ -33,8 +32,7 @@ export class ProfileMetadataGateway
   extends AbstractContractCallGateway<SetProfileMetadataRequest>
   implements
     IDelegatedTransactionGateway<SetProfileMetadataRequest>,
-    ISignedOnChainGateway<SetProfileMetadataRequest>,
-    IPaidTransactionGateway<SetProfileMetadataRequest>
+    ISignedOnChainGateway<SetProfileMetadataRequest>
 {
   constructor(
     config: LensConfig,
@@ -142,3 +140,9 @@ export class ProfileMetadataGateway
     };
   }
 }
+  createDelegatedTransaction(request: SetProfileMetadataRequest): PromiseResult<Transaction<SetProfileMetadataRequest>, BroadcastingError> {
+    throw new Error('Method not implemented.');
+  }
+  createDelegatedTransaction(request: SetProfileMetadataRequest): PromiseResult<Transaction<SetProfileMetadataRequest>, BroadcastingError> {
+    throw new Error('Method not implemented.');
+  }

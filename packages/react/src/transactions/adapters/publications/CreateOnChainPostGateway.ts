@@ -1,15 +1,15 @@
 import {
-  SafeApolloClient,
-  omitTypename,
-  RelaySuccess,
-  CreateOnchainPostTypedDataData,
   CreateOnchainPostBroadcastItemResult,
-  CreateOnchainPostTypedDataVariables,
+  CreateOnchainPostTypedDataData,
   CreateOnchainPostTypedDataDocument,
+  CreateOnchainPostTypedDataVariables,
   OnchainPostRequest,
   PostOnchainData,
-  PostOnchainVariables,
   PostOnchainDocument,
+  PostOnchainVariables,
+  RelaySuccess,
+  SafeApolloClient,
+  omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -17,7 +17,6 @@ import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications'
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -36,8 +35,7 @@ export class CreateOnChainPostGateway
   extends AbstractContractCallGateway<CreatePostRequest>
   implements
     IDelegatedTransactionGateway<CreatePostRequest>,
-    ISignedOnChainGateway<CreatePostRequest>,
-    IPaidTransactionGateway<CreatePostRequest>
+    ISignedOnChainGateway<CreatePostRequest>
 {
   constructor(
     config: LensConfig,

@@ -1,8 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { MaxUint256 } from '@ethersproject/constants';
-import { erc20, bigNumber } from '@lens-protocol/blockchain-bindings';
+import { bigNumber, erc20 } from '@lens-protocol/blockchain-bindings';
 import {
-  IPaidTransactionGateway,
   TokenAllowanceLimit,
   TokenAllowanceRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
@@ -23,10 +22,7 @@ function resolveApproveAmount(request: TokenAllowanceRequest): BigNumber {
   }
 }
 
-export class ApproveTransactionGateway
-  extends AbstractContractCallGateway<TokenAllowanceRequest>
-  implements IPaidTransactionGateway<TokenAllowanceRequest>
-{
+export class ApproveTransactionGateway extends AbstractContractCallGateway<TokenAllowanceRequest> {
   protected async createEncodedData(request: TokenAllowanceRequest): Promise<ContractCallDetails> {
     const contract = erc20(request.amount.asset.address);
 
