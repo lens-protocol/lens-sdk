@@ -60,7 +60,7 @@ export type ValidateHandleRequest = {
  * @group Hooks
  */
 export function useValidateHandle(): UseDeferredTask<
-  boolean,
+  void,
   UnspecifiedError | HandleNotAvailableError | InvalidHandleError,
   ValidateHandleRequest
 > {
@@ -73,7 +73,7 @@ export function useValidateHandle(): UseDeferredTask<
   return useDeferredTask(
     async (
       request,
-    ): PromiseResult<boolean, UnspecifiedError | HandleNotAvailableError | InvalidHandleError> => {
+    ): PromiseResult<void, UnspecifiedError | HandleNotAvailableError | InvalidHandleError> => {
       if (!isValidHandle(request.handle)) {
         return failure(new InvalidHandleError(request.handle));
       }
@@ -96,7 +96,7 @@ export function useValidateHandle(): UseDeferredTask<
         return failure(new HandleNotAvailableError(request.handle));
       }
 
-      return success(true);
+      return success();
     },
   );
 }

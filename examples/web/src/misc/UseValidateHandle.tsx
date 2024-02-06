@@ -18,10 +18,8 @@ export function UseValidateHandle() {
       return;
     }
 
-    if (result.value === true) {
-      toast.success(`You can create a new profile with handle: ${localName}`);
-      return;
-    }
+    toast.success(`You can create a new profile with handle: ${localName}`);
+    return;
   };
 
   return (
