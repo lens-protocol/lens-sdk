@@ -16,7 +16,6 @@ import { SetProfileMetadataRequest } from '@lens-protocol/domain/use-cases/profi
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -33,8 +32,7 @@ export class ProfileMetadataGateway
   extends AbstractContractCallGateway<SetProfileMetadataRequest>
   implements
     IDelegatedTransactionGateway<SetProfileMetadataRequest>,
-    ISignedOnChainGateway<SetProfileMetadataRequest>,
-    IPaidTransactionGateway<SetProfileMetadataRequest>
+    ISignedOnChainGateway<SetProfileMetadataRequest>
 {
   constructor(
     config: LensConfig,

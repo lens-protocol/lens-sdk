@@ -1,15 +1,15 @@
 import {
-  SafeApolloClient,
-  omitTypename,
-  RelaySuccess,
   CommentOnchainData,
-  CommentOnchainVariables,
   CommentOnchainDocument,
-  OnchainCommentRequest,
+  CommentOnchainVariables,
   CreateOnchainCommentBroadcastItemResult,
   CreateOnchainCommentTypedDataData,
-  CreateOnchainCommentTypedDataVariables,
   CreateOnchainCommentTypedDataDocument,
+  CreateOnchainCommentTypedDataVariables,
+  OnchainCommentRequest,
+  RelaySuccess,
+  SafeApolloClient,
+  omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -17,7 +17,6 @@ import { CreateCommentRequest } from '@lens-protocol/domain/use-cases/publicatio
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -36,8 +35,7 @@ export class CreateOnChainCommentGateway
   extends AbstractContractCallGateway<CreateCommentRequest>
   implements
     IDelegatedTransactionGateway<CreateCommentRequest>,
-    ISignedOnChainGateway<CreateCommentRequest>,
-    IPaidTransactionGateway<CreateCommentRequest>
+    ISignedOnChainGateway<CreateCommentRequest>
 {
   constructor(
     config: LensConfig,
