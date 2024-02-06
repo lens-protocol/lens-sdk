@@ -9,14 +9,9 @@ import {
   WalletConnectionErrorReason,
 } from '../../../entities';
 import { mockICredentials, mockWallet } from '../../../entities/__helpers__/mocks';
+import { IWalletFactory } from '../../wallets/IWalletFactory';
 import { ICredentialsWriter } from '../ICredentialsWriter';
-import {
-  ICredentialsIssuer,
-  IWalletFactory,
-  ILoginPresenter,
-  IWritableWalletGateway,
-  Login,
-} from '../Login';
+import { ICredentialsIssuer, ILoginPresenter, IWritableWalletGateway, Login } from '../Login';
 import { profileSessionData, walletOnlySessionData } from '../SessionData';
 import { mockJustWalletLoginRequest, mockProfileLoginRequest } from '../__helpers__/mocks';
 
