@@ -1,2 +1,2 @@
-export * from './TokenAvailability';
 export * from './InviteWallets';
+export * from './TokenAvailability';
