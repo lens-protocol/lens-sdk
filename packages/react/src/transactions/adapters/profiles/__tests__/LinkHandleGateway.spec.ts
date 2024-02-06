@@ -3,11 +3,11 @@
  */
 import { SafeApolloClient } from '@lens-protocol/api-bindings';
 import {
-  mockLensApolloClient,
-  mockRelaySuccessFragment,
   mockCreateLinkHandleToProfileTypedDataData,
   mockCreateLinkHandleToProfileTypedDataResponse,
+  mockLensApolloClient,
   mockLinkHandleToProfileResponse,
+  mockRelaySuccessFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction, UnsignedTransaction } from '@lens-protocol/domain/entities';
 import { mockLinkHandleRequest, mockWallet } from '@lens-protocol/domain/mocks';
@@ -49,7 +49,7 @@ describe(`Given an instance of ${LinkHandleGateway.name}`, () => {
     const wallet = mockWallet();
     const data = mockCreateLinkHandleToProfileTypedDataData();
 
-    it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+    it(`should resolve with the expected ${UnsignedContractCallTransaction.name}`, async () => {
       const provider = await mockJsonRpcProvider();
       const apolloClient = mockLensApolloClient([
         mockCreateLinkHandleToProfileTypedDataResponse({

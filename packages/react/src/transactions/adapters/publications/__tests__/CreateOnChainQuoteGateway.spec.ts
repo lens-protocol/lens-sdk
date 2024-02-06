@@ -6,15 +6,15 @@ import {
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
-  mockQuoteOnchainResponse,
   mockCreateOnchainQuoteTypedDataData,
   mockCreateOnchainQuoteTypedDataResponse,
   mockLensApolloClient,
   mockLensProfileManagerRelayError,
+  mockQuoteOnchainResponse,
   mockRelaySuccessFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
-import { mockNonce, mockCreateQuoteRequest, mockWallet } from '@lens-protocol/domain/mocks';
+import { mockCreateQuoteRequest, mockNonce, mockWallet } from '@lens-protocol/domain/mocks';
 import {
   BroadcastingError,
   BroadcastingErrorReason,
@@ -105,7 +105,7 @@ describe(`Given an instance of ${CreateOnChainQuoteGateway.name}`, () => {
   describe(`when creating an UnsignedTransaction<CreateQuoteRequest>`, () => {
     const wallet = mockWallet();
 
-    it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+    it(`should resolve with the expected ${UnsignedContractCallTransaction.name}`, async () => {
       const provider = await mockJsonRpcProvider();
       const apolloClient = mockLensApolloClient([
         mockCreateOnchainQuoteTypedDataResponse({

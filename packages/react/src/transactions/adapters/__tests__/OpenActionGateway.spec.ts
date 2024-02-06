@@ -290,7 +290,7 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
   ])(`when creating an ${UnsignedTransaction.name}<$name>`, ({ request, response }) => {
     const wallet = mockWallet();
 
-    it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+    it(`should resolve with the expected ${UnsignedContractCallTransaction.name}`, async () => {
       const provider = await mockJsonRpcProvider();
 
       const apolloClient = mockLensApolloClient([response]);
@@ -486,7 +486,7 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
       const wallet = mockWallet();
       const data = mockCreateActOnOpenActionTypedDataData();
 
-      it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+      it(`should resolve with the expected ${UnsignedContractCallTransaction.name}`, async () => {
         const provider = await mockJsonRpcProvider();
 
         const apolloClient = mockLensApolloClient([

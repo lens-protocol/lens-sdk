@@ -55,7 +55,7 @@ describe(`Given an instance of the ${ProfileMetadataGateway.name}`, () => {
   describe(`when creating an ${UnsignedTransaction.name}<SetProfileMetadataRequest>`, () => {
     const wallet = mockWallet();
 
-    it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+    it(`should resolve with the expected ${UnsignedContractCallTransaction.name}`, async () => {
       const provider = await mockJsonRpcProvider();
       const apolloClient = mockLensApolloClient([
         mockCreateSetProfileMetadataTypedDataResponse({

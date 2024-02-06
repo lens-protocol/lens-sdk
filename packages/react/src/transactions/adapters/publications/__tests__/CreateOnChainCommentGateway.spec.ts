@@ -14,7 +14,7 @@ import {
   mockRelaySuccessFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
-import { mockNonce, mockCreateCommentRequest, mockWallet } from '@lens-protocol/domain/mocks';
+import { mockCreateCommentRequest, mockNonce, mockWallet } from '@lens-protocol/domain/mocks';
 import {
   BroadcastingError,
   BroadcastingErrorReason,
@@ -105,7 +105,7 @@ describe(`Given an instance of ${CreateOnChainCommentGateway.name}`, () => {
   describe(`when creating an UnsignedTransaction<CreateCommentRequest>`, () => {
     const wallet = mockWallet();
 
-    it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+    it(`should resolve with the expected ${UnsignedContractCallTransaction.name}`, async () => {
       const provider = await mockJsonRpcProvider();
       const apolloClient = mockLensApolloClient([
         mockCreateOnchainCommentTypedDataResponse({
