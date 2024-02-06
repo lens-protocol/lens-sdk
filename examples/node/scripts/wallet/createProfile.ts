@@ -1,4 +1,4 @@
-import { LensClient, development, isRelaySuccess } from '@lens-protocol/client';
+import { LensClient, development } from '@lens-protocol/client';
 
 import { setupWallet } from '../shared/setupWallet';
 
@@ -9,22 +9,14 @@ async function main() {
     environment: development,
   });
 
-  const handle = Date.now().toString();
-
-  console.log(`Creating a new profile for ${address} with handle "${handle}"`);
+  console.log(`Creating a new profile for ${address}"`);
 
   const profileCreateResult = await client.wallet.createProfile({
-    handle: handle,
     to: address,
   });
 
-  if (!isRelaySuccess(profileCreateResult)) {
-    console.log(`Something went wrong`, profileCreateResult);
-    return;
-  }
-
   console.log(
-    `Transaction to create a new profile with handle "${handle}" was successfully broadcasted with txId`,
+    `Transaction to create a new profile was successfully broadcasted with txId`,
     profileCreateResult.txId,
   );
 
@@ -41,12 +33,6 @@ async function main() {
     `All owned profiles: `,
     allOwnedProfiles.items.map((i) => ({ id: i.id, handle: i.handle })),
   );
-
-  const newProfile = allOwnedProfiles.items.find((item) => item.handle?.localName === handle);
-
-  if (newProfile) {
-    console.log(`The newly created profile's id is: ${newProfile.id}`);
-  }
 }
 
 main();

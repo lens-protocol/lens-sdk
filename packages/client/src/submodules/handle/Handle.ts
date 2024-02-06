@@ -15,6 +15,9 @@ import { Sdk, getSdk } from './graphql/handle.generated';
 export class Handle {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(context: LensContext, authentication: Authentication) {
     const client = new FetchGraphQLClient(context);
 

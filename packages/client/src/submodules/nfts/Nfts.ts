@@ -38,11 +38,15 @@ import {
 /**
  * Query owned NFTs. Challenge ownership. Create and manage NFT galleries.
  *
+ * @experimental This module is not stable and may be removed in a future release
  * @group LensClient Modules
  */
 export class Nfts {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     context: LensContext,
     private readonly authentication: Authentication,
@@ -59,6 +63,7 @@ export class Nfts {
    *
    * @param request - Request object for the query
    * @returns NFTs wrapped in {@link PaginatedResult}
+   * @experimental This function is not stable and may be removed in a future release
    *
    * @example
    * When authenticated
@@ -121,6 +126,7 @@ export class Nfts {
    *
    * @param request - Request object for the query
    * @returns NFT collections wrapped in {@link PaginatedResult}
+   * @experimental This function is not stable and may be removed in a future release
    *
    * @example
    * ```ts
@@ -144,6 +150,7 @@ export class Nfts {
    *
    * @param request - Request object for the query
    * @returns NFT collections wrapped in {@link PaginatedResult}
+   * @experimental This function is not stable and may be removed in a future release
    *
    * @example
    * ```ts
@@ -170,6 +177,7 @@ export class Nfts {
    *
    * @param request - Request object for the query
    * @returns NFT collections with total owners wrapped in {@link PaginatedResult}
+   * @experimental This function is not stable and may be removed in a future release
    *
    * @example
    * ```ts
@@ -193,6 +201,7 @@ export class Nfts {
    *
    * @param request - Request object for the query
    * @returns Profiles wrapped in {@link PaginatedResult}
+   * @experimental This function is not stable and may be removed in a future release
    *
    * @example
    * ```ts
@@ -260,6 +269,7 @@ export class Nfts {
    *
    * @param request - Request object for the query
    * @returns Array of NFT galleries wrapped in {@link PaginatedResult}
+   * @experimental This function is not stable and may be removed in a future release
    *
    * @example
    * ```ts
@@ -288,6 +298,7 @@ export class Nfts {
    *
    * @param request - Request object for the mutation
    * @returns {@link PromiseResult} with the id of the new gallery
+   * @experimental This function is not stable and may be removed in a future release
    *
    * @example
    * ```ts
@@ -322,6 +333,7 @@ export class Nfts {
    *
    * @param request - Request object for the mutation
    * @returns {@link PromiseResult} with void
+   * @experimental This function is not stable and may be removed in a future release
    *
    * @example
    * ```ts
@@ -349,6 +361,7 @@ export class Nfts {
    *
    * @param request - Request object for the mutation
    * @returns {@link PromiseResult} with void
+   * @experimental This function is not stable and may be removed in a future release
    *
    * @example
    * ```ts
@@ -393,6 +406,7 @@ export class Nfts {
    *
    * @param request - Request object for the mutation
    * @returns {@link PromiseResult} with void
+   * @experimental This function is not stable and may be removed in a future release
    *
    * @example
    * ```ts
@@ -426,6 +440,7 @@ export class Nfts {
    *
    * @param request - Request object for the mutation
    * @returns {@link PromiseResult} with void
+   * @experimental This function is not stable and may be removed in a future release
    *
    * @example
    * ```ts

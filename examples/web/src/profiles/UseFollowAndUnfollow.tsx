@@ -14,7 +14,7 @@ import {
   useFollow,
   useUnfollow,
 } from '@lens-protocol/react-web';
-import toast from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 import { RequireProfileSession } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';

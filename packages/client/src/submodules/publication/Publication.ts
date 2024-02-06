@@ -11,6 +11,7 @@ import {
 } from '../../graphql/fragments.generated';
 import { AnyPublicationFragment } from '../../graphql/types';
 import {
+  HideCommentRequest,
   HidePublicationRequest,
   LegacyCollectRequest,
   LimitType,
@@ -30,6 +31,7 @@ import {
   ReportPublicationRequest,
   Scalars,
   TypedDataOptions,
+  UnhideCommentRequest,
   ValidatePublicationMetadataRequest,
 } from '../../graphql/types.generated';
 import {
@@ -66,6 +68,9 @@ import { FetchPublicationOptions, RequestOverwrites } from './types';
 export class Publication {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     private readonly context: LensContext,
     private readonly authentication: Authentication,
@@ -251,6 +256,54 @@ export class Publication {
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.HidePublication({ request }, headers);
+    });
+  }
+
+  /**
+   * Hide a comment that exists under a publication made by the authenticated profile.
+   * If already hidden, does nothing.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * await client.publication.hideComment({
+   *   for: '0x014e-0x0a',
+   * });
+   * ```
+   */
+  async hideComment(
+    request: HideCommentRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      await this.sdk.HideComment({ request }, headers);
+    });
+  }
+
+  /**
+   * Unhide a comment that exists under a publication made by the authenticated profile.
+   * If not hidden, does nothing.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * await client.publication.unhideComment({
+   *   for: '0x014e-0x0a',
+   * });
+   * ```
+   */
+  async unhideComment(
+    request: UnhideCommentRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      await this.sdk.UnhideComment({ request }, headers);
     });
   }
 

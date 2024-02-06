@@ -1,5 +1,5 @@
 import { useResolveAddress } from '@lens-protocol/react-web';
-import toast from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 export function UseResolveAddress() {
   const { execute, loading } = useResolveAddress();

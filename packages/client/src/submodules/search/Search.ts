@@ -20,6 +20,9 @@ import { getSdk, Sdk } from './graphql/search.generated';
 export class Search {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     private readonly context: LensContext,
     authentication: Authentication,

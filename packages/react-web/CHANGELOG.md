@@ -1,5 +1,20 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.30
+
+### Minor Changes
+
+- 9aa0fb780: **chore:** unified implementation and naming of `isValidHandle` helper among react and client SDKs. deprecated `isValidProfileHandle` in the client sdk.
+  **feat:** added `useValidateHandle` hook
+
+### Patch Changes
+
+- bd5a1da6a: **fix:** locks `@apollo/client` to 3.8.x until issues w/ 3.9.x are solved
+- Updated dependencies [9aa0fb780]
+- Updated dependencies [bd5a1da6a]
+  - @lens-protocol/api-bindings@0.11.0-alpha.27
+  - @lens-protocol/react@2.0.0-alpha.30
+
 ## 2.0.0-alpha.29
 
 ### Minor Changes

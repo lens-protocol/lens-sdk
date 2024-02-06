@@ -41,6 +41,9 @@ export class TransactionPollingError extends Error {
 export class Transaction {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     context: LensContext,
     private readonly authentication: Authentication,
@@ -51,6 +54,7 @@ export class Transaction {
 
   /**
    * Get the transaction hash for a transaction id.
+   *
    * @param txId - The transaction id
    * @returns The transaction hash
    *
@@ -77,6 +81,21 @@ export class Transaction {
    */
   async relayQueues(): Promise<RelayQueueResultFragment[]> {
     const result = await this.sdk.RelayQueues();
+    return result.data.result;
+  }
+
+  /**
+   * Generate a Lens API relay address.
+   *
+   * @returns The relay address
+   *
+   * @example
+   * ```ts
+   * const result = await client.transaction.generateLensAPIRelayAddress();
+   * ```
+   */
+  async generateLensAPIRelayAddress(): Promise<string> {
+    const result = await this.sdk.GenerateLensAPIRelayAddress();
     return result.data.result;
   }
 

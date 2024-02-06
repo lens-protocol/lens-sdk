@@ -404,22 +404,6 @@ query WhoHaveBlocked(
   }
 }
 
-# TODO remove, this mutation was moved to `wallet` submodule
-fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
-  reason
-}
-
-mutation CreateProfileWithHandle($request: CreateProfileWithHandleRequest!) {
-  result: createProfileWithHandle(request: $request) {
-    ... on RelaySuccess {
-      ...RelaySuccess
-    }
-    ... on CreateProfileWithHandleErrorResult {
-      ...CreateProfileWithHandleErrorResult
-    }
-  }
-}
-
 # mutations
 mutation AddProfileInterests($request: ProfileInterestsRequest!) {
   result: addProfileInterests(request: $request)
