@@ -6,9 +6,22 @@ import {
   isValidHandle,
 } from '@lens-protocol/client';
 import { MetadataAttributeType, profile as createProfileMetadata } from '@lens-protocol/metadata';
+import * as dotenv from 'dotenv';
+import { ethers } from 'ethers';
 
 import { setupWallet } from '../shared/setupWallet';
 import { uploadWithBundlr } from '../shared/uploadWithBundlr';
+import abi from '../../abi/PermissonlessCreator.json';
+import type { PermissonlessCreator } from '../../contracts/PermissonlessCreator';
+
+dotenv.config();
+
+const typedAbi = abi as ethers.ContractInterface;
+
+const publicActionProxyAddress = {
+  development: 'TBD',
+  production: 'TBD',
+};
 
 const HANDLE_NAMESPACE = 'test'; // use 'lens' namespace for production
 
