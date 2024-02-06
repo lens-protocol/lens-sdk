@@ -1,5 +1,12 @@
 # @lens-protocol/blockchain-bindings
 
+## 0.10.0-alpha.21
+
+### Minor Changes
+
+- 9aa0fb780: **chore:** unified implementation and naming of `isValidHandle` helper among react and client SDKs. deprecated `isValidProfileHandle` in the client sdk.
+  **feat:** added `useValidateHandle` hook
+
 ## 0.10.0-alpha.20
 
 ### Patch Changes

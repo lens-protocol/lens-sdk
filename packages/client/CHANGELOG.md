@@ -1,5 +1,20 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.30
+
+### Minor Changes
+
+- 9aa0fb780: **chore:** unified implementation and naming of `isValidHandle` helper among react and client SDKs. deprecated `isValidProfileHandle` in the client sdk.
+  **feat:** added `useValidateHandle` hook
+
+### Patch Changes
+
+- 8c61d97cf: **chore:** marked Nfts and Poaps as experimental as they are not stable and might be removed in the future
+- db32bfe23: **breaking:** renamed `wallet.createProfile` to `wallet.createProfileWithHandle` and introduced the correct `wallet.createProfile` method. Removed deprecated `profile.create` method.
+- db32bfe23: **feat:** added new methods `transaction.generateLensAPIRelayAddress`, `publication.hideComment` and `publication.unhideComment`
+- Updated dependencies [9aa0fb780]
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.21
+
 ## 2.0.0-alpha.29
 
 ### Patch Changes
