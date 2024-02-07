@@ -55,21 +55,6 @@ describe(`Given an instance of the ${WalletGateway.name}`, () => {
     });
   });
 
-  describe(`when "${WalletGateway.prototype.reset.name}" method is invoked`, () => {
-    it(`should remove all the ${Wallet.name} entities from the underlying storage provider`, async () => {
-      const wallet1 = mockConcreteWallet();
-      const wallet2 = mockConcreteWallet();
-      const storage = mockStorage<WalletStorageSchema>([wallet1, wallet2]);
-
-      const gateway = setupWalletGateway({ storage });
-
-      await gateway.reset();
-
-      expect(await gateway.getByAddress(wallet1.address)).toBeNull();
-      expect(await gateway.getByAddress(wallet2.address)).toBeNull();
-    });
-  });
-
   describe(`when "${WalletGateway.prototype.save.name}" method is invoked`, () => {
     it(`should cache the ${Wallet.name} instance in an in-memory cache to support subsequent reads`, async () => {
       const newWallet = mockConcreteWallet();

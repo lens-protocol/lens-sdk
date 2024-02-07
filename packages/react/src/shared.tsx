@@ -16,7 +16,6 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
 
-import { ConsoleLogger } from './ConsoleLogger';
 import { AccessTokenStorage } from './authentication/adapters/AccessTokenStorage';
 import { AuthApi } from './authentication/adapters/AuthApi';
 import { CredentialsExpiryController } from './authentication/adapters/CredentialsExpiryController';
@@ -25,6 +24,7 @@ import { CredentialsGateway } from './authentication/adapters/CredentialsGateway
 import { CredentialsStorage } from './authentication/adapters/CredentialsStorage';
 import { LogoutPresenter } from './authentication/adapters/LogoutPresenter';
 import { LensConfig } from './config';
+import { ConsoleLogger } from './ConsoleLogger';
 import { createInboxKeyStorage, DisableConversationsGateway } from './inbox';
 import { IProfileCacheManager } from './profile/adapters/IProfileCacheManager';
 import { ProfileCacheManager } from './profile/infrastructure/ProfileCacheManager';
@@ -33,7 +33,6 @@ import { ITransactionFactory } from './transactions/adapters/ITransactionFactory
 import { MomokaRelayer } from './transactions/adapters/MomokaRelayer';
 import { OnChainRelayer } from './transactions/adapters/OnChainRelayer';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
-import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
 import { BlockProfilesResponder } from './transactions/adapters/responders/BlockProfilesResponder';
 import { FollowProfileResponder } from './transactions/adapters/responders/FollowProfileResponder';
 import { LinkHandleResponder } from './transactions/adapters/responders/LinkHandleResponder';
@@ -43,6 +42,7 @@ import { RefreshPublicationResponder } from './transactions/adapters/responders/
 import { UnblockProfilesResponder } from './transactions/adapters/responders/UnblockProfilesResponder';
 import { UnfollowProfileResponder } from './transactions/adapters/responders/UnfollowProfileResponder';
 import { UpdateProfileManagersResponder } from './transactions/adapters/responders/UpdateProfileManagersResponder';
+import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
 import { TransactionFactory } from './transactions/infrastructure/TransactionFactory';
 import { TransactionObserver } from './transactions/infrastructure/TransactionObserver';
 import { createTransactionStorage } from './transactions/infrastructure/TransactionStorage';
@@ -152,7 +152,6 @@ export function createSharedDependencies(userConfig: LensConfig): SharedDependen
   // logout
   const logoutPresenter = new LogoutPresenter();
   const logout = new Logout(
-    walletGateway,
     credentialsGateway,
     transactionGateway,
     conversationsGateway,

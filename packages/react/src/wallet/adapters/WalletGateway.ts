@@ -1,7 +1,6 @@
 import {
   IReadableWalletGateway,
   IWritableWalletGateway,
-  IResettableWalletGateway,
 } from '@lens-protocol/domain/use-cases/authentication';
 import { EvmAddress, never } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
@@ -17,9 +16,7 @@ export const WalletStorageSchema = z.array(WalletDataSchema);
 
 export type WalletStorageSchema = z.infer<typeof WalletStorageSchema>;
 
-export class WalletGateway
-  implements IReadableWalletGateway, IResettableWalletGateway, IWritableWalletGateway
-{
+export class WalletGateway implements IReadableWalletGateway, IWritableWalletGateway {
   private inMemoryCache: Record<EvmAddress, ConcreteWallet> = {};
 
   constructor(
@@ -38,10 +35,6 @@ export class WalletGateway
       this.inMemoryCache[address] = wallet;
     }
     return wallet;
-  }
-
-  async reset(): Promise<void> {
-    await this.storage.reset();
   }
 
   async save(wallet: ConcreteWallet): Promise<void> {
