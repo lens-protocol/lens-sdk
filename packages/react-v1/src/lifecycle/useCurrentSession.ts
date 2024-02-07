@@ -149,7 +149,7 @@ export function useCurrentSession(): ReadResult<
         };
       }
 
-      // shoudn't happen, but just in case, fallback to loading
+      // shouldn't happen, but just in case, fallback to loading
       return {
         data: undefined,
         error: undefined,
