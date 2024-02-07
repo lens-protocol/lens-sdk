@@ -4,10 +4,10 @@ import { mockStorage } from '@lens-protocol/storage/mocks';
 import { mock } from 'jest-mock-extended';
 
 import { mockITransactionFactory } from '../../../transactions/adapters/__helpers__/mocks';
+import { mockConcreteWallet } from '../__helpers__/mocks';
 import { ISignerFactory } from '../ConcreteWallet';
 import { WalletFactory } from '../WalletFactory';
 import { WalletGateway, WalletStorageSchema } from '../WalletGateway';
-import { mockConcreteWallet } from '../__helpers__/mocks';
 
 function setupWalletGateway({ storage }: { storage: IStorage<WalletStorageSchema> }) {
   const signerFactory = mock<ISignerFactory>();
