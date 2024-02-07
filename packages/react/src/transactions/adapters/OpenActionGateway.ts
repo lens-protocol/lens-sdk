@@ -86,7 +86,7 @@ export class OpenActionGateway
     return this.createOpenActionUnsignedProtocolCall(request, nonce);
   }
 
-  protected override async createEncodedData(
+  protected override async createCallDetails(
     request: OpenActionRequest,
   ): Promise<ContractCallDetails> {
     if (request.public) {

@@ -45,7 +45,6 @@ export function mockCreateProfileRequest(
 ): CreateProfileRequest {
   return {
     localName: faker.internet.userName(),
-    followPolicy: mockChargeFollowConfig(),
     approveSignless: true,
     to: mockEvmAddress(),
     ...overrides,

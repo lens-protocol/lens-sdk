@@ -74,7 +74,7 @@ export class UnlinkHandleGateway
     });
   }
 
-  protected async createEncodedData(request: UnlinkHandleRequest): Promise<ContractCallDetails> {
+  protected async createCallDetails(request: UnlinkHandleRequest): Promise<ContractCallDetails> {
     const result = await this.createTypedData(request);
     return this.createUnlinkCallData(result);
   }

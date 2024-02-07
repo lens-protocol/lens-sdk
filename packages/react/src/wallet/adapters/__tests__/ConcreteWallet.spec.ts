@@ -3,20 +3,20 @@
  */
 
 import {
-  NativeTransaction,
-  UnsignedTransaction,
   InsufficientGasError,
+  NativeTransaction,
+  PendingSigningRequestError,
+  UnsignedTransaction,
+  UserRejectedError,
   WalletConnectionError,
   WalletConnectionErrorReason,
-  UserRejectedError,
-  PendingSigningRequestError,
 } from '@lens-protocol/domain/entities';
 import { mockProtocolTransactionRequestModel, mockSignature } from '@lens-protocol/domain/mocks';
 import { ChainType, failure, success } from '@lens-protocol/shared-kernel';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { errorCodes } from 'eth-rpc-errors';
 import { MockProvider } from 'ethereum-waffle';
-import { errors, providers, utils, Wallet } from 'ethers';
+import { Wallet, errors, providers, utils } from 'ethers';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
@@ -187,6 +187,7 @@ describe(`Given an instance of ${ConcreteWallet.name}`, () => {
     it(`should:
         - use the user's wallet to sign and send the transaction
         - resolve with with a ${NativeTransaction.name}`, async () => {
+      // setup
       const provider = new MockProvider();
       const [sender, receiver] = provider.getWallets() as [Wallet, Wallet];
       const txRequest = await sender.populateTransaction({
@@ -202,9 +203,11 @@ describe(`Given an instance of ${ConcreteWallet.name}`, () => {
       const wallet = setupWalletInstance({ signerFactory });
       const receiverBalanceBefore = await receiver.getBalance();
 
+      // execute
       const unsignedTransaction = mockUnsignedTransactionRequest({ chainType, txRequest });
       const result = await wallet.sendTransaction(unsignedTransaction);
 
+      // verify
       const receiverBalanceAfter = await receiver.getBalance();
       expect(receiverBalanceAfter.gt(receiverBalanceBefore)).toBe(true);
 
@@ -220,6 +223,7 @@ describe(`Given an instance of ${ConcreteWallet.name}`, () => {
     }, 15_000);
 
     it(`should fail with ${PendingSigningRequestError.name} in case of existing signing request`, async () => {
+      // setup
       const provider = new MockProvider();
       const [sender, receiver] = provider.getWallets() as [Wallet, Wallet];
       const txRequest = await sender.populateTransaction({
@@ -234,14 +238,17 @@ describe(`Given an instance of ${ConcreteWallet.name}`, () => {
       });
       const wallet = setupWalletInstance({ signerFactory });
 
+      // execute
       const unsignedTransaction = mockUnsignedTransactionRequest({ chainType, txRequest });
       void wallet.sendTransaction(unsignedTransaction); // previous signing request
       const result = await wallet.sendTransaction(unsignedTransaction);
 
+      // verify
       expect(() => result.unwrap()).toThrow(PendingSigningRequestError);
     });
 
     it(`should fail with ${InsufficientGasError.name} in case the wallet does not have enough Matic/Ether`, async () => {
+      // setup
       const signer = mock<providers.JsonRpcSigner>();
       when(signer.sendTransaction).mockRejectedValue(mockErrorWithCode(errors.INSUFFICIENT_FUNDS));
 
@@ -252,9 +259,11 @@ describe(`Given an instance of ${ConcreteWallet.name}`, () => {
       });
       const wallet = setupWalletInstance({ signerFactory });
 
+      // execute
       const unsignedTransaction = mockUnsignedTransactionRequest({ chainType, txRequest: {} });
       const result = await wallet.sendTransaction(unsignedTransaction);
 
+      // verify
       expect(() => result.unwrap()).toThrow(InsufficientGasError);
     });
 

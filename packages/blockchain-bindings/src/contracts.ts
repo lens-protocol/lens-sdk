@@ -5,6 +5,7 @@ import { EvmAddress } from '@lens-protocol/shared-kernel';
 import lensFollowNftAbi from './abi/LensFollowNFT.json';
 import lensHubAbi from './abi/LensHub.json';
 import lensTokenHandleRegistryAbi from './abi/LensTokenHandleRegistry.json';
+import permissionlessCreatorAbi from './abi/PermissionlessCreator.json';
 import publicActProxyAbi from './abi/PublicActProxy.json';
 import erc20Abi from './abi/erc-20.json';
 import type {
@@ -12,6 +13,7 @@ import type {
   LensFollowNFT,
   LensHub,
   LensTokenHandleRegistry,
+  PermissionlessCreator,
   PublicActProxy,
 } from './types';
 
@@ -33,4 +35,8 @@ export function lensTokenHandleRegistry(address: EvmAddress, provider?: Provider
 
 export function publicActProxy(address: EvmAddress, provider?: Provider) {
   return new Contract(address, publicActProxyAbi, provider) as PublicActProxy;
+}
+
+export function permissionlessCreator(address: EvmAddress, provider?: Provider) {
+  return new Contract(address, permissionlessCreatorAbi, provider) as PermissionlessCreator;
 }

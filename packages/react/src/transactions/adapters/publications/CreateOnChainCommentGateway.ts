@@ -78,7 +78,7 @@ export class CreateOnChainCommentGateway
     });
   }
 
-  protected override async createEncodedData(
+  protected override async createCallDetails(
     request: CreateCommentRequest,
   ): Promise<ContractCallDetails> {
     const input = this.resolveOnchainCommentRequest(request);

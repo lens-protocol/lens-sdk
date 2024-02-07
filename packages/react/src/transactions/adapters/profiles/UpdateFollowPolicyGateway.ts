@@ -75,7 +75,7 @@ export class UpdateFollowPolicyGateway
     });
   }
 
-  protected override async createEncodedData(
+  protected override async createCallDetails(
     request: UpdateFollowPolicyRequest,
   ): Promise<ContractCallDetails> {
     const result = await this.createTypedData(request);

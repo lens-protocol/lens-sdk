@@ -78,7 +78,7 @@ export class CreateOnChainQuoteGateway
     });
   }
 
-  protected override async createEncodedData(
+  protected override async createCallDetails(
     request: CreateQuoteRequest,
   ): Promise<ContractCallDetails> {
     const input = this.resolveOnchainQuoteRequest(request);

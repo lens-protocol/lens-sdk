@@ -78,7 +78,7 @@ export class CreateOnChainPostGateway
     });
   }
 
-  protected override async createEncodedData(
+  protected override async createCallDetails(
     request: CreatePostRequest,
   ): Promise<ContractCallDetails> {
     const input = this.resolveOnchainPostRequest(request);

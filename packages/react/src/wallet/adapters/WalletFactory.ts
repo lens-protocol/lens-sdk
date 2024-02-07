@@ -1,5 +1,5 @@
-import { IWalletFactory } from '@lens-protocol/domain/use-cases/authentication';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+import { IWalletFactory } from '@lens-protocol/domain/use-cases/wallets';
 import { EvmAddress } from '@lens-protocol/shared-kernel';
 
 import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';

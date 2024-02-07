@@ -76,7 +76,7 @@ export class CreateOnChainMirrorGateway
     });
   }
 
-  protected override async createEncodedData(
+  protected override async createCallDetails(
     request: CreateMirrorRequest,
   ): Promise<ContractCallDetails> {
     const input = this.resolveOnchainMirrorRequest(request);

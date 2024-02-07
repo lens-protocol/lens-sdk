@@ -25,18 +25,18 @@ import { TransactionQueue } from '../../transactions';
 import { IWalletFactory } from '../../wallets/IWalletFactory';
 import {
   CreateProfile,
+  ICreateProfilePresenter,
   ICreateProfileTransactionGateway,
-  ICreateProfileTransactionPresenter,
 } from '../CreateProfile';
 
 function setupCreateProfile({
   gateway,
-  presenter = mock<ICreateProfileTransactionPresenter>(),
+  presenter = mock<ICreateProfilePresenter>(),
   queue = mockTransactionQueue<AnyTransactionRequestModel>(),
   wallet,
 }: {
   gateway: ICreateProfileTransactionGateway;
-  presenter?: ICreateProfileTransactionPresenter;
+  presenter?: ICreateProfilePresenter;
   queue?: TransactionQueue<AnyTransactionRequestModel>;
   wallet: Wallet;
 }) {
@@ -64,7 +64,7 @@ describe(`Given the ${CreateProfile.name} interactor`, () => {
         wallet,
         unsignedTransaction,
       });
-      const presenter = mock<ICreateProfileTransactionPresenter>();
+      const presenter = mock<ICreateProfilePresenter>();
       const payTransaction = setupCreateProfile({
         gateway,
         presenter,
@@ -111,7 +111,7 @@ describe(`Given the ${CreateProfile.name} interactor`, () => {
           unsignedTransaction,
         });
 
-        const presenter = mock<ICreateProfileTransactionPresenter>();
+        const presenter = mock<ICreateProfilePresenter>();
         const payTransaction = setupCreateProfile({
           gateway,
           presenter,

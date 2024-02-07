@@ -1,9 +1,9 @@
-import { LensConfig, LensProvider, development } from '@lens-protocol/react-web';
+import { LensConfig, LensProvider, staging } from '@lens-protocol/react-web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import { XMTPProvider } from '@xmtp/react-sdk';
 import { Toaster } from 'react-hot-toast';
 import { Outlet, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import { configureChains, createConfig, WagmiConfig } from 'wagmi';
+import { WagmiConfig, configureChains, createConfig } from 'wagmi';
 import { polygonMumbai } from 'wagmi/chains';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { publicProvider } from 'wagmi/providers/public';
@@ -45,6 +45,7 @@ import {
   ProfilesPage,
   UseBlockAndUnblockProfiles,
   UseBlockedProfiles,
+  UseCreateProfile,
   UseFollowAndUnfollow,
   UseLastLoggedInProfile,
   UseLazyProfile,
@@ -66,8 +67,8 @@ import {
 } from './profiles';
 import {
   PublicationsPage,
-  UseBookmarks,
   UseBookmarkToggle,
+  UseBookmarks,
   UseCreateComment,
   UseCreateMirror,
   UseCreatePost,
@@ -108,7 +109,7 @@ const config = createConfig({
 });
 
 const lensConfig: LensConfig = {
-  environment: development,
+  environment: staging,
   bindings: wagmiBindings(),
 };
 
@@ -149,6 +150,7 @@ export function App() {
 
                   <Route path="/profiles">
                     <Route index element={<ProfilesPage />} />
+                    <Route path="useCreateProfile" element={<UseCreateProfile />} />
                     <Route path="useProfile" element={<UseProfile />} />
                     <Route path="useLazyProfile" element={<UseLazyProfile />} />
                     <Route path="useProfiles" element={<UseProfiles />} />

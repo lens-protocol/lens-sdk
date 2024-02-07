@@ -52,3 +52,7 @@ mutation BroadcastOnMomoka($request: BroadcastRequest!) {
     }
   }
 }
+
+query GenerateLensAPIRelayAddress {
+  result: generateLensAPIRelayAddress
+}

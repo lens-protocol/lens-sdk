@@ -11,7 +11,7 @@ export function UseValidateHandle() {
 
     const localName = formData.get('localName') as string;
 
-    const result = await execute({ handle: localName });
+    const result = await execute({ localName });
 
     if (result.isFailure()) {
       toast.error(result.error.message);

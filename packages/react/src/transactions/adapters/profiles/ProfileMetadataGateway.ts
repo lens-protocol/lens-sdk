@@ -77,7 +77,7 @@ export class ProfileMetadataGateway
     });
   }
 
-  protected override async createEncodedData(
+  protected override async createCallDetails(
     request: SetProfileMetadataRequest,
   ): Promise<ContractCallDetails> {
     const result = await this.createTypedData(request);

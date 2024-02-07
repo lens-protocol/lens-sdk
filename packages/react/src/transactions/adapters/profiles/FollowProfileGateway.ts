@@ -115,7 +115,7 @@ export class FollowProfileGateway
     });
   }
 
-  protected override async createEncodedData(request: FollowRequest): Promise<ContractCallDetails> {
+  protected override async createCallDetails(request: FollowRequest): Promise<ContractCallDetails> {
     const result = await this.createTypedData(request);
     return this.createFollowCallDetails(result);
   }

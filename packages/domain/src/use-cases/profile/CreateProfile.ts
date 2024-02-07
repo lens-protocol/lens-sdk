@@ -12,19 +12,17 @@ import { IPaidTransactionGateway } from '../transactions/IPaidTransactionGateway
 import { ITransactionResultPresenter } from '../transactions/ITransactionResultPresenter';
 import { TransactionQueue } from '../transactions/TransactionQueue';
 import { IWalletFactory } from '../wallets/IWalletFactory';
-import { FollowPolicyConfig } from './FollowPolicy';
 
 export type CreateProfileRequest = {
   kind: TransactionKind.CREATE_PROFILE;
   to: EvmAddress;
   localName: string;
   approveSignless: boolean;
-  followPolicy?: FollowPolicyConfig;
 };
 
 export type ICreateProfileTransactionGateway = IPaidTransactionGateway<CreateProfileRequest>;
 
-export type ICreateProfileTransactionPresenter = ITransactionResultPresenter<
+export type ICreateProfilePresenter = ITransactionResultPresenter<
   CreateProfileRequest,
   PendingSigningRequestError | InsufficientGasError | UserRejectedError | WalletConnectionError
 >;
@@ -33,7 +31,7 @@ export class CreateProfile {
   constructor(
     private readonly walletFactory: IWalletFactory,
     private readonly gateway: ICreateProfileTransactionGateway,
-    private readonly presenter: ICreateProfileTransactionPresenter,
+    private readonly presenter: ICreateProfilePresenter,
     private readonly queue: TransactionQueue<AnyTransactionRequestModel>,
   ) {}
 
