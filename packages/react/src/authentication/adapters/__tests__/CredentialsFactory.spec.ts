@@ -13,14 +13,14 @@ import { when } from 'jest-when';
 
 import { AuthApi, AuthChallenge } from '../AuthApi';
 import { CredentialsFactory } from '../CredentialsFactory';
-import { mockCredentials } from '../__helpers__/mocks';
+import { mockJwtCredentials } from '../__helpers__/mocks';
 
 const challenge: AuthChallenge = {
   id: faker.datatype.uuid(),
   text: 'Challenge to sign from backend',
 };
 const signature = mockSignature();
-const credentials = mockCredentials();
+const credentials = mockJwtCredentials();
 
 function setupTestScenario() {
   const wallet = mockWallet();
@@ -87,7 +87,7 @@ describe(`Given an instance of the ${CredentialsFactory.name} class`, () => {
       jest.useFakeTimers({
         now: new Date(0),
       });
-      const newCredentials = mockCredentials();
+      const newCredentials = mockJwtCredentials();
       const { credentialsFactory, authApi } = setupTestScenario();
 
       when(authApi.refreshCredentials)

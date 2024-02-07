@@ -1,9 +1,9 @@
 import { invariant, never } from '@lens-protocol/shared-kernel';
 
-import { ICredentials, Wallet } from '../../entities';
+import { Credentials, Wallet } from '../../entities';
 
 export interface ICredentialsReader {
-  getCredentials(): Promise<ICredentials | null>;
+  getCredentials(): Promise<Credentials | null>;
 }
 
 export interface IReadableWalletGateway {

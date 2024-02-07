@@ -1,6 +1,6 @@
 import { Result, invariant, success } from '@lens-protocol/shared-kernel';
 
-import { ICredentials, ProfileId } from '../../entities';
+import { Credentials, ProfileId } from '../../entities';
 import { ICredentialsWriter } from './ICredentialsWriter';
 import { SessionData, profileSessionData } from './SessionData';
 
@@ -9,7 +9,7 @@ export type UpgradeCredentialsRequest = {
 };
 
 export interface ICredentialsUpgrader {
-  upgradeCredentials(profileId: ProfileId): Promise<ICredentials>;
+  upgradeCredentials(profileId: ProfileId): Promise<Credentials>;
 }
 
 export interface IUpgradeCredentialsPresenter {

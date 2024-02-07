@@ -8,7 +8,7 @@ import {
   WalletConnectionError,
   WalletConnectionErrorReason,
 } from '../../../entities';
-import { mockICredentials, mockWallet } from '../../../entities/__helpers__/mocks';
+import { mockCredentials, mockWallet } from '../../../entities/__helpers__/mocks';
 import { IWalletFactory } from '../../wallets/IWalletFactory';
 import { ICredentialsWriter } from '../ICredentialsWriter';
 import { ICredentialsIssuer, ILoginPresenter, IWritableWalletGateway, Login } from '../Login';
@@ -61,7 +61,7 @@ describe(`Given the ${Login.name} interactor`, () => {
         const walletFactory = mock<IWalletFactory>();
         const credentialsIssuer = mock<ICredentialsIssuer>();
 
-        const credentials = mockICredentials({ address: wallet.address });
+        const credentials = mockCredentials({ address: wallet.address });
 
         when(walletFactory.create).calledWith(request.address).mockResolvedValue(wallet);
         when(credentialsIssuer.issueCredentials)
@@ -119,7 +119,7 @@ describe(`Given the ${Login.name} interactor`, () => {
         const walletFactory = mock<IWalletFactory>();
         const credentialsIssuer = mock<ICredentialsIssuer>();
 
-        const credentials = mockICredentials({ address: wallet.address });
+        const credentials = mockCredentials({ address: wallet.address });
 
         when(walletFactory.create).calledWith(request.address).mockResolvedValue(wallet);
         when(credentialsIssuer.issueCredentials)

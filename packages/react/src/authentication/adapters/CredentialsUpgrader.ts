@@ -7,12 +7,12 @@ import {
 import { ProfileId } from '@lens-protocol/domain/entities';
 import { ICredentialsUpgrader } from '@lens-protocol/domain/use-cases/authentication';
 
-import { Credentials } from './Credentials';
+import { JwtCredentials } from './JwtCredentials';
 
 export class CredentialsUpgrader implements ICredentialsUpgrader {
   constructor(private apolloClient: SafeApolloClient) {}
 
-  async upgradeCredentials(profileId: ProfileId): Promise<Credentials> {
+  async upgradeCredentials(profileId: ProfileId): Promise<JwtCredentials> {
     const result = await this.apolloClient.mutate<
       WalletAuthenticationToProfileAuthenticationData,
       WalletAuthenticationToProfileAuthenticationVariables
@@ -27,6 +27,6 @@ export class CredentialsUpgrader implements ICredentialsUpgrader {
 
     const { accessToken, refreshToken } = result.data.result;
 
-    return new Credentials(accessToken, refreshToken);
+    return new JwtCredentials(accessToken, refreshToken);
   }
 }

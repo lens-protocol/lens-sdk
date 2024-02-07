@@ -1,4 +1,4 @@
-import { ICredentials, ProfileId } from '@lens-protocol/domain/entities';
+import { Credentials, ProfileId } from '@lens-protocol/domain/entities';
 import { DateUtils, EvmAddress, invariant, never } from '@lens-protocol/shared-kernel';
 import jwtDecode from 'jwt-decode';
 import isObject from 'lodash/isObject';
@@ -32,7 +32,7 @@ function isProfileJwtContent(decodedJwt: unknown): decodedJwt is ProfileJwtPaylo
 // Adds some time for all communications that's required to refresh tokens
 const TOKEN_EXP_THRESHOLD = DateUtils.secondsToMs(3);
 
-export class Credentials implements ICredentials {
+export class JwtCredentials implements Credentials {
   readonly address: EvmAddress;
   readonly profileId?: ProfileId;
   readonly authorizationId: string;
@@ -61,19 +61,6 @@ export class Credentials implements ICredentials {
     const tokenExpDate = this.getTokenExpDate(this.refreshToken);
 
     return now < tokenExpDate - TOKEN_EXP_THRESHOLD;
-  }
-
-  isExpired(): boolean {
-    const accessToken = this.accessToken;
-
-    if (!accessToken) {
-      return true;
-    }
-
-    const now = Date.now();
-    const tokenExpDate = this.getTokenExpDate(accessToken);
-
-    return now >= tokenExpDate - TOKEN_EXP_THRESHOLD;
   }
 
   private getTokenExpDate(token: string) {

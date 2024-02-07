@@ -2,14 +2,14 @@ import { InvariantError } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { mockICredentials, mockWallet } from '../../../entities/__helpers__/mocks';
+import { mockCredentials, mockWallet } from '../../../entities/__helpers__/mocks';
 import { ActiveWallet, ICredentialsReader, IReadableWalletGateway } from '../ActiveWallet';
 
 describe(`Given the ${ActiveWallet.name} interactor`, () => {
   describe(`when "${ActiveWallet.prototype.requireActiveWallet.name}" is invoked`, () => {
     it('should return the active wallet when credentials are present', async () => {
       const wallet = mockWallet();
-      const credentials = mockICredentials({ address: wallet.address });
+      const credentials = mockCredentials({ address: wallet.address });
 
       const credentialsReader = mock<ICredentialsReader>({
         getCredentials: async () => credentials,
@@ -37,7 +37,7 @@ describe(`Given the ${ActiveWallet.name} interactor`, () => {
     });
 
     it(`should throw an ${InvariantError.name} if wallet for the given credentials is not found`, async () => {
-      const credentials = mockICredentials();
+      const credentials = mockCredentials();
 
       const credentialsReader = mock<ICredentialsReader>({
         getCredentials: async () => credentials,

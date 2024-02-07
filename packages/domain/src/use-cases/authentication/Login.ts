@@ -1,7 +1,7 @@
 import { EvmAddress, PromiseResult, Result, success } from '@lens-protocol/shared-kernel';
 
 import {
-  ICredentials,
+  Credentials,
   PendingSigningRequestError,
   ProfileId,
   UserRejectedError,
@@ -43,7 +43,7 @@ export interface ILoginPresenter {
 }
 
 export interface ICredentialsIssuer {
-  issueCredentials(signer: Wallet, using?: ProfileId): PromiseResult<ICredentials, LoginError>;
+  issueCredentials(signer: Wallet, using?: ProfileId): PromiseResult<Credentials, LoginError>;
 }
 
 export class Login {

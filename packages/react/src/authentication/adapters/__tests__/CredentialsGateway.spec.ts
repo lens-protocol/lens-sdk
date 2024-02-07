@@ -5,14 +5,14 @@ import {
 import { mockStorage } from '@lens-protocol/storage/mocks';
 
 import { LogoutReason } from '../../useSession';
-import { Credentials } from '../Credentials';
 import { CredentialsGateway } from '../CredentialsGateway';
-import { mockCredentials } from '../__helpers__/mocks';
+import { JwtCredentials } from '../JwtCredentials';
+import { mockJwtCredentials } from '../__helpers__/mocks';
 
-const credentials = mockCredentials();
+const credentials = mockJwtCredentials();
 
 const setupGateway = () => {
-  const storage = mockStorage<Credentials>();
+  const storage = mockStorage<JwtCredentials>();
   const authorizationId = credentials.authorizationId;
   const apolloClient = mockLensApolloClient([
     mockRevokeAuthenticationResponse({
