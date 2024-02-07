@@ -19,8 +19,6 @@ import { useCreateProfileController } from './adapters/useCreateProfileControlle
 export type CreateProfileArgs = {
   /**
    * The user's wallet. Could be an EOA or EIP-1271 compliant Smart Wallet (e.g. ERC-6551).
-   *
-   * If a Profile ID is also provide the address MUST be the Profile Owner or a Profile Manager for it.
    */
   to: EvmAddress;
   /**

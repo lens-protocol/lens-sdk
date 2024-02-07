@@ -29,7 +29,7 @@ export function CreateProfileForm({ address }: { address: string }) {
   return (
     <form onSubmit={createProfile}>
       <fieldset>
-        <legend>Chose a handle for your profile</legend>
+        <legend>Choose an handle for your profile</legend>
         <label>
           <div>
             test/&nbsp;

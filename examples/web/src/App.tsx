@@ -1,4 +1,4 @@
-import { LensConfig, LensProvider, staging } from '@lens-protocol/react-web';
+import { LensConfig, LensProvider, development } from '@lens-protocol/react-web';
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
 import { XMTPProvider } from '@xmtp/react-sdk';
 import { Toaster } from 'react-hot-toast';
@@ -109,7 +109,7 @@ const config = createConfig({
 });
 
 const lensConfig: LensConfig = {
-  environment: staging,
+  environment: development,
   bindings: wagmiBindings(),
 };
 
