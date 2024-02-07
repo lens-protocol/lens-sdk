@@ -20,7 +20,7 @@ export function useCreateProfileController() {
     profileCacheManager,
     providerFactory,
     transactionQueue,
-    walletFactory,
+    walletGateway,
   } = useSharedDependencies();
 
   return async (
@@ -39,7 +39,7 @@ export function useCreateProfileController() {
       config.environment.handleResolver,
     );
 
-    const createProfile = new CreateProfile(walletFactory, gateway, presenter, transactionQueue);
+    const createProfile = new CreateProfile(walletGateway, gateway, presenter, transactionQueue);
 
     await createProfile.execute(request);
 

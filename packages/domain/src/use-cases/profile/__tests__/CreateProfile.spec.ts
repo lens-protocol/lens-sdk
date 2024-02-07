@@ -22,7 +22,7 @@ import {
   mockWallet,
 } from '../../../mocks';
 import { TransactionQueue } from '../../transactions';
-import { IWalletFactory } from '../../wallets/IWalletFactory';
+import { IWalletGateway } from '../../wallets';
 import {
   CreateProfile,
   ICreateProfilePresenter,
@@ -40,11 +40,11 @@ function setupCreateProfile({
   queue?: TransactionQueue<AnyTransactionRequestModel>;
   wallet: Wallet;
 }) {
-  const walletFactory = mock<IWalletFactory>();
+  const walletGateway = mock<IWalletGateway>();
 
-  when(walletFactory.create).calledWith(wallet.address).mockResolvedValue(wallet);
+  when(walletGateway.getByAddress).calledWith(wallet.address).mockResolvedValue(wallet);
 
-  return new CreateProfile(walletFactory, gateway, presenter, queue);
+  return new CreateProfile(walletGateway, gateway, presenter, queue);
 }
 
 describe(`Given the ${CreateProfile.name} interactor`, () => {

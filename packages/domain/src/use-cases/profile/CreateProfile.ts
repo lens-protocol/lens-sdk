@@ -11,7 +11,7 @@ import {
 import { IPaidTransactionGateway } from '../transactions/IPaidTransactionGateway';
 import { ITransactionResultPresenter } from '../transactions/ITransactionResultPresenter';
 import { TransactionQueue } from '../transactions/TransactionQueue';
-import { IWalletFactory } from '../wallets/IWalletFactory';
+import { IWalletGateway } from '../wallets/IWalletGateway';
 
 export type CreateProfileRequest = {
   kind: TransactionKind.CREATE_PROFILE;
@@ -29,14 +29,14 @@ export type ICreateProfilePresenter = ITransactionResultPresenter<
 
 export class CreateProfile {
   constructor(
-    private readonly walletFactory: IWalletFactory,
+    private readonly wallets: IWalletGateway,
     private readonly gateway: ICreateProfileTransactionGateway,
     private readonly presenter: ICreateProfilePresenter,
     private readonly queue: TransactionQueue<AnyTransactionRequestModel>,
   ) {}
 
   async execute(request: CreateProfileRequest) {
-    const wallet = await this.walletFactory.create(request.to);
+    const wallet = await this.wallets.getByAddress(request.to);
 
     const unsigned = await this.gateway.createUnsignedTransaction(request, wallet);
 

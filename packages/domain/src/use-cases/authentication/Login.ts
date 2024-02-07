@@ -8,7 +8,7 @@ import {
   Wallet,
   WalletConnectionError,
 } from '../../entities';
-import { IWalletFactory } from '../wallets/IWalletFactory';
+import { IWalletGateway } from '../wallets/IWalletGateway';
 import { ICredentialsWriter } from './ICredentialsWriter';
 import { SessionData, profileSessionData, walletOnlySessionData } from './SessionData';
 
@@ -32,10 +32,6 @@ export type LoginRequest = {
   profileId?: ProfileId;
 };
 
-export interface IWritableWalletGateway {
-  save(wallet: Wallet): Promise<void>;
-}
-
 export type LoginError = PendingSigningRequestError | UserRejectedError | WalletConnectionError;
 
 export interface ILoginPresenter {
@@ -48,15 +44,14 @@ export interface ICredentialsIssuer {
 
 export class Login {
   constructor(
-    private readonly walletFactory: IWalletFactory,
-    private readonly walletGateway: IWritableWalletGateway,
+    private readonly walletGateway: IWalletGateway,
     private readonly credentialsIssuer: ICredentialsIssuer,
     private readonly credentialsWriter: ICredentialsWriter,
     private readonly presenter: ILoginPresenter,
   ) {}
 
   async execute(request: LoginRequest): Promise<void> {
-    const wallet = await this.walletFactory.create(request.address);
+    const wallet = await this.walletGateway.getByAddress(request.address);
     const result = await this.credentialsIssuer.issueCredentials(wallet, request.profileId);
 
     if (result.isFailure()) {
@@ -64,7 +59,6 @@ export class Login {
       return;
     }
 
-    await this.walletGateway.save(wallet);
     await this.credentialsWriter.save(result.value);
 
     if (request.profileId) {

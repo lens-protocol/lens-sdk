@@ -1,19 +1,16 @@
-import { invariant, never } from '@lens-protocol/shared-kernel';
+import { never } from '@lens-protocol/shared-kernel';
 
 import { Credentials, Wallet } from '../../entities';
+import { IWalletGateway } from '../wallets/IWalletGateway';
 
 export interface ICredentialsReader {
   getCredentials(): Promise<Credentials | null>;
 }
 
-export interface IReadableWalletGateway {
-  getByAddress(address: string): Promise<Wallet | null>;
-}
-
 export class ActiveWallet {
   constructor(
     private credentialsReader: ICredentialsReader,
-    private walletGateway: IReadableWalletGateway,
+    private walletGateway: IWalletGateway,
   ) {}
 
   async requireActiveWallet(): Promise<Wallet> {
@@ -23,10 +20,6 @@ export class ActiveWallet {
       never('User is not authenticated');
     }
 
-    const wallet = await this.walletGateway.getByAddress(credentials.address);
-
-    invariant(wallet, 'Active wallet should exist when credentials are present');
-
-    return wallet;
+    return this.walletGateway.getByAddress(credentials.address);
   }
 }

@@ -1,4 +1,4 @@
-import { TransactionRequest, JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
+import { JsonRpcProvider, JsonRpcSigner, TransactionRequest } from '@ethersproject/providers';
 import { faker } from '@faker-js/faker';
 import { TypedData } from '@lens-protocol/blockchain-bindings';
 import {
@@ -18,8 +18,8 @@ import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { ITransactionFactory } from '../../../transactions/adapters/ITransactionFactory';
 import { mockTypedData } from '../../../transactions/adapters/__helpers__/mocks';
+import { ITransactionFactory } from '../../../transactions/adapters/ITransactionFactory';
 import {
   ConcreteWallet,
   ISignerFactory,
@@ -30,6 +30,10 @@ import {
 } from '../ConcreteWallet';
 import { IProviderFactory } from '../IProviderFactory';
 
+/**
+ *
+ * @deprecated delete me
+ */
 export function mockConcreteWallet() {
   return ConcreteWallet.create(
     mockEvmAddress(),
