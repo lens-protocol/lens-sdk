@@ -1,26 +1,26 @@
 import { textOnly } from '@lens-protocol/metadata';
 import {
   Amount,
+  InsufficientAllowanceError,
+  OpenActionKind,
   OpenActionType,
+  PublicationId,
+  useApproveModule,
   useCreatePost,
   useCurrencies,
-  useApproveModule,
   useOpenAction,
-  OpenActionKind,
-  InsufficientAllowanceError,
   usePublication,
-  PublicationId,
 } from '@lens-protocol/react-web';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useAccount } from 'wagmi';
 
-import { Logs } from '../components/Logs';
+import { PublicationCard } from '../components/cards';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
+import { Logs } from '../components/Logs';
+import { useIrysUploader } from '../hooks/useIrysUploader';
 import { useLogs } from '../hooks/useLogs';
-import { PublicationCard } from '../publications/components/PublicationCard';
-import { uploadJson } from '../upload';
 import { never } from '../utils';
 
 function TestScenario({ publicationId }: { publicationId: PublicationId }) {
@@ -86,6 +86,7 @@ function TestScenario({ publicationId }: { publicationId: PublicationId }) {
 }
 
 export function UseApproveModule() {
+  const { uploadMetadata } = useIrysUploader();
   const [id, setId] = useState<PublicationId | undefined>();
   const { address } = useAccount();
   const { data: currencies, loading, error } = useCurrencies();
@@ -109,7 +110,7 @@ export function UseApproveModule() {
     });
 
     log('Uploading metadata...');
-    const uri = await uploadJson(metadata);
+    const uri = await uploadMetadata(metadata);
 
     log('Creating collectable test post...');
     const result = await post({

@@ -7,9 +7,9 @@ import {
 } from '@lens-protocol/react-web';
 
 import { RequireProfileSession } from '../components/auth';
+import { PublicationCard } from '../components/cards';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
-import { PublicationCard } from './components/PublicationCard';
 
 function IndividualPublication({ publication }: { publication: PrimaryPublication }) {
   const { execute: toggle, loading } = useNotInterestedToggle();

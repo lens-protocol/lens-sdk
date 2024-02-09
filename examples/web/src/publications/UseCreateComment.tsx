@@ -1,22 +1,33 @@
 import { textOnly } from '@lens-protocol/metadata';
-import { publicationId, useCreateComment, usePublication } from '@lens-protocol/react-web';
+import {
+  AnyPublication,
+  Comment,
+  LimitType,
+  publicationId,
+  useCreateComment,
+  usePublication,
+  usePublications,
+} from '@lens-protocol/react-web';
 import { toast } from 'react-hot-toast';
 
 import { RequireProfileSession } from '../components/auth';
+import { CommentCard, PublicationCard } from '../components/cards';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
-import { uploadJson } from '../upload';
+import { useIrysUploader } from '../hooks/useIrysUploader';
 import { never } from '../utils';
-import { PublicationCard } from './components/PublicationCard';
 
-function CommentComposer() {
-  const {
-    data: publication,
-    error: publicationError,
-    loading: publicationLoading,
-  } = usePublication({ forId: publicationId('0x56-0x02') });
+type CommentComposerProps = {
+  commentOn: AnyPublication;
+};
 
+function CommentComposer({ commentOn }: CommentComposerProps) {
+  const { uploadMetadata } = useIrysUploader();
   const { execute, loading, error } = useCreateComment();
+  const { data: comments, prev: refresh } = usePublications({
+    where: { commentOn: { id: commentOn.id } },
+    limit: LimitType.Ten,
+  });
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -30,8 +41,8 @@ function CommentComposer() {
 
     // publish post
     const result = await execute({
-      commentOn: publication?.id ?? never('publication is not loaded'),
-      metadata: await uploadJson(metadata),
+      commentOn: commentOn?.id ?? never('publication is not loaded'),
+      metadata: await uploadMetadata(metadata),
       sponsored: formData.get('sponsored') === 'on',
     });
 
@@ -40,6 +51,8 @@ function CommentComposer() {
       toast.error(result.error.message);
       return;
     }
+
+    toast.success(`Comment broadcasted, waiting for completion...`);
 
     // wait for full completion
     const completion = await result.value.waitForCompletion();
@@ -50,60 +63,74 @@ function CommentComposer() {
       return;
     }
 
-    // post was created
-    const post = completion.value;
-    toast.success(`Post ID: ${post.id}`);
+    await refresh();
+
+    // comment was created
+    const comment = completion.value;
+    toast.success(`Comment ID: ${comment.id}`);
   };
 
-  if (publicationLoading) return <Loading />;
-
-  if (publicationError) return <ErrorMessage error={publicationError} />;
-
   return (
-    <form onSubmit={submit}>
-      <PublicationCard publication={publication} />
-
-      <fieldset>
-        <textarea
-          name="content"
-          minLength={1}
-          required
-          rows={3}
-          placeholder="What's happening?"
-          style={{ resize: 'none' }}
-          disabled={loading}
-        ></textarea>
-
-        <label>
-          <input
-            type="checkbox"
-            name="sponsored"
+    <>
+      <form onSubmit={submit}>
+        <fieldset>
+          <legend>Leave a comment</legend>
+          <textarea
+            name="content"
+            minLength={1}
+            required
+            rows={3}
+            style={{ resize: 'none' }}
             disabled={loading}
-            value="on"
-            defaultChecked={true}
-          />
-          sponsored
-        </label>
+          ></textarea>
 
-        <button type="submit" disabled={loading}>
-          Post
-        </button>
+          <label>
+            <input
+              type="checkbox"
+              name="sponsored"
+              disabled={loading}
+              value="on"
+              defaultChecked={true}
+            />
+            sponsored
+          </label>
 
-        {!loading && error && <pre>{error.message}</pre>}
-      </fieldset>
-    </form>
+          <button type="submit" disabled={loading}>
+            Post
+          </button>
+
+          {!loading && error && <pre>{error.message}</pre>}
+        </fieldset>
+      </form>
+
+      {comments?.map((comment) => (
+        <CommentCard key={comment.id} comment={comment as Comment} />
+      ))}
+    </>
   );
 }
 
 export function UseCreateComment() {
+  const {
+    data: publication,
+    error,
+    loading,
+  } = usePublication({ forId: publicationId('0x56-0x02') });
+
+  if (loading) return <Loading />;
+
+  if (error) return <ErrorMessage error={error} />;
+
   return (
     <div>
       <h1>
         <code>useCreateComment</code>
       </h1>
 
+      <PublicationCard publication={publication} />
+
       <RequireProfileSession message="Log in to create a comment.">
-        <CommentComposer />
+        <CommentComposer commentOn={publication} />
       </RequireProfileSession>
     </div>
   );

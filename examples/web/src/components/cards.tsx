@@ -4,10 +4,11 @@ import {
   Post,
   PublicationMetadata,
   PublicationStats,
+  Quote,
 } from '@lens-protocol/react-web';
 import { ReactNode } from 'react';
 
-import { ProfilePicture } from '../../profiles/components/ProfilePicture';
+import { ProfilePicture } from '../profiles/components/ProfilePicture';
 
 function MetadataSwitch({ metadata }: { metadata: PublicationMetadata }) {
   switch (metadata.__typename) {
@@ -47,7 +48,7 @@ function PublicationTickers({ stats }: { stats: PublicationStats }) {
   );
 }
 
-function PublicationBody({ publication }: { publication: Post | Comment }) {
+function PublicationBody({ publication }: { publication: Post | Comment | Quote }) {
   return (
     <div>
       <MetadataSwitch metadata={publication.metadata} />
@@ -61,6 +62,7 @@ function PublicationSwitch({ publication }: { publication: AnyPublication }) {
   switch (publication.__typename) {
     case 'Post':
     case 'Comment':
+    case 'Quote':
       return <PublicationBody publication={publication} />;
     default:
       return null;
@@ -94,5 +96,29 @@ export function PublicationCard({ publication, children }: PublicationCardProps)
       <PublicationSwitch publication={publication} />
       {children}
     </article>
+  );
+}
+
+type CommentCardProps = {
+  comment: Comment;
+  children?: ReactNode;
+};
+
+export function CommentCard({ comment }: CommentCardProps) {
+  return (
+    <section>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'flex-start',
+          gap: '2rem',
+        }}
+      >
+        <ProfilePicture picture={comment.by.metadata?.picture ?? null} />
+        <p>{comment.by.metadata?.displayName ?? comment.by.handle?.fullHandle ?? comment.by.id}</p>
+      </div>
+      <MetadataSwitch metadata={comment.metadata} />
+    </section>
   );
 }

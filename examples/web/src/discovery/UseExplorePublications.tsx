@@ -1,9 +1,9 @@
-import { useExplorePublications, ExplorePublicationsOrderByType } from '@lens-protocol/react-web';
+import { ExplorePublicationsOrderByType, useExplorePublications } from '@lens-protocol/react-web';
 
+import { PublicationCard } from '../components/cards';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
-import { PublicationCard } from '../publications/components/PublicationCard';
 
 export function UseExplorePublications() {
   const {

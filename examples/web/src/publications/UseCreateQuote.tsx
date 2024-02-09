@@ -1,21 +1,16 @@
 import { textOnly } from '@lens-protocol/metadata';
-import { publicationId, useCreateQuote, usePublication } from '@lens-protocol/react-web';
+import { publicationId, useCreateQuote, useLazyPublication } from '@lens-protocol/react-web';
 import { toast } from 'react-hot-toast';
 
 import { RequireProfileSession } from '../components/auth';
-import { ErrorMessage } from '../components/error/ErrorMessage';
-import { Loading } from '../components/loading/Loading';
-import { uploadJson } from '../upload';
-import { never } from '../utils';
-import { PublicationCard } from './components/PublicationCard';
+import { PublicationCard } from '../components/cards';
+import { useIrysUploader } from '../hooks/useIrysUploader';
+
+const target = publicationId('0x56-0x02');
 
 function QuoteComposer() {
-  const {
-    data: publication,
-    error: publicationError,
-    loading: publicationLoading,
-  } = usePublication({ forId: publicationId('0x56-0x02') });
-
+  const { uploadMetadata } = useIrysUploader();
+  const { execute: load, data } = useLazyPublication();
   const { execute, loading, error } = useCreateQuote();
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -30,8 +25,8 @@ function QuoteComposer() {
 
     // publish post
     const result = await execute({
-      quoteOn: publication?.id ?? never('publication is not loaded'),
-      metadata: await uploadJson(metadata),
+      quoteOn: target,
+      metadata: await uploadMetadata(metadata),
       sponsored: formData.get('sponsored') === 'on',
     });
 
@@ -40,6 +35,8 @@ function QuoteComposer() {
       toast.error(result.error.message);
       return;
     }
+
+    toast.success(`Quote broadcasted, waiting for completion...`);
 
     // wait for full completion
     const completion = await result.value.waitForCompletion();
@@ -52,46 +49,45 @@ function QuoteComposer() {
 
     // quote was created
     const quote = completion.value;
+    await load({ forId: quote.id });
+
     toast.success(`Quote ID: ${quote.id}`);
   };
 
-  if (publicationLoading) return <Loading />;
-
-  if (publicationError) return <ErrorMessage error={publicationError} />;
-
   return (
-    <form onSubmit={submit}>
-      <PublicationCard publication={publication} />
-
-      <fieldset>
-        <textarea
-          name="content"
-          minLength={1}
-          required
-          rows={3}
-          placeholder="What's happening?"
-          style={{ resize: 'none' }}
-          disabled={loading}
-        ></textarea>
-
-        <label>
-          <input
-            type="checkbox"
-            name="sponsored"
+    <>
+      {data && <PublicationCard publication={data} />}
+      <form onSubmit={submit}>
+        <fieldset>
+          <legend>Quote of {target}</legend>
+          <textarea
+            name="content"
+            minLength={1}
+            required
+            rows={3}
+            style={{ resize: 'none' }}
             disabled={loading}
-            value="on"
-            defaultChecked={true}
-          />
-          sponsored
-        </label>
+          ></textarea>
 
-        <button type="submit" disabled={loading}>
-          Quote
-        </button>
+          <label>
+            <input
+              type="checkbox"
+              name="sponsored"
+              disabled={loading}
+              value="on"
+              defaultChecked={true}
+            />
+            sponsored
+          </label>
 
-        {!loading && error && <pre>{error.message}</pre>}
-      </fieldset>
-    </form>
+          <button type="submit" disabled={loading}>
+            Post
+          </button>
+
+          {!loading && error && <pre>{error.message}</pre>}
+        </fieldset>
+      </form>
+    </>
   );
 }
 
@@ -102,7 +98,7 @@ export function UseCreateQuote() {
         <code>useCreateQuote</code>
       </h1>
 
-      <RequireProfileSession message="Log in to create a quote.">
+      <RequireProfileSession message="Log in to create a comment.">
         <QuoteComposer />
       </RequireProfileSession>
     </div>

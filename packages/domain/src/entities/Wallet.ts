@@ -1,15 +1,15 @@
 import { CryptoNativeAsset, EvmAddress, PromiseResult } from '@lens-protocol/shared-kernel';
 
+import { ISignedVote, IUnsignedVote } from './polls';
 import { Signature } from './Signature';
 import {
-  ISignedProtocolCall,
   AnyTransactionRequestModel,
+  ISignedProtocolCall,
   IUnsignedProtocolCall,
-  UnsignedTransaction,
   NativeTransaction,
   ProtocolTransactionRequestModel,
+  UnsignedTransaction,
 } from './Transactions';
-import { ISignedVote, IUnsignedVote } from './polls';
 
 export class InsufficientGasError extends Error {
   name = 'InsufficientGasError' as const;
@@ -21,6 +21,7 @@ export class InsufficientGasError extends Error {
 
 export class PendingSigningRequestError extends Error {
   name = 'PendingSigningRequestError' as const;
+  message = 'Clear or approve the pending wallet request and retry.';
 }
 
 export enum WalletConnectionErrorReason {

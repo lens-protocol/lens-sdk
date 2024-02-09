@@ -3,9 +3,10 @@ import { useCreatePost } from '@lens-protocol/react-web';
 import { toast } from 'react-hot-toast';
 
 import { RequireProfileSession } from '../components/auth';
-import { uploadJson } from '../upload';
+import { useIrysUploader } from '../hooks/useIrysUploader';
 
 function PostComposer() {
+  const { uploadMetadata } = useIrysUploader();
   const { execute, loading, error } = useCreatePost();
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -20,7 +21,7 @@ function PostComposer() {
 
     // publish post
     const result = await execute({
-      metadata: await uploadJson(metadata),
+      metadata: await uploadMetadata(metadata),
       sponsored: formData.get('sponsored') === 'on',
     });
 
@@ -29,6 +30,8 @@ function PostComposer() {
       toast.error(result.error.message);
       return;
     }
+
+    toast.success(`Post broadcasted, waiting for completion...`);
 
     // wait for full completion
     const completion = await result.value.waitForCompletion();
