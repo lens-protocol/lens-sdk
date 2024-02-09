@@ -22,12 +22,12 @@ export type InvitedResultFragment = {
 };
 
 export type InvitedProfilesQueryVariables = Types.Exact<{
-  profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
-  profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profileCoverTransform: Types.ImageTransform;
+  profilePictureTransform: Types.ImageTransform;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
   profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
   profileMetadataSource?: Types.InputMaybe<Types.Scalars['AppId']['input']>;
-  rateRequest?: Types.InputMaybe<Types.RateRequest>;
+  rateRequest: Types.RateRequest;
 }>;
 
 export type InvitedProfilesQuery = { result: Array<InvitedResultFragment> };
@@ -1054,20 +1054,23 @@ export const InvitedProfilesDocument = {
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileCoverTransform' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profilePictureTransform' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileStatsArg' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileStatsArg' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
         },
         {
           kind: 'VariableDefinition',
@@ -1079,7 +1082,6 @@ export const InvitedProfilesDocument = {
             kind: 'NamedType',
             name: { kind: 'Name', value: 'ProfileStatsCountOpenActionArgs' },
           },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
         },
         {
           kind: 'VariableDefinition',
@@ -1090,16 +1092,9 @@ export const InvitedProfilesDocument = {
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'RateRequest' } },
-          defaultValue: {
-            kind: 'ObjectValue',
-            fields: [
-              {
-                kind: 'ObjectField',
-                name: { kind: 'Name', value: 'for' },
-                value: { kind: 'EnumValue', value: 'USD' },
-              },
-            ],
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'RateRequest' } },
           },
         },
       ],
@@ -2206,7 +2201,7 @@ const InviteDocumentString = print(InviteDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     InvitedProfiles(
-      variables?: InvitedProfilesQueryVariables,
+      variables: InvitedProfilesQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
     ): Promise<{
       data: InvitedProfilesQuery;

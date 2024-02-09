@@ -56,12 +56,12 @@ query MutualPoaps($request: MutualPoapsQueryRequest!) {
 
 query PoapHolders(
   $request: PoapHoldersQueryRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
   $profileMetadataSource: AppId = null
-  $rateRequest: RateRequest = { for: USD }
+  $rateRequest: RateRequest!
 ) {
   result: poapHolders(request: $request) {
     items {

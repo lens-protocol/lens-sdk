@@ -22,6 +22,7 @@ import type {
 import {
   PaginatedResult,
   buildPaginatedQueryResult,
+  commonQueryVariables,
   requireAuthHeaders,
   sdkAuthHeaderWrapper,
 } from '../../helpers';
@@ -48,7 +49,7 @@ export class Nfts {
    * @internal
    */
   constructor(
-    context: LensContext,
+    private readonly context: LensContext,
     private readonly authentication: Authentication,
   ) {
     const client = new FetchGraphQLClient(context);
@@ -217,6 +218,7 @@ export class Nfts {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.NftCollectionOwners({
         request: currRequest,
+        ...commonQueryVariables(this.context),
       });
 
       return result.data.result;

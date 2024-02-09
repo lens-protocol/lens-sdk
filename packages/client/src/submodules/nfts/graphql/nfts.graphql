@@ -92,12 +92,12 @@ query NftGalleries($request: NftGalleriesRequest!) {
 
 query NftCollectionOwners(
   $request: NftCollectionOwnersRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
   $profileMetadataSource: AppId = null
-  $rateRequest: RateRequest = { for: USD }
+  $rateRequest: RateRequest!
 ) {
   result: nftCollectionOwners(request: $request) {
     items {

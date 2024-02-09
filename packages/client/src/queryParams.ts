@@ -1,4 +1,3 @@
-import type { ImageSizeTransform } from './graphql';
 import { ImageTransform, SupportedFiatType } from './graphql/types.generated';
 
 export type AppId = string;
@@ -87,26 +86,4 @@ export type MediaTransformsConfig = {
    * The transforms for the profile cover images.
    */
   profileCover?: ImageTransform;
-};
-
-function buildImageTransform(
-  width: ImageSizeTransform,
-  height: ImageSizeTransform = 'auto',
-): ImageTransform {
-  return {
-    width,
-    height,
-    keepAspectRatio: true,
-  };
-}
-
-export const defaultQueryParams = {
-  image: {
-    medium: buildImageTransform('700px'),
-  },
-  profile: {
-    thumbnail: buildImageTransform('256px'),
-    cover: buildImageTransform('1100px'),
-  },
-  fxRateFor: SupportedFiatType.Usd,
 };

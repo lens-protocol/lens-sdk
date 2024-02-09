@@ -12,12 +12,12 @@ query OwnedHandles($request: OwnedHandlesRequest!) {
 
 query ProfilesManaged(
   $request: ProfilesManagedRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
   $profileMetadataSource: AppId = null
-  $rateRequest: RateRequest = { for: USD }
+  $rateRequest: RateRequest!
 ) {
   result: profilesManaged(request: $request) {
     items {
@@ -62,12 +62,12 @@ query ClaimableProfiles {
 
 query LastLoggedInProfile(
   $request: LastLoggedInProfileRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
   $profileMetadataSource: AppId = null
-  $rateRequest: RateRequest = { for: USD }
+  $rateRequest: RateRequest!
 ) {
   result: lastLoggedInProfile(request: $request) {
     ...Profile

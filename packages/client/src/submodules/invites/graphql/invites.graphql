@@ -7,12 +7,12 @@ fragment InvitedResult on InvitedResult {
 }
 
 query InvitedProfiles(
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
   $profileMetadataSource: AppId = null
-  $rateRequest: RateRequest = { for: USD }
+  $rateRequest: RateRequest!
 ) {
   result: invitedProfiles {
     ...InvitedResult

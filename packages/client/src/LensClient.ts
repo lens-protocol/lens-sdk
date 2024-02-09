@@ -3,7 +3,7 @@ import { InMemoryStorageProvider, IStorageProvider } from '@lens-protocol/storag
 import { Authentication, IAuthentication } from './authentication';
 import { LensContext } from './context';
 import { Environment } from './environments';
-import { defaultQueryParams, MediaTransformsConfig, QueryParams } from './queryParams';
+import { MediaTransformsConfig, QueryParams } from './queryParams';
 import {
   Explore,
   Feed,
@@ -98,21 +98,8 @@ export class LensClient {
       storage: config.storage || new InMemoryStorageProvider(),
       origin: config.origin,
       headers: config.headers,
-      params: {
-        ...defaultQueryParams,
-        ...config.params,
-        image: {
-          ...defaultQueryParams.image,
-          medium: config.mediaTransforms?.publication,
-          ...config.params?.image,
-        },
-        profile: {
-          ...defaultQueryParams.profile,
-          cover: config.mediaTransforms?.profileCover,
-          thumbnail: config.mediaTransforms?.profilePicture,
-          ...config.params?.profile,
-        },
-      },
+      mediaTransforms: config.mediaTransforms ?? {},
+      params: config.params ?? {},
     };
     this._authentication = new Authentication(this.context);
   }

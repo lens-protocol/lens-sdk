@@ -907,6 +907,7 @@ export type NotificationWhere = {
   highSignalFilter?: InputMaybe<Scalars['Boolean']['input']>;
   notificationTypes?: InputMaybe<Array<NotificationType>>;
   publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
+  timeBasedAggregation?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type OnchainCommentRequest = {
