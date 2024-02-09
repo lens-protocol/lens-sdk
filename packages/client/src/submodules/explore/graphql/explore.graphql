@@ -8,6 +8,7 @@ query ExplorePublications(
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileMetadataSource: AppId = null
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: explorePublications(request: $request) {
@@ -31,6 +32,7 @@ query ExploreProfiles(
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileMetadataSource: AppId = null
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: exploreProfiles(request: $request) {

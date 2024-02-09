@@ -39,7 +39,7 @@ import type {
 } from '../../graphql/types.generated';
 import {
   PaginatedResult,
-  buildRequestFromConfig,
+  commonQueryVariables,
   buildPaginatedQueryResult,
   requireAuthHeaders,
   sdkAuthHeaderWrapper,
@@ -102,7 +102,7 @@ export class Profile {
   ): Promise<ProfileFragment | null> {
     const result = await this.sdk.Profile({
       request,
-      ...buildRequestFromConfig(this.context),
+      ...commonQueryVariables(this.context),
       ...options,
     });
 
@@ -132,7 +132,7 @@ export class Profile {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Profiles({
         request: currRequest,
-        ...buildRequestFromConfig(this.context),
+        ...commonQueryVariables(this.context),
         ...options,
       });
 
@@ -184,7 +184,7 @@ export class Profile {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.ProfileRecommendations({
         request: currRequest,
-        ...buildRequestFromConfig(this.context),
+        ...commonQueryVariables(this.context),
       });
 
       return result.data.result;
@@ -231,7 +231,7 @@ export class Profile {
   async fetchDefault(request: DefaultProfileRequest): Promise<ProfileFragment | null> {
     const result = await this.sdk.DefaultProfile({
       request,
-      ...buildRequestFromConfig(this.context),
+      ...commonQueryVariables(this.context),
     });
 
     return result.data.result;
@@ -277,7 +277,7 @@ export class Profile {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Following({
         request: currRequest,
-        ...buildRequestFromConfig(this.context),
+        ...commonQueryVariables(this.context),
       });
 
       return result.data.result;
@@ -301,7 +301,7 @@ export class Profile {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Followers({
         request: currRequest,
-        ...buildRequestFromConfig(this.context),
+        ...commonQueryVariables(this.context),
       });
 
       return result.data.result;
@@ -328,7 +328,7 @@ export class Profile {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.MutualFollowers({
         request: currRequest,
-        ...buildRequestFromConfig(this.context),
+        ...commonQueryVariables(this.context),
       });
 
       return result.data.result;
@@ -386,7 +386,7 @@ export class Profile {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.WhoActedOnPublication({
         request: currRequest,
-        ...buildRequestFromConfig(this.context),
+        ...commonQueryVariables(this.context),
       });
 
       return result.data.result;
@@ -417,7 +417,7 @@ export class Profile {
         const result = await this.sdk.WhoHaveBlocked(
           {
             request: currRequest,
-            ...buildRequestFromConfig(this.context),
+            ...commonQueryVariables(this.context),
           },
           headers,
         );

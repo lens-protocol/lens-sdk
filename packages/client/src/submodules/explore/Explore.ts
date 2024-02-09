@@ -11,7 +11,7 @@ import type {
   ExplorePublicationRequest,
 } from '../../graphql/types.generated';
 import {
-  buildRequestFromConfig,
+  commonQueryVariables,
   buildPaginatedQueryResult,
   PaginatedResult,
   sdkAuthHeaderWrapper,
@@ -58,7 +58,7 @@ export class Explore {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.ExplorePublications({
         request: currRequest,
-        ...buildRequestFromConfig(this.context),
+        ...commonQueryVariables(this.context),
       });
 
       return result.data.result;
@@ -84,7 +84,7 @@ export class Explore {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.ExploreProfiles({
         request: currRequest,
-        ...buildRequestFromConfig(this.context),
+        ...commonQueryVariables(this.context),
       });
 
       return result.data.result;

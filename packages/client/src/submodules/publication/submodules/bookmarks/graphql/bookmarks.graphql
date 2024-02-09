@@ -9,6 +9,7 @@ query PublicationBookmarks(
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileMetadataSource: AppId = null
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: publicationBookmarks(request: $request) {

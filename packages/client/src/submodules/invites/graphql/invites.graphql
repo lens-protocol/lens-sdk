@@ -11,6 +11,7 @@ query InvitedProfiles(
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileMetadataSource: AppId = null
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: invitedProfiles {

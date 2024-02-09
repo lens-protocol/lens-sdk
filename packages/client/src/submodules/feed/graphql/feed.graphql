@@ -40,6 +40,7 @@ query Feed(
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileMetadataSource: AppId = null
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: feed(request: $request) {
@@ -62,6 +63,7 @@ query FeedHighlights(
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileMetadataSource: AppId = null
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: feedHighlights(request: $request) {
@@ -124,6 +126,7 @@ query LatestPaidActions(
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileMetadataSource: AppId = null
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: latestPaidActions {

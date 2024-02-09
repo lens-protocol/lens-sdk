@@ -214,6 +214,7 @@ query Profile(
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileMetadataSource: AppId = null
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: profile(request: $request) {
@@ -227,6 +228,7 @@ query DefaultProfile(
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileMetadataSource: AppId = null
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: defaultProfile(request: $request) {
@@ -240,6 +242,7 @@ query Profiles(
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileMetadataSource: AppId = null
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: profiles(request: $request) {
@@ -269,6 +272,7 @@ query ProfileRecommendations(
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileMetadataSource: AppId = null
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: profileRecommendations(request: $request) {
@@ -287,6 +291,7 @@ query Following(
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileMetadataSource: AppId = null
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: following(request: $request) {
@@ -305,6 +310,7 @@ query Followers(
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileMetadataSource: AppId = null
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: followers(request: $request) {
@@ -323,6 +329,7 @@ query MutualFollowers(
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileMetadataSource: AppId = null
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: mutualFollowers(request: $request) {
@@ -355,6 +362,7 @@ query WhoActedOnPublication(
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileMetadataSource: AppId = null
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: whoActedOnPublication(request: $request) {
@@ -392,6 +400,7 @@ query WhoHaveBlocked(
   $profilePictureTransform: ImageTransform = {}
   $profileStatsArg: ProfileStatsArg = {}
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
+  $profileMetadataSource: AppId = null
   $rateRequest: RateRequest = { for: USD }
 ) {
   result: whoHaveBlocked(request: $request) {

@@ -19,7 +19,7 @@ import type {
 } from '../../graphql/types.generated';
 import {
   PaginatedResult,
-  buildRequestFromConfig,
+  commonQueryVariables,
   buildPaginatedQueryResult,
   requireAuthHeaders,
   sdkAuthHeaderWrapper,
@@ -92,7 +92,7 @@ export class Wallet {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.ProfilesManaged({
         request: currRequest,
-        ...buildRequestFromConfig(this.context),
+        ...commonQueryVariables(this.context),
       });
 
       return result.data.result;
@@ -227,7 +227,7 @@ export class Wallet {
   async lastLoggedInProfile(request: LastLoggedInProfileRequest): Promise<ProfileFragment | null> {
     const result = await this.sdk.LastLoggedInProfile({
       request,
-      ...buildRequestFromConfig(this.context),
+      ...commonQueryVariables(this.context),
     });
 
     return result.data.result;

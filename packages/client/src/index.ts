@@ -55,5 +55,5 @@ export type {
 } from '@lens-protocol/shared-kernel';
 export type { IStorageProvider, InMemoryStorageProvider } from '@lens-protocol/storage';
 export type { TypedData, TypedDataResponse } from './types';
-export type { MediaTransformsConfig } from './context';
+export type { MediaTransformsConfig, AppId, QueryParams } from './queryParams';
 export type { PaginatedResult, PaginatedQueryData } from './helpers/buildPaginatedQueryResult';

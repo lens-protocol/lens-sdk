@@ -5,7 +5,7 @@ import { LensContext } from '../../context';
 import { CredentialsExpiredError, NotAuthenticatedError } from '../../errors';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import { AlreadyInvitedCheckRequest, InviteRequest } from '../../graphql/types.generated';
-import { buildRequestFromConfig, requireAuthHeaders, sdkAuthHeaderWrapper } from '../../helpers';
+import { commonQueryVariables, requireAuthHeaders, sdkAuthHeaderWrapper } from '../../helpers';
 import { InvitedResultFragment, Sdk, getSdk } from './graphql/invites.generated';
 
 /**
@@ -44,7 +44,7 @@ export class Invites {
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.InvitedProfiles(buildRequestFromConfig(this.context), headers);
+      const result = await this.sdk.InvitedProfiles(commonQueryVariables(this.context), headers);
 
       return result.data.result;
     });

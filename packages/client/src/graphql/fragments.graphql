@@ -201,6 +201,30 @@ fragment NftImage on NftImage {
   verified
 }
 
+fragment ProfileMetadata on ProfileMetadata {
+  __typename
+  appId
+  displayName
+  bio
+  rawURI
+  picture {
+    ... on ImageSet {
+      ...ProfilePictureSet
+    }
+    ... on NftImage {
+      ...NftImage
+    }
+  }
+  coverPicture {
+    ...ProfileCoverSet
+  }
+  attributes {
+    type
+    key
+    value
+  }
+}
+
 fragment ProfileStats on ProfileStats {
   id
   followers
@@ -305,27 +329,8 @@ fragment Profile on Profile {
       ...UnknownFollowModuleSettings
     }
   }
-  metadata {
-    appId
-    displayName
-    bio
-    rawURI
-    picture {
-      ... on ImageSet {
-        ...ProfilePictureSet
-      }
-      ... on NftImage {
-        ...NftImage
-      }
-    }
-    coverPicture {
-      ...ProfileCoverSet
-    }
-    attributes {
-      type
-      key
-      value
-    }
+  metadata(request: { appId: $profileMetadataSource, useFallback: true }) {
+    ...ProfileMetadata
   }
   handle {
     ...HandleInfo
@@ -626,11 +631,16 @@ fragment PublicationOperations on PublicationOperations {
   actedOn(request: $publicationOperationsActedArgs) {
     ...OpenActionResult
   }
+  canCollect: canAct(request: { filter: { category: COLLECT } })
+  hasCollected: hasActed(request: { filter: { category: COLLECT } }) {
+    ...OptimisticStatusResult
+  }
   hasUpvoted: hasReacted(request: { type: UPVOTE })
   hasDownvoted: hasReacted(request: { type: DOWNVOTE })
   canComment
   canMirror
   canQuote
+  hasQuoted
   hasMirrored
   canDecrypt {
     ...CanDecryptResponse

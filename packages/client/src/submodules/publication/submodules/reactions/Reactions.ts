@@ -9,7 +9,7 @@ import type {
   WhoReactedPublicationRequest,
 } from '../../../../graphql/types.generated';
 import {
-  buildRequestFromConfig,
+  commonQueryVariables,
   buildPaginatedQueryResult,
   PaginatedResult,
   requireAuthHeaders,
@@ -108,7 +108,7 @@ export class Reactions {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.WhoReactedPublication({
         request: currRequest,
-        ...buildRequestFromConfig(this.context),
+        ...commonQueryVariables(this.context),
       });
 
       return result.data.result;
