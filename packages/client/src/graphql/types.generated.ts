@@ -447,6 +447,17 @@ export type HandleToAddressRequest = {
   handle: Scalars['Handle']['input'];
 };
 
+export enum HiddenCommentsType {
+  HiddenOnly = 'HIDDEN_ONLY',
+  Hide = 'HIDE',
+  Show = 'SHOW',
+}
+
+export type HideCommentRequest = {
+  /** The comment to hide. It has to be under a publication made by the user making the request. If already hidden, nothing will happen. */
+  for: Scalars['PublicationId']['input'];
+};
+
 export type HidePublicationRequest = {
   for: Scalars['PublicationId']['input'];
 };
@@ -575,6 +586,11 @@ export type LastLoggedInProfileRequest = {
   for: Scalars['EvmAddress']['input'];
 };
 
+export type LatestPaidActionsFilter = {
+  openActionFilters?: InputMaybe<Array<OpenActionFilter>>;
+  openActionPublicationMetadataFilters?: InputMaybe<PublicationMetadataFilters>;
+};
+
 export type LegacyCollectRequest = {
   on: Scalars['PublicationId']['input'];
   referrer?: InputMaybe<Scalars['PublicationId']['input']>;
@@ -587,11 +603,6 @@ export enum LensProfileManagerRelayErrorReasonType {
   NoLensManagerEnabled = 'NO_LENS_MANAGER_ENABLED',
   RateLimited = 'RATE_LIMITED',
   RequiresSignature = 'REQUIRES_SIGNATURE',
-}
-
-export enum LensProtocolVersion {
-  V1 = 'V1',
-  V2 = 'V2',
 }
 
 export enum LensTransactionFailureType {
@@ -708,6 +719,7 @@ export enum MomokaValidatorError {
   PotentialReorg = 'POTENTIAL_REORG',
   PublicationNonceInvalid = 'PUBLICATION_NONCE_INVALID',
   PublicationNoneDa = 'PUBLICATION_NONE_DA',
+  PublicationNotRecognized = 'PUBLICATION_NOT_RECOGNIZED',
   PublicationNoPointer = 'PUBLICATION_NO_POINTER',
   PublicationSignerNotAllowed = 'PUBLICATION_SIGNER_NOT_ALLOWED',
   SimulationFailed = 'SIMULATION_FAILED',
@@ -1185,6 +1197,7 @@ export type ProfileSpamReasonInput = {
 export type ProfileStatsArg = {
   customFilters?: InputMaybe<Array<CustomFiltersType>>;
   forApps?: InputMaybe<Array<Scalars['AppId']['input']>>;
+  hiddenComments?: InputMaybe<HiddenCommentsType>;
 };
 
 export type ProfileStatsCountOpenActionArgs = {
@@ -1240,6 +1253,8 @@ export type PublicationBookmarksWhere = {
 };
 
 export type PublicationCommentOn = {
+  /** You can use this enum to show, hide or show only hidden comments */
+  hiddenComments?: InputMaybe<HiddenCommentsType>;
   id: Scalars['PublicationId']['input'];
   ranking?: InputMaybe<PublicationCommentOnRanking>;
 };
@@ -1412,6 +1427,7 @@ export type PublicationStatsCountOpenActionArgs = {
 
 export type PublicationStatsInput = {
   customFilters?: InputMaybe<Array<CustomFiltersType>>;
+  hiddenComments?: InputMaybe<HiddenCommentsType>;
   /** Filter the returned stats on apps and 1 of the following filters: tags, contentWarning, mainContentFocus, locale */
   metadata?: InputMaybe<PublicationMetadataFilters>;
 };
@@ -1650,6 +1666,11 @@ export type UnblockRequest = {
 
 export type UnfollowRequest = {
   unfollow: Array<Scalars['ProfileId']['input']>;
+};
+
+export type UnhideCommentRequest = {
+  /** The comment to unhide. It has to be under a publication made by the user making the request. If already visible, nothing will happen. */
+  for: Scalars['PublicationId']['input'];
 };
 
 export type UnknownFollowModuleInput = {

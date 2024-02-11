@@ -14,7 +14,7 @@ export async function createOrGetProfile(signer: Wallet, client: LensClient, han
     return profile;
   }
 
-  const profileCreateResult = await client.wallet.createProfile({
+  const profileCreateResult = await client.wallet.createProfileWithHandle({
     handle,
     to: signer.address,
   });

@@ -25,6 +25,9 @@ import { getSdk, ProfileWhoReactedResultFragment, Sdk } from './graphql/reaction
 export class Reactions {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     private readonly context: LensContext,
     private readonly authentication: Authentication,

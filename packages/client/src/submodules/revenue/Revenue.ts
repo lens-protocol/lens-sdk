@@ -27,6 +27,9 @@ import {
 export class Revenue {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     private readonly context: LensContext,
     authentication: Authentication,

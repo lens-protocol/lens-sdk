@@ -41,6 +41,9 @@ export type NotificationFragment =
 export class Notifications {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     private readonly context: LensContext,
     private readonly authentication: Authentication,

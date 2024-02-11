@@ -12,7 +12,6 @@ import type {
 import type {
   BlockRequest,
   ChangeProfileManagersRequest,
-  CreateProfileWithHandleRequest,
   DefaultProfileRequest,
   DismissRecommendedProfilesRequest,
   FollowersRequest,
@@ -52,7 +51,6 @@ import {
   CreateLinkHandleToProfileBroadcastItemResultFragment,
   CreateUnlinkHandleFromProfileBroadcastItemResultFragment,
   CreateOnchainSetProfileMetadataBroadcastItemResultFragment,
-  CreateProfileWithHandleErrorResultFragment,
   CreateSetFollowModuleBroadcastItemResultFragment,
   CreateUnblockProfilesBroadcastItemResultFragment,
   CreateUnfollowBroadcastItemResultFragment,
@@ -72,6 +70,9 @@ import { FetchProfileOptions } from './types';
 export class Profile {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     private readonly context: LensContext,
     private readonly authentication: Authentication,
@@ -457,34 +458,6 @@ export class Profile {
         return result.data.result;
       }, request);
     });
-  }
-
-  /**
-   * Create a new profile.
-   *
-   * ⚠️ Only available in development environment.
-   *
-   * @param request - Request object for the mutation
-   * @returns Status of the transaction
-   *
-   * @deprecated Use {@link Wallet.createProfile | `client.wallet.createProfile`} instead
-   *
-   * @example
-   * ```ts
-   * const result = await client.profile.create({
-   *   handle: 'handle',
-   *   to: '0x1234567890123456789012345678901234567890',
-   * });
-   * ```
-   */
-  async create(
-    request: CreateProfileWithHandleRequest,
-  ): Promise<RelaySuccessFragment | CreateProfileWithHandleErrorResultFragment> {
-    if (this.context.environment.name === 'production') {
-      throw new Error('Cannot create profile in production environment');
-    }
-    const result = await this.sdk.CreateProfileWithHandle({ request });
-    return result.data.result;
   }
 
   /**

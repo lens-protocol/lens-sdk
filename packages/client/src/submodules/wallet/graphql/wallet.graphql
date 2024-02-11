@@ -102,3 +102,9 @@ mutation CreateProfileWithHandle($request: CreateProfileWithHandleRequest!) {
     }
   }
 }
+
+mutation CreateProfile($request: CreateProfileRequest!) {
+  result: createProfile(request: $request) {
+    ...RelaySuccess
+  }
+}

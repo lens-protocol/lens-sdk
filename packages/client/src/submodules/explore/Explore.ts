@@ -26,6 +26,9 @@ import { getSdk, Sdk } from './graphql/explore.generated';
 export class Explore {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     private readonly context: LensContext,
     authentication: Authentication,

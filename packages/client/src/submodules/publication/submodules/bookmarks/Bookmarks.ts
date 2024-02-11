@@ -26,6 +26,9 @@ import { getSdk, Sdk } from './graphql/bookmarks.generated';
 export class Bookmarks {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     private readonly context: LensContext,
     private readonly authentication: Authentication,

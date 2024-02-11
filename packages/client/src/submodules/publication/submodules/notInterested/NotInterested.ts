@@ -14,6 +14,9 @@ import { Sdk, getSdk } from './graphql/notInterested.generated';
 export class NotInterested {
   private readonly sdk: Sdk;
 
+  /**
+   * @internal
+   */
   constructor(
     context: LensContext,
     private readonly authentication: Authentication,

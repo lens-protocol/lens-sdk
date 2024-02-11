@@ -7,12 +7,12 @@ import { SemVer } from '../../SemVer';
 
 const backupFetch = maybe(() => fetch);
 
-function wrapFetch(
-  logger: ILogger,
-  supportedVersion: SemVer,
-  fetch: WindowOrWorkerGlobalScope['fetch'],
-): WindowOrWorkerGlobalScope['fetch'] {
+type Fetch = typeof fetch;
+
+function wrapFetch(logger: ILogger, supportedVersion: SemVer, fetch: Fetch): Fetch {
   return async (...args) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const response = await fetch(...args);
 
     if (response.status === 200) {
@@ -49,7 +49,7 @@ function wrapFetch(
 }
 
 export type LensLinkArgs = {
-  fetch?: WindowOrWorkerGlobalScope['fetch'];
+  fetch?: Fetch;
   logger: ILogger;
   supportedVersion: SemVer;
   uri: string;
@@ -66,6 +66,7 @@ export function createLensLink({
 
   return new HttpLink({
     uri,
+
     fetch: wrapFetch(logger, supportedVersion, currentFetch),
   });
 }
