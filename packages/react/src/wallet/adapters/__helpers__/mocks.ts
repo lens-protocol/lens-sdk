@@ -19,9 +19,7 @@ import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import { mockTypedData } from '../../../transactions/adapters/__helpers__/mocks';
-import { ITransactionFactory } from '../../../transactions/adapters/ITransactionFactory';
 import {
-  ConcreteWallet,
   ISignerFactory,
   ITransactionRequest,
   SignedProtocolCall,
@@ -29,18 +27,6 @@ import {
   UnsignedProtocolCall,
 } from '../ConcreteWallet';
 import { IProviderFactory } from '../IProviderFactory';
-
-/**
- *
- * @deprecated delete me
- */
-export function mockConcreteWallet() {
-  return ConcreteWallet.create(
-    mockEvmAddress(),
-    mock<ISignerFactory>(),
-    mock<ITransactionFactory<AnyTransactionRequestModel>>(),
-  );
-}
 
 class ErrorWithCode<T extends number | string> extends Error {
   name = 'ErrorWithCode' as const;
