@@ -1,19 +1,19 @@
 import {
-  AuthAuthenticateDocument,
   AuthAuthenticateData,
+  AuthAuthenticateDocument,
   AuthAuthenticateVariables,
-  AuthChallengeDocument,
   AuthChallengeData,
+  AuthChallengeDocument,
   AuthChallengeVariables,
-  AuthRefreshDocument,
   AuthRefreshData,
+  AuthRefreshDocument,
   AuthRefreshVariables,
-  SafeApolloClient,
   ChallengeRequest,
+  SafeApolloClient,
   SignedAuthChallenge,
 } from '@lens-protocol/api-bindings';
 
-import { Credentials } from './Credentials';
+import { JwtCredentials } from './JwtCredentials';
 
 export type AuthChallenge = {
   id: string;
@@ -37,7 +37,7 @@ export class AuthApi {
     };
   }
 
-  async generateCredentials(request: SignedAuthChallenge): Promise<Credentials> {
+  async generateCredentials(request: SignedAuthChallenge): Promise<JwtCredentials> {
     const result = await this.apolloClient.mutate<AuthAuthenticateData, AuthAuthenticateVariables>({
       mutation: AuthAuthenticateDocument,
       variables: { request },
@@ -45,10 +45,10 @@ export class AuthApi {
 
     const { accessToken, refreshToken } = result.data.result;
 
-    return new Credentials(accessToken, refreshToken);
+    return new JwtCredentials(accessToken, refreshToken);
   }
 
-  async refreshCredentials(refreshToken: string): Promise<Credentials> {
+  async refreshCredentials(refreshToken: string): Promise<JwtCredentials> {
     const result = await this.apolloClient.mutate<AuthRefreshData, AuthRefreshVariables>({
       mutation: AuthRefreshDocument,
       variables: { request: { refreshToken } },
@@ -56,6 +56,6 @@ export class AuthApi {
 
     const { accessToken: newAccessToken, refreshToken: newRefreshToken } = result.data.result;
 
-    return new Credentials(newAccessToken, newRefreshToken);
+    return new JwtCredentials(newAccessToken, newRefreshToken);
   }
 }

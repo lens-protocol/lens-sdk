@@ -1,14 +1,14 @@
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
-import { ICredentials, AnyTransactionRequestModel } from '../../entities';
+import { AnyTransactionRequestModel, Credentials } from '../../entities';
 import { TransactionQueue } from '../transactions';
 import { ICredentialsReader } from './ActiveWallet';
 import { ICredentialsWriter } from './ICredentialsWriter';
 import { Logout, LogoutReason } from './Logout';
 import {
+  SessionData,
   anonymousSessionData,
   profileSessionData,
-  SessionData,
   walletOnlySessionData,
 } from './SessionData';
 
@@ -20,7 +20,7 @@ export class CredentialsExpiredError extends Error {
 export interface ICredentialsGateway extends ICredentialsReader, ICredentialsWriter {}
 
 export interface ICredentialsRenewer {
-  renewCredentials(credentials: ICredentials): PromiseResult<ICredentials, CredentialsExpiredError>;
+  renewCredentials(credentials: Credentials): PromiseResult<Credentials, CredentialsExpiredError>;
 }
 
 export interface IBootstrapPresenter {

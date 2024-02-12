@@ -3,9 +3,9 @@ import { CredentialsExpiredError } from '@lens-protocol/domain/use-cases/authent
 import { PromiseResult, failure, invariant, success } from '@lens-protocol/shared-kernel';
 
 import { AuthApi } from './AuthApi';
-import { Credentials } from './Credentials';
 import { Callback, ICredentialsExpiryEmitter } from './CredentialsExpiryController';
 import { CredentialsStorage } from './CredentialsStorage';
+import { JwtCredentials } from './JwtCredentials';
 
 export class AccessTokenStorage implements IAccessTokenStorage, ICredentialsExpiryEmitter {
   private isRefreshing = false;
@@ -41,7 +41,7 @@ export class AccessTokenStorage implements IAccessTokenStorage, ICredentialsExpi
     return failure(new CredentialsExpiredError());
   }
 
-  private async refreshCredentials(credentials: Credentials) {
+  private async refreshCredentials(credentials: JwtCredentials) {
     const newCredentials = await this.authApi.refreshCredentials(credentials.refreshToken);
     await this.credentialsStorage.set(newCredentials);
   }

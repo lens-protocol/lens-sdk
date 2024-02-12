@@ -334,103 +334,6 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
 
-  packages/api-bindings-v1:
-    dependencies:
-      '@apollo/client':
-        specifier: ^3.8.7
-        version: 3.8.10(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)
-      '@lens-protocol/domain':
-        specifier: workspace:*
-        version: link:../domain
-      '@lens-protocol/shared-kernel':
-        specifier: workspace:*
-        version: link:../shared-kernel
-      graphql:
-        specifier: ^16.8.1
-        version: 16.8.1
-      graphql-tag:
-        specifier: ^2.12.6
-        version: 2.12.6(graphql@16.8.1)
-      tslib:
-        specifier: ^2.6.2
-        version: 2.6.2
-    devDependencies:
-      '@babel/core':
-        specifier: ^7.23.3
-        version: 7.23.3
-      '@babel/preset-env':
-        specifier: ^7.23.3
-        version: 7.23.3(@babel/core@7.23.3)
-      '@babel/preset-typescript':
-        specifier: ^7.23.3
-        version: 7.23.3(@babel/core@7.23.3)
-      '@faker-js/faker':
-        specifier: ^7.6.0
-        version: 7.6.0
-      '@graphql-codegen/add':
-        specifier: ^4.0.1
-        version: 4.0.1(graphql@16.8.1)
-      '@graphql-codegen/cli':
-        specifier: ^3.3.1
-        version: 3.3.1(@babel/core@7.23.3)(@types/node@18.18.12)(graphql@16.8.1)
-      '@graphql-codegen/fragment-matcher':
-        specifier: ^4.0.1
-        version: 4.0.1(graphql@16.8.1)
-      '@graphql-codegen/introspection':
-        specifier: ^3.0.1
-        version: 3.0.1(graphql@16.8.1)
-      '@graphql-codegen/typescript':
-        specifier: ^3.0.4
-        version: 3.0.4(graphql@16.8.1)
-      '@graphql-codegen/typescript-apollo-client-helpers':
-        specifier: ^2.2.6
-        version: 2.2.6(graphql@16.8.1)
-      '@graphql-codegen/typescript-operations':
-        specifier: ^3.0.4
-        version: 3.0.4(graphql@16.8.1)
-      '@graphql-codegen/typescript-react-apollo':
-        specifier: ^3.3.7
-        version: 3.3.7(graphql-tag@2.12.6)(graphql@16.8.1)
-      '@lens-protocol/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@lens-protocol/prettier-config':
-        specifier: workspace:*
-        version: link:../prettier-config
-      '@lens-protocol/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      '@types/jest':
-        specifier: ^29.5.10
-        version: 29.5.10
-      '@types/node':
-        specifier: ^18.18.12
-        version: 18.18.12
-      babel-plugin-graphql-tag:
-        specifier: ^3.3.0
-        version: 3.3.0(@babel/core@7.23.3)(graphql-tag@2.12.6)
-      eslint:
-        specifier: ^8.54.0
-        version: 8.54.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@18.18.12)
-      jest-mock-extended:
-        specifier: ^3.0.5
-        version: 3.0.5(jest@29.7.0)(typescript@5.2.2)
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.2.0(react@18.2.0)
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.3)(jest@29.7.0)(typescript@5.2.2)
-      typescript:
-        specifier: 5.2.2
-        version: 5.2.2
-
   packages/blockchain-bindings:
     dependencies:
       '@ethersproject/abi':
@@ -1119,8 +1022,6 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
 
-  packages/react-v1: {}
-
   packages/react-web:
     dependencies:
       '@lens-protocol/api-bindings':
@@ -1214,8 +1115,6 @@ importers:
       typescript:
         specifier: 5.2.2
         version: 5.2.2
-
-  packages/react-web-v1: {}
 
   packages/shared-kernel:
     dependencies:
