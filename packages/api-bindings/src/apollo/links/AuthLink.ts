@@ -4,7 +4,7 @@ import { Observable, Observer } from '@apollo/client/utilities';
 import { CredentialsExpiredError } from '@lens-protocol/domain/use-cases/authentication';
 import { invariant, PromiseResult } from '@lens-protocol/shared-kernel';
 
-import { graphQLResultHasUnauthenticatedError } from '../errors';
+import { isUnauthorizedServerError } from '../errors';
 
 export interface IAccessTokenStorage {
   getAccessToken(): string | null;
@@ -28,9 +28,15 @@ class RequestsQueue {
     this.requests.delete(operation);
   }
 
-  consume() {
+  retryAll() {
     for (const request of this.requests.values()) {
       request.forward(request.operation).subscribe(request.observer);
+    }
+  }
+
+  failWith(result: FetchResult) {
+    for (const request of this.requests.values()) {
+      request.observer.next?.(result);
     }
   }
 }
@@ -67,25 +73,29 @@ class RefreshTokensLink extends ApolloLink {
             return;
           }
 
-          if (graphQLResultHasUnauthenticatedError(result)) {
-            if (!this.refreshing) {
-              this.refreshing = true;
-              const refresh = await this.accessTokenStorage.refreshToken();
-              this.refreshing = false;
-
-              if (refresh.isFailure()) {
-                observer.next(result);
-              } else {
-                forward(operation).subscribe(observer);
-              }
-              this.queue.consume();
-            }
-            return;
-          }
-
           observer.next(result);
         },
-        error: (error) => {
+        error: async (error) => {
+          if (isUnauthorizedServerError(error)) {
+            this.queue.enqueue({ operation, forward, observer });
+
+            if (this.refreshing) {
+              return;
+            }
+
+            this.refreshing = true;
+            const refresh = await this.accessTokenStorage.refreshToken();
+            this.refreshing = false;
+
+            if (refresh.isSuccess()) {
+              this.queue.retryAll();
+              return;
+            }
+
+            this.queue.failWith(error.result as FetchResult);
+
+            return;
+          }
           observer.error(error);
         },
         complete: () => {
@@ -115,8 +125,8 @@ export function createAuthLink(accessTokenStorage: IAccessTokenStorage) {
         ...prevContext,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         headers: {
-          authorization: `Bearer ${token}`,
           ...('headers' in prevContext && prevContext.headers),
+          authorization: `Bearer ${token}`,
         },
       };
     }
