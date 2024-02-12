@@ -2,9 +2,9 @@ import { NormalizedCacheObject } from '@apollo/client';
 import { MockedResponse, mockSingleLink } from '@apollo/client/testing';
 import { DocumentNode, ExecutionResult, GraphQLError } from 'graphql';
 
+import { SafeApolloClient } from '../SafeApolloClient';
 import { createLensCache, createSnapshotCache, defaultQueryParams } from '../cache';
 import { ApolloServerErrorCode } from '../errors';
-import { SafeApolloClient } from '../SafeApolloClient';
 
 export function mockLensApolloClient(
   mocks: ReadonlyArray<MockedResponse<unknown>> = [],
