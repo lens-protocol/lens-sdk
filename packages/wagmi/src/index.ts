@@ -1,42 +1,51 @@
-import { JsonRpcProvider, JsonRpcSigner, Web3Provider } from '@ethersproject/providers';
+import { FallbackProvider, JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
 import { IBindings } from '@lens-protocol/react-web';
 import { invariant } from '@lens-protocol/shared-kernel';
-import { PublicClient, WalletClient } from 'wagmi';
-import { getPublicClient, getWalletClient } from 'wagmi/actions';
+import { Account, Chain, Client, Transport } from 'viem';
+import { Config as WagmiConfig } from 'wagmi';
+import { getPublicClient, getWalletClient, switchChain } from 'wagmi/actions';
 
-function providerFromPublicClient({
-  publicClient,
-}: {
-  publicClient: PublicClient;
-}): JsonRpcProvider {
-  const { chain, transport } = publicClient;
+function clientToProvider({ chain, transport }: Client<Transport, Chain>): JsonRpcProvider {
   const network = {
     chainId: chain.id,
     name: chain.name,
     ensAddress: chain.contracts?.ensRegistry?.address,
   };
-  return new Web3Provider(transport, network);
+
+  if (transport.type === 'fallback') {
+    return new FallbackProvider(
+      (transport.transports as ReturnType<Transport>[]).map(
+        ({ value }) => new JsonRpcProvider(value?.url as string, network),
+      ),
+    ) as unknown as JsonRpcProvider;
+  }
+
+  return new JsonRpcProvider(transport.url as string, network);
 }
 
-async function signerFromWalletClient(walletClient: WalletClient): Promise<JsonRpcSigner> {
-  const { account, transport } = walletClient;
+function clientToSigner({ account, transport }: Client<Transport, Chain, Account>) {
   const provider = new Web3Provider(transport, 'any');
-  const signer = provider.getSigner(account.address);
-  return signer;
+
+  return provider.getSigner(account.address);
 }
 
-export function bindings(): IBindings {
+export function bindings(config: WagmiConfig): IBindings {
   return {
     getProvider: async ({ chainId }) => {
-      const publicClient = getPublicClient({ chainId });
-      return providerFromPublicClient({ publicClient });
+      const publicClient = getPublicClient(config);
+
+      invariant(publicClient, 'Public client is not available');
+
+      if (chainId !== (await publicClient.getChainId())) {
+        await switchChain(config, { chainId });
+      }
+
+      return clientToProvider(publicClient);
     },
-    getSigner: async ({ chainId }) => {
-      const walletClient = await getWalletClient({ chainId });
+    getSigner: async (_) => {
+      const walletClient = await getWalletClient(config);
 
-      invariant(walletClient, 'Wallet client not found');
-
-      return signerFromWalletClient(walletClient);
+      return clientToSigner(walletClient);
     },
   };
 }

@@ -1,10 +1,10 @@
 import { ProfileId, useFeed } from '@lens-protocol/react-web';
 
 import { RequireProfileSession } from '../components/auth';
+import { PublicationCard } from '../components/cards';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
-import { PublicationCard } from '../publications/components/PublicationCard';
 
 function UseFeedInner({ profileId }: { profileId: ProfileId }) {
   const { data, error, loading, hasMore, beforeCount, observeRef, prev } = useInfiniteScroll(

@@ -1,7 +1,6 @@
-import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useAccount, useConnect } from 'wagmi';
-import { InjectedConnector } from 'wagmi/connectors/injected';
+import { injected } from 'wagmi/connectors';
 
 import { LoginForm } from './components/auth';
 
@@ -9,17 +8,12 @@ export function LogInPage() {
   const navigate = useNavigate();
   const { address, isConnecting, isDisconnected } = useAccount();
 
-  const { connect } = useConnect({
-    connector: new InjectedConnector(),
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+  const { connect } = useConnect();
 
   return (
     <div>
       {isDisconnected && (
-        <button disabled={isConnecting} onClick={() => connect()}>
+        <button disabled={isConnecting} onClick={() => connect({ connector: injected() })}>
           Connect first
         </button>
       )}

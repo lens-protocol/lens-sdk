@@ -1,4 +1,4 @@
-import { Profile, useUpdateProfileManagers, useProfileManagers } from '@lens-protocol/react-web';
+import { Profile, useProfileManagers, useUpdateProfileManagers } from '@lens-protocol/react-web';
 
 import { RequireProfileSession } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';

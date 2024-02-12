@@ -1,6 +1,6 @@
 import { PublicationRevenue } from '@lens-protocol/react-web';
 
-import { PublicationCard } from '../../publications/components/PublicationCard';
+import { PublicationCard } from '../../components/cards';
 import { RevenueCard } from './RevenueCard';
 
 type RevenueCardProps = {
