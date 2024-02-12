@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 import { useSharedDependencies } from '../shared';
 
 /**
@@ -8,6 +10,13 @@ import { useSharedDependencies } from '../shared';
  */
 export function useAccessToken() {
   const { accessTokenStorage } = useSharedDependencies();
+  const [token, setToken] = useState(() => accessTokenStorage.getAccessToken());
 
-  return accessTokenStorage.getAccessToken();
+  useEffect(() => {
+    return accessTokenStorage.onRefresh(() => {
+      setToken(accessTokenStorage.getAccessToken());
+    });
+  }, [accessTokenStorage]);
+
+  return token;
 }
