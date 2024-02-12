@@ -1,5 +1,13 @@
 # @lens-protocol/blockchain-bindings
 
+## 0.10.0-alpha.22
+
+### Patch Changes
+
+- 9c7fd3ee3: **feat:** `useCreateProfile` hook
+- Updated dependencies [9c7fd3ee3]
+  - @lens-protocol/domain@0.11.0-alpha.21
+
 ## 0.10.0-alpha.21
 
 ### Minor Changes
