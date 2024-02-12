@@ -2,8 +2,12 @@ import { XMTPProvider } from '@xmtp/react-sdk';
 import { Toaster } from 'react-hot-toast';
 import { Outlet, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
-import { ErrorMessage } from './components/error/ErrorMessage';
+import { HomePage } from './HomePage';
+import { Layout } from './Layout';
+import { LogInPage } from './LogInPage';
+import { Providers } from './Providers';
 import { GenericErrorBoundary } from './components/GenericErrorBoundary';
+import { ErrorMessage } from './components/error/ErrorMessage';
 import { Header } from './components/header/Header';
 import {
   DiscoveryPage,
@@ -15,15 +19,12 @@ import {
   UseSearchProfiles,
   UseSearchPublications,
 } from './discovery';
-import { HomePage } from './HomePage';
 import {
   InboxPage,
   UseEnhanceConversation,
   UseEnhanceConversations,
   UseStartLensConversation,
 } from './inbox';
-import { Layout } from './Layout';
-import { LogInPage } from './LogInPage';
 import {
   LensClientInteroperability,
   MiscPage,
@@ -59,7 +60,6 @@ import {
   UseUpdateProfileManagers,
   UseWhoActedOnPublication,
 } from './profiles';
-import { Providers } from './Providers';
 import {
   PublicationsPage,
   UseBookmarks,

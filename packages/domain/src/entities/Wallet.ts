@@ -1,6 +1,5 @@
 import { CryptoNativeAsset, EvmAddress, PromiseResult } from '@lens-protocol/shared-kernel';
 
-import { ISignedVote, IUnsignedVote } from './polls';
 import { Signature } from './Signature';
 import {
   AnyTransactionRequestModel,
@@ -10,6 +9,7 @@ import {
   ProtocolTransactionRequestModel,
   UnsignedTransaction,
 } from './Transactions';
+import { ISignedVote, IUnsignedVote } from './polls';
 
 export class InsufficientGasError extends Error {
   name = 'InsufficientGasError' as const;

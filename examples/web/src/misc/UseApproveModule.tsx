@@ -15,10 +15,10 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useAccount } from 'wagmi';
 
+import { Logs } from '../components/Logs';
 import { PublicationCard } from '../components/cards';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
-import { Logs } from '../components/Logs';
 import { useIrysUploader } from '../hooks/useIrysUploader';
 import { useLogs } from '../hooks/useLogs';
 import { never } from '../utils';
