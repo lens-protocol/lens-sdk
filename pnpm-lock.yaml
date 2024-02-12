@@ -59,7 +59,7 @@ importers:
         version: 18.2.0(react@18.2.0)
       viem:
         specifier: ^2.7.6
-        version: 2.7.6(typescript@5.2.2)(zod@3.22.4)
+        version: 2.7.6(typescript@5.2.2)
       wagmi:
         specifier: ^2.5.6
         version: 2.5.6(@tanstack/react-query@5.18.1)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(viem@2.7.6)
@@ -198,7 +198,7 @@ importers:
         version: 3.0.2
       viem:
         specifier: ^2.7.6
-        version: 2.7.6(typescript@5.2.2)(zod@3.22.4)
+        version: 2.7.6(typescript@5.2.2)
       wagmi:
         specifier: ^2.5.6
         version: 2.5.6(@tanstack/react-query@5.18.1)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(viem@2.7.6)
@@ -223,7 +223,7 @@ importers:
         version: 18.2.17
       '@vitejs/plugin-react':
         specifier: ^4.2.0
-        version: 4.2.0(vite@4.5.0)
+        version: 4.2.0(vite@4.5.2)
       prettier:
         specifier: ^2.8.8
         version: 2.8.8
@@ -234,11 +234,11 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^4.5.0
-        version: 4.5.0(@types/node@18.18.12)
+        specifier: ^4.5.2
+        version: 4.5.2(@types/node@18.18.12)
       vite-plugin-node-polyfills:
         specifier: ^0.9.0
-        version: 0.9.0(vite@4.5.0)
+        version: 0.9.0(vite@4.5.2)
 
   packages/api-bindings:
     dependencies:
@@ -1284,7 +1284,7 @@ importers:
         version: 5.2.2
       viem:
         specifier: ^2.7.6
-        version: 2.7.6(typescript@5.2.2)(zod@3.22.4)
+        version: 2.7.6(typescript@5.2.2)
       wagmi:
         specifier: ^2.5.6
         version: 2.5.6(@tanstack/react-query@5.18.1)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(viem@2.7.6)
@@ -7850,7 +7850,7 @@ packages:
   /@ungap/structured-clone@1.2.0:
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
 
-  /@vitejs/plugin-react@4.2.0(vite@4.5.0):
+  /@vitejs/plugin-react@4.2.0(vite@4.5.2):
     resolution: {integrity: sha512-+MHTH/e6H12kRp5HUkzOGqPMksezRMmW+TNzlh/QXfI8rRf6l2Z2yH/v12no1UvTwhZgEDMuQ7g7rrfMseU6FQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -7861,7 +7861,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.23.3(@babel/core@7.23.3)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.0
-      vite: 4.5.0(@types/node@18.18.12)
+      vite: 4.5.2(@types/node@18.18.12)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -7884,7 +7884,7 @@ packages:
       '@walletconnect/ethereum-provider': 2.11.1(@types/react@18.2.38)(react@18.2.0)
       '@walletconnect/modal': 2.6.2(@types/react@18.2.38)(react@18.2.0)
       typescript: 5.2.2
-      viem: 2.7.6(typescript@5.2.2)(zod@3.22.4)
+      viem: 2.7.6(typescript@5.2.2)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -7924,7 +7924,7 @@ packages:
       eventemitter3: 5.0.1
       mipd: 0.0.5(typescript@5.2.2)
       typescript: 5.2.2
-      viem: 2.7.6(typescript@5.2.2)(zod@3.22.4)
+      viem: 2.7.6(typescript@5.2.2)
       zustand: 4.4.1(@types/react@18.2.38)(react@18.2.0)
     transitivePeerDependencies:
       - '@types/react'
@@ -8656,7 +8656,7 @@ packages:
       typescript: 5.2.2
       zod: 3.22.4
 
-  /abitype@1.0.0(typescript@5.2.2)(zod@3.22.4):
+  /abitype@1.0.0(typescript@5.2.2):
     resolution: {integrity: sha512-NMeMah//6bJ56H5XRj8QCV4AwuW6hB6zqz2LnhhLdcWVQOsXki6/Pn3APeqxCma62nXIcmZWdu1DlHWS74umVQ==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -8668,7 +8668,6 @@ packages:
         optional: true
     dependencies:
       typescript: 5.2.2
-      zod: 3.22.4
 
   /abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -20241,7 +20240,7 @@ packages:
       - utf-8-validate
       - zod
 
-  /viem@2.7.6(typescript@5.2.2)(zod@3.22.4):
+  /viem@2.7.6(typescript@5.2.2):
     resolution: {integrity: sha512-43TF0VYcTeNef9dax1/BhqlRLXpAo6HAiQ68hrJ8XRhDOou73nHZEjeFl8Eai4UFFodKhu+PbRUFzuuoixOUfg==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -20254,7 +20253,7 @@ packages:
       '@noble/hashes': 1.3.2
       '@scure/bip32': 1.3.2
       '@scure/bip39': 1.2.1
-      abitype: 1.0.0(typescript@5.2.2)(zod@3.22.4)
+      abitype: 1.0.0(typescript@5.2.2)
       isows: 1.0.3(ws@8.13.0)
       typescript: 5.2.2
       ws: 8.13.0
@@ -20263,20 +20262,20 @@ packages:
       - utf-8-validate
       - zod
 
-  /vite-plugin-node-polyfills@0.9.0(vite@4.5.0):
+  /vite-plugin-node-polyfills@0.9.0(vite@4.5.2):
     resolution: {integrity: sha512-+i+WPUuIBhJy+ODfxx6S6FTl28URCxUszbl/IL4GwrZvbqqY/8VDIp+zpjMS8Us/a7GwN4Iaqr/fVIBtkNQojQ==}
     peerDependencies:
       vite: ^2.0.0 || ^3.0.0 || ^4.0.0
     dependencies:
       '@rollup/plugin-inject': 5.0.5
       node-stdlib-browser: 1.2.0
-      vite: 4.5.0(@types/node@18.18.12)
+      vite: 4.5.2(@types/node@18.18.12)
     transitivePeerDependencies:
       - rollup
     dev: true
 
-  /vite@4.5.0(@types/node@18.18.12):
-    resolution: {integrity: sha512-ulr8rNLA6rkyFAlVWw2q5YJ91v098AFQ2R0PRFwPzREXOUJQPtFUG0t+/ZikhaOCDqFoDhN6/v8Sq0o4araFAw==}
+  /vite@4.5.2(@types/node@18.18.12):
+    resolution: {integrity: sha512-tBCZBNSBbHQkaGyhGCDUGqeo2ph8Fstyp6FMSvTtsXeZSPpSMGlviAOav2hxVTqFcx8Hj/twtWKsMJXNY0xI8w==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -20360,7 +20359,7 @@ packages:
       react: 18.2.0
       typescript: 5.2.2
       use-sync-external-store: 1.2.0(react@18.2.0)
-      viem: 2.7.6(typescript@5.2.2)(zod@3.22.4)
+      viem: 2.7.6(typescript@5.2.2)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
