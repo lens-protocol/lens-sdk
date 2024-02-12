@@ -32,7 +32,8 @@ fragment FeedItem on FeedItem {
 
 query Feed(
   $request: FeedRequest!
-  $publicationImageTransform: ImageTransform!
+  $publicationImageSmallTransform: ImageTransform!
+  $publicationImageMediumTransform: ImageTransform!
   $publicationOperationsActedArgs: PublicationOperationsActedArgs
   $publicationStatsInput: PublicationStatsInput!
   $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs!
@@ -55,7 +56,8 @@ query Feed(
 
 query FeedHighlights(
   $request: FeedHighlightsRequest!
-  $publicationImageTransform: ImageTransform!
+  $publicationImageSmallTransform: ImageTransform!
+  $publicationImageMediumTransform: ImageTransform!
   $publicationOperationsActedArgs: PublicationOperationsActedArgs
   $publicationStatsInput: PublicationStatsInput!
   $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs!
@@ -118,7 +120,8 @@ fragment OpenActionPaidAction on OpenActionPaidAction {
 }
 
 query LatestPaidActions(
-  $publicationImageTransform: ImageTransform!
+  $publicationImageSmallTransform: ImageTransform!
+  $publicationImageMediumTransform: ImageTransform!
   $publicationOperationsActedArgs: PublicationOperationsActedArgs
   $publicationStatsInput: PublicationStatsInput!
   $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs!

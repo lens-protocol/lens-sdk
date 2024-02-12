@@ -31,7 +31,8 @@ export type PublicationRevenueFragment = {
 
 export type RevenueFromPublicationsQueryVariables = Types.Exact<{
   request: Types.RevenueFromPublicationsRequest;
-  publicationImageTransform: Types.ImageTransform;
+  publicationImageSmallTransform: Types.ImageTransform;
+  publicationImageMediumTransform: Types.ImageTransform;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
   publicationStatsInput: Types.PublicationStatsInput;
   publicationStatsCountOpenActionArgs: Types.PublicationStatsCountOpenActionArgs;
@@ -49,7 +50,8 @@ export type RevenueFromPublicationsQuery = {
 
 export type RevenueFromPublicationQueryVariables = Types.Exact<{
   request: Types.RevenueFromPublicationRequest;
-  publicationImageTransform: Types.ImageTransform;
+  publicationImageSmallTransform: Types.ImageTransform;
+  publicationImageMediumTransform: Types.ImageTransform;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
   publicationStatsInput: Types.PublicationStatsInput;
   publicationStatsCountOpenActionArgs: Types.PublicationStatsCountOpenActionArgs;
@@ -1456,6 +1458,25 @@ export const PublicationRevenueFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -2344,6 +2365,7 @@ export const PublicationRevenueFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -2351,7 +2373,44 @@ export const PublicationRevenueFragmentDoc = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],
@@ -7024,7 +7083,18 @@ export const RevenueFromPublicationsDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'publicationImageTransform' },
+            name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publicationImageMediumTransform' },
           },
           type: {
             kind: 'NonNullType',
@@ -8414,6 +8484,25 @@ export const RevenueFromPublicationsDocument = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -9302,6 +9391,7 @@ export const RevenueFromPublicationsDocument = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -9309,7 +9399,44 @@ export const RevenueFromPublicationsDocument = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],
@@ -13994,7 +14121,18 @@ export const RevenueFromPublicationDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'publicationImageTransform' },
+            name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publicationImageMediumTransform' },
           },
           type: {
             kind: 'NonNullType',
@@ -15359,6 +15497,25 @@ export const RevenueFromPublicationDocument = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -16247,6 +16404,7 @@ export const RevenueFromPublicationDocument = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -16254,7 +16412,44 @@ export const RevenueFromPublicationDocument = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],

@@ -12,7 +12,8 @@ import {
 import { AppId } from '../queryParams';
 
 type CommonQueryVariables = {
-  publicationImageTransform: ImageTransform;
+  publicationImageSmallTransform: ImageTransform;
+  publicationImageMediumTransform: ImageTransform;
   publicationOperationsActedArgs: PublicationOperationsActedArgs;
   publicationStatsInput: PublicationStatsInput;
   publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs;
@@ -29,7 +30,12 @@ export function commonQueryVariables({
   mediaTransforms,
 }: LensContext): CommonQueryVariables {
   return {
-    publicationImageTransform: pickImageTransform(
+    publicationImageSmallTransform: pickImageTransform(
+      mediaTransforms.publication,
+      params.image?.small,
+      buildImageTransform('400px'),
+    ),
+    publicationImageMediumTransform: pickImageTransform(
       mediaTransforms.publication,
       params.image?.medium,
       buildImageTransform('700px'),

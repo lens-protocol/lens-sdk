@@ -95,7 +95,14 @@ fragment ImageSet on ImageSet {
   optimized {
     ...Image
   }
-  transformed(request: $publicationImageTransform) {
+  small: transformed(request: $publicationImageSmallTransform) {
+    ...Image
+  }
+  medium: transformed(request: $publicationImageMediumTransform) {
+    ...Image
+  }
+  # @deprecated
+  transformed(request: $publicationImageMediumTransform) {
     ...Image
   }
 }
@@ -184,6 +191,10 @@ fragment ProfilePictureSet on ImageSet {
   optimized {
     ...Image
   }
+  thumbnail: transformed(request: $profilePictureTransform) {
+    ...Image
+  }
+  # @deprecated
   transformed(request: $profilePictureTransform) {
     ...Image
   }

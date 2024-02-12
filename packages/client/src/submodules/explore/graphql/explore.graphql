@@ -1,6 +1,7 @@
 query ExplorePublications(
   $request: ExplorePublicationRequest!
-  $publicationImageTransform: ImageTransform!
+  $publicationImageSmallTransform: ImageTransform!
+  $publicationImageMediumTransform: ImageTransform!
   $publicationOperationsActedArgs: PublicationOperationsActedArgs
   $publicationStatsInput: PublicationStatsInput!
   $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs!

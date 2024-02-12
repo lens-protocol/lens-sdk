@@ -31,7 +31,8 @@ export type FeedItemFragment = {
 
 export type FeedQueryVariables = Types.Exact<{
   request: Types.FeedRequest;
-  publicationImageTransform: Types.ImageTransform;
+  publicationImageSmallTransform: Types.ImageTransform;
+  publicationImageMediumTransform: Types.ImageTransform;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
   publicationStatsInput: Types.PublicationStatsInput;
   publicationStatsCountOpenActionArgs: Types.PublicationStatsCountOpenActionArgs;
@@ -49,7 +50,8 @@ export type FeedQuery = {
 
 export type FeedHighlightsQueryVariables = Types.Exact<{
   request: Types.FeedHighlightsRequest;
-  publicationImageTransform: Types.ImageTransform;
+  publicationImageSmallTransform: Types.ImageTransform;
+  publicationImageMediumTransform: Types.ImageTransform;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
   publicationStatsInput: Types.PublicationStatsInput;
   publicationStatsCountOpenActionArgs: Types.PublicationStatsCountOpenActionArgs;
@@ -80,7 +82,8 @@ export type OpenActionPaidActionFragment = {
 };
 
 export type LatestPaidActionsQueryVariables = Types.Exact<{
-  publicationImageTransform: Types.ImageTransform;
+  publicationImageSmallTransform: Types.ImageTransform;
+  publicationImageMediumTransform: Types.ImageTransform;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
   publicationStatsInput: Types.PublicationStatsInput;
   publicationStatsCountOpenActionArgs: Types.PublicationStatsCountOpenActionArgs;
@@ -698,6 +701,25 @@ export const ReactionEventFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -1771,6 +1793,25 @@ export const FeedItemFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -3252,6 +3293,7 @@ export const FeedItemFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -3259,7 +3301,44 @@ export const FeedItemFragmentDoc = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],
@@ -8515,6 +8594,25 @@ export const LatestActedFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -9536,6 +9634,25 @@ export const FollowPaidActionFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -10593,6 +10710,25 @@ export const OpenActionPaidActionFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -12074,6 +12210,7 @@ export const OpenActionPaidActionFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -12081,7 +12218,44 @@ export const OpenActionPaidActionFragmentDoc = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],
@@ -16675,7 +16849,18 @@ export const FeedDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'publicationImageTransform' },
+            name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publicationImageMediumTransform' },
           },
           type: {
             kind: 'NonNullType',
@@ -17478,6 +17663,25 @@ export const FeedDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -18959,6 +19163,7 @@ export const FeedDocument = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -18966,7 +19171,44 @@ export const FeedDocument = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],
@@ -23648,7 +23890,18 @@ export const FeedHighlightsDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'publicationImageTransform' },
+            name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publicationImageMediumTransform' },
           },
           type: {
             kind: 'NonNullType',
@@ -24379,6 +24632,25 @@ export const FeedHighlightsDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -25860,6 +26132,7 @@ export const FeedHighlightsDocument = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -25867,7 +26140,44 @@ export const FeedHighlightsDocument = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],
@@ -30382,7 +30692,18 @@ export const LatestPaidActionsDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'publicationImageTransform' },
+            name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publicationImageMediumTransform' },
           },
           type: {
             kind: 'NonNullType',
@@ -31222,6 +31543,25 @@ export const LatestPaidActionsDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -32703,6 +33043,7 @@ export const LatestPaidActionsDocument = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -32710,7 +33051,44 @@ export const LatestPaidActionsDocument = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],

@@ -58,7 +58,7 @@ import {
   TagResultFragment,
 } from './graphql/publication.generated';
 import { Bookmarks, Reactions, NotInterested, Actions } from './submodules';
-import { FetchPublicationOptions, RequestOverwrites } from './types';
+import { RequestOverwrites } from './types';
 
 /**
  * Publications are the posts, comments, mirrors and quotes that a profile creates.
@@ -111,7 +111,6 @@ export class Publication {
    * Fetch a publication
    *
    * @param request - Request object for the query
-   * @param options - Additional options for the query
    * @returns {@link AnyPublicationFragment} or null if not found
    *
    * @example
@@ -121,14 +120,10 @@ export class Publication {
    * });
    * ```
    */
-  async fetch(
-    request: PublicationRequest,
-    options?: FetchPublicationOptions,
-  ): Promise<AnyPublicationFragment | null> {
+  async fetch(request: PublicationRequest): Promise<AnyPublicationFragment | null> {
     const result = await this.sdk.Publication({
       request,
       ...commonQueryVariables(this.context),
-      ...options,
     });
 
     return result.data.result;
@@ -138,7 +133,6 @@ export class Publication {
    * Fetch all publications by requested criteria
    *
    * @param request - Request object for the query
-   * @param options - Additional options for the query
    * @returns {@link AnyPublicationFragment} wrapped in {@link PaginatedResult}
    *
    * @example
@@ -150,15 +144,11 @@ export class Publication {
    * });
    * ```
    */
-  async fetchAll(
-    request: PublicationsRequest,
-    options?: FetchPublicationOptions,
-  ): Promise<PaginatedResult<AnyPublicationFragment>> {
+  async fetchAll(request: PublicationsRequest): Promise<PaginatedResult<AnyPublicationFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Publications({
         request: currRequest,
         ...commonQueryVariables(this.context),
-        ...options,
       });
 
       return result.data.result;

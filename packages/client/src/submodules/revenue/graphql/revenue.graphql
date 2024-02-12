@@ -26,7 +26,8 @@ fragment PublicationRevenue on PublicationRevenue {
 
 query RevenueFromPublications(
   $request: RevenueFromPublicationsRequest!
-  $publicationImageTransform: ImageTransform!
+  $publicationImageSmallTransform: ImageTransform!
+  $publicationImageMediumTransform: ImageTransform!
   $publicationOperationsActedArgs: PublicationOperationsActedArgs
   $publicationStatsInput: PublicationStatsInput!
   $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs!
@@ -49,7 +50,8 @@ query RevenueFromPublications(
 
 query RevenueFromPublication(
   $request: RevenueFromPublicationRequest!
-  $publicationImageTransform: ImageTransform!
+  $publicationImageSmallTransform: ImageTransform!
+  $publicationImageMediumTransform: ImageTransform!
   $publicationOperationsActedArgs: PublicationOperationsActedArgs
   $publicationStatsInput: PublicationStatsInput!
   $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs!

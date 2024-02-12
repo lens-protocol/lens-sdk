@@ -13,6 +13,12 @@ export type QueryParams = {
    */
   image?: {
     /**
+     * The size of the small publication image
+     *
+     * @defaultValue width: 400px, height: auto, keepAspectRatio: true
+     */
+    small?: ImageTransform;
+    /**
      * The size of the medium publication image
      *
      * @defaultValue width: 700px, height: auto, keepAspectRatio: true

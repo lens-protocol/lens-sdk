@@ -121,7 +121,8 @@ fragment MentionNotification on MentionNotification {
 # queries
 query Notifications(
   $request: NotificationRequest!
-  $publicationImageTransform: ImageTransform!
+  $publicationImageSmallTransform: ImageTransform!
+  $publicationImageMediumTransform: ImageTransform!
   $publicationOperationsActedArgs: PublicationOperationsActedArgs
   $publicationStatsInput: PublicationStatsInput!
   $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs!

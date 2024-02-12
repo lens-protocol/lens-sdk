@@ -23,7 +23,8 @@ import { print } from 'graphql';
 import { DocumentNode } from 'graphql';
 export type PublicationBookmarksQueryVariables = Types.Exact<{
   request: Types.PublicationBookmarksRequest;
-  publicationImageTransform: Types.ImageTransform;
+  publicationImageSmallTransform: Types.ImageTransform;
+  publicationImageMediumTransform: Types.ImageTransform;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
   publicationStatsInput: Types.PublicationStatsInput;
   publicationStatsCountOpenActionArgs: Types.PublicationStatsCountOpenActionArgs;
@@ -77,7 +78,18 @@ export const PublicationBookmarksDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'publicationImageTransform' },
+            name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publicationImageMediumTransform' },
           },
           type: {
             kind: 'NonNullType',
@@ -1427,6 +1439,25 @@ export const PublicationBookmarksDocument = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -2315,6 +2346,7 @@ export const PublicationBookmarksDocument = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -2322,7 +2354,44 @@ export const PublicationBookmarksDocument = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],

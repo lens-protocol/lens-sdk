@@ -12,7 +12,8 @@ fragment PublicationValidateMetadataResult on PublicationValidateMetadataResult 
 # queries
 query Publication(
   $request: PublicationRequest!
-  $publicationImageTransform: ImageTransform!
+  $publicationImageSmallTransform: ImageTransform!
+  $publicationImageMediumTransform: ImageTransform!
   $publicationOperationsActedArgs: PublicationOperationsActedArgs
   $publicationStatsInput: PublicationStatsInput!
   $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs!
@@ -41,7 +42,8 @@ query Publication(
 
 query Publications(
   $request: PublicationsRequest!
-  $publicationImageTransform: ImageTransform!
+  $publicationImageSmallTransform: ImageTransform!
+  $publicationImageMediumTransform: ImageTransform!
   $publicationOperationsActedArgs: PublicationOperationsActedArgs
   $publicationStatsInput: PublicationStatsInput!
   $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs!
