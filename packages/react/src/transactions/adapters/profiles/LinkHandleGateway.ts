@@ -74,7 +74,7 @@ export class LinkHandleGateway
     });
   }
 
-  protected async createEncodedData(request: LinkHandleRequest): Promise<ContractCallDetails> {
+  protected async createCallDetails(request: LinkHandleRequest): Promise<ContractCallDetails> {
     const result = await this.createTypedData(request);
     return this.createLinkCallDetails(result);
   }

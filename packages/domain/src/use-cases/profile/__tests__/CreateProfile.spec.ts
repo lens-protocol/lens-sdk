@@ -1,85 +1,127 @@
-import { failure, success } from '@lens-protocol/shared-kernel';
+import { failure, matic, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
+import { when } from 'jest-when';
 
-import { NativeTransaction } from '../../../entities';
-import { MockedNativeTransaction } from '../../../entities/__helpers__/mocks';
-import { BroadcastingError } from '../../transactions';
-import { TransactionQueue } from '../../transactions/TransactionQueue';
 import {
-  mockAnyBroadcastingError,
+  AnyTransactionRequestModel,
+  InsufficientGasError,
+  NativeTransaction,
+  PendingSigningRequestError,
+  UnsignedTransaction,
+  UserRejectedError,
+  Wallet,
+  WalletConnectionError,
+  WalletConnectionErrorReason,
+} from '../../../entities';
+import {
+  MockedNativeTransaction,
+  mockCreateProfileRequest,
+  mockIPaidTransactionGateway,
   mockTransactionQueue,
-} from '../../transactions/__helpers__/mocks';
+  mockUnsignedTransaction,
+  mockWallet,
+} from '../../../mocks';
+import { TransactionQueue } from '../../transactions';
+import { IWalletFactory } from '../../wallets/IWalletFactory';
 import {
   CreateProfile,
-  CreateProfileRequest,
-  DuplicatedHandleError,
   ICreateProfilePresenter,
-  IProfileTransactionGateway,
+  ICreateProfileTransactionGateway,
 } from '../CreateProfile';
-import { mockCreateProfileRequest, mockIProfileTransactionGateway } from '../__helpers__/mocks';
 
 function setupCreateProfile({
-  presenter,
-  transactionFactory,
-  transactionQueue = mockTransactionQueue<CreateProfileRequest>(),
+  gateway,
+  presenter = mock<ICreateProfilePresenter>(),
+  queue = mockTransactionQueue<AnyTransactionRequestModel>(),
+  wallet,
 }: {
-  presenter: ICreateProfilePresenter;
-  transactionFactory: IProfileTransactionGateway;
-  transactionQueue?: TransactionQueue<CreateProfileRequest>;
+  gateway: ICreateProfileTransactionGateway;
+  presenter?: ICreateProfilePresenter;
+  queue?: TransactionQueue<AnyTransactionRequestModel>;
+  wallet: Wallet;
 }) {
-  return new CreateProfile(transactionFactory, transactionQueue, presenter);
+  const walletFactory = mock<IWalletFactory>();
+
+  when(walletFactory.create).calledWith(wallet.address).mockResolvedValue(wallet);
+
+  return new CreateProfile(walletFactory, gateway, presenter, queue);
 }
 
-describe(`Given an instance of the ${CreateProfile.name} interactor`, () => {
-  describe(`when calling the "${CreateProfile.prototype.execute.name}" method`, () => {
-    const request = mockCreateProfileRequest();
-    const transaction = MockedNativeTransaction.fromRequest(request);
+describe(`Given the ${CreateProfile.name} interactor`, () => {
+  const wallet = mockWallet();
+  const request = mockCreateProfileRequest({ to: wallet.address });
+  const unsignedTransaction = mockUnsignedTransaction(request);
+  const transaction = MockedNativeTransaction.fromUnsignedTransaction(unsignedTransaction);
 
+  describe(`when invoking the "${CreateProfile.prototype.execute.name}" method`, () => {
     it(`should:
-        - create a ${NativeTransaction.name}<CreateProfileRequest>
+        - create an ${UnsignedTransaction.name}<T>
+        - sign and broadcast the transaction with the user's wallet
         - queue the resulting ${NativeTransaction.name} into the ${TransactionQueue.name}`, async () => {
-      const presenter = mock<ICreateProfilePresenter>();
-      const transactionFactory = mockIProfileTransactionGateway({
+      const queue = mockTransactionQueue<AnyTransactionRequestModel>();
+      const gateway = mockIPaidTransactionGateway({
         request,
-        result: success(transaction),
+        wallet,
+        unsignedTransaction,
       });
-      const transactionQueue = mockTransactionQueue<CreateProfileRequest>();
-
-      const createProfile = setupCreateProfile({
-        transactionFactory,
+      const presenter = mock<ICreateProfilePresenter>();
+      const payTransaction = setupCreateProfile({
+        gateway,
         presenter,
-        transactionQueue,
+        queue,
+        wallet,
       });
 
-      await createProfile.execute(request);
+      when(wallet.sendTransaction)
+        .calledWith(unsignedTransaction)
+        .mockResolvedValue(success(transaction));
 
-      expect(transactionQueue.push).toHaveBeenCalledWith(transaction, presenter);
+      await payTransaction.execute(request);
+
+      expect(queue.push).toHaveBeenCalledWith(transaction, presenter);
     });
 
     it.each([
       {
-        ErrorCtor: DuplicatedHandleError,
-        error: new DuplicatedHandleError('bob'),
+        ErrorCtor: PendingSigningRequestError,
+        error: new PendingSigningRequestError(),
       },
       {
-        ErrorCtor: BroadcastingError,
-        error: mockAnyBroadcastingError(),
+        ErrorCtor: WalletConnectionError,
+        error: new WalletConnectionError(WalletConnectionErrorReason.WRONG_ACCOUNT),
       },
-    ])(`should present any $ErrorCtor might occur`, async ({ error }) => {
-      const transactionFactory = mockIProfileTransactionGateway({
-        request,
-        result: failure(error),
-      });
-      const presenter = mock<ICreateProfilePresenter>();
+      {
+        ErrorCtor: InsufficientGasError,
+        error: new InsufficientGasError(matic()),
+      },
+      {
+        ErrorCtor: UserRejectedError,
+        error: new UserRejectedError('user does not want'),
+      },
+    ])(
+      `should present any "$ErrorCtor.name" the transaction sending fails with`,
+      async ({ error }) => {
+        when(wallet.sendTransaction)
+          .calledWith(unsignedTransaction)
+          .mockResolvedValue(failure(error));
 
-      const createProfile = setupCreateProfile({
-        transactionFactory,
-        presenter,
-      });
+        const gateway = mockIPaidTransactionGateway({
+          request,
+          wallet,
+          unsignedTransaction,
+        });
 
-      await createProfile.execute(request);
+        const presenter = mock<ICreateProfilePresenter>();
+        const payTransaction = setupCreateProfile({
+          gateway,
+          presenter,
+          wallet,
+        });
 
-      expect(presenter.present).toHaveBeenCalledWith(failure(error));
-    });
+        await payTransaction.execute(request);
+
+        expect(presenter.present).toHaveBeenCalledWith(failure(error));
+      },
+    );
   });
 });

@@ -53,7 +53,7 @@ describe(`Given an instance of ${BlockProfilesGateway.name}`, () => {
     const request = mockBlockProfilesRequest();
     const data = mockBlockProfilesTypedDataData();
 
-    it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+    it(`should resolve with the expected ${UnsignedContractCallTransaction.name}`, async () => {
       const provider = await mockJsonRpcProvider();
       const apolloClient = mockLensApolloClient([
         mockBlockProfilesTypedDataResponse({

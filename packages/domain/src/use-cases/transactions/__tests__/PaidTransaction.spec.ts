@@ -3,33 +3,30 @@ import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
 import {
-  NativeTransaction,
-  UnsignedTransaction,
+  AnyTransactionRequestModel,
   InsufficientGasError,
+  NativeTransaction,
+  PendingSigningRequestError,
+  UnsignedTransaction,
+  UserRejectedError,
   Wallet,
   WalletConnectionError,
   WalletConnectionErrorReason,
-  UserRejectedError,
-  PendingSigningRequestError,
-  AnyTransactionRequestModel,
 } from '../../../entities';
 import {
   MockedNativeTransaction,
+  mockActiveWallet,
   mockAnyTransactionRequestModel,
+  mockIPaidTransactionGateway,
+  mockTransactionQueue,
   mockUnsignedTransaction,
   mockWallet,
-  mockActiveWallet,
-  mockIPayTransactionGateway,
-  mockTransactionQueue,
 } from '../../../mocks';
-import {
-  IPaidTransactionGateway,
-  IPaidTransactionPresenter,
-  PaidTransaction,
-} from '../PaidTransaction';
+import { IPaidTransactionGateway } from '../IPaidTransactionGateway';
+import { IPaidTransactionPresenter, PaidTransaction } from '../PaidTransaction';
 import { TransactionQueue } from '../TransactionQueue';
 
-function setupPayTransaction({
+function setupPaidTransaction({
   gateway,
   presenter = mock<IPaidTransactionPresenter<AnyTransactionRequestModel>>(),
   queue = mockTransactionQueue<AnyTransactionRequestModel>(),
@@ -55,13 +52,13 @@ describe(`Given the ${PaidTransaction.name} interactor`, () => {
         - queue the resulting ${NativeTransaction.name} into the ${TransactionQueue.name}`, async () => {
       const wallet = mockWallet();
       const queue = mockTransactionQueue<AnyTransactionRequestModel>();
-      const gateway = mockIPayTransactionGateway({
+      const gateway = mockIPaidTransactionGateway({
         request,
         wallet,
         unsignedTransaction,
       });
       const presenter = mock<IPaidTransactionPresenter<AnyTransactionRequestModel>>();
-      const payTransaction = setupPayTransaction({
+      const payTransaction = setupPaidTransaction({
         gateway,
         presenter,
         queue,
@@ -102,14 +99,14 @@ describe(`Given the ${PaidTransaction.name} interactor`, () => {
           .calledWith(unsignedTransaction)
           .mockResolvedValue(failure(error));
 
-        const gateway = mockIPayTransactionGateway({
+        const gateway = mockIPaidTransactionGateway({
           request,
           wallet,
           unsignedTransaction,
         });
 
         const presenter = mock<IPaidTransactionPresenter<AnyTransactionRequestModel>>();
-        const payTransaction = setupPayTransaction({
+        const payTransaction = setupPaidTransaction({
           gateway,
           presenter,
           wallet,

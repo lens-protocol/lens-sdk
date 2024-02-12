@@ -1,46 +1,46 @@
-import { PromiseResult, Url } from '@lens-protocol/shared-kernel';
+import { EvmAddress } from '@lens-protocol/shared-kernel';
 
-import { NativeTransaction, TransactionKind, AnyTransactionRequestModel } from '../../entities';
-import { BroadcastingError } from '../transactions/BroadcastingError';
+import {
+  AnyTransactionRequestModel,
+  InsufficientGasError,
+  PendingSigningRequestError,
+  TransactionKind,
+  UserRejectedError,
+  WalletConnectionError,
+} from '../../entities';
+import { IPaidTransactionGateway } from '../transactions/IPaidTransactionGateway';
 import { ITransactionResultPresenter } from '../transactions/ITransactionResultPresenter';
 import { TransactionQueue } from '../transactions/TransactionQueue';
-import { FollowPolicyConfig } from './FollowPolicy';
+import { IWalletFactory } from '../wallets/IWalletFactory';
 
 export type CreateProfileRequest = {
-  handle: string;
   kind: TransactionKind.CREATE_PROFILE;
-  followPolicy?: FollowPolicyConfig;
-  profileImage?: Url;
+  to: EvmAddress;
+  localName: string;
+  approveSignless: boolean;
 };
 
-export class DuplicatedHandleError extends Error {
-  name = 'DuplicatedHandleError' as const;
-
-  constructor(handle: string) {
-    super(`Handle "${handle}" is already taken`);
-  }
-}
-
-export interface IProfileTransactionGateway {
-  createProfileTransaction<T extends CreateProfileRequest>(
-    request: T,
-  ): PromiseResult<NativeTransaction<T>, BroadcastingError | DuplicatedHandleError>;
-}
+export type ICreateProfileTransactionGateway = IPaidTransactionGateway<CreateProfileRequest>;
 
 export type ICreateProfilePresenter = ITransactionResultPresenter<
   CreateProfileRequest,
-  BroadcastingError | DuplicatedHandleError
+  PendingSigningRequestError | InsufficientGasError | UserRejectedError | WalletConnectionError
 >;
 
 export class CreateProfile {
   constructor(
-    private readonly transactionFactory: IProfileTransactionGateway,
-    private readonly transactionQueue: TransactionQueue<AnyTransactionRequestModel>,
+    private readonly walletFactory: IWalletFactory,
+    private readonly gateway: ICreateProfileTransactionGateway,
     private readonly presenter: ICreateProfilePresenter,
+    private readonly queue: TransactionQueue<AnyTransactionRequestModel>,
   ) {}
 
   async execute(request: CreateProfileRequest) {
-    const result = await this.transactionFactory.createProfileTransaction(request);
+    const wallet = await this.walletFactory.create(request.to);
+
+    const unsigned = await this.gateway.createUnsignedTransaction(request, wallet);
+
+    const result = await wallet.sendTransaction(unsigned);
 
     if (result.isFailure()) {
       this.presenter.present(result);
@@ -48,7 +48,6 @@ export class CreateProfile {
     }
 
     const transaction = result.value;
-
-    await this.transactionQueue.push(transaction, this.presenter);
+    await this.queue.push(transaction, this.presenter);
   }
 }

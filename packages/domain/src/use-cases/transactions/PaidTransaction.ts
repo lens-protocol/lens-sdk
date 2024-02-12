@@ -1,19 +1,14 @@
 import {
+  AnyTransactionRequestModel,
   InsufficientGasError,
   PendingSigningRequestError,
-  AnyTransactionRequestModel,
   UserRejectedError,
-  Wallet,
   WalletConnectionError,
 } from '../../entities';
-import { UnsignedTransaction } from '../../entities/Transactions';
 import { ActiveWallet } from '../authentication/ActiveWallet';
+import { IPaidTransactionGateway } from './IPaidTransactionGateway';
 import { ITransactionResultPresenter } from './ITransactionResultPresenter';
 import { TransactionQueue } from './TransactionQueue';
-
-export interface IPaidTransactionGateway<T extends AnyTransactionRequestModel> {
-  createUnsignedTransaction(request: T, wallet: Wallet): Promise<UnsignedTransaction<T>>;
-}
 
 export type IPaidTransactionPresenter<T extends AnyTransactionRequestModel> =
   ITransactionResultPresenter<

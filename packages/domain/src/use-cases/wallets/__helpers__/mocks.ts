@@ -3,8 +3,7 @@ import { mockDaiAmount, mockEvmAddress } from '@lens-protocol/shared-kernel/mock
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { Wallet, AnyTransactionRequestModel, UnsignedTransaction } from '../../../entities';
-import { IPaidTransactionGateway } from '../../transactions/PaidTransaction';
+import { Wallet } from '../../../entities';
 import {
   IBalanceGateway,
   ITokenGateway,
@@ -71,22 +70,4 @@ export function mockTokeAvailability({
   when(tokenAvailability.checkAvailability).calledWith(request).mockResolvedValue(result);
 
   return tokenAvailability;
-}
-
-export function mockIPayTransactionGateway<T extends AnyTransactionRequestModel>({
-  request,
-  wallet,
-  unsignedTransaction,
-}: {
-  request: T;
-  wallet: Wallet;
-  unsignedTransaction: UnsignedTransaction<T>;
-}): IPaidTransactionGateway<T> {
-  const gateway = mock<IPaidTransactionGateway<T>>();
-
-  when(gateway.createUnsignedTransaction)
-    .calledWith(request, wallet)
-    .mockResolvedValue(unsignedTransaction);
-
-  return gateway;
 }

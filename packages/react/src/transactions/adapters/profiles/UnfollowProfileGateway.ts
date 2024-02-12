@@ -72,7 +72,7 @@ export class UnfollowProfileGateway
     });
   }
 
-  protected async createEncodedData(request: UnfollowRequest): Promise<ContractCallDetails> {
+  protected async createCallDetails(request: UnfollowRequest): Promise<ContractCallDetails> {
     const result = await this.createTypedData(request);
     return this.createUnfollowCallData(result);
   }

@@ -1,17 +1,17 @@
 import {
+  CreateFollowBroadcastItemResult,
   CreateFollowTypedDataData,
   CreateFollowTypedDataDocument,
   CreateFollowTypedDataVariables,
   Follow,
-  FollowRequest as TypedDataFollowRequest,
-  omitTypename,
-  RelaySuccess,
-  SafeApolloClient,
-  CreateFollowBroadcastItemResult,
   FollowData,
-  FollowVariables,
   FollowDocument,
   FollowLensManagerRequest,
+  FollowVariables,
+  RelaySuccess,
+  SafeApolloClient,
+  FollowRequest as TypedDataFollowRequest,
+  omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -25,7 +25,6 @@ import {
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -74,10 +73,7 @@ function resolveProfileFollow(request: FollowRequest): Follow[] {
 
 export class FollowProfileGateway
   extends AbstractContractCallGateway<FollowRequest>
-  implements
-    IDelegatedTransactionGateway<FreeFollowRequest>,
-    ISignedOnChainGateway<FollowRequest>,
-    IPaidTransactionGateway<FollowRequest>
+  implements IDelegatedTransactionGateway<FreeFollowRequest>, ISignedOnChainGateway<FollowRequest>
 {
   constructor(
     config: LensConfig,
@@ -119,7 +115,7 @@ export class FollowProfileGateway
     });
   }
 
-  protected override async createEncodedData(request: FollowRequest): Promise<ContractCallDetails> {
+  protected override async createCallDetails(request: FollowRequest): Promise<ContractCallDetails> {
     const result = await this.createTypedData(request);
     return this.createFollowCallDetails(result);
   }

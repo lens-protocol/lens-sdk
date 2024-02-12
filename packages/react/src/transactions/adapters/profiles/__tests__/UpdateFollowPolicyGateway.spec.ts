@@ -3,10 +3,10 @@
  */
 import { SafeApolloClient, resolveFollowModuleInput } from '@lens-protocol/api-bindings';
 import {
-  mockLensApolloClient,
-  mockRelaySuccessFragment,
   mockCreateSetFollowModuleTypedDataData,
   mockCreateSetFollowModuleTypedDataResponse,
+  mockLensApolloClient,
+  mockRelaySuccessFragment,
   mockSetFollowModuleResponse,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction, UnsignedTransaction } from '@lens-protocol/domain/entities';
@@ -54,7 +54,7 @@ describe(`Given an instance of ${UpdateFollowPolicyGateway.name}`, () => {
     const wallet = mockWallet();
     const data = mockCreateSetFollowModuleTypedDataData();
 
-    it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+    it(`should resolve with the expected ${UnsignedContractCallTransaction.name}`, async () => {
       const provider = await mockJsonRpcProvider();
       const apolloClient = mockLensApolloClient([
         mockCreateSetFollowModuleTypedDataResponse({

@@ -4,6 +4,7 @@ export * from './publications';
 export * from './useApproveModule';
 export * from './useBlockProfiles';
 export * from './useClaimHandle';
+export * from './useCreateProfile';
 export * from './useFollow';
 export * from './useLinkHandle';
 export * from './useOpenAction';
@@ -31,15 +32,14 @@ export type {
 export type {
   ChargeFollowConfig,
   FollowPolicyConfig,
+  NoFeeFollowConfig,
   NoFollowConfig,
   OpenFollowConfig,
   UnknownFollowConfig,
-  // deprecated below
-  NoFeeFollowConfig,
 } from '@lens-protocol/domain/use-cases/profile';
 
 /**
  * Enums
  */
-export { OpenActionType, ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';
 export { FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
+export { OpenActionType, ReferencePolicyType } from '@lens-protocol/domain/use-cases/publications';

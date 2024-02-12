@@ -1,11 +1,13 @@
 import { MockedResponse } from '@apollo/client/testing';
 import { mockTransactionHash } from '@lens-protocol/domain/mocks';
+import { EvmAddress } from '@lens-protocol/shared-kernel';
 
 import {
-  LensTransactionStatusData,
-  LensTransactionStatusRequest,
-  LensTransactionStatusDocument,
+  GenerateLensApiRelayAddressDocument,
   LensTransactionResult,
+  LensTransactionStatusData,
+  LensTransactionStatusDocument,
+  LensTransactionStatusRequest,
   LensTransactionStatusType,
 } from '../../graphql/generated';
 
@@ -37,5 +39,16 @@ export function mockLensTransactionResult(
     txHash: mockTransactionHash(),
     ...overrides,
     __typename: 'LensTransactionResult',
+  };
+}
+
+export function mockGenerateLensAPIRelayAddressResponse({ address }: { address: EvmAddress }) {
+  return {
+    request: {
+      query: GenerateLensApiRelayAddressDocument,
+    },
+    result: {
+      data: { result: address },
+    },
   };
 }

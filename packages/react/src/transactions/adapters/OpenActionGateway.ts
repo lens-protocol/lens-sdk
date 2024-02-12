@@ -1,16 +1,16 @@
-import {
-  SafeApolloClient,
-  omitTypename,
-  isPublicationId,
-  RelaySuccess,
-  ActOnOpenActionData,
-  ActOnOpenActionVariables,
-  ActOnOpenActionDocument,
-  LegacyCollectData,
-  LegacyCollectVariables,
-  LegacyCollectDocument,
-} from '@lens-protocol/api-bindings';
 import * as gql from '@lens-protocol/api-bindings';
+import {
+  ActOnOpenActionData,
+  ActOnOpenActionDocument,
+  ActOnOpenActionVariables,
+  LegacyCollectData,
+  LegacyCollectDocument,
+  LegacyCollectVariables,
+  RelaySuccess,
+  SafeApolloClient,
+  isPublicationId,
+  omitTypename,
+} from '@lens-protocol/api-bindings';
 import { lensHub, publicActProxy } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
 import {
@@ -26,7 +26,6 @@ import {
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -48,8 +47,7 @@ export class OpenActionGateway
   extends AbstractContractCallGateway<OpenActionRequest>
   implements
     ISignedOnChainGateway<OpenActionRequest>,
-    IDelegatedTransactionGateway<DelegableOpenActionRequest>,
-    IPaidTransactionGateway<OpenActionRequest>
+    IDelegatedTransactionGateway<DelegableOpenActionRequest>
 {
   constructor(
     config: LensConfig,
@@ -88,7 +86,7 @@ export class OpenActionGateway
     return this.createOpenActionUnsignedProtocolCall(request, nonce);
   }
 
-  protected override async createEncodedData(
+  protected override async createCallDetails(
     request: OpenActionRequest,
   ): Promise<ContractCallDetails> {
     if (request.public) {

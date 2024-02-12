@@ -8,6 +8,7 @@ import {
   Wallet,
   WalletConnectionError,
 } from '../../entities';
+import { IWalletFactory } from '../wallets/IWalletFactory';
 import { ICredentialsWriter } from './ICredentialsWriter';
 import { SessionData, profileSessionData, walletOnlySessionData } from './SessionData';
 
@@ -30,10 +31,6 @@ export type LoginRequest = {
    */
   profileId?: ProfileId;
 };
-
-export interface IWalletFactory {
-  create(address: EvmAddress): Promise<Wallet>;
-}
 
 export interface IWritableWalletGateway {
   save(wallet: Wallet): Promise<void>;

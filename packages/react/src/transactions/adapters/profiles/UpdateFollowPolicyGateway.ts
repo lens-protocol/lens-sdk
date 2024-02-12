@@ -17,7 +17,6 @@ import { UpdateFollowPolicyRequest } from '@lens-protocol/domain/use-cases/profi
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -34,8 +33,7 @@ export class UpdateFollowPolicyGateway
   extends AbstractContractCallGateway<UpdateFollowPolicyRequest>
   implements
     IDelegatedTransactionGateway<UpdateFollowPolicyRequest>,
-    ISignedOnChainGateway<UpdateFollowPolicyRequest>,
-    IPaidTransactionGateway<UpdateFollowPolicyRequest>
+    ISignedOnChainGateway<UpdateFollowPolicyRequest>
 {
   constructor(
     config: LensConfig,
@@ -77,7 +75,7 @@ export class UpdateFollowPolicyGateway
     });
   }
 
-  protected override async createEncodedData(
+  protected override async createCallDetails(
     request: UpdateFollowPolicyRequest,
   ): Promise<ContractCallDetails> {
     const result = await this.createTypedData(request);

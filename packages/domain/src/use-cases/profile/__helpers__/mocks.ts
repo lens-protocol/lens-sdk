@@ -1,24 +1,19 @@
 import { faker } from '@faker-js/faker';
-import { ChainType, Result } from '@lens-protocol/shared-kernel';
+import { ChainType } from '@lens-protocol/shared-kernel';
 import {
-  mockEvmAddress,
   mockDaiAmount,
-  mockUsdcAmount,
   mockData,
+  mockEvmAddress,
+  mockUsdcAmount,
 } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { TransactionKind, NftOwnershipChallenge, NativeTransaction } from '../../../entities';
+import { NftOwnershipChallenge, TransactionKind } from '../../../entities';
 import { mockProfileId, mockSignature } from '../../../entities/__helpers__/mocks';
-import { BroadcastingError } from '../../transactions';
 import { BlockProfilesRequest } from '../BlockProfiles';
 import { ClaimHandleRequest } from '../ClaimHandle';
-import {
-  CreateProfileRequest,
-  DuplicatedHandleError,
-  IProfileTransactionGateway,
-} from '../CreateProfile';
+import { CreateProfileRequest } from '../CreateProfile';
 import { ChargeFollowConfig, FollowPolicyType } from '../FollowPolicy';
 import { FreeFollowRequest, PaidFollowRequest, UnknownFollowRequest } from '../FollowProfile';
 import { LinkHandleRequest } from '../LinkHandle';
@@ -34,35 +29,6 @@ import { UnlinkHandleRequest } from '../UnlinkHandle';
 import { UpdateFollowPolicyRequest } from '../UpdateFollowPolicy';
 import { UpdateProfileManagersRequest } from '../UpdateProfileManagers';
 
-export function mockCreateProfileRequest(
-  overrides?: Partial<CreateProfileRequest>,
-): CreateProfileRequest {
-  return {
-    handle: faker.internet.userName(),
-    ...overrides,
-    kind: TransactionKind.CREATE_PROFILE,
-  };
-}
-
-export function mockIProfileTransactionGateway({
-  request,
-  result,
-}: {
-  request: CreateProfileRequest;
-  result: Result<
-    NativeTransaction<CreateProfileRequest>,
-    DuplicatedHandleError | BroadcastingError
-  >;
-}) {
-  const profileTransactionGateway = mock<IProfileTransactionGateway>();
-
-  when(profileTransactionGateway.createProfileTransaction)
-    .calledWith(request)
-    .mockResolvedValue(result);
-
-  return profileTransactionGateway;
-}
-
 export function mockChargeFollowConfig(
   overrides?: Partial<ChargeFollowConfig>,
 ): ChargeFollowConfig {
@@ -71,6 +37,18 @@ export function mockChargeFollowConfig(
     recipient: mockEvmAddress(),
     ...overrides,
     type: FollowPolicyType.CHARGE,
+  };
+}
+
+export function mockCreateProfileRequest(
+  overrides?: Partial<CreateProfileRequest>,
+): CreateProfileRequest {
+  return {
+    localName: faker.internet.userName(),
+    approveSignless: true,
+    to: mockEvmAddress(),
+    ...overrides,
+    kind: TransactionKind.CREATE_PROFILE,
   };
 }
 
