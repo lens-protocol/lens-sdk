@@ -98,7 +98,7 @@ export function UseCreateQuote() {
         <code>useCreateQuote</code>
       </h1>
 
-      <RequireProfileSession message="Log in to create a comment.">
+      <RequireProfileSession message="Log in to create a quote.">
         <QuoteComposer />
       </RequireProfileSession>
     </div>
