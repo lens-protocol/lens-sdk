@@ -13,7 +13,6 @@ import { mock } from 'jest-mock-extended';
 import { AppId } from '../AppId';
 import { Credentials } from '../Credentials';
 import { Challenge, NftOwnershipChallenge } from '../Nft';
-import { ISignedVote, IUnsignedVote, PollId } from '../polls';
 import { Profile, ProfileId } from '../Profile';
 import { PublicationId } from '../Publication';
 import { Signature } from '../Signature';
@@ -33,6 +32,7 @@ import {
   UnsignedTransaction,
 } from '../Transactions';
 import { Wallet } from '../Wallet';
+import { ISignedVote, IUnsignedVote, PollId } from '../polls';
 
 export function mockProfileId(): ProfileId {
   return faker.datatype.hexadecimal({ length: 2 }) as ProfileId;

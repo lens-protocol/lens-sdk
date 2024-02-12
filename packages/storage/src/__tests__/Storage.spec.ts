@@ -1,7 +1,6 @@
 import { Deferred, never } from '@lens-protocol/shared-kernel';
 import { TypeOf, z } from 'zod';
 
-import { mockStorageProvider } from '../__helpers__/mocks';
 import {
   BaseStorageSchema,
   IStorageItem,
@@ -9,6 +8,7 @@ import {
   SchemaMismatchError,
 } from '../BaseStorageSchema';
 import { Storage } from '../Storage';
+import { mockStorageProvider } from '../__helpers__/mocks';
 
 describe(`Given a ${Storage.name} instance`, () => {
   const schema = z.object({

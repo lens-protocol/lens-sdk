@@ -100,7 +100,7 @@ module.exports = {
     'import/order': [
       'error',
       {
-        alphabetize: { order: 'asc', caseInsensitive: true },
+        alphabetize: { order: 'asc' },
         groups: ['builtin', 'external', 'unknown', ['internal', 'parent', 'sibling', 'index']],
         pathGroups: [
           {

@@ -10,10 +10,10 @@ import {
 } from '../../../entities';
 import { mockCredentials, mockWallet } from '../../../entities/__helpers__/mocks';
 import { IWalletGateway } from '../../wallets/IWalletGateway';
-import { mockJustWalletLoginRequest, mockProfileLoginRequest } from '../__helpers__/mocks';
 import { ICredentialsWriter } from '../ICredentialsWriter';
 import { ICredentialsIssuer, ILoginPresenter, Login } from '../Login';
 import { profileSessionData, walletOnlySessionData } from '../SessionData';
+import { mockJustWalletLoginRequest, mockProfileLoginRequest } from '../__helpers__/mocks';
 
 function setupTestScenario({
   walletGateway,
