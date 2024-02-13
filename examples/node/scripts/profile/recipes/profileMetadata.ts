@@ -1,7 +1,7 @@
 import { isRelaySuccess } from '@lens-protocol/client';
 
-import { getAuthenticatedClient } from '../shared/getAuthenticatedClient';
-import { setupWallet } from '../shared/setupWallet';
+import { getAuthenticatedClient } from '../../shared/getAuthenticatedClient';
+import { setupWallet } from '../../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
@@ -18,12 +18,26 @@ async function main() {
     forProfileId: profileId,
   });
 
+  if (!profile) {
+    // should never happen
+    console.error(`Profile with id ${profileId} does not exist`);
+    return;
+  }
+
   console.log(
-    `Has profile ${profileId} ${profile?.handle?.fullHandle} signless experience enabled: ${profile?.signless}`,
+    `Profile ${profileId} ${profile.handle?.fullHandle}:
+     - is signless experience enabled: ${profile.signless}
+     - is sponsored: ${profile.sponsor}
+     `,
   );
 
+  if (!profile.sponsor) {
+    // TODO submit tx on chain
+    console.log(`Profile is not sponsored`);
+  }
+
   // check if the profile has signless enabled aka. enabled lens profile manager
-  if (profile?.signless) {
+  if (profile.signless) {
     // singless experience, just use profile.setProfileMetadata
     const result = await client.profile.setProfileMetadata({
       metadataURI,
