@@ -107,7 +107,7 @@ export const development: EnvironmentConfig = {
     maxMiningWaitTime: 120000,
   },
   contracts: {
-    permissionlessCreator: '0x42b302BBB4fA27c21d32EdF602E4e2aA65746999',
+    permissionlessCreator: '0xCb4FB63c3f13CB83cCD6F10E9e5F29eC250329Cc',
   },
   handleResolver: (localName) => `test/${localName}`,
   snapshot: {
@@ -134,7 +134,7 @@ export const staging: EnvironmentConfig = {
     maxMiningWaitTime: 2400000,
   },
   contracts: {
-    permissionlessCreator: '0x42b302BBB4fA27c21d32EdF602E4e2aA65746999',
+    permissionlessCreator: '0xCb4FB63c3f13CB83cCD6F10E9e5F29eC250329Cc',
   },
   handleResolver: (localName) => `test/${localName}`,
   snapshot: {
