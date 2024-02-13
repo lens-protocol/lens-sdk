@@ -73,7 +73,7 @@ export const production: EnvironmentConfig = {
     maxMiningWaitTime: 60000,
   },
   contracts: {
-    permissionlessCreator: '0x42b302BBB4fA27c21d32EdF602E4e2aA65746999',
+    permissionlessCreator: '0x0b5e6100243f793e480DE6088dE6bA70aA9f3872',
   },
   handleResolver: (localName) => `lens/${localName}`,
   snapshot: {
