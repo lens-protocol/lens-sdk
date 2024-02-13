@@ -511,6 +511,19 @@ export type InternalAllowedDomainsRequest = {
   secret: Scalars['String']['input'];
 };
 
+export type InternalBoostProfileRequest = {
+  h?: InputMaybe<Scalars['Handle']['input']>;
+  p?: InputMaybe<Scalars['ProfileId']['input']>;
+  s: Scalars['Int']['input'];
+  secret: Scalars['String']['input'];
+};
+
+export type InternalBoostScoreRequest = {
+  h?: InputMaybe<Scalars['Handle']['input']>;
+  p?: InputMaybe<Scalars['ProfileId']['input']>;
+  secret: Scalars['String']['input'];
+};
+
 export type InternalClaimRequest = {
   address: Scalars['EvmAddress']['input'];
   freeTextHandle?: InputMaybe<Scalars['Boolean']['input']>;

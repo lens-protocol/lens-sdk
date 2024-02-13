@@ -76,6 +76,26 @@ export type LastLoggedInProfileQueryVariables = Types.Exact<{
 
 export type LastLoggedInProfileQuery = { result: ProfileFragment | null };
 
+export type UserCurrentRateLimitFragment = {
+  hourAllowanceLeft: number;
+  hourAllowanceUsed: number;
+  hourAllowance: number;
+  dayAllowanceLeft: number;
+  dayAllowanceUsed: number;
+  dayAllowance: number;
+};
+
+export type UserCurrentRateLimitResultFragment = {
+  momoka: UserCurrentRateLimitFragment;
+  onchain: UserCurrentRateLimitFragment;
+};
+
+export type UserRateLimitQueryVariables = Types.Exact<{
+  request: Types.UserCurrentRateLimitRequest;
+}>;
+
+export type UserRateLimitQuery = { result: UserCurrentRateLimitResultFragment };
+
 export type CreateProfileWithHandleErrorResultFragment = {
   reason: Types.CreateProfileWithHandleErrorReasonType;
 };
@@ -183,6 +203,81 @@ export const ClaimableProfilesResultFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'withHandle' } },
           { kind: 'Field', name: { kind: 'Name', value: 'source' } },
           { kind: 'Field', name: { kind: 'Name', value: 'expiry' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const UserCurrentRateLimitFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'UserCurrentRateLimit' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'UserCurrentRateLimit' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'hourAllowanceLeft' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hourAllowanceUsed' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hourAllowance' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'dayAllowanceLeft' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'dayAllowanceUsed' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'dayAllowance' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const UserCurrentRateLimitResultFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'UserCurrentRateLimitResult' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'UserCurrentRateLimitResult' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'momoka' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'UserCurrentRateLimit' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'onchain' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'UserCurrentRateLimit' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'UserCurrentRateLimit' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'UserCurrentRateLimit' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'hourAllowanceLeft' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hourAllowanceUsed' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hourAllowance' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'dayAllowanceLeft' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'dayAllowanceUsed' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'dayAllowance' } },
         ],
       },
     },
@@ -2666,6 +2761,104 @@ export const LastLoggedInProfileDocument = {
     },
   ],
 } as unknown as DocumentNode;
+export const UserRateLimitDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'UserRateLimit' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UserCurrentRateLimitRequest' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'result' },
+            name: { kind: 'Name', value: 'userRateLimit' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'UserCurrentRateLimitResult' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'UserCurrentRateLimit' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'UserCurrentRateLimit' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'hourAllowanceLeft' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hourAllowanceUsed' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hourAllowance' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'dayAllowanceLeft' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'dayAllowanceUsed' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'dayAllowance' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'UserCurrentRateLimitResult' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'UserCurrentRateLimitResult' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'momoka' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'UserCurrentRateLimit' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'onchain' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'UserCurrentRateLimit' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
 export const ClaimProfileWithHandleDocument = {
   kind: 'Document',
   definitions: [
@@ -2933,6 +3126,7 @@ const ProfilesManagedDocumentString = print(ProfilesManagedDocument);
 const UserSigNoncesDocumentString = print(UserSigNoncesDocument);
 const ClaimableProfilesDocumentString = print(ClaimableProfilesDocument);
 const LastLoggedInProfileDocumentString = print(LastLoggedInProfileDocument);
+const UserRateLimitDocumentString = print(UserRateLimitDocument);
 const ClaimProfileWithHandleDocumentString = print(ClaimProfileWithHandleDocument);
 const CreateProfileWithHandleDocumentString = print(CreateProfileWithHandleDocument);
 const CreateProfileDocumentString = print(CreateProfileDocument);
@@ -3031,6 +3225,25 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'LastLoggedInProfile',
+        'query',
+      );
+    },
+    UserRateLimit(
+      variables: UserRateLimitQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: UserRateLimitQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<UserRateLimitQuery>(UserRateLimitDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'UserRateLimit',
         'query',
       );
     },

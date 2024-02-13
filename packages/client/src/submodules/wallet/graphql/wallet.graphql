@@ -74,6 +74,30 @@ query LastLoggedInProfile(
   }
 }
 
+fragment UserCurrentRateLimit on UserCurrentRateLimit {
+  hourAllowanceLeft
+  hourAllowanceUsed
+  hourAllowance
+  dayAllowanceLeft
+  dayAllowanceUsed
+  dayAllowance
+}
+
+fragment UserCurrentRateLimitResult on UserCurrentRateLimitResult {
+  momoka {
+    ...UserCurrentRateLimit
+  }
+  onchain {
+    ...UserCurrentRateLimit
+  }
+}
+
+query UserRateLimit($request: UserCurrentRateLimitRequest!) {
+  result: userRateLimit(request: $request) {
+    ...UserCurrentRateLimitResult
+  }
+}
+
 # mutations
 fragment CreateProfileWithHandleErrorResult on CreateProfileWithHandleErrorResult {
   reason
