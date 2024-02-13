@@ -3,7 +3,7 @@
  *
  * ## Quick start
  *
- * Install:
+ * Install the Lens React Web SDK package.
  *
  * | Package Manager | Command |
  * |:---------------:|:------- |
@@ -11,40 +11,61 @@
  * | yarn            | `yarn add @lens-protocol/react-web@latest` |
  * | pnpm            | `pnpm add @lens-protocol/react-web@latest` |
  *
- * If you use [wagmi](https://wagmi.sh/) you can install the companion package:
+ * In the following examples we will show you integration with Wagmi and we will explain later how to integrate other libraries via custom bindings.
+ *
+ * Install the Lens Wagmi bindings package and its peer dependencies.
  *
  * | Package Manager | Command |
  * |:---------------:|:------- |
- * | npm             | `npm install @lens-protocol/wagmi@latest` |
- * | yarn            | `yarn add @lens-protocol/wagmi@latest` |
- * | pnpm            | `pnpm add @lens-protocol/wagmi@latest` |
+ * | npm             | `npm install viem@2 wagmi@2 @tanstack/react-query@5 @lens-protocol/wagmi@latest` |
+ * | yarn            | `yarn add viem@2 viem@2 wagmi@2 @tanstack/react-query@5 @lens-protocol/wagmi@latest` |
+ * | pnpm            | `pnpm add viem@2 viem@2 wagmi@2 @tanstack/react-query@5 @lens-protocol/wagmi@latest` |
  *
- * In the following examples we will show you integration with wagmi and we will explain later how to use custom bindings.
- *
- * Create the {@link LensConfig}:
+ * Follow the [Wagmi documentation](https://wagmi.sh/react/getting-started#create-config) to create the Wagmi configuration.
  *
  * ```ts
- * import { LensConfig, development } from '@lens-protocol/react-web';
- * import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
+ * import { createConfig, http } from "wagmi";
+ * import { polygon } from "wagmi/chains";
+ *
+ * const wagmiConfig = createConfig({
+ *   chains: [polygon],
+ *   transports: {
+ *     [polygon.id]: http(),
+ *   },
+ * });
+ * ```
+ *
+ * Next, use this configuration with the `bindings` from the `@lens-protocol/wagmi` package to generate the [LensConfig](https://lens-protocol.github.io/lens-sdk/types/_lens_protocol_react_web.index.LensConfig.html) object.
+ *
+ *
+ * ```ts
+ * import { LensConfig, production } from "@lens-protocol/react-web";
+ * import { bindings } from "@lens-protocol/wagmi";
  *
  * const lensConfig: LensConfig = {
- *   bindings: wagmiBindings(),
- *   environment: development,
+ *   environment: production,
+ *   bindings: bindings(wagmiConfig),
  * };
  * ```
  *
- * Wrap your app with the {@link LensProvider | `<LensProvider>`} and pass the `LensConfig` as a prop.
+ * Now, wrap your app with the `<LensProvider>` component and pass the `LensConfig` object you created earlier.
  *
  * ```tsx
  * import { LensProvider } from '@lens-protocol/react-web';
+ * import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+ * import { WagmiProvider } from "wagmi";
+ *
+ * const queryClient = new QueryClient();
  *
  * function App() {
  *   return (
- *     <WagmiConfig config={config}>
- *       <LensProvider config={lensConfig}>
- *         <YourRoutes />
- *       </LensProvider>
- *     </WagmiConfig>
+ *     <WagmiProvider config={wagmiConfig}>
+ *       <QueryClientProvider client={queryClient}>
+ *         <LensProvider config={lensConfig}>
+ *           <YourApp />
+ *         </LensProvider>
+ *       </QueryClientProvider>
+ *     </WagmiProvider>
  *   );
  * }
  * ```
