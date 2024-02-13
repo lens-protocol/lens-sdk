@@ -1,6 +1,4 @@
 /**
- * @module Core
- *
  * ## Quick start
  *
  * Install the Lens React Web SDK package.
@@ -88,6 +86,8 @@
  *   getSigner: () => wallet
  * };
  * ```
+ *
+ * @module Core
  */
 'use client';
 
