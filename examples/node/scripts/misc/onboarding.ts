@@ -18,8 +18,8 @@ dotenv.config();
 const typedAbi = abi as ethers.ContractInterface;
 
 const permissonlessCreatorAddress = {
-  development: '0x42b302BBB4fA27c21d32EdF602E4e2aA65746999',
-  production: 'TBD',
+  development: '0xCb4FB63c3f13CB83cCD6F10E9e5F29eC250329Cc',
+  production: '0x0b5e6100243f793e480DE6088dE6bA70aA9f3872',
 };
 
 if (!process.env.INFURA_API_KEY) {
