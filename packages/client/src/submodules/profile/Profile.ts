@@ -60,6 +60,7 @@ import {
   getSdk,
   FollowStatusBulkResultFragment,
 } from './graphql/profile.generated';
+import { FetchProfileOptions } from './types';
 
 /**
  * Profiles are the accounts that create publications and are owned by wallets
@@ -85,6 +86,7 @@ export class Profile {
    * Fetch a single profile.
    *
    * @param request - Request object for the query
+   * @param options - Additional options for the query
    * @returns Profile or null if not found
    *
    * @example
@@ -94,10 +96,14 @@ export class Profile {
    * });
    * ```
    */
-  async fetch(request: ProfileRequest): Promise<ProfileFragment | null> {
+  async fetch(
+    request: ProfileRequest,
+    options?: FetchProfileOptions,
+  ): Promise<ProfileFragment | null> {
     const result = await this.sdk.Profile({
       request,
       ...commonQueryVariables(this.context),
+      ...options,
     });
 
     return result.data.result;
@@ -107,6 +113,7 @@ export class Profile {
    * Fetch all profiles by requested criteria.
    *
    * @param request - Request object for the query
+   * @param options - Additional options for the query
    * @returns Profiles wrapped in {@link PaginatedResult}
    *
    * @example
@@ -118,11 +125,15 @@ export class Profile {
    * });
    * ```
    */
-  async fetchAll(request: ProfilesRequest): Promise<PaginatedResult<ProfileFragment>> {
+  async fetchAll(
+    request: ProfilesRequest,
+    options?: FetchProfileOptions,
+  ): Promise<PaginatedResult<ProfileFragment>> {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Profiles({
         request: currRequest,
         ...commonQueryVariables(this.context),
+        ...options,
       });
 
       return result.data.result;
