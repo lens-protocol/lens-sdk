@@ -1,10 +1,37 @@
 import { isRelaySuccess } from '@lens-protocol/client';
+import * as dotenv from 'dotenv';
+import { ethers } from 'ethers';
 
+import abi from '../../../abi/LensHub.json';
+import type { LensHub } from '../../../contracts/LensHub';
 import { getAuthenticatedClient } from '../../shared/getAuthenticatedClient';
-import { setupWallet } from '../../shared/setupWallet';
+
+dotenv.config();
+
+// prepare direct contract call in case of non-sponsored profile
+const typedAbi = abi as ethers.ContractInterface;
+
+const lensHubAddress = {
+  development: '0x4fbffF20302F3326B20052ab9C217C44F6480900',
+  production: '0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d',
+};
+
+if (!process.env.INFURA_API_KEY) {
+  throw new Error('Infura API key is not defined in .env file');
+}
+
+const rpcUrl = {
+  development: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_API_KEY}`,
+  production: `https://polygon.infura.io/v3/${process.env.INFURA_API_KEY}`,
+};
 
 async function main() {
-  const wallet = setupWallet();
+  if (!process.env.WALLET_PRIVATE_KEY) {
+    throw new Error('Private key is not defined in .env file');
+  }
+  const provider = new ethers.providers.JsonRpcProvider(rpcUrl.development);
+  const wallet = new ethers.Wallet(process.env.WALLET_PRIVATE_KEY, provider);
+
   const client = await getAuthenticatedClient(wallet);
 
   // I have metadata already uploaded for simplicity
@@ -32,8 +59,26 @@ async function main() {
   );
 
   if (!profile.sponsor) {
-    // TODO submit tx on chain
-    console.log(`Profile is not sponsored`);
+    // call the contract directly, pay gas yourself
+    const lensHub = new ethers.Contract(lensHubAddress.development, typedAbi, wallet) as LensHub;
+
+    const tx = await lensHub.setProfileMetadataURI(profile.id, metadataURI);
+
+    console.log(`Submitted a tx with a hash: `, tx.hash);
+
+    console.log(`Waiting for tx to be mined and indexed...`);
+    const outcome = await client.transaction.waitUntilComplete({
+      forTxHash: tx.hash,
+    });
+
+    if (outcome === null) {
+      // if the transaction was sped up, the hash would have changed
+      console.error('The transaction was not found');
+      return;
+    }
+
+    console.log(`Profile metadata updated!`);
+    return;
   }
 
   // check if the profile has signless enabled aka. enabled lens profile manager
