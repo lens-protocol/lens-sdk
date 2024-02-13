@@ -1,5 +1,6 @@
 export * from './Profile';
 export * from './helpers';
+export * from './types';
 
 export type {
   CreateBlockProfilesBroadcastItemResultFragment,

@@ -5,5 +5,7 @@ export type {
   ClaimProfileWithHandleErrorResultFragment,
   CreateProfileWithHandleErrorResultFragment,
   ReservedClaimableFragment,
+  UserCurrentRateLimitFragment,
+  UserCurrentRateLimitResultFragment,
   UserSigNoncesFragment,
 } from './graphql/wallet.generated';
