@@ -1,5 +1,13 @@
 # @lens-protocol/react-native
 
+## 0.1.0-alpha.9
+
+### Patch Changes
+
+- 7b1cbde5d: **fix:** TSDoc and better exporting of shared parts
+- Updated dependencies [7b1cbde5d]
+  - @lens-protocol/react@2.0.0-alpha.32
+
 ## 0.1.0-alpha.8
 
 ### Minor Changes

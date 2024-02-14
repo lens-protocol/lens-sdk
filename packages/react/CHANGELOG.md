@@ -1,5 +1,11 @@
 # @lens-protocol/react
 
+## 2.0.0-alpha.32
+
+### Patch Changes
+
+- 7b1cbde5d: **fix:** TSDoc and better exporting of shared parts
+
 ## 2.0.0-alpha.31
 
 ### Minor Changes
