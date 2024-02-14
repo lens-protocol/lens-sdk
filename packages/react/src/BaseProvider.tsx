@@ -1,13 +1,13 @@
 import { ReactNode, useState } from 'react';
 
 import { useBootstrapController } from './authentication/adapters/useBootstrapController';
-import { LensConfig } from './config';
+import { BaseConfig } from './config';
 import { createSharedDependencies, SharedDependenciesProvider } from './shared';
 
 /**
- * <LensProvider> props
+ * <BaseProvider> props
  */
-export type LensProviderProps = {
+export type BaseProviderProps<TConfig extends BaseConfig> = {
   /**
    * The children to render
    */
@@ -15,16 +15,18 @@ export type LensProviderProps = {
   /**
    * The configuration for the Lens SDK
    */
-  config: LensConfig;
+  config: TConfig;
 };
 
 /**
  * Manages the lifecycle and internal state of the Lens SDK
  *
- * @group Components
- * @param props - {@link LensProviderProps}
+ * @internal
  */
-export function LensProvider({ children, ...props }: LensProviderProps) {
+export function BaseProvider<TConfig extends BaseConfig>({
+  children,
+  ...props
+}: BaseProviderProps<TConfig>) {
   const [sharedDependencies] = useState(() => createSharedDependencies(props.config));
 
   useBootstrapController(sharedDependencies);

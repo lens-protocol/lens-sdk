@@ -24,7 +24,7 @@ import { CredentialsFactory } from './authentication/adapters/CredentialsFactory
 import { CredentialsGateway } from './authentication/adapters/CredentialsGateway';
 import { CredentialsStorage } from './authentication/adapters/CredentialsStorage';
 import { LogoutPresenter } from './authentication/adapters/LogoutPresenter';
-import { LensConfig } from './config';
+import { BaseConfig } from './config';
 import { createInboxKeyStorage, DisableConversationsGateway } from './inbox';
 import { IProfileCacheManager } from './profile/adapters/IProfileCacheManager';
 import { ProfileCacheManager } from './profile/infrastructure/ProfileCacheManager';
@@ -56,13 +56,13 @@ import { SignerFactory } from './wallet/infrastructure/SignerFactory';
 /**
  * @internal
  */
-export function createSharedDependencies(userConfig: LensConfig): SharedDependencies {
+export function createSharedDependencies(userConfig: BaseConfig): SharedDependencies {
   const defaultConfig = {
     debug: false,
     logger: new ConsoleLogger(),
     params: defaultQueryParams,
   };
-  const config: Required<LensConfig> = { ...defaultConfig, ...userConfig };
+  const config: Required<BaseConfig> = { ...defaultConfig, ...userConfig };
 
   // auth api
   const anonymousApolloClient = createAuthApolloClient({
@@ -187,7 +187,7 @@ export type SharedDependencies = {
   accessTokenStorage: AccessTokenStorage;
   activeWallet: ActiveWallet;
   apolloClient: SafeApolloClient;
-  config: LensConfig;
+  config: BaseConfig;
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
   inboxKeyStorage: IStorage<string>;

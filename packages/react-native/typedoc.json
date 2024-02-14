@@ -1,8 +1,8 @@
 {
   "tsconfig": "./tsconfig.json",
   "extends": ["../../typedoc.base.json"],
-  "entryPoints": ["src/index.ts"],
-  "readme": "none",
+  "entryPoints": ["src/index.ts", "src/storage/index.ts"],
+  "readme": "./README.md",
   "categorizeByGroup": true,
   "groupOrder": [
     "Hooks",

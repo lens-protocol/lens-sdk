@@ -3,5 +3,6 @@
   "extends": ["../../typedoc.base.json"],
   "entryPoints": ["src/index.ts", "src/gated/index.ts"],
   "intentionallyNotExported": ["Environment", "Typename", "PickByTypename"],
-  "groupOrder": ["LensClient", "LensClient Modules", "Variables", "Functions"]
+  "groupOrder": ["LensClient", "LensClient Modules", "Variables", "Functions"],
+  "readme": "./README.md"
 }

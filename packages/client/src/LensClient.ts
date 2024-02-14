@@ -24,6 +24,8 @@ import {
 
 /**
  * LensClient configuration
+ *
+ * @group LensClient
  */
 export type LensClientConfig = {
   /**

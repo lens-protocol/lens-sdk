@@ -65,7 +65,7 @@ export type ValidateHandleRequest = {
  * ```
  *
  * @experimental This hook is experimental and may change in the future.
- * @category Misc
+ * @category Handle
  * @group Hooks
  */
 export function useValidateHandle(): UseDeferredTask<

@@ -6,13 +6,6 @@ import { useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useReportPublicationController } from './adapters/useReportPublicationController';
 
-export {
-  /**
-   * @deprecated Use {@link PublicationReportReason} instead.
-   */
-  PublicationReportReason as ReportReason,
-};
-
 export { PublicationReportReason };
 
 export type ReportPublicationArgs = ReportPublicationRequest;

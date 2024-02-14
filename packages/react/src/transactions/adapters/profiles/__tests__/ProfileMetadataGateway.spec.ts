@@ -13,7 +13,7 @@ import { ChainType } from '@lens-protocol/shared-kernel';
 import { providers } from 'ethers';
 import { mock } from 'jest-mock-extended';
 
-import { LensConfig } from '../../../../config';
+import { BaseConfig } from '../../../../config';
 import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
 import { mockIProviderFactory } from '../../../../wallet/adapters/__helpers__/mocks';
 import { UnsignedContractCallTransaction } from '../../AbstractContractCallGateway';
@@ -31,7 +31,7 @@ function setupTestScenario({
   apolloClient: SafeApolloClient;
   provider?: providers.JsonRpcProvider;
 }) {
-  const config = mock<LensConfig>();
+  const config = mock<BaseConfig>();
   const transactionFactory = mockITransactionFactory();
   const providerFactory = mockIProviderFactory({
     chainType: ChainType.POLYGON,
