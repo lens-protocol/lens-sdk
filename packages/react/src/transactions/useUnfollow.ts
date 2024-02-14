@@ -13,6 +13,7 @@ import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useUnfollowController } from './adapters/useUnfollowController';
+import { useSponsoredConfig } from './shared/useSponsoredConfig';
 
 /**
  * An object representing the result of an unfollow operation.
@@ -230,6 +231,7 @@ export function useUnfollow(): UseDeferredTask<
 > {
   const { data: session } = useSession();
   const unfollowProfile = useUnfollowController();
+  const configureRequest = useSponsoredConfig();
 
   return useDeferredTask(async (args) => {
     invariant(
@@ -241,11 +243,13 @@ export function useUnfollow(): UseDeferredTask<
       'You must have a profile to use this operation.',
     );
 
-    return unfollowProfile({
-      kind: TransactionKind.UNFOLLOW_PROFILE,
-      profileId: args.profile.id,
-      signless: session.profile.signless,
-      sponsored: args.sponsored ?? true,
-    });
+    return unfollowProfile(
+      configureRequest({
+        kind: TransactionKind.UNFOLLOW_PROFILE,
+        profileId: args.profile.id,
+        signless: session.profile.signless,
+        sponsored: args.sponsored ?? true,
+      }),
+    );
   });
 }

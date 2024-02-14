@@ -13,6 +13,7 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useUpdateFollowPolicyController } from './adapters/useUpdateFollowPolicyController';
+import { useSponsoredConfig } from './shared/useSponsoredConfig';
 
 export type UpdateFollowPolicyArgs = {
   /**
@@ -177,6 +178,7 @@ export function useUpdateFollowPolicy(): UseDeferredTask<
 > {
   const { data: session } = useSession();
   const updateFollowPolicy = useUpdateFollowPolicyController();
+  const configureRequest = useSponsoredConfig();
 
   return useDeferredTask(async (args) => {
     invariant(
@@ -188,11 +190,13 @@ export function useUpdateFollowPolicy(): UseDeferredTask<
       'You must have a profile to use this operation.',
     );
 
-    return updateFollowPolicy({
-      kind: TransactionKind.UPDATE_FOLLOW_POLICY,
-      policy: args.followPolicy,
-      signless: session.profile.signless,
-      sponsored: args.sponsored ?? true,
-    });
+    return updateFollowPolicy(
+      configureRequest({
+        kind: TransactionKind.UPDATE_FOLLOW_POLICY,
+        policy: args.followPolicy,
+        signless: session.profile.signless,
+        sponsored: args.sponsored ?? true,
+      }),
+    );
   });
 }

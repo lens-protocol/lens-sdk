@@ -107,18 +107,13 @@ export interface IBindings extends ISignerBinding, IProviderBinding {}
  */
 export type BaseConfig = {
   bindings: IBindings;
-
   environment: EnvironmentConfig;
-
   logger?: ILogger;
-
   debug?: boolean;
-
   storage: IStorageProvider | IObservableStorageProvider;
-
   params?: QueryParams;
-
   origin?: string;
+  sponsored?: boolean;
 };
 
 /**
@@ -128,17 +123,12 @@ export type BaseConfig = {
  */
 export type RequiredConfig = {
   bindings: IBindings;
-
   environment: EnvironmentConfig;
-
   logger: ILogger;
-
   debug: boolean;
-
   storage: IStorageProvider | IObservableStorageProvider;
-
   origin?: string;
-
+  sponsored: boolean;
   fragmentVariables: AllFragmentVariables;
 };
 
@@ -189,6 +179,7 @@ export function resolveConfig(config: BaseConfig): RequiredConfig {
     environment: config.environment,
     bindings: config.bindings,
     origin: config.origin,
+    sponsored: config.sponsored ?? true,
     fragmentVariables: resolveFragmentVariables(config.params ?? defaultQueryParams),
   };
 }

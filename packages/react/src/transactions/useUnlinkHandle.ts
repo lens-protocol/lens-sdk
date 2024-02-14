@@ -13,6 +13,7 @@ import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useUnlinkHandleController } from './adapters/useUnlinkHandleController';
+import { useSponsoredConfig } from './shared/useSponsoredConfig';
 
 export type UnlinkHandleArgs = {
   /**
@@ -222,6 +223,7 @@ export function useUnlinkHandle(): UseDeferredTask<
 > {
   const { data: session } = useSession();
   const unlinkHandle = useUnlinkHandleController();
+  const configureRequest = useSponsoredConfig();
 
   return useDeferredTask(async (args) => {
     invariant(
@@ -237,12 +239,14 @@ export function useUnlinkHandle(): UseDeferredTask<
       `You can't unlink handle that is not linked to current profile.`,
     );
 
-    return unlinkHandle({
-      kind: TransactionKind.UNLINK_HANDLE,
-      fullHandle: args.handle.fullHandle,
-      profileId: session.profile.id,
-      signless: session.profile.signless,
-      sponsored: args.sponsored ?? true,
-    });
+    return unlinkHandle(
+      configureRequest({
+        kind: TransactionKind.UNLINK_HANDLE,
+        fullHandle: args.handle.fullHandle,
+        profileId: session.profile.id,
+        signless: session.profile.signless,
+        sponsored: args.sponsored ?? true,
+      }),
+    );
   });
 }

@@ -17,6 +17,7 @@ import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useUnblockProfilesController } from './adapters/useUnblockProfilesController';
+import { useSponsoredConfig } from './shared/useSponsoredConfig';
 
 export type UnblockProfileArgs = {
   /**
@@ -246,6 +247,7 @@ export type UnblockOperation = UseDeferredTask<
 export function useUnblockProfiles(): UnblockOperation {
   const { data: session } = useSession();
   const unblockProfile = useUnblockProfilesController();
+  const configureRequest = useSponsoredConfig();
 
   return useDeferredTask(async ({ profiles, sponsored }: UnblockProfileArgs) => {
     invariant(
@@ -253,11 +255,13 @@ export function useUnblockProfiles(): UnblockOperation {
       'You must be authenticated with a profile to unblock a profile. Use `useLogin` hook to authenticate.',
     );
 
-    return unblockProfile({
-      profileIds: profiles.map((profile) => profile.id),
-      kind: TransactionKind.UNBLOCK_PROFILE,
-      signless: session.profile.signless,
-      sponsored: sponsored ?? true,
-    });
+    return unblockProfile(
+      configureRequest({
+        profileIds: profiles.map((profile) => profile.id),
+        kind: TransactionKind.UNBLOCK_PROFILE,
+        signless: session.profile.signless,
+        sponsored: sponsored ?? true,
+      }),
+    );
   });
 }

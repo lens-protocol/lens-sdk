@@ -15,6 +15,7 @@ import { useSession } from '../../authentication';
 import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
 import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
 import { useOpenActionController } from '../adapters/useOpenActionController';
+import { useSponsoredConfig } from '../shared/useSponsoredConfig';
 import { createOpenActionRequest } from './createOpenActionRequest';
 import { OpenActionArgs, UseOpenActionArgs } from './types';
 
@@ -262,6 +263,7 @@ export function useOpenAction(
 > {
   const { data: session } = useSession();
   const openAction = useOpenActionController();
+  const configureRequest = useSponsoredConfig();
 
   return useDeferredTask(async ({ publication, sponsored = true }: OpenActionArgs) => {
     invariant(
@@ -273,7 +275,9 @@ export function useOpenAction(
       'You cannot execute an Open Action on a Momoka publication.',
     );
 
-    const request = createOpenActionRequest({ publication, sponsored }, args.action, session);
+    const request = configureRequest(
+      createOpenActionRequest({ publication, sponsored }, args.action, session),
+    );
 
     return openAction(request);
   });

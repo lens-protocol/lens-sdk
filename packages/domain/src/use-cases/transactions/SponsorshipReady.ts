@@ -4,9 +4,6 @@ type WithSponsoredFlag<T extends ProtocolTransactionRequestModel> = T & {
   sponsored: boolean;
 };
 
-export type SubsidizableProtocolTransactionRequestModel =
-  WithSponsoredFlag<ProtocolTransactionRequestModel>;
-
 export abstract class SponsorshipReady<
   TRequest extends WithSponsoredFlag<ProtocolTransactionRequestModel>,
 > {
