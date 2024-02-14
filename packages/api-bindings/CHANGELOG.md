@@ -1,5 +1,14 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.28
+
+### Patch Changes
+
+- 66c6df157: **fixed:** make `useAccessToken` reactive
+- 9c7fd3ee3: **feat:** `useCreateProfile` hook
+- Updated dependencies [9c7fd3ee3]
+  - @lens-protocol/domain@0.11.0-alpha.21
+
 ## 0.11.0-alpha.27
 
 ### Minor Changes

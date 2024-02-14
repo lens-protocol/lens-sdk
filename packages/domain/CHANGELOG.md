@@ -1,5 +1,11 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.21
+
+### Patch Changes
+
+- 9c7fd3ee3: **feat:** `useCreateProfile` hook
+
 ## 0.11.0-alpha.20
 
 ### Minor Changes
