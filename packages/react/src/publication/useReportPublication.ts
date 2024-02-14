@@ -38,7 +38,6 @@ export type ReportPublicationArgs = ReportPublicationRequest;
  *
  * @category Publications
  * @group Hooks
- * @function useReportPublication
  */
 export function useReportPublication(): UseDeferredTask<void, never, ReportPublicationArgs> {
   const { data: session } = useSession();
