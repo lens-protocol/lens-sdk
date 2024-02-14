@@ -48,7 +48,7 @@ function setupTestScenario(mocks: ReadonlyArray<Response>) {
   return new ApolloClient({
     cache: new InMemoryCache(),
     link: from([
-      createAuthLink(accessTokenStorage),
+      createAuthLink({ accessTokenStorage }),
       createHttpLink({
         fetch,
         uri: 'http://localhost:4000/graphql',

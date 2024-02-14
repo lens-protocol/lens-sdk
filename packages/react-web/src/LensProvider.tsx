@@ -1,4 +1,4 @@
-import type { BaseConfig } from '@lens-protocol/react';
+import type { RequiredConfig } from '@lens-protocol/react';
 import { BaseProvider, EnvironmentConfig, IBindings, QueryParams } from '@lens-protocol/react';
 import { ILogger } from '@lens-protocol/shared-kernel';
 import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/storage';
@@ -87,7 +87,7 @@ const storage = localStorage();
  * ```
  */
 export function LensProvider({ config, ...props }: LensProviderProps) {
-  const [resolvedConfig] = useState<BaseConfig>(() => ({
+  const [resolvedConfig] = useState<RequiredConfig>(() => ({
     ...config,
     storage: config.storage ?? storage,
   }));

@@ -10,7 +10,7 @@ import {
 import { BigNumber, constants, providers, utils } from 'ethers';
 import { mock } from 'jest-mock-extended';
 
-import { BaseConfig } from '../../../config';
+import { RequiredConfig } from '../../../config';
 import { mockIProviderFactory } from '../../../wallet/adapters/__helpers__/mocks';
 import { UnsignedContractCallTransaction } from '../AbstractContractCallGateway';
 import { ApproveTransactionGateway } from '../ApproveTransactionGateway';
@@ -23,7 +23,7 @@ function setupApproveTransactionGateway({
   request: TokenAllowanceRequest;
   provider: providers.JsonRpcProvider;
 }) {
-  const config = mock<BaseConfig>();
+  const config = mock<RequiredConfig>();
   const providerFactory = mockIProviderFactory({
     chainType: request.amount.asset.chainType,
     provider,

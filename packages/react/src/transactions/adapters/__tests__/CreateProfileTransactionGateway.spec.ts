@@ -18,7 +18,7 @@ import { deployMockContract } from 'ethereum-waffle';
 import { BigNumber, Wallet, utils } from 'ethers';
 import { mock } from 'jest-mock-extended';
 
-import { BaseConfig } from '../../../config';
+import { RequiredConfig } from '../../../config';
 import { staging } from '../../../environments';
 import { mockIProviderFactory } from '../../../wallet/adapters/__helpers__/mocks';
 import { UnsignedContractCallTransaction } from '../AbstractContractCallGateway';
@@ -49,7 +49,7 @@ async function setupTestScenario(mocks: MockedResponse[] = []) {
   // eslint-disable-next-line @typescript-eslint/await-thenable
   await mockContract.mock.getProfileWithHandleCreationPrice!.returns(utils.parseEther('10'));
 
-  const config = mock<BaseConfig>({ environment: staging });
+  const config = mock<RequiredConfig>({ environment: staging });
 
   return new CreateProfileTransactionGateway(apolloClient, config, providerFactory);
 }

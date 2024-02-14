@@ -22,7 +22,7 @@ import {
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
-import { BaseConfig } from '../../../config';
+import { RequiredConfig } from '../../../config';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
@@ -36,7 +36,7 @@ export class UpdateFollowPolicyGateway
     ISignedOnChainGateway<UpdateFollowPolicyRequest>
 {
   constructor(
-    config: BaseConfig,
+    config: RequiredConfig,
     providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<UpdateFollowPolicyRequest>,
