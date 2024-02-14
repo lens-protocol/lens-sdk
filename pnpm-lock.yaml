@@ -15,9 +15,6 @@ importers:
       '@changesets/cli':
         specifier: ^2.26.2
         version: 2.26.2
-      '@mxssfd/typedoc-theme':
-        specifier: ^1.1.3
-        version: 1.1.3(typedoc@0.25.3)
       '@preconstruct/cli':
         specifier: ^2.8.1
         version: 2.8.1
@@ -31,8 +28,14 @@ importers:
         specifier: ^1.10.16
         version: 1.10.16
       typedoc:
-        specifier: ^0.25.3
-        version: 0.25.3(typescript@5.2.2)
+        specifier: ^0.25.8
+        version: 0.25.8(typescript@5.2.2)
+      typedoc-material-theme:
+        specifier: ^1.0.2
+        version: 1.0.2(typedoc@0.25.8)
+      typedoc-plugin-extras:
+        specifier: ^3.0.0
+        version: 3.0.0(typedoc@0.25.8)
       typescript:
         specifier: 5.2.2
         version: 5.2.2
@@ -59,7 +62,7 @@ importers:
         version: 18.2.0(react@18.2.0)
       viem:
         specifier: ^2.7.6
-        version: 2.7.6(typescript@5.2.2)(zod@3.22.4)
+        version: 2.7.6(typescript@5.2.2)
       wagmi:
         specifier: ^2.5.6
         version: 2.5.6(@tanstack/react-query@5.18.1)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(viem@2.7.6)
@@ -198,7 +201,7 @@ importers:
         version: 3.0.2
       viem:
         specifier: ^2.7.6
-        version: 2.7.6(typescript@5.2.2)(zod@3.22.4)
+        version: 2.7.6(typescript@5.2.2)
       wagmi:
         specifier: ^2.5.6
         version: 2.5.6(@tanstack/react-query@5.18.1)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(viem@2.7.6)
@@ -1284,7 +1287,7 @@ importers:
         version: 5.2.2
       viem:
         specifier: ^2.7.6
-        version: 2.7.6(typescript@5.2.2)(zod@3.22.4)
+        version: 2.7.6(typescript@5.2.2)
       wagmi:
         specifier: ^2.5.6
         version: 2.5.6(@tanstack/react-query@5.18.1)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(viem@2.7.6)
@@ -5845,6 +5848,10 @@ packages:
       read-yaml-file: 1.1.0
     dev: true
 
+  /@material/material-color-utilities@0.2.7:
+    resolution: {integrity: sha512-0FCeqG6WvK4/Cc06F/xXMd/pv4FeisI0c1tUpBbfhA2n9Y8eZEv4Karjbmf2ZqQCPUWMrGp8A571tCjizxoTiQ==}
+    dev: true
+
   /@metamask/eth-json-rpc-provider@1.0.1:
     resolution: {integrity: sha512-whiUMPlAOrVGmX8aKYVPvlKyG4CpQXiNNyt74vE1xb5sPvmx5oA7B/kOi/JdBvhGQq97U1/AVdXEdk2zkP8qyA==}
     engines: {node: '>=14.0.0'}
@@ -6087,15 +6094,6 @@ packages:
     dependencies:
       '@motionone/dom': 10.16.4
       tslib: 2.6.2
-
-  /@mxssfd/typedoc-theme@1.1.3(typedoc@0.25.3):
-    resolution: {integrity: sha512-/yP5rqhvibMpzXpmw0YLLRCpoj3uVWWlwyJseZXzGxTfiA6/fd1uubUqNoQAi2U19atMDonq8mQc+hlVctrX4g==}
-    engines: {node: '>= 14'}
-    peerDependencies:
-      typedoc: ^0.25.1
-    dependencies:
-      typedoc: 0.25.3(typescript@5.2.2)
-    dev: true
 
   /@near-js/crypto@0.0.3:
     resolution: {integrity: sha512-3WC2A1a1cH8Cqrx+0iDjp1ASEEhxN/KHEMENYb0KZH6Hp5bXIY7Akt4quC7JlgJS5ESvEiLa40tS5h0zAhBWGw==}
@@ -7884,7 +7882,7 @@ packages:
       '@walletconnect/ethereum-provider': 2.11.1(@types/react@18.2.38)(react@18.2.0)
       '@walletconnect/modal': 2.6.2(@types/react@18.2.38)(react@18.2.0)
       typescript: 5.2.2
-      viem: 2.7.6(typescript@5.2.2)(zod@3.22.4)
+      viem: 2.7.6(typescript@5.2.2)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -7924,7 +7922,7 @@ packages:
       eventemitter3: 5.0.1
       mipd: 0.0.5(typescript@5.2.2)
       typescript: 5.2.2
-      viem: 2.7.6(typescript@5.2.2)(zod@3.22.4)
+      viem: 2.7.6(typescript@5.2.2)
       zustand: 4.4.1(@types/react@18.2.38)(react@18.2.0)
     transitivePeerDependencies:
       - '@types/react'
@@ -8656,7 +8654,7 @@ packages:
       typescript: 5.2.2
       zod: 3.22.4
 
-  /abitype@1.0.0(typescript@5.2.2)(zod@3.22.4):
+  /abitype@1.0.0(typescript@5.2.2):
     resolution: {integrity: sha512-NMeMah//6bJ56H5XRj8QCV4AwuW6hB6zqz2LnhhLdcWVQOsXki6/Pn3APeqxCma62nXIcmZWdu1DlHWS74umVQ==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -8668,7 +8666,6 @@ packages:
         optional: true
     dependencies:
       typescript: 5.2.2
-      zod: 3.22.4
 
   /abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -14851,8 +14848,8 @@ packages:
     hasBin: true
     dev: true
 
-  /jsonc-parser@3.2.0:
-    resolution: {integrity: sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w==}
+  /jsonc-parser@3.2.1:
+    resolution: {integrity: sha512-AilxAyFOAcK5wA1+LeaySVBrHsGQvUFCDWXKpZjzaL0PqW+xfBOttn8GNtWKFWqneyMZj41MWF9Kl6iPWLwgOA==}
 
   /jsonfile@2.4.0:
     resolution: {integrity: sha512-PKllAqbgLgxHaj8TElYymKCAgrASebJrWpTnEkOaTowt23VKXXN0sUeriJ+eh7y6ufb/CC5ap11pz71/cM0hUw==}
@@ -17129,7 +17126,7 @@ packages:
   /pkg-types@1.0.3:
     resolution: {integrity: sha512-nN7pYi0AQqJnoLPC9eHFQ8AcyaixBUOwvqc5TDnIKCMEE6I0y8P7OKA7fPexsXGCGxQDl/cmrLAp26LhcwxZ4A==}
     dependencies:
-      jsonc-parser: 3.2.0
+      jsonc-parser: 3.2.1
       mlly: 1.4.2
       pathe: 1.1.1
 
@@ -18504,11 +18501,11 @@ packages:
     resolution: {integrity: sha512-6j1W9l1iAs/4xYBI1SYOVZyFcCis9b4KCLQ8fgAGG07QvzaRLVVRQvAy85yNmmZSjYjg4MWh4gNvlPujU/5LpA==}
     dev: true
 
-  /shiki@0.14.5:
-    resolution: {integrity: sha512-1gCAYOcmCFONmErGTrS1fjzJLA7MGZmKzrBNX7apqSwhyITJg2O102uFzXUeBxNnEkDA9vHIKLyeKq0V083vIw==}
+  /shiki@0.14.7:
+    resolution: {integrity: sha512-dNPAPrxSc87ua2sKJ3H5dQ/6ZaY8RNnaAqK+t0eG7p0Soi2ydiqbGOTaZCqaYvA/uZYfS1LJnemt3Q+mSfcPCg==}
     dependencies:
       ansi-sequence-parser: 1.1.1
-      jsonc-parser: 3.2.0
+      jsonc-parser: 3.2.1
       vscode-oniguruma: 1.7.0
       vscode-textmate: 8.0.0
     dev: true
@@ -19750,17 +19747,35 @@ packages:
       for-each: 0.3.3
       is-typed-array: 1.1.12
 
-  /typedoc@0.25.3(typescript@5.2.2):
-    resolution: {integrity: sha512-Ow8Bo7uY1Lwy7GTmphRIMEo6IOZ+yYUyrc8n5KXIZg1svpqhZSWgni2ZrDhe+wLosFS8yswowUzljTAV/3jmWw==}
+  /typedoc-material-theme@1.0.2(typedoc@0.25.8):
+    resolution: {integrity: sha512-/nH/twYeHrnz5sZaaXzYJ85EOgKqnbl1ivzBKmuEAga1dBsARttwQUTPKAT7XrCPD+rRcoqxuCOdXZ6EGiqRQA==}
+    engines: {node: '>=18.0.0', npm: '>=8.6.0'}
+    peerDependencies:
+      typedoc: ^0.25.3
+    dependencies:
+      '@material/material-color-utilities': 0.2.7
+      typedoc: 0.25.8(typescript@5.2.2)
+    dev: true
+
+  /typedoc-plugin-extras@3.0.0(typedoc@0.25.8):
+    resolution: {integrity: sha512-eiAe3qtm2WbV5owdncpt0zHZPqsNZH2mzNGILPd4zqrvEZie3Et9es4cpGZ+8lHO/SI0pVKwsAj7IuMxPNOdYg==}
+    peerDependencies:
+      typedoc: 0.25.x
+    dependencies:
+      typedoc: 0.25.8(typescript@5.2.2)
+    dev: true
+
+  /typedoc@0.25.8(typescript@5.2.2):
+    resolution: {integrity: sha512-mh8oLW66nwmeB9uTa0Bdcjfis+48bAjSH3uqdzSuSawfduROQLlXw//WSNZLYDdhmMVB7YcYZicq6e8T0d271A==}
     engines: {node: '>= 16'}
     hasBin: true
     peerDependencies:
-      typescript: 4.6.x || 4.7.x || 4.8.x || 4.9.x || 5.0.x || 5.1.x || 5.2.x
+      typescript: 4.6.x || 4.7.x || 4.8.x || 4.9.x || 5.0.x || 5.1.x || 5.2.x || 5.3.x
     dependencies:
       lunr: 2.3.9
       marked: 4.3.0
       minimatch: 9.0.3
-      shiki: 0.14.5
+      shiki: 0.14.7
       typescript: 5.2.2
     dev: true
 
@@ -20241,7 +20256,7 @@ packages:
       - utf-8-validate
       - zod
 
-  /viem@2.7.6(typescript@5.2.2)(zod@3.22.4):
+  /viem@2.7.6(typescript@5.2.2):
     resolution: {integrity: sha512-43TF0VYcTeNef9dax1/BhqlRLXpAo6HAiQ68hrJ8XRhDOou73nHZEjeFl8Eai4UFFodKhu+PbRUFzuuoixOUfg==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -20254,7 +20269,7 @@ packages:
       '@noble/hashes': 1.3.2
       '@scure/bip32': 1.3.2
       '@scure/bip39': 1.2.1
-      abitype: 1.0.0(typescript@5.2.2)(zod@3.22.4)
+      abitype: 1.0.0(typescript@5.2.2)
       isows: 1.0.3(ws@8.13.0)
       typescript: 5.2.2
       ws: 8.13.0
@@ -20360,7 +20375,7 @@ packages:
       react: 18.2.0
       typescript: 5.2.2
       use-sync-external-store: 1.2.0(react@18.2.0)
-      viem: 2.7.6(typescript@5.2.2)(zod@3.22.4)
+      viem: 2.7.6(typescript@5.2.2)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'

@@ -6,13 +6,6 @@ import { useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useReportPublicationController } from './adapters/useReportPublicationController';
 
-export {
-  /**
-   * @deprecated Use {@link PublicationReportReason} instead.
-   */
-  PublicationReportReason as ReportReason,
-};
-
 export { PublicationReportReason };
 
 export type ReportPublicationArgs = ReportPublicationRequest;
@@ -45,6 +38,7 @@ export type ReportPublicationArgs = ReportPublicationRequest;
  *
  * @category Publications
  * @group Hooks
+ * @function useReportPublication
  */
 export function useReportPublication(): UseDeferredTask<void, never, ReportPublicationArgs> {
   const { data: session } = useSession();

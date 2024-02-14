@@ -115,5 +115,10 @@
   },
   "peerDependencies": {
     "@lens-protocol/metadata": "^1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@lens-protocol/metadata": {
+      "optional": true
+    }
   }
 }

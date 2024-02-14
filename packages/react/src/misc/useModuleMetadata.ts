@@ -4,17 +4,17 @@ import {
   useModuleMetadata as useModuleMetadataHook,
   useModuleMetadataLazyQuery,
 } from '@lens-protocol/api-bindings';
-import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
 import { useLensApolloClient } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
-import { useDeferredTask, UseDeferredTask } from '../helpers/tasks';
+import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 
 export type { ModuleMetadataResult };
 
 // export helpers
-export { encodeData, decodeData } from '@lens-protocol/blockchain-bindings';
+export { decodeData, encodeData } from '@lens-protocol/blockchain-bindings';
 export type { ModuleData, ModuleParam } from '@lens-protocol/blockchain-bindings';
 
 /**
@@ -35,7 +35,7 @@ export type UseModuleMetadataArgs = {
  * const { data, error, loading } = useModuleMetadata();
  * ```
  *
- * @category Misc
+ * @category Modules
  * @group Hooks
  */
 export function useModuleMetadata(
@@ -71,7 +71,7 @@ export type FetchModuleMetadataArgs = {
  * ```
  *
  * @experimental This hook is experimental and may change in the future.
- * @category Misc
+ * @category Modules
  * @group Hooks
  */
 export function useLazyModuleMetadata(): UseDeferredTask<

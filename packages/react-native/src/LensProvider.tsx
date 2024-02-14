@@ -1,32 +1,12 @@
-import { QueryParams } from '@lens-protocol/api-bindings';
+import { BaseProvider, EnvironmentConfig, IBindings, QueryParams } from '@lens-protocol/react';
 import { ILogger } from '@lens-protocol/shared-kernel';
 import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/storage';
-
-import { EnvironmentConfig } from './environments';
-import { RequiredSigner } from './wallet/adapters/ConcreteWallet';
-import { GetProvider, IProviderBinding } from './wallet/infrastructure/ProviderFactory';
-import { GetSigner, ISignerBinding } from './wallet/infrastructure/SignerFactory';
-
-export type {
-  GetProvider,
-  GetSigner,
-  ILogger,
-  IObservableStorageProvider,
-  IStorageProvider,
-  QueryParams,
-  RequiredSigner,
-};
-
-export { SupportedFiatType } from '@lens-protocol/api-bindings';
-
-export interface IBindings extends ISignerBinding, IProviderBinding {}
+import { ReactNode } from 'react';
 
 /**
- * `<BaseProvider>` configuration
- *
- * @internal
+ * `<LensProvider>` configuration
  */
-export type BaseConfig = {
+export type LensConfig = {
   /**
    * Provides integration with the ethers.js Signer and Provider
    */
@@ -58,4 +38,37 @@ export type BaseConfig = {
    * The common query params allow you customize some aspect of the returned data.
    */
   params?: QueryParams;
+  /**
+   * The value of the `Origin` HTTP header to use when making requests to the Lens API.
+   *
+   * @example
+   * ```md
+   * https://example.xyz
+   * ```
+   *
+   * @defaultValue if not provided, the requests will be made without the `Origin` header.
+   */
+  origin?: string;
 };
+
+/**
+ * <LensProvider> props
+ */
+export type LensProviderProps = {
+  /**
+   * The children to render
+   */
+  children: ReactNode;
+  /**
+   * The configuration for the Lens SDK
+   */
+  config: LensConfig;
+};
+
+/**
+ * Manages the lifecycle and internal state of the Lens SDK
+ *
+ * @group Components
+ * @param props - {@link LensProviderProps}
+ */
+export const LensProvider = BaseProvider<LensConfig>;

@@ -12,18 +12,18 @@
  *
  * ## Quick start
  *
- * Install:
+ * Install the required peer dependencies.
  *
  * ```bash
- * npm install zod @lens-protocol/metadata@latest @lens-protocol/client@alpha
+ * npm install zod @lens-protocol/metadata@latest
  *
  * # OR
  *
- * yarn add zod @lens-protocol/metadata@latest @lens-protocol/client@alpha
+ * yarn add zod @lens-protocol/metadata@latest
  *
  * # OR
  *
- * pnpm add zod @lens-protocol/metadata@latest @lens-protocol/client@alpha
+ * pnpm add zod @lens-protocol/metadata@latest
  * ```
  *
  * Typical NodeJS setup:
@@ -190,19 +190,19 @@
  *
  * @module Gated
  */
-import { LensClientConfig, LensClient } from './LensClient';
+import { LensClient, LensClientConfig } from './LensClient';
 
 export * from '../index';
 export * from './Gated';
 
 // NOTE: local exports takes priority over package exports, basically overriding the LensClient and
 // see https://github.com/systemjs/systemjs/issues/1031#issuecomment-171262430
-export type { LensClientConfig };
 export { LensClient };
+export type { LensClientConfig };
 
 export { isEncryptedPublicationMetadata } from '@lens-protocol/gated-content';
 export type {
   AuthenticationConfig,
-  ISigner,
   IEncryptionProvider,
+  ISigner,
 } from '@lens-protocol/gated-content';

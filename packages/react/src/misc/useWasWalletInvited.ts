@@ -25,7 +25,7 @@ export type UseWasWalletInvitedArgs = AlreadyInvitedCheckRequest;
  * });
  * ```
  *
- * @category Misc
+ * @category Wallet
  * @group Hooks
  */
 export function useWasWalletInvited(args: UseWasWalletInvitedArgs): ReadResult<boolean> {
@@ -64,7 +64,7 @@ export function useWasWalletInvited(args: UseWasWalletInvitedArgs): ReadResult<b
  * }
  * ```
  *
- * @category Misc
+ * @category Wallet
  * @group Hooks
  */
 export function useLazyWasWalletInvited(): UseDeferredTask<
