@@ -54,7 +54,7 @@ describe(`Given an instance of ${UnfollowProfileGateway.name}`, () => {
     const wallet = mockWallet();
     const data = mockCreateUnfollowTypedDataData();
 
-    it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+    it(`should resolve with the expected ${UnsignedContractCallTransaction.name}`, async () => {
       const provider = await mockJsonRpcProvider();
       const apolloClient = mockLensApolloClient([
         mockCreateUnfollowTypedDataResponse({

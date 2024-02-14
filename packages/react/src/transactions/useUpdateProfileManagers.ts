@@ -9,8 +9,8 @@ import {
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { AtLeastOneOf, EvmAddress, invariant } from '@lens-protocol/shared-kernel';
 
-import { useSession } from '../authentication';
-import { useDeferredTask, UseDeferredTask } from '../helpers/tasks';
+import { SessionType, useSession } from '../authentication';
+import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useUpdateProfileManagersController } from './adapters/useUpdateProfileManagersController';
 
 export type UpdateProfileManagersArgs = AtLeastOneOf<{
@@ -26,6 +26,7 @@ export type UpdateProfileManagersArgs = AtLeastOneOf<{
    * Removes the given addresses from the list of Profile managers for the authenticated Profile.
    */
   remove?: EvmAddress[];
+}> & {
   /**
    * Whether the transaction costs should be sponsored by the Lens API or
    * should be paid by the authenticated wallet.
@@ -40,7 +41,7 @@ export type UpdateProfileManagersArgs = AtLeastOneOf<{
    * otherwise, it will fall back to a signed experience.
    */
   sponsored?: boolean;
-}>;
+};
 
 /**
  * Update the profile manager configuration for the authenticated profile.
@@ -209,9 +210,17 @@ export function useUpdateProfileManagers(): UseDeferredTask<
 
   return useDeferredTask(async (args) => {
     invariant(
-      session?.authenticated,
-      'You must be authenticated to use this operation. Use `useLogin` hook to authenticate.',
+      session?.type === SessionType.WithProfile,
+      'You must be authenticated with the Profile you intend update Profile Managers for. ' +
+        'Use `useLogin` hook to authenticate.',
     );
+
+    if ('approveSignless' in args) {
+      invariant(
+        args.approveSignless === session.profile.signless,
+        `The Signless Experience is already ${args.approveSignless ? 'enabled' : 'disabled'}`,
+      );
+    }
 
     return updateProfileManagers({
       kind: TransactionKind.UPDATE_PROFILE_MANAGERS,

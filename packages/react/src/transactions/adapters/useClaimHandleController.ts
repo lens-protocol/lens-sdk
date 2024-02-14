@@ -8,7 +8,7 @@ import {
 import { PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { useSharedDependencies } from '../../shared';
-import { NewProfilePresenter } from './NewProfilePresenter';
+import { ClaimProfilePresenter } from './ClaimProfilePresenter';
 import { ClaimProfileGateway } from './profiles/ClaimProfileGateway';
 
 export function useClaimHandleController() {
@@ -22,7 +22,7 @@ export function useClaimHandleController() {
     ClaimHandleError<ClaimProfileWithHandleErrorReasonType> | TransactionError
   > => {
     const gateway = new ClaimProfileGateway(apolloClient, transactionFactory);
-    const presenter = new NewProfilePresenter(
+    const presenter = new ClaimProfilePresenter(
       profileCacheManager,
       config.environment.handleResolver,
     );

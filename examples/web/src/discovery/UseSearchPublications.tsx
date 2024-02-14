@@ -1,10 +1,10 @@
-import { useSearchPublications, LimitType } from '@lens-protocol/react-web';
+import { LimitType, useSearchPublications } from '@lens-protocol/react-web';
 import { ChangeEvent, useState } from 'react';
 
+import { PublicationCard } from '../components/cards';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
-import { PublicationCard } from '../publications/components/PublicationCard';
 
 type SearchResultsProps = {
   query: string;

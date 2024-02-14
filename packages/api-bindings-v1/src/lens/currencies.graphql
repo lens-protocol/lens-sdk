@@ -1,5 +1,0 @@
-query EnabledModuleCurrencies {
-  result: enabledModuleCurrencies {
-    ...Erc20Fields
-  }
-}

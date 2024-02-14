@@ -1,5 +1,5 @@
-import { ICredentials } from '../../entities';
+import { Credentials } from '../../entities';
 
 export interface ICredentialsWriter {
-  save(credentials: ICredentials): Promise<void>;
+  save(credentials: Credentials): Promise<void>;
 }

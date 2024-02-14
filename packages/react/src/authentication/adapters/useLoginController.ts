@@ -4,23 +4,12 @@ import { useSharedDependencies } from '../../shared';
 import { LoginPresenter } from './LoginPresenter';
 
 export function useLoginController() {
-  const {
-    credentialsFactory,
-    credentialsGateway,
-    profileCacheManager,
-    walletFactory,
-    walletGateway,
-  } = useSharedDependencies();
+  const { credentialsFactory, credentialsGateway, profileCacheManager, walletGateway } =
+    useSharedDependencies();
 
   return async (request: LoginRequest) => {
     const presenter = new LoginPresenter(profileCacheManager);
-    const login = new Login(
-      walletFactory,
-      walletGateway,
-      credentialsFactory,
-      credentialsGateway,
-      presenter,
-    );
+    const login = new Login(walletGateway, credentialsFactory, credentialsGateway, presenter);
 
     await login.execute(request);
 

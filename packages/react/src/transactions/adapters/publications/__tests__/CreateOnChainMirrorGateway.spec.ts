@@ -6,12 +6,12 @@ import {
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
-  mockLensApolloClient,
   mockCreateOnchainMirrorTypedDataData,
   mockCreateOnchainMirrorTypedDataResponse,
+  mockLensApolloClient,
+  mockLensProfileManagerRelayError,
   mockMirrorOnchainResponse,
   mockRelaySuccessFragment,
-  mockLensProfileManagerRelayError,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
 import { mockCreateMirrorRequest, mockWallet } from '@lens-protocol/domain/mocks';
@@ -86,7 +86,7 @@ describe(`Given an instance of ${CreateOnChainMirrorGateway.name}`, () => {
   describe(`when creating an UnsignedTransaction<CreateMirrorRequest>`, () => {
     const wallet = mockWallet();
 
-    it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+    it(`should resolve with the expected ${UnsignedContractCallTransaction.name}`, async () => {
       const provider = await mockJsonRpcProvider();
       const apolloClient = mockLensApolloClient([
         mockCreateOnchainMirrorTypedDataResponse({

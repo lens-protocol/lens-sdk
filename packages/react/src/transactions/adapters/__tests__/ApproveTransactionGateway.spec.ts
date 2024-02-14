@@ -36,7 +36,7 @@ describe(`Given an instance of the ${ApproveTransactionGateway.name}`, () => {
   const wallet = mockWallet();
 
   describe(`when creating an approve transaction for an exact amount`, () => {
-    it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+    it(`should resolve with the expected ${UnsignedContractCallTransaction.name}`, async () => {
       const request = mockTokenAllowanceRequest({
         limit: TokenAllowanceLimit.EXACT,
       });
@@ -72,7 +72,7 @@ describe(`Given an instance of the ${ApproveTransactionGateway.name}`, () => {
   });
 
   describe(`when creating an infinite approve transaction`, () => {
-    it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+    it(`should resolve with the expected ${UnsignedContractCallTransaction.name}`, async () => {
       const request = mockTokenAllowanceRequest({
         limit: TokenAllowanceLimit.INFINITE,
       });

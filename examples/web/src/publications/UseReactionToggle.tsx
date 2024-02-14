@@ -9,10 +9,10 @@ import {
 } from '@lens-protocol/react-web';
 
 import { RequireProfileSession } from '../components/auth';
+import { PublicationCard } from '../components/cards';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { invariant } from '../utils';
-import { PublicationCard } from './components/PublicationCard';
 
 type ReactionButtonProps = {
   publication: PrimaryPublication;

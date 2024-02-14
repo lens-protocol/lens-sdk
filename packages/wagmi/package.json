@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/wagmi",
-  "version": "3.0.0-alpha.27",
+  "version": "4.0.0-alpha.0",
   "description": "wagmi bindings for @lens-protocol/react",
   "repository": {
     "directory": "packages/wagmi",
@@ -43,19 +43,21 @@
     "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/react-web": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
+    "@tanstack/react-query": "^5.18.1",
     "@types/node": "^18.18.12",
     "@types/react": "^18.2.38",
     "prettier": "^2.8.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "5.2.2",
-    "viem": "^1.19.7",
-    "wagmi": "^1.4.12"
+    "viem": "^2.7.6",
+    "wagmi": "^2.5.6"
   },
   "peerDependencies": {
     "@lens-protocol/react-web": "workspace:*",
-    "viem": "^1.19.5",
-    "wagmi": "^1.4.7"
+    "@tanstack/react-query": ">=5.0.0",
+    "viem": "2.x",
+    "wagmi": "^2.5.6"
   },
   "prettier": "@lens-protocol/prettier-config",
   "babel": {

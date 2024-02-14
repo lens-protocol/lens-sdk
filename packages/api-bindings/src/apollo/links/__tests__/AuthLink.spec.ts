@@ -1,10 +1,17 @@
-import { ApolloClient, ApolloError, from, gql, InMemoryCache } from '@apollo/client';
-import { MockedResponse, mockSingleLink } from '@apollo/client/testing';
+import {
+  ApolloClient,
+  ApolloError,
+  // eslint-disable-next-line no-restricted-imports
+  createHttpLink,
+  from,
+  gql,
+  InMemoryCache,
+} from '@apollo/client';
 import { CredentialsExpiredError } from '@lens-protocol/domain/use-cases/authentication';
 import { failure, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 
-import { mockAuthenticationErrorResponse } from '../../__helpers__/mocks';
+import { createHttpJsonResponse, createUnauthenticatedHttpResponse } from '../../__helpers__/mocks';
 import { ApolloServerErrorCode } from '../../errors';
 import { createAuthLink, IAccessTokenStorage } from '../AuthLink';
 
@@ -13,12 +20,10 @@ const query = gql`
     loopback(value: $value)
   }
 `;
-type LoopbackData = { loopback: number };
-type LoopbackVariables = { value: number };
 
 const accessTokenStorage = mock<IAccessTokenStorage>();
 
-function mockLoopbackResponse(): MockedResponse<LoopbackData, LoopbackVariables> {
+function mockLoopbackResponse() {
   const value = Math.random() * 100;
   return {
     request: {
@@ -33,13 +38,20 @@ function mockLoopbackResponse(): MockedResponse<LoopbackData, LoopbackVariables>
   };
 }
 
-function setupTestScenario(mocks: ReadonlyArray<MockedResponse<unknown>>) {
+function setupTestScenario(mocks: ReadonlyArray<Response>) {
+  const fetch = jest.fn();
+
+  mocks.forEach((mock) => {
+    fetch.mockResolvedValueOnce(mock);
+  });
+
   return new ApolloClient({
     cache: new InMemoryCache(),
     link: from([
       createAuthLink(accessTokenStorage),
-      mockSingleLink(...mocks).setOnError((error) => {
-        throw error;
+      createHttpLink({
+        fetch,
+        uri: 'http://localhost:4000/graphql',
       }),
     ]),
   });
@@ -60,8 +72,8 @@ describe(`Given an instance of the ${ApolloClient.name}`, () => {
 
         it(`should refresh the access token and retry the request`, async () => {
           const client = setupTestScenario([
-            mockAuthenticationErrorResponse(mockedResponse.request),
-            mockedResponse,
+            createUnauthenticatedHttpResponse(),
+            createHttpJsonResponse(200, mockedResponse.result),
           ]);
 
           const result = await client.query(mockedResponse.request);
@@ -73,10 +85,10 @@ describe(`Given an instance of the ${ApolloClient.name}`, () => {
         it('should queue any request while refreshing and retry them after the refresh', async () => {
           const queuedResponse = mockLoopbackResponse();
           const client = setupTestScenario([
-            mockAuthenticationErrorResponse(mockedResponse.request),
-            mockAuthenticationErrorResponse(queuedResponse.request),
-            mockedResponse,
-            queuedResponse,
+            createUnauthenticatedHttpResponse(),
+            createUnauthenticatedHttpResponse(),
+            createHttpJsonResponse(200, mockedResponse.result),
+            createHttpJsonResponse(200, queuedResponse.result),
           ]);
 
           const [firstResult, secondResult] = await Promise.all([
@@ -89,7 +101,7 @@ describe(`Given an instance of the ${ApolloClient.name}`, () => {
         });
 
         it('should propagate the error in case the retry fails', async () => {
-          const mockedFailedResponse = mockAuthenticationErrorResponse(mockedResponse.request);
+          const mockedFailedResponse = createUnauthenticatedHttpResponse();
           const client = setupTestScenario([mockedFailedResponse, mockedFailedResponse]);
 
           await expect(client.query(mockedResponse.request)).rejects.toThrowError(ApolloError);
@@ -105,9 +117,7 @@ describe(`Given an instance of the ${ApolloClient.name}`, () => {
         });
 
         it(`should forward the original error result`, async () => {
-          const client = setupTestScenario([
-            mockAuthenticationErrorResponse(mockedResponse.request),
-          ]);
+          const client = setupTestScenario([createUnauthenticatedHttpResponse()]);
 
           await expect(client.query(mockedResponse.request)).rejects.toThrowError(ApolloError);
         });
@@ -115,16 +125,16 @@ describe(`Given an instance of the ${ApolloClient.name}`, () => {
         it(`should let any queued request continue (and possibly fail)`, async () => {
           const queuedResponse = mockLoopbackResponse();
           const client = setupTestScenario([
-            mockAuthenticationErrorResponse(mockedResponse.request),
-            mockAuthenticationErrorResponse(queuedResponse.request),
-            mockAuthenticationErrorResponse(queuedResponse.request),
+            createUnauthenticatedHttpResponse(),
+            createUnauthenticatedHttpResponse(),
+            createUnauthenticatedHttpResponse(),
           ]);
 
           const firstPromise = client.query(mockedResponse.request);
           const secondPromise = client.query(queuedResponse.request);
 
-          await expect(firstPromise).rejects.toThrowError('Authentication required');
-          await expect(secondPromise).rejects.toThrowError('Authentication required');
+          await expect(firstPromise).rejects.toThrow('Authentication required');
+          await expect(secondPromise).rejects.toThrow('Authentication required');
         });
       });
     });

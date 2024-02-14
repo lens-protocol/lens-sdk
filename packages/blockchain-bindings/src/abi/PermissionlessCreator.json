@@ -1,0 +1,66 @@
+[
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "followModule",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes",
+            "name": "followModuleInitData",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct Types.CreateProfileParams",
+        "name": "createProfileParams",
+        "type": "tuple"
+      },
+      {
+        "internalType": "string",
+        "name": "handle",
+        "type": "string"
+      },
+      {
+        "internalType": "address[]",
+        "name": "delegatedExecutors",
+        "type": "address[]"
+      }
+    ],
+    "name": "createProfileWithHandle",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "profileId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "handleId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getProfileWithHandleCreationPrice",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

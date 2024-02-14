@@ -1,21 +1,21 @@
 import { ProfileId, Wallet } from '@lens-protocol/domain/entities';
 import {
-  ICredentialsIssuer,
-  LoginError,
   CredentialsExpiredError,
+  ICredentialsIssuer,
   ICredentialsRenewer,
+  LoginError,
 } from '@lens-protocol/domain/use-cases/authentication';
-import { failure, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
 
 import { AuthApi } from './AuthApi';
-import { Credentials } from './Credentials';
+import { JwtCredentials } from './JwtCredentials';
 
 export class CredentialsFactory implements ICredentialsIssuer, ICredentialsRenewer {
   constructor(private auth: AuthApi) {}
 
   async renewCredentials(
-    credentials: Credentials,
-  ): PromiseResult<Credentials, CredentialsExpiredError> {
+    credentials: JwtCredentials,
+  ): PromiseResult<JwtCredentials, CredentialsExpiredError> {
     if (!credentials.canRefresh()) {
       return failure(new CredentialsExpiredError());
     }
@@ -30,7 +30,7 @@ export class CredentialsFactory implements ICredentialsIssuer, ICredentialsRenew
   async issueCredentials(
     signer: Wallet,
     using?: ProfileId,
-  ): PromiseResult<Credentials, LoginError> {
+  ): PromiseResult<JwtCredentials, LoginError> {
     const challenge = await this.auth.generateChallenge({
       for: using,
       signedBy: signer.address,

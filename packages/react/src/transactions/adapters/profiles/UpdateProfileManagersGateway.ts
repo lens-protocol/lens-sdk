@@ -43,7 +43,7 @@ export class UpdateProfileManagersGateway
     });
   }
 
-  protected async createEncodedData(
+  protected async createCallDetails(
     request: UpdateProfileManagersRequest,
   ): Promise<ContractCallDetails> {
     const result = await this.createTypedData(request);

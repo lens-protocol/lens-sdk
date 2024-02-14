@@ -11,25 +11,25 @@ import { mock32BytesHexString, mockEvmAddress } from '@lens-protocol/shared-kern
 import { mock } from 'jest-mock-extended';
 
 import { AppId } from '../AppId';
-import { ICredentials } from '../Credentials';
+import { Credentials } from '../Credentials';
 import { Challenge, NftOwnershipChallenge } from '../Nft';
 import { Profile, ProfileId } from '../Profile';
 import { PublicationId } from '../Publication';
 import { Signature } from '../Signature';
 import {
+  AnyTransactionRequestModel,
+  DataTransaction,
+  ISignedProtocolCall,
   IUnsignedProtocolCall,
   MetaTransaction,
   NativeTransaction,
   Nonce,
-  ISignedProtocolCall,
+  ProtocolTransactionRequestModel,
   TransactionError,
   TransactionErrorReason,
   TransactionEvent,
   TransactionKind,
-  AnyTransactionRequestModel,
   UnsignedTransaction,
-  ProtocolTransactionRequestModel,
-  DataTransaction,
 } from '../Transactions';
 import { Wallet } from '../Wallet';
 import { ISignedVote, IUnsignedVote, PollId } from '../polls';
@@ -50,8 +50,8 @@ export function mockWallet({ address = mockEvmAddress() }: { address?: EvmAddres
   return mock<Wallet>({ address });
 }
 
-export function mockICredentials(overrides?: Partial<ICredentials>) {
-  return mock<ICredentials>({
+export function mockCredentials(overrides?: Partial<Credentials>) {
+  return mock<Credentials>({
     address: mockEvmAddress(),
     profileId: mockProfileId(),
     ...overrides,

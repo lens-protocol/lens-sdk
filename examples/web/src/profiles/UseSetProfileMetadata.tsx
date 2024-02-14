@@ -3,7 +3,7 @@ import { Profile, useSetProfileMetadata } from '@lens-protocol/react-web';
 import { toast } from 'react-hot-toast';
 
 import { RequireProfileSession } from '../components/auth';
-import { uploadJson } from '../upload';
+import { useIrysUploader } from '../hooks/useIrysUploader';
 import { ProfileCard } from './components/ProfileCard';
 
 type UpdateProfileFormProps = {
@@ -11,6 +11,7 @@ type UpdateProfileFormProps = {
 };
 
 function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
+  const { uploadMetadata } = useIrysUploader();
   const { execute: update, error, loading } = useSetProfileMetadata();
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -40,7 +41,7 @@ function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
       ],
     });
 
-    const metadataURI = await uploadJson(metadata);
+    const metadataURI = await uploadMetadata(metadata);
 
     const result = await update({
       metadataURI,

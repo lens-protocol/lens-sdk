@@ -2,19 +2,19 @@
  * @jest-environment node
  */
 import {
-  SafeApolloClient,
   LensProfileManagerRelayErrorReasonType,
+  SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
-  mockLensApolloClient,
-  mockCreateOnchainPostTypedDataResponse,
   mockCreateOnchainPostTypedDataData,
-  mockRelaySuccessFragment,
-  mockPostOnchainResponse,
+  mockCreateOnchainPostTypedDataResponse,
+  mockLensApolloClient,
   mockLensProfileManagerRelayError,
+  mockPostOnchainResponse,
+  mockRelaySuccessFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction } from '@lens-protocol/domain/entities';
-import { mockNonce, mockCreatePostRequest, mockWallet } from '@lens-protocol/domain/mocks';
+import { mockCreatePostRequest, mockNonce, mockWallet } from '@lens-protocol/domain/mocks';
 import {
   BroadcastingError,
   BroadcastingErrorReason,
@@ -105,7 +105,7 @@ describe(`Given an instance of ${CreateOnChainPostGateway.name}`, () => {
   describe(`when creating an UnsignedTransaction<CreatePostRequest>`, () => {
     const wallet = mockWallet();
 
-    it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+    it(`should resolve with the expected ${UnsignedContractCallTransaction.name}`, async () => {
       const provider = await mockJsonRpcProvider();
       const apolloClient = mockLensApolloClient([
         mockCreateOnchainPostTypedDataResponse({

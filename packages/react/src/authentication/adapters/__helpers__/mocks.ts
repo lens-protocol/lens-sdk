@@ -1,7 +1,7 @@
-import { Credentials } from '../Credentials';
+import { JwtCredentials } from '../JwtCredentials';
 
-export function mockCredentials(): Credentials {
-  return new Credentials(
+export function mockJwtCredentials(): JwtCredentials {
+  return new JwtCredentials(
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB4NTYiLCJldm1BZGRyZXNzIjoiMHgzZkM0N2NkRGNGZDU5ZGNlMjA2OTRiNTc1QUZjMUQ5NDE4Njc3NWIwIiwicm9sZSI6InByb2ZpbGUiLCJhdXRob3JpemF0aW9uSWQiOiIwNDVjNjdiNi1iMzUxLTQ1YzktYTVhNS1jNGFkOTg4OWQ2MmMiLCJpYXQiOjE3MDEzNTMwOTYsImV4cCI6MTcwMTM1NDg5Nn0.O_pQ386uVIU_Pi1aex8K4E9rWxkqXcTELE1HTaD4gwI',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB4NTYiLCJldm1BZGRyZXNzIjoiMHgzZkM0N2NkRGNGZDU5ZGNlMjA2OTRiNTc1QUZjMUQ5NDE4Njc3NWIwIiwicm9sZSI6InByb2ZpbGVfcmVmcmVzaCIsImF1dGhvcml6YXRpb25JZCI6IjA0NWM2N2I2LWIzNTEtNDVjOS1hNWE1LWM0YWQ5ODg5ZDYyYyIsImlhdCI6MTcwMTM1MzA5NiwiZXhwIjoxNzAxOTU3ODk2fQ.i2kzT4I6VBTuZvjly0TEdGN_YsuBaTDopMQU4_398kA',
   );

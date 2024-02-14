@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { useAccount, useConnect } from 'wagmi';
-import { InjectedConnector } from 'wagmi/connectors/injected';
+import { injected } from 'wagmi/connectors';
 
 type RenderFunction = (address: string) => ReactNode;
 
@@ -12,9 +12,7 @@ export type RequireConnectedWalletProps = {
 export function RequireConnectedWallet({ children, message }: RequireConnectedWalletProps) {
   const { address, isConnected, isConnecting } = useAccount();
 
-  const { connect } = useConnect({
-    connector: new InjectedConnector(),
-  });
+  const { connect } = useConnect();
 
   if (isConnected && address) {
     if (typeof children === 'function') {
@@ -26,7 +24,7 @@ export function RequireConnectedWallet({ children, message }: RequireConnectedWa
   return (
     <div>
       {message && <p>{message}</p>}
-      <button disabled={isConnecting} onClick={() => connect()}>
+      <button disabled={isConnecting} onClick={() => connect({ connector: injected() })}>
         Connect first
       </button>
     </div>

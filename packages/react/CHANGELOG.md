@@ -1,5 +1,21 @@
 # @lens-protocol/react
 
+## 2.0.0-alpha.31
+
+### Minor Changes
+
+- da4c26e34: **feat:** Added `useLazyProfilesManaged` hook
+- 9c7fd3ee3: **feat:** `useCreateProfile` hook
+
+### Patch Changes
+
+- 66c6df157: **fixed:** make `useAccessToken` reactive
+- Updated dependencies [66c6df157]
+- Updated dependencies [9c7fd3ee3]
+  - @lens-protocol/api-bindings@0.11.0-alpha.28
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.22
+  - @lens-protocol/domain@0.11.0-alpha.21
+
 ## 2.0.0-alpha.30
 
 ### Minor Changes

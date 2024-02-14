@@ -1,21 +1,21 @@
 import {
+  CredentialsStorageSchema,
   IStorage,
   IStorageProvider,
+  PersistedCredentials,
   Storage,
   StorageSubscriber,
   StorageSubscription,
-  CredentialsStorageSchema,
-  PersistedCredentials,
 } from '@lens-protocol/storage';
 
-import { Credentials } from './Credentials';
+import { JwtCredentials } from './JwtCredentials';
 
 /**
  * Stores auth credentials.
  * Access token is kept in memory.
  * Refresh token is persisted permanently.
  */
-export class CredentialsStorage implements IStorage<Credentials> {
+export class CredentialsStorage implements IStorage<JwtCredentials> {
   refreshTokenStorage: IStorage<PersistedCredentials>;
   accessToken: string | null = null;
 
@@ -24,13 +24,13 @@ export class CredentialsStorage implements IStorage<Credentials> {
     this.refreshTokenStorage = Storage.createForSchema(authStorageSchema, storageProvider);
   }
 
-  async set({ accessToken, refreshToken }: Credentials): Promise<void> {
+  async set({ accessToken, refreshToken }: JwtCredentials): Promise<void> {
     this.accessToken = accessToken;
 
     await this.refreshTokenStorage.set({ refreshToken });
   }
 
-  async get(): Promise<Credentials | null> {
+  async get(): Promise<JwtCredentials | null> {
     const refreshToken = await this.getRefreshToken();
 
     if (!refreshToken) {
@@ -39,7 +39,7 @@ export class CredentialsStorage implements IStorage<Credentials> {
 
     const accessToken = this.getAccessToken();
 
-    return new Credentials(accessToken, refreshToken);
+    return new JwtCredentials(accessToken, refreshToken);
   }
 
   async reset(): Promise<void> {
@@ -47,7 +47,7 @@ export class CredentialsStorage implements IStorage<Credentials> {
     await this.refreshTokenStorage.reset();
   }
 
-  subscribe(_: StorageSubscriber<Credentials>): StorageSubscription {
+  subscribe(_: StorageSubscriber<JwtCredentials>): StorageSubscription {
     throw new Error('Method not implemented.');
   }
 

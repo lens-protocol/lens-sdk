@@ -76,7 +76,7 @@ export class UnblockProfilesGateway
     });
   }
 
-  protected async createEncodedData(request: UnblockProfilesRequest): Promise<ContractCallDetails> {
+  protected async createCallDetails(request: UnblockProfilesRequest): Promise<ContractCallDetails> {
     const result = await this.createTypedData(request);
     return this.createSetBlockStatusCallDetails(result);
   }

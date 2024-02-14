@@ -1,5 +1,12 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.31
+
+### Patch Changes
+
+- Updated dependencies [9c7fd3ee3]
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.22
+
 ## 2.0.0-alpha.30
 
 ### Minor Changes

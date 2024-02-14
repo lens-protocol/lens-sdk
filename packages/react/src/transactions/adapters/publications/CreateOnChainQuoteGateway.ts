@@ -1,15 +1,15 @@
 import {
-  SafeApolloClient,
-  omitTypename,
-  RelaySuccess,
-  QuoteOnchainData,
-  QuoteOnchainVariables,
-  QuoteOnchainDocument,
-  OnchainQuoteRequest,
   CreateOnchainQuoteBroadcastItemResult,
   CreateOnchainQuoteTypedDataData,
-  CreateOnchainQuoteTypedDataVariables,
   CreateOnchainQuoteTypedDataDocument,
+  CreateOnchainQuoteTypedDataVariables,
+  OnchainQuoteRequest,
+  QuoteOnchainData,
+  QuoteOnchainDocument,
+  QuoteOnchainVariables,
+  RelaySuccess,
+  SafeApolloClient,
+  omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -17,7 +17,6 @@ import { CreateQuoteRequest } from '@lens-protocol/domain/use-cases/publications
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -36,8 +35,7 @@ export class CreateOnChainQuoteGateway
   extends AbstractContractCallGateway<CreateQuoteRequest>
   implements
     IDelegatedTransactionGateway<CreateQuoteRequest>,
-    ISignedOnChainGateway<CreateQuoteRequest>,
-    IPaidTransactionGateway<CreateQuoteRequest>
+    ISignedOnChainGateway<CreateQuoteRequest>
 {
   constructor(
     config: LensConfig,
@@ -80,7 +78,7 @@ export class CreateOnChainQuoteGateway
     });
   }
 
-  protected override async createEncodedData(
+  protected override async createCallDetails(
     request: CreateQuoteRequest,
   ): Promise<ContractCallDetails> {
     const input = this.resolveOnchainQuoteRequest(request);

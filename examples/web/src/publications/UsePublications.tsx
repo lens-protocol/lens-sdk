@@ -1,10 +1,10 @@
 import { PublicationType, profileId, usePublications } from '@lens-protocol/react-web';
 import { useState } from 'react';
 
+import { PublicationCard } from '../components/cards';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
-import { PublicationCard } from './components/PublicationCard';
 
 const allPublicationType = [PublicationType.Comment, PublicationType.Post, PublicationType.Mirror];
 

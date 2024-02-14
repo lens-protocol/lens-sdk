@@ -17,7 +17,6 @@ import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publication
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
@@ -34,8 +33,7 @@ export class CreateOnChainMirrorGateway
   extends AbstractContractCallGateway<CreateMirrorRequest>
   implements
     IDelegatedTransactionGateway<CreateMirrorRequest>,
-    ISignedOnChainGateway<CreateMirrorRequest>,
-    IPaidTransactionGateway<CreateMirrorRequest>
+    ISignedOnChainGateway<CreateMirrorRequest>
 {
   constructor(
     config: LensConfig,
@@ -78,7 +76,7 @@ export class CreateOnChainMirrorGateway
     });
   }
 
-  protected override async createEncodedData(
+  protected override async createCallDetails(
     request: CreateMirrorRequest,
   ): Promise<ContractCallDetails> {
     const input = this.resolveOnchainMirrorRequest(request);

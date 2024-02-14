@@ -1,8 +1,8 @@
 import { profileId, useLazyPublications } from '@lens-protocol/react-web';
 import { toast } from 'react-hot-toast';
 
+import { PublicationCard } from '../components/cards';
 import { ErrorMessage } from '../components/error/ErrorMessage';
-import { PublicationCard } from './components/PublicationCard';
 
 export function UseLazyPublications() {
   const { called, data: publications, error, loading, execute } = useLazyPublications();

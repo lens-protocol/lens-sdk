@@ -5,15 +5,15 @@ import {
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
-  ICredentialsWriter,
   ICredentialsReader,
+  ICredentialsWriter,
   IResettableCredentialsGateway,
   LogoutReason,
 } from '@lens-protocol/domain/use-cases/authentication';
 import { never } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
 
-import { Credentials } from './Credentials';
+import { JwtCredentials } from './JwtCredentials';
 
 type RevokeSessionRequest = {
   authorizationId: string;
@@ -23,7 +23,7 @@ export class CredentialsGateway
   implements ICredentialsWriter, ICredentialsReader, IResettableCredentialsGateway
 {
   constructor(
-    private readonly credentialsStorage: IStorage<Credentials>,
+    private readonly credentialsStorage: IStorage<JwtCredentials>,
     private apolloClient: SafeApolloClient,
   ) {}
 
@@ -31,7 +31,7 @@ export class CredentialsGateway
     return this.credentialsStorage.get();
   }
 
-  async save(credentials: Credentials) {
+  async save(credentials: JwtCredentials) {
     await this.credentialsStorage.set(credentials);
   }
 

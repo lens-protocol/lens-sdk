@@ -6,16 +6,18 @@ import { when } from 'jest-when';
 import waitFor from 'wait-for-expect';
 
 import {
+  AnyTransactionRequestModel,
+  DataTransaction,
+  ISignedProtocolCall,
   IUnsignedProtocolCall,
   MetaTransaction,
   NativeTransaction,
   Nonce,
-  ISignedProtocolCall,
-  TransactionKind,
-  AnyTransactionRequestModel,
   ProtocolTransactionRequestModel,
-  DataTransaction,
   TransactionError,
+  TransactionKind,
+  UnsignedTransaction,
+  Wallet,
 } from '../../../entities';
 import { mockNonce } from '../../../entities/__helpers__/mocks';
 import { BroadcastingError, BroadcastingErrorReason } from '../BroadcastingError';
@@ -23,6 +25,7 @@ import {
   DelegableProtocolTransactionRequestModel,
   IDelegatedTransactionGateway,
 } from '../DelegableSigning';
+import { IPaidTransactionGateway } from '../IPaidTransactionGateway';
 import { IMomokaRelayer, ISignedMomokaGateway } from '../SignedMomoka';
 import {
   IMetaTransactionNonceGateway,
@@ -182,4 +185,22 @@ export function mockTokenAllowanceRequest(
 
 export function mockAnyBroadcastingError() {
   return new BroadcastingError(BroadcastingErrorReason.UNKNOWN);
+}
+
+export function mockIPaidTransactionGateway<T extends AnyTransactionRequestModel>({
+  request,
+  wallet,
+  unsignedTransaction,
+}: {
+  request: T;
+  wallet: Wallet;
+  unsignedTransaction: UnsignedTransaction<T>;
+}): IPaidTransactionGateway<T> {
+  const gateway = mock<IPaidTransactionGateway<T>>();
+
+  when(gateway.createUnsignedTransaction)
+    .calledWith(request, wallet)
+    .mockResolvedValue(unsignedTransaction);
+
+  return gateway;
 }

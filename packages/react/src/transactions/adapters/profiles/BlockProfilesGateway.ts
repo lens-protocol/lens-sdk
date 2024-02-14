@@ -95,7 +95,7 @@ export class BlockProfilesGateway
     return success(data.result);
   }
 
-  protected async createEncodedData(request: BlockProfilesRequest): Promise<ContractCallDetails> {
+  protected async createCallDetails(request: BlockProfilesRequest): Promise<ContractCallDetails> {
     const result = await this.createTypedData(request);
     return this.createSetBlockStatusCallDetails(result);
   }
