@@ -5,6 +5,14 @@
   "name": "Lens SDK Reference",
   "out": "docs",
   "readme": "none",
-  "plugin": ["@mxssfd/typedoc-theme"],
-  "theme": "my-theme"
+  "plugin": ["typedoc-material-theme", "typedoc-plugin-extras"],
+  "themeColor": "#c3e4cd",
+  "customCss": "assets/docs.css",
+  "navigation": {
+    "includeCategories": false,
+    "includeGroups": true,
+    "includeFolders": false
+  },
+  "categorizeByGroup": true,
+  "hideGenerator": true
 }

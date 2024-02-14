@@ -10,6 +10,11 @@ import { InMemoryStorageProvider } from '@lens-protocol/storage';
 import * as core from '../LensClient';
 import { Gated } from './Gated';
 
+/**
+ * The configuration for the LensClient
+ *
+ * @group LensClient
+ */
 export type LensClientConfig = core.LensClientConfig & {
   /**
    * The authentication configuration to use for authenticating with the Lit Protocol network.
@@ -73,6 +78,8 @@ export type LensClientConfig = core.LensClientConfig & {
  *   signer: await provider.getSigner(),
  * });
  * ```
+ *
+ * @group LensClient
  */
 export class LensClient extends core.LensClient {
   private _gated: Gated;

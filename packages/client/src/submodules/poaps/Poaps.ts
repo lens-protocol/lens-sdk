@@ -10,7 +10,7 @@ import type {
 } from '../../graphql/types.generated';
 import {
   PaginatedResult,
-  buildRequestFromConfig,
+  commonQueryVariables,
   buildPaginatedQueryResult,
   sdkAuthHeaderWrapper,
 } from '../../helpers';
@@ -79,7 +79,7 @@ export class Poaps {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.PoapHolders({
         request: currRequest,
-        ...buildRequestFromConfig(this.context),
+        ...commonQueryVariables(this.context),
       });
 
       return result.data.result;

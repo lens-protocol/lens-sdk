@@ -15,6 +15,7 @@ import {
 import {
   PaginatedResult,
   buildPaginatedQueryResult,
+  commonQueryVariables,
   requireAuthHeaders,
   sdkAuthHeaderWrapper,
 } from '../../helpers';
@@ -38,7 +39,7 @@ export class Modules {
    * @internal
    */
   constructor(
-    context: LensContext,
+    private readonly context: LensContext,
     private readonly authentication: Authentication,
   ) {
     const client = new FetchGraphQLClient(context);
@@ -92,7 +93,10 @@ export class Modules {
     CredentialsExpiredError | NotAuthenticatedError
   > {
     return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.ApprovedModuleAllowanceAmount({ request }, headers);
+      const result = await this.sdk.ApprovedModuleAllowanceAmount(
+        { request, ...commonQueryVariables(this.context) },
+        headers,
+      );
 
       return result.data.result;
     });

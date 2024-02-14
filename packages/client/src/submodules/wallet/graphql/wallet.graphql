@@ -12,11 +12,12 @@ query OwnedHandles($request: OwnedHandlesRequest!) {
 
 query ProfilesManaged(
   $request: ProfilesManagedRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
+  $profileMetadataSource: AppId = null
+  $rateRequest: RateRequest!
 ) {
   result: profilesManaged(request: $request) {
     items {
@@ -61,14 +62,39 @@ query ClaimableProfiles {
 
 query LastLoggedInProfile(
   $request: LastLoggedInProfileRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
+  $profileMetadataSource: AppId = null
+  $rateRequest: RateRequest!
 ) {
   result: lastLoggedInProfile(request: $request) {
     ...Profile
+  }
+}
+
+fragment UserCurrentRateLimit on UserCurrentRateLimit {
+  hourAllowanceLeft
+  hourAllowanceUsed
+  hourAllowance
+  dayAllowanceLeft
+  dayAllowanceUsed
+  dayAllowance
+}
+
+fragment UserCurrentRateLimitResult on UserCurrentRateLimitResult {
+  momoka {
+    ...UserCurrentRateLimit
+  }
+  onchain {
+    ...UserCurrentRateLimit
+  }
+}
+
+query UserRateLimit($request: UserCurrentRateLimitRequest!) {
+  result: userRateLimit(request: $request) {
+    ...UserCurrentRateLimitResult
   }
 }
 

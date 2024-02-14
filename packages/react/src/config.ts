@@ -4,17 +4,17 @@ import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/sto
 
 import { EnvironmentConfig } from './environments';
 import { RequiredSigner } from './wallet/adapters/ConcreteWallet';
-import { IProviderBinding, GetProvider } from './wallet/infrastructure/ProviderFactory';
-import { ISignerBinding, GetSigner } from './wallet/infrastructure/SignerFactory';
+import { GetProvider, IProviderBinding } from './wallet/infrastructure/ProviderFactory';
+import { GetSigner, ISignerBinding } from './wallet/infrastructure/SignerFactory';
 
 export type {
-  QueryParams,
-  ILogger,
   GetProvider,
   GetSigner,
-  RequiredSigner,
+  ILogger,
   IObservableStorageProvider,
   IStorageProvider,
+  QueryParams,
+  RequiredSigner,
 };
 
 export { SupportedFiatType } from '@lens-protocol/api-bindings';
@@ -22,9 +22,11 @@ export { SupportedFiatType } from '@lens-protocol/api-bindings';
 export interface IBindings extends ISignerBinding, IProviderBinding {}
 
 /**
- * `<LensProvider>` configuration
+ * `<BaseProvider>` configuration
+ *
+ * @internal
  */
-export type LensConfig = {
+export type BaseConfig = {
   /**
    * Provides integration with the ethers.js Signer and Provider
    */
@@ -53,9 +55,7 @@ export type LensConfig = {
    */
   storage: IStorageProvider | IObservableStorageProvider;
   /**
-   * The common query params allows you customize some aspect of the returned data.
-   *
-   * @defaultValue see individual fields of {@link QueryParams}
+   * The common query params allow you customize some aspect of the returned data.
    */
   params?: QueryParams;
 };

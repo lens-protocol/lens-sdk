@@ -13,7 +13,7 @@
 /**
  * Components
  */
-export * from './LensProvider';
+export * from './BaseProvider';
 
 /**
  * Hooks
@@ -32,16 +32,16 @@ export * from './wallet';
 /**
  * Domain essentials
  */
+export type { AppId, NftId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
 export {
   Amount,
-  WellKnownSymbols,
   ChainType,
+  WellKnownSymbols,
+  erc20,
   ether,
   matic,
-  erc20,
   usd,
 } from '@lens-protocol/shared-kernel';
-export type { EvmAddress, Url } from '@lens-protocol/shared-kernel';
 export type {
   AmountValue,
   Asset,
@@ -54,25 +54,26 @@ export type {
   Erc20Amount,
   Erc20Info,
   Ether,
-  Kind,
-  NativeType,
+  EvmAddress,
   Failure,
   Fiat,
   FiatAmount,
   IEquatableError,
+  Kind,
   Matic,
+  NativeType,
   PromiseResult,
   Result,
   Success,
+  Url,
 } from '@lens-protocol/shared-kernel';
-export type { AppId, NftId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
 
 /**
  * Config
  */
 export * from './chains';
-export * from './environments';
 export * from './config';
+export * from './environments';
 
 /**
  * Hooks helpers types
@@ -97,8 +98,8 @@ export {
   ComparisonOperatorConditionType,
   CustomFiltersType,
   ExploreProfilesOrderByType,
-  ExplorePublicationsOrderByType,
   ExplorePublicationType,
+  ExplorePublicationsOrderByType,
   FeedEventItemType,
   FollowModuleType,
   LimitType,
@@ -122,7 +123,7 @@ export {
 /**
  * Common errors
  */
-export { InvariantError } from '@lens-protocol/shared-kernel';
+export { UnspecifiedError } from '@lens-protocol/api-bindings';
 export {
   InsufficientGasError,
   PendingSigningRequestError,
@@ -134,17 +135,17 @@ export {
   BroadcastingError,
   BroadcastingErrorReason,
 } from '@lens-protocol/domain/use-cases/transactions';
-export { NotFoundError } from './NotFoundError';
 export {
   InsufficientAllowanceError,
   InsufficientFundsError,
 } from '@lens-protocol/domain/use-cases/wallets';
-export { UnspecifiedError } from '@lens-protocol/api-bindings';
+export { InvariantError } from '@lens-protocol/shared-kernel';
+export { NotFoundError } from './NotFoundError';
 
 /**
  * Helpers
  */
-export * from './utils';
+export { erc20Amount } from '@lens-protocol/api-bindings';
 export * from './ConsoleLogger';
 export { useSharedDependencies } from './shared';
-export { erc20Amount } from '@lens-protocol/api-bindings';
+export * from './utils';

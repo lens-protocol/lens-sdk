@@ -5,7 +5,7 @@ import type { ProfileFragment } from '../../graphql/fragments.generated';
 import { PrimaryPublicationFragment } from '../../graphql/types';
 import { ProfileSearchRequest, PublicationSearchRequest } from '../../graphql/types.generated';
 import {
-  buildRequestFromConfig,
+  commonQueryVariables,
   buildPaginatedQueryResult,
   PaginatedResult,
   sdkAuthHeaderWrapper,
@@ -48,7 +48,7 @@ export class Search {
     return buildPaginatedQueryResult(async (currRequest) => {
       const response = await this.sdk.SearchProfiles({
         request: currRequest,
-        ...buildRequestFromConfig(this.context),
+        ...commonQueryVariables(this.context),
       });
       return response.data.result;
     }, request);
@@ -73,7 +73,7 @@ export class Search {
     return buildPaginatedQueryResult(async (currRequest) => {
       const response = await this.sdk.SearchPublications({
         request: currRequest,
-        ...buildRequestFromConfig(this.context),
+        ...commonQueryVariables(this.context),
       });
       return response.data.result;
     }, request);

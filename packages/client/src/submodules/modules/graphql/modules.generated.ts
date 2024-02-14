@@ -59,7 +59,7 @@ export type CurrenciesQuery = {
 
 export type ApprovedModuleAllowanceAmountQueryVariables = Types.Exact<{
   request: Types.ApprovedModuleAllowanceAmountRequest;
-  rateRequest?: Types.InputMaybe<Types.RateRequest>;
+  rateRequest: Types.RateRequest;
 }>;
 
 export type ApprovedModuleAllowanceAmountQuery = {
@@ -622,16 +622,9 @@ export const ApprovedModuleAllowanceAmountDocument = {
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'RateRequest' } },
-          defaultValue: {
-            kind: 'ObjectValue',
-            fields: [
-              {
-                kind: 'ObjectField',
-                name: { kind: 'Name', value: 'for' },
-                value: { kind: 'EnumValue', value: 'USD' },
-              },
-            ],
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'RateRequest' } },
           },
         },
       ],

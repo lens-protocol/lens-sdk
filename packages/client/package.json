@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/client",
-  "version": "2.0.0-alpha.31",
+  "version": "2.0.0-alpha.32",
   "description": "Low level Lens API client",
   "repository": {
     "directory": "packages/client",
@@ -115,5 +115,10 @@
   },
   "peerDependencies": {
     "@lens-protocol/metadata": "^1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@lens-protocol/metadata": {
+      "optional": true
+    }
   }
 }

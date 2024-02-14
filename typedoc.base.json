@@ -6,7 +6,7 @@
   "excludeNotDocumented": false,
   "excludePrivate": true,
   "excludeProtected": true,
-  "disableSources": true,
-  "gitRevision": "develop",
+  "disableSources": false,
+  "gitRevision": "main",
   "hideGenerator": true
 }

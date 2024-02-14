@@ -1,42 +1,16 @@
 /**
+ * The primary entry point of the `@lens-protocol/client` package.
+ *
+ * See {@link Gated} for token-gated support.
+ *
  * @module Core
- *
- * @example
- * Development example:
- * ```ts
- * import { LensClient, development } from '@lens-protocol/client';
- *
- * const client = new LensClient({
- *   environment: development
- * });
- * ```
- *
- * @example
- * Production example:
- * ```ts
- * import { LensClient, production } from '@lens-protocol/client';
- *
- * const client = new LensClient({
- *   environment: production
- * });
- * ```
- *
- * @example
- * Use [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API) to persist authentication state:
- * ```ts
- * const client = new LensClient({
- *   environment: production,
- *
- *   storage: window.localStorage,
- * });
- * ```
  */
 
 export * from './LensClient';
+export * from './authentication';
 export * from './environments';
 export * from './errors';
 export * from './graphql';
-export * from './authentication';
 export * from './submodules';
 
 // types
@@ -54,6 +28,6 @@ export type {
   Success,
 } from '@lens-protocol/shared-kernel';
 export type { IStorageProvider, InMemoryStorageProvider } from '@lens-protocol/storage';
+export type { PaginatedQueryData, PaginatedResult } from './helpers/buildPaginatedQueryResult';
+export type { AppId, MediaTransformsConfig, QueryParams } from './queryParams';
 export type { TypedData, TypedDataResponse } from './types';
-export type { MediaTransformsConfig } from './context';
-export type { PaginatedResult, PaginatedQueryData } from './helpers/buildPaginatedQueryResult';

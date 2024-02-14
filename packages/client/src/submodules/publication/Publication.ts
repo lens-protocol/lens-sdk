@@ -35,7 +35,7 @@ import {
   ValidatePublicationMetadataRequest,
 } from '../../graphql/types.generated';
 import {
-  buildRequestFromConfig,
+  commonQueryVariables,
   buildPaginatedQueryResult,
   PaginatedResult,
   requireAuthHeaders,
@@ -127,7 +127,7 @@ export class Publication {
   ): Promise<AnyPublicationFragment | null> {
     const result = await this.sdk.Publication({
       request,
-      ...buildRequestFromConfig(this.context),
+      ...commonQueryVariables(this.context),
       ...options,
     });
 
@@ -157,7 +157,7 @@ export class Publication {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.Publications({
         request: currRequest,
-        ...buildRequestFromConfig(this.context),
+        ...commonQueryVariables(this.context),
         ...options,
       });
 
