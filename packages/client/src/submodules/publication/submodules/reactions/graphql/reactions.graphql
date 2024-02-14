@@ -22,11 +22,12 @@ fragment ProfileWhoReactedResult on ProfileWhoReactedResult {
 
 query WhoReactedPublication(
   $request: WhoReactedPublicationRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
+  $profileMetadataSource: AppId = null
+  $rateRequest: RateRequest!
 ) {
   result: whoReactedPublication(request: $request) {
     items {

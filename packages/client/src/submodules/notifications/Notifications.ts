@@ -7,7 +7,7 @@ import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import type { NotificationRequest } from '../../graphql/types.generated';
 import {
   PaginatedResult,
-  buildRequestFromConfig,
+  commonQueryVariables,
   buildPaginatedQueryResult,
   requireAuthHeaders,
   sdkAuthHeaderWrapper,
@@ -76,7 +76,7 @@ export class Notifications {
         const result = await this.sdk.Notifications(
           {
             request: currRequest,
-            ...buildRequestFromConfig(this.context),
+            ...commonQueryVariables(this.context),
           },
           headers,
         );

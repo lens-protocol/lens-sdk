@@ -7,8 +7,9 @@ import { sdkAuthHeaderWrapper } from './sdkAuthHeaderWrapper';
 
 const context: LensContext = {
   environment: buildTestEnvironment(),
-  mediaTransforms: {},
   storage: new InMemoryStorageProvider(),
+  mediaTransforms: {},
+  params: {},
 };
 
 describe(`Given the "${sdkAuthHeaderWrapper.name}" helper`, () => {

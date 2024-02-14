@@ -7,7 +7,7 @@ import type {
   RevenueFromPublicationsRequest,
 } from '../../graphql/types.generated';
 import {
-  buildRequestFromConfig,
+  commonQueryVariables,
   buildPaginatedQueryResult,
   PaginatedResult,
   sdkAuthHeaderWrapper,
@@ -54,6 +54,7 @@ export class Revenue {
   async fromFollow(request: FollowRevenueRequest): Promise<RevenueAggregateFragment[]> {
     const result = await this.sdk.FollowRevenues({
       request,
+      ...commonQueryVariables(this.context),
     });
 
     return result.data.result.revenues;
@@ -77,7 +78,7 @@ export class Revenue {
   ): Promise<PublicationRevenueFragment | null> {
     const result = await this.sdk.RevenueFromPublication({
       request,
-      ...buildRequestFromConfig(this.context),
+      ...commonQueryVariables(this.context),
     });
 
     return result.data.result;
@@ -102,7 +103,7 @@ export class Revenue {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.RevenueFromPublications({
         request: currRequest,
-        ...buildRequestFromConfig(this.context),
+        ...commonQueryVariables(this.context),
       });
 
       return result.data.result;

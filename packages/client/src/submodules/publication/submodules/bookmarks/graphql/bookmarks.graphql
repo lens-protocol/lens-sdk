@@ -1,15 +1,17 @@
 # queries
 query PublicationBookmarks(
   $request: PublicationBookmarksRequest!
-  $publicationImageTransform: ImageTransform = {}
-  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-  $publicationStatsInput: PublicationStatsInput! = {}
-  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $publicationImageSmallTransform: ImageTransform!
+  $publicationImageMediumTransform: ImageTransform!
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs
+  $publicationStatsInput: PublicationStatsInput!
+  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs!
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
+  $profileMetadataSource: AppId = null
+  $rateRequest: RateRequest!
 ) {
   result: publicationBookmarks(request: $request) {
     items {

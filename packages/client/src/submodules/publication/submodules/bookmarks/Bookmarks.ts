@@ -10,7 +10,7 @@ import type {
   PublicationBookmarksRequest,
 } from '../../../../graphql/types.generated';
 import {
-  buildRequestFromConfig,
+  commonQueryVariables,
   buildPaginatedQueryResult,
   PaginatedResult,
   requireAuthHeaders,
@@ -61,7 +61,7 @@ export class Bookmarks {
         const result = await this.sdk.PublicationBookmarks(
           {
             request: currRequest,
-            ...buildRequestFromConfig(this.context),
+            ...commonQueryVariables(this.context),
           },
           headers,
         );

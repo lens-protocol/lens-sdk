@@ -16,10 +16,11 @@ import type {
   LastLoggedInProfileRequest,
   OwnedHandlesRequest,
   ProfilesManagedRequest,
+  UserCurrentRateLimitRequest,
 } from '../../graphql/types.generated';
 import {
   PaginatedResult,
-  buildRequestFromConfig,
+  commonQueryVariables,
   buildPaginatedQueryResult,
   requireAuthHeaders,
   sdkAuthHeaderWrapper,
@@ -30,6 +31,7 @@ import {
   CreateProfileWithHandleErrorResultFragment,
   getSdk,
   Sdk,
+  UserCurrentRateLimitResultFragment,
   UserSigNoncesFragment,
 } from './graphql/wallet.generated';
 
@@ -92,7 +94,7 @@ export class Wallet {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.ProfilesManaged({
         request: currRequest,
-        ...buildRequestFromConfig(this.context),
+        ...commonQueryVariables(this.context),
       });
 
       return result.data.result;
@@ -227,9 +229,29 @@ export class Wallet {
   async lastLoggedInProfile(request: LastLoggedInProfileRequest): Promise<ProfileFragment | null> {
     const result = await this.sdk.LastLoggedInProfile({
       request,
-      ...buildRequestFromConfig(this.context),
+      ...commonQueryVariables(this.context),
     });
 
+    return result.data.result;
+  }
+
+  /**
+   * Fetch the current sponsored transaction limits for the requested address and profile.
+   *
+   * @param request - Request object for the query
+   * @returns Current rate limits
+   *
+   * @example
+   * ```ts
+   * const result = await client.wallet.rateLimits({
+   *   userAddress: '0xa5653e88D9c352387deDdC79bcf99f0ada62e9c6',
+   * });
+   * ```
+   */
+  async rateLimits(
+    request: UserCurrentRateLimitRequest,
+  ): Promise<UserCurrentRateLimitResultFragment> {
+    const result = await this.sdk.UserRateLimit({ request });
     return result.data.result;
   }
 }

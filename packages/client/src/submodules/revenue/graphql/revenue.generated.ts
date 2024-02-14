@@ -31,15 +31,17 @@ export type PublicationRevenueFragment = {
 
 export type RevenueFromPublicationsQueryVariables = Types.Exact<{
   request: Types.RevenueFromPublicationsRequest;
-  publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationImageSmallTransform: Types.ImageTransform;
+  publicationImageMediumTransform: Types.ImageTransform;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
-  publicationStatsInput?: Types.PublicationStatsInput;
-  publicationStatsCountOpenActionArgs?: Types.PublicationStatsCountOpenActionArgs;
-  profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
-  profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationStatsInput: Types.PublicationStatsInput;
+  publicationStatsCountOpenActionArgs: Types.PublicationStatsCountOpenActionArgs;
+  profileCoverTransform: Types.ImageTransform;
+  profilePictureTransform: Types.ImageTransform;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
   profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
-  rateRequest?: Types.InputMaybe<Types.RateRequest>;
+  profileMetadataSource?: Types.InputMaybe<Types.Scalars['AppId']['input']>;
+  rateRequest: Types.RateRequest;
 }>;
 
 export type RevenueFromPublicationsQuery = {
@@ -48,22 +50,24 @@ export type RevenueFromPublicationsQuery = {
 
 export type RevenueFromPublicationQueryVariables = Types.Exact<{
   request: Types.RevenueFromPublicationRequest;
-  publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationImageSmallTransform: Types.ImageTransform;
+  publicationImageMediumTransform: Types.ImageTransform;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
-  publicationStatsInput?: Types.PublicationStatsInput;
-  publicationStatsCountOpenActionArgs?: Types.PublicationStatsCountOpenActionArgs;
-  profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
-  profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationStatsInput: Types.PublicationStatsInput;
+  publicationStatsCountOpenActionArgs: Types.PublicationStatsCountOpenActionArgs;
+  profileCoverTransform: Types.ImageTransform;
+  profilePictureTransform: Types.ImageTransform;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
   profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
-  rateRequest?: Types.InputMaybe<Types.RateRequest>;
+  profileMetadataSource?: Types.InputMaybe<Types.Scalars['AppId']['input']>;
+  rateRequest: Types.RateRequest;
 }>;
 
 export type RevenueFromPublicationQuery = { result: PublicationRevenueFragment | null };
 
 export type FollowRevenuesQueryVariables = Types.Exact<{
   request: Types.FollowRevenueRequest;
-  rateRequest?: Types.InputMaybe<Types.RateRequest>;
+  rateRequest: Types.RateRequest;
 }>;
 
 export type FollowRevenuesQuery = { result: { revenues: Array<RevenueAggregateFragment> } };
@@ -1190,73 +1194,34 @@ export const PublicationRevenueFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'metadata' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'appId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'profileMetadataSource' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'useFallback' },
+                      value: { kind: 'BooleanValue', value: true },
+                    },
+                  ],
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'picture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'ImageSet' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'ProfilePictureSet' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'NftImage' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'coverPicture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'attributes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-                    ],
-                  },
-                },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMetadata' } },
               ],
             },
           },
@@ -1400,6 +1365,75 @@ export const PublicationRevenueFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMetadata' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMetadata' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'picture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ProfilePictureSet' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NftImage' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'coverPicture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'attributes' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'ProfilePictureSet' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
       selectionSet: {
@@ -1417,6 +1451,25 @@ export const PublicationRevenueFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -1883,6 +1936,72 @@ export const PublicationRevenueFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'canCollect' },
+            name: { kind: 'Name', value: 'canAct' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'hasCollected' },
+            name: { kind: 'Name', value: 'hasActed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OptimisticStatusResult' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
             alias: { kind: 'Name', value: 'hasUpvoted' },
             name: { kind: 'Name', value: 'hasReacted' },
             arguments: [
@@ -1926,6 +2045,7 @@ export const PublicationRevenueFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hasQuoted' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -2245,6 +2365,7 @@ export const PublicationRevenueFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -2252,7 +2373,44 @@ export const PublicationRevenueFragmentDoc = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],
@@ -6925,10 +7083,23 @@ export const RevenueFromPublicationsDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'publicationImageTransform' },
+            name: { kind: 'Name', value: 'publicationImageSmallTransform' },
           },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
         },
         {
           kind: 'VariableDefinition',
@@ -6940,7 +7111,6 @@ export const RevenueFromPublicationsDocument = {
             kind: 'NamedType',
             name: { kind: 'Name', value: 'PublicationOperationsActedArgs' },
           },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
         },
         {
           kind: 'VariableDefinition',
@@ -6949,7 +7119,6 @@ export const RevenueFromPublicationsDocument = {
             kind: 'NonNullType',
             type: { kind: 'NamedType', name: { kind: 'Name', value: 'PublicationStatsInput' } },
           },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
         },
         {
           kind: 'VariableDefinition',
@@ -6964,25 +7133,27 @@ export const RevenueFromPublicationsDocument = {
               name: { kind: 'Name', value: 'PublicationStatsCountOpenActionArgs' },
             },
           },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileCoverTransform' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profilePictureTransform' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileStatsArg' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileStatsArg' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
         },
         {
           kind: 'VariableDefinition',
@@ -6994,21 +7165,19 @@ export const RevenueFromPublicationsDocument = {
             kind: 'NamedType',
             name: { kind: 'Name', value: 'ProfileStatsCountOpenActionArgs' },
           },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
+          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'RateRequest' } },
-          defaultValue: {
-            kind: 'ObjectValue',
-            fields: [
-              {
-                kind: 'ObjectField',
-                name: { kind: 'Name', value: 'for' },
-                value: { kind: 'EnumValue', value: 'USD' },
-              },
-            ],
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'RateRequest' } },
           },
         },
       ],
@@ -8051,73 +8220,34 @@ export const RevenueFromPublicationsDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'metadata' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'appId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'profileMetadataSource' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'useFallback' },
+                      value: { kind: 'BooleanValue', value: true },
+                    },
+                  ],
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'picture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'ImageSet' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'ProfilePictureSet' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'NftImage' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'coverPicture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'attributes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-                    ],
-                  },
-                },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMetadata' } },
               ],
             },
           },
@@ -8261,6 +8391,75 @@ export const RevenueFromPublicationsDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMetadata' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMetadata' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'picture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ProfilePictureSet' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NftImage' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'coverPicture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'attributes' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'ProfilePictureSet' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
       selectionSet: {
@@ -8278,6 +8477,25 @@ export const RevenueFromPublicationsDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -8744,6 +8962,72 @@ export const RevenueFromPublicationsDocument = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'canCollect' },
+            name: { kind: 'Name', value: 'canAct' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'hasCollected' },
+            name: { kind: 'Name', value: 'hasActed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OptimisticStatusResult' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
             alias: { kind: 'Name', value: 'hasUpvoted' },
             name: { kind: 'Name', value: 'hasReacted' },
             arguments: [
@@ -8787,6 +9071,7 @@ export const RevenueFromPublicationsDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hasQuoted' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -9106,6 +9391,7 @@ export const RevenueFromPublicationsDocument = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -9113,7 +9399,44 @@ export const RevenueFromPublicationsDocument = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],
@@ -13798,10 +14121,23 @@ export const RevenueFromPublicationDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'publicationImageTransform' },
+            name: { kind: 'Name', value: 'publicationImageSmallTransform' },
           },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
         },
         {
           kind: 'VariableDefinition',
@@ -13813,7 +14149,6 @@ export const RevenueFromPublicationDocument = {
             kind: 'NamedType',
             name: { kind: 'Name', value: 'PublicationOperationsActedArgs' },
           },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
         },
         {
           kind: 'VariableDefinition',
@@ -13822,7 +14157,6 @@ export const RevenueFromPublicationDocument = {
             kind: 'NonNullType',
             type: { kind: 'NamedType', name: { kind: 'Name', value: 'PublicationStatsInput' } },
           },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
         },
         {
           kind: 'VariableDefinition',
@@ -13837,25 +14171,27 @@ export const RevenueFromPublicationDocument = {
               name: { kind: 'Name', value: 'PublicationStatsCountOpenActionArgs' },
             },
           },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileCoverTransform' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profilePictureTransform' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileStatsArg' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileStatsArg' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
         },
         {
           kind: 'VariableDefinition',
@@ -13867,21 +14203,19 @@ export const RevenueFromPublicationDocument = {
             kind: 'NamedType',
             name: { kind: 'Name', value: 'ProfileStatsCountOpenActionArgs' },
           },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
+          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'RateRequest' } },
-          defaultValue: {
-            kind: 'ObjectValue',
-            fields: [
-              {
-                kind: 'ObjectField',
-                name: { kind: 'Name', value: 'for' },
-                value: { kind: 'EnumValue', value: 'USD' },
-              },
-            ],
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'RateRequest' } },
           },
         },
       ],
@@ -14899,73 +15233,34 @@ export const RevenueFromPublicationDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'metadata' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'appId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'profileMetadataSource' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'useFallback' },
+                      value: { kind: 'BooleanValue', value: true },
+                    },
+                  ],
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'picture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'ImageSet' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'ProfilePictureSet' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'NftImage' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'coverPicture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'attributes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-                    ],
-                  },
-                },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMetadata' } },
               ],
             },
           },
@@ -15109,6 +15404,75 @@ export const RevenueFromPublicationDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMetadata' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMetadata' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'picture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ProfilePictureSet' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NftImage' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'coverPicture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'attributes' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'ProfilePictureSet' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
       selectionSet: {
@@ -15126,6 +15490,25 @@ export const RevenueFromPublicationDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -15592,6 +15975,72 @@ export const RevenueFromPublicationDocument = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'canCollect' },
+            name: { kind: 'Name', value: 'canAct' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'hasCollected' },
+            name: { kind: 'Name', value: 'hasActed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OptimisticStatusResult' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
             alias: { kind: 'Name', value: 'hasUpvoted' },
             name: { kind: 'Name', value: 'hasReacted' },
             arguments: [
@@ -15635,6 +16084,7 @@ export const RevenueFromPublicationDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hasQuoted' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -15954,6 +16404,7 @@ export const RevenueFromPublicationDocument = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -15961,7 +16412,44 @@ export const RevenueFromPublicationDocument = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],
@@ -20630,16 +21118,9 @@ export const FollowRevenuesDocument = {
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'RateRequest' } },
-          defaultValue: {
-            kind: 'ObjectValue',
-            fields: [
-              {
-                kind: 'ObjectField',
-                name: { kind: 'Name', value: 'for' },
-                value: { kind: 'EnumValue', value: 'USD' },
-              },
-            ],
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'RateRequest' } },
           },
         },
       ],

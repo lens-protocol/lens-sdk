@@ -121,15 +121,17 @@ fragment MentionNotification on MentionNotification {
 # queries
 query Notifications(
   $request: NotificationRequest!
-  $publicationImageTransform: ImageTransform = {}
-  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-  $publicationStatsInput: PublicationStatsInput! = {}
-  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $publicationImageSmallTransform: ImageTransform!
+  $publicationImageMediumTransform: ImageTransform!
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs
+  $publicationStatsInput: PublicationStatsInput!
+  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs!
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
+  $profileMetadataSource: AppId = null
+  $rateRequest: RateRequest!
 ) {
   result: notifications(request: $request) {
     items {

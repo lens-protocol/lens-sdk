@@ -7,7 +7,7 @@ import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import type { PostFragment, QuoteFragment } from '../../graphql/fragments.generated';
 import type { FeedHighlightsRequest, FeedRequest } from '../../graphql/types.generated';
 import {
-  buildRequestFromConfig,
+  commonQueryVariables,
   buildPaginatedQueryResult,
   PaginatedResult,
   requireAuthHeaders,
@@ -68,7 +68,7 @@ export class Feed {
         const result = await this.sdk.Feed(
           {
             request: currRequest,
-            ...buildRequestFromConfig(this.context),
+            ...commonQueryVariables(this.context),
           },
           headers,
         );
@@ -106,7 +106,7 @@ export class Feed {
         const result = await this.sdk.FeedHighlights(
           {
             request: currRequest,
-            ...buildRequestFromConfig(this.context),
+            ...commonQueryVariables(this.context),
           },
           headers,
         );
@@ -136,7 +136,7 @@ export class Feed {
       return buildPaginatedQueryResult(async () => {
         const result = await this.sdk.LatestPaidActions(
           {
-            ...buildRequestFromConfig(this.context),
+            ...commonQueryVariables(this.context),
           },
           headers,
         );

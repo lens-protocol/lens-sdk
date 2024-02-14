@@ -55,7 +55,7 @@ query Currencies($request: PaginatedOffsetRequest!) {
 
 query ApprovedModuleAllowanceAmount(
   $request: ApprovedModuleAllowanceAmountRequest!
-  $rateRequest: RateRequest = { for: USD }
+  $rateRequest: RateRequest!
 ) {
   result: approvedModuleAllowanceAmount(request: $request) {
     ... on ApprovedAllowanceAmountResult {
