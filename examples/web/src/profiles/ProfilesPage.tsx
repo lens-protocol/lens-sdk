@@ -2,6 +2,11 @@ import { LinkCard } from '../components/LinkCard';
 
 const profileHooks = [
   {
+    label: 'useCreateProfile',
+    description: 'Create a new Profile.',
+    path: '/profiles/useCreateProfile',
+  },
+  {
     label: 'useProfile',
     description: 'Fetch a single profile.',
     path: '/profiles/useProfile',

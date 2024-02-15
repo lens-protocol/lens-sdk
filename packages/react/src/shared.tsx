@@ -24,7 +24,7 @@ import { CredentialsFactory } from './authentication/adapters/CredentialsFactory
 import { CredentialsGateway } from './authentication/adapters/CredentialsGateway';
 import { CredentialsStorage } from './authentication/adapters/CredentialsStorage';
 import { LogoutPresenter } from './authentication/adapters/LogoutPresenter';
-import { LensConfig } from './config';
+import { BaseConfig } from './config';
 import { createInboxKeyStorage, DisableConversationsGateway } from './inbox';
 import { IProfileCacheManager } from './profile/adapters/IProfileCacheManager';
 import { ProfileCacheManager } from './profile/infrastructure/ProfileCacheManager';
@@ -49,22 +49,20 @@ import { createTransactionStorage } from './transactions/infrastructure/Transact
 import { BalanceGateway } from './wallet/adapters/BalanceGateway';
 import { IProviderFactory } from './wallet/adapters/IProviderFactory';
 import { TokenGateway } from './wallet/adapters/TokenGateway';
-import { WalletFactory } from './wallet/adapters/WalletFactory';
 import { WalletGateway } from './wallet/adapters/WalletGateway';
 import { ProviderFactory } from './wallet/infrastructure/ProviderFactory';
 import { SignerFactory } from './wallet/infrastructure/SignerFactory';
-import { createWalletStorage } from './wallet/infrastructure/WalletStorage';
 
 /**
  * @internal
  */
-export function createSharedDependencies(userConfig: LensConfig): SharedDependencies {
+export function createSharedDependencies(userConfig: BaseConfig): SharedDependencies {
   const defaultConfig = {
     debug: false,
     logger: new ConsoleLogger(),
     params: defaultQueryParams,
   };
-  const config: Required<LensConfig> = { ...defaultConfig, ...userConfig };
+  const config: Required<BaseConfig> = { ...defaultConfig, ...userConfig };
 
   // auth api
   const anonymousApolloClient = createAuthApolloClient({
@@ -76,7 +74,6 @@ export function createSharedDependencies(userConfig: LensConfig): SharedDependen
   // storages
   const credentialsStorage = new CredentialsStorage(config.storage, config.environment.name);
   const accessTokenStorage = new AccessTokenStorage(authApi, credentialsStorage);
-  const walletStorage = createWalletStorage(config.storage, config.environment.name);
   const transactionStorage = createTransactionStorage(config.storage, config.environment.name);
   const inboxKeyStorage = createInboxKeyStorage(config.storage, config.environment.name);
 
@@ -104,8 +101,7 @@ export function createSharedDependencies(userConfig: LensConfig): SharedDependen
   const credentialsGateway = new CredentialsGateway(credentialsStorage, apolloClient);
   const profileCacheManager = new ProfileCacheManager(apolloClient);
   const publicationCacheManager = new PublicationCacheManager(apolloClient);
-  const walletFactory = new WalletFactory(signerFactory, transactionFactory);
-  const walletGateway = new WalletGateway(walletStorage, walletFactory);
+  const walletGateway = new WalletGateway(signerFactory, transactionFactory);
   const transactionGateway = new PendingTransactionGateway(transactionStorage, transactionFactory);
   const onChainRelayer = new OnChainRelayer(apolloClient, transactionFactory, config.logger);
   const momokaRelayer = new MomokaRelayer(apolloClient, transactionFactory, config.logger);
@@ -152,7 +148,6 @@ export function createSharedDependencies(userConfig: LensConfig): SharedDependen
   // logout
   const logoutPresenter = new LogoutPresenter();
   const logout = new Logout(
-    walletGateway,
     credentialsGateway,
     transactionGateway,
     conversationsGateway,
@@ -181,7 +176,6 @@ export function createSharedDependencies(userConfig: LensConfig): SharedDependen
     transactionFactory,
     transactionGateway,
     transactionQueue,
-    walletFactory,
     walletGateway,
   };
 }
@@ -193,7 +187,7 @@ export type SharedDependencies = {
   accessTokenStorage: AccessTokenStorage;
   activeWallet: ActiveWallet;
   apolloClient: SafeApolloClient;
-  config: LensConfig;
+  config: BaseConfig;
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
   inboxKeyStorage: IStorage<string>;
@@ -207,7 +201,6 @@ export type SharedDependencies = {
   transactionFactory: ITransactionFactory<AnyTransactionRequest>;
   transactionGateway: PendingTransactionGateway;
   transactionQueue: TransactionQueue<AnyTransactionRequest>;
-  walletFactory: WalletFactory;
   walletGateway: WalletGateway;
 };
 

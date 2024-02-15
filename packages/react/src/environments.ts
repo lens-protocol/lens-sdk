@@ -42,6 +42,9 @@ export type EnvironmentConfig = {
   backend: URL;
   chains: ChainConfigRegistry;
   timings: TransactionObserverTimings;
+  contracts: {
+    permissionlessCreator: string;
+  };
   handleResolver: ProfileHandleResolver;
   snapshot: SnapshotConfig;
   // gated: GatedEnvironments.EnvironmentConfig;
@@ -68,6 +71,9 @@ export const production: EnvironmentConfig = {
     pollingInterval: 3000,
     maxIndexingWaitTime: 120000,
     maxMiningWaitTime: 60000,
+  },
+  contracts: {
+    permissionlessCreator: '0x0b5e6100243f793e480DE6088dE6bA70aA9f3872',
   },
   handleResolver: (localName) => `lens/${localName}`,
   snapshot: {
@@ -100,6 +106,9 @@ export const development: EnvironmentConfig = {
     maxIndexingWaitTime: 240000,
     maxMiningWaitTime: 120000,
   },
+  contracts: {
+    permissionlessCreator: '0xCb4FB63c3f13CB83cCD6F10E9e5F29eC250329Cc',
+  },
   handleResolver: (localName) => `test/${localName}`,
   snapshot: {
     hub: 'https://testnet.snapshot.org/graphql' as URL,
@@ -123,6 +132,9 @@ export const staging: EnvironmentConfig = {
     pollingInterval: 5000,
     maxIndexingWaitTime: 240000,
     maxMiningWaitTime: 2400000,
+  },
+  contracts: {
+    permissionlessCreator: '0xCb4FB63c3f13CB83cCD6F10E9e5F29eC250329Cc',
   },
   handleResolver: (localName) => `test/${localName}`,
   snapshot: {

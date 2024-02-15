@@ -17,14 +17,23 @@ export class HandleNotAvailableError extends Error {
 export class InvalidHandleError extends Error {
   name = 'InvalidHandleError' as const;
 
-  constructor(handle: string) {
-    super(`Handle "${handle}" is not valid`);
+  constructor(localName: string) {
+    super(`Handle "${localName}" is not valid`);
   }
 }
 
 export type ValidateHandleRequest = {
-  /** Just the localname portion of a new handle */
-  handle: string;
+  /**
+   * Just the local-name portion of the desired Handle.
+   *
+   * @example
+   * ```ts
+   * // lens/wagmi
+   *
+   * const localName = 'wagmi';
+   * ```
+   */
+  localName: string;
 };
 
 /**
@@ -42,7 +51,7 @@ export type ValidateHandleRequest = {
  * const { called, error, loading, execute } = useValidateHandle();
  *
  * const callback = async () => {
- *   const result = await execute({ handle: 'wagmi' });
+ *   const result = await execute({ localName: 'wagmi' });
  *
  *   if (result.isFailure()) {
  *     console.error(result.error.message); // handle not valid or already taken
@@ -56,7 +65,7 @@ export type ValidateHandleRequest = {
  * ```
  *
  * @experimental This hook is experimental and may change in the future.
- * @category Misc
+ * @category Handle
  * @group Hooks
  */
 export function useValidateHandle(): UseDeferredTask<
@@ -74,14 +83,15 @@ export function useValidateHandle(): UseDeferredTask<
     async (
       request,
     ): PromiseResult<void, UnspecifiedError | HandleNotAvailableError | InvalidHandleError> => {
-      if (!isValidHandle(request.handle)) {
-        return failure(new InvalidHandleError(request.handle));
+      if (!isValidHandle(request.localName)) {
+        return failure(new InvalidHandleError(request.localName));
       }
 
+      const handle = environment.handleResolver(request.localName);
       const { data, error } = await fetch({
         variables: {
           request: {
-            handle: environment.handleResolver(request.handle),
+            handle: handle,
           },
         },
       });
@@ -93,7 +103,7 @@ export function useValidateHandle(): UseDeferredTask<
       invariant(data, 'Data must be defined');
 
       if (data.result) {
-        return failure(new HandleNotAvailableError(request.handle));
+        return failure(new HandleNotAvailableError(handle));
       }
 
       return success();

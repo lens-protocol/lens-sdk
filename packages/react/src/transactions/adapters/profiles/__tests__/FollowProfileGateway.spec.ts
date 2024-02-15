@@ -3,24 +3,24 @@
  */
 import { SafeApolloClient } from '@lens-protocol/api-bindings';
 import {
-  mockLensApolloClient,
-  mockRelaySuccessFragment,
+  mockCreateFollowTypedDataData,
   mockCreateFollowTypedDataResponse,
   mockFollowResponse,
-  mockCreateFollowTypedDataData,
+  mockLensApolloClient,
+  mockRelaySuccessFragment,
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction, UnsignedTransaction } from '@lens-protocol/domain/entities';
 import {
-  mockPaidFollowRequest,
   mockFreeFollowRequest,
-  mockWallet,
+  mockPaidFollowRequest,
   mockUnknownFollowRequest,
+  mockWallet,
 } from '@lens-protocol/domain/mocks';
 import { ChainType } from '@lens-protocol/shared-kernel';
 import { providers } from 'ethers';
 import { mock } from 'jest-mock-extended';
 
-import { LensConfig } from '../../../../config';
+import { BaseConfig } from '../../../../config';
 import { UnsignedProtocolCall } from '../../../../wallet/adapters/ConcreteWallet';
 import { mockIProviderFactory } from '../../../../wallet/adapters/__helpers__/mocks';
 import { UnsignedContractCallTransaction } from '../../AbstractContractCallGateway';
@@ -35,7 +35,7 @@ function setupTestScenario({
   apolloClient: SafeApolloClient;
   provider?: providers.JsonRpcProvider;
 }) {
-  const config = mock<LensConfig>();
+  const config = mock<BaseConfig>();
   const transactionFactory = mockITransactionFactory();
   const providerFactory = mockIProviderFactory({
     chainType: ChainType.POLYGON,
@@ -130,7 +130,7 @@ describe(`Given an instance of ${FollowProfileGateway.name}`, () => {
     describe(`when creating an ${UnsignedTransaction.name}<${name}>`, () => {
       const wallet = mockWallet();
 
-      it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+      it(`should resolve with the expected ${UnsignedContractCallTransaction.name}`, async () => {
         const provider = await mockJsonRpcProvider();
         const apolloClient = mockLensApolloClient([
           mockCreateFollowTypedDataResponse({

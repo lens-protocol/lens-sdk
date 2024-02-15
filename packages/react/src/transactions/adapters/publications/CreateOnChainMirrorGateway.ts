@@ -17,13 +17,12 @@ import { CreateMirrorRequest } from '@lens-protocol/domain/use-cases/publication
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
-import { LensConfig } from '../../../config';
+import { BaseConfig } from '../../../config';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
@@ -34,11 +33,10 @@ export class CreateOnChainMirrorGateway
   extends AbstractContractCallGateway<CreateMirrorRequest>
   implements
     IDelegatedTransactionGateway<CreateMirrorRequest>,
-    ISignedOnChainGateway<CreateMirrorRequest>,
-    IPaidTransactionGateway<CreateMirrorRequest>
+    ISignedOnChainGateway<CreateMirrorRequest>
 {
   constructor(
-    config: LensConfig,
+    config: BaseConfig,
     providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<CreateMirrorRequest>,
@@ -78,7 +76,7 @@ export class CreateOnChainMirrorGateway
     });
   }
 
-  protected override async createEncodedData(
+  protected override async createCallDetails(
     request: CreateMirrorRequest,
   ): Promise<ContractCallDetails> {
     const input = this.resolveOnchainMirrorRequest(request);

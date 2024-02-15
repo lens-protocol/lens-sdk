@@ -1,7 +1,5 @@
 /**
- * ## Quick start
- *
- * This folder provides a set of hooks to help integrate XMTP SDK features with the Lens SDK.
+ * The secondary `/inbox` entrypoint provides a set of hooks to help integrate XMTP SDK features with the Lens SDK.
  * The hooks are intended to be used together with hooks provided by `@xmtp/react-sdk` package.
  * You can find more in their [GitHub repository](https://github.com/xmtp/xmtp-web/tree/main/packages/react-sdk)
  *

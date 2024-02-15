@@ -16,13 +16,12 @@ import { SetProfileMetadataRequest } from '@lens-protocol/domain/use-cases/profi
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
-import { LensConfig } from '../../../config';
+import { BaseConfig } from '../../../config';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
@@ -33,11 +32,10 @@ export class ProfileMetadataGateway
   extends AbstractContractCallGateway<SetProfileMetadataRequest>
   implements
     IDelegatedTransactionGateway<SetProfileMetadataRequest>,
-    ISignedOnChainGateway<SetProfileMetadataRequest>,
-    IPaidTransactionGateway<SetProfileMetadataRequest>
+    ISignedOnChainGateway<SetProfileMetadataRequest>
 {
   constructor(
-    config: LensConfig,
+    config: BaseConfig,
     providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<SetProfileMetadataRequest>,
@@ -79,7 +77,7 @@ export class ProfileMetadataGateway
     });
   }
 
-  protected override async createEncodedData(
+  protected override async createCallDetails(
     request: SetProfileMetadataRequest,
   ): Promise<ContractCallDetails> {
     const result = await this.createTypedData(request);

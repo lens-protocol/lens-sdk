@@ -14,12 +14,12 @@ import { toast } from 'react-hot-toast';
 
 import { Logs } from '../components/Logs';
 import { RequireProfileSession, RequireWalletSession } from '../components/auth';
+import { PublicationCard } from '../components/cards';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
+import { useIrysUploader } from '../hooks/useIrysUploader';
 import { useLogs } from '../hooks/useLogs';
-import { uploadJson } from '../upload';
 import { invariant } from '../utils';
-import { PublicationCard } from './components/PublicationCard';
 
 function TestScenario({ id }: { id: PublicationId }) {
   const { data: publication, loading, error } = usePublication({ forId: id });
@@ -94,6 +94,7 @@ function TestScenario({ id }: { id: PublicationId }) {
 }
 
 export function UseOpenAction() {
+  const { uploadMetadata } = useIrysUploader();
   const { logs, clear, log } = useLogs();
   const [id, setId] = useState<PublicationId | undefined>();
 
@@ -109,7 +110,7 @@ export function UseOpenAction() {
     });
 
     log('Uploading metadata...');
-    const uri = await uploadJson(metadata);
+    const uri = await uploadMetadata(metadata);
 
     log('Creating collectable test post...');
     const result = await post({

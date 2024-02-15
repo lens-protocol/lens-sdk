@@ -1,15 +1,15 @@
 import {
-  SafeApolloClient,
-  omitTypename,
-  RelaySuccess,
-  CreateOnchainPostTypedDataData,
   CreateOnchainPostBroadcastItemResult,
-  CreateOnchainPostTypedDataVariables,
+  CreateOnchainPostTypedDataData,
   CreateOnchainPostTypedDataDocument,
+  CreateOnchainPostTypedDataVariables,
   OnchainPostRequest,
   PostOnchainData,
-  PostOnchainVariables,
   PostOnchainDocument,
+  PostOnchainVariables,
+  RelaySuccess,
+  SafeApolloClient,
+  omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -17,13 +17,12 @@ import { CreatePostRequest } from '@lens-protocol/domain/use-cases/publications'
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
-import { LensConfig } from '../../../config';
+import { BaseConfig } from '../../../config';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
@@ -36,11 +35,10 @@ export class CreateOnChainPostGateway
   extends AbstractContractCallGateway<CreatePostRequest>
   implements
     IDelegatedTransactionGateway<CreatePostRequest>,
-    ISignedOnChainGateway<CreatePostRequest>,
-    IPaidTransactionGateway<CreatePostRequest>
+    ISignedOnChainGateway<CreatePostRequest>
 {
   constructor(
-    config: LensConfig,
+    config: BaseConfig,
     providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<CreatePostRequest>,
@@ -80,7 +78,7 @@ export class CreateOnChainPostGateway
     });
   }
 
-  protected override async createEncodedData(
+  protected override async createCallDetails(
     request: CreatePostRequest,
   ): Promise<ContractCallDetails> {
     const input = this.resolveOnchainPostRequest(request);

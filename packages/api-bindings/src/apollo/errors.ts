@@ -1,5 +1,5 @@
-import { ApolloError, FetchResult } from '@apollo/client';
-import { CausedError } from '@lens-protocol/shared-kernel';
+import { ApolloError, FetchResult, ServerError } from '@apollo/client';
+import { CausedError, isObject } from '@lens-protocol/shared-kernel';
 
 /**
  * @internal
@@ -42,6 +42,25 @@ export function graphQLResultHasUnauthenticatedError<T>(result: FetchResult<T>) 
     result.errors &&
     result.errors.some((e) => e.extensions?.code === ApolloServerErrorCode.UNAUTHENTICATED)
   );
+}
+
+/**
+ * @internal
+ */
+export function isServerError(error: unknown): error is ServerError {
+  return (
+    isObject(error) &&
+    error instanceof Error &&
+    error.name === 'ServerError' &&
+    `statusCode` in error
+  );
+}
+
+/**
+ * @internal
+ */
+export function isUnauthorizedServerError(error: unknown): error is ServerError {
+  return isServerError(error) && error.statusCode === 401;
 }
 
 /**

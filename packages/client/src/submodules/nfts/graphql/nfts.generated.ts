@@ -82,11 +82,12 @@ export type NftGalleriesQuery = {
 
 export type NftCollectionOwnersQueryVariables = Types.Exact<{
   request: Types.NftCollectionOwnersRequest;
-  profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
-  profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profileCoverTransform: Types.ImageTransform;
+  profilePictureTransform: Types.ImageTransform;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
   profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
-  rateRequest?: Types.InputMaybe<Types.RateRequest>;
+  profileMetadataSource?: Types.InputMaybe<Types.Scalars['AppId']['input']>;
+  rateRequest: Types.RateRequest;
 }>;
 
 export type NftCollectionOwnersQuery = {
@@ -1217,20 +1218,23 @@ export const NftCollectionOwnersDocument = {
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileCoverTransform' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profilePictureTransform' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileStatsArg' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileStatsArg' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
         },
         {
           kind: 'VariableDefinition',
@@ -1242,21 +1246,19 @@ export const NftCollectionOwnersDocument = {
             kind: 'NamedType',
             name: { kind: 'Name', value: 'ProfileStatsCountOpenActionArgs' },
           },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
+          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'RateRequest' } },
-          defaultValue: {
-            kind: 'ObjectValue',
-            fields: [
-              {
-                kind: 'ObjectField',
-                name: { kind: 'Name', value: 'for' },
-                value: { kind: 'EnumValue', value: 'USD' },
-              },
-            ],
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'RateRequest' } },
           },
         },
       ],
@@ -1559,73 +1561,34 @@ export const NftCollectionOwnersDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'metadata' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'appId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'profileMetadataSource' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'useFallback' },
+                      value: { kind: 'BooleanValue', value: true },
+                    },
+                  ],
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'picture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'ImageSet' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'ProfilePictureSet' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'NftImage' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'coverPicture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'attributes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-                    ],
-                  },
-                },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMetadata' } },
               ],
             },
           },
@@ -1862,6 +1825,75 @@ export const NftCollectionOwnersDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMetadata' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMetadata' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'picture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ProfilePictureSet' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NftImage' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'coverPicture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'attributes' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'ProfilePictureSet' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
       selectionSet: {
@@ -1879,6 +1911,25 @@ export const NftCollectionOwnersDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],

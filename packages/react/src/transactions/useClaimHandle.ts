@@ -5,9 +5,9 @@ import {
 } from '@lens-protocol/api-bindings';
 import { TransactionError, TransactionKind } from '@lens-protocol/domain/entities';
 import {
-  ClaimHandleError as GenericClaimHandleError,
   ClaimHandleRequest,
   FollowPolicyConfig,
+  ClaimHandleError as GenericClaimHandleError,
 } from '@lens-protocol/domain/use-cases/profile';
 import { OneOf, invariant } from '@lens-protocol/shared-kernel';
 
@@ -15,9 +15,10 @@ import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useClaimHandleController } from './adapters/useClaimHandleController';
 
-// re-export constructor and specialized type
-export const ClaimHandleError = GenericClaimHandleError;
-export type ClaimHandleError = GenericClaimHandleError<ClaimProfileWithHandleErrorReasonType>;
+/**
+ * @privateRemarks Extended class to generate proper documentation. No measurable run-time implications.
+ */
+export class ClaimHandleError extends GenericClaimHandleError<ClaimProfileWithHandleErrorReasonType> {}
 
 export { ClaimProfileWithHandleErrorReasonType };
 

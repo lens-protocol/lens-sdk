@@ -17,13 +17,12 @@ import { UpdateFollowPolicyRequest } from '@lens-protocol/domain/use-cases/profi
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
-import { LensConfig } from '../../../config';
+import { BaseConfig } from '../../../config';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
@@ -34,11 +33,10 @@ export class UpdateFollowPolicyGateway
   extends AbstractContractCallGateway<UpdateFollowPolicyRequest>
   implements
     IDelegatedTransactionGateway<UpdateFollowPolicyRequest>,
-    ISignedOnChainGateway<UpdateFollowPolicyRequest>,
-    IPaidTransactionGateway<UpdateFollowPolicyRequest>
+    ISignedOnChainGateway<UpdateFollowPolicyRequest>
 {
   constructor(
-    config: LensConfig,
+    config: BaseConfig,
     providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<UpdateFollowPolicyRequest>,
@@ -77,7 +75,7 @@ export class UpdateFollowPolicyGateway
     });
   }
 
-  protected override async createEncodedData(
+  protected override async createCallDetails(
     request: UpdateFollowPolicyRequest,
   ): Promise<ContractCallDetails> {
     const result = await this.createTypedData(request);

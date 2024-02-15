@@ -1,17 +1,17 @@
 import {
+  CreateFollowBroadcastItemResult,
   CreateFollowTypedDataData,
   CreateFollowTypedDataDocument,
   CreateFollowTypedDataVariables,
   Follow,
-  FollowRequest as TypedDataFollowRequest,
-  omitTypename,
-  RelaySuccess,
-  SafeApolloClient,
-  CreateFollowBroadcastItemResult,
   FollowData,
-  FollowVariables,
   FollowDocument,
   FollowLensManagerRequest,
+  FollowVariables,
+  RelaySuccess,
+  SafeApolloClient,
+  FollowRequest as TypedDataFollowRequest,
+  omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -25,13 +25,12 @@ import {
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
-import { LensConfig } from '../../../config';
+import { BaseConfig } from '../../../config';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
@@ -74,13 +73,10 @@ function resolveProfileFollow(request: FollowRequest): Follow[] {
 
 export class FollowProfileGateway
   extends AbstractContractCallGateway<FollowRequest>
-  implements
-    IDelegatedTransactionGateway<FreeFollowRequest>,
-    ISignedOnChainGateway<FollowRequest>,
-    IPaidTransactionGateway<FollowRequest>
+  implements IDelegatedTransactionGateway<FreeFollowRequest>, ISignedOnChainGateway<FollowRequest>
 {
   constructor(
-    config: LensConfig,
+    config: BaseConfig,
     providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<FreeFollowRequest>,
@@ -119,7 +115,7 @@ export class FollowProfileGateway
     });
   }
 
-  protected override async createEncodedData(request: FollowRequest): Promise<ContractCallDetails> {
+  protected override async createCallDetails(request: FollowRequest): Promise<ContractCallDetails> {
     const result = await this.createTypedData(request);
     return this.createFollowCallDetails(result);
   }

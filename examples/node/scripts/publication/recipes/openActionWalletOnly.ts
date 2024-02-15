@@ -14,17 +14,21 @@ const publicActionProxyAddress = {
   production: '0x53582b1b7BE71622E7386D736b6baf87749B7a2B',
 };
 
+if (!process.env.INFURA_API_KEY) {
+  throw new Error('Infura API key is not defined in .env file');
+}
+
+const rpcUrl = {
+  development: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_API_KEY}`,
+  production: `https://polygon.infura.io/v3/${process.env.INFURA_API_KEY}`,
+};
+
 async function main() {
   if (!process.env.WALLET_PRIVATE_KEY) {
     throw new Error('Private key is not defined in .env file');
   }
-  if (!process.env.INFURA_API_KEY) {
-    // or define your own provider
-    throw new Error('Infura API key is not defined in .env file');
-  }
-  const provider = new ethers.providers.JsonRpcProvider(
-    `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_API_KEY}`,
-  );
+
+  const provider = new ethers.providers.JsonRpcProvider(rpcUrl.development);
   const wallet = new ethers.Wallet(process.env.WALLET_PRIVATE_KEY, provider);
   const address = await wallet.getAddress();
   const client = new LensClient({
@@ -82,9 +86,16 @@ async function main() {
   console.log(`Submitted a tx with a hash: `, tx.hash);
 
   console.log(`Waiting for tx to be mined...`);
+  const outcome = await client.transaction.waitUntilComplete({
+    forTxHash: tx.hash,
+  });
 
-  const receipt = await tx.wait();
-  console.log(`Tx was mined: `, receipt);
+  if (outcome === null) {
+    console.error('The transaction was not found');
+    process.exit(1);
+  }
+
+  console.log('Publication collected');
 }
 
 main();

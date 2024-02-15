@@ -21,7 +21,7 @@ import {
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
-import { LensConfig } from '../../../config';
+import { BaseConfig } from '../../../config';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
@@ -33,7 +33,7 @@ export class UnfollowProfileGateway
   implements IDelegatedTransactionGateway<UnfollowRequest>, ISignedOnChainGateway<UnfollowRequest>
 {
   constructor(
-    config: LensConfig,
+    config: BaseConfig,
     providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<UnfollowRequest>,
@@ -72,7 +72,7 @@ export class UnfollowProfileGateway
     });
   }
 
-  protected async createEncodedData(request: UnfollowRequest): Promise<ContractCallDetails> {
+  protected async createCallDetails(request: UnfollowRequest): Promise<ContractCallDetails> {
     const result = await this.createTypedData(request);
     return this.createUnfollowCallData(result);
   }

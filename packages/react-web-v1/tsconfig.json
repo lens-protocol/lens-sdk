@@ -1,9 +1,0 @@
-{
-  "extends": "@lens-protocol/tsconfig/base.json",
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "lib": ["DOM", "ESNext"],
-    "outDir": "dist"
-  },
-  "include": ["src", "./jest.config.ts"]
-}

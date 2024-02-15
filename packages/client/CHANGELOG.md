@@ -1,5 +1,23 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.32
+
+### Minor Changes
+
+- 1f95547be: **feat:** added `client.wallet.rateLimits` method to fetch the sponsored transaction limits
+- 1f95547be: **feat:** Introduced common query params, deprecated `LensClientConfig.mediaTransforms` for `LensClientConfig.params`
+
+### Patch Changes
+
+- 7b1cbde5d: **fix:** TSDoc and better exporting of shared parts
+
+## 2.0.0-alpha.31
+
+### Patch Changes
+
+- Updated dependencies [9c7fd3ee3]
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.22
+
 ## 2.0.0-alpha.30
 
 ### Minor Changes

@@ -1,8 +1,8 @@
 import { publicationId, usePublication } from '@lens-protocol/react-web';
 
+import { PublicationCard } from '../components/cards';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
-import { PublicationCard } from './components/PublicationCard';
 
 export function UsePublication() {
   const {

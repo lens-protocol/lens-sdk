@@ -417,12 +417,16 @@ export type FollowersRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<LimitType>;
   of: Scalars['ProfileId']['input'];
+  /** The order by which to sort the profiles - note if your looking at your own followers it always be DESC */
+  orderBy?: InputMaybe<ProfilesOrderBy>;
 };
 
 export type FollowingRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   for: Scalars['ProfileId']['input'];
   limit?: InputMaybe<LimitType>;
+  /** The order by which to sort the profiles - note if your looking at your own following it always be DESC */
+  orderBy?: InputMaybe<ProfilesOrderBy>;
 };
 
 export type FraudReasonInput = {
@@ -504,6 +508,19 @@ export type InternalAllowDomainRequest = {
 };
 
 export type InternalAllowedDomainsRequest = {
+  secret: Scalars['String']['input'];
+};
+
+export type InternalBoostProfileRequest = {
+  h?: InputMaybe<Scalars['Handle']['input']>;
+  p?: InputMaybe<Scalars['ProfileId']['input']>;
+  s: Scalars['Int']['input'];
+  secret: Scalars['String']['input'];
+};
+
+export type InternalBoostScoreRequest = {
+  h?: InputMaybe<Scalars['Handle']['input']>;
+  p?: InputMaybe<Scalars['ProfileId']['input']>;
   secret: Scalars['String']['input'];
 };
 
@@ -744,6 +761,8 @@ export type MutualFollowersRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<LimitType>;
   observer: Scalars['ProfileId']['input'];
+  /** The order by which to sort the profiles */
+  orderBy?: InputMaybe<ProfilesOrderBy>;
   viewing: Scalars['ProfileId']['input'];
 };
 
@@ -881,6 +900,8 @@ export type NftsRequestWhere = {
 
 export type NotificationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  /** The order by which to sort the profiles on follows, reactions, actions and mirrors */
+  orderBy?: InputMaybe<ProfilesOrderBy>;
   where?: InputMaybe<NotificationWhere>;
 };
 
@@ -899,6 +920,7 @@ export type NotificationWhere = {
   highSignalFilter?: InputMaybe<Scalars['Boolean']['input']>;
   notificationTypes?: InputMaybe<Array<NotificationType>>;
   publishedOn?: InputMaybe<Array<Scalars['AppId']['input']>>;
+  timeBasedAggregation?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type OnchainCommentRequest = {
@@ -1178,6 +1200,8 @@ export type ProfileRequest = {
 export type ProfileSearchRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<LimitType>;
+  /** The order by which to sort the profiles */
+  orderBy?: InputMaybe<ProfilesOrderBy>;
   /** Query for the profile search */
   query: Scalars['String']['input'];
   /** Filtering criteria for profile search */
@@ -1216,9 +1240,16 @@ export type ProfilesManagedRequest = {
   limit?: InputMaybe<LimitType>;
 };
 
+export enum ProfilesOrderBy {
+  Default = 'DEFAULT',
+  ProfileClassifier = 'PROFILE_CLASSIFIER',
+}
+
 export type ProfilesRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<LimitType>;
+  /** The order by which to sort the profiles */
+  orderBy?: InputMaybe<ProfilesOrderBy>;
   /** The where clause to use to filter on what you are looking for */
   where: ProfilesRequestWhere;
 };
@@ -1703,6 +1734,11 @@ export type UnlinkHandleFromProfileRequest = {
   handle: Scalars['Handle']['input'];
 };
 
+export type UserCurrentRateLimitRequest = {
+  profileId?: InputMaybe<Scalars['ProfileId']['input']>;
+  userAddress: Scalars['EvmAddress']['input'];
+};
+
 export type UserPoapsQueryRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   for: Scalars['ProfileId']['input'];
@@ -1728,6 +1764,8 @@ export type WhoActedOnPublicationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<LimitType>;
   on: Scalars['PublicationId']['input'];
+  /** The order by which to sort the profiles */
+  orderBy?: InputMaybe<ProfilesOrderBy>;
   where?: InputMaybe<WhoActedOnPublicationWhere>;
 };
 
@@ -1744,6 +1782,8 @@ export type WhoReactedPublicationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   for: Scalars['PublicationId']['input'];
   limit?: InputMaybe<LimitType>;
+  /** The order by which to sort the profiles */
+  orderBy?: InputMaybe<ProfilesOrderBy>;
   where?: InputMaybe<WhoReactedPublicationWhere>;
 };
 

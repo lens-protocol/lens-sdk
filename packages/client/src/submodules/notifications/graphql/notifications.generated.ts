@@ -73,15 +73,17 @@ export type MentionNotificationFragment = {
 
 export type NotificationsQueryVariables = Types.Exact<{
   request: Types.NotificationRequest;
-  publicationImageTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationImageSmallTransform: Types.ImageTransform;
+  publicationImageMediumTransform: Types.ImageTransform;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
-  publicationStatsInput?: Types.PublicationStatsInput;
-  publicationStatsCountOpenActionArgs?: Types.PublicationStatsCountOpenActionArgs;
-  profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
-  profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  publicationStatsInput: Types.PublicationStatsInput;
+  publicationStatsCountOpenActionArgs: Types.PublicationStatsCountOpenActionArgs;
+  profileCoverTransform: Types.ImageTransform;
+  profilePictureTransform: Types.ImageTransform;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
   profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
-  rateRequest?: Types.InputMaybe<Types.RateRequest>;
+  profileMetadataSource?: Types.InputMaybe<Types.Scalars['AppId']['input']>;
+  rateRequest: Types.RateRequest;
 }>;
 
 export type NotificationsQuery = {
@@ -394,73 +396,34 @@ export const ReactionNotificationFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'metadata' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'appId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'profileMetadataSource' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'useFallback' },
+                      value: { kind: 'BooleanValue', value: true },
+                    },
+                  ],
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'picture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'ImageSet' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'ProfilePictureSet' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'NftImage' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'coverPicture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'attributes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-                    ],
-                  },
-                },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMetadata' } },
               ],
             },
           },
@@ -710,6 +673,75 @@ export const ReactionNotificationFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMetadata' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMetadata' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'picture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ProfilePictureSet' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NftImage' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'coverPicture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'attributes' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'ProfilePictureSet' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
       selectionSet: {
@@ -727,6 +759,25 @@ export const ReactionNotificationFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -1779,6 +1830,72 @@ export const ReactionNotificationFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'canCollect' },
+            name: { kind: 'Name', value: 'canAct' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'hasCollected' },
+            name: { kind: 'Name', value: 'hasActed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OptimisticStatusResult' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
             alias: { kind: 'Name', value: 'hasUpvoted' },
             name: { kind: 'Name', value: 'hasReacted' },
             arguments: [
@@ -1822,6 +1939,7 @@ export const ReactionNotificationFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hasQuoted' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -2141,6 +2259,7 @@ export const ReactionNotificationFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -2148,7 +2267,44 @@ export const ReactionNotificationFragmentDoc = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],
@@ -6958,73 +7114,34 @@ export const CommentNotificationFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'metadata' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'appId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'profileMetadataSource' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'useFallback' },
+                      value: { kind: 'BooleanValue', value: true },
+                    },
+                  ],
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'picture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'ImageSet' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'ProfilePictureSet' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'NftImage' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'coverPicture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'attributes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-                    ],
-                  },
-                },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMetadata' } },
               ],
             },
           },
@@ -7274,6 +7391,75 @@ export const CommentNotificationFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMetadata' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMetadata' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'picture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ProfilePictureSet' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NftImage' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'coverPicture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'attributes' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'ProfilePictureSet' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
       selectionSet: {
@@ -7291,6 +7477,25 @@ export const CommentNotificationFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -8343,6 +8548,72 @@ export const CommentNotificationFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'canCollect' },
+            name: { kind: 'Name', value: 'canAct' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'hasCollected' },
+            name: { kind: 'Name', value: 'hasActed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OptimisticStatusResult' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
             alias: { kind: 'Name', value: 'hasUpvoted' },
             name: { kind: 'Name', value: 'hasReacted' },
             arguments: [
@@ -8386,6 +8657,7 @@ export const CommentNotificationFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hasQuoted' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -8705,6 +8977,7 @@ export const CommentNotificationFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -8712,7 +8985,44 @@ export const CommentNotificationFragmentDoc = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],
@@ -13507,73 +13817,34 @@ export const MirrorNotificationFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'metadata' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'appId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'profileMetadataSource' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'useFallback' },
+                      value: { kind: 'BooleanValue', value: true },
+                    },
+                  ],
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'picture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'ImageSet' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'ProfilePictureSet' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'NftImage' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'coverPicture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'attributes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-                    ],
-                  },
-                },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMetadata' } },
               ],
             },
           },
@@ -13823,6 +14094,75 @@ export const MirrorNotificationFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMetadata' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMetadata' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'picture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ProfilePictureSet' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NftImage' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'coverPicture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'attributes' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'ProfilePictureSet' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
       selectionSet: {
@@ -13840,6 +14180,25 @@ export const MirrorNotificationFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -14892,6 +15251,72 @@ export const MirrorNotificationFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'canCollect' },
+            name: { kind: 'Name', value: 'canAct' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'hasCollected' },
+            name: { kind: 'Name', value: 'hasActed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OptimisticStatusResult' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
             alias: { kind: 'Name', value: 'hasUpvoted' },
             name: { kind: 'Name', value: 'hasReacted' },
             arguments: [
@@ -14935,6 +15360,7 @@ export const MirrorNotificationFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hasQuoted' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -15254,6 +15680,7 @@ export const MirrorNotificationFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -15261,7 +15688,44 @@ export const MirrorNotificationFragmentDoc = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],
@@ -20071,73 +20535,34 @@ export const QuoteNotificationFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'metadata' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'appId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'profileMetadataSource' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'useFallback' },
+                      value: { kind: 'BooleanValue', value: true },
+                    },
+                  ],
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'picture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'ImageSet' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'ProfilePictureSet' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'NftImage' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'coverPicture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'attributes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-                    ],
-                  },
-                },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMetadata' } },
               ],
             },
           },
@@ -20387,6 +20812,75 @@ export const QuoteNotificationFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMetadata' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMetadata' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'picture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ProfilePictureSet' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NftImage' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'coverPicture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'attributes' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'ProfilePictureSet' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
       selectionSet: {
@@ -20404,6 +20898,25 @@ export const QuoteNotificationFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -21456,6 +21969,72 @@ export const QuoteNotificationFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'canCollect' },
+            name: { kind: 'Name', value: 'canAct' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'hasCollected' },
+            name: { kind: 'Name', value: 'hasActed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OptimisticStatusResult' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
             alias: { kind: 'Name', value: 'hasUpvoted' },
             name: { kind: 'Name', value: 'hasReacted' },
             arguments: [
@@ -21499,6 +22078,7 @@ export const QuoteNotificationFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hasQuoted' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -21818,6 +22398,7 @@ export const QuoteNotificationFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -21825,7 +22406,44 @@ export const QuoteNotificationFragmentDoc = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],
@@ -26561,73 +27179,34 @@ export const OpenActionProfileActedFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'metadata' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'appId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'profileMetadataSource' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'useFallback' },
+                      value: { kind: 'BooleanValue', value: true },
+                    },
+                  ],
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'picture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'ImageSet' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'ProfilePictureSet' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'NftImage' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'coverPicture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'attributes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-                    ],
-                  },
-                },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMetadata' } },
               ],
             },
           },
@@ -26877,6 +27456,75 @@ export const OpenActionProfileActedFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMetadata' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMetadata' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'picture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ProfilePictureSet' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NftImage' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'coverPicture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'attributes' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'ProfilePictureSet' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
       selectionSet: {
@@ -26894,6 +27542,25 @@ export const OpenActionProfileActedFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -27682,73 +28349,34 @@ export const ActedNotificationFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'metadata' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'appId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'profileMetadataSource' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'useFallback' },
+                      value: { kind: 'BooleanValue', value: true },
+                    },
+                  ],
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'picture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'ImageSet' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'ProfilePictureSet' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'NftImage' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'coverPicture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'attributes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-                    ],
-                  },
-                },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMetadata' } },
               ],
             },
           },
@@ -27998,6 +28626,75 @@ export const ActedNotificationFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMetadata' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMetadata' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'picture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ProfilePictureSet' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NftImage' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'coverPicture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'attributes' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'ProfilePictureSet' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
       selectionSet: {
@@ -28015,6 +28712,25 @@ export const ActedNotificationFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -29067,6 +29783,72 @@ export const ActedNotificationFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'canCollect' },
+            name: { kind: 'Name', value: 'canAct' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'hasCollected' },
+            name: { kind: 'Name', value: 'hasActed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OptimisticStatusResult' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
             alias: { kind: 'Name', value: 'hasUpvoted' },
             name: { kind: 'Name', value: 'hasReacted' },
             arguments: [
@@ -29110,6 +29892,7 @@ export const ActedNotificationFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hasQuoted' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -29429,6 +30212,7 @@ export const ActedNotificationFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -29436,7 +30220,44 @@ export const ActedNotificationFragmentDoc = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],
@@ -34322,73 +35143,34 @@ export const FollowNotificationFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'metadata' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'appId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'profileMetadataSource' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'useFallback' },
+                      value: { kind: 'BooleanValue', value: true },
+                    },
+                  ],
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'picture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'ImageSet' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'ProfilePictureSet' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'NftImage' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'coverPicture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'attributes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-                    ],
-                  },
-                },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMetadata' } },
               ],
             },
           },
@@ -34638,6 +35420,75 @@ export const FollowNotificationFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMetadata' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMetadata' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'picture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ProfilePictureSet' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NftImage' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'coverPicture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'attributes' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'ProfilePictureSet' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
       selectionSet: {
@@ -34655,6 +35506,25 @@ export const FollowNotificationFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -35320,73 +36190,34 @@ export const MentionNotificationFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'metadata' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'appId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'profileMetadataSource' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'useFallback' },
+                      value: { kind: 'BooleanValue', value: true },
+                    },
+                  ],
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'picture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'ImageSet' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'ProfilePictureSet' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'NftImage' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'coverPicture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'attributes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-                    ],
-                  },
-                },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMetadata' } },
               ],
             },
           },
@@ -35636,6 +36467,75 @@ export const MentionNotificationFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMetadata' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMetadata' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'picture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ProfilePictureSet' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NftImage' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'coverPicture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'attributes' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'ProfilePictureSet' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
       selectionSet: {
@@ -35653,6 +36553,25 @@ export const MentionNotificationFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -36705,6 +37624,72 @@ export const MentionNotificationFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'canCollect' },
+            name: { kind: 'Name', value: 'canAct' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'hasCollected' },
+            name: { kind: 'Name', value: 'hasActed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OptimisticStatusResult' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
             alias: { kind: 'Name', value: 'hasUpvoted' },
             name: { kind: 'Name', value: 'hasReacted' },
             arguments: [
@@ -36748,6 +37733,7 @@ export const MentionNotificationFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hasQuoted' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -37067,6 +38053,7 @@ export const MentionNotificationFragmentDoc = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -37074,7 +38061,44 @@ export const MentionNotificationFragmentDoc = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],
@@ -41668,10 +42692,23 @@ export const NotificationsDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'publicationImageTransform' },
+            name: { kind: 'Name', value: 'publicationImageSmallTransform' },
           },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
         },
         {
           kind: 'VariableDefinition',
@@ -41683,7 +42720,6 @@ export const NotificationsDocument = {
             kind: 'NamedType',
             name: { kind: 'Name', value: 'PublicationOperationsActedArgs' },
           },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
         },
         {
           kind: 'VariableDefinition',
@@ -41692,7 +42728,6 @@ export const NotificationsDocument = {
             kind: 'NonNullType',
             type: { kind: 'NamedType', name: { kind: 'Name', value: 'PublicationStatsInput' } },
           },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
         },
         {
           kind: 'VariableDefinition',
@@ -41707,25 +42742,27 @@ export const NotificationsDocument = {
               name: { kind: 'Name', value: 'PublicationStatsCountOpenActionArgs' },
             },
           },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileCoverTransform' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profilePictureTransform' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileStatsArg' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileStatsArg' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
         },
         {
           kind: 'VariableDefinition',
@@ -41737,21 +42774,19 @@ export const NotificationsDocument = {
             kind: 'NamedType',
             name: { kind: 'Name', value: 'ProfileStatsCountOpenActionArgs' },
           },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
+          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'RateRequest' } },
-          defaultValue: {
-            kind: 'ObjectValue',
-            fields: [
-              {
-                kind: 'ObjectField',
-                name: { kind: 'Name', value: 'for' },
-                value: { kind: 'EnumValue', value: 'USD' },
-              },
-            ],
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'RateRequest' } },
           },
         },
       ],
@@ -42481,73 +43516,34 @@ export const NotificationsDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'metadata' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'appId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'profileMetadataSource' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'useFallback' },
+                      value: { kind: 'BooleanValue', value: true },
+                    },
+                  ],
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'picture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'ImageSet' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'ProfilePictureSet' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'NftImage' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'coverPicture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'attributes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-                    ],
-                  },
-                },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMetadata' } },
               ],
             },
           },
@@ -42797,6 +43793,75 @@ export const NotificationsDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMetadata' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMetadata' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'picture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ProfilePictureSet' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NftImage' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'coverPicture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'attributes' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'ProfilePictureSet' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
       selectionSet: {
@@ -42814,6 +43879,25 @@ export const NotificationsDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -43866,6 +44950,72 @@ export const NotificationsDocument = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'canCollect' },
+            name: { kind: 'Name', value: 'canAct' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'hasCollected' },
+            name: { kind: 'Name', value: 'hasActed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'filter' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'category' },
+                            value: { kind: 'EnumValue', value: 'COLLECT' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'OptimisticStatusResult' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
             alias: { kind: 'Name', value: 'hasUpvoted' },
             name: { kind: 'Name', value: 'hasReacted' },
             arguments: [
@@ -43909,6 +45059,7 @@ export const NotificationsDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'canComment' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canMirror' } },
           { kind: 'Field', name: { kind: 'Name', value: 'canQuote' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hasQuoted' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hasMirrored' } },
           {
             kind: 'Field',
@@ -44228,6 +45379,7 @@ export const NotificationsDocument = {
           },
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'small' },
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -44235,7 +45387,44 @@ export const NotificationsDocument = {
                 name: { kind: 'Name', value: 'request' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageTransform' },
+                  name: { kind: 'Name', value: 'publicationImageSmallTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'medium' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
                 },
               },
             ],

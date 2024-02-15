@@ -1,5 +1,6 @@
 import { TransactionKind } from '@lens-protocol/domain/entities';
 import {
+  CreateProfileRequest,
   FollowPolicyConfig,
   FollowPolicyType,
   FollowRequest,
@@ -11,9 +12,15 @@ import { z } from 'zod';
 
 import { DataSchema, Erc20AmountSchema, EvmAddressSchema, ProfileIdSchema } from './common';
 
-export const CreateProfileRequestSchema = z.object({
-  handle: z.string(),
+export const CreateProfileRequestSchema: z.ZodType<
+  CreateProfileRequest,
+  z.ZodTypeDef,
+  UnknownObject
+> = z.object({
   kind: z.literal(TransactionKind.CREATE_PROFILE),
+  localName: z.string(),
+  approveSignless: z.boolean(),
+  to: EvmAddressSchema,
 });
 
 const FollowRequestFeeSchema = z.object({

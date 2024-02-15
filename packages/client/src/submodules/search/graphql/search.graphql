@@ -1,14 +1,16 @@
 query SearchPublications(
   $request: PublicationSearchRequest!
-  $publicationImageTransform: ImageTransform = {}
-  $publicationOperationsActedArgs: PublicationOperationsActedArgs = {}
-  $publicationStatsInput: PublicationStatsInput! = {}
-  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs! = {}
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $publicationImageSmallTransform: ImageTransform!
+  $publicationImageMediumTransform: ImageTransform!
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs
+  $publicationStatsInput: PublicationStatsInput!
+  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs!
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
+  $profileMetadataSource: AppId = null
+  $rateRequest: RateRequest!
 ) {
   result: searchPublications(request: $request) {
     items {
@@ -30,11 +32,12 @@ query SearchPublications(
 
 query SearchProfiles(
   $request: ProfileSearchRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
+  $profileMetadataSource: AppId = null
+  $rateRequest: RateRequest!
 ) {
   result: searchProfiles(request: $request) {
     items {

@@ -2,12 +2,7 @@ import type { Authentication } from '../../authentication';
 import { LensContext } from '../../context';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import { MomokaTransactionRequest, MomokaTransactionsRequest } from '../../graphql/types.generated';
-import {
-  PaginatedResult,
-  buildRequestFromConfig,
-  buildPaginatedQueryResult,
-  sdkAuthHeaderWrapper,
-} from '../../helpers';
+import { PaginatedResult, buildPaginatedQueryResult, sdkAuthHeaderWrapper } from '../../helpers';
 import {
   MomokaCommentTransactionFragment,
   MomokaMirrorTransactionFragment,
@@ -33,10 +28,7 @@ export class Momoka {
   /**
    * @internal
    */
-  constructor(
-    private readonly context: LensContext,
-    authentication: Authentication,
-  ) {
+  constructor(context: LensContext, authentication: Authentication) {
     const client = new FetchGraphQLClient(context);
     this.sdk = getSdk(client, sdkAuthHeaderWrapper(authentication));
   }
@@ -107,7 +99,6 @@ export class Momoka {
     return buildPaginatedQueryResult(async (currRequest) => {
       const result = await this.sdk.momokaTransactions({
         request: currRequest,
-        ...buildRequestFromConfig(this.context),
       });
       return result.data.result;
     }, request);

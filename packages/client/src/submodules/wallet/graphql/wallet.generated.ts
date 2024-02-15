@@ -27,11 +27,12 @@ export type OwnedHandlesQuery = {
 
 export type ProfilesManagedQueryVariables = Types.Exact<{
   request: Types.ProfilesManagedRequest;
-  profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
-  profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profileCoverTransform: Types.ImageTransform;
+  profilePictureTransform: Types.ImageTransform;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
   profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
-  rateRequest?: Types.InputMaybe<Types.RateRequest>;
+  profileMetadataSource?: Types.InputMaybe<Types.Scalars['AppId']['input']>;
+  rateRequest: Types.RateRequest;
 }>;
 
 export type ProfilesManagedQuery = {
@@ -65,14 +66,35 @@ export type ClaimableProfilesQuery = { result: ClaimableProfilesResultFragment }
 
 export type LastLoggedInProfileQueryVariables = Types.Exact<{
   request: Types.LastLoggedInProfileRequest;
-  profileCoverTransform?: Types.InputMaybe<Types.ImageTransform>;
-  profilePictureTransform?: Types.InputMaybe<Types.ImageTransform>;
+  profileCoverTransform: Types.ImageTransform;
+  profilePictureTransform: Types.ImageTransform;
   profileStatsArg?: Types.InputMaybe<Types.ProfileStatsArg>;
   profileStatsCountOpenActionArgs?: Types.InputMaybe<Types.ProfileStatsCountOpenActionArgs>;
-  rateRequest?: Types.InputMaybe<Types.RateRequest>;
+  profileMetadataSource?: Types.InputMaybe<Types.Scalars['AppId']['input']>;
+  rateRequest: Types.RateRequest;
 }>;
 
 export type LastLoggedInProfileQuery = { result: ProfileFragment | null };
+
+export type UserCurrentRateLimitFragment = {
+  hourAllowanceLeft: number;
+  hourAllowanceUsed: number;
+  hourAllowance: number;
+  dayAllowanceLeft: number;
+  dayAllowanceUsed: number;
+  dayAllowance: number;
+};
+
+export type UserCurrentRateLimitResultFragment = {
+  momoka: UserCurrentRateLimitFragment;
+  onchain: UserCurrentRateLimitFragment;
+};
+
+export type UserRateLimitQueryVariables = Types.Exact<{
+  request: Types.UserCurrentRateLimitRequest;
+}>;
+
+export type UserRateLimitQuery = { result: UserCurrentRateLimitResultFragment };
 
 export type CreateProfileWithHandleErrorResultFragment = {
   reason: Types.CreateProfileWithHandleErrorReasonType;
@@ -181,6 +203,81 @@ export const ClaimableProfilesResultFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'withHandle' } },
           { kind: 'Field', name: { kind: 'Name', value: 'source' } },
           { kind: 'Field', name: { kind: 'Name', value: 'expiry' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const UserCurrentRateLimitFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'UserCurrentRateLimit' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'UserCurrentRateLimit' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'hourAllowanceLeft' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hourAllowanceUsed' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hourAllowance' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'dayAllowanceLeft' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'dayAllowanceUsed' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'dayAllowance' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const UserCurrentRateLimitResultFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'UserCurrentRateLimitResult' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'UserCurrentRateLimitResult' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'momoka' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'UserCurrentRateLimit' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'onchain' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'UserCurrentRateLimit' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'UserCurrentRateLimit' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'UserCurrentRateLimit' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'hourAllowanceLeft' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hourAllowanceUsed' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hourAllowance' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'dayAllowanceLeft' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'dayAllowanceUsed' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'dayAllowance' } },
         ],
       },
     },
@@ -376,20 +473,23 @@ export const ProfilesManagedDocument = {
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileCoverTransform' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profilePictureTransform' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileStatsArg' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileStatsArg' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
         },
         {
           kind: 'VariableDefinition',
@@ -401,21 +501,19 @@ export const ProfilesManagedDocument = {
             kind: 'NamedType',
             name: { kind: 'Name', value: 'ProfileStatsCountOpenActionArgs' },
           },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
+          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'RateRequest' } },
-          defaultValue: {
-            kind: 'ObjectValue',
-            fields: [
-              {
-                kind: 'ObjectField',
-                name: { kind: 'Name', value: 'for' },
-                value: { kind: 'EnumValue', value: 'USD' },
-              },
-            ],
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'RateRequest' } },
           },
         },
       ],
@@ -750,73 +848,34 @@ export const ProfilesManagedDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'metadata' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'appId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'profileMetadataSource' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'useFallback' },
+                      value: { kind: 'BooleanValue', value: true },
+                    },
+                  ],
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'picture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'ImageSet' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'ProfilePictureSet' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'NftImage' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'coverPicture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'attributes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-                    ],
-                  },
-                },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMetadata' } },
               ],
             },
           },
@@ -1053,6 +1112,75 @@ export const ProfilesManagedDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMetadata' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMetadata' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'picture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ProfilePictureSet' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NftImage' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'coverPicture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'attributes' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'ProfilePictureSet' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
       selectionSet: {
@@ -1070,6 +1198,25 @@ export const ProfilesManagedDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -1553,20 +1700,23 @@ export const LastLoggedInProfileDocument = {
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileCoverTransform' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profilePictureTransform' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageTransform' } },
+          },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileStatsArg' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileStatsArg' } },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
         },
         {
           kind: 'VariableDefinition',
@@ -1578,21 +1728,19 @@ export const LastLoggedInProfileDocument = {
             kind: 'NamedType',
             name: { kind: 'Name', value: 'ProfileStatsCountOpenActionArgs' },
           },
-          defaultValue: { kind: 'ObjectValue', fields: [] },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
+          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'RateRequest' } },
-          defaultValue: {
-            kind: 'ObjectValue',
-            fields: [
-              {
-                kind: 'ObjectField',
-                name: { kind: 'Name', value: 'for' },
-                value: { kind: 'EnumValue', value: 'USD' },
-              },
-            ],
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'RateRequest' } },
           },
         },
       ],
@@ -1891,73 +2039,34 @@ export const LastLoggedInProfileDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'metadata' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'appId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'profileMetadataSource' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'useFallback' },
+                      value: { kind: 'BooleanValue', value: true },
+                    },
+                  ],
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'picture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'ImageSet' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'ProfilePictureSet' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'NftImage' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'coverPicture' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'attributes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-                    ],
-                  },
-                },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMetadata' } },
               ],
             },
           },
@@ -2194,6 +2303,75 @@ export const LastLoggedInProfileDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMetadata' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMetadata' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'appId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'rawURI' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'picture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ProfilePictureSet' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NftImage' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NftImage' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'coverPicture' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileCoverSet' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'attributes' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'ProfilePictureSet' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImageSet' } },
       selectionSet: {
@@ -2211,6 +2389,25 @@ export const LastLoggedInProfileDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'optimized' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbnail' },
+            name: { kind: 'Name', value: 'transformed' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'profilePictureTransform' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
@@ -2564,6 +2761,104 @@ export const LastLoggedInProfileDocument = {
     },
   ],
 } as unknown as DocumentNode;
+export const UserRateLimitDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'UserRateLimit' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UserCurrentRateLimitRequest' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'result' },
+            name: { kind: 'Name', value: 'userRateLimit' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'UserCurrentRateLimitResult' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'UserCurrentRateLimit' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'UserCurrentRateLimit' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'hourAllowanceLeft' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hourAllowanceUsed' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hourAllowance' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'dayAllowanceLeft' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'dayAllowanceUsed' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'dayAllowance' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'UserCurrentRateLimitResult' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'UserCurrentRateLimitResult' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'momoka' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'UserCurrentRateLimit' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'onchain' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'UserCurrentRateLimit' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
 export const ClaimProfileWithHandleDocument = {
   kind: 'Document',
   definitions: [
@@ -2831,6 +3126,7 @@ const ProfilesManagedDocumentString = print(ProfilesManagedDocument);
 const UserSigNoncesDocumentString = print(UserSigNoncesDocument);
 const ClaimableProfilesDocumentString = print(ClaimableProfilesDocument);
 const LastLoggedInProfileDocumentString = print(LastLoggedInProfileDocument);
+const UserRateLimitDocumentString = print(UserRateLimitDocument);
 const ClaimProfileWithHandleDocumentString = print(ClaimProfileWithHandleDocument);
 const CreateProfileWithHandleDocumentString = print(CreateProfileWithHandleDocument);
 const CreateProfileDocumentString = print(CreateProfileDocument);
@@ -2929,6 +3225,25 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             { ...requestHeaders, ...wrappedRequestHeaders },
           ),
         'LastLoggedInProfile',
+        'query',
+      );
+    },
+    UserRateLimit(
+      variables: UserRateLimitQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: UserRateLimitQuery;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<UserRateLimitQuery>(UserRateLimitDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'UserRateLimit',
         'query',
       );
     },

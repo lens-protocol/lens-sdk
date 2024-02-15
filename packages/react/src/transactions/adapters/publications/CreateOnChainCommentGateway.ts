@@ -1,15 +1,15 @@
 import {
-  SafeApolloClient,
-  omitTypename,
-  RelaySuccess,
   CommentOnchainData,
-  CommentOnchainVariables,
   CommentOnchainDocument,
-  OnchainCommentRequest,
+  CommentOnchainVariables,
   CreateOnchainCommentBroadcastItemResult,
   CreateOnchainCommentTypedDataData,
-  CreateOnchainCommentTypedDataVariables,
   CreateOnchainCommentTypedDataDocument,
+  CreateOnchainCommentTypedDataVariables,
+  OnchainCommentRequest,
+  RelaySuccess,
+  SafeApolloClient,
+  omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensHub } from '@lens-protocol/blockchain-bindings';
 import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
@@ -17,13 +17,12 @@ import { CreateCommentRequest } from '@lens-protocol/domain/use-cases/publicatio
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
-  IPaidTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
-import { LensConfig } from '../../../config';
+import { BaseConfig } from '../../../config';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
@@ -36,11 +35,10 @@ export class CreateOnChainCommentGateway
   extends AbstractContractCallGateway<CreateCommentRequest>
   implements
     IDelegatedTransactionGateway<CreateCommentRequest>,
-    ISignedOnChainGateway<CreateCommentRequest>,
-    IPaidTransactionGateway<CreateCommentRequest>
+    ISignedOnChainGateway<CreateCommentRequest>
 {
   constructor(
-    config: LensConfig,
+    config: BaseConfig,
     providerFactory: IProviderFactory,
     private readonly apolloClient: SafeApolloClient,
     private readonly transactionFactory: ITransactionFactory<CreateCommentRequest>,
@@ -80,7 +78,7 @@ export class CreateOnChainCommentGateway
     });
   }
 
-  protected override async createEncodedData(
+  protected override async createCallDetails(
     request: CreateCommentRequest,
   ): Promise<ContractCallDetails> {
     const input = this.resolveOnchainCommentRequest(request);

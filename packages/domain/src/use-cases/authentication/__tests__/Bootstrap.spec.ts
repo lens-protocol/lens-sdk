@@ -2,15 +2,15 @@ import { failure, never, success } from '@lens-protocol/shared-kernel';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { mockICredentials } from '../../../entities/__helpers__/mocks';
+import { mockCredentials } from '../../../entities/__helpers__/mocks';
 import { mockTransactionQueue } from '../../../mocks';
 import { TransactionQueue } from '../../transactions';
 import {
   Bootstrap,
   CredentialsExpiredError,
+  IBootstrapPresenter,
   ICredentialsGateway,
   ICredentialsRenewer,
-  IBootstrapPresenter,
 } from '../Bootstrap';
 import { Logout, LogoutReason } from '../Logout';
 import { anonymousSessionData, profileSessionData } from '../SessionData';
@@ -60,8 +60,8 @@ describe(`Given the ${Bootstrap.name} interactor`, () => {
   });
 
   describe(`when executed with credentials`, () => {
-    const oldCredentials = mockICredentials();
-    const newCredentials = mockICredentials(oldCredentials);
+    const oldCredentials = mockCredentials();
+    const newCredentials = mockCredentials(oldCredentials);
 
     it(`should:
         - renew the credentials and save the new ones

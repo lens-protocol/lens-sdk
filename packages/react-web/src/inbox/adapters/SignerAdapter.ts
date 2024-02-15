@@ -8,7 +8,7 @@ import type { ActiveWallet } from '@lens-protocol/domain/use-cases/authenticatio
 import { SignArbitraryMessage } from '@lens-protocol/domain/use-cases/inbox';
 import { IEquatableError } from '@lens-protocol/react';
 import { Deferred, Result } from '@lens-protocol/shared-kernel';
-import { Signer } from '@xmtp/react-sdk';
+import { Signer as XmtpSigner } from '@xmtp/react-sdk';
 
 class PromiseResultPresenter<T, E extends IEquatableError> {
   private deferredResult = new Deferred<Result<T, E>>();
@@ -22,7 +22,7 @@ class PromiseResultPresenter<T, E extends IEquatableError> {
   }
 }
 
-export class SignerAdapter implements Signer {
+export class SignerAdapter implements XmtpSigner {
   constructor(private activeWallet: ActiveWallet) {}
 
   async getAddress() {

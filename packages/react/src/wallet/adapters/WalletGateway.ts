@@ -1,62 +1,34 @@
-import {
-  IReadableWalletGateway,
-  IWritableWalletGateway,
-  IResettableWalletGateway,
-} from '@lens-protocol/domain/use-cases/authentication';
+import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
+import { IWalletGateway } from '@lens-protocol/domain/use-cases/wallets';
 import { EvmAddress, never } from '@lens-protocol/shared-kernel';
-import { IStorage } from '@lens-protocol/storage';
 import { z } from 'zod';
 
-import { ConcreteWallet, WalletDataSchema } from './ConcreteWallet';
-
-export interface IWalletUnmarshaller {
-  rehydrate(data: WalletDataSchema): ConcreteWallet;
-}
+import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
+import { ConcreteWallet, ISignerFactory, WalletDataSchema } from './ConcreteWallet';
 
 export const WalletStorageSchema = z.array(WalletDataSchema);
 
 export type WalletStorageSchema = z.infer<typeof WalletStorageSchema>;
 
-export class WalletGateway
-  implements IReadableWalletGateway, IResettableWalletGateway, IWritableWalletGateway
-{
+export class WalletGateway implements IWalletGateway {
   private inMemoryCache: Record<EvmAddress, ConcreteWallet> = {};
 
   constructor(
-    private readonly storage: IStorage<WalletStorageSchema>,
-    private readonly factory: IWalletUnmarshaller,
+    private readonly signerFactory: ISignerFactory,
+    private readonly transactionFactory: ITransactionFactory<AnyTransactionRequest>,
   ) {}
 
-  async getByAddress(address: EvmAddress): Promise<ConcreteWallet | null> {
-    if (this.inMemoryCache[address]) {
-      return this.inMemoryCache[address] ?? never();
-    }
-    const wallets = await this.getAll();
-    const wallet = wallets.find((w) => w.address.toLowerCase() === address.toLowerCase()) ?? null;
+  async getByAddress(address: EvmAddress): Promise<ConcreteWallet> {
+    const key = address.toLowerCase();
 
-    if (wallet) {
-      this.inMemoryCache[address] = wallet;
+    if (this.inMemoryCache[key]) {
+      return this.inMemoryCache[key] ?? never();
     }
+
+    const wallet = ConcreteWallet.create(address, this.signerFactory, this.transactionFactory);
+
+    this.inMemoryCache[key] = wallet;
+
     return wallet;
-  }
-
-  async reset(): Promise<void> {
-    await this.storage.reset();
-  }
-
-  async save(wallet: ConcreteWallet): Promise<void> {
-    const wallets = await this.getAll();
-
-    this.inMemoryCache[wallet.address] = wallet;
-    await this.storage.set(wallets.concat([wallet]).map((w) => w.toWalletData()));
-  }
-
-  private async getAll(): Promise<ConcreteWallet[]> {
-    const data = await this.storage.get();
-
-    if (data === null) {
-      return [];
-    }
-    return data.map((d) => this.factory.rehydrate(d));
   }
 }

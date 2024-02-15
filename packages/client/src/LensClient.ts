@@ -1,8 +1,9 @@
 import { InMemoryStorageProvider, IStorageProvider } from '@lens-protocol/storage';
 
 import { Authentication, IAuthentication } from './authentication';
-import { LensContext, MediaTransformsConfig } from './context';
+import { LensContext } from './context';
 import { Environment } from './environments';
+import { MediaTransformsConfig, QueryParams } from './queryParams';
 import {
   Explore,
   Feed,
@@ -23,6 +24,8 @@ import {
 
 /**
  * LensClient configuration
+ *
+ * @group LensClient
  */
 export type LensClientConfig = {
   /**
@@ -38,11 +41,18 @@ export type LensClientConfig = {
   storage?: IStorageProvider;
 
   /**
+   * Allows to define extra headers to be sent when making requests to the Lens API.
+   * You can set the `origin` or `user-agent` headers here.
+   */
+  headers?: Record<string, string>;
+
+  /**
    * Media returned from the publication and profile queries can be transformed
    * to sizes needed by the SDK consuming application.
    * To overwrite default transformation values, provide a `mediaTransforms` object.
    *
    * @see {@link MediaTransformsConfig} for more information
+   * @deprecated Use the `params` option instead. This will be removed in a future release.
    */
   mediaTransforms?: MediaTransformsConfig;
 
@@ -54,10 +64,11 @@ export type LensClientConfig = {
   origin?: string;
 
   /**
-   * Allows to define extra headers to be sent when making requests to the Lens API.
-   * You can set the `origin` or `user-agent` headers here.
+   * The common query params allow you to customize some aspects of the returned data.
+   *
+   * @defaultValue see individual fields of {@link QueryParams}
    */
-  headers?: Record<string, string>;
+  params?: QueryParams;
 };
 
 /**
@@ -87,9 +98,10 @@ export class LensClient {
     this.context = {
       environment: config.environment,
       storage: config.storage || new InMemoryStorageProvider(),
-      mediaTransforms: config.mediaTransforms || {},
       origin: config.origin,
       headers: config.headers,
+      mediaTransforms: config.mediaTransforms ?? {},
+      params: config.params ?? {},
     };
     this._authentication = new Authentication(this.context);
   }

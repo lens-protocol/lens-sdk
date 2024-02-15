@@ -210,11 +210,12 @@ fragment CreateUnlinkHandleFromProfileBroadcastItemResult on CreateUnlinkHandleF
 # queries
 query Profile(
   $request: ProfileRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
+  $profileMetadataSource: AppId = null
+  $rateRequest: RateRequest!
 ) {
   result: profile(request: $request) {
     ...Profile
@@ -223,11 +224,12 @@ query Profile(
 
 query DefaultProfile(
   $request: DefaultProfileRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
+  $profileMetadataSource: AppId = null
+  $rateRequest: RateRequest!
 ) {
   result: defaultProfile(request: $request) {
     ...Profile
@@ -236,11 +238,12 @@ query DefaultProfile(
 
 query Profiles(
   $request: ProfilesRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
+  $profileMetadataSource: AppId = null
+  $rateRequest: RateRequest!
 ) {
   result: profiles(request: $request) {
     items {
@@ -265,11 +268,12 @@ query ProfileManagers($request: ProfileManagersRequest!) {
 
 query ProfileRecommendations(
   $request: ProfileRecommendationsRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
+  $profileMetadataSource: AppId = null
+  $rateRequest: RateRequest!
 ) {
   result: profileRecommendations(request: $request) {
     items {
@@ -283,11 +287,12 @@ query ProfileRecommendations(
 
 query Following(
   $request: FollowingRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
+  $profileMetadataSource: AppId = null
+  $rateRequest: RateRequest!
 ) {
   result: following(request: $request) {
     items {
@@ -301,11 +306,12 @@ query Following(
 
 query Followers(
   $request: FollowersRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
+  $profileMetadataSource: AppId = null
+  $rateRequest: RateRequest!
 ) {
   result: followers(request: $request) {
     items {
@@ -319,11 +325,12 @@ query Followers(
 
 query MutualFollowers(
   $request: MutualFollowersRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
+  $profileMetadataSource: AppId = null
+  $rateRequest: RateRequest!
 ) {
   result: mutualFollowers(request: $request) {
     items {
@@ -351,11 +358,12 @@ query FollowStatusBulk($request: FollowStatusBulkRequest!) {
 
 query WhoActedOnPublication(
   $request: WhoActedOnPublicationRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
+  $profileMetadataSource: AppId = null
+  $rateRequest: RateRequest!
 ) {
   result: whoActedOnPublication(request: $request) {
     items {
@@ -388,11 +396,12 @@ query ProfileActionHistory($request: ProfileActionHistoryRequest!) {
 
 query WhoHaveBlocked(
   $request: WhoHaveBlockedRequest!
-  $profileCoverTransform: ImageTransform = {}
-  $profilePictureTransform: ImageTransform = {}
-  $profileStatsArg: ProfileStatsArg = {}
-  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs = {}
-  $rateRequest: RateRequest = { for: USD }
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
+  $profileMetadataSource: AppId = null
+  $rateRequest: RateRequest!
 ) {
   result: whoHaveBlocked(request: $request) {
     items {

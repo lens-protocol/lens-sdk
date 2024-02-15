@@ -36,7 +36,7 @@ import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { providers } from 'ethers';
 import { mock } from 'jest-mock-extended';
 
-import { LensConfig } from '../../../config';
+import { BaseConfig } from '../../../config';
 import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { mockIProviderFactory } from '../../../wallet/adapters/__helpers__/mocks';
 import { UnsignedContractCallTransaction } from '../AbstractContractCallGateway';
@@ -54,7 +54,7 @@ function setupTestScenario({
   apolloClient: SafeApolloClient;
   provider?: providers.JsonRpcProvider;
 }) {
-  const config = mock<LensConfig>();
+  const config = mock<BaseConfig>();
   const transactionFactory = mockITransactionFactory();
 
   const providerFactory = mockIProviderFactory({
@@ -290,7 +290,7 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
   ])(`when creating an ${UnsignedTransaction.name}<$name>`, ({ request, response }) => {
     const wallet = mockWallet();
 
-    it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+    it(`should resolve with the expected ${UnsignedContractCallTransaction.name}`, async () => {
       const provider = await mockJsonRpcProvider();
 
       const apolloClient = mockLensApolloClient([response]);
@@ -486,7 +486,7 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
       const wallet = mockWallet();
       const data = mockCreateActOnOpenActionTypedDataData();
 
-      it(`should succeed with the expected ${UnsignedContractCallTransaction.name}`, async () => {
+      it(`should resolve with the expected ${UnsignedContractCallTransaction.name}`, async () => {
         const provider = await mockJsonRpcProvider();
 
         const apolloClient = mockLensApolloClient([
