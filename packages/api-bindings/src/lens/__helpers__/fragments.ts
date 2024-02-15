@@ -164,6 +164,7 @@ export function mockCommentFragment(
   return {
     id: mockPublicationId(),
     isHidden: false,
+    hiddenByAuthor: false,
     txHash: mockTransactionHash(),
     by: mockProfileFragment(),
     createdAt: faker.date.past().toISOString(),

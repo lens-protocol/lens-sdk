@@ -576,3 +576,11 @@ mutation AddPublicationNotInterested($request: PublicationNotInterestedRequest!)
 mutation UndoPublicationNotInterested($request: PublicationNotInterestedRequest!) {
   undoPublicationNotInterested(request: $request)
 }
+
+mutation HideComment($request: HideCommentRequest!) {
+  hideComment(request: $request)
+}
+
+mutation UnhideComment($request: UnhideCommentRequest!) {
+  unhideComment(request: $request)
+}
