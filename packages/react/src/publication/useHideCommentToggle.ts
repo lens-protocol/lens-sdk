@@ -14,6 +14,21 @@ export type UseHideCommentToggleArgs = {
  *
  * You MUST be authenticated via {@link useLogin} to use this hook.
  *
+ * @example
+ * ```tsx
+ * import { Comment, useHideCommentToggle } from '@lens-protocol/react-web';
+ *
+ * function HideableComment({ publication }: { publication: Comment }) {
+ *   const { execute: toggle, loading } = useHideCommentToggle();
+ *
+ *   return (
+ *     <button onClick={() => toggle({ publication })} disabled={loading}>
+ *       {publication.hiddenByAuthor ? 'Unhide' : 'Hide'}
+ *     </button>
+ *   );
+ * }
+ * ```
+ *
  * @category Publications
  * @group Hooks
  * @param args - {@link UseHideCommentToggleArgs}
