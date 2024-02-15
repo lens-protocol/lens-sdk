@@ -1,10 +1,4 @@
-import {
-  BaseConfig,
-  BaseProvider,
-  EnvironmentConfig,
-  IBindings,
-  QueryParams,
-} from '@lens-protocol/react';
+import { BaseProvider, EnvironmentConfig, IBindings, QueryParams } from '@lens-protocol/react';
 import { ILogger } from '@lens-protocol/shared-kernel';
 import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/storage';
 import { ReactNode } from 'react';
@@ -77,4 +71,4 @@ export type LensProviderProps = {
  * @group Components
  * @param props - {@link LensProviderProps}
  */
-export const LensProvider = BaseProvider<BaseConfig>;
+export const LensProvider = BaseProvider<LensConfig>;
