@@ -1,6 +1,6 @@
-import { ether, matic, usd } from '../Asset';
+import { ether, matic } from '../Asset';
 import { ChainType } from '../ChainType';
-import { mockDaiAsset } from '../__helpers__/mocks';
+import { mockDaiAsset, mockUsdAsset } from '../__helpers__/mocks';
 
 describe('Given the Asset type definition', () => {
   [
@@ -14,8 +14,8 @@ describe('Given the Asset type definition', () => {
       expected: true,
     },
     {
-      left: usd(),
-      right: usd(),
+      left: mockUsdAsset(),
+      right: mockUsdAsset(),
       expected: true,
     },
     {
@@ -32,7 +32,7 @@ describe('Given the Asset type definition', () => {
       left: mockDaiAsset({
         chainType: ChainType.ETHEREUM,
       }),
-      right: usd(),
+      right: mockUsdAsset(),
       expected: false,
     },
     {
@@ -50,12 +50,12 @@ describe('Given the Asset type definition', () => {
       expected: false,
     },
     {
-      left: usd(),
+      left: mockUsdAsset(),
       right: ether(),
       expected: false,
     },
     {
-      left: usd(),
+      left: mockUsdAsset(),
       right: matic(),
       expected: false,
     },

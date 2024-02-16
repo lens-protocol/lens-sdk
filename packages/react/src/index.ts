@@ -33,15 +33,7 @@ export * from './wallet';
  * Domain essentials
  */
 export type { AppId, NftId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
-export {
-  Amount,
-  ChainType,
-  WellKnownSymbols,
-  erc20,
-  ether,
-  matic,
-  usd,
-} from '@lens-protocol/shared-kernel';
+export { Amount, ChainType, erc20, fiat, ether, matic } from '@lens-protocol/shared-kernel';
 export type {
   AmountValue,
   Asset,
@@ -146,7 +138,7 @@ export { NotFoundError } from './NotFoundError';
 /**
  * Helpers
  */
-export { erc20Amount } from '@lens-protocol/api-bindings';
+export { erc20Amount, fiatAmount } from '@lens-protocol/api-bindings';
 export * from './ConsoleLogger';
 export { useSharedDependencies } from './shared';
 export * from './utils';
