@@ -1,5 +1,12 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.22
+
+### Patch Changes
+
+- Updated dependencies [9691cdccc]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.10
+
 ## 0.11.0-alpha.21
 
 ### Patch Changes

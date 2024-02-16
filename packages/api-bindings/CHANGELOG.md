@@ -1,5 +1,13 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.29
+
+### Patch Changes
+
+- Updated dependencies [9691cdccc]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.10
+  - @lens-protocol/domain@0.11.0-alpha.22
+
 ## 0.11.0-alpha.28
 
 ### Patch Changes
