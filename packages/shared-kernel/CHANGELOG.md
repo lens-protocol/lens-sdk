@@ -1,5 +1,11 @@
 # @lens-protocol/shared-kernel
 
+## 0.11.0-alpha.10
+
+### Patch Changes
+
+- 9691cdccc: **fix:** missing release of sub-dependency
+
 ## 0.11.0-alpha.9
 
 ### Minor Changes
