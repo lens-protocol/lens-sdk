@@ -1,5 +1,15 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.33
+
+### Patch Changes
+
+- Updated dependencies [9691cdccc]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.10
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.23
+  - @lens-protocol/gated-content@0.3.3-alpha.21
+  - @lens-protocol/storage@0.7.5-alpha.9
+
 ## 2.0.0-alpha.32
 
 ### Minor Changes

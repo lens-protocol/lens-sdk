@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/storage",
-  "version": "0.7.5-alpha.8",
+  "version": "0.7.5-alpha.9",
   "description": "Storage",
   "repository": {
     "directory": "packages/storage",
