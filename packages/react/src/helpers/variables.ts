@@ -24,6 +24,23 @@ export function useProfileFragmentVariables<TVariables extends OperationVariable
 /**
  * @internal
  */
+export function useLazyProfileFragmentVariables() {
+  const { config } = useSharedDependencies();
+
+  return <TVariables extends OperationVariables>(
+    variables: TVariables,
+  ): ProfileFragmentVariables & TVariables => {
+    return {
+      // order matters here, as we want to be able to override the resolved values on a hook-by-hook basis
+      ...config.profileVariables,
+      ...variables,
+    };
+  };
+}
+
+/**
+ * @internal
+ */
 export function usePublicationFragmentVariables<TVariables extends OperationVariables>(
   variables: TVariables,
 ): PublicationFragmentVariables & TVariables {

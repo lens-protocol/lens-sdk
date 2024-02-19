@@ -6,6 +6,7 @@ import {
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { useProfileFragmentVariables } from '../helpers/variables';
 
 /**
  * {@link useProfiles} hook arguments
@@ -14,6 +15,11 @@ export type UseProfilesArgs = PaginatedArgs<ProfilesRequest>;
 
 /**
  * `useProfiles` is a paginated hook that lets you fetch profiles based on a set of filters.
+ *
+ * @example
+ * ```ts
+ * const { data, loading, error } = useProfiles({
+ * ```
  *
  * @category Profiles
  * @group Hooks
@@ -82,7 +88,7 @@ export function useProfiles(args: UseProfilesArgs): PaginatedReadResult<Profile[
   return usePaginatedReadResult(
     useProfilesHook(
       useLensApolloClient({
-        variables: args,
+        variables: useProfileFragmentVariables(args),
       }),
     ),
   );

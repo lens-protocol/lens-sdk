@@ -50,7 +50,7 @@ export function mockProfilesResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: ProfilesVariables;
+  variables: Pick<ProfilesVariables, 'where' | 'cursor'>;
   items: Profile[];
   info?: PaginatedResultInfo;
 }) {
