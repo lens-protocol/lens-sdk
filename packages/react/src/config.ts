@@ -22,40 +22,43 @@ export { SupportedFiatType } from '@lens-protocol/api-bindings';
 export interface IBindings extends ISignerBinding, IProviderBinding {}
 
 /**
+ * Internal configuration
+ *
+ * @internal
+ */
+export type RequiredConfig = {
+  bindings: IBindings;
+
+  environment: EnvironmentConfig;
+
+  logger: ILogger;
+
+  debug: boolean;
+
+  storage: IStorageProvider | IObservableStorageProvider;
+
+  params: QueryParams;
+
+  origin?: string;
+};
+
+/**
  * `<BaseProvider>` configuration
  *
  * @internal
  */
 export type BaseConfig = {
-  /**
-   * Provides integration with the ethers.js Signer and Provider
-   */
   bindings: IBindings;
-  /**
-   * The environment to use. See {@link production} or {@link development}.
-   */
+
   environment: EnvironmentConfig;
-  /**
-   * The logger interface to use when something worth logging happens
-   *
-   * @defaultValue `ConsoleLogger`, an internal implementation of `ILogger` interface that logs to the console
-   */
+
   logger?: ILogger;
-  /**
-   * Enable debug mode. Disable gas estimation on self-funded transactions.
-   *
-   * @defaultValue `false`
-   */
+
   debug?: boolean;
-  /**
-   * The storage provider to use.
-   *
-   * If a implementation of {@link IObservableStorageProvider} is provided,
-   * the provider will be used to subscribe to changes in the storage.
-   */
+
   storage: IStorageProvider | IObservableStorageProvider;
-  /**
-   * The common query params allow you customize some aspect of the returned data.
-   */
+
   params?: QueryParams;
+
+  origin?: string;
 };

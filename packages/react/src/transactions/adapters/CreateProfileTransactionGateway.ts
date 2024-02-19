@@ -8,14 +8,14 @@ import { permissionlessCreator } from '@lens-protocol/blockchain-bindings';
 import { CreateProfileRequest } from '@lens-protocol/domain/use-cases/profile';
 import { Data, EvmAddress } from '@lens-protocol/shared-kernel';
 
-import { BaseConfig } from '../../config';
+import { RequiredConfig } from '../../config';
 import { IProviderFactory } from '../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from './AbstractContractCallGateway';
 
 export class CreateProfileTransactionGateway extends AbstractContractCallGateway<CreateProfileRequest> {
   constructor(
     private apolloClient: SafeApolloClient,
-    config: BaseConfig,
+    config: RequiredConfig,
     providerFactory: IProviderFactory,
   ) {
     super(config, providerFactory);
