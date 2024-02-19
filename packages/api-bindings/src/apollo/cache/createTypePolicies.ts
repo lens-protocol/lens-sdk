@@ -3,6 +3,7 @@ import { FieldPolicy, TypePolicy } from '@apollo/client';
 import { StrictTypedTypePolicies } from '../../lens';
 import { createQueryParamsLocalFields, QueryParams } from './createQueryParamsLocalFields';
 import {
+  createCurrenciesFieldPolicy,
   createExploreProfilesFieldPolicy,
   createExplorePublicationsFieldPolicy,
   createFeedFieldPolicy,
@@ -60,6 +61,7 @@ export function createTypePolicies(
 
     Query: {
       fields: {
+        currencies: createCurrenciesFieldPolicy(),
         exploreProfiles: createExploreProfilesFieldPolicy(),
         explorePublications: createExplorePublicationsFieldPolicy(),
         feed: createFeedFieldPolicy(),

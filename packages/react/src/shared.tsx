@@ -79,6 +79,7 @@ export function createSharedDependencies(userConfig: BaseConfig): SharedDependen
 
   // apollo client
   const apolloClient = createLensApolloClient({
+    connectToDevTools: config.debug,
     queryParams: config.params,
     uri: config.environment.backend,
     accessTokenStorage,

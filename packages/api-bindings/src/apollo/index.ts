@@ -21,6 +21,7 @@ export type ApolloClientConfig = AuthLinkArgs & {
   logger: ILogger;
   pollingInterval: number;
   queryParams?: QueryParams;
+  connectToDevTools?: boolean;
 };
 
 export function createLensApolloClient({
@@ -30,6 +31,7 @@ export function createLensApolloClient({
   logger,
   pollingInterval,
   queryParams,
+  connectToDevTools,
 }: ApolloClientConfig) {
   const authLink = createAuthLink({ accessTokenStorage, origin });
 
@@ -40,7 +42,7 @@ export function createLensApolloClient({
   });
 
   return new SafeApolloClient({
-    connectToDevTools: true,
+    connectToDevTools,
     cache: createLensCache(queryParams),
     link: from([authLink, httpLink]),
     pollingInterval,
