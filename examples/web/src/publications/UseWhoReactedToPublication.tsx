@@ -28,6 +28,8 @@ export function UseWhoReactedToPublication() {
         <code>useWhoReactedToPublication</code>
       </h1>
       <div>
+        {reactions.length === 0 && <p>No reactions.</p>}
+
         {reactions.map((p) => (
           <div key={p.profile.id}>
             <ProfileCard profile={p.profile} />

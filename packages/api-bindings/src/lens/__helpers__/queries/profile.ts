@@ -118,7 +118,7 @@ export function mockSearchProfilesResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: SearchProfilesVariables;
+  variables: Pick<SearchProfilesVariables, 'limit' | 'query' | 'where'>;
   items: Profile[];
   info?: PaginatedResultInfo;
 }) {
@@ -194,7 +194,7 @@ export function mockWhoReactedToPublicationResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: WhoReactedPublicationVariables;
+  variables: Pick<WhoReactedPublicationVariables, 'for' | 'limit' | 'where'>;
   items: ProfileWhoReactedResult[];
   info?: PaginatedResultInfo;
 }) {

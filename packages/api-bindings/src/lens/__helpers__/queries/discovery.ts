@@ -57,7 +57,7 @@ export function mockExploreProfilesResponse({
   variables,
   items,
 }: {
-  variables: ExploreProfilesVariables;
+  variables: Pick<ExploreProfilesVariables, 'limit' | 'orderBy' | 'where'>;
   items: Profile[];
 }) {
   return mockAnyPaginatedResponse({
