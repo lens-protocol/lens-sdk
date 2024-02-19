@@ -1067,6 +1067,7 @@ export type CommentBaseFragment = {
   __typename: 'Comment';
   id: string;
   isHidden: boolean;
+  hiddenByAuthor: boolean;
   txHash: string | null;
   createdAt: string;
   publishedOn: AppFragment | null;
@@ -32619,6 +32620,7 @@ export const CommentBaseFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'isHidden' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hiddenByAuthor' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'momoka' },
@@ -48747,6 +48749,7 @@ export const CommentFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'isHidden' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hiddenByAuthor' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'momoka' },
@@ -55362,6 +55365,7 @@ export const QuoteFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'isHidden' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hiddenByAuthor' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'momoka' },
@@ -61988,6 +61992,7 @@ export const MirrorFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'isHidden' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hiddenByAuthor' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'momoka' },

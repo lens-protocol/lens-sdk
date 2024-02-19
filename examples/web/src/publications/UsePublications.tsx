@@ -22,7 +22,7 @@ export function UsePublications() {
   } = useInfiniteScroll(
     usePublications({
       where: {
-        from: [profileId('0x1b')],
+        from: [profileId('0x06')],
         publicationTypes: publicationType,
       },
     }),

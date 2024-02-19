@@ -29,7 +29,7 @@ function IndividualPublication({ publication }: { publication: Post | Comment })
   );
 }
 
-export function UseBookmarkToggleInner() {
+function UseBookmarkToggleInner() {
   const {
     data: publications,
     error,
@@ -47,10 +47,6 @@ export function UseBookmarkToggleInner() {
 
   return (
     <div>
-      <h1>
-        <code>useBookmarkToggle</code>
-      </h1>
-
       {publications.map((publication) => (
         <IndividualPublication key={publication.id} publication={publication as Post | Comment} />
       ))}
@@ -61,6 +57,9 @@ export function UseBookmarkToggleInner() {
 export function UseBookmarkToggle() {
   return (
     <>
+      <h1>
+        <code>useBookmarkToggle</code>
+      </h1>
       <RequireProfileSession message="Log in to view this example.">
         <UseBookmarkToggleInner />
       </RequireProfileSession>

@@ -5739,6 +5739,7 @@ export const ReactionNotificationFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'isHidden' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hiddenByAuthor' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'momoka' },
@@ -12457,6 +12458,7 @@ export const CommentNotificationFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'isHidden' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hiddenByAuthor' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'momoka' },
@@ -19160,6 +19162,7 @@ export const MirrorNotificationFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'isHidden' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hiddenByAuthor' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'momoka' },
@@ -25795,6 +25798,7 @@ export const QuoteNotificationFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'isHidden' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hiddenByAuthor' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'momoka' },
@@ -33692,6 +33696,7 @@ export const ActedNotificationFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'isHidden' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hiddenByAuthor' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'momoka' },
@@ -41533,6 +41538,7 @@ export const MentionNotificationFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'isHidden' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hiddenByAuthor' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'momoka' },
@@ -48859,6 +48865,7 @@ export const NotificationsDocument = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'isHidden' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hiddenByAuthor' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'momoka' },

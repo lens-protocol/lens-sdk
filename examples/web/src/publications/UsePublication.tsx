@@ -9,7 +9,7 @@ export function UsePublication() {
     data: publication,
     error,
     loading,
-  } = usePublication({ forId: publicationId('0x98-0x16') });
+  } = usePublication({ forId: publicationId('0x56-0x02') });
 
   if (loading) return <Loading />;
 

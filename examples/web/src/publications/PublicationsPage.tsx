@@ -76,6 +76,11 @@ const publicationHooks = [
     description: `Add or remove a not interested flag to a publication.`,
     path: '/publications/useNotInterestedToggle',
   },
+  {
+    label: 'useHideCommentToggle',
+    description: `Hide comments on your publications.`,
+    path: '/publications/useHideCommentToggle',
+  },
 ];
 
 export function PublicationsPage() {

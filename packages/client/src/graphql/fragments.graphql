@@ -1614,6 +1614,7 @@ fragment CommentBase on Comment {
     ...App
   }
   isHidden
+  hiddenByAuthor
   momoka {
     ...MomokaInfo
   }
