@@ -14,7 +14,7 @@ describe(`Given the ${useProfileFollowers.name} hook`, () => {
     it('should settle with the profiles', async () => {
       const { renderHook } = setupHookTestScenario([
         mockFollowersResponse({
-          of: profileId,
+          variables: { of: profileId },
           items: profiles,
         }),
       ]);

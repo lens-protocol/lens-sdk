@@ -1,5 +1,3 @@
-import { ProfileId } from '@lens-protocol/domain/entities';
-
 import {
   FollowersDocument,
   FollowingDocument,
@@ -24,6 +22,7 @@ import {
   WhoActedOnPublicationVariables,
   WhoReactedPublicationDocument,
   WhoReactedPublicationVariables,
+  FollowersVariables,
 } from '../../graphql/generated';
 import { mockPaginatedResultInfo } from '../fragments';
 import { mockAnyPaginatedResponse, mockAnyResponse } from './helpers';
@@ -81,16 +80,16 @@ export function mockMutualFollowersResponse({
 }
 
 export function mockFollowersResponse({
-  of,
+  variables,
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  of: ProfileId;
+  variables: Pick<FollowersVariables, 'of'>;
   items: Profile[];
   info?: PaginatedResultInfo;
 }) {
   return mockAnyPaginatedResponse({
-    variables: { of },
+    variables,
     items,
     info,
     query: FollowersDocument,
@@ -136,7 +135,7 @@ export function mockProfileRecommendationsResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: ProfileRecommendationsVariables;
+  variables: Pick<ProfileRecommendationsVariables, 'for'>;
   items: Profile[];
   info?: PaginatedResultInfo;
 }) {
