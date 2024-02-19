@@ -93,7 +93,7 @@ export function createSharedDependencies(userConfig: BaseConfig): SharedDependen
   const transactionFactory = new TransactionFactory(transactionObserver);
   const credentialsFactory = new CredentialsFactory(authApi);
   const credentialsGateway = new CredentialsGateway(credentialsStorage, apolloClient);
-  const profileCacheManager = new ProfileCacheManager(apolloClient);
+  const profileCacheManager = new ProfileCacheManager(apolloClient, config.profileVariables);
   const publicationCacheManager = new PublicationCacheManager(apolloClient);
   const walletGateway = new WalletGateway(signerFactory, transactionFactory);
   const transactionGateway = new PendingTransactionGateway(transactionStorage, transactionFactory);

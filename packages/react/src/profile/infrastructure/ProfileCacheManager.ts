@@ -2,6 +2,7 @@ import {
   getSessionData,
   ProfileData,
   ProfileDocument,
+  ProfileFragmentVariables,
   ProfileRequest,
   ProfileVariables,
   SafeApolloClient,
@@ -13,7 +14,10 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { IProfileCacheManager } from '../adapters/IProfileCacheManager';
 
 export class ProfileCacheManager implements IProfileCacheManager {
-  constructor(private readonly client: SafeApolloClient) {}
+  constructor(
+    private readonly client: SafeApolloClient,
+    private readonly variables: ProfileFragmentVariables,
+  ) {}
 
   async fetchProfileById(id: ProfileId) {
     return this.fetch({ forProfileId: id });
@@ -48,7 +52,10 @@ export class ProfileCacheManager implements IProfileCacheManager {
   private async fetch(request: ProfileRequest) {
     const { data } = await this.client.query<ProfileData, ProfileVariables>({
       query: ProfileDocument,
-      variables: { request },
+      variables: {
+        request,
+        ...this.variables,
+      },
       fetchPolicy: 'network-only',
     });
 

@@ -16,16 +16,12 @@ export function mockAnyResponse(bulk: MockedResponse) {
         return true;
       }
 
-      for (const key in bulk.request.variables) {
-        if (variables[key] !== bulk.request.variables[key]) {
-          // eslint-disable-next-line no-console
-          console.error(
-            `Variable ${key} mismatch, expected: ${bulk.request.variables[key]}, got: ${variables[key]}`,
-          );
-          return false;
-        }
+      try {
+        expect(variables).toMatchObject(bulk.request.variables);
+        return true;
+      } catch {
+        return false;
       }
-      return true;
     },
     result: bulk.result,
   };

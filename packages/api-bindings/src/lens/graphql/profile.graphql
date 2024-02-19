@@ -231,13 +231,12 @@ fragment CreateUnlinkHandleFromProfileBroadcastItemResult on CreateUnlinkHandleF
 # queries
 query Profile(
   $request: ProfileRequest!
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
-  ...InjectQueryParams
   result: profile(request: $request) {
     ...Profile
   }

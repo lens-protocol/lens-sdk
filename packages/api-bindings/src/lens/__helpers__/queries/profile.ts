@@ -31,7 +31,7 @@ export function mockProfileResponse({
   variables,
   result,
 }: {
-  variables: ProfileVariables;
+  variables: Pick<ProfileVariables, 'request'>;
   result: Profile | null;
 }) {
   return mockAnyResponse({

@@ -1,4 +1,10 @@
-import { ImageSizeTransform, ImageTransform, SupportedFiatType } from '@lens-protocol/api-bindings';
+import {
+  ImageSizeTransform,
+  ImageTransform,
+  ProfileFragmentVariables,
+  PublicationFragmentVariables,
+  SupportedFiatType,
+} from '@lens-protocol/api-bindings';
 import { AppId } from '@lens-protocol/domain/entities';
 import { ILogger } from '@lens-protocol/shared-kernel';
 import { IObservableStorageProvider, IStorageProvider } from '@lens-protocol/storage';
@@ -88,60 +94,12 @@ export type QueryParams = {
   statsFor?: AppId[];
 };
 
-function buildImageTransform(
-  width: ImageSizeTransform,
-  height: ImageSizeTransform = 'auto',
-): ImageTransform {
-  return {
-    width,
-    height,
-    keepAspectRatio: true,
-  };
-}
-
-/**
- * @internal
- */
-export const defaultQueryParams = {
-  image: {
-    small: buildImageTransform('400px'),
-    medium: buildImageTransform('700px'),
-  },
-  profile: {
-    thumbnail: buildImageTransform('256px'),
-    cover: buildImageTransform('1100px'),
-  },
-  fxRateFor: SupportedFiatType.Usd,
-  statsFor: [],
-};
-
 export { SupportedFiatType } from '@lens-protocol/api-bindings';
 
 /**
  * The interface used to access the `Signer` and `Provider` instances.
  */
 export interface IBindings extends ISignerBinding, IProviderBinding {}
-
-/**
- * Internal configuration
- *
- * @internal
- */
-export type RequiredConfig = {
-  bindings: IBindings;
-
-  environment: EnvironmentConfig;
-
-  logger: ILogger;
-
-  debug: boolean;
-
-  storage: IStorageProvider | IObservableStorageProvider;
-
-  params: QueryParams;
-
-  origin?: string;
-};
 
 /**
  * `<BaseProvider>` configuration
@@ -165,14 +123,84 @@ export type BaseConfig = {
 };
 
 /**
+ * Internal configuration
+ *
  * @internal
  */
-export function resolveConfig(userConfig: BaseConfig): RequiredConfig {
-  const defaultConfig = {
-    debug: false,
-    logger: new ConsoleLogger(),
-    params: defaultQueryParams,
-  };
+export type RequiredConfig = {
+  bindings: IBindings;
 
-  return { ...defaultConfig, ...userConfig };
+  environment: EnvironmentConfig;
+
+  logger: ILogger;
+
+  debug: boolean;
+
+  storage: IStorageProvider | IObservableStorageProvider;
+
+  origin?: string;
+
+  profileVariables: ProfileFragmentVariables;
+
+  publicationVariables: PublicationFragmentVariables;
+};
+
+function buildImageTransform(
+  width: ImageSizeTransform,
+  height: ImageSizeTransform = 'auto',
+): ImageTransform {
+  return {
+    width,
+    height,
+    keepAspectRatio: true,
+  };
+}
+
+const defaultQueryParams = {
+  image: {
+    small: buildImageTransform('400px'),
+    medium: buildImageTransform('700px'),
+  },
+  profile: {
+    thumbnail: buildImageTransform('256px'),
+    cover: buildImageTransform('1100px'),
+  },
+  fxRateFor: SupportedFiatType.Usd,
+  statsFor: [],
+};
+
+function resolveProfileFragmentVariables(params: QueryParams): ProfileFragmentVariables {
+  return {
+    fxRateFor: params.fxRateFor ?? defaultQueryParams.fxRateFor,
+    profileCoverSize: params.profile?.cover ?? defaultQueryParams.profile.cover,
+    profileMetadataSource: params.profile?.metadataSource ?? null,
+    profilePictureSize: params.profile?.thumbnail ?? defaultQueryParams.profile.thumbnail,
+    statsFor: params.statsFor ?? defaultQueryParams.statsFor,
+  };
+}
+
+function resolvePublicationFragmentVariables(params: QueryParams): PublicationFragmentVariables {
+  return {
+    ...resolveProfileFragmentVariables(params),
+    fxRateFor: params.fxRateFor ?? defaultQueryParams.fxRateFor,
+    imageMediumSize: params.image?.medium ?? defaultQueryParams.image.medium,
+    imageSmallSize: params.image?.small ?? defaultQueryParams.image.small,
+    statsFor: params.statsFor ?? defaultQueryParams.statsFor,
+  };
+}
+
+/**
+ * @internal
+ */
+export function resolveConfig(config: BaseConfig): RequiredConfig {
+  return {
+    debug: config.debug ?? false,
+    logger: config.logger ?? new ConsoleLogger(),
+    storage: config.storage,
+    environment: config.environment,
+    bindings: config.bindings,
+    origin: config.origin,
+    profileVariables: resolveProfileFragmentVariables(config.params ?? defaultQueryParams),
+    publicationVariables: resolvePublicationFragmentVariables(config.params ?? defaultQueryParams),
+  };
 }

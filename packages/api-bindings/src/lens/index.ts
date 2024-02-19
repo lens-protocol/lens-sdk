@@ -10,6 +10,7 @@ export type {
   Percentage,
   Pixel,
 } from './ImageTransform';
+export * from './variables';
 export * from './utils';
 export * from './publication';
 export * from './FollowModule';
