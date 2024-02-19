@@ -132,7 +132,7 @@ export function createAuthLink({ accessTokenStorage, origin }: AuthLinkArgs) {
         headers: {
           ...('headers' in prevContext && prevContext.headers),
           Authorization: `Bearer ${token}`,
-          Origin: origin,
+          ...(origin && { Origin: origin }),
         },
       };
     }
