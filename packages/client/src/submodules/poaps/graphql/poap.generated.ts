@@ -1479,6 +1479,7 @@ export const PoapHoldersDocument = {
               },
             ],
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'upvoteReactions' },

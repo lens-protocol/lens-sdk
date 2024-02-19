@@ -66,6 +66,7 @@ export type {
   PostFragment,
   ProfileCoverSetFragment,
   ProfileFragment,
+  ProfileMentionedFragment,
   ProfileMetadataFragment,
   ProfileOwnershipConditionFragment,
   ProfilePictureSetFragment,

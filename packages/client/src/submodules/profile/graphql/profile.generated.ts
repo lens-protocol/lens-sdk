@@ -2388,6 +2388,7 @@ export const ProfileDocument = {
               },
             ],
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'upvoteReactions' },
@@ -3468,6 +3469,7 @@ export const DefaultProfileDocument = {
               },
             ],
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'upvoteReactions' },
@@ -4572,6 +4574,7 @@ export const ProfilesDocument = {
               },
             ],
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'upvoteReactions' },
@@ -5780,6 +5783,7 @@ export const ProfileRecommendationsDocument = {
               },
             ],
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'upvoteReactions' },
@@ -6896,6 +6900,7 @@ export const FollowingDocument = {
               },
             ],
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'upvoteReactions' },
@@ -8012,6 +8017,7 @@ export const FollowersDocument = {
               },
             ],
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'upvoteReactions' },
@@ -9128,6 +9134,7 @@ export const MutualFollowersDocument = {
               },
             ],
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'upvoteReactions' },
@@ -10325,6 +10332,7 @@ export const WhoActedOnPublicationDocument = {
               },
             ],
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'upvoteReactions' },
@@ -11539,6 +11547,7 @@ export const WhoHaveBlockedDocument = {
               },
             ],
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'upvoteReactions' },

@@ -973,6 +973,7 @@ export const InvitedResultFragmentDoc = {
               },
             ],
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'upvoteReactions' },
@@ -2060,6 +2061,7 @@ export const InvitedProfilesDocument = {
               },
             ],
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'upvoteReactions' },

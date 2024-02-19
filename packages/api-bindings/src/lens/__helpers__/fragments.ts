@@ -150,6 +150,9 @@ export function mockPostFragment(overrides?: Partial<Omit<gql.Post, '__typename'
     openActionModules: [],
     referenceModule: null,
     stats: mockPublicationStatsFragment(),
+    isEncrypted: false,
+    hashtagsMentioned: [],
+    profilesMentioned: [],
 
     ...overrides,
     __typename: 'Post',
@@ -178,6 +181,9 @@ export function mockCommentFragment(
     commentOn: mainPost,
     firstComment: null,
     stats: mockPublicationStatsFragment(),
+    isEncrypted: false,
+    hashtagsMentioned: [],
+    profilesMentioned: [],
 
     ...overrides,
     __typename: 'Comment',
@@ -199,6 +205,9 @@ export function mockQuoteFragment(overrides?: Partial<Omit<gql.Quote, '__typenam
     referenceModule: null,
     quoteOn: mockPostFragment(),
     stats: mockPublicationStatsFragment(),
+    isEncrypted: false,
+    hashtagsMentioned: [],
+    profilesMentioned: [],
 
     ...overrides,
     __typename: 'Quote',
@@ -327,6 +336,7 @@ export function mockProfileStatsFragment(
     downvotes: faker.datatype.number(),
     upvoted: faker.datatype.number(),
     downvoted: faker.datatype.number(),
+    lensClassifierScore: 0,
 
     ...overrides,
     __typename: 'ProfileStats',

@@ -1481,6 +1481,7 @@ export const ProfilesManagedDocument = {
               },
             ],
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'upvoteReactions' },
@@ -2672,6 +2673,7 @@ export const LastLoggedInProfileDocument = {
               },
             ],
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'upvoteReactions' },
