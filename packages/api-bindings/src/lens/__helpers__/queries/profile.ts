@@ -101,7 +101,7 @@ export function mockFollowingResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: FollowingVariables;
+  variables: Pick<FollowingVariables, 'for'>;
   items: Profile[];
   info?: PaginatedResultInfo;
 }) {

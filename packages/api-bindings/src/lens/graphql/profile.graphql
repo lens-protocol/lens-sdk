@@ -301,13 +301,12 @@ query Following(
   $for: ProfileId!
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
-  ...InjectQueryParams
   result: following(request: { for: $for, limit: $limit, cursor: $cursor }) {
     items {
       ...Profile

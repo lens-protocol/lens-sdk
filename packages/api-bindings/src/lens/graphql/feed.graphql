@@ -84,28 +84,3 @@ query FeedHighlights(
     }
   }
 }
-
-# Not yet ready for production use
-#query ForYou(
-#  $request: PublicationForYouRequest!
-#  $imageSmallSize: ImageTransform = {}
-#  $imageMediumSize: ImageTransform = {}
-#  $profileCoverSize: ImageTransform = {}
-#  $profilePictureSize: ImageTransform = {}
-#  $fxRateFor: SupportedFiatType = USD
-#) {
-#  ...InjectQueryParams
-#  result: forYou(request: $request) {
-#    items {
-#      ... on Post {
-#        ...Post
-#      }
-#      ... on Quote {
-#        ...Quote
-#      }
-#    }
-#    pageInfo {
-#      ...PaginatedResultInfo
-#    }
-#  }
-#}
