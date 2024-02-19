@@ -251,6 +251,7 @@ fragment ProfileStats on ProfileStats {
   downvoted: reacted(request: { type: DOWNVOTE })
   collects: countOpenActions(request: { anyOf: [{ category: COLLECT }] })
   countOpenActions(request: $profileStatsCountOpenActionArgs)
+  lensClassifierScore
 
   # @deprecated
   upvoteReactions: reactions(request: { type: UPVOTE })
@@ -356,6 +357,16 @@ fragment Profile on Profile {
   }
 }
 
+fragment ProfileMentioned on ProfileMentioned {
+  profile {
+    id
+  }
+  snapshotHandleMentioned {
+    ...HandleInfo
+  }
+  stillOwnsHandle
+}
+
 fragment PaginatedResultInfo on PaginatedResultInfo {
   prev
   next
@@ -409,6 +420,7 @@ fragment SimpleCollectOpenActionSettings on SimpleCollectOpenActionSettings {
   contract {
     ...NetworkAddress
   }
+  collectNft
   amount {
     ...Amount
   }
@@ -425,6 +437,7 @@ fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectO
   contract {
     ...NetworkAddress
   }
+  collectNft
   amount {
     ...Amount
   }
@@ -460,6 +473,7 @@ fragment LegacyFreeCollectModuleSettings on LegacyFreeCollectModuleSettings {
   contract {
     ...NetworkAddress
   }
+  collectNft
   followerOnly
 }
 
@@ -469,6 +483,7 @@ fragment LegacyFeeCollectModuleSettings on LegacyFeeCollectModuleSettings {
   contract {
     ...NetworkAddress
   }
+  collectNft
   amount {
     ...Amount
   }
@@ -483,6 +498,7 @@ fragment LegacyLimitedFeeCollectModuleSettings on LegacyLimitedFeeCollectModuleS
   contract {
     ...NetworkAddress
   }
+  collectNft
   collectLimit
   amount {
     ...Amount
@@ -498,6 +514,7 @@ fragment LegacyLimitedTimedFeeCollectModuleSettings on LegacyLimitedTimedFeeColl
   contract {
     ...NetworkAddress
   }
+  collectNft
   collectLimit
   amount {
     ...Amount
@@ -522,6 +539,7 @@ fragment LegacyTimedFeeCollectModuleSettings on LegacyTimedFeeCollectModuleSetti
   contract {
     ...NetworkAddress
   }
+  collectNft
   amount {
     ...Amount
   }
@@ -537,6 +555,7 @@ fragment LegacyMultirecipientFeeCollectModuleSettings on LegacyMultirecipientFee
   contract {
     ...NetworkAddress
   }
+  collectNft
   amount {
     ...Amount
   }
@@ -556,6 +575,7 @@ fragment LegacySimpleCollectModuleSettings on LegacySimpleCollectModuleSettings 
   contract {
     ...NetworkAddress
   }
+  collectNft
   amount {
     ...Amount
   }
@@ -1497,8 +1517,12 @@ fragment Post on Post {
   }
   txHash
   createdAt
+  isEncrypted
   by {
     ...Profile
+  }
+  stats(request: $publicationStatsInput) {
+    ...PublicationStats
   }
   operations {
     ...PublicationOperations
@@ -1602,9 +1626,10 @@ fragment Post on Post {
       ...UnknownReferenceModuleSettings
     }
   }
-  stats(request: $publicationStatsInput) {
-    ...PublicationStats
+  profilesMentioned {
+    ...ProfileMentioned
   }
+  hashtagsMentioned
 }
 
 fragment CommentBase on Comment {
@@ -1620,6 +1645,7 @@ fragment CommentBase on Comment {
   }
   txHash
   createdAt
+  isEncrypted
   by {
     ...Profile
   }
@@ -1729,6 +1755,10 @@ fragment CommentBase on Comment {
 
 fragment Comment on Comment {
   ...CommentBase
+  profilesMentioned {
+    ...ProfileMentioned
+  }
+  hashtagsMentioned
   root {
     ...Post
   }
@@ -1791,6 +1821,7 @@ fragment QuoteBase on Quote {
   }
   txHash
   createdAt
+  isEncrypted
   by {
     ...Profile
   }
@@ -1900,6 +1931,10 @@ fragment QuoteBase on Quote {
 
 fragment Quote on Quote {
   ...QuoteBase
+  profilesMentioned {
+    ...ProfileMentioned
+  }
+  hashtagsMentioned
   quoteOn {
     ... on Post {
       ...Post

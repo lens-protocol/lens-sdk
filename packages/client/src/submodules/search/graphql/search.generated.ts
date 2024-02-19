@@ -284,12 +284,30 @@ export const SearchPublicationsDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isEncrypted' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'by' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Profile' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'stats' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'publicationStatsInput' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'PublicationStats' } },
+              ],
             },
           },
           {
@@ -800,21 +818,15 @@ export const SearchPublicationsDocument = {
           },
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'stats' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'publicationStatsInput' } },
-              },
-            ],
+            name: { kind: 'Name', value: 'profilesMentioned' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'PublicationStats' } },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMentioned' } },
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'hashtagsMentioned' } },
         ],
       },
     },
@@ -1748,6 +1760,7 @@ export const SearchPublicationsDocument = {
               },
             ],
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'upvoteReactions' },
@@ -1815,6 +1828,154 @@ export const SearchPublicationsDocument = {
             kind: 'Field',
             alias: { kind: 'Name', value: 'downvoteReacted' },
             name: { kind: 'Name', value: 'reacted' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'type' },
+                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'PublicationStats' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'PublicationStats' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mirrors' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quotes' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bookmarks' } },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'upvotes' },
+            name: { kind: 'Name', value: 'reactions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'type' },
+                      value: { kind: 'EnumValue', value: 'UPVOTE' },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'downvotes' },
+            name: { kind: 'Name', value: 'reactions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'type' },
+                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'collects' },
+            name: { kind: 'Name', value: 'countOpenActions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'anyOf' },
+                      value: {
+                        kind: 'ListValue',
+                        values: [
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: 'category' },
+                                value: { kind: 'EnumValue', value: 'COLLECT' },
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'countOpenActions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationStatsCountOpenActionArgs' },
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'upvoteReactions' },
+            name: { kind: 'Name', value: 'reactions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'type' },
+                      value: { kind: 'EnumValue', value: 'UPVOTE' },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'downvoteReactions' },
+            name: { kind: 'Name', value: 'reactions' },
             arguments: [
               {
                 kind: 'Argument',
@@ -5014,6 +5175,7 @@ export const SearchPublicationsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
         ],
       },
@@ -5040,6 +5202,7 @@ export const SearchPublicationsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -5076,6 +5239,7 @@ export const SearchPublicationsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
           {
             kind: 'Field',
@@ -5113,6 +5277,7 @@ export const SearchPublicationsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
           {
             kind: 'Field',
@@ -5176,6 +5341,7 @@ export const SearchPublicationsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -5213,6 +5379,7 @@ export const SearchPublicationsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -5261,6 +5428,7 @@ export const SearchPublicationsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -5385,6 +5553,7 @@ export const SearchPublicationsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -5434,6 +5603,7 @@ export const SearchPublicationsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -5565,149 +5735,28 @@ export const SearchPublicationsDocument = {
     },
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'PublicationStats' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'PublicationStats' } },
+      name: { kind: 'Name', value: 'ProfileMentioned' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMentioned' } },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'comments' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mirrors' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'quotes' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'bookmarks' } },
           {
             kind: 'Field',
-            alias: { kind: 'Name', value: 'upvotes' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
+            name: { kind: 'Name', value: 'profile' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'id' } }],
+            },
           },
           {
             kind: 'Field',
-            alias: { kind: 'Name', value: 'downvotes' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
+            name: { kind: 'Name', value: 'snapshotHandleMentioned' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'HandleInfo' } }],
+            },
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'collects' },
-            name: { kind: 'Name', value: 'countOpenActions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'anyOf' },
-                      value: {
-                        kind: 'ListValue',
-                        values: [
-                          {
-                            kind: 'ObjectValue',
-                            fields: [
-                              {
-                                kind: 'ObjectField',
-                                name: { kind: 'Name', value: 'category' },
-                                value: { kind: 'EnumValue', value: 'COLLECT' },
-                              },
-                            ],
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'countOpenActions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationStatsCountOpenActionArgs' },
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'stillOwnsHandle' } },
         ],
       },
     },
@@ -5719,6 +5768,17 @@ export const SearchPublicationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'FragmentSpread', name: { kind: 'Name', value: 'CommentBase' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profilesMentioned' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMentioned' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'hashtagsMentioned' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'root' },
@@ -5823,6 +5883,7 @@ export const SearchPublicationsDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isEncrypted' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'by' },
@@ -6368,6 +6429,7 @@ export const SearchPublicationsDocument = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isEncrypted' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'by' },
@@ -6893,6 +6955,17 @@ export const SearchPublicationsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'FragmentSpread', name: { kind: 'Name', value: 'QuoteBase' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profilesMentioned' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMentioned' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'hashtagsMentioned' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'quoteOn' },
@@ -7979,6 +8052,7 @@ export const SearchProfilesDocument = {
               },
             ],
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'upvoteReactions' },
