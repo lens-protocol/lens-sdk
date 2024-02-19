@@ -67,7 +67,7 @@ export function mockMutualFollowersResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: MutualFollowersVariables;
+  variables: Pick<MutualFollowersVariables, 'observer' | 'viewing'>;
   items: Profile[];
   info?: PaginatedResultInfo;
 }) {
@@ -152,7 +152,7 @@ export function mockWhoActedOnPublicationResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: WhoActedOnPublicationVariables;
+  variables: Pick<WhoActedOnPublicationVariables, 'on' | 'where'>;
   items: Profile[];
   info?: PaginatedResultInfo;
 }) {
