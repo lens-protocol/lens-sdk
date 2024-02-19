@@ -1,6 +1,7 @@
+import { ProfileId } from '@lens-protocol/domain/entities';
+
 import {
   FollowersDocument,
-  FollowersVariables,
   FollowingDocument,
   FollowingVariables,
   MutualFollowersDocument,
@@ -80,16 +81,16 @@ export function mockMutualFollowersResponse({
 }
 
 export function mockFollowersResponse({
-  variables,
+  of,
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: FollowersVariables;
+  of: ProfileId;
   items: Profile[];
   info?: PaginatedResultInfo;
 }) {
   return mockAnyPaginatedResponse({
-    variables,
+    variables: { of },
     items,
     info,
     query: FollowersDocument,

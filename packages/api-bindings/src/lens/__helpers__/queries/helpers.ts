@@ -2,26 +2,30 @@ import { OperationVariables } from '@apollo/client';
 import { MockedResponse } from '@apollo/client/testing';
 import { DocumentNode } from 'graphql';
 
-import { defaultQueryParams } from '../../../apollo';
-import { PaginatedResultInfo, SupportedFiatType } from '../../graphql/generated';
+import { PaginatedResultInfo } from '../../graphql/generated';
 import { mockPaginatedResultInfo } from '../fragments';
 
+// TODO verify if this is still needed
 export function mockAnyResponse(bulk: MockedResponse) {
   return {
     request: {
       query: bulk.request.query,
-      variables: {
-        ...bulk.request.variables,
-        // The values below should match the superset of the variables default values used in
-        // any query that needs such variables. The fact one query might use a subset of these
-        // variables is irrelevant.
-        fxRateFor: SupportedFiatType.Usd,
-        imageMediumSize: defaultQueryParams.image?.medium ?? {},
-        imageSmallSize: defaultQueryParams.image?.small ?? {},
-        profileCoverSize: defaultQueryParams.profile?.cover ?? {},
-        profilePictureSize: defaultQueryParams.profile?.thumbnail ?? {},
-        profileMetadataSource: null,
-      },
+    },
+    variableMatcher: (variables: OperationVariables) => {
+      if (!bulk.request.variables) {
+        return true;
+      }
+
+      for (const key in bulk.request.variables) {
+        if (variables[key] !== bulk.request.variables[key]) {
+          // eslint-disable-next-line no-console
+          console.error(
+            `Variable ${key} mismatch, expected: ${bulk.request.variables[key]}, got: ${variables[key]}`,
+          );
+          return false;
+        }
+      }
+      return true;
     },
     result: bulk.result,
   };
