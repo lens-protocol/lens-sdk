@@ -1,5 +1,4 @@
 import { MockedResponse } from '@apollo/client/testing';
-import { AllFragmentVariables } from '@lens-protocol/api-bindings';
 import { mockLensApolloClient } from '@lens-protocol/api-bindings/mocks';
 import { IStorageProvider } from '@lens-protocol/storage';
 import { RenderHookResult } from '@testing-library/react';
@@ -18,17 +17,17 @@ export function setupHookTestScenario(mocks: MockedResponse[]) {
     renderHook: <TProps, TResult>(
       callback: (props: TProps) => TResult,
     ): RenderHookResult<TResult, TProps> => {
-      const variables = mock<AllFragmentVariables>();
+      const config = resolveConfig({
+        bindings: mock<IBindings>(),
+        environment: development,
+        storage: mock<IStorageProvider>(),
+      });
       return renderHookWithMocks(callback, {
         mocks: {
-          config: resolveConfig({
-            bindings: mock<IBindings>(),
-            environment: development,
-            storage: mock<IStorageProvider>(),
-          }),
+          config,
           apolloClient: client,
-          publicationCacheManager: new PublicationCacheManager(client, variables),
-          profileCacheManager: new ProfileCacheManager(client, variables),
+          publicationCacheManager: new PublicationCacheManager(client, config.fragmentVariables),
+          profileCacheManager: new ProfileCacheManager(client, config.fragmentVariables),
         },
       });
     },
