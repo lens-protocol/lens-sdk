@@ -3,6 +3,7 @@ import {
   PublicationFragmentVariables,
   ProfileFragmentVariables,
 } from '@lens-protocol/api-bindings';
+import merge from 'lodash/merge';
 
 import { useSharedDependencies } from '../shared';
 
@@ -30,11 +31,9 @@ export function useLazyProfileFragmentVariables() {
   return <TVariables extends OperationVariables>(
     variables: TVariables,
   ): ProfileFragmentVariables & TVariables => {
-    return {
-      // order matters here, as we want to be able to override the resolved values on a hook-by-hook basis
-      ...config.profileVariables,
-      ...variables,
-    };
+    // order matters here, as we want to be able to override the resolved values on a hook-by-hook basis
+    // Lodash merge is used because it skips source properties that resolve to undefined
+    return merge(config.publicationVariables, variables);
   };
 }
 
@@ -46,9 +45,7 @@ export function usePublicationFragmentVariables<TVariables extends OperationVari
 ): PublicationFragmentVariables & TVariables {
   const { config } = useSharedDependencies();
 
-  return {
-    // order matters here, as we want to be able to override the resolved values on a hook-by-hook basis
-    ...config.publicationVariables,
-    ...variables,
-  };
+  // order matters here, as we want to be able to override the resolved values on a hook-by-hook basis
+  // Lodash merge is used because it skips source properties that resolve to undefined
+  return merge(config.publicationVariables, variables);
 }

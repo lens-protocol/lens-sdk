@@ -53,7 +53,7 @@ export function mockSearchPublicationsResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: SearchPublicationsVariables;
+  variables: Pick<SearchPublicationsVariables, 'limit' | 'query' | 'where'>;
   items: Array<PrimaryPublication>;
   info?: PaginatedResultInfo;
 }) {

@@ -17,7 +17,7 @@ export type ProfileFragmentVariables = {
 /**
  * @internal
  */
-export type PublicationFragmentVariables = {
+export type PublicationFragmentVariables = ProfileFragmentVariables & {
   fxRateFor: SupportedFiatType;
   imageMediumSize: ImageTransform;
   imageSmallSize: ImageTransform;
