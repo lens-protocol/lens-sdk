@@ -4,6 +4,7 @@ export function createPrimaryPublicationTypePolicy() {
   return {
     fields: {
       stats: oneToOneRelationship(),
+      metadata: oneToOneRelationship(),
     },
   };
 }
