@@ -23,7 +23,7 @@ export function useLazyFragmentVariables() {
  * @internal
  */
 export function useFragmentVariables<TVariables extends OperationVariables>(
-  variables: TVariables,
+  variables?: TVariables,
 ): AllFragmentVariables & TVariables {
   const { config } = useSharedDependencies();
 
