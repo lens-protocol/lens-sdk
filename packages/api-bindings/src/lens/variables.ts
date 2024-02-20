@@ -6,20 +6,12 @@ import { SupportedFiatType } from './graphql/generated';
 /**
  * @internal
  */
-export type ProfileFragmentVariables = {
-  fxRateFor: SupportedFiatType;
-  profileCoverSize: ImageTransform;
-  profileMetadataSource: AppId | null;
-  profilePictureSize: ImageTransform;
-  statsFor: AppId[];
-};
-
-/**
- * @internal
- */
-export type PublicationFragmentVariables = ProfileFragmentVariables & {
+export type AllFragmentVariables = {
   fxRateFor: SupportedFiatType;
   imageMediumSize: ImageTransform;
   imageSmallSize: ImageTransform;
+  profileCoverSize: ImageTransform;
+  profileMetadataSource: AppId | null;
+  profilePictureSize: ImageTransform;
   statsFor: AppId[];
 };

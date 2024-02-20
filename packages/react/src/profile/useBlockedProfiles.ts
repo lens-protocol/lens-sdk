@@ -4,7 +4,7 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { SessionType, useSession } from '../authentication';
 import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
-import { useProfileFragmentVariables } from '../helpers/variables';
+import { useFragmentVariables } from '../helpers/variables';
 
 /**
  * {@link useBlockedProfiles} hook arguments
@@ -38,7 +38,7 @@ export function useBlockedProfiles(
   return usePaginatedReadResult(
     useWhoHaveBlocked(
       useLensApolloClient({
-        variables: useProfileFragmentVariables(args),
+        variables: useFragmentVariables(args),
       }),
     ),
   );

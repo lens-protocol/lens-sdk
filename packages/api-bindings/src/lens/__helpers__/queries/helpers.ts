@@ -5,7 +5,9 @@ import { DocumentNode } from 'graphql';
 import { PaginatedResultInfo } from '../../graphql/generated';
 import { mockPaginatedResultInfo } from '../fragments';
 
-// TODO verify if this is still needed
+/**
+ * Mock any response by matching the query and variables.
+ */
 export function mockAnyResponse(bulk: MockedResponse) {
   return {
     request: {
@@ -28,7 +30,7 @@ export function mockAnyResponse(bulk: MockedResponse) {
 }
 
 /**
- * Mock any paginated responses.
+ * Mock any paginated responses by matching the query and variables.
  */
 export function mockAnyPaginatedResponse<V extends OperationVariables, I>({
   variables,

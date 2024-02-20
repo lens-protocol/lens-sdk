@@ -1,5 +1,5 @@
 import { MockedResponse } from '@apollo/client/testing';
-import { ProfileFragmentVariables } from '@lens-protocol/api-bindings';
+import { AllFragmentVariables } from '@lens-protocol/api-bindings';
 import { mockLensApolloClient } from '@lens-protocol/api-bindings/mocks';
 import { IStorageProvider } from '@lens-protocol/storage';
 import { RenderHookResult } from '@testing-library/react';
@@ -27,7 +27,7 @@ export function setupHookTestScenario(mocks: MockedResponse[]) {
           }),
           apolloClient: client,
           publicationCacheManager: new PublicationCacheManager(client),
-          profileCacheManager: new ProfileCacheManager(client, mock<ProfileFragmentVariables>()),
+          profileCacheManager: new ProfileCacheManager(client, mock<AllFragmentVariables>()),
         },
       });
     },

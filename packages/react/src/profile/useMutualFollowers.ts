@@ -6,7 +6,7 @@ import {
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
-import { useProfileFragmentVariables } from '../helpers/variables';
+import { useFragmentVariables } from '../helpers/variables';
 
 /**
  * {@link useMutualFollowers} hook arguments
@@ -31,7 +31,7 @@ export function useMutualFollowers(args: UseMutualFollowersArgs): PaginatedReadR
   return usePaginatedReadResult(
     useMutualFollowersHook(
       useLensApolloClient({
-        variables: useProfileFragmentVariables(args),
+        variables: useFragmentVariables(args),
       }),
     ),
   );

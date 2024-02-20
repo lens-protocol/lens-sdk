@@ -9,7 +9,7 @@ import { failure, invariant, PromiseResult, success } from '@lens-protocol/share
 import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs } from '../helpers/reads';
 import { useDeferredTask, UseDeferredTask } from '../helpers/tasks';
-import { useLazyProfileFragmentVariables } from '../helpers/variables';
+import { useLazyFragmentVariables } from '../helpers/variables';
 
 /**
  * {@link useLazyProfiles} callback hook arguments
@@ -51,7 +51,7 @@ export type FetchProfilesArgs = PaginatedArgs<ProfilesRequest>;
  */
 export function useLazyProfiles(): UseDeferredTask<Profile[], UnspecifiedError, FetchProfilesArgs> {
   const [fetch] = useProfilesLazyQuery(useLensApolloClient({ fetchPolicy: 'no-cache' }));
-  const merge = useLazyProfileFragmentVariables();
+  const merge = useLazyFragmentVariables();
 
   return useDeferredTask(async (args): PromiseResult<Profile[], UnspecifiedError> => {
     const { data, error } = await fetch({ variables: merge(args) });

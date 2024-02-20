@@ -1,8 +1,7 @@
 import {
+  AllFragmentVariables,
   ImageSizeTransform,
   ImageTransform,
-  ProfileFragmentVariables,
-  PublicationFragmentVariables,
   SupportedFiatType,
 } from '@lens-protocol/api-bindings';
 import { AppId } from '@lens-protocol/domain/entities';
@@ -140,9 +139,7 @@ export type RequiredConfig = {
 
   origin?: string;
 
-  profileVariables: ProfileFragmentVariables;
-
-  publicationVariables: PublicationFragmentVariables;
+  fragmentVariables: AllFragmentVariables;
 };
 
 function buildImageTransform(
@@ -169,22 +166,14 @@ const defaultQueryParams = {
   statsFor: [],
 };
 
-function resolveProfileFragmentVariables(params: QueryParams): ProfileFragmentVariables {
+function resolveFragmentVariables(params: QueryParams): AllFragmentVariables {
   return {
-    fxRateFor: params.fxRateFor ?? defaultQueryParams.fxRateFor,
-    profileCoverSize: params.profile?.cover ?? defaultQueryParams.profile.cover,
-    profileMetadataSource: params.profile?.metadataSource ?? null,
-    profilePictureSize: params.profile?.thumbnail ?? defaultQueryParams.profile.thumbnail,
-    statsFor: params.statsFor ?? defaultQueryParams.statsFor,
-  };
-}
-
-function resolvePublicationFragmentVariables(params: QueryParams): PublicationFragmentVariables {
-  return {
-    ...resolveProfileFragmentVariables(params),
     fxRateFor: params.fxRateFor ?? defaultQueryParams.fxRateFor,
     imageMediumSize: params.image?.medium ?? defaultQueryParams.image.medium,
     imageSmallSize: params.image?.small ?? defaultQueryParams.image.small,
+    profileCoverSize: params.profile?.cover ?? defaultQueryParams.profile.cover,
+    profileMetadataSource: params.profile?.metadataSource ?? null,
+    profilePictureSize: params.profile?.thumbnail ?? defaultQueryParams.profile.thumbnail,
     statsFor: params.statsFor ?? defaultQueryParams.statsFor,
   };
 }
@@ -200,7 +189,6 @@ export function resolveConfig(config: BaseConfig): RequiredConfig {
     environment: config.environment,
     bindings: config.bindings,
     origin: config.origin,
-    profileVariables: resolveProfileFragmentVariables(config.params ?? defaultQueryParams),
-    publicationVariables: resolvePublicationFragmentVariables(config.params ?? defaultQueryParams),
+    fragmentVariables: resolveFragmentVariables(config.params ?? defaultQueryParams),
   };
 }

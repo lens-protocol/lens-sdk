@@ -1,8 +1,8 @@
 import {
+  AllFragmentVariables,
   getSessionData,
   ProfileData,
   ProfileDocument,
-  ProfileFragmentVariables,
   ProfileRequest,
   ProfileVariables,
   SafeApolloClient,
@@ -16,7 +16,7 @@ import { IProfileCacheManager } from '../adapters/IProfileCacheManager';
 export class ProfileCacheManager implements IProfileCacheManager {
   constructor(
     private readonly client: SafeApolloClient,
-    private readonly variables: ProfileFragmentVariables,
+    private readonly variables: AllFragmentVariables,
   ) {}
 
   async fetchProfileById(id: ProfileId) {

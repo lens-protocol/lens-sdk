@@ -17,7 +17,7 @@ export function mockPublicationResponse({
   variables,
   result,
 }: {
-  variables: PublicationVariables;
+  variables: Pick<PublicationVariables, 'request'>;
   result: AnyPublication | null;
 }) {
   return mockAnyResponse({
@@ -36,7 +36,7 @@ export function mockPublicationsResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: PublicationsVariables;
+  variables: Pick<PublicationsVariables, 'cursor' | 'limit' | 'where'>;
   items: Array<AnyPublication>;
   info?: PaginatedResultInfo;
 }) {
@@ -53,7 +53,7 @@ export function mockSearchPublicationsResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: Pick<SearchPublicationsVariables, 'limit' | 'query' | 'where'>;
+  variables: Pick<SearchPublicationsVariables, 'cursor' | 'limit' | 'query' | 'where'>;
   items: Array<PrimaryPublication>;
   info?: PaginatedResultInfo;
 }) {
@@ -70,7 +70,7 @@ export function mockProfileBookmarksResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: PublicationBookmarksVariables;
+  variables: Pick<PublicationBookmarksVariables, 'request'>;
   items: AnyPublication[];
   info?: PaginatedResultInfo;
 }) {
