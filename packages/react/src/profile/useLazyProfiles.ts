@@ -51,10 +51,10 @@ export type FetchProfilesArgs = PaginatedArgs<ProfilesRequest>;
  */
 export function useLazyProfiles(): UseDeferredTask<Profile[], UnspecifiedError, FetchProfilesArgs> {
   const [fetch] = useProfilesLazyQuery(useLensApolloClient({ fetchPolicy: 'no-cache' }));
-  const merge = useLazyFragmentVariables();
+  const fill = useLazyFragmentVariables();
 
   return useDeferredTask(async (args): PromiseResult<Profile[], UnspecifiedError> => {
-    const { data, error } = await fetch({ variables: merge(args) });
+    const { data, error } = await fetch({ variables: fill(args) });
 
     if (error) {
       return failure(new UnspecifiedError(error));

@@ -55,10 +55,10 @@ export function useLazyPublications(): UseDeferredTask<
   FetchPublicationsArgs
 > {
   const [fetch] = usePublicationsLazyQuery(useLensApolloClient({ fetchPolicy: 'no-cache' }));
-  const merge = useLazyFragmentVariables();
+  const fill = useLazyFragmentVariables();
 
   return useDeferredTask(async (args): PromiseResult<AnyPublication[], UnspecifiedError> => {
-    const { data, error } = await fetch({ variables: merge(args) });
+    const { data, error } = await fetch({ variables: fill(args) });
 
     if (error) {
       return failure(new UnspecifiedError(error));

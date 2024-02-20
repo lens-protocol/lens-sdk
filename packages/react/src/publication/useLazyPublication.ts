@@ -61,11 +61,11 @@ export function useLazyPublication(): UseDeferredTask<
       fetchPolicy: 'cache-and-network',
     }),
   );
-  const merge = useLazyFragmentVariables();
+  const fill = useLazyFragmentVariables();
 
   return useDeferredTask(
     async (args): PromiseResult<AnyPublication, NotFoundError | UnspecifiedError> => {
-      const { data, error } = await fetch({ variables: merge({ request: args }) });
+      const { data, error } = await fetch({ variables: fill({ request: args }) });
 
       if (error) {
         return failure(new UnspecifiedError(error));

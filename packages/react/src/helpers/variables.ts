@@ -15,7 +15,7 @@ export function useLazyFragmentVariables() {
   ): AllFragmentVariables & TVariables => {
     // order matters here, as we want to be able to override the resolved values on a hook-by-hook basis
     // Lodash merge is used because it skips source properties that resolve to undefined
-    return merge(config.fragmentVariables, variables);
+    return merge({}, config.fragmentVariables, variables);
   };
 }
 
@@ -29,5 +29,5 @@ export function useFragmentVariables<TVariables extends OperationVariables>(
 
   // order matters here, as we want to be able to override the resolved values on a hook-by-hook basis
   // Lodash merge is used because it skips source properties that resolve to undefined
-  return merge(config.fragmentVariables, variables);
+  return merge({}, config.fragmentVariables, variables);
 }

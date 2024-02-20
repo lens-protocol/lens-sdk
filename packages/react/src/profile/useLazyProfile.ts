@@ -61,10 +61,10 @@ export function useLazyProfile(): UseDeferredTask<
       fetchPolicy: 'cache-and-network',
     }),
   );
-  const merge = useLazyFragmentVariables();
+  const fill = useLazyFragmentVariables();
 
   return useDeferredTask(async (args): PromiseResult<Profile, NotFoundError | UnspecifiedError> => {
-    const { data, error } = await fetch({ variables: merge({ request: args }) });
+    const { data, error } = await fetch({ variables: fill({ request: args }) });
 
     if (error) {
       return failure(new UnspecifiedError(error));
