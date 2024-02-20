@@ -18,6 +18,7 @@ export function setupHookTestScenario(mocks: MockedResponse[]) {
     renderHook: <TProps, TResult>(
       callback: (props: TProps) => TResult,
     ): RenderHookResult<TResult, TProps> => {
+      const variables = mock<AllFragmentVariables>();
       return renderHookWithMocks(callback, {
         mocks: {
           config: resolveConfig({
@@ -26,8 +27,8 @@ export function setupHookTestScenario(mocks: MockedResponse[]) {
             storage: mock<IStorageProvider>(),
           }),
           apolloClient: client,
-          publicationCacheManager: new PublicationCacheManager(client),
-          profileCacheManager: new ProfileCacheManager(client, mock<AllFragmentVariables>()),
+          publicationCacheManager: new PublicationCacheManager(client, variables),
+          profileCacheManager: new ProfileCacheManager(client, variables),
         },
       });
     },
