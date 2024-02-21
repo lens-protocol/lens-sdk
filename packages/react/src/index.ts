@@ -82,7 +82,7 @@ export * from './helpers/tasks';
 /**
  * GQL common types
  */
-export type { App } from '@lens-protocol/api-bindings';
+export type { App, OptimisticStatusResult } from '@lens-protocol/api-bindings';
 
 // GQL enums
 export {
