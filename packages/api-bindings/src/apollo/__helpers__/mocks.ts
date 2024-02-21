@@ -3,14 +3,15 @@ import { MockedResponse, mockSingleLink } from '@apollo/client/testing';
 import { DocumentNode, ExecutionResult, GraphQLError } from 'graphql';
 
 import { SafeApolloClient } from '../SafeApolloClient';
-import { createLensCache, createSnapshotCache, defaultQueryParams } from '../cache';
+import { createLensCache, createSnapshotCache } from '../cache';
 import { ApolloServerErrorCode } from '../errors';
 
 export function mockLensApolloClient(
-  mocks: ReadonlyArray<MockedResponse<unknown>> = [],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  mocks: ReadonlyArray<MockedResponse<any, any>> = [],
 ): SafeApolloClient<NormalizedCacheObject> {
   return new SafeApolloClient({
-    cache: createLensCache(defaultQueryParams),
+    cache: createLensCache(),
 
     link: mockSingleLink(...mocks).setOnError((error) => {
       throw error;

@@ -18,7 +18,7 @@ export function mockFeedResponse({
   variables,
   items,
 }: {
-  variables: FeedVariables;
+  variables: Pick<FeedVariables, 'where'>;
   items: FeedItem[];
 }) {
   return mockAnyPaginatedResponse({
@@ -29,7 +29,7 @@ export function mockFeedResponse({
 }
 
 export function mockExplorePublicationsResponse(args: {
-  variables: ExplorePublicationsVariables;
+  variables: Pick<ExplorePublicationsVariables, 'limit' | 'orderBy' | 'where'>;
   items: ExplorePublication[];
 }) {
   return mockAnyPaginatedResponse({
@@ -43,7 +43,7 @@ export function mockFeedHighlightsResponse({
   variables,
   items,
 }: {
-  variables: FeedHighlightsVariables;
+  variables: Pick<FeedHighlightsVariables, 'limit' | 'where'>;
   items: FeedHighlight[];
 }) {
   return mockAnyPaginatedResponse({
@@ -57,7 +57,7 @@ export function mockExploreProfilesResponse({
   variables,
   items,
 }: {
-  variables: ExploreProfilesVariables;
+  variables: Pick<ExploreProfilesVariables, 'limit' | 'orderBy' | 'where'>;
   items: Profile[];
 }) {
   return mockAnyPaginatedResponse({

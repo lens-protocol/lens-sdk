@@ -1,6 +1,7 @@
 import {
   ApolloCache,
   ApolloClient,
+  ApolloClientOptions,
   ApolloLink,
   DefaultContext,
   MutationOptions,
@@ -38,12 +39,7 @@ function isTerminating(link: ApolloLink): boolean {
   return link.request.length <= 1;
 }
 
-export type SafeApolloClientOptions<TCacheShape> = {
-  cache: ApolloCache<TCacheShape>;
-  /**
-   * @defaultValue false
-   */
-  connectToDevTools?: boolean;
+export type SafeApolloClientOptions<TCacheShape> = ApolloClientOptions<TCacheShape> & {
   pollingInterval?: number;
   version?: SemVer;
   link: ApolloLink;

@@ -7,6 +7,7 @@ import {
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { useFragmentVariables } from '../helpers/variables';
 
 export type UseExplorePublicationsArgs = PaginatedArgs<ExplorePublicationRequest>;
 
@@ -54,11 +55,11 @@ export function useExplorePublications(
   return usePaginatedReadResult(
     useUnderlyingQuery(
       useLensApolloClient({
-        variables: {
+        variables: useFragmentVariables({
           where,
           orderBy,
           statsFor: where?.metadata?.publishedOn,
-        },
+        }),
       }),
     ),
   );

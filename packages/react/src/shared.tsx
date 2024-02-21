@@ -1,7 +1,6 @@
 import {
   createAuthApolloClient,
   createLensApolloClient,
-  defaultQueryParams,
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import { TransactionKind } from '@lens-protocol/domain/entities';
@@ -16,7 +15,6 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
 
-import { ConsoleLogger } from './ConsoleLogger';
 import { AccessTokenStorage } from './authentication/adapters/AccessTokenStorage';
 import { AuthApi } from './authentication/adapters/AuthApi';
 import { CredentialsExpiryController } from './authentication/adapters/CredentialsExpiryController';
@@ -24,7 +22,7 @@ import { CredentialsFactory } from './authentication/adapters/CredentialsFactory
 import { CredentialsGateway } from './authentication/adapters/CredentialsGateway';
 import { CredentialsStorage } from './authentication/adapters/CredentialsStorage';
 import { LogoutPresenter } from './authentication/adapters/LogoutPresenter';
-import { BaseConfig, RequiredConfig } from './config';
+import { BaseConfig, RequiredConfig, resolveConfig } from './config';
 import { createInboxKeyStorage, DisableConversationsGateway } from './inbox';
 import { IProfileCacheManager } from './profile/adapters/IProfileCacheManager';
 import { ProfileCacheManager } from './profile/infrastructure/ProfileCacheManager';
@@ -57,12 +55,7 @@ import { SignerFactory } from './wallet/infrastructure/SignerFactory';
  * @internal
  */
 export function createSharedDependencies(userConfig: BaseConfig): SharedDependencies {
-  const defaultConfig = {
-    debug: false,
-    logger: new ConsoleLogger(),
-    params: defaultQueryParams,
-  };
-  const config: RequiredConfig = { ...defaultConfig, ...userConfig };
+  const config = resolveConfig(userConfig);
 
   // auth api
   const anonymousApolloClient = createAuthApolloClient({
@@ -79,7 +72,7 @@ export function createSharedDependencies(userConfig: BaseConfig): SharedDependen
 
   // apollo client
   const apolloClient = createLensApolloClient({
-    queryParams: config.params,
+    connectToDevTools: config.debug,
     uri: config.environment.backend,
     accessTokenStorage,
     pollingInterval: config.environment.timings.pollingInterval,
@@ -100,8 +93,11 @@ export function createSharedDependencies(userConfig: BaseConfig): SharedDependen
   const transactionFactory = new TransactionFactory(transactionObserver);
   const credentialsFactory = new CredentialsFactory(authApi);
   const credentialsGateway = new CredentialsGateway(credentialsStorage, apolloClient);
-  const profileCacheManager = new ProfileCacheManager(apolloClient);
-  const publicationCacheManager = new PublicationCacheManager(apolloClient);
+  const profileCacheManager = new ProfileCacheManager(apolloClient, config.fragmentVariables);
+  const publicationCacheManager = new PublicationCacheManager(
+    apolloClient,
+    config.fragmentVariables,
+  );
   const walletGateway = new WalletGateway(signerFactory, transactionFactory);
   const transactionGateway = new PendingTransactionGateway(transactionStorage, transactionFactory);
   const onChainRelayer = new OnChainRelayer(apolloClient, transactionFactory, config.logger);

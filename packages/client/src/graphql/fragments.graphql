@@ -64,7 +64,7 @@ fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
   contract {
     ...NetworkAddress
   }
-  followModuleReturnData
+  followModuleReturnData # @deprecated
   initializeCalldata
   initializeResultData
   signlessApproved
@@ -405,7 +405,7 @@ fragment UnknownReferenceModuleSettings on UnknownReferenceModuleSettings {
   contract {
     ...NetworkAddress
   }
-  referenceModuleReturnData
+  referenceModuleReturnData # @deprecated
   initializeCalldata
   initializeResultData
   signlessApproved
@@ -459,7 +459,7 @@ fragment UnknownOpenActionModuleSettings on UnknownOpenActionModuleSettings {
     ...NetworkAddress
   }
   collectNft
-  openActionModuleReturnData # deprecated, kept for backwards compatibility, remove on 2.x stable
+  openActionModuleReturnData # @deprecated
   initializeCalldata
   initializeResultData
   signlessApproved

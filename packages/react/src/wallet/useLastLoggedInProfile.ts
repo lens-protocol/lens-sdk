@@ -8,6 +8,7 @@ import {
 import { NotFoundError } from '../NotFoundError';
 import { useLensApolloClient } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
+import { useFragmentVariables } from '../helpers/variables';
 
 /**
  * {@link useLastLoggedInProfile} hook arguments
@@ -33,9 +34,9 @@ export function useLastLoggedInProfile(
   const { data, error, loading } = useReadResult(
     useLastLoggedInProfileHook(
       useLensApolloClient({
-        variables: {
+        variables: useFragmentVariables({
           request: args,
-        },
+        }),
       }),
     ),
   );

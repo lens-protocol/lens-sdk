@@ -9,6 +9,7 @@ import { failure, OneOf, PromiseResult, success } from '@lens-protocol/shared-ke
 import { NotFoundError } from '../NotFoundError';
 import { useLensApolloClient } from '../helpers/arguments';
 import { useDeferredTask, UseDeferredTask } from '../helpers/tasks';
+import { useLazyFragmentVariables } from '../helpers/variables';
 
 /**
  * {@link useLazyPublication} callback hook arguments
@@ -60,10 +61,11 @@ export function useLazyPublication(): UseDeferredTask<
       fetchPolicy: 'cache-and-network',
     }),
   );
+  const fill = useLazyFragmentVariables();
 
   return useDeferredTask(
     async (args): PromiseResult<AnyPublication, NotFoundError | UnspecifiedError> => {
-      const { data, error } = await fetch({ variables: { request: args } });
+      const { data, error } = await fetch({ variables: fill({ request: args }) });
 
       if (error) {
         return failure(new UnspecifiedError(error));
