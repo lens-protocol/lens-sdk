@@ -39,8 +39,7 @@ module.exports = {
           {
             name: '@apollo/client',
             importNames: ['ApolloClient'],
-            message:
-              'Please use "createLensApolloClient" or "createSnapshotApolloClient" from @lens-protocol/api-bindings.',
+            message: 'Please use "createLensApolloClient" from @lens-protocol/api-bindings.',
           },
         ],
       },

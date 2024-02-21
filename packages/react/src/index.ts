@@ -32,7 +32,7 @@ export * from './wallet';
 /**
  * Domain essentials
  */
-export type { AppId, NftId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
+export type { AppId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
 export { Amount, ChainType, erc20, fiat, ether, matic } from '@lens-protocol/shared-kernel';
 export type {
   AmountValue,
@@ -57,7 +57,6 @@ export type {
   PromiseResult,
   Result,
   Success,
-  Url,
 } from '@lens-protocol/shared-kernel';
 
 /**

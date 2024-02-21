@@ -64,7 +64,6 @@ fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
   contract {
     ...NetworkAddress
   }
-  followModuleReturnData # slated for removal on 2.x stable
   initializeCalldata
   initializeResultData
   signlessApproved
@@ -436,7 +435,6 @@ fragment UnknownReferenceModuleSettings on UnknownReferenceModuleSettings {
   contract {
     ...NetworkAddress
   }
-  referenceModuleReturnData # slated for removal on 2.x stable
   initializeCalldata
   initializeResultData
   signlessApproved
@@ -495,7 +493,6 @@ fragment UnknownOpenActionModuleSettings on UnknownOpenActionModuleSettings {
     ...NetworkAddress
   }
   collectNft
-  openActionModuleReturnData # slated for removal on 2.x stable
   initializeCalldata
   initializeResultData
   signlessApproved

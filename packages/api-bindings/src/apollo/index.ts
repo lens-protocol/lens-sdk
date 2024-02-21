@@ -3,18 +3,8 @@ import { ILogger } from '@lens-protocol/shared-kernel';
 
 import { LENS_API_MINIMAL_SUPPORTED_VERSION } from '../constants';
 import { SafeApolloClient } from './SafeApolloClient';
-import { createSnapshotCache } from './cache';
 import { createLensCache } from './cache/createLensCache';
-import {
-  AuthLinkArgs,
-  IAccessTokenStorage,
-  createAuthLink,
-  createLensLink,
-  createSnapshotLink,
-} from './links';
-
-export { demoSnapshotPoll, snapshotPoll } from './cache/utils/ContentInsight';
-export type { ContentInsightMatcher } from './cache/utils/ContentInsight';
+import { AuthLinkArgs, IAccessTokenStorage, createAuthLink, createLensLink } from './links';
 
 export type ApolloClientConfig = AuthLinkArgs & {
   uri: string;
@@ -58,17 +48,6 @@ export function createAuthApolloClient({ uri, logger }: AuthApolloClientConfig) 
     cache: createLensCache(),
     link: createLensLink({ uri, logger, supportedVersion: LENS_API_MINIMAL_SUPPORTED_VERSION }),
     version: LENS_API_MINIMAL_SUPPORTED_VERSION,
-  });
-}
-
-export type SnapshotApolloClientConfig = {
-  uri: string;
-};
-
-export function createSnapshotApolloClient({ uri }: SnapshotApolloClientConfig) {
-  return new SafeApolloClient({
-    cache: createSnapshotCache(),
-    link: createSnapshotLink({ uri }),
   });
 }
 

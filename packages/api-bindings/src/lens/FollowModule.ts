@@ -6,13 +6,6 @@ import { erc20Amount } from './utils';
 
 export type FollowModule = NonNullable<Profile['followModule']>;
 
-/**
- * @deprecated not longer in use - removal slated for stable 2.x release
- */
-export type ResolveFollowPolicy = {
-  followModule: FollowModule | null;
-};
-
 export type ChargeFollowPolicy = {
   type: FollowPolicyType.CHARGE;
   amount: Erc20Amount;
@@ -26,11 +19,6 @@ export type NoFollowPolicy = {
   contractAddress: EvmAddress;
   chainId: number;
 };
-
-/**
- * @deprecated use {@link NoFollowPolicy} instead - removal slated for stable 2.x release
- */
-export type NoFeeFollowPolicy = NoFollowPolicy;
 
 export type UnknownFollowPolicy = {
   type: FollowPolicyType.UNKNOWN;

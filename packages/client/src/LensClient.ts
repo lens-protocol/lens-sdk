@@ -3,7 +3,7 @@ import { InMemoryStorageProvider, IStorageProvider } from '@lens-protocol/storag
 import { Authentication, IAuthentication } from './authentication';
 import { LensContext } from './context';
 import { Environment } from './environments';
-import { MediaTransformsConfig, QueryParams } from './queryParams';
+import { QueryParams } from './queryParams';
 import {
   Explore,
   Feed,
@@ -47,23 +47,6 @@ export type LensClientConfig = {
   headers?: Record<string, string>;
 
   /**
-   * Media returned from the publication and profile queries can be transformed
-   * to sizes needed by the SDK consuming application.
-   * To overwrite default transformation values, provide a `mediaTransforms` object.
-   *
-   * @see {@link MediaTransformsConfig} for more information
-   * @deprecated Use the `params` option instead. This will be removed in a future release.
-   */
-  mediaTransforms?: MediaTransformsConfig;
-
-  /**
-   * The origin to be sent in the `origin` header when making requests to the Lens API.
-   *
-   * @deprecated Use the `headers` option instead. This will be removed in a future release.
-   */
-  origin?: string;
-
-  /**
    * The common query params allow you to customize some aspects of the returned data.
    *
    * @defaultValue see individual fields of {@link QueryParams}
@@ -98,9 +81,7 @@ export class LensClient {
     this.context = {
       environment: config.environment,
       storage: config.storage || new InMemoryStorageProvider(),
-      origin: config.origin,
       headers: config.headers,
-      mediaTransforms: config.mediaTransforms ?? {},
       params: config.params ?? {},
     };
     this._authentication = new Authentication(this.context);

@@ -150,7 +150,6 @@ export type {
   NftGalleryUpdateInfoRequest,
   NftGalleryUpdateItemOrderRequest,
   NftGalleryUpdateItemsRequest,
-  NftOwnershipChallengeRequest,
   NftsRequest,
   NotificationRequest,
   OnchainCommentRequest,

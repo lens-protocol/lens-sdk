@@ -64,7 +64,6 @@ fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
   contract {
     ...NetworkAddress
   }
-  followModuleReturnData # @deprecated
   initializeCalldata
   initializeResultData
   signlessApproved
@@ -99,10 +98,6 @@ fragment ImageSet on ImageSet {
     ...Image
   }
   medium: transformed(request: $publicationImageMediumTransform) {
-    ...Image
-  }
-  # @deprecated
-  transformed(request: $publicationImageMediumTransform) {
     ...Image
   }
 }
@@ -194,10 +189,6 @@ fragment ProfilePictureSet on ImageSet {
   thumbnail: transformed(request: $profilePictureTransform) {
     ...Image
   }
-  # @deprecated
-  transformed(request: $profilePictureTransform) {
-    ...Image
-  }
 }
 
 fragment NftImage on NftImage {
@@ -252,12 +243,6 @@ fragment ProfileStats on ProfileStats {
   collects: countOpenActions(request: { anyOf: [{ category: COLLECT }] })
   countOpenActions(request: $profileStatsCountOpenActionArgs)
   lensClassifierScore
-
-  # @deprecated
-  upvoteReactions: reactions(request: { type: UPVOTE })
-  downvoteReactions: reactions(request: { type: DOWNVOTE })
-  upvoteReacted: reacted(request: { type: UPVOTE })
-  downvoteReacted: reacted(request: { type: DOWNVOTE })
 }
 
 fragment HandleInfo on HandleInfo {
@@ -405,7 +390,6 @@ fragment UnknownReferenceModuleSettings on UnknownReferenceModuleSettings {
   contract {
     ...NetworkAddress
   }
-  referenceModuleReturnData # @deprecated
   initializeCalldata
   initializeResultData
   signlessApproved
@@ -459,7 +443,6 @@ fragment UnknownOpenActionModuleSettings on UnknownOpenActionModuleSettings {
     ...NetworkAddress
   }
   collectNft
-  openActionModuleReturnData # @deprecated
   initializeCalldata
   initializeResultData
   signlessApproved
@@ -1499,10 +1482,6 @@ fragment PublicationStats on PublicationStats {
   downvotes: reactions(request: { type: DOWNVOTE })
   collects: countOpenActions(request: { anyOf: [{ category: COLLECT }] })
   countOpenActions(request: $publicationStatsCountOpenActionArgs)
-
-  # @deprecated
-  upvoteReactions: reactions(request: { type: UPVOTE })
-  downvoteReactions: reactions(request: { type: DOWNVOTE })
 }
 
 fragment Post on Post {

@@ -1,5 +1,5 @@
 import { AppId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
-import { Data } from '@lens-protocol/shared-kernel';
+import { Data, URI, URL } from '@lens-protocol/shared-kernel';
 
 /**
  * Ensures that the given value is a valid AppId
@@ -39,4 +39,24 @@ export function publicationId(id: string): PublicationId {
 export function data(value: string): Data {
   // for now just asserts the type, in future it will enforce a format
   return value as Data;
+}
+
+/**
+ * Ensures that the given value is a valid URL
+ *
+ * @group Helpers
+ */
+export function url(value: string): URL {
+  // for now just asserts the type, in future it will enforce a format
+  return value as URL;
+}
+
+/**
+ * Ensures that the given value is a valid URI
+ *
+ * @group Helpers
+ */
+export function uri(value: string): URI {
+  // for now just asserts the type, in future it will enforce a format
+  return value as URI;
 }

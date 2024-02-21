@@ -32,7 +32,6 @@ export type {
 export type {
   ChargeFollowConfig,
   FollowPolicyConfig,
-  NoFeeFollowConfig,
   NoFollowConfig,
   OpenFollowConfig,
   UnknownFollowConfig,

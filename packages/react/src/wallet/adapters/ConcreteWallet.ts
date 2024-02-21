@@ -1,5 +1,4 @@
 import { TypedDataSigner, Signer } from '@ethersproject/abstract-signer';
-import { getAddress } from '@ethersproject/address';
 import { ErrorCode } from '@ethersproject/logger';
 import { TransactionRequest } from '@ethersproject/providers';
 import { TypedData } from '@lens-protocol/blockchain-bindings';
@@ -16,8 +15,6 @@ import {
   ProtocolTransactionRequestModel,
   AnyTransactionRequestModel,
   Signature,
-  ISignedVote,
-  PollId,
 } from '@lens-protocol/domain/entities';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import {
@@ -31,8 +28,6 @@ import {
 } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
-import { UnsignedVote } from '../../polls/adapters/SnapshotVoteFactory';
-import { ISnapshotVote } from '../../polls/adapters/SnapshotVoteRelayer';
 import { ITransactionFactory } from '../../transactions/adapters/ITransactionFactory';
 import { assertErrorObjectWithCode, isUserRejectedError } from './errors';
 
@@ -100,15 +95,6 @@ export class SignedProtocolCall<T extends ProtocolTransactionRequestModel>
       unsignedCall.nonce,
     );
   }
-}
-
-export class SignedVote implements ISnapshotVote {
-  constructor(
-    readonly pollId: PollId,
-    readonly signature: Signature,
-    readonly data: TypedData,
-    readonly voter: EvmAddress,
-  ) {}
 }
 
 export interface ITransactionRequest {
@@ -245,53 +231,6 @@ export class ConcreteWallet extends Wallet {
 
       if (err.code === ErrorCode.INSUFFICIENT_FUNDS) {
         return failure(new InsufficientGasError(matic()));
-      }
-
-      throw err;
-    } finally {
-      this.signingInProgress = false;
-    }
-  }
-
-  async signVote(
-    unsignedVote: UnsignedVote,
-  ): PromiseResult<
-    ISignedVote,
-    WalletConnectionError | PendingSigningRequestError | UserRejectedError
-  > {
-    const result = await this.signerFactory.createSigner({
-      address: this.address,
-    });
-
-    if (result.isFailure()) {
-      return result;
-    }
-
-    if (this.signingInProgress) {
-      return failure(new PendingSigningRequestError());
-    }
-    this.signingInProgress = true;
-
-    const signer = result.value;
-    try {
-      const signature = await signer._signTypedData(
-        unsignedVote.typedData.domain,
-        unsignedVote.typedData.types,
-        unsignedVote.typedData.message,
-      );
-
-      const signedVote = new SignedVote(
-        unsignedVote.pollId,
-        signature as Signature,
-        unsignedVote.typedData,
-        getAddress(this.address),
-      );
-      return success(signedVote);
-    } catch (err) {
-      assertErrorObjectWithCode(err);
-
-      if (isUserRejectedError(err)) {
-        return failure(new UserRejectedError());
       }
 
       throw err;

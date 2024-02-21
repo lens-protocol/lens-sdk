@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { mockProfileId, mockPublicationId, mockTransactionHash } from '@lens-protocol/domain/mocks';
-import { ChainType, Erc20, Erc20Amount } from '@lens-protocol/shared-kernel';
+import { ChainType, Erc20, Erc20Amount, URI } from '@lens-protocol/shared-kernel';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 
@@ -238,7 +238,7 @@ export function mockPublicationTextOnlyMetadata(
 ): gql.TextOnlyMetadataV3 {
   return {
     id: faker.helpers.unique(faker.datatype.uuid),
-    rawURI: faker.internet.url(),
+    rawURI: faker.internet.url() as URI,
     locale: 'en',
     tags: null,
     contentWarning: null,
