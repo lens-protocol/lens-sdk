@@ -3,6 +3,7 @@ import { EvmAddress, UnknownObject } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../../NotFoundError';
 import { useLazyModuleMetadata } from '../../misc';
+import { useSharedDependencies } from '../../shared';
 import { createPostRequest } from '../adapters/schemas/builders';
 
 function extractUnknownOpenActionModuleAddresses(desired: CreatePostRequest): EvmAddress[] {
@@ -16,8 +17,16 @@ function extractUnknownOpenActionModuleAddresses(desired: CreatePostRequest): Ev
 
 export function useCreatePostRequest() {
   const { execute: fetch } = useLazyModuleMetadata();
+  const { config } = useSharedDependencies();
+
   return async (input: UnknownObject): Promise<CreatePostRequest> => {
     const desired = createPostRequest(input);
+
+    // if sponsored is disabled globally, return here
+    if (config.sponsored === false) {
+      return { ...desired, sponsored: false };
+    }
+
     const implementations = extractUnknownOpenActionModuleAddresses(desired);
 
     const results = await Promise.all(

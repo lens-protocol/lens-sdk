@@ -12,6 +12,7 @@ import { AtLeastOneOf, EvmAddress, invariant } from '@lens-protocol/shared-kerne
 import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useUpdateProfileManagersController } from './adapters/useUpdateProfileManagersController';
+import { useSponsoredConfig } from './shared/useSponsoredConfig';
 
 export type UpdateProfileManagersArgs = AtLeastOneOf<{
   /**
@@ -207,6 +208,7 @@ export function useUpdateProfileManagers(): UseDeferredTask<
 > {
   const { data: session } = useSession();
   const updateProfileManagers = useUpdateProfileManagersController();
+  const configureRequest = useSponsoredConfig();
 
   return useDeferredTask(async (args) => {
     invariant(
@@ -222,10 +224,12 @@ export function useUpdateProfileManagers(): UseDeferredTask<
       );
     }
 
-    return updateProfileManagers({
-      kind: TransactionKind.UPDATE_PROFILE_MANAGERS,
-      sponsored: args.sponsored ?? true,
-      ...args,
-    });
+    return updateProfileManagers(
+      configureRequest({
+        kind: TransactionKind.UPDATE_PROFILE_MANAGERS,
+        sponsored: args.sponsored ?? true,
+        ...args,
+      }),
+    );
   });
 }

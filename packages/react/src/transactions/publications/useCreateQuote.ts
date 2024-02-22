@@ -18,6 +18,7 @@ import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
 import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
 import { createQuoteRequest } from '../adapters/schemas/builders';
 import { useCreateQuoteController } from '../adapters/useCreateQuoteController';
+import { useSponsoredConfig } from '../shared/useSponsoredConfig';
 
 /**
  * An object representing the result of a quote creation.
@@ -452,6 +453,7 @@ export function useCreateQuote(): UseDeferredTask<
 > {
   const { data: session } = useSession();
   const createQuote = useCreateQuoteController();
+  const configureRequest = useSponsoredConfig();
 
   return useDeferredTask(async (args: CreateQuoteArgs) => {
     invariant(
@@ -463,11 +465,13 @@ export function useCreateQuote(): UseDeferredTask<
       'You must have a profile to create a quote.',
     );
 
-    const request = createQuoteRequest({
-      signless: session.profile.signless,
-      sponsored: args.sponsored ?? true,
-      ...args,
-    });
+    const request = configureRequest(
+      createQuoteRequest({
+        signless: session.profile.signless,
+        sponsored: args.sponsored ?? true,
+        ...args,
+      }),
+    );
 
     return createQuote(request);
   });

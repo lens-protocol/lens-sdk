@@ -14,6 +14,7 @@ import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
 import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
 import { createMirrorRequest } from '../adapters/schemas/builders';
 import { useCreateMirrorController } from '../adapters/useCreateMirrorController';
+import { useSponsoredConfig } from '../shared/useSponsoredConfig';
 
 /**
  * An object representing the result of a mirror creation.
@@ -229,6 +230,7 @@ export function useCreateMirror(): UseDeferredTask<
 > {
   const { data: session } = useSession();
   const createMirror = useCreateMirrorController();
+  const configureRequest = useSponsoredConfig();
 
   return useDeferredTask(async (args: CreateMirrorArgs) => {
     invariant(
@@ -240,11 +242,13 @@ export function useCreateMirror(): UseDeferredTask<
       'You must have a profile to create a mirror.',
     );
 
-    const request = createMirrorRequest({
-      signless: session.profile.signless,
-      sponsored: args.sponsored ?? true,
-      ...args,
-    });
+    const request = configureRequest(
+      createMirrorRequest({
+        signless: session.profile.signless,
+        sponsored: args.sponsored ?? true,
+        ...args,
+      }),
+    );
 
     return createMirror(request);
   });
