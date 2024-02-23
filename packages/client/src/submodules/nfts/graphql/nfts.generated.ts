@@ -1599,6 +1599,7 @@ export const NftCollectionOwnersDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },

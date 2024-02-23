@@ -1147,6 +1147,7 @@ export const PublicationBookmarksDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },

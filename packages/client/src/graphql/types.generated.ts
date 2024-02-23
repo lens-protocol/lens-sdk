@@ -1016,6 +1016,11 @@ export type PaginatedRequest = {
   limit?: InputMaybe<LimitType>;
 };
 
+export type PeerToPeerRecommendRequest = {
+  /** The profile to recommend */
+  profileId: Scalars['ProfileId']['input'];
+};
+
 export type PoapEventQueryRequest = {
   eventId: Scalars['PoapEventId']['input'];
 };
@@ -1561,6 +1566,16 @@ export enum RelayErrorReasonType {
 
 export enum RelayRoleKey {
   CreateProfile = 'CREATE_PROFILE',
+  CreateProfileWithHandleUsingCredits_1 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_1',
+  CreateProfileWithHandleUsingCredits_2 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_2',
+  CreateProfileWithHandleUsingCredits_3 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_3',
+  CreateProfileWithHandleUsingCredits_4 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_4',
+  CreateProfileWithHandleUsingCredits_5 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_5',
+  CreateProfileWithHandleUsingCredits_6 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_6',
+  CreateProfileWithHandleUsingCredits_7 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_7',
+  CreateProfileWithHandleUsingCredits_8 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_8',
+  CreateProfileWithHandleUsingCredits_9 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_9',
+  CreateProfileWithHandleUsingCredits_10 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_10',
   LensManager_1 = 'LENS_MANAGER_1',
   LensManager_2 = 'LENS_MANAGER_2',
   LensManager_3 = 'LENS_MANAGER_3',
@@ -1571,6 +1586,26 @@ export enum RelayRoleKey {
   LensManager_8 = 'LENS_MANAGER_8',
   LensManager_9 = 'LENS_MANAGER_9',
   LensManager_10 = 'LENS_MANAGER_10',
+  LensManager_11 = 'LENS_MANAGER_11',
+  LensManager_12 = 'LENS_MANAGER_12',
+  LensManager_13 = 'LENS_MANAGER_13',
+  LensManager_14 = 'LENS_MANAGER_14',
+  LensManager_15 = 'LENS_MANAGER_15',
+  LensManager_16 = 'LENS_MANAGER_16',
+  LensManager_17 = 'LENS_MANAGER_17',
+  LensManager_18 = 'LENS_MANAGER_18',
+  LensManager_19 = 'LENS_MANAGER_19',
+  LensManager_20 = 'LENS_MANAGER_20',
+  LensManager_21 = 'LENS_MANAGER_21',
+  LensManager_22 = 'LENS_MANAGER_22',
+  LensManager_23 = 'LENS_MANAGER_23',
+  LensManager_24 = 'LENS_MANAGER_24',
+  LensManager_25 = 'LENS_MANAGER_25',
+  LensManager_26 = 'LENS_MANAGER_26',
+  LensManager_27 = 'LENS_MANAGER_27',
+  LensManager_28 = 'LENS_MANAGER_28',
+  LensManager_29 = 'LENS_MANAGER_29',
+  LensManager_30 = 'LENS_MANAGER_30',
   WithSig_1 = 'WITH_SIG_1',
   WithSig_2 = 'WITH_SIG_2',
   WithSig_3 = 'WITH_SIG_3',
@@ -1581,6 +1616,16 @@ export enum RelayRoleKey {
   WithSig_8 = 'WITH_SIG_8',
   WithSig_9 = 'WITH_SIG_9',
   WithSig_10 = 'WITH_SIG_10',
+  WithSig_11 = 'WITH_SIG_11',
+  WithSig_12 = 'WITH_SIG_12',
+  WithSig_13 = 'WITH_SIG_13',
+  WithSig_14 = 'WITH_SIG_14',
+  WithSig_15 = 'WITH_SIG_15',
+  WithSig_16 = 'WITH_SIG_16',
+  WithSig_17 = 'WITH_SIG_17',
+  WithSig_18 = 'WITH_SIG_18',
+  WithSig_19 = 'WITH_SIG_19',
+  WithSig_20 = 'WITH_SIG_20',
 }
 
 export type ReportProfileRequest = {
