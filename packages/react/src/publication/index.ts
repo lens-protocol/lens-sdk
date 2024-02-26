@@ -62,6 +62,7 @@ export {
   resolveReferencePolicy,
 } from '@lens-protocol/api-bindings';
 export type {
+  CollectModuleSettings,
   ReferenceModule,
   ReferencePolicy,
   FollowersOnlyReferencePolicy,

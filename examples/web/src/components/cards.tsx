@@ -1,10 +1,8 @@
 import {
   AnyPublication,
   Comment,
-  Post,
+  PrimaryPublication,
   PublicationMetadata,
-  PublicationStats,
-  Quote,
 } from '@lens-protocol/react-web';
 import { ReactNode } from 'react';
 
@@ -22,38 +20,42 @@ function MetadataSwitch({ metadata }: { metadata: PublicationMetadata }) {
   }
 }
 
-function PublicationTickers({ stats }: { stats: PublicationStats }) {
+function PublicationFacts({ publication }: { publication: PrimaryPublication }) {
   return (
-    <p
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        gap: '2rem',
-        justifyContent: 'space-between',
-      }}
-    >
-      <span>
-        Collects:&nbsp;<strong>{stats.collects}</strong>
-      </span>
-      <span>
-        Mirrors:&nbsp;<strong>{stats.mirrors}</strong>
-      </span>
-      <span>
-        Reactions:&nbsp;<strong>{stats.upvotes - stats.downvotes}</strong>
-      </span>
-      <span>
-        Comments:&nbsp;<strong>{stats.comments}</strong>
-      </span>
-    </p>
+    <>
+      <p
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: '2rem',
+          justifyContent: 'space-between',
+        }}
+      >
+        <span>
+          Collects:&nbsp;<strong>{publication.stats.collects}</strong>
+        </span>
+        <span>
+          Mirrors:&nbsp;<strong>{publication.stats.mirrors}</strong>
+        </span>
+        <span>
+          Reactions:&nbsp;<strong>{publication.stats.upvotes - publication.stats.downvotes}</strong>
+        </span>
+        <span>
+          Comments:&nbsp;<strong>{publication.stats.comments}</strong>
+        </span>
+      </p>
+
+      {publication.operations.hasCollected && <p>You already collected this publication</p>}
+    </>
   );
 }
 
-function PublicationBody({ publication }: { publication: Post | Comment | Quote }) {
+function PublicationBody({ publication }: { publication: PrimaryPublication }) {
   return (
     <div>
       <MetadataSwitch metadata={publication.metadata} />
       <hr />
-      <PublicationTickers stats={publication.stats} />
+      <PublicationFacts publication={publication} />
     </div>
   );
 }
