@@ -46,7 +46,6 @@ export type {
   NoFollowPolicy,
   OpenFollowPolicy,
   UnknownFollowPolicy,
-  NoFeeFollowPolicy, // deprecated
 } from '@lens-protocol/api-bindings';
 export { resolveFollowPolicy } from '@lens-protocol/api-bindings';
 export { isValidHandle } from '@lens-protocol/blockchain-bindings';

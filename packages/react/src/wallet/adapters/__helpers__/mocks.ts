@@ -9,12 +9,10 @@ import {
 } from '@lens-protocol/domain/entities';
 import {
   mockAnyTransactionRequestModel,
-  mockPollId,
   mockProtocolTransactionRequestModel,
   mockSignature,
 } from '@lens-protocol/domain/mocks';
 import { ChainType, EvmAddress, Result } from '@lens-protocol/shared-kernel';
-import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
@@ -23,7 +21,6 @@ import {
   ISignerFactory,
   ITransactionRequest,
   SignedProtocolCall,
-  SignedVote,
   UnsignedProtocolCall,
 } from '../ConcreteWallet';
 import { IProviderFactory } from '../IProviderFactory';
@@ -95,10 +92,6 @@ export function mockISignerFactory({
     .mockResolvedValue(signerResult);
 
   return factory;
-}
-
-export function mockSignedVote(): SignedVote {
-  return new SignedVote(mockPollId(), mockSignature(), mockTypedData(), mockEvmAddress());
 }
 
 type MockedIProviderFactoryConfig = {

@@ -1,27 +1,20 @@
 import { faker } from '@faker-js/faker';
-import { ChainType } from '@lens-protocol/shared-kernel';
+import { ChainType, URI } from '@lens-protocol/shared-kernel';
 import {
   mockDaiAmount,
   mockData,
   mockEvmAddress,
   mockUsdcAmount,
 } from '@lens-protocol/shared-kernel/mocks';
-import { mock } from 'jest-mock-extended';
-import { when } from 'jest-when';
 
-import { NftOwnershipChallenge, TransactionKind } from '../../../entities';
-import { mockProfileId, mockSignature } from '../../../entities/__helpers__/mocks';
+import { TransactionKind } from '../../../entities';
+import { mockProfileId } from '../../../entities/__helpers__/mocks';
 import { BlockProfilesRequest } from '../BlockProfiles';
 import { ClaimHandleRequest } from '../ClaimHandle';
 import { CreateProfileRequest } from '../CreateProfile';
 import { ChargeFollowConfig, FollowPolicyType } from '../FollowPolicy';
 import { FreeFollowRequest, PaidFollowRequest, UnknownFollowRequest } from '../FollowProfile';
 import { LinkHandleRequest } from '../LinkHandle';
-import {
-  INftOwnershipChallengeGateway,
-  NftOwnershipSignature,
-  ProveNftOwnershipRequest,
-} from '../ProveNftOwnership';
 import { SetProfileMetadataRequest } from '../SetProfileMetadata';
 import { UnblockProfilesRequest } from '../UnblockProfiles';
 import { UnfollowRequest } from '../UnfollowProfile';
@@ -70,7 +63,7 @@ export function mockSetProfileMetadataRequest(
   return {
     signless: true,
     sponsored: true,
-    metadataURI: faker.internet.url(),
+    metadataURI: faker.internet.url() as URI,
     ...overrides,
     kind: TransactionKind.UPDATE_PROFILE_DETAILS,
   };
@@ -133,39 +126,6 @@ export function mockUnfollowRequest(): UnfollowRequest {
     sponsored: true,
     signless: true,
   };
-}
-
-export function mockProveNftOwnershipRequest(): ProveNftOwnershipRequest {
-  return {
-    contractAddress: mockEvmAddress(),
-    chainId: faker.datatype.number(),
-    ownerAddress: mockEvmAddress(),
-    tokenId: faker.datatype.uuid(),
-  };
-}
-
-export function mockNftOwnershipSignature(
-  overrides?: Partial<NftOwnershipSignature>,
-): NftOwnershipSignature {
-  return {
-    id: faker.datatype.uuid(),
-    signature: mockSignature(),
-    ...overrides,
-  };
-}
-
-export function mockINftOwnershipChallengeGateway({
-  request,
-  result,
-}: {
-  request: ProveNftOwnershipRequest;
-  result: NftOwnershipChallenge;
-}): INftOwnershipChallengeGateway {
-  const gateway = mock<INftOwnershipChallengeGateway>();
-
-  when(gateway.createOwnershipChallenge).calledWith(request).mockResolvedValue(result);
-
-  return gateway;
 }
 
 function mockFullHandle(): string {

@@ -9,7 +9,6 @@ import { requireAuthHeaders } from './requireAuthHeaders';
 const context: LensContext = {
   environment: buildTestEnvironment(),
   storage: new InMemoryStorageProvider(),
-  mediaTransforms: {},
   params: {},
 };
 

@@ -10,7 +10,13 @@ import {
 import { UnknownObject } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
-import { DataSchema, Erc20AmountSchema, EvmAddressSchema, ProfileIdSchema } from './common';
+import {
+  DataSchema,
+  Erc20AmountSchema,
+  EvmAddressSchema,
+  ProfileIdSchema,
+  UriSchema,
+} from './common';
 
 export const CreateProfileRequestSchema: z.ZodType<
   CreateProfileRequest,
@@ -126,7 +132,7 @@ export const UpdateFollowPolicyRequestSchema: z.ZodType<
 });
 
 export const SetProfileMetadataRequestSchema = z.object({
-  metadataURI: z.string().url(),
+  metadataURI: UriSchema,
   kind: z.literal(TransactionKind.UPDATE_PROFILE_DETAILS),
   signless: z.boolean(),
   sponsored: z.boolean(),

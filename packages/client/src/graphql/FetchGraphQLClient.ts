@@ -9,7 +9,6 @@ export class FetchGraphQLClient extends GraphQLClient {
   constructor(context: LensContext, options?: Options) {
     const url = context.environment.gqlEndpoint;
     const headers = {
-      ...(context.origin ? { origin: context.origin } : {}), // TODO: remove `origin` from LensClientConfig
       ...(context.headers || {}),
     };
     super(url, {

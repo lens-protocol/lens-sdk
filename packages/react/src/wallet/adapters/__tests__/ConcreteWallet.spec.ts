@@ -20,18 +20,11 @@ import { Wallet, errors, providers, utils } from 'ethers';
 import { mock } from 'jest-mock-extended';
 import { when } from 'jest-when';
 
-import { UnsignedVote } from '../../../polls/adapters/SnapshotVoteFactory';
-import { mockUnsignedVote } from '../../../polls/adapters/__helpers__/mocks';
 import {
   mockITransactionFactory,
   mockTypedData,
 } from '../../../transactions/adapters/__helpers__/mocks';
-import {
-  ConcreteWallet,
-  ISignerFactory,
-  SignedVote,
-  UnsignedProtocolCall,
-} from '../ConcreteWallet';
+import { ConcreteWallet, ISignerFactory, UnsignedProtocolCall } from '../ConcreteWallet';
 import {
   mockErrorWithCode,
   mockISignerFactory,
@@ -306,81 +299,6 @@ describe(`Given an instance of ${ConcreteWallet.name}`, () => {
         txRequest: {},
       });
       const result = await wallet.sendTransaction(unsignedTransaction);
-
-      expect(() => result.unwrap()).toThrow(WalletConnectionError);
-    });
-  });
-
-  describe(`when signing a ${UnsignedVote.name}`, () => {
-    const typedData = mockTypedData();
-    const unsignedVote = mockUnsignedVote({ typedData });
-    const signature = mockSignature();
-
-    it(`should use the user's wallet to sign the message and return the ${SignedVote.name}`, async () => {
-      const signer = mock<providers.JsonRpcSigner>();
-      when(signer._signTypedData)
-        .calledWith(typedData.domain, typedData.types, typedData.message)
-        .mockResolvedValue(signature);
-
-      const signerFactory = mockISignerFactory({
-        address,
-        signerResult: success(signer),
-      });
-
-      const wallet = setupWalletInstance({ signerFactory });
-      const result = await wallet.signVote(unsignedVote);
-
-      expect(result.unwrap()).toBeInstanceOf(SignedVote);
-      expect(result.unwrap()).toEqual({
-        pollId: unsignedVote.pollId,
-        data: unsignedVote.typedData,
-        signature,
-        voter: address,
-      });
-    });
-
-    it(`should fail with ${PendingSigningRequestError.name} in case of existing signing request`, async () => {
-      const signer = mock<providers.JsonRpcSigner>();
-      when(signer._signTypedData).mockResolvedValue(signature);
-
-      const signerFactory = mockISignerFactory({
-        address,
-        signerResult: success(signer),
-      });
-      const wallet = setupWalletInstance({ signerFactory });
-
-      void wallet.signVote(unsignedVote);
-      const result = await wallet.signVote(unsignedVote);
-
-      expect(() => result.unwrap()).toThrow(PendingSigningRequestError);
-    });
-
-    it.each([errors.ACTION_REJECTED, errorCodes.provider.userRejectedRequest])(
-      `should fail with ${UserRejectedError.name} if the user cancels the challenge message signing`,
-      async (code) => {
-        const signer = mock<providers.JsonRpcSigner>();
-        when(signer._signTypedData).mockRejectedValue(mockErrorWithCode(code));
-
-        const signerFactory = mockISignerFactory({
-          address,
-          signerResult: success(signer),
-        });
-        const wallet = setupWalletInstance({ signerFactory });
-
-        const result = await wallet.signVote(unsignedVote);
-
-        expect(() => result.unwrap()).toThrow(UserRejectedError);
-      },
-    );
-
-    it(`should fail with ${WalletConnectionError.name} in case the ISignerFactory fails with it`, async () => {
-      const signerFactory = mockISignerFactory({
-        address,
-        signerResult: failure(new WalletConnectionError(WalletConnectionErrorReason.WRONG_ACCOUNT)),
-      });
-      const wallet = setupWalletInstance({ signerFactory });
-
-      const result = await wallet.signVote(unsignedVote);
 
       expect(() => result.unwrap()).toThrow(WalletConnectionError);
     });

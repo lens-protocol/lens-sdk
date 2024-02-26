@@ -40,13 +40,3 @@ export function useBookmarks(args: UseBookmarksArgs = {}): PaginatedReadResult<A
     ),
   );
 }
-
-/**
- * @deprecated Use {@link useBookmarks} instead.
- */
-export const useMyBookmarks = useBookmarks;
-
-/**
- * @deprecated Use {@link UseBookmarksArgs} instead.
- */
-export type UseMyBookmarksArgs = UseBookmarksArgs;

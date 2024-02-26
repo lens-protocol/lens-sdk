@@ -10,6 +10,7 @@ import { invariant } from '@lens-protocol/shared-kernel';
 
 import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
+import { uri } from '../utils';
 import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useSetProfileMetadataController } from './adapters/useSetProfileMetadataController';
 import { useSponsoredConfig } from './shared/useSponsoredConfig';
@@ -242,7 +243,7 @@ export function useSetProfileMetadata(): UseDeferredTask<
     const request = configureRequest({
       kind: TransactionKind.UPDATE_PROFILE_DETAILS,
       signless: session.profile.signless,
-      metadataURI: args.metadataURI,
+      metadataURI: uri(args.metadataURI),
       sponsored: args.sponsored ?? true,
     });
 

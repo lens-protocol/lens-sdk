@@ -2,6 +2,7 @@ import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
 import { Nonce } from '@lens-protocol/domain/entities';
 import { mockNonce, mockProfileId } from '@lens-protocol/domain/mocks';
+import { URI } from '@lens-protocol/shared-kernel';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import {
@@ -58,10 +59,10 @@ import {
 } from './utils';
 
 export function mockCreateSetProfileMetadataTypedDataData({
-  metadataURI = faker.internet.url(),
+  metadataURI = faker.internet.url() as URI,
   nonce = mockNonce(),
 }: {
-  metadataURI?: string;
+  metadataURI?: URI;
   nonce?: Nonce;
 } = {}): CreateOnchainSetProfileMetadataTypedDataData {
   return {

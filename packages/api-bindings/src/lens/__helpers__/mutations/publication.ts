@@ -2,6 +2,7 @@ import { MockedResponse } from '@apollo/client/testing';
 import { faker } from '@faker-js/faker';
 import { Nonce } from '@lens-protocol/domain/entities';
 import { mockNonce, mockProfileId, mockPublicationId } from '@lens-protocol/domain/mocks';
+import { URI } from '@lens-protocol/shared-kernel';
 import { mockEvmAddress } from '@lens-protocol/shared-kernel/mocks';
 
 import {
@@ -152,7 +153,7 @@ export function mockCreateOnchainPostTypedDataData({
         nonce,
         deadline: 1644303500,
         profileId: mockProfileId(),
-        contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json',
+        contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json' as URI,
         actionModules: [mockEvmAddress()],
         actionModulesInitDatas: ['0x'],
         referenceModule: '0x0000000000000000000000000000000000000000',
@@ -211,7 +212,7 @@ export function mockCreateMomokaPostTypedDataData({
         nonce,
         deadline: 1644303500,
         profileId: mockProfileId(),
-        contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json',
+        contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json' as URI,
         actionModules: ['0xd6072BB2ABc0a9d1331c7d0B83AE6C47f2Cb86A3'],
         actionModulesInitDatas: ['0x'],
         referenceModule: '0x0000000000000000000000000000000000000000',
@@ -276,7 +277,7 @@ export function mockCreateOnchainCommentTypedDataData({
         nonce,
         deadline: 1644303500,
         profileId: mockProfileId(),
-        contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json',
+        contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json' as URI,
         pointedProfileId: mockProfileId(),
         pointedPubId: '0x01',
         referrerProfileIds: [],
@@ -339,7 +340,7 @@ export function mockCreateMomokaCommentTypedDataData({
         nonce,
         deadline: 1644303500,
         profileId: mockProfileId(),
-        contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json',
+        contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json' as URI,
         pointedProfileId: mockProfileId(),
         pointedPubId: '0x01',
         referrerProfileIds: [],
@@ -518,7 +519,7 @@ export function mockCreateOnchainQuoteTypedDataData({
         nonce,
         deadline: 1644303500,
         profileId: mockProfileId(),
-        contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json',
+        contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json' as URI,
         pointedProfileId: mockProfileId(),
         pointedPubId: '0x01',
         referrerProfileIds: [],
@@ -579,7 +580,7 @@ export function mockCreateMomokaQuoteTypedDataData({
         nonce,
         deadline: 1644303500,
         profileId: mockProfileId(),
-        contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json',
+        contentURI: 'ipfs://QmR5V6fwKWzoa9gevmYaQ11eMQsAahsjfWPz1rCoNJjN1K.json' as URI,
         pointedProfileId: mockProfileId(),
         pointedPubId: '0x01',
         referrerProfileIds: [],

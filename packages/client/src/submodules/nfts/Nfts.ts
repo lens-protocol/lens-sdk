@@ -15,7 +15,6 @@ import type {
   NftGalleryUpdateInfoRequest,
   NftGalleryUpdateItemOrderRequest,
   NftGalleryUpdateItemsRequest,
-  NftOwnershipChallengeRequest,
   NftsRequest,
   PopularNftCollectionsRequest,
 } from '../../graphql/types.generated';
@@ -28,7 +27,6 @@ import {
 } from '../../helpers';
 import {
   NftFragment,
-  NftOwnershipChallengeResultFragment,
   Sdk,
   getSdk,
   NftGalleryFragment,
@@ -37,7 +35,7 @@ import {
 } from './graphql/nfts.generated';
 
 /**
- * Query owned NFTs. Challenge ownership. Create and manage NFT galleries.
+ * Query owned NFTs. Create and manage NFT galleries.
  *
  * @experimental This module is not stable and may be removed in a future release
  * @group LensClient Modules
@@ -223,47 +221,6 @@ export class Nfts {
 
       return result.data.result;
     }, request);
-  }
-
-  /**
-   * Fetch NFT ownership challenge.
-   *
-   * ⚠️ Requires authenticated LensClient.
-   *
-   * If you are using `development` enviroment you can only query chainIds 5 and 80001.
-   * If you are using `production` enviroment you can only query chainIds 1 and 137.
-   *
-   * @param request - Request object for the query
-   * @returns {@link PromiseResult} with {@link NftOwnershipChallengeResultFragment}
-   * @deprecated There is no use of this method in the Lens Protocol v2
-   *
-   * @example
-   * ```ts
-   * const result = await client.nfts.ownershipChallenge({
-   *   for: '0x1234567890123456789012345678901234567890',
-   *   nfts: [
-   *     {
-   *       contract: {
-   *         address: '0x1234123412341234123412341234123412341234', // an NFT that wallet owns
-   *         chainId: 5,
-   *       },
-   *       tokenId: '1',
-   *     }
-   *   ]
-   * });
-   * ```
-   */
-  async ownershipChallenge(
-    request: NftOwnershipChallengeRequest,
-  ): PromiseResult<
-    NftOwnershipChallengeResultFragment,
-    CredentialsExpiredError | NotAuthenticatedError
-  > {
-    return requireAuthHeaders(this.authentication, async (headers) => {
-      const result = await this.sdk.NftOwnershipChallenge({ request }, headers);
-
-      return result.data.result;
-    });
   }
 
   /**

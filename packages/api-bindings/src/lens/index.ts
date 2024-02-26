@@ -14,7 +14,6 @@ export * from './variables';
 export * from './utils';
 export * from './publication';
 export * from './FollowModule';
-export * from './ContentInsight';
 export * from './Cursor';
 export * from './ReferenceModule';
 
