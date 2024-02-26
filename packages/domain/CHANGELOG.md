@@ -1,5 +1,107 @@
 # @lens-protocol/domain
 
+## 0.11.0
+
+### Minor Changes
+
+- a98f6ad4e: **feat:** allow to overwrite all onchain transactions to be self-funded on the config level
+- cfc03dff8: **feat:** implements `useOpenAction` hook
+- dd2f7d246: feat: adds self-funded support for unfollow
+- d255b3627: **feat:** Added `useDismissRecommendedProfiles` hook
+- a929c0f6e: **feat:** implements `useCreatePost` hook
+- 2becf4650: **feat:** adds support for self-funded `useBlockProfiles`
+- 5ecead02d: **breaking:** Remove all what was marked as deprecated. See the detailed list below. Prepare for the major release.
+
+  React SDKs:
+
+  - removed `NoFeeFollowPolicy`, use `NoFollowPolicy` instead
+  - removed from fragments: `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+  - removed `useMyBookmarks`, use `useBookmarks` instead
+
+  Client SDK:
+
+  - removed from `LensClientConfig`:
+
+    - `mediaTransforms`, use the `params` option instead.
+    - `origin`, use the `headers` option instead
+
+  - removed from fragments:
+
+    - `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+    - `image.transformed`, use `image.small`, `image.medium` or `image.thumbnail` instead
+    - `upvoteReactions`, `downvoteReactions`, `upvoteReacted`, `downvoteReacted`, use `upvotes`, `downvotes`, `upvoted`, `downvoted` instead
+
+  - removed `nfts.ownershipChallenge`
+  - removed `isValidProfileHandle`, use `isValidHandle` instead
+
+- cf250df43: implements `useUnblockProfiles`
+- 336c19f09: **feat:** adds support for self-funded `useUpdateFollowPolicy`
+- 731ff1d02: Added support for Lens Protocol v2
+- 5bc7e430b: **feat:** implements `useCreateComment` hook
+- a42e90e74: add set profile metadata
+- 8120f6760: **feat:** reintroduces `useAccessToken` and `useApolloClient` hooks
+- 9490db8e8: Added useLinkHandle and useUnlinkHandle hooks
+- 8120f6760: **feat:** implements `useClaimHandle`, `useCanClaimHandle`, and `useUpgradeCredentials`
+- cf250df43: adds `useBlockProfiles` hook
+- 78d95a3d0: feat: implements self-funded unlink handle
+- 79068cd37: feat: added `useReportProfile` hook
+  chore: renamed `ReportReason` to `PublicationReportReason`, deprecate `ReportReason`
+
+### Patch Changes
+
+- 493895b8c: **feat:** self-funded `useFollow`
+- dd5088811: feat: adds support for self-funedd updating profile managers
+- 9481f48b4: **feat:** implements `useApproveModule` hook. It also upgrades viem and wagmi peer deps.
+- f82b90a57: Added `useUpdateFollowPolicy` hook
+- 734d68230: **feat:** adds `useProfileManagers` and `useUpdateProfileManagers` hooks
+- 5f93ea77b: **fix:** support `Profile.lensManager` into `Profile.signless` renaming
+- fdd0073d5: **feat:** support for self-funded `useCreateQuote`
+- 8120f6760: **feat:** allow wallet-only authentication via `useLogin`
+- 9b0ad4a1a: **fix:** Added session revoke on logout + more logout improvements
+- 5c429a0d7: **feat:** Added new invite hooks: `useInvitedProfiles`, `useWasWalletInvited`, `useLazyWasWalletInvited` and `useInviteWallets`
+- a3b29e541: **feat:** adds `resolveReferencePolicy` helper to create developer friendly ReferencePolicy out of publication sparse ReferenceModule
+- 5d243a835: **feat:** support for self-funded `useCreateMirror`
+- 6d0d62dd5: **feat:** new `useLogin` and `useSession` hooks
+- 25fe9a463: Support for new v2 hooks
+- 1f28c6d69: Added useCreateQuote hook
+- 51f8cec66: **Added** useReactionToggle hook
+- 5f93ea77b: **fix:** renames of `handleLinkToProfile`, `handleUnlinkToProfile` and correlated mutations, types
+- b37f6f4e0: **feat:** self-funded `useSetProfileMetadata`
+- 9dd33b037: Rename useFollowProfile to useFollow
+  Rename useUnfollowProfile to useUnfollow
+  Add support for LensProfileManager to useFollow, useUnfollow and useUpdateFollowPolicy hooks
+- 7b6fd0f03: Update dependencies
+- 061df8341: **chore:** configure Lens API v2 production URL
+- aa6669306: **fix:** supports `referrers` with Unknown Open Action module via `useOpenAction`
+- d1414eda3: **feat:** implements `useCreateMirror` hook
+- d71f981cc: **chore:** simplifies useApproveModule implementation
+- 2f618240a: Added `useFollowProfile` and `useUnfollowProfile` hooks
+- 21c643d0c: **fix:** Revoke credentials only on user initiated logout
+- eb6a8f07c: **feat:** `useCreatePost` takes Open Action Modules Metadata into consideration when determining sponsored/signless experience
+- 2698fc657: **feat:** support for self-funded `useCreatePost`
+- c8a0c0ff3: Update dependencies
+- c9b5c8d88: **feat:** seamless support for public collect/act in `useOpenAction`
+- c6da5071d: feat: add self-funded support for unblocking profiles
+- b8279c3bd: **fix:** Added support for missing LensProfileManagerRelayErrorReasonType.RequiresSignature
+- 6a25dc021: **feat:** support self-funded `useOpenAction`
+- 40abddd99: **feat:** support for self-funded `useCreateComment`
+- 9c7fd3ee3: **feat:** `useCreateProfile` hook
+- Updated dependencies [a929c0f6e]
+- Updated dependencies [5ecead02d]
+- Updated dependencies [9481f48b4]
+- Updated dependencies [734d68230]
+- Updated dependencies [1a97c390a]
+- Updated dependencies [731ff1d02]
+- Updated dependencies [b647eab70]
+- Updated dependencies [6d0d62dd5]
+- Updated dependencies [25fe9a463]
+- Updated dependencies [6fdfe12bc]
+- Updated dependencies [2f5360796]
+- Updated dependencies [061df8341]
+- Updated dependencies [d71f981cc]
+- Updated dependencies [9691cdccc]
+  - @lens-protocol/shared-kernel@0.11.0
+
 ## 0.11.0-alpha.23
 
 ### Minor Changes

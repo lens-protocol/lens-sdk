@@ -1,5 +1,166 @@
 # @lens-protocol/wagmi
 
+## 4.0.0
+
+### Major Changes
+
+- 9df5730b4: **feat:** updateds peer dep on `@lens-protocol/react@2.x`
+- 8279f5b14: **feat:** Wagmi v2 support
+
+### Minor Changes
+
+- 5ecead02d: **breaking:** Remove all what was marked as deprecated. See the detailed list below. Prepare for the major release.
+
+  React SDKs:
+
+  - removed `NoFeeFollowPolicy`, use `NoFollowPolicy` instead
+  - removed from fragments: `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+  - removed `useMyBookmarks`, use `useBookmarks` instead
+
+  Client SDK:
+
+  - removed from `LensClientConfig`:
+
+    - `mediaTransforms`, use the `params` option instead.
+    - `origin`, use the `headers` option instead
+
+  - removed from fragments:
+
+    - `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+    - `image.transformed`, use `image.small`, `image.medium` or `image.thumbnail` instead
+    - `upvoteReactions`, `downvoteReactions`, `upvoteReacted`, `downvoteReacted`, use `upvotes`, `downvotes`, `upvoted`, `downvoted` instead
+
+  - removed `nfts.ownershipChallenge`
+  - removed `isValidProfileHandle`, use `isValidHandle` instead
+
+- 9481f48b4: **feat:** implements `useApproveModule` hook. It also upgrades viem and wagmi peer deps.
+
+### Patch Changes
+
+- 1a97c390a: **chore:** Removed peer dependency on ethers@5
+- f8db5595f: Upgraded wagmi dependency
+- c8a0c0ff3: Update dependencies
+- 50b546c50: **fix:** wagmi peer dep
+- Updated dependencies [a98f6ad4e]
+- Updated dependencies [4166f51f8]
+- Updated dependencies [acfad683f]
+- Updated dependencies [cfc03dff8]
+- Updated dependencies [4630efb96]
+- Updated dependencies [25b7ef512]
+- Updated dependencies [493895b8c]
+- Updated dependencies [672c85e66]
+- Updated dependencies [9aa0fb780]
+- Updated dependencies [9a7edace3]
+- Updated dependencies [ac17aa775]
+- Updated dependencies [daf688200]
+- Updated dependencies [dd2f7d246]
+- Updated dependencies [d255b3627]
+- Updated dependencies [dd5088811]
+- Updated dependencies [d6a8061e8]
+- Updated dependencies [a3b29e541]
+- Updated dependencies [3bf2e33dc]
+- Updated dependencies [a929c0f6e]
+- Updated dependencies [bd5a1da6a]
+- Updated dependencies [a4e191700]
+- Updated dependencies [5ecead02d]
+- Updated dependencies [9481f48b4]
+- Updated dependencies [cf250df43]
+- Updated dependencies [bb9a8dd7b]
+- Updated dependencies [71a668156]
+- Updated dependencies [1c24ae004]
+- Updated dependencies [734d68230]
+- Updated dependencies [5f93ea77b]
+- Updated dependencies [da4c26e34]
+- Updated dependencies [acfad683f]
+- Updated dependencies [fdd0073d5]
+- Updated dependencies [6c75a89e8]
+- Updated dependencies [8120f6760]
+- Updated dependencies [9b0ad4a1a]
+- Updated dependencies [1a97c390a]
+- Updated dependencies [731ff1d02]
+- Updated dependencies [5c429a0d7]
+- Updated dependencies [9a7edace3]
+- Updated dependencies [a3b29e541]
+- Updated dependencies [821d8c492]
+- Updated dependencies [0a7b26ffa]
+- Updated dependencies [c2b05bdf0]
+- Updated dependencies [b647eab70]
+- Updated dependencies [1bd69391f]
+- Updated dependencies [481e1d7aa]
+- Updated dependencies [30ccf19d3]
+- Updated dependencies [5d243a835]
+- Updated dependencies [6d0d62dd5]
+- Updated dependencies [5f93ea77b]
+- Updated dependencies [25fe9a463]
+- Updated dependencies [6fdfe12bc]
+- Updated dependencies [9a7edace3]
+- Updated dependencies [dd2ab15a5]
+- Updated dependencies [5f93ea77b]
+- Updated dependencies [f71cff84b]
+- Updated dependencies [fca2473b3]
+- Updated dependencies [fa49d587b]
+- Updated dependencies [c09c5fdcd]
+- Updated dependencies [66c6df157]
+- Updated dependencies [2f5360796]
+- Updated dependencies [a21256702]
+- Updated dependencies [b29efcb2d]
+- Updated dependencies [74751f359]
+- Updated dependencies [71a668156]
+- Updated dependencies [7b1cbde5d]
+- Updated dependencies [5bc7e430b]
+- Updated dependencies [b37f6f4e0]
+- Updated dependencies [7cd6bad82]
+- Updated dependencies [a42e90e74]
+- Updated dependencies [8120f6760]
+- Updated dependencies [750767231]
+- Updated dependencies [a58d45417]
+- Updated dependencies [2e351a8cc]
+- Updated dependencies [7b6fd0f03]
+- Updated dependencies [8b86832fe]
+- Updated dependencies [5f93ea77b]
+- Updated dependencies [061df8341]
+- Updated dependencies [89f345ba6]
+- Updated dependencies [6ab0e99ab]
+- Updated dependencies [c2b05bdf0]
+- Updated dependencies [c2b05bdf0]
+- Updated dependencies [aa6669306]
+- Updated dependencies [86fa12e05]
+- Updated dependencies [d1414eda3]
+- Updated dependencies [d71f981cc]
+- Updated dependencies [2f618240a]
+- Updated dependencies [21c643d0c]
+- Updated dependencies [eb6a8f07c]
+- Updated dependencies [9490db8e8]
+- Updated dependencies [3a9720968]
+- Updated dependencies [c074c4ded]
+- Updated dependencies [2698fc657]
+- Updated dependencies [5f93ea77b]
+- Updated dependencies [c8a0c0ff3]
+- Updated dependencies [8120f6760]
+- Updated dependencies [fa944c274]
+- Updated dependencies [87f6da539]
+- Updated dependencies [c9b5c8d88]
+- Updated dependencies [c6da5071d]
+- Updated dependencies [5d95eccd2]
+- Updated dependencies [f997e3f01]
+- Updated dependencies [6a25dc021]
+- Updated dependencies [9691cdccc]
+- Updated dependencies [cf250df43]
+- Updated dependencies [40abddd99]
+- Updated dependencies [9c7fd3ee3]
+- Updated dependencies [0687207b5]
+- Updated dependencies [78d95a3d0]
+- Updated dependencies [d0bad262f]
+- Updated dependencies [327fa5aba]
+- Updated dependencies [79068cd37]
+- Updated dependencies [cfc03dff8]
+- Updated dependencies [bdf81299b]
+- Updated dependencies [6a4df1bdb]
+- Updated dependencies [c2b05bdf0]
+- Updated dependencies [f2010c008]
+  - @lens-protocol/react-web@2.0.0
+  - @lens-protocol/shared-kernel@0.11.0
+
 ## 4.0.0-alpha.3
 
 ### Minor Changes
