@@ -1,5 +1,70 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.34
+
+### Minor Changes
+
+- a98f6ad4e: **feat:** allow to overwrite all onchain transactions to be self-funded on the config level
+- 5ecead02d: **breaking:** Remove all what was marked as deprecated. See the detailed list below. Prepare for the major release.
+
+  React SDKs:
+
+  - removed `NoFeeFollowPolicy`, use `NoFollowPolicy` instead
+  - removed from fragments: `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+  - removed `useMyBookmarks`, use `useBookmarks` instead
+
+  Client SDK:
+
+  - removed from `LensClientConfig`:
+
+    - `mediaTransforms`, use the `params` option instead.
+    - `origin`, use the `headers` option instead
+
+  - removed from fragments:
+
+    - `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+    - `image.transformed`, use `image.small`, `image.medium` or `image.thumbnail` instead
+    - `upvoteReactions`, `downvoteReactions`, `upvoteReacted`, `downvoteReacted`, use `upvotes`, `downvotes`, `upvoted`, `downvoted` instead
+
+  - removed `nfts.ownershipChallenge`
+  - removed `isValidProfileHandle`, use `isValidHandle` instead
+
+- 7cd6bad82: **feat:** Added `useHideCommentToggle` hook
+
+### Patch Changes
+
+- 9a7edace3: **fix:** pagination issue affecting many hooks
+- 71a668156: **fix:** optimistic update of `Comment|Post|Quote.operations.hasCollected` field
+- 6c75a89e8: **feat:** added new fields:
+
+  - `lensClassifierScore` on ProfileStats
+  - `collectNft` on all relevant OpenActionSettings
+  - `isEncrypted`, `profilesMentioned` and `hashtagsMentioned` on Post, Comment and Quote
+
+- 9a7edace3: **fix:** `useCurrencies` pagination
+- 6fdfe12bc: **feat:** introduced `fiatAmount` helper
+- 9a7edace3: **chore:** updade Apollo Client dependency to ^3.9.5
+- f71cff84b: **fix:** missing export of `OptimisticStatusResult` type
+- 71a668156: **fix:** exports `CollectModuleSettings` type
+- 87f6da539: **fix:** allows to define Origin header from React Native integrations
+- Updated dependencies [a98f6ad4e]
+- Updated dependencies [9a7edace3]
+- Updated dependencies [5ecead02d]
+- Updated dependencies [71a668156]
+- Updated dependencies [6c75a89e8]
+- Updated dependencies [9a7edace3]
+- Updated dependencies [6fdfe12bc]
+- Updated dependencies [9a7edace3]
+- Updated dependencies [f71cff84b]
+- Updated dependencies [71a668156]
+- Updated dependencies [7cd6bad82]
+- Updated dependencies [87f6da539]
+  - @lens-protocol/domain@0.11.0-alpha.23
+  - @lens-protocol/react@2.0.0-alpha.34
+  - @lens-protocol/api-bindings@0.11.0-alpha.30
+  - @lens-protocol/shared-kernel@0.11.0-alpha.11
+  - @lens-protocol/storage@0.8.0-alpha.10
+
 ## 2.0.0-alpha.33
 
 ### Patch Changes
