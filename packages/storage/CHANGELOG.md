@@ -1,5 +1,53 @@
 # @lens-protocol/storage
 
+## 0.8.0
+
+### Minor Changes
+
+- 5ecead02d: **breaking:** Remove all what was marked as deprecated. See the detailed list below. Prepare for the major release.
+
+  React SDKs:
+
+  - removed `NoFeeFollowPolicy`, use `NoFollowPolicy` instead
+  - removed from fragments: `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+  - removed `useMyBookmarks`, use `useBookmarks` instead
+
+  Client SDK:
+
+  - removed from `LensClientConfig`:
+
+    - `mediaTransforms`, use the `params` option instead.
+    - `origin`, use the `headers` option instead
+
+  - removed from fragments:
+
+    - `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+    - `image.transformed`, use `image.small`, `image.medium` or `image.thumbnail` instead
+    - `upvoteReactions`, `downvoteReactions`, `upvoteReacted`, `downvoteReacted`, use `upvotes`, `downvotes`, `upvoted`, `downvoted` instead
+
+  - removed `nfts.ownershipChallenge`
+  - removed `isValidProfileHandle`, use `isValidHandle` instead
+
+### Patch Changes
+
+- 9b0ad4a1a: **fix:** Added session revoke on logout + more logout improvements
+- f2010c008: **fix:** `LensClient` and Lens React Hooks interoperability
+- Updated dependencies [a929c0f6e]
+- Updated dependencies [5ecead02d]
+- Updated dependencies [9481f48b4]
+- Updated dependencies [734d68230]
+- Updated dependencies [1a97c390a]
+- Updated dependencies [731ff1d02]
+- Updated dependencies [b647eab70]
+- Updated dependencies [6d0d62dd5]
+- Updated dependencies [25fe9a463]
+- Updated dependencies [6fdfe12bc]
+- Updated dependencies [2f5360796]
+- Updated dependencies [061df8341]
+- Updated dependencies [d71f981cc]
+- Updated dependencies [9691cdccc]
+  - @lens-protocol/shared-kernel@0.11.0
+
 ## 0.8.0-alpha.10
 
 ### Minor Changes

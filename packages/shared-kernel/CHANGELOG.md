@@ -1,5 +1,50 @@
 # @lens-protocol/shared-kernel
 
+## 0.11.0
+
+### Minor Changes
+
+- a929c0f6e: **feat:** implements `useCreatePost` hook
+- 5ecead02d: **breaking:** Remove all what was marked as deprecated. See the detailed list below. Prepare for the major release.
+
+  React SDKs:
+
+  - removed `NoFeeFollowPolicy`, use `NoFollowPolicy` instead
+  - removed from fragments: `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+  - removed `useMyBookmarks`, use `useBookmarks` instead
+
+  Client SDK:
+
+  - removed from `LensClientConfig`:
+
+    - `mediaTransforms`, use the `params` option instead.
+    - `origin`, use the `headers` option instead
+
+  - removed from fragments:
+
+    - `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+    - `image.transformed`, use `image.small`, `image.medium` or `image.thumbnail` instead
+    - `upvoteReactions`, `downvoteReactions`, `upvoteReacted`, `downvoteReacted`, use `upvotes`, `downvotes`, `upvoted`, `downvoted` instead
+
+  - removed `nfts.ownershipChallenge`
+  - removed `isValidProfileHandle`, use `isValidHandle` instead
+
+- 731ff1d02: Added support for Lens Protocol v2
+- b647eab70: **feat:** Introduced `debug` mode. Exported `ConsoleLogger`.
+
+### Patch Changes
+
+- 9481f48b4: **feat:** implements `useApproveModule` hook. It also upgrades viem and wagmi peer deps.
+- 734d68230: **feat:** adds `useProfileManagers` and `useUpdateProfileManagers` hooks
+- 1a97c390a: **chore:** Removed peer dependency on ethers@5
+- 6d0d62dd5: **feat:** new `useLogin` and `useSession` hooks
+- 25fe9a463: Support for new v2 hooks
+- 6fdfe12bc: **feat:** introduced `fiatAmount` helper
+- 2f5360796: **fix:** fixes silent token-refresh logic so that, if refresh token is still valid, a silent refresh of tokens takes places and failed requests are retried seamlessly
+- 061df8341: **chore:** configure Lens API v2 production URL
+- d71f981cc: **chore:** simplifies useApproveModule implementation
+- 9691cdccc: **fix:** missing release of sub-dependency
+
 ## 0.11.0-alpha.11
 
 ### Minor Changes

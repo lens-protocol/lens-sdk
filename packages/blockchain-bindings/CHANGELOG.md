@@ -1,5 +1,108 @@
 # @lens-protocol/blockchain-bindings
 
+## 0.10.0
+
+### Minor Changes
+
+- 9aa0fb780: **chore:** unified implementation and naming of `isValidHandle` helper among react and client SDKs. deprecated `isValidProfileHandle` in the client sdk.
+  **feat:** added `useValidateHandle` hook
+- 5ecead02d: **breaking:** Remove all what was marked as deprecated. See the detailed list below. Prepare for the major release.
+
+  React SDKs:
+
+  - removed `NoFeeFollowPolicy`, use `NoFollowPolicy` instead
+  - removed from fragments: `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+  - removed `useMyBookmarks`, use `useBookmarks` instead
+
+  Client SDK:
+
+  - removed from `LensClientConfig`:
+
+    - `mediaTransforms`, use the `params` option instead.
+    - `origin`, use the `headers` option instead
+
+  - removed from fragments:
+
+    - `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+    - `image.transformed`, use `image.small`, `image.medium` or `image.thumbnail` instead
+    - `upvoteReactions`, `downvoteReactions`, `upvoteReacted`, `downvoteReacted`, use `upvotes`, `downvotes`, `upvoted`, `downvoted` instead
+
+  - removed `nfts.ownershipChallenge`
+  - removed `isValidProfileHandle`, use `isValidHandle` instead
+
+- 731ff1d02: Added support for Lens Protocol v2
+
+### Patch Changes
+
+- 734d68230: **feat:** adds `useProfileManagers` and `useUpdateProfileManagers` hooks
+- 1a97c390a: **chore:** Removed peer dependency on ethers@5
+- d71f981cc: **chore:** simplifies useApproveModule implementation
+- eb6a8f07c: **feat:** `useCreatePost` takes Open Action Modules Metadata into consideration when determining sponsored/signless experience
+- c8a0c0ff3: Update dependencies
+- c9b5c8d88: **feat:** seamless support for public collect/act in `useOpenAction`
+- 9c7fd3ee3: **feat:** `useCreateProfile` hook
+- 6a4df1bdb: **feat:** support Unknown Follow Modules
+- Updated dependencies [a98f6ad4e]
+- Updated dependencies [cfc03dff8]
+- Updated dependencies [493895b8c]
+- Updated dependencies [dd2f7d246]
+- Updated dependencies [d255b3627]
+- Updated dependencies [dd5088811]
+- Updated dependencies [a929c0f6e]
+- Updated dependencies [2becf4650]
+- Updated dependencies [5ecead02d]
+- Updated dependencies [9481f48b4]
+- Updated dependencies [f82b90a57]
+- Updated dependencies [cf250df43]
+- Updated dependencies [336c19f09]
+- Updated dependencies [734d68230]
+- Updated dependencies [5f93ea77b]
+- Updated dependencies [fdd0073d5]
+- Updated dependencies [8120f6760]
+- Updated dependencies [9b0ad4a1a]
+- Updated dependencies [1a97c390a]
+- Updated dependencies [731ff1d02]
+- Updated dependencies [5c429a0d7]
+- Updated dependencies [a3b29e541]
+- Updated dependencies [b647eab70]
+- Updated dependencies [5d243a835]
+- Updated dependencies [6d0d62dd5]
+- Updated dependencies [25fe9a463]
+- Updated dependencies [1f28c6d69]
+- Updated dependencies [6fdfe12bc]
+- Updated dependencies [51f8cec66]
+- Updated dependencies [5f93ea77b]
+- Updated dependencies [2f5360796]
+- Updated dependencies [5bc7e430b]
+- Updated dependencies [b37f6f4e0]
+- Updated dependencies [a42e90e74]
+- Updated dependencies [9dd33b037]
+- Updated dependencies [8120f6760]
+- Updated dependencies [7b6fd0f03]
+- Updated dependencies [061df8341]
+- Updated dependencies [aa6669306]
+- Updated dependencies [d1414eda3]
+- Updated dependencies [d71f981cc]
+- Updated dependencies [2f618240a]
+- Updated dependencies [21c643d0c]
+- Updated dependencies [eb6a8f07c]
+- Updated dependencies [9490db8e8]
+- Updated dependencies [2698fc657]
+- Updated dependencies [c8a0c0ff3]
+- Updated dependencies [8120f6760]
+- Updated dependencies [c9b5c8d88]
+- Updated dependencies [c6da5071d]
+- Updated dependencies [b8279c3bd]
+- Updated dependencies [6a25dc021]
+- Updated dependencies [9691cdccc]
+- Updated dependencies [cf250df43]
+- Updated dependencies [40abddd99]
+- Updated dependencies [9c7fd3ee3]
+- Updated dependencies [78d95a3d0]
+- Updated dependencies [79068cd37]
+  - @lens-protocol/domain@0.11.0
+  - @lens-protocol/shared-kernel@0.11.0
+
 ## 0.10.0-alpha.24
 
 ### Minor Changes

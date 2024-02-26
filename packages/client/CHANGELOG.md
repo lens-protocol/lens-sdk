@@ -1,5 +1,168 @@
 # @lens-protocol/client
 
+## 2.0.0
+
+### Major Changes
+
+- a58d8916c: **Added** support for Lens API v2
+
+### Minor Changes
+
+- 9aa0fb780: **chore:** unified implementation and naming of `isValidHandle` helper among react and client SDKs. deprecated `isValidProfileHandle` in the client sdk.
+  **feat:** added `useValidateHandle` hook
+- 5ecead02d: **breaking:** Remove all what was marked as deprecated. See the detailed list below. Prepare for the major release.
+
+  React SDKs:
+
+  - removed `NoFeeFollowPolicy`, use `NoFollowPolicy` instead
+  - removed from fragments: `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+  - removed `useMyBookmarks`, use `useBookmarks` instead
+
+  Client SDK:
+
+  - removed from `LensClientConfig`:
+
+    - `mediaTransforms`, use the `params` option instead.
+    - `origin`, use the `headers` option instead
+
+  - removed from fragments:
+
+    - `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+    - `image.transformed`, use `image.small`, `image.medium` or `image.thumbnail` instead
+    - `upvoteReactions`, `downvoteReactions`, `upvoteReacted`, `downvoteReacted`, use `upvotes`, `downvotes`, `upvoted`, `downvoted` instead
+
+  - removed `nfts.ownershipChallenge`
+  - removed `isValidProfileHandle`, use `isValidHandle` instead
+
+- 75e2caea6: **feat:** support `handleToAddress` query
+- c043b1d2b: **feat:** token-gated support for LIP-2 metadata spec
+- 8206feb84: **feat:** Added `client.authentication.getWalletAddress` and `client.authentication.getAuthorizationId` methods to retrieve data from the refresh token. Fixed `client.authentication.getProfileId` method to return the profileId only if authenticated with profile.
+- 1f95547be: **feat:** added `client.wallet.rateLimits` method to fetch the sponsored transaction limits
+- fea579acf: **feat**: Added `authentication.authenticateWith` method to allow to authenticate LensClient with an existing refresh token
+- 0a3a61fb6: **feat:** advanced contract condition for token-gated publications
+- a1c584448: **feat**: added new methods:
+
+  - `feed.latestPaidActions`
+  - `profile.report`
+  - `profile.followStatusBulk`
+  - `nfts.collections`
+  - `nfts.collectionOwners`
+  - `nfts.mutualCollections`
+  - `nfts.popularCollections`
+
+  **breaking**: `nfts.fetch` doesn't require authentication, returns `Promise<PaginatedResult<NftFragment>>`
+
+- 61f0aedb6: **feat:** allow decryptable content with wallet-only auth
+- ba895ccf6: **feat:** added `client.profile.recommend` and `client.profile.unrecommend` methods
+- 6ec00c5a6: **feat:** Added `client.authentication.upgradeCredentials` method
+- a21256702: **feat:** support Open Action Module Metadata in `LensClient`
+- 1f95547be: **feat:** Introduced common query params, deprecated `LensClientConfig.mediaTransforms` for `LensClientConfig.params`
+
+### Patch Changes
+
+- fea579acf: **chore**: Relax node version requirements to >18 <21
+- 43bb1af07: - renamed `profile.createOnchainSetProfileMetadataTypedData` to `profile.createSetProfileMetadataTypedData`
+  - removed duplicated method `profile.changeProfileManagers`, use `profile.createChangeProfileManagersTypedData` instead
+  - renamed `profile.createUnblockProfileTypedData` to `profile.createUnblockProfilesTypedData`
+- 8c61d97cf: **chore:** marked Nfts and Poaps as experimental as they are not stable and might be removed in the future
+- 64f5625fa: **feat:** support simplified AccessCondition schema
+- a3b29e541: **fix:** adds missing `publication.operations.canQuote` field
+- 9481f48b4: **feat:** implements `useApproveModule` hook. It also upgrades viem and wagmi peer deps.
+- 3a894449d: Changed waitUntilComplete to timeout after 60s
+- 9a9f3130d: **fix** robust handling of legacy token-gated publication with empty `tokenIds` as ERC-721 NFT Ownership condition
+- 5f93ea77b: **fix:** support `Profile.lensManager` into `Profile.signless` renaming
+- c1e6ada28: Allowed to overwrite accessToken for publication.postOnchain
+- 6c75a89e8: **feat:** added new fields:
+
+  - `lensClassifierScore` on ProfileStats
+  - `collectNft` on all relevant OpenActionSettings
+  - `isEncrypted`, `profilesMentioned` and `hashtagsMentioned` on Post, Comment and Quote
+
+- 1a97c390a: **chore:** Removed peer dependency on ethers@5
+- 2c2b8fa03: **Removed** separate methods to query profile and publication stats.
+  **Added** stats field to all profile and publication query responses.
+- 1bd69391f: **chore:** updates `@lens-protocol/metadata` package to 1.0.0
+- 5f93ea77b: **fix:** support new `HandleInfo`
+- 8c4da31a9: Updated to latest api schema, used TypedDocumentNode to improve startup time
+- b49df26f5: Added `client.modules` and required node version
+- 297e814dc: Added `wallet.claimableProfiles` and `wallet.claimProfile`.
+  Moved `profile.create` to `wallet.createProfile`.
+  Deprecated `profile.create`.
+- dd2ab15a5: **feat:** Ensured interoperability between Client and React SDKs, exported `localStorage()`, added new hook `useStorage`
+- 414c4d815: **Added** poaps module, added whoActedOnPublication, more examples
+- b014f5ce4: Disabled clock check
+- d0bad262f: **feat:** Added `wallet.lastLoggedInProfile` method
+- 7b1cbde5d: **fix:** TSDoc and better exporting of shared parts
+- bef43b12e: Added option to configure the `Origin` header when making requests to the Lens API.
+- becb63387: Updated to latest API schema to use correct legacy collect typed data
+- 62a382dbf: **Added** profile action history as `profile.actionHistory()`
+- 7ed02dd93: **fix:** decryption of undefined metadata fields that are exposed as empty strings in GQL schemas
+- c64ad2e65: feat: added `isOpenActionModuleWithReferralFee` helper function
+- 55a07ad45: Added `authentication.fetch` to get current session details
+- 7ae662389: Added `profile.whoHaveBeenBlocked`
+- 5f93ea77b: **fix:** supports `MetadataAttribute.type`
+- db32bfe23: **breaking:** renamed `wallet.createProfile` to `wallet.createProfileWithHandle` and introduced the correct `wallet.createProfile` method. Removed deprecated `profile.create` method.
+- 061df8341: **chore:** configure Lens API v2 production URL
+- 89f345ba6: **chore:** updates development environment config
+- 4f68f3ecd: **Updated** schema to the latest version of the API
+- 5f93ea77b: **fix:** renames of `handleLinkToProfile`, `handleUnlinkToProfile` and correlated mutations, types
+- f31c4e892: Removed `forApps` from config as it was used only when quering for profile stats
+- 7cd6bad82: **feat:** Added `hiddenByAuthor` field to the Comment fragment
+- 01b2c2cbe: Updated to support the latest API schema
+- 35d787fe2: **Updated** schema to the latest version of the API
+- 5f93ea77b: **fix:** uses `invite` mutation rather than `inviteProfile`
+- 4b10c58f8: Added custom headers option to LensClientConfig
+- 3a9720968: Added `isLensManager` to `ProfileManager` fragment
+- c074c4ded: **fixed:** issue #777
+- 5f93ea77b: **fix:** adds `type` to Open Action module settings types
+- fa944c274: **fixed:** TSDocs typos/mistakes
+- c46f6b341: Added profile.fetchDefault and profile.setDefault methods
+- 91bd72291: Renamed `AnyPublicationMetadataFragment` to `PublicationMetadataFragment`
+- 6a4df1bdb: **feat:** support Unknown Follow Modules
+- 913bc91af: **fixed:** misconfiguration of Lit Access Control contract address
+- db32bfe23: **feat:** added new methods `transaction.generateLensAPIRelayAddress`, `publication.hideComment` and `publication.unhideComment`
+- 75f25d399: Added `authentication.fetchAll`, `authentication.revoke` and `authentication.logout` methods to manage active sessions.
+- f2010c008: **fix:** `LensClient` and Lens React Hooks interoperability
+- Updated dependencies [9aa0fb780]
+- Updated dependencies [a929c0f6e]
+- Updated dependencies [5ecead02d]
+- Updated dependencies [9481f48b4]
+- Updated dependencies [734d68230]
+- Updated dependencies [c043b1d2b]
+- Updated dependencies [9a9f3130d]
+- Updated dependencies [5f93ea77b]
+- Updated dependencies [9b0ad4a1a]
+- Updated dependencies [1a97c390a]
+- Updated dependencies [731ff1d02]
+- Updated dependencies [b647eab70]
+- Updated dependencies [1bd69391f]
+- Updated dependencies [6d0d62dd5]
+- Updated dependencies [5f93ea77b]
+- Updated dependencies [25fe9a463]
+- Updated dependencies [8c4da31a9]
+- Updated dependencies [6fdfe12bc]
+- Updated dependencies [5f93ea77b]
+- Updated dependencies [2f5360796]
+- Updated dependencies [0a3a61fb6]
+- Updated dependencies [7ed02dd93]
+- Updated dependencies [061df8341]
+- Updated dependencies [89f345ba6]
+- Updated dependencies [d71f981cc]
+- Updated dependencies [01b2c2cbe]
+- Updated dependencies [eb6a8f07c]
+- Updated dependencies [5f93ea77b]
+- Updated dependencies [c8a0c0ff3]
+- Updated dependencies [c9b5c8d88]
+- Updated dependencies [9691cdccc]
+- Updated dependencies [9c7fd3ee3]
+- Updated dependencies [6a4df1bdb]
+- Updated dependencies [913bc91af]
+- Updated dependencies [f2010c008]
+  - @lens-protocol/blockchain-bindings@0.10.0
+  - @lens-protocol/shared-kernel@0.11.0
+  - @lens-protocol/gated-content@0.4.0
+  - @lens-protocol/storage@0.8.0
+
 ## 2.0.0-alpha.34
 
 ### Minor Changes

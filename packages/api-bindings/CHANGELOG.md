@@ -1,5 +1,189 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0
+
+### Minor Changes
+
+- cfc03dff8: **feat:** implements `useOpenAction` hook
+- 38a40c70e: add explore profiles
+- 4630efb96: add report publication
+- 25b7ef512: add hide publicaiton
+- 9aa0fb780: **chore:** unified implementation and naming of `isValidHandle` helper among react and client SDKs. deprecated `isValidProfileHandle` in the client sdk.
+  **feat:** added `useValidateHandle` hook
+- 1c3a10c35: add explore publications
+- a929c0f6e: **feat:** implements `useCreatePost` hook
+- 5ecead02d: **breaking:** Remove all what was marked as deprecated. See the detailed list below. Prepare for the major release.
+
+  React SDKs:
+
+  - removed `NoFeeFollowPolicy`, use `NoFollowPolicy` instead
+  - removed from fragments: `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+  - removed `useMyBookmarks`, use `useBookmarks` instead
+
+  Client SDK:
+
+  - removed from `LensClientConfig`:
+
+    - `mediaTransforms`, use the `params` option instead.
+    - `origin`, use the `headers` option instead
+
+  - removed from fragments:
+
+    - `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+    - `image.transformed`, use `image.small`, `image.medium` or `image.thumbnail` instead
+    - `upvoteReactions`, `downvoteReactions`, `upvoteReacted`, `downvoteReacted`, use `upvotes`, `downvotes`, `upvoted`, `downvoted` instead
+
+  - removed `nfts.ownershipChallenge`
+  - removed `isValidProfileHandle`, use `isValidHandle` instead
+
+- cf250df43: implements `useUnblockProfiles`
+- bb9a8dd7b: **feat:** introduces `params.statsFor` and `params.profile.metadataSource` in `LensConfig`
+- 731ff1d02: Added support for Lens Protocol v2
+- 30ccf19d3: adds publication bookmarks
+- c09c5fdcd: adds `useNotInterestedToggle` hook
+- 5bc7e430b: **feat:** implements `useCreateComment` hook
+- 7cd6bad82: **feat:** Added `useHideCommentToggle` hook
+- a42e90e74: add set profile metadata
+- 8120f6760: **feat:** reintroduces `useAccessToken` and `useApolloClient` hooks
+- 6ab0e99ab: **Added** revenue hooks: useRevenueFromFollow, useRevenueFromPublication, useRevenueFromPublications
+- 9490db8e8: Added useLinkHandle and useUnlinkHandle hooks
+- 8120f6760: **feat:** implements `useClaimHandle`, `useCanClaimHandle`, and `useUpgradeCredentials`
+- 0687207b5: Added useOwnedHandles hook
+- 327fa5aba: reintroduce notifications for v2
+- 79068cd37: feat: added `useReportProfile` hook
+  chore: renamed `ReportReason` to `PublicationReportReason`, deprecate `ReportReason`
+- bdf81299b: implements `useBookmarkToggle`
+
+### Patch Changes
+
+- 4166f51f8: **feat:** Added experimental `useLazyProfiles` and `useLazyPublications` hooks
+- 91bd72291: Removed deprecated `useNotInterested`, use `useNotInterestedToggle` instead
+  Removed deprecated `useFollowProfile`, use `useFollow` instead
+  Removed deprecated `useUnfollowProfile`, use `useUnfollow` instead
+- 9a7edace3: **fix:** pagination issue affecting many hooks
+- 6762b1700: add feed highlights
+- 3bf2e33dc: **feat:** Added `useBlockedProfiles` hook
+  **chore:** Renamed `useMyBookmarks` to `useBookmarks`, deprecated `useMyBookmarks`
+  **feat:** Added authentication checks to many hooks that require it on the API side
+- bd5a1da6a: **fix:** locks `@apollo/client` to 3.8.x until issues w/ 3.9.x are solved
+- 9481f48b4: **feat:** implements `useApproveModule` hook. It also upgrades viem and wagmi peer deps.
+- f82b90a57: Added `useUpdateFollowPolicy` hook
+- 71a668156: **fix:** optimistic update of `Comment|Post|Quote.operations.hasCollected` field
+- 734d68230: **feat:** adds `useProfileManagers` and `useUpdateProfileManagers` hooks
+- 5f93ea77b: **fix:** support `Profile.lensManager` into `Profile.signless` renaming
+- acfad683f: **fix:** React Hooks SDK startup time. 20x faster than before.
+- 6c75a89e8: **feat:** added new fields:
+
+  - `lensClassifierScore` on ProfileStats
+  - `collectNft` on all relevant OpenActionSettings
+  - `isEncrypted`, `profilesMentioned` and `hashtagsMentioned` on Post, Comment and Quote
+
+- 9b0ad4a1a: **fix:** Added session revoke on logout + more logout improvements
+- 5c429a0d7: **feat:** Added new invite hooks: `useInvitedProfiles`, `useWasWalletInvited`, `useLazyWasWalletInvited` and `useInviteWallets`
+- 9a7edace3: **fix:** `useCurrencies` pagination
+- a3b29e541: **feat:** adds `resolveReferencePolicy` helper to create developer friendly ReferencePolicy out of publication sparse ReferenceModule
+- c2b05bdf0: **Fixed**: missing export of `findCollectModuleSettings` and `isCollectModuleSettings` helpers
+- 481e1d7aa: **feat:** adds `useResolveAddress` hook
+- 6d0d62dd5: **feat:** new `useLogin` and `useSession` hooks
+- 5f93ea77b: **fix:** support new `HandleInfo`
+- 25fe9a463: Support for new v2 hooks
+- 1f28c6d69: Added useCreateQuote hook
+- 6fdfe12bc: **feat:** introduced `fiatAmount` helper
+- 9a7edace3: **chore:** updade Apollo Client dependency to ^3.9.5
+- 51f8cec66: **Added** useReactionToggle hook
+- 5f93ea77b: **fix:** renames of `handleLinkToProfile`, `handleUnlinkToProfile` and correlated mutations, types
+- 66c6df157: **fixed:** make `useAccessToken` reactive
+- 2f5360796: **fix:** fixes silent token-refresh logic so that, if refresh token is still valid, a silent refresh of tokens takes places and failed requests are retried seamlessly
+- a21256702: **feat:** `useModuleMetadata`, `useLazyModuleMetadata` and surfaces new unknown modules fields
+- 74751f359: feat: Expose `erc20Amount` helper to make working with API Amounts easier
+- 6f51659c1: **fix:** adds missing `__typename` and expose `ProfileFields` from `Profile.invitedBy`
+- 0a3a61fb6: **feat:** advanced contract condition for token-gated publications
+- becb63387: Updated to latest API schema to use correct legacy collect typed data
+- 9dd33b037: Rename useFollowProfile to useFollow
+  Rename useUnfollowProfile to useUnfollow
+  Add support for LensProfileManager to useFollow, useUnfollow and useUpdateFollowPolicy hooks
+- a58d45417: **fix:** `useOpenAction` takes Unknown Open Action Modules' `sponsoredApproved` and `signlessApproved` flags
+- 7b6fd0f03: Update dependencies
+- 5f93ea77b: **fix:** supports `MetadataAttribute.type`
+- 061df8341: **chore:** configure Lens API v2 production URL
+- aa6669306: **fix:** supports `referrers` with Unknown Open Action module via `useOpenAction`
+- 86fa12e05: **fix:** all paginated queries that accidentally overwrite each other when using same hook twice
+- d1414eda3: **feat:** implements `useCreateMirror` hook
+- 01b2c2cbe: Updated to support the latest API schema
+- 2f618240a: Added `useFollowProfile` and `useUnfollowProfile` hooks
+- eb6a8f07c: **feat:** `useCreatePost` takes Open Action Modules Metadata into consideration when determining sponsored/signless experience
+- 3a9720968: Added `isLensManager` to `ProfileManager` fragment
+- 5f93ea77b: **fix:** adds `type` to Open Action module settings types
+- c8a0c0ff3: Update dependencies
+- 87f6da539: **fix:** allows to define Origin header from React Native integrations
+- c9b5c8d88: **feat:** seamless support for public collect/act in `useOpenAction`
+- 5d95eccd2: **feat:** Added `useProfilesManaged` hook
+- d7129e391: Added useCurrencies hook
+- 6a25dc021: **feat:** support self-funded `useOpenAction`
+- 9c7fd3ee3: **feat:** `useCreateProfile` hook
+- d0bad262f: **feat:** Added `useLastLoggedInProfile` hook
+- 6a4df1bdb: **feat:** support Unknown Follow Modules
+- Updated dependencies [a98f6ad4e]
+- Updated dependencies [cfc03dff8]
+- Updated dependencies [493895b8c]
+- Updated dependencies [dd2f7d246]
+- Updated dependencies [d255b3627]
+- Updated dependencies [dd5088811]
+- Updated dependencies [a929c0f6e]
+- Updated dependencies [2becf4650]
+- Updated dependencies [5ecead02d]
+- Updated dependencies [9481f48b4]
+- Updated dependencies [f82b90a57]
+- Updated dependencies [cf250df43]
+- Updated dependencies [336c19f09]
+- Updated dependencies [734d68230]
+- Updated dependencies [5f93ea77b]
+- Updated dependencies [fdd0073d5]
+- Updated dependencies [8120f6760]
+- Updated dependencies [9b0ad4a1a]
+- Updated dependencies [1a97c390a]
+- Updated dependencies [731ff1d02]
+- Updated dependencies [5c429a0d7]
+- Updated dependencies [a3b29e541]
+- Updated dependencies [b647eab70]
+- Updated dependencies [5d243a835]
+- Updated dependencies [6d0d62dd5]
+- Updated dependencies [25fe9a463]
+- Updated dependencies [1f28c6d69]
+- Updated dependencies [6fdfe12bc]
+- Updated dependencies [51f8cec66]
+- Updated dependencies [5f93ea77b]
+- Updated dependencies [2f5360796]
+- Updated dependencies [5bc7e430b]
+- Updated dependencies [b37f6f4e0]
+- Updated dependencies [a42e90e74]
+- Updated dependencies [9dd33b037]
+- Updated dependencies [8120f6760]
+- Updated dependencies [7b6fd0f03]
+- Updated dependencies [061df8341]
+- Updated dependencies [aa6669306]
+- Updated dependencies [d1414eda3]
+- Updated dependencies [d71f981cc]
+- Updated dependencies [2f618240a]
+- Updated dependencies [21c643d0c]
+- Updated dependencies [eb6a8f07c]
+- Updated dependencies [9490db8e8]
+- Updated dependencies [2698fc657]
+- Updated dependencies [c8a0c0ff3]
+- Updated dependencies [8120f6760]
+- Updated dependencies [c9b5c8d88]
+- Updated dependencies [c6da5071d]
+- Updated dependencies [b8279c3bd]
+- Updated dependencies [6a25dc021]
+- Updated dependencies [9691cdccc]
+- Updated dependencies [cf250df43]
+- Updated dependencies [40abddd99]
+- Updated dependencies [9c7fd3ee3]
+- Updated dependencies [78d95a3d0]
+- Updated dependencies [79068cd37]
+  - @lens-protocol/domain@0.11.0
+  - @lens-protocol/shared-kernel@0.11.0
+
 ## 0.11.0-alpha.30
 
 ### Minor Changes

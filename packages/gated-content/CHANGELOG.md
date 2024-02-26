@@ -1,5 +1,68 @@
 # @lens-protocol/gated-content
 
+## 0.4.0
+
+### Minor Changes
+
+- 5ecead02d: **breaking:** Remove all what was marked as deprecated. See the detailed list below. Prepare for the major release.
+
+  React SDKs:
+
+  - removed `NoFeeFollowPolicy`, use `NoFollowPolicy` instead
+  - removed from fragments: `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+  - removed `useMyBookmarks`, use `useBookmarks` instead
+
+  Client SDK:
+
+  - removed from `LensClientConfig`:
+
+    - `mediaTransforms`, use the `params` option instead.
+    - `origin`, use the `headers` option instead
+
+  - removed from fragments:
+
+    - `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+    - `image.transformed`, use `image.small`, `image.medium` or `image.thumbnail` instead
+    - `upvoteReactions`, `downvoteReactions`, `upvoteReacted`, `downvoteReacted`, use `upvotes`, `downvotes`, `upvoted`, `downvoted` instead
+
+  - removed `nfts.ownershipChallenge`
+  - removed `isValidProfileHandle`, use `isValidHandle` instead
+
+### Patch Changes
+
+- c043b1d2b: **feat:** token-gated support for LIP-2 metadata spec
+- 9a9f3130d: **fix** robust handling of legacy token-gated publication with empty `tokenIds` as ERC-721 NFT Ownership condition
+- 5f93ea77b: **fix:** support `Profile.lensManager` into `Profile.signless` renaming
+- 1a97c390a: **chore:** Removed peer dependency on ethers@5
+- 1bd69391f: **chore:** updates `@lens-protocol/metadata` package to 1.0.0
+- 5f93ea77b: **fix:** support new `HandleInfo`
+- 8c4da31a9: Updated to latest api schema, used TypedDocumentNode to improve startup time
+- 5f93ea77b: **fix:** renames of `handleLinkToProfile`, `handleUnlinkToProfile` and correlated mutations, types
+- 0a3a61fb6: **feat:** advanced contract condition for token-gated publications
+- 7ed02dd93: **fix:** decryption of undefined metadata fields that are exposed as empty strings in GQL schemas
+- 89f345ba6: **chore:** updates development environment config
+- 01b2c2cbe: Updated to support the latest API schema
+- 5f93ea77b: **fix:** adds `type` to Open Action module settings types
+- 913bc91af: **fixed:** misconfiguration of Lit Access Control contract address
+- Updated dependencies [a929c0f6e]
+- Updated dependencies [5ecead02d]
+- Updated dependencies [9481f48b4]
+- Updated dependencies [734d68230]
+- Updated dependencies [9b0ad4a1a]
+- Updated dependencies [1a97c390a]
+- Updated dependencies [731ff1d02]
+- Updated dependencies [b647eab70]
+- Updated dependencies [6d0d62dd5]
+- Updated dependencies [25fe9a463]
+- Updated dependencies [6fdfe12bc]
+- Updated dependencies [2f5360796]
+- Updated dependencies [061df8341]
+- Updated dependencies [d71f981cc]
+- Updated dependencies [9691cdccc]
+- Updated dependencies [f2010c008]
+  - @lens-protocol/shared-kernel@0.11.0
+  - @lens-protocol/storage@0.8.0
+
 ## 0.4.0-alpha.22
 
 ### Minor Changes
