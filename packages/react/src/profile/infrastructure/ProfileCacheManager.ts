@@ -1,5 +1,5 @@
-import { FetchPolicy } from '@apollo/client';
 import {
+  AllFragmentVariables,
   getSessionData,
   ProfileData,
   ProfileDocument,
@@ -14,14 +14,17 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { IProfileCacheManager } from '../adapters/IProfileCacheManager';
 
 export class ProfileCacheManager implements IProfileCacheManager {
-  constructor(private readonly client: SafeApolloClient) {}
+  constructor(
+    private readonly client: SafeApolloClient,
+    private readonly variables: AllFragmentVariables,
+  ) {}
 
   async fetchProfileById(id: ProfileId) {
-    return this.fetch({ forProfileId: id }, 'network-only');
+    return this.fetch({ forProfileId: id });
   }
 
   async fetchProfileByHandle(fullHandle: string) {
-    return this.fetch({ forHandle: fullHandle }, 'network-only');
+    return this.fetch({ forHandle: fullHandle });
   }
 
   async refreshCurrentProfile() {
@@ -46,11 +49,14 @@ export class ProfileCacheManager implements IProfileCacheManager {
     });
   }
 
-  private async fetch(request: ProfileRequest, fetchPolicy: FetchPolicy) {
+  private async fetch(request: ProfileRequest) {
     const { data } = await this.client.query<ProfileData, ProfileVariables>({
       query: ProfileDocument,
-      variables: { request },
-      fetchPolicy,
+      variables: {
+        request,
+        ...this.variables,
+      },
+      fetchPolicy: 'network-only',
     });
 
     return data.result;

@@ -1,5 +1,39 @@
 # @lens-protocol/storage
 
+## 0.8.0-alpha.10
+
+### Minor Changes
+
+- 5ecead02d: **breaking:** Remove all what was marked as deprecated. See the detailed list below. Prepare for the major release.
+
+  React SDKs:
+
+  - removed `NoFeeFollowPolicy`, use `NoFollowPolicy` instead
+  - removed from fragments: `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+  - removed `useMyBookmarks`, use `useBookmarks` instead
+
+  Client SDK:
+
+  - removed from `LensClientConfig`:
+
+    - `mediaTransforms`, use the `params` option instead.
+    - `origin`, use the `headers` option instead
+
+  - removed from fragments:
+
+    - `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+    - `image.transformed`, use `image.small`, `image.medium` or `image.thumbnail` instead
+    - `upvoteReactions`, `downvoteReactions`, `upvoteReacted`, `downvoteReacted`, use `upvotes`, `downvotes`, `upvoted`, `downvoted` instead
+
+  - removed `nfts.ownershipChallenge`
+  - removed `isValidProfileHandle`, use `isValidHandle` instead
+
+### Patch Changes
+
+- Updated dependencies [5ecead02d]
+- Updated dependencies [6fdfe12bc]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.11
+
 ## 0.7.5-alpha.9
 
 ### Patch Changes

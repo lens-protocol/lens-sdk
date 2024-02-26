@@ -64,10 +64,10 @@ export type ApproveModuleArgs = {
  * find that, in case of paid follows the result might fail with an {@link InsufficientAllowanceError}.
  *
  * ```ts
- * const follow = useFollow();
+ * const { execute: follow } = useFollow();
  *
  * const followProfile = async (profile: Profile) => {
- *   const result = await follow.execute({ profile });
+ *   const result = await execute({ profile });
  *
  *   if (result.isFailure()) {
  *     switch (result.error.name) {
@@ -87,11 +87,11 @@ export type ApproveModuleArgs = {
  *
  *
  * ```ts
- * const approve = useApproveModule();
- * const follow = useFollow();
+ * const { execute: approve } = useApproveModule();
+ * const { execute: follow } = useFollow();
  *
  * const approveFollowModuleFor = async (profile: Profile) => {
- *   const result = await approve.execute({ on: profile });
+ *   const result = await approve({ on: profile });
  *
  *   if (result.isFailure()) {
  *     console.log(result.error.message);
@@ -103,7 +103,7 @@ export type ApproveModuleArgs = {
  * };
  *
  * const followProfile = async (profile: Profile) => {
- *   const result = await follow.execute({ profile });
+ *   const result = await follow({ profile });
  *
  *   if (result.isFailure()) {
  *     switch (result.error.name) {
@@ -124,15 +124,15 @@ export type ApproveModuleArgs = {
  * to pre-approve a Publication Collect module (legacy or Open Action based).
  *
  * ```ts
- * const approve = useApproveModule();
- * const collect = useOpenAction({
+ * const { execute: approve } = useApproveModule();
+ * const { execute: collect } = useOpenAction({
  *   action: {
  *     kind: OpenActionKind.COLLECT,
  *   }
  * });
  *
  * const approveCollectModuleFor = async (publication: AnyPublication) => {
- *   const result = await approve.execute({ on: publication });
+ *   const result = await approve({ on: publication });
  *
  *   if (result.isFailure()) {
  *     console.log(result.error.message);
@@ -144,7 +144,7 @@ export type ApproveModuleArgs = {
  * };
  *
  * const collectPublication = async (publication: AnyPublication) => {
- *   const result = collect.execute({ publication });
+ *   const result = collect({ publication });
  *
  *   if (result.isFailure()) {
  *     switch (result.error.name) {
@@ -167,7 +167,7 @@ export type ApproveModuleArgs = {
  * const { execute, error, loading } = useApproveModule();
  *
  * const approve = async (item: AnyPublication | Profile) => {
- *   const result = await approve.execute({ on: publication });
+ *   const result = await execute({ on: publication });
  *
  *   if (result.isFailure()) {
  *     switch (result.error.name) {
@@ -183,11 +183,11 @@ export type ApproveModuleArgs = {
  *         break;
  *
  *       case 'TransactionError':
- *         console.log('There was an processing the transaction', completion.error.message);
+ *         console.log('There was an processing the transaction', result.error.message);
  *         break;
  *
  *       case 'WalletConnectionError':
- *         console.log('There was an error connecting to your wallet', error.message);
+ *         console.log('There was an error connecting to your wallet', result.error.message);
  *         break;
  *
  *       case 'UserRejectedError':

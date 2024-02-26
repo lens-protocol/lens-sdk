@@ -1,4 +1,8 @@
-import { FieldFunctionOptions, KeySpecifier } from '@apollo/client/cache/inmemory/policies';
+import {
+  FieldFunctionOptions,
+  KeyArgsFunction,
+  KeySpecifier,
+} from '@apollo/client/cache/inmemory/policies';
 import { FieldPolicy } from '@apollo/client/core';
 import { never } from '@lens-protocol/shared-kernel';
 
@@ -14,7 +18,7 @@ function isEndOfTheRoad<TResult extends CursorBasedPaginatedResult>(result: TRes
   );
 }
 export function cursorBasedPagination<TResult extends CursorBasedPaginatedResult>(
-  keyArgs: KeySpecifier,
+  keyArgs: KeySpecifier | KeyArgsFunction | false,
 ): FieldPolicy<TResult> {
   return {
     keyArgs,

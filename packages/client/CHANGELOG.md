@@ -1,5 +1,51 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.34
+
+### Minor Changes
+
+- 5ecead02d: **breaking:** Remove all what was marked as deprecated. See the detailed list below. Prepare for the major release.
+
+  React SDKs:
+
+  - removed `NoFeeFollowPolicy`, use `NoFollowPolicy` instead
+  - removed from fragments: `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+  - removed `useMyBookmarks`, use `useBookmarks` instead
+
+  Client SDK:
+
+  - removed from `LensClientConfig`:
+
+    - `mediaTransforms`, use the `params` option instead.
+    - `origin`, use the `headers` option instead
+
+  - removed from fragments:
+
+    - `followModuleReturnData`, `referenceModuleReturnData`, `openActionModuleReturnData`
+    - `image.transformed`, use `image.small`, `image.medium` or `image.thumbnail` instead
+    - `upvoteReactions`, `downvoteReactions`, `upvoteReacted`, `downvoteReacted`, use `upvotes`, `downvotes`, `upvoted`, `downvoted` instead
+
+  - removed `nfts.ownershipChallenge`
+  - removed `isValidProfileHandle`, use `isValidHandle` instead
+
+- ba895ccf6: **feat:** added `client.profile.recommend` and `client.profile.unrecommend` methods
+
+### Patch Changes
+
+- 6c75a89e8: **feat:** added new fields:
+
+  - `lensClassifierScore` on ProfileStats
+  - `collectNft` on all relevant OpenActionSettings
+  - `isEncrypted`, `profilesMentioned` and `hashtagsMentioned` on Post, Comment and Quote
+
+- 7cd6bad82: **feat:** Added `hiddenByAuthor` field to the Comment fragment
+- Updated dependencies [5ecead02d]
+- Updated dependencies [6fdfe12bc]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.11
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.24
+  - @lens-protocol/gated-content@0.4.0-alpha.22
+  - @lens-protocol/storage@0.8.0-alpha.10
+
 ## 2.0.0-alpha.33
 
 ### Patch Changes

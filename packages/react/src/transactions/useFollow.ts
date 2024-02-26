@@ -26,6 +26,7 @@ import { Session, SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useFollowController } from './adapters/useFollowController';
+import { useSponsoredConfig } from './shared/useSponsoredConfig';
 
 export class PrematureFollowError extends Error {
   name = 'PrematureFollowError' as const;
@@ -306,6 +307,7 @@ export function useFollow(): UseDeferredTask<
 > {
   const { data: session } = useSession();
   const followProfile = useFollowController();
+  const configureRequest = useSponsoredConfig();
 
   return useDeferredTask(
     async (
@@ -335,7 +337,7 @@ export function useFollow(): UseDeferredTask<
         );
       }
 
-      const request = createFollowRequest(args, session);
+      const request = configureRequest(createFollowRequest(args, session));
       return followProfile(request);
     },
   );

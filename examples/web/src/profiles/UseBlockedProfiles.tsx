@@ -19,6 +19,8 @@ function UseBlockedProfilesInner() {
 
   if (error) return <ErrorMessage error={error} />;
 
+  if (profiles.length === 0) return <p>No profiles blocked.</p>;
+
   return (
     <div>
       {profiles.map((p) => (

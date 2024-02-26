@@ -13,12 +13,6 @@ export type EvmAddress = string;
 export type Data = Brand<string, 'Data'>;
 
 /**
- * A URL
- * @deprecated Use `URL` or `URI` instead.
- */
-export type Url = string;
-
-/**
  * A Uniform Resource Locator.
  *
  * A URL is a specific type of URI that, in addition to identifying a web resource,

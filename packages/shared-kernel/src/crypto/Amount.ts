@@ -10,7 +10,6 @@ import {
   Fiat,
   Matic,
   matic,
-  usd,
 } from './Asset';
 
 /**
@@ -81,14 +80,16 @@ export class Amount<T extends Asset> {
    *
    * @typeParam C - The {@link Asset} type to convert to.
    * @example
-   * Create the USD equivalent of an Ether Amount given the ETH-USD rate:
+   * Create the Fiat equivalent of an Ether Amount given the ETH-FIAT rate:
    *
    * ```ts
    * const etherAmount = Amount.ether('1'); // Amount<Ether>
    *
-   * const rate = Amount.usd('0.0006'); // Amount<Fiat>
+   * const fiatAsset = fiat({ name: 'US Dollar', symbol: 'USD' }); // Fiat
    *
-   * const usdAmount = etherAmount.convert(rate); // Amount<Fiat>
+   * const rate = Amount.fiat(fiatAsset, '0.0006'); // Amount<Fiat>
+   *
+   * const fiatAmount = etherAmount.convert(rate); // Amount<Fiat>
    * ```
    */
   convert<C extends Asset>(rate: Amount<C>): Amount<C> {
@@ -299,10 +300,10 @@ export class Amount<T extends Asset> {
   }
 
   /**
-   * Creates an USD {@link Fiat} Amount with the specified `value`.
+   * Creates an Amount of the specified {@link Fiat} with the specified `value`.
    */
-  static usd(value: AmountValue): Amount<Fiat> {
-    return this.from(usd(), value);
+  static fiat<T extends Fiat>(asset: T, value: AmountValue): Amount<Fiat> {
+    return this.from(asset, value);
   }
 
   /**

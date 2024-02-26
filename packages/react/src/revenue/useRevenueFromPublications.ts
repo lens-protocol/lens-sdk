@@ -6,6 +6,7 @@ import {
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { useFragmentVariables } from '../helpers/variables';
 
 /**
  * {@link useRevenueFromPublications} hook arguments
@@ -32,7 +33,7 @@ export function useRevenueFromPublications(
   return usePaginatedReadResult(
     useRevenueFromPublicationsHook(
       useLensApolloClient({
-        variables: { ...args, statsFor: args.publishedOn },
+        variables: useFragmentVariables({ ...args, statsFor: args.publishedOn }),
       }),
     ),
   );

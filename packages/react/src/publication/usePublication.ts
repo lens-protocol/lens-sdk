@@ -9,6 +9,7 @@ import { OneOf, invariant } from '@lens-protocol/shared-kernel';
 import { NotFoundError } from '../NotFoundError';
 import { useLensApolloClient } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
+import { useFragmentVariables } from '../helpers/variables';
 
 /**
  * {@link usePublication} hook arguments
@@ -41,12 +42,12 @@ export function usePublication({
   const { data, error, loading } = useReadResult(
     usePublicationHook(
       useLensApolloClient({
-        variables: {
+        variables: useFragmentVariables({
           request: {
             ...(forId && { forId }),
             ...(forTxHash && { forTxHash }),
           },
-        },
+        }),
         fetchPolicy: 'cache-and-network',
         // leverage cache content if possible
         nextFetchPolicy: 'cache-first',

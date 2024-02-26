@@ -114,7 +114,12 @@ class RefreshTokensLink extends ApolloLink {
   }
 }
 
-export function createAuthLink(accessTokenStorage: IAccessTokenStorage) {
+export type AuthLinkArgs = {
+  accessTokenStorage: IAccessTokenStorage;
+  origin?: string;
+};
+
+export function createAuthLink({ accessTokenStorage, origin }: AuthLinkArgs) {
   const tokenRefreshLink = new RefreshTokensLink(accessTokenStorage);
 
   const authHeaderLink = setContext((_, prevContext) => {
@@ -126,7 +131,8 @@ export function createAuthLink(accessTokenStorage: IAccessTokenStorage) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         headers: {
           ...('headers' in prevContext && prevContext.headers),
-          authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
+          ...(origin && { Origin: origin }),
         },
       };
     }

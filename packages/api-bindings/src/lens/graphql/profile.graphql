@@ -231,13 +231,12 @@ fragment CreateUnlinkHandleFromProfileBroadcastItemResult on CreateUnlinkHandleF
 # queries
 query Profile(
   $request: ProfileRequest!
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
-  ...InjectQueryParams
   result: profile(request: $request) {
     ...Profile
   }
@@ -247,13 +246,12 @@ query Profiles(
   $where: ProfilesRequestWhere!
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
-  ...InjectQueryParams
   result: profiles(request: { where: $where, limit: $limit, cursor: $cursor }) {
     items {
       ...Profile
@@ -281,13 +279,12 @@ query ProfileRecommendations(
   $shuffle: Boolean
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
-  ...InjectQueryParams
   result: profileRecommendations(
     request: { for: $for, disableML: $disableML, shuffle: $shuffle, limit: $limit, cursor: $cursor }
   ) {
@@ -304,13 +301,12 @@ query Following(
   $for: ProfileId!
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
-  ...InjectQueryParams
   result: following(request: { for: $for, limit: $limit, cursor: $cursor }) {
     items {
       ...Profile
@@ -325,13 +321,12 @@ query Followers(
   $of: ProfileId!
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
-  ...InjectQueryParams
   result: followers(request: { of: $of, limit: $limit, cursor: $cursor }) {
     items {
       ...Profile
@@ -347,13 +342,12 @@ query MutualFollowers(
   $viewing: ProfileId!
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
-  ...InjectQueryParams
   result: mutualFollowers(
     request: { observer: $observer, viewing: $viewing, limit: $limit, cursor: $cursor }
   ) {
@@ -371,13 +365,12 @@ query WhoActedOnPublication(
   $where: WhoActedOnPublicationWhere
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
-  ...InjectQueryParams
   result: whoActedOnPublication(
     request: { on: $on, where: $where, limit: $limit, cursor: $cursor }
   ) {
@@ -393,11 +386,11 @@ query WhoActedOnPublication(
 query WhoHaveBlocked(
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
   result: whoHaveBlocked(request: { limit: $limit, cursor: $cursor }) {
     items {

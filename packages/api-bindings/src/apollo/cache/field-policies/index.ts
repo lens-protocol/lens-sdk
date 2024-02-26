@@ -1,3 +1,4 @@
+export * from './createCurrenciesFieldPolicy';
 export * from './createExploreProfilesFieldPolicy';
 export * from './createExplorePublicationsFieldPolicy';
 export * from './createFeedFieldPolicy';

@@ -49,6 +49,12 @@ export type LensConfig = {
    * @defaultValue if not provided, the requests will be made without the `Origin` header.
    */
   origin?: string;
+  /**
+   * Overwrite all onchain transactions to be self-funded if set to `false`.
+   *
+   * @defaultValue `true`
+   */
+  sponsored?: boolean;
 };
 
 /**

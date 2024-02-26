@@ -70,11 +70,3 @@ export function createLensLink({
     fetch: wrapFetch(logger, supportedVersion, currentFetch),
   });
 }
-
-export type SnapshotLinkArgs = {
-  uri: string;
-};
-
-export function createSnapshotLink({ uri }: SnapshotLinkArgs) {
-  return new HttpLink({ uri });
-}

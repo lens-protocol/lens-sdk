@@ -16,7 +16,7 @@ export function mockFollowRevenuesResponse({
   variables,
   result,
 }: {
-  variables: FollowRevenuesVariables;
+  variables: Pick<FollowRevenuesVariables, 'request'>;
   result: RevenueAggregate[];
 }) {
   return mockAnyResponse({
@@ -34,7 +34,7 @@ export function mockRevenueFromPublicationResponse({
   variables,
   result,
 }: {
-  variables: RevenueFromPublicationVariables;
+  variables: Pick<RevenueFromPublicationVariables, 'request'>;
   result: PublicationRevenue | null;
 }) {
   return mockAnyResponse({
@@ -53,7 +53,7 @@ export function mockRevenueFromPublicationsResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: RevenueFromPublicationsVariables;
+  variables: Pick<RevenueFromPublicationsVariables, 'cursor' | 'for' | 'limit' | 'publishedOn'>;
   items: Array<PublicationRevenue>;
   info?: PaginatedResultInfo;
 }) {

@@ -19,14 +19,11 @@ export type NotInterestedOperation = UseDeferredTask<void, never, UseNotInterest
  * You can use the `primaryPublication.operations.isNotInterested` property to determine
  * the active profile's interest with the provided publication.
  *
- * @category Publications
- * @group Hooks
- *
  * @example
  * ```tsx
- * import { PrimaryPublication, useNotInterestedToggle } from '@lens-protocol/react-web';
+ * import { AnyPublication, useNotInterestedToggle } from '@lens-protocol/react-web';
  *
- * function Publication({ profile, publication }: { publication: AnyPublication }) {
+ * function Publication({ publication }: { publication: AnyPublication }) {
  *   const { execute: toggle, loading } = useNotInterestedToggle();
  *
  *   return (
@@ -36,6 +33,9 @@ export type NotInterestedOperation = UseDeferredTask<void, never, UseNotInterest
  *   );
  * }
  * ```
+ *
+ * @category Publications
+ * @group Hooks
  */
 export function useNotInterestedToggle(): NotInterestedOperation {
   const { data: session } = useSession();

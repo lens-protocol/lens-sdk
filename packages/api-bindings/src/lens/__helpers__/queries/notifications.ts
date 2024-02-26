@@ -12,7 +12,7 @@ export function mockNotificationsResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: NotificationsVariables;
+  variables: Pick<NotificationsVariables, 'statsFor' | 'where'>;
   items: Notification[];
   info?: PaginatedResultInfo;
 }) {

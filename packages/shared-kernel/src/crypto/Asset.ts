@@ -15,8 +15,6 @@ export enum Kind {
 export enum WellKnownSymbols {
   ETH = 'ETH',
   MATIC = 'MATIC',
-  USD = 'USD',
-  USDC = 'USDC',
 }
 
 /** @internal */
@@ -264,13 +262,22 @@ export function ether(): Ether {
 }
 
 /**
- * A convenience function to create a Fiat asset for USD.
- *
- * There is only one USD token, so this function returns the same instance every time.
- *
- * @returns The USD Fiat instance.
+ * Initialization object for `fiat` factory function
  */
-export function usd(): Fiat {
-  const asset = new Fiat('United States dollar', WellKnownSymbols.USD);
+export type FiatInfo = {
+  name: string;
+  symbol: string;
+};
+
+/**
+ * Fiat asset factory function.
+ *
+ * Fiat instances, like all {@link Asset} instances, are immutable and can be compared using reference equality (`===`).
+ *
+ * @param info - {@link FiatInfo} details
+ * @returns An Fiat asset instance.
+ */
+export function fiat({ name, symbol }: FiatInfo) {
+  const asset = new Fiat(name, symbol);
   return immutable(asset.hash, asset);
 }

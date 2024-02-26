@@ -13,22 +13,20 @@ import {
 } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
-import { profileId, publicationId } from '../../../utils';
+import { data, profileId, publicationId, uri } from '../../../utils';
 
 export const UriSchema: z.ZodType<URI, z.ZodTypeDef, string> = z
   .string()
   .min(6)
   .url()
-  .transform((value) => value as URI);
+  .transform(uri);
 
 export const EvmAddressSchema: z.ZodType<EvmAddress, z.ZodTypeDef, string> = z
   .string()
   .min(42)
   .transform((value) => value);
 
-export const DataSchema: z.ZodType<Data, z.ZodTypeDef, string> = z
-  .string()
-  .transform((value) => value as Data);
+export const DataSchema: z.ZodType<Data, z.ZodTypeDef, string> = z.string().transform(data);
 
 export const ProfileIdSchema: z.ZodType<ProfileId, z.ZodTypeDef, string> = z
   .string()

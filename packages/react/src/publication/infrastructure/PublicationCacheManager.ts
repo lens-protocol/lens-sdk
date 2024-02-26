@@ -1,5 +1,6 @@
 import { FetchPolicy } from '@apollo/client';
 import {
+  AllFragmentVariables,
   AnyPublication,
   Comment,
   isCommentPublication,
@@ -28,7 +29,10 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { IPublicationCacheManager } from '../adapters/IPublicationCacheManager';
 
 export class PublicationCacheManager implements IPublicationCacheManager {
-  constructor(private readonly client: SafeApolloClient) {}
+  constructor(
+    private readonly client: SafeApolloClient,
+    private readonly variables: AllFragmentVariables,
+  ) {}
 
   async fetchNewPost(tx: TransactionData<CreatePostRequest>): Promise<Post> {
     const publication = await this.fetchNewPublication(tx);
@@ -69,6 +73,7 @@ export class PublicationCacheManager implements IPublicationCacheManager {
           request: {
             forId: publicationId,
           },
+          ...this.variables,
         },
       },
       (data) => {
@@ -100,7 +105,7 @@ export class PublicationCacheManager implements IPublicationCacheManager {
   private async request(request: PublicationRequest, fetchPolicy: FetchPolicy) {
     const { data } = await this.client.query<PublicationData, PublicationVariables>({
       query: PublicationDocument,
-      variables: { request },
+      variables: { request, ...this.variables },
       fetchPolicy,
     });
 

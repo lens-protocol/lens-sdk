@@ -7,6 +7,7 @@ import {
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { useFragmentVariables } from '../helpers/variables';
 
 export type UseExploreProfilesArgs = PaginatedArgs<ExploreProfilesRequest>;
 
@@ -49,11 +50,11 @@ export function useExploreProfiles(
   return usePaginatedReadResult(
     useBaseExploreProfilesQuery(
       useLensApolloClient({
-        variables: {
+        variables: useFragmentVariables({
           limit,
           where,
           orderBy,
-        },
+        }),
       }),
     ),
   );

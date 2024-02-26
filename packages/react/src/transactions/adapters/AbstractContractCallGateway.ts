@@ -9,7 +9,7 @@ import { Amount, ChainType, Data, EvmAddress } from '@lens-protocol/shared-kerne
 import { BigNumberish, BytesLike } from 'ethers';
 import { v4 } from 'uuid';
 
-import { BaseConfig } from '../../config';
+import { RequiredConfig } from '../../config';
 import { ITransactionRequest } from '../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../wallet/adapters/IProviderFactory';
 import { Eip1559GasPriceEstimator, TransactionExecutionSpeed } from './Eip1559GasPriceEstimator';
@@ -50,7 +50,7 @@ export abstract class AbstractContractCallGateway<TRequest extends AnyTransactio
   implements IPaidTransactionGateway<TRequest>
 {
   constructor(
-    protected readonly config: BaseConfig,
+    protected readonly config: RequiredConfig,
     private readonly providerFactory: IProviderFactory,
   ) {}
 

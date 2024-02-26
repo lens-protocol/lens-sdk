@@ -43,6 +43,12 @@ export type LensConfig = {
    * The common query params allow you to customize some aspect of the returned data.
    */
   params?: QueryParams;
+  /**
+   * Overwrite all onchain transactions to be self-funded if set to `false`.
+   *
+   * @defaultValue `true`
+   */
+  sponsored?: boolean;
 };
 
 /**

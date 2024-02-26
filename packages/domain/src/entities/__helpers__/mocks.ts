@@ -12,7 +12,6 @@ import { mock } from 'jest-mock-extended';
 
 import { AppId } from '../AppId';
 import { Credentials } from '../Credentials';
-import { Challenge, NftOwnershipChallenge } from '../Nft';
 import { Profile, ProfileId } from '../Profile';
 import { PublicationId } from '../Publication';
 import { Signature } from '../Signature';
@@ -32,14 +31,9 @@ import {
   UnsignedTransaction,
 } from '../Transactions';
 import { Wallet } from '../Wallet';
-import { ISignedVote, IUnsignedVote, PollId } from '../polls';
 
 export function mockProfileId(): ProfileId {
   return faker.datatype.hexadecimal({ length: 2 }) as ProfileId;
-}
-
-export function mockPollId(): PollId {
-  return faker.datatype.hexadecimal({ length: 2 }) as PollId;
 }
 
 export function mockPublicationId(profileId: ProfileId = mockProfileId()): PublicationId {
@@ -56,10 +50,6 @@ export function mockCredentials(overrides?: Partial<Credentials>) {
     profileId: mockProfileId(),
     ...overrides,
   });
-}
-
-export function mockChallenge(): Challenge {
-  return mock32BytesHexString();
 }
 
 export function mockSignature(): Signature {
@@ -279,13 +269,6 @@ export function mockTransactionError() {
   return new TransactionError(TransactionErrorReason.MINING_TIMEOUT);
 }
 
-export function mockNftOwnershipChallenge(): NftOwnershipChallenge {
-  return {
-    id: faker.datatype.uuid(),
-    message: mockChallenge(),
-  };
-}
-
 type MockedDataTransactionInit<T extends ProtocolTransactionRequestModel> = {
   request: T;
   id?: string;
@@ -315,21 +298,6 @@ export class MockedDataTransaction<
       request: signedCall.request,
     });
   }
-}
-
-export function mockIUnsignedVote(overrides?: Partial<IUnsignedVote>): IUnsignedVote {
-  return {
-    pollId: mockPollId(),
-    ...overrides,
-  };
-}
-
-export function mockISignedVote(overrides?: Partial<ISignedVote>): ISignedVote {
-  return {
-    pollId: mockPollId(),
-    signature: mockSignature(),
-    ...overrides,
-  };
 }
 
 export function mockAppId(): AppId {

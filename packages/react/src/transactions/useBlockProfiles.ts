@@ -18,6 +18,7 @@ import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useBlockProfilesController } from './adapters/useBlockProfileController';
+import { useSponsoredConfig } from './shared/useSponsoredConfig';
 
 export type BlockProfileArgs = {
   /**
@@ -248,6 +249,7 @@ export type BlockOperation = UseDeferredTask<
 export function useBlockProfiles(): BlockOperation {
   const { data: session } = useSession();
   const blockProfile = useBlockProfilesController();
+  const configureRequest = useSponsoredConfig();
 
   return useDeferredTask(async ({ profiles, sponsored }: BlockProfileArgs) => {
     invariant(
@@ -255,11 +257,13 @@ export function useBlockProfiles(): BlockOperation {
       'You must be authenticated with a profile to block a profile. Use `useLogin` hook to authenticate.',
     );
 
-    return blockProfile({
-      profileIds: profiles.map((profile) => profile.id),
-      kind: TransactionKind.BLOCK_PROFILE,
-      signless: session.profile.signless,
-      sponsored: sponsored ?? true,
-    });
+    return blockProfile(
+      configureRequest({
+        profileIds: profiles.map((profile) => profile.id),
+        kind: TransactionKind.BLOCK_PROFILE,
+        signless: session.profile.signless,
+        sponsored: sponsored ?? true,
+      }),
+    );
   });
 }

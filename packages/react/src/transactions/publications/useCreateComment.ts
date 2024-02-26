@@ -18,6 +18,7 @@ import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
 import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
 import { createCommentRequest } from '../adapters/schemas/builders';
 import { useCreateCommentController } from '../adapters/useCreateCommentController';
+import { useSponsoredConfig } from '../shared/useSponsoredConfig';
 
 /**
  * An object representing the result of a comment creation.
@@ -480,6 +481,7 @@ export function useCreateComment(): UseDeferredTask<
 > {
   const { data: session } = useSession();
   const createComment = useCreateCommentController();
+  const configureRequest = useSponsoredConfig();
 
   return useDeferredTask(async (args: CreateCommentArgs) => {
     invariant(
@@ -491,11 +493,13 @@ export function useCreateComment(): UseDeferredTask<
       'You must have a profile to create a comment.',
     );
 
-    const request = createCommentRequest({
-      signless: session.profile.signless,
-      sponsored: args.sponsored ?? true,
-      ...args,
-    });
+    const request = configureRequest(
+      createCommentRequest({
+        signless: session.profile.signless,
+        sponsored: args.sponsored ?? true,
+        ...args,
+      }),
+    );
 
     return createComment(request);
   });

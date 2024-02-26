@@ -7,6 +7,7 @@ import {
 import { SessionType, useSession } from '../authentication';
 import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { useFragmentVariables } from '../helpers/variables';
 
 export type UseBookmarksArgs = PaginatedArgs<PublicationBookmarksRequest>;
 
@@ -30,22 +31,12 @@ export function useBookmarks(args: UseBookmarksArgs = {}): PaginatedReadResult<A
   return usePaginatedReadResult(
     usePublicationBookmarks(
       useLensApolloClient({
-        variables: {
+        variables: useFragmentVariables({
           request: args,
           statsFor: args.where?.metadata?.publishedOn,
-        },
+        }),
         skip: session?.type !== SessionType.WithProfile,
       }),
     ),
   );
 }
-
-/**
- * @deprecated Use {@link useBookmarks} instead.
- */
-export const useMyBookmarks = useBookmarks;
-
-/**
- * @deprecated Use {@link UseBookmarksArgs} instead.
- */
-export type UseMyBookmarksArgs = UseBookmarksArgs;

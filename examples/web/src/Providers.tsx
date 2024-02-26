@@ -17,6 +17,7 @@ const wagmiConfig = createConfig({
 const lensConfig: LensConfig = {
   environment: development,
   bindings: bindings(wagmiConfig),
+  debug: window.location.search.includes('debug'),
 };
 
 export function Providers({ children }: { children: React.ReactNode }) {

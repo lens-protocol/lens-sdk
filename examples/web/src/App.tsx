@@ -68,6 +68,7 @@ import {
   UseCreateMirror,
   UseCreatePost,
   UseCreateQuote,
+  UseHideCommentToggle,
   UseHidePublication,
   UseLazyPublications,
   UseNotInterestedToggle,
@@ -117,6 +118,7 @@ export function App() {
                   <Route path="useBookmarks" element={<UseBookmarks />} />
                   <Route path="useOpenAction" element={<UseOpenAction />} />
                   <Route path="useNotInterestedToggle" element={<UseNotInterestedToggle />} />
+                  <Route path="useHideCommentToggle" element={<UseHideCommentToggle />} />
                 </Route>
 
                 <Route path="/profiles">

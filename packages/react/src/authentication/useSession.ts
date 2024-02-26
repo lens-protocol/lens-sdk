@@ -10,6 +10,7 @@ import { useEffect, useRef } from 'react';
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { ReadResult } from '../helpers/reads';
+import { useFragmentVariables } from '../helpers/variables';
 
 function usePreviousValue<T>(value: T) {
   const ref = useRef<T>();
@@ -134,11 +135,11 @@ export function useSession(): ReadResult<Session, UnspecifiedError> {
 
   const { data, error, previousData } = useProfile(
     useLensApolloClient({
-      variables: {
+      variables: useFragmentVariables({
         request: {
           forProfileId: profileId,
         },
-      },
+      }),
       fetchPolicy: 'cache-first',
       skip: !trigger,
     }),

@@ -57,8 +57,6 @@ export type NftGalleryFragment = {
   items: Array<NftFragment>;
 };
 
-export type NftOwnershipChallengeResultFragment = { success: boolean; info: string | null };
-
 export type NftCollectionWithOwnersFragment = {
   totalOwners: number;
   collection: NftCollectionFragment;
@@ -117,12 +115,6 @@ export type PopularNftCollectionsQueryVariables = Types.Exact<{
 export type PopularNftCollectionsQuery = {
   result: { items: Array<NftCollectionWithOwnersFragment>; pageInfo: PaginatedResultInfoFragment };
 };
-
-export type NftOwnershipChallengeMutationVariables = Types.Exact<{
-  request: Types.NftOwnershipChallengeRequest;
-}>;
-
-export type NftOwnershipChallengeMutation = { result: NftOwnershipChallengeResultFragment };
 
 export type CreateNftGalleryMutationVariables = Types.Exact<{
   request: Types.NftGalleryCreateRequest;
@@ -616,26 +608,6 @@ export const NftGalleryFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
           { kind: 'Field', name: { kind: 'Name', value: 'width' } },
           { kind: 'Field', name: { kind: 'Name', value: 'height' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode;
-export const NftOwnershipChallengeResultFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'NftOwnershipChallengeResult' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'NftOwnershipChallengeResult' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'success' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'info' } },
         ],
       },
     },
@@ -1627,6 +1599,7 @@ export const NftCollectionOwnersDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -1814,7 +1787,6 @@ export const NftCollectionOwnersDocument = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'followModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -1919,24 +1891,6 @@ export const NftCollectionOwnersDocument = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -2226,90 +2180,7 @@ export const NftCollectionOwnersDocument = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
         ],
       },
     },
@@ -2693,70 +2564,6 @@ export const PopularNftCollectionsDocument = {
     },
   ],
 } as unknown as DocumentNode;
-export const NftOwnershipChallengeDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'NftOwnershipChallenge' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'NftOwnershipChallengeRequest' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'result' },
-            name: { kind: 'Name', value: 'nftOwnershipChallenge' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'NftOwnershipChallengeResult' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'NftOwnershipChallengeResult' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'NftOwnershipChallengeResult' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'success' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'info' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode;
 export const CreateNftGalleryDocument = {
   kind: 'Document',
   definitions: [
@@ -2961,7 +2768,6 @@ const NftCollectionOwnersDocumentString = print(NftCollectionOwnersDocument);
 const NftCollectionsDocumentString = print(NftCollectionsDocument);
 const MutualNftCollectionsDocumentString = print(MutualNftCollectionsDocument);
 const PopularNftCollectionsDocumentString = print(PopularNftCollectionsDocument);
-const NftOwnershipChallengeDocumentString = print(NftOwnershipChallengeDocument);
 const CreateNftGalleryDocumentString = print(CreateNftGalleryDocument);
 const UpdateNftGalleryInfoDocumentString = print(UpdateNftGalleryInfoDocument);
 const UpdateNftGalleryOrderDocumentString = print(UpdateNftGalleryOrderDocument);
@@ -3079,26 +2885,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
           ),
         'PopularNftCollections',
         'query',
-      );
-    },
-    NftOwnershipChallenge(
-      variables: NftOwnershipChallengeMutationVariables,
-      requestHeaders?: GraphQLClientRequestHeaders,
-    ): Promise<{
-      data: NftOwnershipChallengeMutation;
-      extensions?: any;
-      headers: Dom.Headers;
-      status: number;
-    }> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.rawRequest<NftOwnershipChallengeMutation>(
-            NftOwnershipChallengeDocumentString,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'NftOwnershipChallenge',
-        'mutation',
       );
     },
     CreateNFTGallery(

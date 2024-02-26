@@ -1,6 +1,13 @@
-import { Amount, ChainType, erc20, Erc20Amount } from '@lens-protocol/shared-kernel';
+import {
+  Amount,
+  ChainType,
+  erc20,
+  Erc20Amount,
+  fiat,
+  FiatAmount,
+} from '@lens-protocol/shared-kernel';
 
-import { Amount as ApiAmount } from '../graphql/generated';
+import { Amount as ApiAmount, FiatAmount as ApiFiatAmount } from '../graphql/generated';
 
 export function chainType(chainId: number): ChainType {
   switch (chainId) {
@@ -33,4 +40,21 @@ export function erc20Amount(from: ApiAmount): Erc20Amount {
   });
 
   return Amount.erc20(erc20Asset, value);
+}
+
+/**
+ * Convert a FiatAmount returned from the Lens API to a FiatAmount
+ *
+ * @param from - FiatAmount returned from the Lens API
+ * @returns FiatAmount instance
+ */
+export function fiatAmount(from: ApiFiatAmount): FiatAmount {
+  const { asset, value } = from;
+
+  const fiatAsset = fiat({
+    name: asset.name,
+    symbol: asset.symbol,
+  });
+
+  return Amount.fiat(fiatAsset, value);
 }

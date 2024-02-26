@@ -71,25 +71,3 @@ export type QueryParams = {
    */
   statsFor?: AppId[];
 };
-
-/**
- * The media transforms configuration.
- *
- * @deprecated Will be removed in a future release.
- */
-export type MediaTransformsConfig = {
-  /**
-   * The transforms for the publication images.
-   */
-  publication?: ImageTransform;
-
-  /**
-   * The transforms for the profile images.
-   */
-  profilePicture?: ImageTransform;
-
-  /**
-   * The transforms for the profile cover images.
-   */
-  profileCover?: ImageTransform;
-};

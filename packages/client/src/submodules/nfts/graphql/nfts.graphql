@@ -55,11 +55,6 @@ fragment NftGallery on NftGallery {
   }
 }
 
-fragment NftOwnershipChallengeResult on NftOwnershipChallengeResult {
-  success
-  info
-}
-
 fragment NftCollectionWithOwners on NftCollectionWithOwners {
   collection {
     ...NftCollection
@@ -143,12 +138,6 @@ query PopularNftCollections($request: PopularNftCollectionsRequest!) {
 }
 
 # mutations
-mutation NftOwnershipChallenge($request: NftOwnershipChallengeRequest!) {
-  result: nftOwnershipChallenge(request: $request) {
-    ...NftOwnershipChallengeResult
-  }
-}
-
 mutation CreateNFTGallery($request: NftGalleryCreateRequest!) {
   result: createNftGallery(request: $request)
 }

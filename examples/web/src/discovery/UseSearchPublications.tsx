@@ -1,5 +1,5 @@
 import { LimitType, useSearchPublications } from '@lens-protocol/react-web';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 
 import { PublicationCard } from '../components/cards';
 import { ErrorMessage } from '../components/error/ErrorMessage';
@@ -12,7 +12,10 @@ type SearchResultsProps = {
 
 function SearchResults({ query }: SearchResultsProps) {
   const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
-    useSearchPublications({ query, limit: LimitType.Fifty }),
+    useSearchPublications({
+      query,
+      limit: LimitType.Fifty,
+    }),
   );
 
   if (loading) return <Loading />;
@@ -34,15 +37,19 @@ function SearchResults({ query }: SearchResultsProps) {
 }
 
 export function UseSearchPublications() {
-  const [inputValue, setInputValue] = useState('');
-  const [selectedQuery, setSelectedQuery] = useState<string>();
+  const [query, setQuery] = useState('');
 
-  const handleSubmit = () => {
-    setSelectedQuery(inputValue);
-  };
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    const q = formData.get('query') as string | null;
+
+    if (q) {
+      setQuery(q);
+    }
   };
 
   return (
@@ -50,11 +57,12 @@ export function UseSearchPublications() {
       <h1>
         <code>Search Publications</code>
       </h1>
-      <div>
-        <input onChange={handleChange} />
-        <button onClick={handleSubmit}>Search</button>
-      </div>
-      {selectedQuery && <SearchResults query={selectedQuery} />}
+      <form onSubmit={handleSubmit}>
+        <input name="query" />
+        &nbsp;
+        <button>Search</button>
+      </form>
+      {query && <SearchResults query={query} />}
     </div>
   );
 }

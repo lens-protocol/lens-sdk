@@ -1,7 +1,7 @@
 import { getAddress } from '@ethersproject/address';
 
 import { Amount, Denomination } from '../Amount';
-import { erc20, Erc20 } from '../Asset';
+import { erc20, Erc20, fiat, Fiat } from '../Asset';
 import { ChainType } from '../ChainType';
 import { Data, EvmAddress } from '../types';
 
@@ -32,8 +32,15 @@ export function mockMaticGweiAmount(value: number | string) {
   return Amount.matic(Denomination.gwei(value));
 }
 
+export function mockUsdAsset(): Fiat {
+  return fiat({
+    name: 'US Dollar',
+    symbol: 'USD',
+  });
+}
+
 export function mockUsdAmount(value: number | string) {
-  return Amount.usd(value);
+  return Amount.fiat(mockUsdAsset(), value);
 }
 
 export function mockErc20Asset({

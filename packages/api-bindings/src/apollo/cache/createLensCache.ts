@@ -1,16 +1,11 @@
 import { ApolloCache, InMemoryCache, NormalizedCacheObject } from '@apollo/client';
 
 import generatedIntrospection from '../../lens/graphql/generated';
-import { QueryParams } from './createQueryParamsLocalFields';
 import { createTypePolicies } from './createTypePolicies';
 
-export type { QueryParams };
-
-export { defaultQueryParams } from './createQueryParamsLocalFields';
-
-export function createLensCache(params?: QueryParams): ApolloCache<NormalizedCacheObject> {
+export function createLensCache(): ApolloCache<NormalizedCacheObject> {
   return new InMemoryCache({
     possibleTypes: generatedIntrospection.possibleTypes,
-    typePolicies: createTypePolicies(params),
+    typePolicies: createTypePolicies(),
   });
 }

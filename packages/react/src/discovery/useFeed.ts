@@ -3,6 +3,7 @@ import { FeedItem, FeedRequest, useFeed as useBaseFeedQuery } from '@lens-protoc
 import { SessionType, useSession } from '../authentication';
 import { useLensApolloClient } from '../helpers/arguments';
 import { OmitCursor, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { useFragmentVariables } from '../helpers/variables';
 
 export type UseFeedArgs = OmitCursor<FeedRequest>;
 
@@ -48,10 +49,10 @@ export function useFeed({ where }: UseFeedArgs): PaginatedReadResult<FeedItem[]>
   return usePaginatedReadResult(
     useBaseFeedQuery(
       useLensApolloClient({
-        variables: {
+        variables: useFragmentVariables({
           where,
           statsFor: where?.metadata?.publishedOn,
-        },
+        }),
         skip: session?.type !== SessionType.WithProfile,
       }),
     ),
