@@ -57,6 +57,8 @@ export type {
   PromiseResult,
   Result,
   Success,
+  URI,
+  URL,
 } from '@lens-protocol/shared-kernel';
 
 /**

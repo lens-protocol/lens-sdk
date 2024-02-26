@@ -18,12 +18,12 @@ export type UseHideCommentToggleArgs = {
  * ```tsx
  * import { Comment, useHideCommentToggle } from '@lens-protocol/react-web';
  *
- * function HideableComment({ publication }: { publication: Comment }) {
+ * function HideableComment({ comment }: { comment: Comment }) {
  *   const { execute: toggle, loading } = useHideCommentToggle();
  *
  *   return (
- *     <button onClick={() => toggle({ publication })} disabled={loading}>
- *       {publication.hiddenByAuthor ? 'Unhide' : 'Hide'}
+ *     <button onClick={() => toggle({ comment })} disabled={loading}>
+ *       {comment.hiddenByAuthor ? 'Unhide' : 'Hide'}
  *     </button>
  *   );
  * }

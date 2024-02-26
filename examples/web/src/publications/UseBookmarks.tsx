@@ -1,12 +1,38 @@
-import { useBookmarks } from '@lens-protocol/react-web';
+import {
+  useBookmarkToggle,
+  useBookmarks,
+  AnyPublication,
+  isPrimaryPublication,
+} from '@lens-protocol/react-web';
 
 import { RequireProfileSession } from '../components/auth';
 import { PublicationCard } from '../components/cards';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+import { invariant } from '../utils';
 
-export function MyBookmarks() {
+function PublicationWithActions({ publication }: { publication: AnyPublication }) {
+  const { execute: toggle, loading } = useBookmarkToggle();
+
+  invariant(isPrimaryPublication(publication), 'Publication is not a primary publication');
+
+  return (
+    <PublicationCard publication={publication}>
+      <label>
+        Bookmarked{' '}
+        <input
+          disabled={loading}
+          type="checkbox"
+          checked={publication.operations?.hasBookmarked}
+          onChange={() => toggle({ publication })}
+        />
+      </label>
+    </PublicationCard>
+  );
+}
+
+function BookmarksInner() {
   const {
     data: publications,
     error,
@@ -24,7 +50,7 @@ export function MyBookmarks() {
   return (
     <div>
       {publications.map((publication) => (
-        <PublicationCard key={publication.id} publication={publication} />
+        <PublicationWithActions key={publication.id} publication={publication} />
       ))}
       {hasMore && <p ref={observeRef}>Loading more...</p>}
     </div>
@@ -39,7 +65,7 @@ export function UseBookmarks() {
       </h1>
 
       <RequireProfileSession message="Log in to view this example.">
-        {() => <MyBookmarks />}
+        <BookmarksInner />
       </RequireProfileSession>
     </div>
   );
