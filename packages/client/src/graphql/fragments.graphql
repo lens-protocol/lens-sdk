@@ -340,6 +340,7 @@ fragment Profile on Profile {
   stats(request: $profileStatsArg) {
     ...ProfileStats
   }
+  peerToPeerRecommendedByMe
 }
 
 fragment ProfileMentioned on ProfileMentioned {

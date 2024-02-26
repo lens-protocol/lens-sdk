@@ -477,6 +477,18 @@ export type ReportProfileMutationVariables = Types.Exact<{
 
 export type ReportProfileMutation = { reportProfile: string | null };
 
+export type PeerToPeerRecommendMutationVariables = Types.Exact<{
+  request: Types.PeerToPeerRecommendRequest;
+}>;
+
+export type PeerToPeerRecommendMutation = { peerToPeerRecommend: string | null };
+
+export type PeerToPeerUnrecommendMutationVariables = Types.Exact<{
+  request: Types.PeerToPeerRecommendRequest;
+}>;
+
+export type PeerToPeerUnrecommendMutation = { peerToPeerUnrecommend: string | null };
+
 export const ProfileManagerFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -1761,6 +1773,7 @@ export const ProfileDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -2739,6 +2752,7 @@ export const DefaultProfileDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -3741,6 +3755,7 @@ export const ProfilesDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -4847,6 +4862,7 @@ export const ProfileRecommendationsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -5861,6 +5877,7 @@ export const FollowingDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -6875,6 +6892,7 @@ export const FollowersDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -7889,6 +7907,7 @@ export const MutualFollowersDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -8984,6 +9003,7 @@ export const WhoActedOnPublicationDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -10096,6 +10116,7 @@ export const WhoHaveBlockedDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -13027,6 +13048,84 @@ export const ReportProfileDocument = {
     },
   ],
 } as unknown as DocumentNode;
+export const PeerToPeerRecommendDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'PeerToPeerRecommend' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'PeerToPeerRecommendRequest' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'peerToPeerRecommend' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const PeerToPeerUnrecommendDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'PeerToPeerUnrecommend' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'PeerToPeerRecommendRequest' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'peerToPeerUnrecommend' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -13077,6 +13176,8 @@ const CreateUnlinkHandleFromProfileTypedDataDocumentString = print(
   CreateUnlinkHandleFromProfileTypedDataDocument,
 );
 const ReportProfileDocumentString = print(ReportProfileDocument);
+const PeerToPeerRecommendDocumentString = print(PeerToPeerRecommendDocument);
+const PeerToPeerUnrecommendDocumentString = print(PeerToPeerUnrecommendDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Profile(
@@ -13700,6 +13801,46 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'ReportProfile',
+        'mutation',
+      );
+    },
+    PeerToPeerRecommend(
+      variables: PeerToPeerRecommendMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: PeerToPeerRecommendMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<PeerToPeerRecommendMutation>(
+            PeerToPeerRecommendDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'PeerToPeerRecommend',
+        'mutation',
+      );
+    },
+    PeerToPeerUnrecommend(
+      variables: PeerToPeerUnrecommendMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: PeerToPeerUnrecommendMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<PeerToPeerUnrecommendMutation>(
+            PeerToPeerUnrecommendDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'PeerToPeerUnrecommend',
         'mutation',
       );
     },

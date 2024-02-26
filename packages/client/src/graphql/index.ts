@@ -159,6 +159,7 @@ export type {
   OnchainSetProfileMetadataRequest,
   OwnedHandlesRequest,
   PaginatedOffsetRequest,
+  PeerToPeerRecommendRequest,
   PoapEventQueryRequest,
   PoapHoldersQueryRequest,
   PopularNftCollectionsRequest,

@@ -187,6 +187,7 @@ export type ProfileFragment = {
   invitesLeft: number;
   sponsor: boolean;
   signless: boolean;
+  peerToPeerRecommendedByMe: boolean;
   ownedBy: NetworkAddressFragment;
   operations: {
     __typename: 'ProfileOperations';
@@ -2747,6 +2748,7 @@ export const ProfileFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -28348,6 +28350,7 @@ export const PostFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -33665,6 +33668,7 @@ export const CommentBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -38848,6 +38852,7 @@ export const QuoteBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -43579,6 +43584,7 @@ export const CommentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -50092,6 +50098,7 @@ export const QuoteFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -56605,6 +56612,7 @@ export const MirrorFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
