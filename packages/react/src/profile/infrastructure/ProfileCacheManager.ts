@@ -1,6 +1,8 @@
 import {
   AllFragmentVariables,
+  FragmentProfile,
   getSessionData,
+  Profile,
   ProfileData,
   ProfileDocument,
   ProfileRequest,
@@ -47,6 +49,26 @@ export class ProfileCacheManager implements IProfileCacheManager {
         });
       },
     });
+  }
+
+  update(
+    profileId: ProfileId,
+    updateFn: <TProfile extends Profile>(current: TProfile) => TProfile,
+  ) {
+    this.client.cache.updateFragment(
+      {
+        id: this.client.cache.identify({ __typename: 'Profile', id: profileId }),
+        fragment: FragmentProfile,
+        fragmentName: 'Profile',
+        variables: this.variables,
+      },
+      (data: Profile | null) => {
+        if (data) {
+          return updateFn(data);
+        }
+        return data;
+      },
+    );
   }
 
   private async fetch(request: ProfileRequest) {

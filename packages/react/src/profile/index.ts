@@ -11,6 +11,7 @@ export * from './useProfileFollowers';
 export * from './useProfileFollowing';
 export * from './useProfileManagers';
 export * from './useProfiles';
+export * from './useRecommendProfileToggle';
 export * from './useReportProfile';
 export * from './useWhoActedOnPublication';
 

@@ -1,4 +1,4 @@
-import { ToggleProperty } from '@lens-protocol/domain/use-cases/publications';
+import { TogglePublicationProperty } from '@lens-protocol/domain/use-cases/publications';
 
 import { useSharedDependencies } from '../../shared';
 import { HideCommentGateway, HideCommentRequest } from './HideCommentGateway';
@@ -10,17 +10,17 @@ export function useHideCommentController() {
   const hide = async (request: HideCommentRequest) => {
     const presenter = new HideCommentPresenter(publicationCacheManager);
     const gateway = new HideCommentGateway(apolloClient);
-    const comment = new ToggleProperty(gateway, presenter);
+    const toggle = new TogglePublicationProperty(gateway, presenter);
 
-    await comment.add(request);
+    await toggle.on(request);
   };
 
   const unhide = async (request: HideCommentRequest) => {
     const presenter = new HideCommentPresenter(publicationCacheManager);
     const gateway = new HideCommentGateway(apolloClient);
-    const reaction = new ToggleProperty(gateway, presenter);
+    const toggle = new TogglePublicationProperty(gateway, presenter);
 
-    await reaction.remove(request);
+    await toggle.off(request);
   };
 
   return {

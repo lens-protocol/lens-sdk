@@ -356,6 +356,7 @@ fragment ProfileFields on Profile {
   stats(request: { forApps: $statsFor }) {
     ...ProfileStats
   }
+  peerToPeerRecommendedByMe
 }
 
 fragment Profile on Profile {

@@ -48,17 +48,17 @@ export function useNotInterestedToggle(): NotInterestedOperation {
     );
 
     const {
-      id: publicationId,
+      id,
       operations: { isNotInterested },
     } = isMirrorPublication(publication) ? publication.mirrorOn : publication;
 
     if (isNotInterested) {
       await remove({
-        publicationId,
+        id,
       });
     } else {
       await add({
-        publicationId,
+        id,
       });
     }
 

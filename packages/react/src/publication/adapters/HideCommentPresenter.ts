@@ -1,18 +1,15 @@
 import { isCommentPublication } from '@lens-protocol/api-bindings';
-import {
-  ITogglablePropertyPresenter,
-  TogglePropertyRequest,
-} from '@lens-protocol/domain/use-cases/publications';
+import { ITogglablePublicationPropertyPresenter } from '@lens-protocol/domain/use-cases/publications';
 
 import { HideCommentRequest } from './HideCommentGateway';
 import { IPublicationCacheManager } from './IPublicationCacheManager';
 
-export class HideCommentPresenter implements ITogglablePropertyPresenter<HideCommentRequest> {
+export class HideCommentPresenter implements ITogglablePublicationPropertyPresenter {
   constructor(private readonly publicationCacheManager: IPublicationCacheManager) {}
 
   // hide
-  async add({ publicationId }: TogglePropertyRequest) {
-    this.publicationCacheManager.update(publicationId, (current) => {
+  async on({ id }: HideCommentRequest) {
+    this.publicationCacheManager.update(id, (current) => {
       if (!isCommentPublication(current)) {
         return current;
       }
@@ -25,8 +22,8 @@ export class HideCommentPresenter implements ITogglablePropertyPresenter<HideCom
   }
 
   // unhide
-  async remove({ publicationId }: TogglePropertyRequest) {
-    this.publicationCacheManager.update(publicationId, (current) => {
+  async off({ id }: HideCommentRequest) {
+    this.publicationCacheManager.update(id, (current) => {
       if (!isCommentPublication(current)) {
         return current;
       }

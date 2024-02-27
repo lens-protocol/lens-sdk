@@ -8,6 +8,7 @@ export * from './createFollowingFieldPolicy';
 export * from './createMutualFollowersFieldPolicy';
 export * from './createProfileActionHistoryFieldPolicy';
 export * from './createProfileRecommendationsFieldPolicy';
+export * from './createProfileFieldPolicy';
 export * from './createProfilesFieldPolicy';
 export * from './createPublicationFieldPolicy';
 export * from './createPublicationsFieldPolicy';

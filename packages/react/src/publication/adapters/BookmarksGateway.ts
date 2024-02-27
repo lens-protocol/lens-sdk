@@ -8,27 +8,29 @@ import {
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
-  ITogglablePropertyGateway,
-  TogglePropertyRequest,
+  ITogglablePublicationPropertyGateway,
+  TogglePublicationPropertyRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 
-export type BookmarkRequest = TogglePropertyRequest;
+export type BookmarkRequest = TogglePublicationPropertyRequest;
 
-export class BookmarksGateway implements ITogglablePropertyGateway<BookmarkRequest> {
+export class BookmarksGateway implements ITogglablePublicationPropertyGateway {
   constructor(private apolloClient: SafeApolloClient) {}
 
-  async add({ publicationId }: BookmarkRequest): Promise<void> {
+  // add
+  async on({ id }: BookmarkRequest): Promise<void> {
     await this.apolloClient.mutate<AddPublicationBookmarkData, AddPublicationBookmarkVariables>({
       mutation: AddPublicationBookmarkDocument,
       variables: {
         request: {
-          on: publicationId,
+          on: id,
         },
       },
     });
   }
 
-  async remove({ publicationId }: BookmarkRequest): Promise<void> {
+  // remove
+  async off({ id }: BookmarkRequest): Promise<void> {
     await this.apolloClient.mutate<
       RemovePublicationBookmarkData,
       RemovePublicationBookmarkVariables
@@ -36,7 +38,7 @@ export class BookmarksGateway implements ITogglablePropertyGateway<BookmarkReque
       mutation: RemovePublicationBookmarkDocument,
       variables: {
         request: {
-          on: publicationId,
+          on: id,
         },
       },
     });
