@@ -1,8 +1,19 @@
-import { useCreateProfile } from '@lens-protocol/react-web';
+import { useCreateProfile, useProfilePrice } from '@lens-protocol/react-web';
 import toast from 'react-hot-toast';
 
 import { RequireConnectedWallet } from '../components/auth';
 import { formatProfileIdentifier } from '../utils/formatProfileIdentifier';
+
+function ProfilePrice() {
+  const { data: prices, loading, error } = useProfilePrice();
+
+  if (loading) return 'Fetching price...';
+  if (error) return 'Error fetching price.';
+
+  const maticPrice = prices.matic;
+
+  return <p>{`Price: ${maticPrice.toSignificantDigits()} ${maticPrice.asset.symbol}`}</p>;
+}
 
 export function CreateProfileForm({ address }: { address: string }) {
   const { execute, loading } = useCreateProfile();
@@ -40,6 +51,7 @@ export function CreateProfileForm({ address }: { address: string }) {
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
           <button disabled={loading}>Submit</button>
         </div>
+        <ProfilePrice />
       </fieldset>
     </form>
   );
