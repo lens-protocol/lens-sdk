@@ -31,32 +31,37 @@ const lensHubTransactionKinds = [
   TransactionKind.CREATE_QUOTE,
   TransactionKind.FOLLOW_PROFILE,
   TransactionKind.MIRROR_PUBLICATION,
-  TransactionKind.UPDATE_PROFILE_MANAGERS,
+  TransactionKind.UNFOLLOW_PROFILE,
   TransactionKind.UPDATE_FOLLOW_POLICY,
   TransactionKind.UPDATE_PROFILE_DETAILS,
+  TransactionKind.UPDATE_PROFILE_MANAGERS,
 ];
 
-// const tokenHandleRegistryTransactionKinds = []; // not used yet
+const tokenHandleRegistryTransactionKinds = [
+  TransactionKind.LINK_HANDLE,
+  TransactionKind.UNLINK_HANDLE,
+]; // not used yet
 
 const transactionKindToFilterGroup: { [k in TransactionKind]: TransactionKind[] } = {
   [TransactionKind.ACT_ON_PUBLICATION]: lensHubTransactionKinds,
   [TransactionKind.BLOCK_PROFILE]: lensHubTransactionKinds,
-  [TransactionKind.UNBLOCK_PROFILE]: lensHubTransactionKinds,
   [TransactionKind.CREATE_COMMENT]: lensHubTransactionKinds,
   [TransactionKind.CREATE_POST]: lensHubTransactionKinds,
   [TransactionKind.CREATE_QUOTE]: lensHubTransactionKinds,
   [TransactionKind.FOLLOW_PROFILE]: lensHubTransactionKinds,
   [TransactionKind.MIRROR_PUBLICATION]: lensHubTransactionKinds,
-  [TransactionKind.UPDATE_PROFILE_MANAGERS]: lensHubTransactionKinds,
+  [TransactionKind.UNBLOCK_PROFILE]: lensHubTransactionKinds,
+  [TransactionKind.UNFOLLOW_PROFILE]: lensHubTransactionKinds,
   [TransactionKind.UPDATE_FOLLOW_POLICY]: lensHubTransactionKinds,
   [TransactionKind.UPDATE_PROFILE_DETAILS]: lensHubTransactionKinds,
+  [TransactionKind.UPDATE_PROFILE_MANAGERS]: lensHubTransactionKinds,
+
+  [TransactionKind.LINK_HANDLE]: tokenHandleRegistryTransactionKinds,
+  [TransactionKind.UNLINK_HANDLE]: tokenHandleRegistryTransactionKinds,
 
   [TransactionKind.CLAIM_HANDLE]: [],
   [TransactionKind.APPROVE_MODULE]: [],
   [TransactionKind.CREATE_PROFILE]: [],
-  [TransactionKind.UNFOLLOW_PROFILE]: [],
-  [TransactionKind.LINK_HANDLE]: [],
-  [TransactionKind.UNLINK_HANDLE]: [],
 };
 
 function isSerializableMetaTransaction<T extends AnyTransactionRequest>(

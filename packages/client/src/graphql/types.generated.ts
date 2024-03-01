@@ -666,6 +666,26 @@ export enum MetadataAttributeType {
   String = 'STRING',
 }
 
+export type ModExplorePublicationRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  limit?: InputMaybe<LimitType>;
+  orderBy: ExplorePublicationsOrderByType;
+  where?: InputMaybe<ModExplorePublicationsWhere>;
+};
+
+export enum ModExplorePublicationType {
+  Comment = 'COMMENT',
+  Post = 'POST',
+  Quote = 'QUOTE',
+}
+
+export type ModExplorePublicationsWhere = {
+  customFilters?: InputMaybe<Array<CustomFiltersType>>;
+  metadata?: InputMaybe<PublicationMetadataFilters>;
+  publicationTypes?: InputMaybe<Array<ModExplorePublicationType>>;
+  since?: InputMaybe<Scalars['UnixTimestamp']['input']>;
+};
+
 export type ModuleCurrencyApproval = {
   followModule?: InputMaybe<FollowModuleType>;
   openActionModule?: InputMaybe<OpenActionModuleType>;
