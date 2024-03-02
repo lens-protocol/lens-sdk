@@ -219,7 +219,7 @@ export function useUpdateProfileManagers(): UseDeferredTask<
 
     if ('approveSignless' in args) {
       invariant(
-        args.approveSignless === session.profile.signless,
+        args.approveSignless !== session.profile.signless,
         `The Signless Experience is already ${args.approveSignless ? 'enabled' : 'disabled'}`,
       );
     }
