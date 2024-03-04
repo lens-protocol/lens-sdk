@@ -7,6 +7,7 @@ export * from './FollowProfile';
 export * from './LinkHandle';
 export * from './ReportProfile';
 export * from './SetProfileMetadata';
+export * from './ToggleProfileProperty';
 export * from './UnblockProfiles';
 export * from './UnfollowProfile';
 export * from './UnfollowProfile';

@@ -3,7 +3,7 @@ import {
   PublicationStats,
   isPrimaryPublication,
 } from '@lens-protocol/api-bindings';
-import { ITogglablePropertyPresenter } from '@lens-protocol/domain/use-cases/publications';
+import { ITogglablePublicationPropertyPresenter } from '@lens-protocol/domain/use-cases/publications';
 
 import { IPublicationCacheManager } from './IPublicationCacheManager';
 import { ReactionRequest } from './ReactionGateway';
@@ -60,11 +60,12 @@ function updateStatsOnRemove(stats: PublicationStats, reaction: PublicationReact
   }
 }
 
-export class ReactionPresenter implements ITogglablePropertyPresenter<ReactionRequest> {
+export class ReactionPresenter implements ITogglablePublicationPropertyPresenter {
   constructor(private readonly publicationCacheManager: IPublicationCacheManager) {}
 
-  async add(request: ReactionRequest): Promise<void> {
-    this.publicationCacheManager.update(request.publicationId, (current) => {
+  // add
+  async on(request: ReactionRequest): Promise<void> {
+    this.publicationCacheManager.update(request.id, (current) => {
       if (isPrimaryPublication(current)) {
         return {
           ...current,
@@ -83,8 +84,9 @@ export class ReactionPresenter implements ITogglablePropertyPresenter<ReactionRe
     });
   }
 
-  async remove(request: ReactionRequest): Promise<void> {
-    this.publicationCacheManager.update(request.publicationId, (current) => {
+  // remove
+  async off(request: ReactionRequest): Promise<void> {
+    this.publicationCacheManager.update(request.id, (current) => {
       if (isPrimaryPublication(current)) {
         return {
           ...current,

@@ -130,6 +130,7 @@ export function mockProfileFragment(overrides?: Partial<gql.Profile>): gql.Profi
     metadata: null,
     invitedBy: null,
     stats: mockProfileStatsFragment(),
+    peerToPeerRecommendedByMe: false,
 
     ...overrides,
     __typename: 'Profile',

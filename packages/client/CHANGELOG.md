@@ -1,5 +1,12 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.35
+
+### Patch Changes
+
+- 0e9de6f2a: **fix:** adds missing `lensPublicActProxyOnchainSigNonce` field to `UserSigNoncesFragment`
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.25
+
 ## 2.0.0-alpha.34
 
 ### Minor Changes

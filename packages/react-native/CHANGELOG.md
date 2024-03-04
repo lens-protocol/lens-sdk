@@ -1,5 +1,22 @@
 # @lens-protocol/react-native
 
+## 0.1.0-alpha.12
+
+### Minor Changes
+
+- 8869b5819: **feat:** added `useRecommendProfileToggle` hook
+
+### Patch Changes
+
+- 36a077785: **fix:** useUpdateProfileManagers preconditions logic when approving signless
+- 0e9de6f2a: **fix:** nonce management for link/unlink handles and unfollow profile
+- Updated dependencies [8869b5819]
+- Updated dependencies [36a077785]
+- Updated dependencies [0e9de6f2a]
+  - @lens-protocol/api-bindings@0.11.0-alpha.31
+  - @lens-protocol/domain@0.11.0-alpha.24
+  - @lens-protocol/react@2.0.0-alpha.35
+
 ## 0.1.0-alpha.11
 
 ### Minor Changes

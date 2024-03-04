@@ -54,6 +54,7 @@ import {
   UseProfileManagers,
   UseProfiles,
   UseProfilesManaged,
+  UseRecommendProfileToggle,
   UseReportProfile,
   UseSetProfileMetadata,
   UseUpdateFollowPolicy,
@@ -144,6 +145,7 @@ export function App() {
                   <Route path="useBlockedProfiles" element={<UseBlockedProfiles />} />
                   <Route path="useLastLoggedInProfile" element={<UseLastLoggedInProfile />} />
                   <Route path="useReportProfile" element={<UseReportProfile />} />
+                  <Route path="useRecommendProfileToggle" element={<UseRecommendProfileToggle />} />
                 </Route>
 
                 <Route path="/discovery">

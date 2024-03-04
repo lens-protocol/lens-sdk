@@ -8,39 +8,37 @@ import {
   SafeApolloClient,
   PublicationReactionType,
 } from '@lens-protocol/api-bindings';
-import {
-  TogglePropertyRequest,
-  ITogglablePropertyGateway,
-} from '@lens-protocol/domain/use-cases/publications';
-import { Prettify } from '@lens-protocol/shared-kernel';
+import { PublicationId } from '@lens-protocol/domain/entities';
+import { ITogglablePublicationPropertyGateway } from '@lens-protocol/domain/use-cases/publications';
 
-export type ReactionRequest = Prettify<
-  TogglePropertyRequest & {
-    reaction: PublicationReactionType;
-  }
->;
+export type ReactionRequest = {
+  id: PublicationId;
+  reaction: PublicationReactionType;
+};
 
-export class ReactionGateway implements ITogglablePropertyGateway<ReactionRequest> {
+export class ReactionGateway implements ITogglablePublicationPropertyGateway {
   constructor(private apolloClient: SafeApolloClient) {}
 
-  async add(request: ReactionRequest): Promise<void> {
+  // add
+  async on(request: ReactionRequest): Promise<void> {
     await this.apolloClient.mutate<AddReactionData, AddReactionVariables>({
       mutation: AddReactionDocument,
       variables: {
         request: {
-          for: request.publicationId,
+          for: request.id,
           reaction: request.reaction,
         },
       },
     });
   }
 
-  async remove(request: ReactionRequest): Promise<void> {
+  // remove
+  async off(request: ReactionRequest): Promise<void> {
     await this.apolloClient.mutate<RemoveReactionData, RemoveReactionVariables>({
       mutation: RemoveReactionDocument,
       variables: {
         request: {
-          for: request.publicationId,
+          for: request.id,
           reaction: request.reaction,
         },
       },

@@ -625,3 +625,11 @@ mutation CreateUnlinkHandleFromProfileTypedData(
 mutation ReportProfile($request: ReportProfileRequest!) {
   reportProfile(request: $request)
 }
+
+mutation PeerToPeerRecommend($request: PeerToPeerRecommendRequest!) {
+  peerToPeerRecommend(request: $request)
+}
+
+mutation PeerToPeerUnrecommend($request: PeerToPeerRecommendRequest!) {
+  peerToPeerUnrecommend(request: $request)
+}

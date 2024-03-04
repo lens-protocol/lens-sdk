@@ -106,6 +106,11 @@ const profileHooks = [
     description: 'Report a profile.',
     path: '/profiles/useReportProfile',
   },
+  {
+    label: 'useRecommendProfileToggle',
+    description: 'Recommend a profile.',
+    path: '/profiles/useRecommendProfileToggle',
+  },
 ];
 
 export function ProfilesPage() {

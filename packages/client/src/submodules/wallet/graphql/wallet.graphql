@@ -32,6 +32,7 @@ query ProfilesManaged(
 fragment UserSigNonces on UserSigNonces {
   lensHubOnchainSigNonce
   lensTokenHandleRegistryOnchainSigNonce
+  lensPublicActProxyOnchainSigNonce
 }
 
 query UserSigNonces {

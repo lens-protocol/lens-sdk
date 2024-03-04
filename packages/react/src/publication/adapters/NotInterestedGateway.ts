@@ -8,16 +8,17 @@ import {
   AddPublicationNotInterestedVariables,
 } from '@lens-protocol/api-bindings';
 import {
-  ITogglablePropertyGateway,
-  TogglePropertyRequest,
+  ITogglablePublicationPropertyGateway,
+  TogglePublicationPropertyRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 
-export type NotInterestedRequest = TogglePropertyRequest;
+export type NotInterestedRequest = TogglePublicationPropertyRequest;
 
-export class NotInterestedGateway implements ITogglablePropertyGateway<NotInterestedRequest> {
+export class NotInterestedGateway implements ITogglablePublicationPropertyGateway {
   constructor(private apolloClient: SafeApolloClient) {}
 
-  async add({ publicationId }: NotInterestedRequest): Promise<void> {
+  // add
+  async on({ id }: NotInterestedRequest): Promise<void> {
     await this.apolloClient.mutate<
       AddPublicationNotInterestedData,
       AddPublicationNotInterestedVariables
@@ -25,13 +26,14 @@ export class NotInterestedGateway implements ITogglablePropertyGateway<NotIntere
       mutation: AddPublicationNotInterestedDocument,
       variables: {
         request: {
-          on: publicationId,
+          on: id,
         },
       },
     });
   }
 
-  async remove({ publicationId }: NotInterestedRequest): Promise<void> {
+  // remove
+  async off({ id }: NotInterestedRequest): Promise<void> {
     await this.apolloClient.mutate<
       UndoPublicationNotInterestedData,
       UndoPublicationNotInterestedVariables
@@ -39,7 +41,7 @@ export class NotInterestedGateway implements ITogglablePropertyGateway<NotIntere
       mutation: UndoPublicationNotInterestedDocument,
       variables: {
         request: {
-          on: publicationId,
+          on: id,
         },
       },
     });

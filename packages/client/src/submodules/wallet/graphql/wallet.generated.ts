@@ -42,6 +42,7 @@ export type ProfilesManagedQuery = {
 export type UserSigNoncesFragment = {
   lensHubOnchainSigNonce: number;
   lensTokenHandleRegistryOnchainSigNonce: number;
+  lensPublicActProxyOnchainSigNonce: number;
 };
 
 export type UserSigNoncesQueryVariables = Types.Exact<{ [key: string]: never }>;
@@ -141,6 +142,7 @@ export const UserSigNoncesFragmentDoc = {
             kind: 'Field',
             name: { kind: 'Name', value: 'lensTokenHandleRegistryOnchainSigNonce' },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensPublicActProxyOnchainSigNonce' } },
         ],
       },
     },
@@ -1505,6 +1507,7 @@ export const UserSigNoncesDocument = {
             kind: 'Field',
             name: { kind: 'Name', value: 'lensTokenHandleRegistryOnchainSigNonce' },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensPublicActProxyOnchainSigNonce' } },
         ],
       },
     },

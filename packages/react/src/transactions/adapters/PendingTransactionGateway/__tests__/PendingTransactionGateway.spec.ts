@@ -241,22 +241,20 @@ describe(`Given an instance of the ${PendingTransactionGateway.name}`, () => {
         }
       });
 
-      // TODO update with Link/Unlink tx types once ready
-      it.skip(`should not be affected by ${MetaTransaction.name} for methods exposed on TokenHandleRegistry.sol contract`, async () => {
-        const request = mockSetProfileMetadataRequest();
+      it(`should not be affected by ${MetaTransaction.name} for methods exposed on TokenHandleRegistry.sol contract`, async () => {
+        const request = mockCreatePostRequest();
         const gateway = setupPendingTransactionGateway({ factory });
         const init = mockMetaTransactionData({ request });
         const tx = factory.createMetaTransaction(init);
         await gateway.save(tx);
 
-        const nonce = await gateway.getNextMetaTransactionNonceFor(TransactionKind.CREATE_POST);
+        const nonce = await gateway.getNextMetaTransactionNonceFor(TransactionKind.LINK_HANDLE);
 
         expect(nonce).toBeUndefined();
       });
     });
 
-    // TODO update with Link/Unlink tx types once ready
-    describe.skip('for a TransactionKind corresponding to a protocol method exposed on the TokenHandleRegistry.sol contract', () => {
+    describe('for a TransactionKind corresponding to a protocol method exposed on the TokenHandleRegistry.sol contract', () => {
       it(`should compute the next Nonce based on the most recent ${MetaTransaction.name} exposed from the same contract`, async () => {
         const gateway = setupPendingTransactionGateway({ factory });
 
@@ -268,40 +266,20 @@ describe(`Given an instance of the ${PendingTransactionGateway.name}`, () => {
 
           await gateway.save(tx);
 
-          expect(
-            await gateway.getNextMetaTransactionNonceFor(TransactionKind.UPDATE_PROFILE_DETAILS),
-          ).toBe(tx.nonce + 1);
+          expect(await gateway.getNextMetaTransactionNonceFor(TransactionKind.LINK_HANDLE)).toBe(
+            tx.nonce + 1,
+          );
         }
       });
 
       it(`should not be affected by ${MetaTransaction.name} for methods exposed on LensHub.sol contract`, async () => {
-        const request = mockCreatePostRequest();
+        const request = mockLinkHandleRequest();
         const gateway = setupPendingTransactionGateway({ factory });
         const init = mockMetaTransactionData({ request });
         const tx = factory.createMetaTransaction(init);
         await gateway.save(tx);
 
-        const nonce = await gateway.getNextMetaTransactionNonceFor(
-          TransactionKind.UPDATE_PROFILE_DETAILS,
-        );
-
-        expect(nonce).toBeUndefined();
-      });
-    });
-
-    describe(`for ${TransactionKind.UNFOLLOW_PROFILE} meta-tx`, () => {
-      const request = mockUnfollowRequest();
-      const init = mockMetaTransactionData({ request });
-      const tx = factory.createMetaTransaction(init);
-
-      it(`should always return undefined cause the burn method is on Follow NFT contract
-            and keeping accurate tracking of nonces is more complex and not worth it`, async () => {
-        const gateway = setupPendingTransactionGateway({ factory });
-        await gateway.save(tx);
-
-        const nonce = await gateway.getNextMetaTransactionNonceFor(
-          TransactionKind.UNFOLLOW_PROFILE,
-        );
+        const nonce = await gateway.getNextMetaTransactionNonceFor(TransactionKind.CREATE_POST);
 
         expect(nonce).toBeUndefined();
       });

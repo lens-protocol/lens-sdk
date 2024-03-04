@@ -1,17 +1,15 @@
 import { isPrimaryPublication } from '@lens-protocol/api-bindings';
-import {
-  ITogglablePropertyPresenter,
-  TogglePropertyRequest,
-} from '@lens-protocol/domain/use-cases/publications';
+import { ITogglablePublicationPropertyPresenter } from '@lens-protocol/domain/use-cases/publications';
 
 import { BookmarkRequest } from './BookmarksGateway';
 import { IPublicationCacheManager } from './IPublicationCacheManager';
 
-export class BookmarksPresenter implements ITogglablePropertyPresenter<BookmarkRequest> {
+export class BookmarksPresenter implements ITogglablePublicationPropertyPresenter {
   constructor(private readonly publicationCacheManager: IPublicationCacheManager) {}
 
-  async add({ publicationId }: TogglePropertyRequest) {
-    this.publicationCacheManager.update(publicationId, (current) => {
+  // add
+  async on({ id }: BookmarkRequest) {
+    this.publicationCacheManager.update(id, (current) => {
       if (!isPrimaryPublication(current)) {
         return current;
       }
@@ -26,8 +24,9 @@ export class BookmarksPresenter implements ITogglablePropertyPresenter<BookmarkR
     });
   }
 
-  async remove({ publicationId }: TogglePropertyRequest) {
-    this.publicationCacheManager.update(publicationId, (current) => {
+  // remove
+  async off({ id }: BookmarkRequest) {
+    this.publicationCacheManager.update(id, (current) => {
       if (!isPrimaryPublication(current)) {
         return current;
       }

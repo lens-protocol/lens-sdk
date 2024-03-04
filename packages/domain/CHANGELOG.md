@@ -1,5 +1,11 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.24
+
+### Minor Changes
+
+- 8869b5819: **feat:** added `useRecommendProfileToggle` hook
+
 ## 0.11.0-alpha.23
 
 ### Minor Changes
