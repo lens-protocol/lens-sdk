@@ -1,5 +1,16 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.31
+
+### Minor Changes
+
+- 8869b5819: **feat:** added `useRecommendProfileToggle` hook
+
+### Patch Changes
+
+- Updated dependencies [8869b5819]
+  - @lens-protocol/domain@0.11.0-alpha.24
+
 ## 0.11.0-alpha.30
 
 ### Minor Changes
