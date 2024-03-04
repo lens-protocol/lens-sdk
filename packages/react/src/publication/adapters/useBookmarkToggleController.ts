@@ -1,4 +1,4 @@
-import { ToggleProperty } from '@lens-protocol/domain/use-cases/publications';
+import { TogglePublicationProperty } from '@lens-protocol/domain/use-cases/publications';
 
 import { useSharedDependencies } from '../../shared';
 import { BookmarkRequest, BookmarksGateway } from './BookmarksGateway';
@@ -10,17 +10,17 @@ export function useBookmarkToggleController() {
   const add = async (request: BookmarkRequest) => {
     const presenter = new BookmarksPresenter(publicationCacheManager);
     const gateway = new BookmarksGateway(apolloClient);
-    const bookmark = new ToggleProperty(gateway, presenter);
+    const toggle = new TogglePublicationProperty(gateway, presenter);
 
-    await bookmark.add(request);
+    await toggle.on(request);
   };
 
   const remove = async (request: BookmarkRequest) => {
     const presenter = new BookmarksPresenter(publicationCacheManager);
     const gateway = new BookmarksGateway(apolloClient);
-    const bookmark = new ToggleProperty(gateway, presenter);
+    const toggle = new TogglePublicationProperty(gateway, presenter);
 
-    await bookmark.remove(request);
+    await toggle.off(request);
   };
 
   return {

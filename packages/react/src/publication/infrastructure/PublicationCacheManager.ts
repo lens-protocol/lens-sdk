@@ -3,6 +3,7 @@ import {
   AllFragmentVariables,
   AnyPublication,
   Comment,
+  FragmentAnyPublicationInternal,
   isCommentPublication,
   isMirrorPublication,
   isPostPublication,
@@ -66,22 +67,16 @@ export class PublicationCacheManager implements IPublicationCacheManager {
     publicationId: PublicationId,
     updateFn: <TPublication extends AnyPublication>(current: TPublication) => TPublication,
   ) {
-    this.client.cache.updateQuery<PublicationData, PublicationVariables>(
+    this.client.cache.updateFragment(
       {
-        query: PublicationDocument,
-        variables: {
-          request: {
-            forId: publicationId,
-          },
-          ...this.variables,
-        },
+        id: this.client.cache.identify({ __typename: 'AnyPublication', id: publicationId }),
+        fragment: FragmentAnyPublicationInternal,
+        fragmentName: 'AnyPublicationInternal',
+        variables: this.variables,
       },
-      (data) => {
-        if (data?.result) {
-          return {
-            ...data,
-            result: updateFn(data.result),
-          };
+      (data: AnyPublication | null) => {
+        if (data) {
+          return updateFn(data);
         }
         return data;
       },

@@ -1,17 +1,15 @@
 import { isPrimaryPublication } from '@lens-protocol/api-bindings';
-import {
-  ITogglablePropertyPresenter,
-  TogglePropertyRequest,
-} from '@lens-protocol/domain/use-cases/publications';
+import { ITogglablePublicationPropertyPresenter } from '@lens-protocol/domain/use-cases/publications';
 
 import { IPublicationCacheManager } from './IPublicationCacheManager';
 import { NotInterestedRequest } from './NotInterestedGateway';
 
-export class NotInterestedPresenter implements ITogglablePropertyPresenter<NotInterestedRequest> {
+export class NotInterestedPresenter implements ITogglablePublicationPropertyPresenter {
   constructor(private readonly publicationCacheManager: IPublicationCacheManager) {}
 
-  async add({ publicationId }: TogglePropertyRequest) {
-    this.publicationCacheManager.update(publicationId, (current) => {
+  // add
+  async on({ id }: NotInterestedRequest) {
+    this.publicationCacheManager.update(id, (current) => {
       if (!isPrimaryPublication(current)) {
         return current;
       }
@@ -26,8 +24,9 @@ export class NotInterestedPresenter implements ITogglablePropertyPresenter<NotIn
     });
   }
 
-  async remove({ publicationId }: TogglePropertyRequest) {
-    this.publicationCacheManager.update(publicationId, (current) => {
+  // remove
+  async off({ id }: NotInterestedRequest) {
+    this.publicationCacheManager.update(id, (current) => {
       if (!isPrimaryPublication(current)) {
         return current;
       }

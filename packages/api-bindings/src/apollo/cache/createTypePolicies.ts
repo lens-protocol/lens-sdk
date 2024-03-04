@@ -68,6 +68,8 @@ export function createTypePolicies(): StrictTypedTypePolicies & InheritedTypePol
         mutualFollowers: createMutualFollowersFieldPolicy(),
         profileActionHistory: createProfileActionHistoryFieldPolicy(),
         profileRecommendations: createProfileRecommendationsFieldPolicy(),
+        // TODO: investigate correct usage of cache redirect
+        // profile: createProfileFieldPolicy() as FieldPolicy<unknown>,
         profiles: createProfilesFieldPolicy(),
         publication: createPublicationFieldPolicy() as FieldPolicy<unknown>,
         publications: createPublicationsFieldPolicy(),

@@ -1,4 +1,4 @@
-import { ToggleProperty } from '@lens-protocol/domain/use-cases/publications';
+import { TogglePublicationProperty } from '@lens-protocol/domain/use-cases/publications';
 
 import { useSharedDependencies } from '../../shared';
 import { ReactionRequest, ReactionGateway } from './ReactionGateway';
@@ -10,17 +10,17 @@ export function useReactionToggleController() {
   const add = async (request: ReactionRequest) => {
     const presenter = new ReactionPresenter(publicationCacheManager);
     const gateway = new ReactionGateway(apolloClient);
-    const reaction = new ToggleProperty(gateway, presenter);
+    const toggle = new TogglePublicationProperty(gateway, presenter);
 
-    await reaction.add(request);
+    await toggle.on(request);
   };
 
   const remove = async (request: ReactionRequest) => {
     const presenter = new ReactionPresenter(publicationCacheManager);
     const gateway = new ReactionGateway(apolloClient);
-    const reaction = new ToggleProperty(gateway, presenter);
+    const toggle = new TogglePublicationProperty(gateway, presenter);
 
-    await reaction.remove(request);
+    await toggle.off(request);
   };
 
   return {

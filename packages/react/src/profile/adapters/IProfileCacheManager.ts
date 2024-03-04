@@ -5,4 +5,8 @@ export interface IProfileCacheManager {
   fetchProfileById(id: ProfileId): Promise<Profile | null>;
   fetchProfileByHandle(fullHandle: string): Promise<Profile | null>;
   refreshCurrentProfile(): Promise<void>;
+  update(
+    profileId: ProfileId,
+    updateFn: <TProfile extends Profile>(current: TProfile) => TProfile,
+  ): void;
 }

@@ -8,34 +8,34 @@ import {
   UnhideCommentVariables,
 } from '@lens-protocol/api-bindings';
 import {
-  ITogglablePropertyGateway,
-  TogglePropertyRequest,
+  ITogglablePublicationPropertyGateway,
+  TogglePublicationPropertyRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 
-export type HideCommentRequest = TogglePropertyRequest;
+export type HideCommentRequest = TogglePublicationPropertyRequest;
 
-export class HideCommentGateway implements ITogglablePropertyGateway<HideCommentRequest> {
+export class HideCommentGateway implements ITogglablePublicationPropertyGateway {
   constructor(private apolloClient: SafeApolloClient) {}
 
   // hide
-  async add({ publicationId }: HideCommentRequest): Promise<void> {
+  async on({ id }: HideCommentRequest): Promise<void> {
     await this.apolloClient.mutate<HideCommentData, HideCommentVariables>({
       mutation: HideCommentDocument,
       variables: {
         request: {
-          for: publicationId,
+          for: id,
         },
       },
     });
   }
 
   // unhide
-  async remove({ publicationId }: HideCommentRequest): Promise<void> {
+  async off({ id }: HideCommentRequest): Promise<void> {
     await this.apolloClient.mutate<UnhideCommentData, UnhideCommentVariables>({
       mutation: UnhideCommentDocument,
       variables: {
         request: {
-          for: publicationId,
+          for: id,
         },
       },
     });

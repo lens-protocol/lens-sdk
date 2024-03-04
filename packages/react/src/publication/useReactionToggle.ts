@@ -92,12 +92,12 @@ export function useReactionToggle(): UseDeferredTask<void, never, ReactionToggle
 
     if (hasReacted({ publication, reaction })) {
       await remove({
-        publicationId: publication.id,
+        id: publication.id,
         reaction: reaction,
       });
     } else {
       await add({
-        publicationId: publication.id,
+        id: publication.id,
         reaction: reaction,
       });
     }

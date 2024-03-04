@@ -54,11 +54,11 @@ export function useHideCommentToggle(): UseDeferredTask<void, never, UseHideComm
 
     if (comment.hiddenByAuthor) {
       await unhide({
-        publicationId: comment.id,
+        id: comment.id,
       });
     } else {
       await hide({
-        publicationId: comment.id,
+        id: comment.id,
       });
     }
 

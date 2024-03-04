@@ -52,11 +52,11 @@ export function useBookmarkToggle(): UseDeferredTask<void, never, UseBookmarkTog
 
     if (target.operations.hasBookmarked) {
       await remove({
-        publicationId: target.id,
+        id: target.id,
       });
     } else {
       await add({
-        publicationId: target.id,
+        id: target.id,
       });
     }
 

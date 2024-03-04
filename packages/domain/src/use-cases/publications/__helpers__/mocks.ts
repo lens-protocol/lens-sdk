@@ -20,7 +20,6 @@ import {
 import { OpenActionType, UnknownOpenActionConfig } from '../OpenActionConfig';
 import { AnyoneReferencePolicyConfig, ReferencePolicyType } from '../ReferencePolicyConfig';
 import { ReportPublicationRequest } from '../ReportPublication';
-import { TogglePropertyRequest } from '../ToggleProperty';
 
 export function mockCreateMirrorRequest(
   overrides?: Partial<CreateMirrorRequest>,
@@ -73,15 +72,6 @@ export function mockCreateQuoteRequest(
     quoteOn: mockPublicationId(),
     ...overrides,
     kind: TransactionKind.CREATE_QUOTE,
-  };
-}
-
-export function mockTogglePropertyRequest(
-  overrides?: Partial<TogglePropertyRequest>,
-): TogglePropertyRequest {
-  return {
-    publicationId: mockPublicationId(),
-    ...overrides,
   };
 }
 

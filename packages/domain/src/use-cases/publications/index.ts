@@ -7,4 +7,4 @@ export * from './OpenAction';
 export * from './OpenActionConfig';
 export * from './ReferencePolicyConfig';
 export * from './ReportPublication';
-export * from './ToggleProperty';
+export * from './TogglePublicationProperty';
