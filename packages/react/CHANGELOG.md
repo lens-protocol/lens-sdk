@@ -1,5 +1,20 @@
 # @lens-protocol/react
 
+## 2.0.0-alpha.35
+
+### Minor Changes
+
+- 8869b5819: **feat:** added `useRecommendProfileToggle` hook
+
+### Patch Changes
+
+- 36a077785: **fix:** useUpdateProfileManagers preconditions logic when approving signless
+- 0e9de6f2a: **fix:** nonce management for link/unlink handles and unfollow profile
+- Updated dependencies [8869b5819]
+  - @lens-protocol/api-bindings@0.11.0-alpha.31
+  - @lens-protocol/domain@0.11.0-alpha.24
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.25
+
 ## 2.0.0-alpha.34
 
 ### Minor Changes
