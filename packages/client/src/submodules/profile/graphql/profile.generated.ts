@@ -477,6 +477,18 @@ export type ReportProfileMutationVariables = Types.Exact<{
 
 export type ReportProfileMutation = { reportProfile: string | null };
 
+export type PeerToPeerRecommendMutationVariables = Types.Exact<{
+  request: Types.PeerToPeerRecommendRequest;
+}>;
+
+export type PeerToPeerRecommendMutation = { peerToPeerRecommend: string | null };
+
+export type PeerToPeerUnrecommendMutationVariables = Types.Exact<{
+  request: Types.PeerToPeerRecommendRequest;
+}>;
+
+export type PeerToPeerUnrecommendMutation = { peerToPeerUnrecommend: string | null };
+
 export const ProfileManagerFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -1761,6 +1773,7 @@ export const ProfileDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -1961,7 +1974,6 @@ export const ProfileDocument = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'followModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -2066,24 +2078,6 @@ export const ProfileDocument = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -2388,90 +2382,7 @@ export const ProfileDocument = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
         ],
       },
     },
@@ -2841,6 +2752,7 @@ export const DefaultProfileDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -3041,7 +2953,6 @@ export const DefaultProfileDocument = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'followModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -3146,24 +3057,6 @@ export const DefaultProfileDocument = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -3468,90 +3361,7 @@ export const DefaultProfileDocument = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
         ],
       },
     },
@@ -3945,6 +3755,7 @@ export const ProfilesDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -4145,7 +3956,6 @@ export const ProfilesDocument = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'followModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -4250,24 +4060,6 @@ export const ProfilesDocument = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -4572,90 +4364,7 @@ export const ProfilesDocument = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
         ],
       },
     },
@@ -5153,6 +4862,7 @@ export const ProfileRecommendationsDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -5353,7 +5063,6 @@ export const ProfileRecommendationsDocument = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'followModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -5458,24 +5167,6 @@ export const ProfileRecommendationsDocument = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -5780,90 +5471,7 @@ export const ProfileRecommendationsDocument = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
         ],
       },
     },
@@ -6269,6 +5877,7 @@ export const FollowingDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -6469,7 +6078,6 @@ export const FollowingDocument = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'followModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -6574,24 +6182,6 @@ export const FollowingDocument = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -6896,90 +6486,7 @@ export const FollowingDocument = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
         ],
       },
     },
@@ -7385,6 +6892,7 @@ export const FollowersDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -7585,7 +7093,6 @@ export const FollowersDocument = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'followModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -7690,24 +7197,6 @@ export const FollowersDocument = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -8012,90 +7501,7 @@ export const FollowersDocument = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
         ],
       },
     },
@@ -8501,6 +7907,7 @@ export const MutualFollowersDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -8701,7 +8108,6 @@ export const MutualFollowersDocument = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'followModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -8806,24 +8212,6 @@ export const MutualFollowersDocument = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -9128,90 +8516,7 @@ export const MutualFollowersDocument = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
         ],
       },
     },
@@ -9698,6 +9003,7 @@ export const WhoActedOnPublicationDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -9898,7 +9204,6 @@ export const WhoActedOnPublicationDocument = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'followModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -10003,24 +9308,6 @@ export const WhoActedOnPublicationDocument = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -10325,90 +9612,7 @@ export const WhoActedOnPublicationDocument = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
         ],
       },
     },
@@ -10912,6 +10116,7 @@ export const WhoHaveBlockedDocument = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -11112,7 +10317,6 @@ export const WhoHaveBlockedDocument = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'followModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -11217,24 +10421,6 @@ export const WhoHaveBlockedDocument = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -11539,90 +10725,7 @@ export const WhoHaveBlockedDocument = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
         ],
       },
     },
@@ -13945,6 +13048,84 @@ export const ReportProfileDocument = {
     },
   ],
 } as unknown as DocumentNode;
+export const PeerToPeerRecommendDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'PeerToPeerRecommend' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'PeerToPeerRecommendRequest' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'peerToPeerRecommend' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const PeerToPeerUnrecommendDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'PeerToPeerUnrecommend' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'PeerToPeerRecommendRequest' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'peerToPeerUnrecommend' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -13995,6 +13176,8 @@ const CreateUnlinkHandleFromProfileTypedDataDocumentString = print(
   CreateUnlinkHandleFromProfileTypedDataDocument,
 );
 const ReportProfileDocumentString = print(ReportProfileDocument);
+const PeerToPeerRecommendDocumentString = print(PeerToPeerRecommendDocument);
+const PeerToPeerUnrecommendDocumentString = print(PeerToPeerUnrecommendDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Profile(
@@ -14618,6 +13801,46 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'ReportProfile',
+        'mutation',
+      );
+    },
+    PeerToPeerRecommend(
+      variables: PeerToPeerRecommendMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: PeerToPeerRecommendMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<PeerToPeerRecommendMutation>(
+            PeerToPeerRecommendDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'PeerToPeerRecommend',
+        'mutation',
+      );
+    },
+    PeerToPeerUnrecommend(
+      variables: PeerToPeerUnrecommendMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: PeerToPeerUnrecommendMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<PeerToPeerUnrecommendMutation>(
+            PeerToPeerUnrecommendDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'PeerToPeerUnrecommend',
         'mutation',
       );
     },

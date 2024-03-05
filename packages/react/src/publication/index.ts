@@ -3,6 +3,7 @@
  */
 export * from './useBookmarks';
 export * from './useBookmarkToggle';
+export * from './useHideCommentToggle';
 export * from './useHidePublication';
 export * from './useLazyPublication';
 export * from './useLazyPublications';
@@ -61,6 +62,7 @@ export {
   resolveReferencePolicy,
 } from '@lens-protocol/api-bindings';
 export type {
+  CollectModuleSettings,
   ReferenceModule,
   ReferencePolicy,
   FollowersOnlyReferencePolicy,

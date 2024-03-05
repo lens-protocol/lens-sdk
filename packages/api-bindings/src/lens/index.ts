@@ -1,4 +1,4 @@
-import { StoreValue } from '@apollo/client';
+import { Reference } from '@apollo/client';
 
 import { PaginatedResultInfo } from './graphql/generated';
 
@@ -10,14 +10,14 @@ export type {
   Percentage,
   Pixel,
 } from './ImageTransform';
+export * from './variables';
 export * from './utils';
 export * from './publication';
 export * from './FollowModule';
-export * from './ContentInsight';
 export * from './Cursor';
 export * from './ReferenceModule';
 
-export type CursorBasedPaginatedResult<T = StoreValue> = {
+export type CursorBasedPaginatedResult<T = Reference> = {
   items: T[];
   pageInfo: PaginatedResultInfo;
 };

@@ -1,6 +1,5 @@
 import {
   FollowersDocument,
-  FollowersVariables,
   FollowingDocument,
   FollowingVariables,
   MutualFollowersDocument,
@@ -23,6 +22,7 @@ import {
   WhoActedOnPublicationVariables,
   WhoReactedPublicationDocument,
   WhoReactedPublicationVariables,
+  FollowersVariables,
 } from '../../graphql/generated';
 import { mockPaginatedResultInfo } from '../fragments';
 import { mockAnyPaginatedResponse, mockAnyResponse } from './helpers';
@@ -31,7 +31,7 @@ export function mockProfileResponse({
   variables,
   result,
 }: {
-  variables: ProfileVariables;
+  variables: Pick<ProfileVariables, 'request'>;
   result: Profile | null;
 }) {
   return mockAnyResponse({
@@ -50,7 +50,7 @@ export function mockProfilesResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: ProfilesVariables;
+  variables: Pick<ProfilesVariables, 'where' | 'cursor'>;
   items: Profile[];
   info?: PaginatedResultInfo;
 }) {
@@ -67,7 +67,7 @@ export function mockMutualFollowersResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: MutualFollowersVariables;
+  variables: Pick<MutualFollowersVariables, 'observer' | 'viewing'>;
   items: Profile[];
   info?: PaginatedResultInfo;
 }) {
@@ -84,7 +84,7 @@ export function mockFollowersResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: FollowersVariables;
+  variables: Pick<FollowersVariables, 'of'>;
   items: Profile[];
   info?: PaginatedResultInfo;
 }) {
@@ -101,7 +101,7 @@ export function mockFollowingResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: FollowingVariables;
+  variables: Pick<FollowingVariables, 'for'>;
   items: Profile[];
   info?: PaginatedResultInfo;
 }) {
@@ -118,7 +118,7 @@ export function mockSearchProfilesResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: SearchProfilesVariables;
+  variables: Pick<SearchProfilesVariables, 'limit' | 'query' | 'where'>;
   items: Profile[];
   info?: PaginatedResultInfo;
 }) {
@@ -135,7 +135,7 @@ export function mockProfileRecommendationsResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: ProfileRecommendationsVariables;
+  variables: Pick<ProfileRecommendationsVariables, 'for'>;
   items: Profile[];
   info?: PaginatedResultInfo;
 }) {
@@ -152,7 +152,7 @@ export function mockWhoActedOnPublicationResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: WhoActedOnPublicationVariables;
+  variables: Pick<WhoActedOnPublicationVariables, 'on' | 'where'>;
   items: Profile[];
   info?: PaginatedResultInfo;
 }) {
@@ -194,7 +194,7 @@ export function mockWhoReactedToPublicationResponse({
   items,
   info = mockPaginatedResultInfo(),
 }: {
-  variables: WhoReactedPublicationVariables;
+  variables: Pick<WhoReactedPublicationVariables, 'for' | 'limit' | 'where'>;
   items: ProfileWhoReactedResult[];
   info?: PaginatedResultInfo;
 }) {

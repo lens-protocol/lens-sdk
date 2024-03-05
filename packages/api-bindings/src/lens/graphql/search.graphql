@@ -3,15 +3,14 @@ query SearchPublications(
   $where: PublicationSearchWhere
   $limit: LimitType
   $cursor: Cursor
-  $imageSmallSize: ImageTransform = {}
-  $imageMediumSize: ImageTransform = {}
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $imageSmallSize: ImageTransform!
+  $imageMediumSize: ImageTransform!
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
-  ...InjectQueryParams
   result: searchPublications(
     request: { query: $query, where: $where, cursor: $cursor, limit: $limit }
   ) {
@@ -37,13 +36,12 @@ query SearchProfiles(
   $where: ProfileSearchWhere
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
-  ...InjectQueryParams
   result: searchProfiles(
     request: { query: $query, where: $where, limit: $limit, cursor: $cursor }
   ) {

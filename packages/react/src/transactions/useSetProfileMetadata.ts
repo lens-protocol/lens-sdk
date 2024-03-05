@@ -10,8 +10,10 @@ import { invariant } from '@lens-protocol/shared-kernel';
 
 import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
+import { uri } from '../utils';
 import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useSetProfileMetadataController } from './adapters/useSetProfileMetadataController';
+import { useSponsoredConfig } from './shared/useSponsoredConfig';
 
 export type UseSetProfileMetadataArgs = {
   /**
@@ -230,6 +232,7 @@ export function useSetProfileMetadata(): UseDeferredTask<
 > {
   const setProfileMetadata = useSetProfileMetadataController();
   const { data: session } = useSession();
+  const configureRequest = useSponsoredConfig();
 
   return useDeferredTask(async (args: UseSetProfileMetadataArgs) => {
     invariant(
@@ -237,11 +240,13 @@ export function useSetProfileMetadata(): UseDeferredTask<
       'You must be authenticated to set profile metadata. Use `useLogin` hook to authenticate.',
     );
 
-    return setProfileMetadata({
+    const request = configureRequest({
       kind: TransactionKind.UPDATE_PROFILE_DETAILS,
       signless: session.profile.signless,
-      metadataURI: args.metadataURI,
+      metadataURI: uri(args.metadataURI),
       sponsored: args.sponsored ?? true,
     });
+
+    return setProfileMetadata(request);
   });
 }

@@ -3,6 +3,7 @@ import { PublicationId } from '@lens-protocol/domain/entities';
 
 import {
   OpenActionCategoryType,
+  OptimisticStatusResult,
   PublicationOperationsActedArgs,
   StrictTypedTypePolicies,
   TriStateValue,
@@ -35,6 +36,30 @@ export function createPublicationOperationsTypePolicy(): StrictTypedTypePolicies
             const id = readField('id') as PublicationId;
 
             return countAnyPendingCollectFor(id) > 0 ? TriStateValue.No : TriStateValue.Yes;
+          }
+
+          return existing;
+        },
+      },
+      hasActed: {
+        read(
+          existing: OptimisticStatusResult | undefined,
+          { args, readField }: FieldFunctionOptions<PublicationOperationsCanActArgs>,
+        ): OptimisticStatusResult | undefined {
+          if (!existing) {
+            return existing;
+          }
+
+          if (args && isCanCollectAlias(args)) {
+            const id = readField('id') as PublicationId;
+
+            if (countAnyPendingCollectFor(id) > 0) {
+              return {
+                ...existing,
+                value: true,
+                isFinalisedOnchain: false,
+              };
+            }
           }
 
           return existing;

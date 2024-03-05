@@ -44,20 +44,6 @@ export function ProfileCard({ profile, children }: ProfileCardProps) {
           <ProfilePicture picture={metadata.picture} />
           {metadata.displayName && <p>Name: {metadata.displayName}</p>}
           {metadata.bio && <p>Bio: {metadata.bio}</p>}
-
-          {metadata.attributes && (
-            <>
-              <p>Attributes</p>
-              <ul>
-                {(metadata.attributes ?? []).map((attribute, idx) => (
-                  <li key={`${attribute.key}-${idx}`}>
-                    <b>{attribute.key}:</b>&nbsp;
-                    {attribute.value}
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
         </div>
       )}
 

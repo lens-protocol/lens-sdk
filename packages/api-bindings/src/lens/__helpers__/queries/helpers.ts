@@ -2,33 +2,35 @@ import { OperationVariables } from '@apollo/client';
 import { MockedResponse } from '@apollo/client/testing';
 import { DocumentNode } from 'graphql';
 
-import { defaultQueryParams } from '../../../apollo';
-import { PaginatedResultInfo, SupportedFiatType } from '../../graphql/generated';
+import { PaginatedResultInfo } from '../../graphql/generated';
 import { mockPaginatedResultInfo } from '../fragments';
 
+/**
+ * Mock any response by matching the query and variables.
+ */
 export function mockAnyResponse(bulk: MockedResponse) {
   return {
     request: {
       query: bulk.request.query,
-      variables: {
-        ...bulk.request.variables,
-        // The values below should match the superset of the variables default values used in
-        // any query that needs such variables. The fact one query might use a subset of these
-        // variables is irrelevant.
-        fxRateFor: SupportedFiatType.Usd,
-        imageMediumSize: defaultQueryParams.image?.medium ?? {},
-        imageSmallSize: defaultQueryParams.image?.small ?? {},
-        profileCoverSize: defaultQueryParams.profile?.cover ?? {},
-        profilePictureSize: defaultQueryParams.profile?.thumbnail ?? {},
-        profileMetadataSource: null,
-      },
+    },
+    variableMatcher: (variables: OperationVariables) => {
+      if (!bulk.request.variables) {
+        return true;
+      }
+
+      try {
+        expect(variables).toMatchObject(bulk.request.variables);
+        return true;
+      } catch {
+        return false;
+      }
     },
     result: bulk.result,
   };
 }
 
 /**
- * Mock any paginated responses.
+ * Mock any paginated responses by matching the query and variables.
  */
 export function mockAnyPaginatedResponse<V extends OperationVariables, I>({
   variables,

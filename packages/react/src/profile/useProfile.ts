@@ -9,6 +9,7 @@ import { invariant, OneOf } from '@lens-protocol/shared-kernel';
 import { NotFoundError } from '../NotFoundError';
 import { useLensApolloClient } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
+import { useFragmentVariables } from '../helpers/variables';
 
 /**
  * {@link useProfile} hook arguments
@@ -54,12 +55,12 @@ export function useProfile({
   const { data, error, loading } = useReadResult(
     useProfileHook(
       useLensApolloClient({
-        variables: {
+        variables: useFragmentVariables({
           request: {
             ...(forHandle && { forHandle }),
             ...(forProfileId && { forProfileId }),
           },
-        },
+        }),
         fetchPolicy: 'cache-and-network',
         nextFetchPolicy: 'cache-first',
       }),

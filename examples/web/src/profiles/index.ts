@@ -15,6 +15,7 @@ export * from './UseProfileFollowing';
 export * from './UseProfileManagers';
 export * from './UseProfiles';
 export * from './UseProfilesManaged';
+export * from './UseRecommendProfileToggle';
 export * from './UseReportProfile';
 export * from './UseSetProfileMetadata';
 export * from './UseUpdateFollowPolicy';

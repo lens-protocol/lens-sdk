@@ -13,6 +13,7 @@ import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { AsyncTransactionResult } from './adapters/AsyncTransactionResult';
 import { useLinkHandleController } from './adapters/useLinkHandleController';
+import { useSponsoredConfig } from './shared/useSponsoredConfig';
 
 export type LinkHandleArgs = {
   /**
@@ -222,6 +223,7 @@ export function useLinkHandle(): UseDeferredTask<
 > {
   const { data: session } = useSession();
   const linkHandle = useLinkHandleController();
+  const configureRequest = useSponsoredConfig();
 
   return useDeferredTask(async (args) => {
     invariant(
@@ -237,12 +239,14 @@ export function useLinkHandle(): UseDeferredTask<
       `The handle is already linked to profile ${args.handle.linkedTo?.nftTokenId}.`,
     );
 
-    return linkHandle({
-      kind: TransactionKind.LINK_HANDLE,
-      fullHandle: args.handle.fullHandle,
-      profileId: session.profile.id,
-      signless: session.profile.signless,
-      sponsored: args.sponsored ?? true,
-    });
+    return linkHandle(
+      configureRequest({
+        kind: TransactionKind.LINK_HANDLE,
+        fullHandle: args.handle.fullHandle,
+        profileId: session.profile.id,
+        signless: session.profile.signless,
+        sponsored: args.sponsored ?? true,
+      }),
+    );
   });
 }

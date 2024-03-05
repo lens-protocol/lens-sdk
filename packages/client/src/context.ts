@@ -1,7 +1,7 @@
 import { IStorageProvider } from '@lens-protocol/storage';
 
 import { Environment } from './environments';
-import { MediaTransformsConfig, QueryParams } from './queryParams';
+import { QueryParams } from './queryParams';
 
 /**
  * The LensClient context.
@@ -11,8 +11,6 @@ import { MediaTransformsConfig, QueryParams } from './queryParams';
 export type LensContext = {
   environment: Environment;
   storage: IStorageProvider;
-  origin?: string;
   headers?: Record<string, string>;
-  mediaTransforms: MediaTransformsConfig;
   params: QueryParams;
 };

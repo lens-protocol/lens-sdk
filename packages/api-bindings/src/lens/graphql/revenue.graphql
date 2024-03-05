@@ -31,15 +31,14 @@ query RevenueFromPublications(
   $publishedOn: [AppId!]
   $limit: LimitType
   $cursor: Cursor
-  $imageSmallSize: ImageTransform = {}
-  $imageMediumSize: ImageTransform = {}
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $imageSmallSize: ImageTransform!
+  $imageMediumSize: ImageTransform!
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
-  ...InjectQueryParams
   result: revenueFromPublications(
     request: { for: $for, publishedOn: $publishedOn, limit: $limit, cursor: $cursor }
   ) {
@@ -54,22 +53,20 @@ query RevenueFromPublications(
 
 query RevenueFromPublication(
   $request: RevenueFromPublicationRequest!
-  $imageSmallSize: ImageTransform = {}
-  $imageMediumSize: ImageTransform = {}
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $imageSmallSize: ImageTransform!
+  $imageMediumSize: ImageTransform!
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
-  ...InjectQueryParams
   result: revenueFromPublication(request: $request) {
     ...PublicationRevenue
   }
 }
 
-query FollowRevenues($request: FollowRevenueRequest!, $fxRateFor: SupportedFiatType = USD) {
-  ...InjectQueryParams
+query FollowRevenues($request: FollowRevenueRequest!, $fxRateFor: SupportedFiatType!) {
   result: followRevenues(request: $request) {
     revenues {
       ...RevenueAggregate

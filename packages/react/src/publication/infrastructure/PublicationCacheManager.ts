@@ -1,7 +1,9 @@
 import { FetchPolicy } from '@apollo/client';
 import {
+  AllFragmentVariables,
   AnyPublication,
   Comment,
+  FragmentAnyPublicationInternal,
   isCommentPublication,
   isMirrorPublication,
   isPostPublication,
@@ -28,7 +30,10 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { IPublicationCacheManager } from '../adapters/IPublicationCacheManager';
 
 export class PublicationCacheManager implements IPublicationCacheManager {
-  constructor(private readonly client: SafeApolloClient) {}
+  constructor(
+    private readonly client: SafeApolloClient,
+    private readonly variables: AllFragmentVariables,
+  ) {}
 
   async fetchNewPost(tx: TransactionData<CreatePostRequest>): Promise<Post> {
     const publication = await this.fetchNewPublication(tx);
@@ -62,21 +67,16 @@ export class PublicationCacheManager implements IPublicationCacheManager {
     publicationId: PublicationId,
     updateFn: <TPublication extends AnyPublication>(current: TPublication) => TPublication,
   ) {
-    this.client.cache.updateQuery<PublicationData, PublicationVariables>(
+    this.client.cache.updateFragment(
       {
-        query: PublicationDocument,
-        variables: {
-          request: {
-            forId: publicationId,
-          },
-        },
+        id: this.client.cache.identify({ __typename: 'AnyPublication', id: publicationId }),
+        fragment: FragmentAnyPublicationInternal,
+        fragmentName: 'AnyPublicationInternal',
+        variables: this.variables,
       },
-      (data) => {
-        if (data?.result) {
-          return {
-            ...data,
-            result: updateFn(data.result),
-          };
+      (data: AnyPublication | null) => {
+        if (data) {
+          return updateFn(data);
         }
         return data;
       },
@@ -100,7 +100,7 @@ export class PublicationCacheManager implements IPublicationCacheManager {
   private async request(request: PublicationRequest, fetchPolicy: FetchPolicy) {
     const { data } = await this.client.query<PublicationData, PublicationVariables>({
       query: PublicationDocument,
-      variables: { request },
+      variables: { request, ...this.variables },
       fetchPolicy,
     });
 

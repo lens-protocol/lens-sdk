@@ -64,7 +64,6 @@ fragment UnknownFollowModuleSettings on UnknownFollowModuleSettings {
   contract {
     ...NetworkAddress
   }
-  followModuleReturnData # slated for removal on 2.x stable
   initializeCalldata
   initializeResultData
   signlessApproved
@@ -219,6 +218,7 @@ fragment ProfileStats on ProfileStats {
   upvoted: reacted(request: { type: UPVOTE })
   downvoted: reacted(request: { type: DOWNVOTE })
   collects: countOpenActions(request: { anyOf: [{ category: COLLECT }] })
+  lensClassifierScore
 }
 
 fragment ProfileOperations on ProfileOperations {
@@ -356,6 +356,7 @@ fragment ProfileFields on Profile {
   stats(request: { forApps: $statsFor }) {
     ...ProfileStats
   }
+  peerToPeerRecommendedByMe
 }
 
 fragment Profile on Profile {
@@ -364,6 +365,16 @@ fragment Profile on Profile {
   invitedBy {
     ...ProfileFields
   }
+}
+
+fragment ProfileMentioned on ProfileMentioned {
+  profile {
+    id
+  }
+  snapshotHandleMentioned {
+    ...HandleInfo
+  }
+  stillOwnsHandle
 }
 
 fragment PaginatedResultInfo on PaginatedResultInfo {
@@ -425,7 +436,6 @@ fragment UnknownReferenceModuleSettings on UnknownReferenceModuleSettings {
   contract {
     ...NetworkAddress
   }
-  referenceModuleReturnData # slated for removal on 2.x stable
   initializeCalldata
   initializeResultData
   signlessApproved
@@ -440,6 +450,7 @@ fragment SimpleCollectOpenActionSettings on SimpleCollectOpenActionSettings {
   contract {
     ...NetworkAddress
   }
+  collectNft
   amount {
     ...Amount
   }
@@ -463,6 +474,7 @@ fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectO
   contract {
     ...NetworkAddress
   }
+  collectNft
   amount {
     ...Amount
   }
@@ -482,7 +494,6 @@ fragment UnknownOpenActionModuleSettings on UnknownOpenActionModuleSettings {
     ...NetworkAddress
   }
   collectNft
-  openActionModuleReturnData # slated for removal on 2.x stable
   initializeCalldata
   initializeResultData
   signlessApproved
@@ -496,6 +507,7 @@ fragment LegacyFreeCollectModuleSettings on LegacyFreeCollectModuleSettings {
   contract {
     ...NetworkAddress
   }
+  collectNft
   followerOnly
 }
 
@@ -505,6 +517,7 @@ fragment LegacyFeeCollectModuleSettings on LegacyFeeCollectModuleSettings {
   contract {
     ...NetworkAddress
   }
+  collectNft
   amount {
     ...Amount
   }
@@ -519,6 +532,7 @@ fragment LegacyLimitedFeeCollectModuleSettings on LegacyLimitedFeeCollectModuleS
   contract {
     ...NetworkAddress
   }
+  collectNft
   collectLimit
   amount {
     ...Amount
@@ -534,6 +548,7 @@ fragment LegacyLimitedTimedFeeCollectModuleSettings on LegacyLimitedTimedFeeColl
   contract {
     ...NetworkAddress
   }
+  collectNft
   collectLimit
   amount {
     ...Amount
@@ -558,6 +573,7 @@ fragment LegacyTimedFeeCollectModuleSettings on LegacyTimedFeeCollectModuleSetti
   contract {
     ...NetworkAddress
   }
+  collectNft
   amount {
     ...Amount
   }
@@ -573,6 +589,7 @@ fragment LegacyMultirecipientFeeCollectModuleSettings on LegacyMultirecipientFee
   contract {
     ...NetworkAddress
   }
+  collectNft
   amount {
     ...Amount
   }
@@ -591,6 +608,7 @@ fragment LegacySimpleCollectModuleSettings on LegacySimpleCollectModuleSettings 
   contract {
     ...NetworkAddress
   }
+  collectNft
   amount {
     ...Amount
   }
@@ -1479,6 +1497,21 @@ fragment LiveStreamMetadataV3 on LiveStreamMetadataV3 {
 }
 
 # publication fragments
+fragment AnyPublicationInternal on AnyPublication {
+  ... on Post {
+    ...Post
+  }
+  ... on Comment {
+    ...Comment
+  }
+  ... on Mirror {
+    ...Mirror
+  }
+  ... on Quote {
+    ...Quote
+  }
+}
+
 fragment PublicationStats on PublicationStats {
   __typename
   id
@@ -1503,8 +1536,12 @@ fragment Post on Post {
   }
   txHash
   createdAt
+  isEncrypted
   by {
     ...Profile
+  }
+  stats(request: { metadata: { publishedOn: $statsFor } }) {
+    ...PublicationStats
   }
   operations {
     ...PublicationOperations
@@ -1614,9 +1651,10 @@ fragment Post on Post {
       ...UnknownReferenceModuleSettings
     }
   }
-  stats(request: { metadata: { publishedOn: $statsFor } }) {
-    ...PublicationStats
+  profilesMentioned {
+    ...ProfileMentioned
   }
+  hashtagsMentioned
 }
 
 fragment CommentFields on Comment {
@@ -1626,11 +1664,13 @@ fragment CommentFields on Comment {
     ...App
   }
   isHidden
+  hiddenByAuthor
   momoka {
     ...MomokaInfo
   }
   txHash
   createdAt
+  isEncrypted
   by {
     ...Profile
   }
@@ -1758,11 +1798,13 @@ fragment CommentFields on Comment {
 fragment Comment on Comment {
   __typename
   ...CommentFields
-
+  profilesMentioned {
+    ...ProfileMentioned
+  }
+  hashtagsMentioned
   firstComment {
     ...CommentFields
   }
-
   commentOn {
     ... on Post {
       ...Post
@@ -1816,6 +1858,7 @@ fragment QuoteFields on Quote {
   }
   txHash
   createdAt
+  isEncrypted
   by {
     ...Profile
   }
@@ -1935,6 +1978,10 @@ fragment QuoteFields on Quote {
 fragment Quote on Quote {
   __typename
   ...QuoteFields
+  profilesMentioned {
+    ...ProfileMentioned
+  }
+  hashtagsMentioned
   quoteOn {
     ... on Post {
       ...Post

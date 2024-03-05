@@ -7,6 +7,7 @@ import {
 import { SessionType, useSession } from '../authentication';
 import { useLensApolloClient } from '../helpers/arguments';
 import { OmitCursor, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { useFragmentVariables } from '../helpers/variables';
 
 export type UseFeedHighlightsArgs = OmitCursor<FeedHighlightsRequest>;
 
@@ -54,10 +55,10 @@ export function useFeedHighlights({
   return usePaginatedReadResult(
     useBaseFeedHighlightsQuery(
       useLensApolloClient({
-        variables: {
+        variables: useFragmentVariables({
           where,
           statsFor: where?.metadata?.publishedOn,
-        },
+        }),
         skip: session?.type !== SessionType.WithProfile,
       }),
     ),

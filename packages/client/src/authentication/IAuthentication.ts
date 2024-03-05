@@ -26,18 +26,17 @@ export interface IAuthentication {
   authenticateWith({ refreshToken }: { refreshToken: string }): Promise<void>;
 
   /**
-   * Generate a challenge string for the wallet to sign.
+   * Generate a challenge for a wallet or profile to sign.
    *
-   * @param address - The wallet address
+   * @param request - Challenge request
    * @returns A challenge string
    */
   generateChallenge(request: ChallengeRequest): Promise<AuthChallengeFragment>;
 
   /**
-   * Authenticate the user with the wallet address and signature of the challenge.
+   * Authenticate a user with a signature.
    *
-   * @param address - The wallet address
-   * @param signature - The signature of the challenge
+   * @param request - Authentication request
    */
   authenticate(request: SignedAuthChallenge): Promise<void>;
 

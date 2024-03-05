@@ -14,11 +14,11 @@ query ProfilesManaged(
   $includeOwned: Boolean
   $limit: LimitType
   $cursor: Cursor
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
   result: profilesManaged(
     request: { for: $for, includeOwned: $includeOwned, limit: $limit, cursor: $cursor }
@@ -46,11 +46,11 @@ query UserSigNonces {
 
 query LastLoggedInProfile(
   $request: LastLoggedInProfileRequest!
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
   result: lastLoggedInProfile(request: $request) {
     ...Profile

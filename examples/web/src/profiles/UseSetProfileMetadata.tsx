@@ -68,7 +68,17 @@ function UpdateProfileForm({ activeProfile }: UpdateProfileFormProps) {
 
   return (
     <form onSubmit={onSubmit}>
-      <ProfileCard profile={activeProfile} />
+      <ProfileCard profile={activeProfile}>
+        <p>Attributes</p>
+        <ul>
+          {(activeProfile.metadata?.attributes ?? []).map((attribute, idx) => (
+            <li key={`${attribute.key}-${idx}`}>
+              <b>{attribute.key}:</b>&nbsp;
+              {attribute.value}
+            </li>
+          ))}
+        </ul>
+      </ProfileCard>
 
       <label>
         Name:

@@ -6,6 +6,7 @@ import {
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { useFragmentVariables } from '../helpers/variables';
 
 /**
  * {@link usePublications} hook arguments
@@ -113,11 +114,11 @@ export function usePublications({
   return usePaginatedReadResult(
     usePublicationsBase(
       useLensApolloClient({
-        variables: {
+        variables: useFragmentVariables({
           where,
           limit,
           statsFor: where?.metadata?.publishedOn,
-        },
+        }),
       }),
     ),
   );

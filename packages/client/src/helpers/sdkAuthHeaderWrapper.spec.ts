@@ -8,7 +8,6 @@ import { sdkAuthHeaderWrapper } from './sdkAuthHeaderWrapper';
 const context: LensContext = {
   environment: buildTestEnvironment(),
   storage: new InMemoryStorageProvider(),
-  mediaTransforms: {},
   params: {},
 };
 

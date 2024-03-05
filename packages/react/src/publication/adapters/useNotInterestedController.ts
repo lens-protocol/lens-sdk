@@ -1,4 +1,4 @@
-import { ToggleProperty } from '@lens-protocol/domain/use-cases/publications';
+import { TogglePublicationProperty } from '@lens-protocol/domain/use-cases/publications';
 
 import { useSharedDependencies } from '../../shared';
 import { NotInterestedGateway, NotInterestedRequest } from './NotInterestedGateway';
@@ -10,17 +10,17 @@ export function useNotInterestedController() {
   const add = async (request: NotInterestedRequest) => {
     const presenter = new NotInterestedPresenter(publicationCacheManager);
     const gateway = new NotInterestedGateway(apolloClient);
-    const reaction = new ToggleProperty(gateway, presenter);
+    const toggle = new TogglePublicationProperty(gateway, presenter);
 
-    await reaction.add(request);
+    await toggle.on(request);
   };
 
   const remove = async (request: NotInterestedRequest) => {
     const presenter = new NotInterestedPresenter(publicationCacheManager);
     const gateway = new NotInterestedGateway(apolloClient);
-    const reaction = new ToggleProperty(gateway, presenter);
+    const toggle = new TogglePublicationProperty(gateway, presenter);
 
-    await reaction.remove(request);
+    await toggle.off(request);
   };
 
   return {

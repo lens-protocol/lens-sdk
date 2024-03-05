@@ -34,15 +34,14 @@ fragment FeedItem on FeedItem {
 query Feed(
   $where: FeedWhere
   $cursor: Cursor
-  $imageSmallSize: ImageTransform = {}
-  $imageMediumSize: ImageTransform = {}
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $imageSmallSize: ImageTransform!
+  $imageMediumSize: ImageTransform!
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
-  ...InjectQueryParams
   result: feed(request: { where: $where, cursor: $cursor }) {
     items {
       ...FeedItem
@@ -66,15 +65,14 @@ query FeedHighlights(
   $where: FeedHighlightsWhere
   $limit: LimitType
   $cursor: Cursor
-  $imageSmallSize: ImageTransform = {}
-  $imageMediumSize: ImageTransform = {}
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $imageSmallSize: ImageTransform!
+  $imageMediumSize: ImageTransform!
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
-  ...InjectQueryParams
   result: feedHighlights(request: { where: $where, limit: $limit, cursor: $cursor }) {
     items {
       ...FeedHighlight
@@ -84,28 +82,3 @@ query FeedHighlights(
     }
   }
 }
-
-# Not yet ready for production use
-#query ForYou(
-#  $request: PublicationForYouRequest!
-#  $imageSmallSize: ImageTransform = {}
-#  $imageMediumSize: ImageTransform = {}
-#  $profileCoverSize: ImageTransform = {}
-#  $profilePictureSize: ImageTransform = {}
-#  $fxRateFor: SupportedFiatType = USD
-#) {
-#  ...InjectQueryParams
-#  result: forYou(request: $request) {
-#    items {
-#      ... on Post {
-#        ...Post
-#      }
-#      ... on Quote {
-#        ...Quote
-#      }
-#    }
-#    pageInfo {
-#      ...PaginatedResultInfo
-#    }
-#  }
-#}

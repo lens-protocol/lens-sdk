@@ -25,34 +25,15 @@ type CommonQueryVariables = {
   rateRequest: RateRequest;
 };
 
-export function commonQueryVariables({
-  params,
-  mediaTransforms,
-}: LensContext): CommonQueryVariables {
+export function commonQueryVariables({ params }: LensContext): CommonQueryVariables {
   return {
-    publicationImageSmallTransform: pickImageTransform(
-      mediaTransforms.publication,
-      params.image?.small,
-      buildImageTransform('400px'),
-    ),
-    publicationImageMediumTransform: pickImageTransform(
-      mediaTransforms.publication,
-      params.image?.medium,
-      buildImageTransform('700px'),
-    ),
+    publicationImageSmallTransform: params.image?.small ?? buildImageTransform('400px'),
+    publicationImageMediumTransform: params.image?.medium ?? buildImageTransform('700px'),
     publicationOperationsActedArgs: {},
     publicationStatsInput: { metadata: { publishedOn: params.statsFor } },
     publicationStatsCountOpenActionArgs: {},
-    profileCoverTransform: pickImageTransform(
-      mediaTransforms.profileCover,
-      params.profile?.cover,
-      buildImageTransform('1100px'),
-    ),
-    profilePictureTransform: pickImageTransform(
-      mediaTransforms.profilePicture,
-      params.profile?.thumbnail,
-      buildImageTransform('256px'),
-    ),
+    profileCoverTransform: params.profile?.cover ?? buildImageTransform('1100px'),
+    profilePictureTransform: params.profile?.thumbnail ?? buildImageTransform('256px'),
     profileStatsArg: { forApps: params.statsFor },
     profileStatsCountOpenActionArgs: {},
     profileMetadataSource: params.profile?.metadataSource,
@@ -60,14 +41,6 @@ export function commonQueryVariables({
       for: params.fxRateFor || SupportedFiatType.Usd,
     },
   };
-}
-
-function pickImageTransform(
-  option1: ImageTransform | undefined,
-  option2: ImageTransform | undefined,
-  defaultOption: ImageTransform,
-): ImageTransform {
-  return option1 ?? option2 ?? defaultOption;
 }
 
 function buildImageTransform(

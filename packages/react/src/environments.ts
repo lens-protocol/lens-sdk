@@ -1,4 +1,3 @@
-import { ContentInsightMatcher, demoSnapshotPoll, snapshotPoll } from '@lens-protocol/api-bindings';
 import { ChainType, URL } from '@lens-protocol/shared-kernel';
 
 import { ChainConfigRegistry, goerli, mainnet, mumbai, polygon } from './chains';
@@ -12,17 +11,6 @@ export type TransactionObserverTimings = {
   pollingInterval: number; // ms
   maxMiningWaitTime: number; // ms
   maxIndexingWaitTime: number; // ms
-};
-
-/**
- * The Snapshot.org integration configuration
- *
- * @internal
- */
-export type SnapshotConfig = {
-  hub: URL;
-  sequencer: URL;
-  matcher: ContentInsightMatcher;
 };
 
 /**
@@ -46,8 +34,6 @@ export type EnvironmentConfig = {
     permissionlessCreator: string;
   };
   handleResolver: ProfileHandleResolver;
-  snapshot: SnapshotConfig;
-  // gated: GatedEnvironments.EnvironmentConfig;
 };
 
 /**
@@ -76,12 +62,6 @@ export const production: EnvironmentConfig = {
     permissionlessCreator: '0x0b5e6100243f793e480DE6088dE6bA70aA9f3872',
   },
   handleResolver: (localName) => `lens/${localName}`,
-  snapshot: {
-    hub: 'https://hub.snapshot.org/graphql' as URL,
-    matcher: snapshotPoll,
-    sequencer: 'https://seq.snapshot.org' as URL,
-  },
-  // gated: GatedEnvironments.production,
 };
 
 /**
@@ -110,12 +90,6 @@ export const development: EnvironmentConfig = {
     permissionlessCreator: '0xCb4FB63c3f13CB83cCD6F10E9e5F29eC250329Cc',
   },
   handleResolver: (localName) => `test/${localName}`,
-  snapshot: {
-    hub: 'https://testnet.snapshot.org/graphql' as URL,
-    matcher: demoSnapshotPoll,
-    sequencer: 'https://testnet.seq.snapshot.org' as URL,
-  },
-  // gated: GatedEnvironments.development,
 };
 
 /**
@@ -137,10 +111,4 @@ export const staging: EnvironmentConfig = {
     permissionlessCreator: '0xCb4FB63c3f13CB83cCD6F10E9e5F29eC250329Cc',
   },
   handleResolver: (localName) => `test/${localName}`,
-  snapshot: {
-    hub: 'https://testnet.snapshot.org' as URL,
-    matcher: demoSnapshotPoll,
-    sequencer: 'https://testnet.seq.snapshot.org' as URL,
-  },
-  // gated: GatedEnvironments.development,
 };

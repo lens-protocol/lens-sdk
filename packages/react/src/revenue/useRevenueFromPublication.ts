@@ -8,6 +8,7 @@ import {
 import { NotFoundError } from '../NotFoundError';
 import { useLensApolloClient } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
+import { useFragmentVariables } from '../helpers/variables';
 
 /**
  * {@link useRevenueFromPublication} hook arguments
@@ -33,10 +34,10 @@ export function useRevenueFromPublication(
   const { data, error, loading } = useReadResult(
     useRevenueFromPublicationHook(
       useLensApolloClient({
-        variables: {
+        variables: useFragmentVariables({
           request: args,
           statsFor: args.publishedOn,
-        },
+        }),
       }),
     ),
   );

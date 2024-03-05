@@ -21,6 +21,7 @@ import type {
   LinkHandleToProfileRequest,
   MutualFollowersRequest,
   OnchainSetProfileMetadataRequest,
+  PeerToPeerRecommendRequest,
   ProfileActionHistoryRequest,
   ProfileInterestsRequest,
   ProfileManagersRequest,
@@ -211,6 +212,52 @@ export class Profile {
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
     return requireAuthHeaders(this.authentication, async (headers) => {
       await this.sdk.DismissRecommendedProfiles({ request }, headers);
+    });
+  }
+
+  /**
+   * Recommend a profile.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.recommend({
+   *   profileId: '0x01',
+   * });
+   * ```
+   */
+  async recommend(
+    request: PeerToPeerRecommendRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      await this.sdk.PeerToPeerRecommend({ request }, headers);
+    });
+  }
+
+  /**
+   * Remove a recommendation from a previously recommended profile.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * const result = await client.profile.unrecommend({
+   *   profileId: '0x01',
+   * });
+   * ```
+   */
+  async unrecommend(
+    request: PeerToPeerRecommendRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      await this.sdk.PeerToPeerUnrecommend({ request }, headers);
     });
   }
 

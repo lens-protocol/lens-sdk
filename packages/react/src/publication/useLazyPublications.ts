@@ -9,6 +9,7 @@ import { failure, invariant, PromiseResult, success } from '@lens-protocol/share
 import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs } from '../helpers/reads';
 import { useDeferredTask, UseDeferredTask } from '../helpers/tasks';
+import { useLazyFragmentVariables } from '../helpers/variables';
 
 /**
  * {@link useLazyPublications} callback hook arguments
@@ -54,9 +55,10 @@ export function useLazyPublications(): UseDeferredTask<
   FetchPublicationsArgs
 > {
   const [fetch] = usePublicationsLazyQuery(useLensApolloClient({ fetchPolicy: 'no-cache' }));
+  const fill = useLazyFragmentVariables();
 
   return useDeferredTask(async (args): PromiseResult<AnyPublication[], UnspecifiedError> => {
-    const { data, error } = await fetch({ variables: args });
+    const { data, error } = await fetch({ variables: fill(args) });
 
     if (error) {
       return failure(new UnspecifiedError(error));

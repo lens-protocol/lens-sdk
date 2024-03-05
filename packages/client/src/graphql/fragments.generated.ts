@@ -44,7 +44,6 @@ export type RevertFollowModuleSettingsFragment = {
 
 export type UnknownFollowModuleSettingsFragment = {
   __typename: 'UnknownFollowModuleSettings';
-  followModuleReturnData: string | null;
   initializeCalldata: string | null;
   initializeResultData: string | null;
   signlessApproved: boolean;
@@ -73,7 +72,6 @@ export type ImageSetFragment = {
   optimized: ImageFragment | null;
   small: ImageFragment | null;
   medium: ImageFragment | null;
-  transformed: ImageFragment | null;
 };
 
 export type EncryptableImageFragment = {
@@ -130,7 +128,6 @@ export type ProfilePictureSetFragment = {
   raw: ImageFragment;
   optimized: ImageFragment | null;
   thumbnail: ImageFragment | null;
-  transformed: ImageFragment | null;
 };
 
 export type NftImageFragment = {
@@ -162,15 +159,12 @@ export type ProfileStatsFragment = {
   quotes: number;
   publications: number;
   countOpenActions: number;
+  lensClassifierScore: number | null;
   upvotes: number;
   downvotes: number;
   upvoted: number;
   downvoted: number;
   collects: number;
-  upvoteReactions: number;
-  downvoteReactions: number;
-  upvoteReacted: number;
-  downvoteReacted: number;
 };
 
 export type HandleInfoFragment = {
@@ -193,6 +187,7 @@ export type ProfileFragment = {
   invitesLeft: number;
   sponsor: boolean;
   signless: boolean;
+  peerToPeerRecommendedByMe: boolean;
   ownedBy: NetworkAddressFragment;
   operations: {
     __typename: 'ProfileOperations';
@@ -224,6 +219,12 @@ export type ProfileFragment = {
   stats: ProfileStatsFragment;
 };
 
+export type ProfileMentionedFragment = {
+  stillOwnsHandle: boolean;
+  profile: { id: string };
+  snapshotHandleMentioned: HandleInfoFragment;
+};
+
 export type PaginatedResultInfoFragment = { prev: string | null; next: string | null };
 
 export type AppFragment = { __typename: 'App'; id: string };
@@ -245,7 +246,6 @@ export type DegreesOfSeparationReferenceModuleSettingsFragment = {
 
 export type UnknownReferenceModuleSettingsFragment = {
   __typename: 'UnknownReferenceModuleSettings';
-  referenceModuleReturnData: string | null;
   initializeCalldata: string | null;
   initializeResultData: string | null;
   signlessApproved: boolean;
@@ -257,6 +257,7 @@ export type UnknownReferenceModuleSettingsFragment = {
 export type SimpleCollectOpenActionSettingsFragment = {
   __typename: 'SimpleCollectOpenActionSettings';
   type: Types.OpenActionModuleType;
+  collectNft: string | null;
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
@@ -269,6 +270,7 @@ export type SimpleCollectOpenActionSettingsFragment = {
 export type MultirecipientFeeCollectOpenActionSettingsFragment = {
   __typename: 'MultirecipientFeeCollectOpenActionSettings';
   type: Types.OpenActionModuleType;
+  collectNft: string | null;
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
@@ -282,7 +284,6 @@ export type UnknownOpenActionModuleSettingsFragment = {
   __typename: 'UnknownOpenActionModuleSettings';
   type: Types.OpenActionModuleType;
   collectNft: string | null;
-  openActionModuleReturnData: string | null;
   initializeCalldata: string | null;
   initializeResultData: string | null;
   signlessApproved: boolean;
@@ -294,6 +295,7 @@ export type UnknownOpenActionModuleSettingsFragment = {
 export type LegacyFreeCollectModuleSettingsFragment = {
   __typename: 'LegacyFreeCollectModuleSettings';
   type: Types.OpenActionModuleType;
+  collectNft: string | null;
   followerOnly: boolean;
   contract: NetworkAddressFragment;
 };
@@ -301,6 +303,7 @@ export type LegacyFreeCollectModuleSettingsFragment = {
 export type LegacyFeeCollectModuleSettingsFragment = {
   __typename: 'LegacyFeeCollectModuleSettings';
   type: Types.OpenActionModuleType;
+  collectNft: string | null;
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
@@ -311,6 +314,7 @@ export type LegacyFeeCollectModuleSettingsFragment = {
 export type LegacyLimitedFeeCollectModuleSettingsFragment = {
   __typename: 'LegacyLimitedFeeCollectModuleSettings';
   type: Types.OpenActionModuleType;
+  collectNft: string | null;
   collectLimit: string | null;
   recipient: string;
   referralFee: number;
@@ -322,6 +326,7 @@ export type LegacyLimitedFeeCollectModuleSettingsFragment = {
 export type LegacyLimitedTimedFeeCollectModuleSettingsFragment = {
   __typename: 'LegacyLimitedTimedFeeCollectModuleSettings';
   type: Types.OpenActionModuleType;
+  collectNft: string | null;
   collectLimit: string | null;
   recipient: string;
   referralFee: number;
@@ -340,6 +345,7 @@ export type LegacyRevertCollectModuleSettingsFragment = {
 export type LegacyTimedFeeCollectModuleSettingsFragment = {
   __typename: 'LegacyTimedFeeCollectModuleSettings';
   type: Types.OpenActionModuleType;
+  collectNft: string | null;
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
@@ -351,6 +357,7 @@ export type LegacyTimedFeeCollectModuleSettingsFragment = {
 export type LegacyMultirecipientFeeCollectModuleSettingsFragment = {
   __typename: 'LegacyMultirecipientFeeCollectModuleSettings';
   type: Types.OpenActionModuleType;
+  collectNft: string | null;
   referralFee: number;
   followerOnly: boolean;
   collectLimit: string | null;
@@ -363,6 +370,7 @@ export type LegacyMultirecipientFeeCollectModuleSettingsFragment = {
 export type LegacySimpleCollectModuleSettingsFragment = {
   __typename: 'LegacySimpleCollectModuleSettings';
   type: Types.OpenActionModuleType;
+  collectNft: string | null;
   recipient: string;
   referralFee: number;
   followerOnly: boolean;
@@ -1009,8 +1017,6 @@ export type PublicationStatsFragment = {
   upvotes: number;
   downvotes: number;
   collects: number;
-  upvoteReactions: number;
-  downvoteReactions: number;
 };
 
 export type PostFragment = {
@@ -1019,9 +1025,12 @@ export type PostFragment = {
   isHidden: boolean;
   txHash: string | null;
   createdAt: string;
+  isEncrypted: boolean;
+  hashtagsMentioned: Array<string>;
   publishedOn: AppFragment | null;
   momoka: MomokaInfoFragment | null;
   by: ProfileFragment;
+  stats: PublicationStatsFragment;
   operations: PublicationOperationsFragment;
   metadata:
     | ArticleMetadataV3Fragment
@@ -1060,15 +1069,17 @@ export type PostFragment = {
     | UnknownReferenceModuleSettingsFragment
     | {}
     | null;
-  stats: PublicationStatsFragment;
+  profilesMentioned: Array<ProfileMentionedFragment>;
 };
 
 export type CommentBaseFragment = {
   __typename: 'Comment';
   id: string;
   isHidden: boolean;
+  hiddenByAuthor: boolean;
   txHash: string | null;
   createdAt: string;
+  isEncrypted: boolean;
   publishedOn: AppFragment | null;
   momoka: MomokaInfoFragment | null;
   by: ProfileFragment;
@@ -1113,6 +1124,8 @@ export type CommentBaseFragment = {
 };
 
 export type CommentFragment = {
+  hashtagsMentioned: Array<string>;
+  profilesMentioned: Array<ProfileMentionedFragment>;
   root: PostFragment | {};
   commentOn: CommentBaseFragment | PostFragment | QuoteBaseFragment;
   firstComment: CommentBaseFragment | null;
@@ -1137,6 +1150,7 @@ export type QuoteBaseFragment = {
   isHidden: boolean;
   txHash: string | null;
   createdAt: string;
+  isEncrypted: boolean;
   publishedOn: AppFragment | null;
   momoka: MomokaInfoFragment | null;
   by: ProfileFragment;
@@ -1181,6 +1195,8 @@ export type QuoteBaseFragment = {
 };
 
 export type QuoteFragment = {
+  hashtagsMentioned: Array<string>;
+  profilesMentioned: Array<ProfileMentionedFragment>;
   quoteOn: CommentBaseFragment | PostFragment | QuoteBaseFragment;
   stats: PublicationStatsFragment;
 } & QuoteBaseFragment;
@@ -1722,7 +1738,6 @@ export const UnknownFollowModuleSettingsFragmentDoc = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'followModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -1796,24 +1811,6 @@ export const ProfilePictureSetFragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -1941,24 +1938,6 @@ export const NftImageFragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -2211,24 +2190,6 @@ export const ProfileMetadataFragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -2499,90 +2460,7 @@ export const ProfileStatsFragmentDoc = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
         ],
       },
     },
@@ -2870,6 +2748,7 @@ export const ProfileFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -3057,7 +2936,6 @@ export const ProfileFragmentDoc = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'followModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -3163,24 +3041,6 @@ export const ProfileFragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -3450,90 +3310,7 @@ export const ProfileFragmentDoc = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
         ],
       },
     },
@@ -3581,6 +3358,117 @@ export const ProfileFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'ownedBy' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const PublicationStatsFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'PublicationStats' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'PublicationStats' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'comments' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mirrors' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quotes' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bookmarks' } },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'upvotes' },
+            name: { kind: 'Name', value: 'reactions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'type' },
+                      value: { kind: 'EnumValue', value: 'UPVOTE' },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'downvotes' },
+            name: { kind: 'Name', value: 'reactions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'type' },
+                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'collects' },
+            name: { kind: 'Name', value: 'countOpenActions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'anyOf' },
+                      value: {
+                        kind: 'ListValue',
+                        values: [
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: 'category' },
+                                value: { kind: 'EnumValue', value: 'COLLECT' },
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'countOpenActions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationStatsCountOpenActionArgs' },
+                },
+              },
+            ],
+          },
         ],
       },
     },
@@ -4111,24 +3999,6 @@ export const ImageSetFragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
             },
           },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
         ],
       },
     },
@@ -4249,24 +4119,6 @@ export const MarketplaceMetadataFragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'medium' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -7643,24 +7495,6 @@ export const AudioMetadataV3FragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
             },
           },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
         ],
       },
     },
@@ -8843,24 +8677,6 @@ export const VideoMetadataV3FragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'medium' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -10074,24 +9890,6 @@ export const ImageMetadataV3FragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
             },
           },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
         ],
       },
     },
@@ -11260,24 +11058,6 @@ export const ArticleMetadataV3FragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'medium' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -12509,24 +12289,6 @@ export const EventMetadataV3FragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
             },
           },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
         ],
       },
     },
@@ -13725,24 +13487,6 @@ export const LinkMetadataV3FragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
             },
           },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
         ],
       },
     },
@@ -14911,24 +14655,6 @@ export const EmbedMetadataV3FragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'medium' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -16139,24 +15865,6 @@ export const CheckingInMetadataV3FragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
             },
           },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
         ],
       },
     },
@@ -17297,24 +17005,6 @@ export const TextOnlyMetadataV3FragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
             },
           },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
         ],
       },
     },
@@ -18255,24 +17945,6 @@ export const ThreeDMetadataV3FragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'medium' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -19488,24 +19160,6 @@ export const StoryMetadataV3FragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
             },
           },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
         ],
       },
     },
@@ -20676,24 +20330,6 @@ export const TransactionMetadataV3FragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'medium' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -21894,24 +21530,6 @@ export const MintMetadataV3FragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
             },
           },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
         ],
       },
     },
@@ -23082,24 +22700,6 @@ export const SpaceMetadataV3FragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'medium' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -24305,24 +23905,6 @@ export const LiveStreamMetadataV3FragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
             },
           },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
         ],
       },
     },
@@ -25221,6 +24803,7 @@ export const LegacyFreeCollectModuleSettingsFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
         ],
       },
@@ -25265,6 +24848,7 @@ export const LegacyFeeCollectModuleSettingsFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -25412,6 +24996,7 @@ export const LegacyLimitedFeeCollectModuleSettingsFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
           {
             kind: 'Field',
@@ -25560,6 +25145,7 @@ export const LegacyLimitedTimedFeeCollectModuleSettingsFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
           {
             kind: 'Field',
@@ -25752,6 +25338,7 @@ export const LegacyTimedFeeCollectModuleSettingsFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -25900,6 +25487,7 @@ export const LegacyMultirecipientFeeCollectModuleSettingsFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -26059,6 +25647,7 @@ export const LegacySimpleCollectModuleSettingsFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -26516,6 +26105,7 @@ export const MultirecipientFeeCollectOpenActionSettingsFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -26676,6 +26266,7 @@ export const SimpleCollectOpenActionSettingsFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -26826,7 +26417,6 @@ export const UnknownOpenActionModuleSettingsFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'openActionModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -26961,7 +26551,6 @@ export const UnknownReferenceModuleSettingsFragmentDoc = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'referenceModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -26985,154 +26574,93 @@ export const UnknownReferenceModuleSettingsFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode;
-export const PublicationStatsFragmentDoc = {
+export const ProfileMentionedFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'PublicationStats' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'PublicationStats' } },
+      name: { kind: 'Name', value: 'ProfileMentioned' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMentioned' } },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profile' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'id' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'snapshotHandleMentioned' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'HandleInfo' } }],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'stillOwnsHandle' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'NetworkAddress' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NetworkAddress' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'address' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'chainId' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'HandleInfo' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'HandleInfo' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'comments' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mirrors' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'quotes' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'bookmarks' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'fullHandle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'namespace' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'localName' } },
           {
             kind: 'Field',
-            alias: { kind: 'Name', value: 'upvotes' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
+            name: { kind: 'Name', value: 'suggestedFormatted' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'full' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'localName' } },
+              ],
+            },
           },
           {
             kind: 'Field',
-            alias: { kind: 'Name', value: 'downvotes' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
+            name: { kind: 'Name', value: 'linkedTo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'contract' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+                    ],
+                  },
                 },
-              },
-            ],
+                { kind: 'Field', name: { kind: 'Name', value: 'nftTokenId' } },
+              ],
+            },
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'collects' },
-            name: { kind: 'Name', value: 'countOpenActions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'anyOf' },
-                      value: {
-                        kind: 'ListValue',
-                        values: [
-                          {
-                            kind: 'ObjectValue',
-                            fields: [
-                              {
-                                kind: 'ObjectField',
-                                name: { kind: 'Name', value: 'category' },
-                                value: { kind: 'EnumValue', value: 'COLLECT' },
-                              },
-                            ],
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'countOpenActions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationStatsCountOpenActionArgs' },
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'ownedBy' } },
         ],
       },
     },
@@ -27169,12 +26697,30 @@ export const PostFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isEncrypted' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'by' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Profile' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'stats' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'publicationStatsInput' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'PublicationStats' } },
+              ],
             },
           },
           {
@@ -27685,21 +27231,15 @@ export const PostFragmentDoc = {
           },
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'stats' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'publicationStatsInput' } },
-              },
-            ],
+            name: { kind: 'Name', value: 'profilesMentioned' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'PublicationStats' } },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMentioned' } },
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'hashtagsMentioned' } },
         ],
       },
     },
@@ -27887,7 +27427,6 @@ export const PostFragmentDoc = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'followModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -27970,24 +27509,6 @@ export const PostFragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'medium' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -28230,24 +27751,6 @@ export const PostFragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -28517,90 +28020,7 @@ export const PostFragmentDoc = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
         ],
       },
     },
@@ -28930,6 +28350,34 @@ export const PostFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMentioned' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMentioned' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profile' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'id' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'snapshotHandleMentioned' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'HandleInfo' } }],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'stillOwnsHandle' } },
         ],
       },
     },
@@ -29029,7 +28477,6 @@ export const PostFragmentDoc = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'referenceModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -29060,6 +28507,7 @@ export const PostFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -29098,6 +28546,7 @@ export const PostFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -29148,7 +28597,6 @@ export const PostFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'openActionModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -29179,6 +28627,7 @@ export const PostFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
         ],
       },
@@ -29205,6 +28654,7 @@ export const PostFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -29241,6 +28691,7 @@ export const PostFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
           {
             kind: 'Field',
@@ -29278,6 +28729,7 @@ export const PostFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
           {
             kind: 'Field',
@@ -29341,6 +28793,7 @@ export const PostFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -29378,6 +28831,7 @@ export const PostFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -29426,6 +28880,7 @@ export const PostFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -32551,48 +32006,6 @@ export const PostFragmentDoc = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
         ],
       },
     },
@@ -32619,6 +32032,7 @@ export const CommentBaseFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'isHidden' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hiddenByAuthor' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'momoka' },
@@ -32629,6 +32043,7 @@ export const CommentBaseFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isEncrypted' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'by' },
@@ -33330,7 +32745,6 @@ export const CommentBaseFragmentDoc = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'followModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -33413,24 +32827,6 @@ export const CommentBaseFragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'medium' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -33673,24 +33069,6 @@ export const CommentBaseFragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -33960,90 +33338,7 @@ export const CommentBaseFragmentDoc = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
         ],
       },
     },
@@ -34373,6 +33668,7 @@ export const CommentBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -34472,7 +33768,6 @@ export const CommentBaseFragmentDoc = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'referenceModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -34503,6 +33798,7 @@ export const CommentBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -34541,6 +33837,7 @@ export const CommentBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -34591,7 +33888,6 @@ export const CommentBaseFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'openActionModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -34622,6 +33918,7 @@ export const CommentBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
         ],
       },
@@ -34648,6 +33945,7 @@ export const CommentBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -34684,6 +33982,7 @@ export const CommentBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
           {
             kind: 'Field',
@@ -34721,6 +34020,7 @@ export const CommentBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
           {
             kind: 'Field',
@@ -34784,6 +34084,7 @@ export const CommentBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -34821,6 +34122,7 @@ export const CommentBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -34869,6 +34171,7 @@ export const CommentBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -37924,6 +37227,7 @@ export const QuoteBaseFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isEncrypted' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'by' },
@@ -38625,7 +37929,6 @@ export const QuoteBaseFragmentDoc = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'followModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -38708,24 +38011,6 @@ export const QuoteBaseFragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'medium' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -38968,24 +38253,6 @@ export const QuoteBaseFragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -39255,90 +38522,7 @@ export const QuoteBaseFragmentDoc = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
         ],
       },
     },
@@ -39668,6 +38852,7 @@ export const QuoteBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
         ],
       },
     },
@@ -39767,7 +38952,6 @@ export const QuoteBaseFragmentDoc = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'referenceModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -39798,6 +38982,7 @@ export const QuoteBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -39836,6 +39021,7 @@ export const QuoteBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -39886,7 +39072,6 @@ export const QuoteBaseFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'openActionModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -39917,6 +39102,7 @@ export const QuoteBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
         ],
       },
@@ -39943,6 +39129,7 @@ export const QuoteBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -39979,6 +39166,7 @@ export const QuoteBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
           {
             kind: 'Field',
@@ -40016,6 +39204,7 @@ export const QuoteBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
           {
             kind: 'Field',
@@ -40079,6 +39268,7 @@ export const QuoteBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -40116,6 +39306,7 @@ export const QuoteBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -40164,6 +39355,7 @@ export const QuoteBaseFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -43201,6 +42393,17 @@ export const CommentFragmentDoc = {
           { kind: 'FragmentSpread', name: { kind: 'Name', value: 'CommentBase' } },
           {
             kind: 'Field',
+            name: { kind: 'Name', value: 'profilesMentioned' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMentioned' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'hashtagsMentioned' } },
+          {
+            kind: 'Field',
             name: { kind: 'Name', value: 'root' },
             selectionSet: {
               kind: 'SelectionSet',
@@ -43458,7 +42661,6 @@ export const CommentFragmentDoc = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'followModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -43541,24 +42743,6 @@ export const CommentFragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'medium' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -43801,24 +42985,6 @@ export const CommentFragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -44088,90 +43254,7 @@ export const CommentFragmentDoc = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
         ],
       },
     },
@@ -44501,6 +43584,34 @@ export const CommentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMentioned' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMentioned' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profile' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'id' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'snapshotHandleMentioned' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'HandleInfo' } }],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'stillOwnsHandle' } },
         ],
       },
     },
@@ -44600,7 +43711,6 @@ export const CommentFragmentDoc = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'referenceModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -44631,6 +43741,7 @@ export const CommentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -44669,6 +43780,7 @@ export const CommentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -44719,7 +43831,6 @@ export const CommentFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'openActionModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -44750,6 +43861,7 @@ export const CommentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
         ],
       },
@@ -44776,6 +43888,7 @@ export const CommentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -44812,6 +43925,7 @@ export const CommentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
           {
             kind: 'Field',
@@ -44849,6 +43963,7 @@ export const CommentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
           {
             kind: 'Field',
@@ -44912,6 +44027,7 @@ export const CommentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -44949,6 +44065,7 @@ export const CommentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -44997,6 +44114,7 @@ export const CommentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -48122,48 +47240,6 @@ export const CommentFragmentDoc = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
         ],
       },
     },
@@ -48195,12 +47271,30 @@ export const CommentFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isEncrypted' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'by' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Profile' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'stats' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'publicationStatsInput' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'PublicationStats' } },
+              ],
             },
           },
           {
@@ -48711,21 +47805,15 @@ export const CommentFragmentDoc = {
           },
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'stats' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'publicationStatsInput' } },
-              },
-            ],
+            name: { kind: 'Name', value: 'profilesMentioned' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'PublicationStats' } },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMentioned' } },
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'hashtagsMentioned' } },
         ],
       },
     },
@@ -48747,6 +47835,7 @@ export const CommentFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'isHidden' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hiddenByAuthor' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'momoka' },
@@ -48757,6 +47846,7 @@ export const CommentFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isEncrypted' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'by' },
@@ -49302,6 +48392,7 @@ export const CommentFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isEncrypted' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'by' },
@@ -49834,6 +48925,17 @@ export const QuoteFragmentDoc = {
           { kind: 'FragmentSpread', name: { kind: 'Name', value: 'QuoteBase' } },
           {
             kind: 'Field',
+            name: { kind: 'Name', value: 'profilesMentioned' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMentioned' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'hashtagsMentioned' } },
+          {
+            kind: 'Field',
             name: { kind: 'Name', value: 'quoteOn' },
             selectionSet: {
               kind: 'SelectionSet',
@@ -50073,7 +49175,6 @@ export const QuoteFragmentDoc = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'followModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -50156,24 +49257,6 @@ export const QuoteFragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'medium' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -50416,24 +49499,6 @@ export const QuoteFragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -50703,90 +49768,7 @@ export const QuoteFragmentDoc = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
         ],
       },
     },
@@ -51116,6 +50098,34 @@ export const QuoteFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMentioned' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMentioned' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profile' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'id' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'snapshotHandleMentioned' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'HandleInfo' } }],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'stillOwnsHandle' } },
         ],
       },
     },
@@ -51215,7 +50225,6 @@ export const QuoteFragmentDoc = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'referenceModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -51246,6 +50255,7 @@ export const QuoteFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -51284,6 +50294,7 @@ export const QuoteFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -51334,7 +50345,6 @@ export const QuoteFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'openActionModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -51365,6 +50375,7 @@ export const QuoteFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
         ],
       },
@@ -51391,6 +50402,7 @@ export const QuoteFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -51427,6 +50439,7 @@ export const QuoteFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
           {
             kind: 'Field',
@@ -51464,6 +50477,7 @@ export const QuoteFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
           {
             kind: 'Field',
@@ -51527,6 +50541,7 @@ export const QuoteFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -51564,6 +50579,7 @@ export const QuoteFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -51612,6 +50628,7 @@ export const QuoteFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -54737,48 +53754,6 @@ export const QuoteFragmentDoc = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
         ],
       },
     },
@@ -54810,12 +53785,30 @@ export const QuoteFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isEncrypted' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'by' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Profile' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'stats' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'publicationStatsInput' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'PublicationStats' } },
+              ],
             },
           },
           {
@@ -55326,21 +54319,15 @@ export const QuoteFragmentDoc = {
           },
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'stats' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'publicationStatsInput' } },
-              },
-            ],
+            name: { kind: 'Name', value: 'profilesMentioned' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'PublicationStats' } },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMentioned' } },
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'hashtagsMentioned' } },
         ],
       },
     },
@@ -55362,6 +54349,7 @@ export const QuoteFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'isHidden' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hiddenByAuthor' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'momoka' },
@@ -55372,6 +54360,7 @@ export const QuoteFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isEncrypted' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'by' },
@@ -55917,6 +54906,7 @@ export const QuoteFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isEncrypted' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'by' },
@@ -56699,7 +55689,6 @@ export const MirrorFragmentDoc = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'followModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -56782,24 +55771,6 @@ export const MirrorFragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'medium' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'publicationImageMediumTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -57042,24 +56013,6 @@ export const MirrorFragmentDoc = {
           {
             kind: 'Field',
             alias: { kind: 'Name', value: 'thumbnail' },
-            name: { kind: 'Name', value: 'transformed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'profilePictureTransform' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Image' } }],
-            },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'transformed' },
             arguments: [
               {
@@ -57329,90 +56282,7 @@ export const MirrorFragmentDoc = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReacted' },
-            name: { kind: 'Name', value: 'reacted' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lensClassifierScore' } },
         ],
       },
     },
@@ -57742,6 +56612,34 @@ export const MirrorFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'peerToPeerRecommendedByMe' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProfileMentioned' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ProfileMentioned' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profile' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'id' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'snapshotHandleMentioned' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'HandleInfo' } }],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'stillOwnsHandle' } },
         ],
       },
     },
@@ -57841,7 +56739,6 @@ export const MirrorFragmentDoc = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'referenceModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -57872,6 +56769,7 @@ export const MirrorFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -57910,6 +56808,7 @@ export const MirrorFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -57960,7 +56859,6 @@ export const MirrorFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'openActionModuleReturnData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeCalldata' } },
           { kind: 'Field', name: { kind: 'Name', value: 'initializeResultData' } },
           { kind: 'Field', name: { kind: 'Name', value: 'signlessApproved' } },
@@ -57991,6 +56889,7 @@ export const MirrorFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
         ],
       },
@@ -58017,6 +56916,7 @@ export const MirrorFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -58053,6 +56953,7 @@ export const MirrorFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
           {
             kind: 'Field',
@@ -58090,6 +56991,7 @@ export const MirrorFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
           {
             kind: 'Field',
@@ -58153,6 +57055,7 @@ export const MirrorFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -58190,6 +57093,7 @@ export const MirrorFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -58238,6 +57142,7 @@ export const MirrorFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
@@ -61363,48 +60268,6 @@ export const MirrorFragmentDoc = {
               },
             ],
           },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'upvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'UPVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'downvoteReactions' },
-            name: { kind: 'Name', value: 'reactions' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'type' },
-                      value: { kind: 'EnumValue', value: 'DOWNVOTE' },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
         ],
       },
     },
@@ -61436,12 +60299,30 @@ export const MirrorFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isEncrypted' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'by' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Profile' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'stats' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'publicationStatsInput' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'PublicationStats' } },
+              ],
             },
           },
           {
@@ -61952,21 +60833,15 @@ export const MirrorFragmentDoc = {
           },
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'stats' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'request' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'publicationStatsInput' } },
-              },
-            ],
+            name: { kind: 'Name', value: 'profilesMentioned' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'PublicationStats' } },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMentioned' } },
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'hashtagsMentioned' } },
         ],
       },
     },
@@ -61988,6 +60863,7 @@ export const MirrorFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'isHidden' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hiddenByAuthor' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'momoka' },
@@ -61998,6 +60874,7 @@ export const MirrorFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isEncrypted' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'by' },
@@ -62525,6 +61402,17 @@ export const MirrorFragmentDoc = {
           { kind: 'FragmentSpread', name: { kind: 'Name', value: 'CommentBase' } },
           {
             kind: 'Field',
+            name: { kind: 'Name', value: 'profilesMentioned' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMentioned' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'hashtagsMentioned' } },
+          {
+            kind: 'Field',
             name: { kind: 'Name', value: 'root' },
             selectionSet: {
               kind: 'SelectionSet',
@@ -62626,6 +61514,7 @@ export const MirrorFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'txHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isEncrypted' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'by' },
@@ -63151,6 +62040,17 @@ export const MirrorFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'FragmentSpread', name: { kind: 'Name', value: 'QuoteBase' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profilesMentioned' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ProfileMentioned' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'hashtagsMentioned' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'quoteOn' },

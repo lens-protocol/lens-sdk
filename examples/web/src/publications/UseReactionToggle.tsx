@@ -1,10 +1,11 @@
 import {
+  AnyPublication,
   PrimaryPublication,
   PublicationReactionType,
+  PublicationType,
   hasReacted,
   isPrimaryPublication,
-  publicationId,
-  usePublication,
+  usePublications,
   useReactionToggle,
 } from '@lens-protocol/react-web';
 
@@ -40,23 +41,11 @@ function ReactionButton({ publication, reaction }: ReactionButtonProps) {
   );
 }
 
-function UseReactionToggleInner() {
-  const {
-    data: publication,
-    error,
-    loading,
-  } = usePublication({ forId: publicationId('0x56-0x02') });
-
-  if (loading) return <Loading />;
-
-  if (error) return <ErrorMessage error={error} />;
-
+function PublicationWithReactions({ publication }: { publication: AnyPublication }) {
   invariant(isPrimaryPublication(publication), 'Publication is not a primary publication');
 
   return (
-    <div>
-      <PublicationCard publication={publication} />
-
+    <PublicationCard publication={publication}>
       <div>Total Upvotes: {publication.stats.upvotes}</div>
       <div>Total Downvotes: {publication.stats.downvotes}</div>
 
@@ -64,6 +53,29 @@ function UseReactionToggleInner() {
         <ReactionButton publication={publication} reaction={PublicationReactionType.Upvote} />
         <ReactionButton publication={publication} reaction={PublicationReactionType.Downvote} />
       </div>
+    </PublicationCard>
+  );
+}
+
+function UseReactionToggleInner() {
+  const {
+    data: publications,
+    error,
+    loading,
+  } = usePublications({
+    where: {
+      publicationTypes: [PublicationType.Post],
+    },
+  });
+
+  if (loading) return <Loading />;
+  if (error) return <ErrorMessage error={error} />;
+
+  return (
+    <div>
+      {publications.map((publication) => (
+        <PublicationWithReactions key={publication.id} publication={publication} />
+      ))}
     </div>
   );
 }

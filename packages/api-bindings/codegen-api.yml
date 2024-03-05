@@ -55,8 +55,8 @@ generates:
         TxHash: string
         TxId: string
         UnixTimestamp: number
-        URI: string
-        URL: Url
+        URI: URI
+        URL: URL
         UUID: string
         Void: void
     schema:
@@ -79,7 +79,7 @@ generates:
               '/* eslint-disable no-restricted-imports */', # import * from @apollo/client
               '/* eslint-disable tsdoc/syntax */',
               "import type { AppId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';",
-              "import type { EvmAddress, Url } from '@lens-protocol/shared-kernel';",
+              "import type { EvmAddress, URL, URI } from '@lens-protocol/shared-kernel';",
               "import type { ContentEncryptionKey } from '../ContentEncryptionKey';",
               "import type { Cursor } from '../Cursor';",
               "import type { ImageSizeTransform } from '../ImageTransform';",
@@ -100,35 +100,3 @@ generates:
           documentMode: documentNode
       - 'typescript-apollo-client-helpers'
       - 'fragment-matcher'
-
-  src/snapshot/generated.ts:
-    config:
-      strictScalars: true
-      scalars:
-        Any: unknown
-    schema: https://hub.snapshot.org/graphql
-    documents:
-      - src/snapshot/*.graphql
-    plugins:
-      - 'typescript':
-          onlyOperationTypes: true # scalars and enums
-      - add:
-          content: [
-              '/** Code generated. DO NOT EDIT. */',
-              '/* eslint-disable @typescript-eslint/no-redundant-type-constituents */',
-              '/* eslint-disable import/no-default-export */', # generatedTypes default export
-              '/* eslint-disable no-restricted-imports */', # import * from @apollo/client
-              '/* eslint-disable tsdoc/syntax */',
-            ]
-      - 'typescript-operations':
-          skipTypename: true
-          immutableTypes: false
-          inlineFragmentTypes: combine
-          omitOperationSuffix: true
-          operationResultSuffix: 'Data'
-      - 'typescript-react-apollo':
-          pureMagicComment: true # keep
-          omitOperationSuffix: true # MUST goes with typescript-operations.omitOperationSuffix
-          operationResultSuffix: 'Data' # goes with typescript-operations.operationResultSuffix
-          fragmentVariablePrefix: Fragment # because FragmentDoc suffix is removed by omitOperationSuffix we need to add a prefix to differentiate fragment types from fragment documents
-          documentMode: documentNode

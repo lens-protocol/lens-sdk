@@ -3,29 +3,25 @@ import { ILogger } from '@lens-protocol/shared-kernel';
 
 import { LENS_API_MINIMAL_SUPPORTED_VERSION } from '../constants';
 import { SafeApolloClient } from './SafeApolloClient';
-import { createSnapshotCache } from './cache';
-import { createLensCache, QueryParams } from './cache/createLensCache';
-import { createLensLink, IAccessTokenStorage, createAuthLink, createSnapshotLink } from './links';
+import { createLensCache } from './cache/createLensCache';
+import { AuthLinkArgs, IAccessTokenStorage, createAuthLink, createLensLink } from './links';
 
-export type { ContentInsightMatcher } from './cache/utils/ContentInsight';
-export { snapshotPoll, demoSnapshotPoll } from './cache/utils/ContentInsight';
-
-export type ApolloClientConfig = {
-  accessTokenStorage: IAccessTokenStorage;
+export type ApolloClientConfig = AuthLinkArgs & {
   uri: string;
   logger: ILogger;
   pollingInterval: number;
-  queryParams?: QueryParams;
+  connectToDevTools?: boolean;
 };
 
 export function createLensApolloClient({
   accessTokenStorage,
+  origin,
   uri,
   logger,
   pollingInterval,
-  queryParams,
+  connectToDevTools,
 }: ApolloClientConfig) {
-  const authLink = createAuthLink(accessTokenStorage);
+  const authLink = createAuthLink({ accessTokenStorage, origin });
 
   const httpLink = createLensLink({
     uri,
@@ -34,8 +30,8 @@ export function createLensApolloClient({
   });
 
   return new SafeApolloClient({
-    connectToDevTools: true,
-    cache: createLensCache(queryParams),
+    connectToDevTools,
+    cache: createLensCache(),
     link: from([authLink, httpLink]),
     pollingInterval,
     version: LENS_API_MINIMAL_SUPPORTED_VERSION,
@@ -55,22 +51,8 @@ export function createAuthApolloClient({ uri, logger }: AuthApolloClientConfig) 
   });
 }
 
-export type SnapshotApolloClientConfig = {
-  uri: string;
-};
-
-export function createSnapshotApolloClient({ uri }: SnapshotApolloClientConfig) {
-  return new SafeApolloClient({
-    cache: createSnapshotCache(),
-    link: createSnapshotLink({ uri }),
-  });
-}
-
-export type { IAccessTokenStorage };
-export { defaultQueryParams } from './cache/createLensCache';
-export type { QueryParams };
 export type { IGraphQLClient } from './IGraphQLClient';
-export * from './errors';
-export * from './cache/transactions';
 export * from './cache/session';
-export type { SafeApolloClient };
+export * from './cache/transactions';
+export * from './errors';
+export type { IAccessTokenStorage, SafeApolloClient };

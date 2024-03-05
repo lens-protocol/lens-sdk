@@ -14,15 +14,14 @@ fragment PublicationValidateMetadataResult on PublicationValidateMetadataResult 
 # queries
 query Publication(
   $request: PublicationRequest!
-  $imageSmallSize: ImageTransform = {}
-  $imageMediumSize: ImageTransform = {}
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $imageSmallSize: ImageTransform!
+  $imageMediumSize: ImageTransform!
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
-  ...InjectQueryParams
   result: publication(request: $request) {
     ... on Post {
       ...Post
@@ -43,15 +42,14 @@ query Publications(
   $where: PublicationsWhere!
   $limit: LimitType
   $cursor: Cursor
-  $imageSmallSize: ImageTransform = {}
-  $imageMediumSize: ImageTransform = {}
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
+  $imageSmallSize: ImageTransform!
+  $imageMediumSize: ImageTransform!
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
 ) {
-  ...InjectQueryParams
   result: publications(request: { where: $where, limit: $limit, cursor: $cursor }) {
     items {
       ... on Post {
@@ -87,6 +85,37 @@ query PublicationsTags($request: PublicationsTagsRequest!) {
 query ValidatePublicationMetadata($request: ValidatePublicationMetadataRequest!) {
   result: validatePublicationMetadata(request: $request) {
     ...PublicationValidateMetadataResult
+  }
+}
+
+query PublicationBookmarks(
+  $request: PublicationBookmarksRequest!
+  $imageSmallSize: ImageTransform!
+  $imageMediumSize: ImageTransform!
+  $profileCoverSize: ImageTransform!
+  $profilePictureSize: ImageTransform!
+  $statsFor: [AppId!]!
+  $fxRateFor: SupportedFiatType!
+  $profileMetadataSource: AppId
+) {
+  result: publicationBookmarks(request: $request) {
+    items {
+      ... on Post {
+        ...Post
+      }
+      ... on Comment {
+        ...Comment
+      }
+      ... on Mirror {
+        ...Mirror
+      }
+      ... on Quote {
+        ...Quote
+      }
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
   }
 }
 
@@ -529,38 +558,6 @@ mutation RefreshPublicationMetadata($request: RefreshPublicationMetadataRequest!
   }
 }
 
-query PublicationBookmarks(
-  $request: PublicationBookmarksRequest!
-  $imageSmallSize: ImageTransform = {}
-  $imageMediumSize: ImageTransform = {}
-  $profileCoverSize: ImageTransform = {}
-  $profilePictureSize: ImageTransform = {}
-  $statsFor: [AppId!]
-  $fxRateFor: SupportedFiatType = USD
-  $profileMetadataSource: AppId = null
-) {
-  ...InjectQueryParams
-  result: publicationBookmarks(request: $request) {
-    items {
-      ... on Post {
-        ...Post
-      }
-      ... on Comment {
-        ...Comment
-      }
-      ... on Mirror {
-        ...Mirror
-      }
-      ... on Quote {
-        ...Quote
-      }
-    }
-    pageInfo {
-      ...PaginatedResultInfo
-    }
-  }
-}
-
 mutation AddPublicationBookmark($request: PublicationBookmarkRequest!) {
   result: addPublicationBookmark(request: $request)
 }
@@ -575,4 +572,12 @@ mutation AddPublicationNotInterested($request: PublicationNotInterestedRequest!)
 
 mutation UndoPublicationNotInterested($request: PublicationNotInterestedRequest!) {
   undoPublicationNotInterested(request: $request)
+}
+
+mutation HideComment($request: HideCommentRequest!) {
+  hideComment(request: $request)
+}
+
+mutation UnhideComment($request: UnhideCommentRequest!) {
+  unhideComment(request: $request)
 }

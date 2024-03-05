@@ -12,6 +12,7 @@ import {
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { useFragmentVariables } from '../helpers/variables';
 
 export type UseNotificationsArgs = PaginatedArgs<NotificationRequest>;
 
@@ -69,10 +70,10 @@ export function useNotifications({ where }: UseNotificationsArgs = {}): Paginate
   return usePaginatedReadResult(
     useUnderlyingQuery(
       useLensApolloClient({
-        variables: {
+        variables: useFragmentVariables({
           where,
           statsFor: where?.publishedOn,
-        },
+        }),
       }),
     ),
   );

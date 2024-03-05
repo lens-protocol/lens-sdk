@@ -1,10 +1,12 @@
+import { URI } from '@lens-protocol/shared-kernel';
+
 import { TransactionKind } from '../../entities';
 import { DelegableSigning } from '../transactions/DelegableSigning';
 import { PaidTransaction } from '../transactions/PaidTransaction';
 import { SponsorshipReady } from '../transactions/SponsorshipReady';
 
 export type SetProfileMetadataRequest = {
-  metadataURI: string;
+  metadataURI: URI;
   kind: TransactionKind.UPDATE_PROFILE_DETAILS;
   signless: boolean;
   sponsored: boolean;

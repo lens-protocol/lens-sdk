@@ -11,6 +11,7 @@ export * from './useProfileFollowers';
 export * from './useProfileFollowing';
 export * from './useProfileManagers';
 export * from './useProfiles';
+export * from './useRecommendProfileToggle';
 export * from './useReportProfile';
 export * from './useWhoActedOnPublication';
 
@@ -46,7 +47,6 @@ export type {
   NoFollowPolicy,
   OpenFollowPolicy,
   UnknownFollowPolicy,
-  NoFeeFollowPolicy, // deprecated
 } from '@lens-protocol/api-bindings';
 export { resolveFollowPolicy } from '@lens-protocol/api-bindings';
 export { isValidHandle } from '@lens-protocol/blockchain-bindings';

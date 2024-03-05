@@ -54,6 +54,7 @@ import {
   UseProfileManagers,
   UseProfiles,
   UseProfilesManaged,
+  UseRecommendProfileToggle,
   UseReportProfile,
   UseSetProfileMetadata,
   UseUpdateFollowPolicy,
@@ -68,6 +69,7 @@ import {
   UseCreateMirror,
   UseCreatePost,
   UseCreateQuote,
+  UseHideCommentToggle,
   UseHidePublication,
   UseLazyPublications,
   UseNotInterestedToggle,
@@ -117,6 +119,7 @@ export function App() {
                   <Route path="useBookmarks" element={<UseBookmarks />} />
                   <Route path="useOpenAction" element={<UseOpenAction />} />
                   <Route path="useNotInterestedToggle" element={<UseNotInterestedToggle />} />
+                  <Route path="useHideCommentToggle" element={<UseHideCommentToggle />} />
                 </Route>
 
                 <Route path="/profiles">
@@ -142,6 +145,7 @@ export function App() {
                   <Route path="useBlockedProfiles" element={<UseBlockedProfiles />} />
                   <Route path="useLastLoggedInProfile" element={<UseLastLoggedInProfile />} />
                   <Route path="useReportProfile" element={<UseReportProfile />} />
+                  <Route path="useRecommendProfileToggle" element={<UseRecommendProfileToggle />} />
                 </Route>
 
                 <Route path="/discovery">

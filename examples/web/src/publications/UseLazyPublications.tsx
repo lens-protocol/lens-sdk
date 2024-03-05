@@ -12,7 +12,7 @@ export function UseLazyPublications() {
 
     const result = await execute({
       where: {
-        from: [profileId('0x1b')],
+        from: [profileId('0x06')],
       },
     });
 

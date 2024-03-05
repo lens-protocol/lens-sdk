@@ -32,16 +32,8 @@ export * from './wallet';
 /**
  * Domain essentials
  */
-export type { AppId, NftId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
-export {
-  Amount,
-  ChainType,
-  WellKnownSymbols,
-  erc20,
-  ether,
-  matic,
-  usd,
-} from '@lens-protocol/shared-kernel';
+export type { AppId, ProfileId, PublicationId } from '@lens-protocol/domain/entities';
+export { Amount, ChainType, erc20, fiat, ether, matic } from '@lens-protocol/shared-kernel';
 export type {
   AmountValue,
   Asset,
@@ -65,7 +57,8 @@ export type {
   PromiseResult,
   Result,
   Success,
-  Url,
+  URI,
+  URL,
 } from '@lens-protocol/shared-kernel';
 
 /**
@@ -90,7 +83,7 @@ export * from './helpers/tasks';
 /**
  * GQL common types
  */
-export type { App } from '@lens-protocol/api-bindings';
+export type { App, OptimisticStatusResult } from '@lens-protocol/api-bindings';
 
 // GQL enums
 export {
@@ -98,10 +91,11 @@ export {
   ComparisonOperatorConditionType,
   CustomFiltersType,
   ExploreProfilesOrderByType,
-  ExplorePublicationType,
   ExplorePublicationsOrderByType,
+  ExplorePublicationType,
   FeedEventItemType,
   FollowModuleType,
+  HiddenCommentsType,
   LimitType,
   MarketplaceMetadataAttributeDisplayType,
   NftContractType,
@@ -145,7 +139,7 @@ export { NotFoundError } from './NotFoundError';
 /**
  * Helpers
  */
-export { erc20Amount } from '@lens-protocol/api-bindings';
+export { erc20Amount, fiatAmount } from '@lens-protocol/api-bindings';
 export * from './ConsoleLogger';
 export { useSharedDependencies } from './shared';
 export * from './utils';

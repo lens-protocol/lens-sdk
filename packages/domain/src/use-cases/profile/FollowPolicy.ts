@@ -21,13 +21,6 @@ export type OpenFollowConfig = {
   type: FollowPolicyType.ANYONE;
 };
 
-/**
- * @deprecated not longer in use - removal slated for stable 2.x release
- */
-export type NoFeeFollowConfig = {
-  type: FollowPolicyType.ANYONE | FollowPolicyType.NO_ONE;
-};
-
 export type UnknownFollowConfig = {
   type: FollowPolicyType.UNKNOWN;
   /**
