@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "exampleReactNative.app"
-               BlueprintName = "exampleReactNative"
-               ReferencedContainer = "container:exampleReactNative.xcodeproj">
+               BuildableName = "NativeLens.app"
+               BlueprintName = "NativeLens"
+               ReferencedContainer = "container:NativeLens.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "exampleReactNativeTests.xctest"
-               BlueprintName = "exampleReactNativeTests"
-               ReferencedContainer = "container:exampleReactNative.xcodeproj">
+               BuildableName = "NativeLensTests.xctest"
+               BlueprintName = "NativeLensTests"
+               ReferencedContainer = "container:NativeLens.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "exampleReactNative.app"
-            BlueprintName = "exampleReactNative"
-            ReferencedContainer = "container:exampleReactNative.xcodeproj">
+            BuildableName = "NativeLens.app"
+            BlueprintName = "NativeLens"
+            ReferencedContainer = "container:NativeLens.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "exampleReactNative.app"
-            BlueprintName = "exampleReactNative"
-            ReferencedContainer = "container:exampleReactNative.xcodeproj">
+            BuildableName = "NativeLens.app"
+            BlueprintName = "NativeLens"
+            ReferencedContainer = "container:NativeLens.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

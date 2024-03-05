@@ -4,3 +4,4 @@ packages:
   - "examples/shared"
   - "examples/next-js"
   - "examples/node"
+  - "examples/react-native"
