@@ -6,7 +6,12 @@ import {
   PublicationStatsCountOpenActionArgs,
   StrictTypedTypePolicies,
 } from '../../../lens';
-import { countAnyPendingCollectFor } from '../transactions';
+import {
+  countAnyPendingCollectFor,
+  countAnyPendingCreateCommentFor,
+  countAnyPendingCreateMirrorFor,
+  countAnyPendingCreateQuoteFor,
+} from '../transactions';
 
 type CountOpenActionsArgs = {
   request?: PublicationStatsCountOpenActionArgs;
@@ -30,6 +35,24 @@ export function createPublicationStatsTypePolicy(): StrictTypedTypePolicies['Pub
             return (existing ?? 0) + countAnyPendingCollectFor(id);
           }
           return existing ?? 0;
+        },
+      },
+      comments: {
+        read(existing: number | undefined, { readField }: FieldFunctionOptions) {
+          const id = readField('id') as PublicationId;
+          return (existing ?? 0) + countAnyPendingCreateCommentFor(id);
+        },
+      },
+      mirrors: {
+        read(existing: number | undefined, { readField }: FieldFunctionOptions) {
+          const id = readField('id') as PublicationId;
+          return (existing ?? 0) + countAnyPendingCreateMirrorFor(id);
+        },
+      },
+      quotes: {
+        read(existing: number | undefined, { readField }: FieldFunctionOptions) {
+          const id = readField('id') as PublicationId;
+          return (existing ?? 0) + countAnyPendingCreateQuoteFor(id);
         },
       },
     },

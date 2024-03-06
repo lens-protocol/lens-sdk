@@ -12,7 +12,13 @@ import {
   UnfollowRequest,
   UnlinkHandleRequest,
 } from '@lens-protocol/domain/use-cases/profile';
-import { OpenActionRequest, AllOpenActionType } from '@lens-protocol/domain/use-cases/publications';
+import {
+  OpenActionRequest,
+  AllOpenActionType,
+  CreateQuoteRequest,
+  CreateMirrorRequest,
+  CreateCommentRequest,
+} from '@lens-protocol/domain/use-cases/publications';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 
 export enum TxStatus {
@@ -91,6 +97,63 @@ export function countAnyPendingCollect() {
     (count, transaction) =>
       count +
       (isCollectTransaction(transaction) && transaction.status === TxStatus.PENDING ? 1 : 0),
+    0,
+  );
+}
+
+function isCreateCommentTransaction(
+  transaction: TransactionState<AnyTransactionRequest>,
+): transaction is TransactionState<CreateCommentRequest> {
+  return transaction.request.kind === TransactionKind.CREATE_COMMENT;
+}
+
+export function countAnyPendingCreateCommentFor(publicationId: PublicationId) {
+  return recentTransactionsVar().reduce(
+    (count, transaction) =>
+      count +
+      (isCreateCommentTransaction(transaction) &&
+      transaction.status === TxStatus.PENDING &&
+      transaction.request.commentOn === publicationId
+        ? 1
+        : 0),
+    0,
+  );
+}
+
+function isCreateMirrorTransaction(
+  transaction: TransactionState<AnyTransactionRequest>,
+): transaction is TransactionState<CreateMirrorRequest> {
+  return transaction.request.kind === TransactionKind.MIRROR_PUBLICATION;
+}
+
+export function countAnyPendingCreateMirrorFor(publicationId: PublicationId) {
+  return recentTransactionsVar().reduce(
+    (count, transaction) =>
+      count +
+      (isCreateMirrorTransaction(transaction) &&
+      transaction.status === TxStatus.PENDING &&
+      transaction.request.mirrorOn === publicationId
+        ? 1
+        : 0),
+    0,
+  );
+}
+
+function isCreateQuoteTransaction(
+  transaction: TransactionState<AnyTransactionRequest>,
+): transaction is TransactionState<CreateQuoteRequest> {
+  return transaction.request.kind === TransactionKind.CREATE_QUOTE;
+}
+
+export function countAnyPendingCreateQuoteFor(publicationId: PublicationId) {
+  return recentTransactionsVar().reduce(
+    (count, transaction) =>
+      count +
+      (isCreateQuoteTransaction(transaction) &&
+      transaction.status === TxStatus.PENDING &&
+      transaction.request.quoteOn === publicationId
+        ? 1
+        : 0),
     0,
   );
 }
