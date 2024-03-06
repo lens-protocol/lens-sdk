@@ -1,6 +1,6 @@
+import { Box, Button, ButtonText, Text } from '@gluestack-ui/themed';
 import { useSession, useLogin, useLogout, SessionType } from '@lens-protocol/react-native';
 import React from 'react';
-import { Button, Text, View } from 'react-native';
 
 import { wallet } from './wallet';
 
@@ -22,21 +22,41 @@ export function LoginButton() {
 
   if (session?.authenticated) {
     return (
-      <View>
-        <Text>
+      <Box>
+        <Text isTruncated>
           Welcome{' '}
           {session.type === SessionType.WithProfile
             ? session.profile.metadata?.displayName ?? session.profile.handle?.fullHandle
             : session.address}
         </Text>
-        <Button disabled={logoutLoading} onPress={onLogoutPress} title="Log out" />
-      </View>
+        <Button
+          size="md"
+          variant="solid"
+          action="primary"
+          isDisabled={false}
+          isFocusVisible={false}
+          disabled={logoutLoading}
+          onPress={onLogoutPress}
+        >
+          <ButtonText>Log out</ButtonText>
+        </Button>
+      </Box>
     );
   }
 
   return (
-    <View>
-      <Button disabled={loginLoading} onPress={onLoginPress} title="Log in" />
-    </View>
+    <Box>
+      <Button
+        size="md"
+        variant="solid"
+        action="primary"
+        isDisabled={false}
+        isFocusVisible={false}
+        disabled={loginLoading}
+        onPress={onLoginPress}
+      >
+        <ButtonText>Log in</ButtonText>
+      </Button>
+    </Box>
   );
 }

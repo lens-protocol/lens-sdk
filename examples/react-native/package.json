@@ -12,13 +12,17 @@
   },
   "dependencies": {
     "@ethersproject/shims": "^5.7.0",
+    "@gluestack-style/react": "^1.0.48",
+    "@gluestack-ui/config": "^1.1.16",
+    "@gluestack-ui/themed": "^1.1.9",
     "@lens-protocol/metadata": "^1.0.5",
     "@lens-protocol/react-native": "link:../../packages/react-native",
     "ethers": "^5.7.2",
     "react": "18.2.0",
     "react-native": "0.73.5",
     "react-native-get-random-values": "^1.10.0",
-    "react-native-mmkv": "~2.11.0"
+    "react-native-mmkv": "~2.11.0",
+    "react-native-svg": "13.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
