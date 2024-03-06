@@ -33,6 +33,7 @@ import { OnChainRelayer } from './transactions/adapters/OnChainRelayer';
 import { PendingTransactionGateway } from './transactions/adapters/PendingTransactionGateway';
 import { TransactionQueuePresenter } from './transactions/adapters/TransactionQueuePresenter';
 import { BlockProfilesResponder } from './transactions/adapters/responders/BlockProfilesResponder';
+import { CreateProfileResponder } from './transactions/adapters/responders/CreateProfileResponder';
 import { FollowProfileResponder } from './transactions/adapters/responders/FollowProfileResponder';
 import { LinkHandleResponder } from './transactions/adapters/responders/LinkHandleResponder';
 import { NoopResponder } from './transactions/adapters/responders/NoopResponder';
@@ -108,14 +109,14 @@ export function createSharedDependencies(userConfig: BaseConfig): SharedDependen
     [TransactionKind.ACT_ON_PUBLICATION]: new RefreshPublicationResponder(publicationCacheManager),
     [TransactionKind.APPROVE_MODULE]: new NoopResponder(),
     [TransactionKind.BLOCK_PROFILE]: new BlockProfilesResponder(profileCacheManager),
-    [TransactionKind.CLAIM_HANDLE]: new NoopResponder(),
-    [TransactionKind.CREATE_COMMENT]: new NoopResponder(), // TODO update profile for new stats
-    [TransactionKind.CREATE_POST]: new NoopResponder(), // TODO update profile for new stats
-    [TransactionKind.CREATE_PROFILE]: new NoopResponder(),
-    [TransactionKind.CREATE_QUOTE]: new NoopResponder(), // TODO update profile for new stats
+    [TransactionKind.CLAIM_HANDLE]: new CreateProfileResponder(apolloClient, profileCacheManager),
+    [TransactionKind.CREATE_COMMENT]: new RefreshCurrentProfileResponder(profileCacheManager),
+    [TransactionKind.CREATE_POST]: new RefreshCurrentProfileResponder(profileCacheManager),
+    [TransactionKind.CREATE_PROFILE]: new CreateProfileResponder(apolloClient, profileCacheManager),
+    [TransactionKind.CREATE_QUOTE]: new RefreshCurrentProfileResponder(profileCacheManager),
     [TransactionKind.FOLLOW_PROFILE]: new FollowProfileResponder(profileCacheManager),
     [TransactionKind.LINK_HANDLE]: new LinkHandleResponder(apolloClient, profileCacheManager),
-    [TransactionKind.MIRROR_PUBLICATION]: new NoopResponder(), // TODO update profile for new stats
+    [TransactionKind.MIRROR_PUBLICATION]: new RefreshCurrentProfileResponder(profileCacheManager),
     [TransactionKind.UNBLOCK_PROFILE]: new UnblockProfilesResponder(profileCacheManager),
     [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(profileCacheManager),
     [TransactionKind.UNLINK_HANDLE]: new LinkHandleResponder(apolloClient, profileCacheManager),
