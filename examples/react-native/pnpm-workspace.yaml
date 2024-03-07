@@ -1,2 +1,0 @@
-# is required to force pnpm installing packages outside the root workspace
-# see https://github.com/pnpm/pnpm/issues/2412

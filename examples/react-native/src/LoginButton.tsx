@@ -1,42 +1,59 @@
-import { useSession, useLogin, useLogout, SessionType } from '@lens-protocol/react-native';
+import {
+  Button,
+  ButtonText,
+  Toast,
+  ToastTitle,
+  ToastDescription,
+  useToast,
+  VStack,
+} from '@gluestack-ui/themed';
+import { Profile, useLogin } from '@lens-protocol/react-native';
 import React from 'react';
-import { Button, Text, View } from 'react-native';
 
-import { wallet } from './wallet';
+export type LoginButtonProps = {
+  address: string;
+  profile: Profile;
+};
 
-export function LoginButton() {
+export function LoginButton({ address, profile }: LoginButtonProps) {
+  const toast = useToast();
   const { execute: login, loading: loginLoading } = useLogin();
-  const { execute: logout, loading: logoutLoading } = useLogout();
-  const { data: session } = useSession();
 
   const onLoginPress = async () => {
-    const result = await login(wallet);
+    const result = await login({
+      address,
+      profileId: profile?.id,
+    });
 
     if (result.isFailure()) {
+      toast.show({
+        placement: 'top',
+        render: ({ id }) => {
+          const toastId = 'toast-' + id;
+          return (
+            <Toast nativeID={toastId} action="attention" variant="solid">
+              <VStack space="xs">
+                <ToastTitle>Log-in error</ToastTitle>
+                <ToastDescription>{result.error.message}</ToastDescription>
+              </VStack>
+            </Toast>
+          );
+        },
+      });
     }
   };
 
-  const onLogoutPress = async () => {
-    await logout();
-  };
-
-  if (session?.authenticated) {
-    return (
-      <View>
-        <Text>
-          Welcome{' '}
-          {session.type === SessionType.WithProfile
-            ? session.profile.metadata?.displayName ?? session.profile.handle?.fullHandle
-            : session.address}
-        </Text>
-        <Button disabled={logoutLoading} onPress={onLogoutPress} title="Log out" />
-      </View>
-    );
-  }
-
   return (
-    <View>
-      <Button disabled={loginLoading} onPress={onLoginPress} title="Log in" />
-    </View>
+    <Button
+      size="md"
+      variant="link"
+      action="primary"
+      isDisabled={false}
+      isFocusVisible={false}
+      disabled={loginLoading}
+      onPress={onLoginPress}
+    >
+      <ButtonText isTruncated>{profile.handle?.fullHandle ?? profile.ownedBy.address}</ButtonText>
+    </Button>
   );
 }
