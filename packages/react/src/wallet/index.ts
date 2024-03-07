@@ -11,5 +11,6 @@ export * from './useRateLimits';
 export type {
   ClaimableProfilesResult,
   HandleInfo,
+  UserCurrentRateLimit,
   UserCurrentRateLimitResult,
 } from '@lens-protocol/api-bindings';

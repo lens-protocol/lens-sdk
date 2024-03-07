@@ -4,7 +4,7 @@ import { RequireConnectedWallet } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
-import { ProfileCard } from './components/ProfileCard';
+import { ProfileCard } from '../profiles/components/ProfileCard';
 
 function UseProfilesManagedInner({ address }: { address: string }) {
   const {

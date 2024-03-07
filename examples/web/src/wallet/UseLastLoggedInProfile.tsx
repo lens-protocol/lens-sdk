@@ -3,9 +3,9 @@ import { EvmAddress, useLastLoggedInProfile } from '@lens-protocol/react-web';
 import { RequireConnectedWallet } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
-import { ProfileCard } from './components/ProfileCard';
+import { ProfileCard } from '../profiles/components/ProfileCard';
 
-export function UseLastLoggedInProfileInner({ address }: { address: EvmAddress }) {
+function UseLastLoggedInProfileInner({ address }: { address: EvmAddress }) {
   const { data: profile, error, loading } = useLastLoggedInProfile({ for: address });
 
   if (loading) return <Loading />;

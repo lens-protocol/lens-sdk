@@ -42,18 +42,15 @@ import {
   UseBlockedProfiles,
   UseCreateProfile,
   UseFollowAndUnfollow,
-  UseLastLoggedInProfile,
   UseLazyProfile,
   UseLazyProfiles,
   UseMutualFollowers,
-  UseOwnedHandles,
   UseProfile,
   UseProfileActionHistory,
   UseProfileFollowers,
   UseProfileFollowing,
   UseProfileManagers,
   UseProfiles,
-  UseProfilesManaged,
   UseRecommendProfileToggle,
   UseReportProfile,
   UseSetProfileMetadata,
@@ -86,6 +83,13 @@ import {
   UseRevenueFromPublication,
   UseRevenueFromPublications,
 } from './revenue';
+import {
+  UseLastLoggedInProfile,
+  UseOwnedHandles,
+  UseProfilesManaged,
+  UseRateLimits,
+  WalletPage,
+} from './wallet';
 
 export function App() {
   return (
@@ -135,15 +139,12 @@ export function App() {
                   <Route path="useFollow" element={<UseFollowAndUnfollow />} />
                   <Route path="useProfileManagers" element={<UseProfileManagers />} />
                   <Route path="useUpdateProfileManagers" element={<UseUpdateProfileManagers />} />
-                  <Route path="useProfilesManaged" element={<UseProfilesManaged />} />
                   <Route path="useWhoActedOnPublication" element={<UseWhoActedOnPublication />} />
                   <Route path="useProfileActionHistory" element={<UseProfileActionHistory />} />
                   <Route path="useSetProfileMetadata" element={<UseSetProfileMetadata />} />
                   <Route path="useUpdateFollowPolicy" element={<UseUpdateFollowPolicy />} />
-                  <Route path="useOwnedHandles" element={<UseOwnedHandles />} />
                   <Route path="useBlockProfiles" element={<UseBlockAndUnblockProfiles />} />
                   <Route path="useBlockedProfiles" element={<UseBlockedProfiles />} />
-                  <Route path="useLastLoggedInProfile" element={<UseLastLoggedInProfile />} />
                   <Route path="useReportProfile" element={<UseReportProfile />} />
                   <Route path="useRecommendProfileToggle" element={<UseRecommendProfileToggle />} />
                 </Route>
@@ -157,6 +158,14 @@ export function App() {
                   <Route path="useExploreProfiles" element={<UseExploreProfiles />} />
                   <Route path="useExplorePublications" element={<UseExplorePublications />} />
                   <Route path="useRecommendedProfiles" element={<UseRecommendedProfiles />} />
+                </Route>
+
+                <Route path="/wallet">
+                  <Route index element={<WalletPage />} />
+                  <Route path="useProfilesManaged" element={<UseProfilesManaged />} />
+                  <Route path="useOwnedHandles" element={<UseOwnedHandles />} />
+                  <Route path="useLastLoggedInProfile" element={<UseLastLoggedInProfile />} />
+                  <Route path="useRateLimits" element={<UseRateLimits />} />
                 </Route>
 
                 <Route path="/revenue">
