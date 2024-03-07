@@ -204,12 +204,18 @@ importers:
       '@lens-protocol/prettier-config':
         specifier: link:../../packages/prettier-config
         version: link:../../packages/prettier-config
+      '@react-native-community/cli-platform-android':
+        specifier: ^12.3.6
+        version: 12.3.6
       '@react-native/babel-preset':
         specifier: 0.73.21
         version: 0.73.21(@babel/core@7.23.3)(@babel/preset-env@7.23.3)
       '@react-native/eslint-config':
         specifier: 0.73.2
         version: 0.73.2(eslint@8.57.0)(prettier@2.8.8)(typescript@5.0.4)
+      '@react-native/gradle-plugin':
+        specifier: ^0.73.4
+        version: 0.73.4
       '@react-native/metro-config':
         specifier: 0.73.5
         version: 0.73.5(@babel/core@7.23.3)(@babel/preset-env@7.23.3)
