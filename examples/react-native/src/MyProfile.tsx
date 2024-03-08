@@ -29,11 +29,13 @@ function ProfileAvatar({ profile }: ProfileAvatarProps) {
       <AvatarFallbackText fontFamily="$heading">
         {profile.handle?.localName ?? profile.ownedBy.address}
       </AvatarFallbackText>
-      <AvatarImage
-        source={{
-          uri,
-        }}
-      />
+      {uri && (
+        <AvatarImage
+          source={{
+            uri,
+          }}
+        />
+      )}
     </Avatar>
   );
 }
