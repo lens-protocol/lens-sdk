@@ -43,7 +43,7 @@ export type ValidateHandleRequest = {
  *
  * @example
  * ```ts
- * const { called,  error, loading, execute } = useValidateHandle();
+ * const { called, error, loading, execute } = useValidateHandle();
  * ```
  *
  * Simple example:
