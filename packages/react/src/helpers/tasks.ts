@@ -1,41 +1,33 @@
+import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { IEquatableError, PromiseResult } from '@lens-protocol/shared-kernel';
 import { useCallback, useState } from 'react';
 
 /**
  * An deferrable task is a function that can be executed multiple times and that can be in a pending state.
+ *
+ * @internal
  */
-export type DeferrableTask<TData, TError extends IEquatableError = never, TInput = void> = (
+export type DeferrableTask<TValue, TError extends IEquatableError = never, TInput = void> = (
   input: TInput,
-) => PromiseResult<TData, TError>;
+) => PromiseResult<TValue, TError>;
 
 /**
  * The initial state of a deferred task.
  */
 export type DeferredTaskIdle = {
-  called: false;
+  called: boolean;
   loading: false;
   data: undefined;
   error: undefined;
 };
 
 /**
- * The state of a deferred task during the first call.
+ * The state of a deferred task during the loading.
  */
-export type DeferredTaskFirstCall = {
+export type DeferredTaskLoading<TData> = {
   called: true;
   loading: true;
-  data: undefined;
-  error: undefined;
-};
-
-/**
- * The state of a deferred task during the n-th call
- * with data from the previous successful call.
- */
-export type DeferredTaskNthCall<TData> = {
-  called: true;
-  loading: true;
-  data: TData;
+  data: TData | undefined;
   error: undefined;
 };
 
@@ -60,24 +52,49 @@ export type DeferredTaskFailed<TError extends IEquatableError> = {
 };
 
 /**
+ * @deprecated Use DeferredTaskLoading instead. Removal slated for v2.0.0.
+ */
+export type DeferredTaskFirstCall = DeferredTaskLoading<unknown>;
+/**
+ * @deprecated Use DeferredTaskLoading instead. Removal slated for v2.0.0.
+ */
+export type DeferredTaskNthCall<TData> = DeferredTaskLoading<TData>;
+
+/**
  * The possible statuses of a deferred task.
  */
 export type DeferredTaskState<TData, TError extends IEquatableError> =
   | DeferredTaskIdle
-  | DeferredTaskFirstCall
-  | DeferredTaskNthCall<TData>
+  | DeferredTaskLoading<TData>
   | DeferredTaskSuccess<TData>
   | DeferredTaskFailed<TError>;
 
+export function foo() {
+  const test: DeferredTaskState<number, BroadcastingError> = {} as DeferredTaskState<
+    number,
+    BroadcastingError
+  >;
+
+  if (!test.called) {
+    return;
+  }
+
+  if (test.loading) {
+    return;
+  }
+
+  if (test.error) {
+    return;
+  }
+}
+
 /**
- * An deferred task React Hook is a tiny wrapper around an asynchronous function
- * that provides a way to determine when the task is running and also provide access
- * the last error that occurred during the execution of the task.
+ * A deferred task React Hook is a lightweight wrapper for an asynchronous function.
+ * It allows tracking of the task's execution status and provides access to the
+ * last error that occurred during the task's execution, if any.
  *
- * It provides a type-safe way to consume the state of the task.
  * ```ts
  * const { called, loading, data, error, execute }: UseDeferredTask<TData, TError, TInput> = useAnyDeferredTask();
- *
  *
  * if (!called) {
  *   // data === undefined
@@ -98,7 +115,9 @@ export type DeferredTaskState<TData, TError extends IEquatableError> =
  *   return <p>Something went wrong: {error.message}</p>;
  * }
  *
+ * // called === true
  * // data === TData
+ * // error === undefined
  * return <p>Task completed: {data}</p>;
  * ```
  */
@@ -106,9 +125,14 @@ export type UseDeferredTask<
   TData = void,
   TError extends IEquatableError = never,
   TInput = void,
+  TResultValue = TData,
 > = DeferredTaskState<TData, TError> & {
-  execute: DeferrableTask<TData, TError, TInput>;
+  execute: DeferrableTask<TResultValue, TError, TInput>;
 };
+
+/**
+ * @internal
+ */
 
 /**
  * @internal
@@ -126,18 +150,10 @@ export function useDeferredTask<TData, TError extends IEquatableError, TInput = 
   const execute = useCallback(
     async (input: TInput) => {
       setState(({ data }): DeferredTaskState<TData, TError> => {
-        if (data !== undefined) {
-          return {
-            called: true,
-            loading: true,
-            data: data,
-            error: undefined,
-          };
-        }
         return {
           called: true,
           loading: true,
-          data: undefined,
+          data,
           error: undefined,
         };
       });
@@ -163,12 +179,10 @@ export function useDeferredTask<TData, TError extends IEquatableError, TInput = 
 
         return result;
       } catch (err) {
-        setState(({ data, called }) => {
+        setState((existing) => {
           return {
+            ...existing,
             loading: false,
-            called: !data ? false : called,
-            data: data,
-            error: undefined,
           } as DeferredTaskState<TData, TError>;
         });
         throw err;
