@@ -45,7 +45,7 @@ function PublicationFacts({ publication }: { publication: PrimaryPublication }) 
         </span>
       </p>
 
-      {publication.operations.hasCollected && <p>You already collected this publication</p>}
+      {publication.operations.hasCollected.value && <p>You already collected this publication</p>}
     </>
   );
 }

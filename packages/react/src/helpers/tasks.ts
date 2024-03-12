@@ -1,5 +1,5 @@
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
-import { IEquatableError, PromiseResult } from '@lens-protocol/shared-kernel';
+import { IEquatableError, PromiseResult, invariant } from '@lens-protocol/shared-kernel';
 import { useCallback, useState } from 'react';
 
 /**
@@ -149,6 +149,8 @@ export function useDeferredTask<TData, TError extends IEquatableError, TInput = 
 
   const execute = useCallback(
     async (input: TInput) => {
+      invariant(!state.loading, 'Cannot execute a task while another is in progress.');
+
       setState(({ data }): DeferredTaskState<TData, TError> => {
         return {
           called: true,
@@ -188,7 +190,7 @@ export function useDeferredTask<TData, TError extends IEquatableError, TInput = 
         throw err;
       }
     },
-    [handler],
+    [handler, state],
   );
 
   return {

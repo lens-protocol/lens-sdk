@@ -11,7 +11,7 @@ import {
 
 describe('Given the useDeferredTask hook', () => {
   describe('when rendered for the first time', () => {
-    it('should return state inline with type of "DeferredTaskIdle"', async () => {
+    it('should return state in line with type of "DeferredTaskIdle"', async () => {
       const { result } = renderHook(() =>
         useDeferredTask(async (input: string) => {
           return success(input);
@@ -31,7 +31,7 @@ describe('Given the useDeferredTask hook', () => {
 
   describe('and the hook is executed for the first time', () => {
     describe('when the task is in progress', () => {
-      it('should return the state inline with type of "DeferredTaskLoading"', async () => {
+      it('should return the state in line with type of "DeferredTaskLoading"', async () => {
         const { result } = renderHook(() =>
           useDeferredTask(async (input: string) => {
             return success(input);
@@ -54,7 +54,7 @@ describe('Given the useDeferredTask hook', () => {
     });
 
     describe(`when the tasks succeeds`, () => {
-      it('should return the state inline with type of "DeferredTaskSuccess"', async () => {
+      it('should return the state in line with type of "DeferredTaskSuccess"', async () => {
         const { result } = renderHook(() =>
           useDeferredTask(async (input: string) => {
             return success(input);
@@ -74,6 +74,7 @@ describe('Given the useDeferredTask hook', () => {
 
         expect(result.current).toMatchObject(expectation);
       });
+
       it('should support void as success data', async () => {
         const { result } = renderHook(() =>
           useDeferredTask(async (_: string) => {
@@ -97,7 +98,7 @@ describe('Given the useDeferredTask hook', () => {
     });
 
     describe(`when the task fails`, () => {
-      it('should return the state inline with type of "DeferredTaskFailed"', async () => {
+      it('should return the state in line with type of "DeferredTaskFailed"', async () => {
         const { result } = renderHook(() =>
           useDeferredTask(async (_: string) => {
             return failure(new Error('test error'));
@@ -120,7 +121,7 @@ describe('Given the useDeferredTask hook', () => {
     });
 
     describe(`when the task throws an unexpected error`, () => {
-      it('should return the state inline with type of "DeferredTaskIdle" and re-throw the error', async () => {
+      it('should return the state in line with type of "DeferredTaskIdle" and re-throw the error', async () => {
         const { result } = renderHook(() =>
           useDeferredTask(async (_: string) => {
             throw new Error('test error');
@@ -145,7 +146,7 @@ describe('Given the useDeferredTask hook', () => {
 
   describe('and the hook is executed again', () => {
     describe(`when the task is in progress`, () => {
-      it('should return the state inline with type of "DeferredTaskLoading"', async () => {
+      it('should return the state in line with type of "DeferredTaskLoading"', async () => {
         const { result } = renderHook(() =>
           useDeferredTask(async (input: string) => {
             return success(input);
@@ -174,7 +175,7 @@ describe('Given the useDeferredTask hook', () => {
     });
 
     describe('when the task succeeds', () => {
-      it('should return the state inline with type of "DeferredTaskSuccess" with updated data', async () => {
+      it('should return the state in line with type of "DeferredTaskSuccess" with updated data', async () => {
         const { result } = renderHook(() =>
           useDeferredTask(async (input: string) => {
             return success(input);
@@ -203,7 +204,7 @@ describe('Given the useDeferredTask hook', () => {
     });
 
     describe('when the task fails', () => {
-      it('should return the state inline with type of "DeferredTaskFailed"', async () => {
+      it('should return the state in line with type of "DeferredTaskFailed"', async () => {
         const { result } = renderHook(() =>
           useDeferredTask(async (input: string) => {
             if (input === 'one') return success(input);
@@ -233,7 +234,7 @@ describe('Given the useDeferredTask hook', () => {
     });
 
     describe('when the task throws an unexpected error', () => {
-      it('should return the state inline with type of "DeferredTaskIdle" and re-throw the error', async () => {
+      it('should return the state in line with type of "DeferredTaskIdle" and re-throw the error', async () => {
         const { result } = renderHook(() =>
           useDeferredTask(async (input: string) => {
             if (input === 'one') return success(input);
