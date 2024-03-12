@@ -10,11 +10,11 @@ import { act } from '@testing-library/react';
 
 import { setupHookTestScenario } from '../../../__helpers__/setupHookTestScenario';
 import { data } from '../../../utils';
-import { useCreatePostRequest } from '../useCreatePostRequest';
+import { useCreatePostExecutionMode } from '../useCreatePostRequest';
 
 const openActionModuleAddress = mockEvmAddress();
 
-describe(`Given the ${useCreatePostRequest.name} hook`, () => {
+describe(`Given the ${useCreatePostExecutionMode.name} hook`, () => {
   describe('when creating a CreatePostRequest with Unknown Open Actions', () => {
     const desired = mockCreatePostRequest({
       actions: [
@@ -40,7 +40,7 @@ describe(`Given the ${useCreatePostRequest.name} hook`, () => {
         }),
       ]);
 
-      const { result } = renderHook(useCreatePostRequest);
+      const { result } = renderHook(useCreatePostExecutionMode);
 
       await act(async () => {
         const request = await result.current(desired);
@@ -60,7 +60,7 @@ describe(`Given the ${useCreatePostRequest.name} hook`, () => {
         }),
       ]);
 
-      const { result } = renderHook(useCreatePostRequest);
+      const { result } = renderHook(useCreatePostExecutionMode);
 
       await act(async () => {
         const request = await result.current(desired);

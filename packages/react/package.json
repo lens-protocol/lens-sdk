@@ -81,6 +81,7 @@
     "@ethersproject/abi": "^5.7.0",
     "@faker-js/faker": "^7.6.0",
     "@lens-protocol/eslint-config": "workspace:*",
+    "@lens-protocol/metadata": "^1.0.6",
     "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
     "@testing-library/react": "^13.4.0",
@@ -106,10 +107,14 @@
     "typescript": "5.2.2"
   },
   "peerDependencies": {
+    "@lens-protocol/metadata": "^1.0.0",
     "@types/react": "^18.0.0",
     "react": "^18.2.0"
   },
   "peerDependenciesMeta": {
+    "@lens-protocol/metadata": {
+      "optional": true
+    },
     "@types/react": {
       "optional": true
     }
