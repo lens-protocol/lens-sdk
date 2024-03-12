@@ -46,8 +46,6 @@ function PublicationFacts({ publication }: { publication: PrimaryPublication }) 
           Comments:&nbsp;<strong>{publication.stats.comments}</strong>
         </span>
       </p>
-
-      {publication.operations.hasCollected.value && <p>You already collected this publication</p>}
     </>
   );
 }

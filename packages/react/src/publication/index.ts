@@ -52,22 +52,28 @@ export type {
  * Utils
  */
 export {
-  isPostPublication,
-  isCommentPublication,
-  isMirrorPublication,
-  isQuotePublication,
-  isPrimaryPublication,
+  CollectPolicyType,
   findCollectModuleSettings,
   isCollectModuleSettings,
+  isCommentPublication,
+  isMirrorPublication,
+  isPostPublication,
+  isPrimaryPublication,
+  isQuotePublication,
+  resolveCollectPolicy,
   resolveReferencePolicy,
 } from '@lens-protocol/api-bindings';
 export type {
+  AnyoneReferencePolicy,
   CollectModuleSettings,
+  CollectPolicy,
+  DegreesOfSeparationReferencePolicy,
+  FollowersOnlyReferencePolicy,
+  FreeCollectPolicy,
+  MultirecipientCollectPolicy,
+  NoReferencePolicy,
+  PaidCollectPolicy,
   ReferenceModule,
   ReferencePolicy,
-  FollowersOnlyReferencePolicy,
-  DegreesOfSeparationReferencePolicy,
-  NoReferencePolicy,
-  AnyoneReferencePolicy,
   UnknownReferencePolicy,
 } from '@lens-protocol/api-bindings';
