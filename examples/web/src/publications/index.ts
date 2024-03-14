@@ -10,6 +10,7 @@ export * from './UseHidePublication';
 export * from './UseLazyPublications';
 export * from './UseNotInterestedToggle';
 export * from './UseOpenAction';
+export * from './UseOptimisticCreatePost';
 export * from './UsePublication';
 export * from './UsePublications';
 export * from './UseReactionToggle';

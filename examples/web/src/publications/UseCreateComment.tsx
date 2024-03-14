@@ -14,7 +14,7 @@ import { RequireProfileSession } from '../components/auth';
 import { CommentCard, PublicationCard } from '../components/cards';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
-import { useIrysUploader } from '../hooks/useIrysUploader';
+import { useIrysUploadHandler } from '../hooks/useIrysUploader';
 import { never } from '../utils';
 
 type CommentComposerProps = {
@@ -22,7 +22,7 @@ type CommentComposerProps = {
 };
 
 function CommentComposer({ commentOn }: CommentComposerProps) {
-  const { uploadMetadata } = useIrysUploader();
+  const uploadMetadata = useIrysUploadHandler();
   const { execute, loading, error } = useCreateComment();
   const { data: comments, prev: refresh } = usePublications({
     where: { commentOn: { id: commentOn.id } },

@@ -3,10 +3,10 @@ import { useCreatePost } from '@lens-protocol/react-web';
 import { toast } from 'react-hot-toast';
 
 import { RequireProfileSession } from '../components/auth';
-import { useIrysUploader } from '../hooks/useIrysUploader';
+import { useIrysUploadHandler } from '../hooks/useIrysUploader';
 
 function PostComposer() {
-  const { uploadMetadata } = useIrysUploader();
+  const uploadMetadata = useIrysUploadHandler();
   const { execute, loading, error } = useCreatePost();
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {

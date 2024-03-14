@@ -880,6 +880,7 @@ fragment PublicationMetadataMediaImage on PublicationMetadataMediaImage {
     ...EncryptableImageSet
   }
   license
+  altTag
   attributes {
     type
     key

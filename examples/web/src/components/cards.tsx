@@ -12,8 +12,10 @@ function MetadataSwitch({ metadata }: { metadata: PublicationMetadata }) {
   switch (metadata.__typename) {
     case 'ArticleMetadataV3':
     case 'TextOnlyMetadataV3':
-    case 'ImageMetadataV3':
       return <p>{metadata.content}</p>;
+
+    case 'ImageMetadataV3':
+      return <img src={metadata.asset.image.raw.uri} alt={metadata.asset.altTag ?? undefined} />;
 
     default:
       return <p>{metadata.__typename} not supported in this example</p>;
@@ -78,7 +80,7 @@ type PublicationCardProps = {
 
 export function PublicationCard({ publication, children }: PublicationCardProps) {
   return (
-    <article>
+    <article style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       <div
         style={{
           display: 'flex',

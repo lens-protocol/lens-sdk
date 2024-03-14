@@ -39,6 +39,7 @@ function publicationMetadataMediaImage(
   return {
     __typename: 'PublicationMetadataMediaImage',
     image: encryptableImageSet(image.item),
+    altTag: image.altTag ?? null,
     attributes: image.attributes?.map(metadataAttribute) ?? null,
     license: image.license ? publicationMetadataLicenseType(image.license) : null,
   };

@@ -15,8 +15,9 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { SessionType, useSession } from '../../authentication';
 import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
 import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
+import { createPostRequest } from '../adapters/schemas/builders';
 import { useCreatePostController } from '../adapters/useCreatePostController';
-import { useCreatePostExecutionMode } from './useCreatePostRequest';
+import { useCreatePostExecutionMode } from './useCreatePostExecutionMode';
 
 /**
  * An object representing the result of a post creation.
@@ -457,7 +458,7 @@ export function useCreatePost(): UseDeferredTask<
   CreatePostArgs
 > {
   const { data: session } = useSession();
-  const createPostRequest = useCreatePostExecutionMode();
+  const resolveExecutionMode = useCreatePostExecutionMode();
   const createPost = useCreatePostController();
 
   return useDeferredTask(async (args: CreatePostArgs) => {
@@ -466,10 +467,15 @@ export function useCreatePost(): UseDeferredTask<
       'You must be authenticated with a Profile to post. Use `useLogin` hook to authenticate.',
     );
 
-    const request = await createPostRequest({
-      signless: session.profile.signless,
+    const mode = await resolveExecutionMode({
+      author: session.profile,
       sponsored: args.sponsored ?? session.profile.sponsor,
+      actions: args.actions,
+    });
+
+    const request = createPostRequest({
       ...args,
+      ...mode,
     });
 
     return createPost(request);

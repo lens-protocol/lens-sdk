@@ -17,7 +17,7 @@ import { RequireProfileSession, RequireWalletSession } from '../components/auth'
 import { PublicationCard } from '../components/cards';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
-import { useIrysUploader } from '../hooks/useIrysUploader';
+import { useIrysUploadHandler } from '../hooks/useIrysUploader';
 import { useLogs } from '../hooks/useLogs';
 import { invariant } from '../utils';
 
@@ -94,7 +94,7 @@ function TestScenario({ id }: { id: PublicationId }) {
 }
 
 export function UseOpenAction() {
-  const { uploadMetadata } = useIrysUploader();
+  const uploadMetadata = useIrysUploadHandler();
   const { logs, clear, log } = useLogs();
   const [id, setId] = useState<PublicationId | undefined>();
 
