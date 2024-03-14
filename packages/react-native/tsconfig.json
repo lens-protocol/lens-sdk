@@ -3,7 +3,7 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "types": ["react-native", "jest"],
-    "lib": ["ESNext"],
+    "lib": ["ESNext", "DOM"],
     "outDir": "dist"
   },
   "include": ["src", "./jest.config.ts"],

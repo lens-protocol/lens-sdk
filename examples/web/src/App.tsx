@@ -74,6 +74,7 @@ import {
   UseLazyPublications,
   UseNotInterestedToggle,
   UseOpenAction,
+  UseOptimisticCreatePost,
   UsePublication,
   UsePublications,
   UseReactionToggle,
@@ -102,6 +103,7 @@ export function App() {
                 <Route path="/publications">
                   <Route index element={<PublicationsPage />} />
                   <Route path="useCreatePost" element={<UseCreatePost />} />
+                  <Route path="useOptimisticCreatePost" element={<UseOptimisticCreatePost />} />
                   <Route path="useCreateComment" element={<UseCreateComment />} />
                   <Route path="useCreateMirror" element={<UseCreateMirror />} />
                   <Route path="useCreateQuote" element={<UseCreateQuote />} />

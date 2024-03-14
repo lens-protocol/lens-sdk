@@ -7,6 +7,11 @@ const publicationHooks = [
     path: '/publications/useCreatePost',
   },
   {
+    label: 'useOptimisticCreatePost',
+    description: `Experimental: create a post with optimistic logic.`,
+    path: '/publications/useOptimisticCreatePost',
+  },
+  {
     label: 'useCreateComment',
     description: `Leave a comment on another publication.`,
     path: '/publications/useCreateComment',

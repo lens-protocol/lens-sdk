@@ -1,9 +1,9 @@
 import * as raw from '@lens-protocol/metadata';
+import { update } from '@lens-protocol/shared-kernel';
 
 import { ICipher } from './IEncryptionProvider';
 import * as gql from './graphql';
 import { resolvePathsToDecrypt, resolvePathsToEncrypt } from './paths';
-import { update } from './update';
 
 export type EncryptionResult<T extends raw.PublicationMetadata> = {
   encrypted: T;
