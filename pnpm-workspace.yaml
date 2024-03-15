@@ -1,7 +1,7 @@
 packages:
   - "packages/*"
-  - "examples/web"
-  - "examples/shared"
-  - "examples/next-js"
+  - "examples/lens-next-app"
   - "examples/node"
   - "examples/react-native"
+  - "examples/shared"
+  - "examples/web"

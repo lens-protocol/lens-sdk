@@ -50,7 +50,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@lens-protocol/api-bindings": "workspace:*",
     "@lens-protocol/domain": "workspace:*",
     "@lens-protocol/react": "workspace:*",
     "@lens-protocol/shared-kernel": "workspace:*",
