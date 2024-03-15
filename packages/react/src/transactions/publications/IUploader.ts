@@ -34,6 +34,12 @@ export class UploadError extends CausedError implements IEquatableError {
  */
 export interface IUploader {
   /**
+   * Initializes a new upload session.
+   *
+   * Use this to reset any internal state and prepare for a new upload session.
+   */
+  initialize(): Promise<void>;
+  /**
    * Takes one [File](https://developer.mozilla.org/en-US/docs/Web/API/File) and returns the public URI.
    *
    * The file could be uploaded immediately or stored in a queue to be uploaded later.
@@ -94,6 +100,10 @@ export interface IUploader {
  * class MyUploader extends Uploader {
  *   private files: File[] = [];
  *
+ *   async initialize() {
+ *     this.files = [];
+ *   }
+ *
  *   async addFile(file: File) {
  *     this.files.push(file);
  *
@@ -107,10 +117,24 @@ export interface IUploader {
  *
  * const uploader = new MyUploader();
  * ```
+ *
+ * You must override the `addFile` method with the logic to upload the file.
+ *
+ * You can also override the `initialize` and `finalize` methods to handle the upload session lifecycle.
+ * Use the `initialize` method to prepare your uploader internal state (e.g. reset from a previous upload),
+ * and the `finalize` method to, for example, perform a bulk upload of all files.
  */
 export abstract class BaseUploader implements IUploader {
   constructor(protected readonly handler?: UploadHandler) {}
 
+  /**
+   * @internal
+   */
+  async initialize(): Promise<void> {}
+
+  /**
+   * @internal
+   */
   async addFile(file: File): Promise<URI> {
     if (this.handler) {
       const location = await this.handler(file);
@@ -120,6 +144,9 @@ export abstract class BaseUploader implements IUploader {
     throw new Error('Method not implemented.');
   }
 
+  /**
+   * @internal
+   */
   async addURI(name: string, value: string): Promise<URI> {
     if (this.isLocalFile(value)) {
       const response = await fetch(value);
@@ -135,6 +162,9 @@ export abstract class BaseUploader implements IUploader {
     return uri(value);
   }
 
+  /**
+   * @internal
+   */
   async finalize(): Promise<void> {}
 
   /**

@@ -9,6 +9,8 @@ export class PublicationMetadataUploader {
 
   async upload(metadata: PublicationMetadata): PromiseResult<URI, UploadError> {
     try {
+      await this.uploader.initialize();
+
       const file = await this.prepare(metadata);
       const uri = await this.uploader.addFile(file);
 
