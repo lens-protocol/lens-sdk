@@ -57,14 +57,6 @@ export function useRateLimits(
     };
   }
 
-  if (data === null) {
-    return {
-      data: undefined,
-      error: new NotFoundError(`No results found.`),
-      loading: false,
-    };
-  }
-
   return {
     data,
     error: undefined,
