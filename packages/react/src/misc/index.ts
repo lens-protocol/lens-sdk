@@ -3,7 +3,7 @@ export * from './useInvitedProfiles';
 export * from './useInviteWallets';
 export * from './useLatestPaidActions';
 export * from './useModuleMetadata';
-export * from './useProfilePrice';
+export * from './useProfilePrices';
 export * from './useResolveAddress';
 export * from './useSignFrameAction';
 export * from './useValidateHandle';

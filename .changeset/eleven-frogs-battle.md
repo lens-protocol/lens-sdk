@@ -5,4 +5,4 @@
 "@lens-protocol/react-web": minor
 ---
 
-**feat:** added `useProfilePrice` hook to fetch profile minting price
+**feat:** added `useProfilePrices` hook to fetch profile minting price in various currencies

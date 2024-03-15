@@ -1,18 +1,26 @@
-import { useCreateProfile, useProfilePrice } from '@lens-protocol/react-web';
+import { useCreateProfile, useProfilePrices } from '@lens-protocol/react-web';
+import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 import { RequireConnectedWallet } from '../components/auth';
+import { formatAmount } from '../utils/formatAmount';
 import { formatProfileIdentifier } from '../utils/formatProfileIdentifier';
 
 function ProfilePrice() {
-  const { data: prices, loading, error } = useProfilePrice();
+  const { data, execute, loading, error } = useProfilePrices();
+
+  useEffect(() => {
+    void execute();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (loading) return 'Fetching price...';
   if (error) return 'Error fetching price.';
+  if (!data) return null;
 
-  const maticPrice = prices.matic;
+  const maticPrice = data.matic;
 
-  return <p>{`Price: ${maticPrice.toSignificantDigits()} ${maticPrice.asset.symbol}`}</p>;
+  return `Price: ${formatAmount(maticPrice)}`;
 }
 
 export function CreateProfileForm({ address }: { address: string }) {
