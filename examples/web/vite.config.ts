@@ -5,5 +5,5 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), nodePolyfills({ protocolImports: true })],
+  plugins: [react(), nodePolyfills({ protocolImports: true, globals: { Buffer: true } })],
 });
