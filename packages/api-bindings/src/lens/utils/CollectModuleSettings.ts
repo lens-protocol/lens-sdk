@@ -59,59 +59,74 @@ export function findCollectModuleSettings(
 export type CollectFee = {
   amount: Erc20Amount;
   rate?: FiatAmount;
-};
-
-export type FreeCollectPolicy = {
-  type: CollectPolicyType.FREE_COLLECT;
-  collectNft: EvmAddress | null;
-  followerOnly: boolean;
-  collectLimit: string | null;
-  endsAt: string | null;
-  contract: gql.NetworkAddress;
-};
-
-export type PaidCollectPolicy = {
-  type: CollectPolicyType.PAID_COLLECT;
-  collectNft: EvmAddress | null;
+  referralFee: number;
   recipient: EvmAddress;
-  referralFee: number;
-  followerOnly: boolean;
-  collectLimit: string | null;
-  endsAt: string | null;
-  contract: gql.NetworkAddress;
-  fee: CollectFee;
 };
 
-export type MultirecipientCollectPolicy = {
-  type: CollectPolicyType.MULTIRECIPIENT_COLLECT;
-  collectNft: EvmAddress | null;
+export type MultirecipientCollectFee = {
+  amount: Erc20Amount;
+  rate?: FiatAmount;
+  referralFee: number;
   recipients: gql.Recipient[];
-  referralFee: number;
-  followerOnly: boolean;
-  collectLimit: string | null;
-  endsAt: string | null;
-  contract: gql.NetworkAddress;
-  fee: CollectFee;
 };
 
-export type CollectPolicy = FreeCollectPolicy | PaidCollectPolicy | MultirecipientCollectPolicy;
-
-export enum CollectPolicyType {
-  FREE_COLLECT = 'FREE_COLLECT',
-  PAID_COLLECT = 'PAID_COLLECT',
-  MULTIRECIPIENT_COLLECT = 'MULTIRECIPIENT_COLLECT',
+export function isMultirecipientCollectFee(
+  fee: CollectFee | MultirecipientCollectFee,
+): fee is MultirecipientCollectFee {
+  return 'recipients' in fee;
 }
 
-function buildCollectFee(amount?: gql.Amount): CollectFee | undefined {
-  if (!amount) return undefined;
+export type CollectPolicy = {
+  collectNft: EvmAddress | null;
+  followerOnly: boolean;
+  collectLimit: string | null;
+  endsAt: string | null;
+  contract: gql.NetworkAddress;
+  fee?: CollectFee | MultirecipientCollectFee;
+};
 
-  const erc20 = erc20Amount(amount);
+function isFreeCollectModuleSettings(
+  module: CollectModuleSettings,
+): module is gql.LegacyFreeCollectModuleSettings {
+  return module.__typename === 'LegacyFreeCollectModuleSettings';
+}
+
+function isMultirecipientCollectModuleSettings(
+  module: CollectModuleSettings,
+): module is
+  | gql.MultirecipientFeeCollectOpenActionSettings
+  | gql.LegacyMultirecipientFeeCollectModuleSettings {
+  return (
+    module.__typename === 'MultirecipientFeeCollectOpenActionSettings' ||
+    module.__typename === 'LegacyMultirecipientFeeCollectModuleSettings'
+  );
+}
+
+function buildCollectFee(
+  module: CollectModuleSettings,
+): CollectFee | MultirecipientCollectFee | undefined {
+  if (isFreeCollectModuleSettings(module)) return undefined;
+
+  const erc20 = erc20Amount(module.amount);
 
   if (erc20.isZero()) return undefined;
 
+  const shared = {
+    amount: erc20,
+    rate: module.amount.rate ? fiatAmount(module.amount.rate) : undefined,
+    referralFee: module.referralFee,
+  };
+
+  if (isMultirecipientCollectModuleSettings(module)) {
+    return {
+      ...shared,
+      recipients: module.recipients,
+    };
+  }
+
   return {
-    amount: erc20Amount(amount),
-    rate: amount.rate ? fiatAmount(amount.rate) : undefined,
+    ...shared,
+    recipient: module.recipient,
   };
 }
 
@@ -126,143 +141,59 @@ export function resolveCollectPolicy(collectable: PrimaryPublication): CollectPo
 
   if (!module) return null;
 
+  const fee = buildCollectFee(module);
+  const shared = {
+    followerOnly: module.followerOnly,
+    contract: module.contract,
+  };
+
   switch (module.__typename) {
     case 'LegacyAaveFeeCollectModuleSettings':
     case 'LegacyERC4626FeeCollectModuleSettings': {
-      const fee = buildCollectFee(module.amount);
-
-      if (!fee)
-        return {
-          type: CollectPolicyType.FREE_COLLECT,
-          collectNft: null,
-          followerOnly: module.followerOnly,
-          collectLimit: module.collectLimit,
-          endsAt: module.endsAt,
-          contract: module.contract,
-        };
-
       return {
-        type: CollectPolicyType.PAID_COLLECT,
+        ...shared,
         collectNft: null,
-        recipient: module.recipient,
-        referralFee: module.referralFee,
-        followerOnly: module.followerOnly,
         collectLimit: module.collectLimit,
         endsAt: module.endsAt,
-        contract: module.contract,
         fee,
       };
     }
     case 'LegacyLimitedFeeCollectModuleSettings':
     case 'LegacyLimitedTimedFeeCollectModuleSettings': {
-      const fee = buildCollectFee(module.amount);
-
-      if (!fee)
-        return {
-          type: CollectPolicyType.FREE_COLLECT,
-          collectNft: module.collectNft,
-          followerOnly: module.followerOnly,
-          collectLimit: module.collectLimit,
-          endsAt: null,
-          contract: module.contract,
-        };
-
       return {
-        type: CollectPolicyType.PAID_COLLECT,
+        ...shared,
         collectNft: module.collectNft,
-        recipient: module.recipient,
-        referralFee: module.referralFee,
-        followerOnly: module.followerOnly,
         collectLimit: module.collectLimit,
         endsAt: null,
-        contract: module.contract,
         fee,
       };
     }
     case 'LegacyFeeCollectModuleSettings':
     case 'LegacyTimedFeeCollectModuleSettings': {
-      const fee = buildCollectFee(module.amount);
-
-      if (!fee)
-        return {
-          type: CollectPolicyType.FREE_COLLECT,
-          collectNft: module.collectNft,
-          followerOnly: module.followerOnly,
-          collectLimit: null,
-          endsAt: null,
-          contract: module.contract,
-        };
-
       return {
-        type: CollectPolicyType.PAID_COLLECT,
+        ...shared,
         collectNft: module.collectNft,
-        recipient: module.recipient,
-        referralFee: module.referralFee,
-        followerOnly: module.followerOnly,
         collectLimit: null,
         endsAt: null,
-        contract: module.contract,
         fee,
       };
     }
     case 'LegacyFreeCollectModuleSettings':
       return {
-        type: CollectPolicyType.FREE_COLLECT,
+        ...shared,
         collectNft: module.collectNft,
-        followerOnly: module.followerOnly,
         collectLimit: null,
         endsAt: null,
-        contract: module.contract,
       };
     case 'LegacyMultirecipientFeeCollectModuleSettings':
-    case 'MultirecipientFeeCollectOpenActionSettings': {
-      const fee = buildCollectFee(module.amount);
-
-      if (!fee)
-        return {
-          type: CollectPolicyType.FREE_COLLECT,
-          collectNft: module.collectNft,
-          followerOnly: module.followerOnly,
-          collectLimit: module.collectLimit,
-          endsAt: module.endsAt,
-          contract: module.contract,
-        };
-
-      return {
-        type: CollectPolicyType.MULTIRECIPIENT_COLLECT,
-        collectNft: module.collectNft,
-        recipients: module.recipients,
-        referralFee: module.referralFee,
-        followerOnly: module.followerOnly,
-        collectLimit: module.collectLimit,
-        endsAt: module.endsAt,
-        contract: module.contract,
-        fee,
-      };
-    }
+    case 'MultirecipientFeeCollectOpenActionSettings':
     case 'LegacySimpleCollectModuleSettings':
     case 'SimpleCollectOpenActionSettings': {
-      const fee = buildCollectFee(module.amount);
-
-      if (!fee)
-        return {
-          type: CollectPolicyType.FREE_COLLECT,
-          collectNft: module.collectNft,
-          followerOnly: module.followerOnly,
-          collectLimit: module.collectLimit,
-          endsAt: module.endsAt,
-          contract: module.contract,
-        };
-
       return {
-        type: CollectPolicyType.PAID_COLLECT,
+        ...shared,
         collectNft: module.collectNft,
-        recipient: module.recipient,
-        referralFee: module.referralFee,
-        followerOnly: module.followerOnly,
         collectLimit: module.collectLimit,
         endsAt: module.endsAt,
-        contract: module.contract,
         fee,
       };
     }

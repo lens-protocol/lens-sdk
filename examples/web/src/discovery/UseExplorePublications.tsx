@@ -1,8 +1,7 @@
 import {
-  CollectPolicy,
-  CollectPolicyType,
   ExplorePublication,
   ExplorePublicationsOrderByType,
+  isMultirecipientCollectFee,
   resolveCollectPolicy,
   useExplorePublications,
 } from '@lens-protocol/react-web';
@@ -13,47 +12,34 @@ import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { formatAmount, formatFiatAmount } from '../utils/formatAmount';
 
-function FollowerOnlyPolicy({ policy }: { policy: CollectPolicy }) {
-  return policy.followerOnly === true ? <p>Only followers can collect.</p> : null;
-}
-
 function PublicationCollectPolicy({ publication }: { publication: ExplorePublication }) {
   const policy = resolveCollectPolicy(publication);
 
   if (!policy) return null;
 
-  switch (policy.type) {
-    case CollectPolicyType.FREE_COLLECT: {
-      return (
+  return (
+    <div>
+      {policy.followerOnly === true && <div>Only followers can collect</div>}
+      {policy.collectLimit && <div>{`Collect limit: ${policy.collectLimit}`}</div>}
+      {policy.endsAt && <div>{`Ends at: ${policy.endsAt}`}</div>}
+      {!policy.fee ? (
+        <div>Free collect</div>
+      ) : (
         <>
-          <p>Free collect.</p>
-          <FollowerOnlyPolicy policy={policy} />
-        </>
-      );
-    }
-    case CollectPolicyType.PAID_COLLECT:
-      return (
-        <>
-          <p>{`Paid collect: ${formatAmount(policy.fee.amount)} (${formatFiatAmount(
+          <div>{`Paid collect: ${formatAmount(policy.fee.amount)} (${formatFiatAmount(
             policy.fee.amount,
             policy.fee.rate,
-          )}).`}</p>
-          <FollowerOnlyPolicy policy={policy} />
+          )})`}</div>
+          {policy.fee.referralFee > 0 && <div>{`Referral fee: ${policy.fee.referralFee}%`}</div>}
+          {!isMultirecipientCollectFee(policy.fee) ? (
+            <div>{`Recipient: ${policy.fee.recipient}`}</div>
+          ) : (
+            <div>{`Recipients: ${policy.fee.recipients.map((r) => r.recipient).join(', ')}`}</div>
+          )}
         </>
-      );
-
-    case CollectPolicyType.MULTIRECIPIENT_COLLECT: {
-      return (
-        <>
-          <p>{`Paid multirecipient collect: ${formatAmount(policy.fee.amount)} (${formatFiatAmount(
-            policy.fee.amount,
-            policy.fee.rate,
-          )}).`}</p>
-          <FollowerOnlyPolicy policy={policy} />
-        </>
-      );
-    }
-  }
+      )}
+    </div>
+  );
 }
 
 export function UseExplorePublications() {

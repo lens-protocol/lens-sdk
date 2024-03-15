@@ -52,11 +52,11 @@ export type {
  * Utils
  */
 export {
-  CollectPolicyType,
   findCollectModuleSettings,
   isCollectModuleSettings,
   isCommentPublication,
   isMirrorPublication,
+  isMultirecipientCollectFee,
   isPostPublication,
   isPrimaryPublication,
   isQuotePublication,
@@ -69,10 +69,7 @@ export type {
   CollectPolicy,
   DegreesOfSeparationReferencePolicy,
   FollowersOnlyReferencePolicy,
-  FreeCollectPolicy,
-  MultirecipientCollectPolicy,
   NoReferencePolicy,
-  PaidCollectPolicy,
   ReferenceModule,
   ReferencePolicy,
   UnknownReferencePolicy,
