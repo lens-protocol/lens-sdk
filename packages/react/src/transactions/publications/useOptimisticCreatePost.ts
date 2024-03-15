@@ -33,7 +33,7 @@ import { useCreatePostExecutionMode } from './useCreatePostExecutionMode';
  */
 export type OptimisticCreatePostArgs = {
   /**
-   * The metadata object created via @lens-protocol/metadata package.
+   * The metadata object created via `@lens-protocol/metadata` package.
    */
   metadata: PublicationMetadata;
   /**
@@ -97,6 +97,8 @@ export type OptimisticCreatePostError =
  * const { data, execute, loading, error } = useOptimisticCreatePost(uploader);
  * ```
  *
+ * ## Basic usage
+ *
  * To use the hook, first define an instance of the {@link Uploader} class.
  *
  * In this example, we're using a Stateless Uploader.
@@ -120,6 +122,10 @@ export type OptimisticCreatePostError =
  * To create a post, call the `execute` function with the metadata. Contrary to the `useCreatePost` hook you can pass the whole metadata object to the `execute` function.
  *
  * ```ts
+ * import { textOnly } from '@lens-protocol/metadata';
+ *
+ * // ...
+ *
  * const { data, execute, loading, error } = useOptimisticCreatePost(uploader);
  *
  * const post = (content: string) => {
@@ -143,6 +149,49 @@ export type OptimisticCreatePostError =
  * ```
  *
  * The `data` property will be updated with the optimistic Post object immediately after the `execute` call.
+ *
+ * ## Media Upload
+ *
+ * The `useOptimisticCreatePost` hook also supports media uploads.
+ * It accomplishes this by utilizing the provided `uploader` to upload each media file. After the upload,
+ * it updates the supplied metadata with the public URIs of the media files, as returned by the `uploader`.
+ * Finally, it uploads the metadata and creates the post.
+ *
+ * To accomplish this, simply use the local file URL as media URI in the metadata object.
+ *
+ * When using the `@lens-protocol/react-web` package, you can use the `fileToUri` helper to convert a `File` object to a local file URL.
+ *
+ * ```ts fileName="foo"
+ * import { image } from '@lens-protocol/metadata';
+ * import { fileToUri, useOptimisticCreatePost } from '@lens-protocol/react-web';
+ *
+ * // ...
+ *
+ * const post = (file: File) => {
+ *   // create the desired metadata via the `@lens-protocol/metadata` package helpers
+ *   const metadata = image({
+ *     image: {
+ *       item: fileToUri(file),
+ *       type: MediaImageMimeType.JPEG,
+ *     },
+ *   });
+ *
+ *   // invoke the `execute` function to create the post
+ *   const result = await execute({
+ *     metadata,
+ *   });
+ *
+ *   // check for failure scenarios
+ *   if (result.isFailure()) {
+ *     console.log(result.error.message);
+ *   }
+ * };
+ * ```
+ *
+ * When using the `@lens-protocol/react-native` package, you use the property that yield a `file://` URL from the
+ * file picker library of your choice.
+ *
+ * ## Wait for completion
  *
  * Optionally, you can wait for the full completion of the post creation. .
  *
@@ -179,6 +228,8 @@ export type OptimisticCreatePostError =
  * ```
  *
  * At the end the `data` property will automatically update and the final Post object will be available for further interactions.
+ *
+ * ## Failure scenarios
  *
  * In case of upload error an new error type {@link UploadError} will be returned both from the `error` property and from the `Result<T, E>` object from the `execute` function.
  *

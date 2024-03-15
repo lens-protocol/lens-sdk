@@ -1,5 +1,5 @@
 import { MediaImageMimeType, image } from '@lens-protocol/metadata';
-import { useOptimisticCreatePost } from '@lens-protocol/react-web';
+import { fileToUri, useOptimisticCreatePost } from '@lens-protocol/react-web';
 import { toast } from 'react-hot-toast';
 
 import { RequireProfileSession } from '../components/auth';
@@ -20,7 +20,7 @@ function PostComposer() {
     // create post metadata
     const metadata = image({
       image: {
-        item: URL.createObjectURL(file),
+        item: fileToUri(file),
         type: MediaImageMimeType.JPEG,
         altTag: formData.get('description') as string,
       },
