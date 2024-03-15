@@ -1,7 +1,7 @@
 import { ConnectKitButton } from "connectkit";
 import { Button } from "./Button";
 
-export const ConnectWalletButton = () => {
+export function ConnectWalletButton() {
   return (
     <ConnectKitButton.Custom>
       {({ isConnected, show, truncatedAddress }) => {
@@ -9,4 +9,4 @@ export const ConnectWalletButton = () => {
       }}
     </ConnectKitButton.Custom>
   );
-};
+}

@@ -58,7 +58,7 @@ const lensConfig: LensConfig = {
   ...appConfig.lens,
 };
 
-export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
+export function Web3Provider({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
@@ -68,4 +68,4 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
       </QueryClientProvider>
     </WagmiProvider>
   );
-};
+}

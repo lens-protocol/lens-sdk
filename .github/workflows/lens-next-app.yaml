@@ -2,7 +2,7 @@ name: "Lens Next App E2E Test"
 
 on:
   push:
-    branches: [main, develop, nextjs-template]
+    branches: [main, develop]
 
 jobs:
   e2e:

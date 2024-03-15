@@ -1,4 +1,4 @@
-export const Button = ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
+export function Button({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       {...props}
@@ -7,12 +7,9 @@ export const Button = ({ children, ...props }: React.ButtonHTMLAttributes<HTMLBu
       {children}
     </button>
   );
-};
+}
 
-export const ButtonAlt = ({
-  children,
-  ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
+export function ButtonAlt({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       {...props}
@@ -21,4 +18,4 @@ export const ButtonAlt = ({
       {children}
     </button>
   );
-};
+}
