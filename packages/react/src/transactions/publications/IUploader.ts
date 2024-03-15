@@ -1,12 +1,4 @@
-import {
-  CausedError,
-  IEquatableError,
-  PromiseResult,
-  URI,
-  assertError,
-  failure,
-  success,
-} from '@lens-protocol/shared-kernel';
+import { CausedError, IEquatableError, URI } from '@lens-protocol/shared-kernel';
 
 import { uri } from '../../utils';
 
@@ -46,7 +38,7 @@ export interface IUploader {
    *
    * The file could be uploaded immediately or stored in a queue to be uploaded later.
    */
-  addFile(file: File): PromiseResult<URI, UploadError>;
+  addFile(file: File): Promise<URI>;
 
   /**
    * Takes a name of the resource its current URI and returns the public URI.
@@ -55,12 +47,12 @@ export interface IUploader {
    *
    * The resource could copied immediately or stored in a queue to be uploaded later.
    */
-  addURI(name: string, value: string): PromiseResult<URI, UploadError>;
+  addURI(name: string, value: string): Promise<URI>;
 
   /**
    * Finalizes the upload process. This is called when all files for a given upload batch are added.
    */
-  finalize(): PromiseResult<void, UploadError>;
+  finalize(): Promise<void>;
 }
 
 /**
@@ -119,41 +111,34 @@ export interface IUploader {
 export abstract class BaseUploader implements IUploader {
   constructor(protected readonly handler?: UploadHandler) {}
 
-  async addFile(file: File): PromiseResult<URI, UploadError> {
+  async addFile(file: File): Promise<URI> {
     if (this.handler) {
-      try {
-        const location = await this.handler(file);
+      const location = await this.handler(file);
 
-        return success(uri(location));
-      } catch (error) {
-        assertError(error);
-        return failure(new UploadError(`Failed to upload ${file.name}`, { cause: error }));
-      }
+      return uri(location);
     }
     throw new Error('Method not implemented.');
   }
 
-  async addURI(name: string, value: string): PromiseResult<URI, UploadError> {
+  async addURI(name: string, value: string): Promise<URI> {
     if (this.isLocalFile(value)) {
       const response = await fetch(value);
 
       if (!response.ok) {
-        return failure(new UploadError(`Cannot read file from ${value}`));
+        throw new UploadError(`Cannot read file from ${value}`);
       }
 
       const blob = await response.blob();
       const file = new File([blob], name);
       return this.addFile(file);
     }
-    return success(uri(value));
+    return uri(value);
   }
+
+  async finalize(): Promise<void> {}
 
   /**
    * @internal
    */
   protected abstract isLocalFile(value: string): boolean;
-
-  async finalize(): PromiseResult<void, UploadError> {
-    return success();
-  }
 }

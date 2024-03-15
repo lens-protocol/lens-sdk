@@ -99,13 +99,15 @@ export type OptimisticCreatePostError =
  *
  * To use the hook, first define an instance of the {@link Uploader} class.
  *
- * In this example, we'll use a Stateless Uploader. This approach necessitates only a function that conforms to the {@link UploadHandler} signature.
+ * In this example, we're using a Stateless Uploader.
+ * This type of uploader requires just a function that matches the {@link UploadHandler} signature.
+ * Refer to {@link IUploader} for other types of uploaders.
  *
  * ```ts
  * const uploadHandler = async (file: File) => {
  *   // upload the file and return the public URI
  *   return 'https://example.com/uploaded-file.jpg';
- * }
+ * };
  * ```
  *
  * Then, create an instance of the {@link Uploader} class.
@@ -133,7 +135,7 @@ export type OptimisticCreatePostError =
  *   if (result.isFailure()) {
  *     console.log(result.error.message);
  *   }
- * }
+ * };
  *
  * return (
  *   // render data as you would do normally with any Post object
@@ -169,7 +171,7 @@ export type OptimisticCreatePostError =
  *   }
  *
  *   console.log(completion.value);
- * }
+ * };
  *
  * return (
  *   // render data
@@ -194,19 +196,17 @@ export type OptimisticCreatePostError =
  *
  *     // check for upload error
  *     if (result.error instanceof UploadError) {
- *        console.log(`There was an error uploading the file', result.error.cause);
+ *        console.log('There was an error uploading the file', result.error.cause);
  *        return;
  *     }
- *
  *     // other errors handling
  *
  *     return;
  *   }
- * }
+ * };
  *
  * return (
  *   {error && <p>{error.message}</p>}
- *
  *   // render data
  * );
  * ```
