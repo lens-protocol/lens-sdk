@@ -1,6 +1,8 @@
 import { Web3Provider } from '@ethersproject/providers';
 import { WebIrys } from '@irys/sdk';
-import { Uploader } from '@lens-protocol/react-web';
+import { URI, Uploader, uri } from '@lens-protocol/react-web';
+import { DataItem, ArweaveSigner } from 'arbundles';
+import Arweave from 'arweave';
 import { useMemo } from 'react';
 import { Account, Chain, Client, Transport } from 'viem';
 import { useConnectorClient } from 'wagmi';
@@ -59,22 +61,105 @@ export function useIrysUploadHandler() {
   };
 }
 
+class IrysUploader extends Uploader {
+  private _manifestTx: DataItem | null = null;
+  private _txs: DataItem[] = [];
+  private _items = new Map<string, string>();
+  private _ephemeralSigner: ArweaveSigner | null = null;
+
+  private get client() {
+    return this._client ?? never('viem Client not found');
+  }
+
+  private get ephemeralSigner() {
+    return this._ephemeralSigner ?? never('Ephemeral signer not found');
+  }
+
+  constructor(private readonly _client: Client<Transport, Chain, Account> | undefined) {
+    super();
+  }
+
+  override async initialize() {
+    const jwk = await Arweave.crypto.generateJWK();
+    this._ephemeralSigner = new ArweaveSigner(jwk);
+
+    this._manifestTx = null;
+    this._txs = [];
+    this._items = new Map();
+  }
+
+  override async addFile(file: File): Promise<URI> {
+    const irys = await getWebIrys(this.client);
+
+    const referenceId = await this.prepare(irys);
+
+    const tx = irys.arbundles.createData(
+      Buffer.from(await file.arrayBuffer()),
+      this.ephemeralSigner,
+      {
+        tags: [{ name: 'Content-Type', value: file.type }],
+      },
+    );
+    await tx.sign(this.ephemeralSigner);
+    this._txs.push(tx);
+    this._items.set(file.name, tx.id);
+
+    return uri(`https://gateway.irys.xyz/mutable/${referenceId}/${file.name}`);
+  }
+
+  override async finalize(): Promise<void> {
+    if (!this._manifestTx) {
+      throw new Error('Manifest not found');
+    }
+
+    const irys = await getWebIrys(this.client);
+
+    const manifest = await irys.uploader.generateManifest({
+      items: this._items,
+    });
+
+    const updatedManifestTx = irys.arbundles.createData(
+      JSON.stringify(manifest),
+      this.ephemeralSigner,
+      {
+        tags: [
+          { name: 'Type', value: 'manifest' },
+          { name: 'Content-Type', value: 'application/x.arweave-manifest+json' },
+          { name: 'Root-TX', value: this._manifestTx.id },
+        ],
+      },
+    );
+
+    await updatedManifestTx.sign(this.ephemeralSigner);
+
+    this._txs.push(updatedManifestTx);
+
+    await irys.uploader.uploadBundle(this._txs);
+  }
+
+  private async prepare(irys: WebIrys) {
+    if (this._manifestTx) {
+      return this._manifestTx.id;
+    }
+    const manifest = await irys.uploader.generateManifest({
+      items: new Map<string, string>(),
+    });
+    this._manifestTx = irys.arbundles.createData(JSON.stringify(manifest), this.ephemeralSigner, {
+      tags: [
+        { name: 'Type', value: 'manifest' },
+        { name: 'Content-Type', value: 'application/x.arweave-manifest+json' },
+      ],
+    });
+    await this._manifestTx.sign(this.ephemeralSigner);
+
+    this._txs.push(this._manifestTx);
+
+    return this._manifestTx.id;
+  }
+}
+
 export function useIrysUploader() {
   const { data: client } = useConnectorClient();
 
-  return useMemo(() => {
-    return new Uploader(async (file: File) => {
-      const irys = await getWebIrys(client ?? never('viem Client not found'));
-
-      const confirm = window.confirm(`Uploading '${file.name}' via the Irys.`);
-
-      if (!confirm) {
-        throw new Error('User cancelled');
-      }
-
-      const receipt = await irys.uploadFile(file);
-
-      return `https://arweave.net/${receipt.id}`;
-    });
-  }, [client]);
+  return useMemo(() => new IrysUploader(client), [client]);
 }

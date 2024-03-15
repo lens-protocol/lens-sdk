@@ -37,15 +37,19 @@
     "peerDependencyRules": {
       "ignoreMissing": [
         "arweave",
+        "nativewind",
         "react",
+        "react-dom",
         "react-native",
+        "react-native-web",
         "@tanstack/query-core",
         "csstype",
         "rollup"
       ],
       "allowedVersions": {
         "@solana/web3.js": "1.52.0",
-        "ethers": "5.7.2"
+        "ethers": "5.7.2",
+        "react": "18.2.0"
       }
     },
     "overrides": {
