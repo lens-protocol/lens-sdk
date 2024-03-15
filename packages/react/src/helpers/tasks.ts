@@ -1,4 +1,3 @@
-import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { IEquatableError, PromiseResult, invariant } from '@lens-protocol/shared-kernel';
 import { useCallback, useState } from 'react';
 
@@ -69,25 +68,6 @@ export type DeferredTaskState<TData, TError extends IEquatableError> =
   | DeferredTaskSuccess<TData>
   | DeferredTaskFailed<TError>;
 
-export function foo() {
-  const test: DeferredTaskState<number, BroadcastingError> = {} as DeferredTaskState<
-    number,
-    BroadcastingError
-  >;
-
-  if (!test.called) {
-    return;
-  }
-
-  if (test.loading) {
-    return;
-  }
-
-  if (test.error) {
-    return;
-  }
-}
-
 /**
  * A deferred task React Hook is a lightweight wrapper for an asynchronous function.
  * It allows tracking of the task's execution status and provides access to the
@@ -129,10 +109,6 @@ export type UseDeferredTask<
 > = DeferredTaskState<TData, TError> & {
   execute: DeferrableTask<TResultValue, TError, TInput>;
 };
-
-/**
- * @internal
- */
 
 /**
  * @internal

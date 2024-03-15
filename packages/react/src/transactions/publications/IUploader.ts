@@ -3,7 +3,7 @@ import { CausedError, IEquatableError, URI } from '@lens-protocol/shared-kernel'
 import { uri } from '../../utils';
 
 /**
- * A function that upload one file and returns the public URI.
+ * A function that uploads one file and returns the public URI.
  *
  * @experimental
  */
@@ -45,7 +45,7 @@ export interface IUploader {
    *
    * The URI could be a local file path or a remote URL.
    *
-   * The resource could copied immediately or stored in a queue to be uploaded later.
+   * The resource could be copied immediately or stored in a queue to be uploaded later.
    */
   addURI(name: string, value: string): Promise<URI>;
 
@@ -64,7 +64,7 @@ export interface IUploader {
  *
  * ## Stateless Uploader
  *
- * In case you don't need to tied the upload of one file to upload of another,
+ * In case you don't need to tie the upload of one file to the upload of another,
  * you can use a stateless uploader.
  *
  * Define an `UploadHandler` function that takes a `File` and returns a `Promise<string>`.

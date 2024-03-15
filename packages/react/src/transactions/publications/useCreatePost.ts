@@ -469,7 +469,7 @@ export function useCreatePost(): UseDeferredTask<
 
     const mode = await resolveExecutionMode({
       author: session.profile,
-      sponsored: args.sponsored ?? session.profile.sponsor,
+      sponsored: args.sponsored,
       actions: args.actions,
     });
 
