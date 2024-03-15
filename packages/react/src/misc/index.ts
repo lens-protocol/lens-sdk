@@ -2,7 +2,7 @@ export * from './useCurrencies';
 export * from './useInvitedProfiles';
 export * from './useInviteWallets';
 export * from './useModuleMetadata';
-export * from './useProfilePrice';
+export * from './useProfilePrices';
 export * from './useResolveAddress';
 export * from './useValidateHandle';
 export * from './useWasWalletInvited';

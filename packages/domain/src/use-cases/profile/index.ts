@@ -4,7 +4,7 @@ export * from './CreateProfile';
 export * from './DismissRecommendedProfiles';
 export * from './FollowPolicy';
 export * from './FollowProfile';
-export * from './GetProfilePrice';
+export * from './GetProfilePrices';
 export * from './LinkHandle';
 export * from './ReportProfile';
 export * from './SetProfileMetadata';
