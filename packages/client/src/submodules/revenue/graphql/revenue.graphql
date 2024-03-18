@@ -35,7 +35,7 @@ query RevenueFromPublications(
   $profilePictureTransform: ImageTransform!
   $profileStatsArg: ProfileStatsArg
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
-  $profileMetadataSource: AppId = null
+  $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
   result: revenueFromPublications(request: $request) {
@@ -59,7 +59,7 @@ query RevenueFromPublication(
   $profilePictureTransform: ImageTransform!
   $profileStatsArg: ProfileStatsArg
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
-  $profileMetadataSource: AppId = null
+  $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
   result: revenueFromPublication(request: $request) {

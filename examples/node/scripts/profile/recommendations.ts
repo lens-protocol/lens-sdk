@@ -1,11 +1,14 @@
 import { getAuthenticatedClient } from '../shared/getAuthenticatedClient';
-import { getOwnedProfileId } from '../shared/getOwnedProfileId';
 import { setupWallet } from '../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
   const client = await getAuthenticatedClient(wallet);
-  const profileId = await getOwnedProfileId(client, wallet.address);
+  const profileId = await client.authentication.getProfileId();
+
+  if (!profileId) {
+    throw new Error('Profile not authenticated');
+  }
 
   // fetch recommendations for a profile id
   const recommendedProfiles = await client.profile.recommendations({

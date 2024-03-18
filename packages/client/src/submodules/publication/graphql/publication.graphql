@@ -21,7 +21,7 @@ query Publication(
   $profilePictureTransform: ImageTransform!
   $profileStatsArg: ProfileStatsArg
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
-  $profileMetadataSource: AppId = null
+  $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
   result: publication(request: $request) {
@@ -51,7 +51,7 @@ query Publications(
   $profilePictureTransform: ImageTransform!
   $profileStatsArg: ProfileStatsArg
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
-  $profileMetadataSource: AppId = null
+  $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
   result: publications(request: $request) {

@@ -5,7 +5,7 @@ This package is a collection of simple node.js scripts showcasing the `@lens-pro
 ## Getting Started
 
 Some scripts require a wallet to authenticate the LensClient. Copy `.env.example` file to `.env` and define the private key for the wallet you want to use with the scripts. Best practice is to create a new test wallet. You don't need any funds in the wallet to experiment with the LensClient SDK.
-But you will need a bit of MUMBAI MATIC to upload data or files to devnet Bundlr. You can get it from [the faucet](https://faucet.polygon.technology/).
+But you will need a bit of MUMBAI MATIC to upload data or files to devnet Irys. You can get it from [the faucet](https://faucet.polygon.technology/).
 
 ### Run a script
 
@@ -22,14 +22,3 @@ pnpm ts-node ./scripts/authenticate.ts
 ```
 
 Ensure you previously built all the dependencies. See [main setup](../../README.md#setup).
-
-## Example use-cases
-
-- authenticate
-- create a profile
-- create a post
-- fetch a feed and add a reaction
-- fetch profiles by different criteria
-- fetch recommended profiles
-- follow a profile
-- prepare a transaction and broadcast it
