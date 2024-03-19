@@ -11,3 +11,4 @@ export * from '@lens-protocol/react';
 
 export * from './LensProvider';
 export * from './storage';
+export * from './Uploader';

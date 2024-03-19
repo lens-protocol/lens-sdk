@@ -3,16 +3,15 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 
 import {
   DeferredTaskFailed,
-  DeferredTaskFirstCall,
+  DeferredTaskLoading,
   DeferredTaskIdle,
-  DeferredTaskNthCall,
   DeferredTaskSuccess,
   useDeferredTask,
 } from '../tasks';
 
 describe('Given the useDeferredTask hook', () => {
   describe('when rendered for the first time', () => {
-    it('should return state inline with type of "DeferredTaskIdle"', async () => {
+    it('should return state in line with type of "DeferredTaskIdle"', async () => {
       const { result } = renderHook(() =>
         useDeferredTask(async (input: string) => {
           return success(input);
@@ -30,9 +29,9 @@ describe('Given the useDeferredTask hook', () => {
     });
   });
 
-  describe('when the task is in progress', () => {
-    describe(`and the execution of the hook is loading`, () => {
-      it('should return the state inline with type of "DeferredTaskFirstCall"', async () => {
+  describe('and the hook is executed for the first time', () => {
+    describe('when the task is in progress', () => {
+      it('should return the state in line with type of "DeferredTaskLoading"', async () => {
         const { result } = renderHook(() =>
           useDeferredTask(async (input: string) => {
             return success(input);
@@ -43,7 +42,7 @@ describe('Given the useDeferredTask hook', () => {
           void result.current.execute('test');
         });
 
-        const expectation: DeferredTaskFirstCall = {
+        const expectation: DeferredTaskLoading<unknown> = {
           called: true,
           loading: true,
           data: undefined,
@@ -53,104 +52,101 @@ describe('Given the useDeferredTask hook', () => {
         expect(result.current).toMatchObject(expectation);
       });
     });
-  });
 
-  describe(`when the tasks succeeds`, () => {
-    it('should return the state inline with type of "DeferredTaskSuccess"', async () => {
-      const { result } = renderHook(() =>
-        useDeferredTask(async (input: string) => {
-          return success(input);
-        }),
-      );
+    describe(`when the tasks succeeds`, () => {
+      it('should return the state in line with type of "DeferredTaskSuccess"', async () => {
+        const { result } = renderHook(() =>
+          useDeferredTask(async (input: string) => {
+            return success(input);
+          }),
+        );
 
-      await act(async () => {
-        await result.current.execute('test');
-      });
-
-      const expectation: DeferredTaskSuccess<string> = {
-        called: true,
-        loading: false,
-        data: 'test',
-        error: undefined,
-      };
-
-      expect(result.current).toMatchObject(expectation);
-    });
-    it('should support void as success data', async () => {
-      const { result } = renderHook(() =>
-        useDeferredTask(async (_: string) => {
-          return success();
-        }),
-      );
-
-      await act(async () => {
-        await result.current.execute('test');
-      });
-
-      const expectation: DeferredTaskSuccess<void> = {
-        called: true,
-        loading: false,
-        data: undefined,
-        error: undefined,
-      };
-
-      expect(result.current).toMatchObject(expectation);
-    });
-  });
-
-  describe(`when the task fails`, () => {
-    it('should return the state inline with type of "DeferredTaskFailed"', async () => {
-      const { result } = renderHook(() =>
-        useDeferredTask(async (_: string) => {
-          return failure(new Error('test error'));
-        }),
-      );
-
-      await act(async () => {
-        await result.current.execute('test');
-      });
-
-      const expectation: DeferredTaskFailed<Error> = {
-        called: true,
-        loading: false,
-        data: undefined,
-        error: new Error('test error'),
-      };
-
-      expect(result.current).toMatchObject(expectation);
-    });
-  });
-
-  describe(`when the task throws an unexpected error`, () => {
-    it('should return the state inline with type of "DeferredTaskIdle"', async () => {
-      const { result } = renderHook(() =>
-        useDeferredTask(async (_: string) => {
-          throw new Error('test error');
-        }),
-      );
-
-      await act(async () => {
-        try {
+        await act(async () => {
           await result.current.execute('test');
-        } catch {
-          // where unexpected error would be handled in application
-        }
+        });
+
+        const expectation: DeferredTaskSuccess<string> = {
+          called: true,
+          loading: false,
+          data: 'test',
+          error: undefined,
+        };
+
+        expect(result.current).toMatchObject(expectation);
       });
 
-      const expectation: DeferredTaskIdle = {
-        called: false,
-        loading: false,
-        data: undefined,
-        error: undefined,
-      };
+      it('should support void as success data', async () => {
+        const { result } = renderHook(() =>
+          useDeferredTask(async (_: string) => {
+            return success();
+          }),
+        );
 
-      expect(result.current).toMatchObject(expectation);
+        await act(async () => {
+          await result.current.execute('test');
+        });
+
+        const expectation: DeferredTaskSuccess<void> = {
+          called: true,
+          loading: false,
+          data: undefined,
+          error: undefined,
+        };
+
+        expect(result.current).toMatchObject(expectation);
+      });
+    });
+
+    describe(`when the task fails`, () => {
+      it('should return the state in line with type of "DeferredTaskFailed"', async () => {
+        const { result } = renderHook(() =>
+          useDeferredTask(async (_: string) => {
+            return failure(new Error('test error'));
+          }),
+        );
+
+        await act(async () => {
+          await result.current.execute('test');
+        });
+
+        const expectation: DeferredTaskFailed<Error> = {
+          called: true,
+          loading: false,
+          data: undefined,
+          error: new Error('test error'),
+        };
+
+        expect(result.current).toMatchObject(expectation);
+      });
+    });
+
+    describe(`when the task throws an unexpected error`, () => {
+      it('should return the state in line with type of "DeferredTaskIdle" and re-throw the error', async () => {
+        const { result } = renderHook(() =>
+          useDeferredTask(async (_: string) => {
+            throw new Error('test error');
+          }),
+        );
+
+        await act(async () => {
+          await expect(() => result.current.execute('test')).rejects.toThrow();
+        });
+
+        const expectation: DeferredTaskIdle = {
+          called: true,
+          loading: false,
+          data: undefined,
+          error: undefined,
+        };
+
+        expect(result.current).toMatchObject(expectation);
+      });
     });
   });
 
   describe('and the hook is executed again', () => {
     describe(`when the task is in progress`, () => {
-      it('should return the state inline with type of "DeferredTaskNthCall"', async () => {
+      it('should return the state in line with type of "DeferredTaskLoading"', async () => {
         const { result } = renderHook(() =>
           useDeferredTask(async (input: string) => {
             return success(input);
@@ -167,7 +163,7 @@ describe('Given the useDeferredTask hook', () => {
           void result.current.execute('two');
         });
 
-        const expectation: DeferredTaskNthCall<string> = {
+        const expectation: DeferredTaskLoading<string> = {
           called: true,
           loading: true,
           data: 'one',
@@ -179,7 +175,7 @@ describe('Given the useDeferredTask hook', () => {
     });
 
     describe('when the task succeeds', () => {
-      it('should return the state inline with type of "DeferredTaskSuccess" with updated data', async () => {
+      it('should return the state in line with type of "DeferredTaskSuccess" with updated data', async () => {
         const { result } = renderHook(() =>
           useDeferredTask(async (input: string) => {
             return success(input);
@@ -208,7 +204,7 @@ describe('Given the useDeferredTask hook', () => {
     });
 
     describe('when the task fails', () => {
-      it('should return the state inline with type of "DeferredTaskFailed"', async () => {
+      it('should return the state in line with type of "DeferredTaskFailed"', async () => {
         const { result } = renderHook(() =>
           useDeferredTask(async (input: string) => {
             if (input === 'one') return success(input);
@@ -238,7 +234,7 @@ describe('Given the useDeferredTask hook', () => {
     });
 
     describe('when the task throws an unexpected error', () => {
-      it('should return the state inline with type of "DeferredTaskIdle"', async () => {
+      it('should return the state in line with type of "DeferredTaskIdle" and re-throw the error', async () => {
         const { result } = renderHook(() =>
           useDeferredTask(async (input: string) => {
             if (input === 'one') return success(input);
@@ -253,11 +249,7 @@ describe('Given the useDeferredTask hook', () => {
         await waitFor(() => result.current.loading === false);
 
         await act(async () => {
-          try {
-            await result.current.execute('two');
-          } catch {
-            // where unexpected error would be handled in application
-          }
+          await expect(() => result.current.execute('two')).rejects.toThrow();
         });
 
         const expectation: DeferredTaskSuccess<string> = {

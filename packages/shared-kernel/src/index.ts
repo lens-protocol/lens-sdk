@@ -15,6 +15,7 @@ export * from './get';
 export * from './logger/ILogger';
 export * from './maybe';
 export * from './omitDeep';
+export * from './update';
 export * from './ts-helpers/assertError';
 export * from './ts-helpers/assertNever';
 export * from './ts-helpers/invariant';
