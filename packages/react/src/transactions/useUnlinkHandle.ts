@@ -43,7 +43,6 @@ export type UnlinkHandleArgs = {
  *
  * @category Profiles
  * @group Hooks
- * @param args - {@link UnlinkHandleArgs}
  *
  * @example
  * ```tsx

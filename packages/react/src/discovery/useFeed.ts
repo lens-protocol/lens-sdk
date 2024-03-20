@@ -2,10 +2,10 @@ import { FeedItem, FeedRequest, useFeed as useBaseFeedQuery } from '@lens-protoc
 
 import { SessionType, useSession } from '../authentication';
 import { useLensApolloClient } from '../helpers/arguments';
-import { OmitCursor, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { useFragmentVariables } from '../helpers/variables';
 
-export type UseFeedArgs = OmitCursor<FeedRequest>;
+export type UseFeedArgs = PaginatedArgs<FeedRequest>;
 
 /**
  * Fetch a the feed of a given profile and filters.

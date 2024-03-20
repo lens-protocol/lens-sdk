@@ -7,4 +7,14 @@ export * from './useRecommendedProfiles';
 export * from './useSearchProfiles';
 export * from './useSearchPublications';
 
-export type { FeedItem, FeedHighlight, ExplorePublication } from '@lens-protocol/api-bindings';
+export type {
+  ExploreProfilesWhere,
+  ExplorePublication,
+  ExplorePublicationsWhere,
+  FeedHighlight,
+  FeedHighlightsWhere,
+  FeedItem,
+  FeedWhere,
+  ProfileSearchWhere,
+  PublicationSearchWhere,
+} from '@lens-protocol/api-bindings';

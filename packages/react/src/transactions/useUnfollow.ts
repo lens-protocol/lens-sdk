@@ -50,7 +50,6 @@ export type UnfollowArgs = {
  *
  * @category Profiles
  * @group Hooks
- * @param args - {@link UnfollowArgs}
  *
  * @example
  * ```tsx

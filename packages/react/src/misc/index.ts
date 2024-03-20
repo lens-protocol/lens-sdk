@@ -6,4 +6,4 @@ export * from './useResolveAddress';
 export * from './useValidateHandle';
 export * from './useWasWalletInvited';
 
-export type { InvitedResult } from '@lens-protocol/api-bindings';
+export type { InvitedResult, ModuleMetadata } from '@lens-protocol/api-bindings';

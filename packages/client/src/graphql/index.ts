@@ -297,6 +297,7 @@ export {
   LensTransactionFailureType,
   LensTransactionStatusType,
   LimitType,
+  ManagedProfileVisibility,
   MarketplaceMetadataAttributeDisplayType,
   ModuleType,
   MomokaValidatorError,

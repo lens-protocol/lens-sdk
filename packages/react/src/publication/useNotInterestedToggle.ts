@@ -9,8 +9,6 @@ export type UseNotInterestedToggleArgs = {
   publication: AnyPublication;
 };
 
-export type NotInterestedOperation = UseDeferredTask<void, never, UseNotInterestedToggleArgs>;
-
 /**
  * `useNotInterestedToggle` hook let's the active profile toggle the not interested status of a publication.
  *
@@ -37,7 +35,7 @@ export type NotInterestedOperation = UseDeferredTask<void, never, UseNotInterest
  * @category Publications
  * @group Hooks
  */
-export function useNotInterestedToggle(): NotInterestedOperation {
+export function useNotInterestedToggle(): UseDeferredTask<void, never, UseNotInterestedToggleArgs> {
   const { data: session } = useSession();
   const { add, remove } = useNotInterestedController();
 

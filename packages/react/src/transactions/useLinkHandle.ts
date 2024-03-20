@@ -43,7 +43,6 @@ export type LinkHandleArgs = {
  *
  * @category Profiles
  * @group Hooks
- * @param args - {@link LinkHandleArgs}
  *
  * @example
  * ```tsx

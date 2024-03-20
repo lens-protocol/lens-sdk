@@ -40,18 +40,6 @@ export type UnblockProfileArgs = {
   sponsored?: boolean;
 };
 
-export type UnblockOperation = UseDeferredTask<
-  AsyncTransactionResult<void>,
-  | BroadcastingError
-  | InsufficientAllowanceError
-  | InsufficientFundsError
-  | InsufficientGasError
-  | PendingSigningRequestError
-  | UserRejectedError
-  | WalletConnectionError,
-  UnblockProfileArgs
->;
-
 /**
  * Unblock one or many profiles.
  *
@@ -59,7 +47,6 @@ export type UnblockOperation = UseDeferredTask<
  *
  * @category Profiles
  * @group Hooks
- * @param args - {@link UnblockProfileArgs}
  *
  * @example
  * ```ts
@@ -83,7 +70,7 @@ export type UnblockOperation = UseDeferredTask<
  *
  * ## Unblock multiple profiles
  *
- * Unbblock multiple profiles.
+ * Unblock multiple profiles.
  *
  * ```tsx
  * const { execute, loading, error } = useUnblockProfiles();
@@ -244,7 +231,17 @@ export type UnblockOperation = UseDeferredTask<
  * whitelisted one (e.g. localhost).
  *
  */
-export function useUnblockProfiles(): UnblockOperation {
+export function useUnblockProfiles(): UseDeferredTask<
+  AsyncTransactionResult<void>,
+  | BroadcastingError
+  | InsufficientAllowanceError
+  | InsufficientFundsError
+  | InsufficientGasError
+  | PendingSigningRequestError
+  | UserRejectedError
+  | WalletConnectionError,
+  UnblockProfileArgs
+> {
   const { data: session } = useSession();
   const unblockProfile = useUnblockProfilesController();
   const configureRequest = useSponsoredConfig();

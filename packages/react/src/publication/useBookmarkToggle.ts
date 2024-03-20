@@ -9,8 +9,6 @@ export type UseBookmarkToggleArgs = {
   publication: AnyPublication;
 };
 
-export type BookmarkOperation = UseDeferredTask<void, never, UseBookmarkToggleArgs>;
-
 /**
  * `useBookmarkToggle` hook lets the user save or remove a publication from their bookmarks.
  *
@@ -21,7 +19,6 @@ export type BookmarkOperation = UseDeferredTask<void, never, UseBookmarkToggleAr
  *
  * @category Publications
  * @group Hooks
- * @param args - {@link UseBookmarkToggleArgs}
  *
  * @example
  * ```tsx

@@ -42,6 +42,7 @@ export type {
   CryptoAsset,
   CryptoNativeAmount,
   CryptoNativeAsset,
+  Data,
   Erc20,
   Erc20Amount,
   Erc20Info,
@@ -83,13 +84,21 @@ export * from './helpers/tasks';
 /**
  * GQL common types
  */
-export type { App, OptimisticStatusResult } from '@lens-protocol/api-bindings';
+export type {
+  App,
+  ImageSizeTransform,
+  ImageTransform,
+  NetworkAddress,
+  OptimisticStatusResult,
+} from '@lens-protocol/api-bindings';
 
 // GQL enums
 export {
+  CollectOpenActionModuleType,
   CommentRankingFilterType,
   ComparisonOperatorConditionType,
   CustomFiltersType,
+  DecryptFailReasonType,
   ExploreProfilesOrderByType,
   ExplorePublicationsOrderByType,
   ExplorePublicationType,
@@ -97,13 +106,17 @@ export {
   FollowModuleType,
   HiddenCommentsType,
   LimitType,
+  ManagedProfileVisibility,
   MarketplaceMetadataAttributeDisplayType,
+  MetadataAttributeType,
+  ModuleType,
   NftContractType,
   NotificationType,
   OpenActionCategoryType,
   OpenActionModuleType,
   ProfileActionHistoryType,
   ProfileInterestTypes,
+  ProfilesOrderBy,
   PublicationContentWarningType,
   PublicationMetadataLicenseType,
   PublicationMetadataMainFocusType,
@@ -124,14 +137,18 @@ export {
   TransactionError,
   UserRejectedError,
   WalletConnectionError,
+  TransactionErrorReason,
+  WalletConnectionErrorReason,
 } from '@lens-protocol/domain/entities';
 export {
   BroadcastingError,
   BroadcastingErrorReason,
 } from '@lens-protocol/domain/use-cases/transactions';
+export { ClaimHandleError } from '@lens-protocol/domain/use-cases/profile';
 export {
   InsufficientAllowanceError,
   InsufficientFundsError,
+  WalletAlreadyInvitedError,
 } from '@lens-protocol/domain/use-cases/wallets';
 export { InvariantError } from '@lens-protocol/shared-kernel';
 export { NotFoundError } from './NotFoundError';
