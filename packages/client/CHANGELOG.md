@@ -1,5 +1,16 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.36
+
+### Patch Changes
+
+- db223508e: **fix:** fix profile metadata request args when no AppId defined
+- Updated dependencies [177879d07]
+  - @lens-protocol/gated-content@0.4.0-alpha.23
+  - @lens-protocol/shared-kernel@0.11.0-alpha.12
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.26
+  - @lens-protocol/storage@0.8.0-alpha.11
+
 ## 2.0.0-alpha.35
 
 ### Patch Changes

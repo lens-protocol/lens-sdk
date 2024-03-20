@@ -1,5 +1,20 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.32
+
+### Minor Changes
+
+- 8fbfdc9d4: **feat:** added `useRateLimits` hook
+- 840208f26: **feat:** added `resolveCollectPolicy` helper and exchange rate details
+
+### Patch Changes
+
+- 177879d07: **feat:** adds experimental `useOptimisticCreatePost` hook
+- 54f0be643: **feat:** add optimistic updates for publication stats
+- Updated dependencies [177879d07]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.12
+  - @lens-protocol/domain@0.11.0-alpha.25
+
 ## 0.11.0-alpha.31
 
 ### Minor Changes

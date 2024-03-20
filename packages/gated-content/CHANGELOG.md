@@ -1,5 +1,14 @@
 # @lens-protocol/gated-content
 
+## 0.4.0-alpha.23
+
+### Patch Changes
+
+- 177879d07: **feat:** adds experimental `useOptimisticCreatePost` hook
+- Updated dependencies [177879d07]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.12
+  - @lens-protocol/storage@0.8.0-alpha.11
+
 ## 0.4.0-alpha.22
 
 ### Minor Changes
