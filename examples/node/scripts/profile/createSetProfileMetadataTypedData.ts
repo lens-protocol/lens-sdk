@@ -8,7 +8,7 @@ async function main() {
   const client = await getAuthenticatedClient(wallet);
 
   const typedDataResult = await client.profile.createSetProfileMetadataTypedData({
-    metadataURI: 'your-metadata-uri',
+    metadataURI: 'https://arweave.net/cv2Rw4g9NhSEXFlq3Ekx1Xo7n76zQSnrx24uBODEkGg',
   });
 
   // typedDataResult is a Result object

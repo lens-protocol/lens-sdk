@@ -161,7 +161,6 @@ export const ExplorePublicationsDocument = {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
-          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',
@@ -6815,7 +6814,6 @@ export const ExploreProfilesDocument = {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
-          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',

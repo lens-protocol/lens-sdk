@@ -1,11 +1,10 @@
 import { getAuthenticatedClient } from '../../shared/getAuthenticatedClient';
-import { getOwnedProfileId } from '../../shared/getOwnedProfileId';
 import { setupWallet } from '../../shared/setupWallet';
 
 async function main() {
   const wallet = setupWallet();
   const client = await getAuthenticatedClient(wallet);
-  const profileId = await getOwnedProfileId(client, wallet.address);
+  const profileId = await client.authentication.getProfileId();
 
   const profile = await client.profile.fetch({
     forProfileId: profileId,

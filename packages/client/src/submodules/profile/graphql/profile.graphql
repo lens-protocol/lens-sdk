@@ -214,7 +214,7 @@ query Profile(
   $profilePictureTransform: ImageTransform!
   $profileStatsArg: ProfileStatsArg
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
-  $profileMetadataSource: AppId = null
+  $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
   result: profile(request: $request) {
@@ -228,7 +228,7 @@ query DefaultProfile(
   $profilePictureTransform: ImageTransform!
   $profileStatsArg: ProfileStatsArg
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
-  $profileMetadataSource: AppId = null
+  $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
   result: defaultProfile(request: $request) {
@@ -242,7 +242,7 @@ query Profiles(
   $profilePictureTransform: ImageTransform!
   $profileStatsArg: ProfileStatsArg
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
-  $profileMetadataSource: AppId = null
+  $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
   result: profiles(request: $request) {
@@ -272,7 +272,7 @@ query ProfileRecommendations(
   $profilePictureTransform: ImageTransform!
   $profileStatsArg: ProfileStatsArg
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
-  $profileMetadataSource: AppId = null
+  $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
   result: profileRecommendations(request: $request) {
@@ -291,7 +291,7 @@ query Following(
   $profilePictureTransform: ImageTransform!
   $profileStatsArg: ProfileStatsArg
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
-  $profileMetadataSource: AppId = null
+  $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
   result: following(request: $request) {
@@ -310,7 +310,7 @@ query Followers(
   $profilePictureTransform: ImageTransform!
   $profileStatsArg: ProfileStatsArg
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
-  $profileMetadataSource: AppId = null
+  $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
   result: followers(request: $request) {
@@ -329,7 +329,7 @@ query MutualFollowers(
   $profilePictureTransform: ImageTransform!
   $profileStatsArg: ProfileStatsArg
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
-  $profileMetadataSource: AppId = null
+  $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
   result: mutualFollowers(request: $request) {
@@ -362,7 +362,7 @@ query WhoActedOnPublication(
   $profilePictureTransform: ImageTransform!
   $profileStatsArg: ProfileStatsArg
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
-  $profileMetadataSource: AppId = null
+  $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
   result: whoActedOnPublication(request: $request) {
@@ -400,7 +400,7 @@ query WhoHaveBlocked(
   $profilePictureTransform: ImageTransform!
   $profileStatsArg: ProfileStatsArg
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
-  $profileMetadataSource: AppId = null
+  $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
   result: whoHaveBlocked(request: $request) {

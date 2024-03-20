@@ -41,7 +41,7 @@ query Feed(
   $profilePictureTransform: ImageTransform!
   $profileStatsArg: ProfileStatsArg
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
-  $profileMetadataSource: AppId = null
+  $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
   result: feed(request: $request) {
@@ -65,7 +65,7 @@ query FeedHighlights(
   $profilePictureTransform: ImageTransform!
   $profileStatsArg: ProfileStatsArg
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
-  $profileMetadataSource: AppId = null
+  $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
   result: feedHighlights(request: $request) {
@@ -129,7 +129,7 @@ query LatestPaidActions(
   $profilePictureTransform: ImageTransform!
   $profileStatsArg: ProfileStatsArg
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
-  $profileMetadataSource: AppId = null
+  $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
   result: latestPaidActions {

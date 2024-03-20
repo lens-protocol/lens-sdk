@@ -1461,7 +1461,6 @@ export const ProfileDocument = {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
-          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',
@@ -2440,7 +2439,6 @@ export const DefaultProfileDocument = {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
-          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',
@@ -3419,7 +3417,6 @@ export const ProfilesDocument = {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
-          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',
@@ -4526,7 +4523,6 @@ export const ProfileRecommendationsDocument = {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
-          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',
@@ -5541,7 +5537,6 @@ export const FollowingDocument = {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
-          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',
@@ -6556,7 +6551,6 @@ export const FollowersDocument = {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
-          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',
@@ -7571,7 +7565,6 @@ export const MutualFollowersDocument = {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
-          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',
@@ -8667,7 +8660,6 @@ export const WhoActedOnPublicationDocument = {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
-          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',
@@ -9780,7 +9772,6 @@ export const WhoHaveBlockedDocument = {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
-          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',

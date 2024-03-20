@@ -16,7 +16,7 @@ query ProfilesManaged(
   $profilePictureTransform: ImageTransform!
   $profileStatsArg: ProfileStatsArg
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
-  $profileMetadataSource: AppId = null
+  $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
   result: profilesManaged(request: $request) {
@@ -67,7 +67,7 @@ query LastLoggedInProfile(
   $profilePictureTransform: ImageTransform!
   $profileStatsArg: ProfileStatsArg
   $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
-  $profileMetadataSource: AppId = null
+  $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
   result: lastLoggedInProfile(request: $request) {
