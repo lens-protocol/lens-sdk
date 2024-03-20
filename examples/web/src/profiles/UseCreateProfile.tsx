@@ -1,7 +1,26 @@
-import { useCreateProfile } from '@lens-protocol/react-web';
+import { useCreateProfile, useProfilePrices } from '@lens-protocol/react-web';
+import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 import { RequireConnectedWallet } from '../components/auth';
+import { formatAmount } from '../utils/formatAmount';
+
+function ProfilePrice() {
+  const { data, execute, loading, error } = useProfilePrices();
+
+  useEffect(() => {
+    void execute();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (loading) return 'Fetching price...';
+  if (error) return 'Error fetching price.';
+  if (!data) return null;
+
+  const maticPrice = data.matic;
+
+  return `Price: ${formatAmount(maticPrice)}`;
+}
 
 export function CreateProfileForm({ address }: { address: string }) {
   const { execute, loading } = useCreateProfile();
@@ -39,6 +58,7 @@ export function CreateProfileForm({ address }: { address: string }) {
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
           <button disabled={loading}>Submit</button>
         </div>
+        <ProfilePrice />
       </fieldset>
     </form>
   );
