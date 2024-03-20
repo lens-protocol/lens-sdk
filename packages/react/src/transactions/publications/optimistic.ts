@@ -30,6 +30,8 @@ function encryptableImageSet(uri: string): gql.EncryptableImageSet {
       width: null,
     },
     optimized: null,
+    small: null,
+    medium: null,
   };
 }
 

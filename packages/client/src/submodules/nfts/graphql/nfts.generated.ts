@@ -46,7 +46,7 @@ export type NftFragment = {
   owner: OwnerFragment;
   contract: NetworkAddressFragment;
   collection: NftCollectionFragment;
-  metadata: NftMetadataFragment;
+  metadata: NftMetadataFragment | null;
 };
 
 export type NftGalleryFragment = {

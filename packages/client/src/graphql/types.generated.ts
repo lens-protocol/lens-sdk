@@ -171,6 +171,14 @@ export type ClaimProfileWithHandleRequest = {
   id?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type ClaimTokensRequest = {
+  for: ClaimableTokenType;
+};
+
+export enum ClaimableTokenType {
+  Bonsai = 'BONSAI',
+}
+
 export type CollectActionModuleInput = {
   multirecipientCollectOpenAction?: InputMaybe<MultirecipientFeeCollectModuleInput>;
   simpleCollectOpenAction?: InputMaybe<SimpleCollectOpenActionModuleInput>;
@@ -354,6 +362,7 @@ export type FeedRequest = {
 };
 
 export type FeedWhere = {
+  customFilters?: InputMaybe<Array<CustomFiltersType>>;
   feedEventItemTypes?: InputMaybe<Array<FeedEventItemType>>;
   for?: InputMaybe<Scalars['ProfileId']['input']>;
   metadata?: InputMaybe<PublicationMetadataFilters>;
@@ -462,6 +471,11 @@ export type HideCommentRequest = {
   for: Scalars['PublicationId']['input'];
 };
 
+export type HideManagedProfileRequest = {
+  /** The profile to hide */
+  profileId: Scalars['ProfileId']['input'];
+};
+
 export type HidePublicationRequest = {
   for: Scalars['PublicationId']['input'];
 };
@@ -559,6 +573,12 @@ export type InternalInvitesRequest = {
   secret: Scalars['String']['input'];
 };
 
+export type InternalMintHandleAndProfileRequest = {
+  a: Scalars['EvmAddress']['input'];
+  h: Scalars['String']['input'];
+  secret: Scalars['String']['input'];
+};
+
 export type InternalNftIndexRequest = {
   n: Array<Nfi>;
   secret: Scalars['String']['input'];
@@ -566,6 +586,11 @@ export type InternalNftIndexRequest = {
 
 export type InternalNftVerifyRequest = {
   n: Array<Nfi>;
+  secret: Scalars['String']['input'];
+};
+
+export type InternalPaymentHandleInfoRequest = {
+  p: Scalars['String']['input'];
   secret: Scalars['String']['input'];
 };
 
@@ -651,6 +676,13 @@ export type LinkHandleToProfileRequest = {
   /** The full handle - namespace/localname */
   handle: Scalars['Handle']['input'];
 };
+
+/** Managed profile visibility type */
+export enum ManagedProfileVisibility {
+  All = 'ALL',
+  HiddenOnly = 'HIDDEN_ONLY',
+  NoneHidden = 'NONE_HIDDEN',
+}
 
 export enum MarketplaceMetadataAttributeDisplayType {
   Date = 'DATE',
@@ -1261,6 +1293,7 @@ export type ProfilesManagedRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   /** The Ethereum address for which to retrieve managed profiles */
   for: Scalars['EvmAddress']['input'];
+  hiddenFilter?: InputMaybe<ManagedProfileVisibility>;
   includeOwned?: InputMaybe<Scalars['Boolean']['input']>;
   limit?: InputMaybe<LimitType>;
 };
@@ -1596,6 +1629,7 @@ export enum RelayRoleKey {
   CreateProfileWithHandleUsingCredits_8 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_8',
   CreateProfileWithHandleUsingCredits_9 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_9',
   CreateProfileWithHandleUsingCredits_10 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_10',
+  CreateProfileWithHandleUsingCreditsUnderCharLimit = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_UNDER_CHAR_LIMIT',
   LensManager_1 = 'LENS_MANAGER_1',
   LensManager_2 = 'LENS_MANAGER_2',
   LensManager_3 = 'LENS_MANAGER_3',
@@ -1767,6 +1801,11 @@ export type UnfollowRequest = {
 export type UnhideCommentRequest = {
   /** The comment to unhide. It has to be under a publication made by the user making the request. If already visible, nothing will happen. */
   for: Scalars['PublicationId']['input'];
+};
+
+export type UnhideManagedProfileRequest = {
+  /** The profile to unhide */
+  profileId: Scalars['ProfileId']['input'];
 };
 
 export type UnknownFollowModuleInput = {

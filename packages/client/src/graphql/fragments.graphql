@@ -118,6 +118,12 @@ fragment EncryptableImageSet on EncryptableImageSet {
   optimized {
     ...Image
   }
+  small: transformed(request: $publicationImageSmallTransform) {
+    ...Image
+  }
+  medium: transformed(request: $publicationImageMediumTransform) {
+    ...Image
+  }
 }
 
 fragment Video on Video {
