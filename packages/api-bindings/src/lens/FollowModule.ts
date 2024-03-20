@@ -1,14 +1,15 @@
 import { FollowPolicyConfig, FollowPolicyType } from '@lens-protocol/domain/use-cases/profile';
-import { Data, Erc20Amount, EvmAddress } from '@lens-protocol/shared-kernel';
+import { Data, Erc20Amount, EvmAddress, FiatAmount } from '@lens-protocol/shared-kernel';
 
 import { FollowModuleInput, Profile } from './graphql/generated';
-import { erc20Amount } from './utils';
+import { erc20Amount, fiatAmount } from './utils';
 
 export type FollowModule = NonNullable<Profile['followModule']>;
 
 export type ChargeFollowPolicy = {
   type: FollowPolicyType.CHARGE;
   amount: Erc20Amount;
+  rate: FiatAmount | null;
   recipient: string;
   contractAddress: EvmAddress;
   chainId: number;
@@ -59,6 +60,7 @@ export function resolveFollowPolicy({ followModule }: Profile): FollowPolicy {
       return {
         type: FollowPolicyType.CHARGE,
         amount: erc20Amount(followModule.amount),
+        rate: followModule.amount.rate ? fiatAmount(followModule.amount.rate) : null,
         recipient: followModule.recipient,
         contractAddress: followModule.contract.address,
         chainId: followModule.contract.chainId,

@@ -67,11 +67,6 @@ const profileHooks = [
     path: '/profiles/useUpdateProfileManagers',
   },
   {
-    label: 'useProfilesManaged',
-    description: 'Fetch a list of profiles managed by a wallet',
-    path: '/profiles/useProfilesManaged',
-  },
-  {
     label: 'useSetProfileMetadata',
     description: 'Set the metadata for the authenticated Profile.',
     path: '/profiles/useSetProfileMetadata',
@@ -82,11 +77,6 @@ const profileHooks = [
     path: '/profiles/useUpdateFollowPolicy',
   },
   {
-    label: 'useOwnedHandles & useLinkHandle & useUnlinkHandle',
-    description: `Link and unlink handle from a profile.`,
-    path: '/profiles/useOwnedHandles',
-  },
-  {
     label: 'useBlockProfiles & useUnblockProfiles',
     description: 'Block and unblock profiles.',
     path: '/profiles/useBlockProfiles',
@@ -95,11 +85,6 @@ const profileHooks = [
     label: 'useBlockedProfiles',
     description: 'Fetch profiles that have been blocked.',
     path: '/profiles/useBlockedProfiles',
-  },
-  {
-    label: 'useLastLoggedInProfile',
-    description: 'Fetch the last logged in profile for a wallet address.',
-    path: '/profiles/useLastLoggedInProfile',
   },
   {
     label: 'useReportProfile',

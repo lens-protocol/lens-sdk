@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/react",
-  "version": "2.0.0-alpha.35",
+  "version": "2.0.0-alpha.36",
   "description": "Interacting with the Lens Protocol API using React.",
   "main": "dist/lens-protocol-react.cjs.js",
   "module": "dist/lens-protocol-react.esm.js",
@@ -81,6 +81,7 @@
     "@ethersproject/abi": "^5.7.0",
     "@faker-js/faker": "^7.6.0",
     "@lens-protocol/eslint-config": "workspace:*",
+    "@lens-protocol/metadata": "^1.0.6",
     "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
     "@testing-library/react": "^13.4.0",
@@ -106,10 +107,14 @@
     "typescript": "5.2.2"
   },
   "peerDependencies": {
+    "@lens-protocol/metadata": "^1.0.0",
     "@types/react": "^18.0.0",
     "react": "^18.2.0"
   },
   "peerDependenciesMeta": {
+    "@lens-protocol/metadata": {
+      "optional": true
+    },
     "@types/react": {
       "optional": true
     }

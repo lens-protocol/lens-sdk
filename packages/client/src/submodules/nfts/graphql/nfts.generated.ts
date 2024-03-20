@@ -46,7 +46,7 @@ export type NftFragment = {
   owner: OwnerFragment;
   contract: NetworkAddressFragment;
   collection: NftCollectionFragment;
-  metadata: NftMetadataFragment;
+  metadata: NftMetadataFragment | null;
 };
 
 export type NftGalleryFragment = {
@@ -1223,7 +1223,6 @@ export const NftCollectionOwnersDocument = {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
-          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',

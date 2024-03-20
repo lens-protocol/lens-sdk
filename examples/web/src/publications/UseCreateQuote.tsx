@@ -4,12 +4,12 @@ import { toast } from 'react-hot-toast';
 
 import { RequireProfileSession } from '../components/auth';
 import { PublicationCard } from '../components/cards';
-import { useIrysUploader } from '../hooks/useIrysUploader';
+import { useIrysUploadHandler } from '../hooks/useIrysUploader';
 
 const target = publicationId('0x56-0x02');
 
 function QuoteComposer() {
-  const { uploadMetadata } = useIrysUploader();
+  const uploadMetadata = useIrysUploadHandler();
   const { execute: load, data } = useLazyPublication();
   const { execute, loading, error } = useCreateQuote();
 

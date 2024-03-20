@@ -1,5 +1,27 @@
 # @lens-protocol/react
 
+## 2.0.0-alpha.36
+
+### Minor Changes
+
+- 177879d07: **feat:** adds experimental `useOptimisticCreatePost` hook
+- 8fbfdc9d4: **feat:** added `useRateLimits` hook
+- 840208f26: **feat:** added `resolveCollectPolicy` helper and exchange rate details
+
+### Patch Changes
+
+- 54f0be643: **feat:** add optimistic updates for publication stats
+- f95ed6f5a: **feat:** refetch profile stats after content creation
+- Updated dependencies [177879d07]
+- Updated dependencies [54f0be643]
+- Updated dependencies [8fbfdc9d4]
+- Updated dependencies [840208f26]
+  - @lens-protocol/shared-kernel@0.11.0-alpha.12
+  - @lens-protocol/api-bindings@0.11.0-alpha.32
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.26
+  - @lens-protocol/domain@0.11.0-alpha.25
+  - @lens-protocol/storage@0.8.0-alpha.11
+
 ## 2.0.0-alpha.35
 
 ### Minor Changes

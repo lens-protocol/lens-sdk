@@ -9,3 +9,4 @@
 export * from '@lens-protocol/react';
 
 export * from './LensProvider';
+export * from './Uploader';

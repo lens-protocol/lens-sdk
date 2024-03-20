@@ -1,5 +1,6 @@
 import {
   BroadcastingError,
+  FollowPolicyType,
   InsufficientAllowanceError,
   InsufficientFundsError,
   InsufficientGasError,
@@ -10,6 +11,7 @@ import {
   TriStateValue,
   UserRejectedError,
   WalletConnectionError,
+  resolveFollowPolicy,
   useExploreProfiles,
   useFollow,
   useUnfollow,
@@ -19,11 +21,8 @@ import { toast } from 'react-hot-toast';
 import { RequireProfileSession } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
+import { formatAmount, formatFiatAmount } from '../utils/formatAmount';
 import { ProfileCard } from './components/ProfileCard';
-
-type FollowButtonProps = {
-  profile: Profile;
-};
 
 function handleFollowError(
   error:
@@ -64,7 +63,7 @@ function handleFollowError(
   }
 }
 
-function FollowButton({ profile }: FollowButtonProps) {
+function FollowButton({ profile }: { profile: Profile }) {
   const { execute: executeFollow, error: followError, loading: isFollowLoading } = useFollow();
 
   const {
@@ -141,7 +140,7 @@ function FollowButton({ profile }: FollowButtonProps) {
   }
 
   return (
-    <section>
+    <>
       <p>Follow options:</p>
       <button
         onClick={sponsoredFollow}
@@ -167,8 +166,28 @@ function FollowButton({ profile }: FollowButtonProps) {
         Self-funded
       </button>
       {followError && <p>{followError.message}</p>}
-    </section>
+    </>
   );
+}
+
+function FollowPolicy({ profile }: { profile: Profile }) {
+  const policy = resolveFollowPolicy(profile);
+
+  switch (policy.type) {
+    case FollowPolicyType.ANYONE:
+      return <p>Anyone can follow this profile.</p>;
+    case FollowPolicyType.CHARGE:
+      return (
+        <p>{`You must pay ${formatAmount(policy.amount)} (${formatFiatAmount(
+          policy.amount,
+          policy.rate,
+        )}) to follow this profile.`}</p>
+      );
+    case FollowPolicyType.NO_ONE:
+      return <p>You cannot follow this profile.</p>;
+    case FollowPolicyType.UNKNOWN:
+      return <p>Unknown policy.</p>;
+  }
 }
 
 function UseFollowInner() {
@@ -182,6 +201,7 @@ function UseFollowInner() {
     <>
       {data.map((p) => (
         <ProfileCard profile={p} key={p.id}>
+          <FollowPolicy profile={p} />
           <FollowButton profile={p} />
         </ProfileCard>
       ))}

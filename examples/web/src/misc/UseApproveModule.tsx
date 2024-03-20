@@ -19,7 +19,7 @@ import { Logs } from '../components/Logs';
 import { PublicationCard } from '../components/cards';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
-import { useIrysUploader } from '../hooks/useIrysUploader';
+import { useIrysUploadHandler } from '../hooks/useIrysUploader';
 import { useLogs } from '../hooks/useLogs';
 import { never } from '../utils';
 
@@ -86,7 +86,7 @@ function TestScenario({ publicationId }: { publicationId: PublicationId }) {
 }
 
 export function UseApproveModule() {
-  const { uploadMetadata } = useIrysUploader();
+  const uploadMetadata = useIrysUploadHandler();
   const [id, setId] = useState<PublicationId | undefined>();
   const { address } = useAccount();
   const { data: currencies, loading, error } = useCurrencies();

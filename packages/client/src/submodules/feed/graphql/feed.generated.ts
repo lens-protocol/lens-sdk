@@ -16453,7 +16453,6 @@ export const FeedDocument = {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
-          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',
@@ -23404,7 +23403,6 @@ export const FeedHighlightsDocument = {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
-          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',
@@ -30105,7 +30103,6 @@ export const LatestPaidActionsDocument = {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
-          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',

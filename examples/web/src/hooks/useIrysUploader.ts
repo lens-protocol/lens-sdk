@@ -1,5 +1,7 @@
 import { Web3Provider } from '@ethersproject/providers';
 import { WebIrys } from '@irys/sdk';
+import { Uploader } from '@lens-protocol/react-web';
+import { useMemo } from 'react';
 import { Account, Chain, Client, Transport } from 'viem';
 import { useConnectorClient } from 'wagmi';
 
@@ -30,31 +32,49 @@ async function getWebIrys(client: Client<Transport, Chain, Account>) {
   return webIrys;
 }
 
-export function useIrysUploader() {
+export function useIrysUploadHandler() {
   const { data: client } = useConnectorClient();
 
-  return {
-    uploadMetadata: async (data: unknown) => {
-      const confirm = window.confirm(
-        `In this example we will now upload metadata file via the Bundlr Network.
+  return async (data: unknown) => {
+    const confirm = window.confirm(
+      `In this example we will now upload metadata file via the Irys.
     
     Please make sure your wallet is connected to the Polygon Mumbai testnet.
     
     You can get some Mumbai MATIC from the Mumbai Faucet: https://mumbaifaucet.com/`,
-      );
+    );
+
+    if (!confirm) {
+      throw new Error('User cancelled');
+    }
+
+    const irys = await getWebIrys(client ?? never('viem Client not found'));
+
+    const serialized = JSON.stringify(data);
+    const tx = await irys.upload(serialized, {
+      tags: [{ name: 'Content-Type', value: 'application/json' }],
+    });
+
+    return `https://arweave.net/${tx.id}`;
+  };
+}
+
+export function useIrysUploader() {
+  const { data: client } = useConnectorClient();
+
+  return useMemo(() => {
+    return new Uploader(async (file: File) => {
+      const irys = await getWebIrys(client ?? never('viem Client not found'));
+
+      const confirm = window.confirm(`Uploading '${file.name}' via the Irys.`);
 
       if (!confirm) {
         throw new Error('User cancelled');
       }
 
-      const irys = await getWebIrys(client ?? never('viem Client not found'));
+      const receipt = await irys.uploadFile(file);
 
-      const serialized = JSON.stringify(data);
-      const tx = await irys.upload(serialized, {
-        tags: [{ name: 'Content-Type', value: 'application/json' }],
-      });
-
-      return `https://arweave.net/${tx.id}`;
-    },
-  };
+      return `https://arweave.net/${receipt.id}`;
+    });
+  }, [client]);
 }

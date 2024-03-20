@@ -11,7 +11,7 @@ import { ethers } from 'ethers';
 
 import abi from '../../abi/PermissonlessCreator.json';
 import type { PermissonlessCreator } from '../../contracts/PermissonlessCreator';
-import { uploadWithBundlr } from '../shared/uploadWithBundlr';
+import { uploadWithIrys } from '../shared/uploadWithIrys';
 
 dotenv.config();
 
@@ -153,7 +153,7 @@ async function main() {
   });
 
   // upload the metadata to Arweave
-  const metadataURI = await uploadWithBundlr(metadata);
+  const metadataURI = await uploadWithIrys(metadata);
   // const metadataURI = 'https://arweave.net/cv2Rw4g9NhSEXFlq3Ekx1Xo7n76zQSnrx24uBODEkGg';
   console.log(`Metadata uploaded to Arweave with URI: ${metadataURI}`);
 

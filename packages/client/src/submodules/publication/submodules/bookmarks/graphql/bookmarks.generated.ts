@@ -165,7 +165,6 @@ export const PublicationBookmarksDocument = {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'profileMetadataSource' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'AppId' } },
-          defaultValue: { kind: 'NullValue' },
         },
         {
           kind: 'VariableDefinition',
