@@ -1,5 +1,11 @@
 # @lens-protocol/shared-kernel
 
+## 0.11.0-alpha.12
+
+### Patch Changes
+
+- 177879d07: **feat:** adds experimental `useOptimisticCreatePost` hook
+
 ## 0.11.0-alpha.11
 
 ### Minor Changes
