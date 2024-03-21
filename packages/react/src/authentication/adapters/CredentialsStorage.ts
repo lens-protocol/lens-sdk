@@ -1,33 +1,53 @@
+import { IAccessTokenStorage } from '@lens-protocol/api-bindings';
 import {
-  CredentialsStorageSchema,
+  CredentialsExpiredError,
+  Logout,
+  LogoutReason,
+} from '@lens-protocol/domain/use-cases/authentication';
+import { PromiseResult, failure, invariant, success } from '@lens-protocol/shared-kernel';
+import {
   IStorage,
-  IStorageProvider,
   PersistedCredentials,
-  Storage,
   StorageSubscriber,
   StorageSubscription,
 } from '@lens-protocol/storage';
 
+import { AuthApi } from './AuthApi';
 import { JwtCredentials } from './JwtCredentials';
+
+export type Unsubscribe = () => void;
 
 /**
  * Stores auth credentials.
  * Access token is kept in memory.
  * Refresh token is persisted permanently.
  */
-export class CredentialsStorage implements IStorage<JwtCredentials> {
-  refreshTokenStorage: IStorage<PersistedCredentials>;
-  accessToken: string | null = null;
+export class CredentialsStorage implements IStorage<JwtCredentials>, IAccessTokenStorage {
+  private isRefreshing = false;
 
-  constructor(storageProvider: IStorageProvider, namespace: string) {
-    const authStorageSchema = new CredentialsStorageSchema(`lens.${namespace}.credentials`);
-    this.refreshTokenStorage = Storage.createForSchema(authStorageSchema, storageProvider);
+  private subscribers: Set<StorageSubscriber<JwtCredentials>> = new Set();
+
+  private accessToken: string | null = null;
+
+  private logout: Logout | null = null;
+
+  constructor(
+    private readonly refreshTokenStorage: IStorage<PersistedCredentials>,
+    private readonly authApi: AuthApi,
+  ) {}
+
+  onExpiry(logout: Logout) {
+    this.logout = logout;
   }
 
-  async set({ accessToken, refreshToken }: JwtCredentials): Promise<void> {
-    this.accessToken = accessToken;
+  async set(newCredentials: JwtCredentials): Promise<void> {
+    this.accessToken = newCredentials.accessToken;
 
-    await this.refreshTokenStorage.set({ refreshToken });
+    const oldCredentials = await this.get();
+
+    await this.refreshTokenStorage.set({ refreshToken: newCredentials.refreshToken });
+
+    this.notifySubscribers(newCredentials, oldCredentials);
   }
 
   async get(): Promise<JwtCredentials | null> {
@@ -47,12 +67,52 @@ export class CredentialsStorage implements IStorage<JwtCredentials> {
     await this.refreshTokenStorage.reset();
   }
 
-  subscribe(_: StorageSubscriber<JwtCredentials>): StorageSubscription {
-    throw new Error('Method not implemented.');
+  subscribe(subscriber: StorageSubscriber<JwtCredentials>): StorageSubscription {
+    this.subscribers.add(subscriber);
+
+    return {
+      unsubscribe: () => this.subscribers.delete(subscriber),
+    };
   }
 
   getAccessToken(): string | null {
     return this.accessToken;
+  }
+
+  async refreshToken(): PromiseResult<void, CredentialsExpiredError> {
+    invariant(this.isRefreshing === false, 'Cannot refresh token while refreshing');
+    this.isRefreshing = true;
+
+    const result = await this.refreshCredentials();
+
+    this.isRefreshing = false;
+
+    if (result.isFailure()) {
+      await this.logout?.execute(LogoutReason.CREDENTIALS_EXPIRED);
+    }
+    return result;
+  }
+
+  private async refreshCredentials(): PromiseResult<void, CredentialsExpiredError> {
+    const credentials = await this.get();
+
+    if (!credentials || !credentials.canRefresh()) {
+      return failure(new CredentialsExpiredError());
+    }
+    try {
+      const newCredentials = await this.authApi.refreshCredentials(credentials.refreshToken);
+      await this.set(newCredentials);
+      return success();
+    } catch {
+      return failure(new CredentialsExpiredError());
+    }
+  }
+
+  private notifySubscribers(
+    newCredentials: JwtCredentials | null,
+    oldCredentials: JwtCredentials | null,
+  ) {
+    this.subscribers.forEach((callback) => callback(newCredentials, oldCredentials));
   }
 
   private async getRefreshToken(): Promise<string | null> {
