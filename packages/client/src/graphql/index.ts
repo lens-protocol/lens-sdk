@@ -292,6 +292,8 @@ export {
   ExplorePublicationType,
   FeedEventItemType,
   FollowModuleType,
+  FramesEip721TypedDataSpec,
+  FrameVerifySignatureResult,
   HiddenCommentsType,
   LensProfileManagerRelayErrorReasonType,
   LensTransactionFailureType,

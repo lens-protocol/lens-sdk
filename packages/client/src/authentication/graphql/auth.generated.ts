@@ -48,20 +48,24 @@ export type AuthAuthenticateMutationVariables = Types.Exact<{
   request: Types.SignedAuthChallenge;
 }>;
 
-export type AuthAuthenticateMutation = { result: { accessToken: string; refreshToken: string } };
+export type AuthAuthenticateMutation = {
+  result: { accessToken: string; refreshToken: string; identityToken: string };
+};
 
 export type AuthRefreshMutationVariables = Types.Exact<{
   request: Types.RefreshRequest;
 }>;
 
-export type AuthRefreshMutation = { result: { accessToken: string; refreshToken: string } };
+export type AuthRefreshMutation = {
+  result: { accessToken: string; refreshToken: string; identityToken: string };
+};
 
 export type WalletAuthenticationToProfileAuthenticationMutationVariables = Types.Exact<{
   request: Types.WalletAuthenticationToProfileAuthenticationRequest;
 }>;
 
 export type WalletAuthenticationToProfileAuthenticationMutation = {
-  result: { accessToken: string; refreshToken: string };
+  result: { accessToken: string; refreshToken: string; identityToken: string };
 };
 
 export type RevokeAuthenticationMutationVariables = Types.Exact<{
@@ -388,6 +392,7 @@ export const AuthAuthenticateDocument = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'accessToken' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'refreshToken' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'identityToken' } },
               ],
             },
           },
@@ -432,6 +437,7 @@ export const AuthRefreshDocument = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'accessToken' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'refreshToken' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'identityToken' } },
               ],
             },
           },
@@ -479,6 +485,7 @@ export const WalletAuthenticationToProfileAuthenticationDocument = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'accessToken' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'refreshToken' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'identityToken' } },
               ],
             },
           },

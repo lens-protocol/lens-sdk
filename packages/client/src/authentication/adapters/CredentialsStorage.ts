@@ -18,14 +18,16 @@ import { Credentials } from './Credentials';
 export class CredentialsStorage implements IStorage<Credentials> {
   private refreshTokenStorage: IStorage<PersistedCredentials>;
   private accessToken: string | undefined;
+  private identityToken: string | undefined;
 
   constructor(storageProvider: IStorageProvider, namespace: string) {
     const authStorageSchema = new CredentialsStorageSchema(`lens.${namespace}.credentials`);
     this.refreshTokenStorage = Storage.createForSchema(authStorageSchema, storageProvider);
   }
 
-  async set({ accessToken, refreshToken }: Credentials): Promise<void> {
+  async set({ accessToken, identityToken, refreshToken }: Credentials): Promise<void> {
     this.accessToken = accessToken;
+    this.identityToken = identityToken;
 
     await this.refreshTokenStorage.set({ refreshToken });
   }
@@ -38,12 +40,14 @@ export class CredentialsStorage implements IStorage<Credentials> {
     }
 
     const accessToken = this.accessToken;
+    const identityToken = this.identityToken;
 
-    return new Credentials(accessToken, refreshToken);
+    return new Credentials(accessToken, identityToken, refreshToken);
   }
 
   async reset(): Promise<void> {
     this.accessToken = undefined;
+    this.identityToken = undefined;
     await this.refreshTokenStorage.reset();
   }
 
