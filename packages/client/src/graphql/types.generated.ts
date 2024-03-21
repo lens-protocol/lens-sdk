@@ -171,6 +171,14 @@ export type ClaimProfileWithHandleRequest = {
   id?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type ClaimTokensRequest = {
+  for: ClaimableTokenType;
+};
+
+export enum ClaimableTokenType {
+  Bonsai = 'BONSAI',
+}
+
 export type CollectActionModuleInput = {
   multirecipientCollectOpenAction?: InputMaybe<MultirecipientFeeCollectModuleInput>;
   simpleCollectOpenAction?: InputMaybe<SimpleCollectOpenActionModuleInput>;
@@ -578,6 +586,11 @@ export type InternalNftIndexRequest = {
 
 export type InternalNftVerifyRequest = {
   n: Array<Nfi>;
+  secret: Scalars['String']['input'];
+};
+
+export type InternalPaymentHandleInfoRequest = {
+  p: Scalars['String']['input'];
   secret: Scalars['String']['input'];
 };
 
