@@ -5,8 +5,7 @@ import {
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
 import {
-  ICredentialsReader,
-  ICredentialsWriter,
+  ICredentialsGateway,
   IResettableCredentialsGateway,
   LogoutReason,
 } from '@lens-protocol/domain/use-cases/authentication';
@@ -19,9 +18,7 @@ type RevokeSessionRequest = {
   authorizationId: string;
 };
 
-export class CredentialsGateway
-  implements ICredentialsWriter, ICredentialsReader, IResettableCredentialsGateway
-{
+export class CredentialsGateway implements ICredentialsGateway, IResettableCredentialsGateway {
   constructor(
     private readonly credentialsStorage: IStorage<JwtCredentials>,
     private apolloClient: SafeApolloClient,
