@@ -9,6 +9,7 @@ import {
 import {
   OpenActionConfig,
   ReferencePolicyConfig,
+  Referrers,
 } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { invariant } from '@lens-protocol/shared-kernel';
@@ -35,6 +36,19 @@ export type CreateCommentArgs = {
    * The publication ID to comment on.
    */
   commentOn: PublicationId;
+  /**
+   * Use this if the target publication is configured with an Unknown Reference Module
+   * that requires a calldata to process the reference logic.
+   *
+   * It's consumer responsibility to encode it correctly.
+   */
+  commentOnReferenceCalldata?: string;
+  /**
+   * The referrers list for any Unknown Reference Module logic.
+   *
+   * It can be a list of Publication IDs or Profile IDs.
+   */
+  referrers?: Referrers;
   /**
    * The metadata URI.
    */

@@ -6,6 +6,7 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
+import { Referrers } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { invariant } from '@lens-protocol/shared-kernel';
 
@@ -31,6 +32,19 @@ export type CreateMirrorArgs = {
    * The publication ID to mirror.
    */
   mirrorOn: PublicationId;
+  /**
+   * Use this if the mirrored publication is configured with an Unknown Reference Module
+   * that requires a calldata to process the reference logic.
+   *
+   * It's consumer responsibility to encode it correctly.
+   */
+  mirrorOnReferenceData?: string;
+  /**
+   * The referrers list for any Unknown Reference Module logic.
+   *
+   * It can be a list of Publication IDs or Profile IDs.
+   */
+  referrers?: Referrers;
   /**
    * Whether the transaction costs should be sponsored by the Lens API or
    * should be paid by the authenticated wallet.

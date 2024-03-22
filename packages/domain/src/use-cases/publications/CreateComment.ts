@@ -1,4 +1,4 @@
-import { URI } from '@lens-protocol/shared-kernel';
+import { Data, URI } from '@lens-protocol/shared-kernel';
 
 import { isMomokaPublicationId, PublicationId, TransactionKind } from '../../entities';
 import { DelegableSigning } from '../transactions/DelegableSigning';
@@ -6,35 +6,17 @@ import { PaidTransaction } from '../transactions/PaidTransaction';
 import { SponsorshipReady } from '../transactions/SponsorshipReady';
 import { OpenActionConfig } from './OpenActionConfig';
 import { ReferencePolicyConfig, ReferencePolicyType } from './ReferencePolicyConfig';
+import { Referrers } from './Referrers';
 
 export type CreateCommentRequest = {
-  /**
-   * The discriminator for the transaction kind.
-   */
   kind: TransactionKind.CREATE_COMMENT;
-  /**
-   * Whether is possible to delegate the publication signing to the profile's chosen profile manager.
-   */
-  signless: boolean;
-  /**
-   * The publication ID to comment on.
-   */
-  commentOn: PublicationId;
-  /**
-   * The metadata URI.
-   */
-  metadata: URI;
-  /**
-   * The Open Actions associated with the publication.
-   */
   actions: OpenActionConfig[];
-  /**
-   * The post reference policy.
-   */
+  commentOn: PublicationId;
+  commentOnReferenceData?: Data;
+  metadata: URI;
   reference: ReferencePolicyConfig;
-  /**
-   * Whether the transaction costs should be sponsored by the Lens API or not.
-   */
+  referrers?: Referrers;
+  signless: boolean;
   sponsored: boolean;
 };
 

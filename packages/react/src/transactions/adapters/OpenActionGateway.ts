@@ -8,7 +8,6 @@ import {
   LegacyCollectVariables,
   RelaySuccess,
   SafeApolloClient,
-  isPublicationId,
   omitTypename,
 } from '@lens-protocol/api-bindings';
 import { lensHub, publicActProxy } from '@lens-protocol/blockchain-bindings';
@@ -19,7 +18,6 @@ import {
   LegacyCollectRequest,
   MultirecipientCollectRequest,
   OpenActionRequest,
-  Referrers,
   SimpleCollectRequest,
   UnknownActionRequest,
 } from '@lens-protocol/domain/use-cases/publications';
@@ -36,6 +34,7 @@ import { UnsignedProtocolCall } from '../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from './AbstractContractCallGateway';
 import { ITransactionFactory } from './ITransactionFactory';
+import { resolveOnchainReferrers } from './referrals';
 import { handleRelayError } from './relayer';
 
 type NewOpenActionRequest =
@@ -196,7 +195,7 @@ export class OpenActionGateway
           actOn: {
             simpleCollectOpenAction: true,
           },
-          referrers: this.resolveOnchainReferrers(request.referrers),
+          referrers: resolveOnchainReferrers(request.referrers),
         };
       case AllOpenActionType.MULTIRECIPIENT_COLLECT:
         return {
@@ -204,7 +203,7 @@ export class OpenActionGateway
           actOn: {
             multirecipientCollectOpenAction: true,
           },
-          referrers: this.resolveOnchainReferrers(request.referrers),
+          referrers: resolveOnchainReferrers(request.referrers),
         };
       case AllOpenActionType.UNKNOWN_OPEN_ACTION:
         return {
@@ -215,24 +214,9 @@ export class OpenActionGateway
               data: request.data,
             },
           },
-          referrers: this.resolveOnchainReferrers(request.referrers),
+          referrers: resolveOnchainReferrers(request.referrers),
         };
     }
-  }
-
-  private resolveOnchainReferrers(
-    referrers: Referrers | undefined,
-  ): gql.OnchainReferrer[] | undefined {
-    return referrers?.map((value) => {
-      if (isPublicationId(value)) {
-        return {
-          publicationId: value,
-        };
-      }
-      return {
-        profileId: value,
-      };
-    });
   }
 
   private async createLegacyCollectTypedData(

@@ -5,7 +5,6 @@ import {
   PendingSigningRequestError,
   UserRejectedError,
   WalletConnectionError,
-  ProfileId,
   PublicationId,
 } from '../../entities';
 import { DelegableSigning } from '../transactions/DelegableSigning';
@@ -18,6 +17,7 @@ import {
   InsufficientFundsError,
   TokenAvailability,
 } from '../wallets/TokenAvailability';
+import { Referrers } from './Referrers';
 
 export enum AllOpenActionType {
   LEGACY_COLLECT = 'LEGACY_COLLECT',
@@ -41,8 +41,6 @@ export type LegacyCollectRequest = {
   referrer?: PublicationId;
   fee?: CollectFee;
 };
-
-export type Referrers = ReadonlyArray<PublicationId | ProfileId>;
 
 export type MultirecipientCollectRequest = {
   kind: TransactionKind.ACT_ON_PUBLICATION;
