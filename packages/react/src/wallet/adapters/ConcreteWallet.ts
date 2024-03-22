@@ -15,6 +15,8 @@ import {
   ProtocolTransactionRequestModel,
   AnyTransactionRequestModel,
   Signature,
+  UnsignedFrameAction,
+  SignedFrameAction,
 } from '@lens-protocol/domain/entities';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import {
@@ -25,6 +27,7 @@ import {
   matic,
   PromiseResult,
   success,
+  UnknownObject,
 } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
@@ -142,6 +145,51 @@ export class ConcreteWallet extends Wallet {
 
       const signedCall = SignedProtocolCall.create({ unsignedCall, signature });
       return success(signedCall);
+    } catch (err) {
+      assertErrorObjectWithCode(err);
+
+      if (isUserRejectedError(err)) {
+        return failure(new UserRejectedError());
+      }
+
+      throw err;
+    } finally {
+      this.signingInProgress = false;
+    }
+  }
+
+  async signFrameAction<TData extends UnknownObject>(
+    unsignedAction: UnsignedFrameAction<TData>,
+  ): PromiseResult<
+    SignedFrameAction<TData>,
+    PendingSigningRequestError | UserRejectedError | WalletConnectionError
+  > {
+    const result = await this.signerFactory.createSigner({
+      address: this.address,
+      chainType: ChainType.POLYGON,
+    });
+
+    if (result.isFailure()) {
+      return result;
+    }
+
+    if (this.signingInProgress) {
+      return failure(new PendingSigningRequestError());
+    }
+    this.signingInProgress = true;
+
+    const signer = result.value;
+    try {
+      const signature = await signer._signTypedData(
+        unsignedAction.data.domain,
+        unsignedActiontypedData.types,
+        unsignedActiontypedData.message,
+      );
+
+      return success({
+        signature: signature as Signature,
+        signedTypedData: unsignedAction.data,
+      });
     } catch (err) {
       assertErrorObjectWithCode(err);
 

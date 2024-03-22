@@ -1,5 +1,6 @@
 export * from './AppId';
 export * from './Credentials';
+export * from './FrameAction';
 export * from './Invite';
 export * from './Nft';
 export * from './Profile';
