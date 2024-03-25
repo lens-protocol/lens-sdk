@@ -1,9 +1,4 @@
-import {
-  CryptoNativeAsset,
-  EvmAddress,
-  PromiseResult,
-  UnknownObject,
-} from '@lens-protocol/shared-kernel';
+import { CryptoNativeAsset, EvmAddress, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import { SignedFrameAction, UnsignedFrameAction } from './FrameAction';
 import { Signature } from './Signature';
@@ -64,7 +59,7 @@ export abstract class Wallet {
     PendingSigningRequestError | UserRejectedError | WalletConnectionError
   >;
 
-  abstract signFrameAction<TData extends UnknownObject>(
+  abstract signFrameAction<TData>(
     unsignedAction: UnsignedFrameAction<TData>,
   ): PromiseResult<
     SignedFrameAction<TData>,

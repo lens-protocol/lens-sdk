@@ -104,7 +104,6 @@ export {
   ExplorePublicationType,
   FeedEventItemType,
   FollowModuleType,
-  FramesEip721TypedDataSpec,
   HiddenCommentsType,
   LimitType,
   ManagedProfileVisibility,

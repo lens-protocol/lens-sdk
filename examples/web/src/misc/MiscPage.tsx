@@ -27,11 +27,6 @@ const hooks = [
     path: '/misc/useInviteWallets',
   },
   {
-    label: 'LensClient interoperability',
-    description: `Test ReactHooks SDK and Client SDK interoperability.`,
-    path: '/misc/lensClientInteroperability',
-  },
-  {
     label: 'useResolveAddress',
     description: `Resolves and EVM address from a Lens Handle.`,
     path: '/misc/useResolveAddress',
@@ -40,6 +35,16 @@ const hooks = [
     label: 'useValidateHandle',
     description: `Validate the proposed handle before profile creation.`,
     path: '/misc/useValidateHandle',
+  },
+  {
+    label: 'useSignFrameAction',
+    description: `Sign a frame action and prepare it to be validated by frame server.`,
+    path: '/misc/useSignFrameAction',
+  },
+  {
+    label: 'LensClient interoperability',
+    description: `Test ReactHooks SDK and Client SDK interoperability.`,
+    path: '/misc/lensClientInteroperability',
   },
 ];
 

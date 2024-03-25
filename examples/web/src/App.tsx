@@ -34,6 +34,7 @@ import {
   UseInviteWallets,
   UseNotifications,
   UseResolveAddress,
+  UseSignFrameAction,
   UseValidateHandle,
 } from './misc';
 import {
@@ -193,6 +194,7 @@ export function App() {
                     path="lensClientInteroperability"
                     element={<LensClientInteroperability />}
                   />
+                  <Route path="useSignFrameAction" element={<UseSignFrameAction />} />
                 </Route>
 
                 <Route

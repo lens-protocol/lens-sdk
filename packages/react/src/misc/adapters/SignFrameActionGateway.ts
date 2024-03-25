@@ -9,12 +9,10 @@ import {
   SignFrameActionData,
   SignFrameActionDocument,
   SignFrameActionVariables,
+  omitTypename,
 } from '@lens-protocol/api-bindings';
-import {
-  ISignFrameActionGateway,
-  SignedFrameAction,
-  UnsignedFrameAction,
-} from '@lens-protocol/domain/use-cases/wallets';
+import { SignedFrameAction, UnsignedFrameAction } from '@lens-protocol/domain/entities';
+import { ISignFrameActionGateway } from '@lens-protocol/domain/use-cases/wallets';
 
 export class SignFrameActionGateway
   implements ISignFrameActionGateway<FrameLensManagerEip712Request, CreateFrameEip712TypedData>
@@ -22,16 +20,19 @@ export class SignFrameActionGateway
   constructor(private apolloClient: SafeApolloClient) {}
 
   async signFrameAction(
-    request: FrameLensManagerEip712Request,
+    request: FrameEip712Request,
   ): Promise<SignedFrameAction<CreateFrameEip712TypedData>> {
+    // omit deadline from request
+    const { deadline: _, ...requestWithoutDeadline } = request;
+
     const result = await this.apolloClient.mutate<SignFrameActionData, SignFrameActionVariables>({
       mutation: SignFrameActionDocument,
       variables: {
-        request,
+        request: requestWithoutDeadline,
       },
     });
 
-    return result.data.result;
+    return omitTypename(result.data.result);
   }
 
   async createUnsignedFrameAction(
@@ -48,7 +49,7 @@ export class SignFrameActionGateway
     });
 
     return {
-      data: result.data.result,
+      data: omitTypename(result.data.result),
     };
   }
 }

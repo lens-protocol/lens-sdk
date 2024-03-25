@@ -1,22 +1,25 @@
-import {
-  CreateFrameEip712TypedData,
-  FrameLensManagerEip712Request,
-} from '@lens-protocol/api-bindings';
+import { CreateFrameEip712TypedData, FrameEip712Request } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   SignedFrameAction as SignedFrameActionEntity,
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
-import { invariant, success } from '@lens-protocol/shared-kernel';
+import { Prettify, invariant, success } from '@lens-protocol/shared-kernel';
 
 import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useSignFrameActionController } from './adapters/useSignFrameActionController';
 
-export type SignFrameActionArgs = FrameLensManagerEip712Request;
+export type SignFrameActionArgs = Prettify<
+  Omit<FrameEip712Request, 'deadline'> & {
+    deadline?: FrameEip712Request['deadline'];
+  }
+>;
 
 export type SignedFrameAction = SignedFrameActionEntity<CreateFrameEip712TypedData>;
+
+const DEFAULT_DEADLINE = 30 * 60 * 1000; // 30 minutes
 
 /**
  * Sign a Frame action to be verified by a Frame server.
@@ -41,7 +44,10 @@ export function useSignFrameAction(): UseDeferredTask<
     );
 
     const result = await sign({
-      input: args,
+      input: {
+        ...args,
+        deadline: args.deadline || new Date(Date.now() + DEFAULT_DEADLINE).getTime(),
+      },
       signless: session.profile.signless,
     });
 

@@ -1,7 +1,4 @@
-import {
-  CreateFrameEip712TypedData,
-  FrameLensManagerEip712Request,
-} from '@lens-protocol/api-bindings';
+import { CreateFrameEip712TypedData, FrameEip712Request } from '@lens-protocol/api-bindings';
 import {
   PendingSigningRequestError,
   SignedFrameAction,
@@ -19,7 +16,7 @@ export function useSignFrameActionController() {
   const { activeWallet, apolloClient } = useSharedDependencies();
 
   return async (
-    request: SignFrameActionRequest<FrameLensManagerEip712Request>,
+    request: SignFrameActionRequest<FrameEip712Request>,
   ): PromiseResult<
     SignedFrameAction<CreateFrameEip712TypedData>,
     PendingSigningRequestError | UserRejectedError | WalletConnectionError

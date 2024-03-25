@@ -14,7 +14,7 @@ fragment CreateFrameEIP712TypedData on CreateFrameEIP712TypedData {
   domain {
     ...EIP712TypedDataDomain
   }
-  message: value {
+  value {
     specVersion
     url
     buttonIndex
