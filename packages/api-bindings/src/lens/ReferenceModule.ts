@@ -81,7 +81,7 @@ export type ReferencePolicy =
  * }
  * ```
  *
- * @param args - The {@link AnyPublication} to resolve {@link ReferencePolicy} from
+ * @param publication - The {@link AnyPublication} to resolve {@link ReferencePolicy} from
  * @returns {@link ReferencePolicy}
  */
 export function resolveReferencePolicy(publication: AnyPublication): ReferencePolicy {

@@ -15,7 +15,6 @@ export type UseSearchProfilesArgs = PaginatedArgs<ProfileSearchRequest>;
  *
  * @category Discovery
  * @group Hooks
- * @param args - {@link UseSearchProfilesArgs}
  *
  * @example
  * ```tsx

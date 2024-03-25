@@ -31,7 +31,6 @@ export type UseRecommendProfileToggleArgs = {
  *
  * @category Profiles
  * @group Hooks
- * @param args - {@link UseRecommendProfileToggleArgs}
  */
 export function useRecommendProfileToggle(): UseDeferredTask<
   void,

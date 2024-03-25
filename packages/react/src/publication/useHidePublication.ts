@@ -35,7 +35,6 @@ export type UseHidePublicationArgs = {
  *
  * @category Publications
  * @group Hooks
- * @param args - {@link UseHidePublicationArgs}
  */
 export function useHidePublication(): UseDeferredTask<void, never, UseHidePublicationArgs> {
   const { data: session } = useSession();

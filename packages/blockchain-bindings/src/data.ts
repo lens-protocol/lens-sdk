@@ -76,7 +76,7 @@ export function encodeData(abi: ModuleParam[], data: ModuleData): Data {
  * );
  * ```
  */
-export function decodeData(abi: ModuleParam[], encoded: string): ModuleData {
+export function decodeData(abi: ModuleParam[], calldata: string): ModuleData {
   const types = abi.map((param) => {
     return ParamType.fromObject({
       name: param.name,
@@ -85,5 +85,5 @@ export function decodeData(abi: ModuleParam[], encoded: string): ModuleData {
     });
   });
 
-  return defaultAbiCoder.decode(types, encoded) as ModuleData;
+  return defaultAbiCoder.decode(types, calldata) as ModuleData;
 }

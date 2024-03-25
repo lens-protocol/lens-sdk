@@ -6,6 +6,12 @@ export type {
   FollowNotification,
   MentionNotification,
   MirrorNotification,
+  NotificationWhere,
+  OpenActionProfileActed,
+  ProfileMirrorResult,
+  ProfileReactedResult,
   QuoteNotification,
+  ReactedResult,
+  ReactionEvent,
   ReactionNotification,
 } from '@lens-protocol/api-bindings';

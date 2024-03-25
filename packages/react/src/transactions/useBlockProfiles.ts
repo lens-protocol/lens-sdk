@@ -41,19 +41,6 @@ export type BlockProfileArgs = {
   sponsored?: boolean;
 };
 
-export type BlockOperation = UseDeferredTask<
-  AsyncTransactionResult<void>,
-  | BroadcastingError
-  | InsufficientAllowanceError
-  | InsufficientFundsError
-  | InsufficientGasError
-  | PendingSigningRequestError
-  | TransactionError
-  | UserRejectedError
-  | WalletConnectionError,
-  BlockProfileArgs
->;
-
 /**
  * Block one or many profiles.
  *
@@ -61,7 +48,6 @@ export type BlockOperation = UseDeferredTask<
  *
  * @category Profiles
  * @group Hooks
- * @param args - {@link BlockProfileArgs}
  *
  * @example
  * ```ts
@@ -246,7 +232,18 @@ export type BlockOperation = UseDeferredTask<
  * whitelisted one (e.g. localhost).
  *
  */
-export function useBlockProfiles(): BlockOperation {
+export function useBlockProfiles(): UseDeferredTask<
+  AsyncTransactionResult<void>,
+  | BroadcastingError
+  | InsufficientAllowanceError
+  | InsufficientFundsError
+  | InsufficientGasError
+  | PendingSigningRequestError
+  | TransactionError
+  | UserRejectedError
+  | WalletConnectionError,
+  BlockProfileArgs
+> {
   const { data: session } = useSession();
   const blockProfile = useBlockProfilesController();
   const configureRequest = useSponsoredConfig();
