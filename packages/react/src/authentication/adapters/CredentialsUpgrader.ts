@@ -25,8 +25,8 @@ export class CredentialsUpgrader implements ICredentialsUpgrader {
       },
     });
 
-    const { accessToken, refreshToken } = result.data.result;
+    const { accessToken, identityToken, refreshToken } = result.data.result;
 
-    return new JwtCredentials(accessToken, refreshToken);
+    return new JwtCredentials(accessToken, identityToken, refreshToken);
   }
 }

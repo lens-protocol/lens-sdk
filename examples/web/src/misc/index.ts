@@ -6,4 +6,5 @@ export * from './UseCurrencies';
 export * from './UseInviteWallets';
 export * from './UseNotifications';
 export * from './UseResolveAddress';
+export * from './UseSignFrameAction';
 export * from './UseValidateHandle';

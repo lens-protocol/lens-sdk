@@ -45,7 +45,11 @@ export class JwtCredentials implements Credentials {
   readonly profileId?: ProfileId;
   readonly authorizationId: string;
 
-  constructor(readonly accessToken: string | null, readonly refreshToken: string) {
+  constructor(
+    readonly accessToken: string | null,
+    readonly identityToken: string | null,
+    readonly refreshToken: string,
+  ) {
     const decodedRefreshToken = jwtDecode(refreshToken);
 
     if (isWalletJwtContent(decodedRefreshToken)) {

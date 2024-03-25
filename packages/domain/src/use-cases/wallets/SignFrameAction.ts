@@ -15,20 +15,17 @@ export type SignFrameActionRequest<TInput extends UnknownObject> = {
   signless: boolean;
 };
 
-export interface ISignFrameActionGateway<
-  TInput extends UnknownObject,
-  TData extends UnknownObject,
-> {
+export interface ISignFrameActionGateway<TInput extends UnknownObject, TData> {
   signFrameAction(input: TInput): Promise<SignedFrameAction<TData>>;
   createUnsignedFrameAction(input: TInput): Promise<UnsignedFrameAction<TData>>;
 }
 
-export type ISignFrameActionPresenter<TData extends UnknownObject> = IGenericResultPresenter<
+export type ISignFrameActionPresenter<TData> = IGenericResultPresenter<
   SignedFrameAction<TData>,
   PendingSigningRequestError | UserRejectedError | WalletConnectionError
 >;
 
-export class SignFrameAction<TInput extends UnknownObject, TData extends UnknownObject> {
+export class SignFrameAction<TInput extends UnknownObject, TData> {
   constructor(
     protected readonly activeWallet: ActiveWallet,
     protected readonly gateway: ISignFrameActionGateway<TInput, TData>,

@@ -1,22 +1,23 @@
 import { TypedDataSigner, Signer } from '@ethersproject/abstract-signer';
 import { ErrorCode } from '@ethersproject/logger';
 import { TransactionRequest } from '@ethersproject/providers';
+import { CreateFrameEip712TypedData } from '@lens-protocol/api-bindings';
 import { TypedData } from '@lens-protocol/blockchain-bindings';
 import {
+  AnyTransactionRequestModel,
   InsufficientGasError,
-  Wallet,
-  WalletConnectionError,
-  UserRejectedError,
-  PendingSigningRequestError,
   ISignedProtocolCall,
   IUnsignedProtocolCall,
-  UnsignedTransaction,
   NativeTransaction,
+  PendingSigningRequestError,
   ProtocolTransactionRequestModel,
-  AnyTransactionRequestModel,
   Signature,
-  UnsignedFrameAction,
   SignedFrameAction,
+  UnsignedFrameAction,
+  UnsignedTransaction,
+  UserRejectedError,
+  Wallet,
+  WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import {
@@ -27,7 +28,6 @@ import {
   matic,
   PromiseResult,
   success,
-  UnknownObject,
 } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
 
@@ -158,7 +158,7 @@ export class ConcreteWallet extends Wallet {
     }
   }
 
-  async signFrameAction<TData extends UnknownObject>(
+  async signFrameAction<TData>(
     unsignedAction: UnsignedFrameAction<TData>,
   ): PromiseResult<
     SignedFrameAction<TData>,
@@ -179,12 +179,11 @@ export class ConcreteWallet extends Wallet {
     this.signingInProgress = true;
 
     const signer = result.value;
+
+    const { domain, types, value } = unsignedAction.data as CreateFrameEip712TypedData;
+
     try {
-      const signature = await signer._signTypedData(
-        unsignedAction.data.domain,
-        unsignedActiontypedData.types,
-        unsignedActiontypedData.message,
-      );
+      const signature = await signer._signTypedData(domain, types, value);
 
       return success({
         signature: signature as Signature,

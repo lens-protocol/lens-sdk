@@ -1,10 +1,8 @@
-import { UnknownObject } from '@lens-protocol/shared-kernel';
-
-export type UnsignedFrameAction<TData extends UnknownObject> = {
+export type UnsignedFrameAction<TData> = {
   data: TData;
 };
 
-export type SignedFrameAction<TData extends UnknownObject> = {
+export type SignedFrameAction<TData> = {
   signature: string;
   signedTypedData: TData;
 };
