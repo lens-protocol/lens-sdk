@@ -19,7 +19,7 @@ import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
 import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
 import { createQuoteRequest } from '../adapters/schemas/builders';
 import { useCreateQuoteController } from '../adapters/useCreateQuoteController';
-import { useReferenceExecutionMode } from './useReferenceExecutionMode';
+import { useExecutionMode } from './useExecutionMode';
 
 /**
  * An object representing the result of a quote creation.
@@ -467,7 +467,7 @@ export function useCreateQuote(): UseDeferredTask<
 > {
   const { data: session } = useSession();
   const createQuote = useCreateQuoteController();
-  const resolveExecutionMode = useReferenceExecutionMode();
+  const resolveExecutionMode = useExecutionMode();
 
   return useDeferredTask(async (args: CreateQuoteArgs) => {
     invariant(

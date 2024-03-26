@@ -19,7 +19,7 @@ import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
 import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
 import { createCommentRequest } from '../adapters/schemas/builders';
 import { useCreateCommentController } from '../adapters/useCreateCommentController';
-import { useReferenceExecutionMode } from './useReferenceExecutionMode';
+import { useExecutionMode } from './useExecutionMode';
 
 /**
  * An object representing the result of a comment creation.
@@ -495,7 +495,7 @@ export function useCreateComment(): UseDeferredTask<
 > {
   const { data: session } = useSession();
   const createComment = useCreateCommentController();
-  const resolveExecutionMode = useReferenceExecutionMode();
+  const resolveExecutionMode = useExecutionMode();
 
   return useDeferredTask(async (args: CreateCommentArgs) => {
     invariant(

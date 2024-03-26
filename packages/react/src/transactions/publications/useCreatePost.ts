@@ -17,7 +17,7 @@ import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
 import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
 import { createPostRequest } from '../adapters/schemas/builders';
 import { useCreatePostController } from '../adapters/useCreatePostController';
-import { useCreatePostExecutionMode } from './useCreatePostExecutionMode';
+import { useExecutionMode } from './useExecutionMode';
 
 /**
  * An object representing the result of a post creation.
@@ -458,7 +458,7 @@ export function useCreatePost(): UseDeferredTask<
   CreatePostArgs
 > {
   const { data: session } = useSession();
-  const resolveExecutionMode = useCreatePostExecutionMode();
+  const resolveExecutionMode = useExecutionMode();
   const createPost = useCreatePostController();
 
   return useDeferredTask(async (args: CreatePostArgs) => {

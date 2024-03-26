@@ -15,7 +15,7 @@ import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
 import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
 import { createMirrorRequest } from '../adapters/schemas/builders';
 import { useCreateMirrorController } from '../adapters/useCreateMirrorController';
-import { useReferenceExecutionMode } from './useReferenceExecutionMode';
+import { useExecutionMode } from './useExecutionMode';
 
 /**
  * An object representing the result of a mirror creation.
@@ -244,7 +244,7 @@ export function useCreateMirror(): UseDeferredTask<
 > {
   const { data: session } = useSession();
   const createMirror = useCreateMirrorController();
-  const resolveExecutionMode = useReferenceExecutionMode();
+  const resolveExecutionMode = useExecutionMode();
 
   return useDeferredTask(async (args: CreateMirrorArgs) => {
     invariant(

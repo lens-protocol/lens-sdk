@@ -24,7 +24,7 @@ import { IUploader, UploadError } from './IUploader';
 import { PublicationMetadataUploader } from './PublicationMetadataUploader';
 import { post } from './optimistic';
 import { PostAsyncResult } from './useCreatePost';
-import { useCreatePostExecutionMode } from './useCreatePostExecutionMode';
+import { useExecutionMode } from './useExecutionMode';
 
 /**
  * Create new post details.
@@ -276,7 +276,7 @@ export function useOptimisticCreatePost(
     return new PublicationMetadataUploader(uploader);
   }, [uploader]);
   const { data: session } = useSession();
-  const resolveExecutionMode = useCreatePostExecutionMode();
+  const resolveExecutionMode = useExecutionMode();
   const createPost = useCreatePostController();
 
   const [state, setState] = useState<
