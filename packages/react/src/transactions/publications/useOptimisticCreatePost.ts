@@ -297,6 +297,7 @@ export function useOptimisticCreatePost(
     const mode = await resolveExecutionMode({
       actions: args.actions,
       author: session.profile,
+      reference: args.reference,
       sponsored: args.sponsored,
     });
 

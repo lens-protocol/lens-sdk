@@ -15,7 +15,7 @@ import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
 import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
 import { createMirrorRequest } from '../adapters/schemas/builders';
 import { useCreateMirrorController } from '../adapters/useCreateMirrorController';
-import { useSponsoredConfig } from '../shared/useSponsoredConfig';
+import { useReferenceExecutionMode } from './useReferenceExecutionMode';
 
 /**
  * An object representing the result of a mirror creation.
@@ -244,25 +244,24 @@ export function useCreateMirror(): UseDeferredTask<
 > {
   const { data: session } = useSession();
   const createMirror = useCreateMirrorController();
-  const configureRequest = useSponsoredConfig();
+  const resolveExecutionMode = useReferenceExecutionMode();
 
   return useDeferredTask(async (args: CreateMirrorArgs) => {
     invariant(
-      session?.authenticated,
-      'You must be authenticated to create a mirror. Use `useLogin` hook to authenticate.',
-    );
-    invariant(
-      session.type === SessionType.WithProfile,
-      'You must have a profile to create a mirror.',
+      session?.type === SessionType.WithProfile,
+      'You must be authenticated with a Profile to mirror. Use `useLogin` hook to authenticate.',
     );
 
-    const request = configureRequest(
-      createMirrorRequest({
-        signless: session.profile.signless,
-        sponsored: args.sponsored ?? true,
-        ...args,
-      }),
-    );
+    const mode = await resolveExecutionMode({
+      author: session.profile,
+      referencedPublicationId: args.mirrorOn,
+      sponsored: args.sponsored,
+    });
+
+    const request = createMirrorRequest({
+      ...args,
+      ...mode,
+    });
 
     return createMirror(request);
   });

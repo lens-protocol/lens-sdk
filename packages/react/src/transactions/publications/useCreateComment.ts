@@ -19,7 +19,7 @@ import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
 import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
 import { createCommentRequest } from '../adapters/schemas/builders';
 import { useCreateCommentController } from '../adapters/useCreateCommentController';
-import { useSponsoredConfig } from '../shared/useSponsoredConfig';
+import { useReferenceExecutionMode } from './useReferenceExecutionMode';
 
 /**
  * An object representing the result of a comment creation.
@@ -495,25 +495,26 @@ export function useCreateComment(): UseDeferredTask<
 > {
   const { data: session } = useSession();
   const createComment = useCreateCommentController();
-  const configureRequest = useSponsoredConfig();
+  const resolveExecutionMode = useReferenceExecutionMode();
 
   return useDeferredTask(async (args: CreateCommentArgs) => {
     invariant(
-      session?.authenticated,
-      'You must be authenticated to create a comment. Use `useLogin` hook to authenticate.',
-    );
-    invariant(
-      session.type === SessionType.WithProfile,
-      'You must have a profile to create a comment.',
+      session?.type === SessionType.WithProfile,
+      'You must be authenticated with a Profile to comment. Use `useLogin` hook to authenticate.',
     );
 
-    const request = configureRequest(
-      createCommentRequest({
-        signless: session.profile.signless,
-        sponsored: args.sponsored ?? true,
-        ...args,
-      }),
-    );
+    const mode = await resolveExecutionMode({
+      actions: args.actions,
+      author: session.profile,
+      reference: args.reference,
+      referencedPublicationId: args.commentOn,
+      sponsored: args.sponsored,
+    });
+
+    const request = createCommentRequest({
+      ...args,
+      ...mode,
+    });
 
     return createComment(request);
   });

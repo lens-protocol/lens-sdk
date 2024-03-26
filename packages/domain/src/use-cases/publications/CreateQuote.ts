@@ -5,7 +5,7 @@ import { DelegableSigning } from '../transactions/DelegableSigning';
 import { PaidTransaction } from '../transactions/PaidTransaction';
 import { SponsorshipReady } from '../transactions/SponsorshipReady';
 import { OpenActionConfig } from './OpenActionConfig';
-import { ReferencePolicyConfig, ReferencePolicyType } from './ReferencePolicyConfig';
+import { ReferencePolicyConfig } from './ReferencePolicyConfig';
 import { Referrers } from './Referrers';
 
 export type CreateQuoteRequest = {
@@ -34,11 +34,7 @@ export class CreateQuote extends SponsorshipReady<CreateQuoteRequest> {
   }
 
   protected override async sponsored(request: CreateQuoteRequest): Promise<void> {
-    if (
-      request.reference.type === ReferencePolicyType.ANYONE &&
-      request.actions.length === 0 &&
-      isMomokaPublicationId(request.quoteOn)
-    ) {
+    if (isMomokaPublicationId(request.quoteOn)) {
       return this.sponsoredOnMomoka.execute(request);
     }
     return this.sponsoredOnChain.execute(request);

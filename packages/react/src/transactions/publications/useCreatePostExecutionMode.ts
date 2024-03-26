@@ -1,99 +1,41 @@
 import { Profile } from '@lens-protocol/api-bindings';
-import { OpenActionConfig, OpenActionType } from '@lens-protocol/domain/use-cases/publications';
-import { EvmAddress } from '@lens-protocol/shared-kernel';
+import {
+  OpenActionConfig,
+  ReferencePolicyConfig,
+} from '@lens-protocol/domain/use-cases/publications';
 
-import { NotFoundError } from '../../NotFoundError';
-import { useLazyModuleMetadata } from '../../misc';
 import { useSharedDependencies } from '../../shared';
-
-function extractUnknownOpenActionModuleAddresses(actions: OpenActionConfig[] = []): EvmAddress[] {
-  return actions.reduce((addresses, action) => {
-    if (action.type === OpenActionType.UNKNOWN_OPEN_ACTION) {
-      addresses.push(action.address);
-    }
-    return addresses;
-  }, [] as EvmAddress[]);
-}
+import { extractUnknownModuleConfigAddresses } from './modules';
+import { useExecutionMode, TransactionExecutionMode } from './useExecutionMode';
 
 export type CreatePostExecutionModeArgs = {
   author: Profile;
-  actions?: OpenActionConfig[];
-  sponsored?: boolean;
+  actions: OpenActionConfig[] | undefined; // | undefined is intentional to force consumers to provide a value
+  reference: ReferencePolicyConfig | undefined; // | undefined is intentional to force consumers to provide a value
+  sponsored: boolean | undefined; // | undefined is intentional to force consumers to provide a value
 };
 
-export type TransactionExecutionMode =
-  | {
-      signless: false;
-      sponsored: false;
-    }
-  | {
-      signless: boolean;
-      sponsored: true;
-    };
-
 export function useCreatePostExecutionMode() {
-  const { execute: fetch } = useLazyModuleMetadata();
+  const resolve = useExecutionMode();
   const { config } = useSharedDependencies();
 
   return async ({
     actions,
     author,
+    reference,
     sponsored,
   }: CreatePostExecutionModeArgs): Promise<TransactionExecutionMode> => {
-    // if sponsored is disabled globally, return here
+    if (sponsored === false) {
+      return { signless: false, sponsored: false };
+    }
+
     if (config.sponsored === false) {
       return { signless: false, sponsored: false };
     }
 
-    const desired: TransactionExecutionMode =
-      sponsored === false
-        ? { signless: false, sponsored: false }
-        : author.sponsor
-        ? {
-            signless: author.signless,
-            sponsored: true,
-          }
-        : {
-            signless: false,
-            sponsored: false,
-          };
-
-    const implementations = extractUnknownOpenActionModuleAddresses(actions);
-
-    const results = await Promise.all(
-      implementations.map((implementation) => fetch({ implementation })),
-    );
-
-    for (const result of results) {
-      if (result.isFailure()) {
-        if (result.error instanceof NotFoundError) {
-          // if the module is not registered, opt for non-sponsored tx
-          return {
-            ...desired,
-            sponsored: false,
-            signless: false,
-          };
-        }
-        throw result.error;
-      }
-      const { signlessApproved, sponsoredApproved } = result.value;
-
-      if (!sponsoredApproved) {
-        return {
-          ...desired,
-          sponsored: false,
-          signless: false,
-        };
-      }
-
-      if (!signlessApproved) {
-        return {
-          ...desired,
-          signless: false,
-        };
-      }
-    }
-
-    return desired;
+    return resolve({
+      author,
+      unknownModules: extractUnknownModuleConfigAddresses({ actions, reference }),
+    });
   };
 }

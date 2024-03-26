@@ -19,7 +19,7 @@ import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
 import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
 import { createQuoteRequest } from '../adapters/schemas/builders';
 import { useCreateQuoteController } from '../adapters/useCreateQuoteController';
-import { useSponsoredConfig } from '../shared/useSponsoredConfig';
+import { useReferenceExecutionMode } from './useReferenceExecutionMode';
 
 /**
  * An object representing the result of a quote creation.
@@ -467,25 +467,26 @@ export function useCreateQuote(): UseDeferredTask<
 > {
   const { data: session } = useSession();
   const createQuote = useCreateQuoteController();
-  const configureRequest = useSponsoredConfig();
+  const resolveExecutionMode = useReferenceExecutionMode();
 
   return useDeferredTask(async (args: CreateQuoteArgs) => {
     invariant(
-      session?.authenticated,
-      'You must be authenticated to create a quote. Use `useLogin` hook to authenticate.',
-    );
-    invariant(
-      session.type === SessionType.WithProfile,
-      'You must have a profile to create a quote.',
+      session?.type === SessionType.WithProfile,
+      'You must be authenticated with a Profile to quote. Use `useLogin` hook to authenticate.',
     );
 
-    const request = configureRequest(
-      createQuoteRequest({
-        signless: session.profile.signless,
-        sponsored: args.sponsored ?? true,
-        ...args,
-      }),
-    );
+    const mode = await resolveExecutionMode({
+      actions: args.actions,
+      author: session.profile,
+      reference: args.reference,
+      referencedPublicationId: args.quoteOn,
+      sponsored: args.sponsored,
+    });
+
+    const request = createQuoteRequest({
+      ...args,
+      ...mode,
+    });
 
     return createQuote(request);
   });
