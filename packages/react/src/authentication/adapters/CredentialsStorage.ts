@@ -4,7 +4,7 @@ import {
   Logout,
   LogoutReason,
 } from '@lens-protocol/domain/use-cases/authentication';
-import { PromiseResult, failure, invariant, success } from '@lens-protocol/shared-kernel';
+import { PromiseResult, failure, success } from '@lens-protocol/shared-kernel';
 import {
   IStorage,
   PersistedCredentials,
@@ -14,6 +14,7 @@ import {
 
 import { AuthApi } from './AuthApi';
 import { JwtCredentials } from './JwtCredentials';
+import { TimerId, clearSafeTimeout, setSafeTimeout } from './timeout';
 
 export type Unsubscribe = () => void;
 
@@ -23,7 +24,9 @@ export type Unsubscribe = () => void;
  * Refresh token is persisted permanently.
  */
 export class CredentialsStorage implements IStorage<JwtCredentials>, IAccessTokenStorage {
-  private isRefreshing = false;
+  private refreshTimer: TimerId | null = null;
+
+  private refreshPromise: PromiseResult<void, CredentialsExpiredError> | null = null;
 
   private subscribers: Set<StorageSubscriber<JwtCredentials>> = new Set();
 
@@ -47,6 +50,10 @@ export class CredentialsStorage implements IStorage<JwtCredentials>, IAccessToke
 
     await this.refreshTokenStorage.set({ refreshToken: newCredentials.refreshToken });
 
+    this.refreshTimer = setSafeTimeout(
+      this.refreshToken.bind(this),
+      newCredentials.getTokenRefreshTime(),
+    );
     this.notifySubscribers(newCredentials, oldCredentials);
   }
 
@@ -64,6 +71,7 @@ export class CredentialsStorage implements IStorage<JwtCredentials>, IAccessToke
 
   async reset(): Promise<void> {
     this.accessToken = null;
+    this.cancelScheduledRefresh();
     await this.refreshTokenStorage.reset();
   }
 
@@ -80,17 +88,21 @@ export class CredentialsStorage implements IStorage<JwtCredentials>, IAccessToke
   }
 
   async refreshToken(): PromiseResult<void, CredentialsExpiredError> {
-    invariant(this.isRefreshing === false, 'Cannot refresh token while refreshing');
-    this.isRefreshing = true;
-
-    const result = await this.refreshCredentials();
-
-    this.isRefreshing = false;
-
-    if (result.isFailure()) {
-      await this.logout?.execute(LogoutReason.CREDENTIALS_EXPIRED);
+    if (this.refreshPromise) {
+      return this.refreshPromise;
     }
+
+    this.refreshPromise = this.refreshCredentials();
+    const result = await this.refreshPromise;
+    this.refreshPromise = null;
     return result;
+  }
+
+  private cancelScheduledRefresh() {
+    if (this.refreshTimer) {
+      clearSafeTimeout(this.refreshTimer);
+    }
+    this.refreshTimer = null;
   }
 
   private async refreshCredentials(): PromiseResult<void, CredentialsExpiredError> {
@@ -104,6 +116,7 @@ export class CredentialsStorage implements IStorage<JwtCredentials>, IAccessToke
       await this.set(newCredentials);
       return success();
     } catch {
+      await this.logout?.execute(LogoutReason.CREDENTIALS_EXPIRED);
       return failure(new CredentialsExpiredError());
     }
   }
