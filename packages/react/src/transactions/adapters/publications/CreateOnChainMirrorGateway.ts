@@ -27,6 +27,7 @@ import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
 import { ITransactionFactory } from '../ITransactionFactory';
+import { resolveOnchainReferrers } from '../referrals';
 import { handleRelayError } from '../relayer';
 
 export class CreateOnChainMirrorGateway
@@ -144,6 +145,8 @@ export class CreateOnChainMirrorGateway
   private resolveOnchainMirrorRequest(request: CreateMirrorRequest): OnchainMirrorRequest {
     return {
       mirrorOn: request.mirrorOn,
+      mirrorReferenceModuleData: request.mirrorOnReferenceData,
+      referrers: resolveOnchainReferrers(request.referrers),
     };
   }
 }

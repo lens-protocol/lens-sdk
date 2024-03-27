@@ -27,6 +27,7 @@ import { UnsignedProtocolCall } from '../../../wallet/adapters/ConcreteWallet';
 import { IProviderFactory } from '../../../wallet/adapters/IProviderFactory';
 import { AbstractContractCallGateway, ContractCallDetails } from '../AbstractContractCallGateway';
 import { ITransactionFactory } from '../ITransactionFactory';
+import { resolveOnchainReferrers } from '../referrals';
 import { handleRelayError } from '../relayer';
 import { resolveOpenActionModuleInput } from './resolveOpenActionModuleInput';
 import { resolveReferenceModuleInput } from './resolveReferenceModuleInput';
@@ -151,8 +152,10 @@ export class CreateOnChainQuoteGateway
     return {
       contentURI: request.metadata,
       quoteOn: request.quoteOn,
+      quoteOnReferenceModuleData: request.quoteOnReferenceData,
       openActionModules: request.actions?.map(resolveOpenActionModuleInput),
       referenceModule: request.reference && resolveReferenceModuleInput(request.reference),
+      referrers: resolveOnchainReferrers(request.referrers),
     };
   }
 }

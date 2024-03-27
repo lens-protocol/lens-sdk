@@ -6,6 +6,7 @@ import {
   UserRejectedError,
   WalletConnectionError,
 } from '@lens-protocol/domain/entities';
+import { Referrers } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { invariant } from '@lens-protocol/shared-kernel';
 
@@ -14,7 +15,7 @@ import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
 import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
 import { createMirrorRequest } from '../adapters/schemas/builders';
 import { useCreateMirrorController } from '../adapters/useCreateMirrorController';
-import { useSponsoredConfig } from '../shared/useSponsoredConfig';
+import { useExecutionMode } from './useExecutionMode';
 
 /**
  * An object representing the result of a mirror creation.
@@ -32,6 +33,19 @@ export type CreateMirrorArgs = {
    */
   mirrorOn: PublicationId;
   /**
+   * Use this if the mirrored publication is configured with an Unknown Reference Module
+   * that requires a calldata to process the reference logic.
+   *
+   * It's consumer responsibility to encode it correctly.
+   */
+  mirrorOnReferenceData?: string;
+  /**
+   * The referrers list for any Unknown Reference Module logic.
+   *
+   * It can be a list of Publication IDs or Profile IDs.
+   */
+  referrers?: Referrers;
+  /**
    * Whether the transaction costs should be sponsored by the Lens API or
    * should be paid by the authenticated wallet.
    *
@@ -41,8 +55,8 @@ export type CreateMirrorArgs = {
    * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
    * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
    *
-   * If not specified, or `true`, the hook will attempt a Signless Experience when possible;
-   * otherwise, it will fall back to a signed experience.
+   * If not specified, or `true`, the hook will attempt a Sponsored Transaction.
+   * Set it to `false` to force it to use a Self-Funded Transaction.
    */
   sponsored?: boolean;
 };
@@ -230,25 +244,24 @@ export function useCreateMirror(): UseDeferredTask<
 > {
   const { data: session } = useSession();
   const createMirror = useCreateMirrorController();
-  const configureRequest = useSponsoredConfig();
+  const resolveExecutionMode = useExecutionMode();
 
   return useDeferredTask(async (args: CreateMirrorArgs) => {
     invariant(
-      session?.authenticated,
-      'You must be authenticated to create a mirror. Use `useLogin` hook to authenticate.',
-    );
-    invariant(
-      session.type === SessionType.WithProfile,
-      'You must have a profile to create a mirror.',
+      session?.type === SessionType.WithProfile,
+      'You must be authenticated with a Profile to mirror. Use `useLogin` hook to authenticate.',
     );
 
-    const request = configureRequest(
-      createMirrorRequest({
-        signless: session.profile.signless,
-        sponsored: args.sponsored ?? true,
-        ...args,
-      }),
-    );
+    const mode = await resolveExecutionMode({
+      author: session.profile,
+      referencedPublicationId: args.mirrorOn,
+      sponsored: args.sponsored,
+    });
+
+    const request = createMirrorRequest({
+      ...args,
+      ...mode,
+    });
 
     return createMirror(request);
   });

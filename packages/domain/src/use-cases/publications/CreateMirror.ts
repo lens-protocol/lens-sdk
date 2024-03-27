@@ -1,11 +1,16 @@
+import { Data } from '@lens-protocol/shared-kernel';
+
 import { isMomokaPublicationId, PublicationId, TransactionKind } from '../../entities';
 import { DelegableSigning } from '../transactions/DelegableSigning';
 import { PaidTransaction } from '../transactions/PaidTransaction';
 import { SponsorshipReady } from '../transactions/SponsorshipReady';
+import { Referrers } from './Referrers';
 
 export type CreateMirrorRequest = {
-  mirrorOn: PublicationId;
   kind: TransactionKind.MIRROR_PUBLICATION;
+  mirrorOn: PublicationId;
+  mirrorOnReferenceData?: Data;
+  referrers?: Referrers;
   signless: boolean;
   sponsored: boolean;
 };

@@ -24,7 +24,7 @@ import { IUploader, UploadError } from './IUploader';
 import { PublicationMetadataUploader } from './PublicationMetadataUploader';
 import { post } from './optimistic';
 import { PostAsyncResult } from './useCreatePost';
-import { useCreatePostExecutionMode } from './useCreatePostExecutionMode';
+import { useExecutionMode } from './useExecutionMode';
 
 /**
  * Create new post details.
@@ -60,8 +60,8 @@ export type OptimisticCreatePostArgs = {
    * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
    * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
    *
-   * If not specified, or `true`, the hook will attempt a Signless Experience when possible;
-   * otherwise, it will fall back to a signed experience.
+   * If not specified, or `true`, the hook will attempt a Sponsored Transaction.
+   * Set it to `false` to force it to use a Self-Funded Transaction.
    */
   sponsored?: boolean;
 };
@@ -276,7 +276,7 @@ export function useOptimisticCreatePost(
     return new PublicationMetadataUploader(uploader);
   }, [uploader]);
   const { data: session } = useSession();
-  const resolveExecutionMode = useCreatePostExecutionMode();
+  const resolveExecutionMode = useExecutionMode();
   const createPost = useCreatePostController();
 
   const [state, setState] = useState<
@@ -297,6 +297,7 @@ export function useOptimisticCreatePost(
     const mode = await resolveExecutionMode({
       actions: args.actions,
       author: session.profile,
+      reference: args.reference,
       sponsored: args.sponsored,
     });
 

@@ -9,6 +9,7 @@ import {
 import {
   OpenActionConfig,
   ReferencePolicyConfig,
+  Referrers,
 } from '@lens-protocol/domain/use-cases/publications';
 import { BroadcastingError } from '@lens-protocol/domain/use-cases/transactions';
 import { invariant } from '@lens-protocol/shared-kernel';
@@ -18,7 +19,7 @@ import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
 import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
 import { createQuoteRequest } from '../adapters/schemas/builders';
 import { useCreateQuoteController } from '../adapters/useCreateQuoteController';
-import { useSponsoredConfig } from '../shared/useSponsoredConfig';
+import { useExecutionMode } from './useExecutionMode';
 
 /**
  * An object representing the result of a quote creation.
@@ -35,6 +36,19 @@ export type CreateQuoteArgs = {
    * The publication ID to quote on.
    */
   quoteOn: PublicationId;
+  /**
+   * Use this if the target publication is configured with an Unknown Reference Module
+   * that requires a calldata to process the reference logic.
+   *
+   * It's consumer responsibility to encode it correctly.
+   */
+  quoteOnReferenceData?: string;
+  /**
+   * The referrers list for any Unknown Reference Module logic.
+   *
+   * It can be a list of Publication IDs or Profile IDs.
+   */
+  referrers?: Referrers;
   /**
    * The metadata URI.
    */
@@ -63,8 +77,8 @@ export type CreateQuoteArgs = {
    * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
    * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
    *
-   * If not specified, or `true`, the hook will attempt a Signless Experience when possible;
-   * otherwise, it will fall back to a signed experience.
+   * If not specified, or `true`, the hook will attempt a Sponsored Transaction.
+   * Set it to `false` to force it to use a Self-Funded Transaction.
    */
   sponsored?: boolean;
 };
@@ -453,25 +467,26 @@ export function useCreateQuote(): UseDeferredTask<
 > {
   const { data: session } = useSession();
   const createQuote = useCreateQuoteController();
-  const configureRequest = useSponsoredConfig();
+  const resolveExecutionMode = useExecutionMode();
 
   return useDeferredTask(async (args: CreateQuoteArgs) => {
     invariant(
-      session?.authenticated,
-      'You must be authenticated to create a quote. Use `useLogin` hook to authenticate.',
-    );
-    invariant(
-      session.type === SessionType.WithProfile,
-      'You must have a profile to create a quote.',
+      session?.type === SessionType.WithProfile,
+      'You must be authenticated with a Profile to quote. Use `useLogin` hook to authenticate.',
     );
 
-    const request = configureRequest(
-      createQuoteRequest({
-        signless: session.profile.signless,
-        sponsored: args.sponsored ?? true,
-        ...args,
-      }),
-    );
+    const mode = await resolveExecutionMode({
+      actions: args.actions,
+      author: session.profile,
+      reference: args.reference,
+      referencedPublicationId: args.quoteOn,
+      sponsored: args.sponsored,
+    });
+
+    const request = createQuoteRequest({
+      ...args,
+      ...mode,
+    });
 
     return createQuote(request);
   });

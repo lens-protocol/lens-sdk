@@ -18,7 +18,11 @@ import {
   UnknownActionRequest,
 } from '../OpenAction';
 import { OpenActionType, UnknownOpenActionConfig } from '../OpenActionConfig';
-import { AnyoneReferencePolicyConfig, ReferencePolicyType } from '../ReferencePolicyConfig';
+import {
+  AnyoneReferencePolicyConfig,
+  ReferencePolicyType,
+  UnknownReferencePolicyConfig,
+} from '../ReferencePolicyConfig';
 import { ReportPublicationRequest } from '../ReportPublication';
 
 export function mockCreateMirrorRequest(
@@ -95,17 +99,31 @@ export function mockReportPublicationRequest(
   };
 }
 
-export function mockUnknownOpenActionConfig(): UnknownOpenActionConfig {
+export function mockUnknownOpenActionConfig(
+  overrides?: Partial<UnknownOpenActionConfig>,
+): UnknownOpenActionConfig {
   return {
-    type: OpenActionType.UNKNOWN_OPEN_ACTION,
     address: mockEvmAddress(),
     data: '0x' as Data,
+    ...overrides,
+    type: OpenActionType.UNKNOWN_OPEN_ACTION,
   };
 }
 
 export function mockAnyoneReferencePolicyConfig(): AnyoneReferencePolicyConfig {
   return {
     type: ReferencePolicyType.ANYONE,
+  };
+}
+
+export function mockUnknownReferencePolicyConfig(
+  overrides?: Partial<UnknownReferencePolicyConfig>,
+): UnknownReferencePolicyConfig {
+  return {
+    address: mockEvmAddress(),
+    data: '0x' as Data,
+    ...overrides,
+    type: ReferencePolicyType.UNKNOWN,
   };
 }
 

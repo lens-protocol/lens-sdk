@@ -6,5 +6,6 @@ export * from './HidePublication';
 export * from './OpenAction';
 export * from './OpenActionConfig';
 export * from './ReferencePolicyConfig';
+export * from './Referrers';
 export * from './ReportPublication';
 export * from './TogglePublicationProperty';

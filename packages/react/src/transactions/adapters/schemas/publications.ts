@@ -23,6 +23,8 @@ import {
   DataSchema,
 } from './common';
 
+const ReferrersSchema = z.union([PublicationIdSchema, ProfileIdSchema]).array().min(1);
+
 const RecipientWithSplitSchema: z.ZodType<RecipientWithSplit, z.ZodTypeDef, UnknownObject> =
   z.object({
     recipient: EvmAddressSchema,
@@ -96,11 +98,18 @@ const NoReferencePolicyConfigSchema = z.object({
   type: z.literal(ReferencePolicyType.NO_ONE),
 });
 
+const UnknownReferencePolicyConfigSchema = z.object({
+  type: z.literal(ReferencePolicyType.UNKNOWN),
+  address: EvmAddressSchema,
+  data: DataSchema,
+});
+
 const ReferencePolicyConfigSchema = z.discriminatedUnion('type', [
   AnyoneReferencePolicyConfigSchema,
   DegreesOfSeparationReferencePolicyConfigSchema,
   FollowersOnlyReferencePolicyConfigSchema,
   NoReferencePolicyConfigSchema,
+  UnknownReferencePolicyConfigSchema,
 ]);
 
 export const CreatePostRequestSchema: z.ZodType<CreatePostRequest, z.ZodTypeDef, UnknownObject> =
@@ -123,6 +132,8 @@ export const CreateCommentRequestSchema: z.ZodType<
   sponsored: z.boolean(),
   metadata: UriSchema,
   commentOn: PublicationIdSchema,
+  commentOnReferenceData: DataSchema.optional(),
+  referrers: ReferrersSchema.optional(),
   reference: ReferencePolicyConfigSchema.default({ type: ReferencePolicyType.ANYONE }),
   actions: OpenActionConfigSchema.array().default([]),
 });
@@ -134,6 +145,8 @@ export const CreateQuoteRequestSchema: z.ZodType<CreateQuoteRequest, z.ZodTypeDe
     sponsored: z.boolean(),
     metadata: UriSchema,
     quoteOn: PublicationIdSchema,
+    quoteOnReferenceData: DataSchema.optional(),
+    referrers: ReferrersSchema.optional(),
     reference: ReferencePolicyConfigSchema.default({ type: ReferencePolicyType.ANYONE }),
     actions: OpenActionConfigSchema.array().default([]),
   });
@@ -144,6 +157,8 @@ export const CreateMirrorRequestSchema: z.ZodType<
   UnknownObject
 > = z.object({
   mirrorOn: PublicationIdSchema,
+  mirrorOnReferenceData: DataSchema.optional(),
+  referrers: ReferrersSchema.optional(),
   kind: z.literal(TransactionKind.MIRROR_PUBLICATION),
   signless: z.boolean(),
   sponsored: z.boolean(),
@@ -172,7 +187,7 @@ export const LegacyCollectRequestSchema = BaseCollectRequestSchema.extend({
 export const SimpleCollectRequestSchema = BaseCollectRequestSchema.extend({
   type: z.literal(AllOpenActionType.SIMPLE_COLLECT),
   publicationId: PublicationIdSchema,
-  referrers: z.union([PublicationIdSchema, ProfileIdSchema]).array().min(1).optional(),
+  referrers: ReferrersSchema.optional(),
   fee: CollectFeeSchema.optional(),
   public: z.boolean(),
   signless: z.boolean(),
@@ -182,7 +197,7 @@ export const SimpleCollectRequestSchema = BaseCollectRequestSchema.extend({
 export const MultirecipientCollectRequestSchema = BaseCollectRequestSchema.extend({
   type: z.literal(AllOpenActionType.MULTIRECIPIENT_COLLECT),
   publicationId: PublicationIdSchema,
-  referrers: z.union([PublicationIdSchema, ProfileIdSchema]).array().min(1).optional(),
+  referrers: ReferrersSchema.optional(),
   fee: CollectFeeSchema,
   public: z.boolean(),
   signless: z.boolean(),
@@ -194,7 +209,7 @@ export const UnknownActionRequestSchema = BaseCollectRequestSchema.extend({
   publicationId: PublicationIdSchema,
   address: EvmAddressSchema,
   data: DataSchema,
-  referrers: z.union([PublicationIdSchema, ProfileIdSchema]).array().min(1).optional(),
+  referrers: ReferrersSchema.optional(),
   public: z.boolean(),
   signless: z.boolean(),
   sponsored: z.boolean(),

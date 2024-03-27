@@ -1,3 +1,5 @@
+import { Data, EvmAddress } from '@lens-protocol/shared-kernel';
+
 import { ProfileId } from '../../entities';
 
 export enum ReferencePolicyType {
@@ -48,8 +50,24 @@ export type AnyoneReferencePolicyConfig = {
   type: ReferencePolicyType.ANYONE;
 };
 
+export type UnknownReferencePolicyConfig = {
+  type: ReferencePolicyType.UNKNOWN;
+  /**
+   * The address of the Unknown Reference module contract.
+   */
+  address: EvmAddress;
+  /**
+   * The data to initialize the Unknown Reference module contract logic
+   * for the given publication.
+   *
+   * It's consumer responsibility to encode it correctly.
+   */
+  data: Data;
+};
+
 export type ReferencePolicyConfig =
   | FollowersOnlyReferencePolicyConfig
   | DegreesOfSeparationReferencePolicyConfig
   | NoReferencePolicyConfig
-  | AnyoneReferencePolicyConfig;
+  | AnyoneReferencePolicyConfig
+  | UnknownReferencePolicyConfig;
