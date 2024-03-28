@@ -215,6 +215,32 @@ export enum ComparisonOperatorConditionType {
   NotEqual = 'NOT_EQUAL',
 }
 
+export type CreateFrameEip712TypedDataInput = {
+  /** The typed data domain */
+  domain: Eip712TypedDataDomainInput;
+  /** The types */
+  types: CreateFrameEip712TypedDataTypesInput;
+  /** The values */
+  value: CreateFrameEip712TypedDataValueInput;
+};
+
+export type CreateFrameEip712TypedDataTypesInput = {
+  FrameData: Array<Eip712TypedDataFieldInput>;
+};
+
+export type CreateFrameEip712TypedDataValueInput = {
+  actionResponse: Scalars['String']['input'];
+  buttonIndex: Scalars['Int']['input'];
+  deadline: Scalars['UnixTimestamp']['input'];
+  inputText: Scalars['String']['input'];
+  profileId: Scalars['ProfileId']['input'];
+  pubId: Scalars['PublicationId']['input'];
+  /** The EIP-721 spec version, must be 1.0.0 */
+  specVersion: Scalars['String']['input'];
+  state: Scalars['String']['input'];
+  url: Scalars['URI']['input'];
+};
+
 export type CreateProfileRequest = {
   followModule?: InputMaybe<FollowModuleInput>;
   to: Scalars['EvmAddress']['input'];
@@ -265,8 +291,36 @@ export type DegreesOfSeparationReferenceModuleInput = {
   sourceProfileId?: InputMaybe<Scalars['ProfileId']['input']>;
 };
 
+export type DidReactOnPublicationPublicationIdAndProfileId = {
+  profileId: Scalars['ProfileId']['input'];
+  publicationId: Scalars['PublicationId']['input'];
+};
+
+export type DidReactOnPublicationRequest = {
+  for: Array<DidReactOnPublicationPublicationIdAndProfileId>;
+  where?: InputMaybe<WhoReactedPublicationWhere>;
+};
+
 export type DismissRecommendedProfilesRequest = {
   dismiss: Array<Scalars['ProfileId']['input']>;
+};
+
+export type Eip712TypedDataDomainInput = {
+  /** The chainId */
+  chainId: Scalars['ChainId']['input'];
+  /** The name of the typed data domain */
+  name: Scalars['String']['input'];
+  /** The verifying contract */
+  verifyingContract: Scalars['EvmAddress']['input'];
+  /** The version */
+  version: Scalars['String']['input'];
+};
+
+export type Eip712TypedDataFieldInput = {
+  /** The name of the typed data field */
+  name: Scalars['String']['input'];
+  /** The type of the typed data field */
+  type: Scalars['String']['input'];
 };
 
 /** Possible sort criteria for exploring profiles */
@@ -437,6 +491,48 @@ export type FollowingRequest = {
   /** The order by which to sort the profiles - note if your looking at your own following it always be DESC */
   orderBy?: InputMaybe<ProfilesOrderBy>;
 };
+
+export type FrameEip712Request = {
+  actionResponse: Scalars['String']['input'];
+  buttonIndex: Scalars['Int']['input'];
+  deadline: Scalars['UnixTimestamp']['input'];
+  inputText: Scalars['String']['input'];
+  profileId: Scalars['ProfileId']['input'];
+  pubId: Scalars['PublicationId']['input'];
+  /** The EIP-721 spec version, must be 1.0.0 */
+  specVersion: Scalars['String']['input'];
+  state: Scalars['String']['input'];
+  url: Scalars['URI']['input'];
+};
+
+export type FrameLensManagerEip712Request = {
+  actionResponse: Scalars['String']['input'];
+  buttonIndex: Scalars['Int']['input'];
+  inputText: Scalars['String']['input'];
+  profileId: Scalars['ProfileId']['input'];
+  pubId: Scalars['PublicationId']['input'];
+  /** The EIP-721 spec version, must be 1.0.0 */
+  specVersion: Scalars['String']['input'];
+  state: Scalars['String']['input'];
+  url: Scalars['URI']['input'];
+};
+
+export type FrameVerifySignature = {
+  /** The identity token */
+  identityToken: Scalars['Jwt']['input'];
+  /** The signature */
+  signature: Scalars['Signature']['input'];
+  /** The typed data signed */
+  signedTypedData: CreateFrameEip712TypedDataInput;
+};
+
+export enum FrameVerifySignatureResult {
+  DeadlineExpired = 'DEADLINE_EXPIRED',
+  IdentityCannotUseProfile = 'IDENTITY_CANNOT_USE_PROFILE',
+  IdentityUnauthorized = 'IDENTITY_UNAUTHORIZED',
+  SignerAddressCannotUseProfile = 'SIGNER_ADDRESS_CANNOT_USE_PROFILE',
+  Verified = 'VERIFIED',
+}
 
 export type FraudReasonInput = {
   reason: PublicationReportingReason;
@@ -631,6 +727,10 @@ export type LastLoggedInProfileRequest = {
 export type LatestPaidActionsFilter = {
   openActionFilters?: InputMaybe<Array<OpenActionFilter>>;
   openActionPublicationMetadataFilters?: InputMaybe<PublicationMetadataFilters>;
+};
+
+export type LatestPaidActionsWhere = {
+  customFilters?: InputMaybe<Array<CustomFiltersType>>;
 };
 
 export type LegacyCollectRequest = {
@@ -1856,7 +1956,9 @@ export type ValidatePublicationMetadataRequest = {
 
 export type VerifyRequest = {
   /** The access token to verify */
-  accessToken: Scalars['Jwt']['input'];
+  accessToken?: InputMaybe<Scalars['Jwt']['input']>;
+  /** The identity token to verify */
+  identityToken?: InputMaybe<Scalars['Jwt']['input']>;
 };
 
 export type WalletAuthenticationToProfileAuthenticationRequest = {

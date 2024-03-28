@@ -21,21 +21,15 @@ async function main() {
     for: managedProfiles.items[0].id,
   });
 
-  console.log(`Challenge: `, text);
-
   const signature = await wallet.signMessage(text);
 
   await client.authentication.authenticate({ id, signature });
 
-  const accessTokenResult = await client.authentication.getAccessToken();
-  const accessToken = accessTokenResult.unwrap();
+  const identityTokenResult = await client.authentication.getIdentityToken();
+  const identityToken = identityTokenResult.unwrap();
 
-  const profileId = await client.authentication.getProfileId();
-
-  console.log(`Is LensClient authenticated? `, await client.authentication.isAuthenticated());
-  console.log(`Authenticated profileId: `, profileId);
-  console.log(`Access token: `, accessToken);
-  console.log(`Is access token valid? `, await client.authentication.verify({ accessToken }));
+  console.log(`Identity token: `, identityToken);
+  console.log(`Is identity token valid? `, await client.authentication.verify({ identityToken }));
 }
 
 main();

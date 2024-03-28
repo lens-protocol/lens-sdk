@@ -13,6 +13,7 @@ import type {
   ChallengeRequest,
   RevokeAuthenticationRequest,
   SignedAuthChallenge,
+  VerifyRequest,
   WalletAuthenticationToProfileAuthenticationRequest,
 } from '../graphql/types.generated';
 import { buildAuthorizationHeader } from '../helpers/buildAuthorizationHeader';
@@ -39,7 +40,7 @@ export class Authentication implements IAuthentication {
   }
 
   async authenticateWith({ refreshToken }: { refreshToken: string }): Promise<void> {
-    const credentials = new Credentials(undefined, refreshToken);
+    const credentials = new Credentials(undefined, undefined, refreshToken);
     await this.credentials.set(credentials);
   }
 
@@ -59,8 +60,10 @@ export class Authentication implements IAuthentication {
     });
   }
 
-  async verify(accessToken: string): Promise<boolean> {
-    return this.api.verify(accessToken);
+  async verify(request: string | VerifyRequest): Promise<boolean> {
+    const correctRequest = typeof request === 'string' ? { accessToken: request } : request;
+
+    return this.api.verify(correctRequest);
   }
 
   async isAuthenticated(): Promise<boolean> {
@@ -104,6 +107,31 @@ export class Authentication implements IAuthentication {
       }
 
       return success(newCredentials.accessToken);
+    }
+
+    return failure(new CredentialsExpiredError());
+  }
+
+  async getIdentityToken(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError> {
+    const credentials = await this.credentials.get();
+
+    if (!credentials) {
+      return failure(new NotAuthenticatedError());
+    }
+
+    if (!credentials.shouldRefresh() && credentials.identityToken) {
+      return success(credentials.identityToken);
+    }
+
+    if (credentials.canRefresh()) {
+      const newCredentials = await this.api.refresh(credentials.refreshToken);
+      await this.credentials.set(newCredentials);
+
+      if (!newCredentials.identityToken) {
+        return failure(new CredentialsExpiredError());
+      }
+
+      return success(newCredentials.identityToken);
     }
 
     return failure(new CredentialsExpiredError());

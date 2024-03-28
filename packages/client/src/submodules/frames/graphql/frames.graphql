@@ -1,0 +1,45 @@
+query VerifyFrameSignature($request: FrameVerifySignature!) {
+  result: verifyFrameSignature(request: $request)
+}
+
+query CreateFrameTypedData($request: FrameEIP712Request!) {
+  result: createFrameTypedData(request: $request) {
+    ...CreateFrameEIP712TypedData
+  }
+}
+
+fragment CreateFrameEIP712TypedData on CreateFrameEIP712TypedData {
+  types {
+    FrameData {
+      name
+      type
+    }
+  }
+  domain {
+    ...EIP712TypedDataDomain
+  }
+  value {
+    specVersion
+    url
+    buttonIndex
+    profileId
+    pubId
+    inputText
+    state
+    actionResponse
+    deadline
+  }
+}
+
+fragment FrameLensManagerSignatureResult on FrameLensManagerSignatureResult {
+  signedTypedData {
+    ...CreateFrameEIP712TypedData
+  }
+  signature
+}
+
+mutation SignFrameAction($request: FrameLensManagerEIP712Request!) {
+  result: signFrameAction(request: $request) {
+    ...FrameLensManagerSignatureResult
+  }
+}
