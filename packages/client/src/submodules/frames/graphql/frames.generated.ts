@@ -36,7 +36,7 @@ export type CreateFrameEip712TypedDataFragment = {
   types: { FrameData: Array<{ name: string; type: string }> };
   domain: Eip712TypedDataDomainFragment;
   value: {
-    specVersion: Types.FramesEip721TypedDataSpec;
+    specVersion: string;
     url: string;
     buttonIndex: number;
     profileId: string;

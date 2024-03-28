@@ -235,7 +235,8 @@ export type CreateFrameEip712TypedDataValueInput = {
   inputText: Scalars['String']['input'];
   profileId: Scalars['ProfileId']['input'];
   pubId: Scalars['PublicationId']['input'];
-  specVersion: FramesEip721TypedDataSpec;
+  /** The EIP-721 spec version, must be 1.0.0 */
+  specVersion: Scalars['String']['input'];
   state: Scalars['String']['input'];
   url: Scalars['URI']['input'];
 };
@@ -288,6 +289,16 @@ export type DegreesOfSeparationReferenceModuleInput = {
   quotesRestricted: Scalars['Boolean']['input'];
   /** You can set the degree to follow someone elses graph, if you leave blank it use your profile */
   sourceProfileId?: InputMaybe<Scalars['ProfileId']['input']>;
+};
+
+export type DidReactOnPublicationPublicationIdAndProfileId = {
+  profileId: Scalars['ProfileId']['input'];
+  publicationId: Scalars['PublicationId']['input'];
+};
+
+export type DidReactOnPublicationRequest = {
+  for: Array<DidReactOnPublicationPublicationIdAndProfileId>;
+  where?: InputMaybe<WhoReactedPublicationWhere>;
 };
 
 export type DismissRecommendedProfilesRequest = {
@@ -488,7 +499,8 @@ export type FrameEip712Request = {
   inputText: Scalars['String']['input'];
   profileId: Scalars['ProfileId']['input'];
   pubId: Scalars['PublicationId']['input'];
-  specVersion: FramesEip721TypedDataSpec;
+  /** The EIP-721 spec version, must be 1.0.0 */
+  specVersion: Scalars['String']['input'];
   state: Scalars['String']['input'];
   url: Scalars['URI']['input'];
 };
@@ -499,7 +511,8 @@ export type FrameLensManagerEip712Request = {
   inputText: Scalars['String']['input'];
   profileId: Scalars['ProfileId']['input'];
   pubId: Scalars['PublicationId']['input'];
-  specVersion: FramesEip721TypedDataSpec;
+  /** The EIP-721 spec version, must be 1.0.0 */
+  specVersion: Scalars['String']['input'];
   state: Scalars['String']['input'];
   url: Scalars['URI']['input'];
 };
@@ -519,10 +532,6 @@ export enum FrameVerifySignatureResult {
   IdentityUnauthorized = 'IDENTITY_UNAUTHORIZED',
   SignerAddressCannotUseProfile = 'SIGNER_ADDRESS_CANNOT_USE_PROFILE',
   Verified = 'VERIFIED',
-}
-
-export enum FramesEip721TypedDataSpec {
-  OnePointOnePointOne = 'OnePointOnePointOne',
 }
 
 export type FraudReasonInput = {
