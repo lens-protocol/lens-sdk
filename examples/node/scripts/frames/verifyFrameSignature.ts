@@ -1,4 +1,4 @@
-import { FrameVerifySignatureResult, FramesEip721TypedDataSpec } from '@lens-protocol/client';
+import { FrameVerifySignatureResult } from '@lens-protocol/client';
 
 import { getAuthenticatedClient } from '../shared/getAuthenticatedClient';
 import { setupWallet } from '../shared/setupWallet';
@@ -22,7 +22,7 @@ async function main() {
     inputText: 'Hello, World!',
     profileId: profileId,
     pubId: '0x01-0x01',
-    specVersion: FramesEip721TypedDataSpec.OnePointOnePointOne,
+    specVersion: '1.0.0',
     state: '{"counter":1,"idempotency_key":"431b8b38-eb4d-455b"}',
     url: 'https://mylensframe.xyz',
   });

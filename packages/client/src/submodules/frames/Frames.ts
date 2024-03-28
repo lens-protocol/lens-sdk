@@ -39,10 +39,11 @@ export class Frames {
   }
 
   /**
-   * Create Frame TypedData to sign by user wallet
+   * Create Frame action typed data to be signed by user wallet
    *
    * @param request - The request object
    * @returns Typed data for Frame request
+   * @experimental This function might change in the future release
    *
    * @example
    * ```ts
@@ -53,7 +54,7 @@ export class Frames {
    *   inputText: 'Hello, World!',
    *   profileId: '0x01',
    *   pubId: '0x01-0x01',
-   *   specVersion: FramesEip721TypedDataSpec.OnePointOnePointOne,
+   *   specVersion: '1.0.0',
    *   state: '{"counter":1,"idempotency_key":"431b8b38-eb4d-455b"}',
    *   url: 'https://mylensframe.xyz',
    * });
@@ -67,12 +68,13 @@ export class Frames {
   }
 
   /**
-   * Sign Frame Action
+   * Sign Frame action with Lens Manager if enabled
    *
    * ⚠️ Requires authenticated LensClient.
    *
    * @param request - The request object
    * @returns Signature result
+   * @experimental This function might change in the future release
    *
    * @example
    * ```ts
@@ -82,7 +84,7 @@ export class Frames {
    *   inputText: 'Hello, World!',
    *   profileId: '0x01',
    *   pubId: '0x01-0x01',
-   *   specVersion: FramesEip721TypedDataSpec.OnePointOnePointOne,
+   *   specVersion: '1.0.0',
    *   state: '{"counter":1,"idempotency_key":"431b8b38-eb4d-455b"}',
    *   url: 'https://mylensframe.xyz',
    * });
@@ -111,6 +113,7 @@ export class Frames {
    *
    * @param request - The request object
    * @returns Verification result
+   * @experimental This function might change in the future release
    *
    * @example
    * ```ts
