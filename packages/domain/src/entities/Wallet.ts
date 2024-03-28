@@ -1,5 +1,6 @@
 import { CryptoNativeAsset, EvmAddress, PromiseResult } from '@lens-protocol/shared-kernel';
 
+import { SignedFrameAction, UnsignedFrameAction } from './FrameAction';
 import { Signature } from './Signature';
 import {
   AnyTransactionRequestModel,
@@ -55,6 +56,13 @@ export abstract class Wallet {
     unsignedCall: IUnsignedProtocolCall<T>,
   ): PromiseResult<
     ISignedProtocolCall<T>,
+    PendingSigningRequestError | UserRejectedError | WalletConnectionError
+  >;
+
+  abstract signFrameAction<TData>(
+    unsignedAction: UnsignedFrameAction<TData>,
+  ): PromiseResult<
+    SignedFrameAction<TData>,
     PendingSigningRequestError | UserRejectedError | WalletConnectionError
   >;
 

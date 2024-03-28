@@ -1,20 +1,23 @@
 import { TypedDataSigner, Signer } from '@ethersproject/abstract-signer';
 import { ErrorCode } from '@ethersproject/logger';
 import { TransactionRequest } from '@ethersproject/providers';
+import { CreateFrameEip712TypedData } from '@lens-protocol/api-bindings';
 import { TypedData } from '@lens-protocol/blockchain-bindings';
 import {
+  AnyTransactionRequestModel,
   InsufficientGasError,
-  Wallet,
-  WalletConnectionError,
-  UserRejectedError,
-  PendingSigningRequestError,
   ISignedProtocolCall,
   IUnsignedProtocolCall,
-  UnsignedTransaction,
   NativeTransaction,
+  PendingSigningRequestError,
   ProtocolTransactionRequestModel,
-  AnyTransactionRequestModel,
   Signature,
+  SignedFrameAction,
+  UnsignedFrameAction,
+  UnsignedTransaction,
+  UserRejectedError,
+  Wallet,
+  WalletConnectionError,
 } from '@lens-protocol/domain/entities';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 import {
@@ -142,6 +145,50 @@ export class ConcreteWallet extends Wallet {
 
       const signedCall = SignedProtocolCall.create({ unsignedCall, signature });
       return success(signedCall);
+    } catch (err) {
+      assertErrorObjectWithCode(err);
+
+      if (isUserRejectedError(err)) {
+        return failure(new UserRejectedError());
+      }
+
+      throw err;
+    } finally {
+      this.signingInProgress = false;
+    }
+  }
+
+  async signFrameAction<TData>(
+    unsignedAction: UnsignedFrameAction<TData>,
+  ): PromiseResult<
+    SignedFrameAction<TData>,
+    PendingSigningRequestError | UserRejectedError | WalletConnectionError
+  > {
+    const result = await this.signerFactory.createSigner({
+      address: this.address,
+      chainType: ChainType.POLYGON,
+    });
+
+    if (result.isFailure()) {
+      return result;
+    }
+
+    if (this.signingInProgress) {
+      return failure(new PendingSigningRequestError());
+    }
+    this.signingInProgress = true;
+
+    const signer = result.value;
+
+    const { domain, types, value } = unsignedAction.data as CreateFrameEip712TypedData;
+
+    try {
+      const signature = await signer._signTypedData(domain, types, value);
+
+      return success({
+        signature: signature as Signature,
+        signedTypedData: unsignedAction.data,
+      });
     } catch (err) {
       assertErrorObjectWithCode(err);
 

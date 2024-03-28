@@ -5,13 +5,10 @@ async function main() {
     environment: development,
   });
 
-  const deadline = new Date();
-  deadline.setMinutes(deadline.getMinutes() + 30);
-
   const result = await client.frames.createFrameTypedData({
     actionResponse: '0x0000000000000000000000000000000000000000',
     buttonIndex: 2,
-    deadline: deadline.getTime(),
+    deadline: new Date(Date.now() + 30 * 60 * 1000).getTime(), // 30 minutes from now
     inputText: 'Hello, World!',
     profileId: '0x01',
     pubId: '0x01-0x01',
