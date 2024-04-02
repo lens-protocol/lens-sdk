@@ -43,7 +43,6 @@ export function useExecutionMode() {
     referencedPublicationId,
     sponsored,
   }: ExecutionModeArgs): Promise<TransactionExecutionMode> => {
-    // TODO should be
     if (sponsored === false) {
       return { signless: false, sponsored: false };
     }
