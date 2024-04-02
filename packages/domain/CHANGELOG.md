@@ -1,5 +1,12 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.26
+
+### Minor Changes
+
+- cdaf25268: **feat:** added `useSignFrameAction` hook
+  **feat:** added `useIdentityToken` hook
+
 ## 0.11.0-alpha.25
 
 ### Patch Changes
