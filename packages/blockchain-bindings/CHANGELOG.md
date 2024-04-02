@@ -1,5 +1,18 @@
 # @lens-protocol/blockchain-bindings
 
+## 0.10.0-alpha.27
+
+### Minor Changes
+
+- cdaf25268: **feat:** added `useSignFrameAction` hook
+  **feat:** added `useIdentityToken` hook
+
+### Patch Changes
+
+- 4183f686a: **chore:** exported missing gql types
+- Updated dependencies [cdaf25268]
+  - @lens-protocol/domain@0.11.0-alpha.26
+
 ## 0.10.0-alpha.26
 
 ### Patch Changes

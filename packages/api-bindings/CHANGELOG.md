@@ -1,5 +1,19 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.33
+
+### Minor Changes
+
+- cdaf25268: **feat:** added `useSignFrameAction` hook
+  **feat:** added `useIdentityToken` hook
+
+### Patch Changes
+
+- dbb1657e3: **fix:** adds missing `small` and `medium` aliases to `EncryptedImageSet` and `ImageSet` fragments.
+- 4183f686a: **chore:** exported missing gql types
+- Updated dependencies [cdaf25268]
+  - @lens-protocol/domain@0.11.0-alpha.26
+
 ## 0.11.0-alpha.32
 
 ### Minor Changes

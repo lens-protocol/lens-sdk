@@ -1,5 +1,28 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.37
+
+### Minor Changes
+
+- 469940deb: **feat:** added Frames module
+
+      - `client.frames.createFrameTypedData` - create Frame action typed data to be signed by user wallet
+      - `client.frames.signFrameAction` - sign Frame action with Lens Manager if enabled
+      - `client.frames.verifyFrameSignature` - verify Frame signature
+
+  **feat:** added support for Identity Token
+
+      - `client.authentication.getIdentityToken` - retrieve Identity Token from authenticated LensClient
+      - `client.authentication.verify({ identityToken })` - verify the token, notice new argument format
+
+### Patch Changes
+
+- dbb1657e3: **fix:** adds missing `small` and `medium` aliases to `EncryptedImageSet` and `ImageSet` fragments.
+- 4183f686a: **chore:** exported missing gql types
+- Updated dependencies [cdaf25268]
+- Updated dependencies [4183f686a]
+  - @lens-protocol/blockchain-bindings@0.10.0-alpha.27
+
 ## 2.0.0-alpha.36
 
 ### Patch Changes
