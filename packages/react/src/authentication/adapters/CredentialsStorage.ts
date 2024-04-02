@@ -21,6 +21,7 @@ export type Unsubscribe = () => void;
 /**
  * Stores auth credentials.
  * Access token is kept in memory.
+ * Identity token is kept in memory.
  * Refresh token is persisted permanently.
  */
 export class CredentialsStorage implements IStorage<JwtCredentials>, IAccessTokenStorage {
@@ -31,6 +32,7 @@ export class CredentialsStorage implements IStorage<JwtCredentials>, IAccessToke
   private subscribers: Set<StorageSubscriber<JwtCredentials>> = new Set();
 
   private accessToken: string | null = null;
+  private identityToken: string | null = null;
 
   private logout: Logout | null = null;
 
@@ -45,6 +47,7 @@ export class CredentialsStorage implements IStorage<JwtCredentials>, IAccessToke
 
   async set(newCredentials: JwtCredentials): Promise<void> {
     this.accessToken = newCredentials.accessToken;
+    this.identityToken = newCredentials.identityToken;
 
     const oldCredentials = await this.get();
 
@@ -65,8 +68,9 @@ export class CredentialsStorage implements IStorage<JwtCredentials>, IAccessToke
     }
 
     const accessToken = this.getAccessToken();
+    const identityToken = this.getIdentityToken();
 
-    return new JwtCredentials(accessToken, refreshToken);
+    return new JwtCredentials(accessToken, identityToken, refreshToken);
   }
 
   async reset(): Promise<void> {
@@ -85,6 +89,10 @@ export class CredentialsStorage implements IStorage<JwtCredentials>, IAccessToke
 
   getAccessToken(): string | null {
     return this.accessToken;
+  }
+
+  getIdentityToken(): string | null {
+    return this.identityToken;
   }
 
   async refreshToken(): PromiseResult<void, CredentialsExpiredError> {

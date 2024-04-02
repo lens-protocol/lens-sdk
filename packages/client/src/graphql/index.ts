@@ -262,6 +262,7 @@ export type {
   Exact,
   Follow,
   FollowStatusBulk,
+  FrameVerifySignature,
   ImageTransform,
   InputMaybe,
   Maybe,
