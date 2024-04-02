@@ -219,7 +219,6 @@ export type UseSetProfileMetadataArgs = {
  *
  * @category Profiles
  * @group Hooks
- * @param args - {@link UseSetProfileMetadataArgs}
  */
 export function useSetProfileMetadata(): UseDeferredTask<
   AsyncTransactionResult<void>,
@@ -234,7 +233,7 @@ export function useSetProfileMetadata(): UseDeferredTask<
   const { data: session } = useSession();
   const configureRequest = useSponsoredConfig();
 
-  return useDeferredTask(async (args: UseSetProfileMetadataArgs) => {
+  return useDeferredTask(async (args) => {
     invariant(
       session?.type === SessionType.WithProfile,
       'You must be authenticated to set profile metadata. Use `useLogin` hook to authenticate.',

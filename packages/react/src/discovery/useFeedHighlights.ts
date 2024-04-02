@@ -6,10 +6,10 @@ import {
 
 import { SessionType, useSession } from '../authentication';
 import { useLensApolloClient } from '../helpers/arguments';
-import { OmitCursor, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
 import { useFragmentVariables } from '../helpers/variables';
 
-export type UseFeedHighlightsArgs = OmitCursor<FeedHighlightsRequest>;
+export type UseFeedHighlightsArgs = PaginatedArgs<FeedHighlightsRequest>;
 
 /**
  * Fetch a the highlights of a feed for given profile and filters.

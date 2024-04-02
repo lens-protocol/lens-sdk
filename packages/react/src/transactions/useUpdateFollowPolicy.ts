@@ -47,7 +47,6 @@ export type UpdateFollowPolicyArgs = {
  *
  * @category Profiles
  * @group Hooks
- * @param args - {@link UpdateFollowPolicyArgs}
  *
  * @example
  * ```tsx

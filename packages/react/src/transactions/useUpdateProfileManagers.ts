@@ -194,7 +194,6 @@ export type UpdateProfileManagersArgs = AtLeastOneOf<{
  *
  * @category Profiles
  * @group Hooks
- * @param args - {@link UpdateProfileManagersArgs}
  */
 export function useUpdateProfileManagers(): UseDeferredTask<
   void,

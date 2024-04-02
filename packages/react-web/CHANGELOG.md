@@ -1,5 +1,26 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.37
+
+### Minor Changes
+
+- cdaf25268: **feat:** added `useSignFrameAction` hook
+  **feat:** added `useIdentityToken` hook
+
+### Patch Changes
+
+- dbb1657e3: **fix:** adds missing `small` and `medium` aliases to `EncryptedImageSet` and `ImageSet` fragments.
+- 95f361c8b: **fix:** `useAccessToken` not picking up all possible token changes
+- 69c04be1d: **fix:** proactive refresh credentials
+- 4183f686a: **chore:** exported missing gql types
+- Updated dependencies [cdaf25268]
+- Updated dependencies [dbb1657e3]
+- Updated dependencies [95f361c8b]
+- Updated dependencies [69c04be1d]
+- Updated dependencies [4183f686a]
+  - @lens-protocol/domain@0.11.0-alpha.26
+  - @lens-protocol/react@2.0.0-alpha.37
+
 ## 2.0.0-alpha.36
 
 ### Minor Changes

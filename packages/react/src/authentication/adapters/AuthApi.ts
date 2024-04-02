@@ -43,9 +43,9 @@ export class AuthApi {
       variables: { request },
     });
 
-    const { accessToken, refreshToken } = result.data.result;
+    const { accessToken, identityToken, refreshToken } = result.data.result;
 
-    return new JwtCredentials(accessToken, refreshToken);
+    return new JwtCredentials(accessToken, identityToken, refreshToken);
   }
 
   async refreshCredentials(refreshToken: string): Promise<JwtCredentials> {
@@ -54,8 +54,12 @@ export class AuthApi {
       variables: { request: { refreshToken } },
     });
 
-    const { accessToken: newAccessToken, refreshToken: newRefreshToken } = result.data.result;
+    const {
+      accessToken: newAccessToken,
+      identityToken: newIdentityToken,
+      refreshToken: newRefreshToken,
+    } = result.data.result;
 
-    return new JwtCredentials(newAccessToken, newRefreshToken);
+    return new JwtCredentials(newAccessToken, newIdentityToken, newRefreshToken);
   }
 }

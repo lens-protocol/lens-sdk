@@ -35,7 +35,7 @@ async function main() {
   console.log(`Is LensClient authenticated? `, await client.authentication.isAuthenticated());
   console.log(`Authenticated profileId: `, profileId);
   console.log(`Access token: `, accessToken);
-  console.log(`Is access token valid? `, await client.authentication.verify(accessToken));
+  console.log(`Is access token valid? `, await client.authentication.verify({ accessToken }));
 }
 
 main();

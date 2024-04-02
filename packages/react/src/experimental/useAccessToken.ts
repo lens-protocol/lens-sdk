@@ -9,14 +9,20 @@ import { useSharedDependencies } from '../shared';
  * @defaultValue `null` if not authenticated.
  */
 export function useAccessToken() {
-  const { accessTokenStorage } = useSharedDependencies();
-  const [token, setToken] = useState(() => accessTokenStorage.getAccessToken());
+  const { credentialsStorage } = useSharedDependencies();
+  const [token, setToken] = useState(() => credentialsStorage.getAccessToken());
 
   useEffect(() => {
-    return accessTokenStorage.onRefresh(() => {
-      setToken(accessTokenStorage.getAccessToken());
+    const subscription = credentialsStorage.subscribe((credentials) => {
+      if (!credentials) {
+        setToken(null);
+        return;
+      }
+      setToken(credentials.accessToken);
     });
-  }, [accessTokenStorage]);
+
+    return () => subscription.unsubscribe();
+  }, [credentialsStorage]);
 
   return token;
 }

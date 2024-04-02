@@ -5,6 +5,7 @@ import type {
   ChallengeRequest,
   RevokeAuthenticationRequest,
   SignedAuthChallenge,
+  VerifyRequest,
   WalletAuthenticationToProfileAuthenticationRequest,
 } from '../../graphql/types.generated';
 import {
@@ -33,27 +34,27 @@ export class AuthenticationApi {
     return result.data.result;
   }
 
-  async verify(accessToken: string): Promise<boolean> {
-    const result = await this.sdk.AuthVerify({ request: { accessToken } });
+  async verify(request: VerifyRequest): Promise<boolean> {
+    const result = await this.sdk.AuthVerify({ request });
 
     return result.data.result;
   }
 
   async authenticate(request: SignedAuthChallenge): Promise<Credentials> {
     const result = await this.sdk.AuthAuthenticate({ request });
-    const { accessToken, refreshToken } = result.data.result;
+    const { accessToken, identityToken, refreshToken } = result.data.result;
 
-    const credentials = new Credentials(accessToken, refreshToken);
+    const credentials = new Credentials(accessToken, identityToken, refreshToken);
     credentials.checkClock();
 
     return credentials;
   }
 
-  async refresh(refreshToken: string): Promise<Credentials> {
-    const result = await this.sdk.AuthRefresh({ request: { refreshToken } });
-    const { accessToken: newAccessToken, refreshToken: newRefreshToken } = result.data.result;
+  async refresh(currentRefreshToken: string): Promise<Credentials> {
+    const result = await this.sdk.AuthRefresh({ request: { refreshToken: currentRefreshToken } });
+    const { accessToken, identityToken, refreshToken } = result.data.result;
 
-    const credentials = new Credentials(newAccessToken, newRefreshToken);
+    const credentials = new Credentials(accessToken, identityToken, refreshToken);
     credentials.checkClock();
 
     return credentials;
@@ -64,9 +65,9 @@ export class AuthenticationApi {
     headers?: Record<string, string>,
   ): Promise<Credentials> {
     const result = await this.sdk.WalletAuthenticationToProfileAuthentication({ request }, headers);
-    const { accessToken, refreshToken } = result.data.result;
+    const { accessToken, identityToken, refreshToken } = result.data.result;
 
-    const credentials = new Credentials(accessToken, refreshToken);
+    const credentials = new Credentials(accessToken, identityToken, refreshToken);
 
     return credentials;
   }

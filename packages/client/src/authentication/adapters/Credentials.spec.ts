@@ -9,6 +9,7 @@ const profileSession = {
   refreshToken:
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB4NTYiLCJldm1BZGRyZXNzIjoiMHgzZkM0N2NkRGNGZDU5ZGNlMjA2OTRiNTc1QUZjMUQ5NDE4Njc3NWIwIiwicm9sZSI6InByb2ZpbGVfcmVmcmVzaCIsImF1dGhvcml6YXRpb25JZCI6IjA0NWM2N2I2LWIzNTEtNDVjOS1hNWE1LWM0YWQ5ODg5ZDYyYyIsImlhdCI6MTcwMTM1MzA5NiwiZXhwIjoxNzAxOTU3ODk2fQ.i2kzT4I6VBTuZvjly0TEdGN_YsuBaTDopMQU4_398kA',
   refreshTokenExp: 1701957896000,
+  identityToken: '',
 };
 
 const walletSession = {
@@ -18,14 +19,23 @@ const walletSession = {
   refreshToken:
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB4YTU2NTNlODhEOWMzNTIzODdkZURkQzc5YmNmOTlmMGFkYTYyZTljNiIsInJvbGUiOiJ3YWxsZXRfcmVmcmVzaCIsImF1dGhvcml6YXRpb25JZCI6IjMxMWVkNzNkLTZjYjMtNDRmZi05NzdmLTJjMmM1MjI4YWJiNCIsImlhdCI6MTcwMTM1NTA3NywiZXhwIjoxNzAxOTU5ODc3fQ.WTUpWsH-Fvv8U4WIwL_Sk6cpHvRSGY_vdBsy1IQrCmM',
   refreshTokenExp: 1701959877000,
+  identityToken: '',
 };
 
 const buildProfileCredentials = () => {
-  return new Credentials(profileSession.accessToken, profileSession.refreshToken);
+  return new Credentials(
+    profileSession.accessToken,
+    profileSession.identityToken,
+    profileSession.refreshToken,
+  );
 };
 
 const buildWalletCredentials = () => {
-  return new Credentials(walletSession.accessToken, walletSession.refreshToken);
+  return new Credentials(
+    walletSession.accessToken,
+    walletSession.identityToken,
+    walletSession.refreshToken,
+  );
 };
 
 describe(`Given the ${Credentials.name} class`, () => {

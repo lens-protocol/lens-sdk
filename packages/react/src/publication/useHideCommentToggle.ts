@@ -31,7 +31,6 @@ export type UseHideCommentToggleArgs = {
  *
  * @category Publications
  * @group Hooks
- * @param args - {@link UseHideCommentToggleArgs}
  */
 export function useHideCommentToggle(): UseDeferredTask<void, never, UseHideCommentToggleArgs> {
   const { data: session } = useSession();

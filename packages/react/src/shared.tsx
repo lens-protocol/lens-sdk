@@ -15,13 +15,12 @@ import { invariant } from '@lens-protocol/shared-kernel';
 import { IStorage } from '@lens-protocol/storage';
 import React, { ReactNode, useContext } from 'react';
 
-import { AccessTokenStorage } from './authentication/adapters/AccessTokenStorage';
 import { AuthApi } from './authentication/adapters/AuthApi';
-import { CredentialsExpiryController } from './authentication/adapters/CredentialsExpiryController';
 import { CredentialsFactory } from './authentication/adapters/CredentialsFactory';
 import { CredentialsGateway } from './authentication/adapters/CredentialsGateway';
 import { CredentialsStorage } from './authentication/adapters/CredentialsStorage';
 import { LogoutPresenter } from './authentication/adapters/LogoutPresenter';
+import { createRefreshTokenStorage } from './authentication/adapters/RefreshTokenStorage';
 import { BaseConfig, RequiredConfig, resolveConfig } from './config';
 import { createInboxKeyStorage, DisableConversationsGateway } from './inbox';
 import { IProfileCacheManager } from './profile/adapters/IProfileCacheManager';
@@ -66,8 +65,10 @@ export function createSharedDependencies(userConfig: BaseConfig): SharedDependen
   const authApi = new AuthApi(anonymousApolloClient);
 
   // storages
-  const credentialsStorage = new CredentialsStorage(config.storage, config.environment.name);
-  const accessTokenStorage = new AccessTokenStorage(authApi, credentialsStorage);
+  const credentialsStorage = new CredentialsStorage(
+    createRefreshTokenStorage(config.storage, config.environment.name),
+    authApi,
+  );
   const transactionStorage = createTransactionStorage(config.storage, config.environment.name);
   const inboxKeyStorage = createInboxKeyStorage(config.storage, config.environment.name);
 
@@ -75,7 +76,7 @@ export function createSharedDependencies(userConfig: BaseConfig): SharedDependen
   const apolloClient = createLensApolloClient({
     connectToDevTools: config.debug,
     uri: config.environment.backend,
-    accessTokenStorage,
+    accessTokenStorage: credentialsStorage,
     pollingInterval: config.environment.timings.pollingInterval,
     logger: config.logger,
     origin: config.origin,
@@ -153,14 +154,13 @@ export function createSharedDependencies(userConfig: BaseConfig): SharedDependen
   );
 
   // controllers
-  const credentialsExpiryController = new CredentialsExpiryController(logout);
-  credentialsExpiryController.subscribe(accessTokenStorage);
+  credentialsStorage.onExpiry(logout);
 
   return {
-    accessTokenStorage,
     activeWallet,
     apolloClient,
     config,
+    credentialsStorage,
     credentialsFactory,
     credentialsGateway,
     inboxKeyStorage,
@@ -182,10 +182,10 @@ export function createSharedDependencies(userConfig: BaseConfig): SharedDependen
  * @internal
  */
 export type SharedDependencies = {
-  accessTokenStorage: AccessTokenStorage;
   activeWallet: ActiveWallet;
   apolloClient: SafeApolloClient;
   config: RequiredConfig;
+  credentialsStorage: CredentialsStorage;
   credentialsFactory: CredentialsFactory;
   credentialsGateway: CredentialsGateway;
   inboxKeyStorage: IStorage<string>;

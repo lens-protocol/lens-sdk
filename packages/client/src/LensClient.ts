@@ -7,6 +7,7 @@ import { QueryParams } from './queryParams';
 import {
   Explore,
   Feed,
+  Frames,
   Handle,
   Invites,
   Modules,
@@ -106,6 +107,13 @@ export class LensClient {
    */
   get feed(): Feed {
     return new Feed(this.context, this._authentication);
+  }
+
+  /**
+   * The Frames module
+   */
+  get frames(): Frames {
+    return new Frames(this.context, this._authentication);
   }
 
   /**

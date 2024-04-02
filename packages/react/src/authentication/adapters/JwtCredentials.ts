@@ -28,6 +28,14 @@ function isProfileJwtContent(decodedJwt: unknown): decodedJwt is ProfileJwtPaylo
   return isObject(decodedJwt) && 'role' in decodedJwt && decodedJwt.role === 'profile_refresh';
 }
 
+function getTokenExpDate(token: string) {
+  const decodedToken = jwtDecode<WalletJwtPayload | ProfileJwtPayload>(token);
+
+  invariant(decodedToken.exp, 'Exp date should be provided by JWT token');
+
+  return DateUtils.secondsToMs(decodedToken.exp);
+}
+
 // Threshold in seconds that will mark token as expired even it's still valid
 // Adds some time for all communications that's required to refresh tokens
 const TOKEN_EXP_THRESHOLD = DateUtils.secondsToMs(3);
@@ -37,7 +45,11 @@ export class JwtCredentials implements Credentials {
   readonly profileId?: ProfileId;
   readonly authorizationId: string;
 
-  constructor(readonly accessToken: string | null, readonly refreshToken: string) {
+  constructor(
+    readonly accessToken: string | null,
+    readonly identityToken: string | null,
+    readonly refreshToken: string,
+  ) {
     const decodedRefreshToken = jwtDecode(refreshToken);
 
     if (isWalletJwtContent(decodedRefreshToken)) {
@@ -58,16 +70,19 @@ export class JwtCredentials implements Credentials {
 
   canRefresh(): boolean {
     const now = Date.now();
-    const tokenExpDate = this.getTokenExpDate(this.refreshToken);
+    const tokenExpDate = getTokenExpDate(this.refreshToken);
 
     return now < tokenExpDate - TOKEN_EXP_THRESHOLD;
   }
 
-  private getTokenExpDate(token: string) {
-    const decodedToken = jwtDecode<WalletJwtPayload | ProfileJwtPayload>(token);
+  getTokenRefreshTime(): number {
+    if (!this.accessToken) {
+      return 0;
+    }
 
-    invariant(decodedToken.exp, 'Exp date should be provided by JWT token');
+    const now = Date.now();
+    const tokenExpDate = getTokenExpDate(this.accessToken);
 
-    return DateUtils.secondsToMs(decodedToken.exp);
+    return Math.max(tokenExpDate - now - TOKEN_EXP_THRESHOLD, 0);
   }
 }
