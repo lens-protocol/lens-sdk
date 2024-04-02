@@ -63,7 +63,6 @@ generates:
       # - https://api-mumbai.lens-v2.crtlkey.com/ # staging
       - https://api-v2-mumbai-live.lens.dev/graphql # testnet
       # - http://localhost:4000/
-      - src/lens/graphql/client.graphql
     documents:
       - src/lens/graphql/*.graphql
     plugins:
@@ -98,5 +97,6 @@ generates:
           operationResultSuffix: 'Data' # goes with typescript-operations.operationResultSuffix
           fragmentVariablePrefix: Fragment # because FragmentDoc suffix is removed by omitOperationSuffix we need to add a prefix to differentiate fragment types from fragment documents
           documentMode: documentNode
+          withMutationFn: false
       - 'typescript-apollo-client-helpers'
       - 'fragment-matcher'

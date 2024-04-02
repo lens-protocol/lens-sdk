@@ -294,7 +294,6 @@ export function mockPaginatedResultInfo(
   overrides: Partial<gql.PaginatedResultInfo> = {},
 ): gql.PaginatedResultInfo {
   return {
-    moreAfter: false,
     prev: null,
     next: null,
     ...overrides,
