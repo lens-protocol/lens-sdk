@@ -47,6 +47,7 @@ mutation AuthAuthenticate($request: SignedAuthChallenge!) {
   result: authenticate(request: $request) {
     accessToken
     refreshToken
+    identityToken
   }
 }
 
@@ -54,6 +55,7 @@ mutation AuthRefresh($request: RefreshRequest!) {
   result: refresh(request: $request) {
     accessToken
     refreshToken
+    identityToken
   }
 }
 
@@ -63,6 +65,7 @@ mutation WalletAuthenticationToProfileAuthentication(
   result: walletAuthenticationToProfileAuthentication(request: $request) {
     accessToken
     refreshToken
+    identityToken
   }
 }
 

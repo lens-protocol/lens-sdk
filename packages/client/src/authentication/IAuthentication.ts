@@ -6,6 +6,7 @@ import type {
   ChallengeRequest,
   RevokeAuthenticationRequest,
   SignedAuthChallenge,
+  VerifyRequest,
   WalletAuthenticationToProfileAuthenticationRequest,
 } from '../graphql/types.generated';
 import type { PaginatedResult } from '../helpers/buildPaginatedQueryResult';
@@ -55,12 +56,22 @@ export interface IAuthentication {
   ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError>;
 
   /**
-   * Verify that the access token is signed by the server and the user.
+   * Check the validity of the provided token.
    *
-   * @param accessToken - The access token to verify
-   * @returns Whether the access token is valid
+   * @deprecated Use with {@link VerifyRequest} instead.
+   *
+   * @param request - Access token as a string
+   * @returns Whether the provided token is valid
    */
-  verify(accessToken: string): Promise<boolean>;
+  verify(request: string): Promise<boolean>;
+
+  /**
+   * Check the validity of the provided token.
+   *
+   * @param request - Verify request
+   * @returns Whether the provided token is valid
+   */
+  verify(request: VerifyRequest): Promise<boolean>;
 
   /**
    * Check if the user is authenticated. If the credentials are expired, try to refresh them.
@@ -75,6 +86,13 @@ export interface IAuthentication {
    * @returns A Result with the access token or possible error scenarios
    */
   getAccessToken(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError>;
+
+  /**
+   * Get the identity token. If it expired, try to refresh it.
+   *
+   * @returns A Result with the identity token or possible error scenarios
+   */
+  getIdentityToken(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError>;
 
   /**
    * Get the authenticated profile id.

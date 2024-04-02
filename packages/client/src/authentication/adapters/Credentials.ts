@@ -44,6 +44,7 @@ function isProfileJwtContent(decodedJwt: DecodedJwt): decodedJwt is ProfileJwtPa
 export class Credentials {
   constructor(
     readonly accessToken: string | undefined,
+    readonly identityToken: string | undefined,
     readonly refreshToken: string,
   ) {}
 
