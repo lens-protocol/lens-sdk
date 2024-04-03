@@ -1,5 +1,11 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.38
+
+### Patch Changes
+
+- @lens-protocol/blockchain-bindings@0.10.0-alpha.28
+
 ## 2.0.0-alpha.37
 
 ### Minor Changes

@@ -1,5 +1,17 @@
 # @lens-protocol/react-web
 
+## 2.0.0-alpha.38
+
+### Minor Changes
+
+- 880fb5de3: **feat:** supports Unknown Reference modules
+
+### Patch Changes
+
+- Updated dependencies [880fb5de3]
+  - @lens-protocol/domain@0.11.0-alpha.27
+  - @lens-protocol/react@2.0.0-alpha.38
+
 ## 2.0.0-alpha.37
 
 ### Minor Changes
