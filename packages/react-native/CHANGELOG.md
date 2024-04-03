@@ -1,5 +1,9 @@
 # @lens-protocol/react-native
 
+## 2.0.0
+
+This is a stable release, marking the closure of the alpha release channel.
+
 ## 2.0.0-alpha.38
 
 ### Minor Changes

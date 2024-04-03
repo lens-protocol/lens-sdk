@@ -1,5 +1,9 @@
 # @lens-protocol/wagmi
 
+## 4.0.0
+
+This is a stable release, marking the closure of the alpha release channel.
+
 ## 4.0.0-alpha.7
 
 ### Patch Changes

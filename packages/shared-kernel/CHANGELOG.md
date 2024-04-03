@@ -1,5 +1,9 @@
 # @lens-protocol/shared-kernel
 
+## 0.11.0
+
+This is a stable release, marking the closure of the alpha release channel.
+
 ## 0.11.0-alpha.12
 
 ### Patch Changes

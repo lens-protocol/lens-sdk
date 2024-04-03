@@ -1,5 +1,9 @@
 # @lens-protocol/gated-content
 
+## 0.4.0
+
+This is a stable release, marking the closure of the alpha release channel.
+
 ## 0.4.0-alpha.23
 
 ### Patch Changes

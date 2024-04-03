@@ -1,5 +1,9 @@
 # @lens-protocol/blockchain-bindings
 
+## 0.10.0
+
+This is a stable release, marking the closure of the alpha release channel.
+
 ## 0.10.0-alpha.28
 
 ### Patch Changes
