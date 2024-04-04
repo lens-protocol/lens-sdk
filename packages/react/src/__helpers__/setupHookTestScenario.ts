@@ -4,13 +4,13 @@ import { IStorageProvider } from '@lens-protocol/storage';
 import { RenderHookResult } from '@testing-library/react';
 import { mock } from 'jest-mock-extended';
 
-import { IBindings, resolveConfig } from '../config';
+import { BaseConfig, IBindings, resolveConfig } from '../config';
 import { development } from '../environments';
 import { ProfileCacheManager } from '../profile/infrastructure/ProfileCacheManager';
 import { PublicationCacheManager } from '../publication/infrastructure/PublicationCacheManager';
 import { renderHookWithMocks } from './testing-library';
 
-export function setupHookTestScenario(mocks: MockedResponse[]) {
+export function setupHookTestScenario(mocks: MockedResponse[], overrides?: Partial<BaseConfig>) {
   const client = mockLensApolloClient(mocks);
 
   return {
@@ -21,6 +21,7 @@ export function setupHookTestScenario(mocks: MockedResponse[]) {
         bindings: mock<IBindings>(),
         environment: development,
         storage: mock<IStorageProvider>(),
+        ...overrides,
       });
       return renderHookWithMocks(callback, {
         mocks: {

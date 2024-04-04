@@ -40,6 +40,12 @@ export function mockPublicationId(profileId: ProfileId = mockProfileId()): Publi
   return `${profileId}-${faker.datatype.hexadecimal({ length: 2 })}` as PublicationId;
 }
 
+export function mockMomokaPublicationId(): PublicationId {
+  return `${mockProfileId()}-${faker.datatype.hexadecimal({
+    length: 2,
+  })}-DA-${faker.datatype.hexadecimal({ length: 2 })}` as PublicationId;
+}
+
 export function mockWallet({ address = mockEvmAddress() }: { address?: EvmAddress } = {}) {
   return mock<Wallet>({ address });
 }

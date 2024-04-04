@@ -1,5 +1,11 @@
 # @lens-protocol/domain
 
+## 0.11.0-alpha.27
+
+### Patch Changes
+
+- 880fb5de3: **feat:** supports Unknown Reference modules
+
 ## 0.11.0-alpha.26
 
 ### Minor Changes

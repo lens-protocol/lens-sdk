@@ -27,6 +27,14 @@ export function resolveReferenceModuleInput(
           quotesRestricted: false,
         },
       };
+
+    case ReferencePolicyType.UNKNOWN:
+      return {
+        unknownReferenceModule: {
+          address: config.address,
+          data: config.data,
+        },
+      };
   }
 
   return undefined;

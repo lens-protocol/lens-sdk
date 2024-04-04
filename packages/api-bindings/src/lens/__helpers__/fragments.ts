@@ -215,6 +215,21 @@ export function mockQuoteFragment(overrides?: Partial<Omit<gql.Quote, '__typenam
   };
 }
 
+export function mockUnknownReferenceModuleSettings(
+  overrides?: Partial<gql.UnknownReferenceModuleSettings>,
+): gql.UnknownReferenceModuleSettings {
+  return {
+    contract: mockNetworkAddressFragment(),
+    signlessApproved: true,
+    sponsoredApproved: true,
+    initializeCalldata: null,
+    initializeResultData: null,
+    verified: false,
+    ...overrides,
+    __typename: 'UnknownReferenceModuleSettings',
+  };
+}
+
 export function mockMirrorFragment(
   overrides?: Partial<Omit<gql.Mirror, '__typename'>>,
 ): gql.Mirror {
@@ -294,7 +309,6 @@ export function mockPaginatedResultInfo(
   overrides: Partial<gql.PaginatedResultInfo> = {},
 ): gql.PaginatedResultInfo {
   return {
-    moreAfter: false,
     prev: null,
     next: null,
     ...overrides,

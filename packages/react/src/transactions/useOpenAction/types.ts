@@ -87,8 +87,8 @@ export type OpenActionArgs = {
    * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
    * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
    *
-   * If not specified, or `true`, the hook will attempt a Signless Experience when possible;
-   * otherwise, it will fall back to a signed experience.
+   * If not specified, or `true`, the hook will attempt a Sponsored Transaction.
+   * Set it to `false` to force it to use a Self-Funded Transaction.
    */
   sponsored?: boolean;
 };

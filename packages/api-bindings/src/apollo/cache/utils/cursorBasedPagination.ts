@@ -23,26 +23,6 @@ export function cursorBasedPagination<TResult extends CursorBasedPaginatedResult
   return {
     keyArgs,
 
-    read(existing: SafeReadonly<TResult> | undefined) {
-      if (!existing) {
-        return existing;
-      }
-
-      const { items, pageInfo } = existing;
-
-      // items that are not in the cache anymore (for .e.g deleted publication)
-      const readRes: SafeReadonly<TResult> = {
-        ...existing,
-        items,
-        pageInfo: {
-          ...pageInfo,
-          moreAfter: existing.pageInfo.moreAfter ?? existing.pageInfo.next !== null,
-        },
-      };
-
-      return readRes;
-    },
-
     merge(
       existing: SafeReadonly<TResult> | undefined,
       incoming: SafeReadonly<TResult>,
@@ -61,7 +41,6 @@ export function cursorBasedPagination<TResult extends CursorBasedPaginatedResult
             items: existingItems,
             pageInfo: {
               ...incoming.pageInfo, // future-proofing in case we add more fields to pageInfo
-              moreAfter: existing.pageInfo.next !== null,
               next: existing.pageInfo.next,
               prev: existing.pageInfo.prev,
             },
@@ -73,7 +52,6 @@ export function cursorBasedPagination<TResult extends CursorBasedPaginatedResult
           items: incomingItems.concat(existingItems),
           pageInfo: {
             ...incoming.pageInfo, // future-proofing in case we add more fields to pageInfo
-            moreAfter: existing.pageInfo.moreAfter,
             next: existing.pageInfo.next,
             prev: incoming.pageInfo.prev ?? existing.pageInfo.prev,
           },
@@ -87,7 +65,6 @@ export function cursorBasedPagination<TResult extends CursorBasedPaginatedResult
             items: existingItems,
             pageInfo: {
               ...incoming.pageInfo, // future-proofing in case we add more fields to pageInfo
-              moreAfter: false,
               next: existing.pageInfo.next,
               prev: existing.pageInfo.prev,
             },
@@ -99,7 +76,6 @@ export function cursorBasedPagination<TResult extends CursorBasedPaginatedResult
           items: existingItems.concat(incomingItems),
           pageInfo: {
             ...incoming.pageInfo, // future-proofing in case we add more fields to pageInfo
-            moreAfter: incoming.pageInfo.next !== null,
             next: incoming.pageInfo.next,
             prev: existing.pageInfo.prev,
           },

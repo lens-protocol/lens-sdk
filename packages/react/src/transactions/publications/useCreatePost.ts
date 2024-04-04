@@ -17,7 +17,7 @@ import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
 import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
 import { createPostRequest } from '../adapters/schemas/builders';
 import { useCreatePostController } from '../adapters/useCreatePostController';
-import { useCreatePostExecutionMode } from './useCreatePostExecutionMode';
+import { useExecutionMode } from './useExecutionMode';
 
 /**
  * An object representing the result of a post creation.
@@ -58,8 +58,8 @@ export type CreatePostArgs = {
    * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
    * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
    *
-   * If not specified, or `true`, the hook will attempt a Signless Experience when possible;
-   * otherwise, it will fall back to a signed experience.
+   * If not specified, or `true`, the hook will attempt a Sponsored Transaction.
+   * Set it to `false` to force it to use a Self-Funded Transaction.
    */
   sponsored?: boolean;
 };
@@ -458,7 +458,7 @@ export function useCreatePost(): UseDeferredTask<
   CreatePostArgs
 > {
   const { data: session } = useSession();
-  const resolveExecutionMode = useCreatePostExecutionMode();
+  const resolveExecutionMode = useExecutionMode();
   const createPost = useCreatePostController();
 
   return useDeferredTask(async (args: CreatePostArgs) => {
@@ -470,6 +470,7 @@ export function useCreatePost(): UseDeferredTask<
     const mode = await resolveExecutionMode({
       author: session.profile,
       sponsored: args.sponsored,
+      reference: args.reference,
       actions: args.actions,
     });
 
