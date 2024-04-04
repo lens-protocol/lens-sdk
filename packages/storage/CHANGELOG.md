@@ -1,5 +1,9 @@
 # @lens-protocol/storage
 
+## 0.8.0
+
+This is a stable release, marking the closure of the alpha prerelease.
+
 ## 0.8.0-alpha.11
 
 ### Patch Changes
