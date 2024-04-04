@@ -7,7 +7,6 @@ export * from './modules';
 export * from './momoka';
 export * from './nfts';
 export * from './notifications';
-export * from './poaps';
 export * from './profile';
 export * from './publication';
 export * from './revenue';
