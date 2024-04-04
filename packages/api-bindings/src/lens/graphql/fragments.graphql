@@ -385,7 +385,6 @@ fragment ProfileMentioned on ProfileMentioned {
 
 fragment PaginatedResultInfo on PaginatedResultInfo {
   __typename
-  moreAfter @client
   prev
   next
 }
