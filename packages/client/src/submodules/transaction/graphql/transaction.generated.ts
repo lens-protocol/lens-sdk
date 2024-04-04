@@ -12,8 +12,6 @@ import {
   QuoteFragment,
   CommentFragment,
   MirrorFragment,
-  OpenActionResult_KnownCollectOpenActionResult_Fragment,
-  OpenActionResult_UnknownOpenActionResult_Fragment,
   RelaySuccessFragment,
   RelayErrorFragment,
   CreateMomokaPublicationResultFragment,

@@ -1,4 +1,4 @@
-import { hasAtLeastOne, never, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import { hasAtLeastOne, never, PromiseResult } from '@lens-protocol/shared-kernel';
 
 import type { Authentication } from '../../authentication';
 import { LensContext } from '../../context';
@@ -40,7 +40,6 @@ import {
   PaginatedResult,
   requireAuthHeaders,
   sdkAuthHeaderWrapper,
-  buildAuthorizationHeader,
 } from '../../helpers';
 import {
   CreateLegacyCollectBroadcastItemResultFragment,
@@ -58,7 +57,7 @@ import {
   TagResultFragment,
 } from './graphql/publication.generated';
 import { Bookmarks, Reactions, NotInterested, Actions } from './submodules';
-import { FetchPublicationOptions, RequestOverwrites } from './types';
+import { FetchPublicationOptions } from './types';
 
 /**
  * Publications are the posts, comments, mirrors and quotes that a profile creates.
@@ -356,18 +355,10 @@ export class Publication {
    */
   async postOnchain(
     request: OnchainPostRequest,
-    overwrites?: RequestOverwrites,
   ): PromiseResult<
     RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError
   > {
-    if (overwrites?.accessToken) {
-      const overwrittenHeaders = buildAuthorizationHeader(overwrites.accessToken);
-
-      const result = await this.sdk.PostOnchain({ request }, overwrittenHeaders);
-      return success(result.data.result);
-    }
-
     return requireAuthHeaders(this.authentication, async (headers) => {
       const result = await this.sdk.PostOnchain({ request }, headers);
       return result.data.result;

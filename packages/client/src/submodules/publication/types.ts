@@ -3,13 +3,3 @@ import { PublicationStatsCountOpenActionArgs } from '../../graphql/types.generat
 export type FetchPublicationOptions = {
   publicationStatsCountOpenActionArgs?: PublicationStatsCountOpenActionArgs;
 };
-
-/**
- * @experimental This is experimental and might change or be removed in future versions.
- */
-export type RequestOverwrites = {
-  /**
-   * @experimental
-   */
-  accessToken?: string;
-};
