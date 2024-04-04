@@ -1,5 +1,16 @@
 # @lens-protocol/client
 
+## 2.0.0-alpha.38
+
+### Minor Changes
+
+- 9efad9243: **chore:** removed Poaps module as was never implemented on the API side
+  **chore:** removed accessToken overwrite for `publication.postOnchain` method
+
+### Patch Changes
+
+- @lens-protocol/blockchain-bindings@0.10.0-alpha.28
+
 ## 2.0.0-alpha.37
 
 ### Minor Changes

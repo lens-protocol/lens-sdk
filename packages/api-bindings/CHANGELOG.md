@@ -1,5 +1,14 @@
 # @lens-protocol/api-bindings
 
+## 0.11.0-alpha.34
+
+### Patch Changes
+
+- 8dcaeda61: **chore:** remove unused local-only field
+- 880fb5de3: **feat:** supports Unknown Reference modules
+- Updated dependencies [880fb5de3]
+  - @lens-protocol/domain@0.11.0-alpha.27
+
 ## 0.11.0-alpha.33
 
 ### Minor Changes

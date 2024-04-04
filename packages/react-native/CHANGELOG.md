@@ -1,5 +1,20 @@
 # @lens-protocol/react-native
 
+## 2.0.0-alpha.38
+
+### Minor Changes
+
+- 880fb5de3: **feat:** supports Unknown Reference modules
+
+### Patch Changes
+
+- 8dcaeda61: **chore:** remove unused local-only field
+- Updated dependencies [8dcaeda61]
+- Updated dependencies [880fb5de3]
+  - @lens-protocol/api-bindings@0.11.0-alpha.34
+  - @lens-protocol/react@2.0.0-alpha.38
+  - @lens-protocol/domain@0.11.0-alpha.27
+
 ## 2.0.0-alpha.37
 
 ### Minor Changes
