@@ -1,5 +1,9 @@
 # @lens-protocol/domain
 
+## 0.11.0
+
+This is a stable release, marking the closure of the alpha prerelease.
+
 ## 0.11.0-alpha.27
 
 ### Patch Changes

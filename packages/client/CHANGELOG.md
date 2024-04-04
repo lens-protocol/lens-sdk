@@ -1,5 +1,9 @@
 # @lens-protocol/client
 
+## 2.0.0
+
+This is a stable release, marking the closure of the alpha prerelease.
+
 ## 2.0.0-alpha.38
 
 ### Minor Changes
