@@ -1,0 +1,13 @@
+{
+  "extends": "@lens-protocol/tsconfig/base.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "dist"
+  },
+  "include": ["src"],
+  "ts-node": {
+    "transpileOnly": true,
+    "swc": true
+  }
+}
