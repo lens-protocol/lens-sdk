@@ -2,11 +2,12 @@ import { MockedResponse } from '@apollo/client/testing';
 import { Profile, updateSessionData } from '@lens-protocol/api-bindings';
 import { mockProfileFragment, mockProfileResponse } from '@lens-protocol/api-bindings/mocks';
 import { ProfileSessionData } from '@lens-protocol/domain/use-cases/authentication';
+import { waitFor } from '@testing-library/react';
 
-import { SessionType } from '../authentication';
+import { SessionType, useSession } from '../authentication';
 import { setupHookTestScenario } from './setupHookTestScenario';
 
-export function setupHookTestScenarioWithSession(
+export async function setupHookTestScenarioWithSession(
   mocks: MockedResponse[],
   sessionProfile: Profile = mockProfileFragment(),
 ) {
@@ -16,9 +17,7 @@ export function setupHookTestScenarioWithSession(
     profileId: sessionProfile.id,
   };
 
-  updateSessionData(session);
-
-  return setupHookTestScenario([
+  const scenario = setupHookTestScenario([
     mockProfileResponse({
       variables: {
         request: { forProfileId: sessionProfile.id },
@@ -28,4 +27,12 @@ export function setupHookTestScenarioWithSession(
 
     ...mocks,
   ]);
+
+  updateSessionData(session);
+
+  const { result } = scenario.renderHook(useSession);
+
+  await waitFor(() => expect(result.current.loading).toBeFalsy());
+
+  return scenario;
 }

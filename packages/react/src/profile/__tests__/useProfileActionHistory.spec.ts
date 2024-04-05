@@ -8,14 +8,13 @@ import { waitFor } from '@testing-library/react';
 import { setupHookTestScenarioWithSession } from '../../__helpers__/setupHookTestScenarioWithSession';
 import { useProfileActionHistory } from '../useProfileActionHistory';
 
-// TODO make it work
-describe.skip(`Given the ${useProfileActionHistory.name} hook`, () => {
+describe(`Given the ${useProfileActionHistory.name} hook`, () => {
   const history = [mockProfileActionHistoryFragment()];
   const expectations = history.map(({ id, actionType }) => ({ id, actionType }));
 
   describe('when the query returns data successfully', () => {
     it('should settle with the data', async () => {
-      const { renderHook } = setupHookTestScenarioWithSession([
+      const { renderHook } = await setupHookTestScenarioWithSession([
         mockProfileActionHistoryResponse({
           variables: {
             limit: LimitType.Ten,

@@ -1,5 +1,5 @@
 import { renderHook, RenderHookOptions } from '@testing-library/react';
-import { ReactNode } from 'react';
+import { ReactNode, Suspense } from 'react';
 
 import { SharedDependencies, SharedDependenciesProvider } from '../shared';
 
@@ -11,7 +11,7 @@ function createWrapper(mocks: Partial<SharedDependencies> = {}) {
   return function TestWrapper({ children }: { children: ReactNode }) {
     return (
       <SharedDependenciesProvider dependencies={mocks as SharedDependencies}>
-        {children}
+        <Suspense>{children}</Suspense>
       </SharedDependenciesProvider>
     );
   };

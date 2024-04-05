@@ -403,6 +403,7 @@ query WhoHaveBlocked(
 }
 
 fragment ProfileActionHistory on ProfileActionHistory {
+  __typename
   id
   actionType
   who
