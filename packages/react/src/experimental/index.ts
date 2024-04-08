@@ -1,4 +1,3 @@
-export * from './useAccessToken';
+export * from './credentials';
 export * from './useApolloClient';
-export * from './useIdentityToken';
 export * from './useStorage';
