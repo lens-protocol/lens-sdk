@@ -1,3 +1,5 @@
+export { ClientError as GraphQLClientError } from 'graphql-request';
+
 export class NotAuthenticatedError extends Error {
   name = 'NotAuthenticatedError' as const;
   message = 'Not Authenticated';
