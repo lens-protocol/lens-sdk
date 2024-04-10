@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { CATEGORIES } from '../../config';
+import { formatProfileIdentifier } from '../../utils/formatProfileIdentifier';
 import { LoginButton, LogoutButton } from '../auth';
 
 function AuthenticationBar() {
@@ -20,9 +21,7 @@ function AuthenticationBar() {
       {session.authenticated && (
         <strong>
           {session.type === SessionType.WithProfile
-            ? session.profile?.metadata?.displayName ??
-              session.profile.handle?.fullHandle ??
-              session.profile.id
+            ? formatProfileIdentifier(session.profile)
             : session.address}
         </strong>
       )}

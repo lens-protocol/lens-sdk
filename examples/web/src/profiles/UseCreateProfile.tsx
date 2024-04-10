@@ -2,6 +2,7 @@ import { useCreateProfile } from '@lens-protocol/react-web';
 import toast from 'react-hot-toast';
 
 import { RequireConnectedWallet } from '../components/auth';
+import { formatProfileIdentifier } from '../utils/formatProfileIdentifier';
 
 export function CreateProfileForm({ address }: { address: string }) {
   const { execute, loading } = useCreateProfile();
@@ -22,7 +23,7 @@ export function CreateProfileForm({ address }: { address: string }) {
 
     const profile = result.value;
 
-    toast.success(`Congratulations! You now own: ${profile.handle?.fullHandle}!`);
+    toast.success(`Congratulations! You now own: ${formatProfileIdentifier(profile)}!`);
     return;
   };
 

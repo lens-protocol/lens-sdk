@@ -13,6 +13,7 @@ import { toast } from 'react-hot-toast';
 import { RequireProfileSession } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
+import { formatProfileIdentifier } from '../utils/formatProfileIdentifier';
 
 type LinkHandleButtonProps = {
   handle: HandleInfo;
@@ -105,9 +106,7 @@ function UseOwnedProfiles({ address }: { address: EvmAddress }) {
       <h4>Owned profiles</h4>
       <ul>
         {profiles.map((p, index) => (
-          <li key={index}>
-            {p.id} {p.handle?.fullHandle || 'NOT LINKED'}
-          </li>
+          <li key={index}>{formatProfileIdentifier(p)}</li>
         ))}
       </ul>
     </div>
@@ -167,7 +166,7 @@ function Content({ address, profile }: ContentProps) {
       </p>
       <p>
         Active profile: <strong>{profile.id}</strong>. Current handle{' '}
-        <strong>{profile.handle?.fullHandle || 'NOT LINKED'}</strong>.
+        <strong>{formatProfileIdentifier(profile)}</strong>.
       </p>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <UseOwnedProfiles address={address} />

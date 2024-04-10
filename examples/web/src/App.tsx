@@ -32,6 +32,7 @@ import {
   UseClaimHandle,
   UseCurrencies,
   UseInviteWallets,
+  UseLatestPaidActions,
   UseNotifications,
   UseResolveAddress,
   UseSignFrameAction,
@@ -186,6 +187,7 @@ export function App() {
                   <Route path="useNotifications" element={<UseNotifications />} />
                   <Route path="useCurrencies" element={<UseCurrencies />} />
                   <Route path="useApproveModule" element={<UseApproveModule />} />
+                  <Route path="useLatestPaidActions" element={<UseLatestPaidActions />} />
                   <Route path="useClaimHandle" element={<UseClaimHandle />} />
                   <Route path="useInviteWallets" element={<UseInviteWallets />} />
                   <Route path="useResolveAddress" element={<UseResolveAddress />} />

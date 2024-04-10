@@ -4,6 +4,7 @@ export * from './UseApproveModule';
 export * from './UseClaimHandle';
 export * from './UseCurrencies';
 export * from './UseInviteWallets';
+export * from './UseLatestPaidActions';
 export * from './UseNotifications';
 export * from './UseResolveAddress';
 export * from './UseSignFrameAction';
