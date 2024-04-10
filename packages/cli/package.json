@@ -41,9 +41,9 @@
     "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
     "@swc/core": "^1.4.13",
-    "@types/node": "^18.18.12",
-    "eslint": "^8.54.0",
-    "prettier": "^3.1.0",
+    "@types/node": "^18.19.31",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
     "ts-node": "^10.9.2",
     "tsup": "^8.0.2",
     "typescript": "5.2.2"

@@ -1,12 +1,13 @@
 {
   "eslint.workingDirectories": [
-    "examples/nextjs",
+    "examples/lens-next-app",
     "examples/node",
     "examples/react-native",
     "examples/shared",
     "examples/web",
     "packages/api-bindings",
     "packages/blockchain-bindings",
+    "packages/cli",
     "packages/client",
     "packages/domain",
     "packages/eslint-config",

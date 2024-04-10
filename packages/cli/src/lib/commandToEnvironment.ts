@@ -1,4 +1,4 @@
-import { Command } from '@commander-js/extra-typings';
+import type { Command } from '@commander-js/extra-typings';
 import { LensClient, production, development } from '@lens-protocol/client';
 
 const commandToEnvironmentMap = {
@@ -26,13 +26,4 @@ export function initLensClient(name: EnvCommandName) {
   return new LensClient({
     environment: commandToEnvironmentMap[name],
   });
-}
-
-export function getHandlePrefix(name: EnvCommandName) {
-  switch (name) {
-    case 'production':
-      return 'lens';
-    case 'development':
-      return 'test';
-  }
 }
