@@ -84,6 +84,7 @@ query FeedHighlights(
 }
 
 fragment LatestActed on LatestActed {
+  __typename
   profile {
     ...Profile
   }
@@ -120,6 +121,9 @@ fragment OpenActionPaidAction on OpenActionPaidAction {
 }
 
 query LatestPaidActions(
+  $request: PaginatedRequest
+  $where: LatestPaidActionsWhere
+  $filter: LatestPaidActionsFilter
   $publicationImageSmallTransform: ImageTransform!
   $publicationImageMediumTransform: ImageTransform!
   $publicationOperationsActedArgs: PublicationOperationsActedArgs
@@ -132,11 +136,12 @@ query LatestPaidActions(
   $profileMetadataSource: AppId
   $rateRequest: RateRequest!
 ) {
-  result: latestPaidActions {
+  result: latestPaidActions(request: $request, where: $where, filter: $filter) {
     items {
       ... on FollowPaidAction {
         ...FollowPaidAction
       }
+
       ... on OpenActionPaidAction {
         ...OpenActionPaidAction
       }
