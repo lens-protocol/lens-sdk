@@ -16,7 +16,7 @@ describe(`Given the ${useFeed.name} hook`, () => {
     };
 
     it('should return the feed', async () => {
-      const { renderHook } = setupHookTestScenarioWithSession([
+      const { renderHook } = await setupHookTestScenarioWithSession([
         mockFeedResponse({
           variables: args,
           items,

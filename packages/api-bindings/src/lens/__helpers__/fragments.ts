@@ -382,6 +382,8 @@ export function mockProfileActionHistoryFragment(
     actionedOn: faker.date.past().toISOString(),
 
     ...overrides,
+
+    __typename: 'ProfileActionHistory',
   };
 }
 

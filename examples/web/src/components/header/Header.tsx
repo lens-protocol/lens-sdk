@@ -1,11 +1,38 @@
 import { SessionType, useSession } from '@lens-protocol/react-web';
+import { Suspense } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { CATEGORIES } from '../../config';
 import { LoginButton, LogoutButton } from '../auth';
 
+function AuthenticationBar() {
+  const { data: session } = useSession({ suspense: true });
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: '1rem',
+      }}
+    >
+      {session.authenticated && (
+        <strong>
+          {session.type === SessionType.WithProfile
+            ? session.profile?.metadata?.displayName ??
+              session.profile.handle?.fullHandle ??
+              session.profile.id
+            : session.address}
+        </strong>
+      )}
+
+      {session.authenticated ? <LogoutButton /> : <LoginButton />}
+    </div>
+  );
+}
+
 export function Header() {
-  const { data: session } = useSession();
   return (
     <header>
       <div
@@ -21,26 +48,9 @@ export function Header() {
         <span>
           <strong>🌿 Lens SDK</strong>
         </span>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '1rem',
-          }}
-        >
-          {session?.authenticated && (
-            <strong>
-              {session.type === SessionType.WithProfile
-                ? session.profile?.metadata?.displayName ??
-                  session.profile.handle?.fullHandle ??
-                  session.profile.id
-                : session.address}
-            </strong>
-          )}
-
-          {session?.authenticated ? <LogoutButton /> : <LoginButton />}
-        </div>
+        <Suspense>
+          <AuthenticationBar />
+        </Suspense>
       </div>
 
       <nav>

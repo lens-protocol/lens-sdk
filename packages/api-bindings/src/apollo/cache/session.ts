@@ -1,20 +1,20 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
 import { SessionData } from '@lens-protocol/domain/use-cases/authentication';
 
-const sessionVar = makeVar<SessionData | null>(null);
+export const sessionDataVar = makeVar<SessionData | null>(null);
 
 export function getSessionData() {
-  return sessionVar();
+  return sessionDataVar();
 }
 
 export function useSessionDataVar() {
-  return useReactiveVar(sessionVar);
+  return useReactiveVar(sessionDataVar);
 }
 
-export function resetSession() {
-  sessionVar(null);
+export function resetSessionData() {
+  sessionDataVar(null);
 }
 
 export function updateSessionData(session: SessionData) {
-  sessionVar(session);
+  sessionDataVar(session);
 }

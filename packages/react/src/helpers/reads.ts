@@ -28,10 +28,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSharedDependencies } from '../shared';
 
 /**
- * A discriminated union of the possible results of a read operation with no errors.
- *
- * You can rely on the `loading` value to determine if the `data` is available.
- * When `loading` is `false`, the `data` value will be available.
+ * @deprecated use {@link ReadResult | `ReadResult<T, E>`} instead. Removal slated for v3.x.
  */
 export type ReadResultWithoutError<T> =
   | {
@@ -44,13 +41,18 @@ export type ReadResultWithoutError<T> =
     };
 
 /**
- * A discriminated union of the possible results of a read operation with possible errors.
+ * @deprecated use {@link ReadResult | `ReadResult<T, E>`} instead. Removal slated for v3.x.
+ */
+export type ReadResultWithError<T, E> = ReadResult<T, E>;
+
+/**
+ * A discriminated union of the possible results of a read operation.
  *
  * You can rely on the `loading` value to determine if the `data` or `error` can be evaluated.
  *
  * If `error` is `undefined`, then `data` value will be available.
  */
-export type ReadResultWithError<T, E> =
+export type ReadResult<T, E = UnspecifiedError> =
   | {
       data: undefined;
       error: undefined;
@@ -66,13 +68,6 @@ export type ReadResultWithError<T, E> =
       error: E;
       loading: false;
     };
-
-/**
- * A discriminated union of the possible results of a read operation.
- */
-export type ReadResult<T, E = UnspecifiedError> = E extends Error
-  ? ReadResultWithError<T, E>
-  : ReadResultWithoutError<T>;
 
 function buildReadResult<T>(
   data: T | undefined,

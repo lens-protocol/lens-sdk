@@ -16,32 +16,32 @@ describe(`Given the ${useReactionToggle.name} hook`, () => {
   const publication = mockPostFragment();
 
   describe('when calling the execute method on a publication', () => {
-    const { renderHook } = setupHookTestScenarioWithSession([
-      mockPublicationResponse({
-        variables: {
-          request: { forId: publication.id },
-        },
-        result: publication,
-      }),
-      mockAddReactionResponse({
-        variables: {
-          request: {
-            for: publication.id,
-            reaction: PublicationReactionType.Upvote,
-          },
-        },
-      }),
-      mockRemoveReactionResponse({
-        variables: {
-          request: {
-            for: publication.id,
-            reaction: PublicationReactionType.Upvote,
-          },
-        },
-      }),
-    ]);
-
     it('should update the publication `stats` and `operations` as expected', async () => {
+      const { renderHook } = await setupHookTestScenarioWithSession([
+        mockPublicationResponse({
+          variables: {
+            request: { forId: publication.id },
+          },
+          result: publication,
+        }),
+        mockAddReactionResponse({
+          variables: {
+            request: {
+              for: publication.id,
+              reaction: PublicationReactionType.Upvote,
+            },
+          },
+        }),
+        mockRemoveReactionResponse({
+          variables: {
+            request: {
+              for: publication.id,
+              reaction: PublicationReactionType.Upvote,
+            },
+          },
+        }),
+      ]);
+
       const { result: publicationResult } = renderHook(() =>
         usePublication({ forId: publication.id }),
       );

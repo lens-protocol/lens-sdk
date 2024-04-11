@@ -1,18 +1,25 @@
 import {
   UnspecifiedError,
-  useSessionDataVar,
   Profile,
+  sessionDataVar,
   useProfile,
+  useSessionDataVar,
 } from '@lens-protocol/api-bindings';
-import { LogoutReason, SessionType } from '@lens-protocol/domain/use-cases/authentication';
-import { EvmAddress, invariant } from '@lens-protocol/shared-kernel';
+import { ProfileId } from '@lens-protocol/domain/entities';
+import {
+  LogoutReason,
+  SessionData,
+  SessionType,
+} from '@lens-protocol/domain/use-cases/authentication';
+import { EvmAddress, invariant, never } from '@lens-protocol/shared-kernel';
 import { useEffect, useRef } from 'react';
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { ReadResult } from '../helpers/reads';
-import { useFragmentVariables } from '../helpers/variables';
+import { SuspenseReadResult } from '../helpers/suspense';
+import { useLazyFragmentVariables } from '../helpers/variables';
 
-function usePreviousValue<T>(value: T) {
+export function usePreviousValue<T>(value: T) {
   const ref = useRef<T>();
 
   useEffect(() => {
@@ -90,9 +97,22 @@ export type WalletOnlySession = {
 export type Session = AnonymousSession | ProfileSession | WalletOnlySession;
 
 /**
+ * {@link useSession} hook arguments
+ */
+export type UseSessionArgs<TSuspense extends boolean> = {
+  suspense: TSuspense;
+};
+
+/**
  * `useSession` is a hook that lets you access the current {@link Session}
  *
  * @example
+ * ```ts
+ * const { data, error, loading } = useSession();
+ * ```
+ *
+ * ## Basic Usage
+ *
  * Use this hook to determine if the user is authenticated or not.
  * ```tsx
  * function Page() {
@@ -121,35 +141,164 @@ export type Session = AnonymousSession | ProfileSession | WalletOnlySession;
  * }
  * ```
  *
+ * ## Suspense Enabled
+ *
+ * You can enable suspense mode to suspend the component until the session data is available.
+ *
+ * ```tsx
+ * function Page() {
+ *   const { data } = useSession({ suspense: true });
+ *
+ *   switch (data.type) {
+ *     case SessionType.Anonymous:
+ *       // data is a AnonymousSession
+ *       return <Login />;
+ *
+ *     case SessionType.JustWallet:
+ *       // data is a WalletOnlySession
+ *       return <MyWallet address={data.address} />;
+ *
+ *     case SessionType.WithProfile:
+ *       // data is a ProfileSession
+ *       return <MyProfile profile={data.profile} />;
+ *
+ *     default:
+ *       return <p>Something went wrong.</p>;
+ *   }
+ * }
+ * ```
+ *
+ * Further session data updates will NOT trigger a suspense.
+ *
  * @category Authentication
  * @group Hooks
  */
-export function useSession(): ReadResult<Session, UnspecifiedError> {
+export function useSession(args: UseSessionArgs<true>): SuspenseReadResult<Session>;
+export function useSession(args?: UseSessionArgs<never>): ReadResult<Session, UnspecifiedError>;
+export function useSession(
+  args?: UseSessionArgs<boolean>,
+): ReadResult<Session, UnspecifiedError> | SuspenseReadResult<Session> {
   const sessionData = useSessionDataVar();
 
-  const prevSession = usePreviousValue(sessionData);
+  const [primeCacheWithProfile, data] = useProfileFromCache(sessionData);
 
-  const trigger = sessionData?.type === SessionType.WithProfile;
-  const profileId =
-    sessionData?.type === SessionType.WithProfile ? sessionData.profileId : undefined;
+  const result = resultFrom(sessionData, data);
 
-  const { data, error, previousData } = useProfile(
+  const update = async (newSessionData: SessionData | null) => {
+    invariant(newSessionData, 'Session data must be defined.');
+
+    if (newSessionData.type === SessionType.WithProfile) {
+      const response = await primeCacheWithProfile(newSessionData.profileId);
+
+      if (response.error) {
+        return;
+      }
+
+      invariant(response.data, 'Cannot fetch profile data');
+    }
+  };
+
+  useEffect(() => {
+    if (result.loading) {
+      if (sessionData?.type === SessionType.WithProfile) {
+        void update(sessionData);
+        return;
+      }
+
+      return sessionDataVar.onNextChange(async function onNext(newSessionData) {
+        await update(newSessionData);
+      });
+    }
+    return;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Handle suspense
+  if (args?.suspense) {
+    if (result.loading) {
+      // Do the same thing as the effect right above because the effect won't run
+      // when we suspend.
+
+      throw new Promise<void>((resolve) => {
+        sessionDataVar.onNextChange(async (newSessionData) => {
+          await update(newSessionData);
+          resolve();
+        });
+      });
+    }
+
+    if (result.error) {
+      throw result.error;
+    }
+  }
+
+  return result;
+}
+
+function useProfileFromCache(data: SessionData | null) {
+  const fill = useLazyFragmentVariables();
+
+  const shouldFetchProfile = data?.type === SessionType.WithProfile;
+  const profileId = data?.type === SessionType.WithProfile ? data.profileId : undefined;
+
+  const {
+    data: { result: profile } = { result: null },
+    previousData: { result: previousProfile } = { result: null },
+    error,
+    refetch,
+  } = useProfile(
     useLensApolloClient({
-      variables: useFragmentVariables({
+      fetchPolicy: 'cache-first',
+      variables: fill({
         request: {
           forProfileId: profileId,
         },
       }),
-      fetchPolicy: 'cache-first',
-      skip: !trigger,
+      skip: !shouldFetchProfile,
     }),
   );
 
-  if (!sessionData) {
+  const primeCacheWithProfile = (id: ProfileId) =>
+    refetch(
+      fill({
+        request: {
+          forProfileId: id,
+        },
+      }),
+    );
+
+  return [
+    primeCacheWithProfile,
+    {
+      error,
+      profile,
+      previousProfile,
+    },
+  ] as const;
+}
+
+type UseProfileFromCacheData = ReturnType<typeof useProfileFromCache>[1];
+
+function resultFrom(
+  sessionData: SessionData | null,
+  { error, profile, previousProfile }: UseProfileFromCacheData,
+): ReadResult<Session, UnspecifiedError> {
+  if (
+    !sessionData ||
+    (sessionData.type === SessionType.WithProfile && !profile && !previousProfile)
+  ) {
     return {
       data: undefined,
       error: undefined,
       loading: true,
+    };
+  }
+
+  if (error) {
+    return {
+      data: undefined,
+      error: new UnspecifiedError(error),
+      loading: false,
     };
   }
 
@@ -164,6 +313,7 @@ export function useSession(): ReadResult<Session, UnspecifiedError> {
         error: undefined,
         loading: false,
       };
+
     case SessionType.JustWallet:
       return {
         data: {
@@ -174,74 +324,17 @@ export function useSession(): ReadResult<Session, UnspecifiedError> {
         error: undefined,
         loading: false,
       };
-  }
 
-  if (error) {
-    return {
-      data: undefined,
-      error: new UnspecifiedError(error),
-      loading: false,
-    };
-  }
-
-  if (!data) {
-    if (!prevSession) {
-      // no data, no previous session, so still loading for initial data
+    case SessionType.WithProfile:
       return {
-        data: undefined,
+        data: {
+          type: SessionType.WithProfile,
+          authenticated: true,
+          address: sessionData.address,
+          profile: profile ?? previousProfile ?? never('This should never happen.'),
+        },
         error: undefined,
-        loading: true,
+        loading: false,
       };
-    }
-
-    if (prevSession.type === SessionType.WithProfile) {
-      // no data, but we have a previous session, so that means transitioning to a new profile
-      if (previousData?.result) {
-        return {
-          data: {
-            type: SessionType.WithProfile,
-            authenticated: true,
-            address: prevSession.address,
-            profile: previousData.result,
-          },
-          error: undefined,
-          loading: false,
-        };
-      }
-
-      // shouldn't happen, but just in case, fallback to loading
-      return {
-        data: undefined,
-        error: undefined,
-        loading: true,
-      };
-    }
-
-    // transitioning from AnonymousSession to ProfileSession
-    // OR from WalletOnlySession to ProfileSession
-    return {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      data: prevSession,
-      error: undefined,
-      loading: false,
-    };
   }
-
-  invariant(
-    data.result,
-    `Active Profile [ID:${sessionData.profileId}] data not found.\n` +
-      'This is likely an issue with UI state ported across environments.',
-  );
-
-  return {
-    data: {
-      type: SessionType.WithProfile,
-      address: sessionData.address,
-      authenticated: true,
-      profile: data.result,
-    },
-    error: undefined,
-    loading: false,
-  };
 }

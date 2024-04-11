@@ -16,7 +16,7 @@ describe(`Given the ${useFeedHighlights.name} hook`, () => {
         where: { for: profileId },
       };
 
-      const { renderHook } = setupHookTestScenarioWithSession([
+      const { renderHook } = await setupHookTestScenarioWithSession([
         mockFeedHighlightsResponse({
           variables: args,
           items,
