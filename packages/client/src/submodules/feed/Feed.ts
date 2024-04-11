@@ -20,6 +20,7 @@ import {
   OpenActionPaidActionFragment,
   Sdk,
 } from './graphql/feed.generated';
+import { LatestPaidActionsRequest } from './types';
 
 /**
  * Feed is one of the most fundamental element to create a successful social media site.
@@ -121,6 +122,7 @@ export class Feed {
    *
    * ⚠️ Requires authenticated LensClient.
    *
+   * @param request - Request object for the query
    * @returns Array of paid actions wrapped in {@link PaginatedResult}
    *
    * @example
@@ -128,7 +130,9 @@ export class Feed {
    * const result = await client.feed.latestPaidActions();
    * ```
    */
-  async latestPaidActions(): PromiseResult<
+  async latestPaidActions(
+    request: LatestPaidActionsRequest = {},
+  ): PromiseResult<
     PaginatedResult<FollowPaidActionFragment | OpenActionPaidActionFragment>,
     CredentialsExpiredError | NotAuthenticatedError
   > {
@@ -136,6 +140,9 @@ export class Feed {
       return buildPaginatedQueryResult(async () => {
         const result = await this.sdk.LatestPaidActions(
           {
+            request: { cursor: request.cursor, limit: request.limit },
+            where: request.where,
+            filter: request.filter,
             ...commonQueryVariables(this.context),
           },
           headers,

@@ -1608,6 +1608,7 @@ export type PublicationSearchWhere = {
   customFilters?: InputMaybe<Array<CustomFiltersType>>;
   metadata?: InputMaybe<PublicationMetadataFilters>;
   publicationTypes?: InputMaybe<Array<SearchPublicationType>>;
+  withOpenActions?: InputMaybe<Array<OpenActionFilter>>;
 };
 
 export type PublicationStatsCountOpenActionArgs = {
@@ -1667,6 +1668,8 @@ export type RateRequest = {
 };
 
 export type ReactionRequest = {
+  /** The ID of the app that the reaction was made from. */
+  app?: InputMaybe<Scalars['AppId']['input']>;
   for: Scalars['PublicationId']['input'];
   reaction: PublicationReactionType;
 };
