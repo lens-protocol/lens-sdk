@@ -18,7 +18,7 @@ dotenv.config();
 const typedAbi = abi as ethers.ContractInterface;
 
 const permissonlessCreatorAddress = {
-  development: '0xCb4FB63c3f13CB83cCD6F10E9e5F29eC250329Cc',
+  development: '0xCb4FB63c3f13CB83cCD6F10E9e5F29eC250329Cc', // TODO amoy
   production: '0x0b5e6100243f793e480DE6088dE6bA70aA9f3872',
 };
 
@@ -27,7 +27,7 @@ if (!process.env.INFURA_API_KEY) {
 }
 
 const rpcUrl = {
-  development: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_API_KEY}`,
+  development: `https://polygon-amoy.infura.io/v3/${process.env.INFURA_API_KEY}`,
   production: `https://polygon.infura.io/v3/${process.env.INFURA_API_KEY}`,
 };
 

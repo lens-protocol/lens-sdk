@@ -10,7 +10,7 @@ dotenv.config();
 const typedAbi = abi as ethers.ContractInterface;
 
 const publicActionProxyAddress = {
-  development: '0xab5607f5447d538fc79bb32364ddecd8f76d7ee8',
+  development: '0x88c8fa7C470d9d94aDfA40187157917B26A548d3',
   production: '0x53582b1b7BE71622E7386D736b6baf87749B7a2B',
 };
 
@@ -19,7 +19,7 @@ if (!process.env.INFURA_API_KEY) {
 }
 
 const rpcUrl = {
-  development: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_API_KEY}`,
+  development: `https://polygon-amoy.infura.io/v3/${process.env.INFURA_API_KEY}`,
   production: `https://polygon.infura.io/v3/${process.env.INFURA_API_KEY}`,
 };
 
