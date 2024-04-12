@@ -1,5 +1,21 @@
 # @lens-protocol/wagmi
 
+## 4.1.0
+
+### Minor Changes
+
+- ce997e7fd: **chore:** updated development environment to Amoy testnet
+
+### Patch Changes
+
+- Updated dependencies [10757c9cf]
+- Updated dependencies [1d99b37c9]
+- Updated dependencies [05b23041f]
+- Updated dependencies [ce997e7fd]
+- Updated dependencies [8af3e82ac]
+  - @lens-protocol/react-web@2.1.0
+  - @lens-protocol/shared-kernel@0.12.0
+
 ## 4.0.0
 
 This is a stable release, marking the closure of the alpha prerelease.

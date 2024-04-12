@@ -1,5 +1,21 @@
 # @lens-protocol/client
 
+## 2.1.0
+
+### Minor Changes
+
+- ce997e7fd: **chore:** updated development environment to Amoy testnet
+
+### Patch Changes
+
+- 0734bef6e: **feat:** re-exported GraphQLClientError from graphql-request
+- 301811ccb: **feat:** `feed.latestPaidActions` accepts optional request arguments
+- Updated dependencies [ce997e7fd]
+  - @lens-protocol/gated-content@0.5.0
+  - @lens-protocol/shared-kernel@0.12.0
+  - @lens-protocol/blockchain-bindings@0.10.1
+  - @lens-protocol/storage@0.8.1
+
 ## 2.0.0
 
 This is a stable release, marking the closure of the alpha prerelease.
