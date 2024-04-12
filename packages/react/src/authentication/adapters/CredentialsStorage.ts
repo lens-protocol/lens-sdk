@@ -67,10 +67,7 @@ export class CredentialsStorage implements IStorage<JwtCredentials>, IAccessToke
       return null;
     }
 
-    const accessToken = this.getAccessToken();
-    const identityToken = this.getIdentityToken();
-
-    return new JwtCredentials(accessToken, identityToken, refreshToken);
+    return new JwtCredentials(this.accessToken, this.identityToken, refreshToken);
   }
 
   async reset(): Promise<void> {
@@ -89,10 +86,6 @@ export class CredentialsStorage implements IStorage<JwtCredentials>, IAccessToke
 
   getAccessToken(): string | null {
     return this.accessToken;
-  }
-
-  getIdentityToken(): string | null {
-    return this.identityToken;
   }
 
   async refreshToken(): PromiseResult<void, CredentialsExpiredError> {
