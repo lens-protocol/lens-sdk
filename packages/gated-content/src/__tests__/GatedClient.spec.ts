@@ -49,7 +49,7 @@ const rawAccessCondition: raw.AccessCondition = raw.orCondition([
 ]);
 
 /**
- * Disabled until Lit comes back with a solution for Amoy testnet
+ * Disabled until Lit team comes back with a solution for Amoy testnet
  */
 xdescribe(`Given an instance of the ${GatedClient.name}`, () => {
   describe(`when calling the "${GatedClient.prototype.encryptPublicationMetadata.name}" method`, () => {
