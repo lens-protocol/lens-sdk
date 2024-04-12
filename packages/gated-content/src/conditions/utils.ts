@@ -26,6 +26,8 @@ export const toLitSupportedChainName = (chainId: SupportedChainId): SupportedCha
       return SupportedChains.POLYGON;
     case SupportedChainId.MUMBAI:
       return SupportedChains.MUMBAI;
+    case SupportedChainId.AMOY:
+      return SupportedChains.AMOY;
     case SupportedChainId.LINEA_GOERLI:
       return SupportedChains.LINEA_GOERLI;
     default:

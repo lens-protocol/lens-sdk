@@ -1,6 +1,6 @@
 import { ChainType, URL } from '@lens-protocol/shared-kernel';
 
-import { ChainConfigRegistry, goerli, mainnet, mumbai, polygon } from './chains';
+import { ChainConfigRegistry, amoy, goerli, mainnet, polygon } from './chains';
 
 /**
  * The transaction observer timings
@@ -69,17 +69,17 @@ export const production: EnvironmentConfig = {
  *
  * This is the environment to be used when you develop and test your application (test users, test profiles, test data)
  *
- * - Endpoint: https://api-v2-mumbai-live.lens.dev
- * - Chain IDs: 80001 (Mumbai), 5 (Goerli)
+ * - Endpoint: https://api-v2-amoy.lens.dev
+ * - Chain IDs: 80002 (Amoy), 5 (Goerli)
  * - Profile handle namespace: `test/`
  * - Environment specific timings
  */
 export const development: EnvironmentConfig = {
   name: 'development',
-  backend: 'https://api-v2-mumbai-live.lens.dev' as URL,
+  backend: 'https://api-v2-amoy.lens.dev' as URL,
   chains: {
     [ChainType.ETHEREUM]: goerli,
-    [ChainType.POLYGON]: mumbai,
+    [ChainType.POLYGON]: amoy,
   },
   timings: {
     pollingInterval: 3000,
@@ -87,7 +87,7 @@ export const development: EnvironmentConfig = {
     maxMiningWaitTime: 120000,
   },
   contracts: {
-    permissionlessCreator: '0xCb4FB63c3f13CB83cCD6F10E9e5F29eC250329Cc',
+    permissionlessCreator: '0xCb4FB63c3f13CB83cCD6F10E9e5F29eC250329Cc', // TODO: update for amoy
   },
   handleResolver: (localName) => `test/${localName}`,
 };
@@ -97,10 +97,10 @@ export const development: EnvironmentConfig = {
  */
 export const staging: EnvironmentConfig = {
   name: 'staging',
-  backend: 'https://api-mumbai.lens-v2.crtlkey.com' as URL,
+  backend: 'https://api-amoy.lens-v2.crtlkey.com' as URL,
   chains: {
     [ChainType.ETHEREUM]: goerli,
-    [ChainType.POLYGON]: mumbai,
+    [ChainType.POLYGON]: amoy,
   },
   timings: {
     pollingInterval: 5000,
@@ -108,7 +108,7 @@ export const staging: EnvironmentConfig = {
     maxMiningWaitTime: 2400000,
   },
   contracts: {
-    permissionlessCreator: '0xCb4FB63c3f13CB83cCD6F10E9e5F29eC250329Cc',
+    permissionlessCreator: '0xCb4FB63c3f13CB83cCD6F10E9e5F29eC250329Cc', // TODO: update for amoy
   },
   handleResolver: (localName) => `test/${localName}`,
 };

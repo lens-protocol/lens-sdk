@@ -34,7 +34,7 @@ export function mockCurrenciesResponse({
               contract: {
                 __typename: 'NetworkAddress',
                 address: currency.address,
-                chainId: 80001,
+                chainId: 80002,
               },
             }),
           ),
