@@ -48,7 +48,10 @@ const rawAccessCondition: raw.AccessCondition = raw.orCondition([
   }),
 ]);
 
-describe(`Given an instance of the ${GatedClient.name}`, () => {
+/**
+ * Disabled until Lit comes back with a solution for Amoy testnet
+ */
+xdescribe(`Given an instance of the ${GatedClient.name}`, () => {
   describe(`when calling the "${GatedClient.prototype.encryptPublicationMetadata.name}" method`, () => {
     it(`should return the expected raw PublicationMetadata`, async () => {
       const { client } = setupTestScenario();
