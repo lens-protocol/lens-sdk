@@ -264,8 +264,8 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
       '@irys/sdk':
-        specifier: ^0.0.4
-        version: 0.0.4
+        specifier: ^0.1.16
+        version: 0.1.16(arweave@1.14.4)
       '@lens-protocol/client':
         specifier: workspace:*
         version: link:../../packages/client
@@ -284,6 +284,12 @@ importers:
       '@xmtp/react-sdk':
         specifier: ^3.0.0
         version: 3.0.0(@types/react@18.2.38)(react@18.2.0)(typescript@5.2.2)
+      arbundles:
+        specifier: ^0.10.0
+        version: 0.10.0(arweave@1.14.4)
+      arweave:
+        specifier: ^1.14.4
+        version: 1.14.4
       example-shared:
         specifier: workspace:*
         version: link:../shared
@@ -332,7 +338,7 @@ importers:
         version: 18.2.17
       '@vitejs/plugin-react':
         specifier: ^4.2.0
-        version: 4.2.0(vite@4.5.0)
+        version: 4.2.0(vite@5.1.6)
       prettier:
         specifier: ^2.8.8
         version: 2.8.8
@@ -343,11 +349,11 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: ^4.5.0
-        version: 4.5.0(@types/node@18.18.12)
+        specifier: ^5.1.6
+        version: 5.1.6(@types/node@18.18.12)
       vite-plugin-node-polyfills:
-        specifier: ^0.9.0
-        version: 0.9.0(vite@4.5.0)
+        specifier: ^0.21.0
+        version: 0.21.0(vite@5.1.6)
 
   packages/api-bindings:
     dependencies:
@@ -1421,7 +1427,7 @@ packages:
     peerDependencies:
       graphql: ^15.0.0 || ^16.0.0
       graphql-ws: ^5.5.5
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || 18.2.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
       subscriptions-transport-ws: ^0.9.0 || ^0.11.0
     peerDependenciesMeta:
@@ -1463,6 +1469,32 @@ packages:
     transitivePeerDependencies:
       - debug
     dev: true
+
+  /@aptos-labs/aptos-client@0.1.0:
+    resolution: {integrity: sha512-q3s6pPq8H2buGp+tPuIRInWsYOuhSEwuNJPwd2YnsiID3YSLihn2ug39ktDJAcSOprUcp7Nid8WK7hKqnUmSdA==}
+    engines: {node: '>=15.10.0'}
+    dependencies:
+      axios: 1.6.2
+      got: 11.8.6
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
+  /@aptos-labs/ts-sdk@1.10.0:
+    resolution: {integrity: sha512-mENnzxcaWMGaJZeFO/kXUW/J4n7O+lNkj1WhI8rHkyVthPbVcgkjknAdfxPNdIsaaZltPVVO1XgKLN3OypIidw==}
+    engines: {node: '>=11.0.0'}
+    dependencies:
+      '@aptos-labs/aptos-client': 0.1.0
+      '@noble/curves': 1.3.0
+      '@noble/hashes': 1.3.3
+      '@scure/bip32': 1.3.3
+      '@scure/bip39': 1.2.2
+      eventemitter3: 5.0.1
+      form-data: 4.0.0
+      tweetnacl: 1.0.3
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /@ardatan/relay-compiler@12.0.0(graphql@16.8.1):
     resolution: {integrity: sha512-9anThAaj1dQr6IGmzBMcfzOQKTa5artjuPmw8NYK/fiGEMjADbSguBY2FMDykt+QhilR3wc9VA/3yVju7JHg7Q==}
@@ -3164,7 +3196,7 @@ packages:
     resolution: {integrity: sha512-Cnn0kuq4DoONOMcnoVsTOR8E+AdnKFf//6kUWc4LCdnxj31pZWn7rIULd6Y7/Js1PiPHzn7SKCM9vB/jBni8eA==}
     peerDependencies:
       '@types/react': '*'
-      react: '>=16.8.0'
+      react: '>=16.8.0 || 18.2.0'
     peerDependenciesMeta:
       '@types/react':
         optional: true
@@ -3199,7 +3231,7 @@ packages:
     peerDependencies:
       '@emotion/react': ^11.0.0-rc.0
       '@types/react': '*'
-      react: '>=16.8.0'
+      react: '>=16.8.0 || 18.2.0'
     peerDependenciesMeta:
       '@types/react':
         optional: true
@@ -3230,7 +3262,7 @@ packages:
   /@emotion/use-insertion-effect-with-fallbacks@1.0.1(react@18.2.0):
     resolution: {integrity: sha512-jT/qyKZ9rzLErtrjGgdkMBn2OP8wl0G3sQlBb3YPryvKHsjvINUhVaPFfP+fpBcOkmrVOVEEHQFJ7nbj2TH2gw==}
     peerDependencies:
-      react: '>=16.8.0'
+      react: '>=16.8.0 || 18.2.0'
     peerDependenciesMeta:
       react:
         optional: true
@@ -3264,8 +3296,17 @@ packages:
     deprecated: Please use @ensdomains/ens-contracts
     dev: true
 
-  /@esbuild/android-arm64@0.18.20:
-    resolution: {integrity: sha512-Nz4rJcchGDtENV0eMKUNa6L12zz2zBDXuhj/Vjh18zGqB44Bi7MBMSXjgunJgjRhCmKOjnPuZp4Mb6OKqtMHLQ==}
+  /@esbuild/aix-ppc64@0.19.12:
+    resolution: {integrity: sha512-bmoCYyWdEL3wDQIVbcyzRyeKLgk2WtWLTWz1ZIAZF/EGbNOwSA6ew3PftJ1PqMiOOGu0OyFMzG53L0zqIpPeNA==}
+    engines: {node: '>=12'}
+    cpu: [ppc64]
+    os: [aix]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@esbuild/android-arm64@0.19.12:
+    resolution: {integrity: sha512-P0UVNGIienjZv3f5zq0DP3Nt2IE/3plFzuaS96vihvD0Hd6H/q4WXUGpCxD/E8YrSXfNyRPbpTq+T8ZQioSuPA==}
     engines: {node: '>=12'}
     cpu: [arm64]
     os: [android]
@@ -3273,8 +3314,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/android-arm@0.18.20:
-    resolution: {integrity: sha512-fyi7TDI/ijKKNZTUJAQqiG5T7YjJXgnzkURqmGj13C6dCqckZBLdl4h7bkhHt/t0WP+zO9/zwroDvANaOqO5Sw==}
+  /@esbuild/android-arm@0.19.12:
+    resolution: {integrity: sha512-qg/Lj1mu3CdQlDEEiWrlC4eaPZ1KztwGJ9B6J+/6G+/4ewxJg7gqj8eVYWvao1bXrqGiW2rsBZFSX3q2lcW05w==}
     engines: {node: '>=12'}
     cpu: [arm]
     os: [android]
@@ -3282,8 +3323,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/android-x64@0.18.20:
-    resolution: {integrity: sha512-8GDdlePJA8D6zlZYJV/jnrRAi6rOiNaCC/JclcXpB+KIuvfBN4owLtgzY2bsxnx666XjJx2kDPUmnTtR8qKQUg==}
+  /@esbuild/android-x64@0.19.12:
+    resolution: {integrity: sha512-3k7ZoUW6Q6YqhdhIaq/WZ7HwBpnFBlW905Fa4s4qWJyiNOgT1dOqDiVAQFwBH7gBRZr17gLrlFCRzF6jFh7Kew==}
     engines: {node: '>=12'}
     cpu: [x64]
     os: [android]
@@ -3291,8 +3332,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/darwin-arm64@0.18.20:
-    resolution: {integrity: sha512-bxRHW5kHU38zS2lPTPOyuyTm+S+eobPUnTNkdJEfAddYgEcll4xkT8DB9d2008DtTbl7uJag2HuE5NZAZgnNEA==}
+  /@esbuild/darwin-arm64@0.19.12:
+    resolution: {integrity: sha512-B6IeSgZgtEzGC42jsI+YYu9Z3HKRxp8ZT3cqhvliEHovq8HSX2YX8lNocDn79gCKJXOSaEot9MVYky7AKjCs8g==}
     engines: {node: '>=12'}
     cpu: [arm64]
     os: [darwin]
@@ -3300,8 +3341,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/darwin-x64@0.18.20:
-    resolution: {integrity: sha512-pc5gxlMDxzm513qPGbCbDukOdsGtKhfxD1zJKXjCCcU7ju50O7MeAZ8c4krSJcOIJGFR+qx21yMMVYwiQvyTyQ==}
+  /@esbuild/darwin-x64@0.19.12:
+    resolution: {integrity: sha512-hKoVkKzFiToTgn+41qGhsUJXFlIjxI/jSYeZf3ugemDYZldIXIxhvwN6erJGlX4t5h417iFuheZ7l+YVn05N3A==}
     engines: {node: '>=12'}
     cpu: [x64]
     os: [darwin]
@@ -3309,8 +3350,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/freebsd-arm64@0.18.20:
-    resolution: {integrity: sha512-yqDQHy4QHevpMAaxhhIwYPMv1NECwOvIpGCZkECn8w2WFHXjEwrBn3CeNIYsibZ/iZEUemj++M26W3cNR5h+Tw==}
+  /@esbuild/freebsd-arm64@0.19.12:
+    resolution: {integrity: sha512-4aRvFIXmwAcDBw9AueDQ2YnGmz5L6obe5kmPT8Vd+/+x/JMVKCgdcRwH6APrbpNXsPz+K653Qg8HB/oXvXVukA==}
     engines: {node: '>=12'}
     cpu: [arm64]
     os: [freebsd]
@@ -3318,8 +3359,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/freebsd-x64@0.18.20:
-    resolution: {integrity: sha512-tgWRPPuQsd3RmBZwarGVHZQvtzfEBOreNuxEMKFcd5DaDn2PbBxfwLcj4+aenoh7ctXcbXmOQIn8HI6mCSw5MQ==}
+  /@esbuild/freebsd-x64@0.19.12:
+    resolution: {integrity: sha512-EYoXZ4d8xtBoVN7CEwWY2IN4ho76xjYXqSXMNccFSx2lgqOG/1TBPW0yPx1bJZk94qu3tX0fycJeeQsKovA8gg==}
     engines: {node: '>=12'}
     cpu: [x64]
     os: [freebsd]
@@ -3327,8 +3368,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/linux-arm64@0.18.20:
-    resolution: {integrity: sha512-2YbscF+UL7SQAVIpnWvYwM+3LskyDmPhe31pE7/aoTMFKKzIc9lLbyGUpmmb8a8AixOL61sQ/mFh3jEjHYFvdA==}
+  /@esbuild/linux-arm64@0.19.12:
+    resolution: {integrity: sha512-EoTjyYyLuVPfdPLsGVVVC8a0p1BFFvtpQDB/YLEhaXyf/5bczaGeN15QkR+O4S5LeJ92Tqotve7i1jn35qwvdA==}
     engines: {node: '>=12'}
     cpu: [arm64]
     os: [linux]
@@ -3336,8 +3377,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/linux-arm@0.18.20:
-    resolution: {integrity: sha512-/5bHkMWnq1EgKr1V+Ybz3s1hWXok7mDFUMQ4cG10AfW3wL02PSZi5kFpYKrptDsgb2WAJIvRcDm+qIvXf/apvg==}
+  /@esbuild/linux-arm@0.19.12:
+    resolution: {integrity: sha512-J5jPms//KhSNv+LO1S1TX1UWp1ucM6N6XuL6ITdKWElCu8wXP72l9MM0zDTzzeikVyqFE6U8YAV9/tFyj0ti+w==}
     engines: {node: '>=12'}
     cpu: [arm]
     os: [linux]
@@ -3345,8 +3386,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/linux-ia32@0.18.20:
-    resolution: {integrity: sha512-P4etWwq6IsReT0E1KHU40bOnzMHoH73aXp96Fs8TIT6z9Hu8G6+0SHSw9i2isWrD2nbx2qo5yUqACgdfVGx7TA==}
+  /@esbuild/linux-ia32@0.19.12:
+    resolution: {integrity: sha512-Thsa42rrP1+UIGaWz47uydHSBOgTUnwBwNq59khgIwktK6x60Hivfbux9iNR0eHCHzOLjLMLfUMLCypBkZXMHA==}
     engines: {node: '>=12'}
     cpu: [ia32]
     os: [linux]
@@ -3354,8 +3395,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/linux-loong64@0.18.20:
-    resolution: {integrity: sha512-nXW8nqBTrOpDLPgPY9uV+/1DjxoQ7DoB2N8eocyq8I9XuqJ7BiAMDMf9n1xZM9TgW0J8zrquIb/A7s3BJv7rjg==}
+  /@esbuild/linux-loong64@0.19.12:
+    resolution: {integrity: sha512-LiXdXA0s3IqRRjm6rV6XaWATScKAXjI4R4LoDlvO7+yQqFdlr1Bax62sRwkVvRIrwXxvtYEHHI4dm50jAXkuAA==}
     engines: {node: '>=12'}
     cpu: [loong64]
     os: [linux]
@@ -3363,8 +3404,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/linux-mips64el@0.18.20:
-    resolution: {integrity: sha512-d5NeaXZcHp8PzYy5VnXV3VSd2D328Zb+9dEq5HE6bw6+N86JVPExrA6O68OPwobntbNJ0pzCpUFZTo3w0GyetQ==}
+  /@esbuild/linux-mips64el@0.19.12:
+    resolution: {integrity: sha512-fEnAuj5VGTanfJ07ff0gOA6IPsvrVHLVb6Lyd1g2/ed67oU1eFzL0r9WL7ZzscD+/N6i3dWumGE1Un4f7Amf+w==}
     engines: {node: '>=12'}
     cpu: [mips64el]
     os: [linux]
@@ -3372,8 +3413,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/linux-ppc64@0.18.20:
-    resolution: {integrity: sha512-WHPyeScRNcmANnLQkq6AfyXRFr5D6N2sKgkFo2FqguP44Nw2eyDlbTdZwd9GYk98DZG9QItIiTlFLHJHjxP3FA==}
+  /@esbuild/linux-ppc64@0.19.12:
+    resolution: {integrity: sha512-nYJA2/QPimDQOh1rKWedNOe3Gfc8PabU7HT3iXWtNUbRzXS9+vgB0Fjaqr//XNbd82mCxHzik2qotuI89cfixg==}
     engines: {node: '>=12'}
     cpu: [ppc64]
     os: [linux]
@@ -3381,8 +3422,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/linux-riscv64@0.18.20:
-    resolution: {integrity: sha512-WSxo6h5ecI5XH34KC7w5veNnKkju3zBRLEQNY7mv5mtBmrP/MjNBCAlsM2u5hDBlS3NGcTQpoBvRzqBcRtpq1A==}
+  /@esbuild/linux-riscv64@0.19.12:
+    resolution: {integrity: sha512-2MueBrlPQCw5dVJJpQdUYgeqIzDQgw3QtiAHUC4RBz9FXPrskyyU3VI1hw7C0BSKB9OduwSJ79FTCqtGMWqJHg==}
     engines: {node: '>=12'}
     cpu: [riscv64]
     os: [linux]
@@ -3390,8 +3431,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/linux-s390x@0.18.20:
-    resolution: {integrity: sha512-+8231GMs3mAEth6Ja1iK0a1sQ3ohfcpzpRLH8uuc5/KVDFneH6jtAJLFGafpzpMRO6DzJ6AvXKze9LfFMrIHVQ==}
+  /@esbuild/linux-s390x@0.19.12:
+    resolution: {integrity: sha512-+Pil1Nv3Umes4m3AZKqA2anfhJiVmNCYkPchwFJNEJN5QxmTs1uzyy4TvmDrCRNT2ApwSari7ZIgrPeUx4UZDg==}
     engines: {node: '>=12'}
     cpu: [s390x]
     os: [linux]
@@ -3399,8 +3440,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/linux-x64@0.18.20:
-    resolution: {integrity: sha512-UYqiqemphJcNsFEskc73jQ7B9jgwjWrSayxawS6UVFZGWrAAtkzjxSqnoclCXxWtfwLdzU+vTpcNYhpn43uP1w==}
+  /@esbuild/linux-x64@0.19.12:
+    resolution: {integrity: sha512-B71g1QpxfwBvNrfyJdVDexenDIt1CiDN1TIXLbhOw0KhJzE78KIFGX6OJ9MrtC0oOqMWf+0xop4qEU8JrJTwCg==}
     engines: {node: '>=12'}
     cpu: [x64]
     os: [linux]
@@ -3408,8 +3449,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/netbsd-x64@0.18.20:
-    resolution: {integrity: sha512-iO1c++VP6xUBUmltHZoMtCUdPlnPGdBom6IrO4gyKPFFVBKioIImVooR5I83nTew5UOYrk3gIJhbZh8X44y06A==}
+  /@esbuild/netbsd-x64@0.19.12:
+    resolution: {integrity: sha512-3ltjQ7n1owJgFbuC61Oj++XhtzmymoCihNFgT84UAmJnxJfm4sYCiSLTXZtE00VWYpPMYc+ZQmB6xbSdVh0JWA==}
     engines: {node: '>=12'}
     cpu: [x64]
     os: [netbsd]
@@ -3417,8 +3458,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/openbsd-x64@0.18.20:
-    resolution: {integrity: sha512-e5e4YSsuQfX4cxcygw/UCPIEP6wbIL+se3sxPdCiMbFLBWu0eiZOJ7WoD+ptCLrmjZBK1Wk7I6D/I3NglUGOxg==}
+  /@esbuild/openbsd-x64@0.19.12:
+    resolution: {integrity: sha512-RbrfTB9SWsr0kWmb9srfF+L933uMDdu9BIzdA7os2t0TXhCRjrQyCeOt6wVxr79CKD4c+p+YhCj31HBkYcXebw==}
     engines: {node: '>=12'}
     cpu: [x64]
     os: [openbsd]
@@ -3426,8 +3467,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/sunos-x64@0.18.20:
-    resolution: {integrity: sha512-kDbFRFp0YpTQVVrqUd5FTYmWo45zGaXe0X8E1G/LKFC0v8x0vWrhOWSLITcCn63lmZIxfOMXtCfti/RxN/0wnQ==}
+  /@esbuild/sunos-x64@0.19.12:
+    resolution: {integrity: sha512-HKjJwRrW8uWtCQnQOz9qcU3mUZhTUQvi56Q8DPTLLB+DawoiQdjsYq+j+D3s9I8VFtDr+F9CjgXKKC4ss89IeA==}
     engines: {node: '>=12'}
     cpu: [x64]
     os: [sunos]
@@ -3435,8 +3476,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/win32-arm64@0.18.20:
-    resolution: {integrity: sha512-ddYFR6ItYgoaq4v4JmQQaAI5s7npztfV4Ag6NrhiaW0RrnOXqBkgwZLofVTlq1daVTQNhtI5oieTvkRPfZrePg==}
+  /@esbuild/win32-arm64@0.19.12:
+    resolution: {integrity: sha512-URgtR1dJnmGvX864pn1B2YUYNzjmXkuJOIqG2HdU62MVS4EHpU2946OZoTMnRUHklGtJdJZ33QfzdjGACXhn1A==}
     engines: {node: '>=12'}
     cpu: [arm64]
     os: [win32]
@@ -3444,8 +3485,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/win32-ia32@0.18.20:
-    resolution: {integrity: sha512-Wv7QBi3ID/rROT08SABTS7eV4hX26sVduqDOTe1MvGMjNd3EjOz4b7zeexIR62GTIEKrfJXKL9LFxTYgkyeu7g==}
+  /@esbuild/win32-ia32@0.19.12:
+    resolution: {integrity: sha512-+ZOE6pUkMOJfmxmBZElNOx72NKpIa/HFOMGzu8fqzQJ5kgf6aTGrcJaFsNiVMH4JKpMipyK+7k0n2UXN7a8YKQ==}
     engines: {node: '>=12'}
     cpu: [ia32]
     os: [win32]
@@ -3453,8 +3494,8 @@ packages:
     dev: true
     optional: true
 
-  /@esbuild/win32-x64@0.18.20:
-    resolution: {integrity: sha512-kTdfRcSiDfQca/y9QIkng02avJ+NCaQvrMejlsB3RRv5sE9rRoeBPISaZpKxHELzRxZyLvNts1P27W3wV+8geQ==}
+  /@esbuild/win32-x64@0.19.12:
+    resolution: {integrity: sha512-T1QyPSDCyMXaO3pzBkF96E8xMkiRYbUEZADd29SyPGabqxMViNoii+NcK7eWJAEoU6RZyEm5lVSIjTmcdoB9HA==}
     engines: {node: '>=12'}
     cpu: [x64]
     os: [win32]
@@ -4141,10 +4182,12 @@ packages:
   /@gluestack-ui/accordion@1.0.1(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-CLrsR4jbC3nUJifwtpiWnngi1KIeiaXCQ+D9Pm5F0wSyDTQA8e3EFSAdqAEcz/CVE8OItIiFaIDt288Un/ZQJw==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/utils': 0.1.12(react-native@0.73.5)(react@18.2.0)
@@ -4159,10 +4202,12 @@ packages:
   /@gluestack-ui/actionsheet@0.2.37(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-3X7KaIMyGCImQmz7MNQyOY7Or87NRYDjos7KF76Gla8jqapTfheB+5UNtLm6PbexjV/8B3Y8lFZhyk4+qmxvzA==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/hooks': 0.1.11(react@18.2.0)
@@ -4180,10 +4225,12 @@ packages:
   /@gluestack-ui/alert-dialog@0.1.25(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-q7bQmxCnQK4OvHqrVizNOhWh6Pdw63PVmnZ6DeUA6EQn4Jmzqw3WcWEAOWgKRXjilU2frWZIGPebFx5AeNzOSw==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/hooks': 0.1.11(react@18.2.0)
@@ -4200,10 +4247,12 @@ packages:
   /@gluestack-ui/alert@0.1.12(react@18.2.0):
     resolution: {integrity: sha512-oiJfxryKh7+WKKx9PjIX088wgIQTXD9llC52h5HiK1dPUJiswjgGKbFHZbX7uoh9VMiXthBoUvzOIVMv0i5feA==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       react: 18.2.0
@@ -4212,10 +4261,12 @@ packages:
   /@gluestack-ui/avatar@0.1.15(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-ohbgt4FVQ3yzdZrUsEx39LSxyLUqVoj1FIapENNqmCkXqk+wwDwcyEhALInu7JOsuzPAXpUuv4b478XNsYUCTg==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/utils': 0.1.12(react-native@0.73.5)(react@18.2.0)
@@ -4227,10 +4278,12 @@ packages:
   /@gluestack-ui/button@1.0.1(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-49jqhA2GIK55OGQOIFVD4P4cz+UJ/IzeBfQTmYUrbEvgJMoa8UOdWiA7FPSOJVs6b6cF6HqziLsZTycvpnlnNg==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/utils': 0.1.12(react-native@0.73.5)(react@18.2.0)
@@ -4244,10 +4297,12 @@ packages:
   /@gluestack-ui/checkbox@0.1.24(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-r1W3M6IO86YkrwTUv0bWxquM+Rpmjw0BDWehH7YMDPnyuoU5UBjGRAg8VfE3RdjIsPfLVoeUztWCLqqu6TMlmg==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/form-control': 0.1.16(react-native@0.73.5)(react@18.2.0)
@@ -4276,10 +4331,12 @@ packages:
   /@gluestack-ui/divider@0.1.8(react@18.2.0):
     resolution: {integrity: sha512-l+OQ1XD5qI20ghxKbpi+pqntRtd0mtkmhfXYLODbjt2eec3U9kpV1xawXpfN/TFd45WWZTpEQ616sOQqFLo3RA==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       react: 18.2.0
@@ -4288,10 +4345,12 @@ packages:
   /@gluestack-ui/fab@0.1.18(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-uOBTRk7C/N27WyprLtmADPL+8XF31TDEF9S/z/HM2OE2SujuoMG477MNrgrm40SAvad7jePDNv4QRcqVuGxnkA==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/utils': 0.1.12(react-native@0.73.5)(react@18.2.0)
@@ -4305,10 +4364,12 @@ packages:
   /@gluestack-ui/form-control@0.1.16(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-Yc1PaF8BElKcDUA580pdC8++4spGc36yykJblieFlkA5Hvwp5VbAB8LOI6y0KEFLChQHMXKXueUdcTvYqENDJw==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/utils': 0.1.12(react-native@0.73.5)(react@18.2.0)
@@ -4321,10 +4382,12 @@ packages:
   /@gluestack-ui/hooks@0.1.11(react@18.2.0):
     resolution: {integrity: sha512-bcBsF7bTo//JD6L9ekJu0rZs83qYD/pE/Uj3ih3OYEtGU0LDoYiGkBMmDRpVMcVv8bE3TCKivnhHaT/heafInA==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       react: 18.2.0
@@ -4333,10 +4396,12 @@ packages:
   /@gluestack-ui/icon@0.1.20(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-f/+DGR3139LU9NbMMvoumZWIwqy4B4e+xc02kAAubiv7p7aqGDV5KPm2JN5vVmCwiDRxX5u0F3SxodSQhEoQZA==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/provider': 0.1.10(react-native@0.73.5)(react@18.2.0)
@@ -4350,10 +4415,12 @@ packages:
   /@gluestack-ui/image@0.1.7(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-ITfDX7gyxab+w0EMmJdITgG7EB2oF/3MfYgsFBV//VmIlu3OJg2xvnwvYzq3kNdGqr5Nt/5ZEG2ime7Kx2Wmxw==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/utils': 0.1.12(react-native@0.73.5)(react@18.2.0)
@@ -4367,10 +4434,12 @@ packages:
   /@gluestack-ui/input@0.1.24(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-5G/XzLzWX7d2XFqLGqN9VHUO/65JoX8kghXBrQA1V0W10NM0abAqiuz4D6mZJjWAJc57me1ob04pG1WsmELbvA==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/form-control': 0.1.16(react-native@0.73.5)(react@18.2.0)
@@ -4385,10 +4454,12 @@ packages:
   /@gluestack-ui/link@0.1.17(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-Lzolq6LNz401qOpetMpoK2Rc/enpHucwgZtMRX4SnP9DV6vOsCAAIyBrLsCkCxN5JicdteVpPyZpoljExkACLQ==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/utils': 0.1.12(react-native@0.73.5)(react@18.2.0)
@@ -4402,10 +4473,12 @@ packages:
   /@gluestack-ui/menu@0.2.30(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-DxKnVPLinzfCLUftG3ek0yx+8FP5oF1QPDtd62YhmrL/4ybUTMQtDDsg8GIjrjL+kgUHvt0bofsQfwD897lmLg==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/hooks': 0.1.11(react@18.2.0)
@@ -4426,10 +4499,12 @@ packages:
   /@gluestack-ui/modal@0.1.29(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-zPkdvUyuvWmolVtmCpgCCzLOcBuR7Xur6ugQflv4JQVN6l/NSfcBfh9mXBAUAuK2h6leo02abrURFjneXfBP+Q==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/hooks': 0.1.11(react@18.2.0)
@@ -4447,10 +4522,12 @@ packages:
   /@gluestack-ui/overlay@0.1.12(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-rENETe40IRIrFW7rQKBsVotJ0J7DxTmY4xZGyMM/dct6TXnnZa2vIE+mqOK0CQs3cEIWypvDrQrJ0mHWHK1xig==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@react-native-aria/focus': 0.2.9(react-native@0.73.5)(react@18.2.0)
@@ -4464,10 +4541,12 @@ packages:
   /@gluestack-ui/popover@0.1.31(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-YOJcNsaLoCGv53HTPWYEhwZ5ZJqVE4DVXWTNxFP613QcB9zcsQki43bBM1JgIJHVpR05qIAApCsv9CqyzzYm6w==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/hooks': 0.1.11(react@18.2.0)
@@ -4485,10 +4564,12 @@ packages:
   /@gluestack-ui/pressable@0.1.14(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-SaGpalVO//RLpFFGibYBr+54tzcB8nUby4qBNvL2KGx+9HyMrMJFf75ov2aTqpXDrhEmtc8W4oRHd3fldvJIgw==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/utils': 0.1.12(react-native@0.73.5)(react@18.2.0)
@@ -4502,10 +4583,12 @@ packages:
   /@gluestack-ui/progress@0.1.13(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-M05p5UfMaBpY2pqAw5AY/rItF3Qh5mSXoJkxUQRNYbJ2UwFpvFLDXgIBpy2p6eDgOGeo7aWmsktifLztm+4uFQ==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/utils': 0.1.12(react-native@0.73.5)(react@18.2.0)
@@ -4517,10 +4600,12 @@ packages:
   /@gluestack-ui/provider@0.1.10(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-zAfwQM3AUETLL8Br1GUAsnOdn1RhF/Acd33DawbfFSH9GS/RXtgAgt/Fkh7ANirIxCAYmg5z8G9EN+egIbyuwA==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@react-native-aria/interactions': 0.2.11(react-native@0.73.5)(react@18.2.0)
@@ -4534,10 +4619,12 @@ packages:
   /@gluestack-ui/radio@0.1.25(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-Rl/5SW6bpT0n8P38G9IWp4/T5E1Ss8+Xct9jbXOsQyowJcH5Vh4P5pZ5eLh7qC9oLMJKwQMXKc921jUNCpcPXw==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/form-control': 0.1.16(react-native@0.73.5)(react@18.2.0)
@@ -4555,10 +4642,12 @@ packages:
   /@gluestack-ui/react-native-aria@0.1.5(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-6IaE4fcBaGMu3kSDKAoo1wE5qXcoKDX5YA14zzYzXN2d67/K9NYSjpoo/GbxDWZVl45X6Z9QLS/SBP7SmsPO+Q==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@react-native-aria/focus': 0.2.9(react-native@0.73.5)(react@18.2.0)
@@ -4570,10 +4659,12 @@ packages:
   /@gluestack-ui/select@0.1.24(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-iCDH0aoGYz2ymVbn0nnjynyQ1L+mV0YFOUc16gS+DTgfjSrXdjTSYwC0vI3fAoG+Sq30il08A+Y2vuYQHTflZg==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/form-control': 0.1.16(react-native@0.73.5)(react@18.2.0)
@@ -4588,10 +4679,12 @@ packages:
   /@gluestack-ui/slider@0.1.21(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-OZlMgzLnQllXylwpAzz99Bm4XLp9IQH3R+jE3nANIPLNV9DnJUGckCIbXnoarTqUk+F+8Q0xFVb9bSLF9ujAUQ==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/form-control': 0.1.16(react-native@0.73.5)(react@18.2.0)
@@ -4609,10 +4702,12 @@ packages:
   /@gluestack-ui/spinner@0.1.14(react@18.2.0):
     resolution: {integrity: sha512-6uLUvyJMhYR/sIMU/purfaYPqaKiLqnBi0n0LiWRsJNGDgENqdWVHMJpGTdWaFuCLxumZ7xnp0wG2KAdG9UyyQ==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       react: 18.2.0
@@ -4621,10 +4716,12 @@ packages:
   /@gluestack-ui/switch@0.1.19(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-abfFqpvQOF+ZYS516FGtiabxbxYE8edMRL1uFJ3LTCCU6cQ0xikAxajAZmc9mp8AWHmNHsAmuKPxjNLY3dTSsQ==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/form-control': 0.1.16(react-native@0.73.5)(react@18.2.0)
@@ -4640,10 +4737,12 @@ packages:
   /@gluestack-ui/tabs@0.1.14(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-QIAf+ACVFIBm5khxMPNwo4hGtr+uOdc18ygeyHmCOQaCBAhQN9zyscDg5PjBDNasHk7I9WJf5sVr2A4ZzRXybg==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/utils': 0.1.12(react-native@0.73.5)(react@18.2.0)
@@ -4657,10 +4756,12 @@ packages:
   /@gluestack-ui/textarea@0.1.20(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-BkpOwyGT2I12elofVzEs4YbFAxPc41CqUpNc6wNEyovLjPs6BuVzZ7b0U/0xf8C72kj3h5s02GWrkHHVd+Lztw==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/form-control': 0.1.16(react-native@0.73.5)(react@18.2.0)
@@ -4676,7 +4777,7 @@ packages:
     peerDependencies:
       '@gluestack-style/react': '>=1.0'
       '@types/react-native': '>=0.72'
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
       react-native: '>=0.72'
       react-native-svg: '>=13.4.0'
@@ -4684,7 +4785,11 @@ packages:
     peerDependenciesMeta:
       react:
         optional: true
+      react-dom:
+        optional: true
       react-native:
+        optional: true
+      react-native-web:
         optional: true
     dependencies:
       '@expo/html-elements': 0.9.1
@@ -4733,10 +4838,12 @@ packages:
   /@gluestack-ui/toast@1.0.4(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-GVEESsSl567OR/0JlVTuivK6G1EgfEC7N+CAuH6lx+s87qXcOMXeFAgltp6Mxl8g0g5hTPLWrDts2qQLzqwFOA==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/hooks': 0.1.11(react@18.2.0)
@@ -4752,10 +4859,12 @@ packages:
   /@gluestack-ui/tooltip@0.1.26(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-3QHLV4T3Thfo7pkjmZzS051jf4pVguiR28kpCoj7/vsBxnFo3jT6VNv7cVUy9rVvB2lh1EKZyb33THB0DmEeeg==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/hooks': 0.1.11(react@18.2.0)
@@ -4772,10 +4881,12 @@ packages:
   /@gluestack-ui/transitions@0.1.10(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-oOwYAmbebAowDCDZyRdGwhK2of46b642OZQxBBkln/BX7YEvY4PhQIfup0HUCG9YA5IzlQnw0iwqREbaVNKIgA==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@gluestack-ui/overlay': 0.1.12(react-native@0.73.5)(react@18.2.0)
@@ -4790,10 +4901,12 @@ packages:
   /@gluestack-ui/utils@0.1.12(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-OhOkljhr7foCUJP//8LwMN3EX4/pniFWmQpk1yDJMQL9DaTJbP7s3HsnTM7UzH2kp9DR1Utoz9Y9WscH3ajLpQ==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@react-native-aria/focus': 0.2.9(react-native@0.73.5)(react@18.2.0)
@@ -6079,26 +6192,27 @@ packages:
       - debug
     dev: false
 
-  /@irys/query@0.0.1:
-    resolution: {integrity: sha512-7TCyR+Qn+F54IQQx5PlERgqNwgIQik8hY55iZl/silTHhCo1MI2pvx5BozqPUVCc8/KqRsc2nZd8Bc29XGUjRQ==}
+  /@irys/query@0.0.3:
+    resolution: {integrity: sha512-M5njzHfda496dyXQUKlrfC3MoBc+sDrG8GFOuWM/JgMhOWpOVU78nIdL00KAaxsVAYqKTp78llCHOM1Q91XhyA==}
     engines: {node: '>=16.10.0'}
     dependencies:
       async-retry: 1.3.3
-      axios: 1.6.2
+      axios: 1.6.7
     transitivePeerDependencies:
       - debug
     dev: false
 
-  /@irys/sdk@0.0.4:
-    resolution: {integrity: sha512-H49hnWLoLa1HLTVHnm12F/ZwD5iMsV6DEGKK9gte8EBH7tJ/EmUU0RZOLGalaitHAyuoMk79Bg4Bkn7zJFdPGA==}
+  /@irys/sdk@0.1.16(arweave@1.14.4):
+    resolution: {integrity: sha512-r2Y/c1s1WpHmEBcC3UrAy6w6Sny9XMhTcIvcnjvegee0WTqERskuUmsivL/mfouYhzoymzLAQnwsozhYrnCErw==}
     engines: {node: '>=16.10.0'}
     hasBin: true
     dependencies:
+      '@aptos-labs/ts-sdk': 1.10.0
       '@ethersproject/bignumber': 5.7.0
       '@ethersproject/contracts': 5.7.0
       '@ethersproject/providers': 5.7.2
       '@ethersproject/wallet': 5.7.0
-      '@irys/query': 0.0.1
+      '@irys/query': 0.0.3
       '@near-js/crypto': 0.0.3
       '@near-js/keystores-browser': 0.0.3
       '@near-js/providers': 0.0.4
@@ -6106,10 +6220,9 @@ packages:
       '@solana/web3.js': 1.87.6
       '@supercharge/promise-pool': 3.1.0
       algosdk: 1.24.1
-      aptos: 1.8.5
-      arbundles: 0.10.0
+      arbundles: 0.10.0(arweave@1.14.4)
       async-retry: 1.3.3
-      axios: 1.6.2
+      axios: 1.6.7
       base64url: 3.0.1
       bignumber.js: 9.1.2
       bs58: 5.0.0
@@ -6119,6 +6232,7 @@ packages:
       js-sha256: 0.9.0
       mime-types: 2.1.35
       near-seed-phrase: 0.2.0
+      tslib: 2.6.2
     transitivePeerDependencies:
       - arweave
       - bufferutil
@@ -6437,9 +6551,11 @@ packages:
     resolution: {integrity: sha512-LtTD06eyz/Ge23FAR6BY+i9Gsgr/ZgxE12FneML8LrZGcZOSPN2Ojz3N2eJaTiA50kqoeqrGCaYJja8KgKpL6Q==}
     peerDependencies:
       nativewind: ^2.0.0
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-native: '*'
     peerDependenciesMeta:
+      nativewind:
+        optional: true
       react:
         optional: true
       react-native:
@@ -6453,7 +6569,7 @@ packages:
   /@legendapp/tools@2.0.1(react@18.2.0):
     resolution: {integrity: sha512-Kxt0HWvWElRK6oybHRzcYxdgaKGwuaiRNreS7usW7QuHXRIHaH4yMcW2YNRG4DHE5fpefv+Bno/BohQcCE4FaA==}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
     peerDependenciesMeta:
       react:
         optional: true
@@ -6467,7 +6583,7 @@ packages:
       '@apollo/client': ^3.9.5
       '@faker-js/faker': ^7.6.0
       jest-mock-extended: ^3.0.5
-      react: ^18.2.0
+      react: ^18.2.0 || 18.2.0
     peerDependenciesMeta:
       '@faker-js/faker':
         optional: true
@@ -6565,7 +6681,7 @@ packages:
     peerDependencies:
       '@types/react': ^18.0.0
       '@xmtp/react-sdk': ^3.0.0
-      react: ^18.2.0
+      react: ^18.2.0 || 18.2.0
     peerDependenciesMeta:
       '@types/react':
         optional: true
@@ -6600,7 +6716,7 @@ packages:
     resolution: {integrity: sha512-JyRUS+GmLR7VMEVXBR0UYkyal7KFDgJLt4CaVIyDIrnXmQBjWEZRfz29vt5EM6EliXOfF96Kmaja7hontD3LHQ==}
     peerDependencies:
       '@types/react': ^18.0.0
-      react: ^18.2.0
+      react: ^18.2.0 || 18.2.0
     peerDependenciesMeta:
       '@types/react':
         optional: true
@@ -7015,7 +7131,7 @@ packages:
   /@metamask/sdk@0.14.3(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-BYLs//nY2wioVSih78gOQI6sLIYY3vWkwVqXGYUgkBV+bi49bv+9S0m+hZ2cwiRaxfMYtKs0KvhAQ8weiYwDrg==}
     peerDependencies:
-      react: ^18.2.0
+      react: ^18.2.0 || 18.2.0
       react-native: '*'
     peerDependenciesMeta:
       react:
@@ -7697,7 +7813,7 @@ packages:
   /@react-aria/checkbox@3.2.1(react@18.2.0):
     resolution: {integrity: sha512-XnypnlVIfhB3CD7eSjSds8hNkzHgnhu0t48I1D0jYdL1O6tQC4UytPdIqlemRYBVHDloZkWerbjenpHnxhv8iA==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1
+      react: ^16.8.0 || ^17.0.0-rc.1 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -7715,10 +7831,12 @@ packages:
   /@react-aria/dialog@3.5.12(react@18.2.0):
     resolution: {integrity: sha512-7UJR/h/Y364u6Ltpw0bT51B48FybTuIBacGpEJN5IxZlpxvQt0KQcBDiOWfAa/GQogw4B5hH6agaOO0nJcP49Q==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@react-aria/focus': 3.16.2(react@18.2.0)
@@ -7733,7 +7851,7 @@ packages:
   /@react-aria/focus@3.16.2(react@18.2.0):
     resolution: {integrity: sha512-Rqo9ummmgotESfypzFjI3uh58yMpL+E+lJBbQuXkBM0u0cU2YYzu0uOrFrq3zcHk997udZvq1pGK/R+2xk9B7g==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -7749,7 +7867,7 @@ packages:
   /@react-aria/form@3.0.3(react@18.2.0):
     resolution: {integrity: sha512-5Q2BHE4TTPDzGY2npCzpRRYshwWUb3SMUA/Cbz7QfEtBk+NYuVaq3KjvqLqgUUdyKtqLZ9Far0kIAexloOC4jw==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -7765,7 +7883,7 @@ packages:
   /@react-aria/i18n@3.10.2(react@18.2.0):
     resolution: {integrity: sha512-Z1ormoIvMOI4mEdcFLYsoJy9w/EzBdBmgfLP+S/Ah+1xwQOXpgwZxiKOhYHpWa0lf6hkKJL34N9MHJvCJ5Crvw==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -7784,7 +7902,7 @@ packages:
   /@react-aria/interactions@3.21.1(react@18.2.0):
     resolution: {integrity: sha512-AlHf5SOzsShkHfV8GLLk3v9lEmYqYHURKcXWue0JdYbmquMRkUsf/+Tjl1+zHVAQ8lKqRnPYbTmc4AcZbqxltw==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -7799,7 +7917,7 @@ packages:
   /@react-aria/label@3.7.6(react@18.2.0):
     resolution: {integrity: sha512-ap9iFS+6RUOqeW/F2JoNpERqMn1PvVIo3tTMrJ1TY1tIwyJOxdCBRgx9yjnPBnr+Ywguep+fkPNNi/m74+tXVQ==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -7813,10 +7931,12 @@ packages:
   /@react-aria/menu@3.13.1(react@18.2.0):
     resolution: {integrity: sha512-jF80YIcvD16Fgwm5pj7ViUE3Dj7z5iewQixLaFVdvpgfyE58SD/ZVU9/JkK5g/03DYM0sjpUKZGkdFxxw8eKnw==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@react-aria/focus': 3.16.2(react@18.2.0)
@@ -7838,10 +7958,12 @@ packages:
   /@react-aria/overlays@3.21.1(react@18.2.0):
     resolution: {integrity: sha512-djEBDF+TbIIOHWWNpdm19+z8xtY8U+T+wKVQg/UZ6oWnclSqSWeGl70vu73Cg4HVBJ4hKf1SRx4Z/RN6VvH4Yw==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@react-aria/focus': 3.16.2(react@18.2.0)
@@ -7861,7 +7983,7 @@ packages:
   /@react-aria/radio@3.10.2(react@18.2.0):
     resolution: {integrity: sha512-CTUTR+qt3BLjmyQvKHZuVm+1kyvT72ZptOty++sowKXgJApTLdjq8so1IpaLAr8JIfzqD5I4tovsYwIQOX8log==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -7882,10 +8004,12 @@ packages:
   /@react-aria/selection@3.17.5(react@18.2.0):
     resolution: {integrity: sha512-gO5jBUkc7WdkiFMlWt3x9pTSuj3Yeegsxfo44qU5NPlKrnGtPRZDWrlACNgkDHu645RNNPhlyoX0C+G8mUg1xA==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@react-aria/focus': 3.16.2(react@18.2.0)
@@ -7901,7 +8025,7 @@ packages:
   /@react-aria/slider@3.7.6(react@18.2.0):
     resolution: {integrity: sha512-ZeZhyHzhk9gxGuThPKgX2K3RKsxPxsFig1iYoJvqP8485NtHYQIPht2YcpEKA9siLxGF0DR9VCfouVhSoW0AEA==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -7922,7 +8046,7 @@ packages:
     resolution: {integrity: sha512-0gKkgDYdnq1w+ey8KzG9l+H5Z821qh9vVjztk55rUg71vTk/Eaebeir+WtzcLLwTjw3m/asIjx8Y59y1lJZhBw==}
     engines: {node: '>= 12'}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -7934,7 +8058,7 @@ packages:
   /@react-aria/toggle@3.10.2(react@18.2.0):
     resolution: {integrity: sha512-DgitscHWgI6IFgnvp2HcMpLGX/cAn+XX9kF5RJQbRQ9NqUgruU5cEEGSOLMrEJ6zXDa2xmOiQ+kINcyNhA+JLg==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -7951,7 +8075,7 @@ packages:
   /@react-aria/utils@3.23.2(react@18.2.0):
     resolution: {integrity: sha512-yznR9jJ0GG+YJvTMZxijQwVp+ahP66DY0apZf7X+dllyN+ByEDW+yaL1ewYPIpugxVzH5P8jhnBXsIyHKN411g==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -7967,7 +8091,7 @@ packages:
   /@react-aria/visually-hidden@3.8.10(react@18.2.0):
     resolution: {integrity: sha512-np8c4wxdbE7ZrMv/bnjwEfpX0/nkWy9sELEb0sK8n4+HJ+WycoXXrVxBUb9tXgL/GCx5ReeDQChjQWwajm/z3A==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -8105,6 +8229,8 @@ packages:
       react-native: '*'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
       react-native:
         optional: true
@@ -8802,7 +8928,7 @@ packages:
   /@react-stately/calendar@3.4.4(react@18.2.0):
     resolution: {integrity: sha512-f9ZOd096gGGD+3LmU1gkmfqytGyQtrgi+Qjn+70GbM2Jy65pwOR4I9YrobbmeAFov5Tff13mQEa0yqWvbcDLZQ==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -8818,7 +8944,7 @@ packages:
   /@react-stately/checkbox@3.6.3(react@18.2.0):
     resolution: {integrity: sha512-hWp0GXVbMI4sS2NbBjWgOnHNrRqSV4jeftP8zc5JsIYRmrWBUZitxluB34QuVPzrBO29bGsF0GTArSiQZt6BWw==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -8834,7 +8960,7 @@ packages:
   /@react-stately/collections@3.10.5(react@18.2.0):
     resolution: {integrity: sha512-k8Q29Nnvb7iAia1QvTanZsrWP2aqVNBy/1SlE6kLL6vDqtKZC+Esd1SDLHRmIcYIp5aTdfwIGd0NuiRQA7a81Q==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -8847,7 +8973,7 @@ packages:
   /@react-stately/combobox@3.8.2(react@18.2.0):
     resolution: {integrity: sha512-f+IHuFW848VoMbvTfSakn2WIh2urDxO355LrKxnisXPCkpQHpq3lvT2mJtKJwkPxjAy7xPjpV8ejgga2R6p53Q==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -8867,7 +8993,7 @@ packages:
   /@react-stately/data@3.11.2(react@18.2.0):
     resolution: {integrity: sha512-yhK2upk2WbJeiLBRWHrh/4G2CvmmozCzoivLaRAPYu53m1J3MyzVGCLJgnZMbMZvAbNcYWZK6IzO6VqZ2y1fOw==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -8880,7 +9006,7 @@ packages:
   /@react-stately/datepicker@3.9.2(react@18.2.0):
     resolution: {integrity: sha512-Z6FrK6Af7R5BizqHhJFCj3Hn32mg5iLSDdEgFQAuO043guOXUKFUAnbxfbQUjL6PGE6QwWMfQD7PPGebHn9Ifw==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -8899,7 +9025,7 @@ packages:
   /@react-stately/dnd@3.2.8(react@18.2.0):
     resolution: {integrity: sha512-oSo+2Bzum3Q1/d+3FuaDmpVHqqBB004tycuQDDFtad3N1BKm+fNfmslRK1ioLkPLK4sm1130V+BZBY3JXLe80A==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -8919,7 +9045,7 @@ packages:
   /@react-stately/form@3.0.1(react@18.2.0):
     resolution: {integrity: sha512-T1Ul2Ou0uE/S4ECLcGKa0OfXjffdjEHfUFZAk7OZl0Mqq/F7dl5WpoLWJ4d4IyvZzGO6anFNenP+vODWbrF3NA==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -8932,7 +9058,7 @@ packages:
   /@react-stately/grid@3.8.5(react@18.2.0):
     resolution: {integrity: sha512-KCzi0x0p1ZKK+OptonvJqMbn6Vlgo6GfOIlgcDd0dNYDP8TJ+3QFJAFre5mCr7Fubx7LcAOio4Rij0l/R8fkXQ==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -8948,7 +9074,7 @@ packages:
   /@react-stately/list@3.10.3(react@18.2.0):
     resolution: {integrity: sha512-Ul8el0tQy2Ucl3qMQ0fiqdJ874W1ZNjURVSgSxN+pGwVLNBVRjd6Fl7YwZFCXER2YOlzkwg+Zqozf/ZlS0EdXA==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -8964,7 +9090,7 @@ packages:
   /@react-stately/menu@3.6.1(react@18.2.0):
     resolution: {integrity: sha512-3v0vkTm/kInuuG8jG7jbxXDBnMQcoDZKWvYsBQq7+POt0LmijbLdbdZPBoz9TkZ3eo/OoP194LLHOaFTQyHhlw==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -8979,7 +9105,7 @@ packages:
   /@react-stately/numberfield@3.9.1(react@18.2.0):
     resolution: {integrity: sha512-btBIcBEfSVCUm6NwJrMrMygoIu/fQGazzD0RhF7PNsfvkFiWn+TSOyQqSXcsUJVOnBfoS/dVWj6r57KA7zl3FA==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -8995,7 +9121,7 @@ packages:
   /@react-stately/overlays@3.6.5(react@18.2.0):
     resolution: {integrity: sha512-U4rCFj6TPJPXLUvYXAcvh+yP/CO2W+7f0IuqP7ZZGE+Osk9qFkT+zRK5/6ayhBDFpmueNfjIEAzT9gYPQwNHFw==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9009,7 +9135,7 @@ packages:
   /@react-stately/radio@3.10.2(react@18.2.0):
     resolution: {integrity: sha512-JW5ZWiNMKcZvMTsuPeWJQLHXD5rlqy7Qk6fwUx/ZgeibvMBW/NnW19mm2+IMinzmbtERXvR6nsiA837qI+4dew==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9025,7 +9151,7 @@ packages:
   /@react-stately/searchfield@3.5.1(react@18.2.0):
     resolution: {integrity: sha512-9A8Wghx1avRHhMpNH1Nj+jFfiF1bhsff2GEC5PZgWYzhCykw3G5bywn3JAuUS4kh7Vpqhbu4KpHAhmWPSv4B/Q==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9039,7 +9165,7 @@ packages:
   /@react-stately/select@3.6.2(react@18.2.0):
     resolution: {integrity: sha512-duOxdHKol93h6Ew6fap6Amz+zngoERKZLSKVm/8I8uaBgkoBhEeTFv7mlpHTgINxymMw3mMrvy6GL/gfKFwkqg==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9056,7 +9182,7 @@ packages:
   /@react-stately/selection@3.14.3(react@18.2.0):
     resolution: {integrity: sha512-d/t0rIWieqQ7wjLoMoWnuHEUSMoVXxkPBFuSlJF3F16289FiQ+b8aeKFDzFTYN7fFD8rkZTnpuE4Tcxg3TmA+w==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9071,7 +9197,7 @@ packages:
   /@react-stately/slider@3.5.2(react@18.2.0):
     resolution: {integrity: sha512-ntH3NLRG+AwVC7q4Dx9DcmMkMh9vmHjHNXAgaoqNjhvwfSIae7sQ69CkVe6XeJjIBy6LlH81Kgapz+ABe5a1ZA==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9086,7 +9212,7 @@ packages:
   /@react-stately/table@3.11.6(react@18.2.0):
     resolution: {integrity: sha512-34YsfOILXusj3p6QNcKEaDWVORhM6WEhwPSLCZlkwAJvkxuRQFdih5rQKoIDc0uV5aZsB6bYBqiFhnjY0VERhw==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9106,7 +9232,7 @@ packages:
   /@react-stately/tabs@3.6.4(react@18.2.0):
     resolution: {integrity: sha512-WZJgMBqzLgN88RN8AxhY4aH1+I+4w1qQA0Lh3LRSDegaytd+NHixCWaP3IPjePgCB5N1UsPe96Xglw75zjHmDg==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9121,7 +9247,7 @@ packages:
   /@react-stately/toggle@3.7.2(react@18.2.0):
     resolution: {integrity: sha512-SHCF2btcoK57c4lyhucRbyPBAFpp0Pdp0vcPdn3hUgqbu6e5gE0CwG/mgFmZRAQoc7PRc7XifL0uNw8diJJI0Q==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9135,7 +9261,7 @@ packages:
   /@react-stately/tooltip@3.4.7(react@18.2.0):
     resolution: {integrity: sha512-ACtRgBQ8rphBtsUaaxvEAM0HHN9PvMuyvL0vUHd7jvBDCVZJ6it1BKu9SBKjekBkoBOw9nemtkplh9R2CA6V8Q==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9149,7 +9275,7 @@ packages:
   /@react-stately/tree@3.7.6(react@18.2.0):
     resolution: {integrity: sha512-y8KvEoZX6+YvqjNCVGS3zA/BKw4D3XrUtUKIDme3gu5Mn6z97u+hUXKdXVCniZR7yvV3fHAIXwE5V2K8Oit4aw==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9165,7 +9291,7 @@ packages:
   /@react-stately/utils@3.9.1(react@18.2.0):
     resolution: {integrity: sha512-yzw75GE0iUWiyps02BOAPTrybcsMIxEJlzXqtvllAb01O9uX5n0i3X+u2eCpj2UoDF4zS08Ps0jPgWxg8xEYtA==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9177,7 +9303,7 @@ packages:
   /@react-types/button@3.9.2(react@18.2.0):
     resolution: {integrity: sha512-EnPTkGHZRtiwAoJy5q9lDjoG30bEzA/qnvKG29VVXKYAGeqY2IlFs1ypmU+z1X/CpJgPcG3I5cakM7yTVm3pSg==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9189,7 +9315,7 @@ packages:
   /@react-types/calendar@3.4.4(react@18.2.0):
     resolution: {integrity: sha512-hV1Thmb/AES5OmfPvvmyjSkmsEULjiDfA7Yyy70L/YKuSNKb7Su+Bf2VnZuDW3ec+GxO4JJNlpJ0AkbphWBvcg==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9202,7 +9328,7 @@ packages:
   /@react-types/checkbox@3.7.1(react@18.2.0):
     resolution: {integrity: sha512-kuGqjQFex0As/3gfWyk+e9njCcad/ZdnYLLiNvhlk15730xfa0MmnOdpqo9jfuFSXBjOcpxoofvEhvrRMtEdUA==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9214,7 +9340,7 @@ packages:
   /@react-types/combobox@3.10.1(react@18.2.0):
     resolution: {integrity: sha512-XMno1rgVRNta49vf5nV7VJpVSVAV20tt79t618gG1qRKH5Kt2Cy8lz2fQ5vHG6UTv/6jUOvU8g5Pc93sLaTmoA==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9226,7 +9352,7 @@ packages:
   /@react-types/datepicker@3.7.2(react@18.2.0):
     resolution: {integrity: sha512-zThqFAdhQL1dqyVDsDSSTdfCjoD6634eyg/B0ZJfQxcLUR/5pch3v/gxBhbyCVDGMNHRWUWIJvY9DVOepuoSug==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9241,7 +9367,7 @@ packages:
   /@react-types/dialog@3.5.8(react@18.2.0):
     resolution: {integrity: sha512-RX8JsMvty8ADHRqVEkppoynXLtN4IzUh8d5z88UEBbcvWKlHfd6bOBQjQcBH3AUue5wjfpPIt6brw2VzgBY/3Q==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9254,7 +9380,7 @@ packages:
   /@react-types/grid@3.2.4(react@18.2.0):
     resolution: {integrity: sha512-sDVoyQcH7MoGdx5nBi5ZOU/mVFBt9YTxhvr0PZ97dMdEHZtJC1w9SuezwWS34f50yb8YAXQRTICbZYcK4bAlDA==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9266,7 +9392,7 @@ packages:
   /@react-types/menu@3.9.7(react@18.2.0):
     resolution: {integrity: sha512-K6KhloJVoGsqwkdeez72fkNI9dfrmLI/sNrB4XuOKo2crDQ/eyZYWyJmzz8giz/tHME9w774k487rVoefoFh5w==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9279,7 +9405,7 @@ packages:
   /@react-types/numberfield@3.8.1(react@18.2.0):
     resolution: {integrity: sha512-GaCjLQgXUGCt40SLjKk3/COMWFlN2vV/3Xs3VSLAEdFZpk99b+Ik1oR21+7ZP5/iMHuQDc1MJRWdFfIjxCvVDQ==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9291,7 +9417,7 @@ packages:
   /@react-types/overlays@3.8.5(react@18.2.0):
     resolution: {integrity: sha512-4D7EEBQigD/m8hE68Ys8eloyyZFHHduqykSIgINJ0edmo0jygRbWlTwuhWFR9USgSP4dK54duN0Mvq0m4HEVEw==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9303,7 +9429,7 @@ packages:
   /@react-types/radio@3.7.1(react@18.2.0):
     resolution: {integrity: sha512-Zut3rN1odIUBLZdijeyou+UqsLeRE76d9A+npykYGu29ndqmo3w4sLn8QeQcdj1IR71ZnG0pW2Y2BazhK5XrrQ==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9315,7 +9441,7 @@ packages:
   /@react-types/searchfield@3.5.3(react@18.2.0):
     resolution: {integrity: sha512-gBfsT1WpY8UIb74yyYmnjiHpVasph2mdmGj9i8cGF2HUYwx5p+Fr85mtCGDph0uirvRoM5ExMp4snD+ueNAVCg==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9328,7 +9454,7 @@ packages:
   /@react-types/select@3.9.2(react@18.2.0):
     resolution: {integrity: sha512-fGFrunednY3Pq/BBwVOf87Fsuyo/SlevL0wFIE9OOl2V5NXVaTY7/7RYA8hIOHPzmvsMbndy419BEudiNGhv4A==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9340,7 +9466,7 @@ packages:
   /@react-types/shared@3.22.1(react@18.2.0):
     resolution: {integrity: sha512-PCpa+Vo6BKnRMuOEzy5zAZ3/H5tnQg1e80khMhK2xys0j6ZqzkgQC+fHMNZ7VDFNLqqNMj/o0eVeSBDh2POjkw==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9351,7 +9477,7 @@ packages:
   /@react-types/slider@3.7.1(react@18.2.0):
     resolution: {integrity: sha512-FKO3YZYdrBs00XbBW5acP+0L1cCdevl/uRJiXbnLpGysO5PrSFIRS7Wlv4M7ztf6gT7b1Ao4FNC9crbxBr6BzA==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9363,7 +9489,7 @@ packages:
   /@react-types/table@3.9.3(react@18.2.0):
     resolution: {integrity: sha512-Hs/pMbxJdga2zBol4H5pV1FVIiRjCuSTXst6idJjkctanTexR4xkyrtBwl+rdLNoGwQ2pGii49vgklc5bFK7zA==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9376,7 +9502,7 @@ packages:
   /@react-types/tabs@3.3.5(react@18.2.0):
     resolution: {integrity: sha512-6NTSZBOWekCtApdZrhu5tHhE/8q52oVohQN+J5T7shAXd6ZAtu8PABVR/nH4BWucc8FL0OUajRqunqzQMU13gA==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9388,7 +9514,7 @@ packages:
   /@react-types/textfield@3.9.1(react@18.2.0):
     resolution: {integrity: sha512-JBHY9M2CkL6xFaGSfWmUJVu3tEK09FaeB1dU3IEh6P41xxbFnPakYHSSAdnwMXBtXPoSHIVsUBickW/pjgfe5g==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9400,7 +9526,7 @@ packages:
   /@react-types/tooltip@3.4.7(react@18.2.0):
     resolution: {integrity: sha512-rV4HZRQxLRNhe24yATOxnFQtGRUmsR7mqxMupXCmd1vrw8h+rdKlQv1zW2q8nALAKNmnRXZJHxYQ1SFzb98fgg==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9661,6 +9787,110 @@ packages:
       estree-walker: 2.0.2
       picomatch: 2.3.1
     dev: true
+
+  /@rollup/rollup-android-arm-eabi@4.13.0:
+    resolution: {integrity: sha512-5ZYPOuaAqEH/W3gYsRkxQATBW3Ii1MfaT4EQstTnLKViLi2gLSQmlmtTpGucNP3sXEpOiI5tdGhjdE111ekyEg==}
+    cpu: [arm]
+    os: [android]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-android-arm64@4.13.0:
+    resolution: {integrity: sha512-BSbaCmn8ZadK3UAQdlauSvtaJjhlDEjS5hEVVIN3A4bbl3X+otyf/kOJV08bYiRxfejP3DXFzO2jz3G20107+Q==}
+    cpu: [arm64]
+    os: [android]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-darwin-arm64@4.13.0:
+    resolution: {integrity: sha512-Ovf2evVaP6sW5Ut0GHyUSOqA6tVKfrTHddtmxGQc1CTQa1Cw3/KMCDEEICZBbyppcwnhMwcDce9ZRxdWRpVd6g==}
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-darwin-x64@4.13.0:
+    resolution: {integrity: sha512-U+Jcxm89UTK592vZ2J9st9ajRv/hrwHdnvyuJpa5A2ngGSVHypigidkQJP+YiGL6JODiUeMzkqQzbCG3At81Gg==}
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-linux-arm-gnueabihf@4.13.0:
+    resolution: {integrity: sha512-8wZidaUJUTIR5T4vRS22VkSMOVooG0F4N+JSwQXWSRiC6yfEsFMLTYRFHvby5mFFuExHa/yAp9juSphQQJAijQ==}
+    cpu: [arm]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-linux-arm64-gnu@4.13.0:
+    resolution: {integrity: sha512-Iu0Kno1vrD7zHQDxOmvweqLkAzjxEVqNhUIXBsZ8hu8Oak7/5VTPrxOEZXYC1nmrBVJp0ZcL2E7lSuuOVaE3+w==}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-linux-arm64-musl@4.13.0:
+    resolution: {integrity: sha512-C31QrW47llgVyrRjIwiOwsHFcaIwmkKi3PCroQY5aVq4H0A5v/vVVAtFsI1nfBngtoRpeREvZOkIhmRwUKkAdw==}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-linux-riscv64-gnu@4.13.0:
+    resolution: {integrity: sha512-Oq90dtMHvthFOPMl7pt7KmxzX7E71AfyIhh+cPhLY9oko97Zf2C9tt/XJD4RgxhaGeAraAXDtqxvKE1y/j35lA==}
+    cpu: [riscv64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-linux-x64-gnu@4.13.0:
+    resolution: {integrity: sha512-yUD/8wMffnTKuiIsl6xU+4IA8UNhQ/f1sAnQebmE/lyQ8abjsVyDkyRkWop0kdMhKMprpNIhPmYlCxgHrPoXoA==}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-linux-x64-musl@4.13.0:
+    resolution: {integrity: sha512-9RyNqoFNdF0vu/qqX63fKotBh43fJQeYC98hCaf89DYQpv+xu0D8QFSOS0biA7cGuqJFOc1bJ+m2rhhsKcw1hw==}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-win32-arm64-msvc@4.13.0:
+    resolution: {integrity: sha512-46ue8ymtm/5PUU6pCvjlic0z82qWkxv54GTJZgHrQUuZnVH+tvvSP0LsozIDsCBFO4VjJ13N68wqrKSeScUKdA==}
+    cpu: [arm64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-win32-ia32-msvc@4.13.0:
+    resolution: {integrity: sha512-P5/MqLdLSlqxbeuJ3YDeX37srC8mCflSyTrUsgbU1c/U9j6l2g2GiIdYaGD9QjdMQPMSgYm7hgg0551wHyIluw==}
+    cpu: [ia32]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rollup/rollup-win32-x64-msvc@4.13.0:
+    resolution: {integrity: sha512-UKXUQNbO3DOhzLRwHSpa0HnhhCgNODvfoPWv2FCXme8N/ANFfhIPMGuOT+QuKd16+B5yxZ0HdpNlqPvTMS1qfw==}
+    cpu: [x64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
 
   /@rushstack/eslint-patch@1.6.0:
     resolution: {integrity: sha512-2/U3GXA6YiPYQDLGwtGlnNgKYBSwCFIHf8Y9LUY5VATHdtbLlU0Y1R3QoBnT0aB4qv/BEiVVsj7LJXoQCgJ2vA==}
@@ -9950,7 +10180,7 @@ packages:
   /@tanstack/react-query@5.18.1(react@18.2.0):
     resolution: {integrity: sha512-PdI07BbsahZ+04PxSuDQsQvBWe008eWFk/YYWzt8fvzt2sALUM0TpAJa/DFpqa7+SSo7j1EQR6Jx6znXNHyaXw==}
     peerDependencies:
-      react: ^18.0.0
+      react: ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -9976,10 +10206,12 @@ packages:
     resolution: {integrity: sha512-sXOGON+WNTh3MLE9rve97ftaZukN3oNf2KjDy7YTx6hcTO2uuLHuCGynMDhFwGw/jYf4OJ2Qk0i4i79qMNNkyw==}
     engines: {node: '>=12'}
     peerDependencies:
-      react: ^18.0.0
+      react: ^18.0.0 || 18.2.0
       react-dom: ^18.0.0
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@babel/runtime': 7.23.9
@@ -10654,7 +10886,7 @@ packages:
   /@ungap/structured-clone@1.2.0:
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
 
-  /@vitejs/plugin-react@4.2.0(vite@4.5.0):
+  /@vitejs/plugin-react@4.2.0(vite@5.1.6):
     resolution: {integrity: sha512-+MHTH/e6H12kRp5HUkzOGqPMksezRMmW+TNzlh/QXfI8rRf6l2Z2yH/v12no1UvTwhZgEDMuQ7g7rrfMseU6FQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -10665,7 +10897,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.23.3(@babel/core@7.23.3)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.0
-      vite: 4.5.0(@types/node@18.18.12)
+      vite: 5.1.6(@types/node@18.18.12)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -11396,7 +11628,7 @@ packages:
     resolution: {integrity: sha512-xaMQo5N82mSyC551Ktztp+N8aN/kMdZQ6qu/8BJCCErigWV1XXzOHCZr1tgONQHRFjnasmRdqsaTdiGZNatCbg==}
     engines: {node: '>=18'}
     peerDependencies:
-      react: '>=16.14'
+      react: '>=16.14 || 18.2.0'
     peerDependenciesMeta:
       react:
         optional: true
@@ -11780,20 +12012,7 @@ packages:
       - debug
     dev: true
 
-  /aptos@1.8.5:
-    resolution: {integrity: sha512-iQxliWesNHjGQ5YYXCyss9eg4+bDGQWqAZa73vprqGQ9tungK0cRjUI2fmnp63Ed6UG6rurHrL+b0ckbZAOZZQ==}
-    engines: {node: '>=11.0.0'}
-    dependencies:
-      '@noble/hashes': 1.1.3
-      '@scure/bip39': 1.1.0
-      axios: 0.27.2
-      form-data: 4.0.0
-      tweetnacl: 1.0.3
-    transitivePeerDependencies:
-      - debug
-    dev: false
-
-  /arbundles@0.10.0:
+  /arbundles@0.10.0(arweave@1.14.4):
     resolution: {integrity: sha512-Prbkjb0RSR6ToXPaBFhsBiMYSq78vHWbG/Zzy1tALRGvnKYlNLq93cqtmCNHqaYP6YCBZZV05ZpbO5C6269saw==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
@@ -11811,7 +12030,7 @@ packages:
     optionalDependencies:
       '@randlabs/myalgo-connect': 1.4.2
       algosdk: 1.24.1
-      arweave-stream-tx: 1.2.2(arweave@1.11.8)
+      arweave-stream-tx: 1.2.2(arweave@1.14.4)
       multistream: 4.1.0
       tmp-promise: 3.0.3
     transitivePeerDependencies:
@@ -11856,9 +12075,7 @@ packages:
   /arconnect@0.4.2:
     resolution: {integrity: sha512-Jkpd4QL3TVqnd3U683gzXmZUVqBUy17DdJDuL/3D9rkysLgX6ymJ2e+sR+xyZF5Rh42CBqDXWNMmCjBXeP7Gbw==}
     dependencies:
-      arweave: 1.11.9
-    transitivePeerDependencies:
-      - debug
+      arweave: 1.14.4
 
   /arg@4.1.3:
     resolution: {integrity: sha512-58S9QDqG0Xx27YwPSt9fJxivjYl432YCwfDMfZ+71RAqUrZef7LrKQZ3LHLOwCS4FLNBplP533Zx895SeOCHvA==}
@@ -12012,6 +12229,20 @@ packages:
       exponential-backoff: 3.1.1
     optional: true
 
+  /arweave-stream-tx@1.2.2(arweave@1.14.4):
+    resolution: {integrity: sha512-bNt9rj0hbAEzoUZEF2s6WJbIz8nasZlZpxIw03Xm8fzb9gRiiZlZGW3lxQLjfc9Z0VRUWDzwtqoYeEoB/JDToQ==}
+    requiresBuild: true
+    peerDependencies:
+      arweave: ^1.10.0
+    peerDependenciesMeta:
+      arweave:
+        optional: true
+    dependencies:
+      arweave: 1.14.4
+      exponential-backoff: 3.1.1
+    dev: false
+    optional: true
+
   /arweave@1.11.8:
     resolution: {integrity: sha512-58ODeNPIC4OjaOCl2bXjKbOFGsiVZFs+DkQg3BvQGvFWNqw1zTJ4Jp01xGUz+GbdOaDyJcCC0g3l0HwdJfFPyw==}
     engines: {node: '>=12'}
@@ -12037,6 +12268,15 @@ packages:
       util: 0.12.5
     transitivePeerDependencies:
       - debug
+
+  /arweave@1.14.4:
+    resolution: {integrity: sha512-tmqU9fug8XAmFETYwgUhLaD3WKav5DaM4p1vgJpEj/Px2ORPPMikwnSySlFymmL2qgRh2ZBcZsg11+RXPPGLsA==}
+    engines: {node: '>=16.15.0'}
+    dependencies:
+      arconnect: 0.4.2
+      asn1.js: 5.4.1
+      base64-js: 1.5.1
+      bignumber.js: 9.1.2
 
   /asap@2.0.6:
     resolution: {integrity: sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==}
@@ -12235,6 +12475,16 @@ packages:
     resolution: {integrity: sha512-7i24Ri4pmDRfJTR7LDBhsOTtcm+9kjX5WiY1X3wIisx6G9So3pfMkEiU7emUBe46oceVImccTEM3k6C5dbVW8A==}
     dependencies:
       follow-redirects: 1.15.3
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
+  /axios@1.6.7:
+    resolution: {integrity: sha512-/hDJGff6/c7u0hDkvkGxR/oy6CbCs8ziCsC7SqmhjfozqiJGc8Z11wrv9z9lYfY4K8l+H9TpjcMDX0xOZmx+RA==}
+    dependencies:
+      follow-redirects: 1.15.6
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -12707,7 +12957,7 @@ packages:
       browserify-rsa: 4.1.0
       create-hash: 1.2.0
       create-hmac: 1.1.7
-      elliptic: 6.5.4
+      elliptic: 6.5.5
       inherits: 2.0.4
       parse-asn1: 5.1.6
       readable-stream: 3.6.2
@@ -13399,12 +13649,14 @@ packages:
     engines: {node: '>=12.4'}
     peerDependencies:
       '@tanstack/react-query': '>=5.0.0'
-      react: 17.x || 18.x
+      react: 17.x || 18.x || 18.2.0
       react-dom: 17.x || 18.x
       viem: 2.x
       wagmi: 2.x
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@tanstack/react-query': 5.18.1(react@18.2.0)
@@ -13532,7 +13784,7 @@ packages:
     resolution: {integrity: sha512-mf+TCx8wWc9VpuxfP2ht0iSISLZnt0JgWlrOKZiNqyUZWnjIaCIVNQArMHnCZKfEYRg6IM7A+NeJoN8gf/Ws0A==}
     dependencies:
       bn.js: 4.12.0
-      elliptic: 6.5.4
+      elliptic: 6.5.5
     dev: true
 
   /create-hash@1.2.0:
@@ -14017,7 +14269,7 @@ packages:
     peerDependencies:
       '@types/react': '>=16'
       dexie: ^3.2 || ^4.0.1-alpha
-      react: '>=16'
+      react: '>=16 || 18.2.0'
     peerDependenciesMeta:
       react:
         optional: true
@@ -14485,34 +14737,35 @@ packages:
       es6-symbol: 3.1.3
     dev: true
 
-  /esbuild@0.18.20:
-    resolution: {integrity: sha512-ceqxoedUrcayh7Y7ZX6NdbbDzGROiyVBgC4PriJThBKSVPWnnFHZAkfI1lJT8QFkOwH4qOS2SJkS4wvpGl8BpA==}
+  /esbuild@0.19.12:
+    resolution: {integrity: sha512-aARqgq8roFBj054KvQr5f1sFu0D65G+miZRCuJyJ0G13Zwx7vRar5Zhn2tkQNzIXcBrNVsv/8stehpj+GAjgbg==}
     engines: {node: '>=12'}
     hasBin: true
     requiresBuild: true
     optionalDependencies:
-      '@esbuild/android-arm': 0.18.20
-      '@esbuild/android-arm64': 0.18.20
-      '@esbuild/android-x64': 0.18.20
-      '@esbuild/darwin-arm64': 0.18.20
-      '@esbuild/darwin-x64': 0.18.20
-      '@esbuild/freebsd-arm64': 0.18.20
-      '@esbuild/freebsd-x64': 0.18.20
-      '@esbuild/linux-arm': 0.18.20
-      '@esbuild/linux-arm64': 0.18.20
-      '@esbuild/linux-ia32': 0.18.20
-      '@esbuild/linux-loong64': 0.18.20
-      '@esbuild/linux-mips64el': 0.18.20
-      '@esbuild/linux-ppc64': 0.18.20
-      '@esbuild/linux-riscv64': 0.18.20
-      '@esbuild/linux-s390x': 0.18.20
-      '@esbuild/linux-x64': 0.18.20
-      '@esbuild/netbsd-x64': 0.18.20
-      '@esbuild/openbsd-x64': 0.18.20
-      '@esbuild/sunos-x64': 0.18.20
-      '@esbuild/win32-arm64': 0.18.20
-      '@esbuild/win32-ia32': 0.18.20
-      '@esbuild/win32-x64': 0.18.20
+      '@esbuild/aix-ppc64': 0.19.12
+      '@esbuild/android-arm': 0.19.12
+      '@esbuild/android-arm64': 0.19.12
+      '@esbuild/android-x64': 0.19.12
+      '@esbuild/darwin-arm64': 0.19.12
+      '@esbuild/darwin-x64': 0.19.12
+      '@esbuild/freebsd-arm64': 0.19.12
+      '@esbuild/freebsd-x64': 0.19.12
+      '@esbuild/linux-arm': 0.19.12
+      '@esbuild/linux-arm64': 0.19.12
+      '@esbuild/linux-ia32': 0.19.12
+      '@esbuild/linux-loong64': 0.19.12
+      '@esbuild/linux-mips64el': 0.19.12
+      '@esbuild/linux-ppc64': 0.19.12
+      '@esbuild/linux-riscv64': 0.19.12
+      '@esbuild/linux-s390x': 0.19.12
+      '@esbuild/linux-x64': 0.19.12
+      '@esbuild/netbsd-x64': 0.19.12
+      '@esbuild/openbsd-x64': 0.19.12
+      '@esbuild/sunos-x64': 0.19.12
+      '@esbuild/win32-arm64': 0.19.12
+      '@esbuild/win32-ia32': 0.19.12
+      '@esbuild/win32-x64': 0.19.12
     dev: true
 
   /escalade@3.1.1:
@@ -15687,6 +15940,16 @@ packages:
       debug:
         optional: true
 
+  /follow-redirects@1.15.6:
+    resolution: {integrity: sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dev: false
+
   /for-each@0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
     dependencies:
@@ -15744,10 +16007,12 @@ packages:
   /framer-motion@6.5.1(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-o1BGqqposwi7cgDrtg0dNONhkmPsUFDaLcKXigzuTFC5x58mE8iyTazxSudFzmT6MEyJKfjjU8ItoMe3W+3fiw==}
     peerDependencies:
-      react: '>=16.8 || ^17.0.0 || ^18.0.0'
+      react: '>=16.8 || ^17.0.0 || ^18.0.0 || 18.2.0'
       react-dom: '>=16.8 || ^17.0.0 || ^18.0.0'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@motionone/dom': 10.12.0
@@ -19696,13 +19961,15 @@ packages:
     hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
-      react: ^18.2.0
+      react: ^18.2.0 || 18.2.0
       react-dom: ^18.2.0
       sass: ^1.3.0
     peerDependenciesMeta:
       '@opentelemetry/api':
         optional: true
       react:
+        optional: true
+      react-dom:
         optional: true
       sass:
         optional: true
@@ -20687,6 +20954,15 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
 
+  /postcss@8.4.35:
+    resolution: {integrity: sha512-u5U8qYpBCpN13BsiEB0CbR1Hhh4Gc0zLFuedrHJKMctHCHAGrMdG0PRM/KErzAL3CU6/eckEtmHNB3x6e3c0vA==}
+    engines: {node: ^10 || ^12 || >=14}
+    dependencies:
+      nanoid: 3.3.7
+      picocolors: 1.0.0
+      source-map-js: 1.0.2
+    dev: true
+
   /preact@10.19.3:
     resolution: {integrity: sha512-nHHTeFVBTHRGxJXKkKu5hT8C/YWBkPso4/Gad6xuj5dbptt9iF9NZr9pHbPhBrnT2klheu7mHTxTZ/LjwJiEiQ==}
 
@@ -20964,7 +21240,7 @@ packages:
   /react-cool-inview@3.0.1(react@18.2.0):
     resolution: {integrity: sha512-ly6i3Pv5p0fvm12NmJGfKS34eOhA+iU43Th+gZ6t3G6UwsxQsWoITHTHzA9pdkOc/3VmnReqvC/hJkQUDGhQFA==}
     peerDependencies:
-      react: '>= 16.8.0'
+      react: '>= 16.8.0 || 18.2.0'
     peerDependenciesMeta:
       react:
         optional: true
@@ -20984,7 +21260,7 @@ packages:
   /react-dom@18.2.0(react@18.2.0):
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
     peerDependencies:
-      react: ^18.2.0
+      react: ^18.2.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -20997,10 +21273,12 @@ packages:
     resolution: {integrity: sha512-j8z+cQbWIM5LY37pR6uZR6D4LfseplqnuAO4co4u8917hBUvXlEqyP1ZzqVLcqoyUesZZv/ImreoCeHVDpE5pQ==}
     engines: {node: '>=10'}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || 18.2.0'
       react-dom: '>=16'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       goober: 2.1.13
@@ -21014,7 +21292,7 @@ packages:
     resolution: {integrity: sha512-CFJ5NDGJ2MUyBohEHxljOq/39NQ972rh1ajnadG9BjTk+UXbHLq4z5DKEbEQBDoIhUmmbuS/fIMJKo6VOax1HA==}
     peerDependencies:
       i18next: '>= 23.2.3'
-      react: '>= 16.8.0'
+      react: '>= 16.8.0 || 18.2.0'
       react-dom: '*'
       react-native: '*'
     peerDependenciesMeta:
@@ -21238,10 +21516,12 @@ packages:
     resolution: {integrity: sha512-CbcKjEyiSVpA6UtCHOIYLUYn/UJfwzp55va4yEfpk7JBN3GPqWfHrdLkAvNCcpXr8QoihcDMuk0dzWZxtlB/mQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
-      react: '>=16.8'
+      react: '>=16.8 || 18.2.0'
       react-dom: '>=16.8'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@remix-run/router': 1.13.0
@@ -21254,7 +21534,7 @@ packages:
     resolution: {integrity: sha512-pVvzsSsgUxxtuNfTHC4IxjATs10UaAtvLGVSA1tbUE4GDaOSU1Esu2xF5nWLz7KPiMuW8BJWuPFdlGYJ7/rW0w==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
-      react: '>=16.8'
+      react: '>=16.8 || 18.2.0'
     peerDependenciesMeta:
       react:
         optional: true
@@ -21266,7 +21546,7 @@ packages:
   /react-shallow-renderer@16.15.0(react@18.2.0):
     resolution: {integrity: sha512-oScf2FqQ9LFVQgA73vr86xl2NaOIX73rh+YFqcOp68CWj56tSfgtGKrEbyhCj0rSijyG9M1CYprTh39fBi5hzA==}
     peerDependencies:
-      react: ^16.0.0 || ^17.0.0 || ^18.0.0
+      react: ^16.0.0 || ^17.0.0 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -21278,7 +21558,7 @@ packages:
   /react-stately@3.30.1(react@18.2.0):
     resolution: {integrity: sha512-IEhKHMT7wijtczA5vtw/kdq9CZuOIF+ReoSimydTFiABRQxWO9ESAl/fToXOUM9qmCdhdqjGJgMAhqTnmheh8g==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -21312,10 +21592,12 @@ packages:
   /react-transition-state@1.1.5(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-ITY2mZqc2dWG2eitJkYNdcSFW8aKeOlkL2A/vowRrLL8GH3J6Re/SpD/BLvQzrVOTqjsP0b5S9N10vgNNzwMUQ==}
     peerDependencies:
-      react: '>=16.8.0'
+      react: '>=16.8.0 || 18.2.0'
       react-dom: '>=16.8.0'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       react: 18.2.0
@@ -21325,10 +21607,12 @@ packages:
   /react-use-measure@2.1.1(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-nocZhN26cproIiIduswYpV5y5lQpSQS1y/4KuvUCjSKmw7ZWIS/+g3aFnX3WdBkyuGUtTLif3UTqnLLhbDoQig==}
     peerDependencies:
-      react: '>=16.13'
+      react: '>=16.13 || 18.2.0'
       react-dom: '>=16.13'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       debounce: 1.2.1
@@ -21872,11 +22156,26 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /rollup@3.29.4:
-    resolution: {integrity: sha512-oWzmBZwvYrU0iJHtDmhsm662rC15FRXmcjCk1xD771dFDx5jJ02ufAQQTn0etB2emNk4J9EZg/yWKpsn9BWGRw==}
-    engines: {node: '>=14.18.0', npm: '>=8.0.0'}
+  /rollup@4.13.0:
+    resolution: {integrity: sha512-3YegKemjoQnYKmsBlOHfMLVPPA5xLkQ8MHLLSw/fBrFaVkEayL51DilPpNNLq1exr98F2B1TzrV0FUlN3gWRPg==}
+    engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
+    dependencies:
+      '@types/estree': 1.0.5
     optionalDependencies:
+      '@rollup/rollup-android-arm-eabi': 4.13.0
+      '@rollup/rollup-android-arm64': 4.13.0
+      '@rollup/rollup-darwin-arm64': 4.13.0
+      '@rollup/rollup-darwin-x64': 4.13.0
+      '@rollup/rollup-linux-arm-gnueabihf': 4.13.0
+      '@rollup/rollup-linux-arm64-gnu': 4.13.0
+      '@rollup/rollup-linux-arm64-musl': 4.13.0
+      '@rollup/rollup-linux-riscv64-gnu': 4.13.0
+      '@rollup/rollup-linux-x64-gnu': 4.13.0
+      '@rollup/rollup-linux-x64-musl': 4.13.0
+      '@rollup/rollup-win32-arm64-msvc': 4.13.0
+      '@rollup/rollup-win32-ia32-msvc': 4.13.0
+      '@rollup/rollup-win32-x64-msvc': 4.13.0
       fsevents: 2.3.3
     dev: true
 
@@ -22751,11 +23050,13 @@ packages:
     resolution: {integrity: sha512-uuzIIfnVkagcVHv9nE0VPlHPSCmXIUGKfJ42LNjxCCTDTL5sgnJ8Z7GZBq0EnLYGln77tPpEpExt2+qa+cZqSw==}
     engines: {node: '>=10'}
     peerDependencies:
-      react: '>= 16.8.0'
+      react: '>= 16.8.0 || 18.2.0'
       react-dom: '>= 16.8.0'
       react-is: '>= 16.8.0'
     peerDependenciesMeta:
       react:
+        optional: true
+      react-dom:
         optional: true
     dependencies:
       '@babel/helper-module-imports': 7.22.15
@@ -22780,7 +23081,7 @@ packages:
     peerDependencies:
       '@babel/core': '*'
       babel-plugin-macros: '*'
-      react: '>= 16.8.0 || 17.x.x || ^18.0.0-0'
+      react: '>= 16.8.0 || 17.x.x || ^18.0.0-0 || 18.2.0'
     peerDependenciesMeta:
       '@babel/core':
         optional: true
@@ -23800,7 +24101,7 @@ packages:
   /use-sync-external-store@1.2.0(react@18.2.0):
     resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || 18.2.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -23916,7 +24217,7 @@ packages:
     engines: {node: '>=12.20.0'}
     peerDependencies:
       '@types/react': '>=16.8'
-      react: '>=16.8'
+      react: '>=16.8 || 18.2.0'
     peerDependenciesMeta:
       '@types/react':
         optional: true
@@ -23990,24 +24291,24 @@ packages:
       - utf-8-validate
       - zod
 
-  /vite-plugin-node-polyfills@0.9.0(vite@4.5.0):
-    resolution: {integrity: sha512-+i+WPUuIBhJy+ODfxx6S6FTl28URCxUszbl/IL4GwrZvbqqY/8VDIp+zpjMS8Us/a7GwN4Iaqr/fVIBtkNQojQ==}
+  /vite-plugin-node-polyfills@0.21.0(vite@5.1.6):
+    resolution: {integrity: sha512-Sk4DiKnmxN8E0vhgEhzLudfJQfaT8k4/gJ25xvUPG54KjLJ6HAmDKbr4rzDD/QWEY+Lwg80KE85fGYBQihEPQA==}
     peerDependencies:
-      vite: ^2.0.0 || ^3.0.0 || ^4.0.0
+      vite: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
     dependencies:
       '@rollup/plugin-inject': 5.0.5
       node-stdlib-browser: 1.2.0
-      vite: 4.5.0(@types/node@18.18.12)
+      vite: 5.1.6(@types/node@18.18.12)
     transitivePeerDependencies:
       - rollup
     dev: true
 
-  /vite@4.5.0(@types/node@18.18.12):
-    resolution: {integrity: sha512-ulr8rNLA6rkyFAlVWw2q5YJ91v098AFQ2R0PRFwPzREXOUJQPtFUG0t+/ZikhaOCDqFoDhN6/v8Sq0o4araFAw==}
-    engines: {node: ^14.18.0 || >=16.0.0}
+  /vite@5.1.6(@types/node@18.18.12):
+    resolution: {integrity: sha512-yYIAZs9nVfRJ/AiOLCA91zzhjsHUgMjB+EigzFb6W2XTLO8JixBCKCjvhKZaye+NKYHCrkv3Oh50dH9EdLU2RA==}
+    engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
-      '@types/node': '>= 14'
+      '@types/node': ^18.0.0 || >=20.0.0
       less: '*'
       lightningcss: ^1.21.0
       sass: '*'
@@ -24031,9 +24332,9 @@ packages:
         optional: true
     dependencies:
       '@types/node': 18.18.12
-      esbuild: 0.18.20
-      postcss: 8.4.31
-      rollup: 3.29.4
+      esbuild: 0.19.12
+      postcss: 8.4.35
+      rollup: 4.13.0
     optionalDependencies:
       fsevents: 2.3.3
     dev: true
@@ -24071,7 +24372,7 @@ packages:
     resolution: {integrity: sha512-Fi5Ju7N0Pd4EOxSBiyl/sVd2Iquf3w2ED4USalfIm0v1DbyEEIIT90AX2Mhzn/Ty9UnB3MTSO2/wFjj5VzZFTw==}
     peerDependencies:
       '@tanstack/react-query': '>=5.0.0'
-      react: '>=18'
+      react: '>=18 || 18.2.0'
       typescript: '>=5.0.4'
       viem: 2.x
     peerDependenciesMeta:
@@ -24691,7 +24992,7 @@ packages:
     peerDependencies:
       '@types/react': '>=16.8'
       immer: '>=9.0'
-      react: '>=16.8'
+      react: '>=16.8 || 18.2.0'
     peerDependenciesMeta:
       '@types/react':
         optional: true
