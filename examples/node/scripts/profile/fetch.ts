@@ -14,7 +14,7 @@ async function main() {
 
   // by handle
   const profileByHandle = await client.profile.fetch({
-    forHandle: 'test/@firstprofile',
+    forHandle: 'lens/firstprofile',
   });
 
   console.log(`Profile fetched by handle: `, {

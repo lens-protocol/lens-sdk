@@ -5,7 +5,7 @@ async function main() {
     environment: development,
   });
 
-  const address = await client.handle.resolveAddress({ handle: 'test/wagmi' });
+  const address = await client.handle.resolveAddress({ handle: 'lens/wagmi' });
 
   console.log(`Address: `, address);
 }

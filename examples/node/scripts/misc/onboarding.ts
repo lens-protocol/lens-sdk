@@ -31,8 +31,6 @@ const rpcUrl = {
   production: `https://polygon.infura.io/v3/${process.env.INFURA_API_KEY}`,
 };
 
-const HANDLE_NAMESPACE = 'test'; // use 'lens' namespace for production
-
 async function main() {
   // prepare new handle
   const requestedHandle = 'jane_doe'; // input from the user
@@ -50,7 +48,7 @@ async function main() {
 
   // check if the requested handle is available
   const handleOwnerAddress = await client.handle.resolveAddress({
-    handle: `${HANDLE_NAMESPACE}/${requestedHandle}`,
+    handle: `lens/${requestedHandle}`,
   });
 
   if (handleOwnerAddress) {
@@ -112,7 +110,7 @@ async function main() {
   console.log('A new profile has been successfully minted.');
 
   // now fetch the newly created profile to get the id
-  const fullHandle = `${HANDLE_NAMESPACE}/${requestedHandle}`;
+  const fullHandle = `lens/${requestedHandle}`;
 
   const profile = await client.profile.fetch({
     forHandle: fullHandle,

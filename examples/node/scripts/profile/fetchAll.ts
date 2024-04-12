@@ -28,7 +28,7 @@ async function main() {
 
   // by a list of Lens handles
   const profilesByHandle = await client.profile.fetchAll({
-    where: { handles: ['test/@firstprofile'] },
+    where: { handles: ['lens/firstprofile'] },
   });
 
   console.log(
