@@ -23,7 +23,10 @@ const signerWithNoProfile = new Wallet(
   'dc377a505ab51735b73656ddfd5abc01fb9d26544b71d9188ecd74c70a22cb6d',
 );
 
-describe(`Given an instance of "gated.${LensClient.name}"`, () => {
+/**
+ * Disabled until Lit team comes back with a solution for Amoy testnet
+ */
+xdescribe(`Given an instance of "gated.${LensClient.name}"`, () => {
   const initialPostMetadata = metadata.image({
     image: {
       item: faker.internet.url(),
