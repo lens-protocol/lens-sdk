@@ -67,7 +67,12 @@ export type FeedHighlightsQuery = {
   result: { items: Array<PostFragment | QuoteFragment>; pageInfo: PaginatedResultInfoFragment };
 };
 
-export type LatestActedFragment = { actedAt: string; txHash: string; profile: ProfileFragment };
+export type LatestActedFragment = {
+  __typename: 'LatestActed';
+  actedAt: string;
+  txHash: string;
+  profile: ProfileFragment;
+};
 
 export type FollowPaidActionFragment = {
   __typename: 'FollowPaidAction';
@@ -82,6 +87,9 @@ export type OpenActionPaidActionFragment = {
 };
 
 export type LatestPaidActionsQueryVariables = Types.Exact<{
+  request?: Types.InputMaybe<Types.PaginatedRequest>;
+  where?: Types.InputMaybe<Types.LatestPaidActionsWhere>;
+  filter?: Types.InputMaybe<Types.LatestPaidActionsFilter>;
   publicationImageSmallTransform: Types.ImageTransform;
   publicationImageMediumTransform: Types.ImageTransform;
   publicationOperationsActedArgs?: Types.InputMaybe<Types.PublicationOperationsActedArgs>;
@@ -7845,6 +7853,7 @@ export const LatestActedFragmentDoc = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'profile' },
@@ -8791,6 +8800,7 @@ export const FollowPaidActionFragmentDoc = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'profile' },
@@ -9766,6 +9776,7 @@ export const OpenActionPaidActionFragmentDoc = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'profile' },
@@ -30166,6 +30177,21 @@ export const LatestPaidActionsDocument = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'PaginatedRequest' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'where' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'LatestPaidActionsWhere' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'filter' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'LatestPaidActionsFilter' } },
+        },
+        {
+          kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
             name: { kind: 'Name', value: 'publicationImageSmallTransform' },
@@ -30272,6 +30298,23 @@ export const LatestPaidActionsDocument = {
             kind: 'Field',
             alias: { kind: 'Name', value: 'result' },
             name: { kind: 'Name', value: 'latestPaidActions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'where' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'filter' } },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -30342,6 +30385,7 @@ export const LatestPaidActionsDocument = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'profile' },

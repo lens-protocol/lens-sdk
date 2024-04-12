@@ -29,7 +29,7 @@ export type UseProfilesArgs = PaginatedArgs<ProfilesRequest>;
  * ```tsx
  * const { data, loading, error } = useProfiles({
  *   where: {
- *     handles: ['test/@firstprofile'],
+ *     handles: ['lens/firstprofile'],
  *   },
  * });
  * ```

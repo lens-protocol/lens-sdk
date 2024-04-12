@@ -79,6 +79,7 @@ export type {
   ReadResultWithError,
   ReadResultWithoutError,
 } from './helpers/reads';
+export type { SuspenseReadResult } from './helpers/suspense';
 export * from './helpers/tasks';
 
 /**

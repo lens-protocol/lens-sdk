@@ -57,7 +57,7 @@ export class Nfts {
   /**
    * Fetch NFTs for authenticated profile or for provided request params.
    *
-   * If you are using `development` enviroment you can only query chainIds 5 and 80001.
+   * If you are using `development` enviroment you can only query chainIds 5 and 80002.
    * If you are using `production` enviroment you can only query chainIds 1 and 137.
    *
    * @param request - Request object for the query
@@ -252,7 +252,7 @@ export class Nfts {
    *
    * ⚠️ Requires authenticated LensClient.
    *
-   * If you are using `development` enviroment you can only query chainIds 5 and 80001.
+   * If you are using `development` enviroment you can only query chainIds 5 and 80002.
    * If you are using `production` enviroment you can only query chainIds 1 and 137.
    *
    * @param request - Request object for the mutation
@@ -315,7 +315,7 @@ export class Nfts {
    *
    * ⚠️ Requires authenticated LensClient.
    *
-   * If you are using `development` enviroment you can only query chainIds 5 and 80001.
+   * If you are using `development` enviroment you can only query chainIds 5 and 80002.
    * If you are using `production` enviroment you can only query chainIds 1 and 137.
    *
    * @param request - Request object for the mutation
@@ -360,7 +360,7 @@ export class Nfts {
    *
    * ⚠️ Requires authenticated LensClient.
    *
-   * If you are using `development` enviroment you can only query chainIds 5 and 80001.
+   * If you are using `development` enviroment you can only query chainIds 5 and 80002.
    * If you are using `production` enviroment you can only query chainIds 1 and 137.
    *
    * @param request - Request object for the mutation

@@ -105,7 +105,7 @@ export function useExecutionMode() {
         }
         throw result.error;
       }
-      const { signlessApproved, sponsoredApproved } = result.value;
+      const { sponsoredApproved } = result.value; // ignore signlessApproved for now
 
       if (!sponsoredApproved) {
         return {
@@ -115,12 +115,10 @@ export function useExecutionMode() {
         };
       }
 
-      if (!signlessApproved) {
-        return {
-          ...desired,
-          signless: false,
-        };
-      }
+      return {
+        ...desired,
+        sponsored: true,
+      };
     }
 
     return desired;

@@ -12,6 +12,7 @@ import { toast } from 'react-hot-toast';
 import { RequireWalletSession } from '../components/auth';
 import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
+import { formatProfileIdentifier } from '../utils/formatProfileIdentifier';
 
 function ClaimHandleOptions() {
   const { data, loading, error } = useCanClaimHandle();
@@ -62,7 +63,7 @@ function ClaimHandleOptions() {
     }
 
     // successfully logged-in with new profile
-    toast.success(`Successfully logged-in as: ${profile.handle?.fullHandle ?? profile.id}`);
+    toast.success(`Successfully logged-in as: ${formatProfileIdentifier(profile)}`);
   };
 
   const claimReserved = (reserved: ReservedClaimable) => claim({ reserved });

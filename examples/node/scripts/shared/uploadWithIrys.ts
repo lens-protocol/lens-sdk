@@ -7,21 +7,21 @@ export async function uploadWithIrys(data: { [key: string]: unknown }): Promise<
     url: 'https://devnet.irys.xyz',
     token: 'matic',
     key: walletPrivateKey,
-    config: { providerUrl: 'https://rpc-mumbai.maticvigil.com/' },
+    config: { providerUrl: 'https://rpc-amoy.polygon.technology/' },
   });
 
   const atomicBalance = await irys.getLoadedBalance();
   const balance = irys.utils.fromAtomic(atomicBalance);
 
   console.log(
-    `Irys balance for wallet ${String(irys.address)} is ${balance.toString()} MUMBAI MATIC`,
+    `Irys balance for wallet ${String(irys.address)} is ${balance.toString()} AMOY MATIC`,
   );
 
   // fund Irys balance if empty
   if (balance.eq(0)) {
-    console.log('Trying to fund your irys balance with 0.1 MUMBAI MATIC');
+    console.log('Trying to fund your irys balance with 0.1 AMOY MATIC');
 
-    await irys.fund(0.1e18); // 0.1 MUMBAI MATIC
+    await irys.fund(0.1e18); // 0.1 AMOY MATIC
   }
 
   const serialized = JSON.stringify(data);

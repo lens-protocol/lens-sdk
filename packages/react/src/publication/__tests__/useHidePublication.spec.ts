@@ -14,7 +14,7 @@ describe(`Given the ${useHidePublication.name} hook`, () => {
   describe('when calling the execute method on a publication', () => {
     it('should set its `isHidden` flag', async () => {
       const publication = mockPostFragment();
-      const { renderHook } = setupHookTestScenarioWithSession(
+      const { renderHook } = await setupHookTestScenarioWithSession(
         [
           mockPublicationResponse({
             variables: {

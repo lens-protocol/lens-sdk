@@ -204,6 +204,7 @@ export type {
   ExplorePublicationsWhere,
   FeedHighlightsWhere,
   FeedWhere,
+  LatestPaidActionsWhere,
   NftsRequestWhere,
   NotificationWhere,
   ProfileSearchWhere,
@@ -257,6 +258,7 @@ export type {
   PublicationStatsCountOpenActionArgs,
 
   // filters
+  LatestPaidActionsFilter,
   PublicationMetadataContentWarningFilter,
   PublicationMetadataFilters,
   PublicationMetadataTagsFilter,

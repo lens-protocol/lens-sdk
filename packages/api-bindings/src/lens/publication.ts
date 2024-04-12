@@ -5,11 +5,13 @@ import {
   Comment,
   EmbedMetadataV3,
   EventMetadataV3,
+  FollowPaidAction,
   ImageMetadataV3,
   LinkMetadataV3,
   LiveStreamMetadataV3,
   MintMetadataV3,
   Mirror,
+  OpenActionPaidAction,
   Post,
   PublicationMetadataMediaAudio,
   PublicationMetadataMediaImage,
@@ -65,3 +67,8 @@ export type PublicationMetadataMedia =
   | PublicationMetadataMediaAudio
   | PublicationMetadataMediaImage
   | PublicationMetadataMediaVideo;
+
+/**
+ * Convenience type for paid actions types.
+ */
+export type AnyPaidAction = OpenActionPaidAction | FollowPaidAction;

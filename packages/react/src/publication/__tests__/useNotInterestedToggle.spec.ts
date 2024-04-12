@@ -17,7 +17,7 @@ describe(`Given the ${useNotInterestedToggle.name} hook`, () => {
   describe('when calling the execute method on a publication', () => {
     it('should set its `operations.isNotInterested` flag', async () => {
       const publication = mockPostFragment();
-      const { renderHook } = setupHookTestScenarioWithSession([
+      const { renderHook } = await setupHookTestScenarioWithSession([
         mockPublicationResponse({
           variables: {
             request: { forId: publication.id },
@@ -58,7 +58,7 @@ describe(`Given the ${useNotInterestedToggle.name} hook`, () => {
       const publication = mockPostFragment({
         operations: mockPublicationOperationsFragment({ isNotInterested: true }),
       });
-      const { renderHook } = setupHookTestScenarioWithSession([
+      const { renderHook } = await setupHookTestScenarioWithSession([
         mockPublicationResponse({
           variables: {
             request: { forId: publication.id },

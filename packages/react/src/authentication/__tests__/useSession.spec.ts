@@ -1,4 +1,4 @@
-import { Profile, resetSession, updateSessionData } from '@lens-protocol/api-bindings';
+import { Profile, resetSessionData, updateSessionData } from '@lens-protocol/api-bindings';
 import { mockProfileFragment, mockProfileResponse } from '@lens-protocol/api-bindings/mocks';
 import {
   anonymousSessionData,
@@ -27,18 +27,38 @@ function setupTestScenario({ profiles }: { profiles: Profile[] }) {
 describe(`Given the ${useSession.name} hook`, () => {
   const profile = mockProfileFragment();
 
-  describe(`when the current session is "null"`, () => {
+  describe('when rendered in traditional non-suspense mode', () => {
     beforeAll(() => {
-      resetSession();
+      resetSessionData();
     });
 
-    it('should return the expected loading state', async () => {
+    it('should return the expected initial loading state', async () => {
       const { renderHook } = setupTestScenario({ profiles: [] });
 
       const { result } = renderHook(() => useSession());
 
       expect(result.current.loading).toBeTruthy();
       expect(result.current.data).toBeUndefined();
+    });
+  });
+
+  describe('when rendered in suspense mode', () => {
+    beforeAll(() => {
+      resetSessionData();
+    });
+
+    it('should suspend and render once the session data is determined', async () => {
+      const { renderHook } = setupTestScenario({ profiles: [] });
+
+      const { result } = renderHook(() => useSession({ suspense: true }));
+
+      act(() => {
+        updateSessionData(anonymousSessionData());
+      });
+
+      await waitFor(() => {
+        expect(result.current.data.type).toBe(SessionType.Anonymous);
+      });
     });
   });
 
@@ -73,7 +93,7 @@ describe(`Given the ${useSession.name} hook`, () => {
   ])(`when the initial session is:`, ({ session, expectations }) => {
     describe(session.type, () => {
       beforeAll(() => {
-        resetSession();
+        resetSessionData();
       });
 
       it('should return the expected session object', async () => {
@@ -95,112 +115,114 @@ describe(`Given the ${useSession.name} hook`, () => {
     });
   });
 
-  describe(`when the user logs-in with just a wallet`, () => {
-    beforeAll(() => {
-      updateSessionData(anonymousSessionData());
-    });
-
-    it('should return the expected WalletOnlySession', async () => {
-      const { renderHook } = setupTestScenario({ profiles: [profile] });
-
-      const { result } = renderHook(() => useSession());
-
-      act(() => {
-        updateSessionData(walletOnlySessionData({ address: profile.ownedBy.address }));
+  describe(`and the initial session is ${SessionType.Anonymous}`, () => {
+    describe(`when the user logs-in with just a wallet`, () => {
+      beforeAll(() => {
+        updateSessionData(anonymousSessionData());
       });
 
-      expect(result.current.loading).toBe(false);
+      it('should return the expected WalletOnlySession', async () => {
+        const { renderHook } = setupTestScenario({ profiles: [profile] });
 
-      await waitFor(() => {
-        expect(result.current.data).toMatchObject({
-          type: SessionType.JustWallet,
-          address: profile.ownedBy.address,
-          authenticated: true,
+        const { result } = renderHook(() => useSession());
+
+        act(() => {
+          updateSessionData(walletOnlySessionData({ address: profile.ownedBy.address }));
+        });
+
+        expect(result.current.loading).toBe(false);
+
+        await waitFor(() => {
+          expect(result.current.data).toMatchObject({
+            type: SessionType.JustWallet,
+            address: profile.ownedBy.address,
+            authenticated: true,
+          });
+        });
+      });
+    });
+
+    describe(`when the user logs-in with a Lens Profile`, () => {
+      beforeAll(() => {
+        updateSessionData(anonymousSessionData());
+      });
+
+      it('should return the profile data without flickering of the "loading" flag', async () => {
+        const { renderHook } = setupTestScenario({ profiles: [profile] });
+
+        const { result } = renderHook(() => useSession());
+
+        act(() => {
+          updateSessionData(
+            profileSessionData({ address: profile.ownedBy.address, profileId: profile.id }),
+          );
+        });
+
+        await waitFor(() => {
+          expect(result.current.loading).toBe(false);
+        });
+
+        await waitFor(() => {
+          expect(result.current.data).toMatchObject({
+            type: SessionType.WithProfile,
+            address: profile.ownedBy.address,
+            profile: {
+              __typename: 'Profile',
+              id: profile.id,
+            },
+          });
         });
       });
     });
   });
 
-  describe(`when the user logs-in with a Lens Profile`, () => {
-    beforeAll(() => {
-      updateSessionData(anonymousSessionData());
-    });
+  describe(`and the initial session is ${SessionType.WithProfile}`, () => {
+    describe(`when the user switches to a different profile`, () => {
+      const prevProfile = mockProfileFragment();
 
-    it('should return the profile data without flickering of the "loading" flag', async () => {
-      const { renderHook } = setupTestScenario({ profiles: [profile] });
-
-      const { result } = renderHook(() => useSession());
-
-      act(() => {
-        updateSessionData(
-          profileSessionData({ address: profile.ownedBy.address, profileId: profile.id }),
-        );
-      });
-
-      expect(result.current.loading).toBe(false);
-
-      await waitFor(() => {
-        expect(result.current.data).toMatchObject({
-          type: SessionType.WithProfile,
-          address: profile.ownedBy.address,
-          profile: {
-            __typename: 'Profile',
-            id: profile.id,
-          },
-        });
-      });
-    });
-  });
-
-  describe(`when the user switches to a different profile`, () => {
-    const prevProfile = mockProfileFragment();
-
-    beforeAll(() => {
-      updateSessionData(anonymousSessionData());
-    });
-
-    it('should return the new profile data', async () => {
-      const { renderHook } = setupTestScenario({ profiles: [prevProfile, profile] });
-
-      const { result } = renderHook(() => useSession());
-
-      act(() => {
+      beforeAll(() => {
         updateSessionData(
           profileSessionData({ address: prevProfile.ownedBy.address, profileId: prevProfile.id }),
         );
       });
 
-      await waitFor(() => {
-        // previous profile loaded
-        expect(result.current.loading).toBe(false);
-        expect(result.current.data).toMatchObject({
-          type: SessionType.WithProfile,
-          address: prevProfile.ownedBy.address,
-          profile: {
-            __typename: 'Profile',
-            id: prevProfile.id,
-          },
+      it('should return the new profile data', async () => {
+        const { renderHook } = setupTestScenario({ profiles: [prevProfile, profile] });
+
+        const { result } = renderHook(() => useSession());
+
+        await waitFor(() => {
+          // previous profile loaded
+          expect(result.current.loading).toBe(false);
+          expect(result.current.data).toMatchObject({
+            type: SessionType.WithProfile,
+            address: prevProfile.ownedBy.address,
+            profile: {
+              __typename: 'Profile',
+              id: prevProfile.id,
+            },
+          });
         });
-      });
 
-      act(() => {
-        // change to a new profile
-        updateSessionData(
-          profileSessionData({ address: profile.ownedBy.address, profileId: profile.id }),
-        );
-      });
+        act(() => {
+          // change to a new profile
+          updateSessionData(
+            profileSessionData({ address: profile.ownedBy.address, profileId: profile.id }),
+          );
+        });
 
-      // loading state shouldn't change anymore, return previous session while loading a new profile
-      expect(result.current.loading).toBe(false);
+        // loading state shouldn't change anymore, return previous session while loading a new profile
+        expect(result.current.loading).toBe(false);
 
-      await waitFor(() => {
-        expect(result.current.data).toMatchObject({
-          type: SessionType.WithProfile,
-          address: profile.ownedBy.address,
-          profile: {
-            __typename: 'Profile',
-            id: profile.id,
-          },
+        await waitFor(() => {
+          expect(result.current.data).toMatchObject({
+            type: SessionType.WithProfile,
+            address: profile.ownedBy.address,
+            profile: {
+              __typename: 'Profile',
+              id: profile.id,
+            },
+          });
         });
       });
     });

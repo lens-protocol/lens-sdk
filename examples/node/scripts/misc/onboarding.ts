@@ -18,7 +18,7 @@ dotenv.config();
 const typedAbi = abi as ethers.ContractInterface;
 
 const permissonlessCreatorAddress = {
-  development: '0xCb4FB63c3f13CB83cCD6F10E9e5F29eC250329Cc',
+  development: '0x36440da1D98FF46637f0b98AAA082bc77977B49B',
   production: '0x0b5e6100243f793e480DE6088dE6bA70aA9f3872',
 };
 
@@ -27,11 +27,9 @@ if (!process.env.INFURA_API_KEY) {
 }
 
 const rpcUrl = {
-  development: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_API_KEY}`,
+  development: `https://polygon-amoy.infura.io/v3/${process.env.INFURA_API_KEY}`,
   production: `https://polygon.infura.io/v3/${process.env.INFURA_API_KEY}`,
 };
-
-const HANDLE_NAMESPACE = 'test'; // use 'lens' namespace for production
 
 async function main() {
   // prepare new handle
@@ -50,7 +48,7 @@ async function main() {
 
   // check if the requested handle is available
   const handleOwnerAddress = await client.handle.resolveAddress({
-    handle: `${HANDLE_NAMESPACE}/${requestedHandle}`,
+    handle: `lens/${requestedHandle}`,
   });
 
   if (handleOwnerAddress) {
@@ -112,7 +110,7 @@ async function main() {
   console.log('A new profile has been successfully minted.');
 
   // now fetch the newly created profile to get the id
-  const fullHandle = `${HANDLE_NAMESPACE}/${requestedHandle}`;
+  const fullHandle = `lens/${requestedHandle}`;
 
   const profile = await client.profile.fetch({
     forHandle: fullHandle,

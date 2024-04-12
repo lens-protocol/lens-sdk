@@ -23,7 +23,7 @@ export const production = new Environment(
 
 export const development = new Environment(
   'development',
-  'https://api-v2-mumbai-live.lens.dev',
+  'https://api-v2-amoy.lens.dev',
   GatedEnvironments.development,
 );
 
@@ -32,6 +32,6 @@ export const development = new Environment(
  */
 export const staging = new Environment(
   'staging',
-  'https://api-mumbai.lens-v2.crtlkey.com/',
+  'https://api-amoy.lens-v2.crtlkey.com',
   GatedEnvironments.development,
 );

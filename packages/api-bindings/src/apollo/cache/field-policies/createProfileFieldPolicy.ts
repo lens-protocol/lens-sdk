@@ -1,17 +1,19 @@
 import { FieldFunctionOptions, FieldPolicy, Reference } from '@apollo/client';
 
-import { Profile, ProfileRequest } from '../../../lens';
+import { ProfileRequest } from '../../../lens';
 
-// this function is not in use
-// TODO: investigate correct usage of cache redirect
 export function createProfileFieldPolicy(): FieldPolicy<
-  Profile,
-  Profile,
+  Reference,
+  Reference,
   Reference,
   FieldFunctionOptions<{ request: ProfileRequest }>
 > {
   return {
-    read(_, { args, toReference, canRead }) {
+    read(existing, { args, toReference, canRead }) {
+      if (existing) {
+        return existing;
+      }
+
       if (!args) {
         return undefined;
       }

@@ -10,6 +10,8 @@ import {
 } from '@lens-protocol/react-web';
 import { ReactNode } from 'react';
 
+import { formatProfileIdentifier } from '../../utils/formatProfileIdentifier';
+
 function NotificationItemWrapper({ children }: { children: ReactNode }) {
   return <article>{children}</article>;
 }
@@ -29,7 +31,7 @@ function NewCommentNotification({ notification }: { notification: CommentNotific
   return (
     <NotificationItemWrapper>
       <p>
-        Comment by {notification.comment.by.handle?.fullHandle ?? notification.comment.by.id} on{' '}
+        Comment by {formatProfileIdentifier(notification.comment.by)} on{' '}
         {notification.comment.commentOn.id}
       </p>
     </NotificationItemWrapper>
@@ -42,7 +44,7 @@ function NewFollowNotification({ notification }: { notification: FollowNotificat
       <p>
         Followed by{' '}
         {notification.followers.map((profile) => (
-          <div key={profile.id}>{profile.handle?.fullHandle ?? profile.id}</div>
+          <div key={profile.id}>{formatProfileIdentifier(profile)}</div>
         ))}
       </p>
     </NotificationItemWrapper>
@@ -54,7 +56,7 @@ function NewMentionNotification({ notification }: { notification: MentionNotific
     <NotificationItemWrapper>
       <p>
         Mentioned "{notification.publication.id}" by{' '}
-        {notification.publication.by.handle?.fullHandle ?? notification.publication.by.id}
+        {formatProfileIdentifier(notification.publication.by)}
       </p>
     </NotificationItemWrapper>
   );
@@ -82,7 +84,7 @@ function NewReactionNotification({ notification }: { notification: ReactionNotif
       <p>
         Publication {notification.publication.id} got new reactions:
         {notification.reactions.map((reaction, index) => (
-          <div key={index}>by {reaction.profile.handle?.fullHandle ?? reaction.profile.id}</div>
+          <div key={index}>by {formatProfileIdentifier(reaction.profile)}</div>
         ))}
       </p>
     </NotificationItemWrapper>

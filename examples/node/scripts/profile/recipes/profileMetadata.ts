@@ -12,7 +12,7 @@ dotenv.config();
 const typedAbi = abi as ethers.ContractInterface;
 
 const lensHubAddress = {
-  development: '0x4fbffF20302F3326B20052ab9C217C44F6480900',
+  development: '0xA2574D9DdB6A325Ad2Be838Bd854228B80215148',
   production: '0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d',
 };
 
@@ -21,7 +21,7 @@ if (!process.env.INFURA_API_KEY) {
 }
 
 const rpcUrl = {
-  development: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_API_KEY}`,
+  development: `https://polygon-amoy.infura.io/v3/${process.env.INFURA_API_KEY}`,
   production: `https://polygon.infura.io/v3/${process.env.INFURA_API_KEY}`,
 };
 

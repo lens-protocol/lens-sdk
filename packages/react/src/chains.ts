@@ -48,12 +48,24 @@ export const polygon: ChainConfig = {
 
 /**
  * @internal
+ * @deprecated Use `amoy` instead
  */
 export const mumbai: ChainConfig = {
   chainId: 80001,
   name: 'Polygon Testnet Mumbai',
   rpcUrl: 'https://rpc-mumbai.maticvigil.com/',
   blockExplorer: 'https://mumbai.polygonscan.com/',
+  nativeCurrency: matic(),
+};
+
+/**
+ * @internal
+ */
+export const amoy: ChainConfig = {
+  chainId: 80002,
+  name: 'Polygon Testnet Amoy',
+  rpcUrl: 'https://rpc-amoy.polygon.technology/',
+  blockExplorer: 'https://www.oklink.com/amoy/',
   nativeCurrency: matic(),
 };
 
