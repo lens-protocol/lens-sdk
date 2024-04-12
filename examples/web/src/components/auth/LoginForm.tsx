@@ -2,6 +2,7 @@ import { profileId, useLogin, useProfilesManaged } from '@lens-protocol/react-we
 import { toast } from 'react-hot-toast';
 
 import { never } from '../../utils';
+import { formatProfileIdentifier } from '../../utils/formatProfileIdentifier';
 import { ErrorMessage } from '../error/ErrorMessage';
 import { Loading } from '../loading/Loading';
 
@@ -23,7 +24,7 @@ export function LoginForm({ owner, onSuccess }: { owner: string; onSuccess?: () 
     });
 
     if (result.isSuccess()) {
-      toast.success(`Welcome ${String(result.value?.handle?.fullHandle ?? result.value?.id)}`);
+      toast.success(`Welcome ${String(result.value && formatProfileIdentifier(result.value))}`);
       return onSuccess?.();
     }
 
@@ -56,7 +57,7 @@ export function LoginForm({ owner, onSuccess }: { owner: string; onSuccess?: () 
               name="id"
               value={profile.id}
             />
-            {profile.handle?.fullHandle ?? profile.id}
+            {formatProfileIdentifier(profile)}
           </label>
         ))}
 

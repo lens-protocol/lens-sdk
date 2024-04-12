@@ -2,6 +2,7 @@ import { Profile } from '@lens-protocol/react-web';
 import { useStartLensConversation } from '@lens-protocol/react-web/inbox';
 
 import { never } from '../../utils';
+import { formatProfileIdentifier } from '../../utils/formatProfileIdentifier';
 
 type ConversationComposerProps = {
   peerProfile: Profile;
@@ -40,7 +41,7 @@ export function ConversationComposer({ peerProfile }: ConversationComposerProps)
         ></textarea>
 
         <button type="submit" disabled={isLoading}>
-          {`Send a first message to ${peerProfile.handle?.fullHandle || peerProfile.id}`}
+          {`Send a first message to ${formatProfileIdentifier(peerProfile)}`}
         </button>
 
         {!!error && <div>Something went wrong</div>}

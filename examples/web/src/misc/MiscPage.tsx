@@ -17,6 +17,11 @@ const hooks = [
     path: '/misc/useApproveModule',
   },
   {
+    label: 'useLatestPaidActions',
+    description: `List all the latest paid actions for the authenticated profile.`,
+    path: '/misc/useLatestPaidActions',
+  },
+  {
     label: 'useClaimHandle',
     description: `Allows to claim an handle for a whitelisted address.`,
     path: '/misc/useClaimHandle',

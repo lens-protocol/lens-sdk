@@ -7,6 +7,7 @@ import {
 import { ReactNode } from 'react';
 
 import { ProfilePicture } from '../profiles/components/ProfilePicture';
+import { formatProfileIdentifier } from '../utils/formatProfileIdentifier';
 
 function MetadataSwitch({ metadata }: { metadata: PublicationMetadata }) {
   switch (metadata.__typename) {
@@ -89,10 +90,7 @@ export function PublicationCard({ publication, children }: PublicationCardProps)
       >
         <ProfilePicture picture={publication.by.metadata?.picture ?? null} />
         <p>
-          {publication.__typename} by{' '}
-          {publication.by.metadata?.displayName ??
-            publication.by.handle?.fullHandle ??
-            publication.by.id}
+          {publication.__typename} by {formatProfileIdentifier(publication.by)}
         </p>
       </div>
       <PublicationSwitch publication={publication} />
@@ -118,7 +116,7 @@ export function CommentCard({ comment }: CommentCardProps) {
         }}
       >
         <ProfilePicture picture={comment.by.metadata?.picture ?? null} />
-        <p>{comment.by.metadata?.displayName ?? comment.by.handle?.fullHandle ?? comment.by.id}</p>
+        <p>{formatProfileIdentifier(comment.by)}</p>
       </div>
       <MetadataSwitch metadata={comment.metadata} />
     </section>

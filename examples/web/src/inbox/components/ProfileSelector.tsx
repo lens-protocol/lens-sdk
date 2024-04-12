@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { ErrorMessage } from '../../components/error/ErrorMessage';
 import { invariant } from '../../utils';
+import { formatProfileIdentifier } from '../../utils/formatProfileIdentifier';
 
 type ProfileSelectorProps = {
   onProfileSelected: (profile: Profile | null) => void;
@@ -68,7 +69,7 @@ export function ProfileSelector({ onProfileSelected }: ProfileSelectorProps) {
       <option value="default">Select a profile</option>
       {profilesOnXmtp.map((item) => (
         <option key={item.id} value={item.id}>
-          {item.handle?.fullHandle ?? item.id}
+          {formatProfileIdentifier(item)}
         </option>
       ))}
     </select>

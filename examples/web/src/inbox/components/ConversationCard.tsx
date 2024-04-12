@@ -3,6 +3,7 @@ import { EnhancedConversation } from '@lens-protocol/react-web/inbox';
 import { ReactNode } from 'react';
 
 import { ProfilePicture } from '../../profiles/components/ProfilePicture';
+import { formatProfileIdentifier } from '../../utils/formatProfileIdentifier';
 
 type PeerProfileProps = {
   profile: Profile;
@@ -12,7 +13,7 @@ function PeerProfile({ profile }: PeerProfileProps) {
   return (
     <div>
       <ProfilePicture picture={profile.metadata?.picture || null} />
-      <div>{profile.handle?.fullHandle || profile.id}</div>
+      <div>{formatProfileIdentifier(profile)}</div>
     </div>
   );
 }
