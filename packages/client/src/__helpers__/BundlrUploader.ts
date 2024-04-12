@@ -11,7 +11,7 @@ export class BundlrUploader {
       'matic',
       this.signer.privateKey,
       {
-        providerUrl: 'https://rpc-mumbai.maticvigil.com/',
+        providerUrl: 'https://rpc-amoy.polygon.technology/',
       },
     );
     const atomicBalance = await bundlr.getLoadedBalance();
@@ -20,13 +20,13 @@ export class BundlrUploader {
     // fund bundlr balance if empty
     if (balance.lte(0.001)) {
       try {
-        await bundlr.fund(0.1e18); // 0.1 MUMBAI MATIC
+        await bundlr.fund(0.1e18); // 0.1 AMOY MATIC
       } catch (error) {
         // eslint-disable-next-line no-console
         console.warn(
           `Cannot fund ${String(
             bundlr.address,
-          )} Bundlr balance. Mumbai ${balance.toString()} MATIC available.`,
+          )} Bundlr balance. Amoy ${balance.toString()} MATIC available.`,
         );
       }
     }

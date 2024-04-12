@@ -33,7 +33,7 @@ export function CreateProfileForm({ address }: { address: string }) {
         <legend>Choose an handle for your profile</legend>
         <label>
           <div>
-            test/&nbsp;
+            lens/&nbsp;
             <input type="text" name="localName" placeholder="wagmi" disabled={loading} />
           </div>
         </label>

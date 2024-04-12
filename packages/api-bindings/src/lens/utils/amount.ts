@@ -16,6 +16,7 @@ export function chainType(chainId: number): ChainType {
       return ChainType.ETHEREUM;
     case 137:
     case 80001:
+    case 80002:
       return ChainType.POLYGON;
     default:
       throw new Error(`Not supported chainId: ${chainId}`);

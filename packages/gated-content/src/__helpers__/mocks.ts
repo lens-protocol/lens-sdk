@@ -157,7 +157,7 @@ export function mockAccessControlContract(
 ): AccessControlContract {
   return {
     address: mockEvmAddress(),
-    chainId: SupportedChainId.MUMBAI,
+    chainId: SupportedChainId.AMOY,
     ...overrides,
   };
 }

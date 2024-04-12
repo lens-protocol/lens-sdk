@@ -47,6 +47,7 @@ export enum SupportedChains {
   ETHEREUM = 'ethereum',
   POLYGON = 'polygon',
   MUMBAI = 'mumbai',
+  AMOY = 'amoy',
   LINEA_GOERLI = 'lineaGoerli',
 }
 
@@ -54,6 +55,7 @@ export enum SupportedChainId {
   ETHEREUM = 1,
   POLYGON = 137,
   MUMBAI = 80001,
+  AMOY = 80002,
   LINEA_GOERLI = 59140,
 }
 

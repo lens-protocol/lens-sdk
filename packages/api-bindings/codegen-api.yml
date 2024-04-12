@@ -60,8 +60,8 @@ generates:
         UUID: string
         Void: void
     schema:
-      # - https://api-mumbai.lens-v2.crtlkey.com/ # staging
-      - https://api-v2-mumbai-live.lens.dev/graphql # testnet
+      # - https://api-amoy.lens-v2.crtlkey.com/ # staging
+      - https://api-v2-amoy.lens.dev/ # testnet
       # - http://localhost:4000/
     documents:
       - src/lens/graphql/*.graphql

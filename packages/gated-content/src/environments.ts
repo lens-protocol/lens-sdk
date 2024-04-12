@@ -30,10 +30,10 @@ export const production: EnvironmentConfig = {
 
 export const development: EnvironmentConfig = {
   name: 'development',
-  chainId: 80001,
-  chainName: SupportedChains.MUMBAI,
+  chainId: 80002,
+  chainName: SupportedChains.AMOY,
   accessControlContract: {
-    address: '0xc4F726a10fDEb0E98e16Fa658b606192d57FC71c',
-    chainId: SupportedChainId.MUMBAI,
+    address: '0x9Ddad77aD520d02D2566563b446935C6edD970fC',
+    chainId: SupportedChainId.AMOY,
   },
 };

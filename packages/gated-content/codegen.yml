@@ -57,8 +57,9 @@ config:
     Void: string
 
 schema:
-  - https://api-v2-mumbai-live.lens.dev/graphql
-  # - http://localhost:4000/graphql
+  # - https://api-amoy.lens-v2.crtlkey.com/ # staging
+  - https://api-v2-amoy.lens.dev/ # testnet
+  # - http://localhost:4000/
 
 generates:
   src/graphql/generated.ts:

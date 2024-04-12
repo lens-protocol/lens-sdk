@@ -15,7 +15,7 @@ async function getWebIrys(client: Client<Transport, Chain, Account>) {
     url: 'https://devnet.irys.xyz',
     token: 'matic',
     wallet: {
-      rpcUrl: 'https://rpc-mumbai.maticvigil.com/',
+      rpcUrl: 'https://rpc-amoy.polygon.technology/',
       name: 'ethersv5',
       provider: new Web3Provider(client.transport),
     },
@@ -39,9 +39,9 @@ export function useIrysUploadHandler() {
     const confirm = window.confirm(
       `In this example we will now upload metadata file via the Irys.
     
-    Please make sure your wallet is connected to the Polygon Mumbai testnet.
+    Please make sure your wallet is connected to the Polygon Amoy testnet.
     
-    You can get some Mumbai MATIC from the Mumbai Faucet: https://mumbaifaucet.com/`,
+    You can get some Amoy MATIC from the Amoy Faucet: https://faucet.polygon.technology/`,
     );
 
     if (!confirm) {

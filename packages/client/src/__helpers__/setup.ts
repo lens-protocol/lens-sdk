@@ -7,7 +7,7 @@ import { isRelaySuccess } from '../submodules';
 import { BundlrUploader } from './BundlrUploader';
 
 export async function createOrGetProfile(signer: Wallet, client: LensClient, handle: string) {
-  const fullHandle = `test/${handle}`;
+  const fullHandle = `lens/${handle}`;
   const profile = await client.profile.fetch({ forHandle: fullHandle });
 
   if (profile) {

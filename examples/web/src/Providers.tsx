@@ -2,14 +2,14 @@ import { LensConfig, LensProvider, development } from '@lens-protocol/react-web'
 import { bindings } from '@lens-protocol/wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider, createConfig, http } from 'wagmi';
-import { polygon, polygonMumbai } from 'wagmi/chains';
+import { polygon, polygonAmoy } from 'wagmi/chains';
 
 const queryClient = new QueryClient();
 
 const wagmiConfig = createConfig({
-  chains: [polygonMumbai, polygon],
+  chains: [polygonAmoy, polygon],
   transports: {
-    [polygonMumbai.id]: http(),
+    [polygonAmoy.id]: http(),
     [polygon.id]: http(),
   },
 });
