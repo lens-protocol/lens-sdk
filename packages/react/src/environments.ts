@@ -87,7 +87,7 @@ export const development: EnvironmentConfig = {
     maxMiningWaitTime: 120000,
   },
   contracts: {
-    permissionlessCreator: '0xCb4FB63c3f13CB83cCD6F10E9e5F29eC250329Cc', // TODO: update for amoy
+    permissionlessCreator: '0x36440da1D98FF46637f0b98AAA082bc77977B49B',
   },
   handleResolver: (localName) => `test/${localName}`,
 };
@@ -108,7 +108,7 @@ export const staging: EnvironmentConfig = {
     maxMiningWaitTime: 2400000,
   },
   contracts: {
-    permissionlessCreator: '0xCb4FB63c3f13CB83cCD6F10E9e5F29eC250329Cc', // TODO: update for amoy
+    permissionlessCreator: '0x36440da1D98FF46637f0b98AAA082bc77977B49B',
   },
   handleResolver: (localName) => `test/${localName}`,
 };

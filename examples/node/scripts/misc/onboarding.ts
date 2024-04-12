@@ -18,7 +18,7 @@ dotenv.config();
 const typedAbi = abi as ethers.ContractInterface;
 
 const permissonlessCreatorAddress = {
-  development: '0xCb4FB63c3f13CB83cCD6F10E9e5F29eC250329Cc', // TODO amoy
+  development: '0x36440da1D98FF46637f0b98AAA082bc77977B49B',
   production: '0x0b5e6100243f793e480DE6088dE6bA70aA9f3872',
 };
 
