@@ -5,7 +5,7 @@ export function UseResolveAddress() {
   const { execute, loading } = useResolveAddress();
 
   const resolve = async () => {
-    const result = await execute({ handle: 'test/wagmi' });
+    const result = await execute({ handle: 'lens/wagmi' });
 
     if (result.isFailure()) {
       toast.error(result.error.message);
@@ -22,7 +22,7 @@ export function UseResolveAddress() {
       </h1>
 
       <button onClick={resolve} disabled={loading}>
-        Resolve test/wagmi
+        Resolve lens/wagmi
       </button>
     </div>
   );

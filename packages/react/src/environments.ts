@@ -43,7 +43,6 @@ export type EnvironmentConfig = {
  *
  * - Endpoint: https://api-v2.lens.dev
  * - Chain IDs: 137 (Polygon), 1 (Ethereum)
- * - Profile handle namespace: `lens/`
  * - Environment specific timings
  */
 export const production: EnvironmentConfig = {
@@ -71,7 +70,6 @@ export const production: EnvironmentConfig = {
  *
  * - Endpoint: https://api-v2-amoy.lens.dev
  * - Chain IDs: 80002 (Amoy), 5 (Goerli)
- * - Profile handle namespace: `test/`
  * - Environment specific timings
  */
 export const development: EnvironmentConfig = {
@@ -89,7 +87,7 @@ export const development: EnvironmentConfig = {
   contracts: {
     permissionlessCreator: '0x36440da1D98FF46637f0b98AAA082bc77977B49B',
   },
-  handleResolver: (localName) => `test/${localName}`,
+  handleResolver: (localName) => `lens/${localName}`,
 };
 
 /**
@@ -110,5 +108,5 @@ export const staging: EnvironmentConfig = {
   contracts: {
     permissionlessCreator: '0x36440da1D98FF46637f0b98AAA082bc77977B49B',
   },
-  handleResolver: (localName) => `test/${localName}`,
+  handleResolver: (localName) => `lens/${localName}`,
 };
