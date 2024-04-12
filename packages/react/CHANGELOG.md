@@ -1,5 +1,27 @@
 # @lens-protocol/react
 
+## 2.1.0
+
+### Minor Changes
+
+- 1d99b37c9: **feat:** adds `useLatestPaidActions` hook
+- 05b23041f: **feat:** experimental React Suspense support in `useSession` hook
+- ce997e7fd: **chore:** updated development environment to Amoy testnet
+
+### Patch Changes
+
+- 10757c9cf: **feat:** aligns testnet handle namespace to mainnet (i.e., `lens/`)
+- 8af3e82ac: **fix:** allows signless init of sponsored Open Action and Reference modules
+- Updated dependencies [8c2768dd6]
+- Updated dependencies [1d99b37c9]
+- Updated dependencies [05b23041f]
+- Updated dependencies [ce997e7fd]
+  - @lens-protocol/api-bindings@0.12.0
+  - @lens-protocol/shared-kernel@0.12.0
+  - @lens-protocol/blockchain-bindings@0.10.1
+  - @lens-protocol/domain@0.11.1
+  - @lens-protocol/storage@0.8.1
+
 ## 2.0.0
 
 This is a stable release, marking the closure of the alpha prerelease.

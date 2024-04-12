@@ -1,5 +1,17 @@
 # @lens-protocol/gated-content
 
+## 0.5.0
+
+### Minor Changes
+
+- ce997e7fd: **chore:** updated development environment to Amoy testnet
+
+### Patch Changes
+
+- Updated dependencies [ce997e7fd]
+  - @lens-protocol/shared-kernel@0.12.0
+  - @lens-protocol/storage@0.8.1
+
 ## 0.4.0
 
 This is a stable release, marking the closure of the alpha prerelease.

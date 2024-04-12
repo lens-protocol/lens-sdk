@@ -1,5 +1,11 @@
 # @lens-protocol/shared-kernel
 
+## 0.12.0
+
+### Minor Changes
+
+- ce997e7fd: **chore:** updated development environment to Amoy testnet
+
 ## 0.11.0
 
 This is a stable release, marking the closure of the alpha prerelease.

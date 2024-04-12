@@ -1,5 +1,12 @@
 # @lens-protocol/storage
 
+## 0.8.1
+
+### Patch Changes
+
+- Updated dependencies [ce997e7fd]
+  - @lens-protocol/shared-kernel@0.12.0
+
 ## 0.8.0
 
 This is a stable release, marking the closure of the alpha prerelease.
