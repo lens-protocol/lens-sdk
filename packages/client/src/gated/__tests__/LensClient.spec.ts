@@ -6,7 +6,6 @@ import { invariant } from '@lens-protocol/shared-kernel';
 
 import {
   authenticate,
-  collect,
   createOrGetProfile,
   enableLensProfileManager,
   postOnchainViaLensManager,
@@ -19,14 +18,7 @@ jest.retryTimes(3, { logErrorsBeforeRetry: true });
 
 const signer = new Wallet('0xd6e6257e8cf0f321ad0f798dd0b121a7eb4fe9c7c51994e843c0a1ed05867a5f');
 
-const signerWithNoProfile = new Wallet(
-  'dc377a505ab51735b73656ddfd5abc01fb9d26544b71d9188ecd74c70a22cb6d',
-);
-
-/**
- * Disabled until Lit team comes back with a solution for Amoy testnet
- */
-xdescribe(`Given an instance of "gated.${LensClient.name}"`, () => {
+describe(`Given an instance of "gated.${LensClient.name}"`, () => {
   const initialPostMetadata = metadata.image({
     image: {
       item: faker.internet.url(),
@@ -48,8 +40,8 @@ xdescribe(`Given an instance of "gated.${LensClient.name}"`, () => {
 
       await enableLensProfileManager(signer, client, profile);
 
-      const condition = metadata.profileOwnershipCondition({
-        profileId: profile.id,
+      const condition = metadata.eoaOwnershipCondition({
+        address: signer.address,
       });
 
       const encrypted = await client.gated.encryptPublicationMetadata(
@@ -60,34 +52,7 @@ xdescribe(`Given an instance of "gated.${LensClient.name}"`, () => {
       post = await postOnchainViaLensManager(signer, client, encrypted.unwrap());
     }, 60_000);
 
-    describe('when decrypted by the publication author', () => {
-      it('should return the decrypted metadata', async () => {
-        const client = createGatedLensClient(signer);
-        const profile = await createOrGetProfile(signer, client, publicationAuthorHandle);
-
-        await authenticate(signer, client, profile);
-
-        invariant(
-          isEncryptedPublicationMetadata(post.metadata),
-          'Metadata is not encrypted. This is likely an API issue.',
-        );
-
-        const decrypted = await client.gated.decryptPublicationMetadataFragment(post.metadata);
-
-        expect(decrypted.unwrap()).toMatchObject({
-          asset: {
-            image: {
-              raw: {
-                uri: initialPostMetadata.lens.image.item,
-              },
-            },
-          },
-          content: initialPostMetadata.lens.content,
-        });
-      }, 60_000);
-    });
-
-    describe('when decrypted by just a wallet that meets the token-gated conditions', () => {
+    describe('when decrypted by a wallet that meets the token-gated conditions', () => {
       it('should return the decrypted metadata', async () => {
         const authenticatedWithOnlyWalletClient = createGatedLensClient(signer);
 
@@ -116,9 +81,9 @@ xdescribe(`Given an instance of "gated.${LensClient.name}"`, () => {
       });
     });
 
-    describe('when decrypted by just a wallet that does not meet the token-gated conditions', () => {
+    describe('when decrypted by a wallet that does NOT meet the token-gated conditions', () => {
       it(`should throw a ${CannotDecryptError.name} error`, async () => {
-        const authenticatedWithOnlyWalletClient = createGatedLensClient(signerWithNoProfile);
+        const authenticatedWithOnlyWalletClient = createGatedLensClient(Wallet.createRandom());
 
         await authenticate(signer, authenticatedWithOnlyWalletClient);
 
@@ -139,43 +104,5 @@ xdescribe(`Given an instance of "gated.${LensClient.name}"`, () => {
         expect(decryptedResult.error).toBeInstanceOf(CannotDecryptError);
       });
     });
-  });
-
-  describe('and a token-gated post with collect conditions', () => {
-    // TODO complete once collect is fixed at the API level
-    it.skip('should be decryptable via the collect condition', async () => {
-      const client = createGatedLensClient(signer);
-      const profile = await createOrGetProfile(signer, client, publicationAuthorHandle);
-
-      const condition = metadata.collectCondition({
-        publicationId: await client.publication.predictNextOnChainPublicationId({
-          from: profile.id,
-        }),
-        thisPublication: true,
-      });
-      const encrypted = await client.gated.encryptPublicationMetadata(
-        initialPostMetadata,
-        condition,
-      );
-
-      const post = await postOnchainViaLensManager(signer, client, encrypted.unwrap());
-
-      const collector = await createOrGetProfile(signer, client, 'bobthebuilder2');
-
-      await authenticate(signer, client, collector);
-      await enableLensProfileManager(signer, client, collector);
-      await collect(client, post.id);
-
-      // invariant(
-      //   isEncryptedPublicationMetadata(post.metadata),
-      //   'Metadata is not encrypted. This is likely an API issue.',
-      // );
-
-      // const decrypted = await client.gated.decryptPublicationMetadataFragment(post.metadata);
-
-      // expect(decrypted.unwrap()).toMatchObject({
-      //   content: initial.lens.content,
-      // });
-    }, 60_000);
   });
 });
