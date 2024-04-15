@@ -188,8 +188,8 @@ function toRawSimpleCondition(gqlCondition: gql.ThirdTierCondition): raw.SimpleC
         default:
           assertNever(gqlCondition.contractType, 'Unknown NFT contract type');
       }
-      break;
 
+    // eslint-disable-next-line no-fallthrough
     case 'CollectCondition':
       return raw.collectCondition({
         publicationId: gqlCondition.publicationId,

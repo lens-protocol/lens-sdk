@@ -37,3 +37,17 @@ export const development: EnvironmentConfig = {
     chainId: SupportedChainId.AMOY,
   },
 };
+
+/**
+ * We are using Polygon since Mumbai is no longer supported.
+ * This seems to not affect tests automation, but it's worth noting.
+ */
+export const testing: EnvironmentConfig = {
+  name: 'development',
+  chainId: 137,
+  chainName: SupportedChains.POLYGON,
+  accessControlContract: {
+    address: '0x98a6C31E43b158198da95Ef1242faCA868424187',
+    chainId: SupportedChainId.POLYGON,
+  },
+};
