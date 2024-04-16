@@ -5,6 +5,7 @@ export * from './DismissRecommendedProfiles';
 export * from './FollowPolicy';
 export * from './FollowProfile';
 export * from './LinkHandle';
+export * from './ManageProfileInterests';
 export * from './ReportProfile';
 export * from './SetProfileMetadata';
 export * from './ToggleProfileProperty';
