@@ -1,15 +1,19 @@
-import { profileId, useProfile } from '@lens-protocol/react-web';
+import { useProfile } from '@lens-protocol/react-web';
+import { Suspense } from 'react';
 
-import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
 
-export function UseProfile() {
-  const { data: profile, error, loading } = useProfile({ forProfileId: profileId('0x01') });
-
-  if (loading) return <Loading />;
-
-  if (error) return <ErrorMessage error={error} />;
+export function UseProfileInner() {
+  const { data: profile } = useProfile({ forHandle: 'lens/brainjammer', suspense: true });
 
   return <ProfileCard profile={profile} />;
+}
+
+export function UseProfile() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <UseProfileInner />
+    </Suspense>
+  );
 }

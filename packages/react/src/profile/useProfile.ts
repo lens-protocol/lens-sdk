@@ -1,10 +1,15 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+import { useSuspenseQuery } from '@apollo/client';
 import {
   Profile,
+  ProfileData,
+  ProfileDocument,
   ProfileRequest,
+  ProfileVariables,
   UnspecifiedError,
-  useProfile as useProfileHook,
+  useProfile as useProfileQuery,
 } from '@lens-protocol/api-bindings';
-import { invariant, OneOf } from '@lens-protocol/shared-kernel';
+import { invariant, never, OneOf } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
 import { useLensApolloClient } from '../helpers/arguments';
@@ -69,6 +74,7 @@ export function useProfile({
 export function useProfile({
   forHandle,
   forProfileId,
+  suspense = false,
 }: UseProfileArgs<boolean>):
   | ReadResult<Profile, NotFoundError | UnspecifiedError>
   | SuspenseReadResult<Profile> {
@@ -77,8 +83,25 @@ export function useProfile({
     "Only one of 'forProfileId' or 'forHandle' should be provided to 'useProfile' hook",
   );
 
+  if (suspense) {
+    const { data } = useSuspenseQuery<ProfileData, ProfileVariables>(
+      ProfileDocument,
+      useLensApolloClient({
+        variables: useFragmentVariables({
+          request: {
+            ...(forHandle && { forHandle }),
+            ...(forProfileId && { forProfileId }),
+          },
+        }),
+        fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-first',
+      }),
+    );
+    return { data: data.result ?? never() };
+  }
+
   const { data, error, loading } = useReadResult(
-    useProfileHook(
+    useProfileQuery(
       useLensApolloClient({
         variables: useFragmentVariables({
           request: {
