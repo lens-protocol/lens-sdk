@@ -16,7 +16,7 @@ import { useEffect, useRef } from 'react';
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { ReadResult } from '../helpers/reads';
-import { SuspenseReadResult } from '../helpers/suspense';
+import { SuspenseEnabled, SuspenseReadResult } from '../helpers/suspense';
 import { useLazyFragmentVariables } from '../helpers/variables';
 
 export function usePreviousValue<T>(value: T) {
@@ -99,9 +99,7 @@ export type Session = AnonymousSession | ProfileSession | WalletOnlySession;
 /**
  * {@link useSession} hook arguments
  */
-export type UseSessionArgs<TSuspense extends boolean> = {
-  suspense: TSuspense;
-};
+export type UseSessionArgs<TSuspense extends boolean> = SuspenseEnabled<TSuspense>;
 
 /**
  * `useSession` is a hook that lets you access the current {@link Session}

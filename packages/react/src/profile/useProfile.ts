@@ -9,12 +9,14 @@ import { invariant, OneOf } from '@lens-protocol/shared-kernel';
 import { NotFoundError } from '../NotFoundError';
 import { useLensApolloClient } from '../helpers/arguments';
 import { ReadResult, useReadResult } from '../helpers/reads';
+import { SuspenseEnabled, SuspenseReadResult } from '../helpers/suspense';
 import { useFragmentVariables } from '../helpers/variables';
 
 /**
  * {@link useProfile} hook arguments
  */
-export type UseProfileArgs = OneOf<ProfileRequest>;
+export type UseProfileArgs<TSuspense extends boolean = never> = OneOf<ProfileRequest> &
+  SuspenseEnabled<TSuspense>;
 
 /**
  * `useProfile` is a React hook that allows you to fetch a profile from the Lens API.
@@ -24,18 +26,34 @@ export type UseProfileArgs = OneOf<ProfileRequest>;
  * const { data, error, loading } = useProfile({ forProfileId: '0x04' });
  * ```
  *
- * Get a profile by handle:
+ * ## Basic Usage
+ *
+ * Get Profile by Handle:
+ *
  * ```ts
  * const { data, error, loading } = useProfile({
  *   forHandle: 'lens/stani',
  * });
  * ```
  *
- * Get a profile by Id:
+ * Get Profile by Id:
+ *
  * ```ts
  * const { data, error, loading } = useProfile({
  *   forProfileId: '0x04',
  * });
+ * ```
+ *
+ * ## Suspense Enabled
+ *
+ * You can enable suspense mode to suspend the component until the session data is available.
+ *
+ * ```ts
+ * const { data } = useProfile({
+ *   forHandle: 'lens/stani'
+ * });
+ *
+ * console.log(data.id);
  * ```
  *
  * @category Profiles
@@ -43,10 +61,17 @@ export type UseProfileArgs = OneOf<ProfileRequest>;
  *
  * @param args - {@link UseProfileArgs}
  */
+export function useProfile(args: UseProfileArgs<true>): SuspenseReadResult<Profile>;
 export function useProfile({
   forHandle,
   forProfileId,
-}: UseProfileArgs): ReadResult<Profile, NotFoundError | UnspecifiedError> {
+}: UseProfileArgs<never>): ReadResult<Profile, NotFoundError | UnspecifiedError>;
+export function useProfile({
+  forHandle,
+  forProfileId,
+}: UseProfileArgs<boolean>):
+  | ReadResult<Profile, NotFoundError | UnspecifiedError>
+  | SuspenseReadResult<Profile> {
   invariant(
     forProfileId === undefined || forHandle === undefined,
     "Only one of 'forProfileId' or 'forHandle' should be provided to 'useProfile' hook",

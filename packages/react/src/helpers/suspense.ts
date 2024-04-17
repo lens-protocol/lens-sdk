@@ -17,3 +17,12 @@ export type SuspenseReadResult<T, E = never> = T extends Error
   : {
       data: T;
     };
+
+/**
+ * Helper type to enable Suspense mode.
+ *
+ * @experimental This is an experimental type that can change at any time.
+ */
+export type SuspenseEnabled<TSuspense extends boolean> = {
+  suspense?: TSuspense;
+};
