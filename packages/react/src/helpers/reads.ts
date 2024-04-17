@@ -7,6 +7,7 @@ import {
   OperationVariables,
   LazyQueryResultTuple as ApolloLazyResultTuple,
   useLazyQuery,
+  UseSuspenseQueryResult,
 } from '@apollo/client';
 import {
   UnspecifiedError,
@@ -109,6 +110,23 @@ export function useReadResult<
   V extends OperationVariables = { [key: string]: never },
 >({ error, data }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError> {
   return buildReadResult(data?.result, error);
+}
+
+/**
+ * @internal
+ */
+export function useSuspenseReadResult<
+  TData extends QueryData<TResult>,
+  TResult = InferResult<TData>,
+  TVariables extends OperationVariables = { [key: string]: never },
+>({ data, error }: UseSuspenseQueryResult<TData, TVariables>) {
+  if (error) {
+    throw error;
+  }
+
+  return {
+    data: data.result,
+  };
 }
 
 /**

@@ -9,11 +9,11 @@ import {
   UnspecifiedError,
   useProfile as useProfileQuery,
 } from '@lens-protocol/api-bindings';
-import { invariant, never, OneOf } from '@lens-protocol/shared-kernel';
+import { invariant, OneOf } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
 import { useLensApolloClient } from '../helpers/arguments';
-import { ReadResult, useReadResult } from '../helpers/reads';
+import { ReadResult, useReadResult, useSuspenseReadResult } from '../helpers/reads';
 import { SuspenseEnabled, SuspenseReadResult } from '../helpers/suspense';
 import { useFragmentVariables } from '../helpers/variables';
 
@@ -66,7 +66,7 @@ export type UseProfileArgs<TSuspense extends boolean = never> = OneOf<ProfileReq
  *
  * @param args - {@link UseProfileArgs}
  */
-export function useProfile(args: UseProfileArgs<true>): SuspenseReadResult<Profile>;
+export function useProfile(args: UseProfileArgs<true>): SuspenseReadResult<Profile, NotFoundError>;
 export function useProfile({
   forHandle,
   forProfileId,
@@ -77,27 +77,44 @@ export function useProfile({
   suspense = false,
 }: UseProfileArgs<boolean>):
   | ReadResult<Profile, NotFoundError | UnspecifiedError>
-  | SuspenseReadResult<Profile> {
+  | SuspenseReadResult<Profile, NotFoundError> {
   invariant(
     forProfileId === undefined || forHandle === undefined,
     "Only one of 'forProfileId' or 'forHandle' should be provided to 'useProfile' hook",
   );
 
   if (suspense) {
-    const { data } = useSuspenseQuery<ProfileData, ProfileVariables>(
-      ProfileDocument,
-      useLensApolloClient({
-        variables: useFragmentVariables({
-          request: {
-            ...(forHandle && { forHandle }),
-            ...(forProfileId && { forProfileId }),
-          },
+    const { data } = useSuspenseReadResult(
+      useSuspenseQuery<ProfileData, ProfileVariables>(
+        ProfileDocument,
+        useLensApolloClient({
+          variables: useFragmentVariables({
+            request: {
+              ...(forHandle && { forHandle }),
+              ...(forProfileId && { forProfileId }),
+            },
+          }),
+          fetchPolicy: 'cache-and-network',
+          nextFetchPolicy: 'cache-first',
         }),
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
-      }),
+      ),
     );
-    return { data: data.result ?? never() };
+
+    if (data === null) {
+      return {
+        data: undefined,
+        error: new NotFoundError(
+          forProfileId
+            ? `Profile with id: ${forProfileId}`
+            : `Profile with handle: ${forHandle ? forHandle : ''}`,
+        ),
+      };
+    }
+
+    return {
+      data,
+      error: undefined,
+    };
   }
 
   const { data, error, loading } = useReadResult(

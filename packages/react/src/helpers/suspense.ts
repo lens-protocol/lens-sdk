@@ -4,7 +4,7 @@
  * @experimental This is an experimental type that can change at any time.
  */
 
-export type SuspenseReadResult<T, E = never> = T extends Error
+export type SuspenseReadResult<T, E = never> = E extends Error
   ?
       | {
           data: T;
