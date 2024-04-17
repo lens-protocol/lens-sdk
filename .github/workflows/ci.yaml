@@ -73,12 +73,9 @@ jobs:
       - name: Run tests
         run: pnpm test
         env:
-          SDK_GATED_TEST_PK: ${{secrets.SDK_GATED_TEST_PK}}
-          SDK_GATED_TEST_PROFILE_ID: ${{secrets.SDK_GATED_TEST_PROFILE_ID}}
-          SDK_GATED_TEST_PUBLICATION_ID: ${{secrets.SDK_GATED_TEST_PUBLICATION_ID}}
           TESTING_ENV_URL: ${{secrets.TESTING_ENV_URL}}
-          TESTING_HEADER_KEY: ${{secrets.TESTING_HEADER_KEY}}
-          TESTING_HEADER_VALUE: ${{secrets.TESTING_HEADER_VALUE}}
+          TESTING_NO_RATE_LIMIT: ${{secrets.TESTING_NO_RATE_LIMIT}}
+          TESTING_WHITELISTED: ${{secrets.TESTING_WHITELISTED}}
 
   build:
     name: Build
