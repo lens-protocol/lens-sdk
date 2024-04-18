@@ -15,7 +15,7 @@
     "@gluestack-style/react": "^1.0.48",
     "@gluestack-ui/config": "^1.1.16",
     "@gluestack-ui/themed": "^1.1.9",
-    "@lens-protocol/metadata": "^1.0.5",
+    "@lens-protocol/metadata": "^1.1.6",
     "@lens-protocol/react-native": "link:../../packages/react-native",
     "ethers": "^5.7.2",
     "react": "18.2.0",

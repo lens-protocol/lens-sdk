@@ -71,7 +71,7 @@
     "@graphql-codegen/typescript": "^3.0.4",
     "@jest/globals": "^29.7.0",
     "@lens-protocol/eslint-config": "workspace:*",
-    "@lens-protocol/metadata": "^1.0.5",
+    "@lens-protocol/metadata": "^1.1.6",
     "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
     "@types/jest": "^29.5.10",
