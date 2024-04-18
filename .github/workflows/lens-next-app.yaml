@@ -3,6 +3,8 @@ name: "Lens Next App E2E Test"
 on:
   push:
     branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
 
 jobs:
   e2e:
@@ -10,26 +12,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-
-      - name: Use Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
-          cache: "pnpm"
-
-      - name: Create a new Next.js App from the template
-        run: pnpm create next-app -e https://github.com/lens-protocol/lens-sdk/tree/develop/examples/lens-next-app test-app
-
-      - run: cd test-app
+          node-version: lts/*
 
       - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps
+        run: npx playwright install --with-deps
+
+      - name: Create a new Next.js App from the template
+        run: npx create-next-app -e https://github.com/lens-protocol/lens-sdk/tree/develop/examples/lens-next-app test-app
 
       - name: Run Playwright tests
-        run: pnpm run test:e2e
+        run: |
+          cd test-app
+          npm run test:e2e
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
