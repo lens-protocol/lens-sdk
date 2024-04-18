@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/react-native",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Lens Protocol SDK for React Native",
   "main": "dist/lens-protocol-react-native.cjs.js",
   "module": "dist/lens-protocol-react-native.esm.js",
