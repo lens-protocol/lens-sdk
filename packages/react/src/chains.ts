@@ -65,7 +65,7 @@ export const amoy: ChainConfig = {
   chainId: 80002,
   name: 'Polygon Testnet Amoy',
   rpcUrl: 'https://rpc-amoy.polygon.technology/',
-  blockExplorer: 'https://www.oklink.com/amoy/',
+  blockExplorer: 'https://amoy.polygonscan.com/',
   nativeCurrency: matic(),
 };
 

@@ -1,5 +1,11 @@
 # @lens-protocol/gated-content
 
+## 0.5.1
+
+### Patch Changes
+
+- 577b6457e: **chore:** make @lens-protocol/metadata a direct dependency
+
 ## 0.5.0
 
 ### Minor Changes

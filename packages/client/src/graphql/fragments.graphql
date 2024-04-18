@@ -39,6 +39,9 @@ fragment Amount on Amount {
   rate(request: $rateRequest) {
     ...FiatAmount
   }
+  asFiat(request: $rateRequest) {
+    ...FiatAmount
+  }
 }
 
 fragment FeeFollowModuleSettings on FeeFollowModuleSettings {

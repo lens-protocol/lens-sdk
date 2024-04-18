@@ -46,6 +46,9 @@ export enum LitContractType {
 export enum SupportedChains {
   ETHEREUM = 'ethereum',
   POLYGON = 'polygon',
+  /**
+   * @deprecated Mumbai is no longer supported.
+   */
   MUMBAI = 'mumbai',
   AMOY = 'amoy',
   LINEA_GOERLI = 'lineaGoerli',
@@ -54,6 +57,9 @@ export enum SupportedChains {
 export enum SupportedChainId {
   ETHEREUM = 1,
   POLYGON = 137,
+  /**
+   * @deprecated Mumbai is no longer supported.
+   */
   MUMBAI = 80001,
   AMOY = 80002,
   LINEA_GOERLI = 59140,

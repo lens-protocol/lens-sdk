@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/client",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Low level Lens API client",
   "repository": {
     "directory": "packages/client",
@@ -84,7 +84,7 @@
     "@graphql-codegen/typescript-graphql-request": "^5.0.0",
     "@graphql-codegen/typescript-operations": "^4.0.1",
     "@lens-protocol/eslint-config": "workspace:*",
-    "@lens-protocol/metadata": "^1.0.5",
+    "@lens-protocol/metadata": "^1.1.6",
     "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
     "@types/jest": "^29.5.10",

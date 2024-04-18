@@ -13,7 +13,7 @@ import {
   mockProfileOwnershipCondition,
   mockPublicationMetadata,
 } from '../__helpers__/mocks';
-import { development } from '../environments';
+import { testing } from '../environments';
 import { EncryptedFragmentOfAnyPublicationMetadata } from '../graphql';
 import * as gql from '../graphql/__helpers__/mocks';
 import { webCryptoProvider } from '../web';
@@ -34,13 +34,14 @@ function setupTestScenario() {
       uri: 'https://localhost/login',
     },
     signer,
-    environment: development,
+    environment: testing,
     storageProvider: new InMemoryStorageProvider(),
     encryptionProvider: webCryptoProvider(),
   });
 
   return { client };
 }
+
 const rawAccessCondition: raw.AccessCondition = raw.orCondition([
   mockProfileOwnershipCondition({ profileId: ownerId }),
   mockEoaOwnershipCondition({
@@ -48,10 +49,7 @@ const rawAccessCondition: raw.AccessCondition = raw.orCondition([
   }),
 ]);
 
-/**
- * Disabled until Lit team comes back with a solution for Amoy testnet
- */
-xdescribe(`Given an instance of the ${GatedClient.name}`, () => {
+describe(`Given an instance of the ${GatedClient.name}`, () => {
   describe(`when calling the "${GatedClient.prototype.encryptPublicationMetadata.name}" method`, () => {
     it(`should return the expected raw PublicationMetadata`, async () => {
       const { client } = setupTestScenario();

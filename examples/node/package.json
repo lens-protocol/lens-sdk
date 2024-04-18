@@ -21,7 +21,7 @@
     "@ethersproject/providers": "^5.7.2",
     "@irys/sdk": "^0.0.4",
     "@lens-protocol/client": "workspace:*",
-    "@lens-protocol/metadata": "^1.0.5",
+    "@lens-protocol/metadata": "^1.1.6",
     "dotenv": "^16.3.1",
     "ethers": "^5.7.2",
     "typechain": "^8.3.2",

@@ -110,13 +110,3 @@ export async function postOnchainViaLensManager(
 
   return publication;
 }
-
-export async function collect(client: LensClient, publicationId: string) {
-  const result = await client.publication.actions.actOn({
-    actOn: { simpleCollectOpenAction: true },
-    for: publicationId,
-  });
-  const value = result.unwrap();
-  invariant(isRelaySuccess(value), `Broadcast failed: ${JSON.stringify(value)}`);
-  await client.transaction.waitUntilComplete({ forTxId: value.txId });
-}

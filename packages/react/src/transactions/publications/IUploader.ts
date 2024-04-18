@@ -62,7 +62,7 @@ export interface IUploader {
 }
 
 /**
- *  * The Uploader class let you define your own file upload strategy.
+ * The Uploader class let you define your own file upload strategy.
  *
  * There are two types of uploaders you can define:
  * - Stateless uploader: This uploader handles each file individually. It's useful when you're uploading files through an API in your backend.

@@ -199,9 +199,10 @@ export class GatedClient {
       case 'TransactionMetadataV3':
       case 'VideoMetadataV3':
         return new PublicationMetadataDecryptor(cipher).decrypt(encryptedMetadata);
-    }
 
-    assertNever(encryptedMetadata, `Not supported metadata type`);
+      default:
+        assertNever(encryptedMetadata, `Not supported metadata type`);
+    }
   }
 
   private async getOrCreateAuthSig(): Promise<JsonAuthSig> {
