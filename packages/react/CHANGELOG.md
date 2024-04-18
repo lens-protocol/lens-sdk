@@ -1,5 +1,12 @@
 # @lens-protocol/react
 
+## 2.1.1
+
+### Patch Changes
+
+- 577b6457e: **chore:** make @lens-protocol/metadata a direct dependency
+- 0c3d24594: **feat:** adds `useRefreshToken` experimental hook
+
 ## 2.1.0
 
 ### Minor Changes

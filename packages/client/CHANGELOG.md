@@ -1,5 +1,14 @@
 # @lens-protocol/client
 
+## 2.1.1
+
+### Patch Changes
+
+- 577b6457e: **chore:** make @lens-protocol/metadata a direct dependency
+- 105005590: **feat:** added asFiat to AmountFragment, exposes amount value in requested fiat currency
+- Updated dependencies [577b6457e]
+  - @lens-protocol/gated-content@0.5.1
+
 ## 2.1.0
 
 ### Minor Changes
