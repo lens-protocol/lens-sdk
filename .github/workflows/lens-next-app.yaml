@@ -2,9 +2,7 @@ name: "Lens Next App E2E Test"
 
 on:
   push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
+    branches: [main]
 
 jobs:
   e2e:
