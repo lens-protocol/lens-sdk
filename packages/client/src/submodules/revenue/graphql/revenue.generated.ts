@@ -125,6 +125,21 @@ export const RevenueAggregateFragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'asFiat' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
+            },
+          },
         ],
       },
     },
@@ -309,6 +324,21 @@ export const PublicationRevenueFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'rate' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'asFiat' },
             arguments: [
               {
                 kind: 'Argument',
@@ -7294,6 +7324,21 @@ export const RevenueFromPublicationsDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'asFiat' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
+            },
+          },
         ],
       },
     },
@@ -14254,6 +14299,21 @@ export const RevenueFromPublicationDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'asFiat' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
+            },
+          },
         ],
       },
     },
@@ -21037,6 +21097,21 @@ export const FollowRevenuesDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'rate' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'asFiat' },
             arguments: [
               {
                 kind: 'Argument',

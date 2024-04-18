@@ -1211,6 +1211,21 @@ export const ExplorePublicationsDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'asFiat' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
+            },
+          },
         ],
       },
     },
@@ -7270,6 +7285,21 @@ export const ExploreProfilesDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'rate' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'asFiat' },
             arguments: [
               {
                 kind: 'Argument',

@@ -557,6 +557,21 @@ export const ReactionNotificationFragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'asFiat' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
+            },
+          },
         ],
       },
     },
@@ -7223,6 +7238,21 @@ export const CommentNotificationFragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'asFiat' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
+            },
+          },
         ],
       },
     },
@@ -13851,6 +13881,21 @@ export const MirrorNotificationFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'rate' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'asFiat' },
             arguments: [
               {
                 kind: 'Argument',
@@ -20529,6 +20574,21 @@ export const QuoteNotificationFragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'asFiat' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
+            },
+          },
         ],
       },
     },
@@ -27110,6 +27170,21 @@ export const OpenActionProfileActedFragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'asFiat' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
+            },
+          },
         ],
       },
     },
@@ -28167,6 +28242,21 @@ export const ActedNotificationFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'rate' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'asFiat' },
             arguments: [
               {
                 kind: 'Argument',
@@ -34921,6 +35011,21 @@ export const FollowNotificationFragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'asFiat' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
+            },
+          },
         ],
       },
     },
@@ -35855,6 +35960,21 @@ export const MentionNotificationFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'rate' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'asFiat' },
             arguments: [
               {
                 kind: 'Argument',
@@ -43128,6 +43248,21 @@ export const NotificationsDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'rate' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'rateRequest' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FiatAmount' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'asFiat' },
             arguments: [
               {
                 kind: 'Argument',
