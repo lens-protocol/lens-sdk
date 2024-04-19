@@ -954,6 +954,22 @@ export const PublicationRevenueFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -962,6 +978,28 @@ export const PublicationRevenueFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -5616,10 +5654,63 @@ export const PublicationRevenueFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'commentsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mirrorsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quotesRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'degreesOfSeparation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sourceProfileId' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
       },
       selectionSet: {
         kind: 'SelectionSet',
@@ -6380,6 +6471,22 @@ export const PublicationRevenueFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -6388,6 +6495,28 @@ export const PublicationRevenueFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -6926,6 +7055,22 @@ export const PublicationRevenueFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -6934,6 +7079,28 @@ export const PublicationRevenueFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -7942,6 +8109,22 @@ export const RevenueFromPublicationsDocument = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -7950,6 +8133,28 @@ export const RevenueFromPublicationsDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -12604,10 +12809,63 @@ export const RevenueFromPublicationsDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'commentsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mirrorsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quotesRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'degreesOfSeparation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sourceProfileId' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
       },
       selectionSet: {
         kind: 'SelectionSet',
@@ -13368,6 +13626,22 @@ export const RevenueFromPublicationsDocument = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -13376,6 +13650,28 @@ export const RevenueFromPublicationsDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -13914,6 +14210,22 @@ export const RevenueFromPublicationsDocument = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -13922,6 +14234,28 @@ export const RevenueFromPublicationsDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -14917,6 +15251,22 @@ export const RevenueFromPublicationDocument = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -14925,6 +15275,28 @@ export const RevenueFromPublicationDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -19579,10 +19951,63 @@ export const RevenueFromPublicationDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'commentsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mirrorsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quotesRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'degreesOfSeparation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sourceProfileId' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
       },
       selectionSet: {
         kind: 'SelectionSet',
@@ -20343,6 +20768,22 @@ export const RevenueFromPublicationDocument = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -20351,6 +20792,28 @@ export const RevenueFromPublicationDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -20889,6 +21352,22 @@ export const RevenueFromPublicationDocument = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -20897,6 +21376,28 @@ export const RevenueFromPublicationDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
