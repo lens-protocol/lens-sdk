@@ -135,3 +135,11 @@ mutation CreateProfile($request: CreateProfileRequest!) {
     ...RelaySuccess
   }
 }
+
+mutation HideManagedProfile($request: HideManagedProfileRequest!) {
+  hideManagedProfile(request: $request)
+}
+
+mutation UnhideManagedProfile($request: UnhideManagedProfileRequest!) {
+  unhideManagedProfile(request: $request)
+}
