@@ -4,8 +4,8 @@ import { Suspense, startTransition, useState } from 'react';
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
 
-export function UseProfileInner({ handle }: { handle: string }) {
-  const { data, error } = useProfile({ forHandle: handle, suspense: true });
+export function UseProfileInner({ localName }: { localName: string }) {
+  const { data, error } = useProfile({ forHandle: `lens/${localName}`, suspense: true });
 
   if (error) {
     return <p>Profile not found.</p>;
@@ -36,7 +36,7 @@ export function UseProfile() {
       </label>
 
       <Suspense fallback={<Loading />}>
-        <UseProfileInner handle={`lens/${localName}`} />
+        <UseProfileInner localName={localName} />
       </Suspense>
     </div>
   );
