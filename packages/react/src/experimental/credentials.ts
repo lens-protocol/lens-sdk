@@ -12,6 +12,13 @@ class ExternalStorageAdapter {
   constructor(private readonly credentialsStorage: CredentialsStorage) {}
 
   subscribe = (cb: Callback): Callback => {
+    // initial value
+    void this.credentialsStorage.get().then((credentials) => {
+      this.cache = credentials;
+      cb();
+    });
+
+    // subsequent values
     const subscription = this.credentialsStorage.subscribe((credentials) => {
       this.cache = credentials;
       cb();
