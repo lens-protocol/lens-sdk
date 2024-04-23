@@ -228,6 +228,9 @@ export type PaginatedReadResult<T> = ReadResult<T, UnspecifiedError> & {
 
 type PaginatedQueryVariables = OperationVariables & { cursor?: InputMaybe<Cursor> };
 
+/**
+ * @internal
+ */
 export type PaginatedQueryData<K> = {
   result: { pageInfo: PaginatedResultInfo; items: K[] };
 };
@@ -252,6 +255,9 @@ function useAdHocQuery<
   return fetch;
 }
 
+/**
+ * @internal
+ */
 export function usePaginatedReadResult<
   TVariables extends PaginatedQueryVariables,
   TData extends PaginatedQueryData<TItem>,
@@ -361,7 +367,7 @@ export type SuspenseEnabled<TSuspense extends boolean> = {
 /**
  * @internal
  */
-type UseSuspenseQueryArgs<TData, TVariables extends OperationVariables> = {
+export type UseSuspenseQueryArgs<TData, TVariables extends OperationVariables> = {
   suspense: true;
   query: DocumentNode;
   options: QueryHookOptions<TData, TVariables>;
@@ -370,7 +376,7 @@ type UseSuspenseQueryArgs<TData, TVariables extends OperationVariables> = {
 /**
  * @internal
  */
-type UseQueryArgs<TData, TVariables extends OperationVariables> = {
+export type UseQueryArgs<TData, TVariables extends OperationVariables> = {
   suspense: false;
   query: DocumentNode;
   options: QueryHookOptions<TData, TVariables>;
@@ -379,7 +385,7 @@ type UseQueryArgs<TData, TVariables extends OperationVariables> = {
 /**
  * @internal
  */
-type UseSuspendableQueryArgs<TData, TVariables extends OperationVariables> =
+export type UseSuspendableQueryArgs<TData, TVariables extends OperationVariables> =
   | UseSuspenseQueryArgs<TData, TVariables>
   | UseQueryArgs<TData, TVariables>;
 
