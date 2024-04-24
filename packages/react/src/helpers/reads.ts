@@ -104,7 +104,7 @@ function buildReadResult<T>(
 
 export type QueryData<R> = { result: R };
 
-export type InferResult<T extends QueryData<unknown>> = T extends QueryData<infer R> ? R : never;
+type InferResult<T extends QueryData<unknown>> = T extends QueryData<infer R> ? R : never;
 
 /**
  * @internal
@@ -131,8 +131,7 @@ export function useSuspenseReadResult<TResult, TVariables extends OperationVaria
   }
 
   return {
-    data: data?.result,
-    error: undefined,
+    data: data?.result ?? never('Data should be available in suspense mode.'),
   };
 }
 
@@ -336,11 +335,11 @@ export function usePaginatedReadResult<
 }
 
 /**
- * A read result that supports React Suspense
+ * A read result that supports React Suspense and includes an error.
  *
  * @experimental This is an experimental type that can change at any time.
  */
-export type SuspenseResult<T, E = never> =
+export type SuspenseResultWithError<T, E> =
   | {
       data: undefined;
       error: E;
@@ -351,9 +350,16 @@ export type SuspenseResult<T, E = never> =
     };
 
 /**
+ * A read result that supports React Suspense
+ *
+ * @experimental This is an experimental type that can change at any time.
+ */
+export type SuspenseResult<T> = { data: T };
+
+/**
  * @deprecated Use {@link SuspenseResult | `SuspenseResult`} instead.
  */
-export type SuspenseReadResult<T, E = never> = SuspenseResult<T, E>;
+export type SuspenseReadResult<T, E = never> = SuspenseResultWithError<T, E>;
 
 /**
  * Helper type to enable Suspense mode.
@@ -397,7 +403,7 @@ export function useSuspendableQuery<TResult, TVariables extends OperationVariabl
 ): ReadResult<TResult> | SuspenseResult<TResult> {
   if (args.suspense) {
     return useSuspenseReadResult(
-      useSuspenseQuery(args.query, args.options as SuspenseQueryHookOptions),
+      useSuspenseQuery<QueryData<TResult>>(args.query, args.options as SuspenseQueryHookOptions),
     );
   }
 

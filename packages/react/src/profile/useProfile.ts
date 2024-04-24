@@ -9,7 +9,12 @@ import { invariant, OneOf } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
 import { useLensApolloClient } from '../helpers/arguments';
-import { ReadResult, SuspenseEnabled, SuspenseResult, useSuspendableQuery } from '../helpers/reads';
+import {
+  ReadResult,
+  SuspenseEnabled,
+  SuspenseResultWithError,
+  useSuspendableQuery,
+} from '../helpers/reads';
 import { useFragmentVariables } from '../helpers/variables';
 
 function profileNotFound({ forProfileId, forHandle }: UseProfileArgs<boolean>) {
@@ -28,7 +33,7 @@ export type UseProfileArgs<TSuspense extends boolean = never> = OneOf<ProfileReq
 
 export type UseProfileResult =
   | ReadResult<Profile, NotFoundError | UnspecifiedError>
-  | SuspenseResult<Profile, NotFoundError>;
+  | SuspenseResultWithError<Profile, NotFoundError>;
 
 /**
  * `useProfile` is a React hook that allows you to fetch a profile from the Lens API.
@@ -73,17 +78,19 @@ export type UseProfileResult =
  *
  * @param args - {@link UseProfileArgs}
  */
-export function useProfile(args: UseProfileArgs<true>): SuspenseResult<Profile, NotFoundError>;
 export function useProfile({
   forHandle,
   forProfileId,
 }: UseProfileArgs<never>): ReadResult<Profile, NotFoundError | UnspecifiedError>;
+export function useProfile(
+  args: UseProfileArgs<true>,
+): SuspenseResultWithError<Profile, NotFoundError>;
 export function useProfile({
   suspense = false,
   ...request
 }: UseProfileArgs<boolean>):
   | ReadResult<Profile, NotFoundError | UnspecifiedError>
-  | SuspenseResult<Profile, NotFoundError> {
+  | SuspenseResultWithError<Profile, NotFoundError> {
   invariant(
     request.forProfileId === undefined || request.forHandle === undefined,
     "Only one of 'forProfileId' or 'forHandle' should be provided to 'useProfile' hook",
