@@ -12,6 +12,8 @@ const document = gql`
   }
 `;
 
+type PingData = QueryData<void>;
+
 function mockQueryResponse<TData extends QueryData<unknown>>(data: TData): MockedResponse<TData> {
   return {
     request: {
@@ -25,7 +27,7 @@ describe(`Given the read hook helpers`, () => {
   describe(`when rendering an hook created via the ${useReadResult.name} helper`, () => {
     it('should return the data at the end of the initial loading phase', async () => {
       const client = mockLensApolloClient([mockQueryResponse({ result: true })]);
-      const { result } = renderHook(() => useReadResult(useQuery(document, { client })));
+      const { result } = renderHook(() => useReadResult(useQuery<PingData>(document, { client })));
 
       expect(result.current).toMatchObject({
         error: undefined,
@@ -43,9 +45,11 @@ describe(`Given the read hook helpers`, () => {
 
     it(`should wrap any error into ${UnspecifiedError.name}`, async () => {
       const cause = new ApolloError({ graphQLErrors: [] });
-      const queryResult = { error: cause, data: undefined, loading: false } as ApolloQueryResult<
-        QueryData<void>
-      >;
+      const queryResult = {
+        error: cause,
+        data: undefined,
+        loading: false,
+      } as ApolloQueryResult<PingData>;
       const { result } = renderHook(() => useReadResult(queryResult));
 
       expect(result.current).toMatchObject({
@@ -61,12 +65,12 @@ describe(`Given the read hook helpers`, () => {
         mockQueryResponse({ result: false }),
       ]);
 
-      const first = renderHook(() => useReadResult(useQuery(document, { client })));
+      const first = renderHook(() => useReadResult(useQuery<PingData>(document, { client })));
       await waitFor(() => expect(first.result.current.loading).toBeFalsy());
 
       const second = renderHook(() =>
         useReadResult(
-          useQuery(document, {
+          useQuery<PingData>(document, {
             client,
             fetchPolicy: 'cache-and-network',
             nextFetchPolicy: 'cache-first',

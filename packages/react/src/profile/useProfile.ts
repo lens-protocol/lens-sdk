@@ -1,20 +1,39 @@
 import {
   Profile,
+  ProfileDocument,
   ProfileRequest,
+  ProfileVariables,
   UnspecifiedError,
-  useProfile as useProfileHook,
 } from '@lens-protocol/api-bindings';
 import { invariant, OneOf } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
 import { useLensApolloClient } from '../helpers/arguments';
-import { ReadResult, useReadResult } from '../helpers/reads';
+import {
+  ReadResult,
+  SuspenseEnabled,
+  SuspenseResultWithError,
+  useSuspendableQuery,
+} from '../helpers/reads';
 import { useFragmentVariables } from '../helpers/variables';
+
+function profileNotFound({ forProfileId, forHandle }: UseProfileArgs<boolean>) {
+  return new NotFoundError(
+    forProfileId
+      ? `Profile with id: ${forProfileId}`
+      : `Profile with handle: ${forHandle ? forHandle : ''}`,
+  );
+}
 
 /**
  * {@link useProfile} hook arguments
  */
-export type UseProfileArgs = OneOf<ProfileRequest>;
+export type UseProfileArgs<TSuspense extends boolean = never> = OneOf<ProfileRequest> &
+  SuspenseEnabled<TSuspense>;
+
+export type UseProfileResult =
+  | ReadResult<Profile, NotFoundError | UnspecifiedError>
+  | SuspenseResultWithError<Profile, NotFoundError>;
 
 /**
  * `useProfile` is a React hook that allows you to fetch a profile from the Lens API.
@@ -24,18 +43,34 @@ export type UseProfileArgs = OneOf<ProfileRequest>;
  * const { data, error, loading } = useProfile({ forProfileId: '0x04' });
  * ```
  *
- * Get a profile by handle:
+ * ## Basic Usage
+ *
+ * Get Profile by Handle:
+ *
  * ```ts
  * const { data, error, loading } = useProfile({
  *   forHandle: 'lens/stani',
  * });
  * ```
  *
- * Get a profile by Id:
+ * Get Profile by Id:
+ *
  * ```ts
  * const { data, error, loading } = useProfile({
  *   forProfileId: '0x04',
  * });
+ * ```
+ *
+ * ## Suspense Enabled
+ *
+ * You can enable suspense mode to suspend the component until the session data is available.
+ *
+ * ```ts
+ * const { data } = useProfile({
+ *   forHandle: 'lens/stani'
+ * });
+ *
+ * console.log(data.id);
  * ```
  *
  * @category Profiles
@@ -46,58 +81,37 @@ export type UseProfileArgs = OneOf<ProfileRequest>;
 export function useProfile({
   forHandle,
   forProfileId,
-}: UseProfileArgs): ReadResult<Profile, NotFoundError | UnspecifiedError> {
+}: UseProfileArgs<never>): ReadResult<Profile, NotFoundError | UnspecifiedError>;
+export function useProfile(
+  args: UseProfileArgs<true>,
+): SuspenseResultWithError<Profile, NotFoundError>;
+export function useProfile({
+  suspense = false,
+  ...request
+}: UseProfileArgs<boolean>):
+  | ReadResult<Profile, NotFoundError | UnspecifiedError>
+  | SuspenseResultWithError<Profile, NotFoundError> {
   invariant(
-    forProfileId === undefined || forHandle === undefined,
+    request.forProfileId === undefined || request.forHandle === undefined,
     "Only one of 'forProfileId' or 'forHandle' should be provided to 'useProfile' hook",
   );
 
-  const { data, error, loading } = useReadResult(
-    useProfileHook(
-      useLensApolloClient({
-        variables: useFragmentVariables({
-          request: {
-            ...(forHandle && { forHandle }),
-            ...(forProfileId && { forProfileId }),
-          },
-        }),
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
-      }),
-    ),
-  );
+  const result = useSuspendableQuery<Profile | null, ProfileVariables>({
+    suspense,
+    query: ProfileDocument,
+    options: useLensApolloClient({
+      variables: useFragmentVariables({ request }),
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
+    }),
+  });
 
-  if (loading) {
+  if (result.data === null) {
     return {
       data: undefined,
-      error: undefined,
-      loading: true,
+      error: profileNotFound(request),
     };
   }
 
-  if (error) {
-    return {
-      data: undefined,
-      error,
-      loading: false,
-    };
-  }
-
-  if (data === null) {
-    return {
-      data: undefined,
-      error: new NotFoundError(
-        forProfileId
-          ? `Profile with id: ${forProfileId}`
-          : `Profile with handle: ${forHandle ? forHandle : ''}`,
-      ),
-      loading: false,
-    };
-  }
-
-  return {
-    data,
-    error: undefined,
-    loading: false,
-  };
+  return result as UseProfileResult;
 }
