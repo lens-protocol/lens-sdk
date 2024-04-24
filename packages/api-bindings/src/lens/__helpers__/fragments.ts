@@ -130,6 +130,7 @@ export function mockProfileFragment(overrides?: Partial<gql.Profile>): gql.Profi
     metadata: null,
     invitedBy: null,
     stats: mockProfileStatsFragment(),
+    globalStats: mockProfileStatsFragment(),
     peerToPeerRecommendedByMe: false,
 
     ...overrides,
@@ -138,8 +139,11 @@ export function mockProfileFragment(overrides?: Partial<gql.Profile>): gql.Profi
 }
 
 export function mockPostFragment(overrides?: Partial<Omit<gql.Post, '__typename'>>): gql.Post {
+  const publicationId = mockPublicationId();
+  const stats = mockPublicationStatsFragment({ id: publicationId });
+
   return {
-    id: mockPublicationId(),
+    id: publicationId,
     isHidden: false,
     txHash: mockTransactionHash(),
     by: mockProfileFragment(),
@@ -150,7 +154,8 @@ export function mockPostFragment(overrides?: Partial<Omit<gql.Post, '__typename'
     metadata: mockPublicationTextOnlyMetadata(),
     openActionModules: [],
     referenceModule: null,
-    stats: mockPublicationStatsFragment(),
+    stats,
+    globalStats: stats,
     isEncrypted: false,
     hashtagsMentioned: [],
     profilesMentioned: [],
@@ -182,6 +187,7 @@ export function mockCommentFragment(
     commentOn: mainPost,
     firstComment: null,
     stats: mockPublicationStatsFragment(),
+    globalStats: mockPublicationStatsFragment(),
     isEncrypted: false,
     hashtagsMentioned: [],
     profilesMentioned: [],
@@ -206,6 +212,7 @@ export function mockQuoteFragment(overrides?: Partial<Omit<gql.Quote, '__typenam
     referenceModule: null,
     quoteOn: mockPostFragment(),
     stats: mockPublicationStatsFragment(),
+    globalStats: mockPublicationStatsFragment(),
     isEncrypted: false,
     hashtagsMentioned: [],
     profilesMentioned: [],
