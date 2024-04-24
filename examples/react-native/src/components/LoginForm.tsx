@@ -16,7 +16,6 @@ export function LoginForm({ address }: LoginFormProps) {
     loading,
   } = useProfilesManaged({
     for: address,
-    includeOwned: true,
   });
 
   if (loading) {

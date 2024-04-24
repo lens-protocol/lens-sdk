@@ -23,8 +23,6 @@ const config = makeMetroConfig({
       '@babel/runtime': path.resolve(__dirname, './node_modules/@babel/runtime'),
       // point how  `@lens-protocol` linked packages should resolve react without having 2 duplicated versions
       react: path.resolve(__dirname, 'node_modules/react'),
-      // point how  `@lens-protocol` linked packages should resolve ethers without having 2 duplicated versions
-      ethers: path.resolve(__dirname, 'node_modules/ethers'),
     },
   },
   transformer: {
