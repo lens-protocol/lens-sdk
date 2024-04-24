@@ -127,6 +127,18 @@ export type CreateProfileMutationVariables = Types.Exact<{
 
 export type CreateProfileMutation = { result: RelaySuccessFragment };
 
+export type HideManagedProfileMutationVariables = Types.Exact<{
+  request: Types.HideManagedProfileRequest;
+}>;
+
+export type HideManagedProfileMutation = { hideManagedProfile: string | null };
+
+export type UnhideManagedProfileMutationVariables = Types.Exact<{
+  request: Types.UnhideManagedProfileRequest;
+}>;
+
+export type UnhideManagedProfileMutation = { unhideManagedProfile: string | null };
+
 export const UserSigNoncesFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -2942,6 +2954,81 @@ export const CreateProfileDocument = {
     },
   ],
 } as unknown as DocumentNode;
+export const HideManagedProfileDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'HideManagedProfile' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'HideManagedProfileRequest' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'hideManagedProfile' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const UnhideManagedProfileDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UnhideManagedProfile' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UnhideManagedProfileRequest' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'unhideManagedProfile' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'request' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'request' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -2959,6 +3046,8 @@ const UserRateLimitDocumentString = print(UserRateLimitDocument);
 const ClaimProfileWithHandleDocumentString = print(ClaimProfileWithHandleDocument);
 const CreateProfileWithHandleDocumentString = print(CreateProfileWithHandleDocument);
 const CreateProfileDocumentString = print(CreateProfileDocument);
+const HideManagedProfileDocumentString = print(HideManagedProfileDocument);
+const UnhideManagedProfileDocumentString = print(UnhideManagedProfileDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     OwnedHandles(
@@ -3132,6 +3221,46 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'CreateProfile',
+        'mutation',
+      );
+    },
+    HideManagedProfile(
+      variables: HideManagedProfileMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: HideManagedProfileMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<HideManagedProfileMutation>(
+            HideManagedProfileDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'HideManagedProfile',
+        'mutation',
+      );
+    },
+    UnhideManagedProfile(
+      variables: UnhideManagedProfileMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: UnhideManagedProfileMutation;
+      extensions?: any;
+      headers: Dom.Headers;
+      status: number;
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<UnhideManagedProfileMutation>(
+            UnhideManagedProfileDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'UnhideManagedProfile',
         'mutation',
       );
     },
