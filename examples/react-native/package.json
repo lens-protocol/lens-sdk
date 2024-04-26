@@ -32,8 +32,7 @@
     "react-native-modal": "^13.0.1",
     "react-native-svg": "^13.14.0",
     "react-native-web": "^0.19.11",
-    "react-native-windows": "^0.73.11",
-    "viem": "^2.9.26"
+    "react-native-windows": "^0.73.11"
   },
   "devDependencies": {
     "@babel/core": "^7.24.4",

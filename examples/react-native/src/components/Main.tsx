@@ -5,7 +5,6 @@ import React from 'react';
 
 import { ErrorCallout } from './ErrorCallout';
 import { LoginForm } from './LoginForm';
-import { LogoutButton } from './LogoutButton';
 import { MyProfile } from './MyProfile';
 
 export function Main() {
@@ -44,7 +43,6 @@ export function Main() {
         <Text>
           Welcome <Text isTruncated>{session.address}</Text>, you need a Profile to use this app.
         </Text>
-        <LogoutButton />
       </VStack>
     );
   }

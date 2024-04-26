@@ -12,8 +12,6 @@ import {
 import { Profile } from '@lens-protocol/react-native';
 import React from 'react';
 
-import { LogoutButton } from './LogoutButton';
-
 type ProfileAvatarProps = {
   profile: Profile;
 };
@@ -34,6 +32,7 @@ function ProfileAvatar({ profile }: ProfileAvatarProps) {
           source={{
             uri,
           }}
+          alt="profile image"
         />
       )}
     </Avatar>
@@ -94,10 +93,6 @@ export function MyProfile({ profile }: MyProfileProps) {
           <Text size="xs">following</Text>
         </Ticker>
       </Box>
-
-      <Divider my="$6" />
-
-      <LogoutButton />
     </Card>
   );
 }

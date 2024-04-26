@@ -35,7 +35,7 @@ export function LoginForm({ address }: LoginFormProps) {
       <Heading size="lg" textAlign="center">
         Select a profile to log in
       </Heading>
-      <VStack gap="$4">
+      <VStack gap="$4" mb="$4">
         {profiles.map((profile) => (
           <LoginButton key={profile.id} address={address} profile={profile} />
         ))}
