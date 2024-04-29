@@ -1,7 +1,6 @@
 import { ProfileInterestTypes } from '@lens-protocol/api-bindings';
-import { invariant, success } from '@lens-protocol/shared-kernel';
+import { success } from '@lens-protocol/shared-kernel';
 
-import { SessionType, useSession } from '../authentication';
 import { UseDeferredTask, useDeferredTask } from '../helpers/tasks';
 import { useProfileInterestsController } from './adapters/useProfileInterestsController';
 
@@ -46,17 +45,10 @@ export function useRemoveProfileInterests(): UseDeferredTask<
   never,
   RemoveProfileInterestsArgs
 > {
-  const { data: session } = useSession();
   const { remove } = useProfileInterestsController();
 
   return useDeferredTask(async (request) => {
-    invariant(
-      session?.type === SessionType.WithProfile,
-      'You must be authenticated with a profile to use this hook. Use `useLogin` hook to authenticate.',
-    );
-
     await remove({
-      profileId: session.profile.id,
       interests: request.interests,
     });
 

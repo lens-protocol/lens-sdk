@@ -8,15 +8,13 @@ import {
   RemoveProfileInterestsVariables,
   SafeApolloClient,
 } from '@lens-protocol/api-bindings';
-import { ProfileId } from '@lens-protocol/domain/entities';
 import { IProfileInterestsGateway } from '@lens-protocol/domain/use-cases/profile';
 
 export type ProfileInterestsRequest = {
-  profileId: ProfileId;
   interests: ProfileInterestTypes[];
 };
 
-export class ProfileInterestsGateway implements IProfileInterestsGateway {
+export class ProfileInterestsGateway implements IProfileInterestsGateway<ProfileInterestTypes> {
   constructor(private apolloClient: SafeApolloClient) {}
 
   async add(request: ProfileInterestsRequest) {
