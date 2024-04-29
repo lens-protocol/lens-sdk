@@ -31,7 +31,6 @@
   "devDependencies": {
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
-    "@swc/core": "^1.4.13",
     "@types/node": "^18.18.12",
     "@types/uuid": "^9.0.7",
     "prettier": "^2.8.8",

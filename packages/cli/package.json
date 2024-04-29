@@ -40,7 +40,6 @@
     "@lens-protocol/eslint-config": "workspace:*",
     "@lens-protocol/prettier-config": "workspace:*",
     "@lens-protocol/tsconfig": "workspace:*",
-    "@swc/core": "^1.4.13",
     "@types/node": "^18.19.31",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",

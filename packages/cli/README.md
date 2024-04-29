@@ -2,6 +2,8 @@
 
 CLI tool for Lens developers.
 
+**Please note, this is an experimental tool and it may undergo significant changes in the future.**
+
 ## Usage
 
 Install the Lens CLI from npm.
