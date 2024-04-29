@@ -61,6 +61,7 @@ export function createSharedDependencies(userConfig: BaseConfig): SharedDependen
   const anonymousApolloClient = createAuthApolloClient({
     uri: config.environment.backend,
     logger: config.logger,
+    origin: config.origin,
   });
   const authApi = new AuthApi(anonymousApolloClient);
 
@@ -79,7 +80,6 @@ export function createSharedDependencies(userConfig: BaseConfig): SharedDependen
     accessTokenStorage: credentialsStorage,
     pollingInterval: config.environment.timings.pollingInterval,
     logger: config.logger,
-    origin: config.origin,
   });
 
   // infrastructure

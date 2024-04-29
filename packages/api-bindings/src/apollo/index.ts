@@ -7,26 +7,25 @@ import { createLensCache } from './cache/createLensCache';
 import { AuthLinkArgs, IAccessTokenStorage, createAuthLink, createLensLink } from './links';
 
 export type ApolloClientConfig = AuthLinkArgs & {
-  uri: string;
+  connectToDevTools?: boolean;
   logger: ILogger;
   pollingInterval: number;
-  connectToDevTools?: boolean;
+  uri: string;
 };
 
 export function createLensApolloClient({
   accessTokenStorage,
-  origin,
   uri,
   logger,
   pollingInterval,
   connectToDevTools,
 }: ApolloClientConfig) {
-  const authLink = createAuthLink({ accessTokenStorage, origin });
+  const authLink = createAuthLink({ accessTokenStorage });
 
   const httpLink = createLensLink({
-    uri,
     logger,
     supportedVersion: LENS_API_MINIMAL_SUPPORTED_VERSION,
+    uri,
   });
 
   return new SafeApolloClient({
@@ -39,14 +38,20 @@ export function createLensApolloClient({
 }
 
 export type AuthApolloClientConfig = {
-  uri: string;
   logger: ILogger;
+  origin?: string;
+  uri: string;
 };
 
-export function createAuthApolloClient({ uri, logger }: AuthApolloClientConfig) {
+export function createAuthApolloClient({ logger, origin, uri }: AuthApolloClientConfig) {
   return new SafeApolloClient({
     cache: createLensCache(),
-    link: createLensLink({ uri, logger, supportedVersion: LENS_API_MINIMAL_SUPPORTED_VERSION }),
+    link: createLensLink({
+      logger,
+      origin,
+      supportedVersion: LENS_API_MINIMAL_SUPPORTED_VERSION,
+      uri,
+    }),
     version: LENS_API_MINIMAL_SUPPORTED_VERSION,
   });
 }
