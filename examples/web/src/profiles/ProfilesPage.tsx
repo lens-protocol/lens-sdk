@@ -96,6 +96,11 @@ const profileHooks = [
     description: 'Recommend a profile.',
     path: '/profiles/useRecommendProfileToggle',
   },
+  {
+    label: 'useProfileInterests',
+    description: 'Add and remove profile interests.',
+    path: '/profiles/useProfileInterests',
+  },
 ];
 
 export function ProfilesPage() {

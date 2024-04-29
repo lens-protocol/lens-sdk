@@ -1,6 +1,7 @@
 /**
  * Hooks
  */
+export * from './useAddProfileInterests';
 export * from './useBlockedProfiles';
 export * from './useLazyProfile';
 export * from './useLazyProfiles';
@@ -12,6 +13,7 @@ export * from './useProfileFollowing';
 export * from './useProfileManagers';
 export * from './useProfiles';
 export * from './useRecommendProfileToggle';
+export * from './useRemoveProfileInterests';
 export * from './useReportProfile';
 export * from './useWhoActedOnPublication';
 
