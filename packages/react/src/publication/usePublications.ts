@@ -13,6 +13,8 @@ import { useFragmentVariables } from '../helpers/variables';
  */
 export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
 
+export type { PublicationsRequest };
+
 /**
  * Fetch a paginated result of publications based on a set of filters.
  *
