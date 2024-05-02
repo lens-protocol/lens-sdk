@@ -103,6 +103,7 @@ export type {
 
 export type {
   // requests
+  ActOnOpenActionLensManagerRequest,
   ActOnOpenActionRequest,
   AlreadyInvitedCheckRequest,
   ApprovedAuthenticationRequest,
@@ -122,6 +123,7 @@ export type {
   FeedRequest,
   FollowersRequest,
   FollowingRequest,
+  FollowLensManagerRequest,
   FollowRequest,
   FollowRevenueRequest,
   FollowStatusBulkRequest,
@@ -222,6 +224,7 @@ export type {
 
   // inputs
   ActOnOpenActionInput,
+  ActOnOpenActionLensManagerInput,
   AmountInput,
   CollectActionModuleInput,
   CreateFrameEip712TypedDataInput,
@@ -232,6 +235,7 @@ export type {
   Eip712TypedDataFieldInput,
   FeeFollowModuleInput,
   FeeFollowModuleRedeemInput,
+  FollowLensManager,
   FollowModuleInput,
   FollowModuleRedeemInput,
   FraudReasonInput,
@@ -255,6 +259,7 @@ export type {
   UnknownOpenActionActRedeemInput,
   UnknownOpenActionModuleInput,
   UnknownReferenceModuleInput,
+  FollowLensManagerModuleRedeemInput,
 
   // args
   ProfileStatsArg,
