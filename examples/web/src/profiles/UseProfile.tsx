@@ -4,7 +4,7 @@ import { Suspense, startTransition, useState } from 'react';
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
 
-export function UseProfileInner({ localName }: { localName: string }) {
+function UseProfileInner({ localName }: { localName: string }) {
   const { data, error } = useProfile({ forHandle: `lens/${localName}`, suspense: true });
 
   if (error) {
