@@ -1,5 +1,17 @@
 # @lens-protocol/client
 
+## 2.2.0
+
+### Minor Changes
+
+- ea5a9df82: **feat:** added `wallet.hideManagedProfile` and `wallet.unhideManagedProfile` methods
+
+### Patch Changes
+
+- 5e51f4938: **feat:** add missing reference modules fragments: LegacyFollowOnlyReferenceModuleSettingsFragment and LegacyDegreesOfSeparationReferenceModuleSettingsFragment
+- 7f5436d69: **fix:** `client.profile.follow` and `client.publication.actions.actOn` request types
+  - @lens-protocol/blockchain-bindings@0.10.2
+
 ## 2.1.1
 
 ### Patch Changes
