@@ -1,5 +1,14 @@
 # @lens-protocol/api-bindings
 
+## 0.12.1
+
+### Patch Changes
+
+- 2edd76361: **feat:** added globalStats alias to publication and profile stats
+- Updated dependencies [b1e474862]
+- Updated dependencies [1e6b96c67]
+  - @lens-protocol/domain@0.12.0
+
 ## 0.12.0
 
 ### Minor Changes

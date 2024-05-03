@@ -1,5 +1,25 @@
 # @lens-protocol/react
 
+## 2.2.0
+
+### Minor Changes
+
+- 8d4e958e0: **feat:** experimental React Suspense support in `useProfile` hook
+- 1e6b96c67: **feat:** added hooks to manage profile interests: useAddProfileInterests and useRemoveProfileInterests
+
+### Patch Changes
+
+- 8bc1cf3ba: **fix:** make sure initial value is returned by `useAccessToken`, `useRefreshToken`, and `useIdentityToken` in all circumstances
+- 2edd76361: **feat:** added globalStats alias to publication and profile stats
+- b1e474862: **chore:** remove unused error details
+- 0d9bd97bd: **fix:** `useCreateProfile` fails w/ `InvariantError` on first Profile created
+- Updated dependencies [2edd76361]
+- Updated dependencies [b1e474862]
+- Updated dependencies [1e6b96c67]
+  - @lens-protocol/api-bindings@0.12.1
+  - @lens-protocol/domain@0.12.0
+  - @lens-protocol/blockchain-bindings@0.10.2
+
 ## 2.1.1
 
 ### Patch Changes

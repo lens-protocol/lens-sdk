@@ -1,5 +1,15 @@
 # @lens-protocol/domain
 
+## 0.12.0
+
+### Minor Changes
+
+- 1e6b96c67: **feat:** added hooks to manage profile interests: useAddProfileInterests and useRemoveProfileInterests
+
+### Patch Changes
+
+- b1e474862: **chore:** remove unused error details
+
 ## 0.11.1
 
 ### Patch Changes
