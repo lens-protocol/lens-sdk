@@ -16,6 +16,7 @@ import type {
   DismissRecommendedProfilesRequest,
   FollowersRequest,
   FollowingRequest,
+  FollowLensManagerRequest,
   FollowRequest,
   FollowStatusBulkRequest,
   LinkHandleToProfileRequest,
@@ -829,7 +830,7 @@ export class Profile {
    * ```
    */
   async follow(
-    request: FollowRequest,
+    request: FollowLensManagerRequest,
   ): PromiseResult<
     RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError

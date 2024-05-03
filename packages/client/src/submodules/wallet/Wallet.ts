@@ -13,9 +13,11 @@ import type {
   ClaimProfileWithHandleRequest,
   CreateProfileRequest,
   CreateProfileWithHandleRequest,
+  HideManagedProfileRequest,
   LastLoggedInProfileRequest,
   OwnedHandlesRequest,
   ProfilesManagedRequest,
+  UnhideManagedProfileRequest,
   UserCurrentRateLimitRequest,
 } from '../../graphql/types.generated';
 import {
@@ -99,6 +101,52 @@ export class Wallet {
 
       return result.data.result;
     }, request);
+  }
+
+  /**
+   * Hide a profile that is managed but not owned.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * await client.wallet.hideManagedProfile({
+   *   profileId: '0x01',
+   * });
+   * ```
+   */
+  async hideManagedProfile(
+    request: HideManagedProfileRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      await this.sdk.HideManagedProfile({ request }, headers);
+    });
+  }
+
+  /**
+   * Unhide a previously hidden profile that is managed but not owned.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the mutation
+   * @returns {@link PromiseResult} with void
+   *
+   * @example
+   * ```ts
+   * await client.wallet.unhideManagedProfile({
+   *   profileId: '0x01',
+   * });
+   * ```
+   */
+  async unhideManagedProfile(
+    request: UnhideManagedProfileRequest,
+  ): PromiseResult<void, CredentialsExpiredError | NotAuthenticatedError> {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      await this.sdk.UnhideManagedProfile({ request }, headers);
+    });
   }
 
   /**

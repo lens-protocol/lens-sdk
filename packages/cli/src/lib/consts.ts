@@ -1,0 +1,2 @@
+export const LENS_HANDLES_CONTRACT = '0xe7e7ead361f3aacd73a61a9bd6c10ca17f38e945';
+export const LENS_PROFILES_CONTRACT = '0xdb46d1dc155634fbc732f92e853b10b288ad5a1d';

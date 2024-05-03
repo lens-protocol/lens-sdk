@@ -367,6 +367,17 @@ export function post({
       quotes: 0,
       upvotes: 0,
     },
+    globalStats: {
+      __typename: 'PublicationStats',
+      id,
+      bookmarks: 0,
+      collects: 0,
+      comments: 0,
+      downvotes: 0,
+      mirrors: 0,
+      quotes: 0,
+      upvotes: 0,
+    },
     txHash: null,
   };
 }

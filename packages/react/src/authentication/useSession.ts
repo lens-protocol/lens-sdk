@@ -15,8 +15,7 @@ import { EvmAddress, invariant, never } from '@lens-protocol/shared-kernel';
 import { useEffect, useRef } from 'react';
 
 import { useLensApolloClient } from '../helpers/arguments';
-import { ReadResult } from '../helpers/reads';
-import { SuspenseReadResult } from '../helpers/suspense';
+import { ReadResult, SuspenseEnabled, SuspenseResult } from '../helpers/reads';
 import { useLazyFragmentVariables } from '../helpers/variables';
 
 export function usePreviousValue<T>(value: T) {
@@ -99,9 +98,7 @@ export type Session = AnonymousSession | ProfileSession | WalletOnlySession;
 /**
  * {@link useSession} hook arguments
  */
-export type UseSessionArgs<TSuspense extends boolean> = {
-  suspense: TSuspense;
-};
+export type UseSessionArgs<TSuspense extends boolean> = SuspenseEnabled<TSuspense>;
 
 /**
  * `useSession` is a hook that lets you access the current {@link Session}
@@ -173,11 +170,11 @@ export type UseSessionArgs<TSuspense extends boolean> = {
  * @category Authentication
  * @group Hooks
  */
-export function useSession(args: UseSessionArgs<true>): SuspenseReadResult<Session>;
+export function useSession(args: UseSessionArgs<true>): SuspenseResult<Session>;
 export function useSession(args?: UseSessionArgs<never>): ReadResult<Session, UnspecifiedError>;
 export function useSession(
   args?: UseSessionArgs<boolean>,
-): ReadResult<Session, UnspecifiedError> | SuspenseReadResult<Session> {
+): ReadResult<Session, UnspecifiedError> | SuspenseResult<Session> {
   const sessionData = useSessionDataVar();
 
   const [primeCacheWithProfile, data] = useProfileFromCache(sessionData);

@@ -385,7 +385,26 @@ fragment FollowOnlyReferenceModuleSettings on FollowOnlyReferenceModuleSettings 
   }
 }
 
+fragment LegacyFollowOnlyReferenceModuleSettings on LegacyFollowOnlyReferenceModuleSettings {
+  __typename
+  contract {
+    ...NetworkAddress
+  }
+}
+
 fragment DegreesOfSeparationReferenceModuleSettings on DegreesOfSeparationReferenceModuleSettings {
+  __typename
+  contract {
+    ...NetworkAddress
+  }
+  commentsRestricted
+  mirrorsRestricted
+  quotesRestricted
+  degreesOfSeparation
+  sourceProfileId
+}
+
+fragment LegacyDegreesOfSeparationReferenceModuleSettings on LegacyDegreesOfSeparationReferenceModuleSettings {
   __typename
   contract {
     ...NetworkAddress
@@ -1608,8 +1627,14 @@ fragment Post on Post {
     ... on FollowOnlyReferenceModuleSettings {
       ...FollowOnlyReferenceModuleSettings
     }
+    ... on LegacyFollowOnlyReferenceModuleSettings {
+      ...LegacyFollowOnlyReferenceModuleSettings
+    }
     ... on DegreesOfSeparationReferenceModuleSettings {
       ...DegreesOfSeparationReferenceModuleSettings
+    }
+    ... on LegacyDegreesOfSeparationReferenceModuleSettings {
+      ...LegacyDegreesOfSeparationReferenceModuleSettings
     }
     ... on UnknownReferenceModuleSettings {
       ...UnknownReferenceModuleSettings
@@ -1733,8 +1758,14 @@ fragment CommentBase on Comment {
     ... on FollowOnlyReferenceModuleSettings {
       ...FollowOnlyReferenceModuleSettings
     }
+    ... on LegacyFollowOnlyReferenceModuleSettings {
+      ...LegacyFollowOnlyReferenceModuleSettings
+    }
     ... on DegreesOfSeparationReferenceModuleSettings {
       ...DegreesOfSeparationReferenceModuleSettings
+    }
+    ... on LegacyDegreesOfSeparationReferenceModuleSettings {
+      ...LegacyDegreesOfSeparationReferenceModuleSettings
     }
     ... on UnknownReferenceModuleSettings {
       ...UnknownReferenceModuleSettings
@@ -1909,8 +1940,14 @@ fragment QuoteBase on Quote {
     ... on FollowOnlyReferenceModuleSettings {
       ...FollowOnlyReferenceModuleSettings
     }
+    ... on LegacyFollowOnlyReferenceModuleSettings {
+      ...LegacyFollowOnlyReferenceModuleSettings
+    }
     ... on DegreesOfSeparationReferenceModuleSettings {
       ...DegreesOfSeparationReferenceModuleSettings
+    }
+    ... on LegacyDegreesOfSeparationReferenceModuleSettings {
+      ...LegacyDegreesOfSeparationReferenceModuleSettings
     }
     ... on UnknownReferenceModuleSettings {
       ...UnknownReferenceModuleSettings

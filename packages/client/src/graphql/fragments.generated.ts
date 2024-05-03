@@ -239,8 +239,23 @@ export type FollowOnlyReferenceModuleSettingsFragment = {
   contract: NetworkAddressFragment;
 };
 
+export type LegacyFollowOnlyReferenceModuleSettingsFragment = {
+  __typename: 'LegacyFollowOnlyReferenceModuleSettings';
+  contract: NetworkAddressFragment;
+};
+
 export type DegreesOfSeparationReferenceModuleSettingsFragment = {
   __typename: 'DegreesOfSeparationReferenceModuleSettings';
+  commentsRestricted: boolean;
+  mirrorsRestricted: boolean;
+  quotesRestricted: boolean;
+  degreesOfSeparation: number;
+  sourceProfileId: string;
+  contract: NetworkAddressFragment;
+};
+
+export type LegacyDegreesOfSeparationReferenceModuleSettingsFragment = {
+  __typename: 'LegacyDegreesOfSeparationReferenceModuleSettings';
   commentsRestricted: boolean;
   mirrorsRestricted: boolean;
   degreesOfSeparation: number;
@@ -1069,8 +1084,9 @@ export type PostFragment = {
   referenceModule:
     | DegreesOfSeparationReferenceModuleSettingsFragment
     | FollowOnlyReferenceModuleSettingsFragment
+    | LegacyDegreesOfSeparationReferenceModuleSettingsFragment
+    | LegacyFollowOnlyReferenceModuleSettingsFragment
     | UnknownReferenceModuleSettingsFragment
-    | {}
     | null;
   profilesMentioned: Array<ProfileMentionedFragment>;
 };
@@ -1121,8 +1137,9 @@ export type CommentBaseFragment = {
   referenceModule:
     | DegreesOfSeparationReferenceModuleSettingsFragment
     | FollowOnlyReferenceModuleSettingsFragment
+    | LegacyDegreesOfSeparationReferenceModuleSettingsFragment
+    | LegacyFollowOnlyReferenceModuleSettingsFragment
     | UnknownReferenceModuleSettingsFragment
-    | {}
     | null;
 };
 
@@ -1192,8 +1209,9 @@ export type QuoteBaseFragment = {
   referenceModule:
     | DegreesOfSeparationReferenceModuleSettingsFragment
     | FollowOnlyReferenceModuleSettingsFragment
+    | LegacyDegreesOfSeparationReferenceModuleSettingsFragment
+    | LegacyFollowOnlyReferenceModuleSettingsFragment
     | UnknownReferenceModuleSettingsFragment
-    | {}
     | null;
 };
 
@@ -27664,6 +27682,48 @@ export const FollowOnlyReferenceModuleSettingsFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode;
+export const LegacyFollowOnlyReferenceModuleSettingsFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'NetworkAddress' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NetworkAddress' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'address' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'chainId' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
 export const DegreesOfSeparationReferenceModuleSettingsFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -27673,6 +27733,53 @@ export const DegreesOfSeparationReferenceModuleSettingsFragmentDoc = {
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'commentsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mirrorsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quotesRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'degreesOfSeparation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sourceProfileId' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'NetworkAddress' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'NetworkAddress' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'address' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'chainId' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode;
+export const LegacyDegreesOfSeparationReferenceModuleSettingsFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
       },
       selectionSet: {
         kind: 'SelectionSet',
@@ -28380,6 +28487,22 @@ export const PostFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -28388,6 +28511,28 @@ export const PostFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -29666,10 +29811,63 @@ export const PostFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'commentsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mirrorsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quotesRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'degreesOfSeparation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sourceProfileId' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
       },
       selectionSet: {
         kind: 'SelectionSet',
@@ -33762,6 +33960,22 @@ export const CommentBaseFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -33770,6 +33984,28 @@ export const CommentBaseFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -35010,10 +35246,63 @@ export const CommentBaseFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'commentsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mirrorsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quotesRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'degreesOfSeparation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sourceProfileId' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
       },
       selectionSet: {
         kind: 'SelectionSet',
@@ -38999,6 +39288,22 @@ export const QuoteBaseFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -39007,6 +39312,28 @@ export const QuoteBaseFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -40247,10 +40574,63 @@ export const QuoteBaseFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'commentsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mirrorsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quotesRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'degreesOfSeparation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sourceProfileId' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
       },
       selectionSet: {
         kind: 'SelectionSet',
@@ -45059,10 +45439,63 @@ export const CommentFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'commentsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mirrorsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quotesRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'degreesOfSeparation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sourceProfileId' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
       },
       selectionSet: {
         kind: 'SelectionSet',
@@ -49166,6 +49599,22 @@ export const CommentFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -49174,6 +49623,28 @@ export const CommentFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -49724,6 +50195,22 @@ export const CommentFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -49732,6 +50219,28 @@ export const CommentFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -50270,6 +50779,22 @@ export const CommentFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -50278,6 +50803,28 @@ export const CommentFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -51626,10 +52173,63 @@ export const QuoteFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'commentsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mirrorsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quotesRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'degreesOfSeparation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sourceProfileId' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
       },
       selectionSet: {
         kind: 'SelectionSet',
@@ -55733,6 +56333,22 @@ export const QuoteFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -55741,6 +56357,28 @@ export const QuoteFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -56291,6 +56929,22 @@ export const QuoteFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -56299,6 +56953,28 @@ export const QuoteFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -56837,6 +57513,22 @@ export const QuoteFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -56845,6 +57537,28 @@ export const QuoteFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -58193,10 +58907,63 @@ export const MirrorFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'commentsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mirrorsRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quotesRestricted' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'degreesOfSeparation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sourceProfileId' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LegacyDegreesOfSeparationReferenceModuleSettings' },
       },
       selectionSet: {
         kind: 'SelectionSet',
@@ -62300,6 +63067,22 @@ export const MirrorFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -62308,6 +63091,28 @@ export const MirrorFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -62858,6 +63663,22 @@ export const MirrorFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -62866,6 +63687,28 @@ export const MirrorFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },
@@ -63498,6 +64341,22 @@ export const MirrorFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LegacyFollowOnlyReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
                   },
                   selectionSet: {
@@ -63506,6 +64365,28 @@ export const MirrorFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'DegreesOfSeparationReferenceModuleSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: {
+                      kind: 'Name',
+                      value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                    },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'LegacyDegreesOfSeparationReferenceModuleSettings',
+                        },
                       },
                     ],
                   },

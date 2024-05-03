@@ -8,7 +8,11 @@ import {
   LensProfileManagerRelayErrorFragment,
   RelaySuccessFragment,
 } from '../../../../graphql/fragments.generated';
-import type { ActOnOpenActionRequest, TypedDataOptions } from '../../../../graphql/types.generated';
+import type {
+  ActOnOpenActionLensManagerRequest,
+  ActOnOpenActionRequest,
+  TypedDataOptions,
+} from '../../../../graphql/types.generated';
 import { requireAuthHeaders, sdkAuthHeaderWrapper } from '../../../../helpers';
 import {
   CreateActOnOpenActionBroadcastItemResultFragment,
@@ -52,7 +56,7 @@ export class Actions {
    * ```
    */
   async actOn(
-    request: ActOnOpenActionRequest,
+    request: ActOnOpenActionLensManagerRequest,
   ): PromiseResult<
     RelaySuccessFragment | LensProfileManagerRelayErrorFragment,
     CredentialsExpiredError | NotAuthenticatedError

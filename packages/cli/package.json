@@ -1,0 +1,54 @@
+{
+  "name": "@lens-protocol/cli",
+  "version": "0.1.0",
+  "description": "Lens CLI",
+  "repository": {
+    "directory": "packages/cli",
+    "type": "git",
+    "url": "git://github.com/lens-protocol/lens-sdk.git"
+  },
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "lens": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm",
+    "dev": "tsup src/index.ts --format esm --watch",
+    "lens": "ts-node --esm ./src/index.ts",
+    "eslint:fix": "pnpm run eslint --fix",
+    "eslint": "eslint src",
+    "lint": "pnpm run prettier && pnpm run eslint && pnpm run tsc",
+    "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix && pnpm run tsc",
+    "prettier:fix": "prettier --write .",
+    "prettier": "prettier --check .",
+    "test": "echo \"Not in scope for this example\"",
+    "tsc": "tsc --noEmit"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@commander-js/extra-typings": "^12.0.1",
+    "@ethersproject/address": "^5.7.0",
+    "@lens-protocol/client": "*",
+    "@lens-protocol/shared-kernel": "*",
+    "chalk": "^5.3.0",
+    "commander": "^12.0.0",
+    "nanospinner": "^1.1.0",
+    "tslib": "^2.6.2"
+  },
+  "devDependencies": {
+    "@lens-protocol/eslint-config": "workspace:*",
+    "@lens-protocol/prettier-config": "workspace:*",
+    "@lens-protocol/tsconfig": "workspace:*",
+    "@types/node": "^18.19.31",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.0.2",
+    "typescript": "5.2.2"
+  },
+  "engines": {
+    "node": ">=18 <21"
+  },
+  "prettier": "@lens-protocol/prettier-config"
+}

@@ -10,6 +10,7 @@ export * from './UseProfile';
 export * from './UseProfileActionHistory';
 export * from './UseProfileFollowers';
 export * from './UseProfileFollowing';
+export * from './UseProfileInterests';
 export * from './UseProfileManagers';
 export * from './UseProfiles';
 export * from './UseRecommendProfileToggle';

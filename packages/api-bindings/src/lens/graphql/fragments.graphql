@@ -362,6 +362,9 @@ fragment ProfileFields on Profile {
   stats(request: { forApps: $statsFor }) {
     ...ProfileStats
   }
+  globalStats: stats {
+    ...ProfileStats
+  }
   peerToPeerRecommendedByMe
 }
 
@@ -1549,6 +1552,9 @@ fragment Post on Post {
   stats(request: { metadata: { publishedOn: $statsFor } }) {
     ...PublicationStats
   }
+  globalStats: stats {
+    ...PublicationStats
+  }
   operations {
     ...PublicationOperations
   }
@@ -1799,6 +1805,9 @@ fragment CommentFields on Comment {
   stats(request: { metadata: { publishedOn: $statsFor } }) {
     ...PublicationStats
   }
+  globalStats: stats {
+    ...PublicationStats
+  }
 }
 
 fragment Comment on Comment {
@@ -1977,6 +1986,9 @@ fragment QuoteFields on Quote {
     }
   }
   stats(request: { metadata: { publishedOn: $statsFor } }) {
+    ...PublicationStats
+  }
+  globalStats: stats {
     ...PublicationStats
   }
 }

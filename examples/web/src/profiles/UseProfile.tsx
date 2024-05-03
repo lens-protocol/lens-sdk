@@ -1,15 +1,43 @@
-import { profileId, useProfile } from '@lens-protocol/react-web';
+import { useProfile } from '@lens-protocol/react-web';
+import { Suspense, startTransition, useState } from 'react';
 
-import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { ProfileCard } from './components/ProfileCard';
 
+export function UseProfileInner({ localName }: { localName: string }) {
+  const { data, error } = useProfile({ forHandle: `lens/${localName}`, suspense: true });
+
+  if (error) {
+    return <p>Profile not found.</p>;
+  }
+
+  return <ProfileCard profile={data} />;
+}
+
 export function UseProfile() {
-  const { data: profile, error, loading } = useProfile({ forProfileId: profileId('0x01') });
+  const [localName, setLocalName] = useState('brainjammer');
 
-  if (loading) return <Loading />;
+  const update = (event: React.ChangeEvent<HTMLInputElement>) =>
+    startTransition(() => {
+      if (event.target.value.length > 0) {
+        setLocalName(event.target.value);
+      }
+    });
 
-  if (error) return <ErrorMessage error={error} />;
+  return (
+    <div>
+      <h1>
+        <code>useProfile</code>
+      </h1>
 
-  return <ProfileCard profile={profile} />;
+      <label>
+        lens/
+        <input type="text" name="localName" defaultValue={localName} onChange={update} />
+      </label>
+
+      <Suspense fallback={<Loading />}>
+        <UseProfileInner localName={localName} />
+      </Suspense>
+    </div>
+  );
 }

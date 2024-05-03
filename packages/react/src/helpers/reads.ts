@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-console */
 import {
   ApolloError,
@@ -7,6 +8,11 @@ import {
   OperationVariables,
   LazyQueryResultTuple as ApolloLazyResultTuple,
   useLazyQuery,
+  UseSuspenseQueryResult,
+  QueryHookOptions,
+  SuspenseQueryHookOptions,
+  useQuery,
+  useSuspenseQuery,
 } from '@apollo/client';
 import {
   UnspecifiedError,
@@ -104,11 +110,29 @@ type InferResult<T extends QueryData<unknown>> = T extends QueryData<infer R> ? 
  * @internal
  */
 export function useReadResult<
-  T extends QueryData<R>,
-  R = InferResult<T>,
-  V extends OperationVariables = { [key: string]: never },
->({ error, data }: ApolloQueryResult<T, V>): ReadResult<R, UnspecifiedError> {
+  TResult,
+  TVariables extends OperationVariables = { [key: string]: never },
+>({
+  error,
+  data,
+}: ApolloQueryResult<QueryData<TResult>, TVariables>): ReadResult<TResult, UnspecifiedError> {
   return buildReadResult(data?.result, error);
+}
+
+/**
+ * @internal
+ */
+export function useSuspenseReadResult<TResult, TVariables extends OperationVariables>({
+  data,
+  error,
+}: UseSuspenseQueryResult<QueryData<TResult>, TVariables>): SuspenseResult<TResult> {
+  if (error) {
+    throw error;
+  }
+
+  return {
+    data: data?.result ?? never('Data should be available in suspense mode.'),
+  };
 }
 
 /**
@@ -203,6 +227,9 @@ export type PaginatedReadResult<T> = ReadResult<T, UnspecifiedError> & {
 
 type PaginatedQueryVariables = OperationVariables & { cursor?: InputMaybe<Cursor> };
 
+/**
+ * @internal
+ */
 export type PaginatedQueryData<K> = {
   result: { pageInfo: PaginatedResultInfo; items: K[] };
 };
@@ -227,6 +254,9 @@ function useAdHocQuery<
   return fetch;
 }
 
+/**
+ * @internal
+ */
 export function usePaginatedReadResult<
   TVariables extends PaginatedQueryVariables,
   TData extends PaginatedQueryData<TItem>,
@@ -302,4 +332,80 @@ export function usePaginatedReadResult<
       }
     },
   };
+}
+
+/**
+ * A read result that supports React Suspense and includes an error.
+ *
+ * @experimental This is an experimental type that can change at any time.
+ */
+export type SuspenseResultWithError<T, E> =
+  | {
+      data: undefined;
+      error: E;
+    }
+  | {
+      data: T;
+      error: undefined;
+    };
+
+/**
+ * A read result that supports React Suspense
+ *
+ * @experimental This is an experimental type that can change at any time.
+ */
+export type SuspenseResult<T> = { data: T };
+
+/**
+ * @deprecated Use {@link SuspenseResult | `SuspenseResult`} instead.
+ */
+export type SuspenseReadResult<T, E = never> = SuspenseResultWithError<T, E>;
+
+/**
+ * Helper type to enable Suspense mode.
+ *
+ * @experimental This is an experimental type that can change at any time.
+ */
+export type SuspenseEnabled<TSuspense extends boolean> = {
+  suspense?: TSuspense;
+};
+
+/**
+ * @internal
+ */
+export type UseSuspenseQueryArgs<TData, TVariables extends OperationVariables> = {
+  suspense: true;
+  query: DocumentNode;
+  options: QueryHookOptions<TData, TVariables>;
+};
+
+/**
+ * @internal
+ */
+export type UseQueryArgs<TData, TVariables extends OperationVariables> = {
+  suspense: false;
+  query: DocumentNode;
+  options: QueryHookOptions<TData, TVariables>;
+};
+
+/**
+ * @internal
+ */
+export type UseSuspendableQueryArgs<TData, TVariables extends OperationVariables> =
+  | UseSuspenseQueryArgs<TData, TVariables>
+  | UseQueryArgs<TData, TVariables>;
+
+/**
+ * @internal
+ */
+export function useSuspendableQuery<TResult, TVariables extends OperationVariables>(
+  args: UseSuspendableQueryArgs<QueryData<TResult>, TVariables>,
+): ReadResult<TResult> | SuspenseResult<TResult> {
+  if (args.suspense) {
+    return useSuspenseReadResult(
+      useSuspenseQuery<QueryData<TResult>>(args.query, args.options as SuspenseQueryHookOptions),
+    );
+  }
+
+  return useReadResult(useQuery(args.query, args.options as QueryHookOptions));
 }
