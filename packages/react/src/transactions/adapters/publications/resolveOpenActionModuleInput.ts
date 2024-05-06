@@ -27,6 +27,44 @@ export function resolveOpenActionModuleInput(config: OpenActionConfig): OpenActi
         },
       };
 
+    case OpenActionType.SHARED_REVENUE_COLLECT:
+      if ('amount' in config) {
+        return {
+          collectOpenAction: {
+            protocolSharedRevenueCollectOpenAction: {
+              amount: {
+                currency: config.amount.asset.address,
+                value: config.amount.toSignificantDigits(),
+              },
+
+              referralFee: config.referralFee,
+
+              recipient: config.recipient ?? null,
+
+              collectLimit: config.collectLimit?.toString() ?? null,
+
+              endsAt: config.endsAt?.toISOString() ?? null,
+
+              followerOnly: config.followerOnly,
+            },
+          },
+        };
+      }
+
+      return {
+        collectOpenAction: {
+          protocolSharedRevenueCollectOpenAction: {
+            collectLimit: config.collectLimit?.toString() ?? null,
+
+            endsAt: config.endsAt?.toISOString() ?? null,
+
+            followerOnly: config.followerOnly,
+
+            creatorClient: config.creatorClient,
+          },
+        },
+      };
+
     case OpenActionType.MULTIRECIPIENT_COLLECT:
       return {
         collectOpenAction: {

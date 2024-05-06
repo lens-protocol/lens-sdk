@@ -43,6 +43,25 @@ describe(`Given the ${resolveOpenActionModuleInput.name} function`, () => {
     },
     {
       config: {
+        type: OpenActionType.SHARED_REVENUE_COLLECT,
+        collectLimit: 10,
+        followerOnly: true,
+        endsAt,
+        creatorClient: address1,
+      },
+      expected: {
+        collectOpenAction: {
+          protocolSharedRevenueCollectOpenAction: {
+            collectLimit: '10',
+            endsAt: endsAt.toISOString(),
+            followerOnly: true,
+            creatorClient: address1,
+          },
+        },
+      },
+    },
+    {
+      config: {
         type: OpenActionType.MULTIRECIPIENT_COLLECT,
         amount: amount,
         referralFee: 10,

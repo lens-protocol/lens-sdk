@@ -31,6 +31,17 @@ const RecipientWithSplitSchema: z.ZodType<RecipientWithSplit, z.ZodTypeDef, Unkn
     split: z.number(),
   });
 
+const SharedRevenueCollectActionConfigSchema = z.object({
+  type: z.literal(OpenActionType.SHARED_REVENUE_COLLECT),
+  amount: Erc20AmountSchema.optional(),
+  followerOnly: z.boolean(),
+  referralFee: z.number().optional(),
+  collectLimit: z.number().optional(),
+  recipient: EvmAddressSchema.optional(),
+  endsAt: z.coerce.date().min(new Date()).optional(),
+  creatorClient: EvmAddressSchema.optional(),
+});
+
 const SimpleCollectActionConfigSchema = z.object({
   type: z.literal(OpenActionType.SIMPLE_COLLECT),
   amount: Erc20AmountSchema.optional(),
@@ -61,6 +72,7 @@ const OpenActionConfigSchema: z.ZodType<OpenActionConfig, z.ZodTypeDef, UnknownO
   .discriminatedUnion('type', [
     SimpleCollectActionConfigSchema,
     MultirecipientCollectActionConfigSchema,
+    SharedRevenueCollectActionConfigSchema,
     UnknownOpenActionConfigSchema,
   ])
   .superRefine((val, ctx) => {
@@ -189,9 +201,22 @@ export const SimpleCollectRequestSchema = BaseCollectRequestSchema.extend({
   publicationId: PublicationIdSchema,
   referrers: ReferrersSchema.optional(),
   fee: CollectFeeSchema.optional(),
+  collectModule: EvmAddressSchema,
   public: z.boolean(),
   signless: z.boolean(),
   sponsored: z.boolean(),
+});
+
+export const SharedRevenueCollectRequestSchema = BaseCollectRequestSchema.extend({
+  type: z.literal(AllOpenActionType.SHARED_REVENUE_COLLECT),
+  publicationId: PublicationIdSchema,
+  referrers: ReferrersSchema.optional(),
+  fee: CollectFeeSchema.optional(),
+  collectModule: EvmAddressSchema,
+  public: z.boolean(),
+  signless: z.boolean(),
+  sponsored: z.boolean(),
+  executorClient: EvmAddressSchema.optional(),
 });
 
 export const MultirecipientCollectRequestSchema = BaseCollectRequestSchema.extend({
@@ -199,6 +224,7 @@ export const MultirecipientCollectRequestSchema = BaseCollectRequestSchema.exten
   publicationId: PublicationIdSchema,
   referrers: ReferrersSchema.optional(),
   fee: CollectFeeSchema,
+  collectModule: EvmAddressSchema,
   public: z.boolean(),
   signless: z.boolean(),
   sponsored: z.boolean(),
@@ -210,6 +236,7 @@ export const UnknownActionRequestSchema = BaseCollectRequestSchema.extend({
   address: EvmAddressSchema,
   data: DataSchema,
   referrers: ReferrersSchema.optional(),
+  amount: Erc20AmountSchema.optional(),
   public: z.boolean(),
   signless: z.boolean(),
   sponsored: z.boolean(),
@@ -220,5 +247,6 @@ export const OpenActionRequestSchema: z.ZodType<OpenActionRequest, z.ZodTypeDef,
     LegacyCollectRequestSchema,
     SimpleCollectRequestSchema,
     MultirecipientCollectRequestSchema,
+    SharedRevenueCollectRequestSchema,
     UnknownActionRequestSchema,
   ]);

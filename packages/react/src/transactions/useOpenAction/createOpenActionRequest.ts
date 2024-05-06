@@ -1,4 +1,3 @@
-/* eslint-disable no-case-declarations */
 import {
   AnyPublication,
   OpenActionModuleSettings,
@@ -87,7 +86,7 @@ function resolveCollectRequestFor(
         sponsored,
       };
 
-    case 'SimpleCollectOpenActionSettings':
+    case 'SimpleCollectOpenActionSettings': {
       const amount = erc20Amount(settings.amount);
 
       return {
@@ -103,10 +102,12 @@ function resolveCollectRequestFor(
               amount,
               contractAddress: settings.contract.address,
             },
+        collectModule: settings.contract.address,
         public: session.type === SessionType.JustWallet,
         signless,
         sponsored,
       };
+    }
 
     case 'MultirecipientFeeCollectOpenActionSettings':
       return {
@@ -120,10 +121,35 @@ function resolveCollectRequestFor(
           amount: erc20Amount(settings.amount),
           contractAddress: settings.contract.address,
         },
+        collectModule: settings.contract.address,
         public: session.type === SessionType.JustWallet,
         signless,
         sponsored,
       };
+
+    case 'ProtocolSharedRevenueCollectOpenActionSettings': {
+      const amount = erc20Amount(settings.amount);
+
+      return {
+        kind: TransactionKind.ACT_ON_PUBLICATION,
+        type: AllOpenActionType.SHARED_REVENUE_COLLECT,
+        publicationId: collectable.id,
+        referrers:
+          params.referrers ??
+          (args.publication !== collectable ? [args.publication.id] : undefined),
+        fee: amount.isZero()
+          ? undefined
+          : {
+              amount,
+              contractAddress: settings.contract.address,
+            },
+        collectModule: settings.contract.address,
+        executorClient: params.executorClient,
+        public: session.type === SessionType.JustWallet,
+        signless,
+        sponsored,
+      };
+    }
 
     default:
       never(`The publication ${collectable.id} is not collectable`);
@@ -136,7 +162,7 @@ function isUnknownOpenActionModuleSettings(
   return settings.__typename === 'UnknownOpenActionModuleSettings';
 }
 
-function resolveExecutionDynamics(
+function resolveExecutionMode(
   args: RequiredOpenActionArgs,
   session: ProfileSession | WalletOnlySession,
   settings: UnknownOpenActionModuleSettings,
@@ -188,8 +214,9 @@ function resolveUnknownRequestFor(
     address: settings.contract.address,
     data: params.data as Data,
     referrers: params.referrers,
+    amount: params.amount,
 
-    ...resolveExecutionDynamics(args, session, settings),
+    ...resolveExecutionMode(args, session, settings),
   };
 }
 

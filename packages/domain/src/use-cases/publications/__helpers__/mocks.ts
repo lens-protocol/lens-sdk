@@ -14,6 +14,7 @@ import {
   CollectFee,
   LegacyCollectRequest,
   MultirecipientCollectRequest,
+  SharedRevenueCollectRequest,
   SimpleCollectRequest,
   UnknownActionRequest,
 } from '../OpenAction';
@@ -149,6 +150,21 @@ export function mockLegacyCollectRequest(
   };
 }
 
+export function mockSharedRevenueCollectRequest(
+  overrides?: Partial<SharedRevenueCollectRequest>,
+): SharedRevenueCollectRequest {
+  return {
+    publicationId: mockPublicationId(),
+    public: false,
+    signless: true,
+    sponsored: true,
+    collectModule: mockEvmAddress(),
+    ...overrides,
+    type: AllOpenActionType.SHARED_REVENUE_COLLECT,
+    kind: TransactionKind.ACT_ON_PUBLICATION,
+  };
+}
+
 export function mockSimpleCollectRequest(
   overrides?: Partial<SimpleCollectRequest>,
 ): SimpleCollectRequest {
@@ -157,6 +173,7 @@ export function mockSimpleCollectRequest(
     public: false,
     signless: true,
     sponsored: true,
+    collectModule: mockEvmAddress(),
     ...overrides,
     type: AllOpenActionType.SIMPLE_COLLECT,
     kind: TransactionKind.ACT_ON_PUBLICATION,
@@ -172,6 +189,7 @@ export function mockMultirecipientCollectRequest(
     public: false,
     signless: true,
     sponsored: true,
+    collectModule: mockEvmAddress(),
     ...overrides,
     type: AllOpenActionType.MULTIRECIPIENT_COLLECT,
     kind: TransactionKind.ACT_ON_PUBLICATION,

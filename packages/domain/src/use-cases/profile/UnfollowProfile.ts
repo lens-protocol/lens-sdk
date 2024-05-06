@@ -21,6 +21,7 @@ export class UnfollowProfile extends SponsorshipReady<UnfollowRequest> {
   protected override async charged(request: UnfollowRequest): Promise<void> {
     await this.paidExecution.execute(request);
   }
+
   protected override async sponsored(request: UnfollowRequest): Promise<void> {
     await this.delegableExecution.execute(request);
   }

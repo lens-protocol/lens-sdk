@@ -8,6 +8,7 @@ import {
   mockNetworkAddressFragment,
   mockPostFragment,
   mockProfileFragment,
+  mockProtocolSharedRevenueCollectOpenActionSettingsFragment,
   mockSimpleCollectOpenActionSettingsFragment,
   mockUnknownOpenActionModuleSettingsFragment,
 } from '@lens-protocol/api-bindings/mocks';
@@ -159,6 +160,22 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
         },
       },
       expectedRequest: 'SimpleCollectRequest',
+    },
+    {
+      settings: mockProtocolSharedRevenueCollectOpenActionSettingsFragment({
+        amount: mockAmountFragmentFrom(fee),
+        contract: mockNetworkAddressFragment({
+          address: aContractAddress,
+        }),
+      }),
+      expected: {
+        type: AllOpenActionType.SHARED_REVENUE_COLLECT,
+        fee: {
+          amount: fee,
+          contractAddress: aContractAddress,
+        },
+      },
+      expectedRequest: 'SharedRevenueCollectRequest',
     },
     {
       settings: mockMultirecipientFeeCollectOpenActionSettingsFragment({

@@ -1,45 +1,9 @@
-import {
-  LegacyAaveFeeCollectModuleSettingsFragment,
-  LegacyErc4626FeeCollectModuleSettingsFragment,
-  LegacyFeeCollectModuleSettingsFragment,
-  LegacyFreeCollectModuleSettingsFragment,
-  LegacyLimitedFeeCollectModuleSettingsFragment,
-  LegacyLimitedTimedFeeCollectModuleSettingsFragment,
-  LegacyMultirecipientFeeCollectModuleSettingsFragment,
-  LegacyRevertCollectModuleSettingsFragment,
-  LegacySimpleCollectModuleSettingsFragment,
-  LegacyTimedFeeCollectModuleSettingsFragment,
-  MultirecipientFeeCollectOpenActionSettingsFragment,
-  SimpleCollectOpenActionSettingsFragment,
-  UnknownOpenActionModuleSettingsFragment,
-} from '../../../graphql/fragments.generated';
+import { OpenActionModuleFragment } from '../../../graphql';
 
-export type OpenActionModuleFragment =
-  | LegacyAaveFeeCollectModuleSettingsFragment
-  | LegacyErc4626FeeCollectModuleSettingsFragment
-  | LegacyFeeCollectModuleSettingsFragment
-  | LegacyFreeCollectModuleSettingsFragment
-  | LegacyLimitedFeeCollectModuleSettingsFragment
-  | LegacyLimitedTimedFeeCollectModuleSettingsFragment
-  | LegacyMultirecipientFeeCollectModuleSettingsFragment
-  | LegacyRevertCollectModuleSettingsFragment
-  | LegacySimpleCollectModuleSettingsFragment
-  | LegacyTimedFeeCollectModuleSettingsFragment
-  | MultirecipientFeeCollectOpenActionSettingsFragment
-  | SimpleCollectOpenActionSettingsFragment
-  | UnknownOpenActionModuleSettingsFragment;
-
-export type OpenActionModuleWithReferralFeeFragment =
-  | LegacyAaveFeeCollectModuleSettingsFragment
-  | LegacyErc4626FeeCollectModuleSettingsFragment
-  | LegacyFeeCollectModuleSettingsFragment
-  | LegacyLimitedFeeCollectModuleSettingsFragment
-  | LegacyLimitedTimedFeeCollectModuleSettingsFragment
-  | LegacyMultirecipientFeeCollectModuleSettingsFragment
-  | LegacySimpleCollectModuleSettingsFragment
-  | LegacyTimedFeeCollectModuleSettingsFragment
-  | MultirecipientFeeCollectOpenActionSettingsFragment
-  | SimpleCollectOpenActionSettingsFragment;
+export type OpenActionModuleWithReferralFeeFragment = Extract<
+  OpenActionModuleFragment,
+  { referralFee: number }
+>;
 
 export function isOpenActionModuleWithReferralFee(
   module: OpenActionModuleFragment,

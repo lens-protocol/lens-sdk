@@ -1562,6 +1562,25 @@ export const ReactionNotificationFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
                   },
                   selectionSet: {
@@ -2380,6 +2399,16 @@ export const ReactionNotificationFragmentDoc = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'encryptionKey' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'accessControlContract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'accessCondition' },
@@ -5439,6 +5468,46 @@ export const ReactionNotificationFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'amount' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'recipient' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'referralFee' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'endsAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'creatorClient' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
       typeCondition: {
         kind: 'NamedType',
@@ -6217,6 +6286,25 @@ export const ReactionNotificationFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
                   },
                   selectionSet: {
@@ -6793,6 +6881,25 @@ export const ReactionNotificationFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'MultirecipientFeeCollectOpenActionSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
                       },
                     ],
                   },
@@ -8410,6 +8517,25 @@ export const CommentNotificationFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
                   },
                   selectionSet: {
@@ -9228,6 +9354,16 @@ export const CommentNotificationFragmentDoc = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'encryptionKey' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'accessControlContract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'accessCondition' },
@@ -12287,6 +12423,46 @@ export const CommentNotificationFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'amount' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'recipient' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'referralFee' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'endsAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'creatorClient' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
       typeCondition: {
         kind: 'NamedType',
@@ -13065,6 +13241,25 @@ export const CommentNotificationFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
                   },
                   selectionSet: {
@@ -13641,6 +13836,25 @@ export const CommentNotificationFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'MultirecipientFeeCollectOpenActionSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
                       },
                     ],
                   },
@@ -15232,6 +15446,25 @@ export const MirrorNotificationFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
                   },
                   selectionSet: {
@@ -16050,6 +16283,16 @@ export const MirrorNotificationFragmentDoc = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'encryptionKey' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'accessControlContract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'accessCondition' },
@@ -19109,6 +19352,46 @@ export const MirrorNotificationFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'amount' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'recipient' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'referralFee' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'endsAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'creatorClient' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
       typeCondition: {
         kind: 'NamedType',
@@ -19887,6 +20170,25 @@ export const MirrorNotificationFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
                   },
                   selectionSet: {
@@ -20463,6 +20765,25 @@ export const MirrorNotificationFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'MultirecipientFeeCollectOpenActionSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
                       },
                     ],
                   },
@@ -22080,6 +22401,25 @@ export const QuoteNotificationFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
                   },
                   selectionSet: {
@@ -22898,6 +23238,16 @@ export const QuoteNotificationFragmentDoc = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'encryptionKey' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'accessControlContract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'accessCondition' },
@@ -25957,6 +26307,46 @@ export const QuoteNotificationFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'amount' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'recipient' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'referralFee' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'endsAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'creatorClient' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
       typeCondition: {
         kind: 'NamedType',
@@ -26641,6 +27031,25 @@ export const QuoteNotificationFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
                   },
                   selectionSet: {
@@ -27217,6 +27626,25 @@ export const QuoteNotificationFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'MultirecipientFeeCollectOpenActionSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
                       },
                     ],
                   },
@@ -29927,6 +30355,25 @@ export const ActedNotificationFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
                   },
                   selectionSet: {
@@ -30745,6 +31192,16 @@ export const ActedNotificationFragmentDoc = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'encryptionKey' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'accessControlContract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'accessCondition' },
@@ -33804,6 +34261,46 @@ export const ActedNotificationFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'amount' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'recipient' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'referralFee' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'endsAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'creatorClient' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
       typeCondition: {
         kind: 'NamedType',
@@ -34582,6 +35079,25 @@ export const ActedNotificationFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
                   },
                   selectionSet: {
@@ -35158,6 +35674,25 @@ export const ActedNotificationFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'MultirecipientFeeCollectOpenActionSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
                       },
                     ],
                   },
@@ -37812,6 +38347,25 @@ export const MentionNotificationFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
                   },
                   selectionSet: {
@@ -38630,6 +39184,16 @@ export const MentionNotificationFragmentDoc = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'encryptionKey' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'accessControlContract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'accessCondition' },
@@ -41689,6 +42253,46 @@ export const MentionNotificationFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'amount' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'recipient' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'referralFee' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'endsAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'creatorClient' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
       typeCondition: {
         kind: 'NamedType',
@@ -42467,6 +43071,25 @@ export const MentionNotificationFragmentDoc = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
                   },
                   selectionSet: {
@@ -43043,6 +43666,25 @@ export const MentionNotificationFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'MultirecipientFeeCollectOpenActionSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
                       },
                     ],
                   },
@@ -45267,6 +45909,25 @@ export const NotificationsDocument = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
                   },
                   selectionSet: {
@@ -46085,6 +46746,16 @@ export const NotificationsDocument = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'encryptionKey' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'accessControlContract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'accessCondition' },
@@ -49144,6 +49815,46 @@ export const NotificationsDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contract' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'NetworkAddress' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectNft' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'amount' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'recipient' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'referralFee' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'collectLimit' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'endsAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'creatorClient' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
       typeCondition: {
         kind: 'NamedType',
@@ -49922,6 +50633,25 @@ export const NotificationsDocument = {
                   kind: 'InlineFragment',
                   typeCondition: {
                     kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
                     name: { kind: 'Name', value: 'SimpleCollectOpenActionSettings' },
                   },
                   selectionSet: {
@@ -50498,6 +51228,25 @@ export const NotificationsDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'MultirecipientFeeCollectOpenActionSettings' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'ProtocolSharedRevenueCollectOpenActionSettings' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ProtocolSharedRevenueCollectOpenActionSettings',
+                        },
                       },
                     ],
                   },

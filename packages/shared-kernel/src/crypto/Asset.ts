@@ -238,6 +238,22 @@ export function erc20({ name, decimals, symbol, address, chainType }: Erc20Info)
 }
 
 /**
+ * Bonsai asset factory function.
+ *
+ * @param info - {@link Erc20Info} details
+ * @returns An Erc20 asset instance.
+ */
+export function bonsai(address: EvmAddress) {
+  return erc20({
+    address,
+    chainType: ChainType.POLYGON,
+    decimals: 18,
+    name: 'BONSAI',
+    symbol: 'BONSAI',
+  });
+}
+
+/**
  * Matic asset provider function.
  *
  * There is only one Matic token, so this function returns the same instance every time.

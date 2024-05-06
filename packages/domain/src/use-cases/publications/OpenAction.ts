@@ -21,14 +21,20 @@ import { Referrers } from './Referrers';
 
 export enum AllOpenActionType {
   LEGACY_COLLECT = 'LEGACY_COLLECT',
-  SIMPLE_COLLECT = 'SIMPLE_COLLECT',
   MULTIRECIPIENT_COLLECT = 'MULTIRECIPIENT_COLLECT',
+  SHARED_REVENUE_COLLECT = 'SHARED_REVENUE_COLLECT',
+  SIMPLE_COLLECT = 'SIMPLE_COLLECT',
   UNKNOWN_OPEN_ACTION = 'UNKNOWN_OPEN_ACTION',
 }
 
 export type CollectFee = {
   amount: Amount<Erc20>;
   contractAddress: EvmAddress;
+};
+
+export type SharedMintFee = {
+  amount: Amount<Erc20>;
+  executorClient?: EvmAddress;
 };
 
 export type LegacyCollectRequest = {
@@ -48,6 +54,7 @@ export type MultirecipientCollectRequest = {
   publicationId: PublicationId;
   referrers?: Referrers;
   fee: CollectFee;
+  collectModule: EvmAddress;
   public: boolean;
   signless: boolean;
   sponsored: boolean;
@@ -59,6 +66,21 @@ export type SimpleCollectRequest = {
   publicationId: PublicationId;
   referrers?: Referrers;
   fee?: CollectFee;
+  collectModule: EvmAddress;
+  public: boolean;
+  signless: boolean;
+  sponsored: boolean;
+};
+
+export type SharedRevenueCollectRequest = {
+  kind: TransactionKind.ACT_ON_PUBLICATION;
+  type: AllOpenActionType.SHARED_REVENUE_COLLECT;
+  publicationId: PublicationId;
+  referrers?: Referrers;
+  fee?: CollectFee;
+  mintFee?: SharedMintFee;
+  executorClient?: EvmAddress;
+  collectModule: EvmAddress;
   public: boolean;
   signless: boolean;
   sponsored: boolean;
@@ -71,6 +93,7 @@ export type UnknownActionRequest = {
   address: EvmAddress;
   data: Data;
   referrers?: Referrers;
+  amount?: Amount<Erc20>;
   public: boolean;
   signless: boolean;
   sponsored: boolean;
@@ -79,6 +102,7 @@ export type UnknownActionRequest = {
 export type CollectRequest =
   | LegacyCollectRequest
   | MultirecipientCollectRequest
+  | SharedRevenueCollectRequest
   | SimpleCollectRequest;
 
 export type OpenActionRequest = CollectRequest | UnknownActionRequest;
@@ -88,18 +112,25 @@ export type DelegableOpenActionRequest =
   | SimpleCollectRequest
   | UnknownActionRequest;
 
-function isCollectRequest(request: OpenActionRequest): request is CollectRequest {
+export function isCollectRequest(request: OpenActionRequest): request is CollectRequest {
   return [
     AllOpenActionType.LEGACY_COLLECT,
-    AllOpenActionType.SIMPLE_COLLECT,
     AllOpenActionType.MULTIRECIPIENT_COLLECT,
+    AllOpenActionType.SHARED_REVENUE_COLLECT,
+    AllOpenActionType.SIMPLE_COLLECT,
   ].includes(request.type);
+}
+
+export function isUnknownActionRequest(
+  request: OpenActionRequest,
+): request is UnknownActionRequest {
+  return request.type === AllOpenActionType.UNKNOWN_OPEN_ACTION;
 }
 
 export type PaidCollectRequest = CollectRequest & { fee: CollectFee };
 
 export function isPaidCollectRequest(request: OpenActionRequest): request is PaidCollectRequest {
-  return isCollectRequest(request) && request.fee !== undefined;
+  return isCollectRequest(request) && 'fee' in request && request.fee !== undefined;
 }
 
 function isPublicOpenActionRequest(

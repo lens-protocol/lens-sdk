@@ -56,8 +56,8 @@ config:
 
 schema:
   # - https://api-amoy.lens-v2.crtlkey.com/ # staging
-  - https://api-v2-amoy.lens.dev/ # testnet
-  # - http://localhost:4000/
+  # - https://api-v2-amoy.lens.dev/ # testnet
+  - http://localhost:4000/
 documents:
   - src/**/*.graphql
 generates:

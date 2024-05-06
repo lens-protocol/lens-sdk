@@ -1,6 +1,6 @@
 import { AnyPublication } from '@lens-protocol/api-bindings';
 import { ProfileId, PublicationId } from '@lens-protocol/domain/entities';
-import { EvmAddress } from '@lens-protocol/shared-kernel';
+import { Erc20Amount, EvmAddress } from '@lens-protocol/shared-kernel';
 
 /**
  * The category of Open Actions to perform on a given publication.
@@ -33,6 +33,12 @@ export type UnknownActionParams = {
    * The usage of referrers is determined by the specific Open Action module.
    */
   referrers?: ReadonlyArray<PublicationId | ProfileId>;
+  /**
+   * The amount to be used by the Unknown Open Action.
+   *
+   * Use {@link Amount.erc20} with instances {@link Erc20} to create an instance of this type.
+   */
+  amount?: Erc20Amount;
 };
 
 /**
@@ -52,6 +58,19 @@ export type CollectParams = {
    * @defaultValue if the publication is a Mirror the Mirror ID, empty otherwise.
    */
   referrers?: ReadonlyArray<PublicationId | ProfileId>;
+
+  /**
+   * The executor app address.
+   *
+   * This field is evaluated only when the Publication's collect settings utilize
+   * the `ProtocolSharedRevenueMinFeeMintModule`, and no collect fee has been set.
+   *
+   * In the case above, the executor app will receive their share of the mint fee as per
+   * Lens Protocol shared revenue settings.
+   *
+   * If not set, the share for the executor app will be given to the creator of the publication.
+   */
+  executorClient?: EvmAddress;
 };
 
 /**

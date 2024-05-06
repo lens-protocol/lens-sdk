@@ -16,17 +16,22 @@ import {
   AllOpenActionType,
   DelegableOpenActionRequest,
   LegacyCollectRequest,
-  MultirecipientCollectRequest,
   OpenActionRequest,
-  SimpleCollectRequest,
-  UnknownActionRequest,
+  isUnknownActionRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 import {
   BroadcastingError,
   IDelegatedTransactionGateway,
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
-import { ChainType, Data, PromiseResult, success } from '@lens-protocol/shared-kernel';
+import {
+  ChainType,
+  Data,
+  Erc20Amount,
+  PromiseResult,
+  never,
+  success,
+} from '@lens-protocol/shared-kernel';
 import { v4 } from 'uuid';
 
 import { RequiredConfig } from '../../config';
@@ -37,10 +42,9 @@ import { ITransactionFactory } from './ITransactionFactory';
 import { resolveOnchainReferrers } from './referrals';
 import { handleRelayError } from './relayer';
 
-type NewOpenActionRequest =
-  | SimpleCollectRequest
-  | MultirecipientCollectRequest
-  | UnknownActionRequest;
+type NewOpenActionRequest = Exclude<OpenActionRequest, LegacyCollectRequest>;
+
+type NewDelegableOpenActionRequest = Exclude<DelegableOpenActionRequest, LegacyCollectRequest>;
 
 export class OpenActionGateway
   extends AbstractContractCallGateway<OpenActionRequest>
@@ -148,9 +152,9 @@ export class OpenActionGateway
   }
 
   private async relayActOnOpenActionRequestWithProfileManager(
-    request: SimpleCollectRequest | UnknownActionRequest,
+    request: NewDelegableOpenActionRequest,
   ): PromiseResult<RelaySuccess, BroadcastingError> {
-    const input = this.resolveActOnOpenActionRequest(request);
+    const input = this.resolveActOnOpenActionLensManagerRequest(request);
 
     const { data } = await this.apolloClient.mutate<ActOnOpenActionData, ActOnOpenActionVariables>({
       mutation: ActOnOpenActionDocument,
@@ -189,6 +193,23 @@ export class OpenActionGateway
 
   private resolveActOnOpenActionRequest(request: NewOpenActionRequest): gql.ActOnOpenActionRequest {
     switch (request.type) {
+      case AllOpenActionType.MULTIRECIPIENT_COLLECT:
+        return {
+          for: request.publicationId,
+          actOn: {
+            multirecipientCollectOpenAction: true,
+          },
+          referrers: resolveOnchainReferrers(request.referrers),
+        };
+      case AllOpenActionType.SHARED_REVENUE_COLLECT:
+        // TODO handle executor client address
+        return {
+          for: request.publicationId,
+          actOn: {
+            protocolSharedRevenueCollectOpenAction: true,
+          },
+          referrers: resolveOnchainReferrers(request.referrers),
+        };
       case AllOpenActionType.SIMPLE_COLLECT:
         return {
           for: request.publicationId,
@@ -197,11 +218,29 @@ export class OpenActionGateway
           },
           referrers: resolveOnchainReferrers(request.referrers),
         };
-      case AllOpenActionType.MULTIRECIPIENT_COLLECT:
+      case AllOpenActionType.UNKNOWN_OPEN_ACTION:
         return {
           for: request.publicationId,
           actOn: {
-            multirecipientCollectOpenAction: true,
+            unknownOpenAction: {
+              address: request.address,
+              data: request.data,
+            },
+          },
+          referrers: resolveOnchainReferrers(request.referrers),
+        };
+    }
+  }
+
+  private resolveActOnOpenActionLensManagerRequest(
+    request: NewDelegableOpenActionRequest,
+  ): gql.ActOnOpenActionLensManagerRequest {
+    switch (request.type) {
+      case AllOpenActionType.SIMPLE_COLLECT:
+        return {
+          for: request.publicationId,
+          actOn: {
+            simpleCollectOpenAction: true,
           },
           referrers: resolveOnchainReferrers(request.referrers),
         };
@@ -298,13 +337,21 @@ export class OpenActionGateway
     request: NewOpenActionRequest,
     result: gql.CreateActOnOpenActionBroadcastItemResult,
   ): ContractCallDetails {
-    if (
-      request.type == AllOpenActionType.UNKNOWN_OPEN_ACTION ||
-      (request.type == AllOpenActionType.SIMPLE_COLLECT && !request.fee)
-    ) {
-      return this.createPublicFreeActCallDetails(result);
+    switch (request.type) {
+      case AllOpenActionType.SIMPLE_COLLECT:
+      case AllOpenActionType.SHARED_REVENUE_COLLECT:
+        if (!request.fee) {
+          return this.createPublicFreeActCallDetails(result);
+        }
+        break;
+
+      case AllOpenActionType.UNKNOWN_OPEN_ACTION:
+        if (!request.amount) {
+          return this.createPublicFreeActCallDetails(result);
+        }
+        break;
     }
-    return this.createPublicCollectCallDetails(result);
+    return this.createPublicPaidActCallDetails(request, result);
   }
 
   private createPublicFreeActCallDetails(
@@ -328,11 +375,36 @@ export class OpenActionGateway
     };
   }
 
-  private createPublicCollectCallDetails(
+  private resolvePublicPaidActAmount(request: NewOpenActionRequest): Erc20Amount {
+    switch (request.type) {
+      case AllOpenActionType.MULTIRECIPIENT_COLLECT:
+        return request.fee.amount;
+
+      case AllOpenActionType.UNKNOWN_OPEN_ACTION:
+        return request.amount ?? never();
+
+      case AllOpenActionType.SIMPLE_COLLECT:
+        return request.fee?.amount ?? never();
+
+      case AllOpenActionType.SHARED_REVENUE_COLLECT:
+        return (
+          request.fee?.amount ??
+          request.mintFee?.amount ??
+          never('Invalid UnknownActionRequest, missing fee and mintFee')
+        );
+
+      default:
+        never();
+    }
+  }
+
+  private createPublicPaidActCallDetails(
+    request: NewOpenActionRequest,
     result: gql.CreateActOnOpenActionBroadcastItemResult,
   ): ContractCallDetails {
+    const amount = this.resolvePublicPaidActAmount(request);
     const contract = publicActProxy(result.typedData.domain.verifyingContract);
-    const encodedData = contract.interface.encodeFunctionData('publicCollect', [
+    const encodedData = contract.interface.encodeFunctionData('publicPaidAct', [
       {
         publicationActedProfileId: result.typedData.message.publicationActedProfileId,
         publicationActedId: result.typedData.message.publicationActedId,
@@ -342,6 +414,9 @@ export class OpenActionGateway
         actionModuleAddress: result.typedData.message.actionModuleAddress,
         actionModuleData: result.typedData.message.actionModuleData,
       },
+      amount.asset.address,
+      amount.toBigDecimal().toHexadecimal(),
+      isUnknownActionRequest(request) ? contract.address : request.collectModule,
     ]);
     return {
       contractAddress: result.typedData.domain.verifyingContract,
