@@ -56,7 +56,6 @@ export type CreatePostArgs = {
    * See {@link BroadcastingError} with:
    * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
    * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
-   * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
    *
    * If not specified, or `true`, the hook will attempt a Sponsored Transaction.
    * Set it to `false` to force it to use a Self-Funded Transaction.
@@ -375,7 +374,6 @@ export type CreatePostArgs = {
  * If for some reason the Lens API cannot sponsor the transaction, the hook will fail with a {@link BroadcastingError} with one of the following reasons:
  * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
  * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
- * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
  *
  * In those cases you can retry the transaction as self-funded like in the following example:
  *
@@ -405,11 +403,6 @@ export type CreatePostArgs = {
  *   }
  * }
  * ```
- *
- * We omitted the handling of the {@link BroadcastingErrorReason.APP_NOT_ALLOWED} error because it's usually
- * something that builder will face when deploying their app to production using the Production Lens API.
- *
- * It just requires the app to apply for whitelisting. See https://docs.lens.xyz/docs/gasless-and-signless#whitelisting-your-app.
  *
  * ## Momoka posts
  *

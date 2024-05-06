@@ -382,12 +382,6 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
     describe.each([
       {
         relayError: mockLensProfileManagerRelayError(
-          LensProfileManagerRelayErrorReasonType.AppNotAllowed,
-        ),
-        reason: BroadcastingErrorReason.APP_NOT_ALLOWED,
-      },
-      {
-        relayError: mockLensProfileManagerRelayError(
           LensProfileManagerRelayErrorReasonType.NoLensManagerEnabled,
         ),
         reason: BroadcastingErrorReason.NO_LENS_MANAGER_ENABLED,
