@@ -9,12 +9,8 @@ import { invariant, OneOf } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
 import { useLensApolloClient } from '../helpers/arguments';
-import {
-  ReadResult,
-  SuspenseEnabled,
-  SuspenseResultWithError,
-  useSuspendableQuery,
-} from '../helpers/reads';
+import { ReadResult } from '../helpers/reads';
+import { SuspenseEnabled, SuspenseResultWithError, useSuspendableQuery } from '../helpers/suspense';
 import { useFragmentVariables } from '../helpers/variables';
 
 function profileNotFound({ forProfileId, forHandle }: UseProfileArgs<boolean>) {
@@ -24,6 +20,8 @@ function profileNotFound({ forProfileId, forHandle }: UseProfileArgs<boolean>) {
       : `Profile with handle: ${forHandle ? forHandle : ''}`,
   );
 }
+
+export type { ProfileRequest };
 
 /**
  * {@link useProfile} hook arguments
@@ -36,34 +34,39 @@ export type UseProfileResult =
   | SuspenseResultWithError<Profile, NotFoundError>;
 
 /**
- * Fetch a profile by either its full handle or id.
- *
- * @example
- * ```ts
- * const { data, error, loading } = useProfile({ forProfileId: '0x04' });
- * ```
- *
- * ## Basic Usage
- *
- * Get Profile by Handle:
+ * Fetches a Profile by either its full handle or id.
  *
  * ```ts
  * const { data, error, loading } = useProfile({
  *   forHandle: 'lens/stani',
- * });
- * ```
- *
- * Get Profile by Id:
- *
- * ```ts
- * const { data, error, loading } = useProfile({
+ *   // OR
  *   forProfileId: '0x04',
  * });
+ *
+ * if (loading) {
+ *   return <Loading />;
+ * }
+ *
+ * if (error) {
+ *   return <Error error={error} />;
+ * }
+ *
+ * return <Profile profile={data} />;
  * ```
  *
- * ## Suspense Enabled
+ * @category Profiles
+ * @group Hooks
+ * @param args - {@link UseProfileArgs}
+ */
+export function useProfile({
+  forHandle,
+  forProfileId,
+}: UseProfileArgs<never>): ReadResult<Profile, NotFoundError | UnspecifiedError>;
+
+/**
+ * Fetches a Profile by either its full handle or id.
  *
- * You can enable suspense mode to suspend the component until the session data is available.
+ * This signature supports [React Suspense](https://react.dev/reference/react/Suspense).
  *
  * ```ts
  * const { data } = useProfile({
@@ -76,16 +79,12 @@ export type UseProfileResult =
  *
  * @category Profiles
  * @group Hooks
- *
  * @param args - {@link UseProfileArgs}
  */
-export function useProfile({
-  forHandle,
-  forProfileId,
-}: UseProfileArgs<never>): ReadResult<Profile, NotFoundError | UnspecifiedError>;
 export function useProfile(
   args: UseProfileArgs<true>,
 ): SuspenseResultWithError<Profile, NotFoundError>;
+
 export function useProfile({
   suspense = false,
   ...request

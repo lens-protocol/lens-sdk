@@ -1,8 +1,8 @@
-import { PaginatedReadResult } from '@lens-protocol/react-web';
-import { RefCallback } from 'react';
+import { SuspendablePaginatedResult } from '@lens-protocol/react-web';
+import { RefCallback, startTransition } from 'react';
 import { useInView } from 'react-cool-inview';
 
-export function useInfiniteScroll<T, Q extends PaginatedReadResult<T> = PaginatedReadResult<T>>(
+export function useInfiniteScroll<T, Q extends SuspendablePaginatedResult<T>>(
   queryResult: Q,
 ): Q & { observeRef: RefCallback<unknown> } {
   const { observe: observeRef } = useInView({
@@ -10,7 +10,9 @@ export function useInfiniteScroll<T, Q extends PaginatedReadResult<T> = Paginate
     rootMargin: '20% 0px',
     onEnter: async ({ unobserve, observe }) => {
       unobserve();
-      await queryResult.next();
+      startTransition(() => {
+        void queryResult.next();
+      });
       observe();
     },
   });

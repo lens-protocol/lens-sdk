@@ -9,17 +9,9 @@ import { OneOf, invariant } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
 import { useLensApolloClient } from '../helpers/arguments';
-import {
-  ReadResult,
-  SuspenseEnabled,
-  SuspenseResultWithError,
-  useSuspendableQuery,
-} from '../helpers/reads';
+import { ReadResult } from '../helpers/reads';
+import { SuspenseEnabled, SuspenseResultWithError, useSuspendableQuery } from '../helpers/suspense';
 import { useFragmentVariables } from '../helpers/variables';
-
-// function isValidPublicationId(id: string) {
-//   return id.includes('-');
-// }
 
 function publicationNotFound({ forId, forTxHash }: UsePublicationArgs<boolean>) {
   return new NotFoundError(
@@ -28,6 +20,8 @@ function publicationNotFound({ forId, forTxHash }: UsePublicationArgs<boolean>) 
       : `Publication with txHash ${forTxHash ? forTxHash : ''} was not found`,
   );
 }
+
+export type { PublicationRequest };
 
 /**
  * {@link usePublication} hook arguments
@@ -110,13 +104,6 @@ export function usePublication({
       nextFetchPolicy: 'cache-first',
     }),
   });
-
-  // if (request.forId && !isValidPublicationId(request.forId)) {
-  //   return {
-  //     data: undefined,
-  //     error: publicationNotFound(request),
-  //   };
-  // }
 
   if (result.data === null) {
     return {
