@@ -45,6 +45,9 @@ function useCredentials() {
  *
  * @experimental This API is VERY experimental and might change in the future.
  * @defaultValue `null` if not authenticated.
+ *
+ * @category Misc
+ * @group Hooks
  */
 export function useAccessToken() {
   const credentials = useCredentials();
@@ -57,6 +60,9 @@ export function useAccessToken() {
  *
  * @experimental This API is VERY experimental and might change in the future.
  * @defaultValue `null` if not authenticated.
+ *
+ * @category Misc
+ * @group Hooks
  */
 export function useIdentityToken() {
   const credentials = useCredentials();
@@ -69,6 +75,9 @@ export function useIdentityToken() {
  *
  * @experimental This API is VERY experimental and might change in the future.
  * @defaultValue `null` if not authenticated.
+ *
+ * @category Misc
+ * @group Hooks
  */
 export function useRefreshToken() {
   const credentials = useCredentials();

@@ -263,6 +263,9 @@ export type OptimisticCreatePostError =
  * ```
  *
  * @experimental This API is experimental and may change or be removed in future versions without honoring semver.
+ *
+ * @category Publications
+ * @group Hooks
  */
 export function useOptimisticCreatePost(
   uploader: IUploader,
