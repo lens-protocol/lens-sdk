@@ -15,7 +15,8 @@ import { EvmAddress, invariant, never } from '@lens-protocol/shared-kernel';
 import { useEffect, useRef } from 'react';
 
 import { useLensApolloClient } from '../helpers/arguments';
-import { ReadResult, SuspenseEnabled, SuspenseResult } from '../helpers/reads';
+import { ReadResult } from '../helpers/reads';
+import { SuspenseEnabled, SuspenseResult } from '../helpers/suspense';
 import { useLazyFragmentVariables } from '../helpers/variables';
 
 export function usePreviousValue<T>(value: T) {
@@ -101,14 +102,7 @@ export type Session = AnonymousSession | ProfileSession | WalletOnlySession;
 export type UseSessionArgs<TSuspense extends boolean> = SuspenseEnabled<TSuspense>;
 
 /**
- * `useSession` is a hook that lets you access the current {@link Session}
- *
- * @example
- * ```ts
- * const { data, error, loading } = useSession();
- * ```
- *
- * ## Basic Usage
+ * Returns current {@link Session} data.
  *
  * Use this hook to determine if the user is authenticated or not.
  * ```tsx
@@ -138,9 +132,15 @@ export type UseSessionArgs<TSuspense extends boolean> = SuspenseEnabled<TSuspens
  * }
  * ```
  *
- * ## Suspense Enabled
+ * @category Authentication
+ * @group Hooks
+ */
+export function useSession(args: UseSessionArgs<true>): SuspenseResult<Session>;
+
+/**
+ * Returns current {@link Session} data.
  *
- * You can enable suspense mode to suspend the component until the session data is available.
+ * This signature supports [React Suspense](https://react.dev/reference/react/Suspense).
  *
  * ```tsx
  * function Page() {
@@ -170,8 +170,8 @@ export type UseSessionArgs<TSuspense extends boolean> = SuspenseEnabled<TSuspens
  * @category Authentication
  * @group Hooks
  */
-export function useSession(args: UseSessionArgs<true>): SuspenseResult<Session>;
 export function useSession(args?: UseSessionArgs<never>): ReadResult<Session, UnspecifiedError>;
+
 export function useSession(
   args?: UseSessionArgs<boolean>,
 ): ReadResult<Session, UnspecifiedError> | SuspenseResult<Session> {

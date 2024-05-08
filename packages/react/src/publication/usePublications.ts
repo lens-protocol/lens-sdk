@@ -1,29 +1,31 @@
 import {
   AnyPublication,
+  PublicationsDocument,
   PublicationsRequest,
-  usePublications as usePublicationsBase,
 } from '@lens-protocol/api-bindings';
 
 import { useLensApolloClient } from '../helpers/arguments';
-import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { PaginatedArgs, PaginatedReadResult } from '../helpers/reads';
+import {
+  SuspendablePaginatedResult,
+  SuspenseEnabled,
+  SuspensePaginatedResult,
+  useSuspendablePaginatedQuery,
+} from '../helpers/suspense';
 import { useFragmentVariables } from '../helpers/variables';
 
 /**
  * {@link usePublications} hook arguments
  */
-export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
+export type UsePublicationsArgs<TSuspense extends boolean = never> =
+  PaginatedArgs<PublicationsRequest> & SuspenseEnabled<TSuspense>;
 
 export type { PublicationsRequest };
 
 /**
- * Fetch a paginated result of publications based on a set of filters.
+ * Retrieves a paginated list of publications, filtered according to specified criteria.
  *
- * @category Publications
- * @group Hooks
- * @param args - {@link UsePublicationsArgs}
- *
- * @example
- * Fetch post publications
+ * Fetch by Publication Type:
  * ```tsx
  * const { data, loading, error } = usePublications({
  *   where: {
@@ -32,8 +34,7 @@ export type { PublicationsRequest };
  * });
  * ```
  *
- * @example
- * Fetch all short form video post publications
+ * Fetch by Main Content Focus:
  * ```tsx
  * const { data, loading, error } = usePublications({
  *   where: {
@@ -45,8 +46,7 @@ export type { PublicationsRequest };
  * });
  * ```
  *
- * @example
- * Fetch all comments for a specified publication
+ * Fetch Post's comments:
  * ```tsx
  * const { data, loading, error } = usePublications({
  *   where: {
@@ -57,28 +57,7 @@ export type { PublicationsRequest };
  * });
  * ```
  *
- * @example
- * Fetch all mirrors of a specified publication
- * ```tsx
- * const { data, loading, error } = usePublications({
- *   where: {
- *     mirrorOn: publicationId('0x03-0x24'),
- *   }
- * });
- * ```
- *
- * @example
- * Fetch all quotes of a specified publication
- * ```tsx
- * const { data, loading, error } = usePublications({
- *   where: {
- *     quoteOn: publicationId('0x03-0x24'),
- *   }
- * });
- * ```
- *
- * @example
- * Fetch all publications by an author's Profile ID
+ * Fetch Profile's Publications:
  * ```tsx
  * const { data, loading, error } = usePublications({
  *   where: {
@@ -87,41 +66,47 @@ export type { PublicationsRequest };
  * });
  * ```
  *
- * @example
- * Fetch publications mirrored by a Profile ID
- * ```tsx
- * const { data, loading, error } = usePublications({
- *   where: {
- *     from: [profileId('0x01')],
- *     publicationTypes: [PublicationType.Mirror],
- *   }
- * });
- * ```
- *
- * @example
- * Fetch publications quoted by a Profile ID
- * ```tsx
- * const { data, loading, error } = usePublications({
- *   where: {
- *     from: [profileId('0x01')],
- *     publicationTypes: [PublicationType.Quote],
- *   }
- * });
- * ```
+ * @category Publications
+ * @group Hooks
+ * @param args - {@link UsePublicationsArgs}
  */
+export function usePublications(
+  args: UsePublicationsArgs<never>,
+): PaginatedReadResult<AnyPublication[]>;
+/**
+ * Retrieves a paginated list of publications, filtered according to specified criteria.
+ *
+ * This signature supports [React Suspense](https://react.dev/reference/react/Suspense).
+ *
+ * ```tsx
+ * const { data } = usePublications({
+ *   where: { ... },
+ *   suspense: true,
+ * });
+ * ```
+ *
+ * @category Publications
+ * @group Hooks
+ * @param args - {@link UsePublicationsArgs}
+ */
+export function usePublications(
+  args: UsePublicationsArgs<true>,
+): SuspensePaginatedResult<AnyPublication[]>;
+
 export function usePublications({
+  suspense = false,
   where,
   limit,
-}: UsePublicationsArgs): PaginatedReadResult<AnyPublication[]> {
-  return usePaginatedReadResult(
-    usePublicationsBase(
-      useLensApolloClient({
-        variables: useFragmentVariables({
-          where,
-          limit,
-          statsFor: where?.metadata?.publishedOn,
-        }),
+}: UsePublicationsArgs<boolean>): SuspendablePaginatedResult<AnyPublication[]> {
+  return useSuspendablePaginatedQuery({
+    suspense,
+    query: PublicationsDocument,
+    options: useLensApolloClient({
+      variables: useFragmentVariables({
+        where,
+        limit,
+        statsFor: where?.metadata?.publishedOn,
       }),
-    ),
-  );
+    }),
+  });
 }
