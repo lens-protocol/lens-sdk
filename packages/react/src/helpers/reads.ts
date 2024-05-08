@@ -131,7 +131,7 @@ export function useSuspenseReadResult<TResult, TVariables extends OperationVaria
   }
 
   return {
-    data: data?.result ?? never('Data should be available in suspense mode.'),
+    data: data?.result,
   };
 }
 

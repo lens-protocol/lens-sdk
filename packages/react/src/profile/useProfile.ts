@@ -36,7 +36,7 @@ export type UseProfileResult =
   | SuspenseResultWithError<Profile, NotFoundError>;
 
 /**
- * `useProfile` is a React hook that allows you to fetch a profile from the Lens API.
+ * Fetch a profile by either its full handle or id.
  *
  * @example
  * ```ts
@@ -67,7 +67,8 @@ export type UseProfileResult =
  *
  * ```ts
  * const { data } = useProfile({
- *   forHandle: 'lens/stani'
+ *   forHandle: 'lens/stani',
+ *   suspense: true,
  * });
  *
  * console.log(data.id);
@@ -88,9 +89,7 @@ export function useProfile(
 export function useProfile({
   suspense = false,
   ...request
-}: UseProfileArgs<boolean>):
-  | ReadResult<Profile, NotFoundError | UnspecifiedError>
-  | SuspenseResultWithError<Profile, NotFoundError> {
+}: UseProfileArgs<boolean>): UseProfileResult {
   invariant(
     request.forProfileId === undefined || request.forHandle === undefined,
     "Only one of 'forProfileId' or 'forHandle' should be provided to 'useProfile' hook",
