@@ -12,22 +12,12 @@ import {
   SessionType,
 } from '@lens-protocol/domain/use-cases/authentication';
 import { EvmAddress, invariant, never } from '@lens-protocol/shared-kernel';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 import { useLensApolloClient } from '../helpers/arguments';
 import { ReadResult } from '../helpers/reads';
 import { SuspenseEnabled, SuspenseResult } from '../helpers/suspense';
 import { useLazyFragmentVariables } from '../helpers/variables';
-
-export function usePreviousValue<T>(value: T) {
-  const ref = useRef<T>();
-
-  useEffect(() => {
-    ref.current = value;
-  }, [value]);
-
-  return ref.current;
-}
 
 export { LogoutReason, SessionType };
 
