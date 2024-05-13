@@ -51,6 +51,7 @@ function wrapFetch(logger: ILogger, supportedVersion: SemVer, fetch: Fetch): Fet
 export type LensLinkArgs = {
   fetch?: Fetch;
   logger: ILogger;
+  origin?: string;
   supportedVersion: SemVer;
   uri: string;
 };
@@ -58,6 +59,7 @@ export type LensLinkArgs = {
 export function createLensLink({
   fetch: preferredFetch,
   logger,
+  origin,
   supportedVersion,
   uri,
 }: LensLinkArgs) {
@@ -66,7 +68,9 @@ export function createLensLink({
 
   return new HttpLink({
     uri,
-
     fetch: wrapFetch(logger, supportedVersion, currentFetch),
+    headers: {
+      ...(origin && { origin: origin }),
+    },
   });
 }
