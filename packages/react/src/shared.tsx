@@ -115,11 +115,14 @@ export function createSharedDependencies(userConfig: BaseConfig): SharedDependen
     [TransactionKind.CREATE_POST]: new RefreshCurrentProfileResponder(profileCacheManager),
     [TransactionKind.CREATE_PROFILE]: new CreateProfileResponder(apolloClient),
     [TransactionKind.CREATE_QUOTE]: new RefreshCurrentProfileResponder(profileCacheManager),
-    [TransactionKind.FOLLOW_PROFILE]: new FollowProfileResponder(profileCacheManager),
+    [TransactionKind.FOLLOW_PROFILE]: new FollowProfileResponder(apolloClient, profileCacheManager),
     [TransactionKind.LINK_HANDLE]: new LinkHandleResponder(apolloClient, profileCacheManager),
     [TransactionKind.MIRROR_PUBLICATION]: new RefreshCurrentProfileResponder(profileCacheManager),
     [TransactionKind.UNBLOCK_PROFILE]: new UnblockProfilesResponder(profileCacheManager),
-    [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(profileCacheManager),
+    [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(
+      apolloClient,
+      profileCacheManager,
+    ),
     [TransactionKind.UNLINK_HANDLE]: new LinkHandleResponder(apolloClient, profileCacheManager),
     [TransactionKind.UPDATE_FOLLOW_POLICY]: new RefreshCurrentProfileResponder(profileCacheManager),
     [TransactionKind.UPDATE_PROFILE_DETAILS]: new RefreshCurrentProfileResponder(
