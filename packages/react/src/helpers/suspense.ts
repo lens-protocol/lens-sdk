@@ -51,9 +51,8 @@ export type SuspenseReadResult<T, E = never> = SuspenseResultWithError<T, E>;
  *
  * @experimental This is an experimental type that can change at any time.
  */
-export type SuspenseEnabled<TSuspense extends boolean> = {
-  suspense?: TSuspense;
-};
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type SuspenseEnabled<T = {}> = T & { suspense: true };
 
 /**
  * @internal

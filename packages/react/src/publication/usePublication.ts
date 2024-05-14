@@ -13,7 +13,7 @@ import { ReadResult } from '../helpers/reads';
 import { SuspenseEnabled, SuspenseResultWithError, useSuspendableQuery } from '../helpers/suspense';
 import { useFragmentVariables } from '../helpers/variables';
 
-function publicationNotFound({ forId, forTxHash }: UsePublicationArgs<boolean>) {
+function publicationNotFound({ forId, forTxHash }: UsePublicationArgs) {
   return new NotFoundError(
     forId
       ? `Publication with id ${forId} was not found`
@@ -26,8 +26,14 @@ export type { PublicationRequest };
 /**
  * {@link usePublication} hook arguments
  */
-export type UsePublicationArgs<TSuspense extends boolean = never> = OneOf<PublicationRequest> &
-  SuspenseEnabled<TSuspense>;
+export type UsePublicationArgs = OneOf<PublicationRequest>;
+
+/**
+ * {@link usePublication} hook arguments with Suspense support
+ *
+ * @experimental This API can change without notice
+ */
+export type UseSuspensePublicationArgs = SuspenseEnabled<UsePublicationArgs>;
 
 export type UsePublicationResult =
   | ReadResult<AnyPublication, NotFoundError | UnspecifiedError>
@@ -36,42 +42,12 @@ export type UsePublicationResult =
 /**
  * Fetch a publication by either its publication id or transaction hash.
  *
- * @example
- * ```tsx
- * const { data, error, loading } = usePublication({
- *   forId: '0x04-0x0b',
- * });
- * ```
- *
- * ## Basic Usage
- *
- * Get Publication by Id:
- *
  * ```ts
  * const { data, error, loading } = usePublication({
  *   forId: '0x04-0x0b',
- * });
- * ```
- *
- * Get Publication by Transaction Hash:
- *
- * ```ts
- * const { data, error, loading } = usePublication({
+ *   // OR
  *   forTxHash: '0xcd0655e8d1d131ebfc72fa5ebff6ed0430e6e39e729af1a81da3b6f33822a6ff',
  * });
- * ```
- *
- * ## Suspense Enabled
- *
- * You can enable suspense mode to suspend the component until the session data is available.
- *
- * ```ts
- * const { data } = usePublication({
- *   forId: '0x04-0x0b',
- *   suspense: true,
- * });
- *
- * console.log(data.id);
  * ```
  *
  * @category Publications
@@ -82,14 +58,34 @@ export type UsePublicationResult =
 export function usePublication({
   forId,
   forTxHash,
-}: UsePublicationArgs<never>): ReadResult<AnyPublication, NotFoundError | UnspecifiedError>;
+}: UsePublicationArgs): ReadResult<AnyPublication, NotFoundError | UnspecifiedError>;
+
+/**
+ * Fetch a publication by either its publication id or transaction hash.
+ *
+ * This signature supports [React Suspense](https://react.dev/reference/react/Suspense).
+ *
+ * ```ts
+ * const { data } = usePublication({
+ *   forId: '0x04-0x0b',
+ *   suspense: true,
+ * });
+ *
+ * console.log(data.id);
+ * ```
+ *
+ * @experimental This API can change without notice
+ * @category Publications
+ * @group Hooks
+ */
 export function usePublication(
-  args: UsePublicationArgs<true>,
+  args: UseSuspensePublicationArgs,
 ): SuspenseResultWithError<AnyPublication, NotFoundError>;
+
 export function usePublication({
   suspense = false,
   ...request
-}: UsePublicationArgs<boolean>): UsePublicationResult {
+}: UsePublicationArgs & { suspense?: boolean }): UsePublicationResult {
   invariant(
     request.forId === undefined || request.forTxHash === undefined,
     "Only one of 'forId' or 'forTxHash' should be provided to 'usePublication' hook",

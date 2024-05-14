@@ -12,7 +12,6 @@ import {
   InputMaybe,
   Cursor,
   PaginatedResultInfo,
-  LimitType,
 } from '@lens-protocol/api-bindings';
 import { Prettify } from '@lens-protocol/shared-kernel';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -111,20 +110,7 @@ export function useReadResult<
   return buildReadResult(data?.result, error);
 }
 
-export type OmitCursor<T> = Omit<T, 'cursor'>;
-
-export type PaginatedArgs<T> = Prettify<
-  OmitCursor<
-    T & {
-      /**
-       * The number of items to return.
-       *
-       * @defaultValue Default value is set by the API and it might differ between queries.
-       */
-      limit?: LimitType;
-    }
-  >
->;
+export type PaginatedArgs<T> = Prettify<Omit<T, 'cursor'>>;
 
 /**
  * A paginated read result.
