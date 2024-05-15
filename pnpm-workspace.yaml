@@ -3,5 +3,6 @@ packages:
   - "examples/lens-next-app"
   - "examples/node"
   - "examples/react-native"
+  - "examples/react-native-template"
   - "examples/shared"
   - "examples/web"
