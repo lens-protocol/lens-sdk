@@ -205,7 +205,7 @@ function resolveUnknownRequestFor(
     target.openActionModules?.find(
       (entry): entry is UnknownOpenActionModuleSettings =>
         isUnknownOpenActionModuleSettings(entry) && entry.contract.address === params.address,
-    ) ?? never(`Cannot find Open Action settings ${params.address} fro publication ${target.id}`);
+    ) ?? never(`Cannot find Open Action settings ${params.address} in publication ${target.id}`);
 
   return {
     kind: TransactionKind.ACT_ON_PUBLICATION,

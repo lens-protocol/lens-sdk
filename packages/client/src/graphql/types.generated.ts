@@ -1449,7 +1449,6 @@ export type ProtocolSharedRevenueCollectModuleInput = {
   collectLimit?: InputMaybe<Scalars['String']['input']>;
   /** The wallet of a client app to share revenues alongside the recipient and the protocol. Optional. */
   creatorClient?: InputMaybe<Scalars['EvmAddress']['input']>;
-  currentCollects?: Scalars['Float']['input'];
   endsAt?: InputMaybe<Scalars['DateTime']['input']>;
   followerOnly: Scalars['Boolean']['input'];
   recipient?: InputMaybe<Scalars['EvmAddress']['input']>;
@@ -1594,7 +1593,7 @@ export enum PublicationReportingIllegalSubreason {
   AnimalAbuse = 'ANIMAL_ABUSE',
   DirectThreat = 'DIRECT_THREAT',
   HumanAbuse = 'HUMAN_ABUSE',
-  Plagiarism = 'PLAGIARISM',
+  IntEllEctualProperty = 'INTEllECTUAL_PROPERTY',
   ThreatIndividual = 'THREAT_INDIVIDUAL',
   Violence = 'VIOLENCE',
 }

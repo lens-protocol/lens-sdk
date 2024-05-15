@@ -479,6 +479,9 @@ fragment ProtocolSharedRevenueCollectOpenActionSettings on ProtocolSharedRevenue
   amount {
     ...Amount
   }
+  mintFee {
+    ...Amount
+  }
   recipient
   referralFee
   followerOnly

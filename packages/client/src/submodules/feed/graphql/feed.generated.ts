@@ -6453,6 +6453,27 @@ export const FeedItemFragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'distribution' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'executorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'protocolSplit' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'mintFee' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'recipient' } },
           { kind: 'Field', name: { kind: 'Name', value: 'referralFee' } },
           { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
@@ -15438,6 +15459,27 @@ export const OpenActionPaidActionFragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'distribution' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'executorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'protocolSplit' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'mintFee' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'recipient' } },
           { kind: 'Field', name: { kind: 'Name', value: 'referralFee' } },
           { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
@@ -22622,6 +22664,27 @@ export const FeedDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'distribution' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'executorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'protocolSplit' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'mintFee' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
@@ -29832,6 +29895,27 @@ export const FeedHighlightsDocument = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'distribution' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'executorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'protocolSplit' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'mintFee' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'recipient' } },
           { kind: 'Field', name: { kind: 'Name', value: 'referralFee' } },
           { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
@@ -36996,6 +37080,27 @@ export const LatestPaidActionsDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'distribution' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'executorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'protocolSplit' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'mintFee' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],

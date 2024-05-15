@@ -8,247 +8,435 @@ import type { PublicActProxy, PublicActProxyInterface } from '../PublicActProxy'
 
 const _abi = [
   {
+    type: 'constructor',
     inputs: [
       {
-        internalType: 'address',
         name: 'lensHub',
         type: 'address',
+        internalType: 'address',
       },
       {
-        internalType: 'address',
         name: 'collectPublicationAction',
         type: 'address',
-      },
-    ],
-    stateMutability: 'nonpayable',
-    type: 'constructor',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint8',
-        name: 'increment',
-        type: 'uint8',
-      },
-    ],
-    name: 'incrementNonce',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'name',
-    outputs: [
-      {
-        internalType: 'string',
-        name: '',
-        type: 'string',
-      },
-    ],
-    stateMutability: 'pure',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
         internalType: 'address',
-        name: 'signer',
-        type: 'address',
       },
     ],
-    name: 'nonces',
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'COLLECT_PUBLICATION_ACTION',
+    inputs: [],
     outputs: [
       {
-        internalType: 'uint256',
         name: '',
-        type: 'uint256',
+        type: 'address',
+        internalType: 'contract CollectPublicationAction',
       },
     ],
     stateMutability: 'view',
-    type: 'function',
   },
   {
-    inputs: [
+    type: 'function',
+    name: 'HUB',
+    inputs: [],
+    outputs: [
       {
-        components: [
-          {
-            internalType: 'uint256',
-            name: 'publicationActedProfileId',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'publicationActedId',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'actorProfileId',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256[]',
-            name: 'referrerProfileIds',
-            type: 'uint256[]',
-          },
-          {
-            internalType: 'uint256[]',
-            name: 'referrerPubIds',
-            type: 'uint256[]',
-          },
-          {
-            internalType: 'address',
-            name: 'actionModuleAddress',
-            type: 'address',
-          },
-          {
-            internalType: 'bytes',
-            name: 'actionModuleData',
-            type: 'bytes',
-          },
-        ],
-        internalType: 'struct Types.PublicationActionParams',
-        name: 'publicationActionParams',
-        type: 'tuple',
+        name: '',
+        type: 'address',
+        internalType: 'contract ILensHub',
       },
     ],
-    name: 'publicCollect',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: 'view',
   },
   {
+    type: 'function',
+    name: 'incrementNonce',
     inputs: [
       {
-        components: [
-          {
-            internalType: 'uint256',
-            name: 'publicationActedProfileId',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'publicationActedId',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'actorProfileId',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256[]',
-            name: 'referrerProfileIds',
-            type: 'uint256[]',
-          },
-          {
-            internalType: 'uint256[]',
-            name: 'referrerPubIds',
-            type: 'uint256[]',
-          },
-          {
-            internalType: 'address',
-            name: 'actionModuleAddress',
-            type: 'address',
-          },
-          {
-            internalType: 'bytes',
-            name: 'actionModuleData',
-            type: 'bytes',
-          },
-        ],
-        internalType: 'struct Types.PublicationActionParams',
+        name: 'increment',
+        type: 'uint8',
+        internalType: 'uint8',
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'name',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'string',
+        internalType: 'string',
+      },
+    ],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    name: 'nonces',
+    inputs: [
+      {
+        name: 'signer',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'publicCollect',
+    inputs: [
+      {
         name: 'publicationActionParams',
         type: 'tuple',
-      },
-      {
+        internalType: 'struct Types.PublicationActionParams',
         components: [
           {
-            internalType: 'address',
-            name: 'signer',
-            type: 'address',
-          },
-          {
-            internalType: 'uint8',
-            name: 'v',
-            type: 'uint8',
-          },
-          {
-            internalType: 'bytes32',
-            name: 'r',
-            type: 'bytes32',
-          },
-          {
-            internalType: 'bytes32',
-            name: 's',
-            type: 'bytes32',
-          },
-          {
-            internalType: 'uint256',
-            name: 'deadline',
+            name: 'publicationActedProfileId',
             type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'publicationActedId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'actorProfileId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'referrerProfileIds',
+            type: 'uint256[]',
+            internalType: 'uint256[]',
+          },
+          {
+            name: 'referrerPubIds',
+            type: 'uint256[]',
+            internalType: 'uint256[]',
+          },
+          {
+            name: 'actionModuleAddress',
+            type: 'address',
+            internalType: 'address',
+          },
+          {
+            name: 'actionModuleData',
+            type: 'bytes',
+            internalType: 'bytes',
           },
         ],
-        internalType: 'struct Types.EIP712Signature',
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'publicCollectWithSig',
+    inputs: [
+      {
+        name: 'publicationActionParams',
+        type: 'tuple',
+        internalType: 'struct Types.PublicationActionParams',
+        components: [
+          {
+            name: 'publicationActedProfileId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'publicationActedId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'actorProfileId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'referrerProfileIds',
+            type: 'uint256[]',
+            internalType: 'uint256[]',
+          },
+          {
+            name: 'referrerPubIds',
+            type: 'uint256[]',
+            internalType: 'uint256[]',
+          },
+          {
+            name: 'actionModuleAddress',
+            type: 'address',
+            internalType: 'address',
+          },
+          {
+            name: 'actionModuleData',
+            type: 'bytes',
+            internalType: 'bytes',
+          },
+        ],
+      },
+      {
         name: 'signature',
         type: 'tuple',
-      },
-    ],
-    name: 'publicCollectWithSig',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
+        internalType: 'struct Types.EIP712Signature',
         components: [
           {
-            internalType: 'uint256',
-            name: 'publicationActedProfileId',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'publicationActedId',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'actorProfileId',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256[]',
-            name: 'referrerProfileIds',
-            type: 'uint256[]',
-          },
-          {
-            internalType: 'uint256[]',
-            name: 'referrerPubIds',
-            type: 'uint256[]',
-          },
-          {
-            internalType: 'address',
-            name: 'actionModuleAddress',
+            name: 'signer',
             type: 'address',
+            internalType: 'address',
           },
           {
-            internalType: 'bytes',
-            name: 'actionModuleData',
-            type: 'bytes',
+            name: 'v',
+            type: 'uint8',
+            internalType: 'uint8',
+          },
+          {
+            name: 'r',
+            type: 'bytes32',
+            internalType: 'bytes32',
+          },
+          {
+            name: 's',
+            type: 'bytes32',
+            internalType: 'bytes32',
+          },
+          {
+            name: 'deadline',
+            type: 'uint256',
+            internalType: 'uint256',
           },
         ],
-        internalType: 'struct Types.PublicationActionParams',
-        name: 'publicationActionParams',
-        type: 'tuple',
       },
     ],
-    name: 'publicFreeAct',
     outputs: [],
     stateMutability: 'nonpayable',
+  },
+  {
     type: 'function',
+    name: 'publicFreeAct',
+    inputs: [
+      {
+        name: 'publicationActionParams',
+        type: 'tuple',
+        internalType: 'struct Types.PublicationActionParams',
+        components: [
+          {
+            name: 'publicationActedProfileId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'publicationActedId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'actorProfileId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'referrerProfileIds',
+            type: 'uint256[]',
+            internalType: 'uint256[]',
+          },
+          {
+            name: 'referrerPubIds',
+            type: 'uint256[]',
+            internalType: 'uint256[]',
+          },
+          {
+            name: 'actionModuleAddress',
+            type: 'address',
+            internalType: 'address',
+          },
+          {
+            name: 'actionModuleData',
+            type: 'bytes',
+            internalType: 'bytes',
+          },
+        ],
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'publicPaidAct',
+    inputs: [
+      {
+        name: 'publicationActionParams',
+        type: 'tuple',
+        internalType: 'struct Types.PublicationActionParams',
+        components: [
+          {
+            name: 'publicationActedProfileId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'publicationActedId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'actorProfileId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'referrerProfileIds',
+            type: 'uint256[]',
+            internalType: 'uint256[]',
+          },
+          {
+            name: 'referrerPubIds',
+            type: 'uint256[]',
+            internalType: 'uint256[]',
+          },
+          {
+            name: 'actionModuleAddress',
+            type: 'address',
+            internalType: 'address',
+          },
+          {
+            name: 'actionModuleData',
+            type: 'bytes',
+            internalType: 'bytes',
+          },
+        ],
+      },
+      {
+        name: 'currency',
+        type: 'address',
+        internalType: 'address',
+      },
+      {
+        name: 'amount',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'approveTo',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'publicPaidActWithSig',
+    inputs: [
+      {
+        name: 'publicationActionParams',
+        type: 'tuple',
+        internalType: 'struct Types.PublicationActionParams',
+        components: [
+          {
+            name: 'publicationActedProfileId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'publicationActedId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'actorProfileId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'referrerProfileIds',
+            type: 'uint256[]',
+            internalType: 'uint256[]',
+          },
+          {
+            name: 'referrerPubIds',
+            type: 'uint256[]',
+            internalType: 'uint256[]',
+          },
+          {
+            name: 'actionModuleAddress',
+            type: 'address',
+            internalType: 'address',
+          },
+          {
+            name: 'actionModuleData',
+            type: 'bytes',
+            internalType: 'bytes',
+          },
+        ],
+      },
+      {
+        name: 'currency',
+        type: 'address',
+        internalType: 'address',
+      },
+      {
+        name: 'amount',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'approveTo',
+        type: 'address',
+        internalType: 'address',
+      },
+      {
+        name: 'signature',
+        type: 'tuple',
+        internalType: 'struct Types.EIP712Signature',
+        components: [
+          {
+            name: 'signer',
+            type: 'address',
+            internalType: 'address',
+          },
+          {
+            name: 'v',
+            type: 'uint8',
+            internalType: 'uint8',
+          },
+          {
+            name: 'r',
+            type: 'bytes32',
+            internalType: 'bytes32',
+          },
+          {
+            name: 's',
+            type: 'bytes32',
+            internalType: 'bytes32',
+          },
+          {
+            name: 'deadline',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
 ] as const;
 

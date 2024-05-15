@@ -11,15 +11,7 @@ import {
   TokenAllowanceLimit,
   TokenAllowanceRequest,
 } from '@lens-protocol/domain/use-cases/transactions';
-import {
-  Amount,
-  ChainType,
-  Erc20Amount,
-  EvmAddress,
-  erc20,
-  invariant,
-  never,
-} from '@lens-protocol/shared-kernel';
+import { Erc20Amount, EvmAddress, invariant, never } from '@lens-protocol/shared-kernel';
 
 import { SessionType } from '../../authentication';
 
@@ -32,16 +24,8 @@ function createTokenAllowanceRequest(
   };
 }
 
-function buildMintFeeAmount(_module: ProtocolSharedRevenueCollectOpenActionSettings): Erc20Amount {
-  // TODO replace with data from `_module` once available
-  const bonsai = erc20({
-    address: '0x3d2bD0e15829AA5C362a4144FdF4A1112fa29B5c',
-    chainType: ChainType.POLYGON,
-    decimals: 18,
-    name: 'BONSAI',
-    symbol: 'BONSAI',
-  });
-  return Amount.erc20(bonsai, 10);
+function buildMintFeeAmount(module: ProtocolSharedRevenueCollectOpenActionSettings): Erc20Amount {
+  return erc20Amount(module.mintFee);
 }
 
 export type ResolveTokenAllowanceRequestForCollectArgs = {

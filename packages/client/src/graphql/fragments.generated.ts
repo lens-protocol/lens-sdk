@@ -297,6 +297,13 @@ export type ProtocolSharedRevenueCollectOpenActionSettingsFragment = {
   creatorClient: string | null;
   contract: NetworkAddressFragment;
   amount: AmountFragment;
+  distribution: {
+    creatorClientSplit: number;
+    creatorSplit: number;
+    executorClientSplit: number;
+    protocolSplit: number;
+  };
+  mintFee: AmountFragment;
 };
 
 export type MultirecipientFeeCollectOpenActionSettingsFragment = {
@@ -27638,6 +27645,27 @@ export const ProtocolSharedRevenueCollectOpenActionSettingsFragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'distribution' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'executorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'protocolSplit' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'mintFee' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'recipient' } },
           { kind: 'Field', name: { kind: 'Name', value: 'referralFee' } },
           { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
@@ -30346,6 +30374,27 @@ export const PostFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'distribution' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'executorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'protocolSplit' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'mintFee' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
@@ -35855,6 +35904,27 @@ export const CommentBaseFragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'distribution' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'executorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'protocolSplit' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'mintFee' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'recipient' } },
           { kind: 'Field', name: { kind: 'Name', value: 'referralFee' } },
           { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
@@ -41252,6 +41322,27 @@ export const QuoteBaseFragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'distribution' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'executorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'protocolSplit' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'mintFee' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'recipient' } },
           { kind: 'Field', name: { kind: 'Name', value: 'referralFee' } },
           { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
@@ -46162,6 +46253,27 @@ export const CommentFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'distribution' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'executorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'protocolSplit' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'mintFee' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
@@ -53008,6 +53120,27 @@ export const QuoteFragmentDoc = {
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'distribution' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'executorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'protocolSplit' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'mintFee' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'recipient' } },
           { kind: 'Field', name: { kind: 'Name', value: 'referralFee' } },
           { kind: 'Field', name: { kind: 'Name', value: 'followerOnly' } },
@@ -59844,6 +59977,27 @@ export const MirrorFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'amount' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'distribution' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'creatorSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'executorClientSplit' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'protocolSplit' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'mintFee' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Amount' } }],
