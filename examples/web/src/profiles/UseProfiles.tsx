@@ -1,15 +1,11 @@
 import { profileId, useProfiles } from '@lens-protocol/react-web';
 
-import { ErrorMessage } from '../components/error/ErrorMessage';
-import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { ProfileCard } from './components/ProfileCard';
 
 export function UseProfiles() {
   const {
     data: profiles,
-    error,
-    loading,
     hasMore,
     observeRef,
   } = useInfiniteScroll(
@@ -17,12 +13,9 @@ export function UseProfiles() {
       where: {
         profileIds: [profileId('0x01'), profileId('0x02'), profileId('0x03'), profileId('0x04')],
       },
+      suspense: true,
     }),
   );
-
-  if (loading) return <Loading />;
-
-  if (error) return <ErrorMessage error={error} />;
 
   return (
     <div>

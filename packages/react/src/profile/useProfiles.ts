@@ -1,11 +1,18 @@
 import {
   Profile,
+  ProfilesDocument,
   ProfilesRequest,
-  useProfiles as useProfilesHook,
+  ProfilesRequestWhere,
 } from '@lens-protocol/api-bindings';
 
 import { useLensApolloClient } from '../helpers/arguments';
-import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { PaginatedArgs, PaginatedReadResult } from '../helpers/reads';
+import {
+  SuspendablePaginatedResult,
+  SuspenseEnabled,
+  SuspensePaginatedResult,
+  useSuspendablePaginatedQuery,
+} from '../helpers/suspense';
 import { useFragmentVariables } from '../helpers/variables';
 
 /**
@@ -13,18 +20,18 @@ import { useFragmentVariables } from '../helpers/variables';
  */
 export type UseProfilesArgs = PaginatedArgs<ProfilesRequest>;
 
+export type { ProfilesRequest, ProfilesRequestWhere };
+
 /**
- * `useProfiles` is a paginated hook that lets you fetch profiles based on a set of filters.
+ * {@link useProfiles} hook arguments with Suspense support
  *
- * @example
- * ```ts
- * const { data, loading, error } = useProfiles({
- * ```
+ * @experimental This API can change without notice
+ */
+export type UseSuspenseProfilesArgs = SuspenseEnabled<UseProfilesArgs>;
+
+/**
+ * Retrieves a paginated list of profiles, filtered according to specified criteria.
  *
- * @category Profiles
- * @group Hooks
- *
- * @example
  * Fetch profiles by handles
  * ```tsx
  * const { data, loading, error } = useProfiles({
@@ -34,7 +41,6 @@ export type UseProfilesArgs = PaginatedArgs<ProfilesRequest>;
  * });
  * ```
  *
- * @example
  * Fetch profiles by ids
  * ```tsx
  * const { data, loading, error } = useProfiles({
@@ -44,7 +50,6 @@ export type UseProfilesArgs = PaginatedArgs<ProfilesRequest>;
  * });
  * ```
  *
- * @example
  * Fetch profiles by owner addresses
  * ```tsx
  * const { data, loading, error } = useProfiles({
@@ -54,7 +59,6 @@ export type UseProfilesArgs = PaginatedArgs<ProfilesRequest>;
  * });
  * ```
  *
- * @example
  * Fetch profiles who commented on a publication
  * ```tsx
  * const { data, loading, error } = useProfiles({
@@ -64,7 +68,6 @@ export type UseProfilesArgs = PaginatedArgs<ProfilesRequest>;
  * });
  * ```
  *
- * @example
  * Fetch profiles who mirrored a publication
  * ```tsx
  * const { data, loading, error } = useProfiles({
@@ -74,7 +77,6 @@ export type UseProfilesArgs = PaginatedArgs<ProfilesRequest>;
  * });
  * ```
  *
- * @example
  * Fetch profiles who quoted a publication
  * ```tsx
  * const { data, loading, error } = useProfiles({
@@ -83,13 +85,39 @@ export type UseProfilesArgs = PaginatedArgs<ProfilesRequest>;
  *   },
  * });
  * ```
+ *
+ * @category Profiles
+ * @group Hooks
  */
-export function useProfiles(args: UseProfilesArgs): PaginatedReadResult<Profile[]> {
-  return usePaginatedReadResult(
-    useProfilesHook(
-      useLensApolloClient({
-        variables: useFragmentVariables(args),
-      }),
-    ),
-  );
+export function useProfiles(args: UseProfilesArgs): PaginatedReadResult<Profile[]>;
+
+/**
+ * Retrieves a paginated list of profiles, filtered according to specified criteria.
+ *
+ * This signature supports [React Suspense](https://react.dev/reference/react/Suspense).
+ *
+ * ```tsx
+ * const { data } = useProfiles({
+ *   where: { ... },
+ *   suspense: true,
+ * });
+ * ```
+ *
+ * @experimental This API can change without notice
+ * @category Profiles
+ * @group Hooks
+ */
+export function useProfiles(args: UseSuspenseProfilesArgs): SuspensePaginatedResult<Profile[]>;
+
+export function useProfiles({
+  suspense = false,
+  ...args
+}: UseProfilesArgs & { suspense?: boolean }): SuspendablePaginatedResult<Profile[]> {
+  return useSuspendablePaginatedQuery({
+    suspense,
+    query: ProfilesDocument,
+    options: useLensApolloClient({
+      variables: useFragmentVariables(args),
+    }),
+  });
 }
