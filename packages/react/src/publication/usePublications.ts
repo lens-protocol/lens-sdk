@@ -17,10 +17,16 @@ import { useFragmentVariables } from '../helpers/variables';
 /**
  * {@link usePublications} hook arguments
  */
-export type UsePublicationsArgs<TSuspense extends boolean = never> =
-  PaginatedArgs<PublicationsRequest> & SuspenseEnabled<TSuspense>;
+export type UsePublicationsArgs = PaginatedArgs<PublicationsRequest>;
 
 export type { PublicationsRequest };
+
+/**
+ * {@link usePublications} hook arguments with Suspense support
+ *
+ * @experimental This API can change without notice
+ */
+export type UseSuspensePublicationsArgs = SuspenseEnabled<UsePublicationsArgs>;
 
 /**
  * Retrieves a paginated list of publications, filtered according to specified criteria.
@@ -68,11 +74,8 @@ export type { PublicationsRequest };
  *
  * @category Publications
  * @group Hooks
- * @param args - {@link UsePublicationsArgs}
  */
-export function usePublications(
-  args: UsePublicationsArgs<never>,
-): PaginatedReadResult<AnyPublication[]>;
+export function usePublications(args: UsePublicationsArgs): PaginatedReadResult<AnyPublication[]>;
 /**
  * Retrieves a paginated list of publications, filtered according to specified criteria.
  *
@@ -85,19 +88,19 @@ export function usePublications(
  * });
  * ```
  *
+ * @experimental This API can change without notice
  * @category Publications
  * @group Hooks
- * @param args - {@link UsePublicationsArgs}
  */
 export function usePublications(
-  args: UsePublicationsArgs<true>,
+  args: UseSuspensePublicationsArgs,
 ): SuspensePaginatedResult<AnyPublication[]>;
 
 export function usePublications({
+  limit,
   suspense = false,
   where,
-  limit,
-}: UsePublicationsArgs<boolean>): SuspendablePaginatedResult<AnyPublication[]> {
+}: UsePublicationsArgs & { suspense?: boolean }): SuspendablePaginatedResult<AnyPublication[]> {
   return useSuspendablePaginatedQuery({
     suspense,
     query: PublicationsDocument,

@@ -89,7 +89,7 @@ export type Session = AnonymousSession | ProfileSession | WalletOnlySession;
 /**
  * {@link useSession} hook arguments
  */
-export type UseSessionArgs<TSuspense extends boolean> = SuspenseEnabled<TSuspense>;
+export type UseSessionArgs = SuspenseEnabled;
 
 /**
  * Returns current {@link Session} data.
@@ -125,7 +125,7 @@ export type UseSessionArgs<TSuspense extends boolean> = SuspenseEnabled<TSuspens
  * @category Authentication
  * @group Hooks
  */
-export function useSession(args: UseSessionArgs<true>): SuspenseResult<Session>;
+export function useSession(args: UseSessionArgs): SuspenseResult<Session>;
 
 /**
  * Returns current {@link Session} data.
@@ -160,11 +160,11 @@ export function useSession(args: UseSessionArgs<true>): SuspenseResult<Session>;
  * @category Authentication
  * @group Hooks
  */
-export function useSession(args?: UseSessionArgs<never>): ReadResult<Session, UnspecifiedError>;
+export function useSession(): ReadResult<Session, UnspecifiedError>;
 
-export function useSession(
-  args?: UseSessionArgs<boolean>,
-): ReadResult<Session, UnspecifiedError> | SuspenseResult<Session> {
+export function useSession(args?: {
+  suspense: boolean;
+}): ReadResult<Session, UnspecifiedError> | SuspenseResult<Session> {
   const sessionData = useSessionDataVar();
 
   const [primeCacheWithProfile, data] = useProfileFromCache(sessionData);

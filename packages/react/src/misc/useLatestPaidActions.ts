@@ -43,7 +43,6 @@ export type UseLatestPaidActionsArgs = PaginatedArgs<LatestPaidActionRequest>;
 export function useLatestPaidActions({
   filter,
   where,
-  limit,
 }: UseLatestPaidActionsArgs = {}): PaginatedReadResult<AnyPaidAction[]> {
   return usePaginatedReadResult(
     useLatestPaidActionsBase(
@@ -51,7 +50,6 @@ export function useLatestPaidActions({
         variables: useFragmentVariables({
           filter,
           where,
-          limit,
         }),
       }),
     ),
