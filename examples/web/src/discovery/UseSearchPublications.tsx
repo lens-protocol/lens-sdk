@@ -1,8 +1,7 @@
 import { LimitType, useSearchPublications } from '@lens-protocol/react-web';
-import { useState } from 'react';
+import { Suspense, startTransition, useState } from 'react';
 
 import { PublicationCard } from '../components/cards';
-import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 
@@ -11,16 +10,13 @@ type SearchResultsProps = {
 };
 
 function SearchResults({ query }: SearchResultsProps) {
-  const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
+  const { data, hasMore, observeRef } = useInfiniteScroll(
     useSearchPublications({
       query,
       limit: LimitType.Fifty,
+      suspense: true,
     }),
   );
-
-  if (loading) return <Loading />;
-
-  if (error) return <ErrorMessage error={error} />;
 
   if (data.length === 0) {
     return <p>No publications found</p>;
@@ -48,7 +44,9 @@ export function UseSearchPublications() {
     const q = formData.get('query') as string | null;
 
     if (q) {
-      setQuery(q);
+      startTransition(() => {
+        setQuery(q);
+      });
     }
   };
 
@@ -62,7 +60,7 @@ export function UseSearchPublications() {
         &nbsp;
         <button>Search</button>
       </form>
-      {query && <SearchResults query={query} />}
+      <Suspense fallback={<Loading />}>{query && <SearchResults query={query} />}</Suspense>
     </div>
   );
 }
