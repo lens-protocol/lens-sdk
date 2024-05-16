@@ -27,13 +27,21 @@ export enum AllOpenActionType {
   UNKNOWN_OPEN_ACTION = 'UNKNOWN_OPEN_ACTION',
 }
 
+export enum FeeType {
+  COLLECT = 'COLLECT',
+  MINT = 'MINT',
+}
+
 export type CollectFee = {
+  type: FeeType.COLLECT;
   amount: Amount<Erc20>;
   contractAddress: EvmAddress;
 };
 
-export type SharedMintFee = {
+export type MintFee = {
+  type: FeeType.MINT;
   amount: Amount<Erc20>;
+  contractAddress: EvmAddress;
   executorClient?: EvmAddress;
 };
 
@@ -54,7 +62,6 @@ export type MultirecipientCollectRequest = {
   publicationId: PublicationId;
   referrers?: Referrers;
   fee: CollectFee;
-  collectModule: EvmAddress;
   public: boolean;
   signless: boolean;
   sponsored: boolean;
@@ -66,7 +73,6 @@ export type SimpleCollectRequest = {
   publicationId: PublicationId;
   referrers?: Referrers;
   fee?: CollectFee;
-  collectModule: EvmAddress;
   public: boolean;
   signless: boolean;
   sponsored: boolean;
@@ -77,10 +83,7 @@ export type SharedRevenueCollectRequest = {
   type: AllOpenActionType.SHARED_REVENUE_COLLECT;
   publicationId: PublicationId;
   referrers?: Referrers;
-  fee?: CollectFee;
-  mintFee?: SharedMintFee;
-  executorClient?: EvmAddress;
-  collectModule: EvmAddress;
+  fee: CollectFee | MintFee;
   public: boolean;
   signless: boolean;
   sponsored: boolean;
@@ -127,8 +130,11 @@ export function isUnknownActionRequest(
   return request.type === AllOpenActionType.UNKNOWN_OPEN_ACTION;
 }
 
-export type PaidCollectRequest = CollectRequest & { fee: CollectFee };
+type PaidCollectRequest = CollectRequest & { fee: CollectFee | MintFee };
 
+/**
+ * @internal
+ */
 export function isPaidCollectRequest(request: OpenActionRequest): request is PaidCollectRequest {
   return isCollectRequest(request) && 'fee' in request && request.fee !== undefined;
 }

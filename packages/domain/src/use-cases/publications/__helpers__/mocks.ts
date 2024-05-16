@@ -12,7 +12,9 @@ import { HidePublicationRequest } from '../HidePublication';
 import {
   AllOpenActionType,
   CollectFee,
+  FeeType,
   LegacyCollectRequest,
+  MintFee,
   MultirecipientCollectRequest,
   SharedRevenueCollectRequest,
   SimpleCollectRequest,
@@ -133,6 +135,16 @@ export function mockCollectFee(overrides?: Partial<CollectFee>): CollectFee {
     amount: mockDaiAmount(1, ChainType.POLYGON),
     contractAddress: mockEvmAddress(),
     ...overrides,
+    type: FeeType.COLLECT,
+  };
+}
+
+export function mockMintFee(overrides?: Partial<MintFee>): MintFee {
+  return {
+    amount: mockDaiAmount(1, ChainType.POLYGON),
+    contractAddress: mockEvmAddress(),
+    ...overrides,
+    type: FeeType.MINT,
   };
 }
 
@@ -155,10 +167,10 @@ export function mockSharedRevenueCollectRequest(
 ): SharedRevenueCollectRequest {
   return {
     publicationId: mockPublicationId(),
+    fee: mockMintFee(),
     public: false,
     signless: true,
     sponsored: true,
-    collectModule: mockEvmAddress(),
     ...overrides,
     type: AllOpenActionType.SHARED_REVENUE_COLLECT,
     kind: TransactionKind.ACT_ON_PUBLICATION,
@@ -173,7 +185,6 @@ export function mockSimpleCollectRequest(
     public: false,
     signless: true,
     sponsored: true,
-    collectModule: mockEvmAddress(),
     ...overrides,
     type: AllOpenActionType.SIMPLE_COLLECT,
     kind: TransactionKind.ACT_ON_PUBLICATION,
@@ -189,7 +200,6 @@ export function mockMultirecipientCollectRequest(
     public: false,
     signless: true,
     sponsored: true,
-    collectModule: mockEvmAddress(),
     ...overrides,
     type: AllOpenActionType.MULTIRECIPIENT_COLLECT,
     kind: TransactionKind.ACT_ON_PUBLICATION,

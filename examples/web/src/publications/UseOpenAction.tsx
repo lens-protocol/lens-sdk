@@ -117,7 +117,7 @@ export function UseOpenAction() {
       metadata: uri,
       actions: [
         {
-          type: OpenActionType.SIMPLE_COLLECT,
+          type: OpenActionType.SHARED_REVENUE_COLLECT,
           followerOnly: false,
           collectLimit: 5,
         },

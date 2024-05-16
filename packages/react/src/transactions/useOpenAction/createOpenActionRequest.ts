@@ -9,6 +9,7 @@ import { TransactionKind } from '@lens-protocol/domain/entities';
 import {
   AllOpenActionType,
   CollectRequest,
+  FeeType,
   OpenActionRequest,
   UnknownActionRequest,
 } from '@lens-protocol/domain/use-cases/publications';
@@ -63,6 +64,7 @@ function resolveCollectRequestFor(
         publicationId: collectable.id,
         referrer: args.publication !== collectable ? args.publication.id : undefined,
         fee: {
+          type: FeeType.COLLECT,
           amount: erc20Amount(settings.amount),
           contractAddress: settings.contract.address,
         },
@@ -99,10 +101,10 @@ function resolveCollectRequestFor(
         fee: amount.isZero()
           ? undefined
           : {
+              type: FeeType.COLLECT,
               amount,
               contractAddress: settings.contract.address,
             },
-        collectModule: settings.contract.address,
         public: session.type === SessionType.JustWallet,
         signless,
         sponsored,
@@ -118,10 +120,10 @@ function resolveCollectRequestFor(
           params.referrers ??
           (args.publication !== collectable ? [args.publication.id] : undefined),
         fee: {
+          type: FeeType.COLLECT,
           amount: erc20Amount(settings.amount),
           contractAddress: settings.contract.address,
         },
-        collectModule: settings.contract.address,
         public: session.type === SessionType.JustWallet,
         signless,
         sponsored,
@@ -138,13 +140,17 @@ function resolveCollectRequestFor(
           params.referrers ??
           (args.publication !== collectable ? [args.publication.id] : undefined),
         fee: amount.isZero()
-          ? undefined
+          ? {
+              type: FeeType.MINT,
+              amount: erc20Amount(settings.mintFee),
+              contractAddress: settings.contract.address,
+              executorClient: params.executorClient,
+            }
           : {
+              type: FeeType.COLLECT,
               amount,
               contractAddress: settings.contract.address,
             },
-        collectModule: settings.contract.address,
-        executorClient: params.executorClient,
         public: session.type === SessionType.JustWallet,
         signless,
         sponsored,

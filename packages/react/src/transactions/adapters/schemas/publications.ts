@@ -10,6 +10,7 @@ import {
   RecipientWithSplit,
   ReferencePolicyType,
   OpenActionRequest,
+  FeeType,
 } from '@lens-protocol/domain/use-cases/publications';
 import { UnknownObject } from '@lens-protocol/shared-kernel';
 import { z } from 'zod';
@@ -177,8 +178,16 @@ export const CreateMirrorRequestSchema: z.ZodType<
 });
 
 const CollectFeeSchema = z.object({
+  type: z.literal(FeeType.COLLECT),
   amount: Erc20AmountSchema,
   contractAddress: EvmAddressSchema,
+});
+
+const MintFeeSchema = z.object({
+  type: z.literal(FeeType.MINT),
+  amount: Erc20AmountSchema,
+  contractAddress: EvmAddressSchema,
+  executorClient: EvmAddressSchema.optional(),
 });
 
 const BaseCollectRequestSchema = z.object({
@@ -201,7 +210,6 @@ export const SimpleCollectRequestSchema = BaseCollectRequestSchema.extend({
   publicationId: PublicationIdSchema,
   referrers: ReferrersSchema.optional(),
   fee: CollectFeeSchema.optional(),
-  collectModule: EvmAddressSchema,
   public: z.boolean(),
   signless: z.boolean(),
   sponsored: z.boolean(),
@@ -211,12 +219,10 @@ export const SharedRevenueCollectRequestSchema = BaseCollectRequestSchema.extend
   type: z.literal(AllOpenActionType.SHARED_REVENUE_COLLECT),
   publicationId: PublicationIdSchema,
   referrers: ReferrersSchema.optional(),
-  fee: CollectFeeSchema.optional(),
-  collectModule: EvmAddressSchema,
+  fee: z.discriminatedUnion('type', [CollectFeeSchema, MintFeeSchema]),
   public: z.boolean(),
   signless: z.boolean(),
   sponsored: z.boolean(),
-  executorClient: EvmAddressSchema.optional(),
 });
 
 export const MultirecipientCollectRequestSchema = BaseCollectRequestSchema.extend({
@@ -224,7 +230,6 @@ export const MultirecipientCollectRequestSchema = BaseCollectRequestSchema.exten
   publicationId: PublicationIdSchema,
   referrers: ReferrersSchema.optional(),
   fee: CollectFeeSchema,
-  collectModule: EvmAddressSchema,
   public: z.boolean(),
   signless: z.boolean(),
   sponsored: z.boolean(),

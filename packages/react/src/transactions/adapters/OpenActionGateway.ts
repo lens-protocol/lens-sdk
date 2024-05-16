@@ -15,6 +15,7 @@ import { NativeTransaction, Nonce } from '@lens-protocol/domain/entities';
 import {
   AllOpenActionType,
   DelegableOpenActionRequest,
+  FeeType,
   LegacyCollectRequest,
   OpenActionRequest,
   isUnknownActionRequest,
@@ -206,7 +207,7 @@ export class OpenActionGateway
           for: request.publicationId,
           actOn: {
             protocolSharedRevenueCollectOpenAction: {
-              executorClient: request.executorClient ?? null,
+              executorClient: request.fee.type === FeeType.MINT ? request.fee.executorClient : null,
             },
           },
           referrers: resolveOnchainReferrers(request.referrers),
@@ -379,6 +380,7 @@ export class OpenActionGateway
   private resolvePublicPaidActAmount(request: NewOpenActionRequest): Erc20Amount {
     switch (request.type) {
       case AllOpenActionType.MULTIRECIPIENT_COLLECT:
+      case AllOpenActionType.SHARED_REVENUE_COLLECT:
         return request.fee.amount;
 
       case AllOpenActionType.UNKNOWN_OPEN_ACTION:
@@ -386,13 +388,6 @@ export class OpenActionGateway
 
       case AllOpenActionType.SIMPLE_COLLECT:
         return request.fee?.amount ?? never();
-
-      case AllOpenActionType.SHARED_REVENUE_COLLECT:
-        return (
-          request.fee?.amount ??
-          request.mintFee?.amount ??
-          never('Invalid UnknownActionRequest, missing fee and mintFee')
-        );
 
       default:
         never();
@@ -417,7 +412,7 @@ export class OpenActionGateway
       },
       amount.asset.address,
       amount.toBigDecimal().toHexadecimal(),
-      isUnknownActionRequest(request) ? contract.address : request.collectModule,
+      isUnknownActionRequest(request) ? contract.address : request.fee?.contractAddress ?? never(),
     ]);
     return {
       contractAddress: result.typedData.domain.verifyingContract,

@@ -18,8 +18,8 @@ import {
 } from '@lens-protocol/api-bindings/mocks';
 import { NativeTransaction, UnsignedTransaction } from '@lens-protocol/domain/entities';
 import {
-  mockCollectFee,
   mockLegacyCollectRequest,
+  mockMintFee,
   mockMultirecipientCollectRequest,
   mockNonce,
   mockProfileId,
@@ -500,8 +500,9 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
         publicationId,
         referrers,
         public: true,
-        fee: mockCollectFee(),
-        executorClient: '0xAbAe21DD8737DbdCa26A16D6210D9293986800f9',
+        fee: mockMintFee({
+          executorClient: '0xAbAe21DD8737DbdCa26A16D6210D9293986800f9',
+        }),
       }),
       expectedRequest: {
         for: publicationId,
