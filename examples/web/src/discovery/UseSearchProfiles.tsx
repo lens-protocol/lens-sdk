@@ -1,7 +1,6 @@
 import { useSearchProfiles } from '@lens-protocol/react-web';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, Suspense, startTransition, useState } from 'react';
 
-import { ErrorMessage } from '../components/error/ErrorMessage';
 import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { ProfileCard } from '../profiles/components/ProfileCard';
@@ -11,17 +10,14 @@ type SearchResultsProps = {
 };
 
 function SearchResults({ query }: SearchResultsProps) {
-  const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
-    useSearchProfiles({ query }),
+  const { data, hasMore, observeRef } = useInfiniteScroll(
+    useSearchProfiles({ query, suspense: true }),
   );
-
-  if (loading) return <Loading />;
-
-  if (error) return <ErrorMessage error={error} />;
 
   if (data.length === 0) {
     return <p>No profiles found</p>;
   }
+
   return (
     <div>
       {data.map((profile) => (
@@ -37,7 +33,9 @@ export function UseSearchProfiles() {
   const [selectedQuery, setSelectedQuery] = useState<string>();
 
   const handleSubmit = () => {
-    setSelectedQuery(inputValue);
+    startTransition(() => {
+      setSelectedQuery(inputValue);
+    });
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +51,10 @@ export function UseSearchProfiles() {
         <input onChange={handleChange} />
         <button onClick={handleSubmit}>Search</button>
       </div>
-      {selectedQuery && <SearchResults query={selectedQuery} />}
+
+      <Suspense fallback={<Loading />}>
+        {selectedQuery && <SearchResults query={selectedQuery} />}
+      </Suspense>
     </div>
   );
 }
