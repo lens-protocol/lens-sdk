@@ -202,11 +202,12 @@ export class OpenActionGateway
           referrers: resolveOnchainReferrers(request.referrers),
         };
       case AllOpenActionType.SHARED_REVENUE_COLLECT:
-        // TODO handle executor client address
         return {
           for: request.publicationId,
           actOn: {
-            protocolSharedRevenueCollectOpenAction: true,
+            protocolSharedRevenueCollectOpenAction: {
+              executorClient: request.executorClient ?? null,
+            },
           },
           referrers: resolveOnchainReferrers(request.referrers),
         };

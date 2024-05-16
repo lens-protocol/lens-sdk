@@ -146,7 +146,9 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
             request: {
               for: publicationId,
               actOn: {
-                protocolSharedRevenueCollectOpenAction: true,
+                protocolSharedRevenueCollectOpenAction: {
+                  executorClient: null,
+                },
               },
               referrers: expectedOnChainReferrers,
             },
@@ -285,7 +287,9 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
           request: {
             for: publicationId,
             actOn: {
-              protocolSharedRevenueCollectOpenAction: true,
+              protocolSharedRevenueCollectOpenAction: {
+                executorClient: null,
+              },
             },
             referrers: expectedOnChainReferrers,
           },
@@ -497,11 +501,14 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
         referrers,
         public: true,
         fee: mockCollectFee(),
+        executorClient: '0xAbAe21DD8737DbdCa26A16D6210D9293986800f9',
       }),
       expectedRequest: {
         for: publicationId,
         actOn: {
-          protocolSharedRevenueCollectOpenAction: true,
+          protocolSharedRevenueCollectOpenAction: {
+            executorClient: '0xAbAe21DD8737DbdCa26A16D6210D9293986800f9',
+          },
         },
         referrers: expectedOnChainReferrers,
       },
