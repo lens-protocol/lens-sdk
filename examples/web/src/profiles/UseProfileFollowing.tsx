@@ -1,26 +1,19 @@
 import { profileId, useProfileFollowing } from '@lens-protocol/react-web';
 
-import { ErrorMessage } from '../components/error/ErrorMessage';
-import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { ProfileCard } from './components/ProfileCard';
 
 export function UseProfileFollowing() {
   const {
     data: profiles,
-    error,
-    loading,
     hasMore,
     observeRef,
   } = useInfiniteScroll(
     useProfileFollowing({
-      for: profileId('0x04'),
+      for: profileId('0x0109'),
+      suspense: true,
     }),
   );
-
-  if (loading) return <Loading />;
-
-  if (error) return <ErrorMessage error={error} />;
 
   return (
     <div>
