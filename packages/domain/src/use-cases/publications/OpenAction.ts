@@ -11,7 +11,6 @@ import { DelegableSigning } from '../transactions/DelegableSigning';
 import { ITransactionResultPresenter } from '../transactions/ITransactionResultPresenter';
 import { PaidTransaction } from '../transactions/PaidTransaction';
 import { SignedOnChain } from '../transactions/SignedOnChain';
-import { SponsorshipReady } from '../transactions/SponsorshipReady';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -154,22 +153,16 @@ export type IOpenActionPresenter = ITransactionResultPresenter<
   | WalletConnectionError
 >;
 
-export class OpenAction extends SponsorshipReady<OpenActionRequest> {
+export class OpenAction {
   constructor(
     private readonly tokenAvailability: TokenAvailability,
     private readonly signedExecution: SignedOnChain<OpenActionRequest>,
     private readonly delegableExecution: DelegableSigning<OpenActionRequest>,
     private readonly paidExecution: PaidTransaction<OpenActionRequest>,
     private readonly presenter: IOpenActionPresenter,
-  ) {
-    super();
-  }
+  ) {}
 
-  protected async charged(request: OpenActionRequest): Promise<void> {
-    await this.paidExecution.execute(request);
-  }
-
-  protected async sponsored(request: OpenActionRequest): Promise<void> {
+  async execute(request: OpenActionRequest): Promise<void> {
     if (isPaidCollectRequest(request)) {
       const result = await this.tokenAvailability.checkAvailability({
         amount: request.fee.amount,
@@ -180,17 +173,14 @@ export class OpenAction extends SponsorshipReady<OpenActionRequest> {
         this.presenter.present(result);
         return;
       }
-
-      if (isPublicOpenActionRequest(request)) {
-        return this.charged(request);
-      }
-
-      await this.signedExecution.execute(request);
-      return;
     }
 
-    if (isPublicOpenActionRequest(request)) {
-      return this.charged(request);
+    if (isPublicOpenActionRequest(request) || request.sponsored === false) {
+      return this.paidExecution.execute(request);
+    }
+
+    if (isPaidCollectRequest(request)) {
+      return this.signedExecution.execute(request);
     }
 
     await this.delegableExecution.execute(request);

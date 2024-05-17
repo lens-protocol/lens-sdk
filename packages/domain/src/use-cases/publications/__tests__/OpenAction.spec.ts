@@ -58,11 +58,11 @@ function setupOpenAction({
 describe(`Given the ${OpenAction.name} use-case interactor`, () => {
   describe.each([
     {
-      description: 'LegacyCollectRequest',
+      description: 'LegacyCollectRequest with collect fee',
       request: mockLegacyCollectRequest({ fee: mockCollectFee() }),
     },
     {
-      description: 'SimpleCollectRequest',
+      description: 'SimpleCollectRequest with collect fee',
       request: mockSimpleCollectRequest({ fee: mockCollectFee() }),
     },
     {
@@ -74,15 +74,15 @@ describe(`Given the ${OpenAction.name} use-case interactor`, () => {
       request: mockSharedRevenueCollectRequest({ fee: mockCollectFee() }),
     },
     {
-      description: 'MultirecipientCollectRequest',
+      description: 'MultirecipientCollectRequest (implicit collect fee)',
       request: mockMultirecipientCollectRequest(),
     },
     {
-      description: 'public SimpleCollectRequest',
+      description: 'public SimpleCollectRequest with fee',
       request: mockSimpleCollectRequest({ fee: mockCollectFee(), public: true }),
     },
     {
-      description: 'public MultirecipientCollectRequest',
+      description: 'public MultirecipientCollectRequest (implicit collect fee)',
       request: mockMultirecipientCollectRequest({ public: true }),
     },
   ])(`when executed with a request that involves a fee`, ({ request, description }) => {
@@ -243,8 +243,9 @@ describe(`Given the ${OpenAction.name} use-case interactor`, () => {
     'when executed with a request that has the "sponsored" flag set to false',
     ({ request, type }) => {
       it(`should support the ${PaidTransaction.name}<${type}> strategy`, async () => {
-        const { openAction, signedExecution, delegableExecution, paidExecution } =
-          setupOpenAction();
+        const { openAction, signedExecution, delegableExecution, paidExecution } = setupOpenAction({
+          tokenAvailability: mockTokeAvailability({ result: success() }),
+        });
 
         await openAction.execute(request);
 
