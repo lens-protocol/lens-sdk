@@ -117,6 +117,8 @@ export type {
   CollectPolicy,
   DegreesOfSeparationReferencePolicy,
   FollowersOnlyReferencePolicy,
+  MintFee,
+  MintFeeDistribution,
   MultirecipientCollectFee,
   NoReferencePolicy,
   ReferenceModule,

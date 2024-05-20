@@ -12,6 +12,7 @@ import {
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
+import { CollectCriteria } from '../components/CollectPolicy';
 import { Logs } from '../components/Logs';
 import { RequireProfileSession, RequireWalletSession } from '../components/auth';
 import { PublicationCard } from '../components/cards';
@@ -59,7 +60,9 @@ function TestScenario({ id }: { id: PublicationId }) {
 
   return (
     <div>
-      <PublicationCard publication={publication} />
+      <PublicationCard publication={publication}>
+        <CollectCriteria publication={publication} />
+      </PublicationCard>
       <div>
         <RequireProfileSession message="Login with a profile to explore more options">
           <p>As Lens Profile you can perform:</p>

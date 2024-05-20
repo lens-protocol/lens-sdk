@@ -482,6 +482,12 @@ fragment ProtocolSharedRevenueCollectOpenActionSettings on ProtocolSharedRevenue
   mintFee {
     ...Amount
   }
+  distribution {
+    creatorClientSplit
+    creatorSplit
+    executorClientSplit
+    protocolSplit
+  }
   recipient
   referralFee
   followerOnly

@@ -64,9 +64,23 @@ export function findCollectModuleSettings(
  * Describes a single recipient collect fee.
  */
 export type CollectFee = {
+  /**
+   * The collect fee amount.
+   */
   amount: Erc20Amount;
+  /**
+   * The collect fee fiat exchange rate.
+   */
   rate?: FiatAmount;
+  /**
+   * The referral fee share.
+   *
+   * This is a number between 0 and 100%.
+   */
   referralFee: number;
+  /**
+   * The recipient of the fee.
+   */
   recipient: EvmAddress;
 };
 
@@ -74,14 +88,68 @@ export type CollectFee = {
  * Describes a multi recipient collect fee.
  */
 export type MultirecipientCollectFee = {
+  /**
+   * The collect fee amount.
+   */
   amount: Erc20Amount;
+  /**
+   * The collect fee fiat exchange rate.
+   */
   rate?: FiatAmount;
+  /**
+   * The referral fee share.
+   *
+   * This is a number between 0 and 100%.
+   */
   referralFee: number;
+  /**
+   * The list of recipients and their corresponding shares.
+   */
   recipients: gql.Recipient[];
 };
 
-export type SharedMintFee = {
+/**
+ * The shared mint fee distribution.
+ */
+export type MintFeeDistribution = {
+  /**
+   * The creator app share.
+   *
+   * This is a number between 0 and 100%.
+   */
+  creatorClientSplit: number;
+  /**
+   * The default share for the publication creator Profile.
+   *
+   * This is a number between 0 and 100%.
+   *
+   * This could be increased by the creatorClientSplit and
+   * by the executorClientSplit if the corresponding addresses
+   * are not specified.
+   */
+  creatorSplit: number;
+  /**
+   * The executor app share.
+   *
+   * This is a number between 0 and 100%.
+   */
+  executorClientSplit: number;
+  /**
+   * The protocol share.
+   *
+   * This is a number between 0 and 100%.
+   */
+  protocolSplit: number;
+};
+
+export type MintFee = {
+  /**
+   * The mint fee amount.
+   */
   amount: Erc20Amount;
+  /**
+   * The mint fee fiat exchange rate.
+   */
   rate?: FiatAmount;
   /**
    * The creator app address.
@@ -89,6 +157,10 @@ export type SharedMintFee = {
    * If not set, the share for the creator app will be given to the creator of the publication.
    */
   creatorClient?: EvmAddress | null;
+  /**
+   * The mint fee distribution.
+   */
+  distribution: MintFeeDistribution;
 };
 
 /**
@@ -128,12 +200,17 @@ export type CollectPolicy = {
   /**
    * The collect fee, if any.
    */
+  collectFee: CollectFee | MultirecipientCollectFee | null;
+  /**
+   * The collect fee, if any.
+   *
+   * @deprecated Use `collectFee` instead.
+   */
   fee: CollectFee | MultirecipientCollectFee | null;
-
   /**
    * Shared revenue mint fee, if any.
    */
-  mintFee?: SharedMintFee | null;
+  mintFee: MintFee | null;
 };
 
 function isMultirecipientCollectModuleSettings(
@@ -195,9 +272,7 @@ function buildCollectFee(
   };
 }
 
-function buildMintFee(
-  module: gql.ProtocolSharedRevenueCollectOpenActionSettings,
-): SharedMintFee | null {
+function buildMintFee(module: gql.ProtocolSharedRevenueCollectOpenActionSettings): MintFee | null {
   const amount = erc20Amount(module.mintFee);
 
   if (amount.isZero()) return null;
@@ -205,6 +280,12 @@ function buildMintFee(
   return {
     amount,
     creatorClient: module.creatorClient,
+    distribution: {
+      creatorClientSplit: module.distribution.creatorClientSplit / 100,
+      creatorSplit: module.distribution.creatorSplit / 100,
+      executorClientSplit: module.distribution.executorClientSplit / 100,
+      protocolSplit: module.distribution.protocolSplit / 100,
+    },
   };
 }
 
@@ -226,71 +307,101 @@ export function resolveCollectPolicy(collectable: PrimaryPublication): CollectPo
 
   switch (module.__typename) {
     case 'LegacyAaveFeeCollectModuleSettings':
-    case 'LegacyERC4626FeeCollectModuleSettings':
+    case 'LegacyERC4626FeeCollectModuleSettings': {
+      const collectFee = buildCollectFee(module);
+
       return {
         ...shared,
+        collectFee,
         collectNft: null,
         collectLimit: module.collectLimit,
         endsAt: module.endsAt,
-        fee: buildCollectFee(module),
+        fee: collectFee,
+        mintFee: null,
       };
+    }
 
     case 'LegacyLimitedFeeCollectModuleSettings':
-    case 'LegacyLimitedTimedFeeCollectModuleSettings':
+    case 'LegacyLimitedTimedFeeCollectModuleSettings': {
+      const collectFee = buildCollectFee(module);
+
       return {
         ...shared,
+        collectFee,
         collectNft: module.collectNft,
         collectLimit: module.collectLimit,
         endsAt: null,
-        fee: buildCollectFee(module),
+        fee: collectFee,
+        mintFee: null,
       };
+    }
 
     case 'LegacyFeeCollectModuleSettings':
-    case 'LegacyTimedFeeCollectModuleSettings':
+    case 'LegacyTimedFeeCollectModuleSettings': {
+      const collectFee = buildCollectFee(module);
+
       return {
         ...shared,
+        collectFee,
         collectNft: module.collectNft,
         collectLimit: null,
         endsAt: null,
-        fee: buildCollectFee(module),
+        fee: collectFee,
+        mintFee: null,
       };
+    }
 
     case 'LegacyFreeCollectModuleSettings':
       return {
         ...shared,
         collectNft: module.collectNft,
         collectLimit: null,
+        collectFee: null,
         endsAt: null,
         fee: null,
+        mintFee: null,
       };
 
     case 'LegacyMultirecipientFeeCollectModuleSettings':
-    case 'MultirecipientFeeCollectOpenActionSettings':
+    case 'MultirecipientFeeCollectOpenActionSettings': {
+      const collectFee = buildCollectFee(module);
+
       return {
         ...shared,
+        collectFee,
         collectNft: module.collectNft,
         collectLimit: module.collectLimit,
         endsAt: module.endsAt,
-        fee: buildCollectFee(module),
+        fee: collectFee,
+        mintFee: null,
       };
+    }
 
     case 'LegacySimpleCollectModuleSettings':
-    case 'SimpleCollectOpenActionSettings':
+    case 'SimpleCollectOpenActionSettings': {
+      const collectFee = buildCollectFee(module);
+
       return {
         ...shared,
+        collectFee,
         collectNft: module.collectNft,
         collectLimit: module.collectLimit,
         endsAt: module.endsAt,
-        fee: buildCollectFee(module),
+        fee: collectFee,
+        mintFee: null,
       };
+    }
 
     case 'ProtocolSharedRevenueCollectOpenActionSettings': {
+      const collectFee = buildCollectFee(module);
+
       return {
         ...shared,
+        collectFee,
         collectNft: module.collectNft,
         collectLimit: module.collectLimit,
         endsAt: module.endsAt,
-        fee: buildCollectFee(module),
+        fee: collectFee,
         mintFee: buildMintFee(module),
       };
     }
