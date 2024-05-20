@@ -79,9 +79,11 @@ export function useSearchProfiles(args: UseSearchProfilesArgs): PaginatedReadRes
  *   suspense: true,
  * });
  *
- * const search = startTransition(() => {
- *   setQuery('foo');
- * });
+ * const search = () => {
+ *   startTransition(() => {
+ *     setQuery('foo');
+ *   });
+ * };
  * ```
  *
  * @experimental This API can change without notice
