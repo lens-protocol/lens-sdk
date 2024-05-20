@@ -289,6 +289,16 @@ function buildMintFee(module: gql.ProtocolSharedRevenueCollectOpenActionSettings
   };
 }
 
+function resolveEndsAt(datetime: string | null): string | null {
+  if (!datetime) return null;
+
+  const date = new Date(datetime);
+
+  if (date.getTime() === 0) return null;
+
+  return datetime;
+}
+
 /**
  * Resolve API's {@link OpenActionModuleSettings} to more user friendly {@link CollectPolicy}.
  *
@@ -315,7 +325,7 @@ export function resolveCollectPolicy(collectable: PrimaryPublication): CollectPo
         collectFee,
         collectNft: null,
         collectLimit: module.collectLimit,
-        endsAt: module.endsAt,
+        endsAt: resolveEndsAt(module.endsAt),
         fee: collectFee,
         mintFee: null,
       };
@@ -371,7 +381,7 @@ export function resolveCollectPolicy(collectable: PrimaryPublication): CollectPo
         collectFee,
         collectNft: module.collectNft,
         collectLimit: module.collectLimit,
-        endsAt: module.endsAt,
+        endsAt: resolveEndsAt(module.endsAt),
         fee: collectFee,
         mintFee: null,
       };
@@ -386,7 +396,7 @@ export function resolveCollectPolicy(collectable: PrimaryPublication): CollectPo
         collectFee,
         collectNft: module.collectNft,
         collectLimit: module.collectLimit,
-        endsAt: module.endsAt,
+        endsAt: resolveEndsAt(module.endsAt),
         fee: collectFee,
         mintFee: null,
       };
@@ -400,7 +410,7 @@ export function resolveCollectPolicy(collectable: PrimaryPublication): CollectPo
         collectFee,
         collectNft: module.collectNft,
         collectLimit: module.collectLimit,
-        endsAt: module.endsAt,
+        endsAt: resolveEndsAt(module.endsAt),
         fee: collectFee,
         mintFee: buildMintFee(module),
       };
