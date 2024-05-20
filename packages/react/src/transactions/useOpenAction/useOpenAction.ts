@@ -16,7 +16,6 @@ import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
 import { useSharedDependencies } from '../../shared';
 import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
 import { useOpenActionController } from '../adapters/useOpenActionController';
-import { useSponsoredConfig } from '../shared/useSponsoredConfig';
 import { createOpenActionRequest } from './createOpenActionRequest';
 import { OpenActionArgs, UseOpenActionArgs } from './types';
 
@@ -279,7 +278,6 @@ export function useOpenAction(
   const { data: session } = useSession();
   const openAction = useOpenActionController();
   const { config } = useSharedDependencies();
-  const configureSponsorship = useSponsoredConfig();
 
   return useDeferredTask(async ({ publication, sponsored = true }: OpenActionArgs) => {
     invariant(
@@ -292,7 +290,10 @@ export function useOpenAction(
     );
 
     const request = createOpenActionRequest(
-      configureSponsorship({ publication, sponsored }),
+      {
+        publication,
+        sponsored: config.sponsored ? sponsored : true,
+      },
       args.action,
       session,
       config.environment,
