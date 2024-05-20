@@ -1,6 +1,9 @@
 import {
   AnyPublication,
+  MultirecipientFeeCollectOpenActionSettings,
   OpenActionModuleSettings,
+  ProtocolSharedRevenueCollectOpenActionSettings,
+  SimpleCollectOpenActionSettings,
   UnknownOpenActionModuleSettings,
   erc20Amount,
   findCollectModuleSettings,
@@ -16,6 +19,7 @@ import {
 import { Data, invariant, never } from '@lens-protocol/shared-kernel';
 
 import { ProfileSession, SessionType, WalletOnlySession } from '../../authentication';
+import { EnvironmentConfig } from '../../environments';
 import {
   CollectParams,
   OpenActionArgs,
@@ -30,10 +34,24 @@ function resolveTargetPublication(publication: AnyPublication) {
   return publication.__typename === 'Mirror' ? publication.mirrorOn : publication;
 }
 
+function resolveFeeSpender(
+  session: ProfileSession | WalletOnlySession,
+  environment: EnvironmentConfig,
+  settings:
+    | MultirecipientFeeCollectOpenActionSettings
+    | ProtocolSharedRevenueCollectOpenActionSettings
+    | SimpleCollectOpenActionSettings,
+) {
+  return session.type === SessionType.JustWallet
+    ? environment.contracts.publicActProxy
+    : settings.contract.address;
+}
+
 function resolveCollectRequestFor(
   args: RequiredOpenActionArgs,
   params: CollectParams,
   session: ProfileSession | WalletOnlySession,
+  environment: EnvironmentConfig,
 ): CollectRequest {
   const collectable = resolveTargetPublication(args.publication);
   const settings = findCollectModuleSettings(collectable);
@@ -66,7 +84,8 @@ function resolveCollectRequestFor(
         fee: {
           type: FeeType.COLLECT,
           amount: erc20Amount(settings.amount),
-          contractAddress: settings.contract.address,
+          module: settings.contract.address,
+          spender: settings.contract.address,
         },
         public: false,
         signless,
@@ -103,7 +122,8 @@ function resolveCollectRequestFor(
           : {
               type: FeeType.COLLECT,
               amount,
-              contractAddress: settings.contract.address,
+              module: settings.contract.address,
+              spender: resolveFeeSpender(session, environment, settings),
             },
         public: session.type === SessionType.JustWallet,
         signless,
@@ -122,7 +142,8 @@ function resolveCollectRequestFor(
         fee: {
           type: FeeType.COLLECT,
           amount: erc20Amount(settings.amount),
-          contractAddress: settings.contract.address,
+          module: settings.contract.address,
+          spender: resolveFeeSpender(session, environment, settings),
         },
         public: session.type === SessionType.JustWallet,
         signless,
@@ -131,6 +152,7 @@ function resolveCollectRequestFor(
 
     case 'ProtocolSharedRevenueCollectOpenActionSettings': {
       const amount = erc20Amount(settings.amount);
+      const spender = resolveFeeSpender(session, environment, settings);
 
       return {
         kind: TransactionKind.ACT_ON_PUBLICATION,
@@ -143,13 +165,15 @@ function resolveCollectRequestFor(
           ? {
               type: FeeType.MINT,
               amount: erc20Amount(settings.mintFee),
-              contractAddress: settings.contract.address,
+              module: settings.contract.address,
+              spender,
               executorClient: params.executorClient,
             }
           : {
               type: FeeType.COLLECT,
               amount,
-              contractAddress: settings.contract.address,
+              module: settings.contract.address,
+              spender,
             },
         public: session.type === SessionType.JustWallet,
         signless,
@@ -227,14 +251,15 @@ function resolveUnknownRequestFor(
 }
 
 export function createOpenActionRequest(
-  { publication, sponsored = true }: OpenActionArgs,
+  { publication, sponsored }: RequiredOpenActionArgs,
   params: OpenActionParams,
   session: ProfileSession | WalletOnlySession,
+  environment: EnvironmentConfig,
 ): OpenActionRequest {
   const args = { publication, sponsored };
   switch (params.kind) {
     case OpenActionKind.COLLECT:
-      return resolveCollectRequestFor(args, params, session);
+      return resolveCollectRequestFor(args, params, session, environment);
 
     case OpenActionKind.UNKNOWN:
       return resolveUnknownRequestFor(args, params, session);

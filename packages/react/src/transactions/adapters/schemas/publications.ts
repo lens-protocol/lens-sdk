@@ -180,13 +180,15 @@ export const CreateMirrorRequestSchema: z.ZodType<
 const CollectFeeSchema = z.object({
   type: z.literal(FeeType.COLLECT),
   amount: Erc20AmountSchema,
-  contractAddress: EvmAddressSchema,
+  module: EvmAddressSchema,
+  spender: EvmAddressSchema,
 });
 
 const MintFeeSchema = z.object({
   type: z.literal(FeeType.MINT),
   amount: Erc20AmountSchema,
-  contractAddress: EvmAddressSchema,
+  module: EvmAddressSchema,
+  spender: EvmAddressSchema,
   executorClient: EvmAddressSchema.optional(),
 });
 

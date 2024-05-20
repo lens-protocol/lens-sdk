@@ -26,6 +26,7 @@ import {
   ISignedOnChainGateway,
 } from '@lens-protocol/domain/use-cases/transactions';
 import {
+  BigDecimal,
   ChainType,
   Data,
   Erc20Amount,
@@ -411,8 +412,10 @@ export class OpenActionGateway
         actionModuleData: result.typedData.message.actionModuleData,
       },
       amount.asset.address,
-      amount.toBigDecimal().toHexadecimal(),
-      isUnknownActionRequest(request) ? contract.address : request.fee?.contractAddress ?? never(),
+      BigDecimal.rescale(amount.toBigDecimal(), amount.asset.decimals).toHex(),
+      isUnknownActionRequest(request)
+        ? contract.address
+        : request.fee?.module ?? never('Fee is required for publicPaidAct'),
     ]);
     return {
       contractAddress: result.typedData.domain.verifyingContract,

@@ -133,7 +133,8 @@ export function mockUnknownReferencePolicyConfig(
 export function mockCollectFee(overrides?: Partial<CollectFee>): CollectFee {
   return {
     amount: mockDaiAmount(1, ChainType.POLYGON),
-    contractAddress: mockEvmAddress(),
+    module: mockEvmAddress(),
+    spender: mockEvmAddress(),
     ...overrides,
     type: FeeType.COLLECT,
   };
@@ -142,7 +143,8 @@ export function mockCollectFee(overrides?: Partial<CollectFee>): CollectFee {
 export function mockMintFee(overrides?: Partial<MintFee>): MintFee {
   return {
     amount: mockDaiAmount(1, ChainType.POLYGON),
-    contractAddress: mockEvmAddress(),
+    module: mockEvmAddress(),
+    spender: mockEvmAddress(),
     ...overrides,
     type: FeeType.MINT,
   };

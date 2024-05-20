@@ -34,13 +34,15 @@ export enum FeeType {
 export type CollectFee = {
   type: FeeType.COLLECT;
   amount: Amount<Erc20>;
-  contractAddress: EvmAddress;
+  module: EvmAddress;
+  spender: EvmAddress;
 };
 
 export type MintFee = {
   type: FeeType.MINT;
   amount: Amount<Erc20>;
-  contractAddress: EvmAddress;
+  module: EvmAddress;
+  spender: EvmAddress;
   executorClient?: EvmAddress;
 };
 
@@ -166,7 +168,7 @@ export class OpenAction {
     if (isPaidCollectRequest(request)) {
       const result = await this.tokenAvailability.checkAvailability({
         amount: request.fee.amount,
-        spender: request.fee.contractAddress,
+        spender: request.fee.spender,
       });
 
       if (result.isFailure()) {

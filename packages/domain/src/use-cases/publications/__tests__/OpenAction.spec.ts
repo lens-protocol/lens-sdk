@@ -97,7 +97,7 @@ describe(`Given the ${OpenAction.name} use-case interactor`, () => {
           const tokenAvailability = mockTokeAvailability({
             request: {
               amount: request.fee.amount,
-              spender: request.fee.contractAddress,
+              spender: request.fee.spender,
             },
             result: failure(error),
           });
@@ -138,7 +138,7 @@ describe(`Given the ${OpenAction.name} use-case interactor`, () => {
       const tokenAvailability = mockTokeAvailability({
         request: {
           amount: request.fee.amount,
-          spender: request.fee.contractAddress,
+          spender: request.fee.spender,
         },
         result: success(),
       });

@@ -1,8 +1,6 @@
-import { ProtocolTransactionRequestModel } from '@lens-protocol/domain/entities';
-
 import { useSharedDependencies } from '../../shared';
 
-type SponsoredRequest<T extends ProtocolTransactionRequestModel> = T & {
+type SponsoredEnabled<T extends { sponsored?: boolean }> = T & {
   sponsored: boolean;
 };
 
@@ -15,7 +13,9 @@ export function useSponsoredConfig() {
   /**
    * Disables the sponsored flag if RequiredConfig says so
    */
-  return function <T extends ProtocolTransactionRequestModel>(request: SponsoredRequest<T>) {
-    return config.sponsored ? request : { ...request, sponsored: false };
+  return function <T extends { sponsored?: boolean }>(request: T): SponsoredEnabled<T> {
+    return config.sponsored
+      ? { ...request, sponsored: request.sponsored ?? true }
+      : { ...request, sponsored: false };
   };
 }

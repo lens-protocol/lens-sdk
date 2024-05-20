@@ -13,6 +13,7 @@ import { invariant } from '@lens-protocol/shared-kernel';
 
 import { useSession } from '../../authentication';
 import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
+import { useSharedDependencies } from '../../shared';
 import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
 import { useOpenActionController } from '../adapters/useOpenActionController';
 import { useSponsoredConfig } from '../shared/useSponsoredConfig';
@@ -277,7 +278,8 @@ export function useOpenAction(
 > {
   const { data: session } = useSession();
   const openAction = useOpenActionController();
-  const configureRequest = useSponsoredConfig();
+  const { config } = useSharedDependencies();
+  const configureSponsorship = useSponsoredConfig();
 
   return useDeferredTask(async ({ publication, sponsored = true }: OpenActionArgs) => {
     invariant(
@@ -289,8 +291,11 @@ export function useOpenAction(
       'You cannot execute an Open Action on a Momoka publication.',
     );
 
-    const request = configureRequest(
-      createOpenActionRequest({ publication, sponsored }, args.action, session),
+    const request = createOpenActionRequest(
+      configureSponsorship({ publication, sponsored }),
+      args.action,
+      session,
+      config.environment,
     );
 
     return openAction(request);
