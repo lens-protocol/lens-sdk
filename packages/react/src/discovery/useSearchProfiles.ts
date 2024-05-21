@@ -36,9 +36,9 @@ export type UseSuspenseSearchProfilesArgs = SuspenseEnabled<UseSearchProfilesArg
  * function SearchProfiles() {
  *   const { data, error, loading } = useSearchProfiles({ query: 'foo' });
  *
- *   if (loading) return <p>Loading...</p>;
+ *   if (loading) return <Loader />;
  *
- *   if (error) return <p>Error: {error.message}</p>;
+ *   if (error) return <Error message={error.message} />;
  *
  *   return (
  *     <ul>
