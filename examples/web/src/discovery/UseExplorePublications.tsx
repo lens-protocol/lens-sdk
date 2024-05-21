@@ -2,26 +2,19 @@ import { ExplorePublicationsOrderByType, useExplorePublications } from '@lens-pr
 
 import { CollectCriteria } from '../components/CollectPolicy';
 import { PublicationCard } from '../components/cards';
-import { ErrorMessage } from '../components/error/ErrorMessage';
-import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 
 export function UseExplorePublications() {
   const {
     data: publications,
-    error,
-    loading,
     hasMore,
     observeRef,
   } = useInfiniteScroll(
     useExplorePublications({
       orderBy: ExplorePublicationsOrderByType.Latest,
+      suspense: true,
     }),
   );
-
-  if (loading) return <Loading />;
-
-  if (error) return <ErrorMessage error={error} />;
 
   return (
     <div>

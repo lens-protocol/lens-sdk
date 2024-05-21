@@ -30,60 +30,48 @@ export type { PublicationSearchRequest, PublicationSearchWhere };
 export type UseSuspenseSearchPublicationsArgs = SuspenseEnabled<UseSearchPublicationsArgs>;
 
 /**
- * Search for publications based on a defined criteria
+ * Search for publications based on a defined criteria.
  *
  * Search for publications with content that contains "foo"
  * ```tsx
- * import { useSearchPublications } from '@lens-protocol/react';
+ * const { data, error, loading } = useSearchPublications({ query: 'foo' });
  *
- * function SearchPublication() {
- *   const { data, error, loading } = useSearchPublications({ query: 'foo' });
+ * if (loading) return <Loader />;
  *
- *   if (loading) return <p>Loading...</p>;
+ * if (error) return <Error message={error.message} />;
  *
- *   if (error) return <p>Error: {error.message}</p>;
- *
- *   return (
- *     <ul>
- *       {data.map((publication) => (
- *         <li key={publication.id}>
- *            // render publication details
- *         </li>
- *       ))}
- *     </ul>
- *   );
- * }
+ * return (
+ *   <>
+ *     {data.map((publication) => (
+ *       <PublicationCard key={publication.id} publication={publication} />
+ *     ))}
+ *   </>
+ * );
  * ```
  *
  * Search for audio post publications with content that matches a query
  * ```tsx
- * import { useSearchPublications } from '@lens-protocol/react';
+ * const { data, error, loading } = useSearchPublications({
+ *   query: '...',
+ *   where: {
+ *     publicationTypes: [SearchPublicationType.Post],
+ *     metadata: {
+ *       mainContentFocus: [PublicationMetadataMainFocusType.Audio],
+ *     },
+ *   },
+ * });
  *
- * function SearchPublication() {
- *   const { data, error, loading } = useSearchPublications({
- *      query,
- *      where: {
- *        publicationTypes: [SearchPublicationType.Post],
- *        metadata: {
- *          mainContentFocus: [PublicationMetadataMainFocusType.Audio],
- *        },
- *      },
- *    });
+ * if (loading) return <Loader />;
  *
- *   if (loading) return <p>Loading...</p>;
+ * if (error) return <Error message={error.message} />;
  *
- *   if (error) return <p>Error: {error.message}</p>;
- *
- *   return (
- *     <ul>
- *       {data.map((publication) => (
- *         <li key={publication.id}>
- *            // render publication details
- *         </li>
- *       ))}
- *     </ul>
- *   );
- * }
+ * return (
+ *   <>
+ *     {data.map((publication) => (
+ *       <PublicationCard key={publication.id} publication={publication} />
+ *     ))}
+ *   </>
+ * );
  * ```
  *
  * @category Discovery
@@ -94,7 +82,7 @@ export function useSearchPublications(
 ): PaginatedReadResult<PrimaryPublication[]>;
 
 /**
- * Search for publications based on a defined criteria
+ * Search for publications based on a defined criteria.
  *
  * This signature supports [React Suspense](https://react.dev/reference/react/Suspense).
  *
