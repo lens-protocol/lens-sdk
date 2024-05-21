@@ -26,11 +26,11 @@ export type UseProfileManagersArgs = PaginatedArgs<{
  *   });
  *
  *   if (loading) {
- *     return <p>Loading...</p>;
+ *     return <Loader />;
  *   }
  *
  *   if (error) {
- *     return <p>Error: {error.message}</p>;
+ *     return <Error message={error.message} />;
  *   }
  *
  *   return (

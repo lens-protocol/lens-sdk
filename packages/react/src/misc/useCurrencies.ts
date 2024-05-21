@@ -32,9 +32,9 @@ export type UseCurrenciesArgs = PaginatedArgs<PaginatedOffsetRequest>;
  * function CurrencySelector({ onChange }: { onChange: (currency: Erc20) => void }) {
  *   const { data: currencies, error, loading } = useCurrencies();
  *
- *   if (loading) return <p>Loading...</p>;
+ *   if (loading) return <Loader />;
  *
- *   if (error) return <p>Error: {error.message}</p>;
+ *   if (error) return <Error message={error.message} />;
  *
  *   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
  *     const currency = currencies.find((c) => c.symbol === event.target.value);

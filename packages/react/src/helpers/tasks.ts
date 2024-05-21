@@ -86,7 +86,7 @@ export type DeferredTaskState<TData, TError extends IEquatableError> =
  *   // data === undefined on first call
  *   // data === TData from previous successful call
  *   // error === undefined
- *   return <p>Loading...</p>;
+ *   return <Loader />;
  * }
  *
  * if (error) {

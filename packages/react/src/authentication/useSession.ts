@@ -99,7 +99,7 @@ export type UseSessionArgs = SuspenseEnabled;
  * function Page() {
  *   const { data, error, loading } = useSession();
  *
- *   if (loading) return <p>Loading...</p>;
+ *   if (loading) return <Loader />;
  *
  *   if (error) return <p>Something went wrong.</p>;
  *
