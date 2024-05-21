@@ -33,6 +33,10 @@ export type AnyPublicationFragment =
 
 export type PrimaryPublicationFragment = PostFragment | CommentFragment | QuoteFragment;
 
+export type OpenActionModuleFragment = NonNullable<
+  PrimaryPublicationFragment['openActionModules']
+>[number];
+
 export type PublicationMetadataFragment =
   | ArticleMetadataV3Fragment
   | AudioMetadataV3Fragment

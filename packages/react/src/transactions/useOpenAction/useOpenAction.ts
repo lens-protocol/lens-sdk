@@ -13,9 +13,9 @@ import { invariant } from '@lens-protocol/shared-kernel';
 
 import { useSession } from '../../authentication';
 import { useDeferredTask, UseDeferredTask } from '../../helpers/tasks';
+import { useSharedDependencies } from '../../shared';
 import { AsyncTransactionResult } from '../adapters/AsyncTransactionResult';
 import { useOpenActionController } from '../adapters/useOpenActionController';
-import { useSponsoredConfig } from '../shared/useSponsoredConfig';
 import { createOpenActionRequest } from './createOpenActionRequest';
 import { OpenActionArgs, UseOpenActionArgs } from './types';
 
@@ -40,7 +40,7 @@ export type OpenActionAsyncResult = AsyncTransactionResult<void>;
  * });
  * ```
  *
- * ## Collect a publication
+ * ## Collect a Publication
  *
  * You can use the `useOpenAction` hook to collect a publication.
  *
@@ -58,7 +58,76 @@ export type OpenActionAsyncResult = AsyncTransactionResult<void>;
  *
  * It supports seamlessly new collect Open Action modules as well as legacy collect modules.
  *
- * ## Failure scenarios
+ * ## Collect Referrers
+ *
+ * When collecting a publication using the new SimpleCollectOpenAction or MultirecipientFeeCollectOpenAction
+ * you can specify a list of referrer Publication and/or Profile IDs.
+ *
+ * ```ts
+ * const { execute, error, loading } = useOpenAction({
+ *   action: {
+ *     kind: OpenActionKind.COLLECT,
+ *     referrers: [
+ *       publicationId,
+ *       profileId,
+ *     ],
+ *   },
+ * });
+ * ```
+ *
+ * The referrers will split the referral reward of any collect fee paid by the collector.
+ *
+ * ## Public Collect
+ *
+ * You can use the `useOpenAction` hook to collect a publication with just a wallet.
+ * First make sure you logged-in via {@link useLogin} with just an EVM address.
+ *
+ * Then you can use the `useOpenAction` to collect a publication as mentioned above.
+ *
+ * ## Execute Any Open Action
+ *
+ * You can use the `useOpenAction` hook to execute any Open Action.
+ *
+ * You must know the address of the Open Action module and the data required to execute it.
+ *
+ * ```ts
+ * const { execute, error, loading } = useOpenAction({
+ *   action: {
+ *     kind: OpenActionKind.UNKNOWN,
+ *     address: '0x...', // the address of the Open Action module
+ *     data: '0x...', // any data needed to execute the Open Action
+ *   }
+ * });
+ *
+ * const collect = async (publication: AnyPublication) => {
+ *   const result = await execute({ publication });
+ *
+ *   // ...
+ * }
+ * ```
+ *
+ * In case the Open Action imply the payment of a fee, you need to specify the amount to pay.
+ *
+ * ```ts
+ * const bonsai = erc20({
+ *   address: '0x3d2bD0e15829AA5C362a4144FdF4A1112fa29B5c',
+ *   chainType: ChainType.POLYGON,
+ *   decimals: 18,
+ *   name: 'BONSAI',
+ *   symbol: 'BONSAI',
+ * });
+ *
+ * const { execute, error, loading } = useOpenAction({
+ *   action: {
+ *     kind: OpenActionKind.UNKNOWN,
+ *     address: '0x...', // the address of the Open Action module
+ *     data: '0x...', // any data needed to execute the Open Action
+ *     amount: Amount.erc20(bonsai, '10'), // the amount to pay
+ *   }
+ * });
+ * ```
+ *
+ * ## Failure Scenarios
  *
  * You can handle possible failure scenarios by checking the `result` value.
  *
@@ -108,7 +177,7 @@ export type OpenActionAsyncResult = AsyncTransactionResult<void>;
  * };
  * ```
  *
- * ## Wait for completion
+ * ## Wait for Completion
  *
  * You can always wait the operation to be fully processed and indexed by Lens API.
  *
@@ -133,55 +202,7 @@ export type OpenActionAsyncResult = AsyncTransactionResult<void>;
  * };
  * ```
  *
- * ## Collect referrers
- *
- * When collecting a publication using the new SimpleCollectOpenAction or MultirecipientFeeCollectOpenAction
- * you can specify a list of referrer Publication and/or Profile IDs.
- *
- * ```ts
- * const { execute, error, loading } = useOpenAction({
- *   action: {
- *     kind: OpenActionKind.COLLECT,
- *     referrers: [
- *       publicationId,
- *       profileId,
- *     ],
- *   },
- * });
- * ```
- *
- * The referrers will split the referral reward of any collect fee paid by the collector.
- *
- * ## Public collect
- *
- * You can use the `useOpenAction` hook to collect a publication with just a wallet.
- * First make sure you logged-in via {@link useLogin} with just an EVM address.
- *
- * Then you can use the `useOpenAction` to collect a publication as mentioned above.
- *
- * ## Custom open action
- *
- * You can use the `useOpenAction` hook to execute a custom Open Action.
- *
- * You must know the address of the Open Action module and the data required to execute it.
- *
- * ```ts
- * const { execute, error, loading } = useOpenAction({
- *   action: {
- *     kind: OpenActionKind.UNKNOWN,
- *     address: '0x...', // the address of the Open Action module
- *     data: '0x...', // any data needed to execute the Open Action
- *   }
- * });
- *
- * const collect = async (publication: AnyPublication) => {
- *   const result = await execute({ publication });
- *
- *   // ...
- * }
- * ```
- *
- * ## Self-funded approach
+ * ## Self-funded Approach
  *
  * It just takes a single parameter to disable the sponsorship of the transaction gas costs.
  *
@@ -210,12 +231,11 @@ export type OpenActionAsyncResult = AsyncTransactionResult<void>;
  * error happens only with self-funded transactions and it means that the wallet does not
  * have enough funds to pay for the transaction gas costs.
  *
- * ## Self-funded fallback
+ * ## Self-funded Fallback
  *
  * If for some reason the Lens API cannot sponsor the transaction, the hook will fail with a {@link BroadcastingError} with one of the following reasons:
  * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
  * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
- * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
  *
  * In those cases you can retry the transaction as self-funded like in the following example:
  *
@@ -239,12 +259,6 @@ export type OpenActionAsyncResult = AsyncTransactionResult<void>;
  * }
  * ```
  *
- * In this example we omitted {@link BroadcastingErrorReason.APP_NOT_ALLOWED} as it's not normally a problem per-se.
- * It just requires the app to apply for whitelisting. See https://docs.lens.xyz/docs/gasless-and-signless#whitelisting-your-app.
- *
- * You can still include it in your fallback logic if you want to. For example to unblock testing your app from a domain that is not the
- * whitelisted one (e.g. localhost).
- *
  * @category Publications
  * @group Hooks
  */
@@ -263,7 +277,7 @@ export function useOpenAction(
 > {
   const { data: session } = useSession();
   const openAction = useOpenActionController();
-  const configureRequest = useSponsoredConfig();
+  const { config } = useSharedDependencies();
 
   return useDeferredTask(async ({ publication, sponsored = true }: OpenActionArgs) => {
     invariant(
@@ -275,8 +289,14 @@ export function useOpenAction(
       'You cannot execute an Open Action on a Momoka publication.',
     );
 
-    const request = configureRequest(
-      createOpenActionRequest({ publication, sponsored }, args.action, session),
+    const request = createOpenActionRequest(
+      {
+        publication,
+        sponsored: config.sponsored ? sponsored : true,
+      },
+      args.action,
+      session,
+      config.environment,
     );
 
     return openAction(request);

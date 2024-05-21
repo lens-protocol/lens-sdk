@@ -64,10 +64,6 @@ describe(`Given an instance of the ${OnChainRelayer.name}`, () => {
 
   describe.only.each([
     {
-      broadcastResult: mockRelayErrorFragment(RelayErrorReasonType.AppNotAllowed),
-      reason: BroadcastingErrorReason.APP_NOT_ALLOWED,
-    },
-    {
       broadcastResult: mockRelayErrorFragment(RelayErrorReasonType.NotSponsored),
       reason: BroadcastingErrorReason.NOT_SPONSORED,
     },

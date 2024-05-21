@@ -1,10 +1,12 @@
 import { textOnly } from '@lens-protocol/metadata';
 import {
+  InsufficientAllowanceError,
   isPostPublication,
   OpenActionKind,
   OpenActionType,
   PublicationId,
   TriStateValue,
+  useApproveModule,
   useCreatePost,
   useOpenAction,
   usePublication,
@@ -12,6 +14,7 @@ import {
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
+import { CollectCriteria } from '../components/CollectPolicy';
 import { Logs } from '../components/Logs';
 import { RequireProfileSession, RequireWalletSession } from '../components/auth';
 import { PublicationCard } from '../components/cards';
@@ -23,11 +26,12 @@ import { invariant } from '../utils';
 
 function TestScenario({ id }: { id: PublicationId }) {
   const { data: publication, loading, error } = usePublication({ forId: id });
-  const { execute } = useOpenAction({
+  const { execute: act, loading: collecting } = useOpenAction({
     action: {
       kind: OpenActionKind.COLLECT,
     },
   });
+  const { execute: approve, loading: approving } = useApproveModule();
 
   if (loading) {
     return <Loading />;
@@ -38,9 +42,27 @@ function TestScenario({ id }: { id: PublicationId }) {
   }
 
   const collect = async (sponsored?: boolean) => {
-    const result = await execute({ publication, sponsored });
+    const result = await act({ publication, sponsored });
 
     if (result.isFailure()) {
+      // requires approval
+      if (result.error instanceof InsufficientAllowanceError) {
+        const approval = await approve({
+          on: publication,
+        });
+
+        if (approval.isFailure()) {
+          toast.error(approval.error.message);
+          return;
+        }
+
+        toast.success('You successfully approved the module');
+
+        // retry to collect
+        await collect(sponsored);
+        return;
+      }
+
       toast.error(result.error.message);
       return;
     }
@@ -57,38 +79,35 @@ function TestScenario({ id }: { id: PublicationId }) {
 
   invariant(isPostPublication(publication), 'Publication is not a post');
 
+  const disabled =
+    approving || collecting || publication.operations.canCollect === TriStateValue.No;
+
   return (
     <div>
-      <PublicationCard publication={publication} />
-      <div>
-        <RequireProfileSession message="Login with a profile to explore more options">
-          <p>As Lens Profile you can perform:</p>
-          <button
-            onClick={() => collect(false)}
-            disabled={publication.operations.canCollect === TriStateValue.No}
-          >
-            Self-funded collect
-          </button>
-          &nbsp;
-          <button
-            onClick={() => collect(true)}
-            disabled={publication.operations.canCollect === TriStateValue.No}
-          >
-            Gasless collect
-          </button>
-        </RequireProfileSession>
-      </div>
-      <div>
-        <RequireWalletSession message="Login with just a wallet to explore more options">
-          <p>As wallet you can perform:</p>
-          <button
-            onClick={() => collect()}
-            disabled={publication.operations.canCollect === TriStateValue.No}
-          >
-            Public collect
-          </button>
-        </RequireWalletSession>
-      </div>
+      <PublicationCard publication={publication}>
+        <CollectCriteria publication={publication} />
+
+        <div>
+          <RequireProfileSession message="Login with a profile to explore more options">
+            <p>As Lens Profile you can perform:</p>
+            <button onClick={() => collect(false)} disabled={disabled}>
+              Self-funded collect
+            </button>
+            &nbsp;
+            <button onClick={() => collect(true)} disabled={disabled}>
+              Gasless collect
+            </button>
+          </RequireProfileSession>
+        </div>
+        <div>
+          <RequireWalletSession message="Login with just a wallet to explore more options">
+            <p>As wallet you can perform:</p>
+            <button onClick={() => collect()} disabled={disabled}>
+              Public collect
+            </button>
+          </RequireWalletSession>
+        </div>
+      </PublicationCard>
     </div>
   );
 }
@@ -117,7 +136,7 @@ export function UseOpenAction() {
       metadata: uri,
       actions: [
         {
-          type: OpenActionType.SIMPLE_COLLECT,
+          type: OpenActionType.SHARED_REVENUE_COLLECT,
           followerOnly: false,
           collectLimit: 5,
         },

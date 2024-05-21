@@ -469,6 +469,33 @@ fragment SimpleCollectOpenActionSettings on SimpleCollectOpenActionSettings {
   endsAt
 }
 
+fragment ProtocolSharedRevenueCollectOpenActionSettings on ProtocolSharedRevenueCollectOpenActionSettings {
+  __typename
+  type
+  contract {
+    ...NetworkAddress
+  }
+  collectNft
+  amount {
+    ...Amount
+  }
+  mintFee {
+    ...Amount
+  }
+  distribution {
+    creatorClientSplit
+    creatorSplit
+    executorClientSplit
+    protocolSplit
+  }
+  recipient
+  referralFee
+  followerOnly
+  collectLimit
+  endsAt
+  creatorClient
+}
+
 # purposefully renamed Recipient to have a better narrative
 fragment Recipient on RecipientDataOutput {
   # __typename not include to hide RecipientDataOutput not needed anyway here
@@ -720,6 +747,9 @@ fragment PublicationOperations on PublicationOperations {
 fragment PublicationMetadataLitEncryption on PublicationMetadataLitEncryption {
   __typename
   encryptionKey
+  accessControlContract {
+    ...NetworkAddress
+  }
   accessCondition {
     ...RootCondition
   }
@@ -1639,6 +1669,9 @@ fragment Post on Post {
     ... on MultirecipientFeeCollectOpenActionSettings {
       ...MultirecipientFeeCollectOpenActionSettings
     }
+    ... on ProtocolSharedRevenueCollectOpenActionSettings {
+      ...ProtocolSharedRevenueCollectOpenActionSettings
+    }
     ... on SimpleCollectOpenActionSettings {
       ...SimpleCollectOpenActionSettings
     }
@@ -1777,6 +1810,9 @@ fragment CommentFields on Comment {
     }
     ... on MultirecipientFeeCollectOpenActionSettings {
       ...MultirecipientFeeCollectOpenActionSettings
+    }
+    ... on ProtocolSharedRevenueCollectOpenActionSettings {
+      ...ProtocolSharedRevenueCollectOpenActionSettings
     }
     ... on SimpleCollectOpenActionSettings {
       ...SimpleCollectOpenActionSettings
@@ -1960,6 +1996,9 @@ fragment QuoteFields on Quote {
     }
     ... on MultirecipientFeeCollectOpenActionSettings {
       ...MultirecipientFeeCollectOpenActionSettings
+    }
+    ... on ProtocolSharedRevenueCollectOpenActionSettings {
+      ...ProtocolSharedRevenueCollectOpenActionSettings
     }
     ... on SimpleCollectOpenActionSettings {
       ...SimpleCollectOpenActionSettings

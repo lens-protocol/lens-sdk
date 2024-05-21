@@ -10,6 +10,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  ABIJson: string;
   AppId: string;
   BlockchainData: string;
   BroadcastId: string;
@@ -55,6 +56,7 @@ export type Scalars = {
 
 export type ActOnOpenActionInput = {
   readonly multirecipientCollectOpenAction?: InputMaybe<Scalars['Boolean']>;
+  readonly protocolSharedRevenueCollectOpenAction?: InputMaybe<Scalars['Boolean']>;
   readonly simpleCollectOpenAction?: InputMaybe<Scalars['Boolean']>;
   readonly unknownOpenAction?: InputMaybe<UnknownOpenActionActRedeemInput>;
 };
@@ -107,11 +109,18 @@ export type AlreadyInvitedCheckRequest = {
 
 export type Amount = {
   readonly __typename: 'Amount';
+  /** This is the total value of the amount in the fiat currency */
+  readonly asFiat?: Maybe<FiatAmount>;
   /** The asset */
   readonly asset: Asset;
+  /** This is the most recent snapshotted 1:1 conversion rate between the asset and the requested fiat currency */
   readonly rate?: Maybe<FiatAmount>;
   /** Floating point number as string (e.g. 42.009837). It could have the entire precision of the Asset or be truncated to the last significant decimal. */
   readonly value: Scalars['String'];
+};
+
+export type AmountAsFiatArgs = {
+  request: RateRequest;
 };
 
 export type AmountRateArgs = {
@@ -229,6 +238,8 @@ export type AuthenticationResult = {
   readonly __typename: 'AuthenticationResult';
   /** The access token */
   readonly accessToken: Scalars['Jwt'];
+  /** The identity token */
+  readonly identityToken: Scalars['Jwt'];
   /** The refresh token */
   readonly refreshToken: Scalars['Jwt'];
 };
@@ -335,14 +346,28 @@ export type ClaimProfileWithHandleRequest = {
 
 export type ClaimProfileWithHandleResult = ClaimProfileWithHandleErrorResult | RelaySuccess;
 
+export type ClaimTokensRequest = {
+  readonly for: ClaimableTokenType;
+};
+
 export type ClaimableProfilesResult = {
   readonly __typename: 'ClaimableProfilesResult';
   readonly canMintProfileWithFreeTextHandle: Scalars['Boolean'];
   readonly reserved: ReadonlyArray<ReservedClaimable>;
 };
 
+export enum ClaimableTokenType {
+  Bonsai = 'BONSAI',
+}
+
+export type ClaimableTokensResult = {
+  readonly __typename: 'ClaimableTokensResult';
+  readonly bonsai: Amount;
+};
+
 export type CollectActionModuleInput = {
   readonly multirecipientCollectOpenAction?: InputMaybe<MultirecipientFeeCollectModuleInput>;
+  readonly protocolSharedRevenueCollectOpenAction?: InputMaybe<ProtocolSharedRevenueCollectModuleInput>;
   readonly simpleCollectOpenAction?: InputMaybe<SimpleCollectOpenActionModuleInput>;
 };
 
@@ -375,6 +400,8 @@ export type Comment = {
   readonly createdAt: Scalars['DateTime'];
   readonly firstComment?: Maybe<Comment>;
   readonly hashtagsMentioned: ReadonlyArray<Scalars['String']>;
+  /** Signifies whether this comment has been hidden by the author of its parent publication */
+  readonly hiddenByAuthor: Scalars['Boolean'];
   readonly id: Scalars['PublicationId'];
   readonly isEncrypted: Scalars['Boolean'];
   readonly isHidden: Scalars['Boolean'];
@@ -561,6 +588,61 @@ export type CreateFollowEip712TypedDataValue = {
   readonly followerProfileId: Scalars['ProfileId'];
   readonly idsOfProfilesToFollow: ReadonlyArray<Scalars['ProfileId']>;
   readonly nonce: Scalars['Nonce'];
+};
+
+export type CreateFrameEip712TypedData = {
+  readonly __typename: 'CreateFrameEIP712TypedData';
+  /** The typed data domain */
+  readonly domain: Eip712TypedDataDomain;
+  /** The types */
+  readonly types: CreateFrameEip712TypedDataTypes;
+  /** The values */
+  readonly value: CreateFrameEip712TypedDataValue;
+};
+
+export type CreateFrameEip712TypedDataInput = {
+  /** The typed data domain */
+  readonly domain: Eip712TypedDataDomainInput;
+  /** The types */
+  readonly types: CreateFrameEip712TypedDataTypesInput;
+  /** The values */
+  readonly value: CreateFrameEip712TypedDataValueInput;
+};
+
+export type CreateFrameEip712TypedDataTypes = {
+  readonly __typename: 'CreateFrameEIP712TypedDataTypes';
+  readonly FrameData: ReadonlyArray<Eip712TypedDataField>;
+};
+
+export type CreateFrameEip712TypedDataTypesInput = {
+  readonly FrameData: ReadonlyArray<Eip712TypedDataFieldInput>;
+};
+
+export type CreateFrameEip712TypedDataValue = {
+  readonly __typename: 'CreateFrameEIP712TypedDataValue';
+  readonly actionResponse: Scalars['String'];
+  readonly buttonIndex: Scalars['Int'];
+  readonly deadline: Scalars['UnixTimestamp'];
+  readonly inputText: Scalars['String'];
+  readonly profileId: Scalars['ProfileId'];
+  readonly pubId: Scalars['PublicationId'];
+  /** The EIP-721 spec version, must be 1.0.0 */
+  readonly specVersion: Scalars['String'];
+  readonly state: Scalars['String'];
+  readonly url: Scalars['URI'];
+};
+
+export type CreateFrameEip712TypedDataValueInput = {
+  readonly actionResponse: Scalars['String'];
+  readonly buttonIndex: Scalars['Int'];
+  readonly deadline: Scalars['UnixTimestamp'];
+  readonly inputText: Scalars['String'];
+  readonly profileId: Scalars['ProfileId'];
+  readonly pubId: Scalars['PublicationId'];
+  /** The EIP-721 spec version, must be 1.0.0 */
+  readonly specVersion: Scalars['String'];
+  readonly state: Scalars['String'];
+  readonly url: Scalars['URI'];
 };
 
 export type CreateLegacyCollectBroadcastItemResult = {
@@ -1198,8 +1280,38 @@ export type DegreesOfSeparationReferenceModuleSettings = {
   readonly type: ReferenceModuleType;
 };
 
+export type DidReactOnPublicationPublicationIdAndProfileId = {
+  readonly profileId: Scalars['ProfileId'];
+  readonly publicationId: Scalars['PublicationId'];
+};
+
+export type DidReactOnPublicationRequest = {
+  readonly for: ReadonlyArray<DidReactOnPublicationPublicationIdAndProfileId>;
+  readonly where?: InputMaybe<WhoReactedPublicationWhere>;
+};
+
+export type DidReactOnPublicationResult = {
+  readonly __typename: 'DidReactOnPublicationResult';
+  readonly profileId: Scalars['ProfileId'];
+  readonly publicationId: Scalars['PublicationId'];
+  readonly result: Scalars['Boolean'];
+};
+
 export type DismissRecommendedProfilesRequest = {
   readonly dismiss: ReadonlyArray<Scalars['ProfileId']>;
+};
+
+export type DisputedReport = {
+  readonly __typename: 'DisputedReport';
+  readonly createdAt: Scalars['DateTime'];
+  readonly disputeReason: Scalars['String'];
+  readonly disputer: Profile;
+  readonly reportAdditionalInfo: Scalars['String'];
+  readonly reportReason: Scalars['String'];
+  readonly reportSubreason: Scalars['String'];
+  readonly reportedProfile: Profile;
+  readonly reportedPublication?: Maybe<PrimaryPublication>;
+  readonly reporter: Profile;
 };
 
 /** The eip 712 typed data domain */
@@ -1215,9 +1327,27 @@ export type Eip712TypedDataDomain = {
   readonly version: Scalars['String'];
 };
 
+export type Eip712TypedDataDomainInput = {
+  /** The chainId */
+  readonly chainId: Scalars['ChainId'];
+  /** The name of the typed data domain */
+  readonly name: Scalars['String'];
+  /** The verifying contract */
+  readonly verifyingContract: Scalars['EvmAddress'];
+  /** The version */
+  readonly version: Scalars['String'];
+};
+
 /** The eip 712 typed data field */
 export type Eip712TypedDataField = {
   readonly __typename: 'EIP712TypedDataField';
+  /** The name of the typed data field */
+  readonly name: Scalars['String'];
+  /** The type of the typed data field */
+  readonly type: Scalars['String'];
+};
+
+export type Eip712TypedDataFieldInput = {
   /** The name of the typed data field */
   readonly name: Scalars['String'];
   /** The type of the typed data field */
@@ -1392,6 +1522,7 @@ export enum ExplorePublicationsOrderByType {
   TopCommented = 'TOP_COMMENTED',
   TopMirrored = 'TOP_MIRRORED',
   TopQuoted = 'TOP_QUOTED',
+  TopReacted = 'TOP_REACTED',
 }
 
 export type ExplorePublicationsWhere = {
@@ -1459,6 +1590,7 @@ export type FeedRequest = {
 };
 
 export type FeedWhere = {
+  readonly customFilters?: InputMaybe<ReadonlyArray<CustomFiltersType>>;
   readonly feedEventItemTypes?: InputMaybe<ReadonlyArray<FeedEventItemType>>;
   readonly for?: InputMaybe<Scalars['ProfileId']>;
   readonly metadata?: InputMaybe<PublicationMetadataFilters>;
@@ -1492,7 +1624,7 @@ export type FollowLensManager = {
   readonly profileId: Scalars['ProfileId'];
 };
 
-/** The lens manager will only support FREE follow modules, if you want your unknown module allowed to be signless please contact us */
+/** The lens manager will only support follow modules which are verified here - https://github.com/lens-protocol/verified-modules/blob/master/follow-modules.json */
 export type FollowLensManagerModuleRedeemInput = {
   readonly unknownFollowModule?: InputMaybe<UnknownFollowModuleRedeemInput>;
 };
@@ -1536,6 +1668,12 @@ export type FollowOnlyReferenceModuleSettings = {
   readonly type: ReferenceModuleType;
 };
 
+export type FollowPaidAction = {
+  readonly __typename: 'FollowPaidAction';
+  readonly followed: Profile;
+  readonly latestActed: ReadonlyArray<LatestActed>;
+};
+
 export type FollowRequest = {
   readonly follow: ReadonlyArray<Follow>;
 };
@@ -1569,13 +1707,67 @@ export type FollowersRequest = {
   readonly cursor?: InputMaybe<Scalars['Cursor']>;
   readonly limit?: InputMaybe<LimitType>;
   readonly of: Scalars['ProfileId'];
+  /** The order by which to sort the profiles - note if your looking at your own followers it always be DESC */
+  readonly orderBy?: InputMaybe<ProfilesOrderBy>;
 };
 
 export type FollowingRequest = {
   readonly cursor?: InputMaybe<Scalars['Cursor']>;
   readonly for: Scalars['ProfileId'];
   readonly limit?: InputMaybe<LimitType>;
+  /** The order by which to sort the profiles - note if your looking at your own following it always be DESC */
+  readonly orderBy?: InputMaybe<ProfilesOrderBy>;
 };
+
+export type FrameEip712Request = {
+  readonly actionResponse: Scalars['String'];
+  readonly buttonIndex: Scalars['Int'];
+  readonly deadline: Scalars['UnixTimestamp'];
+  readonly inputText: Scalars['String'];
+  readonly profileId: Scalars['ProfileId'];
+  readonly pubId: Scalars['PublicationId'];
+  /** The EIP-721 spec version, must be 1.0.0 */
+  readonly specVersion: Scalars['String'];
+  readonly state: Scalars['String'];
+  readonly url: Scalars['URI'];
+};
+
+export type FrameLensManagerEip712Request = {
+  readonly actionResponse: Scalars['String'];
+  readonly buttonIndex: Scalars['Int'];
+  readonly inputText: Scalars['String'];
+  readonly profileId: Scalars['ProfileId'];
+  readonly pubId: Scalars['PublicationId'];
+  /** The EIP-721 spec version, must be 1.0.0 */
+  readonly specVersion: Scalars['String'];
+  readonly state: Scalars['String'];
+  readonly url: Scalars['URI'];
+};
+
+export type FrameLensManagerSignatureResult = {
+  readonly __typename: 'FrameLensManagerSignatureResult';
+  /** The signature */
+  readonly signature: Scalars['Signature'];
+  /** The typed data signed */
+  readonly signedTypedData: CreateFrameEip712TypedData;
+};
+
+export type FrameVerifySignature = {
+  /** The identity token */
+  readonly identityToken: Scalars['Jwt'];
+  /** The signature */
+  readonly signature: Scalars['Signature'];
+  /** The typed data signed */
+  readonly signedTypedData: CreateFrameEip712TypedDataInput;
+};
+
+export enum FrameVerifySignatureResult {
+  DeadlineExpired = 'DEADLINE_EXPIRED',
+  IdentityCannotUseProfile = 'IDENTITY_CANNOT_USE_PROFILE',
+  IdentityUnauthorized = 'IDENTITY_UNAUTHORIZED',
+  SignerAddressCannotUseProfile = 'SIGNER_ADDRESS_CANNOT_USE_PROFILE',
+  Verified = 'VERIFIED',
+}
 
 export type FraudReasonInput = {
   readonly reason: PublicationReportingReason;
@@ -1604,6 +1796,18 @@ export type GeoLocation = {
   readonly rawURI: Scalars['EncryptableURI'];
 };
 
+export type GetModuleMetadataResult = {
+  readonly __typename: 'GetModuleMetadataResult';
+  readonly metadata: ModuleMetadata;
+  readonly moduleType: ModuleType;
+  /** True if the module can be signedless and use lens manager without a signature */
+  readonly signlessApproved: Scalars['Boolean'];
+  /** True if the module can be sponsored through gasless so the user does not need to pay for gas */
+  readonly sponsoredApproved: Scalars['Boolean'];
+  /** True if the module is deemed as safe */
+  readonly verified: Scalars['Boolean'];
+};
+
 export type GetProfileMetadataArgs = {
   /** The app id to query the profile's metadata */
   readonly appId?: InputMaybe<Scalars['AppId']>;
@@ -1611,10 +1815,17 @@ export type GetProfileMetadataArgs = {
   readonly useFallback?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type HandleGuardianResult = {
+  readonly __typename: 'HandleGuardianResult';
+  readonly cooldownEndsOn?: Maybe<Scalars['DateTime']>;
+  readonly protected: Scalars['Boolean'];
+};
+
 export type HandleInfo = {
   readonly __typename: 'HandleInfo';
   /** The full handle - namespace/localname */
   readonly fullHandle: Scalars['Handle'];
+  readonly guardian: HandleGuardianResult;
   /** The handle nft token id */
   readonly id: Scalars['TokenId'];
   /** If null its not linked to anything */
@@ -1636,8 +1847,36 @@ export type HandleLinkedTo = {
   readonly nftTokenId: Scalars['TokenId'];
 };
 
+export type HandleToAddressRequest = {
+  /** The full handle - namespace/localname */
+  readonly handle: Scalars['Handle'];
+};
+
+export enum HiddenCommentsType {
+  HiddenOnly = 'HIDDEN_ONLY',
+  Hide = 'HIDE',
+  Show = 'SHOW',
+}
+
+export type HideCommentRequest = {
+  /** The comment to hide. It has to be under a publication made by the user making the request. If already hidden, nothing will happen. */
+  readonly for: Scalars['PublicationId'];
+};
+
+export type HideManagedProfileRequest = {
+  /** The profile to hide */
+  readonly profileId: Scalars['ProfileId'];
+};
+
 export type HidePublicationRequest = {
   readonly for: Scalars['PublicationId'];
+};
+
+export type IphResult = {
+  readonly __typename: 'IPHResult';
+  readonly h?: Maybe<Scalars['Handle']>;
+  readonly hda: Scalars['Boolean'];
+  readonly hs: Scalars['Boolean'];
 };
 
 export type IdKitPhoneVerifyWebhookRequest = {
@@ -1727,6 +1966,19 @@ export type InternalAllowedDomainsRequest = {
   readonly secret: Scalars['String'];
 };
 
+export type InternalBoostProfileRequest = {
+  readonly h?: InputMaybe<Scalars['Handle']>;
+  readonly p?: InputMaybe<Scalars['ProfileId']>;
+  readonly s: Scalars['Int'];
+  readonly secret: Scalars['String'];
+};
+
+export type InternalBoostScoreRequest = {
+  readonly h?: InputMaybe<Scalars['Handle']>;
+  readonly p?: InputMaybe<Scalars['ProfileId']>;
+  readonly secret: Scalars['String'];
+};
+
 export type InternalClaimRequest = {
   readonly address: Scalars['EvmAddress'];
   readonly freeTextHandle?: InputMaybe<Scalars['Boolean']>;
@@ -1762,6 +2014,12 @@ export type InternalInvitesRequest = {
   readonly secret: Scalars['String'];
 };
 
+export type InternalMintHandleAndProfileRequest = {
+  readonly a: Scalars['EvmAddress'];
+  readonly h: Scalars['String'];
+  readonly secret: Scalars['String'];
+};
+
 export type InternalNftIndexRequest = {
   readonly n: ReadonlyArray<Nfi>;
   readonly secret: Scalars['String'];
@@ -1769,6 +2027,11 @@ export type InternalNftIndexRequest = {
 
 export type InternalNftVerifyRequest = {
   readonly n: ReadonlyArray<Nfi>;
+  readonly secret: Scalars['String'];
+};
+
+export type InternalPaymentHandleInfoRequest = {
+  readonly p: Scalars['String'];
   readonly secret: Scalars['String'];
 };
 
@@ -1781,6 +2044,14 @@ export type InternalRemoveCuratedTagRequest = {
   readonly hhh: Scalars['String'];
   readonly secret: Scalars['String'];
   readonly ttt: Scalars['String'];
+};
+
+export type InternalUpdateModuleOptionsRequest = {
+  readonly i: Scalars['EvmAddress'];
+  readonly lma?: InputMaybe<Scalars['Boolean']>;
+  readonly secret: Scalars['String'];
+  readonly t: ModuleType;
+  readonly v?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type InternalUpdateProfileStatusRequest = {
@@ -1796,6 +2067,8 @@ export type InviteRequest = {
 
 export type InvitedResult = {
   readonly __typename: 'InvitedResult';
+  readonly addressInvited: Scalars['EvmAddress'];
+  /** @deprecated Profiles hand out invites on Lens V2 so this is unnecessary information. Will always be the dead address. */
   readonly by: Scalars['EvmAddress'];
   readonly profileMinted?: Maybe<Profile>;
   readonly when: Scalars['DateTime'];
@@ -1817,6 +2090,28 @@ export type KnownSupportedModule = {
 
 export type LastLoggedInProfileRequest = {
   readonly for: Scalars['EvmAddress'];
+};
+
+export type LatestActed = {
+  readonly __typename: 'LatestActed';
+  readonly actedAt: Scalars['DateTime'];
+  readonly profile: Profile;
+  readonly txHash: Scalars['TxHash'];
+};
+
+export type LatestPaidActionsFilter = {
+  readonly openActionFilters?: InputMaybe<ReadonlyArray<OpenActionFilter>>;
+  readonly openActionPublicationMetadataFilters?: InputMaybe<PublicationMetadataFilters>;
+};
+
+export type LatestPaidActionsResult = {
+  readonly __typename: 'LatestPaidActionsResult';
+  readonly items: ReadonlyArray<PaidAction>;
+  readonly pageInfo: PaginatedResultInfo;
+};
+
+export type LatestPaidActionsWhere = {
+  readonly customFilters?: InputMaybe<ReadonlyArray<CustomFiltersType>>;
 };
 
 export type LegacyAaveFeeCollectModuleSettings = {
@@ -2024,11 +2319,6 @@ export enum LensProfileManagerRelayErrorReasonType {
 
 export type LensProfileManagerRelayResult = LensProfileManagerRelayError | RelaySuccess;
 
-export enum LensProtocolVersion {
-  V1 = 'V1',
-  V2 = 'V2',
-}
-
 export enum LensTransactionFailureType {
   MetadataError = 'METADATA_ERROR',
   Reverted = 'REVERTED',
@@ -2109,6 +2399,13 @@ export type LiveStreamMetadataV3 = {
   /** The title of the live-stream. Empty if not set. */
   readonly title: Scalars['String'];
 };
+
+/** Managed profile visibility type */
+export enum ManagedProfileVisibility {
+  All = 'ALL',
+  HiddenOnly = 'HIDDEN_ONLY',
+  NoneHidden = 'NONE_HIDDEN',
+}
 
 export type MarketplaceMetadata = {
   readonly __typename: 'MarketplaceMetadata';
@@ -2196,6 +2493,58 @@ export type MirrorNotification = {
 
 export type MirrorablePublication = Comment | Post | Quote;
 
+export type ModDisputeReportRequest = {
+  readonly reason: Scalars['String'];
+  readonly reportedProfileId?: InputMaybe<Scalars['ProfileId']>;
+  readonly reportedPublicationId?: InputMaybe<Scalars['PublicationId']>;
+  readonly reporter: Scalars['ProfileId'];
+};
+
+export type ModExplorePublicationRequest = {
+  readonly cursor?: InputMaybe<Scalars['Cursor']>;
+  readonly limit?: InputMaybe<LimitType>;
+  readonly orderBy: ExplorePublicationsOrderByType;
+  readonly where?: InputMaybe<ModExplorePublicationsWhere>;
+};
+
+export enum ModExplorePublicationType {
+  Comment = 'COMMENT',
+  Post = 'POST',
+  Quote = 'QUOTE',
+}
+
+export type ModExplorePublicationsWhere = {
+  readonly customFilters?: InputMaybe<ReadonlyArray<CustomFiltersType>>;
+  readonly metadata?: InputMaybe<PublicationMetadataFilters>;
+  readonly publicationTypes?: InputMaybe<ReadonlyArray<ModExplorePublicationType>>;
+  readonly since?: InputMaybe<Scalars['UnixTimestamp']>;
+};
+
+export type ModFollowerResult = {
+  readonly __typename: 'ModFollowerResult';
+  readonly createdAt: Scalars['DateTime'];
+  readonly follower: Profile;
+  readonly following: Profile;
+};
+
+export type ModReport = {
+  readonly __typename: 'ModReport';
+  readonly additionalInfo?: Maybe<Scalars['String']>;
+  readonly createdAt: Scalars['DateTime'];
+  readonly reason: Scalars['String'];
+  readonly reportedProfile: Profile;
+  readonly reportedPublication?: Maybe<PrimaryPublication>;
+  readonly reporter: Profile;
+  readonly subreason: Scalars['String'];
+};
+
+export type ModReportsRequest = {
+  readonly cursor?: InputMaybe<Scalars['Cursor']>;
+  readonly forProfile?: InputMaybe<Scalars['ProfileId']>;
+  readonly forPublication?: InputMaybe<Scalars['PublicationId']>;
+  readonly limit?: InputMaybe<LimitType>;
+};
+
 export type ModuleCurrencyApproval = {
   readonly followModule?: InputMaybe<FollowModuleType>;
   readonly openActionModule?: InputMaybe<OpenActionModuleType>;
@@ -2210,6 +2559,28 @@ export type ModuleInfo = {
   readonly name: Scalars['String'];
   readonly type: Scalars['String'];
 };
+
+export type ModuleMetadata = {
+  readonly __typename: 'ModuleMetadata';
+  readonly attributes: ReadonlyArray<MetadataAttribute>;
+  readonly authors: ReadonlyArray<Scalars['String']>;
+  readonly description: Scalars['String'];
+  readonly initializeCalldataABI: Scalars['ABIJson'];
+  readonly initializeResultDataABI?: Maybe<Scalars['ABIJson']>;
+  readonly name: Scalars['String'];
+  readonly processCalldataABI: Scalars['ABIJson'];
+  readonly title: Scalars['String'];
+};
+
+export type ModuleMetadataRequest = {
+  readonly implementation: Scalars['EvmAddress'];
+};
+
+export enum ModuleType {
+  Follow = 'FOLLOW',
+  OpenAction = 'OPEN_ACTION',
+  Reference = 'REFERENCE',
+}
 
 export type MomokaCommentRequest = {
   readonly commentOn: Scalars['PublicationId'];
@@ -2340,6 +2711,7 @@ export enum MomokaValidatorError {
   PotentialReorg = 'POTENTIAL_REORG',
   PublicationNonceInvalid = 'PUBLICATION_NONCE_INVALID',
   PublicationNoneDa = 'PUBLICATION_NONE_DA',
+  PublicationNotRecognized = 'PUBLICATION_NOT_RECOGNIZED',
   PublicationNoPointer = 'PUBLICATION_NO_POINTER',
   PublicationSignerNotAllowed = 'PUBLICATION_SIGNER_NOT_ALLOWED',
   SimulationFailed = 'SIMULATION_FAILED',
@@ -2433,23 +2805,33 @@ export type Mutation = {
   readonly deleteNftGallery?: Maybe<Scalars['Void']>;
   readonly dismissRecommendedProfiles?: Maybe<Scalars['Void']>;
   readonly follow: LensProfileManagerRelayResult;
+  /** Hides a comment that exists under a publication made by the author. If already hidden, does nothing. */
+  readonly hideComment?: Maybe<Scalars['Void']>;
+  /** Hide a managed profile from your managed profiles list. */
+  readonly hideManagedProfile?: Maybe<Scalars['Void']>;
   readonly hidePublication?: Maybe<Scalars['Void']>;
   readonly idKitPhoneVerifyWebhook: IdKitPhoneVerifyWebhookResultStatusType;
   readonly internalAddCuratedTag?: Maybe<Scalars['Void']>;
   readonly internalAddInvites?: Maybe<Scalars['Void']>;
   readonly internalAllowDomain?: Maybe<Scalars['Void']>;
+  readonly internalBoostProfile: Scalars['Int'];
   readonly internalClaim?: Maybe<Scalars['Void']>;
   readonly internalCuratedUpdate?: Maybe<Scalars['Void']>;
+  readonly internalMintHandleAndProfile: Scalars['TxHash'];
   readonly internalNftIndex?: Maybe<Scalars['Void']>;
   readonly internalNftVerify?: Maybe<Scalars['Void']>;
   readonly internalRemoveCuratedTag?: Maybe<Scalars['Void']>;
+  readonly internalUpdateModuleOptions?: Maybe<Scalars['Void']>;
   readonly internalUpdateProfileStatus?: Maybe<Scalars['Void']>;
   readonly invite?: Maybe<Scalars['Void']>;
   readonly legacyCollect: LensProfileManagerRelayResult;
   readonly linkHandleToProfile: LensProfileManagerRelayResult;
   readonly mirrorOnMomoka: RelayMomokaResult;
   readonly mirrorOnchain: LensProfileManagerRelayResult;
+  readonly modDisputeReport?: Maybe<Scalars['Void']>;
   readonly nftOwnershipChallenge: NftOwnershipChallengeResult;
+  readonly peerToPeerRecommend?: Maybe<Scalars['Void']>;
+  readonly peerToPeerUnrecommend?: Maybe<Scalars['Void']>;
   readonly postOnMomoka: RelayMomokaResult;
   readonly postOnchain: LensProfileManagerRelayResult;
   readonly quoteOnMomoka: RelayMomokaResult;
@@ -2459,14 +2841,20 @@ export type Mutation = {
   readonly removeProfileInterests?: Maybe<Scalars['Void']>;
   readonly removePublicationBookmark?: Maybe<Scalars['Void']>;
   readonly removeReaction?: Maybe<Scalars['Void']>;
+  readonly reportProfile?: Maybe<Scalars['Void']>;
   readonly reportPublication?: Maybe<Scalars['Void']>;
   readonly revokeAuthentication?: Maybe<Scalars['Void']>;
   readonly setDefaultProfile?: Maybe<Scalars['Void']>;
   readonly setFollowModule: LensProfileManagerRelayResult;
   readonly setProfileMetadata: LensProfileManagerRelayResult;
+  readonly signFrameAction: FrameLensManagerSignatureResult;
   readonly unblock: LensProfileManagerRelayResult;
   readonly undoPublicationNotInterested?: Maybe<Scalars['Void']>;
   readonly unfollow: LensProfileManagerRelayResult;
+  /** Unhides a hidden comment under a publication made by the author. If not hidden, does nothing. */
+  readonly unhideComment?: Maybe<Scalars['Void']>;
+  /** Unhide an already hidden managed profile from your managed profiles list. */
+  readonly unhideManagedProfile?: Maybe<Scalars['Void']>;
   readonly unlinkHandleFromProfile: LensProfileManagerRelayResult;
   readonly updateNftGalleryInfo?: Maybe<Scalars['Void']>;
   readonly updateNftGalleryItems?: Maybe<Scalars['Void']>;
@@ -2637,6 +3025,14 @@ export type MutationFollowArgs = {
   request: FollowLensManagerRequest;
 };
 
+export type MutationHideCommentArgs = {
+  request: HideCommentRequest;
+};
+
+export type MutationHideManagedProfileArgs = {
+  request: HideManagedProfileRequest;
+};
+
 export type MutationHidePublicationArgs = {
   request: HidePublicationRequest;
 };
@@ -2657,12 +3053,20 @@ export type MutationInternalAllowDomainArgs = {
   request: InternalAllowDomainRequest;
 };
 
+export type MutationInternalBoostProfileArgs = {
+  request: InternalBoostProfileRequest;
+};
+
 export type MutationInternalClaimArgs = {
   request: InternalClaimRequest;
 };
 
 export type MutationInternalCuratedUpdateArgs = {
   request: InternalCuratedUpdateRequest;
+};
+
+export type MutationInternalMintHandleAndProfileArgs = {
+  request: InternalMintHandleAndProfileRequest;
 };
 
 export type MutationInternalNftIndexArgs = {
@@ -2675,6 +3079,10 @@ export type MutationInternalNftVerifyArgs = {
 
 export type MutationInternalRemoveCuratedTagArgs = {
   request: InternalRemoveCuratedTagRequest;
+};
+
+export type MutationInternalUpdateModuleOptionsArgs = {
+  request: InternalUpdateModuleOptionsRequest;
 };
 
 export type MutationInternalUpdateProfileStatusArgs = {
@@ -2701,8 +3109,20 @@ export type MutationMirrorOnchainArgs = {
   request: OnchainMirrorRequest;
 };
 
+export type MutationModDisputeReportArgs = {
+  request: ModDisputeReportRequest;
+};
+
 export type MutationNftOwnershipChallengeArgs = {
   request: NftOwnershipChallengeRequest;
+};
+
+export type MutationPeerToPeerRecommendArgs = {
+  request: PeerToPeerRecommendRequest;
+};
+
+export type MutationPeerToPeerUnrecommendArgs = {
+  request: PeerToPeerRecommendRequest;
 };
 
 export type MutationPostOnMomokaArgs = {
@@ -2741,6 +3161,10 @@ export type MutationRemoveReactionArgs = {
   request: ReactionRequest;
 };
 
+export type MutationReportProfileArgs = {
+  request: ReportProfileRequest;
+};
+
 export type MutationReportPublicationArgs = {
   request: ReportPublicationRequest;
 };
@@ -2761,6 +3185,10 @@ export type MutationSetProfileMetadataArgs = {
   request: OnchainSetProfileMetadataRequest;
 };
 
+export type MutationSignFrameActionArgs = {
+  request: FrameLensManagerEip712Request;
+};
+
 export type MutationUnblockArgs = {
   request: UnblockRequest;
 };
@@ -2771,6 +3199,14 @@ export type MutationUndoPublicationNotInterestedArgs = {
 
 export type MutationUnfollowArgs = {
   request: UnfollowRequest;
+};
+
+export type MutationUnhideCommentArgs = {
+  request: UnhideCommentRequest;
+};
+
+export type MutationUnhideManagedProfileArgs = {
+  request: UnhideManagedProfileRequest;
 };
 
 export type MutationUnlinkHandleFromProfileArgs = {
@@ -2797,6 +3233,8 @@ export type MutualFollowersRequest = {
   readonly cursor?: InputMaybe<Scalars['Cursor']>;
   readonly limit?: InputMaybe<LimitType>;
   readonly observer: Scalars['ProfileId'];
+  /** The order by which to sort the profiles */
+  readonly orderBy?: InputMaybe<ProfilesOrderBy>;
   readonly viewing: Scalars['ProfileId'];
 };
 
@@ -2836,10 +3274,10 @@ export type Nfi = {
 export type Nft = {
   readonly __typename: 'Nft';
   readonly collection: NftCollection;
-  readonly contentURI: Scalars['URI'];
+  readonly contentURI?: Maybe<Scalars['URI']>;
   readonly contract: NetworkAddress;
   readonly contractType: NftContractType;
-  readonly metadata: NftMetadata;
+  readonly metadata?: Maybe<NftMetadata>;
   readonly owner: Owner;
   readonly tokenId: Scalars['TokenId'];
   readonly totalSupply: Scalars['String'];
@@ -3032,6 +3470,8 @@ export type Notification =
 
 export type NotificationRequest = {
   readonly cursor?: InputMaybe<Scalars['Cursor']>;
+  /** The order by which to sort the profiles on follows, reactions, actions and mirrors */
+  readonly orderBy?: InputMaybe<ProfilesOrderBy>;
   readonly where?: InputMaybe<NotificationWhere>;
 };
 
@@ -3050,6 +3490,7 @@ export type NotificationWhere = {
   readonly highSignalFilter?: InputMaybe<Scalars['Boolean']>;
   readonly notificationTypes?: InputMaybe<ReadonlyArray<NotificationType>>;
   readonly publishedOn?: InputMaybe<ReadonlyArray<Scalars['AppId']>>;
+  readonly timeBasedAggregation?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type OnchainCommentRequest = {
@@ -3118,6 +3559,7 @@ export type OpenActionModule =
   | LegacySimpleCollectModuleSettings
   | LegacyTimedFeeCollectModuleSettings
   | MultirecipientFeeCollectOpenActionSettings
+  | ProtocolSharedRevenueCollectOpenActionSettings
   | SimpleCollectOpenActionSettings
   | UnknownOpenActionModuleSettings;
 
@@ -3138,9 +3580,16 @@ export enum OpenActionModuleType {
   LegacySimpleCollectModule = 'LegacySimpleCollectModule',
   LegacyTimedFeeCollectModule = 'LegacyTimedFeeCollectModule',
   MultirecipientFeeCollectOpenActionModule = 'MultirecipientFeeCollectOpenActionModule',
+  ProtocolSharedRevenueCollectOpenActionModule = 'ProtocolSharedRevenueCollectOpenActionModule',
   SimpleCollectOpenActionModule = 'SimpleCollectOpenActionModule',
   UnknownOpenActionModule = 'UnknownOpenActionModule',
 }
+
+export type OpenActionPaidAction = {
+  readonly __typename: 'OpenActionPaidAction';
+  readonly actedOn: PrimaryPublication;
+  readonly latestActed: ReadonlyArray<LatestActed>;
+};
 
 export type OpenActionProfileActed = {
   readonly __typename: 'OpenActionProfileActed';
@@ -3187,6 +3636,12 @@ export type PaginatedCurrenciesResult = {
   readonly pageInfo: PaginatedResultInfo;
 };
 
+export type PaginatedDisputedReports = {
+  readonly __typename: 'PaginatedDisputedReports';
+  readonly items: ReadonlyArray<DisputedReport>;
+  readonly pageInfo: PaginatedResultInfo;
+};
+
 export type PaginatedExplorePublicationResult = {
   readonly __typename: 'PaginatedExplorePublicationResult';
   readonly items: ReadonlyArray<ExplorePublication>;
@@ -3208,6 +3663,24 @@ export type PaginatedFeedResult = {
 export type PaginatedHandlesResult = {
   readonly __typename: 'PaginatedHandlesResult';
   readonly items: ReadonlyArray<HandleInfo>;
+  readonly pageInfo: PaginatedResultInfo;
+};
+
+export type PaginatedModExplorePublicationResult = {
+  readonly __typename: 'PaginatedModExplorePublicationResult';
+  readonly items: ReadonlyArray<PrimaryPublication>;
+  readonly pageInfo: PaginatedResultInfo;
+};
+
+export type PaginatedModFollowersResult = {
+  readonly __typename: 'PaginatedModFollowersResult';
+  readonly items: ReadonlyArray<ModFollowerResult>;
+  readonly pageInfo: PaginatedResultInfo;
+};
+
+export type PaginatedModReports = {
+  readonly __typename: 'PaginatedModReports';
+  readonly items: ReadonlyArray<ModReport>;
   readonly pageInfo: PaginatedResultInfo;
 };
 
@@ -3301,6 +3774,11 @@ export type PaginatedPublicationsTagsResult = {
   readonly pageInfo: PaginatedResultInfo;
 };
 
+export type PaginatedRequest = {
+  readonly cursor?: InputMaybe<Scalars['Cursor']>;
+  readonly limit?: InputMaybe<LimitType>;
+};
+
 /** The paginated result info */
 export type PaginatedResultInfo = {
   readonly __typename: 'PaginatedResultInfo';
@@ -3326,6 +3804,13 @@ export type PaginatedWhoReactedResult = {
   readonly __typename: 'PaginatedWhoReactedResult';
   readonly items: ReadonlyArray<ProfileWhoReactedResult>;
   readonly pageInfo: PaginatedResultInfo;
+};
+
+export type PaidAction = FollowPaidAction | OpenActionPaidAction;
+
+export type PeerToPeerRecommendRequest = {
+  /** The profile to recommend */
+  readonly profileId: Scalars['ProfileId'];
 };
 
 export type PhysicalAddress = {
@@ -3412,7 +3897,7 @@ export type PopularNftCollectionsRequest = {
   /** Include only verified collections */
   readonly onlyVerified?: InputMaybe<Scalars['Boolean']>;
   /** The ordering of Nft collection owners. Defaults to Total Lens Profile owners */
-  readonly orderBy?: InputMaybe<PopularNftCollectionsOrder>;
+  readonly orderBy?: PopularNftCollectionsOrder;
 };
 
 export type Post = {
@@ -3471,6 +3956,8 @@ export type Profile = {
   readonly operations: ProfileOperations;
   /** Who owns the profile */
   readonly ownedBy: NetworkAddress;
+  /** If the profile has been recommended by the authenticated user */
+  readonly peerToPeerRecommendedByMe: Scalars['Boolean'];
   /** If the profile has got signless enabled */
   readonly signless: Scalars['Boolean'];
   /** If lens API will sponsor this persons for gasless experience, note they can have signless on but sponsor false which means it be rejected */
@@ -3523,6 +4010,11 @@ export enum ProfileActionHistoryType {
   Unfollow = 'UNFOLLOW',
   UnlinkHandle = 'UNLINK_HANDLE',
 }
+
+export type ProfileFraudReasonInput = {
+  readonly reason: ProfileReportingReason;
+  readonly subreason: ProfileReportingFraudSubreason;
+};
 
 export type ProfileGuardianResult = {
   readonly __typename: 'ProfileGuardianResult';
@@ -3699,6 +4191,26 @@ export type ProfileRecommendationsRequest = {
   readonly shuffle?: InputMaybe<Scalars['Boolean']>;
 };
 
+export enum ProfileReportingFraudSubreason {
+  Impersonation = 'IMPERSONATION',
+  SomethingElse = 'SOMETHING_ELSE',
+}
+
+export enum ProfileReportingReason {
+  Fraud = 'FRAUD',
+  Spam = 'SPAM',
+}
+
+export type ProfileReportingReasonInput = {
+  readonly fraudReason?: InputMaybe<ProfileFraudReasonInput>;
+  readonly spamReason?: InputMaybe<ProfileSpamReasonInput>;
+};
+
+export enum ProfileReportingSpamSubreason {
+  Repetitive = 'REPETITIVE',
+  SomethingElse = 'SOMETHING_ELSE',
+}
+
 export type ProfileRequest = {
   /** The handle for profile you want to fetch - namespace/localname */
   readonly forHandle?: InputMaybe<Scalars['Handle']>;
@@ -3709,6 +4221,8 @@ export type ProfileRequest = {
 export type ProfileSearchRequest = {
   readonly cursor?: InputMaybe<Scalars['Cursor']>;
   readonly limit?: InputMaybe<LimitType>;
+  /** The order by which to sort the profiles */
+  readonly orderBy?: InputMaybe<ProfilesOrderBy>;
   /** Query for the profile search */
   readonly query: Scalars['String'];
   /** Filtering criteria for profile search */
@@ -3720,6 +4234,11 @@ export type ProfileSearchWhere = {
   readonly customFilters?: InputMaybe<ReadonlyArray<CustomFiltersType>>;
 };
 
+export type ProfileSpamReasonInput = {
+  readonly reason: ProfileReportingReason;
+  readonly subreason: ProfileReportingSpamSubreason;
+};
+
 /** The Profile Stats */
 export type ProfileStats = {
   readonly __typename: 'ProfileStats';
@@ -3728,6 +4247,8 @@ export type ProfileStats = {
   readonly followers: Scalars['Int'];
   readonly following: Scalars['Int'];
   readonly id: Scalars['ProfileId'];
+  /** The profile classifier score of this profile relative to others on Lens. It is a % out of 100. */
+  readonly lensClassifierScore?: Maybe<Scalars['Float']>;
   readonly mirrors: Scalars['Int'];
   readonly posts: Scalars['Int'];
   readonly publications: Scalars['Int'];
@@ -3756,6 +4277,7 @@ export type ProfileStatsReactionsArgs = {
 export type ProfileStatsArg = {
   readonly customFilters?: InputMaybe<ReadonlyArray<CustomFiltersType>>;
   readonly forApps?: InputMaybe<ReadonlyArray<Scalars['AppId']>>;
+  readonly hiddenComments?: InputMaybe<HiddenCommentsType>;
 };
 
 export type ProfileStatsCountOpenActionArgs = {
@@ -3776,6 +4298,7 @@ export type ProfilesManagedRequest = {
   readonly cursor?: InputMaybe<Scalars['Cursor']>;
   /** The Ethereum address for which to retrieve managed profiles */
   readonly for: Scalars['EvmAddress'];
+  readonly hiddenFilter?: InputMaybe<ManagedProfileVisibility>;
   readonly includeOwned?: InputMaybe<Scalars['Boolean']>;
   readonly limit?: InputMaybe<LimitType>;
 };
@@ -3786,9 +4309,16 @@ export type ProfilesManagedResult = {
   readonly isLensManager: Scalars['Boolean'];
 };
 
+export enum ProfilesOrderBy {
+  Default = 'DEFAULT',
+  ProfileClassifier = 'PROFILE_CLASSIFIER',
+}
+
 export type ProfilesRequest = {
   readonly cursor?: InputMaybe<Scalars['Cursor']>;
   readonly limit?: InputMaybe<LimitType>;
+  /** The order by which to sort the profiles */
+  readonly orderBy?: InputMaybe<ProfilesOrderBy>;
   /** The where clause to use to filter on what you are looking for */
   readonly where: ProfilesRequestWhere;
 };
@@ -3808,6 +4338,40 @@ export type ProfilesRequestWhere = {
   readonly whoQuotedPublication?: InputMaybe<Scalars['PublicationId']>;
 };
 
+export type ProtocolSharedRevenueCollectModuleInput = {
+  readonly amount?: InputMaybe<AmountInput>;
+  readonly collectLimit?: InputMaybe<Scalars['String']>;
+  /** The wallet of a client app to share revenues alongside the recipient and the protocol. Optional. */
+  readonly creatorClient?: InputMaybe<Scalars['EvmAddress']>;
+  readonly currentCollects?: Scalars['Float'];
+  readonly endsAt?: InputMaybe<Scalars['DateTime']>;
+  readonly followerOnly: Scalars['Boolean'];
+  readonly recipient?: InputMaybe<Scalars['EvmAddress']>;
+  readonly referralFee?: InputMaybe<Scalars['Float']>;
+};
+
+export type ProtocolSharedRevenueCollectOpenActionSettings = {
+  readonly __typename: 'ProtocolSharedRevenueCollectOpenActionSettings';
+  /** The collect module amount info. `Amount.value = 0` in case of free collects. */
+  readonly amount: Amount;
+  /** The maximum number of collects for this publication. */
+  readonly collectLimit?: Maybe<Scalars['String']>;
+  /** The collect nft address - only deployed on first collect */
+  readonly collectNft?: Maybe<Scalars['EvmAddress']>;
+  readonly contract: NetworkAddress;
+  /** If supplied, this is the app that will receive a split of the shared revenue together with the recipient as well as the protocol */
+  readonly creatorClient?: Maybe<Scalars['EvmAddress']>;
+  /** The end timestamp after which collecting is impossible. */
+  readonly endsAt?: Maybe<Scalars['DateTime']>;
+  /** True if only followers of publisher may collect the post. */
+  readonly followerOnly: Scalars['Boolean'];
+  /** The collect module recipient address */
+  readonly recipient: Scalars['EvmAddress'];
+  /** The collect module referral fee */
+  readonly referralFee: Scalars['Float'];
+  readonly type: OpenActionModuleType;
+};
+
 export type PublicationBookmarkRequest = {
   readonly on: Scalars['PublicationId'];
 };
@@ -3823,6 +4387,8 @@ export type PublicationBookmarksWhere = {
 };
 
 export type PublicationCommentOn = {
+  /** You can use this enum to show, hide or show only hidden comments */
+  readonly hiddenComments?: InputMaybe<HiddenCommentsType>;
   readonly id: Scalars['PublicationId'];
   readonly ranking?: InputMaybe<PublicationCommentOnRanking>;
 };
@@ -3917,6 +4483,7 @@ export enum PublicationMetadataLicenseType {
 export type PublicationMetadataLitEncryption = {
   readonly __typename: 'PublicationMetadataLitEncryption';
   readonly accessCondition: RootCondition;
+  readonly accessControlContract: NetworkAddress;
   readonly encryptedPaths: ReadonlyArray<Scalars['EncryptedPath']>;
   readonly encryptionKey: Scalars['ContentEncryptionKey'];
 };
@@ -4050,6 +4617,7 @@ export enum PublicationReportingIllegalSubreason {
   AnimalAbuse = 'ANIMAL_ABUSE',
   DirectThreat = 'DIRECT_THREAT',
   HumanAbuse = 'HUMAN_ABUSE',
+  Plagiarism = 'PLAGIARISM',
   ThreatIndividual = 'THREAT_INDIVIDUAL',
   Violence = 'VIOLENCE',
 }
@@ -4099,6 +4667,7 @@ export type PublicationSearchWhere = {
   readonly customFilters?: InputMaybe<ReadonlyArray<CustomFiltersType>>;
   readonly metadata?: InputMaybe<PublicationMetadataFilters>;
   readonly publicationTypes?: InputMaybe<ReadonlyArray<SearchPublicationType>>;
+  readonly withOpenActions?: InputMaybe<ReadonlyArray<OpenActionFilter>>;
 };
 
 export type PublicationStats = {
@@ -4126,6 +4695,7 @@ export type PublicationStatsCountOpenActionArgs = {
 
 export type PublicationStatsInput = {
   readonly customFilters?: InputMaybe<ReadonlyArray<CustomFiltersType>>;
+  readonly hiddenComments?: InputMaybe<HiddenCommentsType>;
   /** Filter the returned stats on apps and 1 of the following filters: tags, contentWarning, mainContentFocus, locale */
   readonly metadata?: InputMaybe<PublicationMetadataFilters>;
 };
@@ -4180,16 +4750,21 @@ export type PublicationsWhere = {
 export type Query = {
   readonly __typename: 'Query';
   readonly approvedAuthentications: PaginatedApprovedAuthenticationResult;
+  /** note here if your using a wallet JWT token it will get the allowance of the public proxy contract if its supported if not throw as profiles act not wallets */
   readonly approvedModuleAllowanceAmount: ReadonlyArray<ApprovedAllowanceAmountResult>;
   readonly canClaim: ReadonlyArray<CanClaimResult>;
   readonly challenge: AuthChallengeResult;
+  readonly claimTokens: LensProfileManagerRelayResult;
   readonly claimableProfiles: ClaimableProfilesResult;
   readonly claimableStatus: ClaimProfileStatusType;
+  readonly claimableTokens: ClaimableTokensResult;
+  readonly createFrameTypedData: CreateFrameEip712TypedData;
   /** Get all enabled currencies */
   readonly currencies: PaginatedCurrenciesResult;
   readonly currentSession: ApprovedAuthentication;
   /** Get the default profile for a given EvmAddress. If no default is explicitly set, you will get the oldest profile owned by the address. */
   readonly defaultProfile?: Maybe<Profile>;
+  readonly didReactOnPublication: ReadonlyArray<DidReactOnPublicationResult>;
   readonly exploreProfiles: PaginatedProfileResult;
   readonly explorePublications: PaginatedExplorePublicationResult;
   readonly feed: PaginatedFeedResult;
@@ -4198,18 +4773,29 @@ export type Query = {
   readonly followStatusBulk: ReadonlyArray<FollowStatusBulkResult>;
   readonly followers: PaginatedProfileResult;
   readonly following: PaginatedProfileResult;
+  readonly generateLensAPIRelayAddress: Scalars['EvmAddress'];
+  /** note here if your using a wallet JWT token it will approve to the public proxy contract if its supported if not throw as profiles act not wallets */
   readonly generateModuleCurrencyApprovalData: GenerateModuleCurrencyApprovalResult;
+  readonly handleToAddress?: Maybe<Scalars['EvmAddress']>;
   readonly internalAllowedDomains: ReadonlyArray<Scalars['URI']>;
+  readonly internalBoostScore?: Maybe<Scalars['Int']>;
   readonly internalClaimStatus?: Maybe<Scalars['Void']>;
   readonly internalCuratedHandles: ReadonlyArray<Scalars['String']>;
   readonly internalCuratedTags: ReadonlyArray<Scalars['String']>;
   readonly internalInvites: Scalars['Int'];
+  readonly internalPaymentHandleInfo?: Maybe<IphResult>;
   readonly internalProfileStatus: PrfResult;
   readonly invitedProfiles: ReadonlyArray<InvitedResult>;
   readonly lastLoggedInProfile?: Maybe<Profile>;
+  readonly latestPaidActions: LatestPaidActionsResult;
   readonly lensAPIOwnedEOAs: ReadonlyArray<Scalars['EvmAddress']>;
-  readonly lensProtocolVersion: LensProtocolVersion;
+  readonly lensProtocolVersion: Scalars['String'];
   readonly lensTransactionStatus?: Maybe<LensTransactionResult>;
+  readonly modDisputedReports: PaginatedDisputedReports;
+  readonly modExplorePublications: PaginatedModExplorePublicationResult;
+  readonly modFollowers: PaginatedModFollowersResult;
+  readonly modLatestReports: PaginatedModReports;
+  readonly moduleMetadata?: Maybe<GetModuleMetadataResult>;
   readonly momokaSubmitters: MomokaSubmittersResult;
   readonly momokaSummary: MomokaSummaryResult;
   readonly momokaTransaction?: Maybe<MomokaTransaction>;
@@ -4255,9 +4841,11 @@ export type Query = {
   readonly supportedOpenActionModules: PaginatedSupportedModules;
   readonly supportedReferenceModules: PaginatedSupportedModules;
   readonly txIdToTxHash?: Maybe<Scalars['TxHash']>;
+  readonly userRateLimit: UserCurrentRateLimitResult;
   readonly userSigNonces: UserSigNonces;
   readonly validatePublicationMetadata: PublicationValidateMetadataResult;
   readonly verify: Scalars['Boolean'];
+  readonly verifyFrameSignature: FrameVerifySignatureResult;
   readonly whoActedOnPublication: PaginatedProfileResult;
   /** The list of profiles that the logged in profile has blocked */
   readonly whoHaveBlocked: PaginatedProfileResult;
@@ -4280,12 +4868,24 @@ export type QueryChallengeArgs = {
   request: ChallengeRequest;
 };
 
+export type QueryClaimTokensArgs = {
+  request: ClaimTokensRequest;
+};
+
+export type QueryCreateFrameTypedDataArgs = {
+  request: FrameEip712Request;
+};
+
 export type QueryCurrenciesArgs = {
   request: PaginatedOffsetRequest;
 };
 
 export type QueryDefaultProfileArgs = {
   request: DefaultProfileRequest;
+};
+
+export type QueryDidReactOnPublicationArgs = {
+  request: DidReactOnPublicationRequest;
 };
 
 export type QueryExploreProfilesArgs = {
@@ -4324,8 +4924,16 @@ export type QueryGenerateModuleCurrencyApprovalDataArgs = {
   request: GenerateModuleCurrencyApprovalDataRequest;
 };
 
+export type QueryHandleToAddressArgs = {
+  request: HandleToAddressRequest;
+};
+
 export type QueryInternalAllowedDomainsArgs = {
   request: InternalAllowedDomainsRequest;
+};
+
+export type QueryInternalBoostScoreArgs = {
+  request: InternalBoostScoreRequest;
 };
 
 export type QueryInternalClaimStatusArgs = {
@@ -4344,6 +4952,10 @@ export type QueryInternalInvitesArgs = {
   request: InternalInvitesRequest;
 };
 
+export type QueryInternalPaymentHandleInfoArgs = {
+  request: InternalPaymentHandleInfoRequest;
+};
+
 export type QueryInternalProfileStatusArgs = {
   request: InternalProfileStatusRequest;
 };
@@ -4352,8 +4964,34 @@ export type QueryLastLoggedInProfileArgs = {
   request: LastLoggedInProfileRequest;
 };
 
+export type QueryLatestPaidActionsArgs = {
+  filter?: InputMaybe<LatestPaidActionsFilter>;
+  request?: InputMaybe<PaginatedRequest>;
+  where?: InputMaybe<LatestPaidActionsWhere>;
+};
+
 export type QueryLensTransactionStatusArgs = {
   request: LensTransactionStatusRequest;
+};
+
+export type QueryModDisputedReportsArgs = {
+  request: PaginatedRequest;
+};
+
+export type QueryModExplorePublicationsArgs = {
+  request: ModExplorePublicationRequest;
+};
+
+export type QueryModFollowersArgs = {
+  request: PaginatedRequest;
+};
+
+export type QueryModLatestReportsArgs = {
+  request: ModReportsRequest;
+};
+
+export type QueryModuleMetadataArgs = {
+  request: ModuleMetadataRequest;
 };
 
 export type QueryMomokaTransactionArgs = {
@@ -4496,12 +5134,20 @@ export type QueryTxIdToTxHashArgs = {
   for: Scalars['TxId'];
 };
 
+export type QueryUserRateLimitArgs = {
+  request: UserCurrentRateLimitRequest;
+};
+
 export type QueryValidatePublicationMetadataArgs = {
   request: ValidatePublicationMetadataRequest;
 };
 
 export type QueryVerifyArgs = {
   request: VerifyRequest;
+};
+
+export type QueryVerifyFrameSignatureArgs = {
+  request: FrameVerifySignature;
 };
 
 export type QueryWhoActedOnPublicationArgs = {
@@ -4571,6 +5217,8 @@ export type ReactionNotification = {
 };
 
 export type ReactionRequest = {
+  /** The ID of the app that the reaction was made from. */
+  readonly app?: InputMaybe<Scalars['AppId']>;
   readonly for: Scalars['PublicationId'];
   readonly reaction: PublicationReactionType;
 };
@@ -4659,6 +5307,17 @@ export type RelayResult = RelayError | RelaySuccess;
 
 export enum RelayRoleKey {
   CreateProfile = 'CREATE_PROFILE',
+  CreateProfileWithHandleUsingCredits_1 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_1',
+  CreateProfileWithHandleUsingCredits_2 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_2',
+  CreateProfileWithHandleUsingCredits_3 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_3',
+  CreateProfileWithHandleUsingCredits_4 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_4',
+  CreateProfileWithHandleUsingCredits_5 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_5',
+  CreateProfileWithHandleUsingCredits_6 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_6',
+  CreateProfileWithHandleUsingCredits_7 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_7',
+  CreateProfileWithHandleUsingCredits_8 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_8',
+  CreateProfileWithHandleUsingCredits_9 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_9',
+  CreateProfileWithHandleUsingCredits_10 = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_10',
+  CreateProfileWithHandleUsingCreditsUnderCharLimit = 'CREATE_PROFILE_WITH_HANDLE_USING_CREDITS_UNDER_CHAR_LIMIT',
   LensManager_1 = 'LENS_MANAGER_1',
   LensManager_2 = 'LENS_MANAGER_2',
   LensManager_3 = 'LENS_MANAGER_3',
@@ -4669,6 +5328,26 @@ export enum RelayRoleKey {
   LensManager_8 = 'LENS_MANAGER_8',
   LensManager_9 = 'LENS_MANAGER_9',
   LensManager_10 = 'LENS_MANAGER_10',
+  LensManager_11 = 'LENS_MANAGER_11',
+  LensManager_12 = 'LENS_MANAGER_12',
+  LensManager_13 = 'LENS_MANAGER_13',
+  LensManager_14 = 'LENS_MANAGER_14',
+  LensManager_15 = 'LENS_MANAGER_15',
+  LensManager_16 = 'LENS_MANAGER_16',
+  LensManager_17 = 'LENS_MANAGER_17',
+  LensManager_18 = 'LENS_MANAGER_18',
+  LensManager_19 = 'LENS_MANAGER_19',
+  LensManager_20 = 'LENS_MANAGER_20',
+  LensManager_21 = 'LENS_MANAGER_21',
+  LensManager_22 = 'LENS_MANAGER_22',
+  LensManager_23 = 'LENS_MANAGER_23',
+  LensManager_24 = 'LENS_MANAGER_24',
+  LensManager_25 = 'LENS_MANAGER_25',
+  LensManager_26 = 'LENS_MANAGER_26',
+  LensManager_27 = 'LENS_MANAGER_27',
+  LensManager_28 = 'LENS_MANAGER_28',
+  LensManager_29 = 'LENS_MANAGER_29',
+  LensManager_30 = 'LENS_MANAGER_30',
   WithSig_1 = 'WITH_SIG_1',
   WithSig_2 = 'WITH_SIG_2',
   WithSig_3 = 'WITH_SIG_3',
@@ -4679,12 +5358,28 @@ export enum RelayRoleKey {
   WithSig_8 = 'WITH_SIG_8',
   WithSig_9 = 'WITH_SIG_9',
   WithSig_10 = 'WITH_SIG_10',
+  WithSig_11 = 'WITH_SIG_11',
+  WithSig_12 = 'WITH_SIG_12',
+  WithSig_13 = 'WITH_SIG_13',
+  WithSig_14 = 'WITH_SIG_14',
+  WithSig_15 = 'WITH_SIG_15',
+  WithSig_16 = 'WITH_SIG_16',
+  WithSig_17 = 'WITH_SIG_17',
+  WithSig_18 = 'WITH_SIG_18',
+  WithSig_19 = 'WITH_SIG_19',
+  WithSig_20 = 'WITH_SIG_20',
 }
 
 export type RelaySuccess = {
   readonly __typename: 'RelaySuccess';
   readonly txHash?: Maybe<Scalars['TxHash']>;
   readonly txId: Scalars['TxId'];
+};
+
+export type ReportProfileRequest = {
+  readonly additionalComments?: InputMaybe<Scalars['String']>;
+  readonly for: Scalars['ProfileId'];
+  readonly reason: ProfileReportingReasonInput;
 };
 
 export type ReportPublicationRequest = {
@@ -4898,6 +5593,7 @@ export type SupportedModulesRequest = {
   readonly cursor?: InputMaybe<Scalars['Cursor']>;
   readonly includeUnknown?: InputMaybe<Scalars['Boolean']>;
   readonly limit?: InputMaybe<LimitType>;
+  readonly onlyVerified?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type SybilDotOrgIdentity = {
@@ -5018,6 +5714,16 @@ export type UnfollowRequest = {
   readonly unfollow: ReadonlyArray<Scalars['ProfileId']>;
 };
 
+export type UnhideCommentRequest = {
+  /** The comment to unhide. It has to be under a publication made by the user making the request. If already visible, nothing will happen. */
+  readonly for: Scalars['PublicationId'];
+};
+
+export type UnhideManagedProfileRequest = {
+  /** The profile to unhide */
+  readonly profileId: Scalars['ProfileId'];
+};
+
 export type UnknownFollowModuleInput = {
   readonly address: Scalars['EvmAddress'];
   readonly data: Scalars['BlockchainData'];
@@ -5031,9 +5737,22 @@ export type UnknownFollowModuleRedeemInput = {
 export type UnknownFollowModuleSettings = {
   readonly __typename: 'UnknownFollowModuleSettings';
   readonly contract: NetworkAddress;
-  /** The data used to setup the module which you can decode with your known ABI  */
+  /**
+   * The data used to setup the module which you can decode with your known ABI
+   * @deprecated Use initializeResultData instead
+   */
   readonly followModuleReturnData?: Maybe<Scalars['BlockchainData']>;
+  /** The data used to setup the module */
+  readonly initializeCalldata?: Maybe<Scalars['BlockchainData']>;
+  /** The data returned from the init module */
+  readonly initializeResultData?: Maybe<Scalars['BlockchainData']>;
+  /** True if the module can be signedless and use lens manager without a signature */
+  readonly signlessApproved: Scalars['Boolean'];
+  /** True if the module can be sponsored through gasless so the user does not need to pay for gas */
+  readonly sponsoredApproved: Scalars['Boolean'];
   readonly type: FollowModuleType;
+  /** True if the module is deemed as safe */
+  readonly verified: Scalars['Boolean'];
 };
 
 export type UnknownOpenActionActRedeemInput = {
@@ -5051,9 +5770,22 @@ export type UnknownOpenActionModuleSettings = {
   /** The collect nft address - only deployed on first collect and if its a collectable open action */
   readonly collectNft?: Maybe<Scalars['EvmAddress']>;
   readonly contract: NetworkAddress;
-  /** The data used to setup the module which you can decode with your known ABI  */
+  /** The data used to setup the module */
+  readonly initializeCalldata?: Maybe<Scalars['BlockchainData']>;
+  /** The data returned from the init module */
+  readonly initializeResultData?: Maybe<Scalars['BlockchainData']>;
+  /**
+   * The data returned from the init module
+   * @deprecated Use initializeResultData instead
+   */
   readonly openActionModuleReturnData?: Maybe<Scalars['BlockchainData']>;
+  /** True if the module can be signedless and use lens manager without a signature */
+  readonly signlessApproved: Scalars['Boolean'];
+  /** True if the module can be sponsored through gasless so the user does not need to pay for gas */
+  readonly sponsoredApproved: Scalars['Boolean'];
   readonly type: OpenActionModuleType;
+  /** True if the module is deemed as safe */
+  readonly verified: Scalars['Boolean'];
 };
 
 export type UnknownOpenActionResult = {
@@ -5071,9 +5803,22 @@ export type UnknownReferenceModuleInput = {
 export type UnknownReferenceModuleSettings = {
   readonly __typename: 'UnknownReferenceModuleSettings';
   readonly contract: NetworkAddress;
-  /** The data used to setup the module which you can decode with your known ABI  */
+  /** The data used to setup the module */
+  readonly initializeCalldata?: Maybe<Scalars['BlockchainData']>;
+  /** The data returned from the init module */
+  readonly initializeResultData?: Maybe<Scalars['BlockchainData']>;
+  /**
+   * The data used to setup the module which you can decode with your known ABI
+   * @deprecated Use initializeResultData instead
+   */
   readonly referenceModuleReturnData?: Maybe<Scalars['BlockchainData']>;
+  /** True if the module can be signedless and use lens manager without a signature */
+  readonly signlessApproved: Scalars['Boolean'];
+  /** True if the module can be sponsored through gasless so the user does not need to pay for gas */
+  readonly sponsoredApproved: Scalars['Boolean'];
   readonly type: ReferenceModuleType;
+  /** True if the module is deemed as safe */
+  readonly verified: Scalars['Boolean'];
 };
 
 export type UnknownSupportedModule = {
@@ -5085,6 +5830,27 @@ export type UnknownSupportedModule = {
 export type UnlinkHandleFromProfileRequest = {
   /** The full handle - namespace/localname */
   readonly handle: Scalars['Handle'];
+};
+
+export type UserCurrentRateLimit = {
+  readonly __typename: 'UserCurrentRateLimit';
+  readonly dayAllowance: Scalars['Int'];
+  readonly dayAllowanceLeft: Scalars['Int'];
+  readonly dayAllowanceUsed: Scalars['Int'];
+  readonly hourAllowance: Scalars['Int'];
+  readonly hourAllowanceLeft: Scalars['Int'];
+  readonly hourAllowanceUsed: Scalars['Int'];
+};
+
+export type UserCurrentRateLimitRequest = {
+  readonly profileId?: InputMaybe<Scalars['ProfileId']>;
+  readonly userAddress: Scalars['EvmAddress'];
+};
+
+export type UserCurrentRateLimitResult = {
+  readonly __typename: 'UserCurrentRateLimitResult';
+  readonly momoka: UserCurrentRateLimit;
+  readonly onchain: UserCurrentRateLimit;
 };
 
 export type UserPoapsQueryRequest = {
@@ -5107,7 +5873,9 @@ export type ValidatePublicationMetadataRequest = {
 
 export type VerifyRequest = {
   /** The access token to verify */
-  readonly accessToken: Scalars['Jwt'];
+  readonly accessToken?: InputMaybe<Scalars['Jwt']>;
+  /** The identity token to verify */
+  readonly identityToken?: InputMaybe<Scalars['Jwt']>;
 };
 
 export type Video = {
@@ -5146,6 +5914,8 @@ export type WhoActedOnPublicationRequest = {
   readonly cursor?: InputMaybe<Scalars['Cursor']>;
   readonly limit?: InputMaybe<LimitType>;
   readonly on: Scalars['PublicationId'];
+  /** The order by which to sort the profiles */
+  readonly orderBy?: InputMaybe<ProfilesOrderBy>;
   readonly where?: InputMaybe<WhoActedOnPublicationWhere>;
 };
 
@@ -5162,6 +5932,8 @@ export type WhoReactedPublicationRequest = {
   readonly cursor?: InputMaybe<Scalars['Cursor']>;
   readonly for: Scalars['PublicationId'];
   readonly limit?: InputMaybe<LimitType>;
+  /** The order by which to sort the profiles */
+  readonly orderBy?: InputMaybe<ProfilesOrderBy>;
   readonly where?: InputMaybe<WhoReactedPublicationWhere>;
 };
 

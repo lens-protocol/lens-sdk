@@ -8,6 +8,7 @@ import {
   mockNetworkAddressFragment,
   mockPostFragment,
   mockProfileFragment,
+  mockProtocolSharedRevenueCollectOpenActionSettingsFragment,
   mockSimpleCollectOpenActionSettingsFragment,
   mockUnknownOpenActionModuleSettingsFragment,
 } from '@lens-protocol/api-bindings/mocks';
@@ -21,6 +22,7 @@ import {
   mockProfileSession,
   mockWalletOnlySession,
 } from '../../../authentication/__helpers__/mocks';
+import { staging } from '../../../environments';
 import { createOpenActionRequest } from '../createOpenActionRequest';
 import { OpenActionKind } from '../types';
 
@@ -36,9 +38,10 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
     it(`should throw an ${InvariantError.name}`, () => {
       expect(() =>
         createOpenActionRequest(
-          { publication },
+          { publication, sponsored: true },
           { kind: OpenActionKind.COLLECT },
           mockProfileSession(),
+          staging,
         ),
       ).toThrow(InvariantError);
     });
@@ -56,20 +59,21 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
         type: AllOpenActionType.LEGACY_COLLECT,
         fee: {
           amount: fee,
-          contractAddress: aContractAddress,
+          spender: aContractAddress,
         },
       },
+      expectedRequest: 'LegacyCollectRequest',
     },
     {
       settings: mockLegacyFreeCollectModuleSettingsFragment(),
       expected: {
         type: AllOpenActionType.LEGACY_COLLECT,
       },
+      expectedRequest: 'LegacyCollectRequest',
     },
   ])(
-    `when acting on a publication configured w/ $settings.__typename collect`,
-    ({ expected, settings }) => {
-      const expectedRequest = 'LegacyCollectRequest';
+    `and a PrimaryPublication configured with the $settings.__typename`,
+    ({ expected, expectedRequest, settings }) => {
       const publication = mockPostFragment({
         openActionModules: [settings],
       });
@@ -78,12 +82,13 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
         signless: true,
       });
 
-      describe(`on a PrimaryPublication`, () => {
+      describe(`when executing the Collect Action`, () => {
         it(`should support signless & sponsored ${expectedRequest} in a ${SessionType.WithProfile} session`, () => {
           const result = createOpenActionRequest(
-            { publication },
+            { publication, sponsored: true },
             { kind: OpenActionKind.COLLECT },
             mockProfileSession({ profile }),
+            staging,
           );
 
           expect(result).toMatchObject({
@@ -103,6 +108,7 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
             },
             { kind: OpenActionKind.COLLECT },
             mockProfileSession({ profile }),
+            staging,
           );
 
           expect(result).toMatchObject({
@@ -114,24 +120,26 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
         it(`should throw an ${InvariantError.name} if attempted in a ${SessionType.JustWallet} session`, () => {
           expect(() =>
             createOpenActionRequest(
-              { publication },
+              { publication, sponsored: true },
               { kind: OpenActionKind.COLLECT },
               mockWalletOnlySession(),
+              staging,
             ),
           ).toThrow(InvariantError);
         });
       });
 
-      describe(`on a Mirror`, () => {
+      describe(`when executing the Collect Action on a Mirror for it`, () => {
         const mirror = mockMirrorFragment({
           mirrorOn: publication,
         });
 
         it(`should use the Mirror ID as the "referrer" for the ${expectedRequest}`, () => {
           const result = createOpenActionRequest(
-            { publication: mirror },
+            { publication: mirror, sponsored: true },
             { kind: OpenActionKind.COLLECT },
             mockProfileSession({ profile }),
+            staging,
           );
 
           expect(result).toMatchObject({
@@ -155,10 +163,26 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
         type: AllOpenActionType.SIMPLE_COLLECT,
         fee: {
           amount: fee,
-          contractAddress: aContractAddress,
+          spender: aContractAddress,
         },
       },
       expectedRequest: 'SimpleCollectRequest',
+    },
+    {
+      settings: mockProtocolSharedRevenueCollectOpenActionSettingsFragment({
+        amount: mockAmountFragmentFrom(fee),
+        contract: mockNetworkAddressFragment({
+          address: aContractAddress,
+        }),
+      }),
+      expected: {
+        type: AllOpenActionType.SHARED_REVENUE_COLLECT,
+        fee: {
+          amount: fee,
+          spender: aContractAddress,
+        },
+      },
+      expectedRequest: 'SharedRevenueCollectRequest',
     },
     {
       settings: mockMultirecipientFeeCollectOpenActionSettingsFragment({
@@ -171,13 +195,13 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
         type: AllOpenActionType.MULTIRECIPIENT_COLLECT,
         fee: {
           amount: fee,
-          contractAddress: aContractAddress,
+          spender: aContractAddress,
         },
       },
       expectedRequest: 'MultirecipientCollectRequest',
     },
   ])(
-    `when acting on a publication configured w/ $settings.__typename`,
+    `and a PrimaryPublication configured with the $settings.__typename`,
     ({ expected, expectedRequest, settings }) => {
       const publication = mockPostFragment({
         openActionModules: [settings],
@@ -187,13 +211,14 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
         signless: true,
       });
 
-      describe(`on a PrimaryPublication`, () => {
+      describe(`when executing the Collect Action`, () => {
         it(`should support signless & sponsored ${expectedRequest} in a ${SessionType.WithProfile} session`, () => {
           const referrers = [mockPublicationId(), mockProfileId()];
           const result = createOpenActionRequest(
-            { publication },
+            { publication, sponsored: true },
             { kind: OpenActionKind.COLLECT, referrers },
             mockProfileSession({ profile }),
+            staging,
           );
 
           expect(result).toMatchObject({
@@ -208,9 +233,10 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
         it(`should forward the referrers list`, () => {
           const referrers = [mockPublicationId(), mockProfileId()];
           const result = createOpenActionRequest(
-            { publication },
+            { publication, sponsored: true },
             { kind: OpenActionKind.COLLECT, referrers },
             mockProfileSession({ profile }),
+            staging,
           );
 
           expect(result).toMatchObject({
@@ -223,6 +249,7 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
             { publication, sponsored: false },
             { kind: OpenActionKind.COLLECT },
             mockProfileSession({ profile }),
+            staging,
           );
 
           expect(result).toMatchObject({
@@ -234,9 +261,10 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
         it(`should support public ${expectedRequest} in a ${SessionType.JustWallet} session`, () => {
           const referrers = [mockPublicationId(), mockProfileId()];
           const result = createOpenActionRequest(
-            { publication },
+            { publication, sponsored: true },
             { kind: OpenActionKind.COLLECT, referrers },
             mockWalletOnlySession(),
+            staging,
           );
 
           expect(result).toMatchObject({
@@ -250,21 +278,39 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
         });
       });
 
-      describe(`on a Mirror`, () => {
+      describe(`when executing the Collect Action on a Mirror`, () => {
         it(`should use the Mirror ID as default "referrers" for the ${expectedRequest}`, () => {
           const mirror = mockMirrorFragment({
             mirrorOn: publication,
           });
 
           const result = createOpenActionRequest(
-            { publication: mirror },
+            { publication: mirror, sponsored: true },
             { kind: OpenActionKind.COLLECT },
             mockProfileSession({ profile }),
+            staging,
           );
 
           expect(result).toMatchObject({
             publicationId: mirror.mirrorOn.id,
             referrers: [mirror.id],
+          });
+        });
+      });
+
+      describe(`when executing the specific Open Action in a ${SessionType.JustWallet} session`, () => {
+        it.only(`should specify the PublicActProxy as the fee spender`, () => {
+          const result = createOpenActionRequest(
+            { publication, sponsored: true },
+            { kind: OpenActionKind.COLLECT },
+            mockWalletOnlySession(),
+            staging,
+          );
+
+          expect(result).toMatchObject({
+            fee: {
+              spender: staging.contracts.publicActProxy,
+            },
           });
         });
       });
@@ -295,7 +341,7 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
       it(`should forward the referrers list`, () => {
         const referrers = [mockPublicationId(), mockProfileId()];
         const result = createOpenActionRequest(
-          { publication },
+          { publication, sponsored: true },
           {
             kind: OpenActionKind.UNKNOWN,
             address: signlessSettings.contract.address,
@@ -303,6 +349,7 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
             referrers,
           },
           mockProfileSession(),
+          staging,
         );
 
         expect(result).toMatchObject({
@@ -319,13 +366,14 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
 
       it(`should support signless & sponsored ${expectedRequest}`, () => {
         const result = createOpenActionRequest(
-          { publication },
+          { publication, sponsored: true },
           {
             kind: OpenActionKind.UNKNOWN,
             address: signlessSettings.contract.address,
             data,
           },
           mockProfileSession({ profile }),
+          staging,
         );
 
         expect(result).toMatchObject({
@@ -345,6 +393,7 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
           const result = createOpenActionRequest(
             {
               publication,
+              sponsored: true,
             },
             {
               kind: OpenActionKind.UNKNOWN,
@@ -352,6 +401,7 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
               data,
             },
             mockProfileSession({ profile }),
+            staging,
           );
 
           expect(result).toMatchObject({
@@ -375,6 +425,7 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
             data,
           },
           mockProfileSession({ profile }),
+          staging,
         );
 
         expect(result).toMatchObject({
@@ -387,13 +438,14 @@ describe(`Given the ${createOpenActionRequest.name} predicate`, () => {
     describe(`when executing the specific Open Action in a ${SessionType.JustWallet} session`, () => {
       it(`should support public ${expectedRequest}`, () => {
         const result = createOpenActionRequest(
-          { publication },
+          { publication, sponsored: true },
           {
             kind: OpenActionKind.UNKNOWN,
             address: signlessSettings.contract.address,
             data,
           },
           mockWalletOnlySession(),
+          staging,
         );
 
         expect(result).toMatchObject({

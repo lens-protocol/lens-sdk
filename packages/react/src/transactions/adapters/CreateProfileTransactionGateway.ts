@@ -1,3 +1,4 @@
+import { AddressZero } from '@ethersproject/constants';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import {
   GenerateLensApiRelayAddressData,
@@ -35,7 +36,7 @@ export class CreateProfileTransactionGateway extends AbstractContractCallGateway
     const encodedData = contract.interface.encodeFunctionData('createProfileWithHandle', [
       {
         to: request.to,
-        followModule: '0x0000000000000000000000000000000000000000',
+        followModule: AddressZero,
         followModuleInitData: '0x',
       },
       request.localName,
