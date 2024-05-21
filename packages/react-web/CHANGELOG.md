@@ -1,5 +1,38 @@
 # @lens-protocol/react-web
 
+## 2.3.0
+
+### Minor Changes
+
+- d8b19df55: **feat:** adds React Suspense support to `usePublications` hook
+- 53071caf2: **feat:** adds React Suspense support to `useSearchProfiles` hook
+- 032c71c3d: **feat:** add React Suspense support to `useProfileFollowers` and `useProfileFollowing` hooks
+- 3ffa19856: **feat:** add React Suspense support to `useProfiles` hook
+- be49f3efb: **feat:** add React Suspense support to `useSearchPublications` hook
+- 3e4911040: **feat:** add React Suspense support to `useExplorePublications`, `useExploreProfiles`, `useRecommendedProfiles` hooks
+- b1cb9e78c: **feat:** experimental React Suspense support in `usePublication` hook
+- afb3970c8: **feat:** support new Shared Revenue Collect module
+
+### Patch Changes
+
+- 1f34162dc: **fix:** refresh profile following after a follow or unfollow
+- 46a648de2: **feat:** add React Suspense support to `useFeed` hook
+- fcd04e356: **fixes:** typedoc for some hooks
+- Updated dependencies [21f652d22]
+- Updated dependencies [d8b19df55]
+- Updated dependencies [53071caf2]
+- Updated dependencies [032c71c3d]
+- Updated dependencies [3ffa19856]
+- Updated dependencies [1f34162dc]
+- Updated dependencies [be49f3efb]
+- Updated dependencies [3e4911040]
+- Updated dependencies [b1cb9e78c]
+- Updated dependencies [46a648de2]
+- Updated dependencies [afb3970c8]
+- Updated dependencies [fcd04e356]
+  - @lens-protocol/react@2.3.0
+  - @lens-protocol/domain@0.12.1
+
 ## 2.2.0
 
 ### Minor Changes

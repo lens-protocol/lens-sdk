@@ -1,5 +1,30 @@
 # @lens-protocol/react
 
+## 2.3.0
+
+### Minor Changes
+
+- d8b19df55: **feat:** adds React Suspense support to `usePublications` hook
+- 53071caf2: **feat:** adds React Suspense support to `useSearchProfiles` hook
+- 032c71c3d: **feat:** add React Suspense support to `useProfileFollowers` and `useProfileFollowing` hooks
+- 3ffa19856: **feat:** add React Suspense support to `useProfiles` hook
+- be49f3efb: **feat:** add React Suspense support to `useSearchPublications` hook
+- 3e4911040: **feat:** add React Suspense support to `useExplorePublications`, `useExploreProfiles`, `useRecommendedProfiles` hooks
+- b1cb9e78c: **feat:** experimental React Suspense support in `usePublication` hook
+- afb3970c8: **feat:** support new Shared Revenue Collect module
+
+### Patch Changes
+
+- 21f652d22: **fix:** custom origin header important for react native usecase
+- 1f34162dc: **fix:** refresh profile following after a follow or unfollow
+- 46a648de2: **feat:** add React Suspense support to `useFeed` hook
+- fcd04e356: **fixes:** typedoc for some hooks
+- Updated dependencies [21f652d22]
+- Updated dependencies [afb3970c8]
+  - @lens-protocol/api-bindings@0.12.2
+  - @lens-protocol/domain@0.12.1
+  - @lens-protocol/blockchain-bindings@0.10.3
+
 ## 2.2.0
 
 ### Minor Changes

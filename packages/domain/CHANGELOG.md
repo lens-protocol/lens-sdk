@@ -1,5 +1,11 @@
 # @lens-protocol/domain
 
+## 0.12.1
+
+### Patch Changes
+
+- afb3970c8: **feat:** support new Shared Revenue Collect module
+
 ## 0.12.0
 
 ### Minor Changes

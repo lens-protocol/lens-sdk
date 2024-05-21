@@ -1,5 +1,14 @@
 # @lens-protocol/api-bindings
 
+## 0.12.2
+
+### Patch Changes
+
+- 21f652d22: **fix:** custom origin header important for react native usecase
+- afb3970c8: **feat:** support new Shared Revenue Collect module
+- Updated dependencies [afb3970c8]
+  - @lens-protocol/domain@0.12.1
+
 ## 0.12.1
 
 ### Patch Changes

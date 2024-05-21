@@ -1,5 +1,12 @@
 # @lens-protocol/blockchain-bindings
 
+## 0.10.3
+
+### Patch Changes
+
+- Updated dependencies [afb3970c8]
+  - @lens-protocol/domain@0.12.1
+
 ## 0.10.2
 
 ### Patch Changes

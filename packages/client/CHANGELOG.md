@@ -1,5 +1,15 @@
 # @lens-protocol/client
 
+## 2.3.0
+
+### Minor Changes
+
+- afb3970c8: **feat:** support new Shared Revenue Collect module
+
+### Patch Changes
+
+- @lens-protocol/blockchain-bindings@0.10.3
+
 ## 2.2.0
 
 ### Minor Changes
