@@ -11,7 +11,6 @@ import { DelegableSigning } from '../transactions/DelegableSigning';
 import { ITransactionResultPresenter } from '../transactions/ITransactionResultPresenter';
 import { PaidTransaction } from '../transactions/PaidTransaction';
 import { SignedOnChain } from '../transactions/SignedOnChain';
-import { SponsorshipReady } from '../transactions/SponsorshipReady';
 import {
   InsufficientAllowanceError,
   InsufficientFundsError,
@@ -21,14 +20,30 @@ import { Referrers } from './Referrers';
 
 export enum AllOpenActionType {
   LEGACY_COLLECT = 'LEGACY_COLLECT',
-  SIMPLE_COLLECT = 'SIMPLE_COLLECT',
   MULTIRECIPIENT_COLLECT = 'MULTIRECIPIENT_COLLECT',
+  SHARED_REVENUE_COLLECT = 'SHARED_REVENUE_COLLECT',
+  SIMPLE_COLLECT = 'SIMPLE_COLLECT',
   UNKNOWN_OPEN_ACTION = 'UNKNOWN_OPEN_ACTION',
 }
 
+export enum FeeType {
+  COLLECT = 'COLLECT',
+  MINT = 'MINT',
+}
+
 export type CollectFee = {
+  type: FeeType.COLLECT;
   amount: Amount<Erc20>;
-  contractAddress: EvmAddress;
+  module: EvmAddress;
+  spender: EvmAddress;
+};
+
+export type MintFee = {
+  type: FeeType.MINT;
+  amount: Amount<Erc20>;
+  module: EvmAddress;
+  spender: EvmAddress;
+  executorClient?: EvmAddress;
 };
 
 export type LegacyCollectRequest = {
@@ -64,6 +79,17 @@ export type SimpleCollectRequest = {
   sponsored: boolean;
 };
 
+export type SharedRevenueCollectRequest = {
+  kind: TransactionKind.ACT_ON_PUBLICATION;
+  type: AllOpenActionType.SHARED_REVENUE_COLLECT;
+  publicationId: PublicationId;
+  referrers?: Referrers;
+  fee: CollectFee | MintFee;
+  public: boolean;
+  signless: boolean;
+  sponsored: boolean;
+};
+
 export type UnknownActionRequest = {
   kind: TransactionKind.ACT_ON_PUBLICATION;
   type: AllOpenActionType.UNKNOWN_OPEN_ACTION;
@@ -71,6 +97,7 @@ export type UnknownActionRequest = {
   address: EvmAddress;
   data: Data;
   referrers?: Referrers;
+  amount?: Amount<Erc20>;
   public: boolean;
   signless: boolean;
   sponsored: boolean;
@@ -79,6 +106,7 @@ export type UnknownActionRequest = {
 export type CollectRequest =
   | LegacyCollectRequest
   | MultirecipientCollectRequest
+  | SharedRevenueCollectRequest
   | SimpleCollectRequest;
 
 export type OpenActionRequest = CollectRequest | UnknownActionRequest;
@@ -88,18 +116,28 @@ export type DelegableOpenActionRequest =
   | SimpleCollectRequest
   | UnknownActionRequest;
 
-function isCollectRequest(request: OpenActionRequest): request is CollectRequest {
+export function isCollectRequest(request: OpenActionRequest): request is CollectRequest {
   return [
     AllOpenActionType.LEGACY_COLLECT,
-    AllOpenActionType.SIMPLE_COLLECT,
     AllOpenActionType.MULTIRECIPIENT_COLLECT,
+    AllOpenActionType.SHARED_REVENUE_COLLECT,
+    AllOpenActionType.SIMPLE_COLLECT,
   ].includes(request.type);
 }
 
-export type PaidCollectRequest = CollectRequest & { fee: CollectFee };
+export function isUnknownActionRequest(
+  request: OpenActionRequest,
+): request is UnknownActionRequest {
+  return request.type === AllOpenActionType.UNKNOWN_OPEN_ACTION;
+}
 
+type PaidCollectRequest = CollectRequest & { fee: CollectFee | MintFee };
+
+/**
+ * @internal
+ */
 export function isPaidCollectRequest(request: OpenActionRequest): request is PaidCollectRequest {
-  return isCollectRequest(request) && request.fee !== undefined;
+  return isCollectRequest(request) && 'fee' in request && request.fee !== undefined;
 }
 
 function isPublicOpenActionRequest(
@@ -117,43 +155,34 @@ export type IOpenActionPresenter = ITransactionResultPresenter<
   | WalletConnectionError
 >;
 
-export class OpenAction extends SponsorshipReady<OpenActionRequest> {
+export class OpenAction {
   constructor(
     private readonly tokenAvailability: TokenAvailability,
     private readonly signedExecution: SignedOnChain<OpenActionRequest>,
     private readonly delegableExecution: DelegableSigning<OpenActionRequest>,
     private readonly paidExecution: PaidTransaction<OpenActionRequest>,
     private readonly presenter: IOpenActionPresenter,
-  ) {
-    super();
-  }
+  ) {}
 
-  protected async charged(request: OpenActionRequest): Promise<void> {
-    await this.paidExecution.execute(request);
-  }
-
-  protected async sponsored(request: OpenActionRequest): Promise<void> {
+  async execute(request: OpenActionRequest): Promise<void> {
     if (isPaidCollectRequest(request)) {
       const result = await this.tokenAvailability.checkAvailability({
         amount: request.fee.amount,
-        spender: request.fee.contractAddress,
+        spender: request.fee.spender,
       });
 
       if (result.isFailure()) {
         this.presenter.present(result);
         return;
       }
-
-      if (isPublicOpenActionRequest(request)) {
-        return this.charged(request);
-      }
-
-      await this.signedExecution.execute(request);
-      return;
     }
 
-    if (isPublicOpenActionRequest(request)) {
-      return this.charged(request);
+    if (isPublicOpenActionRequest(request) || request.sponsored === false) {
+      return this.paidExecution.execute(request);
+    }
+
+    if (isPaidCollectRequest(request)) {
+      return this.signedExecution.execute(request);
     }
 
     await this.delegableExecution.execute(request);

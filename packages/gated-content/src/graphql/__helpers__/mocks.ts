@@ -141,6 +141,7 @@ export function mockPublicationMetadataLitEncryption(
 ): PublicationMetadataLitEncryption {
   return {
     accessCondition: mockRootCondition(),
+    accessControlContract: mockNetworkAddress(),
     encryptionKey: faker.datatype.hexadecimal({ length: 368 }),
     encryptedPaths: [],
     ...overrides,

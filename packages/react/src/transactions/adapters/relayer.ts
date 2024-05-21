@@ -15,10 +15,6 @@ export function handleRelayError(
   _?: unknown,
 ): Failure<BroadcastingError> {
   switch (error.reason) {
-    case RelayErrorReasonType.AppNotAllowed:
-    case LensProfileManagerRelayErrorReasonType.AppNotAllowed:
-      return failure(new BroadcastingError(BroadcastingErrorReason.APP_NOT_ALLOWED));
-
     case RelayErrorReasonType.RateLimited:
     case LensProfileManagerRelayErrorReasonType.RateLimited:
       return failure(new BroadcastingError(BroadcastingErrorReason.RATE_LIMITED));

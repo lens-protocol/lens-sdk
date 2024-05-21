@@ -57,7 +57,7 @@ export abstract class AbstractContractCallGateway<TRequest extends AnyTransactio
   async createUnsignedTransaction(
     request: TRequest,
     wallet: Wallet,
-  ): Promise<UnsignedTransaction<TRequest>> {
+  ): Promise<UnsignedContractCallTransaction<TRequest>> {
     const provider = await this.providerFactory.createProvider({
       chainType: ChainType.POLYGON,
     });

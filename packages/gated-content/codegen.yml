@@ -11,6 +11,7 @@ config:
     field: false
   strictScalars: true
   scalars:
+    ABIJson: string
     AppId: string
     BlockchainData: string
     BroadcastId: string

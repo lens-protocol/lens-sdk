@@ -19,10 +19,12 @@ import {
 import { NativeTransaction, UnsignedTransaction } from '@lens-protocol/domain/entities';
 import {
   mockLegacyCollectRequest,
+  mockMintFee,
   mockMultirecipientCollectRequest,
   mockNonce,
   mockProfileId,
   mockPublicationId,
+  mockSharedRevenueCollectRequest,
   mockSimpleCollectRequest,
   mockUnknownActionRequest,
   mockWallet,
@@ -119,6 +121,34 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
               for: publicationId,
               actOn: {
                 simpleCollectOpenAction: true,
+              },
+              referrers: expectedOnChainReferrers,
+            },
+            options: nonce
+              ? {
+                  overrideSigNonce: nonce,
+                }
+              : undefined,
+          },
+          data,
+        });
+
+        return { data, response };
+      },
+    },
+    {
+      name: 'SharedRevenueCollectRequest',
+      request: mockSharedRevenueCollectRequest({ publicationId, referrers }),
+      setupMocks: (nonce?: number) => {
+        const data = mockCreateActOnOpenActionTypedDataData({ nonce });
+        const response = mockCreateActOnOpenActionTypedDataResponse({
+          variables: {
+            request: {
+              for: publicationId,
+              actOn: {
+                protocolSharedRevenueCollectOpenAction: {
+                  executorClient: null,
+                },
               },
               referrers: expectedOnChainReferrers,
             },
@@ -242,6 +272,24 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
             for: publicationId,
             actOn: {
               simpleCollectOpenAction: true,
+            },
+            referrers: expectedOnChainReferrers,
+          },
+        },
+        data: mockCreateActOnOpenActionTypedDataData(),
+      }),
+    },
+    {
+      name: 'SharedRevenueCollectRequest',
+      request: mockSharedRevenueCollectRequest({ publicationId, referrers }),
+      response: mockCreateActOnOpenActionTypedDataResponse({
+        variables: {
+          request: {
+            for: publicationId,
+            actOn: {
+              protocolSharedRevenueCollectOpenAction: {
+                executorClient: null,
+              },
             },
             referrers: expectedOnChainReferrers,
           },
@@ -382,12 +430,6 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
     describe.each([
       {
         relayError: mockLensProfileManagerRelayError(
-          LensProfileManagerRelayErrorReasonType.AppNotAllowed,
-        ),
-        reason: BroadcastingErrorReason.APP_NOT_ALLOWED,
-      },
-      {
-        relayError: mockLensProfileManagerRelayError(
           LensProfileManagerRelayErrorReasonType.NoLensManagerEnabled,
         ),
         reason: BroadcastingErrorReason.NO_LENS_MANAGER_ENABLED,
@@ -450,6 +492,28 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
         },
         referrers: expectedOnChainReferrers,
       },
+      expectedMethodHash: '0xc0cc2190', // publicFreeAct
+    },
+    {
+      name: 'SharedRevenueCollectRequest',
+      request: mockSharedRevenueCollectRequest({
+        publicationId,
+        referrers,
+        public: true,
+        fee: mockMintFee({
+          executorClient: '0xAbAe21DD8737DbdCa26A16D6210D9293986800f9',
+        }),
+      }),
+      expectedRequest: {
+        for: publicationId,
+        actOn: {
+          protocolSharedRevenueCollectOpenAction: {
+            executorClient: '0xAbAe21DD8737DbdCa26A16D6210D9293986800f9',
+          },
+        },
+        referrers: expectedOnChainReferrers,
+      },
+      expectedMethodHash: '0x9648337c', // publicPaidAct
     },
     {
       name: 'MultirecipientCollectRequest',
@@ -461,6 +525,7 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
         },
         referrers: expectedOnChainReferrers,
       },
+      expectedMethodHash: '0x9648337c', // publicPaidAct
     },
     {
       name: 'UnknownActionRequest',
@@ -479,10 +544,11 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
           },
         },
       },
+      expectedMethodHash: '0xc0cc2190', // publicFreeAct
     },
   ])(
     `when creating ${UnsignedTransaction.name}<$name> for a Public Act Proxy call`,
-    ({ request, expectedRequest }) => {
+    ({ request, expectedRequest, expectedMethodHash }) => {
       const wallet = mockWallet();
       const data = mockCreateActOnOpenActionTypedDataData();
 
@@ -502,6 +568,9 @@ describe(`Given an instance of ${OpenActionGateway.name}`, () => {
         const unsignedTransaction = await gateway.createUnsignedTransaction(request, wallet);
 
         expect(unsignedTransaction).toBeInstanceOf(UnsignedContractCallTransaction);
+        expect(unsignedTransaction.transactionRequest.data).toEqual(
+          expect.stringContaining(expectedMethodHash),
+        );
       });
     },
   );

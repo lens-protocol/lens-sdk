@@ -21,7 +21,9 @@ import {
 import {
   mockCollectFee,
   mockLegacyCollectRequest,
+  mockMintFee,
   mockMultirecipientCollectRequest,
+  mockSharedRevenueCollectRequest,
   mockSimpleCollectRequest,
   mockUnknownActionRequest,
 } from '../__helpers__/mocks';
@@ -54,28 +56,36 @@ function setupOpenAction({
 }
 
 describe(`Given the ${OpenAction.name} use-case interactor`, () => {
-  describe.only.each([
+  describe.each([
     {
-      description: 'LegacyCollectRequest',
+      description: 'LegacyCollectRequest with collect fee',
       request: mockLegacyCollectRequest({ fee: mockCollectFee() }),
     },
     {
-      description: 'SimpleCollectRequest',
+      description: 'SimpleCollectRequest with collect fee',
       request: mockSimpleCollectRequest({ fee: mockCollectFee() }),
     },
     {
-      description: 'MultirecipientCollectRequest',
+      description: 'SharedRevenueCollectRequest with mint fee',
+      request: mockSharedRevenueCollectRequest({ fee: mockMintFee() }),
+    },
+    {
+      description: 'SharedRevenueCollectRequest with collect fee',
+      request: mockSharedRevenueCollectRequest({ fee: mockCollectFee() }),
+    },
+    {
+      description: 'MultirecipientCollectRequest (implicit collect fee)',
       request: mockMultirecipientCollectRequest(),
     },
     {
-      description: 'public SimpleCollectRequest',
+      description: 'public SimpleCollectRequest with fee',
       request: mockSimpleCollectRequest({ fee: mockCollectFee(), public: true }),
     },
     {
-      description: 'public MultirecipientCollectRequest',
+      description: 'public MultirecipientCollectRequest (implicit collect fee)',
       request: mockMultirecipientCollectRequest({ public: true }),
     },
-  ])(`when executed with a request that requires a fee`, ({ request, description }) => {
+  ])(`when executed with a request that involves a fee`, ({ request, description }) => {
     invariant(isPaidCollectRequest(request), 'Test misconfiguration.');
 
     it(`should check the token availability for ${description}`, async () => {
@@ -87,7 +97,7 @@ describe(`Given the ${OpenAction.name} use-case interactor`, () => {
           const tokenAvailability = mockTokeAvailability({
             request: {
               amount: request.fee.amount,
-              spender: request.fee.contractAddress,
+              spender: request.fee.spender,
             },
             result: failure(error),
           });
@@ -104,7 +114,7 @@ describe(`Given the ${OpenAction.name} use-case interactor`, () => {
     });
   });
 
-  describe.only.each([
+  describe.each([
     {
       type: 'LegacyCollectRequest',
       request: mockLegacyCollectRequest({ fee: mockCollectFee() }),
@@ -114,17 +124,21 @@ describe(`Given the ${OpenAction.name} use-case interactor`, () => {
       request: mockSimpleCollectRequest({ fee: mockCollectFee() }),
     },
     {
+      type: 'SharedRevenueCollectRequest with mint fee',
+      request: mockSharedRevenueCollectRequest(),
+    },
+    {
       type: 'MultirecipientCollectRequest',
       request: mockMultirecipientCollectRequest(),
     },
-  ])(`when executed with a request that requires a fee`, ({ request, type }) => {
+  ])(`when executed with a request that involves a fee`, ({ request, type }) => {
     invariant(isPaidCollectRequest(request), 'Test misconfiguration.');
 
     it(`should support the ${SignedOnChain.name}<${type}> strategy`, async () => {
       const tokenAvailability = mockTokeAvailability({
         request: {
           amount: request.fee.amount,
-          spender: request.fee.contractAddress,
+          spender: request.fee.spender,
         },
         result: success(),
       });
@@ -140,11 +154,16 @@ describe(`Given the ${OpenAction.name} use-case interactor`, () => {
     });
   });
 
-  describe.only.each([
+  describe.each([
     {
       type: 'SimpleCollectRequest',
       request: mockSimpleCollectRequest({ fee: undefined, public: true }),
       tokenAvailability: mock<TokenAvailability>(),
+    },
+    {
+      type: 'SharedRevenueCollectRequest',
+      request: mockSharedRevenueCollectRequest({ public: true }),
+      tokenAvailability: mockTokeAvailability({ result: success() }),
     },
     {
       type: 'UnknownActionRequest',
@@ -170,7 +189,7 @@ describe(`Given the ${OpenAction.name} use-case interactor`, () => {
     });
   });
 
-  describe.only.each([
+  describe.each([
     {
       type: 'LegacyCollectRequest',
       request: mockLegacyCollectRequest({ fee: undefined }),
@@ -184,7 +203,7 @@ describe(`Given the ${OpenAction.name} use-case interactor`, () => {
       request: mockUnknownActionRequest(),
     },
   ])(
-    `when executed with a request without fee or for which is not possible to determine (e.g. unknown open action)`,
+    `when executed with a request without fee or for which is not possible to determine if requires a fee (e.g. unknown open action)`,
     ({ request, type }) => {
       it(`should support the ${DelegableSigning.name}<${type}> strategy`, async () => {
         const { openAction, signedExecution, delegableExecution, paidExecution } =
@@ -199,7 +218,7 @@ describe(`Given the ${OpenAction.name} use-case interactor`, () => {
     },
   );
 
-  describe.only.each([
+  describe.each([
     {
       type: 'LegacyCollectRequest',
       request: mockLegacyCollectRequest({ sponsored: false }),
@@ -207,6 +226,10 @@ describe(`Given the ${OpenAction.name} use-case interactor`, () => {
     {
       type: 'SimpleCollectRequest',
       request: mockSimpleCollectRequest({ sponsored: false }),
+    },
+    {
+      type: 'SharedRevenueCollectRequest',
+      request: mockSharedRevenueCollectRequest({ sponsored: false }),
     },
     {
       type: 'UnknownActionRequest',
@@ -220,8 +243,9 @@ describe(`Given the ${OpenAction.name} use-case interactor`, () => {
     'when executed with a request that has the "sponsored" flag set to false',
     ({ request, type }) => {
       it(`should support the ${PaidTransaction.name}<${type}> strategy`, async () => {
-        const { openAction, signedExecution, delegableExecution, paidExecution } =
-          setupOpenAction();
+        const { openAction, signedExecution, delegableExecution, paidExecution } = setupOpenAction({
+          tokenAvailability: mockTokeAvailability({ result: success() }),
+        });
 
         await openAction.execute(request);
 
