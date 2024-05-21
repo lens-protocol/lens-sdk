@@ -208,7 +208,8 @@ export class OpenActionGateway
           for: request.publicationId,
           actOn: {
             protocolSharedRevenueCollectOpenAction: {
-              executorClient: request.fee.type === FeeType.MINT ? request.fee.executorClient : null,
+              executorClient:
+                request.fee.type === FeeType.MINT ? request.fee.executorClient ?? null : null,
             },
           },
           referrers: resolveOnchainReferrers(request.referrers),
