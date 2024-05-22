@@ -83,6 +83,42 @@ query FeedHighlights(
   }
 }
 
+fragment ForYouResult on ForYouResult {
+  publication {
+    ... on Post {
+      ...Post
+    }
+    ... on Quote {
+      ...Quote
+    }
+  }
+  source
+}
+
+query ForYou(
+  $request: PublicationForYouRequest!
+  $publicationImageSmallTransform: ImageTransform!
+  $publicationImageMediumTransform: ImageTransform!
+  $publicationOperationsActedArgs: PublicationOperationsActedArgs
+  $publicationStatsInput: PublicationStatsInput!
+  $publicationStatsCountOpenActionArgs: PublicationStatsCountOpenActionArgs!
+  $profileCoverTransform: ImageTransform!
+  $profilePictureTransform: ImageTransform!
+  $profileStatsArg: ProfileStatsArg
+  $profileStatsCountOpenActionArgs: ProfileStatsCountOpenActionArgs
+  $profileMetadataSource: AppId
+  $rateRequest: RateRequest!
+) {
+  result: forYou(request: $request) {
+    items {
+      ...ForYouResult
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }
+}
+
 fragment LatestActed on LatestActed {
   __typename
   profile {

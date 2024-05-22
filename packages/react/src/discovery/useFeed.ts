@@ -55,9 +55,8 @@ export type UseSuspenseFeedArgs = SuspenseEnabled<UseFeedArgs>;
  *
  * @category Discovery
  * @group Hooks
- * @param args - {@link UseFeedArgs}
  */
-export function useFeed({ where }: UseFeedArgs): PaginatedReadResult<FeedItem[]>;
+export function useFeed(args: UseFeedArgs): PaginatedReadResult<FeedItem[]>;
 
 /**
  * Fetch a the feed of a given profile and filters.
@@ -89,9 +88,8 @@ export function useFeed({ where }: UseFeedArgs): PaginatedReadResult<FeedItem[]>
  * @experimental This API can change without notice
  * @category Discovery
  * @group Hooks
- * @param args - {@link UseSuspenseFeedArgs}
  */
-export function useFeed({ where }: UseSuspenseFeedArgs): SuspensePaginatedResult<FeedItem[]>;
+export function useFeed(args: UseSuspenseFeedArgs): SuspensePaginatedResult<FeedItem[]>;
 
 export function useFeed({
   suspense = false,

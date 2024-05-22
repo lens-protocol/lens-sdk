@@ -83,46 +83,20 @@ query FeedHighlights(
   }
 }
 
-fragment LatestActed on LatestActed {
-  __typename
-  profile {
-    ...Profile
-  }
-  actedAt
-  txHash
-}
-
-fragment FollowPaidAction on FollowPaidAction {
-  __typename
-  latestActed {
-    ...LatestActed
-  }
-  followed {
-    ...Profile
-  }
-}
-
-fragment OpenActionPaidAction on OpenActionPaidAction {
-  __typename
-  latestActed {
-    ...LatestActed
-  }
-  actedOn {
+fragment ForYouResult on ForYouResult {
+  publication {
     ... on Post {
       ...Post
-    }
-    ... on Comment {
-      ...Comment
     }
     ... on Quote {
       ...Quote
     }
   }
+  source
 }
 
-query LatestPaidActions(
-  $where: LatestPaidActionsWhere
-  $filter: LatestPaidActionsFilter
+query ForYou(
+  $for: ProfileId
   $limit: LimitType
   $cursor: Cursor
   $imageSmallSize: ImageTransform!
@@ -133,19 +107,9 @@ query LatestPaidActions(
   $fxRateFor: SupportedFiatType!
   $profileMetadataSource: AppId
 ) {
-  result: latestPaidActions(
-    filter: $filter
-    where: $where
-    request: { limit: $limit, cursor: $cursor }
-  ) {
+  result: forYou(request: { for: $for, limit: $limit, cursor: $cursor }) {
     items {
-      ... on FollowPaidAction {
-        ...FollowPaidAction
-      }
-
-      ... on OpenActionPaidAction {
-        ...OpenActionPaidAction
-      }
+      ...ForYouResult
     }
     pageInfo {
       ...PaginatedResultInfo

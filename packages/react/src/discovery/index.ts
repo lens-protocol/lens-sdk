@@ -3,6 +3,7 @@ export * from './useExploreProfiles';
 export * from './useExplorePublications';
 export * from './useFeed';
 export * from './useFeedHighlights';
+export * from './usePublicationsForYou';
 export * from './useRecommendedProfiles';
 export * from './useSearchProfiles';
 export * from './useSearchPublications';

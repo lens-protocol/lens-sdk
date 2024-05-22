@@ -4,6 +4,7 @@ export * from './helpers';
 export type {
   FeedItemFragment,
   FollowPaidActionFragment,
+  ForYouResultFragment,
   LatestActedFragment,
   OpenActionPaidActionFragment,
   ReactionEventFragment,

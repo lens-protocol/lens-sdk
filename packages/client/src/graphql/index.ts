@@ -308,6 +308,7 @@ export {
   ExplorePublicationType,
   FeedEventItemType,
   FollowModuleType,
+  ForYouSource,
   FrameVerifySignatureResult,
   HiddenCommentsType,
   LensProfileManagerRelayErrorReasonType,

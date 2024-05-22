@@ -7,7 +7,7 @@ import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 
 function UseFeedHighlightsInner({ profileId }: { profileId: ProfileId }) {
-  const { data, error, loading, hasMore, beforeCount, observeRef, prev } = useInfiniteScroll(
+  const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
     useFeedHighlights({
       where: {
         for: profileId,
@@ -22,10 +22,6 @@ function UseFeedHighlightsInner({ profileId }: { profileId: ProfileId }) {
       {loading && <Loading />}
 
       {error && <ErrorMessage error={error} />}
-
-      <button disabled={loading || beforeCount === 0} onClick={prev}>
-        Fetch newer
-      </button>
 
       {data?.map((item) => (
         <PublicationCard key={`${item.id}`} publication={item} />

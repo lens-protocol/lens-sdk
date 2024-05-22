@@ -17,6 +17,7 @@ import {
   UseExplorePublications,
   UseFeed,
   UseFeedHighlights,
+  UsePublicationsForYou,
   UseRecommendedProfiles,
   UseSearchProfiles,
   UseSearchPublications,
@@ -165,6 +166,7 @@ export function App() {
                     <Route index element={<DiscoveryPage />} />
                     <Route path="useFeed" element={<UseFeed />} />
                     <Route path="useFeedHighlights" element={<UseFeedHighlights />} />
+                    <Route path="usePublicationsForYou" element={<UsePublicationsForYou />} />
                     <Route path="useSearchPublications" element={<UseSearchPublications />} />
                     <Route path="useSearchProfiles" element={<UseSearchProfiles />} />
                     <Route path="useExploreProfiles" element={<UseExploreProfiles />} />
