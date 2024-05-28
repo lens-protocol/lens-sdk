@@ -56,7 +56,7 @@ export type UseSuspenseFeedArgs = SuspenseEnabled<UseFeedArgs>;
  * @category Discovery
  * @group Hooks
  */
-export function useFeed(args: UseFeedArgs): PaginatedReadResult<FeedItem[]>;
+export function useFeed(args?: UseFeedArgs): PaginatedReadResult<FeedItem[]>;
 
 /**
  * Fetch a the feed of a given profile and filters.
@@ -67,7 +67,7 @@ export function useFeed(args: UseFeedArgs): PaginatedReadResult<FeedItem[]>;
  *
  * @example
  * ```tsx
- * const { data, loading, error } =  useFeed({
+ * const { data } =  useFeed({
  *   where: {
  *     for: '0x01`, // profileId
  *   },
@@ -94,7 +94,7 @@ export function useFeed(args: UseSuspenseFeedArgs): SuspensePaginatedResult<Feed
 export function useFeed({
   suspense = false,
   where,
-}: UseFeedArgs & { suspense?: boolean }): SuspendablePaginatedResult<FeedItem[]> {
+}: UseFeedArgs & { suspense?: boolean } = {}): SuspendablePaginatedResult<FeedItem[]> {
   const { data: session } = useSession({ suspense } as UseSessionArgs);
 
   return useSuspendablePaginatedQuery({

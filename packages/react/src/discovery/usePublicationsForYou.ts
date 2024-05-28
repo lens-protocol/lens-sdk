@@ -72,7 +72,7 @@ export function usePublicationsForYou(
  *
  * @example
  * ```tsx
- * const { data, loading, error } =  usePublicationsForYou({
+ * const { data } =  usePublicationsForYou({
  *   for: '0x01`, // profileId
  *   suspense: true,
  * });

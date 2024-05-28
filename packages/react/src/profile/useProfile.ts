@@ -75,10 +75,14 @@ export function useProfile({
  * This signature supports [React Suspense](https://react.dev/reference/react/Suspense).
  *
  * ```ts
- * const { data } = useProfile({
+ * const { data, error } = useProfile({
  *   forHandle: 'lens/stani',
  *   suspense: true,
  * });
+ *
+ * if (error) {
+ *   // not found
+ * }
  *
  * console.log(data.id);
  * ```

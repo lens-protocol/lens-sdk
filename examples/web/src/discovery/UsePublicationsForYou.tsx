@@ -1,4 +1,4 @@
-import { profileId, usePublicationsForYou } from '@lens-protocol/react-web';
+import { usePublicationsForYou } from '@lens-protocol/react-web';
 
 import { RequireProfileSession } from '../components/auth';
 import { PublicationCard } from '../components/cards';
@@ -7,7 +7,6 @@ import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 function UsePublicationsForYouInner() {
   const { data, hasMore, observeRef } = useInfiniteScroll(
     usePublicationsForYou({
-      for: profileId('0x0a'),
       suspense: true,
     }),
   );
@@ -18,9 +17,9 @@ function UsePublicationsForYouInner() {
         <code>usePublicationsForYou</code>
       </h1>
 
-      {data?.length === 0 && <p>No items</p>}
+      {data.length === 0 && <p>No items</p>}
 
-      {data?.map((item) => (
+      {data.map((item) => (
         <PublicationCard key={item.publication.id} publication={item.publication} />
       ))}
 

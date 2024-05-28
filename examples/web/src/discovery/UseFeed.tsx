@@ -17,9 +17,9 @@ function Feed() {
         <code>useFeed</code>
       </h1>
 
-      {data?.length === 0 && <p>No items</p>}
+      {data.length === 0 && <p>No items</p>}
 
-      {data?.map((item, i) => (
+      {data.map((item, i) => (
         <PublicationCard key={`${item.root.id}-${i}`} publication={item.root} />
       ))}
 
