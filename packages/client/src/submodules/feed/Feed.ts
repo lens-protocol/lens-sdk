@@ -5,7 +5,11 @@ import { LensContext } from '../../context';
 import type { CredentialsExpiredError, NotAuthenticatedError } from '../../errors';
 import { FetchGraphQLClient } from '../../graphql/FetchGraphQLClient';
 import type { PostFragment, QuoteFragment } from '../../graphql/fragments.generated';
-import type { FeedHighlightsRequest, FeedRequest } from '../../graphql/types.generated';
+import type {
+  FeedHighlightsRequest,
+  FeedRequest,
+  PublicationForYouRequest,
+} from '../../graphql/types.generated';
 import {
   commonQueryVariables,
   buildPaginatedQueryResult,
@@ -16,6 +20,7 @@ import {
 import {
   FeedItemFragment,
   FollowPaidActionFragment,
+  ForYouResultFragment,
   getSdk,
   OpenActionPaidActionFragment,
   Sdk,
@@ -105,6 +110,44 @@ export class Feed {
     return requireAuthHeaders(this.authentication, async (headers) => {
       return buildPaginatedQueryResult(async (currRequest) => {
         const result = await this.sdk.FeedHighlights(
+          {
+            request: currRequest,
+            ...commonQueryVariables(this.context),
+          },
+          headers,
+        );
+
+        return result.data.result;
+      }, request);
+    });
+  }
+
+  /**
+   * Fetch personalized feed of Quotes and Posts for a profile.
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - Request object for the query
+   * @returns Array of publications wrapped in {@link PaginatedResult}
+   *
+   * @example
+   * ```ts
+   * const result = await client.feed.forYou({
+   *   where: {
+   *     for: '0x123',
+   *   },
+   * });
+   * ```
+   */
+  async forYou(
+    request: PublicationForYouRequest,
+  ): PromiseResult<
+    PaginatedResult<ForYouResultFragment>,
+    CredentialsExpiredError | NotAuthenticatedError
+  > {
+    return requireAuthHeaders(this.authentication, async (headers) => {
+      return buildPaginatedQueryResult(async (currRequest) => {
+        const result = await this.sdk.ForYou(
           {
             request: currRequest,
             ...commonQueryVariables(this.context),

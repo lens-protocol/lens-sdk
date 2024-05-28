@@ -66,10 +66,14 @@ export function usePublication({
  * This signature supports [React Suspense](https://react.dev/reference/react/Suspense).
  *
  * ```ts
- * const { data } = usePublication({
+ * const { data, error } = usePublication({
  *   forId: '0x04-0x0b',
  *   suspense: true,
  * });
+ *
+ * if (error) {
+ *   // not found
+ * }
  *
  * console.log(data.id);
  * ```

@@ -40,9 +40,8 @@
     "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix && pnpm run tsc",
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
-    "test": "jest",
-    "test:seq": "jest --runInBand",
-    "test:watch": "jest --watch",
+    "test": "jest --runInBand",
+    "test:watch": "jest --runInBand --watch",
     "tsc": "tsc --noEmit"
   },
   "license": "MIT",

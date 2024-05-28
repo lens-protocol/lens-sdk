@@ -12,6 +12,11 @@ const discoveryHooks = [
     path: '/discovery/useFeedHighlights',
   },
   {
+    label: 'usePublicationsForYou',
+    description: `Fetch personalized feed of Quotes and Posts for a profile.`,
+    path: '/discovery/usePublicationsForYou',
+  },
+  {
     label: 'useSearchPublications',
     description: 'Search for publications using filters.',
     path: '/discovery/useSearchPublications',

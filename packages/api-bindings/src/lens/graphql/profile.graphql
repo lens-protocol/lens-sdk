@@ -402,26 +402,6 @@ query WhoHaveBlocked(
   }
 }
 
-fragment ProfileActionHistory on ProfileActionHistory {
-  __typename
-  id
-  actionType
-  who
-  txHash
-  actionedOn
-}
-
-query ProfileActionHistory($limit: LimitType, $cursor: Cursor) {
-  result: profileActionHistory(request: { limit: $limit, cursor: $cursor }) {
-    items {
-      ...ProfileActionHistory
-    }
-    pageInfo {
-      ...PaginatedResultInfo
-    }
-  }
-}
-
 fragment ReservedClaimable on ReservedClaimable {
   id
   withHandle

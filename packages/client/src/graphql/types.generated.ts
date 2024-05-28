@@ -198,6 +198,7 @@ export enum CollectOpenActionModuleType {
   LegacySimpleCollectModule = 'LegacySimpleCollectModule',
   LegacyTimedFeeCollectModule = 'LegacyTimedFeeCollectModule',
   MultirecipientFeeCollectOpenActionModule = 'MultirecipientFeeCollectOpenActionModule',
+  ProtocolSharedRevenueCollectOpenActionModule = 'ProtocolSharedRevenueCollectOpenActionModule',
   SimpleCollectOpenActionModule = 'SimpleCollectOpenActionModule',
   UnknownOpenActionModule = 'UnknownOpenActionModule',
 }
@@ -494,6 +495,13 @@ export type FollowingRequest = {
   orderBy?: InputMaybe<ProfilesOrderBy>;
 };
 
+export enum ForYouSource {
+  Curated = 'curated',
+  ExtendedNetwork = 'extended_network',
+  Following = 'following',
+  Popular = 'popular',
+}
+
 export type FrameEip712Request = {
   actionResponse: Scalars['String']['input'];
   buttonIndex: Scalars['Int']['input'];
@@ -663,6 +671,13 @@ export type InternalCuratedUpdateRequest = {
   /** The full handle - namespace/localname */
   handle: Scalars['Handle']['input'];
   remove: Scalars['Boolean']['input'];
+  secret: Scalars['String']['input'];
+};
+
+export type InternalForYouFeedRequest = {
+  d: Scalars['DateTime']['input'];
+  n: Scalars['Int']['input'];
+  p?: InputMaybe<Scalars['ProfileId']['input']>;
   secret: Scalars['String']['input'];
 };
 
@@ -1490,6 +1505,12 @@ export enum PublicationContentWarningType {
   Sensitive = 'SENSITIVE',
   Spoiler = 'SPOILER',
 }
+
+export type PublicationForYouRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  for?: InputMaybe<Scalars['ProfileId']['input']>;
+  limit?: InputMaybe<LimitType>;
+};
 
 export type PublicationMetadataContentWarningFilter = {
   oneOf: Array<PublicationContentWarningType>;
