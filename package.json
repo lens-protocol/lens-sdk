@@ -49,7 +49,7 @@
       }
     },
     "overrides": {
-      "ganache": "7.7.4"
+      "ganache": "7.9.2"
     }
   },
   "engines": {
