@@ -112,6 +112,31 @@ export class Authentication implements IAuthentication {
     return failure(new CredentialsExpiredError());
   }
 
+  async getRefreshToken(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError> {
+    const credentials = await this.credentials.get();
+
+    if (!credentials) {
+      return failure(new NotAuthenticatedError());
+    }
+
+    if (!credentials.shouldRefresh()) {
+      return success(credentials.refreshToken);
+    }
+
+    if (credentials.canRefresh()) {
+      const newCredentials = await this.api.refresh(credentials.refreshToken);
+      await this.credentials.set(newCredentials);
+
+      if (!newCredentials.refreshToken) {
+        return failure(new CredentialsExpiredError());
+      }
+
+      return success(newCredentials.refreshToken);
+    }
+
+    return failure(new CredentialsExpiredError());
+  }
+
   async getIdentityToken(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError> {
     const credentials = await this.credentials.get();
 
