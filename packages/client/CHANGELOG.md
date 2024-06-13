@@ -1,5 +1,11 @@
 # @lens-protocol/client
 
+## 2.3.0
+
+### Minor Changes
+
+- 7e4d60348: **feat:** adds `client.authentication.getRefreshToken()` method.
+
 ## 2.2.0
 
 ### Minor Changes
