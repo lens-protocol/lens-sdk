@@ -1,3 +1,4 @@
+import { FollowingDocument, SafeApolloClient } from '@lens-protocol/api-bindings';
 import { FollowRequest } from '@lens-protocol/domain/use-cases/profile';
 import {
   ITransactionResponder,
@@ -7,9 +8,17 @@ import {
 import { IProfileCacheManager } from '../../../profile/adapters/IProfileCacheManager';
 
 export class FollowProfileResponder implements ITransactionResponder<FollowRequest> {
-  constructor(private readonly profileCacheManager: IProfileCacheManager) {}
+  constructor(
+    private readonly apolloClient: SafeApolloClient,
+    private readonly profileCacheManager: IProfileCacheManager,
+  ) {}
 
   async commit({ request }: TransactionData<FollowRequest>) {
-    await this.profileCacheManager.fetchProfileById(request.profileId);
+    await Promise.all([
+      this.profileCacheManager.fetchProfileById(request.profileId),
+      this.apolloClient.refetchQueries({
+        include: [FollowingDocument],
+      }),
+    ]);
   }
 }

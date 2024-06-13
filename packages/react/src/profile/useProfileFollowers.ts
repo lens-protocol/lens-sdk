@@ -1,11 +1,13 @@
-import {
-  Profile,
-  FollowersRequest,
-  useFollowers as useFollowersHook,
-} from '@lens-protocol/api-bindings';
+import { Profile, FollowersRequest, FollowersDocument } from '@lens-protocol/api-bindings';
 
 import { useLensApolloClient } from '../helpers/arguments';
-import { PaginatedArgs, PaginatedReadResult, usePaginatedReadResult } from '../helpers/reads';
+import { PaginatedArgs, PaginatedReadResult } from '../helpers/reads';
+import {
+  SuspendablePaginatedResult,
+  SuspenseEnabled,
+  SuspensePaginatedResult,
+  useSuspendablePaginatedQuery,
+} from '../helpers/suspense';
 import { useFragmentVariables } from '../helpers/variables';
 
 /**
@@ -13,11 +15,17 @@ import { useFragmentVariables } from '../helpers/variables';
  */
 export type UseProfileFollowersArgs = PaginatedArgs<FollowersRequest>;
 
+export type { FollowersRequest };
+
 /**
- * `useProfileFollowers` is a paginated hook that lets you fetch profiles that follow a requested profile.
+ * {@link useProfileFollowers} hook arguments with Suspense support
  *
- * @category Profiles
- * @group Hooks
+ * @experimental This API can change without notice
+ */
+export type UseSuspenseProfileFollowersArgs = SuspenseEnabled<UseProfileFollowersArgs>;
+
+/**
+ * Fetch profiles that follow a requested profile.
  *
  * @example
  * ```tsx
@@ -25,13 +33,43 @@ export type UseProfileFollowersArgs = PaginatedArgs<FollowersRequest>;
  *   of: '0x123',
  * });
  * ```
+ *
+ * @category Profiles
+ * @group Hooks
  */
-export function useProfileFollowers(args: UseProfileFollowersArgs): PaginatedReadResult<Profile[]> {
-  return usePaginatedReadResult(
-    useFollowersHook(
-      useLensApolloClient({
-        variables: useFragmentVariables(args),
-      }),
-    ),
-  );
+export function useProfileFollowers(args: UseProfileFollowersArgs): PaginatedReadResult<Profile[]>;
+
+/**
+ * Fetch profiles that follow a requested profile.
+ *
+ * This signature supports [React Suspense](https://react.dev/reference/react/Suspense).
+ *
+ * ```tsx
+ * const { data } = useProfileFollowers({
+ *   of: '0x123',
+ *   suspense: true,
+ * });
+ *
+ * console.log(data);
+ * ```
+ *
+ * @experimental This API can change without notice
+ * @category Profiles
+ * @group Hooks
+ */
+export function useProfileFollowers(
+  args: UseSuspenseProfileFollowersArgs,
+): SuspensePaginatedResult<Profile[]>;
+
+export function useProfileFollowers({
+  suspense = false,
+  ...args
+}: UseProfileFollowersArgs & { suspense?: boolean }): SuspendablePaginatedResult<Profile[]> {
+  return useSuspendablePaginatedQuery({
+    suspense,
+    query: FollowersDocument,
+    options: useLensApolloClient({
+      variables: useFragmentVariables(args),
+    }),
+  });
 }

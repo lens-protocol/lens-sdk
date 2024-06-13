@@ -1,5 +1,11 @@
 # @lens-protocol/api-bindings
 
+## 0.12.2
+
+### Patch Changes
+
+- 21f652d22: **fix:** custom origin header important for react native usecase
+
 ## 0.12.1
 
 ### Patch Changes

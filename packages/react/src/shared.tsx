@@ -61,6 +61,7 @@ export function createSharedDependencies(userConfig: BaseConfig): SharedDependen
   const anonymousApolloClient = createAuthApolloClient({
     uri: config.environment.backend,
     logger: config.logger,
+    origin: config.origin,
   });
   const authApi = new AuthApi(anonymousApolloClient);
 
@@ -79,7 +80,6 @@ export function createSharedDependencies(userConfig: BaseConfig): SharedDependen
     accessTokenStorage: credentialsStorage,
     pollingInterval: config.environment.timings.pollingInterval,
     logger: config.logger,
-    origin: config.origin,
   });
 
   // infrastructure
@@ -115,11 +115,14 @@ export function createSharedDependencies(userConfig: BaseConfig): SharedDependen
     [TransactionKind.CREATE_POST]: new RefreshCurrentProfileResponder(profileCacheManager),
     [TransactionKind.CREATE_PROFILE]: new CreateProfileResponder(apolloClient),
     [TransactionKind.CREATE_QUOTE]: new RefreshCurrentProfileResponder(profileCacheManager),
-    [TransactionKind.FOLLOW_PROFILE]: new FollowProfileResponder(profileCacheManager),
+    [TransactionKind.FOLLOW_PROFILE]: new FollowProfileResponder(apolloClient, profileCacheManager),
     [TransactionKind.LINK_HANDLE]: new LinkHandleResponder(apolloClient, profileCacheManager),
     [TransactionKind.MIRROR_PUBLICATION]: new RefreshCurrentProfileResponder(profileCacheManager),
     [TransactionKind.UNBLOCK_PROFILE]: new UnblockProfilesResponder(profileCacheManager),
-    [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(profileCacheManager),
+    [TransactionKind.UNFOLLOW_PROFILE]: new UnfollowProfileResponder(
+      apolloClient,
+      profileCacheManager,
+    ),
     [TransactionKind.UNLINK_HANDLE]: new LinkHandleResponder(apolloClient, profileCacheManager),
     [TransactionKind.UPDATE_FOLLOW_POLICY]: new RefreshCurrentProfileResponder(profileCacheManager),
     [TransactionKind.UPDATE_PROFILE_DETAILS]: new RefreshCurrentProfileResponder(

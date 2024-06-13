@@ -81,14 +81,21 @@ export interface IAuthentication {
   isAuthenticated(): Promise<boolean>;
 
   /**
-   * Get the access token. If it expired, try to refresh it.
+   * Get the access token.
    *
    * @returns A Result with the access token or possible error scenarios
    */
   getAccessToken(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError>;
 
   /**
-   * Get the identity token. If it expired, try to refresh it.
+   * Get the refresh token.
+   *
+   * @returns A Result with the refresh token or possible error scenarios
+   */
+  getRefreshToken(): PromiseResult<string, CredentialsExpiredError | NotAuthenticatedError>;
+
+  /**
+   * Get the identity token.
    *
    * @returns A Result with the identity token or possible error scenarios
    */

@@ -1,20 +1,15 @@
 import { useExploreProfiles, ExploreProfilesOrderByType } from '@lens-protocol/react-web';
 
-import { ErrorMessage } from '../components/error/ErrorMessage';
-import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { ProfileCard } from '../profiles/components/ProfileCard';
 
 export function UseExploreProfiles() {
-  const { data, error, loading, hasMore, observeRef } = useInfiniteScroll(
+  const { data, hasMore, observeRef } = useInfiniteScroll(
     useExploreProfiles({
       orderBy: ExploreProfilesOrderByType.LatestCreated,
+      suspense: true,
     }),
   );
-
-  if (loading) return <Loading />;
-
-  if (error) return <ErrorMessage error={error} />;
 
   if (data.length === 0) return <p>No items</p>;
 

@@ -12,21 +12,12 @@ import {
   SessionType,
 } from '@lens-protocol/domain/use-cases/authentication';
 import { EvmAddress, invariant, never } from '@lens-protocol/shared-kernel';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 import { useLensApolloClient } from '../helpers/arguments';
-import { ReadResult, SuspenseEnabled, SuspenseResult } from '../helpers/reads';
+import { ReadResult } from '../helpers/reads';
+import { SuspenseEnabled, SuspenseResult } from '../helpers/suspense';
 import { useLazyFragmentVariables } from '../helpers/variables';
-
-export function usePreviousValue<T>(value: T) {
-  const ref = useRef<T>();
-
-  useEffect(() => {
-    ref.current = value;
-  }, [value]);
-
-  return ref.current;
-}
 
 export { LogoutReason, SessionType };
 
@@ -98,24 +89,17 @@ export type Session = AnonymousSession | ProfileSession | WalletOnlySession;
 /**
  * {@link useSession} hook arguments
  */
-export type UseSessionArgs<TSuspense extends boolean> = SuspenseEnabled<TSuspense>;
+export type UseSessionArgs = SuspenseEnabled;
 
 /**
- * `useSession` is a hook that lets you access the current {@link Session}
- *
- * @example
- * ```ts
- * const { data, error, loading } = useSession();
- * ```
- *
- * ## Basic Usage
+ * Returns current {@link Session} data.
  *
  * Use this hook to determine if the user is authenticated or not.
  * ```tsx
  * function Page() {
  *   const { data, error, loading } = useSession();
  *
- *   if (loading) return <p>Loading...</p>;
+ *   if (loading) return <Loader />;
  *
  *   if (error) return <p>Something went wrong.</p>;
  *
@@ -138,9 +122,15 @@ export type UseSessionArgs<TSuspense extends boolean> = SuspenseEnabled<TSuspens
  * }
  * ```
  *
- * ## Suspense Enabled
+ * @category Authentication
+ * @group Hooks
+ */
+export function useSession(args: UseSessionArgs): SuspenseResult<Session>;
+
+/**
+ * Returns current {@link Session} data.
  *
- * You can enable suspense mode to suspend the component until the session data is available.
+ * This signature supports [React Suspense](https://react.dev/reference/react/Suspense).
  *
  * ```tsx
  * function Page() {
@@ -170,11 +160,11 @@ export type UseSessionArgs<TSuspense extends boolean> = SuspenseEnabled<TSuspens
  * @category Authentication
  * @group Hooks
  */
-export function useSession(args: UseSessionArgs<true>): SuspenseResult<Session>;
-export function useSession(args?: UseSessionArgs<never>): ReadResult<Session, UnspecifiedError>;
-export function useSession(
-  args?: UseSessionArgs<boolean>,
-): ReadResult<Session, UnspecifiedError> | SuspenseResult<Session> {
+export function useSession(): ReadResult<Session, UnspecifiedError>;
+
+export function useSession(args?: {
+  suspense: boolean;
+}): ReadResult<Session, UnspecifiedError> | SuspenseResult<Session> {
   const sessionData = useSessionDataVar();
 
   const [primeCacheWithProfile, data] = useProfileFromCache(sessionData);

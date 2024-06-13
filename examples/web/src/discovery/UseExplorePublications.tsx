@@ -7,8 +7,6 @@ import {
 } from '@lens-protocol/react-web';
 
 import { PublicationCard } from '../components/cards';
-import { ErrorMessage } from '../components/error/ErrorMessage';
-import { Loading } from '../components/loading/Loading';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { formatAmount, formatFiatAmount } from '../utils/formatAmount';
 
@@ -45,19 +43,14 @@ function PublicationCollectPolicy({ publication }: { publication: ExplorePublica
 export function UseExplorePublications() {
   const {
     data: publications,
-    error,
-    loading,
     hasMore,
     observeRef,
   } = useInfiniteScroll(
     useExplorePublications({
       orderBy: ExplorePublicationsOrderByType.Latest,
+      suspense: true,
     }),
   );
-
-  if (loading) return <Loading />;
-
-  if (error) return <ErrorMessage error={error} />;
 
   return (
     <div>

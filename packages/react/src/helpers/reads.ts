@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-console */
 import {
   ApolloError,
@@ -6,29 +5,15 @@ import {
   DocumentNode,
   LazyQueryExecFunction,
   OperationVariables,
-  LazyQueryResultTuple as ApolloLazyResultTuple,
   useLazyQuery,
-  UseSuspenseQueryResult,
-  QueryHookOptions,
-  SuspenseQueryHookOptions,
-  useQuery,
-  useSuspenseQuery,
 } from '@apollo/client';
 import {
   UnspecifiedError,
   InputMaybe,
   Cursor,
   PaginatedResultInfo,
-  LimitType,
 } from '@lens-protocol/api-bindings';
-import {
-  failure,
-  IEquatableError,
-  never,
-  Prettify,
-  PromiseResult,
-  success,
-} from '@lens-protocol/shared-kernel';
+import { Prettify } from '@lens-protocol/shared-kernel';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useSharedDependencies } from '../shared';
@@ -102,9 +87,15 @@ function buildReadResult<T>(
   };
 }
 
+/**
+ * A standardized query result data object.
+ *
+ * All queries should alias their results to `result` to ensure interoperability
+ * with this helper hooks.
+ *
+ * @internal
+ */
 export type QueryData<R> = { result: R };
-
-type InferResult<T extends QueryData<unknown>> = T extends QueryData<infer R> ? R : never;
 
 /**
  * @internal
@@ -119,82 +110,7 @@ export function useReadResult<
   return buildReadResult(data?.result, error);
 }
 
-/**
- * @internal
- */
-export function useSuspenseReadResult<TResult, TVariables extends OperationVariables>({
-  data,
-  error,
-}: UseSuspenseQueryResult<QueryData<TResult>, TVariables>): SuspenseResult<TResult> {
-  if (error) {
-    throw error;
-  }
-
-  return {
-    data: data?.result ?? never('Data should be available in suspense mode.'),
-  };
-}
-
-/**
- * @experimental This is a pathfinder type for new lazy query hooks. It can change at any time.
- */
-export type LazyReadResult<
-  TArgs,
-  TValue,
-  TError extends IEquatableError = UnspecifiedError,
-> = ReadResult<TValue, TError> & {
-  /**
-   * Fetches the data for this query.
-   *
-   * @returns A promise that resolves when the data has been fetched.
-   */
-  execute: (args: TArgs) => PromiseResult<TValue, TError>;
-};
-
-/**
- * @internal
- */
-export function useLazyReadResult<
-  TData extends QueryData<TResult>,
-  TResult = InferResult<TData>,
-  TVariables extends OperationVariables = { [key: string]: never },
->([execute, { error, data }]: ApolloLazyResultTuple<TData, TVariables>): LazyReadResult<
-  TVariables,
-  TResult,
-  UnspecifiedError
-> {
-  return {
-    ...buildReadResult(data?.result, error),
-
-    execute: useCallback(
-      async (variables: TVariables) => {
-        const result = await execute({ variables });
-
-        if (result.error) {
-          return failure(new UnspecifiedError(result.error));
-        }
-
-        return success(result.data ? result.data.result : never());
-      },
-      [execute],
-    ),
-  };
-}
-
-export type OmitCursor<T> = Omit<T, 'cursor'>;
-
-export type PaginatedArgs<T> = Prettify<
-  OmitCursor<
-    T & {
-      /**
-       * The number of items to return.
-       *
-       * @defaultValue Default value is set by the API and it might differ between queries.
-       */
-      limit?: LimitType;
-    }
-  >
->;
+export type PaginatedArgs<T> = Prettify<Omit<T, 'cursor'>>;
 
 /**
  * A paginated read result.
@@ -214,31 +130,31 @@ export type PaginatedReadResult<T> = ReadResult<T, UnspecifiedError> & {
   /**
    * Fetches the next page of items.
    *
-   * @returns A promise that resolves when the next page of items has been fetched.
+   * @returns A promise that resolves when the operation is complete, regardless if it had any items to fetch.
    */
   next: () => Promise<void>;
   /**
    * Fetches the previous page of items.
    *
-   * @returns A promise that resolves when the prev page of items has been fetched.
+   * @returns A promise that resolves when the operation is complete, regardless if it had any items to fetch.
    */
   prev: () => Promise<void>;
 };
 
-type PaginatedQueryVariables = OperationVariables & { cursor?: InputMaybe<Cursor> };
+/**
+ * @internal
+ */
+export type PaginatedQueryVariables = OperationVariables & { cursor?: InputMaybe<Cursor> };
 
 /**
  * @internal
  */
-export type PaginatedQueryData<K> = {
-  result: { pageInfo: PaginatedResultInfo; items: K[] };
+export type PaginatedQueryData<TItem> = {
+  result: { pageInfo: PaginatedResultInfo; items: TItem[] };
 };
 
-type InferPaginatedItemsType<T extends PaginatedQueryData<unknown>> = T extends PaginatedQueryData<
-  infer R
->
-  ? R
-  : never;
+type InferPaginatedItemsType<TData extends PaginatedQueryData<unknown>> =
+  TData extends PaginatedQueryData<infer TItem> ? TItem : never;
 
 function useAdHocQuery<
   TVariables extends PaginatedQueryVariables,
@@ -268,7 +184,8 @@ export function usePaginatedReadResult<
   fetchMore,
   variables,
   observable,
-}: ApolloQueryResult<TData, TVariables>): PaginatedReadResult<TItem[]> {
+}: ApolloQueryResult<TData, TVariables>): // | UseSuspenseQueryResult<TData, TVariables>
+PaginatedReadResult<TItem[]> {
   const fetch = useAdHocQuery<TVariables, TData, TItem>(observable.query);
   const cachedData = useRef(data).current;
 
@@ -332,80 +249,4 @@ export function usePaginatedReadResult<
       }
     },
   };
-}
-
-/**
- * A read result that supports React Suspense and includes an error.
- *
- * @experimental This is an experimental type that can change at any time.
- */
-export type SuspenseResultWithError<T, E> =
-  | {
-      data: undefined;
-      error: E;
-    }
-  | {
-      data: T;
-      error: undefined;
-    };
-
-/**
- * A read result that supports React Suspense
- *
- * @experimental This is an experimental type that can change at any time.
- */
-export type SuspenseResult<T> = { data: T };
-
-/**
- * @deprecated Use {@link SuspenseResult | `SuspenseResult`} instead.
- */
-export type SuspenseReadResult<T, E = never> = SuspenseResultWithError<T, E>;
-
-/**
- * Helper type to enable Suspense mode.
- *
- * @experimental This is an experimental type that can change at any time.
- */
-export type SuspenseEnabled<TSuspense extends boolean> = {
-  suspense?: TSuspense;
-};
-
-/**
- * @internal
- */
-export type UseSuspenseQueryArgs<TData, TVariables extends OperationVariables> = {
-  suspense: true;
-  query: DocumentNode;
-  options: QueryHookOptions<TData, TVariables>;
-};
-
-/**
- * @internal
- */
-export type UseQueryArgs<TData, TVariables extends OperationVariables> = {
-  suspense: false;
-  query: DocumentNode;
-  options: QueryHookOptions<TData, TVariables>;
-};
-
-/**
- * @internal
- */
-export type UseSuspendableQueryArgs<TData, TVariables extends OperationVariables> =
-  | UseSuspenseQueryArgs<TData, TVariables>
-  | UseQueryArgs<TData, TVariables>;
-
-/**
- * @internal
- */
-export function useSuspendableQuery<TResult, TVariables extends OperationVariables>(
-  args: UseSuspendableQueryArgs<QueryData<TResult>, TVariables>,
-): ReadResult<TResult> | SuspenseResult<TResult> {
-  if (args.suspense) {
-    return useSuspenseReadResult(
-      useSuspenseQuery<QueryData<TResult>>(args.query, args.options as SuspenseQueryHookOptions),
-    );
-  }
-
-  return useReadResult(useQuery(args.query, args.options as QueryHookOptions));
 }

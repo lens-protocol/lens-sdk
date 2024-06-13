@@ -9,15 +9,11 @@ import { invariant, OneOf } from '@lens-protocol/shared-kernel';
 
 import { NotFoundError } from '../NotFoundError';
 import { useLensApolloClient } from '../helpers/arguments';
-import {
-  ReadResult,
-  SuspenseEnabled,
-  SuspenseResultWithError,
-  useSuspendableQuery,
-} from '../helpers/reads';
+import { ReadResult } from '../helpers/reads';
+import { SuspenseEnabled, SuspenseResultWithError, useSuspendableQuery } from '../helpers/suspense';
 import { useFragmentVariables } from '../helpers/variables';
 
-function profileNotFound({ forProfileId, forHandle }: UseProfileArgs<boolean>) {
+function profileNotFound({ forProfileId, forHandle }: UseProfileArgs) {
   return new NotFoundError(
     forProfileId
       ? `Profile with id: ${forProfileId}`
@@ -25,72 +21,80 @@ function profileNotFound({ forProfileId, forHandle }: UseProfileArgs<boolean>) {
   );
 }
 
+export type { ProfileRequest };
+
 /**
  * {@link useProfile} hook arguments
  */
-export type UseProfileArgs<TSuspense extends boolean = never> = OneOf<ProfileRequest> &
-  SuspenseEnabled<TSuspense>;
+export type UseProfileArgs = OneOf<ProfileRequest>;
+
+/**
+ * {@link useProfile} hook arguments with Suspense support
+ *
+ * @experimental This API can change without notice
+ */
+export type UseSuspenseProfileArgs = SuspenseEnabled<UseProfileArgs>;
 
 export type UseProfileResult =
   | ReadResult<Profile, NotFoundError | UnspecifiedError>
   | SuspenseResultWithError<Profile, NotFoundError>;
 
 /**
- * `useProfile` is a React hook that allows you to fetch a profile from the Lens API.
- *
- * @example
- * ```ts
- * const { data, error, loading } = useProfile({ forProfileId: '0x04' });
- * ```
- *
- * ## Basic Usage
- *
- * Get Profile by Handle:
+ * Fetches a Profile by either its full handle or id.
  *
  * ```ts
  * const { data, error, loading } = useProfile({
  *   forHandle: 'lens/stani',
- * });
- * ```
- *
- * Get Profile by Id:
- *
- * ```ts
- * const { data, error, loading } = useProfile({
+ *   // OR
  *   forProfileId: '0x04',
  * });
- * ```
  *
- * ## Suspense Enabled
+ * if (loading) {
+ *   return <Loading />;
+ * }
  *
- * You can enable suspense mode to suspend the component until the session data is available.
+ * if (error) {
+ *   return <Error error={error} />;
+ * }
  *
- * ```ts
- * const { data } = useProfile({
- *   forHandle: 'lens/stani'
- * });
- *
- * console.log(data.id);
+ * return <Profile profile={data} />;
  * ```
  *
  * @category Profiles
  * @group Hooks
- *
  * @param args - {@link UseProfileArgs}
  */
 export function useProfile({
   forHandle,
   forProfileId,
-}: UseProfileArgs<never>): ReadResult<Profile, NotFoundError | UnspecifiedError>;
+}: UseProfileArgs): ReadResult<Profile, NotFoundError | UnspecifiedError>;
+
+/**
+ * Fetches a Profile by either its full handle or id.
+ *
+ * This signature supports [React Suspense](https://react.dev/reference/react/Suspense).
+ *
+ * ```ts
+ * const { data } = useProfile({
+ *   forHandle: 'lens/stani',
+ *   suspense: true,
+ * });
+ *
+ * console.log(data.id);
+ * ```
+ *
+ * @experimental This API can change without notice
+ * @category Profiles
+ * @group Hooks
+ */
 export function useProfile(
-  args: UseProfileArgs<true>,
+  args: UseSuspenseProfileArgs,
 ): SuspenseResultWithError<Profile, NotFoundError>;
+
 export function useProfile({
   suspense = false,
   ...request
-}: UseProfileArgs<boolean>):
-  | ReadResult<Profile, NotFoundError | UnspecifiedError>
-  | SuspenseResultWithError<Profile, NotFoundError> {
+}: UseProfileArgs & { suspense?: boolean }): UseProfileResult {
   invariant(
     request.forProfileId === undefined || request.forHandle === undefined,
     "Only one of 'forProfileId' or 'forHandle' should be provided to 'useProfile' hook",
