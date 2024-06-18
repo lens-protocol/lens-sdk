@@ -302,6 +302,7 @@ export function mockPublicationOperationsFragment(
     canMirror: gql.TriStateValue.Unknown,
     canQuote: gql.TriStateValue.Unknown,
     hasMirrored: false,
+    hasQuoted: false,
     hasUpvoted: false,
     hasDownvoted: false,
     hasCollected: mockOptimisticStatusResultFragment(),

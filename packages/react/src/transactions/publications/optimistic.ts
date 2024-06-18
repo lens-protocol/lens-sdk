@@ -341,6 +341,7 @@ export function post({
       canMirror: gql.TriStateValue.No,
       canQuote: gql.TriStateValue.No,
       hasMirrored: false,
+      hasQuoted: false,
       hasUpvoted: false,
       hasDownvoted: false,
       hasCollected: {
