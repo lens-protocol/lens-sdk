@@ -28,7 +28,6 @@ export type UseSetProfileMetadataArgs = {
    * See {@link BroadcastingError} with:
    * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
    * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
-   * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
    *
    * If not specified, or `true`, the hook will attempt a Sponsored Transaction.
    * Set it to `false` to force it to use a Self-Funded Transaction.
@@ -178,7 +177,6 @@ export type UseSetProfileMetadataArgs = {
  * If for some reason the Lens API cannot sponsor the transaction, the hook will fail with a {@link BroadcastingError} with one of the following reasons:
  * - {@link BroadcastingErrorReason.NOT_SPONSORED} - the profile is not sponsored
  * - {@link BroadcastingErrorReason.RATE_LIMITED} - the profile reached the rate limit
- * - {@link BroadcastingErrorReason.APP_NOT_ALLOWED} - the app is not whitelisted for gasless transactions
  *
  * In those cases you can retry the transaction as self-funded like in the following example:
  *
@@ -210,12 +208,6 @@ export type UseSetProfileMetadataArgs = {
  *   }
  * }
  * ```
- *
- * In this example we omitted {@link BroadcastingErrorReason.APP_NOT_ALLOWED} as it's not normally a problem per-se.
- * It just requires the app to apply for whitelisting. See https://docs.lens.xyz/docs/gasless-and-signless#whitelisting-your-app.
- *
- * You can still include it in your fallback logic if you want to. For example to unblock testing your app from a domain that is not the
- * whitelisted one (e.g. localhost).
  *
  * @category Profiles
  * @group Hooks

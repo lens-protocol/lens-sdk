@@ -63,6 +63,7 @@ export type Scalars = {
 
 export type ActOnOpenActionInput = {
   multirecipientCollectOpenAction?: InputMaybe<Scalars['Boolean']['input']>;
+  protocolSharedRevenueCollectOpenAction?: InputMaybe<ProtocolSharedRevenueActRedeemInput>;
   simpleCollectOpenAction?: InputMaybe<Scalars['Boolean']['input']>;
   unknownOpenAction?: InputMaybe<UnknownOpenActionActRedeemInput>;
 };
@@ -181,6 +182,7 @@ export enum ClaimableTokenType {
 
 export type CollectActionModuleInput = {
   multirecipientCollectOpenAction?: InputMaybe<MultirecipientFeeCollectModuleInput>;
+  protocolSharedRevenueCollectOpenAction?: InputMaybe<ProtocolSharedRevenueCollectModuleInput>;
   simpleCollectOpenAction?: InputMaybe<SimpleCollectOpenActionModuleInput>;
 };
 
@@ -798,6 +800,13 @@ export enum MetadataAttributeType {
   String = 'STRING',
 }
 
+export type ModDisputeReportRequest = {
+  reason: Scalars['String']['input'];
+  reportedProfileId?: InputMaybe<Scalars['ProfileId']['input']>;
+  reportedPublicationId?: InputMaybe<Scalars['PublicationId']['input']>;
+  reporter: Scalars['ProfileId']['input'];
+};
+
 export type ModExplorePublicationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<LimitType>;
@@ -816,6 +825,13 @@ export type ModExplorePublicationsWhere = {
   metadata?: InputMaybe<PublicationMetadataFilters>;
   publicationTypes?: InputMaybe<Array<ModExplorePublicationType>>;
   since?: InputMaybe<Scalars['UnixTimestamp']['input']>;
+};
+
+export type ModReportsRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  forProfile?: InputMaybe<Scalars['ProfileId']['input']>;
+  forPublication?: InputMaybe<Scalars['PublicationId']['input']>;
+  limit?: InputMaybe<LimitType>;
 };
 
 export type ModuleCurrencyApproval = {
@@ -1146,6 +1162,7 @@ export enum OpenActionModuleType {
   LegacySimpleCollectModule = 'LegacySimpleCollectModule',
   LegacyTimedFeeCollectModule = 'LegacyTimedFeeCollectModule',
   MultirecipientFeeCollectOpenActionModule = 'MultirecipientFeeCollectOpenActionModule',
+  ProtocolSharedRevenueCollectOpenActionModule = 'ProtocolSharedRevenueCollectOpenActionModule',
   SimpleCollectOpenActionModule = 'SimpleCollectOpenActionModule',
   UnknownOpenActionModule = 'UnknownOpenActionModule',
 }
@@ -1427,6 +1444,22 @@ export type ProfilesRequestWhere = {
   whoQuotedPublication?: InputMaybe<Scalars['PublicationId']['input']>;
 };
 
+export type ProtocolSharedRevenueActRedeemInput = {
+  /** The frontend app address that the collector uses */
+  executorClient?: InputMaybe<Scalars['EvmAddress']['input']>;
+};
+
+export type ProtocolSharedRevenueCollectModuleInput = {
+  amount?: InputMaybe<AmountInput>;
+  collectLimit?: InputMaybe<Scalars['String']['input']>;
+  /** The wallet of a client app to share revenues alongside the recipient and the protocol. Optional. */
+  creatorClient?: InputMaybe<Scalars['EvmAddress']['input']>;
+  endsAt?: InputMaybe<Scalars['DateTime']['input']>;
+  followerOnly: Scalars['Boolean']['input'];
+  recipient?: InputMaybe<Scalars['EvmAddress']['input']>;
+  referralFee?: InputMaybe<Scalars['Float']['input']>;
+};
+
 export type PublicationBookmarkRequest = {
   on: Scalars['PublicationId']['input'];
 };
@@ -1565,6 +1598,7 @@ export enum PublicationReportingIllegalSubreason {
   AnimalAbuse = 'ANIMAL_ABUSE',
   DirectThreat = 'DIRECT_THREAT',
   HumanAbuse = 'HUMAN_ABUSE',
+  IntEllEctualProperty = 'INTEllECTUAL_PROPERTY',
   ThreatIndividual = 'THREAT_INDIVIDUAL',
   Violence = 'VIOLENCE',
 }

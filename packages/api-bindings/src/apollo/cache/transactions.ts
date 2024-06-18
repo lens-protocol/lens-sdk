@@ -13,11 +13,11 @@ import {
   UnlinkHandleRequest,
 } from '@lens-protocol/domain/use-cases/profile';
 import {
-  OpenActionRequest,
-  AllOpenActionType,
   CreateQuoteRequest,
   CreateMirrorRequest,
   CreateCommentRequest,
+  CollectRequest,
+  isCollectRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 import { AnyTransactionRequest } from '@lens-protocol/domain/use-cases/transactions';
 
@@ -68,14 +68,10 @@ export function useRecentTransactionsVar() {
 
 function isCollectTransaction(
   transaction: TransactionState<AnyTransactionRequest>,
-): transaction is TransactionState<OpenActionRequest> {
+): transaction is TransactionState<CollectRequest> {
   return (
     transaction.request.kind === TransactionKind.ACT_ON_PUBLICATION &&
-    [
-      AllOpenActionType.LEGACY_COLLECT,
-      AllOpenActionType.SIMPLE_COLLECT,
-      AllOpenActionType.MULTIRECIPIENT_COLLECT,
-    ].includes(transaction.request.type)
+    isCollectRequest(transaction.request)
   );
 }
 

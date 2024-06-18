@@ -444,6 +444,33 @@ fragment SimpleCollectOpenActionSettings on SimpleCollectOpenActionSettings {
   endsAt
 }
 
+fragment ProtocolSharedRevenueCollectOpenActionSettings on ProtocolSharedRevenueCollectOpenActionSettings {
+  __typename
+  type
+  contract {
+    ...NetworkAddress
+  }
+  collectNft
+  amount {
+    ...Amount
+  }
+  distribution {
+    creatorClientSplit
+    creatorSplit
+    executorClientSplit
+    protocolSplit
+  }
+  mintFee {
+    ...Amount
+  }
+  recipient
+  referralFee
+  followerOnly
+  collectLimit
+  endsAt
+  creatorClient
+}
+
 fragment MultirecipientFeeCollectOpenActionSettings on MultirecipientFeeCollectOpenActionSettings {
   __typename
   type
@@ -694,6 +721,9 @@ fragment PublicationOperations on PublicationOperations {
 fragment PublicationMetadataLitEncryption on PublicationMetadataLitEncryption {
   __typename
   encryptionKey
+  accessControlContract {
+    ...NetworkAddress
+  }
   accessCondition {
     ...RootCondition
   }
@@ -1616,6 +1646,9 @@ fragment Post on Post {
     ... on MultirecipientFeeCollectOpenActionSettings {
       ...MultirecipientFeeCollectOpenActionSettings
     }
+    ... on ProtocolSharedRevenueCollectOpenActionSettings {
+      ...ProtocolSharedRevenueCollectOpenActionSettings
+    }
     ... on SimpleCollectOpenActionSettings {
       ...SimpleCollectOpenActionSettings
     }
@@ -1746,6 +1779,9 @@ fragment CommentBase on Comment {
     }
     ... on MultirecipientFeeCollectOpenActionSettings {
       ...MultirecipientFeeCollectOpenActionSettings
+    }
+    ... on ProtocolSharedRevenueCollectOpenActionSettings {
+      ...ProtocolSharedRevenueCollectOpenActionSettings
     }
     ... on SimpleCollectOpenActionSettings {
       ...SimpleCollectOpenActionSettings
@@ -1928,6 +1964,9 @@ fragment QuoteBase on Quote {
     }
     ... on MultirecipientFeeCollectOpenActionSettings {
       ...MultirecipientFeeCollectOpenActionSettings
+    }
+    ... on ProtocolSharedRevenueCollectOpenActionSettings {
+      ...ProtocolSharedRevenueCollectOpenActionSettings
     }
     ... on SimpleCollectOpenActionSettings {
       ...SimpleCollectOpenActionSettings

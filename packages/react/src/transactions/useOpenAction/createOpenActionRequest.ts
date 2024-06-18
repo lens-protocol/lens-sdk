@@ -1,7 +1,9 @@
-/* eslint-disable no-case-declarations */
 import {
   AnyPublication,
+  MultirecipientFeeCollectOpenActionSettings,
   OpenActionModuleSettings,
+  ProtocolSharedRevenueCollectOpenActionSettings,
+  SimpleCollectOpenActionSettings,
   UnknownOpenActionModuleSettings,
   erc20Amount,
   findCollectModuleSettings,
@@ -10,12 +12,14 @@ import { TransactionKind } from '@lens-protocol/domain/entities';
 import {
   AllOpenActionType,
   CollectRequest,
+  FeeType,
   OpenActionRequest,
   UnknownActionRequest,
 } from '@lens-protocol/domain/use-cases/publications';
 import { Data, invariant, never } from '@lens-protocol/shared-kernel';
 
 import { ProfileSession, SessionType, WalletOnlySession } from '../../authentication';
+import { EnvironmentConfig } from '../../environments';
 import {
   CollectParams,
   OpenActionArgs,
@@ -30,10 +34,24 @@ function resolveTargetPublication(publication: AnyPublication) {
   return publication.__typename === 'Mirror' ? publication.mirrorOn : publication;
 }
 
+function resolveFeeSpender(
+  session: ProfileSession | WalletOnlySession,
+  environment: EnvironmentConfig,
+  settings:
+    | MultirecipientFeeCollectOpenActionSettings
+    | ProtocolSharedRevenueCollectOpenActionSettings
+    | SimpleCollectOpenActionSettings,
+) {
+  return session.type === SessionType.JustWallet
+    ? environment.contracts.publicActProxy
+    : settings.contract.address;
+}
+
 function resolveCollectRequestFor(
   args: RequiredOpenActionArgs,
   params: CollectParams,
   session: ProfileSession | WalletOnlySession,
+  environment: EnvironmentConfig,
 ): CollectRequest {
   const collectable = resolveTargetPublication(args.publication);
   const settings = findCollectModuleSettings(collectable);
@@ -64,8 +82,10 @@ function resolveCollectRequestFor(
         publicationId: collectable.id,
         referrer: args.publication !== collectable ? args.publication.id : undefined,
         fee: {
+          type: FeeType.COLLECT,
           amount: erc20Amount(settings.amount),
-          contractAddress: settings.contract.address,
+          module: settings.contract.address,
+          spender: settings.contract.address,
         },
         public: false,
         signless,
@@ -87,7 +107,7 @@ function resolveCollectRequestFor(
         sponsored,
       };
 
-    case 'SimpleCollectOpenActionSettings':
+    case 'SimpleCollectOpenActionSettings': {
       const amount = erc20Amount(settings.amount);
 
       return {
@@ -100,13 +120,16 @@ function resolveCollectRequestFor(
         fee: amount.isZero()
           ? undefined
           : {
+              type: FeeType.COLLECT,
               amount,
-              contractAddress: settings.contract.address,
+              module: settings.contract.address,
+              spender: resolveFeeSpender(session, environment, settings),
             },
         public: session.type === SessionType.JustWallet,
         signless,
         sponsored,
       };
+    }
 
     case 'MultirecipientFeeCollectOpenActionSettings':
       return {
@@ -117,13 +140,46 @@ function resolveCollectRequestFor(
           params.referrers ??
           (args.publication !== collectable ? [args.publication.id] : undefined),
         fee: {
+          type: FeeType.COLLECT,
           amount: erc20Amount(settings.amount),
-          contractAddress: settings.contract.address,
+          module: settings.contract.address,
+          spender: resolveFeeSpender(session, environment, settings),
         },
         public: session.type === SessionType.JustWallet,
         signless,
         sponsored,
       };
+
+    case 'ProtocolSharedRevenueCollectOpenActionSettings': {
+      const amount = erc20Amount(settings.amount);
+      const spender = resolveFeeSpender(session, environment, settings);
+
+      return {
+        kind: TransactionKind.ACT_ON_PUBLICATION,
+        type: AllOpenActionType.SHARED_REVENUE_COLLECT,
+        publicationId: collectable.id,
+        referrers:
+          params.referrers ??
+          (args.publication !== collectable ? [args.publication.id] : undefined),
+        fee: amount.isZero()
+          ? {
+              type: FeeType.MINT,
+              amount: erc20Amount(settings.mintFee),
+              module: settings.contract.address,
+              spender,
+              executorClient: params.executorClient,
+            }
+          : {
+              type: FeeType.COLLECT,
+              amount,
+              module: settings.contract.address,
+              spender,
+            },
+        public: session.type === SessionType.JustWallet,
+        signless,
+        sponsored,
+      };
+    }
 
     default:
       never(`The publication ${collectable.id} is not collectable`);
@@ -136,7 +192,7 @@ function isUnknownOpenActionModuleSettings(
   return settings.__typename === 'UnknownOpenActionModuleSettings';
 }
 
-function resolveExecutionDynamics(
+function resolveExecutionMode(
   args: RequiredOpenActionArgs,
   session: ProfileSession | WalletOnlySession,
   settings: UnknownOpenActionModuleSettings,
@@ -179,7 +235,7 @@ function resolveUnknownRequestFor(
     target.openActionModules?.find(
       (entry): entry is UnknownOpenActionModuleSettings =>
         isUnknownOpenActionModuleSettings(entry) && entry.contract.address === params.address,
-    ) ?? never(`Cannot find Open Action settings ${params.address} fro publication ${target.id}`);
+    ) ?? never(`Cannot find Open Action settings ${params.address} in publication ${target.id}`);
 
   return {
     kind: TransactionKind.ACT_ON_PUBLICATION,
@@ -188,20 +244,22 @@ function resolveUnknownRequestFor(
     address: settings.contract.address,
     data: params.data as Data,
     referrers: params.referrers,
+    amount: params.amount,
 
-    ...resolveExecutionDynamics(args, session, settings),
+    ...resolveExecutionMode(args, session, settings),
   };
 }
 
 export function createOpenActionRequest(
-  { publication, sponsored = true }: OpenActionArgs,
+  { publication, sponsored }: RequiredOpenActionArgs,
   params: OpenActionParams,
   session: ProfileSession | WalletOnlySession,
+  environment: EnvironmentConfig,
 ): OpenActionRequest {
   const args = { publication, sponsored };
   switch (params.kind) {
     case OpenActionKind.COLLECT:
-      return resolveCollectRequestFor(args, params, session);
+      return resolveCollectRequestFor(args, params, session, environment);
 
     case OpenActionKind.UNKNOWN:
       return resolveUnknownRequestFor(args, params, session);
