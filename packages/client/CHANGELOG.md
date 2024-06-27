@@ -1,5 +1,11 @@
 # @lens-protocol/client
 
+## 2.3.1
+
+### Patch Changes
+
+- 7f080c11b: **fix:** adds `ProfileOperations.hasBlockedMe` field.
+
 ## 2.3.0
 
 ### Minor Changes
