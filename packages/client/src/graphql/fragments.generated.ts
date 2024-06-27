@@ -194,11 +194,12 @@ export type ProfileFragment = {
   ownedBy: NetworkAddressFragment;
   operations: {
     __typename: 'ProfileOperations';
-    id: string;
     canBlock: boolean;
     canUnblock: boolean;
     canFollow: Types.TriStateValue;
     canUnfollow: boolean;
+    id: string;
+    hasBlockedMe: OptimisticStatusResultFragment;
     isBlockedByMe: OptimisticStatusResultFragment;
     isFollowedByMe: OptimisticStatusResultFragment;
     isFollowingMe: OptimisticStatusResultFragment;
@@ -2548,6 +2549,23 @@ export const ProfileFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canBlock' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canUnblock' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canFollow' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canUnfollow' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'hasBlockedMe' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'OptimisticStatusResult' },
+                      },
+                    ],
+                  },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
                   kind: 'Field',
@@ -2588,10 +2606,6 @@ export const ProfileFragmentDoc = {
                     ],
                   },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'canBlock' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canUnblock' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canFollow' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canUnfollow' } },
               ],
             },
           },
@@ -29479,6 +29493,23 @@ export const PostFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canBlock' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canUnblock' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canFollow' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canUnfollow' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'hasBlockedMe' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'OptimisticStatusResult' },
+                      },
+                    ],
+                  },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
                   kind: 'Field',
@@ -29519,10 +29550,6 @@ export const PostFragmentDoc = {
                     ],
                   },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'canBlock' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canUnblock' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canFollow' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canUnfollow' } },
               ],
             },
           },
@@ -34941,6 +34968,23 @@ export const CommentBaseFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canBlock' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canUnblock' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canFollow' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canUnfollow' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'hasBlockedMe' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'OptimisticStatusResult' },
+                      },
+                    ],
+                  },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
                   kind: 'Field',
@@ -34981,10 +35025,6 @@ export const CommentBaseFragmentDoc = {
                     ],
                   },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'canBlock' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canUnblock' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canFollow' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canUnfollow' } },
               ],
             },
           },
@@ -40269,6 +40309,23 @@ export const QuoteBaseFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canBlock' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canUnblock' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canFollow' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canUnfollow' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'hasBlockedMe' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'OptimisticStatusResult' },
+                      },
+                    ],
+                  },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
                   kind: 'Field',
@@ -40309,10 +40366,6 @@ export const QuoteBaseFragmentDoc = {
                     ],
                   },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'canBlock' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canUnblock' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canFollow' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canUnfollow' } },
               ],
             },
           },
@@ -45107,6 +45160,23 @@ export const CommentFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canBlock' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canUnblock' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canFollow' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canUnfollow' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'hasBlockedMe' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'OptimisticStatusResult' },
+                      },
+                    ],
+                  },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
                   kind: 'Field',
@@ -45147,10 +45217,6 @@ export const CommentFragmentDoc = {
                     ],
                   },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'canBlock' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canUnblock' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canFollow' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canUnfollow' } },
               ],
             },
           },
@@ -51841,6 +51907,23 @@ export const QuoteFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canBlock' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canUnblock' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canFollow' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canUnfollow' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'hasBlockedMe' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'OptimisticStatusResult' },
+                      },
+                    ],
+                  },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
                   kind: 'Field',
@@ -51881,10 +51964,6 @@ export const QuoteFragmentDoc = {
                     ],
                   },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'canBlock' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canUnblock' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canFollow' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canUnfollow' } },
               ],
             },
           },
@@ -58575,6 +58654,23 @@ export const MirrorFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canBlock' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canUnblock' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canFollow' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canUnfollow' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'hasBlockedMe' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'OptimisticStatusResult' },
+                      },
+                    ],
+                  },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
                   kind: 'Field',
@@ -58615,10 +58711,6 @@ export const MirrorFragmentDoc = {
                     ],
                   },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'canBlock' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canUnblock' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canFollow' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canUnfollow' } },
               ],
             },
           },

@@ -95,6 +95,23 @@ export const InvitedResultFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canBlock' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canUnblock' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canFollow' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canUnfollow' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'hasBlockedMe' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'OptimisticStatusResult' },
+                      },
+                    ],
+                  },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
                   kind: 'Field',
@@ -135,10 +152,6 @@ export const InvitedResultFragmentDoc = {
                     ],
                   },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'canBlock' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canUnblock' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canFollow' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canUnfollow' } },
               ],
             },
           },
@@ -1095,6 +1108,23 @@ export const InvitedProfilesDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canBlock' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canUnblock' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canFollow' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'canUnfollow' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'hasBlockedMe' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'OptimisticStatusResult' },
+                      },
+                    ],
+                  },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
                   kind: 'Field',
@@ -1135,10 +1165,6 @@ export const InvitedProfilesDocument = {
                     ],
                   },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'canBlock' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canUnblock' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canFollow' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'canUnfollow' } },
               ],
             },
           },

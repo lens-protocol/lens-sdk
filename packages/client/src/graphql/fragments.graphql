@@ -283,6 +283,13 @@ fragment Profile on Profile {
   createdAt
   operations {
     __typename
+    canBlock
+    canUnblock
+    canFollow
+    canUnfollow
+    hasBlockedMe {
+      ...OptimisticStatusResult
+    }
     id
     isBlockedByMe {
       ...OptimisticStatusResult
@@ -293,10 +300,6 @@ fragment Profile on Profile {
     isFollowingMe {
       ...OptimisticStatusResult
     }
-    canBlock
-    canUnblock
-    canFollow
-    canUnfollow
   }
   interests
   guardian {

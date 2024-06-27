@@ -229,7 +229,14 @@ fragment ProfileStats on ProfileStats {
 
 fragment ProfileOperations on ProfileOperations {
   __typename
+  canBlock
+  canUnblock
+  canFollow
+  canUnfollow
   id
+  hasBlockedMe {
+    ...OptimisticStatusResult
+  }
   isBlockedByMe {
     ...OptimisticStatusResult
   }
@@ -239,10 +246,6 @@ fragment ProfileOperations on ProfileOperations {
   isFollowingMe {
     ...OptimisticStatusResult
   }
-  canBlock
-  canUnblock
-  canFollow
-  canUnfollow
 }
 
 fragment ProfileOnchainIdentity on ProfileOnchainIdentity {
@@ -711,6 +714,7 @@ fragment PublicationOperations on PublicationOperations {
   canMirror
   canQuote
   hasMirrored
+  hasQuoted
   canDecrypt {
     ...CanDecryptResponse
   }

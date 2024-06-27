@@ -492,6 +492,13 @@ export type FollowingRequest = {
   orderBy?: InputMaybe<ProfilesOrderBy>;
 };
 
+export enum ForYouSource {
+  Curated = 'curated',
+  ExtendedNetwork = 'extended_network',
+  Following = 'following',
+  Popular = 'popular',
+}
+
 export type FrameEip712Request = {
   actionResponse: Scalars['String']['input'];
   buttonIndex: Scalars['Int']['input'];
@@ -664,6 +671,13 @@ export type InternalCuratedUpdateRequest = {
   secret: Scalars['String']['input'];
 };
 
+export type InternalForYouFeedRequest = {
+  d: Scalars['DateTime']['input'];
+  n: Scalars['Int']['input'];
+  p?: InputMaybe<Scalars['ProfileId']['input']>;
+  secret: Scalars['String']['input'];
+};
+
 export type InternalInvitesRequest = {
   p: Scalars['ProfileId']['input'];
   secret: Scalars['String']['input'];
@@ -798,6 +812,13 @@ export enum MetadataAttributeType {
   String = 'STRING',
 }
 
+export type ModDisputeReportRequest = {
+  reason: Scalars['String']['input'];
+  reportedProfileId?: InputMaybe<Scalars['ProfileId']['input']>;
+  reportedPublicationId?: InputMaybe<Scalars['PublicationId']['input']>;
+  reporter: Scalars['ProfileId']['input'];
+};
+
 export type ModExplorePublicationRequest = {
   cursor?: InputMaybe<Scalars['Cursor']['input']>;
   limit?: InputMaybe<LimitType>;
@@ -816,6 +837,13 @@ export type ModExplorePublicationsWhere = {
   metadata?: InputMaybe<PublicationMetadataFilters>;
   publicationTypes?: InputMaybe<Array<ModExplorePublicationType>>;
   since?: InputMaybe<Scalars['UnixTimestamp']['input']>;
+};
+
+export type ModReportsRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  forProfile?: InputMaybe<Scalars['ProfileId']['input']>;
+  forPublication?: InputMaybe<Scalars['PublicationId']['input']>;
+  limit?: InputMaybe<LimitType>;
 };
 
 export type ModuleCurrencyApproval = {
@@ -1458,6 +1486,14 @@ export enum PublicationContentWarningType {
   Spoiler = 'SPOILER',
 }
 
+export type PublicationForYouRequest = {
+  cursor?: InputMaybe<Scalars['Cursor']['input']>;
+  for?: InputMaybe<Scalars['ProfileId']['input']>;
+  limit?: InputMaybe<LimitType>;
+  /** The `For You` feed results are served randomized by default. Toggling this off will end up in a more `static` feed. */
+  randomized?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export type PublicationMetadataContentWarningFilter = {
   oneOf: Array<PublicationContentWarningType>;
 };
@@ -1565,6 +1601,7 @@ export enum PublicationReportingIllegalSubreason {
   AnimalAbuse = 'ANIMAL_ABUSE',
   DirectThreat = 'DIRECT_THREAT',
   HumanAbuse = 'HUMAN_ABUSE',
+  IntEllEctualProperty = 'INTEllECTUAL_PROPERTY',
   ThreatIndividual = 'THREAT_INDIVIDUAL',
   Violence = 'VIOLENCE',
 }

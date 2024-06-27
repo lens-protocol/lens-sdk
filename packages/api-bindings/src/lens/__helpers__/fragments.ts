@@ -55,11 +55,12 @@ function mockProfileOperationsFragment(
   overrides?: Partial<gql.ProfileOperations>,
 ): gql.ProfileOperations {
   return {
-    id: mockProfileId(),
     canBlock: false,
     canUnblock: false,
     canFollow: gql.TriStateValue.Unknown,
     canUnfollow: false,
+    hasBlockedMe: mockOptimisticStatusResultFragment(),
+    id: mockProfileId(),
     isBlockedByMe: mockOptimisticStatusResultFragment(),
     isFollowedByMe: mockOptimisticStatusResultFragment(),
     isFollowingMe: mockOptimisticStatusResultFragment(),
@@ -302,6 +303,7 @@ export function mockPublicationOperationsFragment(
     canMirror: gql.TriStateValue.Unknown,
     canQuote: gql.TriStateValue.Unknown,
     hasMirrored: false,
+    hasQuoted: false,
     hasUpvoted: false,
     hasDownvoted: false,
     hasCollected: mockOptimisticStatusResultFragment(),
