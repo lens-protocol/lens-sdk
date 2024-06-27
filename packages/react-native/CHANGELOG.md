@@ -1,5 +1,16 @@
 # @lens-protocol/react-native
 
+## 2.3.1
+
+### Patch Changes
+
+- 73c1bfebe: **fix:** expose PublicationOperations#hasQuoted flag.
+- 7f080c11b: **fix:** adds `ProfileOperations.hasBlockedMe` field.
+- Updated dependencies [73c1bfebe]
+- Updated dependencies [7f080c11b]
+  - @lens-protocol/api-bindings@0.12.3
+  - @lens-protocol/react@2.3.1
+
 ## 2.3.0
 
 ### Minor Changes
