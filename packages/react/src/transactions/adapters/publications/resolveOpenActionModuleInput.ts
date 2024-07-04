@@ -1,3 +1,4 @@
+import { AddressZero } from '@ethersproject/constants';
 import { OpenActionModuleInput } from '@lens-protocol/api-bindings';
 import { OpenActionConfig, OpenActionType } from '@lens-protocol/domain/use-cases/publications';
 
@@ -15,7 +16,7 @@ export function resolveOpenActionModuleInput(config: OpenActionConfig): OpenActi
 
               referralFee: config.referralFee,
 
-              recipient: config.recipient ?? null,
+              recipient: config.recipient ?? AddressZero,
             }),
 
             collectLimit: config.collectLimit?.toString() ?? null,

@@ -42,6 +42,8 @@ export type SimpleCollectActionConfig = {
   referralFee?: number;
   /**
    * The recipient of the collect fee.
+   *
+   * You MUST provide a recipient if you provide an amount.
    */
   recipient?: EvmAddress;
   /**
