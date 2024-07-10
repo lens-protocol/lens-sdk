@@ -1,6 +1,7 @@
 packages:
   - "packages/*"
   - "examples/lens-next-app"
+  - "examples/lens-next-privy-app"
   - "examples/node"
   - "examples/react-native"
   - "examples/shared"
