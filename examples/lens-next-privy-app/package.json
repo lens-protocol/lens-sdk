@@ -13,7 +13,7 @@
   "dependencies": {
     "@lens-protocol/react-web": "latest",
     "@lens-protocol/wagmi": "latest",
-    "@privy-io/react-auth": "^1.73.1",
+    "@privy-io/react-auth": "^1.74.1",
     "@privy-io/wagmi": "^0.2.10",
     "@tanstack/react-query": "^5.29.2",
     "next": "^14.2.2",
