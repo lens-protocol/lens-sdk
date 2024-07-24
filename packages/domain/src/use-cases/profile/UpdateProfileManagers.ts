@@ -24,6 +24,7 @@ export class UpdateProfileManagers extends SponsorshipReady<UpdateProfileManager
   protected override async charged(request: UpdateProfileManagersRequest): Promise<void> {
     await this.paidExecution.execute(request);
   }
+
   protected override async sponsored(request: UpdateProfileManagersRequest): Promise<void> {
     await this.sponsoredExecution.execute(request);
   }

@@ -1,4 +1,4 @@
-import { ChainType, URL } from '@lens-protocol/shared-kernel';
+import { ChainType, EvmAddress, URL } from '@lens-protocol/shared-kernel';
 
 import { ChainConfigRegistry, amoy, goerli, mainnet, polygon } from './chains';
 
@@ -31,7 +31,8 @@ export type EnvironmentConfig = {
   chains: ChainConfigRegistry;
   timings: TransactionObserverTimings;
   contracts: {
-    permissionlessCreator: string;
+    permissionlessCreator: EvmAddress;
+    publicActProxy: EvmAddress;
   };
   handleResolver: ProfileHandleResolver;
 };
@@ -59,6 +60,7 @@ export const production: EnvironmentConfig = {
   },
   contracts: {
     permissionlessCreator: '0x0b5e6100243f793e480DE6088dE6bA70aA9f3872',
+    publicActProxy: '0x358bac99d38609F3D9fB9450Dff87DF65AdD8965',
   },
   handleResolver: (localName) => `lens/${localName}`,
 };
@@ -86,6 +88,7 @@ export const development: EnvironmentConfig = {
   },
   contracts: {
     permissionlessCreator: '0x36440da1D98FF46637f0b98AAA082bc77977B49B',
+    publicActProxy: '0xfD8671cC32ca785Cb4fb81431CF0Acfe7d4dAa3F',
   },
   handleResolver: (localName) => `lens/${localName}`,
 };
@@ -107,6 +110,7 @@ export const staging: EnvironmentConfig = {
   },
   contracts: {
     permissionlessCreator: '0x36440da1D98FF46637f0b98AAA082bc77977B49B',
+    publicActProxy: '0xfD8671cC32ca785Cb4fb81431CF0Acfe7d4dAa3F',
   },
   handleResolver: (localName) => `lens/${localName}`,
 };

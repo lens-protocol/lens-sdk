@@ -7,6 +7,8 @@ export type RequestFallback = AnyTransactionRequestModel;
 export enum BroadcastingErrorReason {
   /**
    * The app is not whitelisted to use gasless transactions.
+   *
+   * @deprecated This error reason is not longer used and will be removed in the future.
    */
   APP_NOT_ALLOWED = 'APP_NOT_ALLOWED',
   /**

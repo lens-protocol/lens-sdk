@@ -10,7 +10,7 @@ dotenv.config();
 const typedAbi = abi as ethers.ContractInterface;
 
 const publicActionProxyAddress = {
-  development: '0x88c8fa7C470d9d94aDfA40187157917B26A548d3',
+  development: '0x77706372deCeb81D49422F9115680B4873722AF1',
   production: '0x53582b1b7BE71622E7386D736b6baf87749B7a2B',
 };
 
@@ -52,36 +52,22 @@ async function main() {
 
   const { typedData } = resultTypedData.unwrap();
 
-  // sign the typed data
-  const signedTypedData = await wallet._signTypedData(
-    typedData.domain,
-    typedData.types,
-    typedData.value,
-  );
-
   // init publicActProxy contract
   const publicActProxy = new ethers.Contract(
     publicActionProxyAddress.development,
     typedAbi,
     wallet,
   ) as PublicActProxy;
-
-  // prepare data for the contract
-  const { v, r, s } = ethers.utils.splitSignature(signedTypedData);
-
   // submit tx
-  const tx = await publicActProxy.publicCollectWithSig(
-    {
-      publicationActedProfileId: typedData.value.publicationActedProfileId,
-      publicationActedId: typedData.value.publicationActedId,
-      actorProfileId: typedData.value.actorProfileId,
-      referrerProfileIds: typedData.value.referrerProfileIds,
-      referrerPubIds: typedData.value.referrerPubIds,
-      actionModuleAddress: typedData.value.actionModuleAddress,
-      actionModuleData: typedData.value.actionModuleData,
-    },
-    { signer: wallet.address, v, r, s, deadline: typedData.value.deadline },
-  );
+  const tx = await publicActProxy.publicFreeAct({
+    publicationActedProfileId: typedData.value.publicationActedProfileId,
+    publicationActedId: typedData.value.publicationActedId,
+    actorProfileId: typedData.value.actorProfileId,
+    referrerProfileIds: typedData.value.referrerProfileIds,
+    referrerPubIds: typedData.value.referrerPubIds,
+    actionModuleAddress: typedData.value.actionModuleAddress,
+    actionModuleData: typedData.value.actionModuleData,
+  });
 
   console.log(`Submitted a tx with a hash: `, tx.hash);
 

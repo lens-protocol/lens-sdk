@@ -63,6 +63,7 @@ export type Scalars = {
 
 export type ActOnOpenActionInput = {
   multirecipientCollectOpenAction?: InputMaybe<Scalars['Boolean']['input']>;
+  protocolSharedRevenueCollectOpenAction?: InputMaybe<ProtocolSharedRevenueActRedeemInput>;
   simpleCollectOpenAction?: InputMaybe<Scalars['Boolean']['input']>;
   unknownOpenAction?: InputMaybe<UnknownOpenActionActRedeemInput>;
 };
@@ -181,6 +182,7 @@ export enum ClaimableTokenType {
 
 export type CollectActionModuleInput = {
   multirecipientCollectOpenAction?: InputMaybe<MultirecipientFeeCollectModuleInput>;
+  protocolSharedRevenueCollectOpenAction?: InputMaybe<ProtocolSharedRevenueCollectModuleInput>;
   simpleCollectOpenAction?: InputMaybe<SimpleCollectOpenActionModuleInput>;
 };
 
@@ -1174,6 +1176,7 @@ export enum OpenActionModuleType {
   LegacySimpleCollectModule = 'LegacySimpleCollectModule',
   LegacyTimedFeeCollectModule = 'LegacyTimedFeeCollectModule',
   MultirecipientFeeCollectOpenActionModule = 'MultirecipientFeeCollectOpenActionModule',
+  ProtocolSharedRevenueCollectOpenActionModule = 'ProtocolSharedRevenueCollectOpenActionModule',
   SimpleCollectOpenActionModule = 'SimpleCollectOpenActionModule',
   UnknownOpenActionModule = 'UnknownOpenActionModule',
 }
@@ -1453,6 +1456,22 @@ export type ProfilesRequestWhere = {
   whoMirroredPublication?: InputMaybe<Scalars['PublicationId']['input']>;
   /** Pass the publication id and get a list of the profiles who quoted it */
   whoQuotedPublication?: InputMaybe<Scalars['PublicationId']['input']>;
+};
+
+export type ProtocolSharedRevenueActRedeemInput = {
+  /** The frontend app address that the collector uses */
+  executorClient?: InputMaybe<Scalars['EvmAddress']['input']>;
+};
+
+export type ProtocolSharedRevenueCollectModuleInput = {
+  amount?: InputMaybe<AmountInput>;
+  collectLimit?: InputMaybe<Scalars['String']['input']>;
+  /** The wallet of a client app to share revenues alongside the recipient and the protocol. Optional. */
+  creatorClient?: InputMaybe<Scalars['EvmAddress']['input']>;
+  endsAt?: InputMaybe<Scalars['DateTime']['input']>;
+  followerOnly: Scalars['Boolean']['input'];
+  recipient?: InputMaybe<Scalars['EvmAddress']['input']>;
+  referralFee?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type PublicationBookmarkRequest = {

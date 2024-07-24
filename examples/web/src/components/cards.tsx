@@ -79,7 +79,10 @@ type PublicationCardProps = {
 
 export function PublicationCard({ publication, children }: PublicationCardProps) {
   return (
-    <article style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <article
+      style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+      data-id={publication.id}
+    >
       <div
         style={{
           display: 'flex',

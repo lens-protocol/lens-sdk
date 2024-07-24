@@ -492,6 +492,15 @@ export function mockSimpleCollectOpenActionSettingsFragment(
   });
 }
 
+export function mockProtocolSharedRevenueCollectOpenActionSettingsFragment(
+  overrides?: Partial<gql.ProtocolSharedRevenueCollectOpenActionSettings>,
+) {
+  return mock<gql.ProtocolSharedRevenueCollectOpenActionSettings>({
+    ...overrides,
+    __typename: 'ProtocolSharedRevenueCollectOpenActionSettings',
+  });
+}
+
 export function mockMultirecipientFeeCollectOpenActionSettingsFragment(
   overrides?: Partial<gql.MultirecipientFeeCollectOpenActionSettings>,
 ) {
