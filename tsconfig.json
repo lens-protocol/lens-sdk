@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "paths": {
+      "@lens-social/types": ["./packages/types/src"]
+    }
+  },
+  "include": ["**/*.ts"]
+}

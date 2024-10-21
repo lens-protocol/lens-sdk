@@ -1,0 +1,17 @@
+{
+  "name": "@lens-social/sdk",
+  "version": "0.0.0",
+  "description": "The quickest way to build on top of Lens Social.",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "packageManager": "pnpm@8.15.9+sha512.499434c9d8fdd1a2794ebf4552b3b25c0a633abcee5bb15e7b5de90f32f47b513aca98cd5cfd001c31f0db454bc3804edccd578501e4ca293a6816166bbd9f81",
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4"
+  },
+  "license": "MIT"
+}

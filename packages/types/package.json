@@ -1,0 +1,22 @@
+{
+  "name": "@lens-social/types",
+  "version": "0.0.0",
+  "description": "Low-level types for Lens Social SDK",
+  "repository": {
+    "directory": "packages/types",
+    "type": "git",
+    "url": "git://github.com/lens-social/sdk.git"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "neverthrow": "^8.0.0"
+  },
+  "devDependencies": {
+    "type-fest": "^4.26.1",
+    "typescript": "^5.6.3"
+  }
+}
