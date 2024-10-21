@@ -1,0 +1,23 @@
+{
+  "[graphql]": {
+    "editor.formatOnSave": false
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.removeUnused.ts": "explicit",
+      "source.removeUnusedImports": "explicit",
+      "source.organizeImports.biome": "explicit"
+    },
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.formatOnSave": true,
+    "editor.suggest.insertMode": "replace"
+  }
+}

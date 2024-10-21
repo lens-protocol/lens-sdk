@@ -1,9 +1,9 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
   "vcs": {
-    "enabled": false,
+    "enabled": true,
     "clientKind": "git",
-    "useIgnoreFile": false
+    "useIgnoreFile": true
   },
   "files": {
     "ignoreUnknown": false,
@@ -24,12 +24,16 @@
   },
   "javascript": {
     "formatter": {
-      "quoteStyle": "double"
+      "quoteStyle": "single",
+      "jsxQuoteStyle": "single"
     }
   },
   "overrides": [
     {
-      "include": ["packages/graphql/src/graphql-env.d.ts"],
+      "include": ["./packages/graphql/src/graphql-env.d.ts"],
+      "formatter": {
+        "enabled": false
+      },
       "linter": {
         "rules": {
           "complexity": {

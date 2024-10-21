@@ -28,7 +28,7 @@ nvm use
 
 to switch to the correct Node.js version.
 
-We recommend to have [corepack](https://www.totaltypescript.com/how-to-use-corepack) enabled to automatically have the correct version of `pnpm`.
+We recommend enabling [corepack](https://www.totaltypescript.com/how-to-use-corepack) to automatically use the correct version of `pnpm` when entering the project folder.
 
 ### Initial Setup <!-- omit in toc -->
 
@@ -69,6 +69,10 @@ Clean the build:
 ```bash
 pnpm clean
 ```
+
+### IDE Setup <!-- omit in toc -->
+
+The project uses [Biome](https://biomejs.dev/) to format and lint the code. You can install the Biome extension for your IDE: https://biomejs.dev/guides/editors/first-party-extensions/
 
 ### Publishing <!-- omit in toc -->
 
