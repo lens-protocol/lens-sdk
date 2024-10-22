@@ -1,5 +1,7 @@
 export * from 'neverthrow';
 
+export * from './helpers';
+
 export * from './BigDecimal';
 export * from './hex';
 export * from './id';
