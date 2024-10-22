@@ -4,7 +4,6 @@
   "compilerOptions": {
     "composite": true,
     "module": "ESNext",
-    "outDir": "dist",
     "plugins": [
       {
         "name": "gql.tada/ts-plugin",

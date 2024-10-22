@@ -9,6 +9,7 @@
     "pnpm": ">=9.1.2"
   },
   "scripts": {
+    "echo": "pwd",
     "check:all": "biome check",
     "check:changed": "biome check --changed",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -8,14 +8,31 @@
     "url": "git://github.com/lens-social/sdk.git"
   },
   "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "import": ["./dist/index.d.ts"],
+      "require": ["./dist/index.d.cts"]
+    }
+  },
+  "files": ["dist"],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsup"
   },
   "license": "MIT",
   "dependencies": {
     "neverthrow": "^8.0.0"
   },
   "devDependencies": {
+    "tsup": "^8.3.0",
     "type-fest": "^4.26.1",
     "typescript": "^5.6.3"
   }
