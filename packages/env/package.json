@@ -1,0 +1,39 @@
+{
+  "name": "@lens-social/env",
+  "version": "0.0.0",
+  "description": "The Lens Social environments.",
+  "repository": {
+    "directory": "packages/env",
+    "type": "git",
+    "url": "git://github.com/lens-network/social-sdk.git"
+  },
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "import": ["./dist/index.esm.d.ts"],
+      "require": ["./dist/index.cjs.d.ts"]
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@lens-social/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.8",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.3"
+  },
+  "license": "MIT"
+}

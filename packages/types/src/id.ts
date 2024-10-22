@@ -1,4 +1,5 @@
 import type { Tagged } from 'type-fest';
+import { identity } from './identity';
 
 /**
  * An identifier.
@@ -9,6 +10,7 @@ export type ID = Tagged<string, 'ID'>;
  * A Universally Unique Identifier.
  */
 export type UUID = Tagged<`${string}-${string}-${string}-${string}-${string}`, 'UUID'>;
+export const uuid = identity<UUID>;
 
 /**
  * A Lens Post ID.

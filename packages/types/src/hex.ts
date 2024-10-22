@@ -10,7 +10,6 @@ export type HexString = `0x${string}`;
  * An EVM address.
  */
 export type EvmAddress = Tagged<HexString, 'EvmAddress'>;
-
 export const evmAddress = identity<EvmAddress>;
 
 /**
@@ -22,6 +21,7 @@ export type BlockchainData = Tagged<HexString, 'BlockchainData'>;
  * A signature.
  */
 export type Signature = Tagged<HexString, 'Signature'>;
+export const signature = identity<Signature>;
 
 /**
  * An RLP-encoded transaction.
