@@ -5,7 +5,7 @@
   "repository": {
     "directory": "packages/types",
     "type": "git",
-    "url": "git://github.com/lens-social/sdk.git"
+    "url": "git://github.com/lens-network/social-sdk.git"
   },
   "type": "module",
   "main": "dist/index.cjs",

@@ -1,4 +1,5 @@
 import type { Tagged } from 'type-fest';
+import { identity } from './identity';
 
 /**
  * A string that represents a hex value with a `0x` prefix.
@@ -9,6 +10,8 @@ export type HexString = `0x${string}`;
  * An EVM address.
  */
 export type EvmAddress = Tagged<HexString, 'EvmAddress'>;
+
+export const evmAddress = identity<EvmAddress>;
 
 /**
  * RLP-encoded blockchain data.

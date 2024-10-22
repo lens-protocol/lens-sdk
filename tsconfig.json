@@ -4,6 +4,7 @@
   "compilerOptions": {
     "lib": ["ESNext"],
     "paths": {
+      "@lens-social/graphq": ["./packages/graphql/src"],
       "@lens-social/types": ["./packages/types/src"]
     }
   },
