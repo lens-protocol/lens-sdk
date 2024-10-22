@@ -15,21 +15,6 @@ The official SDK for the Lens Social 🌿.
 
 This section is for developers who want to contribute to the SDK.
 
-### Pre-requisites: <!-- omit in toc -->
-
-- Node.js: >= v20. See [installation guide](https://nodejs.org/en/download/package-manager).
-- pnpm: v9.1.2. See [installation guide](https://pnpm.io/installation).
-
-If you use [nvm](https://github.com/nvm-sh/nvm) to manage your Node.js versions, you can run:
-
-```bash
-nvm use
-```
-
-to switch to the correct Node.js version.
-
-We recommend enabling [corepack](https://www.totaltypescript.com/how-to-use-corepack) to automatically use the correct version of `pnpm` when entering the project folder.
-
 ### Initial Setup <!-- omit in toc -->
 
 Clone the repository:
@@ -43,6 +28,29 @@ Install the dependencies:
 ```bash
 pnpm install
 ```
+
+### Pre-requisites: <!-- omit in toc -->
+
+- Node.js: >= v20. See [installation guide](https://nodejs.org/en/download/package-manager).
+- pnpm: v9.1.2. See [installation guide](https://pnpm.io/installation).
+
+Use [nvm](https://github.com/nvm-sh/nvm) to manage your Node.js versions. Run the following command in the project root folder:
+
+```bash
+nvm use
+```
+
+to switch to the correct Node.js version.
+
+Enable [corepack](https://www.totaltypescript.com/how-to-use-corepack) to use the the correct version of `pnpm`.
+
+Run the following command in the project root folder:
+
+```bash
+corepack install
+```
+
+to install the correct version once. After that corepack will automatically use the correct version of `pnpm` when entering the project folder.
 
 ### Usage <!-- omit in toc -->
 
@@ -68,6 +76,12 @@ Clean the build:
 
 ```bash
 pnpm clean
+```
+
+Create a new package:
+
+```
+pnpm new:lib
 ```
 
 ### IDE Setup <!-- omit in toc -->

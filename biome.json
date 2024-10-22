@@ -30,6 +30,15 @@
   },
   "overrides": [
     {
+      "include": ["./templates/*"],
+      "formatter": {
+        "enabled": false
+      },
+      "linter": {
+        "enabled": false
+      }
+    },
+    {
       "include": ["./packages/*/dist"],
       "formatter": {
         "enabled": false
