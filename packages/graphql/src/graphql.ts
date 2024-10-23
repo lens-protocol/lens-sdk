@@ -3,6 +3,8 @@ import type {
   BigDecimal,
   BlockchainData,
   CompactJwt,
+  Cursor,
+  DateTime,
   EncodedTransaction,
   EvmAddress,
   ID,
@@ -30,8 +32,8 @@ export const graphql = initGraphQLTada<{
     BigInt: bigint;
     BlockchainData: BlockchainData;
     Boolean: boolean;
-    Cursor: unknown;
-    DateTime: unknown;
+    Cursor: Cursor;
+    DateTime: DateTime;
     EncodedTransaction: EncodedTransaction;
     EvmAddress: EvmAddress;
     Float: number;

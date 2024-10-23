@@ -13,14 +13,14 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.esm.js",
-      "require": "./dist/index.cjs.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
   "typesVersions": {
     "*": {
-      "import": ["./dist/index.esm.d.ts"],
-      "require": ["./dist/index.cjs.d.ts"]
+      "import": ["./dist/index.d.ts"],
+      "require": ["./dist/index.d.cts"]
     }
   },
   "files": ["dist"],

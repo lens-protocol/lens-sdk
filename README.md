@@ -56,9 +56,7 @@ to install the correct version once. After that corepack will automatically use 
 
 Run the tests:
 
-```bash
-pnpm test
-```
+- `pnpm test:client`: Run the tests for the `@lens-social/client` package.
 
 Lint the code:
 
@@ -80,7 +78,7 @@ pnpm clean
 
 Create a new package:
 
-```
+```bash
 pnpm new:lib
 ```
 

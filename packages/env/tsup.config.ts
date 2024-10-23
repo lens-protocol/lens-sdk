@@ -6,7 +6,7 @@ export default defineConfig(() => ({
   outDir: 'dist',
   splitting: false,
   sourcemap: true,
-  treeshake: true,
+  treeshake: false,
   clean: true,
   tsconfig: 'tsconfig.build.json',
   bundle: true,

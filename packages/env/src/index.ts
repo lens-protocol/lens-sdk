@@ -47,5 +47,13 @@ export const testnet: EnvironmentConfig = new Proxy(
  */
 export const staging: EnvironmentConfig = {
   name: 'staging',
-  backend: url('https://api.staging.lens.dev/'),
+  backend: url('https://api.staging.lens.dev/graphql'),
+};
+
+/**
+ * @internal
+ */
+export const local: EnvironmentConfig = {
+  name: 'local',
+  backend: url('http://localhost:3000/graphql'),
 };

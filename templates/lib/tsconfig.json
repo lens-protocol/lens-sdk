@@ -1,16 +1,4 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "composite": true,
-    "module": "ESNext",
-    "lib": ["ESNext"],
-    "types": ["node"]
-  },
-  "include": ["src/**/*"],
-  "references": [
-    {
-      "path": "../types"
-    }
-  ]
+  "extends": ["./tsconfig.build.json", "../../tsconfig.json"]
 }

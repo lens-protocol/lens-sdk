@@ -1,13 +1,15 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "lib": ["ESNext"],
+    "skipLibCheck": true, // Important for ambient types (e.g., vite-env.d.ts) to work
+    "types": ["node"],
     "paths": {
+      "@lens-social/client": ["./packages/client/src"],
       "@lens-social/env": ["./packages/env/src"],
       "@lens-social/graphql": ["./packages/graphql/src"],
       "@lens-social/types": ["./packages/types/src"]
     }
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts"],
+  "exclude": ["dist", "node_modules"]
 }
