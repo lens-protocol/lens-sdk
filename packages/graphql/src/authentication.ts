@@ -2,20 +2,30 @@ import type { FragmentOf, ResultOf, VariablesOf } from 'gql.tada';
 import { App } from './fragments/App';
 import { graphql } from './graphql';
 
+const AuthenticationChallenge = graphql(
+  `
+  fragment AuthenticationChallenge on AuthenticationChallenge {
+    __typename
+    id
+    text
+    app {
+      ...App
+    }
+  }
+`,
+  [App],
+);
+export type AuthenticationChallenge = FragmentOf<typeof AuthenticationChallenge>;
+
 export const ChallengeMutation = graphql(
   `
   mutation Challenge($request: ChallengeRequest!) {
     value: challenge(request: $request) {
-      __typename
-      id
-      text
-      app {
-        ...App
-      }
+      ...AuthenticationChallenge
     }
   }
   `,
-  [App],
+  [AuthenticationChallenge],
 );
 
 export type ChallengeVariables = VariablesOf<typeof ChallengeMutation>;

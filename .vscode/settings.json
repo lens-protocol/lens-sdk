@@ -8,7 +8,7 @@
     "editor.codeActionsOnSave": {
       "source.fixAll": "explicit",
       "source.removeUnused.ts": "never",
-      "source.removeUnusedImports": "explicit",
+      "source.removeUnusedImports": "never",
       "source.organizeImports.biome": "explicit"
     },
     "editor.formatOnSave": true
