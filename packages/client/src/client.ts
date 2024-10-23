@@ -148,7 +148,7 @@ export class LensClient {
     return {
       headers: {
         Origin: options.origin,
-        ...(this.tokens ? { Authorization: `Bearer ${this.tokens.accessToken}` } : {}),
+        ...(this.tokens ? { 'x-access-token': this.tokens.accessToken } : {}),
       },
     };
   }

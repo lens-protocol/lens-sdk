@@ -13,7 +13,7 @@ export function assertError(error: unknown): asserts error is Error {
   }
 }
 
-import type { Ok, Result } from 'neverthrow';
+import type { Err, Ok, Result } from 'neverthrow';
 /**
  * Exhaustiveness checking for union and enum types
  * see https://www.typescriptlang.org/docs/handbook/2/narrowing.html#exhaustiveness-checking
@@ -34,6 +34,6 @@ export function assertOk<T, E>(result: Result<T, E>): asserts result is Ok<T, E>
 /**
  * Asserts that the given result is an `Err` variant.
  */
-export function assertErr<T, E>(result: Result<T, E>): asserts result is Result<T, E> {
+export function assertErr<T, E>(result: Result<T, E>): asserts result is Err<T, E> {
   invariant(result.isErr(), 'Expected result to be Err');
 }

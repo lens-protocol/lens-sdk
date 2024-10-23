@@ -5,7 +5,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { describe, expect, it } from 'vitest';
 import { LensClient } from './client';
 
-const account = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
+const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
 
 describe(`Given an instance of the ${LensClient.name}`, () => {
   const client = new LensClient({
@@ -16,12 +16,15 @@ describe(`Given an instance of the ${LensClient.name}`, () => {
   });
 
   describe('When authenticating', () => {
+    const account = evmAddress('0x00A58BA275E6BFC004E2bf9be121a15a2c543e71');
+    const app = evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3');
+
     it('Then it should stay authenticated', async () => {
       const challenge = await client.challenge({
         request: {
-          account: evmAddress('0x00A58BA275E6BFC004E2bf9be121a15a2c543e71'),
-          signedBy: evmAddress('0x00A58BA275E6BFC004E2bf9be121a15a2c543e71'),
-          app: evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3'),
+          account,
+          signedBy: account,
+          app,
         },
       });
       assertOk(challenge);
@@ -29,7 +32,7 @@ describe(`Given an instance of the ${LensClient.name}`, () => {
       const tokens = await client.authenticate({
         request: {
           id: challenge.value.id,
-          signature: signature(await account.signMessage({ message: challenge.value.text })),
+          signature: signature(await signer.signMessage({ message: challenge.value.text })),
         },
       });
       assertOk(tokens);
@@ -37,7 +40,10 @@ describe(`Given an instance of the ${LensClient.name}`, () => {
       expect(client.accessToken).not.toBeNull();
 
       const authentication = await client.currentAuthentication();
-      assertOk(authentication);
+      expect(authentication._unsafeUnwrap()).toMatchObject({
+        signer: account,
+        app,
+      });
     });
   });
 });
