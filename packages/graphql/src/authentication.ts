@@ -41,33 +41,44 @@ const AuthenticationTokens = graphql(`
 `);
 export type AuthenticationTokens = FragmentOf<typeof AuthenticationTokens>;
 
+const AuthenticationResult = graphql(
+  `
+  fragment AuthenticationResult on AuthenticationResult {
+    ...on AuthenticationTokens {
+      __typename
+      ...AuthenticationTokens
+    }
+      
+    ...on WrongSignerError {
+      __typename
+      reason
+    }
+        
+    ...on ExpiredChallengeError {
+      __typename
+      reason
+    }
+          
+    ...on ForbiddenError {
+      __typename
+      reason
+    }
+  }
+`,
+  [AuthenticationTokens],
+);
+
+export type AuthenticationResult = FragmentOf<typeof AuthenticationResult>;
+
 export const AuthenticateMutation = graphql(
   `
   mutation Authenticate($request: SignedAuthChallenge!) {
     value: authenticate(request: $request) {
-      ...on AuthenticationTokens {
-        __typename
-        ...AuthenticationTokens
-      }
-        
-      ...on WrongSignerError {
-        __typename
-        reason
-      }
-          
-      ...on ExpiredChallengeError {
-        __typename
-        reason
-      }
-            
-      ...on ForbiddenError {
-        __typename
-        reason
-      }
+      ...AuthenticationResult
     }
   }
   `,
-  [AuthenticationTokens],
+  [AuthenticationResult],
 );
 
 export type AuthenticateVariables = VariablesOf<typeof AuthenticateMutation>;

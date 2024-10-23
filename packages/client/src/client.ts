@@ -3,10 +3,10 @@ import { AuthenticateMutation, CurrentAuthenticationQuery } from '@lens-social/g
 import type { AuthenticateVariables } from '@lens-social/graphql';
 import type { ActiveAuthentication } from '@lens-social/graphql';
 import { ChallengeMutation, type ChallengeVariables } from '@lens-social/graphql';
-import type { AuthenticateResult } from '@lens-social/graphql';
 import type { AuthenticationTokens } from '@lens-social/graphql';
 import type { AuthenticationChallenge } from '@lens-social/graphql';
-import { ResultAsync, type URL, never, okAsync } from '@lens-social/types';
+import type { AuthenticationResult } from '@lens-social/graphql';
+import { ResultAsync, never, okAsync } from '@lens-social/types';
 import type { IdToken } from '@lens-social/types';
 import type { RefreshToken } from '@lens-social/types';
 import type { AccessToken } from '@lens-social/types';
@@ -29,18 +29,17 @@ import { UnauthenticatedError, UnexpectedError } from './errors';
  *
  * All queries should alias their results to `value` to ensure interoperability
  * with this client interface.
- *
- * @internal
  */
-export type StandardData<R> = { value: R };
-
-type ValueOf<Result> = Result extends StandardData<infer Value> ? Value : never;
+type StandardData<T> = { value: T };
 
 function takeValue<T>(result: StandardData<T> | undefined): T {
-  return result?.value ?? never('No value');
+  return result?.value ?? never('Expected a value');
 }
 
 export type LensClientOptions = {
+  /**
+   * The environment configuration to use (e.g. `mainnet`, `testnet`).
+   */
   environment: EnvironmentConfig;
   /**
    * Whether to enable caching.
@@ -54,7 +53,12 @@ export type LensClientOptions = {
    * @defaultValue `false`
    */
   debug?: boolean;
-  origin: URL;
+  /**
+   * The URL origin of the client.
+   *
+   * Use this to set the `Origin` header for requests from non-browser environments.
+   */
+  origin?: string;
 };
 
 export class LensClient {
@@ -119,9 +123,7 @@ export class LensClient {
   /**
    * Authenticate the user with the signed authentication challenge.
    */
-  authenticate({
-    request,
-  }: AuthenticateVariables): ResultAsync<ValueOf<AuthenticateResult>, Error> {
+  authenticate({ request }: AuthenticateVariables): ResultAsync<AuthenticationResult, Error> {
     return this.mutation(AuthenticateMutation, { request })
       .andThen(this.handleAuthentication)
       .map(takeValue)
@@ -147,7 +149,7 @@ export class LensClient {
   private fetchOptions(options: LensClientOptions): RequestInit {
     return {
       headers: {
-        Origin: options.origin,
+        ...(options.origin ? { Origin: options.origin } : {}),
         ...(this.tokens ? { 'x-access-token': this.tokens.accessToken } : {}),
       },
     };
