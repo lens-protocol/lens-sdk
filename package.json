@@ -11,8 +11,9 @@
   },
   "scripts": {
     "build": "turbo build",
-    "lint": "biome check",
+    "dev": "turbo watch build",
     "clean": "rimraf packages/*/dist",
+    "lint": "biome check",
     "new:lib": "NODE_OPTIONS='--import tsx' plop --plopfile=plopfile.ts",
     "test:client": "vitest --project @lens-social/client",
     "test:storage": "vitest --project @lens-social/storage",

@@ -38,16 +38,3 @@ jobs:
 
       - name: Run Tests
         run: pnpm test:storage
-
-  # build:
-  #   name: Build
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #     - uses: actions/checkout@v4
-
-  #     - name: Setup Repository
-  #       uses: ./.github/actions/setup
-
-  #     - name: Build
-  #       run: pnpm build

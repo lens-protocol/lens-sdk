@@ -5,26 +5,6 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
-    },
-    "build:types": {
-      "dependsOn": [],
-      "outputs": ["packages/types/dist/**"]
-    },
-    "build:graphql": {
-      "dependsOn": ["build:types"],
-      "outputs": ["packages/graphql/dist/**"]
-    },
-    "build:storage": {
-      "dependsOn": ["build:types"],
-      "outputs": ["packages/storage/dist/**"]
-    },
-    "build:env": {
-      "dependsOn": ["build:types"],
-      "outputs": ["packages/env/dist/**"]
-    },
-    "build:client": {
-      "dependsOn": ["build:graphql", "build:storage", "build:env"],
-      "outputs": ["packages/client/dist/**"]
     }
   }
 }
