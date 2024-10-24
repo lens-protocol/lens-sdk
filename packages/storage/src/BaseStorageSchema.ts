@@ -1,4 +1,4 @@
-import { assertError } from '@lens-social/types';
+import { assertError, invariant } from '@lens-social/types';
 import { z } from 'zod';
 
 /**
@@ -9,17 +9,6 @@ export class SchemaMismatchError extends Error {
 
   constructor(schemaId: string, errors: string) {
     super(`Schema mismatch for ${schemaId} with errors: ${errors}`);
-  }
-}
-
-/**
- * Error thrown when no migration path is found between two versions
- */
-export class NoMigrationPathError extends Error {
-  name = 'NoMigrationPathError' as const;
-
-  constructor(schemaId: string, fromVersion: number, toVersion: number) {
-    super(`No migration path for schema ${schemaId} from version ${fromVersion} to ${toVersion}`);
   }
 }
 
@@ -69,16 +58,18 @@ export class BaseStorageSchema<
   async process(storageItemUnknown: unknown): Promise<IStorageItem<Output>> {
     const storageItem = this.parseStorageItem(storageItemUnknown);
 
-    const data = this.migrate(storageItem);
+    const data = await this.migrate(storageItem);
 
-    return Promise.resolve({ data, metadata: storageItem.metadata });
+    return { data, metadata: storageItem.metadata };
   }
 
-  protected migrate(storageItem: IStorageItem<Input>): Output {
+  protected async migrate(storageItem: IStorageItem<Input>): Promise<Output> {
     const storageVersion = storageItem.metadata.version;
-    if (this.version !== storageVersion) {
-      throw new NoMigrationPathError(this.key, storageVersion, this.version);
-    }
+
+    invariant(
+      this.version === storageVersion,
+      `No migration path for schema ${this.key} from version ${storageVersion} to ${this.version}`,
+    );
 
     // make sure we received correct shape from external storage
     return this.parseData(storageItem.data);

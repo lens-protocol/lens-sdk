@@ -13,7 +13,8 @@
     "check:all": "biome check",
     "check:changed": "biome check --changed",
     "new:lib": "NODE_OPTIONS='--import tsx' plop --plopfile=plopfile.ts",
-    "test:client": "vitest --project @lens-social/client"
+    "test:client": "vitest --project @lens-social/client",
+    "test:storage": "vitest --project @lens-social/storage"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",

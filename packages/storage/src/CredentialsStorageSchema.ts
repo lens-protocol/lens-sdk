@@ -17,9 +17,9 @@ export class CredentialsStorageSchema extends BaseStorageSchema<PersistedCredent
     super(key, PersistedCredentialsSchema);
   }
 
-  protected override migrate(
+  protected override async migrate(
     storageItem: IStorageItem<PersistedCredentials>,
-  ): PersistedCredentials {
+  ): Promise<PersistedCredentials> {
     return this.parseData(storageItem.data);
   }
 }
