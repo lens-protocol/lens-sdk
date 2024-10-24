@@ -19,17 +19,11 @@
   },
   "typesVersions": {
     "*": {
-      "import": [
-        "./dist/index.d.ts"
-      ],
-      "require": [
-        "./dist/index.d.cts"
-      ]
+      "import": ["./dist/index.d.ts"],
+      "require": ["./dist/index.d.cts"]
     }
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "tsup"
   },
