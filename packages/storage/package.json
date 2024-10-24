@@ -1,9 +1,9 @@
 {
-  "name": "@lens-social/client",
+  "name": "@lens-social/storage",
   "version": "0.0.0",
-  "description": "Low-level Lens API client",
+  "description": "This package contains functionality related to storage.",
   "repository": {
-    "directory": "packages/client",
+    "directory": "packages/storage",
     "type": "git",
     "url": "git://github.com/lens-network/social-sdk.git"
   },
@@ -24,22 +24,15 @@
     }
   },
   "files": ["dist"],
-  "sideEffects": false,
   "scripts": {
     "build": "tsup"
   },
   "dependencies": {
-    "@lens-social/env": "workspace:*",
-    "@lens-social/graphql": "workspace:*",
-    "@lens-social/storage": "workspace:*",
-    "@lens-social/types": "workspace:*",
-    "@urql/core": "^5.0.8",
-    "loglevel": "^1.9.2"
+    "@lens-social/types": "workspace:*"
   },
   "devDependencies": {
     "tsup": "^8.3.0",
-    "typescript": "^5.6.3",
-    "viem": "^2.21.33"
+    "typescript": "^5.6.3"
   },
   "license": "MIT"
 }
