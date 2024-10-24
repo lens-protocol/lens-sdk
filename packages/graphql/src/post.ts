@@ -1,4 +1,7 @@
 import type { FragmentOf, VariablesOf } from 'gql.tada';
+import { SponsoredTransactionRequest } from './fragments/SponsoredTransactionRequest';
+import { TransactionRequest } from './fragments/TransactionRequest';
+import { TransactionWillFail } from './fragments/TransactionWillFail';
 import { graphql } from './graphql';
 
 const PostResponse = graphql(`
@@ -8,83 +11,6 @@ const PostResponse = graphql(`
   }
 `);
 export type PostResponse = FragmentOf<typeof PostResponse>;
-
-const Eip712TransactionRequest = graphql(`
-  fragment Eip712TransactionRequest on Eip712TransactionRequest {
-    __typename
-    type
-    to
-    from
-    nonce
-    gasLimit
-    gasPrice
-    data
-    value
-    chainId
-    customData {
-      gasPerPubdata
-      factoryDeps
-      customSignature
-      paymasterParams {
-        paymaster
-        paymasterInput
-      }
-    }
-  }
-`);
-export type Eip712TransactionRequest = FragmentOf<typeof Eip712TransactionRequest>;
-
-const SponsoredTransactionRequest = graphql(
-  `
-  fragment SponsoredTransactionRequest on SponsoredTransactionRequest {
-    __typename
-    encoded
-    raw {
-      ...Eip712TransactionRequest
-    }
-  }
-`,
-  [Eip712TransactionRequest],
-);
-export type SponsoredTransactionRequest = FragmentOf<typeof SponsoredTransactionRequest>;
-
-const Eip1559TransactionRequest = graphql(`
-  fragment Eip1559TransactionRequest on Eip1559TransactionRequest {
-    __typename
-    type
-    to
-    nonce
-    gasLimit
-    maxPriorityFeePerGas
-    maxFeePerGas
-    data
-    value
-    chainId
-  }
-`);
-export type Eip1559TransactionRequest = FragmentOf<typeof Eip1559TransactionRequest>;
-
-const TransactionRequest = graphql(
-  `
-  fragment TransactionRequest on TransactionRequest {
-    __typename
-    encoded
-    raw {
-      ...Eip1559TransactionRequest
-    }
-  }
-`,
-  [Eip1559TransactionRequest],
-);
-export type TransactionRequest = FragmentOf<typeof TransactionRequest>;
-
-const TransactionWillFail = graphql(`
-  fragment TransactionWillFail on TransactionWillFail {
-    __typename
-    reason
-  }
-`);
-export type TransactionWillFail = FragmentOf<typeof TransactionWillFail>;
 
 const PostResult = graphql(
   `
@@ -122,3 +48,16 @@ export const PostMutation = graphql(
 );
 
 export type PostVariables = VariablesOf<typeof PostMutation>;
+
+export const RepostMutation = graphql(
+  `
+  mutation Repost($request: CreateRepostRequest!) {
+    value: repost(request: $request) {
+      ...PostResult
+    }
+  }
+`,
+  [PostResult],
+);
+
+export type RepostVariables = VariablesOf<typeof RepostMutation>;

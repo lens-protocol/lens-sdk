@@ -5,7 +5,7 @@ import type { ActiveAuthentication } from '@lens-social/graphql';
 import { ChallengeMutation, type ChallengeVariables } from '@lens-social/graphql';
 import type { AuthenticationTokens } from '@lens-social/graphql';
 import type { AuthenticationChallenge } from '@lens-social/graphql';
-import { ResultAsync, errAsync, never, okAsync, signatureFrom } from '@lens-social/types';
+import { ResultAsync, never, okAsync, signatureFrom } from '@lens-social/types';
 import {
   type AnyVariables,
   type Operation,
@@ -18,12 +18,7 @@ import {
   mapExchange,
 } from '@urql/core';
 import { type Logger, getLogger } from 'loglevel';
-import {
-  AuthenticationError,
-  type SigningError,
-  UnauthenticatedError,
-  UnexpectedError,
-} from './errors';
+import { AuthenticationError, UnauthenticatedError, UnexpectedError } from './errors';
 
 /**
  * A standardized data object.
@@ -144,6 +139,7 @@ export class Client<BlanketError = UnexpectedError> {
     return this.challenge(params)
       .map(async (challenge) => ({
         challenge,
+        // TODO handle signing errors
         signature: await params.signMessage(challenge.text),
       }))
       .andThen(({ challenge, signature }) =>
@@ -205,7 +201,7 @@ class AuthenticatedClient extends Client<UnauthenticatedError | UnexpectedError>
   /**
    * The current authentication credentials if available.
    */
-  get credentials(): AuthenticationTokens | null {
+  get credentials(): AuthenticationTokens {
     return this.tokens;
   }
 
