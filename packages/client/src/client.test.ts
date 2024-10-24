@@ -1,5 +1,5 @@
 import { local } from '@lens-social/env';
-import { url, assertErr, assertOk, evmAddress, signatureFrom } from '@lens-social/types';
+import { assertErr, assertOk, evmAddress, signatureFrom } from '@lens-social/types';
 
 import { privateKeyToAccount } from 'viem/accounts';
 import { describe, expect, it } from 'vitest';
@@ -13,7 +13,7 @@ const app = evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3');
 describe(`Given an instance of the ${Client.name}`, () => {
   const client = Client.create({
     environment: local,
-    origin: url('http://example.com'),
+    origin: 'http://example.com',
   });
 
   describe('When authenticating via the low-level methods', () => {
