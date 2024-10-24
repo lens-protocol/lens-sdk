@@ -42,7 +42,7 @@ describe(`Given an instance of the ${Client.name}`, () => {
     });
   });
 
-  describe('When authenticating via the `signIn` convenience method', () => {
+  describe('When authenticating via the `login` convenience method', () => {
     it('Then it should return an Err<never, SigningError> with any error thrown by the provided `SignMessage` function', async () => {
       const challenge = await client.login({
         request: {

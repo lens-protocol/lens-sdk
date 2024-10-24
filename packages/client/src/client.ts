@@ -5,6 +5,7 @@ import type { ActiveAuthentication } from '@lens-social/graphql';
 import { ChallengeMutation, type ChallengeVariables } from '@lens-social/graphql';
 import type { AuthenticationTokens } from '@lens-social/graphql';
 import type { AuthenticationChallenge } from '@lens-social/graphql';
+import type { IStorageProvider } from '@lens-social/storage';
 import { ResultAsync, errAsync, never, okAsync, signatureFrom } from '@lens-social/types';
 import {
   type AnyVariables,
@@ -39,7 +40,7 @@ function takeValue<T>({ data }: OperationResult<StandardData<T> | undefined, Any
   return data?.value ?? never('Expected a value');
 }
 
-type BaseOptions = {
+type ClientOptions = {
   /**
    * The environment configuration to use (e.g. `mainnet`, `testnet`).
    */
@@ -62,16 +63,14 @@ type BaseOptions = {
    * Use this to set the `Origin` header for requests from non-browser environments.
    */
   origin?: string;
-};
 
-type AuthenticatedOptions = BaseOptions & {
   /**
-   * The initial authentication tokens to use.
+   * The storage provider to use.
+   *
+   * @defaultValue {@link InMemoryStorageProvider}
    */
-  tokens: AuthenticationTokens;
+  storage?: IStorageProvider;
 };
-
-export type ClientOptions = BaseOptions | AuthenticatedOptions;
 
 export type SignMessage = (message: string) => Promise<string>;
 
@@ -79,20 +78,15 @@ export type LoginParams = ChallengeVariables & {
   signMessage: SignMessage;
 };
 
-export class Client<BlanketError = UnexpectedError> {
+export class Client<TError = UnexpectedError> {
   protected readonly options: ClientOptions;
 
   protected readonly urql: UrqlClient;
 
   protected readonly logger: Logger;
 
-  static create(options: BaseOptions): Client;
-  static create(options: AuthenticatedOptions): SessionClient;
-  static create(options: ClientOptions): Client | SessionClient {
-    if ('tokens' in options) {
-      return new SessionClient(options);
-    }
-    return new Client<UnexpectedError>(options);
+  static create(options: ClientOptions): Client {
+    return new Client(options);
   }
 
   protected constructor(options: ClientOptions) {
@@ -122,7 +116,7 @@ export class Client<BlanketError = UnexpectedError> {
   /**
    * Generate a new authentication challenge for the given account and app.
    */
-  challenge({ request }: ChallengeVariables): ResultAsync<AuthenticationChallenge, BlanketError> {
+  challenge({ request }: ChallengeVariables): ResultAsync<AuthenticationChallenge, TError> {
     return this.mutation(ChallengeMutation, { request });
   }
 
@@ -131,10 +125,10 @@ export class Client<BlanketError = UnexpectedError> {
    */
   authenticate({
     request,
-  }: AuthenticateVariables): ResultAsync<SessionClient, AuthenticationError | BlanketError> {
+  }: AuthenticateVariables): ResultAsync<SessionClient, AuthenticationError | TError> {
     return this.mutation(AuthenticateMutation, { request }).andThen((result) => {
       if (result.__typename === 'AuthenticationTokens') {
-        return okAsync(new SessionClient({ ...this.options, tokens: result }));
+        return okAsync(new SessionClient(this.options, result));
       }
       return AuthenticationError.from(result.reason).asResultAsync<SessionClient>();
     });
@@ -142,7 +136,7 @@ export class Client<BlanketError = UnexpectedError> {
 
   login(
     params: LoginParams,
-  ): ResultAsync<SessionClient, AuthenticationError | SigningError | BlanketError> {
+  ): ResultAsync<SessionClient, AuthenticationError | SigningError | TError> {
     return this.challenge(params)
       .map(async (challenge) => ({
         challenge,
@@ -175,23 +169,23 @@ export class Client<BlanketError = UnexpectedError> {
   public query<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
-  ): ResultAsync<TValue, BlanketError> {
+  ): ResultAsync<TValue, TError> {
     return this.resultFrom(this.urql.query(document, variables)).map(takeValue);
   }
 
   public mutation<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
-  ): ResultAsync<TValue, BlanketError> {
+  ): ResultAsync<TValue, TError> {
     return this.resultFrom(this.urql.mutation(document, variables)).map(takeValue);
   }
 
   protected resultFrom<TData, TVariables extends AnyVariables>(
     source: OperationResultSource<OperationResult<TData, TVariables>>,
-  ): ResultAsync<OperationResult<TData, TVariables>, BlanketError> {
+  ): ResultAsync<OperationResult<TData, TVariables>, TError> {
     return ResultAsync.fromPromise(source.toPromise(), (err: unknown) => {
       this.logger.error(err);
-      return UnexpectedError.from(err) as BlanketError;
+      return UnexpectedError.from(err) as TError;
     });
   }
 
@@ -205,9 +199,9 @@ export class Client<BlanketError = UnexpectedError> {
 class SessionClient extends Client<UnauthenticatedError | UnexpectedError> {
   private readonly tokens: AuthenticationTokens;
 
-  constructor(options: AuthenticatedOptions) {
+  constructor(options: ClientOptions, tokens: AuthenticationTokens) {
     super(options);
-    this.tokens = options.tokens;
+    this.tokens = tokens;
   }
 
   /**
