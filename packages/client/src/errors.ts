@@ -12,18 +12,20 @@ export enum GraphQLErrorCode {
   BAD_REQUEST = 'BAD_REQUEST',
 }
 
+class ResultAwareError extends Error {
+  asResultAsync<T>(): ResultAsync<T, typeof this> {
+    return errAsync(this);
+  }
+}
+
 /**
- *
+ * Error indicating a user is not authenticated.
  */
-export class UnauthenticatedError extends Error {
+export class UnauthenticatedError extends ResultAwareError {
   name = 'UnauthenticatedError' as const;
 
   private constructor(message: string, props: { cause: unknown }) {
     super(message, props);
-  }
-
-  asResultAsync<T>(): ResultAsync<T, UnauthenticatedError> {
-    return errAsync(this);
   }
 
   static from(error: CombinedError): UnauthenticatedError {
@@ -31,7 +33,10 @@ export class UnauthenticatedError extends Error {
   }
 }
 
-export class UnexpectedError extends Error {
+/**
+ * Error indicating an unexpected condition occurred.
+ */
+export class UnexpectedError extends ResultAwareError {
   name = 'UnexpectedError' as const;
 
   private constructor(message: string, props: { cause: unknown }) {
@@ -40,5 +45,24 @@ export class UnexpectedError extends Error {
 
   static from(cause: unknown) {
     return new UnexpectedError('An unexpected error occurred', { cause });
+  }
+}
+
+export class AuthenticationError extends ResultAwareError {
+  name = 'AuthenticationError' as const;
+
+  static from(message: string) {
+    return new AuthenticationError(message);
+  }
+}
+
+/**
+ * Error indicating an error occurred while signing.
+ */
+export class SigningError extends ResultAwareError {
+  name = 'SigningError' as const;
+
+  static from(cause: unknown) {
+    return new SigningError('An error occurred while signing', { cause });
   }
 }

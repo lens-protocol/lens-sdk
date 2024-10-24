@@ -1,24 +1,21 @@
 import { local } from '@lens-social/env';
-import { url, assertOk, evmAddress, signature } from '@lens-social/types';
+import { url, assertOk, evmAddress, signatureFrom } from '@lens-social/types';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { describe, expect, it } from 'vitest';
-import { LensClient } from './client';
+import { Client } from './client';
 
 const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
+const account = evmAddress(signer.address);
+const app = evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3');
 
-describe(`Given an instance of the ${LensClient.name}`, () => {
-  const client = new LensClient({
+describe(`Given an instance of the ${Client.name}`, () => {
+  const client = Client.create({
     environment: local,
-    cache: false,
-    debug: false,
     origin: url('http://example.com'),
   });
 
   describe('When authenticating', () => {
-    const account = evmAddress('0x00A58BA275E6BFC004E2bf9be121a15a2c543e71');
-    const app = evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3');
-
     it('Then it should stay authenticated', async () => {
       const challenge = await client.challenge({
         request: {
@@ -29,17 +26,15 @@ describe(`Given an instance of the ${LensClient.name}`, () => {
       });
       assertOk(challenge);
 
-      const tokens = await client.authenticate({
+      const authenticated = await client.authenticate({
         request: {
           id: challenge.value.id,
-          signature: signature(await signer.signMessage({ message: challenge.value.text })),
+          signature: signatureFrom(await signer.signMessage({ message: challenge.value.text })),
         },
       });
-      assertOk(tokens);
+      assertOk(authenticated);
 
-      expect(client.accessToken).not.toBeNull();
-
-      const authentication = await client.currentAuthentication();
+      const authentication = await authenticated.value.currentAuthentication();
       expect(authentication._unsafeUnwrap()).toMatchObject({
         signer: account,
         app,

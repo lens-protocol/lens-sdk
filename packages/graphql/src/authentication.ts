@@ -1,4 +1,4 @@
-import type { FragmentOf, ResultOf, VariablesOf } from 'gql.tada';
+import type { FragmentOf, VariablesOf } from 'gql.tada';
 import { App } from './fragments/App';
 import { graphql } from './graphql';
 
@@ -30,10 +30,9 @@ export const ChallengeMutation = graphql(
 
 export type ChallengeVariables = VariablesOf<typeof ChallengeMutation>;
 
-export type ChallengeResult = ResultOf<typeof ChallengeMutation>;
-
 const AuthenticationTokens = graphql(`
   fragment AuthenticationTokens on AuthenticationTokens {
+    __typename
     accessToken
     refreshToken
     identityToken
@@ -45,7 +44,6 @@ const AuthenticationResult = graphql(
   `
   fragment AuthenticationResult on AuthenticationResult {
     ...on AuthenticationTokens {
-      __typename
       ...AuthenticationTokens
     }
       
@@ -83,8 +81,6 @@ export const AuthenticateMutation = graphql(
 
 export type AuthenticateVariables = VariablesOf<typeof AuthenticateMutation>;
 
-export type AuthenticateResult = ResultOf<typeof AuthenticateMutation>;
-
 const ActiveAuthentication = graphql(`
   fragment ActiveAuthentication on ActiveAuthentication {
     authenticationId
@@ -111,5 +107,3 @@ export const CurrentAuthenticationQuery = graphql(
   `,
   [ActiveAuthentication],
 );
-
-export type CurrentAuthenticationResult = ResultOf<typeof CurrentAuthenticationQuery>;

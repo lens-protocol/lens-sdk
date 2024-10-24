@@ -2,7 +2,7 @@ export * from 'neverthrow';
 
 export * from './helpers';
 
-export * from './BigDecimal';
+export * from './number';
 export * from './hex';
 export * from './id';
 export * from './jwt';

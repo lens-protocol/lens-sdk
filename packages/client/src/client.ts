@@ -5,11 +5,7 @@ import type { ActiveAuthentication } from '@lens-social/graphql';
 import { ChallengeMutation, type ChallengeVariables } from '@lens-social/graphql';
 import type { AuthenticationTokens } from '@lens-social/graphql';
 import type { AuthenticationChallenge } from '@lens-social/graphql';
-import type { AuthenticationResult } from '@lens-social/graphql';
 import { ResultAsync, never, okAsync } from '@lens-social/types';
-import type { IdToken } from '@lens-social/types';
-import type { RefreshToken } from '@lens-social/types';
-import type { AccessToken } from '@lens-social/types';
 import {
   type AnyVariables,
   type Operation,
@@ -22,7 +18,7 @@ import {
   mapExchange,
 } from '@urql/core';
 import { type Logger, getLogger } from 'loglevel';
-import { UnauthenticatedError, UnexpectedError } from './errors';
+import { AuthenticationError, UnauthenticatedError, UnexpectedError } from './errors';
 
 /**
  * A standardized data object.
@@ -32,11 +28,11 @@ import { UnauthenticatedError, UnexpectedError } from './errors';
  */
 type StandardData<T> = { value: T };
 
-function takeValue<T>(result: StandardData<T> | undefined): T {
-  return result?.value ?? never('Expected a value');
+function takeValue<T>({ data }: OperationResult<StandardData<T> | undefined, AnyVariables>): T {
+  return data?.value ?? never('Expected a value');
 }
 
-export type LensClientOptions = {
+type BaseOptions = {
   /**
    * The environment configuration to use (e.g. `mainnet`, `testnet`).
    */
@@ -61,36 +57,35 @@ export type LensClientOptions = {
   origin?: string;
 };
 
-export class LensClient {
-  protected urql: UrqlClient;
-
-  protected logger: Logger;
-
-  protected tokens: AuthenticationTokens | null = null;
-
+type AuthenticatedOptions = BaseOptions & {
   /**
-   * The current Access Token if available.
+   * The initial authentication tokens to use.
    */
-  get accessToken(): AccessToken | null {
-    return this.tokens?.accessToken ?? null;
+  tokens: AuthenticationTokens;
+};
+
+export type ClientOptions = BaseOptions | AuthenticatedOptions;
+
+export class Client<BlanketError = UnexpectedError> {
+  protected readonly options: ClientOptions;
+
+  protected readonly urql: UrqlClient;
+
+  protected readonly logger: Logger;
+
+  static create(options: BaseOptions): Client;
+  static create(options: AuthenticatedOptions): AuthenticatedClient;
+  static create(options: ClientOptions): Client | AuthenticatedClient {
+    if ('tokens' in options) {
+      return new AuthenticatedClient(options);
+    }
+    return new Client<UnexpectedError>(options);
   }
 
-  /**
-   * The current ID Token if available.
-   */
-  get idToken(): IdToken | null {
-    return this.tokens?.identityToken ?? null;
-  }
+  protected constructor(options: ClientOptions) {
+    this.options = options;
 
-  /**
-   * The current Refresh Token if available.
-   */
-  get refreshToken(): RefreshToken | null {
-    return this.tokens?.refreshToken ?? null;
-  }
-
-  constructor(options: LensClientOptions) {
-    this.logger = getLogger(LensClient.name);
+    this.logger = getLogger(Client.name);
     this.logger.setLevel(options.debug ? 'DEBUG' : 'SILENT');
 
     this.urql = createClient({
@@ -114,24 +109,75 @@ export class LensClient {
   /**
    * Generate a new authentication challenge for the given account and app.
    */
-  challenge({ request }: ChallengeVariables): ResultAsync<AuthenticationChallenge, Error> {
-    return this.mutation(ChallengeMutation, { request })
-      .andThen(this.handleAuthentication)
-      .map(takeValue);
+  challenge({ request }: ChallengeVariables): ResultAsync<AuthenticationChallenge, BlanketError> {
+    return this.mutation(ChallengeMutation, { request });
   }
 
   /**
    * Authenticate the user with the signed authentication challenge.
    */
-  authenticate({ request }: AuthenticateVariables): ResultAsync<AuthenticationResult, Error> {
-    return this.mutation(AuthenticateMutation, { request })
-      .andThen(this.handleAuthentication)
-      .map(takeValue)
-      .andTee((tokens) => {
-        if (tokens.__typename === 'AuthenticationTokens') {
-          this.tokens = tokens as AuthenticationTokens;
-        }
-      });
+  authenticate({
+    request,
+  }: AuthenticateVariables): ResultAsync<AuthenticatedClient, AuthenticationError | BlanketError> {
+    return this.mutation(AuthenticateMutation, { request }).andThen((result) => {
+      if (result.__typename === 'AuthenticationTokens') {
+        return okAsync(new AuthenticatedClient({ ...this.options, tokens: result }));
+      }
+      return AuthenticationError.from(result.reason).asResultAsync<AuthenticatedClient>();
+    });
+  }
+
+  protected fetchOptions(options: ClientOptions): RequestInit {
+    return {
+      headers: {
+        ...(options.origin ? { Origin: options.origin } : {}),
+      },
+    };
+  }
+
+  public query<TValue, TVariables extends AnyVariables>(
+    document: TypedDocumentNode<StandardData<TValue>, TVariables>,
+    variables: TVariables,
+  ): ResultAsync<TValue, BlanketError> {
+    return this.resultFrom(this.urql.query(document, variables)).map(takeValue);
+  }
+
+  public mutation<TValue, TVariables extends AnyVariables>(
+    document: TypedDocumentNode<StandardData<TValue>, TVariables>,
+    variables: TVariables,
+  ): ResultAsync<TValue, BlanketError> {
+    return this.resultFrom(this.urql.mutation(document, variables)).map(takeValue);
+  }
+
+  protected resultFrom<TData, TVariables extends AnyVariables>(
+    source: OperationResultSource<OperationResult<TData, TVariables>>,
+  ): ResultAsync<OperationResult<TData, TVariables>, BlanketError> {
+    return ResultAsync.fromPromise(source.toPromise(), (err: unknown) => {
+      this.logger.error(err);
+      return UnexpectedError.from(err) as BlanketError;
+    });
+  }
+
+  // TODO
+  // protected mapGraphQLErrors
+}
+
+/**
+ * @privateRemarks Intentionally not exported.
+ */
+class AuthenticatedClient extends Client<UnauthenticatedError | UnexpectedError> {
+  private readonly tokens: AuthenticationTokens;
+
+  constructor(options: AuthenticatedOptions) {
+    super(options);
+    this.tokens = options.tokens;
+  }
+
+  /**
+   * The current authentication credentials if available.
+   */
+  get credentials(): AuthenticationTokens | null {
+    return this.tokens;
   }
 
   /**
@@ -141,50 +187,54 @@ export class LensClient {
     ActiveAuthentication,
     UnauthenticatedError | UnexpectedError
   > {
-    return this.query(CurrentAuthenticationQuery, {})
+    return this.query(CurrentAuthenticationQuery, {});
+  }
+
+  override query<TValue, TVariables extends AnyVariables>(
+    document: TypedDocumentNode<StandardData<TValue>, TVariables>,
+    variables: TVariables,
+  ): ResultAsync<TValue, UnauthenticatedError | UnexpectedError> {
+    return this.resultFrom(this.urql.query(document, variables))
       .andThen(this.handleAuthentication)
       .map(takeValue);
   }
 
-  private fetchOptions(options: LensClientOptions): RequestInit {
+  override mutation<TValue, TVariables extends AnyVariables>(
+    document: TypedDocumentNode<StandardData<TValue>, TVariables>,
+    variables: TVariables,
+  ): ResultAsync<TValue, UnauthenticatedError | UnexpectedError> {
+    return this.resultFrom(this.urql.mutation(document, variables))
+      .andThen(this.handleAuthentication)
+      .map(takeValue);
+  }
+
+  protected override fetchOptions(options: ClientOptions): RequestInit {
+    const base = super.fetchOptions(options);
     return {
+      ...base,
       headers: {
-        ...(options.origin ? { Origin: options.origin } : {}),
-        ...(this.tokens ? { 'x-access-token': this.tokens.accessToken } : {}),
+        ...base.headers,
+        'x-access-token': this.tokens.accessToken,
+        // Authorization: `Bearer ${this.tokens.accessToken}`,
       },
     };
   }
 
-  private query<Data, Variables extends AnyVariables>(
-    document: TypedDocumentNode<Data, Variables>,
-    variables: Variables,
-  ): ResultAsync<OperationResult<Data, Variables>, UnexpectedError> {
-    return this.resultFrom(this.urql.query(document, variables));
-  }
-
-  private mutation<Data, Variables extends AnyVariables>(
-    document: TypedDocumentNode<Data, Variables>,
-    variables: Variables,
-  ): ResultAsync<OperationResult<Data, Variables>, UnexpectedError> {
-    return this.resultFrom(this.urql.mutation(document, variables));
-  }
-
-  private resultFrom<Data, Variables extends AnyVariables>(
-    source: OperationResultSource<OperationResult<Data, Variables>>,
-  ): ResultAsync<OperationResult<Data, Variables>, UnexpectedError> {
-    return ResultAsync.fromPromise(source.toPromise(), (err: unknown) => {
-      this.logger.error(err);
-      return UnexpectedError.from(err);
-    });
-  }
-
-  private handleAuthentication<Data, Variables extends AnyVariables>({
-    error,
-    data,
-  }: OperationResult<Data, Variables>): ResultAsync<Data | undefined, UnauthenticatedError> {
-    if (error) {
-      return UnauthenticatedError.from(error).asResultAsync<Data>();
+  private handleAuthentication<
+    Data,
+    Variables extends AnyVariables,
+    Result extends OperationResult<Data, Variables>,
+    TError extends UnauthenticatedError | UnexpectedError,
+  >(result: Result): ResultAsync<Result, TError> {
+    if (result.error) {
+      // TODO detect the error type from extension's code
+      return UnauthenticatedError.from(result.error).asResultAsync<Result>() as ResultAsync<
+        Result,
+        TError
+      >;
     }
-    return okAsync(data);
+    return okAsync(result);
   }
 }
+
+export type { AuthenticatedClient };

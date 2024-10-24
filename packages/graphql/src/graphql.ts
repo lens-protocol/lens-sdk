@@ -1,6 +1,7 @@
 import type {
   AccessToken,
   BigDecimal,
+  BigIntString,
   BlockchainData,
   CompactJwt,
   Cursor,
@@ -29,7 +30,7 @@ export const graphql = initGraphQLTada<{
   scalars: {
     AccessToken: AccessToken;
     BigDecimal: BigDecimal;
-    BigInt: bigint;
+    BigInt: BigIntString;
     BlockchainData: BlockchainData;
     Boolean: boolean;
     Cursor: Cursor;
