@@ -18,12 +18,19 @@ import {
   mapExchange,
 } from '@urql/core';
 import { type Logger, getLogger } from 'loglevel';
-import { AuthenticationError, SigningError, UnauthenticatedError, UnexpectedError } from './errors';
+import {
+  AuthenticationError,
+  GraphQLErrorCode,
+  SigningError,
+  UnauthenticatedError,
+  UnexpectedError,
+  hasExtensionCode,
+} from './errors';
 
 /**
  * A standardized data object.
  *
- * All queries should alias their results to `value` to ensure interoperability
+ * All GQL operations should alias their results to `value` to ensure interoperability
  * with this client interface.
  */
 type StandardData<T> = { value: T };
@@ -254,14 +261,12 @@ class AuthenticatedClient extends Client<UnauthenticatedError | UnexpectedError>
     Data,
     Variables extends AnyVariables,
     Result extends OperationResult<Data, Variables>,
-    TError extends UnauthenticatedError | UnexpectedError,
-  >(result: Result): ResultAsync<Result, TError> {
+  >(result: Result): ResultAsync<Result, UnauthenticatedError | UnexpectedError> {
     if (result.error) {
-      // TODO detect the error type from extension's code
-      return UnauthenticatedError.from(result.error).asResultAsync<Result>() as ResultAsync<
-        Result,
-        TError
-      >;
+      if (hasExtensionCode(result.error, GraphQLErrorCode.UNAUTHENTICATED)) {
+        return UnauthenticatedError.from(result.error).asResultAsync<Result>();
+      }
+      return UnexpectedError.from(result.error).asResultAsync<Result>();
     }
     return okAsync(result);
   }

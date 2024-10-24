@@ -11,6 +11,14 @@ export enum GraphQLErrorCode {
   BAD_USER_INPUT = 'BAD_USER_INPUT',
   BAD_REQUEST = 'BAD_REQUEST',
 }
+/**
+ * @internal
+ */
+export function hasExtensionCode(error: CombinedError, code: GraphQLErrorCode): boolean {
+  return error.graphQLErrors.some((gqlError) => {
+    return gqlError.extensions?.code === code;
+  });
+}
 
 class ResultAwareError extends Error {
   asResultAsync<T>(): ResultAsync<T, typeof this> {
