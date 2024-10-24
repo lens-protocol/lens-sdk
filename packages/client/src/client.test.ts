@@ -1,5 +1,5 @@
 import { local } from '@lens-social/env';
-import { url, assertOk, evmAddress, signatureFrom } from '@lens-social/types';
+import { url, assertErr, assertOk, evmAddress, signatureFrom } from '@lens-social/types';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { describe, expect, it } from 'vitest';
@@ -15,8 +15,8 @@ describe(`Given an instance of the ${Client.name}`, () => {
     origin: url('http://example.com'),
   });
 
-  describe('When authenticating', () => {
-    it('Then it should stay authenticated', async () => {
+  describe('When authenticating via the low-level methods', () => {
+    it('Then it should authenticate and stay authenticated', async () => {
       const challenge = await client.challenge({
         request: {
           account,
@@ -42,7 +42,20 @@ describe(`Given an instance of the ${Client.name}`, () => {
     });
   });
 
-  describe('When the `signMessage` function throws', () => {
-    it.skip('Then it should return an Err<never, SigningError>');
+  describe('When authenticating via the `signIn` convenience method', () => {
+    it('Then it should return an Err<never, SigningError> with any error thrown by the provided `SignMessage` function', async () => {
+      const challenge = await client.login({
+        request: {
+          account,
+          signedBy: account,
+          app,
+        },
+        signMessage: async () => {
+          throw new Error('Test Error');
+        },
+      });
+
+      assertErr(challenge);
+    });
   });
 });

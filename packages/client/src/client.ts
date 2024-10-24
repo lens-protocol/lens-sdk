@@ -5,7 +5,7 @@ import type { ActiveAuthentication } from '@lens-social/graphql';
 import { ChallengeMutation, type ChallengeVariables } from '@lens-social/graphql';
 import type { AuthenticationTokens } from '@lens-social/graphql';
 import type { AuthenticationChallenge } from '@lens-social/graphql';
-import { ResultAsync, never, okAsync, signatureFrom } from '@lens-social/types';
+import { ResultAsync, errAsync, never, okAsync, signatureFrom } from '@lens-social/types';
 import {
   type AnyVariables,
   type Operation,
@@ -18,7 +18,7 @@ import {
   mapExchange,
 } from '@urql/core';
 import { type Logger, getLogger } from 'loglevel';
-import { AuthenticationError, UnauthenticatedError, UnexpectedError } from './errors';
+import { AuthenticationError, SigningError, UnauthenticatedError, UnexpectedError } from './errors';
 
 /**
  * A standardized data object.
@@ -68,7 +68,7 @@ export type ClientOptions = BaseOptions | AuthenticatedOptions;
 
 export type SignMessage = (message: string) => Promise<string>;
 
-export type SignInParams = ChallengeVariables & {
+export type LoginParams = ChallengeVariables & {
   signMessage: SignMessage;
 };
 
@@ -133,23 +133,28 @@ export class Client<BlanketError = UnexpectedError> {
     });
   }
 
-  signIn(
-    params: SignInParams,
-  ): ResultAsync<AuthenticatedClient, AuthenticationError | BlanketError> {
+  login(
+    params: LoginParams,
+  ): ResultAsync<AuthenticatedClient, AuthenticationError | SigningError | BlanketError> {
     return this.challenge(params)
       .map(async (challenge) => ({
         challenge,
-        // TODO handle signing errors
-        signature: await params.signMessage(challenge.text),
+        signature: await ResultAsync.fromPromise(params.signMessage(challenge.text), (err) =>
+          SigningError.from(err),
+        ),
       }))
-      .andThen(({ challenge, signature }) =>
-        this.authenticate({
+      .andThen(({ challenge, signature }) => {
+        if (signature.isErr()) {
+          return errAsync(signature.error);
+        }
+
+        return this.authenticate({
           request: {
             id: challenge.id,
-            signature: signatureFrom(signature),
+            signature: signatureFrom(signature.value),
           },
-        }),
-      );
+        });
+      });
   }
 
   protected fetchOptions(options: ClientOptions): RequestInit {

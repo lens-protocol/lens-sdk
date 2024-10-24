@@ -18,7 +18,7 @@ describe(`Given the ${post.name} action`, () => {
 
   describe('When creating a Post', () => {
     it('Then it should return the expected TransactionRequest', async () => {
-      const authenticated = await client.signIn({
+      const authenticated = await client.login({
         request: { signedBy: account, app, account },
         signMessage: (message) => signer.signMessage({ message }),
       });
