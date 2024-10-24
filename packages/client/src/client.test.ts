@@ -41,4 +41,8 @@ describe(`Given an instance of the ${Client.name}`, () => {
       });
     });
   });
+
+  describe('When the `signMessage` function throws', () => {
+    it.skip('Then it should return an Err<never, SigningError>');
+  });
 });

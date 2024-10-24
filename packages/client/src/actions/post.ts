@@ -6,7 +6,7 @@ import type { AuthenticatedClient } from '../client';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
 export function post(
-  client: AuthenticatedClient,
+  client: AuthenticatedClient, // | Result<AuthenticatedClient, UnexpectedError>,
   variables: PostVariables,
 ): ResultAsync<PostResult, UnauthenticatedError | UnexpectedError> {
   return client.mutation(PostMutation, variables);

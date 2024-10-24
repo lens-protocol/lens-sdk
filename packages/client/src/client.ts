@@ -5,7 +5,7 @@ import type { ActiveAuthentication } from '@lens-social/graphql';
 import { ChallengeMutation, type ChallengeVariables } from '@lens-social/graphql';
 import type { AuthenticationTokens } from '@lens-social/graphql';
 import type { AuthenticationChallenge } from '@lens-social/graphql';
-import { ResultAsync, never, okAsync } from '@lens-social/types';
+import { ResultAsync, errAsync, never, okAsync, signatureFrom } from '@lens-social/types';
 import {
   type AnyVariables,
   type Operation,
@@ -18,7 +18,12 @@ import {
   mapExchange,
 } from '@urql/core';
 import { type Logger, getLogger } from 'loglevel';
-import { AuthenticationError, UnauthenticatedError, UnexpectedError } from './errors';
+import {
+  AuthenticationError,
+  type SigningError,
+  UnauthenticatedError,
+  UnexpectedError,
+} from './errors';
 
 /**
  * A standardized data object.
@@ -65,6 +70,12 @@ type AuthenticatedOptions = BaseOptions & {
 };
 
 export type ClientOptions = BaseOptions | AuthenticatedOptions;
+
+export type SignMessage = (message: string) => Promise<string>;
+
+export type SignInParams = ChallengeVariables & {
+  signMessage: SignMessage;
+};
 
 export class Client<BlanketError = UnexpectedError> {
   protected readonly options: ClientOptions;
@@ -125,6 +136,24 @@ export class Client<BlanketError = UnexpectedError> {
       }
       return AuthenticationError.from(result.reason).asResultAsync<AuthenticatedClient>();
     });
+  }
+
+  signIn(
+    params: SignInParams,
+  ): ResultAsync<AuthenticatedClient, AuthenticationError | BlanketError> {
+    return this.challenge(params)
+      .map(async (challenge) => ({
+        challenge,
+        signature: await params.signMessage(challenge.text),
+      }))
+      .andThen(({ challenge, signature }) =>
+        this.authenticate({
+          request: {
+            id: challenge.id,
+            signature: signatureFrom(signature),
+          },
+        }),
+      );
   }
 
   protected fetchOptions(options: ClientOptions): RequestInit {
