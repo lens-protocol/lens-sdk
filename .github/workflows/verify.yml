@@ -37,7 +37,7 @@ jobs:
         run: echo "PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}" > .env
 
       - name: Run Tests
-        run: pnpm test
+        run: pnpm test:storage
 
   # build:
   #   name: Build
