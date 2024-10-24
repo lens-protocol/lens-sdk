@@ -26,8 +26,7 @@
   "files": ["dist"],
   "sideEffects": false,
   "scripts": {
-    "build": "tsup",
-    "test": "vitest"
+    "build": "tsup"
   },
   "dependencies": {
     "@lens-social/env": "workspace:*",
