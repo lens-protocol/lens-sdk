@@ -19,11 +19,17 @@
   },
   "typesVersions": {
     "*": {
-      "import": ["./dist/index.d.ts"],
-      "require": ["./dist/index.d.cts"]
+      "import": [
+        "./dist/index.d.ts"
+      ],
+      "require": [
+        "./dist/index.d.cts"
+      ]
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
   "scripts": {
     "build": "tsup"
@@ -34,6 +40,7 @@
     "@lens-social/storage": "workspace:*",
     "@lens-social/types": "workspace:*",
     "@urql/core": "^5.0.8",
+    "@urql/exchange-auth": "^2.2.0",
     "loglevel": "^1.9.2"
   },
   "devDependencies": {

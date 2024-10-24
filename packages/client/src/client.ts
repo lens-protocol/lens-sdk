@@ -1,11 +1,18 @@
 import type { EnvironmentConfig } from '@lens-social/env';
-import { AuthenticateMutation, CurrentAuthenticationQuery } from '@lens-social/graphql';
-import type { AuthenticateVariables } from '@lens-social/graphql';
-import type { ActiveAuthentication } from '@lens-social/graphql';
-import { ChallengeMutation, type ChallengeVariables } from '@lens-social/graphql';
-import type { AuthenticationTokens } from '@lens-social/graphql';
-import type { AuthenticationChallenge } from '@lens-social/graphql';
-import type { IStorageProvider } from '@lens-social/storage';
+import {
+  AuthenticateMutation,
+  ChallengeMutation,
+  CurrentAuthenticationQuery,
+} from '@lens-social/graphql';
+import type {
+  ActiveAuthentication,
+  AuthenticateVariables,
+  AuthenticationChallenge,
+  AuthenticationTokens,
+  ChallengeVariables,
+} from '@lens-social/graphql';
+import type { Credentials, IStorage, IStorageProvider } from '@lens-social/storage';
+import { InMemoryStorageProvider, createCredentialsStorage } from '@lens-social/storage';
 import { ResultAsync, errAsync, never, okAsync, signatureFrom } from '@lens-social/types';
 import {
   type AnyVariables,
@@ -19,6 +26,7 @@ import {
   mapExchange,
 } from '@urql/core';
 import { type Logger, getLogger } from 'loglevel';
+
 import {
   AuthenticationError,
   GraphQLErrorCode,
@@ -40,7 +48,10 @@ function takeValue<T>({ data }: OperationResult<StandardData<T> | undefined, Any
   return data?.value ?? never('Expected a value');
 }
 
-type ClientOptions = {
+/**
+ * The options to configure the client.
+ */
+export type ClientOptions = {
   /**
    * The environment configuration to use (e.g. `mainnet`, `testnet`).
    */
@@ -72,6 +83,17 @@ type ClientOptions = {
   storage?: IStorageProvider;
 };
 
+/**
+ * @internal
+ */
+type ClientContext = {
+  environment: EnvironmentConfig;
+  cache: boolean;
+  debug: boolean;
+  origin?: string;
+  storage: IStorageProvider;
+};
+
 export type SignMessage = (message: string) => Promise<string>;
 
 export type LoginParams = ChallengeVariables & {
@@ -79,18 +101,28 @@ export type LoginParams = ChallengeVariables & {
 };
 
 export class Client<TError = UnexpectedError> {
-  protected readonly options: ClientOptions;
+  protected readonly context: ClientContext;
 
   protected readonly urql: UrqlClient;
 
   protected readonly logger: Logger;
+
+  protected readonly credentials: IStorage<Credentials>;
 
   static create(options: ClientOptions): Client {
     return new Client(options);
   }
 
   protected constructor(options: ClientOptions) {
-    this.options = options;
+    this.context = {
+      environment: options.environment,
+      cache: options.cache ?? false,
+      debug: options.debug ?? false,
+      origin: options.origin,
+      storage: options.storage ?? new InMemoryStorageProvider(),
+    };
+
+    this.credentials = createCredentialsStorage(this.context.storage, options.environment.name);
 
     this.logger = getLogger(Client.name);
     this.logger.setLevel(options.debug ? 'DEBUG' : 'SILENT');
@@ -99,17 +131,23 @@ export class Client<TError = UnexpectedError> {
       url: options.environment.backend,
       exchanges: [
         mapExchange({
-          onOperation: (operation: Operation) => {
+          onOperation: async (operation: Operation) => {
             this.logger.debug(
               'Operation:',
               // biome-ignore lint/suspicious/noExplicitAny: This is a debug log
               (operation.query.definitions[0] as any)?.name?.value ?? 'Unknown',
             );
+            return {
+              ...operation,
+              context: {
+                ...operation.context,
+                fetchOptions: await this.fetchOptions(),
+              },
+            };
           },
         }),
         fetchExchange,
       ],
-      fetchOptions: this.fetchOptions.bind(this, options),
     });
   }
 
@@ -126,12 +164,17 @@ export class Client<TError = UnexpectedError> {
   authenticate({
     request,
   }: AuthenticateVariables): ResultAsync<SessionClient, AuthenticationError | TError> {
-    return this.mutation(AuthenticateMutation, { request }).andThen((result) => {
-      if (result.__typename === 'AuthenticationTokens') {
-        return okAsync(new SessionClient(this.options, result));
-      }
-      return AuthenticationError.from(result.reason).asResultAsync<SessionClient>();
-    });
+    return this.mutation(AuthenticateMutation, { request })
+      .andThen((result) => {
+        if (result.__typename === 'AuthenticationTokens') {
+          return okAsync(result);
+        }
+        return AuthenticationError.from(result.reason).asResultAsync<AuthenticationTokens>();
+      })
+      .map(async (tokens) => {
+        await this.credentials.set(tokens);
+        return new SessionClient(this.context);
+      });
   }
 
   login(
@@ -158,10 +201,19 @@ export class Client<TError = UnexpectedError> {
       });
   }
 
-  protected fetchOptions(options: ClientOptions): RequestInit {
+  resume(): ResultAsync<SessionClient, UnauthenticatedError> {
+    return ResultAsync.fromSafePromise(this.credentials.get()).andThen((credentials) => {
+      if (!credentials) {
+        return new UnauthenticatedError('No credentials found').asResultAsync<SessionClient>();
+      }
+      return okAsync(new SessionClient(this.context));
+    });
+  }
+
+  protected fetchOptions(): RequestInit | Promise<RequestInit> {
     return {
       headers: {
-        ...(options.origin ? { Origin: options.origin } : {}),
+        ...(this.context.origin ? { Origin: this.context.origin } : {}),
       },
     };
   }
@@ -188,28 +240,18 @@ export class Client<TError = UnexpectedError> {
       return UnexpectedError.from(err) as TError;
     });
   }
-
-  // TODO
-  // protected mapGraphQLErrors
 }
 
 /**
  * @privateRemarks Intentionally not exported.
  */
 class SessionClient extends Client<UnauthenticatedError | UnexpectedError> {
-  private readonly tokens: AuthenticationTokens;
-
-  constructor(options: ClientOptions, tokens: AuthenticationTokens) {
-    super(options);
-    this.tokens = tokens;
-  }
-
   /**
    * The current authentication credentials if available.
    */
-  get credentials(): AuthenticationTokens {
-    return this.tokens;
-  }
+  // get credentials(): AuthenticationTokens {
+  //   return this.tokens;
+  // }
 
   /**
    * Get the current authentication status.
@@ -239,13 +281,15 @@ class SessionClient extends Client<UnauthenticatedError | UnexpectedError> {
       .map(takeValue);
   }
 
-  protected override fetchOptions(options: ClientOptions): RequestInit {
-    const base = super.fetchOptions(options);
+  protected override async fetchOptions(): Promise<RequestInit> {
+    const base = await super.fetchOptions();
+    const credentials = (await this.credentials.get()) ?? never('No credentials found');
+
     return {
       ...base,
       headers: {
         ...base.headers,
-        'x-access-token': this.tokens.accessToken,
+        'x-access-token': credentials.accessToken,
         // Authorization: `Bearer ${this.tokens.accessToken}`,
       },
     };

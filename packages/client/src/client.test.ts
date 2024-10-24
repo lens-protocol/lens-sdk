@@ -1,8 +1,9 @@
 import { local } from '@lens-social/env';
 import { url, assertErr, assertOk, evmAddress, signatureFrom } from '@lens-social/types';
-import { privateKeyToAccount } from 'viem/accounts';
 
+import { privateKeyToAccount } from 'viem/accounts';
 import { describe, expect, it } from 'vitest';
+
 import { Client } from './client';
 
 const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
@@ -44,7 +45,7 @@ describe(`Given an instance of the ${Client.name}`, () => {
 
   describe('When authenticating via the `login` convenience method', () => {
     it('Then it should return an Err<never, SigningError> with any error thrown by the provided `SignMessage` function', async () => {
-      const challenge = await client.login({
+      const authenticated = await client.login({
         request: {
           account,
           signedBy: account,
@@ -55,7 +56,29 @@ describe(`Given an instance of the ${Client.name}`, () => {
         },
       });
 
-      assertErr(challenge);
+      assertErr(authenticated);
+    });
+  });
+
+  describe('When resuming an authenticated session', () => {
+    it('Then it should return a SessionClient instance associated with the credentials in the storage', async () => {
+      await client.login({
+        request: {
+          account,
+          signedBy: account,
+          app,
+        },
+        signMessage: (message) => signer.signMessage({ message }),
+      });
+
+      const authenticated = await client.resume();
+      assertOk(authenticated);
+
+      const authentication = await authenticated.value.currentAuthentication();
+      expect(authentication._unsafeUnwrap()).toMatchObject({
+        signer: account,
+        app,
+      });
     });
   });
 });

@@ -32,10 +32,6 @@ class ResultAwareError extends Error {
 export class UnauthenticatedError extends ResultAwareError {
   name = 'UnauthenticatedError' as const;
 
-  private constructor(message: string, props: { cause: unknown }) {
-    super(message, props);
-  }
-
   static from(error: CombinedError): UnauthenticatedError {
     return new UnauthenticatedError(error.message, { cause: error });
   }
@@ -46,10 +42,6 @@ export class UnauthenticatedError extends ResultAwareError {
  */
 export class UnexpectedError extends ResultAwareError {
   name = 'UnexpectedError' as const;
-
-  private constructor(message: string, props: { cause: unknown }) {
-    super(message, props);
-  }
 
   static from(cause: unknown) {
     return new UnexpectedError('An unexpected error occurred', { cause });
