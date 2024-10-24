@@ -3,14 +3,14 @@ import type { PostVariables } from '@lens-social/graphql';
 import { PostMutation, type PostResult, RepostMutation } from '@lens-social/graphql';
 import type { RepostVariables } from '@lens-social/graphql';
 import type { ResultAsync } from '@lens-social/types';
-import type { AuthenticatedClient } from '../client';
+import type { SessionClient } from '../client';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
 /**
  * Create a new post.
  */
 export function post(
-  client: AuthenticatedClient,
+  client: SessionClient,
   variables: PostVariables,
 ): ResultAsync<PostResult, UnauthenticatedError | UnexpectedError> {
   return client.mutation(PostMutation, variables);
@@ -20,7 +20,7 @@ export function post(
  * Repost a post.
  */
 export function repost(
-  client: AuthenticatedClient,
+  client: SessionClient,
   variables: RepostVariables,
 ): ResultAsync<PostResult, UnauthenticatedError | UnexpectedError> {
   return client.mutation(RepostMutation, variables);

@@ -87,10 +87,10 @@ export class Client<BlanketError = UnexpectedError> {
   protected readonly logger: Logger;
 
   static create(options: BaseOptions): Client;
-  static create(options: AuthenticatedOptions): AuthenticatedClient;
-  static create(options: ClientOptions): Client | AuthenticatedClient {
+  static create(options: AuthenticatedOptions): SessionClient;
+  static create(options: ClientOptions): Client | SessionClient {
     if ('tokens' in options) {
-      return new AuthenticatedClient(options);
+      return new SessionClient(options);
     }
     return new Client<UnexpectedError>(options);
   }
@@ -131,18 +131,18 @@ export class Client<BlanketError = UnexpectedError> {
    */
   authenticate({
     request,
-  }: AuthenticateVariables): ResultAsync<AuthenticatedClient, AuthenticationError | BlanketError> {
+  }: AuthenticateVariables): ResultAsync<SessionClient, AuthenticationError | BlanketError> {
     return this.mutation(AuthenticateMutation, { request }).andThen((result) => {
       if (result.__typename === 'AuthenticationTokens') {
-        return okAsync(new AuthenticatedClient({ ...this.options, tokens: result }));
+        return okAsync(new SessionClient({ ...this.options, tokens: result }));
       }
-      return AuthenticationError.from(result.reason).asResultAsync<AuthenticatedClient>();
+      return AuthenticationError.from(result.reason).asResultAsync<SessionClient>();
     });
   }
 
   login(
     params: LoginParams,
-  ): ResultAsync<AuthenticatedClient, AuthenticationError | SigningError | BlanketError> {
+  ): ResultAsync<SessionClient, AuthenticationError | SigningError | BlanketError> {
     return this.challenge(params)
       .map(async (challenge) => ({
         challenge,
@@ -202,7 +202,7 @@ export class Client<BlanketError = UnexpectedError> {
 /**
  * @privateRemarks Intentionally not exported.
  */
-class AuthenticatedClient extends Client<UnauthenticatedError | UnexpectedError> {
+class SessionClient extends Client<UnauthenticatedError | UnexpectedError> {
   private readonly tokens: AuthenticationTokens;
 
   constructor(options: AuthenticatedOptions) {
@@ -272,4 +272,4 @@ class AuthenticatedClient extends Client<UnauthenticatedError | UnexpectedError>
   }
 }
 
-export type { AuthenticatedClient };
+export type { SessionClient };
