@@ -19,16 +19,23 @@
   },
   "typesVersions": {
     "*": {
-      "import": ["./dist/index.d.ts"],
-      "require": ["./dist/index.d.cts"]
+      "import": [
+        "./dist/index.d.ts"
+      ],
+      "require": [
+        "./dist/index.d.cts"
+      ]
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup"
   },
   "dependencies": {
-    "@lens-social/types": "workspace:*"
+    "@lens-social/types": "workspace:*",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "tsup": "^8.3.0",

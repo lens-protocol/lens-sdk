@@ -62,7 +62,7 @@ importers:
         version: 5.6.3
       viem:
         specifier: ^2.21.33
-        version: 2.21.33(typescript@5.6.3)
+        version: 2.21.33(typescript@5.6.3)(zod@3.23.8)
 
   packages/env:
     dependencies:
@@ -104,6 +104,9 @@ importers:
       '@lens-social/types':
         specifier: workspace:*
         version: link:../types
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       tsup:
         specifier: ^8.3.0
@@ -1934,6 +1937,9 @@ packages:
     resolution: {integrity: sha512-cYVsTjKl8b+FrnidjibDWskAv7UKOfcwaVZdp/it9n1s9fU3IkgDbhdIRKCW4JDsAlECJY0ytoVPT3sK6kideA==}
     engines: {node: '>=18'}
 
+  zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
+
 snapshots:
 
   '@0no-co/graphql.web@1.0.9(graphql@16.9.0)':
@@ -2322,9 +2328,10 @@ snapshots:
       loupe: 3.1.2
       tinyrainbow: 1.2.0
 
-  abitype@1.0.6(typescript@5.6.3):
+  abitype@1.0.6(typescript@5.6.3)(zod@3.23.8):
     optionalDependencies:
       typescript: 5.6.3
+      zod: 3.23.8
 
   aggregate-error@4.0.1:
     dependencies:
@@ -3442,14 +3449,14 @@ snapshots:
 
   v8flags@4.0.1: {}
 
-  viem@2.21.33(typescript@5.6.3):
+  viem@2.21.33(typescript@5.6.3)(zod@3.23.8):
     dependencies:
       '@adraffy/ens-normalize': 1.11.0
       '@noble/curves': 1.6.0
       '@noble/hashes': 1.5.0
       '@scure/bip32': 1.5.0
       '@scure/bip39': 1.4.0
-      abitype: 1.0.6(typescript@5.6.3)
+      abitype: 1.0.6(typescript@5.6.3)(zod@3.23.8)
       isows: 1.0.6(ws@8.18.0)
       webauthn-p256: 0.0.10
       ws: 8.18.0
@@ -3588,3 +3595,5 @@ snapshots:
   ws@8.18.0: {}
 
   yoctocolors-cjs@2.1.2: {}
+
+  zod@3.23.8: {}
