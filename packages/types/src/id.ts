@@ -16,6 +16,7 @@ export const uuid = identity<UUID>;
  * A Lens Post ID.
  */
 export type PostId = Tagged<string, 'PostId'>;
+export const postId = identity<PostId>;
 
 /**
  * A Lens v2 Profile ID.

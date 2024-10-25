@@ -8,7 +8,14 @@ import type {
 } from '@lens-social/graphql';
 import type { Credentials, IStorage, IStorageProvider } from '@lens-social/storage';
 import { InMemoryStorageProvider, createCredentialsStorage } from '@lens-social/storage';
-import { ResultAsync, errAsync, never, okAsync, signatureFrom } from '@lens-social/types';
+import {
+  ResultAsync,
+  errAsync,
+  invariant,
+  never,
+  okAsync,
+  signatureFrom,
+} from '@lens-social/types';
 import {
   type AnyVariables,
   type Operation,
@@ -39,8 +46,12 @@ import {
  */
 type StandardData<T> = { value: T };
 
-function takeValue<T>({ data }: OperationResult<StandardData<T> | undefined, AnyVariables>): T {
-  return data?.value ?? never('Expected a value');
+function takeValue<T>({
+  data,
+  error,
+}: OperationResult<StandardData<T> | undefined, AnyVariables>): T {
+  invariant(data, `Expected a value, got: ${error?.message}`);
+  return data.value;
 }
 
 /**
@@ -364,6 +375,11 @@ class SessionClient extends AbstractClient<UnauthenticatedError | UnexpectedErro
    * @param variables - The variables to pass to the operation.
    * @returns The result of the operation.
    */
+
+  override query<TValue, TVariables extends AnyVariables>(
+    document: TypedDocumentNode<StandardData<TValue>, TVariables>,
+    variables: TVariables,
+  ): ResultAsync<TValue, UnexpectedError>;
   override query<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
@@ -421,3 +437,8 @@ class SessionClient extends AbstractClient<UnauthenticatedError | UnexpectedErro
 }
 
 export type { SessionClient };
+
+/**
+ * Any client that can be used to interact with the Lens GraphQL API.
+ */
+export type AnyClient = PublicClient | SessionClient;
