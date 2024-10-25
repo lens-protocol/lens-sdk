@@ -61,3 +61,16 @@ export const RepostMutation = graphql(
 );
 
 export type RepostVariables = VariablesOf<typeof RepostMutation>;
+
+export const EditPostMutation = graphql(
+  `
+  mutation EditPost($request: EditPostRequest!) {
+    value: editPost(request: $request) {
+      ...PostResult
+    }
+  }
+`,
+  [PostResult],
+);
+
+export type EditPostVariables = VariablesOf<typeof EditPostMutation>;
