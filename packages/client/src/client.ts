@@ -213,6 +213,13 @@ export class Client<TError = UnexpectedError> {
     };
   }
 
+  /**
+   * Execute a GraphQL query operation.
+   *
+   * @param document - The GraphQL document to execute.
+   * @param variables - The variables to pass to the operation.
+   * @returns The result of the operation.
+   */
   public query<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
@@ -220,6 +227,13 @@ export class Client<TError = UnexpectedError> {
     return this.resultFrom(this.urql.query(document, variables)).map(takeValue);
   }
 
+  /**
+   * Execute a GraphQL mutation operation.
+   *
+   * @param document - The GraphQL document to execute.
+   * @param variables - The variables to pass to the operation.
+   * @returns The result of the operation.
+   */
   public mutation<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
@@ -242,12 +256,21 @@ export class Client<TError = UnexpectedError> {
  */
 class SessionClient extends Client<UnauthenticatedError | UnexpectedError> {
   /**
-   * The current authentication credentials if available.
+   * The current authentication tokens if available.
    */
-  // get credentials(): AuthenticationTokens {
-  //   return this.tokens;
-  // }
+  async getCredentials(): Promise<Credentials | null> {
+    return await this.credentials.get();
+  }
 
+  /**
+   * Execute a GraphQL query operation.
+   *
+   * It will automatically handle authentication errors and re-fresh credentials if necessary.
+   *
+   * @param document - The GraphQL document to execute.
+   * @param variables - The variables to pass to the operation.
+   * @returns The result of the operation.
+   */
   override query<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
@@ -257,6 +280,15 @@ class SessionClient extends Client<UnauthenticatedError | UnexpectedError> {
       .map(takeValue);
   }
 
+  /**
+   * Execute a GraphQL mutation operation.
+   *
+   * It will automatically handle authentication errors and re-fresh credentials if necessary.
+   *
+   * @param document - The GraphQL document to execute.
+   * @param variables - The variables to pass to the operation.
+   * @returns The result of the operation.
+   */
   override mutation<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,

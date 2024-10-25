@@ -19,26 +19,38 @@
   },
   "typesVersions": {
     "*": {
-      "import": ["./dist/index.d.ts"],
-      "require": ["./dist/index.d.cts"]
+      "import": [
+        "./dist/index.d.ts"
+      ],
+      "require": [
+        "./dist/index.d.cts"
+      ]
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
   "scripts": {
     "build": "tsup"
   },
   "dependencies": {
     "@lens-social/client": "workspace:*",
+    "@lens-social/env": "workspace:*",
     "@lens-social/graphql": "workspace:*",
     "@lens-social/types": "workspace:*",
     "urql": "^4.2.0"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.0.1",
     "@types/react": "^18.3.12",
+    "happy-dom": "^15.7.4",
     "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "tsup": "^8.3.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "viem": "^2.21.33"
   },
   "peerDependencies": {
     "@types/react": "^18.3.12",

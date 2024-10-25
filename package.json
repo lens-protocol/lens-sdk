@@ -16,6 +16,7 @@
     "lint": "biome check",
     "new:lib": "NODE_OPTIONS='--import tsx' plop --plopfile=plopfile.ts",
     "test:client": "vitest --project @lens-social/client",
+    "test:react": "vitest --project @lens-social/react",
     "test:storage": "vitest --project @lens-social/storage",
     "test": "vitest"
   },

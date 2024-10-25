@@ -10,7 +10,7 @@ export default defineConfig(() => ({
   clean: true,
   tsconfig: 'tsconfig.build.json',
   bundle: true,
-  minify: true,
+  minify: false,
   dts: true,
   platform: 'neutral',
   format: ['esm', 'cjs'],

@@ -2,10 +2,16 @@ import type { Client } from '@lens-social/client';
 import { invariant } from '@lens-social/types';
 import React, { type ReactNode, useContext } from 'react';
 
+/**
+ * @internal
+ */
 export type LensContextValue = {
   client: Client;
 };
 
+/**
+ * @internal
+ */
 export function createContextValue(client: Client): LensContextValue {
   return { client };
 }

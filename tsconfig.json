@@ -7,6 +7,7 @@
       "@lens-social/client": ["./packages/client/src"],
       "@lens-social/env": ["./packages/env/src"],
       "@lens-social/graphql": ["./packages/graphql/src"],
+      "@lens-social/react": ["./packages/react/src"],
       "@lens-social/storage": ["./packages/storage/src"],
       "@lens-social/types": ["./packages/types/src"]
     }
