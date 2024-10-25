@@ -201,7 +201,7 @@ export class Client<TError = UnexpectedError> {
       });
   }
 
-  resume(): ResultAsync<SessionClient, UnauthenticatedError> {
+  resumeSession(): ResultAsync<SessionClient, UnauthenticatedError> {
     return ResultAsync.fromSafePromise(this.credentials.get()).andThen((credentials) => {
       if (!credentials) {
         return new UnauthenticatedError('No credentials found').asResultAsync<SessionClient>();
@@ -252,16 +252,6 @@ class SessionClient extends Client<UnauthenticatedError | UnexpectedError> {
   // get credentials(): AuthenticationTokens {
   //   return this.tokens;
   // }
-
-  /**
-   * Get the current authentication status.
-   */
-  currentAuthentication(): ResultAsync<
-    ActiveAuthentication,
-    UnauthenticatedError | UnexpectedError
-  > {
-    return this.query(CurrentAuthenticationQuery, {});
-  }
 
   override query<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,

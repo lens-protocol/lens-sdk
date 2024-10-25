@@ -4,6 +4,7 @@ import { assertErr, assertOk, evmAddress, signatureFrom } from '@lens-social/typ
 import { privateKeyToAccount } from 'viem/accounts';
 import { describe, expect, it } from 'vitest';
 
+import { currentAuthentication } from './actions';
 import { Client } from './client';
 
 const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
@@ -35,7 +36,7 @@ describe(`Given an instance of the ${Client.name}`, () => {
       });
       assertOk(authenticated);
 
-      const authentication = await authenticated.value.currentAuthentication();
+      const authentication = await currentAuthentication(authenticated.value);
       expect(authentication._unsafeUnwrap()).toMatchObject({
         signer: account,
         app,
@@ -71,10 +72,10 @@ describe(`Given an instance of the ${Client.name}`, () => {
         signMessage: (message) => signer.signMessage({ message }),
       });
 
-      const authenticated = await client.resume();
+      const authenticated = await client.resumeSession();
       assertOk(authenticated);
 
-      const authentication = await authenticated.value.currentAuthentication();
+      const authentication = await currentAuthentication(authenticated.value);
       expect(authentication._unsafeUnwrap()).toMatchObject({
         signer: account,
         app,
