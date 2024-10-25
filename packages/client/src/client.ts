@@ -189,6 +189,11 @@ abstract class AbstractClient<TError> {
     return ResultAsync.fromPromise(source.toPromise(), (err: unknown) => {
       this.logger.error(err);
       return UnexpectedError.from(err) as TError;
+    }).andThrough((result) => {
+      if (result.error?.networkError) {
+        return errAsync(UnexpectedError.from(result.error.networkError) as TError);
+      }
+      return okAsync(result);
     });
   }
 }

@@ -1,11 +1,13 @@
 import { local } from '@lens-social/env';
-import { assertErr, assertOk, evmAddress, signatureFrom } from '@lens-social/types';
+import { url, assertErr, assertOk, evmAddress, signatureFrom } from '@lens-social/types';
 
 import { privateKeyToAccount } from 'viem/accounts';
 import { describe, expect, it } from 'vitest';
 
-import { currentAuthentication } from './actions';
+import { HealthQuery } from '@lens-social/graphql';
+import { currentAuthentication, fetchPost } from './actions';
 import { PublicClient } from './client';
+import { UnexpectedError } from './errors';
 
 const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
 const account = evmAddress(signer.address);
@@ -80,6 +82,22 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
         signer: account,
         app,
       });
+    });
+  });
+
+  describe('When receiving a Network error', () => {
+    const client = PublicClient.create({
+      environment: {
+        backend: url('http://127.0.0.1'),
+        name: 'broken',
+      },
+      origin: 'http://example.com',
+    });
+
+    it(`Then it should return an ${UnexpectedError.name}`, async () => {
+      const result = await client.query(HealthQuery, {});
+      assertErr(result);
+      expect(result.error).toBeInstanceOf(UnexpectedError);
     });
   });
 });

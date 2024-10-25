@@ -1,4 +1,4 @@
-import { type ResultAsync, errAsync } from '@lens-social/types';
+import { type ResultAsync, assertError, errAsync } from '@lens-social/types';
 import type { CombinedError } from '@urql/core';
 
 /**
@@ -44,7 +44,24 @@ export class UnexpectedError extends ResultAwareError {
   name = 'UnexpectedError' as const;
 
   static from(cause: unknown) {
-    return new UnexpectedError('An unexpected error occurred', { cause });
+    const message = UnexpectedError.formatMessage(cause);
+    return new UnexpectedError(message, { cause });
+  }
+
+  private static formatMessage(cause: unknown): string {
+    if (!(cause instanceof Error)) {
+      return String(cause);
+    }
+
+    const messages: string[] = [];
+    let currentError: unknown = cause;
+
+    while (currentError instanceof Error) {
+      messages.push(currentError.message);
+      currentError = currentError.cause;
+    }
+
+    return messages.join(' due to ');
   }
 }
 
