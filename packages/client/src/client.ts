@@ -166,12 +166,12 @@ abstract class AbstractClient<TError> {
   public abstract query<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
-  ): ResultAsync<TValue, TError>;
+  ): ResultAsync<TValue, TError | UnexpectedError>;
 
   public mutation<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
-  ): ResultAsync<TValue, TError> {
+  ): ResultAsync<TValue, TError | UnexpectedError> {
     return this.resultFrom(this.urql.mutation(document, variables)).map(takeValue);
   }
 
@@ -185,13 +185,13 @@ abstract class AbstractClient<TError> {
 
   protected resultFrom<TData, TVariables extends AnyVariables>(
     source: OperationResultSource<OperationResult<TData, TVariables>>,
-  ): ResultAsync<OperationResult<TData, TVariables>, TError> {
+  ): ResultAsync<OperationResult<TData, TVariables>, TError | UnexpectedError> {
     return ResultAsync.fromPromise(source.toPromise(), (err: unknown) => {
       this.logger.error(err);
-      return UnexpectedError.from(err) as TError;
-    }).andThrough((result) => {
+      return UnexpectedError.from(err);
+    }).andThen((result) => {
       if (result.error?.networkError) {
-        return errAsync(UnexpectedError.from(result.error.networkError) as TError);
+        return errAsync(UnexpectedError.from(result.error.networkError));
       }
       return okAsync(result);
     });
@@ -246,7 +246,7 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
         if (result.__typename === 'AuthenticationTokens') {
           return okAsync(result);
         }
-        return AuthenticationError.from(result.reason).asResultAsync<AuthenticationTokens>();
+        return AuthenticationError.from(result.reason).asResultAsync();
       })
       .map(async (tokens) => {
         await this.credentials.set(tokens);
@@ -286,7 +286,7 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
   resumeSession(): ResultAsync<SessionClient, UnauthenticatedError> {
     return ResultAsync.fromSafePromise(this.credentials.get()).andThen((credentials) => {
       if (!credentials) {
-        return new UnauthenticatedError('No credentials found').asResultAsync<SessionClient>();
+        return new UnauthenticatedError('No credentials found').asResultAsync();
       }
       return okAsync(new SessionClient(this));
     });
@@ -433,9 +433,9 @@ class SessionClient extends AbstractClient<UnauthenticatedError | UnexpectedErro
   >(result: Result): ResultAsync<Result, UnauthenticatedError | UnexpectedError> {
     if (result.error) {
       if (hasExtensionCode(result.error, GraphQLErrorCode.UNAUTHENTICATED)) {
-        return UnauthenticatedError.from(result.error).asResultAsync<Result>();
+        return UnauthenticatedError.from(result.error).asResultAsync();
       }
-      return UnexpectedError.from(result.error).asResultAsync<Result>();
+      return UnexpectedError.from(result.error).asResultAsync();
     }
     return okAsync(result);
   }

@@ -1,4 +1,4 @@
-import { type ResultAsync, assertError, errAsync } from '@lens-social/types';
+import { type ResultAsync, errAsync } from '@lens-social/types';
 import type { CombinedError } from '@urql/core';
 
 /**
@@ -21,7 +21,7 @@ export function hasExtensionCode(error: CombinedError, code: GraphQLErrorCode): 
 }
 
 class ResultAwareError extends Error {
-  asResultAsync<T>(): ResultAsync<T, typeof this> {
+  asResultAsync(): ResultAsync<never, typeof this> {
     return errAsync(this);
   }
 }
