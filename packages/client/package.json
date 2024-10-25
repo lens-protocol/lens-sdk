@@ -14,13 +14,18 @@
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./actions": {
+      "import": "./dist/actions/index.js",
+      "require": "./dist/actions/index.cjs",
+      "types": "./dist/actions/index.d.cts"
     }
   },
   "typesVersions": {
     "*": {
-      "import": ["./dist/index.d.ts"],
-      "require": ["./dist/index.d.cts"]
+      "actions": ["./dist/actions/index.d.ts"]
     }
   },
   "files": ["dist"],

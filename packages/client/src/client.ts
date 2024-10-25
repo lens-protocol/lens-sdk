@@ -1,11 +1,6 @@
 import type { EnvironmentConfig } from '@lens-social/env';
-import {
-  AuthenticateMutation,
-  ChallengeMutation,
-  CurrentAuthenticationQuery,
-} from '@lens-social/graphql';
+import { AuthenticateMutation, ChallengeMutation } from '@lens-social/graphql';
 import type {
-  ActiveAuthentication,
   AuthenticateVariables,
   AuthenticationChallenge,
   AuthenticationTokens,
