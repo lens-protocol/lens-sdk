@@ -5,14 +5,14 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { describe, expect, it } from 'vitest';
 
 import { currentAuthentication } from './actions';
-import { Client } from './client';
+import { PublicClient } from './client';
 
 const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
 const account = evmAddress(signer.address);
 const app = evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3');
 
-describe(`Given an instance of the ${Client.name}`, () => {
-  const client = Client.create({
+describe(`Given an instance of the ${PublicClient.name}`, () => {
+  const client = PublicClient.create({
     environment: local,
     origin: 'http://example.com',
   });

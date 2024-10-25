@@ -28,6 +28,16 @@ export const ReadResult = {
     error: undefined,
     loading: true,
   }),
+  Success: <T, E = never>(data: T): ReadResult<T, E> => ({
+    data,
+    error: undefined,
+    loading: false,
+  }),
+  Failure: <T, E = never>(error: E): ReadResult<T, E> => ({
+    data: undefined,
+    error,
+    loading: false,
+  }),
 };
 
 /**

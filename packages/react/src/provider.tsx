@@ -1,8 +1,8 @@
-import type { Client } from '@lens-social/client';
+import type { PublicClient } from '@lens-social/client';
 import React from 'react';
 
-import { type ReactNode, useState } from 'react';
-import { createContextValue, LensContextProvider } from './context';
+import type { ReactNode } from 'react';
+import { LensContextProvider } from './context';
 
 /**
  * <Provider> props
@@ -15,7 +15,7 @@ export type ProviderProps = {
   /**
    * The configuration for the Lens SDK
    */
-  client: Client;
+  client: PublicClient;
 };
 
 /**
@@ -25,7 +25,7 @@ export type ProviderProps = {
  * import { Provider, staging } from '@lens-protocol/react-web';
  * import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
  *
-*
+ *
  *
  * function App() {
  *   return (
@@ -37,7 +37,5 @@ export type ProviderProps = {
  * ```
  */
 export function Provider({ children, client }: ProviderProps) {
-  const [value] = useState(() => createContextValue(client));
-
-  return <LensContextProvider value={value}>{children}</LensContextProvider>;
+  return <LensContextProvider client={client}>{children}</LensContextProvider>;
 }

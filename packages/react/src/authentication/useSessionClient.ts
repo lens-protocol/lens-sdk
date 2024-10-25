@@ -1,20 +1,48 @@
 import type { SessionClient } from '@lens-social/client';
 import { useEffect, useState } from 'react';
-import { useLensContext } from '../context';
-import { ReadResult } from '../helpers';
+import { UnknownSession, useLensContext } from '../context';
+import { ReadResult, type SuspenseResult } from '../helpers';
 
-export function useSessionClient(): ReadResult<SessionClient | null> {
-  const { client } = useLensContext();
-  const [state, setState] = useState<ReadResult<SessionClient | null>>(ReadResult.Initial());
+/**
+ * {@link useSessionClient} hook arguments
+ */
+export type UseSessionArgs = {
+  /**
+   * Whether to use suspense mode
+   *
+   * @defaultValue false
+   */
+  suspense?: boolean;
+};
+
+export function useSessionClient(args: UseSessionArgs): SuspenseResult<SessionClient | null>;
+
+export function useSessionClient(): ReadResult<SessionClient | null>;
+
+export function useSessionClient(args?: { suspense?: boolean }):
+  | ReadResult<SessionClient | null>
+  | SuspenseResult<SessionClient | null> {
+  const { session, resumeSession } = useLensContext();
+  const [output, setOutput] = useState<ReadResult<SessionClient | null>>(
+    session === UnknownSession ? ReadResult.Initial() : ReadResult.Success(session),
+  );
 
   useEffect(() => {
-    const session = client.resumeSession();
+    // If the session is already known, don't do anything.
+    if (session !== UnknownSession) {
+      return;
+    }
 
-    session.match(
-      (sessionClient) => setState({ data: sessionClient, loading: false, error: undefined }),
-      (_) => setState({ data: null, loading: false, error: undefined }),
-    );
-  }, [client]);
+    resumeSession().then((value) => setOutput(ReadResult.Success(value)));
+  }, [resumeSession, session]);
 
-  return state;
+  // Handle suspense
+  if (args?.suspense && session === UnknownSession) {
+    // The effect above won't run when we suspend.
+
+    // Suspends with a ResultAsync which is a Promise-like object.
+    throw resumeSession();
+  }
+
+  return output;
 }

@@ -95,18 +95,14 @@ export type LoginParams = ChallengeVariables & {
   signMessage: SignMessage;
 };
 
-export class Client<TError = UnexpectedError> {
-  protected readonly context: ClientContext;
+abstract class AbstractClient<TError> {
+  public readonly context: ClientContext;
 
   protected readonly urql: UrqlClient;
 
   protected readonly logger: Logger;
 
   protected readonly credentials: IStorage<Credentials>;
-
-  static create(options: ClientOptions): Client {
-    return new Client(options);
-  }
 
   protected constructor(options: ClientOptions) {
     this.context = {
@@ -119,7 +115,7 @@ export class Client<TError = UnexpectedError> {
 
     this.credentials = createCredentialsStorage(this.context.storage, options.environment.name);
 
-    this.logger = getLogger(Client.name);
+    this.logger = getLogger(this.constructor.name);
     this.logger.setLevel(options.debug ? 'DEBUG' : 'SILENT');
 
     this.urql = createClient({
@@ -147,9 +143,79 @@ export class Client<TError = UnexpectedError> {
   }
 
   /**
+   * Asserts that the client is a {@link PublicClient}.
+   */
+  public abstract isPublicClient(): this is PublicClient;
+
+  /**
+   *  that the client is a {@link SessionClient}.
+   */
+  public abstract isSessionClient(): this is SessionClient;
+
+  public abstract query<TValue, TVariables extends AnyVariables>(
+    document: TypedDocumentNode<StandardData<TValue>, TVariables>,
+    variables: TVariables,
+  ): ResultAsync<TValue, TError>;
+
+  public mutation<TValue, TVariables extends AnyVariables>(
+    document: TypedDocumentNode<StandardData<TValue>, TVariables>,
+    variables: TVariables,
+  ): ResultAsync<TValue, TError> {
+    return this.resultFrom(this.urql.mutation(document, variables)).map(takeValue);
+  }
+
+  protected fetchOptions(): RequestInit | Promise<RequestInit> {
+    return {
+      headers: {
+        ...(this.context.origin ? { Origin: this.context.origin } : {}),
+      },
+    };
+  }
+
+  protected resultFrom<TData, TVariables extends AnyVariables>(
+    source: OperationResultSource<OperationResult<TData, TVariables>>,
+  ): ResultAsync<OperationResult<TData, TVariables>, TError> {
+    return ResultAsync.fromPromise(source.toPromise(), (err: unknown) => {
+      this.logger.error(err);
+      return UnexpectedError.from(err) as TError;
+    });
+  }
+}
+
+/**
+ * A client to interact with the public access queries and mutations of the Lens GraphQL API.
+ */
+export class PublicClient extends AbstractClient<UnexpectedError> {
+  /**
+   * The current session client.
+   *
+   * This could be the {@link PublicClient} itself if the user is not authenticated, or a {@link SessionClient} if the user is authenticated.
+   */
+  public currentSession: PublicClient | SessionClient = this;
+
+  /**
+   * Create a new instance of the {@link PublicClient}.
+   *
+   * ```ts
+   * const client = PublicClient.create({
+   *   environment: mainnet,
+   *   origin: 'http://example.com',
+   * });
+   * ```
+   *
+   * @param options - The options to configure the client.
+   * @returns The new instance of the client.
+   */
+  static create(options: ClientOptions): PublicClient {
+    return new PublicClient(options);
+  }
+
+  /**
    * Generate a new authentication challenge for the given account and app.
    */
-  challenge({ request }: ChallengeVariables): ResultAsync<AuthenticationChallenge, TError> {
+  challenge({
+    request,
+  }: ChallengeVariables): ResultAsync<AuthenticationChallenge, UnexpectedError> {
     return this.mutation(ChallengeMutation, { request });
   }
 
@@ -158,7 +224,7 @@ export class Client<TError = UnexpectedError> {
    */
   authenticate({
     request,
-  }: AuthenticateVariables): ResultAsync<SessionClient, AuthenticationError | TError> {
+  }: AuthenticateVariables): ResultAsync<SessionClient, AuthenticationError | UnexpectedError> {
     return this.mutation(AuthenticateMutation, { request })
       .andThen((result) => {
         if (result.__typename === 'AuthenticationTokens') {
@@ -168,13 +234,13 @@ export class Client<TError = UnexpectedError> {
       })
       .map(async (tokens) => {
         await this.credentials.set(tokens);
-        return new SessionClient(this.context);
+        return new SessionClient(this);
       });
   }
 
   login(
     params: LoginParams,
-  ): ResultAsync<SessionClient, AuthenticationError | SigningError | TError> {
+  ): ResultAsync<SessionClient, AuthenticationError | SigningError | UnexpectedError> {
     return this.challenge(params)
       .map(async (challenge) => ({
         challenge,
@@ -196,21 +262,32 @@ export class Client<TError = UnexpectedError> {
       });
   }
 
+  /**
+   * Resume an instance of the SessionClient from the credentials in storage.
+   *
+   * @returns The session client if available.
+   */
   resumeSession(): ResultAsync<SessionClient, UnauthenticatedError> {
     return ResultAsync.fromSafePromise(this.credentials.get()).andThen((credentials) => {
       if (!credentials) {
         return new UnauthenticatedError('No credentials found').asResultAsync<SessionClient>();
       }
-      return okAsync(new SessionClient(this.context));
+      return okAsync(new SessionClient(this));
     });
   }
 
-  protected fetchOptions(): RequestInit | Promise<RequestInit> {
-    return {
-      headers: {
-        ...(this.context.origin ? { Origin: this.context.origin } : {}),
-      },
-    };
+  /**
+   * {@inheritDoc AbstractClient.isPublicClient}
+   */
+  public override isPublicClient(): this is PublicClient {
+    return true;
+  }
+
+  /**
+   * {@inheritDoc AbstractClient.isSessionClient}
+   */
+  public override isSessionClient(): this is SessionClient {
+    return false;
   }
 
   /**
@@ -223,7 +300,7 @@ export class Client<TError = UnexpectedError> {
   public query<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
-  ): ResultAsync<TValue, TError> {
+  ): ResultAsync<TValue, UnexpectedError> {
     return this.resultFrom(this.urql.query(document, variables)).map(takeValue);
   }
 
@@ -237,29 +314,45 @@ export class Client<TError = UnexpectedError> {
   public mutation<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
-  ): ResultAsync<TValue, TError> {
+  ): ResultAsync<TValue, UnexpectedError> {
     return this.resultFrom(this.urql.mutation(document, variables)).map(takeValue);
-  }
-
-  protected resultFrom<TData, TVariables extends AnyVariables>(
-    source: OperationResultSource<OperationResult<TData, TVariables>>,
-  ): ResultAsync<OperationResult<TData, TVariables>, TError> {
-    return ResultAsync.fromPromise(source.toPromise(), (err: unknown) => {
-      this.logger.error(err);
-      return UnexpectedError.from(err) as TError;
-    });
   }
 }
 
 /**
+ * The client to interact with the protected queries and mutations of the Lens GraphQL API.
+ *
  * @privateRemarks Intentionally not exported.
  */
-class SessionClient extends Client<UnauthenticatedError | UnexpectedError> {
+class SessionClient extends AbstractClient<UnauthenticatedError | UnexpectedError> {
+  public get parent(): PublicClient {
+    return this._parent;
+  }
+
+  constructor(private readonly _parent: PublicClient) {
+    super(_parent.context);
+    _parent.currentSession = this;
+  }
+
   /**
    * The current authentication tokens if available.
    */
   async getCredentials(): Promise<Credentials | null> {
     return await this.credentials.get();
+  }
+
+  /**
+   * {@inheritDoc AbstractClient.isPublicClient}
+   */
+  public override isPublicClient(): this is PublicClient {
+    return false;
+  }
+
+  /**
+   * {@inheritDoc AbstractClient.isSessionClient}
+   */
+  public override isSessionClient(): this is SessionClient {
+    return true;
   }
 
   /**

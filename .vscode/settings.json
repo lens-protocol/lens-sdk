@@ -13,6 +13,16 @@
     },
     "editor.formatOnSave": true
   },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.removeUnused.ts": "never",
+      "source.removeUnusedImports": "never",
+      "source.organizeImports.biome": "explicit"
+    },
+    "editor.formatOnSave": true
+  },
   "[json]": {
     "editor.defaultFormatter": "biomejs.biome",
     "editor.quickSuggestions": {

@@ -1,33 +1,53 @@
-import type { Client } from '@lens-social/client';
+import type { PublicClient, SessionClient } from '@lens-social/client';
 import { invariant } from '@lens-social/types';
-import React, { type ReactNode, useContext } from 'react';
+import React, { type ReactNode, useContext, useState } from 'react';
+
+export const UnknownSession = Symbol('Unknown');
+export type SessionState = SessionClient | null | typeof UnknownSession;
 
 /**
  * @internal
  */
 export type LensContextValue = {
-  client: Client;
+  client: PublicClient;
+  session: SessionState;
+  resumeSession: () => Promise<SessionClient | null>;
 };
 
-/**
- * @internal
- */
-export function createContextValue(client: Client): LensContextValue {
-  return { client };
+function useLensContextValue(client: PublicClient): LensContextValue {
+  const [session, setSession] = useState<SessionState>(UnknownSession);
+
+  return {
+    client,
+    session,
+    resumeSession: () =>
+      client
+        .resumeSession()
+        .match(
+          (value) => value,
+          (_) => null,
+        )
+        .then((value) => {
+          setSession(value);
+          return value;
+        }),
+  };
 }
 
 const LensContext = React.createContext<LensContextValue | null>(null);
 
 type LensContextProviderProps = {
   children: ReactNode;
-  value: LensContextValue;
+  client: PublicClient;
 };
 
 /**
  * @internal
  */
-export function LensContextProvider({ children, value }: LensContextProviderProps) {
-  return (<LensContext.Provider value={value}>{children}</LensContext.Provider>);
+export function LensContextProvider({ children, client }: LensContextProviderProps) {
+  const value = useLensContextValue(client);
+
+  return <LensContext.Provider value={value}>{children}</LensContext.Provider>;
 }
 
 /**
@@ -38,7 +58,7 @@ export function useLensContext(): LensContextValue {
 
   invariant(
     context,
-    'Could not find Lens SDK context, ensure your code is wrapped in a <LensProvider>',
+    'Could not find Lens SDK context, ensure your code is wrapped in a Lens <Provider>',
   );
 
   return context;
