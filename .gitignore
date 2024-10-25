@@ -13,6 +13,9 @@ node_modules
 .DS_Store
 *.pem
 
+# turbo
+.turbo
+
 # lockfiles
 package-lock.json
 yarn.lock

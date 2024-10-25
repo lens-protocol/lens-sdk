@@ -48,6 +48,15 @@
       }
     },
     {
+      "include": ["./packages/graphql/*.graphql"],
+      "formatter": {
+        "enabled": false
+      },
+      "linter": {
+        "enabled": false
+      }
+    },
+    {
       "include": ["./packages/graphql/src/graphql-env.d.ts"],
       "formatter": {
         "enabled": false
