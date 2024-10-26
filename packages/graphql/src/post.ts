@@ -1,8 +1,10 @@
 import type { FragmentOf, VariablesOf } from 'gql.tada';
-import { SponsoredTransactionRequest } from './fragments/SponsoredTransactionRequest';
-import { TransactionRequest } from './fragments/TransactionRequest';
-import { TransactionWillFail } from './fragments/TransactionWillFail';
-import { AnyPost } from './fragments/post';
+import {
+  AnyPost,
+  SponsoredTransactionRequest,
+  TransactionRequest,
+  TransactionWillFail,
+} from './fragments';
 import { graphql } from './graphql';
 
 const PostResponse = graphql(

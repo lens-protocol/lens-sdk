@@ -12,7 +12,7 @@ import type { UnexpectedError } from '../errors';
  * and {@link Account#operations} specific to the authenticated Account.
  *
  * ```ts
- * const result = await fetchPost(client, { request: { postId: postId('0x01') } });
+ * const result = await fetchPost(anyClient, { request: { postId: postId('0x01') } });
  * ```
  *
  * @param client - Any Lens client.

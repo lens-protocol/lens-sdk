@@ -1,5 +1,5 @@
 import type { FragmentOf, VariablesOf } from 'gql.tada';
-import { App } from './fragments/primitives';
+import { App } from './fragments';
 import { graphql } from './graphql';
 
 const AuthenticationChallenge = graphql(
