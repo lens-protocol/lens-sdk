@@ -5,7 +5,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { describe, expect, it } from 'vitest';
 
 import { HealthQuery } from '@lens-social/graphql';
-import { currentAuthentication, fetchPost } from './actions';
+import { currentAuthentication } from './actions';
 import { PublicClient } from './client';
 import { UnexpectedError } from './errors';
 

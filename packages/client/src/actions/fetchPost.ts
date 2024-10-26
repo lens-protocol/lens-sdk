@@ -6,12 +6,13 @@ import type { AnyClient } from '../client';
 import type { UnexpectedError } from '../errors';
 
 /**
- * Fetch a post.
+ * Fetch a Post.
  *
- * Using a {@link SessionClient} will yield {@link Post#operations} specific to the authenticated Account.
+ * Using a {@link SessionClient} will yield {@link Post#operations}
+ * and {@link Account#operations} specific to the authenticated Account.
  *
  * ```ts
- * const result = await getPost(client, { request: { postId: postId('0x01') } });
+ * const result = await fetchPost(client, { request: { postId: postId('0x01') } });
  * ```
  *
  * @param client - Any Lens client.

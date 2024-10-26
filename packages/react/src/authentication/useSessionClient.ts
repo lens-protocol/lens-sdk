@@ -8,15 +8,31 @@ import { ReadResult, type SuspenseResult } from '../helpers';
  */
 export type UseSessionArgs = {
   /**
-   * Whether to use suspense mode
-   *
-   * @defaultValue false
+   * Enables React Suspense support.
    */
-  suspense?: boolean;
+  suspense?: true;
 };
 
+/**
+ * Retrieve the current {@link SessionClient} if available.
+ * If the session is not available, it will attempt to resume it from storage.
+ *
+ * ```tsx
+ * const { data, loading } = useSessionClient();
+ * ```
+ */
 export function useSessionClient(args: UseSessionArgs): SuspenseResult<SessionClient | null>;
 
+/**
+ * Retrieve the current {@link SessionClient} if available.
+ * If the session is not available, it will attempt to resume it from storage.
+ *
+ * This signature supports React Suspense:
+ *
+ * ```tsx
+ * const { data } = useSessionClient({ suspense: true });
+ * ```
+ */
 export function useSessionClient(): ReadResult<SessionClient | null>;
 
 export function useSessionClient(args?: { suspense?: boolean }):

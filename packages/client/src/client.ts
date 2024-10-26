@@ -3,7 +3,6 @@ import { AuthenticateMutation, ChallengeMutation } from '@lens-social/graphql';
 import type {
   AuthenticateVariables,
   AuthenticationChallenge,
-  AuthenticationTokens,
   ChallengeVariables,
 } from '@lens-social/graphql';
 import type { Credentials, IStorage, IStorageProvider } from '@lens-social/storage';

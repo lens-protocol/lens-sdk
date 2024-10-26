@@ -1,3 +1,4 @@
+export * from './account';
 export * from './authentication';
 export * from './fragments';
 export * from './graphql';
