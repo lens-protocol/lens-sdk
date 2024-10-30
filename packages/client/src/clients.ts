@@ -8,8 +8,10 @@ import type {
 import type { Credentials, IStorage, IStorageProvider } from '@lens-social/storage';
 import { InMemoryStorageProvider, createCredentialsStorage } from '@lens-social/storage';
 import {
+  type Result,
   ResultAsync,
   errAsync,
+  evmAddress,
   invariant,
   never,
   okAsync,
@@ -28,6 +30,7 @@ import {
 } from '@urql/core';
 import { type Logger, getLogger } from 'loglevel';
 
+import type { EvmAddress } from '@lens-social/types';
 import {
   AuthenticationError,
   GraphQLErrorCode,
@@ -36,6 +39,7 @@ import {
   UnexpectedError,
   hasExtensionCode,
 } from './errors';
+import { decodeIdToken } from './tokens';
 
 /**
  * A standardized data object.
@@ -43,7 +47,7 @@ import {
  * All GQL operations should alias their results to `value` to ensure interoperability
  * with this client interface.
  */
-type StandardData<T> = { value: T };
+export type StandardData<T> = { value: T };
 
 function takeValue<T>({
   data,
@@ -335,6 +339,22 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
 }
 
 /**
+ * Represents an authenticated entity within the system, containing key addresses for identity and authorization.
+ */
+export type Principal = {
+  /**
+   * The Account address.
+   * */
+  account: EvmAddress;
+  /**
+   * The signer address.
+   *
+   * If different from the account address, this is the address of an Account Manager for it.
+   */
+  signer: EvmAddress;
+};
+
+/**
  * The client to interact with the protected queries and mutations of the Lens GraphQL API.
  *
  * @privateRemarks Intentionally not exported.
@@ -352,8 +372,30 @@ class SessionClient extends AbstractClient<UnauthenticatedError | UnexpectedErro
   /**
    * The current authentication tokens if available.
    */
-  async getCredentials(): Promise<Credentials | null> {
-    return await this.credentials.get();
+  getCredentials(): ResultAsync<Credentials | null, UnexpectedError> {
+    return ResultAsync.fromPromise(this.credentials.get(), (err) => UnexpectedError.from(err));
+  }
+
+  /**
+   * @internal
+   */
+  getPrincipal(): ResultAsync<Principal, UnexpectedError> {
+    return this.getCredentials().andThen((credentials) => {
+      if (!credentials) {
+        return UnexpectedError.from('No credentials found').asResultAsync();
+      }
+
+      const claims = decodeIdToken(credentials.identityToken);
+
+      if (claims.isErr()) {
+        return claims.error.asResultAsync();
+      }
+
+      return okAsync({
+        account: claims.value.act ? claims.value.act.sub : claims.value.sub,
+        signer: claims.value.sub,
+      });
+    });
   }
 
   /**
@@ -432,7 +474,7 @@ class SessionClient extends AbstractClient<UnauthenticatedError | UnexpectedErro
   >(result: Result): ResultAsync<Result, UnauthenticatedError | UnexpectedError> {
     if (result.error) {
       if (hasExtensionCode(result.error, GraphQLErrorCode.UNAUTHENTICATED)) {
-        return UnauthenticatedError.from(result.error).asResultAsync();
+        return UnauthenticatedError.fromCombinedError(result.error).asResultAsync();
       }
       return UnexpectedError.from(result.error).asResultAsync();
     }

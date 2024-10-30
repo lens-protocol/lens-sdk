@@ -3,7 +3,7 @@ import { assertOk, evmAddress, uri } from '@lens-social/types';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { describe, expect, it } from 'vitest';
-import { PublicClient } from '../client';
+import { PublicClient } from '../clients';
 import { post } from './post';
 
 const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);

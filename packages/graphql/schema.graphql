@@ -5584,6 +5584,16 @@ type ExpiredChallengeError {
   reason: String!
 }
 
+"""
+The transaction has failed to be mined or indexed.
+
+The reason for the failure is provided.
+"""
+type FailedTransactionStatus {
+  reason: String!
+  blockTimestamp: DateTime!
+}
+
 input FeeFollowRuleInput {
   amount: AmountInput!
 }
@@ -5598,6 +5608,15 @@ input FeedRequest {
 
 input FeedRulesInput {
   unknownFeedRule: UnknownFeedRuleInput
+}
+
+"""
+The transaction has been mined and indexed correctly.
+
+If the transaction involves any metadata, the metadata has been snapshotted and indexed.
+"""
+type FinishedTransactionStatus {
+  blockTimestamp: DateTime!
 }
 
 """
@@ -8274,6 +8293,11 @@ type NftOwnershipCondition {
 
 scalar NonEmptyString
 
+"""The existence of the transaction is not known. Try again later."""
+type NotFoundTransaction {
+  reason: String!
+}
+
 type NumberAttribute {
   """The attribute's unique identifier."""
   key: NonEmptyString!
@@ -8420,6 +8444,19 @@ type PaymasterParams {
 
   """The bytestream input for the paymaster."""
   paymasterInput: BlockchainData!
+}
+
+"""
+The existence of the transaction is known, but its status is not yet known.
+
+The transaction could be:
+- waiting to be included in a block
+- waiting for a block to be mined
+- waiting to be indexed by the Lens Indexer
+- waiting for any associated metadata to be snapshotted and indexed
+"""
+type PendingTransactionStatus {
+  blockTimestamp: DateTime!
 }
 
 """
@@ -8796,6 +8833,8 @@ type Query {
   mlAccountRecommendations(request: MlaccountRecommendationsRequest!): PaginatedAccountsResult!
   mlPostsForYou(request: MlpostsForYouRequest!): PaginatedPostsForYouResult!
   mlPostsExplore(request: MlexplorePostsRequest!): PaginatedPostsResult
+
+  """Get the status of a transaction by its hash."""
   transactionStatus(request: TransactionStatusRequest!): TransactionStatusResult!
   debugMetadata(request: DebugPostMetadataRequest!): DebugPostMetadataResult!
   debugTransactionStatusFailed(request: DebugTransactionStatusRequest!): DebugTransactionStatusResult
@@ -10953,12 +10992,7 @@ input TransactionStatusRequest {
   txHash: TxHash!
 }
 
-enum TransactionStatusResult {
-  FINISHED
-  PENDING
-  NOT_FOUND
-  FAILED
-}
+union TransactionStatusResult = PendingTransactionStatus | FinishedTransactionStatus | FailedTransactionStatus | NotFoundTransaction
 
 type TransactionWillFail {
   reason: String!

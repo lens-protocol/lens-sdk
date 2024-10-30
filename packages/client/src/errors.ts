@@ -1,4 +1,4 @@
-import { type ResultAsync, errAsync } from '@lens-social/types';
+import { ResultAwareError } from '@lens-social/types';
 import type { CombinedError } from '@urql/core';
 
 /**
@@ -20,19 +20,13 @@ export function hasExtensionCode(error: CombinedError, code: GraphQLErrorCode): 
   });
 }
 
-class ResultAwareError extends Error {
-  asResultAsync(): ResultAsync<never, typeof this> {
-    return errAsync(this);
-  }
-}
-
 /**
  * Error indicating a user is not authenticated.
  */
 export class UnauthenticatedError extends ResultAwareError {
   name = 'UnauthenticatedError' as const;
 
-  static from(error: CombinedError): UnauthenticatedError {
+  static fromCombinedError(error: CombinedError): UnauthenticatedError {
     return new UnauthenticatedError(error.message, { cause: error });
   }
 }
@@ -42,35 +36,10 @@ export class UnauthenticatedError extends ResultAwareError {
  */
 export class UnexpectedError extends ResultAwareError {
   name = 'UnexpectedError' as const;
-
-  static from(cause: unknown) {
-    const message = UnexpectedError.formatMessage(cause);
-    return new UnexpectedError(message, { cause });
-  }
-
-  private static formatMessage(cause: unknown): string {
-    if (!(cause instanceof Error)) {
-      return String(cause);
-    }
-
-    const messages: string[] = [];
-    let currentError: unknown = cause;
-
-    while (currentError instanceof Error) {
-      messages.push(currentError.message);
-      currentError = currentError.cause;
-    }
-
-    return messages.join(' due to ');
-  }
 }
 
 export class AuthenticationError extends ResultAwareError {
   name = 'AuthenticationError' as const;
-
-  static from(message: string) {
-    return new AuthenticationError(message);
-  }
 }
 
 /**
@@ -78,8 +47,4 @@ export class AuthenticationError extends ResultAwareError {
  */
 export class SigningError extends ResultAwareError {
   name = 'SigningError' as const;
-
-  static from(cause: unknown) {
-    return new SigningError('An error occurred while signing', { cause });
-  }
 }

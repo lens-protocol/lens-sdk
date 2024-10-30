@@ -2,7 +2,7 @@ import type { AnyPost, PostQueryVariables } from '@lens-social/graphql';
 import { PostQuery } from '@lens-social/graphql';
 import type { ResultAsync } from '@lens-social/types';
 
-import type { AnyClient } from '../client';
+import type { AnyClient } from '../clients';
 import type { UnexpectedError } from '../errors';
 
 /**

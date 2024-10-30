@@ -11,12 +11,6 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "typesVersions": {
-    "*": {
-      "import": ["./dist/index.d.ts"],
-      "require": ["./dist/index.d.cts"]
-    }
-  },
   "files": ["dist"],
   "sideEffects": false,
   "scripts": {
@@ -27,7 +21,7 @@
     "neverthrow": "^8.0.0"
   },
   "devDependencies": {
-    "tsup": "^8.3.0",
+    "tsup": "^8.3.5",
     "type-fest": "^4.26.1",
     "typescript": "^5.6.3"
   }

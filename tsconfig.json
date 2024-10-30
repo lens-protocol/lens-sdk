@@ -5,6 +5,7 @@
     "types": ["node"],
     "paths": {
       "@lens-social/client": ["./packages/client/src"],
+      "@lens-social/client/actions": ["./packages/client/src/actions"],
       "@lens-social/env": ["./packages/env/src"],
       "@lens-social/graphql": ["./packages/graphql/src"],
       "@lens-social/react": ["./packages/react/src"],

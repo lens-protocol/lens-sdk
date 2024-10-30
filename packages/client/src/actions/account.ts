@@ -4,7 +4,7 @@ import type { ResultAsync } from '@lens-social/types';
 
 import type { SetAccountMetadataVariables } from '@lens-social/graphql';
 import type { SetAccountMetadataResult } from '@lens-social/graphql';
-import type { AnyClient, SessionClient } from '../client';
+import type { AnyClient, SessionClient } from '../clients';
 import type { UnexpectedError } from '../errors';
 
 /**

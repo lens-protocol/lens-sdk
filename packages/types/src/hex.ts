@@ -55,3 +55,4 @@ export type EncodedTransaction = Tagged<HexString, 'EncodedTransaction'>;
  * A transaction hash.
  */
 export type TxHash = Tagged<HexString, 'TxHash'>;
+export const txHash = hexString<TxHash>;

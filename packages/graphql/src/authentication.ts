@@ -1,5 +1,5 @@
 import type { FragmentOf, VariablesOf } from 'gql.tada';
-import { App } from './fragments';
+import { App, PaginatedResultInfo } from './fragments';
 import { graphql } from './graphql';
 
 const AuthenticationChallenge = graphql(
@@ -36,6 +36,30 @@ const AuthenticationTokens = graphql(
 );
 export type AuthenticationTokens = FragmentOf<typeof AuthenticationTokens>;
 
+const WrongSignerError = graphql(
+  `fragment WrongSignerError on WrongSignerError {
+    __typename
+    reason
+  }`,
+);
+export type WrongSignerError = FragmentOf<typeof WrongSignerError>;
+
+const ExpiredChallengeError = graphql(
+  `fragment ExpiredChallengeError on ExpiredChallengeError {
+    __typename
+    reason
+  }`,
+);
+export type ExpiredChallengeError = FragmentOf<typeof ExpiredChallengeError>;
+
+const ForbiddenError = graphql(
+  `fragment ForbiddenError on ForbiddenError {
+    __typename
+    reason
+  }`,
+);
+export type ForbiddenError = FragmentOf<typeof ForbiddenError>;
+
 const AuthenticationResult = graphql(
   `fragment AuthenticationResult on AuthenticationResult {
     ...on AuthenticationTokens {
@@ -43,21 +67,18 @@ const AuthenticationResult = graphql(
     }
       
     ...on WrongSignerError {
-      __typename
-      reason
+      ...WrongSignerError
     }
         
     ...on ExpiredChallengeError {
-      __typename
-      reason
+      ...ExpiredChallengeError
     }
           
     ...on ForbiddenError {
-      __typename
-      reason
+      ...ForbiddenError
     }
   }`,
-  [AuthenticationTokens],
+  [AuthenticationTokens, WrongSignerError, ExpiredChallengeError, ForbiddenError],
 );
 
 export type AuthenticationResult = FragmentOf<typeof AuthenticationResult>;
@@ -97,3 +118,53 @@ export const CurrentAuthenticationQuery = graphql(
   }`,
   [ActiveAuthentication],
 );
+
+export const AccountAuthenticationsQuery = graphql(
+  `query AccountAuthentications($request: AccountAuthenticationsRequest!) {
+    value: accountAuthentications(request: $request) {
+      items {
+        ...ActiveAuthentication
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }
+  
+`,
+  [ActiveAuthentication, PaginatedResultInfo],
+);
+
+export type AccountAuthenticationsVariables = VariablesOf<typeof AccountAuthenticationsQuery>;
+
+export const RevokeAuthenticationMutation = graphql(
+  `mutation RevokeAuthentication($request: RevokeAuthenticationRequest!) {
+    value: revokeAuthentication(request: $request)
+  })`,
+);
+
+export type RevokeAuthenticationVariables = VariablesOf<typeof RevokeAuthenticationMutation>;
+
+export const RefreshResult = graphql(
+  `fragment RefreshResult on RefreshResult {
+    ...on AuthenticationTokens {
+      ...AuthenticationTokens
+    }
+          
+    ...on ForbiddenError {
+      ...ForbiddenError
+    }
+  }`,
+  [AuthenticationTokens, ForbiddenError],
+);
+
+export const RefreshMutation = graphql(
+  `mutation Refresh($request: RefreshRequest!) {
+    value: refresh(request: $request) {
+      ...RefreshResult
+    }
+  }`,
+  [RefreshResult],
+);
+
+export type RefreshVariables = VariablesOf<typeof RefreshMutation>;

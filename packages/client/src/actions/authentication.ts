@@ -1,6 +1,6 @@
 import { type ActiveAuthentication, CurrentAuthenticationQuery } from '@lens-social/graphql';
 import type { ResultAsync } from '@lens-social/types';
-import type { SessionClient } from '../client';
+import type { SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
 /**

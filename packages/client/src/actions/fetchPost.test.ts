@@ -2,7 +2,7 @@ import { local } from '@lens-social/env';
 import { assertOk, postId } from '@lens-social/types';
 import { describe, it } from 'vitest';
 
-import { PublicClient } from '../client';
+import { PublicClient } from '../clients';
 import { fetchPost } from './fetchPost';
 
 describe(`Given the '${fetchPost.name}' action`, () => {

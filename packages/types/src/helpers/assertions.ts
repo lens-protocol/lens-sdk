@@ -27,7 +27,7 @@ export function assertNever(x: never, message = `Unexpected object: ${String(x)}
  * Asserts that the given `Result<T, E>` is an `Ok<T, never>` variant.
  */
 export function assertOk<T, E extends Error>(result: Result<T, E>): asserts result is Ok<T, E> {
-  invariant(result.isOk(), `Expected result to be Ok: ${result._unsafeUnwrapErr().message}`);
+  invariant(result.isOk(), 'Expected result to be Ok');
 }
 
 /**

@@ -2,6 +2,7 @@ export * from 'neverthrow';
 
 export * from './helpers';
 
+export * from './errors';
 export * from './number';
 export * from './hex';
 export * from './id';

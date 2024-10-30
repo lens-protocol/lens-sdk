@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 
 import { HealthQuery } from '@lens-social/graphql';
 import { currentAuthentication } from './actions';
-import { PublicClient } from './client';
+import { PublicClient } from './clients';
 import { UnexpectedError } from './errors';
 
 const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
@@ -36,12 +36,14 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
           signature: signatureFrom(await signer.signMessage({ message: challenge.value.text })),
         },
       });
+
       assertOk(authenticated);
 
-      const authentication = await currentAuthentication(authenticated.value);
-      expect(authentication._unsafeUnwrap()).toMatchObject({
-        signer: account,
-        app,
+      const principal = await authenticated.value.getPrincipal();
+      assertOk(principal);
+      expect(principal.value).toMatchObject({
+        account: account.toLowerCase(),
+        signer: account.toLowerCase(),
       });
     });
   });
