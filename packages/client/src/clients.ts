@@ -8,10 +8,8 @@ import type {
 import type { Credentials, IStorage, IStorageProvider } from '@lens-social/storage';
 import { InMemoryStorageProvider, createCredentialsStorage } from '@lens-social/storage';
 import {
-  type Result,
   ResultAsync,
   errAsync,
-  evmAddress,
   invariant,
   never,
   okAsync,
