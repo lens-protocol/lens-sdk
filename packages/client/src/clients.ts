@@ -383,7 +383,7 @@ class SessionClient extends AbstractClient<UnauthenticatedError | UnexpectedErro
         return UnexpectedError.from('No credentials found').asResultAsync();
       }
 
-      const claims = decodeIdToken(credentials.identityToken);
+      const claims = decodeIdToken(credentials.idToken);
 
       if (claims.isErr()) {
         return claims.error.asResultAsync();

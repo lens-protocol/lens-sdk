@@ -31,7 +31,7 @@ const AuthenticationTokens = graphql(
     __typename
     accessToken
     refreshToken
-    identityToken
+    idToken
   }`,
 );
 export type AuthenticationTokens = FragmentOf<typeof AuthenticationTokens>;

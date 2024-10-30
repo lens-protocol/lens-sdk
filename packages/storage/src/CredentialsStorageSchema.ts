@@ -9,14 +9,14 @@ import { Storage } from './Storage';
 
 export type Credentials = {
   accessToken: AccessToken;
-  identityToken: IdToken;
+  idToken: IdToken;
   refreshToken: RefreshToken;
 };
 
 // TODO
 const PersistedCredentialsSchema: z.ZodType<Credentials, z.ZodTypeDef, unknown> = z.object({
   accessToken: z.string().transform(accessToken),
-  identityToken: z.string().transform(idToken),
+  idToken: z.string().transform(idToken),
   refreshToken: z.string().transform(refreshToken),
 });
 
