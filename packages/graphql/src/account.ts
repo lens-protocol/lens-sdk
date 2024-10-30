@@ -61,3 +61,46 @@ export const SetAccountMetadataMutation = graphql(
   [SetAccountMetadataResult],
 );
 export type SetAccountMetadataVariables = VariablesOf<typeof SetAccountMetadataMutation>;
+
+const CreateAccountResponse = graphql(
+  `fragment CreateAccountResponse on CreateAccountResponse {
+    __typename
+    hash
+  }`,
+);
+export type CreateAccountResponse = FragmentOf<typeof CreateAccountResponse>;
+
+const CreateAccountWithUsernameResult = graphql(
+  `fragment CreateAccountWithUsernameResult on CreateAccountWithUsernameResult {
+    ...on CreateAccountResponse {
+      ...CreateAccountResponse
+    }
+
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+
+    ...on TransactionRequest {
+      ...TransactionRequest
+    }
+
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [CreateAccountResponse, SponsoredTransactionRequest, TransactionRequest, TransactionWillFail],
+);
+export type CreateAccountWithUsernameResult = FragmentOf<typeof CreateAccountWithUsernameResult>;
+
+export const CreateAccountWithUsernameMutation = graphql(
+  `mutation CreateAccountWithUsername($request: CreateAccountWithUsernameRequest!) {
+    value: createAccountWithUsername(request: $request) {
+      ...CreateAccountWithUsernameResult
+    }
+  }`,
+  [CreateAccountWithUsernameResult],
+);
+
+export type CreateAccountWithUsernameVariables = VariablesOf<
+  typeof CreateAccountWithUsernameMutation
+>;
