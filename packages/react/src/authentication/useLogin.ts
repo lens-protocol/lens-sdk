@@ -3,8 +3,8 @@ import {
   type SessionClient,
   type SigningError,
   type UnexpectedError,
-  fetchAccount,
 } from '@lens-social/client';
+import { fetchAccount } from '@lens-social/client/actions';
 import type { Account } from '@lens-social/graphql';
 import { type EvmAddress, type ResultAsync, okAsync } from '@lens-social/types';
 

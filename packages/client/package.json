@@ -24,14 +24,10 @@
   },
   "typesVersions": {
     "*": {
-      "actions": [
-        "./dist/actions/index.d.ts"
-      ]
+      "actions": ["./dist/actions/index.d.ts"]
     }
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "sideEffects": false,
   "scripts": {
     "build": "tsup"
