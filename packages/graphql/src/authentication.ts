@@ -140,7 +140,7 @@ export type AccountAuthenticationsVariables = VariablesOf<typeof AccountAuthenti
 export const RevokeAuthenticationMutation = graphql(
   `mutation RevokeAuthentication($request: RevokeAuthenticationRequest!) {
     value: revokeAuthentication(request: $request)
-  })`,
+  }`,
 );
 
 export type RevokeAuthenticationVariables = VariablesOf<typeof RevokeAuthenticationMutation>;

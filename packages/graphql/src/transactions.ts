@@ -12,7 +12,7 @@ export type PendingTransactionStatus = FragmentOf<typeof PendingTransactionStatu
 export const FinishedTransactionStatus = graphql(
   `fragment FinishedTransactionStatus on FinishedTransactionStatus {
     __typename
-    hash
+    blockTimestamp
   }`,
 );
 export type FinishedTransactionStatus = FragmentOf<typeof FinishedTransactionStatus>;
