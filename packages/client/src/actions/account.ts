@@ -13,10 +13,16 @@ import type { UnexpectedError } from '../errors';
  * Using a {@link SessionClient} will yield {@link Account#operations} specific to the authenticated Account.
  *
  * ```ts
- * const result = await getPost(anyClient, { request: { postId: postId('0x01') } });
+ * const result = await fetchAccount(anyClient, {
+ *    request: {
+ *      legacyProfileId?: legacyProfileId('0x01'),
+ *      username?: userNameValue('alice'),
+ *      address?: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ *  } });
  * ```
  *
  * @param client - Any Lens client.
+ * @param variables - The Account query variables.
  * @returns The Account or `null` if it does not exist.
  */
 export function fetchAccount(
