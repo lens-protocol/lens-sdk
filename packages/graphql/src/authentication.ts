@@ -119,29 +119,18 @@ export const CurrentAuthenticationQuery = graphql(
   [ActiveAuthentication],
 );
 
-export const PaginatedActiveAuthenticationsResult = graphql(
-  `fragment PaginatedActiveAuthenticationsResult on PaginatedActiveAuthenticationsResult {
-    items {
-      ...ActiveAuthentication
-    }
-    pageInfo {
-      ...PaginatedResultInfo
-    }
-  }`,
-  [ActiveAuthentication, PaginatedResultInfo],
-);
-
-export type PaginatedActiveAuthenticationsResult = FragmentOf<
-  typeof PaginatedActiveAuthenticationsResult
->;
-
 export const AccountAuthenticationsQuery = graphql(
   `query AccountAuthentications($request: AccountAuthenticationsRequest!) {
     value: accountAuthentications(request: $request) {
-      ...PaginatedActiveAuthenticationsResult
+      items {
+        ...ActiveAuthentication
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
     }
   }`,
-  [PaginatedActiveAuthenticationsResult],
+  [ActiveAuthentication, PaginatedResultInfo],
 );
 
 export type AccountAuthenticationsVariables = VariablesOf<typeof AccountAuthenticationsQuery>;
