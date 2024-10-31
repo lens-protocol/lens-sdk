@@ -69,7 +69,7 @@ export function revokeAuthentication(
  * });
  * ```
  *
- * @param client - The client to use for the refresh operation.
+ * @param client - Any Lens client.
  * @param variables - The refresh request variables.
  * @returns The refreshed authentication tokens if the operation was successful.
  */

@@ -1,15 +1,9 @@
 import type { Account, AccountQueryVariables } from '@lens-social/graphql';
-import {
-  AccountQuery,
-  CreateAccountWithUsernameMutation,
-  SetAccountMetadataMutation,
-} from '@lens-social/graphql';
+import { AccountQuery, SetAccountMetadataMutation } from '@lens-social/graphql';
 import type { ResultAsync } from '@lens-social/types';
 
 import type { SetAccountMetadataVariables } from '@lens-social/graphql';
 import type { SetAccountMetadataResult } from '@lens-social/graphql';
-import type { CreateAccountWithUsernameResult } from '@lens-social/graphql';
-import type { CreateAccountWithUsernameVariables } from '@lens-social/graphql';
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
