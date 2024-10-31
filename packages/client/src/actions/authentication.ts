@@ -1,6 +1,5 @@
 import type {
   ActiveAuthentication,
-  PaginatedActiveAuthenticationsResult,
   RefreshResult,
   RefreshVariables,
   RevokeAuthenticationVariables,
@@ -17,6 +16,7 @@ import type { ResultAsync } from '@lens-social/types';
 
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
+import type { Paginated } from '../types';
 
 /**
  * Get the ActiveAuthentication associated with the current session.
@@ -98,6 +98,6 @@ export function refresh(
 export function fetchAccountAuthentications(
   client: SessionClient,
   { request }: AccountAuthenticationsVariables,
-): ResultAsync<PaginatedActiveAuthenticationsResult, UnexpectedError> {
+): ResultAsync<Paginated<ActiveAuthentication>, UnexpectedError> {
   return client.query(AccountAuthenticationsQuery, { request });
 }
