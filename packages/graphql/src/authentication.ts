@@ -119,20 +119,29 @@ export const CurrentAuthenticationQuery = graphql(
   [ActiveAuthentication],
 );
 
+export const PaginatedActiveAuthenticationsResult = graphql(
+  `fragment PaginatedActiveAuthenticationsResult on PaginatedActiveAuthenticationsResult {
+    items {
+      ...ActiveAuthentication
+    }
+    pageInfo {
+      ...PaginatedResultInfo
+    }
+  }`,
+  [ActiveAuthentication, PaginatedResultInfo],
+);
+
+export type PaginatedActiveAuthenticationsResult = FragmentOf<
+  typeof PaginatedActiveAuthenticationsResult
+>;
+
 export const AccountAuthenticationsQuery = graphql(
   `query AccountAuthentications($request: AccountAuthenticationsRequest!) {
     value: accountAuthentications(request: $request) {
-      items {
-        ...ActiveAuthentication
-      }
-      pageInfo {
-        ...PaginatedResultInfo
-      }
+      ...PaginatedActiveAuthenticationsResult
     }
-  }
-  
-`,
-  [ActiveAuthentication, PaginatedResultInfo],
+  }`,
+  [PaginatedActiveAuthenticationsResult],
 );
 
 export type AccountAuthenticationsVariables = VariablesOf<typeof AccountAuthenticationsQuery>;
@@ -157,6 +166,8 @@ export const RefreshResult = graphql(
   }`,
   [AuthenticationTokens, ForbiddenError],
 );
+
+export type RefreshResult = FragmentOf<typeof RefreshResult>;
 
 export const RefreshMutation = graphql(
   `mutation Refresh($request: RefreshRequest!) {
