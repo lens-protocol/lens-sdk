@@ -4,6 +4,7 @@ import type {
   RefreshResult,
   RefreshVariables,
   RevokeAuthenticationVariables,
+  RolloverRefreshVariables,
 } from '@lens-social/graphql';
 
 import {
@@ -11,11 +12,12 @@ import {
   CurrentAuthenticationQuery,
   RefreshMutation,
   RevokeAuthenticationMutation,
+  RolloverRefreshMutation,
 } from '@lens-social/graphql';
 import type { AccountAuthenticationsVariables } from '@lens-social/graphql';
 import type { ResultAsync } from '@lens-social/types';
 
-import type { AnyClient, SessionClient } from '../clients';
+import type { SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
 /**
@@ -52,7 +54,7 @@ export function currentAuthentication(
 export function revokeAuthentication(
   client: SessionClient,
   { request }: RevokeAuthenticationVariables,
-): ResultAsync<void, UnexpectedError> {
+): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
   return client.query(RevokeAuthenticationMutation, { request });
 }
 
@@ -60,22 +62,22 @@ export function revokeAuthentication(
  * Refresh the authentication tokens of the authenticated Account.
  *
  * ```ts
- * const result = await refresh(anyClient, {
+ * const result = await refresh(sessionClient, {
  *  request: {
  *   refreshToken: string
  *  },
  * });
  * ```
  *
- * @param client - Any Lens client.
+ * @param client - The client to use for the refresh operation.
  * @param variables - The refresh request variables.
  * @returns The refreshed authentication tokens if the operation was successful.
  */
 export function refresh(
-  client: AnyClient,
+  client: SessionClient,
   { request }: RefreshVariables,
-): ResultAsync<RefreshResult, UnexpectedError> {
-  return client.query(RefreshMutation, { request });
+): ResultAsync<RefreshResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(RefreshMutation, { request });
 }
 
 /**
@@ -98,6 +100,35 @@ export function refresh(
 export function fetchAccountAuthentications(
   client: SessionClient,
   { request }: AccountAuthenticationsVariables,
-): ResultAsync<PaginatedActiveAuthenticationsResult, UnexpectedError> {
+): ResultAsync<PaginatedActiveAuthenticationsResult, UnauthenticatedError | UnexpectedError> {
   return client.query(AccountAuthenticationsQuery, { request });
+}
+
+/**
+ * Issue new authentication tokens from a valid Lens API v2 refresh token.
+ *
+ * Use this to seamlessly transition your users from Lens API v2 to Lens API v3 without
+ * requiring them to re-authenticate.
+ *
+ * The HTTP Origin header MUST be present and match the app's domain.
+ *
+ * ```ts
+ * const result = await rolloverRefresh(sessionClient, {
+ *  request: {
+ *    refreshToken: string,
+ *    app: evmAddress("0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3"),
+ *  },
+ * });
+ * ```
+ *
+ * @param client - The client to use for the rollover refresh operation.
+ * @param variables - The rollover refresh request variables.
+ * @returns The refreshed authentication tokens if the operation was successful.
+ */
+
+export function rolloverRefresh(
+  client: SessionClient,
+  { request }: RolloverRefreshVariables,
+): ResultAsync<RefreshResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(RolloverRefreshMutation, { request });
 }

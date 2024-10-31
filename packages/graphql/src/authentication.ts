@@ -179,3 +179,14 @@ export const RefreshMutation = graphql(
 );
 
 export type RefreshVariables = VariablesOf<typeof RefreshMutation>;
+
+export const RolloverRefreshMutation = graphql(
+  `mutation RolloverRefresh($request: RolloverRefreshRequest!) {
+    value: rolloverRefresh(request: $request) {
+      ...RefreshResult
+    }
+  }`,
+  [RefreshResult],
+);
+
+export type RolloverRefreshVariables = VariablesOf<typeof RolloverRefreshMutation>;
