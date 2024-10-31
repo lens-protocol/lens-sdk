@@ -1,11 +1,17 @@
 import type { Account, AccountQueryVariables } from '@lens-social/graphql';
-import { AccountQuery, SetAccountMetadataMutation } from '@lens-social/graphql';
+import {
+  AccountQuery,
+  CreateAccountWithUsernameMutation,
+  SetAccountMetadataMutation,
+} from '@lens-social/graphql';
 import type { ResultAsync } from '@lens-social/types';
 
 import type { SetAccountMetadataVariables } from '@lens-social/graphql';
 import type { SetAccountMetadataResult } from '@lens-social/graphql';
+import type { CreateAccountWithUsernameResult } from '@lens-social/graphql';
+import type { CreateAccountWithUsernameVariables } from '@lens-social/graphql';
 import type { AnyClient, SessionClient } from '../clients';
-import type { UnexpectedError } from '../errors';
+import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
 /**
  * Fetch an Account.
@@ -50,6 +56,30 @@ export function fetchAccount(
 export function setAccountMetadata(
   client: SessionClient,
   { request }: SetAccountMetadataVariables,
-): ResultAsync<SetAccountMetadataResult, UnexpectedError> {
-  return client.query(SetAccountMetadataMutation, { request });
+): ResultAsync<SetAccountMetadataResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(SetAccountMetadataMutation, { request });
+}
+
+/**
+ * Create an account with a given username.
+ *
+ * ```ts
+ * const result = await createAccount(sessionClient, {
+ *  request: {
+ *    accountManager: [evmAddress('0x01')],
+ *    localName: string,
+ *    metadataUri: uri('ar://abc123def456gh…'),
+ *  },
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param variables - The create account request variables.
+ * @returns The create account operation result.
+ */
+export function createAccountWithUsername(
+  client: SessionClient,
+  { request }: CreateAccountWithUsernameVariables,
+): ResultAsync<CreateAccountWithUsernameResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(CreateAccountWithUsernameMutation, { request });
 }

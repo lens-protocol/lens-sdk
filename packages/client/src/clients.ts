@@ -445,6 +445,10 @@ class SessionClient extends AbstractClient<UnauthenticatedError | UnexpectedErro
   override mutation<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
     variables: TVariables,
+  ): ResultAsync<TValue, UnexpectedError>;
+  override mutation<TValue, TVariables extends AnyVariables>(
+    document: TypedDocumentNode<StandardData<TValue>, TVariables>,
+    variables: TVariables,
   ): ResultAsync<TValue, UnauthenticatedError | UnexpectedError> {
     return this.resultFrom(this.urql.mutation(document, variables))
       .andThen(this.handleAuthentication)

@@ -17,7 +17,7 @@ import {
 import type { AccountAuthenticationsVariables } from '@lens-social/graphql';
 import type { ResultAsync } from '@lens-social/types';
 
-import type { SessionClient } from '../clients';
+import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
 /**
@@ -55,14 +55,14 @@ export function revokeAuthentication(
   client: SessionClient,
   { request }: RevokeAuthenticationVariables,
 ): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
-  return client.query(RevokeAuthenticationMutation, { request });
+  return client.mutation(RevokeAuthenticationMutation, { request });
 }
 
 /**
  * Refresh the authentication tokens of the authenticated Account.
  *
  * ```ts
- * const result = await refresh(sessionClient, {
+ * const result = await refresh(anyClient, {
  *  request: {
  *   refreshToken: string
  *  },
@@ -74,9 +74,9 @@ export function revokeAuthentication(
  * @returns The refreshed authentication tokens if the operation was successful.
  */
 export function refresh(
-  client: SessionClient,
+  client: AnyClient,
   { request }: RefreshVariables,
-): ResultAsync<RefreshResult, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<RefreshResult, UnexpectedError> {
   return client.mutation(RefreshMutation, { request });
 }
 
