@@ -76,7 +76,7 @@ export function revokeAuthentication(
 export function refresh(
   client: AnyClient,
   { request }: RefreshVariables,
-): ResultAsync<RefreshResult, UnexpectedError> {
+): ResultAsync<RefreshResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(RefreshMutation, { request });
 }
 

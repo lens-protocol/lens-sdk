@@ -59,27 +59,3 @@ export function setAccountMetadata(
 ): ResultAsync<SetAccountMetadataResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(SetAccountMetadataMutation, { request });
 }
-
-/**
- * Create an account with a given username.
- *
- * ```ts
- * const result = await createAccount(sessionClient, {
- *  request: {
- *    accountManager: [evmAddress('0x01')],
- *    localName: string,
- *    metadataUri: uri('ar://abc123def456gh…'),
- *  },
- * });
- * ```
- *
- * @param client - The session client for the authenticated Account.
- * @param variables - The create account request variables.
- * @returns The create account operation result.
- */
-export function createAccountWithUsername(
-  client: SessionClient,
-  { request }: CreateAccountWithUsernameVariables,
-): ResultAsync<CreateAccountWithUsernameResult, UnexpectedError | UnauthenticatedError> {
-  return client.mutation(CreateAccountWithUsernameMutation, { request });
-}
