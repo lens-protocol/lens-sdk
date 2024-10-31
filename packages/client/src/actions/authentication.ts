@@ -60,7 +60,7 @@ export function revokeAuthentication(
  * Refresh the authentication tokens of the authenticated Account.
  *
  * ```ts
- * const result = await refresh(sessionClient, {
+ * const result = await refresh(anyClient, {
  *  request: {
  *   refreshToken: string
  *  },
