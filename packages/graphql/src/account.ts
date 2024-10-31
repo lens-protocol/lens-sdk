@@ -1,8 +1,8 @@
 import type { FragmentOf, VariablesOf } from 'gql.tada';
 import {
   Account,
+  SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
-  TransactionRequest,
   TransactionWillFail,
 } from './fragments';
 import { graphql } from './graphql';
@@ -35,8 +35,8 @@ const SetAccountMetadataResult = graphql(
       ...SponsoredTransactionRequest
     }
 
-    ...on TransactionRequest {
-      ...TransactionRequest
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
     }
 
     ...on TransactionWillFail {
@@ -46,7 +46,7 @@ const SetAccountMetadataResult = graphql(
   [
     SetAccountMetadataResponse,
     SponsoredTransactionRequest,
-    TransactionRequest,
+    SelfFundedTransactionRequest,
     TransactionWillFail,
   ],
 );
@@ -80,15 +80,20 @@ const CreateAccountWithUsernameResult = graphql(
       ...SponsoredTransactionRequest
     }
 
-    ...on TransactionRequest {
-      ...TransactionRequest
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
     }
 
     ...on TransactionWillFail {
       ...TransactionWillFail
     }
   }`,
-  [CreateAccountResponse, SponsoredTransactionRequest, TransactionRequest, TransactionWillFail],
+  [
+    CreateAccountResponse,
+    SponsoredTransactionRequest,
+    SelfFundedTransactionRequest,
+    TransactionWillFail,
+  ],
 );
 export type CreateAccountWithUsernameResult = FragmentOf<typeof CreateAccountWithUsernameResult>;
 

@@ -57,7 +57,7 @@ enum AccountFollowRuleErrorType {
   UNKNOWN
 }
 
-union AccountFollowRuleResult = OptimisticAccountFollowRule | SponsoredTransactionRequest | TransactionRequest | AccountFollowRuleError
+union AccountFollowRuleResult = SetAccountFollowRuleResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | AccountFollowRuleError
 
 type AccountGraphsFollowStats {
   followers: Int!
@@ -208,8 +208,6 @@ input AccountsRequest {
   addresses: [EvmAddress!]
   usernames: [UsernameValue!]
   legacyProfileIds: [LegacyProfileId!]
-  limit: Int
-  cursor: Cursor
 }
 
 input ActionFilter {
@@ -453,7 +451,11 @@ input AssignUsernameToAccountRequest {
   accountUsernameId: String!
 }
 
-union AssignUsernameToAccountResult = OptimisticAssignUsernameToAccount | SponsoredTransactionRequest | TransactionRequest | AssignUsernameToAccountError
+type AssignUsernameToAccountResponse {
+  hash: TxHash!
+}
+
+union AssignUsernameToAccountResult = AssignUsernameToAccountResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | AssignUsernameToAccountError
 
 type AudioMetadata {
   """The App Id that this publication belongs to."""
@@ -529,7 +531,11 @@ input BlockRequest {
   account: EvmAddress!
 }
 
-union BlockResult = OptimisticBlock | SponsoredTransactionRequest | TransactionRequest | BlockError
+type BlockResponse {
+  hash: TxHash!
+}
+
+union BlockResult = BlockResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | BlockError
 
 scalar BlockchainData
 
@@ -553,11 +559,11 @@ type BooleanValue {
 }
 
 input CanFollowRequest {
-  appOrGraph: EvmAddress!
+  graph: EvmAddress!
 }
 
 input CanUnfollowRequest {
-  appOrGraph: EvmAddress!
+  graph: EvmAddress!
 }
 
 scalar ChainId
@@ -635,10 +641,6 @@ type CreateAccountResponse {
   hash: TxHash!
 }
 
-type CreateAccountWithUsernameInvalidUsernameError {
-  error: String!
-}
-
 input CreateAccountWithUsernameRequest {
   """The account metadata uri"""
   metadataUri: URI!
@@ -650,7 +652,7 @@ input CreateAccountWithUsernameRequest {
   accountManager: [EvmAddress!]!
 }
 
-union CreateAccountWithUsernameResult = CreateAccountResponse | CreateAccountWithUsernameInvalidUsernameError | SponsoredTransactionRequest | TransactionRequest | TransactionWillFail
+union CreateAccountWithUsernameResult = CreateAccountResponse | InvalidUsername | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input CreateFollowRequest {
   """The account to follow."""
@@ -799,7 +801,7 @@ type DeletePostResponse {
   hash: TxHash!
 }
 
-union DeletePostResult = DeletePostResponse | SponsoredTransactionRequest | TransactionRequest | TransactionWillFail
+union DeletePostResult = DeletePostResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input DismissRecommendedAccountsRequest {
   accounts: [EvmAddress!]!
@@ -828,6 +830,9 @@ type Eip1559TransactionRequest {
 
   """The target of the transaction."""
   to: EvmAddress!
+
+  """The sender of the transaction."""
+  from: EvmAddress!
 
   """The nonce of the transaction, used to prevent replay attacks."""
   nonce: Int!
@@ -1560,7 +1565,7 @@ type FollowResponse {
   hash: TxHash!
 }
 
-union FollowResult = FollowResponse | SponsoredTransactionRequest | TransactionRequest | TransactionWillFail
+union FollowResult = FollowResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type FollowRule {
   moduleName: String!
@@ -1762,12 +1767,16 @@ type ImageMetadata {
   content: Encryptable!
 }
 
+type InvalidUsername {
+  reason: String!
+}
+
 input IsFollowedByMeRequest {
-  appOrGraph: EvmAddress!
+  graph: EvmAddress!
 }
 
 input IsFollowingMeRequest {
-  appOrGraph: EvmAddress!
+  graph: EvmAddress!
 }
 
 type KnownAction {
@@ -1889,9 +1898,41 @@ scalar Locale
 
 type LoggedInAccountOperations {
   id: ID!
+
+  """
+  Check if the target account is followed by the authenticated account.
+  
+  If a graph is not specified:
+  - It first checks for a Graph address specified within the query scope.
+  - If no Graph address is found, it defaults to using the Global Graph.
+  """
   isFollowedByMe(request: IsFollowedByMeRequest): Boolean!
+
+  """
+  Check if the authenticated account is following the target account.
+  
+  If a graph is not specified:
+  - It first checks for a Graph address specified within the query scope.
+  - If no Graph address is found, it defaults to using the Global Graph.
+  """
   isFollowingMe(request: IsFollowingMeRequest): Boolean!
+
+  """
+  Check if the authenticated account can follow the target account.
+  
+  If a graph is not specified:
+  - It first checks for a Graph address specified within the query scope.
+  - If no Graph address is found, it defaults to using the Global Graph.
+  """
   canFollow(request: CanFollowRequest): TriStateValue!
+
+  """
+  Check if the authenticated account can unfollow the target account.
+  
+  If a graph is not specified:
+  - It first checks for a Graph address specified within the query scope.
+  - If no Graph address is found, it defaults to using the Global Graph.
+  """
   canUnfollow(request: CanUnfollowRequest): Boolean!
   isMutedByMe: Boolean!
   isBlockedByMe: Boolean!
@@ -2650,29 +2691,12 @@ type NftOwnershipCondition {
   type: String!
 }
 
-"""The existence of the transaction is not known. Try again later."""
-type NotFoundTransaction {
+"""The existence of the transaction is not yet indexed. Keep trying."""
+type NotIndexedYetStatus {
   reason: String!
-}
 
-type OptimisticAccountFollowRule {
-  txHash: TxHash!
-}
-
-type OptimisticAssignUsernameToAccount {
-  txHash: TxHash!
-}
-
-type OptimisticBlock {
-  txHash: TxHash!
-}
-
-type OptimisticUnassignUsernameFromAccount {
-  txHash: TxHash!
-}
-
-type OptimisticUnblock {
-  txHash: TxHash!
+  """True if the transaction has been mined."""
+  txHasMined: Boolean!
 }
 
 enum PageSize {
@@ -3021,7 +3045,7 @@ type PostResponse {
   hash: TxHash!
 }
 
-union PostResult = PostResponse | SponsoredTransactionRequest | TransactionRequest | TransactionWillFail
+union PostResult = PostResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 enum PostTagsOrderBy {
   MOST_POPULAR
@@ -3214,6 +3238,27 @@ input SearchPostsRequest {
   cursor: Cursor
 }
 
+type SelfFundedTransactionRequest {
+  """
+  The encoded EIP-1559 transaction request.
+  
+  Use a parser to decode this data into a transaction request object
+  for your library (e.g., ethers, viem).
+  """
+  encoded: EncodedTransaction!
+
+  """
+  The raw transaction request object.
+  
+  Use this object if your library does not have a parser for the encoded transaction data.
+  """
+  raw: Eip1559TransactionRequest!
+}
+
+type SetAccountFollowRuleResponse {
+  hash: TxHash!
+}
+
 input SetAccountMetadataRequest {
   metadataUri: URI!
 }
@@ -3222,7 +3267,7 @@ type SetAccountMetadataResponse {
   hash: TxHash!
 }
 
-union SetAccountMetadataResult = SetAccountMetadataResponse | SponsoredTransactionRequest | TransactionRequest | TransactionWillFail
+union SetAccountMetadataResult = SetAccountMetadataResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar Signature
 
@@ -3530,28 +3575,11 @@ type TransactionMetadata {
   content: Encryptable!
 }
 
-type TransactionRequest {
-  """
-  The encoded EIP-1559 transaction request.
-  
-  Use a parser to decode this data into a transaction request object
-  for your library (e.g., ethers, viem).
-  """
-  encoded: EncodedTransaction!
-
-  """
-  The raw transaction request object.
-  
-  Use this object if your library does not have a parser for the encoded transaction data.
-  """
-  raw: Eip1559TransactionRequest!
-}
-
 input TransactionStatusRequest {
   txHash: TxHash!
 }
 
-union TransactionStatusResult = PendingTransactionStatus | FinishedTransactionStatus | FailedTransactionStatus | NotFoundTransaction
+union TransactionStatusResult = PendingTransactionStatus | FinishedTransactionStatus | FailedTransactionStatus | NotIndexedYetStatus
 
 enum TransactionType {
   ERC_721
@@ -3591,7 +3619,11 @@ type UnassignUsernameFromAccountError {
   error: UnlinkUsernameFromAccountErrorType!
 }
 
-union UnassignUsernameFromAccountResult = OptimisticUnassignUsernameFromAccount | SponsoredTransactionRequest | TransactionRequest | UnassignUsernameFromAccountError
+type UnassignUsernameFromAccountResponse {
+  hash: TxHash!
+}
+
+union UnassignUsernameFromAccountResult = UnassignUsernameFromAccountResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | UnassignUsernameFromAccountError
 
 type UnblockError {
   error: UnblockErrorType!
@@ -3607,7 +3639,11 @@ input UnblockRequest {
   account: EvmAddress!
 }
 
-union UnblockResult = OptimisticUnblock | SponsoredTransactionRequest | TransactionRequest | UnblockError
+type UnblockResponse {
+  hash: TxHash!
+}
+
+union UnblockResult = UnblockResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | UnblockError
 
 type UndoReactionFailure {
   reason: String!
@@ -3635,7 +3671,7 @@ type UnfollowResponse {
   hash: TxHash!
 }
 
-union UnfollowResult = UnfollowResponse | SponsoredTransactionRequest | TransactionRequest | TransactionWillFail
+union UnfollowResult = UnfollowResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input UnhideManagedAccountRequest {
   account: EvmAddress!

@@ -26,13 +26,13 @@ export const FailedTransactionStatus = graphql(
 );
 export type FailedTransactionStatus = FragmentOf<typeof FailedTransactionStatus>;
 
-export const NotFoundTransaction = graphql(
-  `fragment NotFoundTransaction on NotFoundTransaction {
+export const NotIndexedYetStatus = graphql(
+  `fragment NotIndexedYetStatus on NotIndexedYetStatus {
     __typename
     reason
   }`,
 );
-export type NotFoundTransaction = FragmentOf<typeof NotFoundTransaction>;
+export type NotIndexedYetStatus = FragmentOf<typeof NotIndexedYetStatus>;
 
 export const TransactionStatusResult = graphql(
   `fragment TransactionStatusResult on TransactionStatusResult {
@@ -45,15 +45,15 @@ export const TransactionStatusResult = graphql(
     ...on FailedTransactionStatus {
       ...FailedTransactionStatus
     }
-    ...on NotFoundTransaction {
-      ...NotFoundTransaction
+    ...on NotIndexedYetStatus {
+      ...NotIndexedYetStatus
     }
   }`,
   [
     PendingTransactionStatus,
     FinishedTransactionStatus,
     FailedTransactionStatus,
-    NotFoundTransaction,
+    NotIndexedYetStatus,
   ],
 );
 export type TransactionStatusResult = FragmentOf<typeof TransactionStatusResult>;

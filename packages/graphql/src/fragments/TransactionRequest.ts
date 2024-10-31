@@ -17,9 +17,9 @@ const Eip1559TransactionRequest = graphql(`
 `);
 export type Eip1559TransactionRequest = FragmentOf<typeof Eip1559TransactionRequest>;
 
-export const TransactionRequest = graphql(
+export const SelfFundedTransactionRequest = graphql(
   `
-  fragment TransactionRequest on TransactionRequest {
+  fragment SelfFundedTransactionRequest on SelfFundedTransactionRequest {
     __typename
     encoded
     raw {
@@ -29,4 +29,4 @@ export const TransactionRequest = graphql(
 `,
   [Eip1559TransactionRequest],
 );
-export type TransactionRequest = FragmentOf<typeof TransactionRequest>;
+export type SelfFundedTransactionRequest = FragmentOf<typeof SelfFundedTransactionRequest>;
