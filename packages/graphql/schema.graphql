@@ -80,6 +80,20 @@ type AccountManager {
   addedAt: DateTime!
 }
 
+input AccountManagerPermissions {
+  """Whether the account can execute transactions."""
+  canExecuteTransactions: Boolean!
+
+  """Whether the account can transfer tokens."""
+  canTransferTokens: Boolean!
+
+  """Whether the account can transfer native tokens."""
+  canTransferNative: Boolean!
+
+  """Whether the account can set the metadata URI."""
+  canSetMetadataUri: Boolean!
+}
+
 input AccountManagersRequest {
   pageSize: PageSize
   cursor: Cursor
@@ -234,6 +248,20 @@ type ActiveAuthentication {
   createdAt: DateTime!
   updatedAt: DateTime!
 }
+
+input AddAccountManagerRequest {
+  """The address to add as a manager."""
+  address: EvmAddress!
+
+  """The permissions to give the account manager."""
+  permissions: AccountManagerPermissions!
+}
+
+type AddAccountManagerResponse {
+  hash: TxHash!
+}
+
+union AddAccountManagerResult = AddAccountManagerResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type AddReactionFailure {
   reason: String!
@@ -970,6 +998,12 @@ type EmbedMetadata {
   tags: [Tag!]
   content: Encryptable!
 }
+
+type EnableSignlessResponse {
+  hash: TxHash!
+}
+
+union EnableSignlessResult = EnableSignlessResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar EncodedTransaction
 
@@ -1723,6 +1757,7 @@ input HasReactedRequest {
 }
 
 input HideManagedAccountRequest {
+  """The account to hide."""
   account: EvmAddress!
 }
 
@@ -1960,6 +1995,17 @@ enum ManagedAccountsVisibility {
   NONE_HIDDEN
   HIDDEN_ONLY
   ALL
+}
+
+type MeResult {
+  account: Account!
+  isSignless: Boolean!
+  isSponsored: Boolean!
+  loggedInTo: EvmAddress!
+  canExecuteTransactions: Boolean!
+  canTransferTokens: Boolean!
+  canTransferNative: Boolean!
+  canSetMetadataUri: Boolean!
 }
 
 """
@@ -2522,7 +2568,19 @@ type Mutation {
   You MUST be authenticated to use this mutation.
   """
   reportAccount(request: ReportAccountRequest!): Void!
+
+  """
+  Hide an account which the authenticated account manages.
+  
+  You MUST be authenticated to use this mutation.
+  """
   hideManagedAccount(request: HideManagedAccountRequest!): Void!
+
+  """
+  Hide an account which the authenticated account manages.
+  
+  You MUST be authenticated to use this mutation.
+  """
   unhideManagedAccount(request: UnhideManagedAccountRequest!): Void!
 
   """
@@ -2533,10 +2591,34 @@ type Mutation {
   setAccountMetadata(request: SetAccountMetadataRequest!): SetAccountMetadataResult!
   block(request: BlockRequest!): BlockResult!
   unblock(request: UnblockRequest!): UnblockResult!
+
+  """
+  Recommend an account from the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
   recommendAccount(request: RecommendAccount!): Void!
+
+  """
+  Undo recommended account from the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
   undoRecommendedAccount(request: UndoRecommendedAccount!): Void!
+
+  """
+  Mute an account for the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
   mute(request: MuteRequest!): Void!
-  unmute(request: UnmuteRequest!): Void!
+
+  """
+  Unmute an account for the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
+  unmute(request: MuteRequest!): Void!
 
   """
   Create an account with a given username.
@@ -2544,6 +2626,41 @@ type Mutation {
   You MUST be authenticated to use this mutation.
   """
   createAccountWithUsername(request: CreateAccountWithUsernameRequest!): CreateAccountWithUsernameResult!
+
+  """
+  Add an account manager to the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
+  addAccountManager(request: AddAccountManagerRequest!): AddAccountManagerResult!
+
+  """
+  Remove an account manager to the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
+  removeAccountManager(request: RemoveAccountManagerRequest!): RemoveAccountManagerResult!
+
+  """
+  Add signless to the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
+  enableSignless: EnableSignlessResult!
+
+  """
+  Remove signless to the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
+  removeSignless: RemoveSignlessResult!
+
+  """
+  Update an account manager to the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
+  updateAccountManager(request: UpdateAccountManagerRequest!): UpdateAccountManagerResult!
 
   """Authenticate the user with the signed authentication challenge."""
   authenticate(request: SignedAuthChallenge!): AuthenticationResult!
@@ -3089,6 +3206,7 @@ type ProfileOwnershipCondition {
 type Query {
   health: Boolean!
   account(request: AccountRequest!): Account
+  me: MeResult!
   accounts(request: AccountsRequest!): [Account!]!
   accountStats(request: AccountStatsRequest!): AccountStats!
   accountGraphsStats(request: AccountGraphsStatsRequest!): AccountGraphsFollowStats!
@@ -3161,6 +3279,7 @@ type RecipientDataOutput {
 }
 
 input RecommendAccount {
+  """The account to recommend."""
   account: EvmAddress!
 }
 
@@ -3176,6 +3295,23 @@ input RefreshRequest {
 union RefreshResult = AuthenticationTokens | ForbiddenError
 
 scalar RefreshToken
+
+input RemoveAccountManagerRequest {
+  """The address to remove as a manager."""
+  manager: EvmAddress!
+}
+
+type RemoveAccountManagerResponse {
+  hash: TxHash!
+}
+
+union RemoveAccountManagerResult = RemoveAccountManagerResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+type RemoveSignlessResponse {
+  hash: TxHash!
+}
+
+union RemoveSignlessResult = RemoveSignlessResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input ReportAccountRequest {
   account: EvmAddress!
@@ -3664,6 +3800,7 @@ type UndoReactionResponse {
 union UndoReactionResult = UndoReactionResponse | UndoReactionFailure
 
 input UndoRecommendedAccount {
+  """The account to remove as a recommendation."""
   account: EvmAddress!
 }
 
@@ -3674,6 +3811,7 @@ type UnfollowResponse {
 union UnfollowResult = UnfollowResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input UnhideManagedAccountRequest {
+  """The account to unhide."""
   account: EvmAddress!
 }
 
@@ -3730,9 +3868,19 @@ enum UnlinkUsernameFromAccountErrorType {
   UNAUTHORIZED
 }
 
-input UnmuteRequest {
-  account: EvmAddress!
+input UpdateAccountManagerRequest {
+  """The address to update as a manager."""
+  manager: EvmAddress!
+
+  """The permissions to update for the account manager."""
+  permissions: AccountManagerPermissions!
 }
+
+type UpdateAccountManagerResponse {
+  hash: TxHash!
+}
+
+union UpdateAccountManagerResult = UpdateAccountManagerResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar UsernameValue
 
