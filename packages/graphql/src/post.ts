@@ -1,8 +1,8 @@
 import type { FragmentOf, VariablesOf } from 'gql.tada';
 import {
   AnyPost,
+  SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
-  TransactionRequest,
   TransactionWillFail,
 } from './fragments';
 import { graphql } from './graphql';
@@ -25,15 +25,15 @@ const PostResult = graphql(
       ...SponsoredTransactionRequest
     }
 
-    ...on TransactionRequest {
-      ...TransactionRequest
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
     }
 
     ...on TransactionWillFail {
       ...TransactionWillFail
     }
   }`,
-  [PostResponse, SponsoredTransactionRequest, TransactionRequest, TransactionWillFail],
+  [PostResponse, SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
 );
 export type PostResult = FragmentOf<typeof PostResult>;
 

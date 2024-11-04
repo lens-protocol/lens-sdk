@@ -17,17 +17,30 @@ scalar AccessToken
 
 type Account {
   address: EvmAddress!
+
+  """The score of the account."""
   score: Int!
+
+  """The metadata of the account."""
   metadata: AccountMetadata
+
+  """The username linked to the account."""
   username: UsernameValue
+
+  """The operations for the account."""
   operations: LoggedInAccountOperations
 }
 
 input AccountAuthenticationsRequest {
+  """
+  You can optionally filter the authentications by the app that created them.
+  """
   app: EvmAddress
   pageSize: PageSize
   cursor: Cursor
 }
+
+union AccountAvailable = AccountManaged | AccountOwned
 
 type AccountBlocked {
   account: Account!
@@ -35,17 +48,33 @@ type AccountBlocked {
 }
 
 type AccountFeedsStats {
+  """The total number of posts."""
   posts: Int!
+
+  """The total number of comments."""
   comments: Int!
+
+  """The total number of reposts."""
   reposts: Int!
+
+  """The total number of quotes."""
   quotes: Int!
+
+  """The total number of times the account has reacted."""
   reacted: Int!
+
+  """The total number of reactions."""
   reactions: Int!
+
+  """The total number of collects."""
   collects: Int!
 }
 
 input AccountFeedsStatsRequest {
+  """The account to get stats for."""
   account: EvmAddress!
+
+  """The feeds to get stats for."""
   forFeeds: [EvmAddress!]! = ["0xa8E1e68E3195d8e150A95CF2D0F0AfaE154f8fa5"]
 }
 
@@ -57,31 +86,82 @@ enum AccountFollowRuleErrorType {
   UNKNOWN
 }
 
-union AccountFollowRuleResult = OptimisticAccountFollowRule | SponsoredTransactionRequest | TransactionRequest | AccountFollowRuleError
+union AccountFollowRuleResult = SetAccountFollowRuleResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | AccountFollowRuleError
 
 type AccountGraphsFollowStats {
+  """The total number of followers."""
   followers: Int!
+
+  """The total number of following."""
   following: Int!
 }
 
 input AccountGraphsStatsRequest {
+  """The account to get stats for."""
   account: EvmAddress!
+
+  """The graphs to get stats for."""
   forGraphs: [EvmAddress!]! = ["0x7bE2cA3B7be499546f3f31605f4818D70d14439A"]
 }
 
 type AccountManaged {
+  """The account you are managing."""
   account: Account!
+
+  """The permissions you have on the account."""
+  permissions: AccountManagerPermissions!
+
+  """The date the account management was added."""
   addedAt: DateTime!
 }
 
 type AccountManager {
-  address: EvmAddress!
+  """The address of the account manager."""
+  manager: EvmAddress!
+
+  """Whether the account manager is a Lens manager."""
   isLensManager: Boolean!
+
+  """The permissions the account manager has."""
+  permissions: AccountManagerPermissions!
+
+  """The date the account manager was added."""
   addedAt: DateTime!
 }
 
+type AccountManagerPermissions {
+  """Whether the account can execute transactions."""
+  canExecuteTransactions: Boolean!
+
+  """Whether the account can transfer tokens."""
+  canTransferTokens: Boolean!
+
+  """Whether the account can transfer native tokens."""
+  canTransferNative: Boolean!
+
+  """Whether the account can set the metadata URI."""
+  canSetMetadataUri: Boolean!
+}
+
+input AccountManagerPermissionsInput {
+  """Whether the account can execute transactions."""
+  canExecuteTransactions: Boolean!
+
+  """Whether the account can transfer tokens."""
+  canTransferTokens: Boolean!
+
+  """Whether the account can transfer native tokens."""
+  canTransferNative: Boolean!
+
+  """Whether the account can set the metadata URI."""
+  canSetMetadataUri: Boolean!
+}
+
 input AccountManagersRequest {
+  """The page size."""
   pageSize: PageSize
+
+  """The cursor."""
   cursor: Cursor
 }
 
@@ -118,6 +198,14 @@ type AccountMetadata {
   picture: URI
 }
 
+type AccountOwned {
+  """The account you own."""
+  account: Account!
+
+  """The date the account was created."""
+  addedAt: DateTime!
+}
+
 type AccountPostReaction {
   account: Account!
   reactions: [PostReaction!]!
@@ -130,8 +218,13 @@ enum AccountReportReason {
 }
 
 input AccountRequest {
+  """The account address."""
   address: EvmAddress
+
+  """The username."""
   username: UsernameValue
+
+  """The legacy profile ID."""
   legacyProfileId: LegacyProfileId
 }
 
@@ -141,75 +234,95 @@ enum AccountSearchOrderBy {
 }
 
 input AccountSearchRequest {
-  limit: Int
+  """The page size."""
+  pageSize: Int
+
+  """The cursor."""
   cursor: Cursor
-  query: String!
+
+  """The local name to search for."""
+  localName: String!
+
+  """The username prefix to search for."""
   namespace: [String!]
+
+  """The order by."""
   orderBy: AccountSearchOrderBy
 }
 
-type AccountSponsorLimit {
-  window: SponsorLimitType!
-  allowanceLeft: Int!
-  allowanceUsed: Int!
-  allowance: Int!
-}
-
-input AccountSponsorRequest {
-  account: EvmAddress!
-  appOrSponsor: EvmAddress
-}
-
-type AccountSponsorResult {
-  global: AccountSponsorLimit
-  user: AccountSponsorLimit
-}
-
 type AccountStats {
+  """The stats for the feeds."""
   feedStats: AccountFeedsStats!
+
+  """The stats for the graphs."""
   graphFollowStats: AccountGraphsFollowStats!
 }
 
 input AccountStatsRequest {
+  """The account to get stats for."""
   account: EvmAddress!
+
+  """The feeds to get stats for."""
   forFeeds: [EvmAddress!]! = ["0xa8E1e68E3195d8e150A95CF2D0F0AfaE154f8fa5"]
+
+  """The graphs to get stats for."""
   forGraphs: [EvmAddress!]! = ["0x7bE2cA3B7be499546f3f31605f4818D70d14439A"]
 }
 
 type AccountUsername {
   id: String
   value: UsernameValue!
-  prefix: String!
+  namespace: String!
   localName: String!
   linkedTo: EvmAddress
   ownedBy: EvmAddress!
 }
 
 input AccountUsernameRequest {
-  limit: Int
+  """The page size."""
+  pageSize: Int
+
+  """The cursor."""
   cursor: Cursor
-  account: EvmAddress!
+
+  """The account or address to get owned usernames for."""
+  owner: EvmAddress!
 }
 
-input AccountsBlockedRequest {
+input AccountsAvailableRequest {
+  """The page size."""
   pageSize: PageSize
-  cursor: Cursor
-}
 
-input AccountsManagedRequest {
-  pageSize: PageSize
+  """The cursor."""
   cursor: Cursor
+
+  """The account to get managed by."""
   managedBy: EvmAddress!
+
+  """Whether to include owned accounts."""
   includeOwned: Boolean
+
+  """The visibility of hidden accounts."""
   hiddenFilter: ManagedAccountsVisibility
 }
 
-input AccountsRequest {
-  addresses: [EvmAddress!]
-  usernames: [UsernameValue!]
-  legacyProfileIds: [LegacyProfileId!]
-  limit: Int
+input AccountsBlockedRequest {
+  """The page size."""
+  pageSize: PageSize
+
+  """The cursor."""
   cursor: Cursor
+}
+
+input AccountsRequest {
+  """The addresses to get."""
+  addresses: [EvmAddress!]
+
+  """The usernames to get."""
+  usernames: [UsernameValue!]
+
+  """The legacy profile IDs to get."""
+  legacyProfileIds: [LegacyProfileId!]
 }
 
 input ActionFilter {
@@ -225,17 +338,15 @@ type ActionInputInfo {
   type: String!
 }
 
-type ActiveAuthentication {
-  authenticationId: UUID!
-  app: EvmAddress!
-  browser: String
-  device: String
-  os: String
-  origin: URL
-  signer: EvmAddress!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+input AddAccountManagerRequest {
+  """The address to add as a manager."""
+  address: EvmAddress!
+
+  """The permissions to give the account manager."""
+  permissions: AccountManagerPermissionsInput!
 }
+
+union AddAccountManagerResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type AddReactionFailure {
   reason: String!
@@ -453,7 +564,11 @@ input AssignUsernameToAccountRequest {
   accountUsernameId: String!
 }
 
-union AssignUsernameToAccountResult = OptimisticAssignUsernameToAccount | SponsoredTransactionRequest | TransactionRequest | AssignUsernameToAccountError
+type AssignUsernameToAccountResponse {
+  hash: TxHash!
+}
+
+union AssignUsernameToAccountResult = AssignUsernameToAccountResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | AssignUsernameToAccountError
 
 type AudioMetadata {
   """The App Id that this publication belongs to."""
@@ -488,6 +603,18 @@ type AudioMetadata {
   """The optional audio title."""
   title: String
   content: Encryptable!
+}
+
+type AuthenticatedSession {
+  authenticationId: UUID!
+  app: EvmAddress!
+  browser: String
+  device: String
+  os: String
+  origin: URL
+  signer: EvmAddress!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type AuthenticationChallenge {
@@ -526,10 +653,15 @@ enum BlockErrorType {
 }
 
 input BlockRequest {
+  """The account to block."""
   account: EvmAddress!
 }
 
-union BlockResult = OptimisticBlock | SponsoredTransactionRequest | TransactionRequest | BlockError
+type BlockResponse {
+  hash: TxHash!
+}
+
+union BlockResult = BlockResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | BlockError
 
 scalar BlockchainData
 
@@ -553,11 +685,11 @@ type BooleanValue {
 }
 
 input CanFollowRequest {
-  appOrGraph: EvmAddress!
+  graph: EvmAddress!
 }
 
 input CanUnfollowRequest {
-  appOrGraph: EvmAddress!
+  graph: EvmAddress!
 }
 
 scalar ChainId
@@ -635,22 +767,18 @@ type CreateAccountResponse {
   hash: TxHash!
 }
 
-type CreateAccountWithUsernameInvalidUsernameError {
-  error: String!
-}
-
 input CreateAccountWithUsernameRequest {
   """The account metadata uri"""
   metadataUri: URI!
 
-  """The local name to create should not include the namespace"""
+  """The local name to create - should not include the namespace"""
   localName: String!
 
   """Any account managers you wish to add to the account"""
-  accountManager: [EvmAddress!]!
+  accountManager: [EvmAddress!]
 }
 
-union CreateAccountWithUsernameResult = CreateAccountResponse | CreateAccountWithUsernameInvalidUsernameError | SponsoredTransactionRequest | TransactionRequest | TransactionWillFail
+union CreateAccountWithUsernameResult = CreateAccountResponse | InvalidUsername | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input CreateFollowRequest {
   """The account to follow."""
@@ -767,6 +895,17 @@ scalar Cursor
 
 scalar DateTime
 
+input DebugAccountSponsorRequest {
+  """The account to get the sponsor limit for."""
+  account: EvmAddress!
+
+  """The app to get the sponsor limit for."""
+  app: EvmAddress
+
+  """The sponsor to get the sponsor limit for."""
+  sponsor: EvmAddress
+}
+
 input DebugPostMetadataRequest {
   rawUri: URI
   json: String
@@ -799,7 +938,7 @@ type DeletePostResponse {
   hash: TxHash!
 }
 
-union DeletePostResult = DeletePostResponse | SponsoredTransactionRequest | TransactionRequest | TransactionWillFail
+union DeletePostResult = DeletePostResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input DismissRecommendedAccountsRequest {
   accounts: [EvmAddress!]!
@@ -828,6 +967,9 @@ type Eip1559TransactionRequest {
 
   """The target of the transaction."""
   to: EvmAddress!
+
+  """The sender of the transaction."""
+  from: EvmAddress!
 
   """The nonce of the transaction, used to prevent replay attacks."""
   nonce: Int!
@@ -965,6 +1107,8 @@ type EmbedMetadata {
   tags: [Tag!]
   content: Encryptable!
 }
+
+union EnableSignlessResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar EncodedTransaction
 
@@ -1560,7 +1704,7 @@ type FollowResponse {
   hash: TxHash!
 }
 
-union FollowResult = FollowResponse | SponsoredTransactionRequest | TransactionRequest | TransactionWillFail
+union FollowResult = FollowResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type FollowRule {
   moduleName: String!
@@ -1718,6 +1862,7 @@ input HasReactedRequest {
 }
 
 input HideManagedAccountRequest {
+  """The account to hide."""
   account: EvmAddress!
 }
 
@@ -1762,12 +1907,16 @@ type ImageMetadata {
   content: Encryptable!
 }
 
+type InvalidUsername {
+  reason: String!
+}
+
 input IsFollowedByMeRequest {
-  appOrGraph: EvmAddress!
+  graph: EvmAddress!
 }
 
 input IsFollowingMeRequest {
-  appOrGraph: EvmAddress!
+  graph: EvmAddress!
 }
 
 type KnownAction {
@@ -1779,7 +1928,10 @@ type KnownAction {
 }
 
 input LastLoggedInAccountRequest {
+  """The address to get the last logged in account for."""
   address: EvmAddress!
+
+  """The app to get the last logged in account for."""
   app: EvmAddress
 }
 
@@ -1889,9 +2041,41 @@ scalar Locale
 
 type LoggedInAccountOperations {
   id: ID!
+
+  """
+  Check if the target account is followed by the authenticated account.
+  
+  If a graph is not specified:
+  - It first checks for a Graph address specified within the query scope.
+  - If no Graph address is found, it defaults to using the Global Graph.
+  """
   isFollowedByMe(request: IsFollowedByMeRequest): Boolean!
+
+  """
+  Check if the authenticated account is following the target account.
+  
+  If a graph is not specified:
+  - It first checks for a Graph address specified within the query scope.
+  - If no Graph address is found, it defaults to using the Global Graph.
+  """
   isFollowingMe(request: IsFollowingMeRequest): Boolean!
+
+  """
+  Check if the authenticated account can follow the target account.
+  
+  If a graph is not specified:
+  - It first checks for a Graph address specified within the query scope.
+  - If no Graph address is found, it defaults to using the Global Graph.
+  """
   canFollow(request: CanFollowRequest): TriStateValue!
+
+  """
+  Check if the authenticated account can unfollow the target account.
+  
+  If a graph is not specified:
+  - It first checks for a Graph address specified within the query scope.
+  - If no Graph address is found, it defaults to using the Global Graph.
+  """
   canUnfollow(request: CanUnfollowRequest): Boolean!
   isMutedByMe: Boolean!
   isBlockedByMe: Boolean!
@@ -1919,6 +2103,35 @@ enum ManagedAccountsVisibility {
   NONE_HIDDEN
   HIDDEN_ONLY
   ALL
+}
+
+type MeResult {
+  """The logged in account."""
+  account: Account!
+
+  """Whether the account is signless."""
+  isSignless: Boolean!
+
+  """Whether the account is sponsored."""
+  isSponsored: Boolean!
+
+  """The address app the account is logged in to."""
+  loggedInTo: EvmAddress!
+
+  """Whether the account can execute transactions."""
+  canExecuteTransactions: Boolean!
+
+  """Whether the account can transfer tokens."""
+  canTransferTokens: Boolean!
+
+  """Whether the account can transfer native tokens."""
+  canTransferNative: Boolean!
+
+  """Whether the account can set the metadata URI."""
+  canSetMetadataUri: Boolean!
+
+  """The sponsorship allowance for the account."""
+  limit: SponsorshipAllowance!
 }
 
 """
@@ -2481,7 +2694,19 @@ type Mutation {
   You MUST be authenticated to use this mutation.
   """
   reportAccount(request: ReportAccountRequest!): Void!
+
+  """
+  Hide an account which the authenticated account manages.
+  
+  You MUST be authenticated to use this mutation.
+  """
   hideManagedAccount(request: HideManagedAccountRequest!): Void!
+
+  """
+  Hide an account which the authenticated account manages.
+  
+  You MUST be authenticated to use this mutation.
+  """
   unhideManagedAccount(request: UnhideManagedAccountRequest!): Void!
 
   """
@@ -2490,12 +2715,48 @@ type Mutation {
   You MUST be authenticated to use this mutation.
   """
   setAccountMetadata(request: SetAccountMetadataRequest!): SetAccountMetadataResult!
+
+  """
+  Block an account with the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
   block(request: BlockRequest!): BlockResult!
+
+  """
+  Unblock an account with the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
   unblock(request: UnblockRequest!): UnblockResult!
+
+  """
+  Recommend an account from the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
   recommendAccount(request: RecommendAccount!): Void!
+
+  """
+  Undo recommended account from the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
   undoRecommendedAccount(request: UndoRecommendedAccount!): Void!
+
+  """
+  Mute an account for the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
   mute(request: MuteRequest!): Void!
-  unmute(request: UnmuteRequest!): Void!
+
+  """
+  Unmute an account for the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
+  unmute(request: MuteRequest!): Void!
 
   """
   Create an account with a given username.
@@ -2503,6 +2764,41 @@ type Mutation {
   You MUST be authenticated to use this mutation.
   """
   createAccountWithUsername(request: CreateAccountWithUsernameRequest!): CreateAccountWithUsernameResult!
+
+  """
+  Add an account manager to the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
+  addAccountManager(request: AddAccountManagerRequest!): AddAccountManagerResult!
+
+  """
+  Remove an account manager to the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
+  removeAccountManager(request: RemoveAccountManagerRequest!): RemoveAccountManagerResult!
+
+  """
+  Add signless to the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
+  enableSignless: EnableSignlessResult!
+
+  """
+  Remove signless to the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
+  removeSignless: RemoveSignlessResult!
+
+  """
+  Update an account manager to the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
+  updateAccountManager(request: UpdateAccountManagerRequest!): UpdateAccountManagerResult!
 
   """Authenticate the user with the signed authentication challenge."""
   authenticate(request: SignedAuthChallenge!): AuthenticationResult!
@@ -2523,6 +2819,8 @@ type Mutation {
 
   """You MUST be authenticated to use this mutation."""
   switchAccount(request: SwitchAccountRequest!): SwitchAccountResult!
+
+  """Refreshes the authentication tokens."""
   refresh(request: RefreshRequest!): RefreshResult!
 
   """
@@ -2533,7 +2831,7 @@ type Mutation {
   
   The HTTP Origin header MUST be present and match the app's domain.
   """
-  rolloverRefresh(request: RolloverRefreshRequest!): RefreshResult!
+  legacyRolloverRefresh(request: RolloverRefreshRequest!): RefreshResult!
 
   """
   Create a new post.
@@ -2623,6 +2921,7 @@ type Mutation {
 }
 
 input MuteRequest {
+  """The account to mute."""
   account: EvmAddress!
 }
 
@@ -2650,29 +2949,12 @@ type NftOwnershipCondition {
   type: String!
 }
 
-"""The existence of the transaction is not known. Try again later."""
-type NotFoundTransaction {
+"""The existence of the transaction is not yet indexed. Keep trying."""
+type NotIndexedYetStatus {
   reason: String!
-}
 
-type OptimisticAccountFollowRule {
-  txHash: TxHash!
-}
-
-type OptimisticAssignUsernameToAccount {
-  txHash: TxHash!
-}
-
-type OptimisticBlock {
-  txHash: TxHash!
-}
-
-type OptimisticUnassignUsernameFromAccount {
-  txHash: TxHash!
-}
-
-type OptimisticUnblock {
-  txHash: TxHash!
+  """True if the transaction has been mined."""
+  txHasMined: Boolean!
 }
 
 enum PageSize {
@@ -2681,17 +2963,23 @@ enum PageSize {
 }
 
 type PaginatedAccountManagersResult {
+  """The account managers."""
   items: [AccountManager!]!
+
+  """The pagination information for the given request."""
+  pageInfo: PaginatedResultInfo!
+}
+
+type PaginatedAccountsAvailableResult {
+  """The accounts available to use for the given address"""
+  items: [AccountAvailable!]!
+
+  """The pagination information for the given request."""
   pageInfo: PaginatedResultInfo!
 }
 
 type PaginatedAccountsBlockedResult {
   items: [AccountBlocked!]!
-  pageInfo: PaginatedResultInfo!
-}
-
-type PaginatedAccountsManagedResult {
-  items: [AccountManaged!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -2706,7 +2994,7 @@ type PaginatedActions {
 }
 
 type PaginatedActiveAuthenticationsResult {
-  items: [ActiveAuthentication!]!
+  items: [AuthenticatedSession!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -2771,7 +3059,10 @@ input PaginatedQuery {
 }
 
 type PaginatedResultInfo {
+  """The cursor to the previous page of results, if any."""
   prev: Cursor
+
+  """The cursor to the next page of results, if any."""
   next: Cursor
 }
 
@@ -3021,7 +3312,7 @@ type PostResponse {
   hash: TxHash!
 }
 
-union PostResult = PostResponse | SponsoredTransactionRequest | TransactionRequest | TransactionWillFail
+union PostResult = PostResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 enum PostTagsOrderBy {
   MOST_POPULAR
@@ -3064,30 +3355,69 @@ type ProfileOwnershipCondition {
 
 type Query {
   health: Boolean!
+
+  """Get an account by address, username, or legacy profile ID."""
   account(request: AccountRequest!): Account
-  accounts(request: AccountsRequest!): [Account!]!
-  accountStats(request: AccountStatsRequest!): AccountStats!
-  accountGraphsStats(request: AccountGraphsStatsRequest!): AccountGraphsFollowStats!
-  accountFeedsStats(request: AccountFeedsStatsRequest!): AccountFeedsStats!
-  whoReferencedPost(request: WhoReferencedPostRequest!): PaginatedAccountsResult!
-  whoActedOnPost(request: WhoActedOnPostRequest!): PaginatedAccountsResult!
-  accountsBlocked(request: AccountsBlockedRequest!): PaginatedAccountsBlockedResult!
-  accountsManaged(request: AccountsManagedRequest!): PaginatedAccountsManagedResult!
-  accountManagers(request: AccountManagersRequest!): PaginatedAccountManagersResult!
-  accountUsernames(request: AccountUsernameRequest!): PaginatedUsernamesResult!
-  accountSponsorLimit(request: AccountSponsorRequest!): AccountSponsorResult!
-  searchAccounts(request: AccountSearchRequest!): PaginatedAccountsResult!
-  lastLoggedInAccount(request: LastLoggedInAccountRequest!): Account
-  app(request: AppRequest!): App
-  apps(request: AppsRequest!): PaginatedAppsResult!
-  accountAuthentications(request: AccountAuthenticationsRequest!): PaginatedActiveAuthenticationsResult!
 
   """
-  Get the current authentication for the user's request.
+  Account information for the authenticated account.
   
   You MUST be authenticated to use this query.
   """
-  currentAuthentication: ActiveAuthentication!
+  me: MeResult!
+
+  """Get accounts by address, username, or legacy profile ID."""
+  accounts(request: AccountsRequest!): [Account!]!
+
+  """Get the stats for an account."""
+  accountStats(request: AccountStatsRequest!): AccountStats!
+
+  """Get the account stats for the graphs."""
+  accountGraphsStats(request: AccountGraphsStatsRequest!): AccountGraphsFollowStats!
+
+  """Get the account stats for the feeds."""
+  accountFeedsStats(request: AccountFeedsStatsRequest!): AccountFeedsStats!
+
+  """
+  Accounts blocked for the authenticated account.
+  
+  You MUST be authenticated to use this query.
+  """
+  accountsBlocked(request: AccountsBlockedRequest!): PaginatedAccountsBlockedResult!
+
+  """Get the accounts which are available to use for the given address"""
+  accountsAvailable(request: AccountsAvailableRequest!): PaginatedAccountsAvailableResult!
+
+  """
+  account manager for the authenticated account.
+  
+  You MUST be authenticated to use this query.
+  """
+  accountManagers(request: AccountManagersRequest!): PaginatedAccountManagersResult!
+
+  """Search for accounts by usernames."""
+  searchAccounts(request: AccountSearchRequest!): PaginatedAccountsResult!
+
+  """
+  Get the last logged in account for the given address and app if specified.
+  """
+  lastLoggedInAccount(request: LastLoggedInAccountRequest!): Account
+  app(request: AppRequest!): App
+  apps(request: AppsRequest!): PaginatedAppsResult!
+
+  """
+  List all active authenticated sessions for the current account.
+  
+  You MUST be authenticated to use this query.
+  """
+  authenticatedSessions(request: AccountAuthenticationsRequest!): PaginatedActiveAuthenticationsResult!
+
+  """
+  Get the current authenticated session for the current account.
+  
+  You MUST be authenticated to use this query.
+  """
+  currentSession: AuthenticatedSession!
   feed(request: FeedRequest!): Feed
   post(request: PostRequest!): AnyPost
   posts(request: PostsRequest!): PaginatedPostsResult!
@@ -3100,6 +3430,8 @@ type Query {
   postReactionStatus(request: PostReactionStatusRequest!): [PostReactionStatus!]!
   searchPosts(request: SearchPostsRequest!): PaginatedPostsResult!
   postActions(request: PostActionsRequest!): PaginatedActions!
+  whoReferencedPost(request: WhoReferencedPostRequest!): PaginatedAccountsResult!
+  whoActedOnPost(request: WhoActedOnPostRequest!): PaginatedAccountsResult!
   following(request: FollowingRequest!): PaginatedAccountsResult!
   followers(request: FollowersRequest!): PaginatedAccountsResult!
   followersYouKnow(request: FollowersYouKnowRequest!): PaginatedAccountsResult!
@@ -3118,11 +3450,13 @@ type Query {
   transactionStatus(request: TransactionStatusRequest!): TransactionStatusResult!
   debugMetadata(request: DebugPostMetadataRequest!): DebugPostMetadataResult!
   debugTransactionStatusFailed(request: DebugTransactionStatusRequest!): DebugTransactionStatusResult
+  debugAccountSponsorLimit(request: DebugAccountSponsorRequest!): SponsorshipLimits!
   createFrameTypedData(request: FrameEIP712Request!): CreateFrameEIP712TypedData!
   verifyFrameSignature(request: FrameVerifySignature!): FrameVerifySignatureResult!
   modFollowersHistory(request: PaginatedQuery!): PaginatedModFollowersResult!
   modLatestReports(request: ModReportsRequest!): PaginatedModReports!
   modDisputedReports(request: PaginatedQuery!): PaginatedDisputedReports!
+  usernames(request: AccountUsernameRequest!): PaginatedUsernamesResult!
   _service: _Service!
 }
 
@@ -3137,6 +3471,7 @@ type RecipientDataOutput {
 }
 
 input RecommendAccount {
+  """The account to recommend."""
   account: EvmAddress!
 }
 
@@ -3153,10 +3488,26 @@ union RefreshResult = AuthenticationTokens | ForbiddenError
 
 scalar RefreshToken
 
+input RemoveAccountManagerRequest {
+  """The address to remove as a manager."""
+  manager: EvmAddress!
+}
+
+union RemoveAccountManagerResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+union RemoveSignlessResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
 input ReportAccountRequest {
+  """The account to report."""
   account: EvmAddress!
+
+  """The reason for the report."""
   reason: AccountReportReason!
+
+  """An optional comment to add to the report."""
   additionalComment: String
+
+  """An optional list of posts to reference in the report."""
   referencePosts: [PostId!]
 }
 
@@ -3214,7 +3565,29 @@ input SearchPostsRequest {
   cursor: Cursor
 }
 
+type SelfFundedTransactionRequest {
+  """
+  The encoded EIP-1559 transaction request.
+  
+  Use a parser to decode this data into a transaction request object
+  for your library (e.g., ethers, viem).
+  """
+  encoded: EncodedTransaction!
+
+  """
+  The raw transaction request object.
+  
+  Use this object if your library does not have a parser for the encoded transaction data.
+  """
+  raw: Eip1559TransactionRequest!
+}
+
+type SetAccountFollowRuleResponse {
+  hash: TxHash!
+}
+
 input SetAccountMetadataRequest {
+  """The metadata URI to set."""
   metadataUri: URI!
 }
 
@@ -3222,7 +3595,7 @@ type SetAccountMetadataResponse {
   hash: TxHash!
 }
 
-union SetAccountMetadataResult = SetAccountMetadataResponse | SponsoredTransactionRequest | TransactionRequest | TransactionWillFail
+union SetAccountMetadataResult = SetAccountMetadataResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar Signature
 
@@ -3316,6 +3689,28 @@ type SponsoredTransactionRequest {
   Use this object if your library does not have a parser for the encoded transaction data.
   """
   raw: Eip712TransactionRequest!
+}
+
+type SponsorshipAllowance {
+  """The sponsorship window type."""
+  window: SponsorLimitType!
+
+  """The number of remaining sponsorship allowance."""
+  allowanceLeft: Int!
+
+  """The number of sponsorship allowance used."""
+  allowanceUsed: Int!
+
+  """The total sponsorship allowance."""
+  allowance: Int!
+}
+
+type SponsorshipLimits {
+  """The global sponsorship allowance."""
+  global: SponsorshipAllowance
+
+  """The user sponsorship allowance."""
+  user: SponsorshipAllowance
 }
 
 type StoryMetadata {
@@ -3530,28 +3925,11 @@ type TransactionMetadata {
   content: Encryptable!
 }
 
-type TransactionRequest {
-  """
-  The encoded EIP-1559 transaction request.
-  
-  Use a parser to decode this data into a transaction request object
-  for your library (e.g., ethers, viem).
-  """
-  encoded: EncodedTransaction!
-
-  """
-  The raw transaction request object.
-  
-  Use this object if your library does not have a parser for the encoded transaction data.
-  """
-  raw: Eip1559TransactionRequest!
-}
-
 input TransactionStatusRequest {
   txHash: TxHash!
 }
 
-union TransactionStatusResult = PendingTransactionStatus | FinishedTransactionStatus | FailedTransactionStatus | NotFoundTransaction
+union TransactionStatusResult = PendingTransactionStatus | FinishedTransactionStatus | FailedTransactionStatus | NotIndexedYetStatus
 
 enum TransactionType {
   ERC_721
@@ -3591,7 +3969,11 @@ type UnassignUsernameFromAccountError {
   error: UnlinkUsernameFromAccountErrorType!
 }
 
-union UnassignUsernameFromAccountResult = OptimisticUnassignUsernameFromAccount | SponsoredTransactionRequest | TransactionRequest | UnassignUsernameFromAccountError
+type UnassignUsernameFromAccountResponse {
+  hash: TxHash!
+}
+
+union UnassignUsernameFromAccountResult = UnassignUsernameFromAccountResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | UnassignUsernameFromAccountError
 
 type UnblockError {
   error: UnblockErrorType!
@@ -3604,10 +3986,15 @@ enum UnblockErrorType {
 }
 
 input UnblockRequest {
+  """The account to unblock."""
   account: EvmAddress!
 }
 
-union UnblockResult = OptimisticUnblock | SponsoredTransactionRequest | TransactionRequest | UnblockError
+type UnblockResponse {
+  hash: TxHash!
+}
+
+union UnblockResult = UnblockResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | UnblockError
 
 type UndoReactionFailure {
   reason: String!
@@ -3628,6 +4015,7 @@ type UndoReactionResponse {
 union UndoReactionResult = UndoReactionResponse | UndoReactionFailure
 
 input UndoRecommendedAccount {
+  """The account to remove as a recommendation."""
   account: EvmAddress!
 }
 
@@ -3635,9 +4023,10 @@ type UnfollowResponse {
   hash: TxHash!
 }
 
-union UnfollowResult = UnfollowResponse | SponsoredTransactionRequest | TransactionRequest | TransactionWillFail
+union UnfollowResult = UnfollowResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input UnhideManagedAccountRequest {
+  """The account to unhide."""
   account: EvmAddress!
 }
 
@@ -3694,9 +4083,15 @@ enum UnlinkUsernameFromAccountErrorType {
   UNAUTHORIZED
 }
 
-input UnmuteRequest {
-  account: EvmAddress!
+input UpdateAccountManagerRequest {
+  """The address to update as a manager."""
+  manager: EvmAddress!
+
+  """The permissions to update for the account manager."""
+  permissions: AccountManagerPermissionsInput!
 }
+
+union UpdateAccountManagerResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar UsernameValue
 
@@ -3753,10 +4148,15 @@ enum WhoActedOnPostOrderBy {
 }
 
 input WhoActedOnPostRequest {
+  """The post id to get who acted on."""
   postId: PostId!
   filter: WhoActedOnPostFilter
   orderBy: WhoActedOnPostOrderBy
-  limit: Int
+
+  """The page size."""
+  pageSize: Int
+
+  """The cursor."""
   cursor: Cursor
 }
 
@@ -3767,10 +4167,17 @@ enum WhoReferencedPostOrderBy {
 }
 
 input WhoReferencedPostRequest {
+  """The post id to get who referenced."""
   postId: PostId!
+
+  """The reference types to filter by."""
   referenceTypes: [PostReferenceType!]
   orderBy: WhoReferencedPostOrderBy
-  limit: Int
+
+  """The page size."""
+  pageSize: Int
+
+  """The cursor."""
   cursor: Cursor
 }
 

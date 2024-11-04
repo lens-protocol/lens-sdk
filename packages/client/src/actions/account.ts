@@ -1,9 +1,15 @@
 import type { Account, AccountQueryVariables } from '@lens-social/graphql';
-import { AccountQuery, SetAccountMetadataMutation } from '@lens-social/graphql';
+import {
+  AccountQuery,
+  CreateAccountWithUsernameMutation,
+  SetAccountMetadataMutation,
+} from '@lens-social/graphql';
 import type { ResultAsync } from '@lens-social/types';
 
 import type { SetAccountMetadataVariables } from '@lens-social/graphql';
 import type { SetAccountMetadataResult } from '@lens-social/graphql';
+import type { CreateAccountWithUsernameVariables } from '@lens-social/graphql';
+import type { CreateAccountWithUsernameResult } from '@lens-social/graphql';
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
@@ -52,4 +58,29 @@ export function setAccountMetadata(
   { request }: SetAccountMetadataVariables,
 ): ResultAsync<SetAccountMetadataResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(SetAccountMetadataMutation, { request });
+
+}
+
+/**
+ * Create an account with a given username.
+ *
+ * ```ts
+ * const result = await createAccountWithUsername(sessionClient, {
+ *  request: {
+ *    accountManager: [evmAddress('0x01')],
+ *    localName: 'wagmi',
+ *    metadataUri: uri('lens://bafybxiky5jf…'),
+ *  },
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param variables - The create account request variables.
+ * @returns The create account operation result.
+ */
+export function createAccountWithUsername(
+  client: SessionClient,
+  { request }: CreateAccountWithUsernameVariables,
+): ResultAsync<CreateAccountWithUsernameResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(CreateAccountWithUsernameMutation, { request });
 }
