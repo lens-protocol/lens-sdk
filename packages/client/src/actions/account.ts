@@ -64,7 +64,7 @@ export function setAccountMetadata(
  * Create an account with a given username.
  *
  * ```ts
- * const result = await createAccount(sessionClient, {
+ * const result = await createAccountWithUsername(sessionClient, {
  *  request: {
  *    accountManager: [evmAddress('0x01')],
  *    localName: string,
