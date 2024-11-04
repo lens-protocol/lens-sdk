@@ -68,7 +68,7 @@ export function setAccountMetadata(
  *  request: {
  *    accountManager: [evmAddress('0x01')],
  *    localName: string,
- *    metadataUri: uri('ar://abc123def456gh…'),
+ *    metadataUri: uri('lens://bafybxiky5jf…'),
  *  },
  * });
  * ```
