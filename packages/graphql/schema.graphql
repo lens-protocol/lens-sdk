@@ -32,9 +32,6 @@ type Account {
 }
 
 input AccountAuthenticationsRequest {
-  """
-  You can optionally filter the authentications by the app that created them.
-  """
   app: EvmAddress
   pageSize: PageSize
   cursor: Cursor
@@ -338,6 +335,18 @@ type ActionInputInfo {
   type: String!
 }
 
+type ActiveAuthentication {
+  authenticationId: UUID!
+  app: EvmAddress!
+  browser: String
+  device: String
+  os: String
+  origin: URL
+  signer: EvmAddress!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 input AddAccountManagerRequest {
   """The address to add as a manager."""
   address: EvmAddress!
@@ -603,18 +612,6 @@ type AudioMetadata {
   """The optional audio title."""
   title: String
   content: Encryptable!
-}
-
-type AuthenticatedSession {
-  authenticationId: UUID!
-  app: EvmAddress!
-  browser: String
-  device: String
-  os: String
-  origin: URL
-  signer: EvmAddress!
-  createdAt: DateTime!
-  updatedAt: DateTime!
 }
 
 type AuthenticationChallenge {
@@ -2819,8 +2816,6 @@ type Mutation {
 
   """You MUST be authenticated to use this mutation."""
   switchAccount(request: SwitchAccountRequest!): SwitchAccountResult!
-
-  """Refreshes the authentication tokens."""
   refresh(request: RefreshRequest!): RefreshResult!
 
   """
@@ -2831,7 +2826,7 @@ type Mutation {
   
   The HTTP Origin header MUST be present and match the app's domain.
   """
-  legacyRolloverRefresh(request: RolloverRefreshRequest!): RefreshResult!
+  rolloverRefresh(request: RolloverRefreshRequest!): RefreshResult!
 
   """
   Create a new post.
@@ -2994,7 +2989,7 @@ type PaginatedActions {
 }
 
 type PaginatedActiveAuthenticationsResult {
-  items: [AuthenticatedSession!]!
+  items: [ActiveAuthentication!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -3404,20 +3399,14 @@ type Query {
   lastLoggedInAccount(request: LastLoggedInAccountRequest!): Account
   app(request: AppRequest!): App
   apps(request: AppsRequest!): PaginatedAppsResult!
+  accountAuthentications(request: AccountAuthenticationsRequest!): PaginatedActiveAuthenticationsResult!
 
   """
-  List all active authenticated sessions for the current account.
+  Get the current authentication for the user's request.
   
   You MUST be authenticated to use this query.
   """
-  authenticatedSessions(request: AccountAuthenticationsRequest!): PaginatedActiveAuthenticationsResult!
-
-  """
-  Get the current authenticated session for the current account.
-  
-  You MUST be authenticated to use this query.
-  """
-  currentSession: AuthenticatedSession!
+  currentAuthentication: ActiveAuthentication!
   feed(request: FeedRequest!): Feed
   post(request: PostRequest!): AnyPost
   posts(request: PostsRequest!): PaginatedPostsResult!
