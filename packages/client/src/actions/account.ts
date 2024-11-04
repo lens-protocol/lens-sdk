@@ -67,7 +67,7 @@ export function setAccountMetadata(
  * const result = await createAccountWithUsername(sessionClient, {
  *  request: {
  *    accountManager: [evmAddress('0x01')],
- *    localName: string,
+ *    localName: 'wagmi',
  *    metadataUri: uri('lens://bafybxiky5jf…'),
  *  },
  * });
