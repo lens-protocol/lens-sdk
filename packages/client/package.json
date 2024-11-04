@@ -8,18 +8,18 @@
     "url": "git://github.com/lens-network/social-sdk.git"
   },
   "type": "module",
+  "types": "dist/index.d.ts",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
-  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
     "./actions": {
+      "types": "./dist/actions/index.d.cts",
       "import": "./dist/actions/index.js",
-      "require": "./dist/actions/index.cjs",
-      "types": "./dist/actions/index.d.cts"
+      "require": "./dist/actions/index.cjs"
     }
   },
   "typesVersions": {

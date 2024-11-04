@@ -1,9 +1,5 @@
-import {
-  AuthenticationError,
-  type SessionClient,
-  type SigningError,
-  type UnexpectedError,
-} from '@lens-social/client';
+import type { SessionClient, SigningError, UnexpectedError } from '@lens-social/client';
+import { AuthenticationError } from '@lens-social/client';
 import { fetchAccount } from '@lens-social/client/actions';
 import type { Account } from '@lens-social/graphql';
 import { type EvmAddress, type ResultAsync, okAsync } from '@lens-social/types';

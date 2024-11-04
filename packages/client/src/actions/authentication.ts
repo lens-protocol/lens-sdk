@@ -1,5 +1,5 @@
 import type {
-  AuthenticatedSession,
+  ActiveAuthenticationResult,
   RefreshResult,
   RefreshVariables,
   RevokeAuthenticationVariables,
@@ -7,8 +7,8 @@ import type {
 } from '@lens-social/graphql';
 
 import {
-  AuthenticatedSessions,
-  CurrentSessionQuery,
+  AccountAuthenticationsQuery,
+  CurrentAuthenticationQuery,
   RefreshMutation,
   RevokeAuthenticationMutation,
   RolloverRefreshMutation,
@@ -24,16 +24,16 @@ import type { Paginated } from '../types';
  * Get the AuthenticatedSession associated with the authenticated Account.
  *
  * ```ts
- * const result = await currentSession(sessionClient);
+ * const result = await currentAuthentication(sessionClient);
  * ```
  *
  * @param client - The session client.
  * @returns The current AuthenticatedSession details.
  */
-export function currentSession(
+export function currentAuthentication(
   client: SessionClient,
-): ResultAsync<AuthenticatedSession, UnauthenticatedError | UnexpectedError> {
-  return client.query(CurrentSessionQuery, {});
+): ResultAsync<ActiveAuthenticationResult, UnauthenticatedError | UnexpectedError> {
+  return client.query(CurrentAuthenticationQuery, {});
 }
 
 /**
@@ -84,7 +84,7 @@ export function refresh(
  * Fetch the authenticated sessions associated with the authenticated Account.
  *
  * ```ts
- * const result = await fetchAccountAuthentications(sessionClient, {
+ * const result = await fetchActiveAuthentications(sessionClient, {
  *  request: {
  *   cursor?: cursor;
  *   pageSize?: "TEN" | "FIFTY";
@@ -97,11 +97,11 @@ export function refresh(
  * @param variables - The refresh request variables.
  * @returns The paginated authenticated sessions associated with the authenticated Account.
  */
-export function fetchAuthenticatedSessions(
+export function fetchActiveAuthentications(
   client: SessionClient,
   { request }: AuthenticatedSessionsVariables,
-): ResultAsync<Paginated<AuthenticatedSession>, UnexpectedError> {
-  return client.query(AuthenticatedSessions, { request });
+): ResultAsync<Paginated<ActiveAuthenticationResult>, UnexpectedError> {
+  return client.query(AccountAuthenticationsQuery, { request });
 }
 
 /**
