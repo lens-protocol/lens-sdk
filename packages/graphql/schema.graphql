@@ -32,6 +32,9 @@ type Account {
 }
 
 input AccountAuthenticationsRequest {
+  """
+  You can optionally filter the authentications by the app that created them.
+  """
   app: EvmAddress
   pageSize: PageSize
   cursor: Cursor
@@ -335,18 +338,6 @@ type ActionInputInfo {
   type: String!
 }
 
-type ActiveAuthentication {
-  authenticationId: UUID!
-  app: EvmAddress!
-  browser: String
-  device: String
-  os: String
-  origin: URL
-  signer: EvmAddress!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
 input AddAccountManagerRequest {
   """The address to add as a manager."""
   address: EvmAddress!
@@ -614,10 +605,21 @@ type AudioMetadata {
   content: Encryptable!
 }
 
+type AuthenticatedSession {
+  authenticationId: UUID!
+  app: EvmAddress!
+  browser: String
+  device: String
+  os: String
+  origin: URL
+  signer: EvmAddress!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type AuthenticationChallenge {
   id: UUID!
   text: String!
-  app: App!
 }
 
 union AuthenticationResult = AuthenticationTokens | WrongSignerError | ExpiredChallengeError | ForbiddenError
@@ -692,9 +694,28 @@ input CanUnfollowRequest {
 scalar ChainId
 
 input ChallengeRequest {
-  account: EvmAddress!
-  app: EvmAddress!
+  """The address you intend login with."""
+  address: EvmAddress!
+
+  """
+  The app you intend to authenticate with.
+  
+  MUST be a valid App address unless you want to authenticated as Builder.
+  """
+  app: EvmAddress! = "0x0000000000000000000000000000000000000000"
+
+  """
+  The actual signer you intend to use to sign the challenge.
+  
+  This could be:
+  - The Account Owner if the address is a Lens Account.
+  - The Account Manager if the address is a Lens Account.
+  - The same address if the address is an EOA.
+  """
   signedBy: EvmAddress!
+
+  """Whether the challenge is for a Builder authentication."""
+  builder: Boolean! = false
 }
 
 type CheckingInMetadata {
@@ -2688,112 +2709,112 @@ type Mutation {
   """
   Report an account.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   reportAccount(request: ReportAccountRequest!): Void!
 
   """
-  Hide an account which the authenticated account manages.
+  Hides an account from the user's list of managed accounts.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   hideManagedAccount(request: HideManagedAccountRequest!): Void!
 
   """
-  Hide an account which the authenticated account manages.
+  Undo the hiding of an account from the user's list of managed accounts.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   unhideManagedAccount(request: UnhideManagedAccountRequest!): Void!
 
   """
   Set the metadata for the authenticated account.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   setAccountMetadata(request: SetAccountMetadataRequest!): SetAccountMetadataResult!
 
   """
   Block an account with the authenticated account.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   block(request: BlockRequest!): BlockResult!
 
   """
   Unblock an account with the authenticated account.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   unblock(request: UnblockRequest!): UnblockResult!
 
   """
   Recommend an account from the authenticated account.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   recommendAccount(request: RecommendAccount!): Void!
 
   """
   Undo recommended account from the authenticated account.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   undoRecommendedAccount(request: UndoRecommendedAccount!): Void!
 
   """
   Mute an account for the authenticated account.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   mute(request: MuteRequest!): Void!
 
   """
   Unmute an account for the authenticated account.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   unmute(request: MuteRequest!): Void!
 
   """
   Create an account with a given username.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   createAccountWithUsername(request: CreateAccountWithUsernameRequest!): CreateAccountWithUsernameResult!
 
   """
   Add an account manager to the authenticated account.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner to use this mutation.
   """
   addAccountManager(request: AddAccountManagerRequest!): AddAccountManagerResult!
 
   """
   Remove an account manager to the authenticated account.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner to use this mutation.
   """
   removeAccountManager(request: RemoveAccountManagerRequest!): RemoveAccountManagerResult!
 
   """
-  Add signless to the authenticated account.
+  Enables Signless experience for the authenticated account.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner to use this mutation.
   """
   enableSignless: EnableSignlessResult!
 
   """
-  Remove signless to the authenticated account.
+  Remove Signless experience for the authenticated account.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner to use this mutation.
   """
   removeSignless: RemoveSignlessResult!
 
   """
-  Update an account manager to the authenticated account.
+  Update the Account Manager Permissions for a given Account Manager.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner to use this mutation.
   """
   updateAccountManager(request: UpdateAccountManagerRequest!): UpdateAccountManagerResult!
 
@@ -2801,7 +2822,16 @@ type Mutation {
   authenticate(request: SignedAuthChallenge!): AuthenticationResult!
 
   """
-  Generate a new authentication challenge for the given account and app.
+  Generates a new authentication challenge for the specified address and app.
+  
+  Users must sign the challenge to authenticate.
+  
+  The issued challenge can be for authentication credentials for different roles:
+  - AccountOwner: The `address` is a Lens Account, and the `signed_by` is the Account Owner.
+  - AccountManager: The `address` is a Lens Account, and the `signed_by` is an Account Manager
+  for it.
+  - OnboardingUser: The `address` is an EOA
+  - Builder:
   
   The HTTP Origin header MUST be present and match the app's domain.
   """
@@ -2810,12 +2840,16 @@ type Mutation {
   """
   Revoke an authentication.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   revokeAuthentication(request: RevokeAuthenticationRequest!): Void!
 
-  """You MUST be authenticated to use this mutation."""
+  """
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
   switchAccount(request: SwitchAccountRequest!): SwitchAccountResult!
+
+  """Refreshes the authentication tokens."""
   refresh(request: RefreshRequest!): RefreshResult!
 
   """
@@ -2826,47 +2860,47 @@ type Mutation {
   
   The HTTP Origin header MUST be present and match the app's domain.
   """
-  rolloverRefresh(request: RolloverRefreshRequest!): RefreshResult!
+  legacyRolloverRefresh(request: RolloverRefreshRequest!): RefreshResult!
 
   """
   Create a new post.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   post(request: CreatePostRequest!): PostResult!
 
   """
   Repost a post.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   repost(request: CreateRepostRequest!): PostResult!
 
   """
   Delete a post.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   deletePost(request: DeletePostRequest!): DeletePostResult!
 
   """
   Edit a post.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   editPost(request: EditPostRequest!): PostResult!
 
   """
   Bookmark a post.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   bookmarkPost(request: BookmarkPostRequest!): Void!
 
   """
   Undo bookmark.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   undoBookmarkPost(request: BookmarkPostRequest!): Void!
   hideReply(request: HideReplyRequest!): Void!
@@ -2875,35 +2909,35 @@ type Mutation {
   """
   React to a post.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   addReaction(request: AddReactionRequest!): AddReactionResult!
 
   """
   Undo reaction to a post.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   undoReaction(request: UndoReactionRequest!): UndoReactionResult!
 
   """
   Report a post.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   reportPost(request: ReportPostRequest!): Void!
 
   """
   Follow an Account on the global Graph or a specific Graph.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   follow(request: CreateFollowRequest!): FollowResult!
 
   """
   Unfollow an Account on the global Graph or a specific Graph.
   
-  You MUST be authenticated to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   unfollow(request: CreateUnfollowRequest!): UnfollowResult!
   setAccountFollowRule(request: CreateAccountFollowRuleRequest!): AccountFollowRuleResult!
@@ -2989,7 +3023,7 @@ type PaginatedActions {
 }
 
 type PaginatedActiveAuthenticationsResult {
-  items: [ActiveAuthentication!]!
+  items: [AuthenticatedSession!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -3399,14 +3433,20 @@ type Query {
   lastLoggedInAccount(request: LastLoggedInAccountRequest!): Account
   app(request: AppRequest!): App
   apps(request: AppsRequest!): PaginatedAppsResult!
-  accountAuthentications(request: AccountAuthenticationsRequest!): PaginatedActiveAuthenticationsResult!
 
   """
-  Get the current authentication for the user's request.
+  List all active authenticated sessions for the current account.
   
   You MUST be authenticated to use this query.
   """
-  currentAuthentication: ActiveAuthentication!
+  authenticatedSessions(request: AccountAuthenticationsRequest!): PaginatedActiveAuthenticationsResult!
+
+  """
+  Get the current authenticated session for the current account.
+  
+  You MUST be authenticated to use this query.
+  """
+  currentSession: AuthenticatedSession!
   feed(request: FeedRequest!): Feed
   post(request: PostRequest!): AnyPost
   posts(request: PostsRequest!): PaginatedPostsResult!

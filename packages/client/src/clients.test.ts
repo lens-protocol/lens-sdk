@@ -23,7 +23,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
     it('Then it should authenticate and stay authenticated', async () => {
       const challenge = await client.challenge({
         request: {
-          account,
+          address: account,
           signedBy: account,
           app,
         },
@@ -52,7 +52,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
     it('Then it should return an Err<never, SigningError> with any error thrown by the provided `SignMessage` function', async () => {
       const authenticated = await client.login({
         request: {
-          account,
+          address: account,
           signedBy: account,
           app,
         },
@@ -69,7 +69,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
     it('Then it should return a SessionClient instance associated with the credentials in the storage', async () => {
       await client.login({
         request: {
-          account,
+          address: account,
           signedBy: account,
           app,
         },

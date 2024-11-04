@@ -1,5 +1,5 @@
 import type { FragmentOf, VariablesOf } from 'gql.tada';
-import { App, PaginatedResultInfo } from './fragments';
+import { PaginatedResultInfo } from './fragments';
 import { graphql } from './graphql';
 
 const AuthenticationChallenge = graphql(
@@ -7,11 +7,8 @@ const AuthenticationChallenge = graphql(
     __typename
     id
     text
-    app {
-      ...App
-    }
   }`,
-  [App],
+  [],
 );
 export type AuthenticationChallenge = FragmentOf<typeof AuthenticationChallenge>;
 
