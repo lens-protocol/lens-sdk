@@ -58,7 +58,6 @@ export function setAccountMetadata(
   { request }: SetAccountMetadataVariables,
 ): ResultAsync<SetAccountMetadataResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(SetAccountMetadataMutation, { request });
-
 }
 
 /**
