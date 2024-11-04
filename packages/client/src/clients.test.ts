@@ -5,7 +5,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { describe, expect, it } from 'vitest';
 
 import { HealthQuery } from '@lens-social/graphql';
-import { currentAuthentication } from './actions';
+import { currentSession } from './actions';
 import { PublicClient } from './clients';
 import { UnexpectedError } from './errors';
 
@@ -79,7 +79,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
       const authenticated = await client.resumeSession();
       assertOk(authenticated);
 
-      const authentication = await currentAuthentication(authenticated.value);
+      const authentication = await currentSession(authenticated.value);
       expect(authentication._unsafeUnwrap()).toMatchObject({
         signer: account,
         app,

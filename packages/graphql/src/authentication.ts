@@ -94,8 +94,8 @@ export const AuthenticateMutation = graphql(
 
 export type AuthenticateVariables = VariablesOf<typeof AuthenticateMutation>;
 
-const ActiveAuthentication = graphql(
-  `fragment ActiveAuthentication on ActiveAuthentication {
+const AuthenticatedSession = graphql(
+  `fragment AuthenticatedSession on AuthenticatedSession {
     authenticationId
     app
     browser
@@ -108,32 +108,32 @@ const ActiveAuthentication = graphql(
   }`,
 );
 
-export type ActiveAuthentication = FragmentOf<typeof ActiveAuthentication>;
+export type AuthenticatedSession = FragmentOf<typeof AuthenticatedSession>;
 
-export const CurrentAuthenticationQuery = graphql(
-  `query CurrentAuthentication {
-    value: currentAuthentication {
-      ...ActiveAuthentication
+export const CurrentSessionQuery = graphql(
+  `query CurrentSession {
+    value: currentSession {
+      ...AuthenticatedSession
     }
   }`,
-  [ActiveAuthentication],
+  [AuthenticatedSession],
 );
 
-export const AccountAuthenticationsQuery = graphql(
-  `query AccountAuthentications($request: AccountAuthenticationsRequest!) {
-    value: accountAuthentications(request: $request) {
+export const AuthenticatedSessions = graphql(
+  `query AuthenticatedSessions($request: AccountAuthenticationsRequest!) {
+    value: authenticatedSessions(request: $request) {
       items {
-        ...ActiveAuthentication
+        ...AuthenticatedSession
       }
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }`,
-  [ActiveAuthentication, PaginatedResultInfo],
+  [AuthenticatedSession, PaginatedResultInfo],
 );
 
-export type AccountAuthenticationsVariables = VariablesOf<typeof AccountAuthenticationsQuery>;
+export type AuthenticatedSessionsVariables = VariablesOf<typeof AuthenticatedSessions>;
 
 export const RevokeAuthenticationMutation = graphql(
   `mutation RevokeAuthentication($request: RevokeAuthenticationRequest!) {

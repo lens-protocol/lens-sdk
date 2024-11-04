@@ -17,17 +17,30 @@ scalar AccessToken
 
 type Account {
   address: EvmAddress!
+
+  """The score of the account."""
   score: Int!
+
+  """The metadata of the account."""
   metadata: AccountMetadata
+
+  """The username linked to the account."""
   username: UsernameValue
+
+  """The operations for the account."""
   operations: LoggedInAccountOperations
 }
 
 input AccountAuthenticationsRequest {
+  """
+  You can optionally filter the authentications by the app that created them.
+  """
   app: EvmAddress
   pageSize: PageSize
   cursor: Cursor
 }
+
+union AccountAvailable = AccountManaged | AccountOwned
 
 type AccountBlocked {
   account: Account!
@@ -35,17 +48,33 @@ type AccountBlocked {
 }
 
 type AccountFeedsStats {
+  """The total number of posts."""
   posts: Int!
+
+  """The total number of comments."""
   comments: Int!
+
+  """The total number of reposts."""
   reposts: Int!
+
+  """The total number of quotes."""
   quotes: Int!
+
+  """The total number of times the account has reacted."""
   reacted: Int!
+
+  """The total number of reactions."""
   reactions: Int!
+
+  """The total number of collects."""
   collects: Int!
 }
 
 input AccountFeedsStatsRequest {
+  """The account to get stats for."""
   account: EvmAddress!
+
+  """The feeds to get stats for."""
   forFeeds: [EvmAddress!]! = ["0xa8E1e68E3195d8e150A95CF2D0F0AfaE154f8fa5"]
 }
 
@@ -60,27 +89,61 @@ enum AccountFollowRuleErrorType {
 union AccountFollowRuleResult = SetAccountFollowRuleResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | AccountFollowRuleError
 
 type AccountGraphsFollowStats {
+  """The total number of followers."""
   followers: Int!
+
+  """The total number of following."""
   following: Int!
 }
 
 input AccountGraphsStatsRequest {
+  """The account to get stats for."""
   account: EvmAddress!
+
+  """The graphs to get stats for."""
   forGraphs: [EvmAddress!]! = ["0x7bE2cA3B7be499546f3f31605f4818D70d14439A"]
 }
 
 type AccountManaged {
+  """The account you are managing."""
   account: Account!
+
+  """The permissions you have on the account."""
+  permissions: AccountManagerPermissions!
+
+  """The date the account management was added."""
   addedAt: DateTime!
 }
 
 type AccountManager {
-  address: EvmAddress!
+  """The address of the account manager."""
+  manager: EvmAddress!
+
+  """Whether the account manager is a Lens manager."""
   isLensManager: Boolean!
+
+  """The permissions the account manager has."""
+  permissions: AccountManagerPermissions!
+
+  """The date the account manager was added."""
   addedAt: DateTime!
 }
 
-input AccountManagerPermissions {
+type AccountManagerPermissions {
+  """Whether the account can execute transactions."""
+  canExecuteTransactions: Boolean!
+
+  """Whether the account can transfer tokens."""
+  canTransferTokens: Boolean!
+
+  """Whether the account can transfer native tokens."""
+  canTransferNative: Boolean!
+
+  """Whether the account can set the metadata URI."""
+  canSetMetadataUri: Boolean!
+}
+
+input AccountManagerPermissionsInput {
   """Whether the account can execute transactions."""
   canExecuteTransactions: Boolean!
 
@@ -95,7 +158,10 @@ input AccountManagerPermissions {
 }
 
 input AccountManagersRequest {
+  """The page size."""
   pageSize: PageSize
+
+  """The cursor."""
   cursor: Cursor
 }
 
@@ -132,6 +198,14 @@ type AccountMetadata {
   picture: URI
 }
 
+type AccountOwned {
+  """The account you own."""
+  account: Account!
+
+  """The date the account was created."""
+  addedAt: DateTime!
+}
+
 type AccountPostReaction {
   account: Account!
   reactions: [PostReaction!]!
@@ -144,8 +218,13 @@ enum AccountReportReason {
 }
 
 input AccountRequest {
+  """The account address."""
   address: EvmAddress
+
+  """The username."""
   username: UsernameValue
+
+  """The legacy profile ID."""
   legacyProfileId: LegacyProfileId
 }
 
@@ -155,72 +234,94 @@ enum AccountSearchOrderBy {
 }
 
 input AccountSearchRequest {
-  limit: Int
+  """The page size."""
+  pageSize: Int
+
+  """The cursor."""
   cursor: Cursor
-  query: String!
+
+  """The local name to search for."""
+  localName: String!
+
+  """The username prefix to search for."""
   namespace: [String!]
+
+  """The order by."""
   orderBy: AccountSearchOrderBy
 }
 
-type AccountSponsorLimit {
-  window: SponsorLimitType!
-  allowanceLeft: Int!
-  allowanceUsed: Int!
-  allowance: Int!
-}
-
-input AccountSponsorRequest {
-  account: EvmAddress!
-  appOrSponsor: EvmAddress
-}
-
-type AccountSponsorResult {
-  global: AccountSponsorLimit
-  user: AccountSponsorLimit
-}
-
 type AccountStats {
+  """The stats for the feeds."""
   feedStats: AccountFeedsStats!
+
+  """The stats for the graphs."""
   graphFollowStats: AccountGraphsFollowStats!
 }
 
 input AccountStatsRequest {
+  """The account to get stats for."""
   account: EvmAddress!
+
+  """The feeds to get stats for."""
   forFeeds: [EvmAddress!]! = ["0xa8E1e68E3195d8e150A95CF2D0F0AfaE154f8fa5"]
+
+  """The graphs to get stats for."""
   forGraphs: [EvmAddress!]! = ["0x7bE2cA3B7be499546f3f31605f4818D70d14439A"]
 }
 
 type AccountUsername {
   id: String
   value: UsernameValue!
-  prefix: String!
+  namespace: String!
   localName: String!
   linkedTo: EvmAddress
   ownedBy: EvmAddress!
 }
 
 input AccountUsernameRequest {
-  limit: Int
+  """The page size."""
+  pageSize: Int
+
+  """The cursor."""
   cursor: Cursor
-  account: EvmAddress!
+
+  """The account or address to get owned usernames for."""
+  owner: EvmAddress!
 }
 
-input AccountsBlockedRequest {
+input AccountsAvailableRequest {
+  """The page size."""
   pageSize: PageSize
-  cursor: Cursor
-}
 
-input AccountsManagedRequest {
-  pageSize: PageSize
+  """The cursor."""
   cursor: Cursor
+
+  """The account to get managed by."""
   managedBy: EvmAddress!
+
+  """Whether to include owned accounts."""
   includeOwned: Boolean
+
+  """The visibility of hidden accounts."""
   hiddenFilter: ManagedAccountsVisibility
 }
 
+input AccountsBlockedRequest {
+  """The page size."""
+  pageSize: PageSize
+
+  """The cursor."""
+  cursor: Cursor
+}
+
 input AccountsRequest {
+  """The addresses to get."""
   addresses: [EvmAddress!]
+
+  """The usernames to get."""
   usernames: [UsernameValue!]
+
+  """The legacy profile IDs to get."""
   legacyProfileIds: [LegacyProfileId!]
 }
 
@@ -237,31 +338,15 @@ type ActionInputInfo {
   type: String!
 }
 
-type ActiveAuthentication {
-  authenticationId: UUID!
-  app: EvmAddress!
-  browser: String
-  device: String
-  os: String
-  origin: URL
-  signer: EvmAddress!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
 input AddAccountManagerRequest {
   """The address to add as a manager."""
   address: EvmAddress!
 
   """The permissions to give the account manager."""
-  permissions: AccountManagerPermissions!
+  permissions: AccountManagerPermissionsInput!
 }
 
-type AddAccountManagerResponse {
-  hash: TxHash!
-}
-
-union AddAccountManagerResult = AddAccountManagerResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union AddAccountManagerResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type AddReactionFailure {
   reason: String!
@@ -520,6 +605,18 @@ type AudioMetadata {
   content: Encryptable!
 }
 
+type AuthenticatedSession {
+  authenticationId: UUID!
+  app: EvmAddress!
+  browser: String
+  device: String
+  os: String
+  origin: URL
+  signer: EvmAddress!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type AuthenticationChallenge {
   id: UUID!
   text: String!
@@ -556,6 +653,7 @@ enum BlockErrorType {
 }
 
 input BlockRequest {
+  """The account to block."""
   account: EvmAddress!
 }
 
@@ -673,11 +771,11 @@ input CreateAccountWithUsernameRequest {
   """The account metadata uri"""
   metadataUri: URI!
 
-  """The local name to create should not include the namespace"""
+  """The local name to create - should not include the namespace"""
   localName: String!
 
   """Any account managers you wish to add to the account"""
-  accountManager: [EvmAddress!]!
+  accountManager: [EvmAddress!]
 }
 
 union CreateAccountWithUsernameResult = CreateAccountResponse | InvalidUsername | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
@@ -796,6 +894,17 @@ input CurrencyRequest {
 scalar Cursor
 
 scalar DateTime
+
+input DebugAccountSponsorRequest {
+  """The account to get the sponsor limit for."""
+  account: EvmAddress!
+
+  """The app to get the sponsor limit for."""
+  app: EvmAddress
+
+  """The sponsor to get the sponsor limit for."""
+  sponsor: EvmAddress
+}
 
 input DebugPostMetadataRequest {
   rawUri: URI
@@ -999,11 +1108,7 @@ type EmbedMetadata {
   content: Encryptable!
 }
 
-type EnableSignlessResponse {
-  hash: TxHash!
-}
-
-union EnableSignlessResult = EnableSignlessResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union EnableSignlessResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar EncodedTransaction
 
@@ -1823,7 +1928,10 @@ type KnownAction {
 }
 
 input LastLoggedInAccountRequest {
+  """The address to get the last logged in account for."""
   address: EvmAddress!
+
+  """The app to get the last logged in account for."""
   app: EvmAddress
 }
 
@@ -1998,14 +2106,32 @@ enum ManagedAccountsVisibility {
 }
 
 type MeResult {
+  """The logged in account."""
   account: Account!
+
+  """Whether the account is signless."""
   isSignless: Boolean!
+
+  """Whether the account is sponsored."""
   isSponsored: Boolean!
+
+  """The address app the account is logged in to."""
   loggedInTo: EvmAddress!
+
+  """Whether the account can execute transactions."""
   canExecuteTransactions: Boolean!
+
+  """Whether the account can transfer tokens."""
   canTransferTokens: Boolean!
+
+  """Whether the account can transfer native tokens."""
   canTransferNative: Boolean!
+
+  """Whether the account can set the metadata URI."""
   canSetMetadataUri: Boolean!
+
+  """The sponsorship allowance for the account."""
+  limit: SponsorshipAllowance!
 }
 
 """
@@ -2589,7 +2715,19 @@ type Mutation {
   You MUST be authenticated to use this mutation.
   """
   setAccountMetadata(request: SetAccountMetadataRequest!): SetAccountMetadataResult!
+
+  """
+  Block an account with the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
   block(request: BlockRequest!): BlockResult!
+
+  """
+  Unblock an account with the authenticated account.
+  
+  You MUST be authenticated to use this mutation.
+  """
   unblock(request: UnblockRequest!): UnblockResult!
 
   """
@@ -2681,6 +2819,8 @@ type Mutation {
 
   """You MUST be authenticated to use this mutation."""
   switchAccount(request: SwitchAccountRequest!): SwitchAccountResult!
+
+  """Refreshes the authentication tokens."""
   refresh(request: RefreshRequest!): RefreshResult!
 
   """
@@ -2691,7 +2831,7 @@ type Mutation {
   
   The HTTP Origin header MUST be present and match the app's domain.
   """
-  rolloverRefresh(request: RolloverRefreshRequest!): RefreshResult!
+  legacyRolloverRefresh(request: RolloverRefreshRequest!): RefreshResult!
 
   """
   Create a new post.
@@ -2781,6 +2921,7 @@ type Mutation {
 }
 
 input MuteRequest {
+  """The account to mute."""
   account: EvmAddress!
 }
 
@@ -2822,17 +2963,23 @@ enum PageSize {
 }
 
 type PaginatedAccountManagersResult {
+  """The account managers."""
   items: [AccountManager!]!
+
+  """The pagination information for the given request."""
+  pageInfo: PaginatedResultInfo!
+}
+
+type PaginatedAccountsAvailableResult {
+  """The accounts available to use for the given address"""
+  items: [AccountAvailable!]!
+
+  """The pagination information for the given request."""
   pageInfo: PaginatedResultInfo!
 }
 
 type PaginatedAccountsBlockedResult {
   items: [AccountBlocked!]!
-  pageInfo: PaginatedResultInfo!
-}
-
-type PaginatedAccountsManagedResult {
-  items: [AccountManaged!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -2847,7 +2994,7 @@ type PaginatedActions {
 }
 
 type PaginatedActiveAuthenticationsResult {
-  items: [ActiveAuthentication!]!
+  items: [AuthenticatedSession!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -2912,7 +3059,10 @@ input PaginatedQuery {
 }
 
 type PaginatedResultInfo {
+  """The cursor to the previous page of results, if any."""
   prev: Cursor
+
+  """The cursor to the next page of results, if any."""
   next: Cursor
 }
 
@@ -3205,31 +3355,69 @@ type ProfileOwnershipCondition {
 
 type Query {
   health: Boolean!
+
+  """Get an account by address, username, or legacy profile ID."""
   account(request: AccountRequest!): Account
-  me: MeResult!
-  accounts(request: AccountsRequest!): [Account!]!
-  accountStats(request: AccountStatsRequest!): AccountStats!
-  accountGraphsStats(request: AccountGraphsStatsRequest!): AccountGraphsFollowStats!
-  accountFeedsStats(request: AccountFeedsStatsRequest!): AccountFeedsStats!
-  whoReferencedPost(request: WhoReferencedPostRequest!): PaginatedAccountsResult!
-  whoActedOnPost(request: WhoActedOnPostRequest!): PaginatedAccountsResult!
-  accountsBlocked(request: AccountsBlockedRequest!): PaginatedAccountsBlockedResult!
-  accountsManaged(request: AccountsManagedRequest!): PaginatedAccountsManagedResult!
-  accountManagers(request: AccountManagersRequest!): PaginatedAccountManagersResult!
-  accountUsernames(request: AccountUsernameRequest!): PaginatedUsernamesResult!
-  accountSponsorLimit(request: AccountSponsorRequest!): AccountSponsorResult!
-  searchAccounts(request: AccountSearchRequest!): PaginatedAccountsResult!
-  lastLoggedInAccount(request: LastLoggedInAccountRequest!): Account
-  app(request: AppRequest!): App
-  apps(request: AppsRequest!): PaginatedAppsResult!
-  accountAuthentications(request: AccountAuthenticationsRequest!): PaginatedActiveAuthenticationsResult!
 
   """
-  Get the current authentication for the user's request.
+  Account information for the authenticated account.
   
   You MUST be authenticated to use this query.
   """
-  currentAuthentication: ActiveAuthentication!
+  me: MeResult!
+
+  """Get accounts by address, username, or legacy profile ID."""
+  accounts(request: AccountsRequest!): [Account!]!
+
+  """Get the stats for an account."""
+  accountStats(request: AccountStatsRequest!): AccountStats!
+
+  """Get the account stats for the graphs."""
+  accountGraphsStats(request: AccountGraphsStatsRequest!): AccountGraphsFollowStats!
+
+  """Get the account stats for the feeds."""
+  accountFeedsStats(request: AccountFeedsStatsRequest!): AccountFeedsStats!
+
+  """
+  Accounts blocked for the authenticated account.
+  
+  You MUST be authenticated to use this query.
+  """
+  accountsBlocked(request: AccountsBlockedRequest!): PaginatedAccountsBlockedResult!
+
+  """Get the accounts which are available to use for the given address"""
+  accountsAvailable(request: AccountsAvailableRequest!): PaginatedAccountsAvailableResult!
+
+  """
+  account manager for the authenticated account.
+  
+  You MUST be authenticated to use this query.
+  """
+  accountManagers(request: AccountManagersRequest!): PaginatedAccountManagersResult!
+
+  """Search for accounts by usernames."""
+  searchAccounts(request: AccountSearchRequest!): PaginatedAccountsResult!
+
+  """
+  Get the last logged in account for the given address and app if specified.
+  """
+  lastLoggedInAccount(request: LastLoggedInAccountRequest!): Account
+  app(request: AppRequest!): App
+  apps(request: AppsRequest!): PaginatedAppsResult!
+
+  """
+  List all active authenticated sessions for the current account.
+  
+  You MUST be authenticated to use this query.
+  """
+  authenticatedSessions(request: AccountAuthenticationsRequest!): PaginatedActiveAuthenticationsResult!
+
+  """
+  Get the current authenticated session for the current account.
+  
+  You MUST be authenticated to use this query.
+  """
+  currentSession: AuthenticatedSession!
   feed(request: FeedRequest!): Feed
   post(request: PostRequest!): AnyPost
   posts(request: PostsRequest!): PaginatedPostsResult!
@@ -3242,6 +3430,8 @@ type Query {
   postReactionStatus(request: PostReactionStatusRequest!): [PostReactionStatus!]!
   searchPosts(request: SearchPostsRequest!): PaginatedPostsResult!
   postActions(request: PostActionsRequest!): PaginatedActions!
+  whoReferencedPost(request: WhoReferencedPostRequest!): PaginatedAccountsResult!
+  whoActedOnPost(request: WhoActedOnPostRequest!): PaginatedAccountsResult!
   following(request: FollowingRequest!): PaginatedAccountsResult!
   followers(request: FollowersRequest!): PaginatedAccountsResult!
   followersYouKnow(request: FollowersYouKnowRequest!): PaginatedAccountsResult!
@@ -3260,11 +3450,13 @@ type Query {
   transactionStatus(request: TransactionStatusRequest!): TransactionStatusResult!
   debugMetadata(request: DebugPostMetadataRequest!): DebugPostMetadataResult!
   debugTransactionStatusFailed(request: DebugTransactionStatusRequest!): DebugTransactionStatusResult
+  debugAccountSponsorLimit(request: DebugAccountSponsorRequest!): SponsorshipLimits!
   createFrameTypedData(request: FrameEIP712Request!): CreateFrameEIP712TypedData!
   verifyFrameSignature(request: FrameVerifySignature!): FrameVerifySignatureResult!
   modFollowersHistory(request: PaginatedQuery!): PaginatedModFollowersResult!
   modLatestReports(request: ModReportsRequest!): PaginatedModReports!
   modDisputedReports(request: PaginatedQuery!): PaginatedDisputedReports!
+  usernames(request: AccountUsernameRequest!): PaginatedUsernamesResult!
   _service: _Service!
 }
 
@@ -3301,22 +3493,21 @@ input RemoveAccountManagerRequest {
   manager: EvmAddress!
 }
 
-type RemoveAccountManagerResponse {
-  hash: TxHash!
-}
+union RemoveAccountManagerResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
-union RemoveAccountManagerResult = RemoveAccountManagerResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
-
-type RemoveSignlessResponse {
-  hash: TxHash!
-}
-
-union RemoveSignlessResult = RemoveSignlessResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union RemoveSignlessResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input ReportAccountRequest {
+  """The account to report."""
   account: EvmAddress!
+
+  """The reason for the report."""
   reason: AccountReportReason!
+
+  """An optional comment to add to the report."""
   additionalComment: String
+
+  """An optional list of posts to reference in the report."""
   referencePosts: [PostId!]
 }
 
@@ -3396,6 +3587,7 @@ type SetAccountFollowRuleResponse {
 }
 
 input SetAccountMetadataRequest {
+  """The metadata URI to set."""
   metadataUri: URI!
 }
 
@@ -3497,6 +3689,28 @@ type SponsoredTransactionRequest {
   Use this object if your library does not have a parser for the encoded transaction data.
   """
   raw: Eip712TransactionRequest!
+}
+
+type SponsorshipAllowance {
+  """The sponsorship window type."""
+  window: SponsorLimitType!
+
+  """The number of remaining sponsorship allowance."""
+  allowanceLeft: Int!
+
+  """The number of sponsorship allowance used."""
+  allowanceUsed: Int!
+
+  """The total sponsorship allowance."""
+  allowance: Int!
+}
+
+type SponsorshipLimits {
+  """The global sponsorship allowance."""
+  global: SponsorshipAllowance
+
+  """The user sponsorship allowance."""
+  user: SponsorshipAllowance
 }
 
 type StoryMetadata {
@@ -3772,6 +3986,7 @@ enum UnblockErrorType {
 }
 
 input UnblockRequest {
+  """The account to unblock."""
   account: EvmAddress!
 }
 
@@ -3873,14 +4088,10 @@ input UpdateAccountManagerRequest {
   manager: EvmAddress!
 
   """The permissions to update for the account manager."""
-  permissions: AccountManagerPermissions!
+  permissions: AccountManagerPermissionsInput!
 }
 
-type UpdateAccountManagerResponse {
-  hash: TxHash!
-}
-
-union UpdateAccountManagerResult = UpdateAccountManagerResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union UpdateAccountManagerResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar UsernameValue
 
@@ -3937,10 +4148,15 @@ enum WhoActedOnPostOrderBy {
 }
 
 input WhoActedOnPostRequest {
+  """The post id to get who acted on."""
   postId: PostId!
   filter: WhoActedOnPostFilter
   orderBy: WhoActedOnPostOrderBy
-  limit: Int
+
+  """The page size."""
+  pageSize: Int
+
+  """The cursor."""
   cursor: Cursor
 }
 
@@ -3951,10 +4167,17 @@ enum WhoReferencedPostOrderBy {
 }
 
 input WhoReferencedPostRequest {
+  """The post id to get who referenced."""
   postId: PostId!
+
+  """The reference types to filter by."""
   referenceTypes: [PostReferenceType!]
   orderBy: WhoReferencedPostOrderBy
-  limit: Int
+
+  """The page size."""
+  pageSize: Int
+
+  """The cursor."""
   cursor: Cursor
 }
 

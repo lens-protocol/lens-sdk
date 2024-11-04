@@ -1,17 +1,17 @@
 import type {
-  ActiveAuthentication,
+  AuthenticatedSession,
   RefreshResult,
   RefreshVariables,
   RevokeAuthenticationVariables,
 } from '@lens-social/graphql';
 
 import {
-  AccountAuthenticationsQuery,
-  CurrentAuthenticationQuery,
+  AuthenticatedSessions,
+  CurrentSessionQuery,
   RefreshMutation,
   RevokeAuthenticationMutation,
 } from '@lens-social/graphql';
-import type { AccountAuthenticationsVariables } from '@lens-social/graphql';
+import type { AuthenticatedSessionsVariables } from '@lens-social/graphql';
 import type { ResultAsync } from '@lens-social/types';
 
 import type { AnyClient, SessionClient } from '../clients';
@@ -19,19 +19,19 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
 import type { Paginated } from '../types';
 
 /**
- * Get the ActiveAuthentication associated with the current session.
+ * Get the AuthenticatedSession associated with the authenticated Account.
  *
  * ```ts
- * const result = await currentAuthentication(sessionClient);
+ * const result = await currentSession(sessionClient);
  * ```
  *
  * @param client - The session client.
- * @returns The current ActiveAuthentication details.
+ * @returns The current AuthenticatedSession details.
  */
-export function currentAuthentication(
+export function currentSession(
   client: SessionClient,
-): ResultAsync<ActiveAuthentication, UnauthenticatedError | UnexpectedError> {
-  return client.query(CurrentAuthenticationQuery, {});
+): ResultAsync<AuthenticatedSession, UnauthenticatedError | UnexpectedError> {
+  return client.query(CurrentSessionQuery, {});
 }
 
 /**
@@ -79,7 +79,7 @@ export function refresh(
 }
 
 /**
- * Fetch the authentications associated with the authenticated Account.
+ * Fetch the authenticated sessions associated with the authenticated Account.
  *
  * ```ts
  * const result = await fetchAccountAuthentications(sessionClient, {
@@ -93,11 +93,11 @@ export function refresh(
  *
  * @param client - The session client for the authenticated Account.
  * @param variables - The refresh request variables.
- * @returns The paginated authentications associated with the Account.
+ * @returns The paginated authenticated sessions associated with the authenticated Account.
  */
-export function fetchAccountAuthentications(
+export function fetchAuthenticatedSessions(
   client: SessionClient,
-  { request }: AccountAuthenticationsVariables,
-): ResultAsync<Paginated<ActiveAuthentication>, UnexpectedError> {
-  return client.query(AccountAuthenticationsQuery, { request });
+  { request }: AuthenticatedSessionsVariables,
+): ResultAsync<Paginated<AuthenticatedSession>, UnexpectedError> {
+  return client.query(AuthenticatedSessions, { request });
 }
