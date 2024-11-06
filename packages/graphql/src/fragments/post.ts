@@ -1,7 +1,7 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
 import { Account } from './account';
-import { Amount, BooleanValue, NetworkAddress } from './common';
+import { ActionInputInfo, Amount, BooleanValue, NetworkAddress } from './common';
 import { App, Feed } from './primitives';
 
 export type PostActionType = ReturnType<typeof graphql.scalar<'PostActionType'>>;
@@ -213,3 +213,72 @@ export const AnyPost = graphql(
   [Post, Repost],
 );
 export type AnyPost = FragmentOf<typeof AnyPost>;
+
+export const KnownAction = graphql(
+  `fragment KnownAction on KnownAction {
+    __typename
+    name
+    setupInput {
+      ...ActionInputInfo
+    }
+    actionInput {
+      ...ActionInputInfo
+    }
+    returnSetupInput {
+      ...ActionInputInfo
+    }
+    contract {
+      ...NetworkAddress
+    }
+  }`,
+  [NetworkAddress, ActionInputInfo],
+);
+export type KnownAction = FragmentOf<typeof KnownAction>;
+
+export const UnknownAction = graphql(
+  `fragment UnknownAction on UnknownAction {
+    __typename
+    name
+    contract {
+      ...NetworkAddress
+    }
+  }`,
+  [NetworkAddress],
+);
+export type UnknownAction = FragmentOf<typeof UnknownAction>;
+
+export const ActionInfo = graphql(
+  `fragment ActionInfo on ActionInfo {
+    ... on KnownAction {
+      ...KnownAction
+    }
+    ... on UnknownAction {
+      ...UnknownAction
+    }
+  }`,
+  [KnownAction, UnknownAction],
+);
+export type ActionInfo = FragmentOf<typeof ActionInfo>;
+
+export const PostReaction = graphql(
+  `fragment PostReaction on PostReaction {
+    __typename
+    reactedAt
+    reaction
+  }`,
+);
+export type PostReaction = FragmentOf<typeof PostReaction>;
+
+export const AccountPostReaction = graphql(
+  `fragment AccountPostReaction on AccountPostReaction {
+    __typename
+    account {
+      ...Account
+    }
+    reactions {
+      ...PostReaction
+    }
+  }`,
+  [Account, PostReaction],
+);
+export type AccountPostReaction = FragmentOf<typeof AccountPostReaction>;

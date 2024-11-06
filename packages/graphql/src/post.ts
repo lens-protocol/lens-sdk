@@ -1,11 +1,25 @@
 import type { FragmentOf, VariablesOf } from 'gql.tada';
 import {
+  AccountPostReaction,
+  ActionInfo,
   AnyPost,
+  PaginatedResultInfo,
+  Post,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
 } from './fragments';
 import { graphql } from './graphql';
+
+// List of query and mutation operations related to posts
+// The operations are:
+// - PostMutation
+// - RepostMutation
+// - EditPostMutation
+// - PostQuery
+// - PostActionsQuery
+// - PostReactionsQuery
+// - PostBookmarksQuery
 
 const PostResponse = graphql(
   `fragment PostResponse on PostResponse {
@@ -20,15 +34,12 @@ const PostResult = graphql(
     ...on PostResponse {
       ...PostResponse
     }
-
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
     }
-
     ...on SelfFundedTransactionRequest {
       ...SelfFundedTransactionRequest
     }
-
     ...on TransactionWillFail {
       ...TransactionWillFail
     }
@@ -76,3 +87,63 @@ export const PostQuery = graphql(
   [AnyPost],
 );
 export type PostQueryVariables = VariablesOf<typeof PostQuery>;
+
+export const PostActionsQuery = graphql(
+  `query PostActions($request: PostActionsRequest!) {
+    value: postActions(request: $request) {
+      items {
+        ...ActionInfo
+      },
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [ActionInfo, PaginatedResultInfo],
+);
+export type PostActionsVariables = VariablesOf<typeof PostActionsQuery>;
+
+export const PostReactionsQuery = graphql(
+  `query PostReactions($request: PostReactionsRequest!) {
+    value: postReactions(request: $request) {
+      items {
+        ...AccountPostReaction
+      },
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [AccountPostReaction, PaginatedResultInfo],
+);
+export type PostReactionsVariables = VariablesOf<typeof PostReactionsQuery>;
+
+export const PostBookmarksQuery = graphql(
+  `query PostBookmarks($request: PostBookmarksRequest!) {
+    value: postBookmarks(request: $request) {
+      items {
+        ...Post
+      },
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [Post, PaginatedResultInfo],
+);
+export type PostBookmarksVariables = VariablesOf<typeof PostBookmarksQuery>;
+
+export const PostReferencesQuery = graphql(
+  `query PostReferences($request: PostReferencesRequest!) {
+    value: postReferences(request: $request) {
+      items {
+        ...Post
+      },
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [Post, PaginatedResultInfo],
+);
+export type PostReferencesVariables = VariablesOf<typeof PostReferencesQuery>;

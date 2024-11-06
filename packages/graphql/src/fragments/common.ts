@@ -61,3 +61,12 @@ export const Amount = graphql(
   [Asset],
 );
 export type Amount = FragmentOf<typeof Amount>;
+
+export const ActionInputInfo = graphql(
+  `fragment ActionInputInfo on ActionInputInfo {
+    __typename
+    type
+    name
+  }`,
+);
+export type ActionInputInfo = FragmentOf<typeof ActionInputInfo>;
