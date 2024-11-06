@@ -82,7 +82,7 @@ export function useLogin(): UseAsyncTask<LoginArgs, Account, LoginError> {
 
     return login.execute({
       request: {
-        account: args.account,
+        address: args.account,
         signedBy: args.signer.address,
         app: args.app,
       },

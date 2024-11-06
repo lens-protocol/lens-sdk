@@ -75,7 +75,7 @@ input AccountFeedsStatsRequest {
   account: EvmAddress!
 
   """The feeds to get stats for."""
-  forFeeds: [EvmAddress!]! = ["0xa8E1e68E3195d8e150A95CF2D0F0AfaE154f8fa5"]
+  forFeeds: [EvmAddress!]! = ["0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"]
 }
 
 type AccountFollowRuleError {
@@ -101,7 +101,7 @@ input AccountGraphsStatsRequest {
   account: EvmAddress!
 
   """The graphs to get stats for."""
-  forGraphs: [EvmAddress!]! = ["0x7bE2cA3B7be499546f3f31605f4818D70d14439A"]
+  forGraphs: [EvmAddress!]! = ["0x5E647e6197fa5C6aA814E11C3504BE232a3D671a"]
 }
 
 type AccountManaged {
@@ -263,19 +263,10 @@ input AccountStatsRequest {
   account: EvmAddress!
 
   """The feeds to get stats for."""
-  forFeeds: [EvmAddress!]! = ["0xa8E1e68E3195d8e150A95CF2D0F0AfaE154f8fa5"]
+  forFeeds: [EvmAddress!]! = ["0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"]
 
   """The graphs to get stats for."""
-  forGraphs: [EvmAddress!]! = ["0x7bE2cA3B7be499546f3f31605f4818D70d14439A"]
-}
-
-type AccountUsername {
-  id: String
-  value: UsernameValue!
-  namespace: String!
-  localName: String!
-  linkedTo: EvmAddress
-  ownedBy: EvmAddress!
+  forGraphs: [EvmAddress!]! = ["0x5E647e6197fa5C6aA814E11C3504BE232a3D671a"]
 }
 
 input AccountUsernameRequest {
@@ -347,6 +338,14 @@ input AddAccountManagerRequest {
 }
 
 union AddAccountManagerResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input AddAppAuthorizationEndpointRequest {
+  """The app."""
+  app: EvmAddress!
+
+  """The app authorization endpoint."""
+  endpoint: URL!
+}
 
 type AddReactionFailure {
   reason: String!
@@ -798,6 +797,44 @@ input CreateAccountWithUsernameRequest {
 
 union CreateAccountWithUsernameResult = CreateAccountResponse | InvalidUsername | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
+input CreateAppRequest {
+  """The app metadata uri"""
+  metadataUri: URI
+
+  """Any admins who need to manage this app also"""
+  admins: [EvmAddress!]
+
+  """The app graph defaults to use the global graph"""
+  graph: EvmAddress! = "0x5E647e6197fa5C6aA814E11C3504BE232a3D671a"
+
+  """The app feeds defaults to use the global feed"""
+  feeds: [EvmAddress!]! = ["0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"]
+
+  """The default feed defaults to use the global feed"""
+  defaultFeed: EvmAddress! = "0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"
+
+  """The app username leave empty to use the lens username"""
+  username: EvmAddress! = "0x70e89263e68F29B8192a9fd6fee5531C3bbF0440"
+
+  """The app groups leave empty if none"""
+  groups: [EvmAddress!]
+
+  """The app signers leave empty if none"""
+  signers: [EvmAddress!]
+
+  """The app paymaster leave empty if none"""
+  paymaster: EvmAddress
+
+  """The app treasury leave empty if none"""
+  treasury: EvmAddress
+}
+
+type CreateAppResponse {
+  hash: TxHash!
+}
+
+union CreateAppResult = CreateAppResponse | SelfFundedTransactionRequest | TransactionWillFail
+
 input CreateFollowRequest {
   """The account to follow."""
   account: EvmAddress!
@@ -805,7 +842,7 @@ input CreateFollowRequest {
   """
   The graph to follow the account on. If not provided, the global graph is used.
   """
-  graph: EvmAddress! = "0x7bE2cA3B7be499546f3f31605f4818D70d14439A"
+  graph: EvmAddress! = "0x5E647e6197fa5C6aA814E11C3504BE232a3D671a"
 
   """
   The data required by any follow rules associated with the account being followed.
@@ -864,7 +901,7 @@ input CreateFrameEIP712TypedDataValueInput {
 
 input CreatePostRequest {
   """The feed to post to. If not provided, the global feed is used."""
-  feed: EvmAddress! = "0xa8E1e68E3195d8e150A95CF2D0F0AfaE154f8fa5"
+  feed: EvmAddress! = "0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"
 
   """The URI of the post metadata."""
   contentUri: URI!
@@ -881,7 +918,7 @@ input CreatePostRequest {
 
 input CreateRepostRequest {
   """The feed to repost to. If not provided, the global feed is used."""
-  feed: EvmAddress! = "0xa8E1e68E3195d8e150A95CF2D0F0AfaE154f8fa5"
+  feed: EvmAddress! = "0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"
 
   """The post to reference."""
   post: PostId!
@@ -895,7 +932,7 @@ input CreateUnfollowRequest {
   The graph where the account is followed and should be unfollowed.
   If not provided, the global graph is used.
   """
-  graph: EvmAddress! = "0x7bE2cA3B7be499546f3f31605f4818D70d14439A"
+  graph: EvmAddress! = "0x5E647e6197fa5C6aA814E11C3504BE232a3D671a"
 
   """
   The data required by the graph rules associated with the specified graph.
@@ -1761,7 +1798,7 @@ input FollowersRequest {
   limit: Int
   cursor: Cursor
   account: EvmAddress!
-  forGraphs: [EvmAddress!]! = ["0x7bE2cA3B7be499546f3f31605f4818D70d14439A"]
+  forGraphs: [EvmAddress!]! = ["0x5E647e6197fa5C6aA814E11C3504BE232a3D671a"]
   orderBy: FollowersOrderBy
 }
 
@@ -1775,7 +1812,7 @@ input FollowersYouKnowRequest {
   cursor: Cursor
   target: EvmAddress!
   observer: EvmAddress!
-  forGraphs: [EvmAddress!]! = ["0x7bE2cA3B7be499546f3f31605f4818D70d14439A"]
+  forGraphs: [EvmAddress!]! = ["0x5E647e6197fa5C6aA814E11C3504BE232a3D671a"]
   orderBy: FollowersYouKnowOrderBy
 }
 
@@ -1788,7 +1825,7 @@ input FollowingRequest {
   limit: Int
   cursor: Cursor
   account: EvmAddress!
-  forGraphs: [EvmAddress!]! = ["0x7bE2cA3B7be499546f3f31605f4818D70d14439A"]
+  forGraphs: [EvmAddress!]! = ["0x5E647e6197fa5C6aA814E11C3504BE232a3D671a"]
   orderBy: FollowingOrderBy
 }
 
@@ -2707,6 +2744,20 @@ input ModReportsRequest {
 
 type Mutation {
   """
+  Create a new app
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  createApp(request: CreateAppRequest!): CreateAppResult!
+
+  """
+  Add an app authorization endpoint.
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  addAppAuthorizationEndpoint(request: AddAppAuthorizationEndpointRequest!): Void!
+
+  """
   Report an account.
   
   You MUST be authenticated as Account Owner or Account Manager to use this mutation.
@@ -3101,7 +3152,7 @@ type PaginatedTimelineResult {
 }
 
 type PaginatedUsernamesResult {
-  items: [AccountUsername!]!
+  items: [UsernameResult!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -3198,7 +3249,7 @@ input PostBookmarksFilter {
 }
 
 input PostBookmarksRequest {
-  forFeeds: [EvmAddress!]! = ["0xa8E1e68E3195d8e150A95CF2D0F0AfaE154f8fa5"]
+  forFeeds: [EvmAddress!]! = ["0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"]
   filter: PostBookmarksFilter
   pageSize: PageSize
   cursor: Cursor
@@ -3349,7 +3400,7 @@ enum PostTagsOrderBy {
 }
 
 input PostTagsRequest {
-  forFeeds: [EvmAddress!]! = ["0xa8E1e68E3195d8e150A95CF2D0F0AfaE154f8fa5"]
+  forFeeds: [EvmAddress!]! = ["0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"]
   orderBy: PostTagsOrderBy! = MOST_POPULAR
   pageSize: PageSize
   cursor: Cursor
@@ -3370,7 +3421,7 @@ input PostsFilterRequest {
 }
 
 input PostsRequest {
-  forFeeds: [EvmAddress!]! = ["0xa8E1e68E3195d8e150A95CF2D0F0AfaE154f8fa5"]
+  forFeeds: [EvmAddress!]! = ["0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"]
   filter: PostsFilterRequest
   pageSize: PageSize
   cursor: Cursor
@@ -3586,7 +3637,7 @@ input SearchPostsRequest {
   query: String!
 
   """The feeds to search in."""
-  forFeeds: [EvmAddress!]! = ["0xa8E1e68E3195d8e150A95CF2D0F0AfaE154f8fa5"]
+  forFeeds: [EvmAddress!]! = ["0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"]
 
   """The optional post types to filter by."""
   filter: SearchPostsFilter
@@ -3890,7 +3941,7 @@ input TimelineHighlightsRequest {
   limit: Int
   cursor: Cursor
   account: EvmAddress!
-  forFeeds: [EvmAddress!]! = ["0xa8E1e68E3195d8e150A95CF2D0F0AfaE154f8fa5"]
+  forFeeds: [EvmAddress!]! = ["0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"]
   filter: TimelineHighlightsFilter
 }
 
@@ -3904,7 +3955,7 @@ type TimelineItem {
 input TimelineRequest {
   cursor: Cursor
   account: EvmAddress!
-  forFeeds: [EvmAddress!]! = ["0xa8E1e68E3195d8e150A95CF2D0F0AfaE154f8fa5"]
+  forFeeds: [EvmAddress!]! = ["0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"]
   filter: TimelineFilter
 }
 
@@ -4121,6 +4172,15 @@ input UpdateAccountManagerRequest {
 }
 
 union UpdateAccountManagerResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+type UsernameResult {
+  id: String
+  value: UsernameValue!
+  namespace: String!
+  localName: String!
+  linkedTo: EvmAddress
+  ownedBy: EvmAddress!
+}
 
 scalar UsernameValue
 

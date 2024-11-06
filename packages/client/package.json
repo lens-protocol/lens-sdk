@@ -17,9 +17,9 @@
       "require": "./dist/index.cjs"
     },
     "./actions": {
-      "types": "./dist/actions/index.d.cts",
       "import": "./dist/actions/index.js",
-      "require": "./dist/actions/index.cjs"
+      "require": "./dist/actions/index.cjs",
+      "types": "./dist/actions/index.d.cts"
     }
   },
   "typesVersions": {

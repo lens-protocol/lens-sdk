@@ -1,19 +1,18 @@
 import type {
-  ActiveAuthenticationResult,
+  AuthenticatedSessionResult,
+  AuthenticatedSessionsVariables,
+  LegacyRolloverRefreshVariables,
   RefreshResult,
   RefreshVariables,
   RevokeAuthenticationVariables,
-  RolloverRefreshVariables,
 } from '@lens-social/graphql';
-
 import {
-  AccountAuthenticationsQuery,
-  CurrentAuthenticationQuery,
+  AuthenticatedSessionsQuery,
+  CurrentSessionQuery,
+  LegacyRolloverRefreshMutation,
   RefreshMutation,
   RevokeAuthenticationMutation,
-  RolloverRefreshMutation,
 } from '@lens-social/graphql';
-import type { AuthenticatedSessionsVariables } from '@lens-social/graphql';
 import type { ResultAsync } from '@lens-social/types';
 
 import type { AnyClient, SessionClient } from '../clients';
@@ -32,8 +31,8 @@ import type { Paginated } from '../types';
  */
 export function currentAuthentication(
   client: SessionClient,
-): ResultAsync<ActiveAuthenticationResult, UnauthenticatedError | UnexpectedError> {
-  return client.query(CurrentAuthenticationQuery, {});
+): ResultAsync<AuthenticatedSessionResult, UnauthenticatedError | UnexpectedError> {
+  return client.query(CurrentSessionQuery, {});
 }
 
 /**
@@ -100,8 +99,8 @@ export function refresh(
 export function fetchActiveAuthentications(
   client: SessionClient,
   { request }: AuthenticatedSessionsVariables,
-): ResultAsync<Paginated<ActiveAuthenticationResult>, UnexpectedError> {
-  return client.query(AccountAuthenticationsQuery, { request });
+): ResultAsync<Paginated<AuthenticatedSessionResult>, UnexpectedError> {
+  return client.query(AuthenticatedSessionsQuery, { request });
 }
 
 /**
@@ -113,7 +112,7 @@ export function fetchActiveAuthentications(
  * The HTTP Origin header MUST be present and match the app's domain.
  *
  * ```ts
- * const result = await rolloverRefresh(sessionClient, {
+ * const result = await legacyRolloverRefresh(sessionClient, {
  *  request: {
  *    refreshToken: string,
  *    app: evmAddress("0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3"),
@@ -126,9 +125,9 @@ export function fetchActiveAuthentications(
  * @returns The refreshed authentication tokens if the operation was successful.
  */
 
-export function rolloverRefresh(
+export function legacyRolloverRefresh(
   client: SessionClient,
-  { request }: RolloverRefreshVariables,
+  { request }: LegacyRolloverRefreshVariables,
 ): ResultAsync<RefreshResult, UnexpectedError | UnauthenticatedError> {
-  return client.mutation(RolloverRefreshMutation, { request });
+  return client.mutation(LegacyRolloverRefreshMutation, { request });
 }

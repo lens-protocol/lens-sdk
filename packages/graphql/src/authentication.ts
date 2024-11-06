@@ -91,8 +91,8 @@ export const AuthenticateMutation = graphql(
 
 export type AuthenticateVariables = VariablesOf<typeof AuthenticateMutation>;
 
-const ActiveAuthentication = graphql(
-  `fragment ActiveAuthentication on ActiveAuthentication {
+const AuthenticatedSession = graphql(
+  `fragment AuthenticatedSession on AuthenticatedSession {
     authenticationId
     app
     browser
@@ -105,32 +105,32 @@ const ActiveAuthentication = graphql(
   }`,
 );
 
-export type ActiveAuthenticationResult = FragmentOf<typeof ActiveAuthentication>;
+export type AuthenticatedSessionResult = FragmentOf<typeof AuthenticatedSession>;
 
-export const CurrentAuthenticationQuery = graphql(
-  `query CurrentAuthentication {
-    value: currentAuthentication {
-      ...ActiveAuthentication
+export const CurrentSessionQuery = graphql(
+  `query CurrentSession {
+    value: currentSession {
+      ...AuthenticatedSession
     }
   }`,
-  [ActiveAuthentication],
+  [AuthenticatedSession],
 );
 
-export const AccountAuthenticationsQuery = graphql(
-  `query AccountAuthentications($request: AccountAuthenticationsRequest!) {
-    value: accountAuthentications(request: $request) {
+export const AuthenticatedSessionsQuery = graphql(
+  `query AuthenticatedSessions($request: AccountAuthenticationsRequest!) {
+    value: authenticatedSessions(request: $request) {
       items {
-        ...ActiveAuthentication
+        ...AuthenticatedSession
       }
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }`,
-  [ActiveAuthentication, PaginatedResultInfo],
+  [AuthenticatedSession, PaginatedResultInfo],
 );
 
-export type AuthenticatedSessionsVariables = VariablesOf<typeof AccountAuthenticationsQuery>;
+export type AuthenticatedSessionsVariables = VariablesOf<typeof AuthenticatedSessionsQuery>;
 
 export const RevokeAuthenticationMutation = graphql(
   `mutation RevokeAuthentication($request: RevokeAuthenticationRequest!) {
@@ -166,13 +166,13 @@ export const RefreshMutation = graphql(
 
 export type RefreshVariables = VariablesOf<typeof RefreshMutation>;
 
-export const RolloverRefreshMutation = graphql(
-  `mutation RolloverRefresh($request: RolloverRefreshRequest!) {
-    value: rolloverRefresh(request: $request) {
+export const LegacyRolloverRefreshMutation = graphql(
+  `mutation LegacyRolloverRefresh($request: RolloverRefreshRequest!) {
+    value: legacyRolloverRefresh(request: $request) {
       ...RefreshResult
     }
   }`,
   [RefreshResult],
 );
 
-export type RolloverRefreshVariables = VariablesOf<typeof RolloverRefreshMutation>;
+export type LegacyRolloverRefreshVariables = VariablesOf<typeof LegacyRolloverRefreshMutation>;

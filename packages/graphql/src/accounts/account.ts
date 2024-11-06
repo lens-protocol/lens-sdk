@@ -4,8 +4,8 @@ import {
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
-} from './fragments';
-import { graphql } from './graphql';
+} from '../fragments';
+import { graphql } from '../graphql';
 
 export const AccountQuery = graphql(
   `query Account($request: AccountRequest!) {
