@@ -15,6 +15,7 @@ import {
   okAsync,
   signatureFrom,
 } from '@lens-social/types';
+import type { EvmAddress } from '@lens-social/types';
 import {
   type AnyVariables,
   type Operation,
@@ -28,7 +29,6 @@ import {
 } from '@urql/core';
 import { type Logger, getLogger } from 'loglevel';
 
-import type { EvmAddress } from '@lens-social/types';
 import {
   AuthenticationError,
   GraphQLErrorCode,

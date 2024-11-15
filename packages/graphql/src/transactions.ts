@@ -1,4 +1,4 @@
-import type { FragmentOf, VariablesOf } from 'gql.tada';
+import type { FragmentOf } from 'gql.tada';
 import { graphql } from './graphql';
 import type { RequestOf } from './utils';
 
