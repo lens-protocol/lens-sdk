@@ -1,10 +1,23 @@
-import type { EditPostVariables, PostVariables } from '@lens-social/graphql';
+import type {
+  AddReactionResult,
+  AddReactionVariables,
+  BookmarkPostVariables,
+  EditPostVariables,
+  PostVariables,
+  UndoBookmarkPostVariables,
+  UndoReactionResult,
+  UndoReactionVariables,
+} from '@lens-social/graphql';
 
 import {
+  AddReactionMutation,
+  BookmarkPostMutation,
   EditPostMutation,
   PostMutation,
   type PostResult,
   RepostMutation,
+  UndoBookmarkPostMutation,
+  UndoReactionMutation,
 } from '@lens-social/graphql';
 import type { RepostVariables } from '@lens-social/graphql';
 import type { ResultAsync } from '@lens-social/types';
@@ -76,4 +89,94 @@ export function editPost(
   variables: EditPostVariables,
 ): ResultAsync<PostResult, UnauthenticatedError | UnexpectedError> {
   return client.mutation(EditPostMutation, variables);
+}
+
+/**
+ * React to a post.
+ *
+ * ```ts
+ * const result = await addReaction(sessionClient, {
+ *  request: {
+ *    postId: post.id,
+ *    reaction: "UPVOTE" | "DOWNVOTE",
+ *  },
+ * });
+ * ```
+ *
+ * @param client - The session client.
+ * @param variables - The addReaction to post variables.
+ * @returns Success boolean if reaction was added or error with a reason.
+ */
+export function addReaction(
+  client: SessionClient,
+  variables: AddReactionVariables,
+): ResultAsync<AddReactionResult, UnauthenticatedError | UnexpectedError> {
+  return client.mutation(AddReactionMutation, variables);
+}
+
+/**
+ * Undo reaction from a post.
+ *
+ * ```ts
+ * const result = await undoReaction(sessionClient, {
+ *  request: {
+ *    postId: post.id,
+ *    reaction: "UPVOTE" | "DOWNVOTE",
+ *  },
+ * });
+ * ```
+ *
+ * @param client - The session client.
+ * @param variables - The undoReaction to post variables.
+ * @returns Success boolean if reaction was removed or error with a reason.
+ */
+export function undoReaction(
+  client: SessionClient,
+  variables: UndoReactionVariables,
+): ResultAsync<UndoReactionResult, UnauthenticatedError | UnexpectedError> {
+  return client.mutation(UndoReactionMutation, variables);
+}
+
+/**
+ * Bookmark a post.
+ *
+ * ```ts
+ * const result = await bookmarkPost(sessionClient, {
+ *  request: {
+ *    postId: post.id,
+ *  },
+ * });
+ * ```
+ *
+ * @param client - The session client.
+ * @param variables - The bookmarkPost variables.
+ * @returns void
+ */
+export function bookmarkPost(
+  client: SessionClient,
+  variables: BookmarkPostVariables,
+): ResultAsync<void, UnauthenticatedError | UnexpectedError> {
+  return client.mutation(BookmarkPostMutation, variables);
+}
+
+/**
+ * Undo bookmark from a post.
+ *
+ * ```ts
+ * const result = await undoBookmarkPost(sessionClient, {
+ *  request: {
+ *    postId: post.id,
+ *  },
+ * });
+ * ```
+ *
+ * @param client - The session client.
+ * @param variables - The undoBookmarkPost variables.
+ * @returns void
+ */
+export function undoBookmarkPost(
+  client: SessionClient,
+  variables: UndoBookmarkPostVariables,
+): ResultAsync<void, UnauthenticatedError | UnexpectedError> {
+  return client.mutation(UndoBookmarkPostMutation, variables);
 }

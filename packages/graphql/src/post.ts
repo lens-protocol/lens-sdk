@@ -147,3 +147,65 @@ export const PostReferencesQuery = graphql(
   [Post, PaginatedResultInfo],
 );
 export type PostReferencesVariables = VariablesOf<typeof PostReferencesQuery>;
+
+const AddReactionResult = graphql(
+  `fragment AddReactionResult on AddReactionResult {
+    ... on AddReactionResponse {
+      __typename
+      success
+    }
+    ... on AddReactionFailure {
+      __typename
+      reason
+    }
+  }`,
+);
+export type AddReactionResult = FragmentOf<typeof AddReactionResult>;
+
+export const AddReactionMutation = graphql(
+  `mutation AddReaction($request: AddReactionRequest!) {
+    value: addReaction(request: $request) {
+      ...AddReactionResult
+    }
+  }`,
+  [AddReactionResult],
+);
+export type AddReactionVariables = VariablesOf<typeof AddReactionMutation>;
+
+const UndoReactionResult = graphql(
+  `fragment UndoReactionResult on UndoReactionResult {
+    ... on UndoReactionResponse {
+      __typename
+      success
+    }
+    ... on UndoReactionFailure {
+      __typename
+      reason
+    }
+  }`,
+);
+export type UndoReactionResult = FragmentOf<typeof UndoReactionResult>;
+
+export const UndoReactionMutation = graphql(
+  `mutation UndoReaction($request: UndoReactionRequest!) {
+    value: undoReaction(request: $request) {
+      ...UndoReactionResult
+    }
+  }`,
+  [UndoReactionResult],
+);
+export type UndoReactionVariables = VariablesOf<typeof UndoReactionMutation>;
+
+export const BookmarkPostMutation = graphql(
+  `mutation BookmarkPost($request: BookmarkPostRequest!) {
+    value: bookmarkPost(request: $request) 
+  }`,
+);
+export type BookmarkPostVariables = VariablesOf<typeof BookmarkPostMutation>;
+
+export const UndoBookmarkPostMutation = graphql(
+  `mutation UndoBookmarkPost($request: BookmarkPostRequest!) {
+    value: undoBookmarkPost(request: $request) 
+  }`,
+);
+export type UndoBookmarkPostVariables = VariablesOf<typeof UndoBookmarkPostMutation>;

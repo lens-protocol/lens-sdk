@@ -75,7 +75,7 @@ input AccountFeedsStatsRequest {
   account: EvmAddress!
 
   """The feeds to get stats for."""
-  forFeeds: [EvmAddress!]! = ["0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"]
+  forFeeds: [EvmAddress!]! = ["0x42cedc904968EC64890478a6c786537F43228D88"]
 }
 
 type AccountFollowRuleError {
@@ -101,7 +101,7 @@ input AccountGraphsStatsRequest {
   account: EvmAddress!
 
   """The graphs to get stats for."""
-  forGraphs: [EvmAddress!]! = ["0x5E647e6197fa5C6aA814E11C3504BE232a3D671a"]
+  forGraphs: [EvmAddress!]! = ["0xc1Ec3C7a6F7AdA7bd1A6FE697A22158f7111061b"]
 }
 
 type AccountManaged {
@@ -263,10 +263,10 @@ input AccountStatsRequest {
   account: EvmAddress!
 
   """The feeds to get stats for."""
-  forFeeds: [EvmAddress!]! = ["0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"]
+  forFeeds: [EvmAddress!]! = ["0x42cedc904968EC64890478a6c786537F43228D88"]
 
   """The graphs to get stats for."""
-  forGraphs: [EvmAddress!]! = ["0x5E647e6197fa5C6aA814E11C3504BE232a3D671a"]
+  forGraphs: [EvmAddress!]! = ["0xc1Ec3C7a6F7AdA7bd1A6FE697A22158f7111061b"]
 }
 
 input AccountUsernameRequest {
@@ -805,16 +805,16 @@ input CreateAppRequest {
   admins: [EvmAddress!]
 
   """The app graph defaults to use the global graph"""
-  graph: EvmAddress! = "0x5E647e6197fa5C6aA814E11C3504BE232a3D671a"
+  graph: EvmAddress! = "0xc1Ec3C7a6F7AdA7bd1A6FE697A22158f7111061b"
 
   """The app feeds defaults to use the global feed"""
-  feeds: [EvmAddress!]! = ["0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"]
+  feeds: [EvmAddress!]! = ["0x42cedc904968EC64890478a6c786537F43228D88"]
 
   """The default feed defaults to use the global feed"""
-  defaultFeed: EvmAddress! = "0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"
+  defaultFeed: EvmAddress! = "0x42cedc904968EC64890478a6c786537F43228D88"
 
   """The app username leave empty to use the lens username"""
-  username: EvmAddress! = "0x70e89263e68F29B8192a9fd6fee5531C3bbF0440"
+  username: EvmAddress! = "0xF0F931CA31cb3abC452cC8007ebD555ca3Cd81b6"
 
   """The app groups leave empty if none"""
   groups: [EvmAddress!]
@@ -835,6 +835,20 @@ type CreateAppResponse {
 
 union CreateAppResult = CreateAppResponse | SelfFundedTransactionRequest | TransactionWillFail
 
+input CreateFeedRequest {
+  """The feed metadata uri"""
+  metadataUri: URI
+
+  """Any admins who need to manage this feed"""
+  admins: [EvmAddress!]
+}
+
+type CreateFeedResponse {
+  hash: TxHash!
+}
+
+union CreateFeedResult = CreateFeedResponse | SelfFundedTransactionRequest | TransactionWillFail
+
 input CreateFollowRequest {
   """The account to follow."""
   account: EvmAddress!
@@ -842,7 +856,7 @@ input CreateFollowRequest {
   """
   The graph to follow the account on. If not provided, the global graph is used.
   """
-  graph: EvmAddress! = "0x5E647e6197fa5C6aA814E11C3504BE232a3D671a"
+  graph: EvmAddress! = "0xc1Ec3C7a6F7AdA7bd1A6FE697A22158f7111061b"
 
   """
   The data required by any follow rules associated with the account being followed.
@@ -899,9 +913,62 @@ input CreateFrameEIP712TypedDataValueInput {
   deadline: Int!
 }
 
+input CreateGraphRequest {
+  """The graph metadata uri"""
+  metadataUri: URI
+
+  """Any admins who need to manage this graph"""
+  admins: [EvmAddress!]
+}
+
+type CreateGraphResponse {
+  hash: TxHash!
+}
+
+union CreateGraphResult = CreateGraphResponse | SelfFundedTransactionRequest | TransactionWillFail
+
+input CreateGroupRequest {
+  """The group metadata uri"""
+  metadataUri: URI
+
+  """Any admins who need to manage this group"""
+  admins: [EvmAddress!]
+}
+
+type CreateGroupResponse {
+  hash: TxHash!
+}
+
+union CreateGroupResult = CreateGroupResponse | SelfFundedTransactionRequest | TransactionWillFail
+
+input CreateNamespaceRequest {
+  """The feed metadata uri"""
+  metadataUri: URI
+
+  """Any admins who need to manage this feed"""
+  admins: [EvmAddress!]
+
+  """
+  The namespace for example for lens this would be lens, and it means that the usernames will
+  be like lens/username
+  """
+  namespace: String!
+
+  """
+  The symbol for the namespace as usernames minted under the namespace are NFTs
+  """
+  symbol: String!
+}
+
+type CreateNamespaceResponse {
+  hash: TxHash!
+}
+
+union CreateNamespaceResult = CreateNamespaceResponse | SelfFundedTransactionRequest | TransactionWillFail
+
 input CreatePostRequest {
   """The feed to post to. If not provided, the global feed is used."""
-  feed: EvmAddress! = "0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"
+  feed: EvmAddress! = "0x42cedc904968EC64890478a6c786537F43228D88"
 
   """The URI of the post metadata."""
   contentUri: URI!
@@ -918,7 +985,7 @@ input CreatePostRequest {
 
 input CreateRepostRequest {
   """The feed to repost to. If not provided, the global feed is used."""
-  feed: EvmAddress! = "0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"
+  feed: EvmAddress! = "0x42cedc904968EC64890478a6c786537F43228D88"
 
   """The post to reference."""
   post: PostId!
@@ -932,7 +999,7 @@ input CreateUnfollowRequest {
   The graph where the account is followed and should be unfollowed.
   If not provided, the global graph is used.
   """
-  graph: EvmAddress! = "0x5E647e6197fa5C6aA814E11C3504BE232a3D671a"
+  graph: EvmAddress! = "0xc1Ec3C7a6F7AdA7bd1A6FE697A22158f7111061b"
 
   """
   The data required by the graph rules associated with the specified graph.
@@ -1761,21 +1828,9 @@ type FollowResponse {
 
 union FollowResult = FollowResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
-type FollowRule {
-  moduleName: String!
-  contract: NetworkAddress!
-}
-
 input FollowRulesInput {
   feeFollowRule: FeeFollowRuleInput
   unknownFollowRule: UnknownFollowRuleInput
-}
-
-input FollowRulesRequest {
-  limit: Int
-  cursor: Cursor
-  includeUnknown: Boolean
-  onlyVerified: Boolean
 }
 
 input FollowStatusRequest {
@@ -1789,44 +1844,100 @@ type FollowStatusResult {
   isFollowing: BooleanValue!
 }
 
+type Follower {
+  """The account which is following"""
+  follower: Account!
+
+  """The timestamp when the follower was followed"""
+  followedOn: DateTime!
+}
+
 enum FollowersOrderBy {
-  APPS_OR_GRAPHS_FILTER_ORDER
+  DESC
+  ASC
   ACCOUNT_SCORE
 }
 
 input FollowersRequest {
-  limit: Int
+  """The page size."""
+  pageSize: PageSize
+
+  """The cursor."""
   cursor: Cursor
+
+  """The account to get followers for."""
   account: EvmAddress!
-  forGraphs: [EvmAddress!]! = ["0x5E647e6197fa5C6aA814E11C3504BE232a3D671a"]
-  orderBy: FollowersOrderBy
+
+  """
+  The graphs to get followers for
+  The result will come back if they follow on ANY of the supplied graphs
+  """
+  forGraphs: [EvmAddress!]! = ["0xc1Ec3C7a6F7AdA7bd1A6FE697A22158f7111061b"]
+
+  """The order by."""
+  orderBy: FollowersOrderBy! = DESC
 }
 
 enum FollowersYouKnowOrderBy {
-  APPS_OR_GRAPHS_FILTER_ORDER
-  ACCOUNT_SCORE
+  DESC
+  ASC
 }
 
 input FollowersYouKnowRequest {
-  limit: Int
+  """The page size."""
+  pageSize: PageSize
+
+  """The cursor."""
   cursor: Cursor
+
+  """The account to check followers you know."""
   target: EvmAddress!
+
+  """The account you are looking from."""
   observer: EvmAddress!
-  forGraphs: [EvmAddress!]! = ["0x5E647e6197fa5C6aA814E11C3504BE232a3D671a"]
-  orderBy: FollowersYouKnowOrderBy
+
+  """
+  The graphs to get followers you know for
+  The result will come back if they follow on ANY of the supplied graphs
+  """
+  forGraphs: [EvmAddress!]! = ["0xc1Ec3C7a6F7AdA7bd1A6FE697A22158f7111061b"]
+
+  """The order by."""
+  orderBy: FollowersYouKnowOrderBy! = DESC
+}
+
+type Following {
+  """The account which is following"""
+  following: Account!
+
+  """The timestamp when the following happened"""
+  followedOn: DateTime!
 }
 
 enum FollowingOrderBy {
-  APPS_OR_GRAPHS_FILTER_ORDER
+  DESC
+  ASC
   ACCOUNT_SCORE
 }
 
 input FollowingRequest {
-  limit: Int
+  """The page size."""
+  pageSize: PageSize
+
+  """The cursor."""
   cursor: Cursor
+
+  """The account to get following for."""
   account: EvmAddress!
-  forGraphs: [EvmAddress!]! = ["0x5E647e6197fa5C6aA814E11C3504BE232a3D671a"]
-  orderBy: FollowingOrderBy
+
+  """
+  The graphs to get following for.
+  The result will come back if they are following on ANY of the supplied graphs
+  """
+  forGraphs: [EvmAddress!]! = ["0xc1Ec3C7a6F7AdA7bd1A6FE697A22158f7111061b"]
+
+  """The order by."""
+  orderBy: FollowingOrderBy! = DESC
 }
 
 enum ForYouSource {
@@ -1882,34 +1993,8 @@ enum FrameVerifySignatureResult {
   SIGNER_ADDRESS_CANNOT_USE_PROFILE
 }
 
-type Graph {
-  address: EvmAddress!
-  metadata: GraphMetadata
-}
-
-type GraphMetadata {
-  """Optional markdown formatted description of the graph."""
-  description: String
-
-  """The name of the graph."""
-  name: String!
-
-  """The human-friendly title for the graph."""
-  title: String!
-}
-
-input GraphRequest {
-  graph: EvmAddress!
-}
-
 input GraphRulesInput {
   unknownGraphRule: UnknownGraphRuleInput
-}
-
-input GraphsRequest {
-  app: EvmAddress
-  limit: Int
-  cursor: Cursor
 }
 
 input HasReactedRequest {
@@ -2881,8 +2966,9 @@ type Mutation {
   - AccountOwner: The `address` is a Lens Account, and the `signed_by` is the Account Owner.
   - AccountManager: The `address` is a Lens Account, and the `signed_by` is an Account Manager
   for it.
-  - OnboardingUser: The `address` is an EOA
-  - Builder:
+  - OnboardingUser: The `address` is an EOA that needs to create their Lens Account.
+  - Builder: The `address` is the EOA of a Builder that needs to use configuration and
+  management features.
   
   The HTTP Origin header MUST be present and match the app's domain.
   """
@@ -2891,7 +2977,7 @@ type Mutation {
   """
   Revoke an authentication.
   
-  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  You MUST be authenticated to use this mutation.
   """
   revokeAuthentication(request: RevokeAuthenticationRequest!): Void!
 
@@ -2992,12 +3078,40 @@ type Mutation {
   """
   unfollow(request: CreateUnfollowRequest!): UnfollowResult!
   setAccountFollowRule(request: CreateAccountFollowRuleRequest!): AccountFollowRuleResult!
+
+  """
+  Create a new graph
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  createGraph(request: CreateGraphRequest!): CreateGraphResult!
   assignUsernameToAccount(request: AssignUsernameToAccountRequest!): AssignUsernameToAccountResult!
   unassignUsernameFromAccount: UnassignUsernameFromAccountResult!
+
+  """
+  Create a new namespace
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  createNamespace(request: CreateNamespaceRequest!): CreateNamespaceResult!
   mlDismissRecommendedAccounts(request: DismissRecommendedAccountsRequest!): Void!
   mlAddPostNotInterested(request: PostNotInterestedRequest!): Void!
   mlUndoPostNotInterested(request: PostNotInterestedRequest!): Void!
   signFrameAction(request: FrameLensManagerEIP712Request!): FrameLensManagerSignatureResult!
+
+  """
+  Create a new feed
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  createFeed(request: CreateFeedRequest!): CreateFeedResult!
+
+  """
+  Create a new group
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  createGroup(request: CreateGroupRequest!): CreateGroupResult!
 }
 
 input MuteRequest {
@@ -3093,13 +3207,13 @@ type PaginatedDisputedReports {
   pageInfo: PaginatedResultInfo!
 }
 
-type PaginatedFollowRules {
-  items: [FollowRule!]!
+type PaginatedFollowersResult {
+  items: [Follower!]!
   pageInfo: PaginatedResultInfo!
 }
 
-type PaginatedGraphsResult {
-  items: [Graph!]!
+type PaginatedFollowingResult {
+  items: [Following!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -3213,6 +3327,7 @@ type Post {
   commentOn: NestedPost
   actions: [PostAction!]!
   operations: LoggedInPostOperations
+  stats: PostStats!
 }
 
 input PostAccountPair {
@@ -3249,7 +3364,7 @@ input PostBookmarksFilter {
 }
 
 input PostBookmarksRequest {
-  forFeeds: [EvmAddress!]! = ["0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"]
+  forFeeds: [EvmAddress!]! = ["0x42cedc904968EC64890478a6c786537F43228D88"]
   filter: PostBookmarksFilter
   pageSize: PageSize
   cursor: Cursor
@@ -3357,9 +3472,21 @@ enum PostReferenceType {
 }
 
 input PostReferencesRequest {
+  """The post to get references for."""
   referencePostId: PostId!
+
+  """The types of references to get."""
   referenceTypes: [PostReferenceType!]!
+
+  """
+  The visibility filter to apply by default it will honour the visibility of the post.
+  """
+  visibilityFilter: PostVisibilityFilter! = VISIBLE
+
+  """The page size."""
   pageSize: PageSize
+
+  """The cursor."""
   cursor: Cursor
 }
 
@@ -3394,13 +3521,30 @@ type PostResponse {
 
 union PostResult = PostResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
+type PostStats {
+  """The total number of bookmarks."""
+  bookmarks: Int!
+
+  """The total number of comments."""
+  comments: Int!
+
+  """The total number of reposts."""
+  reposts: Int!
+
+  """The total number of quotes."""
+  quotes: Int!
+
+  """Get the number of reactions for the post."""
+  reactions(request: StatsReactionRequest! = {type: UPVOTE}): Int!
+}
+
 enum PostTagsOrderBy {
   MOST_POPULAR
   ALPHABETICAL
 }
 
 input PostTagsRequest {
-  forFeeds: [EvmAddress!]! = ["0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"]
+  forFeeds: [EvmAddress!]! = ["0x42cedc904968EC64890478a6c786537F43228D88"]
   orderBy: PostTagsOrderBy! = MOST_POPULAR
   pageSize: PageSize
   cursor: Cursor
@@ -3413,6 +3557,17 @@ enum PostType {
   QUOTE
 }
 
+enum PostVisibilityFilter {
+  """All posts even if they have been hidden"""
+  ALL
+
+  """Only the posts that are hidden"""
+  HIDDEN
+
+  """Only the posts that are visible"""
+  VISIBLE
+}
+
 input PostsFilterRequest {
   authors: [EvmAddress!]
   postTypes: [PostType!]
@@ -3421,7 +3576,7 @@ input PostsFilterRequest {
 }
 
 input PostsRequest {
-  forFeeds: [EvmAddress!]! = ["0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"]
+  forFeeds: [EvmAddress!]! = ["0x42cedc904968EC64890478a6c786537F43228D88"]
   filter: PostsFilterRequest
   pageSize: PageSize
   cursor: Cursor
@@ -3512,13 +3667,10 @@ type Query {
   postActions(request: PostActionsRequest!): PaginatedActions!
   whoReferencedPost(request: WhoReferencedPostRequest!): PaginatedAccountsResult!
   whoActedOnPost(request: WhoActedOnPostRequest!): PaginatedAccountsResult!
-  following(request: FollowingRequest!): PaginatedAccountsResult!
-  followers(request: FollowersRequest!): PaginatedAccountsResult!
-  followersYouKnow(request: FollowersYouKnowRequest!): PaginatedAccountsResult!
+  following(request: FollowingRequest!): PaginatedFollowingResult!
+  followers(request: FollowersRequest!): PaginatedFollowersResult!
+  followersYouKnow(request: FollowersYouKnowRequest!): PaginatedFollowersResult!
   followStatus(request: FollowStatusRequest!): [FollowStatusResult!]!
-  graph(request: GraphRequest!): Graph
-  graphs(request: GraphsRequest!): PaginatedGraphsResult!
-  followRules(request: FollowRulesRequest!): PaginatedFollowRules!
   currencies(request: CurrencyRequest!): PaginatedCurrenciesResult!
   timeline(request: TimelineRequest!): PaginatedTimelineResult!
   timelineHighlights(request: TimelineHighlightsRequest!): PaginatedPostsResult!
@@ -3637,7 +3789,7 @@ input SearchPostsRequest {
   query: String!
 
   """The feeds to search in."""
-  forFeeds: [EvmAddress!]! = ["0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"]
+  forFeeds: [EvmAddress!]! = ["0x42cedc904968EC64890478a6c786537F43228D88"]
 
   """The optional post types to filter by."""
   filter: SearchPostsFilter
@@ -3793,6 +3945,10 @@ type SponsorshipLimits {
   user: SponsorshipAllowance
 }
 
+input StatsReactionRequest {
+  type: PostReactionType!
+}
+
 type StoryMetadata {
   """The App Id that this publication belongs to."""
   appId: AppId
@@ -3941,7 +4097,7 @@ input TimelineHighlightsRequest {
   limit: Int
   cursor: Cursor
   account: EvmAddress!
-  forFeeds: [EvmAddress!]! = ["0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"]
+  forFeeds: [EvmAddress!]! = ["0x42cedc904968EC64890478a6c786537F43228D88"]
   filter: TimelineHighlightsFilter
 }
 
@@ -3955,7 +4111,7 @@ type TimelineItem {
 input TimelineRequest {
   cursor: Cursor
   account: EvmAddress!
-  forFeeds: [EvmAddress!]! = ["0xa27Cc2AaE6E5571C2E496bDD937bf894800c6f5F"]
+  forFeeds: [EvmAddress!]! = ["0x42cedc904968EC64890478a6c786537F43228D88"]
   filter: TimelineFilter
 }
 
