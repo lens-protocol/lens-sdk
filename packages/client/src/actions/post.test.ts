@@ -19,14 +19,12 @@ describe(`Given the ${post.name} action`, () => {
   describe('When creating a Post', () => {
     it('Then it should return the expected TransactionRequest', async () => {
       const authenticated = await client.login({
-        request: { signedBy: account, app, account },
+        accountOwner: { owner: account, app, account },
         signMessage: (message) => signer.signMessage({ message }),
       });
 
       const result = await post(authenticated._unsafeUnwrap(), {
-        request: {
-          contentUri: uri('https://example.com'),
-        },
+        contentUri: uri('https://example.com'),
       });
 
       assertOk(result);

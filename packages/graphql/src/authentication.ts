@@ -1,6 +1,7 @@
-import type { FragmentOf, VariablesOf } from 'gql.tada';
+import type { FragmentOf } from 'gql.tada';
 import { PaginatedResultInfo } from './fragments';
 import { graphql } from './graphql';
+import type { RequestOf } from './utils';
 
 const AuthenticationChallenge = graphql(
   `fragment AuthenticationChallenge on AuthenticationChallenge {
@@ -21,7 +22,7 @@ export const ChallengeMutation = graphql(
   [AuthenticationChallenge],
 );
 
-export type ChallengeVariables = VariablesOf<typeof ChallengeMutation>;
+export type ChallengeRequest = RequestOf<typeof ChallengeMutation>;
 
 const AuthenticationTokens = graphql(
   `fragment AuthenticationTokens on AuthenticationTokens {
@@ -89,7 +90,7 @@ export const AuthenticateMutation = graphql(
   [AuthenticationResult],
 );
 
-export type AuthenticateVariables = VariablesOf<typeof AuthenticateMutation>;
+export type SignedAuthChallenge = RequestOf<typeof AuthenticateMutation>;
 
 const AuthenticatedSession = graphql(
   `fragment AuthenticatedSession on AuthenticatedSession {
@@ -105,7 +106,7 @@ const AuthenticatedSession = graphql(
   }`,
 );
 
-export type AuthenticatedSessionResult = FragmentOf<typeof AuthenticatedSession>;
+export type AuthenticatedSession = FragmentOf<typeof AuthenticatedSession>;
 
 export const CurrentSessionQuery = graphql(
   `query CurrentSession {
@@ -117,7 +118,7 @@ export const CurrentSessionQuery = graphql(
 );
 
 export const AuthenticatedSessionsQuery = graphql(
-  `query AuthenticatedSessions($request: AccountAuthenticationsRequest!) {
+  `query AuthenticatedSessions($request: AuthenticatedSessionsRequest!) {
     value: authenticatedSessions(request: $request) {
       items {
         ...AuthenticatedSession
@@ -130,7 +131,7 @@ export const AuthenticatedSessionsQuery = graphql(
   [AuthenticatedSession, PaginatedResultInfo],
 );
 
-export type AuthenticatedSessionsVariables = VariablesOf<typeof AuthenticatedSessionsQuery>;
+export type AuthenticatedSessionsRequest = RequestOf<typeof AuthenticatedSessionsQuery>;
 
 export const RevokeAuthenticationMutation = graphql(
   `mutation RevokeAuthentication($request: RevokeAuthenticationRequest!) {
@@ -138,7 +139,7 @@ export const RevokeAuthenticationMutation = graphql(
   }`,
 );
 
-export type RevokeAuthenticationVariables = VariablesOf<typeof RevokeAuthenticationMutation>;
+export type RevokeAuthenticationRequest = RequestOf<typeof RevokeAuthenticationMutation>;
 
 export const RefreshResult = graphql(
   `fragment RefreshResult on RefreshResult {
@@ -164,7 +165,7 @@ export const RefreshMutation = graphql(
   [RefreshResult],
 );
 
-export type RefreshVariables = VariablesOf<typeof RefreshMutation>;
+export type RefreshRequest = RequestOf<typeof RefreshMutation>;
 
 export const LegacyRolloverRefreshMutation = graphql(
   `mutation LegacyRolloverRefresh($request: RolloverRefreshRequest!) {
@@ -175,4 +176,4 @@ export const LegacyRolloverRefreshMutation = graphql(
   [RefreshResult],
 );
 
-export type LegacyRolloverRefreshVariables = VariablesOf<typeof LegacyRolloverRefreshMutation>;
+export type RolloverRefreshRequest = RequestOf<typeof LegacyRolloverRefreshMutation>;

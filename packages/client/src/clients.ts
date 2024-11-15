@@ -1,9 +1,9 @@
 import type { EnvironmentConfig } from '@lens-social/env';
 import { AuthenticateMutation, ChallengeMutation } from '@lens-social/graphql';
 import type {
-  AuthenticateVariables,
   AuthenticationChallenge,
-  ChallengeVariables,
+  ChallengeRequest,
+  SignedAuthChallenge,
 } from '@lens-social/graphql';
 import type { Credentials, IStorage, IStorageProvider } from '@lens-social/storage';
 import { InMemoryStorageProvider, createCredentialsStorage } from '@lens-social/storage';
@@ -96,7 +96,7 @@ type ClientContext = {
 
 export type SignMessage = (message: string) => Promise<string>;
 
-export type LoginParams = ChallengeVariables & {
+export type LoginParams = ChallengeRequest & {
   signMessage: SignMessage;
 };
 
@@ -223,18 +223,16 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
   /**
    * Generate a new authentication challenge for the given account and app.
    */
-  challenge({
-    request,
-  }: ChallengeVariables): ResultAsync<AuthenticationChallenge, UnexpectedError> {
+  challenge(request: ChallengeRequest): ResultAsync<AuthenticationChallenge, UnexpectedError> {
     return this.mutation(ChallengeMutation, { request });
   }
 
   /**
    * Authenticate the user with the signed authentication challenge.
    */
-  authenticate({
-    request,
-  }: AuthenticateVariables): ResultAsync<SessionClient, AuthenticationError | UnexpectedError> {
+  authenticate(
+    request: SignedAuthChallenge,
+  ): ResultAsync<SessionClient, AuthenticationError | UnexpectedError> {
     return this.mutation(AuthenticateMutation, { request })
       .andThen((result) => {
         if (result.__typename === 'AuthenticationTokens') {
@@ -248,13 +246,23 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
       });
   }
 
-  login(
-    params: LoginParams,
-  ): ResultAsync<SessionClient, AuthenticationError | SigningError | UnexpectedError> {
-    return this.challenge(params)
+  /**
+   * Log in into Lens.
+   *
+   * @param params - The login parameters.
+   * @returns The SessionClient if the login was successful.
+   */
+  login({
+    signMessage,
+    ...request
+  }: LoginParams): ResultAsync<
+    SessionClient,
+    AuthenticationError | SigningError | UnexpectedError
+  > {
+    return this.challenge(request)
       .map(async (challenge) => ({
         challenge,
-        signature: await ResultAsync.fromPromise(params.signMessage(challenge.text), (err) =>
+        signature: await ResultAsync.fromPromise(signMessage(challenge.text), (err) =>
           SigningError.from(err),
         ),
       }))
@@ -264,10 +272,8 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
         }
 
         return this.authenticate({
-          request: {
-            id: challenge.id,
-            signature: signatureFrom(signature.value),
-          },
+          id: challenge.id,
+          signature: signatureFrom(signature.value),
         });
       });
   }

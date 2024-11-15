@@ -1,5 +1,6 @@
 import type { FragmentOf, VariablesOf } from 'gql.tada';
 import { graphql } from './graphql';
+import type { RequestOf } from './utils';
 
 export const PendingTransactionStatus = graphql(
   `fragment PendingTransactionStatus on PendingTransactionStatus {
@@ -67,4 +68,4 @@ export const TransactionStatusQuery = graphql(
   [TransactionStatusResult],
 );
 
-export type TransactionStatusVariables = VariablesOf<typeof TransactionStatusQuery>;
+export type TransactionStatusRequest = RequestOf<typeof TransactionStatusQuery>;

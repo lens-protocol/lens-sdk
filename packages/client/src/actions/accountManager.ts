@@ -1,10 +1,10 @@
 import type {
   AccountManager,
-  AccountManagersVariables,
+  AccountManagersRequest,
+  AddAccountManagerRequest,
   AddAccountManagerResult,
-  AddAccountManagerVariables,
+  RemoveAccountManagerRequest,
   RemoveAccountManagerResult,
-  RemoveAccountManagerVariables,
 } from '@lens-social/graphql';
 import {
   AccountManagersQuery,
@@ -21,21 +21,16 @@ import type { Paginated } from '../types';
  * Fetch Account Managers.
  *
  * ```ts
- *  const result = await fetchAccountManagers(sessionClient, {
- *   request: {
- *    cursor?: Cursor,
- *    pageSize?: "TEN" | "FIFTY",
- *  },
- * });
+ * const result = await fetchAccountManagers(sessionClient);
  * ```
  *
  * @param client - Lens SessionClient.
- * @param variables - The AccountManagers query variables.
+ * @param request - The query request.
  * @returns List of Account Managers.
  */
 export function fetchAccountManagers(
   client: SessionClient,
-  { request }: AccountManagersVariables,
+  request: AccountManagersRequest = {},
 ): ResultAsync<Paginated<AccountManager>, UnexpectedError | UnauthenticatedError> {
   return client.query(AccountManagersQuery, { request });
 }
@@ -45,25 +40,23 @@ export function fetchAccountManagers(
  *
  * ```ts
  * const result = await addAccountManager(sessionClient, {
- *  request: {
- *    permissions: {
- *      canSetMetadataUri: true | false,
- *      canTransferNative: true | false,
- *      canTransferTokens: true | false,
- *      canExecuteTransactions: true | false,
- *    },
- *    address: evmAddress("0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3");
- *  },
+ *   address: evmAddress("0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3"),
+ *   permissions: {
+ *     canSetMetadataUri: true,
+ *     canTransferNative: true,
+ *     canTransferTokens: true,
+ *     canExecuteTransactions: true,
+ *   },
  * });
  * ```
  *
  * @param client - Lens SessionClient.
- * @param variables - The AddAccountManager mutation variables.
- * @returns Transaction result.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
  */
 export function addAccountManager(
   client: SessionClient,
-  { request }: AddAccountManagerVariables,
+  request: AddAccountManagerRequest,
 ): ResultAsync<AddAccountManagerResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(AddAccountManagerMutation, { request });
 }
@@ -73,19 +66,17 @@ export function addAccountManager(
  *
  * ```ts
  * const result = await removeAccountManager(sessionClient, {
- *  request: {
- *    manager: evmAddress("0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3");
- *  },
+ *   manager: evmAddress("0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3");
  * });
  * ```
  *
  * @param client - Lens SessionClient.
- * @param variables - The RemoveAccountManager mutation variables.
- * @returns Transaction result.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
  */
 export function removeAccountManager(
   client: SessionClient,
-  { request }: RemoveAccountManagerVariables,
+  request: RemoveAccountManagerRequest,
 ): ResultAsync<RemoveAccountManagerResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(RemoveAccountManagerMutation, { request });
 }

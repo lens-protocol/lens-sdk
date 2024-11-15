@@ -30,7 +30,8 @@
   "files": ["dist"],
   "sideEffects": false,
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@lens-social/env": "workspace:*",

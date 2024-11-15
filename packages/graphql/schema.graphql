@@ -37,15 +37,6 @@ type Account {
   operations: LoggedInAccountOperations
 }
 
-input AccountAuthenticationsRequest {
-  """
-  You can optionally filter the authentications by the app that created them.
-  """
-  app: EvmAddress
-  pageSize: PageSize
-  cursor: Cursor
-}
-
 union AccountAvailable = AccountManaged | AccountOwned
 
 type AccountBlocked {
@@ -650,6 +641,15 @@ type AuthenticatedSession {
   signer: EvmAddress!
   createdAt: DateTime!
   updatedAt: DateTime!
+}
+
+input AuthenticatedSessionsRequest {
+  """
+  You can optionally filter the authentications by the app that created them.
+  """
+  app: EvmAddress
+  pageSize: PageSize
+  cursor: Cursor
 }
 
 type AuthenticationChallenge {
@@ -3503,7 +3503,7 @@ enum PostReferenceType {
 
 input PostReferencesRequest {
   """The post to get references for."""
-  referencePostId: PostId!
+  referencedPost: PostId!
 
   """The types of references to get."""
   referenceTypes: [PostReferenceType!]!
@@ -3683,7 +3683,7 @@ type Query {
   
   You MUST be authenticated to use this query.
   """
-  authenticatedSessions(request: AccountAuthenticationsRequest!): PaginatedActiveAuthenticationsResult!
+  authenticatedSessions(request: AuthenticatedSessionsRequest!): PaginatedActiveAuthenticationsResult!
 
   """
   Get the current authenticated session for the current account.

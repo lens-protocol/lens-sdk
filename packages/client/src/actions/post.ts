@@ -1,12 +1,13 @@
 import type {
+  AddReactionRequest,
   AddReactionResult,
-  AddReactionVariables,
-  BookmarkPostVariables,
-  EditPostVariables,
-  PostVariables,
-  UndoBookmarkPostVariables,
+  BookmarkPostRequest,
+  CreatePostRequest,
+  CreateRepostRequest,
+  EditPostRequest,
+  UndoBookmarkPostRequest,
+  UndoReactionRequest,
   UndoReactionResult,
-  UndoReactionVariables,
 } from '@lens-social/graphql';
 
 import {
@@ -19,7 +20,6 @@ import {
   UndoBookmarkPostMutation,
   UndoReactionMutation,
 } from '@lens-social/graphql';
-import type { RepostVariables } from '@lens-social/graphql';
 import type { ResultAsync } from '@lens-social/types';
 import type { SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
@@ -29,21 +29,19 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
  *
  * ```ts
  * const result = await post(sessionClient, {
- *   request: {
- *     contentUri: uri('https://example.com'),
- *   },
+ *   contentUri: uri('https://example.com'),
  * });
  * ```
  *
  * @param client - The session client.
- * @param variables - The post variables.
- * @returns The post operation result.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
  */
 export function post(
   client: SessionClient,
-  variables: PostVariables,
+  request: CreatePostRequest,
 ): ResultAsync<PostResult, UnauthenticatedError | UnexpectedError> {
-  return client.mutation(PostMutation, variables);
+  return client.mutation(PostMutation, { request });
 }
 
 /**
@@ -51,21 +49,19 @@ export function post(
  *
  * ```ts
  * const result = await repost(sessionClient, {
- *   request: {
- *     postId: post.id,
- *   },
+ *   post: post.id,
  * });
  * ```
  *
  * @param client - The session client.
- * @param variables - The repost variables.
- * @returns The repost operation result.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
  */
 export function repost(
   client: SessionClient,
-  variables: RepostVariables,
+  request: CreateRepostRequest,
 ): ResultAsync<PostResult, UnauthenticatedError | UnexpectedError> {
-  return client.mutation(RepostMutation, variables);
+  return client.mutation(RepostMutation, { request });
 }
 
 /**
@@ -73,22 +69,20 @@ export function repost(
  *
  * ```ts
  * const result = await editPost(sessionClient, {
- *   request: {
- *     postId: post.id,
- *     contentUri: uri('https://example.com'),
- *   },
+ *   post: post.id,
+ *   contentUri: uri('https://example.com'),
  * });
  * ```
  *
  * @param client - The session client.
- * @param variables - The edit post variables.
- * @returns The edit post operation result.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
  */
 export function editPost(
   client: SessionClient,
-  variables: EditPostVariables,
+  request: EditPostRequest,
 ): ResultAsync<PostResult, UnauthenticatedError | UnexpectedError> {
-  return client.mutation(EditPostMutation, variables);
+  return client.mutation(EditPostMutation, { request });
 }
 
 /**
@@ -96,22 +90,20 @@ export function editPost(
  *
  * ```ts
  * const result = await addReaction(sessionClient, {
- *  request: {
- *    postId: post.id,
- *    reaction: "UPVOTE" | "DOWNVOTE",
- *  },
+ *   post: post.id,
+ *   reaction: "UPVOTE" | "DOWNVOTE",
  * });
  * ```
  *
  * @param client - The session client.
- * @param variables - The addReaction to post variables.
+ * @param request - The mutation request.
  * @returns Success boolean if reaction was added or error with a reason.
  */
 export function addReaction(
   client: SessionClient,
-  variables: AddReactionVariables,
+  request: AddReactionRequest,
 ): ResultAsync<AddReactionResult, UnauthenticatedError | UnexpectedError> {
-  return client.mutation(AddReactionMutation, variables);
+  return client.mutation(AddReactionMutation, { request });
 }
 
 /**
@@ -119,22 +111,20 @@ export function addReaction(
  *
  * ```ts
  * const result = await undoReaction(sessionClient, {
- *  request: {
- *    postId: post.id,
- *    reaction: "UPVOTE" | "DOWNVOTE",
- *  },
+ *   post: post.id,
+ *   reaction: "UPVOTE" | "DOWNVOTE",
  * });
  * ```
  *
  * @param client - The session client.
- * @param variables - The undoReaction to post variables.
+ * @param request - The mutation request.
  * @returns Success boolean if reaction was removed or error with a reason.
  */
 export function undoReaction(
   client: SessionClient,
-  variables: UndoReactionVariables,
+  request: UndoReactionRequest,
 ): ResultAsync<UndoReactionResult, UnauthenticatedError | UnexpectedError> {
-  return client.mutation(UndoReactionMutation, variables);
+  return client.mutation(UndoReactionMutation, { request });
 }
 
 /**
@@ -142,21 +132,19 @@ export function undoReaction(
  *
  * ```ts
  * const result = await bookmarkPost(sessionClient, {
- *  request: {
- *    postId: post.id,
- *  },
+ *   post: post.id,
  * });
  * ```
  *
  * @param client - The session client.
- * @param variables - The bookmarkPost variables.
+ * @param request - The mutation request.
  * @returns void
  */
 export function bookmarkPost(
   client: SessionClient,
-  variables: BookmarkPostVariables,
+  request: BookmarkPostRequest,
 ): ResultAsync<void, UnauthenticatedError | UnexpectedError> {
-  return client.mutation(BookmarkPostMutation, variables);
+  return client.mutation(BookmarkPostMutation, { request });
 }
 
 /**
@@ -164,19 +152,17 @@ export function bookmarkPost(
  *
  * ```ts
  * const result = await undoBookmarkPost(sessionClient, {
- *  request: {
- *    postId: post.id,
- *  },
+ *   post: post.id,
  * });
  * ```
  *
  * @param client - The session client.
- * @param variables - The undoBookmarkPost variables.
+ * @param request - The mutation request.
  * @returns void
  */
 export function undoBookmarkPost(
   client: SessionClient,
-  variables: UndoBookmarkPostVariables,
+  request: UndoBookmarkPostRequest,
 ): ResultAsync<void, UnauthenticatedError | UnexpectedError> {
-  return client.mutation(UndoBookmarkPostMutation, variables);
+  return client.mutation(UndoBookmarkPostMutation, { request });
 }

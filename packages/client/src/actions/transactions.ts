@@ -1,4 +1,4 @@
-import type { TransactionStatusResult, TransactionStatusVariables } from '@lens-social/graphql';
+import type { TransactionStatusRequest, TransactionStatusResult } from '@lens-social/graphql';
 import { TransactionStatusQuery } from '@lens-social/graphql';
 import type { ResultAsync } from '@lens-social/types';
 
@@ -9,15 +9,18 @@ import type { UnexpectedError } from '../errors';
  * Fetch the indexing status of a Transaction.
  *
  * ```ts
- * const result = await transactionStatus(anyClient, { request: { postId: postId('0x01') } });
+ * const result = await transactionStatus(anyClient, {
+ *   txHash: '0x97589c9e3a3c5b007d…',
+ * });
  * ```
  *
  * @param client - Any Lens client.
+ * @param request - The query request.
  * @returns The indexing status of the Transaction.
  */
 export function transactionStatus(
   client: AnyClient,
-  { request }: TransactionStatusVariables,
+  request: TransactionStatusRequest,
 ): ResultAsync<TransactionStatusResult, UnexpectedError> {
   return client.query(TransactionStatusQuery, { request });
 }
