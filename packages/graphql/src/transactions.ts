@@ -1,6 +1,5 @@
 import type { FragmentOf } from 'gql.tada';
-import { graphql } from './graphql';
-import type { RequestOf } from './utils';
+import { type RequestOf, graphql } from './graphql';
 
 export const PendingTransactionStatus = graphql(
   `fragment PendingTransactionStatus on PendingTransactionStatus {

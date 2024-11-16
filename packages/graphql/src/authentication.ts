@@ -1,7 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
 import { PaginatedResultInfo } from './fragments';
-import { graphql } from './graphql';
-import type { RequestOf } from './utils';
+import { type RequestOf, graphql } from './graphql';
 
 const AuthenticationChallenge = graphql(
   `fragment AuthenticationChallenge on AuthenticationChallenge {

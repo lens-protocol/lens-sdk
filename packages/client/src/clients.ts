@@ -15,7 +15,6 @@ import {
   okAsync,
   signatureFrom,
 } from '@lens-social/types';
-import type { EvmAddress } from '@lens-social/types';
 import {
   type AnyVariables,
   type Operation,

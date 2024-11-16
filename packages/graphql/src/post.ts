@@ -8,8 +8,7 @@ import {
   SponsoredTransactionRequest,
   TransactionWillFail,
 } from './fragments';
-import { graphql } from './graphql';
-import type { RequestOf } from './utils';
+import { type RequestOf, graphql } from './graphql';
 
 const PostResponse = graphql(
   `fragment PostResponse on PostResponse {

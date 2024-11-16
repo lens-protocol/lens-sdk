@@ -31,6 +31,16 @@ export const Account = graphql(
   `fragment Account on Account {
     __typename
     address
+    username
+  }`,
+  [AccountMetadata, LoggedInAccountOperations],
+);
+export type Account = FragmentOf<typeof Account>;
+
+export const FullAccount = graphql(
+  `fragment Account on Account {
+    __typename
+    address
     score
     metadata {
       ...AccountMetadata
@@ -42,4 +52,4 @@ export const Account = graphql(
   }`,
   [AccountMetadata, LoggedInAccountOperations],
 );
-export type Account = FragmentOf<typeof Account>;
+export type FullAccount = FragmentOf<typeof FullAccount>;

@@ -5,8 +5,7 @@ import {
   SponsoredTransactionRequest,
   TransactionWillFail,
 } from '../fragments';
-import { graphql } from '../graphql';
-import type { RequestOf } from '../utils';
+import { type RequestOf, graphql } from '../graphql';
 
 const AccountManager = graphql(
   `fragment AccountManager on AccountManager {
