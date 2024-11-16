@@ -1,8 +1,8 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
 
-const Eip712TransactionRequest = graphql(`
-  fragment Eip712TransactionRequest on Eip712TransactionRequest {
+const Eip712TransactionRequest = graphql(
+  `fragment Eip712TransactionRequest on Eip712TransactionRequest {
     __typename
     type
     to
@@ -22,20 +22,18 @@ const Eip712TransactionRequest = graphql(`
         paymasterInput
       }
     }
-  }
-`);
+  }`,
+);
 export type Eip712TransactionRequest = FragmentOf<typeof Eip712TransactionRequest>;
 
 export const SponsoredTransactionRequest = graphql(
-  `
-  fragment SponsoredTransactionRequest on SponsoredTransactionRequest {
+  `fragment SponsoredTransactionRequest on SponsoredTransactionRequest {
     __typename
     encoded
     raw {
       ...Eip712TransactionRequest
     }
-  }
-`,
+  }`,
   [Eip712TransactionRequest],
 );
 export type SponsoredTransactionRequest = FragmentOf<typeof SponsoredTransactionRequest>;

@@ -7,7 +7,8 @@ import { PublicClient } from '../clients';
 import { post } from './post';
 
 const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
-const account = evmAddress(signer.address);
+const owner = evmAddress(signer.address);
+const account = evmAddress(import.meta.env.ACCOUNT);
 const app = evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3');
 
 describe(`Given the ${post.name} action`, () => {
@@ -19,7 +20,7 @@ describe(`Given the ${post.name} action`, () => {
   describe('When creating a Post', () => {
     it('Then it should return the expected TransactionRequest', async () => {
       const authenticated = await client.login({
-        accountOwner: { owner: account, app, account },
+        accountOwner: { account, app, owner },
         signMessage: (message) => signer.signMessage({ message }),
       });
 
@@ -29,10 +30,10 @@ describe(`Given the ${post.name} action`, () => {
 
       assertOk(result);
       expect(result.value).toMatchObject({
-        __typename: 'TransactionRequest',
+        __typename: 'SponsoredTransactionRequest',
         encoded: expect.any(String),
         raw: expect.objectContaining({
-          __typename: 'Eip1559TransactionRequest',
+          __typename: 'Eip712TransactionRequest',
         }),
       });
     });

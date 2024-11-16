@@ -4,7 +4,7 @@ import { url, assertErr, assertOk, evmAddress, signatureFrom } from '@lens-socia
 import { privateKeyToAccount } from 'viem/accounts';
 import { describe, expect, it } from 'vitest';
 
-import { HealthQuery } from '@lens-social/graphql';
+import { HealthQuery, Role } from '@lens-social/graphql';
 import { currentSession } from './actions';
 import { PublicClient } from './clients';
 import { UnexpectedError } from './errors';
@@ -32,19 +32,18 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
       assertOk(challenge);
 
       const authenticated = await client.authenticate({
-        request: {
-          id: challenge.value.id,
-          signature: signatureFrom(await signer.signMessage({ message: challenge.value.text })),
-        },
+        id: challenge.value.id,
+        signature: signatureFrom(await signer.signMessage({ message: challenge.value.text })),
       });
 
       assertOk(authenticated);
 
-      const principal = await authenticated.value.getPrincipal();
-      assertOk(principal);
-      expect(principal.value).toMatchObject({
+      const user = await authenticated.value.getAuthenticatedUser();
+      assertOk(user);
+      expect(user.value).toMatchObject({
+        role: Role.AccountOwner,
         account: account.toLowerCase(),
-        signer: account.toLowerCase(),
+        owner: owner.toLowerCase(),
       });
     });
   });
@@ -82,7 +81,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
 
       const authentication = await currentSession(authenticated.value);
       expect(authentication._unsafeUnwrap()).toMatchObject({
-        signer: account,
+        signer: owner,
         app,
       });
     });

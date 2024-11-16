@@ -21,7 +21,7 @@ import type {
   UsernameValue,
   Void,
 } from '@lens-social/types';
-import { initGraphQLTada } from 'gql.tada';
+import { type FragmentOf, initGraphQLTada } from 'gql.tada';
 import type { introspection } from './graphql-env';
 
 export const graphql = initGraphQLTada<{
@@ -55,3 +55,11 @@ export const graphql = initGraphQLTada<{
     Void: Void;
   };
 }>();
+
+export type FragmentShape = NonNullable<Parameters<typeof graphql>[1]>[number];
+
+export type Return<In extends string, Fragments extends FragmentShape[]> = ReturnType<
+  typeof graphql<In, Fragments>
+>;
+
+export type FragmentNodeFor<T> = T extends FragmentOf<infer U> ? U : never;

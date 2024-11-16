@@ -29,6 +29,7 @@ import {
 } from '@urql/core';
 import { type Logger, getLogger } from 'loglevel';
 
+import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
 import {
   AuthenticationError,
   GraphQLErrorCode,
@@ -336,22 +337,6 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
 }
 
 /**
- * Represents an authenticated entity within the system, containing key addresses for identity and authorization.
- */
-export type Principal = {
-  /**
-   * The Account address.
-   * */
-  account: EvmAddress;
-  /**
-   * The signer address.
-   *
-   * If different from the account address, this is the address of an Account Manager for it.
-   */
-  signer: EvmAddress;
-};
-
-/**
  * The client to interact with the protected queries and mutations of the Lens GraphQL API.
  *
  * @privateRemarks Intentionally not exported.
@@ -376,7 +361,7 @@ class SessionClient extends AbstractClient<UnauthenticatedError | UnexpectedErro
   /**
    * @internal
    */
-  getPrincipal(): ResultAsync<Principal, UnexpectedError> {
+  getAuthenticatedUser(): ResultAsync<AuthenticatedUser, UnexpectedError> {
     return this.getCredentials().andThen((credentials) => {
       if (!credentials) {
         return UnexpectedError.from('No credentials found').asResultAsync();
@@ -388,10 +373,7 @@ class SessionClient extends AbstractClient<UnauthenticatedError | UnexpectedErro
         return claims.error.asResultAsync();
       }
 
-      return okAsync({
-        account: claims.value.act ? claims.value.act.sub : claims.value.sub,
-        signer: claims.value.sub,
-      });
+      return authenticatedUser(claims.value);
     });
   }
 
