@@ -31,7 +31,7 @@ type Account {
   metadata: AccountMetadata
 
   """The username linked to the account."""
-  username: UsernameValue
+  username(request: AccountUsernameRequest): Username
 
   """The operations for the account."""
   operations: LoggedInAccountOperations
@@ -72,7 +72,7 @@ input AccountFeedsStatsRequest {
   account: EvmAddress!
 
   """The feeds to get stats for."""
-  forFeeds: [EvmAddress!]! = ["0xB43fc665acc78aB3C06F61A7c98BbFAA68811Ba8"]
+  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
 }
 
 type AccountGraphsFollowStats {
@@ -88,7 +88,7 @@ input AccountGraphsStatsRequest {
   account: EvmAddress!
 
   """The graphs to get stats for."""
-  forGraphs: [EvmAddress!]! = ["0x45a73e4cF0e129D2cd36eb9CDf094600Bff9A9a4"]
+  forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
 }
 
 type AccountManaged {
@@ -125,7 +125,7 @@ input AccountManagerChallengeRequest {
   playground app. This is to make it easier if you forget to set it. This may change in the
   future.
   """
-  app: EvmAddress! = "0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3"
+  app: EvmAddress! = "0xe5439696f4057aF073c0FB2dc6e5e755392922e1"
 
   """The address of the Lens Account."""
   account: EvmAddress!
@@ -164,19 +164,32 @@ input AccountManagerPermissionsInput {
 
 input AccountManagersRequest {
   """The page size."""
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor
 }
 
-type AccountMetadata {
-  """
-  The App Id that this Profile data refers to. If omitted the data is considered to be the
-  global Profile data.
-  """
-  appId: AppId
+type AccountMention {
+  """The account that was mentioned."""
+  account: EvmAddress!
 
+  """The namespace that was used in a mention."""
+  namespace: EvmAddress!
+
+  """
+  The replacement information.
+  Use to replace mentions in the post content.
+  """
+  replace: AccountMentionReplace!
+}
+
+type AccountMentionReplace {
+  from: String!
+  to: String!
+}
+
+type AccountMetadata {
   """
   A bag of attributes that can be used to store any kind of metadata that is not currently
   supported by the standard. Over time, common attributes will be added to the standard and
@@ -184,10 +197,10 @@ type AccountMetadata {
   """
   attributes: [MetadataAttribute!]!
 
-  """The profile bio as markdown."""
+  """The Account bio as markdown."""
   bio: String
 
-  """The profile cover picture."""
+  """The Account cover picture."""
   coverPicture: URI
 
   """
@@ -196,10 +209,10 @@ type AccountMetadata {
   """
   id: String!
 
-  """The profile display name."""
+  """The Account display name."""
   name: String
 
-  """The profile picture."""
+  """The Account picture."""
   picture: URI
 }
 
@@ -220,7 +233,7 @@ input AccountOwnerChallengeRequest {
   playground app. This is to make it easier if you forget to set it. This may change in the
   future.
   """
-  app: EvmAddress! = "0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3"
+  app: EvmAddress! = "0xe5439696f4057aF073c0FB2dc6e5e755392922e1"
 
   """The address of the Lens Account."""
   account: EvmAddress!
@@ -245,7 +258,7 @@ input AccountRequest {
   address: EvmAddress
 
   """The username."""
-  username: UsernameValue
+  username: UsernameInput
 
   """The legacy profile ID."""
   legacyProfileId: LegacyProfileId
@@ -270,7 +283,7 @@ input AccountSearchRequest {
   orderBy: AccountSearchOrderBy! = DEFAULT
 
   """The page size."""
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor
@@ -289,43 +302,37 @@ input AccountStatsRequest {
   account: EvmAddress!
 
   """The feeds to get stats for."""
-  forFeeds: [EvmAddress!]! = ["0xB43fc665acc78aB3C06F61A7c98BbFAA68811Ba8"]
+  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
 
   """The graphs to get stats for."""
-  forGraphs: [EvmAddress!]! = ["0x45a73e4cF0e129D2cd36eb9CDf094600Bff9A9a4"]
+  forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
 }
 
 input AccountUsernameRequest {
-  """The page size."""
-  pageSize: PageSize
-
-  """The cursor."""
-  cursor: Cursor
-
-  """The account or address to get owned usernames for."""
-  owner: EvmAddress!
+  """The namespace to get account assigned username"""
+  namespace: EvmAddress! = "0x6Cc71E78e25eBF6A2525CadC1fc628B42AE4138f"
 }
 
 input AccountsAvailableRequest {
-  """The page size."""
-  pageSize: PageSize
-
-  """The cursor."""
-  cursor: Cursor
-
   """The account to get managed by."""
   managedBy: EvmAddress!
 
-  """Whether to include owned accounts."""
-  includeOwned: Boolean
+  """Whether to include owned accounts. Defaults to true."""
+  includeOwned: Boolean! = true
 
   """The visibility of hidden accounts."""
-  hiddenFilter: ManagedAccountsVisibility
+  hiddenFilter: ManagedAccountsVisibility! = ALL
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
 }
 
 input AccountsBlockedRequest {
   """The page size."""
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor
@@ -336,7 +343,7 @@ input AccountsRequest {
   addresses: [EvmAddress!]
 
   """The usernames to get."""
-  usernames: [UsernameValue!]
+  usernames: [UsernameInput!]
 
   """The legacy profile IDs to get."""
   legacyProfileIds: [LegacyProfileId!]
@@ -485,8 +492,6 @@ type App {
   metadata: AppMetadata
 }
 
-scalar AppId
-
 type AppMetadata {
   """
   An optional short and detailed description of the app, explaining its features and purpose.
@@ -512,7 +517,7 @@ type AppMetadata {
   termsOfService: URI
 
   """The url of the app."""
-  url: String!
+  url: URI!
 }
 
 enum AppMetadataLensPlatformsItem {
@@ -536,15 +541,12 @@ enum AppsOrderBy {
 }
 
 input AppsRequest {
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
   cursor: Cursor
   orderBy: AppsOrderBy! = LATEST_FIRST
 }
 
 type ArticleMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """Any attachment you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -559,13 +561,10 @@ type ArticleMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
+  """The main focus of the post."""
   mainContentFocus: MainContentFocus!
 
   """An arbitrary list of tags."""
@@ -582,24 +581,12 @@ type AssignUsernameResponse {
 }
 
 input AssignUsernameToAccountRequest {
-  """
-  This is the namespace address you wish to assign to it will default to the lens username
-  """
-  namespaceAddress: EvmAddress! = "0xC0A43E5E1b1373A46b0D3097e682e73Fe7AB1fAB"
-
-  """
-  The local name to assign for example if i was wanting to assign lens/wagmi to my account
-  i would pass in wagmi excluding the namespace
-  """
-  localName: String!
+  username: UsernameInput!
 }
 
 union AssignUsernameToAccountResult = AssignUsernameResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type AudioMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -614,13 +601,10 @@ type AudioMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
+  """The main focus of the post."""
   mainContentFocus: MainContentFocus!
 
   """An arbitrary list of tags."""
@@ -648,7 +632,7 @@ input AuthenticatedSessionsRequest {
   You can optionally filter the authentications by the app that created them.
   """
   app: EvmAddress
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
   cursor: Cursor
 }
 
@@ -757,9 +741,6 @@ type CheckingInMetadata {
   """The optional address of the location."""
   address: PhysicalAddress
 
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -773,16 +754,13 @@ type CheckingInMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """Where you checking in from (free form text)."""
+  """Where you're checking in from (free form text)."""
   location: Encryptable!
 
-  """The main focus of the publication."""
+  """The main focus of the post."""
   mainContentFocus: MainContentFocus!
 
   """The optional geographic position of the location."""
@@ -799,7 +777,7 @@ input CollectActionInput {
 
 """CollectCondition"""
 type CollectCondition {
-  publicationId: PostId!
+  publicationId: LegacyPublicationId!
   thisPublication: Boolean!
   type: String!
 }
@@ -823,8 +801,8 @@ input CreateAccountWithUsernameRequest {
   """The account metadata uri"""
   metadataUri: URI!
 
-  """The local name to create - should not include the namespace"""
-  localName: String!
+  """The username you wish to mint with the account"""
+  username: UsernameInput!
 
   """Any account managers you wish to add to the account"""
   accountManager: [EvmAddress!]
@@ -840,16 +818,16 @@ input CreateAppRequest {
   admins: [EvmAddress!]
 
   """The app graph defaults to use the global graph"""
-  graph: EvmAddress! = "0x45a73e4cF0e129D2cd36eb9CDf094600Bff9A9a4"
+  graph: EvmAddress! = "0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"
 
   """The app feeds defaults to use the global feed"""
-  feeds: [EvmAddress!]! = ["0xB43fc665acc78aB3C06F61A7c98BbFAA68811Ba8"]
+  feeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
 
   """The default feed defaults to use the global feed"""
-  defaultFeed: EvmAddress! = "0xB43fc665acc78aB3C06F61A7c98BbFAA68811Ba8"
+  defaultFeed: EvmAddress! = "0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"
 
   """The app username leave empty to use the lens username"""
-  namespace: EvmAddress! = "0xC0A43E5E1b1373A46b0D3097e682e73Fe7AB1fAB"
+  namespace: EvmAddress! = "0x6Cc71E78e25eBF6A2525CadC1fc628B42AE4138f"
 
   """The app groups leave empty if none"""
   groups: [EvmAddress!]
@@ -891,7 +869,7 @@ input CreateFollowRequest {
   """
   The graph to follow the account on. If not provided, the global graph is used.
   """
-  graph: EvmAddress! = "0x45a73e4cF0e129D2cd36eb9CDf094600Bff9A9a4"
+  graph: EvmAddress! = "0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"
 
   """
   The data required by any follow rules associated with the account being followed.
@@ -938,7 +916,7 @@ type CreateNamespaceResponse {
 
 input CreatePostRequest {
   """The feed to post to. If not provided, the global feed is used."""
-  feed: EvmAddress! = "0xB43fc665acc78aB3C06F61A7c98BbFAA68811Ba8"
+  feed: EvmAddress! = "0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"
 
   """The URI of the post metadata."""
   contentUri: URI!
@@ -955,7 +933,7 @@ input CreatePostRequest {
 
 input CreateRepostRequest {
   """The feed to repost to. If not provided, the global feed is used."""
-  feed: EvmAddress! = "0xB43fc665acc78aB3C06F61A7c98BbFAA68811Ba8"
+  feed: EvmAddress! = "0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"
 
   """The post to reference."""
   post: PostId!
@@ -969,7 +947,7 @@ input CreateUnfollowRequest {
   The graph where the account is followed and should be unfollowed.
   If not provided, the global graph is used.
   """
-  graph: EvmAddress! = "0x45a73e4cF0e129D2cd36eb9CDf094600Bff9A9a4"
+  graph: EvmAddress! = "0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"
 
   """
   The data required by the graph rules associated with the specified graph.
@@ -997,6 +975,19 @@ input CreateUsernameNamespaceRequest {
 }
 
 union CreateUsernameNamespaceResult = CreateNamespaceResponse | SelfFundedTransactionRequest | TransactionWillFail
+
+input CreateUsernameRequest {
+  username: UsernameInput!
+
+  """If you want to auto assign the username to the account default is true"""
+  autoAssign: Boolean! = true
+}
+
+type CreateUsernameResponse {
+  hash: TxHash!
+}
+
+union CreateUsernameResult = CreateUsernameResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar Cursor
 
@@ -1131,9 +1122,6 @@ type Eip712TransactionRequest {
 }
 
 type EmbedMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -1150,13 +1138,10 @@ type EmbedMetadata {
   """The embed URL."""
   embed: Encryptable!
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
+  """The main focus of the post."""
   mainContentFocus: MainContentFocus!
 
   """An arbitrary list of tags."""
@@ -1165,8 +1150,6 @@ type EmbedMetadata {
 }
 
 union EnableSignlessResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
-
-scalar EncodedTransaction
 
 scalar Encryptable
 
@@ -1207,9 +1190,6 @@ type EventMetadata {
   """The address of the event."""
   address: PhysicalAddress
 
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -1226,9 +1206,6 @@ type EventMetadata {
 
   """The event end time (ISO 8601 `YYYY-MM-DDTHH:mm:ss.sssZ`)."""
   endsAt: Encryptable!
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
 
   """The links you want to include with it."""
@@ -1238,7 +1215,7 @@ type EventMetadata {
   """The location of the event."""
   location: EventMetadataLensLocation!
 
-  """The main focus of the publication."""
+  """The main focus of the post."""
   mainContentFocus: MainContentFocus!
 
   """The geographic position of the event."""
@@ -1258,7 +1235,7 @@ type EventMetadata {
 
 type EventMetadataLensLocation {
   physical: Encryptable
-  virtual: Encryptable
+  virtual: URI
 }
 
 type EventMetadataLensSchedulingAdjustments {
@@ -1725,6 +1702,24 @@ input FeeFollowRuleInput {
 
 type Feed {
   address: EvmAddress!
+  metadata: FeedMetadata
+}
+
+type FeedMetadata {
+  """Optional markdown formatted description of the Feed."""
+  description: String
+
+  """
+  A unique identifier that in storages like IPFS ensures the uniqueness of the metadata URI.
+  Use a UUID if unsure.
+  """
+  id: String!
+
+  """The name of the Feed."""
+  name: String!
+
+  """The human-friendly title for the Feed."""
+  title: String!
 }
 
 input FeedRequest {
@@ -1750,7 +1745,7 @@ type FinishedTransactionStatus {
 
 """FollowCondition"""
 type FollowCondition {
-  follow: EvmAddress!
+  follow: LegacyProfileId!
   type: String!
 }
 
@@ -1761,7 +1756,7 @@ type FollowNotification {
 
 input FollowPair {
   """The graph you are checking defaults to global graph."""
-  graph: EvmAddress! = "0x45a73e4cF0e129D2cd36eb9CDf094600Bff9A9a4"
+  graph: EvmAddress! = "0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"
 
   """The follower."""
   follower: EvmAddress!
@@ -1808,7 +1803,7 @@ enum FollowersOrderBy {
 
 input FollowersRequest {
   """The page size."""
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor
@@ -1820,7 +1815,7 @@ input FollowersRequest {
   The graphs to get followers for
   The result will come back if they follow on ANY of the supplied graphs
   """
-  forGraphs: [EvmAddress!]! = ["0x45a73e4cF0e129D2cd36eb9CDf094600Bff9A9a4"]
+  forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
 
   """The order by."""
   orderBy: FollowersOrderBy! = DESC
@@ -1833,7 +1828,7 @@ enum FollowersYouKnowOrderBy {
 
 input FollowersYouKnowRequest {
   """The page size."""
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor
@@ -1848,7 +1843,7 @@ input FollowersYouKnowRequest {
   The graphs to get followers you know for
   The result will come back if they follow on ANY of the supplied graphs
   """
-  forGraphs: [EvmAddress!]! = ["0x45a73e4cF0e129D2cd36eb9CDf094600Bff9A9a4"]
+  forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
 
   """The order by."""
   orderBy: FollowersYouKnowOrderBy! = DESC
@@ -1870,7 +1865,7 @@ enum FollowingOrderBy {
 
 input FollowingRequest {
   """The page size."""
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor
@@ -1882,7 +1877,7 @@ input FollowingRequest {
   The graphs to get following for.
   The result will come back if they are following on ANY of the supplied graphs
   """
-  forGraphs: [EvmAddress!]! = ["0x45a73e4cF0e129D2cd36eb9CDf094600Bff9A9a4"]
+  forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
 
   """The order by."""
   orderBy: FollowingOrderBy! = DESC
@@ -1902,6 +1897,12 @@ type Graph {
 type GraphMetadata {
   """Optional markdown formatted description of the graph."""
   description: String
+
+  """
+  A unique identifier that in storages like IPFS ensures the uniqueness of the metadata URI.
+  Use a UUID if unsure.
+  """
+  id: String!
 
   """The name of the graph."""
   name: String!
@@ -1928,9 +1929,35 @@ type Group {
   metadata: GroupMetadata
 }
 
+enum GroupMembersOrderBy {
+  LAST_JOINED
+  FIRST_JOINED
+  ACCOUNT_SCORE
+}
+
+input GroupMembersRequest {
+  """The group"""
+  group: EvmAddress!
+
+  """The order by."""
+  orderBy: GroupMembersOrderBy! = LAST_JOINED
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
 type GroupMetadata {
   """Optional markdown formatted description of the Community."""
   description: String
+
+  """
+  A unique identifier that in storages like IPFS ensures the uniqueness of the metadata URI.
+  Use a UUID if unsure.
+  """
+  id: String!
 
   """Optional uri of the Community's icon."""
   icon: URI
@@ -1971,7 +1998,7 @@ input GroupsRequest {
   orderBy: GroupsOrderBy! = LATEST_JOINED
 
   """The page size."""
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor
@@ -1993,9 +2020,6 @@ input HideReplyRequest {
 scalar IdToken
 
 type ImageMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -2009,14 +2033,11 @@ type ImageMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   image: MediaImage!
   locale: Locale!
 
-  """The main focus of the publication."""
+  """The main focus of the post."""
   mainContentFocus: MainContentFocus!
 
   """An arbitrary list of tags."""
@@ -2079,12 +2100,11 @@ union LeaveGroupResult = LeaveGroupResponse | SponsoredTransactionRequest | Self
 
 scalar LegacyProfileId
 
+scalar LegacyPublicationId
+
 scalar LegacyRefreshToken
 
 type LinkMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -2098,13 +2118,10 @@ type LinkMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
+  """The main focus of the post."""
   mainContentFocus: MainContentFocus!
 
   """The sharing link url."""
@@ -2122,9 +2139,6 @@ type LitProtocolEncryptionStrategy {
 }
 
 type LivestreamMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -2147,9 +2161,6 @@ type LivestreamMetadata {
 
   """The optional stream end time (ISO 8601 `YYYY-MM-DDTHH:mm:ss.sssZ`)"""
   endsAt: Encryptable
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
 
   """
@@ -2159,7 +2170,7 @@ type LivestreamMetadata {
   liveUrl: Encryptable!
   locale: Locale!
 
-  """The main focus of the publication."""
+  """The main focus of the post."""
   mainContentFocus: MainContentFocus!
 
   """
@@ -2759,9 +2770,6 @@ enum MetadataLicenseType {
 }
 
 type MintMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -2775,13 +2783,10 @@ type MintMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
+  """The main focus of the post."""
   mainContentFocus: MainContentFocus!
 
   """
@@ -2817,16 +2822,16 @@ type Mutation {
   reportAccount(request: ReportAccountRequest!): Void!
 
   """
-  Hides an account from the user's list of managed accounts.
+  Hides an account from the manager list of managed accounts.
   
-  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  You MUST be authenticated as Account Manager to use this mutation.
   """
   hideManagedAccount(request: HideManagedAccountRequest!): Void!
 
   """
-  Undo the hiding of an account from the user's list of managed accounts.
+  Undo the hiding of an account from the manager list of managed accounts.
   
-  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  You MUST be authenticated as Account Manager to use this mutation.
   """
   unhideManagedAccount(request: UnhideManagedAccountRequest!): Void!
 
@@ -3053,6 +3058,20 @@ type Mutation {
   createGraph(request: CreateGraphRequest!): CreateGraphResult!
 
   """
+  Create a new username namespace aka deploying a new username contract
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  createUsernameNamespace(request: CreateUsernameNamespaceRequest!): CreateUsernameNamespaceResult!
+
+  """
+  Create a username.
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  createUsername(request: CreateUsernameRequest!): CreateUsernameResult!
+
+  """
   Assign a username to an account.
   
   You MUST be authenticated as Account Owner or Account Manager to use this mutation.
@@ -3060,18 +3079,13 @@ type Mutation {
   assignUsernameToAccount(request: AssignUsernameToAccountRequest!): AssignUsernameToAccountResult!
 
   """
-  Unassign a username from an account.
+  Unassign a username from the logged-in user's Account.
+  
+  Defaults to the Lens namespace if no request is provided.
   
   You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   unassignUsernameFromAccount(request: UnassignUsernameFromAccountRequest!): UnassignUsernameToAccountResult!
-
-  """
-  Create a new username namespace aka deploying a new username contract
-  
-  You MUST be authenticated as a builder to use this mutation.
-  """
-  createUsernameNamespace(request: CreateUsernameNamespaceRequest!): CreateUsernameNamespaceResult!
 
   """
   Create a new feed
@@ -3178,10 +3192,10 @@ enum NotificationOrderBy {
 
 input NotificationRequest {
   """The graphs to get notifications for."""
-  forGraphs: [EvmAddress!]! = ["0x45a73e4cF0e129D2cd36eb9CDf094600Bff9A9a4"]
+  forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
 
   """The feeds to get notifications for."""
-  forFeeds: [EvmAddress!]! = ["0xB43fc665acc78aB3C06F61A7c98BbFAA68811Ba8"]
+  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
 
   """An optional filter to narrow down the notifications result."""
   filter: NotificationFilter
@@ -3209,7 +3223,7 @@ input OnboardingUserChallengeRequest {
   playground app. This is to make it easier if you forget to set it. This may change in the
   future.
   """
-  app: EvmAddress! = "0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3"
+  app: EvmAddress! = "0xe5439696f4057aF073c0FB2dc6e5e755392922e1"
 
   """The address of the EOA that needs to create their Lens Account."""
   wallet: EvmAddress!
@@ -3380,6 +3394,7 @@ type Post {
   actions: [PostAction!]!
   operations: LoggedInPostOperations
   stats: PostStats!
+  mentions: [AccountMention!]!
 }
 
 input PostAccountPair {
@@ -3417,9 +3432,9 @@ input PostBookmarksFilter {
 
 input PostBookmarksRequest {
   """The feeds to get bookmarks for."""
-  forFeeds: [EvmAddress!]! = ["0xB43fc665acc78aB3C06F61A7c98BbFAA68811Ba8"]
+  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
   filter: PostBookmarksFilter
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
   cursor: Cursor
 }
 
@@ -3487,7 +3502,7 @@ input PostReactionsRequest {
 
   """The order in which to return the results."""
   orderBy: PostReactionOrderBy
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
   cursor: Cursor
 }
 
@@ -3514,7 +3529,7 @@ input PostReferencesRequest {
   visibilityFilter: PostVisibilityFilter! = VISIBLE
 
   """The page size."""
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor
@@ -3541,6 +3556,7 @@ enum PostReportReason {
   SOMETHING_ELSE
 }
 
+"""You must provide either a txHash or a postId, not both."""
 input PostRequest {
   """The post ID."""
   post: PostId
@@ -3584,7 +3600,7 @@ input PostTagsRequest {
   """The feeds to get tags for."""
   forFeeds: [EvmAddress!]!
   orderBy: PostTagsOrderBy! = MOST_POPULAR
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
   cursor: Cursor
 }
 
@@ -3614,15 +3630,15 @@ input PostsFilterRequest {
 }
 
 input PostsRequest {
-  forFeeds: [EvmAddress!]! = ["0xB43fc665acc78aB3C06F61A7c98BbFAA68811Ba8"]
+  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
   filter: PostsFilterRequest
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
   cursor: Cursor
 }
 
 """ProfileOwnershipCondition"""
 type ProfileOwnershipCondition {
-  profileId: EvmAddress!
+  profileId: LegacyProfileId!
   type: String!
 }
 
@@ -3662,7 +3678,7 @@ type Query {
   accountsAvailable(request: AccountsAvailableRequest!): PaginatedAccountsAvailableResult!
 
   """
-  account manager for the authenticated account.
+  Account manager for the authenticated account.
   
   You MUST be authenticated to use this query.
   """
@@ -3703,6 +3719,8 @@ type Query {
   postReactionStatus(request: PostReactionStatusRequest!): [PostReactionStatus!]!
   searchPosts(request: SearchPostsRequest!): PaginatedAnyPostsResult!
   postActions(request: PostActionsRequest!): PaginatedActions!
+
+  """Get accounts who referenced a post"""
   whoReferencedPost(request: WhoReferencedPostRequest!): PaginatedAccountsResult!
   whoActedOnPost(request: WhoActedOnPostRequest!): PaginatedAccountsResult!
   following(request: FollowingRequest!): PaginatedFollowingResult!
@@ -3717,6 +3735,9 @@ type Query {
 
   """Search for groups"""
   searchGroups(request: SearchGroupsRequest!): PaginatedGroupsResult!
+
+  """Get the members of the group"""
+  groupMembers(request: GroupMembersRequest!): PaginatedAccountsResult!
 
   """
   Get account timeline.
@@ -3739,10 +3760,11 @@ type Query {
   transactionStatus(request: TransactionStatusRequest!): TransactionStatusResult!
   debugMetadata(request: DebugPostMetadataRequest!): DebugPostMetadataResult!
   debugTransactionStatusFailed(request: DebugTransactionStatusRequest!): DebugTransactionStatusResult
-  usernameNamespace(request: UsernameRequest!): UsernameNamespace
+  usernameNamespace(request: UsernameNamespaceRequest!): UsernameNamespace
+  username(request: UsernameRequest!): Username
 
   """Get the usernames for the account/owner."""
-  usernames(request: AccountUsernameRequest!): PaginatedUsernamesResult!
+  usernames(request: UsernamesRequest!): PaginatedUsernamesResult!
   _service: _Service!
 }
 
@@ -3846,7 +3868,7 @@ input SearchGroupsRequest {
   query: String!
 
   """The page size."""
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor
@@ -3872,29 +3894,29 @@ input SearchPostsRequest {
   query: String!
 
   """The feeds to search in."""
-  forFeeds: [EvmAddress!]! = ["0xB43fc665acc78aB3C06F61A7c98BbFAA68811Ba8"]
+  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
 
   """The optional post types to filter by."""
   filter: SearchPostsFilter
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
   cursor: Cursor
 }
 
-type SelfFundedTransactionRequest {
-  """
-  The encoded EIP-1559 transaction request.
-  
-  Use a parser to decode this data into a transaction request object
-  for your library (e.g., ethers, viem).
-  """
-  encoded: EncodedTransaction!
+enum SelfFundedFallbackReason {
+  NOT_SPONSORED
+  CANNOT_SPONSOR
+}
 
+type SelfFundedTransactionRequest {
   """
   The raw transaction request object.
   
   Use this object if your library does not have a parser for the encoded transaction data.
   """
   raw: Eip1559TransactionRequest!
+
+  """The reason for the fallback."""
+  reason: SelfFundedFallbackReason
 }
 
 input SetAccountMetadataRequest {
@@ -3938,9 +3960,6 @@ type SimpleCollectActionSettings {
 }
 
 type SpaceMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -3954,16 +3973,13 @@ type SpaceMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
 
   """The space join link."""
   link: Encryptable!
   locale: Locale!
 
-  """The main focus of the publication."""
+  """The main focus of the post."""
   mainContentFocus: MainContentFocus!
 
   """The space start time (ISO 8601 `YYYY-MM-DDTHH:mm:ss.sssZ`)."""
@@ -3984,21 +4000,21 @@ enum SponsorLimitType {
   MONTH
 }
 
-type SponsoredTransactionRequest {
-  """
-  The encoded EIP-712 transaction request.
-  
-  Use a parser that supports ZKsync EIP-712 transaction to decode this data into a
-  transaction request object for your library (e.g., zksync/ethers, viem/zksync).
-  """
-  encoded: EncodedTransaction!
+enum SponsoredFallbackReason {
+  SIGNLESS_DISABLED
+  SIGNLESS_FAILED
+}
 
+type SponsoredTransactionRequest {
   """
   The raw transaction request object.
   
   Use this object if your library does not have a parser for the encoded transaction data.
   """
   raw: Eip712TransactionRequest!
+
+  """The reason for the fallback."""
+  reason: SponsoredFallbackReason
 }
 
 type SponsorshipAllowance {
@@ -4020,9 +4036,6 @@ input StatsReactionRequest {
 }
 
 type StoryMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The story asset."""
   asset: AnyMedia!
 
@@ -4036,13 +4049,10 @@ type StoryMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
+  """The main focus of the post."""
   mainContentFocus: MainContentFocus!
 
   """An arbitrary list of tags."""
@@ -4059,9 +4069,6 @@ union SwitchAccountResult = AuthenticationTokens | ForbiddenError
 scalar Tag
 
 type TextOnlyMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """
   A bag of attributes that can be used to store any kind of metadata that is not currently
   supported by the standard. Over time, common attributes will be added to the standard and
@@ -4073,13 +4080,10 @@ type TextOnlyMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
+  """The main focus of the post."""
   mainContentFocus: MainContentFocus!
 
   """An arbitrary list of tags."""
@@ -4113,10 +4117,7 @@ enum ThreeDAssetFormat {
 }
 
 type ThreeDMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
-  """The 3D items for the publication"""
+  """The 3D items for the post"""
   assets: [ThreeDAsset!]!
 
   """The other attachments you want to include with it."""
@@ -4132,13 +4133,10 @@ type ThreeDMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
+  """The main focus of the post."""
   mainContentFocus: MainContentFocus!
 
   """An arbitrary list of tags."""
@@ -4170,11 +4168,11 @@ input TimelineHighlightsRequest {
   account: EvmAddress!
 
   """The feeds to get timeline for."""
-  forFeeds: [EvmAddress!]! = ["0xB43fc665acc78aB3C06F61A7c98BbFAA68811Ba8"]
+  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
 
   """An optional filter to apply to the timeline."""
   filter: TimelineHighlightsFilter
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
   cursor: Cursor
 }
 
@@ -4190,7 +4188,7 @@ input TimelineRequest {
   account: EvmAddress!
 
   """The feeds to get timeline for."""
-  forFeeds: [EvmAddress!]! = ["0xB43fc665acc78aB3C06F61A7c98BbFAA68811Ba8"]
+  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
 
   """An optional filter to apply to the timeline."""
   filter: TimelineFilter
@@ -4206,9 +4204,6 @@ type TopLevelAccessCondition {
 }
 
 type TransactionMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -4225,13 +4220,10 @@ type TransactionMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
+  """The main focus of the post."""
   mainContentFocus: MainContentFocus!
 
   """An arbitrary list of tags."""
@@ -4286,10 +4278,7 @@ entities without requiring a central allocating authority.
 scalar UUID @specifiedBy(url: "http://tools.ietf.org/html/rfc4122")
 
 input UnassignUsernameFromAccountRequest {
-  """
-  This is the namespace address you wish to unassign. Defaults to the lens namespace
-  """
-  namespaceAddress: EvmAddress! = "0xC0A43E5E1b1373A46b0D3097e682e73Fe7AB1fAB"
+  namespace: EvmAddress! = "0x6Cc71E78e25eBF6A2525CadC1fc628B42AE4138f"
 }
 
 type UnassignUsernameResponse {
@@ -4411,7 +4400,7 @@ union UpdateAccountManagerResult = SponsoredTransactionRequest | SelfFundedTrans
 
 type Username {
   """A unique identifier for the username entry."""
-  id: UUID!
+  id: ID!
 
   """The username value (e.g., lens/bob)."""
   value: UsernameValue!
@@ -4432,6 +4421,14 @@ type Username {
   timestamp: DateTime!
 }
 
+input UsernameInput {
+  """The local name to create - should not include the namespace"""
+  localName: String!
+
+  """The namespace. Defaults to lens namespace"""
+  namespace: EvmAddress! = "0x6Cc71E78e25eBF6A2525CadC1fc628B42AE4138f"
+}
+
 type UsernameNamespace {
   """The address of the namespace."""
   address: EvmAddress!
@@ -4444,22 +4441,45 @@ type UsernameNamespace {
 type UsernameNamespaceMetadata {
   """An optional description of the Username collection."""
   description: String
+
+  """
+  A unique identifier that in storages like IPFS ensures the uniqueness of the metadata URI.
+  Use a UUID if unsure.
+  """
+  id: String!
 }
 
-input UsernameRequest {
-  """The username"""
-  username: EvmAddress
+input UsernameNamespaceRequest {
+  """The namespace"""
+  namespace: EvmAddress
 
-  """The transaction hash you created the username with."""
+  """The transaction hash you created the namespace with."""
   txHash: TxHash
+}
+
+"""You must provide either an id or a username, not both."""
+input UsernameRequest {
+  """The username ID."""
+  id: ID
+
+  """The username namespace and local name."""
+  username: UsernameInput
 }
 
 scalar UsernameValue
 
-type VideoMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
+input UsernamesRequest {
+  """The page size."""
+  pageSize: PageSize! = FIFTY
 
+  """The cursor."""
+  cursor: Cursor
+
+  """The account or address to get owned usernames for."""
+  owner: EvmAddress!
+}
+
+type VideoMetadata {
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -4473,14 +4493,11 @@ type VideoMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
-  mainContentFocus: VideoMetadataLensMainContentFocus!
+  """The main focus of the post."""
+  mainContentFocus: MainContentFocus!
 
   """An arbitrary list of tags."""
   tags: [Tag!]
@@ -4489,11 +4506,6 @@ type VideoMetadata {
   title: String
   video: MediaVideo!
   content: Encryptable!
-}
-
-enum VideoMetadataLensMainContentFocus {
-  SHORT_VIDEO
-  VIDEO
 }
 
 scalar Void
@@ -4522,8 +4534,8 @@ input WhoActedOnPostRequest {
 }
 
 enum WhoReferencedPostOrderBy {
-  LAST_ACTIONED
-  FIRST_ACTIONED
+  MOST_RECENT
+  OLDEST
   ACCOUNT_SCORE
 }
 
@@ -4531,12 +4543,12 @@ input WhoReferencedPostRequest {
   """The post id to get who referenced."""
   post: PostId!
 
-  """The reference types to filter by."""
-  referenceTypes: [PostReferenceType!]
-  orderBy: WhoReferencedPostOrderBy
+  """The types of references to get."""
+  referenceTypes: [PostReferenceType!]!
+  orderBy: WhoReferencedPostOrderBy! = MOST_RECENT
 
   """The page size."""
-  pageSize: Int
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor

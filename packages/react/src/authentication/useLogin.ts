@@ -68,7 +68,7 @@ export function useLogin(): UseAsyncTask<LoginArgs, Account, LoginError> {
 
   return useAsyncTask((args: LoginArgs): LoginResult => {
     const repository = (sessionClient: SessionClient): LoginResult =>
-      fetchAccount(sessionClient, { request: { address: args.account } }).andThen((account) => {
+      fetchAccount(sessionClient, { address: args.account }).andThen((account) => {
         if (account === null) {
           return AuthenticationError.from(
             'Unable to retrieve the Account data you signed in with. ' +
@@ -81,9 +81,9 @@ export function useLogin(): UseAsyncTask<LoginArgs, Account, LoginError> {
     const login = new Login(client, repository);
 
     return login.execute({
-      request: {
-        address: args.account,
-        signedBy: args.signer.address,
+      accountOwner: {
+        account: args.account,
+        owner: args.signer.address,
         app: args.app,
       },
       signMessage: args.signer.signMessage.bind(args.signer),

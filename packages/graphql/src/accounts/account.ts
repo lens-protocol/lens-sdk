@@ -1,12 +1,11 @@
 import type { FragmentOf } from 'gql.tada';
 import {
   Account,
-  FullAccount,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
 } from '../fragments';
-import { type RequestOf, factory, graphql } from '../graphql';
+import { type RequestOf, graphql } from '../graphql';
 
 export const AccountQuery = graphql(
   `query Account($request: AccountRequest!) {
@@ -16,17 +15,6 @@ export const AccountQuery = graphql(
   }`,
   [Account],
 );
-
-export const accountQuery = factory(
-  `query Account($request: AccountRequest!) {
-    value: account(request: $request) {
-      ...Account
-    }
-  }`,
-);
-
-// const withBase = accountQuery(Account);
-// const withFull = accountQuery(FullAccount);
 
 export type AccountRequest = RequestOf<typeof AccountQuery>;
 
