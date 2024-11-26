@@ -97,7 +97,7 @@
     "typescript": "5.2.2"
   },
   "engines": {
-    "node": ">=18 <21"
+    "node": ">=18 <=22"
   },
   "prettier": "@lens-protocol/prettier-config",
   "babel": {
