@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/react",
-  "version": "0.0.0",
+  "version": "2.3.1",
   "description": "The official React bindings for the Lens Protocol",
   "repository": {
     "directory": "packages/react",
