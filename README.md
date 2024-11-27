@@ -42,7 +42,7 @@ nvm use
 
 to switch to the correct Node.js version.
 
-Enable [corepack](https://www.totaltypescript.com/how-to-use-corepack) to use the the correct version of `pnpm`.
+Enable [corepack](https://www.totaltypescript.com/how-to-use-corepack) to use the correct version of `pnpm`.
 
 Run the following command in the project root folder:
 
