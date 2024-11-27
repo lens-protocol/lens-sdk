@@ -1,5 +1,5 @@
-import type { PublicClient, SessionClient } from '@lens-social/client';
-import { invariant } from '@lens-social/types';
+import type { PublicClient, SessionClient } from '@lens-protocol/client';
+import { invariant } from '@lens-protocol/types';
 import React, { type ReactNode, useContext, useState } from 'react';
 
 export const UnknownSession = Symbol('Unknown');

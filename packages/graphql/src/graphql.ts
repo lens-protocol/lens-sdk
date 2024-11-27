@@ -21,7 +21,7 @@ import {
   type UsernameValue,
   type Void,
   never,
-} from '@lens-social/types';
+} from '@lens-protocol/types';
 import { type DocumentDecoration, type FragmentOf, initGraphQLTada } from 'gql.tada';
 import type { introspection } from './graphql-env';
 

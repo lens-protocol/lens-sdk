@@ -1,6 +1,6 @@
-import type { TransactionStatusRequest, TransactionStatusResult } from '@lens-social/graphql';
-import { TransactionStatusQuery } from '@lens-social/graphql';
-import type { ResultAsync } from '@lens-social/types';
+import type { TransactionStatusRequest, TransactionStatusResult } from '@lens-protocol/graphql';
+import { TransactionStatusQuery } from '@lens-protocol/graphql';
+import type { ResultAsync } from '@lens-protocol/types';
 
 import type { AnyClient } from '../clients';
 import type { UnexpectedError } from '../errors';

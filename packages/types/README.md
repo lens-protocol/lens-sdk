@@ -1,4 +1,4 @@
-# `@lens-social/types`
+# `@lens-protocol/types`
 
 This package contains low-level types and language extensions. **It is not intended to be used directly.**
 

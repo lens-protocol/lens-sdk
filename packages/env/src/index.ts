@@ -1,4 +1,4 @@
-import { url, type URL, never } from '@lens-social/types';
+import { url, type URL, never } from '@lens-protocol/types';
 
 /**
  * The environment configuration type.

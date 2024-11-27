@@ -1,4 +1,4 @@
-import type { ResultAsync } from '@lens-social/types';
+import type { ResultAsync } from '@lens-protocol/types';
 
 export interface SessionManager<TRequest, TResult> {
   login(request: TRequest): TResult;

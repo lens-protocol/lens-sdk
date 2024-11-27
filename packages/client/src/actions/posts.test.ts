@@ -1,5 +1,5 @@
-import { local } from '@lens-social/env';
-import { assertOk, postId } from '@lens-social/types';
+import { local } from '@lens-protocol/env';
+import { assertOk, postId } from '@lens-protocol/types';
 import { describe, it } from 'vitest';
 
 import { PublicClient } from '../clients';

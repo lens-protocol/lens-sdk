@@ -1,5 +1,5 @@
-import { local } from '@lens-social/env';
-import { assertOk, evmAddress, uri } from '@lens-social/types';
+import { local } from '@lens-protocol/env';
+import { assertOk, evmAddress, uri } from '@lens-protocol/types';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { describe, expect, it } from 'vitest';

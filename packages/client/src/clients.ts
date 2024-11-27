@@ -1,12 +1,12 @@
-import type { EnvironmentConfig } from '@lens-social/env';
-import { AuthenticateMutation, ChallengeMutation } from '@lens-social/graphql';
+import type { EnvironmentConfig } from '@lens-protocol/env';
+import { AuthenticateMutation, ChallengeMutation } from '@lens-protocol/graphql';
 import type {
   AuthenticationChallenge,
   ChallengeRequest,
   SignedAuthChallenge,
-} from '@lens-social/graphql';
-import type { Credentials, IStorage, IStorageProvider } from '@lens-social/storage';
-import { InMemoryStorageProvider, createCredentialsStorage } from '@lens-social/storage';
+} from '@lens-protocol/graphql';
+import type { Credentials, IStorage, IStorageProvider } from '@lens-protocol/storage';
+import { InMemoryStorageProvider, createCredentialsStorage } from '@lens-protocol/storage';
 import {
   ResultAsync,
   errAsync,
@@ -14,7 +14,7 @@ import {
   never,
   okAsync,
   signatureFrom,
-} from '@lens-social/types';
+} from '@lens-protocol/types';
 import {
   type AnyVariables,
   type Operation,

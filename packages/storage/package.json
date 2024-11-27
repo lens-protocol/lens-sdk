@@ -1,5 +1,5 @@
 {
-  "name": "@lens-social/storage",
+  "name": "@lens-protocol/storage",
   "version": "0.0.0",
   "description": "This package contains functionality related to storage.",
   "repository": {
@@ -28,7 +28,7 @@
     "build": "tsup"
   },
   "dependencies": {
-    "@lens-social/types": "workspace:*",
+    "@lens-protocol/types": "workspace:*",
     "zod": "^3.23.8"
   },
   "devDependencies": {

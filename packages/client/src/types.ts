@@ -1,4 +1,4 @@
-import type { PaginatedResultInfo } from '@lens-social/graphql';
+import type { PaginatedResultInfo } from '@lens-protocol/graphql';
 
 /**
  * A standardized data object.

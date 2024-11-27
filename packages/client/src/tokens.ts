@@ -1,7 +1,7 @@
-import type { Role } from '@lens-social/graphql';
-import type { EvmAddress, Result } from '@lens-social/types';
-import type { UUID } from '@lens-social/types';
-import { type IdToken, err, ok } from '@lens-social/types';
+import type { Role } from '@lens-protocol/graphql';
+import type { EvmAddress, Result } from '@lens-protocol/types';
+import type { UUID } from '@lens-protocol/types';
+import { type IdToken, err, ok } from '@lens-protocol/types';
 import { jwtDecode } from 'jwt-decode';
 import { UnexpectedError } from './errors';
 

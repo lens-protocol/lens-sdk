@@ -3,16 +3,16 @@ import type {
   AccountRequest,
   CreateAccountWithUsernameRequest,
   SetAccountMetadataRequest,
-} from '@lens-social/graphql';
+} from '@lens-protocol/graphql';
 import {
   AccountQuery,
   CreateAccountWithUsernameMutation,
   SetAccountMetadataMutation,
-} from '@lens-social/graphql';
-import type { ResultAsync } from '@lens-social/types';
+} from '@lens-protocol/graphql';
+import type { ResultAsync } from '@lens-protocol/types';
 
-import type { SetAccountMetadataResult } from '@lens-social/graphql';
-import type { CreateAccountWithUsernameResult } from '@lens-social/graphql';
+import type { SetAccountMetadataResult } from '@lens-protocol/graphql';
+import type { CreateAccountWithUsernameResult } from '@lens-protocol/graphql';
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 

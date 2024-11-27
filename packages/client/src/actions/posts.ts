@@ -8,15 +8,15 @@ import type {
   PostReactionsRequest,
   PostReferencesRequest,
   PostRequest,
-} from '@lens-social/graphql';
+} from '@lens-protocol/graphql';
 import {
   PostActionsQuery,
   PostBookmarksQuery,
   PostQuery,
   PostReactionsQuery,
   PostReferencesQuery,
-} from '@lens-social/graphql';
-import type { ResultAsync } from '@lens-social/types';
+} from '@lens-protocol/graphql';
+import type { ResultAsync } from '@lens-protocol/types';
 
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';

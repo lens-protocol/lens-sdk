@@ -1,6 +1,6 @@
-# `@lens-social/env`
+# `@lens-protocol/env`
 
-The Lens Social environments.
+The Lens environments.
 
 ---
 

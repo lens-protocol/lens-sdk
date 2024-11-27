@@ -1,4 +1,4 @@
-import type { SessionClient } from '@lens-social/client';
+import type { SessionClient } from '@lens-protocol/client';
 import { useEffect, useState } from 'react';
 import { UnknownSession, useLensContext } from '../context';
 import { ReadResult, type SuspenseResult } from '../helpers';

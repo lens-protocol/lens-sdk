@@ -1,5 +1,5 @@
 {
-  "name": "@lens-social/client",
+  "name": "@lens-protocol/client",
   "version": "0.0.0",
   "description": "Low-level Lens API client",
   "repository": {
@@ -34,10 +34,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@lens-social/env": "workspace:*",
-    "@lens-social/graphql": "workspace:*",
-    "@lens-social/storage": "workspace:*",
-    "@lens-social/types": "workspace:*",
+    "@lens-protocol/env": "workspace:*",
+    "@lens-protocol/graphql": "workspace:*",
+    "@lens-protocol/storage": "workspace:*",
+    "@lens-protocol/types": "workspace:*",
     "@urql/core": "^5.0.8",
     "@urql/exchange-auth": "^2.2.0",
     "jwt-decode": "^4.0.0",

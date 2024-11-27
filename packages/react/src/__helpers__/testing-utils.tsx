@@ -1,7 +1,7 @@
 import { type RenderHookOptions, renderHook } from '@testing-library/react';
 import React, { type ReactNode, Suspense } from 'react';
 
-import type { PublicClient } from '@lens-social/client';
+import type { PublicClient } from '@lens-protocol/client';
 import { LensContextProvider } from '../context';
 
 function createWrapper(client: PublicClient) {

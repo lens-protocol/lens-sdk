@@ -1,10 +1,10 @@
-import { local } from '@lens-social/env';
-import { url, assertErr, assertOk, evmAddress, signatureFrom } from '@lens-social/types';
+import { local } from '@lens-protocol/env';
+import { url, assertErr, assertOk, evmAddress, signatureFrom } from '@lens-protocol/types';
 
 import { privateKeyToAccount } from 'viem/accounts';
 import { describe, expect, it } from 'vitest';
 
-import { HealthQuery, Role } from '@lens-social/graphql';
+import { HealthQuery, Role } from '@lens-protocol/graphql';
 import { currentSession } from './actions';
 import { PublicClient } from './clients';
 import { UnexpectedError } from './errors';

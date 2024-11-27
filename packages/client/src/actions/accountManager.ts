@@ -5,13 +5,13 @@ import type {
   AddAccountManagerResult,
   RemoveAccountManagerRequest,
   RemoveAccountManagerResult,
-} from '@lens-social/graphql';
+} from '@lens-protocol/graphql';
 import {
   AccountManagersQuery,
   AddAccountManagerMutation,
   RemoveAccountManagerMutation,
-} from '@lens-social/graphql';
-import type { ResultAsync } from '@lens-social/types';
+} from '@lens-protocol/graphql';
+import type { ResultAsync } from '@lens-protocol/types';
 
 import type { SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';

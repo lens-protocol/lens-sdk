@@ -1,4 +1,4 @@
-import { ResultAwareError } from '@lens-social/types';
+import { ResultAwareError } from '@lens-protocol/types';
 import type { CombinedError } from '@urql/core';
 
 /**

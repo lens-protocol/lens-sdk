@@ -1,8 +1,8 @@
-import type { SessionClient, SigningError, UnexpectedError } from '@lens-social/client';
-import { AuthenticationError } from '@lens-social/client';
-import { fetchAccount } from '@lens-social/client/actions';
-import type { Account } from '@lens-social/graphql';
-import { type EvmAddress, type ResultAsync, okAsync } from '@lens-social/types';
+import type { SessionClient, SigningError, UnexpectedError } from '@lens-protocol/client';
+import { AuthenticationError } from '@lens-protocol/client';
+import { fetchAccount } from '@lens-protocol/client/actions';
+import type { Account } from '@lens-protocol/graphql';
+import { type EvmAddress, type ResultAsync, okAsync } from '@lens-protocol/types';
 
 import { useLensContext } from '../context';
 import { type UseAsyncTask, useAsyncTask } from '../helpers';

@@ -1,7 +1,7 @@
 {
-  "name": "@lens-social/types",
+  "name": "@lens-protocol/types",
   "version": "0.0.0",
-  "description": "Low-level types for Lens Social SDK",
+  "description": "Low-level types for Lens SDK",
   "repository": {
     "directory": "packages/types",
     "type": "git",

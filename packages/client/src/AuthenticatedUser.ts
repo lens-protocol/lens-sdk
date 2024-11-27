@@ -1,5 +1,5 @@
-import { Role } from '@lens-social/graphql';
-import { type EvmAddress, type Result, type UUID, err, never, ok } from '@lens-social/types';
+import { Role } from '@lens-protocol/graphql';
+import { type EvmAddress, type Result, type UUID, err, never, ok } from '@lens-protocol/types';
 import { UnexpectedError } from './errors';
 import type { IdTokenClaims } from './tokens';
 

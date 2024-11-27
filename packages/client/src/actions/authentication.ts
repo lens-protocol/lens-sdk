@@ -5,15 +5,15 @@ import type {
   RefreshResult,
   RevokeAuthenticationRequest,
   RolloverRefreshRequest,
-} from '@lens-social/graphql';
+} from '@lens-protocol/graphql';
 import {
   AuthenticatedSessionsQuery,
   CurrentSessionQuery,
   LegacyRolloverRefreshMutation,
   RefreshMutation,
   RevokeAuthenticationMutation,
-} from '@lens-social/graphql';
-import type { ResultAsync } from '@lens-social/types';
+} from '@lens-protocol/graphql';
+import type { ResultAsync } from '@lens-protocol/types';
 
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';

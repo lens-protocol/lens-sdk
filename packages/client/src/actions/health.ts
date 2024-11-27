@@ -1,5 +1,5 @@
-import { HealthQuery } from '@lens-social/graphql';
-import type { ResultAsync } from '@lens-social/types';
+import { HealthQuery } from '@lens-protocol/graphql';
+import type { ResultAsync } from '@lens-protocol/types';
 import type { AnyClient } from '../clients';
 import type { UnexpectedError } from '../errors';
 
