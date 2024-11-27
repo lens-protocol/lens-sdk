@@ -36,7 +36,7 @@ export const Account = graphql(
       ...Username
     }
   }`,
-  [AccountMetadata, LoggedInAccountOperations, Username],
+  [Username],
 );
 export type Account = FragmentOf<typeof Account>;
 
