@@ -1,6 +1,7 @@
-import type { EvmAddress, Result } from '@lens-social/types';
-import type { UUID } from '@lens-social/types';
-import { type IdToken, err, ok } from '@lens-social/types';
+import type { Role } from '@lens-protocol/graphql';
+import type { EvmAddress, Result } from '@lens-protocol/types';
+import type { UUID } from '@lens-protocol/types';
+import { type IdToken, err, ok } from '@lens-protocol/types';
 import { jwtDecode } from 'jwt-decode';
 import { UnexpectedError } from './errors';
 
@@ -49,6 +50,16 @@ export interface IdTokenClaims {
    * This is useful for Account Managers to specify the Account address they can act on behalf of.
    */
   act?: ActorClaim | null;
+
+  /**
+   * Sponsored - a boolean indicating if the Account is sponsored.
+   */
+  'tag:lens.dev,2024:sponsored': boolean;
+
+  /**
+   * Role - the authenticated role of the user.
+   */
+  'tag:lens.dev,2024:role': Role;
 }
 
 /**

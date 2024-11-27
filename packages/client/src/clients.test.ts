@@ -1,16 +1,17 @@
-import { local } from '@lens-social/env';
-import { url, assertErr, assertOk, evmAddress, signatureFrom } from '@lens-social/types';
+import { local } from '@lens-protocol/env';
+import { url, assertErr, assertOk, evmAddress, signatureFrom } from '@lens-protocol/types';
 
 import { privateKeyToAccount } from 'viem/accounts';
 import { describe, expect, it } from 'vitest';
 
-import { HealthQuery } from '@lens-social/graphql';
-import { currentAuthentication } from './actions';
+import { HealthQuery, Role } from '@lens-protocol/graphql';
+import { currentSession } from './actions';
 import { PublicClient } from './clients';
 import { UnexpectedError } from './errors';
 
 const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
-const account = evmAddress(signer.address);
+const owner = evmAddress(signer.address);
+const account = evmAddress(import.meta.env.ACCOUNT);
 const app = evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3');
 
 describe(`Given an instance of the ${PublicClient.name}`, () => {
@@ -22,28 +23,27 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
   describe('When authenticating via the low-level methods', () => {
     it('Then it should authenticate and stay authenticated', async () => {
       const challenge = await client.challenge({
-        request: {
-          address: account,
-          signedBy: account,
+        accountOwner: {
+          account,
+          owner,
           app,
         },
       });
       assertOk(challenge);
 
       const authenticated = await client.authenticate({
-        request: {
-          id: challenge.value.id,
-          signature: signatureFrom(await signer.signMessage({ message: challenge.value.text })),
-        },
+        id: challenge.value.id,
+        signature: signatureFrom(await signer.signMessage({ message: challenge.value.text })),
       });
 
       assertOk(authenticated);
 
-      const principal = await authenticated.value.getPrincipal();
-      assertOk(principal);
-      expect(principal.value).toMatchObject({
+      const user = await authenticated.value.getAuthenticatedUser();
+      assertOk(user);
+      expect(user.value).toMatchObject({
+        role: Role.AccountOwner,
         account: account.toLowerCase(),
-        signer: account.toLowerCase(),
+        owner: owner.toLowerCase(),
       });
     });
   });
@@ -51,9 +51,9 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
   describe('When authenticating via the `login` convenience method', () => {
     it('Then it should return an Err<never, SigningError> with any error thrown by the provided `SignMessage` function', async () => {
       const authenticated = await client.login({
-        request: {
-          address: account,
-          signedBy: account,
+        accountOwner: {
+          account,
+          owner,
           app,
         },
         signMessage: async () => {
@@ -68,9 +68,9 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
   describe('When resuming an authenticated session', () => {
     it('Then it should return a SessionClient instance associated with the credentials in the storage', async () => {
       await client.login({
-        request: {
-          address: account,
-          signedBy: account,
+        accountOwner: {
+          account,
+          owner,
           app,
         },
         signMessage: (message) => signer.signMessage({ message }),
@@ -79,9 +79,9 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
       const authenticated = await client.resumeSession();
       assertOk(authenticated);
 
-      const authentication = await currentAuthentication(authenticated.value);
+      const authentication = await currentSession(authenticated.value);
       expect(authentication._unsafeUnwrap()).toMatchObject({
-        signer: account,
+        signer: owner,
         app,
       });
     });

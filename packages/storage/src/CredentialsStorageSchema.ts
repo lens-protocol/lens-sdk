@@ -1,5 +1,5 @@
-import { accessToken, idToken, refreshToken } from '@lens-social/types';
-import type { AccessToken, IdToken, RefreshToken } from '@lens-social/types';
+import { accessToken, idToken, refreshToken } from '@lens-protocol/types';
+import type { AccessToken, IdToken, RefreshToken } from '@lens-protocol/types';
 
 import { z } from 'zod';
 

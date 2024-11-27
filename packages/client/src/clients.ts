@@ -1,12 +1,12 @@
-import type { EnvironmentConfig } from '@lens-social/env';
-import { AuthenticateMutation, ChallengeMutation } from '@lens-social/graphql';
+import type { EnvironmentConfig } from '@lens-protocol/env';
+import { AuthenticateMutation, ChallengeMutation } from '@lens-protocol/graphql';
 import type {
-  AuthenticateVariables,
   AuthenticationChallenge,
-  ChallengeVariables,
-} from '@lens-social/graphql';
-import type { Credentials, IStorage, IStorageProvider } from '@lens-social/storage';
-import { InMemoryStorageProvider, createCredentialsStorage } from '@lens-social/storage';
+  ChallengeRequest,
+  SignedAuthChallenge,
+} from '@lens-protocol/graphql';
+import type { Credentials, IStorage, IStorageProvider } from '@lens-protocol/storage';
+import { InMemoryStorageProvider, createCredentialsStorage } from '@lens-protocol/storage';
 import {
   ResultAsync,
   errAsync,
@@ -14,7 +14,7 @@ import {
   never,
   okAsync,
   signatureFrom,
-} from '@lens-social/types';
+} from '@lens-protocol/types';
 import {
   type AnyVariables,
   type Operation,
@@ -28,7 +28,7 @@ import {
 } from '@urql/core';
 import { type Logger, getLogger } from 'loglevel';
 
-import type { EvmAddress } from '@lens-social/types';
+import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
 import {
   AuthenticationError,
   GraphQLErrorCode,
@@ -96,7 +96,7 @@ type ClientContext = {
 
 export type SignMessage = (message: string) => Promise<string>;
 
-export type LoginParams = ChallengeVariables & {
+export type LoginParams = ChallengeRequest & {
   signMessage: SignMessage;
 };
 
@@ -223,18 +223,16 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
   /**
    * Generate a new authentication challenge for the given account and app.
    */
-  challenge({
-    request,
-  }: ChallengeVariables): ResultAsync<AuthenticationChallenge, UnexpectedError> {
+  challenge(request: ChallengeRequest): ResultAsync<AuthenticationChallenge, UnexpectedError> {
     return this.mutation(ChallengeMutation, { request });
   }
 
   /**
    * Authenticate the user with the signed authentication challenge.
    */
-  authenticate({
-    request,
-  }: AuthenticateVariables): ResultAsync<SessionClient, AuthenticationError | UnexpectedError> {
+  authenticate(
+    request: SignedAuthChallenge,
+  ): ResultAsync<SessionClient, AuthenticationError | UnexpectedError> {
     return this.mutation(AuthenticateMutation, { request })
       .andThen((result) => {
         if (result.__typename === 'AuthenticationTokens') {
@@ -248,13 +246,23 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
       });
   }
 
-  login(
-    params: LoginParams,
-  ): ResultAsync<SessionClient, AuthenticationError | SigningError | UnexpectedError> {
-    return this.challenge(params)
+  /**
+   * Log in into Lens.
+   *
+   * @param params - The login parameters.
+   * @returns The SessionClient if the login was successful.
+   */
+  login({
+    signMessage,
+    ...request
+  }: LoginParams): ResultAsync<
+    SessionClient,
+    AuthenticationError | SigningError | UnexpectedError
+  > {
+    return this.challenge(request)
       .map(async (challenge) => ({
         challenge,
-        signature: await ResultAsync.fromPromise(params.signMessage(challenge.text), (err) =>
+        signature: await ResultAsync.fromPromise(signMessage(challenge.text), (err) =>
           SigningError.from(err),
         ),
       }))
@@ -264,10 +272,8 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
         }
 
         return this.authenticate({
-          request: {
-            id: challenge.id,
-            signature: signatureFrom(signature.value),
-          },
+          id: challenge.id,
+          signature: signatureFrom(signature.value),
         });
       });
   }
@@ -330,22 +336,6 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
 }
 
 /**
- * Represents an authenticated entity within the system, containing key addresses for identity and authorization.
- */
-export type Principal = {
-  /**
-   * The Account address.
-   * */
-  account: EvmAddress;
-  /**
-   * The signer address.
-   *
-   * If different from the account address, this is the address of an Account Manager for it.
-   */
-  signer: EvmAddress;
-};
-
-/**
  * The client to interact with the protected queries and mutations of the Lens GraphQL API.
  *
  * @privateRemarks Intentionally not exported.
@@ -370,7 +360,7 @@ class SessionClient extends AbstractClient<UnauthenticatedError | UnexpectedErro
   /**
    * @internal
    */
-  getPrincipal(): ResultAsync<Principal, UnexpectedError> {
+  getAuthenticatedUser(): ResultAsync<AuthenticatedUser, UnexpectedError> {
     return this.getCredentials().andThen((credentials) => {
       if (!credentials) {
         return UnexpectedError.from('No credentials found').asResultAsync();
@@ -382,10 +372,7 @@ class SessionClient extends AbstractClient<UnauthenticatedError | UnexpectedErro
         return claims.error.asResultAsync();
       }
 
-      return okAsync({
-        account: claims.value.act ? claims.value.act.sub : claims.value.sub,
-        signer: claims.value.sub,
-      });
+      return authenticatedUser(claims.value);
     });
   }
 

@@ -1,7 +1,7 @@
 {
-  "name": "@lens-social/sdk",
+  "name": "lens-sdk",
   "version": "0.0.0",
-  "description": "The quickest way to build on top of Lens Social.",
+  "description": "The quickest way to build on top of Lens.",
   "private": true,
   "type": "module",
   "workspaces": ["packages/*"],
@@ -16,13 +16,14 @@
     "lint": "biome check",
     "lint:fix": "biome check --write",
     "new:lib": "NODE_OPTIONS='--import tsx' plop --plopfile=plopfile.ts",
-    "test:client": "vitest --project @lens-social/client",
-    "test:react": "vitest --project @lens-social/react",
-    "test:storage": "vitest --project @lens-social/storage",
+    "test:client": "vitest --project @lens-protocol/client",
+    "test:react": "vitest --project @lens-protocol/react",
+    "test:storage": "vitest --project @lens-protocol/storage",
     "test": "vitest"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@changesets/cli": "^2.27.10",
     "@types/node": "^22.7.8",
     "jest-extended": "^4.0.2",
     "plop": "^4.0.1",

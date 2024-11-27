@@ -1,5 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
+import { Username } from './username';
 
 export const LoggedInAccountOperations = graphql(
   `fragment LoggedInAccountOperations on LoggedInAccountOperations {
@@ -31,15 +32,29 @@ export const Account = graphql(
   `fragment Account on Account {
     __typename
     address
+    username{
+      ...Username
+    }
+  }`,
+  [AccountMetadata, LoggedInAccountOperations, Username],
+);
+export type Account = FragmentOf<typeof Account>;
+
+export const FullAccount = graphql(
+  `fragment Account on Account {
+    __typename
+    address
     score
     metadata {
       ...AccountMetadata
     }
-    username
+    username{
+      ...Username
+    }
     operations {
       ...LoggedInAccountOperations
     }
   }`,
-  [AccountMetadata, LoggedInAccountOperations],
+  [AccountMetadata, LoggedInAccountOperations, Username],
 );
-export type Account = FragmentOf<typeof Account>;
+export type FullAccount = FragmentOf<typeof FullAccount>;

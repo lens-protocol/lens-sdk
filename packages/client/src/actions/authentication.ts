@@ -1,19 +1,19 @@
 import type {
-  AuthenticatedSessionResult,
-  AuthenticatedSessionsVariables,
-  LegacyRolloverRefreshVariables,
+  AuthenticatedSession,
+  AuthenticatedSessionsRequest,
+  RefreshRequest,
   RefreshResult,
-  RefreshVariables,
-  RevokeAuthenticationVariables,
-} from '@lens-social/graphql';
+  RevokeAuthenticationRequest,
+  RolloverRefreshRequest,
+} from '@lens-protocol/graphql';
 import {
   AuthenticatedSessionsQuery,
   CurrentSessionQuery,
   LegacyRolloverRefreshMutation,
   RefreshMutation,
   RevokeAuthenticationMutation,
-} from '@lens-social/graphql';
-import type { ResultAsync } from '@lens-social/types';
+} from '@lens-protocol/graphql';
+import type { ResultAsync } from '@lens-protocol/types';
 
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
@@ -23,15 +23,15 @@ import type { Paginated } from '../types';
  * Get the AuthenticatedSession associated with the authenticated Account.
  *
  * ```ts
- * const result = await currentAuthentication(sessionClient);
+ * const result = await currentSession(sessionClient);
  * ```
  *
  * @param client - The session client.
  * @returns The current AuthenticatedSession details.
  */
-export function currentAuthentication(
+export function currentSession(
   client: SessionClient,
-): ResultAsync<AuthenticatedSessionResult, UnauthenticatedError | UnexpectedError> {
+): ResultAsync<AuthenticatedSession, UnauthenticatedError | UnexpectedError> {
   return client.query(CurrentSessionQuery, {});
 }
 
@@ -40,19 +40,17 @@ export function currentAuthentication(
  *
  * ```ts
  * const result = await revokeAuthentication(sessionClient, {
- *   request: {
- *     authenticationId: uuid(),
- *   },
+ *   authenticationId: 'f4dd2ea1-58d4-4210-86a2-67b7571f241a',
  * });
  * ```
  *
  * @param client - The session client for the authenticated Account.
- * @param variables - The revoke authentication request variables.
+ * @param request - The mutation request.
  * @returns Void if the operation was successful.
  */
 export function revokeAuthentication(
   client: SessionClient,
-  { request }: RevokeAuthenticationVariables,
+  request: RevokeAuthenticationRequest,
 ): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
   return client.mutation(RevokeAuthenticationMutation, { request });
 }
@@ -62,19 +60,17 @@ export function revokeAuthentication(
  *
  * ```ts
  * const result = await refresh(anyClient, {
- *  request: {
- *   refreshToken: string
- *  },
+ *   refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5c…'
  * });
  * ```
  *
  * @param client - Any Lens client.
- * @param variables - The refresh request variables.
+ * @param request - The mutation request.
  * @returns The refreshed authentication tokens if the operation was successful.
  */
 export function refresh(
   client: AnyClient,
-  { request }: RefreshVariables,
+  request: RefreshRequest,
 ): ResultAsync<RefreshResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(RefreshMutation, { request });
 }
@@ -83,23 +79,17 @@ export function refresh(
  * Fetch the authenticated sessions associated with the authenticated Account.
  *
  * ```ts
- * const result = await fetchActiveAuthentications(sessionClient, {
- *  request: {
- *   cursor?: cursor;
- *   pageSize?: "TEN" | "FIFTY";
- *   app?: evmAddress("0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3");
- *  },
- * });
+ * const result = await fetchActiveAuthentications(sessionClient);
  * ```
  *
  * @param client - The session client for the authenticated Account.
- * @param variables - The refresh request variables.
+ * @param request - The query request.
  * @returns The paginated authenticated sessions associated with the authenticated Account.
  */
 export function fetchActiveAuthentications(
   client: SessionClient,
-  { request }: AuthenticatedSessionsVariables,
-): ResultAsync<Paginated<AuthenticatedSessionResult>, UnexpectedError> {
+  request: AuthenticatedSessionsRequest = {},
+): ResultAsync<Paginated<AuthenticatedSession>, UnexpectedError> {
   return client.query(AuthenticatedSessionsQuery, { request });
 }
 
@@ -113,21 +103,19 @@ export function fetchActiveAuthentications(
  *
  * ```ts
  * const result = await legacyRolloverRefresh(sessionClient, {
- *  request: {
- *    refreshToken: string,
- *    app: evmAddress("0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3"),
- *  },
+ *   refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5c…',
+ *   app: evmAddress("0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3"),
  * });
  * ```
  *
  * @param client - The client to use for the rollover refresh operation.
- * @param variables - The rollover refresh request variables.
+ * @param request - The mutation request.
  * @returns The refreshed authentication tokens if the operation was successful.
  */
 
 export function legacyRolloverRefresh(
   client: SessionClient,
-  { request }: LegacyRolloverRefreshVariables,
+  request: RolloverRefreshRequest,
 ): ResultAsync<RefreshResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(LegacyRolloverRefreshMutation, { request });
 }

@@ -1,11 +1,11 @@
-import type { FragmentOf, VariablesOf } from 'gql.tada';
+import type { FragmentOf } from 'gql.tada';
 import {
   PaginatedResultInfo,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
 } from '../fragments';
-import { graphql } from '../graphql';
+import { type RequestOf, graphql } from '../graphql';
 
 const AccountManager = graphql(
   `fragment AccountManager on AccountManager {
@@ -36,7 +36,8 @@ export const AccountManagersQuery = graphql(
   }`,
   [AccountManager, PaginatedResultInfo],
 );
-export type AccountManagersVariables = VariablesOf<typeof AccountManagersQuery>;
+
+export type AccountManagersRequest = RequestOf<typeof AccountManagersQuery>;
 
 const AddAccountManagerResult = graphql(
   `fragment AddAccountManagerResult on AddAccountManagerResult{
@@ -62,7 +63,7 @@ export const AddAccountManagerMutation = graphql(
   }`,
   [AddAccountManagerResult],
 );
-export type AddAccountManagerVariables = VariablesOf<typeof AddAccountManagerMutation>;
+export type AddAccountManagerRequest = RequestOf<typeof AddAccountManagerMutation>;
 
 const RemoveAccountManagerResult = graphql(
   `fragment RemoveAccountManagerResult on RemoveAccountManagerResult{
@@ -88,4 +89,4 @@ export const RemoveAccountManagerMutation = graphql(
   }`,
   [RemoveAccountManagerResult],
 );
-export type RemoveAccountManagerVariables = VariablesOf<typeof RemoveAccountManagerMutation>;
+export type RemoveAccountManagerRequest = RequestOf<typeof RemoveAccountManagerMutation>;

@@ -1,8 +1,8 @@
 import { type TypeOf, z } from 'zod';
 
-import { never } from '@lens-social/types';
-import { InvariantError } from '@lens-social/types';
-import { Deferred } from '@lens-social/types';
+import { never } from '@lens-protocol/types';
+import { InvariantError } from '@lens-protocol/types';
+import { Deferred } from '@lens-protocol/types';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { BaseStorageSchema, type IStorageItem, SchemaMismatchError } from './BaseStorageSchema';
 import { Storage } from './Storage';

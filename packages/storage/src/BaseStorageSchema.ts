@@ -1,4 +1,4 @@
-import { assertError, invariant } from '@lens-social/types';
+import { assertError, invariant } from '@lens-protocol/types';
 import { z } from 'zod';
 
 /**

@@ -1,6 +1,6 @@
-import { PublicClient } from '@lens-social/client';
-import { local } from '@lens-social/env';
-import { assertOk, evmAddress } from '@lens-social/types';
+import { PublicClient } from '@lens-protocol/client';
+import { local } from '@lens-protocol/env';
+import { assertOk, evmAddress } from '@lens-protocol/types';
 import { privateKeyToAccount } from 'viem/accounts';
 import { describe, expect, it } from 'vitest';
 

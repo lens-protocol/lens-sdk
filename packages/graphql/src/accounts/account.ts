@@ -1,11 +1,11 @@
-import type { FragmentOf, VariablesOf } from 'gql.tada';
+import type { FragmentOf } from 'gql.tada';
 import {
   Account,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
 } from '../fragments';
-import { graphql } from '../graphql';
+import { type RequestOf, graphql } from '../graphql';
 
 export const AccountQuery = graphql(
   `query Account($request: AccountRequest!) {
@@ -15,7 +15,8 @@ export const AccountQuery = graphql(
   }`,
   [Account],
 );
-export type AccountQueryVariables = VariablesOf<typeof AccountQuery>;
+
+export type AccountRequest = RequestOf<typeof AccountQuery>;
 
 const SetAccountMetadataResponse = graphql(
   `fragment SetAccountMetadataResponse on SetAccountMetadataResponse {
@@ -60,7 +61,8 @@ export const SetAccountMetadataMutation = graphql(
   }`,
   [SetAccountMetadataResult],
 );
-export type SetAccountMetadataVariables = VariablesOf<typeof SetAccountMetadataMutation>;
+
+export type SetAccountMetadataRequest = RequestOf<typeof SetAccountMetadataMutation>;
 
 const CreateAccountResponse = graphql(
   `fragment CreateAccountResponse on CreateAccountResponse {
@@ -106,6 +108,4 @@ export const CreateAccountWithUsernameMutation = graphql(
   [CreateAccountWithUsernameResult],
 );
 
-export type CreateAccountWithUsernameVariables = VariablesOf<
-  typeof CreateAccountWithUsernameMutation
->;
+export type CreateAccountWithUsernameRequest = RequestOf<typeof CreateAccountWithUsernameMutation>;

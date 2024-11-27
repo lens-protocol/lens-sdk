@@ -1,7 +1,7 @@
 {
-  "name": "@lens-social/env",
+  "name": "@lens-protocol/env",
   "version": "0.0.0",
-  "description": "The Lens Social environments.",
+  "description": "The Lens environments.",
   "repository": {
     "directory": "packages/env",
     "type": "git",
@@ -29,7 +29,7 @@
     "build": "tsup"
   },
   "dependencies": {
-    "@lens-social/types": "workspace:*"
+    "@lens-protocol/types": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.7.8",

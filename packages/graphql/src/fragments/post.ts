@@ -18,7 +18,6 @@ export type RecipientDataOutput = FragmentOf<typeof RecipientDataOutput>;
 export const SimpleCollectActionSettings = graphql(
   `fragment SimpleCollectActionSettings on SimpleCollectActionSettings {
     __typename
-    type
     contract {
       ...NetworkAddress
     }
@@ -42,7 +41,6 @@ export type SimpleCollectActionSettings = FragmentOf<typeof SimpleCollectActionS
 export const UnknownActionSettings = graphql(
   `fragment UnknownActionSettings on UnknownActionSettings {
     __typename
-    type
     initializeCalldata
     initializeResultData
     verified

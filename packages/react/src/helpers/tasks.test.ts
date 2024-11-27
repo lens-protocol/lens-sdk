@@ -1,6 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 
-import { errAsync, okAsync } from '@lens-social/types';
+import { errAsync, okAsync } from '@lens-protocol/types';
 import { describe, expect, it } from 'vitest';
 import {
   type AsyncTaskError,

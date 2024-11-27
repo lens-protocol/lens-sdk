@@ -1,5 +1,5 @@
 {
-  "name": "@lens-social/react",
+  "name": "@lens-protocol/react",
   "version": "0.0.0",
   "description": "The official React bindings for the Lens Protocol",
   "repository": {
@@ -30,10 +30,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@lens-social/client": "workspace:*",
-    "@lens-social/env": "workspace:*",
-    "@lens-social/graphql": "workspace:*",
-    "@lens-social/types": "workspace:*",
+    "@lens-protocol/client": "workspace:*",
+    "@lens-protocol/env": "workspace:*",
+    "@lens-protocol/graphql": "workspace:*",
+    "@lens-protocol/types": "workspace:*",
     "urql": "^4.2.0"
   },
   "devDependencies": {

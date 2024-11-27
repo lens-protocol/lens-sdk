@@ -1,4 +1,4 @@
-import { type ResultAsync, invariant } from '@lens-social/types';
+import { type ResultAsync, invariant } from '@lens-protocol/types';
 import { useCallback, useState } from 'react';
 
 /**

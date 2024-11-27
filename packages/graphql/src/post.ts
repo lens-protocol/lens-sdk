@@ -1,25 +1,14 @@
-import type { FragmentOf, VariablesOf } from 'gql.tada';
+import type { FragmentOf } from 'gql.tada';
 import {
   AccountPostReaction,
   ActionInfo,
   AnyPost,
   PaginatedResultInfo,
-  Post,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
 } from './fragments';
-import { graphql } from './graphql';
-
-// List of query and mutation operations related to posts
-// The operations are:
-// - PostMutation
-// - RepostMutation
-// - EditPostMutation
-// - PostQuery
-// - PostActionsQuery
-// - PostReactionsQuery
-// - PostBookmarksQuery
+import { type RequestOf, graphql } from './graphql';
 
 const PostResponse = graphql(
   `fragment PostResponse on PostResponse {
@@ -56,7 +45,7 @@ export const PostMutation = graphql(
   }`,
   [PostResult],
 );
-export type PostVariables = VariablesOf<typeof PostMutation>;
+export type CreatePostRequest = RequestOf<typeof PostMutation>;
 
 export const RepostMutation = graphql(
   `mutation Repost($request: CreateRepostRequest!) {
@@ -66,7 +55,7 @@ export const RepostMutation = graphql(
   }`,
   [PostResult],
 );
-export type RepostVariables = VariablesOf<typeof RepostMutation>;
+export type CreateRepostRequest = RequestOf<typeof RepostMutation>;
 
 export const EditPostMutation = graphql(
   `mutation EditPost($request: EditPostRequest!) {
@@ -76,7 +65,7 @@ export const EditPostMutation = graphql(
   }`,
   [PostResult],
 );
-export type EditPostVariables = VariablesOf<typeof EditPostMutation>;
+export type EditPostRequest = RequestOf<typeof EditPostMutation>;
 
 export const PostQuery = graphql(
   `query Post($request: PostRequest!) {
@@ -86,7 +75,7 @@ export const PostQuery = graphql(
   }`,
   [AnyPost],
 );
-export type PostQueryVariables = VariablesOf<typeof PostQuery>;
+export type PostRequest = RequestOf<typeof PostQuery>;
 
 export const PostActionsQuery = graphql(
   `query PostActions($request: PostActionsRequest!) {
@@ -101,7 +90,7 @@ export const PostActionsQuery = graphql(
   }`,
   [ActionInfo, PaginatedResultInfo],
 );
-export type PostActionsVariables = VariablesOf<typeof PostActionsQuery>;
+export type PostActionsRequest = RequestOf<typeof PostActionsQuery>;
 
 export const PostReactionsQuery = graphql(
   `query PostReactions($request: PostReactionsRequest!) {
@@ -116,37 +105,37 @@ export const PostReactionsQuery = graphql(
   }`,
   [AccountPostReaction, PaginatedResultInfo],
 );
-export type PostReactionsVariables = VariablesOf<typeof PostReactionsQuery>;
+export type PostReactionsRequest = RequestOf<typeof PostReactionsQuery>;
 
 export const PostBookmarksQuery = graphql(
   `query PostBookmarks($request: PostBookmarksRequest!) {
     value: postBookmarks(request: $request) {
       items {
-        ...Post
+        ...AnyPost
       },
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }`,
-  [Post, PaginatedResultInfo],
+  [AnyPost, PaginatedResultInfo],
 );
-export type PostBookmarksVariables = VariablesOf<typeof PostBookmarksQuery>;
+export type PostBookmarksRequest = RequestOf<typeof PostBookmarksQuery>;
 
 export const PostReferencesQuery = graphql(
   `query PostReferences($request: PostReferencesRequest!) {
     value: postReferences(request: $request) {
       items {
-        ...Post
+        ...AnyPost
       },
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }`,
-  [Post, PaginatedResultInfo],
+  [AnyPost, PaginatedResultInfo],
 );
-export type PostReferencesVariables = VariablesOf<typeof PostReferencesQuery>;
+export type PostReferencesRequest = RequestOf<typeof PostReferencesQuery>;
 
 const AddReactionResult = graphql(
   `fragment AddReactionResult on AddReactionResult {
@@ -170,7 +159,7 @@ export const AddReactionMutation = graphql(
   }`,
   [AddReactionResult],
 );
-export type AddReactionVariables = VariablesOf<typeof AddReactionMutation>;
+export type AddReactionRequest = RequestOf<typeof AddReactionMutation>;
 
 const UndoReactionResult = graphql(
   `fragment UndoReactionResult on UndoReactionResult {
@@ -194,18 +183,18 @@ export const UndoReactionMutation = graphql(
   }`,
   [UndoReactionResult],
 );
-export type UndoReactionVariables = VariablesOf<typeof UndoReactionMutation>;
+export type UndoReactionRequest = RequestOf<typeof UndoReactionMutation>;
 
 export const BookmarkPostMutation = graphql(
   `mutation BookmarkPost($request: BookmarkPostRequest!) {
     value: bookmarkPost(request: $request) 
   }`,
 );
-export type BookmarkPostVariables = VariablesOf<typeof BookmarkPostMutation>;
+export type BookmarkPostRequest = RequestOf<typeof BookmarkPostMutation>;
 
 export const UndoBookmarkPostMutation = graphql(
   `mutation UndoBookmarkPost($request: BookmarkPostRequest!) {
     value: undoBookmarkPost(request: $request) 
   }`,
 );
-export type UndoBookmarkPostVariables = VariablesOf<typeof UndoBookmarkPostMutation>;
+export type UndoBookmarkPostRequest = RequestOf<typeof UndoBookmarkPostMutation>;

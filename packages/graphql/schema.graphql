@@ -18,6 +18,12 @@ scalar AccessToken
 type Account {
   address: EvmAddress!
 
+  """
+  The owner of the account - note if the Account is not a lens account this will return the
+  address of the account itself.
+  """
+  owner: EvmAddress!
+
   """The score of the account."""
   score: Int!
 
@@ -25,19 +31,10 @@ type Account {
   metadata: AccountMetadata
 
   """The username linked to the account."""
-  username: UsernameValue
+  username(request: AccountUsernameRequest): Username
 
   """The operations for the account."""
   operations: LoggedInAccountOperations
-}
-
-input AccountAuthenticationsRequest {
-  """
-  You can optionally filter the authentications by the app that created them.
-  """
-  app: EvmAddress
-  pageSize: PageSize
-  cursor: Cursor
 }
 
 union AccountAvailable = AccountManaged | AccountOwned
@@ -75,18 +72,8 @@ input AccountFeedsStatsRequest {
   account: EvmAddress!
 
   """The feeds to get stats for."""
-  forFeeds: [EvmAddress!]! = ["0x42cedc904968EC64890478a6c786537F43228D88"]
+  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
 }
-
-type AccountFollowRuleError {
-  error: AccountFollowRuleErrorType!
-}
-
-enum AccountFollowRuleErrorType {
-  UNKNOWN
-}
-
-union AccountFollowRuleResult = SetAccountFollowRuleResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | AccountFollowRuleError
 
 type AccountGraphsFollowStats {
   """The total number of followers."""
@@ -101,7 +88,7 @@ input AccountGraphsStatsRequest {
   account: EvmAddress!
 
   """The graphs to get stats for."""
-  forGraphs: [EvmAddress!]! = ["0xc1Ec3C7a6F7AdA7bd1A6FE697A22158f7111061b"]
+  forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
 }
 
 type AccountManaged {
@@ -127,6 +114,24 @@ type AccountManager {
 
   """The date the account manager was added."""
   addedAt: DateTime!
+}
+
+input AccountManagerChallengeRequest {
+  """
+  The App you intend to authenticate with.
+  
+  It MUST be a valid App address.
+  Note: On the testnet, it will default to `0x90C8C68D0ABFB40D4FCD72316A65E42161520BC3`, the
+  playground app. This is to make it easier if you forget to set it. This may change in the
+  future.
+  """
+  app: EvmAddress! = "0xe5439696f4057aF073c0FB2dc6e5e755392922e1"
+
+  """The address of the Lens Account."""
+  account: EvmAddress!
+
+  """The address of the Account Manager."""
+  manager: EvmAddress!
 }
 
 type AccountManagerPermissions {
@@ -159,19 +164,32 @@ input AccountManagerPermissionsInput {
 
 input AccountManagersRequest {
   """The page size."""
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor
 }
 
-type AccountMetadata {
-  """
-  The App Id that this Profile data refers to. If omitted the data is considered to be the
-  global Profile data.
-  """
-  appId: AppId
+type AccountMention {
+  """The account that was mentioned."""
+  account: EvmAddress!
 
+  """The namespace that was used in a mention."""
+  namespace: EvmAddress!
+
+  """
+  The replacement information.
+  Use to replace mentions in the post content.
+  """
+  replace: AccountMentionReplace!
+}
+
+type AccountMentionReplace {
+  from: String!
+  to: String!
+}
+
+type AccountMetadata {
   """
   A bag of attributes that can be used to store any kind of metadata that is not currently
   supported by the standard. Over time, common attributes will be added to the standard and
@@ -179,10 +197,10 @@ type AccountMetadata {
   """
   attributes: [MetadataAttribute!]!
 
-  """The profile bio as markdown."""
+  """The Account bio as markdown."""
   bio: String
 
-  """The profile cover picture."""
+  """The Account cover picture."""
   coverPicture: URI
 
   """
@@ -191,10 +209,10 @@ type AccountMetadata {
   """
   id: String!
 
-  """The profile display name."""
+  """The Account display name."""
   name: String
 
-  """The profile picture."""
+  """The Account picture."""
   picture: URI
 }
 
@@ -204,6 +222,24 @@ type AccountOwned {
 
   """The date the account was created."""
   addedAt: DateTime!
+}
+
+input AccountOwnerChallengeRequest {
+  """
+  The App you intend to authenticate with.
+  
+  It MUST be a valid App address.
+  Note: On the testnet, it will default to `0x90C8C68D0ABFB40D4FCD72316A65E42161520BC3`, the
+  playground app. This is to make it easier if you forget to set it. This may change in the
+  future.
+  """
+  app: EvmAddress! = "0xe5439696f4057aF073c0FB2dc6e5e755392922e1"
+
+  """The address of the Lens Account."""
+  account: EvmAddress!
+
+  """The address of the Account Owner."""
+  owner: EvmAddress!
 }
 
 type AccountPostReaction {
@@ -222,32 +258,35 @@ input AccountRequest {
   address: EvmAddress
 
   """The username."""
-  username: UsernameValue
+  username: UsernameInput
 
   """The legacy profile ID."""
   legacyProfileId: LegacyProfileId
+
+  """The transaction hash you created the account with."""
+  txHash: TxHash
 }
 
 enum AccountSearchOrderBy {
-  USERNAME_PREFIX_ORDER
+  DEFAULT
   ACCOUNT_SCORE
 }
 
 input AccountSearchRequest {
-  """The page size."""
-  pageSize: Int
-
-  """The cursor."""
-  cursor: Cursor
-
   """The local name to search for."""
   localName: String!
 
-  """The username prefix to search for."""
+  """Optional. The username prefix to search for."""
   namespace: [String!]
 
   """The order by."""
-  orderBy: AccountSearchOrderBy
+  orderBy: AccountSearchOrderBy! = DEFAULT
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
 }
 
 type AccountStats {
@@ -263,43 +302,37 @@ input AccountStatsRequest {
   account: EvmAddress!
 
   """The feeds to get stats for."""
-  forFeeds: [EvmAddress!]! = ["0x42cedc904968EC64890478a6c786537F43228D88"]
+  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
 
   """The graphs to get stats for."""
-  forGraphs: [EvmAddress!]! = ["0xc1Ec3C7a6F7AdA7bd1A6FE697A22158f7111061b"]
+  forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
 }
 
 input AccountUsernameRequest {
-  """The page size."""
-  pageSize: Int
-
-  """The cursor."""
-  cursor: Cursor
-
-  """The account or address to get owned usernames for."""
-  owner: EvmAddress!
+  """The namespace to get account assigned username"""
+  namespace: EvmAddress! = "0x6Cc71E78e25eBF6A2525CadC1fc628B42AE4138f"
 }
 
 input AccountsAvailableRequest {
-  """The page size."""
-  pageSize: PageSize
-
-  """The cursor."""
-  cursor: Cursor
-
   """The account to get managed by."""
   managedBy: EvmAddress!
 
-  """Whether to include owned accounts."""
-  includeOwned: Boolean
+  """Whether to include owned accounts. Defaults to true."""
+  includeOwned: Boolean! = true
 
   """The visibility of hidden accounts."""
-  hiddenFilter: ManagedAccountsVisibility
+  hiddenFilter: ManagedAccountsVisibility! = ALL
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
 }
 
 input AccountsBlockedRequest {
   """The page size."""
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor
@@ -310,7 +343,7 @@ input AccountsRequest {
   addresses: [EvmAddress!]
 
   """The usernames to get."""
-  usernames: [UsernameValue!]
+  usernames: [UsernameInput!]
 
   """The legacy profile IDs to get."""
   legacyProfileIds: [LegacyProfileId!]
@@ -356,7 +389,7 @@ input AddReactionRequest {
   reaction: PostReactionType!
 
   """The post to react to."""
-  postId: PostId!
+  post: PostId!
 }
 
 type AddReactionResponse {
@@ -453,13 +486,11 @@ type App {
   graphAddress: EvmAddress
   sponsorshipAddress: EvmAddress
   defaultFeedAddress: EvmAddress
-  usernameAddress: EvmAddress
+  namespaceAddress: EvmAddress
   treasuryAddress: EvmAddress
   createdAt: DateTime!
   metadata: AppMetadata
 }
-
-scalar AppId
 
 type AppMetadata {
   """
@@ -486,7 +517,7 @@ type AppMetadata {
   termsOfService: URI
 
   """The url of the app."""
-  url: String!
+  url: URI!
 }
 
 enum AppMetadataLensPlatformsItem {
@@ -496,7 +527,11 @@ enum AppMetadataLensPlatformsItem {
 }
 
 input AppRequest {
-  app: EvmAddress!
+  """The app"""
+  app: EvmAddress
+
+  """The transaction hash you created the app with."""
+  txHash: TxHash
 }
 
 enum AppsOrderBy {
@@ -506,15 +541,12 @@ enum AppsOrderBy {
 }
 
 input AppsRequest {
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
   cursor: Cursor
   orderBy: AppsOrderBy! = LATEST_FIRST
 }
 
 type ArticleMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """Any attachment you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -529,14 +561,11 @@ type ArticleMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
-  mainContentFocus: String!
+  """The main focus of the post."""
+  mainContentFocus: MainContentFocus!
 
   """An arbitrary list of tags."""
   tags: [Tag!]
@@ -547,32 +576,17 @@ type ArticleMetadata {
 
 union Asset = Erc20
 
-type AssignUsernameToAccountError {
-  error: AssignUsernameToAccountErrorType!
-}
-
-enum AssignUsernameToAccountErrorType {
-  UNKNOWN
-  USERNAME_ALREADY_ASSIGNED
-  INVALID_USERNAME
-  UNAUTHORIZED
-}
-
-input AssignUsernameToAccountRequest {
-  usernameAddress: EvmAddress!
-  accountUsernameId: String!
-}
-
-type AssignUsernameToAccountResponse {
+type AssignUsernameResponse {
   hash: TxHash!
 }
 
-union AssignUsernameToAccountResult = AssignUsernameToAccountResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | AssignUsernameToAccountError
+input AssignUsernameToAccountRequest {
+  username: UsernameInput!
+}
+
+union AssignUsernameToAccountResult = AssignUsernameResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type AudioMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -587,14 +601,11 @@ type AudioMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
-  mainContentFocus: String!
+  """The main focus of the post."""
+  mainContentFocus: MainContentFocus!
 
   """An arbitrary list of tags."""
   tags: [Tag!]
@@ -614,6 +625,15 @@ type AuthenticatedSession {
   signer: EvmAddress!
   createdAt: DateTime!
   updatedAt: DateTime!
+}
+
+input AuthenticatedSessionsRequest {
+  """
+  You can optionally filter the authentications by the app that created them.
+  """
+  app: EvmAddress
+  pageSize: PageSize! = FIFTY
+  cursor: Cursor
 }
 
 type AuthenticationChallenge {
@@ -664,7 +684,7 @@ union BlockResult = BlockResponse | SponsoredTransactionRequest | SelfFundedTran
 scalar BlockchainData
 
 input BookmarkPostRequest {
-  postId: PostId!
+  post: PostId!
 }
 
 type BooleanAndCondition {
@@ -682,6 +702,11 @@ type BooleanValue {
   onChain: Boolean!
 }
 
+input BuilderChallengeRequest {
+  """The builder's address. Most typically the EOA of their wallet."""
+  address: EvmAddress!
+}
+
 input CanFollowRequest {
   graph: EvmAddress!
 }
@@ -692,37 +717,29 @@ input CanUnfollowRequest {
 
 scalar ChainId
 
+"""
+The request to generate a new authentication challenge.
+
+The optional fields are used to specify the role you are authenticating as.
+You can only specify one role at a time.
+"""
 input ChallengeRequest {
-  """The address you intend login with."""
-  address: EvmAddress!
+  """Use this to authenticate as a Builder."""
+  builder: BuilderChallengeRequest
 
-  """
-  The app you intend to authenticate with.
-  
-  MUST be a valid App address unless you want to authenticated as Builder.
-  """
-  app: EvmAddress! = "0x0000000000000000000000000000000000000000"
+  """Use this to authenticate as an Account Manager."""
+  accountManager: AccountManagerChallengeRequest
 
-  """
-  The actual signer you intend to use to sign the challenge.
-  
-  This could be:
-  - The Account Owner if the address is a Lens Account.
-  - The Account Manager if the address is a Lens Account.
-  - The same address if the address is an EOA.
-  """
-  signedBy: EvmAddress!
+  """Use this to authenticate as an Account Owner."""
+  accountOwner: AccountOwnerChallengeRequest
 
-  """Whether the challenge is for a Builder authentication."""
-  builder: Boolean! = false
+  """Use this to authenticate as an Onboarding User."""
+  onboardingUser: OnboardingUserChallengeRequest
 }
 
 type CheckingInMetadata {
   """The optional address of the location."""
   address: PhysicalAddress
-
-  """The App Id that this publication belongs to."""
-  appId: AppId
 
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
@@ -737,17 +754,14 @@ type CheckingInMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """Where you checking in from (free form text)."""
+  """Where you're checking in from (free form text)."""
   location: Encryptable!
 
-  """The main focus of the publication."""
-  mainContentFocus: String!
+  """The main focus of the post."""
+  mainContentFocus: MainContentFocus!
 
   """The optional geographic position of the location."""
   position: Encryptable
@@ -763,21 +777,20 @@ input CollectActionInput {
 
 """CollectCondition"""
 type CollectCondition {
-  publicationId: PostId!
+  publicationId: LegacyPublicationId!
   thisPublication: Boolean!
   type: String!
+}
+
+type CommentNotification {
+  id: GeneratedNotificationId!
+  comment: Post!
 }
 
 enum ContentWarning {
   NSFW
   SENSITIVE
   SPOILER
-}
-
-input CreateAccountFollowRuleRequest {
-  account: EvmAddress!
-  graph: EvmAddress
-  rule: FollowRulesInput!
 }
 
 type CreateAccountResponse {
@@ -788,8 +801,8 @@ input CreateAccountWithUsernameRequest {
   """The account metadata uri"""
   metadataUri: URI!
 
-  """The local name to create - should not include the namespace"""
-  localName: String!
+  """The username you wish to mint with the account"""
+  username: UsernameInput!
 
   """Any account managers you wish to add to the account"""
   accountManager: [EvmAddress!]
@@ -805,16 +818,16 @@ input CreateAppRequest {
   admins: [EvmAddress!]
 
   """The app graph defaults to use the global graph"""
-  graph: EvmAddress! = "0xc1Ec3C7a6F7AdA7bd1A6FE697A22158f7111061b"
+  graph: EvmAddress! = "0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"
 
   """The app feeds defaults to use the global feed"""
-  feeds: [EvmAddress!]! = ["0x42cedc904968EC64890478a6c786537F43228D88"]
+  feeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
 
   """The default feed defaults to use the global feed"""
-  defaultFeed: EvmAddress! = "0x42cedc904968EC64890478a6c786537F43228D88"
+  defaultFeed: EvmAddress! = "0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"
 
   """The app username leave empty to use the lens username"""
-  username: EvmAddress! = "0xF0F931CA31cb3abC452cC8007ebD555ca3Cd81b6"
+  namespace: EvmAddress! = "0x6Cc71E78e25eBF6A2525CadC1fc628B42AE4138f"
 
   """The app groups leave empty if none"""
   groups: [EvmAddress!]
@@ -856,7 +869,7 @@ input CreateFollowRequest {
   """
   The graph to follow the account on. If not provided, the global graph is used.
   """
-  graph: EvmAddress! = "0xc1Ec3C7a6F7AdA7bd1A6FE697A22158f7111061b"
+  graph: EvmAddress! = "0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"
 
   """
   The data required by any follow rules associated with the account being followed.
@@ -867,50 +880,6 @@ input CreateFollowRequest {
   The data required by the graph rules associated with the specified graph.
   """
   graphRule: GraphRulesInput
-}
-
-type CreateFrameEIP712TypedData {
-  types: CreateFrameEIP712TypedDataTypes!
-  domain: Eip712TypedDataDomain!
-  value: CreateFrameEIP712TypedDataValue!
-}
-
-input CreateFrameEIP712TypedDataInput {
-  types: CreateFrameEIP712TypedDataTypesInput!
-  domain: Eip712TypedDataDomainInput!
-  value: CreateFrameEIP712TypedDataValueInput!
-}
-
-type CreateFrameEIP712TypedDataTypes {
-  frameData: [Eip712TypedDataField!]!
-}
-
-input CreateFrameEIP712TypedDataTypesInput {
-  frameData: [Eip712TypedDataFieldInput!]!
-}
-
-type CreateFrameEIP712TypedDataValue {
-  specVersion: String!
-  url: URI!
-  buttonIndex: Int!
-  account: EvmAddress!
-  postId: PostId!
-  inputText: String!
-  state: String!
-  actionResponse: String!
-  deadline: Int!
-}
-
-input CreateFrameEIP712TypedDataValueInput {
-  specVersion: String!
-  url: URI!
-  buttonIndex: Int!
-  account: EvmAddress!
-  postId: PostId!
-  inputText: String!
-  state: String!
-  actionResponse: String!
-  deadline: Int!
 }
 
 input CreateGraphRequest {
@@ -941,7 +910,52 @@ type CreateGroupResponse {
 
 union CreateGroupResult = CreateGroupResponse | SelfFundedTransactionRequest | TransactionWillFail
 
-input CreateNamespaceRequest {
+type CreateNamespaceResponse {
+  hash: TxHash!
+}
+
+input CreatePostRequest {
+  """The feed to post to. If not provided, the global feed is used."""
+  feed: EvmAddress! = "0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"
+
+  """The URI of the post metadata."""
+  contentUri: URI!
+
+  """The post to quote, if any."""
+  quoteOf: ReferencingPostInput
+
+  """The post to comment on, if any."""
+  commentOn: ReferencingPostInput
+
+  """The actions to attach to the post."""
+  actions: [PostActionInput!]
+}
+
+input CreateRepostRequest {
+  """The feed to repost to. If not provided, the global feed is used."""
+  feed: EvmAddress! = "0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"
+
+  """The post to reference."""
+  post: PostId!
+}
+
+input CreateUnfollowRequest {
+  """The account to unfollow."""
+  account: EvmAddress!
+
+  """
+  The graph where the account is followed and should be unfollowed.
+  If not provided, the global graph is used.
+  """
+  graph: EvmAddress! = "0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"
+
+  """
+  The data required by the graph rules associated with the specified graph.
+  """
+  graphRule: GraphRulesInput
+}
+
+input CreateUsernameNamespaceRequest {
   """The feed metadata uri"""
   metadataUri: URI
 
@@ -960,73 +974,24 @@ input CreateNamespaceRequest {
   symbol: String!
 }
 
-type CreateNamespaceResponse {
+union CreateUsernameNamespaceResult = CreateNamespaceResponse | SelfFundedTransactionRequest | TransactionWillFail
+
+input CreateUsernameRequest {
+  username: UsernameInput!
+
+  """If you want to auto assign the username to the account default is true"""
+  autoAssign: Boolean! = true
+}
+
+type CreateUsernameResponse {
   hash: TxHash!
 }
 
-union CreateNamespaceResult = CreateNamespaceResponse | SelfFundedTransactionRequest | TransactionWillFail
-
-input CreatePostRequest {
-  """The feed to post to. If not provided, the global feed is used."""
-  feed: EvmAddress! = "0x42cedc904968EC64890478a6c786537F43228D88"
-
-  """The URI of the post metadata."""
-  contentUri: URI!
-
-  """The post to quote, if any."""
-  quoteOf: ReferencingPostInput
-
-  """The post to comment on, if any."""
-  commentOn: ReferencingPostInput
-
-  """The actions to attach to the post."""
-  actions: [PostActionInput!]
-}
-
-input CreateRepostRequest {
-  """The feed to repost to. If not provided, the global feed is used."""
-  feed: EvmAddress! = "0x42cedc904968EC64890478a6c786537F43228D88"
-
-  """The post to reference."""
-  post: PostId!
-}
-
-input CreateUnfollowRequest {
-  """The account to unfollow."""
-  account: EvmAddress!
-
-  """
-  The graph where the account is followed and should be unfollowed.
-  If not provided, the global graph is used.
-  """
-  graph: EvmAddress! = "0xc1Ec3C7a6F7AdA7bd1A6FE697A22158f7111061b"
-
-  """
-  The data required by the graph rules associated with the specified graph.
-  """
-  graphRule: GraphRulesInput
-}
-
-input CurrencyRequest {
-  limit: Int
-  cursor: Cursor
-  verified: Boolean
-}
+union CreateUsernameResult = CreateUsernameResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar Cursor
 
 scalar DateTime
-
-input DebugAccountSponsorRequest {
-  """The account to get the sponsor limit for."""
-  account: EvmAddress!
-
-  """The app to get the sponsor limit for."""
-  app: EvmAddress
-
-  """The sponsor to get the sponsor limit for."""
-  sponsor: EvmAddress
-}
 
 input DebugPostMetadataRequest {
   rawUri: URI
@@ -1061,22 +1026,6 @@ type DeletePostResponse {
 }
 
 union DeletePostResult = DeletePostResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
-
-input DismissRecommendedAccountsRequest {
-  accounts: [EvmAddress!]!
-}
-
-type DisputedReport {
-  createdAt: DateTime!
-  reporter: Account!
-  reportedAccount: Account!
-  reportReason: String!
-  reportSubreason: String!
-  reportAdditionalInfo: String!
-  reportedPost: Post
-  disputer: Account!
-  disputeReason: String!
-}
 
 input EditPostRequest {
   post: PostId!
@@ -1172,34 +1121,7 @@ type Eip712TransactionRequest {
   customData: Eip712Meta!
 }
 
-type Eip712TypedDataDomain {
-  name: String!
-  chainId: Int!
-  version: String!
-  verifyingContract: EvmAddress!
-}
-
-input Eip712TypedDataDomainInput {
-  name: String!
-  chainId: Int!
-  version: String!
-  verifyingContract: EvmAddress!
-}
-
-type Eip712TypedDataField {
-  name: String!
-  type: String!
-}
-
-input Eip712TypedDataFieldInput {
-  name: String!
-  type: String!
-}
-
 type EmbedMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -1216,14 +1138,11 @@ type EmbedMetadata {
   """The embed URL."""
   embed: Encryptable!
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
-  mainContentFocus: String!
+  """The main focus of the post."""
+  mainContentFocus: MainContentFocus!
 
   """An arbitrary list of tags."""
   tags: [Tag!]
@@ -1231,8 +1150,6 @@ type EmbedMetadata {
 }
 
 union EnableSignlessResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
-
-scalar EncodedTransaction
 
 scalar Encryptable
 
@@ -1242,7 +1159,7 @@ enum EntityType {
   ACCOUNT
   GRAPH
   FEED
-  USERNAME
+  USERNAME_NAMESPACE
   GROUP
   POST
   APP
@@ -1273,9 +1190,6 @@ type EventMetadata {
   """The address of the event."""
   address: PhysicalAddress
 
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -1292,9 +1206,6 @@ type EventMetadata {
 
   """The event end time (ISO 8601 `YYYY-MM-DDTHH:mm:ss.sssZ`)."""
   endsAt: Encryptable!
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
 
   """The links you want to include with it."""
@@ -1304,8 +1215,8 @@ type EventMetadata {
   """The location of the event."""
   location: EventMetadataLensLocation!
 
-  """The main focus of the publication."""
-  mainContentFocus: String!
+  """The main focus of the post."""
+  mainContentFocus: MainContentFocus!
 
   """The geographic position of the event."""
   position: Encryptable
@@ -1324,7 +1235,7 @@ type EventMetadata {
 
 type EventMetadataLensLocation {
   physical: Encryptable
-  virtual: Encryptable
+  virtual: URI
 }
 
 type EventMetadataLensSchedulingAdjustments {
@@ -1791,10 +1702,32 @@ input FeeFollowRuleInput {
 
 type Feed {
   address: EvmAddress!
+  metadata: FeedMetadata
+}
+
+type FeedMetadata {
+  """Optional markdown formatted description of the Feed."""
+  description: String
+
+  """
+  A unique identifier that in storages like IPFS ensures the uniqueness of the metadata URI.
+  Use a UUID if unsure.
+  """
+  id: String!
+
+  """The name of the Feed."""
+  name: String!
+
+  """The human-friendly title for the Feed."""
+  title: String!
 }
 
 input FeedRequest {
-  feed: EvmAddress!
+  """The feed"""
+  feed: EvmAddress
+
+  """The transaction hash you created the feed with."""
+  txHash: TxHash
 }
 
 input FeedRulesInput {
@@ -1812,13 +1745,23 @@ type FinishedTransactionStatus {
 
 """FollowCondition"""
 type FollowCondition {
-  follow: EvmAddress!
+  follow: LegacyProfileId!
   type: String!
 }
 
+type FollowNotification {
+  id: GeneratedNotificationId!
+  followers: [NotificationAccountFollow!]!
+}
+
 input FollowPair {
-  graph: EvmAddress!
+  """The graph you are checking defaults to global graph."""
+  graph: EvmAddress! = "0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"
+
+  """The follower."""
   follower: EvmAddress!
+
+  """The account being followed."""
   account: EvmAddress!
 }
 
@@ -1860,7 +1803,7 @@ enum FollowersOrderBy {
 
 input FollowersRequest {
   """The page size."""
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor
@@ -1872,7 +1815,7 @@ input FollowersRequest {
   The graphs to get followers for
   The result will come back if they follow on ANY of the supplied graphs
   """
-  forGraphs: [EvmAddress!]! = ["0xc1Ec3C7a6F7AdA7bd1A6FE697A22158f7111061b"]
+  forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
 
   """The order by."""
   orderBy: FollowersOrderBy! = DESC
@@ -1885,7 +1828,7 @@ enum FollowersYouKnowOrderBy {
 
 input FollowersYouKnowRequest {
   """The page size."""
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor
@@ -1900,7 +1843,7 @@ input FollowersYouKnowRequest {
   The graphs to get followers you know for
   The result will come back if they follow on ANY of the supplied graphs
   """
-  forGraphs: [EvmAddress!]! = ["0xc1Ec3C7a6F7AdA7bd1A6FE697A22158f7111061b"]
+  forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
 
   """The order by."""
   orderBy: FollowersYouKnowOrderBy! = DESC
@@ -1922,7 +1865,7 @@ enum FollowingOrderBy {
 
 input FollowingRequest {
   """The page size."""
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor
@@ -1934,67 +1877,131 @@ input FollowingRequest {
   The graphs to get following for.
   The result will come back if they are following on ANY of the supplied graphs
   """
-  forGraphs: [EvmAddress!]! = ["0xc1Ec3C7a6F7AdA7bd1A6FE697A22158f7111061b"]
+  forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
 
   """The order by."""
   orderBy: FollowingOrderBy! = DESC
-}
-
-enum ForYouSource {
-  FOLLOWING
-  CURATED
-  POPULAR
-  EXTENDED_NETWORK
 }
 
 type ForbiddenError {
   reason: String!
 }
 
-input FrameEIP712Request {
-  specVersion: String!
-  url: URI!
-  buttonIndex: Int!
-  account: EvmAddress!
-  postId: PostId!
-  inputText: String!
-  state: String!
-  actionResponse: String!
-  deadline: Int!
+scalar GeneratedNotificationId
+
+type Graph {
+  address: EvmAddress!
+  metadata: GraphMetadata
 }
 
-input FrameLensManagerEIP712Request {
-  specVersion: String!
-  url: URI!
-  buttonIndex: Int!
-  account: EvmAddress!
-  postId: PostId!
-  inputText: String!
-  state: String!
-  actionResponse: String!
+type GraphMetadata {
+  """Optional markdown formatted description of the graph."""
+  description: String
+
+  """
+  A unique identifier that in storages like IPFS ensures the uniqueness of the metadata URI.
+  Use a UUID if unsure.
+  """
+  id: String!
+
+  """The name of the graph."""
+  name: String!
+
+  """The human-friendly title for the graph."""
+  title: String!
 }
 
-type FrameLensManagerSignatureResult {
-  signedTypedData: CreateFrameEIP712TypedData!
-  signature: Signature!
-}
+input GraphRequest {
+  """The graph"""
+  graph: EvmAddress
 
-input FrameVerifySignature {
-  signedTypedData: CreateFrameEIP712TypedDataInput!
-  signature: Signature!
-  identityToken: IdToken!
-}
-
-enum FrameVerifySignatureResult {
-  VERIFIED
-  IDENTITY_UNAUTHORIZED
-  IDENTITY_CANNOT_USE_PROFILE
-  DEADLINE_EXPIRED
-  SIGNER_ADDRESS_CANNOT_USE_PROFILE
+  """The transaction hash you created the graph with."""
+  txHash: TxHash
 }
 
 input GraphRulesInput {
   unknownGraphRule: UnknownGraphRuleInput
+}
+
+type Group {
+  address: EvmAddress!
+  timestamp: DateTime!
+  metadata: GroupMetadata
+}
+
+enum GroupMembersOrderBy {
+  LAST_JOINED
+  FIRST_JOINED
+  ACCOUNT_SCORE
+}
+
+input GroupMembersRequest {
+  """The group"""
+  group: EvmAddress!
+
+  """The order by."""
+  orderBy: GroupMembersOrderBy! = LAST_JOINED
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
+type GroupMetadata {
+  """Optional markdown formatted description of the Community."""
+  description: String
+
+  """
+  A unique identifier that in storages like IPFS ensures the uniqueness of the metadata URI.
+  Use a UUID if unsure.
+  """
+  id: String!
+
+  """Optional uri of the Community's icon."""
+  icon: URI
+
+  """The name of the Community."""
+  name: String!
+
+  """The slug for the Community."""
+  slug: String!
+}
+
+input GroupRequest {
+  """The group"""
+  group: EvmAddress
+
+  """The transaction hash you created the group with."""
+  txHash: TxHash
+}
+
+input GroupsFilter {
+  """The name of the group"""
+  name: String
+}
+
+enum GroupsOrderBy {
+  LATEST_JOINED
+  NAME
+}
+
+input GroupsRequest {
+  """Get the groups this account is a member of"""
+  member: EvmAddress!
+
+  """The filter"""
+  filter: GroupsFilter
+
+  """The order by."""
+  orderBy: GroupsOrderBy! = LATEST_JOINED
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
 }
 
 input HasReactedRequest {
@@ -2007,15 +2014,12 @@ input HideManagedAccountRequest {
 }
 
 input HideReplyRequest {
-  postId: PostId!
+  post: PostId!
 }
 
 scalar IdToken
 
 type ImageMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -2029,15 +2033,12 @@ type ImageMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   image: MediaImage!
   locale: Locale!
 
-  """The main focus of the publication."""
-  mainContentFocus: String!
+  """The main focus of the post."""
+  mainContentFocus: MainContentFocus!
 
   """An arbitrary list of tags."""
   tags: [Tag!]
@@ -2059,6 +2060,17 @@ input IsFollowingMeRequest {
   graph: EvmAddress!
 }
 
+input JoinGroupRequest {
+  """The group you want to join"""
+  group: EvmAddress!
+}
+
+type JoinGroupResponse {
+  hash: TxHash!
+}
+
+union JoinGroupResult = JoinGroupResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
 type KnownAction {
   name: String!
   contract: NetworkAddress!
@@ -2075,14 +2087,24 @@ input LastLoggedInAccountRequest {
   app: EvmAddress
 }
 
+input LeaveGroupRequest {
+  """The group you want to leave"""
+  group: EvmAddress!
+}
+
+type LeaveGroupResponse {
+  hash: TxHash!
+}
+
+union LeaveGroupResult = LeaveGroupResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
 scalar LegacyProfileId
+
+scalar LegacyPublicationId
 
 scalar LegacyRefreshToken
 
 type LinkMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -2096,14 +2118,11 @@ type LinkMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
-  mainContentFocus: String!
+  """The main focus of the post."""
+  mainContentFocus: MainContentFocus!
 
   """The sharing link url."""
   sharingLink: Encryptable!
@@ -2120,9 +2139,6 @@ type LitProtocolEncryptionStrategy {
 }
 
 type LivestreamMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -2145,9 +2161,6 @@ type LivestreamMetadata {
 
   """The optional stream end time (ISO 8601 `YYYY-MM-DDTHH:mm:ss.sssZ`)"""
   endsAt: Encryptable
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
 
   """
@@ -2157,8 +2170,8 @@ type LivestreamMetadata {
   liveUrl: Encryptable!
   locale: Locale!
 
-  """The main focus of the publication."""
-  mainContentFocus: String!
+  """The main focus of the post."""
+  mainContentFocus: MainContentFocus!
 
   """
   Some livestream platforms have the playback url as a separate url. If not your case make
@@ -2239,6 +2252,25 @@ type LoggedInPostOperations {
   hasReposted: BooleanValue!
 }
 
+enum MainContentFocus {
+  ARTICLE
+  AUDIO
+  CHECKING_IN
+  EMBED
+  EVENT
+  IMAGE
+  LINK
+  LIVESTREAM
+  MINT
+  SHORT_VIDEO
+  SPACE
+  STORY
+  TEXT_ONLY
+  THREE_D
+  TRANSACTION
+  VIDEO
+}
+
 enum ManagedAccountsVisibility {
   NONE_HIDDEN
   HIDDEN_ONLY
@@ -2247,7 +2279,7 @@ enum ManagedAccountsVisibility {
 
 type MeResult {
   """The logged in account."""
-  account: Account!
+  account: AccountAvailable!
 
   """Whether the account is signless."""
   isSignless: Boolean!
@@ -2255,20 +2287,8 @@ type MeResult {
   """Whether the account is sponsored."""
   isSponsored: Boolean!
 
-  """The address app the account is logged in to."""
-  loggedInTo: EvmAddress!
-
-  """Whether the account can execute transactions."""
-  canExecuteTransactions: Boolean!
-
-  """Whether the account can transfer tokens."""
-  canTransferTokens: Boolean!
-
-  """Whether the account can transfer native tokens."""
-  canTransferNative: Boolean!
-
-  """Whether the account can set the metadata URI."""
-  canSetMetadataUri: Boolean!
+  """The app the account is logged in to."""
+  appLoggedIn: EvmAddress!
 
   """The sponsorship allowance for the account."""
   limit: SponsorshipAllowance!
@@ -2689,6 +2709,11 @@ enum MediaVideoType {
   VIDEO_WEBM
 }
 
+type MentionNotification {
+  id: GeneratedNotificationId!
+  post: Post!
+}
+
 type MetadataAttribute {
   type: MetadataAttributeType!
   key: String!
@@ -2745,9 +2770,6 @@ enum MetadataLicenseType {
 }
 
 type MintMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -2761,14 +2783,11 @@ type MintMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
-  mainContentFocus: String!
+  """The main focus of the post."""
+  mainContentFocus: MainContentFocus!
 
   """
   The mint item it can be a URL of the known provider like opensea https://opensea.io/assets/ethereum/0xfaa2471e93bd1cee3b0ab381c242ada8e1d1a759/299 or https://zora.co/collect/0x9d90669665607f08005cae4a7098143f554c59ef/39626. The Lens API has an allow list of providers and if the domain does not match it will mark it as failed metadata
@@ -2778,53 +2797,6 @@ type MintMetadata {
   """An arbitrary list of tags."""
   tags: [Tag!]
   content: Encryptable!
-}
-
-input MlaccountRecommendationsRequest {
-  limit: Int
-  cursor: Cursor
-  account: EvmAddress!
-  shuffle: Boolean
-}
-
-input MlexplorePostsFilter {
-  since: Int
-}
-
-input MlexplorePostsRequest {
-  limit: Int
-  cursor: Cursor
-  filter: MlexplorePostsFilter
-}
-
-input MlpostsForYouRequest {
-  limit: Int
-  cursor: Cursor
-  account: EvmAddress!
-  shuffle: Boolean
-}
-
-type ModFollowerResult {
-  createdAt: DateTime!
-  follower: Account!
-  following: Account!
-}
-
-type ModReport {
-  createdAt: DateTime!
-  reporter: Account!
-  reportedAccount: Account!
-  reportedPost: Post
-  reason: String!
-  subreason: String!
-  additionalInfo: String
-}
-
-input ModReportsRequest {
-  limit: Int
-  cursor: Cursor
-  account: EvmAddress
-  postId: PostId
 }
 
 type Mutation {
@@ -2850,16 +2822,16 @@ type Mutation {
   reportAccount(request: ReportAccountRequest!): Void!
 
   """
-  Hides an account from the user's list of managed accounts.
+  Hides an account from the manager list of managed accounts.
   
-  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  You MUST be authenticated as Account Manager to use this mutation.
   """
   hideManagedAccount(request: HideManagedAccountRequest!): Void!
 
   """
-  Undo the hiding of an account from the user's list of managed accounts.
+  Undo the hiding of an account from the manager list of managed accounts.
   
-  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  You MUST be authenticated as Account Manager to use this mutation.
   """
   unhideManagedAccount(request: UnhideManagedAccountRequest!): Void!
 
@@ -2915,7 +2887,7 @@ type Mutation {
   """
   Create an account with a given username.
   
-  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  You MUST be authenticated as Onboarding User to use this mutation.
   """
   createAccountWithUsername(request: CreateAccountWithUsernameRequest!): CreateAccountWithUsernameResult!
 
@@ -3077,7 +3049,6 @@ type Mutation {
   You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   unfollow(request: CreateUnfollowRequest!): UnfollowResult!
-  setAccountFollowRule(request: CreateAccountFollowRuleRequest!): AccountFollowRuleResult!
 
   """
   Create a new graph
@@ -3085,19 +3056,36 @@ type Mutation {
   You MUST be authenticated as a builder to use this mutation.
   """
   createGraph(request: CreateGraphRequest!): CreateGraphResult!
-  assignUsernameToAccount(request: AssignUsernameToAccountRequest!): AssignUsernameToAccountResult!
-  unassignUsernameFromAccount: UnassignUsernameFromAccountResult!
 
   """
-  Create a new namespace
+  Create a new username namespace aka deploying a new username contract
   
   You MUST be authenticated as a builder to use this mutation.
   """
-  createNamespace(request: CreateNamespaceRequest!): CreateNamespaceResult!
-  mlDismissRecommendedAccounts(request: DismissRecommendedAccountsRequest!): Void!
-  mlAddPostNotInterested(request: PostNotInterestedRequest!): Void!
-  mlUndoPostNotInterested(request: PostNotInterestedRequest!): Void!
-  signFrameAction(request: FrameLensManagerEIP712Request!): FrameLensManagerSignatureResult!
+  createUsernameNamespace(request: CreateUsernameNamespaceRequest!): CreateUsernameNamespaceResult!
+
+  """
+  Create a username.
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  createUsername(request: CreateUsernameRequest!): CreateUsernameResult!
+
+  """
+  Assign a username to an account.
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  assignUsernameToAccount(request: AssignUsernameToAccountRequest!): AssignUsernameToAccountResult!
+
+  """
+  Unassign a username from the logged-in user's Account.
+  
+  Defaults to the Lens namespace if no request is provided.
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  unassignUsernameFromAccount(request: UnassignUsernameFromAccountRequest!): UnassignUsernameToAccountResult!
 
   """
   Create a new feed
@@ -3112,6 +3100,20 @@ type Mutation {
   You MUST be authenticated as a builder to use this mutation.
   """
   createGroup(request: CreateGroupRequest!): CreateGroupResult!
+
+  """
+  Join a group
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  joinGroup(request: JoinGroupRequest!): JoinGroupResult!
+
+  """
+  Leave a group
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  leaveGroup(request: LeaveGroupRequest!): LeaveGroupResult!
 }
 
 input MuteRequest {
@@ -3149,6 +3151,82 @@ type NotIndexedYetStatus {
 
   """True if the transaction has been mined."""
   txHasMined: Boolean!
+}
+
+union Notification = ReactionNotification | CommentNotification | RepostNotification | QuoteNotification | FollowNotification | MentionNotification
+
+type NotificationAccountFollow {
+  followedAt: DateTime!
+  account: Account!
+}
+
+type NotificationAccountPostReaction {
+  account: Account!
+  reactions: [PostReaction!]!
+}
+
+type NotificationAccountRepost {
+  repostId: PostId!
+  repostedAt: DateTime!
+  account: Account!
+}
+
+input NotificationFilter {
+  """The apps to filter by."""
+  apps: [EvmAddress!]
+
+  """The notification types to filter by."""
+  notificationTypes: [NotificationType!]
+
+  """Include notification from accounts with low score"""
+  includeLowScore: Boolean! = false
+
+  """Aggregate notifications by time"""
+  timeBasedAggregation: Boolean! = true
+}
+
+enum NotificationOrderBy {
+  DEFAULT
+  ACCOUNT_SCORE
+}
+
+input NotificationRequest {
+  """The graphs to get notifications for."""
+  forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
+
+  """The feeds to get notifications for."""
+  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
+
+  """An optional filter to narrow down the notifications result."""
+  filter: NotificationFilter
+
+  """An optional order to sort the notifications result."""
+  orderBy: NotificationOrderBy! = DEFAULT
+  cursor: Cursor
+}
+
+enum NotificationType {
+  REPOSTED
+  QUOTED
+  COMMENTED
+  FOLLOWED
+  MENTIONED
+  REACTED
+}
+
+input OnboardingUserChallengeRequest {
+  """
+  The App you intend to authenticate with.
+  
+  It MUST be a valid App address.
+  Note: On the testnet, it will default to `0x90C8C68D0ABFB40D4FCD72316A65E42161520BC3`, the
+  playground app. This is to make it easier if you forget to set it. This may change in the
+  future.
+  """
+  app: EvmAddress! = "0xe5439696f4057aF073c0FB2dc6e5e755392922e1"
+
+  """The address of the EOA that needs to create their Lens Account."""
+  wallet: EvmAddress!
 }
 
 enum PageSize {
@@ -3192,18 +3270,13 @@ type PaginatedActiveAuthenticationsResult {
   pageInfo: PaginatedResultInfo!
 }
 
+type PaginatedAnyPostsResult {
+  items: [AnyPost!]!
+  pageInfo: PaginatedResultInfo!
+}
+
 type PaginatedAppsResult {
   items: [App!]!
-  pageInfo: PaginatedResultInfo!
-}
-
-type PaginatedCurrenciesResult {
-  items: [Erc20!]!
-  pageInfo: PaginatedResultInfo!
-}
-
-type PaginatedDisputedReports {
-  items: [DisputedReport!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -3217,13 +3290,14 @@ type PaginatedFollowingResult {
   pageInfo: PaginatedResultInfo!
 }
 
-type PaginatedModFollowersResult {
-  items: [ModFollowerResult!]!
+type PaginatedGroupsResult {
+  """The groups"""
+  items: [Group!]!
   pageInfo: PaginatedResultInfo!
 }
 
-type PaginatedModReports {
-  items: [ModReport!]!
+type PaginatedNotificationResult {
+  items: [Notification!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -3237,19 +3311,9 @@ type PaginatedPostTagsResult {
   pageInfo: PaginatedResultInfo!
 }
 
-type PaginatedPostsForYouResult {
-  items: [PostForYou!]!
-  pageInfo: PaginatedResultInfo!
-}
-
 type PaginatedPostsResult {
   items: [Post!]!
   pageInfo: PaginatedResultInfo!
-}
-
-input PaginatedQuery {
-  pageSize: PageSize
-  cursor: Cursor
 }
 
 type PaginatedResultInfo {
@@ -3266,7 +3330,7 @@ type PaginatedTimelineResult {
 }
 
 type PaginatedUsernamesResult {
-  items: [UsernameResult!]!
+  items: [Username!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -3319,6 +3383,8 @@ type Post {
   id: PostId!
   author: Account!
   feed: Feed!
+  isEdited: Boolean!
+  isDeleted: Boolean!
   timestamp: DateTime!
   app: App
   metadata: PostMetadata!
@@ -3328,10 +3394,11 @@ type Post {
   actions: [PostAction!]!
   operations: LoggedInPostOperations
   stats: PostStats!
+  mentions: [AccountMention!]!
 }
 
 input PostAccountPair {
-  postId: PostId!
+  post: PostId!
   account: EvmAddress!
 }
 
@@ -3364,42 +3431,24 @@ input PostBookmarksFilter {
 }
 
 input PostBookmarksRequest {
-  forFeeds: [EvmAddress!]! = ["0x42cedc904968EC64890478a6c786537F43228D88"]
+  """The feeds to get bookmarks for."""
+  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
   filter: PostBookmarksFilter
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
   cursor: Cursor
-}
-
-enum PostContentWarningType {
-  NSFW
-  SENSITIVE
-  SPOILER
-}
-
-type PostForYou {
-  post: Post!
-  source: ForYouSource!
 }
 
 scalar PostId
 
-enum PostMainContentFocus {
-  TEXT
-  IMAGE
-  VIDEO
-  AUDIO
-  FILE
-}
-
 union PostMetadata = ArticleMetadata | AudioMetadata | CheckingInMetadata | EmbedMetadata | EventMetadata | ImageMetadata | LinkMetadata | LivestreamMetadata | MintMetadata | SpaceMetadata | StoryMetadata | TextOnlyMetadata | ThreeDMetadata | TransactionMetadata | VideoMetadata
 
 input PostMetadataContentWarningFilter {
-  oneOf: [PostContentWarningType!]!
+  oneOf: [ContentWarning!]!
 }
 
 input PostMetadataFilter {
   """The main focus of the post."""
-  mainContentFocus: [PostMainContentFocus!]
+  mainContentFocus: [MainContentFocus!]
 
   """The tags to filter by."""
   tags: PostMetadataTagsFilter
@@ -3411,10 +3460,6 @@ input PostMetadataFilter {
 input PostMetadataTagsFilter {
   oneOf: [String!]
   all: [String!]
-}
-
-input PostNotInterestedRequest {
-  postId: PostId!
 }
 
 type PostReaction {
@@ -3450,14 +3495,14 @@ input PostReactionsFilter {
 
 input PostReactionsRequest {
   """The ID of the post to get reactions for."""
-  postId: PostId!
+  post: PostId!
 
   """An optional filter to narrow down the result."""
   filter: PostReactionsFilter
 
   """The order in which to return the results."""
   orderBy: PostReactionOrderBy
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
   cursor: Cursor
 }
 
@@ -3473,7 +3518,7 @@ enum PostReferenceType {
 
 input PostReferencesRequest {
   """The post to get references for."""
-  referencePostId: PostId!
+  referencedPost: PostId!
 
   """The types of references to get."""
   referenceTypes: [PostReferenceType!]!
@@ -3484,7 +3529,7 @@ input PostReferencesRequest {
   visibilityFilter: PostVisibilityFilter! = VISIBLE
 
   """The page size."""
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor
@@ -3511,8 +3556,13 @@ enum PostReportReason {
   SOMETHING_ELSE
 }
 
+"""You must provide either a txHash or a postId, not both."""
 input PostRequest {
-  postId: PostId!
+  """The post ID."""
+  post: PostId
+
+  """The transaction hash you sent the post with."""
+  txHash: TxHash
 }
 
 type PostResponse {
@@ -3534,6 +3584,9 @@ type PostStats {
   """The total number of quotes."""
   quotes: Int!
 
+  """The total number of collects."""
+  collects: Int!
+
   """Get the number of reactions for the post."""
   reactions(request: StatsReactionRequest! = {type: UPVOTE}): Int!
 }
@@ -3544,9 +3597,10 @@ enum PostTagsOrderBy {
 }
 
 input PostTagsRequest {
-  forFeeds: [EvmAddress!]! = ["0x42cedc904968EC64890478a6c786537F43228D88"]
+  """The feeds to get tags for."""
+  forFeeds: [EvmAddress!]!
   orderBy: PostTagsOrderBy! = MOST_POPULAR
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
   cursor: Cursor
 }
 
@@ -3576,15 +3630,15 @@ input PostsFilterRequest {
 }
 
 input PostsRequest {
-  forFeeds: [EvmAddress!]! = ["0x42cedc904968EC64890478a6c786537F43228D88"]
+  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
   filter: PostsFilterRequest
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
   cursor: Cursor
 }
 
 """ProfileOwnershipCondition"""
 type ProfileOwnershipCondition {
-  profileId: EvmAddress!
+  profileId: LegacyProfileId!
   type: String!
 }
 
@@ -3624,7 +3678,7 @@ type Query {
   accountsAvailable(request: AccountsAvailableRequest!): PaginatedAccountsAvailableResult!
 
   """
-  account manager for the authenticated account.
+  Account manager for the authenticated account.
   
   You MUST be authenticated to use this query.
   """
@@ -3645,7 +3699,7 @@ type Query {
   
   You MUST be authenticated to use this query.
   """
-  authenticatedSessions(request: AccountAuthenticationsRequest!): PaginatedActiveAuthenticationsResult!
+  authenticatedSessions(request: AuthenticatedSessionsRequest!): PaginatedActiveAuthenticationsResult!
 
   """
   Get the current authenticated session for the current account.
@@ -3655,41 +3709,74 @@ type Query {
   currentSession: AuthenticatedSession!
   feed(request: FeedRequest!): Feed
   post(request: PostRequest!): AnyPost
-  posts(request: PostsRequest!): PaginatedPostsResult!
-  postReferences(request: PostReferencesRequest!): PaginatedPostsResult!
+  posts(request: PostsRequest!): PaginatedAnyPostsResult!
+  postReferences(request: PostReferencesRequest!): PaginatedAnyPostsResult!
   postTags(request: PostTagsRequest!): PaginatedPostTagsResult!
-  postBookmarks(request: PostBookmarksRequest!): PaginatedPostsResult!
+  postBookmarks(request: PostBookmarksRequest!): PaginatedAnyPostsResult!
 
   """Get the reactions added to a post."""
   postReactions(request: PostReactionsRequest!): PaginatedPostReactionsResult!
   postReactionStatus(request: PostReactionStatusRequest!): [PostReactionStatus!]!
-  searchPosts(request: SearchPostsRequest!): PaginatedPostsResult!
+  searchPosts(request: SearchPostsRequest!): PaginatedAnyPostsResult!
   postActions(request: PostActionsRequest!): PaginatedActions!
+
+  """Get accounts who referenced a post"""
   whoReferencedPost(request: WhoReferencedPostRequest!): PaginatedAccountsResult!
   whoActedOnPost(request: WhoActedOnPostRequest!): PaginatedAccountsResult!
   following(request: FollowingRequest!): PaginatedFollowingResult!
   followers(request: FollowersRequest!): PaginatedFollowersResult!
   followersYouKnow(request: FollowersYouKnowRequest!): PaginatedFollowersResult!
   followStatus(request: FollowStatusRequest!): [FollowStatusResult!]!
-  currencies(request: CurrencyRequest!): PaginatedCurrenciesResult!
+  graph(request: GraphRequest!): Graph
+  group(request: GroupRequest!): Group
+
+  """Get the groups this account is a member of"""
+  groups(request: GroupsRequest!): PaginatedGroupsResult!
+
+  """Search for groups"""
+  searchGroups(request: SearchGroupsRequest!): PaginatedGroupsResult!
+
+  """Get the members of the group"""
+  groupMembers(request: GroupMembersRequest!): PaginatedAccountsResult!
+
+  """
+  Get account timeline.
+  
+  You MUST be authenticated to use this query.
+  """
   timeline(request: TimelineRequest!): PaginatedTimelineResult!
+
+  """Get most engaged posts for the given account timeline."""
   timelineHighlights(request: TimelineHighlightsRequest!): PaginatedPostsResult!
-  mlAccountRecommendations(request: MlaccountRecommendationsRequest!): PaginatedAccountsResult!
-  mlPostsForYou(request: MlpostsForYouRequest!): PaginatedPostsForYouResult!
-  mlPostsExplore(request: MlexplorePostsRequest!): PaginatedPostsResult
+
+  """
+  Get account notifications.
+  
+  You MUST be authenticated to use this query.
+  """
+  notifications(request: NotificationRequest!): PaginatedNotificationResult!
 
   """Get the status of a transaction by its hash."""
   transactionStatus(request: TransactionStatusRequest!): TransactionStatusResult!
   debugMetadata(request: DebugPostMetadataRequest!): DebugPostMetadataResult!
   debugTransactionStatusFailed(request: DebugTransactionStatusRequest!): DebugTransactionStatusResult
-  debugAccountSponsorLimit(request: DebugAccountSponsorRequest!): SponsorshipLimits!
-  createFrameTypedData(request: FrameEIP712Request!): CreateFrameEIP712TypedData!
-  verifyFrameSignature(request: FrameVerifySignature!): FrameVerifySignatureResult!
-  modFollowersHistory(request: PaginatedQuery!): PaginatedModFollowersResult!
-  modLatestReports(request: ModReportsRequest!): PaginatedModReports!
-  modDisputedReports(request: PaginatedQuery!): PaginatedDisputedReports!
-  usernames(request: AccountUsernameRequest!): PaginatedUsernamesResult!
+  usernameNamespace(request: UsernameNamespaceRequest!): UsernameNamespace
+  username(request: UsernameRequest!): Username
+
+  """Get the usernames for the account/owner."""
+  usernames(request: UsernamesRequest!): PaginatedUsernamesResult!
   _service: _Service!
+}
+
+type QuoteNotification {
+  id: GeneratedNotificationId!
+  quote: Post!
+}
+
+type ReactionNotification {
+  id: GeneratedNotificationId!
+  reactions: [NotificationAccountPostReaction!]!
+  post: Post!
 }
 
 input RecipientDataInput {
@@ -3744,7 +3831,7 @@ input ReportAccountRequest {
 }
 
 input ReportPostRequest {
-  postId: PostId!
+  post: PostId!
   reason: PostReportReason!
   additionalComment: String
 }
@@ -3752,9 +3839,16 @@ input ReportPostRequest {
 type Repost {
   id: PostId!
   author: Account!
+  isDeleted: Boolean!
   timestamp: DateTime!
   app: App
   repostOf: Post!
+}
+
+type RepostNotification {
+  id: GeneratedNotificationId!
+  reposts: [NotificationAccountRepost!]!
+  post: Post!
 }
 
 input RevokeAuthenticationRequest {
@@ -3767,6 +3861,17 @@ input RolloverRefreshRequest {
 
   """A valid Lens API v2 refresh token for a Profile session."""
   refreshToken: LegacyRefreshToken!
+}
+
+input SearchGroupsRequest {
+  """The search query"""
+  query: String!
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
 }
 
 input SearchPostsFilter {
@@ -3789,33 +3894,29 @@ input SearchPostsRequest {
   query: String!
 
   """The feeds to search in."""
-  forFeeds: [EvmAddress!]! = ["0x42cedc904968EC64890478a6c786537F43228D88"]
+  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
 
   """The optional post types to filter by."""
   filter: SearchPostsFilter
-  pageSize: PageSize
+  pageSize: PageSize! = FIFTY
   cursor: Cursor
 }
 
-type SelfFundedTransactionRequest {
-  """
-  The encoded EIP-1559 transaction request.
-  
-  Use a parser to decode this data into a transaction request object
-  for your library (e.g., ethers, viem).
-  """
-  encoded: EncodedTransaction!
+enum SelfFundedFallbackReason {
+  NOT_SPONSORED
+  CANNOT_SPONSOR
+}
 
+type SelfFundedTransactionRequest {
   """
   The raw transaction request object.
   
   Use this object if your library does not have a parser for the encoded transaction data.
   """
   raw: Eip1559TransactionRequest!
-}
 
-type SetAccountFollowRuleResponse {
-  hash: TxHash!
+  """The reason for the fallback."""
+  reason: SelfFundedFallbackReason
 }
 
 input SetAccountMetadataRequest {
@@ -3847,7 +3948,6 @@ input SimpleCollectActionInput {
 }
 
 type SimpleCollectActionSettings {
-  type: PostActionType!
   contract: NetworkAddress!
   amount: Amount!
   collectNft: EvmAddress
@@ -3860,9 +3960,6 @@ type SimpleCollectActionSettings {
 }
 
 type SpaceMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -3876,17 +3973,14 @@ type SpaceMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
 
   """The space join link."""
   link: Encryptable!
   locale: Locale!
 
-  """The main focus of the publication."""
-  mainContentFocus: String!
+  """The main focus of the post."""
+  mainContentFocus: MainContentFocus!
 
   """The space start time (ISO 8601 `YYYY-MM-DDTHH:mm:ss.sssZ`)."""
   startsAt: Encryptable!
@@ -3906,21 +4000,21 @@ enum SponsorLimitType {
   MONTH
 }
 
-type SponsoredTransactionRequest {
-  """
-  The encoded EIP-712 transaction request.
-  
-  Use a parser that supports ZKsync EIP-712 transaction to decode this data into a
-  transaction request object for your library (e.g., zksync/ethers, viem/zksync).
-  """
-  encoded: EncodedTransaction!
+enum SponsoredFallbackReason {
+  SIGNLESS_DISABLED
+  SIGNLESS_FAILED
+}
 
+type SponsoredTransactionRequest {
   """
   The raw transaction request object.
   
   Use this object if your library does not have a parser for the encoded transaction data.
   """
   raw: Eip712TransactionRequest!
+
+  """The reason for the fallback."""
+  reason: SponsoredFallbackReason
 }
 
 type SponsorshipAllowance {
@@ -3937,22 +4031,11 @@ type SponsorshipAllowance {
   allowance: Int!
 }
 
-type SponsorshipLimits {
-  """The global sponsorship allowance."""
-  global: SponsorshipAllowance
-
-  """The user sponsorship allowance."""
-  user: SponsorshipAllowance
-}
-
 input StatsReactionRequest {
   type: PostReactionType!
 }
 
 type StoryMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The story asset."""
   asset: AnyMedia!
 
@@ -3966,14 +4049,11 @@ type StoryMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
-  mainContentFocus: String!
+  """The main focus of the post."""
+  mainContentFocus: MainContentFocus!
 
   """An arbitrary list of tags."""
   tags: [Tag!]
@@ -3989,9 +4069,6 @@ union SwitchAccountResult = AuthenticationTokens | ForbiddenError
 scalar Tag
 
 type TextOnlyMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """
   A bag of attributes that can be used to store any kind of metadata that is not currently
   supported by the standard. Over time, common attributes will be added to the standard and
@@ -4003,14 +4080,11 @@ type TextOnlyMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
-  mainContentFocus: String!
+  """The main focus of the post."""
+  mainContentFocus: MainContentFocus!
 
   """An arbitrary list of tags."""
   tags: [Tag!]
@@ -4043,10 +4117,7 @@ enum ThreeDAssetFormat {
 }
 
 type ThreeDMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
-  """The 3D items for the publication"""
+  """The 3D items for the post"""
   assets: [ThreeDAsset!]!
 
   """The other attachments you want to include with it."""
@@ -4062,14 +4133,11 @@ type ThreeDMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
-  mainContentFocus: String!
+  """The main focus of the post."""
+  mainContentFocus: MainContentFocus!
 
   """An arbitrary list of tags."""
   tags: [Tag!]
@@ -4079,40 +4147,54 @@ type ThreeDMetadata {
 enum TimelineEventItemType {
   POST
   COMMENT
-  MIRROR
+  REPOST
   QUOTE
 }
 
 input TimelineFilter {
+  """The post event types to filter by."""
   eventType: [TimelineEventItemType!]
+
+  """The optional metadata filter."""
   metadata: PostMetadataFilter
 }
 
 input TimelineHighlightsFilter {
-  eventType: [TimelineEventItemType!]
   metadata: PostMetadataFilter
 }
 
 input TimelineHighlightsRequest {
-  limit: Int
-  cursor: Cursor
+  """The account to get timeline highlights for."""
   account: EvmAddress!
-  forFeeds: [EvmAddress!]! = ["0x42cedc904968EC64890478a6c786537F43228D88"]
+
+  """The feeds to get timeline for."""
+  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
+
+  """An optional filter to apply to the timeline."""
   filter: TimelineHighlightsFilter
+  pageSize: PageSize! = FIFTY
+  cursor: Cursor
 }
 
 type TimelineItem {
-  id: String!
+  id: UUID!
   primary: Post!
-  mirrors: [Post!]!
+  reposts: [Post!]!
   comments: [Post!]!
 }
 
 input TimelineRequest {
-  cursor: Cursor
+  """The account to get timeline for."""
   account: EvmAddress!
-  forFeeds: [EvmAddress!]! = ["0x42cedc904968EC64890478a6c786537F43228D88"]
+
+  """The feeds to get timeline for."""
+  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
+
+  """An optional filter to apply to the timeline."""
   filter: TimelineFilter
+
+  """The cursor."""
+  cursor: Cursor
 }
 
 """AccessCondition"""
@@ -4122,9 +4204,6 @@ type TopLevelAccessCondition {
 }
 
 type TransactionMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
-
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -4141,14 +4220,11 @@ type TransactionMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
-  mainContentFocus: String!
+  """The main focus of the post."""
+  mainContentFocus: MainContentFocus!
 
   """An arbitrary list of tags."""
   tags: [Tag!]
@@ -4201,15 +4277,15 @@ entities without requiring a central allocating authority.
 """
 scalar UUID @specifiedBy(url: "http://tools.ietf.org/html/rfc4122")
 
-type UnassignUsernameFromAccountError {
-  error: UnlinkUsernameFromAccountErrorType!
+input UnassignUsernameFromAccountRequest {
+  namespace: EvmAddress! = "0x6Cc71E78e25eBF6A2525CadC1fc628B42AE4138f"
 }
 
-type UnassignUsernameFromAccountResponse {
+type UnassignUsernameResponse {
   hash: TxHash!
 }
 
-union UnassignUsernameFromAccountResult = UnassignUsernameFromAccountResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | UnassignUsernameFromAccountError
+union UnassignUsernameToAccountResult = UnassignUsernameResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type UnblockError {
   error: UnblockErrorType!
@@ -4241,7 +4317,7 @@ input UndoReactionRequest {
   reaction: PostReactionType!
 
   """The post to react to."""
-  postId: PostId!
+  post: PostId!
 }
 
 type UndoReactionResponse {
@@ -4267,7 +4343,7 @@ input UnhideManagedAccountRequest {
 }
 
 input UnhideReplyRequest {
-  postId: PostId!
+  post: PostId!
 }
 
 type UnknownAction {
@@ -4281,7 +4357,6 @@ input UnknownActionInput {
 }
 
 type UnknownActionSettings {
-  type: PostActionType!
   initializeCalldata: BlockchainData
   initializeResultData: BlockchainData
   verified: Boolean!
@@ -4313,12 +4388,6 @@ input UnknownGraphRuleInput {
   data: BlockchainData!
 }
 
-enum UnlinkUsernameFromAccountErrorType {
-  UNKNOWN
-  USERNAME_NOT_LINKED
-  UNAUTHORIZED
-}
-
 input UpdateAccountManagerRequest {
   """The address to update as a manager."""
   manager: EvmAddress!
@@ -4329,21 +4398,88 @@ input UpdateAccountManagerRequest {
 
 union UpdateAccountManagerResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
-type UsernameResult {
-  id: String
+type Username {
+  """A unique identifier for the username entry."""
+  id: ID!
+
+  """The username value (e.g., lens/bob)."""
   value: UsernameValue!
-  namespace: String!
+
+  """The namespace of the username"""
+  namespace: UsernameNamespace!
+
+  """The local name of the username (e.g., bob)."""
   localName: String!
+
+  """The address that the username is linked to, if any."""
   linkedTo: EvmAddress
+
+  """The address that owns the username entry."""
   ownedBy: EvmAddress!
+
+  """The timestamp when the username was created."""
+  timestamp: DateTime!
+}
+
+input UsernameInput {
+  """The local name to create - should not include the namespace"""
+  localName: String!
+
+  """The namespace. Defaults to lens namespace"""
+  namespace: EvmAddress! = "0x6Cc71E78e25eBF6A2525CadC1fc628B42AE4138f"
+}
+
+type UsernameNamespace {
+  """The address of the namespace."""
+  address: EvmAddress!
+
+  """The namespace for example `lens`"""
+  namespace: String!
+  metadata: UsernameNamespaceMetadata
+}
+
+type UsernameNamespaceMetadata {
+  """An optional description of the Username collection."""
+  description: String
+
+  """
+  A unique identifier that in storages like IPFS ensures the uniqueness of the metadata URI.
+  Use a UUID if unsure.
+  """
+  id: String!
+}
+
+input UsernameNamespaceRequest {
+  """The namespace"""
+  namespace: EvmAddress
+
+  """The transaction hash you created the namespace with."""
+  txHash: TxHash
+}
+
+"""You must provide either an id or a username, not both."""
+input UsernameRequest {
+  """The username ID."""
+  id: ID
+
+  """The username namespace and local name."""
+  username: UsernameInput
 }
 
 scalar UsernameValue
 
-type VideoMetadata {
-  """The App Id that this publication belongs to."""
-  appId: AppId
+input UsernamesRequest {
+  """The page size."""
+  pageSize: PageSize! = FIFTY
 
+  """The cursor."""
+  cursor: Cursor
+
+  """The account or address to get owned usernames for."""
+  owner: EvmAddress!
+}
+
+type VideoMetadata {
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
 
@@ -4357,14 +4493,11 @@ type VideoMetadata {
   """Specify a content warning."""
   contentWarning: ContentWarning
   encryptedWith: EncryptionStrategy
-
-  """Determine if the publication should not be shown in any feed."""
-  hideFromFeed: Boolean
   id: MetadataId!
   locale: Locale!
 
-  """The main focus of the publication."""
-  mainContentFocus: VideoMetadataLensMainContentFocus!
+  """The main focus of the post."""
+  mainContentFocus: MainContentFocus!
 
   """An arbitrary list of tags."""
   tags: [Tag!]
@@ -4373,11 +4506,6 @@ type VideoMetadata {
   title: String
   video: MediaVideo!
   content: Encryptable!
-}
-
-enum VideoMetadataLensMainContentFocus {
-  SHORT_VIDEO
-  VIDEO
 }
 
 scalar Void
@@ -4394,7 +4522,7 @@ enum WhoActedOnPostOrderBy {
 
 input WhoActedOnPostRequest {
   """The post id to get who acted on."""
-  postId: PostId!
+  post: PostId!
   filter: WhoActedOnPostFilter
   orderBy: WhoActedOnPostOrderBy
 
@@ -4406,21 +4534,21 @@ input WhoActedOnPostRequest {
 }
 
 enum WhoReferencedPostOrderBy {
-  LAST_ACTIONED
-  FIRST_ACTIONED
+  MOST_RECENT
+  OLDEST
   ACCOUNT_SCORE
 }
 
 input WhoReferencedPostRequest {
   """The post id to get who referenced."""
-  postId: PostId!
+  post: PostId!
 
-  """The reference types to filter by."""
-  referenceTypes: [PostReferenceType!]
-  orderBy: WhoReferencedPostOrderBy
+  """The types of references to get."""
+  referenceTypes: [PostReferenceType!]!
+  orderBy: WhoReferencedPostOrderBy! = MOST_RECENT
 
   """The page size."""
-  pageSize: Int
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor

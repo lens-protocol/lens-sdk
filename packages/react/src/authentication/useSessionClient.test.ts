@@ -1,8 +1,8 @@
-import { local } from '@lens-social/env';
-import { evmAddress } from '@lens-social/types';
+import { local } from '@lens-protocol/env';
+import { evmAddress } from '@lens-protocol/types';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import { PublicClient, type SessionClient } from '@lens-social/client';
+import { PublicClient, type SessionClient } from '@lens-protocol/client';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { renderHookWithContext } from '../__helpers__/testing-utils';
 import { useSessionClient } from './useSessionClient';

@@ -1,8 +1,8 @@
-import type { SessionClient, SigningError, UnexpectedError } from '@lens-social/client';
-import { AuthenticationError } from '@lens-social/client';
-import { fetchAccount } from '@lens-social/client/actions';
-import type { Account } from '@lens-social/graphql';
-import { type EvmAddress, type ResultAsync, okAsync } from '@lens-social/types';
+import type { SessionClient, SigningError, UnexpectedError } from '@lens-protocol/client';
+import { AuthenticationError } from '@lens-protocol/client';
+import { fetchAccount } from '@lens-protocol/client/actions';
+import type { Account } from '@lens-protocol/graphql';
+import { type EvmAddress, type ResultAsync, okAsync } from '@lens-protocol/types';
 
 import { useLensContext } from '../context';
 import { type UseAsyncTask, useAsyncTask } from '../helpers';
@@ -68,7 +68,7 @@ export function useLogin(): UseAsyncTask<LoginArgs, Account, LoginError> {
 
   return useAsyncTask((args: LoginArgs): LoginResult => {
     const repository = (sessionClient: SessionClient): LoginResult =>
-      fetchAccount(sessionClient, { request: { address: args.account } }).andThen((account) => {
+      fetchAccount(sessionClient, { address: args.account }).andThen((account) => {
         if (account === null) {
           return AuthenticationError.from(
             'Unable to retrieve the Account data you signed in with. ' +
@@ -81,9 +81,9 @@ export function useLogin(): UseAsyncTask<LoginArgs, Account, LoginError> {
     const login = new Login(client, repository);
 
     return login.execute({
-      request: {
-        address: args.account,
-        signedBy: args.signer.address,
+      accountOwner: {
+        account: args.account,
+        owner: args.signer.address,
         app: args.app,
       },
       signMessage: args.signer.signMessage.bind(args.signer),

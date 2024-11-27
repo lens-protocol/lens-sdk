@@ -1,5 +1,5 @@
 {
-  "name": "@lens-social/graphql",
+  "name": "@lens-protocol/graphql",
   "version": "0.0.0",
   "description": "GraphQL bindings for the Lens API",
   "repository": {
@@ -29,12 +29,12 @@
     "build": "tsup",
     "check": "gql.tada check",
     "doctor": "gql.tada doctor",
-    "download:local": "gql-tada generate schema 'http://localhost:3000/graphql' --output './schema.graphql'",
-    "download:staging": "gql-tada generate schema 'https://api.staging.lens.dev/graphql' --output './schema.graphql'",
-    "generate": "gql-tada generate output"
+    "gql:download:local": "gql-tada generate schema 'http://localhost:3000/graphql' --output './schema.graphql'",
+    "gql:download:staging": "gql-tada generate schema 'https://api.staging.lens.dev/graphql' --output './schema.graphql'",
+    "gql:generate": "gql-tada generate output"
   },
   "dependencies": {
-    "@lens-social/types": "workspace:*",
+    "@lens-protocol/types": "workspace:*",
     "gql.tada": "^1.8.10",
     "graphql": "^16.9.0"
   },

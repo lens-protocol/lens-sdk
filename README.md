@@ -1,6 +1,6 @@
-# Lens Social SDK
+# Lens SDK
 
-The official SDK for the Lens Social 🌿.
+The official SDK for the Lens 🌿.
 
 ## Table of Contents <!-- omit in toc -->
 
@@ -56,7 +56,7 @@ to install the correct version once. After that corepack will automatically use 
 
 Run the tests:
 
-- `pnpm test:client`: Run the tests for the `@lens-social/client` package.
+- `pnpm test:client`: Run the tests for the `@lens-protocol/client` package.
 
 Lint the code:
 
@@ -119,4 +119,4 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## License
 
-Lens Social SDK is [MIT licensed](./LICENSE).
+Lens SDK is [MIT licensed](./LICENSE).

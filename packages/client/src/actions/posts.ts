@@ -3,20 +3,20 @@ import type {
   ActionInfo,
   AnyPost,
   Post,
-  PostActionsVariables,
-  PostBookmarksVariables,
-  PostQueryVariables,
-  PostReactionsVariables,
-  PostReferencesVariables,
-} from '@lens-social/graphql';
+  PostActionsRequest,
+  PostBookmarksRequest,
+  PostReactionsRequest,
+  PostReferencesRequest,
+  PostRequest,
+} from '@lens-protocol/graphql';
 import {
   PostActionsQuery,
   PostBookmarksQuery,
   PostQuery,
   PostReactionsQuery,
   PostReferencesQuery,
-} from '@lens-social/graphql';
-import type { ResultAsync } from '@lens-social/types';
+} from '@lens-protocol/graphql';
+import type { ResultAsync } from '@lens-protocol/types';
 
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
@@ -29,15 +29,18 @@ import type { Paginated } from '../types';
  * and {@link Account#operations} specific to the authenticated Account.
  *
  * ```ts
- * const result = await fetchPost(anyClient, { request: { postId: postId('0x01') } });
+ * const result = await fetchPost(anyClient, {
+ *   post: postId('0x01')
+ * });
  * ```
  *
  * @param client - Any Lens client.
+ * @param request - The query request.
  * @returns The Post or `null` if it does not exist.
  */
 export function fetchPost(
   client: AnyClient,
-  { request }: PostQueryVariables,
+  request: PostRequest,
 ): ResultAsync<AnyPost | null, UnexpectedError> {
   return client.query(PostQuery, { request });
 }
@@ -46,24 +49,16 @@ export function fetchPost(
  * Fetch available actions for POST.
  *
  * ```ts
- * const result = await fetchPostActions(anyClient, {
- *   request: {
- *     onlyVerified?: boolean,
- *     includeOnlyCollectActions?: boolean,
- *     includeUnknown?: boolean,
- *     cursor?: Cursor,
- *     limit?: "TEN" | "FIFTY",
- *   }
- * });
+ * const result = await fetchPostActions(anyClient);
  * ```
  *
  * @param client - Any Lens client.
- * @param variables - The PostActions query variables.
+ * @param request - The query request.
  * @returns The list of actions available.
  */
 export function fetchPostActions(
   client: AnyClient,
-  { request }: PostActionsVariables,
+  request: PostActionsRequest = {},
 ): ResultAsync<Paginated<ActionInfo>, UnexpectedError> {
   return client.query(PostActionsQuery, { request });
 }
@@ -73,24 +68,17 @@ export function fetchPostActions(
  *
  * ```ts
  * const result = await fetchPostReactions(anyClient, {
- *   request: {
- *     postId: postId('0x01'),
- *     onlyVerified?: boolean,
- *     includeOnlyCollectActions?: boolean,
- *     includeUnknown?: boolean,
- *     cursor?: Cursor,
- *     limit?: "TEN" | "FIFTY",
- *   }
+ *   post: postId('42'),
  * });
  * ```
  *
  * @param client - Any Lens client.
- * @param variables - The PostReactions query variables.
+ * @param request - The query request.
  * @returns The list of reactions for the post.
  */
 export function fetchPostReactions(
   client: AnyClient,
-  { request }: PostReactionsVariables,
+  request: PostReactionsRequest,
 ): ResultAsync<Paginated<AccountPostReaction>, UnexpectedError> {
   return client.query(PostReactionsQuery, { request });
 }
@@ -99,24 +87,17 @@ export function fetchPostReactions(
  * Fetch bookmarked posts.
  *
  * ```ts
- * const result = await fetchPostReactions(anyClient, {
- *   request: {
- *    cursor?: Cursor,
- *    pageSize?: "TEN" | "FIFTY",
- *    filter?: ...,
- *    forFeeds?: EvmAddress[],
- *  }
- * });
+ * const result = await fetchPostReactions(anyClient);
  * ```
  *
  * @param client - Session Lens client.
- * @param variables - The PostBookmarks query variables.
+ * @param request - The query request.
  * @returns The list of bookmarked posts.
  */
 export function fetchPostBookmarks(
   client: SessionClient,
-  { request }: PostBookmarksVariables,
-): ResultAsync<Paginated<Post>, UnexpectedError | UnauthenticatedError> {
+  request: PostBookmarksRequest = {},
+): ResultAsync<Paginated<AnyPost>, UnexpectedError | UnauthenticatedError> {
   return client.query(PostBookmarksQuery, { request });
 }
 
@@ -125,22 +106,17 @@ export function fetchPostBookmarks(
  *
  * ```ts
  * const result = await fetchPostReferences(anyClient, {
- *   request: {
- *    cursor?: Cursor,
- *    pageSize?: "TEN" | "FIFTY",
- *    filter?: ...,
- *    forFeeds?: EvmAddress[],
- *  }
+ *   referencedPost: postId('42'),
  * });
  * ```
  *
  * @param client - Any Lens client.
- * @param variables - The PostReferences query variables.
+ * @param request - The query request.
  * @returns The list of posts references.
  */
 export function fetchPostReferences(
   client: AnyClient,
-  { request }: PostReferencesVariables,
-): ResultAsync<Paginated<Post>, UnexpectedError | UnauthenticatedError> {
+  request: PostReferencesRequest,
+): ResultAsync<Paginated<AnyPost>, UnexpectedError | UnauthenticatedError> {
   return client.query(PostReferencesQuery, { request });
 }

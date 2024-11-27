@@ -4,13 +4,13 @@
     "skipLibCheck": true, // Important for ambient types (e.g., vite-env.d.ts) to work
     "types": ["node"],
     "paths": {
-      "@lens-social/client": ["./packages/client/src"],
-      "@lens-social/client/actions": ["./packages/client/src/actions"],
-      "@lens-social/env": ["./packages/env/src"],
-      "@lens-social/graphql": ["./packages/graphql/src"],
-      "@lens-social/react": ["./packages/react/src"],
-      "@lens-social/storage": ["./packages/storage/src"],
-      "@lens-social/types": ["./packages/types/src"]
+      "@lens-protocol/client": ["./packages/client/src"],
+      "@lens-protocol/client/actions": ["./packages/client/src/actions"],
+      "@lens-protocol/env": ["./packages/env/src"],
+      "@lens-protocol/graphql": ["./packages/graphql/src"],
+      "@lens-protocol/react": ["./packages/react/src"],
+      "@lens-protocol/storage": ["./packages/storage/src"],
+      "@lens-protocol/types": ["./packages/types/src"]
     }
   },
   "include": ["**/*.ts"],
