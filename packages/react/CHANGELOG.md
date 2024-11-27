@@ -1,5 +1,11 @@
 # @lens-protocol/react
 
+## 2.3.2
+
+### Patch Changes
+
+- f54564545: **fix:** Simple Collect Module recipient is not optional when amount is specified.
+
 ## 2.3.1
 
 ### Patch Changes

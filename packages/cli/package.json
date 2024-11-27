@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lens CLI",
   "repository": {
     "directory": "packages/cli",

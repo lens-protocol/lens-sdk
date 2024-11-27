@@ -1,5 +1,11 @@
 # @lens-protocol/client
 
+## 2.3.2
+
+### Patch Changes
+
+- 0ef404132: **chore:** up the node engine restriction to allow new node lts ver 22
+
 ## 2.3.1
 
 ### Patch Changes

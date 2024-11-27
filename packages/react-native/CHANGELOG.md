@@ -1,5 +1,13 @@
 # @lens-protocol/react-native
 
+## 2.3.2
+
+### Patch Changes
+
+- f54564545: **fix:** Simple Collect Module recipient is not optional when amount is specified.
+- Updated dependencies [f54564545]
+  - @lens-protocol/react@2.3.2
+
 ## 2.3.1
 
 ### Patch Changes
