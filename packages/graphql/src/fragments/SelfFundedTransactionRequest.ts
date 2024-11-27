@@ -21,7 +21,8 @@ export type Eip1559TransactionRequest = FragmentOf<typeof Eip1559TransactionRequ
 export const SelfFundedTransactionRequest = graphql(
   `fragment SelfFundedTransactionRequest on SelfFundedTransactionRequest {
     __typename
-    encoded
+    reason
+    selfFundedReason
     raw {
       ...Eip1559TransactionRequest
     }

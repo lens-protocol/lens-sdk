@@ -29,7 +29,8 @@ export type Eip712TransactionRequest = FragmentOf<typeof Eip712TransactionReques
 export const SponsoredTransactionRequest = graphql(
   `fragment SponsoredTransactionRequest on SponsoredTransactionRequest {
     __typename
-    encoded
+    reason
+    sponsoredReason
     raw {
       ...Eip712TransactionRequest
     }
