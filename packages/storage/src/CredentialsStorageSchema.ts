@@ -13,7 +13,7 @@ export type Credentials = {
   refreshToken: RefreshToken;
 };
 
-// TODO
+// TODO parse v3 then fallback to v2 shape
 const PersistedCredentialsSchema: z.ZodType<Credentials, z.ZodTypeDef, unknown> = z.object({
   accessToken: z.string().transform(accessToken),
   idToken: z.string().transform(idToken),
