@@ -3914,9 +3914,8 @@ type SelfFundedTransactionRequest {
   Use this object if your library does not have a parser for the encoded transaction data.
   """
   raw: Eip1559TransactionRequest!
-
-  """The reason for the fallback."""
-  reason: SelfFundedFallbackReason
+  reason: String!
+  selfFundedReason: SelfFundedFallbackReason
 }
 
 input SetAccountMetadataRequest {
@@ -4012,9 +4011,8 @@ type SponsoredTransactionRequest {
   Use this object if your library does not have a parser for the encoded transaction data.
   """
   raw: Eip712TransactionRequest!
-
-  """The reason for the fallback."""
-  reason: SponsoredFallbackReason
+  reason: String!
+  sponsoredReason: SponsoredFallbackReason
 }
 
 type SponsorshipAllowance {

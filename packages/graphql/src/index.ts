@@ -1,4 +1,5 @@
 export * from './accounts';
+export * from './app';
 export * from './authentication';
 export * from './enums';
 export * from './fragments';
