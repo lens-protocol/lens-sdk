@@ -1,4 +1,4 @@
-name: Snapshot Release
+name: Canary Release
 
 on:
   push:
