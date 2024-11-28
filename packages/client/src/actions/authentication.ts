@@ -79,14 +79,14 @@ export function refresh(
  * Fetch the authenticated sessions associated with the authenticated Account.
  *
  * ```ts
- * const result = await fetchActiveAuthentications(sessionClient);
+ * const result = await fetchAuthenticatedSessions(sessionClient);
  * ```
  *
  * @param client - The session client for the authenticated Account.
  * @param request - The query request.
  * @returns The paginated authenticated sessions associated with the authenticated Account.
  */
-export function fetchActiveAuthentications(
+export function fetchAuthenticatedSessions(
   client: SessionClient,
   request: AuthenticatedSessionsRequest = {},
 ): ResultAsync<Paginated<AuthenticatedSession>, UnexpectedError> {
