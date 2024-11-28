@@ -4,23 +4,26 @@ import type {
   BookmarkPostRequest,
   CreatePostRequest,
   CreateRepostRequest,
+  DeletePostRequest,
+  DeletePostResult,
   EditPostRequest,
+  PostResult,
   UndoBookmarkPostRequest,
   UndoReactionRequest,
   UndoReactionResult,
 } from '@lens-protocol/graphql';
-
 import {
   AddReactionMutation,
   BookmarkPostMutation,
+  DeletePostMutation,
   EditPostMutation,
   PostMutation,
-  type PostResult,
   RepostMutation,
   UndoBookmarkPostMutation,
   UndoReactionMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
+
 import type { SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
@@ -83,6 +86,26 @@ export function editPost(
   request: EditPostRequest,
 ): ResultAsync<PostResult, UnauthenticatedError | UnexpectedError> {
   return client.mutation(EditPostMutation, { request });
+}
+
+/**
+ * Delete a Post.
+ *
+ * ```ts
+ * const result = await deletePost(sessionClient, {
+ *   post: post.id,
+ * });
+ * ```
+ *
+ * @param client - The session client.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function deletePost(
+  client: SessionClient,
+  request: DeletePostRequest,
+): ResultAsync<DeletePostResult, UnauthenticatedError | UnexpectedError> {
+  return client.mutation(DeletePostMutation, { request });
 }
 
 /**

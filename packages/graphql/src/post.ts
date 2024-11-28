@@ -198,3 +198,33 @@ export const UndoBookmarkPostMutation = graphql(
   }`,
 );
 export type UndoBookmarkPostRequest = RequestOf<typeof UndoBookmarkPostMutation>;
+
+const DeletePostResult = graphql(
+  `fragment DeletePostResult on DeletePostResult {
+    ... on DeletePostResponse {
+      __typename
+      hash
+    }
+    ... on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ... on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ... on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [TransactionWillFail, SelfFundedTransactionRequest, SponsoredTransactionRequest],
+);
+export type DeletePostResult = FragmentOf<typeof DeletePostResult>;
+
+export const DeletePostMutation = graphql(
+  `mutation DeletePost($request: DeletePostRequest!) {
+    value: deletePost(request: $request) {
+      ...DeletePostResult
+    }
+  }`,
+  [DeletePostResult],
+);
+export type DeletePostRequest = RequestOf<typeof DeletePostMutation>;
