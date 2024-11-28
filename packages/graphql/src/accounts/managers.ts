@@ -11,7 +11,7 @@ const AccountManager = graphql(
   `fragment AccountManager on AccountManager {
     __typename
     addedAt
-    # address - not possible to query (probably a bug)
+    manager
     isLensManager
     permissions {
       canExecuteTransactions

@@ -2,17 +2,21 @@ import type {
   Account,
   AccountRequest,
   CreateAccountWithUsernameRequest,
+  CreateAccountWithUsernameResult,
+  EnableSignlessResult,
   SetAccountMetadataRequest,
+  SetAccountMetadataResult,
 } from '@lens-protocol/graphql';
 import {
   AccountQuery,
   CreateAccountWithUsernameMutation,
+  EnableSignlessMutation,
+  RemoveSignlessMutation,
   SetAccountMetadataMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
-import type { SetAccountMetadataResult } from '@lens-protocol/graphql';
-import type { CreateAccountWithUsernameResult } from '@lens-protocol/graphql';
+import type { RemoveSignlessResult } from '@lens-protocol/graphql';
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
@@ -23,8 +27,6 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
  *
  * ```ts
  * const result = await fetchAccount(anyClient, {
- *   legacyProfileId?: legacyProfileId('0x01'),
- *   username?: userNameValue('alice'),
  *   address?: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
  * });
  * ```
@@ -65,8 +67,9 @@ export function setAccountMetadata(
  *
  * ```ts
  * const result = await createAccountWithUsername(sessionClient, {
- *   accountManager: [evmAddress('0x01')],
- *   localName: 'wagmi',
+ *   username: {
+ *      localname: 'wagmi'
+ *   },
  *   metadataUri: uri('lens://bafybxiky5jf…'),
  * });
  * ```
@@ -80,4 +83,38 @@ export function createAccountWithUsername(
   request: CreateAccountWithUsernameRequest,
 ): ResultAsync<CreateAccountWithUsernameResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(CreateAccountWithUsernameMutation, { request });
+}
+
+/**
+ * Get transaction to enable signless.
+ *
+ * ```ts
+ * const result = await enableSignless(sessionClient);
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function enableSignless(
+  client: SessionClient,
+): ResultAsync<EnableSignlessResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(EnableSignlessMutation, {});
+}
+
+/**
+ * Get transaction to remove signless.
+ *
+ * ```ts
+ * const result = await removeSignless(sessionClient);
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function removeSignless(
+  client: SessionClient,
+): ResultAsync<RemoveSignlessResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(RemoveSignlessMutation, {});
 }
