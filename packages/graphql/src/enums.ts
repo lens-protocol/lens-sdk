@@ -7,3 +7,11 @@ export enum Role {
   OnboardingUser = 'ONBOARDING_USER',
   Builder = 'BUILDER',
 }
+
+/**
+ * Enum for the different page sizes available.
+ */
+export enum PageSize {
+  Ten = 'TEN',
+  Fifty = 'FIFTY',
+}

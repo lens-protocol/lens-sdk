@@ -23,6 +23,7 @@ import {
   never,
 } from '@lens-protocol/types';
 import { type DocumentDecoration, type FragmentOf, initGraphQLTada } from 'gql.tada';
+import type { PageSize } from './enums';
 import type { introspection } from './graphql-env';
 
 export const graphql = initGraphQLTada<{
@@ -44,6 +45,7 @@ export const graphql = initGraphQLTada<{
     Int: number;
     LegacyProfileId: LegacyProfileId;
     LegacyRefreshToken: CompactJwt;
+    PageSize: PageSize;
     PostId: PostId;
     RefreshToken: RefreshToken;
     Signature: Signature;
