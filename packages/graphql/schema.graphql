@@ -2279,7 +2279,7 @@ enum ManagedAccountsVisibility {
 
 type MeResult {
   """The logged in account."""
-  account: AccountAvailable!
+  loggedInAs: AccountAvailable!
 
   """Whether the account is signless."""
   isSignless: Boolean!

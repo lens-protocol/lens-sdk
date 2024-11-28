@@ -41,12 +41,6 @@ export function fetchAccountManagers(
  * ```ts
  * const result = await addAccountManager(sessionClient, {
  *   address: evmAddress("0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3"),
- *   permissions: {
- *     canSetMetadataUri: true,
- *     canTransferNative: true,
- *     canTransferTokens: true,
- *     canExecuteTransactions: true,
- *   },
  * });
  * ```
  *
