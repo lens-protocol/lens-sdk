@@ -16,6 +16,7 @@
     "lint": "biome check",
     "lint:fix": "biome check --write",
     "new:lib": "NODE_OPTIONS='--import tsx' plop --plopfile=plopfile.ts",
+    "prepublish": "pnpm run build",
     "test:client": "vitest --project @lens-protocol/client",
     "test:react": "vitest --project @lens-protocol/react",
     "test:storage": "vitest --project @lens-protocol/storage",
