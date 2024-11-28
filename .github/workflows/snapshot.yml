@@ -36,6 +36,10 @@ jobs:
         id: check_changeset
         run: echo "changeset_exists=$(grep -q 'No unreleased changesets found' <<< '${{ steps.create_snapshot.outputs.stdout }}' && echo false || echo true)" >> $GITHUB_ENV
 
+      - name: Build
+        if: env.changeset_exists == 'true'
+        run: pnpm build
+
       - name: Publish Snapshot
         if: env.changeset_exists == 'true'
         run: pnpm changeset publish --snapshot --tag canary --no-git-tag
