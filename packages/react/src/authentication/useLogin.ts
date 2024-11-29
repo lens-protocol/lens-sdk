@@ -51,7 +51,7 @@ type LoginResult = ResultAsync<Account, LoginError>;
  *
  * const result = await execute({
  *   account: evmAddress('0xB8d87f414EDc074A1808497BA2Fefc0fb37164C3'),
- *   app: evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3'),
+ *   app: evmAddress('0xe5439696f4057aF073c0FB2dc6e5e755392922e1'),
  *   signer: {
  *     address: evmAddress(wallet.address),
  *     signMessage: (message: string) => wallet.signMessage({ message }),

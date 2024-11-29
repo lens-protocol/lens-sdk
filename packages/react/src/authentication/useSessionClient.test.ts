@@ -8,8 +8,9 @@ import { renderHookWithContext } from '../__helpers__/testing-utils';
 import { useSessionClient } from './useSessionClient';
 
 const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
-const account = evmAddress(signer.address);
-const app = evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3');
+const owner = evmAddress(signer.address);
+const app = evmAddress(import.meta.env.TEST_APP);
+const account = evmAddress(import.meta.env.TEST_ACCOUNT);
 
 describe(`Given the '${useSessionClient.name}' hook`, () => {
   describe('And the user is not authenticated', () => {
@@ -50,10 +51,10 @@ describe(`Given the '${useSessionClient.name}' hook`, () => {
 
     beforeAll(async () => {
       const result = await client.login({
-        request: {
+        accountOwner: {
           account,
-          signedBy: account,
           app,
+          owner,
         },
         signMessage: (message) => signer.signMessage({ message }),
       });

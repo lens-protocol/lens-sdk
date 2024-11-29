@@ -40,7 +40,7 @@ export function fetchAccountManagers(
  *
  * ```ts
  * const result = await addAccountManager(sessionClient, {
- *   address: evmAddress("0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3"),
+ *   address: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1"),
  * });
  * ```
  *
@@ -60,7 +60,7 @@ export function addAccountManager(
  *
  * ```ts
  * const result = await removeAccountManager(sessionClient, {
- *   manager: evmAddress("0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3");
+ *   manager: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1");
  * });
  * ```
  *
