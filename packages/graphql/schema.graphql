@@ -35,6 +35,9 @@ type Account {
 
   """The operations for the account."""
   operations: LoggedInAccountOperations
+
+  """Get the rules for the account."""
+  rules(request: RuleInput): FollowRulesConfig!
 }
 
 union AccountAvailable = AccountManaged | AccountOwned
@@ -488,6 +491,7 @@ type App {
   defaultFeedAddress: EvmAddress
   namespaceAddress: EvmAddress
   treasuryAddress: EvmAddress
+  sourceStampVerificationEnabled: Boolean!
   createdAt: DateTime!
   metadata: AppMetadata
 }
@@ -532,6 +536,10 @@ input AppRequest {
 
   """The transaction hash you created the app with."""
   txHash: TxHash
+}
+
+type ApprovalGroupRule {
+  rule: EvmAddress!
 }
 
 enum AppsOrderBy {
@@ -735,6 +743,16 @@ input ChallengeRequest {
 
   """Use this to authenticate as an Onboarding User."""
   onboardingUser: OnboardingUserChallengeRequest
+}
+
+type CharsetUsernameNamespaceRule {
+  rule: EvmAddress!
+  allowNumeric: Boolean!
+  allowLatinLowercase: Boolean!
+  allowLatinUppercase: Boolean!
+  customAllowedCharset: [String!]
+  customDisallowedCharset: [String!]
+  cannotStartWith: String
 }
 
 type CheckingInMetadata {
@@ -1703,6 +1721,7 @@ input FeeFollowRuleInput {
 type Feed {
   address: EvmAddress!
   metadata: FeedMetadata
+  rules(request: RuleInput): FeedRulesConfig!
 }
 
 type FeedMetadata {
@@ -1728,6 +1747,13 @@ input FeedRequest {
 
   """The transaction hash you created the feed with."""
   txHash: TxHash
+}
+
+union FeedRule = TokenGatedFeedRule | GroupGatedFeedRule | RestrictedSignersFeedRule | SimplePaymentFeedRule | UserBlockingRule | UnknownFeedRule
+
+type FeedRulesConfig {
+  required: [FeedRule!]!
+  anyOf: [FeedRule!]!
 }
 
 input FeedRulesInput {
@@ -1771,6 +1797,13 @@ type FollowResponse {
 
 union FollowResult = FollowResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
+union FollowRule = TokenGatedFollowRule | SimplePaymentFollowRule | UnknownFollowRule
+
+type FollowRulesConfig {
+  required: [FollowRule!]!
+  anyOf: [FollowRule!]!
+}
+
 input FollowRulesInput {
   feeFollowRule: FeeFollowRuleInput
   unknownFollowRule: UnknownFollowRuleInput
@@ -1793,6 +1826,14 @@ type Follower {
 
   """The timestamp when the follower was followed"""
   followedOn: DateTime!
+}
+
+type FollowerOnlyPostRule {
+  rule: EvmAddress!
+  graph: EvmAddress!
+  repliesRestricted: Boolean!
+  repostsRestricted: Boolean!
+  quotesRestricted: Boolean!
 }
 
 enum FollowersOrderBy {
@@ -1892,6 +1933,7 @@ scalar GeneratedNotificationId
 type Graph {
   address: EvmAddress!
   metadata: GraphMetadata
+  rules(request: RuleInput): GraphRulesConfig!
 }
 
 type GraphMetadata {
@@ -1919,6 +1961,13 @@ input GraphRequest {
   txHash: TxHash
 }
 
+union GraphRule = TokenGatedGraphRule | RestrictedSignerGraphRule | UserBlockingRule | UnknownGraphRule
+
+type GraphRulesConfig {
+  required: [GraphRule!]!
+  anyOf: [GraphRule!]!
+}
+
 input GraphRulesInput {
   unknownGraphRule: UnknownGraphRuleInput
 }
@@ -1927,6 +1976,12 @@ type Group {
   address: EvmAddress!
   timestamp: DateTime!
   metadata: GroupMetadata
+  rules(request: RuleInput): GroupRulesConfig!
+}
+
+type GroupGatedFeedRule {
+  rule: EvmAddress!
+  group: Group!
 }
 
 enum GroupMembersOrderBy {
@@ -1975,6 +2030,13 @@ input GroupRequest {
 
   """The transaction hash you created the group with."""
   txHash: TxHash
+}
+
+union GroupRule = TokenGatedGroupRule | SimplePaymentGroupRule | ApprovalGroupRule | UnknownGroupRule
+
+type GroupRulesConfig {
+  required: [GroupRule!]!
+  anyOf: [GroupRule!]!
 }
 
 input GroupsFilter {
@@ -2103,6 +2165,12 @@ scalar LegacyProfileId
 scalar LegacyPublicationId
 
 scalar LegacyRefreshToken
+
+type LengthUsernameNamespaceRule {
+  rule: EvmAddress!
+  minLength: Int!
+  maxLength: Int!
+}
 
 type LinkMetadata {
   """The other attachments you want to include with it."""
@@ -3395,6 +3463,7 @@ type Post {
   operations: LoggedInPostOperations
   stats: PostStats!
   mentions: [AccountMention!]!
+  rules(request: RuleInput): PostRulesConfig!
 }
 
 input PostAccountPair {
@@ -3570,6 +3639,13 @@ type PostResponse {
 }
 
 union PostResult = PostResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+union PostRule = FollowerOnlyPostRule | UnknownPostRule
+
+type PostRulesConfig {
+  required: [PostRule!]!
+  anyOf: [PostRule!]!
+}
 
 type PostStats {
   """The total number of bookmarks."""
@@ -3851,6 +3927,21 @@ type RepostNotification {
   post: Post!
 }
 
+type RestrictedSigner {
+  label: String!
+  signer: EvmAddress!
+}
+
+type RestrictedSignerGraphRule {
+  rule: EvmAddress!
+  signers: [RestrictedSigner!]!
+}
+
+type RestrictedSignersFeedRule {
+  rule: EvmAddress!
+  signers: [RestrictedSigner!]!
+}
+
 input RevokeAuthenticationRequest {
   authenticationId: UUID!
 }
@@ -3861,6 +3952,10 @@ input RolloverRefreshRequest {
 
   """A valid Lens API v2 refresh token for a Profile session."""
   refreshToken: LegacyRefreshToken!
+}
+
+input RuleInput {
+  rules: [EvmAddress!]!
 }
 
 input SearchGroupsRequest {
@@ -3956,6 +4051,30 @@ type SimpleCollectActionSettings {
   referralFee: Float!
   endsAt: DateTime
   recipients: [RecipientDataOutput!]!
+}
+
+type SimplePaymentFeedRule {
+  rule: EvmAddress!
+  amount: Amount!
+  recipient: EvmAddress!
+}
+
+type SimplePaymentFollowRule {
+  rule: EvmAddress!
+  amount: Amount!
+  recipient: EvmAddress!
+}
+
+type SimplePaymentGroupRule {
+  rule: EvmAddress!
+  amount: Amount!
+  recipient: EvmAddress!
+}
+
+type SimplePaymentUsernameNamespaceRule {
+  rule: EvmAddress!
+  amount: Amount!
+  recipient: EvmAddress!
 }
 
 type SpaceMetadata {
@@ -4195,6 +4314,52 @@ input TimelineRequest {
   cursor: Cursor
 }
 
+type TokenGatedFeedRule {
+  rule: EvmAddress!
+  tokenStandard: TokenStandard!
+  typeId: BigInt!
+  token: EvmAddress!
+  amount: Amount!
+}
+
+type TokenGatedFollowRule {
+  rule: EvmAddress!
+  tokenStandard: TokenStandard!
+  typeId: BigInt!
+  token: EvmAddress!
+  amount: Amount!
+}
+
+type TokenGatedGraphRule {
+  rule: EvmAddress!
+  tokenStandard: TokenStandard!
+  typeId: BigInt!
+  token: EvmAddress!
+  amount: Amount!
+}
+
+type TokenGatedGroupRule {
+  rule: EvmAddress!
+  tokenStandard: TokenStandard!
+  typeId: BigInt!
+  token: EvmAddress!
+  amount: Amount!
+}
+
+type TokenGatedUsernameNamespaceRule {
+  rule: EvmAddress!
+  tokenStandard: TokenStandard!
+  typeId: BigInt!
+  token: EvmAddress!
+  amount: Amount!
+}
+
+enum TokenStandard {
+  ERC_20
+  ERC_721
+  ERC_1155
+}
+
 """AccessCondition"""
 type TopLevelAccessCondition {
   criteria: [AnyAccessCondition!]!
@@ -4362,12 +4527,22 @@ type UnknownActionSettings {
   collectNft: EvmAddress
 }
 
+type UnknownFeedRule {
+  rule: EvmAddress!
+  configData: BlockchainData!
+}
+
 input UnknownFeedRuleInput {
   """The rule contract address."""
   address: EvmAddress!
 
   """The encoded rule execution data."""
   data: BlockchainData!
+}
+
+type UnknownFollowRule {
+  rule: EvmAddress!
+  configData: BlockchainData!
 }
 
 input UnknownFollowRuleInput {
@@ -4378,12 +4553,32 @@ input UnknownFollowRuleInput {
   data: BlockchainData!
 }
 
+type UnknownGraphRule {
+  rule: EvmAddress!
+  configData: BlockchainData!
+}
+
 input UnknownGraphRuleInput {
   """The rule contract address."""
   address: EvmAddress!
 
   """The encoded rule execution data."""
   data: BlockchainData!
+}
+
+type UnknownGroupRule {
+  rule: EvmAddress!
+  configData: BlockchainData!
+}
+
+type UnknownPostRule {
+  rule: EvmAddress!
+  configData: BlockchainData!
+}
+
+type UnknownUsernameNamespaceRule {
+  rule: EvmAddress!
+  configData: BlockchainData!
 }
 
 input UpdateAccountManagerRequest {
@@ -4395,6 +4590,11 @@ input UpdateAccountManagerRequest {
 }
 
 union UpdateAccountManagerResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+type UserBlockingRule {
+  rule: EvmAddress!
+  blockedUsers: [EvmAddress!]!
+}
 
 type Username {
   """A unique identifier for the username entry."""
@@ -4434,6 +4634,7 @@ type UsernameNamespace {
   """The namespace for example `lens`"""
   namespace: String!
   metadata: UsernameNamespaceMetadata
+  rules(request: RuleInput): UsernameNamespaceRulesConfig!
 }
 
 type UsernameNamespaceMetadata {
@@ -4453,6 +4654,13 @@ input UsernameNamespaceRequest {
 
   """The transaction hash you created the namespace with."""
   txHash: TxHash
+}
+
+union UsernameNamespaceRule = TokenGatedUsernameNamespaceRule | SimplePaymentUsernameNamespaceRule | CharsetUsernameNamespaceRule | LengthUsernameNamespaceRule | UnknownUsernameNamespaceRule
+
+type UsernameNamespaceRulesConfig {
+  required: [UsernameNamespaceRule!]!
+  anyOf: [UsernameNamespaceRule!]!
 }
 
 """You must provide either an id or a username, not both."""
