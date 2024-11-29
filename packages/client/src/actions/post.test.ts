@@ -8,8 +8,8 @@ import { post } from './post';
 
 const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
 const owner = evmAddress(signer.address);
-const account = evmAddress(import.meta.env.TEST_ACCOUNT);
 const app = evmAddress(import.meta.env.TEST_APP);
+const account = evmAddress(import.meta.env.TEST_ACCOUNT);
 
 describe(`Given the '${post.name}' action`, () => {
   const client = PublicClient.create({
