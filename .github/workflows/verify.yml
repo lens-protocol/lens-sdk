@@ -35,9 +35,9 @@ jobs:
       - name: Setup Environment Variables
         shell: bash
         run: |
-          echo "PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}" > .env
-          echo "TEST_APP=${{ vars.TEST_APP }}" > .env
-          echo "TEST_ACCOUNT=${{ vars.TEST_ACCOUNT }}" > .env
+          echo "PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}" >> .env
+          echo "TEST_APP=${{ vars.TEST_APP }}" >> .env
+          echo "TEST_ACCOUNT=${{ vars.TEST_ACCOUNT }}" >> .env
 
       - name: Run Tests
         run: pnpm test:storage && pnpm test:client
