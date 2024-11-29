@@ -199,11 +199,18 @@ export const UndoBookmarkPostMutation = graphql(
 );
 export type UndoBookmarkPostRequest = RequestOf<typeof UndoBookmarkPostMutation>;
 
+const DeletePostResponse = graphql(
+  `fragment DeletePostResponse on DeletePostResponse {
+    __typename
+    hash
+  }`,
+);
+export type DeletePostResponse = FragmentOf<typeof DeletePostResponse>;
+
 const DeletePostResult = graphql(
   `fragment DeletePostResult on DeletePostResult {
     ... on DeletePostResponse {
-      __typename
-      hash
+      ...DeletePostResponse
     }
     ... on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -215,7 +222,12 @@ const DeletePostResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [TransactionWillFail, SelfFundedTransactionRequest, SponsoredTransactionRequest],
+  [
+    DeletePostResponse,
+    TransactionWillFail,
+    SelfFundedTransactionRequest,
+    SponsoredTransactionRequest,
+  ],
 );
 export type DeletePostResult = FragmentOf<typeof DeletePostResult>;
 
