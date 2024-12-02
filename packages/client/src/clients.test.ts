@@ -1,4 +1,4 @@
-import { local } from '@lens-protocol/env';
+import { testnet } from '@lens-protocol/env';
 import { url, assertErr, assertOk, evmAddress, signatureFrom } from '@lens-protocol/types';
 
 import { privateKeyToAccount } from 'viem/accounts';
@@ -11,12 +11,12 @@ import { UnexpectedError } from './errors';
 
 const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
 const owner = evmAddress(signer.address);
-const account = evmAddress(import.meta.env.ACCOUNT);
-const app = evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3');
+const account = evmAddress(import.meta.env.TEST_ACCOUNT);
+const app = evmAddress(import.meta.env.TEST_APP);
 
 describe(`Given an instance of the ${PublicClient.name}`, () => {
   const client = PublicClient.create({
-    environment: local,
+    environment: testnet,
     origin: 'http://example.com',
   });
 

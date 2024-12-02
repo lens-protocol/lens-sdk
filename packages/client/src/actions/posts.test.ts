@@ -1,13 +1,13 @@
-import { local } from '@lens-protocol/env';
+import { testnet } from '@lens-protocol/env';
 import { assertOk, postId } from '@lens-protocol/types';
 import { describe, it } from 'vitest';
 
 import { PublicClient } from '../clients';
 import { fetchPost } from './posts';
 
-describe('Given the Post queries', () => {
+describe('Given the Post query actions', () => {
   const client = PublicClient.create({
-    environment: local,
+    environment: testnet,
     origin: 'http://example.com',
   });
 

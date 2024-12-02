@@ -9,7 +9,7 @@ import { useLogin } from './useLogin';
 
 const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
 const account = evmAddress(signer.address);
-const app = evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3');
+const app = evmAddress(import.meta.env.TEST_APP);
 
 describe(`Given the ${useLogin.name} hook`, () => {
   const client = PublicClient.create({

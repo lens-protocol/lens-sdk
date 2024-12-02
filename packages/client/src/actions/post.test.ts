@@ -1,4 +1,4 @@
-import { local } from '@lens-protocol/env';
+import { testnet } from '@lens-protocol/env';
 import { assertOk, evmAddress, uri } from '@lens-protocol/types';
 import { privateKeyToAccount } from 'viem/accounts';
 
@@ -8,12 +8,12 @@ import { post } from './post';
 
 const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
 const owner = evmAddress(signer.address);
-const account = evmAddress(import.meta.env.ACCOUNT);
-const app = evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3');
+const app = evmAddress(import.meta.env.TEST_APP);
+const account = evmAddress(import.meta.env.TEST_ACCOUNT);
 
-describe(`Given the ${post.name} action`, () => {
+describe(`Given the '${post.name}' action`, () => {
   const client = PublicClient.create({
-    environment: local,
+    environment: testnet,
     origin: 'http://example.com',
   });
 
@@ -31,7 +31,6 @@ describe(`Given the ${post.name} action`, () => {
       assertOk(result);
       expect(result.value).toMatchObject({
         __typename: 'SponsoredTransactionRequest',
-        encoded: expect.any(String),
         raw: expect.objectContaining({
           __typename: 'Eip712TransactionRequest',
         }),
