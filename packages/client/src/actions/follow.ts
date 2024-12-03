@@ -14,9 +14,9 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
  * Follow an Account
  *
  * ```ts
- * const result = await follow(sessionClient,
- *  { account: evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3') }
- * );
+ * const result = await follow(sessionClient, {
+ *  account: evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3')
+ * });
  * ```
  *
  * @param client - The session client for the authenticated Account.
@@ -34,9 +34,9 @@ export function follow(
  * Unfollow an Account
  *
  * ```ts
- * const result = await unfollow(sessionClient,
- *  { account: evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3') }
- * );
+ * const result = await unfollow(sessionClient, {
+ *  account: evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3')
+ * });
  * ```
  *
  * @param client - The session client for the authenticated Account.
