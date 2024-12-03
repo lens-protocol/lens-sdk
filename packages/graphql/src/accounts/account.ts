@@ -1,6 +1,7 @@
 import type { FragmentOf } from 'gql.tada';
 import {
   Account,
+  PaginatedResultInfo,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
@@ -17,6 +18,31 @@ export const AccountQuery = graphql(
 );
 
 export type AccountRequest = RequestOf<typeof AccountQuery>;
+
+const PaginatedAccountsResult = graphql(
+  `fragment PaginatedAccountsResult on PaginatedAccountsResult {
+    __typename
+    items {
+        ...Account
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+  }`,
+  [Account, PaginatedResultInfo],
+);
+export type PaginatedAccountsResult = FragmentOf<typeof PaginatedAccountsResult>;
+
+export const SearchAccountsQuery = graphql(
+  `query SearchAccounts($request: AccountSearchRequest!) {
+    value: searchAccounts(request: $request) {
+      ...PaginatedAccountsResult
+    }
+  }`,
+  [PaginatedAccountsResult],
+);
+
+export type SearchAccountsRequest = RequestOf<typeof SearchAccountsQuery>;
 
 const SetAccountMetadataResponse = graphql(
   `fragment SetAccountMetadataResponse on SetAccountMetadataResponse {
