@@ -9,6 +9,7 @@ import type { Credentials, IStorage, IStorageProvider } from '@lens-protocol/sto
 import { InMemoryStorageProvider, createCredentialsStorage } from '@lens-protocol/storage';
 import {
   ResultAsync,
+  type TxHash,
   errAsync,
   invariant,
   never,
@@ -29,16 +30,20 @@ import {
 import { type Logger, getLogger } from 'loglevel';
 
 import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
+import { transactionStatus } from './actions';
+import { configureContext } from './context';
 import {
   AuthenticationError,
   GraphQLErrorCode,
   SigningError,
+  TransactionIndexingError,
   UnauthenticatedError,
   UnexpectedError,
   hasExtensionCode,
 } from './errors';
 import { decodeIdToken } from './tokens';
 import type { StandardData } from './types';
+import { delay } from './utils';
 
 function takeValue<T>({
   data,
@@ -101,30 +106,20 @@ export type LoginParams = ChallengeRequest & {
 };
 
 abstract class AbstractClient<TError> {
-  public readonly context: ClientContext;
-
   protected readonly urql: UrqlClient;
 
   protected readonly logger: Logger;
 
   protected readonly credentials: IStorage<Credentials>;
 
-  protected constructor(options: ClientOptions) {
-    this.context = {
-      environment: options.environment,
-      cache: options.cache ?? false,
-      debug: options.debug ?? false,
-      origin: options.origin,
-      storage: options.storage ?? new InMemoryStorageProvider(),
-    };
-
-    this.credentials = createCredentialsStorage(this.context.storage, options.environment.name);
+  protected constructor(public readonly context: ClientContext) {
+    this.credentials = createCredentialsStorage(context.storage, context.environment.name);
 
     this.logger = getLogger(this.constructor.name);
-    this.logger.setLevel(options.debug ? 'DEBUG' : 'SILENT');
+    this.logger.setLevel(context.debug ? 'DEBUG' : 'SILENT');
 
     this.urql = createClient({
-      url: options.environment.backend,
+      url: context.environment.backend,
       exchanges: [
         mapExchange({
           onOperation: async (operation: Operation) => {
@@ -217,7 +212,7 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
    * @returns The new instance of the client.
    */
   static create(options: ClientOptions): PublicClient {
-    return new PublicClient(options);
+    return new PublicClient(configureContext(options));
   }
 
   /**
@@ -429,6 +424,49 @@ class SessionClient extends AbstractClient<UnauthenticatedError | UnexpectedErro
     return this.resultFrom(this.urql.mutation(document, variables))
       .andThen(this.handleAuthentication)
       .map(takeValue);
+  }
+
+  /**
+   * Given a transaction hash, wait for the transaction to be either confirmed or rejected by the Lens API indexer.
+   *
+   * @param hash - The transaction hash to wait for.
+   * @returns The transaction hash if the transaction was confirmed or an error if the transaction was rejected.
+   */
+  readonly waitForTransaction = (
+    txHash: TxHash,
+  ): ResultAsync<TxHash, TransactionIndexingError | UnexpectedError> => {
+    return ResultAsync.fromPromise(this.pollTransactionStatus(txHash), (err) => {
+      if (err instanceof TransactionIndexingError || err instanceof UnexpectedError) {
+        return err;
+      }
+      return UnexpectedError.from(err);
+    });
+  };
+
+  protected async pollTransactionStatus(txHash: TxHash): Promise<TxHash> {
+    const startedAt = Date.now();
+
+    while (Date.now() - startedAt < this.context.environment.indexingTimeout) {
+      const result = await transactionStatus(this, { txHash });
+
+      if (result.isErr()) {
+        throw UnexpectedError.from(result.error);
+      }
+
+      switch (result.value.__typename) {
+        case 'FinishedTransactionStatus':
+          return txHash;
+
+        case 'FailedTransactionStatus':
+          throw TransactionIndexingError.from(result.value.reason);
+
+        case 'PendingTransactionStatus':
+        case 'NotIndexedYetStatus':
+          await delay(this.context.environment.pollingInterval);
+          break;
+      }
+    }
+    throw TransactionIndexingError.from(`Timeout waiting for transaction ${txHash}`);
   }
 
   protected override async fetchOptions(): Promise<RequestInit> {

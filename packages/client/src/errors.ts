@@ -54,6 +54,20 @@ export class SigningError extends ResultAwareError {
 }
 
 /**
+ * Error indicating a transaction failed.
+ */
+export class TransactionError extends ResultAwareError {
+  name = 'TransactionError' as const;
+}
+
+/**
+ * Error indicating a transaction failed to index.
+ */
+export class TransactionIndexingError extends ResultAwareError {
+  name = 'TransactionIndexingError' as const;
+}
+
+/**
  * Error indicating an operation was not executed due to a validation error.
  * See the `cause` property for more information.
  */

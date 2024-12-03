@@ -4,4 +4,5 @@ export type { IStorageProvider, InMemoryStorageProvider } from '@lens-protocol/s
 export * from '@lens-protocol/types';
 
 export * from './clients';
+export * from './config';
 export * from './errors';
