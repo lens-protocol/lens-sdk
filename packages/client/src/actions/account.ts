@@ -4,6 +4,8 @@ import type {
   CreateAccountWithUsernameRequest,
   CreateAccountWithUsernameResult,
   EnableSignlessResult,
+  PaginatedAccountsResult,
+  SearchAccountsRequest,
   SetAccountMetadataRequest,
   SetAccountMetadataResult,
 } from '@lens-protocol/graphql';
@@ -12,6 +14,7 @@ import {
   CreateAccountWithUsernameMutation,
   EnableSignlessMutation,
   RemoveSignlessMutation,
+  SearchAccountsQuery,
   SetAccountMetadataMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
@@ -40,6 +43,26 @@ export function fetchAccount(
   request: AccountRequest,
 ): ResultAsync<Account | null, UnexpectedError> {
   return client.query(AccountQuery, { request });
+}
+
+/**
+ * Search accounts.
+ *
+ * ```ts
+ * const result = await searchAccounts(anyClient, {
+ *   localName: 'wagmi',
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The SearchAccounts query request.
+ * @returns The list of Account or empty list if it does not find anything.
+ */
+export function searchAccounts(
+  client: AnyClient,
+  request: SearchAccountsRequest,
+): ResultAsync<PaginatedAccountsResult | null, UnexpectedError> {
+  return client.query(SearchAccountsQuery, { request });
 }
 
 /**
