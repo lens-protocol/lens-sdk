@@ -19,27 +19,19 @@ export const AccountQuery = graphql(
 
 export type AccountRequest = RequestOf<typeof AccountQuery>;
 
-const PaginatedAccountsResult = graphql(
-  `fragment PaginatedAccountsResult on PaginatedAccountsResult {
-    __typename
-    items {
+export const SearchAccountsQuery = graphql(
+  `query SearchAccounts($request: AccountSearchRequest!) {
+    value: searchAccounts(request: $request) {
+      __typename
+      items {
         ...Account
       }
       pageInfo {
         ...PaginatedResultInfo
       }
-  }`,
-  [Account, PaginatedResultInfo],
-);
-export type PaginatedAccountsResult = FragmentOf<typeof PaginatedAccountsResult>;
-
-export const SearchAccountsQuery = graphql(
-  `query SearchAccounts($request: AccountSearchRequest!) {
-    value: searchAccounts(request: $request) {
-      ...PaginatedAccountsResult
     }
   }`,
-  [PaginatedAccountsResult],
+  [Account, PaginatedResultInfo],
 );
 
 export type SearchAccountsRequest = RequestOf<typeof SearchAccountsQuery>;

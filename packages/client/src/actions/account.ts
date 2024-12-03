@@ -4,7 +4,6 @@ import type {
   CreateAccountWithUsernameRequest,
   CreateAccountWithUsernameResult,
   EnableSignlessResult,
-  PaginatedAccountsResult,
   SearchAccountsRequest,
   SetAccountMetadataRequest,
   SetAccountMetadataResult,
@@ -22,6 +21,7 @@ import type { ResultAsync } from '@lens-protocol/types';
 import type { RemoveSignlessResult } from '@lens-protocol/graphql';
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
+import type { Paginated } from '../types';
 
 /**
  * Fetch an Account.
@@ -61,7 +61,7 @@ export function fetchAccount(
 export function searchAccounts(
   client: AnyClient,
   request: SearchAccountsRequest,
-): ResultAsync<PaginatedAccountsResult | null, UnexpectedError> {
+): ResultAsync<Paginated<Account> | null, UnexpectedError> {
   return client.query(SearchAccountsQuery, { request });
 }
 
