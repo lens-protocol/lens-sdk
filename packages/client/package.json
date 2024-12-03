@@ -20,11 +20,17 @@
       "import": "./dist/actions/index.js",
       "require": "./dist/actions/index.cjs",
       "types": "./dist/actions/index.d.cts"
+    },
+    "./viem": {
+      "import": "./dist/viem/index.js",
+      "require": "./dist/viem/index.cjs",
+      "types": "./dist/viem/index.d.cts"
     }
   },
   "typesVersions": {
     "*": {
-      "actions": ["./dist/actions/index.d.ts"]
+      "actions": ["./dist/actions/index.d.ts"],
+      "viem": ["./dist/viem/index.d.ts"]
     }
   },
   "files": ["dist"],
@@ -43,10 +49,23 @@
     "jwt-decode": "^4.0.0",
     "loglevel": "^1.9.2"
   },
+  "peerDependencies": {
+    "@lens-network/sdk": "canary",
+    "viem": "^2.21.53"
+  },
+  "peerDependenciesMeta": {
+    "@lens-network/sdk": {
+      "optional": true
+    },
+    "viem": {
+      "optional": true
+    }
+  },
   "devDependencies": {
+    "@lens-network/sdk": "0.0.0-canary-20241203115646",
     "tsup": "^8.3.5",
     "typescript": "^5.6.3",
-    "viem": "^2.21.33"
+    "viem": "^2.21.53"
   },
   "license": "MIT"
 }

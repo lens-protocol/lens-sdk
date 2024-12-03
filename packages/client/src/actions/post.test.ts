@@ -11,12 +11,12 @@ const owner = evmAddress(signer.address);
 const app = evmAddress(import.meta.env.TEST_APP);
 const account = evmAddress(import.meta.env.TEST_ACCOUNT);
 
-describe(`Given the '${post.name}' action`, () => {
-  const client = PublicClient.create({
-    environment: testnet,
-    origin: 'http://example.com',
-  });
+const client = PublicClient.create({
+  environment: testnet,
+  origin: 'http://example.com',
+});
 
+describe(`Given the '${post.name}' action`, () => {
   describe('When creating a Post', () => {
     it('Then it should return the expected TransactionRequest', async () => {
       const authenticated = await client.login({

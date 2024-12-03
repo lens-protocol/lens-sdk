@@ -69,6 +69,9 @@ importers:
         specifier: ^1.9.2
         version: 1.9.2
     devDependencies:
+      '@lens-network/sdk':
+        specifier: 0.0.0-canary-20241203115646
+        version: 0.0.0-canary-20241203115646(viem@2.21.53(typescript@5.6.3)(zod@3.23.8))
       tsup:
         specifier: ^8.3.5
         version: 8.3.5(postcss@8.4.47)(tsx@4.19.2)(typescript@5.6.3)
@@ -76,8 +79,8 @@ importers:
         specifier: ^5.6.3
         version: 5.6.3
       viem:
-        specifier: ^2.21.33
-        version: 2.21.52(typescript@5.6.3)(zod@3.23.8)
+        specifier: ^2.21.53
+        version: 2.21.53(typescript@5.6.3)(zod@3.23.8)
 
   packages/env:
     dependencies:
@@ -809,6 +812,21 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@lens-network/sdk@0.0.0-canary-20241203115646':
+    resolution: {integrity: sha512-/oYmhM/WaUgAAzrsWHrcXPr8SQmWrWsUP2LRsa9JtgJXCwpJlKoPxO0E6VFYJxN7LdEtdXdr1eU+d49gE7J/+g==}
+    engines: {node: '>=18', pnpm: '>=9.1.2'}
+    peerDependencies:
+      ethers: ^6.12.1
+      viem: ^2.12.0
+      zksync-ethers: ^6.7.1
+    peerDependenciesMeta:
+      ethers:
+        optional: true
+      viem:
+        optional: true
+      zksync-ethers:
+        optional: true
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -2497,6 +2515,14 @@ packages:
       typescript:
         optional: true
 
+  viem@2.21.53:
+    resolution: {integrity: sha512-0pY8clBacAwzc59iV1vY4a6U4xvRlA5tAuhClJCKvqA6rXJzmNMMvxQ0EG79lkHr7WtBEruXz8nAmONXwnq4EQ==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   vite-node@2.1.6:
     resolution: {integrity: sha512-DBfJY0n9JUwnyLxPSSUmEePT21j8JZp/sR9n+/gBwQU6DcQOioPdb8/pibWfXForbirSagZCilseYIwaL3f95A==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
@@ -3106,6 +3132,10 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@lens-network/sdk@0.0.0-canary-20241203115646(viem@2.21.53(typescript@5.6.3)(zod@3.23.8))':
+    optionalDependencies:
+      viem: 2.21.53(typescript@5.6.3)(zod@3.23.8)
 
   '@manypkg/find-root@1.1.0':
     dependencies:
@@ -4780,6 +4810,24 @@ snapshots:
   v8flags@4.0.1: {}
 
   viem@2.21.52(typescript@5.6.3)(zod@3.23.8):
+    dependencies:
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
+      '@scure/bip32': 1.5.0
+      '@scure/bip39': 1.4.0
+      abitype: 1.0.6(typescript@5.6.3)(zod@3.23.8)
+      isows: 1.0.6(ws@8.18.0)
+      ox: 0.1.2(typescript@5.6.3)(zod@3.23.8)
+      webauthn-p256: 0.0.10
+      ws: 8.18.0
+    optionalDependencies:
+      typescript: 5.6.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - zod
+
+  viem@2.21.53(typescript@5.6.3)(zod@3.23.8):
     dependencies:
       '@noble/curves': 1.6.0
       '@noble/hashes': 1.5.0

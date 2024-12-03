@@ -1,5 +1,6 @@
 import { ResultAwareError } from '@lens-protocol/types';
 import type { CombinedError } from '@urql/core';
+import type { ErrorResponse } from './types';
 
 /**
  * @internal
@@ -38,6 +39,9 @@ export class UnexpectedError extends ResultAwareError {
   name = 'UnexpectedError' as const;
 }
 
+/**
+ * Error indicating a user is not authorized.
+ */
 export class AuthenticationError extends ResultAwareError {
   name = 'AuthenticationError' as const;
 }
@@ -47,4 +51,20 @@ export class AuthenticationError extends ResultAwareError {
  */
 export class SigningError extends ResultAwareError {
   name = 'SigningError' as const;
+}
+
+/**
+ * Error indicating an operation was not executed due to a validation error.
+ * See the `cause` property for more information.
+ */
+export class ValidationError<T extends string> extends ResultAwareError {
+  name = 'ValidationError' as const;
+
+  constructor(public readonly cause: ErrorResponse<T>) {
+    super(cause.reason);
+  }
+
+  static fromErrorResponse<T extends string>(error: ErrorResponse<T>): ValidationError<T> {
+    return new ValidationError(error);
+  }
 }
