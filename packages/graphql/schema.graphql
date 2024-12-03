@@ -375,6 +375,18 @@ input AddAccountManagerRequest {
 
 union AddAccountManagerResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
+input AddAdminsRequest {
+  """
+  The graph/app/sponsor/feed/username/group address which manages these admins
+  """
+  address: EvmAddress!
+
+  """The addresses to add as admins"""
+  admins: [EvmAddress!]!
+}
+
+union AddAdminsResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
 input AddAppAuthorizationEndpointRequest {
   """The app."""
   app: EvmAddress!
@@ -382,6 +394,36 @@ input AddAppAuthorizationEndpointRequest {
   """The app authorization endpoint."""
   endpoint: URL!
 }
+
+input AddAppFeedsRequest {
+  """The app to update"""
+  app: EvmAddress!
+
+  """The app feeds (max 10 per request)"""
+  feeds: [EvmAddress!]!
+}
+
+union AddAppFeedsResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input AddAppGroupsRequest {
+  """The app to update"""
+  app: EvmAddress!
+
+  """The app groups (max 10 per request)"""
+  groups: [EvmAddress!]!
+}
+
+union AddAppGroupsResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input AddAppSignersRequest {
+  """The app to update"""
+  app: EvmAddress!
+
+  """The app signers (max 10 per request)"""
+  signers: [EvmAddress!]!
+}
+
+union AddAppSignersResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type AddReactionFailure {
   reason: String!
@@ -400,6 +442,18 @@ type AddReactionResponse {
 }
 
 union AddReactionResult = AddReactionResponse | AddReactionFailure
+
+type Admin {
+  address: EvmAddress!
+  addedAt: DateTime!
+}
+
+input AdminsForRequest {
+  """The graph/app/sponsor/feed/username/group address"""
+  address: EvmAddress!
+  pageSize: PageSize! = FIFTY
+  cursor: Cursor
+}
 
 type AdvancedContractCondition {
   """
@@ -494,6 +548,34 @@ type App {
   sourceStampVerificationEnabled: Boolean!
   createdAt: DateTime!
   metadata: AppMetadata
+  owner: EvmAddress!
+}
+
+type AppFeed {
+  feed: EvmAddress!
+  timestamp: DateTime!
+}
+
+input AppFeedsRequest {
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+
+  """The app address"""
+  app: EvmAddress!
+}
+
+input AppGroupsRequest {
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+
+  """The app address"""
+  app: EvmAddress!
 }
 
 type AppMetadata {
@@ -536,6 +618,22 @@ input AppRequest {
 
   """The transaction hash you created the app with."""
   txHash: TxHash
+}
+
+type AppSigner {
+  signer: EvmAddress!
+  timestamp: DateTime!
+}
+
+input AppSignersRequest {
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+
+  """The app address"""
+  app: EvmAddress!
 }
 
 type ApprovalGroupRule {
@@ -633,6 +731,7 @@ type AuthenticatedSession {
   signer: EvmAddress!
   createdAt: DateTime!
   updatedAt: DateTime!
+  expiresAt: DateTime!
 }
 
 input AuthenticatedSessionsRequest {
@@ -849,6 +948,12 @@ input CreateAppRequest {
 
   """The app groups leave empty if none"""
   groups: [EvmAddress!]
+
+  """
+  If the app has source stamp verification enabled meaning
+  you can only do stuff with the app if its signed by one of the signers
+  """
+  sourceStampVerification: Boolean!
 
   """The app signers leave empty if none"""
   signers: [EvmAddress!]
@@ -1079,7 +1184,7 @@ type Eip1559TransactionRequest {
   data: BlockchainData!
 
   """The transaction value (in wei)."""
-  value: BigInt
+  value: BigInt!
 
   """The chain ID for the network this transaction is valid on."""
   chainId: Int!
@@ -1130,7 +1235,7 @@ type Eip712TransactionRequest {
   data: BlockchainData!
 
   """The transaction value (in wei)."""
-  value: BigInt
+  value: BigInt!
 
   """The chain ID for the network this transaction is valid on."""
   chainId: Int!
@@ -1720,7 +1825,9 @@ input FeeFollowRuleInput {
 
 type Feed {
   address: EvmAddress!
+  createdAt: DateTime!
   metadata: FeedMetadata
+  owner: EvmAddress!
   rules(request: RuleInput): FeedRulesConfig!
 }
 
@@ -1932,7 +2039,9 @@ scalar GeneratedNotificationId
 
 type Graph {
   address: EvmAddress!
+  createdAt: DateTime!
   metadata: GraphMetadata
+  owner: EvmAddress!
   rules(request: RuleInput): GraphRulesConfig!
 }
 
@@ -1976,6 +2085,7 @@ type Group {
   address: EvmAddress!
   timestamp: DateTime!
   metadata: GroupMetadata
+  owner: EvmAddress!
   rules(request: RuleInput): GroupRulesConfig!
 }
 
@@ -2343,6 +2453,76 @@ enum ManagedAccountsVisibility {
   NONE_HIDDEN
   HIDDEN_ONLY
   ALL
+}
+
+input ManagedAppsRequest {
+  """The address for a user to see what apps they manage."""
+  address: EvmAddress!
+
+  """Whether to include the apps which is owned by the address."""
+  includeOwners: Boolean! = true
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
+input ManagedFeedsRequest {
+  """The address for a user to see what feeds they manage."""
+  address: EvmAddress!
+
+  """Whether to include the feeds which is owned by the address."""
+  includeOwners: Boolean! = true
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
+input ManagedGraphsRequest {
+  """The address for a user to see what graphs they manage."""
+  address: EvmAddress!
+
+  """Whether to include the graphs which is owned by the address."""
+  includeOwners: Boolean! = true
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
+input ManagedGroupsRequest {
+  """The address for a user to see what groups they manage."""
+  address: EvmAddress!
+
+  """Whether to include the groups which is owned by the address."""
+  includeOwners: Boolean! = true
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
+input ManagedNamespacesRequest {
+  """The address for a user to see what namespaces they manage."""
+  address: EvmAddress!
+
+  """Whether to include the namespaces which is owned by the address."""
+  includeOwners: Boolean! = true
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
 }
 
 type MeResult {
@@ -2883,6 +3063,97 @@ type Mutation {
   addAppAuthorizationEndpoint(request: AddAppAuthorizationEndpointRequest!): Void!
 
   """
+  Add feeds to an app
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  addAppFeeds(request: AddAppFeedsRequest!): AddAppFeedsResult!
+
+  """
+  Add groups to an app
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  addAppGroups(request: AddAppGroupsRequest!): AddAppGroupsResult!
+
+  """
+  Add signers to an app
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  addAppSigners(request: AddAppSignersRequest!): AddAppSignersResult!
+
+  """
+  Remove feeds to an app
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  removeAppFeeds(request: RemoveAppFeedsRequest!): RemoveAppFeedsResult!
+
+  """
+  Remove groups to an app
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  removeAppGroups(request: RemoveAppGroupsRequest!): RemoveAppGroupsResult!
+
+  """
+  Remove signers to an app
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  removeAppSigners(request: RemoveAppSignersRequest!): RemoveAppSignersResult!
+
+  """
+  Set graph for an app
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  setAppGraph(request: SetAppGraphRequest!): SetAppGraphResult!
+
+  """
+  Set default feed for an app
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  setDefaultAppFeed(request: SetDefaultAppFeedRequest!): SetDefaultAppFeedResult!
+
+  """
+  Set metadata for an app
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  setAppMetadata(request: SetAppMetadataRequest!): SetAppMetadataResult!
+
+  """
+  Set the source stamp verification for an app
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  setAppSourceStampVerification(request: SetAppSourceStampVerificationRequest!): SetAppSourceStampVerificationResult!
+
+  """
+  Set sponsorship for an app
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  setAppSponsorship(request: SetAppSponsorshipRequest!): SetAppSponsorshipResult!
+
+  """
+  Set treasury for an app
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  setAppTreasury(request: SetAppTreasuryRequest!): SetAppTreasuryResult!
+
+  """
+  Set username namespace for an app
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  setAppUsernameNamespace(request: SetAppUsernameNamespaceRequest!): SetAppUsernameNamespaceResult!
+
+  """
   Report an account.
   
   You MUST be authenticated as Account Owner or Account Manager to use this mutation.
@@ -3156,6 +3427,20 @@ type Mutation {
   unassignUsernameFromAccount(request: UnassignUsernameFromAccountRequest!): UnassignUsernameToAccountResult!
 
   """
+  Add admins to a graph/app/sponsor/feed/username/group.
+  
+  You MUST be authenticated as Account Owner to use this mutation.
+  """
+  addAdmins(request: AddAdminsRequest!): AddAdminsResult!
+
+  """
+  Remove admins from a graph/app/sponsor/feed/username/group.
+  
+  You MUST be authenticated as Account Owner to use this mutation.
+  """
+  removeAdmins(request: RemoveAdminsRequest!): RemoveAdminsResult!
+
+  """
   Create a new feed
   
   You MUST be authenticated as a builder to use this mutation.
@@ -3338,13 +3623,35 @@ type PaginatedActiveAuthenticationsResult {
   pageInfo: PaginatedResultInfo!
 }
 
+type PaginatedAdminsResult {
+  items: [Admin!]!
+  pageInfo: PaginatedResultInfo!
+}
+
 type PaginatedAnyPostsResult {
   items: [AnyPost!]!
   pageInfo: PaginatedResultInfo!
 }
 
+type PaginatedAppFeedsResult {
+  """The feeds"""
+  items: [AppFeed!]!
+  pageInfo: PaginatedResultInfo!
+}
+
+type PaginatedAppSignersResult {
+  """The signers"""
+  items: [AppSigner!]!
+  pageInfo: PaginatedResultInfo!
+}
+
 type PaginatedAppsResult {
   items: [App!]!
+  pageInfo: PaginatedResultInfo!
+}
+
+type PaginatedFeedsResult {
+  items: [Feed!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -3355,6 +3662,11 @@ type PaginatedFollowersResult {
 
 type PaginatedFollowingResult {
   items: [Following!]!
+  pageInfo: PaginatedResultInfo!
+}
+
+type PaginatedGraphsResult {
+  items: [Graph!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -3394,6 +3706,11 @@ type PaginatedResultInfo {
 
 type PaginatedTimelineResult {
   items: [TimelineItem!]!
+  pageInfo: PaginatedResultInfo!
+}
+
+type PaginatedUsernameNamespacesResult {
+  items: [UsernameNamespace!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -3450,7 +3767,6 @@ type PhysicalAddress {
 type Post {
   id: PostId!
   author: Account!
-  feed: Feed!
   isEdited: Boolean!
   isDeleted: Boolean!
   timestamp: DateTime!
@@ -3463,6 +3779,7 @@ type Post {
   operations: LoggedInPostOperations
   stats: PostStats!
   mentions: [AccountMention!]!
+  feed: Feed!
   rules(request: RuleInput): PostRulesConfig!
 }
 
@@ -3767,8 +4084,24 @@ type Query {
   Get the last logged in account for the given address and app if specified.
   """
   lastLoggedInAccount(request: LastLoggedInAccountRequest!): Account
+
+  """Get an app"""
   app(request: AppRequest!): App
+
+  """Get the apps"""
   apps(request: AppsRequest!): PaginatedAppsResult!
+
+  """Get the groups for an app"""
+  appGroups(request: AppGroupsRequest!): PaginatedGroupsResult!
+
+  """Get the signers for an app"""
+  appSigners(request: AppSignersRequest!): PaginatedAppSignersResult!
+
+  """Get the feeds for an app"""
+  appFeeds(request: AppFeedsRequest!): PaginatedAppFeedsResult!
+
+  """Get the apps managed by the given address."""
+  managedApps(request: ManagedAppsRequest!): PaginatedAppsResult!
 
   """
   List all active authenticated sessions for the current account.
@@ -3784,6 +4117,9 @@ type Query {
   """
   currentSession: AuthenticatedSession!
   feed(request: FeedRequest!): Feed
+
+  """Get the feeds managed by the given address."""
+  managedFeeds(request: ManagedFeedsRequest!): PaginatedFeedsResult!
   post(request: PostRequest!): AnyPost
   posts(request: PostsRequest!): PaginatedAnyPostsResult!
   postReferences(request: PostReferencesRequest!): PaginatedAnyPostsResult!
@@ -3804,6 +4140,9 @@ type Query {
   followersYouKnow(request: FollowersYouKnowRequest!): PaginatedFollowersResult!
   followStatus(request: FollowStatusRequest!): [FollowStatusResult!]!
   graph(request: GraphRequest!): Graph
+
+  """Get the graphs managed by the given address."""
+  managedGraphs(request: ManagedGraphsRequest!): PaginatedGraphsResult!
   group(request: GroupRequest!): Group
 
   """Get the groups this account is a member of"""
@@ -3814,6 +4153,12 @@ type Query {
 
   """Get the members of the group"""
   groupMembers(request: GroupMembersRequest!): PaginatedAccountsResult!
+
+  """Get the groups managed by the given address."""
+  managedGroups(request: ManagedGroupsRequest!): PaginatedGroupsResult!
+
+  """Get admins for a graph/app/sponsor/feed/username/group address"""
+  adminsFor(request: AdminsForRequest!): PaginatedAdminsResult!
 
   """
   Get account timeline.
@@ -3841,6 +4186,9 @@ type Query {
 
   """Get the usernames for the account/owner."""
   usernames(request: UsernamesRequest!): PaginatedUsernamesResult!
+
+  """Get the namespaces managed by the given address."""
+  managedNamespaces(request: ManagedNamespacesRequest!): PaginatedUsernameNamespacesResult!
   _service: _Service!
 }
 
@@ -3889,6 +4237,48 @@ input RemoveAccountManagerRequest {
 }
 
 union RemoveAccountManagerResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input RemoveAdminsRequest {
+  """
+  The graph/app/sponsor/feed/username/group address which manages these admins
+  """
+  address: EvmAddress!
+
+  """The addresses to remove as admins"""
+  admins: [EvmAddress!]!
+}
+
+union RemoveAdminsResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input RemoveAppFeedsRequest {
+  """The app to update"""
+  app: EvmAddress!
+
+  """The app feeds (max 10 per request)"""
+  feeds: [EvmAddress!]!
+}
+
+union RemoveAppFeedsResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input RemoveAppGroupsRequest {
+  """The app to update"""
+  app: EvmAddress!
+
+  """The app groups (max 10 per request)"""
+  groups: [EvmAddress!]!
+}
+
+union RemoveAppGroupsResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input RemoveAppSignersRequest {
+  """The app to update"""
+  app: EvmAddress!
+
+  """The app signers (max 10 per request)"""
+  signers: [EvmAddress!]!
+}
+
+union RemoveAppSignersResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 union RemoveSignlessResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
@@ -4023,6 +4413,76 @@ type SetAccountMetadataResponse {
 }
 
 union SetAccountMetadataResult = SetAccountMetadataResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input SetAppGraphRequest {
+  """The app to update"""
+  app: EvmAddress!
+
+  """The app graph to set"""
+  graph: EvmAddress!
+}
+
+union SetAppGraphResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input SetAppMetadataRequest {
+  """The app to update"""
+  app: EvmAddress!
+
+  """The app metadata to set"""
+  metadataUri: String!
+}
+
+union SetAppMetadataResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input SetAppSourceStampVerificationRequest {
+  """The app to update"""
+  app: EvmAddress!
+
+  """The app source stamp verification to set"""
+  status: Boolean!
+}
+
+union SetAppSourceStampVerificationResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input SetAppSponsorshipRequest {
+  """The app to update"""
+  app: EvmAddress!
+
+  """The app sponsorship to set"""
+  sponsorship: EvmAddress!
+}
+
+union SetAppSponsorshipResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input SetAppTreasuryRequest {
+  """The app to update"""
+  app: EvmAddress!
+
+  """The app treasury to set"""
+  treasury: EvmAddress!
+}
+
+union SetAppTreasuryResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input SetAppUsernameNamespaceRequest {
+  """The app to update"""
+  app: EvmAddress!
+
+  """The app username namespace to set"""
+  usernameNamespace: EvmAddress!
+}
+
+union SetAppUsernameNamespaceResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input SetDefaultAppFeedRequest {
+  """The app to update"""
+  app: EvmAddress!
+
+  """The app default feed to set"""
+  feed: EvmAddress!
+}
+
+union SetDefaultAppFeedResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar Signature
 
@@ -4603,9 +5063,6 @@ type Username {
   """The username value (e.g., lens/bob)."""
   value: UsernameValue!
 
-  """The namespace of the username"""
-  namespace: UsernameNamespace!
-
   """The local name of the username (e.g., bob)."""
   localName: String!
 
@@ -4617,6 +5074,7 @@ type Username {
 
   """The timestamp when the username was created."""
   timestamp: DateTime!
+  namespace: UsernameNamespace!
 }
 
 input UsernameInput {
@@ -4633,7 +5091,9 @@ type UsernameNamespace {
 
   """The namespace for example `lens`"""
   namespace: String!
+  createdAt: DateTime!
   metadata: UsernameNamespaceMetadata
+  owner: EvmAddress!
   rules(request: RuleInput): UsernameNamespaceRulesConfig!
 }
 
