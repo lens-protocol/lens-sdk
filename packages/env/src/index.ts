@@ -6,6 +6,8 @@ import { url, type URL, never } from '@lens-protocol/types';
 export type EnvironmentConfig = {
   name: string;
   backend: URL;
+  indexingTimeout: number;
+  pollingInterval: number;
 };
 
 /**
@@ -17,6 +19,8 @@ export const mainnet: EnvironmentConfig = new Proxy(
   {
     name: 'mainnet',
     backend: url('https://example.com'),
+    indexingTimeout: 10000,
+    pollingInterval: 1000,
   },
   {
     get: (_target, _prop) => {
@@ -33,6 +37,8 @@ export const mainnet: EnvironmentConfig = new Proxy(
 export const testnet: EnvironmentConfig = {
   name: 'testnet',
   backend: url('https://api.testnet.lens.dev/graphql'),
+  indexingTimeout: 10000,
+  pollingInterval: 1000,
 };
 
 /**
@@ -41,6 +47,8 @@ export const testnet: EnvironmentConfig = {
 export const staging: EnvironmentConfig = {
   name: 'staging',
   backend: url('https://api.staging.lens.dev/graphql'),
+  indexingTimeout: 20000,
+  pollingInterval: 2000,
 };
 
 /**
@@ -49,4 +57,6 @@ export const staging: EnvironmentConfig = {
 export const local: EnvironmentConfig = {
   name: 'local',
   backend: url('http://localhost:3000/graphql'),
+  indexingTimeout: 5000,
+  pollingInterval: 500,
 };
