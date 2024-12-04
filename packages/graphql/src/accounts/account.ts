@@ -127,3 +127,73 @@ export const CreateAccountWithUsernameMutation = graphql(
 );
 
 export type CreateAccountWithUsernameRequest = RequestOf<typeof CreateAccountWithUsernameMutation>;
+
+const AccountFeedsStats = graphql(
+  `fragment AccountFeedsStats on AccountFeedsStats {
+    __typename
+    posts
+    comments
+    reposts
+    quotes
+    reacted
+    reactions
+    collects
+  }`,
+);
+export type AccountFeedsStats = FragmentOf<typeof AccountFeedsStats>;
+
+const AccountGraphsFollowStats = graphql(
+  `fragment AccountGraphsFollowStats on AccountGraphsFollowStats {
+    __typename
+    followers
+    following
+  }`,
+);
+export type AccountGraphsFollowStats = FragmentOf<typeof AccountGraphsFollowStats>;
+
+const AccountStats = graphql(
+  `fragment AccountStats on AccountStats {
+    __typename
+    feedStats {
+      ...AccountFeedsStats
+    }
+    graphFollowStats {
+      ...AccountGraphsFollowStats
+    }
+  }`,
+  [AccountFeedsStats, AccountGraphsFollowStats],
+);
+export type AccountStats = FragmentOf<typeof AccountStats>;
+
+export const AccountFeedsStatsQuery = graphql(
+  `query AccountFeedsStats($request: AccountFeedsStatsRequest!) {
+    value: accountFeedsStats(request: $request) {
+      ...AccountFeedsStats
+    }
+  }`,
+  [AccountFeedsStats],
+);
+
+export type AccountFeedsStatsRequest = RequestOf<typeof AccountFeedsStatsQuery>;
+
+export const AccountStatsQuery = graphql(
+  `query AccountStats($request: AccountStatsRequest!) {
+    value: accountStats(request: $request) {
+      ...AccountStats
+    }
+  }`,
+  [AccountStats],
+);
+
+export type AccountStatsRequest = RequestOf<typeof AccountStatsQuery>;
+
+export const AccountGraphsStatsQuery = graphql(
+  `query AccountGraphsStats($request: AccountGraphsStatsRequest!) {
+    value: accountGraphsStats(request: $request) {
+      ...AccountGraphsFollowStats
+    }
+  }`,
+  [AccountGraphsFollowStats],
+);
+
+export type AccountGraphsStatsRequest = RequestOf<typeof AccountGraphsStatsQuery>;
