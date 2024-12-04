@@ -152,7 +152,7 @@ export function fetchAccountsAvailable(
  * @returns The list of blocked accounts.
  */
 export function fetchAccountsBlocked(
-  client: AnyClient,
+  client: SessionClient,
   request: AccountsBlockedRequest,
 ): ResultAsync<Paginated<AccountBlocked> | null, UnexpectedError> {
   return client.query(AccountsBlockedQuery, { request });
