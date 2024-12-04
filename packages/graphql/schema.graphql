@@ -593,6 +593,9 @@ type AppMetadata {
   """The name of the app."""
   name: String!
 
+  """The tagline of the app."""
+  tagline: String
+
   """The platforms supported by the app."""
   platforms: [AppMetadataLensPlatformsItem!]!
 
@@ -618,6 +621,11 @@ input AppRequest {
 
   """The transaction hash you created the app with."""
   txHash: TxHash
+}
+
+input AppServerApiKeyRequest {
+  """The app address."""
+  app: EvmAddress!
 }
 
 type AppSigner {
@@ -3154,6 +3162,13 @@ type Mutation {
   setAppUsernameNamespace(request: SetAppUsernameNamespaceRequest!): SetAppUsernameNamespaceResult!
 
   """
+  Refresh the server side api key for an app
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  appRefreshServerApiKey(request: RefreshAppServerApiKeyRequest!): ServerAPIKey!
+
+  """
   Report an account.
   
   You MUST be authenticated as Account Owner or Account Manager to use this mutation.
@@ -4104,6 +4119,13 @@ type Query {
   managedApps(request: ManagedAppsRequest!): PaginatedAppsResult!
 
   """
+  Get the server side API key for the app you must be the owner of the app to see it.
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  appServerApiKey(request: AppServerApiKeyRequest!): ServerAPIKey!
+
+  """
   List all active authenticated sessions for the current account.
   
   You MUST be authenticated to use this query.
@@ -4221,6 +4243,11 @@ input RecommendAccount {
 input ReferencingPostInput {
   """The post to reference."""
   post: PostId!
+}
+
+input RefreshAppServerApiKeyRequest {
+  """The app to refresh the server side api key for"""
+  app: EvmAddress!
 }
 
 input RefreshRequest {
@@ -4402,6 +4429,8 @@ type SelfFundedTransactionRequest {
   reason: String!
   selfFundedReason: SelfFundedFallbackReason
 }
+
+scalar ServerAPIKey
 
 input SetAccountMetadataRequest {
   """The metadata URI to set."""
