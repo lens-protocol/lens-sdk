@@ -62,7 +62,7 @@
     }
   },
   "devDependencies": {
-    "@lens-network/sdk": "0.0.0-canary-20241203115646",
+    "@lens-network/sdk": "0.0.0-canary-20241203140504",
     "tsup": "^8.3.5",
     "typescript": "^5.6.3",
     "viem": "^2.21.53"
