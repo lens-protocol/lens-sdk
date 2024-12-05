@@ -6,7 +6,7 @@ import type {
   SignedAuthChallenge,
 } from '@lens-protocol/graphql';
 import type { Credentials, IStorage, IStorageProvider } from '@lens-protocol/storage';
-import { InMemoryStorageProvider, createCredentialsStorage } from '@lens-protocol/storage';
+import { createCredentialsStorage } from '@lens-protocol/storage';
 import {
   ResultAsync,
   type TxHash,
