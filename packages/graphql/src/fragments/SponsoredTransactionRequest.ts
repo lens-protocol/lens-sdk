@@ -9,7 +9,8 @@ const Eip712TransactionRequest = graphql(
     from
     nonce
     gasLimit
-    gasPrice
+    maxFeePerGas
+    maxPriorityFeePerGas
     data
     value
     chainId
