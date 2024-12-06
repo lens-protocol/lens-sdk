@@ -1898,6 +1898,35 @@ input FeedRulesInput {
   unknownFeedRule: UnknownFeedRuleInput
 }
 
+input FeedsFilterRequest {
+  """The optional filter to get feeds managed by address"""
+  managedBy: ManagedBy
+
+  """
+  The optional filter to narrow feeds by search query.
+  Uses fuzzy search on feed name
+  """
+  searchQuery: String
+}
+
+enum FeedsOrderBy {
+  NEWEST
+  ALPHABETICAL
+}
+
+input FeedsRequest {
+  filter: FeedsFilterRequest
+
+  """The order by."""
+  orderBy: FeedsOrderBy! = NEWEST
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
 """
 The transaction has been mined and indexed correctly.
 
@@ -2118,6 +2147,33 @@ input GraphRulesInput {
   unknownGraphRule: UnknownGraphRuleInput
 }
 
+input GraphsFilterRequest {
+  """The optional filter to get graphs managed by address"""
+  managedBy: ManagedBy
+
+  """
+  The optional filter to narrow graphs by search query.
+  Uses fuzzy search on feed name
+  """
+  searchQuery: String
+}
+
+enum GraphsOrderBy {
+  NEWEST
+  ALPHABETICAL
+}
+
+input GraphsRequest {
+  filter: GraphsFilterRequest
+
+  """The order by."""
+  orderBy: GraphsOrderBy! = NEWEST
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
 type Group {
   address: EvmAddress!
   timestamp: DateTime!
@@ -2204,25 +2260,30 @@ type GroupStatsResponse {
   totalMembers: Int!
 }
 
-input GroupsFilter {
-  """The name of the group"""
-  name: String
+input GroupsFilterRequest {
+  """The optional filter to get groups where account is a member"""
+  member: EvmAddress
+
+  """The optional filter to get groups managed by address"""
+  managedBy: ManagedBy
+
+  """
+  The optional filter to narrow groups by search query.
+  Uses fuzzy search on feed name
+  """
+  searchQuery: String
 }
 
 enum GroupsOrderBy {
-  LATEST_JOINED
-  NAME
+  NEWEST
+  ALPHABETICAL
 }
 
 input GroupsRequest {
-  """Get the groups this account is a member of"""
-  member: EvmAddress!
-
-  """The filter"""
-  filter: GroupsFilter
+  filter: GroupsFilterRequest
 
   """The order by."""
-  orderBy: GroupsOrderBy! = LATEST_JOINED
+  orderBy: GroupsOrderBy! = NEWEST
 
   """The page size."""
   pageSize: PageSize! = FIFTY
@@ -2524,46 +2585,12 @@ input ManagedAppsRequest {
   cursor: Cursor
 }
 
-input ManagedFeedsRequest {
-  """The address for a user to see what feeds they manage."""
+input ManagedBy {
+  """The address for a user to see what apps they manage."""
   address: EvmAddress!
 
-  """Whether to include the feeds which is owned by the address."""
+  """Whether to include the apps which is owned by the address."""
   includeOwners: Boolean! = true
-
-  """The page size."""
-  pageSize: PageSize! = FIFTY
-
-  """The cursor."""
-  cursor: Cursor
-}
-
-input ManagedGraphsRequest {
-  """The address for a user to see what graphs they manage."""
-  address: EvmAddress!
-
-  """Whether to include the graphs which is owned by the address."""
-  includeOwners: Boolean! = true
-
-  """The page size."""
-  pageSize: PageSize! = FIFTY
-
-  """The cursor."""
-  cursor: Cursor
-}
-
-input ManagedGroupsRequest {
-  """The address for a user to see what groups they manage."""
-  address: EvmAddress!
-
-  """Whether to include the groups which is owned by the address."""
-  includeOwners: Boolean! = true
-
-  """The page size."""
-  pageSize: PageSize! = FIFTY
-
-  """The cursor."""
-  cursor: Cursor
 }
 
 input ManagedNamespacesRequest {
@@ -4264,8 +4291,8 @@ type Query {
   currentSession: AuthenticatedSession!
   feed(request: FeedRequest!): Feed
 
-  """Get the feeds managed by the given address."""
-  managedFeeds(request: ManagedFeedsRequest!): PaginatedFeedsResult!
+  """Get the feeds."""
+  feeds(request: FeedsRequest!): PaginatedFeedsResult!
   post(request: PostRequest!): AnyPost
   posts(request: PostsRequest!): PaginatedAnyPostsResult!
   postReferences(request: PostReferencesRequest!): PaginatedAnyPostsResult!
@@ -4288,21 +4315,15 @@ type Query {
   followStatus(request: FollowStatusRequest!): [FollowStatusResult!]!
   graph(request: GraphRequest!): Graph
 
-  """Get the graphs managed by the given address."""
-  managedGraphs(request: ManagedGraphsRequest!): PaginatedGraphsResult!
+  """Get the graphs."""
+  graphs(request: GraphsRequest!): PaginatedGraphsResult!
   group(request: GroupRequest!): Group
 
-  """Get the groups this account is a member of"""
+  """Get the groups."""
   groups(request: GroupsRequest!): PaginatedGroupsResult!
-
-  """Search for groups"""
-  searchGroups(request: SearchGroupsRequest!): PaginatedGroupsResult!
 
   """Get the members of the group"""
   groupMembers(request: GroupMembersRequest!): PaginatedAccountsResult!
-
-  """Get the groups managed by the given address."""
-  managedGroups(request: ManagedGroupsRequest!): PaginatedGroupsResult!
 
   """Get the groups managed by the given address."""
   groupStats(request: GroupStatsRequest!): GroupStatsResponse!
@@ -4504,17 +4525,6 @@ input RolloverRefreshRequest {
 
 input RuleInput {
   rules: [EvmAddress!]!
-}
-
-input SearchGroupsRequest {
-  """The search query"""
-  query: String!
-
-  """The page size."""
-  pageSize: PageSize! = FIFTY
-
-  """The cursor."""
-  cursor: Cursor
 }
 
 input SearchPostsFilter {
