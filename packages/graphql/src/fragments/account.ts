@@ -58,3 +58,72 @@ export const FullAccount = graphql(
   [AccountMetadata, LoggedInAccountOperations, Username],
 );
 export type FullAccount = FragmentOf<typeof FullAccount>;
+
+const AccountManagerPermissions = graphql(
+  `fragment AccountManagerPermissions on AccountManagerPermissions {
+    __typename
+    canExecuteTransactions
+    canSetMetadataUri
+    canTransferNative
+    canTransferTokens
+  }`,
+);
+export type AccountManagerPermissions = FragmentOf<typeof AccountManagerPermissions>;
+
+export const AccountManager = graphql(
+  `fragment AccountManager on AccountManager {
+    __typename
+    addedAt
+    manager
+    isLensManager
+    permissions {
+      ...AccountManagerPermissions
+    }
+  }`,
+);
+export type AccountManager = FragmentOf<typeof AccountManager>;
+
+const AccountManaged = graphql(
+  `fragment AccountManaged on AccountManaged {
+    __typename
+    addedAt
+    account {
+      ...Account
+    }
+    permissions {
+      ...AccountManagerPermissions
+    }
+  }`,
+  [AccountManagerPermissions, Account],
+);
+export type AccountManaged = FragmentOf<typeof AccountManaged>;
+
+export const AccountAvailable = graphql(
+  `fragment AccountAvailable on AccountAvailable {
+    __typename
+    ... on AccountManaged {
+      ...AccountManaged
+    }
+    ... on AccountOwned {
+      __typename
+      addedAt
+      account {
+        ...Account
+      }
+    }
+  }`,
+  [Account, AccountManaged],
+);
+export type AccountAvailable = FragmentOf<typeof AccountAvailable>;
+
+export const AccountBlocked = graphql(
+  `fragment AccountBlocked on AccountBlocked {
+    __typename
+    blockedAt
+    account {
+      ...Account
+    }
+  }`,
+  [Account],
+);
+export type AccountBlocked = FragmentOf<typeof AccountBlocked>;
