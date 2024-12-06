@@ -1,5 +1,7 @@
 import type {
   Account,
+  AccountAvailable,
+  AccountBlocked,
   AccountFeedsStats,
   AccountFeedsStatsRequest,
   AccountGraphsFollowStats,
@@ -7,6 +9,8 @@ import type {
   AccountRequest,
   AccountStats,
   AccountStatsRequest,
+  AccountsAvailableRequest,
+  AccountsBlockedRequest,
   CreateAccountWithUsernameRequest,
   CreateAccountWithUsernameResult,
   EnableSignlessResult,
@@ -20,6 +24,8 @@ import {
   AccountGraphsStatsQuery,
   AccountQuery,
   AccountStatsQuery,
+  AccountsAvailableQuery,
+  AccountsBlockedQuery,
   CreateAccountWithUsernameMutation,
   EnableSignlessMutation,
   RemoveSignlessMutation,
@@ -112,6 +118,44 @@ export function fetchAccountGraphStats(
   request: AccountGraphsStatsRequest,
 ): ResultAsync<AccountGraphsFollowStats | null, UnexpectedError> {
   return client.query(AccountGraphsStatsQuery, { request });
+}
+
+/**
+ * Fetch Accounts Available.
+ *
+ * ```ts
+ * const result = await fetchAccountsAvailable(anyClient, {
+ *   managedBy: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of available accounts.
+ */
+export function fetchAccountsAvailable(
+  client: AnyClient,
+  request: AccountsAvailableRequest,
+): ResultAsync<Paginated<AccountAvailable> | null, UnexpectedError> {
+  return client.query(AccountsAvailableQuery, { request });
+}
+
+/**
+ * Fetch Blocked Accounts.
+ *
+ * ```ts
+ * const result = await fetchAccountsBlocked(sessionClient);
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The query request.
+ * @returns The list of blocked accounts.
+ */
+export function fetchAccountsBlocked(
+  client: SessionClient,
+  request: AccountsBlockedRequest,
+): ResultAsync<Paginated<AccountBlocked> | null, UnexpectedError> {
+  return client.query(AccountsBlockedQuery, { request });
 }
 
 /**
