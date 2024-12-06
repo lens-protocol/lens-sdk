@@ -6,7 +6,7 @@ import type {
   SignedAuthChallenge,
 } from '@lens-protocol/graphql';
 import type { Credentials, IStorage, IStorageProvider } from '@lens-protocol/storage';
-import { InMemoryStorageProvider, createCredentialsStorage } from '@lens-protocol/storage';
+import { createCredentialsStorage } from '@lens-protocol/storage';
 import {
   ResultAsync,
   type TxHash,
@@ -31,6 +31,7 @@ import { type Logger, getLogger } from 'loglevel';
 
 import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
 import { transactionStatus } from './actions';
+import type { ClientConfig } from './config';
 import { configureContext } from './context';
 import {
   AuthenticationError,
@@ -52,41 +53,6 @@ function takeValue<T>({
   invariant(data, `Expected a value, got: ${error?.message}`);
   return data.value;
 }
-
-/**
- * The options to configure the client.
- */
-export type ClientOptions = {
-  /**
-   * The environment configuration to use (e.g. `mainnet`, `testnet`).
-   */
-  environment: EnvironmentConfig;
-  /**
-   * Whether to enable caching.
-   *
-   * @defaultValue `false`
-   */
-  cache?: boolean;
-  /**
-   * Whether to enable debug mode.
-   *
-   * @defaultValue `false`
-   */
-  debug?: boolean;
-  /**
-   * The URL origin of the client.
-   *
-   * Use this to set the `Origin` header for requests from non-browser environments.
-   */
-  origin?: string;
-
-  /**
-   * The storage provider to use.
-   *
-   * @defaultValue {@link InMemoryStorageProvider}
-   */
-  storage?: IStorageProvider;
-};
 
 /**
  * @internal
@@ -211,7 +177,7 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
    * @param options - The options to configure the client.
    * @returns The new instance of the client.
    */
-  static create(options: ClientOptions): PublicClient {
+  static create(options: ClientConfig): PublicClient {
     return new PublicClient(configureContext(options));
   }
 

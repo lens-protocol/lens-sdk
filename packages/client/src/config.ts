@@ -2,7 +2,7 @@ import type { EnvironmentConfig } from '@lens-protocol/env';
 import type { IStorageProvider } from '@lens-protocol/storage';
 
 /**
- * The client
+ * The client configuration.
  */
 export type ClientConfig = {
   /**

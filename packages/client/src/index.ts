@@ -5,4 +5,5 @@ export * from '@lens-protocol/types';
 
 export * from './clients';
 export * from './config';
+export type * from './context';
 export * from './errors';
