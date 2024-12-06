@@ -7,3 +7,4 @@ export * from './SponsoredTransactionRequest';
 export * from './SelfFundedTransactionRequest';
 export * from './TransactionWillFail';
 export * from './username';
+export * from './namespace';
