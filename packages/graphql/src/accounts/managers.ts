@@ -75,3 +75,29 @@ export const RemoveAccountManagerMutation = graphql(
   [RemoveAccountManagerResult],
 );
 export type RemoveAccountManagerRequest = RequestOf<typeof RemoveAccountManagerMutation>;
+
+const UpdateAccountManagerResult = graphql(
+  `fragment UpdateAccountManagerResult on UpdateAccountManagerResult{
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [SelfFundedTransactionRequest, SponsoredTransactionRequest, TransactionWillFail],
+);
+export type UpdateAccountManagerResult = FragmentOf<typeof UpdateAccountManagerResult>;
+
+export const UpdateAccountManagerMutation = graphql(
+  `mutation RemoveAccountManager($request: UpdateAccountManagerRequest!) {
+    value: updateAccountManager(request: $request) {
+      ...UpdateAccountManagerResult
+    }
+  }`,
+  [UpdateAccountManagerResult],
+);
+export type UpdateAccountManagerRequest = RequestOf<typeof UpdateAccountManagerMutation>;

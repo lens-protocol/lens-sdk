@@ -81,7 +81,6 @@ export const SetAccountMetadataMutation = graphql(
   }`,
   [SetAccountMetadataResult],
 );
-
 export type SetAccountMetadataRequest = RequestOf<typeof SetAccountMetadataMutation>;
 
 const CreateAccountResponse = graphql(
@@ -231,3 +230,17 @@ export const AccountsBlockedQuery = graphql(
 );
 
 export type AccountsBlockedRequest = RequestOf<typeof AccountsBlockedQuery>;
+
+export const MuteAccountMutation = graphql(
+  `mutation Mute($request: MuteRequest!) {
+    value: mute(request: $request)
+  }`,
+);
+export type MuteRequest = RequestOf<typeof MuteAccountMutation>;
+
+export const UnmuteAccountMutation = graphql(
+  `mutation Unmute($request: MuteRequest!) {
+    value: unmute(request: $request)
+  }`,
+);
+export type UnmuteRequest = RequestOf<typeof UnmuteAccountMutation>;

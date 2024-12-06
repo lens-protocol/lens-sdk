@@ -14,10 +14,12 @@ import type {
   CreateAccountWithUsernameRequest,
   CreateAccountWithUsernameResult,
   EnableSignlessResult,
+  MuteRequest,
   RemoveSignlessResult,
   SearchAccountsRequest,
   SetAccountMetadataRequest,
   SetAccountMetadataResult,
+  UnmuteRequest,
 } from '@lens-protocol/graphql';
 import {
   AccountFeedsStatsQuery,
@@ -28,9 +30,11 @@ import {
   AccountsBlockedQuery,
   CreateAccountWithUsernameMutation,
   EnableSignlessMutation,
+  MuteAccountMutation,
   RemoveSignlessMutation,
   SearchAccountsQuery,
   SetAccountMetadataMutation,
+  UnmuteAccountMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
@@ -253,4 +257,44 @@ export function removeSignless(
   client: SessionClient,
 ): ResultAsync<RemoveSignlessResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(RemoveSignlessMutation, {});
+}
+
+/**
+ * Mute an account.
+ *
+ * ```ts
+ * const result = await muteAccount(sessionClient, {
+ *   account: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1");
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns void.
+ */
+export function muteAccount(
+  client: SessionClient,
+  request: MuteRequest,
+): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(MuteAccountMutation, { request });
+}
+
+/**
+ * Unmute an account.
+ *
+ * ```ts
+ * const result = await unmuteAccount(sessionClient, {
+ *   account: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1");
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns void.
+ */
+export function unmuteAccount(
+  client: SessionClient,
+  request: UnmuteRequest,
+): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(UnmuteAccountMutation, { request });
 }
