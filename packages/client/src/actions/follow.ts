@@ -109,18 +109,18 @@ export function fetchFollowing(
  * Fetch accounts following.
  *
  * ```ts
- * const result = await fetchFollowersYouKnow(sessionClient, {
+ * const result = await fetchFollowersYouKnow(anyClient, {
  *   observer: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
  *   target: evmAddress('0xe5439696f4057aF073c0FB2dc6e5e755392922e1'),
  * });
  * ```
  *
- * @param client - The session client for the authenticated Account.
+ * @param client - Any Lens client.
  * @param request - The query request.
  * @returns List of accounts following.
  */
 export function fetchFollowersYouKnow(
-  client: SessionClient,
+  client: AnyClient,
   request: FollowersYouKnowRequest,
 ): ResultAsync<Paginated<Follower>, UnexpectedError> {
   return client.query(FollowersYouKnowQuery, { request });
