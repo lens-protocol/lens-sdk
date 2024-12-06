@@ -2062,6 +2062,12 @@ input FollowingRequest {
   orderBy: FollowingOrderBy! = DESC
 }
 
+enum ForYouSource {
+  FOLLOWING
+  CURATED
+  POPULAR
+}
+
 type ForbiddenError {
   reason: String!
 }
@@ -3096,6 +3102,47 @@ type MintMetadata {
   content: Encryptable!
 }
 
+input MlaccountRecommendationsRequest {
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+
+  """The account to get recommendations for."""
+  account: EvmAddress!
+
+  """Shuffle the recommendations."""
+  shuffle: Boolean! = false
+}
+
+input MlexplorePostsFilter {
+  since: Int
+}
+
+input MlexplorePostsRequest {
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+  filter: MlexplorePostsFilter
+}
+
+input MlpostsForYouRequest {
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+
+  """The account to get for you for."""
+  account: EvmAddress!
+
+  """Shuffle the for you posts."""
+  shuffle: Boolean! = false
+}
+
 type Mutation {
   """
   Create a new app
@@ -3759,6 +3806,11 @@ type PaginatedPostTagsResult {
   pageInfo: PaginatedResultInfo!
 }
 
+type PaginatedPostsForYouResult {
+  items: [PostForYou!]!
+  pageInfo: PaginatedResultInfo!
+}
+
 type PaginatedPostsResult {
   items: [Post!]!
   pageInfo: PaginatedResultInfo!
@@ -3901,6 +3953,11 @@ input PostEditsRequest {
   post: PostId!
   pageSize: PageSize! = FIFTY
   cursor: Cursor
+}
+
+type PostForYou {
+  post: Post!
+  source: ForYouSource!
 }
 
 scalar PostId
@@ -4269,6 +4326,9 @@ type Query {
   You MUST be authenticated to use this query.
   """
   notifications(request: NotificationRequest!): PaginatedNotificationResult!
+  mlAccountRecommendations(request: MlaccountRecommendationsRequest!): PaginatedAccountsResult!
+  mlPostsForYou(request: MlpostsForYouRequest!): PaginatedPostsForYouResult!
+  mlPostsExplore(request: MlexplorePostsRequest!): PaginatedPostsResult
 
   """Get the status of a transaction by its hash."""
   transactionStatus(request: TransactionStatusRequest!): TransactionStatusResult!
