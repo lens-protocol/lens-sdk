@@ -37,11 +37,8 @@ async function sendTransaction(
       account: walletClient.account,
       data: request.raw.data,
       gas: BigInt(request.raw.gasLimit),
-
-      // TODO Replace this workaround hack once the gas price estimation is clarified.
-      maxFeePerGas: BigInt(request.raw.gasPrice),
-      maxPriorityFeePerGas: BigInt(request.raw.gasPrice),
-      // gasPrice: BigInt(request.raw.gasPrice),
+      maxFeePerGas: BigInt(request.raw.maxFeePerGas),
+      maxPriorityFeePerGas: BigInt(request.raw.maxPriorityFeePerGas),
       nonce: request.raw.nonce,
       paymaster: request.raw.customData.paymasterParams?.paymaster,
       paymasterInput: request.raw.customData.paymasterParams?.paymasterInput,

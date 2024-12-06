@@ -1,5 +1,7 @@
 import type {
   Account,
+  AccountAvailable,
+  AccountBlocked,
   AccountFeedsStats,
   AccountFeedsStatsRequest,
   AccountGraphsFollowStats,
@@ -7,24 +9,32 @@ import type {
   AccountRequest,
   AccountStats,
   AccountStatsRequest,
+  AccountsAvailableRequest,
+  AccountsBlockedRequest,
   CreateAccountWithUsernameRequest,
   CreateAccountWithUsernameResult,
   EnableSignlessResult,
+  MuteRequest,
   RemoveSignlessResult,
   SearchAccountsRequest,
   SetAccountMetadataRequest,
   SetAccountMetadataResult,
+  UnmuteRequest,
 } from '@lens-protocol/graphql';
 import {
   AccountFeedsStatsQuery,
   AccountGraphsStatsQuery,
   AccountQuery,
   AccountStatsQuery,
+  AccountsAvailableQuery,
+  AccountsBlockedQuery,
   CreateAccountWithUsernameMutation,
   EnableSignlessMutation,
+  MuteAccountMutation,
   RemoveSignlessMutation,
   SearchAccountsQuery,
   SetAccountMetadataMutation,
+  UnmuteAccountMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
@@ -112,6 +122,44 @@ export function fetchAccountGraphStats(
   request: AccountGraphsStatsRequest,
 ): ResultAsync<AccountGraphsFollowStats | null, UnexpectedError> {
   return client.query(AccountGraphsStatsQuery, { request });
+}
+
+/**
+ * Fetch Accounts Available.
+ *
+ * ```ts
+ * const result = await fetchAccountsAvailable(anyClient, {
+ *   managedBy: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of available accounts.
+ */
+export function fetchAccountsAvailable(
+  client: AnyClient,
+  request: AccountsAvailableRequest,
+): ResultAsync<Paginated<AccountAvailable> | null, UnexpectedError> {
+  return client.query(AccountsAvailableQuery, { request });
+}
+
+/**
+ * Fetch Blocked Accounts.
+ *
+ * ```ts
+ * const result = await fetchAccountsBlocked(sessionClient);
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The query request.
+ * @returns The list of blocked accounts.
+ */
+export function fetchAccountsBlocked(
+  client: SessionClient,
+  request: AccountsBlockedRequest,
+): ResultAsync<Paginated<AccountBlocked> | null, UnexpectedError> {
+  return client.query(AccountsBlockedQuery, { request });
 }
 
 /**
@@ -209,4 +257,44 @@ export function removeSignless(
   client: SessionClient,
 ): ResultAsync<RemoveSignlessResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(RemoveSignlessMutation, {});
+}
+
+/**
+ * Mute an account.
+ *
+ * ```ts
+ * const result = await muteAccount(sessionClient, {
+ *   account: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1");
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns void.
+ */
+export function muteAccount(
+  client: SessionClient,
+  request: MuteRequest,
+): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(MuteAccountMutation, { request });
+}
+
+/**
+ * Unmute an account.
+ *
+ * ```ts
+ * const result = await unmuteAccount(sessionClient, {
+ *   account: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1");
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns void.
+ */
+export function unmuteAccount(
+  client: SessionClient,
+  request: UnmuteRequest,
+): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(UnmuteAccountMutation, { request });
 }

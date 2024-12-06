@@ -5,11 +5,14 @@ import type {
   AddAccountManagerResult,
   RemoveAccountManagerRequest,
   RemoveAccountManagerResult,
+  UpdateAccountManagerRequest,
+  UpdateAccountManagerResult,
 } from '@lens-protocol/graphql';
 import {
   AccountManagersQuery,
   AddAccountManagerMutation,
   RemoveAccountManagerMutation,
+  UpdateAccountManagerMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
@@ -73,4 +76,30 @@ export function removeAccountManager(
   request: RemoveAccountManagerRequest,
 ): ResultAsync<RemoveAccountManagerResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(RemoveAccountManagerMutation, { request });
+}
+
+/**
+ * Update permissions for an account manager.
+ *
+ * ```ts
+ * const result = await updateAccountManager(sessionClient, {
+ *   permissions: {
+ *       canSetMetadataUri: true;
+ *       canTransferNative: false;
+ *       canTransferTokens: true;
+ *       canExecuteTransactions: false;
+ *   },
+ *   manager: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1");
+ * });
+ * ```
+ *
+ * @param client - Lens SessionClient.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function updateAccountManager(
+  client: SessionClient,
+  request: UpdateAccountManagerRequest,
+): ResultAsync<UpdateAccountManagerResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(UpdateAccountManagerMutation, { request });
 }

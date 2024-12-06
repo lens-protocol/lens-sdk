@@ -545,7 +545,7 @@ type App {
   defaultFeedAddress: EvmAddress
   namespaceAddress: EvmAddress
   treasuryAddress: EvmAddress
-  sourceStampVerificationEnabled: Boolean!
+  verificationEnabled: Boolean!
   createdAt: DateTime!
   metadata: AppMetadata
   owner: EvmAddress!
@@ -593,6 +593,9 @@ type AppMetadata {
   """The name of the app."""
   name: String!
 
+  """The tagline of the app."""
+  tagline: String
+
   """The platforms supported by the app."""
   platforms: [AppMetadataLensPlatformsItem!]!
 
@@ -620,6 +623,11 @@ input AppRequest {
   txHash: TxHash
 }
 
+input AppServerApiKeyRequest {
+  """The app address."""
+  app: EvmAddress!
+}
+
 type AppSigner {
   signer: EvmAddress!
   timestamp: DateTime!
@@ -634,6 +642,23 @@ input AppSignersRequest {
 
   """The app address"""
   app: EvmAddress!
+}
+
+type AppUser {
+  account: Account!
+  lastActiveOn: DateTime!
+  firstLoginOn: DateTime!
+}
+
+input AppUsersRequest {
+  """The App to filter by."""
+  app: EvmAddress!
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
 }
 
 type ApprovalGroupRule {
@@ -950,10 +975,10 @@ input CreateAppRequest {
   groups: [EvmAddress!]
 
   """
-  If the app has source stamp verification enabled meaning
+  If the app has verification enabled meaning
   you can only do stuff with the app if its signed by one of the signers
   """
-  sourceStampVerification: Boolean!
+  verification: Boolean!
 
   """The app signers leave empty if none"""
   signers: [EvmAddress!]
@@ -1171,11 +1196,11 @@ type Eip1559TransactionRequest {
   """The maximum amount of gas to allow this transaction to consume."""
   gasLimit: Int!
 
-  """The EIP_1559 maximum priority fee to pay per gas."""
+  """The maximum priority fee to pay per gas."""
   maxPriorityFeePerGas: BigInt!
 
   """
-  The EIP_1559 maximum total fee to pay per gas. The actual
+  The maximum total fee to pay per gas. The actual
   value used is protocol enforced to be the block's base fee.
   """
   maxFeePerGas: BigInt!
@@ -1228,8 +1253,14 @@ type Eip712TransactionRequest {
   """The maximum amount of gas to allow this transaction to consume."""
   gasLimit: Int!
 
-  """The gas price to use."""
-  gasPrice: BigInt!
+  """The maximum priority fee to pay per gas."""
+  maxPriorityFeePerGas: BigInt!
+
+  """
+  The maximum total fee to pay per gas. The actual
+  value used is protocol enforced to be the block's base fee.
+  """
+  maxFeePerGas: BigInt!
 
   """The transaction data."""
   data: BlockchainData!
@@ -2031,6 +2062,12 @@ input FollowingRequest {
   orderBy: FollowingOrderBy! = DESC
 }
 
+enum ForYouSource {
+  FOLLOWING
+  CURATED
+  POPULAR
+}
+
 type ForbiddenError {
   reason: String!
 }
@@ -2085,6 +2122,12 @@ type Group {
   address: EvmAddress!
   timestamp: DateTime!
   metadata: GroupMetadata
+
+  """
+  Check if the authenticated account is a member of the group.
+  Will return null if the account is not logged in.
+  """
+  isMember: Boolean
   owner: EvmAddress!
   rules(request: RuleInput): GroupRulesConfig!
 }
@@ -2132,6 +2175,9 @@ type GroupMetadata {
 
   """The slug for the Community."""
   slug: String!
+
+  """The Group cover picture."""
+  coverPicture: URI
 }
 
 input GroupRequest {
@@ -2147,6 +2193,15 @@ union GroupRule = TokenGatedGroupRule | SimplePaymentGroupRule | ApprovalGroupRu
 type GroupRulesConfig {
   required: [GroupRule!]!
   anyOf: [GroupRule!]!
+}
+
+input GroupStatsRequest {
+  """The group address to check its total members."""
+  group: EvmAddress!
+}
+
+type GroupStatsResponse {
+  totalMembers: Int!
 }
 
 input GroupsFilter {
@@ -3047,6 +3102,47 @@ type MintMetadata {
   content: Encryptable!
 }
 
+input MlaccountRecommendationsRequest {
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+
+  """The account to get recommendations for."""
+  account: EvmAddress!
+
+  """Shuffle the recommendations."""
+  shuffle: Boolean! = false
+}
+
+input MlexplorePostsFilter {
+  since: Int
+}
+
+input MlexplorePostsRequest {
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+  filter: MlexplorePostsFilter
+}
+
+input MlpostsForYouRequest {
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+
+  """The account to get for you for."""
+  account: EvmAddress!
+
+  """Shuffle the for you posts."""
+  shuffle: Boolean! = false
+}
+
 type Mutation {
   """
   Create a new app
@@ -3126,11 +3222,13 @@ type Mutation {
   setAppMetadata(request: SetAppMetadataRequest!): SetAppMetadataResult!
 
   """
-  Set the source stamp verification for an app
+  Set if the app verification is enabled
+  App needs to have authorization endpoint enabled
+  App needs to return `verification_endpoint` from the authorization endpoint
   
   You MUST be authenticated as a builder to use this mutation.
   """
-  setAppSourceStampVerification(request: SetAppSourceStampVerificationRequest!): SetAppSourceStampVerificationResult!
+  setAppVerification(request: SetAppVerificationRequest!): SetAppVerificationResult!
 
   """
   Set sponsorship for an app
@@ -3152,6 +3250,13 @@ type Mutation {
   You MUST be authenticated as a builder to use this mutation.
   """
   setAppUsernameNamespace(request: SetAppUsernameNamespaceRequest!): SetAppUsernameNamespaceResult!
+
+  """
+  Refresh the server side api key for an app
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  appRefreshServerApiKey(request: RefreshAppServerApiKeyRequest!): ServerAPIKey!
 
   """
   Report an account.
@@ -3645,6 +3750,11 @@ type PaginatedAppSignersResult {
   pageInfo: PaginatedResultInfo!
 }
 
+type PaginatedAppUsersResult {
+  items: [AppUser!]!
+  pageInfo: PaginatedResultInfo!
+}
+
 type PaginatedAppsResult {
   items: [App!]!
   pageInfo: PaginatedResultInfo!
@@ -3681,6 +3791,11 @@ type PaginatedNotificationResult {
   pageInfo: PaginatedResultInfo!
 }
 
+type PaginatedPostEditsResult {
+  items: [PostEdit!]!
+  pageInfo: PaginatedResultInfo!
+}
+
 type PaginatedPostReactionsResult {
   items: [AccountPostReaction!]!
   pageInfo: PaginatedResultInfo!
@@ -3688,6 +3803,11 @@ type PaginatedPostReactionsResult {
 
 type PaginatedPostTagsResult {
   items: [Tag!]!
+  pageInfo: PaginatedResultInfo!
+}
+
+type PaginatedPostsForYouResult {
+  items: [PostForYou!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -3822,6 +3942,22 @@ input PostBookmarksRequest {
   filter: PostBookmarksFilter
   pageSize: PageSize! = FIFTY
   cursor: Cursor
+}
+
+type PostEdit {
+  metadata: PostMetadata!
+  timestamp: DateTime!
+}
+
+input PostEditsRequest {
+  post: PostId!
+  pageSize: PageSize! = FIFTY
+  cursor: Cursor
+}
+
+type PostForYou {
+  post: Post!
+  source: ForYouSource!
 }
 
 scalar PostId
@@ -4100,8 +4236,18 @@ type Query {
   """Get the feeds for an app"""
   appFeeds(request: AppFeedsRequest!): PaginatedAppFeedsResult!
 
+  """Get accounts for an app."""
+  appUsers(request: AppUsersRequest!): PaginatedAppUsersResult!
+
   """Get the apps managed by the given address."""
   managedApps(request: ManagedAppsRequest!): PaginatedAppsResult!
+
+  """
+  Get the server side API key for the app you must be the owner of the app to see it.
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  appServerApiKey(request: AppServerApiKeyRequest!): ServerAPIKey!
 
   """
   List all active authenticated sessions for the current account.
@@ -4135,6 +4281,7 @@ type Query {
   """Get accounts who referenced a post"""
   whoReferencedPost(request: WhoReferencedPostRequest!): PaginatedAccountsResult!
   whoActedOnPost(request: WhoActedOnPostRequest!): PaginatedAccountsResult!
+  postEdits(request: PostEditsRequest!): PaginatedPostEditsResult!
   following(request: FollowingRequest!): PaginatedFollowingResult!
   followers(request: FollowersRequest!): PaginatedFollowersResult!
   followersYouKnow(request: FollowersYouKnowRequest!): PaginatedFollowersResult!
@@ -4157,6 +4304,9 @@ type Query {
   """Get the groups managed by the given address."""
   managedGroups(request: ManagedGroupsRequest!): PaginatedGroupsResult!
 
+  """Get the groups managed by the given address."""
+  groupStats(request: GroupStatsRequest!): GroupStatsResponse!
+
   """Get admins for a graph/app/sponsor/feed/username/group address"""
   adminsFor(request: AdminsForRequest!): PaginatedAdminsResult!
 
@@ -4176,6 +4326,9 @@ type Query {
   You MUST be authenticated to use this query.
   """
   notifications(request: NotificationRequest!): PaginatedNotificationResult!
+  mlAccountRecommendations(request: MlaccountRecommendationsRequest!): PaginatedAccountsResult!
+  mlPostsForYou(request: MlpostsForYouRequest!): PaginatedPostsForYouResult!
+  mlPostsExplore(request: MlexplorePostsRequest!): PaginatedPostsResult
 
   """Get the status of a transaction by its hash."""
   transactionStatus(request: TransactionStatusRequest!): TransactionStatusResult!
@@ -4221,6 +4374,11 @@ input RecommendAccount {
 input ReferencingPostInput {
   """The post to reference."""
   post: PostId!
+}
+
+input RefreshAppServerApiKeyRequest {
+  """The app to refresh the server side api key for"""
+  app: EvmAddress!
 }
 
 input RefreshRequest {
@@ -4403,6 +4561,8 @@ type SelfFundedTransactionRequest {
   selfFundedReason: SelfFundedFallbackReason
 }
 
+scalar ServerAPIKey
+
 input SetAccountMetadataRequest {
   """The metadata URI to set."""
   metadataUri: URI!
@@ -4434,16 +4594,6 @@ input SetAppMetadataRequest {
 
 union SetAppMetadataResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
-input SetAppSourceStampVerificationRequest {
-  """The app to update"""
-  app: EvmAddress!
-
-  """The app source stamp verification to set"""
-  status: Boolean!
-}
-
-union SetAppSourceStampVerificationResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
-
 input SetAppSponsorshipRequest {
   """The app to update"""
   app: EvmAddress!
@@ -4473,6 +4623,16 @@ input SetAppUsernameNamespaceRequest {
 }
 
 union SetAppUsernameNamespaceResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input SetAppVerificationRequest {
+  """The app to update"""
+  app: EvmAddress!
+
+  """The new verification state"""
+  enabled: Boolean!
+}
+
+union SetAppVerificationResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input SetDefaultAppFeedRequest {
   """The app to update"""
