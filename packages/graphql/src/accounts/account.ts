@@ -1,6 +1,8 @@
 import type { FragmentOf } from 'gql.tada';
 import {
   Account,
+  AccountAvailable,
+  AccountBlocked,
   PaginatedResultInfo,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
@@ -196,6 +198,38 @@ export const AccountGraphsStatsQuery = graphql(
 );
 
 export type AccountGraphsStatsRequest = RequestOf<typeof AccountGraphsStatsQuery>;
+
+export const AccountsAvailableQuery = graphql(
+  `query AccountsAvailable($request: AccountsAvailableRequest!) {
+    value: accountsAvailable(request: $request) {
+      items{
+        ...AccountAvailable
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [AccountAvailable, PaginatedResultInfo],
+);
+
+export type AccountsAvailableRequest = RequestOf<typeof AccountsAvailableQuery>;
+
+export const AccountsBlockedQuery = graphql(
+  `query AccountsBlocked($request: AccountsBlockedRequest!) {
+    value: accountsBlocked(request: $request) {
+      items{
+        ...AccountBlocked
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [AccountBlocked, PaginatedResultInfo],
+);
+
+export type AccountsBlockedRequest = RequestOf<typeof AccountsBlockedQuery>;
 
 export const MuteAccountMutation = graphql(
   `mutation Mute($request: MuteRequest!) {

@@ -1,27 +1,12 @@
 import type { FragmentOf } from 'gql.tada';
 import {
+  AccountManager,
   PaginatedResultInfo,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
 } from '../fragments';
 import { type RequestOf, graphql } from '../graphql';
-
-const AccountManager = graphql(
-  `fragment AccountManager on AccountManager {
-    __typename
-    addedAt
-    manager
-    isLensManager
-    permissions {
-      canExecuteTransactions
-      canSetMetadataUri
-      canTransferNative
-      canTransferTokens
-    }
-  }`,
-);
-export type AccountManager = FragmentOf<typeof AccountManager>;
 
 export const AccountManagersQuery = graphql(
   `query AccountManagers($request: AccountManagersRequest!) {
