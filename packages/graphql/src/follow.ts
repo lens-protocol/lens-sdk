@@ -1,6 +1,9 @@
 import type { FragmentOf } from 'gql.tada';
 
 import {
+  Account,
+  BooleanValue,
+  PaginatedResultInfo,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
@@ -85,3 +88,99 @@ export const UnfollowMutation = graphql(
   [UnfollowResult],
 );
 export type CreateUnfollowRequest = RequestOf<typeof UnfollowMutation>;
+
+const Follower = graphql(
+  `fragment Follower on Follower {
+    __typename
+    follower {
+      ...Account
+    }
+    followedOn
+  }`,
+  [Account],
+);
+export type Follower = FragmentOf<typeof Follower>;
+
+const Following = graphql(
+  `fragment Following on Following {
+    __typename
+    following {
+      ...Account
+    }
+    followedOn
+  }`,
+  [Account],
+);
+export type Following = FragmentOf<typeof Following>;
+
+export const FollowersQuery = graphql(
+  `query Followers ($request: FollowersRequest!) {
+    value: followers(request: $request) {
+      __typename
+      items {
+        ...Follower
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [Follower, PaginatedResultInfo],
+);
+export type FollowersRequest = RequestOf<typeof FollowersQuery>;
+
+export const FollowingQuery = graphql(
+  `query Following ($request: FollowingRequest!) {
+    value: following(request: $request) {
+      __typename
+      items {
+        ...Following
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [Following, PaginatedResultInfo],
+);
+export type FollowingRequest = RequestOf<typeof FollowingQuery>;
+
+export const FollowersYouKnowQuery = graphql(
+  `query FollowersYouKnow ($request: FollowersYouKnowRequest!) {
+    value: followersYouKnow(request: $request) {
+      __typename
+      items {
+        ...Follower
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [Follower, PaginatedResultInfo],
+);
+export type FollowersYouKnowRequest = RequestOf<typeof FollowersYouKnowQuery>;
+
+const FollowStatusResult = graphql(
+  `fragment FollowStatusResult on FollowStatusResult {
+    __typename
+    graph
+    follower
+    account
+    isFollowing {
+      ...BooleanValue
+    }
+  }`,
+  [BooleanValue],
+);
+export type FollowStatusResult = FragmentOf<typeof FollowStatusResult>;
+
+export const FollowStatusQuery = graphql(
+  `query FollowStatus ($request: FollowStatusRequest!) {
+    value: followStatus(request: $request) {
+      ...FollowStatusResult
+    }
+  }`,
+  [FollowStatusResult],
+);
+export type FollowStatusRequest = RequestOf<typeof FollowStatusQuery>;
