@@ -4,8 +4,7 @@ import type { AnyClient } from '../clients';
 import type { UnexpectedError } from '../errors';
 
 /**
- * Health checks.
- *
+ * Health check query.
  *
  * ```ts
  * const result = await health(anyClient);
