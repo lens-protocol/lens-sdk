@@ -138,7 +138,7 @@ export function fetchFollowersYouKnow(
  *
  * @param client - Any Lens client.
  * @param request - The query request.
- * @returns Status of the follow action.
+ * @returns Status of the following action.
  */
 export function fetchFollowStatus(
   client: AnyClient,
