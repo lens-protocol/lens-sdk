@@ -1,5 +1,5 @@
 """
-The comparison operator to use. In case of boolean functions you can only use EQUAL or NOT_EQUAL
+The comparison operator to use. In the case of boolean functions, you can only use EQUAL or NOT_EQUAL
 """
 enum AccessConditionComparison {
   EQUAL
@@ -462,7 +462,7 @@ type AdvancedContractCondition {
   abi: String!
 
   """
-  The comparison operator to use. In case of boolean functions you can only use EQUAL or
+  The comparison operator to use. In the case of boolean functions, you can only use EQUAL or
   NOT_EQUAL
   """
   comparison: AccessConditionComparison!
@@ -474,7 +474,7 @@ type AdvancedContractCondition {
   """
   The parameters to pass to the function. Must be exactly matching the function arguments.
   You *must* pass in the `:userAddress` parameter to represent the decrypter address. Any
-  array or tuple arguments, must be stringified JSON arrays.
+  array or tuple arguments must be stringified JSON arrays.
   """
   params: [String!]!
   type: String!
@@ -777,12 +777,12 @@ union AuthenticationResult = AuthenticationTokens | WrongSignerError | ExpiredCh
 
 type AuthenticationTokens {
   """
-  The Access Token to use as a Bearer token in authenticated Lens API requests.
+  The Access Token is to be used as a Bearer token in authenticated Lens API requests.
   """
   accessToken: AccessToken!
 
   """
-  The Refresh Token to use to obtain a new tokens triplet without re-authenticating.
+  The Refresh Token is to be used to obtain a new tokens triplet without re-authenticating.
   """
   refreshToken: RefreshToken!
   idToken: IdToken!
@@ -976,14 +976,14 @@ input CreateAppRequest {
 
   """
   If the app has verification enabled meaning
-  you can only do stuff with the app if its signed by one of the signers
+  you can only do stuff with the app if it is signed by one of the signers
   """
   verification: Boolean!
 
   """The app signers leave empty if none"""
   signers: [EvmAddress!]
 
-  """The app paymaster leave empty if none"""
+  """The app paymaster leaves empty if none"""
   paymaster: EvmAddress
 
   """The app treasury leave empty if none"""
@@ -1020,12 +1020,12 @@ input CreateFollowRequest {
   graph: EvmAddress! = "0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"
 
   """
-  The data required by any follow rules associated with the account being followed.
+  The data required by any follow rules is associated with the account being followed.
   """
   followRule: FollowRulesInput
 
   """
-  The data required by the graph rules associated with the specified graph.
+  The data required by the graph rules is associated with the specified graph.
   """
   graphRule: GraphRulesInput
 }
@@ -1111,7 +1111,7 @@ input CreateUsernameNamespaceRequest {
   admins: [EvmAddress!]
 
   """
-  The namespace for example for lens this would be lens, and it means that the usernames will
+  The namespace for example for lens would be lens, and it means that the usernames will
   be like lens/username
   """
   namespace: String!
@@ -1229,7 +1229,7 @@ type Eip712Meta {
   factoryDeps: [BlockchainData!]!
 
   """
-  Custom signature used for cases where the signer's account is not an EOA.
+  Custom signature is used for cases where the signer's account is not an EOA.
   """
   customSignature: BlockchainData
 
@@ -1395,7 +1395,7 @@ type EventMetadataLensLocation {
 type EventMetadataLensSchedulingAdjustments {
   """
   Indicates a reference timezone for the event start and end times. If physical event, you
-  could use the timezone of the event location. If virtual event, the timezone of the event
+  could use the timezone of the event location. If a virtual event, the timezone of the event
   organizer.
   """
   timezoneId: EventMetadataLensSchedulingAdjustmentsTimezoneId!
