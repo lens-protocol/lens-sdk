@@ -66,7 +66,7 @@ export const PostAction = graphql(
 );
 export type PostAction = FragmentOf<typeof PostAction>;
 
-// TODO add metadata fragments once problems with current schema are resolved
+// TODO add metadata fragments once problems with the current schema are resolved
 export const PostMetadata = graphql(
   `fragment PostMetadata on PostMetadata {
     __typename
