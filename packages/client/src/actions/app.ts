@@ -284,7 +284,7 @@ export function setAppMetadata(
 }
 
 /**
- * Set verification status for app
+ * Set verification status for the app
  *
  * ```ts
  * const result = await setAppVerification(sessionClient, {
@@ -305,7 +305,7 @@ export function setAppVerification(
 }
 
 /**
- * Set sponsorship for app
+ * Set sponsorship for the app
  *
  * ```ts
  * const result = await setAppSponsorship(sessionClient, {

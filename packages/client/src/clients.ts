@@ -208,7 +208,7 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
   }
 
   /**
-   * Log in into Lens.
+   * Log in to Lens.
    *
    * @param params - The login parameters.
    * @returns The SessionClient if the login was successful.

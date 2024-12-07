@@ -115,7 +115,7 @@ export function fetchAccountFeedStats(
  *
  * @param client - Any Lens client.
  * @param request - The query request.
- * @returns The follow stats for the account or `null` if it does not exist.
+ * @returns The following stats for the account or `null` if it does not exist.
  */
 export function fetchAccountGraphStats(
   client: AnyClient,

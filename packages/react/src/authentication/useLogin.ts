@@ -26,8 +26,8 @@ export type LoginArgs = {
    *
    * ALL operations will be scoped to this App.
    *
-   * Use only with App you own or with the app builder's permission.
-   * App builder have the ability to refuse access to their App in case of abuse.
+   * Use only with the App you own or with the app builder's permission.
+   * App builder has the ability to refuse access to their App in case of abuse.
    */
   app: EvmAddress;
   /**
