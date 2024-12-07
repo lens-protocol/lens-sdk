@@ -4528,7 +4528,7 @@ input SearchPostsFilter {
 input SearchPostsRequest {
   """
   The query text to search for in the post content or metadata tags.
-  The passed strings supports web search syntax similar to the search engines:
+  The passed strings support web search syntax similar to the search engines:
   - individual words match independently.
   - double-quoted phrases match as a single unit.
   - the word or (case-insensitive) specifies an “or” condition between two words or phrases
