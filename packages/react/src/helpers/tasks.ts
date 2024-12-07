@@ -2,7 +2,7 @@ import { type ResultAsync, invariant } from '@lens-protocol/types';
 import { useCallback, useState } from 'react';
 
 /**
- * An deferrable task is a function that can be executed multiple times and that can be in a pending state.
+ * A deferrable task is a function that can be executed multiple times and that can be in a pending state.
  *
  * @internal
  */
@@ -11,7 +11,7 @@ export type AsyncTask<TInput, TResult extends ResultAsync<unknown, unknown>> = (
 ) => TResult;
 
 /**
- * The initial state of a async task.
+ * The initial state of an async task.
  */
 export type AsyncTaskIdle = {
   called: boolean;
@@ -21,7 +21,7 @@ export type AsyncTaskIdle = {
 };
 
 /**
- * The state of a async task during the loading.
+ * The state of an async task during the loading.
  */
 export type AsyncTaskLoading<TData> = {
   called: true;
@@ -31,7 +31,7 @@ export type AsyncTaskLoading<TData> = {
 };
 
 /**
- * The state of a async task after a successful call.
+ * The state of an async task after a successful call.
  */
 export type AsyncTaskSuccess<TData> = {
   called: true;
@@ -41,7 +41,7 @@ export type AsyncTaskSuccess<TData> = {
 };
 
 /**
- * The state of a async task after a failed call.
+ * The state of an async task after a failed call.
  */
 export type AsyncTaskError<TError> = {
   called: true;
@@ -51,7 +51,7 @@ export type AsyncTaskError<TError> = {
 };
 
 /**
- * The possible statuses of a async task.
+ * The possible statuses of an async task.
  */
 export type AsyncTaskState<TData, TError> =
   | AsyncTaskIdle
