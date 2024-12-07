@@ -21,7 +21,7 @@ export type RenderHookWithContextOptions<TProps> = Omit<RenderHookOptions<TProps
 /**
  * Wrapper around `renderHook` from `@testing-library/react`.
  *
- * Use it to run test on an hook that requires the Lens SDK context and/or a Suspense boundary.
+ * Use it to run test on a hook that requires the Lens SDK context and/or a Suspense boundary.
  *
  * ```ts
  * const { result } = renderHookWithContext(() => useMyHook());
