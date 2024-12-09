@@ -5,4 +5,5 @@ export * from './follow';
 export * from './post';
 export * from './posts';
 export * from './transactions';
+export * from './username';
 export * from './timeline';
