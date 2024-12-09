@@ -240,3 +240,24 @@ export const DeletePostMutation = graphql(
   [DeletePostResult],
 );
 export type DeletePostRequest = RequestOf<typeof DeletePostMutation>;
+
+export const HideReplyMutation = graphql(
+  `mutation HideReply($request: HideReplyRequest!) {
+    value: hideReply(request: $request) 
+  }`,
+);
+export type HideReplyRequest = RequestOf<typeof HideReplyMutation>;
+
+export const UnhideReplyMutation = graphql(
+  `mutation UnhideReply($request: UnhideReplyRequest!) {
+    value: unhideReply(request: $request) 
+  }`,
+);
+export type UnhideReplyRequest = RequestOf<typeof UnhideReplyMutation>;
+
+export const ReportPostMutation = graphql(
+  `mutation ReportPost($request: ReportPostRequest!) {
+    value: reportPost(request: $request) 
+  }`,
+);
+export type ReportPostRequest = RequestOf<typeof ReportPostMutation>;
