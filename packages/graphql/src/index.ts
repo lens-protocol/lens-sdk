@@ -6,6 +6,7 @@ export * from './enums';
 export * from './follow';
 export * from './fragments';
 export * from './graphql';
+export * from './group';
 export * from './health';
 export * from './notifications';
 export * from './post';

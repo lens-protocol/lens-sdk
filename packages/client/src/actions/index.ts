@@ -3,6 +3,7 @@ export * from './admins';
 export * from './app';
 export * from './authentication';
 export * from './follow';
+export * from './group';
 export * from './post';
 export * from './posts';
 export * from './timeline';
