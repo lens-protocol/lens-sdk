@@ -1,4 +1,5 @@
 export * from './accounts';
+export * from './admins';
 export * from './app';
 export * from './authentication';
 export * from './enums';
@@ -7,6 +8,7 @@ export * from './follow';
 export * from './fragments';
 export * from './graph';
 export * from './graphql';
+export * from './group';
 export * from './health';
 export * from './namespace';
 export * from './notifications';
