@@ -1,10 +1,11 @@
 import type { EnvironmentConfig } from '@lens-protocol/env';
+import type { Account, AccountFragment, FragmentDocumentFor } from '@lens-protocol/graphql';
 import type { IStorageProvider } from '@lens-protocol/storage';
 
 /**
  * The client configuration.
  */
-export type ClientConfig = {
+export type ClientConfig<TAccount extends Account> = {
   /**
    * The environment configuration to use (e.g. `mainnet`, `testnet`).
    */
@@ -34,4 +35,10 @@ export type ClientConfig = {
    * @defaultValue {@link InMemoryStorageProvider}
    */
   storage?: IStorageProvider;
+  /**
+   * The Account Fragment to use.
+   *
+   * @defaultValue {@link AccountFragment}
+   */
+  accountFragment?: FragmentDocumentFor<TAccount>;
 };

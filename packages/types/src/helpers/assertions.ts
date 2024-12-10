@@ -1,6 +1,6 @@
 import type { Err, Ok, Result } from 'neverthrow';
 import type { UnknownRecord } from 'type-fest';
-import { InvariantError, invariant } from './invariant';
+import { InvariantError } from './invariant';
 
 function isObject(value: unknown): value is UnknownRecord {
   const type = typeof value;
@@ -27,12 +27,16 @@ export function assertNever(x: never, message = `Unexpected object: ${String(x)}
  * Asserts that the given `Result<T, E>` is an `Ok<T, never>` variant.
  */
 export function assertOk<T, E extends Error>(result: Result<T, E>): asserts result is Ok<T, E> {
-  invariant(result.isOk(), 'Expected result to be Ok');
+  if (result.isErr()) {
+    throw new InvariantError(`Expected result to be Ok: ${result.error.message}`);
+  }
 }
 
 /**
  * Asserts that the given `Result<T, E>` is an `Err<never, E>` variant.
  */
 export function assertErr<T, E extends Error>(result: Result<T, E>): asserts result is Err<T, E> {
-  invariant(result.isErr(), 'Expected result to be Err');
+  if (result.isOk()) {
+    throw new InvariantError(`Expected result to be Err: ${result.value}`);
+  }
 }

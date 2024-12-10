@@ -3,7 +3,7 @@ import {
   AccountPostReaction,
   ActionInfo,
   AnyPost,
-  PaginatedResultInfo,
+  PaginatedResultInfoFragment,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
@@ -88,7 +88,7 @@ export const PostActionsQuery = graphql(
       }
     }
   }`,
-  [ActionInfo, PaginatedResultInfo],
+  [ActionInfo, PaginatedResultInfoFragment],
 );
 export type PostActionsRequest = RequestOf<typeof PostActionsQuery>;
 
@@ -103,7 +103,7 @@ export const PostReactionsQuery = graphql(
       }
     }
   }`,
-  [AccountPostReaction, PaginatedResultInfo],
+  [AccountPostReaction, PaginatedResultInfoFragment],
 );
 export type PostReactionsRequest = RequestOf<typeof PostReactionsQuery>;
 
@@ -118,7 +118,7 @@ export const PostBookmarksQuery = graphql(
       }
     }
   }`,
-  [AnyPost, PaginatedResultInfo],
+  [AnyPost, PaginatedResultInfoFragment],
 );
 export type PostBookmarksRequest = RequestOf<typeof PostBookmarksQuery>;
 
@@ -133,7 +133,7 @@ export const PostReferencesQuery = graphql(
       }
     }
   }`,
-  [AnyPost, PaginatedResultInfo],
+  [AnyPost, PaginatedResultInfoFragment],
 );
 export type PostReferencesRequest = RequestOf<typeof PostReferencesQuery>;
 

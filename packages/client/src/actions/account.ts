@@ -31,7 +31,6 @@ import type {
 import {
   AccountFeedsStatsQuery,
   AccountGraphsStatsQuery,
-  AccountQuery,
   AccountStatsQuery,
   AccountsAvailableQuery,
   AccountsBlockedQuery,
@@ -47,10 +46,12 @@ import {
   UnblockMutation,
   UndoRecommendAccountMutation,
   UnmuteAccountMutation,
+  accountQuery,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
 import type { AnyClient, SessionClient } from '../clients';
+import type { Context } from '../context';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 import type { Paginated } from '../types';
 
@@ -69,11 +70,12 @@ import type { Paginated } from '../types';
  * @param request - The Account query request.
  * @returns The Account or `null` if it does not exist.
  */
-export function fetchAccount(
-  client: AnyClient,
+export function fetchAccount<TAccount extends Account>(
+  client: AnyClient<Context<TAccount>>,
   request: AccountRequest,
-): ResultAsync<Account | null, UnexpectedError> {
-  return client.query(AccountQuery, { request });
+): ResultAsync<TAccount | null, UnexpectedError> {
+  const document = accountQuery(client.context.accountFragment);
+  return client.query(document, { request });
 }
 
 /**

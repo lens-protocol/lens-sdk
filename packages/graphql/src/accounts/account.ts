@@ -1,25 +1,36 @@
 import type { FragmentOf } from 'gql.tada';
 import {
-  Account,
+  type Account,
   AccountAvailable,
   AccountBlocked,
-  PaginatedResultInfo,
+  AccountFragment,
+  PaginatedResultInfoFragment,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
 } from '../fragments';
-import { type RequestOf, graphql } from '../graphql';
+import {
+  type FragmentDocumentFor,
+  type RequestFrom,
+  type RequestOf,
+  type StandardDocumentNode,
+  graphql,
+} from '../graphql';
 
-export const AccountQuery = graphql(
-  `query Account($request: AccountRequest!) {
+const AccountQueryString = `
+  query Account($request: AccountRequest!) {
     value: account(request: $request) {
       ...Account
     }
-  }`,
-  [Account],
-);
+  }
+`;
+export type AccountRequest = RequestFrom<typeof AccountQueryString>;
 
-export type AccountRequest = RequestOf<typeof AccountQuery>;
+export function accountQuery<TAccount extends Account>(
+  fragment: FragmentDocumentFor<TAccount>,
+): StandardDocumentNode<TAccount | null, AccountRequest> {
+  return graphql(AccountQueryString, [fragment]) as StandardDocumentNode;
+}
 
 export const SearchAccountsQuery = graphql(
   `query SearchAccounts($request: AccountSearchRequest!) {
@@ -33,7 +44,7 @@ export const SearchAccountsQuery = graphql(
       }
     }
   }`,
-  [Account, PaginatedResultInfo],
+  [AccountFragment, PaginatedResultInfoFragment],
 );
 
 export type SearchAccountsRequest = RequestOf<typeof SearchAccountsQuery>;
@@ -210,7 +221,7 @@ export const AccountsAvailableQuery = graphql(
       }
     }
   }`,
-  [AccountAvailable, PaginatedResultInfo],
+  [AccountAvailable, PaginatedResultInfoFragment],
 );
 
 export type AccountsAvailableRequest = RequestOf<typeof AccountsAvailableQuery>;
@@ -226,7 +237,7 @@ export const AccountsBlockedQuery = graphql(
       }
     }
   }`,
-  [AccountBlocked, PaginatedResultInfo],
+  [AccountBlocked, PaginatedResultInfoFragment],
 );
 
 export type AccountsBlockedRequest = RequestOf<typeof AccountsBlockedQuery>;

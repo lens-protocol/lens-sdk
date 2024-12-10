@@ -1,13 +1,14 @@
 import type { PublicClient } from '@lens-protocol/client';
 import React from 'react';
 
+import type { Context } from '@lens-protocol/client';
 import type { ReactNode } from 'react';
 import { LensContextProvider } from './context';
 
 /**
  * <Provider> props
  */
-export type ProviderProps = {
+export type ProviderProps<TContext extends Context> = {
   /**
    * The children to render
    */
@@ -15,7 +16,7 @@ export type ProviderProps = {
   /**
    * The configuration for the Lens SDK
    */
-  client: PublicClient;
+  client: PublicClient<TContext>;
 };
 
 /**
@@ -36,6 +37,6 @@ export type ProviderProps = {
  * }
  * ```
  */
-export function Provider({ children, client }: ProviderProps) {
+export function Provider<TContext extends Context>({ children, client }: ProviderProps<TContext>) {
   return <LensContextProvider client={client}>{children}</LensContextProvider>;
 }

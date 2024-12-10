@@ -184,21 +184,21 @@ importers:
       neverthrow:
         specifier: ^8.0.0
         version: 8.0.0
+      type-fest:
+        specifier: ^4.26.1
+        version: 4.26.1
     devDependencies:
       tsup:
         specifier: ^8.3.5
         version: 8.3.5(postcss@8.4.49)(tsx@4.19.2)(typescript@5.6.3)
-      type-fest:
-        specifier: ^4.26.1
-        version: 4.26.1
       typescript:
         specifier: ^5.6.3
         version: 5.6.3
 
 packages:
 
-  '@0no-co/graphql.web@1.0.9':
-    resolution: {integrity: sha512-lXSg4bDHvP8CiMdpQf9f/rca12IIjXHN/p0Rc5mgzgLe4JBlIoA1zFa9NKhfG1bW0OyI2hgaOldFCfkEQwZuEQ==}
+  '@0no-co/graphql.web@1.0.12':
+    resolution: {integrity: sha512-BTDjjsV/zSPy5fqItwm+KWUfh9CSe9tTtR6rCB72ddtkAxdcHbi4Ir4r/L1Et4lyxmL+i7Rb3m9sjLLi9tYrzA==}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
     peerDependenciesMeta:
@@ -2670,7 +2670,7 @@ packages:
 
 snapshots:
 
-  '@0no-co/graphql.web@1.0.9(graphql@16.9.0)':
+  '@0no-co/graphql.web@1.0.12(graphql@16.9.0)':
     optionalDependencies:
       graphql: 16.9.0
 
@@ -3099,7 +3099,7 @@ snapshots:
 
   '@gql.tada/internal@1.0.8(graphql@16.9.0)(typescript@5.6.3)':
     dependencies:
-      '@0no-co/graphql.web': 1.0.9(graphql@16.9.0)
+      '@0no-co/graphql.web': 1.0.12(graphql@16.9.0)
       graphql: 16.9.0
       typescript: 5.6.3
 
@@ -3354,7 +3354,7 @@ snapshots:
 
   '@urql/core@5.0.8(graphql@16.9.0)':
     dependencies:
-      '@0no-co/graphql.web': 1.0.9(graphql@16.9.0)
+      '@0no-co/graphql.web': 1.0.12(graphql@16.9.0)
       wonka: 6.3.4
     transitivePeerDependencies:
       - graphql
@@ -3915,7 +3915,7 @@ snapshots:
 
   gql.tada@1.8.10(graphql@16.9.0)(typescript@5.6.3):
     dependencies:
-      '@0no-co/graphql.web': 1.0.9(graphql@16.9.0)
+      '@0no-co/graphql.web': 1.0.12(graphql@16.9.0)
       '@0no-co/graphqlsp': 1.12.16(graphql@16.9.0)(typescript@5.6.3)
       '@gql.tada/cli-utils': 1.6.3(graphql@16.9.0)(typescript@5.6.3)
       '@gql.tada/internal': 1.0.8(graphql@16.9.0)(typescript@5.6.3)
