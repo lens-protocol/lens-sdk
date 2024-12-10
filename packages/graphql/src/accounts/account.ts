@@ -1,25 +1,24 @@
 import type { FragmentOf } from 'gql.tada';
 import {
-  Account,
   AccountAvailable,
   AccountBlocked,
+  AccountFragment,
   PaginatedResultInfo,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
 } from '../fragments';
-import { type RequestOf, graphql } from '../graphql';
+import { type RequestOf, type RequestOfFactory, factory, graphql } from '../graphql';
 
-export const AccountQuery = graphql(
+export const accountQuery = factory(
   `query Account($request: AccountRequest!) {
     value: account(request: $request) {
       ...Account
     }
   }`,
-  [Account],
 );
 
-export type AccountRequest = RequestOf<typeof AccountQuery>;
+export type AccountRequest = RequestOfFactory<typeof accountQuery>;
 
 export const SearchAccountsQuery = graphql(
   `query SearchAccounts($request: AccountSearchRequest!) {
@@ -33,7 +32,7 @@ export const SearchAccountsQuery = graphql(
       }
     }
   }`,
-  [Account, PaginatedResultInfo],
+  [AccountFragment, PaginatedResultInfo],
 );
 
 export type SearchAccountsRequest = RequestOf<typeof SearchAccountsQuery>;

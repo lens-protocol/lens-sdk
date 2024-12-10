@@ -2,7 +2,6 @@ import type {
   AccountPostReaction,
   ActionInfo,
   AnyPost,
-  Post,
   PostActionsRequest,
   PostBookmarksRequest,
   PostReactionsRequest,

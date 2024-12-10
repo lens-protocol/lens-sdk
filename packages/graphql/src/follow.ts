@@ -1,7 +1,7 @@
 import type { FragmentOf } from 'gql.tada';
 
 import {
-  Account,
+  AccountFragment,
   BooleanValue,
   PaginatedResultInfo,
   SelfFundedTransactionRequest,
@@ -97,7 +97,7 @@ const Follower = graphql(
     }
     followedOn
   }`,
-  [Account],
+  [AccountFragment],
 );
 export type Follower = FragmentOf<typeof Follower>;
 
@@ -109,7 +109,7 @@ const Following = graphql(
     }
     followedOn
   }`,
-  [Account],
+  [AccountFragment],
 );
 export type Following = FragmentOf<typeof Following>;
 

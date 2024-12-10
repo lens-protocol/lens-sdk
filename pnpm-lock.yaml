@@ -58,10 +58,10 @@ importers:
         version: link:../types
       '@urql/core':
         specifier: ^5.0.8
-        version: 5.0.8(graphql@16.9.0)
+        version: 5.0.8
       '@urql/exchange-auth':
         specifier: ^2.2.0
-        version: 2.2.0(@urql/core@5.0.8(graphql@16.9.0))
+        version: 2.2.0(@urql/core@5.0.8)
       jwt-decode:
         specifier: ^4.0.0
         version: 4.0.0
@@ -71,16 +71,16 @@ importers:
     devDependencies:
       '@lens-network/sdk':
         specifier: 0.0.0-canary-20241203140504
-        version: 0.0.0-canary-20241203140504(viem@2.21.53(typescript@5.6.3)(zod@3.23.8))
+        version: 0.0.0-canary-20241203140504(viem@2.21.53(typescript@5.6.3))
       tsup:
         specifier: ^8.3.5
-        version: 8.3.5(postcss@8.4.49)(tsx@4.19.2)(typescript@5.6.3)
+        version: 8.3.5(typescript@5.6.3)
       typescript:
         specifier: ^5.6.3
         version: 5.6.3
       viem:
         specifier: ^2.21.53
-        version: 2.21.53(typescript@5.6.3)(zod@3.23.8)
+        version: 2.21.53(typescript@5.6.3)
 
   packages/env:
     dependencies:
@@ -197,8 +197,8 @@ importers:
 
 packages:
 
-  '@0no-co/graphql.web@1.0.9':
-    resolution: {integrity: sha512-lXSg4bDHvP8CiMdpQf9f/rca12IIjXHN/p0Rc5mgzgLe4JBlIoA1zFa9NKhfG1bW0OyI2hgaOldFCfkEQwZuEQ==}
+  '@0no-co/graphql.web@1.0.12':
+    resolution: {integrity: sha512-BTDjjsV/zSPy5fqItwm+KWUfh9CSe9tTtR6rCB72ddtkAxdcHbi4Ir4r/L1Et4lyxmL+i7Rb3m9sjLLi9tYrzA==}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
     peerDependenciesMeta:
@@ -2670,7 +2670,9 @@ packages:
 
 snapshots:
 
-  '@0no-co/graphql.web@1.0.9(graphql@16.9.0)':
+  '@0no-co/graphql.web@1.0.12': {}
+
+  '@0no-co/graphql.web@1.0.12(graphql@16.9.0)':
     optionalDependencies:
       graphql: 16.9.0
 
@@ -3099,7 +3101,7 @@ snapshots:
 
   '@gql.tada/internal@1.0.8(graphql@16.9.0)(typescript@5.6.3)':
     dependencies:
-      '@0no-co/graphql.web': 1.0.9(graphql@16.9.0)
+      '@0no-co/graphql.web': 1.0.12(graphql@16.9.0)
       graphql: 16.9.0
       typescript: 5.6.3
 
@@ -3135,9 +3137,9 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@lens-network/sdk@0.0.0-canary-20241203140504(viem@2.21.53(typescript@5.6.3)(zod@3.23.8))':
+  '@lens-network/sdk@0.0.0-canary-20241203140504(viem@2.21.53(typescript@5.6.3))':
     optionalDependencies:
-      viem: 2.21.53(typescript@5.6.3)(zod@3.23.8)
+      viem: 2.21.53(typescript@5.6.3)
 
   '@manypkg/find-root@1.1.0':
     dependencies:
@@ -3352,16 +3354,23 @@ snapshots:
     dependencies:
       '@types/node': 22.10.1
 
-  '@urql/core@5.0.8(graphql@16.9.0)':
+  '@urql/core@5.0.8':
     dependencies:
-      '@0no-co/graphql.web': 1.0.9(graphql@16.9.0)
+      '@0no-co/graphql.web': 1.0.12
       wonka: 6.3.4
     transitivePeerDependencies:
       - graphql
 
-  '@urql/exchange-auth@2.2.0(@urql/core@5.0.8(graphql@16.9.0))':
+  '@urql/core@5.0.8(graphql@16.9.0)':
     dependencies:
-      '@urql/core': 5.0.8(graphql@16.9.0)
+      '@0no-co/graphql.web': 1.0.12(graphql@16.9.0)
+      wonka: 6.3.4
+    transitivePeerDependencies:
+      - graphql
+
+  '@urql/exchange-auth@2.2.0(@urql/core@5.0.8)':
+    dependencies:
+      '@urql/core': 5.0.8
       wonka: 6.3.4
 
   '@vitest/expect@2.1.8':
@@ -3403,6 +3412,10 @@ snapshots:
       '@vitest/pretty-format': 2.1.8
       loupe: 3.1.2
       tinyrainbow: 1.2.0
+
+  abitype@1.0.6(typescript@5.6.3):
+    optionalDependencies:
+      typescript: 5.6.3
 
   abitype@1.0.6(typescript@5.6.3)(zod@3.23.8):
     optionalDependencies:
@@ -3915,7 +3928,7 @@ snapshots:
 
   gql.tada@1.8.10(graphql@16.9.0)(typescript@5.6.3):
     dependencies:
-      '@0no-co/graphql.web': 1.0.9(graphql@16.9.0)
+      '@0no-co/graphql.web': 1.0.12(graphql@16.9.0)
       '@0no-co/graphqlsp': 1.12.16(graphql@16.9.0)(typescript@5.6.3)
       '@gql.tada/cli-utils': 1.6.3(graphql@16.9.0)(typescript@5.6.3)
       '@gql.tada/internal': 1.0.8(graphql@16.9.0)(typescript@5.6.3)
@@ -4290,6 +4303,20 @@ snapshots:
 
   outdent@0.5.0: {}
 
+  ox@0.1.2(typescript@5.6.3):
+    dependencies:
+      '@adraffy/ens-normalize': 1.11.0
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
+      '@scure/bip32': 1.5.0
+      '@scure/bip39': 1.4.0
+      abitype: 1.0.6(typescript@5.6.3)
+      eventemitter3: 5.0.1
+    optionalDependencies:
+      typescript: 5.6.3
+    transitivePeerDependencies:
+      - zod
+
   ox@0.1.2(typescript@5.6.3)(zod@3.23.8):
     dependencies:
       '@adraffy/ens-normalize': 1.11.0
@@ -4401,6 +4428,10 @@ snapshots:
       node-plop: 0.32.0
       ora: 8.1.0
       v8flags: 4.0.1
+
+  postcss-load-config@6.0.1:
+    dependencies:
+      lilconfig: 3.1.2
 
   postcss-load-config@6.0.1(postcss@8.4.49)(tsx@4.19.2):
     dependencies:
@@ -4750,6 +4781,32 @@ snapshots:
       - tsx
       - yaml
 
+  tsup@8.3.5(typescript@5.6.3):
+    dependencies:
+      bundle-require: 5.0.0(esbuild@0.24.0)
+      cac: 6.7.14
+      chokidar: 4.0.1
+      consola: 3.2.3
+      debug: 4.3.7
+      esbuild: 0.24.0
+      joycon: 3.1.1
+      picocolors: 1.1.1
+      postcss-load-config: 6.0.1
+      resolve-from: 5.0.0
+      rollup: 4.24.2
+      source-map: 0.8.0-beta.0
+      sucrase: 3.35.0
+      tinyexec: 0.3.1
+      tinyglobby: 0.2.10
+      tree-kill: 1.2.2
+    optionalDependencies:
+      typescript: 5.6.3
+    transitivePeerDependencies:
+      - jiti
+      - supports-color
+      - tsx
+      - yaml
+
   tsx@4.19.2:
     dependencies:
       esbuild: 0.23.1
@@ -4818,6 +4875,24 @@ snapshots:
   util-deprecate@1.0.2: {}
 
   v8flags@4.0.1: {}
+
+  viem@2.21.53(typescript@5.6.3):
+    dependencies:
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
+      '@scure/bip32': 1.5.0
+      '@scure/bip39': 1.4.0
+      abitype: 1.0.6(typescript@5.6.3)
+      isows: 1.0.6(ws@8.18.0)
+      ox: 0.1.2(typescript@5.6.3)
+      webauthn-p256: 0.0.10
+      ws: 8.18.0
+    optionalDependencies:
+      typescript: 5.6.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - zod
 
   viem@2.21.53(typescript@5.6.3)(zod@3.23.8):
     dependencies:

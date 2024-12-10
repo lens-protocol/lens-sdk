@@ -58,14 +58,6 @@ export type OperationHandler<T extends string, E extends string> =
   | DelegableOperationHandler<T, E>;
 
 /**
- * A standardized data object.
- *
- * All GQL operations should alias their results to `value` to ensure interoperability
- * with this client interface.
- */
-export type StandardData<T> = { value: T };
-
-/**
  * A paginated list of items.
  */
 export type Paginated<T> = {
