@@ -27,7 +27,7 @@ export function fetchUsername(
 }
 
 /**
- * Fetch usernames owned by an account.
+ * Fetch usernames owned by an address.
  *
  * ```ts
  * const result = await fetchUsernames(anyClient, {
