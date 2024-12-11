@@ -1,8 +1,10 @@
 import type { FragmentOf } from 'gql.tada';
 import {
+  PaginatedResultInfo,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
+  Username,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
@@ -133,3 +135,29 @@ export const UnassignUsernameFromAccountMutation = graphql(
 export type UnassignUsernameFromAccountRequest = RequestOf<
   typeof UnassignUsernameFromAccountMutation
 >;
+
+export const UsernameQuery = graphql(
+  `query Username($request: UsernameRequest!) {
+    value: username(request: $request) {
+      ...Username
+    }
+  }`,
+  [Username],
+);
+export type UsernameRequest = RequestOf<typeof UsernameQuery>;
+
+export const UsernamesQuery = graphql(
+  `query Usernames($request: UsernamesRequest!) {
+    value: usernames(request: $request) {
+      __typename
+      items {
+        ...Username
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [Username, PaginatedResultInfo],
+);
+export type UsernamesRequest = RequestOf<typeof UsernamesQuery>;

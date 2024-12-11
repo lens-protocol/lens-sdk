@@ -32,7 +32,7 @@ export function fetchTimeline(
 }
 
 /**
- * Fetch fetchTimelineHighlights from an account.
+ * Fetch Timeline Highlights for an account.
  *
  * ```ts
  * const result = await fetchTimelineHighlights(anyClient, {
