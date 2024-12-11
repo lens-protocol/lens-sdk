@@ -1,21 +1,20 @@
-import type { Post, TimelineHighlightsRequest } from '@lens-protocol/graphql';
+import type {
+  AssignUsernameToAccountRequest,
+  AssignUsernameToAccountResult,
+  CreateUsernameRequest,
+  CreateUsernameResult,
+  UnassignUsernameFromAccountRequest,
+  UnassignUsernameToAccountResult,
+} from '@lens-protocol/graphql';
 import {
   AssignUsernameToAccountMutation,
   CreateUsernameMutation,
-  TimelineHighlightsQuery,
   UnassignUsernameFromAccountMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
-import type { CreateUsernameRequest } from '@lens-protocol/graphql';
-import type { CreateUsernameResult } from '@lens-protocol/graphql';
-import type { AssignUsernameToAccountRequest } from '@lens-protocol/graphql';
-import type { AssignUsernameToAccountResult } from '@lens-protocol/graphql';
-import type { UnassignUsernameFromAccountRequest } from '@lens-protocol/graphql';
-import type { UnassignUsernameToAccountResult } from '@lens-protocol/graphql';
-import type { AnyClient, SessionClient } from '../clients';
+import type { SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
-import type { Paginated } from '../types';
 
 /**
  * Create a username
@@ -55,7 +54,7 @@ export function createUsername(
  * @returns Tiered transaction result.
  */
 export function assignUsernameToAccount(
-  client: AnyClient,
+  client: SessionClient,
   request: AssignUsernameToAccountRequest,
 ): ResultAsync<AssignUsernameToAccountResult, UnauthenticatedError | UnexpectedError> {
   return client.mutation(AssignUsernameToAccountMutation, { request });
@@ -77,7 +76,7 @@ export function assignUsernameToAccount(
  * @returns Tiered transaction result.
  */
 export function unassignUsernameFromAccount(
-  client: AnyClient,
+  client: SessionClient,
   request: UnassignUsernameFromAccountRequest,
 ): ResultAsync<UnassignUsernameToAccountResult, UnauthenticatedError | UnexpectedError> {
   return client.query(UnassignUsernameFromAccountMutation, { request });
