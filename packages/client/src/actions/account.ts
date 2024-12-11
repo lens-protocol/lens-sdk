@@ -11,12 +11,13 @@ import type {
   AccountStatsRequest,
   AccountsAvailableRequest,
   AccountsBlockedRequest,
+  AccountsRequest,
   CreateAccountWithUsernameRequest,
   CreateAccountWithUsernameResult,
   EnableSignlessResult,
   MuteRequest,
+  PaginatedAccountsResult,
   RemoveSignlessResult,
-  SearchAccountsRequest,
   SetAccountMetadataRequest,
   SetAccountMetadataResult,
   UnmuteRequest,
@@ -28,11 +29,11 @@ import {
   AccountStatsQuery,
   AccountsAvailableQuery,
   AccountsBlockedQuery,
+  AccountsQuery,
   CreateAccountWithUsernameMutation,
   EnableSignlessMutation,
   MuteAccountMutation,
   RemoveSignlessMutation,
-  SearchAccountsQuery,
   SetAccountMetadataMutation,
   UnmuteAccountMutation,
 } from '@lens-protocol/graphql';
@@ -62,6 +63,26 @@ export function fetchAccount(
   request: AccountRequest,
 ): ResultAsync<Account | null, UnexpectedError> {
   return client.query(AccountQuery, { request });
+}
+
+/**
+ * Fetch an Accounts.
+ *
+ * Using a {@link SessionClient} will yield {@link Account#operations} specific to the authenticated Account.
+ *
+ * ```ts
+ * const result = await fetchAccounts(anyClient);
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of accounts.
+ */
+export function fetchAccounts(
+  client: AnyClient,
+  request: AccountsRequest,
+): ResultAsync<PaginatedAccountsResult | null, UnexpectedError> {
+  return client.query(AccountsQuery, { request });
 }
 
 /**
@@ -160,26 +181,6 @@ export function fetchAccountsBlocked(
   request: AccountsBlockedRequest,
 ): ResultAsync<Paginated<AccountBlocked> | null, UnexpectedError> {
   return client.query(AccountsBlockedQuery, { request });
-}
-
-/**
- * Search accounts.
- *
- * ```ts
- * const result = await searchAccounts(anyClient, {
- *   localName: 'wagmi',
- * });
- * ```
- *
- * @param client - Any Lens client.
- * @param request - The SearchAccounts query request.
- * @returns The list of Account or empty list if it does not find anything.
- */
-export function searchAccounts(
-  client: AnyClient,
-  request: SearchAccountsRequest,
-): ResultAsync<Paginated<Account> | null, UnexpectedError> {
-  return client.query(SearchAccountsQuery, { request });
 }
 
 /**
