@@ -101,3 +101,17 @@ export const UpdateAccountManagerMutation = graphql(
   [UpdateAccountManagerResult],
 );
 export type UpdateAccountManagerRequest = RequestOf<typeof UpdateAccountManagerMutation>;
+
+export const HideManagedAccountMutation = graphql(
+  `mutation HideManagedAccount($request: HideManagedAccountRequest!) {
+    value: hideManagedAccount(request: $request)
+  }`,
+);
+export type HideManagedAccountRequest = RequestOf<typeof HideManagedAccountMutation>;
+
+export const UnhideManagedAccountMutation = graphql(
+  `mutation UnhideManagedAccount($request: UnhideManagedAccountRequest!) {
+    value: unhideManagedAccount(request: $request)
+  }`,
+);
+export type UnhideManagedAccountRequest = RequestOf<typeof UnhideManagedAccountMutation>;
