@@ -43,7 +43,6 @@ export type Account = FragmentOf<typeof AccountFragment>;
 export const FullAccountFragment = graphql(
   `fragment Account on Account {
     __typename
-    full: address
     address
     score
     metadata {

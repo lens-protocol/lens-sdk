@@ -145,7 +145,7 @@ abstract class AbstractClient<TContext extends Context, TError> {
 /**
  * A client to interact with the public access queries and mutations of the Lens GraphQL API.
  */
-export class PublicClient<TContext extends Context = Context> extends AbstractClient<
+export class PublicClient<TContext extends Context> extends AbstractClient<
   TContext,
   UnexpectedError
 > {
@@ -169,7 +169,9 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
    * @param options - The options to configure the client.
    * @returns The new instance of the client.
    */
-  static create<TAccount extends Account>(options: ClientConfig<TAccount>): PublicClient<Context> {
+  static create<TAccount extends Account>(
+    options: ClientConfig<TAccount>,
+  ): PublicClient<Context<TAccount>> {
     return new PublicClient(configureContext(options));
   }
 
