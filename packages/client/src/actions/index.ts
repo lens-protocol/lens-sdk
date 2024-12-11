@@ -11,3 +11,4 @@ export * from './post';
 export * from './posts';
 export * from './timeline';
 export * from './transactions';
+export * from './username';

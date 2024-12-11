@@ -15,3 +15,4 @@ export * from './notifications';
 export * from './post';
 export * from './timeline';
 export * from './transactions';
+export * from './username';
