@@ -1,5 +1,5 @@
 import type { FragmentOf } from 'gql.tada';
-import { AccountFragment, PaginatedResultInfo, Post } from './fragments';
+import { AccountFragment, PaginatedResultInfo, PostFragment } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
 const FollowNotification = graphql(
@@ -34,7 +34,7 @@ const ReactionNotification = graphql(
       ...Post
     }
   }`,
-  [AccountFragment, Post],
+  [AccountFragment, PostFragment],
 );
 export type ReactionNotification = FragmentOf<typeof ReactionNotification>;
 
@@ -46,7 +46,7 @@ const CommentNotification = graphql(
       ...Post
     }
   }`,
-  [Post],
+  [PostFragment],
 );
 export type CommentNotification = FragmentOf<typeof CommentNotification>;
 
@@ -77,7 +77,7 @@ const QuoteNotification = graphql(
       ...Post
     }
   }`,
-  [Post],
+  [PostFragment],
 );
 export type QuoteNotification = FragmentOf<typeof QuoteNotification>;
 
@@ -89,7 +89,7 @@ const MentionNotification = graphql(
       ...Post
     }
   }`,
-  [Post],
+  [PostFragment],
 );
 export type MentionNotification = FragmentOf<typeof MentionNotification>;
 

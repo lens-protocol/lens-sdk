@@ -150,7 +150,7 @@ export const NestedPost = graphql(
 );
 export type NestedPost = FragmentOf<typeof NestedPost>;
 
-export const Post = graphql(
+export const PostFragment = graphql(
   `fragment Post on Post {
     __typename
     id
@@ -188,7 +188,7 @@ export const Post = graphql(
 );
 export type PostFragment = Post;
 
-export type Post = FragmentOf<typeof Post>;
+export type Post = FragmentOf<typeof PostFragment>;
 
 // operations: LoggedInPostOperations
 export const Repost = graphql(
@@ -210,7 +210,7 @@ export const AnyPost = graphql(
       ...Repost
     }
   }`,
-  [Post, Repost],
+  [PostFragment, Repost],
 );
 export type AnyPost = FragmentOf<typeof AnyPost>;
 
