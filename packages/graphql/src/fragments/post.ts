@@ -1,6 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
-import { Account } from './account';
+import { AccountFragment } from './account';
 import { ActionInputInfo, Amount, BooleanValue, NetworkAddress } from './common';
 import { App, Feed } from './primitives';
 
@@ -134,7 +134,7 @@ export const ReferencedPost = graphql(
     }
   }
   `,
-  [Account, App, Feed, PostMetadata, PostAction, LoggedInPostOperations],
+  [AccountFragment, App, Feed, PostMetadata, PostAction, LoggedInPostOperations],
 );
 
 export const NestedPost = graphql(
@@ -150,7 +150,7 @@ export const NestedPost = graphql(
 );
 export type NestedPost = FragmentOf<typeof NestedPost>;
 
-export const Post = graphql(
+export const PostFragment = graphql(
   `fragment Post on Post {
     __typename
     id
@@ -184,9 +184,11 @@ export const Post = graphql(
     }
   }
   `,
-  [Account, App, Feed, PostMetadata, PostAction, NestedPost, LoggedInPostOperations],
+  [AccountFragment, App, Feed, PostMetadata, PostAction, NestedPost, LoggedInPostOperations],
 );
-export type Post = FragmentOf<typeof Post>;
+export type PostFragment = Post;
+
+export type Post = FragmentOf<typeof PostFragment>;
 
 // operations: LoggedInPostOperations
 export const Repost = graphql(
@@ -208,7 +210,7 @@ export const AnyPost = graphql(
       ...Repost
     }
   }`,
-  [Post, Repost],
+  [PostFragment, Repost],
 );
 export type AnyPost = FragmentOf<typeof AnyPost>;
 
@@ -277,6 +279,6 @@ export const AccountPostReaction = graphql(
       ...PostReaction
     }
   }`,
-  [Account, PostReaction],
+  [AccountFragment, PostReaction],
 );
 export type AccountPostReaction = FragmentOf<typeof AccountPostReaction>;

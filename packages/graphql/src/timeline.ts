@@ -1,5 +1,5 @@
 import type { FragmentOf } from 'gql.tada';
-import { PaginatedResultInfo, Post } from './fragments';
+import { PaginatedResultInfo, PostFragment } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
 const TimelineItem = graphql(
@@ -16,7 +16,7 @@ const TimelineItem = graphql(
       ...Post
     }
   }`,
-  [Post],
+  [PostFragment],
 );
 export type TimelineItem = FragmentOf<typeof TimelineItem>;
 
@@ -48,6 +48,6 @@ export const TimelineHighlightsQuery = graphql(
       }
     }
   }`,
-  [Post, PaginatedResultInfo],
+  [PostFragment, PaginatedResultInfo],
 );
 export type TimelineHighlightsRequest = RequestOf<typeof TimelineHighlightsQuery>;
