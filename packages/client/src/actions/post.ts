@@ -7,23 +7,29 @@ import type {
   DeletePostRequest,
   DeletePostResult,
   EditPostRequest,
+  HideReplyRequest,
   PostResult,
   UndoBookmarkPostRequest,
   UndoReactionRequest,
   UndoReactionResult,
+  UnhideReplyRequest,
 } from '@lens-protocol/graphql';
 import {
   AddReactionMutation,
   BookmarkPostMutation,
   DeletePostMutation,
   EditPostMutation,
+  HideReplyMutation,
   PostMutation,
+  ReportPostMutation,
   RepostMutation,
   UndoBookmarkPostMutation,
   UndoReactionMutation,
+  UnhideReplyMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
+import type { ReportPostRequest } from '@lens-protocol/graphql';
 import type { SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
@@ -188,4 +194,65 @@ export function undoBookmarkPost(
   request: UndoBookmarkPostRequest,
 ): ResultAsync<void, UnauthenticatedError | UnexpectedError> {
   return client.mutation(UndoBookmarkPostMutation, { request });
+}
+
+/**
+ * Hide a reply.
+ *
+ * ```ts
+ * const result = await hideReply(sessionClient, {
+ *   post: post.id,
+ * });
+ * ```
+ *
+ * @param client - The session client.
+ * @param request - The mutation request.
+ * @returns void
+ */
+export function hideReply(
+  client: SessionClient,
+  request: HideReplyRequest,
+): ResultAsync<void, UnauthenticatedError | UnexpectedError> {
+  return client.mutation(HideReplyMutation, { request });
+}
+
+/**
+ * Unhide a reply.
+ *
+ * ```ts
+ * const result = await unhideReply(sessionClient, {
+ *   post: post.id,
+ * });
+ * ```
+ *
+ * @param client - The session client.
+ * @param request - The mutation request.
+ * @returns void
+ */
+export function unhideReply(
+  client: SessionClient,
+  request: UnhideReplyRequest,
+): ResultAsync<void, UnauthenticatedError | UnexpectedError> {
+  return client.mutation(UnhideReplyMutation, { request });
+}
+
+/**
+ * Report a post
+ *
+ * ```ts
+ * const result = await reportPost(sessionClient, {
+ *   reason: "SCAM",
+ *   post: post.id,
+ * });
+ * ```
+ *
+ * @param client - The session client.
+ * @param request - The mutation request.
+ * @returns void
+ */
+export function reportPost(
+  client: SessionClient,
+  request: ReportPostRequest,
+): ResultAsync<void, UnauthenticatedError | UnexpectedError> {
+  return client.mutation(ReportPostMutation, { request });
 }
