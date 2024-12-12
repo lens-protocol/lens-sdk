@@ -251,3 +251,117 @@ export const UnmuteAccountMutation = graphql(
   }`,
 );
 export type UnmuteRequest = RequestOf<typeof UnmuteAccountMutation>;
+
+export const ReportAccountMutation = graphql(
+  `mutation ReportAccount($request: ReportAccountRequest!) {
+    value: reportAccount(request: $request)
+  }`,
+);
+export type ReportAccountRequest = RequestOf<typeof ReportAccountMutation>;
+
+const BlockError = graphql(
+  `fragment BlockError on BlockError {
+    __typename
+    error
+  }`,
+);
+export type BlockError = FragmentOf<typeof BlockError>;
+
+const BlockResponse = graphql(
+  `fragment BlockResponse on BlockResponse {
+    __typename
+    hash
+  }`,
+);
+export type BlockResponse = FragmentOf<typeof BlockResponse>;
+
+const BlockResult = graphql(
+  `fragment BlockResult on BlockResult {
+    ...on BlockResponse {
+      ...BlockResponse
+    }
+
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+
+    ...on BlockError {
+      ...BlockError
+    }
+  }`,
+  [BlockResponse, SponsoredTransactionRequest, SelfFundedTransactionRequest, BlockError],
+);
+export type BlockResult = FragmentOf<typeof BlockResult>;
+
+export const BlockMutation = graphql(
+  `mutation Block($request: BlockRequest!) {
+    value: block(request: $request){
+      ...BlockResult
+    }
+  }`,
+  [BlockResult],
+);
+export type BlockRequest = RequestOf<typeof BlockMutation>;
+
+const UnblockResponse = graphql(
+  `fragment UnblockResponse on UnblockResponse {
+    __typename
+    hash
+  }`,
+);
+export type UnblockResponse = FragmentOf<typeof UnblockResponse>;
+
+const UnblockError = graphql(
+  `fragment UnblockError on UnblockError {
+    __typename
+    error
+  }`,
+);
+export type UnblockError = FragmentOf<typeof UnblockError>;
+
+const UnblockResult = graphql(
+  `fragment UnblockResult on UnblockResult {
+    ...on UnblockResponse {
+      ...UnblockResponse
+    }
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on UnblockError {
+      ...UnblockError
+    }
+  }`,
+  [UnblockResponse, SponsoredTransactionRequest, SelfFundedTransactionRequest, UnblockError],
+);
+export type UnblockResult = FragmentOf<typeof UnblockResult>;
+
+export const UnblockMutation = graphql(
+  `mutation Unblock($request: UnblockRequest!) {
+    value: unblock(request: $request){
+      ...UnblockResult
+    }
+  }`,
+  [UnblockResult],
+);
+export type UnblockRequest = RequestOf<typeof UnblockMutation>;
+
+export const RecommendAccountMutation = graphql(
+  `mutation RecommendAccount($request: RecommendAccount!) {
+    value: recommendAccount(request: $request)
+  }`,
+);
+export type RecommendAccountRequest = RequestOf<typeof RecommendAccountMutation>;
+
+export const UndoRecommendAccountMutation = graphql(
+  `mutation UndoRecommendedAccount($request: UndoRecommendedAccount!) {
+    value: undoRecommendedAccount(request: $request)
+  }`,
+);
+export type UndoRecommendAccountRequest = RequestOf<typeof UndoRecommendAccountMutation>;

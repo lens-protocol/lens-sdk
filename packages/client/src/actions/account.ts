@@ -12,14 +12,21 @@ import type {
   AccountsAvailableRequest,
   AccountsBlockedRequest,
   AccountsRequest,
+  BlockRequest,
+  BlockResult,
   CreateAccountWithUsernameRequest,
   CreateAccountWithUsernameResult,
   EnableSignlessResult,
   MuteRequest,
   PaginatedAccountsResult,
+  RecommendAccountRequest,
   RemoveSignlessResult,
+  ReportAccountRequest,
   SetAccountMetadataRequest,
   SetAccountMetadataResult,
+  UnblockRequest,
+  UnblockResult,
+  UndoRecommendAccountRequest,
   UnmuteRequest,
 } from '@lens-protocol/graphql';
 import {
@@ -30,11 +37,16 @@ import {
   AccountsAvailableQuery,
   AccountsBlockedQuery,
   AccountsQuery,
+  BlockMutation,
   CreateAccountWithUsernameMutation,
   EnableSignlessMutation,
   MuteAccountMutation,
+  RecommendAccountMutation,
   RemoveSignlessMutation,
+  ReportAccountMutation,
   SetAccountMetadataMutation,
+  UnblockMutation,
+  UndoRecommendAccountMutation,
   UnmuteAccountMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
@@ -265,7 +277,7 @@ export function removeSignless(
  *
  * ```ts
  * const result = await muteAccount(sessionClient, {
- *   account: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1");
+ *   account: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1"),
  * });
  * ```
  *
@@ -285,7 +297,7 @@ export function muteAccount(
  *
  * ```ts
  * const result = await unmuteAccount(sessionClient, {
- *   account: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1");
+ *   account: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1"),
  * });
  * ```
  *
@@ -298,4 +310,103 @@ export function unmuteAccount(
   request: UnmuteRequest,
 ): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
   return client.mutation(UnmuteAccountMutation, { request });
+}
+
+/**
+ * Report an account.
+ *
+ * ```ts
+ * const result = await reportAccount(sessionClient, {
+ *   account: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1"),
+ *   reason: AccountReportReason.RepetitiveSpam,
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns void.
+ */
+export function reportAccount(
+  client: SessionClient,
+  request: ReportAccountRequest,
+): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(ReportAccountMutation, { request });
+}
+
+/**
+ * Block an account.
+ *
+ * ```ts
+ * const result = await blockAccount(sessionClient, {
+ *   account: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1"),
+ * });
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function blockAccount(
+  client: SessionClient,
+  request: BlockRequest,
+): ResultAsync<BlockResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(BlockMutation, { request });
+}
+
+/**
+ * Unblock an account.
+ *
+ * ```ts
+ * const result = await unblockAccount(sessionClient, {
+ *   account: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1"),
+ * });
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function unblockAccount(
+  client: SessionClient,
+  request: UnblockRequest,
+): ResultAsync<UnblockResult, UnauthenticatedError | UnexpectedError> {
+  return client.mutation(UnblockMutation, { request });
+}
+
+/**
+ * Recommend an account.
+ *
+ * ```ts
+ * const result = await recommendAccount(sessionClient, {
+ *   account: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1"),
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns void.
+ */
+export function recommendAccount(
+  client: SessionClient,
+  request: RecommendAccountRequest,
+): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(RecommendAccountMutation, { request });
+}
+
+/**
+ * Undo recommendation of an account.
+ *
+ * ```ts
+ * const result = await undoRecommendAccount(sessionClient, {
+ *   account: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1"),
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns void.
+ */
+export function undoRecommendAccount(
+  client: SessionClient,
+  request: UndoRecommendAccountRequest,
+): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(UndoRecommendAccountMutation, { request });
 }

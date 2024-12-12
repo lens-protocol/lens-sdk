@@ -5,6 +5,8 @@ import type {
   RefreshResult,
   RevokeAuthenticationRequest,
   RolloverRefreshRequest,
+  SwitchAccountRequest,
+  SwitchAccountResult,
 } from '@lens-protocol/graphql';
 import {
   AuthenticatedSessionsQuery,
@@ -12,6 +14,7 @@ import {
   LegacyRolloverRefreshMutation,
   RefreshMutation,
   RevokeAuthenticationMutation,
+  SwitchAccountMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
@@ -118,4 +121,24 @@ export function legacyRolloverRefresh(
   request: RolloverRefreshRequest,
 ): ResultAsync<RefreshResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(LegacyRolloverRefreshMutation, { request });
+}
+
+/**
+ * Switch to account managed.
+ *
+ * ```ts
+ * const result = await switchAccount(sessionClient{
+ *   account: evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3'),
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The query request.
+ * @returns The authenticated tokens for the switched account.
+ */
+export function switchAccount(
+  client: SessionClient,
+  request: SwitchAccountRequest,
+): ResultAsync<SwitchAccountResult, UnauthenticatedError | UnexpectedError> {
+  return client.query(SwitchAccountMutation, { request });
 }
