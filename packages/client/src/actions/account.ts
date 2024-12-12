@@ -317,7 +317,7 @@ export function unmuteAccount(
  * ```ts
  * const result = await reportAccount(sessionClient, {
  *   account: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1"),
- *   reason: "REPETITIVE_SPAM",
+ *   reason: AccountReportReason.RepetitiveSpam,
  * });
  * ```
  *
