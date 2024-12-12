@@ -3,7 +3,7 @@ import {
   AccountAvailableFragment,
   AccountBlockedFragment,
   AccountFragment,
-  PaginatedResultInfo,
+  PaginatedResultInfoFragment,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
@@ -33,7 +33,7 @@ export const SearchAccountsQuery = graphql(
       }
     }
   }`,
-  [AccountFragment, PaginatedResultInfo],
+  [AccountFragment, PaginatedResultInfoFragment],
 );
 
 export type SearchAccountsRequest = RequestOf<typeof SearchAccountsQuery>;
@@ -210,7 +210,7 @@ export const AccountsAvailableQuery = graphql(
       }
     }
   }`,
-  [AccountAvailableFragment, PaginatedResultInfo],
+  [AccountAvailableFragment, PaginatedResultInfoFragment],
 );
 
 export type AccountsAvailableRequest = RequestOf<typeof AccountsAvailableQuery>;
@@ -226,7 +226,7 @@ export const AccountsBlockedQuery = graphql(
       }
     }
   }`,
-  [AccountBlockedFragment, PaginatedResultInfo],
+  [AccountBlockedFragment, PaginatedResultInfoFragment],
 );
 
 export type AccountsBlockedRequest = RequestOf<typeof AccountsBlockedQuery>;

@@ -3,7 +3,7 @@ import type { FragmentOf } from 'gql.tada';
 import {
   AccountFragment,
   BooleanValue,
-  PaginatedResultInfo,
+  PaginatedResultInfoFragment,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
@@ -125,7 +125,7 @@ export const FollowersQuery = graphql(
       }
     }
   }`,
-  [Follower, PaginatedResultInfo],
+  [Follower, PaginatedResultInfoFragment],
 );
 export type FollowersRequest = RequestOf<typeof FollowersQuery>;
 
@@ -141,7 +141,7 @@ export const FollowingQuery = graphql(
       }
     }
   }`,
-  [Following, PaginatedResultInfo],
+  [Following, PaginatedResultInfoFragment],
 );
 export type FollowingRequest = RequestOf<typeof FollowingQuery>;
 
@@ -157,7 +157,7 @@ export const FollowersYouKnowQuery = graphql(
       }
     }
   }`,
-  [Follower, PaginatedResultInfo],
+  [Follower, PaginatedResultInfoFragment],
 );
 export type FollowersYouKnowRequest = RequestOf<typeof FollowersYouKnowQuery>;
 

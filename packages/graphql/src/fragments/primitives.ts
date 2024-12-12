@@ -1,7 +1,7 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
 
-export const AppMetadata = graphql(
+export const AppMetadataFragment = graphql(
   `fragment AppMetadata on AppMetadata {
       __typename
       description
@@ -14,9 +14,9 @@ export const AppMetadata = graphql(
       url
   }`,
 );
-export type AppMetadata = FragmentOf<typeof AppMetadata>;
+export type AppMetadata = FragmentOf<typeof AppMetadataFragment>;
 
-export const App = graphql(
+export const AppFragment = graphql(
   `fragment App on App {
     __typename
     address
@@ -30,9 +30,9 @@ export const App = graphql(
       ...AppMetadata
     }
   }`,
-  [AppMetadata],
+  [AppMetadataFragment],
 );
-export type App = FragmentOf<typeof App>;
+export type App = FragmentOf<typeof AppFragment>;
 
 export const Feed = graphql(
   `fragment Feed on Feed {
