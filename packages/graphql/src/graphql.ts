@@ -23,7 +23,7 @@ import {
   never,
 } from '@lens-protocol/types';
 import { type DocumentDecoration, type FragmentOf, initGraphQLTada } from 'gql.tada';
-import type { PageSize } from './enums';
+import type { ContentWarning, PageSize } from './enums';
 import type { introspection } from './graphql-env';
 
 export const graphql = initGraphQLTada<{
@@ -35,6 +35,7 @@ export const graphql = initGraphQLTada<{
     BigInt: BigIntString;
     BlockchainData: BlockchainData;
     Boolean: boolean;
+    ContentWarning: ContentWarning;
     Cursor: Cursor;
     DateTime: DateTime;
     EncodedTransaction: EncodedTransaction;

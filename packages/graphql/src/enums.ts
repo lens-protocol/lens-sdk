@@ -15,3 +15,12 @@ export enum PageSize {
   Ten = 'TEN',
   Fifty = 'FIFTY',
 }
+
+/**
+ * Enum for the different content warnings.
+ */
+export enum ContentWarning {
+  nsfw = 'NSFW',
+  sensitive = 'SENSITIVE',
+  spoiler = 'SPOILER',
+}

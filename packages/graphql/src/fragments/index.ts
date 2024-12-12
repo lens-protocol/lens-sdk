@@ -8,3 +8,5 @@ export * from './SelfFundedTransactionRequest';
 export * from './TransactionWillFail';
 export * from './username';
 export * from './namespace';
+export * from './media';
+export * from './metadata';
