@@ -23,4 +23,12 @@ export enum ContentWarning {
   nsfw = 'NSFW',
   sensitive = 'SENSITIVE',
   spoiler = 'SPOILER',
+
+ /**
+ * Enum for the different reasons to report an account.
+ */
+export enum AccountReportReason {
+  Impersonation = 'IMPERSONATION',
+  RepetitiveSpam = 'REPETITIVE_SPAM',
+  Other = 'OTHER',
 }
