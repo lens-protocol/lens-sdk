@@ -4,18 +4,16 @@ import { AccountFragment } from './account';
 import { ActionInputInfo, Amount, BooleanValue, NetworkAddress } from './common';
 import { App, Feed } from './primitives';
 
-export type PostActionType = ReturnType<typeof graphql.scalar<'PostActionType'>>;
-
-export const RecipientDataOutput = graphql(
+export const RecipientDataOutputFragment = graphql(
   `fragment RecipientDataOutput on RecipientDataOutput {
     __typename
     recipient
     split
   }`,
 );
-export type RecipientDataOutput = FragmentOf<typeof RecipientDataOutput>;
+export type RecipientDataOutput = FragmentOf<typeof RecipientDataOutputFragment>;
 
-export const SimpleCollectActionSettings = graphql(
+export const SimpleCollectActionSettingsFragment = graphql(
   `fragment SimpleCollectActionSettings on SimpleCollectActionSettings {
     __typename
     contract {
@@ -34,11 +32,13 @@ export const SimpleCollectActionSettings = graphql(
       ...RecipientDataOutput
     }
   }`,
-  [Amount, NetworkAddress, RecipientDataOutput],
+  [Amount, NetworkAddress, RecipientDataOutputFragment],
 );
-export type SimpleCollectActionSettings = FragmentOf<typeof SimpleCollectActionSettings>;
+export type SimpleCollectActionSettingsFragment = FragmentOf<
+  typeof SimpleCollectActionSettingsFragment
+>;
 
-export const UnknownActionSettings = graphql(
+export const UnknownActionSettingsFragment = graphql(
   `fragment UnknownActionSettings on UnknownActionSettings {
     __typename
     initializeCalldata
@@ -51,9 +51,9 @@ export const UnknownActionSettings = graphql(
   }`,
   [NetworkAddress],
 );
-export type UnknownActionSettings = FragmentOf<typeof UnknownActionSettings>;
+export type UnknownActionSettings = FragmentOf<typeof UnknownActionSettingsFragment>;
 
-export const PostAction = graphql(
+export const PostActionFragment = graphql(
   `fragment PostAction on PostAction {
     ... on SimpleCollectActionSettings {
       ...SimpleCollectActionSettings
@@ -62,21 +62,19 @@ export const PostAction = graphql(
       ...UnknownActionSettings
     }
   }`,
-  [SimpleCollectActionSettings, UnknownActionSettings],
+  [SimpleCollectActionSettingsFragment, UnknownActionSettingsFragment],
 );
-export type PostAction = FragmentOf<typeof PostAction>;
+export type PostAction = FragmentOf<typeof PostActionFragment>;
 
 // TODO add metadata fragments once problems with current schema are resolved
-export const PostMetadata = graphql(
+export const PostMetadataFragment = graphql(
   `fragment PostMetadata on PostMetadata {
     __typename
   }`,
 );
-export type PostMetadata = FragmentOf<typeof PostMetadata>;
+export type PostMetadata = FragmentOf<typeof PostMetadataFragment>;
 
-export type PostReactionType = ReturnType<typeof graphql.scalar<'PostReactionType'>>;
-
-export const LoggedInPostOperations = graphql(
+export const LoggedInPostOperationsFragment = graphql(
   `fragment LoggedInPostOperations on LoggedInPostOperations {
     __typename
     id
@@ -100,16 +98,16 @@ export const LoggedInPostOperations = graphql(
   }`,
   [BooleanValue],
 );
-export type LoggedInPostOperations = FragmentOf<typeof LoggedInPostOperations>;
+export type LoggedInPostOperations = FragmentOf<typeof LoggedInPostOperationsFragment>;
 
-export const PostReference = graphql(
+export const PostReferenceFragment = graphql(
   `fragment PostReference on PostReference {
     id
   }`,
 );
-export type PostReference = FragmentOf<typeof PostReference>;
+export type PostReference = FragmentOf<typeof PostReferenceFragment>;
 
-export const ReferencedPost = graphql(
+export const ReferencedPostFragment = graphql(
   `fragment ReferencedPost on Post {
     __typename
     id
@@ -134,10 +132,17 @@ export const ReferencedPost = graphql(
     }
   }
   `,
-  [AccountFragment, App, Feed, PostMetadata, PostAction, LoggedInPostOperations],
+  [
+    AccountFragment,
+    App,
+    Feed,
+    PostMetadataFragment,
+    PostActionFragment,
+    LoggedInPostOperationsFragment,
+  ],
 );
 
-export const NestedPost = graphql(
+export const NestedPostFragment = graphql(
   `fragment NestedPost on NestedPost {
     ...on Post {
       ...ReferencedPost
@@ -146,11 +151,11 @@ export const NestedPost = graphql(
       ...PostReference
     }
   }`,
-  [PostReference, ReferencedPost],
+  [PostReferenceFragment, ReferencedPostFragment],
 );
-export type NestedPost = FragmentOf<typeof NestedPost>;
+export type NestedPost = FragmentOf<typeof NestedPostFragment>;
 
-export const Post = graphql(
+export const PostFragment = graphql(
   `fragment Post on Post {
     __typename
     id
@@ -184,21 +189,29 @@ export const Post = graphql(
     }
   }
   `,
-  [AccountFragment, App, Feed, PostMetadata, PostAction, NestedPost, LoggedInPostOperations],
+  [
+    AccountFragment,
+    App,
+    Feed,
+    PostMetadataFragment,
+    PostActionFragment,
+    NestedPostFragment,
+    LoggedInPostOperationsFragment,
+  ],
 );
-export type Post = FragmentOf<typeof Post>;
+export type Post = FragmentOf<typeof PostFragment>;
 
 // operations: LoggedInPostOperations
-export const Repost = graphql(
+export const RepostFragment = graphql(
   `fragment Repost on Repost {
     __typename
     id
   }`,
   [],
 );
-export type Repost = FragmentOf<typeof Repost>;
+export type Repost = FragmentOf<typeof RepostFragment>;
 
-export const AnyPost = graphql(
+export const AnyPostFragment = graphql(
   `fragment AnyPost on AnyPost {
     ...on Post {
       ...Post
@@ -208,11 +221,11 @@ export const AnyPost = graphql(
       ...Repost
     }
   }`,
-  [Post, Repost],
+  [PostFragment, RepostFragment],
 );
-export type AnyPost = FragmentOf<typeof AnyPost>;
+export type AnyPost = FragmentOf<typeof AnyPostFragment>;
 
-export const KnownAction = graphql(
+export const KnownActionFragment = graphql(
   `fragment KnownAction on KnownAction {
     __typename
     name
@@ -231,9 +244,9 @@ export const KnownAction = graphql(
   }`,
   [NetworkAddress, ActionInputInfo],
 );
-export type KnownAction = FragmentOf<typeof KnownAction>;
+export type KnownAction = FragmentOf<typeof KnownActionFragment>;
 
-export const UnknownAction = graphql(
+export const UnknownActionFragment = graphql(
   `fragment UnknownAction on UnknownAction {
     __typename
     name
@@ -243,9 +256,9 @@ export const UnknownAction = graphql(
   }`,
   [NetworkAddress],
 );
-export type UnknownAction = FragmentOf<typeof UnknownAction>;
+export type UnknownAction = FragmentOf<typeof UnknownActionFragment>;
 
-export const ActionInfo = graphql(
+export const ActionInfoFragment = graphql(
   `fragment ActionInfo on ActionInfo {
     ... on KnownAction {
       ...KnownAction
@@ -254,20 +267,20 @@ export const ActionInfo = graphql(
       ...UnknownAction
     }
   }`,
-  [KnownAction, UnknownAction],
+  [KnownActionFragment, UnknownActionFragment],
 );
-export type ActionInfo = FragmentOf<typeof ActionInfo>;
+export type ActionInfo = FragmentOf<typeof ActionInfoFragment>;
 
-export const PostReaction = graphql(
+export const PostReactionFragment = graphql(
   `fragment PostReaction on PostReaction {
     __typename
     reactedAt
     reaction
   }`,
 );
-export type PostReaction = FragmentOf<typeof PostReaction>;
+export type PostReaction = FragmentOf<typeof PostReactionFragment>;
 
-export const AccountPostReaction = graphql(
+export const AccountPostReactionFragment = graphql(
   `fragment AccountPostReaction on AccountPostReaction {
     __typename
     account {
@@ -277,6 +290,6 @@ export const AccountPostReaction = graphql(
       ...PostReaction
     }
   }`,
-  [AccountFragment, PostReaction],
+  [AccountFragment, PostReactionFragment],
 );
-export type AccountPostReaction = FragmentOf<typeof AccountPostReaction>;
+export type AccountPostReaction = FragmentOf<typeof AccountPostReactionFragment>;
