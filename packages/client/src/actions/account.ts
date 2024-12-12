@@ -18,7 +18,6 @@ import type {
   CreateAccountWithUsernameResult,
   EnableSignlessResult,
   MuteRequest,
-  PaginatedAccountsResult,
   RecommendAccountRequest,
   RemoveSignlessResult,
   ReportAccountRequest,
@@ -93,7 +92,7 @@ export function fetchAccount(
 export function fetchAccounts(
   client: AnyClient,
   request: AccountsRequest,
-): ResultAsync<PaginatedAccountsResult | null, UnexpectedError> {
+): ResultAsync<Paginated<Account> | null, UnexpectedError> {
   return client.query(AccountsQuery, { request });
 }
 
