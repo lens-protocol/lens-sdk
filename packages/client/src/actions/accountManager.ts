@@ -3,15 +3,19 @@ import type {
   AccountManagersRequest,
   AddAccountManagerRequest,
   AddAccountManagerResult,
+  HideManagedAccountRequest,
   RemoveAccountManagerRequest,
   RemoveAccountManagerResult,
+  UnhideManagedAccountRequest,
   UpdateAccountManagerRequest,
   UpdateAccountManagerResult,
 } from '@lens-protocol/graphql';
 import {
   AccountManagersQuery,
   AddAccountManagerMutation,
+  HideManagedAccountMutation,
   RemoveAccountManagerMutation,
+  UnhideManagedAccountMutation,
   UpdateAccountManagerMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
@@ -102,4 +106,44 @@ export function updateAccountManager(
   request: UpdateAccountManagerRequest,
 ): ResultAsync<UpdateAccountManagerResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(UpdateAccountManagerMutation, { request });
+}
+
+/**
+ * Hide a managed account.
+ *
+ * ```ts
+ * const result = await muteAccount(sessionClient, {
+ *   account: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1");
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns void.
+ */
+export function hideManagedAccount(
+  client: SessionClient,
+  request: HideManagedAccountRequest,
+): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(HideManagedAccountMutation, { request });
+}
+
+/**
+ * Unhide a managed account.
+ *
+ * ```ts
+ * const result = await unhideManagedAccount(sessionClient, {
+ *   account: evmAddress("0xe5439696f4057aF073c0FB2dc6e5e755392922e1");
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns void.
+ */
+export function unhideManagedAccount(
+  client: SessionClient,
+  request: UnhideManagedAccountRequest,
+): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(UnhideManagedAccountMutation, { request });
 }
