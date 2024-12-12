@@ -19,7 +19,7 @@ import type { Paginated } from '../types';
  */
 export function fetchNotifications(
   client: SessionClient,
-  request: NotificationsRequest,
+  request: NotificationsRequest = {},
 ): ResultAsync<Paginated<Notification>, UnexpectedError> {
   return client.query(NotificationsQuery, { request });
 }
