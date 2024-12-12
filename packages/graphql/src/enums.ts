@@ -15,3 +15,12 @@ export enum PageSize {
   Ten = 'TEN',
   Fifty = 'FIFTY',
 }
+
+/**
+ * Enum for the different reasons to report an account.
+ */
+export enum AccountReportReason {
+  Impersonation = 'IMPERSONATION',
+  RepetitiveSpam = 'REPETITIVE_SPAM',
+  Other = 'OTHER',
+}
