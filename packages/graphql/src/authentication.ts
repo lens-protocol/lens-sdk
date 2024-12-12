@@ -1,5 +1,5 @@
 import type { FragmentOf } from 'gql.tada';
-import { PaginatedResultInfo } from './fragments';
+import { PaginatedResultInfoFragment } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
 const AuthenticationChallenge = graphql(
@@ -124,7 +124,7 @@ export const AuthenticatedSessionsQuery = graphql(
       }
     }
   }`,
-  [AuthenticatedSession, PaginatedResultInfo],
+  [AuthenticatedSession, PaginatedResultInfoFragment],
 );
 export type AuthenticatedSessionsRequest = RequestOf<typeof AuthenticatedSessionsQuery>;
 

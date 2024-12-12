@@ -1,9 +1,9 @@
 import type { FragmentOf } from 'gql.tada';
 
 import {
-  Account,
+  AccountFragment,
   BooleanValue,
-  PaginatedResultInfo,
+  PaginatedResultInfoFragment,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
@@ -97,7 +97,7 @@ const Follower = graphql(
     }
     followedOn
   }`,
-  [Account],
+  [AccountFragment],
 );
 export type Follower = FragmentOf<typeof Follower>;
 
@@ -109,7 +109,7 @@ const Following = graphql(
     }
     followedOn
   }`,
-  [Account],
+  [AccountFragment],
 );
 export type Following = FragmentOf<typeof Following>;
 
@@ -125,7 +125,7 @@ export const FollowersQuery = graphql(
       }
     }
   }`,
-  [Follower, PaginatedResultInfo],
+  [Follower, PaginatedResultInfoFragment],
 );
 export type FollowersRequest = RequestOf<typeof FollowersQuery>;
 
@@ -141,7 +141,7 @@ export const FollowingQuery = graphql(
       }
     }
   }`,
-  [Following, PaginatedResultInfo],
+  [Following, PaginatedResultInfoFragment],
 );
 export type FollowingRequest = RequestOf<typeof FollowingQuery>;
 
@@ -157,7 +157,7 @@ export const FollowersYouKnowQuery = graphql(
       }
     }
   }`,
-  [Follower, PaginatedResultInfo],
+  [Follower, PaginatedResultInfoFragment],
 );
 export type FollowersYouKnowRequest = RequestOf<typeof FollowersYouKnowQuery>;
 

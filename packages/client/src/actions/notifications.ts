@@ -1,8 +1,10 @@
 import type { Notification, NotificationsRequest } from '@lens-protocol/graphql';
-import { NotificationsQuery } from '@lens-protocol/graphql';
+import { notificationsQuery } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
+import type { Account } from '@lens-protocol/graphql';
 import type { SessionClient } from '../clients';
+import type { Context } from '../context';
 import type { UnexpectedError } from '../errors';
 import type { Paginated } from '../types';
 
@@ -17,9 +19,10 @@ import type { Paginated } from '../types';
  * @param request - The query request.
  * @returns Paginated notifications.
  */
-export function fetchNotifications(
-  client: SessionClient,
-  request: NotificationsRequest,
-): ResultAsync<Paginated<Notification>, UnexpectedError> {
-  return client.query(NotificationsQuery, { request });
+export function fetchNotifications<TAccount extends Account>(
+  client: SessionClient<Context<TAccount>>,
+  request: NotificationsRequest = {},
+): ResultAsync<Paginated<Notification<TAccount>>, UnexpectedError> {
+  const document = notificationsQuery(client.context.accountFragment);
+  return client.query(document, { request });
 }
