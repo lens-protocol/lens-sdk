@@ -1,11 +1,10 @@
-import type { EnvironmentConfig } from '@lens-protocol/env';
 import { AuthenticateMutation, ChallengeMutation } from '@lens-protocol/graphql';
 import type {
   AuthenticationChallenge,
   ChallengeRequest,
   SignedAuthChallenge,
 } from '@lens-protocol/graphql';
-import type { Credentials, IStorage, IStorageProvider } from '@lens-protocol/storage';
+import type { Credentials, IStorage } from '@lens-protocol/storage';
 import { createCredentialsStorage } from '@lens-protocol/storage';
 import {
   ResultAsync,
@@ -32,7 +31,7 @@ import { type Logger, getLogger } from 'loglevel';
 import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
 import { transactionStatus } from './actions';
 import type { ClientConfig } from './config';
-import { configureContext } from './context';
+import { type Context, configureContext } from './context';
 import {
   AuthenticationError,
   GraphQLErrorCode,
@@ -54,17 +53,6 @@ function takeValue<T>({
   return data.value;
 }
 
-/**
- * @internal
- */
-type ClientContext = {
-  environment: EnvironmentConfig;
-  cache: boolean;
-  debug: boolean;
-  origin?: string;
-  storage: IStorageProvider;
-};
-
 export type SignMessage = (message: string) => Promise<string>;
 
 export type LoginParams = ChallengeRequest & {
@@ -78,7 +66,7 @@ abstract class AbstractClient<TError> {
 
   protected readonly credentials: IStorage<Credentials>;
 
-  protected constructor(public readonly context: ClientContext) {
+  protected constructor(public readonly context: Context) {
     this.credentials = createCredentialsStorage(context.storage, context.environment.name);
 
     this.logger = getLogger(this.constructor.name);
@@ -443,8 +431,7 @@ class SessionClient extends AbstractClient<UnauthenticatedError | UnexpectedErro
       ...base,
       headers: {
         ...base.headers,
-        'x-access-token': credentials.accessToken,
-        // Authorization: `Bearer ${this.tokens.accessToken}`,
+        Authorization: `Bearer ${credentials.accessToken}`,
       },
     };
   }
