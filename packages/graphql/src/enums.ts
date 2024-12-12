@@ -24,3 +24,19 @@ export enum AccountReportReason {
   RepetitiveSpam = 'REPETITIVE_SPAM',
   Other = 'OTHER',
 }
+
+/**
+ * Enum for the different type of Post Actions.
+ */
+export enum PostActionType {
+  SimpleCollectAction = 'SIMPLE_COLLECT_ACTION',
+  UnknownAction = 'UNKNOWN_ACTION',
+}
+
+/**
+ * Enum for the different types of reactions a user can have on a post.
+ */
+export enum PostReactionType {
+  Upvote = 'UPVOTE',
+  Downvote = 'DOWNVOTE',
+}
