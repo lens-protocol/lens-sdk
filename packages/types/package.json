@@ -18,11 +18,11 @@
   },
   "license": "MIT",
   "dependencies": {
-    "neverthrow": "^8.0.0"
+    "neverthrow": "^8.0.0",
+    "type-fest": "^4.26.1"
   },
   "devDependencies": {
     "tsup": "^8.3.5",
-    "type-fest": "^4.26.1",
     "typescript": "^5.6.3"
   }
 }
