@@ -40,3 +40,12 @@ export enum PostReactionType {
   Upvote = 'UPVOTE',
   Downvote = 'DOWNVOTE',
 }
+
+/**
+ * Enum for the different content warnings.
+ */
+export enum ContentWarning {
+  nsfw = 'NSFW',
+  sensitive = 'SENSITIVE',
+  spoiler = 'SPOILER',
+}

@@ -2,7 +2,23 @@ import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
 import { AccountFragment } from './account';
 import { ActionInputInfo, Amount, BooleanValue, NetworkAddress } from './common';
-import { App, Feed } from './primitives';
+import {
+  ArticleMetadataFragment,
+  AudioMetadataFragment,
+  CheckingInMetadataFragment,
+  EmbedMetadataFragment,
+  EventMetadataFragment,
+  ImageMetadataFragment,
+  LivestreamMetadataFragment,
+  MintMetadataFragment,
+  SpaceMetadataFragment,
+  StoryMetadataFragment,
+  TextOnlyMetadataFragment,
+  ThreeDMetadataFragment,
+  TransactionMetadataFragment,
+  VideoMetadataFragment,
+} from './metadata';
+import { AppFragment, Feed } from './primitives';
 
 export const RecipientDataOutputFragment = graphql(
   `fragment RecipientDataOutput on RecipientDataOutput {
@@ -66,11 +82,67 @@ export const PostActionFragment = graphql(
 );
 export type PostAction = FragmentOf<typeof PostActionFragment>;
 
-// TODO add metadata fragments once problems with current schema are resolved
 export const PostMetadataFragment = graphql(
   `fragment PostMetadata on PostMetadata {
-    __typename
+    ... on ArticleMetadata {
+      ...ArticleMetadata
+    }
+    ... on AudioMetadata {
+      ...AudioMetadata
+    }
+    ... on TextOnlyMetadata {
+      ...TextOnlyMetadata
+    }
+    ... on CheckingInMetadata {
+      ...CheckingInMetadata
+    }
+    ... on ImageMetadata {
+      ...ImageMetadata
+    }
+    ... on VideoMetadata {
+      ...VideoMetadata
+    }
+    ... on EmbedMetadata {
+      ...EmbedMetadata
+    }
+    ... on EventMetadata {
+      ...EventMetadata
+    }
+    ... on LivestreamMetadata {
+      ...LivestreamMetadata
+    }
+    ... on MintMetadata {
+      ...MintMetadata
+    }
+    ... on SpaceMetadata {
+      ...SpaceMetadata
+    }
+    ... on StoryMetadata {
+      ...StoryMetadata
+    }
+    ... on ThreeDMetadata {
+      ...ThreeDMetadata
+    }
+    ... on TransactionMetadata {
+      ...TransactionMetadata
+    }
   }`,
+  [
+    ArticleMetadataFragment,
+    AudioMetadataFragment,
+    TextOnlyMetadataFragment,
+    CheckingInMetadataFragment,
+    ImageMetadataFragment,
+    VideoMetadataFragment,
+    EmbedMetadataFragment,
+    EventMetadataFragment,
+    LivestreamMetadataFragment,
+    MintMetadataFragment,
+    SpaceMetadataFragment,
+    StoryMetadataFragment,
+    ThreeDMetadataFragment,
+    TransactionMetadataFragment,
+  ],
 );
 export type PostMetadata = FragmentOf<typeof PostMetadataFragment>;
 
@@ -134,7 +206,7 @@ export const ReferencedPostFragment = graphql(
   `,
   [
     AccountFragment,
-    App,
+    AppFragment,
     Feed,
     PostMetadataFragment,
     PostActionFragment,
@@ -191,7 +263,7 @@ export const PostFragment = graphql(
   `,
   [
     AccountFragment,
-    App,
+    AppFragment,
     Feed,
     PostMetadataFragment,
     PostActionFragment,
