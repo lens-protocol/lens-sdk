@@ -1,7 +1,7 @@
 import type { FragmentOf } from 'gql.tada';
 import {
-  AccountAvailable,
-  AccountBlocked,
+  AccountAvailableFragment,
+  AccountBlockedFragment,
   AccountFragment,
   PaginatedResultInfo,
   SelfFundedTransactionRequest,
@@ -210,7 +210,7 @@ export const AccountsAvailableQuery = graphql(
       }
     }
   }`,
-  [AccountAvailable, PaginatedResultInfo],
+  [AccountAvailableFragment, PaginatedResultInfo],
 );
 
 export type AccountsAvailableRequest = RequestOf<typeof AccountsAvailableQuery>;
@@ -226,7 +226,7 @@ export const AccountsBlockedQuery = graphql(
       }
     }
   }`,
-  [AccountBlocked, PaginatedResultInfo],
+  [AccountBlockedFragment, PaginatedResultInfo],
 );
 
 export type AccountsBlockedRequest = RequestOf<typeof AccountsBlockedQuery>;

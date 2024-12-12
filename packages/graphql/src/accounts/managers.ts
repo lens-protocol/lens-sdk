@@ -1,6 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
 import {
-  AccountManager,
+  AccountManagerFragment,
   PaginatedResultInfo,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
@@ -19,7 +19,7 @@ export const AccountManagersQuery = graphql(
       }
     }
   }`,
-  [AccountManager, PaginatedResultInfo],
+  [AccountManagerFragment, PaginatedResultInfo],
 );
 
 export type AccountManagersRequest = RequestOf<typeof AccountManagersQuery>;
