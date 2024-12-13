@@ -3,6 +3,7 @@ import type {
   AuthenticationChallenge,
   ChallengeRequest,
   SignedAuthChallenge,
+  StandardData,
 } from '@lens-protocol/graphql';
 import type { Credentials, IStorage } from '@lens-protocol/storage';
 import { createCredentialsStorage } from '@lens-protocol/storage';
@@ -42,7 +43,6 @@ import {
   hasExtensionCode,
 } from './errors';
 import { decodeIdToken } from './tokens';
-import type { StandardData } from './types';
 import { delay } from './utils';
 
 function takeValue<T>({
@@ -59,14 +59,14 @@ export type LoginParams = ChallengeRequest & {
   signMessage: SignMessage;
 };
 
-abstract class AbstractClient<TError> {
+abstract class AbstractClient<TContext extends Context, TError> {
   protected readonly urql: UrqlClient;
 
   protected readonly logger: Logger;
 
   protected readonly credentials: IStorage<Credentials>;
 
-  protected constructor(public readonly context: Context) {
+  protected constructor(public readonly context: TContext) {
     this.credentials = createCredentialsStorage(context.storage, context.environment.name);
 
     this.logger = getLogger(this.constructor.name);
@@ -99,12 +99,12 @@ abstract class AbstractClient<TError> {
   /**
    * Asserts that the client is a {@link PublicClient}.
    */
-  public abstract isPublicClient(): this is PublicClient;
+  public abstract isPublicClient(): this is PublicClient<TContext>;
 
   /**
    *  that the client is a {@link SessionClient}.
    */
-  public abstract isSessionClient(): this is SessionClient;
+  public abstract isSessionClient(): this is SessionClient<TContext>;
 
   public abstract query<TValue, TVariables extends AnyVariables>(
     document: TypedDocumentNode<StandardData<TValue>, TVariables>,
@@ -144,13 +144,16 @@ abstract class AbstractClient<TError> {
 /**
  * A client to interact with the public access queries and mutations of the Lens GraphQL API.
  */
-export class PublicClient extends AbstractClient<UnexpectedError> {
+export class PublicClient<TContext extends Context = Context> extends AbstractClient<
+  TContext,
+  UnexpectedError
+> {
   /**
    * The current session client.
    *
    * This could be the {@link PublicClient} itself if the user is not authenticated, or a {@link SessionClient} if the user is authenticated.
    */
-  public currentSession: PublicClient | SessionClient = this;
+  public currentSession: PublicClient<TContext> | SessionClient<TContext> = this;
 
   /**
    * Create a new instance of the {@link PublicClient}.
@@ -165,7 +168,7 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
    * @param options - The options to configure the client.
    * @returns The new instance of the client.
    */
-  static create(options: ClientConfig): PublicClient {
+  static create(options: ClientConfig): PublicClient<Context> {
     return new PublicClient(configureContext(options));
   }
 
@@ -181,7 +184,7 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
    */
   authenticate(
     request: SignedAuthChallenge,
-  ): ResultAsync<SessionClient, AuthenticationError | UnexpectedError> {
+  ): ResultAsync<SessionClient<TContext>, AuthenticationError | UnexpectedError> {
     return this.mutation(AuthenticateMutation, { request })
       .andThen((result) => {
         if (result.__typename === 'AuthenticationTokens') {
@@ -205,7 +208,7 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
     signMessage,
     ...request
   }: LoginParams): ResultAsync<
-    SessionClient,
+    SessionClient<TContext>,
     AuthenticationError | SigningError | UnexpectedError
   > {
     return this.challenge(request)
@@ -232,7 +235,7 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
    *
    * @returns The session client if available.
    */
-  resumeSession(): ResultAsync<SessionClient, UnauthenticatedError> {
+  resumeSession(): ResultAsync<SessionClient<TContext>, UnauthenticatedError> {
     return ResultAsync.fromSafePromise(this.credentials.get()).andThen((credentials) => {
       if (!credentials) {
         return new UnauthenticatedError('No credentials found').asResultAsync();
@@ -244,14 +247,14 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
   /**
    * {@inheritDoc AbstractClient.isPublicClient}
    */
-  public override isPublicClient(): this is PublicClient {
+  public override isPublicClient(): this is PublicClient<TContext> {
     return true;
   }
 
   /**
    * {@inheritDoc AbstractClient.isSessionClient}
    */
-  public override isSessionClient(): this is SessionClient {
+  public override isSessionClient(): this is SessionClient<TContext> {
     return false;
   }
 
@@ -289,12 +292,15 @@ export class PublicClient extends AbstractClient<UnexpectedError> {
  *
  * @privateRemarks Intentionally not exported.
  */
-class SessionClient extends AbstractClient<UnauthenticatedError | UnexpectedError> {
-  public get parent(): PublicClient {
+class SessionClient<TContext extends Context = Context> extends AbstractClient<
+  TContext,
+  UnauthenticatedError | UnexpectedError
+> {
+  public get parent(): PublicClient<TContext> {
     return this._parent;
   }
 
-  constructor(private readonly _parent: PublicClient) {
+  constructor(private readonly _parent: PublicClient<TContext>) {
     super(_parent.context);
     _parent.currentSession = this;
   }
@@ -328,14 +334,14 @@ class SessionClient extends AbstractClient<UnauthenticatedError | UnexpectedErro
   /**
    * {@inheritDoc AbstractClient.isPublicClient}
    */
-  public override isPublicClient(): this is PublicClient {
+  public override isPublicClient(): this is PublicClient<TContext> {
     return false;
   }
 
   /**
    * {@inheritDoc AbstractClient.isSessionClient}
    */
-  public override isSessionClient(): this is SessionClient {
+  public override isSessionClient(): this is SessionClient<TContext> {
     return true;
   }
 
@@ -431,7 +437,8 @@ class SessionClient extends AbstractClient<UnauthenticatedError | UnexpectedErro
       ...base,
       headers: {
         ...base.headers,
-        Authorization: `Bearer ${credentials.accessToken}`,
+        'x-access-token': credentials.accessToken,
+        // Authorization: `Bearer ${this.tokens.accessToken}`,
       },
     };
   }
@@ -456,4 +463,6 @@ export type { SessionClient };
 /**
  * Any client that can be used to interact with the Lens GraphQL API.
  */
-export type AnyClient = PublicClient | SessionClient;
+export type AnyClient<TContext extends Context = Context> =
+  | PublicClient<TContext>
+  | SessionClient<TContext>;

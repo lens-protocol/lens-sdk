@@ -1,4 +1,5 @@
 import type {
+  Paginated,
   Post,
   TimelineHighlightsRequest,
   TimelineItem,
@@ -9,7 +10,6 @@ import type { ResultAsync } from '@lens-protocol/types';
 
 import type { AnyClient } from '../clients';
 import type { UnexpectedError } from '../errors';
-import type { Paginated } from '../types';
 
 /**
  * Fetch timeline from an account.

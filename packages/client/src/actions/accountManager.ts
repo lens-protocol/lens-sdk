@@ -4,6 +4,7 @@ import type {
   AddAccountManagerRequest,
   AddAccountManagerResult,
   HideManagedAccountRequest,
+  Paginated,
   RemoveAccountManagerRequest,
   RemoveAccountManagerResult,
   UnhideManagedAccountRequest,
@@ -22,7 +23,6 @@ import type { ResultAsync } from '@lens-protocol/types';
 
 import type { SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
-import type { Paginated } from '../types';
 
 /**
  * Fetch Account Managers.

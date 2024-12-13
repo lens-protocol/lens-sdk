@@ -1,5 +1,3 @@
-import type { PaginatedResultInfo } from '@lens-protocol/graphql';
-
 import type {
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
@@ -56,19 +54,3 @@ export type DelegableOperationHandler<T extends string, E extends string> = (
 export type OperationHandler<T extends string, E extends string> =
   | RestrictedOperationHandler<E>
   | DelegableOperationHandler<T, E>;
-
-/**
- * A standardized data object.
- *
- * All GQL operations should alias their results to `value` to ensure interoperability
- * with this client interface.
- */
-export type StandardData<T> = { value: T };
-
-/**
- * A paginated list of items.
- */
-export type Paginated<T> = {
-  items: readonly T[];
-  pageInfo: PaginatedResultInfo;
-};
