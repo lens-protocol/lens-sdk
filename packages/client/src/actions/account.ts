@@ -102,7 +102,9 @@ export function fetchAccounts(
  * Fetch an Accounts Bulk.
  *
  * ```ts
- * const result = await fetchAccountsBulk(anyClient);
+ * const result = await fetchAccountsBulk(anyClient, {
+ *  addresses: [evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5')],
+ * });
  * ```
  *
  * @param client - Any Lens client.
