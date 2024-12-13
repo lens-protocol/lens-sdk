@@ -1,5 +1,8 @@
 import type { FragmentOf } from 'gql.tada';
 import {
+  AccountFragment,
+  GroupFragment,
+  PaginatedResultInfoFragment,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
@@ -123,3 +126,63 @@ export const LeaveGroupMutation = graphql(
   [LeaveGroupResult],
 );
 export type LeaveGroupRequest = RequestOf<typeof LeaveGroupMutation>;
+
+export const GroupQuery = graphql(
+  `query Group($request: GroupRequest!) {
+    value: group(request: $request) {
+      ...Group
+    }
+  }`,
+  [GroupFragment],
+);
+export type GroupRequest = RequestOf<typeof GroupQuery>;
+
+export const GroupsQuery = graphql(
+  `query Groups($request: GroupsRequest!) {
+    value: groups(request: $request) {
+      __typename
+      items {
+        ...Group
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [GroupFragment, PaginatedResultInfoFragment],
+);
+export type GroupsRequest = RequestOf<typeof GroupsQuery>;
+
+export const GroupMembersQuery = graphql(
+  `query GroupMembers($request: GroupMembersRequest!) {
+    value: groupMembers(request: $request) {
+      __typename
+      items {
+        ...Account
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [AccountFragment, PaginatedResultInfoFragment],
+);
+export type GroupMembersRequest = RequestOf<typeof GroupMembersQuery>;
+
+export const GroupStatsResponseFragment = graphql(
+  `fragment GroupStatsResponse on GroupStatsResponse {
+      __typename
+      totalMembers
+  }`,
+);
+export type GroupStatsResponse = FragmentOf<typeof GroupStatsResponseFragment>;
+
+export const GroupStatsQuery = graphql(
+  `query GroupStats($request: GroupStatsRequest!) {
+    value: groupStats(request: $request) {
+      ...GroupStatsResponse
+    }
+  }`,
+  [GroupStatsResponseFragment],
+);
+export type GroupStatsRequest = RequestOf<typeof GroupStatsQuery>;
