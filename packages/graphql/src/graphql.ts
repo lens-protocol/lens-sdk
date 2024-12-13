@@ -29,11 +29,47 @@ import {
 } from 'gql.tada';
 import type { StandardData } from './common';
 import type {
+  AccessConditionComparison,
   AccountReportReason,
+  AccountSearchOrderBy,
+  AppMetadataLensPlatformsItem,
+  AppsOrderBy,
   ContentWarning,
+  FollowersOrderBy,
+  FollowersYouKnowOrderBy,
+  FollowingOrderBy,
+  ForYouSource,
+  GraphsOrderBy,
+  GroupsOrderBy,
+  MainContentFocus,
+  ManagedAccountsVisibility,
+  MediaAudioKind,
+  MediaAudioType,
+  MediaImageType,
+  MediaVideoType,
+  MetadataAttributeType,
+  MetadataLicenseType,
+  NotificationOrderBy,
+  NotificationType,
   PageSize,
+  PostActionCategoryType,
   PostActionType,
+  PostReactionOrderBy,
   PostReactionType,
+  PostReferenceType,
+  PostReportReason,
+  PostTagsOrderBy,
+  PostType,
+  PostVisibilityFilter,
+  SelfFundedFallbackReason,
+  SponsorLimitType,
+  SponsoredFallbackReason,
+  TokenStandard,
+  TransactionType,
+  TriStateValue,
+  UnblockErrorType,
+  WhoActedOnPostOrderBy,
+  WhoReferencedPostOrderBy,
 } from './enums';
 import type { introspection } from './graphql-env';
 
@@ -71,6 +107,42 @@ export const graphql = initGraphQLTada<{
     UsernameValue: UsernameValue;
     UUID: UUID;
     Void: Void;
+    WhoReferencedPostOrderBy: WhoReferencedPostOrderBy;
+    AccessConditionComparison: AccessConditionComparison;
+    AccountSearchOrderBy: AccountSearchOrderBy;
+    AppMetadataLensPlatformsItem: AppMetadataLensPlatformsItem;
+    AppsOrderBy: AppsOrderBy;
+    FollowersOrderBy: FollowersOrderBy;
+    FollowersYouKnowOrderBy: FollowersYouKnowOrderBy;
+    FollowingOrderBy: FollowingOrderBy;
+    ForYouSource: ForYouSource;
+    GraphsOrderBy: GraphsOrderBy;
+    GroupsOrderBy: GroupsOrderBy;
+    MainContentFocus: MainContentFocus;
+    ManagedAccountsVisibility: ManagedAccountsVisibility;
+    MediaAudioKind: MediaAudioKind;
+    MediaAudioType: MediaAudioType;
+    MediaImageType: MediaImageType;
+    MediaVideoType: MediaVideoType;
+    MetadataAttributeType: MetadataAttributeType;
+    MetadataLicenseType: MetadataLicenseType;
+    NotificationOrderBy: NotificationOrderBy;
+    NotificationType: NotificationType;
+    PostActionCategoryType: PostActionCategoryType;
+    PostReactionOrderBy: PostReactionOrderBy;
+    PostReferenceType: PostReferenceType;
+    PostReportReason: PostReportReason;
+    PostTagsOrderBy: PostTagsOrderBy;
+    PostType: PostType;
+    PostVisibilityFilter: PostVisibilityFilter;
+    SelfFundedFallbackReason: SelfFundedFallbackReason;
+    SponsorLimitType: SponsorLimitType;
+    SponsoredFallbackReason: SponsoredFallbackReason;
+    TokenStandard: TokenStandard;
+    TransactionType: TransactionType;
+    TriStateValue: TriStateValue;
+    UnblockErrorType: UnblockErrorType;
+    WhoActedOnPostOrderBy: WhoActedOnPostOrderBy;
   };
 }>();
 
