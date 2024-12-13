@@ -13,12 +13,25 @@ import type {
 import {
   PostActionsQuery,
   PostBookmarksQuery,
+  PostEditsQuery,
   PostQuery,
+  PostReactionStatusQuery,
   PostReactionsQuery,
   PostReferencesQuery,
+  PostTagsQuery,
+  WhoActedOnPostQuery,
+  WhoReferencedPostQuery,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
+import type { PostTagsRequest } from '@lens-protocol/graphql';
+import type { PostReactionStatusRequest } from '@lens-protocol/graphql';
+import type { PostReactionStatus } from '@lens-protocol/graphql';
+import type { WhoReferencedPostRequest } from '@lens-protocol/graphql';
+import type { Account } from '@lens-protocol/graphql';
+import type { WhoActedOnPostQueryRequest } from '@lens-protocol/graphql';
+import type { PostEditsRequest } from '@lens-protocol/graphql';
+import type { PostEdit } from '@lens-protocol/graphql';
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
@@ -119,4 +132,108 @@ export function fetchPostReferences(
   request: PostReferencesRequest,
 ): ResultAsync<Paginated<AnyPost>, UnexpectedError | UnauthenticatedError> {
   return client.query(PostReferencesQuery, { request });
+}
+
+/**
+ * Fetch post tags.
+ *
+ * ```ts
+ * const result = await fetchPostTags(anyClient, {
+ *   forFeeds: [evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5')],
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of post tags.
+ */
+export function fetchPostTags(
+  client: AnyClient,
+  request: PostTagsRequest,
+): ResultAsync<Paginated<string>, UnexpectedError> {
+  return client.query(PostTagsQuery, { request });
+}
+
+/**
+ * Fetch post reaction status.
+ *
+ * ```ts
+ * const result = await fetchPostReactionStatus(anyClient, {
+ *   pairs: [{
+ *     account: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5')],
+ *     post: postId('42'),
+ *   }],
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of post reaction status.
+ */
+export function fetchPostReactionStatus(
+  client: AnyClient,
+  request: PostReactionStatusRequest,
+): ResultAsync<PostReactionStatus[], UnexpectedError> {
+  return client.query(PostReactionStatusQuery, { request });
+}
+
+/**
+ * Fetch who referenced post.
+ *
+ * ```ts
+ * const result = await fetchWhoReferencedPost(anyClient, {
+ *   referenceTypes: [PostReferenceType.CommentOn]
+ *   post: postId('42'),
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of accounts who referenced the post.
+ */
+export function fetchWhoReferencedPost(
+  client: AnyClient,
+  request: WhoReferencedPostRequest,
+): ResultAsync<Paginated<Account>, UnexpectedError> {
+  return client.query(WhoReferencedPostQuery, { request });
+}
+
+/**
+ * Fetch who acted on post.
+ *
+ * ```ts
+ * const result = await fetchWhoActedOnPost(anyClient, {
+ *   post:  postId('42'),
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of accounts who acted on the post.
+ */
+export function fetchWhoActedOnPost(
+  client: AnyClient,
+  request: WhoActedOnPostQueryRequest,
+): ResultAsync<Paginated<Account>, UnexpectedError> {
+  return client.query(WhoActedOnPostQuery, { request });
+}
+
+/**
+ * Fetch post edits.
+ *
+ * ```ts
+ * const result = await fetchPostEdits(anyClient, {
+ *   post:  postId('42'),
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of edits for the post.
+ */
+export function fetchPostEdits(
+  client: AnyClient,
+  request: PostEditsRequest,
+): ResultAsync<Paginated<PostEdit>, UnexpectedError> {
+  return client.query(PostEditsQuery, { request });
 }

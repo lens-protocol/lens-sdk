@@ -34,6 +34,8 @@ import type {
   PageSize,
   PostActionType,
   PostReactionType,
+  PostReferenceType,
+  WhoReferencedPostOrderBy,
 } from './enums';
 import type { introspection } from './graphql-env';
 
@@ -60,17 +62,20 @@ export const graphql = initGraphQLTada<{
     LegacyRefreshToken: CompactJwt;
     PostActionType: PostActionType;
     PostReactionType: PostReactionType;
+    PostReferenceType: PostReferenceType;
     PageSize: PageSize;
     PostId: PostId;
     RefreshToken: RefreshToken;
     Signature: Signature;
     String: string;
+    Tag: string;
     TxHash: TxHash;
     URI: URI;
     URL: URL;
     UsernameValue: UsernameValue;
     UUID: UUID;
     Void: Void;
+    WhoReferencedPostOrderBy: WhoReferencedPostOrderBy;
   };
 }>();
 
