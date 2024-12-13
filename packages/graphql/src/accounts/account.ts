@@ -18,7 +18,6 @@ export const AccountQuery = graphql(
   }`,
   [AccountFragment],
 );
-
 export type AccountRequest = RequestOf<typeof AccountQuery>;
 
 export const AccountsQuery = graphql(
@@ -35,8 +34,17 @@ export const AccountsQuery = graphql(
   }`,
   [AccountFragment, PaginatedResultInfoFragment],
 );
-
 export type AccountsRequest = RequestOf<typeof AccountsQuery>;
+
+export const AccountsBulkQuery = graphql(
+  `query AccountsBulk($request: AccountsBulkRequest!) {
+    value: accountsBulk(request: $request) {
+      ...Account
+    }
+  }`,
+  [AccountFragment],
+);
+export type AccountsBulkRequest = RequestOf<typeof AccountsBulkQuery>;
 
 const SetAccountMetadataResponse = graphql(
   `fragment SetAccountMetadataResponse on SetAccountMetadataResponse {

@@ -11,6 +11,7 @@ import type {
   AccountStatsRequest,
   AccountsAvailableRequest,
   AccountsBlockedRequest,
+  AccountsBulkRequest,
   AccountsRequest,
   BlockRequest,
   BlockResult,
@@ -36,6 +37,7 @@ import {
   AccountStatsQuery,
   AccountsAvailableQuery,
   AccountsBlockedQuery,
+  AccountsBulkQuery,
   AccountsQuery,
   BlockMutation,
   CreateAccountWithUsernameMutation,
@@ -94,6 +96,24 @@ export function fetchAccounts(
   request: AccountsRequest,
 ): ResultAsync<Paginated<Account> | null, UnexpectedError> {
   return client.query(AccountsQuery, { request });
+}
+
+/**
+ * Fetch an Accounts Bulk.
+ *
+ * ```ts
+ * const result = await fetchAccountsBulk(anyClient);
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of accounts.
+ */
+export function fetchAccountsBulk(
+  client: AnyClient,
+  request: AccountsBulkRequest,
+): ResultAsync<Account[], UnexpectedError> {
+  return client.query(AccountsBulkQuery, { request });
 }
 
 /**
