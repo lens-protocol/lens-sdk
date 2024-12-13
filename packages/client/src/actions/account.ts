@@ -93,7 +93,7 @@ export function fetchAccount(
  */
 export function fetchAccounts(
   client: AnyClient,
-  request: AccountsRequest,
+  request: AccountsRequest = {},
 ): ResultAsync<Paginated<Account> | null, UnexpectedError> {
   return client.query(AccountsQuery, { request });
 }
