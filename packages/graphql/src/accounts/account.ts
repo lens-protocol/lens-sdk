@@ -18,14 +18,13 @@ export const AccountQuery = graphql(
   }`,
   [AccountFragment],
 );
-
 export type AccountRequest = RequestOf<typeof AccountQuery>;
 
-export const SearchAccountsQuery = graphql(
-  `query SearchAccounts($request: AccountSearchRequest!) {
-    value: searchAccounts(request: $request) {
+export const AccountsQuery = graphql(
+  `query Accounts($request: AccountsRequest!) {
+    value: accounts(request: $request) {
       __typename
-      items {
+      items{
         ...Account
       }
       pageInfo {
@@ -35,8 +34,17 @@ export const SearchAccountsQuery = graphql(
   }`,
   [AccountFragment, PaginatedResultInfoFragment],
 );
+export type AccountsRequest = RequestOf<typeof AccountsQuery>;
 
-export type SearchAccountsRequest = RequestOf<typeof SearchAccountsQuery>;
+export const AccountsBulkQuery = graphql(
+  `query AccountsBulk($request: AccountsBulkRequest!) {
+    value: accountsBulk(request: $request) {
+      ...Account
+    }
+  }`,
+  [AccountFragment],
+);
+export type AccountsBulkRequest = RequestOf<typeof AccountsBulkQuery>;
 
 const SetAccountMetadataResponse = graphql(
   `fragment SetAccountMetadataResponse on SetAccountMetadataResponse {
