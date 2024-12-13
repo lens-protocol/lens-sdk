@@ -111,7 +111,7 @@ export function fetchAccounts(
  */
 export function fetchAccountsBulk(
   client: AnyClient,
-  request: AccountsBulkRequest,
+  request: AccountsBulkRequest = {},
 ): ResultAsync<Account[], UnexpectedError> {
   return client.query(AccountsBulkQuery, { request });
 }
