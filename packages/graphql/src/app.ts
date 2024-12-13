@@ -1,6 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
 import {
-  App,
+  AppFragment,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
@@ -13,7 +13,7 @@ export const AppQuery = graphql(
       ...App
     }
   }`,
-  [App],
+  [AppFragment],
 );
 export type AppRequest = RequestOf<typeof AppQuery>;
 

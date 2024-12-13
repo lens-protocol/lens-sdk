@@ -1,6 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
 import {
-  PaginatedResultInfo,
+  PaginatedResultInfoFragment,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
@@ -158,6 +158,6 @@ export const UsernamesQuery = graphql(
       }
     }
   }`,
-  [Username, PaginatedResultInfo],
+  [Username, PaginatedResultInfoFragment],
 );
 export type UsernamesRequest = RequestOf<typeof UsernamesQuery>;

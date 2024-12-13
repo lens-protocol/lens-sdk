@@ -1,9 +1,9 @@
 import type { FragmentOf } from 'gql.tada';
 import {
-  AccountPostReaction,
-  ActionInfo,
-  AnyPost,
-  PaginatedResultInfo,
+  AccountPostReactionFragment,
+  ActionInfoFragment,
+  AnyPostFragment,
+  PaginatedResultInfoFragment,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
@@ -73,7 +73,7 @@ export const PostQuery = graphql(
       ...AnyPost
     }
   }`,
-  [AnyPost],
+  [AnyPostFragment],
 );
 export type PostRequest = RequestOf<typeof PostQuery>;
 
@@ -88,7 +88,7 @@ export const PostActionsQuery = graphql(
       }
     }
   }`,
-  [ActionInfo, PaginatedResultInfo],
+  [ActionInfoFragment, PaginatedResultInfoFragment],
 );
 export type PostActionsRequest = RequestOf<typeof PostActionsQuery>;
 
@@ -103,7 +103,7 @@ export const PostReactionsQuery = graphql(
       }
     }
   }`,
-  [AccountPostReaction, PaginatedResultInfo],
+  [AccountPostReactionFragment, PaginatedResultInfoFragment],
 );
 export type PostReactionsRequest = RequestOf<typeof PostReactionsQuery>;
 
@@ -118,7 +118,7 @@ export const PostBookmarksQuery = graphql(
       }
     }
   }`,
-  [AnyPost, PaginatedResultInfo],
+  [AnyPostFragment, PaginatedResultInfoFragment],
 );
 export type PostBookmarksRequest = RequestOf<typeof PostBookmarksQuery>;
 
@@ -133,7 +133,7 @@ export const PostReferencesQuery = graphql(
       }
     }
   }`,
-  [AnyPost, PaginatedResultInfo],
+  [AnyPostFragment, PaginatedResultInfoFragment],
 );
 export type PostReferencesRequest = RequestOf<typeof PostReferencesQuery>;
 

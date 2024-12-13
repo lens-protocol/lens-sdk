@@ -1,8 +1,8 @@
 import type { FragmentOf } from 'gql.tada';
-import { Account, PaginatedResultInfo, Post } from './fragments';
+import { AccountFragment, PaginatedResultInfoFragment, PostFragment } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
-const FollowNotification = graphql(
+const FollowNotificationFragment = graphql(
   `fragment FollowNotification on FollowNotification {
     __typename
     id
@@ -13,11 +13,11 @@ const FollowNotification = graphql(
       followedAt
     }
   }`,
-  [Account],
+  [AccountFragment],
 );
-export type FollowNotification = FragmentOf<typeof FollowNotification>;
+export type FollowNotification = FragmentOf<typeof FollowNotificationFragment>;
 
-const ReactionNotification = graphql(
+const ReactionNotificationFragment = graphql(
   `fragment ReactionNotification on ReactionNotification {
     __typename
     id
@@ -34,11 +34,11 @@ const ReactionNotification = graphql(
       ...Post
     }
   }`,
-  [Account, Post],
+  [AccountFragment, PostFragment],
 );
-export type ReactionNotification = FragmentOf<typeof ReactionNotification>;
+export type ReactionNotification = FragmentOf<typeof ReactionNotificationFragment>;
 
-const CommentNotification = graphql(
+const CommentNotificationFragment = graphql(
   `fragment CommentNotification on CommentNotification {
     __typename
     id
@@ -46,30 +46,38 @@ const CommentNotification = graphql(
       ...Post
     }
   }`,
-  [Post],
+  [PostFragment],
 );
-export type CommentNotification = FragmentOf<typeof CommentNotification>;
+export type CommentNotification = FragmentOf<typeof CommentNotificationFragment>;
 
-const RepostNotification = graphql(
+const NotificationAccountRepostFragment = graphql(
+  `fragment NotificationAccountRepost on NotificationAccountRepost {
+    repostId
+    account {
+      ...Account
+    }
+    repostedAt
+  }`,
+  [AccountFragment],
+);
+export type NotificationAccountRepost = FragmentOf<typeof NotificationAccountRepostFragment>;
+
+const RepostNotificationFragment = graphql(
   `fragment RepostNotification on RepostNotification {
     __typename
     id
     reposts {
-      repostId
-      account {
-        ...Account
-      }
-      repostedAt
+      ...NotificationAccountRepost
     }
     post {
       ...Post
     }
   }`,
-  [Account],
+  [NotificationAccountRepostFragment, PostFragment],
 );
-export type RepostNotification = FragmentOf<typeof RepostNotification>;
+export type RepostNotification = FragmentOf<typeof RepostNotificationFragment>;
 
-const QuoteNotification = graphql(
+const QuoteNotificationFragment = graphql(
   `fragment QuoteNotification on QuoteNotification {
     __typename
     id
@@ -77,11 +85,11 @@ const QuoteNotification = graphql(
       ...Post
     }
   }`,
-  [Post],
+  [PostFragment],
 );
-export type QuoteNotification = FragmentOf<typeof QuoteNotification>;
+export type QuoteNotification = FragmentOf<typeof QuoteNotificationFragment>;
 
-const MentionNotification = graphql(
+const MentionNotificationFragment = graphql(
   `fragment MentionNotification on MentionNotification {
     __typename
     id
@@ -89,13 +97,12 @@ const MentionNotification = graphql(
       ...Post
     }
   }`,
-  [Post],
+  [PostFragment],
 );
-export type MentionNotification = FragmentOf<typeof MentionNotification>;
+export type MentionNotification = FragmentOf<typeof MentionNotificationFragment>;
 
-const Notification = graphql(
+const NotificationFragment = graphql(
   `fragment Notification on Notification {
-    __typename
     ... on FollowNotification {
       ...FollowNotification
     }
@@ -116,15 +123,22 @@ const Notification = graphql(
     }
   }`,
   [
-    FollowNotification,
-    ReactionNotification,
-    CommentNotification,
-    RepostNotification,
-    QuoteNotification,
-    MentionNotification,
+    FollowNotificationFragment,
+    ReactionNotificationFragment,
+    CommentNotificationFragment,
+    RepostNotificationFragment,
+    QuoteNotificationFragment,
+    MentionNotificationFragment,
   ],
 );
-export type Notification = FragmentOf<typeof Notification>;
+
+export type Notification =
+  | FollowNotification
+  | ReactionNotification
+  | CommentNotification
+  | RepostNotification
+  | QuoteNotification
+  | MentionNotification;
 
 export const NotificationsQuery = graphql(
   `query Notifications($request: NotificationRequest!) {
@@ -138,6 +152,6 @@ export const NotificationsQuery = graphql(
       }
     }
   }`,
-  [Notification, PaginatedResultInfo],
+  [NotificationFragment, PaginatedResultInfoFragment],
 );
 export type NotificationsRequest = RequestOf<typeof NotificationsQuery>;

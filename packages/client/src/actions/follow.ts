@@ -2,6 +2,7 @@ import type {
   CreateFollowRequest,
   CreateUnfollowRequest,
   FollowResult,
+  Paginated,
   UnfollowResult,
 } from '@lens-protocol/graphql';
 import {
@@ -23,7 +24,6 @@ import type { FollowStatusRequest } from '@lens-protocol/graphql';
 import type { FollowStatusResult } from '@lens-protocol/graphql';
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
-import type { Paginated } from '../types';
 
 /**
  * Follow an Account
