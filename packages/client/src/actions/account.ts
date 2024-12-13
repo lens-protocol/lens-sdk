@@ -11,6 +11,8 @@ import type {
   AccountStatsRequest,
   AccountsAvailableRequest,
   AccountsBlockedRequest,
+  AccountsBulkRequest,
+  AccountsRequest,
   BlockRequest,
   BlockResult,
   CreateAccountWithUsernameRequest,
@@ -21,7 +23,6 @@ import type {
   RecommendAccountRequest,
   RemoveSignlessResult,
   ReportAccountRequest,
-  SearchAccountsRequest,
   SetAccountMetadataRequest,
   SetAccountMetadataResult,
   UnblockRequest,
@@ -36,6 +37,8 @@ import {
   AccountStatsQuery,
   AccountsAvailableQuery,
   AccountsBlockedQuery,
+  AccountsBulkQuery,
+  AccountsQuery,
   BlockMutation,
   CreateAccountWithUsernameMutation,
   EnableSignlessMutation,
@@ -43,7 +46,6 @@ import {
   RecommendAccountMutation,
   RemoveSignlessMutation,
   ReportAccountMutation,
-  SearchAccountsQuery,
   SetAccountMetadataMutation,
   UnblockMutation,
   UndoRecommendAccountMutation,
@@ -74,6 +76,46 @@ export function fetchAccount(
   request: AccountRequest,
 ): ResultAsync<Account | null, UnexpectedError> {
   return client.query(AccountQuery, { request });
+}
+
+/**
+ * Fetch an Accounts.
+ *
+ * Using a {@link SessionClient} will yield {@link Account#operations} specific to the authenticated Account.
+ *
+ * ```ts
+ * const result = await fetchAccounts(anyClient);
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of accounts.
+ */
+export function fetchAccounts(
+  client: AnyClient,
+  request: AccountsRequest = {},
+): ResultAsync<Paginated<Account> | null, UnexpectedError> {
+  return client.query(AccountsQuery, { request });
+}
+
+/**
+ * Fetch an Accounts Bulk.
+ *
+ * ```ts
+ * const result = await fetchAccountsBulk(anyClient, {
+ *  addresses: [evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5')],
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of accounts.
+ */
+export function fetchAccountsBulk(
+  client: AnyClient,
+  request: AccountsBulkRequest = {},
+): ResultAsync<Account[], UnexpectedError> {
+  return client.query(AccountsBulkQuery, { request });
 }
 
 /**
@@ -172,26 +214,6 @@ export function fetchAccountsBlocked(
   request: AccountsBlockedRequest,
 ): ResultAsync<Paginated<AccountBlocked> | null, UnexpectedError> {
   return client.query(AccountsBlockedQuery, { request });
-}
-
-/**
- * Search accounts.
- *
- * ```ts
- * const result = await searchAccounts(anyClient, {
- *   localName: 'wagmi',
- * });
- * ```
- *
- * @param client - Any Lens client.
- * @param request - The SearchAccounts query request.
- * @returns The list of Account or empty list if it does not find anything.
- */
-export function searchAccounts(
-  client: AnyClient,
-  request: SearchAccountsRequest,
-): ResultAsync<Paginated<Account> | null, UnexpectedError> {
-  return client.query(SearchAccountsQuery, { request });
 }
 
 /**

@@ -24,6 +24,12 @@ type Account {
   """
   owner: EvmAddress!
 
+  """
+  The account created at. Note if they are using a standard EOA this will be genesis block
+  timestamp
+  """
+  createdAt: DateTime!
+
   """The score of the account."""
   score: Int!
 
@@ -184,12 +190,7 @@ type AccountMention {
   The replacement information.
   Use to replace mentions in the post content.
   """
-  replace: AccountMentionReplace!
-}
-
-type AccountMentionReplace {
-  from: String!
-  to: String!
+  replace: MentionReplace!
 }
 
 type AccountMetadata {
@@ -270,28 +271,6 @@ input AccountRequest {
   txHash: TxHash
 }
 
-enum AccountSearchOrderBy {
-  DEFAULT
-  ACCOUNT_SCORE
-}
-
-input AccountSearchRequest {
-  """The local name to search for."""
-  localName: String!
-
-  """Optional. The username prefix to search for."""
-  namespace: [String!]
-
-  """The order by."""
-  orderBy: AccountSearchOrderBy! = DEFAULT
-
-  """The page size."""
-  pageSize: PageSize! = FIFTY
-
-  """The cursor."""
-  cursor: Cursor
-}
-
 type AccountStats {
   """The stats for the feeds."""
   feedStats: AccountFeedsStats!
@@ -341,7 +320,7 @@ input AccountsBlockedRequest {
   cursor: Cursor
 }
 
-input AccountsRequest {
+input AccountsBulkRequest {
   """The addresses to get."""
   addresses: [EvmAddress!]
 
@@ -350,6 +329,30 @@ input AccountsRequest {
 
   """The legacy profile IDs to get."""
   legacyProfileIds: [LegacyProfileId!]
+}
+
+input AccountsFilterRequest {
+  """The optional filter to narrow accounts by search query."""
+  searchBy: UsernameSearchInput
+}
+
+enum AccountsOrderBy {
+  ALPHABETICAL
+  ACCOUNT_SCORE
+  BEST_MATCH
+}
+
+input AccountsRequest {
+  filter: AccountsFilterRequest
+
+  """The order by."""
+  orderBy: AccountsOrderBy! = ACCOUNT_SCORE
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
 }
 
 input ActionFilter {
@@ -665,16 +668,39 @@ type ApprovalGroupRule {
   rule: EvmAddress!
 }
 
+input AppsFilterRequest {
+  """The optional filter to get apps managed by address"""
+  managedBy: ManagedBy
+
+  """
+  The optional filter to narrow apps by search query.
+  Uses fuzzy search on app name
+  """
+  searchQuery: String
+}
+
 enum AppsOrderBy {
-  ALPHABETICAL
   LATEST_FIRST
   OLDEST_FIRST
+  ALPHABETICAL
 }
 
 input AppsRequest {
-  pageSize: PageSize! = FIFTY
-  cursor: Cursor
+  filter: AppsFilterRequest
+
+  """The order by."""
   orderBy: AppsOrderBy! = LATEST_FIRST
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
+type AppsResult {
+  items: [App!]!
+  pageInfo: PaginatedResultInfo!
 }
 
 type ArticleMetadata {
@@ -1859,6 +1885,7 @@ type Feed {
   createdAt: DateTime!
   metadata: FeedMetadata
   owner: EvmAddress!
+  operations: LoggedInFeedPostOperations
   rules(request: RuleInput): FeedRulesConfig!
 }
 
@@ -1910,7 +1937,8 @@ input FeedsFilterRequest {
 }
 
 enum FeedsOrderBy {
-  NEWEST
+  LATEST_FIRST
+  OLDEST_FIRST
   ALPHABETICAL
 }
 
@@ -1918,7 +1946,7 @@ input FeedsRequest {
   filter: FeedsFilterRequest
 
   """The order by."""
-  orderBy: FeedsOrderBy! = NEWEST
+  orderBy: FeedsOrderBy! = LATEST_FIRST
 
   """The page size."""
   pageSize: PageSize! = FIFTY
@@ -2153,13 +2181,14 @@ input GraphsFilterRequest {
 
   """
   The optional filter to narrow graphs by search query.
-  Uses fuzzy search on feed name
+  Uses fuzzy search on graph name
   """
   searchQuery: String
 }
 
 enum GraphsOrderBy {
-  NEWEST
+  LATEST_FIRST
+  OLDEST_FIRST
   ALPHABETICAL
 }
 
@@ -2167,7 +2196,7 @@ input GraphsRequest {
   filter: GraphsFilterRequest
 
   """The order by."""
-  orderBy: GraphsOrderBy! = NEWEST
+  orderBy: GraphsOrderBy! = LATEST_FIRST
   pageSize: PageSize! = FIFTY
 
   """The cursor."""
@@ -2213,6 +2242,17 @@ input GroupMembersRequest {
   cursor: Cursor
 }
 
+type GroupMention {
+  """The group that was mentioned"""
+  group: EvmAddress!
+
+  """
+  The replacement information.
+  Use to replace mentions in the post content.
+  """
+  replace: MentionReplace!
+}
+
 type GroupMetadata {
   """Optional markdown formatted description of the Community."""
   description: String
@@ -2228,9 +2268,6 @@ type GroupMetadata {
 
   """The name of the Community."""
   name: String!
-
-  """The slug for the Community."""
-  slug: String!
 
   """The Group cover picture."""
   coverPicture: URI
@@ -2269,13 +2306,14 @@ input GroupsFilterRequest {
 
   """
   The optional filter to narrow groups by search query.
-  Uses fuzzy search on feed name
+  Uses fuzzy search on group name
   """
   searchQuery: String
 }
 
 enum GroupsOrderBy {
-  NEWEST
+  LATEST_FIRST
+  OLDEST_FIRST
   ALPHABETICAL
 }
 
@@ -2283,7 +2321,7 @@ input GroupsRequest {
   filter: GroupsFilterRequest
 
   """The order by."""
-  orderBy: GroupsOrderBy! = NEWEST
+  orderBy: GroupsOrderBy! = LATEST_FIRST
 
   """The page size."""
   pageSize: PageSize! = FIFTY
@@ -2358,6 +2396,11 @@ type JoinGroupResponse {
 }
 
 union JoinGroupResult = JoinGroupResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+type KeyValue {
+  key: String!
+  value: String!
+}
 
 type KnownAction {
   name: String!
@@ -2532,6 +2575,10 @@ type LoggedInAccountOperations {
   hasReported: Boolean!
 }
 
+type LoggedInFeedPostOperations {
+  canPost: RulesOutcome!
+}
+
 type LoggedInPostOperations {
   id: ID!
   isNotInterested: Boolean!
@@ -2571,40 +2618,12 @@ enum ManagedAccountsVisibility {
   ALL
 }
 
-input ManagedAppsRequest {
-  """The address for a user to see what apps they manage."""
-  address: EvmAddress!
-
-  """Whether to include the apps which is owned by the address."""
-  includeOwners: Boolean! = true
-
-  """The page size."""
-  pageSize: PageSize! = FIFTY
-
-  """The cursor."""
-  cursor: Cursor
-}
-
 input ManagedBy {
   """The address for a user to see what apps they manage."""
   address: EvmAddress!
 
   """Whether to include the apps which is owned by the address."""
   includeOwners: Boolean! = true
-}
-
-input ManagedNamespacesRequest {
-  """The address for a user to see what namespaces they manage."""
-  address: EvmAddress!
-
-  """Whether to include the namespaces which is owned by the address."""
-  includeOwners: Boolean! = true
-
-  """The page size."""
-  pageSize: PageSize! = FIFTY
-
-  """The cursor."""
-  cursor: Cursor
 }
 
 type MeResult {
@@ -3042,6 +3061,11 @@ enum MediaVideoType {
 type MentionNotification {
   id: GeneratedNotificationId!
   post: Post!
+}
+
+type MentionReplace {
+  from: String!
+  to: String!
 }
 
 type MetadataAttribute {
@@ -3573,6 +3597,13 @@ type Mutation {
   removeAdmins(request: RemoveAdminsRequest!): RemoveAdminsResult!
 
   """
+  Transfer primitive ownership for the graph/app/sponsor/feed/username/group.
+  
+  You MUST be authenticated as Account Owner to use this mutation.
+  """
+  transferPrimitiveOwnership(request: TransferPrimitiveOwnershipRequest!): TransferPrimitiveOwnershipResult!
+
+  """
   Create a new feed
   
   You MUST be authenticated as a builder to use this mutation.
@@ -3604,6 +3635,41 @@ type Mutation {
 input MuteRequest {
   """The account to mute."""
   account: EvmAddress!
+}
+
+input NamespacesFilterRequest {
+  """The optional filter to get namespaces managed by address"""
+  managedBy: ManagedBy
+
+  """
+  The optional filter to narrow namespaces by search query.
+  Uses fuzzy search on namespace name
+  """
+  searchQuery: String
+}
+
+enum NamespacesOrderBy {
+  LATEST_FIRST
+  OLDEST_FIRST
+  ALPHABETICAL
+}
+
+input NamespacesRequest {
+  filter: NamespacesFilterRequest
+
+  """The order by."""
+  orderBy: NamespacesOrderBy! = LATEST_FIRST
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
+type NamespacesResult {
+  items: [UsernameNamespace!]!
+  pageInfo: PaginatedResultInfo!
 }
 
 union NestedPost = Post | PostReference
@@ -3782,11 +3848,6 @@ type PaginatedAppUsersResult {
   pageInfo: PaginatedResultInfo!
 }
 
-type PaginatedAppsResult {
-  items: [App!]!
-  pageInfo: PaginatedResultInfo!
-}
-
 type PaginatedFeedsResult {
   items: [Feed!]!
   pageInfo: PaginatedResultInfo!
@@ -3856,11 +3917,6 @@ type PaginatedTimelineResult {
   pageInfo: PaginatedResultInfo!
 }
 
-type PaginatedUsernameNamespacesResult {
-  items: [UsernameNamespace!]!
-  pageInfo: PaginatedResultInfo!
-}
-
 type PaginatedUsernamesResult {
   items: [Username!]!
   pageInfo: PaginatedResultInfo!
@@ -3925,7 +3981,7 @@ type Post {
   actions: [PostAction!]!
   operations: LoggedInPostOperations
   stats: PostStats!
-  mentions: [AccountMention!]!
+  mentions: [PostMention!]!
   feed: Feed!
   rules(request: RuleInput): PostRulesConfig!
 }
@@ -3988,6 +4044,8 @@ type PostForYou {
 }
 
 scalar PostId
+
+union PostMention = AccountMention | GroupMention
 
 union PostMetadata = ArticleMetadata | AudioMetadata | CheckingInMetadata | EmbedMetadata | EventMetadata | ImageMetadata | LinkMetadata | LivestreamMetadata | MintMetadata | SpaceMetadata | StoryMetadata | TextOnlyMetadata | ThreeDMetadata | TransactionMetadata | VideoMetadata
 
@@ -4183,6 +4241,11 @@ input PostsFilterRequest {
   postTypes: [PostType!]
   metadata: PostMetadataFilter
   apps: [EvmAddress!]
+
+  """
+  The optional query text to search for in the post content or metadata tags.
+  """
+  searchQuery: String
 }
 
 input PostsRequest {
@@ -4204,6 +4267,9 @@ type Query {
   """Get an account by address, username, or legacy profile ID."""
   account(request: AccountRequest!): Account
 
+  """Get accounts."""
+  accounts(request: AccountsRequest!): PaginatedAccountsResult!
+
   """
   Account information for the authenticated account.
   
@@ -4212,7 +4278,7 @@ type Query {
   me: MeResult!
 
   """Get accounts by address, username, or legacy profile ID."""
-  accounts(request: AccountsRequest!): [Account!]!
+  accountsBulk(request: AccountsBulkRequest!): [Account!]!
 
   """Get the stats for an account."""
   accountStats(request: AccountStatsRequest!): AccountStats!
@@ -4240,9 +4306,6 @@ type Query {
   """
   accountManagers(request: AccountManagersRequest!): PaginatedAccountManagersResult!
 
-  """Search for accounts by usernames."""
-  searchAccounts(request: AccountSearchRequest!): PaginatedAccountsResult!
-
   """
   Get the last logged in account for the given address and app if specified.
   """
@@ -4251,8 +4314,8 @@ type Query {
   """Get an app"""
   app(request: AppRequest!): App
 
-  """Get the apps"""
-  apps(request: AppsRequest!): PaginatedAppsResult!
+  """Get the apps."""
+  apps(request: AppsRequest!): AppsResult!
 
   """Get the groups for an app"""
   appGroups(request: AppGroupsRequest!): PaginatedGroupsResult!
@@ -4265,9 +4328,6 @@ type Query {
 
   """Get accounts for an app."""
   appUsers(request: AppUsersRequest!): PaginatedAppUsersResult!
-
-  """Get the apps managed by the given address."""
-  managedApps(request: ManagedAppsRequest!): PaginatedAppsResult!
 
   """
   Get the server side API key for the app you must be the owner of the app to see it.
@@ -4302,7 +4362,6 @@ type Query {
   """Get the reactions added to a post."""
   postReactions(request: PostReactionsRequest!): PaginatedPostReactionsResult!
   postReactionStatus(request: PostReactionStatusRequest!): [PostReactionStatus!]!
-  searchPosts(request: SearchPostsRequest!): PaginatedAnyPostsResult!
   postActions(request: PostActionsRequest!): PaginatedActions!
 
   """Get accounts who referenced a post"""
@@ -4325,7 +4384,7 @@ type Query {
   """Get the members of the group"""
   groupMembers(request: GroupMembersRequest!): PaginatedAccountsResult!
 
-  """Get the groups managed by the given address."""
+  """Get the number of members in a Group"""
   groupStats(request: GroupStatsRequest!): GroupStatsResponse!
 
   """Get admins for a graph/app/sponsor/feed/username/group address"""
@@ -4361,8 +4420,8 @@ type Query {
   """Get the usernames for the account/owner."""
   usernames(request: UsernamesRequest!): PaginatedUsernamesResult!
 
-  """Get the namespaces managed by the given address."""
-  managedNamespaces(request: ManagedNamespacesRequest!): PaginatedUsernameNamespacesResult!
+  """Get the namespaces."""
+  namespaces(request: NamespacesRequest!): NamespacesResult!
   _service: _Service!
 }
 
@@ -4527,32 +4586,15 @@ input RuleInput {
   rules: [EvmAddress!]!
 }
 
-input SearchPostsFilter {
-  """The post types to filter by."""
-  postTypes: [PostType!]
-
-  """The optional metadata filter."""
-  metadata: PostMetadataFilter
+type RulesFailed {
+  unsatisfiedRules: [UnsatisfiedRule!]!
 }
 
-input SearchPostsRequest {
-  """
-  The query text to search for in the post content or metadata tags.
-  The passed strings supports web search syntax similar to the search engines:
-  - individual words match independently.
-  - double-quoted phrases match as a single unit.
-  - the word or (case-insensitive) specifies an “or” condition between two words or phrases
-  - a "-" prefix specifies to not match the following word or phrase.
-  """
-  query: String!
+union RulesOutcome = RulesSucceeded | RulesFailed
 
-  """The feeds to search in."""
-  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
-
-  """The optional post types to filter by."""
-  filter: SearchPostsFilter
-  pageSize: PageSize! = FIFTY
-  cursor: Cursor
+type RulesSucceeded {
+  restrictedSignerRequired: Boolean!
+  extraChecksRequired: [UnknownRule!]!
 }
 
 enum SelfFundedFallbackReason {
@@ -5046,6 +5088,18 @@ type TransactionWillFail {
   reason: String!
 }
 
+input TransferPrimitiveOwnershipRequest {
+  """
+  The graph/app/sponsor/feed/username/group address to change ownership for
+  """
+  address: EvmAddress!
+
+  """The address of the new owner"""
+  newOwner: EvmAddress!
+}
+
+union TransferPrimitiveOwnershipResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
 enum TriStateValue {
   YES
   NO
@@ -5206,9 +5260,20 @@ type UnknownPostRule {
   configData: BlockchainData!
 }
 
+type UnknownRule {
+  rule: EvmAddress!
+  configParams: [KeyValue!]!
+}
+
 type UnknownUsernameNamespaceRule {
   rule: EvmAddress!
   configData: BlockchainData!
+}
+
+type UnsatisfiedRule {
+  name: String!
+  rule: EvmAddress!
+  reason: String!
 }
 
 input UpdateAccountManagerRequest {
@@ -5248,7 +5313,7 @@ type Username {
 }
 
 input UsernameInput {
-  """The local name to create - should not include the namespace"""
+  """The local name, should not include the namespace"""
   localName: String!
 
   """The namespace. Defaults to lens namespace"""
@@ -5300,6 +5365,19 @@ input UsernameRequest {
 
   """The username namespace and local name."""
   username: UsernameInput
+}
+
+input UsernameSearchInput {
+  """
+  The local name to search for
+  Uses fuzzy search on username name
+  """
+  localNameQuery: String!
+
+  """
+  The namespaces to search for local name in. Defaults to global namespace
+  """
+  namespaces: [EvmAddress!]! = ["0x6Cc71E78e25eBF6A2525CadC1fc628B42AE4138f"]
 }
 
 scalar UsernameValue

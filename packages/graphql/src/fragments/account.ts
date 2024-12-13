@@ -1,5 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
+import { MetadataAttributeFragment } from './metadata';
 import { Username } from './username';
 
 export const LoggedInAccountOperationsFragment = graphql(
@@ -20,11 +21,19 @@ export const LoggedInAccountOperationsFragment = graphql(
 );
 export type LoggedInAccountOperations = FragmentOf<typeof LoggedInAccountOperationsFragment>;
 
-// TODO fix this
 export const AccountMetadataFragment = graphql(
   `fragment AccountMetadata on AccountMetadata {
     __typename
+    attributes {
+      ...MetadataAttribute
+    }
+    bio
+    coverPicture
+    id
+    name
+    picture
   }`,
+  [MetadataAttributeFragment],
 );
 export type AccountMetadata = FragmentOf<typeof AccountMetadataFragment>;
 
