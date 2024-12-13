@@ -4,9 +4,9 @@ import {
   AccountBlockedFragment,
   AccountFragment,
   PaginatedResultInfoFragment,
-  SelfFundedTransactionRequest,
-  SponsoredTransactionRequest,
-  TransactionWillFail,
+  SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
+  TransactionWillFailFragment,
 } from '../fragments';
 import { type RequestOf, graphql } from '../graphql';
 
@@ -74,9 +74,9 @@ const SetAccountMetadataResult = graphql(
   }`,
   [
     SetAccountMetadataResponse,
-    SponsoredTransactionRequest,
-    SelfFundedTransactionRequest,
-    TransactionWillFail,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
   ],
 );
 export type SetAccountMetadataResult = FragmentOf<typeof SetAccountMetadataResult>;
@@ -99,6 +99,14 @@ const CreateAccountResponse = graphql(
 );
 export type CreateAccountResponse = FragmentOf<typeof CreateAccountResponse>;
 
+const InvalidUsernameFragment = graphql(
+  `fragment InvalidUsername on InvalidUsername {
+    __typename
+    reason
+  }`,
+);
+export type InvalidUsername = FragmentOf<typeof InvalidUsernameFragment>;
+
 const CreateAccountWithUsernameResult = graphql(
   `fragment CreateAccountWithUsernameResult on CreateAccountWithUsernameResult {
     ...on CreateAccountResponse {
@@ -113,15 +121,20 @@ const CreateAccountWithUsernameResult = graphql(
       ...SelfFundedTransactionRequest
     }
 
+    ...on InvalidUsername {
+      ...InvalidUsername
+    }
+
     ...on TransactionWillFail {
       ...TransactionWillFail
     }
   }`,
   [
     CreateAccountResponse,
-    SponsoredTransactionRequest,
-    SelfFundedTransactionRequest,
-    TransactionWillFail,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    InvalidUsernameFragment,
+    TransactionWillFailFragment,
   ],
 );
 export type CreateAccountWithUsernameResult = FragmentOf<typeof CreateAccountWithUsernameResult>;
@@ -294,7 +307,12 @@ const BlockResult = graphql(
       ...BlockError
     }
   }`,
-  [BlockResponse, SponsoredTransactionRequest, SelfFundedTransactionRequest, BlockError],
+  [
+    BlockResponse,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    BlockError,
+  ],
 );
 export type BlockResult = FragmentOf<typeof BlockResult>;
 
@@ -339,7 +357,12 @@ const UnblockResult = graphql(
       ...UnblockError
     }
   }`,
-  [UnblockResponse, SponsoredTransactionRequest, SelfFundedTransactionRequest, UnblockError],
+  [
+    UnblockResponse,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    UnblockError,
+  ],
 );
 export type UnblockResult = FragmentOf<typeof UnblockResult>;
 

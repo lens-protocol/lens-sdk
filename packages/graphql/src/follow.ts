@@ -4,9 +4,9 @@ import {
   AccountFragment,
   BooleanValue,
   PaginatedResultInfoFragment,
-  SelfFundedTransactionRequest,
-  SponsoredTransactionRequest,
-  TransactionWillFail,
+  SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
+  TransactionWillFailFragment,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
@@ -33,7 +33,12 @@ const FollowResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [FollowResponse, SelfFundedTransactionRequest, SponsoredTransactionRequest, TransactionWillFail],
+  [
+    FollowResponse,
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type FollowResult = FragmentOf<typeof FollowResult>;
 
@@ -72,9 +77,9 @@ const UnfollowResult = graphql(
   }`,
   [
     UnfollowResponse,
-    SelfFundedTransactionRequest,
-    SponsoredTransactionRequest,
-    TransactionWillFail,
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    TransactionWillFailFragment,
   ],
 );
 export type UnfollowResult = FragmentOf<typeof UnfollowResult>;

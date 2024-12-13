@@ -6,9 +6,9 @@ import {
   AnyPostFragment,
   PaginatedResultInfoFragment,
   PostMetadataFragment,
-  SelfFundedTransactionRequest,
-  SponsoredTransactionRequest,
-  TransactionWillFail,
+  SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
+  TransactionWillFailFragment,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
@@ -35,7 +35,12 @@ const PostResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [PostResponse, SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    PostResponse,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type PostResult = FragmentOf<typeof PostResult>;
 
@@ -226,9 +231,9 @@ const DeletePostResult = graphql(
   }`,
   [
     DeletePostResponse,
-    TransactionWillFail,
-    SelfFundedTransactionRequest,
-    SponsoredTransactionRequest,
+    TransactionWillFailFragment,
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
   ],
 );
 export type DeletePostResult = FragmentOf<typeof DeletePostResult>;

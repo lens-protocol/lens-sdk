@@ -2,9 +2,9 @@ import type { FragmentOf } from 'gql.tada';
 import {
   AccountManagerFragment,
   PaginatedResultInfoFragment,
-  SelfFundedTransactionRequest,
-  SponsoredTransactionRequest,
-  TransactionWillFail,
+  SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
+  TransactionWillFailFragment,
 } from '../fragments';
 import { type RequestOf, graphql } from '../graphql';
 
@@ -36,7 +36,11 @@ const AddAccountManagerResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SelfFundedTransactionRequest, SponsoredTransactionRequest, TransactionWillFail],
+  [
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type AddAccountManagerResult = FragmentOf<typeof AddAccountManagerResult>;
 
@@ -62,7 +66,11 @@ const RemoveAccountManagerResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SelfFundedTransactionRequest, SponsoredTransactionRequest, TransactionWillFail],
+  [
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type RemoveAccountManagerResult = FragmentOf<typeof RemoveAccountManagerResult>;
 
@@ -88,7 +96,11 @@ const UpdateAccountManagerResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SelfFundedTransactionRequest, SponsoredTransactionRequest, TransactionWillFail],
+  [
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type UpdateAccountManagerResult = FragmentOf<typeof UpdateAccountManagerResult>;
 

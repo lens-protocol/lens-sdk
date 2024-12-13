@@ -1,9 +1,9 @@
 import type { FragmentOf } from 'gql.tada';
 import {
   AppFragment,
-  SelfFundedTransactionRequest,
-  SponsoredTransactionRequest,
-  TransactionWillFail,
+  SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
+  TransactionWillFailFragment,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
@@ -37,7 +37,7 @@ const CreateAppResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [CreateAppResponse, SelfFundedTransactionRequest, TransactionWillFail],
+  [CreateAppResponse, SelfFundedTransactionRequestFragment, TransactionWillFailFragment],
 );
 export type CreateAppResult = FragmentOf<typeof CreateAppResult>;
 
@@ -63,7 +63,11 @@ const AddAppFeedsResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type AddAppFeedsResult = FragmentOf<typeof AddAppFeedsResult>;
 
@@ -89,7 +93,11 @@ const AddAppGroupsResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type AddAppGroupsResult = FragmentOf<typeof AddAppGroupsResult>;
 
@@ -115,7 +123,11 @@ const AddAppSignersResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type AddAppSignersResult = FragmentOf<typeof AddAppSignersResult>;
 
@@ -141,7 +153,11 @@ const RemoveAppFeedsResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type RemoveAppFeedsResult = FragmentOf<typeof RemoveAppFeedsResult>;
 
@@ -167,7 +183,11 @@ const RemoveAppGroupsResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type RemoveAppGroupsResult = FragmentOf<typeof RemoveAppGroupsResult>;
 
@@ -193,7 +213,11 @@ const RemoveAppSignersResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type RemoveAppSignersResult = FragmentOf<typeof RemoveAppSignersResult>;
 
@@ -219,7 +243,11 @@ const SetAppGraphResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type SetAppGraphResult = FragmentOf<typeof SetAppGraphResult>;
 
@@ -245,7 +273,11 @@ const SetDefaultAppFeedResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type SetDefaultAppFeedResult = FragmentOf<typeof SetDefaultAppFeedResult>;
 
@@ -271,7 +303,11 @@ const SetAppMetadataResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type SetAppMetadataResult = FragmentOf<typeof SetAppMetadataResult>;
 
@@ -297,7 +333,11 @@ const SetAppVerificationResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type SetAppVerificationResult = FragmentOf<typeof SetAppVerificationResult>;
 
@@ -323,7 +363,11 @@ const SetAppSponsorshipResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type SetAppSponsorshipResult = FragmentOf<typeof SetAppSponsorshipResult>;
 
@@ -349,7 +393,11 @@ const SetAppTreasuryResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type SetAppTreasuryResult = FragmentOf<typeof SetAppTreasuryResult>;
 
@@ -375,7 +423,11 @@ const SetAppUsernameNamespaceResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type SetAppUsernameNamespaceResult = FragmentOf<typeof SetAppUsernameNamespaceResult>;
 

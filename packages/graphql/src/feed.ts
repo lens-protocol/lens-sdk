@@ -2,8 +2,8 @@ import type { FragmentOf } from 'gql.tada';
 import {
   FeedFragment,
   PaginatedResultInfoFragment,
-  SelfFundedTransactionRequest,
-  TransactionWillFail,
+  SelfFundedTransactionRequestFragment,
+  TransactionWillFailFragment,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
@@ -27,7 +27,7 @@ const CreateFeedResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [CreateFeedResponse, SelfFundedTransactionRequest, TransactionWillFail],
+  [CreateFeedResponse, SelfFundedTransactionRequestFragment, TransactionWillFailFragment],
 );
 export type CreateFeedResult = FragmentOf<typeof CreateFeedResult>;
 

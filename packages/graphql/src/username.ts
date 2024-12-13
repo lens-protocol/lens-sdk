@@ -1,9 +1,9 @@
 import type { FragmentOf } from 'gql.tada';
 import {
   PaginatedResultInfoFragment,
-  SelfFundedTransactionRequest,
-  SponsoredTransactionRequest,
-  TransactionWillFail,
+  SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
+  TransactionWillFailFragment,
   Username,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
@@ -33,9 +33,9 @@ const CreateUsernameResult = graphql(
   }`,
   [
     CreateUsernameResponse,
-    SelfFundedTransactionRequest,
-    TransactionWillFail,
-    SponsoredTransactionRequest,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+    SponsoredTransactionRequestFragment,
   ],
 );
 export type CreateUsernameResult = FragmentOf<typeof CreateUsernameResult>;
@@ -74,9 +74,9 @@ const AssignUsernameToAccountResult = graphql(
     }
   }`,
   [
-    SponsoredTransactionRequest,
-    SelfFundedTransactionRequest,
-    TransactionWillFail,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
     AssignUsernameResponse,
   ],
 );
@@ -116,9 +116,9 @@ const UnassignUsernameToAccountResult = graphql(
     }
   }`,
   [
-    SponsoredTransactionRequest,
-    SelfFundedTransactionRequest,
-    TransactionWillFail,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
     UnassignUsernameResponse,
   ],
 );

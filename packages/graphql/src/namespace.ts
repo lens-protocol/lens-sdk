@@ -1,8 +1,8 @@
 import type { FragmentOf } from 'gql.tada';
 import {
   PaginatedResultInfoFragment,
-  SelfFundedTransactionRequest,
-  TransactionWillFail,
+  SelfFundedTransactionRequestFragment,
+  TransactionWillFailFragment,
   UsernameNamespaceFragment,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
@@ -27,7 +27,7 @@ const CreateUsernameNamespaceResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [CreateNamespaceResponse, SelfFundedTransactionRequest, TransactionWillFail],
+  [CreateNamespaceResponse, SelfFundedTransactionRequestFragment, TransactionWillFailFragment],
 );
 export type CreateUsernameNamespaceResult = FragmentOf<typeof CreateUsernameNamespaceResult>;
 

@@ -1,9 +1,9 @@
 import type { FragmentOf } from 'gql.tada';
 
 import {
-  SelfFundedTransactionRequest,
-  SponsoredTransactionRequest,
-  TransactionWillFail,
+  SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
+  TransactionWillFailFragment,
 } from '../fragments';
 import { graphql } from '../graphql';
 
@@ -19,7 +19,11 @@ const EnableSignlessResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SelfFundedTransactionRequest, SponsoredTransactionRequest, TransactionWillFail],
+  [
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type EnableSignlessResult = FragmentOf<typeof EnableSignlessResult>;
 
@@ -44,7 +48,11 @@ const RemoveSignlessResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SelfFundedTransactionRequest, SponsoredTransactionRequest, TransactionWillFail],
+  [
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type RemoveSignlessResult = FragmentOf<typeof RemoveSignlessResult>;
 

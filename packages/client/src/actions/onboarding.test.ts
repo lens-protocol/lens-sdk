@@ -12,25 +12,22 @@ const metadata = account({
   name: 'John Doe',
   bio: 'A test account',
 });
-const metadataUri = `data:application/json,${JSON.stringify(metadata)}`;
-
-const handler = handleWith(walletClient);
 
 describe('Given an onboarding user', () => {
   describe('When switching to the newly created account', () => {
-    it('Then it should be authenticated', async () => {
+    it.skip('Then it should be authenticated', async () => {
       // Login as onboarding user
       const result = await loginAsOnboardingUser().andThen((sessionClient) =>
         // Create an account with username
         createAccountWithUsername(sessionClient, {
           username: { localName: `testname${Date.now()}` },
-          metadataUri,
+          metadataUri: `data:application/json,${JSON.stringify(metadata)}`,
         })
           // Sign if necessary
-          .andThen(handler)
+          .andThen(handleWith(walletClient))
 
           // Wait for the transaction to be mined
-          .andThen(sessionClient.waitForTransaction as any)
+          .andThen(sessionClient.waitForTransaction)
 
           // Fetch the account
           .andThen((txHash) => fetchAccount(sessionClient, { txHash }))

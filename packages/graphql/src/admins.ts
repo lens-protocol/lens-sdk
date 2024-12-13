@@ -1,9 +1,9 @@
 import type { FragmentOf } from 'gql.tada';
 import {
   PaginatedResultInfoFragment,
-  SelfFundedTransactionRequest,
-  SponsoredTransactionRequest,
-  TransactionWillFail,
+  SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
+  TransactionWillFailFragment,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
@@ -19,7 +19,11 @@ const AddAdminsResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type AddAdminsResult = FragmentOf<typeof AddAdminsResult>;
 
@@ -45,7 +49,11 @@ const RemoveAdminsResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
 export type RemoveAdminsResult = FragmentOf<typeof RemoveAdminsResult>;
 

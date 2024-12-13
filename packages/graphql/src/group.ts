@@ -3,9 +3,9 @@ import {
   AccountFragment,
   GroupFragment,
   PaginatedResultInfoFragment,
-  SelfFundedTransactionRequest,
-  SponsoredTransactionRequest,
-  TransactionWillFail,
+  SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
+  TransactionWillFailFragment,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
@@ -29,7 +29,7 @@ const CreateGroupResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [CreateGroupResponse, SelfFundedTransactionRequest, TransactionWillFail],
+  [CreateGroupResponse, SelfFundedTransactionRequestFragment, TransactionWillFailFragment],
 );
 export type CreateGroupResult = FragmentOf<typeof CreateGroupResult>;
 
@@ -67,9 +67,9 @@ const JoinGroupResult = graphql(
     }
   }`,
   [
-    SponsoredTransactionRequest,
-    SelfFundedTransactionRequest,
-    TransactionWillFail,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
     JoinGroupResponse,
   ],
 );
@@ -109,9 +109,9 @@ const LeaveGroupResult = graphql(
     }
   }`,
   [
-    SponsoredTransactionRequest,
-    SelfFundedTransactionRequest,
-    TransactionWillFail,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
     LeaveGroupResponse,
   ],
 );
