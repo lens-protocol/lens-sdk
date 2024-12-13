@@ -1,6 +1,7 @@
 import type {
   AuthenticatedSession,
   AuthenticatedSessionsRequest,
+  Paginated,
   RefreshRequest,
   RefreshResult,
   RevokeAuthenticationRequest,
@@ -20,7 +21,6 @@ import type { ResultAsync } from '@lens-protocol/types';
 
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
-import type { Paginated } from '../types';
 
 /**
  * Get the AuthenticatedSession associated with the authenticated Account.

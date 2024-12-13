@@ -2,6 +2,7 @@ import type {
   AccountPostReaction,
   ActionInfo,
   AnyPost,
+  Paginated,
   Post,
   PostActionsRequest,
   PostBookmarksRequest,
@@ -20,7 +21,6 @@ import type { ResultAsync } from '@lens-protocol/types';
 
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
-import type { Paginated } from '../types';
 
 /**
  * Fetch a Post.

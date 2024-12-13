@@ -3,6 +3,7 @@ import type {
   AssignUsernameToAccountResult,
   CreateUsernameRequest,
   CreateUsernameResult,
+  Paginated,
   UnassignUsernameFromAccountRequest,
   UnassignUsernameToAccountResult,
   Username,
@@ -22,7 +23,6 @@ import type { SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
 import type { AnyClient } from '../clients';
-import type { Paginated } from '../types';
 
 /**
  * Create a username
