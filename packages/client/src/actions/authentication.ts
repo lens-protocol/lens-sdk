@@ -140,5 +140,5 @@ export function switchAccount(
   client: SessionClient,
   request: SwitchAccountRequest,
 ): ResultAsync<SwitchAccountResult, UnauthenticatedError | UnexpectedError> {
-  return client.query(SwitchAccountMutation, { request });
+  return client.mutation(SwitchAccountMutation, { request });
 }

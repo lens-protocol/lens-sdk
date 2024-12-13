@@ -63,9 +63,11 @@
   },
   "devDependencies": {
     "@lens-network/sdk": "canary",
+    "@lens-protocol/metadata": "canary",
     "tsup": "^8.3.5",
     "typescript": "^5.6.3",
-    "viem": "^2.21.53"
+    "viem": "^2.21.53",
+    "zod": "^3.23.8"
   },
   "license": "MIT"
 }

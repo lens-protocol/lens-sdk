@@ -24,24 +24,20 @@ export type ErrorResponse<T extends string> = {
   reason: string;
 };
 
-export type DelegableOperationResult<
-  O extends string,
-  E extends string,
-  OR extends OperationResponse<string> = OperationResponse<O>,
-  ER extends ErrorResponse<string> = ErrorResponse<E>,
-> = OR | SponsoredTransactionRequest | SelfFundedTransactionRequest | ER;
+export type DelegableOperationResult<O extends string, E extends string> =
+  | OperationResponse<O>
+  | SponsoredTransactionRequest
+  | SelfFundedTransactionRequest
+  | ErrorResponse<E>;
 
-export type RestrictedOperationResult<
-  E extends string,
-  ER extends ErrorResponse<string> = ErrorResponse<E>,
-> = SponsoredTransactionRequest | SelfFundedTransactionRequest | ER;
+export type RestrictedOperationResult<E extends string> =
+  | SponsoredTransactionRequest
+  | SelfFundedTransactionRequest
+  | ErrorResponse<E>;
 
-export type OperationResult<
-  O extends string,
-  E extends string,
-  OR extends OperationResponse<string> = OperationResponse<O>,
-  ER extends ErrorResponse<string> = ErrorResponse<E>,
-> = DelegableOperationResult<O, E, OR, ER> | RestrictedOperationResult<E, ER>;
+export type OperationResult<O extends string, E extends string> =
+  | DelegableOperationResult<O, E>
+  | RestrictedOperationResult<E>;
 
 export type RestrictedOperationHandler<E extends string> = (
   result: RestrictedOperationResult<E>,
