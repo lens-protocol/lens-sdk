@@ -31,15 +31,20 @@ import type { StandardData } from './common';
 import type {
   AccessConditionComparison,
   AccountReportReason,
-  AccountSearchOrderBy,
+  AccountsOrderBy,
   AppMetadataLensPlatformsItem,
   AppsOrderBy,
+  BlockErrorType,
   ContentWarning,
+  EntityType,
+  EventMetadataLensSchedulingAdjustmentsTimezoneId,
+  FeedsOrderBy,
   FollowersOrderBy,
   FollowersYouKnowOrderBy,
   FollowingOrderBy,
   ForYouSource,
   GraphsOrderBy,
+  GroupMembersOrderBy,
   GroupsOrderBy,
   MainContentFocus,
   ManagedAccountsVisibility,
@@ -49,6 +54,8 @@ import type {
   MediaVideoType,
   MetadataAttributeType,
   MetadataLicenseType,
+  NamespacesOrderBy,
+  NftContractType,
   NotificationOrderBy,
   NotificationType,
   PageSize,
@@ -64,6 +71,8 @@ import type {
   SelfFundedFallbackReason,
   SponsorLimitType,
   SponsoredFallbackReason,
+  ThreeDAssetFormat,
+  TimelineEventItemType,
   TokenStandard,
   TransactionType,
   TriStateValue,
@@ -78,46 +87,37 @@ export const graphql = initGraphQLTada<{
   introspection: introspection;
   scalars: {
     AccessToken: AccessToken;
+    AccessConditionComparison: AccessConditionComparison;
     AccountReportReason: AccountReportReason;
+    AccountsOrderBy: AccountsOrderBy;
+    AppMetadataLensPlatformsItem: AppMetadataLensPlatformsItem;
+    AppsOrderBy: AppsOrderBy;
     BigDecimal: BigDecimal;
     BigInt: BigIntString;
     BlockchainData: BlockchainData;
+    BlockErrorType: BlockErrorType;
     Boolean: boolean;
     ContentWarning: ContentWarning;
     Cursor: Cursor;
     DateTime: DateTime;
     EncodedTransaction: EncodedTransaction;
+    EntityType: EntityType;
+    EventMetadataLensSchedulingAdjustmentsTimezoneId: EventMetadataLensSchedulingAdjustmentsTimezoneId;
     EvmAddress: EvmAddress;
+    FeedsOrderBy: FeedsOrderBy;
     Float: number;
-    ID: ID;
-    IdToken: IdToken;
-    Int: number;
-    LegacyProfileId: LegacyProfileId;
-    LegacyRefreshToken: CompactJwt;
-    PostActionType: PostActionType;
-    PostReactionType: PostReactionType;
-    PageSize: PageSize;
-    PostId: PostId;
-    RefreshToken: RefreshToken;
-    Signature: Signature;
-    String: string;
-    TxHash: TxHash;
-    URI: URI;
-    URL: URL;
-    UsernameValue: UsernameValue;
-    UUID: UUID;
-    Void: Void;
-    WhoReferencedPostOrderBy: WhoReferencedPostOrderBy;
-    AccessConditionComparison: AccessConditionComparison;
-    AccountSearchOrderBy: AccountSearchOrderBy;
-    AppMetadataLensPlatformsItem: AppMetadataLensPlatformsItem;
-    AppsOrderBy: AppsOrderBy;
     FollowersOrderBy: FollowersOrderBy;
     FollowersYouKnowOrderBy: FollowersYouKnowOrderBy;
     FollowingOrderBy: FollowingOrderBy;
     ForYouSource: ForYouSource;
     GraphsOrderBy: GraphsOrderBy;
+    GroupMembersOrderBy: GroupMembersOrderBy;
     GroupsOrderBy: GroupsOrderBy;
+    ID: ID;
+    IdToken: IdToken;
+    Int: number;
+    LegacyProfileId: LegacyProfileId;
+    LegacyRefreshToken: CompactJwt;
     MainContentFocus: MainContentFocus;
     ManagedAccountsVisibility: ManagedAccountsVisibility;
     MediaAudioKind: MediaAudioKind;
@@ -126,23 +126,42 @@ export const graphql = initGraphQLTada<{
     MediaVideoType: MediaVideoType;
     MetadataAttributeType: MetadataAttributeType;
     MetadataLicenseType: MetadataLicenseType;
+    NamespacesOrderBy: NamespacesOrderBy;
+    NftContractType: NftContractType;
     NotificationOrderBy: NotificationOrderBy;
     NotificationType: NotificationType;
+    PageSize: PageSize;
     PostActionCategoryType: PostActionCategoryType;
+    PostActionType: PostActionType;
+    PostId: PostId;
     PostReactionOrderBy: PostReactionOrderBy;
+    PostReactionType: PostReactionType;
     PostReferenceType: PostReferenceType;
     PostReportReason: PostReportReason;
     PostTagsOrderBy: PostTagsOrderBy;
     PostType: PostType;
     PostVisibilityFilter: PostVisibilityFilter;
+    RefreshToken: RefreshToken;
     SelfFundedFallbackReason: SelfFundedFallbackReason;
+    Signature: Signature;
     SponsorLimitType: SponsorLimitType;
     SponsoredFallbackReason: SponsoredFallbackReason;
+    String: string;
+    Tag: string;
+    ThreeDAssetFormat: ThreeDAssetFormat;
+    TimelineEventItemType: TimelineEventItemType;
     TokenStandard: TokenStandard;
     TransactionType: TransactionType;
     TriStateValue: TriStateValue;
+    TxHash: TxHash;
+    URI: URI;
+    URL: URL;
+    UUID: UUID;
     UnblockErrorType: UnblockErrorType;
+    UsernameValue: UsernameValue;
+    Void: Void;
     WhoActedOnPostOrderBy: WhoActedOnPostOrderBy;
+    WhoReferencedPostOrderBy: WhoReferencedPostOrderBy;
   };
 }>();
 
