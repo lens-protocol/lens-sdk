@@ -33,13 +33,13 @@ const AuthenticationTokensFragment = graphql(
 );
 export type AuthenticationTokens = FragmentOf<typeof AuthenticationTokensFragment>;
 
-const WrongSignerError = graphql(
+const WrongSignerErrorFragment = graphql(
   `fragment WrongSignerError on WrongSignerError {
     __typename
     reason
   }`,
 );
-export type WrongSignerError = FragmentOf<typeof WrongSignerError>;
+export type WrongSignerError = FragmentOf<typeof WrongSignerErrorFragment>;
 
 const ExpiredChallengeErrorFragment = graphql(
   `fragment ExpiredChallengeError on ExpiredChallengeError {
@@ -77,7 +77,7 @@ const AuthenticationResultFragment = graphql(
   }`,
   [
     AuthenticationTokensFragment,
-    WrongSignerError,
+    WrongSignerErrorFragment,
     ExpiredChallengeErrorFragment,
     ForbiddenErrorFragment,
   ],

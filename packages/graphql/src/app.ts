@@ -321,7 +321,7 @@ export const SetAppMetadataMutation = graphql(
 );
 export type SetAppMetadataRequest = RequestOf<typeof SetAppMetadataMutation>;
 
-const SetAppVerificationResult = graphql(
+const SetAppVerificationResultFragment = graphql(
   `fragment SetAppVerificationResult on SetAppVerificationResult {
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -339,7 +339,7 @@ const SetAppVerificationResult = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type SetAppVerificationResult = FragmentOf<typeof SetAppVerificationResult>;
+export type SetAppVerificationResult = FragmentOf<typeof SetAppVerificationResultFragment>;
 
 export const SetAppVerificationMutation = graphql(
   `mutation SetAppVerification($request: SetAppVerificationRequest!) {
@@ -347,7 +347,7 @@ export const SetAppVerificationMutation = graphql(
       ...SetAppVerificationResult
     }
   }`,
-  [SetAppVerificationResult],
+  [SetAppVerificationResultFragment],
 );
 export type SetAppVerificationRequest = RequestOf<typeof SetAppVerificationMutation>;
 

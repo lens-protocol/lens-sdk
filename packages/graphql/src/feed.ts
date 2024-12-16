@@ -7,15 +7,15 @@ import {
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
-const CreateFeedResponse = graphql(
+const CreateFeedResponseFragment = graphql(
   `fragment CreateFeedResponse on CreateFeedResponse {
     __typename
     hash
   }`,
 );
-export type CreateFeedResponse = FragmentOf<typeof CreateFeedResponse>;
+export type CreateFeedResponse = FragmentOf<typeof CreateFeedResponseFragment>;
 
-const CreateFeedResult = graphql(
+const CreateFeedResultFragment = graphql(
   `fragment CreateFeedResult on CreateFeedResult {
     ...on CreateFeedResponse {
       ...CreateFeedResponse
@@ -27,9 +27,9 @@ const CreateFeedResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [CreateFeedResponse, SelfFundedTransactionRequestFragment, TransactionWillFailFragment],
+  [CreateFeedResponseFragment, SelfFundedTransactionRequestFragment, TransactionWillFailFragment],
 );
-export type CreateFeedResult = FragmentOf<typeof CreateFeedResult>;
+export type CreateFeedResult = FragmentOf<typeof CreateFeedResultFragment>;
 
 export const CreateFeedMutation = graphql(
   `mutation CreateFeed($request: CreateFeedRequest!) {
@@ -37,7 +37,7 @@ export const CreateFeedMutation = graphql(
       ...CreateFeedResult
     }
   }`,
-  [CreateFeedResult],
+  [CreateFeedResultFragment],
 );
 export type CreateFeedRequest = RequestOf<typeof CreateFeedMutation>;
 
