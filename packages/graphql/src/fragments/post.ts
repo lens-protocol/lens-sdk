@@ -1,7 +1,12 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
 import { AccountFragment } from './account';
-import { ActionInputInfo, Amount, BooleanValue, NetworkAddress } from './common';
+import {
+  ActionInputInfoFragment,
+  AmountFragment,
+  BooleanValueFragment,
+  NetworkAddressFragment,
+} from './common';
 import {
   ArticleMetadataFragment,
   AudioMetadataFragment,
@@ -48,7 +53,7 @@ export const SimpleCollectActionSettingsFragment = graphql(
       ...RecipientDataOutput
     }
   }`,
-  [Amount, NetworkAddress, RecipientDataOutputFragment],
+  [AmountFragment, NetworkAddressFragment, RecipientDataOutputFragment],
 );
 export type SimpleCollectActionSettingsFragment = FragmentOf<
   typeof SimpleCollectActionSettingsFragment
@@ -65,7 +70,7 @@ export const UnknownActionSettingsFragment = graphql(
     }
     collectNft
   }`,
-  [NetworkAddress],
+  [NetworkAddressFragment],
 );
 export type UnknownActionSettings = FragmentOf<typeof UnknownActionSettingsFragment>;
 
@@ -168,7 +173,7 @@ export const LoggedInPostOperationsFragment = graphql(
       ...BooleanValue
     }
   }`,
-  [BooleanValue],
+  [BooleanValueFragment],
 );
 export type LoggedInPostOperations = FragmentOf<typeof LoggedInPostOperationsFragment>;
 
@@ -314,7 +319,7 @@ export const KnownActionFragment = graphql(
       ...NetworkAddress
     }
   }`,
-  [NetworkAddress, ActionInputInfo],
+  [NetworkAddressFragment, ActionInputInfoFragment],
 );
 export type KnownAction = FragmentOf<typeof KnownActionFragment>;
 
@@ -326,7 +331,7 @@ export const UnknownActionFragment = graphql(
       ...NetworkAddress
     }
   }`,
-  [NetworkAddress],
+  [NetworkAddressFragment],
 );
 export type UnknownAction = FragmentOf<typeof UnknownActionFragment>;
 

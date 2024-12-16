@@ -46,15 +46,15 @@ export const AccountsBulkQuery = graphql(
 );
 export type AccountsBulkRequest = RequestOf<typeof AccountsBulkQuery>;
 
-const SetAccountMetadataResponse = graphql(
+const SetAccountMetadataResponseFragment = graphql(
   `fragment SetAccountMetadataResponse on SetAccountMetadataResponse {
     __typename
     hash
   }`,
 );
-export type SetAccountMetadataResponse = FragmentOf<typeof SetAccountMetadataResponse>;
+export type SetAccountMetadataResponse = FragmentOf<typeof SetAccountMetadataResponseFragment>;
 
-const SetAccountMetadataResult = graphql(
+const SetAccountMetadataResultFragment = graphql(
   `fragment SetAccountMetadataResult on SetAccountMetadataResult {
     ...on SetAccountMetadataResponse {
       ...SetAccountMetadataResponse
@@ -73,13 +73,13 @@ const SetAccountMetadataResult = graphql(
     }
   }`,
   [
-    SetAccountMetadataResponse,
+    SetAccountMetadataResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,
   ],
 );
-export type SetAccountMetadataResult = FragmentOf<typeof SetAccountMetadataResult>;
+export type SetAccountMetadataResult = FragmentOf<typeof SetAccountMetadataResultFragment>;
 
 export const SetAccountMetadataMutation = graphql(
   `mutation SetAccountMetadata($request: SetAccountMetadataRequest!) {
@@ -87,17 +87,17 @@ export const SetAccountMetadataMutation = graphql(
       ...SetAccountMetadataResult
     }
   }`,
-  [SetAccountMetadataResult],
+  [SetAccountMetadataResultFragment],
 );
 export type SetAccountMetadataRequest = RequestOf<typeof SetAccountMetadataMutation>;
 
-const CreateAccountResponse = graphql(
+const CreateAccountResponseFragment = graphql(
   `fragment CreateAccountResponse on CreateAccountResponse {
     __typename
     hash
   }`,
 );
-export type CreateAccountResponse = FragmentOf<typeof CreateAccountResponse>;
+export type CreateAccountResponse = FragmentOf<typeof CreateAccountResponseFragment>;
 
 const InvalidUsernameFragment = graphql(
   `fragment InvalidUsername on InvalidUsername {
@@ -107,7 +107,7 @@ const InvalidUsernameFragment = graphql(
 );
 export type InvalidUsername = FragmentOf<typeof InvalidUsernameFragment>;
 
-const CreateAccountWithUsernameResult = graphql(
+const CreateAccountWithUsernameResultFragment = graphql(
   `fragment CreateAccountWithUsernameResult on CreateAccountWithUsernameResult {
     ...on CreateAccountResponse {
       ...CreateAccountResponse
@@ -130,14 +130,16 @@ const CreateAccountWithUsernameResult = graphql(
     }
   }`,
   [
-    CreateAccountResponse,
+    CreateAccountResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
     InvalidUsernameFragment,
     TransactionWillFailFragment,
   ],
 );
-export type CreateAccountWithUsernameResult = FragmentOf<typeof CreateAccountWithUsernameResult>;
+export type CreateAccountWithUsernameResult = FragmentOf<
+  typeof CreateAccountWithUsernameResultFragment
+>;
 
 export const CreateAccountWithUsernameMutation = graphql(
   `mutation CreateAccountWithUsername($request: CreateAccountWithUsernameRequest!) {
@@ -145,12 +147,12 @@ export const CreateAccountWithUsernameMutation = graphql(
       ...CreateAccountWithUsernameResult
     }
   }`,
-  [CreateAccountWithUsernameResult],
+  [CreateAccountWithUsernameResultFragment],
 );
 
 export type CreateAccountWithUsernameRequest = RequestOf<typeof CreateAccountWithUsernameMutation>;
 
-const AccountFeedsStats = graphql(
+const AccountFeedsStatsFragment = graphql(
   `fragment AccountFeedsStats on AccountFeedsStats {
     __typename
     posts
@@ -162,18 +164,18 @@ const AccountFeedsStats = graphql(
     collects
   }`,
 );
-export type AccountFeedsStats = FragmentOf<typeof AccountFeedsStats>;
+export type AccountFeedsStats = FragmentOf<typeof AccountFeedsStatsFragment>;
 
-const AccountGraphsFollowStats = graphql(
+const AccountGraphsFollowStatsFragment = graphql(
   `fragment AccountGraphsFollowStats on AccountGraphsFollowStats {
     __typename
     followers
     following
   }`,
 );
-export type AccountGraphsFollowStats = FragmentOf<typeof AccountGraphsFollowStats>;
+export type AccountGraphsFollowStats = FragmentOf<typeof AccountGraphsFollowStatsFragment>;
 
-const AccountStats = graphql(
+const AccountStatsFragment = graphql(
   `fragment AccountStats on AccountStats {
     __typename
     feedStats {
@@ -183,9 +185,9 @@ const AccountStats = graphql(
       ...AccountGraphsFollowStats
     }
   }`,
-  [AccountFeedsStats, AccountGraphsFollowStats],
+  [AccountFeedsStatsFragment, AccountGraphsFollowStatsFragment],
 );
-export type AccountStats = FragmentOf<typeof AccountStats>;
+export type AccountStats = FragmentOf<typeof AccountStatsFragment>;
 
 export const AccountFeedsStatsQuery = graphql(
   `query AccountFeedsStats($request: AccountFeedsStatsRequest!) {
@@ -193,7 +195,7 @@ export const AccountFeedsStatsQuery = graphql(
       ...AccountFeedsStats
     }
   }`,
-  [AccountFeedsStats],
+  [AccountFeedsStatsFragment],
 );
 
 export type AccountFeedsStatsRequest = RequestOf<typeof AccountFeedsStatsQuery>;
@@ -204,7 +206,7 @@ export const AccountStatsQuery = graphql(
       ...AccountStats
     }
   }`,
-  [AccountStats],
+  [AccountStatsFragment],
 );
 
 export type AccountStatsRequest = RequestOf<typeof AccountStatsQuery>;
@@ -215,7 +217,7 @@ export const AccountGraphsStatsQuery = graphql(
       ...AccountGraphsFollowStats
     }
   }`,
-  [AccountGraphsFollowStats],
+  [AccountGraphsFollowStatsFragment],
 );
 
 export type AccountGraphsStatsRequest = RequestOf<typeof AccountGraphsStatsQuery>;
@@ -273,23 +275,23 @@ export const ReportAccountMutation = graphql(
 );
 export type ReportAccountRequest = RequestOf<typeof ReportAccountMutation>;
 
-const BlockError = graphql(
+const BlockErrorFragment = graphql(
   `fragment BlockError on BlockError {
     __typename
     error
   }`,
 );
-export type BlockError = FragmentOf<typeof BlockError>;
+export type BlockError = FragmentOf<typeof BlockErrorFragment>;
 
-const BlockResponse = graphql(
+const BlockResponseFragment = graphql(
   `fragment BlockResponse on BlockResponse {
     __typename
     hash
   }`,
 );
-export type BlockResponse = FragmentOf<typeof BlockResponse>;
+export type BlockResponse = FragmentOf<typeof BlockResponseFragment>;
 
-const BlockResult = graphql(
+const BlockResultFragment = graphql(
   `fragment BlockResult on BlockResult {
     ...on BlockResponse {
       ...BlockResponse
@@ -308,13 +310,13 @@ const BlockResult = graphql(
     }
   }`,
   [
-    BlockResponse,
+    BlockResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
-    BlockError,
+    BlockErrorFragment,
   ],
 );
-export type BlockResult = FragmentOf<typeof BlockResult>;
+export type BlockResult = FragmentOf<typeof BlockResultFragment>;
 
 export const BlockMutation = graphql(
   `mutation Block($request: BlockRequest!) {
@@ -322,27 +324,27 @@ export const BlockMutation = graphql(
       ...BlockResult
     }
   }`,
-  [BlockResult],
+  [BlockResultFragment],
 );
 export type BlockRequest = RequestOf<typeof BlockMutation>;
 
-const UnblockResponse = graphql(
+const UnblockResponseFragment = graphql(
   `fragment UnblockResponse on UnblockResponse {
     __typename
     hash
   }`,
 );
-export type UnblockResponse = FragmentOf<typeof UnblockResponse>;
+export type UnblockResponse = FragmentOf<typeof UnblockResponseFragment>;
 
-const UnblockError = graphql(
+const UnblockErrorFragment = graphql(
   `fragment UnblockError on UnblockError {
     __typename
     error
   }`,
 );
-export type UnblockError = FragmentOf<typeof UnblockError>;
+export type UnblockError = FragmentOf<typeof UnblockErrorFragment>;
 
-const UnblockResult = graphql(
+const UnblockResultFragment = graphql(
   `fragment UnblockResult on UnblockResult {
     ...on UnblockResponse {
       ...UnblockResponse
@@ -358,13 +360,13 @@ const UnblockResult = graphql(
     }
   }`,
   [
-    UnblockResponse,
+    UnblockResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
-    UnblockError,
+    UnblockErrorFragment,
   ],
 );
-export type UnblockResult = FragmentOf<typeof UnblockResult>;
+export type UnblockResult = FragmentOf<typeof UnblockResultFragment>;
 
 export const UnblockMutation = graphql(
   `mutation Unblock($request: UnblockRequest!) {
@@ -372,7 +374,7 @@ export const UnblockMutation = graphql(
       ...UnblockResult
     }
   }`,
-  [UnblockResult],
+  [UnblockResultFragment],
 );
 export type UnblockRequest = RequestOf<typeof UnblockMutation>;
 

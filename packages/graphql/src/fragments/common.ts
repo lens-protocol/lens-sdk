@@ -1,25 +1,25 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
 
-export const BooleanValue = graphql(
+export const BooleanValueFragment = graphql(
   `fragment BooleanValue on BooleanValue {
     __typename
     optimistic
     onChain
   }`,
 );
-export type BooleanValue = FragmentOf<typeof BooleanValue>;
+export type BooleanValue = FragmentOf<typeof BooleanValueFragment>;
 
-export const NetworkAddress = graphql(
+export const NetworkAddressFragment = graphql(
   `fragment NetworkAddress on NetworkAddress {
     __typename
     address
     chainId
   }`,
 );
-export type NetworkAddress = FragmentOf<typeof NetworkAddress>;
+export type NetworkAddress = FragmentOf<typeof NetworkAddressFragment>;
 
-export const Erc20 = graphql(
+export const Erc20Fragment = graphql(
   `fragment Erc20 on Erc20 {
     __typename
     name
@@ -29,21 +29,21 @@ export const Erc20 = graphql(
       ...NetworkAddress
     }
   }`,
-  [NetworkAddress],
+  [NetworkAddressFragment],
 );
-export type Erc20 = FragmentOf<typeof Erc20>;
+export type Erc20 = FragmentOf<typeof Erc20Fragment>;
 
-export const Asset = graphql(
+export const AssetFragment = graphql(
   `fragment Asset on Asset {
     ...on Erc20 {
       ...Erc20
     }
   }`,
-  [Erc20],
+  [Erc20Fragment],
 );
-export type Asset = FragmentOf<typeof Asset>;
+export type Asset = FragmentOf<typeof AssetFragment>;
 
-export const Amount = graphql(
+export const AmountFragment = graphql(
   `fragment Amount on Amount {
     __typename
     asset {
@@ -51,15 +51,15 @@ export const Amount = graphql(
     }
     value
   }`,
-  [Asset],
+  [AssetFragment],
 );
-export type Amount = FragmentOf<typeof Amount>;
+export type Amount = FragmentOf<typeof AmountFragment>;
 
-export const ActionInputInfo = graphql(
+export const ActionInputInfoFragment = graphql(
   `fragment ActionInputInfo on ActionInputInfo {
     __typename
     type
     name
   }`,
 );
-export type ActionInputInfo = FragmentOf<typeof ActionInputInfo>;
+export type ActionInputInfo = FragmentOf<typeof ActionInputInfoFragment>;

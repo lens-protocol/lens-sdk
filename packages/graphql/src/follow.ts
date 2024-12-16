@@ -2,7 +2,7 @@ import type { FragmentOf } from 'gql.tada';
 
 import {
   AccountFragment,
-  BooleanValue,
+  BooleanValueFragment,
   PaginatedResultInfoFragment,
   SelfFundedTransactionRequestFragment,
   SponsoredTransactionRequestFragment,
@@ -176,7 +176,7 @@ const FollowStatusResultFragment = graphql(
       ...BooleanValue
     }
   }`,
-  [BooleanValue],
+  [BooleanValueFragment],
 );
 export type FollowStatusResult = FragmentOf<typeof FollowStatusResultFragment>;
 
