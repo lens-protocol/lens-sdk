@@ -4,10 +4,11 @@ import { http, type Account, type Transport, type WalletClient, createWalletClie
 import { privateKeyToAccount } from 'viem/accounts';
 import { PublicClient, testnet } from './src';
 
-const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
-const owner = evmAddress(signer.address);
+const pk = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
 const account = evmAddress(import.meta.env.TEST_ACCOUNT);
 const app = evmAddress(import.meta.env.TEST_APP);
+
+export const signer = evmAddress(pk.address);
 
 export function loginAsAccountOwner() {
   const client = PublicClient.create({
@@ -18,10 +19,10 @@ export function loginAsAccountOwner() {
   return client.login({
     accountOwner: {
       account,
-      owner,
+      owner: signer,
       app,
     },
-    signMessage: (message) => signer.signMessage({ message }),
+    signMessage: (message) => pk.signMessage({ message }),
   });
 }
 
@@ -33,10 +34,10 @@ export function loginAsOnboardingUser() {
 
   return client.login({
     onboardingUser: {
-      wallet: owner,
+      wallet: signer,
       app,
     },
-    signMessage: (message) => signer.signMessage({ message }),
+    signMessage: (message) => pk.signMessage({ message }),
   });
 }
 

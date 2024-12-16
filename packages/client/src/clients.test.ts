@@ -92,6 +92,8 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
       environment: {
         backend: url('http://127.0.0.1'),
         name: 'broken',
+        indexingTimeout: 1000,
+        pollingInterval: 1000,
       },
       origin: 'http://example.com',
     });

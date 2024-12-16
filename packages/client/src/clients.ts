@@ -29,8 +29,9 @@ import {
 } from '@urql/core';
 import { type Logger, getLogger } from 'loglevel';
 
+import type { SwitchAccountRequest } from '@lens-protocol/graphql';
 import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
-import { transactionStatus } from './actions';
+import { switchAccount, transactionStatus } from './actions';
 import type { ClientConfig } from './config';
 import { type Context, configureContext } from './context';
 import {
@@ -343,6 +344,33 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
    */
   public override isSessionClient(): this is SessionClient<TContext> {
     return true;
+  }
+
+  /**
+   * Switch authenticated account to a new account.
+   *
+   * You MUST be authenticated as Onboarding User, Account Owner, or Account Manager to be able to switch.
+   * The signer associated with the current session MUST be the owner or a manager of the account.
+   *
+   * @returns The updated SessionClient if the switch was successful.
+   */
+  switchAccount(
+    request: SwitchAccountRequest,
+  ): ResultAsync<
+    SessionClient<TContext>,
+    AuthenticationError | UnauthenticatedError | UnexpectedError
+  > {
+    return switchAccount(this, request)
+      .andThen((result) => {
+        if (result.__typename === 'ForbiddenError') {
+          return AuthenticationError.from(result.reason).asResultAsync();
+        }
+        return okAsync(result);
+      })
+      .map(async (tokens) => {
+        await this.credentials.set(tokens);
+        return this;
+      });
   }
 
   /**

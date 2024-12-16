@@ -48,6 +48,16 @@
       }
     },
     {
+      "include": ["./packages/**/*.test.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noNonNullAssertion": "off"
+          }
+        }
+      }
+    },
+    {
       "include": ["./packages/graphql/*.graphql"],
       "formatter": {
         "enabled": false
