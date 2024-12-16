@@ -1,5 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
 import {
+  PaginatedResultInfoFragment,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
@@ -57,3 +58,28 @@ export const RemoveAdminsMutation = graphql(
   [RemoveAdminsResult],
 );
 export type RemoveAdminsRequest = RequestOf<typeof RemoveAdminsMutation>;
+
+export const AdminFragment = graphql(
+  `fragment Admin on Admin {
+    __typename
+    address
+    addedAt
+  }`,
+);
+export type Admin = FragmentOf<typeof AdminFragment>;
+
+export const AdminsForQuery = graphql(
+  `query AdminsFor($request: AdminsForRequest!) {
+    value: adminsFor(request: $request) {
+      __typename
+      items {
+        ...Admin
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [AdminFragment, PaginatedResultInfoFragment],
+);
+export type AdminsForRequest = RequestOf<typeof AdminsForQuery>;

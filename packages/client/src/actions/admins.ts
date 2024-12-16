@@ -1,13 +1,16 @@
 import type {
   AddAdminsRequest,
   AddAdminsResult,
+  Admin,
+  AdminsForRequest,
   RemoveAdminsRequest,
   RemoveAdminsResult,
 } from '@lens-protocol/graphql';
-import { AddAdminsMutation, RemoveAdminsMutation } from '@lens-protocol/graphql';
+import { AddAdminsMutation, AdminsForQuery, RemoveAdminsMutation } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
-import type { SessionClient } from '../clients';
+import type { Paginated } from '@lens-protocol/graphql';
+import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
 /**
@@ -50,4 +53,24 @@ export function removeAdmins(
   request: RemoveAdminsRequest,
 ): ResultAsync<RemoveAdminsResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(RemoveAdminsMutation, { request });
+}
+
+/**
+ * Fetch admins for.
+ *
+ * ```ts
+ * const result = await fetchAdminsFor(anyClient, {
+ *   address: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of admins or empty if it does not exist.
+ */
+export function fetchAdminsFor(
+  client: AnyClient,
+  request: AdminsForRequest,
+): ResultAsync<Paginated<Admin> | null, UnexpectedError> {
+  return client.query(AdminsForQuery, { request });
 }
