@@ -67,6 +67,16 @@
       "organizeImports": {
         "enabled": false
       }
+    },
+    {
+      "include": ["./examples/**/*.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noNonNullAssertion": "off"
+          }
+        }
+      }
     }
   ]
 }

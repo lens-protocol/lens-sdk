@@ -19,6 +19,7 @@ node_modules
 # lockfiles
 package-lock.json
 yarn.lock
+examples/*/pnpm-lock.yaml
 
 # debug
 .pnpm-debug.log*
