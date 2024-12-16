@@ -76,7 +76,7 @@ importers:
         specifier: canary
         version: 0.0.0-canary-20241203140504(viem@2.21.53(typescript@5.7.2)(zod@3.23.8))
       '@lens-protocol/metadata':
-        specifier: 2.0.0-next.2
+        specifier: next
         version: 2.0.0-next.2(zod@3.23.8)
       tsup:
         specifier: ^8.3.5
