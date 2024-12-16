@@ -1,9 +1,11 @@
 import type { FragmentOf } from 'gql.tada';
 import {
+  AccountFragment,
   AccountPostReactionFragment,
   ActionInfoFragment,
   AnyPostFragment,
   PaginatedResultInfoFragment,
+  PostMetadataFragment,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
@@ -261,3 +263,97 @@ export const ReportPostMutation = graphql(
   }`,
 );
 export type ReportPostRequest = RequestOf<typeof ReportPostMutation>;
+
+export const PostTagsQuery = graphql(
+  `query PostTags($request: PostTagsRequest!) {
+    value: postTags(request: $request) {
+      __typename
+      items
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [PaginatedResultInfoFragment],
+);
+export type PostTagsRequest = RequestOf<typeof PostTagsQuery>;
+
+export const PostReactionStatusFragment = graphql(
+  `fragment PostReactionStatus on PostReactionStatus {
+    __typename
+    postId
+    account
+    result
+  }`,
+);
+export type PostReactionStatus = FragmentOf<typeof PostReactionStatusFragment>;
+
+export const PostReactionStatusQuery = graphql(
+  `query PostReactionStatus($request: PostReactionStatusRequest!) {
+    value: postReactionStatus(request: $request) {
+      ...PostReactionStatus
+    }
+  }`,
+  [PostReactionStatusFragment],
+);
+export type PostReactionStatusRequest = RequestOf<typeof PostReactionStatusQuery>;
+
+export const WhoReferencedPostQuery = graphql(
+  `query WhoReferencedPost($request: WhoReferencedPostRequest!) {
+    value: whoReferencedPost(request: $request) {
+      __typename
+      items {
+        ...Account
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [PaginatedResultInfoFragment, AccountFragment],
+);
+export type WhoReferencedPostRequest = RequestOf<typeof WhoReferencedPostQuery>;
+
+export const WhoActedOnPostQuery = graphql(
+  `query WhoReferencedPost($request: WhoActedOnPostRequest!) {
+    value: whoActedOnPost(request: $request) {
+      __typename
+      items {
+        ...Account
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [PaginatedResultInfoFragment, AccountFragment],
+);
+export type WhoActedOnPostQueryRequest = RequestOf<typeof WhoActedOnPostQuery>;
+
+export const PostEditFragment = graphql(
+  `fragment PostEdit on PostEdit {
+    __typename
+    metadata{
+      ...PostMetadata
+    }
+    timestamp
+  }`,
+  [PostMetadataFragment],
+);
+export type PostEdit = FragmentOf<typeof PostEditFragment>;
+
+export const PostEditsQuery = graphql(
+  `query PostEdits($request: PostEditsRequest!) {
+    value: postEdits(request: $request) {
+      __typename
+      items {
+        ...PostEdit
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [PostEditFragment, PaginatedResultInfoFragment],
+);
+export type PostEditsRequest = RequestOf<typeof PostEditsQuery>;
