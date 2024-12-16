@@ -1,5 +1,10 @@
 import type { FragmentOf } from 'gql.tada';
-import { SelfFundedTransactionRequest, TransactionWillFail } from './fragments';
+import {
+  PaginatedResultInfoFragment,
+  SelfFundedTransactionRequest,
+  TransactionWillFail,
+  UsernameNamespaceFragment,
+} from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
 const CreateNamespaceResponse = graphql(
@@ -35,3 +40,29 @@ export const CreateUsernameNamespaceMutation = graphql(
   [CreateUsernameNamespaceResult],
 );
 export type CreateUsernameNamespaceRequest = RequestOf<typeof CreateUsernameNamespaceMutation>;
+
+export const UsernameNamespaceQuery = graphql(
+  `query UsernameNamespace($request: UsernameNamespaceRequest!) {
+    value: usernameNamespace(request: $request) {
+      ...UsernameNamespace
+    }
+  }`,
+  [UsernameNamespaceFragment],
+);
+export type UsernameNamespaceRequest = RequestOf<typeof UsernameNamespaceQuery>;
+
+export const NamespacesQuery = graphql(
+  `query Namespaces($request: NamespacesRequest!) {
+    value: namespaces(request: $request) {
+      __typename
+      items {
+        ...UsernameNamespace
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [UsernameNamespaceFragment, PaginatedResultInfoFragment],
+);
+export type NamespacesRequest = RequestOf<typeof NamespacesQuery>;
