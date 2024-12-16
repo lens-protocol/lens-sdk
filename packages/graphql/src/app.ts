@@ -1,6 +1,9 @@
 import type { FragmentOf } from 'gql.tada';
 import {
+  AccountFragment,
   AppFragment,
+  GroupFragment,
+  PaginatedResultInfoFragment,
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
   TransactionWillFail,
@@ -16,6 +19,125 @@ export const AppQuery = graphql(
   [AppFragment],
 );
 export type AppRequest = RequestOf<typeof AppQuery>;
+
+export const AppsQuery = graphql(
+  `query Apps($request: AppsRequest!) {
+    value: apps(request: $request) {
+      __typename
+      items {
+        ...App
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [AppFragment, PaginatedResultInfoFragment],
+);
+export type AppsRequest = RequestOf<typeof AppsQuery>;
+
+export const AppGroupsQuery = graphql(
+  `query AppGroups($request: AppGroupsRequest!) {
+    value: appGroups(request: $request) {
+      __typename
+      items {
+        ...Group
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [GroupFragment, PaginatedResultInfoFragment],
+);
+export type AppGroupsRequest = RequestOf<typeof AppGroupsQuery>;
+
+export const AppSignerFragment = graphql(
+  `fragment AppSigner on AppSigner {
+    __typename
+    signer
+    timestamp
+  }`,
+);
+export type AppSigner = FragmentOf<typeof AppSignerFragment>;
+
+export const AppSignersQuery = graphql(
+  `query AppSigners($request: AppSignersRequest!) {
+    value: appSigners(request: $request) {
+      __typename
+      items {
+        ...AppSigner
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [AppSignerFragment, PaginatedResultInfoFragment],
+);
+export type AppSignersRequest = RequestOf<typeof AppSignersQuery>;
+
+export const AppFeedFragment = graphql(
+  `fragment AppFeed on AppFeed {
+    __typename
+    feed
+    timestamp
+  }`,
+);
+export type AppFeed = FragmentOf<typeof AppFeedFragment>;
+
+export const AppFeedsQuery = graphql(
+  `query AppFeeds($request: AppFeedsRequest!) {
+    value: appFeeds(request: $request) {
+      __typename
+      items {
+        ...AppFeed
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [AppFeedFragment, PaginatedResultInfoFragment],
+);
+export type AppFeedsRequest = RequestOf<typeof AppFeedsQuery>;
+
+export const AppUserFragment = graphql(
+  `fragment AppUser on AppUser {
+    __typename
+    account {
+      ...Account
+    }
+    lastActiveOn
+    firstLoginOn
+  }`,
+  [AccountFragment],
+);
+export type AppUser = FragmentOf<typeof AppUserFragment>;
+
+export const AppUsersQuery = graphql(
+  `query AppUsers($request: AppUsersRequest!) {
+    value: appUsers(request: $request) {
+      __typename
+      items {
+        ...AppUser
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [AppUserFragment, PaginatedResultInfoFragment],
+);
+export type AppUsersRequest = RequestOf<typeof AppUsersQuery>;
+
+export const AppServerApiKeyQuery = graphql(
+  `query AppServerApiKey($request: AppServerApiKeyRequest!) {
+    value: appServerApiKey(request: $request)
+  }`,
+  [AppFragment],
+);
+export type AppServerApiKeyRequest = RequestOf<typeof AppServerApiKeyQuery>;
 
 const CreateAppResponse = graphql(
   `fragment CreateAppResponse on CreateAppResponse {
