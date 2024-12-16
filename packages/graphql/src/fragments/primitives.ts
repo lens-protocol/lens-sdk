@@ -109,3 +109,31 @@ export const UsernameNamespaceFragment = graphql(
   [UsernameNamespaceMetadataFragment],
 );
 export type UsernameNamespace = FragmentOf<typeof UsernameNamespaceFragment>;
+
+export const GroupMetadataFragment = graphql(
+  `fragment GroupMetadata on GroupMetadata {
+      __typename
+      description
+      id
+      icon
+      name
+      coverPicture
+  }`,
+);
+export type GroupMetadata = FragmentOf<typeof GroupMetadataFragment>;
+
+// TODO: add GroupRulesConfig
+export const GroupFragment = graphql(
+  `fragment Group on Group {
+    __typename
+    address
+    timestamp
+    metadata {
+      ...GroupMetadata
+    }
+    isMember
+    owner
+  }`,
+  [GroupMetadataFragment],
+);
+export type Group = FragmentOf<typeof GroupFragment>;
