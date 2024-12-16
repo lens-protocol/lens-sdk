@@ -7,7 +7,7 @@ import {
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
-const AddAdminsResult = graphql(
+const AddAdminsResultFragment = graphql(
   `fragment AddAdminsResult on AddAdminsResult {
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -25,7 +25,7 @@ const AddAdminsResult = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type AddAdminsResult = FragmentOf<typeof AddAdminsResult>;
+export type AddAdminsResult = FragmentOf<typeof AddAdminsResultFragment>;
 
 export const AddAdminsMutation = graphql(
   `mutation AddAdmins($request: AddAdminsRequest!) {
@@ -33,11 +33,11 @@ export const AddAdminsMutation = graphql(
       ...AddAdminsResult
     }
   }`,
-  [AddAdminsResult],
+  [AddAdminsResultFragment],
 );
 export type AddAdminsRequest = RequestOf<typeof AddAdminsMutation>;
 
-const RemoveAdminsResult = graphql(
+const RemoveAdminsResultFragment = graphql(
   `fragment RemoveAdminsResult on RemoveAdminsResult {
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -55,7 +55,7 @@ const RemoveAdminsResult = graphql(
     TransactionWillFailFragment,
   ],
 );
-export type RemoveAdminsResult = FragmentOf<typeof RemoveAdminsResult>;
+export type RemoveAdminsResult = FragmentOf<typeof RemoveAdminsResultFragment>;
 
 export const RemoveAdminsMutation = graphql(
   `mutation RemoveAdmins($request: RemoveAdminsRequest!) {
@@ -63,7 +63,7 @@ export const RemoveAdminsMutation = graphql(
       ...RemoveAdminsResult
     }
   }`,
-  [RemoveAdminsResult],
+  [RemoveAdminsResultFragment],
 );
 export type RemoveAdminsRequest = RequestOf<typeof RemoveAdminsMutation>;
 
