@@ -45,7 +45,25 @@ export enum PostReactionType {
  * Enum for the different content warnings.
  */
 export enum ContentWarning {
-  nsfw = 'NSFW',
-  sensitive = 'SENSITIVE',
-  spoiler = 'SPOILER',
+  Nsfw = 'NSFW',
+  Sensitive = 'SENSITIVE',
+  Spoiler = 'SPOILER',
+}
+
+/**
+ * Enum for the different types of references a post can have.
+ */
+export enum PostReferenceType {
+  CommentOn = 'COMMENT_ON',
+  RepostOf = 'REPOST_OF',
+  QuoteOf = 'QUOTE_OF',
+}
+
+/**
+ * Enum for the different order by options for who referenced on a post.
+ */
+export enum WhoReferencedPostOrderBy {
+  MostRecent = 'MOST_RECENT',
+  Oldest = 'OLDEST',
+  AccountScore = 'ACCOUNT_SCORE',
 }

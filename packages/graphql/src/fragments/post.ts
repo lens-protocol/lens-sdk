@@ -18,7 +18,7 @@ import {
   TransactionMetadataFragment,
   VideoMetadataFragment,
 } from './metadata';
-import { AppFragment, Feed } from './primitives';
+import { AppFragment, FeedFragment } from './primitives';
 
 export const RecipientDataOutputFragment = graphql(
   `fragment RecipientDataOutput on RecipientDataOutput {
@@ -207,7 +207,7 @@ export const ReferencedPostFragment = graphql(
   [
     AccountFragment,
     AppFragment,
-    Feed,
+    FeedFragment,
     PostMetadataFragment,
     PostActionFragment,
     LoggedInPostOperationsFragment,
@@ -264,7 +264,7 @@ export const PostFragment = graphql(
   [
     AccountFragment,
     AppFragment,
-    Feed,
+    FeedFragment,
     PostMetadataFragment,
     PostActionFragment,
     NestedPostFragment,

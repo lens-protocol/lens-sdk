@@ -1,5 +1,10 @@
 import type { FragmentOf } from 'gql.tada';
-import { SelfFundedTransactionRequest, TransactionWillFail } from './fragments';
+import {
+  GraphFragment,
+  PaginatedResultInfoFragment,
+  SelfFundedTransactionRequest,
+  TransactionWillFail,
+} from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
 const CreateGraphResponse = graphql(
@@ -35,3 +40,29 @@ export const CreateGraphMutation = graphql(
   [CreateGraphResult],
 );
 export type CreateGraphRequest = RequestOf<typeof CreateGraphMutation>;
+
+export const GraphQuery = graphql(
+  `query Graph($request: GraphRequest!) {
+    value: graph(request: $request) {
+      ...Graph
+    }
+  }`,
+  [GraphFragment],
+);
+export type GraphRequest = RequestOf<typeof GraphQuery>;
+
+export const GraphsQuery = graphql(
+  `query Graphs($request: GraphsRequest!) {
+    value: graphs(request: $request) {
+      __typename
+      items {
+        ...Graph
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [GraphFragment, PaginatedResultInfoFragment],
+);
+export type GraphsRequest = RequestOf<typeof GraphsQuery>;
