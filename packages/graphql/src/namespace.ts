@@ -7,15 +7,15 @@ import {
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
-const CreateNamespaceResponse = graphql(
+const CreateNamespaceResponseFragment = graphql(
   `fragment CreateNamespaceResponse on CreateNamespaceResponse {
     __typename
     hash
   }`,
 );
-export type CreateNamespaceResponse = FragmentOf<typeof CreateNamespaceResponse>;
+export type CreateNamespaceResponse = FragmentOf<typeof CreateNamespaceResponseFragment>;
 
-const CreateUsernameNamespaceResult = graphql(
+const CreateUsernameNamespaceResultFragment = graphql(
   `fragment CreateUsernameNamespaceResult on CreateUsernameNamespaceResult {
     ...on CreateNamespaceResponse {
       ...CreateNamespaceResponse
@@ -27,9 +27,15 @@ const CreateUsernameNamespaceResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [CreateNamespaceResponse, SelfFundedTransactionRequestFragment, TransactionWillFailFragment],
+  [
+    CreateNamespaceResponseFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type CreateUsernameNamespaceResult = FragmentOf<typeof CreateUsernameNamespaceResult>;
+export type CreateUsernameNamespaceResult = FragmentOf<
+  typeof CreateUsernameNamespaceResultFragment
+>;
 
 export const CreateUsernameNamespaceMutation = graphql(
   `mutation CreateUsernameNamespace($request: CreateUsernameNamespaceRequest!) {
@@ -37,7 +43,7 @@ export const CreateUsernameNamespaceMutation = graphql(
       ...CreateUsernameNamespaceResult
     }
   }`,
-  [CreateUsernameNamespaceResult],
+  [CreateUsernameNamespaceResultFragment],
 );
 export type CreateUsernameNamespaceRequest = RequestOf<typeof CreateUsernameNamespaceMutation>;
 

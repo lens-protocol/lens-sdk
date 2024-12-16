@@ -12,15 +12,15 @@ import {
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
-const PostResponse = graphql(
+const PostResponseFragment = graphql(
   `fragment PostResponse on PostResponse {
     __typename
     hash
   }`,
 );
-export type PostResponse = FragmentOf<typeof PostResponse>;
+export type PostResponse = FragmentOf<typeof PostResponseFragment>;
 
-const PostResult = graphql(
+const PostResultFragment = graphql(
   `fragment PostResult on PostResult {
     ...on PostResponse {
       ...PostResponse
@@ -36,13 +36,13 @@ const PostResult = graphql(
     }
   }`,
   [
-    PostResponse,
+    PostResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,
   ],
 );
-export type PostResult = FragmentOf<typeof PostResult>;
+export type PostResult = FragmentOf<typeof PostResultFragment>;
 
 export const PostMutation = graphql(
   `mutation Post($request: CreatePostRequest!) {
@@ -50,7 +50,7 @@ export const PostMutation = graphql(
       ...PostResult
     }
   }`,
-  [PostResult],
+  [PostResultFragment],
 );
 export type CreatePostRequest = RequestOf<typeof PostMutation>;
 
@@ -60,7 +60,7 @@ export const RepostMutation = graphql(
       ...PostResult
     }
   }`,
-  [PostResult],
+  [PostResultFragment],
 );
 export type CreateRepostRequest = RequestOf<typeof RepostMutation>;
 
@@ -70,7 +70,7 @@ export const EditPostMutation = graphql(
       ...PostResult
     }
   }`,
-  [PostResult],
+  [PostResultFragment],
 );
 export type EditPostRequest = RequestOf<typeof EditPostMutation>;
 
@@ -144,7 +144,7 @@ export const PostReferencesQuery = graphql(
 );
 export type PostReferencesRequest = RequestOf<typeof PostReferencesQuery>;
 
-const AddReactionResult = graphql(
+const AddReactionResultFragment = graphql(
   `fragment AddReactionResult on AddReactionResult {
     ... on AddReactionResponse {
       __typename
@@ -156,7 +156,7 @@ const AddReactionResult = graphql(
     }
   }`,
 );
-export type AddReactionResult = FragmentOf<typeof AddReactionResult>;
+export type AddReactionResult = FragmentOf<typeof AddReactionResultFragment>;
 
 export const AddReactionMutation = graphql(
   `mutation AddReaction($request: AddReactionRequest!) {
@@ -164,11 +164,11 @@ export const AddReactionMutation = graphql(
       ...AddReactionResult
     }
   }`,
-  [AddReactionResult],
+  [AddReactionResultFragment],
 );
 export type AddReactionRequest = RequestOf<typeof AddReactionMutation>;
 
-const UndoReactionResult = graphql(
+const UndoReactionResultFragment = graphql(
   `fragment UndoReactionResult on UndoReactionResult {
     ... on UndoReactionResponse {
       __typename
@@ -180,7 +180,7 @@ const UndoReactionResult = graphql(
     }
   }`,
 );
-export type UndoReactionResult = FragmentOf<typeof UndoReactionResult>;
+export type UndoReactionResult = FragmentOf<typeof UndoReactionResultFragment>;
 
 export const UndoReactionMutation = graphql(
   `mutation UndoReaction($request: UndoReactionRequest!) {
@@ -188,7 +188,7 @@ export const UndoReactionMutation = graphql(
       ...UndoReactionResult
     }
   }`,
-  [UndoReactionResult],
+  [UndoReactionResultFragment],
 );
 export type UndoReactionRequest = RequestOf<typeof UndoReactionMutation>;
 
@@ -206,15 +206,15 @@ export const UndoBookmarkPostMutation = graphql(
 );
 export type UndoBookmarkPostRequest = RequestOf<typeof UndoBookmarkPostMutation>;
 
-const DeletePostResponse = graphql(
+const DeletePostResponseFragment = graphql(
   `fragment DeletePostResponse on DeletePostResponse {
     __typename
     hash
   }`,
 );
-export type DeletePostResponse = FragmentOf<typeof DeletePostResponse>;
+export type DeletePostResponse = FragmentOf<typeof DeletePostResponseFragment>;
 
-const DeletePostResult = graphql(
+const DeletePostResultFragment = graphql(
   `fragment DeletePostResult on DeletePostResult {
     ... on DeletePostResponse {
       ...DeletePostResponse
@@ -230,13 +230,13 @@ const DeletePostResult = graphql(
     }
   }`,
   [
-    DeletePostResponse,
+    DeletePostResponseFragment,
     TransactionWillFailFragment,
     SelfFundedTransactionRequestFragment,
     SponsoredTransactionRequestFragment,
   ],
 );
-export type DeletePostResult = FragmentOf<typeof DeletePostResult>;
+export type DeletePostResult = FragmentOf<typeof DeletePostResultFragment>;
 
 export const DeletePostMutation = graphql(
   `mutation DeletePost($request: DeletePostRequest!) {
@@ -244,7 +244,7 @@ export const DeletePostMutation = graphql(
       ...DeletePostResult
     }
   }`,
-  [DeletePostResult],
+  [DeletePostResultFragment],
 );
 export type DeletePostRequest = RequestOf<typeof DeletePostMutation>;
 

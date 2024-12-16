@@ -2,7 +2,7 @@ import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
 import { UsernameNamespaceFragment } from './primitives';
 
-export const Username = graphql(
+export const UsernameFragment = graphql(
   `fragment Username on Username {
       __typename
       id
@@ -17,4 +17,4 @@ export const Username = graphql(
   }`,
   [UsernameNamespaceFragment],
 );
-export type Username = FragmentOf<typeof Username>;
+export type Username = FragmentOf<typeof UsernameFragment>;
