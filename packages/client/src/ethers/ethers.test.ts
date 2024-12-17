@@ -1,22 +1,18 @@
 import { testnet } from '@lens-protocol/env';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, it } from 'vitest';
 
-import { chains } from '@lens-network/sdk/viem';
-import { evmAddress, uri } from '@lens-protocol/types';
-import { http, createWalletClient } from 'viem';
-import { privateKeyToAccount } from 'viem/accounts';
+import { assertOk, evmAddress, uri } from '@lens-protocol/types';
 import { handleWith } from '.';
-import { TestLock } from '../../testing-utils';
 import { post } from '../actions/post';
 import { PublicClient } from '../clients';
 
-const walletClient = createWalletClient({
-  account: privateKeyToAccount(import.meta.env.PRIVATE_KEY),
-  chain: chains.testnet,
-  transport: http(),
-});
+import { Network, Wallet, getDefaultProvider } from '@lens-network/sdk/ethers';
+import { TestLock } from '../../testing-utils';
 
-const owner = evmAddress(walletClient.account.address);
+// biome-ignore lint/suspicious/noExplicitAny: needs a fix in @lens-network/sdk
+const wallet = new Wallet(import.meta.env.PRIVATE_KEY, getDefaultProvider(Network.Testnet) as any);
+
+const owner = evmAddress(wallet.address);
 const app = evmAddress(import.meta.env.TEST_APP);
 const account = evmAddress(import.meta.env.TEST_ACCOUNT);
 
@@ -25,7 +21,7 @@ const publicClient = PublicClient.create({
   origin: 'http://example.com',
 });
 
-describe('Given an integration with viem', () => {
+describe('Given an integration with ethers.js', () => {
   beforeAll(async () => {
     await TestLock.acquire('post');
   });
@@ -35,20 +31,20 @@ describe('Given an integration with viem', () => {
   });
 
   describe('When handling transaction actions', () => {
-    it('Then it should be possible to chain them with other helpers', async () => {
+    it.sequential('Then it should be possible to chain them with other helpers', async () => {
       const authenticated = await publicClient.login({
         accountOwner: { account, app, owner },
-        signMessage: (message: string) => walletClient.signMessage({ message }),
+        signMessage: (message: string) => wallet.signMessage(message),
       });
       const sessionClient = authenticated._unsafeUnwrap();
 
       const result = await post(sessionClient, {
         contentUri: uri('https://devnet.irys.xyz/3n3Ujg3jPBHX58MPPqYXBSQtPhTgrcTk4RedJgV1Ejhb'),
       })
-        .andThen(handleWith(walletClient))
+        .andThen(handleWith(wallet))
         .andThen(sessionClient.waitForTransaction);
 
-      expect(result.isOk(), result.isErr() ? result.error.message : undefined).toBe(true);
+      assertOk(result);
     });
   });
 });
