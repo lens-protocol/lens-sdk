@@ -2,20 +2,20 @@ import type { FragmentOf } from 'gql.tada';
 import {
   GraphFragment,
   PaginatedResultInfoFragment,
-  SelfFundedTransactionRequest,
-  TransactionWillFail,
+  SelfFundedTransactionRequestFragment,
+  TransactionWillFailFragment,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
-const CreateGraphResponse = graphql(
+const CreateGraphResponseFragment = graphql(
   `fragment CreateGraphResponse on CreateGraphResponse {
     __typename
     hash
   }`,
 );
-export type CreateGraphResponse = FragmentOf<typeof CreateGraphResponse>;
+export type CreateGraphResponse = FragmentOf<typeof CreateGraphResponseFragment>;
 
-const CreateGraphResult = graphql(
+const CreateGraphResultFragment = graphql(
   `fragment CreateGraphResult on CreateGraphResult {
     ...on CreateGraphResponse {
       ...CreateGraphResponse
@@ -27,9 +27,9 @@ const CreateGraphResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [CreateGraphResponse, SelfFundedTransactionRequest, TransactionWillFail],
+  [CreateGraphResponseFragment, SelfFundedTransactionRequestFragment, TransactionWillFailFragment],
 );
-export type CreateGraphResult = FragmentOf<typeof CreateGraphResult>;
+export type CreateGraphResult = FragmentOf<typeof CreateGraphResultFragment>;
 
 export const CreateGraphMutation = graphql(
   `mutation CreateGraph($request: CreateGraphRequest!) {
@@ -37,7 +37,7 @@ export const CreateGraphMutation = graphql(
       ...CreateGraphResult
     }
   }`,
-  [CreateGraphResult],
+  [CreateGraphResultFragment],
 );
 export type CreateGraphRequest = RequestOf<typeof CreateGraphMutation>;
 

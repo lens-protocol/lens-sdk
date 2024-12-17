@@ -2,7 +2,7 @@ import type { FragmentOf } from 'gql.tada';
 import { PaginatedResultInfoFragment, PostFragment } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
-const TimelineItem = graphql(
+const TimelineItemFragment = graphql(
   `fragment TimelineItem on TimelineItem {
     __typename
     id
@@ -18,7 +18,7 @@ const TimelineItem = graphql(
   }`,
   [PostFragment],
 );
-export type TimelineItem = FragmentOf<typeof TimelineItem>;
+export type TimelineItem = FragmentOf<typeof TimelineItemFragment>;
 
 export const TimelineQuery = graphql(
   `query Timeline($request: TimelineRequest!) {
@@ -32,7 +32,7 @@ export const TimelineQuery = graphql(
       }
     }
   }`,
-  [TimelineItem, PaginatedResultInfoFragment],
+  [TimelineItemFragment, PaginatedResultInfoFragment],
 );
 export type TimelineRequest = RequestOf<typeof TimelineQuery>;
 

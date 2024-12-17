@@ -1,11 +1,12 @@
 import { testnet } from '@lens-protocol/env';
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { chains } from '@lens-network/sdk/viem';
 import { evmAddress, uri } from '@lens-protocol/types';
 import { http, createWalletClient } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { handleWith } from '.';
+import { TestLock } from '../../testing-utils';
 import { post } from '../actions/post';
 import { PublicClient } from '../clients';
 
@@ -25,6 +26,14 @@ const publicClient = PublicClient.create({
 });
 
 describe('Given an integration with viem', () => {
+  beforeAll(async () => {
+    await TestLock.acquire('post');
+  });
+
+  afterAll(() => {
+    TestLock.release('post');
+  });
+
   describe('When handling transaction actions', () => {
     it('Then it should be possible to chain them with other helpers', async () => {
       const authenticated = await publicClient.login({

@@ -1,22 +1,22 @@
 import type { FragmentOf } from 'gql.tada';
 import {
   PaginatedResultInfoFragment,
-  SelfFundedTransactionRequest,
-  SponsoredTransactionRequest,
-  TransactionWillFail,
-  Username,
+  SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
+  TransactionWillFailFragment,
+  UsernameFragment,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
-const CreateUsernameResponse = graphql(
+const CreateUsernameResponseFragment = graphql(
   `fragment CreateUsernameResponse on CreateUsernameResponse {
     __typename
     hash
   }`,
 );
-export type CreateUsernameResponse = FragmentOf<typeof CreateUsernameResponse>;
+export type CreateUsernameResponse = FragmentOf<typeof CreateUsernameResponseFragment>;
 
-const CreateUsernameResult = graphql(
+const CreateUsernameResultFragment = graphql(
   `fragment CreateUsernameResult on CreateUsernameResult {
     ...on CreateUsernameResponse {
       ...CreateUsernameResponse
@@ -32,13 +32,13 @@ const CreateUsernameResult = graphql(
     }
   }`,
   [
-    CreateUsernameResponse,
-    SelfFundedTransactionRequest,
-    TransactionWillFail,
-    SponsoredTransactionRequest,
+    CreateUsernameResponseFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+    SponsoredTransactionRequestFragment,
   ],
 );
-export type CreateUsernameResult = FragmentOf<typeof CreateUsernameResult>;
+export type CreateUsernameResult = FragmentOf<typeof CreateUsernameResultFragment>;
 
 export const CreateUsernameMutation = graphql(
   `mutation CreateUsername($request: CreateUsernameRequest!) {
@@ -46,19 +46,19 @@ export const CreateUsernameMutation = graphql(
       ...CreateUsernameResult
     }
   }`,
-  [CreateUsernameResult],
+  [CreateUsernameResultFragment],
 );
 export type CreateUsernameRequest = RequestOf<typeof CreateUsernameMutation>;
 
-const AssignUsernameResponse = graphql(
+const AssignUsernameResponseFragment = graphql(
   `fragment AssignUsernameResponse on AssignUsernameResponse {
     __typename
     hash
   }`,
 );
-export type AssignUsernameResponse = FragmentOf<typeof AssignUsernameResponse>;
+export type AssignUsernameResponse = FragmentOf<typeof AssignUsernameResponseFragment>;
 
-const AssignUsernameToAccountResult = graphql(
+const AssignUsernameToAccountResultFragment = graphql(
   `fragment AssignUsernameToAccountResult on AssignUsernameToAccountResult {
     ...on AssignUsernameResponse {
       ...AssignUsernameResponse
@@ -74,13 +74,15 @@ const AssignUsernameToAccountResult = graphql(
     }
   }`,
   [
-    SponsoredTransactionRequest,
-    SelfFundedTransactionRequest,
-    TransactionWillFail,
-    AssignUsernameResponse,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+    AssignUsernameResponseFragment,
   ],
 );
-export type AssignUsernameToAccountResult = FragmentOf<typeof AssignUsernameToAccountResult>;
+export type AssignUsernameToAccountResult = FragmentOf<
+  typeof AssignUsernameToAccountResultFragment
+>;
 
 export const AssignUsernameToAccountMutation = graphql(
   `mutation AssignUsernameToAccount($request: AssignUsernameToAccountRequest!) {
@@ -88,19 +90,19 @@ export const AssignUsernameToAccountMutation = graphql(
       ...AssignUsernameToAccountResult
     }
   }`,
-  [AssignUsernameToAccountResult],
+  [AssignUsernameToAccountResultFragment],
 );
 export type AssignUsernameToAccountRequest = RequestOf<typeof AssignUsernameToAccountMutation>;
 
-const UnassignUsernameResponse = graphql(
+const UnassignUsernameResponseFragment = graphql(
   `fragment UnassignUsernameResponse on UnassignUsernameResponse {
     __typename
     hash
   }`,
 );
-export type UnassignUsernameResponse = FragmentOf<typeof UnassignUsernameResponse>;
+export type UnassignUsernameResponse = FragmentOf<typeof UnassignUsernameResponseFragment>;
 
-const UnassignUsernameToAccountResult = graphql(
+const UnassignUsernameToAccountResultFragment = graphql(
   `fragment UnassignUsernameToAccountResult on UnassignUsernameToAccountResult {
     ...on UnassignUsernameResponse {
       ...UnassignUsernameResponse
@@ -116,13 +118,15 @@ const UnassignUsernameToAccountResult = graphql(
     }
   }`,
   [
-    SponsoredTransactionRequest,
-    SelfFundedTransactionRequest,
-    TransactionWillFail,
-    UnassignUsernameResponse,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+    UnassignUsernameResponseFragment,
   ],
 );
-export type UnassignUsernameToAccountResult = FragmentOf<typeof UnassignUsernameToAccountResult>;
+export type UnassignUsernameToAccountResult = FragmentOf<
+  typeof UnassignUsernameToAccountResultFragment
+>;
 
 export const UnassignUsernameFromAccountMutation = graphql(
   `mutation LeaveGroup($request: UnassignUsernameFromAccountRequest!) {
@@ -130,7 +134,7 @@ export const UnassignUsernameFromAccountMutation = graphql(
       ...UnassignUsernameToAccountResult
     }
   }`,
-  [UnassignUsernameToAccountResult],
+  [UnassignUsernameToAccountResultFragment],
 );
 export type UnassignUsernameFromAccountRequest = RequestOf<
   typeof UnassignUsernameFromAccountMutation
@@ -142,7 +146,7 @@ export const UsernameQuery = graphql(
       ...Username
     }
   }`,
-  [Username],
+  [UsernameFragment],
 );
 export type UsernameRequest = RequestOf<typeof UsernameQuery>;
 
@@ -158,6 +162,6 @@ export const UsernamesQuery = graphql(
       }
     }
   }`,
-  [Username, PaginatedResultInfoFragment],
+  [UsernameFragment, PaginatedResultInfoFragment],
 );
 export type UsernamesRequest = RequestOf<typeof UsernamesQuery>;

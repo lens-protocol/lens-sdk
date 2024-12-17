@@ -3,21 +3,21 @@ import {
   AccountFragment,
   GroupFragment,
   PaginatedResultInfoFragment,
-  SelfFundedTransactionRequest,
-  SponsoredTransactionRequest,
-  TransactionWillFail,
+  SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
+  TransactionWillFailFragment,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
-const CreateGroupResponse = graphql(
+const CreateGroupResponseFragment = graphql(
   `fragment CreateGroupResponse on CreateGroupResponse {
     __typename
     hash
   }`,
 );
-export type CreateGroupResponse = FragmentOf<typeof CreateGroupResponse>;
+export type CreateGroupResponse = FragmentOf<typeof CreateGroupResponseFragment>;
 
-const CreateGroupResult = graphql(
+const CreateGroupResultFragment = graphql(
   `fragment CreateGroupResult on CreateGroupResult {
     ...on CreateGroupResponse {
       ...CreateGroupResponse
@@ -29,9 +29,9 @@ const CreateGroupResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [CreateGroupResponse, SelfFundedTransactionRequest, TransactionWillFail],
+  [CreateGroupResponseFragment, SelfFundedTransactionRequestFragment, TransactionWillFailFragment],
 );
-export type CreateGroupResult = FragmentOf<typeof CreateGroupResult>;
+export type CreateGroupResult = FragmentOf<typeof CreateGroupResultFragment>;
 
 export const CreateGroupMutation = graphql(
   `mutation CreateGroup($request: CreateGroupRequest!) {
@@ -39,19 +39,19 @@ export const CreateGroupMutation = graphql(
       ...CreateGroupResult
     }
   }`,
-  [CreateGroupResult],
+  [CreateGroupResultFragment],
 );
 export type CreateGroupRequest = RequestOf<typeof CreateGroupMutation>;
 
-const JoinGroupResponse = graphql(
+const JoinGroupResponseFragment = graphql(
   `fragment JoinGroupResponse on JoinGroupResponse {
     __typename
     hash
   }`,
 );
-export type JoinGroupResponse = FragmentOf<typeof JoinGroupResponse>;
+export type JoinGroupResponse = FragmentOf<typeof JoinGroupResponseFragment>;
 
-const JoinGroupResult = graphql(
+const JoinGroupResultFragment = graphql(
   `fragment JoinGroupResult on JoinGroupResult {
     ...on JoinGroupResponse {
       ...JoinGroupResponse
@@ -67,13 +67,13 @@ const JoinGroupResult = graphql(
     }
   }`,
   [
-    SponsoredTransactionRequest,
-    SelfFundedTransactionRequest,
-    TransactionWillFail,
-    JoinGroupResponse,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+    JoinGroupResponseFragment,
   ],
 );
-export type JoinGroupResult = FragmentOf<typeof JoinGroupResult>;
+export type JoinGroupResult = FragmentOf<typeof JoinGroupResultFragment>;
 
 export const JoinGroupMutation = graphql(
   `mutation JoinGroup($request: JoinGroupRequest!) {
@@ -81,19 +81,19 @@ export const JoinGroupMutation = graphql(
       ...JoinGroupResult
     }
   }`,
-  [JoinGroupResult],
+  [JoinGroupResultFragment],
 );
 export type JoinGroupRequest = RequestOf<typeof JoinGroupMutation>;
 
-const LeaveGroupResponse = graphql(
+const LeaveGroupResponseFragment = graphql(
   `fragment LeaveGroupResponse on LeaveGroupResponse {
     __typename
     hash
   }`,
 );
-export type LeaveGroupResponse = FragmentOf<typeof LeaveGroupResponse>;
+export type LeaveGroupResponse = FragmentOf<typeof LeaveGroupResponseFragment>;
 
-const LeaveGroupResult = graphql(
+const LeaveGroupResultFragment = graphql(
   `fragment LeaveGroupResult on LeaveGroupResult {
     ...on LeaveGroupResponse {
       ...LeaveGroupResponse
@@ -109,13 +109,13 @@ const LeaveGroupResult = graphql(
     }
   }`,
   [
-    SponsoredTransactionRequest,
-    SelfFundedTransactionRequest,
-    TransactionWillFail,
-    LeaveGroupResponse,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+    LeaveGroupResponseFragment,
   ],
 );
-export type LeaveGroupResult = FragmentOf<typeof LeaveGroupResult>;
+export type LeaveGroupResult = FragmentOf<typeof LeaveGroupResultFragment>;
 
 export const LeaveGroupMutation = graphql(
   `mutation LeaveGroup($request: LeaveGroupRequest!) {
@@ -123,7 +123,7 @@ export const LeaveGroupMutation = graphql(
       ...LeaveGroupResult
     }
   }`,
-  [LeaveGroupResult],
+  [LeaveGroupResultFragment],
 );
 export type LeaveGroupRequest = RequestOf<typeof LeaveGroupMutation>;
 

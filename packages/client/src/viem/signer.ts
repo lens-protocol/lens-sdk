@@ -15,13 +15,7 @@ import type { Account, Hash, Transport, WalletClient } from 'viem';
 import { sendTransaction as sendEip1559Transaction } from 'viem/actions';
 import { sendEip712Transaction } from 'viem/zksync';
 import { SigningError, ValidationError } from '../errors';
-import {
-  type DelegableOperationHandler,
-  type OperationHandler,
-  type OperationResult,
-  type RestrictedOperationHandler,
-  isTransactionRequest,
-} from '../types';
+import { type OperationHandler, type OperationResult, isTransactionRequest } from '../types';
 
 async function sendTransaction(
   walletClient: WalletClient<Transport, chains.LensNetworkChain, Account>,
@@ -69,15 +63,9 @@ function signWith(
   );
 }
 
-export function handleWith<T extends string, E extends string>(
+export function handleWith(
   walletClient: WalletClient<Transport, chains.LensNetworkChain, Account>,
-): DelegableOperationHandler<T, E>;
-export function handleWith<E extends string>(
-  walletClient: WalletClient<Transport, chains.LensNetworkChain, Account>,
-): RestrictedOperationHandler<E>;
-export function handleWith<T extends string, E extends string>(
-  walletClient: WalletClient<Transport, chains.LensNetworkChain, Account>,
-): OperationHandler<T, E> {
+): OperationHandler {
   return <T extends string, E extends string>(
     result: OperationResult<T, E>,
   ): ResultAsync<TxHash, SigningError | ValidationError<E>> => {

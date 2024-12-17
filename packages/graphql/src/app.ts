@@ -4,9 +4,9 @@ import {
   AppFragment,
   GroupFragment,
   PaginatedResultInfoFragment,
-  SelfFundedTransactionRequest,
-  SponsoredTransactionRequest,
-  TransactionWillFail,
+  SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
+  TransactionWillFailFragment,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
@@ -139,15 +139,15 @@ export const AppServerApiKeyQuery = graphql(
 );
 export type AppServerApiKeyRequest = RequestOf<typeof AppServerApiKeyQuery>;
 
-const CreateAppResponse = graphql(
+const CreateAppResponseFragment = graphql(
   `fragment CreateAppResponse on CreateAppResponse {
     __typename
     hash
   }`,
 );
-export type CreateAppResponse = FragmentOf<typeof CreateAppResponse>;
+export type CreateAppResponse = FragmentOf<typeof CreateAppResponseFragment>;
 
-const CreateAppResult = graphql(
+const CreateAppResultFragment = graphql(
   `fragment CreateAppResult on CreateAppResult {
     ...on CreateAppResponse {
       ...CreateAppResponse
@@ -159,9 +159,9 @@ const CreateAppResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [CreateAppResponse, SelfFundedTransactionRequest, TransactionWillFail],
+  [CreateAppResponseFragment, SelfFundedTransactionRequestFragment, TransactionWillFailFragment],
 );
-export type CreateAppResult = FragmentOf<typeof CreateAppResult>;
+export type CreateAppResult = FragmentOf<typeof CreateAppResultFragment>;
 
 export const CreateAppMutation = graphql(
   `mutation CreateApp($request: CreateAppRequest!) {
@@ -169,11 +169,11 @@ export const CreateAppMutation = graphql(
       ...CreateAppResult
     }
   }`,
-  [CreateAppResult],
+  [CreateAppResultFragment],
 );
 export type CreateAppRequest = RequestOf<typeof CreateAppMutation>;
 
-const AddAppFeedsResult = graphql(
+const AddAppFeedsResultFragment = graphql(
   `fragment AddAppFeedsResult on AddAppFeedsResult {
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -185,9 +185,13 @@ const AddAppFeedsResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type AddAppFeedsResult = FragmentOf<typeof AddAppFeedsResult>;
+export type AddAppFeedsResult = FragmentOf<typeof AddAppFeedsResultFragment>;
 
 export const AddAppFeedsMutation = graphql(
   `mutation AddAppFeeds($request: AddAppFeedsRequest!) {
@@ -195,11 +199,11 @@ export const AddAppFeedsMutation = graphql(
       ...AddAppFeedsResult
     }
   }`,
-  [AddAppFeedsResult],
+  [AddAppFeedsResultFragment],
 );
 export type AddAppFeedsRequest = RequestOf<typeof AddAppFeedsMutation>;
 
-const AddAppGroupsResult = graphql(
+const AddAppGroupsResultFragment = graphql(
   `fragment AddAppGroupsResult on AddAppGroupsResult {
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -211,9 +215,13 @@ const AddAppGroupsResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type AddAppGroupsResult = FragmentOf<typeof AddAppGroupsResult>;
+export type AddAppGroupsResult = FragmentOf<typeof AddAppGroupsResultFragment>;
 
 export const AddAppGroupsMutation = graphql(
   `mutation AddAppGroups($request: AddAppGroupsRequest!) {
@@ -221,11 +229,11 @@ export const AddAppGroupsMutation = graphql(
       ...AddAppGroupsResult
     }
   }`,
-  [AddAppGroupsResult],
+  [AddAppGroupsResultFragment],
 );
 export type AddAppGroupsRequest = RequestOf<typeof AddAppGroupsMutation>;
 
-const AddAppSignersResult = graphql(
+const AddAppSignersResultFragment = graphql(
   `fragment AddAppSignersResult on AddAppSignersResult {
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -237,9 +245,13 @@ const AddAppSignersResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type AddAppSignersResult = FragmentOf<typeof AddAppSignersResult>;
+export type AddAppSignersResult = FragmentOf<typeof AddAppSignersResultFragment>;
 
 export const AddAppSignersMutation = graphql(
   `mutation AddAppSigners($request: AddAppSignersRequest!) {
@@ -247,11 +259,11 @@ export const AddAppSignersMutation = graphql(
       ...AddAppSignersResult
     }
   }`,
-  [AddAppSignersResult],
+  [AddAppSignersResultFragment],
 );
 export type AddAppSignersRequest = RequestOf<typeof AddAppSignersMutation>;
 
-const RemoveAppFeedsResult = graphql(
+const RemoveAppFeedsResultFragment = graphql(
   `fragment RemoveAppFeedsResult on RemoveAppFeedsResult {
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -263,9 +275,13 @@ const RemoveAppFeedsResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type RemoveAppFeedsResult = FragmentOf<typeof RemoveAppFeedsResult>;
+export type RemoveAppFeedsResult = FragmentOf<typeof RemoveAppFeedsResultFragment>;
 
 export const RemoveAppFeedsMutation = graphql(
   `mutation RemoveAppFeeds($request: RemoveAppFeedsRequest!) {
@@ -273,11 +289,11 @@ export const RemoveAppFeedsMutation = graphql(
       ...RemoveAppFeedsResult
     }
   }`,
-  [RemoveAppFeedsResult],
+  [RemoveAppFeedsResultFragment],
 );
 export type RemoveAppFeedsRequest = RequestOf<typeof RemoveAppFeedsMutation>;
 
-const RemoveAppGroupsResult = graphql(
+const RemoveAppGroupsResultFragment = graphql(
   `fragment RemoveAppGroupsResult on RemoveAppGroupsResult {
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -289,9 +305,13 @@ const RemoveAppGroupsResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type RemoveAppGroupsResult = FragmentOf<typeof RemoveAppGroupsResult>;
+export type RemoveAppGroupsResult = FragmentOf<typeof RemoveAppGroupsResultFragment>;
 
 export const RemoveAppGroupsMutation = graphql(
   `mutation RemoveAppGroups($request: RemoveAppGroupsRequest!) {
@@ -299,11 +319,11 @@ export const RemoveAppGroupsMutation = graphql(
       ...RemoveAppGroupsResult
     }
   }`,
-  [RemoveAppGroupsResult],
+  [RemoveAppGroupsResultFragment],
 );
 export type RemoveAppGroupsRequest = RequestOf<typeof RemoveAppGroupsMutation>;
 
-const RemoveAppSignersResult = graphql(
+const RemoveAppSignersResultFragment = graphql(
   `fragment RemoveAppSignersResult on RemoveAppSignersResult {
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -315,9 +335,13 @@ const RemoveAppSignersResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type RemoveAppSignersResult = FragmentOf<typeof RemoveAppSignersResult>;
+export type RemoveAppSignersResult = FragmentOf<typeof RemoveAppSignersResultFragment>;
 
 export const RemoveAppSignersMutation = graphql(
   `mutation RemoveAppSigners($request: RemoveAppSignersRequest!) {
@@ -325,11 +349,11 @@ export const RemoveAppSignersMutation = graphql(
       ...RemoveAppSignersResult
     }
   }`,
-  [RemoveAppSignersResult],
+  [RemoveAppSignersResultFragment],
 );
 export type RemoveAppSignersRequest = RequestOf<typeof RemoveAppSignersMutation>;
 
-const SetAppGraphResult = graphql(
+const SetAppGraphResultFragment = graphql(
   `fragment SetAppGraphResult on SetAppGraphResult {
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -341,9 +365,13 @@ const SetAppGraphResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type SetAppGraphResult = FragmentOf<typeof SetAppGraphResult>;
+export type SetAppGraphResult = FragmentOf<typeof SetAppGraphResultFragment>;
 
 export const SetAppGraphMutation = graphql(
   `mutation SetAppGraph($request: SetAppGraphRequest!) {
@@ -351,11 +379,11 @@ export const SetAppGraphMutation = graphql(
       ...SetAppGraphResult
     }
   }`,
-  [SetAppGraphResult],
+  [SetAppGraphResultFragment],
 );
 export type SetAppGraphRequest = RequestOf<typeof SetAppGraphMutation>;
 
-const SetDefaultAppFeedResult = graphql(
+const SetDefaultAppFeedResultFragment = graphql(
   `fragment SetDefaultAppFeedResult on SetDefaultAppFeedResult {
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -367,9 +395,13 @@ const SetDefaultAppFeedResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type SetDefaultAppFeedResult = FragmentOf<typeof SetDefaultAppFeedResult>;
+export type SetDefaultAppFeedResult = FragmentOf<typeof SetDefaultAppFeedResultFragment>;
 
 export const SetDefaultAppFeedMutation = graphql(
   `mutation SetDefaultAppFeed($request: SetDefaultAppFeedRequest!) {
@@ -377,11 +409,11 @@ export const SetDefaultAppFeedMutation = graphql(
       ...SetDefaultAppFeedResult
     }
   }`,
-  [SetDefaultAppFeedResult],
+  [SetDefaultAppFeedResultFragment],
 );
 export type SetDefaultAppFeedRequest = RequestOf<typeof SetDefaultAppFeedMutation>;
 
-const SetAppMetadataResult = graphql(
+const SetAppMetadataResultFragment = graphql(
   `fragment SetAppMetadataResult on SetAppMetadataResult {
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -393,9 +425,13 @@ const SetAppMetadataResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type SetAppMetadataResult = FragmentOf<typeof SetAppMetadataResult>;
+export type SetAppMetadataResult = FragmentOf<typeof SetAppMetadataResultFragment>;
 
 export const SetAppMetadataMutation = graphql(
   `mutation SetAppMetadata($request: SetAppMetadataRequest!) {
@@ -403,11 +439,11 @@ export const SetAppMetadataMutation = graphql(
       ...SetAppMetadataResult
     }
   }`,
-  [SetAppMetadataResult],
+  [SetAppMetadataResultFragment],
 );
 export type SetAppMetadataRequest = RequestOf<typeof SetAppMetadataMutation>;
 
-const SetAppVerificationResult = graphql(
+const SetAppVerificationResultFragment = graphql(
   `fragment SetAppVerificationResult on SetAppVerificationResult {
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -419,9 +455,13 @@ const SetAppVerificationResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type SetAppVerificationResult = FragmentOf<typeof SetAppVerificationResult>;
+export type SetAppVerificationResult = FragmentOf<typeof SetAppVerificationResultFragment>;
 
 export const SetAppVerificationMutation = graphql(
   `mutation SetAppVerification($request: SetAppVerificationRequest!) {
@@ -429,11 +469,11 @@ export const SetAppVerificationMutation = graphql(
       ...SetAppVerificationResult
     }
   }`,
-  [SetAppVerificationResult],
+  [SetAppVerificationResultFragment],
 );
 export type SetAppVerificationRequest = RequestOf<typeof SetAppVerificationMutation>;
 
-const SetAppSponsorshipResult = graphql(
+const SetAppSponsorshipResultFragment = graphql(
   `fragment SetAppSponsorshipResult on SetAppSponsorshipResult {
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -445,9 +485,13 @@ const SetAppSponsorshipResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type SetAppSponsorshipResult = FragmentOf<typeof SetAppSponsorshipResult>;
+export type SetAppSponsorshipResult = FragmentOf<typeof SetAppSponsorshipResultFragment>;
 
 export const SetAppSponsorshipMutation = graphql(
   `mutation SetAppSponsorship($request: SetAppSponsorshipRequest!) {
@@ -455,11 +499,11 @@ export const SetAppSponsorshipMutation = graphql(
       ...SetAppSponsorshipResult
     }
   }`,
-  [SetAppSponsorshipResult],
+  [SetAppSponsorshipResultFragment],
 );
 export type SetAppSponsorshipRequest = RequestOf<typeof SetAppSponsorshipMutation>;
 
-const SetAppTreasuryResult = graphql(
+const SetAppTreasuryResultFragment = graphql(
   `fragment SetAppTreasuryResult on SetAppTreasuryResult {
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -471,9 +515,13 @@ const SetAppTreasuryResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type SetAppTreasuryResult = FragmentOf<typeof SetAppTreasuryResult>;
+export type SetAppTreasuryResult = FragmentOf<typeof SetAppTreasuryResultFragment>;
 
 export const SetAppTreasuryMutation = graphql(
   `mutation SetAppTreasury($request: SetAppTreasuryRequest!) {
@@ -481,11 +529,11 @@ export const SetAppTreasuryMutation = graphql(
       ...SetAppTreasuryResult
     }
   }`,
-  [SetAppTreasuryResult],
+  [SetAppTreasuryResultFragment],
 );
 export type SetAppTreasuryRequest = RequestOf<typeof SetAppTreasuryMutation>;
 
-const SetAppUsernameNamespaceResult = graphql(
+const SetAppUsernameNamespaceResultFragment = graphql(
   `fragment SetAppUsernameNamespaceResult on SetAppUsernameNamespaceResult {
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -497,9 +545,15 @@ const SetAppUsernameNamespaceResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SponsoredTransactionRequest, SelfFundedTransactionRequest, TransactionWillFail],
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type SetAppUsernameNamespaceResult = FragmentOf<typeof SetAppUsernameNamespaceResult>;
+export type SetAppUsernameNamespaceResult = FragmentOf<
+  typeof SetAppUsernameNamespaceResultFragment
+>;
 
 export const SetAppUsernameNamespaceMutation = graphql(
   `mutation SetAppUsernameNamespace($request: SetAppUsernameNamespaceRequest!) {
@@ -507,6 +561,6 @@ export const SetAppUsernameNamespaceMutation = graphql(
       ...SetAppUsernameNamespaceResult
     }
   }`,
-  [SetAppUsernameNamespaceResult],
+  [SetAppUsernameNamespaceResultFragment],
 );
 export type SetAppUsernameNamespaceRequest = RequestOf<typeof SetAppUsernameNamespaceMutation>;

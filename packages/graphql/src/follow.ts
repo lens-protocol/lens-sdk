@@ -2,23 +2,23 @@ import type { FragmentOf } from 'gql.tada';
 
 import {
   AccountFragment,
-  BooleanValue,
+  BooleanValueFragment,
   PaginatedResultInfoFragment,
-  SelfFundedTransactionRequest,
-  SponsoredTransactionRequest,
-  TransactionWillFail,
+  SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
+  TransactionWillFailFragment,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
-const FollowResponse = graphql(
+const FollowResponseFragment = graphql(
   `fragment FollowResponse on FollowResponse {
     __typename
     hash
   }`,
 );
-export type FollowResponse = FragmentOf<typeof FollowResponse>;
+export type FollowResponse = FragmentOf<typeof FollowResponseFragment>;
 
-const FollowResult = graphql(
+const FollowResultFragment = graphql(
   `fragment FollowResult on FollowResult{
     ...on FollowResponse {
       ...FollowResponse
@@ -33,9 +33,14 @@ const FollowResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [FollowResponse, SelfFundedTransactionRequest, SponsoredTransactionRequest, TransactionWillFail],
+  [
+    FollowResponseFragment,
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type FollowResult = FragmentOf<typeof FollowResult>;
+export type FollowResult = FragmentOf<typeof FollowResultFragment>;
 
 export const FollowMutation = graphql(
   `mutation Follow ($request: CreateFollowRequest!) {
@@ -43,19 +48,19 @@ export const FollowMutation = graphql(
       ...FollowResult
     }
   }`,
-  [FollowResult],
+  [FollowResultFragment],
 );
 export type CreateFollowRequest = RequestOf<typeof FollowMutation>;
 
-const UnfollowResponse = graphql(
+const UnfollowResponseFragment = graphql(
   `fragment UnfollowResponse on UnfollowResponse {
     __typename
     hash
   }`,
 );
-export type UnfollowResponse = FragmentOf<typeof UnfollowResponse>;
+export type UnfollowResponse = FragmentOf<typeof UnfollowResponseFragment>;
 
-const UnfollowResult = graphql(
+const UnfollowResultFragment = graphql(
   `fragment UnfollowResult on UnfollowResult{
     ...on UnfollowResponse {
       ...UnfollowResponse
@@ -71,13 +76,13 @@ const UnfollowResult = graphql(
     }
   }`,
   [
-    UnfollowResponse,
-    SelfFundedTransactionRequest,
-    SponsoredTransactionRequest,
-    TransactionWillFail,
+    UnfollowResponseFragment,
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    TransactionWillFailFragment,
   ],
 );
-export type UnfollowResult = FragmentOf<typeof UnfollowResult>;
+export type UnfollowResult = FragmentOf<typeof UnfollowResultFragment>;
 
 export const UnfollowMutation = graphql(
   `mutation Unfollow ($request: CreateUnfollowRequest!) {
@@ -85,11 +90,11 @@ export const UnfollowMutation = graphql(
       ...UnfollowResult
     }
   }`,
-  [UnfollowResult],
+  [UnfollowResultFragment],
 );
 export type CreateUnfollowRequest = RequestOf<typeof UnfollowMutation>;
 
-const Follower = graphql(
+const FollowerFragment = graphql(
   `fragment Follower on Follower {
     __typename
     follower {
@@ -99,9 +104,9 @@ const Follower = graphql(
   }`,
   [AccountFragment],
 );
-export type Follower = FragmentOf<typeof Follower>;
+export type Follower = FragmentOf<typeof FollowerFragment>;
 
-const Following = graphql(
+const FollowingFragment = graphql(
   `fragment Following on Following {
     __typename
     following {
@@ -111,7 +116,7 @@ const Following = graphql(
   }`,
   [AccountFragment],
 );
-export type Following = FragmentOf<typeof Following>;
+export type Following = FragmentOf<typeof FollowingFragment>;
 
 export const FollowersQuery = graphql(
   `query Followers ($request: FollowersRequest!) {
@@ -125,7 +130,7 @@ export const FollowersQuery = graphql(
       }
     }
   }`,
-  [Follower, PaginatedResultInfoFragment],
+  [FollowerFragment, PaginatedResultInfoFragment],
 );
 export type FollowersRequest = RequestOf<typeof FollowersQuery>;
 
@@ -141,7 +146,7 @@ export const FollowingQuery = graphql(
       }
     }
   }`,
-  [Following, PaginatedResultInfoFragment],
+  [FollowingFragment, PaginatedResultInfoFragment],
 );
 export type FollowingRequest = RequestOf<typeof FollowingQuery>;
 
@@ -157,11 +162,11 @@ export const FollowersYouKnowQuery = graphql(
       }
     }
   }`,
-  [Follower, PaginatedResultInfoFragment],
+  [FollowerFragment, PaginatedResultInfoFragment],
 );
 export type FollowersYouKnowRequest = RequestOf<typeof FollowersYouKnowQuery>;
 
-const FollowStatusResult = graphql(
+const FollowStatusResultFragment = graphql(
   `fragment FollowStatusResult on FollowStatusResult {
     __typename
     graph
@@ -171,9 +176,9 @@ const FollowStatusResult = graphql(
       ...BooleanValue
     }
   }`,
-  [BooleanValue],
+  [BooleanValueFragment],
 );
-export type FollowStatusResult = FragmentOf<typeof FollowStatusResult>;
+export type FollowStatusResult = FragmentOf<typeof FollowStatusResultFragment>;
 
 export const FollowStatusQuery = graphql(
   `query FollowStatus ($request: FollowStatusRequest!) {
@@ -181,6 +186,6 @@ export const FollowStatusQuery = graphql(
       ...FollowStatusResult
     }
   }`,
-  [FollowStatusResult],
+  [FollowStatusResultFragment],
 );
 export type FollowStatusRequest = RequestOf<typeof FollowStatusQuery>;
