@@ -1,13 +1,13 @@
 import type { FragmentOf } from 'gql.tada';
 
 import {
-  SelfFundedTransactionRequest,
-  SponsoredTransactionRequest,
-  TransactionWillFail,
+  SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
+  TransactionWillFailFragment,
 } from '../fragments';
 import { graphql } from '../graphql';
 
-const EnableSignlessResult = graphql(
+const EnableSignlessResultFragment = graphql(
   `fragment EnableSignlessResult on EnableSignlessResult{
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -19,9 +19,13 @@ const EnableSignlessResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SelfFundedTransactionRequest, SponsoredTransactionRequest, TransactionWillFail],
+  [
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type EnableSignlessResult = FragmentOf<typeof EnableSignlessResult>;
+export type EnableSignlessResult = FragmentOf<typeof EnableSignlessResultFragment>;
 
 export const EnableSignlessMutation = graphql(
   `mutation EnableSignless {
@@ -29,10 +33,10 @@ export const EnableSignlessMutation = graphql(
       ...EnableSignlessResult
     }
   }`,
-  [EnableSignlessResult],
+  [EnableSignlessResultFragment],
 );
 
-const RemoveSignlessResult = graphql(
+const RemoveSignlessResultFragment = graphql(
   `fragment RemoveSignlessResult on RemoveSignlessResult{
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -44,9 +48,13 @@ const RemoveSignlessResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SelfFundedTransactionRequest, SponsoredTransactionRequest, TransactionWillFail],
+  [
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type RemoveSignlessResult = FragmentOf<typeof RemoveSignlessResult>;
+export type RemoveSignlessResult = FragmentOf<typeof RemoveSignlessResultFragment>;
 
 export const RemoveSignlessMutation = graphql(
   `mutation RemoveSignless {
@@ -54,5 +62,5 @@ export const RemoveSignlessMutation = graphql(
       ...RemoveSignlessResult
     }
   }`,
-  [RemoveSignlessResult],
+  [RemoveSignlessResultFragment],
 );

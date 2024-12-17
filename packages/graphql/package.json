@@ -32,7 +32,9 @@
     "gql:genereate:cache": "gql.tada generate turbo",
     "gql:download:local": "gql-tada generate schema 'http://localhost:3000/graphql' --output './schema.graphql'",
     "gql:download:staging": "gql-tada generate schema 'https://api.staging.lens.dev/graphql' --output './schema.graphql'",
-    "gql:generate": "gql-tada generate output"
+    "gql:generate": "gql-tada generate output",
+    "gql:turbo": "gql-tada turbo",
+    "prebuild": "pnpm run gql:turbo"
   },
   "dependencies": {
     "@lens-protocol/types": "workspace:*",

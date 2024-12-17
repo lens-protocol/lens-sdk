@@ -2,9 +2,9 @@ import type { FragmentOf } from 'gql.tada';
 import {
   AccountManagerFragment,
   PaginatedResultInfoFragment,
-  SelfFundedTransactionRequest,
-  SponsoredTransactionRequest,
-  TransactionWillFail,
+  SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
+  TransactionWillFailFragment,
 } from '../fragments';
 import { type RequestOf, graphql } from '../graphql';
 
@@ -24,7 +24,7 @@ export const AccountManagersQuery = graphql(
 
 export type AccountManagersRequest = RequestOf<typeof AccountManagersQuery>;
 
-const AddAccountManagerResult = graphql(
+const AddAccountManagerResultFragment = graphql(
   `fragment AddAccountManagerResult on AddAccountManagerResult{
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -36,9 +36,13 @@ const AddAccountManagerResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SelfFundedTransactionRequest, SponsoredTransactionRequest, TransactionWillFail],
+  [
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type AddAccountManagerResult = FragmentOf<typeof AddAccountManagerResult>;
+export type AddAccountManagerResult = FragmentOf<typeof AddAccountManagerResultFragment>;
 
 export const AddAccountManagerMutation = graphql(
   `mutation AddAccountManager($request: AddAccountManagerRequest!) {
@@ -46,11 +50,11 @@ export const AddAccountManagerMutation = graphql(
       ...AddAccountManagerResult
     }
   }`,
-  [AddAccountManagerResult],
+  [AddAccountManagerResultFragment],
 );
 export type AddAccountManagerRequest = RequestOf<typeof AddAccountManagerMutation>;
 
-const RemoveAccountManagerResult = graphql(
+const RemoveAccountManagerResultFragment = graphql(
   `fragment RemoveAccountManagerResult on RemoveAccountManagerResult{
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -62,9 +66,13 @@ const RemoveAccountManagerResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SelfFundedTransactionRequest, SponsoredTransactionRequest, TransactionWillFail],
+  [
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type RemoveAccountManagerResult = FragmentOf<typeof RemoveAccountManagerResult>;
+export type RemoveAccountManagerResult = FragmentOf<typeof RemoveAccountManagerResultFragment>;
 
 export const RemoveAccountManagerMutation = graphql(
   `mutation RemoveAccountManager($request: RemoveAccountManagerRequest!) {
@@ -72,11 +80,11 @@ export const RemoveAccountManagerMutation = graphql(
       ...RemoveAccountManagerResult
     }
   }`,
-  [RemoveAccountManagerResult],
+  [RemoveAccountManagerResultFragment],
 );
 export type RemoveAccountManagerRequest = RequestOf<typeof RemoveAccountManagerMutation>;
 
-const UpdateAccountManagerResult = graphql(
+const UpdateAccountManagerResultFragment = graphql(
   `fragment UpdateAccountManagerResult on UpdateAccountManagerResult{
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -88,9 +96,13 @@ const UpdateAccountManagerResult = graphql(
       ...TransactionWillFail
     }
   }`,
-  [SelfFundedTransactionRequest, SponsoredTransactionRequest, TransactionWillFail],
+  [
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
 );
-export type UpdateAccountManagerResult = FragmentOf<typeof UpdateAccountManagerResult>;
+export type UpdateAccountManagerResult = FragmentOf<typeof UpdateAccountManagerResultFragment>;
 
 export const UpdateAccountManagerMutation = graphql(
   `mutation RemoveAccountManager($request: UpdateAccountManagerRequest!) {
@@ -98,7 +110,7 @@ export const UpdateAccountManagerMutation = graphql(
       ...UpdateAccountManagerResult
     }
   }`,
-  [UpdateAccountManagerResult],
+  [UpdateAccountManagerResultFragment],
 );
 export type UpdateAccountManagerRequest = RequestOf<typeof UpdateAccountManagerMutation>;
 

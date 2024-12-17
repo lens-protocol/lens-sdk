@@ -1,40 +1,40 @@
 import type { FragmentOf } from 'gql.tada';
 import { type RequestOf, graphql } from './graphql';
 
-export const PendingTransactionStatus = graphql(
+const PendingTransactionStatusFragment = graphql(
   `fragment PendingTransactionStatus on PendingTransactionStatus {
     __typename
     blockTimestamp
   }`,
 );
-export type PendingTransactionStatus = FragmentOf<typeof PendingTransactionStatus>;
+export type PendingTransactionStatus = FragmentOf<typeof PendingTransactionStatusFragment>;
 
-export const FinishedTransactionStatus = graphql(
+const FinishedTransactionStatusFragment = graphql(
   `fragment FinishedTransactionStatus on FinishedTransactionStatus {
     __typename
     blockTimestamp
   }`,
 );
-export type FinishedTransactionStatus = FragmentOf<typeof FinishedTransactionStatus>;
+export type FinishedTransactionStatus = FragmentOf<typeof FinishedTransactionStatusFragment>;
 
-export const FailedTransactionStatus = graphql(
+const FailedTransactionStatusFragment = graphql(
   `fragment FailedTransactionStatus on FailedTransactionStatus {
     __typename
     blockTimestamp
     reason
   }`,
 );
-export type FailedTransactionStatus = FragmentOf<typeof FailedTransactionStatus>;
+export type FailedTransactionStatus = FragmentOf<typeof FailedTransactionStatusFragment>;
 
-export const NotIndexedYetStatus = graphql(
+const NotIndexedYetStatusFragment = graphql(
   `fragment NotIndexedYetStatus on NotIndexedYetStatus {
     __typename
     reason
   }`,
 );
-export type NotIndexedYetStatus = FragmentOf<typeof NotIndexedYetStatus>;
+export type NotIndexedYetStatus = FragmentOf<typeof NotIndexedYetStatusFragment>;
 
-export const TransactionStatusResult = graphql(
+const TransactionStatusResultFragment = graphql(
   `fragment TransactionStatusResult on TransactionStatusResult {
     ...on PendingTransactionStatus {
       ...PendingTransactionStatus
@@ -50,13 +50,13 @@ export const TransactionStatusResult = graphql(
     }
   }`,
   [
-    PendingTransactionStatus,
-    FinishedTransactionStatus,
-    FailedTransactionStatus,
-    NotIndexedYetStatus,
+    PendingTransactionStatusFragment,
+    FinishedTransactionStatusFragment,
+    FailedTransactionStatusFragment,
+    NotIndexedYetStatusFragment,
   ],
 );
-export type TransactionStatusResult = FragmentOf<typeof TransactionStatusResult>;
+export type TransactionStatusResult = FragmentOf<typeof TransactionStatusResultFragment>;
 
 export const TransactionStatusQuery = graphql(
   `query TransactionStatus($request: TransactionStatusRequest!) {
@@ -64,7 +64,7 @@ export const TransactionStatusQuery = graphql(
       ...TransactionStatusResult
     }
   }`,
-  [TransactionStatusResult],
+  [TransactionStatusResultFragment],
 );
 
 export type TransactionStatusRequest = RequestOf<typeof TransactionStatusQuery>;

@@ -1,7 +1,7 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
 
-const Eip712TransactionRequest = graphql(
+const Eip712TransactionRequestFragment = graphql(
   `fragment Eip712TransactionRequest on Eip712TransactionRequest {
     __typename
     type
@@ -25,9 +25,9 @@ const Eip712TransactionRequest = graphql(
     }
   }`,
 );
-export type Eip712TransactionRequest = FragmentOf<typeof Eip712TransactionRequest>;
+export type Eip712TransactionRequest = FragmentOf<typeof Eip712TransactionRequestFragment>;
 
-export const SponsoredTransactionRequest = graphql(
+export const SponsoredTransactionRequestFragment = graphql(
   `fragment SponsoredTransactionRequest on SponsoredTransactionRequest {
     __typename
     reason
@@ -36,6 +36,6 @@ export const SponsoredTransactionRequest = graphql(
       ...Eip712TransactionRequest
     }
   }`,
-  [Eip712TransactionRequest],
+  [Eip712TransactionRequestFragment],
 );
-export type SponsoredTransactionRequest = FragmentOf<typeof SponsoredTransactionRequest>;
+export type SponsoredTransactionRequest = FragmentOf<typeof SponsoredTransactionRequestFragment>;

@@ -127,7 +127,7 @@ export function legacyRolloverRefresh(
  * Switch to account managed.
  *
  * ```ts
- * const result = await switchAccount(sessionClient{
+ * const result = await switchAccount(sessionClient, {
  *   account: evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3'),
  * });
  * ```
@@ -140,5 +140,5 @@ export function switchAccount(
   client: SessionClient,
   request: SwitchAccountRequest,
 ): ResultAsync<SwitchAccountResult, UnauthenticatedError | UnexpectedError> {
-  return client.query(SwitchAccountMutation, { request });
+  return client.mutation(SwitchAccountMutation, { request });
 }
