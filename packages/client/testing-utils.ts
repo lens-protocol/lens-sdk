@@ -48,3 +48,20 @@ export function signerWallet(): WalletClient<Transport, chains.LensNetworkChain,
     transport: http(),
   });
 }
+
+// biome-ignore lint/complexity/noStaticOnlyClass: simplicity
+export class TestLock {
+  private static locks = new Map<string, boolean>();
+
+  static async acquire(identifier: string) {
+    while (TestLock.locks.get(identifier)) {
+      // Wait if lock is already held
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    TestLock.locks.set(identifier, true); // Acquire lock
+  }
+
+  static release(identifier: string) {
+    TestLock.locks.delete(identifier); // Release lock
+  }
+}

@@ -21,6 +21,11 @@
       "require": "./dist/actions/index.cjs",
       "types": "./dist/actions/index.d.cts"
     },
+    "./ethers": {
+      "import": "./dist/ethers/index.js",
+      "require": "./dist/ethers/index.cjs",
+      "types": "./dist/ethers/index.d.cts"
+    },
     "./viem": {
       "import": "./dist/viem/index.js",
       "require": "./dist/viem/index.cjs",
@@ -30,6 +35,7 @@
   "typesVersions": {
     "*": {
       "actions": ["./dist/actions/index.d.ts"],
+      "ethers": ["./dist/ethers/index.d.ts"],
       "viem": ["./dist/viem/index.d.ts"]
     }
   },
@@ -51,22 +57,32 @@
   },
   "peerDependencies": {
     "@lens-network/sdk": "canary",
-    "viem": "^2.21.53"
+    "ethers": "^6.13.4",
+    "viem": "^2.21.53",
+    "zksync-ethers": "^6.15.3"
   },
   "peerDependenciesMeta": {
     "@lens-network/sdk": {
       "optional": true
     },
+    "ethers": {
+      "optional": true
+    },
     "viem": {
+      "optional": true
+    },
+    "zksync-ethers": {
       "optional": true
     }
   },
   "devDependencies": {
     "@lens-network/sdk": "canary",
     "@lens-protocol/metadata": "next",
+    "ethers": "^6.13.4",
     "tsup": "^8.3.5",
     "typescript": "^5.6.3",
     "viem": "^2.21.53",
+    "zksync-ethers": "^6.15.3",
     "zod": "^3.23.8"
   },
   "license": "MIT"
