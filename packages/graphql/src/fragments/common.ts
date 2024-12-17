@@ -19,13 +19,6 @@ export const NetworkAddress = graphql(
 );
 export type NetworkAddress = FragmentOf<typeof NetworkAddress>;
 
-/**
- * A value that can be in three statuses: YES, NO, or UNKNOWN.
- *
- * UNKNOWN implies that it was not possible to determine the value.
- */
-export type TriStateValue = ReturnType<typeof graphql.scalar<'TriStateValue'>>;
-
 export const Erc20 = graphql(
   `fragment Erc20 on Erc20 {
     __typename
