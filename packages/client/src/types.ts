@@ -51,6 +51,7 @@ export type DelegableOperationHandler<T extends string, E extends string> = (
   result: DelegableOperationResult<T, E>,
 ) => ResultAsync<TxHash, SigningError | ValidationError<E>>;
 
-export type OperationHandler<T extends string, E extends string> =
-  | RestrictedOperationHandler<E>
-  | DelegableOperationHandler<T, E>;
+export type OperationHandler<
+  T extends string = string,
+  E extends string = string,
+> = T extends string ? DelegableOperationHandler<T, E> : RestrictedOperationHandler<E>;
