@@ -3,6 +3,7 @@ import { assertOk, never } from '@lens-protocol/types';
 import { describe, expect, it } from 'vitest';
 
 import { type Account, Role } from '@lens-protocol/graphql';
+import { uri } from '@lens-protocol/types';
 import { loginAsOnboardingUser, signer, signerWallet } from '../../testing-utils';
 import { handleWith } from '../viem';
 import { createAccountWithUsername, fetchAccount } from './account';
@@ -24,15 +25,13 @@ describe('Given an onboarding user', () => {
           // Create an account with username
           createAccountWithUsername(sessionClient, {
             username: { localName: `testname${Date.now()}` },
-            metadataUri: `data:application/json,${JSON.stringify(metadata)}`,
+            metadataUri: uri(`data:application/json,${JSON.stringify(metadata)}`),
           })
             // Sign if necessary
-            // biome-ignore lint/suspicious/noExplicitAny: temporary
-            .andThen(handleWith(walletClient) as any)
+            .andThen(handleWith(walletClient))
 
             // Wait for the transaction to be mined
-            // biome-ignore lint/suspicious/noExplicitAny: temporary
-            .andThen(sessionClient.waitForTransaction as any)
+            .andThen(sessionClient.waitForTransaction)
 
             // Fetch the account
             .andThen((txHash) => fetchAccount(sessionClient, { txHash }))
@@ -42,7 +41,11 @@ describe('Given an onboarding user', () => {
             })
 
             // Switch to the newly created account
-            .andThen((account) => sessionClient.switchAccount({ account: account?.address })),
+            .andThen((account) =>
+              sessionClient.switchAccount({
+                account: account?.address ?? never('Account not found'),
+              }),
+            ),
         )
         .match(
           (value) => value,
