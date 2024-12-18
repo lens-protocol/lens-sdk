@@ -36,9 +36,7 @@ describe('Given an integration with viem', { timeout: 10000 }, () => {
       const result = await post(sessionClient, {
         contentUri: uri('https://devnet.irys.xyz/3n3Ujg3jPBHX58MPPqYXBSQtPhTgrcTk4RedJgV1Ejhb'),
       })
-        .andTee(console.log)
         .andThen(handleWith(walletClient))
-        .andTee(console.log)
         .andThen(sessionClient.waitForTransaction);
 
       expect(result.isOk(), result.isErr() ? result.error.message : undefined).toBe(true);
