@@ -11,7 +11,13 @@ import { type Address, createWalletClient, custom } from 'viem';
 const chain = chains.testnet;
 
 // hoist account
-const [address] = (await window.ethereum!.request({ method: 'eth_requestAccounts' })) as [Address];
+let address: Address;
+try {
+  [address] = (await window.ethereum!.request({ method: 'eth_requestAccounts' })) as [Address];
+} catch (error) {
+  console.error('Failed to get account:', error);
+  throw error;
+}
 
 const walletClient = createWalletClient({
   account: address,
