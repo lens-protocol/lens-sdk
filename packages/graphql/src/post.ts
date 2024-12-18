@@ -84,6 +84,21 @@ export const PostQuery = graphql(
 );
 export type PostRequest = RequestOf<typeof PostQuery>;
 
+export const PostsQuery = graphql(
+  `query Posts($request: PostsRequest!) {
+    value: posts(request: $request) {
+      items {
+        ...AnyPost
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [AnyPostFragment, PaginatedResultInfoFragment],
+);
+export type PostsRequest = RequestOf<typeof PostsQuery>;
+
 export const PostActionsQuery = graphql(
   `query PostActions($request: PostActionsRequest!) {
     value: postActions(request: $request) {
