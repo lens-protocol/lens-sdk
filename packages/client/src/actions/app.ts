@@ -6,9 +6,19 @@ import type {
   AddAppSignersRequest,
   AddAppSignersResult,
   App,
+  AppFeed,
+  AppFeedsRequest,
+  AppGroupsRequest,
   AppRequest,
+  AppSigner,
+  AppSignersRequest,
+  AppUser,
+  AppUsersRequest,
+  AppsRequest,
   CreateAppRequest,
   CreateAppResult,
+  Group,
+  Paginated,
   RemoveAppFeedsRequest,
   RemoveAppFeedsResult,
   RemoveAppGroupsRequest,
@@ -34,7 +44,12 @@ import {
   AddAppFeedsMutation,
   AddAppGroupsMutation,
   AddAppSignersMutation,
+  AppFeedsQuery,
+  AppGroupsQuery,
   AppQuery,
+  AppSignersQuery,
+  AppUsersQuery,
+  AppsQuery,
   CreateAppMutation,
   RemoveAppFeedsMutation,
   RemoveAppGroupsMutation,
@@ -49,6 +64,7 @@ import {
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
+import type {} from '@lens-protocol/graphql';
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
@@ -72,6 +88,110 @@ export function fetchApp(
   request: AppRequest,
 ): ResultAsync<App | null, UnexpectedError> {
   return client.query(AppQuery, { request });
+}
+
+/**
+ * Fetch Apps.
+ *
+ * ```ts
+ * const result = await fetchApps(anyClient, {
+ *   filter: {
+ *     managedBy: {
+ *       address: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5')
+ *     }
+ *   },
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of Apps or empty if it does not exist.
+ */
+export function fetchApps(
+  client: AnyClient,
+  request: AppsRequest,
+): ResultAsync<Paginated<App> | null, UnexpectedError> {
+  return client.query(AppsQuery, { request });
+}
+
+/**
+ * Fetch Groups linked to an App.
+ *
+ * ```ts
+ * const result = await fetchAppGroups(anyClient, {
+ *   app: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5')
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of groups for an App or empty if it does not exist.
+ */
+export function fetchAppGroups(
+  client: AnyClient,
+  request: AppGroupsRequest,
+): ResultAsync<Paginated<Group> | null, UnexpectedError> {
+  return client.query(AppGroupsQuery, { request });
+}
+
+/**
+ * Fetch Feeds linked to an App.
+ *
+ * ```ts
+ * const result = await fetchAppFeeds(anyClient, {
+ *   app: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5')
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of feeds for an App or empty if it does not exist.
+ */
+export function fetchAppFeeds(
+  client: AnyClient,
+  request: AppFeedsRequest,
+): ResultAsync<Paginated<AppFeed> | null, UnexpectedError> {
+  return client.query(AppFeedsQuery, { request });
+}
+
+/**
+ * Fetch Signers linked to an App.
+ *
+ * ```ts
+ * const result = await fetchAppSigners(anyClient, {
+ *   app: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5')
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of signers for an App or empty if it does not exist.
+ */
+export function fetchAppSigners(
+  client: AnyClient,
+  request: AppSignersRequest,
+): ResultAsync<Paginated<AppSigner> | null, UnexpectedError> {
+  return client.query(AppSignersQuery, { request });
+}
+
+/**
+ * Fetch users using an App.
+ *
+ * ```ts
+ * const result = await fetchAppUsers(anyClient, {
+ *   app: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5')
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of users for an App or empty if it does not exist.
+ */
+export function fetchAppUsers(
+  client: AnyClient,
+  request: AppUsersRequest,
+): ResultAsync<Paginated<AppUser> | null, UnexpectedError> {
+  return client.query(AppUsersQuery, { request });
 }
 
 /**
