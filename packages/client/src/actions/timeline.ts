@@ -1,6 +1,6 @@
 import type {
+  AnyPost,
   Paginated,
-  Post,
   TimelineHighlightsRequest,
   TimelineItem,
   TimelineRequest,
@@ -47,6 +47,6 @@ export function fetchTimeline(
 export function fetchTimelineHighlights(
   client: AnyClient,
   request: TimelineHighlightsRequest,
-): ResultAsync<Paginated<Post> | null, UnexpectedError> {
+): ResultAsync<Paginated<AnyPost>, UnexpectedError> {
   return client.query(TimelineHighlightsQuery, { request });
 }

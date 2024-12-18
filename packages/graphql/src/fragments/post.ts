@@ -177,13 +177,6 @@ export const LoggedInPostOperationsFragment = graphql(
 );
 export type LoggedInPostOperations = FragmentOf<typeof LoggedInPostOperationsFragment>;
 
-export const PostReferenceFragment = graphql(
-  `fragment PostReference on PostReference {
-    id
-  }`,
-);
-export type PostReference = FragmentOf<typeof PostReferenceFragment>;
-
 export const ReferencedPostFragment = graphql(
   `fragment ReferencedPost on Post {
     __typename
@@ -219,19 +212,6 @@ export const ReferencedPostFragment = graphql(
   ],
 );
 
-export const NestedPostFragment = graphql(
-  `fragment NestedPost on NestedPost {
-    ...on Post {
-      ...ReferencedPost
-    }
-    ...on PostReference {
-      ...PostReference
-    }
-  }`,
-  [PostReferenceFragment, ReferencedPostFragment],
-);
-export type NestedPost = FragmentOf<typeof NestedPostFragment>;
-
 export const PostFragment = graphql(
   `fragment Post on Post {
     __typename
@@ -250,13 +230,13 @@ export const PostFragment = graphql(
       ...PostMetadata
     }
     root {
-      ...NestedPost
+      ...ReferencedPost
     }
     quoteOf {
-      ...NestedPost
+      ...ReferencedPost
     }
     commentOn {
-      ...NestedPost
+      ...ReferencedPost
     }
     actions {
       ...PostAction
@@ -272,7 +252,7 @@ export const PostFragment = graphql(
     FeedFragment,
     PostMetadataFragment,
     PostActionFragment,
-    NestedPostFragment,
+    ReferencedPostFragment,
     LoggedInPostOperationsFragment,
   ],
 );
