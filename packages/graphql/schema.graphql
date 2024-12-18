@@ -2222,18 +2222,31 @@ type GroupGatedFeedRule {
   group: Group!
 }
 
+type GroupMember {
+  account: Account!
+  lastActiveAt: DateTime!
+  joinedAt: DateTime!
+}
+
+input GroupMembersFilterRequest {
+  """The optional filter to narrow members by search query."""
+  searchBy: UsernameSearchInput
+}
+
 enum GroupMembersOrderBy {
   LAST_JOINED
   FIRST_JOINED
+  LAST_ACTIVE
   ACCOUNT_SCORE
 }
 
 input GroupMembersRequest {
   """The group"""
   group: EvmAddress!
+  filter: GroupMembersFilterRequest
 
   """The order by."""
-  orderBy: GroupMembersOrderBy! = LAST_JOINED
+  orderBy: GroupMembersOrderBy! = ACCOUNT_SCORE
 
   """The page size."""
   pageSize: PageSize! = FIFTY
@@ -3672,8 +3685,6 @@ type NamespacesResult {
   pageInfo: PaginatedResultInfo!
 }
 
-union NestedPost = Post | PostReference
-
 type NetworkAddress {
   address: EvmAddress!
   chainId: Int!
@@ -3868,6 +3879,11 @@ type PaginatedGraphsResult {
   pageInfo: PaginatedResultInfo!
 }
 
+type PaginatedGroupMembersResult {
+  items: [GroupMember!]!
+  pageInfo: PaginatedResultInfo!
+}
+
 type PaginatedGroupsResult {
   """The groups"""
   items: [Group!]!
@@ -3975,9 +3991,9 @@ type Post {
   timestamp: DateTime!
   app: App
   metadata: PostMetadata!
-  root: NestedPost
-  quoteOf: NestedPost
-  commentOn: NestedPost
+  root: Post
+  quoteOf: Post
+  commentOn: Post
   actions: [PostAction!]!
   operations: LoggedInPostOperations
   stats: PostStats!
@@ -4111,10 +4127,6 @@ input PostReactionsRequest {
   orderBy: PostReactionOrderBy
   pageSize: PageSize! = FIFTY
   cursor: Cursor
-}
-
-type PostReference {
-  id: PostId!
 }
 
 enum PostReferenceType {
@@ -4382,7 +4394,7 @@ type Query {
   groups(request: GroupsRequest!): PaginatedGroupsResult!
 
   """Get the members of the group"""
-  groupMembers(request: GroupMembersRequest!): PaginatedAccountsResult!
+  groupMembers(request: GroupMembersRequest!): PaginatedGroupMembersResult!
 
   """Get the number of members in a Group"""
   groupStats(request: GroupStatsRequest!): GroupStatsResponse!
