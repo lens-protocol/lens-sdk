@@ -1,7 +1,7 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
+import { OperationValidationOutcomeFragment } from './common';
 import { MetadataAttributeFragment } from './metadata';
-import { OperationValidationOutcomeFragment } from './operationValidationOutcome';
 import { UsernameFragment } from './username';
 
 // TODO: add canFollow and canUnfollow after implementing OperationValidationOutcome

@@ -2,7 +2,6 @@ export * from './account';
 export * from './common';
 export * from './media';
 export * from './metadata';
-export * from './operationValidationOutcome';
 export * from './pagination';
 export * from './post';
 export * from './primitives';
