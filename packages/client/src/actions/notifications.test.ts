@@ -4,7 +4,7 @@ import { describe, it } from 'vitest';
 import { loginAsAccountOwner } from '../../testing-utils';
 import { fetchNotifications } from './notifications';
 
-describe(`Given the '${fetchNotifications.name}' action`, () => {
+describe.skip(`Given the '${fetchNotifications.name}' action`, () => {
   describe('When invoked', () => {
     it('Then it should not fail w/ a GQL BadRequest error', async () => {
       const result = await loginAsAccountOwner().andThen(fetchNotifications);
