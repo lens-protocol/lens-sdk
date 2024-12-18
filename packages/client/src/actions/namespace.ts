@@ -1,15 +1,15 @@
 import type {
   CreateUsernameNamespaceRequest,
   CreateUsernameNamespaceResult,
+  NamespaceRequest,
   NamespacesRequest,
   Paginated,
   UsernameNamespace,
-  UsernameNamespaceRequest,
 } from '@lens-protocol/graphql';
 import {
   CreateUsernameNamespaceMutation,
+  NamespaceQuery,
   NamespacesQuery,
-  UsernameNamespaceQuery,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
@@ -38,10 +38,10 @@ export function createUsernameNamespace(
 }
 
 /**
- * Fetch a UsernameNamespace.
+ * Fetch a Namespace.
  *
  * ```ts
- * const result = await fetchUsernameNamespace(anyClient, {
+ * const result = await fetchNamespace(anyClient, {
  *   namespace: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
  * });
  * ```
@@ -50,11 +50,11 @@ export function createUsernameNamespace(
  * @param request - The query request.
  * @returns The UsernameNamespace or `null` if it does not exist.
  */
-export function fetchUsernameNamespace(
+export function fetchNamespace(
   client: AnyClient,
-  request: UsernameNamespaceRequest,
+  request: NamespaceRequest,
 ): ResultAsync<UsernameNamespace | null, UnexpectedError> {
-  return client.query(UsernameNamespaceQuery, { request });
+  return client.query(NamespaceQuery, { request });
 }
 
 /**
