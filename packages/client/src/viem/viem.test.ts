@@ -1,12 +1,11 @@
 import { testnet } from '@lens-protocol/env';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { chains } from '@lens-network/sdk/viem';
 import { evmAddress, uri } from '@lens-protocol/types';
 import { http, createWalletClient } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { handleWith } from '.';
-import { TestLock } from '../../testing-utils';
 import { post } from '../actions/post';
 import { PublicClient } from '../clients';
 
@@ -25,15 +24,7 @@ const publicClient = PublicClient.create({
   origin: 'http://example.com',
 });
 
-describe('Given an integration with viem', () => {
-  beforeAll(async () => {
-    await TestLock.acquire('post');
-  });
-
-  afterAll(() => {
-    TestLock.release('post');
-  });
-
+describe('Given an integration with viem', { timeout: 10000 }, () => {
   describe('When handling transaction actions', () => {
     it('Then it should be possible to chain them with other helpers', async () => {
       const authenticated = await publicClient.login({
@@ -45,7 +36,9 @@ describe('Given an integration with viem', () => {
       const result = await post(sessionClient, {
         contentUri: uri('https://devnet.irys.xyz/3n3Ujg3jPBHX58MPPqYXBSQtPhTgrcTk4RedJgV1Ejhb'),
       })
+        .andTee(console.log)
         .andThen(handleWith(walletClient))
+        .andTee(console.log)
         .andThen(sessionClient.waitForTransaction);
 
       expect(result.isOk(), result.isErr() ? result.error.message : undefined).toBe(true);

@@ -20,7 +20,7 @@
     "test:client": "vitest --project @lens-protocol/client",
     "test:react": "vitest --project @lens-protocol/react",
     "test:storage": "vitest --project @lens-protocol/storage",
-    "test": "vitest"
+    "test": "vitest --no-file-parallelism"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
