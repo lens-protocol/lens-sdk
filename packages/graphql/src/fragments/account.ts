@@ -1,6 +1,7 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
 import { MetadataAttributeFragment } from './metadata';
+import { OperationValidationOutcomeFragment } from './operationValidationOutcome';
 import { UsernameFragment } from './username';
 
 // TODO: add canFollow and canUnfollow after implementing OperationValidationOutcome
@@ -10,6 +11,12 @@ export const LoggedInAccountOperationsFragment = graphql(
     id
     isFollowedByMe
     isFollowingMe
+    canFollow {
+      ...OperationValidationOutcome
+    }
+    canUnfollow {
+      ...OperationValidationOutcome
+    }
     isMutedByMe
     isBlockedByMe
     hasBlockedMe
@@ -17,6 +24,7 @@ export const LoggedInAccountOperationsFragment = graphql(
     canUnblock
     hasReported
   }`,
+  [OperationValidationOutcomeFragment],
 );
 export type LoggedInAccountOperations = FragmentOf<typeof LoggedInAccountOperationsFragment>;
 

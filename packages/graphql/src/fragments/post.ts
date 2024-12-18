@@ -23,6 +23,7 @@ import {
   TransactionMetadataFragment,
   VideoMetadataFragment,
 } from './metadata';
+import { OperationValidationOutcomeFragment } from './operationValidationOutcome';
 import { AppFragment, FeedFragment } from './primitives';
 
 export const RecipientDataOutputFragment = graphql(
@@ -159,6 +160,21 @@ export const LoggedInPostOperationsFragment = graphql(
     isNotInterested
     hasBookmarked
     hasReported
+    canEdit{
+      ...OperationValidationOutcome
+    }
+    canDelete{
+      ...OperationValidationOutcome
+    }
+    canComment{
+      ...OperationValidationOutcome
+    }
+    canQuote{
+      ...OperationValidationOutcome
+    }
+    canRepost{
+      ...OperationValidationOutcome
+    }
     hasUpvoted: hasReacted(request: { type: UPVOTE })
     hasDownvoted: hasReacted(request: { type: DOWNVOTE })
     hasCommented {
@@ -171,7 +187,7 @@ export const LoggedInPostOperationsFragment = graphql(
       ...BooleanValue
     }
   }`,
-  [BooleanValueFragment],
+  [BooleanValueFragment, OperationValidationOutcomeFragment],
 );
 export type LoggedInPostOperations = FragmentOf<typeof LoggedInPostOperationsFragment>;
 
