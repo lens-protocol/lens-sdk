@@ -30,9 +30,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build
-        run: |
-          pnpm --filter graphql run gql:generate:cache
-          pnpm build
+        run: pnpm build
 
       - name: Setup Environment Variables
         shell: bash
