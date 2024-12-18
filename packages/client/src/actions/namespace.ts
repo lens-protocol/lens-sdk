@@ -1,15 +1,15 @@
 import type {
   CreateUsernameNamespaceRequest,
   CreateUsernameNamespaceResult,
+  NamespaceRequest,
   NamespacesRequest,
   Paginated,
   UsernameNamespace,
-  UsernameNamespaceRequest,
 } from '@lens-protocol/graphql';
 import {
   CreateUsernameNamespaceMutation,
+  NamespaceQuery,
   NamespacesQuery,
-  UsernameNamespaceQuery,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
@@ -52,9 +52,9 @@ export function createUsernameNamespace(
  */
 export function fetchUsernameNamespace(
   client: AnyClient,
-  request: UsernameNamespaceRequest,
+  request: NamespaceRequest,
 ): ResultAsync<UsernameNamespace | null, UnexpectedError> {
-  return client.query(UsernameNamespaceQuery, { request });
+  return client.query(NamespaceQuery, { request });
 }
 
 /**

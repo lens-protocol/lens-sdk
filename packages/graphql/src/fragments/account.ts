@@ -3,14 +3,13 @@ import { graphql } from '../graphql';
 import { MetadataAttributeFragment } from './metadata';
 import { UsernameFragment } from './username';
 
+// TODO: add canFollow and canUnfollow after implementing OperationValidationOutcome
 export const LoggedInAccountOperationsFragment = graphql(
   `fragment LoggedInAccountOperations on LoggedInAccountOperations {
     __typename
     id
     isFollowedByMe
     isFollowingMe
-    canFollow
-    canUnfollow
     isMutedByMe
     isBlockedByMe
     hasBlockedMe

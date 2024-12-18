@@ -151,6 +151,7 @@ export const PostMetadataFragment = graphql(
 );
 export type PostMetadata = FragmentOf<typeof PostMetadataFragment>;
 
+// TODO: add canComment, canQuote and canRepost after implementing OperationValidationOutcome
 export const LoggedInPostOperationsFragment = graphql(
   `fragment LoggedInPostOperations on LoggedInPostOperations {
     __typename
@@ -160,9 +161,6 @@ export const LoggedInPostOperationsFragment = graphql(
     hasReported
     hasUpvoted: hasReacted(request: { type: UPVOTE })
     hasDownvoted: hasReacted(request: { type: DOWNVOTE })
-    canComment
-    canQuote
-    canRepost
     hasCommented {
       ...BooleanValue
     }
