@@ -17,10 +17,10 @@
     "lint:fix": "biome check --write",
     "new:lib": "NODE_OPTIONS='--import tsx' plop --plopfile=plopfile.ts",
     "prepublish": "pnpm run build",
-    "test:client": "vitest --project @lens-protocol/client",
-    "test:react": "vitest --project @lens-protocol/react",
-    "test:storage": "vitest --project @lens-protocol/storage",
-    "test": "vitest"
+    "test:client": "vitest --project @lens-protocol/client --no-file-parallelism",
+    "test:react": "vitest --project @lens-protocol/react --no-file-parallelism",
+    "test:storage": "vitest --project @lens-protocol/storage --no-file-parallelism",
+    "test": "vitest --no-file-parallelism"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",

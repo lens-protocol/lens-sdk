@@ -1,5 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
 import {
+  AccountFragment,
   PaginatedResultInfoFragment,
   SelfFundedTransactionRequestFragment,
   SponsoredTransactionRequestFragment,
@@ -70,9 +71,12 @@ export type RemoveAdminsRequest = RequestOf<typeof RemoveAdminsMutation>;
 export const AdminFragment = graphql(
   `fragment Admin on Admin {
     __typename
-    address
+    account {
+      ...Account
+    }
     addedAt
   }`,
+  [AccountFragment],
 );
 export type Admin = FragmentOf<typeof AdminFragment>;
 

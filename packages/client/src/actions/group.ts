@@ -2,6 +2,7 @@ import type {
   CreateGroupRequest,
   CreateGroupResult,
   Group,
+  GroupMember,
   GroupMembersRequest,
   GroupRequest,
   GroupStatsRequest,
@@ -24,7 +25,6 @@ import {
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
-import type { Account } from '@lens-protocol/graphql';
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
@@ -140,7 +140,7 @@ export function fetchGroups(
 export function fetchGroupMembers(
   client: AnyClient,
   request: GroupMembersRequest,
-): ResultAsync<Paginated<Account>, UnexpectedError> {
+): ResultAsync<Paginated<GroupMember>, UnexpectedError> {
   return client.query(GroupMembersQuery, { request });
 }
 

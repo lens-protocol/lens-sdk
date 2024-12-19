@@ -6,6 +6,7 @@ import {
   AmountFragment,
   BooleanValueFragment,
   NetworkAddressFragment,
+  OperationValidationOutcomeFragment,
 } from './common';
 import {
   ArticleMetadataFragment,
@@ -160,9 +161,15 @@ export const LoggedInPostOperationsFragment = graphql(
     hasReported
     hasUpvoted: hasReacted(request: { type: UPVOTE })
     hasDownvoted: hasReacted(request: { type: DOWNVOTE })
-    canComment
-    canQuote
-    canRepost
+    canComment {
+      ...OperationValidationOutcome
+    }
+    canQuote {
+      ...OperationValidationOutcome
+    }
+    canRepost {
+      ...OperationValidationOutcome
+    }
     hasCommented {
       ...BooleanValue
     }
@@ -173,7 +180,7 @@ export const LoggedInPostOperationsFragment = graphql(
       ...BooleanValue
     }
   }`,
-  [BooleanValueFragment],
+  [BooleanValueFragment, OperationValidationOutcomeFragment],
 );
 export type LoggedInPostOperations = FragmentOf<typeof LoggedInPostOperationsFragment>;
 

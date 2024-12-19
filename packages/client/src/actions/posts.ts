@@ -9,6 +9,7 @@ import type {
   PostReactionsRequest,
   PostReferencesRequest,
   PostRequest,
+  PostsRequest,
 } from '@lens-protocol/graphql';
 import {
   PostActionsQuery,
@@ -19,6 +20,7 @@ import {
   PostReactionsQuery,
   PostReferencesQuery,
   PostTagsQuery,
+  PostsQuery,
   WhoActedOnPostQuery,
   WhoReferencedPostQuery,
 } from '@lens-protocol/graphql';
@@ -43,7 +45,7 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
  *
  * ```ts
  * const result = await fetchPost(anyClient, {
- *   post: postId('0x01')
+ *   post: postId('42')
  * });
  * ```
  *
@@ -56,6 +58,31 @@ export function fetchPost(
   request: PostRequest,
 ): ResultAsync<AnyPost | null, UnexpectedError> {
   return client.query(PostQuery, { request });
+}
+
+/**
+ * Fetch paginated Posts.
+ *
+ * Using a {@link SessionClient} will yield {@link Post#operations}
+ * and {@link Account#operations} specific to the authenticated Account.
+ *
+ * ```ts
+ * const result = await fetchPosts(anyClient, {
+ *   filter: {
+ *     authors: [evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5')],
+ *   }
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The paginated list of Posts.
+ */
+export function fetchPosts(
+  client: AnyClient,
+  request: PostsRequest,
+): ResultAsync<Paginated<AnyPost>, UnexpectedError> {
+  return client.query(PostsQuery, { request });
 }
 
 /**
