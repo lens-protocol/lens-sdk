@@ -935,15 +935,6 @@ export enum TransactionType {
 }
 
 /**
- * Enum for TriStateValue.
- */
-export enum TriStateValue {
-  Yes = 'YES',
-  No = 'NO',
-  Unknown = 'UNKNOWN',
-}
-
-/**
  * Enum for UnblockErrorType.
  */
 export enum UnblockErrorType {

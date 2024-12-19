@@ -75,7 +75,6 @@ import type {
   TimelineEventItemType,
   TokenStandard,
   TransactionType,
-  TriStateValue,
   UnblockErrorType,
   WhoActedOnPostOrderBy,
   WhoReferencedPostOrderBy,
@@ -152,7 +151,6 @@ export const graphql = initGraphQLTada<{
     TimelineEventItemType: TimelineEventItemType;
     TokenStandard: TokenStandard;
     TransactionType: TransactionType;
-    TriStateValue: TriStateValue;
     TxHash: TxHash;
     URI: URI;
     URL: URL;
