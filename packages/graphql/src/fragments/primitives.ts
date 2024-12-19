@@ -3,15 +3,15 @@ import { graphql } from '../graphql';
 
 export const AppMetadataFragment = graphql(
   `fragment AppMetadata on AppMetadata {
-      __typename
-      description
-      developer
-      logo
-      name
-      platforms
-      privacyPolicy
-      termsOfService
-      url
+    __typename
+    description
+    developer
+    logo
+    name
+    platforms
+    privacyPolicy
+    termsOfService
+    url
   }`,
 );
 export type AppMetadata = FragmentOf<typeof AppMetadataFragment>;
@@ -36,11 +36,11 @@ export type App = FragmentOf<typeof AppFragment>;
 
 export const FeedMetadataFragment = graphql(
   `fragment FeedMetadata on FeedMetadata {
-      __typename
-      description
-      id
-      name
-      title
+    __typename
+    description
+    id
+    name
+    title
   }`,
 );
 export type FeedMetadata = FragmentOf<typeof FeedMetadataFragment>;
@@ -122,7 +122,7 @@ export const GroupMetadataFragment = graphql(
 );
 export type GroupMetadata = FragmentOf<typeof GroupMetadataFragment>;
 
-// TODO: add GroupRulesConfig
+// TODO: add GroupRulesConfig and GroupOperationsConfig
 export const GroupFragment = graphql(
   `fragment Group on Group {
     __typename
@@ -131,7 +131,6 @@ export const GroupFragment = graphql(
     metadata {
       ...GroupMetadata
     }
-    isMember
     owner
   }`,
   [GroupMetadataFragment],

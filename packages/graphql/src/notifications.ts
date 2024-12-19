@@ -1,5 +1,5 @@
 import type { FragmentOf } from 'gql.tada';
-import { AccountFragment, PaginatedResultInfoFragment, PostFragment } from './fragments';
+import { AccountFragment, PaginatedResultInfoFragment, ReferencedPostFragment } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
 const FollowNotificationFragment = graphql(
@@ -31,10 +31,10 @@ const ReactionNotificationFragment = graphql(
       }
     }
     post {
-      ...Post
+      ...ReferencedPost
     }
   }`,
-  [AccountFragment, PostFragment],
+  [AccountFragment, ReferencedPostFragment],
 );
 export type ReactionNotification = FragmentOf<typeof ReactionNotificationFragment>;
 
@@ -43,10 +43,10 @@ const CommentNotificationFragment = graphql(
     __typename
     id
     comment {
-      ...Post
+      ...ReferencedPost
     }
   }`,
-  [PostFragment],
+  [ReferencedPostFragment],
 );
 export type CommentNotification = FragmentOf<typeof CommentNotificationFragment>;
 
@@ -70,10 +70,10 @@ const RepostNotificationFragment = graphql(
       ...NotificationAccountRepost
     }
     post {
-      ...Post
+      ...ReferencedPost
     }
   }`,
-  [NotificationAccountRepostFragment, PostFragment],
+  [NotificationAccountRepostFragment, ReferencedPostFragment],
 );
 export type RepostNotification = FragmentOf<typeof RepostNotificationFragment>;
 
@@ -82,10 +82,10 @@ const QuoteNotificationFragment = graphql(
     __typename
     id
     quote {
-      ...Post
+      ...ReferencedPost
     }
   }`,
-  [PostFragment],
+  [ReferencedPostFragment],
 );
 export type QuoteNotification = FragmentOf<typeof QuoteNotificationFragment>;
 
@@ -94,10 +94,10 @@ const MentionNotificationFragment = graphql(
     __typename
     id
     post {
-      ...Post
+      ...ReferencedPost
     }
   }`,
-  [PostFragment],
+  [ReferencedPostFragment],
 );
 export type MentionNotification = FragmentOf<typeof MentionNotificationFragment>;
 

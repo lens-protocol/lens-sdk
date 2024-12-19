@@ -1,4 +1,4 @@
-import { AuthenticateMutation, ChallengeMutation } from '@lens-protocol/graphql';
+import { AuthenticateMutation, ChallengeMutation, RefreshMutation } from '@lens-protocol/graphql';
 import type {
   AuthenticationChallenge,
   ChallengeRequest,
@@ -12,24 +12,23 @@ import {
   type TxHash,
   errAsync,
   invariant,
-  never,
   okAsync,
   signatureFrom,
 } from '@lens-protocol/types';
 import {
   type AnyVariables,
-  type Operation,
+  type Exchange,
   type OperationResult,
   type OperationResultSource,
   type TypedDocumentNode,
   type Client as UrqlClient,
   createClient,
   fetchExchange,
-  mapExchange,
 } from '@urql/core';
 import { type Logger, getLogger } from 'loglevel';
 
 import type { SwitchAccountRequest } from '@lens-protocol/graphql';
+import { type AuthConfig, authExchange } from '@urql/exchange-auth';
 import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
 import { switchAccount, transactionStatus } from './actions';
 import type { ClientConfig } from './config';
@@ -75,25 +74,12 @@ abstract class AbstractClient<TContext extends Context, TError> {
 
     this.urql = createClient({
       url: context.environment.backend,
-      exchanges: [
-        mapExchange({
-          onOperation: async (operation: Operation) => {
-            this.logger.debug(
-              'Operation:',
-              // biome-ignore lint/suspicious/noExplicitAny: This is a debug log
-              (operation.query.definitions[0] as any)?.name?.value ?? 'Unknown',
-            );
-            return {
-              ...operation,
-              context: {
-                ...operation.context,
-                fetchOptions: await this.fetchOptions(),
-              },
-            };
-          },
-        }),
-        fetchExchange,
-      ],
+      fetchOptions: {
+        headers: {
+          ...(this.context.origin ? { Origin: this.context.origin } : {}),
+        },
+      },
+      exchanges: this.exchanges(),
     });
   }
 
@@ -119,12 +105,8 @@ abstract class AbstractClient<TContext extends Context, TError> {
     return this.resultFrom(this.urql.mutation(document, variables)).map(takeValue);
   }
 
-  protected fetchOptions(): RequestInit | Promise<RequestInit> {
-    return {
-      headers: {
-        ...(this.context.origin ? { Origin: this.context.origin } : {}),
-      },
-    };
+  protected exchanges(): Exchange[] {
+    return [fetchExchange];
   }
 
   protected resultFrom<TData, TVariables extends AnyVariables>(
@@ -308,13 +290,15 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
 
   /**
    * The current authentication tokens if available.
+   *
+   * @internal
    */
   getCredentials(): ResultAsync<Credentials | null, UnexpectedError> {
     return ResultAsync.fromPromise(this.credentials.get(), (err) => UnexpectedError.from(err));
   }
 
   /**
-   * @internal
+   * The AuthenticatedUser associated with the current session.
    */
   getAuthenticatedUser(): ResultAsync<AuthenticatedUser, UnexpectedError> {
     return this.getCredentials().andThen((credentials) => {
@@ -362,14 +346,14 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
   > {
     return switchAccount(this, request)
       .andThen((result) => {
-        if (result.__typename === 'ForbiddenError') {
-          return AuthenticationError.from(result.reason).asResultAsync();
+        if (result.__typename === 'AuthenticationTokens') {
+          return okAsync(result);
         }
-        return okAsync(result);
+        return AuthenticationError.from(result.reason).asResultAsync();
       })
       .map(async (tokens) => {
         await this.credentials.set(tokens);
-        return this;
+        return new SessionClient(this.parent);
       });
   }
 
@@ -457,18 +441,50 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
     throw TransactionIndexingError.from(`Timeout waiting for transaction ${txHash}`);
   }
 
-  protected override async fetchOptions(): Promise<RequestInit> {
-    const base = await super.fetchOptions();
-    const credentials = (await this.credentials.get()) ?? never('No credentials found');
+  protected override exchanges(): Exchange[] {
+    return [
+      authExchange(async (utils): Promise<AuthConfig> => {
+        let credentials = await this.getCredentials().unwrapOr(null);
 
-    return {
-      ...base,
-      headers: {
-        ...base.headers,
-        'x-access-token': credentials.accessToken,
-        // Authorization: `Bearer ${this.tokens.accessToken}`,
-      },
-    };
+        return {
+          addAuthToOperation: (operation) => {
+            if (!credentials) return operation;
+
+            return utils.appendHeaders(operation, {
+              Authorization: `Bearer ${credentials.accessToken}`,
+            });
+          },
+
+          didAuthError: (error) => hasExtensionCode(error, GraphQLErrorCode.UNAUTHENTICATED),
+
+          refreshAuth: async () => {
+            const result = await utils.mutate(RefreshMutation, {
+              request: {
+                refreshToken: credentials?.refreshToken,
+              },
+            });
+
+            if (result.data) {
+              switch (result.data.value.__typename) {
+                case 'AuthenticationTokens':
+                  credentials = result.data?.value;
+                  await this.credentials.set(result.data?.value);
+                  break;
+
+                case 'ForbiddenError':
+                  throw AuthenticationError.from(result.data.value.reason);
+
+                default:
+                  throw AuthenticationError.from(
+                    `Unsupported refresh token response ${result.data.value}`,
+                  );
+              }
+            }
+          },
+        };
+      }),
+      fetchExchange,
+    ];
   }
 
   private handleAuthentication<

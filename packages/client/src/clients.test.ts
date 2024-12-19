@@ -1,13 +1,16 @@
-import { testnet } from '@lens-protocol/env';
 import { url, assertErr, assertOk, evmAddress, signatureFrom } from '@lens-protocol/types';
+import { HttpResponse, graphql, passthrough } from 'msw';
+import { setupServer } from 'msw/node';
 
 import { privateKeyToAccount } from 'viem/accounts';
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { HealthQuery, Role } from '@lens-protocol/graphql';
+import { CurrentSessionQuery, HealthQuery, RefreshMutation, Role } from '@lens-protocol/graphql';
+import { createGraphQLErrorObject, createPublicClient } from '../testing-utils';
 import { currentSession } from './actions';
 import { PublicClient } from './clients';
-import { UnexpectedError } from './errors';
+import { GraphQLErrorCode, UnauthenticatedError, UnexpectedError } from './errors';
+import { delay } from './utils';
 
 const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
 const owner = evmAddress(signer.address);
@@ -15,10 +18,7 @@ const account = evmAddress(import.meta.env.TEST_ACCOUNT);
 const app = evmAddress(import.meta.env.TEST_APP);
 
 describe(`Given an instance of the ${PublicClient.name}`, () => {
-  const client = PublicClient.create({
-    environment: testnet,
-    origin: 'http://example.com',
-  });
+  const client = createPublicClient();
 
   describe('When authenticating via the low-level methods', () => {
     it('Then it should authenticate and stay authenticated', async () => {
@@ -102,6 +102,100 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
       const result = await client.query(HealthQuery, {});
       assertErr(result);
       expect(result.error).toBeInstanceOf(UnexpectedError);
+    });
+  });
+
+  describe('And a SessionClient created from it', () => {
+    describe('When a request fails with UNAUTHENTICATED extension code', () => {
+      const server = setupServer(
+        graphql.query(
+          CurrentSessionQuery,
+          (_) =>
+            HttpResponse.json({
+              errors: [createGraphQLErrorObject(GraphQLErrorCode.UNAUTHENTICATED)],
+            }),
+          {
+            once: true,
+          },
+        ),
+        // Pass through all other operations
+        graphql.operation(() => passthrough()),
+      );
+
+      beforeAll(() => {
+        server.listen();
+      });
+
+      afterAll(() => {
+        server.close();
+      });
+
+      it(
+        'Then it should silently refresh credentials and retry the request',
+        { timeout: 5000 },
+        async () => {
+          const authenticated = await client.login({
+            accountOwner: {
+              account,
+              owner,
+              app,
+            },
+            signMessage: (message) => signer.signMessage({ message }),
+          });
+          assertOk(authenticated);
+
+          // wait 1 second to make sure the new tokens have 'expiry at' different from the previous ones
+          await delay(1000);
+
+          const result = await currentSession(authenticated.value);
+
+          assertOk(result);
+        },
+      );
+    });
+
+    describe('When a token refresh fails', () => {
+      const server = setupServer(
+        graphql.query(CurrentSessionQuery, (_) =>
+          HttpResponse.json({
+            errors: [createGraphQLErrorObject(GraphQLErrorCode.UNAUTHENTICATED)],
+          }),
+        ),
+        graphql.mutation(RefreshMutation, (_) =>
+          HttpResponse.json({
+            errors: [createGraphQLErrorObject(GraphQLErrorCode.BAD_USER_INPUT)],
+          }),
+        ),
+        // Pass through all other operations
+        graphql.operation(() => passthrough()),
+      );
+
+      beforeAll(() => {
+        server.listen();
+      });
+
+      afterAll(() => {
+        server.close();
+      });
+      it(
+        `Then it should return a '${UnauthenticatedError.name}' to the original request caller`,
+        { timeout: 5000 },
+        async () => {
+          const authenticated = await client.login({
+            accountOwner: {
+              account,
+              owner,
+              app,
+            },
+            signMessage: (message) => signer.signMessage({ message }),
+          });
+          assertOk(authenticated);
+
+          const result = await currentSession(authenticated.value);
+          assertErr(result);
+          expect(result.error).toBeInstanceOf(UnauthenticatedError);
+        },
+      );
     });
   });
 });

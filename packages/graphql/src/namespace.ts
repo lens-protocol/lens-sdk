@@ -47,15 +47,15 @@ export const CreateUsernameNamespaceMutation = graphql(
 );
 export type CreateUsernameNamespaceRequest = RequestOf<typeof CreateUsernameNamespaceMutation>;
 
-export const UsernameNamespaceQuery = graphql(
-  `query UsernameNamespace($request: UsernameNamespaceRequest!) {
-    value: usernameNamespace(request: $request) {
+export const NamespaceQuery = graphql(
+  `query Namespace($request: NamespaceRequest!) {
+    value: namespace(request: $request) {
       ...UsernameNamespace
     }
   }`,
   [UsernameNamespaceFragment],
 );
-export type UsernameNamespaceRequest = RequestOf<typeof UsernameNamespaceQuery>;
+export type NamespaceRequest = RequestOf<typeof NamespaceQuery>;
 
 export const NamespacesQuery = graphql(
   `query Namespaces($request: NamespacesRequest!) {

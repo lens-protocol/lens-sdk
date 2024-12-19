@@ -331,7 +331,7 @@ input AccountsBulkRequest {
   legacyProfileIds: [LegacyProfileId!]
 }
 
-input AccountsFilterRequest {
+input AccountsFilter {
   """The optional filter to narrow accounts by search query."""
   searchBy: UsernameSearchInput
 }
@@ -343,7 +343,7 @@ enum AccountsOrderBy {
 }
 
 input AccountsRequest {
-  filter: AccountsFilterRequest
+  filter: AccountsFilter
 
   """The order by."""
   orderBy: AccountsOrderBy! = ACCOUNT_SCORE
@@ -447,13 +447,27 @@ type AddReactionResponse {
 union AddReactionResult = AddReactionResponse | AddReactionFailure
 
 type Admin {
-  address: EvmAddress!
+  account: Account!
   addedAt: DateTime!
+}
+
+input AdminsForFilterRequest {
+  """The optional filter to narrow admins query"""
+  searchBy: UsernameSearchInput
+}
+
+enum AdminsForOrderBy {
+  LATEST_FIRST
+  OLDEST_FIRST
 }
 
 input AdminsForRequest {
   """The graph/app/sponsor/feed/username/group address"""
   address: EvmAddress!
+  filter: AdminsForFilterRequest
+
+  """The order by."""
+  orderBy: AdminsForOrderBy! = LATEST_FIRST
   pageSize: PageSize! = FIFTY
   cursor: Cursor
 }
@@ -636,15 +650,32 @@ type AppSigner {
   timestamp: DateTime!
 }
 
+input AppSignersFilterRequest {
+  """
+  The optional filter to narrow signers.
+  Uses fuzzy search on signer address
+  """
+  searchQuery: String
+}
+
+enum AppSignersOrderBy {
+  LATEST_FIRST
+  OLDEST_FIRST
+}
+
 input AppSignersRequest {
+  """The app address"""
+  app: EvmAddress!
+  filter: AppSignersFilterRequest
+
+  """The order by."""
+  orderBy: AppSignersOrderBy! = LATEST_FIRST
+
   """The page size."""
   pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor
-
-  """The app address"""
-  app: EvmAddress!
 }
 
 type AppUser {
@@ -653,9 +684,24 @@ type AppUser {
   firstLoginOn: DateTime!
 }
 
+input AppUsersFilterRequest {
+  """The optional filter to narrow app users query"""
+  searchBy: UsernameSearchInput
+}
+
+enum AppUsersOrderBy {
+  ALPHABETICAL
+  ACCOUNT_SCORE
+  BEST_MATCH
+}
+
 input AppUsersRequest {
-  """The App to filter by."""
+  """The App to get users for."""
   app: EvmAddress!
+  filter: AppUsersFilterRequest
+
+  """The order by."""
+  orderBy: AppUsersOrderBy! = ACCOUNT_SCORE
 
   """The page size."""
   pageSize: PageSize! = FIFTY
@@ -668,7 +714,7 @@ type ApprovalGroupRule {
   rule: EvmAddress!
 }
 
-input AppsFilterRequest {
+input AppsFilter {
   """The optional filter to get apps managed by address"""
   managedBy: ManagedBy
 
@@ -686,7 +732,7 @@ enum AppsOrderBy {
 }
 
 input AppsRequest {
-  filter: AppsFilterRequest
+  filter: AppsFilter
 
   """The order by."""
   orderBy: AppsOrderBy! = LATEST_FIRST
@@ -1004,7 +1050,7 @@ input CreateAppRequest {
   If the app has verification enabled meaning
   you can only do stuff with the app if its signed by one of the signers
   """
-  verification: Boolean!
+  verification: Boolean! = false
 
   """The app signers leave empty if none"""
   signers: [EvmAddress!]
@@ -1925,7 +1971,7 @@ input FeedRulesInput {
   unknownFeedRule: UnknownFeedRuleInput
 }
 
-input FeedsFilterRequest {
+input FeedsFilter {
   """The optional filter to get feeds managed by address"""
   managedBy: ManagedBy
 
@@ -1943,7 +1989,7 @@ enum FeedsOrderBy {
 }
 
 input FeedsRequest {
-  filter: FeedsFilterRequest
+  filter: FeedsFilter
 
   """The order by."""
   orderBy: FeedsOrderBy! = LATEST_FIRST
@@ -2129,6 +2175,11 @@ type ForbiddenError {
   reason: String!
 }
 
+input GenerateNewAppServerApiKeyRequest {
+  """The app to generate the new server side api key for"""
+  app: EvmAddress!
+}
+
 scalar GeneratedNotificationId
 
 type Graph {
@@ -2175,7 +2226,7 @@ input GraphRulesInput {
   unknownGraphRule: UnknownGraphRuleInput
 }
 
-input GraphsFilterRequest {
+input GraphsFilter {
   """The optional filter to get graphs managed by address"""
   managedBy: ManagedBy
 
@@ -2193,7 +2244,7 @@ enum GraphsOrderBy {
 }
 
 input GraphsRequest {
-  filter: GraphsFilterRequest
+  filter: GraphsFilter
 
   """The order by."""
   orderBy: GraphsOrderBy! = LATEST_FIRST
@@ -2207,13 +2258,8 @@ type Group {
   address: EvmAddress!
   timestamp: DateTime!
   metadata: GroupMetadata
-
-  """
-  Check if the authenticated account is a member of the group.
-  Will return null if the account is not logged in.
-  """
-  isMember: Boolean
   owner: EvmAddress!
+  operations: LoggedInGroupOperations
   rules(request: RuleInput): GroupRulesConfig!
 }
 
@@ -2228,7 +2274,7 @@ type GroupMember {
   joinedAt: DateTime!
 }
 
-input GroupMembersFilterRequest {
+input GroupMembersFilter {
   """The optional filter to narrow members by search query."""
   searchBy: UsernameSearchInput
 }
@@ -2243,7 +2289,7 @@ enum GroupMembersOrderBy {
 input GroupMembersRequest {
   """The group"""
   group: EvmAddress!
-  filter: GroupMembersFilterRequest
+  filter: GroupMembersFilter
 
   """The order by."""
   orderBy: GroupMembersOrderBy! = ACCOUNT_SCORE
@@ -2310,7 +2356,7 @@ type GroupStatsResponse {
   totalMembers: Int!
 }
 
-input GroupsFilterRequest {
+input GroupsFilter {
   """The optional filter to get groups where account is a member"""
   member: EvmAddress
 
@@ -2331,7 +2377,7 @@ enum GroupsOrderBy {
 }
 
 input GroupsRequest {
-  filter: GroupsFilterRequest
+  filter: GroupsFilter
 
   """The order by."""
   orderBy: GroupsOrderBy! = LATEST_FIRST
@@ -2570,7 +2616,7 @@ type LoggedInAccountOperations {
   - It first checks for a Graph address specified within the query scope.
   - If no Graph address is found, it defaults to using the Global Graph.
   """
-  canFollow(request: CanFollowRequest): TriStateValue!
+  canFollow(request: CanFollowRequest): OperationValidationOutcome!
 
   """
   Check if the authenticated account can unfollow the target account.
@@ -2579,7 +2625,7 @@ type LoggedInAccountOperations {
   - It first checks for a Graph address specified within the query scope.
   - If no Graph address is found, it defaults to using the Global Graph.
   """
-  canUnfollow(request: CanUnfollowRequest): Boolean!
+  canUnfollow(request: CanUnfollowRequest): OperationValidationOutcome!
   isMutedByMe: Boolean!
   isBlockedByMe: Boolean!
   hasBlockedMe: Boolean!
@@ -2589,7 +2635,15 @@ type LoggedInAccountOperations {
 }
 
 type LoggedInFeedPostOperations {
-  canPost: RulesOutcome!
+  canPost: OperationValidationOutcome!
+}
+
+type LoggedInGroupOperations {
+  canJoin: OperationValidationOutcome!
+  canLeave: OperationValidationOutcome!
+  canAddMember: OperationValidationOutcome!
+  canRemoveMember: OperationValidationOutcome!
+  isMember: Boolean!
 }
 
 type LoggedInPostOperations {
@@ -2598,12 +2652,24 @@ type LoggedInPostOperations {
   hasBookmarked: Boolean!
   hasReported: Boolean!
   hasReacted(request: HasReactedRequest): Boolean!
-  canComment: TriStateValue!
-  canQuote: TriStateValue!
-  canRepost: TriStateValue!
+  canComment: OperationValidationOutcome!
+  canQuote: OperationValidationOutcome!
+  canRepost: OperationValidationOutcome!
   hasCommented: BooleanValue!
   hasQuoted: BooleanValue!
   hasReposted: BooleanValue!
+  canEdit: OperationValidationOutcome!
+  canDelete: OperationValidationOutcome!
+}
+
+type LoggedInUsernameNamespaceOperations {
+  canMint: OperationValidationOutcome!
+}
+
+type LoggedInUsernameOperations {
+  canRemove: OperationValidationOutcome!
+  canAssign: OperationValidationOutcome!
+  canUnassign: OperationValidationOutcome!
 }
 
 enum MainContentFocus {
@@ -3316,11 +3382,11 @@ type Mutation {
   setAppUsernameNamespace(request: SetAppUsernameNamespaceRequest!): SetAppUsernameNamespaceResult!
 
   """
-  Refresh the server side api key for an app
+  Generate a new app server side api key
   
   You MUST be authenticated as a builder to use this mutation.
   """
-  appRefreshServerApiKey(request: RefreshAppServerApiKeyRequest!): ServerAPIKey!
+  generateNewAppServerApiKey(request: GenerateNewAppServerApiKeyRequest!): ServerAPIKey!
 
   """
   Report an account.
@@ -3626,7 +3692,7 @@ type Mutation {
   """
   Create a new group
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated to use this mutation.
   """
   createGroup(request: CreateGroupRequest!): CreateGroupResult!
 
@@ -3650,7 +3716,15 @@ input MuteRequest {
   account: EvmAddress!
 }
 
-input NamespacesFilterRequest {
+input NamespaceRequest {
+  """The namespace"""
+  namespace: EvmAddress
+
+  """The transaction hash you created the namespace with."""
+  txHash: TxHash
+}
+
+input NamespacesFilter {
   """The optional filter to get namespaces managed by address"""
   managedBy: ManagedBy
 
@@ -3668,7 +3742,7 @@ enum NamespacesOrderBy {
 }
 
 input NamespacesRequest {
-  filter: NamespacesFilterRequest
+  filter: NamespacesFilter
 
   """The order by."""
   orderBy: NamespacesOrderBy! = LATEST_FIRST
@@ -3789,6 +3863,18 @@ input OnboardingUserChallengeRequest {
 
   """The address of the EOA that needs to create their Lens Account."""
   wallet: EvmAddress!
+}
+
+type OperationValidationFailed {
+  unsatisfiedRules: [UnsatisfiedRule!]
+  reason: String!
+}
+
+union OperationValidationOutcome = OperationValidationPassed | OperationValidationFailed
+
+type OperationValidationPassed {
+  restrictedSignerRequired: Boolean!
+  extraChecksRequired: [UnknownRule!]!
 }
 
 enum PageSize {
@@ -4248,7 +4334,7 @@ enum PostVisibilityFilter {
   VISIBLE
 }
 
-input PostsFilterRequest {
+input PostsFilter {
   authors: [EvmAddress!]
   postTypes: [PostType!]
   metadata: PostMetadataFilter
@@ -4262,7 +4348,7 @@ input PostsFilterRequest {
 
 input PostsRequest {
   forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
-  filter: PostsFilterRequest
+  filter: PostsFilter
   pageSize: PageSize! = FIFTY
   cursor: Cursor
 }
@@ -4426,7 +4512,7 @@ type Query {
   transactionStatus(request: TransactionStatusRequest!): TransactionStatusResult!
   debugMetadata(request: DebugPostMetadataRequest!): DebugPostMetadataResult!
   debugTransactionStatusFailed(request: DebugTransactionStatusRequest!): DebugTransactionStatusResult
-  usernameNamespace(request: UsernameNamespaceRequest!): UsernameNamespace
+  namespace(request: NamespaceRequest!): UsernameNamespace
   username(request: UsernameRequest!): Username
 
   """Get the usernames for the account/owner."""
@@ -4466,11 +4552,6 @@ input RecommendAccount {
 input ReferencingPostInput {
   """The post to reference."""
   post: PostId!
-}
-
-input RefreshAppServerApiKeyRequest {
-  """The app to refresh the server side api key for"""
-  app: EvmAddress!
 }
 
 input RefreshRequest {
@@ -4596,17 +4677,6 @@ input RolloverRefreshRequest {
 
 input RuleInput {
   rules: [EvmAddress!]!
-}
-
-type RulesFailed {
-  unsatisfiedRules: [UnsatisfiedRule!]!
-}
-
-union RulesOutcome = RulesSucceeded | RulesFailed
-
-type RulesSucceeded {
-  restrictedSignerRequired: Boolean!
-  extraChecksRequired: [UnknownRule!]!
 }
 
 enum SelfFundedFallbackReason {
@@ -4953,6 +5023,9 @@ enum TimelineEventItemType {
 }
 
 input TimelineFilter {
+  """The apps to filter by."""
+  apps: [EvmAddress!]
+
   """The post event types to filter by."""
   eventType: [TimelineEventItemType!]
 
@@ -4961,6 +5034,8 @@ input TimelineFilter {
 }
 
 input TimelineHighlightsFilter {
+  """The apps to filter by."""
+  apps: [EvmAddress!]
   metadata: PostMetadataFilter
 }
 
@@ -5111,12 +5186,6 @@ input TransferPrimitiveOwnershipRequest {
 }
 
 union TransferPrimitiveOwnershipResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
-
-enum TriStateValue {
-  YES
-  NO
-  UNKNOWN
-}
 
 scalar TxHash
 
@@ -5322,6 +5391,7 @@ type Username {
   """The timestamp when the username was created."""
   timestamp: DateTime!
   namespace: UsernameNamespace!
+  operations: LoggedInUsernameOperations
 }
 
 input UsernameInput {
@@ -5341,6 +5411,8 @@ type UsernameNamespace {
   createdAt: DateTime!
   metadata: UsernameNamespaceMetadata
   owner: EvmAddress!
+  stats: UsernameNamespaceStats!
+  operations: LoggedInUsernameNamespaceOperations
   rules(request: RuleInput): UsernameNamespaceRulesConfig!
 }
 
@@ -5355,19 +5427,15 @@ type UsernameNamespaceMetadata {
   id: String!
 }
 
-input UsernameNamespaceRequest {
-  """The namespace"""
-  namespace: EvmAddress
-
-  """The transaction hash you created the namespace with."""
-  txHash: TxHash
-}
-
 union UsernameNamespaceRule = TokenGatedUsernameNamespaceRule | SimplePaymentUsernameNamespaceRule | CharsetUsernameNamespaceRule | LengthUsernameNamespaceRule | UnknownUsernameNamespaceRule
 
 type UsernameNamespaceRulesConfig {
   required: [UsernameNamespaceRule!]!
   anyOf: [UsernameNamespaceRule!]!
+}
+
+type UsernameNamespaceStats {
+  totalUsernames: Int!
 }
 
 """You must provide either an id or a username, not both."""
@@ -5394,15 +5462,39 @@ input UsernameSearchInput {
 
 scalar UsernameValue
 
+input UsernamesFilter {
+  """The optional filter to get usernames owned by address"""
+  owner: EvmAddress
+
+  """The optional filter to get usernames linked to an address"""
+  linkedTo: EvmAddress
+
+  """The optional filter to get usernames for a namespace"""
+  namespace: EvmAddress
+
+  """
+  The optional filter to narrow usernames
+  Uses fuzzy search by local name
+  """
+  localNameQuery: String
+}
+
+enum UsernamesOrderBy {
+  LAST_MINTED
+  FIRST_MINTED
+}
+
 input UsernamesRequest {
+  filter: UsernamesFilter
+
+  """The order by."""
+  orderBy: UsernamesOrderBy! = LAST_MINTED
+
   """The page size."""
   pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor
-
-  """The account or address to get owned usernames for."""
-  owner: EvmAddress!
 }
 
 type VideoMetadata {

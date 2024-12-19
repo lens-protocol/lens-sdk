@@ -153,19 +153,32 @@ export const GroupsQuery = graphql(
 );
 export type GroupsRequest = RequestOf<typeof GroupsQuery>;
 
+export const GroupMemberFragment = graphql(
+  `fragment GroupMember on GroupMember {
+    __typename
+    account {
+      ...Account
+    }
+    lastActiveAt
+    joinedAt
+  }`,
+  [AccountFragment],
+);
+export type GroupMember = FragmentOf<typeof GroupMemberFragment>;
+
 export const GroupMembersQuery = graphql(
   `query GroupMembers($request: GroupMembersRequest!) {
     value: groupMembers(request: $request) {
       __typename
       items {
-        ...Account
+        ...GroupMember
       }
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }`,
-  [AccountFragment, PaginatedResultInfoFragment],
+  [GroupMemberFragment, PaginatedResultInfoFragment],
 );
 export type GroupMembersRequest = RequestOf<typeof GroupMembersQuery>;
 

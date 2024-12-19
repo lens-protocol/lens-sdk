@@ -63,3 +63,71 @@ export const ActionInputInfoFragment = graphql(
   }`,
 );
 export type ActionInputInfo = FragmentOf<typeof ActionInputInfoFragment>;
+
+const KeyValueFragment = graphql(
+  `fragment KeyValue on KeyValue {
+    __typename
+    key
+    value
+  }`,
+);
+export type KeyValue = FragmentOf<typeof KeyValueFragment>;
+
+const UnknownRuleFragment = graphql(
+  `fragment UnknownRule on UnknownRule {
+    __typename
+    rule
+    configParams {
+      ...KeyValue
+    }
+  }`,
+  [KeyValueFragment],
+);
+export type UnknownRule = FragmentOf<typeof UnknownRuleFragment>;
+
+const UnsatisfiedRuleFragment = graphql(
+  `fragment UnsatisfiedRule on UnsatisfiedRule {
+    __typename
+    name
+    rule
+    reason
+  }`,
+);
+export type UnsatisfiedRule = FragmentOf<typeof UnsatisfiedRuleFragment>;
+
+const OperationValidationFailedFragment = graphql(
+  `fragment OperationValidationFailed on OperationValidationFailed {
+    __typename
+    reason
+    unsatisfiedRules {
+      ...UnsatisfiedRule
+    }
+  }`,
+  [UnsatisfiedRuleFragment],
+);
+export type OperationValidationFailed = FragmentOf<typeof OperationValidationFailedFragment>;
+
+const OperationValidationPassedFragment = graphql(
+  `fragment OperationValidationPassed on OperationValidationPassed {
+    __typename
+    restrictedSignerRequired
+    extraChecksRequired {
+      ...UnknownRule
+    }
+  }`,
+  [UnknownRuleFragment],
+);
+export type OperationValidationPassed = FragmentOf<typeof OperationValidationPassedFragment>;
+
+export const OperationValidationOutcomeFragment = graphql(
+  `fragment OperationValidationOutcome on OperationValidationOutcome {
+    ...on OperationValidationPassed {
+      ...OperationValidationPassed
+    }
+    ...on OperationValidationFailed {
+      ...OperationValidationFailed
+    }
+  }`,
+  [OperationValidationPassedFragment, OperationValidationFailedFragment],
+);
+export type OperationValidationOutcome = FragmentOf<typeof OperationValidationOutcomeFragment>;
