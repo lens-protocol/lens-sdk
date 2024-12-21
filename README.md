@@ -42,7 +42,7 @@ nvm use
 
 to switch to the correct Node.js version.
 
-Enable [corepack](https://www.totaltypescript.com/how-to-use-corepack) to use the the correct version of `pnpm`.
+Enable [corepack](https://www.totaltypescript.com/how-to-use-corepack) to use the correct version of `pnpm`.
 
 Run the following command in the project root folder:
 
@@ -89,13 +89,13 @@ The project uses [Biome](https://biomejs.dev/) to format and lint the code. You 
 ### Publishing <!-- omit in toc -->
 
 1. Create a new release branch using the `release/X.Y.Z` naming convention.
-2. Bumps up version number and updates the changelog.
+2. Bump up version number and updates the changelog.
 
    ```bash
    pnpm changeset version
    ```
 
-3. Commit the changes using `chore: bumps up version number` as the commit message.
+3. Commit the changes using `chore: bump up version number` as the commit message.
 4. Push the changes to the remote repository.
 5. Open a pull request to the `main` branch.
 6. Wait for all checks to pass and for the pull request to be approved.
