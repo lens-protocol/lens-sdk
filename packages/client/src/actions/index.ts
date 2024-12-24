@@ -7,6 +7,7 @@ export * from './follow';
 export * from './health';
 export * from './graph';
 export * from './namespace';
+export * from './notifications';
 export * from './group';
 export * from './post';
 export * from './posts';
