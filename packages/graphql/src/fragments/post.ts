@@ -156,12 +156,13 @@ export const LoggedInPostOperationsFragment = graphql(
   `fragment LoggedInPostOperations on LoggedInPostOperations {
     __typename
     id
-    isNotInterested
-    hasBookmarked
-    hasReported
-    hasUpvoted: hasReacted(request: { type: UPVOTE })
-    hasDownvoted: hasReacted(request: { type: DOWNVOTE })
     canComment {
+      ...OperationValidationOutcome
+    }
+    canDelete {
+      ...OperationValidationOutcome
+    }
+    canEdit {
       ...OperationValidationOutcome
     }
     canQuote {
@@ -170,15 +171,20 @@ export const LoggedInPostOperationsFragment = graphql(
     canRepost {
       ...OperationValidationOutcome
     }
+    hasBookmarked
     hasCommented {
       ...BooleanValue
     }
     hasQuoted {
       ...BooleanValue
     }
+    hasUpvoted: hasReacted(request: { type: UPVOTE })
+    hasDownvoted: hasReacted(request: { type: DOWNVOTE })
+    hasReported
     hasReposted {
       ...BooleanValue
     }
+    isNotInterested
   }`,
   [BooleanValueFragment, OperationValidationOutcomeFragment],
 );
