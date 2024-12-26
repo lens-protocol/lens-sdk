@@ -1,4 +1,5 @@
 import type { FragmentOf } from 'gql.tada';
+import type { Paginated } from '../common';
 import {
   type Account,
   AccountAvailableFragment,
@@ -18,7 +19,6 @@ import {
 } from '../graphql';
 
 export type AccountRequest = RequestTypeOf<'AccountRequest'>;
-
 export function accountQuery<TAccount extends Account>(
   fragment: FragmentDocumentFor<TAccount>,
 ): StandardDocumentNode<TAccount | null, AccountRequest> {
@@ -32,11 +32,15 @@ export function accountQuery<TAccount extends Account>(
   ) as StandardDocumentNode;
 }
 
-export const AccountsQuery = graphql(
-  `query Accounts($request: AccountsRequest!) {
+export type AccountsRequest = RequestTypeOf<'AccountsRequest'>;
+export function accountsQuery<TAccount extends Account>(
+  fragment: FragmentDocumentFor<TAccount>,
+): StandardDocumentNode<Paginated<TAccount>, AccountsRequest> {
+  return graphql(
+    `query Accounts($request: AccountsRequest!) {
     value: accounts(request: $request) {
       __typename
-      items{
+      items {
         ...Account
       }
       pageInfo {
@@ -44,9 +48,9 @@ export const AccountsQuery = graphql(
       }
     }
   }`,
-  [AccountFragment, PaginatedResultInfoFragment],
-);
-export type AccountsRequest = RequestOf<typeof AccountsQuery>;
+    [fragment, PaginatedResultInfoFragment],
+  ) as StandardDocumentNode;
+}
 
 export const AccountsBulkQuery = graphql(
   `query AccountsBulk($request: AccountsBulkRequest!) {

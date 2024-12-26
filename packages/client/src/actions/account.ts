@@ -37,7 +37,6 @@ import {
   AccountsAvailableQuery,
   AccountsBlockedQuery,
   AccountsBulkQuery,
-  AccountsQuery,
   BlockMutation,
   CreateAccountWithUsernameMutation,
   EnableSignlessMutation,
@@ -50,6 +49,7 @@ import {
   UndoRecommendAccountMutation,
   UnmuteAccountMutation,
   accountQuery,
+  accountsQuery,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
@@ -85,18 +85,24 @@ export function fetchAccount<TAccount extends Account>(
  * Using a {@link SessionClient} will yield {@link Account#operations} specific to the authenticated Account.
  *
  * ```ts
- * const result = await fetchAccounts(anyClient);
+ * const result = await fetchAccounts(anyClient, {
+ *   filter: {
+ *     searchBy: {
+ *       localNameQuery: 'stani',
+ *     }
+ *   }
+ * });
  * ```
  *
  * @param client - Any Lens client.
  * @param request - The query request.
  * @returns The list of accounts.
  */
-export function fetchAccounts(
-  client: AnyClient,
+export function fetchAccounts<TAccount extends Account>(
+  client: AnyClient<Context<TAccount>>,
   request: AccountsRequest = {},
-): ResultAsync<Paginated<Account> | null, UnexpectedError> {
-  return client.query(AccountsQuery, { request });
+): ResultAsync<Paginated<TAccount> | null, UnexpectedError> {
+  return client.query(accountsQuery(client.context.accountFragment), { request });
 }
 
 /**

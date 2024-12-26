@@ -3,33 +3,26 @@ import 'viem/window';
 import {
   type FragmentOf,
   PublicClient,
-  UsernameFragment,
   evmAddress,
   graphql,
   testnet as protocolTestnet,
 } from '@lens-protocol/client';
 import { fetchAccount } from '@lens-protocol/client/actions';
 
-const MyAccountMetadataFragment = graphql(
-  `fragment AccountMetadata on AccountMetadata {
-    __typename
-    name
-    picture
-  }`,
-);
-
 const MyAccountFragment = graphql(
   `fragment Account on Account {
     __typename
     address
     username {
-      ...Username
+      value
     }
     metadata {
-      ...AccountMetadata
+      __typename
+      name
+      picture
     }
   }`,
-  [UsernameFragment, MyAccountMetadataFragment],
+  [],
 );
 
 type MyAccount = FragmentOf<typeof MyAccountFragment>;
