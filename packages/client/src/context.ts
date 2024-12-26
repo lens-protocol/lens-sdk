@@ -1,5 +1,5 @@
 import type { EnvironmentConfig } from '@lens-protocol/env';
-import type { Account } from '@lens-protocol/graphql';
+import { type Account, AccountFragment } from '@lens-protocol/graphql';
 import type { FragmentDocumentFor } from '@lens-protocol/graphql';
 import { type IStorageProvider, InMemoryStorageProvider } from '@lens-protocol/storage';
 import type { ClientConfig } from './config';
@@ -35,6 +35,6 @@ export function configureContext<TConfig extends ClientConfig>(
     debug: from.debug ?? false,
     origin: from.origin,
     storage: from.storage ?? new InMemoryStorageProvider(),
-    accountFragment: from.accountFragment,
+    accountFragment: from.accountFragment ?? AccountFragment,
   } as ContextFrom<TConfig>;
 }

@@ -22,7 +22,6 @@ const MyAccountFragment = graphql(
       picture
     }
   }`,
-  [],
 );
 
 type MyAccount = FragmentOf<typeof MyAccountFragment>;
@@ -34,12 +33,7 @@ const client = PublicClient.create({
 
 const account: MyAccount | null = await fetchAccount(client, {
   address: evmAddress('0x57b62a1571F4F09CDB4C3d93dA542bfe142D9F81'),
-}).match(
-  (account) => account,
-  (error) => {
-    throw error;
-  },
-);
+}).unwrapOr(null);
 
 export default [
   `<h2>${account?.username?.value}</h2>`,
