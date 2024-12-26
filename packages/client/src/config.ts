@@ -1,10 +1,12 @@
 import type { EnvironmentConfig } from '@lens-protocol/env';
+import type { Account } from '@lens-protocol/graphql';
+import type { FragmentDocumentFor } from '@lens-protocol/graphql';
 import type { IStorageProvider } from '@lens-protocol/storage';
 
 /**
  * The client configuration.
  */
-export type ClientConfig = {
+export type ClientConfig<TAccount extends Account = Account> = {
   /**
    * The environment configuration to use (e.g. `mainnet`, `testnet`).
    */
@@ -27,11 +29,16 @@ export type ClientConfig = {
    * Use this to set the `Origin` header for requests from non-browser environments.
    */
   origin?: string;
-
   /**
    * The storage provider to use.
    *
    * @defaultValue {@link InMemoryStorageProvider}
    */
   storage?: IStorageProvider;
+  /**
+   * The Account Fragment to use.
+   *
+   * @defaultValue {@link AccountFragment}
+   */
+  accountFragment?: FragmentDocumentFor<TAccount>;
 };

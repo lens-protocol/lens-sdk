@@ -1,0 +1,19 @@
+{
+  "name": "example-custom-fragments",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@lens-network/sdk": "canary",
+    "@lens-protocol/client": "file:../../packages/client",
+    "@lens-protocol/metadata": "next",
+    "@lens-protocol/storage-node-client": "next",
+    "viem": "^2.21.55"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11"
+  }
+}

@@ -1,5 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
 import {
+  type Account,
   AccountAvailableFragment,
   AccountBlockedFragment,
   AccountFragment,
@@ -8,17 +9,28 @@ import {
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
 } from '../fragments';
-import { type RequestOf, graphql } from '../graphql';
+import {
+  type FragmentDocumentFor,
+  type RequestOf,
+  type RequestTypeOf,
+  type StandardDocumentNode,
+  graphql,
+} from '../graphql';
 
-export const AccountQuery = graphql(
-  `query Account($request: AccountRequest!) {
+export type AccountRequest = RequestTypeOf<'AccountRequest'>;
+
+export function accountQuery<TAccount extends Account>(
+  fragment: FragmentDocumentFor<TAccount>,
+): StandardDocumentNode<TAccount | null, AccountRequest> {
+  return graphql(
+    `query Account($request: AccountRequest!) {
     value: account(request: $request) {
       ...Account
     }
   }`,
-  [AccountFragment],
-);
-export type AccountRequest = RequestOf<typeof AccountQuery>;
+    [fragment],
+  ) as StandardDocumentNode;
+}
 
 export const AccountsQuery = graphql(
   `query Accounts($request: AccountsRequest!) {

@@ -54,6 +54,18 @@ export const AccountFragment = graphql(
     username{
       ...Username
     }
+  }`,
+  [UsernameFragment],
+);
+export type Account = FragmentOf<typeof AccountFragment>;
+
+export const FullAccountFragment = graphql(
+  `fragment Account on Account {
+    __typename
+    address
+    username{
+      ...Username
+    }
     metadata {
       ...AccountMetadata
     }
@@ -63,7 +75,7 @@ export const AccountFragment = graphql(
   }`,
   [AccountMetadataFragment, LoggedInAccountOperationsFragment, UsernameFragment],
 );
-export type Account = FragmentOf<typeof AccountFragment>;
+export type FullAccount = FragmentOf<typeof AccountFragment>;
 
 const AccountManagerPermissionsFragment = graphql(
   `fragment AccountManagerPermissions on AccountManagerPermissions {

@@ -32,7 +32,7 @@ import { type AuthConfig, authExchange } from '@urql/exchange-auth';
 import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
 import { switchAccount, transactionStatus } from './actions';
 import type { ClientConfig } from './config';
-import { type Context, configureContext } from './context';
+import { type Context, type ContextFrom, configureContext } from './context';
 import {
   AuthenticationError,
   GraphQLErrorCode,
@@ -151,7 +151,9 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
    * @param options - The options to configure the client.
    * @returns The new instance of the client.
    */
-  static create(options: ClientConfig): PublicClient<Context> {
+  static create<TConfig extends ClientConfig>(
+    options: TConfig,
+  ): PublicClient<ContextFrom<TConfig>> {
     return new PublicClient(configureContext(options));
   }
 

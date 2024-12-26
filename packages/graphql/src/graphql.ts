@@ -164,6 +164,8 @@ export const graphql = initGraphQLTada<{
   };
 }>();
 
+export type { FragmentOf, TadaDocumentNode };
+
 /**
  * @internal
  */
@@ -205,7 +207,12 @@ export type FragmentDocumentFor<TGqlNode extends AnyGqlNode> = TGqlNode extends 
     >
   : never;
 
-export type RequestFrom<In extends string> = RequestOf<GetDocumentNode<In, FragmentShape[]>>;
+/**
+ * @internal
+ */
+export type RequestTypeOf<Name extends string> = RequestOf<
+  GetDocumentNode<`query Named($request: ${Name}) {}`, FragmentShape[]>
+>;
 
 // biome-ignore lint/suspicious/noExplicitAny: simplifies necessary type assertions
 export type StandardDocumentNode<Value = any, Request = any> = TadaDocumentNode<
