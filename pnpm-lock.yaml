@@ -78,6 +78,9 @@ importers:
       '@lens-protocol/metadata':
         specifier: next
         version: 2.0.0-next.2(zod@3.23.8)
+      '@lens-protocol/storage-node-client':
+        specifier: next
+        version: 0.0.0-next-20241217195719
       ethers:
         specifier: ^6.13.4
         version: 6.13.4
@@ -886,6 +889,9 @@ packages:
     peerDependenciesMeta:
       zod:
         optional: true
+
+  '@lens-protocol/storage-node-client@0.0.0-next-20241217195719':
+    resolution: {integrity: sha512-jWonPI26JViuAN54rjhhpC1jw9bkSmjnY7xqYUEmwdza/P6Noh5GXQLaHvyi9QgrQ7RO8Iw7ObgcTK2oHD84MA==}
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -3496,6 +3502,8 @@ snapshots:
       uuid: 9.0.1
     optionalDependencies:
       zod: 3.23.8
+
+  '@lens-protocol/storage-node-client@0.0.0-next-20241217195719': {}
 
   '@manypkg/find-root@1.1.0':
     dependencies:

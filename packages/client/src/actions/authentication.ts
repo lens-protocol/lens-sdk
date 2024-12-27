@@ -1,6 +1,7 @@
 import type {
   AuthenticatedSession,
   AuthenticatedSessionsRequest,
+  MeResult,
   Paginated,
   RefreshRequest,
   RefreshResult,
@@ -13,6 +14,7 @@ import {
   AuthenticatedSessionsQuery,
   CurrentSessionQuery,
   LegacyRolloverRefreshMutation,
+  MeQuery,
   RefreshMutation,
   RevokeAuthenticationMutation,
   SwitchAccountMutation,
@@ -141,4 +143,16 @@ export function switchAccount(
   request: SwitchAccountRequest,
 ): ResultAsync<SwitchAccountResult, UnauthenticatedError | UnexpectedError> {
   return client.mutation(SwitchAccountMutation, { request });
+}
+
+/**
+ * Retrieve the details of the authenticated Account.
+ *
+ * @param client - The session client for the authenticated Account.
+ * @returns The details of the authenticated Account.
+ */
+export function fetchMeDetails(
+  client: SessionClient,
+): ResultAsync<MeResult, UnauthenticatedError | UnexpectedError> {
+  return client.query(MeQuery, {});
 }
