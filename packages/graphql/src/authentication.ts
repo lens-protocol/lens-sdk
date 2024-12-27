@@ -1,5 +1,5 @@
 import type { FragmentOf } from 'gql.tada';
-import { PaginatedResultInfoFragment } from './fragments';
+import { AccountAvailableFragment, PaginatedResultInfoFragment } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
 const AuthenticationChallengeFragment = graphql(
@@ -197,3 +197,31 @@ export const SwitchAccountMutation = graphql(
   [SwitchAccountResultFragment],
 );
 export type SwitchAccountRequest = RequestOf<typeof SwitchAccountMutation>;
+
+const MeResultFragment = graphql(
+  `fragment MeResult on MeResult {
+    appLoggedIn
+    isSignless
+    isSponsored
+    limit {
+      allowance
+      allowanceLeft
+      allowanceUsed
+      window
+    }
+    loggedInAs {
+      ...AccountAvailable
+    }
+  }`,
+  [AccountAvailableFragment],
+);
+export type MeResult = FragmentOf<typeof MeResultFragment>;
+
+export const MeQuery = graphql(
+  `query Me {
+    value: me {
+      ...MeResult
+    }
+  }`,
+  [MeResultFragment],
+);

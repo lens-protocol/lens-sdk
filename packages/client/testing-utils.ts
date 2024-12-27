@@ -1,8 +1,10 @@
 import { chains } from '@lens-network/sdk/viem';
+import { StorageClient, testnet as storageEnv } from '@lens-protocol/storage-node-client';
 import { evmAddress } from '@lens-protocol/types';
 import { http, type Account, type Transport, type WalletClient, createWalletClient } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
-import { GraphQLErrorCode, PublicClient, testnet } from './src';
+
+import { GraphQLErrorCode, PublicClient, testnet as apiEnv } from './src';
 
 const pk = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
 const account = evmAddress(import.meta.env.TEST_ACCOUNT);
@@ -12,7 +14,7 @@ export const signer = evmAddress(pk.address);
 
 export function createPublicClient() {
   return PublicClient.create({
-    environment: testnet,
+    environment: apiEnv,
     origin: 'http://example.com',
   });
 }
@@ -69,3 +71,5 @@ export function createGraphQLErrorObject(code: GraphQLErrorCode) {
     },
   };
 }
+
+export const storageClient = StorageClient.create(storageEnv);

@@ -20,44 +20,36 @@ describe('Given an onboarding user', () => {
       let newAccount: Account | null = null;
 
       // Login as onboarding user
-      const sessionClient = await loginAsOnboardingUser()
-        .andThen((sessionClient) =>
-          // Create an account with username
-          createAccountWithUsername(sessionClient, {
-            username: { localName: `testname${Date.now()}` },
-            metadataUri: uri(`data:application/json,${JSON.stringify(metadata)}`),
+      const result = await loginAsOnboardingUser().andThen((sessionClient) =>
+        // Create an account with username
+        createAccountWithUsername(sessionClient, {
+          username: { localName: `testname${Date.now()}` },
+          metadataUri: uri(`data:application/json,${JSON.stringify(metadata)}`),
+        })
+          // Sign if necessary
+          .andThen(handleWith(walletClient))
+
+          // Wait for the transaction to be mined
+          .andThen(sessionClient.waitForTransaction)
+
+          // Fetch the account
+          .andThen((txHash) => fetchAccount(sessionClient, { txHash }))
+
+          .andTee((account) => {
+            newAccount = account ?? never('Account not found');
           })
-            // Sign if necessary
-            .andThen(handleWith(walletClient))
 
-            // Wait for the transaction to be mined
-            .andThen(sessionClient.waitForTransaction)
+          // Switch to the newly created account
+          .andThen((account) =>
+            sessionClient.switchAccount({
+              account: account?.address ?? never('Account not found'),
+            }),
+          ),
+      );
+      assertOk(result);
 
-            // Fetch the account
-            .andThen((txHash) => fetchAccount(sessionClient, { txHash }))
-
-            .andTee((account) => {
-              newAccount = account ?? never('Account not found');
-            })
-
-            // Switch to the newly created account
-            .andThen((account) =>
-              sessionClient.switchAccount({
-                account: account?.address ?? never('Account not found'),
-              }),
-            ),
-        )
-        .match(
-          (value) => value,
-          (error) => {
-            throw error;
-          },
-        );
-
-      const user = await sessionClient.getAuthenticatedUser();
-      assertOk(user);
-
-      expect(user.value).toMatchObject({
+      const user = await result.value.getAuthenticatedUser().unwrapOr(null);
+      expect(user).toMatchObject({
         role: Role.AccountOwner,
         account: newAccount!.address.toLowerCase(),
         owner: signer.toLowerCase(),

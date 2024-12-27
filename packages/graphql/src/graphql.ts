@@ -21,6 +21,7 @@ import type {
   UsernameValue,
   Void,
 } from '@lens-protocol/types';
+import { InvariantError } from '@lens-protocol/types';
 import {
   type DocumentDecoration,
   type FragmentOf,
@@ -251,3 +252,14 @@ export type DynamicFragmentOf<
 > = Document extends DynamicFragmentDocument<infer In, infer StaticNodes>
   ? FragmentOf<FragmentDocumentFrom<In, FragmentDocumentForEach<[...DynamicNodes, ...StaticNodes]>>>
   : never;
+
+export function assertTypename<Typename extends string>(
+  node: AnyGqlNode,
+  typename: Typename,
+): asserts node is AnyGqlNode<Typename> {
+  if (node.__typename !== typename) {
+    throw new InvariantError(
+      `Expected node to have typename "${typename}", but got "${node.__typename}"`,
+    );
+  }
+}
