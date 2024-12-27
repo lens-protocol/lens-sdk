@@ -66,5 +66,5 @@ const created = await createAccountWithUsername(sessionClient, {
 
 export default [
   `<h2>${created?.username?.value}</h2>`,
-  `<p>Address: ${await created?.address}</p>`,
+  `<p>Address: ${created?.address}</p>`,
 ];
