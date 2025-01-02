@@ -48,6 +48,9 @@ export const AccountFragment = graphql(
   `fragment Account on Account {
     __typename
     address
+    owner
+    score
+    createdAt
     username{
       ...Username
     }
