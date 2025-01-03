@@ -161,7 +161,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
             errors: [createGraphQLErrorObject(GraphQLErrorCode.UNAUTHENTICATED)],
           }),
         ),
-        graphql.mutation(RefreshMutation, (_) =>
+        graphql.mutation(RefreshMutation, (_req: unknown) =>
           HttpResponse.json({
             errors: [createGraphQLErrorObject(GraphQLErrorCode.BAD_USER_INPUT)],
           }),
