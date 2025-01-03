@@ -56,7 +56,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
           owner,
           app,
         },
-        signMessage: async () => {
+        signMessage: async (message: string) => {
           throw new Error('Test Error');
         },
       });
@@ -110,7 +110,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
       const server = setupServer(
         graphql.query(
           CurrentSessionQuery,
-          (_) =>
+          (_req: unknown) =>
             HttpResponse.json({
               errors: [createGraphQLErrorObject(GraphQLErrorCode.UNAUTHENTICATED)],
             }),
@@ -156,12 +156,12 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
 
     describe('When a token refresh fails', () => {
       const server = setupServer(
-        graphql.query(CurrentSessionQuery, (_) =>
+        graphql.query(CurrentSessionQuery, (_req: unknown) =>
           HttpResponse.json({
             errors: [createGraphQLErrorObject(GraphQLErrorCode.UNAUTHENTICATED)],
           }),
         ),
-        graphql.mutation(RefreshMutation, (_) =>
+        graphql.mutation(RefreshMutation, (_req: unknown) =>
           HttpResponse.json({
             errors: [createGraphQLErrorObject(GraphQLErrorCode.BAD_USER_INPUT)],
           }),
