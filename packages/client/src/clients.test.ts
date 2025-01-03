@@ -156,7 +156,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
 
     describe('When a token refresh fails', () => {
       const server = setupServer(
-        graphql.query(CurrentSessionQuery, (_) =>
+        graphql.query(CurrentSessionQuery, (_req: unknown) =>
           HttpResponse.json({
             errors: [createGraphQLErrorObject(GraphQLErrorCode.UNAUTHENTICATED)],
           }),
