@@ -56,7 +56,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
           owner,
           app,
         },
-        signMessage: async () => {
+        signMessage: async (message: string) => {
           throw new Error('Test Error');
         },
       });
