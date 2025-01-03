@@ -110,7 +110,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
       const server = setupServer(
         graphql.query(
           CurrentSessionQuery,
-          (_) =>
+          (_req: unknown) =>
             HttpResponse.json({
               errors: [createGraphQLErrorObject(GraphQLErrorCode.UNAUTHENTICATED)],
             }),
