@@ -225,6 +225,19 @@ export const ReferencedPostFragment = graphql(
   ],
 );
 
+export const PostStatsFragment = graphql(
+  `fragment PostStats on PostStats {
+    __typename
+    bookmarks
+    collects
+    comments
+    quotes
+    reactions
+    reposts
+  }`,
+);
+export type PostStats = FragmentOf<typeof PostStatsFragment>;
+
 export const PostFragment = graphql(
   `fragment Post on Post {
     __typename
@@ -236,6 +249,10 @@ export const PostFragment = graphql(
       ...Feed
     }
     timestamp
+    slug
+    stats {
+      ...PostStats
+    }
     app {
       ...App
     }
@@ -265,6 +282,7 @@ export const PostFragment = graphql(
     FeedFragment,
     PostMetadataFragment,
     PostActionFragment,
+    PostStatsFragment,
     ReferencedPostFragment,
     LoggedInPostOperationsFragment,
   ],
