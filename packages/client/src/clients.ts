@@ -7,33 +7,35 @@ import type {
 } from '@lens-protocol/graphql';
 import type { Credentials, IStorage } from '@lens-protocol/storage';
 import { createCredentialsStorage } from '@lens-protocol/storage';
+import type { TxHash } from '@lens-protocol/types';
 import {
-  ResultAsync,
-  type TxHash,
+  type Result,
+  type ResultAsync,
   errAsync,
   invariant,
   okAsync,
   signatureFrom,
 } from '@lens-protocol/types';
-import {
-  type AnyVariables,
-  type Exchange,
-  type OperationResult,
-  type OperationResultSource,
-  type TypedDocumentNode,
-  type Client as UrqlClient,
-  createClient,
-  fetchExchange,
+
+import type {
+  AnyVariables,
+  Exchange,
+  OperationResult,
+  OperationResultSource,
+  TypedDocumentNode,
+  Client as UrqlClient,
+  Operation,
+  GraphQLError,
 } from '@urql/core';
-import { type Logger, getLogger } from 'loglevel';
+import { createClient, fetchExchange } from '@urql/core';
+import type { Logger } from 'loglevel';
+import { getLogger } from 'loglevel';
 
 import type { SwitchAccountRequest } from '@lens-protocol/graphql';
-import { type AuthConfig, authExchange } from '@urql/exchange-auth';
-import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
-import { switchAccount, transactionStatus } from './actions';
-import type { ClientConfig } from './config';
-import { type Context, configureContext } from './context';
-import {
+import type { AuthConfig } from '@urql/exchange-auth';
+import { authExchange } from '@urql/exchange-auth';
+
+import type {
   AuthenticationError,
   GraphQLErrorCode,
   SigningError,
@@ -109,13 +111,15 @@ abstract class AbstractClient<TContext extends Context, TError> {
     return [fetchExchange];
   }
 
-  protected resultFrom<TData, TVariables extends AnyVariables>(
-    source: OperationResultSource<OperationResult<TData, TVariables>>,
-  ): ResultAsync<OperationResult<TData, TVariables>, TError | UnexpectedError> {
+  protected resultFrom<
+    Data,
+    Variables extends AnyVariables,
+    R extends OperationResult<Data, Variables>,
+  >(source: OperationResultSource<R>): ResultAsync<R, TError | UnexpectedError> {
     return ResultAsync.fromPromise(source.toPromise(), (err: unknown) => {
       this.logger.error(err);
       return UnexpectedError.from(err);
-    }).andThen((result) => {
+    }).andThen((result: R) => {
       if (result.error?.networkError) {
         return errAsync(UnexpectedError.from(result.error.networkError));
       }
@@ -169,13 +173,13 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
     request: SignedAuthChallenge,
   ): ResultAsync<SessionClient<TContext>, AuthenticationError | UnexpectedError> {
     return this.mutation(AuthenticateMutation, { request })
-      .andThen((result) => {
+      .andThen((result: AuthResult) => {
         if (result.__typename === 'AuthenticationTokens') {
           return okAsync(result);
         }
         return AuthenticationError.from(result.reason).asResultAsync();
       })
-      .map(async (tokens) => {
+      .map(async (tokens: AuthTokens) => {
         await this.credentials.set(tokens);
         return new SessionClient(this);
       });
@@ -219,7 +223,7 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
    * @returns The session client if available.
    */
   resumeSession(): ResultAsync<SessionClient<TContext>, UnauthenticatedError> {
-    return ResultAsync.fromSafePromise(this.credentials.get()).andThen((credentials) => {
+    return ResultAsync.fromSafePromise(this.credentials.get()).andThen((credentials: Credentials | null) => {
       if (!credentials) {
         return new UnauthenticatedError('No credentials found').asResultAsync();
       }
@@ -443,11 +447,11 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
 
   protected override exchanges(): Exchange[] {
     return [
-      authExchange(async (utils): Promise<AuthConfig> => {
+      authExchange(async (utils: UrqlUtils): Promise<AuthConfig> => {
         let credentials = await this.getCredentials().unwrapOr(null);
 
         return {
-          addAuthToOperation: (operation) => {
+          addAuthToOperation: (operation: Operation) => {
             if (!credentials) return operation;
 
             return utils.appendHeaders(operation, {
@@ -455,7 +459,7 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
             });
           },
 
-          didAuthError: (error) => hasExtensionCode(error, GraphQLErrorCode.UNAUTHENTICATED),
+          didAuthError: (error: GraphQLError) => hasExtensionCode(error, GraphQLErrorCode.UNAUTHENTICATED),
 
           refreshAuth: async () => {
             const result = await utils.mutate(RefreshMutation, {
