@@ -1,18 +1,3 @@
-"""
-The comparison operator to use. In case of boolean functions you can only use EQUAL or NOT_EQUAL
-"""
-enum AccessConditionComparison {
-  EQUAL
-  NOT_EQUAL
-  GREATER_THAN
-  GREATER_THAN_OR_EQUAL
-  LESS_THAN
-  LESS_THAN_OR_EQUAL
-}
-
-"""AccessConditionType"""
-union AccessConditionType = NftOwnershipCondition | Erc20OwnershipCondition | EoaOwnershipCondition | ProfileOwnershipCondition | FollowCondition | CollectCondition | AdvancedContractCondition
-
 scalar AccessToken
 
 type Account {
@@ -53,6 +38,16 @@ type AccountBlocked {
   blockedAt: DateTime!
 }
 
+input AccountBlockedNotificationAttributes {
+  graph: EvmAddress
+  app: EvmAddress
+}
+
+input AccountCreatedNotificationAttributes {
+  graph: EvmAddress
+  app: EvmAddress
+}
+
 type AccountFeedsStats {
   """The total number of posts."""
   posts: Int!
@@ -82,6 +77,13 @@ input AccountFeedsStatsRequest {
 
   """The feeds to get stats for."""
   forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
+}
+
+input AccountFollowedNotificationAttributes {
+  follower: EvmAddress
+  followedAccount: EvmAddress
+  graph: EvmAddress
+  app: EvmAddress
 }
 
 type AccountGraphsFollowStats {
@@ -123,6 +125,11 @@ type AccountManager {
 
   """The date the account manager was added."""
   addedAt: DateTime!
+}
+
+input AccountManagerAddedNotificationAttributes {
+  managedAccount: EvmAddress
+  manager: EvmAddress
 }
 
 input AccountManagerChallengeRequest {
@@ -171,6 +178,16 @@ input AccountManagerPermissionsInput {
   canSetMetadataUri: Boolean!
 }
 
+input AccountManagerRemovedNotificationAttributes {
+  managedAccount: EvmAddress
+  manager: EvmAddress
+}
+
+input AccountManagerUpdatedNotificationAttributes {
+  managedAccount: EvmAddress
+  manager: EvmAddress
+}
+
 input AccountManagersRequest {
   """The page size."""
   pageSize: PageSize! = FIFTY
@@ -191,6 +208,14 @@ type AccountMention {
   Use to replace mentions in the post content.
   """
   replace: MentionReplace!
+}
+
+input AccountMentionedNotificationAttributes {
+  author: EvmAddress
+  feed: EvmAddress
+  mentionedAccount: EvmAddress
+  mentionedUsername: UsernameValue
+  app: EvmAddress
 }
 
 type AccountMetadata {
@@ -246,6 +271,10 @@ input AccountOwnerChallengeRequest {
   owner: EvmAddress!
 }
 
+input AccountOwnershipTransferredNotificationAttributes {
+  account: EvmAddress
+}
+
 type AccountPostReaction {
   account: Account!
   reactions: [PostReaction!]!
@@ -255,6 +284,12 @@ enum AccountReportReason {
   IMPERSONATION
   REPETITIVE_SPAM
   OTHER
+}
+
+input AccountReportedNotificationAttributes {
+  reportedAccount: EvmAddress
+  reporter: EvmAddress
+  app: EvmAddress
 }
 
 input AccountRequest {
@@ -290,9 +325,36 @@ input AccountStatsRequest {
   forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
 }
 
+input AccountUnblockedNotificationAttributes {
+  graph: EvmAddress
+  app: EvmAddress
+}
+
+input AccountUnfollowedNotificationAttributes {
+  unfollower: EvmAddress
+  unfollowedAccount: EvmAddress
+  graph: EvmAddress
+  app: EvmAddress
+}
+
+input AccountUsernameAssignedNotificationAttributes {
+  namespace: EvmAddress
+  account: EvmAddress
+}
+
+input AccountUsernameCreatedNotificationAttributes {
+  namespace: EvmAddress
+  account: EvmAddress
+}
+
 input AccountUsernameRequest {
   """The namespace to get account assigned username"""
   namespace: EvmAddress! = "0x6Cc71E78e25eBF6A2525CadC1fc628B42AE4138f"
+}
+
+input AccountUsernameUnassignedNotificationAttributes {
+  namespace: EvmAddress
+  previousAccount: EvmAddress
 }
 
 input AccountsAvailableRequest {
@@ -472,36 +534,6 @@ input AdminsForRequest {
   cursor: Cursor
 }
 
-type AdvancedContractCondition {
-  """
-  The contract ABI. Has to be in human readable single string format containing the signature of the function you want to call. See https://docs.ethers.org/v5/api/utils/abi/formats/#abi-formats--human-readable-abi for more info
-  """
-  abi: String!
-
-  """
-  The comparison operator to use. In case of boolean functions you can only use EQUAL or
-  NOT_EQUAL
-  """
-  comparison: AccessConditionComparison!
-  contract: NetworkAddress!
-
-  """The name of the function you want to call"""
-  functionName: String!
-
-  """
-  The parameters to pass to the function. Must be exactly matching the function arguments.
-  You *must* pass in the `:userAddress` parameter to represent the decrypter address. Any
-  array or tuple arguments, must be stringified JSON arrays.
-  """
-  params: [String!]!
-  type: String!
-
-  """The comparison value. Accepts 'true', 'false' or a number"""
-  value: AdvancedContractConditionValue!
-}
-
-scalar AdvancedContractConditionValue
-
 type Amount {
   asset: Asset!
 
@@ -526,31 +558,7 @@ input AmountInput {
   value: BigDecimal!
 }
 
-"""AccessConditionCriteriaItem"""
-union AnyAccessCondition = BooleanAndCondition | BooleanOrCondition | CollectCondition | AdvancedContractCondition | EoaOwnershipCondition | Erc20OwnershipCondition | FollowCondition | NftOwnershipCondition | ProfileOwnershipCondition
-
-"""
-AnyMedia
-
-<details><summary>JSON schema</summary>
-
-```json
-{
-"anyOf": [
-{
-"$ref": "#/$defs/MediaAudio"
-},
-{
-"$ref": "#/$defs/MediaImage"
-},
-{
-"$ref": "#/$defs/MediaVideo"
-}
-]
-}
-```
-</details>
-"""
+"""AnyMedia"""
 union AnyMedia = MediaAudio | MediaImage | MediaVideo
 
 union AnyPost = Post | Repost
@@ -614,7 +622,7 @@ type AppMetadata {
   tagline: String
 
   """The platforms supported by the app."""
-  platforms: [AppMetadataLensPlatformsItem!]!
+  platforms: [AppPlatform!]!
 
   """The privacy policy for the app."""
   privacyPolicy: URI
@@ -626,7 +634,7 @@ type AppMetadata {
   url: URI!
 }
 
-enum AppMetadataLensPlatformsItem {
+enum AppPlatform {
   WEB
   IOS
   ANDROID
@@ -759,11 +767,10 @@ type ArticleMetadata {
   their usage as arbitrary attributes will be discouraged.
   """
   attributes: [MetadataAttribute!]!
-  content: Encryptable!
+  content: String!
 
   """Specify a content warning."""
   contentWarning: ContentWarning
-  encryptedWith: EncryptionStrategy
   id: MetadataId!
   locale: Locale!
 
@@ -803,7 +810,6 @@ type AudioMetadata {
 
   """Specify a content warning."""
   contentWarning: ContentWarning
-  encryptedWith: EncryptionStrategy
   id: MetadataId!
   locale: Locale!
 
@@ -815,7 +821,7 @@ type AudioMetadata {
 
   """The optional audio title."""
   title: String
-  content: Encryptable!
+  content: String!
 }
 
 type AuthenticatedSession {
@@ -891,16 +897,6 @@ input BookmarkPostRequest {
   post: PostId!
 }
 
-type BooleanAndCondition {
-  criteria: [AccessConditionType!]!
-  type: String!
-}
-
-type BooleanOrCondition {
-  criteria: [AccessConditionType!]!
-  type: String!
-}
-
 type BooleanValue {
   optimistic: Boolean!
   onChain: Boolean!
@@ -967,33 +963,25 @@ type CheckingInMetadata {
 
   """Specify a content warning."""
   contentWarning: ContentWarning
-  encryptedWith: EncryptionStrategy
   id: MetadataId!
   locale: Locale!
 
   """Where you're checking in from (free form text)."""
-  location: Encryptable!
+  location: String!
 
   """The main focus of the post."""
   mainContentFocus: MainContentFocus!
 
   """The optional geographic position of the location."""
-  position: Encryptable
+  position: GeoUri
 
   """An arbitrary list of tags."""
   tags: [Tag!]
-  content: Encryptable!
+  content: String!
 }
 
 input CollectActionInput {
   simpleCollectAction: SimpleCollectActionInput
-}
-
-"""CollectCondition"""
-type CollectCondition {
-  publicationId: LegacyPublicationId!
-  thisPublication: Boolean!
-  type: String!
 }
 
 type CommentNotification {
@@ -1159,6 +1147,24 @@ input CreateRepostRequest {
   post: PostId!
 }
 
+input CreateSnsSubscriptionRequest {
+  """
+  The webhook URL to send notifications to. It must be an HTTP or HTTPS URL that is
+  accessible by the Lens API and is owned by you as it will be used to confirm the
+  subscription.
+  """
+  webhook: String!
+
+  """
+  The topics to subscribe to. You can subscribe to multiple topics at once. This cannot be
+  changed once the subscription is created.
+  """
+  topics: [SnsTopicInput!]!
+
+  """The app to optionally assign this subscription to."""
+  app: EvmAddress
+}
+
 input CreateUnfollowRequest {
   """The account to unfollow."""
   account: EvmAddress!
@@ -1246,6 +1252,10 @@ type DeletePostResponse {
 }
 
 union DeletePostResult = DeletePostResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input DeleteSnsSubscriptionRequest {
+  id: UUID!
+}
 
 input EditPostRequest {
   post: PostId!
@@ -1362,8 +1372,7 @@ type EmbedMetadata {
   contentWarning: ContentWarning
 
   """The embed URL."""
-  embed: Encryptable!
-  encryptedWith: EncryptionStrategy
+  embed: URI!
   id: MetadataId!
   locale: Locale!
 
@@ -1372,14 +1381,21 @@ type EmbedMetadata {
 
   """An arbitrary list of tags."""
   tags: [Tag!]
-  content: Encryptable!
+  content: String!
 }
 
 union EnableSignlessResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
-scalar Encryptable
-
-union EncryptionStrategy = LitProtocolEncryptionStrategy
+input EntityId @oneOf {
+  account: EvmAddress
+  graph: EvmAddress
+  feed: EvmAddress
+  usernameNamespace: EvmAddress
+  group: EvmAddress
+  post: PostId
+  app: EvmAddress
+  sponsorship: EvmAddress
+}
 
 enum EntityType {
   ACCOUNT
@@ -1392,24 +1408,11 @@ enum EntityType {
   SPONSORSHIP
 }
 
-"""EoaOwnershipCondition"""
-type EoaOwnershipCondition {
-  address: EvmAddress!
-  type: String!
-}
-
 type Erc20 {
   name: String!
   symbol: String!
   decimals: Int!
   contract: NetworkAddress!
-}
-
-"""Erc20OwnershipCondition"""
-type Erc20OwnershipCondition {
-  amount: Amount!
-  condition: AccessConditionComparison!
-  type: String!
 }
 
 type EventMetadata {
@@ -1428,14 +1431,13 @@ type EventMetadata {
 
   """Specify a content warning."""
   contentWarning: ContentWarning
-  encryptedWith: EncryptionStrategy
 
   """The event end time (ISO 8601 `YYYY-MM-DDTHH:mm:ss.sssZ`)."""
-  endsAt: Encryptable!
+  endsAt: DateTime!
   id: MetadataId!
 
   """The links you want to include with it."""
-  links: [Encryptable!]!
+  links: [URI!]!
   locale: Locale!
 
   """The location of the event."""
@@ -1445,22 +1447,22 @@ type EventMetadata {
   mainContentFocus: MainContentFocus!
 
   """The geographic position of the event."""
-  position: Encryptable
+  position: GeoUri
   schedulingAdjustments: EventMetadataLensSchedulingAdjustments
 
   """The event start time (ISO 8601 `YYYY-MM-DDTHH:mm:ss.sssZ`)."""
-  startsAt: Encryptable!
+  startsAt: DateTime!
 
   """An arbitrary list of tags."""
   tags: [Tag!]
 
   """The title of the event."""
   title: String
-  content: Encryptable!
+  content: String!
 }
 
 type EventMetadataLensLocation {
-  physical: Encryptable
+  physical: String
   virtual: URI
 }
 
@@ -2010,12 +2012,6 @@ type FinishedTransactionStatus {
   blockTimestamp: DateTime!
 }
 
-"""FollowCondition"""
-type FollowCondition {
-  follow: LegacyProfileId!
-  type: String!
-}
-
 type FollowNotification {
   id: GeneratedNotificationId!
   followers: [NotificationAccountFollow!]!
@@ -2181,6 +2177,16 @@ input GenerateNewAppServerApiKeyRequest {
 }
 
 scalar GeneratedNotificationId
+
+scalar GeoUri
+
+input GetSnsSubscriptionsRequest {
+  """
+  The app to get subscriptions for. If not provided, all subscriptions owned by the logged in
+  account will be returned.
+  """
+  app: EvmAddress
+}
 
 type Graph {
   address: EvmAddress!
@@ -2417,7 +2423,6 @@ type ImageMetadata {
 
   """Specify a content warning."""
   contentWarning: ContentWarning
-  encryptedWith: EncryptionStrategy
   id: MetadataId!
   image: MediaImage!
   locale: Locale!
@@ -2430,7 +2435,7 @@ type ImageMetadata {
 
   """The optional image title."""
   title: String
-  content: Encryptable!
+  content: String!
 }
 
 type InvalidUsername {
@@ -2444,6 +2449,9 @@ input IsFollowedByMeRequest {
 input IsFollowingMeRequest {
   graph: EvmAddress!
 }
+
+"""A scalar that can represent any JSON value."""
+scalar JSON
 
 input JoinGroupRequest {
   """The group you want to join"""
@@ -2490,8 +2498,6 @@ union LeaveGroupResult = LeaveGroupResponse | SponsoredTransactionRequest | Self
 
 scalar LegacyProfileId
 
-scalar LegacyPublicationId
-
 scalar LegacyRefreshToken
 
 type LengthUsernameNamespaceRule {
@@ -2513,7 +2519,6 @@ type LinkMetadata {
 
   """Specify a content warning."""
   contentWarning: ContentWarning
-  encryptedWith: EncryptionStrategy
   id: MetadataId!
   locale: Locale!
 
@@ -2521,17 +2526,11 @@ type LinkMetadata {
   mainContentFocus: MainContentFocus!
 
   """The sharing link url."""
-  sharingLink: Encryptable!
+  sharingLink: URI!
 
   """An arbitrary list of tags."""
   tags: [Tag!]
-  content: Encryptable!
-}
-
-type LitProtocolEncryptionStrategy {
-  accessCondition: TopLevelAccessCondition!
-  encryptedPaths: [String!]!
-  encryptionKey: String!
+  content: String!
 }
 
 type LivestreamMetadata {
@@ -2549,21 +2548,20 @@ type LivestreamMetadata {
   The data cannot be changed so you can put in an API endpoint to know if it is still live or
   not for clients to be able to check.
   """
-  checkLiveApi: Encryptable
+  checkLiveApi: URI
 
   """Specify a content warning."""
   contentWarning: ContentWarning
-  encryptedWith: EncryptionStrategy
 
   """The optional stream end time (ISO 8601 `YYYY-MM-DDTHH:mm:ss.sssZ`)"""
-  endsAt: Encryptable
+  endsAt: DateTime
   id: MetadataId!
 
   """
   Some livestream platforms have the live url as a separate url. If not your case make sure
   `liveUrl` and `playbackUrl` are the same.
   """
-  liveUrl: Encryptable!
+  liveUrl: URI!
   locale: Locale!
 
   """The main focus of the post."""
@@ -2573,17 +2571,17 @@ type LivestreamMetadata {
   Some livestream platforms have the playback url as a separate url. If not your case make
   sure `liveUrl` and `playbackUrl` are the same.
   """
-  playbackUrl: Encryptable!
+  playbackUrl: URI!
 
   """The stream start time (ISO 8601 `YYYY-MM-DDTHH:mm:ss.sssZ`)."""
-  startsAt: Encryptable!
+  startsAt: DateTime!
 
   """An arbitrary list of tags."""
   tags: [Tag!]
 
   """The livestream title."""
   title: String
-  content: Encryptable!
+  content: String!
 }
 
 scalar Locale
@@ -2722,149 +2720,42 @@ type MeResult {
   limit: SponsorshipAllowance!
 }
 
-"""
-MediaAudio
-
-<details><summary>JSON schema</summary>
-
-```json
-{
-"type": "object",
-"required": [
-"item",
-"type"
-],
-"properties": {
-"artist": {
-"description": "The name of the artist.",
-"$ref": "#/$defs/EncryptableString"
-},
-"attributes": {
-"description": "A bag of attributes that can be used to store any kind of metadata that is not currently supported by the standard.",
-"type": "array",
-"items": {
-"$ref": "#/$defs/MetadataAttribute"
-},
-"minItems": 1
-},
-"cover": {
-"$ref": "#/$defs/EncryptableUri"
-},
-"credits": {
-"description": "The credits for the audio.",
-"$ref": "#/$defs/EncryptableString"
-},
-"duration": {
-"description": "How long the the audio is in seconds.",
-"type": "integer",
-"exclusiveMinimum": 0.0
-},
-"genre": {
-"description": "The genre of the audio",
-"$ref": "#/$defs/EncryptableString"
-},
-"item": {
-"$ref": "#/$defs/EncryptableUri"
-},
-"kind": {
-"description": "The type of audio.",
-"type": "string",
-"enum": [
-"MUSIC",
-"PODCAST",
-"AUDIOBOOK",
-"VOICE_NOTE",
-"SOUND",
-"OTHER"
-]
-},
-"license": {
-"description": "The license for the audio.",
-"$ref": "#/$defs/MetadataLicenseType"
-},
-"lyrics": {
-"$ref": "#/$defs/EncryptableUri"
-},
-"recordLabel": {
-"description": "The record label for the audio.",
-"$ref": "#/$defs/EncryptableString"
-},
-"type": {
-"description": "The mime type of the audio file.",
-"type": "string",
-"enum": [
-"audio/wav",
-"audio/vnd.wave",
-"audio/mpeg",
-"audio/ogg",
-"audio/mp4",
-"audio/aac",
-"audio/webm",
-"audio/flac"
-]
-}
-},
-"additionalProperties": false
-}
-```
-</details>
-"""
+"""MediaAudio"""
 type MediaAudio {
   """The name of the artist."""
-  artist: Encryptable
+  artist: String
 
   """
   A bag of attributes that can be used to store any kind of metadata that is not currently
   supported by the standard.
   """
   attributes: [MetadataAttribute!]!
-  cover: Encryptable
+  cover: URI
 
   """The credits for the audio."""
-  credits: Encryptable
+  credits: String
 
   """How long the the audio is in seconds."""
   duration: Int
 
   """The genre of the audio"""
-  genre: Encryptable
-  item: Encryptable!
+  genre: String
+  item: URI!
 
   """The type of audio."""
   kind: MediaAudioKind
 
   """The license for the audio."""
   license: MetadataLicenseType
-  lyrics: Encryptable
+  lyrics: URI
 
   """The record label for the audio."""
-  recordLabel: Encryptable
+  recordLabel: String
 
   """The mime type of the audio file."""
   type: MediaAudioType!
 }
 
-"""
-The type of audio.
-
-<details><summary>JSON schema</summary>
-
-```json
-{
-"description": "The type of audio.",
-"type": "string",
-"enum": [
-"MUSIC",
-"PODCAST",
-"AUDIOBOOK",
-"VOICE_NOTE",
-"SOUND",
-"OTHER"
-]
-}
-```
-</details>
-"""
 enum MediaAudioKind {
   MUSIC
   PODCAST
@@ -2874,29 +2765,7 @@ enum MediaAudioKind {
   OTHER
 }
 
-"""
-The mime type of the audio file.
-
-<details><summary>JSON schema</summary>
-
-```json
-{
-"description": "The mime type of the audio file.",
-"type": "string",
-"enum": [
-"audio/wav",
-"audio/vnd.wave",
-"audio/mpeg",
-"audio/ogg",
-"audio/mp4",
-"audio/aac",
-"audio/webm",
-"audio/flac"
-]
-}
-```
-</details>
-"""
+"""The mime type of the audio file."""
 enum MediaAudioType {
   AUDIO_WAV
   AUDIO_VND_WAVE
@@ -2963,14 +2832,14 @@ MediaImage
 """
 type MediaImage {
   """The alt tag for accessibility"""
-  altTag: Encryptable
+  altTag: String
 
   """
   A bag of attributes that can be used to store any kind of metadata that is not currently
   supported by the standard.
   """
   attributes: [MetadataAttribute!]!
-  item: Encryptable!
+  item: URI!
 
   """The license for the image"""
   license: MetadataLicenseType
@@ -3013,6 +2882,10 @@ enum MediaImageType {
   TIFF
   WEBP
   X_MS_BMP
+}
+
+input MediaSnapshotNotificationAttributes {
+  source: EntityId
 }
 
 """
@@ -3079,18 +2952,18 @@ MediaVideo
 """
 type MediaVideo {
   """The alt tag for accessibility"""
-  altTag: Encryptable
+  altTag: String
 
   """
   A bag of attributes that can be used to store any kind of metadata that is not currently
   supported by the standard.
   """
   attributes: [MetadataAttribute!]!
-  cover: Encryptable
+  cover: URI
 
   """How long the the video is in seconds"""
   duration: Int
-  item: Encryptable!
+  item: URI!
 
   """The license for the video"""
   license: MetadataLicenseType
@@ -3202,6 +3075,10 @@ enum MetadataLicenseType {
   TBNL_NC_ND_NPL_LEDGER
 }
 
+input MetadataSnapshotNotificationAttributes {
+  source: EntityId
+}
+
 type MintMetadata {
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
@@ -3215,7 +3092,6 @@ type MintMetadata {
 
   """Specify a content warning."""
   contentWarning: ContentWarning
-  encryptedWith: EncryptionStrategy
   id: MetadataId!
   locale: Locale!
 
@@ -3225,11 +3101,11 @@ type MintMetadata {
   """
   The mint item it can be a URL of the known provider like opensea https://opensea.io/assets/ethereum/0xfaa2471e93bd1cee3b0ab381c242ada8e1d1a759/299 or https://zora.co/collect/0x9d90669665607f08005cae4a7098143f554c59ef/39626. The Lens API has an allow list of providers and if the domain does not match it will mark it as failed metadata
   """
-  mintLink: Encryptable!
+  mintLink: URI!
 
   """An arbitrary list of tags."""
   tags: [Tag!]
-  content: Encryptable!
+  content: String!
 }
 
 input MlaccountRecommendationsRequest {
@@ -3287,6 +3163,13 @@ type Mutation {
   You MUST be authenticated as a builder to use this mutation.
   """
   addAppAuthorizationEndpoint(request: AddAppAuthorizationEndpointRequest!): Void!
+
+  """
+  Remove an app authorization endpoint.
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  removeAppAuthorizationEndpoint(request: RemoveAppAuthorizationEndpointRequest!): Void!
 
   """
   Add feeds to an app
@@ -3632,6 +3515,13 @@ type Mutation {
   createGraph(request: CreateGraphRequest!): CreateGraphResult!
 
   """
+  Set metadata for a graph
+  
+  You MUST be authenticated to use this mutation.
+  """
+  setGraphMetadata(request: SetGraphMetadataRequest!): SetGraphMetadataResult!
+
+  """
   Create a new username namespace aka deploying a new username contract
   
   You MUST be authenticated as a builder to use this mutation.
@@ -3662,6 +3552,13 @@ type Mutation {
   unassignUsernameFromAccount(request: UnassignUsernameFromAccountRequest!): UnassignUsernameToAccountResult!
 
   """
+  Set metadata for a namespace
+  
+  You MUST be authenticated to use this mutation.
+  """
+  setNamespaceMetadata(request: SetNamespaceMetadataRequest!): SetNamespaceMetadataResult!
+
+  """
   Add admins to a graph/app/sponsor/feed/username/group.
   
   You MUST be authenticated as Account Owner to use this mutation.
@@ -3690,6 +3587,13 @@ type Mutation {
   createFeed(request: CreateFeedRequest!): CreateFeedResult!
 
   """
+  Set metadata for a feed
+  
+  You MUST be authenticated to use this mutation.
+  """
+  setFeedMetadata(request: SetFeedMetadataRequest!): SetFeedMetadataResult!
+
+  """
   Create a new group
   
   You MUST be authenticated to use this mutation.
@@ -3709,6 +3613,15 @@ type Mutation {
   You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   leaveGroup(request: LeaveGroupRequest!): LeaveGroupResult!
+
+  """
+  Set metadata for a group
+  
+  You MUST be authenticated to use this mutation.
+  """
+  setGroupMetadata(request: SetGroupMetadataRequest!): SetGroupMetadataResult!
+  createSnsSubscriptions(request: CreateSnsSubscriptionRequest!): [SnsSubscription!]!
+  deleteSnsSubscription(request: DeleteSnsSubscriptionRequest!): Void!
 }
 
 input MuteRequest {
@@ -3762,23 +3675,6 @@ type NamespacesResult {
 type NetworkAddress {
   address: EvmAddress!
   chainId: Int!
-}
-
-enum NftContractType {
-  ERC_721
-  ERC_1155
-}
-
-type NftOwnershipCondition {
-  contract: NetworkAddress!
-  contractType: NftContractType!
-
-  """
-  A list of token IDs you want to check ownership of. The list is optional for ERC721, you
-  MUST provide a list of token IDs for ERC1155.
-  """
-  tokenIds: [String!]!
-  type: String!
 }
 
 """The existence of the transaction is not yet indexed. Keep trying."""
@@ -4048,29 +3944,30 @@ type PendingTransactionStatus {
 """PhysicalAddress"""
 type PhysicalAddress {
   """The country name component."""
-  country: Encryptable!
+  country: String!
 
   """The full mailing address formatted for display."""
-  formatted: Encryptable
+  formatted: String
 
   """The city or locality."""
-  locality: Encryptable!
+  locality: String!
 
   """The zip or postal code."""
-  postalCode: Encryptable
+  postalCode: String
 
   """The state or region."""
-  region: Encryptable
+  region: String
 
   """
   The street address including house number, street name, P.O. Box, apartment or unit number
   and extended multi-line address information.
   """
-  streetAddress: Encryptable
+  streetAddress: String
 }
 
 type Post {
   id: PostId!
+  slug: PostId!
   author: Account!
   isEdited: Boolean!
   isDeleted: Boolean!
@@ -4129,12 +4026,37 @@ input PostBookmarksRequest {
   cursor: Cursor
 }
 
+input PostCreatedNotificationAttributes {
+  author: EvmAddress
+  parentPostId: PostId
+  postTypes: [PostType!]
+  feed: EvmAddress
+  app: EvmAddress
+}
+
+input PostDeletedNotificationAttributes {
+  author: EvmAddress
+  parentPostId: PostId
+  postTypes: [PostType!]
+  feed: EvmAddress
+  app: EvmAddress
+}
+
 type PostEdit {
   metadata: PostMetadata!
   timestamp: DateTime!
 }
 
+input PostEditedNotificationAttributes {
+  author: EvmAddress
+  parentPostId: PostId
+  postTypes: [PostType!]
+  feed: EvmAddress
+  app: EvmAddress
+}
+
 input PostEditsRequest {
+  """The post ID."""
   post: PostId!
   pageSize: PageSize! = FIFTY
   cursor: Cursor
@@ -4176,9 +4098,23 @@ type PostReaction {
   reactedAt: DateTime!
 }
 
+input PostReactionAddedNotificationAttributes {
+  postId: PostId
+  reactingAccount: EvmAddress
+  reactionType: PostReactionType
+  app: EvmAddress
+}
+
 enum PostReactionOrderBy {
   DEFAULT
   ACCOUNT_SCORE
+}
+
+input PostReactionRemovedNotificationAttributes {
+  postId: PostId
+  reactingAccount: EvmAddress
+  reactionType: PostReactionType
+  app: EvmAddress
 }
 
 type PostReactionStatus {
@@ -4259,6 +4195,13 @@ enum PostReportReason {
   FAKE_ENGAGEMENT
   MANIPULATION_ALGO
   SOMETHING_ELSE
+}
+
+input PostReportedNotificationAttributes {
+  author: EvmAddress
+  reporter: EvmAddress
+  feed: EvmAddress
+  app: EvmAddress
 }
 
 """You must provide either a txHash or a postId, not both."""
@@ -4351,12 +4294,6 @@ input PostsRequest {
   filter: PostsFilter
   pageSize: PageSize! = FIFTY
   cursor: Cursor
-}
-
-"""ProfileOwnershipCondition"""
-type ProfileOwnershipCondition {
-  profileId: LegacyProfileId!
-  type: String!
 }
 
 type Query {
@@ -4504,6 +4441,7 @@ type Query {
   You MUST be authenticated to use this query.
   """
   notifications(request: NotificationRequest!): PaginatedNotificationResult!
+  getSnsSubscriptions(request: GetSnsSubscriptionsRequest!): [SnsSubscription!]!
   mlAccountRecommendations(request: MlaccountRecommendationsRequest!): PaginatedAccountsResult!
   mlPostsForYou(request: MlpostsForYouRequest!): PaginatedPostsForYouResult!
   mlPostsExplore(request: MlexplorePostsRequest!): PaginatedPostsResult
@@ -4581,6 +4519,11 @@ input RemoveAdminsRequest {
 
 union RemoveAdminsResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
+input RemoveAppAuthorizationEndpointRequest {
+  """The app."""
+  app: EvmAddress!
+}
+
 input RemoveAppFeedsRequest {
   """The app to update"""
   app: EvmAddress!
@@ -4635,6 +4578,7 @@ input ReportPostRequest {
 
 type Repost {
   id: PostId!
+  slug: PostId!
   author: Account!
   isDeleted: Boolean!
   timestamp: DateTime!
@@ -4778,6 +4722,46 @@ input SetDefaultAppFeedRequest {
 
 union SetDefaultAppFeedResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
+input SetFeedMetadataRequest {
+  """The feed to update"""
+  feed: EvmAddress!
+
+  """The feed metadata to set"""
+  metadataUri: String!
+}
+
+union SetFeedMetadataResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input SetGraphMetadataRequest {
+  """The graph to update"""
+  graph: EvmAddress!
+
+  """The graph metadata to set"""
+  metadataUri: String!
+}
+
+union SetGraphMetadataResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input SetGroupMetadataRequest {
+  """The group to update"""
+  group: EvmAddress!
+
+  """The group metadata to set"""
+  metadataUri: String!
+}
+
+union SetGroupMetadataResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input SetNamespaceMetadataRequest {
+  """The namespace to update"""
+  namespace: EvmAddress!
+
+  """The namespace metadata to set"""
+  metadataUri: String!
+}
+
+union SetNamespaceMetadataResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
 scalar Signature
 
 input SignedAuthChallenge {
@@ -4831,6 +4815,82 @@ type SimplePaymentUsernameNamespaceRule {
   recipient: EvmAddress!
 }
 
+enum SnsNotificationType {
+  MEDIA_SNAPSHOT_SUCCESS
+  MEDIA_SNAPSHOT_ERROR
+  METADATA_SNAPSHOT_SUCCESS
+  METADATA_SNAPSHOT_ERROR
+  POST_CREATED
+  QUOTE_CREATED
+  COMMENT_CREATED
+  REPOST_CREATED
+  POST_EDITED
+  POST_DELETED
+  POST_COLLECTED
+  POST_ACTION_COMPLETED
+  POST_REACTION_ADDED
+  POST_REACTION_REMOVED
+  POST_REPORTED
+  ACCOUNT_CREATED
+  ACCOUNT_MENTIONED
+  ACCOUNT_FOLLOWED
+  ACCOUNT_UNFOLLOWED
+  ACCOUNT_FOLLOW_RULES_UPDATED
+  ACCOUNT_BLOCKED
+  ACCOUNT_UNBLOCKED
+  ACCOUNT_METADATA_UPDATED
+  ACCOUNT_USERNAME_CREATED
+  ACCOUNT_USERNAME_ASSIGNED
+  ACCOUNT_USERNAME_UNASSIGNED
+  ACCOUNT_CONTENT_CONSUMED
+  ACCOUNT_MANAGER_ADDED
+  ACCOUNT_MANAGER_REMOVED
+  ACCOUNT_MANAGER_UPDATED
+  ACCOUNT_OWNERSHIP_TRANSFERRED
+  ACCOUNT_REPORTED
+  ML_PROFILE_SIGNAL
+}
+
+type SnsSubscription {
+  id: UUID!
+  account: EvmAddress!
+  webhook: URL!
+  app: EvmAddress
+  topic: SnsNotificationType!
+  topicArn: String!
+  attributes: JSON!
+}
+
+input SnsTopicInput @oneOf {
+  mediaSnapshotSuccess: MediaSnapshotNotificationAttributes
+  mediaSnapshotError: MediaSnapshotNotificationAttributes
+  metadataSnapshotSuccess: MetadataSnapshotNotificationAttributes
+  metadataSnapshotError: MetadataSnapshotNotificationAttributes
+  postCreated: PostCreatedNotificationAttributes
+  quoteCreated: PostCreatedNotificationAttributes
+  commentCreated: PostCreatedNotificationAttributes
+  repostCreated: PostCreatedNotificationAttributes
+  postEdited: PostEditedNotificationAttributes
+  postDeleted: PostDeletedNotificationAttributes
+  postReactionAdded: PostReactionAddedNotificationAttributes
+  postReactionRemoved: PostReactionRemovedNotificationAttributes
+  postReported: PostReportedNotificationAttributes
+  accountCreated: AccountCreatedNotificationAttributes
+  accountMentioned: AccountMentionedNotificationAttributes
+  accountFollowed: AccountFollowedNotificationAttributes
+  accountUnfollowed: AccountUnfollowedNotificationAttributes
+  accountBlocked: AccountBlockedNotificationAttributes
+  accountUnblocked: AccountUnblockedNotificationAttributes
+  accountUsernameCreated: AccountUsernameCreatedNotificationAttributes
+  accountUsernameAssigned: AccountUsernameAssignedNotificationAttributes
+  accountUsernameUnassigned: AccountUsernameUnassignedNotificationAttributes
+  accountManagerAdded: AccountManagerAddedNotificationAttributes
+  accountManagerRemoved: AccountManagerRemovedNotificationAttributes
+  accountManagerUpdated: AccountManagerUpdatedNotificationAttributes
+  accountOwnershipTransferred: AccountOwnershipTransferredNotificationAttributes
+  accountReported: AccountReportedNotificationAttributes
+}
+
 type SpaceMetadata {
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
@@ -4844,25 +4904,24 @@ type SpaceMetadata {
 
   """Specify a content warning."""
   contentWarning: ContentWarning
-  encryptedWith: EncryptionStrategy
   id: MetadataId!
 
   """The space join link."""
-  link: Encryptable!
+  link: URI!
   locale: Locale!
 
   """The main focus of the post."""
   mainContentFocus: MainContentFocus!
 
   """The space start time (ISO 8601 `YYYY-MM-DDTHH:mm:ss.sssZ`)."""
-  startsAt: Encryptable!
+  startsAt: DateTime!
 
   """An arbitrary list of tags."""
   tags: [Tag!]
 
   """The space title."""
   title: String!
-  content: Encryptable!
+  content: String!
 }
 
 enum SponsorLimitType {
@@ -4919,7 +4978,6 @@ type StoryMetadata {
 
   """Specify a content warning."""
   contentWarning: ContentWarning
-  encryptedWith: EncryptionStrategy
   id: MetadataId!
   locale: Locale!
 
@@ -4928,7 +4986,7 @@ type StoryMetadata {
 
   """An arbitrary list of tags."""
   tags: [Tag!]
-  content: Encryptable!
+  content: String!
 }
 
 input SwitchAccountRequest {
@@ -4946,11 +5004,10 @@ type TextOnlyMetadata {
   their usage as arbitrary attributes will be discouraged.
   """
   attributes: [MetadataAttribute!]!
-  content: Encryptable!
+  content: String!
 
   """Specify a content warning."""
   contentWarning: ContentWarning
-  encryptedWith: EncryptionStrategy
   id: MetadataId!
   locale: Locale!
 
@@ -5003,7 +5060,6 @@ type ThreeDMetadata {
 
   """Specify a content warning."""
   contentWarning: ContentWarning
-  encryptedWith: EncryptionStrategy
   id: MetadataId!
   locale: Locale!
 
@@ -5012,7 +5068,7 @@ type ThreeDMetadata {
 
   """An arbitrary list of tags."""
   tags: [Tag!]
-  content: Encryptable!
+  content: String!
 }
 
 enum TimelineEventItemType {
@@ -5119,12 +5175,6 @@ enum TokenStandard {
   ERC_1155
 }
 
-"""AccessCondition"""
-type TopLevelAccessCondition {
-  criteria: [AnyAccessCondition!]!
-  type: String!
-}
-
 type TransactionMetadata {
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
@@ -5141,7 +5191,6 @@ type TransactionMetadata {
 
   """Specify a content warning."""
   contentWarning: ContentWarning
-  encryptedWith: EncryptionStrategy
   id: MetadataId!
   locale: Locale!
 
@@ -5152,11 +5201,11 @@ type TransactionMetadata {
   tags: [Tag!]
 
   """The transaction hash."""
-  txHash: Encryptable!
+  txHash: String!
 
   """The type of transaction."""
   type: TransactionType!
-  content: Encryptable!
+  content: String!
 }
 
 input TransactionStatusRequest {
@@ -5510,7 +5559,6 @@ type VideoMetadata {
 
   """Specify a content warning."""
   contentWarning: ContentWarning
-  encryptedWith: EncryptionStrategy
   id: MetadataId!
   locale: Locale!
 
@@ -5523,7 +5571,7 @@ type VideoMetadata {
   """The optional video title."""
   title: String
   video: MediaVideo!
-  content: Encryptable!
+  content: String!
 }
 
 scalar Void
