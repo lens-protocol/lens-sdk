@@ -1,53 +1,53 @@
 import type { FragmentOf } from 'gql.tada';
-import { PaginatedResultInfoFragment, PostFragment } from './fragments';
-import { type RequestOf, graphql } from './graphql';
+import { PaginatedResultInfoFragment } from './fragments';
+import { type RequestOf, dynamic, partial } from './graphql';
 
-const TimelineItemFragment = graphql(
+const timelineItemFragment = partial(
   `fragment TimelineItem on TimelineItem {
     __typename
     id
     primary {
-      ...Post
+      ${'...Post'}
     }
     comments {
-      ...Post
+      ${'...Post'}
     }
     reposts {
-      ...Post
+      ${'...Post'}
     }
   }`,
-  [PostFragment],
+  [],
 );
-export type TimelineItem = FragmentOf<typeof TimelineItemFragment>;
+export type TimelineItem = FragmentOf<typeof timelineItemFragment>;
 
-export const TimelineQuery = graphql(
+export const timelineQuery = dynamic(
   `query Timeline($request: TimelineRequest!) {
     value: timeline(request: $request) {
       __typename
       items {
-        ...TimelineItem
+        ${'...TimelineItem'}
       }
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }`,
-  [TimelineItemFragment, PaginatedResultInfoFragment],
+  [timelineItemFragment, PaginatedResultInfoFragment],
 );
-export type TimelineRequest = RequestOf<typeof TimelineQuery>;
+export type TimelineRequest = RequestOf<typeof timelineQuery>;
 
-export const TimelineHighlightsQuery = graphql(
+export const timelineHighlightsQuery = dynamic(
   `query TimelineHighlights($request: TimelineHighlightsRequest!) {
     value: timelineHighlights(request: $request) {
       __typename
       items {
-        ...Post
+        ${'...Post'}
       }
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }`,
-  [PostFragment, PaginatedResultInfoFragment],
+  [PaginatedResultInfoFragment],
 );
-export type TimelineHighlightsRequest = RequestOf<typeof TimelineHighlightsQuery>;
+export type TimelineHighlightsRequest = RequestOf<typeof timelineHighlightsQuery>;

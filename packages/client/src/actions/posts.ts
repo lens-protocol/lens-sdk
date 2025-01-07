@@ -1,4 +1,5 @@
 import type {
+  Account,
   AccountPostReaction,
   ActionInfo,
   AnyPost,
@@ -6,35 +7,36 @@ import type {
   Post,
   PostActionsRequest,
   PostBookmarksRequest,
+  PostEdit,
+  PostEditsRequest,
+  PostFields,
+  PostReactionStatus,
+  PostReactionStatusRequest,
   PostReactionsRequest,
   PostReferencesRequest,
   PostRequest,
+  PostTagsRequest,
   PostsRequest,
+  WhoActedOnPostQueryRequest,
+  WhoReferencedPostRequest,
 } from '@lens-protocol/graphql';
 import {
   PostActionsQuery,
-  PostBookmarksQuery,
   PostEditsQuery,
-  PostQuery,
   PostReactionStatusQuery,
   PostReactionsQuery,
-  PostReferencesQuery,
   PostTagsQuery,
-  PostsQuery,
   WhoActedOnPostQuery,
   WhoReferencedPostQuery,
+  postBookmarksQuery,
+  postQuery,
+  postReferencesQuery,
+  postsQuery,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
-import type { PostTagsRequest } from '@lens-protocol/graphql';
-import type { PostReactionStatusRequest } from '@lens-protocol/graphql';
-import type { PostReactionStatus } from '@lens-protocol/graphql';
-import type { WhoReferencedPostRequest } from '@lens-protocol/graphql';
-import type { Account } from '@lens-protocol/graphql';
-import type { WhoActedOnPostQueryRequest } from '@lens-protocol/graphql';
-import type { PostEditsRequest } from '@lens-protocol/graphql';
-import type { PostEdit } from '@lens-protocol/graphql';
 import type { AnyClient, SessionClient } from '../clients';
+import type { Context } from '../context';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
 /**
@@ -53,11 +55,14 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
  * @param request - The query request.
  * @returns The Post or `null` if it does not exist.
  */
-export function fetchPost(
-  client: AnyClient,
+export function fetchPost<TAccount extends Account, TPostFields extends PostFields>(
+  client: AnyClient<Context<TAccount, TPostFields>>,
   request: PostRequest,
-): ResultAsync<AnyPost | null, UnexpectedError> {
-  return client.query(PostQuery, { request });
+): ResultAsync<AnyPost<TPostFields, TAccount> | null, UnexpectedError> {
+  return client.query(
+    postQuery([client.context.postFieldsFragment, client.context.accountFragment]),
+    { request },
+  );
 }
 
 /**
@@ -82,7 +87,7 @@ export function fetchPosts(
   client: AnyClient,
   request: PostsRequest,
 ): ResultAsync<Paginated<AnyPost>, UnexpectedError> {
-  return client.query(PostsQuery, { request });
+  return client.query(postsQuery, { request });
 }
 
 /**
@@ -138,7 +143,7 @@ export function fetchPostBookmarks(
   client: SessionClient,
   request: PostBookmarksRequest = {},
 ): ResultAsync<Paginated<AnyPost>, UnexpectedError | UnauthenticatedError> {
-  return client.query(PostBookmarksQuery, { request });
+  return client.query(postBookmarksQuery, { request });
 }
 
 /**
@@ -158,7 +163,7 @@ export function fetchPostReferences(
   client: AnyClient,
   request: PostReferencesRequest,
 ): ResultAsync<Paginated<AnyPost>, UnexpectedError | UnauthenticatedError> {
-  return client.query(PostReferencesQuery, { request });
+  return client.query(postReferencesQuery, { request });
 }
 
 /**

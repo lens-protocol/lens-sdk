@@ -1,6 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
-import { graphql } from '../graphql';
-import { AccountFragment } from './account';
+import { type FragmentDocumentFor, type PartialFragmentOf, graphql, partial } from '../graphql';
+import { type Account, AccountFragment } from './account';
 import {
   ActionInputInfoFragment,
   AmountFragment,
@@ -15,6 +15,7 @@ import {
   EmbedMetadataFragment,
   EventMetadataFragment,
   ImageMetadataFragment,
+  LinkMetadataFragment,
   LivestreamMetadataFragment,
   MintMetadataFragment,
   SpaceMetadataFragment,
@@ -56,9 +57,7 @@ export const SimpleCollectActionSettingsFragment = graphql(
   }`,
   [AmountFragment, NetworkAddressFragment, RecipientDataOutputFragment],
 );
-export type SimpleCollectActionSettingsFragment = FragmentOf<
-  typeof SimpleCollectActionSettingsFragment
->;
+export type SimpleCollectActionSettings = FragmentOf<typeof SimpleCollectActionSettingsFragment>;
 
 export const UnknownActionSettingsFragment = graphql(
   `fragment UnknownActionSettings on UnknownActionSettings {
@@ -75,6 +74,7 @@ export const UnknownActionSettingsFragment = graphql(
 );
 export type UnknownActionSettings = FragmentOf<typeof UnknownActionSettingsFragment>;
 
+export type PostAction = SimpleCollectActionSettings | UnknownActionSettings;
 export const PostActionFragment = graphql(
   `fragment PostAction on PostAction {
     ... on SimpleCollectActionSettings {
@@ -86,9 +86,11 @@ export const PostActionFragment = graphql(
   }`,
   [SimpleCollectActionSettingsFragment, UnknownActionSettingsFragment],
 );
-export type PostAction = FragmentOf<typeof PostActionFragment>;
 
-export const PostMetadataFragment = graphql(
+/**
+ * @deprecated Define your own PostMetadataFragment instead using {@link graphql} and {@link FragmentOf}.
+ */
+export const FullPostMetadataFragment = graphql(
   `fragment PostMetadata on PostMetadata {
     ... on ArticleMetadata {
       ...ArticleMetadata
@@ -114,6 +116,9 @@ export const PostMetadataFragment = graphql(
     ... on EventMetadata {
       ...EventMetadata
     }
+    ... on LinkMetadata {
+      ...LinkMetadata
+    }
     ... on LivestreamMetadata {
       ...LivestreamMetadata
     }
@@ -136,21 +141,23 @@ export const PostMetadataFragment = graphql(
   [
     ArticleMetadataFragment,
     AudioMetadataFragment,
-    TextOnlyMetadataFragment,
     CheckingInMetadataFragment,
-    ImageMetadataFragment,
-    VideoMetadataFragment,
     EmbedMetadataFragment,
     EventMetadataFragment,
+    ImageMetadataFragment,
     LivestreamMetadataFragment,
     MintMetadataFragment,
     SpaceMetadataFragment,
     StoryMetadataFragment,
+    TextOnlyMetadataFragment,
     ThreeDMetadataFragment,
+    LinkMetadataFragment,
     TransactionMetadataFragment,
+    VideoMetadataFragment,
   ],
 );
-export type PostMetadata = FragmentOf<typeof PostMetadataFragment>;
+
+export type FullPostMetadata = FragmentOf<typeof FullPostMetadataFragment>;
 
 export const LoggedInPostOperationsFragment = graphql(
   `fragment LoggedInPostOperations on LoggedInPostOperations {
@@ -190,41 +197,6 @@ export const LoggedInPostOperationsFragment = graphql(
 );
 export type LoggedInPostOperations = FragmentOf<typeof LoggedInPostOperationsFragment>;
 
-export const ReferencedPostFragment = graphql(
-  `fragment ReferencedPost on Post {
-    __typename
-    id
-    author {
-      ...Account
-    }
-    feed {
-      ...Feed
-    }
-    timestamp
-    app {
-      ...App
-    }
-    metadata {
-      ...PostMetadata
-    }
-    actions {
-      ...PostAction
-    }
-    operations {
-      ...LoggedInPostOperations
-    }
-  }
-  `,
-  [
-    AccountFragment,
-    AppFragment,
-    FeedFragment,
-    PostMetadataFragment,
-    PostActionFragment,
-    LoggedInPostOperationsFragment,
-  ],
-);
-
 export const PostStatsFragment = graphql(
   `fragment PostStats on PostStats {
     __typename
@@ -238,80 +210,172 @@ export const PostStatsFragment = graphql(
 );
 export type PostStats = FragmentOf<typeof PostStatsFragment>;
 
-export const PostFragment = graphql(
+export const PostFieldsFragment = graphql(
+  `fragment PostFields on Post {
+    __typename
+    id
+    timestamp
+    slug
+  }`,
+);
+export type PostFields = FragmentOf<typeof PostFieldsFragment>;
+
+/**
+ * @deprecated Define your own PostFieldsFragment instead using {@link graphql} and {@link FragmentOf}.
+ *
+ * @example
+ * ```ts
+ * const PostFieldsFragment = graphql(
+ *   `fragment PostFields on Post {
+ *     __typename
+ *     id
+ *     timestamp
+ *     metadata {
+ *       ...PostMetadata
+ *     }
+ *   }`,
+ *   [],
+ * );
+ *
+ * type PostFields = FragmentOf<typeof PostFieldsFragment>;
+ * ```
+ */
+export const FullPostFieldsFragment = graphql(
+  `fragment PostFields on Post {
+    __typename
+    id
+    timestamp
+    slug
+    app {
+      ...App
+    }
+    feed {
+      ...Feed
+    }
+    metadata {
+      ...PostMetadata
+    }
+    operations {
+      ...LoggedInPostOperations
+    }
+    stats {
+      ...PostStats
+    }
+  }`,
+  [
+    AppFragment,
+    FeedFragment,
+    LoggedInPostOperationsFragment,
+    FullPostMetadataFragment,
+    PostStatsFragment,
+  ],
+);
+/**
+ * @deprecated Define your own FullPostFieldsFragment instead using {@link graphql} and {@link FragmentOf}.
+ */
+export type FullPostFields = FragmentOf<typeof FullPostFieldsFragment>;
+
+export const ReferencedPostFragment = partial(
+  `fragment ReferencedPost on Post {
+    ${'...PostFields'}
+      
+    author {
+      ...Account
+    }
+  }`,
+);
+
+export type ReferencedPost<
+  TPostFields extends PostFields = PostFields,
+  TAccount extends Account = Account,
+> = PartialFragmentOf<
+  typeof ReferencedPostFragment,
+  [FragmentDocumentFor<TPostFields, 'Post', 'PostFields'>, FragmentDocumentFor<TAccount>]
+>;
+
+export const PostFragment = partial(
   `fragment Post on Post {
+    ${'...PostFields'}
+
+    author {
+      ...Account
+    }
+    root {
+      ${'...ReferencedPost'}
+    }
+    quoteOf {
+      ${'...ReferencedPost'}
+    }
+    commentOn {
+      ${'...ReferencedPost'}
+    }
+  }`,
+  [ReferencedPostFragment],
+);
+
+export type Post<
+  TPostFields extends PostFields = PostFields,
+  TAccount extends Account = Account,
+> = PartialFragmentOf<
+  typeof PostFragment,
+  [FragmentDocumentFor<TPostFields, 'Post', 'PostFields'>, FragmentDocumentFor<TAccount>]
+>;
+
+export const RepostFragment = partial(
+  `fragment Repost on Repost {
     __typename
     id
     author {
       ...Account
     }
-    feed {
-      ...Feed
-    }
+    isDeleted
     timestamp
-    slug
-    stats {
-      ...PostStats
-    }
     app {
       ...App
     }
-    metadata {
-      ...PostMetadata
-    }
-    root {
-      ...ReferencedPost
-    }
-    quoteOf {
-      ...ReferencedPost
-    }
-    commentOn {
-      ...ReferencedPost
-    }
-    actions {
-      ...PostAction
-    }
-    operations {
-      ...LoggedInPostOperations
-    }
-  }
-  `,
-  [
-    AccountFragment,
-    AppFragment,
-    FeedFragment,
-    PostMetadataFragment,
-    PostActionFragment,
-    PostStatsFragment,
-    ReferencedPostFragment,
-    LoggedInPostOperationsFragment,
-  ],
-);
-export type Post = FragmentOf<typeof PostFragment>;
+    repostOf {
+      ${'...PostFields'}
 
-// operations: LoggedInPostOperations
-export const RepostFragment = graphql(
-  `fragment Repost on Repost {
-    __typename
-    id
+      author {
+        ...Account
+      }
+      root {
+        ${'...ReferencedPost'}
+      }
+      quoteOf {
+        ${'...ReferencedPost'}
+      }
+      commentOn {
+        ${'...ReferencedPost'}
+      }
+    }
   }`,
-  [],
+  [AppFragment, PostFragment],
 );
-export type Repost = FragmentOf<typeof RepostFragment>;
+export type Repost<
+  TPostFields extends PostFields = PostFields,
+  TAccount extends Account = Account,
+> = PartialFragmentOf<
+  typeof RepostFragment,
+  [FragmentDocumentFor<TPostFields, 'Post', 'PostFields'>, FragmentDocumentFor<TAccount>]
+>;
 
-export const AnyPostFragment = graphql(
+export const AnyPostFragment = partial(
   `fragment AnyPost on AnyPost {
     ...on Post {
-      ...Post
+      ${'...Post'}
     }
 
     ...on Repost {
-      ...Repost
+      ${'...Repost'}
     }
   }`,
   [PostFragment, RepostFragment],
 );
-export type AnyPost = FragmentOf<typeof AnyPostFragment>;
+export type AnyPost<
+  TPostFields extends PostFields = PostFields,
+  TAccount extends Account = Account,
+> = Post<TPostFields, TAccount> | Repost<TPostFields, TAccount>;
 
 export const KnownActionFragment = graphql(
   `fragment KnownAction on KnownAction {

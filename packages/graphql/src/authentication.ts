@@ -1,6 +1,18 @@
 import type { FragmentOf } from 'gql.tada';
-import { AccountAvailableFragment, PaginatedResultInfoFragment } from './fragments';
-import { type RequestOf, graphql } from './graphql';
+import {
+  type Account,
+  AccountAvailableFragment,
+  type FullAccount,
+  PaginatedResultInfoFragment,
+} from './fragments';
+import {
+  type FragmentDocumentFor,
+  type PartialFragmentOf,
+  type RequestOf,
+  dynamic,
+  graphql,
+  partial,
+} from './graphql';
 
 const AuthenticationChallengeFragment = graphql(
   `fragment AuthenticationChallenge on AuthenticationChallenge {
@@ -198,7 +210,7 @@ export const SwitchAccountMutation = graphql(
 );
 export type SwitchAccountRequest = RequestOf<typeof SwitchAccountMutation>;
 
-const MeResultFragment = graphql(
+const MeResultFragment = partial(
   `fragment MeResult on MeResult {
     appLoggedIn
     isSignless
@@ -215,9 +227,16 @@ const MeResultFragment = graphql(
   }`,
   [AccountAvailableFragment],
 );
+export type MeDetails<TAccount extends Account> = PartialFragmentOf<
+  typeof MeResultFragment,
+  [FragmentDocumentFor<TAccount>]
+>;
+
+type test = MeDetails<FullAccount>;
+
 export type MeResult = FragmentOf<typeof MeResultFragment>;
 
-export const MeQuery = graphql(
+export const meQuery = dynamic(
   `query Me {
     value: me {
       ...MeResult

@@ -1,7 +1,5 @@
 import type { FragmentOf } from 'gql.tada';
-import type { Paginated } from '../common';
 import {
-  type Account,
   AccountAvailableFragment,
   AccountBlockedFragment,
   AccountFragment,
@@ -10,34 +8,20 @@ import {
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
 } from '../fragments';
-import {
-  type FragmentDocumentFor,
-  type RequestOf,
-  type RequestTypeOf,
-  type StandardDocumentNode,
-  graphql,
-} from '../graphql';
+import { type RequestOf, dynamic, graphql } from '../graphql';
 
-export type AccountRequest = RequestTypeOf<'AccountRequest'>;
-export function accountQuery<TAccount extends Account>(
-  fragment: FragmentDocumentFor<TAccount>,
-): StandardDocumentNode<TAccount | null, AccountRequest> {
-  return graphql(
-    `query Account($request: AccountRequest!) {
+export const accountQuery = dynamic(
+  `query Account($request: AccountRequest!) {
     value: account(request: $request) {
       ...Account
     }
   }`,
-    [fragment],
-  ) as StandardDocumentNode;
-}
+  [],
+);
+export type AccountRequest = RequestOf<typeof accountQuery>;
 
-export type AccountsRequest = RequestTypeOf<'AccountsRequest'>;
-export function accountsQuery<TAccount extends Account>(
-  fragment: FragmentDocumentFor<TAccount>,
-): StandardDocumentNode<Paginated<TAccount>, AccountsRequest> {
-  return graphql(
-    `query Accounts($request: AccountsRequest!) {
+export const accountsQuery = dynamic(
+  `query Accounts($request: AccountsRequest!) {
     value: accounts(request: $request) {
       __typename
       items {
@@ -48,9 +32,9 @@ export function accountsQuery<TAccount extends Account>(
       }
     }
   }`,
-    [fragment, PaginatedResultInfoFragment],
-  ) as StandardDocumentNode;
-}
+  [PaginatedResultInfoFragment],
+);
+export type AccountsRequest = RequestOf<typeof accountsQuery>;
 
 export const AccountsBulkQuery = graphql(
   `query AccountsBulk($request: AccountsBulkRequest!) {

@@ -1,12 +1,15 @@
 import type { EnvironmentConfig } from '@lens-protocol/env';
-import type { Account } from '@lens-protocol/graphql';
+import type { Account, PostFields } from '@lens-protocol/graphql';
 import type { FragmentDocumentFor } from '@lens-protocol/graphql';
 import type { IStorageProvider } from '@lens-protocol/storage';
 
 /**
  * The client configuration.
  */
-export type ClientConfig<TAccount extends Account = Account> = {
+export type ClientConfig<
+  TAccount extends Account = Account,
+  TPostFields extends PostFields = PostFields,
+> = {
   /**
    * The environment configuration to use (e.g. `mainnet`, `testnet`).
    */
@@ -40,5 +43,11 @@ export type ClientConfig<TAccount extends Account = Account> = {
    *
    * @defaultValue {@link AccountFragment}
    */
-  accountFragment?: FragmentDocumentFor<TAccount>;
+  accountFragment?: FragmentDocumentFor<TAccount, 'Account'>;
+  /**
+   * The Post Fragment to use.
+   *
+   * @defaultValue {@link PostFragment}
+   */
+  postFieldsFragment?: FragmentDocumentFor<TPostFields, 'Post', 'PostFields'>;
 };

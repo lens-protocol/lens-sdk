@@ -4,6 +4,7 @@ import { evmAddress } from '@lens-protocol/types';
 import { http, type Account, type Transport, type WalletClient, createWalletClient } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
+import { FullAccountFragment, FullPostFieldsFragment } from '@lens-protocol/graphql';
 import { GraphQLErrorCode, PublicClient, testnet as apiEnv } from './src';
 
 const pk = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
@@ -16,6 +17,8 @@ export function createPublicClient() {
   return PublicClient.create({
     environment: apiEnv,
     origin: 'http://example.com',
+    accountFragment: FullAccountFragment,
+    postFieldsFragment: FullPostFieldsFragment,
   });
 }
 

@@ -28,7 +28,6 @@ import {
   type TadaDocumentNode,
   initGraphQLTada,
 } from 'gql.tada';
-import type { StandardData } from './common';
 import type {
   AccessConditionComparison,
   AccountReportReason,
@@ -82,6 +81,9 @@ import type {
 } from './enums';
 import type { introspection } from './graphql-env';
 
+/**
+ * A function that may be used to create documents typed using the Lens API GraphQL schema.
+ */
 export const graphql = initGraphQLTada<{
   disableMasking: true;
   introspection: introspection;
@@ -169,16 +171,6 @@ export type { FragmentOf, TadaDocumentNode };
 /**
  * @internal
  */
-export type RequestOf<Document> = Document extends DocumentDecoration<
-  unknown,
-  { request: infer Request }
->
-  ? Request
-  : never;
-
-/**
- * @internal
- */
 export type FragmentShape = NonNullable<Parameters<typeof graphql>[1]>[number];
 
 type GetDocumentNode<
@@ -186,87 +178,128 @@ type GetDocumentNode<
   Fragments extends FragmentShape[] = FragmentShape[],
 > = ReturnType<typeof graphql<In, Fragments>>;
 
-export type AnyGqlNode<TTypename extends string = string> = { __typename: TTypename };
+/**
+ * @internal
+ */
+export type AnySelectionSet = Record<string, unknown>;
 
+/**
+ * @internal
+ */
 export type AnyVariables = Record<string, unknown>;
 
-/**
- * @internal
- */
-export type FragmentDocumentFor<TGqlNode extends AnyGqlNode> = TGqlNode extends AnyGqlNode<
-  infer TTypename
->
-  ? TadaDocumentNode<
-      TGqlNode,
-      AnyVariables,
-      {
-        fragment: TTypename;
-        on: TTypename;
-        masked: false;
-      }
-    >
-  : never;
+type TypedSelectionSet<TTypename extends string = string> = { __typename: TTypename };
 
 /**
  * @internal
  */
-export type RequestTypeOf<Name extends string> = RequestOf<
-  GetDocumentNode<`query Named($request: ${Name}) {}`, FragmentShape[]>
+export type FragmentDocumentFor<
+  TGqlNode extends AnySelectionSet,
+  TTypename extends string = TGqlNode extends TypedSelectionSet<infer TTypename>
+    ? TTypename
+    : never,
+  TFragmentName extends string = TTypename,
+> = TadaDocumentNode<
+  TGqlNode,
+  AnyVariables,
+  {
+    fragment: TFragmentName;
+    on: TTypename;
+    masked: false;
+  }
 >;
 
-// biome-ignore lint/suspicious/noExplicitAny: simplifies necessary type assertions
-export type StandardDocumentNode<Value = any, Request = any> = TadaDocumentNode<
-  StandardData<Value>,
-  { request: Request }
->;
-
-type FragmentDocumentFrom<
-  In extends string,
-  Fragments extends FragmentShape[],
-  Document extends GetDocumentNode<In, Fragments> = GetDocumentNode<In, Fragments>,
-> = Document extends FragmentShape ? Document : never;
-
-type FragmentDocumentForEach<Nodes extends AnyGqlNode[]> = {
-  [K in keyof Nodes]: FragmentDocumentFor<Nodes[K]>;
-};
-
 /**
- * @internal
+ * Asserts that the node is of a specific type in a union.
+ *
+ * ```ts
+ * type A = { __typename: 'A', a: string };
+ * type B = { __typename: 'B', b: string };
+ *
+ * const node: A | B = { __typename: 'A', a: 'a' };
+ *
+ * assertTypename(node, 'A');
+ *
+ * console.log(node.a); // OK
+ * ```
+ *
+ * @param node - The node to assert the typename of
+ * @param typename - The expected typename
  */
-export type DynamicFragmentDocument<
-  In extends string,
-  StaticNodes extends AnyGqlNode[],
-> = FragmentDocumentFrom<In, FragmentDocumentForEach<StaticNodes>> & {
-  __phantom: In;
-};
-
-/**
- * @internal
- */
-export function fragment<In extends string, StaticNodes extends AnyGqlNode[]>(
-  input: In,
-  staticFragments: FragmentDocumentForEach<StaticNodes> = [] as FragmentDocumentForEach<StaticNodes>,
-): DynamicFragmentDocument<In, StaticNodes> {
-  return graphql(input, staticFragments) as DynamicFragmentDocument<In, StaticNodes>;
-}
-
-/**
- * @internal
- */
-export type DynamicFragmentOf<
-  Document,
-  DynamicNodes extends AnyGqlNode[],
-> = Document extends DynamicFragmentDocument<infer In, infer StaticNodes>
-  ? FragmentOf<FragmentDocumentFrom<In, FragmentDocumentForEach<[...DynamicNodes, ...StaticNodes]>>>
-  : never;
-
 export function assertTypename<Typename extends string>(
-  node: AnyGqlNode,
+  node: TypedSelectionSet,
   typename: Typename,
-): asserts node is AnyGqlNode<Typename> {
+): asserts node is TypedSelectionSet<Typename> {
   if (node.__typename !== typename) {
     throw new InvariantError(
       `Expected node to have typename "${typename}", but got "${node.__typename}"`,
     );
   }
 }
+
+type FragmentDocumentFrom<
+  In extends string,
+  Fragments extends FragmentShape[] = FragmentShape[],
+> = GetDocumentNode<In, Fragments> extends FragmentShape ? GetDocumentNode<In, Fragments> : never;
+
+/**
+ * @internal
+ */
+export type PartialFragment<
+  In extends string = string,
+  StaticFragments extends FragmentShape[] = [],
+> = FragmentDocumentFrom<In, StaticFragments> & {
+  __phantom: In;
+};
+
+/**
+ * @internal
+ */
+export function partial<In extends string, StaticFragments extends FragmentShape[] = []>(
+  input: In,
+  staticFragments?: StaticFragments,
+): PartialFragment<In, StaticFragments> {
+  return graphql(input, staticFragments) as PartialFragment<In, StaticFragments>;
+}
+
+// https://github.com/0no-co/GraphQLSP/blob/6d9ce44d46dc6adbaf387ad5c96e4125570c3a94/packages/graphqlsp/src/ast/checks.ts#L26-L27
+partial.scalar = true;
+partial.persisted = true;
+
+export type PartialFragmentOf<
+  Fragment extends FragmentShape,
+  DynamicFragments extends FragmentShape[],
+> = Fragment extends PartialFragment<infer In, infer StaticFragments>
+  ? FragmentOf<FragmentDocumentFrom<In, [...StaticFragments, ...DynamicFragments]>>
+  : never;
+
+export type DynamicDocument<In extends string, StaticFragments extends FragmentShape[] = []> = <
+  DynamicFragments extends FragmentShape[],
+>(
+  dynamicFragments: DynamicFragments,
+) => GetDocumentNode<In, [...StaticFragments, ...DynamicFragments]>;
+
+/**
+ * @internal
+ */
+export function dynamic<In extends string, StaticFragments extends FragmentShape[] = []>(
+  input: In,
+  // biome-ignore lint/suspicious/noExplicitAny: simplicity
+  staticFragments: StaticFragments = [] as any,
+): DynamicDocument<In, StaticFragments> {
+  return <DynamicFragments extends FragmentShape[]>(dynamicFragments: DynamicFragments) =>
+    graphql(input, staticFragments.concat(dynamicFragments) as FragmentShape[]);
+}
+
+// https://github.com/0no-co/GraphQLSP/blob/6d9ce44d46dc6adbaf387ad5c96e4125570c3a94/packages/graphqlsp/src/ast/checks.ts#L26-L27
+dynamic.scalar = true;
+dynamic.persisted = true;
+
+/**
+ * @internal
+ */
+export type RequestOf<Document> = Document extends DynamicDocument<infer In>
+  ? RequestOf<GetDocumentNode<In>>
+  : Document extends DocumentDecoration<unknown, { request: infer Request }>
+    ? Request
+    : never;

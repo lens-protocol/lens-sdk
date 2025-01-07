@@ -14,14 +14,16 @@ import {
   AuthenticatedSessionsQuery,
   CurrentSessionQuery,
   LegacyRolloverRefreshMutation,
-  MeQuery,
   RefreshMutation,
   RevokeAuthenticationMutation,
   SwitchAccountMutation,
+  meQuery,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
+import type { Account } from '@lens-protocol/graphql';
 import type { AnyClient, SessionClient } from '../clients';
+import type { Context } from '../context';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
 /**
@@ -151,8 +153,8 @@ export function switchAccount(
  * @param client - The session client for the authenticated Account.
  * @returns The details of the authenticated Account.
  */
-export function fetchMeDetails(
-  client: SessionClient,
+export function fetchMeDetails<TAccount extends Account>(
+  client: SessionClient<Context<TAccount>>,
 ): ResultAsync<MeResult, UnauthenticatedError | UnexpectedError> {
-  return client.query(MeQuery, {});
+  return client.query(meQuery([client.context.accountFragment]), {});
 }

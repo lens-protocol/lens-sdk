@@ -1,5 +1,5 @@
 import type { FragmentOf } from 'gql.tada';
-import { graphql } from '../graphql';
+import { type FragmentDocumentFor, type PartialFragmentOf, graphql, partial } from '../graphql';
 import { OperationValidationOutcomeFragment } from './common';
 import { MetadataAttributeFragment } from './metadata';
 import { UsernameFragment } from './username';
@@ -49,14 +49,36 @@ export const AccountFragment = graphql(
     __typename
     address
   }`,
-  [],
 );
 export type Account = FragmentOf<typeof AccountFragment>;
 
+/**
+ * @deprecated Define your own AccountFragment instead using {@link graphql} and {@link FragmentOf}.
+ *
+ * @example
+ * ```ts
+ * const AccountFragment = graphql(
+ *   `fragment Account on Account {
+ *     __typename
+ *     address
+ *     owner
+ *     username {
+ *       ...Username
+ *     }
+ *   }`,
+ *   [UsernameFragment],
+ * );
+ *
+ * type Account = FragmentOf<typeof AccountFragment>;
+ * ```
+ */
 export const FullAccountFragment = graphql(
   `fragment Account on Account {
     __typename
     address
+    owner
+    score
+    createdAt
     username{
       ...Username
     }
@@ -69,7 +91,10 @@ export const FullAccountFragment = graphql(
   }`,
   [AccountMetadataFragment, LoggedInAccountOperationsFragment, UsernameFragment],
 );
-export type FullAccount = FragmentOf<typeof AccountFragment>;
+/**
+ * @deprecated Define your own FullAccountFragment instead using {@link graphql} and {@link FragmentOf}.
+ */
+export type FullAccount = FragmentOf<typeof FullAccountFragment>;
 
 const AccountManagerPermissionsFragment = graphql(
   `fragment AccountManagerPermissions on AccountManagerPermissions {
@@ -95,7 +120,7 @@ export const AccountManagerFragment = graphql(
 );
 export type AccountManager = FragmentOf<typeof AccountManagerFragment>;
 
-const AccountManagedFragment = graphql(
+const AccountManagedFragment = partial(
   `fragment AccountManaged on AccountManaged {
     __typename
     addedAt
@@ -106,27 +131,43 @@ const AccountManagedFragment = graphql(
       ...AccountManagerPermissions
     }
   }`,
-  [AccountManagerPermissionsFragment, AccountFragment],
+  [AccountManagerPermissionsFragment],
 );
-export type AccountManaged = FragmentOf<typeof AccountManagedFragment>;
+export type AccountManaged<TAccount extends Account> = PartialFragmentOf<
+  typeof AccountManagedFragment,
+  [FragmentDocumentFor<TAccount>]
+>;
 
-export const AccountAvailableFragment = graphql(
+const AccountOwnedFragment = partial(
+  `fragment AccountOwned on AccountOwned {
+    __typename
+    addedAt
+    account {
+      ...Account
+    }
+  }`,
+  [],
+);
+export type AccountOwned<TAccount extends Account> = PartialFragmentOf<
+  typeof AccountOwnedFragment,
+  [FragmentDocumentFor<TAccount>]
+>;
+
+export const AccountAvailableFragment = partial(
   `fragment AccountAvailable on AccountAvailable {
     __typename
     ... on AccountManaged {
       ...AccountManaged
     }
     ... on AccountOwned {
-      __typename
-      addedAt
-      account {
-        ...Account
-      }
+      ...AccountOwned
     }
   }`,
-  [AccountFragment, AccountManagedFragment],
+  [AccountManagedFragment, AccountOwnedFragment],
 );
-export type AccountAvailable = FragmentOf<typeof AccountAvailableFragment>;
+export type AccountAvailable<TAccount extends Account> =
+  | AccountManaged<TAccount>
+  | AccountOwned<TAccount>;
 
 export const AccountBlockedFragment = graphql(
   `fragment AccountBlocked on AccountBlocked {

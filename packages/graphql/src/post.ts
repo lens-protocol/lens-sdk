@@ -4,13 +4,13 @@ import {
   AccountPostReactionFragment,
   ActionInfoFragment,
   AnyPostFragment,
+  FullPostMetadataFragment,
   PaginatedResultInfoFragment,
-  PostMetadataFragment,
   SelfFundedTransactionRequestFragment,
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
 } from './fragments';
-import { type RequestOf, graphql } from './graphql';
+import { type RequestOf, dynamic, graphql } from './graphql';
 
 const PostResponseFragment = graphql(
   `fragment PostResponse on PostResponse {
@@ -74,21 +74,21 @@ export const EditPostMutation = graphql(
 );
 export type EditPostRequest = RequestOf<typeof EditPostMutation>;
 
-export const PostQuery = graphql(
+export const postQuery = dynamic(
   `query Post($request: PostRequest!) {
     value: post(request: $request) {
-      ...AnyPost
+      ${'...AnyPost'}
     }
   }`,
   [AnyPostFragment],
 );
-export type PostRequest = RequestOf<typeof PostQuery>;
+export type PostRequest = RequestOf<typeof postQuery>;
 
-export const PostsQuery = graphql(
+export const postsQuery = dynamic(
   `query Posts($request: PostsRequest!) {
     value: posts(request: $request) {
       items {
-        ...AnyPost
+        ${'...AnyPost'}
       }
       pageInfo {
         ...PaginatedResultInfo
@@ -97,7 +97,7 @@ export const PostsQuery = graphql(
   }`,
   [AnyPostFragment, PaginatedResultInfoFragment],
 );
-export type PostsRequest = RequestOf<typeof PostsQuery>;
+export type PostsRequest = RequestOf<typeof postQuery>;
 
 export const PostActionsQuery = graphql(
   `query PostActions($request: PostActionsRequest!) {
@@ -129,11 +129,11 @@ export const PostReactionsQuery = graphql(
 );
 export type PostReactionsRequest = RequestOf<typeof PostReactionsQuery>;
 
-export const PostBookmarksQuery = graphql(
+export const postBookmarksQuery = dynamic(
   `query PostBookmarks($request: PostBookmarksRequest!) {
     value: postBookmarks(request: $request) {
       items {
-        ...AnyPost
+        ${'...AnyPost'}
       },
       pageInfo {
         ...PaginatedResultInfo
@@ -142,13 +142,13 @@ export const PostBookmarksQuery = graphql(
   }`,
   [AnyPostFragment, PaginatedResultInfoFragment],
 );
-export type PostBookmarksRequest = RequestOf<typeof PostBookmarksQuery>;
+export type PostBookmarksRequest = RequestOf<typeof postBookmarksQuery>;
 
-export const PostReferencesQuery = graphql(
+export const postReferencesQuery = dynamic(
   `query PostReferences($request: PostReferencesRequest!) {
     value: postReferences(request: $request) {
       items {
-        ...AnyPost
+         ${'...AnyPost'}
       },
       pageInfo {
         ...PaginatedResultInfo
@@ -157,7 +157,7 @@ export const PostReferencesQuery = graphql(
   }`,
   [AnyPostFragment, PaginatedResultInfoFragment],
 );
-export type PostReferencesRequest = RequestOf<typeof PostReferencesQuery>;
+export type PostReferencesRequest = RequestOf<typeof postReferencesQuery>;
 
 const AddReactionResultFragment = graphql(
   `fragment AddReactionResult on AddReactionResult {
@@ -358,7 +358,7 @@ export const PostEditFragment = graphql(
     }
     timestamp
   }`,
-  [PostMetadataFragment],
+  [FullPostMetadataFragment],
 );
 export type PostEdit = FragmentOf<typeof PostEditFragment>;
 

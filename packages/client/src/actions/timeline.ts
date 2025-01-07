@@ -5,7 +5,7 @@ import type {
   TimelineItem,
   TimelineRequest,
 } from '@lens-protocol/graphql';
-import { TimelineHighlightsQuery, TimelineQuery } from '@lens-protocol/graphql';
+import { timelineHighlightsQuery, timelineQuery } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
 import type { AnyClient } from '../clients';
@@ -28,7 +28,7 @@ export function fetchTimeline(
   client: AnyClient,
   request: TimelineRequest,
 ): ResultAsync<Paginated<TimelineItem> | null, UnexpectedError> {
-  return client.query(TimelineQuery, { request });
+  return client.query(timelineQuery, { request });
 }
 
 /**
@@ -48,5 +48,5 @@ export function fetchTimelineHighlights(
   client: AnyClient,
   request: TimelineHighlightsRequest,
 ): ResultAsync<Paginated<AnyPost>, UnexpectedError> {
-  return client.query(TimelineHighlightsQuery, { request });
+  return client.query(timelineHighlightsQuery, { request });
 }

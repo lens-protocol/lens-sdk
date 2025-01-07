@@ -76,7 +76,7 @@ export function fetchAccount<TAccount extends Account>(
   client: AnyClient<Context<TAccount>>,
   request: AccountRequest,
 ): ResultAsync<TAccount | null, UnexpectedError> {
-  return client.query(accountQuery(client.context.accountFragment), { request });
+  return client.query(accountQuery([client.context.accountFragment]), { request });
 }
 
 /**
@@ -102,7 +102,7 @@ export function fetchAccounts<TAccount extends Account>(
   client: AnyClient<Context<TAccount>>,
   request: AccountsRequest = {},
 ): ResultAsync<Paginated<TAccount> | null, UnexpectedError> {
-  return client.query(accountsQuery(client.context.accountFragment), { request });
+  return client.query(accountsQuery([client.context.accountFragment]), { request });
 }
 
 /**
