@@ -4858,7 +4858,7 @@ type SnsSubscription {
   app: EvmAddress
   topic: SnsNotificationType!
   topicArn: String!
-  attributes: JSON!
+  filter: JSON!
 }
 
 input SnsTopicInput @oneOf {

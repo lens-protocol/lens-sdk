@@ -5,8 +5,15 @@ import type {
   GraphRequest,
   GraphsRequest,
   Paginated,
+  SetGraphMetadataRequest,
+  SetGraphMetadataResult,
 } from '@lens-protocol/graphql';
-import { CreateGraphMutation, GraphQuery, GraphsQuery } from '@lens-protocol/graphql';
+import {
+  CreateGraphMutation,
+  GraphQuery,
+  GraphsQuery,
+  SetGraphMetadataMutation,
+} from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
 import type { AnyClient, SessionClient } from '../clients';
@@ -28,6 +35,27 @@ export function createGraph(
   request: CreateGraphRequest,
 ): ResultAsync<CreateGraphResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(CreateGraphMutation, { request });
+}
+
+/**
+ * Set Graph Metadata
+ *
+ * ```ts
+ * const result = await setGraphMetadata(sessionClient, {
+ *  graph: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ *  metadataUri: 'https://example.com/feed-metadata.json',
+ * });
+ * ```
+ *
+ * @param client - The session client logged as a builder.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function setGraphMetadata(
+  client: SessionClient,
+  request: SetGraphMetadataRequest,
+): ResultAsync<SetGraphMetadataResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(SetGraphMetadataMutation, { request });
 }
 
 /**

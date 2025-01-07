@@ -5,8 +5,15 @@ import type {
   FeedRequest,
   FeedsRequest,
   Paginated,
+  SetFeedMetadataRequest,
+  SetFeedMetadataResult,
 } from '@lens-protocol/graphql';
-import { CreateFeedMutation, FeedQuery, FeedsQuery } from '@lens-protocol/graphql';
+import {
+  CreateFeedMutation,
+  FeedQuery,
+  FeedsQuery,
+  SetFeedMetadataMutation,
+} from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
 import type { AnyClient, SessionClient } from '../clients';
@@ -28,6 +35,27 @@ export function createFeed(
   request: CreateFeedRequest,
 ): ResultAsync<CreateFeedResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(CreateFeedMutation, { request });
+}
+
+/**
+ * Set Feed Metadata
+ *
+ * ```ts
+ * const result = await setFeedMetadata(sessionClient, {
+ *  feed: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ *  metadataUri: 'https://example.com/feed-metadata.json',
+ * });
+ * ```
+ *
+ * @param client - The session client logged as a builder.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function setFeedMetadata(
+  client: SessionClient,
+  request: SetFeedMetadataRequest,
+): ResultAsync<SetFeedMetadataResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(SetFeedMetadataMutation, { request });
 }
 
 /**

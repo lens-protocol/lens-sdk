@@ -3,6 +3,7 @@ import {
   GraphFragment,
   PaginatedResultInfoFragment,
   SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
@@ -40,6 +41,36 @@ export const CreateGraphMutation = graphql(
   [CreateGraphResultFragment],
 );
 export type CreateGraphRequest = RequestOf<typeof CreateGraphMutation>;
+
+const SetGraphMetadataResultFragment = graphql(
+  `fragment SetGraphMetadataResult on SetGraphMetadataResult {
+    ... on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type SetGraphMetadataResult = FragmentOf<typeof SetGraphMetadataResultFragment>;
+
+export const SetGraphMetadataMutation = graphql(
+  `mutation SetGraphMetadata($request: SetGraphMetadataRequest!) {
+    value: setGraphMetadata(request: $request) {
+      ...SetGraphMetadataResult
+    }
+  }`,
+  [SetGraphMetadataResultFragment],
+);
+export type SetGraphMetadataRequest = RequestOf<typeof SetGraphMetadataMutation>;
 
 export const GraphQuery = graphql(
   `query Graph($request: GraphRequest!) {
