@@ -153,7 +153,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       urql:
-        specifier: ^4.2.0
+        specifier: ^4.2.1
         version: 4.2.1(graphql@16.9.0)(react@18.3.1)
     devDependencies:
       '@testing-library/dom':
@@ -165,6 +165,9 @@ importers:
       '@types/react':
         specifier: ^18.3.12
         version: 18.3.12
+      ethers:
+        specifier: ^6.13.4
+        version: 6.13.4
       happy-dom:
         specifier: ^15.7.4
         version: 15.11.7
@@ -183,6 +186,9 @@ importers:
       viem:
         specifier: ^2.22.4
         version: 2.22.4(typescript@5.7.2)(zod@3.23.8)
+      zksync-ethers:
+        specifier: ^6.15.3
+        version: 6.15.3(ethers@6.13.4)
 
   packages/storage:
     dependencies:
