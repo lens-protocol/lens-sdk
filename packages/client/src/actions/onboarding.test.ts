@@ -4,11 +4,10 @@ import { describe, expect, it } from 'vitest';
 
 import { type Account, Role } from '@lens-protocol/graphql';
 import { uri } from '@lens-protocol/types';
-import { loginAsOnboardingUser, signer, signerWallet } from '../../testing-utils';
+import { loginAsOnboardingUser, signer, wallet } from '../test-utils';
 import { handleWith } from '../viem';
 import { createAccountWithUsername, fetchAccount } from './account';
 
-const walletClient = signerWallet();
 const metadata = account({
   name: 'John Doe',
   bio: 'A test account',
@@ -27,7 +26,7 @@ describe('Given an onboarding user', () => {
           metadataUri: uri(`data:application/json,${JSON.stringify(metadata)}`),
         })
           // Sign if necessary
-          .andThen(handleWith(walletClient))
+          .andThen(handleWith(wallet))
 
           // Wait for the transaction to be mined
           .andThen(sessionClient.waitForTransaction)

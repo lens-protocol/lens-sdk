@@ -40,4 +40,4 @@ jobs:
           echo "TEST_ACCOUNT=${{ vars.TEST_ACCOUNT }}" >> .env
 
       - name: Run Tests
-        run: pnpm test:storage && pnpm test:client
+        run: pnpm test

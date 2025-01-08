@@ -1,7 +1,7 @@
 import { assertOk } from '@lens-protocol/types';
 import { describe, it } from 'vitest';
 
-import { loginAsAccountOwner } from '../../testing-utils';
+import { loginAsAccountOwner } from '../test-utils';
 import { fetchNotifications } from './notifications';
 
 describe(`Given the '${fetchNotifications.name}' action`, () => {

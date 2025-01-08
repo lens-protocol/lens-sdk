@@ -1,21 +1,12 @@
-import { PublicClient } from '@lens-protocol/client';
-import { local } from '@lens-protocol/env';
-import { assertOk, evmAddress } from '@lens-protocol/types';
-import { privateKeyToAccount } from 'viem/accounts';
+import { assertOk } from '@lens-protocol/types';
 import { describe, expect, it } from 'vitest';
 
+import { account, app, createPublicClient, signer, wallet } from '@lens-protocol/client/test-utils';
 import { renderHookWithContext } from '../__helpers__/testing-utils';
 import { useLogin } from './useLogin';
 
-const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
-const account = evmAddress(signer.address);
-const app = evmAddress(import.meta.env.TEST_APP);
-
 describe(`Given the ${useLogin.name} hook`, () => {
-  const client = PublicClient.create({
-    environment: local,
-    origin: 'http://example.com',
-  });
+  const client = createPublicClient();
 
   describe('When used to login into an existing Account', () => {
     it('Then it should return the Account data', async () => {
@@ -27,8 +18,8 @@ describe(`Given the ${useLogin.name} hook`, () => {
         account,
         app,
         signer: {
-          address: account,
-          signMessage: async (message: string) => signer.signMessage({ message }),
+          address: signer,
+          signMessage: async (message: string) => wallet.signMessage({ message }),
         },
       });
 

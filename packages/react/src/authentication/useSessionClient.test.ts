@@ -1,8 +1,8 @@
-import { local } from '@lens-protocol/env';
 import { evmAddress } from '@lens-protocol/types';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import { PublicClient, type SessionClient } from '@lens-protocol/client';
+import type { SessionClient } from '@lens-protocol/client';
+import { createPublicClient } from '@lens-protocol/client/test-utils';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { renderHookWithContext } from '../__helpers__/testing-utils';
 import { useSessionClient } from './useSessionClient';
@@ -11,14 +11,10 @@ const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
 const owner = evmAddress(signer.address);
 const app = evmAddress(import.meta.env.TEST_APP);
 const account = evmAddress(import.meta.env.TEST_ACCOUNT);
+const client = createPublicClient();
 
 describe(`Given the '${useSessionClient.name}' hook`, () => {
   describe('And the user is not authenticated', () => {
-    const client = PublicClient.create({
-      environment: local,
-      origin: 'http://example.com',
-    });
-
     describe('When rendered in traditional non-suspense mode', () => {
       it('Then it should return `null`', async () => {
         const { result } = renderHookWithContext(() => useSessionClient(), {
@@ -43,10 +39,6 @@ describe(`Given the '${useSessionClient.name}' hook`, () => {
   });
 
   describe('And the user is authenticated', () => {
-    const client = PublicClient.create({
-      environment: local,
-      origin: 'http://example.com',
-    });
     let sessionClient: SessionClient;
 
     beforeAll(async () => {
@@ -70,7 +62,7 @@ describe(`Given the '${useSessionClient.name}' hook`, () => {
       });
 
       await vi.waitUntil(() => result.current.loading === false);
-      expect(result.current.data?.getCredentials()).resolves.toEqual(credentials);
+      await expect(result.current.data?.getCredentials()).resolves.toEqual(credentials);
     });
 
     describe('When rendered in suspense mode', () => {
@@ -84,7 +76,7 @@ describe(`Given the '${useSessionClient.name}' hook`, () => {
         });
 
         await vi.waitUntil(() => result.current !== null);
-        expect(result.current.data?.getCredentials()).resolves.toEqual(credentials);
+        await expect(result.current.data?.getCredentials()).resolves.toEqual(credentials);
       });
     });
   });
