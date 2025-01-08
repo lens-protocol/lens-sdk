@@ -155,6 +155,6 @@ export function switchAccount(
  */
 export function fetchMeDetails<TAccount extends Account>(
   client: SessionClient<Context<TAccount>>,
-): ResultAsync<MeResult, UnauthenticatedError | UnexpectedError> {
+): ResultAsync<MeResult<TAccount>, UnauthenticatedError | UnexpectedError> {
   return client.query(meQuery([client.context.accountFragment]), {});
 }

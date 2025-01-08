@@ -222,7 +222,7 @@ export const AccountGraphsStatsQuery = graphql(
 
 export type AccountGraphsStatsRequest = RequestOf<typeof AccountGraphsStatsQuery>;
 
-export const AccountsAvailableQuery = graphql(
+export const AccountsAvailableQuery = dynamic(
   `query AccountsAvailable($request: AccountsAvailableRequest!) {
     value: accountsAvailable(request: $request) {
       items{

@@ -1,8 +1,8 @@
 import type { FragmentOf } from 'gql.tada';
 import {
   type Account,
+  type AccountAvailable,
   AccountAvailableFragment,
-  type FullAccount,
   PaginatedResultInfoFragment,
 } from './fragments';
 import {
@@ -222,24 +222,20 @@ const MeResultFragment = partial(
       window
     }
     loggedInAs {
-      ...AccountAvailable
+      ${'...AccountAvailable'}
     }
   }`,
   [AccountAvailableFragment],
 );
-export type MeDetails<TAccount extends Account> = PartialFragmentOf<
+export type MeResult<TAccount extends Account> = PartialFragmentOf<
   typeof MeResultFragment,
-  [FragmentDocumentFor<TAccount>]
+  [FragmentDocumentFor<AccountAvailable<TAccount>>]
 >;
-
-type test = MeDetails<FullAccount>;
-
-export type MeResult = FragmentOf<typeof MeResultFragment>;
 
 export const meQuery = dynamic(
   `query Me {
     value: me {
-      ...MeResult
+      ${'...MeResult'}
     }
   }`,
   [MeResultFragment],

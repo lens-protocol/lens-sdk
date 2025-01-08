@@ -124,11 +124,11 @@ const AccountManagedFragment = partial(
   `fragment AccountManaged on AccountManaged {
     __typename
     addedAt
-    account {
-      ...Account
-    }
     permissions {
       ...AccountManagerPermissions
+    }
+    account {
+      ...Account
     }
   }`,
   [AccountManagerPermissionsFragment],
@@ -146,8 +146,8 @@ const AccountOwnedFragment = partial(
       ...Account
     }
   }`,
-  [],
 );
+
 export type AccountOwned<TAccount extends Account> = PartialFragmentOf<
   typeof AccountOwnedFragment,
   [FragmentDocumentFor<TAccount>]

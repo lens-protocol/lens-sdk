@@ -273,11 +273,19 @@ export type PartialFragmentOf<
   ? FragmentOf<FragmentDocumentFrom<In, [...StaticFragments, ...DynamicFragments]>>
   : never;
 
-export type DynamicDocument<In extends string, StaticFragments extends FragmentShape[] = []> = <
-  DynamicFragments extends FragmentShape[],
->(
+export type DynamicDocument<
+  In extends string = string,
+  StaticFragments extends FragmentShape[] = [],
+> = <DynamicFragments extends FragmentShape[]>(
   dynamicFragments: DynamicFragments,
 ) => GetDocumentNode<In, [...StaticFragments, ...DynamicFragments]>;
+
+export type DynamicFragmentOf<
+  Document extends DynamicDocument,
+  DynamicFragments extends FragmentShape[],
+> = Document extends DynamicDocument<infer In, infer StaticFragments>
+  ? FragmentOf<FragmentDocumentFrom<In, [...StaticFragments, ...DynamicFragments]>>
+  : never;
 
 /**
  * @internal

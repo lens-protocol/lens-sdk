@@ -275,24 +275,6 @@ export const FullPostFieldsFragment = graphql(
  */
 export type FullPostFields = FragmentOf<typeof FullPostFieldsFragment>;
 
-export const ReferencedPostFragment = partial(
-  `fragment ReferencedPost on Post {
-    ${'...PostFields'}
-      
-    author {
-      ...Account
-    }
-  }`,
-);
-
-export type ReferencedPost<
-  TPostFields extends PostFields = PostFields,
-  TAccount extends Account = Account,
-> = PartialFragmentOf<
-  typeof ReferencedPostFragment,
-  [FragmentDocumentFor<TPostFields, 'Post', 'PostFields'>, FragmentDocumentFor<TAccount>]
->;
-
 export const PostFragment = partial(
   `fragment Post on Post {
     ${'...PostFields'}
@@ -301,16 +283,27 @@ export const PostFragment = partial(
       ...Account
     }
     root {
-      ${'...ReferencedPost'}
+      ${'...PostFields'}
+      
+      author {
+        ...Account
+      }
     }
     quoteOf {
-      ${'...ReferencedPost'}
+      ${'...PostFields'}
+      
+      author {
+        ...Account
+      }
     }
     commentOn {
-      ${'...ReferencedPost'}
+      ${'...PostFields'}
+      
+      author {
+        ...Account
+      }
     }
   }`,
-  [ReferencedPostFragment],
 );
 
 export type Post<
@@ -339,19 +332,33 @@ export const RepostFragment = partial(
       author {
         ...Account
       }
+
       root {
-        ${'...ReferencedPost'}
+        ${'...PostFields'}
+      
+        author {
+          ...Account
+        }
       }
       quoteOf {
-        ${'...ReferencedPost'}
+        ${'...PostFields'}
+      
+        author {
+          ...Account
+        }
       }
       commentOn {
-        ${'...ReferencedPost'}
+        ${'...PostFields'}
+      
+        author {
+          ...Account
+        }
       }
     }
   }`,
-  [AppFragment, PostFragment],
+  [AppFragment],
 );
+
 export type Repost<
   TPostFields extends PostFields = PostFields,
   TAccount extends Account = Account,
