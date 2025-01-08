@@ -1,3 +1,5 @@
+export * from '@lens-protocol/client';
+
 export * from './authentication';
 export type {
   AsyncTaskIdle,

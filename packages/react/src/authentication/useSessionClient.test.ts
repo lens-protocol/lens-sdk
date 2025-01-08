@@ -4,7 +4,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 import type { SessionClient } from '@lens-protocol/client';
 import { createPublicClient } from '@lens-protocol/client/test-utils';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
-import { renderHookWithContext } from '../__helpers__/testing-utils';
+import { renderHookWithContext } from '../test-utils';
 import { useSessionClient } from './useSessionClient';
 
 const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
@@ -27,7 +27,7 @@ describe(`Given the '${useSessionClient.name}' hook`, () => {
     });
 
     describe('When rendered in suspense mode', () => {
-      it('should suspend and render once the SessionClient is determined', async () => {
+      it('Then it should suspend and render once the SessionClient is determined', async () => {
         const { result } = renderHookWithContext(() => useSessionClient({ suspense: true }), {
           client,
         });
@@ -54,7 +54,7 @@ describe(`Given the '${useSessionClient.name}' hook`, () => {
       sessionClient = result._unsafeUnwrap();
     });
 
-    it('should return the SessionClient instance if available', async () => {
+    it('Then it should return the SessionClient instance if available', async () => {
       const credentials = await sessionClient.getCredentials();
 
       const { result } = renderHookWithContext(() => useSessionClient(), {
@@ -66,7 +66,7 @@ describe(`Given the '${useSessionClient.name}' hook`, () => {
     });
 
     describe('When rendered in suspense mode', () => {
-      it('should suspend and render once the SessionClient is determined', async () => {
+      it('Then it should suspend and render once the SessionClient is determined', async () => {
         expect.hasAssertions();
 
         const credentials = await sessionClient.getCredentials();

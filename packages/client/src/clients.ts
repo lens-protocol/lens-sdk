@@ -53,9 +53,21 @@ function takeValue<T>({
   return data.value;
 }
 
+/**
+ * A message signer.
+ */
 export type SignMessage = (message: string) => Promise<string>;
 
+/**
+ * The challenge request and the signer to use to sign the SIWE message.
+ *
+ * This is used to obtain a SIWE message that needs to be signed
+ * as part of the login process.
+ */
 export type LoginParams = ChallengeRequest & {
+  /**
+   * The signer to use to sign the SIWE message.
+   */
   signMessage: SignMessage;
 };
 
@@ -182,7 +194,7 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
   }
 
   /**
-   * Log in into Lens.
+   * Log in to Lens.
    *
    * @param params - The login parameters.
    * @returns The SessionClient if the login was successful.

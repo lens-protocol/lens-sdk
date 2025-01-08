@@ -11,9 +11,10 @@ import {
   okAsync,
   txHash,
 } from '@lens-protocol/types';
-import type { Account, Hash, Transport, WalletClient } from 'viem';
+import type { Account, Chain, Hash, Transport, WalletActions, WalletClient } from 'viem';
 import { sendTransaction as sendEip1559Transaction } from 'viem/actions';
 import { sendEip712Transaction } from 'viem/zksync';
+import type { SignMessage } from '../clients';
 import { SigningError, ValidationError } from '../errors';
 import { type OperationHandler, type OperationResult, isTransactionRequest } from '../types';
 
@@ -54,7 +55,7 @@ async function sendTransaction(
   });
 }
 
-function signWith(
+function sendTransactionWith(
   walletClient: WalletClient<Transport, chains.LensNetworkChain, Account>,
   request: SponsoredTransactionRequest | SelfFundedTransactionRequest,
 ): ResultAsync<TxHash, SigningError> {
@@ -63,7 +64,12 @@ function signWith(
   );
 }
 
-export function handleWith(
+/**
+ * Handles a transaction mutation result.
+ *
+ * In case the result is a transaction request, it will be signed and sent using the provided wallet client.
+ */
+export function handleOperationWith(
   walletClient: WalletClient<Transport, chains.LensNetworkChain, Account>,
 ): OperationHandler {
   return <T extends string, E extends string>(
@@ -74,9 +80,21 @@ export function handleWith(
     }
 
     if (isTransactionRequest(result)) {
-      return signWith(walletClient, result);
+      return sendTransactionWith(walletClient, result);
     }
 
     return errAsync(ValidationError.fromErrorResponse(result));
   };
+}
+
+/**
+ * @deprecated Use {@link handleOperationWith} instead.
+ */
+export const handleWith = handleOperationWith;
+
+/**
+ * Sign an Ethereum message with the provided wallet client.
+ */
+export function signMessageWith(walletClient: WalletActions<Chain, Account>): SignMessage {
+  return (message: string) => walletClient.signMessage({ message });
 }

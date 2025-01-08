@@ -1,21 +1,23 @@
-import { url, assertErr, assertOk, evmAddress, signatureFrom } from '@lens-protocol/types';
+import { CurrentSessionQuery, HealthQuery, RefreshMutation, Role } from '@lens-protocol/graphql';
+import { url, assertErr, assertOk, signatureFrom } from '@lens-protocol/types';
 import { HttpResponse, graphql, passthrough } from 'msw';
 import { setupServer } from 'msw/node';
 
-import { privateKeyToAccount } from 'viem/accounts';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { CurrentSessionQuery, HealthQuery, RefreshMutation, Role } from '@lens-protocol/graphql';
 import { currentSession } from './actions';
 import { PublicClient } from './clients';
 import { GraphQLErrorCode, UnauthenticatedError, UnexpectedError } from './errors';
-import { createGraphQLErrorObject, createPublicClient } from './test-utils';
+import {
+  account,
+  app,
+  createGraphQLErrorObject,
+  createPublicClient,
+  signer,
+  wallet,
+} from './test-utils';
 import { delay } from './utils';
-
-const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
-const owner = evmAddress(signer.address);
-const account = evmAddress(import.meta.env.TEST_ACCOUNT);
-const app = evmAddress(import.meta.env.TEST_APP);
+import { signMessageWith } from './viem';
 
 describe(`Given an instance of the ${PublicClient.name}`, () => {
   const client = createPublicClient();
@@ -25,7 +27,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
       const challenge = await client.challenge({
         accountOwner: {
           account,
-          owner,
+          owner: signer,
           app,
         },
       });
@@ -33,7 +35,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
 
       const authenticated = await client.authenticate({
         id: challenge.value.id,
-        signature: signatureFrom(await signer.signMessage({ message: challenge.value.text })),
+        signature: signatureFrom(await wallet.signMessage({ message: challenge.value.text })),
       });
 
       assertOk(authenticated);
@@ -42,8 +44,8 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
       assertOk(user);
       expect(user.value).toMatchObject({
         role: Role.AccountOwner,
-        account: account.toLowerCase(),
-        owner: owner.toLowerCase(),
+        address: account.toLowerCase(),
+        signer: signer.toLowerCase(),
       });
     });
   });
@@ -53,7 +55,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
       const authenticated = await client.login({
         accountOwner: {
           account,
-          owner,
+          owner: signer,
           app,
         },
         signMessage: async () => {
@@ -70,10 +72,10 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
       await client.login({
         accountOwner: {
           account,
-          owner,
+          owner: signer,
           app,
         },
-        signMessage: (message) => signer.signMessage({ message }),
+        signMessage: signMessageWith(wallet),
       });
 
       const authenticated = await client.resumeSession();
@@ -81,7 +83,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
 
       const authentication = await currentSession(authenticated.value);
       expect(authentication._unsafeUnwrap()).toMatchObject({
-        signer: owner,
+        signer,
         app,
       });
     });
@@ -137,10 +139,10 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
           const authenticated = await client.login({
             accountOwner: {
               account,
-              owner,
+              owner: signer,
               app,
             },
-            signMessage: (message) => signer.signMessage({ message }),
+            signMessage: signMessageWith(wallet),
           });
           assertOk(authenticated);
 
@@ -184,10 +186,10 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
           const authenticated = await client.login({
             accountOwner: {
               account,
-              owner,
+              owner: signer,
               app,
             },
-            signMessage: (message) => signer.signMessage({ message }),
+            signMessage: signMessageWith(wallet),
           });
           assertOk(authenticated);
 

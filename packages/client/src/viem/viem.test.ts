@@ -5,7 +5,7 @@ import { chains } from '@lens-network/sdk/viem';
 import { evmAddress, uri } from '@lens-protocol/types';
 import { http, createWalletClient } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
-import { handleWith } from '.';
+import { handleOperationWith } from '.';
 import { post } from '../actions/post';
 import { PublicClient } from '../clients';
 
@@ -36,7 +36,7 @@ describe('Given an integration with viem', { timeout: 10000 }, () => {
       const result = await post(sessionClient, {
         contentUri: uri('https://devnet.irys.xyz/3n3Ujg3jPBHX58MPPqYXBSQtPhTgrcTk4RedJgV1Ejhb'),
       })
-        .andThen(handleWith(walletClient))
+        .andThen(handleOperationWith(walletClient))
         .andThen(sessionClient.waitForTransaction);
 
       expect(result.isOk(), result.isErr() ? result.error.message : undefined).toBe(true);

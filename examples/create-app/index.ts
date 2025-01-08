@@ -3,7 +3,7 @@ import 'viem/window';
 import { chains } from '@lens-network/sdk/viem';
 import { PublicClient, testnet as protocolTestnet } from '@lens-protocol/client';
 import { createApp, fetchApp } from '@lens-protocol/client/actions';
-import { handleWith } from '@lens-protocol/client/viem';
+import { handleOperationWith } from '@lens-protocol/client/viem';
 import { Platform, app } from '@lens-protocol/metadata';
 import { StorageClient, testnet as storageTestnet } from '@lens-protocol/storage-node-client';
 import { type Address, createWalletClient, custom } from 'viem';
@@ -53,7 +53,7 @@ const created = await createApp(sessionClient, {
   metadataUri: uri,
   verification: false, // will become optional soon
 })
-  .andThen(handleWith(walletClient))
+  .andThen(handleOperationWith(walletClient))
   .andThen(sessionClient.waitForTransaction)
   .andThen((txHash) => fetchApp(sessionClient, { txHash }))
   .match(

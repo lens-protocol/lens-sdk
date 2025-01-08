@@ -2,9 +2,9 @@ import { testnet } from '@lens-protocol/env';
 import { describe, it } from 'vitest';
 
 import { assertOk, evmAddress, uri } from '@lens-protocol/types';
-import { handleWith } from '.';
 import { post } from '../actions/post';
 import { PublicClient } from '../clients';
+import { handleOperationWith } from './signer';
 
 import { Network, Wallet, getDefaultProvider } from '@lens-network/sdk/ethers';
 
@@ -32,7 +32,7 @@ describe('Given an integration with ethers.js', () => {
       const result = await post(sessionClient, {
         contentUri: uri('https://devnet.irys.xyz/3n3Ujg3jPBHX58MPPqYXBSQtPhTgrcTk4RedJgV1Ejhb'),
       })
-        .andThen(handleWith(wallet))
+        .andThen(handleOperationWith(wallet))
         .andThen(sessionClient.waitForTransaction);
 
       assertOk(result);

@@ -3,40 +3,17 @@ import { type EvmAddress, type Result, type UUID, err, never, ok } from '@lens-p
 import { UnexpectedError } from './errors';
 import type { IdTokenClaims } from './tokens';
 
-export type AccountManager = {
-  role: Role.AccountManager;
-  authentication_id: UUID;
-  account: EvmAddress;
-  app: EvmAddress;
-  manager: EvmAddress;
-  sponsored: boolean;
-};
+const ROLE_CLAIM = 'tag:lens.dev,2024:role';
+const SPONSORED_CLAIM = 'tag:lens.dev,2024:sponsored';
 
-export type AccountOwner = {
-  role: Role.AccountOwner;
-  authentication_id: UUID;
-  account: EvmAddress;
-  app: EvmAddress;
-  owner: EvmAddress;
-  sponsored: boolean;
-};
-
-export type OnboardingUser = {
-  role: Role.OnboardingUser;
-  authentication_id: UUID;
+export type AuthenticatedUser = {
   address: EvmAddress;
   app: EvmAddress;
-  sponsored: boolean;
-};
-
-export type Builder = {
-  role: Role.Builder;
   authentication_id: UUID;
-  address: EvmAddress;
+  role: Role;
+  signer: EvmAddress;
   sponsored: boolean;
 };
-
-export type AuthenticatedUser = AccountManager | AccountOwner | OnboardingUser | Builder;
 
 /**
  * @internal
@@ -44,41 +21,48 @@ export type AuthenticatedUser = AccountManager | AccountOwner | OnboardingUser |
 export function authenticatedUser(
   claims: IdTokenClaims,
 ): Result<AuthenticatedUser, UnexpectedError> {
-  switch (claims['tag:lens.dev,2024:role']) {
+  switch (claims[ROLE_CLAIM]) {
     case Role.AccountManager:
       return ok({
-        role: Role.AccountManager,
-        authentication_id: claims.sid,
-        account: claims.act?.sub ?? never('Account Manager must have an Actor Claim'),
+        address: claims.act?.sub ?? never('Account Manager must have an Actor Claim'),
         app: claims.aud,
-        manager: claims.sub,
-        sponsored: claims['tag:lens.dev,2024:sponsored'],
+        authentication_id: claims.sid,
+        role: Role.AccountManager,
+        signer: claims.sub,
+        sponsored: claims[SPONSORED_CLAIM],
       });
+
     case Role.AccountOwner:
       return ok({
-        role: Role.AccountOwner,
-        authentication_id: claims.sid,
-        account: claims.act?.sub ?? never('Account Owner must have an Actor Claim'),
+        address: claims.act?.sub ?? never('Account Owner must have an Actor Claim'),
         app: claims.aud,
-        owner: claims.sub,
-        sponsored: claims['tag:lens.dev,2024:sponsored'],
+        authentication_id: claims.sid,
+        role: Role.AccountOwner,
+        signer: claims.sub,
+        sponsored: claims[SPONSORED_CLAIM],
       });
+
     case Role.OnboardingUser:
       return ok({
-        role: Role.OnboardingUser,
-        authentication_id: claims.sid,
         address: claims.sub,
         app: claims.aud,
-        sponsored: claims['tag:lens.dev,2024:sponsored'],
+        authentication_id: claims.sid,
+        role: Role.OnboardingUser,
+        signer: claims.sub,
+        sponsored: claims[SPONSORED_CLAIM],
       });
+
     case Role.Builder:
       return ok({
-        role: Role.Builder,
-        authentication_id: claims.sid,
         address: claims.sub,
-        sponsored: claims['tag:lens.dev,2024:sponsored'],
+        app: claims.aud,
+        authentication_id: claims.sid,
+        role: Role.Builder,
+        signer: claims.sub,
+        sponsored: claims[SPONSORED_CLAIM],
       });
+
     default:
-      return err(UnexpectedError.from(`Unexpected role: ${claims['tag:lens.dev,2024:role']}`));
+      return err(UnexpectedError.from(`Unexpected role: ${claims[ROLE_CLAIM]}`));
   }
 }

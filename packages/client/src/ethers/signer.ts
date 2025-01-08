@@ -7,6 +7,7 @@ import type {
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,
 } from '@lens-protocol/graphql';
+import type { SignMessage } from '../clients';
 import { SigningError, ValidationError } from '../errors';
 import { type OperationHandler, type OperationResult, isTransactionRequest } from '../types';
 
@@ -51,7 +52,12 @@ function signWith(
   );
 }
 
-export function handleWith(signer: Signer): OperationHandler {
+/**
+ * Handles a transaction mutation result.
+ *
+ * In case the result is a transaction request, it will be signed and sent using the provided signer.
+ */
+export function handleOperationWith(signer: Signer): OperationHandler {
   return <T extends string, E extends string>(
     result: OperationResult<T, E>,
   ): ResultAsync<TxHash, SigningError | ValidationError<E>> => {
@@ -65,4 +71,16 @@ export function handleWith(signer: Signer): OperationHandler {
 
     return errAsync(ValidationError.fromErrorResponse(result));
   };
+}
+
+/**
+ * @deprecated Use {@link handleOperationWith} instead.
+ */
+export const handleWith = handleOperationWith;
+
+/**
+ * Sign an Ethereum message with the provided signer.
+ */
+export function signMessageWith(signer: Signer): SignMessage {
+  return (message: string) => signer.signMessage(message);
 }

@@ -3,7 +3,7 @@ import 'viem/window';
 import { chains } from '@lens-network/sdk/viem';
 import { PublicClient, testnet as protocolTestnet } from '@lens-protocol/client';
 import { createAccountWithUsername, fetchAccount } from '@lens-protocol/client/actions';
-import { handleWith } from '@lens-protocol/client/viem';
+import { handleOperationWith } from '@lens-protocol/client/viem';
 import { account } from '@lens-protocol/metadata';
 import { StorageClient, testnet as storageTestnet } from '@lens-protocol/storage-node-client';
 import { type Address, createWalletClient, custom } from 'viem';
@@ -54,7 +54,7 @@ const created = await createAccountWithUsername(sessionClient, {
     localName: `john.doe.${Date.now()}`,
   },
 })
-  .andThen(handleWith(walletClient))
+  .andThen(handleOperationWith(walletClient))
   .andThen(sessionClient.waitForTransaction)
   .andThen((txHash) => fetchAccount(sessionClient, { txHash }))
   .match(
