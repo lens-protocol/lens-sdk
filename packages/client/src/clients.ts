@@ -72,7 +72,10 @@ export type LoginParams = ChallengeRequest & {
 };
 
 abstract class AbstractClient<TContext extends Context, TError> {
-  protected readonly urql: UrqlClient;
+  /**
+   * @internal
+   */
+  public readonly urql: UrqlClient;
 
   protected readonly logger: Logger;
 
