@@ -80,7 +80,7 @@ pnpm clean
 Create a new package:
 
 ```bash
-pnpm new:lib
+pnpm new:package
 ```
 
 ### IDE Setup <!-- omit in toc -->

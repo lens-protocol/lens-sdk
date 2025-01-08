@@ -79,7 +79,7 @@
       }
     },
     {
-      "include": ["./examples/**/*.ts"],
+      "include": ["./examples/**/*.ts", "./examples/**/*.tsx"],
       "linter": {
         "rules": {
           "style": {

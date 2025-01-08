@@ -45,7 +45,7 @@
     "react-dom": "^18.3.1",
     "tsup": "^8.3.5",
     "typescript": "^5.6.3",
-    "viem": "^2.21.33"
+    "viem": "^2.22.4"
   },
   "peerDependencies": {
     "@types/react": "^18.3.12",
@@ -54,9 +54,6 @@
   },
   "peerDependenciesMeta": {
     "@types/react": {
-      "optional": true
-    },
-    "wagmi": {
       "optional": true
     }
   },
