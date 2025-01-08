@@ -6,6 +6,7 @@ The official SDK for the Lens 🌿.
 
 - [Installation](#installation)
 - [Development Workflow](#development-workflow)
+- [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -112,6 +113,40 @@ The project uses [Biome](https://biomejs.dev/) to format and lint the code. You 
    ```
 
 9. Merge the pull request to the `main` branch.
+
+## Troubleshooting
+
+### Incompatible Types Across Packages <!-- omit in toc -->
+
+Working within a monorepo can sometimes lead to type incompatibilities across packages. If you encounter an error like:
+
+```bash
+Type 'import("[...]/packages/client/dist/index").PublicClient<import("[...]/packages/client/dist/index").Context>' is not assignable to type 'import("[...]/packages/client/src/clients").PublicClient<import("[...]/packages/client/src/context").Context>'.
+```
+
+This usually indicates that TypeScript is picking up types from different versions of the same package. To resolve this, make sure you have configured the entry points correctly as aliases in the top level `tsconfig.json` file.
+
+```json
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "types": ["node"],
+    "paths": {
+      "@lens-protocol/client": ["./packages/client/src"],
+      "@lens-protocol/client/actions": ["./packages/client/src/actions"],
+      "@lens-protocol/client/test-utils": ["./packages/client/src/test-utils"],
+      "@lens-protocol/env": ["./packages/env/src"],
+      "@lens-protocol/graphql": ["./packages/graphql/src"],
+      "@lens-protocol/react": ["./packages/react/src"],
+      "@lens-protocol/storage": ["./packages/storage/src"],
+      "@lens-protocol/types": ["./packages/types/src"]
+    }
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["dist", "node_modules"]
+}
+```
 
 ## Contributing
 

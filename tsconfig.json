@@ -6,6 +6,7 @@
     "paths": {
       "@lens-protocol/client": ["./packages/client/src"],
       "@lens-protocol/client/actions": ["./packages/client/src/actions"],
+      "@lens-protocol/client/test-utils": ["./packages/client/src/test-utils"],
       "@lens-protocol/env": ["./packages/env/src"],
       "@lens-protocol/graphql": ["./packages/graphql/src"],
       "@lens-protocol/react": ["./packages/react/src"],

@@ -1,16 +1,24 @@
+/// <reference path="../../../vite-env.d.ts" />
+
 import { chains } from '@lens-network/sdk/viem';
 import { StorageClient, testnet as storageEnv } from '@lens-protocol/storage-node-client';
 import { evmAddress } from '@lens-protocol/types';
 import { http, type Account, type Transport, type WalletClient, createWalletClient } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import { GraphQLErrorCode, PublicClient, testnet as apiEnv } from './src';
+import { GraphQLErrorCode, PublicClient, testnet as apiEnv } from '.';
 
 const pk = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
-const account = evmAddress(import.meta.env.TEST_ACCOUNT);
-const app = evmAddress(import.meta.env.TEST_APP);
-
-export const signer = evmAddress(pk.address);
+export const account = evmAddress(import.meta.env.TEST_ACCOUNT);
+export const app = evmAddress(import.meta.env.TEST_APP);
+export const wallet: WalletClient<Transport, chains.LensNetworkChain, Account> = createWalletClient(
+  {
+    account: pk,
+    chain: chains.testnet,
+    transport: http(),
+  },
+);
+export const signer = evmAddress(wallet.account.address);
 
 export function createPublicClient() {
   return PublicClient.create({
@@ -41,14 +49,6 @@ export function loginAsOnboardingUser() {
       app,
     },
     signMessage: (message) => pk.signMessage({ message }),
-  });
-}
-
-export function signerWallet(): WalletClient<Transport, chains.LensNetworkChain, Account> {
-  return createWalletClient({
-    account: privateKeyToAccount(import.meta.env.PRIVATE_KEY),
-    chain: chains.testnet,
-    transport: http(),
   });
 }
 

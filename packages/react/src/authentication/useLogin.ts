@@ -71,8 +71,7 @@ export function useLogin(): UseAsyncTask<LoginArgs, Account, LoginError> {
       fetchAccount(sessionClient, { address: args.account }).andThen((account) => {
         if (account === null) {
           return AuthenticationError.from(
-            'Unable to retrieve the Account data you signed in with. ' +
-              'Please contact the Lens team.',
+            'Account not found. This could be a Lens API issue. Please report this to the Lens team.',
           ).asResultAsync();
         }
         return okAsync(account);

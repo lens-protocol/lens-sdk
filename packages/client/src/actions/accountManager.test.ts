@@ -3,8 +3,8 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { type Account, assertTypename } from '@lens-protocol/graphql';
 import * as metadata from '@lens-protocol/metadata';
 import { assertOk, never, uri } from '@lens-protocol/types';
-import { loginAsOnboardingUser, signerWallet, storageClient } from '../../testing-utils';
 import type { SessionClient } from '../clients';
+import { loginAsOnboardingUser, storageClient, wallet } from '../test-utils';
 import { handleWith } from '../viem';
 import {
   createAccountWithUsername,
@@ -14,7 +14,6 @@ import {
 } from './account';
 import { fetchMeDetails } from './authentication';
 
-const walletClient = signerWallet();
 describe('Given a new Lens Account', () => {
   let newAccount: Account;
   let sessionClient: SessionClient;
@@ -28,7 +27,7 @@ describe('Given a new Lens Account', () => {
         username: { localName: `testname${Date.now()}` },
         metadataUri: uri(`data:application/json,${JSON.stringify(initialMetadata)}`), // empty at first
       })
-        .andThen(handleWith(walletClient))
+        .andThen(handleWith(wallet))
         .andThen(sessionClient.waitForTransaction)
         .andThen((txHash) => fetchAccount(sessionClient, { txHash }))
         .andThen((account) => {
@@ -47,7 +46,7 @@ describe('Given a new Lens Account', () => {
   describe(`When invoking the '${enableSignless.name}' action`, () => {
     beforeAll(async () => {
       const result = await enableSignless(sessionClient)
-        .andThen(handleWith(walletClient))
+        .andThen(handleWith(wallet))
         .andThen(sessionClient.waitForTransaction);
       assertOk(result);
     });

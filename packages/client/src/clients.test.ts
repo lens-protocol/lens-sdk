@@ -6,10 +6,10 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { CurrentSessionQuery, HealthQuery, RefreshMutation, Role } from '@lens-protocol/graphql';
-import { createGraphQLErrorObject, createPublicClient } from '../testing-utils';
 import { currentSession } from './actions';
 import { PublicClient } from './clients';
 import { GraphQLErrorCode, UnauthenticatedError, UnexpectedError } from './errors';
+import { createGraphQLErrorObject, createPublicClient } from './test-utils';
 import { delay } from './utils';
 
 const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);

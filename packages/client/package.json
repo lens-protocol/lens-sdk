@@ -30,13 +30,19 @@
       "import": "./dist/viem/index.js",
       "require": "./dist/viem/index.cjs",
       "types": "./dist/viem/index.d.cts"
+    },
+    "./test-utils": {
+      "import": "./dist/test-utils.js",
+      "require": "./dist/test-utils.cjs",
+      "types": "./dist/test-utils.d.cts"
     }
   },
   "typesVersions": {
     "*": {
       "actions": ["./dist/actions/index.d.ts"],
       "ethers": ["./dist/ethers/index.d.ts"],
-      "viem": ["./dist/viem/index.d.ts"]
+      "viem": ["./dist/viem/index.d.ts"],
+      "test-utils": ["./dist/test-utils.d.ts"]
     }
   },
   "files": ["dist"],
