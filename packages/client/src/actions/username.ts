@@ -111,17 +111,20 @@ export function fetchUsername(
 }
 
 /**
- * Fetch usernames owned by an address.
+ * Fetch usernames.
+ * Example: fetch usernames owned by a specific address.
  *
  * ```ts
  * const result = await fetchUsernames(anyClient, {
- *   owner: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ *  filter: {
+ *    owner: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ *  },
  * });
  * ```
  *
  * @param client - Any Lens client.
  * @param request - The query request.
- * @returns The list of owned usernames.
+ * @returns The list of usernames.
  */
 export function fetchUsernames(
   client: AnyClient,
