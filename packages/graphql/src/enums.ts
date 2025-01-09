@@ -960,3 +960,12 @@ export enum WhoReferencedPostOrderBy {
   Oldest = 'OLDEST',
   AccountScore = 'ACCOUNT_SCORE',
 }
+
+/**
+ * Enum for AppUsersOrderBy.
+ */
+export enum AppUsersOrderBy {
+  Alphabetical = 'ALPHABETICAL',
+  AccountScore = 'ACCOUNT_SCORE',
+  BestMatch = 'BEST_MATCH',
+}
