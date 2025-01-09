@@ -29,17 +29,11 @@
   },
   "typesVersions": {
     "*": {
-      "ethers": [
-        "./dist/ethers.d.ts"
-      ],
-      "viem": [
-        "./dist/viem.d.ts"
-      ]
+      "ethers": ["./dist/ethers.d.ts"],
+      "viem": ["./dist/viem.d.ts"]
     }
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "sideEffects": false,
   "scripts": {
     "build": "tsup",

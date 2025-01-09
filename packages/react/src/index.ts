@@ -9,4 +9,4 @@ export type {
   AsyncTaskState,
   UseAsyncTask,
 } from './helpers';
-export * from './provider';
+export * from './LensProvider';
