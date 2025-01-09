@@ -1,8 +1,9 @@
-import { type SessionClient, never } from '@lens-protocol/client';
+import type { SessionClient } from '@lens-protocol/client';
 import type { AuthenticatedUser } from '@lens-protocol/client';
 import { account, app, createPublicClient, signer, wallet } from '@lens-protocol/client/test-utils';
 import { signMessageWith } from '@lens-protocol/client/viem';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
+
 import { renderHookWithContext } from '../test-utils';
 import { useAuthenticatedUser } from './useAuthenticatedUser';
 

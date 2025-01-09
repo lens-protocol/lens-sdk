@@ -1,7 +1,6 @@
 import type { PublicClient } from '@lens-protocol/client';
 import React from 'react';
 import type { ReactNode } from 'react';
-import { Provider as UrqlProvider } from 'urql';
 
 import { LensContextProvider } from './context';
 
@@ -39,9 +38,5 @@ export type LensProviderProps = {
  * ```
  */
 export function LensProvider({ children, client }: LensProviderProps) {
-  return (
-    <UrqlProvider value={client.urql}>
-      <LensContextProvider client={client}>{children}</LensContextProvider>
-    </UrqlProvider>
-  );
+  return <LensContextProvider client={client}>{children}</LensContextProvider>;
 }

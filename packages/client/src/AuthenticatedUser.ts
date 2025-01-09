@@ -9,7 +9,7 @@ const SPONSORED_CLAIM = 'tag:lens.dev,2024:sponsored';
 export type AuthenticatedUser = {
   address: EvmAddress;
   app: EvmAddress;
-  authentication_id: UUID;
+  authenticationId: UUID;
   role: Role;
   signer: EvmAddress;
   sponsored: boolean;
@@ -26,7 +26,7 @@ export function authenticatedUser(
       return ok({
         address: claims.act?.sub ?? never('Account Manager must have an Actor Claim'),
         app: claims.aud,
-        authentication_id: claims.sid,
+        authenticationId: claims.sid,
         role: Role.AccountManager,
         signer: claims.sub,
         sponsored: claims[SPONSORED_CLAIM],
@@ -36,7 +36,7 @@ export function authenticatedUser(
       return ok({
         address: claims.act?.sub ?? never('Account Owner must have an Actor Claim'),
         app: claims.aud,
-        authentication_id: claims.sid,
+        authenticationId: claims.sid,
         role: Role.AccountOwner,
         signer: claims.sub,
         sponsored: claims[SPONSORED_CLAIM],
@@ -46,7 +46,7 @@ export function authenticatedUser(
       return ok({
         address: claims.sub,
         app: claims.aud,
-        authentication_id: claims.sid,
+        authenticationId: claims.sid,
         role: Role.OnboardingUser,
         signer: claims.sub,
         sponsored: claims[SPONSORED_CLAIM],
@@ -56,7 +56,7 @@ export function authenticatedUser(
       return ok({
         address: claims.sub,
         app: claims.aud,
-        authentication_id: claims.sid,
+        authenticationId: claims.sid,
         role: Role.Builder,
         signer: claims.sub,
         sponsored: claims[SPONSORED_CLAIM],

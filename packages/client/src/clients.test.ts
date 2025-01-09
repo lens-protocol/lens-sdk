@@ -50,7 +50,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
     });
   });
 
-  describe('When authenticating via the `login` convenience method', () => {
+  describe(`When authenticating via the '${PublicClient.prototype.login.name}' convenience method`, () => {
     it('Then it should return an Err<never, SigningError> with any error thrown by the provided `SignMessage` function', async () => {
       const authenticated = await client.login({
         accountOwner: {
@@ -108,6 +108,25 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
   });
 
   describe('And a SessionClient created from it', () => {
+    describe(`When invoking the 'logout' method`, () => {
+      it('Then it should revoke the current authenticated session and clear the credentials from the storage', async () => {
+        const authenticated = await client.login({
+          accountOwner: {
+            account,
+            owner: signer,
+            app,
+          },
+          signMessage: signMessageWith(wallet),
+        });
+        assertOk(authenticated);
+
+        const result = await authenticated.value.logout();
+        assertOk(result);
+        assertErr(await currentSession(authenticated.value));
+        assertErr(await authenticated.value.getAuthenticatedUser());
+      });
+    });
+
     describe('When a request fails with UNAUTHENTICATED extension code', () => {
       const server = setupServer(
         graphql.query(

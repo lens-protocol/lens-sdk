@@ -12,7 +12,7 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo watch build",
-    "clean": "rimraf packages/*/dist",
+    "clean": "rimraf .turbo packages/*/dist",
     "lint": "biome check",
     "lint:fix": "biome check --write",
     "new:package": "NODE_OPTIONS='--import tsx' plop --plopfile=plopfile.ts",

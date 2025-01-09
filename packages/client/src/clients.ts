@@ -30,7 +30,7 @@ import { type Logger, getLogger } from 'loglevel';
 import type { SwitchAccountRequest } from '@lens-protocol/graphql';
 import { type AuthConfig, authExchange } from '@urql/exchange-auth';
 import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
-import { switchAccount, transactionStatus } from './actions';
+import { revokeAuthentication, switchAccount, transactionStatus } from './actions';
 import type { ClientConfig } from './config';
 import { type Context, configureContext } from './context';
 import {
@@ -329,6 +329,17 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
 
       return authenticatedUser(claims.value);
     });
+  }
+
+  /**
+   * Log out the current session.
+   */
+  logout(): ResultAsync<void, UnauthenticatedError | UnexpectedError> {
+    return this.getAuthenticatedUser()
+      .andThen(({ authenticationId }) => revokeAuthentication(this, { authenticationId }))
+      .andTee(() =>
+        ResultAsync.fromPromise(this.credentials.reset(), (err) => UnexpectedError.from(err)),
+      );
   }
 
   /**

@@ -17,14 +17,14 @@
       "require": "./dist/index.cjs"
     },
     "./ethers": {
-      "types": "./dist/ethers.d.cts",
       "import": "./dist/ethers.js",
-      "require": "./dist/ethers.cjs"
+      "require": "./dist/ethers.cjs",
+      "types": "./dist/ethers.d.cts"
     },
     "./viem": {
-      "types": "./dist/viem.d.cts",
       "import": "./dist/viem.js",
-      "require": "./dist/viem.cjs"
+      "require": "./dist/viem.cjs",
+      "types": "./dist/viem.d.cts"
     }
   },
   "typesVersions": {

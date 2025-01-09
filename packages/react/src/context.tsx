@@ -2,6 +2,8 @@ import type { PublicClient, SessionClient } from '@lens-protocol/client';
 import type { AuthenticatedUser } from '@lens-protocol/client';
 import { invariant } from '@lens-protocol/types';
 import React, { type ReactNode, useContext, useEffect, useState } from 'react';
+import { Provider as UrqlProvider } from 'urql';
+
 import { ReadResult, type SuspenseResult } from './helpers';
 
 /**
@@ -94,7 +96,11 @@ type LensContextProviderProps = {
 export function LensContextProvider({ children, client }: LensContextProviderProps) {
   const value = useLensContextValue(client);
 
-  return <LensContext.Provider value={value}>{children}</LensContext.Provider>;
+  return (
+    <LensContext.Provider value={value}>
+      <UrqlProvider value={value.session.client.urql}>{children}</UrqlProvider>
+    </LensContext.Provider>
+  );
 }
 
 /**
@@ -105,7 +111,7 @@ export function useLensContext(): LensContextValue {
 
   invariant(
     context,
-    'Could not find Lens SDK context, ensure your code is wrapped in a Lens <Provider>',
+    'Could not find Lens SDK context, ensure your code is wrapped in a <LensProvider>',
   );
 
   return context;
