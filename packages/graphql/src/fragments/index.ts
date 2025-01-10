@@ -5,7 +5,5 @@ export * from './metadata';
 export * from './pagination';
 export * from './post';
 export * from './primitives';
-export * from './SelfFundedTransactionRequest';
-export * from './SponsoredTransactionRequest';
-export * from './TransactionWillFail';
+export * from './transactions';
 export * from './username';

@@ -116,9 +116,9 @@ export function fetchUsername(
  *
  * ```ts
  * const result = await fetchUsernames(anyClient, {
- *  filter: {
- *    owner: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
- *  },
+ *   filter: {
+ *     owner: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ *   },
  * });
  * ```
  *
