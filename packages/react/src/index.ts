@@ -1,3 +1,6 @@
+export * from '@lens-protocol/client';
+
+export * from './account';
 export * from './authentication';
 export type {
   AsyncTaskIdle,
@@ -7,4 +10,4 @@ export type {
   AsyncTaskState,
   UseAsyncTask,
 } from './helpers';
-export * from './provider';
+export * from './LensProvider';

@@ -30,7 +30,7 @@ import { type Logger, getLogger } from 'loglevel';
 import type { SwitchAccountRequest } from '@lens-protocol/graphql';
 import { type AuthConfig, authExchange } from '@urql/exchange-auth';
 import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
-import { switchAccount, transactionStatus } from './actions';
+import { revokeAuthentication, switchAccount, transactionStatus } from './actions';
 import type { ClientConfig } from './config';
 import { type Context, configureContext } from './context';
 import {
@@ -53,14 +53,29 @@ function takeValue<T>({
   return data.value;
 }
 
+/**
+ * A message signer.
+ */
 export type SignMessage = (message: string) => Promise<string>;
 
+/**
+ * The challenge request and the signer to use to sign the SIWE message.
+ *
+ * This is used to obtain a SIWE message that needs to be signed
+ * as part of the login process.
+ */
 export type LoginParams = ChallengeRequest & {
+  /**
+   * The signer to use to sign the SIWE message.
+   */
   signMessage: SignMessage;
 };
 
 abstract class AbstractClient<TContext extends Context, TError> {
-  protected readonly urql: UrqlClient;
+  /**
+   * @internal
+   */
+  public readonly urql: UrqlClient;
 
   protected readonly logger: Logger;
 
@@ -182,7 +197,7 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
   }
 
   /**
-   * Log in into Lens.
+   * Log in to Lens.
    *
    * @param params - The login parameters.
    * @returns The SessionClient if the login was successful.
@@ -314,6 +329,17 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
 
       return authenticatedUser(claims.value);
     });
+  }
+
+  /**
+   * Log out the current session.
+   */
+  logout(): ResultAsync<void, UnauthenticatedError | UnexpectedError> {
+    return this.getAuthenticatedUser()
+      .andThen(({ authenticationId }) => revokeAuthentication(this, { authenticationId }))
+      .andTee(() =>
+        ResultAsync.fromPromise(this.credentials.reset(), (err) => UnexpectedError.from(err)),
+      );
   }
 
   /**

@@ -1,18 +1,19 @@
 import type { SessionClient } from '@lens-protocol/client';
+import type { AuthenticatedUser } from '@lens-protocol/client';
 import { account, app, createPublicClient, signer, wallet } from '@lens-protocol/client/test-utils';
 import { signMessageWith } from '@lens-protocol/client/viem';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { renderHookWithContext } from '../test-utils';
-import { useSessionClient } from './useSessionClient';
+import { useAuthenticatedUser } from './useAuthenticatedUser';
 
 const client = createPublicClient();
 
-describe(`Given the '${useSessionClient.name}' hook`, () => {
+describe(`Given the '${useAuthenticatedUser.name}' hook`, () => {
   describe('And the user is not authenticated', () => {
     describe('When rendered in traditional non-suspense mode', () => {
       it('Then it should return `null`', async () => {
-        const { result } = renderHookWithContext(() => useSessionClient(), {
+        const { result } = renderHookWithContext(() => useAuthenticatedUser(), {
           client,
         });
 
@@ -23,7 +24,7 @@ describe(`Given the '${useSessionClient.name}' hook`, () => {
 
     describe('When rendered in suspense mode', () => {
       it('Then it should suspend and render once the SessionClient is determined', async () => {
-        const { result } = renderHookWithContext(() => useSessionClient({ suspense: true }), {
+        const { result } = renderHookWithContext(() => useAuthenticatedUser({ suspense: true }), {
           client,
         });
 
@@ -35,6 +36,7 @@ describe(`Given the '${useSessionClient.name}' hook`, () => {
 
   describe('And the user is authenticated', () => {
     let sessionClient: SessionClient;
+    let user: AuthenticatedUser;
 
     beforeAll(async () => {
       const result = await client.login({
@@ -47,31 +49,34 @@ describe(`Given the '${useSessionClient.name}' hook`, () => {
       });
 
       sessionClient = result._unsafeUnwrap();
+
+      user = await sessionClient.getAuthenticatedUser().match(
+        (v) => v,
+        (e) => {
+          throw e;
+        },
+      );
     });
 
-    it('Then it should return the SessionClient instance if available', async () => {
-      const credentials = await sessionClient.getCredentials();
-
-      const { result } = renderHookWithContext(() => useSessionClient(), {
+    it('Then it should return the AuthenticatedUser if available', async () => {
+      const { result } = renderHookWithContext(() => useAuthenticatedUser(), {
         client,
       });
 
       await vi.waitUntil(() => result.current.loading === false);
-      await expect(result.current.data?.getCredentials()).resolves.toEqual(credentials);
+      expect(result.current.data).toEqual(user);
     });
 
     describe('When rendered in suspense mode', () => {
       it('Then it should suspend and render once the SessionClient is determined', async () => {
         expect.hasAssertions();
 
-        const credentials = await sessionClient.getCredentials();
-
-        const { result } = renderHookWithContext(() => useSessionClient({ suspense: true }), {
+        const { result } = renderHookWithContext(() => useAuthenticatedUser({ suspense: true }), {
           client,
         });
 
         await vi.waitUntil(() => result.current !== null);
-        await expect(result.current.data?.getCredentials()).resolves.toEqual(credentials);
+        expect(result.current.data).toEqual(user);
       });
     });
   });

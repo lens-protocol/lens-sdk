@@ -1,19 +1,19 @@
 import type { PublicClient } from '@lens-protocol/client';
 import React from 'react';
-
 import type { ReactNode } from 'react';
+
 import { LensContextProvider } from './context';
 
 /**
  * <Provider> props
  */
-export type ProviderProps = {
+export type LensProviderProps = {
   /**
    * The children to render
    */
   children: ReactNode;
   /**
-   * The configuration for the Lens SDK
+   * The Lens client to use
    */
   client: PublicClient;
 };
@@ -22,20 +22,21 @@ export type ProviderProps = {
  * Manages the lifecycle and internal state of the Lens SDK
  *
  * ```tsx
- * import { Provider, staging } from '@lens-protocol/react-web';
- * import { bindings as wagmiBindings } from '@lens-protocol/wagmi';
+ * import { LensProvider, PublicClient, testnet } from '@lens-protocol/react';
  *
- *
+ * const client = PublicClient.create({
+ *   environment: testnet,
+ * });
  *
  * function App() {
  *   return (
- *     <Provider config={lensConfig}>
+ *     <LensProvider client={client}>
  *        // ...
- *     </Provider>
+ *     </LensProvider>
  *   );
  * }
  * ```
  */
-export function Provider({ children, client }: ProviderProps) {
+export function LensProvider({ children, client }: LensProviderProps) {
   return <LensContextProvider client={client}>{children}</LensContextProvider>;
 }
