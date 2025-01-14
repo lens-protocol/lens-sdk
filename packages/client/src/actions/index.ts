@@ -12,6 +12,7 @@ export * from './namespace';
 export * from './notifications';
 export * from './post';
 export * from './posts';
+export * from './sns';
 export * from './timeline';
 export * from './transactions';
 export * from './username';
