@@ -564,3 +564,21 @@ export const SetAppUsernameNamespaceMutation = graphql(
   [SetAppUsernameNamespaceResultFragment],
 );
 export type SetAppUsernameNamespaceRequest = RequestOf<typeof SetAppUsernameNamespaceMutation>;
+
+export const AddAppAuthorizationEndpointMutation = graphql(
+  `mutation AddAppAuthorizationEndpoint($request: AddAppAuthorizationEndpointRequest!) {
+    value: addAppAuthorizationEndpoint(request: $request)
+  }`,
+);
+export type AddAppAuthorizationEndpointRequest = RequestOf<
+  typeof AddAppAuthorizationEndpointMutation
+>;
+
+export const RemoveAppAuthorizationEndpointMutation = graphql(
+  `mutation RemoveAppAuthorizationEndpoint($request: RemoveAppAuthorizationEndpointRequest!) {
+    value: removeAppAuthorizationEndpoint(request: $request)
+  }`,
+);
+export type RemoveAppAuthorizationEndpointRequest = RequestOf<
+  typeof RemoveAppAuthorizationEndpointMutation
+>;
