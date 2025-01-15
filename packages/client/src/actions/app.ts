@@ -203,7 +203,7 @@ export function fetchAppUsers(
  * });
  * ```
  *
- * @param client - The session client logged as a builder.
+ * @param client - The session client logged in as a builder.
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
@@ -224,7 +224,7 @@ export function createApp(
  * });
  * ```
  *
- * @param client - The session client logged as a builder.
+ * @param client - The session client logged in as a builder.
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
@@ -245,7 +245,7 @@ export function addAppFeeds(
  * });
  * ```
  *
- * @param client - The session client logged as a builder.
+ * @param client - The session client logged in as a builder.
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
@@ -266,7 +266,7 @@ export function addAppGroups(
  * });
  * ```
  *
- * @param client - The session client logged as a builder.
+ * @param client - The session client logged in as a builder.
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
@@ -287,7 +287,7 @@ export function addAppSigners(
  * });
  * ```
  *
- * @param client - The session client logged as a builder.
+ * @param client - The session client logged in as a builder.
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
@@ -308,7 +308,7 @@ export function removeAppFeeds(
  * });
  * ```
  *
- * @param client - The session client logged as a builder.
+ * @param client - The session client logged in as a builder.
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
@@ -329,7 +329,7 @@ export function removeAppGroups(
  * });
  * ```
  *
- * @param client - The session client logged as a builder.
+ * @param client - The session client logged in as a builder.
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
@@ -350,7 +350,7 @@ export function removeAppSigners(
  * });
  * ```
  *
- * @param client - The session client logged as a builder.
+ * @param client - The session client logged in as a builder.
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
@@ -371,7 +371,7 @@ export function setAppGraph(
  * });
  * ```
  *
- * @param client - The session client logged as a builder.
+ * @param client - The session client logged in as a builder.
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
@@ -387,12 +387,12 @@ export function setDefaultAppFeed(
  *
  * ```ts
  * const result = await setAppMetadata(sessionClient, {
- *   metadataUri: 'https://example.com/metadata.json',
+ *   metadataUri: uri("lens://4f91..."),
  *   app: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
  * });
  * ```
  *
- * @param client - The session client logged as a builder.
+ * @param client - The session client logged in as a builder.
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
@@ -413,7 +413,7 @@ export function setAppMetadata(
  * });
  * ```
  *
- * @param client - The session client logged as a builder.
+ * @param client - The session client logged in as a builder.
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
@@ -434,7 +434,7 @@ export function setAppVerification(
  * });
  * ```
  *
- * @param client - The session client logged as a builder.
+ * @param client - The session client logged in as a builder.
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
@@ -455,7 +455,7 @@ export function setAppSponsorship(
  * });
  * ```
  *
- * @param client - The session client logged as a builder.
+ * @param client - The session client logged in as a builder.
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
@@ -476,7 +476,7 @@ export function setAppTreasury(
  * });
  * ```
  *
- * @param client - The session client logged as a builder.
+ * @param client - The session client logged in as a builder.
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */

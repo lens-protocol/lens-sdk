@@ -3,6 +3,7 @@ import {
   FeedFragment,
   PaginatedResultInfoFragment,
   SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
@@ -40,6 +41,36 @@ export const CreateFeedMutation = graphql(
   [CreateFeedResultFragment],
 );
 export type CreateFeedRequest = RequestOf<typeof CreateFeedMutation>;
+
+const SetFeedMetadataResultFragment = graphql(
+  `fragment SetFeedMetadataResult on SetFeedMetadataResult {
+    ... on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type SetFeedMetadataResult = FragmentOf<typeof SetFeedMetadataResultFragment>;
+
+export const SetFeedMetadataMutation = graphql(
+  `mutation SetFeedMetadata($request: SetFeedMetadataRequest!) {
+    value: setFeedMetadata(request: $request) {
+      ...SetFeedMetadataResult
+    }
+  }`,
+  [SetFeedMetadataResultFragment],
+);
+export type SetFeedMetadataRequest = RequestOf<typeof SetFeedMetadataMutation>;
 
 export const FeedQuery = graphql(
   `query Feed($request: FeedRequest!) {

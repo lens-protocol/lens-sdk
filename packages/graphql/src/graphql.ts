@@ -34,6 +34,7 @@ import type {
   AccountReportReason,
   AccountsOrderBy,
   AppMetadataLensPlatformsItem,
+  AppUsersOrderBy,
   AppsOrderBy,
   BlockErrorType,
   ContentWarning,
@@ -47,6 +48,7 @@ import type {
   GraphsOrderBy,
   GroupMembersOrderBy,
   GroupsOrderBy,
+  IndexingStatus,
   MainContentFocus,
   ManagedAccountsVisibility,
   MediaAudioKind,
@@ -75,6 +77,7 @@ import type {
   ThreeDAssetFormat,
   TimelineEventItemType,
   TokenStandard,
+  TransactionOperation,
   TransactionType,
   UnblockErrorType,
   WhoActedOnPostOrderBy,
@@ -92,6 +95,7 @@ export const graphql = initGraphQLTada<{
     AccountsOrderBy: AccountsOrderBy;
     AppMetadataLensPlatformsItem: AppMetadataLensPlatformsItem;
     AppsOrderBy: AppsOrderBy;
+    AppUsersOrderBy: AppUsersOrderBy;
     BigDecimal: BigDecimal;
     BigInt: BigIntString;
     BlockchainData: BlockchainData;
@@ -115,6 +119,7 @@ export const graphql = initGraphQLTada<{
     GroupsOrderBy: GroupsOrderBy;
     ID: ID;
     IdToken: IdToken;
+    IndexingStatus: IndexingStatus;
     Int: number;
     LegacyProfileId: LegacyProfileId;
     LegacyRefreshToken: CompactJwt;
@@ -151,6 +156,7 @@ export const graphql = initGraphQLTada<{
     ThreeDAssetFormat: ThreeDAssetFormat;
     TimelineEventItemType: TimelineEventItemType;
     TokenStandard: TokenStandard;
+    TransactionOperation: TransactionOperation;
     TransactionType: TransactionType;
     TxHash: TxHash;
     URI: URI;
