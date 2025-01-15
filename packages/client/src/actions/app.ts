@@ -1,4 +1,5 @@
 import type {
+  AddAppAuthorizationEndpointRequest,
   AddAppFeedsRequest,
   AddAppFeedsResult,
   AddAppGroupsRequest,
@@ -19,6 +20,7 @@ import type {
   CreateAppResult,
   Group,
   Paginated,
+  RemoveAppAuthorizationEndpointRequest,
   RemoveAppFeedsRequest,
   RemoveAppFeedsResult,
   RemoveAppGroupsRequest,
@@ -41,6 +43,7 @@ import type {
   SetDefaultAppFeedResult,
 } from '@lens-protocol/graphql';
 import {
+  AddAppAuthorizationEndpointMutation,
   AddAppFeedsMutation,
   AddAppGroupsMutation,
   AddAppSignersMutation,
@@ -51,6 +54,7 @@ import {
   AppUsersQuery,
   AppsQuery,
   CreateAppMutation,
+  RemoveAppAuthorizationEndpointMutation,
   RemoveAppFeedsMutation,
   RemoveAppGroupsMutation,
   RemoveAppSignersMutation,
@@ -485,4 +489,45 @@ export function setAppUsernameNamespace(
   request: SetAppUsernameNamespaceRequest,
 ): ResultAsync<SetAppUsernameNamespaceResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(SetAppUsernameNamespaceMutation, { request });
+}
+
+/**
+ * Add an authorization endpoint to an App
+ *
+ * ```ts
+ * const result = await addAppAuthorizationEndpoint(sessionClient, {
+ *   endpoint: uri('https://example.com/auth'),
+ *   app: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ * });
+ * ```
+ *
+ * @param client - The session client logged as a builder.
+ * @param request - The mutation request.
+ * @returns void.
+ */
+export function addAppAuthorizationEndpoint(
+  client: SessionClient,
+  request: AddAppAuthorizationEndpointRequest,
+): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(AddAppAuthorizationEndpointMutation, { request });
+}
+
+/**
+ * Remove an authorization endpoint to an App
+ *
+ * ```ts
+ * const result = await removeAppAuthorizationEndpoint(sessionClient, {
+ *   app: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ * });
+ * ```
+ *
+ * @param client - The session client logged as a builder.
+ * @param request - The mutation request.
+ * @returns void.
+ */
+export function removeAppAuthorizationEndpoint(
+  client: SessionClient,
+  request: RemoveAppAuthorizationEndpointRequest,
+): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(RemoveAppAuthorizationEndpointMutation, { request });
 }
