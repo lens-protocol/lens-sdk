@@ -127,7 +127,7 @@ export function fetchPostReactions(
  * Fetch bookmarked posts.
  *
  * ```ts
- * const result = await fetchPostReactions(anyClient);
+ * const result = await fetchPostBookmarks(anyClient);
  * ```
  *
  * @param client - Session Lens client.

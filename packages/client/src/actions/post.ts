@@ -58,7 +58,7 @@ export function post(
  *
  * ```ts
  * const result = await repost(sessionClient, {
- *   post: post.id,
+ *   post: postId('42'),
  * });
  * ```
  *
@@ -78,7 +78,7 @@ export function repost(
  *
  * ```ts
  * const result = await editPost(sessionClient, {
- *   post: post.id,
+ *   post: postId('42'),
  *   contentUri: uri('https://example.com'),
  * });
  * ```
@@ -99,7 +99,7 @@ export function editPost(
  *
  * ```ts
  * const result = await deletePost(sessionClient, {
- *   post: post.id,
+ *   post: postId('42'),
  * });
  * ```
  *
@@ -119,7 +119,7 @@ export function deletePost(
  *
  * ```ts
  * const result = await addReaction(sessionClient, {
- *   post: post.id,
+ *   post: postId('42'),
  *   reaction: "UPVOTE" | "DOWNVOTE",
  * });
  * ```
@@ -140,7 +140,7 @@ export function addReaction(
  *
  * ```ts
  * const result = await undoReaction(sessionClient, {
- *   post: post.id,
+ *   post: postId('42'),
  *   reaction: "UPVOTE" | "DOWNVOTE",
  * });
  * ```
@@ -161,7 +161,7 @@ export function undoReaction(
  *
  * ```ts
  * const result = await bookmarkPost(sessionClient, {
- *   post: post.id,
+ *   post: postId('42'),
  * });
  * ```
  *
@@ -181,7 +181,7 @@ export function bookmarkPost(
  *
  * ```ts
  * const result = await undoBookmarkPost(sessionClient, {
- *   post: post.id,
+ *   post: postId('42'),
  * });
  * ```
  *
@@ -201,7 +201,7 @@ export function undoBookmarkPost(
  *
  * ```ts
  * const result = await hideReply(sessionClient, {
- *   post: post.id,
+ *   post: postId('42'),
  * });
  * ```
  *
@@ -221,7 +221,7 @@ export function hideReply(
  *
  * ```ts
  * const result = await unhideReply(sessionClient, {
- *   post: post.id,
+ *   post: postId('42'),
  * });
  * ```
  *
@@ -242,7 +242,7 @@ export function unhideReply(
  * ```ts
  * const result = await reportPost(sessionClient, {
  *   reason: "SCAM",
- *   post: post.id,
+ *   post: postId('1234...'),
  * });
  * ```
  *
