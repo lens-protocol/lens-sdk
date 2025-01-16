@@ -1,15 +1,21 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
-import { Username } from './username';
+import { OperationValidationOutcomeFragment } from './common';
+import { MetadataAttributeFragment } from './metadata';
+import { UsernameFragment } from './username';
 
-export const LoggedInAccountOperations = graphql(
+export const LoggedInAccountOperationsFragment = graphql(
   `fragment LoggedInAccountOperations on LoggedInAccountOperations {
     __typename
     id
     isFollowedByMe
     isFollowingMe
-    canFollow
-    canUnfollow
+    canFollow {
+      ...OperationValidationOutcome
+    }
+    canUnfollow {
+      ...OperationValidationOutcome
+    }
     isMutedByMe
     isBlockedByMe
     hasBlockedMe
@@ -17,49 +23,48 @@ export const LoggedInAccountOperations = graphql(
     canUnblock
     hasReported
   }`,
+  [OperationValidationOutcomeFragment],
 );
-export type LoggedInAccountOperations = FragmentOf<typeof LoggedInAccountOperations>;
+export type LoggedInAccountOperations = FragmentOf<typeof LoggedInAccountOperationsFragment>;
 
-// TODO fix this
-export const AccountMetadata = graphql(
+export const AccountMetadataFragment = graphql(
   `fragment AccountMetadata on AccountMetadata {
     __typename
+    attributes {
+      ...MetadataAttribute
+    }
+    bio
+    coverPicture
+    id
+    name
+    picture
   }`,
+  [MetadataAttributeFragment],
 );
-export type AccountMetadata = FragmentOf<typeof AccountMetadata>;
+export type AccountMetadata = FragmentOf<typeof AccountMetadataFragment>;
 
-export const Account = graphql(
+export const AccountFragment = graphql(
   `fragment Account on Account {
     __typename
     address
+    owner
+    score
+    createdAt
     username{
       ...Username
     }
-  }`,
-  [Username],
-);
-export type Account = FragmentOf<typeof Account>;
-
-export const FullAccount = graphql(
-  `fragment Account on Account {
-    __typename
-    address
-    score
     metadata {
       ...AccountMetadata
-    }
-    username{
-      ...Username
     }
     operations {
       ...LoggedInAccountOperations
     }
   }`,
-  [AccountMetadata, LoggedInAccountOperations, Username],
+  [AccountMetadataFragment, LoggedInAccountOperationsFragment, UsernameFragment],
 );
-export type FullAccount = FragmentOf<typeof FullAccount>;
+export type Account = FragmentOf<typeof AccountFragment>;
 
-const AccountManagerPermissions = graphql(
+const AccountManagerPermissionsFragment = graphql(
   `fragment AccountManagerPermissions on AccountManagerPermissions {
     __typename
     canExecuteTransactions
@@ -68,9 +73,9 @@ const AccountManagerPermissions = graphql(
     canTransferTokens
   }`,
 );
-export type AccountManagerPermissions = FragmentOf<typeof AccountManagerPermissions>;
+export type AccountManagerPermissions = FragmentOf<typeof AccountManagerPermissionsFragment>;
 
-export const AccountManager = graphql(
+export const AccountManagerFragment = graphql(
   `fragment AccountManager on AccountManager {
     __typename
     addedAt
@@ -81,9 +86,9 @@ export const AccountManager = graphql(
     }
   }`,
 );
-export type AccountManager = FragmentOf<typeof AccountManager>;
+export type AccountManager = FragmentOf<typeof AccountManagerFragment>;
 
-const AccountManaged = graphql(
+const AccountManagedFragment = graphql(
   `fragment AccountManaged on AccountManaged {
     __typename
     addedAt
@@ -94,11 +99,11 @@ const AccountManaged = graphql(
       ...AccountManagerPermissions
     }
   }`,
-  [AccountManagerPermissions, Account],
+  [AccountManagerPermissionsFragment, AccountFragment],
 );
-export type AccountManaged = FragmentOf<typeof AccountManaged>;
+export type AccountManaged = FragmentOf<typeof AccountManagedFragment>;
 
-export const AccountAvailable = graphql(
+export const AccountAvailableFragment = graphql(
   `fragment AccountAvailable on AccountAvailable {
     __typename
     ... on AccountManaged {
@@ -112,11 +117,11 @@ export const AccountAvailable = graphql(
       }
     }
   }`,
-  [Account, AccountManaged],
+  [AccountFragment, AccountManagedFragment],
 );
-export type AccountAvailable = FragmentOf<typeof AccountAvailable>;
+export type AccountAvailable = FragmentOf<typeof AccountAvailableFragment>;
 
-export const AccountBlocked = graphql(
+export const AccountBlockedFragment = graphql(
   `fragment AccountBlocked on AccountBlocked {
     __typename
     blockedAt
@@ -124,6 +129,6 @@ export const AccountBlocked = graphql(
       ...Account
     }
   }`,
-  [Account],
+  [AccountFragment],
 );
-export type AccountBlocked = FragmentOf<typeof AccountBlocked>;
+export type AccountBlocked = FragmentOf<typeof AccountBlockedFragment>;
