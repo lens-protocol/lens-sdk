@@ -23,7 +23,7 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
  * });
  * ```
  *
- * @param client - The session client logged as a builder.
+ * @param client - The session client logged in as a builder.
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */

@@ -13,6 +13,8 @@ import type {
   LeaveGroupRequest,
   LeaveGroupResult,
   Paginated,
+  SetGroupMetadataRequest,
+  SetGroupMetadataResult,
 } from '@lens-protocol/graphql';
 import {
   CreateGroupMutation,
@@ -22,6 +24,7 @@ import {
   GroupsQuery,
   JoinGroupMutation,
   LeaveGroupMutation,
+  SetGroupMetadataMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
@@ -35,7 +38,7 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
  * const result = await createGroup(sessionClient);
  * ```
  *
- * @param client - The session client logged as a builder.
+ * @param client - The session client logged in as a builder.
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
@@ -44,6 +47,27 @@ export function createGroup(
   request: CreateGroupRequest,
 ): ResultAsync<CreateGroupResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(CreateGroupMutation, { request });
+}
+
+/**
+ * Set Group Metadata
+ *
+ * ```ts
+ * const result = await setGroupMetadata(sessionClient, {
+ *  group: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ *  metadataUri: uri("lens://4f91..."),
+ * });
+ * ```
+ *
+ * @param client - The session client logged in as a builder.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function setGroupMetadata(
+  client: SessionClient,
+  request: SetGroupMetadataRequest,
+): ResultAsync<SetGroupMetadataResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(SetGroupMetadataMutation, { request });
 }
 
 /**

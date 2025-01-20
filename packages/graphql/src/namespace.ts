@@ -2,6 +2,7 @@ import type { FragmentOf } from 'gql.tada';
 import {
   PaginatedResultInfoFragment,
   SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
   UsernameNamespaceFragment,
 } from './fragments';
@@ -46,6 +47,36 @@ export const CreateUsernameNamespaceMutation = graphql(
   [CreateUsernameNamespaceResultFragment],
 );
 export type CreateUsernameNamespaceRequest = RequestOf<typeof CreateUsernameNamespaceMutation>;
+
+const SetNamespaceMetadataResultFragment = graphql(
+  `fragment SetNamespaceMetadataResult on SetNamespaceMetadataResult {
+    ... on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type SetNamespaceMetadataResult = FragmentOf<typeof SetNamespaceMetadataResultFragment>;
+
+export const SetNamespaceMetadataMutation = graphql(
+  `mutation SetNamespaceMetadata($request: SetNamespaceMetadataRequest!) {
+    value: setNamespaceMetadata(request: $request) {
+      ...SetNamespaceMetadataResult
+    }
+  }`,
+  [SetNamespaceMetadataResultFragment],
+);
+export type SetNamespaceMetadataRequest = RequestOf<typeof SetNamespaceMetadataMutation>;
 
 export const NamespaceQuery = graphql(
   `query Namespace($request: NamespaceRequest!) {

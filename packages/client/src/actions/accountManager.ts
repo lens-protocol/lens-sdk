@@ -63,7 +63,7 @@ export function addAccountManager(
 }
 
 /**
- * Add an account manager to the authenticated account.
+ * Remove manager from the authenticated account.
  *
  * ```ts
  * const result = await removeAccountManager(sessionClient, {

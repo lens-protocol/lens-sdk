@@ -43,6 +43,36 @@ export const CreateGroupMutation = graphql(
 );
 export type CreateGroupRequest = RequestOf<typeof CreateGroupMutation>;
 
+const SetGroupMetadataResultFragment = graphql(
+  `fragment SetGroupMetadataResult on SetGroupMetadataResult {
+    ... on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type SetGroupMetadataResult = FragmentOf<typeof SetGroupMetadataResultFragment>;
+
+export const SetGroupMetadataMutation = graphql(
+  `mutation SetGroupMetadata($request: SetGroupMetadataRequest!) {
+    value: setGroupMetadata(request: $request) {
+      ...SetGroupMetadataResult
+    }
+  }`,
+  [SetGroupMetadataResultFragment],
+);
+export type SetGroupMetadataRequest = RequestOf<typeof SetGroupMetadataMutation>;
+
 const JoinGroupResponseFragment = graphql(
   `fragment JoinGroupResponse on JoinGroupResponse {
     __typename
