@@ -38,7 +38,7 @@ export function fetchSnsSubscription(
  * Create SNS subscriptions.
  *
  * ```ts
- * const result = await createSnsSubscription(SessionClient, {
+ * const result = await createSnsSubscription(sessionClient, {
  *   topics: [
  *     { accountMentioned: evmAddress('0x1234...') },
  *     { accountFollowed: evmAddress('0x90ab...') },
@@ -62,7 +62,7 @@ export function createSnsSubscriptions(
  * Delete a SNS subscription.
  *
  * ```ts
- * const result = await deleteSnsSubscription(SessionClient, {
+ * const result = await deleteSnsSubscription(sessionClient, {
  *   id: "1234-dasdf-...",
  * });
  * ```
