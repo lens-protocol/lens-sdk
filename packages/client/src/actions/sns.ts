@@ -43,7 +43,7 @@ export function fetchSnsSubscription(
  *     { accountMentioned: evmAddress('0x1234...') },
  *     { accountFollowed: evmAddress('0x90ab...') },
  *   ],
- *   webhook: 'https://example.com',
+ *   webhook: uri('https://example.com'),
  * });
  * ```
  *
