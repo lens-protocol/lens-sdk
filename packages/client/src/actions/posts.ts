@@ -146,6 +146,7 @@ export function fetchPostBookmarks(
  *
  * ```ts
  * const result = await fetchPostReferences(anyClient, {
+ *   referencedTypes: [PostReferenceType.CommentOn],
  *   referencedPost: postId('42'),
  * });
  * ```

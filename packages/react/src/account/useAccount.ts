@@ -15,7 +15,7 @@ export type UseAccountArgs = AccountRequest;
  * This signature supports React Suspense:
  *
  * ```tsx
- * const { data } = useAccount({ managedBy: evmAddress('0x…'), suspense: true });
+ * const { data } = useAccount({ address: evmAddress('0x…'), suspense: true });
  * ```
  */
 export function useAccount(args: UseAccountArgs & Suspendable): SuspenseResult<Account | null>;
@@ -24,7 +24,7 @@ export function useAccount(args: UseAccountArgs & Suspendable): SuspenseResult<A
  * Fetch a single Account.
  *
  * ```tsx
- * const { data } = useAccount({ managedBy: evmAddress('0x…') });
+ * const { data } = useAccount({ address: evmAddress('0x…') });
  * ```
  */
 export function useAccount(args: UseAccountArgs): ReadResult<Account | null>;
