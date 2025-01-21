@@ -86,7 +86,7 @@ export function fetchFollowers(
 }
 
 /**
- * Fetch accounts following.
+ * Fetch following accounts for an account.
  *
  * ```ts
  * const result = await fetchFollowing(anyClient, {
@@ -106,7 +106,7 @@ export function fetchFollowing(
 }
 
 /**
- * Fetch accounts following.
+ * Fetch followers you know.
  *
  * ```ts
  * const result = await fetchFollowersYouKnow(anyClient, {
