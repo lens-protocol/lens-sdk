@@ -30,7 +30,7 @@ export function usePosts(args: PostsArgs & Suspendable): SuspenseResult<Paginate
  *   filter: {
  *     searchQuery: 'test',
  *   },
- * );
+ * });
  * ```
  */
 export function usePosts(args: PostsArgs): ReadResult<Paginated<AnyPost>>;
