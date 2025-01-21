@@ -150,7 +150,9 @@ This usually indicates that TypeScript is picking up types from different versio
 
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+We are currently focused on launching Lens Network mainnet and Lens Protocol v3. We are not able to accept contributions at this time. We will update this section in due course.
+
+If you have a pressing issue or feature request, please open an issue on GitHub.
 
 ## License
 
