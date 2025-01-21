@@ -24,7 +24,7 @@ export function useAccount(args: UseAccountArgs & Suspendable): SuspenseResult<A
  * Fetch a single Account.
  *
  * ```tsx
- * const { data } = useAccount({ address: evmAddress('0x…') });
+ * const { data, loading } = useAccount({ address: evmAddress('0x…') });
  * ```
  */
 export function useAccount(args: UseAccountArgs): ReadResult<Account | null>;

@@ -28,7 +28,7 @@ export function useAccounts(args: AccountsArgs & Suspendable): SuspenseResult<Pa
  * Fetch accounts available filtered by the given arguments.
  *
  * ```tsx
- * const { data } = useAccounts({
+ * const { data, loading } = useAccounts({
  *   filter: {
  *     searchBy: {
  *       localNameQuery: 'wagmi'

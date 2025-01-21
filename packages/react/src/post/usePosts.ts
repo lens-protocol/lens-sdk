@@ -26,7 +26,7 @@ export function usePosts(args: PostsArgs & Suspendable): SuspenseResult<Paginate
  * Fetch posts available filtered by the given arguments.
  *
  * ```tsx
- * const { data } = usePosts({
+ * const { data, loading } = usePosts({
  *   filter: {
  *     searchQuery: 'test',
  *   },

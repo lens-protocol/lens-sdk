@@ -21,7 +21,7 @@ export function usePost(args: UsePostArgs & Suspendable): SuspenseResult<AnyPost
  * Fetch a single post.
  *
  * ```tsx
- * const { data } = usePost({ post: postId('34…') });
+ * const { data, loading } = usePost({ post: postId('34…') });
  * ```
  */
 export function usePost(args: UsePostArgs): ReadResult<AnyPost | null>;

@@ -26,7 +26,7 @@ export function usePostReactions(
  * Fetch reactions to a post.
  *
  * ```tsx
- * const { data } = usePostReactions({
+ * const { data, loading } = usePostReactions({
  *   post: postId('42'),
  * );
  * ```

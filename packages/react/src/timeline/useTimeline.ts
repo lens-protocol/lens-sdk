@@ -23,7 +23,7 @@ export function useTimeline(
  * Fetch timeline from an account.
  *
  * ```tsx
- * const { data } = useTimeline({ account: evmAddress('0x…') });
+ * const { data, loading } = useTimeline({ account: evmAddress('0x…') });
  * ```
  */
 export function useTimeline(args: TimelineArgs): ReadResult<Paginated<TimelineItem>>;
