@@ -2,7 +2,9 @@ export * from '@lens-protocol/client';
 
 export * from './account';
 export * from './authentication';
+export * from './feed';
 export * from './follow';
+export * from './graph';
 export * from './group';
 export type {
   AsyncTaskError,
