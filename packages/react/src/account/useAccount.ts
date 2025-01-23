@@ -1,11 +1,8 @@
-import { type Account, AccountQuery, type AccountRequest } from '@lens-protocol/graphql';
-import {
-  type ReadResult,
-  type Suspendable,
-  type SuspendableResult,
-  type SuspenseResult,
-  useSuspendableQuery,
-} from '../helpers';
+import type { Account, AccountRequest } from '@lens-protocol/graphql';
+import { AccountQuery } from '@lens-protocol/graphql';
+
+import type { ReadResult, Suspendable, SuspendableResult, SuspenseResult } from '../helpers';
+import { useSuspendableQuery } from '../helpers';
 
 export type UseAccountArgs = AccountRequest;
 
