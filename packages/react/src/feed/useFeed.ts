@@ -12,7 +12,7 @@ export type FeedArgs = FeedRequest;
  * This signature supports React Suspense:
  *
  * ```tsx
- * const { data } = useFeed({ address: feed('0x…'), suspense: true });
+ * const { data } = useFeed({ feed: evmAddress('0x…'), suspense: true });
  * ```
  */
 export function useFeed(args: FeedArgs & Suspendable): SuspenseResult<Feed | null>;

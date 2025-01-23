@@ -27,13 +27,15 @@ export function useAccountsBlocked(
  * ```
  */
 export function useAccountsBlocked(
-  args: AccountsBlockedArgs,
+  args?: AccountsBlockedArgs,
 ): ReadResult<Paginated<AccountBlocked>>;
 
 export function useAccountsBlocked({
   suspense = false,
   ...request
-}: AccountsBlockedArgs & { suspense?: boolean }): SuspendableResult<Paginated<AccountBlocked>> {
+}: AccountsBlockedArgs & { suspense?: boolean } = {}): SuspendableResult<
+  Paginated<AccountBlocked>
+> {
   return useSuspendableQuery({
     document: AccountsBlockedQuery,
     variables: { request },

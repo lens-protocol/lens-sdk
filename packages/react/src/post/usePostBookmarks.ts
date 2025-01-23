@@ -26,12 +26,12 @@ export function usePostBookmarks(
  * const { data, loading } = usePostBookmarks();
  * ```
  */
-export function usePostBookmarks(args: PostBookmarksArgs): ReadResult<Paginated<AnyPost>>;
+export function usePostBookmarks(args?: PostBookmarksArgs): ReadResult<Paginated<AnyPost>>;
 
 export function usePostBookmarks({
   suspense = false,
   ...request
-}: PostBookmarksArgs & { suspense?: boolean }): SuspendableResult<Paginated<AnyPost>> {
+}: PostBookmarksArgs & { suspense?: boolean } = {}): SuspendableResult<Paginated<AnyPost>> {
   return useSuspendableQuery({
     document: PostBookmarksQuery,
     variables: { request },

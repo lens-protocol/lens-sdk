@@ -26,12 +26,12 @@ export function useNotifications(
  * const { data, loading } = useNotifications();
  * ```
  */
-export function useNotifications(args: NotificationsArgs): ReadResult<Paginated<Notification>>;
+export function useNotifications(args?: NotificationsArgs): ReadResult<Paginated<Notification>>;
 
 export function useNotifications({
   suspense = false,
   ...request
-}: NotificationsArgs & { suspense?: boolean }): SuspendableResult<Paginated<Notification>> {
+}: NotificationsArgs & { suspense?: boolean } = {}): SuspendableResult<Paginated<Notification>> {
   return useSuspendableQuery({
     document: NotificationsQuery,
     variables: { request },

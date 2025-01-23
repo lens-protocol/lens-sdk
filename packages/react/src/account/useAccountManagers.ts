@@ -27,13 +27,15 @@ export function useAccountManagers(
  * ```
  */
 export function useAccountManagers(
-  args: AccountManagersArgs,
+  args?: AccountManagersArgs,
 ): ReadResult<Paginated<AccountManager>>;
 
 export function useAccountManagers({
   suspense = false,
   ...request
-}: AccountManagersArgs & { suspense?: boolean }): SuspendableResult<Paginated<AccountManager>> {
+}: AccountManagersArgs & { suspense?: boolean } = {}): SuspendableResult<
+  Paginated<AccountManager>
+> {
   return useSuspendableQuery({
     document: AccountManagersQuery,
     variables: { request },
