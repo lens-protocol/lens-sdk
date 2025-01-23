@@ -71,12 +71,17 @@ type AccountFeedsStats {
   collects: Int!
 }
 
+input AccountFeedsStatsFilter {
+  """The feeds to filter by."""
+  feeds: [FeedOneOf!]
+}
+
 input AccountFeedsStatsRequest {
   """The account to get stats for."""
   account: EvmAddress!
 
-  """The feeds to get stats for."""
-  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
+  """An optional filter to apply to the result."""
+  filter: AccountFeedsStatsFilter
 }
 
 input AccountFollowedNotificationAttributes {
@@ -94,12 +99,17 @@ type AccountGraphsFollowStats {
   following: Int!
 }
 
+input AccountGraphsStatsFilter {
+  """The graphs to filter by."""
+  graphs: [GraphOneOf!]
+}
+
 input AccountGraphsStatsRequest {
   """The account to get stats for."""
   account: EvmAddress!
 
-  """The graphs to get stats for."""
-  forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
+  """An optional filter to apply to the result."""
+  filter: AccountGraphsStatsFilter
 }
 
 type AccountManaged {
@@ -740,6 +750,7 @@ enum AppsOrderBy {
 }
 
 input AppsRequest {
+  """The optional apps filter"""
   filter: AppsFilter
 
   """The order by."""
@@ -1016,7 +1027,7 @@ input CreateAppRequest {
   """The app metadata uri"""
   metadataUri: URI
 
-  """Any admins who need to manage this app also"""
+  """List of admins who can manage this app"""
   admins: [EvmAddress!]
 
   """The app graph defaults to use the global graph"""
@@ -1035,8 +1046,9 @@ input CreateAppRequest {
   groups: [EvmAddress!]
 
   """
-  If the app has verification enabled meaning
-  you can only do stuff with the app if its signed by one of the signers
+  Whether the App Verification workflow is enabled.
+  This gives control to approve or reject transactions involving
+  social interactions (e.g., post, follow, comment, etc.) using the app.
   """
   verification: Boolean! = false
 
@@ -1060,7 +1072,7 @@ input CreateFeedRequest {
   """The feed metadata uri"""
   metadataUri: URI
 
-  """Any admins who need to manage this feed"""
+  """List of admins who can manage this feed"""
   admins: [EvmAddress!]
 }
 
@@ -1094,7 +1106,7 @@ input CreateGraphRequest {
   """The graph metadata uri"""
   metadataUri: URI
 
-  """Any admins who need to manage this graph"""
+  """List of admins who can manage this graph"""
   admins: [EvmAddress!]
 }
 
@@ -1108,7 +1120,7 @@ input CreateGroupRequest {
   """The group metadata uri"""
   metadataUri: URI
 
-  """Any admins who need to manage this group"""
+  """List of admins who can manage this group"""
   admins: [EvmAddress!]
 }
 
@@ -1165,6 +1177,36 @@ input CreateSnsSubscriptionRequest {
   app: EvmAddress
 }
 
+input CreateSponsorshipRequest {
+  """The sponsorship metadata URI"""
+  metadataUri: URI
+
+  """List of admins who can manage this sponsorship."""
+  admins: [EvmAddress!]
+
+  """List of sponsorship signers."""
+  signers: [SponsorshipSignerInput!]
+
+  """
+  Whether the Lens API is authorized as sponsorship signer for the
+  purpose of sponsoring end-user social operations (e.g. post, comment, follow, etc.)
+  done through the Lens API for the apps associated with this sponsorship.
+  """
+  allowLensAccess: Boolean!
+
+  """The sponsorship usage allowances with the corresponding limits."""
+  rateLimit: SponsorshipRateLimits
+
+  """The list of addresses excluded from the sponsorship rate limits."""
+  exclusionList: [SponsorshipRateLimitsExempt!]! = []
+}
+
+type CreateSponsorshipResponse {
+  hash: TxHash!
+}
+
+union CreateSponsorshipResult = CreateSponsorshipResponse | SelfFundedTransactionRequest | TransactionWillFail
+
 input CreateUnfollowRequest {
   """The account to unfollow."""
   account: EvmAddress!
@@ -1185,7 +1227,7 @@ input CreateUsernameNamespaceRequest {
   """The feed metadata uri"""
   metadataUri: URI
 
-  """Any admins who need to manage this feed"""
+  """List of admins who can manage this feed"""
   admins: [EvmAddress!]
 
   """
@@ -1228,15 +1270,6 @@ input DebugPostMetadataRequest {
 type DebugPostMetadataResult {
   valid: Boolean!
   reason: String
-}
-
-input DebugTransactionStatusRequest {
-  txHash: TxHash!
-}
-
-type DebugTransactionStatusResult {
-  blockExplorer: URI
-  reason: String!
 }
 
 input DeletePostRequest {
@@ -1955,6 +1988,12 @@ type FeedMetadata {
   title: String!
 }
 
+input FeedOneOf @oneOf {
+  globalFeed: Boolean
+  feed: EvmAddress
+  app: EvmAddress
+}
+
 input FeedRequest {
   """The feed"""
   feed: EvmAddress
@@ -2063,6 +2102,9 @@ type Follower {
   """The account which is following"""
   follower: Account!
 
+  """The graph the follower is following on"""
+  graph: EvmAddress!
+
   """The timestamp when the follower was followed"""
   followedOn: DateTime!
 }
@@ -2073,6 +2115,14 @@ type FollowerOnlyPostRule {
   repliesRestricted: Boolean!
   repostsRestricted: Boolean!
   quotesRestricted: Boolean!
+}
+
+input FollowersFilter {
+  """
+  The graphs to filter by.
+  The result will come back if they follow on ANY of the supplied graphs
+  """
+  graphs: [GraphOneOf!]
 }
 
 enum FollowersOrderBy {
@@ -2091,14 +2141,19 @@ input FollowersRequest {
   """The account to get followers for."""
   account: EvmAddress!
 
-  """
-  The graphs to get followers for
-  The result will come back if they follow on ANY of the supplied graphs
-  """
-  forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
+  """An optional filter to apply to the result."""
+  filter: FollowersFilter
 
   """The order by."""
   orderBy: FollowersOrderBy! = DESC
+}
+
+input FollowersYouKnowFilter {
+  """
+  The graphs to get followers you know for
+  The result will come back if they follow on ANY of the supplied graphs
+  """
+  graphs: [GraphOneOf!]
 }
 
 enum FollowersYouKnowOrderBy {
@@ -2119,11 +2174,8 @@ input FollowersYouKnowRequest {
   """The account you are looking from."""
   observer: EvmAddress!
 
-  """
-  The graphs to get followers you know for
-  The result will come back if they follow on ANY of the supplied graphs
-  """
-  forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
+  """An optional filter to apply to the result."""
+  filter: FollowersYouKnowFilter
 
   """The order by."""
   orderBy: FollowersYouKnowOrderBy! = DESC
@@ -2133,8 +2185,19 @@ type Following {
   """The account which is following"""
   following: Account!
 
+  """The graph the account is following on"""
+  graph: EvmAddress!
+
   """The timestamp when the following happened"""
   followedOn: DateTime!
+}
+
+input FollowingFilter {
+  """
+  The graphs to filter by.
+  The result will come back if they are following on ANY of the supplied graphs
+  """
+  graphs: [GraphOneOf!]
 }
 
 enum FollowingOrderBy {
@@ -2153,11 +2216,8 @@ input FollowingRequest {
   """The account to get following for."""
   account: EvmAddress!
 
-  """
-  The graphs to get following for.
-  The result will come back if they are following on ANY of the supplied graphs
-  """
-  forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
+  """An optional filter to apply to the result."""
+  filter: FollowingFilter
 
   """The order by."""
   orderBy: FollowingOrderBy! = DESC
@@ -2213,6 +2273,12 @@ type GraphMetadata {
 
   """The human-friendly title for the graph."""
   title: String!
+}
+
+input GraphOneOf @oneOf {
+  globalGraph: Boolean
+  graph: EvmAddress
+  app: EvmAddress
 }
 
 input GraphRequest {
@@ -2600,36 +2666,28 @@ type LoggedInAccountOperations {
   """
   Check if the target account is followed by the authenticated account.
   
-  If a graph is not specified:
-  - It first checks for a Graph address specified within the query scope.
-  - If no Graph address is found, it defaults to using the Global Graph.
+  If a graph is not specified it defaults to using the Global Graph
   """
   isFollowedByMe(request: IsFollowedByMeRequest): Boolean!
 
   """
   Check if the authenticated account is following the target account.
   
-  If a graph is not specified:
-  - It first checks for a Graph address specified within the query scope.
-  - If no Graph address is found, it defaults to using the Global Graph.
+  If a graph is not specified it defaults to using the Global Graph
   """
   isFollowingMe(request: IsFollowingMeRequest): Boolean!
 
   """
   Check if the authenticated account can follow the target account.
   
-  If a graph is not specified:
-  - It first checks for a Graph address specified within the query scope.
-  - If no Graph address is found, it defaults to using the Global Graph.
+  If a graph is not specified it defaults to using the Global Graph
   """
   canFollow(request: CanFollowRequest): OperationValidationOutcome!
 
   """
   Check if the authenticated account can unfollow the target account.
   
-  If a graph is not specified:
-  - It first checks for a Graph address specified within the query scope.
-  - If no Graph address is found, it defaults to using the Global Graph.
+  If a graph is not specified it defaults to using the Global Graph
   """
   canUnfollow(request: CanUnfollowRequest): OperationValidationOutcome!
   isMutedByMe: Boolean!
@@ -2704,10 +2762,12 @@ enum ManagedAccountsVisibility {
 }
 
 input ManagedBy {
-  """The address for a user to see what apps they manage."""
+  """The address that is either the owner or an admin of the primitive."""
   address: EvmAddress!
 
-  """Whether to include the apps which is owned by the address."""
+  """
+  Whether to include the owned primitives or just the ones the address is an admin of.
+  """
   includeOwners: Boolean! = true
 }
 
@@ -3630,6 +3690,41 @@ type Mutation {
   setGroupMetadata(request: SetGroupMetadataRequest!): SetGroupMetadataResult!
   createSnsSubscriptions(request: CreateSnsSubscriptionRequest!): [SnsSubscription!]!
   deleteSnsSubscription(request: DeleteSnsSubscriptionRequest!): Void!
+
+  """
+  Create a new sponsorship.
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  createSponsorship(request: CreateSponsorshipRequest!): CreateSponsorshipResult!
+
+  """
+  Set metadata for a sponsorship
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  setSponsorshipMetadata(request: SetSponsorshipMetadataRequest!): SetSponsorshipMetadataResult!
+
+  """
+  Update a sponsorship rate limits.
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  updateSponsorshipLimits(request: UpdateSponsorshipLimitsRequest!): UpdateSponsorshipLimitsResult!
+
+  """
+  Update a sponsorship exclusion list from the rate limits.
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  updateSponsorshipExclusionList(request: UpdateSponsorshipExclusionListRequest!): UpdateSponsorshipExclusionListResult!
+
+  """
+  Update a sponsorship signers list.
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  updateSponsorshipSigners(request: UpdateSponsorshipSignersRequest!): UpdateSponsorshipSignersResult!
 }
 
 input MuteRequest {
@@ -3712,6 +3807,12 @@ type NotificationAccountRepost {
 }
 
 input NotificationFilter {
+  """The feeds to filter by."""
+  feeds: [FeedOneOf!]
+
+  """The graphs to filter by."""
+  graphs: [GraphOneOf!]
+
   """The apps to filter by."""
   apps: [EvmAddress!]
 
@@ -3731,12 +3832,6 @@ enum NotificationOrderBy {
 }
 
 input NotificationRequest {
-  """The graphs to get notifications for."""
-  forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
-
-  """The feeds to get notifications for."""
-  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
-
   """An optional filter to narrow down the notifications result."""
   filter: NotificationFilter
 
@@ -3896,7 +3991,7 @@ type PaginatedPostReactionsResult {
 }
 
 type PaginatedPostTagsResult {
-  items: [Tag!]!
+  items: [PostTag!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -4024,12 +4119,12 @@ input PostActionsRequest {
 }
 
 input PostBookmarksFilter {
+  """The feeds to filter by."""
+  feeds: [FeedOneOf!]
   metadata: PostMetadataFilter
 }
 
 input PostBookmarksRequest {
-  """The feeds to get bookmarks for."""
-  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
   filter: PostBookmarksFilter
   pageSize: PageSize! = FIFTY
   cursor: Cursor
@@ -4255,14 +4350,24 @@ type PostStats {
   reactions(request: StatsReactionRequest! = {type: UPVOTE}): Int!
 }
 
+type PostTag {
+  value: String!
+  total: Int!
+}
+
+input PostTagsFilter {
+  """The feeds to filter by."""
+  feeds: [FeedOneOf!]
+}
+
 enum PostTagsOrderBy {
   MOST_POPULAR
   ALPHABETICAL
 }
 
 input PostTagsRequest {
-  """The feeds to get tags for."""
-  forFeeds: [EvmAddress!]!
+  """An optional filter to apply to the tags."""
+  filter: PostTagsFilter
   orderBy: PostTagsOrderBy! = MOST_POPULAR
   pageSize: PageSize! = FIFTY
   cursor: Cursor
@@ -4287,6 +4392,8 @@ enum PostVisibilityFilter {
 }
 
 input PostsFilter {
+  """The feeds to filter by."""
+  feeds: [FeedOneOf!]
   authors: [EvmAddress!]
   postTypes: [PostType!]
   metadata: PostMetadataFilter
@@ -4299,7 +4406,6 @@ input PostsFilter {
 }
 
 input PostsRequest {
-  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
   filter: PostsFilter
   pageSize: PageSize! = FIFTY
   cursor: Cursor
@@ -4458,7 +4564,6 @@ type Query {
   """Get the status of a transaction by its hash."""
   transactionStatus(request: TransactionStatusRequest!): TransactionStatusResult!
   debugMetadata(request: DebugPostMetadataRequest!): DebugPostMetadataResult!
-  debugTransactionStatusFailed(request: DebugTransactionStatusRequest!): DebugTransactionStatusResult
   namespace(request: NamespaceRequest!): UsernameNamespace
   username(request: UsernameRequest!): Username
 
@@ -4467,6 +4572,18 @@ type Query {
 
   """Get the namespaces."""
   namespaces(request: NamespacesRequest!): NamespacesResult!
+
+  """Get paginated Sponsorship limits Exclusion list."""
+  sponsorshipLimitsExclusions(request: SponsorshipLimitExclusionsRequest!): SponsorshipLimitsExclusionsResult!
+
+  """Get a Sponsorship"""
+  sponsorship(request: SponsorshipRequest!): Sponsorship
+
+  """Get paginated Sponsorship Signers."""
+  sponsorshipSigners(request: SponsorshipSignersRequest!): SponsorshipSignersResult!
+
+  """Get paginated Sponsorships."""
+  sponsorships(request: SponsorshipsRequest!): SponsorshipsResult!
   _service: _Service!
 }
 
@@ -4771,6 +4888,16 @@ input SetNamespaceMetadataRequest {
 
 union SetNamespaceMetadataResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
+input SetSponsorshipMetadataRequest {
+  """The sponsorship to update"""
+  sponsorship: EvmAddress!
+
+  """The sponsorship metadata to set"""
+  metadataUri: URI!
+}
+
+union SetSponsorshipMetadataResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
 scalar Signature
 
 input SignedAuthChallenge {
@@ -4933,11 +5060,9 @@ type SpaceMetadata {
   content: String!
 }
 
-enum SponsorLimitType {
-  HOUR
-  DAY
-  WEEK
-  MONTH
+type SponsorLimit {
+  window: SponsorshipRateLimitWindow!
+  allowance: Int!
 }
 
 enum SponsoredFallbackReason {
@@ -4956,9 +5081,20 @@ type SponsoredTransactionRequest {
   sponsoredReason: SponsoredFallbackReason
 }
 
+type Sponsorship {
+  address: EvmAddress!
+  isPaused: Boolean!
+  allowLensAccess: Boolean!
+  createdAt: DateTime!
+  metadata: SponsorshipMetadata
+  globalRateLimit: SponsorLimit
+  userRateLimit: SponsorLimit
+  owner: EvmAddress!
+}
+
 type SponsorshipAllowance {
   """The sponsorship window type."""
-  window: SponsorLimitType!
+  window: SponsorshipRateLimitWindow!
 
   """The number of remaining sponsorship allowance."""
   allowanceLeft: Int!
@@ -4968,6 +5104,171 @@ type SponsorshipAllowance {
 
   """The total sponsorship allowance."""
   allowance: Int!
+}
+
+input SponsorshipLimitExclusionsFilter {
+  """The sponsorship address."""
+  sponsorship: EvmAddress!
+}
+
+enum SponsorshipLimitExclusionsOrderBy {
+  LATEST_FIRST
+  OLDEST_FIRST
+  ALPHABETICAL
+}
+
+input SponsorshipLimitExclusionsRequest {
+  """The filter options."""
+  filter: SponsorshipLimitExclusionsFilter!
+
+  """The order by criteria."""
+  orderBy: SponsorshipLimitExclusionsOrderBy! = OLDEST_FIRST
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
+type SponsorshipLimitsExclusionsResult {
+  items: [SponsorshipLimitsExempt!]!
+  pageInfo: PaginatedResultInfo!
+}
+
+type SponsorshipLimitsExempt {
+  sponsorship: EvmAddress!
+  label: String!
+  address: EvmAddress!
+  createdAt: DateTime!
+}
+
+type SponsorshipMetadata {
+  """An optional description of the Username collection."""
+  description: String
+
+  """
+  A unique identifier that in storages like IPFS ensures the uniqueness of the metadata URI.
+  Use a UUID if unsure.
+  """
+  id: String!
+
+  """The name of the Sponsorship."""
+  name: String!
+}
+
+input SponsorshipRateLimit {
+  """The limit time window."""
+  window: SponsorshipRateLimitWindow!
+
+  """The limit value."""
+  limit: Int!
+}
+
+enum SponsorshipRateLimitWindow {
+  HOUR
+  DAY
+  WEEK
+  MONTH
+}
+
+input SponsorshipRateLimits {
+  """The global rate limit."""
+  global: SponsorshipRateLimit
+
+  """The user rate limit."""
+  user: SponsorshipRateLimit
+}
+
+input SponsorshipRateLimitsExempt {
+  """The exempt address."""
+  address: EvmAddress!
+
+  """The human-readable label for the exempt address."""
+  label: String!
+}
+
+input SponsorshipRequest {
+  """The Sponsorship address."""
+  address: EvmAddress
+
+  """The transaction hash you created the Sponsorship with."""
+  txHash: TxHash
+}
+
+type SponsorshipSigner {
+  sponsorship: EvmAddress!
+  label: String!
+  address: EvmAddress!
+  createdAt: DateTime!
+}
+
+input SponsorshipSignerInput {
+  """The signer address"""
+  address: EvmAddress!
+
+  """The human-readable label for the signer"""
+  label: String!
+}
+
+input SponsorshipSignersFilter {
+  """The sponsorship address."""
+  sponsorship: EvmAddress!
+}
+
+enum SponsorshipSignersOrderBy {
+  LATEST_FIRST
+  OLDEST_FIRST
+  ALPHABETICAL
+}
+
+input SponsorshipSignersRequest {
+  """The filter options."""
+  filter: SponsorshipSignersFilter!
+
+  """The order by criteria."""
+  orderBy: SponsorshipSignersOrderBy! = OLDEST_FIRST
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
+type SponsorshipSignersResult {
+  items: [SponsorshipSigner!]!
+  pageInfo: PaginatedResultInfo!
+}
+
+input SponsorshipsFilter {
+  """The filter to get Sponsorships managed by address"""
+  managedBy: ManagedBy!
+}
+
+enum SponsorshipsOrderBy {
+  LATEST_FIRST
+  OLDEST_FIRST
+  ALPHABETICAL
+}
+
+input SponsorshipsRequest {
+  """The filter options."""
+  filter: SponsorshipsFilter!
+
+  """The order by criteria."""
+  orderBy: SponsorshipsOrderBy! = LATEST_FIRST
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
+type SponsorshipsResult {
+  items: [Sponsorship!]!
+  pageInfo: PaginatedResultInfo!
 }
 
 input StatsReactionRequest {
@@ -5093,6 +5394,9 @@ enum TimelineEventItemType {
 }
 
 input TimelineFilter {
+  """The feeds to filter by."""
+  feeds: [FeedOneOf!]
+
   """The apps to filter by."""
   apps: [EvmAddress!]
 
@@ -5104,6 +5408,9 @@ input TimelineFilter {
 }
 
 input TimelineHighlightsFilter {
+  """The feeds to filter by."""
+  feeds: [FeedOneOf!]
+
   """The apps to filter by."""
   apps: [EvmAddress!]
   metadata: PostMetadataFilter
@@ -5112,9 +5419,6 @@ input TimelineHighlightsFilter {
 input TimelineHighlightsRequest {
   """The account to get timeline highlights for."""
   account: EvmAddress!
-
-  """The feeds to get timeline for."""
-  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
 
   """An optional filter to apply to the timeline."""
   filter: TimelineHighlightsFilter
@@ -5132,9 +5436,6 @@ type TimelineItem {
 input TimelineRequest {
   """The account to get timeline for."""
   account: EvmAddress!
-
-  """The feeds to get timeline for."""
-  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
 
   """An optional filter to apply to the timeline."""
   filter: TimelineFilter
@@ -5520,6 +5821,42 @@ input UpdateAccountManagerRequest {
 }
 
 union UpdateAccountManagerResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input UpdateSponsorshipExclusionListRequest {
+  """The sponsorship to update"""
+  sponsorship: EvmAddress!
+
+  """The new entries to add."""
+  toAdd: [SponsorshipRateLimitsExempt!]! = []
+
+  """The entries to remove."""
+  toRemove: [EvmAddress!]! = []
+}
+
+union UpdateSponsorshipExclusionListResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input UpdateSponsorshipLimitsRequest {
+  """The sponsorship to update"""
+  sponsorship: EvmAddress!
+
+  """The new rate limits"""
+  rateLimits: SponsorshipRateLimits
+}
+
+union UpdateSponsorshipLimitsResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input UpdateSponsorshipSignersRequest {
+  """The sponsorship to update"""
+  sponsorship: EvmAddress!
+
+  """The new entries to add."""
+  toAdd: [SponsorshipSignerInput!]! = []
+
+  """The entries to remove."""
+  toRemove: [EvmAddress!]! = []
+}
+
+union UpdateSponsorshipSignersResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type UserBlockingRule {
   rule: EvmAddress!
