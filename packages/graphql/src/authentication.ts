@@ -1,5 +1,9 @@
 import type { FragmentOf } from 'gql.tada';
-import { AccountAvailableFragment, PaginatedResultInfoFragment } from './fragments';
+import {
+  AccountAvailableFragment,
+  AccountFragment,
+  PaginatedResultInfoFragment,
+} from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
 const AuthenticationChallengeFragment = graphql(
@@ -225,3 +229,13 @@ export const MeQuery = graphql(
   }`,
   [MeResultFragment],
 );
+
+export const LastLoggedInAccountQuery = graphql(
+  `query LastLoggedInAccount($request: LastLoggedInAccountRequest!) {
+    value: lastLoggedInAccount(request: $request) {
+      ...Account
+    }
+  }`,
+  [AccountFragment],
+);
+export type LastLoggedInAccountRequest = RequestOf<typeof LastLoggedInAccountQuery>;

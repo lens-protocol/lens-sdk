@@ -1,6 +1,8 @@
 import type {
+  Account,
   AuthenticatedSession,
   AuthenticatedSessionsRequest,
+  LastLoggedInAccountRequest,
   MeResult,
   Paginated,
   RefreshRequest,
@@ -13,6 +15,7 @@ import type {
 import {
   AuthenticatedSessionsQuery,
   CurrentSessionQuery,
+  LastLoggedInAccountQuery,
   LegacyRolloverRefreshMutation,
   MeQuery,
   RefreshMutation,
@@ -155,4 +158,24 @@ export function fetchMeDetails(
   client: SessionClient,
 ): ResultAsync<MeResult, UnauthenticatedError | UnexpectedError> {
   return client.query(MeQuery, {});
+}
+
+/**
+ * Get the last logged in account.
+ *
+ * ```ts
+ * const result = await lastLoggedInAccount(sessionClient, {
+ *   address: evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3'),
+ * });
+ * ```
+ *
+ * @param client - The session client.
+ * @param request - The query request.
+ * @returns The last logged in account.
+ */
+export function lastLoggedInAccount(
+  client: SessionClient,
+  request: LastLoggedInAccountRequest,
+): ResultAsync<Account | null, UnauthenticatedError | UnexpectedError> {
+  return client.query(LastLoggedInAccountQuery, { request });
 }

@@ -197,7 +197,6 @@ export const AccountFeedsStatsQuery = graphql(
   }`,
   [AccountFeedsStatsFragment],
 );
-
 export type AccountFeedsStatsRequest = RequestOf<typeof AccountFeedsStatsQuery>;
 
 export const AccountStatsQuery = graphql(
@@ -208,7 +207,6 @@ export const AccountStatsQuery = graphql(
   }`,
   [AccountStatsFragment],
 );
-
 export type AccountStatsRequest = RequestOf<typeof AccountStatsQuery>;
 
 export const AccountGraphsStatsQuery = graphql(
@@ -219,7 +217,6 @@ export const AccountGraphsStatsQuery = graphql(
   }`,
   [AccountGraphsFollowStatsFragment],
 );
-
 export type AccountGraphsStatsRequest = RequestOf<typeof AccountGraphsStatsQuery>;
 
 export const AccountsAvailableQuery = graphql(
@@ -235,7 +232,6 @@ export const AccountsAvailableQuery = graphql(
   }`,
   [AccountAvailableFragment, PaginatedResultInfoFragment],
 );
-
 export type AccountsAvailableRequest = RequestOf<typeof AccountsAvailableQuery>;
 
 export const AccountsBlockedQuery = graphql(
@@ -251,7 +247,6 @@ export const AccountsBlockedQuery = graphql(
   }`,
   [AccountBlockedFragment, PaginatedResultInfoFragment],
 );
-
 export type AccountsBlockedRequest = RequestOf<typeof AccountsBlockedQuery>;
 
 export const MuteAccountMutation = graphql(
