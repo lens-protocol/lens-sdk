@@ -1079,3 +1079,15 @@ export enum SponsorshipsOrderBy {
   OldestFirst = 'OLDEST_FIRST',
   Alphabetical = 'ALPHABETICAL',
 }
+
+export enum SponsorshipSignersOrderBy {
+  LatestFirst = 'LATEST_FIRST',
+  OldestFirst = 'OLDEST_FIRST',
+  Alphabetical = 'ALPHABETICAL',
+}
+
+export enum SponsorshipLimitExclusionsOrderBy {
+  LatestFirst = 'LATEST_FIRST',
+  OldestFirst = 'OLDEST_FIRST',
+  Alphabetical = 'ALPHABETICAL',
+}

@@ -74,7 +74,9 @@ import type {
   SelfFundedFallbackReason,
   SponsorLimitType,
   SponsoredFallbackReason,
+  SponsorshipLimitExclusionsOrderBy,
   SponsorshipRateLimitWindow,
+  SponsorshipSignersOrderBy,
   SponsorshipsOrderBy,
   ThreeDAssetFormat,
   TimelineEventItemType,
@@ -153,8 +155,10 @@ export const graphql = initGraphQLTada<{
     Signature: Signature;
     SponsoredFallbackReason: SponsoredFallbackReason;
     SponsorLimitType: SponsorLimitType;
+    SponsorshipLimitExclusionsOrderBy: SponsorshipLimitExclusionsOrderBy;
     SponsorshipRateLimitWindow: SponsorshipRateLimitWindow;
     SponsorshipsOrderBy: SponsorshipsOrderBy;
+    SponsorshipSignersOrderBy: SponsorshipSignersOrderBy;
     String: string;
     Tag: string;
     ThreeDAssetFormat: ThreeDAssetFormat;

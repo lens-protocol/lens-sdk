@@ -66,3 +66,55 @@ export const SponsorshipQuery = graphql(
   [SponsorshipFragment],
 );
 export type SponsorshipRequest = RequestOf<typeof SponsorshipQuery>;
+
+const SponsorshipSignerFragment = graphql(
+  `fragment SponsorshipSigner on SponsorshipSigner {
+    __typename
+    sponsorship
+    label
+    address
+    createdAt
+  }`,
+);
+export type SponsorshipSigner = FragmentOf<typeof SponsorshipSignerFragment>;
+
+export const SponsorshipSignerQuery = graphql(
+  `query SponsorshipSigner($request: SponsorshipSignersRequest!) {
+    value: sponsorshipSigners(request: $request) {
+      items {
+        ...SponsorshipSigner
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [SponsorshipSignerFragment, PaginatedResultInfoFragment],
+);
+export type SponsorshipSignersRequest = RequestOf<typeof SponsorshipSignerQuery>;
+
+const SponsorshipLimitsExemptFragment = graphql(
+  `fragment SponsorshipLimitsExempt on SponsorshipLimitsExempt {
+    __typename
+    sponsorship
+    label
+    address
+    createdAt
+  }`,
+);
+export type SponsorshipLimitsExempt = FragmentOf<typeof SponsorshipLimitsExemptFragment>;
+
+export const SponsorshipLimitExclusionsQuery = graphql(
+  `query  SponsorshipLimitExclusions($request:  SponsorshipLimitExclusionsRequest!) {
+    value: sponsorshipLimitsExclusions(request: $request) {
+      items {
+        ... SponsorshipLimitsExempt
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [SponsorshipLimitsExemptFragment, PaginatedResultInfoFragment],
+);
+export type SponsorshipLimitExclusionsRequest = RequestOf<typeof SponsorshipLimitExclusionsQuery>;
