@@ -9,6 +9,7 @@ import type {
   PostReactionsRequest,
   PostReferencesRequest,
   PostRequest,
+  PostTag,
   PostsRequest,
 } from '@lens-protocol/graphql';
 import {
@@ -26,14 +27,16 @@ import {
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
-import type { PostTagsRequest } from '@lens-protocol/graphql';
-import type { PostReactionStatusRequest } from '@lens-protocol/graphql';
-import type { PostReactionStatus } from '@lens-protocol/graphql';
-import type { WhoReferencedPostRequest } from '@lens-protocol/graphql';
-import type { Account } from '@lens-protocol/graphql';
-import type { WhoActedOnPostQueryRequest } from '@lens-protocol/graphql';
-import type { PostEditsRequest } from '@lens-protocol/graphql';
-import type { PostEdit } from '@lens-protocol/graphql';
+import type {
+  Account,
+  PostEdit,
+  PostEditsRequest,
+  PostReactionStatus,
+  PostReactionStatusRequest,
+  PostTagsRequest,
+  WhoActedOnPostQueryRequest,
+  WhoReferencedPostRequest,
+} from '@lens-protocol/graphql';
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
@@ -167,7 +170,11 @@ export function fetchPostReferences(
  *
  * ```ts
  * const result = await fetchPostTags(anyClient, {
- *   forFeeds: [evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5')],
+ *   filter: [
+ *     {
+ *       feed: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ *     }
+ *   ],
  * });
  * ```
  *
@@ -178,7 +185,7 @@ export function fetchPostReferences(
 export function fetchPostTags(
   client: AnyClient,
   request: PostTagsRequest,
-): ResultAsync<Paginated<string>, UnexpectedError> {
+): ResultAsync<Paginated<PostTag>, UnexpectedError> {
   return client.query(PostTagsQuery, { request });
 }
 
