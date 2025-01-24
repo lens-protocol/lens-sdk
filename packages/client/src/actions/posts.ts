@@ -167,9 +167,7 @@ export function fetchPostReferences(
  *
  * ```ts
  * const result = await fetchPostTags(anyClient, {
- *   filter: {
- *     globalFeed: true,
- *   }
+ *   forFeeds: [evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5')],
  * });
  * ```
  *
