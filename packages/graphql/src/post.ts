@@ -284,17 +284,28 @@ export const ReportPostMutation = graphql(
 );
 export type ReportPostRequest = RequestOf<typeof ReportPostMutation>;
 
+export const PostTagFragment = graphql(
+  `fragment PostTag on PostTag {
+    __typename
+    value
+    total
+  }`,
+);
+export type PostTag = FragmentOf<typeof PostTagFragment>;
+
 export const PostTagsQuery = graphql(
   `query PostTags($request: PostTagsRequest!) {
     value: postTags(request: $request) {
       __typename
-      items
+      items{
+        ...PostTag
+      }
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }`,
-  [PaginatedResultInfoFragment],
+  [PostTagFragment, PaginatedResultInfoFragment],
 );
 export type PostTagsRequest = RequestOf<typeof PostTagsQuery>;
 
