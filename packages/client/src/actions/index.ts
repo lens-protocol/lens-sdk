@@ -13,6 +13,7 @@ export * from './notifications';
 export * from './post';
 export * from './posts';
 export * from './sns';
+export * from './sponsorship';
 export * from './timeline';
 export * from './transactions';
 export * from './username';

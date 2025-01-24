@@ -1066,3 +1066,16 @@ export enum IndexingStatus {
   Pending = 'PENDING',
   Failed = 'FAILED',
 }
+
+export enum SponsorshipRateLimitWindow {
+  Hour = 'HOUR',
+  Day = 'DAY',
+  Week = 'WEEK',
+  Month = 'MONTH',
+}
+
+export enum SponsorshipsOrderBy {
+  LatestFirst = 'LATEST_FIRST',
+  OldestFirst = 'OLDEST_FIRST',
+  Alphabetical = 'ALPHABETICAL',
+}
