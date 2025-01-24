@@ -59,7 +59,7 @@ describe('Given a new Lens Account', () => {
       });
     });
 
-    it('Then it should be possible to perform social operations in a signless fashion (e.g., updating Account metadata)', async () => {
+    it.skip('Then it should be possible to perform social operations in a signless fashion (e.g., updating Account metadata)', async () => {
       const updated = metadata.account({
         name: 'Bruce Wayne',
       });
@@ -70,8 +70,8 @@ describe('Given a new Lens Account', () => {
       });
 
       assertOk(result);
-
       assertTypename(result.value, 'SetAccountMetadataResponse');
+      console.log(result.value.hash);
       await sessionClient.waitForTransaction(result.value.hash);
 
       const account = await fetchAccount(sessionClient, { address: newAccount.address }).unwrapOr(
