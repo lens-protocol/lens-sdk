@@ -1,5 +1,10 @@
 import type { FragmentOf } from 'gql.tada';
-import { PaginatedResultInfoFragment } from './fragments';
+import {
+  PaginatedResultInfoFragment,
+  SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
+  TransactionWillFailFragment,
+} from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
 const SponsorshipMetadataFragment = graphql(
@@ -118,3 +123,165 @@ export const SponsorshipLimitExclusionsQuery = graphql(
   [SponsorshipLimitsExemptFragment, PaginatedResultInfoFragment],
 );
 export type SponsorshipLimitExclusionsRequest = RequestOf<typeof SponsorshipLimitExclusionsQuery>;
+
+const CreateSponsorshipResponse = graphql(
+  `fragment CreateSponsorshipResponse on CreateSponsorshipResponse {
+    __typename
+    hash
+  }`,
+);
+export type CreateSponsorshipResponse = FragmentOf<typeof CreateSponsorshipResponse>;
+
+const CreateSponsorshipResultFragment = graphql(
+  `fragment CreateSponsorshipResult on CreateSponsorshipResult {
+    ...on CreateSponsorshipResponse {
+      ...CreateSponsorshipResponse
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [CreateSponsorshipResponse, SelfFundedTransactionRequestFragment, TransactionWillFailFragment],
+);
+export type CreateSponsorshipResult = FragmentOf<typeof CreateSponsorshipResultFragment>;
+
+export const CreateSponsorshipMutation = graphql(
+  `mutation CreateSponsorship($request: CreateSponsorshipRequest!) {
+    value: createSponsorship(request: $request) {
+      ...CreateSponsorshipResult
+    }
+  }`,
+  [CreateSponsorshipResultFragment],
+);
+export type CreateSponsorshipRequest = RequestOf<typeof CreateSponsorshipMutation>;
+
+const SetSponsorshipMetadataResultFragment = graphql(
+  `fragment SetSponsorshipMetadataResult on SetSponsorshipMetadataResult {
+    ... on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type SetSponsorshipMetadataResult = FragmentOf<typeof SetSponsorshipMetadataResultFragment>;
+
+export const SetSponsorshipMetadataMutation = graphql(
+  `mutation SetSponsorshipMetadata($request: SetSponsorshipMetadataRequest!) {
+    value: setSponsorshipMetadata(request: $request) {
+      ...SetSponsorshipMetadataResult
+    }
+  }`,
+  [SetSponsorshipMetadataResultFragment],
+);
+export type SetSponsorshipMetadataRequest = RequestOf<typeof SetSponsorshipMetadataMutation>;
+
+const UpdateSponsorshipLimitsResultFragment = graphql(
+  `fragment UpdateSponsorshipLimitsResult on UpdateSponsorshipLimitsResult {
+    ... on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type UpdateSponsorshipLimitsResult = FragmentOf<
+  typeof UpdateSponsorshipLimitsResultFragment
+>;
+
+export const UpdateSponsorshipLimitsMutation = graphql(
+  `mutation UpdateSponsorshipLimits($request: UpdateSponsorshipLimitsRequest!) {
+    value: updateSponsorshipLimits(request: $request) {
+      ...UpdateSponsorshipLimitsResult
+    }
+  }`,
+  [UpdateSponsorshipLimitsResultFragment],
+);
+export type UpdateSponsorshipLimitsRequest = RequestOf<typeof UpdateSponsorshipLimitsMutation>;
+
+const UpdateSponsorshipExclusionListResultFragment = graphql(
+  `fragment UpdateSponsorshipExclusionListResult on UpdateSponsorshipExclusionListResult {
+    ... on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type UpdateSponsorshipExclusionListResult = FragmentOf<
+  typeof UpdateSponsorshipExclusionListResultFragment
+>;
+
+export const UpdateSponsorshipExclusionListMutation = graphql(
+  `mutation UpdateSponsorshipExclusionList($request: UpdateSponsorshipExclusionListRequest!) {
+    value: updateSponsorshipExclusionList(request: $request) {
+      ...UpdateSponsorshipExclusionListResult
+    }
+  }`,
+  [UpdateSponsorshipExclusionListResultFragment],
+);
+export type UpdateSponsorshipExclusionListRequest = RequestOf<
+  typeof UpdateSponsorshipExclusionListMutation
+>;
+
+const UpdateSponsorshipSignersResultFragment = graphql(
+  `fragment UpdateSponsorshipSignersResult on UpdateSponsorshipSignersResult {
+    ... on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type UpdateSponsorshipSignersResult = FragmentOf<
+  typeof UpdateSponsorshipSignersResultFragment
+>;
+
+export const UpdateSponsorshipSignersMutation = graphql(
+  `mutation UpdateSponsorshipSigners($request: UpdateSponsorshipSignersRequest!) {
+    value: updateSponsorshipSigners(request: $request) {
+      ...UpdateSponsorshipSignersResult
+    }
+  }`,
+  [UpdateSponsorshipSignersResultFragment],
+);
+export type UpdateSponsorshipSignersRequest = RequestOf<typeof UpdateSponsorshipSignersMutation>;
