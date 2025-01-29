@@ -18,4 +18,5 @@ export * from './sns';
 export * from './sponsorship';
 export * from './timeline';
 export * from './transactions';
+export * from './transferOwnership';
 export * from './username';

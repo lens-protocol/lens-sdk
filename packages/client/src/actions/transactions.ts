@@ -10,7 +10,7 @@ import type { UnexpectedError } from '../errors';
  *
  * ```ts
  * const result = await transactionStatus(anyClient, {
- *   txHash: '0x97589c9e3a3c5b007d…',
+ *   txHash: txHash('0x97589c9e3a3c5b007d…'),
  * });
  * ```
  *
