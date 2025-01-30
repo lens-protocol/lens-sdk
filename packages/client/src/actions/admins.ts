@@ -71,6 +71,6 @@ export function removeAdmins(
 export function fetchAdminsFor(
   client: AnyClient,
   request: AdminsForRequest,
-): ResultAsync<Paginated<Admin> | null, UnexpectedError> {
+): ResultAsync<Paginated<Admin>, UnexpectedError> {
   return client.query(AdminsForQuery, { request });
 }

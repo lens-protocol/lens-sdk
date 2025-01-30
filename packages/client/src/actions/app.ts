@@ -114,7 +114,7 @@ export function fetchApp(
 export function fetchApps(
   client: AnyClient,
   request: AppsRequest,
-): ResultAsync<Paginated<App> | null, UnexpectedError> {
+): ResultAsync<Paginated<App>, UnexpectedError> {
   return client.query(AppsQuery, { request });
 }
 
@@ -134,7 +134,7 @@ export function fetchApps(
 export function fetchAppGroups(
   client: AnyClient,
   request: AppGroupsRequest,
-): ResultAsync<Paginated<Group> | null, UnexpectedError> {
+): ResultAsync<Paginated<Group>, UnexpectedError> {
   return client.query(AppGroupsQuery, { request });
 }
 
@@ -154,7 +154,7 @@ export function fetchAppGroups(
 export function fetchAppFeeds(
   client: AnyClient,
   request: AppFeedsRequest,
-): ResultAsync<Paginated<AppFeed> | null, UnexpectedError> {
+): ResultAsync<Paginated<AppFeed>, UnexpectedError> {
   return client.query(AppFeedsQuery, { request });
 }
 
@@ -174,7 +174,7 @@ export function fetchAppFeeds(
 export function fetchAppSigners(
   client: AnyClient,
   request: AppSignersRequest,
-): ResultAsync<Paginated<AppSigner> | null, UnexpectedError> {
+): ResultAsync<Paginated<AppSigner>, UnexpectedError> {
   return client.query(AppSignersQuery, { request });
 }
 

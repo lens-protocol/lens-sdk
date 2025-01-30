@@ -1188,9 +1188,9 @@ input CreateSponsorshipRequest {
   signers: [SponsorshipSignerInput!]
 
   """
-  Whether the Lens API is authorized as sponsorship signer for the
-  purpose of sponsoring end-user social operations (e.g. post, comment, follow, etc.)
-  done through the Lens API for the apps associated with this sponsorship.
+  Indicates whether the Lens API is authorized as the sponsorship signer
+  to sponsor end-user social operations (e.g., posts, comments, follows)
+  performed through the Lens API for apps associated with this sponsorship.
   """
   allowLensAccess: Boolean!
 
@@ -1198,7 +1198,7 @@ input CreateSponsorshipRequest {
   rateLimit: SponsorshipRateLimits
 
   """The list of addresses excluded from the sponsorship rate limits."""
-  exclusionList: [SponsorshipRateLimitsExempt!]! = []
+  exclusionList: [SponsorshipRateLimitsExempt!]
 }
 
 type CreateSponsorshipResponse {
@@ -5084,12 +5084,25 @@ type SponsoredTransactionRequest {
 type Sponsorship {
   address: EvmAddress!
   isPaused: Boolean!
-  allowLensAccess: Boolean!
   createdAt: DateTime!
   metadata: SponsorshipMetadata
   globalRateLimit: SponsorLimit
   userRateLimit: SponsorLimit
   owner: EvmAddress!
+
+  """
+  The native token balance of the sponsorship contract.
+  
+  This value is cached for up to 2 minutes for each sponsorship contract.
+  """
+  balance: BigDecimal
+
+  """
+  Indicates whether the Lens API is authorized as the sponsorship signer
+  to sponsor end-user social operations (e.g., posts, comments, follows)
+  performed through the Lens API for apps associated with this sponsorship.
+  """
+  allowsLensAccess: Boolean!
 }
 
 type SponsorshipAllowance {

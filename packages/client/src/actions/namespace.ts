@@ -101,6 +101,6 @@ export function fetchNamespace(
 export function fetchNamespaces(
   client: AnyClient,
   request: NamespacesRequest,
-): ResultAsync<Paginated<UsernameNamespace> | null, UnexpectedError> {
+): ResultAsync<Paginated<UsernameNamespace>, UnexpectedError> {
   return client.query(NamespacesQuery, { request });
 }
