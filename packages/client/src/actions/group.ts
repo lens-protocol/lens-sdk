@@ -144,7 +144,7 @@ export function fetchGroup(
 export function fetchGroups(
   client: AnyClient,
   request: GroupsRequest = {},
-): ResultAsync<Paginated<Group> | null, UnexpectedError> {
+): ResultAsync<Paginated<Group> | Paginated<[]>, UnexpectedError> {
   return client.query(GroupsQuery, { request });
 }
 
