@@ -27,7 +27,7 @@ import type { UnexpectedError } from '../errors';
 export function fetchTimeline(
   client: AnyClient,
   request: TimelineRequest,
-): ResultAsync<Paginated<TimelineItem> | Paginated<[]>, UnexpectedError> {
+): ResultAsync<Paginated<TimelineItem>, UnexpectedError> {
   return client.query(TimelineQuery, { request });
 }
 

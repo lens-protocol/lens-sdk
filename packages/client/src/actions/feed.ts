@@ -98,6 +98,6 @@ export function fetchFeed(
 export function fetchFeeds(
   client: AnyClient,
   request: FeedsRequest,
-): ResultAsync<Paginated<Feed> | Paginated<[]>, UnexpectedError> {
+): ResultAsync<Paginated<Feed>, UnexpectedError> {
   return client.query(FeedsQuery, { request });
 }

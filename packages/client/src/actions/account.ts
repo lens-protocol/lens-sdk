@@ -94,7 +94,7 @@ export function fetchAccount(
 export function fetchAccounts(
   client: AnyClient,
   request: AccountsRequest = {},
-): ResultAsync<Paginated<Account> | Paginated<[]>, UnexpectedError> {
+): ResultAsync<Paginated<Account>, UnexpectedError> {
   return client.query(AccountsQuery, { request });
 }
 
@@ -194,7 +194,7 @@ export function fetchAccountGraphStats(
 export function fetchAccountsAvailable(
   client: AnyClient,
   request: AccountsAvailableRequest,
-): ResultAsync<Paginated<AccountAvailable> | Paginated<[]>, UnexpectedError> {
+): ResultAsync<Paginated<AccountAvailable>, UnexpectedError> {
   return client.query(AccountsAvailableQuery, { request });
 }
 
@@ -212,7 +212,7 @@ export function fetchAccountsAvailable(
 export function fetchAccountsBlocked(
   client: SessionClient,
   request: AccountsBlockedRequest,
-): ResultAsync<Paginated<AccountBlocked> | Paginated<[]>, UnexpectedError> {
+): ResultAsync<Paginated<AccountBlocked>, UnexpectedError> {
   return client.query(AccountsBlockedQuery, { request });
 }
 

@@ -98,6 +98,6 @@ export function fetchGraph(
 export function fetchGraphs(
   client: AnyClient,
   request: GraphsRequest,
-): ResultAsync<Paginated<Graph> | Paginated<[]>, UnexpectedError> {
+): ResultAsync<Paginated<Graph>, UnexpectedError> {
   return client.query(GraphsQuery, { request });
 }

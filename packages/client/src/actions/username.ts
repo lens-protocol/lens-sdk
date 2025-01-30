@@ -129,6 +129,6 @@ export function fetchUsername(
 export function fetchUsernames(
   client: AnyClient,
   request: UsernamesRequest,
-): ResultAsync<Paginated<Username> | Paginated<[]>, UnexpectedError> {
+): ResultAsync<Paginated<Username>, UnexpectedError> {
   return client.query(UsernamesQuery, { request });
 }
