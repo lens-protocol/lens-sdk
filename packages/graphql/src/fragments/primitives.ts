@@ -183,7 +183,9 @@ export const FeedFragment = graphql(
       ...FeedMetadata
     }
     owner
-    operations
+    operations {
+      ...LoggedInFeedPostOperations
+    }
     rules {
       ...FeedRules
     }
