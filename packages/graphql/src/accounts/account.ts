@@ -386,3 +386,49 @@ export const UndoRecommendAccountMutation = graphql(
   }`,
 );
 export type UndoRecommendAccountRequest = RequestOf<typeof UndoRecommendAccountMutation>;
+
+const UpdateAccountFollowRulesResponseFragment = graphql(
+  `fragment UpdateAccountFollowRulesResponse on UpdateAccountFollowRulesResponse {
+    __typename
+    hash
+  }`,
+);
+export type UpdateAccountFollowRulesResponse = FragmentOf<
+  typeof UpdateAccountFollowRulesResponseFragment
+>;
+
+const UpdateAccountFollowRulesResultFragment = graphql(
+  `fragment UpdateAccountFollowRulesResult on UpdateAccountFollowRulesResult {
+    ...on UpdateAccountFollowRulesResponse {
+      ...UpdateAccountFollowRulesResponse
+    }
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    UpdateAccountFollowRulesResponseFragment,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type UpdateAccountFollowRulesResult = FragmentOf<
+  typeof UpdateAccountFollowRulesResultFragment
+>;
+
+export const UpdateAccountFollowRulesMutation = graphql(
+  `mutation UpdateAccountFollowRules($request: UpdateAccountFollowRulesRequest!) {
+    value: updateAccountFollowRules(request: $request){
+      ...UpdateAccountFollowRulesResult
+    }
+  }`,
+  [UpdateAccountFollowRulesResultFragment],
+);
+export type UpdateAccountFollowRulesRequest = RequestOf<typeof UpdateAccountFollowRulesMutation>;
