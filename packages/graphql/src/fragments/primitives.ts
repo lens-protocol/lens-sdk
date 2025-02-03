@@ -204,18 +204,48 @@ export const GraphMetadataFragment = graphql(
 );
 export type GraphMetadata = FragmentOf<typeof GraphMetadataFragment>;
 
-// TODO: Add rules
+export const GraphRuleFragment = graphql(
+  `fragment GraphRule on GraphRule {
+    __typename
+    id
+    type
+    address
+    extraData {
+      ...ExtraData
+    }
+  }`,
+  [ExtraDataFragment],
+);
+export type GraphRule = FragmentOf<typeof GraphRuleFragment>;
+
+export const GraphRulesFragment = graphql(
+  `fragment GraphRules on GraphRules {
+    __typename
+    required {
+      ...GraphRule
+    }
+    anyOf {
+      ...GraphRule
+    }
+  }`,
+  [GraphRuleFragment],
+);
+export type GraphRules = FragmentOf<typeof GraphRulesFragment>;
+
 export const GraphFragment = graphql(
   `fragment Graph on Graph {
     __typename
     address
     createdAt
+    owner
     metadata {
       ...GraphMetadata
     }
-    owner
+    rules {
+      ...GraphRules
+    }
   }`,
-  [GraphMetadataFragment],
+  [GraphMetadataFragment, GraphRulesFragment],
 );
 export type Graph = FragmentOf<typeof GraphFragment>;
 

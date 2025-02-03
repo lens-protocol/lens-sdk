@@ -1160,76 +1160,49 @@ export enum AccountActionType {
   Unknown = 'UNKNOWN',
 }
 
-export enum AccountFollowRuleType {
-  tokenGated = 'TOKEN_GATED',
-  simplePayment = 'SIMPLE_PAYMENT',
-  unknown = 'UNKNOWN',
-}
-
 export enum FeedRuleExecuteOn {
-  creatingPost = 'CREATING_POST',
-  editingPost = 'EDITING_POST',
-  deletingPost = 'DELETING_POST',
-  changingPostRule = 'CHANGING_POST_RULE',
-}
-
-export enum FeedRuleType {
-  tokenGated = 'TOKEN_GATED',
-  restrictedSigners = 'RESTRICTED_SIGNERS',
-  acountBlocking = 'ACCOUNT_BLOCKING',
-  simplePayment = 'SIMPLE_PAYMENT',
-  groupGated = 'GROUP_GATED',
-  unknown = 'UNKNOWN',
+  CreatingPost = 'CREATING_POST',
+  EditingPost = 'EDITING_POST',
+  DeletingPost = 'DELETING_POST',
+  ChangingPostRule = 'CHANGING_POST_RULE',
 }
 
 export enum GroupRuleExecuteOn {
-  adding = 'ADDING',
-  removing = 'REMOVING',
-  joining = 'JOINING',
-  leaving = 'LEAVING',
+  Adding = 'ADDING',
+  Removing = 'REMOVING',
+  Joining = 'JOINING',
+  Leaving = 'LEAVING',
 }
 
 export enum GroupRuleType {
-  tokenGated = 'TOKEN_GATED',
-  simplePayment = 'SIMPLE_PAYMENT',
-  membershipApproval = 'MEMBERSHIP_APPROVAL',
-  banMember = 'BAN_MEMBER',
-  unknown = 'UNKNOWN',
+  TokenGated = 'TOKEN_GATED',
+  SimplePayment = 'SIMPLE_PAYMENT',
+  MembershipApproval = 'MEMBERSHIP_APPROVAL',
+  BanAccount = 'BAN_ACCOUNT',
+  Unknown = 'UNKNOWN',
 }
 
 export enum NamespaceRuleExecuteOn {
-  creating = 'CREATING',
-  removing = 'REMOVING',
-  assigning = 'ASSIGNING',
-  unassigning = 'UNASSIGNING',
+  Creating = 'CREATING',
+  Removing = 'REMOVING',
+  Assigning = 'ASSIGNING',
+  Unassigning = 'UNASSIGNING',
 }
 
 export enum NamespaceRuleType {
-  tokenGated = 'TOKEN_GATED',
-  pricePerLength = 'PRICE_PER_LENGTH',
-  usernameLength = 'USERNAME_LENGTH',
-  unknown = 'UNKNOWN',
+  TokenGated = 'TOKEN_GATED',
+  PricePerLength = 'PRICE_PER_LENGTH',
+  UsernameLength = 'USERNAME_LENGTH',
+  Unknown = 'UNKNOWN',
 }
 
 export enum PostRuleExecuteOn {
-  creatingPost = 'CREATING_POST',
-  editingPost = 'EDITING_POST',
-}
-
-export enum PostRuleType {
-  followersOnly = 'FOLLOWERS_ONLY',
-  unknown = 'UNKNOWN',
+  CreatingPost = 'CREATING_POST',
+  EditingPost = 'EDITING_POST',
 }
 
 export enum GraphRuleExecuteOn {
-  following = 'FOLLOWING',
-  unfollowing = 'UNFOLLOWING',
-  changingFollowRules = 'CHANGING_FOLLOW_RULES',
-}
-
-export enum GraphRuleType {
-  tokenGated = 'TOKEN_GATED',
-  accountBlocking = 'ACCOUNT_BLOCKING',
-  groupGated = 'GROUP_GATED',
-  unknown = 'UNKNOWN',
+  Following = 'FOLLOWING',
+  Unfollowing = 'UNFOLLOWING',
+  ChangingFollowRules = 'CHANGING_FOLLOW_RULES',
 }
