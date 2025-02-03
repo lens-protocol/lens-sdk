@@ -176,7 +176,7 @@ export const PostRuleFragment = graphql(
 export type PostRule = FragmentOf<typeof PostRuleFragment>;
 
 export const PostOperationValidationRuleFragment = graphql(
-  `fragment PostOperationValidationRule on OperationValidationRule {
+  `fragment PostOperationValidationRule on PostOperationValidationRule {
     ... on PostRule {
       ...PostRule
     }

@@ -981,6 +981,24 @@ type AuthenticationTokens {
   idToken: IdToken!
 }
 
+input BanAccountGroupRuleConfig {
+  enable: AlwaysTrue
+}
+
+input BanGroupAccountRequest {
+  """The group you want to ban member on."""
+  group: EvmAddress!
+
+  """The account you want to ban on the group."""
+  account: EvmAddress!
+}
+
+type BanGroupAccountResponse {
+  hash: TxHash!
+}
+
+union BanGroupAccountResult = BanGroupAccountResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
 scalar BigDecimal
 
 type BigDecimalKeyValue {
@@ -2702,7 +2720,48 @@ type Group {
   metadata: GroupMetadata
   owner: EvmAddress!
   operations: LoggedInGroupOperations
+
+  """Returns true if the group has banning rule enabled"""
+  banningEnabled: Boolean!
+
+  """Returns true if the group has membership approval rule enabled"""
+  membershipApprovalEnabled: Boolean!
   rules: GroupRules!
+}
+
+type GroupBannedAccount {
+  ruleId: RuleId!
+  account: Account!
+  bannedBy: Account!
+  lastActiveAt: DateTime!
+  bannedAt: DateTime!
+}
+
+input GroupBannedAccountsFilter {
+  """The optional filter to narrow banned accounts by search query."""
+  searchBy: UsernameSearchInput
+}
+
+enum GroupBannedAccountsOrderBy {
+  LAST_BANNED
+  FIRST_BANNED
+  LAST_ACTIVE
+  ACCOUNT_SCORE
+}
+
+input GroupBannedAccountsRequest {
+  """The group"""
+  group: EvmAddress!
+  filter: GroupBannedAccountsFilter
+
+  """The order by."""
+  orderBy: GroupBannedAccountsOrderBy! = ACCOUNT_SCORE
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
 }
 
 input GroupGatedFeedRuleConfig {
@@ -2843,6 +2902,7 @@ type GroupRule {
 
 input GroupRuleConfig {
   membershipApprovalRule: MembershipApprovalGroupRuleConfig
+  banAccountRule: BanAccountGroupRuleConfig
   tokenGatedRule: TokenGatedGroupRuleConfig
   simplePaymentRule: SimplePaymentGroupRuleConfig
   unknownRule: UnknownGroupRuleConfig
@@ -2859,7 +2919,7 @@ enum GroupRuleType {
   TOKEN_GATED
   SIMPLE_PAYMENT
   MEMBERSHIP_APPROVAL
-  BAN_MEMBER
+  BAN_ACCOUNT
   UNKNOWN
 }
 
@@ -2868,6 +2928,7 @@ enum GroupRuleUnsatisfiedReason {
   TOKEN_GATED_ACCOUNT_REMOVAL_STILL_TOKEN_HOLDER
   SIMPLE_PAYMENT_NOT_ENOUGH_BALANCE
   MEMBERSHIP_APPROVAL_REQUIRED
+  ACCOUNT_BANNED
 }
 
 type GroupRules {
@@ -3187,6 +3248,7 @@ type LoggedInGroupOperations {
   canAddMember: GroupOperationValidationOutcome!
   canRemoveMember: GroupOperationValidationOutcome!
   isMember: Boolean!
+  isBanned: Boolean!
 }
 
 type LoggedInPostOperations {
@@ -4304,6 +4366,22 @@ type Mutation {
   You MUST be a group owner or admin to use this mutation
   """
   rejectGroupMembershipRequest(request: RejectGroupMembershipRequest!): RejectGroupMembershipResult!
+
+  """
+  Ban account to join a group
+  Banned account MUST not be a member of a group.
+  Use `removeGroupMember` mutation with `ban` flag to remove and ban existing members
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  banGroupAccount(request: BanGroupAccountRequest!): BanGroupAccountResult!
+
+  """
+  Unban account
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  unbanGroupAccount(request: UnbanGroupAccountRequest!): UnbanGroupAccountResult!
   createSnsSubscriptions(request: CreateSnsSubscriptionRequest!): [SnsSubscription!]!
   deleteSnsSubscription(request: DeleteSnsSubscriptionRequest!): Void!
 
@@ -4564,8 +4642,6 @@ input OnboardingUserChallengeRequest {
   wallet: EvmAddress!
 }
 
-union OperationValidationRule = PostRule | FeedRule
-
 enum PageSize {
   TEN
   FIFTY
@@ -4651,6 +4727,11 @@ type PaginatedFollowingResult {
 
 type PaginatedGraphsResult {
   items: [Graph!]!
+  pageInfo: PaginatedResultInfo!
+}
+
+type PaginatedGroupBannedAccountsResult {
+  items: [GroupBannedAccount!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -4924,8 +5005,10 @@ type PostOperationValidationPassed {
   passed: AlwaysTrue!
 }
 
+union PostOperationValidationRule = PostRule | FeedRule
+
 type PostOperationValidationUnknown {
-  extraChecksRequired: [OperationValidationRule!]!
+  extraChecksRequired: [PostOperationValidationRule!]!
 }
 
 type PostReaction {
@@ -5327,6 +5410,9 @@ type Query {
   """Get the group membership requests"""
   groupMembershipRequests(request: GroupMembershipRequestsRequest!): PaginatedGroupMembershipRequestsResult!
 
+  """Get the banned accounts of a group"""
+  groupBannedAccounts(request: GroupBannedAccountsRequest!): PaginatedGroupBannedAccountsResult!
+
   """Get admins for a graph/app/sponsor/feed/username/group address"""
   adminsFor(request: AdminsForRequest!): PaginatedAdminsResult!
 
@@ -5493,6 +5579,9 @@ input RemoveGroupMemberRequest {
 
   """The account you want to remove from the group."""
   account: EvmAddress!
+
+  """Ban the account from the joining the group."""
+  ban: Boolean! = false
 
   """The processing params for the join rules."""
   rulesProcessingParams: [GroupRulesProcessingParams!]
@@ -6458,6 +6547,8 @@ enum TransactionOperation {
   GROUP_MEMBERSHIP_APPROVAL_REQUEST_CANCELLED
   GROUP_MEMBERSHIP_APPROVAL_APPROVED
   GROUP_MEMBERSHIP_APPROVAL_REJECTED
+  GROUP_ACCOUNT_BANNED
+  GROUP_ACCOUNT_UNBANNED
   NAMESPACE_FACTORY_DEPLOYMENT
   SPONSOR_FREE_PAYMASTER_CREATED
   SPONSOR_ADDED_TO_APPROVED_SIGNERS
@@ -6551,6 +6642,20 @@ type UnassignUsernameResponse {
 }
 
 union UnassignUsernameToAccountResult = UnassignUsernameResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input UnbanGroupAccountRequest {
+  """The group you want to unban member on."""
+  group: EvmAddress!
+
+  """The account you want to unban on the group."""
+  account: EvmAddress!
+}
+
+type UnbanGroupAccountResponse {
+  hash: TxHash!
+}
+
+union UnbanGroupAccountResult = UnbanGroupAccountResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type UnblockError {
   error: UnblockErrorType!
