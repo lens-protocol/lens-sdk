@@ -17,33 +17,37 @@ const SponsorshipMetadataFragment = graphql(
 );
 export type SponsorshipMetadata = FragmentOf<typeof SponsorshipMetadataFragment>;
 
-const SponsorLimitFragment = graphql(
-  `fragment SponsorLimit on SponsorLimit {
+const SponsorshipRateLimitFragment = graphql(
+  `fragment SponsorshipRateLimit on SponsorshipRateLimit {
     __typename
+    limit
     window
-    allowance
   }`,
 );
-export type SponsorLimitMetadata = FragmentOf<typeof SponsorLimitFragment>;
+export type SponsorshipRateLimit = FragmentOf<typeof SponsorshipRateLimitFragment>;
 
 const SponsorshipFragment = graphql(
   `fragment Sponsorship on Sponsorship {
+    __typename
     address
     isPaused
-    allowLensAccess
+    allowsLensAccess
     createdAt
     metadata {
       ...SponsorshipMetadata
     }
-    globalRateLimit {
-      ...SponsorLimit
-    }
-    userRateLimit {
-      ...SponsorLimit
+    limits {
+      __typename
+      global {
+        ...SponsorshipRateLimit
+      }
+      user {
+        ...SponsorshipRateLimit
+      }
     }
     owner
   }`,
-  [SponsorshipMetadataFragment, SponsorLimitFragment],
+  [SponsorshipMetadataFragment, SponsorshipRateLimitFragment],
 );
 export type Sponsorship = FragmentOf<typeof SponsorshipFragment>;
 
