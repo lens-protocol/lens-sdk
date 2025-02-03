@@ -14,6 +14,7 @@ export * from './health';
 export * from './namespace';
 export * from './notifications';
 export * from './post';
+export * from './scalars';
 export * from './sns';
 export * from './sponsorship';
 export * from './timeline';

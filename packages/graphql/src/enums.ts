@@ -1091,3 +1091,39 @@ export enum SponsorshipLimitExclusionsOrderBy {
   OldestFirst = 'OLDEST_FIRST',
   Alphabetical = 'ALPHABETICAL',
 }
+
+export enum FeedRuleUnsatisfiedReason {
+  GroupGatedNotAMember = 'GROUP_GATED_NOT_A_MEMBER',
+  TokenGatedNotATokenHolder = 'TOKEN_GATED_NOT_A_TOKEN_HOLDER',
+  AccountBlocked = 'ACCOUNT_BLOCKED',
+  SimplePaymentNotEnoughBalance = 'SIMPLE_PAYMENT_NOT_ENOUGH_BALANCE',
+}
+
+export enum GroupRuleUnsatisfiedReason {
+  TokenGatedAccountJoiningNotATokenHolder = 'TOKEN_GATED_ACCOUNT_JOINING_NOT_A_TOKEN_HOLDER',
+  TokenGatedAccountRemovalStillTokenHolder = 'TOKEN_GATED_ACCOUNT_REMOVAL_STILL_TOKEN_HOLDER',
+  SimplePaymentNotEnoughBalance = 'SIMPLE_PAYMENT_NOT_ENOUGH_BALANCE',
+  MembershipApprovalRequired = 'MEMBERSHIP_APPROVAL_REQUIRED',
+}
+
+export enum NamespaceRuleUnsatisfiedReason {
+  TokenGatedNotATokenHolder = 'TOKEN_GATED_NOT_A_TOKEN_HOLDER',
+  UsernameLengthNotWithinRange = 'USERNAME_LENGTH_NOT_WITHIN_RANGE',
+  UsernamePricePerLengthNotEnoughBalance = 'USERNAME_PRICE_PER_LENGTH_NOT_ENOUGH_BALANCE',
+}
+
+export enum PostRuleUnsatisfiedReason {
+  PostNotAFollower = 'POST_NOT_A_FOLLOWER',
+  FeedGroupGatedNotAMember = 'FEED_GROUP_GATED_NOT_A_MEMBER',
+  FeedTokenGatedNotATokenHolder = 'FEED_TOKEN_GATED_NOT_A_TOKEN_HOLDER',
+  FeedAccountBlocked = 'FEED_ACCOUNT_BLOCKED',
+  FeedSimplePaymentNotEnoughBalance = 'FEED_SIMPLE_PAYMENT_NOT_ENOUGH_BALANCE',
+}
+
+export enum AccountFollowRuleUnsatisfiedReason {
+  GraphTokenGatedNotATokenHolder = 'GRAPH_TOKEN_GATED_NOT_A_TOKEN_HOLDER',
+  GraphAccountBlocked = 'GRAPH_ACCOUNT_BLOCKED',
+  GraphGroupGatedNotAMember = 'GRAPH_GROUP_GATED_NOT_A_MEMBER',
+  FollowSimplePaymentNotEnoughBalance = 'FOLLOW_SIMPLE_PAYMENT_NOT_ENOUGH_BALANCE',
+  FollowTokenGatedNotATokenHolder = 'FOLLOW_TOKEN_GATED_NOT_A_TOKEN_HOLDER',
+}

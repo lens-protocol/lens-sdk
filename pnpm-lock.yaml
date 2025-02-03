@@ -77,10 +77,10 @@ importers:
         version: 0.0.0-canary-20241203140504(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))
       '@lens-protocol/metadata':
         specifier: next
-        version: 2.0.0-next.3(zod@3.23.8)
+        version: 2.0.0-next.6(typescript@5.7.2)(zod@3.23.8)
       '@lens-protocol/storage-node-client':
         specifier: next
-        version: 0.0.0-next-20241217195719
+        version: 0.0.0-next-20250114134800
       ethers:
         specifier: ^6.13.4
         version: 6.13.4
@@ -130,6 +130,9 @@ importers:
       graphql:
         specifier: ^16.9.0
         version: 16.9.0
+      type-fest:
+        specifier: ^4.26.1
+        version: 4.30.0
     devDependencies:
       tsup:
         specifier: ^8.3.5
@@ -887,8 +890,8 @@ packages:
       zksync-ethers:
         optional: true
 
-  '@lens-protocol/metadata@2.0.0-next.3':
-    resolution: {integrity: sha512-/aJIzea2cBsucTT63r+q2N5EvGK91cCFPvX3h/unjTZc90LcGC7e7xCXhO7yJthaAtJSENMtRrd0l8VfQagV8w==}
+  '@lens-protocol/metadata@2.0.0-next.6':
+    resolution: {integrity: sha512-om7HYTdhpeWJLeQy+NNCOexYe1gPSnBPc5bR6EhLLs1YNhQmvWgQG/j92/283sQlMopo7Rsqk9KggUgdtEbHvg==}
     engines: {node: '>=20'}
     peerDependencies:
       zod: ^3.22.3
@@ -896,8 +899,8 @@ packages:
       zod:
         optional: true
 
-  '@lens-protocol/storage-node-client@0.0.0-next-20241217195719':
-    resolution: {integrity: sha512-jWonPI26JViuAN54rjhhpC1jw9bkSmjnY7xqYUEmwdza/P6Noh5GXQLaHvyi9QgrQ7RO8Iw7ObgcTK2oHD84MA==}
+  '@lens-protocol/storage-node-client@0.0.0-next-20250114134800':
+    resolution: {integrity: sha512-1tSI6U8cgpXWsla0AbaJuy9x+q+qzcvEnbU/zhW2FO5xLxQsS7W4RB0V2fGxysGP0CcDyFws++rlAjcTbTPeEw==}
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -1245,6 +1248,17 @@ packages:
 
   abitype@1.0.7:
     resolution: {integrity: sha512-ZfYYSktDQUwc2eduYu8C4wOs+RDPmnRYMh7zNfzeMtGGgb0U+6tLGjixUic6mXf5xKKCcgT5Qp6cv39tOARVFw==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+      zod: ^3 >=3.22.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      zod:
+        optional: true
+
+  abitype@1.0.8:
+    resolution: {integrity: sha512-ZeiI6h3GnW06uYDLx0etQtX/p8E24UaHHBj57RSjK7YBFe7iuVn07EDpOeP451D06sF27VOz9JJPlIKJmXgkEg==}
     peerDependencies:
       typescript: '>=5.0.4'
       zod: ^3 >=3.22.0
@@ -1997,6 +2011,7 @@ packages:
 
   lodash.get@4.4.2:
     resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
+    deprecated: This package is deprecated. Use the optional chaining (?.) operator instead.
 
   lodash.sortby@4.7.0:
     resolution: {integrity: sha512-HDWXG8isMntAyRF5vZ7xKuEvOhT4AhlRt/3czTSjvGUxjYCBVRQY48ViDHyfYz9VIoBkW4TMGQNapx+l3RUwdA==}
@@ -3474,14 +3489,17 @@ snapshots:
       viem: 2.22.4(typescript@5.7.2)(zod@3.23.8)
       zksync-ethers: 6.15.3(ethers@6.13.4)
 
-  '@lens-protocol/metadata@2.0.0-next.3(zod@3.23.8)':
+  '@lens-protocol/metadata@2.0.0-next.6(typescript@5.7.2)(zod@3.23.8)':
     dependencies:
+      abitype: 1.0.8(typescript@5.7.2)(zod@3.23.8)
       json-stable-stringify: 1.1.1
       uuid: 9.0.1
     optionalDependencies:
       zod: 3.23.8
+    transitivePeerDependencies:
+      - typescript
 
-  '@lens-protocol/storage-node-client@0.0.0-next-20241217195719': {}
+  '@lens-protocol/storage-node-client@0.0.0-next-20250114134800': {}
 
   '@manypkg/find-root@1.1.0':
     dependencies:
@@ -3786,6 +3804,11 @@ snapshots:
       tinyrainbow: 1.2.0
 
   abitype@1.0.7(typescript@5.7.2)(zod@3.23.8):
+    optionalDependencies:
+      typescript: 5.7.2
+      zod: 3.23.8
+
+  abitype@1.0.8(typescript@5.7.2)(zod@3.23.8):
     optionalDependencies:
       typescript: 5.7.2
       zod: 3.23.8

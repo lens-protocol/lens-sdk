@@ -31,6 +31,7 @@ import {
 import type { StandardData } from './common';
 import type {
   AccessConditionComparison,
+  AccountFollowRuleUnsatisfiedReason,
   AccountReportReason,
   AccountsOrderBy,
   AppMetadataLensPlatformsItem,
@@ -40,6 +41,7 @@ import type {
   ContentWarning,
   EntityType,
   EventMetadataLensSchedulingAdjustmentsTimezoneId,
+  FeedRuleUnsatisfiedReason,
   FeedsOrderBy,
   FollowersOrderBy,
   FollowersYouKnowOrderBy,
@@ -47,6 +49,7 @@ import type {
   ForYouSource,
   GraphsOrderBy,
   GroupMembersOrderBy,
+  GroupRuleUnsatisfiedReason,
   GroupsOrderBy,
   IndexingStatus,
   MainContentFocus,
@@ -57,6 +60,7 @@ import type {
   MediaVideoType,
   MetadataAttributeType,
   MetadataLicenseType,
+  NamespaceRuleUnsatisfiedReason,
   NamespacesOrderBy,
   NftContractType,
   NotificationOrderBy,
@@ -68,6 +72,7 @@ import type {
   PostReactionType,
   PostReferenceType,
   PostReportReason,
+  PostRuleUnsatisfiedReason,
   PostTagsOrderBy,
   PostType,
   PostVisibilityFilter,
@@ -88,15 +93,18 @@ import type {
   WhoReferencedPostOrderBy,
 } from './enums';
 import type { introspection } from './graphql-env';
+import type { AlwaysTrue } from './scalars';
 
 export const graphql = initGraphQLTada<{
   disableMasking: true;
   introspection: introspection;
   scalars: {
-    AccessToken: AccessToken;
     AccessConditionComparison: AccessConditionComparison;
+    AccessToken: AccessToken;
+    AccountFollowRuleUnsatisfiedReason: AccountFollowRuleUnsatisfiedReason;
     AccountReportReason: AccountReportReason;
     AccountsOrderBy: AccountsOrderBy;
+    AlwaysTrue: AlwaysTrue;
     AppMetadataLensPlatformsItem: AppMetadataLensPlatformsItem;
     AppsOrderBy: AppsOrderBy;
     AppUsersOrderBy: AppUsersOrderBy;
@@ -112,6 +120,7 @@ export const graphql = initGraphQLTada<{
     EntityType: EntityType;
     EventMetadataLensSchedulingAdjustmentsTimezoneId: EventMetadataLensSchedulingAdjustmentsTimezoneId;
     EvmAddress: EvmAddress;
+    FeedRuleUnsatisfiedReason: FeedRuleUnsatisfiedReason;
     FeedsOrderBy: FeedsOrderBy;
     Float: number;
     FollowersOrderBy: FollowersOrderBy;
@@ -120,6 +129,7 @@ export const graphql = initGraphQLTada<{
     ForYouSource: ForYouSource;
     GraphsOrderBy: GraphsOrderBy;
     GroupMembersOrderBy: GroupMembersOrderBy;
+    GroupRuleUnsatisfiedReason: GroupRuleUnsatisfiedReason;
     GroupsOrderBy: GroupsOrderBy;
     ID: ID;
     IdToken: IdToken;
@@ -135,6 +145,7 @@ export const graphql = initGraphQLTada<{
     MediaVideoType: MediaVideoType;
     MetadataAttributeType: MetadataAttributeType;
     MetadataLicenseType: MetadataLicenseType;
+    NamespaceRuleUnsatisfiedReason: NamespaceRuleUnsatisfiedReason;
     NamespacesOrderBy: NamespacesOrderBy;
     NftContractType: NftContractType;
     NotificationOrderBy: NotificationOrderBy;
@@ -147,6 +158,7 @@ export const graphql = initGraphQLTada<{
     PostReactionType: PostReactionType;
     PostReferenceType: PostReferenceType;
     PostReportReason: PostReportReason;
+    PostRuleUnsatisfiedReason: PostRuleUnsatisfiedReason;
     PostTagsOrderBy: PostTagsOrderBy;
     PostType: PostType;
     PostVisibilityFilter: PostVisibilityFilter;
@@ -157,8 +169,8 @@ export const graphql = initGraphQLTada<{
     SponsorLimitType: SponsorLimitType;
     SponsorshipLimitExclusionsOrderBy: SponsorshipLimitExclusionsOrderBy;
     SponsorshipRateLimitWindow: SponsorshipRateLimitWindow;
-    SponsorshipsOrderBy: SponsorshipsOrderBy;
     SponsorshipSignersOrderBy: SponsorshipSignersOrderBy;
+    SponsorshipsOrderBy: SponsorshipsOrderBy;
     String: string;
     Tag: string;
     ThreeDAssetFormat: ThreeDAssetFormat;
@@ -167,11 +179,11 @@ export const graphql = initGraphQLTada<{
     TransactionOperation: TransactionOperation;
     TransactionType: TransactionType;
     TxHash: TxHash;
+    UnblockErrorType: UnblockErrorType;
     URI: URI;
     URL: URL;
-    UUID: UUID;
-    UnblockErrorType: UnblockErrorType;
     UsernameValue: UsernameValue;
+    UUID: UUID;
     Void: Void;
     WhoActedOnPostOrderBy: WhoActedOnPostOrderBy;
     WhoReferencedPostOrderBy: WhoReferencedPostOrderBy;
