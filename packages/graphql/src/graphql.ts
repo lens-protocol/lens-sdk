@@ -31,6 +31,8 @@ import {
 import type { StandardData } from './common';
 import type {
   AccessConditionComparison,
+  AccountActionType,
+  AccountFollowRuleType,
   AccountFollowRuleUnsatisfiedReason,
   AccountReportReason,
   AccountsOrderBy,
@@ -41,6 +43,7 @@ import type {
   ContentWarning,
   EntityType,
   EventMetadataLensSchedulingAdjustmentsTimezoneId,
+  FeedRuleExecuteOn,
   FeedRuleType,
   FeedRuleUnsatisfiedReason,
   FeedsOrderBy,
@@ -48,8 +51,12 @@ import type {
   FollowersYouKnowOrderBy,
   FollowingOrderBy,
   ForYouSource,
+  GraphRuleExecuteOn,
+  GraphRuleType,
   GraphsOrderBy,
   GroupMembersOrderBy,
+  GroupRuleExecuteOn,
+  GroupRuleType,
   GroupRuleUnsatisfiedReason,
   GroupsOrderBy,
   IndexingStatus,
@@ -61,6 +68,8 @@ import type {
   MediaVideoType,
   MetadataAttributeType,
   MetadataLicenseType,
+  NamespaceRuleExecuteOn,
+  NamespaceRuleType,
   NamespaceRuleUnsatisfiedReason,
   NamespacesOrderBy,
   NftContractType,
@@ -73,6 +82,7 @@ import type {
   PostReactionType,
   PostReferenceType,
   PostReportReason,
+  PostRuleExecuteOn,
   PostRuleType,
   PostRuleUnsatisfiedReason,
   PostTagsOrderBy,
@@ -103,6 +113,8 @@ export const graphql = initGraphQLTada<{
   scalars: {
     AccessConditionComparison: AccessConditionComparison;
     AccessToken: AccessToken;
+    AccountActionType: AccountActionType;
+    AccountFollowRuleType: AccountFollowRuleType;
     AccountFollowRuleUnsatisfiedReason: AccountFollowRuleUnsatisfiedReason;
     AccountReportReason: AccountReportReason;
     AccountsOrderBy: AccountsOrderBy;
@@ -122,6 +134,7 @@ export const graphql = initGraphQLTada<{
     EntityType: EntityType;
     EventMetadataLensSchedulingAdjustmentsTimezoneId: EventMetadataLensSchedulingAdjustmentsTimezoneId;
     EvmAddress: EvmAddress;
+    FeedRuleExecuteOn: FeedRuleExecuteOn;
     FeedRuleType: FeedRuleType;
     FeedRuleUnsatisfiedReason: FeedRuleUnsatisfiedReason;
     FeedsOrderBy: FeedsOrderBy;
@@ -130,8 +143,12 @@ export const graphql = initGraphQLTada<{
     FollowersYouKnowOrderBy: FollowersYouKnowOrderBy;
     FollowingOrderBy: FollowingOrderBy;
     ForYouSource: ForYouSource;
+    GraphRuleExecuteOn: GraphRuleExecuteOn;
+    GraphRuleType: GraphRuleType;
     GraphsOrderBy: GraphsOrderBy;
     GroupMembersOrderBy: GroupMembersOrderBy;
+    GroupRuleExecuteOn: GroupRuleExecuteOn;
+    GroupRuleType: GroupRuleType;
     GroupRuleUnsatisfiedReason: GroupRuleUnsatisfiedReason;
     GroupsOrderBy: GroupsOrderBy;
     ID: ID;
@@ -148,6 +165,8 @@ export const graphql = initGraphQLTada<{
     MediaVideoType: MediaVideoType;
     MetadataAttributeType: MetadataAttributeType;
     MetadataLicenseType: MetadataLicenseType;
+    NamespaceRuleExecuteOn: NamespaceRuleExecuteOn;
+    NamespaceRuleType: NamespaceRuleType;
     NamespaceRuleUnsatisfiedReason: NamespaceRuleUnsatisfiedReason;
     NamespacesOrderBy: NamespacesOrderBy;
     NftContractType: NftContractType;
@@ -161,12 +180,14 @@ export const graphql = initGraphQLTada<{
     PostReactionType: PostReactionType;
     PostReferenceType: PostReferenceType;
     PostReportReason: PostReportReason;
+    PostRuleExecuteOn: PostRuleExecuteOn;
     PostRuleType: PostRuleType;
     PostRuleUnsatisfiedReason: PostRuleUnsatisfiedReason;
     PostTagsOrderBy: PostTagsOrderBy;
     PostType: PostType;
     PostVisibilityFilter: PostVisibilityFilter;
     RefreshToken: RefreshToken;
+    RuleId: string;
     SelfFundedFallbackReason: SelfFundedFallbackReason;
     Signature: Signature;
     SponsoredFallbackReason: SponsoredFallbackReason;

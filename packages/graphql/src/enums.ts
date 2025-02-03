@@ -1154,3 +1154,82 @@ export enum GraphRuleType {
   GroupGated = 'GROUP_GATED',
   Unknown = 'UNKNOWN',
 }
+
+export enum AccountActionType {
+  Tipping = 'TIPPING',
+  Unknown = 'UNKNOWN',
+}
+
+export enum AccountFollowRuleType {
+  tokenGated = 'TOKEN_GATED',
+  simplePayment = 'SIMPLE_PAYMENT',
+  unknown = 'UNKNOWN',
+}
+
+export enum FeedRuleExecuteOn {
+  creatingPost = 'CREATING_POST',
+  editingPost = 'EDITING_POST',
+  deletingPost = 'DELETING_POST',
+  changingPostRule = 'CHANGING_POST_RULE',
+}
+
+export enum FeedRuleType {
+  tokenGated = 'TOKEN_GATED',
+  restrictedSigners = 'RESTRICTED_SIGNERS',
+  acountBlocking = 'ACCOUNT_BLOCKING',
+  simplePayment = 'SIMPLE_PAYMENT',
+  groupGated = 'GROUP_GATED',
+  unknown = 'UNKNOWN',
+}
+
+export enum GroupRuleExecuteOn {
+  adding = 'ADDING',
+  removing = 'REMOVING',
+  joining = 'JOINING',
+  leaving = 'LEAVING',
+}
+
+export enum GroupRuleType {
+  tokenGated = 'TOKEN_GATED',
+  simplePayment = 'SIMPLE_PAYMENT',
+  membershipApproval = 'MEMBERSHIP_APPROVAL',
+  banMember = 'BAN_MEMBER',
+  unknown = 'UNKNOWN',
+}
+
+export enum NamespaceRuleExecuteOn {
+  creating = 'CREATING',
+  removing = 'REMOVING',
+  assigning = 'ASSIGNING',
+  unassigning = 'UNASSIGNING',
+}
+
+export enum NamespaceRuleType {
+  tokenGated = 'TOKEN_GATED',
+  pricePerLength = 'PRICE_PER_LENGTH',
+  usernameLength = 'USERNAME_LENGTH',
+  unknown = 'UNKNOWN',
+}
+
+export enum PostRuleExecuteOn {
+  creatingPost = 'CREATING_POST',
+  editingPost = 'EDITING_POST',
+}
+
+export enum PostRuleType {
+  followersOnly = 'FOLLOWERS_ONLY',
+  unknown = 'UNKNOWN',
+}
+
+export enum GraphRuleExecuteOn {
+  following = 'FOLLOWING',
+  unfollowing = 'UNFOLLOWING',
+  changingFollowRules = 'CHANGING_FOLLOW_RULES',
+}
+
+export enum GraphRuleType {
+  tokenGated = 'TOKEN_GATED',
+  accountBlocking = 'ACCOUNT_BLOCKING',
+  groupGated = 'GROUP_GATED',
+  unknown = 'UNKNOWN',
+}
