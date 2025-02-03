@@ -228,7 +228,34 @@ export const UsernameNamespaceMetadataFragment = graphql(
 );
 export type UsernameNamespaceMetadata = FragmentOf<typeof UsernameNamespaceMetadataFragment>;
 
-// TODO: Add rules
+export const NamespaceRuleFragment = graphql(
+  `fragment NamespaceRule on NamespaceRule {
+    __typename
+    id
+    type
+    address
+    extraData {
+      ...ExtraData
+    }
+  }`,
+  [ExtraDataFragment],
+);
+export type NamespaceRule = FragmentOf<typeof NamespaceRuleFragment>;
+
+export const NamespaceRulesFragment = graphql(
+  `fragment NamespaceRules on NamespaceRules {
+    __typename
+    required {
+      ...NamespaceRule
+    }
+    anyOf {
+      ...NamespaceRule
+    }
+  }`,
+  [NamespaceRuleFragment],
+);
+export type NamespaceRules = FragmentOf<typeof NamespaceRulesFragment>;
+
 export const UsernameNamespaceFragment = graphql(
   `fragment UsernameNamespace on UsernameNamespace {
     __typename
@@ -238,8 +265,11 @@ export const UsernameNamespaceFragment = graphql(
       ...UsernameNamespaceMetadata
     }
     owner
+    rules {
+      ...NamespaceRules
+    }
   }`,
-  [UsernameNamespaceMetadataFragment],
+  [UsernameNamespaceMetadataFragment, NamespaceRulesFragment],
 );
 export type UsernameNamespace = FragmentOf<typeof UsernameNamespaceFragment>;
 
