@@ -175,6 +175,19 @@ export const AccountMetadataFragment = graphql(
 );
 export type AccountMetadata = FragmentOf<typeof AccountMetadataFragment>;
 
+export const AccountFollowRulesFragment = graphql(
+  `fragment AccountFollowRules on AccountFollowRules {
+    __typename
+    required {
+      ...AccountFollowRule
+    }
+    anyOf {
+      ...AccountFollowRule
+    }
+  }`,
+  [AccountFollowRuleFragment],
+);
+
 export const AccountFragment = graphql(
   `fragment Account on Account {
     __typename
@@ -191,8 +204,16 @@ export const AccountFragment = graphql(
     operations {
       ...LoggedInAccountOperations
     }
+    rules {
+      ...AccountFollowRules
+    }
   }`,
-  [AccountMetadataFragment, LoggedInAccountOperationsFragment, UsernameFragment],
+  [
+    AccountMetadataFragment,
+    LoggedInAccountOperationsFragment,
+    UsernameFragment,
+    AccountFollowRulesFragment,
+  ],
 );
 export type Account = FragmentOf<typeof AccountFragment>;
 
