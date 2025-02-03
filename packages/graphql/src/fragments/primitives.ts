@@ -285,17 +285,162 @@ export const GroupMetadataFragment = graphql(
 );
 export type GroupMetadata = FragmentOf<typeof GroupMetadataFragment>;
 
-// TODO: add GroupRulesConfig and GroupOperationsConfig
+export const GroupRuleFragment = graphql(
+  `fragment GroupRule on GroupRule {
+    __typename
+    id
+    type
+    address
+    extraData {
+      ...ExtraData
+    }
+  }`,
+  [ExtraDataFragment],
+);
+export type GroupRule = FragmentOf<typeof GroupRuleFragment>;
+
+export const GroupRulesFragment = graphql(
+  `fragment GroupRules on GroupRules {
+    __typename
+    required {
+      ...GroupRule
+    }
+    anyOf {
+      ...GroupRule
+    }
+  }`,
+  [GroupRuleFragment],
+);
+export type GroupRules = FragmentOf<typeof GroupRulesFragment>;
+
+export const GroupOperationValidationPassedFragment = graphql(
+  `fragment GroupOperationValidationPassed on GroupOperationValidationPassed {
+    __typename
+  }`,
+);
+export type GroupOperationValidationPassed = FragmentOf<
+  typeof GroupOperationValidationPassedFragment
+>;
+
+export const GroupOperationValidationUnknownFragment = graphql(
+  `fragment GroupOperationValidationUnknown on GroupOperationValidationUnknown {
+    __typename
+    extraChecksRequired {
+      ...GroupRule
+    }
+  }`,
+  [GroupRuleFragment],
+);
+export type GroupOperationValidationUnknown = FragmentOf<
+  typeof GroupOperationValidationUnknownFragment
+>;
+
+export const GroupUnsatisfiedRuleFragment = graphql(
+  `fragment GroupUnsatisfiedRule on GroupUnsatisfiedRule {
+    __typename
+    rule
+    reason
+    message
+    extraData {
+      ...ExtraData
+    }
+  }`,
+  [ExtraDataFragment],
+);
+export type GroupUnsatisfiedRule = FragmentOf<typeof GroupUnsatisfiedRuleFragment>;
+
+export const GroupUnsatisfiedRulesFragment = graphql(
+  `fragment GroupUnsatisfiedRules on GroupUnsatisfiedRules {
+    __typename
+    required {
+      ...GroupUnsatisfiedRule
+    }
+    anyOf {
+      ...GroupUnsatisfiedRule
+    }
+  }`,
+  [GroupUnsatisfiedRuleFragment],
+);
+export type GroupUnsatisfiedRules = FragmentOf<typeof GroupUnsatisfiedRulesFragment>;
+
+export const GroupOperationValidationFailedFragment = graphql(
+  `fragment GroupOperationValidationFailed on GroupOperationValidationFailed {
+    __typename
+    unsatisfiedRules {
+      ...GroupUnsatisfiedRules
+    }
+    reason
+  }`,
+  [GroupUnsatisfiedRulesFragment],
+);
+export type GroupOperationValidationFailed = FragmentOf<
+  typeof GroupOperationValidationFailedFragment
+>;
+
+export const GroupOperationValidationOutcomeFragment = graphql(
+  `fragment GroupOperationValidationOutcome on GroupOperationValidationOutcome {
+    __typename
+    ... on GroupOperationValidationPassed {
+      ...GroupOperationValidationPassed
+    }
+    ... on GroupOperationValidationUnknown {
+      ...GroupOperationValidationUnknown
+    }
+    ... on GroupOperationValidationFailed {
+      ...GroupOperationValidationFailed
+    }
+  }`,
+  [
+    GroupOperationValidationPassedFragment,
+    GroupOperationValidationUnknownFragment,
+    GroupOperationValidationFailedFragment,
+  ],
+);
+export type GroupOperationValidationOutcome =
+  | GroupOperationValidationPassed
+  | GroupOperationValidationUnknown
+  | GroupOperationValidationFailed;
+
+export const LoggedInGroupOperationsFragment = graphql(
+  `fragment LoggedInGroupOperations on LoggedInGroupOperations {
+    __typename
+    canJoin {
+      ...GroupOperationValidationOutcome
+    }
+    canLeave {
+      ...GroupOperationValidationOutcome
+    }
+    canAddMember {
+      ...GroupOperationValidationOutcome
+    }
+    canRemoveMember {
+      ...GroupOperationValidationOutcome
+    }
+    isMember
+    isBanned
+  }`,
+  [GroupOperationValidationOutcomeFragment],
+);
+export type LoggedInGroupOperations = FragmentOf<typeof LoggedInGroupOperationsFragment>;
+
 export const GroupFragment = graphql(
   `fragment Group on Group {
     __typename
     address
     timestamp
+    owner
+    banningEnabled
+    membershipApprovalEnabled
     metadata {
       ...GroupMetadata
     }
-    owner
+    rules {
+      ...GroupRules
+    }
+    operations {
+      ...LoggedInGroupOperations
+    }
   }`,
-  [GroupMetadataFragment],
+  [GroupMetadataFragment, GroupRulesFragment, LoggedInGroupOperationsFragment],
 );
 export type Group = FragmentOf<typeof GroupFragment>;
