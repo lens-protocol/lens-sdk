@@ -297,3 +297,11 @@ export type ExtraData =
   | BigDecimalKeyValue
   | DictionaryKeyValue
   | ArrayKeyValue;
+
+export const UnknownActionFragment = graphql(
+  `fragment UnknownAction on UnknownAction {
+    __typename
+    address
+  }`,
+);
+export type UnknownAction = FragmentOf<typeof UnknownActionFragment>;

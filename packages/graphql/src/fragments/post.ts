@@ -7,6 +7,7 @@ import {
   BooleanValueFragment,
   ExtraDataFragment,
   NetworkAddressFragment,
+  UnknownActionFragment,
 } from './common';
 import {
   ArticleMetadataFragment,
@@ -36,57 +37,41 @@ export const RecipientDataOutputFragment = graphql(
 export type RecipientDataOutput = FragmentOf<typeof RecipientDataOutputFragment>;
 
 export const SimpleCollectActionSettingsFragment = graphql(
-  `fragment SimpleCollectActionSettings on SimpleCollectActionSettings {
+  `fragment SimpleCollectAction on SimpleCollectAction {
     __typename
-    contract {
-      ...NetworkAddress
-    }
-    amount {
-      ...Amount
-    }
-    collectNft
-    collectLimit
-    followerOnly
-    recipient
-    referralFee
-    endsAt
-    recipients {
-      ...RecipientDataOutput
-    }
+    address
   }`,
-  [AmountFragment, NetworkAddressFragment, RecipientDataOutputFragment],
+  [],
 );
 export type SimpleCollectActionSettingsFragment = FragmentOf<
   typeof SimpleCollectActionSettingsFragment
 >;
 
-export const UnknownActionSettingsFragment = graphql(
-  `fragment UnknownActionSettings on UnknownActionSettings {
+export const TippingPostActionSettingsFragment = graphql(
+  `fragment TippingPostAction on TippingPostAction {
     __typename
-    initializeCalldata
-    initializeResultData
-    verified
-    contract {
-      ...NetworkAddress
-    }
-    collectNft
+    address
   }`,
-  [NetworkAddressFragment],
+  [],
 );
-export type UnknownActionSettings = FragmentOf<typeof UnknownActionSettingsFragment>;
+export type TippingPostActionSettingsFragment = FragmentOf<
+  typeof TippingPostActionSettingsFragment
+>;
 
 export const PostActionFragment = graphql(
   `fragment PostAction on PostAction {
-    ... on SimpleCollectActionSettings {
-      ...SimpleCollectActionSettings
+    ... on SimpleCollectAction {
+      ...SimpleCollectAction
     }
-    ... on UnknownActionSettings {
-      ...UnknownActionSettings
+    ... on TippingPostAction {
+      ...TippingPostAction
+    }
+    ... on UnknownAction {
+      ...UnknownAction
     }
   }`,
-  [SimpleCollectActionSettingsFragment, UnknownActionSettingsFragment],
+  [SimpleCollectActionSettingsFragment, TippingPostActionSettingsFragment, UnknownActionFragment],
 );
-export type PostAction = FragmentOf<typeof PostActionFragment>;
 
 export const PostMetadataFragment = graphql(
   `fragment PostMetadata on PostMetadata {
@@ -447,31 +432,6 @@ export const KnownActionFragment = graphql(
   [NetworkAddressFragment, ActionInputInfoFragment],
 );
 export type KnownAction = FragmentOf<typeof KnownActionFragment>;
-
-export const UnknownActionFragment = graphql(
-  `fragment UnknownAction on UnknownAction {
-    __typename
-    name
-    contract {
-      ...NetworkAddress
-    }
-  }`,
-  [NetworkAddressFragment],
-);
-export type UnknownAction = FragmentOf<typeof UnknownActionFragment>;
-
-export const ActionInfoFragment = graphql(
-  `fragment ActionInfo on ActionInfo {
-    ... on KnownAction {
-      ...KnownAction
-    }
-    ... on UnknownAction {
-      ...UnknownAction
-    }
-  }`,
-  [KnownActionFragment, UnknownActionFragment],
-);
-export type ActionInfo = FragmentOf<typeof ActionInfoFragment>;
 
 export const PostReactionFragment = graphql(
   `fragment PostReaction on PostReaction {

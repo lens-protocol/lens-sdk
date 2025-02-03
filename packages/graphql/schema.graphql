@@ -5813,9 +5813,7 @@ input SignedAuthChallenge {
 }
 
 type SimpleCollectAction {
-  actionAddress: EvmAddress!
-  metadataUri: URI
-  metadata: JSON
+  address: EvmAddress!
 }
 
 input SimpleCollectActionConfigInput {
@@ -6359,15 +6357,11 @@ input TimelineRequest {
 }
 
 type TippingAccountAction {
-  actionAddress: EvmAddress!
-  metadataUri: URI
-  metadata: JSON
+  address: EvmAddress!
 }
 
 type TippingPostAction {
-  actionAddress: EvmAddress!
-  metadataUri: URI
-  metadata: JSON
+  address: EvmAddress!
 }
 
 input TokenAmountInput {
@@ -6725,9 +6719,7 @@ input UnknownAccountRuleConfig {
 }
 
 type UnknownAction {
-  actionAddress: EvmAddress!
-  metadataUri: URI
-  metadata: JSON
+  address: EvmAddress!
 }
 
 input UnknownActionConfigInput {

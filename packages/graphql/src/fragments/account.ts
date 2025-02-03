@@ -1,6 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
-import { ExtraDataFragment } from './common';
+import { ExtraDataFragment, type UnknownAction, UnknownActionFragment } from './common';
 import { MetadataAttributeFragment } from './metadata';
 import { UsernameFragment } from './username';
 
@@ -188,6 +188,28 @@ export const AccountFollowRulesFragment = graphql(
   [AccountFollowRuleFragment],
 );
 
+export const TippingAccountActionFragment = graphql(
+  `fragment TippingAccountAction on TippingAccountAction {
+    __typename
+    address
+  }`,
+);
+export type TippingAccountAction = FragmentOf<typeof TippingAccountActionFragment>;
+
+export const AccountActionFragment = graphql(
+  `fragment AccountAction on AccountAction {
+    __typename
+    ... on TippingAccountAction {
+      ...TippingAccountAction
+    }
+    ... on UnknownAction {
+      ...UnknownAction
+    }
+  }`,
+  [TippingAccountActionFragment, UnknownActionFragment],
+);
+export type AccountAction = TippingAccountAction | UnknownAction;
+
 export const AccountFragment = graphql(
   `fragment Account on Account {
     __typename
@@ -207,12 +229,16 @@ export const AccountFragment = graphql(
     rules {
       ...AccountFollowRules
     }
+    actions {
+      ...AccountAction
+    }
   }`,
   [
     AccountMetadataFragment,
     LoggedInAccountOperationsFragment,
     UsernameFragment,
     AccountFollowRulesFragment,
+    AccountActionFragment,
   ],
 );
 export type Account = FragmentOf<typeof AccountFragment>;

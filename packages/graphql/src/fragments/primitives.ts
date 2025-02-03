@@ -124,7 +124,6 @@ export type FeedOperationValidationFailed = FragmentOf<
   typeof FeedOperationValidationFailedFragment
 >;
 
-//union FeedOperationValidationOutcome = FeedOperationValidationPassed | FeedOperationValidationUnknown | FeedOperationValidationFailed
 export const FeedOperationValidationOutcomeFragment = graphql(
   `fragment FeedOperationValidationOutcome on FeedOperationValidationOutcome {
     __typename
@@ -190,7 +189,7 @@ export const FeedFragment = graphql(
       ...FeedRules
     }
   }`,
-  [FeedMetadataFragment, FeedRuleFragment],
+  [FeedMetadataFragment, LoggedInFeedPostOperationsFragment, FeedRulesFragment],
 );
 export type Feed = FragmentOf<typeof FeedFragment>;
 
