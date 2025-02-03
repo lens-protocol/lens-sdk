@@ -2,6 +2,7 @@ import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
 import { ExtraDataFragment, type UnknownAction, UnknownActionFragment } from './common';
 import { MetadataAttributeFragment } from './metadata';
+import { type GraphRule, GraphRuleFragment } from './primitives';
 import { UsernameFragment } from './username';
 
 export const AccountFollowOperationValidationPassedFragment = graphql(
@@ -26,20 +27,6 @@ export const AccountFollowRuleFragment = graphql(
   [ExtraDataFragment],
 );
 export type AccountFollowRule = FragmentOf<typeof AccountFollowRuleFragment>;
-
-export const GraphRuleFragment = graphql(
-  `fragment GraphRule on GraphRule {
-    __typename
-    id
-    type
-    address
-    extraData {
-      ...ExtraData
-    }
-  }`,
-  [ExtraDataFragment],
-);
-export type GraphRule = FragmentOf<typeof GraphRuleFragment>;
 
 export const AccountFollowOperationValidationRuleFragment = graphql(
   `fragment AccountFollowOperationValidationRule on AccountFollowOperationValidationRule {

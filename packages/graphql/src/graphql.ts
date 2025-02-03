@@ -22,12 +22,7 @@ import type {
   Void,
 } from '@lens-protocol/types';
 import { InvariantError } from '@lens-protocol/types';
-import {
-  type DocumentDecoration,
-  type FragmentOf,
-  type TadaDocumentNode,
-  initGraphQLTada,
-} from 'gql.tada';
+import { type DocumentDecoration, type TadaDocumentNode, initGraphQLTada } from 'gql.tada';
 import type { StandardData } from './common';
 import type {
   AccessConditionComparison,
@@ -235,26 +230,39 @@ type GetDocumentNode<
   Fragments extends FragmentShape[] = FragmentShape[],
 > = ReturnType<typeof graphql<In, Fragments>>;
 
-export type AnyGqlNode<TTypename extends string = string> = { __typename: TTypename };
+/**
+ * @internal
+ */
+export type AnySelectionSet = Record<string, unknown>;
 
+/**
+ * @internal
+ */
 export type AnyVariables = Record<string, unknown>;
 
 /**
  * @internal
  */
-export type FragmentDocumentFor<TGqlNode extends AnyGqlNode> = TGqlNode extends AnyGqlNode<
-  infer TTypename
->
-  ? TadaDocumentNode<
-      TGqlNode,
-      AnyVariables,
-      {
-        fragment: TTypename;
-        on: TTypename;
-        masked: false;
-      }
-    >
-  : never;
+export type TypedSelectionSet<TTypename extends string = string> = { __typename: TTypename };
+
+/**
+ * @internal
+ */
+export type FragmentDocumentFor<
+  TGqlNode extends AnySelectionSet,
+  TTypename extends string = TGqlNode extends TypedSelectionSet<infer TTypename>
+    ? TTypename
+    : never,
+  TFragmentName extends string = TTypename,
+> = TadaDocumentNode<
+  TGqlNode,
+  AnyVariables,
+  {
+    fragment: TFragmentName;
+    on: TTypename;
+    masked: false;
+  }
+>;
 
 export type RequestFrom<In extends string> = RequestOf<GetDocumentNode<In, FragmentShape[]>>;
 
@@ -264,50 +272,27 @@ export type StandardDocumentNode<Value = any, Request = any> = TadaDocumentNode<
   { request: Request }
 >;
 
-type FragmentDocumentFrom<
-  In extends string,
-  Fragments extends FragmentShape[],
-  Document extends GetDocumentNode<In, Fragments> = GetDocumentNode<In, Fragments>,
-> = Document extends FragmentShape ? Document : never;
-
-type FragmentDocumentForEach<Nodes extends AnyGqlNode[]> = {
-  [K in keyof Nodes]: FragmentDocumentFor<Nodes[K]>;
-};
-
-/**
- * @internal
+/*
+ * Asserts that the node is of a specific type in a union.
+ *
+ * ```ts
+ * type A = { __typename: 'A', a: string };
+ * type B = { __typename: 'B', b: string };
+ *
+ * const node: A | B = { __typename: 'A', a: 'a' };
+ *
+ * assertTypename(node, 'A');
+ *
+ * console.log(node.a); // OK
+ * ```
+ *
+ * @param node - The node to assert the typename of
+ * @param typename - The expected typename
  */
-export type DynamicFragmentDocument<
-  In extends string,
-  StaticNodes extends AnyGqlNode[],
-> = FragmentDocumentFrom<In, FragmentDocumentForEach<StaticNodes>> & {
-  __phantom: In;
-};
-
-/**
- * @internal
- */
-export function fragment<In extends string, StaticNodes extends AnyGqlNode[]>(
-  input: In,
-  staticFragments: FragmentDocumentForEach<StaticNodes> = [] as FragmentDocumentForEach<StaticNodes>,
-): DynamicFragmentDocument<In, StaticNodes> {
-  return graphql(input, staticFragments) as DynamicFragmentDocument<In, StaticNodes>;
-}
-
-/**
- * @internal
- */
-export type DynamicFragmentOf<
-  Document,
-  DynamicNodes extends AnyGqlNode[],
-> = Document extends DynamicFragmentDocument<infer In, infer StaticNodes>
-  ? FragmentOf<FragmentDocumentFrom<In, FragmentDocumentForEach<[...DynamicNodes, ...StaticNodes]>>>
-  : never;
-
 export function assertTypename<Typename extends string>(
-  node: AnyGqlNode,
+  node: TypedSelectionSet,
   typename: Typename,
-): asserts node is AnyGqlNode<Typename> {
+): asserts node is TypedSelectionSet<Typename> {
   if (node.__typename !== typename) {
     throw new InvariantError(
       `Expected node to have typename "${typename}", but got "${node.__typename}"`,

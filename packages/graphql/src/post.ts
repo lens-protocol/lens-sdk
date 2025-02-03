@@ -2,9 +2,9 @@ import type { FragmentOf } from 'gql.tada';
 import {
   AccountFragment,
   AccountPostReactionFragment,
-  ActionInfoFragment,
   AnyPostFragment,
   PaginatedResultInfoFragment,
+  PostActionFragment,
   PostMetadataFragment,
   SelfFundedTransactionRequestFragment,
   SponsoredTransactionRequestFragment,
@@ -103,14 +103,14 @@ export const PostActionsQuery = graphql(
   `query PostActions($request: PostActionsRequest!) {
     value: postActions(request: $request) {
       items {
-        ...ActionInfo
+        ...PostAction
       },
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }`,
-  [ActionInfoFragment, PaginatedResultInfoFragment],
+  [PostActionFragment, PaginatedResultInfoFragment],
 );
 export type PostActionsRequest = RequestOf<typeof PostActionsQuery>;
 

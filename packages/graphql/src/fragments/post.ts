@@ -1,6 +1,8 @@
+import type { PostId } from '@lens-protocol/types';
+import type { Prettify } from '@lens-protocol/types';
 import type { FragmentOf } from 'gql.tada';
-import { graphql } from '../graphql';
-import { AccountFragment } from './account';
+import { type FragmentDocumentFor, graphql } from '../graphql';
+import { type Account, AccountFragment } from './account';
 import {
   ActionInputInfoFragment,
   BooleanValueFragment,
@@ -24,7 +26,7 @@ import {
   TransactionMetadataFragment,
   VideoMetadataFragment,
 } from './metadata';
-import { AppFragment, FeedFragment, type FeedRule, FeedRuleFragment } from './primitives';
+import { AppFragment, type FeedRule, FeedRuleFragment } from './primitives';
 
 export const RecipientDataOutputFragment = graphql(
   `fragment RecipientDataOutput on RecipientDataOutput {
@@ -288,40 +290,52 @@ export const LoggedInPostOperationsFragment = graphql(
 );
 export type LoggedInPostOperations = FragmentOf<typeof LoggedInPostOperationsFragment>;
 
-export const ReferencedPostFragment = graphql(
-  `fragment ReferencedPost on Post {
+export const MentionReplaceFragment = graphql(
+  `fragment MentionReplace on MentionReplace {
     __typename
-    id
-    author {
-      ...Account
-    }
-    feed {
-      ...Feed
-    }
-    timestamp
-    app {
-      ...App
-    }
-    metadata {
-      ...PostMetadata
-    }
-    actions {
-      ...PostAction
-    }
-    operations {
-      ...LoggedInPostOperations
-    }
-  }
-  `,
-  [
-    AccountFragment,
-    AppFragment,
-    FeedFragment,
-    PostMetadataFragment,
-    PostActionFragment,
-    LoggedInPostOperationsFragment,
-  ],
+    from
+    to
+  }`,
 );
+export type MentionReplace = FragmentOf<typeof MentionReplaceFragment>;
+
+export const AccountMentionFragment = graphql(
+  `fragment AccountMention on AccountMention {
+    __typename
+    account
+    namespace
+    replace {
+      ...MentionReplace
+    }
+  }`,
+  [MentionReplaceFragment],
+);
+export type AccountMention = FragmentOf<typeof AccountMentionFragment>;
+
+export const GroupMentionFragment = graphql(
+  `fragment GroupMention on GroupMention {
+    __typename
+    group
+    replace {
+      ...MentionReplace
+    }
+  }`,
+  [MentionReplaceFragment],
+);
+export type GroupMention = FragmentOf<typeof GroupMentionFragment>;
+
+export const PostMentionFragment = graphql(
+  `fragment PostMention on PostMention {
+    ... on AccountMention {
+      ...AccountMention
+    }
+    ... on GroupMention {
+      ...GroupMention
+    }
+  }`,
+  [AccountMentionFragment, GroupMentionFragment],
+);
+export type PostMention = AccountMention | GroupMention;
 
 export const PostStatsFragment = graphql(
   `fragment PostStats on PostStats {
@@ -330,11 +344,89 @@ export const PostStatsFragment = graphql(
     collects
     comments
     quotes
-    reactions
+    upvotes: reactions(request: { type: UPVOTE })
+    downvotes: reactions(request: { type: UPVOTE })
     reposts
   }`,
 );
 export type PostStats = FragmentOf<typeof PostStatsFragment>;
+
+export const PostRulesFragment = graphql(
+  `fragment PostRules on PostRules {
+    __typename
+    required {
+      ...PostRule
+    }
+    anyOf {
+      ...PostRule
+    }
+  }`,
+  [PostRuleFragment],
+);
+export type PostRules = FragmentOf<typeof PostRulesFragment>;
+
+const PostFieldsFragment = graphql(
+  `fragment PostFields on Post {
+    __typename
+    slug
+    feed
+    isDeleted
+    isEdited
+    timestamp
+    app {
+      ...App
+    }
+    metadata {
+      ...PostMetadata
+    }
+    mentions {
+      ...PostMention
+    }
+    stats {
+      ...PostStats
+    }
+    actions {
+      ...PostAction
+    }
+    rules {
+      ...PostRules
+    }
+    operations {
+      ...LoggedInPostOperations
+    }
+  }`,
+  [
+    AppFragment,
+    PostMetadataFragment,
+    PostMentionFragment,
+    PostStatsFragment,
+    PostActionFragment,
+    PostRulesFragment,
+    LoggedInPostOperationsFragment,
+  ],
+);
+export type PostFields = FragmentOf<typeof PostFieldsFragment>;
+
+export type ReferencedPost = Prettify<
+  {
+    id: PostId;
+    author: Account;
+  } & PostFields
+>;
+// mitigates error TS7056: The inferred type of this node exceeds the maximum length
+// the compiler will serialize. An explicit type annotation is needed.
+export const ReferencedPostFragment: FragmentDocumentFor<ReferencedPost, 'Post', 'ReferencedPost'> =
+  graphql(
+    `fragment ReferencedPost on Post {
+      __typename
+      id
+      author {
+        ...Account
+      }
+      ...PostFields
+    }`,
+    [AccountFragment, PostFieldsFragment],
+  );
 
 export const PostFragment = graphql(
   `fragment Post on Post {
@@ -343,20 +435,8 @@ export const PostFragment = graphql(
     author {
       ...Account
     }
-    feed {
-      ...Feed
-    }
-    timestamp
-    slug
-    stats {
-      ...PostStats
-    }
-    app {
-      ...App
-    }
-    metadata {
-      ...PostMetadata
-    }
+    ...PostFields
+
     root {
       ...ReferencedPost
     }
@@ -366,34 +446,30 @@ export const PostFragment = graphql(
     commentOn {
       ...ReferencedPost
     }
-    actions {
-      ...PostAction
-    }
-    operations {
-      ...LoggedInPostOperations
-    }
   }
   `,
-  [
-    AccountFragment,
-    AppFragment,
-    FeedFragment,
-    PostMetadataFragment,
-    PostActionFragment,
-    PostStatsFragment,
-    ReferencedPostFragment,
-    LoggedInPostOperationsFragment,
-  ],
+  [AccountFragment, PostFieldsFragment, ReferencedPostFragment],
 );
 export type Post = FragmentOf<typeof PostFragment>;
 
-// operations: LoggedInPostOperations
 export const RepostFragment = graphql(
   `fragment Repost on Repost {
     __typename
     id
+    slug
+    isDeleted
+    timestamp
+    app {
+      ...App
+    }
+    author {
+      ...Account
+    }
+    repostOf {
+      ...Post
+    }
   }`,
-  [],
+  [AppFragment, AccountFragment, PostFragment],
 );
 export type Repost = FragmentOf<typeof RepostFragment>;
 
