@@ -3,6 +3,9 @@ import {
   type CreateSponsorshipRequest,
   type CreateSponsorshipResult,
   type Paginated,
+  PauseSponsorshipMutation,
+  type PausingRequest,
+  type PausingResult,
   SetSponsorshipMetadataMutation,
   type SetSponsorshipMetadataRequest,
   type SetSponsorshipMetadataResult,
@@ -17,6 +20,7 @@ import {
   type SponsorshipSignersRequest,
   SponsorshipsQuery,
   type SponsorshipsRequest,
+  UnpauseSponsorshipMutation,
   UpdateSponsorshipExclusionListMutation,
   type UpdateSponsorshipExclusionListRequest,
   type UpdateSponsorshipExclusionListResult,
@@ -266,4 +270,44 @@ export function updateSponsorshipSigners(
   request: UpdateSponsorshipSignersRequest,
 ): ResultAsync<UpdateSponsorshipSignersResult, UnexpectedError | UnauthenticatedError> {
   return client.mutation(UpdateSponsorshipSignersMutation, { request });
+}
+
+/**
+ * Pause sponsorship.
+ *
+ * ```ts
+ * const result = await pauseSponsorship(sessionClient, {
+ *   sponsorship: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ * });
+ * ```
+ *
+ * @param client - The session client logged in as a builder.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function pauseSponsorship(
+  client: SessionClient,
+  request: PausingRequest,
+): ResultAsync<PausingResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(PauseSponsorshipMutation, { request });
+}
+
+/**
+ * Unpause sponsorship.
+ *
+ * ```ts
+ * const result = await unpauseSponsorship(sessionClient, {
+ *   sponsorship: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ * });
+ * ```
+ *
+ * @param client - The session client logged in as a builder.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function unpauseSponsorship(
+  client: SessionClient,
+  request: PausingRequest,
+): ResultAsync<PausingResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(UnpauseSponsorshipMutation, { request });
 }

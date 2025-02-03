@@ -289,3 +289,43 @@ export const UpdateSponsorshipSignersMutation = graphql(
   [UpdateSponsorshipSignersResultFragment],
 );
 export type UpdateSponsorshipSignersRequest = RequestOf<typeof UpdateSponsorshipSignersMutation>;
+
+const PausingResultFragment = graphql(
+  `fragment PausingResult on PausingResult {
+    ... on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type PausingResult = FragmentOf<typeof PausingResultFragment>;
+
+export const PauseSponsorshipMutation = graphql(
+  `mutation PauseSponsorship($request: PausingRequest!) {
+    value: pauseSponsorship(request: $request) {
+      ...PausingResult
+    }
+  }`,
+  [PausingResultFragment],
+);
+
+export const UnpauseSponsorshipMutation = graphql(
+  `mutation UnpauseSponsorship($request: PausingRequest!) {
+    value: unpauseSponsorship(request: $request) {
+      ...PausingResult
+    }
+  }`,
+  [PausingResultFragment],
+);
+
+export type PausingRequest = RequestOf<typeof PauseSponsorshipMutation>;
