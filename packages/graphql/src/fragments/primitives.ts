@@ -1,5 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
+import { ExtraDataFragment } from './common';
 
 export const AppMetadataFragment = graphql(
   `fragment AppMetadata on AppMetadata {
@@ -45,7 +46,134 @@ export const FeedMetadataFragment = graphql(
 );
 export type FeedMetadata = FragmentOf<typeof FeedMetadataFragment>;
 
-// TODO: Add operations and rules
+export const FeedOperationValidationPassedFragment = graphql(
+  `fragment FeedOperationValidationPassed on FeedOperationValidationPassed {
+    __typename
+  }`,
+);
+export type FeedOperationValidationPassed = FragmentOf<
+  typeof FeedOperationValidationPassedFragment
+>;
+
+export const FeedRuleFragment = graphql(
+  `fragment FeedRule on FeedRule {
+      __typename
+      id
+      type
+      address
+      extraData {
+        ...ExtraData
+      }
+    }`,
+  [ExtraDataFragment],
+);
+export type FeedRule = FragmentOf<typeof FeedRuleFragment>;
+
+export const FeedOperationValidationUnknownFragment = graphql(
+  `fragment FeedOperationValidationUnknown on FeedOperationValidationUnknown {
+    __typename
+    extraChecksRequired {
+      ...FeedRule
+    }
+  }`,
+  [FeedRuleFragment],
+);
+export type FeedOperationValidationUnknown = FragmentOf<
+  typeof FeedOperationValidationUnknownFragment
+>;
+
+export const FeedUnsatisfiedRuleFragment = graphql(
+  `fragment FeedUnsatisfiedRule on FeedUnsatisfiedRule {
+    __typename
+    rule
+    reason
+    message
+    extraData {
+      ...ExtraData
+    }
+  }`,
+  [ExtraDataFragment],
+);
+export type FeedUnsatisfiedRule = FragmentOf<typeof FeedUnsatisfiedRuleFragment>;
+
+export const FeedUnsatisfiedRulesFragment = graphql(
+  `fragment FeedUnsatisfiedRules on FeedUnsatisfiedRules {
+    __typename
+    required {
+      ...FeedUnsatisfiedRule
+    }
+    anyOf {
+      ...FeedUnsatisfiedRule
+    }
+  }`,
+  [FeedUnsatisfiedRuleFragment],
+);
+export type FeedUnsatisfiedRules = FragmentOf<typeof FeedUnsatisfiedRulesFragment>;
+
+export const FeedOperationValidationFailedFragment = graphql(
+  `fragment FeedOperationValidationFailed on FeedOperationValidationFailed {
+    __typename
+    unsatisfiedRules {
+      ...FeedUnsatisfiedRules
+    }
+    reason
+  }`,
+  [FeedUnsatisfiedRulesFragment],
+);
+export type FeedOperationValidationFailed = FragmentOf<
+  typeof FeedOperationValidationFailedFragment
+>;
+
+//union FeedOperationValidationOutcome = FeedOperationValidationPassed | FeedOperationValidationUnknown | FeedOperationValidationFailed
+export const FeedOperationValidationOutcomeFragment = graphql(
+  `fragment FeedOperationValidationOutcome on FeedOperationValidationOutcome {
+    __typename
+    ... on FeedOperationValidationPassed {
+      ...FeedOperationValidationPassed
+    }
+    ... on FeedOperationValidationUnknown {
+      ...FeedOperationValidationUnknown
+    }
+    ... on FeedOperationValidationFailed {
+      ...FeedOperationValidationFailed
+    }
+  }`,
+  [
+    FeedOperationValidationPassedFragment,
+    FeedOperationValidationUnknownFragment,
+    FeedOperationValidationFailedFragment,
+  ],
+);
+export type FeedOperationValidationOutcome =
+  | FeedOperationValidationPassed
+  | FeedOperationValidationUnknown
+  | FeedOperationValidationFailed;
+
+export const LoggedInFeedPostOperationsFragment = graphql(
+  `fragment LoggedInFeedPostOperations on LoggedInFeedPostOperations {
+    __typename
+    canPost {
+      ...FeedOperationValidationOutcome
+    }
+  }`,
+  [FeedOperationValidationOutcomeFragment],
+);
+export type LoggedInFeedPostOperations = FragmentOf<typeof LoggedInFeedPostOperationsFragment>;
+
+export const FeedRulesFragment = graphql(
+  `fragment FeedRules on FeedRules {
+    __typename
+    required {
+      ...FeedRule
+    }
+    anyOf {
+      ...FeedRule
+    }
+  }`,
+  [FeedRuleFragment],
+);
+export type FeedRules = FragmentOf<typeof FeedRulesFragment>;
+
 export const FeedFragment = graphql(
   `fragment Feed on Feed {
     __typename
@@ -55,8 +183,12 @@ export const FeedFragment = graphql(
       ...FeedMetadata
     }
     owner
+    operations
+    rules {
+      ...FeedRules
+    }
   }`,
-  [FeedMetadataFragment],
+  [FeedMetadataFragment, FeedRuleFragment],
 );
 export type Feed = FragmentOf<typeof FeedFragment>;
 

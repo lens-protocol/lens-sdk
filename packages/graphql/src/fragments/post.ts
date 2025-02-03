@@ -24,7 +24,7 @@ import {
   TransactionMetadataFragment,
   VideoMetadataFragment,
 } from './metadata';
-import { AppFragment, FeedFragment } from './primitives';
+import { AppFragment, FeedFragment, type FeedRule, FeedRuleFragment } from './primitives';
 
 export const RecipientDataOutputFragment = graphql(
   `fragment RecipientDataOutput on RecipientDataOutput {
@@ -161,20 +161,6 @@ export type PostOperationValidationPassed = FragmentOf<
   typeof PostOperationValidationPassedFragment
 >;
 
-export const FeedRuleFragment = graphql(
-  `fragment FeedRule on FeedRule {
-    __typename
-    id
-    type
-    address
-    extraData {
-      ...ExtraData
-    }
-  }`,
-  [ExtraDataFragment],
-);
-export type FeedRule = FragmentOf<typeof FeedRuleFragment>;
-
 export const PostRuleFragment = graphql(
   `fragment PostRule on PostRule {
     __typename
@@ -214,27 +200,6 @@ export const PostOperationValidationUnknownFragment = graphql(
 export type PostOperationValidationUnknown = FragmentOf<
   typeof PostOperationValidationUnknownFragment
 >;
-
-/*
-type PostUnsatisfiedRule {
-  rule: EvmAddress!
-  reason: PostRuleUnsatisfiedReason!
-  message: String!
-  extraData: [ExtraData!]!
-}
-
-type PostUnsatisfiedRules {
-  required: [PostUnsatisfiedRule!]!
-  anyOf: [PostUnsatisfiedRule!]!
-}
-
-type PostOperationValidationFailed {
-  unsatisfiedRules: PostUnsatisfiedRules
-  reason: String!
-}
-
-union PostOperationValidationOutcome = PostOperationValidationPassed | PostOperationValidationUnknown | PostOperationValidationFailed
-*/
 
 export const PostUnsatisfiedRuleFragment = graphql(
   `fragment PostUnsatisfiedRule on PostUnsatisfiedRule {
