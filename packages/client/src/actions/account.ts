@@ -31,7 +31,6 @@ import type {
   UnmuteRequest,
   UpdateAccountFollowRulesRequest,
   UpdateAccountFollowRulesResult,
-  UpdateAccountManagerRequest,
 } from '@lens-protocol/graphql';
 import {
   AccountFeedsStatsQuery,
