@@ -18,7 +18,7 @@ export type DateTime = Tagged<string, 'DateTime'>;
 /**
  * Beautify the  readout of all of the members of that intersection.
  *
- * @see https://twitter.com/mattpocockuk/status/1622730173446557697
+ * @see https://x.com/mattpocockuk/status/1622730173446557697
  *
  * @internal
  */
