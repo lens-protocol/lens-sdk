@@ -5,8 +5,8 @@ import {
   ActionInputInfoFragment,
   AmountFragment,
   BooleanValueFragment,
+  ExtraDataFragment,
   NetworkAddressFragment,
-  OperationValidationOutcomeFragment,
 } from './common';
 import {
   ArticleMetadataFragment,
@@ -152,24 +152,173 @@ export const PostMetadataFragment = graphql(
 );
 export type PostMetadata = FragmentOf<typeof PostMetadataFragment>;
 
+export const PostOperationValidationPassedFragment = graphql(
+  `fragment PostOperationValidationPassed on PostOperationValidationPassed {
+    __typename
+  }`,
+);
+export type PostOperationValidationPassed = FragmentOf<
+  typeof PostOperationValidationPassedFragment
+>;
+
+export const FeedRuleFragment = graphql(
+  `fragment FeedRule on FeedRule {
+    __typename
+    id
+    type
+    address
+    extraData {
+      ...ExtraData
+    }
+  }`,
+  [ExtraDataFragment],
+);
+export type FeedRule = FragmentOf<typeof FeedRuleFragment>;
+
+export const PostRuleFragment = graphql(
+  `fragment PostRule on PostRule {
+    __typename
+    id
+    type
+    address
+    extraData {
+      ...ExtraData
+    }
+  }`,
+  [ExtraDataFragment],
+);
+export type PostRule = FragmentOf<typeof PostRuleFragment>;
+
+export const PostOperationValidationRuleFragment = graphql(
+  `fragment PostOperationValidationRule on OperationValidationRule {
+    ... on PostRule {
+      ...PostRule
+    }
+    ... on FeedRule {
+      ...FeedRule
+    }
+  }`,
+  [PostRuleFragment, FeedRuleFragment],
+);
+export type PostOperationValidationRule = FeedRule | PostRule;
+
+export const PostOperationValidationUnknownFragment = graphql(
+  `fragment PostOperationValidationUnknown on PostOperationValidationUnknown {
+    __typename
+    extraChecksRequired {
+      ...PostOperationValidationRule
+    }
+  }`,
+  [PostOperationValidationRuleFragment],
+);
+export type PostOperationValidationUnknown = FragmentOf<
+  typeof PostOperationValidationUnknownFragment
+>;
+
+/*
+type PostUnsatisfiedRule {
+  rule: EvmAddress!
+  reason: PostRuleUnsatisfiedReason!
+  message: String!
+  extraData: [ExtraData!]!
+}
+
+type PostUnsatisfiedRules {
+  required: [PostUnsatisfiedRule!]!
+  anyOf: [PostUnsatisfiedRule!]!
+}
+
+type PostOperationValidationFailed {
+  unsatisfiedRules: PostUnsatisfiedRules
+  reason: String!
+}
+
+union PostOperationValidationOutcome = PostOperationValidationPassed | PostOperationValidationUnknown | PostOperationValidationFailed
+*/
+
+export const PostUnsatisfiedRuleFragment = graphql(
+  `fragment PostUnsatisfiedRule on PostUnsatisfiedRule {
+    __typename
+    rule
+    reason
+    message
+    extraData {
+      ...ExtraData
+    }
+  }`,
+  [ExtraDataFragment],
+);
+export type PostUnsatisfiedRule = FragmentOf<typeof PostUnsatisfiedRuleFragment>;
+
+export const PostUnsatisfiedRulesFragment = graphql(
+  `fragment PostUnsatisfiedRules on PostUnsatisfiedRules {
+    __typename
+    required {
+      ...PostUnsatisfiedRule
+    }
+    anyOf {
+      ...PostUnsatisfiedRule
+    }
+  }`,
+  [PostUnsatisfiedRuleFragment],
+);
+export type PostUnsatisfiedRules = FragmentOf<typeof PostUnsatisfiedRulesFragment>;
+
+export const PostOperationValidationFailedFragment = graphql(
+  `fragment PostOperationValidationFailed on PostOperationValidationFailed {
+    __typename
+    unsatisfiedRules {
+      ...PostUnsatisfiedRules
+    }
+    reason
+  }`,
+  [PostUnsatisfiedRulesFragment],
+);
+export type PostOperationValidationFailed = FragmentOf<
+  typeof PostOperationValidationFailedFragment
+>;
+
+export const PostOperationValidationOutcome = graphql(
+  `fragment PostOperationValidationOutcome on PostOperationValidationOutcome {
+    ... on PostOperationValidationPassed {
+      ...PostOperationValidationPassed
+    }
+    ... on PostOperationValidationUnknown {
+      ...PostOperationValidationUnknown
+    }
+    ... on PostOperationValidationFailed {
+      ...PostOperationValidationFailed
+    }
+  }`,
+  [
+    PostOperationValidationPassedFragment,
+    PostOperationValidationUnknownFragment,
+    PostOperationValidationFailedFragment,
+  ],
+);
+export type OperationValidationOutcome =
+  | PostOperationValidationPassed
+  | PostOperationValidationUnknown
+  | PostOperationValidationFailed;
+
 export const LoggedInPostOperationsFragment = graphql(
   `fragment LoggedInPostOperations on LoggedInPostOperations {
     __typename
     id
     canComment {
-      ...OperationValidationOutcome
+      ...PostOperationValidationOutcome
     }
     canDelete {
-      ...OperationValidationOutcome
+      ...PostOperationValidationOutcome
     }
     canEdit {
-      ...OperationValidationOutcome
+      ...PostOperationValidationOutcome
     }
     canQuote {
-      ...OperationValidationOutcome
+      ...PostOperationValidationOutcome
     }
     canRepost {
-      ...OperationValidationOutcome
+      ...PostOperationValidationOutcome
     }
     hasBookmarked
     hasCommented {
@@ -186,7 +335,7 @@ export const LoggedInPostOperationsFragment = graphql(
     }
     isNotInterested
   }`,
-  [BooleanValueFragment, OperationValidationOutcomeFragment],
+  [BooleanValueFragment, PostOperationValidationOutcome],
 );
 export type LoggedInPostOperations = FragmentOf<typeof LoggedInPostOperationsFragment>;
 

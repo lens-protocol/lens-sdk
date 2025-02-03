@@ -1127,3 +1127,30 @@ export enum AccountFollowRuleUnsatisfiedReason {
   FollowSimplePaymentNotEnoughBalance = 'FOLLOW_SIMPLE_PAYMENT_NOT_ENOUGH_BALANCE',
   FollowTokenGatedNotATokenHolder = 'FOLLOW_TOKEN_GATED_NOT_A_TOKEN_HOLDER',
 }
+
+export enum FeedRuleType {
+  TokenGated = 'TOKEN_GATED',
+  RestrictedSigners = 'RESTRICTED_SIGNERS',
+  AccountBlocking = 'ACCOUNT_BLOCKING',
+  SimplePayment = 'SIMPLE_PAYMENT',
+  GroupGated = 'GROUP_GATED',
+  Unknown = 'UNKNOWN',
+}
+
+export enum PostRuleType {
+  FollowersOnly = 'FOLLOWERS_ONLY',
+  Unknown = 'UNKNOWN',
+}
+
+export enum AccountFollowRuleType {
+  TokenGated = 'TOKEN_GATED',
+  SimplePayment = 'SIMPLE_PAYMENT',
+  Unknown = 'UNKNOWN',
+}
+
+export enum GraphRuleType {
+  TokenGated = 'TOKEN_GATED',
+  AccountBlocking = 'ACCOUNT_BLOCKING',
+  GroupGated = 'GROUP_GATED',
+  Unknown = 'UNKNOWN',
+}

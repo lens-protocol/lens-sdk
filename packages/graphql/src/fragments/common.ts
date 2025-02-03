@@ -64,70 +64,236 @@ export const ActionInputInfoFragment = graphql(
 );
 export type ActionInputInfo = FragmentOf<typeof ActionInputInfoFragment>;
 
-const KeyValueFragment = graphql(
-  `fragment KeyValue on KeyValue {
+const IntKeyValueFragment = graphql(
+  `fragment IntKeyValue on IntKeyValue {
     __typename
     key
     value
   }`,
 );
-export type KeyValue = FragmentOf<typeof KeyValueFragment>;
+export type IntKeyValue = FragmentOf<typeof IntKeyValueFragment>;
 
-const UnknownRuleFragment = graphql(
-  `fragment UnknownRule on UnknownRule {
+const IntNullableKeyValueFragment = graphql(
+  `fragment IntNullableKeyValue on IntNullableKeyValue {
     __typename
-    rule
-    configParams {
-      ...KeyValue
-    }
+    key
+    value
   }`,
-  [KeyValueFragment],
 );
-export type UnknownRule = FragmentOf<typeof UnknownRuleFragment>;
+export type IntNullableKeyValue = FragmentOf<typeof IntNullableKeyValueFragment>;
 
-const UnsatisfiedRuleFragment = graphql(
-  `fragment UnsatisfiedRule on UnsatisfiedRule {
+const AddressKeyValueFragment = graphql(
+  `fragment AddressKeyValue on AddressKeyValue {
     __typename
-    name
-    rule
-    reason
+    key
+    value {
+      ...NetworkAddress
+    }
   }`,
+  [NetworkAddressFragment],
 );
-export type UnsatisfiedRule = FragmentOf<typeof UnsatisfiedRuleFragment>;
+export type AddressKeyValue = FragmentOf<typeof AddressKeyValueFragment>;
 
-const OperationValidationFailedFragment = graphql(
-  `fragment OperationValidationFailed on OperationValidationFailed {
+const StringKeyValueFragment = graphql(
+  `fragment StringKeyValue on StringKeyValue {
     __typename
-    reason
-    unsatisfiedRules {
-      ...UnsatisfiedRule
-    }
+    key
+    value
   }`,
-  [UnsatisfiedRuleFragment],
 );
-export type OperationValidationFailed = FragmentOf<typeof OperationValidationFailedFragment>;
+export type StringKeyValue = FragmentOf<typeof StringKeyValueFragment>;
 
-const OperationValidationPassedFragment = graphql(
-  `fragment OperationValidationPassed on OperationValidationPassed {
+const BooleanKeyValueFragment = graphql(
+  `fragment BooleanKeyValue on BooleanKeyValue {
     __typename
-    restrictedSignerRequired
-    extraChecksRequired {
-      ...UnknownRule
-    }
+    key
+    value
   }`,
-  [UnknownRuleFragment],
 );
-export type OperationValidationPassed = FragmentOf<typeof OperationValidationPassedFragment>;
+export type BooleanKeyValue = FragmentOf<typeof BooleanKeyValueFragment>;
 
-export const OperationValidationOutcomeFragment = graphql(
-  `fragment OperationValidationOutcome on OperationValidationOutcome {
-    ...on OperationValidationPassed {
-      ...OperationValidationPassed
+const RawKeyValueFragment = graphql(
+  `fragment RawKeyValue on RawKeyValue {
+    __typename
+    key
+    value
+  }`,
+);
+export type RawKeyValue = FragmentOf<typeof RawKeyValueFragment>;
+
+const BigDecimalKeyValueFragment = graphql(
+  `fragment BigDecimalKeyValue on BigDecimalKeyValue {
+    __typename
+    key
+    value
+  }`,
+);
+export type BigDecimalKeyValue = FragmentOf<typeof BigDecimalKeyValueFragment>;
+
+const PrimitiveDataFragment = graphql(
+  `fragment PrimitiveData on PrimitiveData {
+    ...on IntKeyValue {
+      ...IntKeyValue
     }
-    ...on OperationValidationFailed {
-      ...OperationValidationFailed
+    ...on IntNullableKeyValue {
+      ...IntNullableKeyValue
+    }
+    ...on AddressKeyValue {
+      ...AddressKeyValue
+    }
+    ...on StringKeyValue {
+      ...StringKeyValue
+    }
+    ...on BooleanKeyValue {
+      ...BooleanKeyValue
+    }
+    ...on RawKeyValue {
+      ...RawKeyValue
+    }
+    ...on BigDecimalKeyValue {
+      ...BigDecimalKeyValue
     }
   }`,
-  [OperationValidationPassedFragment, OperationValidationFailedFragment],
+  [
+    IntKeyValueFragment,
+    IntNullableKeyValueFragment,
+    AddressKeyValueFragment,
+    StringKeyValueFragment,
+    BooleanKeyValueFragment,
+    RawKeyValueFragment,
+    BigDecimalKeyValueFragment,
+  ],
 );
-export type OperationValidationOutcome = FragmentOf<typeof OperationValidationOutcomeFragment>;
+export type PrimitiveData =
+  | IntKeyValue
+  | IntNullableKeyValue
+  | AddressKeyValue
+  | StringKeyValue
+  | BooleanKeyValue
+  | RawKeyValue
+  | BigDecimalKeyValue;
+
+const DictionaryKeyValueFragment = graphql(
+  `fragment DictionaryKeyValue on DictionaryKeyValue {
+    __typename
+    key
+    value {
+      ...PrimitiveData
+    }
+  }`,
+  [PrimitiveDataFragment],
+);
+export type DictionaryKeyValue = FragmentOf<typeof DictionaryKeyValueFragment>;
+
+const ArrayDataFragment = graphql(
+  `fragment ArrayData on ArrayData {
+    ...on IntKeyValue {
+      ...IntKeyValue
+    }
+    ...on IntNullableKeyValue {
+      ...IntNullableKeyValue
+    }
+    ...on AddressKeyValue {
+      ...AddressKeyValue
+    }
+    ...on StringKeyValue {
+      ...StringKeyValue
+    }
+    ...on BooleanKeyValue {
+      ...BooleanKeyValue
+    }
+    ...on RawKeyValue {
+      ...RawKeyValue
+    }
+    ...on BigDecimalKeyValue {
+      ...BigDecimalKeyValue
+    }
+    ...on DictionaryKeyValue {
+      ...DictionaryKeyValue
+    }
+  }`,
+  [
+    IntKeyValueFragment,
+    IntNullableKeyValueFragment,
+    AddressKeyValueFragment,
+    StringKeyValueFragment,
+    BooleanKeyValueFragment,
+    RawKeyValueFragment,
+    BigDecimalKeyValueFragment,
+    DictionaryKeyValueFragment,
+  ],
+);
+export type ArrayData =
+  | IntKeyValue
+  | IntNullableKeyValue
+  | AddressKeyValue
+  | StringKeyValue
+  | BooleanKeyValue
+  | RawKeyValue
+  | BigDecimalKeyValue
+  | DictionaryKeyValue;
+
+const ArrayKeyValueFragment = graphql(
+  `fragment ArrayKeyValue on ArrayKeyValue {
+    __typename
+    key
+    value {
+      ...ArrayData
+    }
+  }`,
+  [ArrayDataFragment],
+);
+export type ArrayKeyValue = FragmentOf<typeof ArrayKeyValueFragment>;
+
+export const ExtraDataFragment = graphql(
+  `fragment ExtraData on ExtraData {
+    ...on IntKeyValue {
+      ...IntKeyValue
+    }
+    ...on IntNullableKeyValue {
+      ...IntNullableKeyValue
+    }
+    ...on AddressKeyValue {
+      ...AddressKeyValue
+    }
+    ...on StringKeyValue {
+      ...StringKeyValue
+    }
+    ...on BooleanKeyValue {
+      ...BooleanKeyValue
+    }
+    ...on RawKeyValue {
+      ...RawKeyValue
+    }
+    ...on BigDecimalKeyValue {
+      ...BigDecimalKeyValue
+    }
+    ...on DictionaryKeyValue {
+      ...DictionaryKeyValue
+    }
+    ...on ArrayKeyValue {
+      ...ArrayKeyValue
+    }
+  }`,
+  [
+    IntKeyValueFragment,
+    IntNullableKeyValueFragment,
+    AddressKeyValueFragment,
+    StringKeyValueFragment,
+    BooleanKeyValueFragment,
+    RawKeyValueFragment,
+    BigDecimalKeyValueFragment,
+    DictionaryKeyValueFragment,
+    ArrayKeyValueFragment,
+  ],
+);
+export type ExtraData =
+  | IntKeyValue
+  | IntNullableKeyValue
+  | AddressKeyValue
+  | StringKeyValue
+  | BooleanKeyValue
+  | RawKeyValue
+  | BigDecimalKeyValue
+  | DictionaryKeyValue
+  | ArrayKeyValue;

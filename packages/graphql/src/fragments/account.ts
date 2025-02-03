@@ -1,10 +1,141 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
-import { OperationValidationOutcomeFragment } from './common';
+import { ExtraDataFragment } from './common';
 import { MetadataAttributeFragment } from './metadata';
 import { UsernameFragment } from './username';
 
-// TODO: add canFollow and canUnfollow after implementing OperationValidationOutcome
+export const AccountFollowOperationValidationPassedFragment = graphql(
+  `fragment AccountFollowOperationValidationPassed on AccountFollowOperationValidationPassed {
+    __typename
+  }`,
+);
+export type AccountFollowOperationValidationPassed = FragmentOf<
+  typeof AccountFollowOperationValidationPassedFragment
+>;
+
+export const AccountFollowRuleFragment = graphql(
+  `fragment AccountFollowRule on AccountFollowRule {
+    __typename
+    id
+    type
+    address
+    extraData {
+      ...ExtraData
+    }
+  }`,
+  [ExtraDataFragment],
+);
+export type AccountFollowRule = FragmentOf<typeof AccountFollowRuleFragment>;
+
+export const GraphRuleFragment = graphql(
+  `fragment GraphRule on GraphRule {
+    __typename
+    id
+    type
+    address
+    extraData {
+      ...ExtraData
+    }
+  }`,
+  [ExtraDataFragment],
+);
+export type GraphRule = FragmentOf<typeof GraphRuleFragment>;
+
+export const AccountFollowOperationValidationRuleFragment = graphql(
+  `fragment AccountFollowOperationValidationRule on AccountFollowOperationValidationRule {
+    __typename
+    ... on AccountFollowRule {
+      ...AccountFollowRule
+    }
+    ... on GraphRule {
+      ...GraphRule
+    }
+  }`,
+  [AccountFollowRuleFragment, GraphRuleFragment],
+);
+export type AccountFollowOperationValidationRule = AccountFollowRule | GraphRule;
+
+export const AccountFollowOperationValidationUnknownFragment = graphql(
+  `fragment AccountFollowOperationValidationUnknown on AccountFollowOperationValidationUnknown {
+    __typename
+    extraChecksRequired {
+      ...AccountFollowOperationValidationRule
+    }
+  }`,
+  [AccountFollowOperationValidationRuleFragment],
+);
+export type AccountFollowOperationValidationUnknown = FragmentOf<
+  typeof AccountFollowOperationValidationUnknownFragment
+>;
+
+export const AccountFollowUnsatisfiedRuleFragment = graphql(
+  `fragment AccountFollowUnsatisfiedRule on AccountFollowUnsatisfiedRule {
+    __typename
+    rule
+    reason
+    message
+    extraData {
+      ...ExtraData
+    }
+  }`,
+  [ExtraDataFragment],
+);
+export type AccountFollowUnsatisfiedRule = FragmentOf<typeof AccountFollowUnsatisfiedRuleFragment>;
+
+export const AccountFollowUnsatisfiedRulesFragment = graphql(
+  `fragment AccountFollowUnsatisfiedRules on AccountFollowUnsatisfiedRules {
+    __typename
+    required {
+      ...AccountFollowUnsatisfiedRule
+    }
+    anyOf {
+      ...AccountFollowUnsatisfiedRule
+    }
+  }`,
+  [AccountFollowUnsatisfiedRuleFragment],
+);
+export type AccountFollowUnsatisfiedRules = FragmentOf<
+  typeof AccountFollowUnsatisfiedRulesFragment
+>;
+
+export const AccountFollowOperationValidationFailedFragment = graphql(
+  `fragment AccountFollowOperationValidationFailed on AccountFollowOperationValidationFailed {
+    __typename
+    unsatisfiedRules {
+      ...AccountFollowUnsatisfiedRules
+    }
+    reason
+  }`,
+  [AccountFollowUnsatisfiedRulesFragment],
+);
+export type AccountFollowOperationValidationFailed = FragmentOf<
+  typeof AccountFollowOperationValidationFailedFragment
+>;
+
+export const AccountFollowOperationValidationOutcomeFragment = graphql(
+  `fragment AccountFollowOperationValidationOutcome on AccountFollowOperationValidationOutcome {
+    __typename
+    ... on AccountFollowOperationValidationPassed {
+      ...AccountFollowOperationValidationPassed
+    }
+    ... on AccountFollowOperationValidationUnknown {
+      ...AccountFollowOperationValidationUnknown
+    }
+    ... on AccountFollowOperationValidationFailed {
+      ...AccountFollowOperationValidationFailed
+    }
+  }`,
+  [
+    AccountFollowOperationValidationPassedFragment,
+    AccountFollowOperationValidationUnknownFragment,
+    AccountFollowOperationValidationFailedFragment,
+  ],
+);
+export type AccountFollowOperationValidationOutcome =
+  | AccountFollowOperationValidationPassed
+  | AccountFollowOperationValidationUnknown
+  | AccountFollowOperationValidationFailed;
+
 export const LoggedInAccountOperationsFragment = graphql(
   `fragment LoggedInAccountOperations on LoggedInAccountOperations {
     __typename
@@ -12,10 +143,10 @@ export const LoggedInAccountOperationsFragment = graphql(
     isFollowedByMe
     isFollowingMe
     canFollow {
-      ...OperationValidationOutcome
+      ...AccountFollowOperationValidationOutcome
     }
     canUnfollow {
-      ...OperationValidationOutcome
+      ...AccountFollowOperationValidationOutcome
     }
     isMutedByMe
     isBlockedByMe
@@ -24,7 +155,7 @@ export const LoggedInAccountOperationsFragment = graphql(
     canUnblock
     hasReported
   }`,
-  [OperationValidationOutcomeFragment],
+  [AccountFollowOperationValidationOutcomeFragment],
 );
 export type LoggedInAccountOperations = FragmentOf<typeof LoggedInAccountOperationsFragment>;
 

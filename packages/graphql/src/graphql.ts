@@ -41,6 +41,7 @@ import type {
   ContentWarning,
   EntityType,
   EventMetadataLensSchedulingAdjustmentsTimezoneId,
+  FeedRuleType,
   FeedRuleUnsatisfiedReason,
   FeedsOrderBy,
   FollowersOrderBy,
@@ -72,6 +73,7 @@ import type {
   PostReactionType,
   PostReferenceType,
   PostReportReason,
+  PostRuleType,
   PostRuleUnsatisfiedReason,
   PostTagsOrderBy,
   PostType,
@@ -120,6 +122,7 @@ export const graphql = initGraphQLTada<{
     EntityType: EntityType;
     EventMetadataLensSchedulingAdjustmentsTimezoneId: EventMetadataLensSchedulingAdjustmentsTimezoneId;
     EvmAddress: EvmAddress;
+    FeedRuleType: FeedRuleType;
     FeedRuleUnsatisfiedReason: FeedRuleUnsatisfiedReason;
     FeedsOrderBy: FeedsOrderBy;
     Float: number;
@@ -158,6 +161,7 @@ export const graphql = initGraphQLTada<{
     PostReactionType: PostReactionType;
     PostReferenceType: PostReferenceType;
     PostReportReason: PostReportReason;
+    PostRuleType: PostRuleType;
     PostRuleUnsatisfiedReason: PostRuleUnsatisfiedReason;
     PostTagsOrderBy: PostTagsOrderBy;
     PostType: PostType;
