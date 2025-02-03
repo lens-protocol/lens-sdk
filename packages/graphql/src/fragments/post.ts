@@ -3,7 +3,6 @@ import { graphql } from '../graphql';
 import { AccountFragment } from './account';
 import {
   ActionInputInfoFragment,
-  AmountFragment,
   BooleanValueFragment,
   ExtraDataFragment,
   NetworkAddressFragment,
