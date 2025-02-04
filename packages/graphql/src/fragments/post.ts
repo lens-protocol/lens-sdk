@@ -3,13 +3,7 @@ import type { Prettify } from '@lens-protocol/types';
 import type { FragmentOf } from 'gql.tada';
 import { type FragmentDocumentFor, graphql } from '../graphql';
 import { type Account, AccountFragment } from './account';
-import {
-  ActionInputInfoFragment,
-  BooleanValueFragment,
-  ExtraDataFragment,
-  NetworkAddressFragment,
-  UnknownActionFragment,
-} from './common';
+import { BooleanValueFragment, ExtraDataFragment, UnknownActionFragment } from './common';
 import {
   ArticleMetadataFragment,
   AudioMetadataFragment,
@@ -27,15 +21,6 @@ import {
   VideoMetadataFragment,
 } from './metadata';
 import { AppFragment, type FeedRule, FeedRuleFragment } from './primitives';
-
-export const RecipientDataOutputFragment = graphql(
-  `fragment RecipientDataOutput on RecipientDataOutput {
-    __typename
-    recipient
-    split
-  }`,
-);
-export type RecipientDataOutput = FragmentOf<typeof RecipientDataOutputFragment>;
 
 export const SimpleCollectActionSettingsFragment = graphql(
   `fragment SimpleCollectAction on SimpleCollectAction {
@@ -73,6 +58,7 @@ export const PostActionFragment = graphql(
   }`,
   [SimpleCollectActionSettingsFragment, TippingPostActionSettingsFragment, UnknownActionFragment],
 );
+export type PostAction = FragmentOf<typeof PostActionFragment>;
 
 export const PostMetadataFragment = graphql(
   `fragment PostMetadata on PostMetadata {
@@ -486,27 +472,6 @@ export const AnyPostFragment = graphql(
   [PostFragment, RepostFragment],
 );
 export type AnyPost = FragmentOf<typeof AnyPostFragment>;
-
-export const KnownActionFragment = graphql(
-  `fragment KnownAction on KnownAction {
-    __typename
-    name
-    setupInput {
-      ...ActionInputInfo
-    }
-    actionInput {
-      ...ActionInputInfo
-    }
-    returnSetupInput {
-      ...ActionInputInfo
-    }
-    contract {
-      ...NetworkAddress
-    }
-  }`,
-  [NetworkAddressFragment, ActionInputInfoFragment],
-);
-export type KnownAction = FragmentOf<typeof KnownActionFragment>;
 
 export const PostReactionFragment = graphql(
   `fragment PostReaction on PostReaction {

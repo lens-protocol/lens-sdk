@@ -2,6 +2,7 @@ import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
 import { UsernameNamespaceFragment } from './primitives';
 
+// TODO: Missing operations
 export const UsernameFragment = graphql(
   `fragment Username on Username {
       __typename
@@ -11,9 +12,7 @@ export const UsernameFragment = graphql(
       linkedTo
       ownedBy
       timestamp
-      namespace {
-        ...UsernameNamespace
-      }
+      namespace
   }`,
   [UsernameNamespaceFragment],
 );

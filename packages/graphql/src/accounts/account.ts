@@ -99,13 +99,13 @@ const CreateAccountResponseFragment = graphql(
 );
 export type CreateAccountResponse = FragmentOf<typeof CreateAccountResponseFragment>;
 
-const InvalidUsernameFragment = graphql(
-  `fragment InvalidUsername on InvalidUsername {
+const UsernameTakenFragment = graphql(
+  `fragment UsernameTaken on UsernameTaken {
     __typename
-    reason
+    ownedBy
   }`,
 );
-export type InvalidUsername = FragmentOf<typeof InvalidUsernameFragment>;
+export type UsernameTaken = FragmentOf<typeof UsernameTakenFragment>;
 
 const CreateAccountWithUsernameResultFragment = graphql(
   `fragment CreateAccountWithUsernameResult on CreateAccountWithUsernameResult {
@@ -121,8 +121,8 @@ const CreateAccountWithUsernameResultFragment = graphql(
       ...SelfFundedTransactionRequest
     }
 
-    ...on InvalidUsername {
-      ...InvalidUsername
+    ...on UsernameTaken {
+      ...UsernameTaken
     }
 
     ...on TransactionWillFail {
@@ -133,7 +133,7 @@ const CreateAccountWithUsernameResultFragment = graphql(
     CreateAccountResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
-    InvalidUsernameFragment,
+    UsernameTakenFragment,
     TransactionWillFailFragment,
   ],
 );

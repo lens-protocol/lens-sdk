@@ -1,9 +1,9 @@
 import type {
   AccountPostReaction,
-  ActionInfo,
   AnyPost,
   Paginated,
   Post,
+  PostAction,
   PostActionsRequest,
   PostBookmarksRequest,
   PostReactionsRequest,
@@ -102,7 +102,7 @@ export function fetchPosts(
 export function fetchPostActions(
   client: AnyClient,
   request: PostActionsRequest = {},
-): ResultAsync<Paginated<ActionInfo>, UnexpectedError> {
+): ResultAsync<Paginated<PostAction>, UnexpectedError> {
   return client.query(PostActionsQuery, { request });
 }
 
