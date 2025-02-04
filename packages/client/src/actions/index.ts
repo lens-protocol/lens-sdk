@@ -1,5 +1,6 @@
 export * from './account';
 export * from './accountManager';
+export * from './actions';
 export * from './admins';
 export * from './app';
 export * from './authentication';
