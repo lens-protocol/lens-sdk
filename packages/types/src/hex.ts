@@ -39,6 +39,7 @@ export function evmAddress(value: string) {
  * RLP-encoded blockchain data.
  */
 export type BlockchainData = Tagged<HexString, 'BlockchainData'>;
+export const blockchainData = hexString<BlockchainData>;
 
 /**
  * A signature.
