@@ -1109,6 +1109,7 @@ export enum GroupRuleUnsatisfiedReason {
 export enum NamespaceRuleUnsatisfiedReason {
   TokenGatedNotATokenHolder = 'TOKEN_GATED_NOT_A_TOKEN_HOLDER',
   UsernameLengthNotWithinRange = 'USERNAME_LENGTH_NOT_WITHIN_RANGE',
+  UsernameReserverd = 'USERNAME_RESERVED',
   UsernamePricePerLengthNotEnoughBalance = 'USERNAME_PRICE_PER_LENGTH_NOT_ENOUGH_BALANCE',
 }
 
@@ -1193,6 +1194,7 @@ export enum NamespaceRuleType {
   TokenGated = 'TOKEN_GATED',
   PricePerLength = 'PRICE_PER_LENGTH',
   UsernameLength = 'USERNAME_LENGTH',
+  UsernameReserverd = 'USERNAME_RESERVED',
   Unknown = 'UNKNOWN',
 }
 
@@ -1205,4 +1207,10 @@ export enum GraphRuleExecuteOn {
   Following = 'FOLLOWING',
   Unfollowing = 'UNFOLLOWING',
   ChangingFollowRules = 'CHANGING_FOLLOW_RULES',
+}
+
+export enum GraphRuleUnsatisfiedReason {
+  GroupGatedNotAMember = 'GROUP_GATED_NOT_A_MEMBER',
+  TokenGatedNotATokenHolder = 'TOKEN_GATED_NOT_A_TOKEN_HOLDER',
+  AccountBlocked = 'ACCOUNT_BLOCKED',
 }
