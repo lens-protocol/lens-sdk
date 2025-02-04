@@ -53,10 +53,12 @@ const Eip712TransactionRequestFragment = graphql(
     value
     chainId
     customData {
+      __typename
       gasPerPubdata
       factoryDeps
       customSignature
       paymasterParams {
+        __typename
         paymaster
         paymasterInput
       }
