@@ -174,6 +174,7 @@ export const AccountFollowRulesFragment = graphql(
   }`,
   [AccountFollowRuleFragment],
 );
+export type AccountFollowRules = FragmentOf<typeof AccountFollowRulesFragment>;
 
 export const TippingAccountActionFragment = graphql(
   `fragment TippingAccountAction on TippingAccountAction {
