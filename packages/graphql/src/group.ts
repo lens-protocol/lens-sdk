@@ -229,3 +229,66 @@ export const GroupStatsQuery = graphql(
   [GroupStatsResponseFragment],
 );
 export type GroupStatsRequest = RequestOf<typeof GroupStatsQuery>;
+
+export const GroupMembershipRequestFragment = graphql(
+  `fragment GroupMembershipRequest on GroupMembershipRequest {
+      __typename
+      ruleId
+      requestedAt
+      lastActiveAt
+      account {
+        ...Account
+      }
+  }`,
+  [AccountFragment],
+);
+export type GroupMembershipRequest = FragmentOf<typeof GroupMembershipRequestFragment>;
+
+export const GroupMembershipRequestsQuery = graphql(
+  `query GroupMembershipRequests($request: GroupMembershipRequestsRequest!) {
+    value: groupMembershipRequests(request: $request) {
+      __typename
+      items {
+        ...GroupMembershipRequest
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [GroupMembershipRequestFragment, PaginatedResultInfoFragment],
+);
+export type GroupMembershipRequestsRequest = RequestOf<typeof GroupMembershipRequestsQuery>;
+
+export const GroupBannedAccountFragment = graphql(
+  `fragment GroupBannedAccount on GroupBannedAccount {
+      __typename
+      ruleId
+      lastActiveAt
+      bannedAt
+      bannedBy {
+        ...Account
+      }
+      account {
+        ...Account
+      }
+  }`,
+  [AccountFragment],
+);
+export type GroupBannedAccount = FragmentOf<typeof GroupBannedAccountFragment>;
+
+export const GroupBannedAccountsQuery = graphql(
+  `query GroupBannedAccounts($request: GroupBannedAccountsRequest!) {
+    value: groupBannedAccounts(request: $request) {
+      __typename
+      items {
+        ...GroupBannedAccount
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [GroupBannedAccountFragment, PaginatedResultInfoFragment],
+);
+export type GroupBannedAccountsRequest = RequestOf<typeof GroupBannedAccountsQuery>;

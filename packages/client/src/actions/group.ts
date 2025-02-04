@@ -2,8 +2,12 @@ import type {
   CreateGroupRequest,
   CreateGroupResult,
   Group,
+  GroupBannedAccount,
+  GroupBannedAccountsRequest,
   GroupMember,
   GroupMembersRequest,
+  GroupMembershipRequest,
+  GroupMembershipRequestsRequest,
   GroupRequest,
   GroupStatsRequest,
   GroupStatsResponse,
@@ -18,7 +22,9 @@ import type {
 } from '@lens-protocol/graphql';
 import {
   CreateGroupMutation,
+  GroupBannedAccountsQuery,
   GroupMembersQuery,
+  GroupMembershipRequestsQuery,
   GroupQuery,
   GroupStatsQuery,
   GroupsQuery,
@@ -186,4 +192,44 @@ export function fetchGroupStats(
   request: GroupStatsRequest,
 ): ResultAsync<GroupStatsResponse | null, UnexpectedError> {
   return client.query(GroupStatsQuery, { request });
+}
+
+/**
+ * Fetch banned accounts for a group.
+ *
+ * ```ts
+ * const result = await fetchGroupBannedAccounts(anyClient, {
+ *   group: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of banned accounts for the group.
+ */
+export function fetchGroupBannedAccounts(
+  client: AnyClient,
+  request: GroupBannedAccountsRequest,
+): ResultAsync<Paginated<GroupBannedAccount>, UnexpectedError> {
+  return client.query(GroupBannedAccountsQuery, { request });
+}
+
+/**
+ * Fetch membership requests for a group (only admin/owner).
+ *
+ * ```ts
+ * const result = await fetchGroupMembershipRequests(sessionClient, {
+ *   group: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The query request.
+ * @returns The list of membership requests for the group.
+ */
+export function fetchGroupMembershipRequests(
+  client: SessionClient,
+  request: GroupMembershipRequestsRequest,
+): ResultAsync<Paginated<GroupMembershipRequest>, UnexpectedError> {
+  return client.query(GroupMembershipRequestsQuery, { request });
 }
