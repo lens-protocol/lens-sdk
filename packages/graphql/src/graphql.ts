@@ -13,6 +13,7 @@ import type {
   LegacyProfileId,
   PostId,
   RefreshToken,
+  RuleId,
   Signature,
   TxHash,
   URI,
@@ -184,7 +185,7 @@ export const graphql = initGraphQLTada<{
     PostType: PostType;
     PostVisibilityFilter: PostVisibilityFilter;
     RefreshToken: RefreshToken;
-    RuleId: string;
+    RuleId: RuleId;
     SelfFundedFallbackReason: SelfFundedFallbackReason;
     Signature: Signature;
     SponsoredFallbackReason: SponsoredFallbackReason;

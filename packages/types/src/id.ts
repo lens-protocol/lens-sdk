@@ -19,6 +19,12 @@ export type PostId = Tagged<string, 'PostId'>;
 export const postId = identity<PostId>;
 
 /**
+ * A Lens Post ID.
+ */
+export type RuleId = Tagged<string, 'RuleId'>;
+export const ruleId = identity<RuleId>;
+
+/**
  * A Lens v2 Profile ID.
  */
 export type LegacyProfileId = Tagged<string, 'LegacyProfileId'>;
