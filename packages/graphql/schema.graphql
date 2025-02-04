@@ -595,7 +595,7 @@ type AddGroupMemberResponse {
   hash: TxHash!
 }
 
-union AddGroupMemberResult = AddGroupMemberResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union AddGroupMemberResult = AddGroupMemberResponse | GroupOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type AddReactionFailure {
   reason: String!
@@ -909,7 +909,7 @@ input AssignUsernameToAccountRequest {
   unassignUsernameRulesProcessingParams: [NamespaceRulesProcessingParams!]
 }
 
-union AssignUsernameToAccountResult = AssignUsernameResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union AssignUsernameToAccountResult = AssignUsernameResponse | NamespaceOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type AudioMetadata {
   """The other attachments you want to include with it."""
@@ -1178,7 +1178,7 @@ input CreateAccountWithUsernameRequest {
   accountManager: [EvmAddress!]
 }
 
-union CreateAccountWithUsernameResult = CreateAccountResponse | InvalidUsername | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union CreateAccountWithUsernameResult = CreateAccountResponse | UsernameTaken | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input CreateAppRequest {
   """The app metadata uri"""
@@ -1441,7 +1441,7 @@ type CreateUsernameResponse {
   hash: TxHash!
 }
 
-union CreateUsernameResult = CreateUsernameResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union CreateUsernameResult = CreateUsernameResponse | NamespaceOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar Cursor
 
@@ -2443,7 +2443,7 @@ type FollowResponse {
   hash: TxHash!
 }
 
-union FollowResult = FollowResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union FollowResult = FollowResponse | GraphOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input FollowStatusRequest {
   pairs: [FollowPair!]!
@@ -2638,6 +2638,11 @@ input GraphOneOf @oneOf {
   app: EvmAddress
 }
 
+type GraphOperationValidationFailed {
+  unsatisfiedRules: GraphUnsatisfiedRules
+  reason: String!
+}
+
 input GraphRequest {
   """The graph"""
   graph: EvmAddress
@@ -2672,6 +2677,12 @@ enum GraphRuleType {
   UNKNOWN
 }
 
+enum GraphRuleUnsatisfiedReason {
+  GROUP_GATED_NOT_A_MEMBER
+  TOKEN_GATED_NOT_A_TOKEN_HOLDER
+  ACCOUNT_BLOCKED
+}
+
 type GraphRules {
   required: [GraphRule!]!
   anyOf: [GraphRule!]!
@@ -2684,6 +2695,18 @@ input GraphRulesConfigInput {
 
 input GraphRulesProcessingParams {
   unknownRule: UnknownRuleProcessingParams
+}
+
+type GraphUnsatisfiedRule {
+  rule: EvmAddress!
+  reason: GraphRuleUnsatisfiedReason!
+  message: String!
+  extraData: [ExtraData!]!
+}
+
+type GraphUnsatisfiedRules {
+  required: [GraphUnsatisfiedRule!]!
+  anyOf: [GraphUnsatisfiedRule!]!
 }
 
 input GraphsFilter {
@@ -3058,10 +3081,6 @@ type IntNullableKeyValue {
   value: Int
 }
 
-type InvalidUsername {
-  reason: String!
-}
-
 input IsFollowedByMeRequest {
   graph: EvmAddress!
 }
@@ -3085,7 +3104,7 @@ type JoinGroupResponse {
   hash: TxHash!
 }
 
-union JoinGroupResult = JoinGroupResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union JoinGroupResult = JoinGroupResponse | GroupOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input LastLoggedInAccountRequest {
   """The address to get the last logged in account for."""
@@ -3107,7 +3126,7 @@ type LeaveGroupResponse {
   hash: TxHash!
 }
 
-union LeaveGroupResult = LeaveGroupResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union LeaveGroupResult = LeaveGroupResponse | GroupOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar LegacyProfileId
 
@@ -3265,6 +3284,10 @@ type LoggedInPostOperations {
   hasReposted: BooleanValue!
   canEdit: PostOperationValidationOutcome!
   canDelete: PostOperationValidationOutcome!
+}
+
+type LoggedInUsernameNamespaceOperations {
+  canCreate: NamespaceOperationValidationOutcome!
 }
 
 type LoggedInUsernameOperations {
@@ -4256,6 +4279,13 @@ type Mutation {
   updateNamespaceRules(request: UpdateNamespaceRulesRequest!): UpdateNamespaceRulesResult!
 
   """
+  Update reserved usernames
+  
+  You MUST be a namespace owner or admin to use this mutation
+  """
+  updateReservedUsernames(request: UpdateReservedUsernamesRequest!): UpdateReservedUsernamesResult!
+
+  """
   Add admins to a graph/app/sponsor/feed/username/group.
   
   You MUST be authenticated as Account Owner to use this mutation.
@@ -4463,6 +4493,17 @@ input NamespaceRequest {
   txHash: TxHash
 }
 
+input NamespaceReservedUsernamesRequest {
+  """The namespace to get reserved usernames for"""
+  namespace: EvmAddress!
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
 type NamespaceRule {
   id: RuleId!
   type: NamespaceRuleType!
@@ -4474,6 +4515,7 @@ input NamespaceRuleConfig {
   tokenGatedRule: TokenGatedNamespaceRuleConfig
   usernamePricePerLengthRule: UsernamePricePerLengthNamespaceRuleConfig
   usernameLengthRule: UsernameLengthNamespaceRuleConfig
+  usernameReservedRule: UsernameReservedNamespaceRuleConfig
   unknownRule: UnknownNamespaceRuleConfig
 }
 
@@ -4488,12 +4530,14 @@ enum NamespaceRuleType {
   TOKEN_GATED
   PRICE_PER_LENGTH
   USERNAME_LENGTH
+  USERNAME_RESERVED
   UNKNOWN
 }
 
 enum NamespaceRuleUnsatisfiedReason {
   TOKEN_GATED_NOT_A_TOKEN_HOLDER
   USERNAME_LENGTH_NOT_WITHIN_RANGE
+  USERNAME_RESERVED
   USERNAME_PRICE_PER_LENGTH_NOT_ENOUGH_BALANCE
 }
 
@@ -4748,6 +4792,11 @@ type PaginatedGroupMembershipRequestsResult {
 type PaginatedGroupsResult {
   """The groups"""
   items: [Group!]!
+  pageInfo: PaginatedResultInfo!
+}
+
+type PaginatedNamespaceReservedUsernamesResult {
+  items: [UsernameReserved!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -5140,7 +5189,7 @@ type PostResponse {
   hash: TxHash!
 }
 
-union PostResult = PostResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union PostResult = PostResponse | PostOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type PostRule {
   id: RuleId!
@@ -5449,6 +5498,9 @@ type Query {
   """Get the namespaces."""
   namespaces(request: NamespacesRequest!): NamespacesResult!
 
+  """Get the banned accounts of a group"""
+  namespaceReservedUsernames(request: NamespaceReservedUsernamesRequest!): PaginatedNamespaceReservedUsernamesResult!
+
   """Get paginated Sponsorship limits Exclusion list."""
   sponsorshipLimitsExclusions(request: SponsorshipLimitExclusionsRequest!): SponsorshipLimitsExclusionsResult!
 
@@ -5591,7 +5643,7 @@ type RemoveGroupMemberResponse {
   hash: TxHash!
 }
 
-union RemoveGroupMemberResult = RemoveGroupMemberResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union RemoveGroupMemberResult = RemoveGroupMemberResponse | GroupOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 union RemoveSignlessResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
@@ -6561,6 +6613,9 @@ enum TransactionOperation {
   USERNAME_RULE_RECONFIGURED
   USERNAME_RULE_SELECTOR_ENABLED
   USERNAME_RULE_SELECTOR_DISABLED
+  USERNAME_RESERVED
+  USERNAME_RELEASED
+  USERNAME_RESERVED_CREATED
   SPONSORSHIP_FACTORY_DEPLOYMENT
   SPONSORSHIP_ACCESS_CONTROL_ADDED
   SPONSORSHIP_ACCESS_CONTROL_UPDATED
@@ -6635,7 +6690,7 @@ type UnassignUsernameResponse {
   hash: TxHash!
 }
 
-union UnassignUsernameToAccountResult = UnassignUsernameResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union UnassignUsernameToAccountResult = UnassignUsernameResponse | NamespaceOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input UnbanGroupAccountRequest {
   """The group you want to unban member on."""
@@ -6699,7 +6754,7 @@ type UnfollowResponse {
   hash: TxHash!
 }
 
-union UnfollowResult = UnfollowResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union UnfollowResult = UnfollowResponse | GraphOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input UnhideManagedAccountRequest {
   """The account to unhide."""
@@ -6879,6 +6934,17 @@ type UpdatePostRulesResponse {
 
 union UpdatePostRulesResult = UpdatePostRulesResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
+input UpdateReservedUsernamesRequest {
+  """The namespace to update reserved usernames for"""
+  namespace: EvmAddress!
+
+  """Usernames to reserve"""
+  toReserve: [String!]! = []
+  toRelease: [String!]! = []
+}
+
+union UpdateReservedUsernamesResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
 input UpdateSponsorshipExclusionListRequest {
   """The sponsorship to update"""
   sponsorship: EvmAddress!
@@ -6972,6 +7038,7 @@ type UsernameNamespace {
   owner: EvmAddress!
   stats: UsernameNamespaceStats!
   rules: NamespaceRules!
+  operations: LoggedInUsernameNamespaceOperations
 }
 
 type UsernameNamespaceMetadata {
@@ -7004,6 +7071,16 @@ input UsernameRequest {
   username: UsernameInput
 }
 
+type UsernameReserved {
+  ruleId: RuleId!
+  namespace: EvmAddress!
+  localName: String!
+}
+
+input UsernameReservedNamespaceRuleConfig {
+  reserved: [String!]
+}
+
 input UsernameSearchInput {
   """
   The local name to search for
@@ -7015,6 +7092,10 @@ input UsernameSearchInput {
   The namespaces to search for local name in. Defaults to global namespace
   """
   namespaces: [EvmAddress!]! = ["0x9e8768B0d2fA8Cd1fbA8F2187Ddf2D81Cfd4CaeB"]
+}
+
+type UsernameTaken {
+  ownedBy: EvmAddress!
 }
 
 scalar UsernameValue
