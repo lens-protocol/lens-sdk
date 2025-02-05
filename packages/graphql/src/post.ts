@@ -388,3 +388,45 @@ export const PostEditsQuery = graphql(
   [PostEditFragment, PaginatedResultInfoFragment],
 );
 export type PostEditsRequest = RequestOf<typeof PostEditsQuery>;
+
+const UpdatePostRulesResponseFragment = graphql(
+  `fragment UpdatePostRulesResponse on UpdatePostRulesResponse {
+    __typename
+    hash
+  }`,
+);
+export type UpdatePostRulesResponse = FragmentOf<typeof UpdatePostRulesResponseFragment>;
+
+const UpdatePostRulesResultFragment = graphql(
+  `fragment UpdatePostRulesResult on UpdatePostRulesResult {
+    ...on UpdatePostRulesResponse {
+      ...UpdatePostRulesResponse
+    }
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    UpdatePostRulesResponseFragment,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type UpdatePostRulesResult = FragmentOf<typeof UpdatePostRulesResultFragment>;
+
+export const UpdatePostRulesMutation = graphql(
+  `mutation UpdatePostRules($request: UpdatePostRulesRequest!) {
+    value: updatePostRules(request: $request) {
+      ...UpdatePostRulesResult
+    }
+  }`,
+  [UpdatePostRulesResultFragment],
+);
+export type UpdatePostRulesRequest = RequestOf<typeof UpdatePostRulesMutation>;
