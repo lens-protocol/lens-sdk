@@ -1,5 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
 import {
+  NamespaceOperationValidationFailedFragment,
   PaginatedResultInfoFragment,
   SelfFundedTransactionRequestFragment,
   SponsoredTransactionRequestFragment,
@@ -27,15 +28,19 @@ const CreateUsernameResultFragment = graphql(
     ...on SelfFundedTransactionRequest {
       ...SelfFundedTransactionRequest
     }
+    ...on NamespaceOperationValidationFailed {
+      ...NamespaceOperationValidationFailed
+    }
     ...on TransactionWillFail {
       ...TransactionWillFail
     }
   }`,
   [
     CreateUsernameResponseFragment,
-    SelfFundedTransactionRequestFragment,
-    TransactionWillFailFragment,
     SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    NamespaceOperationValidationFailedFragment,
+    TransactionWillFailFragment,
   ],
 );
 export type CreateUsernameResult = FragmentOf<typeof CreateUsernameResultFragment>;
@@ -69,15 +74,19 @@ const AssignUsernameToAccountResultFragment = graphql(
     ...on SelfFundedTransactionRequest {
       ...SelfFundedTransactionRequest
     }
+    ...on NamespaceOperationValidationFailed {
+      ...NamespaceOperationValidationFailed
+    }
     ...on TransactionWillFail {
       ...TransactionWillFail
     }
   }`,
   [
+    AssignUsernameResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
+    NamespaceOperationValidationFailedFragment,
     TransactionWillFailFragment,
-    AssignUsernameResponseFragment,
   ],
 );
 export type AssignUsernameToAccountResult = FragmentOf<
@@ -113,15 +122,19 @@ const UnassignUsernameToAccountResultFragment = graphql(
     ...on SelfFundedTransactionRequest {
       ...SelfFundedTransactionRequest
     }
+    ...on NamespaceOperationValidationFailed {
+      ...NamespaceOperationValidationFailed
+    }
     ...on TransactionWillFail {
       ...TransactionWillFail
     }
   }`,
   [
+    UnassignUsernameResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
+    NamespaceOperationValidationFailedFragment,
     TransactionWillFailFragment,
-    UnassignUsernameResponseFragment,
   ],
 );
 export type UnassignUsernameToAccountResult = FragmentOf<

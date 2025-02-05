@@ -474,3 +474,95 @@ export const GroupFragment = graphql(
   [GroupMetadataFragment, GroupRulesFragment, LoggedInGroupOperationsFragment],
 );
 export type Group = FragmentOf<typeof GroupFragment>;
+
+export const NamespaceUnsatisfiedRuleFragment = graphql(
+  `fragment NamespaceUnsatisfiedRule on NamespaceUnsatisfiedRule {
+    __typename
+    rule
+    reason
+    message
+    extraData {
+      ...ExtraData
+    }
+  }`,
+  [ExtraDataFragment],
+);
+export type NamespaceUnsatisfiedRule = FragmentOf<typeof NamespaceUnsatisfiedRuleFragment>;
+
+export const NamespaceOperationValidationPassedFragment = graphql(
+  `fragment NamespaceOperationValidationPassed on NamespaceOperationValidationPassed {
+    __typename
+  }`,
+);
+export type NamespaceOperationValidationPassed = FragmentOf<
+  typeof NamespaceOperationValidationPassedFragment
+>;
+
+export const NamespaceOperationValidationUnknownFragment = graphql(
+  `fragment NamespaceOperationValidationUnknown on NamespaceOperationValidationUnknown {
+    __typename
+    extraChecksRequired {
+      ...NamespaceRule
+    }
+  }`,
+  [NamespaceRuleFragment],
+);
+export type NamespaceOperationValidationUnknown = FragmentOf<
+  typeof NamespaceOperationValidationUnknownFragment
+>;
+
+export const NamespaceUnsatisfiedRulesFragment = graphql(
+  `fragment NamespaceUnsatisfiedRules on NamespaceUnsatisfiedRules {
+    required {
+      ...NamespaceUnsatisfiedRule
+    }
+    anyOf {
+      ...NamespaceUnsatisfiedRule
+    }
+  }`,
+  [NamespaceUnsatisfiedRuleFragment],
+);
+export type NamespaceUnsatisfiedRules = FragmentOf<typeof NamespaceUnsatisfiedRulesFragment>;
+
+export const NamespaceOperationValidationFailedFragment = graphql(
+  `fragment NamespaceOperationValidationFailed on NamespaceOperationValidationFailed {
+    __typename
+    unsatisfiedRules {
+      required {
+        ...NamespaceUnsatisfiedRules
+      }
+      anyOf {
+        ...NamespaceUnsatisfiedRules
+      }
+    }
+    reason
+  }`,
+  [NamespaceUnsatisfiedRulesFragment],
+);
+export type NamespaceOperationValidationFailed = FragmentOf<
+  typeof NamespaceOperationValidationFailedFragment
+>;
+
+export const NamespaceOperationValidationOutcomeFragment = graphql(
+  `fragment NamespaceOperationValidationOutcome on NamespaceOperationValidationOutcome {
+    __typename
+    ... on NamespaceOperationValidationPassed {
+      ...NamespaceOperationValidationPassed
+    }
+    ... on NamespaceOperationValidationUnknown {
+      ...NamespaceOperationValidationUnknown
+    }
+    ... on NamespaceOperationValidationFailed {
+      ...NamespaceOperationValidationFailed
+    }
+  }`,
+  [
+    NamespaceOperationValidationPassedFragment,
+    NamespaceOperationValidationUnknownFragment,
+    NamespaceOperationValidationFailedFragment,
+  ],
+);
+export type NamespaceOperationValidationOutcome =
+  | NamespaceOperationValidationPassed
+  | NamespaceOperationValidationUnknown
+  | NamespaceOperationValidationFailed;
