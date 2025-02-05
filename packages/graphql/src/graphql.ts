@@ -8,6 +8,7 @@ import type {
   DateTime,
   EncodedTransaction,
   EvmAddress,
+  FixedBytes32,
   ID,
   IdToken,
   LegacyProfileId,
@@ -135,6 +136,7 @@ export const graphql = initGraphQLTada<{
     FeedRuleType: FeedRuleType;
     FeedRuleUnsatisfiedReason: FeedRuleUnsatisfiedReason;
     FeedsOrderBy: FeedsOrderBy;
+    Fixed32Bytes: FixedBytes32;
     Float: number;
     FollowersOrderBy: FollowersOrderBy;
     FollowersYouKnowOrderBy: FollowersYouKnowOrderBy;
@@ -142,8 +144,8 @@ export const graphql = initGraphQLTada<{
     ForYouSource: ForYouSource;
     GraphRuleExecuteOn: GraphRuleExecuteOn;
     GraphRuleType: GraphRuleType;
-    GraphsOrderBy: GraphsOrderBy;
     GraphRuleUnsatisfiedReason: GraphRuleUnsatisfiedReason;
+    GraphsOrderBy: GraphsOrderBy;
     GroupMembersOrderBy: GroupMembersOrderBy;
     GroupRuleExecuteOn: GroupRuleExecuteOn;
     GroupRuleType: GroupRuleType;

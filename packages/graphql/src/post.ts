@@ -2,9 +2,9 @@ import type { FragmentOf } from 'gql.tada';
 import {
   AccountFragment,
   AccountPostReactionFragment,
+  ActionMetadataFragment,
   AnyPostFragment,
   PaginatedResultInfoFragment,
-  PostActionFragment,
   PostMetadataFragment,
   SelfFundedTransactionRequestFragment,
   SponsoredTransactionRequestFragment,
@@ -99,20 +99,70 @@ export const PostsQuery = graphql(
 );
 export type PostsRequest = RequestOf<typeof PostsQuery>;
 
-export const PostActionsQuery = graphql(
-  `query PostActions($request: PostActionsRequest!) {
-    value: postActions(request: $request) {
+export const SimpleCollectActionContractFragment = graphql(
+  `fragment SimpleCollectActionContract on SimpleCollectActionContract {
+    __typename
+    address
+  }`,
+  [],
+);
+export type SimpleCollectActionContract = FragmentOf<typeof SimpleCollectActionContractFragment>;
+
+export const TippingPostActionContractFragment = graphql(
+  `fragment TippingPostActionContract on TippingPostActionContract {
+    __typename
+    address
+  }`,
+  [],
+);
+export type TippingPostActionContract = FragmentOf<typeof TippingPostActionContractFragment>;
+
+export const UnknownPostActionContractFragment = graphql(
+  `fragment UnknownPostActionContract on UnknownPostActionContract {
+    __typename
+    address
+    metadata {
+      ...ActionMetadata
+    }
+  }`,
+  [ActionMetadataFragment],
+);
+export type UnknownPostActionContract = FragmentOf<typeof UnknownPostActionContractFragment>;
+
+export const PostActionContractFragment = graphql(
+  `fragment PostActionContract on PostActionContract {
+    ... on SimpleCollectActionContract {
+      ...SimpleCollectActionContract
+    }
+    ... on TippingPostActionContract {
+      ...TippingPostActionContract
+    }
+    ... on UnknownPostActionContract {
+      ...UnknownPostActionContract
+    }
+  }`,
+  [
+    SimpleCollectActionContractFragment,
+    TippingPostActionContractFragment,
+    UnknownPostActionContractFragment,
+  ],
+);
+export type PostActionContract = FragmentOf<typeof PostActionContractFragment>;
+
+export const PostActionContractsQuery = graphql(
+  `query PostActionContracts($request: PostActionContractsRequest!) {
+    value: postActionContracts(request: $request) {
       items {
-        ...PostAction
+        ...PostActionContract
       },
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }`,
-  [PostActionFragment, PaginatedResultInfoFragment],
+  [PostActionContractFragment, PaginatedResultInfoFragment],
 );
-export type PostActionsRequest = RequestOf<typeof PostActionsQuery>;
+export type PostActionContractsRequest = RequestOf<typeof PostActionContractsQuery>;
 
 export const PostReactionsQuery = graphql(
   `query PostReactions($request: PostReactionsRequest!) {

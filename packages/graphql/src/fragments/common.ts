@@ -241,10 +241,47 @@ export type ExtraData =
   | DictionaryKeyValue
   | ArrayKeyValue;
 
+export const KeyValuePairFragment = graphql(
+  `fragment KeyValuePair on KeyValuePair {
+    __typename
+    key
+    name
+    type
+  }`,
+);
+export type KeyValuePair = FragmentOf<typeof KeyValuePairFragment>;
+
+export const ActionMetadataFragment = graphql(
+  `fragment ActionMetadata on ActionMetadata {
+    __typename
+    id
+    name
+    title
+    source
+    authors
+    configureParams {
+      ...KeyValuePair
+    }
+    description
+    executeParams {
+      ...KeyValuePair
+    }
+    setDisabledParams {
+      ...KeyValuePair
+    }
+  }`,
+  [KeyValuePairFragment],
+);
+export type ActionMetadata = FragmentOf<typeof ActionMetadataFragment>;
+
 export const UnknownActionFragment = graphql(
   `fragment UnknownAction on UnknownAction {
     __typename
-    actionAddress
+    address
+    metadata {
+      ...ActionMetadata
+    }
   }`,
+  [ActionMetadataFragment],
 );
 export type UnknownAction = FragmentOf<typeof UnknownActionFragment>;

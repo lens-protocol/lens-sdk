@@ -517,7 +517,47 @@ input AccountsRequest {
 input ActionFilter {
   address: EvmAddress
   actionType: PostActionType
-  category: PostActionCategoryType
+}
+
+type ActionMetadata {
+  """List of authors email addresses."""
+  authors: [String!]!
+
+  """
+  An optional list of `ContractKeyValuePairDescriptor` that describes the `params` argument
+  of the `configure` function.
+  """
+  configureParams: [KeyValuePair!]!
+
+  """Markdown formatted description of the Action."""
+  description: String!
+
+  """
+  A list of `ContractKeyValuePairDescriptor` that describes the `params` argument of the
+  `execute` function.
+  """
+  executeParams: [KeyValuePair!]!
+
+  """
+  A unique identifier that in storages like IPFS ensures the uniqueness of the metadata URI.
+  Use a UUID if unsure.
+  """
+  id: String!
+
+  """A short name for the Action."""
+  name: String!
+
+  """
+  An optional list of `ContractKeyValuePairDescriptor` that describes the `params` argument
+  of the `setDisabledParams` function.
+  """
+  setDisabledParams: [KeyValuePair!]!
+
+  """The link to the Action source code. Typically a GitHub repository."""
+  source: URI!
+
+  """The human-friendly title for the Action."""
+  title: String!
 }
 
 input AddAccountManagerRequest {
@@ -2364,8 +2404,8 @@ type FeedRules {
 }
 
 input FeedRulesConfigInput {
-  required: [FeedRuleConfig!]!
-  anyOf: [FeedRuleConfig!]!
+  required: [FeedRuleConfig!]
+  anyOf: [FeedRuleConfig!]
 }
 
 input FeedRulesProcessingParams {
@@ -2423,6 +2463,8 @@ type FinishedTransactionStatus {
   blockTimestamp: DateTime!
   summary: [SubOperationStatus!]!
 }
+
+scalar FixedBytes32
 
 type FollowNotification {
   id: GeneratedNotificationId!
@@ -2690,8 +2732,8 @@ type GraphRules {
 }
 
 input GraphRulesConfigInput {
-  required: [GraphRuleConfig!]!
-  anyOf: [GraphRuleConfig!]!
+  required: [GraphRuleConfig!]
+  anyOf: [GraphRuleConfig!]
 }
 
 input GraphRulesProcessingParams {
@@ -2973,8 +3015,8 @@ type GroupRules {
 }
 
 input GroupRulesConfigInput {
-  required: [GroupRuleConfig!]!
-  anyOf: [GroupRuleConfig!]!
+  required: [GroupRuleConfig!]
+  anyOf: [GroupRuleConfig!]
 }
 
 input GroupRulesProcessingParams {
@@ -3118,6 +3160,17 @@ type JoinGroupResponse {
 }
 
 union JoinGroupResult = JoinGroupResponse | GroupOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+type KeyValuePair {
+  """A unique 32 bytes long hexadecimal string key."""
+  key: FixedBytes32!
+
+  """The human-readable name of the parameter."""
+  name: String!
+
+  """The human-readable ABI description of the parameter."""
+  type: String!
+}
 
 input LastLoggedInAccountRequest {
   """The address to get the last logged in account for."""
@@ -4559,8 +4612,8 @@ type NamespaceRules {
 }
 
 input NamespaceRulesConfigInput {
-  required: [NamespaceRuleConfig!]!
-  anyOf: [NamespaceRuleConfig!]!
+  required: [NamespaceRuleConfig!]
+  anyOf: [NamespaceRuleConfig!]
 }
 
 input NamespaceRulesProcessingParams {
@@ -4812,8 +4865,8 @@ type PaginatedNotificationResult {
   pageInfo: PaginatedResultInfo!
 }
 
-type PaginatedPostActions {
-  items: [PostAction!]!
+type PaginatedPostActionContracts {
+  items: [PostActionContract!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -4942,13 +4995,18 @@ input PostAccountPair {
 
 union PostAction = SimpleCollectAction | TippingPostAction | UnknownAction
 
-enum PostActionCategoryType {
-  COLLECT
-}
-
 input PostActionConfig @oneOf {
   simpleCollect: SimpleCollectActionConfig
   unknown: UnknownActionConfig
+}
+
+union PostActionContract = SimpleCollectActionContract | TippingPostActionContract | UnknownPostActionContract
+
+input PostActionContractsRequest {
+  includeUnknown: Boolean! = false
+  onlyCollectActions: Boolean! = false
+  pageSize: PageSize! = FIFTY
+  cursor: Cursor
 }
 
 input PostActionExecute @oneOf {
@@ -4967,13 +5025,6 @@ enum PostActionType {
   SIMPLE_COLLECT
   TIPPING
   UNKNOWN
-}
-
-input PostActionsRequest {
-  includeUnknown: Boolean! = false
-  onlyCollectActions: Boolean! = false
-  pageSize: PageSize! = FIFTY
-  cursor: Cursor
 }
 
 input PostBookmarksFilter {
@@ -5239,8 +5290,8 @@ type PostRules {
 }
 
 input PostRulesConfigInput {
-  required: [PostRuleConfig!]!
-  anyOf: [PostRuleConfig!]!
+  required: [PostRuleConfig!]
+  anyOf: [PostRuleConfig!]
 }
 
 input PostRulesProcessingParams {
@@ -5443,7 +5494,9 @@ type Query {
   """Get the reactions added to a post."""
   postReactions(request: PostReactionsRequest!): PaginatedPostReactionsResult!
   postReactionStatus(request: PostReactionStatusRequest!): [PostReactionStatus!]!
-  postActions(request: PostActionsRequest!): PaginatedPostActions!
+
+  """Lists all available Post Action contracts."""
+  postActionContracts(request: PostActionContractsRequest!): PaginatedPostActionContracts!
 
   """Get accounts who referenced a post"""
   whoReferencedPost(request: WhoReferencedPostRequest!): PaginatedAccountsResult!
@@ -5887,6 +5940,10 @@ input SimpleCollectActionConfig {
   followerOnGraph: EvmAddress
   endsAt: DateTime
   isImmutable: Boolean! = true
+}
+
+type SimpleCollectActionContract {
+  address: EvmAddress!
 }
 
 input SimplePaymentFeedRuleConfig {
@@ -6428,6 +6485,10 @@ type TippingPostAction {
   address: EvmAddress!
 }
 
+type TippingPostActionContract {
+  address: EvmAddress!
+}
+
 input TokenAmountInput {
   standard: TokenStandard!
 
@@ -6786,7 +6847,8 @@ input UnknownAccountRuleConfig {
 }
 
 type UnknownAction {
-  actionAddress: EvmAddress!
+  address: EvmAddress!
+  metadata: ActionMetadata
 }
 
 input UnknownActionConfig {
@@ -6841,6 +6903,11 @@ input UnknownNamespaceRuleConfig {
   params: [ExtraDataInput!]
 }
 
+type UnknownPostActionContract {
+  address: EvmAddress!
+  metadata: ActionMetadata
+}
+
 input UnknownPostRuleConfig {
   """The rule contract address."""
   address: EvmAddress!
@@ -6884,7 +6951,7 @@ union UpdateAccountManagerResult = SponsoredTransactionRequest | SelfFundedTrans
 input UpdateFeedRulesRequest {
   """The feed to update rules for"""
   feed: EvmAddress! = "0xAE7DE4A71b95E63730568957Ca2cc62d3d52fad9"
-  toAdd: FeedRulesConfigInput! = {required: [], anyOf: []}
+  toAdd: FeedRulesConfigInput! = {required: null, anyOf: null}
   toRemove: [RuleId!]! = []
 }
 
@@ -6897,7 +6964,7 @@ union UpdateFeedRulesResult = UpdateFeedRulesResponse | SponsoredTransactionRequ
 input UpdateGraphRulesRequest {
   """The graph to update rules for"""
   graph: EvmAddress! = "0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"
-  toAdd: GraphRulesConfigInput! = {required: [], anyOf: []}
+  toAdd: GraphRulesConfigInput! = {required: null, anyOf: null}
   toRemove: [RuleId!]! = []
 }
 
@@ -6910,7 +6977,7 @@ union UpdateGraphRulesResult = UpdateGraphRulesResponse | SponsoredTransactionRe
 input UpdateGroupRulesRequest {
   """The group to update rules for"""
   group: EvmAddress!
-  toAdd: GroupRulesConfigInput! = {required: [], anyOf: []}
+  toAdd: GroupRulesConfigInput! = {required: null, anyOf: null}
   toRemove: [RuleId!]! = []
 }
 
@@ -6923,7 +6990,7 @@ union UpdateGroupRulesResult = UpdateGroupRulesResponse | SponsoredTransactionRe
 input UpdateNamespaceRulesRequest {
   """The namespace to update rules for"""
   namespace: EvmAddress!
-  toAdd: NamespaceRulesConfigInput! = {required: [], anyOf: []}
+  toAdd: NamespaceRulesConfigInput! = {required: null, anyOf: null}
   toRemove: [RuleId!]! = []
 }
 
@@ -6936,7 +7003,7 @@ union UpdateNamespaceRulesResult = UpdateNamespaceRulesResponse | SponsoredTrans
 input UpdatePostRulesRequest {
   """The post to update rules for."""
   post: PostId!
-  toAdd: PostRulesConfigInput! = {required: [], anyOf: []}
+  toAdd: PostRulesConfigInput! = {required: null, anyOf: null}
   toRemove: [RuleId!]! = []
 }
 
