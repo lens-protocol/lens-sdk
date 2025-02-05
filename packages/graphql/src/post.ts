@@ -6,6 +6,7 @@ import {
   AnyPostFragment,
   PaginatedResultInfoFragment,
   PostMetadataFragment,
+  PostOperationValidationFailedFragment,
   SelfFundedTransactionRequestFragment,
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
@@ -31,6 +32,9 @@ const PostResultFragment = graphql(
     ...on SelfFundedTransactionRequest {
       ...SelfFundedTransactionRequest
     }
+    ... on PostOperationValidationFailed {
+      ...PostOperationValidationFailed
+    }
     ...on TransactionWillFail {
       ...TransactionWillFail
     }
@@ -39,6 +43,7 @@ const PostResultFragment = graphql(
     PostResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
+    PostOperationValidationFailedFragment,
     TransactionWillFailFragment,
   ],
 );
