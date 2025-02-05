@@ -266,11 +266,14 @@ export function reportPost(
  * ```ts
  * const result = await updatePostRules(sessionClient, {
  *   post: postId('42...'),
- *   toAdd: [{
- *     followersOnlyRule: {
- *       graph: evmAddress('0x1234...'),
- *     }
- *   }]
+ *   toAdd: {
+ *     anyOf: [{
+ *       followersOnlyRule: {
+ *         graph: evmAddress('0x1234...'),
+ *       }
+ *     }]
+ *     required: [],
+ *   }
  * });
  * ```
  *

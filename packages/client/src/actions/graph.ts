@@ -7,12 +7,15 @@ import type {
   Paginated,
   SetGraphMetadataRequest,
   SetGraphMetadataResult,
+  UpdateGraphRulesRequest,
+  UpdateGraphRulesResult,
 } from '@lens-protocol/graphql';
 import {
   CreateGraphMutation,
   GraphQuery,
   GraphsQuery,
   SetGraphMetadataMutation,
+  UpdateGraphRulesMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
@@ -100,4 +103,34 @@ export function fetchGraphs(
   request: GraphsRequest,
 ): ResultAsync<Paginated<Graph>, UnexpectedError> {
   return client.query(GraphsQuery, { request });
+}
+
+/**
+ * Update graph rules.
+ *
+ * ```ts
+ * const result = await updatePostRules(sessionClient, {
+ *   graph: evmAddress('0x1234...'),
+ *   toAdd: {
+ *     required: [{
+ *       tokenGatedRule: {
+ *         standard: 'ERC20',
+ *         currency: evmAddress('0x5678...'),
+ *         value: 1.5, // Token value in its main unit
+ *       }
+ *     }],
+ *     anyOf: [],
+ *   }
+ * });
+ * ```
+ *
+ * @param client - The session client.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function updateGraphRules(
+  client: SessionClient,
+  request: UpdateGraphRulesRequest,
+): ResultAsync<UpdateGraphRulesResult, UnauthenticatedError | UnexpectedError> {
+  return client.mutation(UpdateGraphRulesMutation, { request });
 }
