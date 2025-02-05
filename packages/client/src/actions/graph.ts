@@ -109,7 +109,7 @@ export function fetchGraphs(
  * Update graph rules.
  *
  * ```ts
- * const result = await updatePostRules(sessionClient, {
+ * const result = await updateGraphRules(sessionClient, {
  *   graph: evmAddress('0x1234...'),
  *   toAdd: {
  *     required: [{
