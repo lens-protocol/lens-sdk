@@ -1,5 +1,4 @@
 import type { FragmentOf } from 'gql.tada';
-import { S } from '../../client/dist/index-D96qE_SL';
 import {
   FeedFragment,
   PaginatedResultInfoFragment,

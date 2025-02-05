@@ -244,7 +244,7 @@ export type ExtraData =
 export const UnknownActionFragment = graphql(
   `fragment UnknownAction on UnknownAction {
     __typename
-    address
+    actionAddress
   }`,
 );
 export type UnknownAction = FragmentOf<typeof UnknownActionFragment>;

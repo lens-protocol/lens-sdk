@@ -22,27 +22,23 @@ import {
 } from './metadata';
 import { AppFragment, type FeedRule, FeedRuleFragment } from './primitives';
 
-export const SimpleCollectActionSettingsFragment = graphql(
+export const SimpleCollectActionFragment = graphql(
   `fragment SimpleCollectAction on SimpleCollectAction {
     __typename
     address
   }`,
   [],
 );
-export type SimpleCollectActionSettingsFragment = FragmentOf<
-  typeof SimpleCollectActionSettingsFragment
->;
+export type SimpleCollectAction = FragmentOf<typeof SimpleCollectActionFragment>;
 
-export const TippingPostActionSettingsFragment = graphql(
+export const TippingPostActionFragment = graphql(
   `fragment TippingPostAction on TippingPostAction {
     __typename
     address
   }`,
   [],
 );
-export type TippingPostActionSettingsFragment = FragmentOf<
-  typeof TippingPostActionSettingsFragment
->;
+export type TippingPostAction = FragmentOf<typeof TippingPostActionFragment>;
 
 export const PostActionFragment = graphql(
   `fragment PostAction on PostAction {
@@ -56,7 +52,7 @@ export const PostActionFragment = graphql(
       ...UnknownAction
     }
   }`,
-  [SimpleCollectActionSettingsFragment, TippingPostActionSettingsFragment, UnknownActionFragment],
+  [SimpleCollectActionFragment, TippingPostActionFragment, UnknownActionFragment],
 );
 export type PostAction = FragmentOf<typeof PostActionFragment>;
 

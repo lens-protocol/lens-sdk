@@ -34,13 +34,13 @@ type Account {
 
 union AccountAction = TippingAccountAction | UnknownAction
 
-input AccountActionConfigInput @oneOf {
-  unknown: UnknownActionConfigInput
+input AccountActionConfig @oneOf {
+  unknown: UnknownActionConfig
 }
 
-input AccountActionExecuteInput @oneOf {
+input AccountActionExecute @oneOf {
   tipping: AmountInput
-  unknown: UnknownActionExecuteInput
+  unknown: UnknownActionExecute
 }
 
 enum AccountActionType {
@@ -233,7 +233,7 @@ input AccountManagerChallengeRequest {
   playground app. This is to make it easier if you forget to set it. This may change in the
   future.
   """
-  app: EvmAddress! = "0x75eE97D12c168DD0d500Af5E2ada0Bd5823eD995"
+  app: EvmAddress! = "0x6F6AC764c218C57a509De5E05013EEdA8c9264E0"
 
   """The address of the Lens Account."""
   account: EvmAddress!
@@ -354,7 +354,7 @@ input AccountOwnerChallengeRequest {
   playground app. This is to make it easier if you forget to set it. This may change in the
   future.
   """
-  app: EvmAddress! = "0x75eE97D12c168DD0d500Af5E2ada0Bd5823eD995"
+  app: EvmAddress! = "0x6F6AC764c218C57a509De5E05013EEdA8c9264E0"
 
   """The address of the Lens Account."""
   account: EvmAddress!
@@ -399,8 +399,8 @@ input AccountRequest {
 }
 
 input AccountRulesConfigInput {
-  required: [AccountFollowRuleConfig!]!
-  anyOf: [AccountFollowRuleConfig!]!
+  required: [AccountFollowRuleConfig!]
+  anyOf: [AccountFollowRuleConfig!]
 }
 
 type AccountStats {
@@ -416,10 +416,10 @@ input AccountStatsRequest {
   account: EvmAddress!
 
   """The feeds to get stats for."""
-  forFeeds: [EvmAddress!]! = ["0xa0114744c7f82FF7c9BD88033376573E2CA47eC9"]
+  forFeeds: [EvmAddress!]! = ["0xAE7DE4A71b95E63730568957Ca2cc62d3d52fad9"]
 
   """The graphs to get stats for."""
-  forGraphs: [EvmAddress!]! = ["0xeFC7C4b9Ad9665e756AaA41A828CD78917aCAe9e"]
+  forGraphs: [EvmAddress!]! = ["0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"]
 }
 
 input AccountUnblockedNotificationAttributes {
@@ -446,7 +446,7 @@ input AccountUsernameCreatedNotificationAttributes {
 
 input AccountUsernameRequest {
   """The namespace to get account assigned username"""
-  namespace: EvmAddress! = "0x9e8768B0d2fA8Cd1fbA8F2187Ddf2D81Cfd4CaeB"
+  namespace: EvmAddress! = "0x0b7Fb953a8f7E0BFd4B075E3121F4489322BC6C2"
 }
 
 input AccountUsernameUnassignedNotificationAttributes {
@@ -1131,7 +1131,7 @@ type CommentNotification {
 
 input ConfigureAccountActionRequest {
   """The action type and configuration."""
-  action: AccountActionConfigInput!
+  action: AccountActionConfig!
 }
 
 type ConfigureAccountActionResponse {
@@ -1144,11 +1144,8 @@ input ConfigurePostActionRequest {
   """The post to configure the action for."""
   post: PostId!
 
-  """The feed that the post is on."""
-  feed: EvmAddress!
-
   """The post action configuration parameters."""
-  params: PostActionConfigInput!
+  params: PostActionConfig!
 }
 
 type ConfigurePostActionResponse {
@@ -1188,16 +1185,16 @@ input CreateAppRequest {
   admins: [EvmAddress!]
 
   """The app graph defaults to use the global graph"""
-  graph: EvmAddress! = "0xeFC7C4b9Ad9665e756AaA41A828CD78917aCAe9e"
+  graph: EvmAddress! = "0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"
 
   """The app feeds defaults to use the global feed"""
-  feeds: [EvmAddress!]! = ["0xa0114744c7f82FF7c9BD88033376573E2CA47eC9"]
+  feeds: [EvmAddress!]! = ["0xAE7DE4A71b95E63730568957Ca2cc62d3d52fad9"]
 
   """The default feed defaults to use the global feed"""
-  defaultFeed: EvmAddress! = "0xa0114744c7f82FF7c9BD88033376573E2CA47eC9"
+  defaultFeed: EvmAddress! = "0xAE7DE4A71b95E63730568957Ca2cc62d3d52fad9"
 
   """The app username leave empty to use the lens username"""
-  namespace: EvmAddress! = "0x9e8768B0d2fA8Cd1fbA8F2187Ddf2D81Cfd4CaeB"
+  namespace: EvmAddress! = "0x0b7Fb953a8f7E0BFd4B075E3121F4489322BC6C2"
 
   """The app groups leave empty if none"""
   groups: [EvmAddress!]
@@ -1249,7 +1246,7 @@ input CreateFollowRequest {
   """
   The graph to follow the account on. If not provided, the global graph is used.
   """
-  graph: EvmAddress! = "0xeFC7C4b9Ad9665e756AaA41A828CD78917aCAe9e"
+  graph: EvmAddress! = "0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"
 
   """
   The data required by any follow rules associated with the account being followed.
@@ -1288,6 +1285,9 @@ input CreateGroupRequest {
 
   """Rules for the group"""
   rules: GroupRulesConfigInput
+
+  """The group feed configuration"""
+  feed: GroupFeedParams
 }
 
 type CreateGroupResponse {
@@ -1302,7 +1302,7 @@ type CreateNamespaceResponse {
 
 input CreatePostRequest {
   """The feed to post to. If not provided, the global feed is used."""
-  feed: EvmAddress! = "0xa0114744c7f82FF7c9BD88033376573E2CA47eC9"
+  feed: EvmAddress! = "0xAE7DE4A71b95E63730568957Ca2cc62d3d52fad9"
 
   """The URI of the post metadata."""
   contentUri: URI!
@@ -1317,7 +1317,7 @@ input CreatePostRequest {
   commentOn: ReferencingPostInput
 
   """The actions to attach to the post."""
-  actions: [PostActionConfigInput!]
+  actions: [PostActionConfig!]
 
   """Rules for the post"""
   rules: PostRulesConfigInput
@@ -1325,7 +1325,7 @@ input CreatePostRequest {
 
 input CreateRepostRequest {
   """The feed to repost to. If not provided, the global feed is used."""
-  feed: EvmAddress! = "0xa0114744c7f82FF7c9BD88033376573E2CA47eC9"
+  feed: EvmAddress! = "0xAE7DE4A71b95E63730568957Ca2cc62d3d52fad9"
 
   """The post to reference."""
   post: PostId!
@@ -1393,7 +1393,7 @@ input CreateUnfollowRequest {
   The graph where the account is followed and should be unfollowed.
   If not provided, the global graph is used.
   """
-  graph: EvmAddress! = "0xeFC7C4b9Ad9665e756AaA41A828CD78917aCAe9e"
+  graph: EvmAddress! = "0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"
 
   """The processing params for the graph rules."""
   graphRulesProcessingParams: [GraphRulesProcessingParams!]
@@ -1716,6 +1716,7 @@ enum EntityType {
   SPONSORSHIP
   ACCOUNT_ACTION
   POST_ACTION
+  RULE
 }
 
 type EventMetadata {
@@ -2217,7 +2218,7 @@ input ExecuteAccountActionRequest {
   targetAccount: EvmAddress!
 
   """The action params."""
-  params: AccountActionExecuteInput!
+  params: AccountActionExecute!
 }
 
 type ExecuteAccountActionResponse {
@@ -2234,7 +2235,7 @@ input ExecutePostActionRequest {
   feed: EvmAddress!
 
   """The action params."""
-  params: PostActionExecuteInput!
+  action: PostActionExecute!
 }
 
 type ExecutePostActionResponse {
@@ -2430,7 +2431,7 @@ type FollowNotification {
 
 input FollowPair {
   """The graph you are checking defaults to global graph."""
-  graph: EvmAddress! = "0xeFC7C4b9Ad9665e756AaA41A828CD78917aCAe9e"
+  graph: EvmAddress! = "0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"
 
   """The follower."""
   follower: EvmAddress!
@@ -2476,7 +2477,7 @@ input FollowersFilter {
 }
 
 input FollowersOnlyPostRuleConfig {
-  graph: EvmAddress! = "0xeFC7C4b9Ad9665e756AaA41A828CD78917aCAe9e"
+  graph: EvmAddress! = "0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"
   repliesRestricted: Boolean! = true
   repostRestricted: Boolean! = true
   quotesRestricted: Boolean! = true
@@ -2740,6 +2741,7 @@ input GraphsRequest {
 type Group {
   address: EvmAddress!
   timestamp: DateTime!
+  feed: EvmAddress
   metadata: GroupMetadata
   owner: EvmAddress!
   operations: LoggedInGroupOperations
@@ -2785,6 +2787,17 @@ input GroupBannedAccountsRequest {
 
   """The cursor."""
   cursor: Cursor
+}
+
+input GroupFeedParams {
+  """The feed metadata uri"""
+  metadataUri: URI
+
+  """
+  Rules for the feed
+  Note: Group feed has GroupGated rule set by default
+  """
+  rules: FeedRulesConfigInput
 }
 
 input GroupGatedFeedRuleConfig {
@@ -4016,7 +4029,7 @@ type Mutation {
   updateAccountManager(request: UpdateAccountManagerRequest!): UpdateAccountManagerResult!
 
   """
-  Update account rules
+  Update account follow rules
   
   You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
@@ -4192,10 +4205,9 @@ type Mutation {
   enablePostAction(request: EnablePostActionRequest!): EnablePostActionResult!
 
   """
-  Execute the given post action for the authenticated post.
+  Execute the given post action.
   
-  You MUST be authenticated as the owner or manager of the account that authored this Post to
-  use this mutation.
+  You MUST be authenticated to use this mutation.
   """
   executePostAction(request: ExecutePostActionRequest!): ExecutePostActionResult!
 
@@ -4680,7 +4692,7 @@ input OnboardingUserChallengeRequest {
   playground app. This is to make it easier if you forget to set it. This may change in the
   future.
   """
-  app: EvmAddress! = "0x75eE97D12c168DD0d500Af5E2ada0Bd5823eD995"
+  app: EvmAddress! = "0x6F6AC764c218C57a509De5E05013EEdA8c9264E0"
 
   """The address of the EOA that needs to create their Lens Account."""
   wallet: EvmAddress!
@@ -4714,11 +4726,6 @@ type PaginatedAccountsBlockedResult {
 
 type PaginatedAccountsResult {
   items: [Account!]!
-  pageInfo: PaginatedResultInfo!
-}
-
-type PaginatedActions {
-  items: [PostAction!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -4802,6 +4809,11 @@ type PaginatedNamespaceReservedUsernamesResult {
 
 type PaginatedNotificationResult {
   items: [Notification!]!
+  pageInfo: PaginatedResultInfo!
+}
+
+type PaginatedPostActions {
+  items: [PostAction!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -4934,15 +4946,15 @@ enum PostActionCategoryType {
   COLLECT
 }
 
-input PostActionConfigInput @oneOf {
-  simpleCollect: SimpleCollectActionConfigInput
-  unknown: UnknownActionConfigInput
+input PostActionConfig @oneOf {
+  simpleCollect: SimpleCollectActionConfig
+  unknown: UnknownActionConfig
 }
 
-input PostActionExecuteInput @oneOf {
+input PostActionExecute @oneOf {
   simpleCollect: AmountInput
   tipping: AmountInput
-  unknown: UnknownActionExecuteInput
+  unknown: UnknownActionExecute
 }
 
 enum PostActionInput {
@@ -4952,9 +4964,9 @@ enum PostActionInput {
 }
 
 enum PostActionType {
-  SIMPLE_COLLECT_ACTION
+  SIMPLE_COLLECT
   TIPPING
-  UNKNOWN_ACTION
+  UNKNOWN
 }
 
 input PostActionsRequest {
@@ -5431,7 +5443,7 @@ type Query {
   """Get the reactions added to a post."""
   postReactions(request: PostReactionsRequest!): PaginatedPostReactionsResult!
   postReactionStatus(request: PostReactionStatusRequest!): [PostReactionStatus!]!
-  postActions(request: PostActionsRequest!): PaginatedActions!
+  postActions(request: PostActionsRequest!): PaginatedPostActions!
 
   """Get accounts who referenced a post"""
   whoReferencedPost(request: WhoReferencedPostRequest!): PaginatedAccountsResult!
@@ -5868,7 +5880,7 @@ type SimpleCollectAction {
   address: EvmAddress!
 }
 
-input SimpleCollectActionConfigInput {
+input SimpleCollectActionConfig {
   amount: AmountInput
   recipient: EvmAddress
   collectLimit: Int
@@ -6535,8 +6547,8 @@ enum TransactionOperation {
   APP_PAYMASTER_ADDED
   APP_PAYMASTER_REMOVED
   APP_TREASURY_SET
-  APP_NAMESPACE_ADDED
-  APP_NAMESPACE_REMOVED
+  AppUsernameAdded
+  AppUsernameRemoved
   FEED_ACCESS_CONTROL_ADDED
   FEED_ACCESS_CONTROL_UPDATED
   FEED_EXTRA_DATA_ADDED
@@ -6680,7 +6692,7 @@ entities without requiring a central allocating authority.
 scalar UUID @specifiedBy(url: "http://tools.ietf.org/html/rfc4122")
 
 input UnassignUsernameFromAccountRequest {
-  namespace: EvmAddress! = "0x9e8768B0d2fA8Cd1fbA8F2187Ddf2D81Cfd4CaeB"
+  namespace: EvmAddress! = "0x0b7Fb953a8f7E0BFd4B075E3121F4489322BC6C2"
 
   """The processing params for the unassign rules."""
   rulesProcessingParams: [NamespaceRulesProcessingParams!]
@@ -6774,10 +6786,10 @@ input UnknownAccountRuleConfig {
 }
 
 type UnknownAction {
-  address: EvmAddress!
+  actionAddress: EvmAddress!
 }
 
-input UnknownActionConfigInput {
+input UnknownActionConfig {
   """The unknown action's contract address"""
   address: EvmAddress!
 
@@ -6785,7 +6797,7 @@ input UnknownActionConfigInput {
   params: [ExtraDataInput!]!
 }
 
-input UnknownActionExecuteInput {
+input UnknownActionExecute {
   """The unknown action's contract address"""
   address: EvmAddress!
 
@@ -6848,8 +6860,8 @@ input UnknownRuleProcessingParams {
 
 input UpdateAccountFollowRulesRequest {
   """The graph to update account follow rules for."""
-  graph: EvmAddress! = "0xeFC7C4b9Ad9665e756AaA41A828CD78917aCAe9e"
-  toAdd: AccountRulesConfigInput! = {required: [], anyOf: []}
+  graph: EvmAddress! = "0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"
+  toAdd: AccountRulesConfigInput! = {required: null, anyOf: null}
   toRemove: [RuleId!]! = []
 }
 
@@ -6871,7 +6883,7 @@ union UpdateAccountManagerResult = SponsoredTransactionRequest | SelfFundedTrans
 
 input UpdateFeedRulesRequest {
   """The feed to update rules for"""
-  feed: EvmAddress! = "0xa0114744c7f82FF7c9BD88033376573E2CA47eC9"
+  feed: EvmAddress! = "0xAE7DE4A71b95E63730568957Ca2cc62d3d52fad9"
   toAdd: FeedRulesConfigInput! = {required: [], anyOf: []}
   toRemove: [RuleId!]! = []
 }
@@ -6884,7 +6896,7 @@ union UpdateFeedRulesResult = UpdateFeedRulesResponse | SponsoredTransactionRequ
 
 input UpdateGraphRulesRequest {
   """The graph to update rules for"""
-  graph: EvmAddress! = "0xeFC7C4b9Ad9665e756AaA41A828CD78917aCAe9e"
+  graph: EvmAddress! = "0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"
   toAdd: GraphRulesConfigInput! = {required: [], anyOf: []}
   toRemove: [RuleId!]! = []
 }
@@ -7019,7 +7031,7 @@ input UsernameInput {
   localName: String!
 
   """The namespace. Defaults to lens namespace"""
-  namespace: EvmAddress! = "0x9e8768B0d2fA8Cd1fbA8F2187Ddf2D81Cfd4CaeB"
+  namespace: EvmAddress! = "0x0b7Fb953a8f7E0BFd4B075E3121F4489322BC6C2"
 }
 
 input UsernameLengthNamespaceRuleConfig {
@@ -7091,7 +7103,7 @@ input UsernameSearchInput {
   """
   The namespaces to search for local name in. Defaults to global namespace
   """
-  namespaces: [EvmAddress!]! = ["0x9e8768B0d2fA8Cd1fbA8F2187Ddf2D81Cfd4CaeB"]
+  namespaces: [EvmAddress!]! = ["0x0b7Fb953a8f7E0BFd4B075E3121F4489322BC6C2"]
 }
 
 type UsernameTaken {
