@@ -142,6 +142,7 @@ export const graphql = initGraphQLTada<{
     FollowersYouKnowOrderBy: FollowersYouKnowOrderBy;
     FollowingOrderBy: FollowingOrderBy;
     ForYouSource: ForYouSource;
+    GeneratedNotificationId: ID;
     GraphRuleExecuteOn: GraphRuleExecuteOn;
     GraphRuleType: GraphRuleType;
     GraphRuleUnsatisfiedReason: GraphRuleUnsatisfiedReason;
