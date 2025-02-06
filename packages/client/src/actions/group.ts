@@ -79,18 +79,6 @@ export function createGroup(
   return client.mutation(CreateGroupMutation, { request });
 }
 
-createGroup({} as any, {
-  rules: {
-    required: [
-      {
-        tokenGatedRule: {
-          token: {},
-        },
-      },
-    ],
-  },
-});
-
 /**
  * Set Group Metadata
  *
