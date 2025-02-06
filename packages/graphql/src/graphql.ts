@@ -50,7 +50,6 @@ import type {
   ForYouSource,
   GraphRuleExecuteOn,
   GraphRuleType,
-  GraphRuleUnsatisfiedReason,
   GraphsOrderBy,
   GroupMembersOrderBy,
   GroupRuleExecuteOn,
@@ -145,7 +144,6 @@ export const graphql = initGraphQLTada<{
     GeneratedNotificationId: ID;
     GraphRuleExecuteOn: GraphRuleExecuteOn;
     GraphRuleType: GraphRuleType;
-    GraphRuleUnsatisfiedReason: GraphRuleUnsatisfiedReason;
     GraphsOrderBy: GraphsOrderBy;
     GroupMembersOrderBy: GroupMembersOrderBy;
     GroupRuleExecuteOn: GroupRuleExecuteOn;

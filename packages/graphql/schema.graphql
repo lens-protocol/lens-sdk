@@ -2486,7 +2486,7 @@ type FollowResponse {
   hash: TxHash!
 }
 
-union FollowResult = FollowResponse | GraphOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union FollowResult = FollowResponse | AccountFollowOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input FollowStatusRequest {
   pairs: [FollowPair!]!
@@ -2681,11 +2681,6 @@ input GraphOneOf @oneOf {
   app: EvmAddress
 }
 
-type GraphOperationValidationFailed {
-  unsatisfiedRules: GraphUnsatisfiedRules
-  reason: String!
-}
-
 input GraphRequest {
   """The graph"""
   graph: EvmAddress
@@ -2720,12 +2715,6 @@ enum GraphRuleType {
   UNKNOWN
 }
 
-enum GraphRuleUnsatisfiedReason {
-  GROUP_GATED_NOT_A_MEMBER
-  TOKEN_GATED_NOT_A_TOKEN_HOLDER
-  ACCOUNT_BLOCKED
-}
-
 type GraphRules {
   required: [GraphRule!]!
   anyOf: [GraphRule!]!
@@ -2738,18 +2727,6 @@ input GraphRulesConfigInput {
 
 input GraphRulesProcessingParams {
   unknownRule: UnknownRuleProcessingParams
-}
-
-type GraphUnsatisfiedRule {
-  rule: EvmAddress!
-  reason: GraphRuleUnsatisfiedReason!
-  message: String!
-  extraData: [ExtraData!]!
-}
-
-type GraphUnsatisfiedRules {
-  required: [GraphUnsatisfiedRule!]!
-  anyOf: [GraphUnsatisfiedRule!]!
 }
 
 input GraphsFilter {
@@ -6827,7 +6804,7 @@ type UnfollowResponse {
   hash: TxHash!
 }
 
-union UnfollowResult = UnfollowResponse | GraphOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union UnfollowResult = UnfollowResponse | AccountFollowOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input UnhideManagedAccountRequest {
   """The account to unhide."""

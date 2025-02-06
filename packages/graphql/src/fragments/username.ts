@@ -1,8 +1,24 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
-import { UsernameNamespaceFragment } from './primitives';
+import { NamespaceOperationValidationOutcomeFragment } from './primitives';
 
-// TODO: Missing operations
+export const LoggedInUsernameOperationsFragment = graphql(
+  `fragment LoggedInUsernameOperations on LoggedInUsernameOperations {
+      __typename
+      canRemove {
+        ...NamespaceOperationValidationOutcome
+      }
+      canAssign {
+        ...NamespaceOperationValidationOutcome
+      }
+      canUnassign {
+        ...NamespaceOperationValidationOutcome
+      }
+  }`,
+  [NamespaceOperationValidationOutcomeFragment],
+);
+export type LoggedInUsernameOperations = FragmentOf<typeof LoggedInUsernameOperationsFragment>;
+
 export const UsernameFragment = graphql(
   `fragment Username on Username {
       __typename
@@ -13,7 +29,10 @@ export const UsernameFragment = graphql(
       ownedBy
       timestamp
       namespace
+      operations {
+        ...LoggedInUsernameOperations
+      }
   }`,
-  [UsernameNamespaceFragment],
+  [LoggedInUsernameOperationsFragment],
 );
 export type Username = FragmentOf<typeof UsernameFragment>;

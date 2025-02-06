@@ -1208,9 +1208,3 @@ export enum GraphRuleExecuteOn {
   Unfollowing = 'UNFOLLOWING',
   ChangingFollowRules = 'CHANGING_FOLLOW_RULES',
 }
-
-export enum GraphRuleUnsatisfiedReason {
-  GroupGatedNotAMember = 'GROUP_GATED_NOT_A_MEMBER',
-  TokenGatedNotATokenHolder = 'TOKEN_GATED_NOT_A_TOKEN_HOLDER',
-  AccountBlocked = 'ACCOUNT_BLOCKED',
-}

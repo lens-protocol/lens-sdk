@@ -1,6 +1,7 @@
 import type { FragmentOf } from 'gql.tada';
 
 import {
+  AccountFollowOperationValidationFailedFragment,
   AccountFragment,
   BooleanValueFragment,
   PaginatedResultInfoFragment,
@@ -29,14 +30,18 @@ const FollowResultFragment = graphql(
     ...on SelfFundedTransactionRequest {
       ...SelfFundedTransactionRequest
     }
+    ...on AccountFollowOperationValidationFailed {
+      ...AccountFollowOperationValidationFailed
+    }
     ...on TransactionWillFail {
       ...TransactionWillFail
     }
   }`,
   [
     FollowResponseFragment,
-    SelfFundedTransactionRequestFragment,
     SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    AccountFollowOperationValidationFailedFragment,
     TransactionWillFailFragment,
   ],
 );
@@ -71,14 +76,18 @@ const UnfollowResultFragment = graphql(
     ...on SelfFundedTransactionRequest {
       ...SelfFundedTransactionRequest
     }
+    ...on AccountFollowOperationValidationFailed {
+      ...AccountFollowOperationValidationFailed
+    }
     ...on TransactionWillFail {
       ...TransactionWillFail
     }
   }`,
   [
     UnfollowResponseFragment,
-    SelfFundedTransactionRequestFragment,
     SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    AccountFollowOperationValidationFailedFragment,
     TransactionWillFailFragment,
   ],
 );
