@@ -1,6 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
-import { ExtraDataFragment, type UnknownAction, UnknownActionFragment } from './common';
+import { AnyKeyValueFragment, type UnknownAction, UnknownActionFragment } from './common';
 import { MetadataAttributeFragment } from './metadata';
 import { type GraphRule, GraphRuleFragment } from './primitives';
 import { UsernameFragment } from './username';
@@ -20,11 +20,11 @@ export const AccountFollowRuleFragment = graphql(
     id
     type
     address
-    extraData {
-      ...ExtraData
+    config {
+      ...AnyKeyValue
     }
   }`,
-  [ExtraDataFragment],
+  [AnyKeyValueFragment],
 );
 export type AccountFollowRule = FragmentOf<typeof AccountFollowRuleFragment>;
 
@@ -61,11 +61,11 @@ export const AccountFollowUnsatisfiedRuleFragment = graphql(
     rule
     reason
     message
-    extraData {
-      ...ExtraData
+    config {
+      ...AnyKeyValue
     }
   }`,
-  [ExtraDataFragment],
+  [AnyKeyValueFragment],
 );
 export type AccountFollowUnsatisfiedRule = FragmentOf<typeof AccountFollowUnsatisfiedRuleFragment>;
 

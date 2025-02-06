@@ -1,6 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
-import { ExtraDataFragment } from './common';
+import { AnyKeyValueFragment } from './common';
 
 export const AppMetadataFragment = graphql(
   `fragment AppMetadata on AppMetadata {
@@ -61,11 +61,12 @@ export const FeedRuleFragment = graphql(
       id
       type
       address
-      extraData {
-        ...ExtraData
+      executesOn
+      config {
+        ...AnyKeyValue
       }
     }`,
-  [ExtraDataFragment],
+  [AnyKeyValueFragment],
 );
 export type FeedRule = FragmentOf<typeof FeedRuleFragment>;
 
@@ -88,11 +89,11 @@ export const FeedUnsatisfiedRuleFragment = graphql(
     rule
     reason
     message
-    extraData {
-      ...ExtraData
+    config {
+      ...AnyKeyValue
     }
   }`,
-  [ExtraDataFragment],
+  [AnyKeyValueFragment],
 );
 export type FeedUnsatisfiedRule = FragmentOf<typeof FeedUnsatisfiedRuleFragment>;
 
@@ -210,11 +211,12 @@ export const GraphRuleFragment = graphql(
     id
     type
     address
-    extraData {
-      ...ExtraData
+    executesOn
+    config {
+      ...AnyKeyValue
     }
   }`,
-  [ExtraDataFragment],
+  [AnyKeyValueFragment],
 );
 export type GraphRule = FragmentOf<typeof GraphRuleFragment>;
 
@@ -264,11 +266,12 @@ export const NamespaceRuleFragment = graphql(
     id
     type
     address
-    extraData {
-      ...ExtraData
+    executesOn
+    config {
+      ...AnyKeyValue
     }
   }`,
-  [ExtraDataFragment],
+  [AnyKeyValueFragment],
 );
 export type NamespaceRule = FragmentOf<typeof NamespaceRuleFragment>;
 
@@ -292,11 +295,11 @@ export const NamespaceUnsatisfiedRuleFragment = graphql(
     rule
     reason
     message
-    extraData {
-      ...ExtraData
+    config {
+      ...AnyKeyValue
     }
   }`,
-  [ExtraDataFragment],
+  [AnyKeyValueFragment],
 );
 export type NamespaceUnsatisfiedRule = FragmentOf<typeof NamespaceUnsatisfiedRuleFragment>;
 
@@ -433,11 +436,12 @@ export const GroupRuleFragment = graphql(
     id
     type
     address
-    extraData {
-      ...ExtraData
+    executesOn
+    config {
+      ...AnyKeyValue
     }
   }`,
-  [ExtraDataFragment],
+  [AnyKeyValueFragment],
 );
 export type GroupRule = FragmentOf<typeof GroupRuleFragment>;
 
@@ -483,11 +487,11 @@ export const GroupUnsatisfiedRuleFragment = graphql(
     rule
     reason
     message
-    extraData {
-      ...ExtraData
+    config {
+      ...AnyKeyValue
     }
   }`,
-  [ExtraDataFragment],
+  [AnyKeyValueFragment],
 );
 export type GroupUnsatisfiedRule = FragmentOf<typeof GroupUnsatisfiedRuleFragment>;
 

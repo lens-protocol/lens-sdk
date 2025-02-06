@@ -122,7 +122,7 @@ type AccountFollowRule {
   id: RuleId!
   type: AccountFollowRuleType!
   address: EvmAddress!
-  extraData: [ExtraData!]!
+  config: [AnyKeyValue!]!
 }
 
 input AccountFollowRuleConfig {
@@ -158,7 +158,7 @@ type AccountFollowUnsatisfiedRule {
   rule: EvmAddress!
   reason: AccountFollowRuleUnsatisfiedReason!
   message: String!
-  extraData: [ExtraData!]!
+  config: [AnyKeyValue!]!
 }
 
 type AccountFollowUnsatisfiedRules {
@@ -702,6 +702,12 @@ input AmountInput {
   value: BigDecimal!
 }
 
+union AnyKeyValue = IntKeyValue | IntNullableKeyValue | AddressKeyValue | StringKeyValue | BooleanKeyValue | RawKeyValue | BigDecimalKeyValue | DictionaryKeyValue | ArrayKeyValue
+
+input AnyKeyValueInput @oneOf {
+  raw: RawKeyValueInput
+}
+
 """AnyMedia"""
 union AnyMedia = MediaAudio | MediaImage | MediaVideo
 
@@ -1089,6 +1095,8 @@ input BuilderChallengeRequest {
   """The builder's address. Most typically the EOA of their wallet."""
   address: EvmAddress!
 }
+
+union CanCreateUsernameResult = UsernameTaken | NamespaceOperationValidationPassed | NamespaceOperationValidationUnknown | NamespaceOperationValidationFailed
 
 input CanFollowRequest {
   graph: EvmAddress!
@@ -1529,7 +1537,7 @@ input DisableAccountActionRequest {
   actionAddress: EvmAddress
 
   """The action params."""
-  params: [ExtraDataInput!] = null
+  params: [AnyKeyValueInput!] = null
 }
 
 type DisableAccountActionResponse {
@@ -1701,7 +1709,7 @@ input EnableAccountActionRequest {
   actionAddress: EvmAddress
 
   """The action params if any."""
-  params: [ExtraDataInput!]
+  params: [AnyKeyValueInput!]
 }
 
 type EnableAccountActionResponse {
@@ -2289,12 +2297,6 @@ type ExpiredChallengeError {
   reason: String!
 }
 
-union ExtraData = IntKeyValue | IntNullableKeyValue | AddressKeyValue | StringKeyValue | BooleanKeyValue | RawKeyValue | BigDecimalKeyValue | DictionaryKeyValue | ArrayKeyValue
-
-input ExtraDataInput @oneOf {
-  raw: RawKeyValueInput
-}
-
 """
 The transaction has failed to be mined or indexed.
 
@@ -2365,7 +2367,8 @@ type FeedRule {
   id: RuleId!
   type: FeedRuleType!
   address: EvmAddress!
-  extraData: [ExtraData!]!
+  executesOn: [FeedRuleExecuteOn!]!
+  config: [AnyKeyValue!]!
 }
 
 input FeedRuleConfig {
@@ -2416,7 +2419,7 @@ type FeedUnsatisfiedRule {
   rule: EvmAddress!
   reason: FeedRuleUnsatisfiedReason!
   message: String!
-  extraData: [ExtraData!]!
+  config: [AnyKeyValue!]!
 }
 
 type FeedUnsatisfiedRules {
@@ -2693,7 +2696,8 @@ type GraphRule {
   id: RuleId!
   type: GraphRuleType!
   address: EvmAddress!
-  extraData: [ExtraData!]!
+  executesOn: [GraphRuleExecuteOn!]!
+  config: [AnyKeyValue!]!
 }
 
 input GraphRuleConfig {
@@ -2952,7 +2956,8 @@ type GroupRule {
   id: RuleId!
   type: GroupRuleType!
   address: EvmAddress!
-  extraData: [ExtraData!]!
+  executesOn: [GroupRuleExecuteOn!]!
+  config: [AnyKeyValue!]!
 }
 
 input GroupRuleConfig {
@@ -3013,7 +3018,7 @@ type GroupUnsatisfiedRule {
   rule: EvmAddress!
   reason: GroupRuleUnsatisfiedReason!
   message: String!
-  extraData: [ExtraData!]!
+  config: [AnyKeyValue!]!
 }
 
 type GroupUnsatisfiedRules {
@@ -4550,7 +4555,8 @@ type NamespaceRule {
   id: RuleId!
   type: NamespaceRuleType!
   address: EvmAddress!
-  extraData: [ExtraData!]!
+  executesOn: [NamespaceRuleExecuteOn!]!
+  config: [AnyKeyValue!]!
 }
 
 input NamespaceRuleConfig {
@@ -4601,7 +4607,7 @@ type NamespaceUnsatisfiedRule {
   rule: EvmAddress!
   reason: NamespaceRuleUnsatisfiedReason!
   message: String!
-  extraData: [ExtraData!]!
+  config: [AnyKeyValue!]!
 }
 
 type NamespaceUnsatisfiedRules {
@@ -5235,7 +5241,8 @@ type PostRule {
   id: RuleId!
   type: PostRuleType!
   address: EvmAddress!
-  extraData: [ExtraData!]!
+  executesOn: [PostRuleExecuteOn!]!
+  config: [AnyKeyValue!]!
 }
 
 input PostRuleConfig {
@@ -5329,7 +5336,7 @@ type PostUnsatisfiedRule {
   rule: EvmAddress!
   reason: PostRuleUnsatisfiedReason!
   message: String!
-  extraData: [ExtraData!]!
+  config: [AnyKeyValue!]!
 }
 
 type PostUnsatisfiedRules {
@@ -5531,6 +5538,13 @@ type Query {
   """Get the status of a transaction by its hash."""
   transactionStatus(request: TransactionStatusRequest!): TransactionStatusResult!
   debugMetadata(request: DebugPostMetadataRequest!): DebugPostMetadataResult!
+
+  """
+  Checks if the given username can be created by the account
+  
+  You MUST be authenticated to use this mutation.
+  """
+  canCreateUsername(request: UsernameInput!): CanCreateUsernameResult!
   namespace(request: NamespaceRequest!): UsernameNamespace
   username(request: UsernameRequest!): Username
 
@@ -6820,7 +6834,7 @@ input UnknownAccountRuleConfig {
   address: EvmAddress!
 
   """Optional rule configuration parameters"""
-  params: [ExtraDataInput!]
+  params: [AnyKeyValueInput!]
 }
 
 type UnknownAction {
@@ -6833,7 +6847,7 @@ input UnknownActionConfig {
   address: EvmAddress!
 
   """Optional action configuration params"""
-  params: [ExtraDataInput!]!
+  params: [AnyKeyValueInput!]!
 }
 
 input UnknownActionExecute {
@@ -6841,7 +6855,7 @@ input UnknownActionExecute {
   address: EvmAddress!
 
   """Optional action execution params"""
-  params: [ExtraDataInput!]!
+  params: [AnyKeyValueInput!]!
 }
 
 input UnknownFeedRuleConfig {
@@ -6850,7 +6864,7 @@ input UnknownFeedRuleConfig {
   executeOn: [FeedRuleExecuteOn!]!
 
   """Optional rule configuration parameters"""
-  params: [ExtraDataInput!]
+  config: [AnyKeyValueInput!]
 }
 
 input UnknownGraphRuleConfig {
@@ -6859,7 +6873,7 @@ input UnknownGraphRuleConfig {
   executeOn: [GraphRuleExecuteOn!]!
 
   """Optional rule configuration parameters"""
-  params: [ExtraDataInput!]
+  config: [AnyKeyValueInput!]
 }
 
 input UnknownGroupRuleConfig {
@@ -6868,7 +6882,7 @@ input UnknownGroupRuleConfig {
   executeOn: [GroupRuleExecuteOn!]!
 
   """Optional rule configuration parameters"""
-  params: [ExtraDataInput!]
+  config: [AnyKeyValueInput!]
 }
 
 input UnknownNamespaceRuleConfig {
@@ -6877,7 +6891,7 @@ input UnknownNamespaceRuleConfig {
   executeOn: [NamespaceRuleExecuteOn!]!
 
   """Optional rule configuration parameters"""
-  params: [ExtraDataInput!]
+  config: [AnyKeyValueInput!]
 }
 
 type UnknownPostActionContract {
@@ -6891,7 +6905,7 @@ input UnknownPostRuleConfig {
   executeOn: [PostRuleExecuteOn!]!
 
   """Optional rule configuration parameters"""
-  params: [ExtraDataInput!]
+  config: [AnyKeyValueInput!]
 }
 
 input UnknownRuleProcessingParams {
@@ -6899,7 +6913,7 @@ input UnknownRuleProcessingParams {
   id: RuleId!
 
   """The rule processing params"""
-  params: [ExtraDataInput!]
+  params: [AnyKeyValueInput!]
 }
 
 input UpdateAccountFollowRulesRequest {

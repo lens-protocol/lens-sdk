@@ -188,8 +188,8 @@ const ArrayKeyValueFragment = graphql(
 );
 export type ArrayKeyValue = FragmentOf<typeof ArrayKeyValueFragment>;
 
-export const ExtraDataFragment = graphql(
-  `fragment ExtraData on ExtraData {
+export const AnyKeyValueFragment = graphql(
+  `fragment AnyKeyValue on AnyKeyValue {
     ...on IntKeyValue {
       ...IntKeyValue
     }
@@ -230,7 +230,7 @@ export const ExtraDataFragment = graphql(
     ArrayKeyValueFragment,
   ],
 );
-export type ExtraData =
+export type AnyKeyValue =
   | IntKeyValue
   | IntNullableKeyValue
   | AddressKeyValue

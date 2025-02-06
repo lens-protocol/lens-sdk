@@ -3,7 +3,7 @@ import type { Prettify } from '@lens-protocol/types';
 import type { FragmentOf } from 'gql.tada';
 import { type FragmentDocumentFor, graphql } from '../graphql';
 import { type Account, AccountFragment } from './account';
-import { BooleanValueFragment, ExtraDataFragment, UnknownActionFragment } from './common';
+import { AnyKeyValueFragment, BooleanValueFragment, UnknownActionFragment } from './common';
 import {
   ArticleMetadataFragment,
   AudioMetadataFragment,
@@ -135,11 +135,12 @@ export const PostRuleFragment = graphql(
     id
     type
     address
-    extraData {
-      ...ExtraData
+    executesOn
+    config {
+      ...AnyKeyValue
     }
   }`,
-  [ExtraDataFragment],
+  [AnyKeyValueFragment],
 );
 export type PostRule = FragmentOf<typeof PostRuleFragment>;
 
@@ -175,11 +176,11 @@ export const PostUnsatisfiedRuleFragment = graphql(
     rule
     reason
     message
-    extraData {
-      ...ExtraData
+    config {
+      ...AnyKeyValue
     }
   }`,
-  [ExtraDataFragment],
+  [AnyKeyValueFragment],
 );
 export type PostUnsatisfiedRule = FragmentOf<typeof PostUnsatisfiedRuleFragment>;
 
