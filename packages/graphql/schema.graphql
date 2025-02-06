@@ -399,8 +399,8 @@ input AccountRequest {
 }
 
 input AccountRulesConfigInput {
-  required: [AccountFollowRuleConfig!]
-  anyOf: [AccountFollowRuleConfig!]
+  required: [AccountFollowRuleConfig!]! = []
+  anyOf: [AccountFollowRuleConfig!]! = []
 }
 
 type AccountStats {
@@ -2404,8 +2404,8 @@ type FeedRules {
 }
 
 input FeedRulesConfigInput {
-  required: [FeedRuleConfig!]
-  anyOf: [FeedRuleConfig!]
+  required: [FeedRuleConfig!]! = []
+  anyOf: [FeedRuleConfig!]! = []
 }
 
 input FeedRulesProcessingParams {
@@ -2721,8 +2721,8 @@ type GraphRules {
 }
 
 input GraphRulesConfigInput {
-  required: [GraphRuleConfig!]
-  anyOf: [GraphRuleConfig!]
+  required: [GraphRuleConfig!]! = []
+  anyOf: [GraphRuleConfig!]! = []
 }
 
 input GraphRulesProcessingParams {
@@ -2992,8 +2992,8 @@ type GroupRules {
 }
 
 input GroupRulesConfigInput {
-  required: [GroupRuleConfig!]
-  anyOf: [GroupRuleConfig!]
+  required: [GroupRuleConfig!]! = []
+  anyOf: [GroupRuleConfig!]! = []
 }
 
 input GroupRulesProcessingParams {
@@ -4589,8 +4589,8 @@ type NamespaceRules {
 }
 
 input NamespaceRulesConfigInput {
-  required: [NamespaceRuleConfig!]
-  anyOf: [NamespaceRuleConfig!]
+  required: [NamespaceRuleConfig!]! = []
+  anyOf: [NamespaceRuleConfig!]! = []
 }
 
 input NamespaceRulesProcessingParams {
@@ -5267,8 +5267,8 @@ type PostRules {
 }
 
 input PostRulesConfigInput {
-  required: [PostRuleConfig!]
-  anyOf: [PostRuleConfig!]
+  required: [PostRuleConfig!]! = []
+  anyOf: [PostRuleConfig!]! = []
 }
 
 input PostRulesProcessingParams {
@@ -6905,7 +6905,7 @@ input UnknownRuleProcessingParams {
 input UpdateAccountFollowRulesRequest {
   """The graph to update account follow rules for."""
   graph: EvmAddress! = "0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"
-  toAdd: AccountRulesConfigInput! = {required: null, anyOf: null}
+  toAdd: AccountRulesConfigInput! = {required: [], anyOf: []}
   toRemove: [RuleId!]! = []
 }
 
@@ -6928,7 +6928,7 @@ union UpdateAccountManagerResult = SponsoredTransactionRequest | SelfFundedTrans
 input UpdateFeedRulesRequest {
   """The feed to update rules for"""
   feed: EvmAddress! = "0xAE7DE4A71b95E63730568957Ca2cc62d3d52fad9"
-  toAdd: FeedRulesConfigInput! = {required: null, anyOf: null}
+  toAdd: FeedRulesConfigInput! = {required: [], anyOf: []}
   toRemove: [RuleId!]! = []
 }
 
@@ -6941,7 +6941,7 @@ union UpdateFeedRulesResult = UpdateFeedRulesResponse | SponsoredTransactionRequ
 input UpdateGraphRulesRequest {
   """The graph to update rules for"""
   graph: EvmAddress! = "0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"
-  toAdd: GraphRulesConfigInput! = {required: null, anyOf: null}
+  toAdd: GraphRulesConfigInput! = {required: [], anyOf: []}
   toRemove: [RuleId!]! = []
 }
 
@@ -6954,7 +6954,7 @@ union UpdateGraphRulesResult = UpdateGraphRulesResponse | SponsoredTransactionRe
 input UpdateGroupRulesRequest {
   """The group to update rules for"""
   group: EvmAddress!
-  toAdd: GroupRulesConfigInput! = {required: null, anyOf: null}
+  toAdd: GroupRulesConfigInput! = {required: [], anyOf: []}
   toRemove: [RuleId!]! = []
 }
 
@@ -6967,7 +6967,7 @@ union UpdateGroupRulesResult = UpdateGroupRulesResponse | SponsoredTransactionRe
 input UpdateNamespaceRulesRequest {
   """The namespace to update rules for"""
   namespace: EvmAddress!
-  toAdd: NamespaceRulesConfigInput! = {required: null, anyOf: null}
+  toAdd: NamespaceRulesConfigInput! = {required: [], anyOf: []}
   toRemove: [RuleId!]! = []
 }
 
@@ -6980,7 +6980,7 @@ union UpdateNamespaceRulesResult = UpdateNamespaceRulesResponse | SponsoredTrans
 input UpdatePostRulesRequest {
   """The post to update rules for."""
   post: PostId!
-  toAdd: PostRulesConfigInput! = {required: null, anyOf: null}
+  toAdd: PostRulesConfigInput! = {required: [], anyOf: []}
   toRemove: [RuleId!]! = []
 }
 
