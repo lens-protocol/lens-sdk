@@ -6864,7 +6864,7 @@ input UnknownFeedRuleConfig {
   executeOn: [FeedRuleExecuteOn!]!
 
   """Optional rule configuration parameters"""
-  config: [AnyKeyValueInput!]
+  params: [AnyKeyValueInput!]
 }
 
 input UnknownGraphRuleConfig {
@@ -6873,7 +6873,7 @@ input UnknownGraphRuleConfig {
   executeOn: [GraphRuleExecuteOn!]!
 
   """Optional rule configuration parameters"""
-  config: [AnyKeyValueInput!]
+  params: [AnyKeyValueInput!]
 }
 
 input UnknownGroupRuleConfig {
@@ -6882,7 +6882,7 @@ input UnknownGroupRuleConfig {
   executeOn: [GroupRuleExecuteOn!]!
 
   """Optional rule configuration parameters"""
-  config: [AnyKeyValueInput!]
+  params: [AnyKeyValueInput!]
 }
 
 input UnknownNamespaceRuleConfig {
@@ -6891,7 +6891,7 @@ input UnknownNamespaceRuleConfig {
   executeOn: [NamespaceRuleExecuteOn!]!
 
   """Optional rule configuration parameters"""
-  config: [AnyKeyValueInput!]
+  params: [AnyKeyValueInput!]
 }
 
 type UnknownPostActionContract {
@@ -6905,7 +6905,7 @@ input UnknownPostRuleConfig {
   executeOn: [PostRuleExecuteOn!]!
 
   """Optional rule configuration parameters"""
-  config: [AnyKeyValueInput!]
+  params: [AnyKeyValueInput!]
 }
 
 input UnknownRuleProcessingParams {
