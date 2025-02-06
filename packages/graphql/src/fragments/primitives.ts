@@ -342,12 +342,7 @@ export const NamespaceOperationValidationFailedFragment = graphql(
   `fragment NamespaceOperationValidationFailed on NamespaceOperationValidationFailed {
     __typename
     unsatisfiedRules {
-      required {
-        ...NamespaceUnsatisfiedRules
-      }
-      anyOf {
-        ...NamespaceUnsatisfiedRules
-      }
+      ...NamespaceUnsatisfiedRules
     }
     reason
   }`,

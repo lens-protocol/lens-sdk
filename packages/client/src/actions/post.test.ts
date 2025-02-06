@@ -1,32 +1,17 @@
-import { testnet } from '@lens-protocol/env';
-import { assertOk, evmAddress, uri } from '@lens-protocol/types';
-import { privateKeyToAccount } from 'viem/accounts';
+import { assertOk, uri } from '@lens-protocol/types';
 
 import { describe, expect, it } from 'vitest';
-import { PublicClient } from '../clients';
+import { loginAsAccountOwner } from '../test-utils';
 import { post } from './post';
-
-const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
-const owner = evmAddress(signer.address);
-const app = evmAddress(import.meta.env.TEST_APP);
-const account = evmAddress(import.meta.env.TEST_ACCOUNT);
-
-const client = PublicClient.create({
-  environment: testnet,
-  origin: 'http://example.com',
-});
 
 describe(`Given the '${post.name}' action`, () => {
   describe('When creating a Post', () => {
     it('Then it should return the expected TransactionRequest', async () => {
-      const authenticated = await client.login({
-        accountOwner: { account, app, owner },
-        signMessage: (message) => signer.signMessage({ message }),
-      });
-
-      const result = await post(authenticated._unsafeUnwrap(), {
-        contentUri: uri('https://example.com'),
-      });
+      const result = await loginAsAccountOwner().andThen((sessionClient) =>
+        post(sessionClient, {
+          contentUri: uri('https://example.com'),
+        }),
+      );
 
       assertOk(result);
       expect(result.value).toMatchObject({
