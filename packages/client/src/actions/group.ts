@@ -79,6 +79,18 @@ export function createGroup(
   return client.mutation(CreateGroupMutation, { request });
 }
 
+createGroup({} as any, {
+  rules: {
+    required: [
+      {
+        tokenGatedRule: {
+          token: {},
+        },
+      },
+    ],
+  },
+});
+
 /**
  * Set Group Metadata
  *
@@ -291,8 +303,8 @@ export function updateGroupRules(
  *
  * ```ts
  * const result = await addGroupMember(sessionClient, {
- *   group: evmAddress('0xe2f2...'),
- *   account: evmAddress('0x4f91...'),
+ *   group: evmAddress('0xe2f2…'),
+ *   account: evmAddress('0x4f91…'),
  * });
  * ```
  *
@@ -312,8 +324,8 @@ export function addGroupMember(
  *
  * ```ts
  * const result = await removeGroupMember(sessionClient, {
- *   group: evmAddress('0xe2f...'),
- *   account: evmAddress('0x4f91...'),
+ *   group: evmAddress('0xe2f…'),
+ *   account: evmAddress('0x4f91…'),
  *   ban: true
  * });
  * ```
@@ -334,7 +346,7 @@ export function removeGroupMember(
  *
  * ```ts
  * const result = await requestGroupMembership(sessionClient, {
- *   group: evmAddress('0xe2f...'),
+ *   group: evmAddress('0xe2f…'),
  * });
  * ```
  *
@@ -354,7 +366,7 @@ export function requestGroupMembership(
  *
  * ```ts
  * const result = await cancelGroupMembershipRequest(sessionClient, {
- *   group: evmAddress('0xe2f...'),
+ *   group: evmAddress('0xe2f…'),
  * });
  * ```
  *
@@ -374,8 +386,8 @@ export function cancelGroupMembershipRequest(
  *
  * ```ts
  * const result = await rejectGroupMembershipRequest(sessionClient, {
- *   group: evmAddress('0xe2f...'),
- *   account: evmAddress('0x4f91...'),
+ *   group: evmAddress('0xe2f…'),
+ *   account: evmAddress('0x4f91…'),
  * });
  * ```
  *
@@ -395,8 +407,8 @@ export function rejectGroupMembershipRequest(
  *
  * ```ts
  * const result = await banGroupAccount(sessionClient, {
- *   group: evmAddress('0xe2f...'),
- *   account: evmAddress('0x4f91...'),
+ *   group: evmAddress('0xe2f…'),
+ *   account: evmAddress('0x4f91…'),
  * });
  * ```
  *
@@ -416,8 +428,8 @@ export function banGroupAccount(
  *
  * ```ts
  * const result = await unbanGroupAccount(sessionClient, {
- *   group: evmAddress('0xe2f...'),
- *   account: evmAddress('0x4f91...'),
+ *   group: evmAddress('0xe2f…'),
+ *   account: evmAddress('0x4f91…'),
  * });
  * ```
  *

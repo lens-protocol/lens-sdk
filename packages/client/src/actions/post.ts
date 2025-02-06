@@ -245,7 +245,7 @@ export function unhideReply(
  * ```ts
  * const result = await reportPost(sessionClient, {
  *   reason: "SCAM",
- *   post: postId('1234...'),
+ *   post: postId('1234…'),
  * });
  * ```
  *
@@ -265,11 +265,11 @@ export function reportPost(
  *
  * ```ts
  * const result = await updatePostRules(sessionClient, {
- *   post: postId('42...'),
+ *   post: postId('42…'),
  *   toAdd: {
  *     anyOf: [{
  *       followersOnlyRule: {
- *         graph: evmAddress('0x1234...'),
+ *         graph: evmAddress('0x1234…'),
  *       }
  *     }]
  *     required: [],

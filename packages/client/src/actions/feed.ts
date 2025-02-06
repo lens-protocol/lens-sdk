@@ -110,13 +110,13 @@ export function fetchFeeds(
  *
  * ```ts
  * const result = await updateFeedRules(sessionClient, {
- *   feed: evmAddress('0x1234...'),
+ *   feed: evmAddress('0x1234…'),
  *   toAdd: {
  *     required: [{
  *       tokenGatedRule: {
- *         standard: 'ERC20',
- *         currency: evmAddress('0x5678...'),
- *         value: 1.5, // Token value in its main unit
+ *         standard: TokenStandard.Erc20,
+ *         currency: evmAddress('0x5678…'),
+ *         value: '1.5', // Token value in its main unit
  *       }
  *     }],
  *     anyOf: [],

@@ -36,13 +36,13 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
  *
  * ```ts
  * const result = await configurePostAction(sessionClient, {
- *   post: postId('1234...'),
- *   feed: evmAddress('0x1234...'),
+ *   post: postId('1234…'),
+ *   feed: evmAddress('0x1234…'),
  *   params: {
  *     simpleCollect: {
  *       amount: {
  *         value: '100',
- *         currency: evmAddress('0x5678...')
+ *         currency: evmAddress('0x5678…')
  *       }
  *     }
  *   }
@@ -65,8 +65,8 @@ export function configurePostAction(
  *
  * ```ts
  * const result = await enablePostAction(sessionClient, {
- *   post: postId('1234...'),
- *   feed: evmAddress('0x1234...'),
+ *   post: postId('1234…'),
+ *   feed: evmAddress('0x1234…'),
  *   action: 'SIMPLE_COLLECT'
  * });
  * ```
@@ -87,8 +87,8 @@ export function enablePostAction(
  *
  * ```ts
  * const result = await disablePostAction(sessionClient, {
- *   post: postId('1234...'),
- *   feed: evmAddress('0x1234...'),
+ *   post: postId('1234…'),
+ *   feed: evmAddress('0x1234…'),
  *   action: 'SIMPLE_COLLECT'
  * });
  * ```
@@ -109,12 +109,12 @@ export function disablePostAction(
  *
  * ```ts
  * const result = await executePostAction(sessionClient, {
- *   post: postId('1234...'),
- *   feed: evmAddress('0x1234...'),
+ *   post: postId('1234…'),
+ *   feed: evmAddress('0x1234…'),
  *   params: {
  *     simpleCollect: {
  *       value: '100',
- *       currency: evmAddress('0x5678...')
+ *       currency: evmAddress('0x5678…')
  *     }
  *   }
  * });
@@ -143,7 +143,7 @@ export function executePostAction(
  *       key: 'usd',
  *       value: '100'
  *     }],
- *     address: evmAddress('0x1234...'),
+ *     address: evmAddress('0x1234…'),
  *   }
  * });
  * ```
@@ -204,11 +204,11 @@ export function disableAccountAction(
  *
  * ```ts
  * const result = await executeAccountAction(sessionClient, {
- *   targetAccount: evmAddress('0x1234...'),
+ *   targetAccount: evmAddress('0x1234…'),
  *   params: {
  *     tipping: {
  *       value: '100',
- *       currency: evmAddress('0x5678...')
+ *       currency: evmAddress('0x5678…')
  *     }
  *   }
  * });
