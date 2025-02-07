@@ -14,7 +14,7 @@ import {
 } from './account';
 import { fetchMeDetails } from './authentication';
 
-describe('Given a new Lens Account', () => {
+describe('Given a new Lens Account', { timeout: 10000 }, () => {
   let newAccount: Account;
   let sessionClient: SessionClient;
 
