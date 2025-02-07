@@ -12,20 +12,16 @@ const wallet = new Wallet(import.meta.env.PRIVATE_KEY, getDefaultProvider(Networ
 
 describe('Given an integration with ethers.js', () => {
   describe('When handling transaction actions', () => {
-    it(
-      'Then it should be possible to chain them with other helpers',
-      async () => {
-        const result = await loginAsAccountOwner().andThen((sessionClient) =>
-          post(sessionClient, {
-            contentUri: uri('https://devnet.irys.xyz/3n3Ujg3jPBHX58MPPqYXBSQtPhTgrcTk4RedJgV1Ejhb'),
-          })
-            .andThen(handleOperationWith(wallet))
-            .andThen(sessionClient.waitForTransaction),
-        );
+    it('Then it should be possible to chain them with other helpers', async () => {
+      const result = await loginAsAccountOwner().andThen((sessionClient) =>
+        post(sessionClient, {
+          contentUri: uri('https://devnet.irys.xyz/3n3Ujg3jPBHX58MPPqYXBSQtPhTgrcTk4RedJgV1Ejhb'),
+        })
+          .andThen(handleOperationWith(wallet))
+          .andThen(sessionClient.waitForTransaction),
+      );
 
-        assertOk(result);
-      },
-      { timeout: 10000 },
-    );
+      assertOk(result);
+    });
   });
 });

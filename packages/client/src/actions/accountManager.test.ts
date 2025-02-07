@@ -50,6 +50,7 @@ describe('Given a new Lens Account', () => {
         .andThen(sessionClient.waitForTransaction);
       assertOk(result);
     });
+
     it(`Then it should be reflected in the '${fetchMeDetails.name}' action result`, async () => {
       const result = await fetchMeDetails(sessionClient);
 

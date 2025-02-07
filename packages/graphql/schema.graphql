@@ -7166,6 +7166,7 @@ input UsernameSearchInput {
 
 type UsernameTaken {
   ownedBy: EvmAddress!
+  reason: String!
 }
 
 scalar UsernameValue

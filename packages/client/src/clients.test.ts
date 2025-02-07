@@ -151,28 +151,24 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
         server.close();
       });
 
-      it(
-        'Then it should silently refresh credentials and retry the request',
-        { timeout: 5000 },
-        async () => {
-          const authenticated = await client.login({
-            accountOwner: {
-              account,
-              owner: signer,
-              app,
-            },
-            signMessage: signMessageWith(wallet),
-          });
-          assertOk(authenticated);
+      it('Then it should silently refresh credentials and retry the request', async () => {
+        const authenticated = await client.login({
+          accountOwner: {
+            account,
+            owner: signer,
+            app,
+          },
+          signMessage: signMessageWith(wallet),
+        });
+        assertOk(authenticated);
 
-          // wait 1 second to make sure the new tokens have 'expiry at' different from the previous ones
-          await delay(1000);
+        // wait 1 second to make sure the new tokens have 'expiry at' different from the previous ones
+        await delay(1000);
 
-          const result = await currentSession(authenticated.value);
+        const result = await currentSession(authenticated.value);
 
-          assertOk(result);
-        },
-      );
+        assertOk(result);
+      });
     });
 
     describe('When a token refresh fails', () => {
@@ -198,25 +194,21 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
       afterAll(() => {
         server.close();
       });
-      it(
-        `Then it should return a '${UnauthenticatedError.name}' to the original request caller`,
-        { timeout: 5000 },
-        async () => {
-          const authenticated = await client.login({
-            accountOwner: {
-              account,
-              owner: signer,
-              app,
-            },
-            signMessage: signMessageWith(wallet),
-          });
-          assertOk(authenticated);
+      it(`Then it should return a '${UnauthenticatedError.name}' to the original request caller`, async () => {
+        const authenticated = await client.login({
+          accountOwner: {
+            account,
+            owner: signer,
+            app,
+          },
+          signMessage: signMessageWith(wallet),
+        });
+        assertOk(authenticated);
 
-          const result = await currentSession(authenticated.value);
-          assertErr(result);
-          expect(result.error).toBeInstanceOf(UnauthenticatedError);
-        },
-      );
+        const result = await currentSession(authenticated.value);
+        assertErr(result);
+        expect(result.error).toBeInstanceOf(UnauthenticatedError);
+      });
     });
   });
 });

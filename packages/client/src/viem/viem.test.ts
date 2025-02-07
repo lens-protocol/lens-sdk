@@ -14,7 +14,7 @@ const walletClient = createWalletClient({
   transport: http(),
 });
 
-describe('Given an integration with viem', { timeout: 10000 }, () => {
+describe('Given an integration with viem', () => {
   describe('When handling transaction actions', () => {
     it('Then it should be possible to chain them with other helpers', async () => {
       const result = await loginAsAccountOwner().andThen((sessionClient) =>

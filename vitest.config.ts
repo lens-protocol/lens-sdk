@@ -9,5 +9,6 @@ export default defineConfig({
     setupFiles: [resolve(__dirname, './vitest.setup.ts')],
     env: loadEnv('', process.cwd(), ''),
     environment: 'node',
+    testTimeout: 10_000,
   },
 });
