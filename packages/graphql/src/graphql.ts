@@ -28,7 +28,6 @@ import { type DocumentDecoration, type TadaDocumentNode, initGraphQLTada } from 
 import type { StandardData } from './common';
 import type {
   AccessConditionComparison,
-  AccountActionType,
   AccountFollowRuleType,
   AccountFollowRuleUnsatisfiedReason,
   AccountReportReason,
@@ -95,7 +94,6 @@ import type {
   ThreeDAssetFormat,
   TimelineEventItemType,
   TokenStandard,
-  TransactionOperation,
   TransactionType,
   UnblockErrorType,
   WhoActedOnPostOrderBy,
@@ -110,7 +108,6 @@ export const graphql = initGraphQLTada<{
   scalars: {
     AccessConditionComparison: AccessConditionComparison;
     AccessToken: AccessToken;
-    AccountActionType: AccountActionType;
     AccountFollowRuleType: AccountFollowRuleType;
     AccountFollowRuleUnsatisfiedReason: AccountFollowRuleUnsatisfiedReason;
     AccountReportReason: AccountReportReason;
@@ -200,7 +197,7 @@ export const graphql = initGraphQLTada<{
     ThreeDAssetFormat: ThreeDAssetFormat;
     TimelineEventItemType: TimelineEventItemType;
     TokenStandard: TokenStandard;
-    TransactionOperation: TransactionOperation;
+    // TransactionOperation: TransactionOperation; intentionally not mapped since it grows often and it's a debug information
     TransactionType: TransactionType;
     TxHash: TxHash;
     UnblockErrorType: UnblockErrorType;

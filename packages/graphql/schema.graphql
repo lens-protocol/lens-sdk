@@ -34,18 +34,13 @@ type Account {
 
 union AccountAction = TippingAccountAction | UnknownAction
 
-input AccountActionConfig @oneOf {
-  unknown: UnknownActionConfig
+input AccountActionConfigInput @oneOf {
+  unknown: UnknownActionConfigInput
 }
 
-input AccountActionExecute @oneOf {
+input AccountActionExecuteInput @oneOf {
   tipping: AmountInput
-  unknown: UnknownActionExecute
-}
-
-enum AccountActionType {
-  TIPPING
-  UNKNOWN
+  unknown: UnknownActionExecuteInput
 }
 
 union AccountAvailable = AccountManaged | AccountOwned
@@ -1179,7 +1174,7 @@ type CommentNotification {
 
 input ConfigureAccountActionRequest {
   """The action type and configuration."""
-  action: AccountActionConfig!
+  action: AccountActionConfigInput!
 }
 
 type ConfigureAccountActionResponse {
@@ -1193,7 +1188,7 @@ input ConfigurePostActionRequest {
   post: PostId!
 
   """The post action configuration parameters."""
-  params: PostActionConfig!
+  params: PostActionConfigInput!
 }
 
 type ConfigurePostActionResponse {
@@ -1365,7 +1360,7 @@ input CreatePostRequest {
   commentOn: ReferencingPostInput
 
   """The actions to attach to the post."""
-  actions: [PostActionConfig!]
+  actions: [PostActionConfigInput!]
 
   """Rules for the post"""
   rules: PostRulesConfigInput
@@ -1529,15 +1524,9 @@ type DictionaryKeyValue {
   value: [PrimitiveData!]!
 }
 
-input DisableAccountActionRequest {
-  """The account action to set."""
-  action: AccountActionType!
-
-  """Set the action's contract address in case of unknown actions"""
-  actionAddress: EvmAddress
-
-  """The action params."""
-  params: [AnyKeyValueInput!] = null
+input DisableAccountActionRequest @oneOf {
+  tipping: Boolean
+  unknown: UnknownActionConfigInput
 }
 
 type DisableAccountActionResponse {
@@ -1546,18 +1535,16 @@ type DisableAccountActionResponse {
 
 union DisableAccountActionResult = DisableAccountActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
-input DisablePostActionRequest {
-  """The action to disable."""
-  action: PostActionInput!
+input DisablePostActionParams @oneOf {
+  tipping: Boolean
+  unknown: UnknownActionConfigInput
+}
 
-  """Set the action's contract address in case of unknown actions"""
-  actionAddress: EvmAddress
+input DisablePostActionRequest {
+  action: DisablePostActionParams!
 
   """The target post."""
   post: PostId!
-
-  """The feed that the post is on."""
-  feed: EvmAddress!
 }
 
 type DisablePostActionResponse {
@@ -1701,15 +1688,9 @@ type EmbedMetadata {
   content: String!
 }
 
-input EnableAccountActionRequest {
-  """The account action to set."""
-  action: AccountActionType!
-
-  """Set the action's contract address in case of unknown actions"""
-  actionAddress: EvmAddress
-
-  """The action params if any."""
-  params: [AnyKeyValueInput!]
+input EnableAccountActionRequest @oneOf {
+  tipping: Boolean
+  unknown: UnknownActionConfigInput
 }
 
 type EnableAccountActionResponse {
@@ -1718,18 +1699,16 @@ type EnableAccountActionResponse {
 
 union EnableAccountActionResult = EnableAccountActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
+input EnablePostActionParams @oneOf {
+  tipping: Boolean
+  unknown: UnknownActionConfigInput
+}
+
 input EnablePostActionRequest {
-  """The post action to set."""
-  action: PostActionInput!
+  action: EnablePostActionParams!
 
-  """The"""
-  actionAddress: EvmAddress
-
-  """The post to set the action for."""
+  """The target post."""
   post: PostId!
-
-  """The feed that the post is on."""
-  feed: EvmAddress!
 }
 
 type EnablePostActionResponse {
@@ -1765,6 +1744,23 @@ enum EntityType {
   ACCOUNT_ACTION
   POST_ACTION
   RULE
+}
+
+type Erc20 {
+  name: String!
+  symbol: String!
+  decimals: Int!
+  contract: NetworkAddress!
+}
+
+type Erc20Amount {
+  asset: Erc20!
+
+  """
+  Token value in its main unit (e.g., 1.5 DAI), not in the smallest fraction (e.g.,
+  wei).
+  """
+  value: BigDecimal!
 }
 
 type EventMetadata {
@@ -2263,10 +2259,10 @@ scalar EvmAddress
 
 input ExecuteAccountActionRequest {
   """The target account to execute the action on."""
-  targetAccount: EvmAddress!
+  account: EvmAddress!
 
   """The action params."""
-  params: AccountActionExecute!
+  action: AccountActionExecuteInput!
 }
 
 type ExecuteAccountActionResponse {
@@ -2279,11 +2275,8 @@ input ExecutePostActionRequest {
   """The target post to execute the action on."""
   post: PostId!
 
-  """The target feed that the post is on."""
-  feed: EvmAddress!
-
   """The action params."""
-  action: PostActionExecute!
+  action: PostActionExecuteInput!
 }
 
 type ExecutePostActionResponse {
@@ -2511,6 +2504,16 @@ type Follower {
 
   """The timestamp when the follower was followed"""
   followedOn: DateTime!
+}
+
+type FollowerOn {
+  globalGraph: Boolean
+  graph: EvmAddress
+}
+
+input FollowerOnInput @oneOf {
+  globalGraph: Boolean
+  graph: EvmAddress
 }
 
 input FollowersFilter {
@@ -4650,6 +4653,11 @@ type NamespacesResult {
   pageInfo: PaginatedResultInfo!
 }
 
+type NetworkAddress {
+  address: EvmAddress!
+  chainId: Int!
+}
+
 """The existence of the transaction is not yet indexed. Keep trying."""
 type NotIndexedYetStatus {
   reason: String!
@@ -4964,7 +4972,7 @@ type Post {
   root: Post
   quoteOf: Post
   commentOn: Post
-  actions: [PostAction!]!
+  actions(includeDisabled: Boolean! = false): [PostAction!]!
   operations: LoggedInPostOperations
   stats: PostStats!
   mentions: [PostMention!]!
@@ -4978,9 +4986,9 @@ input PostAccountPair {
 
 union PostAction = SimpleCollectAction | TippingPostAction | UnknownAction
 
-input PostActionConfig @oneOf {
-  simpleCollect: SimpleCollectActionConfig
-  unknown: UnknownActionConfig
+input PostActionConfigInput @oneOf {
+  simpleCollect: SimpleCollectActionConfigInput
+  unknown: UnknownActionConfigInput
 }
 
 union PostActionContract = SimpleCollectActionContract | TippingPostActionContract | UnknownPostActionContract
@@ -4992,16 +5000,10 @@ input PostActionContractsRequest {
   cursor: Cursor
 }
 
-input PostActionExecute @oneOf {
-  simpleCollect: AmountInput
+input PostActionExecuteInput @oneOf {
+  simpleCollect: SimpleCollectActionExecuteInput
   tipping: AmountInput
-  unknown: UnknownActionExecute
-}
-
-enum PostActionInput {
-  SIMPLE_COLLECT
-  TIPPING
-  UNKNOWN
+  unknown: UnknownActionExecuteInput
 }
 
 enum PostActionType {
@@ -5922,19 +5924,29 @@ input SignedAuthChallenge {
 
 type SimpleCollectAction {
   address: EvmAddress!
+  amount: Erc20Amount
+  recipient: EvmAddress
+  collectLimit: Int
+  followerOnGraph: FollowerOn
+  endsAt: DateTime
+  isImmutable: Boolean!
 }
 
-input SimpleCollectActionConfig {
+input SimpleCollectActionConfigInput {
   amount: AmountInput
   recipient: EvmAddress
   collectLimit: Int
-  followerOnGraph: EvmAddress
+  followerOnGraph: FollowerOnInput
   endsAt: DateTime
-  isImmutable: Boolean! = true
+  isImmutable: Boolean! = false
 }
 
 type SimpleCollectActionContract {
   address: EvmAddress!
+}
+
+input SimpleCollectActionExecuteInput {
+  enable: AlwaysTrue!
 }
 
 input SimplePaymentFeedRuleConfig {
@@ -6599,8 +6611,8 @@ enum TransactionOperation {
   APP_PAYMASTER_ADDED
   APP_PAYMASTER_REMOVED
   APP_TREASURY_SET
-  AppUsernameAdded
-  AppUsernameRemoved
+  APP_NAMESPACE_ADDED
+  APP_NAMESPACE_REMOVED
   FEED_ACCESS_CONTROL_ADDED
   FEED_ACCESS_CONTROL_UPDATED
   FEED_EXTRA_DATA_ADDED
@@ -6839,10 +6851,16 @@ input UnknownAccountRuleConfig {
 
 type UnknownAction {
   address: EvmAddress!
+  config: UnknownActionConfig!
   metadata: ActionMetadata
 }
 
-input UnknownActionConfig {
+type UnknownActionConfig {
+  address: EvmAddress!
+  params: [RawKeyValue!]!
+}
+
+input UnknownActionConfigInput {
   """The unknown action's contract address"""
   address: EvmAddress!
 
@@ -6850,12 +6868,12 @@ input UnknownActionConfig {
   params: [AnyKeyValueInput!]!
 }
 
-input UnknownActionExecute {
+input UnknownActionExecuteInput {
   """The unknown action's contract address"""
   address: EvmAddress!
 
   """Optional action execution params"""
-  params: [AnyKeyValueInput!]!
+  params: [RawKeyValueInput!]!
 }
 
 input UnknownFeedRuleConfig {
