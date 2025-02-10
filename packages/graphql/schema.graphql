@@ -228,7 +228,7 @@ input AccountManagerChallengeRequest {
   playground app. This is to make it easier if you forget to set it. This may change in the
   future.
   """
-  app: EvmAddress! = "0x6F6AC764c218C57a509De5E05013EEdA8c9264E0"
+  app: EvmAddress! = "0xaC19aa2402b3AC3f9Fe471D4783EC68595432465"
 
   """The address of the Lens Account."""
   account: EvmAddress!
@@ -349,7 +349,7 @@ input AccountOwnerChallengeRequest {
   playground app. This is to make it easier if you forget to set it. This may change in the
   future.
   """
-  app: EvmAddress! = "0x6F6AC764c218C57a509De5E05013EEdA8c9264E0"
+  app: EvmAddress! = "0xaC19aa2402b3AC3f9Fe471D4783EC68595432465"
 
   """The address of the Lens Account."""
   account: EvmAddress!
@@ -411,10 +411,10 @@ input AccountStatsRequest {
   account: EvmAddress!
 
   """The feeds to get stats for."""
-  forFeeds: [EvmAddress!]! = ["0xAE7DE4A71b95E63730568957Ca2cc62d3d52fad9"]
+  forFeeds: [EvmAddress!]! = ["0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"]
 
   """The graphs to get stats for."""
-  forGraphs: [EvmAddress!]! = ["0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"]
+  forGraphs: [EvmAddress!]! = ["0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"]
 }
 
 input AccountUnblockedNotificationAttributes {
@@ -441,7 +441,7 @@ input AccountUsernameCreatedNotificationAttributes {
 
 input AccountUsernameRequest {
   """The namespace to get account assigned username"""
-  namespace: EvmAddress! = "0x0b7Fb953a8f7E0BFd4B075E3121F4489322BC6C2"
+  namespace: EvmAddress! = "0xaFe49B3faA3C65c4C56C6b768C9047E3bF4076Bb"
 }
 
 input AccountUsernameUnassignedNotificationAttributes {
@@ -1218,7 +1218,7 @@ input CreateAccountWithUsernameRequest {
   accountManager: [EvmAddress!]
 }
 
-union CreateAccountWithUsernameResult = CreateAccountResponse | UsernameTaken | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union CreateAccountWithUsernameResult = CreateAccountResponse | UsernameTaken | NamespaceOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input CreateAppRequest {
   """The app metadata uri"""
@@ -1228,16 +1228,16 @@ input CreateAppRequest {
   admins: [EvmAddress!]
 
   """The app graph defaults to use the global graph"""
-  graph: EvmAddress! = "0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"
+  graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
 
   """The app feeds defaults to use the global feed"""
-  feeds: [EvmAddress!]! = ["0xAE7DE4A71b95E63730568957Ca2cc62d3d52fad9"]
+  feeds: [EvmAddress!]! = ["0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"]
 
   """The default feed defaults to use the global feed"""
-  defaultFeed: EvmAddress! = "0xAE7DE4A71b95E63730568957Ca2cc62d3d52fad9"
+  defaultFeed: EvmAddress! = "0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"
 
   """The app username leave empty to use the lens username"""
-  namespace: EvmAddress! = "0x0b7Fb953a8f7E0BFd4B075E3121F4489322BC6C2"
+  namespace: EvmAddress! = "0xaFe49B3faA3C65c4C56C6b768C9047E3bF4076Bb"
 
   """The app groups leave empty if none"""
   groups: [EvmAddress!]
@@ -1289,7 +1289,7 @@ input CreateFollowRequest {
   """
   The graph to follow the account on. If not provided, the global graph is used.
   """
-  graph: EvmAddress! = "0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"
+  graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
 
   """
   The data required by any follow rules associated with the account being followed.
@@ -1345,7 +1345,7 @@ type CreateNamespaceResponse {
 
 input CreatePostRequest {
   """The feed to post to. If not provided, the global feed is used."""
-  feed: EvmAddress! = "0xAE7DE4A71b95E63730568957Ca2cc62d3d52fad9"
+  feed: EvmAddress! = "0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"
 
   """The URI of the post metadata."""
   contentUri: URI!
@@ -1368,7 +1368,7 @@ input CreatePostRequest {
 
 input CreateRepostRequest {
   """The feed to repost to. If not provided, the global feed is used."""
-  feed: EvmAddress! = "0xAE7DE4A71b95E63730568957Ca2cc62d3d52fad9"
+  feed: EvmAddress! = "0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"
 
   """The post to reference."""
   post: PostId!
@@ -1436,7 +1436,7 @@ input CreateUnfollowRequest {
   The graph where the account is followed and should be unfollowed.
   If not provided, the global graph is used.
   """
-  graph: EvmAddress! = "0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"
+  graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
 
   """The processing params for the graph rules."""
   graphRulesProcessingParams: [GraphRulesProcessingParams!]
@@ -1484,7 +1484,7 @@ type CreateUsernameResponse {
   hash: TxHash!
 }
 
-union CreateUsernameResult = CreateUsernameResponse | NamespaceOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union CreateUsernameResult = CreateUsernameResponse | UsernameTaken | NamespaceOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar Cursor
 
@@ -2469,7 +2469,7 @@ type FollowNotification {
 
 input FollowPair {
   """The graph you are checking defaults to global graph."""
-  graph: EvmAddress! = "0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"
+  graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
 
   """The follower."""
   follower: EvmAddress!
@@ -2525,7 +2525,7 @@ input FollowersFilter {
 }
 
 input FollowersOnlyPostRuleConfig {
-  graph: EvmAddress! = "0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"
+  graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
   repliesRestricted: Boolean! = true
   repostRestricted: Boolean! = true
   quotesRestricted: Boolean! = true
@@ -4567,6 +4567,7 @@ input NamespaceRuleConfig {
   usernamePricePerLengthRule: UsernamePricePerLengthNamespaceRuleConfig
   usernameLengthRule: UsernameLengthNamespaceRuleConfig
   usernameReservedRule: UsernameReservedNamespaceRuleConfig
+  usernameSimpleCharsetRule: Boolean
   unknownRule: UnknownNamespaceRuleConfig
 }
 
@@ -4582,12 +4583,14 @@ enum NamespaceRuleType {
   PRICE_PER_LENGTH
   USERNAME_LENGTH
   USERNAME_RESERVED
+  USERNAME_SIMPLE_CHARSET
   UNKNOWN
 }
 
 enum NamespaceRuleUnsatisfiedReason {
   TOKEN_GATED_NOT_A_TOKEN_HOLDER
   USERNAME_LENGTH_NOT_WITHIN_RANGE
+  USERNAME_NOT_A_SIMPLE_CHARSET
   USERNAME_RESERVED
   USERNAME_PRICE_PER_LENGTH_NOT_ENOUGH_BALANCE
 }
@@ -4736,7 +4739,7 @@ input OnboardingUserChallengeRequest {
   playground app. This is to make it easier if you forget to set it. This may change in the
   future.
   """
-  app: EvmAddress! = "0x6F6AC764c218C57a509De5E05013EEdA8c9264E0"
+  app: EvmAddress! = "0xaC19aa2402b3AC3f9Fe471D4783EC68595432465"
 
   """The address of the EOA that needs to create their Lens Account."""
   wallet: EvmAddress!
@@ -5001,7 +5004,7 @@ input PostActionContractsRequest {
 }
 
 input PostActionExecuteInput @oneOf {
-  simpleCollect: SimpleCollectActionExecuteInput
+  simpleCollect: Boolean
   tipping: AmountInput
   unknown: UnknownActionExecuteInput
 }
@@ -5945,10 +5948,6 @@ type SimpleCollectActionContract {
   address: EvmAddress!
 }
 
-input SimpleCollectActionExecuteInput {
-  enable: AlwaysTrue!
-}
-
 input SimplePaymentFeedRuleConfig {
   cost: AmountInput!
   recipient: EvmAddress!
@@ -6756,7 +6755,7 @@ entities without requiring a central allocating authority.
 scalar UUID @specifiedBy(url: "http://tools.ietf.org/html/rfc4122")
 
 input UnassignUsernameFromAccountRequest {
-  namespace: EvmAddress! = "0x0b7Fb953a8f7E0BFd4B075E3121F4489322BC6C2"
+  namespace: EvmAddress! = "0xaFe49B3faA3C65c4C56C6b768C9047E3bF4076Bb"
 
   """The processing params for the unassign rules."""
   rulesProcessingParams: [NamespaceRulesProcessingParams!]
@@ -6936,7 +6935,7 @@ input UnknownRuleProcessingParams {
 
 input UpdateAccountFollowRulesRequest {
   """The graph to update account follow rules for."""
-  graph: EvmAddress! = "0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"
+  graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
   toAdd: AccountRulesConfigInput! = {required: [], anyOf: []}
   toRemove: [RuleId!]! = []
 }
@@ -6959,7 +6958,7 @@ union UpdateAccountManagerResult = SponsoredTransactionRequest | SelfFundedTrans
 
 input UpdateFeedRulesRequest {
   """The feed to update rules for"""
-  feed: EvmAddress! = "0xAE7DE4A71b95E63730568957Ca2cc62d3d52fad9"
+  feed: EvmAddress! = "0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"
   toAdd: FeedRulesConfigInput! = {required: [], anyOf: []}
   toRemove: [RuleId!]! = []
 }
@@ -6972,7 +6971,7 @@ union UpdateFeedRulesResult = UpdateFeedRulesResponse | SponsoredTransactionRequ
 
 input UpdateGraphRulesRequest {
   """The graph to update rules for"""
-  graph: EvmAddress! = "0xAA4073eb869aC7A4F4fc720612f2eA92Ee11Fba6"
+  graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
   toAdd: GraphRulesConfigInput! = {required: [], anyOf: []}
   toRemove: [RuleId!]! = []
 }
@@ -7107,7 +7106,7 @@ input UsernameInput {
   localName: String!
 
   """The namespace. Defaults to lens namespace"""
-  namespace: EvmAddress! = "0x0b7Fb953a8f7E0BFd4B075E3121F4489322BC6C2"
+  namespace: EvmAddress! = "0xaFe49B3faA3C65c4C56C6b768C9047E3bF4076Bb"
 }
 
 input UsernameLengthNamespaceRuleConfig {
@@ -7179,7 +7178,7 @@ input UsernameSearchInput {
   """
   The namespaces to search for local name in. Defaults to global namespace
   """
-  namespaces: [EvmAddress!]! = ["0x0b7Fb953a8f7E0BFd4B075E3121F4489322BC6C2"]
+  namespaces: [EvmAddress!]! = ["0xaFe49B3faA3C65c4C56C6b768C9047E3bF4076Bb"]
 }
 
 type UsernameTaken {

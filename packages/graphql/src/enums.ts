@@ -1018,6 +1018,7 @@ export enum GroupRuleUnsatisfiedReason {
 export enum NamespaceRuleUnsatisfiedReason {
   TokenGatedNotATokenHolder = 'TOKEN_GATED_NOT_A_TOKEN_HOLDER',
   UsernameLengthNotWithinRange = 'USERNAME_LENGTH_NOT_WITHIN_RANGE',
+  UsernameNotASimpleCharset = 'USERNAME_NOT_A_SIMPLE_CHARSET',
   UsernameReserverd = 'USERNAME_RESERVED',
   UsernamePricePerLengthNotEnoughBalance = 'USERNAME_PRICE_PER_LENGTH_NOT_ENOUGH_BALANCE',
 }
@@ -1099,6 +1100,7 @@ export enum NamespaceRuleType {
   PricePerLength = 'PRICE_PER_LENGTH',
   UsernameLength = 'USERNAME_LENGTH',
   UsernameReserverd = 'USERNAME_RESERVED',
+  UsernameSimpleCharset = 'USERNAME_SIMPLE_CHARSET',
   Unknown = 'UNKNOWN',
 }
 

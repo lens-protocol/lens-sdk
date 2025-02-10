@@ -3,6 +3,7 @@ import {
   AccountAvailableFragment,
   AccountBlockedFragment,
   AccountFragment,
+  NamespaceOperationValidationFailedFragment,
   PaginatedResultInfoFragment,
   SelfFundedTransactionRequestFragment,
   SponsoredTransactionRequestFragment,
@@ -126,6 +127,10 @@ const CreateAccountWithUsernameResultFragment = graphql(
       ...UsernameTaken
     }
 
+    ...on NamespaceOperationValidationFailed {
+      ...NamespaceOperationValidationFailed
+    }
+
     ...on TransactionWillFail {
       ...TransactionWillFail
     }
@@ -135,6 +140,7 @@ const CreateAccountWithUsernameResultFragment = graphql(
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
     UsernameTakenFragment,
+    NamespaceOperationValidationFailedFragment,
     TransactionWillFailFragment,
   ],
 );
