@@ -1534,7 +1534,7 @@ type DisableAccountActionResponse {
 union DisableAccountActionResult = DisableAccountActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input DisablePostActionParams @oneOf {
-  tipping: Boolean
+  simpleCollect: Boolean
   unknown: UnknownActionConfigInput
 }
 
@@ -1698,7 +1698,7 @@ type EnableAccountActionResponse {
 union EnableAccountActionResult = EnableAccountActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input EnablePostActionParams @oneOf {
-  tipping: Boolean
+  simpleCollect: Boolean
   unknown: UnknownActionConfigInput
 }
 
