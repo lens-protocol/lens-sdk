@@ -30,8 +30,8 @@ import type { AnyClient } from '../clients';
  * ```ts
  * const result = await createUsername(sessionClient, {
  *   username: {
- *    localName: 'wagmi'
- *   }
+ *     localName: 'wagmi',
+ *   },
  * });
  * ```
  *
@@ -52,8 +52,8 @@ export function createUsername(
  * ```ts
  * const result = await assignUsernameToAccount(sessionClient, {
  *   username: {
- *    localName: 'wagmi'
- *   }
+ *     localName: 'wagmi',
+ *   },
  * });
  * ```
  *
@@ -74,8 +74,8 @@ export function assignUsernameToAccount(
  * ```ts
  * const result = await unassignUsernameFromAccount(sessionClient, {
  *   username: {
- *    localName: 'wagmi'
- *   }
+ *     localName: 'wagmi',
+ *   },
  * });
  * ```
  *
@@ -95,7 +95,9 @@ export function unassignUsernameFromAccount(
  *
  * ```ts
  * const result = await fetchUsername(anyClient, {
- *   username: { localName: 'wagmi' },
+ *   username: {
+ *     localName: 'wagmi',
+ *   },
  * });
  * ```
  *
