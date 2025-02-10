@@ -2,10 +2,11 @@ import type { FragmentOf } from 'gql.tada';
 import {
   AccountFragment,
   AccountPostReactionFragment,
-  ActionInfoFragment,
+  ActionMetadataFragment,
   AnyPostFragment,
   PaginatedResultInfoFragment,
   PostMetadataFragment,
+  PostOperationValidationFailedFragment,
   SelfFundedTransactionRequestFragment,
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
@@ -31,6 +32,9 @@ const PostResultFragment = graphql(
     ...on SelfFundedTransactionRequest {
       ...SelfFundedTransactionRequest
     }
+    ... on PostOperationValidationFailed {
+      ...PostOperationValidationFailed
+    }
     ...on TransactionWillFail {
       ...TransactionWillFail
     }
@@ -39,6 +43,7 @@ const PostResultFragment = graphql(
     PostResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
+    PostOperationValidationFailedFragment,
     TransactionWillFailFragment,
   ],
 );
@@ -99,20 +104,70 @@ export const PostsQuery = graphql(
 );
 export type PostsRequest = RequestOf<typeof PostsQuery>;
 
-export const PostActionsQuery = graphql(
-  `query PostActions($request: PostActionsRequest!) {
-    value: postActions(request: $request) {
+export const SimpleCollectActionContractFragment = graphql(
+  `fragment SimpleCollectActionContract on SimpleCollectActionContract {
+    __typename
+    address
+  }`,
+  [],
+);
+export type SimpleCollectActionContract = FragmentOf<typeof SimpleCollectActionContractFragment>;
+
+export const TippingPostActionContractFragment = graphql(
+  `fragment TippingPostActionContract on TippingPostActionContract {
+    __typename
+    address
+  }`,
+  [],
+);
+export type TippingPostActionContract = FragmentOf<typeof TippingPostActionContractFragment>;
+
+export const UnknownPostActionContractFragment = graphql(
+  `fragment UnknownPostActionContract on UnknownPostActionContract {
+    __typename
+    address
+    metadata {
+      ...ActionMetadata
+    }
+  }`,
+  [ActionMetadataFragment],
+);
+export type UnknownPostActionContract = FragmentOf<typeof UnknownPostActionContractFragment>;
+
+export const PostActionContractFragment = graphql(
+  `fragment PostActionContract on PostActionContract {
+    ... on SimpleCollectActionContract {
+      ...SimpleCollectActionContract
+    }
+    ... on TippingPostActionContract {
+      ...TippingPostActionContract
+    }
+    ... on UnknownPostActionContract {
+      ...UnknownPostActionContract
+    }
+  }`,
+  [
+    SimpleCollectActionContractFragment,
+    TippingPostActionContractFragment,
+    UnknownPostActionContractFragment,
+  ],
+);
+export type PostActionContract = FragmentOf<typeof PostActionContractFragment>;
+
+export const PostActionContractsQuery = graphql(
+  `query PostActionContracts($request: PostActionContractsRequest!) {
+    value: postActionContracts(request: $request) {
       items {
-        ...ActionInfo
+        ...PostActionContract
       },
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }`,
-  [ActionInfoFragment, PaginatedResultInfoFragment],
+  [PostActionContractFragment, PaginatedResultInfoFragment],
 );
-export type PostActionsRequest = RequestOf<typeof PostActionsQuery>;
+export type PostActionContractsRequest = RequestOf<typeof PostActionContractsQuery>;
 
 export const PostReactionsQuery = graphql(
   `query PostReactions($request: PostReactionsRequest!) {
@@ -388,3 +443,45 @@ export const PostEditsQuery = graphql(
   [PostEditFragment, PaginatedResultInfoFragment],
 );
 export type PostEditsRequest = RequestOf<typeof PostEditsQuery>;
+
+const UpdatePostRulesResponseFragment = graphql(
+  `fragment UpdatePostRulesResponse on UpdatePostRulesResponse {
+    __typename
+    hash
+  }`,
+);
+export type UpdatePostRulesResponse = FragmentOf<typeof UpdatePostRulesResponseFragment>;
+
+const UpdatePostRulesResultFragment = graphql(
+  `fragment UpdatePostRulesResult on UpdatePostRulesResult {
+    ...on UpdatePostRulesResponse {
+      ...UpdatePostRulesResponse
+    }
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    UpdatePostRulesResponseFragment,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type UpdatePostRulesResult = FragmentOf<typeof UpdatePostRulesResultFragment>;
+
+export const UpdatePostRulesMutation = graphql(
+  `mutation UpdatePostRules($request: UpdatePostRulesRequest!) {
+    value: updatePostRules(request: $request) {
+      ...UpdatePostRulesResult
+    }
+  }`,
+  [UpdatePostRulesResultFragment],
+);
+export type UpdatePostRulesRequest = RequestOf<typeof UpdatePostRulesMutation>;

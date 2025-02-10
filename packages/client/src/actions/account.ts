@@ -29,6 +29,8 @@ import type {
   UnblockResult,
   UndoRecommendAccountRequest,
   UnmuteRequest,
+  UpdateAccountFollowRulesRequest,
+  UpdateAccountFollowRulesResult,
 } from '@lens-protocol/graphql';
 import {
   AccountFeedsStatsQuery,
@@ -50,6 +52,7 @@ import {
   UnblockMutation,
   UndoRecommendAccountMutation,
   UnmuteAccountMutation,
+  UpdateAccountFollowRulesMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
@@ -430,4 +433,24 @@ export function undoRecommendAccount(
   request: UndoRecommendAccountRequest,
 ): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
   return client.mutation(UndoRecommendAccountMutation, { request });
+}
+
+/**
+ * Update account follow rules
+ *
+ * ```ts
+ * const result = await updateAccountFollowRules(sessionClient, {
+ *   toRemove: ['1234'],
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function updateAccountFollowRules(
+  client: SessionClient,
+  request: UpdateAccountFollowRulesRequest,
+): ResultAsync<UpdateAccountFollowRulesResult, UnauthenticatedError | UnexpectedError> {
+  return client.mutation(UpdateAccountFollowRulesMutation, { request });
 }

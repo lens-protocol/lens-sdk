@@ -1,6 +1,8 @@
 import type {
   AssignUsernameToAccountRequest,
   AssignUsernameToAccountResult,
+  CanCreateUsernameRequest,
+  CanCreateUsernameResult,
   CreateUsernameRequest,
   CreateUsernameResult,
   Paginated,
@@ -12,6 +14,7 @@ import type {
 } from '@lens-protocol/graphql';
 import {
   AssignUsernameToAccountMutation,
+  CanCreateUsernameQuery,
   CreateUsernameMutation,
   UnassignUsernameFromAccountMutation,
   UsernameQuery,
@@ -25,13 +28,29 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
 import type { AnyClient } from '../clients';
 
 /**
+ * Checks if the given username can be created by the logged in Account.
+ *
+ * ```ts
+ * const result = await canCreateUsername(sessionClient, {
+ *   localName: 'wagmi',
+ * });
+ * ```
+ */
+export function canCreateUsername(
+  client: SessionClient,
+  request: CanCreateUsernameRequest,
+): ResultAsync<CanCreateUsernameResult, UnexpectedError | UnauthenticatedError> {
+  return client.query(CanCreateUsernameQuery, { request });
+}
+
+/**
  * Create a username
  *
  * ```ts
  * const result = await createUsername(sessionClient, {
  *   username: {
- *    localName: 'wagmi'
- *   }
+ *     localName: 'wagmi',
+ *   },
  * });
  * ```
  *
@@ -52,8 +71,8 @@ export function createUsername(
  * ```ts
  * const result = await assignUsernameToAccount(sessionClient, {
  *   username: {
- *    localName: 'wagmi'
- *   }
+ *     localName: 'wagmi',
+ *   },
  * });
  * ```
  *
@@ -74,8 +93,8 @@ export function assignUsernameToAccount(
  * ```ts
  * const result = await unassignUsernameFromAccount(sessionClient, {
  *   username: {
- *    localName: 'wagmi'
- *   }
+ *     localName: 'wagmi',
+ *   },
  * });
  * ```
  *
@@ -95,7 +114,9 @@ export function unassignUsernameFromAccount(
  *
  * ```ts
  * const result = await fetchUsername(anyClient, {
- *   username: { localName: 'wagmi' },
+ *   username: {
+ *     localName: 'wagmi',
+ *   },
  * });
  * ```
  *

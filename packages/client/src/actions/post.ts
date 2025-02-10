@@ -13,6 +13,8 @@ import type {
   UndoReactionRequest,
   UndoReactionResult,
   UnhideReplyRequest,
+  UpdatePostRulesRequest,
+  UpdatePostRulesResult,
 } from '@lens-protocol/graphql';
 import {
   AddReactionMutation,
@@ -26,6 +28,7 @@ import {
   UndoBookmarkPostMutation,
   UndoReactionMutation,
   UnhideReplyMutation,
+  UpdatePostRulesMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
@@ -242,7 +245,7 @@ export function unhideReply(
  * ```ts
  * const result = await reportPost(sessionClient, {
  *   reason: "SCAM",
- *   post: postId('1234...'),
+ *   post: postId('1234…'),
  * });
  * ```
  *
@@ -255,4 +258,32 @@ export function reportPost(
   request: ReportPostRequest,
 ): ResultAsync<void, UnauthenticatedError | UnexpectedError> {
   return client.mutation(ReportPostMutation, { request });
+}
+
+/**
+ * Update post rules.
+ *
+ * ```ts
+ * const result = await updatePostRules(sessionClient, {
+ *   post: postId('42…'),
+ *   toAdd: {
+ *     anyOf: [{
+ *       followersOnlyRule: {
+ *         graph: evmAddress('0x1234…'),
+ *       }
+ *     }]
+ *     required: [],
+ *   }
+ * });
+ * ```
+ *
+ * @param client - The session client.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function updatePostRules(
+  client: SessionClient,
+  request: UpdatePostRulesRequest,
+): ResultAsync<UpdatePostRulesResult, UnauthenticatedError | UnexpectedError> {
+  return client.mutation(UpdatePostRulesMutation, { request });
 }

@@ -28,7 +28,19 @@ type Account {
   operations: LoggedInAccountOperations
 
   """Get the rules for the account."""
-  rules(request: RuleInput): FollowRulesConfig!
+  rules: AccountFollowRules!
+  actions: [AccountAction!]!
+}
+
+union AccountAction = TippingAccountAction | UnknownAction
+
+input AccountActionConfigInput @oneOf {
+  unknown: UnknownActionConfigInput
+}
+
+input AccountActionExecuteInput @oneOf {
+  tipping: AmountInput
+  unknown: UnknownActionExecuteInput
 }
 
 union AccountAvailable = AccountManaged | AccountOwned
@@ -82,6 +94,71 @@ input AccountFeedsStatsRequest {
 
   """An optional filter to apply to the result."""
   filter: AccountFeedsStatsFilter
+}
+
+type AccountFollowOperationValidationFailed {
+  unsatisfiedRules: AccountFollowUnsatisfiedRules
+  reason: String!
+}
+
+union AccountFollowOperationValidationOutcome = AccountFollowOperationValidationPassed | AccountFollowOperationValidationUnknown | AccountFollowOperationValidationFailed
+
+type AccountFollowOperationValidationPassed {
+  passed: AlwaysTrue!
+}
+
+union AccountFollowOperationValidationRule = AccountFollowRule | GraphRule
+
+type AccountFollowOperationValidationUnknown {
+  extraChecksRequired: [AccountFollowOperationValidationRule!]!
+}
+
+type AccountFollowRule {
+  id: RuleId!
+  type: AccountFollowRuleType!
+  address: EvmAddress!
+  config: [AnyKeyValue!]!
+}
+
+input AccountFollowRuleConfig {
+  tokenGatedRule: TokenGatedFollowRuleConfig
+  simplePaymentRule: SimplePaymentFollowRuleConfig
+  unknownRule: UnknownAccountRuleConfig
+}
+
+enum AccountFollowRuleType {
+  TOKEN_GATED
+  SIMPLE_PAYMENT
+  UNKNOWN
+}
+
+enum AccountFollowRuleUnsatisfiedReason {
+  GRAPH_TOKEN_GATED_NOT_A_TOKEN_HOLDER
+  GRAPH_ACCOUNT_BLOCKED
+  GRAPH_GROUP_GATED_NOT_A_MEMBER
+  FOLLOW_SIMPLE_PAYMENT_NOT_ENOUGH_BALANCE
+  FOLLOW_TOKEN_GATED_NOT_A_TOKEN_HOLDER
+}
+
+type AccountFollowRules {
+  required: [AccountFollowRule!]!
+  anyOf: [AccountFollowRule!]!
+}
+
+input AccountFollowRulesProcessingParams {
+  unknownRule: UnknownRuleProcessingParams
+}
+
+type AccountFollowUnsatisfiedRule {
+  rule: EvmAddress!
+  reason: AccountFollowRuleUnsatisfiedReason!
+  message: String!
+  config: [AnyKeyValue!]!
+}
+
+type AccountFollowUnsatisfiedRules {
+  required: [AccountFollowUnsatisfiedRule!]!
+  anyOf: [AccountFollowUnsatisfiedRule!]!
 }
 
 input AccountFollowedNotificationAttributes {
@@ -147,11 +224,10 @@ input AccountManagerChallengeRequest {
   The App you intend to authenticate with.
   
   It MUST be a valid App address.
-  Note: On the testnet, it will default to `0x90C8C68D0ABFB40D4FCD72316A65E42161520BC3`, the
-  playground app. This is to make it easier if you forget to set it. This may change in the
-  future.
+  Note: On the testnet, it will default to the playground app.
+  This is to make it easier if you forget to set it. This may change in the future.
   """
-  app: EvmAddress! = "0xe5439696f4057aF073c0FB2dc6e5e755392922e1"
+  app: EvmAddress! = "0xaC19aa2402b3AC3f9Fe471D4783EC68595432465"
 
   """The address of the Lens Account."""
   account: EvmAddress!
@@ -268,11 +344,10 @@ input AccountOwnerChallengeRequest {
   The App you intend to authenticate with.
   
   It MUST be a valid App address.
-  Note: On the testnet, it will default to `0x90C8C68D0ABFB40D4FCD72316A65E42161520BC3`, the
-  playground app. This is to make it easier if you forget to set it. This may change in the
-  future.
+  Note: On the testnet, it will default to the playground app.
+  This is to make it easier if you forget to set it. This may change in the future.
   """
-  app: EvmAddress! = "0xe5439696f4057aF073c0FB2dc6e5e755392922e1"
+  app: EvmAddress! = "0xaC19aa2402b3AC3f9Fe471D4783EC68595432465"
 
   """The address of the Lens Account."""
   account: EvmAddress!
@@ -316,6 +391,11 @@ input AccountRequest {
   txHash: TxHash
 }
 
+input AccountRulesConfigInput {
+  required: [AccountFollowRuleConfig!]! = []
+  anyOf: [AccountFollowRuleConfig!]! = []
+}
+
 type AccountStats {
   """The stats for the feeds."""
   feedStats: AccountFeedsStats!
@@ -329,10 +409,10 @@ input AccountStatsRequest {
   account: EvmAddress!
 
   """The feeds to get stats for."""
-  forFeeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
+  forFeeds: [EvmAddress!]! = ["0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"]
 
   """The graphs to get stats for."""
-  forGraphs: [EvmAddress!]! = ["0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"]
+  forGraphs: [EvmAddress!]! = ["0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"]
 }
 
 input AccountUnblockedNotificationAttributes {
@@ -359,7 +439,7 @@ input AccountUsernameCreatedNotificationAttributes {
 
 input AccountUsernameRequest {
   """The namespace to get account assigned username"""
-  namespace: EvmAddress! = "0x6Cc71E78e25eBF6A2525CadC1fc628B42AE4138f"
+  namespace: EvmAddress! = "0xaFe49B3faA3C65c4C56C6b768C9047E3bF4076Bb"
 }
 
 input AccountUsernameUnassignedNotificationAttributes {
@@ -430,14 +510,47 @@ input AccountsRequest {
 input ActionFilter {
   address: EvmAddress
   actionType: PostActionType
-  category: PostActionCategoryType
 }
 
-union ActionInfo = KnownAction | UnknownAction
+type ActionMetadata {
+  """List of authors email addresses."""
+  authors: [String!]!
 
-type ActionInputInfo {
+  """
+  An optional list of `ContractKeyValuePairDescriptor` that describes the `params` argument
+  of the `configure` function.
+  """
+  configureParams: [KeyValuePair!]!
+
+  """Markdown formatted description of the Action."""
+  description: String!
+
+  """
+  A list of `ContractKeyValuePairDescriptor` that describes the `params` argument of the
+  `execute` function.
+  """
+  executeParams: [KeyValuePair!]!
+
+  """
+  A unique identifier that in storages like IPFS ensures the uniqueness of the metadata URI.
+  Use a UUID if unsure.
+  """
+  id: String!
+
+  """A short name for the Action."""
   name: String!
-  type: String!
+
+  """
+  An optional list of `ContractKeyValuePairDescriptor` that describes the `params` argument
+  of the `setDisabledParams` function.
+  """
+  setDisabledParams: [KeyValuePair!]!
+
+  """The link to the Action source code. Typically a GitHub repository."""
+  source: URI!
+
+  """The human-friendly title for the Action."""
+  title: String!
 }
 
 input AddAccountManagerRequest {
@@ -500,6 +613,23 @@ input AddAppSignersRequest {
 
 union AddAppSignersResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
+input AddGroupMemberRequest {
+  """The group you want to add member to."""
+  group: EvmAddress!
+
+  """The account you want to add to the group."""
+  account: EvmAddress!
+
+  """The processing params for the add member rules."""
+  rulesProcessingParams: [GroupRulesProcessingParams!]
+}
+
+type AddGroupMemberResponse {
+  hash: TxHash!
+}
+
+union AddGroupMemberResult = AddGroupMemberResponse | GroupOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
 type AddReactionFailure {
   reason: String!
 }
@@ -517,6 +647,11 @@ type AddReactionResponse {
 }
 
 union AddReactionResult = AddReactionResponse | AddReactionFailure
+
+type AddressKeyValue {
+  key: String!
+  value: EvmAddress!
+}
 
 type Admin {
   account: Account!
@@ -544,15 +679,7 @@ input AdminsForRequest {
   cursor: Cursor
 }
 
-type Amount {
-  asset: Asset!
-
-  """
-  Token value in its main unit (e.g., 1.5 DAI), not in the smallest fraction (e.g.,
-  wei).
-  """
-  value: BigDecimal!
-}
+scalar AlwaysTrue
 
 input AmountInput {
   """
@@ -566,6 +693,12 @@ input AmountInput {
   wei).
   """
   value: BigDecimal!
+}
+
+union AnyKeyValue = IntKeyValue | IntNullableKeyValue | AddressKeyValue | StringKeyValue | BooleanKeyValue | RawKeyValue | BigDecimalKeyValue | DictionaryKeyValue | ArrayKeyValue
+
+input AnyKeyValueInput @oneOf {
+  raw: RawKeyValueInput
 }
 
 """AnyMedia"""
@@ -728,10 +861,6 @@ input AppUsersRequest {
   cursor: Cursor
 }
 
-type ApprovalGroupRule {
-  rule: EvmAddress!
-}
-
 input AppsFilter {
   """The optional filter to get apps managed by address"""
   managedBy: ManagedBy
@@ -768,6 +897,13 @@ type AppsResult {
   pageInfo: PaginatedResultInfo!
 }
 
+union ArrayData = IntKeyValue | IntNullableKeyValue | AddressKeyValue | StringKeyValue | BooleanKeyValue | RawKeyValue | BigDecimalKeyValue | DictionaryKeyValue
+
+type ArrayKeyValue {
+  key: String!
+  value: [ArrayData!]!
+}
+
 type ArticleMetadata {
   """Any attachment you want to include with it."""
   attachments: [AnyMedia!]!
@@ -795,17 +931,24 @@ type ArticleMetadata {
   title: String
 }
 
-union Asset = Erc20
-
 type AssignUsernameResponse {
   hash: TxHash!
 }
 
 input AssignUsernameToAccountRequest {
   username: UsernameInput!
+
+  """The processing params for the namespace assign rules."""
+  assignRulesProcessingParams: [NamespaceRulesProcessingParams!]
+
+  """The processing params for the namespace unassign rules from account"""
+  unassignAccountRulesProcessingParams: [NamespaceRulesProcessingParams!]
+
+  """The processing params for the namespace unassign rules from namespace"""
+  unassignUsernameRulesProcessingParams: [NamespaceRulesProcessingParams!]
 }
 
-union AssignUsernameToAccountResult = AssignUsernameResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union AssignUsernameToAccountResult = AssignUsernameResponse | NamespaceOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type AudioMetadata {
   """The other attachments you want to include with it."""
@@ -877,7 +1020,30 @@ type AuthenticationTokens {
   idToken: IdToken!
 }
 
+input BanAccountGroupRuleConfig {
+  enable: AlwaysTrue
+}
+
+input BanGroupAccountRequest {
+  """The group you want to ban member on."""
+  group: EvmAddress!
+
+  """The account you want to ban on the group."""
+  account: EvmAddress!
+}
+
+type BanGroupAccountResponse {
+  hash: TxHash!
+}
+
+union BanGroupAccountResult = BanGroupAccountResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
 scalar BigDecimal
+
+type BigDecimalKeyValue {
+  key: String!
+  value: BigDecimal!
+}
 
 scalar BigInt
 
@@ -908,6 +1074,11 @@ input BookmarkPostRequest {
   post: PostId!
 }
 
+type BooleanKeyValue {
+  key: String!
+  value: Boolean!
+}
+
 type BooleanValue {
   optimistic: Boolean!
   onChain: Boolean!
@@ -918,6 +1089,8 @@ input BuilderChallengeRequest {
   address: EvmAddress!
 }
 
+union CanCreateUsernameResult = UsernameTaken | NamespaceOperationValidationPassed | NamespaceOperationValidationUnknown | NamespaceOperationValidationFailed
+
 input CanFollowRequest {
   graph: EvmAddress!
 }
@@ -925,6 +1098,17 @@ input CanFollowRequest {
 input CanUnfollowRequest {
   graph: EvmAddress!
 }
+
+input CancelGroupMembershipRequestRequest {
+  """The group you want cancel your membership request for"""
+  group: EvmAddress!
+}
+
+type CancelGroupMembershipRequestResponse {
+  hash: TxHash!
+}
+
+union CancelGroupMembershipRequestResult = CancelGroupMembershipRequestResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar ChainId
 
@@ -946,16 +1130,6 @@ input ChallengeRequest {
 
   """Use this to authenticate as an Onboarding User."""
   onboardingUser: OnboardingUserChallengeRequest
-}
-
-type CharsetUsernameNamespaceRule {
-  rule: EvmAddress!
-  allowNumeric: Boolean!
-  allowLatinLowercase: Boolean!
-  allowLatinUppercase: Boolean!
-  customAllowedCharset: [String!]
-  customDisallowedCharset: [String!]
-  cannotStartWith: String
 }
 
 type CheckingInMetadata {
@@ -991,14 +1165,35 @@ type CheckingInMetadata {
   content: String!
 }
 
-input CollectActionInput {
-  simpleCollectAction: SimpleCollectActionInput
-}
-
 type CommentNotification {
   id: GeneratedNotificationId!
   comment: Post!
 }
+
+input ConfigureAccountActionRequest {
+  """The action type and configuration."""
+  action: AccountActionConfigInput!
+}
+
+type ConfigureAccountActionResponse {
+  hash: TxHash!
+}
+
+union ConfigureAccountActionResult = ConfigureAccountActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input ConfigurePostActionRequest {
+  """The post to configure the action for."""
+  post: PostId!
+
+  """The post action configuration parameters."""
+  params: PostActionConfigInput!
+}
+
+type ConfigurePostActionResponse {
+  hash: TxHash!
+}
+
+union ConfigurePostActionResult = ConfigurePostActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 enum ContentWarning {
   NSFW
@@ -1021,7 +1216,7 @@ input CreateAccountWithUsernameRequest {
   accountManager: [EvmAddress!]
 }
 
-union CreateAccountWithUsernameResult = CreateAccountResponse | InvalidUsername | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union CreateAccountWithUsernameResult = CreateAccountResponse | UsernameTaken | NamespaceOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input CreateAppRequest {
   """The app metadata uri"""
@@ -1031,16 +1226,16 @@ input CreateAppRequest {
   admins: [EvmAddress!]
 
   """The app graph defaults to use the global graph"""
-  graph: EvmAddress! = "0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"
+  graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
 
   """The app feeds defaults to use the global feed"""
-  feeds: [EvmAddress!]! = ["0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"]
+  feeds: [EvmAddress!]! = ["0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"]
 
   """The default feed defaults to use the global feed"""
-  defaultFeed: EvmAddress! = "0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"
+  defaultFeed: EvmAddress! = "0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"
 
   """The app username leave empty to use the lens username"""
-  namespace: EvmAddress! = "0x6Cc71E78e25eBF6A2525CadC1fc628B42AE4138f"
+  namespace: EvmAddress! = "0xaFe49B3faA3C65c4C56C6b768C9047E3bF4076Bb"
 
   """The app groups leave empty if none"""
   groups: [EvmAddress!]
@@ -1074,6 +1269,9 @@ input CreateFeedRequest {
 
   """List of admins who can manage this feed"""
   admins: [EvmAddress!]
+
+  """Rules for the feed"""
+  rules: FeedRulesConfigInput
 }
 
 type CreateFeedResponse {
@@ -1089,17 +1287,17 @@ input CreateFollowRequest {
   """
   The graph to follow the account on. If not provided, the global graph is used.
   """
-  graph: EvmAddress! = "0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"
+  graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
 
   """
   The data required by any follow rules associated with the account being followed.
   """
-  followRule: FollowRulesInput
+  followRuleProcessingParams: [AccountFollowRulesProcessingParams!]
 
   """
   The data required by the graph rules associated with the specified graph.
   """
-  graphRule: GraphRulesInput
+  graphRulesProcessingParams: [GraphRulesProcessingParams!]
 }
 
 input CreateGraphRequest {
@@ -1108,6 +1306,9 @@ input CreateGraphRequest {
 
   """List of admins who can manage this graph"""
   admins: [EvmAddress!]
+
+  """Rules for the graph"""
+  rules: GraphRulesConfigInput
 }
 
 type CreateGraphResponse {
@@ -1122,6 +1323,12 @@ input CreateGroupRequest {
 
   """List of admins who can manage this group"""
   admins: [EvmAddress!]
+
+  """Rules for the group"""
+  rules: GroupRulesConfigInput
+
+  """The group feed configuration"""
+  feed: GroupFeedParams
 }
 
 type CreateGroupResponse {
@@ -1136,10 +1343,13 @@ type CreateNamespaceResponse {
 
 input CreatePostRequest {
   """The feed to post to. If not provided, the global feed is used."""
-  feed: EvmAddress! = "0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"
+  feed: EvmAddress! = "0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"
 
   """The URI of the post metadata."""
   contentUri: URI!
+
+  """The processing params for the feed rules."""
+  feedRulesProcessingParams: [FeedRulesProcessingParams!]
 
   """The post to quote, if any."""
   quoteOf: ReferencingPostInput
@@ -1148,15 +1358,24 @@ input CreatePostRequest {
   commentOn: ReferencingPostInput
 
   """The actions to attach to the post."""
-  actions: [PostActionInput!]
+  actions: [PostActionConfigInput!]
+
+  """Rules for the post"""
+  rules: PostRulesConfigInput
 }
 
 input CreateRepostRequest {
   """The feed to repost to. If not provided, the global feed is used."""
-  feed: EvmAddress! = "0x83C8D9e96Da13aaD12E068F48C639C7671D2a5C7"
+  feed: EvmAddress! = "0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"
 
   """The post to reference."""
   post: PostId!
+
+  """The processing params for the post rules."""
+  postRulesProcessingParams: [PostRulesProcessingParams!]
+
+  """The processing params for the feed rules."""
+  feedRulesProcessingParams: [FeedRulesProcessingParams!]
 }
 
 input CreateSnsSubscriptionRequest {
@@ -1195,7 +1414,7 @@ input CreateSponsorshipRequest {
   allowLensAccess: Boolean!
 
   """The sponsorship usage allowances with the corresponding limits."""
-  rateLimit: SponsorshipRateLimits
+  rateLimit: SponsorshipRateLimitsInput
 
   """The list of addresses excluded from the sponsorship rate limits."""
   exclusionList: [SponsorshipRateLimitsExempt!]
@@ -1215,12 +1434,10 @@ input CreateUnfollowRequest {
   The graph where the account is followed and should be unfollowed.
   If not provided, the global graph is used.
   """
-  graph: EvmAddress! = "0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"
+  graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
 
-  """
-  The data required by the graph rules associated with the specified graph.
-  """
-  graphRule: GraphRulesInput
+  """The processing params for the graph rules."""
+  graphRulesProcessingParams: [GraphRulesProcessingParams!]
 }
 
 input CreateUsernameNamespaceRequest {
@@ -1240,6 +1457,7 @@ input CreateUsernameNamespaceRequest {
   The symbol for the namespace as usernames minted under the namespace are NFTs
   """
   symbol: String!
+  rules: NamespaceRulesConfigInput
 }
 
 union CreateUsernameNamespaceResult = CreateNamespaceResponse | SelfFundedTransactionRequest | TransactionWillFail
@@ -1249,13 +1467,22 @@ input CreateUsernameRequest {
 
   """If you want to auto assign the username to the account default is true"""
   autoAssign: Boolean! = true
+
+  """The processing params for the namespace create rules."""
+  createUsernameRulesProcessingParams: [NamespaceRulesProcessingParams!]
+
+  """The processing params for the namespace assign rules from account"""
+  assignAccountNamespaceRulesProcessingParams: [NamespaceRulesProcessingParams!]
+
+  """The processing params for the namespace unassign rules from namespace"""
+  unassignUsernameNamespaceRulesProcessingParams: [NamespaceRulesProcessingParams!]
 }
 
 type CreateUsernameResponse {
   hash: TxHash!
 }
 
-union CreateUsernameResult = CreateUsernameResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union CreateUsernameResult = CreateUsernameResponse | UsernameTaken | NamespaceOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar Cursor
 
@@ -1276,8 +1503,8 @@ input DeletePostRequest {
   """The post to delete."""
   post: PostId!
 
-  """If needed, the feed rule data required to accomplish the deletion."""
-  feedRules: FeedRulesInput
+  """The processing params for the feed rules."""
+  feedRulesProcessingParams: [FeedRulesProcessingParams!]
 }
 
 type DeletePostResponse {
@@ -1290,9 +1517,51 @@ input DeleteSnsSubscriptionRequest {
   id: UUID!
 }
 
+type DictionaryKeyValue {
+  key: String!
+  value: [PrimitiveData!]!
+}
+
+input DisableAccountActionRequest @oneOf {
+  tipping: Boolean
+  unknown: UnknownActionConfigInput
+}
+
+type DisableAccountActionResponse {
+  hash: TxHash!
+}
+
+union DisableAccountActionResult = DisableAccountActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input DisablePostActionParams @oneOf {
+  simpleCollect: Boolean
+  unknown: UnknownActionConfigInput
+}
+
+input DisablePostActionRequest {
+  action: DisablePostActionParams!
+
+  """The target post."""
+  post: PostId!
+}
+
+type DisablePostActionResponse {
+  hash: TxHash!
+}
+
+union DisablePostActionResult = DisablePostActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
 input EditPostRequest {
   post: PostId!
   contentUri: URI!
+
+  """The processing params for the feed rules."""
+  feedRulesProcessingParams: [FeedRulesProcessingParams!]
+
+  """
+  The processing params for the parent post (if post edited is a comment or quote)
+  """
+  parentPostRulesProcessingParams: [PostRulesProcessingParams!]
 }
 
 type Eip1559TransactionRequest {
@@ -1417,6 +1686,35 @@ type EmbedMetadata {
   content: String!
 }
 
+input EnableAccountActionRequest @oneOf {
+  tipping: Boolean
+  unknown: UnknownActionConfigInput
+}
+
+type EnableAccountActionResponse {
+  hash: TxHash!
+}
+
+union EnableAccountActionResult = EnableAccountActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input EnablePostActionParams @oneOf {
+  simpleCollect: Boolean
+  unknown: UnknownActionConfigInput
+}
+
+input EnablePostActionRequest {
+  action: EnablePostActionParams!
+
+  """The target post."""
+  post: PostId!
+}
+
+type EnablePostActionResponse {
+  hash: TxHash!
+}
+
+union EnablePostActionResult = EnablePostActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
 union EnableSignlessResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input EntityId @oneOf {
@@ -1428,6 +1726,8 @@ input EntityId @oneOf {
   post: PostId
   app: EvmAddress
   sponsorship: EvmAddress
+  accountAction: EvmAddress
+  postAction: EvmAddress
 }
 
 enum EntityType {
@@ -1439,6 +1739,9 @@ enum EntityType {
   POST
   APP
   SPONSORSHIP
+  ACCOUNT_ACTION
+  POST_ACTION
+  RULE
 }
 
 type Erc20 {
@@ -1446,6 +1749,16 @@ type Erc20 {
   symbol: String!
   decimals: Int!
   contract: NetworkAddress!
+}
+
+type Erc20Amount {
+  asset: Erc20!
+
+  """
+  Token value in its main unit (e.g., 1.5 DAI), not in the smallest fraction (e.g.,
+  wei).
+  """
+  value: BigDecimal!
 }
 
 type EventMetadata {
@@ -1942,6 +2255,34 @@ enum EventMetadataLensSchedulingAdjustmentsTimezoneId {
 
 scalar EvmAddress
 
+input ExecuteAccountActionRequest {
+  """The target account to execute the action on."""
+  account: EvmAddress!
+
+  """The action params."""
+  action: AccountActionExecuteInput!
+}
+
+type ExecuteAccountActionResponse {
+  hash: TxHash!
+}
+
+union ExecuteAccountActionResult = ExecuteAccountActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input ExecutePostActionRequest {
+  """The target post to execute the action on."""
+  post: PostId!
+
+  """The action params."""
+  action: PostActionExecuteInput!
+}
+
+type ExecutePostActionResponse {
+  hash: TxHash!
+}
+
+union ExecutePostActionResult = ExecutePostActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
 """The challenge has expired or was not found."""
 type ExpiredChallengeError {
   reason: String!
@@ -1958,17 +2299,13 @@ type FailedTransactionStatus {
   summary: [SubOperationStatus!]!
 }
 
-input FeeFollowRuleInput {
-  amount: AmountInput!
-}
-
 type Feed {
   address: EvmAddress!
   createdAt: DateTime!
   metadata: FeedMetadata
   owner: EvmAddress!
   operations: LoggedInFeedPostOperations
-  rules(request: RuleInput): FeedRulesConfig!
+  rules: FeedRules!
 }
 
 type FeedMetadata {
@@ -1994,6 +2331,21 @@ input FeedOneOf @oneOf {
   app: EvmAddress
 }
 
+type FeedOperationValidationFailed {
+  unsatisfiedRules: FeedUnsatisfiedRules
+  reason: String!
+}
+
+union FeedOperationValidationOutcome = FeedOperationValidationPassed | FeedOperationValidationUnknown | FeedOperationValidationFailed
+
+type FeedOperationValidationPassed {
+  passed: AlwaysTrue!
+}
+
+type FeedOperationValidationUnknown {
+  extraChecksRequired: [FeedRule!]!
+}
+
 input FeedRequest {
   """The feed"""
   feed: EvmAddress
@@ -2002,15 +2354,68 @@ input FeedRequest {
   txHash: TxHash
 }
 
-union FeedRule = TokenGatedFeedRule | GroupGatedFeedRule | RestrictedSignersFeedRule | SimplePaymentFeedRule | UserBlockingRule | UnknownFeedRule
+type FeedRule {
+  id: RuleId!
+  type: FeedRuleType!
+  address: EvmAddress!
+  executesOn: [FeedRuleExecuteOn!]!
+  config: [AnyKeyValue!]!
+}
 
-type FeedRulesConfig {
+input FeedRuleConfig {
+  groupGatedRule: GroupGatedFeedRuleConfig
+  tokenGatedRule: TokenGatedFeedRuleConfig
+  simplePaymentRule: SimplePaymentFeedRuleConfig
+  unknownRule: UnknownFeedRuleConfig
+}
+
+enum FeedRuleExecuteOn {
+  CREATING_POST
+  EDITING_POST
+  DELETING_POST
+  CHANGING_POST_RULE
+}
+
+enum FeedRuleType {
+  TOKEN_GATED
+  RESTRICTED_SIGNERS
+  ACCOUNT_BLOCKING
+  SIMPLE_PAYMENT
+  GROUP_GATED
+  UNKNOWN
+}
+
+enum FeedRuleUnsatisfiedReason {
+  GROUP_GATED_NOT_A_MEMBER
+  TOKEN_GATED_NOT_A_TOKEN_HOLDER
+  ACCOUNT_BLOCKED
+  SIMPLE_PAYMENT_NOT_ENOUGH_BALANCE
+}
+
+type FeedRules {
   required: [FeedRule!]!
   anyOf: [FeedRule!]!
 }
 
-input FeedRulesInput {
-  unknownFeedRule: UnknownFeedRuleInput
+input FeedRulesConfigInput {
+  required: [FeedRuleConfig!]! = []
+  anyOf: [FeedRuleConfig!]! = []
+}
+
+input FeedRulesProcessingParams {
+  unknownRule: UnknownRuleProcessingParams
+}
+
+type FeedUnsatisfiedRule {
+  rule: EvmAddress!
+  reason: FeedRuleUnsatisfiedReason!
+  message: String!
+  config: [AnyKeyValue!]!
+}
+
+type FeedUnsatisfiedRules {
+  required: [FeedUnsatisfiedRule!]!
+  anyOf: [FeedUnsatisfiedRule!]!
 }
 
 input FeedsFilter {
@@ -2053,6 +2458,8 @@ type FinishedTransactionStatus {
   summary: [SubOperationStatus!]!
 }
 
+scalar FixedBytes32
+
 type FollowNotification {
   id: GeneratedNotificationId!
   followers: [NotificationAccountFollow!]!
@@ -2060,7 +2467,7 @@ type FollowNotification {
 
 input FollowPair {
   """The graph you are checking defaults to global graph."""
-  graph: EvmAddress! = "0x9e7085a6cc3A02F6026817997cE44B26Ba4Df557"
+  graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
 
   """The follower."""
   follower: EvmAddress!
@@ -2073,19 +2480,7 @@ type FollowResponse {
   hash: TxHash!
 }
 
-union FollowResult = FollowResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
-
-union FollowRule = TokenGatedFollowRule | SimplePaymentFollowRule | UnknownFollowRule
-
-type FollowRulesConfig {
-  required: [FollowRule!]!
-  anyOf: [FollowRule!]!
-}
-
-input FollowRulesInput {
-  feeFollowRule: FeeFollowRuleInput
-  unknownFollowRule: UnknownFollowRuleInput
-}
+union FollowResult = FollowResponse | AccountFollowOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input FollowStatusRequest {
   pairs: [FollowPair!]!
@@ -2109,12 +2504,14 @@ type Follower {
   followedOn: DateTime!
 }
 
-type FollowerOnlyPostRule {
-  rule: EvmAddress!
-  graph: EvmAddress!
-  repliesRestricted: Boolean!
-  repostsRestricted: Boolean!
-  quotesRestricted: Boolean!
+type FollowerOn {
+  globalGraph: Boolean
+  graph: EvmAddress
+}
+
+input FollowerOnInput @oneOf {
+  globalGraph: Boolean
+  graph: EvmAddress
 }
 
 input FollowersFilter {
@@ -2123,6 +2520,13 @@ input FollowersFilter {
   The result will come back if they follow on ANY of the supplied graphs
   """
   graphs: [GraphOneOf!]
+}
+
+input FollowersOnlyPostRuleConfig {
+  graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
+  repliesRestricted: Boolean! = true
+  repostRestricted: Boolean! = true
+  quotesRestricted: Boolean! = true
 }
 
 enum FollowersOrderBy {
@@ -2255,7 +2659,7 @@ type Graph {
   createdAt: DateTime!
   metadata: GraphMetadata
   owner: EvmAddress!
-  rules(request: RuleInput): GraphRulesConfig!
+  rules: GraphRules!
 }
 
 type GraphMetadata {
@@ -2289,15 +2693,45 @@ input GraphRequest {
   txHash: TxHash
 }
 
-union GraphRule = TokenGatedGraphRule | RestrictedSignerGraphRule | UserBlockingRule | UnknownGraphRule
+type GraphRule {
+  id: RuleId!
+  type: GraphRuleType!
+  address: EvmAddress!
+  executesOn: [GraphRuleExecuteOn!]!
+  config: [AnyKeyValue!]!
+}
 
-type GraphRulesConfig {
+input GraphRuleConfig {
+  groupGatedRule: GroupGatedGraphRuleConfig
+  tokenGatedRule: TokenGatedGraphRuleConfig
+  unknownRule: UnknownGraphRuleConfig
+}
+
+enum GraphRuleExecuteOn {
+  FOLLOWING
+  UNFOLLOWING
+  CHANGING_FOLLOW_RULES
+}
+
+enum GraphRuleType {
+  TOKEN_GATED
+  ACCOUNT_BLOCKING
+  GROUP_GATED
+  UNKNOWN
+}
+
+type GraphRules {
   required: [GraphRule!]!
   anyOf: [GraphRule!]!
 }
 
-input GraphRulesInput {
-  unknownGraphRule: UnknownGraphRuleInput
+input GraphRulesConfigInput {
+  required: [GraphRuleConfig!]! = []
+  anyOf: [GraphRuleConfig!]! = []
+}
+
+input GraphRulesProcessingParams {
+  unknownRule: UnknownRuleProcessingParams
 }
 
 input GraphsFilter {
@@ -2331,15 +2765,71 @@ input GraphsRequest {
 type Group {
   address: EvmAddress!
   timestamp: DateTime!
+  feed: EvmAddress
   metadata: GroupMetadata
   owner: EvmAddress!
   operations: LoggedInGroupOperations
-  rules(request: RuleInput): GroupRulesConfig!
+
+  """Returns true if the group has banning rule enabled"""
+  banningEnabled: Boolean!
+
+  """Returns true if the group has membership approval rule enabled"""
+  membershipApprovalEnabled: Boolean!
+  rules: GroupRules!
 }
 
-type GroupGatedFeedRule {
-  rule: EvmAddress!
-  group: Group!
+type GroupBannedAccount {
+  ruleId: RuleId!
+  account: Account!
+  bannedBy: Account!
+  lastActiveAt: DateTime!
+  bannedAt: DateTime!
+}
+
+input GroupBannedAccountsFilter {
+  """The optional filter to narrow banned accounts by search query."""
+  searchBy: UsernameSearchInput
+}
+
+enum GroupBannedAccountsOrderBy {
+  LAST_BANNED
+  FIRST_BANNED
+  LAST_ACTIVE
+  ACCOUNT_SCORE
+}
+
+input GroupBannedAccountsRequest {
+  """The group"""
+  group: EvmAddress!
+  filter: GroupBannedAccountsFilter
+
+  """The order by."""
+  orderBy: GroupBannedAccountsOrderBy! = ACCOUNT_SCORE
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
+input GroupFeedParams {
+  """The feed metadata uri"""
+  metadataUri: URI
+
+  """
+  Rules for the feed
+  Note: Group feed has GroupGated rule set by default
+  """
+  rules: FeedRulesConfigInput
+}
+
+input GroupGatedFeedRuleConfig {
+  group: EvmAddress!
+}
+
+input GroupGatedGraphRuleConfig {
+  group: EvmAddress!
 }
 
 type GroupMember {
@@ -2367,6 +2857,40 @@ input GroupMembersRequest {
 
   """The order by."""
   orderBy: GroupMembersOrderBy! = ACCOUNT_SCORE
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
+type GroupMembershipRequest {
+  ruleId: RuleId!
+  account: Account!
+  lastActiveAt: DateTime!
+  requestedAt: DateTime!
+}
+
+input GroupMembershipRequestsFilter {
+  """The optional filter to narrow members by search query."""
+  searchBy: UsernameSearchInput
+}
+
+enum GroupMembershipRequestsOrderBy {
+  LAST_REQUESTED
+  FIRST_REQUESTED
+  LAST_ACTIVE
+  ACCOUNT_SCORE
+}
+
+input GroupMembershipRequestsRequest {
+  """The group"""
+  group: EvmAddress!
+  filter: GroupMembershipRequestsFilter
+
+  """The order by."""
+  orderBy: GroupMembershipRequestsOrderBy! = ACCOUNT_SCORE
 
   """The page size."""
   pageSize: PageSize! = FIFTY
@@ -2406,6 +2930,21 @@ type GroupMetadata {
   coverPicture: URI
 }
 
+type GroupOperationValidationFailed {
+  unsatisfiedRules: GroupUnsatisfiedRules
+  reason: String!
+}
+
+union GroupOperationValidationOutcome = GroupOperationValidationPassed | GroupOperationValidationUnknown | GroupOperationValidationFailed
+
+type GroupOperationValidationPassed {
+  passed: AlwaysTrue!
+}
+
+type GroupOperationValidationUnknown {
+  extraChecksRequired: [GroupRule!]!
+}
+
 input GroupRequest {
   """The group"""
   group: EvmAddress
@@ -2414,11 +2953,57 @@ input GroupRequest {
   txHash: TxHash
 }
 
-union GroupRule = TokenGatedGroupRule | SimplePaymentGroupRule | ApprovalGroupRule | UnknownGroupRule
+type GroupRule {
+  id: RuleId!
+  type: GroupRuleType!
+  address: EvmAddress!
+  executesOn: [GroupRuleExecuteOn!]!
+  config: [AnyKeyValue!]!
+}
 
-type GroupRulesConfig {
+input GroupRuleConfig {
+  membershipApprovalRule: MembershipApprovalGroupRuleConfig
+  banAccountRule: BanAccountGroupRuleConfig
+  tokenGatedRule: TokenGatedGroupRuleConfig
+  simplePaymentRule: SimplePaymentGroupRuleConfig
+  unknownRule: UnknownGroupRuleConfig
+}
+
+enum GroupRuleExecuteOn {
+  ADDING
+  REMOVING
+  JOINING
+  LEAVING
+}
+
+enum GroupRuleType {
+  TOKEN_GATED
+  SIMPLE_PAYMENT
+  MEMBERSHIP_APPROVAL
+  BAN_ACCOUNT
+  UNKNOWN
+}
+
+enum GroupRuleUnsatisfiedReason {
+  TOKEN_GATED_ACCOUNT_JOINING_NOT_A_TOKEN_HOLDER
+  TOKEN_GATED_ACCOUNT_REMOVAL_STILL_TOKEN_HOLDER
+  SIMPLE_PAYMENT_NOT_ENOUGH_BALANCE
+  MEMBERSHIP_APPROVAL_REQUIRED
+  ACCOUNT_BANNED
+}
+
+type GroupRules {
   required: [GroupRule!]!
   anyOf: [GroupRule!]!
+}
+
+input GroupRulesConfigInput {
+  required: [GroupRuleConfig!]! = []
+  anyOf: [GroupRuleConfig!]! = []
+}
+
+input GroupRulesProcessingParams {
+  unknownRule: UnknownRuleProcessingParams
 }
 
 input GroupStatsRequest {
@@ -2428,6 +3013,18 @@ input GroupStatsRequest {
 
 type GroupStatsResponse {
   totalMembers: Int!
+}
+
+type GroupUnsatisfiedRule {
+  rule: EvmAddress!
+  reason: GroupRuleUnsatisfiedReason!
+  message: String!
+  config: [AnyKeyValue!]!
+}
+
+type GroupUnsatisfiedRules {
+  required: [GroupUnsatisfiedRule!]!
+  anyOf: [GroupUnsatisfiedRule!]!
 }
 
 input GroupsFilter {
@@ -2512,8 +3109,14 @@ enum IndexingStatus {
   FAILED
 }
 
-type InvalidUsername {
-  reason: String!
+type IntKeyValue {
+  key: String!
+  value: Int!
+}
+
+type IntNullableKeyValue {
+  key: String!
+  value: Int
 }
 
 input IsFollowedByMeRequest {
@@ -2530,25 +3133,26 @@ scalar JSON
 input JoinGroupRequest {
   """The group you want to join"""
   group: EvmAddress!
+
+  """The processing params for the join rules."""
+  rulesProcessingParams: [GroupRulesProcessingParams!]
 }
 
 type JoinGroupResponse {
   hash: TxHash!
 }
 
-union JoinGroupResult = JoinGroupResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union JoinGroupResult = JoinGroupResponse | GroupOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
-type KeyValue {
-  key: String!
-  value: String!
-}
+type KeyValuePair {
+  """A unique 32 bytes long hexadecimal string key."""
+  key: FixedBytes32!
 
-type KnownAction {
+  """The human-readable name of the parameter."""
   name: String!
-  contract: NetworkAddress!
-  setupInput: [ActionInputInfo!]!
-  actionInput: [ActionInputInfo!]!
-  returnSetupInput: [ActionInputInfo!]!
+
+  """The human-readable ABI description of the parameter."""
+  type: String!
 }
 
 input LastLoggedInAccountRequest {
@@ -2562,22 +3166,26 @@ input LastLoggedInAccountRequest {
 input LeaveGroupRequest {
   """The group you want to leave"""
   group: EvmAddress!
+
+  """The processing params for the leave rules."""
+  rulesProcessingParams: [GroupRulesProcessingParams!]
 }
 
 type LeaveGroupResponse {
   hash: TxHash!
 }
 
-union LeaveGroupResult = LeaveGroupResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union LeaveGroupResult = LeaveGroupResponse | GroupOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar LegacyProfileId
 
+scalar LegacyPublicationId
+
 scalar LegacyRefreshToken
 
-type LengthUsernameNamespaceRule {
-  rule: EvmAddress!
-  minLength: Int!
-  maxLength: Int!
+input LengthAmountPair {
+  length: Int!
+  amount: BigDecimal!
 }
 
 type LinkMetadata {
@@ -2682,14 +3290,14 @@ type LoggedInAccountOperations {
   
   If a graph is not specified it defaults to using the Global Graph
   """
-  canFollow(request: CanFollowRequest): OperationValidationOutcome!
+  canFollow(request: CanFollowRequest): AccountFollowOperationValidationOutcome!
 
   """
   Check if the authenticated account can unfollow the target account.
   
   If a graph is not specified it defaults to using the Global Graph
   """
-  canUnfollow(request: CanUnfollowRequest): OperationValidationOutcome!
+  canUnfollow(request: CanUnfollowRequest): AccountFollowOperationValidationOutcome!
   isMutedByMe: Boolean!
   isBlockedByMe: Boolean!
   hasBlockedMe: Boolean!
@@ -2699,15 +3307,16 @@ type LoggedInAccountOperations {
 }
 
 type LoggedInFeedPostOperations {
-  canPost: OperationValidationOutcome!
+  canPost: FeedOperationValidationOutcome!
 }
 
 type LoggedInGroupOperations {
-  canJoin: OperationValidationOutcome!
-  canLeave: OperationValidationOutcome!
-  canAddMember: OperationValidationOutcome!
-  canRemoveMember: OperationValidationOutcome!
+  canJoin: GroupOperationValidationOutcome!
+  canLeave: GroupOperationValidationOutcome!
+  canAddMember: GroupOperationValidationOutcome!
+  canRemoveMember: GroupOperationValidationOutcome!
   isMember: Boolean!
+  isBanned: Boolean!
 }
 
 type LoggedInPostOperations {
@@ -2716,24 +3325,24 @@ type LoggedInPostOperations {
   hasBookmarked: Boolean!
   hasReported: Boolean!
   hasReacted(request: HasReactedRequest): Boolean!
-  canComment: OperationValidationOutcome!
-  canQuote: OperationValidationOutcome!
-  canRepost: OperationValidationOutcome!
+  canComment: PostOperationValidationOutcome!
+  canQuote: PostOperationValidationOutcome!
+  canRepost: PostOperationValidationOutcome!
   hasCommented: BooleanValue!
   hasQuoted: BooleanValue!
   hasReposted: BooleanValue!
-  canEdit: OperationValidationOutcome!
-  canDelete: OperationValidationOutcome!
+  canEdit: PostOperationValidationOutcome!
+  canDelete: PostOperationValidationOutcome!
 }
 
 type LoggedInUsernameNamespaceOperations {
-  canMint: OperationValidationOutcome!
+  canCreate: NamespaceOperationValidationOutcome!
 }
 
 type LoggedInUsernameOperations {
-  canRemove: OperationValidationOutcome!
-  canAssign: OperationValidationOutcome!
-  canUnassign: OperationValidationOutcome!
+  canRemove: NamespaceOperationValidationOutcome!
+  canAssign: NamespaceOperationValidationOutcome!
+  canUnassign: NamespaceOperationValidationOutcome!
 }
 
 enum MainContentFocus {
@@ -3076,6 +3685,10 @@ enum MediaVideoType {
   VIDEO_OGV
   VIDEO_QUICKTIME
   VIDEO_WEBM
+}
+
+input MembershipApprovalGroupRuleConfig {
+  enable: AlwaysTrue
 }
 
 type MentionNotification {
@@ -3451,6 +4064,41 @@ type Mutation {
   """
   updateAccountManager(request: UpdateAccountManagerRequest!): UpdateAccountManagerResult!
 
+  """
+  Update account follow rules
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  updateAccountFollowRules(request: UpdateAccountFollowRulesRequest!): UpdateAccountFollowRulesResult!
+
+  """
+  Configure the given account action for the authenticated account.
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  configureAccountAction(request: ConfigureAccountActionRequest!): ConfigureAccountActionResult!
+
+  """
+  Set the given account action for the authenticated account.
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  disableAccountAction(request: DisableAccountActionRequest!): DisableAccountActionResult!
+
+  """
+  Set the given account action for the authenticated account.
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  enableAccountAction(request: EnableAccountActionRequest!): EnableAccountActionResult!
+
+  """
+  Execute the given account action for the authenticated account.
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  executeAccountAction(request: ExecuteAccountActionRequest!): ExecuteAccountActionResult!
+
   """Authenticate the user with the signed authentication challenge."""
   authenticate(request: SignedAuthChallenge!): AuthenticationResult!
 
@@ -3562,6 +4210,44 @@ type Mutation {
   reportPost(request: ReportPostRequest!): Void!
 
   """
+  Update post rules
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  updatePostRules(request: UpdatePostRulesRequest!): UpdatePostRulesResult!
+
+  """
+  Configure the given post action for the given post.
+  
+  You MUST be authenticated as the owner or manager of the account that authored this Post to
+  use this mutation.
+  """
+  configurePostAction(request: ConfigurePostActionRequest!): ConfigurePostActionResult!
+
+  """
+  Disable the given post action for the given post.
+  
+  You MUST be authenticated as the Owner or Manager of the account that made this post to use
+  this mutation.
+  """
+  disablePostAction(request: DisablePostActionRequest!): DisablePostActionResult!
+
+  """
+  Enable the given post action for the authenticated post.
+  
+  You MUST be authenticated as the owner or manager of the account that authored this Post to
+  use this mutation.
+  """
+  enablePostAction(request: EnablePostActionRequest!): EnablePostActionResult!
+
+  """
+  Execute the given post action.
+  
+  You MUST be authenticated to use this mutation.
+  """
+  executePostAction(request: ExecutePostActionRequest!): ExecutePostActionResult!
+
+  """
   Follow an Account on the global Graph or a specific Graph.
   
   You MUST be authenticated as Account Owner or Account Manager to use this mutation.
@@ -3581,6 +4267,13 @@ type Mutation {
   You MUST be authenticated as a builder to use this mutation.
   """
   createGraph(request: CreateGraphRequest!): CreateGraphResult!
+
+  """
+  Update graph rules
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  updateGraphRules(request: UpdateGraphRulesRequest!): UpdateGraphRulesResult!
 
   """
   Set metadata for a graph
@@ -3627,6 +4320,20 @@ type Mutation {
   setNamespaceMetadata(request: SetNamespaceMetadataRequest!): SetNamespaceMetadataResult!
 
   """
+  Update namespace rules
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  updateNamespaceRules(request: UpdateNamespaceRulesRequest!): UpdateNamespaceRulesResult!
+
+  """
+  Update reserved usernames
+  
+  You MUST be a namespace owner or admin to use this mutation
+  """
+  updateReservedUsernames(request: UpdateReservedUsernamesRequest!): UpdateReservedUsernamesResult!
+
+  """
   Add admins to a graph/app/sponsor/feed/username/group.
   
   You MUST be authenticated as Account Owner to use this mutation.
@@ -3662,11 +4369,25 @@ type Mutation {
   setFeedMetadata(request: SetFeedMetadataRequest!): SetFeedMetadataResult!
 
   """
+  Update feed rules
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  updateFeedRules(request: UpdateFeedRulesRequest!): UpdateFeedRulesResult!
+
+  """
   Create a new group
   
   You MUST be authenticated to use this mutation.
   """
   createGroup(request: CreateGroupRequest!): CreateGroupResult!
+
+  """
+  Update group rules
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  updateGroupRules(request: UpdateGroupRulesRequest!): UpdateGroupRulesResult!
 
   """
   Join a group
@@ -3688,6 +4409,57 @@ type Mutation {
   You MUST be authenticated to use this mutation.
   """
   setGroupMetadata(request: SetGroupMetadataRequest!): SetGroupMetadataResult!
+
+  """
+  Add group member
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  addGroupMember(request: AddGroupMemberRequest!): AddGroupMemberResult!
+
+  """
+  Remove group member
+  
+  You MUST be a group owner or admin to use this mutation
+  """
+  removeGroupMember(request: RemoveGroupMemberRequest!): RemoveGroupMemberResult!
+
+  """
+  Request to join a group
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  requestGroupMembership(request: RequestGroupMembershipRequest!): RequestGroupMembershipResult!
+
+  """
+  Cancel group membership request
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  cancelGroupMembershipRequest(request: CancelGroupMembershipRequestRequest!): CancelGroupMembershipRequestResult!
+
+  """
+  Reject group membership request
+  
+  You MUST be a group owner or admin to use this mutation
+  """
+  rejectGroupMembershipRequest(request: RejectGroupMembershipRequest!): RejectGroupMembershipResult!
+
+  """
+  Ban account to join a group
+  Banned account MUST not be a member of a group.
+  Use `removeGroupMember` mutation with `ban` flag to remove and ban existing members
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  banGroupAccount(request: BanGroupAccountRequest!): BanGroupAccountResult!
+
+  """
+  Unban account
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  unbanGroupAccount(request: UnbanGroupAccountRequest!): UnbanGroupAccountResult!
   createSnsSubscriptions(request: CreateSnsSubscriptionRequest!): [SnsSubscription!]!
   deleteSnsSubscription(request: DeleteSnsSubscriptionRequest!): Void!
 
@@ -3697,6 +4469,20 @@ type Mutation {
   You MUST be authenticated as a builder to use this mutation.
   """
   createSponsorship(request: CreateSponsorshipRequest!): CreateSponsorshipResult!
+
+  """
+  Pause a sponsorship.
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  pauseSponsorship(request: PausingRequest!): PausingResult!
+
+  """
+  Unpause a sponsorship.
+  
+  You MUST be authenticated as a builder to use this mutation.
+  """
+  unpauseSponsorship(request: PausingRequest!): PausingResult!
 
   """
   Set metadata for a sponsorship
@@ -3732,12 +4518,105 @@ input MuteRequest {
   account: EvmAddress!
 }
 
+type NamespaceOperationValidationFailed {
+  unsatisfiedRules: NamespaceUnsatisfiedRules
+  reason: String!
+}
+
+union NamespaceOperationValidationOutcome = NamespaceOperationValidationPassed | NamespaceOperationValidationUnknown | NamespaceOperationValidationFailed
+
+type NamespaceOperationValidationPassed {
+  passed: AlwaysTrue!
+}
+
+type NamespaceOperationValidationUnknown {
+  extraChecksRequired: [NamespaceRule!]!
+}
+
 input NamespaceRequest {
   """The namespace"""
   namespace: EvmAddress
 
   """The transaction hash you created the namespace with."""
   txHash: TxHash
+}
+
+input NamespaceReservedUsernamesRequest {
+  """The namespace to get reserved usernames for"""
+  namespace: EvmAddress!
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
+type NamespaceRule {
+  id: RuleId!
+  type: NamespaceRuleType!
+  address: EvmAddress!
+  executesOn: [NamespaceRuleExecuteOn!]!
+  config: [AnyKeyValue!]!
+}
+
+input NamespaceRuleConfig {
+  tokenGatedRule: TokenGatedNamespaceRuleConfig
+  usernamePricePerLengthRule: UsernamePricePerLengthNamespaceRuleConfig
+  usernameLengthRule: UsernameLengthNamespaceRuleConfig
+  usernameReservedRule: UsernameReservedNamespaceRuleConfig
+  usernameSimpleCharsetRule: Boolean
+  unknownRule: UnknownNamespaceRuleConfig
+}
+
+enum NamespaceRuleExecuteOn {
+  CREATING
+  REMOVING
+  ASSIGNING
+  UNASSIGNING
+}
+
+enum NamespaceRuleType {
+  TOKEN_GATED
+  PRICE_PER_LENGTH
+  USERNAME_LENGTH
+  USERNAME_RESERVED
+  USERNAME_SIMPLE_CHARSET
+  UNKNOWN
+}
+
+enum NamespaceRuleUnsatisfiedReason {
+  TOKEN_GATED_NOT_A_TOKEN_HOLDER
+  USERNAME_LENGTH_NOT_WITHIN_RANGE
+  USERNAME_NOT_A_SIMPLE_CHARSET
+  USERNAME_RESERVED
+  USERNAME_PRICE_PER_LENGTH_NOT_ENOUGH_BALANCE
+}
+
+type NamespaceRules {
+  required: [NamespaceRule!]!
+  anyOf: [NamespaceRule!]!
+}
+
+input NamespaceRulesConfigInput {
+  required: [NamespaceRuleConfig!]! = []
+  anyOf: [NamespaceRuleConfig!]! = []
+}
+
+input NamespaceRulesProcessingParams {
+  unknownRule: UnknownRuleProcessingParams
+}
+
+type NamespaceUnsatisfiedRule {
+  rule: EvmAddress!
+  reason: NamespaceRuleUnsatisfiedReason!
+  message: String!
+  config: [AnyKeyValue!]!
+}
+
+type NamespaceUnsatisfiedRules {
+  required: [NamespaceUnsatisfiedRule!]!
+  anyOf: [NamespaceUnsatisfiedRule!]!
 }
 
 input NamespacesFilter {
@@ -3854,26 +4733,13 @@ input OnboardingUserChallengeRequest {
   The App you intend to authenticate with.
   
   It MUST be a valid App address.
-  Note: On the testnet, it will default to `0x90C8C68D0ABFB40D4FCD72316A65E42161520BC3`, the
-  playground app. This is to make it easier if you forget to set it. This may change in the
-  future.
+  Note: On the testnet, it will default to the playground app.
+  This is to make it easier if you forget to set it. This may change in the future.
   """
-  app: EvmAddress! = "0xe5439696f4057aF073c0FB2dc6e5e755392922e1"
+  app: EvmAddress! = "0xaC19aa2402b3AC3f9Fe471D4783EC68595432465"
 
   """The address of the EOA that needs to create their Lens Account."""
   wallet: EvmAddress!
-}
-
-type OperationValidationFailed {
-  unsatisfiedRules: [UnsatisfiedRule!]
-  reason: String!
-}
-
-union OperationValidationOutcome = OperationValidationPassed | OperationValidationFailed
-
-type OperationValidationPassed {
-  restrictedSignerRequired: Boolean!
-  extraChecksRequired: [UnknownRule!]!
 }
 
 enum PageSize {
@@ -3904,11 +4770,6 @@ type PaginatedAccountsBlockedResult {
 
 type PaginatedAccountsResult {
   items: [Account!]!
-  pageInfo: PaginatedResultInfo!
-}
-
-type PaginatedActions {
-  items: [ActionInfo!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -3964,8 +4825,18 @@ type PaginatedGraphsResult {
   pageInfo: PaginatedResultInfo!
 }
 
+type PaginatedGroupBannedAccountsResult {
+  items: [GroupBannedAccount!]!
+  pageInfo: PaginatedResultInfo!
+}
+
 type PaginatedGroupMembersResult {
   items: [GroupMember!]!
+  pageInfo: PaginatedResultInfo!
+}
+
+type PaginatedGroupMembershipRequestsResult {
+  items: [GroupMembershipRequest!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -3975,8 +4846,18 @@ type PaginatedGroupsResult {
   pageInfo: PaginatedResultInfo!
 }
 
+type PaginatedNamespaceReservedUsernamesResult {
+  items: [UsernameReserved!]!
+  pageInfo: PaginatedResultInfo!
+}
+
 type PaginatedNotificationResult {
   items: [Notification!]!
+  pageInfo: PaginatedResultInfo!
+}
+
+type PaginatedPostActionContracts {
+  items: [PostActionContract!]!
   pageInfo: PaginatedResultInfo!
 }
 
@@ -4022,6 +4903,13 @@ type PaginatedUsernamesResult {
   items: [Username!]!
   pageInfo: PaginatedResultInfo!
 }
+
+input PausingRequest {
+  """The sponsorship to update"""
+  sponsorship: EvmAddress!
+}
+
+union PausingResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type PaymasterParams {
   """The address of the paymaster."""
@@ -4073,6 +4961,9 @@ type Post {
   id: PostId!
   slug: PostId!
   author: Account!
+
+  """The feed address that the post belongs to."""
+  feed: EvmAddress!
   isEdited: Boolean!
   isDeleted: Boolean!
   timestamp: DateTime!
@@ -4081,12 +4972,11 @@ type Post {
   root: Post
   quoteOf: Post
   commentOn: Post
-  actions: [PostAction!]!
+  actions(request: PostActionsParams! = {includeDisabled: false}): [PostAction!]!
   operations: LoggedInPostOperations
   stats: PostStats!
   mentions: [PostMention!]!
-  feed: Feed!
-  rules(request: RuleInput): PostRulesConfig!
+  rules: PostRules!
 }
 
 input PostAccountPair {
@@ -4094,28 +4984,36 @@ input PostAccountPair {
   account: EvmAddress!
 }
 
-union PostAction = SimpleCollectActionSettings | UnknownActionSettings
+union PostAction = SimpleCollectAction | TippingPostAction | UnknownAction
 
-enum PostActionCategoryType {
-  COLLECT
+input PostActionConfigInput @oneOf {
+  simpleCollect: SimpleCollectActionConfigInput
+  unknown: UnknownActionConfigInput
 }
 
-input PostActionInput {
-  collectAction: CollectActionInput!
-  unknownAction: UnknownActionInput!
+union PostActionContract = SimpleCollectActionContract | TippingPostActionContract | UnknownPostActionContract
+
+input PostActionContractsRequest {
+  includeUnknown: Boolean! = false
+  onlyCollectActions: Boolean! = false
+  pageSize: PageSize! = FIFTY
+  cursor: Cursor
+}
+
+input PostActionExecuteInput @oneOf {
+  simpleCollect: Boolean
+  tipping: AmountInput
+  unknown: UnknownActionExecuteInput
 }
 
 enum PostActionType {
-  SIMPLE_COLLECT_ACTION
-  UNKNOWN_ACTION
+  SIMPLE_COLLECT
+  TIPPING
+  UNKNOWN
 }
 
-input PostActionsRequest {
-  limit: Int
-  cursor: Cursor
-  includeUnknown: Boolean
-  includeOnlyCollectActions: Boolean
-  onlyVerified: Boolean
+input PostActionsParams {
+  includeDisabled: Boolean!
 }
 
 input PostBookmarksFilter {
@@ -4195,6 +5093,23 @@ input PostMetadataFilter {
 input PostMetadataTagsFilter {
   oneOf: [String!]
   all: [String!]
+}
+
+type PostOperationValidationFailed {
+  unsatisfiedRules: PostUnsatisfiedRules
+  reason: String!
+}
+
+union PostOperationValidationOutcome = PostOperationValidationPassed | PostOperationValidationUnknown | PostOperationValidationFailed
+
+type PostOperationValidationPassed {
+  passed: AlwaysTrue!
+}
+
+union PostOperationValidationRule = PostRule | FeedRule
+
+type PostOperationValidationUnknown {
+  extraChecksRequired: [PostOperationValidationRule!]!
 }
 
 type PostReaction {
@@ -4308,10 +5223,15 @@ input PostReportedNotificationAttributes {
   app: EvmAddress
 }
 
-"""You must provide either a txHash or a postId, not both."""
+"""
+You must provide either a txHash or a postId or a legacyId, you can not apply more than one.
+"""
 input PostRequest {
   """The post ID."""
   post: PostId
+
+  """The legacy publication ID."""
+  legacyId: LegacyPublicationId
 
   """The transaction hash you sent the post with."""
   txHash: TxHash
@@ -4321,13 +5241,51 @@ type PostResponse {
   hash: TxHash!
 }
 
-union PostResult = PostResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union PostResult = PostResponse | PostOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
-union PostRule = FollowerOnlyPostRule | UnknownPostRule
+type PostRule {
+  id: RuleId!
+  type: PostRuleType!
+  address: EvmAddress!
+  executesOn: [PostRuleExecuteOn!]!
+  config: [AnyKeyValue!]!
+}
 
-type PostRulesConfig {
+input PostRuleConfig {
+  followersOnlyRule: FollowersOnlyPostRuleConfig
+  unknownRule: UnknownPostRuleConfig
+}
+
+enum PostRuleExecuteOn {
+  CREATING_POST
+  EDITING_POST
+}
+
+enum PostRuleType {
+  FOLLOWERS_ONLY
+  UNKNOWN
+}
+
+enum PostRuleUnsatisfiedReason {
+  POST_NOT_A_FOLLOWER
+  FEED_GROUP_GATED_NOT_A_MEMBER
+  FEED_TOKEN_GATED_NOT_A_TOKEN_HOLDER
+  FEED_ACCOUNT_BLOCKED
+  FEED_SIMPLE_PAYMENT_NOT_ENOUGH_BALANCE
+}
+
+type PostRules {
   required: [PostRule!]!
   anyOf: [PostRule!]!
+}
+
+input PostRulesConfigInput {
+  required: [PostRuleConfig!]! = []
+  anyOf: [PostRuleConfig!]! = []
+}
+
+input PostRulesProcessingParams {
+  unknownRule: UnknownRuleProcessingParams
 }
 
 type PostStats {
@@ -4380,6 +5338,18 @@ enum PostType {
   QUOTE
 }
 
+type PostUnsatisfiedRule {
+  rule: EvmAddress!
+  reason: PostRuleUnsatisfiedReason!
+  message: String!
+  config: [AnyKeyValue!]!
+}
+
+type PostUnsatisfiedRules {
+  required: [PostUnsatisfiedRule!]!
+  anyOf: [PostUnsatisfiedRule!]!
+}
+
 enum PostVisibilityFilter {
   """All posts even if they have been hidden"""
   ALL
@@ -4410,6 +5380,8 @@ input PostsRequest {
   pageSize: PageSize! = FIFTY
   cursor: Cursor
 }
+
+union PrimitiveData = IntKeyValue | IntNullableKeyValue | AddressKeyValue | StringKeyValue | BooleanKeyValue | RawKeyValue | BigDecimalKeyValue
 
 type Query {
   health: Boolean!
@@ -4512,7 +5484,9 @@ type Query {
   """Get the reactions added to a post."""
   postReactions(request: PostReactionsRequest!): PaginatedPostReactionsResult!
   postReactionStatus(request: PostReactionStatusRequest!): [PostReactionStatus!]!
-  postActions(request: PostActionsRequest!): PaginatedActions!
+
+  """Lists all available Post Action contracts."""
+  postActionContracts(request: PostActionContractsRequest!): PaginatedPostActionContracts!
 
   """Get accounts who referenced a post"""
   whoReferencedPost(request: WhoReferencedPostRequest!): PaginatedAccountsResult!
@@ -4536,6 +5510,12 @@ type Query {
 
   """Get the number of members in a Group"""
   groupStats(request: GroupStatsRequest!): GroupStatsResponse!
+
+  """Get the group membership requests"""
+  groupMembershipRequests(request: GroupMembershipRequestsRequest!): PaginatedGroupMembershipRequestsResult!
+
+  """Get the banned accounts of a group"""
+  groupBannedAccounts(request: GroupBannedAccountsRequest!): PaginatedGroupBannedAccountsResult!
 
   """Get admins for a graph/app/sponsor/feed/username/group address"""
   adminsFor(request: AdminsForRequest!): PaginatedAdminsResult!
@@ -4564,6 +5544,13 @@ type Query {
   """Get the status of a transaction by its hash."""
   transactionStatus(request: TransactionStatusRequest!): TransactionStatusResult!
   debugMetadata(request: DebugPostMetadataRequest!): DebugPostMetadataResult!
+
+  """
+  Checks if the given username can be created by the account
+  
+  You MUST be authenticated to use this mutation.
+  """
+  canCreateUsername(request: UsernameInput!): CanCreateUsernameResult!
   namespace(request: NamespaceRequest!): UsernameNamespace
   username(request: UsernameRequest!): Username
 
@@ -4572,6 +5559,9 @@ type Query {
 
   """Get the namespaces."""
   namespaces(request: NamespacesRequest!): NamespacesResult!
+
+  """Get the banned accounts of a group"""
+  namespaceReservedUsernames(request: NamespaceReservedUsernamesRequest!): PaginatedNamespaceReservedUsernamesResult!
 
   """Get paginated Sponsorship limits Exclusion list."""
   sponsorshipLimitsExclusions(request: SponsorshipLimitExclusionsRequest!): SponsorshipLimitsExclusionsResult!
@@ -4592,20 +5582,20 @@ type QuoteNotification {
   quote: Post!
 }
 
+type RawKeyValue {
+  key: BlockchainData!
+  value: BlockchainData!
+}
+
+input RawKeyValueInput {
+  key: BlockchainData!
+  value: BlockchainData!
+}
+
 type ReactionNotification {
   id: GeneratedNotificationId!
   reactions: [NotificationAccountPostReaction!]!
   post: Post!
-}
-
-input RecipientDataInput {
-  recipient: EvmAddress!
-  split: Float!
-}
-
-type RecipientDataOutput {
-  recipient: EvmAddress!
-  split: Float!
 }
 
 input RecommendAccount {
@@ -4616,6 +5606,9 @@ input RecommendAccount {
 input ReferencingPostInput {
   """The post to reference."""
   post: PostId!
+
+  """The processing params for the post rules."""
+  postRulesProcessingParams: [PostRulesProcessingParams!]
 }
 
 input RefreshRequest {
@@ -4625,6 +5618,20 @@ input RefreshRequest {
 union RefreshResult = AuthenticationTokens | ForbiddenError
 
 scalar RefreshToken
+
+input RejectGroupMembershipRequest {
+  """The group you want to reject membership request for."""
+  group: EvmAddress!
+
+  """The account you want to reject membership request for."""
+  account: EvmAddress!
+}
+
+type RejectGroupMembershipRequestResponse {
+  hash: TxHash!
+}
+
+union RejectGroupMembershipResult = RejectGroupMembershipRequestResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input RemoveAccountManagerRequest {
   """The address to remove as a manager."""
@@ -4680,6 +5687,26 @@ input RemoveAppSignersRequest {
 
 union RemoveAppSignersResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
+input RemoveGroupMemberRequest {
+  """The group you want to join"""
+  group: EvmAddress!
+
+  """The account you want to remove from the group."""
+  account: EvmAddress!
+
+  """Ban the account from the joining the group."""
+  ban: Boolean! = false
+
+  """The processing params for the join rules."""
+  rulesProcessingParams: [GroupRulesProcessingParams!]
+}
+
+type RemoveGroupMemberResponse {
+  hash: TxHash!
+}
+
+union RemoveGroupMemberResult = RemoveGroupMemberResponse | GroupOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
 union RemoveSignlessResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input ReportAccountRequest {
@@ -4718,20 +5745,16 @@ type RepostNotification {
   post: Post!
 }
 
-type RestrictedSigner {
-  label: String!
-  signer: EvmAddress!
+input RequestGroupMembershipRequest {
+  """The group you want to add member to."""
+  group: EvmAddress!
 }
 
-type RestrictedSignerGraphRule {
-  rule: EvmAddress!
-  signers: [RestrictedSigner!]!
+type RequestGroupMembershipResponse {
+  hash: TxHash!
 }
 
-type RestrictedSignersFeedRule {
-  rule: EvmAddress!
-  signers: [RestrictedSigner!]!
-}
+union RequestGroupMembershipResult = RequestGroupMembershipResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input RevokeAuthenticationRequest {
   authenticationId: UUID!
@@ -4745,9 +5768,7 @@ input RolloverRefreshRequest {
   refreshToken: LegacyRefreshToken!
 }
 
-input RuleInput {
-  rules: [EvmAddress!]!
-}
+scalar RuleId
 
 enum SelfFundedFallbackReason {
   NOT_SPONSORED
@@ -4905,49 +5926,41 @@ input SignedAuthChallenge {
   signature: Signature!
 }
 
-input SimpleCollectActionInput {
-  amount: AmountInput
-  referralFee: Float
+type SimpleCollectAction {
+  address: EvmAddress!
+  amount: Erc20Amount
   recipient: EvmAddress
-  collectLimit: String
-  followerOnly: Boolean!
+  collectLimit: Int
+  followerOnGraph: FollowerOn
   endsAt: DateTime
-  recipients: [RecipientDataInput!]
+  isImmutable: Boolean!
 }
 
-type SimpleCollectActionSettings {
-  contract: NetworkAddress!
-  amount: Amount!
-  collectNft: EvmAddress
-  collectLimit: String
-  followerOnly: Boolean!
-  recipient: EvmAddress!
-  referralFee: Float!
+input SimpleCollectActionConfigInput {
+  amount: AmountInput
+  recipient: EvmAddress
+  collectLimit: Int
+  followerOnGraph: FollowerOnInput
   endsAt: DateTime
-  recipients: [RecipientDataOutput!]!
+  isImmutable: Boolean! = false
 }
 
-type SimplePaymentFeedRule {
-  rule: EvmAddress!
-  amount: Amount!
+type SimpleCollectActionContract {
+  address: EvmAddress!
+}
+
+input SimplePaymentFeedRuleConfig {
+  cost: AmountInput!
   recipient: EvmAddress!
 }
 
-type SimplePaymentFollowRule {
-  rule: EvmAddress!
-  amount: Amount!
+input SimplePaymentFollowRuleConfig {
+  cost: AmountInput!
   recipient: EvmAddress!
 }
 
-type SimplePaymentGroupRule {
-  rule: EvmAddress!
-  amount: Amount!
-  recipient: EvmAddress!
-}
-
-type SimplePaymentUsernameNamespaceRule {
-  rule: EvmAddress!
-  amount: Amount!
+input SimplePaymentGroupRuleConfig {
+  cost: AmountInput!
   recipient: EvmAddress!
 }
 
@@ -5060,14 +6073,10 @@ type SpaceMetadata {
   content: String!
 }
 
-type SponsorLimit {
-  window: SponsorshipRateLimitWindow!
-  allowance: Int!
-}
-
 enum SponsoredFallbackReason {
   SIGNLESS_DISABLED
   SIGNLESS_FAILED
+  INVOLVES_FUNDS
 }
 
 type SponsoredTransactionRequest {
@@ -5086,8 +6095,7 @@ type Sponsorship {
   isPaused: Boolean!
   createdAt: DateTime!
   metadata: SponsorshipMetadata
-  globalRateLimit: SponsorLimit
-  userRateLimit: SponsorLimit
+  limits: SponsorshipLimits
   owner: EvmAddress!
 
   """
@@ -5144,6 +6152,11 @@ input SponsorshipLimitExclusionsRequest {
   cursor: Cursor
 }
 
+type SponsorshipLimits {
+  global: SponsorshipRateLimit
+  user: SponsorshipRateLimit
+}
+
 type SponsorshipLimitsExclusionsResult {
   items: [SponsorshipLimitsExempt!]!
   pageInfo: PaginatedResultInfo!
@@ -5170,7 +6183,12 @@ type SponsorshipMetadata {
   name: String!
 }
 
-input SponsorshipRateLimit {
+type SponsorshipRateLimit {
+  window: SponsorshipRateLimitWindow!
+  limit: Int!
+}
+
+input SponsorshipRateLimitInput {
   """The limit time window."""
   window: SponsorshipRateLimitWindow!
 
@@ -5185,20 +6203,20 @@ enum SponsorshipRateLimitWindow {
   MONTH
 }
 
-input SponsorshipRateLimits {
-  """The global rate limit."""
-  global: SponsorshipRateLimit
-
-  """The user rate limit."""
-  user: SponsorshipRateLimit
-}
-
 input SponsorshipRateLimitsExempt {
   """The exempt address."""
   address: EvmAddress!
 
   """The human-readable label for the exempt address."""
   label: String!
+}
+
+input SponsorshipRateLimitsInput {
+  """The global rate limit."""
+  global: SponsorshipRateLimitInput
+
+  """The user rate limit."""
+  user: SponsorshipRateLimitInput
 }
 
 input SponsorshipRequest {
@@ -5310,6 +6328,11 @@ type StoryMetadata {
   """An arbitrary list of tags."""
   tags: [Tag!]
   content: String!
+}
+
+type StringKeyValue {
+  key: String!
+  value: String!
 }
 
 type SubOperationStatus {
@@ -5457,50 +6480,61 @@ input TimelineRequest {
   cursor: Cursor
 }
 
-type TokenGatedFeedRule {
-  rule: EvmAddress!
-  tokenStandard: TokenStandard!
-  typeId: BigInt!
-  token: EvmAddress!
-  amount: Amount!
+type TippingAccountAction {
+  address: EvmAddress!
 }
 
-type TokenGatedFollowRule {
-  rule: EvmAddress!
-  tokenStandard: TokenStandard!
-  typeId: BigInt!
-  token: EvmAddress!
-  amount: Amount!
+type TippingPostAction {
+  address: EvmAddress!
 }
 
-type TokenGatedGraphRule {
-  rule: EvmAddress!
-  tokenStandard: TokenStandard!
-  typeId: BigInt!
-  token: EvmAddress!
-  amount: Amount!
+type TippingPostActionContract {
+  address: EvmAddress!
 }
 
-type TokenGatedGroupRule {
-  rule: EvmAddress!
-  tokenStandard: TokenStandard!
-  typeId: BigInt!
-  token: EvmAddress!
-  amount: Amount!
+input TokenAmountInput {
+  standard: TokenStandard!
+
+  """
+  The token address. To represent the native token, use the
+  0x000000000000000000000000000000000000800a.
+  """
+  currency: EvmAddress!
+
+  """
+  Token value in its main unit (e.g., 1.5 DAI), not in the smallest fraction (e.g.,
+  wei).
+  """
+  value: BigDecimal!
+
+  """Optional, only for ERC-1155 tokens."""
+  typeId: BigInt
 }
 
-type TokenGatedUsernameNamespaceRule {
-  rule: EvmAddress!
-  tokenStandard: TokenStandard!
-  typeId: BigInt!
-  token: EvmAddress!
-  amount: Amount!
+input TokenGatedFeedRuleConfig {
+  token: TokenAmountInput!
+}
+
+input TokenGatedFollowRuleConfig {
+  token: TokenAmountInput!
+}
+
+input TokenGatedGraphRuleConfig {
+  token: TokenAmountInput!
+}
+
+input TokenGatedGroupRuleConfig {
+  token: TokenAmountInput!
+}
+
+input TokenGatedNamespaceRuleConfig {
+  token: TokenAmountInput!
 }
 
 enum TokenStandard {
-  ERC_20
-  ERC_721
-  ERC_1155
+  ERC20
+  ERC721
+  ERC1155
 }
 
 type TransactionMetadata {
@@ -5546,6 +6580,17 @@ enum TransactionOperation {
   ACCOUNT_MANAGER_UPDATED
   ACCOUNT_OWNER_TRANSFERRED
   ACCOUNT_METADATA_URI_SET
+  ACCOUNT_ACTION_CONFIGURED
+  ACCOUNT_ACTION_RECONFIGURED
+  ACCOUNT_ACTION_DISABLED
+  ACCOUNT_ACTION_ENABLED
+  ACCOUNT_ACTION_EXECUTED
+  POST_ACTION_CONFIGURED
+  POST_ACTION_RECONFIGURED
+  POST_ACTION_DISABLED
+  POST_ACTION_ENABLED
+  POST_ACTION_EXECUTED
+  ACTION_METADATA_URI_SET
   APP_FACTORY_DEPLOYMENT
   APP_ACCESS_CONTROL_ADDED
   APP_ACCESS_CONTROL_UPDATED
@@ -5566,8 +6611,8 @@ enum TransactionOperation {
   APP_PAYMASTER_ADDED
   APP_PAYMASTER_REMOVED
   APP_TREASURY_SET
-  APP_USERNAME_ADDED
-  APP_USERNAME_REMOVED
+  APP_NAMESPACE_ADDED
+  APP_NAMESPACE_REMOVED
   FEED_ACCESS_CONTROL_ADDED
   FEED_ACCESS_CONTROL_UPDATED
   FEED_EXTRA_DATA_ADDED
@@ -5577,6 +6622,17 @@ enum TransactionOperation {
   FEED_POST_CREATED
   FEED_POST_DELETED
   FEED_POST_EDITED
+  FEED_POST_EXTRA_DATA_ADDED
+  FEED_POST_EXTRA_DATA_REMOVED
+  FEED_POST_EXTRA_DATA_UPDATED
+  FEED_RULE_CONFIGURED
+  FEED_RULE_RECONFIGURED
+  FEED_RULE_SELECTOR_ENABLED
+  FEED_RULE_SELECTOR_DISABLED
+  FEED_POST_RULE_CONFIGURED
+  FEED_POST_RULE_RECONFIGURED
+  FEED_POST_RULE_SELECTOR_ENABLED
+  FEED_POST_RULE_SELECTOR_DISABLED
   GRAPH_FACTORY_DEPLOYMENT
   GRAPH_ACCESS_CONTROL_ADDED
   GRAPH_ACCESS_CONTROL_UPDATED
@@ -5586,22 +6642,41 @@ enum TransactionOperation {
   GRAPH_FOLLOWED
   GRAPH_METADATA_URI_SET
   GRAPH_UNFOLLOWED
+  GRAPH_RULE_CONFIGURED
+  GRAPH_RULE_RECONFIGURED
+  GRAPH_RULE_SELECTOR_ENABLED
+  GRAPH_RULE_SELECTOR_DISABLED
+  GRAPH_FOLLOW_RULE_CONFIGURED
+  GRAPH_FOLLOW_RULE_RECONFIGURED
+  GRAPH_FOLLOW_RULE_SELECTOR_ENABLED
+  GRAPH_FOLLOW_RULE_SELECTOR_DISABLED
   GROUP_FACTORY_DEPLOYMENT
   GROUP_MEMBER_JOINED
   GROUP_MEMBER_LEFT
   GROUP_MEMBER_REMOVED
+  GROUP_MEMBER_ADDED
   GROUP_ACCESS_CONTROL_ADDED
   GROUP_ACCESS_CONTROL_UPDATED
   GROUP_EXTRA_DATA_ADDED
   GROUP_EXTRA_DATA_REMOVED
   GROUP_EXTRA_DATA_UPDATED
   GROUP_METADATA_URI_SET
+  GROUP_RULE_CONFIGURED
+  GROUP_RULE_RECONFIGURED
+  GROUP_RULE_SELECTOR_ENABLED
+  GROUP_RULE_SELECTOR_DISABLED
+  GROUP_MEMBERSHIP_APPROVAL_REQUESTED
+  GROUP_MEMBERSHIP_APPROVAL_REQUEST_CANCELLED
+  GROUP_MEMBERSHIP_APPROVAL_APPROVED
+  GROUP_MEMBERSHIP_APPROVAL_REJECTED
+  GROUP_ACCOUNT_BANNED
+  GROUP_ACCOUNT_UNBANNED
+  NAMESPACE_FACTORY_DEPLOYMENT
   SPONSOR_FREE_PAYMASTER_CREATED
   SPONSOR_ADDED_TO_APPROVED_SIGNERS
   SPONSOR_METADATA_URI_CHANGED
   USERNAME_ASSIGNED
   USERNAME_CREATED
-  USERNAME_FACTORY_DEPLOYMENT
   USERNAME_REMOVED
   USERNAME_UNASSIGNED
   USERNAME_ACCESS_CONTROL_ADDED
@@ -5610,11 +6685,18 @@ enum TransactionOperation {
   USERNAME_EXTRA_DATA_REMOVED
   USERNAME_EXTRA_DATA_UPDATED
   USERNAME_METADATA_URI_SET
+  USERNAME_RULE_CONFIGURED
+  USERNAME_RULE_RECONFIGURED
+  USERNAME_RULE_SELECTOR_ENABLED
+  USERNAME_RULE_SELECTOR_DISABLED
+  USERNAME_RESERVED
+  USERNAME_RELEASED
+  USERNAME_RESERVED_CREATED
+  SPONSORSHIP_FACTORY_DEPLOYMENT
   SPONSORSHIP_ACCESS_CONTROL_ADDED
   SPONSORSHIP_ACCESS_CONTROL_UPDATED
   SPONSORSHIP_ADDED_TO_EXCLUSION_LIST
   SPONSORSHIP_REMOVED_FROM_EXCLUSION_LIST
-  SPONSORSHIP_FACTORY_DEPLOYMENT
   SPONSORSHIP_FUNDS_SPENT
   SPONSORSHIP_GRANT_REVOKED
   SPONSORSHIP_GRANTED_FUNDS
@@ -5674,14 +6756,31 @@ entities without requiring a central allocating authority.
 scalar UUID @specifiedBy(url: "http://tools.ietf.org/html/rfc4122")
 
 input UnassignUsernameFromAccountRequest {
-  namespace: EvmAddress! = "0x6Cc71E78e25eBF6A2525CadC1fc628B42AE4138f"
+  namespace: EvmAddress! = "0xaFe49B3faA3C65c4C56C6b768C9047E3bF4076Bb"
+
+  """The processing params for the unassign rules."""
+  rulesProcessingParams: [NamespaceRulesProcessingParams!]
 }
 
 type UnassignUsernameResponse {
   hash: TxHash!
 }
 
-union UnassignUsernameToAccountResult = UnassignUsernameResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union UnassignUsernameToAccountResult = UnassignUsernameResponse | NamespaceOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input UnbanGroupAccountRequest {
+  """The group you want to unban member on."""
+  group: EvmAddress!
+
+  """The account you want to unban on the group."""
+  account: EvmAddress!
+}
+
+type UnbanGroupAccountResponse {
+  hash: TxHash!
+}
+
+union UnbanGroupAccountResult = UnbanGroupAccountResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type UnblockError {
   error: UnblockErrorType!
@@ -5731,7 +6830,7 @@ type UnfollowResponse {
   hash: TxHash!
 }
 
-union UnfollowResult = UnfollowResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union UnfollowResult = UnfollowResponse | AccountFollowOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input UnhideManagedAccountRequest {
   """The account to unhide."""
@@ -5742,88 +6841,111 @@ input UnhideReplyRequest {
   post: PostId!
 }
 
+input UnknownAccountRuleConfig {
+  """The rule contract address."""
+  address: EvmAddress!
+
+  """Optional rule configuration parameters"""
+  params: [AnyKeyValueInput!]
+}
+
 type UnknownAction {
-  name: String!
-  contract: NetworkAddress!
-}
-
-input UnknownActionInput {
   address: EvmAddress!
-  data: String!
+  config: UnknownActionConfig!
+  metadata: ActionMetadata
 }
 
-type UnknownActionSettings {
-  initializeCalldata: BlockchainData
-  initializeResultData: BlockchainData
-  verified: Boolean!
-  contract: NetworkAddress!
-  collectNft: EvmAddress
+type UnknownActionConfig {
+  address: EvmAddress!
+  params: [RawKeyValue!]!
 }
 
-type UnknownFeedRule {
-  rule: EvmAddress!
-  configData: BlockchainData!
+input UnknownActionConfigInput {
+  """The unknown action's contract address"""
+  address: EvmAddress!
+
+  """Optional action configuration params"""
+  params: [AnyKeyValueInput!]!
 }
 
-input UnknownFeedRuleInput {
+input UnknownActionExecuteInput {
+  """The unknown action's contract address"""
+  address: EvmAddress!
+
+  """Optional action execution params"""
+  params: [RawKeyValueInput!]!
+}
+
+input UnknownFeedRuleConfig {
   """The rule contract address."""
   address: EvmAddress!
+  executeOn: [FeedRuleExecuteOn!]!
 
-  """The encoded rule execution data."""
-  data: BlockchainData!
+  """Optional rule configuration parameters"""
+  params: [AnyKeyValueInput!]
 }
 
-type UnknownFollowRule {
-  rule: EvmAddress!
-  configData: BlockchainData!
-}
-
-input UnknownFollowRuleInput {
+input UnknownGraphRuleConfig {
   """The rule contract address."""
   address: EvmAddress!
+  executeOn: [GraphRuleExecuteOn!]!
 
-  """The encoded rule execution data."""
-  data: BlockchainData!
+  """Optional rule configuration parameters"""
+  params: [AnyKeyValueInput!]
 }
 
-type UnknownGraphRule {
-  rule: EvmAddress!
-  configData: BlockchainData!
-}
-
-input UnknownGraphRuleInput {
+input UnknownGroupRuleConfig {
   """The rule contract address."""
   address: EvmAddress!
+  executeOn: [GroupRuleExecuteOn!]!
 
-  """The encoded rule execution data."""
-  data: BlockchainData!
+  """Optional rule configuration parameters"""
+  params: [AnyKeyValueInput!]
 }
 
-type UnknownGroupRule {
-  rule: EvmAddress!
-  configData: BlockchainData!
+input UnknownNamespaceRuleConfig {
+  """The rule contract address."""
+  address: EvmAddress!
+  executeOn: [NamespaceRuleExecuteOn!]!
+
+  """Optional rule configuration parameters"""
+  params: [AnyKeyValueInput!]
 }
 
-type UnknownPostRule {
-  rule: EvmAddress!
-  configData: BlockchainData!
+type UnknownPostActionContract {
+  address: EvmAddress!
+  metadata: ActionMetadata
 }
 
-type UnknownRule {
-  rule: EvmAddress!
-  configParams: [KeyValue!]!
+input UnknownPostRuleConfig {
+  """The rule contract address."""
+  address: EvmAddress!
+  executeOn: [PostRuleExecuteOn!]!
+
+  """Optional rule configuration parameters"""
+  params: [AnyKeyValueInput!]
 }
 
-type UnknownUsernameNamespaceRule {
-  rule: EvmAddress!
-  configData: BlockchainData!
+input UnknownRuleProcessingParams {
+  """The rule id"""
+  id: RuleId!
+
+  """The rule processing params"""
+  params: [AnyKeyValueInput!]
 }
 
-type UnsatisfiedRule {
-  name: String!
-  rule: EvmAddress!
-  reason: String!
+input UpdateAccountFollowRulesRequest {
+  """The graph to update account follow rules for."""
+  graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
+  toAdd: AccountRulesConfigInput! = {required: [], anyOf: []}
+  toRemove: [RuleId!]! = []
 }
+
+type UpdateAccountFollowRulesResponse {
+  hash: TxHash!
+}
+
+union UpdateAccountFollowRulesResult = UpdateAccountFollowRulesResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input UpdateAccountManagerRequest {
   """The address to update as a manager."""
@@ -5834,6 +6956,82 @@ input UpdateAccountManagerRequest {
 }
 
 union UpdateAccountManagerResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input UpdateFeedRulesRequest {
+  """The feed to update rules for"""
+  feed: EvmAddress! = "0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"
+  toAdd: FeedRulesConfigInput! = {required: [], anyOf: []}
+  toRemove: [RuleId!]! = []
+}
+
+type UpdateFeedRulesResponse {
+  hash: TxHash!
+}
+
+union UpdateFeedRulesResult = UpdateFeedRulesResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input UpdateGraphRulesRequest {
+  """The graph to update rules for"""
+  graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
+  toAdd: GraphRulesConfigInput! = {required: [], anyOf: []}
+  toRemove: [RuleId!]! = []
+}
+
+type UpdateGraphRulesResponse {
+  hash: TxHash!
+}
+
+union UpdateGraphRulesResult = UpdateGraphRulesResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input UpdateGroupRulesRequest {
+  """The group to update rules for"""
+  group: EvmAddress!
+  toAdd: GroupRulesConfigInput! = {required: [], anyOf: []}
+  toRemove: [RuleId!]! = []
+}
+
+type UpdateGroupRulesResponse {
+  hash: TxHash!
+}
+
+union UpdateGroupRulesResult = UpdateGroupRulesResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input UpdateNamespaceRulesRequest {
+  """The namespace to update rules for"""
+  namespace: EvmAddress!
+  toAdd: NamespaceRulesConfigInput! = {required: [], anyOf: []}
+  toRemove: [RuleId!]! = []
+}
+
+type UpdateNamespaceRulesResponse {
+  hash: TxHash!
+}
+
+union UpdateNamespaceRulesResult = UpdateNamespaceRulesResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input UpdatePostRulesRequest {
+  """The post to update rules for."""
+  post: PostId!
+  toAdd: PostRulesConfigInput! = {required: [], anyOf: []}
+  toRemove: [RuleId!]! = []
+}
+
+type UpdatePostRulesResponse {
+  hash: TxHash!
+}
+
+union UpdatePostRulesResult = UpdatePostRulesResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input UpdateReservedUsernamesRequest {
+  """The namespace to update reserved usernames for"""
+  namespace: EvmAddress!
+
+  """Usernames to reserve"""
+  toReserve: [String!]! = []
+  toRelease: [String!]! = []
+}
+
+union UpdateReservedUsernamesResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input UpdateSponsorshipExclusionListRequest {
   """The sponsorship to update"""
@@ -5853,7 +7051,7 @@ input UpdateSponsorshipLimitsRequest {
   sponsorship: EvmAddress!
 
   """The new rate limits"""
-  rateLimits: SponsorshipRateLimits
+  rateLimits: SponsorshipRateLimitsInput
 }
 
 union UpdateSponsorshipLimitsResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
@@ -5863,18 +7061,22 @@ input UpdateSponsorshipSignersRequest {
   sponsorship: EvmAddress!
 
   """The new entries to add."""
-  toAdd: [SponsorshipSignerInput!]! = []
+  toAdd: [SponsorshipSignerInput!]
 
   """The entries to remove."""
-  toRemove: [EvmAddress!]! = []
+  toRemove: [EvmAddress!]
+
+  """
+  Indicates whether the Lens API is authorized as the sponsorship signer
+  to sponsor end-user social operations (e.g., posts, comments, follows)
+  performed through the Lens API for apps associated with this sponsorship.
+  
+  If not provided, it won't affect the current configuration.
+  """
+  allowLensAccess: Boolean
 }
 
 union UpdateSponsorshipSignersResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
-
-type UserBlockingRule {
-  rule: EvmAddress!
-  blockedUsers: [EvmAddress!]!
-}
 
 type Username {
   """A unique identifier for the username entry."""
@@ -5882,6 +7084,9 @@ type Username {
 
   """The username value (e.g., lens/bob)."""
   value: UsernameValue!
+
+  """The address of the namespace that the username is linked to."""
+  namespace: EvmAddress!
 
   """The local name of the username (e.g., bob)."""
   localName: String!
@@ -5894,7 +7099,6 @@ type Username {
 
   """The timestamp when the username was created."""
   timestamp: DateTime!
-  namespace: UsernameNamespace!
   operations: LoggedInUsernameOperations
 }
 
@@ -5903,7 +7107,12 @@ input UsernameInput {
   localName: String!
 
   """The namespace. Defaults to lens namespace"""
-  namespace: EvmAddress! = "0x6Cc71E78e25eBF6A2525CadC1fc628B42AE4138f"
+  namespace: EvmAddress! = "0xaFe49B3faA3C65c4C56C6b768C9047E3bF4076Bb"
+}
+
+input UsernameLengthNamespaceRuleConfig {
+  maxLength: Int
+  minLength: Int
 }
 
 type UsernameNamespace {
@@ -5916,8 +7125,8 @@ type UsernameNamespace {
   metadata: UsernameNamespaceMetadata
   owner: EvmAddress!
   stats: UsernameNamespaceStats!
+  rules: NamespaceRules!
   operations: LoggedInUsernameNamespaceOperations
-  rules(request: RuleInput): UsernameNamespaceRulesConfig!
 }
 
 type UsernameNamespaceMetadata {
@@ -5931,15 +7140,14 @@ type UsernameNamespaceMetadata {
   id: String!
 }
 
-union UsernameNamespaceRule = TokenGatedUsernameNamespaceRule | SimplePaymentUsernameNamespaceRule | CharsetUsernameNamespaceRule | LengthUsernameNamespaceRule | UnknownUsernameNamespaceRule
-
-type UsernameNamespaceRulesConfig {
-  required: [UsernameNamespaceRule!]!
-  anyOf: [UsernameNamespaceRule!]!
-}
-
 type UsernameNamespaceStats {
   totalUsernames: Int!
+}
+
+input UsernamePricePerLengthNamespaceRuleConfig {
+  cost: AmountInput!
+  costOverrides: [LengthAmountPair!]
+  recipient: EvmAddress!
 }
 
 """You must provide either an id or a username, not both."""
@@ -5949,6 +7157,16 @@ input UsernameRequest {
 
   """The username namespace and local name."""
   username: UsernameInput
+}
+
+type UsernameReserved {
+  ruleId: RuleId!
+  namespace: EvmAddress!
+  localName: String!
+}
+
+input UsernameReservedNamespaceRuleConfig {
+  reserved: [String!]
 }
 
 input UsernameSearchInput {
@@ -5961,7 +7179,12 @@ input UsernameSearchInput {
   """
   The namespaces to search for local name in. Defaults to global namespace
   """
-  namespaces: [EvmAddress!]! = ["0x6Cc71E78e25eBF6A2525CadC1fc628B42AE4138f"]
+  namespaces: [EvmAddress!]! = ["0xaFe49B3faA3C65c4C56C6b768C9047E3bF4076Bb"]
+}
+
+type UsernameTaken {
+  ownedBy: EvmAddress!
+  reason: String!
 }
 
 scalar UsernameValue

@@ -13,9 +13,9 @@ const metadata = account({
   bio: 'A test account',
 });
 
-describe('Given an onboarding user', () => {
+describe('Given an onboarding user', { timeout: 10000 }, () => {
   describe('When switching to the newly created account', () => {
-    it('Then it should be authenticated', { timeout: 10000 }, async () => {
+    it('Then it should be authenticated', async () => {
       let newAccount: Account | null = null;
 
       // Login as onboarding user

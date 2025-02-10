@@ -39,7 +39,8 @@
   "dependencies": {
     "@lens-protocol/types": "workspace:*",
     "gql.tada": "^1.8.10",
-    "graphql": "^16.9.0"
+    "graphql": "^16.9.0",
+    "type-fest": "^4.26.1"
   },
   "devDependencies": {
     "tsup": "^8.3.5",

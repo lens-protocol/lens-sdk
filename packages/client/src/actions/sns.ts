@@ -40,8 +40,8 @@ export function fetchSnsSubscription(
  * ```ts
  * const result = await createSnsSubscription(sessionClient, {
  *   topics: [
- *     { accountMentioned: evmAddress('0x1234...') },
- *     { accountFollowed: evmAddress('0x90ab...') },
+ *     { accountMentioned: evmAddress('0x1234…') },
+ *     { accountFollowed: evmAddress('0x90ab…') },
  *   ],
  *   webhook: uri('https://example.com'),
  * });

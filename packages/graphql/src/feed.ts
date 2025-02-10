@@ -97,3 +97,45 @@ export const FeedsQuery = graphql(
   [FeedFragment, PaginatedResultInfoFragment],
 );
 export type FeedsRequest = RequestOf<typeof FeedsQuery>;
+
+const UpdateFeedRulesResponseFragment = graphql(
+  `fragment UpdateFeedRulesResponse on UpdateFeedRulesResponse {
+    __typename
+    hash
+  }`,
+);
+export type UpdateFeedRulesResponse = FragmentOf<typeof UpdateFeedRulesResponseFragment>;
+
+const UpdateFeedRulesResultFragment = graphql(
+  `fragment UpdateFeedRulesResult on UpdateFeedRulesResult {
+    ...on UpdateFeedRulesResponse {
+      ...UpdateFeedRulesResponse
+    }
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    SponsoredTransactionRequestFragment,
+    UpdateFeedRulesResponseFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type UpdateFeedRulesResult = FragmentOf<typeof UpdateFeedRulesResultFragment>;
+
+export const UpdateFeedRulesMutation = graphql(
+  `mutation UpdateFeedRules($request: UpdateFeedRulesRequest!) {
+    value: updateFeedRules(request: $request) {
+      ...UpdateFeedRulesResult
+    }
+  }`,
+  [UpdateFeedRulesResultFragment],
+);
+export type UpdateFeedRulesRequest = RequestOf<typeof UpdateFeedRulesMutation>;

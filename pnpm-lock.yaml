@@ -130,6 +130,9 @@ importers:
       graphql:
         specifier: ^16.9.0
         version: 16.9.0
+      type-fest:
+        specifier: ^4.26.1
+        version: 4.30.0
     devDependencies:
       tsup:
         specifier: ^8.3.5

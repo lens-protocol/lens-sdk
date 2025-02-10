@@ -103,3 +103,77 @@ export const NamespacesQuery = graphql(
   [UsernameNamespaceFragment, PaginatedResultInfoFragment],
 );
 export type NamespacesRequest = RequestOf<typeof NamespacesQuery>;
+
+const UpdateNamespaceRulesResponseFragment = graphql(
+  `fragment UpdateNamespaceRulesResponse on UpdateNamespaceRulesResponse {
+    __typename
+    hash
+  }`,
+);
+export type UpdateNamespaceRulesResponse = FragmentOf<typeof UpdateNamespaceRulesResponseFragment>;
+
+const UpdateNamespaceRulesResultFragment = graphql(
+  `fragment UpdateNamespaceRulesResult on UpdateNamespaceRulesResult {
+    ...on UpdateNamespaceRulesResponse {
+      ...UpdateNamespaceRulesResponse
+    }
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    UpdateNamespaceRulesResponseFragment,
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type UpdateNamespaceRulesResult = FragmentOf<typeof UpdateNamespaceRulesResultFragment>;
+
+export const UpdateNamespaceRulesMutation = graphql(
+  `mutation UpdateNamespaceRules($request: UpdateNamespaceRulesRequest!) {
+    value: updateNamespaceRules(request: $request) {
+      ...UpdateNamespaceRulesResult
+    }
+  }`,
+  [UpdateNamespaceRulesResultFragment],
+);
+export type UpdateNamespaceRulesRequest = RequestOf<typeof UpdateNamespaceRulesMutation>;
+
+const UpdateReservedUsernamesResultFragment = graphql(
+  `fragment UpdateReservedUsernamesResult on UpdateReservedUsernamesResult {
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type UpdateReservedUsernamesResult = FragmentOf<
+  typeof UpdateReservedUsernamesResultFragment
+>;
+
+export const UpdateReservedUsernamesMutation = graphql(
+  `mutation UpdateReservedUsernames($request: UpdateReservedUsernamesRequest!) {
+    value: updateReservedUsernames(request: $request) {
+      ...UpdateReservedUsernamesResult
+    }
+  }`,
+  [UpdateReservedUsernamesResultFragment],
+);
+export type UpdateReservedUsernamesRequest = RequestOf<typeof UpdateReservedUsernamesMutation>;

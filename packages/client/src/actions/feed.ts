@@ -7,12 +7,15 @@ import type {
   Paginated,
   SetFeedMetadataRequest,
   SetFeedMetadataResult,
+  UpdateFeedRulesRequest,
+  UpdateFeedRulesResult,
 } from '@lens-protocol/graphql';
 import {
   CreateFeedMutation,
   FeedQuery,
   FeedsQuery,
   SetFeedMetadataMutation,
+  UpdateFeedRulesMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
@@ -100,4 +103,34 @@ export function fetchFeeds(
   request: FeedsRequest,
 ): ResultAsync<Paginated<Feed>, UnexpectedError> {
   return client.query(FeedsQuery, { request });
+}
+
+/**
+ * Update feed rules.
+ *
+ * ```ts
+ * const result = await updateFeedRules(sessionClient, {
+ *   feed: evmAddress('0x1234…'),
+ *   toAdd: {
+ *     required: [{
+ *       tokenGatedRule: {
+ *         standard: TokenStandard.Erc20,
+ *         currency: evmAddress('0x5678…'),
+ *         value: '1.5', // Token value in its main unit
+ *       }
+ *     }],
+ *     anyOf: [],
+ *   }
+ * });
+ * ```
+ *
+ * @param client - The session client.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function updateFeedRules(
+  client: SessionClient,
+  request: UpdateFeedRulesRequest,
+): ResultAsync<UpdateFeedRulesResult, UnauthenticatedError | UnexpectedError> {
+  return client.mutation(UpdateFeedRulesMutation, { request });
 }

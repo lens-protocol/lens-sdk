@@ -3,6 +3,7 @@ import {
   AccountAvailableFragment,
   AccountBlockedFragment,
   AccountFragment,
+  NamespaceOperationValidationFailedFragment,
   PaginatedResultInfoFragment,
   SelfFundedTransactionRequestFragment,
   SponsoredTransactionRequestFragment,
@@ -99,13 +100,14 @@ const CreateAccountResponseFragment = graphql(
 );
 export type CreateAccountResponse = FragmentOf<typeof CreateAccountResponseFragment>;
 
-const InvalidUsernameFragment = graphql(
-  `fragment InvalidUsername on InvalidUsername {
+export const UsernameTakenFragment = graphql(
+  `fragment UsernameTaken on UsernameTaken {
     __typename
     reason
+    ownedBy
   }`,
 );
-export type InvalidUsername = FragmentOf<typeof InvalidUsernameFragment>;
+export type UsernameTaken = FragmentOf<typeof UsernameTakenFragment>;
 
 const CreateAccountWithUsernameResultFragment = graphql(
   `fragment CreateAccountWithUsernameResult on CreateAccountWithUsernameResult {
@@ -121,8 +123,12 @@ const CreateAccountWithUsernameResultFragment = graphql(
       ...SelfFundedTransactionRequest
     }
 
-    ...on InvalidUsername {
-      ...InvalidUsername
+    ...on UsernameTaken {
+      ...UsernameTaken
+    }
+
+    ...on NamespaceOperationValidationFailed {
+      ...NamespaceOperationValidationFailed
     }
 
     ...on TransactionWillFail {
@@ -133,7 +139,8 @@ const CreateAccountWithUsernameResultFragment = graphql(
     CreateAccountResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
-    InvalidUsernameFragment,
+    UsernameTakenFragment,
+    NamespaceOperationValidationFailedFragment,
     TransactionWillFailFragment,
   ],
 );
@@ -386,3 +393,49 @@ export const UndoRecommendAccountMutation = graphql(
   }`,
 );
 export type UndoRecommendAccountRequest = RequestOf<typeof UndoRecommendAccountMutation>;
+
+const UpdateAccountFollowRulesResponseFragment = graphql(
+  `fragment UpdateAccountFollowRulesResponse on UpdateAccountFollowRulesResponse {
+    __typename
+    hash
+  }`,
+);
+export type UpdateAccountFollowRulesResponse = FragmentOf<
+  typeof UpdateAccountFollowRulesResponseFragment
+>;
+
+const UpdateAccountFollowRulesResultFragment = graphql(
+  `fragment UpdateAccountFollowRulesResult on UpdateAccountFollowRulesResult {
+    ...on UpdateAccountFollowRulesResponse {
+      ...UpdateAccountFollowRulesResponse
+    }
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    UpdateAccountFollowRulesResponseFragment,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type UpdateAccountFollowRulesResult = FragmentOf<
+  typeof UpdateAccountFollowRulesResultFragment
+>;
+
+export const UpdateAccountFollowRulesMutation = graphql(
+  `mutation UpdateAccountFollowRules($request: UpdateAccountFollowRulesRequest!) {
+    value: updateAccountFollowRules(request: $request){
+      ...UpdateAccountFollowRulesResult
+    }
+  }`,
+  [UpdateAccountFollowRulesResultFragment],
+);
+export type UpdateAccountFollowRulesRequest = RequestOf<typeof UpdateAccountFollowRulesMutation>;

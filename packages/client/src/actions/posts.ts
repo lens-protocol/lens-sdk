@@ -1,10 +1,10 @@
 import type {
   AccountPostReaction,
-  ActionInfo,
   AnyPost,
   Paginated,
   Post,
-  PostActionsRequest,
+  PostActionContract,
+  PostActionContractsRequest,
   PostBookmarksRequest,
   PostReactionsRequest,
   PostReferencesRequest,
@@ -13,7 +13,7 @@ import type {
   PostsRequest,
 } from '@lens-protocol/graphql';
 import {
-  PostActionsQuery,
+  PostActionContractsQuery,
   PostBookmarksQuery,
   PostEditsQuery,
   PostQuery,
@@ -89,21 +89,21 @@ export function fetchPosts(
 }
 
 /**
- * Fetch available actions for POST.
+ * Fetch availale Post Action contracts.
  *
  * ```ts
- * const result = await fetchPostActions(anyClient);
+ * const result = await fetchPostActionContracts(anyClient);
  * ```
  *
  * @param client - Any Lens client.
  * @param request - The query request.
  * @returns The list of actions available.
  */
-export function fetchPostActions(
+export function fetchPostActionContracts(
   client: AnyClient,
-  request: PostActionsRequest = {},
-): ResultAsync<Paginated<ActionInfo>, UnexpectedError> {
-  return client.query(PostActionsQuery, { request });
+  request: PostActionContractsRequest = {},
+): ResultAsync<Paginated<PostActionContract>, UnexpectedError> {
+  return client.query(PostActionContractsQuery, { request });
 }
 
 /**

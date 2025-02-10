@@ -6,6 +6,10 @@ import type {
   Paginated,
   SetNamespaceMetadataRequest,
   SetNamespaceMetadataResult,
+  UpdateNamespaceRulesRequest,
+  UpdateNamespaceRulesResult,
+  UpdateReservedUsernamesRequest,
+  UpdateReservedUsernamesResult,
   UsernameNamespace,
 } from '@lens-protocol/graphql';
 import {
@@ -13,6 +17,8 @@ import {
   NamespaceQuery,
   NamespacesQuery,
   SetNamespaceMetadataMutation,
+  UpdateNamespaceRulesMutation,
+  UpdateReservedUsernamesMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
@@ -103,4 +109,56 @@ export function fetchNamespaces(
   request: NamespacesRequest,
 ): ResultAsync<Paginated<UsernameNamespace>, UnexpectedError> {
   return client.query(NamespacesQuery, { request });
+}
+
+/**
+ * Update namespace rules.
+ *
+ * ```ts
+ * const result = await updateNamespaceRules(sessionClient, {
+ *   namespace: evmAddress('0x1234…'),
+ *   toAdd: {
+ *     required: [{
+ *       tokenGatedRule: {
+ *         standard: TokenStandard.Erc20,
+ *         currency: evmAddress('0x5678…'),
+ *         value: '1.5', // Token value in its main unit
+ *       }
+ *     }],
+ *     anyOf: [],
+ *   }
+ * });
+ * ```
+ *
+ * @param client - The session client.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function updateNamespaceRules(
+  client: SessionClient,
+  request: UpdateNamespaceRulesRequest,
+): ResultAsync<UpdateNamespaceRulesResult, UnauthenticatedError | UnexpectedError> {
+  return client.mutation(UpdateNamespaceRulesMutation, { request });
+}
+
+/**
+ * Update reserved usernames in a namespace.
+ *
+ * ```ts
+ * const result = await updateReservedUsernames(sessionClient, {
+ *   namespace: evmAddress('0x1234…'),
+ *   toRelease: ['alice', 'bob'],
+ *   toReserve: ['charlie', 'dave'],
+ * });
+ * ```
+ *
+ * @param client - The session client.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function updateReservedUsernames(
+  client: SessionClient,
+  request: UpdateReservedUsernamesRequest,
+): ResultAsync<UpdateReservedUsernamesResult, UnauthenticatedError | UnexpectedError> {
+  return client.mutation(UpdateReservedUsernamesMutation, { request });
 }

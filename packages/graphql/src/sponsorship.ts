@@ -17,33 +17,37 @@ const SponsorshipMetadataFragment = graphql(
 );
 export type SponsorshipMetadata = FragmentOf<typeof SponsorshipMetadataFragment>;
 
-const SponsorLimitFragment = graphql(
-  `fragment SponsorLimit on SponsorLimit {
+const SponsorshipRateLimitFragment = graphql(
+  `fragment SponsorshipRateLimit on SponsorshipRateLimit {
     __typename
+    limit
     window
-    allowance
   }`,
 );
-export type SponsorLimitMetadata = FragmentOf<typeof SponsorLimitFragment>;
+export type SponsorshipRateLimit = FragmentOf<typeof SponsorshipRateLimitFragment>;
 
 const SponsorshipFragment = graphql(
   `fragment Sponsorship on Sponsorship {
+    __typename
     address
     isPaused
-    allowLensAccess
+    allowsLensAccess
     createdAt
     metadata {
       ...SponsorshipMetadata
     }
-    globalRateLimit {
-      ...SponsorLimit
-    }
-    userRateLimit {
-      ...SponsorLimit
+    limits {
+      __typename
+      global {
+        ...SponsorshipRateLimit
+      }
+      user {
+        ...SponsorshipRateLimit
+      }
     }
     owner
   }`,
-  [SponsorshipMetadataFragment, SponsorLimitFragment],
+  [SponsorshipMetadataFragment, SponsorshipRateLimitFragment],
 );
 export type Sponsorship = FragmentOf<typeof SponsorshipFragment>;
 
@@ -285,3 +289,43 @@ export const UpdateSponsorshipSignersMutation = graphql(
   [UpdateSponsorshipSignersResultFragment],
 );
 export type UpdateSponsorshipSignersRequest = RequestOf<typeof UpdateSponsorshipSignersMutation>;
+
+const PausingResultFragment = graphql(
+  `fragment PausingResult on PausingResult {
+    ... on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type PausingResult = FragmentOf<typeof PausingResultFragment>;
+
+export const PauseSponsorshipMutation = graphql(
+  `mutation PauseSponsorship($request: PausingRequest!) {
+    value: pauseSponsorship(request: $request) {
+      ...PausingResult
+    }
+  }`,
+  [PausingResultFragment],
+);
+
+export const UnpauseSponsorshipMutation = graphql(
+  `mutation UnpauseSponsorship($request: PausingRequest!) {
+    value: unpauseSponsorship(request: $request) {
+      ...PausingResult
+    }
+  }`,
+  [PausingResultFragment],
+);
+
+export type PausingRequest = RequestOf<typeof PauseSponsorshipMutation>;

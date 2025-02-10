@@ -39,6 +39,7 @@ export function evmAddress(value: string) {
  * RLP-encoded blockchain data.
  */
 export type BlockchainData = Tagged<HexString, 'BlockchainData'>;
+export const blockchainData = hexString<BlockchainData>;
 
 /**
  * A signature.
@@ -56,3 +57,14 @@ export type EncodedTransaction = Tagged<HexString, 'EncodedTransaction'>;
  */
 export type TxHash = Tagged<HexString, 'TxHash'>;
 export const txHash = hexString<TxHash>;
+
+/**
+ * A fixed 32 bytes long hexadecimal string.
+ *
+ * Typically the result of a hash function like `keccak256`.
+ */
+export type FixedBytes32 = Tagged<HexString, 'FixedBytes32'>;
+export function fixedBytes32(value: string) {
+  invariant(value.length === 66, `FixedBytes32: invalid length ${value.length}`);
+  return hexString<FixedBytes32>(value);
+}

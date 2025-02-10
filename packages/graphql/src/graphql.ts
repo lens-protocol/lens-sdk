@@ -8,11 +8,13 @@ import type {
   DateTime,
   EncodedTransaction,
   EvmAddress,
+  FixedBytes32,
   ID,
   IdToken,
   LegacyProfileId,
   PostId,
   RefreshToken,
+  RuleId,
   Signature,
   TxHash,
   URI,
@@ -22,15 +24,12 @@ import type {
   Void,
 } from '@lens-protocol/types';
 import { InvariantError } from '@lens-protocol/types';
-import {
-  type DocumentDecoration,
-  type FragmentOf,
-  type TadaDocumentNode,
-  initGraphQLTada,
-} from 'gql.tada';
+import { type DocumentDecoration, type TadaDocumentNode, initGraphQLTada } from 'gql.tada';
 import type { StandardData } from './common';
 import type {
   AccessConditionComparison,
+  AccountFollowRuleType,
+  AccountFollowRuleUnsatisfiedReason,
   AccountReportReason,
   AccountsOrderBy,
   AppMetadataLensPlatformsItem,
@@ -40,13 +39,21 @@ import type {
   ContentWarning,
   EntityType,
   EventMetadataLensSchedulingAdjustmentsTimezoneId,
+  FeedRuleExecuteOn,
+  FeedRuleType,
+  FeedRuleUnsatisfiedReason,
   FeedsOrderBy,
   FollowersOrderBy,
   FollowersYouKnowOrderBy,
   FollowingOrderBy,
   ForYouSource,
+  GraphRuleExecuteOn,
+  GraphRuleType,
   GraphsOrderBy,
   GroupMembersOrderBy,
+  GroupRuleExecuteOn,
+  GroupRuleType,
+  GroupRuleUnsatisfiedReason,
   GroupsOrderBy,
   IndexingStatus,
   MainContentFocus,
@@ -57,6 +64,9 @@ import type {
   MediaVideoType,
   MetadataAttributeType,
   MetadataLicenseType,
+  NamespaceRuleExecuteOn,
+  NamespaceRuleType,
+  NamespaceRuleUnsatisfiedReason,
   NamespacesOrderBy,
   NftContractType,
   NotificationOrderBy,
@@ -68,6 +78,9 @@ import type {
   PostReactionType,
   PostReferenceType,
   PostReportReason,
+  PostRuleExecuteOn,
+  PostRuleType,
+  PostRuleUnsatisfiedReason,
   PostTagsOrderBy,
   PostType,
   PostVisibilityFilter,
@@ -81,22 +94,25 @@ import type {
   ThreeDAssetFormat,
   TimelineEventItemType,
   TokenStandard,
-  TransactionOperation,
   TransactionType,
   UnblockErrorType,
   WhoActedOnPostOrderBy,
   WhoReferencedPostOrderBy,
 } from './enums';
 import type { introspection } from './graphql-env';
+import type { AlwaysTrue } from './scalars';
 
 export const graphql = initGraphQLTada<{
   disableMasking: true;
   introspection: introspection;
   scalars: {
-    AccessToken: AccessToken;
     AccessConditionComparison: AccessConditionComparison;
+    AccessToken: AccessToken;
+    AccountFollowRuleType: AccountFollowRuleType;
+    AccountFollowRuleUnsatisfiedReason: AccountFollowRuleUnsatisfiedReason;
     AccountReportReason: AccountReportReason;
     AccountsOrderBy: AccountsOrderBy;
+    AlwaysTrue: AlwaysTrue;
     AppMetadataLensPlatformsItem: AppMetadataLensPlatformsItem;
     AppsOrderBy: AppsOrderBy;
     AppUsersOrderBy: AppUsersOrderBy;
@@ -112,14 +128,24 @@ export const graphql = initGraphQLTada<{
     EntityType: EntityType;
     EventMetadataLensSchedulingAdjustmentsTimezoneId: EventMetadataLensSchedulingAdjustmentsTimezoneId;
     EvmAddress: EvmAddress;
+    FeedRuleExecuteOn: FeedRuleExecuteOn;
+    FeedRuleType: FeedRuleType;
+    FeedRuleUnsatisfiedReason: FeedRuleUnsatisfiedReason;
     FeedsOrderBy: FeedsOrderBy;
+    Fixed32Bytes: FixedBytes32;
     Float: number;
     FollowersOrderBy: FollowersOrderBy;
     FollowersYouKnowOrderBy: FollowersYouKnowOrderBy;
     FollowingOrderBy: FollowingOrderBy;
     ForYouSource: ForYouSource;
+    GeneratedNotificationId: ID;
+    GraphRuleExecuteOn: GraphRuleExecuteOn;
+    GraphRuleType: GraphRuleType;
     GraphsOrderBy: GraphsOrderBy;
     GroupMembersOrderBy: GroupMembersOrderBy;
+    GroupRuleExecuteOn: GroupRuleExecuteOn;
+    GroupRuleType: GroupRuleType;
+    GroupRuleUnsatisfiedReason: GroupRuleUnsatisfiedReason;
     GroupsOrderBy: GroupsOrderBy;
     ID: ID;
     IdToken: IdToken;
@@ -135,6 +161,9 @@ export const graphql = initGraphQLTada<{
     MediaVideoType: MediaVideoType;
     MetadataAttributeType: MetadataAttributeType;
     MetadataLicenseType: MetadataLicenseType;
+    NamespaceRuleExecuteOn: NamespaceRuleExecuteOn;
+    NamespaceRuleType: NamespaceRuleType;
+    NamespaceRuleUnsatisfiedReason: NamespaceRuleUnsatisfiedReason;
     NamespacesOrderBy: NamespacesOrderBy;
     NftContractType: NftContractType;
     NotificationOrderBy: NotificationOrderBy;
@@ -147,31 +176,35 @@ export const graphql = initGraphQLTada<{
     PostReactionType: PostReactionType;
     PostReferenceType: PostReferenceType;
     PostReportReason: PostReportReason;
+    PostRuleExecuteOn: PostRuleExecuteOn;
+    PostRuleType: PostRuleType;
+    PostRuleUnsatisfiedReason: PostRuleUnsatisfiedReason;
     PostTagsOrderBy: PostTagsOrderBy;
     PostType: PostType;
     PostVisibilityFilter: PostVisibilityFilter;
     RefreshToken: RefreshToken;
+    RuleId: RuleId;
     SelfFundedFallbackReason: SelfFundedFallbackReason;
     Signature: Signature;
     SponsoredFallbackReason: SponsoredFallbackReason;
     SponsorLimitType: SponsorLimitType;
     SponsorshipLimitExclusionsOrderBy: SponsorshipLimitExclusionsOrderBy;
     SponsorshipRateLimitWindow: SponsorshipRateLimitWindow;
-    SponsorshipsOrderBy: SponsorshipsOrderBy;
     SponsorshipSignersOrderBy: SponsorshipSignersOrderBy;
+    SponsorshipsOrderBy: SponsorshipsOrderBy;
     String: string;
     Tag: string;
     ThreeDAssetFormat: ThreeDAssetFormat;
     TimelineEventItemType: TimelineEventItemType;
     TokenStandard: TokenStandard;
-    TransactionOperation: TransactionOperation;
+    // TransactionOperation: TransactionOperation; intentionally not mapped since it grows often and it's a debug information
     TransactionType: TransactionType;
     TxHash: TxHash;
+    UnblockErrorType: UnblockErrorType;
     URI: URI;
     URL: URL;
-    UUID: UUID;
-    UnblockErrorType: UnblockErrorType;
     UsernameValue: UsernameValue;
+    UUID: UUID;
     Void: Void;
     WhoActedOnPostOrderBy: WhoActedOnPostOrderBy;
     WhoReferencedPostOrderBy: WhoReferencedPostOrderBy;
@@ -198,26 +231,39 @@ type GetDocumentNode<
   Fragments extends FragmentShape[] = FragmentShape[],
 > = ReturnType<typeof graphql<In, Fragments>>;
 
-export type AnyGqlNode<TTypename extends string = string> = { __typename: TTypename };
+/**
+ * @internal
+ */
+export type AnySelectionSet = Record<string, unknown>;
 
+/**
+ * @internal
+ */
 export type AnyVariables = Record<string, unknown>;
 
 /**
  * @internal
  */
-export type FragmentDocumentFor<TGqlNode extends AnyGqlNode> = TGqlNode extends AnyGqlNode<
-  infer TTypename
->
-  ? TadaDocumentNode<
-      TGqlNode,
-      AnyVariables,
-      {
-        fragment: TTypename;
-        on: TTypename;
-        masked: false;
-      }
-    >
-  : never;
+export type TypedSelectionSet<TTypename extends string = string> = { __typename: TTypename };
+
+/**
+ * @internal
+ */
+export type FragmentDocumentFor<
+  TGqlNode extends AnySelectionSet,
+  TTypename extends string = TGqlNode extends TypedSelectionSet<infer TTypename>
+    ? TTypename
+    : never,
+  TFragmentName extends string = TTypename,
+> = TadaDocumentNode<
+  TGqlNode,
+  AnyVariables,
+  {
+    fragment: TFragmentName;
+    on: TTypename;
+    masked: false;
+  }
+>;
 
 export type RequestFrom<In extends string> = RequestOf<GetDocumentNode<In, FragmentShape[]>>;
 
@@ -227,50 +273,27 @@ export type StandardDocumentNode<Value = any, Request = any> = TadaDocumentNode<
   { request: Request }
 >;
 
-type FragmentDocumentFrom<
-  In extends string,
-  Fragments extends FragmentShape[],
-  Document extends GetDocumentNode<In, Fragments> = GetDocumentNode<In, Fragments>,
-> = Document extends FragmentShape ? Document : never;
-
-type FragmentDocumentForEach<Nodes extends AnyGqlNode[]> = {
-  [K in keyof Nodes]: FragmentDocumentFor<Nodes[K]>;
-};
-
-/**
- * @internal
+/*
+ * Asserts that the node is of a specific type in a union.
+ *
+ * ```ts
+ * type A = { __typename: 'A', a: string };
+ * type B = { __typename: 'B', b: string };
+ *
+ * const node: A | B = { __typename: 'A', a: 'a' };
+ *
+ * assertTypename(node, 'A');
+ *
+ * console.log(node.a); // OK
+ * ```
+ *
+ * @param node - The node to assert the typename of
+ * @param typename - The expected typename
  */
-export type DynamicFragmentDocument<
-  In extends string,
-  StaticNodes extends AnyGqlNode[],
-> = FragmentDocumentFrom<In, FragmentDocumentForEach<StaticNodes>> & {
-  __phantom: In;
-};
-
-/**
- * @internal
- */
-export function fragment<In extends string, StaticNodes extends AnyGqlNode[]>(
-  input: In,
-  staticFragments: FragmentDocumentForEach<StaticNodes> = [] as FragmentDocumentForEach<StaticNodes>,
-): DynamicFragmentDocument<In, StaticNodes> {
-  return graphql(input, staticFragments) as DynamicFragmentDocument<In, StaticNodes>;
-}
-
-/**
- * @internal
- */
-export type DynamicFragmentOf<
-  Document,
-  DynamicNodes extends AnyGqlNode[],
-> = Document extends DynamicFragmentDocument<infer In, infer StaticNodes>
-  ? FragmentOf<FragmentDocumentFrom<In, FragmentDocumentForEach<[...DynamicNodes, ...StaticNodes]>>>
-  : never;
-
 export function assertTypename<Typename extends string>(
-  node: AnyGqlNode,
+  node: TypedSelectionSet,
   typename: Typename,
-): asserts node is AnyGqlNode<Typename> {
+): asserts node is TypedSelectionSet<Typename> {
   if (node.__typename !== typename) {
     throw new InvariantError(
       `Expected node to have typename "${typename}", but got "${node.__typename}"`,

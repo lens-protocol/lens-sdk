@@ -1,5 +1,9 @@
 import type { FragmentOf } from 'gql.tada';
+import { UsernameTakenFragment } from './accounts';
 import {
+  NamespaceOperationValidationFailedFragment,
+  NamespaceOperationValidationPassedFragment,
+  NamespaceOperationValidationUnknownFragment,
   PaginatedResultInfoFragment,
   SelfFundedTransactionRequestFragment,
   SponsoredTransactionRequestFragment,
@@ -27,15 +31,19 @@ const CreateUsernameResultFragment = graphql(
     ...on SelfFundedTransactionRequest {
       ...SelfFundedTransactionRequest
     }
+    ...on NamespaceOperationValidationFailed {
+      ...NamespaceOperationValidationFailed
+    }
     ...on TransactionWillFail {
       ...TransactionWillFail
     }
   }`,
   [
     CreateUsernameResponseFragment,
-    SelfFundedTransactionRequestFragment,
-    TransactionWillFailFragment,
     SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    NamespaceOperationValidationFailedFragment,
+    TransactionWillFailFragment,
   ],
 );
 export type CreateUsernameResult = FragmentOf<typeof CreateUsernameResultFragment>;
@@ -69,15 +77,19 @@ const AssignUsernameToAccountResultFragment = graphql(
     ...on SelfFundedTransactionRequest {
       ...SelfFundedTransactionRequest
     }
+    ...on NamespaceOperationValidationFailed {
+      ...NamespaceOperationValidationFailed
+    }
     ...on TransactionWillFail {
       ...TransactionWillFail
     }
   }`,
   [
+    AssignUsernameResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
+    NamespaceOperationValidationFailedFragment,
     TransactionWillFailFragment,
-    AssignUsernameResponseFragment,
   ],
 );
 export type AssignUsernameToAccountResult = FragmentOf<
@@ -113,15 +125,19 @@ const UnassignUsernameToAccountResultFragment = graphql(
     ...on SelfFundedTransactionRequest {
       ...SelfFundedTransactionRequest
     }
+    ...on NamespaceOperationValidationFailed {
+      ...NamespaceOperationValidationFailed
+    }
     ...on TransactionWillFail {
       ...TransactionWillFail
     }
   }`,
   [
+    UnassignUsernameResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
+    NamespaceOperationValidationFailedFragment,
     TransactionWillFailFragment,
-    UnassignUsernameResponseFragment,
   ],
 );
 export type UnassignUsernameToAccountResult = FragmentOf<
@@ -165,3 +181,38 @@ export const UsernamesQuery = graphql(
   [UsernameFragment, PaginatedResultInfoFragment],
 );
 export type UsernamesRequest = RequestOf<typeof UsernamesQuery>;
+
+const CanCreateUsernameResultFragment = graphql(
+  `fragment CanCreateUsernameResult on CanCreateUsernameResult {
+    __typename
+    ... on NamespaceOperationValidationPassed {
+      ...NamespaceOperationValidationPassed
+    }
+    ... on NamespaceOperationValidationUnknown {
+      ...NamespaceOperationValidationUnknown
+    }
+    ... on NamespaceOperationValidationFailed {
+      ...NamespaceOperationValidationFailed
+    }
+    ...on UsernameTaken {
+      ...UsernameTaken
+    }
+  }`,
+  [
+    NamespaceOperationValidationPassedFragment,
+    NamespaceOperationValidationUnknownFragment,
+    NamespaceOperationValidationFailedFragment,
+    UsernameTakenFragment,
+  ],
+);
+export type CanCreateUsernameResult = FragmentOf<typeof CanCreateUsernameResultFragment>;
+
+export const CanCreateUsernameQuery = graphql(
+  `query CanCreateUsername($request: UsernameInput!) {
+    value: canCreateUsername(request: $request) {
+      ...CanCreateUsernameResult
+    }
+  }`,
+  [CanCreateUsernameResultFragment],
+);
+export type CanCreateUsernameRequest = RequestOf<typeof CanCreateUsernameQuery>;

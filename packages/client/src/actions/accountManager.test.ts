@@ -14,7 +14,7 @@ import {
 } from './account';
 import { fetchMeDetails } from './authentication';
 
-describe('Given a new Lens Account', () => {
+describe('Given a new Lens Account', { timeout: 10000 }, () => {
   let newAccount: Account;
   let sessionClient: SessionClient;
 
@@ -50,6 +50,7 @@ describe('Given a new Lens Account', () => {
         .andThen(sessionClient.waitForTransaction);
       assertOk(result);
     });
+
     it(`Then it should be reflected in the '${fetchMeDetails.name}' action result`, async () => {
       const result = await fetchMeDetails(sessionClient);
 

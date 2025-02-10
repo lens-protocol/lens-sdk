@@ -1,4 +1,5 @@
 export * from './accounts';
+export * from './actions';
 export * from './admins';
 export * from './app';
 export * from './authentication';
@@ -14,6 +15,7 @@ export * from './health';
 export * from './namespace';
 export * from './notifications';
 export * from './post';
+export * from './scalars';
 export * from './sns';
 export * from './sponsorship';
 export * from './timeline';

@@ -97,3 +97,45 @@ export const GraphsQuery = graphql(
   [GraphFragment, PaginatedResultInfoFragment],
 );
 export type GraphsRequest = RequestOf<typeof GraphsQuery>;
+
+const UpdateGraphRulesResponseFragment = graphql(
+  `fragment UpdateGraphRulesResponse on UpdateGraphRulesResponse {
+    __typename
+    hash
+  }`,
+);
+export type UpdateGraphRulesResponse = FragmentOf<typeof UpdateGraphRulesResponseFragment>;
+
+const UpdateGraphRulesResultFragment = graphql(
+  `fragment UpdateGraphRulesResult on UpdateGraphRulesResult {
+    ...on UpdateGraphRulesResponse {
+      ...UpdateGraphRulesResponse
+    }
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    UpdateGraphRulesResponseFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+    SponsoredTransactionRequestFragment,
+  ],
+);
+export type UpdateGraphRulesResult = FragmentOf<typeof UpdateGraphRulesResultFragment>;
+
+export const UpdateGraphRulesMutation = graphql(
+  `mutation UpdateGraphRules($request: UpdateGraphRulesRequest!) {
+    value: updateGraphRules(request: $request) {
+      ...UpdateGraphRulesResult
+    }
+  }`,
+  [UpdateGraphRulesResultFragment],
+);
+export type UpdateGraphRulesRequest = RequestOf<typeof UpdateGraphRulesMutation>;

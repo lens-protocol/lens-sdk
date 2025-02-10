@@ -970,97 +970,6 @@ export enum AppUsersOrderBy {
   BestMatch = 'BEST_MATCH',
 }
 
-export enum TransactionOperation {
-  AccessControlRoleGranted = 'ACCESS_CONTROL_ROLE_GRANTED',
-  AccessControlRoleRevoked = 'ACCESS_CONTROL_ROLE_REVOKED',
-  AccessControlFactoryOwnerAdminDeployment = 'ACCESS_CONTROL_FACTORY_OWNER_ADMIN_DEPLOYMENT',
-  AccountFactoryDeployment = 'ACCOUNT_FACTORY_DEPLOYMENT',
-  AccountManagerAdded = 'ACCOUNT_MANAGER_ADDED',
-  AccountManagerRemoved = 'ACCOUNT_MANAGER_REMOVED',
-  AccountManagerUpdated = 'ACCOUNT_MANAGER_UPDATED',
-  AccountOwnerTransferred = 'ACCOUNT_OWNER_TRANSFERRED',
-  AccountMetadataUriSet = 'ACCOUNT_METADATA_URI_SET',
-  AppFactoryDeployment = 'APP_FACTORY_DEPLOYMENT',
-  AppAccessControlAdded = 'APP_ACCESS_CONTROL_ADDED',
-  AppAccessControlUpdated = 'APP_ACCESS_CONTROL_UPDATED',
-  AppDefaultFeedSet = 'APP_DEFAULT_FEED_SET',
-  AppExtraDataAdded = 'APP_EXTRA_DATA_ADDED',
-  AppExtraDataRemoved = 'APP_EXTRA_DATA_REMOVED',
-  AppExtraDataUpdated = 'APP_EXTRA_DATA_UPDATED',
-  AppFeedAdded = 'APP_FEED_ADDED',
-  AppFeedRemoved = 'APP_FEED_REMOVED',
-  AppGraphAdded = 'APP_GRAPH_ADDED',
-  AppGraphRemoved = 'APP_GRAPH_REMOVED',
-  AppGroupAdded = 'APP_GROUP_ADDED',
-  AppGroupRemoved = 'APP_GROUP_REMOVED',
-  AppMetadataUriSet = 'APP_METADATA_URI_SET',
-  AppSignerAdded = 'APP_SIGNER_ADDED',
-  AppSignerRemoved = 'APP_SIGNER_REMOVED',
-  AppSourceStampVerificationSet = 'APP_SOURCE_STAMP_VERIFICATION_SET',
-  AppPaymasterAdded = 'APP_PAYMASTER_ADDED',
-  AppPaymasterRemoved = 'APP_PAYMASTER_REMOVED',
-  AppTreasurySet = 'APP_TREASURY_SET',
-  AppUsernameAdded = 'APP_USERNAME_ADDED',
-  AppUsernameRemoved = 'APP_USERNAME_REMOVED',
-  FeedAccessControlAdded = 'FEED_ACCESS_CONTROL_ADDED',
-  FeedAccessControlUpdated = 'FEED_ACCESS_CONTROL_UPDATED',
-  FeedExtraDataAdded = 'FEED_EXTRA_DATA_ADDED',
-  FeedExtraDataRemoved = 'FEED_EXTRA_DATA_REMOVED',
-  FeedExtraDataUpdated = 'FEED_EXTRA_DATA_UPDATED',
-  FeedMetadataUriSet = 'FEED_METADATA_URI_SET',
-  FeedPostCreated = 'FEED_POST_CREATED',
-  FeedPostDeleted = 'FEED_POST_DELETED',
-  FeedPostEdited = 'FEED_POST_EDITED',
-  GraphFactoryDeployment = 'GRAPH_FACTORY_DEPLOYMENT',
-  GraphAccessControlAdded = 'GRAPH_ACCESS_CONTROL_ADDED',
-  GraphAccessControlUpdated = 'GRAPH_ACCESS_CONTROL_UPDATED',
-  GraphExtraDataAdded = 'GRAPH_EXTRA_DATA_ADDED',
-  GraphExtraDataRemoved = 'GRAPH_EXTRA_DATA_REMOVED',
-  GraphExtraDataUpdated = 'GRAPH_EXTRA_DATA_UPDATED',
-  GraphFollowed = 'GRAPH_FOLLOWED',
-  GraphMetadataUriSet = 'GRAPH_METADATA_URI_SET',
-  GraphUnfollowed = 'GRAPH_UNFOLLOWED',
-  GroupFactoryDeployment = 'GROUP_FACTORY_DEPLOYMENT',
-  GroupMemberJoined = 'GROUP_MEMBER_JOINED',
-  GroupMemberLeft = 'GROUP_MEMBER_LEFT',
-  GroupMemberRemoved = 'GROUP_MEMBER_REMOVED',
-  GroupAccessControlAdded = 'GROUP_ACCESS_CONTROL_ADDED',
-  GroupAccessControlUpdated = 'GROUP_ACCESS_CONTROL_UPDATED',
-  GroupExtraDataAdded = 'GROUP_EXTRA_DATA_ADDED',
-  GroupExtraDataRemoved = 'GROUP_EXTRA_DATA_REMOVED',
-  GroupExtraDataUpdated = 'GROUP_EXTRA_DATA_UPDATED',
-  GroupMetadataUriSet = 'GROUP_METADATA_URI_SET',
-  SponsorFreePaymasterCreated = 'SPONSOR_FREE_PAYMASTER_CREATED',
-  SponsorAddedToApprovedSigners = 'SPONSOR_ADDED_TO_APPROVED_SIGNERS',
-  SponsorMetadataUriChanged = 'SPONSOR_METADATA_URI_CHANGED',
-  UsernameAssigned = 'USERNAME_ASSIGNED',
-  UsernameCreated = 'USERNAME_CREATED',
-  UsernameFactoryDeployment = 'USERNAME_FACTORY_DEPLOYMENT',
-  UsernameRemoved = 'USERNAME_REMOVED',
-  UsernameUnassigned = 'USERNAME_UNASSIGNED',
-  UsernameAccessControlAdded = 'USERNAME_ACCESS_CONTROL_ADDED',
-  UsernameAccessControlUpdated = 'USERNAME_ACCESS_CONTROL_UPDATED',
-  UsernameExtraDataAdded = 'USERNAME_EXTRA_DATA_ADDED',
-  UsernameExtraDataRemoved = 'USERNAME_EXTRA_DATA_REMOVED',
-  UsernameExtraDataUpdated = 'USERNAME_EXTRA_DATA_UPDATED',
-  UsernameMetadataUriSet = 'USERNAME_METADATA_URI_SET',
-  SponsorshipAccessControlAdded = 'SPONSORSHIP_ACCESS_CONTROL_ADDED',
-  SponsorshipAccessControlUpdated = 'SPONSORSHIP_ACCESS_CONTROL_UPDATED',
-  SponsorshipAddedToExclusionList = 'SPONSORSHIP_ADDED_TO_EXCLUSION_LIST',
-  SponsorshipRemovedFromExclusionList = 'SPONSORSHIP_REMOVED_FROM_EXCLUSION_LIST',
-  SponsorshipFactoryDeployment = 'SPONSORSHIP_FACTORY_DEPLOYMENT',
-  SponsorshipFundsSpent = 'SPONSORSHIP_FUNDS_SPENT',
-  SponsorshipGrantRevoked = 'SPONSORSHIP_GRANT_REVOKED',
-  SponsorshipGrantedFunds = 'SPONSORSHIP_GRANTED_FUNDS',
-  SponsorshipMetadataUriSet = 'SPONSORSHIP_METADATA_URI_SET',
-  SponsorshipPaused = 'SPONSORSHIP_PAUSED',
-  SponsorshipRateLimitsChanged = 'SPONSORSHIP_RATE_LIMITS_CHANGED',
-  SponsorshipUnpaused = 'SPONSORSHIP_UNPAUSED',
-  SponsorshipSignerAdded = 'SPONSORSHIP_SIGNER_ADDED',
-  SponsorshipSignerRemoved = 'SPONSORSHIP_SIGNER_REMOVED',
-  FeedFactoryDeployment = 'FEED_FACTORY_DEPLOYMENT',
-}
-
 export enum IndexingStatus {
   Finished = 'FINISHED',
   Pending = 'PENDING',
@@ -1090,4 +999,118 @@ export enum SponsorshipLimitExclusionsOrderBy {
   LatestFirst = 'LATEST_FIRST',
   OldestFirst = 'OLDEST_FIRST',
   Alphabetical = 'ALPHABETICAL',
+}
+
+export enum FeedRuleUnsatisfiedReason {
+  GroupGatedNotAMember = 'GROUP_GATED_NOT_A_MEMBER',
+  TokenGatedNotATokenHolder = 'TOKEN_GATED_NOT_A_TOKEN_HOLDER',
+  AccountBlocked = 'ACCOUNT_BLOCKED',
+  SimplePaymentNotEnoughBalance = 'SIMPLE_PAYMENT_NOT_ENOUGH_BALANCE',
+}
+
+export enum GroupRuleUnsatisfiedReason {
+  TokenGatedAccountJoiningNotATokenHolder = 'TOKEN_GATED_ACCOUNT_JOINING_NOT_A_TOKEN_HOLDER',
+  TokenGatedAccountRemovalStillTokenHolder = 'TOKEN_GATED_ACCOUNT_REMOVAL_STILL_TOKEN_HOLDER',
+  SimplePaymentNotEnoughBalance = 'SIMPLE_PAYMENT_NOT_ENOUGH_BALANCE',
+  MembershipApprovalRequired = 'MEMBERSHIP_APPROVAL_REQUIRED',
+}
+
+export enum NamespaceRuleUnsatisfiedReason {
+  TokenGatedNotATokenHolder = 'TOKEN_GATED_NOT_A_TOKEN_HOLDER',
+  UsernameLengthNotWithinRange = 'USERNAME_LENGTH_NOT_WITHIN_RANGE',
+  UsernameNotASimpleCharset = 'USERNAME_NOT_A_SIMPLE_CHARSET',
+  UsernameReserverd = 'USERNAME_RESERVED',
+  UsernamePricePerLengthNotEnoughBalance = 'USERNAME_PRICE_PER_LENGTH_NOT_ENOUGH_BALANCE',
+}
+
+export enum PostRuleUnsatisfiedReason {
+  PostNotAFollower = 'POST_NOT_A_FOLLOWER',
+  FeedGroupGatedNotAMember = 'FEED_GROUP_GATED_NOT_A_MEMBER',
+  FeedTokenGatedNotATokenHolder = 'FEED_TOKEN_GATED_NOT_A_TOKEN_HOLDER',
+  FeedAccountBlocked = 'FEED_ACCOUNT_BLOCKED',
+  FeedSimplePaymentNotEnoughBalance = 'FEED_SIMPLE_PAYMENT_NOT_ENOUGH_BALANCE',
+}
+
+export enum AccountFollowRuleUnsatisfiedReason {
+  GraphTokenGatedNotATokenHolder = 'GRAPH_TOKEN_GATED_NOT_A_TOKEN_HOLDER',
+  GraphAccountBlocked = 'GRAPH_ACCOUNT_BLOCKED',
+  GraphGroupGatedNotAMember = 'GRAPH_GROUP_GATED_NOT_A_MEMBER',
+  FollowSimplePaymentNotEnoughBalance = 'FOLLOW_SIMPLE_PAYMENT_NOT_ENOUGH_BALANCE',
+  FollowTokenGatedNotATokenHolder = 'FOLLOW_TOKEN_GATED_NOT_A_TOKEN_HOLDER',
+}
+
+export enum FeedRuleType {
+  TokenGated = 'TOKEN_GATED',
+  RestrictedSigners = 'RESTRICTED_SIGNERS',
+  AccountBlocking = 'ACCOUNT_BLOCKING',
+  SimplePayment = 'SIMPLE_PAYMENT',
+  GroupGated = 'GROUP_GATED',
+  Unknown = 'UNKNOWN',
+}
+
+export enum PostRuleType {
+  FollowersOnly = 'FOLLOWERS_ONLY',
+  Unknown = 'UNKNOWN',
+}
+
+export enum AccountFollowRuleType {
+  TokenGated = 'TOKEN_GATED',
+  SimplePayment = 'SIMPLE_PAYMENT',
+  Unknown = 'UNKNOWN',
+}
+
+export enum GraphRuleType {
+  TokenGated = 'TOKEN_GATED',
+  AccountBlocking = 'ACCOUNT_BLOCKING',
+  GroupGated = 'GROUP_GATED',
+  Unknown = 'UNKNOWN',
+}
+
+export enum FeedRuleExecuteOn {
+  CreatingPost = 'CREATING_POST',
+  EditingPost = 'EDITING_POST',
+  DeletingPost = 'DELETING_POST',
+  ChangingPostRule = 'CHANGING_POST_RULE',
+}
+
+export enum GroupRuleExecuteOn {
+  Adding = 'ADDING',
+  Removing = 'REMOVING',
+  Joining = 'JOINING',
+  Leaving = 'LEAVING',
+}
+
+export enum GroupRuleType {
+  TokenGated = 'TOKEN_GATED',
+  SimplePayment = 'SIMPLE_PAYMENT',
+  MembershipApproval = 'MEMBERSHIP_APPROVAL',
+  BanAccount = 'BAN_ACCOUNT',
+  Unknown = 'UNKNOWN',
+}
+
+export enum NamespaceRuleExecuteOn {
+  Creating = 'CREATING',
+  Removing = 'REMOVING',
+  Assigning = 'ASSIGNING',
+  Unassigning = 'UNASSIGNING',
+}
+
+export enum NamespaceRuleType {
+  TokenGated = 'TOKEN_GATED',
+  PricePerLength = 'PRICE_PER_LENGTH',
+  UsernameLength = 'USERNAME_LENGTH',
+  UsernameReserverd = 'USERNAME_RESERVED',
+  UsernameSimpleCharset = 'USERNAME_SIMPLE_CHARSET',
+  Unknown = 'UNKNOWN',
+}
+
+export enum PostRuleExecuteOn {
+  CreatingPost = 'CREATING_POST',
+  EditingPost = 'EDITING_POST',
+}
+
+export enum GraphRuleExecuteOn {
+  Following = 'FOLLOWING',
+  Unfollowing = 'UNFOLLOWING',
+  ChangingFollowRules = 'CHANGING_FOLLOW_RULES',
 }

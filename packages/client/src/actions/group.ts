@@ -1,9 +1,19 @@
 import type {
+  AddGroupMemberRequest,
+  AddGroupMemberResult,
+  BanGroupAccountRequest,
+  BanGroupAccountResult,
+  CancelGroupMembershipRequestRequest,
+  CancelGroupMembershipRequestResult,
   CreateGroupRequest,
   CreateGroupResult,
   Group,
+  GroupBannedAccount,
+  GroupBannedAccountsRequest,
   GroupMember,
   GroupMembersRequest,
+  GroupMembershipRequest,
+  GroupMembershipRequestsRequest,
   GroupRequest,
   GroupStatsRequest,
   GroupStatsResponse,
@@ -13,18 +23,38 @@ import type {
   LeaveGroupRequest,
   LeaveGroupResult,
   Paginated,
+  RejectGroupMembershipRequestRequest,
+  RejectGroupMembershipResult,
+  RemoveGroupMemberRequest,
+  RemoveGroupMemberResult,
+  RequestGroupMembershipRequest,
+  RequestGroupMembershipResult,
   SetGroupMetadataRequest,
   SetGroupMetadataResult,
+  UnbanGroupAccountRequest,
+  UnbanGroupAccountResult,
+  UpdateGroupRulesRequest,
+  UpdateGroupRulesResult,
 } from '@lens-protocol/graphql';
 import {
+  AddGroupMemberMutation,
+  BanGroupAccountMutation,
+  CancelGroupMembershipRequestMutation,
   CreateGroupMutation,
+  GroupBannedAccountsQuery,
   GroupMembersQuery,
+  GroupMembershipRequestsQuery,
   GroupQuery,
   GroupStatsQuery,
   GroupsQuery,
   JoinGroupMutation,
   LeaveGroupMutation,
+  RejectGroupMembershipRequestMutation,
+  RemoveGroupMemberMutation,
+  RequestGroupMembershipMutation,
   SetGroupMetadataMutation,
+  UnbanGroupAccountMutation,
+  UpdateGroupRulesMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
@@ -38,7 +68,7 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
  * const result = await createGroup(sessionClient);
  * ```
  *
- * @param client - The session client logged in as a builder.
+ * @param client - The session client for the authenticated Account.
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
@@ -59,7 +89,7 @@ export function createGroup(
  * });
  * ```
  *
- * @param client - The session client logged in as a builder.
+ * @param client - The session client for the authenticated Account.
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
@@ -186,4 +216,218 @@ export function fetchGroupStats(
   request: GroupStatsRequest,
 ): ResultAsync<GroupStatsResponse | null, UnexpectedError> {
   return client.query(GroupStatsQuery, { request });
+}
+
+/**
+ * Fetch banned accounts for a group.
+ *
+ * ```ts
+ * const result = await fetchGroupBannedAccounts(anyClient, {
+ *   group: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of banned accounts for the group.
+ */
+export function fetchGroupBannedAccounts(
+  client: AnyClient,
+  request: GroupBannedAccountsRequest,
+): ResultAsync<Paginated<GroupBannedAccount>, UnexpectedError> {
+  return client.query(GroupBannedAccountsQuery, { request });
+}
+
+/**
+ * Fetch membership requests for a group (only admin/owner).
+ *
+ * ```ts
+ * const result = await fetchGroupMembershipRequests(sessionClient, {
+ *   group: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The query request.
+ * @returns The list of membership requests for the group.
+ */
+export function fetchGroupMembershipRequests(
+  client: SessionClient,
+  request: GroupMembershipRequestsRequest,
+): ResultAsync<Paginated<GroupMembershipRequest>, UnexpectedError> {
+  return client.query(GroupMembershipRequestsQuery, { request });
+}
+
+/**
+ * Update group rules.
+ *
+ * ```ts
+ * const result = await updateGroupRules(sessionClient, {
+ *   group: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ *   toAdd: {
+ *     required: [{
+ *       membershipApprovalRule: {
+ *         enable: true
+ *       }
+ *     }]
+ *     anyOf: [],
+ *   }
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function updateGroupRules(
+  client: SessionClient,
+  request: UpdateGroupRulesRequest,
+): ResultAsync<UpdateGroupRulesResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(UpdateGroupRulesMutation, { request });
+}
+
+/**
+ * Add an account to a group.
+ *
+ * ```ts
+ * const result = await addGroupMember(sessionClient, {
+ *   group: evmAddress('0xe2f2…'),
+ *   account: evmAddress('0x4f91…'),
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function addGroupMember(
+  client: SessionClient,
+  request: AddGroupMemberRequest,
+): ResultAsync<AddGroupMemberResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(AddGroupMemberMutation, { request });
+}
+
+/**
+ * Remove account from a group.
+ *
+ * ```ts
+ * const result = await removeGroupMember(sessionClient, {
+ *   group: evmAddress('0xe2f…'),
+ *   account: evmAddress('0x4f91…'),
+ *   ban: true
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function removeGroupMember(
+  client: SessionClient,
+  request: RemoveGroupMemberRequest,
+): ResultAsync<RemoveGroupMemberResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(RemoveGroupMemberMutation, { request });
+}
+
+/**
+ * Request membership for a group.
+ *
+ * ```ts
+ * const result = await requestGroupMembership(sessionClient, {
+ *   group: evmAddress('0xe2f…'),
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function requestGroupMembership(
+  client: SessionClient,
+  request: RequestGroupMembershipRequest,
+): ResultAsync<RequestGroupMembershipResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(RequestGroupMembershipMutation, { request });
+}
+
+/**
+ * Cancel and existing request to be part of a group.
+ *
+ * ```ts
+ * const result = await cancelGroupMembershipRequest(sessionClient, {
+ *   group: evmAddress('0xe2f…'),
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function cancelGroupMembershipRequest(
+  client: SessionClient,
+  request: CancelGroupMembershipRequestRequest,
+): ResultAsync<CancelGroupMembershipRequestResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(CancelGroupMembershipRequestMutation, { request });
+}
+
+/**
+ * Reject as admin/owner of a group a request to be part of a group.
+ *
+ * ```ts
+ * const result = await rejectGroupMembershipRequest(sessionClient, {
+ *   group: evmAddress('0xe2f…'),
+ *   account: evmAddress('0x4f91…'),
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function rejectGroupMembershipRequest(
+  client: SessionClient,
+  request: RejectGroupMembershipRequestRequest,
+): ResultAsync<RejectGroupMembershipResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(RejectGroupMembershipRequestMutation, { request });
+}
+
+/**
+ * Ban as admin/owner an account to be part of a group.
+ *
+ * ```ts
+ * const result = await banGroupAccount(sessionClient, {
+ *   group: evmAddress('0xe2f…'),
+ *   account: evmAddress('0x4f91…'),
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function banGroupAccount(
+  client: SessionClient,
+  request: BanGroupAccountRequest,
+): ResultAsync<BanGroupAccountResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(BanGroupAccountMutation, { request });
+}
+
+/**
+ * Unban as admin/owner an account to be part of a group.
+ *
+ * ```ts
+ * const result = await unbanGroupAccount(sessionClient, {
+ *   group: evmAddress('0xe2f…'),
+ *   account: evmAddress('0x4f91…'),
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function unbanGroupAccount(
+  client: SessionClient,
+  request: UnbanGroupAccountRequest,
+): ResultAsync<UnbanGroupAccountResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(UnbanGroupAccountMutation, { request });
 }
