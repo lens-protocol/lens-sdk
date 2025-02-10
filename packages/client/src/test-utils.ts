@@ -6,7 +6,7 @@ import { evmAddress } from '@lens-protocol/types';
 import { http, type Account, type Transport, type WalletClient, createWalletClient } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import { GraphQLErrorCode, PublicClient, staging as apiEnv } from '.';
+import { GraphQLErrorCode, PublicClient, testnet as apiEnv } from '.';
 
 const pk = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
 export const account = evmAddress(import.meta.env.TEST_ACCOUNT);
