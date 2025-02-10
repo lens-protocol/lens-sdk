@@ -39,5 +39,5 @@ jobs:
           echo "TEST_APP=${{ vars.TEST_APP }}" >> .env
           echo "TEST_ACCOUNT=${{ vars.TEST_ACCOUNT }}" >> .env
 
-      # - name: Run Tests
-      #   run: pnpm test
+      - name: Run Tests
+        run: pnpm test
