@@ -100,7 +100,7 @@ const CreateAccountResponseFragment = graphql(
 );
 export type CreateAccountResponse = FragmentOf<typeof CreateAccountResponseFragment>;
 
-const UsernameTakenFragment = graphql(
+export const UsernameTakenFragment = graphql(
   `fragment UsernameTaken on UsernameTaken {
     __typename
     reason

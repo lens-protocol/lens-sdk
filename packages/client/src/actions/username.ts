@@ -1,6 +1,8 @@
 import type {
   AssignUsernameToAccountRequest,
   AssignUsernameToAccountResult,
+  CanCreateUsernameRequest,
+  CanCreateUsernameResult,
   CreateUsernameRequest,
   CreateUsernameResult,
   Paginated,
@@ -12,6 +14,7 @@ import type {
 } from '@lens-protocol/graphql';
 import {
   AssignUsernameToAccountMutation,
+  CanCreateUsernameQuery,
   CreateUsernameMutation,
   UnassignUsernameFromAccountMutation,
   UsernameQuery,
@@ -23,6 +26,22 @@ import type { SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
 import type { AnyClient } from '../clients';
+
+/**
+ * Checks if the given username can be created by the logged in Account.
+ *
+ * ```ts
+ * const result = await canCreateUsername(sessionClient, {
+ *   localName: 'wagmi',
+ * });
+ * ```
+ */
+export function canCreateUsername(
+  client: SessionClient,
+  request: CanCreateUsernameRequest,
+): ResultAsync<CanCreateUsernameResult, UnexpectedError | UnauthenticatedError> {
+  return client.query(CanCreateUsernameQuery, { request });
+}
 
 /**
  * Create a username

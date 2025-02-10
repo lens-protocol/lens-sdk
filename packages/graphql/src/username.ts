@@ -1,6 +1,9 @@
 import type { FragmentOf } from 'gql.tada';
+import { UsernameTakenFragment } from './accounts';
 import {
   NamespaceOperationValidationFailedFragment,
+  NamespaceOperationValidationPassedFragment,
+  NamespaceOperationValidationUnknownFragment,
   PaginatedResultInfoFragment,
   SelfFundedTransactionRequestFragment,
   SponsoredTransactionRequestFragment,
@@ -178,3 +181,38 @@ export const UsernamesQuery = graphql(
   [UsernameFragment, PaginatedResultInfoFragment],
 );
 export type UsernamesRequest = RequestOf<typeof UsernamesQuery>;
+
+const CanCreateUsernameResultFragment = graphql(
+  `fragment CanCreateUsernameResult on CanCreateUsernameResult {
+    __typename
+    ... on NamespaceOperationValidationPassed {
+      ...NamespaceOperationValidationPassed
+    }
+    ... on NamespaceOperationValidationUnknown {
+      ...NamespaceOperationValidationUnknown
+    }
+    ... on NamespaceOperationValidationFailed {
+      ...NamespaceOperationValidationFailed
+    }
+    ...on UsernameTaken {
+      ...UsernameTaken
+    }
+  }`,
+  [
+    NamespaceOperationValidationPassedFragment,
+    NamespaceOperationValidationUnknownFragment,
+    NamespaceOperationValidationFailedFragment,
+    UsernameTakenFragment,
+  ],
+);
+export type CanCreateUsernameResult = FragmentOf<typeof CanCreateUsernameResultFragment>;
+
+export const CanCreateUsernameQuery = graphql(
+  `query CanCreateUsername($request: UsernameInput!) {
+    value: canCreateUsername(request: $request) {
+      ...CanCreateUsernameResult
+    }
+  }`,
+  [CanCreateUsernameResultFragment],
+);
+export type CanCreateUsernameRequest = RequestOf<typeof CanCreateUsernameQuery>;
