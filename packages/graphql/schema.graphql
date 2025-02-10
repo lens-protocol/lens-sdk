@@ -224,9 +224,8 @@ input AccountManagerChallengeRequest {
   The App you intend to authenticate with.
   
   It MUST be a valid App address.
-  Note: On the testnet, it will default to `0x90C8C68D0ABFB40D4FCD72316A65E42161520BC3`, the
-  playground app. This is to make it easier if you forget to set it. This may change in the
-  future.
+  Note: On the testnet, it will default to the playground app.
+  This is to make it easier if you forget to set it. This may change in the future.
   """
   app: EvmAddress! = "0xaC19aa2402b3AC3f9Fe471D4783EC68595432465"
 
@@ -345,9 +344,8 @@ input AccountOwnerChallengeRequest {
   The App you intend to authenticate with.
   
   It MUST be a valid App address.
-  Note: On the testnet, it will default to `0x90C8C68D0ABFB40D4FCD72316A65E42161520BC3`, the
-  playground app. This is to make it easier if you forget to set it. This may change in the
-  future.
+  Note: On the testnet, it will default to the playground app.
+  This is to make it easier if you forget to set it. This may change in the future.
   """
   app: EvmAddress! = "0xaC19aa2402b3AC3f9Fe471D4783EC68595432465"
 
@@ -4735,9 +4733,8 @@ input OnboardingUserChallengeRequest {
   The App you intend to authenticate with.
   
   It MUST be a valid App address.
-  Note: On the testnet, it will default to `0x90C8C68D0ABFB40D4FCD72316A65E42161520BC3`, the
-  playground app. This is to make it easier if you forget to set it. This may change in the
-  future.
+  Note: On the testnet, it will default to the playground app.
+  This is to make it easier if you forget to set it. This may change in the future.
   """
   app: EvmAddress! = "0xaC19aa2402b3AC3f9Fe471D4783EC68595432465"
 
@@ -4975,7 +4972,7 @@ type Post {
   root: Post
   quoteOf: Post
   commentOn: Post
-  actions(includeDisabled: Boolean! = false): [PostAction!]!
+  actions(request: PostActionsParams! = {includeDisabled: false}): [PostAction!]!
   operations: LoggedInPostOperations
   stats: PostStats!
   mentions: [PostMention!]!
@@ -5013,6 +5010,10 @@ enum PostActionType {
   SIMPLE_COLLECT
   TIPPING
   UNKNOWN
+}
+
+input PostActionsParams {
+  includeDisabled: Boolean!
 }
 
 input PostBookmarksFilter {
