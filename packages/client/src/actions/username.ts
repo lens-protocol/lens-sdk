@@ -104,7 +104,7 @@ export function assignUsernameToAccount(
  */
 export function unassignUsernameFromAccount(
   client: SessionClient,
-  request: UnassignUsernameFromAccountRequest,
+  request: UnassignUsernameFromAccountRequest = {},
 ): ResultAsync<UnassignUsernameToAccountResult, UnauthenticatedError | UnexpectedError> {
   return client.query(UnassignUsernameFromAccountMutation, { request });
 }
