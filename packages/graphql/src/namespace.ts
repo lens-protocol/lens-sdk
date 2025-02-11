@@ -177,3 +177,28 @@ export const UpdateReservedUsernamesMutation = graphql(
   [UpdateReservedUsernamesResultFragment],
 );
 export type UpdateReservedUsernamesRequest = RequestOf<typeof UpdateReservedUsernamesMutation>;
+
+const UsernameReservedFragment = graphql(
+  `fragment UsernameReserved on UsernameReserved {
+    ruleId
+    namespace
+    localName
+  }`,
+);
+export type UsernameReserved = FragmentOf<typeof UsernameReservedFragment>;
+
+export const NamespaceReservedUsernamesQuery = graphql(
+  `query NamespaceReservedUsernames($request: NamespaceReservedUsernamesRequest!) {
+    value: namespaceReservedUsernames(request: $request) {
+      __typename
+      items {
+        ...UsernameReserved
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [UsernameReservedFragment, PaginatedResultInfoFragment],
+);
+export type NamespaceReservedUsernamesRequest = RequestOf<typeof NamespaceReservedUsernamesQuery>;
