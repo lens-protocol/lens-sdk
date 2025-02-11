@@ -18,6 +18,7 @@ import type {
   AppsRequest,
   CreateAppRequest,
   CreateAppResult,
+  GenerateNewAppServerApiKeyRequest,
   Group,
   Paginated,
   RemoveAppAuthorizationEndpointRequest,
@@ -27,6 +28,7 @@ import type {
   RemoveAppGroupsResult,
   RemoveAppSignersRequest,
   RemoveAppSignersResult,
+  ServerAPIKey,
   SetAppGraphRequest,
   SetAppGraphResult,
   SetAppMetadataRequest,
@@ -50,10 +52,12 @@ import {
   AppFeedsQuery,
   AppGroupsQuery,
   AppQuery,
+  AppServerApiKeyQuery,
   AppSignersQuery,
   AppUsersQuery,
   AppsQuery,
   CreateAppMutation,
+  GenerateNewAppServerApiKeyMutation,
   RemoveAppAuthorizationEndpointMutation,
   RemoveAppFeedsMutation,
   RemoveAppGroupsMutation,
@@ -69,6 +73,7 @@ import {
 import type { ResultAsync } from '@lens-protocol/types';
 
 import type {} from '@lens-protocol/graphql';
+import type { AppServerApiKeyRequest } from '@lens-protocol/graphql';
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
@@ -530,4 +535,36 @@ export function removeAppAuthorizationEndpoint(
   request: RemoveAppAuthorizationEndpointRequest,
 ): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
   return client.mutation(RemoveAppAuthorizationEndpointMutation, { request });
+}
+
+/**
+ * Fetch the server API key for an App.
+ *
+ * You MUST be logged-in as Builder and be the owner of the App.
+ *
+ * @param client  - The session client logged as a builder.
+ * @param request - The query request.
+ * @returns The server API key for the App.
+ */
+export function fetchAppServerAPiKey(
+  client: SessionClient,
+  request: AppServerApiKeyRequest,
+): ResultAsync<ServerAPIKey, UnexpectedError | UnauthenticatedError> {
+  return client.query(AppServerApiKeyQuery, { request });
+}
+
+/**
+ * Generate a new server API key for an App.
+ *
+ * You MUST be logged-in as Builder and be the owner of the App.
+ *
+ * @param client - The session client logged as a builder.
+ * @param request - The mutation request.
+ * @returns The new server API key for the App.
+ */
+export function generateNewAppServerApiKey(
+  client: SessionClient,
+  request: GenerateNewAppServerApiKeyRequest,
+): ResultAsync<ServerAPIKey, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(GenerateNewAppServerApiKeyMutation, { request });
 }
