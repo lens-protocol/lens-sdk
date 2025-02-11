@@ -2,6 +2,7 @@ import type {
   CreateUsernameNamespaceRequest,
   CreateUsernameNamespaceResult,
   NamespaceRequest,
+  NamespaceReservedUsernamesRequest,
   NamespacesRequest,
   Paginated,
   SetNamespaceMetadataRequest,
@@ -11,10 +12,12 @@ import type {
   UpdateReservedUsernamesRequest,
   UpdateReservedUsernamesResult,
   UsernameNamespace,
+  UsernameReserved,
 } from '@lens-protocol/graphql';
 import {
   CreateUsernameNamespaceMutation,
   NamespaceQuery,
+  NamespaceReservedUsernamesQuery,
   NamespacesQuery,
   SetNamespaceMetadataMutation,
   UpdateNamespaceRulesMutation,
@@ -161,4 +164,24 @@ export function updateReservedUsernames(
   request: UpdateReservedUsernamesRequest,
 ): ResultAsync<UpdateReservedUsernamesResult, UnauthenticatedError | UnexpectedError> {
   return client.mutation(UpdateReservedUsernamesMutation, { request });
+}
+
+/**
+ * Fetch all reserved usernames in a namespace.
+ *
+ * ```ts
+ * const result = await fetchNamespaceReservedUsernames(anyClient, {
+ *   namespace: evmAddress('0x1234…'),
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of reserved usernames or empty list if none exist.
+ */
+export function fetchNamespaceReservedUsernames(
+  client: AnyClient,
+  request: NamespaceReservedUsernamesRequest,
+): ResultAsync<Paginated<UsernameReserved>, UnexpectedError> {
+  return client.query(NamespaceReservedUsernamesQuery, { request });
 }
