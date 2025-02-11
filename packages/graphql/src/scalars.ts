@@ -10,3 +10,8 @@ import type { Tagged } from 'type-fest';
  * type to represent a success case.
  */
 export type AlwaysTrue = Tagged<boolean, 'AlwaysTrue'>;
+
+/**
+ * A string that represents a server API key.
+ */
+export type ServerAPIKey = Tagged<string, 'ServerAPIKey'>;

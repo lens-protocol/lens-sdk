@@ -100,7 +100,7 @@ import type {
   WhoReferencedPostOrderBy,
 } from './enums';
 import type { introspection } from './graphql-env';
-import type { AlwaysTrue } from './scalars';
+import type { AlwaysTrue, ServerAPIKey } from './scalars';
 
 export const graphql = initGraphQLTada<{
   disableMasking: true;
@@ -185,6 +185,7 @@ export const graphql = initGraphQLTada<{
     RefreshToken: RefreshToken;
     RuleId: RuleId;
     SelfFundedFallbackReason: SelfFundedFallbackReason;
+    ServerAPIKey: ServerAPIKey;
     Signature: Signature;
     SponsoredFallbackReason: SponsoredFallbackReason;
     SponsorLimitType: SponsorLimitType;

@@ -131,14 +131,6 @@ export const AppUsersQuery = graphql(
 );
 export type AppUsersRequest = RequestOf<typeof AppUsersQuery>;
 
-export const AppServerApiKeyQuery = graphql(
-  `query AppServerApiKey($request: AppServerApiKeyRequest!) {
-    value: appServerApiKey(request: $request)
-  }`,
-  [AppFragment],
-);
-export type AppServerApiKeyRequest = RequestOf<typeof AppServerApiKeyQuery>;
-
 const CreateAppResponseFragment = graphql(
   `fragment CreateAppResponse on CreateAppResponse {
     __typename
@@ -582,3 +574,19 @@ export const RemoveAppAuthorizationEndpointMutation = graphql(
 export type RemoveAppAuthorizationEndpointRequest = RequestOf<
   typeof RemoveAppAuthorizationEndpointMutation
 >;
+
+export const GenerateNewAppServerApiKeyMutation = graphql(
+  `mutation GenerateNewAppServerApiKey($request: GenerateNewAppServerApiKeyRequest!) {
+    value: generateNewAppServerApiKey(request: $request)
+  }`,
+);
+export type GenerateNewAppServerApiKeyRequest = RequestOf<
+  typeof GenerateNewAppServerApiKeyMutation
+>;
+
+export const AppServerApiKeyQuery = graphql(
+  `query AppServerApiKey($request: AppServerApiKeyRequest!) {
+    value: appServerApiKey(request: $request)
+  }`,
+);
+export type AppServerApiKeyRequest = RequestOf<typeof AppServerApiKeyQuery>;
