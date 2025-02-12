@@ -1,6 +1,6 @@
 import type {
-  AddGroupMemberRequest,
-  AddGroupMemberResult,
+  ApproveGroupMembershipRequest,
+  ApproveGroupMembershipResult,
   BanGroupAccountRequest,
   BanGroupAccountResult,
   CancelGroupMembershipRequestRequest,
@@ -37,7 +37,7 @@ import type {
   UpdateGroupRulesResult,
 } from '@lens-protocol/graphql';
 import {
-  AddGroupMemberMutation,
+  ApproveGroupMembershipRequestsMutation,
   BanGroupAccountMutation,
   CancelGroupMembershipRequestMutation,
   CreateGroupMutation,
@@ -287,12 +287,12 @@ export function updateGroupRules(
 }
 
 /**
- * Add an account to a group.
+ * Approve group membership requests.
  *
  * ```ts
- * const result = await addGroupMember(sessionClient, {
+ * const result = await approveGroupMembershipRequests(sessionClient, {
  *   group: evmAddress('0xe2f2…'),
- *   account: evmAddress('0x4f91…'),
+ *   accounts: [evmAddress('0x4f91…'), evmAddress('0x4f92…')],
  * });
  * ```
  *
@@ -300,11 +300,11 @@ export function updateGroupRules(
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
-export function addGroupMember(
+export function approveGroupMembershipRequests(
   client: SessionClient,
-  request: AddGroupMemberRequest,
-): ResultAsync<AddGroupMemberResult, UnexpectedError | UnauthenticatedError> {
-  return client.mutation(AddGroupMemberMutation, { request });
+  request: ApproveGroupMembershipRequest,
+): ResultAsync<ApproveGroupMembershipResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(ApproveGroupMembershipRequestsMutation, { request });
 }
 
 /**
