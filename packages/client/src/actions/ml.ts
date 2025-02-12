@@ -1,21 +1,26 @@
 import type {
   Account,
+  DismissRecommendedAccountsRequest,
   MlAccountRecommendationsRequest,
   MlPostsExploreRequest,
   MlPostsForYouRequest,
   Paginated,
   Post,
   PostForYou,
+  PostNotInterestedRequest,
 } from '@lens-protocol/graphql';
 import {
+  AddPostNotInterestedMutation,
   MlAccountRecommendationsQuery,
+  MlDismissRecommendedAccountsMutation,
   MlPostsExploreQuery,
   MlPostsForYouQuery,
+  UndoPostNotInterestedMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
 
-import type { AnyClient } from '../clients';
-import type { UnexpectedError } from '../errors';
+import type { AnyClient, SessionClient } from '../clients';
+import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
 /**
  * Fetch account recommendations from ML.
@@ -73,4 +78,64 @@ export function fetchPostsToExplore(
   request: MlPostsExploreRequest,
 ): ResultAsync<Paginated<Post> | null, UnexpectedError> {
   return client.query(MlPostsExploreQuery, { request });
+}
+
+/**
+ * Dismiss recommended account.
+ *
+ * ```ts
+ * const result = await dismissRecommendedAccount(sessionClient, {
+ *   accounts: [evmAddress('0xe2f2...')],
+ * });
+ * ```
+ *
+ * @param client - Session Lens client.
+ * @param request - The list of accounts to dismiss.
+ * @returns - void
+ */
+export function dismissRecommendedAccount(
+  client: SessionClient,
+  request: DismissRecommendedAccountsRequest,
+): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(MlDismissRecommendedAccountsMutation, { request });
+}
+
+/**
+ * Add post as not interested.
+ *
+ * ```ts
+ * const result = await addPostNotInterested(sessionClient, {
+ *   post: postID('34fdasd...'),
+ * });
+ * ```
+ *
+ * @param client - Session Lens client.
+ * @param request - The post to add as not interested.
+ * @returns - void
+ */
+export function addPostNotInterested(
+  client: SessionClient,
+  request: PostNotInterestedRequest,
+): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(AddPostNotInterestedMutation, { request });
+}
+
+/**
+ * Remove post as not interested.
+ *
+ * ```ts
+ * const result = await undoPostNotInterested(sessionClient, {
+ *   post: postID('34fdasd...'),
+ * });
+ * ```
+ *
+ * @param client - Session Lens client.
+ * @param request - The post to remove as not interested.
+ * @returns - void
+ */
+export function undoPostNotInterested(
+  client: SessionClient,
+  request: PostNotInterestedRequest,
+): ResultAsync<void, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(UndoPostNotInterestedMutation, { request });
 }

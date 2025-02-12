@@ -61,3 +61,24 @@ export const MlPostsExploreQuery = graphql(
   [PostFragment, PaginatedResultInfoFragment],
 );
 export type MlPostsExploreRequest = RequestOf<typeof MlPostsExploreQuery>;
+
+export const MlDismissRecommendedAccountsMutation = graphql(
+  `mutation MlDismissRecommendedAccounts($request: DismissRecommendedAccountsRequest!) {
+    value: mlDismissRecommendedAccounts(request: $request)
+  }`,
+);
+export type DismissRecommendedAccountsRequest = RequestOf<
+  typeof MlDismissRecommendedAccountsMutation
+>;
+
+export const AddPostNotInterestedMutation = graphql(
+  `mutation AddPostNotInterested($request: PostNotInterestedRequest!) {
+    value: addPostNotInterested(request: $request)
+  }`,
+);
+export const UndoPostNotInterestedMutation = graphql(
+  `mutation UndoPostNotInterested($request: PostNotInterestedRequest!) {
+    value: undoPostNotInterested(request: $request)
+  }`,
+);
+export type PostNotInterestedRequest = RequestOf<typeof AddPostNotInterestedMutation>;
