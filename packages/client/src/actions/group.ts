@@ -1,6 +1,6 @@
 import type {
-  AddGroupMemberRequest,
-  AddGroupMemberResult,
+  ApproveGroupMembershipRequest,
+  ApproveGroupMembershipResult,
   BanGroupAccountRequest,
   BanGroupAccountResult,
   CancelGroupMembershipRequestRequest,
@@ -25,8 +25,8 @@ import type {
   Paginated,
   RejectGroupMembershipRequestRequest,
   RejectGroupMembershipResult,
-  RemoveGroupMemberRequest,
-  RemoveGroupMemberResult,
+  RemoveGroupMembersRequest,
+  RemoveGroupMembersResult,
   RequestGroupMembershipRequest,
   RequestGroupMembershipResult,
   SetGroupMetadataRequest,
@@ -37,7 +37,7 @@ import type {
   UpdateGroupRulesResult,
 } from '@lens-protocol/graphql';
 import {
-  AddGroupMemberMutation,
+  ApproveGroupMembershipRequestsMutation,
   BanGroupAccountMutation,
   CancelGroupMembershipRequestMutation,
   CreateGroupMutation,
@@ -50,7 +50,7 @@ import {
   JoinGroupMutation,
   LeaveGroupMutation,
   RejectGroupMembershipRequestMutation,
-  RemoveGroupMemberMutation,
+  RemoveGroupMembersMutation,
   RequestGroupMembershipMutation,
   SetGroupMetadataMutation,
   UnbanGroupAccountMutation,
@@ -287,12 +287,12 @@ export function updateGroupRules(
 }
 
 /**
- * Add an account to a group.
+ * Approve group membership requests.
  *
  * ```ts
- * const result = await addGroupMember(sessionClient, {
+ * const result = await approveGroupMembershipRequests(sessionClient, {
  *   group: evmAddress('0xe2f2…'),
- *   account: evmAddress('0x4f91…'),
+ *   accounts: [evmAddress('0x4f91…'), evmAddress('0x4f92…')],
  * });
  * ```
  *
@@ -300,21 +300,21 @@ export function updateGroupRules(
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
-export function addGroupMember(
+export function approveGroupMembershipRequests(
   client: SessionClient,
-  request: AddGroupMemberRequest,
-): ResultAsync<AddGroupMemberResult, UnexpectedError | UnauthenticatedError> {
-  return client.mutation(AddGroupMemberMutation, { request });
+  request: ApproveGroupMembershipRequest,
+): ResultAsync<ApproveGroupMembershipResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(ApproveGroupMembershipRequestsMutation, { request });
 }
 
 /**
  * Remove account from a group.
  *
  * ```ts
- * const result = await removeGroupMember(sessionClient, {
+ * const result = await removeGroupMembers(sessionClient, {
  *   group: evmAddress('0xe2f…'),
- *   account: evmAddress('0x4f91…'),
- *   ban: true
+ *   accounts: [evmAddress('0x4f91…'), evmAddress('0x4f92…')],
+ *   ban: true, // contextually bans the accounts from rejoining
  * });
  * ```
  *
@@ -322,11 +322,11 @@ export function addGroupMember(
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
-export function removeGroupMember(
+export function removeGroupMembers(
   client: SessionClient,
-  request: RemoveGroupMemberRequest,
-): ResultAsync<RemoveGroupMemberResult, UnexpectedError | UnauthenticatedError> {
-  return client.mutation(RemoveGroupMemberMutation, { request });
+  request: RemoveGroupMembersRequest,
+): ResultAsync<RemoveGroupMembersResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(RemoveGroupMembersMutation, { request });
 }
 
 /**
