@@ -613,22 +613,22 @@ input AddAppSignersRequest {
 
 union AddAppSignersResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
-input AddGroupMemberRequest {
+input AddGroupMembersRequest {
   """The group you want to add member to."""
   group: EvmAddress!
 
-  """The account you want to add to the group."""
-  account: EvmAddress!
+  """The accounts you want to add to the group."""
+  accounts: [EvmAddress!]!
 
   """The processing params for the add member rules."""
   rulesProcessingParams: [GroupRulesProcessingParams!]
 }
 
-type AddGroupMemberResponse {
+type AddGroupMembersResponse {
   hash: TxHash!
 }
 
-union AddGroupMemberResult = AddGroupMemberResponse | GroupOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union AddGroupMembersResult = AddGroupMembersResponse | GroupOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type AddReactionFailure {
   reason: String!
@@ -861,6 +861,23 @@ input AppUsersRequest {
   cursor: Cursor
 }
 
+input ApproveGroupMembershipRequest {
+  """The group you want to add member to."""
+  group: EvmAddress!
+
+  """The accounts you want to approve membership for."""
+  accounts: [EvmAddress!]!
+
+  """The processing params for the add member rules."""
+  rulesProcessingParams: [GroupRulesProcessingParams!]
+}
+
+type ApproveGroupMembershipRequestsResponse {
+  hash: TxHash!
+}
+
+union ApproveGroupMembershipResult = ApproveGroupMembershipRequestsResponse | GroupOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
 input AppsFilter {
   """The optional filter to get apps managed by address"""
   managedBy: ManagedBy
@@ -1024,19 +1041,19 @@ input BanAccountGroupRuleConfig {
   enable: AlwaysTrue
 }
 
-input BanGroupAccountRequest {
+input BanGroupAccountsRequest {
   """The group you want to ban member on."""
   group: EvmAddress!
 
-  """The account you want to ban on the group."""
-  account: EvmAddress!
+  """The accounts you want to ban on the group."""
+  accounts: [EvmAddress!]!
 }
 
-type BanGroupAccountResponse {
+type BanGroupAccountsResponse {
   hash: TxHash!
 }
 
-union BanGroupAccountResult = BanGroupAccountResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union BanGroupAccountsResult = BanGroupAccountsResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar BigDecimal
 
@@ -1214,6 +1231,15 @@ input CreateAccountWithUsernameRequest {
 
   """Any account managers you wish to add to the account"""
   accountManager: [EvmAddress!]
+
+  """The processing params for the namespace create rules."""
+  createNamespaceRuleProcessingParams: [NamespaceRulesProcessingParams!]
+
+  """The processing params for the namespace assign rules."""
+  assignNamespaceRuleProcessingParams: [NamespaceRulesProcessingParams!]
+
+  """The processing params for the namespace account unassign rules."""
+  unassignAccountNamespaceRuleProcessingParams: [NamespaceRulesProcessingParams!]
 }
 
 union CreateAccountWithUsernameResult = CreateAccountResponse | UsernameTaken | NamespaceOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
@@ -1225,17 +1251,17 @@ input CreateAppRequest {
   """List of admins who can manage this app"""
   admins: [EvmAddress!]
 
-  """The app graph defaults to use the global graph"""
-  graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
+  """The app default graph"""
+  graph: GraphChoiceOneOf!
 
   """The app feeds defaults to use the global feed"""
-  feeds: [EvmAddress!]! = ["0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"]
+  feeds: [EvmAddress!]
 
-  """The default feed defaults to use the global feed"""
-  defaultFeed: EvmAddress! = "0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"
+  """The app default feed"""
+  defaultFeed: FeedChoiceOneOf!
 
-  """The app username leave empty to use the lens username"""
-  namespace: EvmAddress! = "0xaFe49B3faA3C65c4C56C6b768C9047E3bF4076Bb"
+  """The app username namespace"""
+  namespace: UsernameNamespaceChoiceOneOf!
 
   """The app groups leave empty if none"""
   groups: [EvmAddress!]
@@ -1550,6 +1576,10 @@ type DisablePostActionResponse {
 }
 
 union DisablePostActionResult = DisablePostActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+
+input DismissRecommendedAccountsRequest {
+  accounts: [EvmAddress!]!
+}
 
 input EditPostRequest {
   post: PostId!
@@ -2308,6 +2338,12 @@ type Feed {
   rules: FeedRules!
 }
 
+input FeedChoiceOneOf @oneOf {
+  globalFeed: Boolean
+  custom: EvmAddress
+  none: Boolean
+}
+
 type FeedMetadata {
   """Optional markdown formatted description of the Feed."""
   description: String
@@ -2660,6 +2696,12 @@ type Graph {
   metadata: GraphMetadata
   owner: EvmAddress!
   rules: GraphRules!
+}
+
+input GraphChoiceOneOf @oneOf {
+  globalGraph: Boolean
+  custom: EvmAddress
+  none: Boolean
 }
 
 type GraphMetadata {
@@ -3317,6 +3359,7 @@ type LoggedInGroupOperations {
   canRemoveMember: GroupOperationValidationOutcome!
   isMember: Boolean!
   isBanned: Boolean!
+  hasRequestedMembership: Boolean!
 }
 
 type LoggedInPostOperations {
@@ -4248,6 +4291,20 @@ type Mutation {
   executePostAction(request: ExecutePostActionRequest!): ExecutePostActionResult!
 
   """
+  Add a post not interested.
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  addPostNotInterested(request: PostNotInterestedRequest!): Void!
+
+  """
+  Undo a post not interested.
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  undoPostNotInterested(request: PostNotInterestedRequest!): Void!
+
+  """
   Follow an Account on the global Graph or a specific Graph.
   
   You MUST be authenticated as Account Owner or Account Manager to use this mutation.
@@ -4322,7 +4379,7 @@ type Mutation {
   """
   Update namespace rules
   
-  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  You MUST be a namespace owner or admin to use this mutation
   """
   updateNamespaceRules(request: UpdateNamespaceRulesRequest!): UpdateNamespaceRulesResult!
 
@@ -4353,6 +4410,7 @@ type Mutation {
   You MUST be authenticated as Account Owner to use this mutation.
   """
   transferPrimitiveOwnership(request: TransferPrimitiveOwnershipRequest!): TransferPrimitiveOwnershipResult!
+  mlDismissRecommendedAccounts(request: DismissRecommendedAccountsRequest!): Void!
 
   """
   Create a new feed
@@ -4411,18 +4469,18 @@ type Mutation {
   setGroupMetadata(request: SetGroupMetadataRequest!): SetGroupMetadataResult!
 
   """
-  Add group member
+  Add group members
   
   You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
-  addGroupMember(request: AddGroupMemberRequest!): AddGroupMemberResult!
+  addGroupMembers(request: AddGroupMembersRequest!): AddGroupMembersResult!
 
   """
-  Remove group member
+  Remove group members
   
   You MUST be a group owner or admin to use this mutation
   """
-  removeGroupMember(request: RemoveGroupMemberRequest!): RemoveGroupMemberResult!
+  removeGroupMembers(request: RemoveGroupMembersRequest!): RemoveGroupMembersResult!
 
   """
   Request to join a group
@@ -4439,27 +4497,34 @@ type Mutation {
   cancelGroupMembershipRequest(request: CancelGroupMembershipRequestRequest!): CancelGroupMembershipRequestResult!
 
   """
-  Reject group membership request
+  Approve group members
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  approveGroupMembershipRequests(request: ApproveGroupMembershipRequest!): ApproveGroupMembershipResult!
+
+  """
+  Reject group membership requests
   
   You MUST be a group owner or admin to use this mutation
   """
-  rejectGroupMembershipRequest(request: RejectGroupMembershipRequest!): RejectGroupMembershipResult!
+  rejectGroupMembershipRequests(request: RejectGroupMembershipRequest!): RejectGroupMembershipResult!
 
   """
-  Ban account to join a group
-  Banned account MUST not be a member of a group.
+  Ban accounts to join a group
+  Banned account MUST not be a member of the group.
   Use `removeGroupMember` mutation with `ban` flag to remove and ban existing members
   
   You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
-  banGroupAccount(request: BanGroupAccountRequest!): BanGroupAccountResult!
+  banGroupAccounts(request: BanGroupAccountsRequest!): BanGroupAccountsResult!
 
   """
-  Unban account
+  Unban accounts
   
   You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
-  unbanGroupAccount(request: UnbanGroupAccountRequest!): UnbanGroupAccountResult!
+  unbanGroupAccounts(request: UnbanGroupAccountsRequest!): UnbanGroupAccountsResult!
   createSnsSubscriptions(request: CreateSnsSubscriptionRequest!): [SnsSubscription!]!
   deleteSnsSubscription(request: DeleteSnsSubscriptionRequest!): Void!
 
@@ -5095,6 +5160,10 @@ input PostMetadataTagsFilter {
   all: [String!]
 }
 
+input PostNotInterestedRequest {
+  post: PostId!
+}
+
 type PostOperationValidationFailed {
   unsatisfiedRules: PostUnsatisfiedRules
   reason: String!
@@ -5623,15 +5692,15 @@ input RejectGroupMembershipRequest {
   """The group you want to reject membership request for."""
   group: EvmAddress!
 
-  """The account you want to reject membership request for."""
-  account: EvmAddress!
+  """The accounts you want to reject membership request for."""
+  accounts: [EvmAddress!]!
 }
 
-type RejectGroupMembershipRequestResponse {
+type RejectGroupMembershipRequestsResponse {
   hash: TxHash!
 }
 
-union RejectGroupMembershipResult = RejectGroupMembershipRequestResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union RejectGroupMembershipResult = RejectGroupMembershipRequestsResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input RemoveAccountManagerRequest {
   """The address to remove as a manager."""
@@ -5687,12 +5756,12 @@ input RemoveAppSignersRequest {
 
 union RemoveAppSignersResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
-input RemoveGroupMemberRequest {
+input RemoveGroupMembersRequest {
   """The group you want to join"""
   group: EvmAddress!
 
-  """The account you want to remove from the group."""
-  account: EvmAddress!
+  """The accounts you want to remove from the group."""
+  accounts: [EvmAddress!]!
 
   """Ban the account from the joining the group."""
   ban: Boolean! = false
@@ -5701,11 +5770,11 @@ input RemoveGroupMemberRequest {
   rulesProcessingParams: [GroupRulesProcessingParams!]
 }
 
-type RemoveGroupMemberResponse {
+type RemoveGroupMembersResponse {
   hash: TxHash!
 }
 
-union RemoveGroupMemberResult = RemoveGroupMemberResponse | GroupOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union RemoveGroupMembersResult = RemoveGroupMembersResponse | GroupOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 union RemoveSignlessResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
@@ -5804,7 +5873,7 @@ input SetAppGraphRequest {
   app: EvmAddress!
 
   """The app graph to set"""
-  graph: EvmAddress!
+  graph: GraphChoiceOneOf!
 }
 
 union SetAppGraphResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
@@ -5844,7 +5913,7 @@ input SetAppUsernameNamespaceRequest {
   app: EvmAddress!
 
   """The app username namespace to set"""
-  usernameNamespace: EvmAddress!
+  usernameNamespace: UsernameNamespaceChoiceOneOf!
 }
 
 union SetAppUsernameNamespaceResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
@@ -5864,7 +5933,7 @@ input SetDefaultAppFeedRequest {
   app: EvmAddress!
 
   """The app default feed to set"""
-  feed: EvmAddress!
+  feed: FeedChoiceOneOf!
 }
 
 union SetDefaultAppFeedResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
@@ -5997,7 +6066,7 @@ enum SnsNotificationType {
   ACCOUNT_MANAGER_UPDATED
   ACCOUNT_OWNERSHIP_TRANSFERRED
   ACCOUNT_REPORTED
-  ML_PROFILE_SIGNAL
+  MlProfileSignal
 }
 
 type SnsSubscription {
@@ -6768,19 +6837,19 @@ type UnassignUsernameResponse {
 
 union UnassignUsernameToAccountResult = UnassignUsernameResponse | NamespaceOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
-input UnbanGroupAccountRequest {
+input UnbanGroupAccountsRequest {
   """The group you want to unban member on."""
   group: EvmAddress!
 
-  """The account you want to unban on the group."""
-  account: EvmAddress!
+  """The accounts you want to unban on the group."""
+  accounts: [EvmAddress!]!
 }
 
-type UnbanGroupAccountResponse {
+type UnbanGroupAccountsResponse {
   hash: TxHash!
 }
 
-union UnbanGroupAccountResult = UnbanGroupAccountResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union UnbanGroupAccountsResult = UnbanGroupAccountsResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type UnblockError {
   error: UnblockErrorType!
@@ -7003,11 +7072,7 @@ input UpdateNamespaceRulesRequest {
   toRemove: [RuleId!]! = []
 }
 
-type UpdateNamespaceRulesResponse {
-  hash: TxHash!
-}
-
-union UpdateNamespaceRulesResult = UpdateNamespaceRulesResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union UpdateNamespaceRulesResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input UpdatePostRulesRequest {
   """The post to update rules for."""
@@ -7127,6 +7192,12 @@ type UsernameNamespace {
   stats: UsernameNamespaceStats!
   rules: NamespaceRules!
   operations: LoggedInUsernameNamespaceOperations
+}
+
+input UsernameNamespaceChoiceOneOf @oneOf {
+  globalNamespace: Boolean
+  custom: EvmAddress
+  none: Boolean
 }
 
 type UsernameNamespaceMetadata {

@@ -336,18 +336,18 @@ export const UpdateGroupRulesMutation = graphql(
 );
 export type UpdateGroupRulesRequest = RequestOf<typeof UpdateGroupRulesMutation>;
 
-const AddGroupMemberResponseFragment = graphql(
-  `fragment AddGroupMemberResponse on AddGroupMemberResponse {
+const AddGroupMembersResponseFragment = graphql(
+  `fragment AddGroupMembersResponse on AddGroupMembersResponse {
     __typename
     hash
   }`,
 );
-export type AddGroupMemberResponse = FragmentOf<typeof AddGroupMemberResponseFragment>;
+export type AddGroupMembersResponse = FragmentOf<typeof AddGroupMembersResponseFragment>;
 
-const AddGroupMemberResultFragment = graphql(
-  `fragment AddGroupMemberResult on AddGroupMemberResult {
-    ...on AddGroupMemberResponse {
-      ...AddGroupMemberResponse
+const AddGroupMembersResultFragment = graphql(
+  `fragment AddGroupMembersResult on AddGroupMembersResult {
+    ...on AddGroupMembersResponse {
+      ...AddGroupMembersResponse
     }
     ...on GroupOperationValidationFailed {
       ...GroupOperationValidationFailed
@@ -363,37 +363,84 @@ const AddGroupMemberResultFragment = graphql(
     }
   }`,
   [
-    AddGroupMemberResponseFragment,
+    AddGroupMembersResponseFragment,
     GroupOperationValidationFailedFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,
   ],
 );
-export type AddGroupMemberResult = FragmentOf<typeof AddGroupMemberResultFragment>;
+export type AddGroupMembersResult = FragmentOf<typeof AddGroupMembersResultFragment>;
 
-export const AddGroupMemberMutation = graphql(
-  `mutation AddGroupMember($request: AddGroupMemberRequest!) {
-    value: addGroupMember(request: $request) {
-      ...AddGroupMemberResult
+export const AddGroupMembersMutation = graphql(
+  `mutation AddGroupMembers($request: AddGroupMembersRequest!) {
+    value: addGroupMembers(request: $request) {
+      ...AddGroupMembersResult
     }
   }`,
-  [AddGroupMemberResultFragment],
+  [AddGroupMembersResultFragment],
 );
-export type AddGroupMemberRequest = RequestOf<typeof AddGroupMemberMutation>;
+export type AddGroupMembersRequest = RequestOf<typeof AddGroupMembersMutation>;
 
-const RemoveGroupMemberResponseFragment = graphql(
-  `fragment RemoveGroupMemberResponse on RemoveGroupMemberResponse {
+const ApproveGroupMembershipRequestsResponseFragment = graphql(
+  `fragment ApproveGroupMembershipRequestsResponse on ApproveGroupMembershipRequestsResponse {
     __typename
     hash
   }`,
 );
-export type RemoveGroupMemberResponse = FragmentOf<typeof RemoveGroupMemberResponseFragment>;
 
-const RemoveGroupMemberResultFragment = graphql(
-  `fragment RemoveGroupMemberResult on RemoveGroupMemberResult {
-    ...on RemoveGroupMemberResponse {
-      ...RemoveGroupMemberResponse
+const ApproveGroupMembershipResultFragment = graphql(
+  `fragment ApproveGroupMembershipResult on ApproveGroupMembershipResult {
+    ...on ApproveGroupMembershipRequestsResponse {
+      ...ApproveGroupMembershipRequestsResponse
+    }
+    ...on GroupOperationValidationFailed {
+      ...GroupOperationValidationFailed
+    }
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    ApproveGroupMembershipRequestsResponseFragment,
+    SponsoredTransactionRequestFragment,
+    SelfFundedTransactionRequestFragment,
+    TransactionWillFailFragment,
+    GroupOperationValidationFailedFragment,
+  ],
+);
+export type ApproveGroupMembershipResult = FragmentOf<typeof ApproveGroupMembershipResultFragment>;
+
+export const ApproveGroupMembershipRequestsMutation = graphql(
+  `mutation ApproveGroupMembershipRequests($request: ApproveGroupMembershipRequest!) {
+    value: approveGroupMembershipRequests(request: $request) {
+      ...ApproveGroupMembershipResult
+    }
+  }`,
+  [ApproveGroupMembershipResultFragment],
+);
+export type ApproveGroupMembershipRequest = RequestOf<
+  typeof ApproveGroupMembershipRequestsMutation
+>;
+
+const RemoveGroupMembersResponseFragment = graphql(
+  `fragment RemoveGroupMembersResponse on RemoveGroupMembersResponse {
+    __typename
+    hash
+  }`,
+);
+export type RemoveGroupMembersResponse = FragmentOf<typeof RemoveGroupMembersResponseFragment>;
+
+const RemoveGroupMembersResultFragment = graphql(
+  `fragment RemoveGroupMembersResult on RemoveGroupMembersResult {
+    ...on RemoveGroupMembersResponse {
+      ...RemoveGroupMembersResponse
     }
     ...on GroupOperationValidationFailed {
       ...GroupOperationValidationFailed
@@ -413,20 +460,20 @@ const RemoveGroupMemberResultFragment = graphql(
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,
     GroupOperationValidationFailedFragment,
-    RemoveGroupMemberResponseFragment,
+    RemoveGroupMembersResponseFragment,
   ],
 );
-export type RemoveGroupMemberResult = FragmentOf<typeof RemoveGroupMemberResultFragment>;
+export type RemoveGroupMembersResult = FragmentOf<typeof RemoveGroupMembersResultFragment>;
 
-export const RemoveGroupMemberMutation = graphql(
-  `mutation RemoveGroupMember($request: RemoveGroupMemberRequest!) {
-    value: removeGroupMember(request: $request) {
-      ...RemoveGroupMemberResult
+export const RemoveGroupMembersMutation = graphql(
+  `mutation RemoveGroupMembers($request: RemoveGroupMemberRequest!) {
+    value: removeGroupMembers(request: $request) {
+      ...RemoveGroupMembersResult
     }
   }`,
-  [RemoveGroupMemberResultFragment],
+  [RemoveGroupMembersResultFragment],
 );
-export type RemoveGroupMemberRequest = RequestOf<typeof RemoveGroupMemberMutation>;
+export type RemoveGroupMembersRequest = RequestOf<typeof RemoveGroupMembersMutation>;
 
 const RequestGroupMembershipResponseFragment = graphql(
   `fragment RequestGroupMembershipResponse on RequestGroupMembershipResponse {
@@ -520,20 +567,20 @@ export type CancelGroupMembershipRequestRequest = RequestOf<
   typeof CancelGroupMembershipRequestMutation
 >;
 
-const RejectGroupMembershipRequestResponseFragment = graphql(
-  `fragment RejectGroupMembershipRequestResponse on RejectGroupMembershipRequestResponse {
+const RejectGroupMembershipRequestsResponseFragment = graphql(
+  `fragment RejectGroupMembershipRequestsResponse on RejectGroupMembershipRequestsResponse {
     __typename
     hash
   }`,
 );
-export type RejectGroupMembershipRequestResponse = FragmentOf<
-  typeof RejectGroupMembershipRequestResponseFragment
+export type RejectGroupMembershipRequestsResponse = FragmentOf<
+  typeof RejectGroupMembershipRequestsResponseFragment
 >;
 
 const RejectGroupMembershipResultFragment = graphql(
   `fragment RejectGroupMembershipResult on RejectGroupMembershipResult {
-    ...on RejectGroupMembershipRequestResponse {
-      ...RejectGroupMembershipRequestResponse
+    ...on RejectGroupMembershipRequestsResponse {
+      ...RejectGroupMembershipRequestsResponse
     }
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -549,35 +596,33 @@ const RejectGroupMembershipResultFragment = graphql(
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,
-    RejectGroupMembershipRequestResponseFragment,
+    RejectGroupMembershipRequestsResponseFragment,
   ],
 );
 export type RejectGroupMembershipResult = FragmentOf<typeof RejectGroupMembershipResultFragment>;
 
-export const RejectGroupMembershipRequestMutation = graphql(
-  `mutation RejectGroupMembershipRequest($request: RejectGroupMembershipRequest!) {
-    value: rejectGroupMembershipRequest(request: $request) {
+export const RejectGroupMembershipRequestsMutation = graphql(
+  `mutation RejectGroupMembershipRequests($request: RejectGroupMembershipRequest!) {
+    value: rejectGroupMembershipRequests(request: $request) {
       ...RejectGroupMembershipResult
     }
   }`,
   [RejectGroupMembershipResultFragment],
 );
-export type RejectGroupMembershipRequestRequest = RequestOf<
-  typeof RejectGroupMembershipRequestMutation
->;
+export type RejectGroupMembershipRequest = RequestOf<typeof RejectGroupMembershipRequestsMutation>;
 
 const BanGroupAccountResponseFragment = graphql(
-  `fragment BanGroupAccountResponse on BanGroupAccountResponse {
+  `fragment BanGroupAccountsResponse on BanGroupAccountsResponse {
     __typename
     hash
   }`,
 );
-export type BanGroupAccountResponse = FragmentOf<typeof BanGroupAccountResponseFragment>;
+export type BanGroupAccountsResponse = FragmentOf<typeof BanGroupAccountResponseFragment>;
 
 const BanGroupAccountResultFragment = graphql(
-  `fragment BanGroupAccountResult on BanGroupAccountResult {
-    ...on BanGroupAccountResponse {
-      ...BanGroupAccountResponse
+  `fragment BanGroupAccountsResult on BanGroupAccountsResult {
+    ...on BanGroupAccountsResponse {
+      ...BanGroupAccountsResponse
     }
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -596,30 +641,30 @@ const BanGroupAccountResultFragment = graphql(
     BanGroupAccountResponseFragment,
   ],
 );
-export type BanGroupAccountResult = FragmentOf<typeof BanGroupAccountResultFragment>;
+export type BanGroupAccountsResult = FragmentOf<typeof BanGroupAccountResultFragment>;
 
-export const BanGroupAccountMutation = graphql(
-  `mutation BanGroupAccount($request: BanGroupAccountRequest!) {
-    value: banGroupAccount(request: $request) {
-      ...BanGroupAccountResult
+export const BanGroupAccountsMutation = graphql(
+  `mutation BanGroupAccounts($request: BanGroupAccountsRequest!) {
+    value: banGroupAccounts(request: $request) {
+      ...BanGroupAccountsResult
     }
   }`,
   [BanGroupAccountResultFragment],
 );
-export type BanGroupAccountRequest = RequestOf<typeof BanGroupAccountMutation>;
+export type BanGroupAccountsRequest = RequestOf<typeof BanGroupAccountsMutation>;
 
-const UnbanGroupAccountResponseFragment = graphql(
-  `fragment UnbanGroupAccountResponse on UnbanGroupAccountResponse {
+const UnbanGroupAccountsResponseFragment = graphql(
+  `fragment UnbanGroupAccountsResponse on UnbanGroupAccountsResponse {
     __typename
     hash
   }`,
 );
-export type UnbanGroupAccountResponse = FragmentOf<typeof UnbanGroupAccountResponseFragment>;
+export type UnbanGroupAccountsResponse = FragmentOf<typeof UnbanGroupAccountsResponseFragment>;
 
-const UnbanGroupAccountResultFragment = graphql(
-  `fragment UnbanGroupAccountResult on UnbanGroupAccountResult {
-    ...on UnbanGroupAccountResponse {
-      ...UnbanGroupAccountResponse
+const UnbanGroupAccountsResultFragment = graphql(
+  `fragment UnbanGroupAccountsResult on UnbanGroupAccountsResult {
+    ...on UnbanGroupAccountsResponse {
+      ...UnbanGroupAccountsResponse
     }
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -635,17 +680,17 @@ const UnbanGroupAccountResultFragment = graphql(
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,
-    UnbanGroupAccountResponseFragment,
+    UnbanGroupAccountsResponseFragment,
   ],
 );
-export type UnbanGroupAccountResult = FragmentOf<typeof UnbanGroupAccountResultFragment>;
+export type UnbanGroupAccountsResult = FragmentOf<typeof UnbanGroupAccountsResultFragment>;
 
-export const UnbanGroupAccountMutation = graphql(
-  `mutation UnbanGroupAccount($request: UnbanGroupAccountRequest!) {
-    value: unbanGroupAccount(request: $request) {
-      ...UnbanGroupAccountResult
+export const UnbanGroupAccountsMutation = graphql(
+  `mutation UnbanGroupAccounts($request: UnbanGroupAccountsRequest!) {
+    value: unbanGroupAccounts(request: $request) {
+      ...UnbanGroupAccountsResult
     }
   }`,
-  [UnbanGroupAccountResultFragment],
+  [UnbanGroupAccountsResultFragment],
 );
-export type UnbanGroupAccountRequest = RequestOf<typeof UnbanGroupAccountMutation>;
+export type UnbanGroupAccountsRequest = RequestOf<typeof UnbanGroupAccountsMutation>;
