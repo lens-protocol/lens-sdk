@@ -285,3 +285,44 @@ export const UnknownActionFragment = graphql(
   [ActionMetadataFragment],
 );
 export type UnknownAction = FragmentOf<typeof UnknownActionFragment>;
+
+export const FollowerOnFragment = graphql(
+  `fragment FollowerOn on FollowerOn {
+    __typename
+    globalGraph
+    graph
+  }`,
+);
+export type FollowerOn = FragmentOf<typeof FollowerOnFragment>;
+
+export const NetworkAddressFragment = graphql(
+  `fragment NetworkAddress on NetworkAddress {
+    address
+    chainId
+  }`,
+);
+export type NetworkAddress = FragmentOf<typeof NetworkAddressFragment>;
+
+export const Erc20Fragment = graphql(
+  `fragment Erc20 on Erc20 {
+    name
+    symbol
+    decimals
+    contract {
+      ...NetworkAddress
+    }
+  }`,
+  [NetworkAddressFragment],
+);
+export type Erc20 = FragmentOf<typeof Erc20Fragment>;
+
+export const Erc20AmountFragment = graphql(
+  `fragment Erc20Amount on Erc20Amount {
+    asset {
+      ...Erc20
+    }
+    value
+  }`,
+  [Erc20Fragment],
+);
+export type Erc20Amount = FragmentOf<typeof Erc20AmountFragment>;

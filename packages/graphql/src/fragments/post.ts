@@ -3,7 +3,13 @@ import type { Prettify } from '@lens-protocol/types';
 import type { FragmentOf } from 'gql.tada';
 import { type FragmentDocumentFor, graphql } from '../graphql';
 import { type Account, AccountFragment } from './account';
-import { AnyKeyValueFragment, BooleanValueFragment, UnknownActionFragment } from './common';
+import {
+  AnyKeyValueFragment,
+  BooleanValueFragment,
+  Erc20AmountFragment,
+  FollowerOnFragment,
+  UnknownActionFragment,
+} from './common';
 import {
   ArticleMetadataFragment,
   AudioMetadataFragment,
@@ -26,8 +32,18 @@ export const SimpleCollectActionFragment = graphql(
   `fragment SimpleCollectAction on SimpleCollectAction {
     __typename
     address
+    amount {
+      ...Erc20Amount
+    }
+    recipient
+    collectLimit
+    followerOnGraph {
+      ...FollowerOn
+    }
+    endsAt
+    isImmutable
   }`,
-  [],
+  [Erc20AmountFragment, FollowerOnFragment],
 );
 export type SimpleCollectAction = FragmentOf<typeof SimpleCollectActionFragment>;
 
