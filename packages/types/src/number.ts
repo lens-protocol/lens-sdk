@@ -14,3 +14,7 @@ export function bigDecimal(value: string): BigDecimal {
  * A string representation of a big integer number.
  */
 export type BigIntString = Tagged<string, 'BigIntString'>;
+export function bigIntString(value: string): BigIntString {
+  invariant(!/^-?\d+$/.test(value), `Invalid BigIntString: ${value}`);
+  return value as BigIntString;
+}
