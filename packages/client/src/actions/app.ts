@@ -207,7 +207,15 @@ export function fetchAppUsers(
  *
  * ```ts
  * const result = await createApp(sessionClient, {
- *   verification: true
+ *   defaultFeed: {
+ *     globalFeed: true,
+ *   },
+ *   graph: {
+ *     globalGraph: true,
+ *   },
+ *   namespace: {
+ *     globalNamespace: true,
+ *   },
  * });
  * ```
  *
