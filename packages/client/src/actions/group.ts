@@ -1,8 +1,8 @@
 import type {
   ApproveGroupMembershipRequest,
   ApproveGroupMembershipResult,
-  BanGroupAccountRequest,
-  BanGroupAccountResult,
+  BanGroupAccountsRequest,
+  BanGroupAccountsResult,
   CancelGroupMembershipRequestRequest,
   CancelGroupMembershipRequestResult,
   CreateGroupRequest,
@@ -23,7 +23,7 @@ import type {
   LeaveGroupRequest,
   LeaveGroupResult,
   Paginated,
-  RejectGroupMembershipRequestRequest,
+  RejectGroupMembershipRequest,
   RejectGroupMembershipResult,
   RemoveGroupMembersRequest,
   RemoveGroupMembersResult,
@@ -31,14 +31,14 @@ import type {
   RequestGroupMembershipResult,
   SetGroupMetadataRequest,
   SetGroupMetadataResult,
-  UnbanGroupAccountRequest,
-  UnbanGroupAccountResult,
+  UnbanGroupAccountsRequest,
+  UnbanGroupAccountsResult,
   UpdateGroupRulesRequest,
   UpdateGroupRulesResult,
 } from '@lens-protocol/graphql';
 import {
   ApproveGroupMembershipRequestsMutation,
-  BanGroupAccountMutation,
+  BanGroupAccountsMutation,
   CancelGroupMembershipRequestMutation,
   CreateGroupMutation,
   GroupBannedAccountsQuery,
@@ -49,11 +49,11 @@ import {
   GroupsQuery,
   JoinGroupMutation,
   LeaveGroupMutation,
-  RejectGroupMembershipRequestMutation,
+  RejectGroupMembershipRequestsMutation,
   RemoveGroupMembersMutation,
   RequestGroupMembershipMutation,
   SetGroupMetadataMutation,
-  UnbanGroupAccountMutation,
+  UnbanGroupAccountsMutation,
   UpdateGroupRulesMutation,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
@@ -370,12 +370,14 @@ export function cancelGroupMembershipRequest(
 }
 
 /**
- * Reject as admin/owner of a group a request to be part of a group.
+ * Reject group membership requests.
+ *
+ * You must be the owner or admin of the group to reject membership requests.
  *
  * ```ts
- * const result = await rejectGroupMembershipRequest(sessionClient, {
+ * const result = await rejectGroupMembershipRequests(sessionClient, {
  *   group: evmAddress('0xe2f…'),
- *   account: evmAddress('0x4f91…'),
+ *   accounts: [evmAddress('0x4f91…'), evmAddress('0x4f92…')],
  * });
  * ```
  *
@@ -383,20 +385,22 @@ export function cancelGroupMembershipRequest(
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
-export function rejectGroupMembershipRequest(
+export function rejectGroupMembershipRequests(
   client: SessionClient,
-  request: RejectGroupMembershipRequestRequest,
+  request: RejectGroupMembershipRequest,
 ): ResultAsync<RejectGroupMembershipResult, UnexpectedError | UnauthenticatedError> {
-  return client.mutation(RejectGroupMembershipRequestMutation, { request });
+  return client.mutation(RejectGroupMembershipRequestsMutation, { request });
 }
 
 /**
- * Ban as admin/owner an account to be part of a group.
+ * Ban accounts from a group. These accounts will not be able to join the group.
+ *
+ * You must be the owner or admin of the group to ban accounts.
  *
  * ```ts
  * const result = await banGroupAccount(sessionClient, {
  *   group: evmAddress('0xe2f…'),
- *   account: evmAddress('0x4f91…'),
+ *   accounts: [evmAddress('0x4f91…'), evmAddress('0x4f92…')],
  * });
  * ```
  *
@@ -404,20 +408,22 @@ export function rejectGroupMembershipRequest(
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
-export function banGroupAccount(
+export function banGroupAccounts(
   client: SessionClient,
-  request: BanGroupAccountRequest,
-): ResultAsync<BanGroupAccountResult, UnexpectedError | UnauthenticatedError> {
-  return client.mutation(BanGroupAccountMutation, { request });
+  request: BanGroupAccountsRequest,
+): ResultAsync<BanGroupAccountsResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(BanGroupAccountsMutation, { request });
 }
 
 /**
- * Unban as admin/owner an account to be part of a group.
+ * Unban accounts from a group.
+ *
+ * You must be the owner or admin of the group to unban accounts.
  *
  * ```ts
- * const result = await unbanGroupAccount(sessionClient, {
+ * const result = await unbanGroupAccounts(sessionClient, {
  *   group: evmAddress('0xe2f…'),
- *   account: evmAddress('0x4f91…'),
+ *   accounts: [evmAddress('0x4f91…'), evmAddress('0x4f92…')],
  * });
  * ```
  *
@@ -425,9 +431,9 @@ export function banGroupAccount(
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
-export function unbanGroupAccount(
+export function unbanGroupAccounts(
   client: SessionClient,
-  request: UnbanGroupAccountRequest,
-): ResultAsync<UnbanGroupAccountResult, UnexpectedError | UnauthenticatedError> {
-  return client.mutation(UnbanGroupAccountMutation, { request });
+  request: UnbanGroupAccountsRequest,
+): ResultAsync<UnbanGroupAccountsResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(UnbanGroupAccountsMutation, { request });
 }
