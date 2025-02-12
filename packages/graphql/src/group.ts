@@ -429,18 +429,18 @@ export type ApproveGroupMembershipRequest = RequestOf<
   typeof ApproveGroupMembershipRequestsMutation
 >;
 
-const RemoveGroupMemberResponseFragment = graphql(
-  `fragment RemoveGroupMemberResponse on RemoveGroupMemberResponse {
+const RemoveGroupMembersResponseFragment = graphql(
+  `fragment RemoveGroupMembersResponse on RemoveGroupMembersResponse {
     __typename
     hash
   }`,
 );
-export type RemoveGroupMemberResponse = FragmentOf<typeof RemoveGroupMemberResponseFragment>;
+export type RemoveGroupMembersResponse = FragmentOf<typeof RemoveGroupMembersResponseFragment>;
 
-const RemoveGroupMemberResultFragment = graphql(
-  `fragment RemoveGroupMemberResult on RemoveGroupMemberResult {
-    ...on RemoveGroupMemberResponse {
-      ...RemoveGroupMemberResponse
+const RemoveGroupMembersResultFragment = graphql(
+  `fragment RemoveGroupMembersResult on RemoveGroupMembersResult {
+    ...on RemoveGroupMembersResponse {
+      ...RemoveGroupMembersResponse
     }
     ...on GroupOperationValidationFailed {
       ...GroupOperationValidationFailed
@@ -460,20 +460,20 @@ const RemoveGroupMemberResultFragment = graphql(
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,
     GroupOperationValidationFailedFragment,
-    RemoveGroupMemberResponseFragment,
+    RemoveGroupMembersResponseFragment,
   ],
 );
-export type RemoveGroupMemberResult = FragmentOf<typeof RemoveGroupMemberResultFragment>;
+export type RemoveGroupMembersResult = FragmentOf<typeof RemoveGroupMembersResultFragment>;
 
-export const RemoveGroupMemberMutation = graphql(
-  `mutation RemoveGroupMember($request: RemoveGroupMemberRequest!) {
-    value: removeGroupMember(request: $request) {
-      ...RemoveGroupMemberResult
+export const RemoveGroupMembersMutation = graphql(
+  `mutation RemoveGroupMembers($request: RemoveGroupMemberRequest!) {
+    value: removeGroupMembers(request: $request) {
+      ...RemoveGroupMembersResult
     }
   }`,
-  [RemoveGroupMemberResultFragment],
+  [RemoveGroupMembersResultFragment],
 );
-export type RemoveGroupMemberRequest = RequestOf<typeof RemoveGroupMemberMutation>;
+export type RemoveGroupMembersRequest = RequestOf<typeof RemoveGroupMembersMutation>;
 
 const RequestGroupMembershipResponseFragment = graphql(
   `fragment RequestGroupMembershipResponse on RequestGroupMembershipResponse {

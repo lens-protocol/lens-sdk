@@ -25,8 +25,8 @@ import type {
   Paginated,
   RejectGroupMembershipRequestRequest,
   RejectGroupMembershipResult,
-  RemoveGroupMemberRequest,
-  RemoveGroupMemberResult,
+  RemoveGroupMembersRequest,
+  RemoveGroupMembersResult,
   RequestGroupMembershipRequest,
   RequestGroupMembershipResult,
   SetGroupMetadataRequest,
@@ -50,7 +50,7 @@ import {
   JoinGroupMutation,
   LeaveGroupMutation,
   RejectGroupMembershipRequestMutation,
-  RemoveGroupMemberMutation,
+  RemoveGroupMembersMutation,
   RequestGroupMembershipMutation,
   SetGroupMetadataMutation,
   UnbanGroupAccountMutation,
@@ -311,10 +311,10 @@ export function approveGroupMembershipRequests(
  * Remove account from a group.
  *
  * ```ts
- * const result = await removeGroupMember(sessionClient, {
+ * const result = await removeGroupMembers(sessionClient, {
  *   group: evmAddress('0xe2f…'),
- *   account: evmAddress('0x4f91…'),
- *   ban: true
+ *   accounts: [evmAddress('0x4f91…'), evmAddress('0x4f92…')],
+ *   ban: true, // contextually bans the accounts from rejoining
  * });
  * ```
  *
@@ -322,11 +322,11 @@ export function approveGroupMembershipRequests(
  * @param request - The mutation request.
  * @returns Tiered transaction result.
  */
-export function removeGroupMember(
+export function removeGroupMembers(
   client: SessionClient,
-  request: RemoveGroupMemberRequest,
-): ResultAsync<RemoveGroupMemberResult, UnexpectedError | UnauthenticatedError> {
-  return client.mutation(RemoveGroupMemberMutation, { request });
+  request: RemoveGroupMembersRequest,
+): ResultAsync<RemoveGroupMembersResult, UnexpectedError | UnauthenticatedError> {
+  return client.mutation(RemoveGroupMembersMutation, { request });
 }
 
 /**
