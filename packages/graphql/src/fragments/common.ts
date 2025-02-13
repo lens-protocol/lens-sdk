@@ -278,11 +278,14 @@ export const UnknownActionFragment = graphql(
   `fragment UnknownAction on UnknownAction {
     __typename
     address
+    config {
+      ...AnyKeyValue
+    }
     metadata {
       ...ActionMetadata
     }
   }`,
-  [ActionMetadataFragment],
+  [AnyKeyValueFragment, ActionMetadataFragment],
 );
 export type UnknownAction = FragmentOf<typeof UnknownActionFragment>;
 
