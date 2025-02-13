@@ -882,6 +882,12 @@ input AppsFilter {
   """The optional filter to get apps managed by address"""
   managedBy: ManagedBy
 
+  """The optional filter to get apps linked to feed"""
+  linkedToFeed: EvmAddress
+
+  """The optional filter to get apps linked to graph"""
+  linkedToGraph: EvmAddress
+
   """
   The optional filter to narrow apps by search query.
   Uses fuzzy search on app name
@@ -1549,7 +1555,7 @@ type DictionaryKeyValue {
 }
 
 input DisableAccountActionRequest @oneOf {
-  tipping: Boolean
+  tipping: AlwaysTrue
   unknown: UnknownActionConfigInput
 }
 
@@ -1560,7 +1566,7 @@ type DisableAccountActionResponse {
 union DisableAccountActionResult = DisableAccountActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input DisablePostActionParams @oneOf {
-  simpleCollect: Boolean
+  simpleCollect: AlwaysTrue
   unknown: UnknownActionConfigInput
 }
 
@@ -1717,7 +1723,7 @@ type EmbedMetadata {
 }
 
 input EnableAccountActionRequest @oneOf {
-  tipping: Boolean
+  tipping: AlwaysTrue
   unknown: UnknownActionConfigInput
 }
 
@@ -1728,7 +1734,7 @@ type EnableAccountActionResponse {
 union EnableAccountActionResult = EnableAccountActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input EnablePostActionParams @oneOf {
-  simpleCollect: Boolean
+  simpleCollect: AlwaysTrue
   unknown: UnknownActionConfigInput
 }
 
@@ -2339,9 +2345,9 @@ type Feed {
 }
 
 input FeedChoiceOneOf @oneOf {
-  globalFeed: Boolean
+  globalFeed: AlwaysTrue
   custom: EvmAddress
-  none: Boolean
+  none: AlwaysTrue
 }
 
 type FeedMetadata {
@@ -2362,7 +2368,7 @@ type FeedMetadata {
 }
 
 input FeedOneOf @oneOf {
-  globalFeed: Boolean
+  globalFeed: AlwaysTrue
   feed: EvmAddress
   app: EvmAddress
 }
@@ -2699,9 +2705,9 @@ type Graph {
 }
 
 input GraphChoiceOneOf @oneOf {
-  globalGraph: Boolean
+  globalGraph: AlwaysTrue
   custom: EvmAddress
-  none: Boolean
+  none: AlwaysTrue
 }
 
 type GraphMetadata {
@@ -2722,7 +2728,7 @@ type GraphMetadata {
 }
 
 input GraphOneOf @oneOf {
-  globalGraph: Boolean
+  globalGraph: AlwaysTrue
   graph: EvmAddress
   app: EvmAddress
 }
@@ -5066,7 +5072,7 @@ input PostActionContractsRequest {
 }
 
 input PostActionExecuteInput @oneOf {
-  simpleCollect: Boolean
+  simpleCollect: SimpleCollectExecuteInput
   tipping: AmountInput
   unknown: UnknownActionExecuteInput
 }
@@ -5667,6 +5673,26 @@ type ReactionNotification {
   post: Post!
 }
 
+type RecipientPercent {
+  address: EvmAddress!
+
+  """
+  Percentage of the fee that will be sent to the recipient must be a whole number between 0
+  and 100.
+  """
+  percent: Int!
+}
+
+input RecipientPercentInput {
+  address: EvmAddress!
+
+  """
+  Percentage of the fee that will be sent to the recipient must be a whole number between 0
+  and 100.
+  """
+  percent: Int!
+}
+
 input RecommendAccount {
   """The account to recommend."""
   account: EvmAddress!
@@ -5678,6 +5704,11 @@ input ReferencingPostInput {
 
   """The processing params for the post rules."""
   postRulesProcessingParams: [PostRulesProcessingParams!]
+}
+
+input ReferralCut {
+  address: EvmAddress!
+  percent: Int!
 }
 
 input RefreshRequest {
@@ -5998,7 +6029,13 @@ input SignedAuthChallenge {
 type SimpleCollectAction {
   address: EvmAddress!
   amount: Erc20Amount
-  recipient: EvmAddress
+  recipients: [RecipientPercent!]
+
+  """
+  Percentage of the fee that will be sent to the referrers must be a whole number between 0
+  and 100.
+  """
+  referralShare: Int
   collectLimit: Int
   followerOnGraph: FollowerOn
   endsAt: DateTime
@@ -6007,7 +6044,13 @@ type SimpleCollectAction {
 
 input SimpleCollectActionConfigInput {
   amount: AmountInput
-  recipient: EvmAddress
+  recipients: [RecipientPercentInput!]
+
+  """
+  Percentage of the fee that will be sent to the referrers must be a whole number between 0
+  and 100.
+  """
+  referralShare: Int
   collectLimit: Int
   followerOnGraph: FollowerOnInput
   endsAt: DateTime
@@ -6016,6 +6059,11 @@ input SimpleCollectActionConfigInput {
 
 type SimpleCollectActionContract {
   address: EvmAddress!
+}
+
+input SimpleCollectExecuteInput {
+  selected: AlwaysTrue!
+  referrals: [ReferralCut!]
 }
 
 input SimplePaymentFeedRuleConfig {
@@ -6920,13 +6968,8 @@ input UnknownAccountRuleConfig {
 
 type UnknownAction {
   address: EvmAddress!
-  config: UnknownActionConfig!
+  config: [RawKeyValue!]!
   metadata: ActionMetadata
-}
-
-type UnknownActionConfig {
-  address: EvmAddress!
-  params: [RawKeyValue!]!
 }
 
 input UnknownActionConfigInput {
@@ -7006,7 +7049,11 @@ input UnknownRuleProcessingParams {
 input UpdateAccountFollowRulesRequest {
   """The graph to update account follow rules for."""
   graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
+
+  """The rules to add"""
   toAdd: AccountRulesConfigInput! = {required: [], anyOf: []}
+
+  """The rules to remove"""
   toRemove: [RuleId!]! = []
 }
 
@@ -7028,47 +7075,51 @@ union UpdateAccountManagerResult = SponsoredTransactionRequest | SelfFundedTrans
 
 input UpdateFeedRulesRequest {
   """The feed to update rules for"""
-  feed: EvmAddress! = "0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"
+  feed: EvmAddress!
+
+  """The rules to add"""
   toAdd: FeedRulesConfigInput! = {required: [], anyOf: []}
+
+  """The rules to remove"""
   toRemove: [RuleId!]! = []
 }
 
-type UpdateFeedRulesResponse {
-  hash: TxHash!
-}
-
-union UpdateFeedRulesResult = UpdateFeedRulesResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union UpdateFeedRulesResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input UpdateGraphRulesRequest {
   """The graph to update rules for"""
-  graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
+  graph: EvmAddress!
+
+  """The rules to add"""
   toAdd: GraphRulesConfigInput! = {required: [], anyOf: []}
+
+  """The rules to remove"""
   toRemove: [RuleId!]! = []
 }
 
-type UpdateGraphRulesResponse {
-  hash: TxHash!
-}
-
-union UpdateGraphRulesResult = UpdateGraphRulesResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union UpdateGraphRulesResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input UpdateGroupRulesRequest {
   """The group to update rules for"""
   group: EvmAddress!
+
+  """The rules to add"""
   toAdd: GroupRulesConfigInput! = {required: [], anyOf: []}
+
+  """The rules to remove"""
   toRemove: [RuleId!]! = []
 }
 
-type UpdateGroupRulesResponse {
-  hash: TxHash!
-}
-
-union UpdateGroupRulesResult = UpdateGroupRulesResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union UpdateGroupRulesResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input UpdateNamespaceRulesRequest {
   """The namespace to update rules for"""
   namespace: EvmAddress!
+
+  """The rules to add"""
   toAdd: NamespaceRulesConfigInput! = {required: [], anyOf: []}
+
+  """The rules to remove"""
   toRemove: [RuleId!]! = []
 }
 
@@ -7077,8 +7128,15 @@ union UpdateNamespaceRulesResult = SponsoredTransactionRequest | SelfFundedTrans
 input UpdatePostRulesRequest {
   """The post to update rules for."""
   post: PostId!
+
+  """The rules to add"""
   toAdd: PostRulesConfigInput! = {required: [], anyOf: []}
+
+  """The rules to remove"""
   toRemove: [RuleId!]! = []
+
+  """The processing params for the feed rules."""
+  feedRulesProcessingParams: [FeedRulesProcessingParams!]! = []
 }
 
 type UpdatePostRulesResponse {
@@ -7195,9 +7253,9 @@ type UsernameNamespace {
 }
 
 input UsernameNamespaceChoiceOneOf @oneOf {
-  globalNamespace: Boolean
+  globalNamespace: AlwaysTrue
   custom: EvmAddress
-  none: Boolean
+  none: AlwaysTrue
 }
 
 type UsernameNamespaceMetadata {

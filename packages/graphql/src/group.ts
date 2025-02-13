@@ -294,19 +294,8 @@ export const GroupBannedAccountsQuery = graphql(
 );
 export type GroupBannedAccountsRequest = RequestOf<typeof GroupBannedAccountsQuery>;
 
-const UpdateGroupRulesResponseFragment = graphql(
-  `fragment UpdateGroupRulesResponse on UpdateGroupRulesResponse {
-    __typename
-    hash
-  }`,
-);
-export type UpdateGroupRulesResponse = FragmentOf<typeof UpdateGroupRulesResponseFragment>;
-
 const UpdateGroupRulesResultFragment = graphql(
   `fragment UpdateGroupRulesResult on UpdateGroupRulesResult {
-    ...on UpdateGroupRulesResponse {
-      ...UpdateGroupRulesResponse
-    }
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
     }
@@ -321,7 +310,6 @@ const UpdateGroupRulesResultFragment = graphql(
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,
-    UpdateGroupRulesResponseFragment,
   ],
 );
 export type UpdateGroupRulesResult = FragmentOf<typeof UpdateGroupRulesResultFragment>;
