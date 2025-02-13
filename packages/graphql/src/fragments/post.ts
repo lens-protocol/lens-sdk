@@ -28,6 +28,15 @@ import {
 } from './metadata';
 import { AppFragment, type FeedRule, FeedRuleFragment } from './primitives';
 
+export const RecipientPercentFragment = graphql(
+  `fragment RecipientPercent on RecipientPercent {
+    __typename
+    address
+    percent
+  }`,
+);
+export type RecipientPercent = FragmentOf<typeof RecipientPercentFragment>;
+
 export const SimpleCollectActionFragment = graphql(
   `fragment SimpleCollectAction on SimpleCollectAction {
     __typename
@@ -35,7 +44,10 @@ export const SimpleCollectActionFragment = graphql(
     amount {
       ...Erc20Amount
     }
-    recipient
+    recipients {
+      ...RecipientPercent
+    }
+    referralShare
     collectLimit
     followerOnGraph {
       ...FollowerOn
@@ -43,7 +55,7 @@ export const SimpleCollectActionFragment = graphql(
     endsAt
     isImmutable
   }`,
-  [Erc20AmountFragment, FollowerOnFragment],
+  [Erc20AmountFragment, RecipientPercentFragment, FollowerOnFragment],
 );
 export type SimpleCollectAction = FragmentOf<typeof SimpleCollectActionFragment>;
 
