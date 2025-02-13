@@ -207,11 +207,15 @@ export function fetchAppUsers(
  *
  * ```ts
  * const result = await createApp(sessionClient, {
- *   metadataUri: uri("lens://4f91..."),
- *   defaultFeed: { globalFeed: true },
- *   usernameNamespace: { globalNamespace: true },
- *   graph: { none: true },
- *   verification: true
+ *   defaultFeed: {
+ *     globalFeed: true,
+ *   },
+ *   graph: {
+ *     globalGraph: true,
+ *   },
+ *   namespace: {
+ *     globalNamespace: true,
+ *   },
  * });
  * ```
  *
@@ -484,7 +488,7 @@ export function setAppTreasury(
  * ```ts
  * const result = await setAppUsernameNamespace(sessionClient, {
  *   usernameNamespace: {
- *     custom: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5')
+ *     custom: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
  *   },
  *   app: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
  * });
