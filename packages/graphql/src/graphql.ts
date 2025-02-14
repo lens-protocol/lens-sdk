@@ -58,6 +58,7 @@ import type {
   IndexingStatus,
   MainContentFocus,
   ManagedAccountsVisibility,
+  MarketplaceMetadataAttributeType,
   MediaAudioKind,
   MediaAudioType,
   MediaImageType,
@@ -156,6 +157,8 @@ export const graphql = initGraphQLTada<{
     LegacyRefreshToken: CompactJwt;
     MainContentFocus: MainContentFocus;
     ManagedAccountsVisibility: ManagedAccountsVisibility;
+    MarketplaceMetadataAttributeType: MarketplaceMetadataAttributeType;
+    MarketplaceMetadataAttributeValue: string;
     MediaAudioKind: MediaAudioKind;
     MediaAudioType: MediaAudioType;
     MediaImageType: MediaImageType;

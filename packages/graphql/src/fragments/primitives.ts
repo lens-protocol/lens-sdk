@@ -11,6 +11,7 @@ export const AppMetadataFragment = graphql(
     name
     platforms
     privacyPolicy
+    tagline
     termsOfService
     url
   }`,

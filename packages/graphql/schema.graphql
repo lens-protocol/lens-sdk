@@ -1343,6 +1343,70 @@ input CreateFollowRequest {
   graphRulesProcessingParams: [GraphRulesProcessingParams!]
 }
 
+type CreateFrameEIP712TypedData {
+  """The types"""
+  types: CreateFrameEIP712TypedDataTypes!
+
+  """The domain"""
+  domain: Eip712TypedDataDomain!
+
+  """The value"""
+  value: CreateFrameEIP712TypedDataValue!
+}
+
+input CreateFrameEIP712TypedDataInput {
+  """The typed data types"""
+  types: CreateFrameEIP712TypedDataTypesInput!
+
+  """The typed data domain"""
+  domain: Eip712TypedDataDomainInput!
+
+  """The typed data value"""
+  value: FrameEIP712Request!
+}
+
+type CreateFrameEIP712TypedDataTypes {
+  """The frame data"""
+  frameData: [Eip712TypedDataField!]!
+}
+
+input CreateFrameEIP712TypedDataTypesInput {
+  """The frame data"""
+  frameData: [Eip712TypedDataFieldInput!]!
+}
+
+type CreateFrameEIP712TypedDataValue {
+  """The frame spec version"""
+  specVersion: String!
+
+  """The url"""
+  url: URI!
+
+  """The button index"""
+  buttonIndex: Int!
+
+  """The account address"""
+  account: EvmAddress!
+
+  """The post id"""
+  postId: PostId!
+
+  """The input text"""
+  inputText: String!
+
+  """The state"""
+  state: String!
+
+  """The transaction id"""
+  transactionId: String!
+
+  """The app the frame is being executed from"""
+  app: EvmAddress!
+
+  """The deadline the typed data expires"""
+  deadline: Int!
+}
+
 input CreateGraphRequest {
   """The graph metadata uri"""
   metadataUri: URI
@@ -1704,6 +1768,50 @@ type Eip712TransactionRequest {
 
   """The custom data for EIP-712 transaction metadata."""
   customData: Eip712Meta!
+}
+
+type Eip712TypedDataDomain {
+  """The name of the domain"""
+  name: String!
+
+  """The chain id"""
+  chainId: Int!
+
+  """The version of the domain"""
+  version: String!
+
+  """The verifying contract"""
+  verifyingContract: EvmAddress!
+}
+
+input Eip712TypedDataDomainInput {
+  """The name of the domain"""
+  name: String!
+
+  """The chain id"""
+  chainId: Int!
+
+  """The version of the domain"""
+  version: String!
+
+  """The verifying contract"""
+  verifyingContract: EvmAddress!
+}
+
+type Eip712TypedDataField {
+  """The name of the field"""
+  name: String!
+
+  """The type of the field"""
+  type: String!
+}
+
+input Eip712TypedDataFieldInput {
+  """The name of the field"""
+  name: String!
+
+  """The type of the field"""
+  type: String!
 }
 
 type EmbedMetadata {
@@ -2690,6 +2798,94 @@ type ForbiddenError {
   reason: String!
 }
 
+input FrameEIP712Request {
+  """The frame spec version"""
+  specVersion: String!
+
+  """The url"""
+  url: URI!
+
+  """The button index"""
+  buttonIndex: Int!
+
+  """The account address"""
+  account: EvmAddress!
+
+  """The post id"""
+  post: PostId!
+
+  """The input text"""
+  inputText: String!
+
+  """The state"""
+  state: String!
+
+  """The transaction id"""
+  transactionId: String!
+
+  """The app the frame is being executed from"""
+  app: EvmAddress!
+
+  """The deadline the typed data expires"""
+  deadline: Int!
+}
+
+type FrameLensManagerSignatureResult {
+  """The signed typed data"""
+  signedTypedData: CreateFrameEIP712TypedData!
+
+  """The signature"""
+  signature: Signature!
+}
+
+input FrameVerifySignature {
+  """The signed typed data"""
+  signedTypedData: CreateFrameEIP712TypedDataInput!
+
+  """The signature"""
+  signature: Signature!
+
+  """The identity token"""
+  identityToken: IdToken!
+}
+
+enum FrameVerifySignatureResult {
+  """The frame was verified"""
+  VERIFIED
+
+  """The post does not exist"""
+  POST_DOESNT_EXIST
+
+  """The identity token is not authorized to use the frame"""
+  IDENTITY_UNAUTHORIZED
+
+  """
+  The identity token is not a valid identity token used with an account authentication
+  """
+  IDENTITY_TOKEN_NOT_VALID
+
+  """The typed data types is not in the correct format"""
+  TYPED_DATA_TYPES_INCORRECT_FIELDS
+
+  """The typed data domain is not in the correct format"""
+  TYPED_DATA_DOMAIN_INCORRECT
+
+  """The typed data account is not matching the identity token account"""
+  TYPED_DATA_ACCOUNT_NOT_MATCHING_IDENTITY_TOKEN
+
+  """The identity token is not a valid identity token"""
+  IDENTITY_CANNOT_USE_ACCOUNT
+
+  """The signature is not valid"""
+  SIGNATURE_NOT_VALID
+
+  """The deadline has expired"""
+  DEADLINE_EXPIRED
+
+  """The signer address cannot use the account"""
+  SIGNER_ADDRESS_CANNOT_USE_ACCOUNT
+}
+
 input GenerateNewAppServerApiKeyRequest {
   """The app to generate the new server side api key for"""
   app: EvmAddress!
@@ -3439,6 +3635,56 @@ input ManagedBy {
   """
   includeOwners: Boolean! = true
 }
+
+"""
+MarketplaceMetadataAttribute
+
+<details><summary>JSON schema</summary>
+
+```json
+{
+"type": "object",
+"properties": {
+"display_type": {
+"type": "string",
+"enum": [
+"number",
+"string",
+"date"
+]
+},
+"trait_type": {
+"description": "The name of the trait.",
+"$ref": "#/$defs/NonEmptyString"
+},
+"value": {
+"type": [
+"string",
+"number"
+]
+}
+},
+"additionalProperties": true
+}
+```
+</details>
+"""
+type MarketplaceMetadataAttribute {
+  displayType: MarketplaceMetadataAttributeDisplayType
+
+  """The name of the trait."""
+  traitType: String
+  value: MarketplaceMetadataAttributeValue
+}
+
+"""MarketplaceMetadataAttributeDisplayType"""
+enum MarketplaceMetadataAttributeDisplayType {
+  NUMBER
+  STRING
+  DATE
+}
+
+scalar MarketplaceMetadataAttributeValue
 
 type MeResult {
   """The logged in account."""
@@ -4430,6 +4676,13 @@ type Mutation {
   mlDismissRecommendedAccounts(request: DismissRecommendedAccountsRequest!): Void!
 
   """
+  sign a frame action with the lens account manager
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  signFrameAction(request: FrameEIP712Request!): FrameLensManagerSignatureResult!
+
+  """
   Create a new feed
   
   You MUST be authenticated as a builder to use this mutation.
@@ -4739,6 +4992,41 @@ type NamespacesResult {
 type NetworkAddress {
   address: EvmAddress!
   chainId: Int!
+}
+
+type NftMetadata {
+  """
+  A URL to a multi-media attachment for the item. The file extensions GLTF, GLB, WEBM, MP4,
+  M4V, OGV, and OGG are supported, along with the audio-only extensions MP3, WAV, and OGA.
+  Animation_url also supports HTML pages, allowing you to build rich experiences and
+  interactive NFTs using JavaScript canvas, WebGL, and more. Scripts and relative paths
+  within the HTML page are now supported. However, access to browser extensions is not
+  supported.
+  """
+  animationUrl: URI
+
+  """
+  These are the attributes for the item, which will show up on the OpenSea and others NFT
+  trading websites on the item.
+  """
+  attributes: [MarketplaceMetadataAttribute!]!
+
+  """
+  A human-readable description of the item. It could be plain text or markdown.
+  """
+  description: String
+
+  """
+  This is the URL that will appear below the asset's image on OpenSea and others etc. and
+  will allow users to leave OpenSea and view the item on the site.
+  """
+  externalUrl: URI
+
+  """NFT will store any image here."""
+  image: URI
+
+  """Name of the NFT item."""
+  name: String
 }
 
 """The existence of the transaction is not yet indexed. Keep trying."""
@@ -5069,6 +5357,7 @@ type Post {
   stats: PostStats!
   mentions: [PostMention!]!
   rules: PostRules!
+  collectibleMetadata: NftMetadata!
   contentUri(request: PostContentUriRequest! = {useSnapshot: false}): URI!
 }
 
@@ -5658,6 +5947,10 @@ type Query {
   transactionStatus(request: TransactionStatusRequest!): TransactionStatusResult!
   debugMetadata(request: DebugPostMetadataRequest!): DebugPostMetadataResult!
 
+  """Create a frame typed data"""
+  createFrameTypedData(request: FrameEIP712Request!): CreateFrameEIP712TypedData!
+  verifyFrameSignature(request: FrameVerifySignature!): FrameVerifySignatureResult!
+
   """
   Checks if the given username can be created by the account
   
@@ -6078,6 +6371,7 @@ type SimpleCollectAction {
   followerOnGraph: FollowerOn
   endsAt: DateTime
   isImmutable: Boolean!
+  collectNftAddress: EvmAddress!
 }
 
 input SimpleCollectActionConfigInput {
