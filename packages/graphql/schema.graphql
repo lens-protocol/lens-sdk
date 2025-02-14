@@ -6617,7 +6617,7 @@ input TimelineHighlightsRequest {
 type TimelineItem {
   id: UUID!
   primary: Post!
-  reposts: [Post!]!
+  reposts: [Repost!]!
   comments: [Post!]!
 }
 
