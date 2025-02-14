@@ -1,4 +1,5 @@
 import type {
+  AccountExecutedActions,
   AccountPostReaction,
   AnyPost,
   Paginated,
@@ -6,11 +7,14 @@ import type {
   PostActionContract,
   PostActionContractsRequest,
   PostBookmarksRequest,
+  PostExecutedActions,
   PostReactionsRequest,
   PostReferencesRequest,
   PostRequest,
   PostTag,
   PostsRequest,
+  WhoExecutedActionOnAccountRequest,
+  WhoExecutedActionOnPostRequest,
 } from '@lens-protocol/graphql';
 import {
   PostActionContractsQuery,
@@ -22,7 +26,8 @@ import {
   PostReferencesQuery,
   PostTagsQuery,
   PostsQuery,
-  WhoActedOnPostQuery,
+  WhoExecutedActionOnAccountQuery,
+  WhoExecutedActionOnPostQuery,
   WhoReferencedPostQuery,
 } from '@lens-protocol/graphql';
 import type { ResultAsync } from '@lens-protocol/types';
@@ -34,9 +39,8 @@ import type {
   PostReactionStatus,
   PostReactionStatusRequest,
   PostTagsRequest,
-  WhoActedOnPostQueryRequest,
-  WhoReferencedPostRequest,
 } from '@lens-protocol/graphql';
+import type { WhoReferencedPostRequest } from '@lens-protocol/graphql';
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
@@ -234,11 +238,11 @@ export function fetchWhoReferencedPost(
 }
 
 /**
- * Fetch who acted on post.
+ * Fetch who executed an action on a Post.
  *
  * ```ts
- * const result = await fetchWhoActedOnPost(anyClient, {
- *   post:  postId('42'),
+ * const result = await fetchWhoExecutedActionOnPost(anyClient, {
+ *   post: postId('42'),
  * });
  * ```
  *
@@ -246,11 +250,31 @@ export function fetchWhoReferencedPost(
  * @param request - The query request.
  * @returns The list of accounts who acted on the post.
  */
-export function fetchWhoActedOnPost(
+export function fetchWhoExecutedActionOnPost(
   client: AnyClient,
-  request: WhoActedOnPostQueryRequest,
-): ResultAsync<Paginated<Account>, UnexpectedError> {
-  return client.query(WhoActedOnPostQuery, { request });
+  request: WhoExecutedActionOnPostRequest,
+): ResultAsync<Paginated<PostExecutedActions>, UnexpectedError> {
+  return client.query(WhoExecutedActionOnPostQuery, { request });
+}
+
+/**
+ * Fetch who executed an action on an Account.
+ *
+ * ```ts
+ * const result = await fetchWhoExecutedActionOnAccount(anyClient, {
+ *   account: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The list of accounts who acted on the post.
+ */
+export function fetchWhoExecutedActionOnAccount(
+  client: AnyClient,
+  request: WhoExecutedActionOnAccountRequest,
+): ResultAsync<Paginated<AccountExecutedActions>, UnexpectedError> {
+  return client.query(WhoExecutedActionOnAccountQuery, { request });
 }
 
 /**

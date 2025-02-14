@@ -944,9 +944,18 @@ export enum UnblockErrorType {
 }
 
 /**
- * Enum for WhoActedOnPostOrderBy.
+ * Enum for WhoExecutedActionOnAccountOrderBy.
  */
-export enum WhoActedOnPostOrderBy {
+export enum WhoExecutedActionOnAccountOrderBy {
+  LastActioned = 'LAST_ACTIONED',
+  FirstActioned = 'FIRST_ACTIONED',
+  AccountScore = 'ACCOUNT_SCORE',
+}
+
+/**
+ * Enum for WhoExecutedActionOnPostOrderBy.
+ */
+export enum WhoExecutedActionOnPostOrderBy {
   LastActioned = 'LAST_ACTIONED',
   FirstActioned = 'FIRST_ACTIONED',
   AccountScore = 'ACCOUNT_SCORE',

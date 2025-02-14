@@ -43,6 +43,11 @@ input AccountActionExecuteInput @oneOf {
   unknown: UnknownActionExecuteInput
 }
 
+input AccountActionFilter @oneOf {
+  address: EvmAddress
+  tipping: AlwaysTrue
+}
+
 union AccountAvailable = AccountManaged | AccountOwned
 
 type AccountBlocked {
@@ -58,6 +63,13 @@ input AccountBlockedNotificationAttributes {
 input AccountCreatedNotificationAttributes {
   graph: EvmAddress
   app: EvmAddress
+}
+
+type AccountExecutedActions {
+  account: Account!
+  total: Int!
+  lastAt: DateTime!
+  firstAt: DateTime!
 }
 
 type AccountFeedsStats {
@@ -495,6 +507,7 @@ enum AccountsOrderBy {
 }
 
 input AccountsRequest {
+  """The optional accounts filter"""
   filter: AccountsFilter
 
   """The order by."""
@@ -505,11 +518,6 @@ input AccountsRequest {
 
   """The cursor."""
   cursor: Cursor
-}
-
-input ActionFilter {
-  address: EvmAddress
-  actionType: PostActionType
 }
 
 type ActionMetadata {
@@ -4818,6 +4826,11 @@ enum PageSize {
   FIFTY
 }
 
+type PaginatedAccountExecutedActionsResult {
+  items: [AccountExecutedActions!]!
+  pageInfo: PaginatedResultInfo!
+}
+
 type PaginatedAccountManagersResult {
   """The account managers."""
   items: [AccountManager!]!
@@ -4937,6 +4950,11 @@ type PaginatedPostEditsResult {
   pageInfo: PaginatedResultInfo!
 }
 
+type PaginatedPostExecutedActionsResult {
+  items: [PostExecutedActions!]!
+  pageInfo: PaginatedResultInfo!
+}
+
 type PaginatedPostReactionsResult {
   items: [AccountPostReaction!]!
   pageInfo: PaginatedResultInfo!
@@ -5048,6 +5066,7 @@ type Post {
   stats: PostStats!
   mentions: [PostMention!]!
   rules: PostRules!
+  contentUri(request: PostContentUriRequest! = {useSnapshot: false}): URI!
 }
 
 input PostAccountPair {
@@ -5077,10 +5096,10 @@ input PostActionExecuteInput @oneOf {
   unknown: UnknownActionExecuteInput
 }
 
-enum PostActionType {
-  SIMPLE_COLLECT
-  TIPPING
-  UNKNOWN
+input PostActionFilter @oneOf {
+  address: EvmAddress
+  simpleCollect: AlwaysTrue
+  tipping: AlwaysTrue
 }
 
 input PostActionsParams {
@@ -5097,6 +5116,10 @@ input PostBookmarksRequest {
   filter: PostBookmarksFilter
   pageSize: PageSize! = FIFTY
   cursor: Cursor
+}
+
+input PostContentUriRequest {
+  useSnapshot: Boolean!
 }
 
 input PostCreatedNotificationAttributes {
@@ -5133,6 +5156,13 @@ input PostEditsRequest {
   post: PostId!
   pageSize: PageSize! = FIFTY
   cursor: Cursor
+}
+
+type PostExecutedActions {
+  account: Account!
+  total: Int!
+  lastAt: DateTime!
+  firstAt: DateTime!
 }
 
 type PostForYou {
@@ -5508,6 +5538,9 @@ type Query {
   """
   lastLoggedInAccount(request: LastLoggedInAccountRequest!): Account
 
+  """Get who acted on a post."""
+  whoExecutedActionOnAccount(request: WhoExecutedActionOnAccountRequest!): PaginatedAccountExecutedActionsResult!
+
   """Get an app"""
   app(request: AppRequest!): App
 
@@ -5565,7 +5598,9 @@ type Query {
 
   """Get accounts who referenced a post"""
   whoReferencedPost(request: WhoReferencedPostRequest!): PaginatedAccountsResult!
-  whoActedOnPost(request: WhoActedOnPostRequest!): PaginatedAccountsResult!
+
+  """Get who acted on a post."""
+  whoExecutedActionOnPost(request: WhoExecutedActionOnPostRequest!): PaginatedPostExecutedActionsResult!
   postEdits(request: PostEditsRequest!): PaginatedPostEditsResult!
   following(request: FollowingRequest!): PaginatedFollowingResult!
   followers(request: FollowersRequest!): PaginatedFollowersResult!
@@ -6582,7 +6617,7 @@ input TimelineHighlightsRequest {
 type TimelineItem {
   id: UUID!
   primary: Post!
-  reposts: [Post!]!
+  reposts: [Repost!]!
   comments: [Post!]!
 }
 
@@ -6809,6 +6844,7 @@ enum TransactionOperation {
   USERNAME_RESERVED
   USERNAME_RELEASED
   USERNAME_RESERVED_CREATED
+  USERNAME_TRANSFER
   SPONSORSHIP_FACTORY_DEPLOYMENT
   SPONSORSHIP_ACCESS_CONTROL_ADDED
   SPONSORSHIP_ACCESS_CONTROL_UPDATED
@@ -7383,24 +7419,55 @@ type VideoMetadata {
 
 scalar Void
 
-input WhoActedOnPostFilter {
-  anyOf: [ActionFilter!]!
+input WhoExecutedActionOnAccountFilter {
+  anyOf: [AccountActionFilter!]!
 }
 
-enum WhoActedOnPostOrderBy {
+enum WhoExecutedActionOnAccountOrderBy {
   LAST_ACTIONED
   FIRST_ACTIONED
   ACCOUNT_SCORE
 }
 
-input WhoActedOnPostRequest {
-  """The post id to get who acted on."""
-  post: PostId!
-  filter: WhoActedOnPostFilter
-  orderBy: WhoActedOnPostOrderBy
+input WhoExecutedActionOnAccountRequest {
+  """The account on which action were executed."""
+  account: EvmAddress!
+
+  """The optional actions filter"""
+  filter: WhoExecutedActionOnAccountFilter
+
+  """The order by."""
+  orderBy: WhoExecutedActionOnAccountOrderBy! = ACCOUNT_SCORE
 
   """The page size."""
-  pageSize: Int
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
+input WhoExecutedActionOnPostFilter {
+  anyOf: [PostActionFilter!]!
+}
+
+enum WhoExecutedActionOnPostOrderBy {
+  LAST_ACTIONED
+  FIRST_ACTIONED
+  ACCOUNT_SCORE
+}
+
+input WhoExecutedActionOnPostRequest {
+  """The post on which actions were executed."""
+  post: PostId!
+
+  """The optional actions filter"""
+  filter: WhoExecutedActionOnPostFilter
+
+  """The order by."""
+  orderBy: WhoExecutedActionOnPostOrderBy! = ACCOUNT_SCORE
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor
