@@ -418,7 +418,10 @@ type AccountStats {
 
 input AccountStatsRequest {
   """The account to get stats for."""
-  account: EvmAddress!
+  account: EvmAddress
+
+  """The username."""
+  username: UsernameInput
 
   """The feeds to get stats for."""
   forFeeds: [EvmAddress!]! = ["0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"]

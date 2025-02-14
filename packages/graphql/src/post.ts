@@ -403,11 +403,14 @@ export type WhoReferencedPostRequest = RequestOf<typeof WhoReferencedPostQuery>;
 const PostExecutedActionsFragment = graphql(
   `fragment PostExecutedActions on PostExecutedActions {
     __typename
-    account
+    account {
+      ...Account
+    }
     total
     lastAt
     firstAt
   }`,
+  [AccountFragment],
 );
 export type PostExecutedActions = FragmentOf<typeof PostExecutedActionsFragment>;
 
@@ -430,11 +433,14 @@ export type WhoExecutedActionOnPostRequest = RequestOf<typeof WhoExecutedActionO
 const AccountExecutedActionsFragment = graphql(
   `fragment AccountExecutedActions on AccountExecutedActions {
     __typename
-    account
+    account {
+      ...Account
+    }
     total
     lastAt
     firstAt
   }`,
+  [AccountFragment],
 );
 export type AccountExecutedActions = FragmentOf<typeof AccountExecutedActionsFragment>;
 
