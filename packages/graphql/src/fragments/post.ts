@@ -384,6 +384,8 @@ const PostFieldsFragment = graphql(
     isDeleted
     isEdited
     timestamp
+    contentUri
+    snapshotUrl: contentUri(request: { useSnapshot: true })
     app {
       ...App
     }

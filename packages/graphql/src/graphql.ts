@@ -96,7 +96,8 @@ import type {
   TokenStandard,
   TransactionType,
   UnblockErrorType,
-  WhoActedOnPostOrderBy,
+  WhoExecutedActionOnAccountOrderBy,
+  WhoExecutedActionOnPostOrderBy,
   WhoReferencedPostOrderBy,
 } from './enums';
 import type { introspection } from './graphql-env';
@@ -207,7 +208,8 @@ export const graphql = initGraphQLTada<{
     UsernameValue: UsernameValue;
     UUID: UUID;
     Void: Void;
-    WhoActedOnPostOrderBy: WhoActedOnPostOrderBy;
+    WhoExecutedActionOnAccountOrderBy: WhoExecutedActionOnAccountOrderBy;
+    WhoExecutedActionOnPostOrderBy: WhoExecutedActionOnPostOrderBy;
     WhoReferencedPostOrderBy: WhoReferencedPostOrderBy;
   };
 }>();
