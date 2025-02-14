@@ -1123,3 +1123,9 @@ export enum GraphRuleExecuteOn {
   Unfollowing = 'UNFOLLOWING',
   ChangingFollowRules = 'CHANGING_FOLLOW_RULES',
 }
+
+export enum MarketplaceMetadataAttributeType {
+  Number = 'NUMBER',
+  String = 'STRING',
+  Date = 'DATE',
+}

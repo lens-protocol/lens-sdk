@@ -54,6 +54,7 @@ export const SimpleCollectActionFragment = graphql(
     }
     endsAt
     isImmutable
+    collectNftAddress
   }`,
   [Erc20AmountFragment, RecipientPercentFragment, FollowerOnFragment],
 );
@@ -376,6 +377,32 @@ export const PostRulesFragment = graphql(
 );
 export type PostRules = FragmentOf<typeof PostRulesFragment>;
 
+export const MarketplaceMetadataAttributeFragment = graphql(
+  `fragment MarketplaceMetadataAttribute on MarketplaceMetadataAttribute {
+    __typename
+    displayType
+    traitType
+    value
+  }`,
+);
+export type MarketplaceMetadataAttribute = FragmentOf<typeof MarketplaceMetadataAttributeFragment>;
+
+export const NftMetadataFragment = graphql(
+  `fragment NftMetadata on NftMetadata {
+    __typename
+    animationUrl
+    attributes {
+      ...MarketplaceMetadataAttribute
+    }
+    description
+    externalUrl
+    image
+    name
+  }`,
+  [MarketplaceMetadataAttributeFragment],
+);
+export type NftMetadata = FragmentOf<typeof NftMetadataFragment>;
+
 const PostFieldsFragment = graphql(
   `fragment PostFields on Post {
     __typename
@@ -407,6 +434,9 @@ const PostFieldsFragment = graphql(
     operations {
       ...LoggedInPostOperations
     }
+    collectibleMetadata {
+      ...NftMetadata
+    }
   }`,
   [
     AppFragment,
@@ -416,6 +446,7 @@ const PostFieldsFragment = graphql(
     PostActionFragment,
     PostRulesFragment,
     LoggedInPostOperationsFragment,
+    NftMetadataFragment,
   ],
 );
 export type PostFields = FragmentOf<typeof PostFieldsFragment>;
