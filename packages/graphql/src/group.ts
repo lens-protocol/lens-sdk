@@ -454,7 +454,7 @@ const RemoveGroupMembersResultFragment = graphql(
 export type RemoveGroupMembersResult = FragmentOf<typeof RemoveGroupMembersResultFragment>;
 
 export const RemoveGroupMembersMutation = graphql(
-  `mutation RemoveGroupMembers($request: RemoveGroupMemberRequest!) {
+  `mutation RemoveGroupMembers($request: RemoveGroupMembersRequest!) {
     value: removeGroupMembers(request: $request) {
       ...RemoveGroupMembersResult
     }

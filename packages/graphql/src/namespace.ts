@@ -104,19 +104,8 @@ export const NamespacesQuery = graphql(
 );
 export type NamespacesRequest = RequestOf<typeof NamespacesQuery>;
 
-const UpdateNamespaceRulesResponseFragment = graphql(
-  `fragment UpdateNamespaceRulesResponse on UpdateNamespaceRulesResponse {
-    __typename
-    hash
-  }`,
-);
-export type UpdateNamespaceRulesResponse = FragmentOf<typeof UpdateNamespaceRulesResponseFragment>;
-
 const UpdateNamespaceRulesResultFragment = graphql(
   `fragment UpdateNamespaceRulesResult on UpdateNamespaceRulesResult {
-    ...on UpdateNamespaceRulesResponse {
-      ...UpdateNamespaceRulesResponse
-    }
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
     }
@@ -128,7 +117,6 @@ const UpdateNamespaceRulesResultFragment = graphql(
     }
   }`,
   [
-    UpdateNamespaceRulesResponseFragment,
     SelfFundedTransactionRequestFragment,
     SponsoredTransactionRequestFragment,
     TransactionWillFailFragment,
