@@ -51,7 +51,7 @@ const { uri } = await storageClient.uploadFile(
 const created = await createAccountWithUsername(sessionClient, {
   metadataUri: uri,
   username: {
-    localName: `john.doe.${Date.now()}`,
+    localName: `john-doe-${Date.now()}`,
   },
 })
   .andThen(handleOperationWith(walletClient))
