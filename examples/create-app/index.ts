@@ -1,7 +1,7 @@
 import 'viem/window';
 
 import { chains } from '@lens-network/sdk/viem';
-import { PublicClient, testnet as protocolTestnet } from '@lens-protocol/client';
+import { PublicClient, testnet as protocolTestnet, uri } from '@lens-protocol/client';
 import { createApp, fetchApp } from '@lens-protocol/client/actions';
 import { handleOperationWith } from '@lens-protocol/client/viem';
 import { Platform, app } from '@lens-protocol/metadata';
@@ -47,11 +47,19 @@ const metadata = app({
   developer: 'me@example.com',
 });
 
-const { uri } = await storageClient.uploadAsJson(metadata);
+const resource = await storageClient.uploadAsJson(metadata);
 
 const created = await createApp(sessionClient, {
-  metadataUri: uri,
-  verification: false, // will become optional soon
+  metadataUri: uri(resource.uri),
+  defaultFeed: {
+    globalFeed: true,
+  },
+  graph: {
+    globalGraph: true,
+  },
+  namespace: {
+    globalNamespace: true,
+  },
 })
   .andThen(handleOperationWith(walletClient))
   .andThen(sessionClient.waitForTransaction)
