@@ -22,7 +22,7 @@ type Account {
   metadata: AccountMetadata
 
   """The username linked to the account."""
-  username(request: AccountUsernameRequest): Username
+  username(request: AccountUsernameOneOf! = {namespace: "0xaFe49B3faA3C65c4C56C6b768C9047E3bF4076Bb"}): Username
 
   """The operations for the account."""
   operations: LoggedInAccountOperations
@@ -452,9 +452,16 @@ input AccountUsernameCreatedNotificationAttributes {
   account: EvmAddress
 }
 
-input AccountUsernameRequest {
+input AccountUsernameOneOf @oneOf {
   """The namespace to get account assigned username"""
-  namespace: EvmAddress! = "0xaFe49B3faA3C65c4C56C6b768C9047E3bF4076Bb"
+  namespace: EvmAddress
+
+  """
+  This will get the last linked username if it exists
+  note that it may not marry up to the app where a post
+  was created if used in that context
+  """
+  autoResolve: AlwaysTrue
 }
 
 input AccountUsernameUnassignedNotificationAttributes {
@@ -1472,9 +1479,6 @@ input CreatePostRequest {
 }
 
 input CreateRepostRequest {
-  """The feed to repost to. If not provided, the global feed is used."""
-  feed: EvmAddress! = "0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"
-
   """The post to reference."""
   post: PostId!
 
@@ -2671,7 +2675,7 @@ type FollowerOn {
 }
 
 input FollowerOnInput @oneOf {
-  globalGraph: Boolean
+  globalGraph: AlwaysTrue
   graph: EvmAddress
 }
 
@@ -4656,21 +4660,21 @@ type Mutation {
   """
   Add admins to a graph/app/sponsor/feed/username/group.
   
-  You MUST be authenticated as Account Owner to use this mutation.
+  You MUST be authenticated as Builder to use this mutation.
   """
   addAdmins(request: AddAdminsRequest!): AddAdminsResult!
 
   """
   Remove admins from a graph/app/sponsor/feed/username/group.
   
-  You MUST be authenticated as Account Owner to use this mutation.
+  You MUST be authenticated as Builder to use this mutation.
   """
   removeAdmins(request: RemoveAdminsRequest!): RemoveAdminsResult!
 
   """
   Transfer primitive ownership for the graph/app/sponsor/feed/username/group.
   
-  You MUST be authenticated as Account Owner to use this mutation.
+  You MUST be authenticated as Builder to use this mutation.
   """
   transferPrimitiveOwnership(request: TransferPrimitiveOwnershipRequest!): TransferPrimitiveOwnershipResult!
   mlDismissRecommendedAccounts(request: DismissRecommendedAccountsRequest!): Void!
@@ -5945,7 +5949,7 @@ type Query {
 
   """Get the status of a transaction by its hash."""
   transactionStatus(request: TransactionStatusRequest!): TransactionStatusResult!
-  debugMetadata(request: DebugPostMetadataRequest!): DebugPostMetadataResult!
+  debugMetadata(debugMetadataRequest: DebugPostMetadataRequest!): DebugPostMetadataResult!
 
   """Create a frame typed data"""
   createFrameTypedData(request: FrameEIP712Request!): CreateFrameEIP712TypedData!
@@ -6361,11 +6365,6 @@ type SimpleCollectAction {
   address: EvmAddress!
   amount: Erc20Amount
   recipients: [RecipientPercent!]
-
-  """
-  Percentage of the fee that will be sent to the referrers must be a whole number between 0
-  and 100.
-  """
   referralShare: Int
   collectLimit: Int
   followerOnGraph: FollowerOn
@@ -6377,11 +6376,6 @@ type SimpleCollectAction {
 input SimpleCollectActionConfigInput {
   amount: AmountInput
   recipients: [RecipientPercentInput!]
-
-  """
-  Percentage of the fee that will be sent to the referrers must be a whole number between 0
-  and 100.
-  """
   referralShare: Int
   collectLimit: Int
   followerOnGraph: FollowerOnInput
