@@ -10,7 +10,7 @@ query CreateFrameTypedData($request: FrameEIP712Request!) {
 
 fragment CreateFrameEIP712TypedData on CreateFrameEIP712TypedData {
   types {
-    FrameData {
+    frameData {
       name
       type
     }
@@ -22,11 +22,12 @@ fragment CreateFrameEIP712TypedData on CreateFrameEIP712TypedData {
     specVersion
     url
     buttonIndex
-    profileId
-    pubId
+    account
+    post
     inputText
     state
-    actionResponse
+    transactionId
+    app
     deadline
   }
 }

@@ -1,3 +1,7 @@
+query VerifyFrameSignature($request: FrameVerifySignature!) {
+  result: verifyFrameSignature(request: $request)
+}
+
 query CreateFrameTypedData($request: FrameEIP712Request!) {
   result: createFrameTypedData(request: $request) {
     ...CreateFrameEIP712TypedData
@@ -6,7 +10,7 @@ query CreateFrameTypedData($request: FrameEIP712Request!) {
 
 fragment CreateFrameEIP712TypedData on CreateFrameEIP712TypedData {
   types {
-    FrameData {
+    frameData {
       name
       type
     }
@@ -18,11 +22,12 @@ fragment CreateFrameEIP712TypedData on CreateFrameEIP712TypedData {
     specVersion
     url
     buttonIndex
-    profileId
-    pubId
+    account
+    post
     inputText
     state
-    actionResponse
+    transactionId
+    app
     deadline
   }
 }
