@@ -19,7 +19,7 @@ async function main() {
   });
 
   if (result.isFailure()) {
-    console.error(result.error);
+    console.error(result.error); // CredentialsExpiredError or NotAuthenticatedError
     process.exit(1);
   }
 

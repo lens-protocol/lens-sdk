@@ -10,7 +10,7 @@ query CreateFrameTypedData($request: FrameEIP712Request!) {
 
 fragment CreateFrameEIP712TypedData on CreateFrameEIP712TypedData {
   types {
-    frameData {
+    FrameData {
       name
       type
     }

@@ -88,7 +88,6 @@ export class Frames {
    *   state: '{"counter":1,"idempotency_key":"431b8b38-eb4d-455b"}',
    *   url: 'https://mylensframe.xyz',
    *   app: '0x0000000000000000000000000000000000000000',
-   *   deadline: 1711038973,
    * });
    * ```
    */
