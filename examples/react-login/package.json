@@ -1,0 +1,26 @@
+{
+  "name": "react-login",
+  "description": "Log in to Lens",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@lens-network/sdk": "canary",
+    "@lens-protocol/react": "workspace:*",
+    "@tanstack/react-query": "^5.63.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "viem": "^2.22.4",
+    "wagmi": "^2.14.6"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react-swc": "^3.7.2",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.9"
+  }
+}
