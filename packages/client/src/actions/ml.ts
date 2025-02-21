@@ -101,7 +101,7 @@ export function dismissRecommendedAccount(
 }
 
 /**
- * Add post as not interested.
+ * Flag a post as not of interest.
  *
  * ```ts
  * const result = await addPostNotInterested(sessionClient, {
