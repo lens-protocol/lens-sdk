@@ -81,7 +81,7 @@ export function fetchPostsToExplore(
 }
 
 /**
- * Dismiss recommended account.
+ * Dismiss a recommended account.
  *
  * ```ts
  * const result = await dismissRecommendedAccount(sessionClient, {
