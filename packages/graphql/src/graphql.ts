@@ -107,6 +107,8 @@ import type {
 import type { introspection } from './graphql-env';
 import type { ServerAPIKey } from './scalars';
 
+export type { FragmentOf } from 'gql.tada';
+
 export const graphql = initGraphQLTada<{
   disableMasking: true;
   introspection: introspection;

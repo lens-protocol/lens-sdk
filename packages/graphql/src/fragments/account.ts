@@ -244,7 +244,7 @@ export const AccountFragment = graphql(
     AccountActionFragment,
   ],
 );
-export type Account = FragmentOf<typeof AccountFragment>;
+export interface Account extends FragmentOf<typeof AccountFragment> {}
 
 const AccountManagerPermissionsFragment = graphql(
   `fragment AccountManagerPermissions on AccountManagerPermissions {

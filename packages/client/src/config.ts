@@ -1,5 +1,6 @@
 import type { EnvironmentConfig } from '@lens-protocol/env';
 import type { IStorageProvider } from '@lens-protocol/storage';
+import type { TypedDocumentNode } from '@urql/core';
 
 /**
  * The client configuration.
@@ -29,7 +30,7 @@ export type ClientConfig = {
   origin?: string;
 
   /**
-   * The storage provider to use.
+   * The storage provider to use for authentication state and other data.
    *
    * @defaultValue {@link InMemoryStorageProvider}
    */
@@ -41,4 +42,9 @@ export type ClientConfig = {
    * Use this with a Server API Key to not incur in rate limits when used on a server-to-server scenario.
    */
   apiKey?: string;
+
+  /**
+   * The custom fragments to use.
+   */
+  fragments?: TypedDocumentNode[];
 };

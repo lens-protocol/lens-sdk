@@ -2,7 +2,7 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig(() => ({
-  entry: ['src/index.ts'],
+  entry: ['src/index.ts', 'src/test-utils.ts'],
   outDir: 'dist',
   splitting: false,
   sourcemap: true,
@@ -14,4 +14,7 @@ export default defineConfig(() => ({
   dts: true,
   platform: 'neutral',
   format: ['esm', 'cjs'],
+  loader: {
+    '.graphql': 'text',
+  },
 }));

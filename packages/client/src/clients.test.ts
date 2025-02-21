@@ -4,11 +4,12 @@ import {
   HealthQuery,
   RefreshMutation,
   Role,
+  UsernameFragment,
+  graphql,
 } from '@lens-protocol/graphql';
 import { url, assertErr, assertOk } from '@lens-protocol/types';
-import { HttpResponse, graphql, passthrough } from 'msw';
+import * as msw from 'msw';
 import { setupServer } from 'msw/node';
-
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { currentSession, fetchAccount } from './actions';
@@ -26,7 +27,7 @@ import {
 import { delay } from './utils';
 import { signMessageWith } from './viem';
 
-describe(`Given an instance of the ${PublicClient.name}`, () => {
+describe(`Given an instance of the '${PublicClient.name}'`, () => {
   const client = createPublicClient();
 
   describe('When authenticating via the low-level methods', () => {
@@ -150,21 +151,21 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
         exp: Date.now() / 1000 + 10,
       });
       const server = setupServer(
-        graphql.mutation(
+        msw.graphql.mutation(
           AuthenticateMutation,
           async ({ request }) => {
             const response = await fetch(request);
             // biome-ignore lint/suspicious/noExplicitAny: keep it simple
             const result = (await response.json()) as any;
             result.data.value.accessToken = accessToken;
-            return HttpResponse.json(result);
+            return msw.HttpResponse.json(result);
           },
           {
             once: true,
           },
         ),
         // Pass through all other operations
-        graphql.operation(() => passthrough()),
+        msw.graphql.operation(() => msw.passthrough()),
       );
 
       beforeAll(() => {
@@ -194,10 +195,10 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
 
     describe('When a request fails with UNAUTHENTICATED extension code', () => {
       const server = setupServer(
-        graphql.query(
+        msw.graphql.query(
           CurrentSessionQuery,
           (_) =>
-            HttpResponse.json({
+            msw.HttpResponse.json({
               errors: [createGraphQLErrorObject(GraphQLErrorCode.UNAUTHENTICATED)],
             }),
           {
@@ -205,7 +206,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
           },
         ),
         // Pass through all other operations
-        graphql.operation(() => passthrough()),
+        msw.graphql.operation(() => msw.passthrough()),
       );
 
       beforeAll(() => {
@@ -238,18 +239,18 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
 
     describe('When a token refresh fails', () => {
       const server = setupServer(
-        graphql.query(CurrentSessionQuery, (_) =>
-          HttpResponse.json({
+        msw.graphql.query(CurrentSessionQuery, (_) =>
+          msw.HttpResponse.json({
             errors: [createGraphQLErrorObject(GraphQLErrorCode.UNAUTHENTICATED)],
           }),
         ),
-        graphql.mutation(RefreshMutation, (_) =>
-          HttpResponse.json({
+        msw.graphql.mutation(RefreshMutation, (_) =>
+          msw.HttpResponse.json({
             errors: [createGraphQLErrorObject(GraphQLErrorCode.BAD_USER_INPUT)],
           }),
         ),
         // Pass through all other operations
-        graphql.operation(() => passthrough()),
+        msw.graphql.operation(() => msw.passthrough()),
       );
 
       beforeAll(() => {
@@ -274,6 +275,40 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
         const result = await currentSession(authenticated.value);
         assertErr(result);
         expect(result.error).toBeInstanceOf(UnauthenticatedError);
+      });
+    });
+  });
+
+  describe('When some fragments are provided', () => {
+    it('Then it should replace them in any relevant query', async () => {
+      const BaseAccountFragment = graphql(
+        `fragment BaseAccount on Account {
+          test: address
+        }`,
+      );
+      const AccountFragment = graphql(
+        `fragment Account on Account {
+          ...BaseAccount 
+          username {
+            ...Username
+          }
+        }`,
+        [BaseAccountFragment, UsernameFragment],
+      );
+
+      const client = createPublicClient({
+        fragments: [AccountFragment],
+      });
+
+      const result = await fetchAccount(client, { address: TEST_ACCOUNT });
+
+      assertOk(result);
+
+      expect(result.value).toMatchObject({
+        test: TEST_ACCOUNT,
+        username: {
+          value: expect.any(String),
+        },
       });
     });
   });
