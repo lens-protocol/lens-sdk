@@ -1300,8 +1300,8 @@ input CreateAppRequest {
   """The app signers leave empty if none"""
   signers: [EvmAddress!]
 
-  """The app paymaster leave empty if none"""
-  paymaster: EvmAddress
+  """The app sponsorship leave empty if none"""
+  sponsorship: EvmAddress
 
   """The app treasury leave empty if none"""
   treasury: EvmAddress
@@ -2442,6 +2442,10 @@ type ExecutePostActionResponse {
 
 union ExecutePostActionResult = ExecutePostActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
+input ExecutedUnknownActionRequest {
+  address: EvmAddress!
+}
+
 """The challenge has expired or was not found."""
 type ExpiredChallengeError {
   reason: String!
@@ -2670,8 +2674,8 @@ type Follower {
 }
 
 type FollowerOn {
-  globalGraph: Boolean
-  graph: EvmAddress
+  globalGraph: Boolean!
+  graph: EvmAddress!
 }
 
 input FollowerOnInput @oneOf {
@@ -3593,6 +3597,15 @@ type LoggedInPostOperations {
   hasReposted: BooleanValue!
   canEdit: PostOperationValidationOutcome!
   canDelete: PostOperationValidationOutcome!
+  canTip: Boolean!
+  canSimpleCollect: SimpleCollectValidationOutcome!
+  executedUnknownActionCount(request: ExecutedUnknownActionRequest!): Int!
+  hasExecutedUnknownAction(request: ExecutedUnknownActionRequest!): Boolean!
+  simpleCollectCount: Int!
+  hasSimpleCollected: Boolean!
+  postTipCount: Int!
+  hasTipped: Boolean!
+  lastTip: PostTip
 }
 
 type LoggedInUsernameNamespaceOperations {
@@ -5732,6 +5745,11 @@ input PostTagsRequest {
   cursor: Cursor
 }
 
+type PostTip {
+  amount: Erc20Amount!
+  date: DateTime!
+}
+
 enum PostType {
   ROOT
   COMMENT
@@ -5860,7 +5878,7 @@ type Query {
   
   You MUST be authenticated as a builder to use this mutation.
   """
-  appServerApiKey(request: AppServerApiKeyRequest!): ServerAPIKey!
+  appServerApiKey(request: AppServerApiKeyRequest!): String
 
   """
   List all active authenticated sessions for the current account.
@@ -6380,7 +6398,7 @@ input SimpleCollectActionConfigInput {
   collectLimit: Int
   followerOnGraph: FollowerOnInput
   endsAt: DateTime
-  isImmutable: Boolean! = false
+  isImmutable: Boolean! = true
 }
 
 type SimpleCollectActionContract {
@@ -6390,6 +6408,25 @@ type SimpleCollectActionContract {
 input SimpleCollectExecuteInput {
   selected: AlwaysTrue!
   referrals: [ReferralCut!]
+}
+
+type SimpleCollectValidationFailed {
+  reasonType: SimpleCollectValidationFailedReason!
+  reason: String!
+}
+
+enum SimpleCollectValidationFailedReason {
+  NOT_ENABLED
+  END_DATE_REACHED
+  LIMIT_REACHED
+  NOT_ENOUGH_BALANCE
+  NOT_A_FOLLOWER
+}
+
+union SimpleCollectValidationOutcome = SimpleCollectValidationPassed | SimpleCollectValidationFailed
+
+type SimpleCollectValidationPassed {
+  passed: AlwaysTrue!
 }
 
 input SimplePaymentFeedRuleConfig {

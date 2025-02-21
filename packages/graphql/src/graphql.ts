@@ -86,6 +86,7 @@ import type {
   PostType,
   PostVisibilityFilter,
   SelfFundedFallbackReason,
+  SimpleCollectValidationFailedReason,
   SponsorLimitType,
   SponsoredFallbackReason,
   SponsorshipLimitExclusionsOrderBy,
@@ -191,6 +192,7 @@ export const graphql = initGraphQLTada<{
     SelfFundedFallbackReason: SelfFundedFallbackReason;
     ServerAPIKey: ServerAPIKey;
     Signature: Signature;
+    SimpleCollectValidationFailedReason: SimpleCollectValidationFailedReason;
     SponsoredFallbackReason: SponsoredFallbackReason;
     SponsorLimitType: SponsorLimitType;
     SponsorshipLimitExclusionsOrderBy: SponsorshipLimitExclusionsOrderBy;
