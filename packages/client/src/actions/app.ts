@@ -547,7 +547,9 @@ export function removeAppAuthorizationEndpoint(
 }
 
 /**
- * Fetch the server API key for an App.
+ * Checks if the App has a server API key allocated.
+ *
+ * The actual value is redacted for security reasons.
  *
  * You MUST be logged-in as Builder and be the owner of the App.
  *
@@ -558,7 +560,7 @@ export function removeAppAuthorizationEndpoint(
 export function fetchAppServerAPiKey(
   client: SessionClient,
   request: AppServerApiKeyRequest,
-): ResultAsync<ServerAPIKey, UnexpectedError | UnauthenticatedError> {
+): ResultAsync<string | null, UnexpectedError | UnauthenticatedError> {
   return client.query(AppServerApiKeyQuery, { request });
 }
 
