@@ -300,6 +300,7 @@ export type FollowerOn = FragmentOf<typeof FollowerOnFragment>;
 
 export const NetworkAddressFragment = graphql(
   `fragment NetworkAddress on NetworkAddress {
+    __typename
     address
     chainId
   }`,
@@ -308,6 +309,7 @@ export type NetworkAddress = FragmentOf<typeof NetworkAddressFragment>;
 
 export const Erc20Fragment = graphql(
   `fragment Erc20 on Erc20 {
+    __typename
     name
     symbol
     decimals
@@ -321,6 +323,7 @@ export type Erc20 = FragmentOf<typeof Erc20Fragment>;
 
 export const Erc20AmountFragment = graphql(
   `fragment Erc20Amount on Erc20Amount {
+    __typename
     asset {
       ...Erc20
     }

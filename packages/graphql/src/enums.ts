@@ -1129,3 +1129,11 @@ export enum MarketplaceMetadataAttributeType {
   String = 'STRING',
   Date = 'DATE',
 }
+
+export enum SimpleCollectValidationFailedReason {
+  NotEnabled = 'NOT_ENABLED',
+  EndDateReached = 'END_DATE_REACHED',
+  LimitReached = 'LIMIT_REACHED',
+  NotEnoughBalance = 'NOT_ENOUGH_BALANCE',
+  NotAFollower = 'NOT_A_FOLLOWER',
+}

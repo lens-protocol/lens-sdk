@@ -241,7 +241,7 @@ export type PostOperationValidationFailed = FragmentOf<
   typeof PostOperationValidationFailedFragment
 >;
 
-export const PostOperationValidationOutcome = graphql(
+export const PostOperationValidationOutcomeFragment = graphql(
   `fragment PostOperationValidationOutcome on PostOperationValidationOutcome {
     ... on PostOperationValidationPassed {
       ...PostOperationValidationPassed
@@ -264,6 +264,54 @@ export type OperationValidationOutcome =
   | PostOperationValidationUnknown
   | PostOperationValidationFailed;
 
+export const PostTipFragment = graphql(
+  `fragment PostTip on PostTip {
+    __typename
+    amount {
+      ...Erc20Amount
+    }
+    date
+  }`,
+  [Erc20AmountFragment],
+);
+export type PostTip = FragmentOf<typeof PostTipFragment>;
+
+export const SimpleCollectValidationPassedFragment = graphql(
+  `fragment SimpleCollectValidationPassed on SimpleCollectValidationPassed {
+    __typename
+  }`,
+);
+export type SimpleCollectValidationPassed = FragmentOf<
+  typeof SimpleCollectValidationPassedFragment
+>;
+
+export const SimpleCollectValidationFailedFragment = graphql(
+  `fragment SimpleCollectValidationFailed on SimpleCollectValidationFailed {
+    __typename
+    reasonType
+    reason
+  }`,
+);
+export type SimpleCollectValidationFailed = FragmentOf<
+  typeof SimpleCollectValidationFailedFragment
+>;
+
+export const SimpleCollectValidationOutcomeFragment = graphql(
+  `fragment SimpleCollectValidationOutcome on SimpleCollectValidationOutcome {
+    __typename
+    ... on SimpleCollectValidationPassed {
+      ...SimpleCollectValidationPassed
+    }
+    ... on SimpleCollectValidationFailed {
+      ...SimpleCollectValidationFailed
+    }
+  }`,
+  [SimpleCollectValidationPassedFragment, SimpleCollectValidationFailedFragment],
+);
+export type SimpleCollectValidationOutcome =
+  | SimpleCollectValidationPassed
+  | SimpleCollectValidationFailed;
+
 export const LoggedInPostOperationsFragment = graphql(
   `fragment LoggedInPostOperations on LoggedInPostOperations {
     __typename
@@ -283,6 +331,10 @@ export const LoggedInPostOperationsFragment = graphql(
     canRepost {
       ...PostOperationValidationOutcome
     }
+    canSimpleCollect {
+      ...SimpleCollectValidationOutcome
+    }
+    canTip
     hasBookmarked
     hasCommented {
       ...BooleanValue
@@ -296,9 +348,21 @@ export const LoggedInPostOperationsFragment = graphql(
     hasReposted {
       ...BooleanValue
     }
+    hasSimpleCollected
+    hasTipped
     isNotInterested
+    lastTip {
+      ...PostTip
+    }
+    postTipCount
+    simpleCollectCount
   }`,
-  [BooleanValueFragment, PostOperationValidationOutcome],
+  [
+    BooleanValueFragment,
+    PostOperationValidationOutcomeFragment,
+    PostTipFragment,
+    SimpleCollectValidationOutcomeFragment,
+  ],
 );
 export type LoggedInPostOperations = FragmentOf<typeof LoggedInPostOperationsFragment>;
 
