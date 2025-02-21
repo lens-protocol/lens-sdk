@@ -7,7 +7,7 @@ const EIP712TypedDataDomainFragment = graphql(
     chain_id
     version
     verifying_contract
-  }`
+  }`,
 );
 
 export const CreateFrameEip712TypedDataFragment = graphql(
@@ -34,9 +34,11 @@ export const CreateFrameEip712TypedDataFragment = graphql(
       deadline
     }
   }`,
-  [EIP712TypedDataDomainFragment]
+  [EIP712TypedDataDomainFragment],
 );
-export type CreateFrameEip712TypedDataFragment = FragmentOf<typeof CreateFrameEip712TypedDataFragment>;
+export type CreateFrameEip712TypedDataFragment = FragmentOf<
+  typeof CreateFrameEip712TypedDataFragment
+>;
 
 export const CreateFrameTypedDataQuery = graphql(
   `query CreateFrameTypedData($request: FrameEIP712Request!) {
@@ -44,14 +46,14 @@ export const CreateFrameTypedDataQuery = graphql(
       ...CreateFrameEip712TypedData
     }
   }`,
-  [CreateFrameEip712TypedDataFragment]
+  [CreateFrameEip712TypedDataFragment],
 );
 export type CreateFrameTypedDataRequest = RequestOf<typeof CreateFrameTypedDataQuery>;
 
 export const VerifyFrameSignatureQuery = graphql(
   `query VerifyFrameSignature($request: FrameVerifySignature!) {
     value: verifyFrameSignature(request: $request)
-  }`
+  }`,
 );
 export type VerifyFrameSignatureRequest = RequestOf<typeof VerifyFrameSignatureQuery>;
 
@@ -62,9 +64,11 @@ export const FrameLensManagerSignatureResultFragment = graphql(
     }
     signature
   }`,
-  [CreateFrameEip712TypedDataFragment]
+  [CreateFrameEip712TypedDataFragment],
 );
-export type FrameLensManagerSignatureResultFragment = FragmentOf<typeof FrameLensManagerSignatureResultFragment>;
+export type FrameLensManagerSignatureResultFragment = FragmentOf<
+  typeof FrameLensManagerSignatureResultFragment
+>;
 
 export const SignFrameActionMutation = graphql(
   `mutation SignFrameAction($request: FrameLensManagerEIP712Request!) {
@@ -72,6 +76,6 @@ export const SignFrameActionMutation = graphql(
       ...FrameLensManagerSignatureResult
     }
   }`,
-  [FrameLensManagerSignatureResultFragment]
+  [FrameLensManagerSignatureResultFragment],
 );
 export type SignFrameActionRequest = RequestOf<typeof SignFrameActionMutation>;

@@ -1,4 +1,3 @@
-import type { ResultAsync } from '@lens-protocol/types';
 import {
   CreateFrameTypedDataQuery,
   FrameVerifySignatureResult,
@@ -12,6 +11,7 @@ import type {
   SignFrameActionRequest,
   VerifyFrameSignatureRequest,
 } from '@lens-protocol/graphql';
+import type { ResultAsync } from '@lens-protocol/types';
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
@@ -33,7 +33,7 @@ export function verifyFrameSignature(
   client: AnyClient,
   request: VerifyFrameSignatureRequest,
 ): ResultAsync<FrameVerifySignatureResult, UnexpectedError> {
-  return client.query(VerifyFrameSignatureQuery, { request }).map(
-    (result) => FrameVerifySignatureResult[result as keyof typeof FrameVerifySignatureResult]
-  );
+  return client
+    .query(VerifyFrameSignatureQuery, { request })
+    .map((result) => FrameVerifySignatureResult[result as keyof typeof FrameVerifySignatureResult]);
 }

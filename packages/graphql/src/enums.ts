@@ -1139,15 +1139,15 @@ export enum SimpleCollectValidationFailedReason {
 }
 
 export enum FrameVerifySignatureResult {
-  verified = "VERIFIED",
-  postDoesntExist = "POST_DOESNT_EXIST",
-  identityUnauthorized = "IDENTITY_UNAUTHORIZED",
-  identityTokenNotValid = "IDENTITY_TOKEN_NOT_VALID",
-  typedDataTypesIncorrectFields = "TYPED_DATA_TYPES_INCORRECT_FIELDS",
-  typedDataDomainIncorrect = "TYPED_DATA_DOMAIN_INCORRECT",
-  typedDataAccountNotMatchingIdentityToken = "TYPED_DATA_ACCOUNT_NOT_MATCHING_IDENTITY_TOKEN",
-  identityCannotUseAccount = "IDENTITY_CANNOT_USE_ACCOUNT",
-  signatureNotValid = "SIGNATURE_NOT_VALID",
-  deadlineExpired = "DEADLINE_EXPIRED",
-  signerAddressCannotUseAccount = "SIGNER_ADDRESS_CANNOT_USE_ACCOUNT",
+  verified = 'VERIFIED',
+  postDoesntExist = 'POST_DOESNT_EXIST',
+  identityUnauthorized = 'IDENTITY_UNAUTHORIZED',
+  identityTokenNotValid = 'IDENTITY_TOKEN_NOT_VALID',
+  typedDataTypesIncorrectFields = 'TYPED_DATA_TYPES_INCORRECT_FIELDS',
+  typedDataDomainIncorrect = 'TYPED_DATA_DOMAIN_INCORRECT',
+  typedDataAccountNotMatchingIdentityToken = 'TYPED_DATA_ACCOUNT_NOT_MATCHING_IDENTITY_TOKEN',
+  identityCannotUseAccount = 'IDENTITY_CANNOT_USE_ACCOUNT',
+  signatureNotValid = 'SIGNATURE_NOT_VALID',
+  deadlineExpired = 'DEADLINE_EXPIRED',
+  signerAddressCannotUseAccount = 'SIGNER_ADDRESS_CANNOT_USE_ACCOUNT',
 }
