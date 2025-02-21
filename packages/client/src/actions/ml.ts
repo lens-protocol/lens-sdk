@@ -26,7 +26,7 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
  * Fetch account recommendations from ML.
  *
  * ```ts
- * const result = await fetchMlAccountRecommendations(anyClient, {
+ * const result = await fetchAccountRecommendations(anyClient, {
  *   account: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
  * });
  * ```
@@ -35,7 +35,7 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
  * @param request - The query request.
  * @returns The list accounts recommended.
  */
-export function fetchMlAccountRecommendations(
+export function fetchAccountRecommendations(
   client: AnyClient,
   request: MlAccountRecommendationsRequest,
 ): ResultAsync<Paginated<Account> | null, UnexpectedError> {
