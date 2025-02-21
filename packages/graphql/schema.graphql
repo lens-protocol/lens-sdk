@@ -668,7 +668,7 @@ union AddReactionResult = AddReactionResponse | AddReactionFailure
 
 type AddressKeyValue {
   key: String!
-  value: EvmAddress!
+  address: EvmAddress!
 }
 
 type Admin {
@@ -942,7 +942,7 @@ union ArrayData = IntKeyValue | IntNullableKeyValue | AddressKeyValue | StringKe
 
 type ArrayKeyValue {
   key: String!
-  value: [ArrayData!]!
+  array: [ArrayData!]!
 }
 
 type ArticleMetadata {
@@ -1083,7 +1083,7 @@ scalar BigDecimal
 
 type BigDecimalKeyValue {
   key: String!
-  value: BigDecimal!
+  bigDecimal: BigDecimal!
 }
 
 scalar BigInt
@@ -1117,7 +1117,7 @@ input BookmarkPostRequest {
 
 type BooleanKeyValue {
   key: String!
-  value: Boolean!
+  boolean: Boolean!
 }
 
 type BooleanValue {
@@ -1630,7 +1630,7 @@ input DeleteSnsSubscriptionRequest {
 
 type DictionaryKeyValue {
   key: String!
-  value: [PrimitiveData!]!
+  dictionary: [PrimitiveData!]!
 }
 
 input DisableAccountActionRequest @oneOf {
@@ -3374,12 +3374,12 @@ enum IndexingStatus {
 
 type IntKeyValue {
   key: String!
-  value: Int!
+  int: Int!
 }
 
 type IntNullableKeyValue {
   key: String!
-  value: Int
+  optionalInt: Int
 }
 
 input IsFollowedByMeRequest {
@@ -5804,6 +5804,7 @@ union PrimitiveData = IntKeyValue | IntNullableKeyValue | AddressKeyValue | Stri
 
 type Query {
   health: Boolean!
+  maintenance: Boolean!
 
   """Get an account by address, username, or legacy profile ID."""
   account(request: AccountRequest!): Account
@@ -6012,12 +6013,12 @@ type QuoteNotification {
 
 type RawKeyValue {
   key: BlockchainData!
-  value: BlockchainData!
+  data: BlockchainData!
 }
 
 input RawKeyValueInput {
   key: BlockchainData!
-  value: BlockchainData!
+  data: BlockchainData!
 }
 
 type ReactionNotification {
@@ -6812,7 +6813,7 @@ type StoryMetadata {
 
 type StringKeyValue {
   key: String!
-  value: String!
+  string: String!
 }
 
 type SubOperationStatus {

@@ -14,7 +14,7 @@ const IntKeyValueFragment = graphql(
   `fragment IntKeyValue on IntKeyValue {
     __typename
     key
-    value
+    int
   }`,
 );
 export type IntKeyValue = FragmentOf<typeof IntKeyValueFragment>;
@@ -23,7 +23,7 @@ const IntNullableKeyValueFragment = graphql(
   `fragment IntNullableKeyValue on IntNullableKeyValue {
     __typename
     key
-    value
+    optionalInt
   }`,
 );
 export type IntNullableKeyValue = FragmentOf<typeof IntNullableKeyValueFragment>;
@@ -32,7 +32,7 @@ const AddressKeyValueFragment = graphql(
   `fragment AddressKeyValue on AddressKeyValue {
     __typename
     key
-    value 
+    address 
   }`,
 );
 export type AddressKeyValue = FragmentOf<typeof AddressKeyValueFragment>;
@@ -41,7 +41,7 @@ const StringKeyValueFragment = graphql(
   `fragment StringKeyValue on StringKeyValue {
     __typename
     key
-    value
+    string
   }`,
 );
 export type StringKeyValue = FragmentOf<typeof StringKeyValueFragment>;
@@ -50,7 +50,7 @@ const BooleanKeyValueFragment = graphql(
   `fragment BooleanKeyValue on BooleanKeyValue {
     __typename
     key
-    value
+    boolean
   }`,
 );
 export type BooleanKeyValue = FragmentOf<typeof BooleanKeyValueFragment>;
@@ -59,7 +59,7 @@ const RawKeyValueFragment = graphql(
   `fragment RawKeyValue on RawKeyValue {
     __typename
     key
-    value
+    data
   }`,
 );
 export type RawKeyValue = FragmentOf<typeof RawKeyValueFragment>;
@@ -68,7 +68,7 @@ const BigDecimalKeyValueFragment = graphql(
   `fragment BigDecimalKeyValue on BigDecimalKeyValue {
     __typename
     key
-    value
+    bigDecimal
   }`,
 );
 export type BigDecimalKeyValue = FragmentOf<typeof BigDecimalKeyValueFragment>;
@@ -120,7 +120,7 @@ const DictionaryKeyValueFragment = graphql(
   `fragment DictionaryKeyValue on DictionaryKeyValue {
     __typename
     key
-    value {
+    dictionary {
       ...PrimitiveData
     }
   }`,
@@ -180,7 +180,7 @@ const ArrayKeyValueFragment = graphql(
   `fragment ArrayKeyValue on ArrayKeyValue {
     __typename
     key
-    value {
+    array {
       ...ArrayData
     }
   }`,
