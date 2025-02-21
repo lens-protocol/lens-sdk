@@ -121,7 +121,7 @@ export function addPostNotInterested(
 }
 
 /**
- * Remove post as not interested.
+ * Undo a previous decision to flag a post as uninteresting.
  *
  * ```ts
  * const result = await undoPostNotInterested(sessionClient, {
