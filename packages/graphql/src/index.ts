@@ -12,6 +12,7 @@ export * from './graph';
 export * from './graphql';
 export * from './group';
 export * from './health';
+export * from './ml';
 export * from './namespace';
 export * from './notifications';
 export * from './post';

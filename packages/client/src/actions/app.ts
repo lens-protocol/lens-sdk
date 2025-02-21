@@ -361,7 +361,7 @@ export function removeAppSigners(
  *
  * ```ts
  * const result = await setAppGraph(sessionClient, {
- *   graph: graph: { globalGraph: true },
+ *   graph: { globalGraph: true },
  *   app: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
  * });
  * ```

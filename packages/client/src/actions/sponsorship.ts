@@ -112,7 +112,7 @@ export function fetchSponsorshipSigners(
  *
  * @param client - Any Lens client.
  * @param request - The query request.
- * @returns The paginated list of Sponsorship Signers.
+ * @returns The paginated list of excluded addresses.
  */
 export function fetchSponsorshipLimitExclusions(
   client: AnyClient,
