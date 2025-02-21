@@ -7,6 +7,7 @@ export * from './common';
 export * from './enums';
 export * from './feed';
 export * from './follow';
+export * from './frames';
 export * from './fragments';
 export * from './graph';
 export * from './graphql';
