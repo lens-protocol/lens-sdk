@@ -98,19 +98,8 @@ export const GraphsQuery = graphql(
 );
 export type GraphsRequest = RequestOf<typeof GraphsQuery>;
 
-const UpdateGraphRulesResponseFragment = graphql(
-  `fragment UpdateGraphRulesResponse on UpdateGraphRulesResponse {
-    __typename
-    hash
-  }`,
-);
-export type UpdateGraphRulesResponse = FragmentOf<typeof UpdateGraphRulesResponseFragment>;
-
 const UpdateGraphRulesResultFragment = graphql(
   `fragment UpdateGraphRulesResult on UpdateGraphRulesResult {
-    ...on UpdateGraphRulesResponse {
-      ...UpdateGraphRulesResponse
-    }
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
     }
@@ -122,7 +111,6 @@ const UpdateGraphRulesResultFragment = graphql(
     }
   }`,
   [
-    UpdateGraphRulesResponseFragment,
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,
     SponsoredTransactionRequestFragment,

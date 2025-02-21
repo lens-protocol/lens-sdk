@@ -11,6 +11,7 @@ export const AppMetadataFragment = graphql(
     name
     platforms
     privacyPolicy
+    tagline
     termsOfService
     url
   }`,
@@ -21,12 +22,14 @@ export const AppFragment = graphql(
   `fragment App on App {
     __typename
     address
-    graphAddress
-    sponsorshipAddress
-    defaultFeedAddress
-    namespaceAddress
-    treasuryAddress
     createdAt
+    defaultFeedAddress
+    graphAddress
+    namespaceAddress
+    owner
+    sponsorshipAddress
+    treasuryAddress
+    verificationEnabled
     metadata {
       ...AppMetadata
     }

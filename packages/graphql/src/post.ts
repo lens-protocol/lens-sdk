@@ -400,21 +400,65 @@ export const WhoReferencedPostQuery = graphql(
 );
 export type WhoReferencedPostRequest = RequestOf<typeof WhoReferencedPostQuery>;
 
-export const WhoActedOnPostQuery = graphql(
-  `query WhoReferencedPost($request: WhoActedOnPostRequest!) {
-    value: whoActedOnPost(request: $request) {
+const PostExecutedActionsFragment = graphql(
+  `fragment PostExecutedActions on PostExecutedActions {
+    __typename
+    account {
+      ...Account
+    }
+    total
+    lastAt
+    firstAt
+  }`,
+  [AccountFragment],
+);
+export type PostExecutedActions = FragmentOf<typeof PostExecutedActionsFragment>;
+
+export const WhoExecutedActionOnPostQuery = graphql(
+  `query WhoExecutedActionOnPost($request: WhoExecutedActionOnPostRequest!) {
+    value: whoExecutedActionOnPost(request: $request) {
       __typename
       items {
-        ...Account
+        ...PostExecutedActions
       }
       pageInfo {
         ...PaginatedResultInfo
       }
     }
   }`,
-  [PaginatedResultInfoFragment, AccountFragment],
+  [PostExecutedActionsFragment, PaginatedResultInfoFragment],
 );
-export type WhoActedOnPostQueryRequest = RequestOf<typeof WhoActedOnPostQuery>;
+export type WhoExecutedActionOnPostRequest = RequestOf<typeof WhoExecutedActionOnPostQuery>;
+
+const AccountExecutedActionsFragment = graphql(
+  `fragment AccountExecutedActions on AccountExecutedActions {
+    __typename
+    account {
+      ...Account
+    }
+    total
+    lastAt
+    firstAt
+  }`,
+  [AccountFragment],
+);
+export type AccountExecutedActions = FragmentOf<typeof AccountExecutedActionsFragment>;
+
+export const WhoExecutedActionOnAccountQuery = graphql(
+  `query WhoExecutedActionOnAccount($request: WhoExecutedActionOnAccountRequest!) {
+    value: whoExecutedActionOnAccount(request: $request) {
+      __typename
+      items {
+        ...AccountExecutedActions
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [AccountExecutedActionsFragment, PaginatedResultInfoFragment],
+);
+export type WhoExecutedActionOnAccountRequest = RequestOf<typeof WhoExecutedActionOnAccountQuery>;
 
 export const PostEditFragment = graphql(
   `fragment PostEdit on PostEdit {

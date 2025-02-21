@@ -28,6 +28,15 @@ import {
 } from './metadata';
 import { AppFragment, type FeedRule, FeedRuleFragment } from './primitives';
 
+export const RecipientPercentFragment = graphql(
+  `fragment RecipientPercent on RecipientPercent {
+    __typename
+    address
+    percent
+  }`,
+);
+export type RecipientPercent = FragmentOf<typeof RecipientPercentFragment>;
+
 export const SimpleCollectActionFragment = graphql(
   `fragment SimpleCollectAction on SimpleCollectAction {
     __typename
@@ -35,15 +44,19 @@ export const SimpleCollectActionFragment = graphql(
     amount {
       ...Erc20Amount
     }
-    recipient
+    recipients {
+      ...RecipientPercent
+    }
+    referralShare
     collectLimit
     followerOnGraph {
       ...FollowerOn
     }
     endsAt
     isImmutable
+    collectNftAddress
   }`,
-  [Erc20AmountFragment, FollowerOnFragment],
+  [Erc20AmountFragment, RecipientPercentFragment, FollowerOnFragment],
 );
 export type SimpleCollectAction = FragmentOf<typeof SimpleCollectActionFragment>;
 
@@ -364,6 +377,32 @@ export const PostRulesFragment = graphql(
 );
 export type PostRules = FragmentOf<typeof PostRulesFragment>;
 
+export const MarketplaceMetadataAttributeFragment = graphql(
+  `fragment MarketplaceMetadataAttribute on MarketplaceMetadataAttribute {
+    __typename
+    displayType
+    traitType
+    value
+  }`,
+);
+export type MarketplaceMetadataAttribute = FragmentOf<typeof MarketplaceMetadataAttributeFragment>;
+
+export const NftMetadataFragment = graphql(
+  `fragment NftMetadata on NftMetadata {
+    __typename
+    animationUrl
+    attributes {
+      ...MarketplaceMetadataAttribute
+    }
+    description
+    externalUrl
+    image
+    name
+  }`,
+  [MarketplaceMetadataAttributeFragment],
+);
+export type NftMetadata = FragmentOf<typeof NftMetadataFragment>;
+
 const PostFieldsFragment = graphql(
   `fragment PostFields on Post {
     __typename
@@ -372,6 +411,8 @@ const PostFieldsFragment = graphql(
     isDeleted
     isEdited
     timestamp
+    contentUri
+    snapshotUrl: contentUri(request: { useSnapshot: true })
     app {
       ...App
     }
@@ -393,6 +434,9 @@ const PostFieldsFragment = graphql(
     operations {
       ...LoggedInPostOperations
     }
+    collectibleMetadata {
+      ...NftMetadata
+    }
   }`,
   [
     AppFragment,
@@ -402,6 +446,7 @@ const PostFieldsFragment = graphql(
     PostActionFragment,
     PostRulesFragment,
     LoggedInPostOperationsFragment,
+    NftMetadataFragment,
   ],
 );
 export type PostFields = FragmentOf<typeof PostFieldsFragment>;

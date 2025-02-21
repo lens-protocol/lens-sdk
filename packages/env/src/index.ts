@@ -20,7 +20,7 @@ export const mainnet: EnvironmentConfig = new Proxy(
     name: 'mainnet',
     backend: url('https://example.com'),
     indexingTimeout: 10000,
-    pollingInterval: 1000,
+    pollingInterval: 100,
   },
   {
     get: (_target, _prop) => {
@@ -38,7 +38,7 @@ export const testnet: EnvironmentConfig = {
   name: 'testnet',
   backend: url('https://api.testnet.lens.dev/graphql'),
   indexingTimeout: 10000,
-  pollingInterval: 1000,
+  pollingInterval: 100,
 };
 
 /**
@@ -48,7 +48,7 @@ export const staging: EnvironmentConfig = {
   name: 'staging',
   backend: url('https://api.staging.lens.dev/graphql'),
   indexingTimeout: 20000,
-  pollingInterval: 2000,
+  pollingInterval: 100,
 };
 
 /**
@@ -58,5 +58,5 @@ export const local: EnvironmentConfig = {
   name: 'local',
   backend: url('http://localhost:3000/graphql'),
   indexingTimeout: 60000,
-  pollingInterval: 500,
+  pollingInterval: 100,
 };

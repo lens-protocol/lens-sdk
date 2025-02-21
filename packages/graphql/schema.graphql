@@ -22,7 +22,7 @@ type Account {
   metadata: AccountMetadata
 
   """The username linked to the account."""
-  username(request: AccountUsernameRequest): Username
+  username(request: AccountUsernameOneOf! = {namespace: "0xaFe49B3faA3C65c4C56C6b768C9047E3bF4076Bb"}): Username
 
   """The operations for the account."""
   operations: LoggedInAccountOperations
@@ -43,6 +43,11 @@ input AccountActionExecuteInput @oneOf {
   unknown: UnknownActionExecuteInput
 }
 
+input AccountActionFilter @oneOf {
+  address: EvmAddress
+  tipping: AlwaysTrue
+}
+
 union AccountAvailable = AccountManaged | AccountOwned
 
 type AccountBlocked {
@@ -58,6 +63,13 @@ input AccountBlockedNotificationAttributes {
 input AccountCreatedNotificationAttributes {
   graph: EvmAddress
   app: EvmAddress
+}
+
+type AccountExecutedActions {
+  account: Account!
+  total: Int!
+  lastAt: DateTime!
+  firstAt: DateTime!
 }
 
 type AccountFeedsStats {
@@ -406,7 +418,10 @@ type AccountStats {
 
 input AccountStatsRequest {
   """The account to get stats for."""
-  account: EvmAddress!
+  account: EvmAddress
+
+  """The username."""
+  username: UsernameInput
 
   """The feeds to get stats for."""
   forFeeds: [EvmAddress!]! = ["0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"]
@@ -437,9 +452,16 @@ input AccountUsernameCreatedNotificationAttributes {
   account: EvmAddress
 }
 
-input AccountUsernameRequest {
+input AccountUsernameOneOf @oneOf {
   """The namespace to get account assigned username"""
-  namespace: EvmAddress! = "0xaFe49B3faA3C65c4C56C6b768C9047E3bF4076Bb"
+  namespace: EvmAddress
+
+  """
+  This will get the last linked username if it exists
+  note that it may not marry up to the app where a post
+  was created if used in that context
+  """
+  autoResolve: AlwaysTrue
 }
 
 input AccountUsernameUnassignedNotificationAttributes {
@@ -495,6 +517,7 @@ enum AccountsOrderBy {
 }
 
 input AccountsRequest {
+  """The optional accounts filter"""
   filter: AccountsFilter
 
   """The order by."""
@@ -505,11 +528,6 @@ input AccountsRequest {
 
   """The cursor."""
   cursor: Cursor
-}
-
-input ActionFilter {
-  address: EvmAddress
-  actionType: PostActionType
 }
 
 type ActionMetadata {
@@ -881,6 +899,12 @@ union ApproveGroupMembershipResult = ApproveGroupMembershipRequestsResponse | Gr
 input AppsFilter {
   """The optional filter to get apps managed by address"""
   managedBy: ManagedBy
+
+  """The optional filter to get apps linked to feed"""
+  linkedToFeed: EvmAddress
+
+  """The optional filter to get apps linked to graph"""
+  linkedToGraph: EvmAddress
 
   """
   The optional filter to narrow apps by search query.
@@ -1326,6 +1350,70 @@ input CreateFollowRequest {
   graphRulesProcessingParams: [GraphRulesProcessingParams!]
 }
 
+type CreateFrameEIP712TypedData {
+  """The types"""
+  types: CreateFrameEIP712TypedDataTypes!
+
+  """The domain"""
+  domain: Eip712TypedDataDomain!
+
+  """The value"""
+  value: CreateFrameEIP712TypedDataValue!
+}
+
+input CreateFrameEIP712TypedDataInput {
+  """The typed data types"""
+  types: CreateFrameEIP712TypedDataTypesInput!
+
+  """The typed data domain"""
+  domain: Eip712TypedDataDomainInput!
+
+  """The typed data value"""
+  value: FrameEIP712Request!
+}
+
+type CreateFrameEIP712TypedDataTypes {
+  """The frame data"""
+  frameData: [Eip712TypedDataField!]!
+}
+
+input CreateFrameEIP712TypedDataTypesInput {
+  """The frame data"""
+  frameData: [Eip712TypedDataFieldInput!]!
+}
+
+type CreateFrameEIP712TypedDataValue {
+  """The frame spec version"""
+  specVersion: String!
+
+  """The url"""
+  url: URI!
+
+  """The button index"""
+  buttonIndex: Int!
+
+  """The account address"""
+  account: EvmAddress!
+
+  """The post id"""
+  postId: PostId!
+
+  """The input text"""
+  inputText: String!
+
+  """The state"""
+  state: String!
+
+  """The transaction id"""
+  transactionId: String!
+
+  """The app the frame is being executed from"""
+  app: EvmAddress!
+
+  """The deadline the typed data expires"""
+  deadline: Int!
+}
+
 input CreateGraphRequest {
   """The graph metadata uri"""
   metadataUri: URI
@@ -1391,9 +1479,6 @@ input CreatePostRequest {
 }
 
 input CreateRepostRequest {
-  """The feed to repost to. If not provided, the global feed is used."""
-  feed: EvmAddress! = "0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"
-
   """The post to reference."""
   post: PostId!
 
@@ -1549,7 +1634,7 @@ type DictionaryKeyValue {
 }
 
 input DisableAccountActionRequest @oneOf {
-  tipping: Boolean
+  tipping: AlwaysTrue
   unknown: UnknownActionConfigInput
 }
 
@@ -1560,7 +1645,7 @@ type DisableAccountActionResponse {
 union DisableAccountActionResult = DisableAccountActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input DisablePostActionParams @oneOf {
-  simpleCollect: Boolean
+  simpleCollect: AlwaysTrue
   unknown: UnknownActionConfigInput
 }
 
@@ -1689,6 +1774,50 @@ type Eip712TransactionRequest {
   customData: Eip712Meta!
 }
 
+type Eip712TypedDataDomain {
+  """The name of the domain"""
+  name: String!
+
+  """The chain id"""
+  chainId: Int!
+
+  """The version of the domain"""
+  version: String!
+
+  """The verifying contract"""
+  verifyingContract: EvmAddress!
+}
+
+input Eip712TypedDataDomainInput {
+  """The name of the domain"""
+  name: String!
+
+  """The chain id"""
+  chainId: Int!
+
+  """The version of the domain"""
+  version: String!
+
+  """The verifying contract"""
+  verifyingContract: EvmAddress!
+}
+
+type Eip712TypedDataField {
+  """The name of the field"""
+  name: String!
+
+  """The type of the field"""
+  type: String!
+}
+
+input Eip712TypedDataFieldInput {
+  """The name of the field"""
+  name: String!
+
+  """The type of the field"""
+  type: String!
+}
+
 type EmbedMetadata {
   """The other attachments you want to include with it."""
   attachments: [AnyMedia!]!
@@ -1717,7 +1846,7 @@ type EmbedMetadata {
 }
 
 input EnableAccountActionRequest @oneOf {
-  tipping: Boolean
+  tipping: AlwaysTrue
   unknown: UnknownActionConfigInput
 }
 
@@ -1728,7 +1857,7 @@ type EnableAccountActionResponse {
 union EnableAccountActionResult = EnableAccountActionResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input EnablePostActionParams @oneOf {
-  simpleCollect: Boolean
+  simpleCollect: AlwaysTrue
   unknown: UnknownActionConfigInput
 }
 
@@ -2339,9 +2468,9 @@ type Feed {
 }
 
 input FeedChoiceOneOf @oneOf {
-  globalFeed: Boolean
+  globalFeed: AlwaysTrue
   custom: EvmAddress
-  none: Boolean
+  none: AlwaysTrue
 }
 
 type FeedMetadata {
@@ -2362,7 +2491,7 @@ type FeedMetadata {
 }
 
 input FeedOneOf @oneOf {
-  globalFeed: Boolean
+  globalFeed: AlwaysTrue
   feed: EvmAddress
   app: EvmAddress
 }
@@ -2546,7 +2675,7 @@ type FollowerOn {
 }
 
 input FollowerOnInput @oneOf {
-  globalGraph: Boolean
+  globalGraph: AlwaysTrue
   graph: EvmAddress
 }
 
@@ -2673,6 +2802,94 @@ type ForbiddenError {
   reason: String!
 }
 
+input FrameEIP712Request {
+  """The frame spec version"""
+  specVersion: String!
+
+  """The url"""
+  url: URI!
+
+  """The button index"""
+  buttonIndex: Int!
+
+  """The account address"""
+  account: EvmAddress!
+
+  """The post id"""
+  post: PostId!
+
+  """The input text"""
+  inputText: String!
+
+  """The state"""
+  state: String!
+
+  """The transaction id"""
+  transactionId: String!
+
+  """The app the frame is being executed from"""
+  app: EvmAddress!
+
+  """The deadline the typed data expires"""
+  deadline: Int!
+}
+
+type FrameLensManagerSignatureResult {
+  """The signed typed data"""
+  signedTypedData: CreateFrameEIP712TypedData!
+
+  """The signature"""
+  signature: Signature!
+}
+
+input FrameVerifySignature {
+  """The signed typed data"""
+  signedTypedData: CreateFrameEIP712TypedDataInput!
+
+  """The signature"""
+  signature: Signature!
+
+  """The identity token"""
+  identityToken: IdToken!
+}
+
+enum FrameVerifySignatureResult {
+  """The frame was verified"""
+  VERIFIED
+
+  """The post does not exist"""
+  POST_DOESNT_EXIST
+
+  """The identity token is not authorized to use the frame"""
+  IDENTITY_UNAUTHORIZED
+
+  """
+  The identity token is not a valid identity token used with an account authentication
+  """
+  IDENTITY_TOKEN_NOT_VALID
+
+  """The typed data types is not in the correct format"""
+  TYPED_DATA_TYPES_INCORRECT_FIELDS
+
+  """The typed data domain is not in the correct format"""
+  TYPED_DATA_DOMAIN_INCORRECT
+
+  """The typed data account is not matching the identity token account"""
+  TYPED_DATA_ACCOUNT_NOT_MATCHING_IDENTITY_TOKEN
+
+  """The identity token is not a valid identity token"""
+  IDENTITY_CANNOT_USE_ACCOUNT
+
+  """The signature is not valid"""
+  SIGNATURE_NOT_VALID
+
+  """The deadline has expired"""
+  DEADLINE_EXPIRED
+
+  """The signer address cannot use the account"""
+  SIGNER_ADDRESS_CANNOT_USE_ACCOUNT
+}
+
 input GenerateNewAppServerApiKeyRequest {
   """The app to generate the new server side api key for"""
   app: EvmAddress!
@@ -2699,9 +2916,9 @@ type Graph {
 }
 
 input GraphChoiceOneOf @oneOf {
-  globalGraph: Boolean
+  globalGraph: AlwaysTrue
   custom: EvmAddress
-  none: Boolean
+  none: AlwaysTrue
 }
 
 type GraphMetadata {
@@ -2722,7 +2939,7 @@ type GraphMetadata {
 }
 
 input GraphOneOf @oneOf {
-  globalGraph: Boolean
+  globalGraph: AlwaysTrue
   graph: EvmAddress
   app: EvmAddress
 }
@@ -3422,6 +3639,56 @@ input ManagedBy {
   """
   includeOwners: Boolean! = true
 }
+
+"""
+MarketplaceMetadataAttribute
+
+<details><summary>JSON schema</summary>
+
+```json
+{
+"type": "object",
+"properties": {
+"display_type": {
+"type": "string",
+"enum": [
+"number",
+"string",
+"date"
+]
+},
+"trait_type": {
+"description": "The name of the trait.",
+"$ref": "#/$defs/NonEmptyString"
+},
+"value": {
+"type": [
+"string",
+"number"
+]
+}
+},
+"additionalProperties": true
+}
+```
+</details>
+"""
+type MarketplaceMetadataAttribute {
+  displayType: MarketplaceMetadataAttributeDisplayType
+
+  """The name of the trait."""
+  traitType: String
+  value: MarketplaceMetadataAttributeValue
+}
+
+"""MarketplaceMetadataAttributeDisplayType"""
+enum MarketplaceMetadataAttributeDisplayType {
+  NUMBER
+  STRING
+  DATE
+}
+
+scalar MarketplaceMetadataAttributeValue
 
 type MeResult {
   """The logged in account."""
@@ -4393,24 +4660,31 @@ type Mutation {
   """
   Add admins to a graph/app/sponsor/feed/username/group.
   
-  You MUST be authenticated as Account Owner to use this mutation.
+  You MUST be authenticated as Builder to use this mutation.
   """
   addAdmins(request: AddAdminsRequest!): AddAdminsResult!
 
   """
   Remove admins from a graph/app/sponsor/feed/username/group.
   
-  You MUST be authenticated as Account Owner to use this mutation.
+  You MUST be authenticated as Builder to use this mutation.
   """
   removeAdmins(request: RemoveAdminsRequest!): RemoveAdminsResult!
 
   """
   Transfer primitive ownership for the graph/app/sponsor/feed/username/group.
   
-  You MUST be authenticated as Account Owner to use this mutation.
+  You MUST be authenticated as Builder to use this mutation.
   """
   transferPrimitiveOwnership(request: TransferPrimitiveOwnershipRequest!): TransferPrimitiveOwnershipResult!
   mlDismissRecommendedAccounts(request: DismissRecommendedAccountsRequest!): Void!
+
+  """
+  sign a frame action with the lens account manager
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  """
+  signFrameAction(request: FrameEIP712Request!): FrameLensManagerSignatureResult!
 
   """
   Create a new feed
@@ -4724,6 +4998,41 @@ type NetworkAddress {
   chainId: Int!
 }
 
+type NftMetadata {
+  """
+  A URL to a multi-media attachment for the item. The file extensions GLTF, GLB, WEBM, MP4,
+  M4V, OGV, and OGG are supported, along with the audio-only extensions MP3, WAV, and OGA.
+  Animation_url also supports HTML pages, allowing you to build rich experiences and
+  interactive NFTs using JavaScript canvas, WebGL, and more. Scripts and relative paths
+  within the HTML page are now supported. However, access to browser extensions is not
+  supported.
+  """
+  animationUrl: URI
+
+  """
+  These are the attributes for the item, which will show up on the OpenSea and others NFT
+  trading websites on the item.
+  """
+  attributes: [MarketplaceMetadataAttribute!]!
+
+  """
+  A human-readable description of the item. It could be plain text or markdown.
+  """
+  description: String
+
+  """
+  This is the URL that will appear below the asset's image on OpenSea and others etc. and
+  will allow users to leave OpenSea and view the item on the site.
+  """
+  externalUrl: URI
+
+  """NFT will store any image here."""
+  image: URI
+
+  """Name of the NFT item."""
+  name: String
+}
+
 """The existence of the transaction is not yet indexed. Keep trying."""
 type NotIndexedYetStatus {
   reason: String!
@@ -4810,6 +5119,11 @@ input OnboardingUserChallengeRequest {
 enum PageSize {
   TEN
   FIFTY
+}
+
+type PaginatedAccountExecutedActionsResult {
+  items: [AccountExecutedActions!]!
+  pageInfo: PaginatedResultInfo!
 }
 
 type PaginatedAccountManagersResult {
@@ -4931,6 +5245,11 @@ type PaginatedPostEditsResult {
   pageInfo: PaginatedResultInfo!
 }
 
+type PaginatedPostExecutedActionsResult {
+  items: [PostExecutedActions!]!
+  pageInfo: PaginatedResultInfo!
+}
+
 type PaginatedPostReactionsResult {
   items: [AccountPostReaction!]!
   pageInfo: PaginatedResultInfo!
@@ -5042,6 +5361,8 @@ type Post {
   stats: PostStats!
   mentions: [PostMention!]!
   rules: PostRules!
+  collectibleMetadata: NftMetadata!
+  contentUri(request: PostContentUriRequest! = {useSnapshot: false}): URI!
 }
 
 input PostAccountPair {
@@ -5066,15 +5387,15 @@ input PostActionContractsRequest {
 }
 
 input PostActionExecuteInput @oneOf {
-  simpleCollect: Boolean
+  simpleCollect: SimpleCollectExecuteInput
   tipping: AmountInput
   unknown: UnknownActionExecuteInput
 }
 
-enum PostActionType {
-  SIMPLE_COLLECT
-  TIPPING
-  UNKNOWN
+input PostActionFilter @oneOf {
+  address: EvmAddress
+  simpleCollect: AlwaysTrue
+  tipping: AlwaysTrue
 }
 
 input PostActionsParams {
@@ -5091,6 +5412,10 @@ input PostBookmarksRequest {
   filter: PostBookmarksFilter
   pageSize: PageSize! = FIFTY
   cursor: Cursor
+}
+
+input PostContentUriRequest {
+  useSnapshot: Boolean!
 }
 
 input PostCreatedNotificationAttributes {
@@ -5127,6 +5452,13 @@ input PostEditsRequest {
   post: PostId!
   pageSize: PageSize! = FIFTY
   cursor: Cursor
+}
+
+type PostExecutedActions {
+  account: Account!
+  total: Int!
+  lastAt: DateTime!
+  firstAt: DateTime!
 }
 
 type PostForYou {
@@ -5502,6 +5834,9 @@ type Query {
   """
   lastLoggedInAccount(request: LastLoggedInAccountRequest!): Account
 
+  """Get who acted on a post."""
+  whoExecutedActionOnAccount(request: WhoExecutedActionOnAccountRequest!): PaginatedAccountExecutedActionsResult!
+
   """Get an app"""
   app(request: AppRequest!): App
 
@@ -5559,7 +5894,9 @@ type Query {
 
   """Get accounts who referenced a post"""
   whoReferencedPost(request: WhoReferencedPostRequest!): PaginatedAccountsResult!
-  whoActedOnPost(request: WhoActedOnPostRequest!): PaginatedAccountsResult!
+
+  """Get who acted on a post."""
+  whoExecutedActionOnPost(request: WhoExecutedActionOnPostRequest!): PaginatedPostExecutedActionsResult!
   postEdits(request: PostEditsRequest!): PaginatedPostEditsResult!
   following(request: FollowingRequest!): PaginatedFollowingResult!
   followers(request: FollowersRequest!): PaginatedFollowersResult!
@@ -5612,7 +5949,11 @@ type Query {
 
   """Get the status of a transaction by its hash."""
   transactionStatus(request: TransactionStatusRequest!): TransactionStatusResult!
-  debugMetadata(request: DebugPostMetadataRequest!): DebugPostMetadataResult!
+  debugMetadata(debugMetadataRequest: DebugPostMetadataRequest!): DebugPostMetadataResult!
+
+  """Create a frame typed data"""
+  createFrameTypedData(request: FrameEIP712Request!): CreateFrameEIP712TypedData!
+  verifyFrameSignature(request: FrameVerifySignature!): FrameVerifySignatureResult!
 
   """
   Checks if the given username can be created by the account
@@ -5667,6 +6008,26 @@ type ReactionNotification {
   post: Post!
 }
 
+type RecipientPercent {
+  address: EvmAddress!
+
+  """
+  Percentage of the fee that will be sent to the recipient must be a whole number between 0
+  and 100.
+  """
+  percent: Int!
+}
+
+input RecipientPercentInput {
+  address: EvmAddress!
+
+  """
+  Percentage of the fee that will be sent to the recipient must be a whole number between 0
+  and 100.
+  """
+  percent: Int!
+}
+
 input RecommendAccount {
   """The account to recommend."""
   account: EvmAddress!
@@ -5678,6 +6039,11 @@ input ReferencingPostInput {
 
   """The processing params for the post rules."""
   postRulesProcessingParams: [PostRulesProcessingParams!]
+}
+
+input ReferralCut {
+  address: EvmAddress!
+  percent: Int!
 }
 
 input RefreshRequest {
@@ -5998,16 +6364,19 @@ input SignedAuthChallenge {
 type SimpleCollectAction {
   address: EvmAddress!
   amount: Erc20Amount
-  recipient: EvmAddress
+  recipients: [RecipientPercent!]
+  referralShare: Int
   collectLimit: Int
   followerOnGraph: FollowerOn
   endsAt: DateTime
   isImmutable: Boolean!
+  collectNftAddress: EvmAddress!
 }
 
 input SimpleCollectActionConfigInput {
   amount: AmountInput
-  recipient: EvmAddress
+  recipients: [RecipientPercentInput!]
+  referralShare: Int
   collectLimit: Int
   followerOnGraph: FollowerOnInput
   endsAt: DateTime
@@ -6016,6 +6385,11 @@ input SimpleCollectActionConfigInput {
 
 type SimpleCollectActionContract {
   address: EvmAddress!
+}
+
+input SimpleCollectExecuteInput {
+  selected: AlwaysTrue!
+  referrals: [ReferralCut!]
 }
 
 input SimplePaymentFeedRuleConfig {
@@ -6534,7 +6908,7 @@ input TimelineHighlightsRequest {
 type TimelineItem {
   id: UUID!
   primary: Post!
-  reposts: [Post!]!
+  reposts: [Repost!]!
   comments: [Post!]!
 }
 
@@ -6761,6 +7135,7 @@ enum TransactionOperation {
   USERNAME_RESERVED
   USERNAME_RELEASED
   USERNAME_RESERVED_CREATED
+  USERNAME_TRANSFER
   SPONSORSHIP_FACTORY_DEPLOYMENT
   SPONSORSHIP_ACCESS_CONTROL_ADDED
   SPONSORSHIP_ACCESS_CONTROL_UPDATED
@@ -6920,13 +7295,8 @@ input UnknownAccountRuleConfig {
 
 type UnknownAction {
   address: EvmAddress!
-  config: UnknownActionConfig!
+  config: [RawKeyValue!]!
   metadata: ActionMetadata
-}
-
-type UnknownActionConfig {
-  address: EvmAddress!
-  params: [RawKeyValue!]!
 }
 
 input UnknownActionConfigInput {
@@ -7006,7 +7376,11 @@ input UnknownRuleProcessingParams {
 input UpdateAccountFollowRulesRequest {
   """The graph to update account follow rules for."""
   graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
+
+  """The rules to add"""
   toAdd: AccountRulesConfigInput! = {required: [], anyOf: []}
+
+  """The rules to remove"""
   toRemove: [RuleId!]! = []
 }
 
@@ -7028,47 +7402,51 @@ union UpdateAccountManagerResult = SponsoredTransactionRequest | SelfFundedTrans
 
 input UpdateFeedRulesRequest {
   """The feed to update rules for"""
-  feed: EvmAddress! = "0x82365f8DF6599b3444D2754bDb2317bdDc357c3B"
+  feed: EvmAddress!
+
+  """The rules to add"""
   toAdd: FeedRulesConfigInput! = {required: [], anyOf: []}
+
+  """The rules to remove"""
   toRemove: [RuleId!]! = []
 }
 
-type UpdateFeedRulesResponse {
-  hash: TxHash!
-}
-
-union UpdateFeedRulesResult = UpdateFeedRulesResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union UpdateFeedRulesResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input UpdateGraphRulesRequest {
   """The graph to update rules for"""
-  graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
+  graph: EvmAddress!
+
+  """The rules to add"""
   toAdd: GraphRulesConfigInput! = {required: [], anyOf: []}
+
+  """The rules to remove"""
   toRemove: [RuleId!]! = []
 }
 
-type UpdateGraphRulesResponse {
-  hash: TxHash!
-}
-
-union UpdateGraphRulesResult = UpdateGraphRulesResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union UpdateGraphRulesResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input UpdateGroupRulesRequest {
   """The group to update rules for"""
   group: EvmAddress!
+
+  """The rules to add"""
   toAdd: GroupRulesConfigInput! = {required: [], anyOf: []}
+
+  """The rules to remove"""
   toRemove: [RuleId!]! = []
 }
 
-type UpdateGroupRulesResponse {
-  hash: TxHash!
-}
-
-union UpdateGroupRulesResult = UpdateGroupRulesResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
+union UpdateGroupRulesResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 input UpdateNamespaceRulesRequest {
   """The namespace to update rules for"""
   namespace: EvmAddress!
+
+  """The rules to add"""
   toAdd: NamespaceRulesConfigInput! = {required: [], anyOf: []}
+
+  """The rules to remove"""
   toRemove: [RuleId!]! = []
 }
 
@@ -7077,8 +7455,15 @@ union UpdateNamespaceRulesResult = SponsoredTransactionRequest | SelfFundedTrans
 input UpdatePostRulesRequest {
   """The post to update rules for."""
   post: PostId!
+
+  """The rules to add"""
   toAdd: PostRulesConfigInput! = {required: [], anyOf: []}
+
+  """The rules to remove"""
   toRemove: [RuleId!]! = []
+
+  """The processing params for the feed rules."""
+  feedRulesProcessingParams: [FeedRulesProcessingParams!]! = []
 }
 
 type UpdatePostRulesResponse {
@@ -7195,9 +7580,9 @@ type UsernameNamespace {
 }
 
 input UsernameNamespaceChoiceOneOf @oneOf {
-  globalNamespace: Boolean
+  globalNamespace: AlwaysTrue
   custom: EvmAddress
-  none: Boolean
+  none: AlwaysTrue
 }
 
 type UsernameNamespaceMetadata {
@@ -7325,24 +7710,55 @@ type VideoMetadata {
 
 scalar Void
 
-input WhoActedOnPostFilter {
-  anyOf: [ActionFilter!]!
+input WhoExecutedActionOnAccountFilter {
+  anyOf: [AccountActionFilter!]!
 }
 
-enum WhoActedOnPostOrderBy {
+enum WhoExecutedActionOnAccountOrderBy {
   LAST_ACTIONED
   FIRST_ACTIONED
   ACCOUNT_SCORE
 }
 
-input WhoActedOnPostRequest {
-  """The post id to get who acted on."""
-  post: PostId!
-  filter: WhoActedOnPostFilter
-  orderBy: WhoActedOnPostOrderBy
+input WhoExecutedActionOnAccountRequest {
+  """The account on which action were executed."""
+  account: EvmAddress!
+
+  """The optional actions filter"""
+  filter: WhoExecutedActionOnAccountFilter
+
+  """The order by."""
+  orderBy: WhoExecutedActionOnAccountOrderBy! = ACCOUNT_SCORE
 
   """The page size."""
-  pageSize: Int
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
+input WhoExecutedActionOnPostFilter {
+  anyOf: [PostActionFilter!]!
+}
+
+enum WhoExecutedActionOnPostOrderBy {
+  LAST_ACTIONED
+  FIRST_ACTIONED
+  ACCOUNT_SCORE
+}
+
+input WhoExecutedActionOnPostRequest {
+  """The post on which actions were executed."""
+  post: PostId!
+
+  """The optional actions filter"""
+  filter: WhoExecutedActionOnPostFilter
+
+  """The order by."""
+  orderBy: WhoExecutedActionOnPostOrderBy! = ACCOUNT_SCORE
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
 
   """The cursor."""
   cursor: Cursor

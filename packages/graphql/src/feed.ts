@@ -98,19 +98,8 @@ export const FeedsQuery = graphql(
 );
 export type FeedsRequest = RequestOf<typeof FeedsQuery>;
 
-const UpdateFeedRulesResponseFragment = graphql(
-  `fragment UpdateFeedRulesResponse on UpdateFeedRulesResponse {
-    __typename
-    hash
-  }`,
-);
-export type UpdateFeedRulesResponse = FragmentOf<typeof UpdateFeedRulesResponseFragment>;
-
 const UpdateFeedRulesResultFragment = graphql(
   `fragment UpdateFeedRulesResult on UpdateFeedRulesResult {
-    ...on UpdateFeedRulesResponse {
-      ...UpdateFeedRulesResponse
-    }
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
     }
@@ -123,7 +112,6 @@ const UpdateFeedRulesResultFragment = graphql(
   }`,
   [
     SponsoredTransactionRequestFragment,
-    UpdateFeedRulesResponseFragment,
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,
   ],

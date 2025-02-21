@@ -58,6 +58,7 @@ import type {
   IndexingStatus,
   MainContentFocus,
   ManagedAccountsVisibility,
+  MarketplaceMetadataAttributeType,
   MediaAudioKind,
   MediaAudioType,
   MediaImageType,
@@ -96,11 +97,12 @@ import type {
   TokenStandard,
   TransactionType,
   UnblockErrorType,
-  WhoActedOnPostOrderBy,
+  WhoExecutedActionOnAccountOrderBy,
+  WhoExecutedActionOnPostOrderBy,
   WhoReferencedPostOrderBy,
 } from './enums';
 import type { introspection } from './graphql-env';
-import type { AlwaysTrue, ServerAPIKey } from './scalars';
+import type { ServerAPIKey } from './scalars';
 
 export const graphql = initGraphQLTada<{
   disableMasking: true;
@@ -112,7 +114,7 @@ export const graphql = initGraphQLTada<{
     AccountFollowRuleUnsatisfiedReason: AccountFollowRuleUnsatisfiedReason;
     AccountReportReason: AccountReportReason;
     AccountsOrderBy: AccountsOrderBy;
-    AlwaysTrue: AlwaysTrue;
+    AlwaysTrue: true;
     AppMetadataLensPlatformsItem: AppMetadataLensPlatformsItem;
     AppsOrderBy: AppsOrderBy;
     AppUsersOrderBy: AppUsersOrderBy;
@@ -155,6 +157,8 @@ export const graphql = initGraphQLTada<{
     LegacyRefreshToken: CompactJwt;
     MainContentFocus: MainContentFocus;
     ManagedAccountsVisibility: ManagedAccountsVisibility;
+    MarketplaceMetadataAttributeType: MarketplaceMetadataAttributeType;
+    MarketplaceMetadataAttributeValue: string;
     MediaAudioKind: MediaAudioKind;
     MediaAudioType: MediaAudioType;
     MediaImageType: MediaImageType;
@@ -207,7 +211,8 @@ export const graphql = initGraphQLTada<{
     UsernameValue: UsernameValue;
     UUID: UUID;
     Void: Void;
-    WhoActedOnPostOrderBy: WhoActedOnPostOrderBy;
+    WhoExecutedActionOnAccountOrderBy: WhoExecutedActionOnAccountOrderBy;
+    WhoExecutedActionOnPostOrderBy: WhoExecutedActionOnPostOrderBy;
     WhoReferencedPostOrderBy: WhoReferencedPostOrderBy;
   };
 }>();
