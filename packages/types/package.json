@@ -5,12 +5,24 @@
   "repository": {
     "directory": "packages/types",
     "type": "git",
-    "url": "git://github.com/lens-network/social-sdk.git"
+    "url": "git://github.com/lens-protocol/lens-sdk.git"
   },
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "import": ["./dist/index.d.ts"],
+      "require": ["./dist/index.d.cts"]
+    }
+  },
   "files": ["dist"],
   "sideEffects": false,
   "scripts": {
