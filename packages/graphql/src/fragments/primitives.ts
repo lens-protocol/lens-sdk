@@ -571,6 +571,7 @@ export const GroupFragment = graphql(
   `fragment Group on Group {
     __typename
     address
+    feed
     timestamp
     owner
     banningEnabled

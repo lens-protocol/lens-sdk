@@ -135,7 +135,7 @@ export const graphql = initGraphQLTada<{
     FeedRuleType: FeedRuleType;
     FeedRuleUnsatisfiedReason: FeedRuleUnsatisfiedReason;
     FeedsOrderBy: FeedsOrderBy;
-    Fixed32Bytes: FixedBytes32;
+    FixedBytes32: FixedBytes32;
     Float: number;
     FollowersOrderBy: FollowersOrderBy;
     FollowersYouKnowOrderBy: FollowersYouKnowOrderBy;
