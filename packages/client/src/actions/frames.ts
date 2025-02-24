@@ -15,6 +15,30 @@ import type { ResultAsync } from '@lens-protocol/types';
 import type { AnyClient, SessionClient } from '../clients';
 import type { UnauthenticatedError, UnexpectedError } from '../errors';
 
+
+  /**
+   * Create Frame action typed data to be signed by user wallet
+   *
+   * @param request - The request object
+   * @returns Typed data for Frame request
+   * @experimental This function might change in the future release
+   *
+   * @example
+   * ```ts
+   * const result = await client.frames.createFrameTypedData({
+   *   transactionId: '0x0000000000000000000000000000000000000000',
+   *   buttonIndex: 2,
+   *   deadline: 1711038973,
+   *   inputText: 'Hello, World!',
+   *   account: '0x0000000000000000000000000000000000000000',
+   *   post: '0x01-0x01',
+   *   app: '0x0000000000000000000000000000000000000000,
+   *   specVersion: '1.1.0',
+   *   state: '{"counter":1,"idempotency_key":"431b8b38-eb4d-455b"}',
+   *   url: 'https://mylensframe.xyz',
+   * });
+   * ```
+   */
 export function createFrameTypedData(
   client: AnyClient,
   request: CreateFrameTypedDataRequest,
@@ -22,6 +46,31 @@ export function createFrameTypedData(
   return client.query(CreateFrameTypedDataQuery, { request });
 }
 
+
+  /**
+   * Sign Frame action with Lens Manager if enabled
+   *
+   * ⚠️ Requires authenticated LensClient.
+   *
+   * @param request - The request object
+   * @returns Signature result
+   * @experimental This function might change in the future release
+   *
+   * @example
+   * ```ts
+   * const result = await client.frames.signFrameAction({
+   *   transactionId: '0x0000000000000000000000000000000000000000',
+   *   buttonIndex: 2,
+   *   inputText: 'Hello, World!',
+   *   account: '0x0000000000000000000000000000000000000000',
+   *   post: '0x01-0x01',
+   *   app: '0x0000000000000000000000000000000000000000,
+   *   specVersion: '1.1.0',
+   *   state: '{"counter":1,"idempotency_key":"431b8b38-eb4d-455b"}',
+   *   url: 'https://mylensframe.xyz',
+   * });
+   * ```
+   */
 export function signFrameAction(
   client: SessionClient,
   request: SignFrameActionRequest,
@@ -29,6 +78,23 @@ export function signFrameAction(
   return client.mutation(SignFrameActionMutation, { request });
 }
 
+
+  /**
+   * Verify Frame signature
+   *
+   * @param request - The request object
+   * @returns Verification result
+   * @experimental This function might change in the future release
+   *
+   * @example
+   * ```ts
+   * const result = await client.frames.verifyFrameSignature({
+   *   identityToken: identityToken,
+   *   signature: data.signature,
+   *   signedTypedData: data.signedTypedData,
+   * });
+   * ```
+   */
 export function verifyFrameSignature(
   client: AnyClient,
   request: VerifyFrameSignatureRequest,
