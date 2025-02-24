@@ -1256,6 +1256,11 @@ input CreateAccountWithUsernameRequest {
   """Any account managers you wish to add to the account"""
   accountManager: [EvmAddress!]
 
+  """
+  Enable signless on creation adding the lens API key to the account manager
+  """
+  enableSignless: Boolean! = true
+
   """The processing params for the namespace create rules."""
   createNamespaceRuleProcessingParams: [NamespaceRulesProcessingParams!]
 
@@ -6422,6 +6427,7 @@ enum SimpleCollectValidationFailedReason {
   LIMIT_REACHED
   NOT_ENOUGH_BALANCE
   NOT_A_FOLLOWER
+  POST_DELETED
 }
 
 union SimpleCollectValidationOutcome = SimpleCollectValidationPassed | SimpleCollectValidationFailed
@@ -7189,6 +7195,8 @@ enum TransactionOperation {
   SPONSORSHIP_SIGNER_ADDED
   SPONSORSHIP_SIGNER_REMOVED
   FEED_FACTORY_DEPLOYMENT
+  ACCOUNT_BLOCKED
+  ACCOUNT_UNBLOCKED
 }
 
 input TransactionStatusRequest {

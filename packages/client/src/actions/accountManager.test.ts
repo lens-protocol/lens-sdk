@@ -6,15 +6,10 @@ import { assertOk, never, uri } from '@lens-protocol/types';
 import type { SessionClient } from '../clients';
 import { loginAsOnboardingUser, storageClient, wallet } from '../test-utils';
 import { handleOperationWith } from '../viem';
-import {
-  createAccountWithUsername,
-  enableSignless,
-  fetchAccount,
-  setAccountMetadata,
-} from './account';
+import { createAccountWithUsername, fetchAccount, setAccountMetadata } from './account';
 import { fetchMeDetails } from './authentication';
 
-describe('Given a new Lens Account', { timeout: 10000 }, () => {
+describe(`Given the '${createAccountWithUsername.name}' action`, { timeout: 10000 }, () => {
   let newAccount: Account;
   let sessionClient: SessionClient;
 
@@ -43,15 +38,8 @@ describe('Given a new Lens Account', { timeout: 10000 }, () => {
     sessionClient = result.value;
   });
 
-  describe(`When invoking the '${enableSignless.name}' action`, () => {
-    beforeAll(async () => {
-      const result = await enableSignless(sessionClient)
-        .andThen(handleOperationWith(wallet))
-        .andThen(sessionClient.waitForTransaction);
-      assertOk(result);
-    });
-
-    it(`Then it should be reflected in the '${fetchMeDetails.name}' action result`, async () => {
+  describe('When creating a new Account', () => {
+    it('Then it should have Signless enabled by defailt', async () => {
       const result = await fetchMeDetails(sessionClient);
 
       assertOk(result);

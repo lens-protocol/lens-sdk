@@ -1136,4 +1136,5 @@ export enum SimpleCollectValidationFailedReason {
   LimitReached = 'LIMIT_REACHED',
   NotEnoughBalance = 'NOT_ENOUGH_BALANCE',
   NotAFollower = 'NOT_A_FOLLOWER',
+  PostDeleted = 'POST_DELETED',
 }
