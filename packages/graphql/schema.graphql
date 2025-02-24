@@ -60,6 +60,10 @@ input AccountBlockedNotificationAttributes {
   app: EvmAddress
 }
 
+type AccountBlockedResponse {
+  hash: TxHash!
+}
+
 input AccountCreatedNotificationAttributes {
   graph: EvmAddress
   app: EvmAddress
@@ -433,6 +437,10 @@ input AccountStatsRequest {
 input AccountUnblockedNotificationAttributes {
   graph: EvmAddress
   app: EvmAddress
+}
+
+type AccountUnblockedResponse {
+  hash: TxHash!
 }
 
 input AccountUnfollowedNotificationAttributes {
@@ -1088,26 +1096,12 @@ type BigDecimalKeyValue {
 
 scalar BigInt
 
-type BlockError {
-  error: BlockErrorType!
-}
-
-enum BlockErrorType {
-  UNKNOWN
-  ALREADY_BLOCKED
-  UNAUTHORIZED
-}
-
 input BlockRequest {
   """The account to block."""
   account: EvmAddress!
 }
 
-type BlockResponse {
-  hash: TxHash!
-}
-
-union BlockResult = BlockResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | BlockError
+union BlockResult = AccountBlockedResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 scalar BlockchainData
 
@@ -4472,6 +4466,9 @@ type Mutation {
   """
   legacyRolloverRefresh(request: RolloverRefreshRequest!): RefreshResult!
 
+  """Refreshes the metadata for the provided entity."""
+  refreshMetadata(request: EntityId!): RefreshMetadataResult!
+
   """
   Create a new post.
   
@@ -4613,7 +4610,7 @@ type Mutation {
   """
   Update graph rules
   
-  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  You MUST be authenticated as a builder to use this mutation.
   """
   updateGraphRules(request: UpdateGraphRulesRequest!): UpdateGraphRulesResult!
 
@@ -4627,7 +4624,7 @@ type Mutation {
   """
   Create a new username namespace aka deploying a new username contract
   
-  You MUST be authenticated as a builder to use this mutation.
+  You MUST be authenticated to use this mutation.
   """
   createUsernameNamespace(request: CreateUsernameNamespaceRequest!): CreateUsernameNamespaceResult!
 
@@ -4664,14 +4661,14 @@ type Mutation {
   """
   Update namespace rules
   
-  You MUST be a namespace owner or admin to use this mutation
+  You MUST be authenticated to use this mutation.
   """
   updateNamespaceRules(request: UpdateNamespaceRulesRequest!): UpdateNamespaceRulesResult!
 
   """
   Update reserved usernames
   
-  You MUST be a namespace owner or admin to use this mutation
+  You MUST be authenticated to use this mutation.
   """
   updateReservedUsernames(request: UpdateReservedUsernamesRequest!): UpdateReservedUsernamesResult!
 
@@ -4721,7 +4718,7 @@ type Mutation {
   """
   Update feed rules
   
-  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  You MUST be authenticated as a builder to use this mutation.
   """
   updateFeedRules(request: UpdateFeedRulesRequest!): UpdateFeedRulesResult!
 
@@ -4735,7 +4732,8 @@ type Mutation {
   """
   Update group rules
   
-  You MUST be authenticated as Account Owner or Account Manager to use this mutation.
+  You MUST be authenticated as Account Owner or Account Manager or Builder to use this
+  mutation.
   """
   updateGroupRules(request: UpdateGroupRulesRequest!): UpdateGroupRulesResult!
 
@@ -5363,9 +5361,6 @@ type Post {
   id: PostId!
   slug: PostId!
   author: Account!
-
-  """The feed address that the post belongs to."""
-  feed: EvmAddress!
   isEdited: Boolean!
   isDeleted: Boolean!
   timestamp: DateTime!
@@ -5381,6 +5376,7 @@ type Post {
   rules: PostRules!
   collectibleMetadata: NftMetadata!
   contentUri(request: PostContentUriRequest! = {useSnapshot: false}): URI!
+  feed: PostFeedInfo!
 }
 
 input PostAccountPair {
@@ -5479,9 +5475,20 @@ type PostExecutedActions {
   firstAt: DateTime!
 }
 
+type PostFeedInfo {
+  address: EvmAddress!
+  metadata: FeedMetadata
+  group: PostGroupInfo
+}
+
 type PostForYou {
   post: Post!
   source: ForYouSource!
+}
+
+type PostGroupInfo {
+  address: EvmAddress!
+  metadata: GroupMetadata
 }
 
 scalar PostId
@@ -5975,6 +5982,9 @@ type Query {
   transactionStatus(request: TransactionStatusRequest!): TransactionStatusResult!
   debugMetadata(debugMetadataRequest: DebugPostMetadataRequest!): DebugPostMetadataResult!
 
+  """Get the status of a refresh metadata job."""
+  refreshMetadataStatus(id: UUID!): RefreshMetadataStatusResult!
+
   """Create a frame typed data"""
   createFrameTypedData(request: FrameEIP712Request!): CreateFrameEIP712TypedData!
   verifyFrameSignature(request: FrameVerifySignature!): FrameVerifySignatureResult!
@@ -6068,6 +6078,29 @@ input ReferencingPostInput {
 input ReferralCut {
   address: EvmAddress!
   percent: Int!
+}
+
+type RefreshMetadataResult {
+  """
+  The id of the refresh metadata job. You can use this id to check the status of the job.
+  """
+  id: UUID!
+}
+
+type RefreshMetadataStatusResult {
+  """
+  The id of the refresh metadata job. You can use this id to check the status of the job.
+  """
+  id: UUID!
+
+  """The status of the refresh metadata job."""
+  status: IndexingStatus!
+
+  """An optional reason in case the status is failed."""
+  reason: String
+
+  """The timestamp when the refresh metadata job was updated."""
+  updatedAt: DateTime!
 }
 
 input RefreshRequest {
@@ -6456,6 +6489,8 @@ enum SnsNotificationType {
   MEDIA_SNAPSHOT_ERROR
   METADATA_SNAPSHOT_SUCCESS
   METADATA_SNAPSHOT_ERROR
+  REFRESH_METADATA_SUCCESS
+  REFRESH_METADATA_ERROR
   POST_CREATED
   QUOTE_CREATED
   COMMENT_CREATED
@@ -6502,6 +6537,8 @@ input SnsTopicInput @oneOf {
   mediaSnapshotError: MediaSnapshotNotificationAttributes
   metadataSnapshotSuccess: MetadataSnapshotNotificationAttributes
   metadataSnapshotError: MetadataSnapshotNotificationAttributes
+  refreshMetadataSuccess: MetadataSnapshotNotificationAttributes
+  refreshMetadataError: MetadataSnapshotNotificationAttributes
   postCreated: PostCreatedNotificationAttributes
   quoteCreated: PostCreatedNotificationAttributes
   commentCreated: PostCreatedNotificationAttributes
@@ -7197,6 +7234,9 @@ enum TransactionOperation {
   FEED_FACTORY_DEPLOYMENT
   ACCOUNT_BLOCKED
   ACCOUNT_UNBLOCKED
+  ACCOUNT_EXTRA_DATA_ADDED
+  ACCOUNT_EXTRA_DATA_REMOVED
+  ACCOUNT_EXTRA_DATA_UPDATED
 }
 
 input TransactionStatusRequest {
@@ -7272,26 +7312,12 @@ type UnbanGroupAccountsResponse {
 
 union UnbanGroupAccountsResult = UnbanGroupAccountsResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
-type UnblockError {
-  error: UnblockErrorType!
-}
-
-enum UnblockErrorType {
-  UNKNOWN
-  NOT_BLOCKED
-  UNAUTHORIZED
-}
-
 input UnblockRequest {
   """The account to unblock."""
   account: EvmAddress!
 }
 
-type UnblockResponse {
-  hash: TxHash!
-}
-
-union UnblockResult = UnblockResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | UnblockError
+union UnblockResult = AccountUnblockedResponse | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
 type UndoReactionFailure {
   reason: String!

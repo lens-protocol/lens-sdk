@@ -97,7 +97,6 @@ import type {
   TimelineEventItemType,
   TokenStandard,
   TransactionType,
-  UnblockErrorType,
   WhoExecutedActionOnAccountOrderBy,
   WhoExecutedActionOnPostOrderBy,
   WhoReferencedPostOrderBy,
@@ -207,7 +206,6 @@ export const graphql = initGraphQLTada<{
     // TransactionOperation: TransactionOperation; intentionally not mapped since it grows often and it's a debug information
     TransactionType: TransactionType;
     TxHash: TxHash;
-    UnblockErrorType: UnblockErrorType;
     URI: URI;
     URL: URL;
     UsernameValue: UsernameValue;

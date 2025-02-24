@@ -26,7 +26,13 @@ import {
   TransactionMetadataFragment,
   VideoMetadataFragment,
 } from './metadata';
-import { AppFragment, type FeedRule, FeedRuleFragment } from './primitives';
+import {
+  AppFragment,
+  FeedMetadataFragment,
+  type FeedRule,
+  FeedRuleFragment,
+  GroupMetadataFragment,
+} from './primitives';
 
 export const RecipientPercentFragment = graphql(
   `fragment RecipientPercent on RecipientPercent {
@@ -467,16 +473,45 @@ export const NftMetadataFragment = graphql(
 );
 export type NftMetadata = FragmentOf<typeof NftMetadataFragment>;
 
+export const PostGroupInfoFragment = graphql(
+  `fragment PostGroupInfo on PostGroupInfo {
+    __typename
+    address
+    metadata {
+      ...GroupMetadata
+    }
+  }`,
+  [GroupMetadataFragment],
+);
+export type PostGroupInfo = FragmentOf<typeof PostGroupInfoFragment>;
+
+export const PostFeedInfoFragment = graphql(
+  `fragment PostFeedInfo on PostFeedInfo {
+    __typename
+    address
+    metadata {
+      ...FeedMetadata
+    }
+    group {
+      ...PostGroupInfo
+    }
+  }`,
+  [FeedMetadataFragment, PostGroupInfoFragment],
+);
+export type PostFeedInfo = FragmentOf<typeof PostFeedInfoFragment>;
+
 const PostFieldsFragment = graphql(
   `fragment PostFields on Post {
     __typename
     slug
-    feed
     isDeleted
     isEdited
     timestamp
     contentUri
     snapshotUrl: contentUri(request: { useSnapshot: true })
+    feed {
+      ...PostFeedInfo
+    }
     app {
       ...App
     }
@@ -503,6 +538,7 @@ const PostFieldsFragment = graphql(
     }
   }`,
   [
+    PostFeedInfoFragment,
     AppFragment,
     PostMetadataFragment,
     PostMentionFragment,

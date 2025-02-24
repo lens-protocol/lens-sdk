@@ -935,15 +935,6 @@ export enum TransactionType {
 }
 
 /**
- * Enum for UnblockErrorType.
- */
-export enum UnblockErrorType {
-  Unknown = 'UNKNOWN',
-  NotBlocked = 'NOT_BLOCKED',
-  Unauthorized = 'UNAUTHORIZED',
-}
-
-/**
  * Enum for WhoExecutedActionOnAccountOrderBy.
  */
 export enum WhoExecutedActionOnAccountOrderBy {
