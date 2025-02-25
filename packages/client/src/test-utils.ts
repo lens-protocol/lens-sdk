@@ -31,7 +31,6 @@ export function createPublicClient() {
 
 export function loginAsAccountOwner() {
   const client = createPublicClient();
-
   return client.login({
     accountOwner: {
       account,

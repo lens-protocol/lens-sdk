@@ -12,7 +12,7 @@ import { refreshMetadata, waitForMetadata } from './metadata';
 import { post } from './post';
 import { fetchPost } from './posts';
 
-describe('Metadata refresh actions', () => {
+describe('Given user creates a post', () => {
   const client = createPublicClient();
   let postId: PostId;
 
@@ -25,27 +25,29 @@ describe('Metadata refresh actions', () => {
       })
         .andThen(handleOperationWith(wallet))
         .andThen(sessionClient.waitForTransaction)
-        .andThen((tx) => fetchPost(client, { txHash: tx })),
+        .andThen((tx) => fetchPost(sessionClient, { txHash: tx })),
     );
     assertOk(result);
     invariant(result.value, 'Expected post to be defined and created');
-    expect(result.value.id).toBeDefined();
     console.log(`Post created with id: ${result.value.id}`);
     postId = result.value.id;
   });
 
-  it('Possible to refreshMetadata and wait to be updated', async () => {
-    // TODO: add possibility to change metadata in the same URL and refresh later
-    // That feature will be available soon in the storage nodes
-    const newMetadata = await loginAsAccountOwner().andThen((sessionClient) =>
-      refreshMetadata(sessionClient, { post: postId }),
-    );
-    assertOk(newMetadata);
-    invariant(newMetadata.value, 'Expected to be defined');
-    console.log(`Metadata refreshed with id: ${newMetadata.value.id}`);
+  describe('When user modifies metadata in the used URL and call refreshMetadata', () => {
+    it('Then post metadata content should be updated', async () => {
+      // TODO: add possibility to change metadata in the same URL and refresh later
+      // That feature will be available soon in the storage nodes
+      const newMetadata = await loginAsAccountOwner().andThen((sessionClient) =>
+        refreshMetadata(sessionClient, { post: postId }),
+      );
 
-    const result = await waitForMetadata(client, newMetadata.value.id);
-    assertOk(result);
-    expect(result.value).toEqual(newMetadata.value.id);
+      assertOk(newMetadata);
+      invariant(newMetadata.value, 'Expected to be defined');
+      console.log(`Metadata refreshed with id: ${newMetadata.value.id}`);
+
+      const result = await waitForMetadata(client, newMetadata.value.id);
+      assertOk(result);
+      expect(result.value).toEqual(newMetadata.value.id);
+    });
   });
 });
