@@ -97,6 +97,5 @@ export function verifyFrameSignature(
   request: VerifyFrameSignatureRequest,
 ): ResultAsync<FrameVerifySignatureResult, UnexpectedError> {
   return client
-    .query(VerifyFrameSignatureQuery, { request })
-    .map((result) => FrameVerifySignatureResult[result as keyof typeof FrameVerifySignatureResult]);
+    .query(VerifyFrameSignatureQuery, { request });
 }
