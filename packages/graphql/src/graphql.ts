@@ -47,6 +47,7 @@ import type {
   FollowersYouKnowOrderBy,
   FollowingOrderBy,
   ForYouSource,
+  FrameVerifySignatureResult,
   GraphRuleExecuteOn,
   GraphRuleType,
   GraphsOrderBy,
@@ -140,6 +141,7 @@ export const graphql = initGraphQLTada<{
     FollowersYouKnowOrderBy: FollowersYouKnowOrderBy;
     FollowingOrderBy: FollowingOrderBy;
     ForYouSource: ForYouSource;
+    FrameVerifySignatureResult: FrameVerifySignatureResult;
     GeneratedNotificationId: ID;
     GraphRuleExecuteOn: GraphRuleExecuteOn;
     GraphRuleType: GraphRuleType;
