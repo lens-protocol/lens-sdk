@@ -1129,3 +1129,17 @@ export enum SimpleCollectValidationFailedReason {
   NotAFollower = 'NOT_A_FOLLOWER',
   PostDeleted = 'POST_DELETED',
 }
+
+export enum FrameVerifySignatureResult {
+  Verified = 'VERIFIED',
+  PostDoesntExist = 'POST_DOESNT_EXIST',
+  IdentityUnauthorized = 'IDENTITY_UNAUTHORIZED',
+  IdentityTokenNotValid = 'IDENTITY_TOKEN_NOT_VALID',
+  TypedDataTypesIncorrectFields = 'TYPED_DATA_TYPES_INCORRECT_FIELDS',
+  TypedDataDomainIncorrect = 'TYPED_DATA_DOMAIN_INCORRECT',
+  TypedDataAccountNotMatchingIdentityToken = 'TYPED_DATA_ACCOUNT_NOT_MATCHING_IDENTITY_TOKEN',
+  IdentityCannotUseAccount = 'IDENTITY_CANNOT_USE_ACCOUNT',
+  SignatureNotValid = 'SIGNATURE_NOT_VALID',
+  DeadlineExpired = 'DEADLINE_EXPIRED',
+  SignerAddressCannotUseAccount = 'SIGNER_ADDRESS_CANNOT_USE_ACCOUNT',
+}
