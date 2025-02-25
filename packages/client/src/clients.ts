@@ -1,15 +1,22 @@
-import { AuthenticateMutation, ChallengeMutation, RefreshMutation } from '@lens-protocol/graphql';
 import type {
   AuthenticationChallenge,
   ChallengeRequest,
   SignedAuthChallenge,
   StandardData,
+  SwitchAccountRequest,
+} from '@lens-protocol/graphql';
+import {
+  AuthenticateMutation,
+  ChallengeMutation,
+  IndexingStatus,
+  RefreshMutation,
 } from '@lens-protocol/graphql';
 import type { Credentials, IStorage } from '@lens-protocol/storage';
 import { createCredentialsStorage } from '@lens-protocol/storage';
 import {
   ResultAsync,
   type TxHash,
+  type UUID,
   errAsync,
   invariant,
   okAsync,
@@ -25,17 +32,22 @@ import {
   createClient,
   fetchExchange,
 } from '@urql/core';
+import { type AuthConfig, authExchange } from '@urql/exchange-auth';
 import { type Logger, getLogger } from 'loglevel';
 
-import type { SwitchAccountRequest } from '@lens-protocol/graphql';
-import { type AuthConfig, authExchange } from '@urql/exchange-auth';
 import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
-import { revokeAuthentication, switchAccount, transactionStatus } from './actions';
+import {
+  refreshMetadataStatus,
+  revokeAuthentication,
+  switchAccount,
+  transactionStatus,
+} from './actions';
 import type { ClientConfig } from './config';
 import { type Context, configureContext } from './context';
 import {
   AuthenticationError,
   GraphQLErrorCode,
+  MetadataIndexingError,
   SigningError,
   TransactionIndexingError,
   UnauthenticatedError,
@@ -465,6 +477,43 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
       }
     }
     throw TransactionIndexingError.from(`Timeout waiting for transaction ${txHash}`);
+  }
+
+  /**
+   * Given a metadata id, wait for the metadata to be either confirmed or rejected by the Lens API.
+   *
+   * @param hash - The metadata id to wait for.
+   * @returns The metadata id if the metadata was confirmed or an error if the transaction was rejected.
+   */
+  readonly waitForMetadata = (
+    id: UUID,
+  ): ResultAsync<UUID, MetadataIndexingError | UnexpectedError> => {
+    return ResultAsync.fromPromise(this.pollMetadataStatus(id), (err) => {
+      if (err instanceof MetadataIndexingError || err instanceof UnexpectedError) {
+        return err;
+      }
+      return UnexpectedError.from(err);
+    });
+  };
+
+  protected async pollMetadataStatus(id: UUID): Promise<UUID> {
+    const startedAt = Date.now();
+    while (Date.now() - startedAt < this.context.environment.indexingTimeout) {
+      const result = await refreshMetadataStatus(this, id);
+      if (result.isErr()) {
+        throw UnexpectedError.from(result.error);
+      }
+      switch (result.value.status) {
+        case IndexingStatus.Finished:
+          return result.value.id;
+        case IndexingStatus.Failed:
+          throw MetadataIndexingError.from(result.value.reason);
+        case IndexingStatus.Pending:
+          await delay(this.context.environment.pollingInterval);
+          break;
+      }
+    }
+    throw MetadataIndexingError.from(`Timeout waiting for metadata ${id}`);
   }
 
   protected override exchanges(): Exchange[] {
