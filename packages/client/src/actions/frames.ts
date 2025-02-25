@@ -24,7 +24,7 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
  *
  * @example
  * ```ts
- * const result = await createFrameTypedData(client, {
+ * const result = await createFrameTypedData(anyClient, {
  *   transactionId: '0x0000000000000000000000000000000000000000',
  *   buttonIndex: 2,
  *   deadline: 1711038973,
@@ -48,7 +48,7 @@ export function createFrameTypedData(
 /**
  * Sign Frame action with Lens Manager if enabled
  *
- * ⚠️ Requires authenticated LensClient.
+ * ⚠️ Requires authenticated SessionClient.
  *
  * @param request - The request object
  * @returns Signature result
@@ -56,7 +56,7 @@ export function createFrameTypedData(
  *
  * @example
  * ```ts
- * const result = await signFrameAction(client, {
+ * const result = await signFrameAction(sessionClient, {
  *   transactionId: '0x0000000000000000000000000000000000000000',
  *   buttonIndex: 2,
  *   inputText: 'Hello, World!',
@@ -85,7 +85,7 @@ export function signFrameAction(
  *
  * @example
  * ```ts
- * const result = await verifyFrameSignature(client, {
+ * const result = await verifyFrameSignature(anyClient, {
  *   identityToken: identityToken,
  *   signature: data.signature,
  *   signedTypedData: data.signedTypedData,
