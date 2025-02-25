@@ -1,6 +1,6 @@
 import {
   CreateFrameTypedDataQuery,
-  FrameVerifySignatureResult,
+  type FrameVerifySignatureResult,
   SignFrameActionMutation,
   VerifyFrameSignatureQuery,
 } from '@lens-protocol/graphql';
@@ -96,6 +96,5 @@ export function verifyFrameSignature(
   client: AnyClient,
   request: VerifyFrameSignatureRequest,
 ): ResultAsync<FrameVerifySignatureResult, UnexpectedError> {
-  return client
-    .query(VerifyFrameSignatureQuery, { request });
+  return client.query(VerifyFrameSignatureQuery, { request });
 }
