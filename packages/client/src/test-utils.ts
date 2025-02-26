@@ -1,12 +1,12 @@
 /// <reference path="../../../vite-env.d.ts" />
 
+import { StorageClient } from '@lens-chain/storage-client';
 import { chains } from '@lens-network/sdk/viem';
-import { StorageClient, testnet as storageEnv } from '@lens-protocol/storage-node-client';
 import { evmAddress } from '@lens-protocol/types';
 import { http, type Account, type Transport, type WalletClient, createWalletClient } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import { GraphQLErrorCode, PublicClient, staging as apiEnv } from '.';
+import { GraphQLErrorCode, PublicClient, staging } from '.';
 
 const pk = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
 export const account = evmAddress(import.meta.env.TEST_ACCOUNT);
@@ -22,7 +22,7 @@ export const signer = evmAddress(wallet.account.address);
 
 export function createPublicClient() {
   return PublicClient.create({
-    environment: apiEnv,
+    environment: staging,
     origin: 'http://example.com',
   });
 }
@@ -72,4 +72,4 @@ export function createGraphQLErrorObject(code: GraphQLErrorCode) {
   };
 }
 
-export const storageClient = StorageClient.create(storageEnv);
+export const storageClient = StorageClient.create();
