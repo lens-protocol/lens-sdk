@@ -73,7 +73,7 @@ importers:
         version: 1.9.2
     devDependencies:
       '@lens-chain/storage-client':
-        specifier: 0.0.0-next-20250226153049
+        specifier: next
         version: 0.0.0-next-20250226153049
       '@lens-network/sdk':
         specifier: canary
