@@ -72,15 +72,15 @@ importers:
         specifier: ^1.9.2
         version: 1.9.2
     devDependencies:
+      '@lens-chain/storage-client':
+        specifier: next
+        version: 0.0.0-next-20250226153049
       '@lens-network/sdk':
         specifier: canary
         version: 0.0.0-canary-20241203140504(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))
       '@lens-protocol/metadata':
         specifier: next
         version: 2.0.0-next.6(typescript@5.7.2)(zod@3.23.8)
-      '@lens-protocol/storage-node-client':
-        specifier: next
-        version: 0.0.0-next-20250114134800
       ethers:
         specifier: ^6.13.4
         version: 6.13.4
@@ -875,6 +875,9 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
+  '@lens-chain/storage-client@0.0.0-next-20250226153049':
+    resolution: {integrity: sha512-jVVG4j21onqgNDO7JNRT4QExrTgjg7EYjkVdv8CMh+nawZKlzHyNQtrd8ooxI1C/SU9OW8dHxE69mUm9OLxu1g==}
+
   '@lens-network/sdk@0.0.0-canary-20241203140504':
     resolution: {integrity: sha512-w5mNEXQTP0pSkCq6b8sgM2/87dad1gFTP7hbaDxy4lXnM1fBrVA5OzxWRfCIJJY8/NGdw4RYhEzJoXf4IRR97w==}
     engines: {node: '>=18', pnpm: '>=9.1.2'}
@@ -898,9 +901,6 @@ packages:
     peerDependenciesMeta:
       zod:
         optional: true
-
-  '@lens-protocol/storage-node-client@0.0.0-next-20250114134800':
-    resolution: {integrity: sha512-1tSI6U8cgpXWsla0AbaJuy9x+q+qzcvEnbU/zhW2FO5xLxQsS7W4RB0V2fGxysGP0CcDyFws++rlAjcTbTPeEw==}
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -3495,6 +3495,8 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
+  '@lens-chain/storage-client@0.0.0-next-20250226153049': {}
+
   '@lens-network/sdk@0.0.0-canary-20241203140504(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))':
     optionalDependencies:
       ethers: 6.13.4
@@ -3510,8 +3512,6 @@ snapshots:
       zod: 3.23.8
     transitivePeerDependencies:
       - typescript
-
-  '@lens-protocol/storage-node-client@0.0.0-next-20250114134800': {}
 
   '@manypkg/find-root@1.1.0':
     dependencies:

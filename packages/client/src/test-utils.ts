@@ -1,14 +1,14 @@
 /// <reference path="../../../vite-env.d.ts" />
 
+import { StorageClient } from '@lens-chain/storage-client';
 import { chains } from '@lens-network/sdk/viem';
-import { StorageClient, testnet as storageEnv } from '@lens-protocol/storage-node-client';
 import { evmAddress } from '@lens-protocol/types';
 import type { Account, Transport, WalletClient } from 'viem';
 import { http, createWalletClient } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { ContentWarning, type TextOnlyOptions, textOnly } from '@lens-protocol/metadata';
-import { GraphQLErrorCode, PublicClient, staging as apiEnv } from '.';
+import { GraphQLErrorCode, PublicClient, staging } from '.';
 
 const pk = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
 export const account = evmAddress(import.meta.env.TEST_ACCOUNT);
@@ -24,7 +24,7 @@ export const signer = evmAddress(wallet.account.address);
 
 export function createPublicClient() {
   return PublicClient.create({
-    environment: apiEnv,
+    environment: staging,
     origin: 'http://example.com',
   });
 }
@@ -73,8 +73,6 @@ export function createGraphQLErrorObject(code: GraphQLErrorCode) {
   };
 }
 
-export const storageClient = StorageClient.create(storageEnv);
-
 export function postOnlyTextMetadata(customMetadata?: TextOnlyOptions) {
   const metadata =
     customMetadata !== undefined
@@ -88,3 +86,4 @@ export function postOnlyTextMetadata(customMetadata?: TextOnlyOptions) {
 
   return storageClient.uploadAsJson(textOnly(metadata));
 }
+export const storageClient = StorageClient.create();
