@@ -13,13 +13,14 @@ export const RefreshMetadataStatusResultFragment = graphql(
 export type RefreshMetadataStatusResult = FragmentOf<typeof RefreshMetadataStatusResultFragment>;
 
 export const RefreshMetadataStatusQuery = graphql(
-  `query RefreshMetadataStatus($request: UUID!) {
-    value: refreshMetadataStatus(id: $request) {
+  `query RefreshMetadataStatus($request: RefreshMetadataStatusRequest!) {
+    value: refreshMetadataStatus(request: $request) {
       ...RefreshMetadataStatusResult
     }
   }`,
   [RefreshMetadataStatusResultFragment],
 );
+export type RefreshMetadataStatusRequest = RequestOf<typeof RefreshMetadataStatusQuery>;
 
 export const RefreshMetadataResultFragment = graphql(
   `fragment RefreshMetadataResult on RefreshMetadataResult {
@@ -30,7 +31,7 @@ export const RefreshMetadataResultFragment = graphql(
 export type RefreshMetadataResult = FragmentOf<typeof RefreshMetadataResultFragment>;
 
 export const RefreshMetadataMutation = graphql(
-  `mutation RefreshMetadata($request: EntityId!) {
+  `mutation RefreshMetadata($request: RefreshMetadataRequest!) {
     value: refreshMetadata(request: $request){
       ...RefreshMetadataResult
     }

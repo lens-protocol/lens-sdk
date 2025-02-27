@@ -36,7 +36,7 @@ describe('Given user creates a post', () => {
       // TODO: add possibility to change metadata in the same URL and refresh later
       // That feature will be available soon in the storage nodes
       const client = createPublicClient();
-      const newMetadata = await refreshMetadata(client, { account: postId });
+      const newMetadata = await refreshMetadata(client, { entity: { post: postId } });
 
       assertOk(newMetadata);
       invariant(newMetadata.value, 'Expected to be defined');

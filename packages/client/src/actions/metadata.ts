@@ -1,6 +1,7 @@
 import type {
   RefreshMetadataRequest,
   RefreshMetadataResult,
+  RefreshMetadataStatusRequest,
   RefreshMetadataStatusResult,
 } from '@lens-protocol/graphql';
 import {
@@ -18,9 +19,9 @@ import { delay } from '../utils';
  * Fetch the indexing status of metadata.
  *
  * ```ts
- * const result = await refreshMetadataStatus(anyClient,
- *   uuid("a0a88a62-377f-46eb-a1ec-ca6597aef164")
- * );
+ * const result = await refreshMetadataStatus(anyClient, {
+ *   id: uuid("a0a88a62-377f-46eb-a1ec-ca6597aef164")
+ * });
  * ```
  *
  * @param client - Any Lens client.
@@ -29,7 +30,7 @@ import { delay } from '../utils';
  */
 export function refreshMetadataStatus(
   client: AnyClient,
-  request: UUID,
+  request: RefreshMetadataStatusRequest,
 ): ResultAsync<RefreshMetadataStatusResult, UnexpectedError> {
   return client.query(RefreshMetadataStatusQuery, { request });
 }
@@ -39,7 +40,9 @@ export function refreshMetadataStatus(
  *
  * ```ts
  * const result = await refreshMetadata(anyClient, {
- *   post: postId('42'),
+ *   entity: {
+ *     post: postId('42'),
+ *   },
  * });
  * ```
  *
@@ -76,7 +79,7 @@ export function waitForMetadata(
 async function pollMetadataStatus(client: AnyClient, id: UUID): Promise<UUID> {
   const startedAt = Date.now();
   while (Date.now() - startedAt < client.context.environment.indexingTimeout) {
-    const result = await refreshMetadataStatus(client, id);
+    const result = await refreshMetadataStatus(client, { id });
     if (result.isErr()) {
       throw UnexpectedError.from(result.error);
     }

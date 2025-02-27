@@ -4474,7 +4474,7 @@ type Mutation {
   legacyRolloverRefresh(request: RolloverRefreshRequest!): RefreshResult!
 
   """Refreshes the metadata for the provided entity."""
-  refreshMetadata(request: EntityId!): RefreshMetadataResult!
+  refreshMetadata(request: RefreshMetadataRequest!): RefreshMetadataResult!
 
   """
   Create a new post.
@@ -5993,7 +5993,7 @@ type Query {
   debugMetadata(debugMetadataRequest: DebugPostMetadataRequest!): DebugPostMetadataResult!
 
   """Get the status of a refresh metadata job."""
-  refreshMetadataStatus(id: UUID!): RefreshMetadataStatusResult!
+  refreshMetadataStatus(request: RefreshMetadataStatusRequest!): RefreshMetadataStatusResult!
 
   """Create a frame typed data"""
   createFrameTypedData(request: FrameEIP712Request!): CreateFrameEIP712TypedData!
@@ -6090,10 +6090,19 @@ input ReferralCut {
   percent: Int!
 }
 
+input RefreshMetadataRequest {
+  entity: EntityId!
+}
+
 type RefreshMetadataResult {
   """
   The id of the refresh metadata job. You can use this id to check the status of the job.
   """
+  id: UUID!
+}
+
+input RefreshMetadataStatusRequest {
+  """The refresh metadata status ID from the refreshMetadata mutation."""
   id: UUID!
 }
 
