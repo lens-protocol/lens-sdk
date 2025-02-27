@@ -278,26 +278,18 @@ export const ReportAccountMutation = graphql(
 );
 export type ReportAccountRequest = RequestOf<typeof ReportAccountMutation>;
 
-const BlockErrorFragment = graphql(
-  `fragment BlockError on BlockError {
-    __typename
-    error
-  }`,
-);
-export type BlockError = FragmentOf<typeof BlockErrorFragment>;
-
-const BlockResponseFragment = graphql(
-  `fragment BlockResponse on BlockResponse {
+const AccountBlockedResponseFragment = graphql(
+  `fragment AccountBlockedResponse on AccountBlockedResponse {
     __typename
     hash
   }`,
 );
-export type BlockResponse = FragmentOf<typeof BlockResponseFragment>;
+export type AccountBlockedResponse = FragmentOf<typeof AccountBlockedResponseFragment>;
 
 const BlockResultFragment = graphql(
   `fragment BlockResult on BlockResult {
-    ...on BlockResponse {
-      ...BlockResponse
+    ...on AccountBlockedResponse {
+      ...AccountBlockedResponse
     }
 
     ...on SponsoredTransactionRequest {
@@ -308,15 +300,15 @@ const BlockResultFragment = graphql(
       ...SelfFundedTransactionRequest
     }
 
-    ...on BlockError {
-      ...BlockError
+    ...on TransactionWillFail {
+      ...TransactionWillFail
     }
   }`,
   [
-    BlockResponseFragment,
+    AccountBlockedResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
-    BlockErrorFragment,
+    TransactionWillFailFragment,
   ],
 );
 export type BlockResult = FragmentOf<typeof BlockResultFragment>;
@@ -331,26 +323,18 @@ export const BlockMutation = graphql(
 );
 export type BlockRequest = RequestOf<typeof BlockMutation>;
 
-const UnblockResponseFragment = graphql(
-  `fragment UnblockResponse on UnblockResponse {
+const AccountUnblockedResponseFragment = graphql(
+  `fragment AccountUnblockedResponse on AccountUnblockedResponse {
     __typename
     hash
   }`,
 );
-export type UnblockResponse = FragmentOf<typeof UnblockResponseFragment>;
-
-const UnblockErrorFragment = graphql(
-  `fragment UnblockError on UnblockError {
-    __typename
-    error
-  }`,
-);
-export type UnblockError = FragmentOf<typeof UnblockErrorFragment>;
+export type AccountUnblockedResponse = FragmentOf<typeof AccountUnblockedResponseFragment>;
 
 const UnblockResultFragment = graphql(
   `fragment UnblockResult on UnblockResult {
-    ...on UnblockResponse {
-      ...UnblockResponse
+    ...on AccountUnblockedResponse {
+      ...AccountUnblockedResponse
     }
     ...on SponsoredTransactionRequest {
       ...SponsoredTransactionRequest
@@ -358,15 +342,15 @@ const UnblockResultFragment = graphql(
     ...on SelfFundedTransactionRequest {
       ...SelfFundedTransactionRequest
     }
-    ...on UnblockError {
-      ...UnblockError
+    ...on TransactionWillFail {
+      ...TransactionWillFail
     }
   }`,
   [
-    UnblockResponseFragment,
+    AccountUnblockedResponseFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
-    UnblockErrorFragment,
+    TransactionWillFailFragment,
   ],
 );
 export type UnblockResult = FragmentOf<typeof UnblockResultFragment>;
