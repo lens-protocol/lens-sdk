@@ -169,6 +169,7 @@ const AccountFeedsStatsFragment = graphql(
     reacted
     reactions
     collects
+    tips
   }`,
 );
 export type AccountFeedsStats = FragmentOf<typeof AccountFeedsStatsFragment>;

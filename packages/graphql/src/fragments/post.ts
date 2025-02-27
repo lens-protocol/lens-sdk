@@ -429,6 +429,7 @@ export const PostStatsFragment = graphql(
     upvotes: reactions(request: { type: UPVOTE })
     downvotes: reactions(request: { type: UPVOTE })
     reposts
+    tips
   }`,
 );
 export type PostStats = FragmentOf<typeof PostStatsFragment>;

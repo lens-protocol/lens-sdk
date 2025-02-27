@@ -97,6 +97,9 @@ type AccountFeedsStats {
 
   """The total number of collects."""
   collects: Int!
+
+  """The total number of tips received."""
+  tips: Int!
 }
 
 input AccountFeedsStatsFilter {
@@ -3569,10 +3572,12 @@ type LoggedInAccountOperations {
 }
 
 type LoggedInFeedPostOperations {
+  id: ID!
   canPost: FeedOperationValidationOutcome!
 }
 
 type LoggedInGroupOperations {
+  id: ID!
   canJoin: GroupOperationValidationOutcome!
   canLeave: GroupOperationValidationOutcome!
   canAddMember: GroupOperationValidationOutcome!
@@ -3608,10 +3613,12 @@ type LoggedInPostOperations {
 }
 
 type LoggedInUsernameNamespaceOperations {
+  id: ID!
   canCreate: NamespaceOperationValidationOutcome!
 }
 
 type LoggedInUsernameOperations {
+  id: ID!
   canRemove: NamespaceOperationValidationOutcome!
   canAssign: NamespaceOperationValidationOutcome!
   canUnassign: NamespaceOperationValidationOutcome!
@@ -5729,6 +5736,9 @@ type PostStats {
 
   """The total number of collects."""
   collects: Int!
+
+  """The total number of tips received."""
+  tips: Int!
 
   """Get the number of reactions for the post."""
   reactions(request: StatsReactionRequest! = {type: UPVOTE}): Int!

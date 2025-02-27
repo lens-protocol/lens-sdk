@@ -155,6 +155,7 @@ export type FeedOperationValidationOutcome =
 export const LoggedInFeedPostOperationsFragment = graphql(
   `fragment LoggedInFeedPostOperations on LoggedInFeedPostOperations {
     __typename
+    id
     canPost {
       ...FeedOperationValidationOutcome
     }
@@ -382,6 +383,7 @@ export type NamespaceOperationValidationOutcome =
 export const LoggedInUsernameNamespaceOperationsFragment = graphql(
   `fragment LoggedInUsernameNamespaceOperations on LoggedInUsernameNamespaceOperations {
     __typename
+    id
     canCreate {
       ...NamespaceOperationValidationOutcome
     }
@@ -548,6 +550,7 @@ export type GroupOperationValidationOutcome =
 export const LoggedInGroupOperationsFragment = graphql(
   `fragment LoggedInGroupOperations on LoggedInGroupOperations {
     __typename
+    id
     canJoin {
       ...GroupOperationValidationOutcome
     }
