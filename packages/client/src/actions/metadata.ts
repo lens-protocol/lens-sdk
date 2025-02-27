@@ -10,7 +10,7 @@ import {
 } from '@lens-protocol/graphql';
 import { ResultAsync, type UUID } from '@lens-protocol/types';
 
-import type { AnyClient, SessionClient } from '../clients';
+import type { AnyClient } from '../clients';
 import { MetadataIndexingError, type UnauthenticatedError, UnexpectedError } from '../errors';
 import { delay } from '../utils';
 
@@ -38,17 +38,17 @@ export function refreshMetadataStatus(
  * Refresh the metadata for a given entity.
  *
  * ```ts
- * const result = await refreshMetadata(sessionClient, {
+ * const result = await refreshMetadata(anyClient, {
  *   post: postId('42'),
  * });
  * ```
  *
- * @param client - The session client.
+ * @param client - Any Lens client.
  * @param request - The mutation request.
  * @returns - UUID to track the metadata refresh.
  */
 export function refreshMetadata(
-  client: SessionClient,
+  client: AnyClient,
   request: RefreshMetadataRequest,
 ): ResultAsync<RefreshMetadataResult, UnauthenticatedError | UnexpectedError> {
   return client.mutation(RefreshMetadataMutation, { request });
