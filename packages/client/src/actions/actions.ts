@@ -156,10 +156,17 @@ export function configureAccountAction(
 
 /**
  * Enable account action.
+ * The tipping action is not possible to modify.
  *
  * ```ts
  * const result = await enableAccountAction(sessionClient, {
- *   tipping: true
+ *   unknown: {
+ *     params: [{
+ *       key: 'usd',
+ *       value: '100'
+ *     }],
+ *     address: evmAddress('0x1234…'),
+ *   }
  * });
  * ```
  *
@@ -176,10 +183,13 @@ export function enableAccountAction(
 
 /**
  * Disable account action.
+ * Not possible to disable the tipping action.
  *
  * ```ts
  * const result = await disableAccountAction(sessionClient, {
- *   tipping: true,
+ *   unknown: {
+ *     address: evmAddress('0x1234…'),
+ *   }
  * });
  * ```
  *
@@ -199,8 +209,8 @@ export function disableAccountAction(
  *
  * ```ts
  * const result = await executeAccountAction(sessionClient, {
- *   account: evmAddress('0x1234…'),
- *   action: {
+ *   targetAccount: evmAddress('0x1234…'),
+ *   params: {
  *     tipping: {
  *       value: '100',
  *       currency: evmAddress('0x5678…')
