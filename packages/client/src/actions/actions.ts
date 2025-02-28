@@ -37,7 +37,6 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
  * ```ts
  * const result = await configurePostAction(sessionClient, {
  *   post: postId('1234…'),
- *   feed: evmAddress('0x1234…'),
  *   params: {
  *     simpleCollect: {
  *       amount: {
@@ -66,8 +65,7 @@ export function configurePostAction(
  * ```ts
  * const result = await enablePostAction(sessionClient, {
  *   post: postId('1234…'),
- *   feed: evmAddress('0x1234…'),
- *   action: 'SIMPLE_COLLECT'
+ *   action: { simpleCollect: true }
  * });
  * ```
  *
@@ -88,8 +86,7 @@ export function enablePostAction(
  * ```ts
  * const result = await disablePostAction(sessionClient, {
  *   post: postId('1234…'),
- *   feed: evmAddress('0x1234…'),
- *   action: 'SIMPLE_COLLECT'
+ *   action: { simpleCollect: true }
  * });
  * ```
  *
@@ -110,11 +107,9 @@ export function disablePostAction(
  * ```ts
  * const result = await executePostAction(sessionClient, {
  *   post: postId('1234…'),
- *   feed: evmAddress('0x1234…'),
- *   params: {
+ *   action: {
  *     simpleCollect: {
- *       value: '100',
- *       currency: evmAddress('0x5678…')
+ *       selected: true,
  *     }
  *   }
  * });
@@ -164,7 +159,7 @@ export function configureAccountAction(
  *
  * ```ts
  * const result = await enableAccountAction(sessionClient, {
- *   action: 'TIPPING'
+ *   tipping: true
  * });
  * ```
  *
@@ -184,7 +179,7 @@ export function enableAccountAction(
  *
  * ```ts
  * const result = await disableAccountAction(sessionClient, {
- *   action: 'TIPPING'
+ *   tipping: true,
  * });
  * ```
  *
@@ -204,8 +199,8 @@ export function disableAccountAction(
  *
  * ```ts
  * const result = await executeAccountAction(sessionClient, {
- *   targetAccount: evmAddress('0x1234…'),
- *   params: {
+ *   account: evmAddress('0x1234…'),
+ *   action: {
  *     tipping: {
  *       value: '100',
  *       currency: evmAddress('0x5678…')
