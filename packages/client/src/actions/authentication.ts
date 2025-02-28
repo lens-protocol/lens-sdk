@@ -129,15 +129,12 @@ export function legacyRolloverRefresh(
 }
 
 /**
- * Switch to account managed.
+ * Switch to another managed account.
  *
- * ```ts
- * const result = await switchAccount(sessionClient, {
- *   account: evmAddress('0x90c8c68d0Abfb40D4fCD72316A65e42161520BC3'),
- * });
- * ```
+ * @remarks Use the {@link SessionClient#switchAccount} method to switch to an account instead.
+ * It's unlikely you'll need to use this action directly.
  *
- * @param client - The session client for the authenticated Account.
+ * @param client - The current session client.
  * @param request - The query request.
  * @returns The authenticated tokens for the switched account.
  */
