@@ -1,8 +1,8 @@
 import 'viem/window';
 
-import { StorageClient, testnet as storageTestnet } from '@lens-chain/storage-client';
+import { StorageClient, immutable } from '@lens-chain/storage-client';
 import { chains } from '@lens-network/sdk/viem';
-import { PublicClient, testnet as protocolTestnet } from '@lens-protocol/client';
+import { PublicClient, testnet } from '@lens-protocol/client';
 import { createAccountWithUsername, fetchAccount } from '@lens-protocol/client/actions';
 import { handleOperationWith } from '@lens-protocol/client/viem';
 import { account } from '@lens-protocol/metadata';
@@ -20,7 +20,7 @@ const walletClient = createWalletClient({
 });
 
 const client = PublicClient.create({
-  environment: protocolTestnet,
+  environment: testnet,
 });
 
 const sessionClient = await client
@@ -38,7 +38,7 @@ const sessionClient = await client
     },
   );
 
-const storageClient = StorageClient.create(storageTestnet);
+const storageClient = StorageClient.create();
 
 const metadata = account({
   name: 'John Doe',
@@ -46,6 +46,7 @@ const metadata = account({
 
 const { uri } = await storageClient.uploadFile(
   new File([JSON.stringify(metadata)], 'metadata.json', { type: 'application/json' }),
+  { acl: immutable(chain.id) },
 );
 
 const created = await createAccountWithUsername(sessionClient, {
