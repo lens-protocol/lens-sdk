@@ -97,6 +97,9 @@ type AccountFeedsStats {
 
   """The total number of collects."""
   collects: Int!
+
+  """The total number of tips received."""
+  tips: Int!
 }
 
 input AccountFeedsStatsFilter {
@@ -1633,7 +1636,6 @@ type DictionaryKeyValue {
 }
 
 input DisableAccountActionRequest @oneOf {
-  tipping: AlwaysTrue
   unknown: UnknownActionConfigInput
 }
 
@@ -1845,7 +1847,6 @@ type EmbedMetadata {
 }
 
 input EnableAccountActionRequest @oneOf {
-  tipping: AlwaysTrue
   unknown: UnknownActionConfigInput
 }
 
@@ -3569,10 +3570,12 @@ type LoggedInAccountOperations {
 }
 
 type LoggedInFeedPostOperations {
+  id: ID!
   canPost: FeedOperationValidationOutcome!
 }
 
 type LoggedInGroupOperations {
+  id: ID!
   canJoin: GroupOperationValidationOutcome!
   canLeave: GroupOperationValidationOutcome!
   canAddMember: GroupOperationValidationOutcome!
@@ -3608,10 +3611,12 @@ type LoggedInPostOperations {
 }
 
 type LoggedInUsernameNamespaceOperations {
+  id: ID!
   canCreate: NamespaceOperationValidationOutcome!
 }
 
 type LoggedInUsernameOperations {
+  id: ID!
   canRemove: NamespaceOperationValidationOutcome!
   canAssign: NamespaceOperationValidationOutcome!
   canUnassign: NamespaceOperationValidationOutcome!
@@ -4467,7 +4472,7 @@ type Mutation {
   legacyRolloverRefresh(request: RolloverRefreshRequest!): RefreshResult!
 
   """Refreshes the metadata for the provided entity."""
-  refreshMetadata(request: EntityId!): RefreshMetadataResult!
+  refreshMetadata(request: RefreshMetadataRequest!): RefreshMetadataResult!
 
   """
   Create a new post.
@@ -5730,6 +5735,9 @@ type PostStats {
   """The total number of collects."""
   collects: Int!
 
+  """The total number of tips received."""
+  tips: Int!
+
   """Get the number of reactions for the post."""
   reactions(request: StatsReactionRequest! = {type: UPVOTE}): Int!
 }
@@ -5983,7 +5991,7 @@ type Query {
   debugMetadata(debugMetadataRequest: DebugPostMetadataRequest!): DebugPostMetadataResult!
 
   """Get the status of a refresh metadata job."""
-  refreshMetadataStatus(id: UUID!): RefreshMetadataStatusResult!
+  refreshMetadataStatus(request: RefreshMetadataStatusRequest!): RefreshMetadataStatusResult!
 
   """Create a frame typed data"""
   createFrameTypedData(request: FrameEIP712Request!): CreateFrameEIP712TypedData!
@@ -6080,10 +6088,19 @@ input ReferralCut {
   percent: Int!
 }
 
+input RefreshMetadataRequest {
+  entity: EntityId!
+}
+
 type RefreshMetadataResult {
   """
   The id of the refresh metadata job. You can use this id to check the status of the job.
   """
+  id: UUID!
+}
+
+input RefreshMetadataStatusRequest {
+  """The refresh metadata status ID from the refreshMetadata mutation."""
   id: UUID!
 }
 
@@ -7376,7 +7393,7 @@ input UnknownActionConfigInput {
   address: EvmAddress!
 
   """Optional action configuration params"""
-  params: [AnyKeyValueInput!]!
+  params: [AnyKeyValueInput!]! = []
 }
 
 input UnknownActionExecuteInput {

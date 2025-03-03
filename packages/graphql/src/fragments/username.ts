@@ -5,6 +5,7 @@ import { NamespaceOperationValidationOutcomeFragment } from './primitives';
 export const LoggedInUsernameOperationsFragment = graphql(
   `fragment LoggedInUsernameOperations on LoggedInUsernameOperations {
       __typename
+      id
       canRemove {
         ...NamespaceOperationValidationOutcome
       }

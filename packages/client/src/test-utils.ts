@@ -3,9 +3,11 @@
 import { StorageClient } from '@lens-chain/storage-client';
 import { chains } from '@lens-network/sdk/viem';
 import { evmAddress } from '@lens-protocol/types';
-import { http, type Account, type Transport, type WalletClient, createWalletClient } from 'viem';
+import type { Account, Transport, WalletClient } from 'viem';
+import { http, createWalletClient } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
+import { ContentWarning, type TextOnlyOptions, textOnly } from '@lens-protocol/metadata';
 import { GraphQLErrorCode, PublicClient, staging } from '.';
 
 const pk = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
@@ -29,7 +31,6 @@ export function createPublicClient() {
 
 export function loginAsAccountOwner() {
   const client = createPublicClient();
-
   return client.login({
     accountOwner: {
       account,
@@ -72,4 +73,17 @@ export function createGraphQLErrorObject(code: GraphQLErrorCode) {
   };
 }
 
+export function postOnlyTextMetadata(customMetadata?: TextOnlyOptions) {
+  const metadata =
+    customMetadata !== undefined
+      ? customMetadata
+      : {
+          content: 'This is a post for testing purposes',
+          tags: ['test', 'lens', 'sdk'],
+          contentWarning: ContentWarning.SENSITIVE,
+          locale: 'en-US',
+        };
+
+  return storageClient.uploadAsJson(textOnly(metadata));
+}
 export const storageClient = StorageClient.create();

@@ -1,10 +1,11 @@
-import { AuthenticateMutation, ChallengeMutation, RefreshMutation } from '@lens-protocol/graphql';
 import type {
   AuthenticationChallenge,
   ChallengeRequest,
   SignedAuthChallenge,
   StandardData,
+  SwitchAccountRequest,
 } from '@lens-protocol/graphql';
+import { AuthenticateMutation, ChallengeMutation, RefreshMutation } from '@lens-protocol/graphql';
 import type { Credentials, IStorage } from '@lens-protocol/storage';
 import { createCredentialsStorage } from '@lens-protocol/storage';
 import {
@@ -25,10 +26,9 @@ import {
   createClient,
   fetchExchange,
 } from '@urql/core';
+import { type AuthConfig, authExchange } from '@urql/exchange-auth';
 import { type Logger, getLogger } from 'loglevel';
 
-import type { SwitchAccountRequest } from '@lens-protocol/graphql';
-import { type AuthConfig, authExchange } from '@urql/exchange-auth';
 import { type AuthenticatedUser, authenticatedUser } from './AuthenticatedUser';
 import { revokeAuthentication, switchAccount, transactionStatus } from './actions';
 import type { ClientConfig } from './config';

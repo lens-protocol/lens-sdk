@@ -37,7 +37,6 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
  * ```ts
  * const result = await configurePostAction(sessionClient, {
  *   post: postId('1234…'),
- *   feed: evmAddress('0x1234…'),
  *   params: {
  *     simpleCollect: {
  *       amount: {
@@ -66,8 +65,7 @@ export function configurePostAction(
  * ```ts
  * const result = await enablePostAction(sessionClient, {
  *   post: postId('1234…'),
- *   feed: evmAddress('0x1234…'),
- *   action: 'SIMPLE_COLLECT'
+ *   action: { simpleCollect: true }
  * });
  * ```
  *
@@ -88,8 +86,7 @@ export function enablePostAction(
  * ```ts
  * const result = await disablePostAction(sessionClient, {
  *   post: postId('1234…'),
- *   feed: evmAddress('0x1234…'),
- *   action: 'SIMPLE_COLLECT'
+ *   action: { simpleCollect: true }
  * });
  * ```
  *
@@ -110,11 +107,9 @@ export function disablePostAction(
  * ```ts
  * const result = await executePostAction(sessionClient, {
  *   post: postId('1234…'),
- *   feed: evmAddress('0x1234…'),
- *   params: {
+ *   action: {
  *     simpleCollect: {
- *       value: '100',
- *       currency: evmAddress('0x5678…')
+ *       selected: true,
  *     }
  *   }
  * });
@@ -161,10 +156,17 @@ export function configureAccountAction(
 
 /**
  * Enable account action.
+ * The tipping action is not possible to modify.
  *
  * ```ts
  * const result = await enableAccountAction(sessionClient, {
- *   action: 'TIPPING'
+ *   unknown: {
+ *     params: [{
+ *       key: 'usd',
+ *       value: '100'
+ *     }],
+ *     address: evmAddress('0x1234…'),
+ *   }
  * });
  * ```
  *
@@ -181,10 +183,13 @@ export function enableAccountAction(
 
 /**
  * Disable account action.
+ * Not possible to disable the tipping action.
  *
  * ```ts
  * const result = await disableAccountAction(sessionClient, {
- *   action: 'TIPPING'
+ *   unknown: {
+ *     address: evmAddress('0x1234…'),
+ *   }
  * });
  * ```
  *

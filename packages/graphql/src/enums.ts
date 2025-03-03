@@ -920,9 +920,9 @@ export enum TimelineEventItemType {
  * Enum for TokenStandard.
  */
 export enum TokenStandard {
-  Erc20 = 'ERC_20',
-  Erc721 = 'ERC_721',
-  Erc1155 = 'ERC_1155',
+  Erc20 = 'ERC20',
+  Erc721 = 'ERC721',
+  Erc1155 = 'ERC1155',
 }
 
 /**

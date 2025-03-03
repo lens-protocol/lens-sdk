@@ -13,6 +13,7 @@ export * from './graph';
 export * from './graphql';
 export * from './group';
 export * from './health';
+export * from './metadata';
 export * from './ml';
 export * from './namespace';
 export * from './notifications';

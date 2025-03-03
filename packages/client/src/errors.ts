@@ -68,6 +68,13 @@ export class TransactionIndexingError extends ResultAwareError {
 }
 
 /**
+ * Error indicating metadata failed to index.
+ */
+export class MetadataIndexingError extends ResultAwareError {
+  name = 'MetadataIndexingError' as const;
+}
+
+/**
  * Error indicating an operation was not executed due to a validation error.
  * See the `cause` property for more information.
  */

@@ -1,32 +1,33 @@
 import type { FragmentOf } from 'gql.tada';
 import { type RequestOf, graphql } from './graphql';
 
-const EIP712TypedDataDomainFragment = graphql(
-  `fragment EIP712TypedDataDomain on EIP712TypedDataDomain {
+const Eip712TypedDataDomainFragment = graphql(
+  `fragment Eip712TypedDataDomain on Eip712TypedDataDomain {
+    __typename
     name
-    chain_id
+    chainId
     version
-    verifying_contract
+    verifyingContract
   }`,
 );
 
 export const CreateFrameEip712TypedDataFragment = graphql(
   `fragment CreateFrameEip712TypedData on CreateFrameEIP712TypedData {
     types {
-      FrameData {
+      frameData {
         name
         type
       }
     }
     domain {
-      ...EIP712TypedDataDomain
+      ...Eip712TypedDataDomain
     }
     value {
       specVersion
       url
       buttonIndex
       account
-      post
+      postId
       inputText
       state
       transactionId
@@ -34,7 +35,7 @@ export const CreateFrameEip712TypedDataFragment = graphql(
       deadline
     }
   }`,
-  [EIP712TypedDataDomainFragment],
+  [Eip712TypedDataDomainFragment],
 );
 export type CreateFrameEip712TypedDataFragment = FragmentOf<
   typeof CreateFrameEip712TypedDataFragment
@@ -71,7 +72,7 @@ export type FrameLensManagerSignatureResultFragment = FragmentOf<
 >;
 
 export const SignFrameActionMutation = graphql(
-  `mutation SignFrameAction($request: FrameLensManagerEIP712Request!) {
+  `mutation SignFrameAction($request: FrameEIP712Request!) {
     value: signFrameAction(request: $request) {
       ...FrameLensManagerSignatureResult
     }
