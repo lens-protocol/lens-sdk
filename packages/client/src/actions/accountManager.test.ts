@@ -49,7 +49,7 @@ describe(`Given the '${createAccountWithUsername.name}' action`, { timeout: 1000
       });
     });
 
-    it('Then it should be possible to perform social operations in a signless fashion (e.g., updating Account metadata)', async () => {
+    it('Then it should be able to perform social operations in a signless fashion (e.g., updating Account metadata)', async () => {
       const updated = metadata.account({
         name: 'Bruce Wayne',
       });
