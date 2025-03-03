@@ -1,6 +1,6 @@
 /// <reference path="../../../vite-env.d.ts" />
 
-import { StorageClient } from '@lens-chain/storage-client';
+import { StorageClient, immutable } from '@lens-chain/storage-client';
 import { chains } from '@lens-network/sdk/viem';
 import { evmAddress } from '@lens-protocol/types';
 import type { Account, Transport, WalletClient } from 'viem';
@@ -11,12 +11,14 @@ import { ContentWarning, type TextOnlyOptions, textOnly } from '@lens-protocol/m
 import { GraphQLErrorCode, PublicClient, staging } from '.';
 
 const pk = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
+
+export const chain = chains.testnet;
 export const account = evmAddress(import.meta.env.TEST_ACCOUNT);
 export const app = evmAddress(import.meta.env.TEST_APP);
 export const wallet: WalletClient<Transport, chains.LensNetworkChain, Account> = createWalletClient(
   {
     account: pk,
-    chain: chains.testnet,
+    chain,
     transport: http(),
   },
 );
@@ -84,6 +86,6 @@ export function postOnlyTextMetadata(customMetadata?: TextOnlyOptions) {
           locale: 'en-US',
         };
 
-  return storageClient.uploadAsJson(textOnly(metadata));
+  return storageClient.uploadAsJson(textOnly(metadata), { acl: immutable(chain.id) });
 }
 export const storageClient = StorageClient.create();

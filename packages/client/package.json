@@ -39,13 +39,23 @@
   },
   "typesVersions": {
     "*": {
-      "actions": ["./dist/actions/index.d.ts"],
-      "ethers": ["./dist/ethers/index.d.ts"],
-      "viem": ["./dist/viem/index.d.ts"],
-      "test-utils": ["./dist/test-utils.d.ts"]
+      "actions": [
+        "./dist/actions/index.d.ts"
+      ],
+      "ethers": [
+        "./dist/ethers/index.d.ts"
+      ],
+      "viem": [
+        "./dist/viem/index.d.ts"
+      ],
+      "test-utils": [
+        "./dist/test-utils.d.ts"
+      ]
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
   "scripts": {
     "build": "tsup",
@@ -82,7 +92,7 @@
     }
   },
   "devDependencies": {
-    "@lens-chain/storage-client": "next",
+    "@lens-chain/storage-client": "^1.0.2",
     "@lens-network/sdk": "canary",
     "@lens-protocol/metadata": "next",
     "ethers": "^6.13.4",

@@ -73,8 +73,8 @@ importers:
         version: 1.9.2
     devDependencies:
       '@lens-chain/storage-client':
-        specifier: next
-        version: 0.0.0-next-20250226153049
+        specifier: ^1.0.2
+        version: 1.0.2
       '@lens-network/sdk':
         specifier: canary
         version: 0.0.0-canary-20241203140504(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))
@@ -875,8 +875,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@lens-chain/storage-client@0.0.0-next-20250226153049':
-    resolution: {integrity: sha512-jVVG4j21onqgNDO7JNRT4QExrTgjg7EYjkVdv8CMh+nawZKlzHyNQtrd8ooxI1C/SU9OW8dHxE69mUm9OLxu1g==}
+  '@lens-chain/storage-client@1.0.2':
+    resolution: {integrity: sha512-D1jsobIDAejVpVIY7jiE26XjGDU965vKrd0unipLD64JXnYHtOxvuPH1KtIQKzjW+2sSANXkqj5qeY+CeKtPsA==}
 
   '@lens-network/sdk@0.0.0-canary-20241203140504':
     resolution: {integrity: sha512-w5mNEXQTP0pSkCq6b8sgM2/87dad1gFTP7hbaDxy4lXnM1fBrVA5OzxWRfCIJJY8/NGdw4RYhEzJoXf4IRR97w==}
@@ -3495,7 +3495,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@lens-chain/storage-client@0.0.0-next-20250226153049': {}
+  '@lens-chain/storage-client@1.0.2': {}
 
   '@lens-network/sdk@0.0.0-canary-20241203140504(ethers@6.13.4)(viem@2.22.4(typescript@5.7.2)(zod@3.23.8))(zksync-ethers@6.15.3(ethers@6.13.4))':
     optionalDependencies:

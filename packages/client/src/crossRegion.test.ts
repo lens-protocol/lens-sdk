@@ -7,7 +7,7 @@ import { assertOk, never, uri } from '@lens-protocol/types';
 
 import { createAccountWithUsername, fetchAccount, setAccountMetadata } from './actions/account';
 import type { SessionClient } from './clients';
-import { loginAsOnboardingUser, wallet } from './test-utils';
+import { chain, loginAsOnboardingUser, wallet } from './test-utils';
 import { handleOperationWith } from './viem';
 
 describe('Given an instance of the StorageClient bound to staging', { timeout: 10000 }, () => {
@@ -45,7 +45,9 @@ describe('Given an instance of the StorageClient bound to staging', { timeout: 1
       const updated = metadata.account({
         name: 'Bruce Wayne',
       });
-      const resource = await storageClient.uploadAsJson(updated);
+      const resource = await storageClient.uploadAsJson(updated, {
+        acl: storage.immutable(chain.id),
+      });
       const result = await setAccountMetadata(sessionClient, {
         metadataUri: resource.uri,
       });
