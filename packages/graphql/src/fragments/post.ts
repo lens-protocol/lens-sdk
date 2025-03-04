@@ -66,28 +66,16 @@ export const SimpleCollectActionFragment = graphql(
 );
 export type SimpleCollectAction = FragmentOf<typeof SimpleCollectActionFragment>;
 
-export const TippingPostActionFragment = graphql(
-  `fragment TippingPostAction on TippingPostAction {
-    __typename
-    address
-  }`,
-  [],
-);
-export type TippingPostAction = FragmentOf<typeof TippingPostActionFragment>;
-
 export const PostActionFragment = graphql(
   `fragment PostAction on PostAction {
     ... on SimpleCollectAction {
       ...SimpleCollectAction
     }
-    ... on TippingPostAction {
-      ...TippingPostAction
-    }
     ... on UnknownAction {
       ...UnknownAction
     }
   }`,
-  [SimpleCollectActionFragment, TippingPostActionFragment, UnknownActionFragment],
+  [SimpleCollectActionFragment, UnknownActionFragment],
 );
 export type PostAction = FragmentOf<typeof PostActionFragment>;
 

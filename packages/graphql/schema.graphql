@@ -5389,7 +5389,11 @@ input PostAccountPair {
   account: EvmAddress!
 }
 
-union PostAction = SimpleCollectAction | TippingPostAction | UnknownAction
+"""
+The configured actions for a post. All posts have the TippingPostAction enabled by default which
+is not listed here.
+"""
+union PostAction = SimpleCollectAction | UnknownAction
 
 input PostActionConfigInput @oneOf {
   simpleCollect: SimpleCollectActionConfigInput
@@ -7022,10 +7026,6 @@ input TimelineRequest {
 }
 
 type TippingAccountAction {
-  address: EvmAddress!
-}
-
-type TippingPostAction {
   address: EvmAddress!
 }
 
