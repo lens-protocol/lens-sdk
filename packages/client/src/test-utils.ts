@@ -1,14 +1,14 @@
 /// <reference path="../../../vite-env.d.ts" />
 
+import { chains } from '@lens-chain/sdk/viem';
 import { StorageClient, immutable } from '@lens-chain/storage-client';
-import { chains } from '@lens-network/sdk/viem';
 import { evmAddress } from '@lens-protocol/types';
 import type { Account, Transport, WalletClient } from 'viem';
 import { http, createWalletClient } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { ContentWarning, type TextOnlyOptions, textOnly } from '@lens-protocol/metadata';
-import { GraphQLErrorCode, PublicClient, staging } from '.';
+import { GraphQLErrorCode, PublicClient, testnet } from '.';
 
 const pk = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
 
@@ -26,7 +26,7 @@ export const signer = evmAddress(wallet.account.address);
 
 export function createPublicClient() {
   return PublicClient.create({
-    environment: staging,
+    environment: testnet,
     origin: 'http://example.com',
   });
 }

@@ -1,7 +1,7 @@
 import 'viem/window';
 
+import { chains } from '@lens-chain/sdk/viem';
 import { StorageClient, immutable } from '@lens-chain/storage-client';
-import { chains } from '@lens-network/sdk/viem';
 import { PublicClient, testnet } from '@lens-protocol/client';
 import { createAccountWithUsername, fetchAccount } from '@lens-protocol/client/actions';
 import { handleOperationWith } from '@lens-protocol/client/viem';

@@ -1,4 +1,4 @@
-import type { chains } from '@lens-network/sdk/viem';
+import type { chains } from '@lens-chain/sdk/viem';
 import type {
   SelfFundedTransactionRequest,
   SponsoredTransactionRequest,

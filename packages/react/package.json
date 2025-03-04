@@ -70,7 +70,7 @@
     "@types/react": {
       "optional": true
     },
-    "@lens-network/sdk": {
+    "@lens-chain/sdk": {
       "optional": true
     },
     "ethers": {
