@@ -40,7 +40,7 @@ describe(`Given the '${createAccountWithUsername.name}' action`, { timeout: 1000
   });
 
   describe('When creating a new Account', () => {
-    it('Then it should have Signless enabled by defailt', async () => {
+    it('Then it should have Signless enabled by default', async () => {
       const result = await fetchMeDetails(sessionClient);
 
       assertOk(result);
