@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { chains } from '@lens-network/sdk/viem';
+import { chains } from '@lens-chain/sdk/viem';
 import { uri } from '@lens-protocol/types';
 import { http, createWalletClient } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';

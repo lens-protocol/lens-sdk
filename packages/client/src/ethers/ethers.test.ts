@@ -4,10 +4,10 @@ import { assertOk, uri } from '@lens-protocol/types';
 import { post } from '../actions/post';
 import { handleOperationWith } from './signer';
 
-import { Network, Wallet, getDefaultProvider } from '@lens-network/sdk/ethers';
+import { Network, Wallet, getDefaultProvider } from '@lens-chain/sdk/ethers';
 import { loginAsAccountOwner } from '../test-utils';
 
-// biome-ignore lint/suspicious/noExplicitAny: needs a fix in @lens-network/sdk
+// biome-ignore lint/suspicious/noExplicitAny: needs a fix in @lens-chain/sdk
 const wallet = new Wallet(import.meta.env.PRIVATE_KEY, getDefaultProvider(Network.Testnet) as any);
 
 describe('Given an integration with ethers.js', { timeout: 10000 }, () => {
