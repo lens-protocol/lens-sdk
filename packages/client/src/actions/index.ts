@@ -6,6 +6,7 @@ export * from './app';
 export * from './authentication';
 export * from './feed';
 export * from './follow';
+export * from './frames';
 export * from './graph';
 export * from './group';
 export * from './health';
