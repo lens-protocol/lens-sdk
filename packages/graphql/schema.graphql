@@ -577,9 +577,6 @@ type ActionMetadata {
 
   """The link to the Action source code. Typically a GitHub repository."""
   source: URI!
-
-  """The human-friendly title for the Action."""
-  title: String!
 }
 
 input AddAccountManagerRequest {
@@ -2489,9 +2486,6 @@ type FeedMetadata {
 
   """The name of the Feed."""
   name: String!
-
-  """The human-friendly title for the Feed."""
-  title: String!
 }
 
 input FeedOneOf @oneOf {
@@ -2937,9 +2931,6 @@ type GraphMetadata {
 
   """The name of the graph."""
   name: String!
-
-  """The human-friendly title for the graph."""
-  title: String!
 }
 
 input GraphOneOf @oneOf {

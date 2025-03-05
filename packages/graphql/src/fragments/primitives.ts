@@ -44,7 +44,6 @@ export const FeedMetadataFragment = graphql(
     description
     id
     name
-    title
   }`,
 );
 export type FeedMetadata = FragmentOf<typeof FeedMetadataFragment>;
@@ -204,7 +203,6 @@ export const GraphMetadataFragment = graphql(
       description
       id
       name
-      title
   }`,
 );
 export type GraphMetadata = FragmentOf<typeof GraphMetadataFragment>;
