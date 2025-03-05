@@ -256,7 +256,6 @@ export const ActionMetadataFragment = graphql(
     __typename
     id
     name
-    title
     source
     authors
     configureParams {
