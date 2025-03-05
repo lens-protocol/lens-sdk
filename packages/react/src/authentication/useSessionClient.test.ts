@@ -1,5 +1,11 @@
 import type { SessionClient } from '@lens-protocol/client';
-import { account, app, createPublicClient, signer, wallet } from '@lens-protocol/client/test-utils';
+import {
+  TEST_ACCOUNT,
+  TEST_APP,
+  TEST_SIGNER,
+  createPublicClient,
+  wallet,
+} from '@lens-protocol/client/test-utils';
 import { signMessageWith } from '@lens-protocol/client/viem';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 
@@ -39,9 +45,9 @@ describe(`Given the '${useSessionClient.name}' hook`, () => {
     beforeAll(async () => {
       const result = await client.login({
         accountOwner: {
-          account,
-          app,
-          owner: signer,
+          account: TEST_ACCOUNT,
+          app: TEST_APP,
+          owner: TEST_SIGNER,
         },
         signMessage: signMessageWith(wallet),
       });

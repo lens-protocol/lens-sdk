@@ -10,19 +10,17 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { ContentWarning, type TextOnlyOptions, textOnly } from '@lens-protocol/metadata';
 import { GraphQLErrorCode, PublicClient, testnet } from '.';
 
-const pk = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
+export const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
 
-export const chain = chains.testnet;
-export const account = evmAddress(import.meta.env.TEST_ACCOUNT);
-export const app = evmAddress(import.meta.env.TEST_APP);
-export const wallet: WalletClient<Transport, chains.LensNetworkChain, Account> = createWalletClient(
-  {
-    account: pk,
-    chain,
-    transport: http(),
-  },
-);
-export const signer = evmAddress(wallet.account.address);
+export const CHAIN = chains.testnet;
+export const TEST_ACCOUNT = evmAddress(import.meta.env.TEST_ACCOUNT);
+export const TEST_APP = evmAddress(import.meta.env.TEST_APP);
+export const wallet: WalletClient<Transport, chains.LensChain, Account> = createWalletClient({
+  account: signer,
+  chain: CHAIN,
+  transport: http(),
+});
+export const TEST_SIGNER = evmAddress(wallet.account.address);
 
 export function createPublicClient() {
   return PublicClient.create({
@@ -35,11 +33,11 @@ export function loginAsAccountOwner() {
   const client = createPublicClient();
   return client.login({
     accountOwner: {
-      account,
-      owner: signer,
-      app,
+      account: TEST_ACCOUNT,
+      owner: TEST_SIGNER,
+      app: TEST_APP,
     },
-    signMessage: (message) => pk.signMessage({ message }),
+    signMessage: (message) => signer.signMessage({ message }),
   });
 }
 
@@ -48,10 +46,10 @@ export function loginAsOnboardingUser() {
 
   return client.login({
     onboardingUser: {
-      wallet: signer,
-      app,
+      wallet: TEST_SIGNER,
+      app: TEST_APP,
     },
-    signMessage: (message) => pk.signMessage({ message }),
+    signMessage: (message) => signer.signMessage({ message }),
   });
 }
 
@@ -86,6 +84,6 @@ export function postOnlyTextMetadata(customMetadata?: TextOnlyOptions) {
           locale: 'en-US',
         };
 
-  return storageClient.uploadAsJson(textOnly(metadata), { acl: immutable(chain.id) });
+  return storageClient.uploadAsJson(textOnly(metadata), { acl: immutable(CHAIN.id) });
 }
 export const storageClient = StorageClient.create();

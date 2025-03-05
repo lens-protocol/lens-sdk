@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 import { type Account, Role } from '@lens-protocol/graphql';
 import { uri } from '@lens-protocol/types';
-import { loginAsOnboardingUser, signer, wallet } from '../test-utils';
+import { TEST_SIGNER, loginAsOnboardingUser, wallet } from '../test-utils';
 import { handleOperationWith } from '../viem';
 import { createAccountWithUsername, fetchAccount } from './account';
 
@@ -51,7 +51,7 @@ describe('Given an onboarding user', { timeout: 10000 }, () => {
       expect(user).toMatchObject({
         role: Role.AccountOwner,
         address: newAccount!.address.toLowerCase(),
-        signer: signer.toLowerCase(),
+        signer: TEST_SIGNER.toLowerCase(),
       });
     });
   });

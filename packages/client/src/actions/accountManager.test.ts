@@ -5,7 +5,7 @@ import { type Account, assertTypename } from '@lens-protocol/graphql';
 import * as metadata from '@lens-protocol/metadata';
 import { assertOk, never, uri } from '@lens-protocol/types';
 import type { SessionClient } from '../clients';
-import { chain, loginAsOnboardingUser, storageClient, wallet } from '../test-utils';
+import { CHAIN, loginAsOnboardingUser, storageClient, wallet } from '../test-utils';
 import { handleOperationWith } from '../viem';
 import { createAccountWithUsername, fetchAccount, setAccountMetadata } from './account';
 import { fetchMeDetails } from './authentication';
@@ -53,7 +53,7 @@ describe(`Given the '${createAccountWithUsername.name}' action`, { timeout: 1000
       const updated = metadata.account({
         name: 'Bruce Wayne',
       });
-      const resource = await storageClient.uploadAsJson(updated, { acl: immutable(chain.id) });
+      const resource = await storageClient.uploadAsJson(updated, { acl: immutable(CHAIN.id) });
       const result = await setAccountMetadata(sessionClient, {
         metadataUri: resource.uri,
       });
