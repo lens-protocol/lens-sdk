@@ -19,7 +19,7 @@ import { SigningError, ValidationError } from '../errors';
 import { type OperationHandler, type OperationResult, isTransactionRequest } from '../types';
 
 async function sendTransaction(
-  walletClient: WalletClient<Transport, chains.LensNetworkChain, Account>,
+  walletClient: WalletClient<Transport, chains.LensChain, Account>,
   request: SponsoredTransactionRequest | SelfFundedTransactionRequest,
 ): Promise<Hash> {
   invariant(
@@ -56,7 +56,7 @@ async function sendTransaction(
 }
 
 function sendTransactionWith(
-  walletClient: WalletClient<Transport, chains.LensNetworkChain, Account>,
+  walletClient: WalletClient<Transport, chains.LensChain, Account>,
   request: SponsoredTransactionRequest | SelfFundedTransactionRequest,
 ): ResultAsync<TxHash, SigningError> {
   return ResultAsync.fromPromise(sendTransaction(walletClient, request).then(txHash), (err) =>
@@ -70,7 +70,7 @@ function sendTransactionWith(
  * In case the result is a transaction request, it will be signed and sent using the provided wallet client.
  */
 export function handleOperationWith(
-  walletClient: WalletClient<Transport, chains.LensNetworkChain, Account>,
+  walletClient: WalletClient<Transport, chains.LensChain, Account>,
 ): OperationHandler {
   return <T extends string, E extends string>(
     result: OperationResult<T, E>,

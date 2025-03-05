@@ -9,11 +9,11 @@ import { currentSession } from './actions';
 import { PublicClient } from './clients';
 import { GraphQLErrorCode, UnauthenticatedError, UnexpectedError } from './errors';
 import {
-  account,
-  app,
+  TEST_ACCOUNT,
+  TEST_APP,
+  TEST_SIGNER,
   createGraphQLErrorObject,
   createPublicClient,
-  signer,
   wallet,
 } from './test-utils';
 import { delay } from './utils';
@@ -26,9 +26,9 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
     it('Then it should authenticate and stay authenticated', async () => {
       const challenge = await client.challenge({
         accountOwner: {
-          account,
-          owner: signer,
-          app,
+          account: TEST_ACCOUNT,
+          owner: TEST_SIGNER,
+          app: TEST_APP,
         },
       });
       assertOk(challenge);
@@ -44,8 +44,8 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
       assertOk(user);
       expect(user.value).toMatchObject({
         role: Role.AccountOwner,
-        address: account.toLowerCase(),
-        signer: signer.toLowerCase(),
+        address: TEST_ACCOUNT.toLowerCase(),
+        signer: TEST_SIGNER.toLowerCase(),
       });
     });
   });
@@ -54,9 +54,9 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
     it('Then it should return an Err<never, SigningError> with any error thrown by the provided `SignMessage` function', async () => {
       const authenticated = await client.login({
         accountOwner: {
-          account,
-          owner: signer,
-          app,
+          account: TEST_ACCOUNT,
+          owner: TEST_SIGNER,
+          app: TEST_APP,
         },
         signMessage: async () => {
           throw new Error('Test Error');
@@ -71,9 +71,9 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
     it('Then it should return a SessionClient instance associated with the credentials in the storage', async () => {
       await client.login({
         accountOwner: {
-          account,
-          owner: signer,
-          app,
+          account: TEST_ACCOUNT,
+          owner: TEST_SIGNER,
+          app: TEST_APP,
         },
         signMessage: signMessageWith(wallet),
       });
@@ -83,8 +83,8 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
 
       const authentication = await currentSession(authenticated.value);
       expect(authentication._unsafeUnwrap()).toMatchObject({
-        signer,
-        app,
+        signer: TEST_SIGNER,
+        app: TEST_APP,
       });
     });
   });
@@ -112,9 +112,9 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
       it('Then it should revoke the current authenticated session and clear the credentials from the storage', async () => {
         const authenticated = await client.login({
           accountOwner: {
-            account,
-            owner: signer,
-            app,
+            account: TEST_ACCOUNT,
+            owner: TEST_SIGNER,
+            app: TEST_APP,
           },
           signMessage: signMessageWith(wallet),
         });
@@ -154,9 +154,9 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
       it('Then it should silently refresh credentials and retry the request', async () => {
         const authenticated = await client.login({
           accountOwner: {
-            account,
-            owner: signer,
-            app,
+            account: TEST_ACCOUNT,
+            owner: TEST_SIGNER,
+            app: TEST_APP,
           },
           signMessage: signMessageWith(wallet),
         });
@@ -197,9 +197,9 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
       it(`Then it should return a '${UnauthenticatedError.name}' to the original request caller`, async () => {
         const authenticated = await client.login({
           accountOwner: {
-            account,
-            owner: signer,
-            app,
+            account: TEST_ACCOUNT,
+            owner: TEST_SIGNER,
+            app: TEST_APP,
           },
           signMessage: signMessageWith(wallet),
         });

@@ -7,11 +7,11 @@ import { assertErr, assertOk, never } from '@lens-protocol/types';
 
 import { createAccountWithUsername, fetchAccount, setAccountMetadata } from './actions/account';
 import type { SessionClient } from './clients';
-import { account, chain, loginAsOnboardingUser, wallet } from './test-utils';
+import { CHAIN, TEST_ACCOUNT, loginAsOnboardingUser, wallet } from './test-utils';
 import { handleOperationWith } from './viem';
 
 const storageClient = storage.StorageClient.create(storage.staging);
-const acl = storage.lensAccountOnly(account, 37111);
+const acl = storage.lensAccountOnly(TEST_ACCOUNT, 37111);
 
 describe('Given an instance of the StorageClient (bound to staging)', { timeout: 10000 }, () => {
   let initialFileResponse: storage.FileUploadResponse;
@@ -51,7 +51,7 @@ describe('Given an instance of the StorageClient (bound to staging)', { timeout:
   describe('When I upload a file from one region', () => {
     it('Then it should be accessible from the Lens API in another region', async () => {
       const response = await storageClient.uploadAsJson(updates, {
-        acl: storage.immutable(chain.id),
+        acl: storage.immutable(CHAIN.id),
       });
       const result = await setAccountMetadata(sessionClient, {
         metadataUri: response.gatewayUrl,
