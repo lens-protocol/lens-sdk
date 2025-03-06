@@ -1,13 +1,13 @@
 /// <reference path="../../../vite-env.d.ts" />
 
 import { chains } from '@lens-chain/sdk/viem';
-import { StorageClient, immutable } from '@lens-chain/storage-client';
-import { evmAddress } from '@lens-protocol/types';
+import { StorageClient, immutable, walletOnly } from '@lens-chain/storage-client';
+import { type TextOnlyMetadata, textOnly } from '@lens-protocol/metadata';
+import { type URI, evmAddress } from '@lens-protocol/types';
 import type { Account, Transport, WalletClient } from 'viem';
 import { http, createWalletClient } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import { ContentWarning, type TextOnlyOptions, textOnly } from '@lens-protocol/metadata';
 import { GraphQLErrorCode, PublicClient, testnet } from '.';
 
 export const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
@@ -73,17 +73,28 @@ export function createGraphQLErrorObject(code: GraphQLErrorCode) {
   };
 }
 
-export function postOnlyTextMetadata(customMetadata?: TextOnlyOptions) {
-  const metadata =
-    customMetadata !== undefined
-      ? customMetadata
-      : {
-          content: 'This is a post for testing purposes',
-          tags: ['test', 'lens', 'sdk'],
-          contentWarning: ContentWarning.SENSITIVE,
-          locale: 'en-US',
-        };
-
-  return storageClient.uploadAsJson(textOnly(metadata), { acl: immutable(CHAIN.id) });
-}
 export const storageClient = StorageClient.create();
+
+function dummyTextOnlyMetadata(): TextOnlyMetadata {
+  return textOnly({
+    content: 'This is a post for testing purposes',
+    locale: 'en-US',
+  });
+}
+
+export function uploadImmutableTextOnlyPostMetadata() {
+  const metadata = dummyTextOnlyMetadata();
+  const acl = immutable(CHAIN.id);
+  return storageClient.uploadAsJson(metadata, { acl });
+}
+
+const acl = walletOnly(TEST_SIGNER, CHAIN.id);
+
+export function uploadTextOnlyPostMetadata() {
+  const metadata = dummyTextOnlyMetadata();
+  return storageClient.uploadAsJson(metadata, { acl });
+}
+
+export function updateTextOnlyMetadata(uri: URI, metadata: TextOnlyMetadata) {
+  return storageClient.updateJson(uri, metadata, signer, { acl });
+}
