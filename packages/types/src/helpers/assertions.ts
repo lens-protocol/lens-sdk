@@ -40,3 +40,12 @@ export function assertErr<T, E extends Error>(result: Result<T, E>): asserts res
     throw new InvariantError(`Expected result to be Err: ${result.value}`);
   }
 }
+
+/**
+ * Asserts that the given value is not `null`.
+ */
+export function assertNotNull<T>(value: T): asserts value is Exclude<T, null> {
+  if (value === null) {
+    throw new InvariantError('Expected value to be not null');
+  }
+}

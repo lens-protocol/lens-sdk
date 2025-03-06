@@ -1,10 +1,13 @@
-import { type PostId, assertOk, invariant } from '@lens-protocol/types';
+import { type Post, justPost } from '@lens-protocol/graphql';
+import { assertOk, nonNullable } from '@lens-protocol/types';
 import { beforeAll, describe, expect, it } from 'vitest';
 
+import { textOnly } from '@lens-protocol/metadata';
 import {
   createPublicClient,
   loginAsAccountOwner,
-  postOnlyTextMetadata,
+  updateTextOnlyMetadata,
+  uploadTextOnlyPostMetadata,
   wallet,
 } from '../test-utils';
 import { handleOperationWith } from '../viem';
@@ -12,37 +15,45 @@ import { refreshMetadata, waitForMetadata } from './metadata';
 import { post } from './post';
 import { fetchPost } from './posts';
 
-describe('Given user creates a post', () => {
-  let postId: PostId;
+describe('Given a Lens Post', () => {
+  let item: Post;
 
   beforeAll(async () => {
-    // Create a post with metadata
-    const resources = await postOnlyTextMetadata();
+    const resources = await uploadTextOnlyPostMetadata();
+
     const result = await loginAsAccountOwner().andThen((sessionClient) =>
       post(sessionClient, {
         contentUri: resources.uri,
       })
         .andThen(handleOperationWith(wallet))
         .andThen(sessionClient.waitForTransaction)
-        .andThen((tx) => fetchPost(sessionClient, { txHash: tx })),
+        .andThen((tx) => fetchPost(sessionClient, { txHash: tx }))
+        .map(nonNullable)
+        .map(justPost),
     );
     assertOk(result);
-    invariant(result.value, 'Expected post to be defined and created');
-    postId = result.value.id;
+    item = result.value;
   });
 
-  describe('When user modifies metadata in the used URL and call refreshMetadata', () => {
-    it('Then post metadata content should be updated', async () => {
-      // TODO: add possibility to change metadata in the same URL and refresh later
-      // That feature will be available soon in the storage nodes
-      const client = createPublicClient();
-      const newMetadata = await refreshMetadata(client, { entity: { post: postId } });
+  describe(`When the metadata at 'contentUri' is updated`, () => {
+    const client = createPublicClient();
+    const updates = textOnly({ content: 'This is the new content' });
 
-      assertOk(newMetadata);
-      invariant(newMetadata.value, 'Expected to be defined');
-      const result = await waitForMetadata(client, newMetadata.value.id);
-      assertOk(result);
-      expect(result.value).toEqual(newMetadata.value.id);
+    beforeAll(async () => {
+      const response = await updateTextOnlyMetadata(item.contentUri, updates);
+      await response.waitForPropagation();
+    }, 10_000);
+
+    it('Then it should be possible to force a refresh of the metadata', async () => {
+      const refreshed = await refreshMetadata(client, { entity: { post: item.id } }).andThen(
+        ({ id }) => waitForMetadata(client, id),
+      );
+
+      assertOk(refreshed);
+
+      const fetched = await fetchPost(client, { post: item.id }).map(nonNullable).map(justPost);
+      assertOk(fetched);
+      expect(fetched.value.metadata).toHaveProperty('content', updates.lens.content);
     });
   });
 });
