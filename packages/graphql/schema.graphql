@@ -743,6 +743,7 @@ type App {
   createdAt: DateTime!
   metadata: AppMetadata
   owner: EvmAddress!
+  hasAuthorizationEndpoint: Boolean!
 }
 
 type AppFeed {

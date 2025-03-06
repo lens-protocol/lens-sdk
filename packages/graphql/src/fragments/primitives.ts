@@ -30,6 +30,7 @@ export const AppFragment = graphql(
     sponsorshipAddress
     treasuryAddress
     verificationEnabled
+    hasAuthorizationEndpoint
     metadata {
       ...AppMetadata
     }
