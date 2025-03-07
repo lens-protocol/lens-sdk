@@ -393,10 +393,19 @@ export type LoggedInUsernameNamespaceOperations = FragmentOf<
   typeof LoggedInUsernameNamespaceOperationsFragment
 >;
 
+const UsernameNamespaceStatsFragment = graphql(
+  `fragment UsernameNamespaceStats on UsernameNamespaceStats {
+    __typename
+    totalUsernames
+  }`,
+);
+export type UsernameNamespaceStats = FragmentOf<typeof UsernameNamespaceStatsFragment>;
+
 export const UsernameNamespaceFragment = graphql(
   `fragment UsernameNamespace on UsernameNamespace {
     __typename
     address
+    namespace
     createdAt
     metadata {
       ...UsernameNamespaceMetadata
@@ -408,11 +417,15 @@ export const UsernameNamespaceFragment = graphql(
     operations {
       ...LoggedInUsernameNamespaceOperations
     }
+    stats {
+      ...UsernameNamespaceStats
+    }
   }`,
   [
     UsernameNamespaceMetadataFragment,
     NamespaceRulesFragment,
     LoggedInUsernameNamespaceOperationsFragment,
+    UsernameNamespaceStatsFragment,
   ],
 );
 export type UsernameNamespace = FragmentOf<typeof UsernameNamespaceFragment>;
