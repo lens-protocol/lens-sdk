@@ -32,4 +32,6 @@ jobs:
         with:
           environment: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment || github.event.client_payload.lens_env || 'staging' }}
           private_key: ${{ secrets.PRIVATE_KEY }}
+          test_app: ${{ vars.TEST_APP }}
+          test_account: ${{ vars.TEST_ACCOUNT }}
           publish_results: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.publish_results || 'true' }}

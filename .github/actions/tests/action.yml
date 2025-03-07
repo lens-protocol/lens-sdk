@@ -13,6 +13,12 @@ inputs:
     description: 'Publish test results'
     required: false
     default: 'false'
+  test_app:
+    description: 'Test application variable'
+    required: true
+  test_account:
+    description: 'Test account variable'
+    required: true
   
 runs:
   using: 'composite'
@@ -30,8 +36,8 @@ runs:
       shell: bash
       run: |
         export PRIVATE_KEY="${{ inputs.private_key }}"
-        echo "TEST_APP=${{ vars.TEST_APP }}" >> .env
-        echo "TEST_ACCOUNT=${{ vars.TEST_ACCOUNT }}" >> .env
+        echo "TEST_APP=${{ inputs.test_app }}" >> .env
+        echo "TEST_ACCOUNT=${{ inputs.test_account }}" >> .env
         echo "ENVIRONMENT=${{ inputs.environment }}" >> .env
 
     - name: Run Tests

@@ -31,4 +31,6 @@ jobs:
         with:
           environment: 'staging'
           private_key: ${{ secrets.PRIVATE_KEY }}
+          test_app: ${{ vars.TEST_APP }}
+          test_account: ${{ vars.TEST_ACCOUNT }}
           publish_results: 'false'
