@@ -35,7 +35,7 @@ runs:
     - name: Setup Environment Variables
       shell: bash
       run: |
-        export PRIVATE_KEY="${{ inputs.private_key }}"
+        echo PRIVATE_KEY="${{ inputs.private_key }}" >> .env
         echo "TEST_APP=${{ inputs.test_app }}" >> .env
         echo "TEST_ACCOUNT=${{ inputs.test_account }}" >> .env
         echo "ENVIRONMENT=${{ inputs.environment }}" >> .env
