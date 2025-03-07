@@ -6,6 +6,9 @@ inputs:
     description: 'Environment to run tests against'
     required: true
     default: 'staging'
+  private_key:
+    description: 'Private key for authentication'
+    required: true
   publish_results:
     description: 'Publish test results'
     required: false
@@ -19,14 +22,6 @@ runs:
     - name: Setup Repository
       uses: ./.github/actions/setup
 
-    - name: Make sure PRIVATE_KEY secret is set
-      shell: bash
-      run: |
-        if [[ -z "${{ secrets.PRIVATE_KEY }}" ]]; then
-          echo "Error: PRIVATE_KEY secret is missing" >&2
-          exit 1
-        fi
-
     - name: Build
       shell: bash
       run: pnpm build
@@ -34,7 +29,7 @@ runs:
     - name: Setup Environment Variables
       shell: bash
       run: |
-        echo "PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}" >> .env
+        export PRIVATE_KEY="${{ inputs.private_key }}"
         echo "TEST_APP=${{ vars.TEST_APP }}" >> .env
         echo "TEST_ACCOUNT=${{ vars.TEST_ACCOUNT }}" >> .env
         echo "ENVIRONMENT=${{ inputs.environment }}" >> .env

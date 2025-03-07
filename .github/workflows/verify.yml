@@ -30,4 +30,5 @@ jobs:
         uses: ./.github/actions/tests
         with:
           environment: 'staging'
+          private_key: ${{ secrets.PRIVATE_KEY }}
           publish_results: 'false'
