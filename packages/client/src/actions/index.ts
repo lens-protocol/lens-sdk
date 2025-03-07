@@ -4,6 +4,7 @@ export * from './actions';
 export * from './admins';
 export * from './app';
 export * from './authentication';
+export * from './balances';
 export * from './feed';
 export * from './follow';
 export * from './frames';

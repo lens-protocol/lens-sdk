@@ -331,3 +331,26 @@ export const Erc20AmountFragment = graphql(
   [Erc20Fragment],
 );
 export type Erc20Amount = FragmentOf<typeof Erc20AmountFragment>;
+
+export const NativeTokenFragment = graphql(
+  `fragment NativeToken on NativeToken {
+    __typename
+    name
+    symbol
+    decimals
+  }`,
+  [NetworkAddressFragment],
+);
+export type NativeToken = FragmentOf<typeof NativeTokenFragment>;
+
+export const NativeAmountFragment = graphql(
+  `fragment NativeAmount on NativeAmount {
+    __typename
+    asset {
+      ...NativeToken
+    }
+    value
+  }`,
+  [NativeTokenFragment],
+);
+export type NativeAmount = FragmentOf<typeof NativeAmountFragment>;

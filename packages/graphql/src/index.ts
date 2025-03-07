@@ -3,6 +3,7 @@ export * from './actions';
 export * from './admins';
 export * from './app';
 export * from './authentication';
+export * from './balances';
 export * from './common';
 export * from './enums';
 export * from './feed';

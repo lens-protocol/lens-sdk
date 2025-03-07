@@ -8,13 +8,22 @@ import type { Account, Transport, WalletClient } from 'viem';
 import { http, createWalletClient } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import { GraphQLErrorCode, PublicClient, testnet } from '.';
-
-export const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
+import { GraphQLErrorCode, PublicClient, local, staging, testnet } from '.';
 
 export const CHAIN = chains.testnet;
 export const TEST_ACCOUNT = evmAddress(import.meta.env.TEST_ACCOUNT);
 export const TEST_APP = evmAddress(import.meta.env.TEST_APP);
+export const TEST_ERC20 = evmAddress(import.meta.env.TEST_ERC20);
+
+export const signer = privateKeyToAccount(import.meta.env.PRIVATE_KEY);
+
+export const environment =
+  import.meta.env.ENVIRONMENT === 'local'
+    ? local
+    : import.meta.env.ENVIRONMENT === 'staging'
+      ? staging
+      : testnet;
+
 export const wallet: WalletClient<Transport, chains.LensChain, Account> = createWalletClient({
   account: signer,
   chain: CHAIN,
@@ -24,7 +33,7 @@ export const TEST_SIGNER = evmAddress(wallet.account.address);
 
 export function createPublicClient() {
   return PublicClient.create({
-    environment: testnet,
+    environment,
     origin: 'http://example.com',
   });
 }
