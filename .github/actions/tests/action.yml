@@ -1,0 +1,52 @@
+name: 'Test Workflow'
+description: 'Run tests against a specified environment'
+
+inputs:
+  environment:
+    description: 'Environment to run tests against'
+    required: true
+    default: 'staging'
+  publish_results:
+    description: 'Publish test results'
+    required: false
+    default: 'false'
+  
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Repository
+      uses: ./.github/actions/setup
+
+    - name: Make sure PRIVATE_KEY secret is set
+      shell: bash
+      run: |
+        if [[ -z "${{ secrets.PRIVATE_KEY }}" ]]; then
+          echo "Error: PRIVATE_KEY secret is missing" >&2
+          exit 1
+        fi
+
+    - name: Build
+      shell: bash
+      run: pnpm build
+
+    - name: Setup Environment Variables
+      shell: bash
+      run: |
+        echo "PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}" >> .env
+        echo "TEST_APP=${{ vars.TEST_APP }}" >> .env
+        echo "TEST_ACCOUNT=${{ vars.TEST_ACCOUNT }}" >> .env
+        echo "ENVIRONMENT=${{ inputs.environment }}" >> .env
+
+    - name: Run Tests
+      shell: bash
+      run: pnpm test
+
+    - name: Publish Test Results
+      if: ${{ inputs.publish_results == 'true' }}
+      shell: bash
+      run: |
+        echo "Publishing test results..."
+        # Add logic to upload test results to a service or save artifacts
+        echo "Test results published."

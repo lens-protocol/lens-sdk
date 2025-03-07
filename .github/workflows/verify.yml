@@ -26,18 +26,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Repository
-        uses: ./.github/actions/setup
-
-      - name: Build
-        run: pnpm build
-
-      - name: Setup Environment Variables
-        shell: bash
-        run: |
-          echo "PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}" >> .env
-          echo "TEST_APP=${{ vars.TEST_APP }}" >> .env
-          echo "TEST_ACCOUNT=${{ vars.TEST_ACCOUNT }}" >> .env
-
       - name: Run Tests
-        run: pnpm test
+        uses: ./.github/actions/tests
+        with:
+          environment: 'staging'
+          publish_results: 'false'
