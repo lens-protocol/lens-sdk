@@ -31,6 +31,7 @@
     "editor.formatOnSave": true,
     "editor.suggest.insertMode": "replace"
   },
+  "disabledExtensions": ["Orta.vscode-jest"],
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true
 }

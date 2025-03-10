@@ -1,0 +1,37 @@
+name: Run Tests on Demand
+
+on:
+  repository_dispatch:
+    types: [on-demand-test]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to run tests against'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - testnet
+      publish_results:
+        description: 'Publish test results'
+        required: false
+        default: 'true'
+        type: string
+
+jobs:
+  tests:
+    name: Full Test Suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Tests
+        uses: ./.github/actions/tests
+        with:
+          environment: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment || github.event.client_payload.lens_env || 'staging' }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+          test_app: ${{ vars.TEST_APP }}
+          test_account: ${{ vars.TEST_ACCOUNT }}
+          publish_results: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.publish_results || 'true' }}

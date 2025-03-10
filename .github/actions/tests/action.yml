@@ -1,0 +1,53 @@
+name: 'Test Workflow'
+description: 'Run tests against a specified environment'
+
+inputs:
+  environment:
+    description: 'Environment to run tests against'
+    required: true
+    default: 'staging'
+  private_key:
+    description: 'Private key for authentication'
+    required: true
+  publish_results:
+    description: 'Publish test results'
+    required: false
+    default: 'false'
+  test_app:
+    description: 'Test application variable'
+    required: true
+  test_account:
+    description: 'Test account variable'
+    required: true
+  
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Repository
+      uses: ./.github/actions/setup
+
+    - name: Build
+      shell: bash
+      run: pnpm build
+
+    - name: Setup Environment Variables
+      shell: bash
+      run: |
+        echo PRIVATE_KEY="${{ inputs.private_key }}" >> .env
+        echo "TEST_APP=${{ inputs.test_app }}" >> .env
+        echo "TEST_ACCOUNT=${{ inputs.test_account }}" >> .env
+        echo "ENVIRONMENT=${{ inputs.environment }}" >> .env
+
+    - name: Run Tests
+      shell: bash
+      run: pnpm test
+
+    - name: Publish Test Results
+      if: ${{ inputs.publish_results == 'true' }}
+      shell: bash
+      run: |
+        echo "Publishing test results..."
+        # Add logic to upload test results to a service or save artifacts
+        echo "Test results published."
