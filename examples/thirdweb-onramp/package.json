@@ -1,5 +1,5 @@
 {
-  "name": "example-thirdweb-pay",
+  "name": "example-thirdweb-onramp",
   "private": true,
   "type": "module",
   "scripts": {

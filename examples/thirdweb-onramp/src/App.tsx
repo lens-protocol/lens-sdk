@@ -11,12 +11,16 @@ const chain = chains.testnet;
 // hoist account
 const [address] = (await window.ethereum!.request({ method: 'eth_requestAccounts' })) as [Address];
 
+// create wallet client
+// this example assume you might not use thirdweb wallet already, if you
+// do you can skip this step and use the wallet from thirdweb
 const walletClient = createWalletClient({
   account: address,
   chain: chain,
   transport: custom(window.ethereum!),
 });
 
+// create thirdweb wallet
 const thirdwebWallet = await viemAdapter.wallet.fromViem({
   walletClient: walletClient,
 });
@@ -31,12 +35,16 @@ export function App() {
       activeWallet={thirdwebWallet}
       client={client}
       payOptions={{
+        mode: 'direct_payment',
         buyWithFiat: {
           preferredProvider: 'COINBASE',
-          testMode: true, // enable test mode
+          testMode: true, // <<<<<<<<< IMPORTANT!!! enable test mode
         },
         buyWithCrypto: false,
-        prefillBuy: {
+        paymentInfo: {
+          amount: '5', // amount of token to buy
+          chain: ethereum, // workaround for getting quotes working
+          sellerAddress: address,
           token: {
             // Using GHO on Ethereum to get quotes working
             address: '0x40d16fc0246ad3160ccc09b8d0d3a2cd28ae6c2f',
@@ -45,12 +53,6 @@ export function App() {
             name: 'GRASS',
             symbol: 'GRASS',
             icon: 'https://block-explorer.testnet.lens.dev/images/grass.png',
-          },
-          chain: ethereum, // workaround for getting quotes working
-          allowEdits: {
-            amount: true, // allow editing buy amount
-            token: false, // disable selecting buy token
-            chain: false, // disable selecting buy chain
           },
         },
         onPurchaseSuccess: (purchase) => {
