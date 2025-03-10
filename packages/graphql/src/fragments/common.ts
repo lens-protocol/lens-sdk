@@ -273,8 +273,8 @@ export const ActionMetadataFragment = graphql(
 );
 export type ActionMetadata = FragmentOf<typeof ActionMetadataFragment>;
 
-export const UnknownActionFragment = graphql(
-  `fragment UnknownAction on UnknownAction {
+export const UnknownPostActionFragment = graphql(
+  `fragment UnknownPostAction on UnknownPostAction {
     __typename
     address
     config {
@@ -286,7 +286,7 @@ export const UnknownActionFragment = graphql(
   }`,
   [AnyKeyValueFragment, ActionMetadataFragment],
 );
-export type UnknownAction = FragmentOf<typeof UnknownActionFragment>;
+export type UnknownPostAction = FragmentOf<typeof UnknownPostActionFragment>;
 
 export const FollowerOnFragment = graphql(
   `fragment FollowerOn on FollowerOn {

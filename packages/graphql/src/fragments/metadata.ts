@@ -17,25 +17,23 @@ export const MetadataAttributeFragment = graphql(
 );
 export type MetadataAttribute = FragmentOf<typeof MetadataAttributeFragment>;
 
-export const EventMetadataLensLocationFragment = graphql(
-  `fragment EventMetadataLensLocation on EventMetadataLensLocation {
+export const EventLocationFragment = graphql(
+  `fragment EventLocation on EventLocation {
     __typename
     physical
     virtual
   }`,
 );
-export type EventMetadataLensLocation = FragmentOf<typeof EventMetadataLensLocationFragment>;
+export type EventLocationFragment = FragmentOf<typeof EventLocationFragment>;
 
-export const EventMetadataLensSchedulingAdjustmentsFragment = graphql(
-  `fragment EventMetadataLensSchedulingAdjustments on EventMetadataLensSchedulingAdjustments {
+export const EventSchedulingAdjustmentsFragment = graphql(
+  `fragment EventSchedulingAdjustments on EventSchedulingAdjustments {
     __typename
     timezoneId
     timezoneOffset
   }`,
 );
-export type EventMetadataLensSchedulingAdjustments = FragmentOf<
-  typeof EventMetadataLensSchedulingAdjustmentsFragment
->;
+export type EventSchedulingAdjustments = FragmentOf<typeof EventSchedulingAdjustmentsFragment>;
 
 export const PhysicalAddressFragment = graphql(
   `fragment PhysicalAddress on PhysicalAddress {
@@ -228,12 +226,12 @@ export const EventMetadataFragment = graphql(
     links
     locale
     location {
-      ...EventMetadataLensLocation
+      ...EventLocation
     }
     mainContentFocus
     position
     schedulingAdjustments {
-      ...EventMetadataLensSchedulingAdjustments
+      ...EventSchedulingAdjustments
     }
     startsAt
     tags
@@ -253,8 +251,8 @@ export const EventMetadataFragment = graphql(
     AnyMediaFragment,
     MetadataAttributeFragment,
     PhysicalAddressFragment,
-    EventMetadataLensLocationFragment,
-    EventMetadataLensSchedulingAdjustmentsFragment,
+    EventLocationFragment,
+    EventSchedulingAdjustmentsFragment,
   ],
 );
 export type EventMetadata = FragmentOf<typeof EventMetadataFragment>;
