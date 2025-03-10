@@ -8,7 +8,7 @@ import {
   BooleanValueFragment,
   Erc20AmountFragment,
   FollowerOnFragment,
-  UnknownActionFragment,
+  UnknownPostActionFragment,
 } from './common';
 import {
   ArticleMetadataFragment,
@@ -71,11 +71,11 @@ export const PostActionFragment = graphql(
     ... on SimpleCollectAction {
       ...SimpleCollectAction
     }
-    ... on UnknownAction {
-      ...UnknownAction
+    ... on UnknownPostAction {
+      ...UnknownPostAction
     }
   }`,
-  [SimpleCollectActionFragment, UnknownActionFragment],
+  [SimpleCollectActionFragment, UnknownPostActionFragment],
 );
 export type PostAction = FragmentOf<typeof PostActionFragment>;
 

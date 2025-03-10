@@ -32,7 +32,11 @@ type Account {
   actions: [AccountAction!]!
 }
 
-union AccountAction = TippingAccountAction | UnknownAction
+"""
+The configured actions for an account. All accounts have the TippingAccountAction enabled by
+default which is not listed here.
+"""
+union AccountAction = TippingAccountAction | UnknownAccountAction
 
 input AccountActionConfigInput @oneOf {
   unknown: UnknownActionConfigInput
@@ -332,18 +336,10 @@ input AccountMentionedNotificationAttributes {
 }
 
 type AccountMetadata {
-  """
-  A bag of attributes that can be used to store any kind of metadata that is not currently
-  supported by the standard. Over time, common attributes will be added to the standard and
-  their usage as arbitrary attributes will be discouraged.
-  """
   attributes: [MetadataAttribute!]!
 
   """The Account bio as markdown."""
   bio: String
-
-  """The Account cover picture."""
-  coverPicture: URI
 
   """
   A unique identifier that in storages like IPFS ensures the uniqueness of the metadata URI.
@@ -353,9 +349,8 @@ type AccountMetadata {
 
   """The Account display name."""
   name: String
-
-  """The Account picture."""
-  picture: URI
+  picture(request: MediaImageRequest! = {useOriginal: false}): URI
+  coverPicture(request: MediaImageRequest! = {useOriginal: false}): URI
 }
 
 type AccountOwned {
@@ -753,6 +748,7 @@ type App {
   createdAt: DateTime!
   metadata: AppMetadata
   owner: EvmAddress!
+  hasAuthorizationEndpoint: Boolean!
 }
 
 type AppFeed {
@@ -791,9 +787,6 @@ type AppMetadata {
   """The Developer of the app."""
   developer: String!
 
-  """The Logo icon for the app."""
-  logo: URI
-
   """The name of the app."""
   name: String!
 
@@ -811,6 +804,9 @@ type AppMetadata {
 
   """The url of the app."""
   url: URI!
+
+  """The logo of the app."""
+  logo(request: MediaImageRequest! = {useOriginal: false}): URI
 }
 
 enum AppPlatform {
@@ -973,6 +969,8 @@ type ArticleMetadata {
   their usage as arbitrary attributes will be discouraged.
   """
   attributes: [MetadataAttribute!]!
+
+  """The content of the article."""
   content: String!
 
   """Specify a content warning."""
@@ -1943,6 +1941,11 @@ type Erc20BalanceError {
   token: EvmAddress!
 }
 
+type EventLocation {
+  physical: String
+  virtual: URI
+}
+
 type EventMetadata {
   """The address of the event."""
   address: PhysicalAddress
@@ -1969,14 +1972,14 @@ type EventMetadata {
   locale: Locale!
 
   """The location of the event."""
-  location: EventMetadataLensLocation!
+  location: EventLocation!
 
   """The main focus of the post."""
   mainContentFocus: MainContentFocus!
 
   """The geographic position of the event."""
   position: GeoUri
-  schedulingAdjustments: EventMetadataLensSchedulingAdjustments
+  schedulingAdjustments: EventSchedulingAdjustments
 
   """The event start time (ISO 8601 `YYYY-MM-DDTHH:mm:ss.sssZ`)."""
   startsAt: DateTime!
@@ -1989,450 +1992,14 @@ type EventMetadata {
   content: String!
 }
 
-type EventMetadataLensLocation {
-  physical: String
-  virtual: URI
-}
-
-type EventMetadataLensSchedulingAdjustments {
+type EventSchedulingAdjustments {
   """
   Indicates a reference timezone for the event start and end times. If physical event, you
   could use the timezone of the event location. If virtual event, the timezone of the event
   organizer.
   """
-  timezoneId: EventMetadataLensSchedulingAdjustmentsTimezoneId!
+  timezoneId: TimezoneId!
   timezoneOffset: Float!
-}
-
-enum EventMetadataLensSchedulingAdjustmentsTimezoneId {
-  AFRICA_ABIDJAN
-  AFRICA_ACCRA
-  AFRICA_ADDIS_ABABA
-  AFRICA_ALGIERS
-  AFRICA_ASMERA
-  AFRICA_BAMAKO
-  AFRICA_BANGUI
-  AFRICA_BANJUL
-  AFRICA_BISSAU
-  AFRICA_BLANTYRE
-  AFRICA_BRAZZAVILLE
-  AFRICA_BUJUMBURA
-  AFRICA_CAIRO
-  AFRICA_CASABLANCA
-  AFRICA_CEUTA
-  AFRICA_CONAKRY
-  AFRICA_DAKAR
-  AFRICA_DAR_ES_SALAAM
-  AFRICA_DJIBOUTI
-  AFRICA_DOUALA
-  AFRICA_EL_AAIUN
-  AFRICA_FREETOWN
-  AFRICA_GABORONE
-  AFRICA_HARARE
-  AFRICA_JOHANNESBURG
-  AFRICA_JUBA
-  AFRICA_KAMPALA
-  AFRICA_KHARTOUM
-  AFRICA_KIGALI
-  AFRICA_KINSHASA
-  AFRICA_LAGOS
-  AFRICA_LIBREVILLE
-  AFRICA_LOME
-  AFRICA_LUANDA
-  AFRICA_LUBUMBASHI
-  AFRICA_LUSAKA
-  AFRICA_MALABO
-  AFRICA_MAPUTO
-  AFRICA_MASERU
-  AFRICA_MBABANE
-  AFRICA_MOGADISHU
-  AFRICA_MONROVIA
-  AFRICA_NAIROBI
-  AFRICA_NDJAMENA
-  AFRICA_NIAMEY
-  AFRICA_NOUAKCHOTT
-  AFRICA_OUAGADOUGOU
-  AFRICA_PORTO_NOVO
-  AFRICA_SAO_TOME
-  AFRICA_TRIPOLI
-  AFRICA_TUNIS
-  AFRICA_WINDHOEK
-  AMERICA_ADAK
-  AMERICA_ANCHORAGE
-  AMERICA_ANGUILLA
-  AMERICA_ANTIGUA
-  AMERICA_ARAGUAINA
-  AMERICA_ARGENTINA_LA_RIOJA
-  AMERICA_ARGENTINA_RIO_GALLEGOS
-  AMERICA_ARGENTINA_SALTA
-  AMERICA_ARGENTINA_SAN_JUAN
-  AMERICA_ARGENTINA_SAN_LUIS
-  AMERICA_ARGENTINA_TUCUMAN
-  AMERICA_ARGENTINA_USHUAIA
-  AMERICA_ARUBA
-  AMERICA_ASUNCION
-  AMERICA_BAHIA
-  AMERICA_BAHIA_BANDERAS
-  AMERICA_BARBADOS
-  AMERICA_BELEM
-  AMERICA_BELIZE
-  AMERICA_BLANC_SABLON
-  AMERICA_BOA_VISTA
-  AMERICA_BOGOTA
-  AMERICA_BOISE
-  AMERICA_BUENOS_AIRES
-  AMERICA_CAMBRIDGE_BAY
-  AMERICA_CAMPO_GRANDE
-  AMERICA_CANCUN
-  AMERICA_CARACAS
-  AMERICA_CATAMARCA
-  AMERICA_CAYENNE
-  AMERICA_CAYMAN
-  AMERICA_CHICAGO
-  AMERICA_CHIHUAHUA
-  AMERICA_CIUDAD_JUAREZ
-  AMERICA_CORAL_HARBOUR
-  AMERICA_CORDOBA
-  AMERICA_COSTA_RICA
-  AMERICA_CRESTON
-  AMERICA_CUIABA
-  AMERICA_CURACAO
-  AMERICA_DANMARKSHAVN
-  AMERICA_DAWSON
-  AMERICA_DAWSON_CREEK
-  AMERICA_DENVER
-  AMERICA_DETROIT
-  AMERICA_DOMINICA
-  AMERICA_EDMONTON
-  AMERICA_EIRUNEPE
-  AMERICA_EL_SALVADOR
-  AMERICA_FORT_NELSON
-  AMERICA_FORTALEZA
-  AMERICA_GLACE_BAY
-  AMERICA_GODTHAB
-  AMERICA_GOOSE_BAY
-  AMERICA_GRAND_TURK
-  AMERICA_GRENADA
-  AMERICA_GUADELOUPE
-  AMERICA_GUATEMALA
-  AMERICA_GUAYAQUIL
-  AMERICA_GUYANA
-  AMERICA_HALIFAX
-  AMERICA_HAVANA
-  AMERICA_HERMOSILLO
-  AMERICA_INDIANA_KNOX
-  AMERICA_INDIANA_MARENGO
-  AMERICA_INDIANA_PETERSBURG
-  AMERICA_INDIANA_TELL_CITY
-  AMERICA_INDIANA_VEVAY
-  AMERICA_INDIANA_VINCENNES
-  AMERICA_INDIANA_WINAMAC
-  AMERICA_INDIANAPOLIS
-  AMERICA_INUVIK
-  AMERICA_IQALUIT
-  AMERICA_JAMAICA
-  AMERICA_JUJUY
-  AMERICA_JUNEAU
-  AMERICA_KENTUCKY_MONTICELLO
-  AMERICA_KRALENDIJK
-  AMERICA_LA_PAZ
-  AMERICA_LIMA
-  AMERICA_LOS_ANGELES
-  AMERICA_LOUISVILLE
-  AMERICA_LOWER_PRINCES
-  AMERICA_MACEIO
-  AMERICA_MANAGUA
-  AMERICA_MANAUS
-  AMERICA_MARIGOT
-  AMERICA_MARTINIQUE
-  AMERICA_MATAMOROS
-  AMERICA_MAZATLAN
-  AMERICA_MENDOZA
-  AMERICA_MENOMINEE
-  AMERICA_MERIDA
-  AMERICA_METLAKATLA
-  AMERICA_MEXICO_CITY
-  AMERICA_MIQUELON
-  AMERICA_MONCTON
-  AMERICA_MONTERREY
-  AMERICA_MONTEVIDEO
-  AMERICA_MONTSERRAT
-  AMERICA_NASSAU
-  AMERICA_NEW_YORK
-  AMERICA_NIPIGON
-  AMERICA_NOME
-  AMERICA_NORONHA
-  AMERICA_NORTH_DAKOTA_BEULAH
-  AMERICA_NORTH_DAKOTA_CENTER
-  AMERICA_NORTH_DAKOTA_NEW_SALEM
-  AMERICA_OJINAGA
-  AMERICA_PANAMA
-  AMERICA_PANGNIRTUNG
-  AMERICA_PARAMARIBO
-  AMERICA_PHOENIX
-  AMERICA_PORT_AU_PRINCE
-  AMERICA_PORT_OF_SPAIN
-  AMERICA_PORTO_VELHO
-  AMERICA_PUERTO_RICO
-  AMERICA_PUNTA_ARENAS
-  AMERICA_RAINY_RIVER
-  AMERICA_RANKIN_INLET
-  AMERICA_RECIFE
-  AMERICA_REGINA
-  AMERICA_RESOLUTE
-  AMERICA_RIO_BRANCO
-  AMERICA_SANTA_ISABEL
-  AMERICA_SANTAREM
-  AMERICA_SANTIAGO
-  AMERICA_SANTO_DOMINGO
-  AMERICA_SAO_PAULO
-  AMERICA_SCORESBYSUND
-  AMERICA_SITKA
-  AMERICA_ST_BARTHELEMY
-  AMERICA_ST_JOHNS
-  AMERICA_ST_KITTS
-  AMERICA_ST_LUCIA
-  AMERICA_ST_THOMAS
-  AMERICA_ST_VINCENT
-  AMERICA_SWIFT_CURRENT
-  AMERICA_TEGUCIGALPA
-  AMERICA_THULE
-  AMERICA_THUNDER_BAY
-  AMERICA_TIJUANA
-  AMERICA_TORONTO
-  AMERICA_TORTOLA
-  AMERICA_VANCOUVER
-  AMERICA_WHITEHORSE
-  AMERICA_WINNIPEG
-  AMERICA_YAKUTAT
-  AMERICA_YELLOWKNIFE
-  ANTARCTICA_CASEY
-  ANTARCTICA_DAVIS
-  ANTARCTICA_DUMONT_D_URVILLE
-  ANTARCTICA_MACQUARIE
-  ANTARCTICA_MAWSON
-  ANTARCTICA_MC_MURDO
-  ANTARCTICA_PALMER
-  ANTARCTICA_ROTHERA
-  ANTARCTICA_SYOWA
-  ANTARCTICA_TROLL
-  ANTARCTICA_VOSTOK
-  ARCTIC_LONGYEARBYEN
-  ASIA_ADEN
-  ASIA_ALMATY
-  ASIA_AMMAN
-  ASIA_ANADYR
-  ASIA_AQTAU
-  ASIA_AQTOBE
-  ASIA_ASHGABAT
-  ASIA_ATYRAU
-  ASIA_BAGHDAD
-  ASIA_BAHRAIN
-  ASIA_BAKU
-  ASIA_BANGKOK
-  ASIA_BARNAUL
-  ASIA_BEIRUT
-  ASIA_BISHKEK
-  ASIA_BRUNEI
-  ASIA_CALCUTTA
-  ASIA_CHITA
-  ASIA_CHOIBALSAN
-  ASIA_COLOMBO
-  ASIA_DAMASCUS
-  ASIA_DHAKA
-  ASIA_DILI
-  ASIA_DUBAI
-  ASIA_DUSHANBE
-  ASIA_FAMAGUSTA
-  ASIA_GAZA
-  ASIA_HEBRON
-  ASIA_HONG_KONG
-  ASIA_HOVD
-  ASIA_IRKUTSK
-  ASIA_JAKARTA
-  ASIA_JAYAPURA
-  ASIA_JERUSALEM
-  ASIA_KABUL
-  ASIA_KAMCHATKA
-  ASIA_KARACHI
-  ASIA_KATMANDU
-  ASIA_KHANDYGA
-  ASIA_KRASNOYARSK
-  ASIA_KUALA_LUMPUR
-  ASIA_KUCHING
-  ASIA_KUWAIT
-  ASIA_MACAU
-  ASIA_MAGADAN
-  ASIA_MAKASSAR
-  ASIA_MANILA
-  ASIA_MUSCAT
-  ASIA_NICOSIA
-  ASIA_NOVOKUZNETSK
-  ASIA_NOVOSIBIRSK
-  ASIA_OMSK
-  ASIA_ORAL
-  ASIA_PHNOM_PENH
-  ASIA_PONTIANAK
-  ASIA_PYONGYANG
-  ASIA_QATAR
-  ASIA_QOSTANAY
-  ASIA_QYZYLORDA
-  ASIA_RANGOON
-  ASIA_RIYADH
-  ASIA_SAIGON
-  ASIA_SAKHALIN
-  ASIA_SAMARKAND
-  ASIA_SEOUL
-  ASIA_SHANGHAI
-  ASIA_SINGAPORE
-  ASIA_SREDNEKOLYMSK
-  ASIA_TAIPEI
-  ASIA_TASHKENT
-  ASIA_TBILISI
-  ASIA_TEHRAN
-  ASIA_THIMPHU
-  ASIA_TOKYO
-  ASIA_TOMSK
-  ASIA_ULAANBAATAR
-  ASIA_URUMQI
-  ASIA_UST_NERA
-  ASIA_VIENTIANE
-  ASIA_VLADIVOSTOK
-  ASIA_YAKUTSK
-  ASIA_YEKATERINBURG
-  ASIA_YEREVAN
-  ATLANTIC_AZORES
-  ATLANTIC_BERMUDA
-  ATLANTIC_CANARY
-  ATLANTIC_CAPE_VERDE
-  ATLANTIC_FAEROE
-  ATLANTIC_MADEIRA
-  ATLANTIC_REYKJAVIK
-  ATLANTIC_SOUTH_GEORGIA
-  ATLANTIC_ST_HELENA
-  ATLANTIC_STANLEY
-  AUSTRALIA_ADELAIDE
-  AUSTRALIA_BRISBANE
-  AUSTRALIA_BROKEN_HILL
-  AUSTRALIA_CURRIE
-  AUSTRALIA_DARWIN
-  AUSTRALIA_EUCLA
-  AUSTRALIA_HOBART
-  AUSTRALIA_LINDEMAN
-  AUSTRALIA_LORD_HOWE
-  AUSTRALIA_MELBOURNE
-  AUSTRALIA_PERTH
-  AUSTRALIA_SYDNEY
-  EUROPE_AMSTERDAM
-  EUROPE_ANDORRA
-  EUROPE_ASTRAKHAN
-  EUROPE_ATHENS
-  EUROPE_BELGRADE
-  EUROPE_BERLIN
-  EUROPE_BRATISLAVA
-  EUROPE_BRUSSELS
-  EUROPE_BUCHAREST
-  EUROPE_BUDAPEST
-  EUROPE_BUSINGEN
-  EUROPE_CHISINAU
-  EUROPE_COPENHAGEN
-  EUROPE_DUBLIN
-  EUROPE_GIBRALTAR
-  EUROPE_GUERNSEY
-  EUROPE_HELSINKI
-  EUROPE_ISLE_OF_MAN
-  EUROPE_ISTANBUL
-  EUROPE_JERSEY
-  EUROPE_KALININGRAD
-  EUROPE_KIEV
-  EUROPE_KIROV
-  EUROPE_LISBON
-  EUROPE_LJUBLJANA
-  EUROPE_LONDON
-  EUROPE_LUXEMBOURG
-  EUROPE_MADRID
-  EUROPE_MALTA
-  EUROPE_MARIEHAMN
-  EUROPE_MINSK
-  EUROPE_MONACO
-  EUROPE_MOSCOW
-  EUROPE_OSLO
-  EUROPE_PARIS
-  EUROPE_PODGORICA
-  EUROPE_PRAGUE
-  EUROPE_RIGA
-  EUROPE_ROME
-  EUROPE_SAMARA
-  EUROPE_SAN_MARINO
-  EUROPE_SARAJEVO
-  EUROPE_SARATOV
-  EUROPE_SIMFEROPOL
-  EUROPE_SKOPJE
-  EUROPE_SOFIA
-  EUROPE_STOCKHOLM
-  EUROPE_TALLINN
-  EUROPE_TIRANE
-  EUROPE_ULYANOVSK
-  EUROPE_UZHGOROD
-  EUROPE_VADUZ
-  EUROPE_VATICAN
-  EUROPE_VIENNA
-  EUROPE_VILNIUS
-  EUROPE_VOLGOGRAD
-  EUROPE_WARSAW
-  EUROPE_ZAGREB
-  EUROPE_ZAPOROZHYE
-  EUROPE_ZURICH
-  INDIAN_ANTANANARIVO
-  INDIAN_CHAGOS
-  INDIAN_CHRISTMAS
-  INDIAN_COCOS
-  INDIAN_COMORO
-  INDIAN_KERGUELEN
-  INDIAN_MAHE
-  INDIAN_MALDIVES
-  INDIAN_MAURITIUS
-  INDIAN_MAYOTTE
-  INDIAN_REUNION
-  PACIFIC_APIA
-  PACIFIC_AUCKLAND
-  PACIFIC_BOUGAINVILLE
-  PACIFIC_CHATHAM
-  PACIFIC_EASTER
-  PACIFIC_EFATE
-  PACIFIC_ENDERBURY
-  PACIFIC_FAKAOFO
-  PACIFIC_FIJI
-  PACIFIC_FUNAFUTI
-  PACIFIC_GALAPAGOS
-  PACIFIC_GAMBIER
-  PACIFIC_GUADALCANAL
-  PACIFIC_GUAM
-  PACIFIC_HONOLULU
-  PACIFIC_JOHNSTON
-  PACIFIC_KIRITIMATI
-  PACIFIC_KOSRAE
-  PACIFIC_KWAJALEIN
-  PACIFIC_MAJURO
-  PACIFIC_MARQUESAS
-  PACIFIC_MIDWAY
-  PACIFIC_NAURU
-  PACIFIC_NIUE
-  PACIFIC_NORFOLK
-  PACIFIC_NOUMEA
-  PACIFIC_PAGO_PAGO
-  PACIFIC_PALAU
-  PACIFIC_PITCAIRN
-  PACIFIC_PONAPE
-  PACIFIC_PORT_MORESBY
-  PACIFIC_RAROTONGA
-  PACIFIC_SAIPAN
-  PACIFIC_TAHITI
-  PACIFIC_TARAWA
-  PACIFIC_TONGATAPU
-  PACIFIC_TRUK
-  PACIFIC_WAKE
-  PACIFIC_WALLIS
 }
 
 scalar EvmAddress
@@ -2648,6 +2215,11 @@ type FinishedTransactionStatus {
 }
 
 scalar FixedBytes32
+
+input FixedSizeTransform {
+  width: Int!
+  height: Int!
+}
 
 type FollowNotification {
   id: GeneratedNotificationId!
@@ -3199,15 +2771,11 @@ type GroupMetadata {
   Use a UUID if unsure.
   """
   id: String!
-
-  """Optional uri of the Community's icon."""
-  icon: URI
+  icon(request: MediaImageRequest! = {useOriginal: false}): URI
 
   """The name of the Community."""
   name: String!
-
-  """The Group cover picture."""
-  coverPicture: URI
+  coverPicture(request: MediaImageRequest! = {useOriginal: false}): URI
 }
 
 type GroupOperationValidationFailed {
@@ -3344,6 +2912,10 @@ input HasReactedRequest {
   type: PostReactionType
 }
 
+input HeightBasedTransform {
+  height: Int!
+}
+
 input HideManagedAccountRequest {
   """The account to hide."""
   account: EvmAddress!
@@ -3381,6 +2953,13 @@ type ImageMetadata {
   """The optional image title."""
   title: String
   content: String!
+}
+
+"""The image transformation to apply to the image."""
+input ImageTransform @oneOf {
+  fixedSize: FixedSizeTransform
+  widthBased: WidthBasedTransform
+  heightBased: HeightBasedTransform
 }
 
 enum IndexingStatus {
@@ -3741,7 +3320,6 @@ type MeResult {
   limit: SponsorshipAllowance!
 }
 
-"""MediaAudio"""
 type MediaAudio {
   """The name of the artist."""
   artist: String
@@ -3751,7 +3329,6 @@ type MediaAudio {
   supported by the standard.
   """
   attributes: [MetadataAttribute!]!
-  cover: URI
 
   """The credits for the audio."""
   credits: String
@@ -3761,13 +3338,14 @@ type MediaAudio {
 
   """The genre of the audio"""
   genre: String
-  item: URI!
 
   """The type of audio."""
   kind: MediaAudioKind
 
   """The license for the audio."""
   license: MetadataLicenseType
+
+  """The URI to the lyrics of the audio file."""
   lyrics: URI
 
   """The record label for the audio."""
@@ -3775,6 +3353,13 @@ type MediaAudio {
 
   """The mime type of the audio file."""
   type: MediaAudioType!
+
+  """
+  The URI of the audio. You can use the optional `request` argument to choose between
+  the original URI or a snapshotted one on CDN. Returns the snapshotted URI by default.
+  """
+  item(request: MediaAudioRequest! = {useOriginal: false}): URI!
+  cover(request: MediaImageRequest! = {useOriginal: false}): URI
 }
 
 enum MediaAudioKind {
@@ -3784,6 +3369,10 @@ enum MediaAudioKind {
   VOICE_NOTE
   SOUND
   OTHER
+}
+
+input MediaAudioRequest {
+  useOriginal: Boolean!
 }
 
 """The mime type of the audio file."""
@@ -3798,59 +3387,6 @@ enum MediaAudioType {
   AUDIO_FLAC
 }
 
-"""
-MediaImage
-
-<details><summary>JSON schema</summary>
-
-```json
-{
-"type": "object",
-"required": [
-"item",
-"type"
-],
-"properties": {
-"altTag": {
-"description": "The alt tag for accessibility",
-"$ref": "#/$defs/EncryptableString"
-},
-"attributes": {
-"description": "A bag of attributes that can be used to store any kind of metadata that is not currently supported by the standard.",
-"type": "array",
-"items": {
-"$ref": "#/$defs/MetadataAttribute"
-},
-"minItems": 1
-},
-"item": {
-"$ref": "#/$defs/EncryptableUri"
-},
-"license": {
-"description": "The license for the image",
-"$ref": "#/$defs/MetadataLicenseType"
-},
-"type": {
-"description": "The mime type of the image",
-"type": "string",
-"enum": [
-"image/bmp",
-"image/gif",
-"image/heic",
-"image/jpeg",
-"image/png",
-"image/svg+xml",
-"image/tiff",
-"image/webp",
-"image/x-ms-bmp"
-]
-}
-},
-"additionalProperties": false
-}
-```
-</details>
-"""
 type MediaImage {
   """The alt tag for accessibility"""
   altTag: String
@@ -3860,13 +3396,30 @@ type MediaImage {
   supported by the standard.
   """
   attributes: [MetadataAttribute!]!
-  item: URI!
 
   """The license for the image"""
   license: MetadataLicenseType
 
   """The mime type of the image"""
   type: MediaImageType!
+
+  """The width of the image"""
+  width: Int
+
+  """The height of the image"""
+  height: Int
+
+  """
+  The URI of the image. You can use the optional `request` argument to choose between
+  the original, snapshotted on CDN, or transformed to a different resolution. Returns the
+  snapshotted URI by default.
+  """
+  item(request: MediaImageRequest! = {useOriginal: false}): URI!
+}
+
+input MediaImageRequest @oneOf {
+  useOriginal: Boolean
+  preferTransform: ImageTransform
 }
 
 """
@@ -3909,68 +3462,6 @@ input MediaSnapshotNotificationAttributes {
   source: EntityId
 }
 
-"""
-MediaVideo
-
-<details><summary>JSON schema</summary>
-
-```json
-{
-"type": "object",
-"required": [
-"item",
-"type"
-],
-"properties": {
-"altTag": {
-"description": "The alt tag for accessibility",
-"$ref": "#/$defs/EncryptableString"
-},
-"attributes": {
-"description": "A bag of attributes that can be used to store any kind of metadata that is not currently supported by the standard.",
-"type": "array",
-"items": {
-"$ref": "#/$defs/MetadataAttribute"
-},
-"minItems": 1
-},
-"cover": {
-"$ref": "#/$defs/EncryptableUri"
-},
-"duration": {
-"description": "How long the the video is in seconds",
-"type": "integer",
-"exclusiveMinimum": 0.0
-},
-"item": {
-"$ref": "#/$defs/EncryptableUri"
-},
-"license": {
-"description": "The license for the video",
-"$ref": "#/$defs/MetadataLicenseType"
-},
-"type": {
-"description": "The mime type of the video",
-"type": "string",
-"enum": [
-"model/gltf+json",
-"model/gltf-binary",
-"video/x-m4v",
-"video/mov",
-"video/mp4",
-"video/mpeg",
-"video/ogg",
-"video/ogv",
-"video/quicktime",
-"video/webm"
-]
-}
-},
-"additionalProperties": false
-}
-```
-</details>
-"""
 type MediaVideo {
   """The alt tag for accessibility"""
   altTag: String
@@ -3980,17 +3471,22 @@ type MediaVideo {
   supported by the standard.
   """
   attributes: [MetadataAttribute!]!
-  cover: URI
 
   """How long the the video is in seconds"""
   duration: Int
-  item: URI!
 
   """The license for the video"""
   license: MetadataLicenseType
 
   """The mime type of the video"""
   type: MediaVideoType!
+  item(request: MediaVideoRequest! = {useOriginal: false}): URI!
+  cover(request: MediaImageRequest! = {useOriginal: false}): URI
+}
+
+input MediaVideoRequest {
+  """Set to `true` to get the original URI of the video."""
+  useOriginal: Boolean!
 }
 
 """
@@ -5435,7 +4931,7 @@ input PostAccountPair {
 The configured actions for a post. All posts have the TippingPostAction enabled by default which
 is not listed here.
 """
-union PostAction = SimpleCollectAction | UnknownAction
+union PostAction = SimpleCollectAction | UnknownPostAction
 
 input PostActionConfigInput @oneOf {
   simpleCollect: SimpleCollectActionConfigInput
@@ -7074,6 +6570,437 @@ input TimelineRequest {
   cursor: Cursor
 }
 
+enum TimezoneId {
+  AFRICA_ABIDJAN
+  AFRICA_ACCRA
+  AFRICA_ADDIS_ABABA
+  AFRICA_ALGIERS
+  AFRICA_ASMERA
+  AFRICA_BAMAKO
+  AFRICA_BANGUI
+  AFRICA_BANJUL
+  AFRICA_BISSAU
+  AFRICA_BLANTYRE
+  AFRICA_BRAZZAVILLE
+  AFRICA_BUJUMBURA
+  AFRICA_CAIRO
+  AFRICA_CASABLANCA
+  AFRICA_CEUTA
+  AFRICA_CONAKRY
+  AFRICA_DAKAR
+  AFRICA_DAR_ES_SALAAM
+  AFRICA_DJIBOUTI
+  AFRICA_DOUALA
+  AFRICA_EL_AAIUN
+  AFRICA_FREETOWN
+  AFRICA_GABORONE
+  AFRICA_HARARE
+  AFRICA_JOHANNESBURG
+  AFRICA_JUBA
+  AFRICA_KAMPALA
+  AFRICA_KHARTOUM
+  AFRICA_KIGALI
+  AFRICA_KINSHASA
+  AFRICA_LAGOS
+  AFRICA_LIBREVILLE
+  AFRICA_LOME
+  AFRICA_LUANDA
+  AFRICA_LUBUMBASHI
+  AFRICA_LUSAKA
+  AFRICA_MALABO
+  AFRICA_MAPUTO
+  AFRICA_MASERU
+  AFRICA_MBABANE
+  AFRICA_MOGADISHU
+  AFRICA_MONROVIA
+  AFRICA_NAIROBI
+  AFRICA_NDJAMENA
+  AFRICA_NIAMEY
+  AFRICA_NOUAKCHOTT
+  AFRICA_OUAGADOUGOU
+  AFRICA_PORTO_NOVO
+  AFRICA_SAO_TOME
+  AFRICA_TRIPOLI
+  AFRICA_TUNIS
+  AFRICA_WINDHOEK
+  AMERICA_ADAK
+  AMERICA_ANCHORAGE
+  AMERICA_ANGUILLA
+  AMERICA_ANTIGUA
+  AMERICA_ARAGUAINA
+  AMERICA_ARGENTINA_LA_RIOJA
+  AMERICA_ARGENTINA_RIO_GALLEGOS
+  AMERICA_ARGENTINA_SALTA
+  AMERICA_ARGENTINA_SAN_JUAN
+  AMERICA_ARGENTINA_SAN_LUIS
+  AMERICA_ARGENTINA_TUCUMAN
+  AMERICA_ARGENTINA_USHUAIA
+  AMERICA_ARUBA
+  AMERICA_ASUNCION
+  AMERICA_BAHIA
+  AMERICA_BAHIA_BANDERAS
+  AMERICA_BARBADOS
+  AMERICA_BELEM
+  AMERICA_BELIZE
+  AMERICA_BLANC_SABLON
+  AMERICA_BOA_VISTA
+  AMERICA_BOGOTA
+  AMERICA_BOISE
+  AMERICA_BUENOS_AIRES
+  AMERICA_CAMBRIDGE_BAY
+  AMERICA_CAMPO_GRANDE
+  AMERICA_CANCUN
+  AMERICA_CARACAS
+  AMERICA_CATAMARCA
+  AMERICA_CAYENNE
+  AMERICA_CAYMAN
+  AMERICA_CHICAGO
+  AMERICA_CHIHUAHUA
+  AMERICA_CIUDAD_JUAREZ
+  AMERICA_CORAL_HARBOUR
+  AMERICA_CORDOBA
+  AMERICA_COSTA_RICA
+  AMERICA_CRESTON
+  AMERICA_CUIABA
+  AMERICA_CURACAO
+  AMERICA_DANMARKSHAVN
+  AMERICA_DAWSON
+  AMERICA_DAWSON_CREEK
+  AMERICA_DENVER
+  AMERICA_DETROIT
+  AMERICA_DOMINICA
+  AMERICA_EDMONTON
+  AMERICA_EIRUNEPE
+  AMERICA_EL_SALVADOR
+  AMERICA_FORT_NELSON
+  AMERICA_FORTALEZA
+  AMERICA_GLACE_BAY
+  AMERICA_GODTHAB
+  AMERICA_GOOSE_BAY
+  AMERICA_GRAND_TURK
+  AMERICA_GRENADA
+  AMERICA_GUADELOUPE
+  AMERICA_GUATEMALA
+  AMERICA_GUAYAQUIL
+  AMERICA_GUYANA
+  AMERICA_HALIFAX
+  AMERICA_HAVANA
+  AMERICA_HERMOSILLO
+  AMERICA_INDIANA_KNOX
+  AMERICA_INDIANA_MARENGO
+  AMERICA_INDIANA_PETERSBURG
+  AMERICA_INDIANA_TELL_CITY
+  AMERICA_INDIANA_VEVAY
+  AMERICA_INDIANA_VINCENNES
+  AMERICA_INDIANA_WINAMAC
+  AMERICA_INDIANAPOLIS
+  AMERICA_INUVIK
+  AMERICA_IQALUIT
+  AMERICA_JAMAICA
+  AMERICA_JUJUY
+  AMERICA_JUNEAU
+  AMERICA_KENTUCKY_MONTICELLO
+  AMERICA_KRALENDIJK
+  AMERICA_LA_PAZ
+  AMERICA_LIMA
+  AMERICA_LOS_ANGELES
+  AMERICA_LOUISVILLE
+  AMERICA_LOWER_PRINCES
+  AMERICA_MACEIO
+  AMERICA_MANAGUA
+  AMERICA_MANAUS
+  AMERICA_MARIGOT
+  AMERICA_MARTINIQUE
+  AMERICA_MATAMOROS
+  AMERICA_MAZATLAN
+  AMERICA_MENDOZA
+  AMERICA_MENOMINEE
+  AMERICA_MERIDA
+  AMERICA_METLAKATLA
+  AMERICA_MEXICO_CITY
+  AMERICA_MIQUELON
+  AMERICA_MONCTON
+  AMERICA_MONTERREY
+  AMERICA_MONTEVIDEO
+  AMERICA_MONTSERRAT
+  AMERICA_NASSAU
+  AMERICA_NEW_YORK
+  AMERICA_NIPIGON
+  AMERICA_NOME
+  AMERICA_NORONHA
+  AMERICA_NORTH_DAKOTA_BEULAH
+  AMERICA_NORTH_DAKOTA_CENTER
+  AMERICA_NORTH_DAKOTA_NEW_SALEM
+  AMERICA_OJINAGA
+  AMERICA_PANAMA
+  AMERICA_PANGNIRTUNG
+  AMERICA_PARAMARIBO
+  AMERICA_PHOENIX
+  AMERICA_PORT_AU_PRINCE
+  AMERICA_PORT_OF_SPAIN
+  AMERICA_PORTO_VELHO
+  AMERICA_PUERTO_RICO
+  AMERICA_PUNTA_ARENAS
+  AMERICA_RAINY_RIVER
+  AMERICA_RANKIN_INLET
+  AMERICA_RECIFE
+  AMERICA_REGINA
+  AMERICA_RESOLUTE
+  AMERICA_RIO_BRANCO
+  AMERICA_SANTA_ISABEL
+  AMERICA_SANTAREM
+  AMERICA_SANTIAGO
+  AMERICA_SANTO_DOMINGO
+  AMERICA_SAO_PAULO
+  AMERICA_SCORESBYSUND
+  AMERICA_SITKA
+  AMERICA_ST_BARTHELEMY
+  AMERICA_ST_JOHNS
+  AMERICA_ST_KITTS
+  AMERICA_ST_LUCIA
+  AMERICA_ST_THOMAS
+  AMERICA_ST_VINCENT
+  AMERICA_SWIFT_CURRENT
+  AMERICA_TEGUCIGALPA
+  AMERICA_THULE
+  AMERICA_THUNDER_BAY
+  AMERICA_TIJUANA
+  AMERICA_TORONTO
+  AMERICA_TORTOLA
+  AMERICA_VANCOUVER
+  AMERICA_WHITEHORSE
+  AMERICA_WINNIPEG
+  AMERICA_YAKUTAT
+  AMERICA_YELLOWKNIFE
+  ANTARCTICA_CASEY
+  ANTARCTICA_DAVIS
+  ANTARCTICA_DUMONT_D_URVILLE
+  ANTARCTICA_MACQUARIE
+  ANTARCTICA_MAWSON
+  ANTARCTICA_MC_MURDO
+  ANTARCTICA_PALMER
+  ANTARCTICA_ROTHERA
+  ANTARCTICA_SYOWA
+  ANTARCTICA_TROLL
+  ANTARCTICA_VOSTOK
+  ARCTIC_LONGYEARBYEN
+  ASIA_ADEN
+  ASIA_ALMATY
+  ASIA_AMMAN
+  ASIA_ANADYR
+  ASIA_AQTAU
+  ASIA_AQTOBE
+  ASIA_ASHGABAT
+  ASIA_ATYRAU
+  ASIA_BAGHDAD
+  ASIA_BAHRAIN
+  ASIA_BAKU
+  ASIA_BANGKOK
+  ASIA_BARNAUL
+  ASIA_BEIRUT
+  ASIA_BISHKEK
+  ASIA_BRUNEI
+  ASIA_CALCUTTA
+  ASIA_CHITA
+  ASIA_CHOIBALSAN
+  ASIA_COLOMBO
+  ASIA_DAMASCUS
+  ASIA_DHAKA
+  ASIA_DILI
+  ASIA_DUBAI
+  ASIA_DUSHANBE
+  ASIA_FAMAGUSTA
+  ASIA_GAZA
+  ASIA_HEBRON
+  ASIA_HONG_KONG
+  ASIA_HOVD
+  ASIA_IRKUTSK
+  ASIA_JAKARTA
+  ASIA_JAYAPURA
+  ASIA_JERUSALEM
+  ASIA_KABUL
+  ASIA_KAMCHATKA
+  ASIA_KARACHI
+  ASIA_KATMANDU
+  ASIA_KHANDYGA
+  ASIA_KRASNOYARSK
+  ASIA_KUALA_LUMPUR
+  ASIA_KUCHING
+  ASIA_KUWAIT
+  ASIA_MACAU
+  ASIA_MAGADAN
+  ASIA_MAKASSAR
+  ASIA_MANILA
+  ASIA_MUSCAT
+  ASIA_NICOSIA
+  ASIA_NOVOKUZNETSK
+  ASIA_NOVOSIBIRSK
+  ASIA_OMSK
+  ASIA_ORAL
+  ASIA_PHNOM_PENH
+  ASIA_PONTIANAK
+  ASIA_PYONGYANG
+  ASIA_QATAR
+  ASIA_QOSTANAY
+  ASIA_QYZYLORDA
+  ASIA_RANGOON
+  ASIA_RIYADH
+  ASIA_SAIGON
+  ASIA_SAKHALIN
+  ASIA_SAMARKAND
+  ASIA_SEOUL
+  ASIA_SHANGHAI
+  ASIA_SINGAPORE
+  ASIA_SREDNEKOLYMSK
+  ASIA_TAIPEI
+  ASIA_TASHKENT
+  ASIA_TBILISI
+  ASIA_TEHRAN
+  ASIA_THIMPHU
+  ASIA_TOKYO
+  ASIA_TOMSK
+  ASIA_ULAANBAATAR
+  ASIA_URUMQI
+  ASIA_UST_NERA
+  ASIA_VIENTIANE
+  ASIA_VLADIVOSTOK
+  ASIA_YAKUTSK
+  ASIA_YEKATERINBURG
+  ASIA_YEREVAN
+  ATLANTIC_AZORES
+  ATLANTIC_BERMUDA
+  ATLANTIC_CANARY
+  ATLANTIC_CAPE_VERDE
+  ATLANTIC_FAEROE
+  ATLANTIC_MADEIRA
+  ATLANTIC_REYKJAVIK
+  ATLANTIC_SOUTH_GEORGIA
+  ATLANTIC_ST_HELENA
+  ATLANTIC_STANLEY
+  AUSTRALIA_ADELAIDE
+  AUSTRALIA_BRISBANE
+  AUSTRALIA_BROKEN_HILL
+  AUSTRALIA_CURRIE
+  AUSTRALIA_DARWIN
+  AUSTRALIA_EUCLA
+  AUSTRALIA_HOBART
+  AUSTRALIA_LINDEMAN
+  AUSTRALIA_LORD_HOWE
+  AUSTRALIA_MELBOURNE
+  AUSTRALIA_PERTH
+  AUSTRALIA_SYDNEY
+  EUROPE_AMSTERDAM
+  EUROPE_ANDORRA
+  EUROPE_ASTRAKHAN
+  EUROPE_ATHENS
+  EUROPE_BELGRADE
+  EUROPE_BERLIN
+  EUROPE_BRATISLAVA
+  EUROPE_BRUSSELS
+  EUROPE_BUCHAREST
+  EUROPE_BUDAPEST
+  EUROPE_BUSINGEN
+  EUROPE_CHISINAU
+  EUROPE_COPENHAGEN
+  EUROPE_DUBLIN
+  EUROPE_GIBRALTAR
+  EUROPE_GUERNSEY
+  EUROPE_HELSINKI
+  EUROPE_ISLE_OF_MAN
+  EUROPE_ISTANBUL
+  EUROPE_JERSEY
+  EUROPE_KALININGRAD
+  EUROPE_KIEV
+  EUROPE_KIROV
+  EUROPE_LISBON
+  EUROPE_LJUBLJANA
+  EUROPE_LONDON
+  EUROPE_LUXEMBOURG
+  EUROPE_MADRID
+  EUROPE_MALTA
+  EUROPE_MARIEHAMN
+  EUROPE_MINSK
+  EUROPE_MONACO
+  EUROPE_MOSCOW
+  EUROPE_OSLO
+  EUROPE_PARIS
+  EUROPE_PODGORICA
+  EUROPE_PRAGUE
+  EUROPE_RIGA
+  EUROPE_ROME
+  EUROPE_SAMARA
+  EUROPE_SAN_MARINO
+  EUROPE_SARAJEVO
+  EUROPE_SARATOV
+  EUROPE_SIMFEROPOL
+  EUROPE_SKOPJE
+  EUROPE_SOFIA
+  EUROPE_STOCKHOLM
+  EUROPE_TALLINN
+  EUROPE_TIRANE
+  EUROPE_ULYANOVSK
+  EUROPE_UZHGOROD
+  EUROPE_VADUZ
+  EUROPE_VATICAN
+  EUROPE_VIENNA
+  EUROPE_VILNIUS
+  EUROPE_VOLGOGRAD
+  EUROPE_WARSAW
+  EUROPE_ZAGREB
+  EUROPE_ZAPOROZHYE
+  EUROPE_ZURICH
+  INDIAN_ANTANANARIVO
+  INDIAN_CHAGOS
+  INDIAN_CHRISTMAS
+  INDIAN_COCOS
+  INDIAN_COMORO
+  INDIAN_KERGUELEN
+  INDIAN_MAHE
+  INDIAN_MALDIVES
+  INDIAN_MAURITIUS
+  INDIAN_MAYOTTE
+  INDIAN_REUNION
+  PACIFIC_APIA
+  PACIFIC_AUCKLAND
+  PACIFIC_BOUGAINVILLE
+  PACIFIC_CHATHAM
+  PACIFIC_EASTER
+  PACIFIC_EFATE
+  PACIFIC_ENDERBURY
+  PACIFIC_FAKAOFO
+  PACIFIC_FIJI
+  PACIFIC_FUNAFUTI
+  PACIFIC_GALAPAGOS
+  PACIFIC_GAMBIER
+  PACIFIC_GUADALCANAL
+  PACIFIC_GUAM
+  PACIFIC_HONOLULU
+  PACIFIC_JOHNSTON
+  PACIFIC_KIRITIMATI
+  PACIFIC_KOSRAE
+  PACIFIC_KWAJALEIN
+  PACIFIC_MAJURO
+  PACIFIC_MARQUESAS
+  PACIFIC_MIDWAY
+  PACIFIC_NAURU
+  PACIFIC_NIUE
+  PACIFIC_NORFOLK
+  PACIFIC_NOUMEA
+  PACIFIC_PAGO_PAGO
+  PACIFIC_PALAU
+  PACIFIC_PITCAIRN
+  PACIFIC_PONAPE
+  PACIFIC_PORT_MORESBY
+  PACIFIC_RAROTONGA
+  PACIFIC_SAIPAN
+  PACIFIC_TAHITI
+  PACIFIC_TARAWA
+  PACIFIC_TONGATAPU
+  PACIFIC_TRUK
+  PACIFIC_WAKE
+  PACIFIC_WALLIS
+}
+
 type TippingAccountAction {
   address: EvmAddress!
 }
@@ -7423,18 +7350,18 @@ input UnhideReplyRequest {
   post: PostId!
 }
 
+type UnknownAccountAction {
+  address: EvmAddress!
+  config: [RawKeyValue!]!
+  metadata: ActionMetadata
+}
+
 input UnknownAccountRuleConfig {
   """The rule contract address."""
   address: EvmAddress!
 
   """Optional rule configuration parameters"""
   params: [AnyKeyValueInput!]
-}
-
-type UnknownAction {
-  address: EvmAddress!
-  config: [RawKeyValue!]!
-  metadata: ActionMetadata
 }
 
 input UnknownActionConfigInput {
@@ -7450,7 +7377,7 @@ input UnknownActionExecuteInput {
   address: EvmAddress!
 
   """Optional action execution params"""
-  params: [RawKeyValueInput!]!
+  params: [RawKeyValueInput!]! = []
 }
 
 input UnknownFeedRuleConfig {
@@ -7487,6 +7414,12 @@ input UnknownNamespaceRuleConfig {
 
   """Optional rule configuration parameters"""
   params: [AnyKeyValueInput!]
+}
+
+type UnknownPostAction {
+  address: EvmAddress!
+  config: [RawKeyValue!]!
+  metadata: ActionMetadata
 }
 
 type UnknownPostActionContract {
@@ -7921,6 +7854,10 @@ input WhoReferencedPostRequest {
 
   """The cursor."""
   cursor: Cursor
+}
+
+input WidthBasedTransform {
+  width: Int!
 }
 
 """The signature was not signed by the expected signer."""

@@ -1,6 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
-import { AnyKeyValueFragment, type UnknownAction, UnknownActionFragment } from './common';
+import { ActionMetadataFragment, AnyKeyValueFragment } from './common';
 import { MetadataAttributeFragment } from './metadata';
 import { type GraphRule, GraphRuleFragment } from './primitives';
 import { UsernameFragment } from './username';
@@ -184,19 +184,34 @@ export const TippingAccountActionFragment = graphql(
 );
 export type TippingAccountAction = FragmentOf<typeof TippingAccountActionFragment>;
 
+export const UnknownAccountActionFragment = graphql(
+  `fragment UnknownAccountAction on UnknownAccountAction {
+    __typename
+    address
+    config {
+      ...AnyKeyValue
+    }
+    metadata {
+      ...ActionMetadata
+    }
+  }`,
+  [AnyKeyValueFragment, ActionMetadataFragment],
+);
+export type UnknownAccountAction = FragmentOf<typeof UnknownAccountActionFragment>;
+
 export const AccountActionFragment = graphql(
   `fragment AccountAction on AccountAction {
     __typename
     ... on TippingAccountAction {
       ...TippingAccountAction
     }
-    ... on UnknownAction {
-      ...UnknownAction
+    ... on UnknownAccountAction {
+      ...UnknownAccountAction
     }
   }`,
-  [TippingAccountActionFragment, UnknownActionFragment],
+  [TippingAccountActionFragment, UnknownAccountActionFragment],
 );
-export type AccountAction = TippingAccountAction | UnknownAction;
+export type AccountAction = TippingAccountAction | UnknownAccountAction;
 
 export const AccountFragment = graphql(
   `fragment Account on Account {
