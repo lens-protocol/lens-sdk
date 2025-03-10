@@ -34,4 +34,5 @@ jobs:
           private_key: ${{ secrets.PRIVATE_KEY }}
           test_app: ${{ vars.TEST_APP }}
           test_account: ${{ vars.TEST_ACCOUNT }}
+          test_erc20: ${{ vars.TEST_ERC20 }}
           publish_results: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.publish_results || 'true' }}
