@@ -50,6 +50,14 @@ input AccountActionFilter @oneOf {
 
 union AccountAvailable = AccountManaged | AccountOwned
 
+input AccountBalancesRequest {
+  """The ERC-20 token addresses to get balances for."""
+  tokens: [EvmAddress!]! = []
+
+  """Whether to include the native token balance."""
+  includeNative: Boolean! = false
+}
+
 type AccountBlocked {
   account: Account!
   blockedAt: DateTime!
@@ -721,6 +729,8 @@ input AmountInput {
   value: BigDecimal!
 }
 
+union AnyAccountBalance = NativeAmount | Erc20Amount | NativeBalanceError | Erc20BalanceError
+
 union AnyKeyValue = IntKeyValue | IntNullableKeyValue | AddressKeyValue | StringKeyValue | BooleanKeyValue | RawKeyValue | BigDecimalKeyValue | DictionaryKeyValue | ArrayKeyValue
 
 input AnyKeyValueInput @oneOf {
@@ -743,7 +753,6 @@ type App {
   createdAt: DateTime!
   metadata: AppMetadata
   owner: EvmAddress!
-  hasAuthorizationEndpoint: Boolean!
 }
 
 type AppFeed {
@@ -1902,13 +1911,21 @@ enum EntityType {
 }
 
 type Erc20 {
+  """The name of the token."""
   name: String!
+
+  """The symbol of the token."""
   symbol: String!
+
+  """The number of decimals the token uses."""
   decimals: Int!
+
+  """The contract address of the token."""
   contract: NetworkAddress!
 }
 
 type Erc20Amount {
+  """The ERC-20 token info."""
   asset: Erc20!
 
   """
@@ -1916,6 +1933,14 @@ type Erc20Amount {
   wei).
   """
   value: BigDecimal!
+}
+
+type Erc20BalanceError {
+  """The reason for the failure."""
+  reason: String!
+
+  """The token for which the balance retrieval failed."""
+  token: EvmAddress!
 }
 
 type EventMetadata {
@@ -5006,6 +5031,31 @@ type NamespacesResult {
   pageInfo: PaginatedResultInfo!
 }
 
+type NativeAmount {
+  """The native token info."""
+  asset: NativeToken!
+
+  """Token value in its main unit (e.g., 1.5 GHO)."""
+  value: BigDecimal!
+}
+
+"""A failure to retrieve the balance of the native token."""
+type NativeBalanceError {
+  """The reason for the failure."""
+  reason: String!
+}
+
+type NativeToken {
+  """The name of the token."""
+  name: String!
+
+  """The symbol of the token."""
+  symbol: String!
+
+  """The number of decimals the token uses."""
+  decimals: Int!
+}
+
 type NetworkAddress {
   address: EvmAddress!
   chainId: Int!
@@ -5829,6 +5879,13 @@ type Query {
   accounts(request: AccountsRequest!): PaginatedAccountsResult!
 
   """
+  Get native and/or ERC20 token balances in bulk for the authenticated Account.
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this query.
+  """
+  accountBalances(request: AccountBalancesRequest!): [AnyAccountBalance!]!
+
+  """
   Account information for the authenticated account.
   
   You MUST be authenticated to use this query.
@@ -6640,7 +6697,7 @@ type Sponsorship {
   
   This value is cached for up to 2 minutes for each sponsorship contract.
   """
-  balance: BigDecimal
+  balance: BigDecimal!
 
   """
   Indicates whether the Lens API is authorized as the sponsorship signer

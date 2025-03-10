@@ -14,10 +14,13 @@ inputs:
     required: false
     default: 'false'
   test_app:
-    description: 'Test application variable'
+    description: 'A valid Lens App address'
     required: true
   test_account:
-    description: 'Test account variable'
+    description: 'A Lens Account address'
+    required: true
+  test_erc20:
+    description: 'An ERC20 token address'
     required: true
   
 runs:
@@ -38,6 +41,7 @@ runs:
         echo PRIVATE_KEY="${{ inputs.private_key }}" >> .env
         echo "TEST_APP=${{ inputs.test_app }}" >> .env
         echo "TEST_ACCOUNT=${{ inputs.test_account }}" >> .env
+        echo "TEST_ERC20=${{ inputs.test_erc20 }}" >> .env
         echo "ENVIRONMENT=${{ inputs.environment }}" >> .env
 
     - name: Run Tests
