@@ -2968,6 +2968,10 @@ enum IndexingStatus {
   FAILED
 }
 
+type InsufficientFunds {
+  reason: String!
+}
+
 type IntKeyValue {
   key: String!
   int: Int!
@@ -3938,6 +3942,13 @@ type Mutation {
   You MUST be authenticated as Account Owner or Account Manager to use this mutation.
   """
   executeAccountAction(request: ExecuteAccountActionRequest!): ExecuteAccountActionResult!
+
+  """
+  Creates a withdrawal transaction request for the authenticated account.
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation
+  """
+  withdraw(request: WithdrawRequest!): WithdrawResult!
 
   """Authenticate the user with the signed authentication challenge."""
   authenticate(request: SignedAuthChallenge!): AuthenticationResult!
@@ -7859,6 +7870,13 @@ input WhoReferencedPostRequest {
 input WidthBasedTransform {
   width: Int!
 }
+
+input WithdrawRequest @oneOf {
+  erc20: AmountInput
+  native: BigDecimal
+}
+
+union WithdrawResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | InsufficientFunds | TransactionWillFail
 
 """The signature was not signed by the expected signer."""
 type WrongSignerError {

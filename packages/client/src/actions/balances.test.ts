@@ -1,12 +1,13 @@
-import { assertOk, evmAddress } from '@lens-protocol/types';
+import { assertOk, bigDecimal, evmAddress } from '@lens-protocol/types';
 import { describe, expect, it } from 'vitest';
 
 import { zeroAddress } from 'viem';
-import { CHAIN, TEST_ERC20, loginAsAccountOwner } from '../test-utils';
-import { fetchAccountBalances } from './balances';
+import { CHAIN, TEST_ERC20, loginAsAccountOwner, wallet } from '../test-utils';
+import { handleOperationWith } from '../viem';
+import { fetchAccountBalances, withdraw } from './balances';
 
-describe(`Given the '${fetchAccountBalances.name}' action`, () => {
-  describe('When fetching token balances for the logged-in account', () => {
+describe('Given the balance actions', () => {
+  describe(`When calling the '${fetchAccountBalances.name}' action`, () => {
     it('Then it should return the expected balance amounts', async () => {
       const result = await loginAsAccountOwner().andThen((sessionClient) =>
         fetchAccountBalances(sessionClient, {
@@ -36,9 +37,7 @@ describe(`Given the '${fetchAccountBalances.name}' action`, () => {
         },
       ]);
     });
-  });
 
-  describe('When fetching a token balance that does not resolve', () => {
     it('Then it should be resilient and have a local erro just for the failed balance', async () => {
       const result = await loginAsAccountOwner().andThen((sessionClient) =>
         fetchAccountBalances(sessionClient, {
@@ -72,6 +71,22 @@ describe(`Given the '${fetchAccountBalances.name}' action`, () => {
           value: expect.any(String),
         },
       ]);
+    });
+  });
+
+  describe(`When calling the '${withdraw.name}' action`, () => {
+    // TODO enable once deposit is implemented
+    it.skip('Then it should return the expected transaction result', async () => {
+      const result = await loginAsAccountOwner().andThen((sessionClient) =>
+        withdraw(sessionClient, {
+          native: bigDecimal(1),
+        })
+          .andTee(console.log)
+          .andThen(handleOperationWith(wallet)),
+      );
+      assertOk(result);
+
+      console.log(result.value);
     });
   });
 });

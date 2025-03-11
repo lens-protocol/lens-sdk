@@ -5,9 +5,10 @@ import { invariant } from './helpers';
  * A string representation of an high precision decimal number (e.g., "0.1", "1000.42")
  */
 export type BigDecimal = Tagged<string, 'BigDecimal'>;
-export function bigDecimal(value: string): BigDecimal {
-  invariant(!/^-?\d+(\.\d+)?$/.test(value), `Invalid BigDecimal: ${value}`);
-  return value as BigDecimal;
+export function bigDecimal(value: string | number): BigDecimal {
+  const str = String(value);
+  invariant(/^-?\d+(\.\d+)?$/.test(str), `Invalid BigDecimal: ${str}`);
+  return str as BigDecimal;
 }
 
 /**
