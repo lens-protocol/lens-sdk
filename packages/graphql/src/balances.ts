@@ -4,6 +4,9 @@ import {
   Erc20AmountFragment,
   type NativeAmount,
   NativeAmountFragment,
+  SelfFundedTransactionRequestFragment,
+  SponsoredTransactionRequestFragment,
+  TransactionWillFailFragment,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
@@ -57,3 +60,45 @@ export const AccountBalancesQuery = graphql(
   [AnyAccountBalanceFragment],
 );
 export type AccountBalancesRequest = RequestOf<typeof AccountBalancesQuery>;
+
+export const InsufficientFundsFragment = graphql(`
+  fragment InsufficientFunds on InsufficientFunds {
+    __typename
+    reason
+  }
+`);
+export type InsufficientFunds = FragmentOf<typeof InsufficientFundsFragment>;
+
+const WithdrawResultFragment = graphql(
+  `fragment WithdrawResult on WithdrawResult{
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on InsufficientFunds {
+      ...InsufficientFunds
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    InsufficientFundsFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type WithdrawResult = FragmentOf<typeof WithdrawResultFragment>;
+
+export const WithdrawMutation = graphql(
+  `mutation Withdraw ($request: WithdrawRequest!) {
+    value: withdraw(request: $request) {
+      ...WithdrawResult
+    }
+  }`,
+  [WithdrawResultFragment],
+);
+export type WithdrawRequest = RequestOf<typeof WithdrawMutation>;
