@@ -564,6 +564,7 @@ export enum ForYouSource {
   Following = 'FOLLOWING',
   Curated = 'CURATED',
   Popular = 'POPULAR',
+  ExtendedNetwork = 'EXTENDED_NETWORK',
 }
 
 /**

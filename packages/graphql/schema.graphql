@@ -2392,6 +2392,7 @@ enum ForYouSource {
   FOLLOWING
   CURATED
   POPULAR
+  EXTENDED_NETWORK
 }
 
 type ForbiddenError {
@@ -3407,18 +3408,18 @@ type MediaImage {
   """The mime type of the image"""
   type: MediaImageType!
 
-  """The width of the image"""
-  width: Int
-
-  """The height of the image"""
-  height: Int
-
   """
   The URI of the image. You can use the optional `request` argument to choose between
   the original, snapshotted on CDN, or transformed to a different resolution. Returns the
   snapshotted URI by default.
   """
   item(request: MediaImageRequest! = {useOriginal: false}): URI!
+
+  """The width of the image."""
+  width: Int
+
+  """The height of the image."""
+  height: Int
 }
 
 input MediaImageRequest @oneOf {
@@ -3660,6 +3661,11 @@ input MlexplorePostsRequest {
   filter: MlexplorePostsFilter
 }
 
+input MlinternalForYouRequest {
+  secret: String!
+  account: EvmAddress
+}
+
 input MlpostsForYouRequest {
   """The page size."""
   pageSize: PageSize! = FIFTY
@@ -3667,8 +3673,10 @@ input MlpostsForYouRequest {
   """The cursor."""
   cursor: Cursor
 
-  """The account to get for you for."""
-  account: EvmAddress!
+  """
+  The account to get for you for. If not provided, defaults to the authenticated account.
+  """
+  account: EvmAddress
 
   """Shuffle the for you posts."""
   shuffle: Boolean! = false
@@ -4222,6 +4230,7 @@ type Mutation {
   """
   transferPrimitiveOwnership(request: TransferPrimitiveOwnershipRequest!): TransferPrimitiveOwnershipResult!
   mlDismissRecommendedAccounts(request: DismissRecommendedAccountsRequest!): Void!
+  mlForYouInternal(request: MlinternalForYouRequest!): Void!
 
   """
   sign a frame action with the lens account manager
@@ -6069,9 +6078,6 @@ enum SnsNotificationType {
   REFRESH_METADATA_SUCCESS
   REFRESH_METADATA_ERROR
   POST_CREATED
-  QUOTE_CREATED
-  COMMENT_CREATED
-  REPOST_CREATED
   POST_EDITED
   POST_DELETED
   POST_COLLECTED
@@ -6117,9 +6123,6 @@ input SnsTopicInput @oneOf {
   refreshMetadataSuccess: MetadataSnapshotNotificationAttributes
   refreshMetadataError: MetadataSnapshotNotificationAttributes
   postCreated: PostCreatedNotificationAttributes
-  quoteCreated: PostCreatedNotificationAttributes
-  commentCreated: PostCreatedNotificationAttributes
-  repostCreated: PostCreatedNotificationAttributes
   postEdited: PostEditedNotificationAttributes
   postDeleted: PostDeletedNotificationAttributes
   postReactionAdded: PostReactionAddedNotificationAttributes

@@ -26,6 +26,8 @@ export const MediaImageFragment = graphql(
     item
     license
     type
+    width
+    height
   }`,
 );
 export type MediaImage = FragmentOf<typeof MediaImageFragment>;
