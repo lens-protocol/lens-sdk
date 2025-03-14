@@ -37,7 +37,7 @@ export type ClientConfig = {
 
   /**
    * The Server API Key for your Lens App.
-   * 
+   *
    * Use this with a Server API Key to not incur in rate limits when used on a server-to-server scenario.
    */
   apiKey?: string;
