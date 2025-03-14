@@ -564,6 +564,7 @@ export enum ForYouSource {
   Following = 'FOLLOWING',
   Curated = 'CURATED',
   Popular = 'POPULAR',
+  ExtendedNetwork = 'EXTENDED_NETWORK',
 }
 
 /**
@@ -1142,4 +1143,39 @@ export enum FrameVerifySignatureResult {
   SignatureNotValid = 'SIGNATURE_NOT_VALID',
   DeadlineExpired = 'DEADLINE_EXPIRED',
   SignerAddressCannotUseAccount = 'SIGNER_ADDRESS_CANNOT_USE_ACCOUNT',
+}
+
+export enum SnsNotificationType {
+  MediaSnapshotSuccess = 'MEDIA_SNAPSHOT_SUCCESS',
+  MediaSnapshotError = 'MEDIA_SNAPSHOT_ERROR',
+  MetadataSnapshotSuccess = 'METADATA_SNAPSHOT_SUCCESS',
+  MetadataSnapshotError = 'METADATA_SNAPSHOT_ERROR',
+  RefreshMetadataSuccess = 'REFRESH_METADATA_SUCCESS',
+  RefreshMetadataError = 'REFRESH_METADATA_ERROR',
+  PostCreated = 'POST_CREATED',
+  PostEdited = 'POST_EDITED',
+  PostDeleted = 'POST_DELETED',
+  PostCollected = 'POST_COLLECTED',
+  PostActionCompleted = 'POST_ACTION_COMPLETED',
+  PostReactionAdded = 'POST_REACTION_ADDED',
+  PostReactionRemoved = 'POST_REACTION_REMOVED',
+  PostReported = 'POST_REPORTED',
+  AccountCreated = 'ACCOUNT_CREATED',
+  AccountMentioned = 'ACCOUNT_MENTIONED',
+  AccountFollowed = 'ACCOUNT_FOLLOWED',
+  AccountUnfollowed = 'ACCOUNT_UNFOLLOWED',
+  AccountFollowRulesUpdated = 'ACCOUNT_FOLLOW_RULES_UPDATED',
+  AccountBlocked = 'ACCOUNT_BLOCKED',
+  AccountUnblocked = 'ACCOUNT_UNBLOCKED',
+  AccountMetadataUpdated = 'ACCOUNT_METADATA_UPDATED',
+  AccountUsernameCreated = 'ACCOUNT_USERNAME_CREATED',
+  AccountUsernameAssigned = 'ACCOUNT_USERNAME_ASSIGNED',
+  AccountUsernameUnassigned = 'ACCOUNT_USERNAME_UNASSIGNED',
+  AccountContentConsumed = 'ACCOUNT_CONTENT_CONSUMED',
+  AccountManagerAdded = 'ACCOUNT_MANAGER_ADDED',
+  AccountManagerRemoved = 'ACCOUNT_MANAGER_REMOVED',
+  AccountManagerUpdated = 'ACCOUNT_MANAGER_UPDATED',
+  AccountOwnershipTransferred = 'ACCOUNT_OWNERSHIP_TRANSFERRED',
+  AccountReported = 'ACCOUNT_REPORTED',
+  MlProfileSignal = 'ML_PROFILE_SIGNAL',
 }

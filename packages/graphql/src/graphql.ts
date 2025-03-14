@@ -88,6 +88,7 @@ import type {
   PostVisibilityFilter,
   SelfFundedFallbackReason,
   SimpleCollectValidationFailedReason,
+  SnsNotificationType,
   SponsorLimitType,
   SponsoredFallbackReason,
   SponsorshipLimitExclusionsOrderBy,
@@ -194,6 +195,7 @@ export const graphql = initGraphQLTada<{
     ServerAPIKey: ServerAPIKey;
     Signature: Signature;
     SimpleCollectValidationFailedReason: SimpleCollectValidationFailedReason;
+    SnsNotificationType: SnsNotificationType;
     SponsoredFallbackReason: SponsoredFallbackReason;
     SponsorLimitType: SponsorLimitType;
     SponsorshipLimitExclusionsOrderBy: SponsorshipLimitExclusionsOrderBy;
