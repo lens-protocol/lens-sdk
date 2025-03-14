@@ -92,6 +92,7 @@ abstract class AbstractClient<TContext extends Context, TError> {
       fetchOptions: {
         headers: {
           ...(this.context.origin ? { Origin: this.context.origin } : {}),
+          ...(this.context.apiKey ? { 'x-lens-app': this.context.apiKey } : {}),
         },
       },
       exchanges: this.exchanges(),

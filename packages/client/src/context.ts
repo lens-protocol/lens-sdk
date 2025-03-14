@@ -11,6 +11,7 @@ export type Context = {
   debug: boolean;
   origin?: string;
   storage: IStorageProvider;
+  apiKey?: string;
 };
 
 /**
@@ -23,5 +24,6 @@ export function configureContext(from: ClientConfig): Context {
     debug: from.debug ?? false,
     origin: from.origin,
     storage: from.storage ?? new InMemoryStorageProvider(),
+    apiKey: from.apiKey,
   };
 }
