@@ -34,11 +34,11 @@ export type ClientConfig = {
    * @defaultValue {@link InMemoryStorageProvider}
    */
   storage?: IStorageProvider;
-  
+
   /**
-   * Optional API key to include in requests.
-   * 
-   * When provided, adds an `api-rate` header with the API key as its value.
+   * Optional API key.
+   *
+   * When provided, adds an `x-lens-app` header with the API key as its value.
    */
   apiKey?: string;
 };
