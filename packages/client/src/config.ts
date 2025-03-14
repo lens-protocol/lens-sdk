@@ -36,9 +36,9 @@ export type ClientConfig = {
   storage?: IStorageProvider;
 
   /**
-   * Optional API key.
-   *
-   * When provided, adds an `x-lens-app` header with the API key as its value.
+   * The Server API Key for your Lens App.
+   * 
+   * Use this with a Server API Key to not incur in rate limits when used on a server-to-server scenario.
    */
   apiKey?: string;
 };
