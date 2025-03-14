@@ -625,6 +625,7 @@ export const PostReactionFragment = graphql(
     __typename
     reactedAt
     reaction
+    app
   }`,
 );
 export type PostReaction = FragmentOf<typeof PostReactionFragment>;
