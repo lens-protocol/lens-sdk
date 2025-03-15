@@ -10,6 +10,9 @@ import {
   type SetSponsorshipMetadataRequest,
   type SetSponsorshipMetadataResult,
   type Sponsorship,
+  type SponsorshipGrant,
+  SponsorshipGrantsQuery,
+  type SponsorshipGrantsRequest,
   SponsorshipLimitExclusionsQuery,
   type SponsorshipLimitExclusionsRequest,
   type SponsorshipLimitsExempt,
@@ -97,6 +100,28 @@ export function fetchSponsorshipSigners(
   request: SponsorshipSignersRequest,
 ): ResultAsync<Paginated<SponsorshipSigner>, UnexpectedError> {
   return client.query(SponsorshipSignerQuery, { request });
+}
+
+/**
+ * Fetch paginated Sponsorship Grants.
+ *
+ * ```ts
+ * const result = await fetchSponsorshipGrants(anyClient, {
+ *   filter: {
+ *     sponsorship: evmAddress('0xe2f2a5C287993345a840db3B0845fbc70f5935a5'),
+ *   }
+ * });
+ * ```
+ *
+ * @param client - Any Lens client.
+ * @param request - The query request.
+ * @returns The paginated list of Sponsorship Signers.
+ */
+export function fetchSponsorshipGrants(
+  client: AnyClient,
+  request: SponsorshipGrantsRequest,
+): ResultAsync<Paginated<SponsorshipGrant>, UnexpectedError> {
+  return client.query(SponsorshipGrantsQuery, { request });
 }
 
 /**

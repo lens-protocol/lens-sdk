@@ -9,6 +9,7 @@ import type {
   EncodedTransaction,
   EvmAddress,
   FixedBytes32,
+  GrantId,
   ID,
   IdToken,
   LegacyProfileId,
@@ -144,6 +145,7 @@ export const graphql = initGraphQLTada<{
     ForYouSource: ForYouSource;
     FrameVerifySignatureResult: FrameVerifySignatureResult;
     GeneratedNotificationId: ID;
+    GrantId: GrantId;
     GraphRuleExecuteOn: GraphRuleExecuteOn;
     GraphRuleType: GraphRuleType;
     GraphsOrderBy: GraphsOrderBy;

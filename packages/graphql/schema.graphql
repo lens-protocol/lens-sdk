@@ -1208,6 +1208,11 @@ type CheckingInMetadata {
   content: String!
 }
 
+input CollectedBy {
+  """The address of the account that collected the posts."""
+  account: EvmAddress!
+}
+
 type CommentNotification {
   id: GeneratedNotificationId!
   comment: Post!
@@ -2503,6 +2508,8 @@ input GetSnsSubscriptionsRequest {
   """
   app: EvmAddress
 }
+
+scalar GrantId
 
 type Graph {
   address: EvmAddress!
@@ -5369,17 +5376,26 @@ enum PostVisibilityFilter {
 }
 
 input PostsFilter {
-  """The feeds to filter by."""
+  """The feeds where the posts are published."""
   feeds: [FeedOneOf!]
+
+  """The authors of the posts."""
   authors: [EvmAddress!]
+
+  """The types of the posts."""
   postTypes: [PostType!]
+
+  """The metadata filters to apply to the posts."""
   metadata: PostMetadataFilter
+
+  """The apps used to publish the posts."""
   apps: [EvmAddress!]
 
-  """
-  The optional query text to search for in the post content or metadata tags.
-  """
+  """The query text to search for in the post content or metadata tags."""
   searchQuery: String
+
+  """The account that collected the posts."""
+  collectedBy: CollectedBy
 }
 
 input PostsRequest {
@@ -5601,6 +5617,9 @@ type Query {
 
   """Get paginated Sponsorships."""
   sponsorships(request: SponsorshipsRequest!): SponsorshipsResult!
+
+  """Get paginated Sponsorship Grants."""
+  sponsorshipGrants(request: SponsorshipGrantsRequest!): SponsorshipGrantsResult!
   _service: _Service!
 }
 
@@ -6239,6 +6258,33 @@ type SponsorshipAllowance {
 
   """The total sponsorship allowance."""
   allowance: Int!
+}
+
+type SponsorshipGrant {
+  id: GrantId!
+  grantedAt: DateTime!
+  amount: NativeAmount!
+}
+
+input SponsorshipGrantsFilter @oneOf {
+  sponsorship: EvmAddress
+  linkedToApp: EvmAddress
+}
+
+input SponsorshipGrantsRequest {
+  """The filter options."""
+  filter: SponsorshipGrantsFilter!
+
+  """The page size."""
+  pageSize: PageSize! = FIFTY
+
+  """The cursor."""
+  cursor: Cursor
+}
+
+type SponsorshipGrantsResult {
+  items: [SponsorshipGrant!]!
+  pageInfo: PaginatedResultInfo!
 }
 
 input SponsorshipLimitExclusionsFilter {
