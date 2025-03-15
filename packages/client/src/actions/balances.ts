@@ -2,6 +2,9 @@ import {
   AccountBalancesQuery,
   type AccountBalancesRequest,
   type AnyAccountBalance,
+  DepositMutation,
+  type DepositRequest,
+  type DepositResult,
   WithdrawMutation,
   type WithdrawRequest,
   type WithdrawResult,
@@ -39,7 +42,7 @@ export function fetchAccountBalances(
  *
  * ```ts
  * const result = await withdraw(sessionClient, {
- *   native: bigDecimal("42.5"),
+ *   native: bigDecimal(42.5),
  * });
  * ```
  *
@@ -52,4 +55,24 @@ export function withdraw(
   request: WithdrawRequest,
 ): ResultAsync<WithdrawResult, UnexpectedError | UnauthenticatedError> {
   return sessionClient.mutation(WithdrawMutation, { request });
+}
+
+/**
+ * Deposit funds into the authenticated Account.
+ *
+ * ```ts
+ * const result = await deposit(sessionClient, {
+ *   native: bigDecimal(42.5),
+ * });
+ * ```
+ *
+ * @param client - The session client for the authenticated Account.
+ * @param request - The mutation request.
+ * @returns Tiered transaction result.
+ */
+export function deposit(
+  sessionClient: SessionClient,
+  request: DepositRequest,
+): ResultAsync<DepositResult, UnexpectedError | UnauthenticatedError> {
+  return sessionClient.mutation(DepositMutation, { request });
 }
