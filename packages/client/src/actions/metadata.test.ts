@@ -1,8 +1,8 @@
 import { type Post, justPost } from '@lens-protocol/graphql';
+import { textOnly } from '@lens-protocol/metadata';
 import { assertOk, nonNullable } from '@lens-protocol/types';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { textOnly } from '@lens-protocol/metadata';
 import {
   createPublicClient,
   loginAsAccountOwner,
