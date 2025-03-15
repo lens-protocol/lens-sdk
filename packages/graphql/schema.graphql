@@ -5108,6 +5108,11 @@ type PostOperationValidationUnknown {
 type PostReaction {
   reaction: PostReactionType!
   reactedAt: DateTime!
+
+  """
+  This is the app which it was reacted on - note lens v2 legacy reactions may not have an app linked to it
+  """
+  app: EvmAddress
 }
 
 input PostReactionAddedNotificationAttributes {
@@ -5132,6 +5137,7 @@ input PostReactionRemovedNotificationAttributes {
 type PostReactionStatus {
   postId: PostId!
   account: EvmAddress!
+  app: EvmAddress
   result: Boolean!
 }
 
@@ -5658,7 +5664,11 @@ input ReferralCut {
 }
 
 input RefreshMetadataRequest {
+  """The entity to refresh metadata for."""
   entity: EntityId!
+
+  """Used only when trying to refresh app-specific account metadata"""
+  app: EvmAddress
 }
 
 type RefreshMetadataResult {
