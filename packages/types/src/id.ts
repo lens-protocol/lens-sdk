@@ -25,6 +25,12 @@ export type RuleId = Tagged<string, 'RuleId'>;
 export const ruleId = identity<RuleId>;
 
 /**
+ * A Sponsorship Grant ID.
+ */
+export type GrantId = Tagged<string, 'GrantId'>;
+export const grantId = identity<GrantId>;
+
+/**
  * A Lens v2 Profile ID.
  */
 export type LegacyProfileId = Tagged<string, 'LegacyProfileId'>;

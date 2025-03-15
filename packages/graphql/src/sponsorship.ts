@@ -1,5 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
 import {
+  NativeAmountFragment,
   PaginatedResultInfoFragment,
   SelfFundedTransactionRequestFragment,
   SponsoredTransactionRequestFragment,
@@ -65,6 +66,34 @@ export const SponsorshipsQuery = graphql(
   [SponsorshipFragment, PaginatedResultInfoFragment],
 );
 export type SponsorshipsRequest = RequestOf<typeof SponsorshipsQuery>;
+
+const SponsorshipGrantFragment = graphql(
+  `fragment SponsorshipGrant on SponsorshipGrant {
+    __typename
+    id
+    grantedAt
+    amount {
+      ...NativeAmount
+    }
+  }`,
+  [NativeAmountFragment],
+);
+export type SponsorshipGrant = FragmentOf<typeof SponsorshipGrantFragment>;
+
+export const SponsorshipGrantsQuery = graphql(
+  `query SponsorshipGrants($request: SponsorshipGrantsRequest!) {
+    value: sponsorshipGrants(request: $request) {
+      items {
+        ...SponsorshipGrant
+      }
+      pageInfo {
+        ...PaginatedResultInfo
+      }
+    }
+  }`,
+  [SponsorshipGrantFragment, PaginatedResultInfoFragment],
+);
+export type SponsorshipGrantsRequest = RequestOf<typeof SponsorshipGrantsQuery>;
 
 export const SponsorshipQuery = graphql(
   `query Sponsorship($request: SponsorshipRequest!) {
