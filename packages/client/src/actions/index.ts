@@ -11,6 +11,7 @@ export * from './funds';
 export * from './graph';
 export * from './group';
 export * from './health';
+export * from './helpers';
 export * from './metadata';
 export * from './ml';
 export * from './namespace';

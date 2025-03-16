@@ -136,3 +136,71 @@ export const DepositMutation = graphql(
   [DepositResultFragment],
 );
 export type DepositRequest = RequestOf<typeof DepositMutation>;
+
+const WrapTokensResultFragment = graphql(
+  `fragment WrapTokensResult on WrapTokensResult{
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on InsufficientFunds {
+      ...InsufficientFunds
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    InsufficientFundsFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type WrapTokensResult = FragmentOf<typeof WrapTokensResultFragment>;
+
+export const WrapTokensMutation = graphql(
+  `mutation WrapTokens($request: WrapTokensRequest!) {
+    value: wrapTokens(request: $request) {
+      ...WrapTokensResult
+    }
+  }`,
+  [WrapTokensResultFragment],
+);
+export type WrapTokensRequest = RequestOf<typeof WrapTokensMutation>;
+
+const UnwrapTokensResultFragment = graphql(
+  `fragment UnwrapTokensResult on UnwrapTokensResult{
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on InsufficientFunds {
+      ...InsufficientFunds
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    InsufficientFundsFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type UnwrapTokensResult = FragmentOf<typeof UnwrapTokensResultFragment>;
+
+export const UnwrapTokensMutation = graphql(
+  `mutation UnwrapTokens($request: UnwrapTokensRequest!) {
+    value: unwrapTokens(request: $request) {
+      ...UnwrapTokensResult
+    }
+  }`,
+  [UnwrapTokensResultFragment],
+);
+export type UnwrapTokensRequest = RequestOf<typeof UnwrapTokensMutation>;
