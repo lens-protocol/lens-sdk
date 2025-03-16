@@ -4,11 +4,11 @@ import { describe, expect, it } from 'vitest';
 import { zeroAddress } from 'viem';
 import { CHAIN, TEST_ERC20, loginAsAccountOwner, wallet } from '../test-utils';
 import { handleOperationWith } from '../viem';
-import { deposit, fetchAccountBalances, withdraw } from './balances';
+import { deposit, fetchAccountBalances, withdraw } from './funds';
 
-describe('Given the balance actions', () => {
+describe('Given a Lens Account', () => {
   describe(`When calling the '${fetchAccountBalances.name}' action`, () => {
-    it('Then it should return the expected balance amounts', async () => {
+    it('Then it should return the requested balance amounts', async () => {
       const result = await loginAsAccountOwner().andThen((sessionClient) =>
         fetchAccountBalances(sessionClient, {
           includeNative: true,
