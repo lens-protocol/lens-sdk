@@ -94,7 +94,7 @@ const WithdrawResultFragment = graphql(
 export type WithdrawResult = FragmentOf<typeof WithdrawResultFragment>;
 
 export const WithdrawMutation = graphql(
-  `mutation Withdraw ($request: WithdrawRequest!) {
+  `mutation Withdraw($request: WithdrawRequest!) {
     value: withdraw(request: $request) {
       ...WithdrawResult
     }
@@ -102,3 +102,37 @@ export const WithdrawMutation = graphql(
   [WithdrawResultFragment],
 );
 export type WithdrawRequest = RequestOf<typeof WithdrawMutation>;
+
+const DepositResultFragment = graphql(
+  `fragment DepositResult on DepositResult{
+    ...on SponsoredTransactionRequest {
+      ...SponsoredTransactionRequest
+    }
+    ...on SelfFundedTransactionRequest {
+      ...SelfFundedTransactionRequest
+    }
+    ...on InsufficientFunds {
+      ...InsufficientFunds
+    }
+    ...on TransactionWillFail {
+      ...TransactionWillFail
+    }
+  }`,
+  [
+    SelfFundedTransactionRequestFragment,
+    SponsoredTransactionRequestFragment,
+    InsufficientFundsFragment,
+    TransactionWillFailFragment,
+  ],
+);
+export type DepositResult = FragmentOf<typeof DepositResultFragment>;
+
+export const DepositMutation = graphql(
+  `mutation Deposit($request: DepositRequest!) {
+    value: deposit(request: $request) {
+      ...DepositResult
+    }
+  }`,
+  [DepositResultFragment],
+);
+export type DepositRequest = RequestOf<typeof DepositMutation>;

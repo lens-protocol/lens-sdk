@@ -1640,6 +1640,13 @@ input DeleteSnsSubscriptionRequest {
   id: UUID!
 }
 
+input DepositRequest @oneOf {
+  erc20: AmountInput
+  native: BigDecimal
+}
+
+union DepositResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | InsufficientFunds | TransactionWillFail
+
 type DictionaryKeyValue {
   key: String!
   dictionary: [PrimitiveData!]!
@@ -3964,6 +3971,13 @@ type Mutation {
   You MUST be authenticated as Account Owner or Account Manager to use this mutation
   """
   withdraw(request: WithdrawRequest!): WithdrawResult!
+
+  """
+  Creates a deposit transaction request for the authenticated account.
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation
+  """
+  deposit(request: DepositRequest!): DepositResult!
 
   """Authenticate the user with the signed authentication challenge."""
   authenticate(request: SignedAuthChallenge!): AuthenticationResult!
