@@ -3979,6 +3979,26 @@ type Mutation {
   """
   deposit(request: DepositRequest!): DepositResult!
 
+  """
+  Creates a wrap transaction request to convert tokens held in the authenticated Lens Account
+  to their ERC20 equivalent. For example:
+  - Mainnet: GHO -> WGHO
+  - Testnet: GRASS -> WGRASS
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation
+  """
+  wrapTokens(request: WrapTokensRequest!): WrapTokensResult!
+
+  """
+  Creates an unwrap transaction request to convert wrapped tokens held in the authenticated
+  Lens Account to their unwrapped version. For example:
+  - Mainnet: WGHO -> GHO
+  - Testnet: WGRASS -> GRASS
+  
+  You MUST be authenticated as Account Owner or Account Manager to use this mutation
+  """
+  unwrapTokens(request: UnwrapTokensRequest!): UnwrapTokensResult!
+
   """Authenticate the user with the signed authentication challenge."""
   authenticate(request: SignedAuthChallenge!): AuthenticationResult!
 
@@ -7528,6 +7548,12 @@ input UnknownRuleProcessingParams {
   params: [AnyKeyValueInput!]
 }
 
+input UnwrapTokensRequest {
+  amount: BigDecimal!
+}
+
+union UnwrapTokensResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | InsufficientFunds | TransactionWillFail
+
 input UpdateAccountFollowRulesRequest {
   """The graph to update account follow rules for."""
   graph: EvmAddress! = "0xb510545B32A0742E1D4D4899c2eC8b57c74e5FA5"
@@ -7950,6 +7976,12 @@ input WithdrawRequest @oneOf {
 }
 
 union WithdrawResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | InsufficientFunds | TransactionWillFail
+
+input WrapTokensRequest {
+  amount: BigDecimal!
+}
+
+union WrapTokensResult = SponsoredTransactionRequest | SelfFundedTransactionRequest | InsufficientFunds | TransactionWillFail
 
 """The signature was not signed by the expected signer."""
 type WrongSignerError {
