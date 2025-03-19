@@ -1,5 +1,4 @@
-import type { PostId } from '@lens-protocol/types';
-import type { Prettify } from '@lens-protocol/types';
+import type { PostId, Prettify } from '@lens-protocol/types';
 import type { FragmentOf } from 'gql.tada';
 import { type FragmentDocumentFor, graphql } from '../graphql';
 import { type Account, AccountFragment } from './account';
@@ -24,6 +23,7 @@ import {
   TextOnlyMetadataFragment,
   ThreeDMetadataFragment,
   TransactionMetadataFragment,
+  UnknownPostMetadataFragment,
   VideoMetadataFragment,
 } from './metadata';
 import {
@@ -123,6 +123,9 @@ export const PostMetadataFragment = graphql(
     ... on TransactionMetadata {
       ...TransactionMetadata
     }
+    ... on UnknownPostMetadata {
+      ...UnknownPostMetadata
+    }
   }`,
   [
     ArticleMetadataFragment,
@@ -139,6 +142,7 @@ export const PostMetadataFragment = graphql(
     StoryMetadataFragment,
     ThreeDMetadataFragment,
     TransactionMetadataFragment,
+    UnknownPostMetadataFragment,
   ],
 );
 export type PostMetadata = FragmentOf<typeof PostMetadataFragment>;
