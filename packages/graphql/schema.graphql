@@ -3022,6 +3022,8 @@ type JoinGroupResponse {
 
 union JoinGroupResult = JoinGroupResponse | GroupOperationValidationFailed | SponsoredTransactionRequest | SelfFundedTransactionRequest | TransactionWillFail
 
+scalar JsonString
+
 type KeyValuePair {
   """A unique 32 bytes long hexadecimal string key."""
   key: FixedBytes32!
@@ -3272,39 +3274,7 @@ input ManagedBy {
   includeOwners: Boolean! = true
 }
 
-"""
-MarketplaceMetadataAttribute
-
-<details><summary>JSON schema</summary>
-
-```json
-{
-"type": "object",
-"properties": {
-"display_type": {
-"type": "string",
-"enum": [
-"number",
-"string",
-"date"
-]
-},
-"trait_type": {
-"description": "The name of the trait.",
-"$ref": "#/$defs/NonEmptyString"
-},
-"value": {
-"type": [
-"string",
-"number"
-]
-}
-},
-"additionalProperties": true
-}
-```
-</details>
-"""
+"""MarketplaceMetadataAttribute"""
 type MarketplaceMetadataAttribute {
   displayType: MarketplaceMetadataAttributeDisplayType
 
@@ -3364,7 +3334,7 @@ type MediaAudio {
   """The license for the audio."""
   license: MetadataLicenseType
 
-  """The URI to the lyrics of the audio file."""
+  """A URI to the lyrics of the audio file."""
   lyrics: URI
 
   """The record label for the audio."""
@@ -5103,7 +5073,7 @@ scalar PostId
 
 union PostMention = AccountMention | GroupMention
 
-union PostMetadata = ArticleMetadata | AudioMetadata | CheckingInMetadata | EmbedMetadata | EventMetadata | ImageMetadata | LinkMetadata | LivestreamMetadata | MintMetadata | SpaceMetadata | StoryMetadata | TextOnlyMetadata | ThreeDMetadata | TransactionMetadata | VideoMetadata
+union PostMetadata = ArticleMetadata | AudioMetadata | CheckingInMetadata | EmbedMetadata | EventMetadata | ImageMetadata | LinkMetadata | LivestreamMetadata | MintMetadata | SpaceMetadata | StoryMetadata | TextOnlyMetadata | ThreeDMetadata | TransactionMetadata | VideoMetadata | UnknownPostMetadata
 
 input PostMetadataContentWarningFilter {
   oneOf: [ContentWarning!]!
@@ -7529,6 +7499,10 @@ type UnknownPostAction {
 type UnknownPostActionContract {
   address: EvmAddress!
   metadata: ActionMetadata
+}
+
+type UnknownPostMetadata {
+  raw: JsonString!
 }
 
 input UnknownPostRuleConfig {

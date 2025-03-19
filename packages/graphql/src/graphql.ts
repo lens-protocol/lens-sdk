@@ -12,6 +12,7 @@ import type {
   GrantId,
   ID,
   IdToken,
+  JsonString,
   LegacyProfileId,
   PostId,
   RefreshToken,
@@ -220,6 +221,7 @@ export const graphql = initGraphQLTada<{
     WhoExecutedActionOnAccountOrderBy: WhoExecutedActionOnAccountOrderBy;
     WhoExecutedActionOnPostOrderBy: WhoExecutedActionOnPostOrderBy;
     WhoReferencedPostOrderBy: WhoReferencedPostOrderBy;
+    JSONString: JsonString;
   };
 }>();
 

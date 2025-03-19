@@ -412,3 +412,11 @@ export const TransactionMetadataFragment = graphql(
   [MetadataAttributeFragment, AnyMediaFragment],
 );
 export type TransactionMetadata = FragmentOf<typeof TransactionMetadataFragment>;
+
+export const UnknownPostMetadataFragment = graphql(
+  `fragment UnknownPostMetadata on UnknownPostMetadata {
+    __typename
+    raw
+  }`,
+);
+export type UnknownPostMetadata = FragmentOf<typeof UnknownPostMetadataFragment>;
