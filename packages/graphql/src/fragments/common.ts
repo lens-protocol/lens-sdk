@@ -271,7 +271,7 @@ export const ActionMetadataFragment = graphql(
   }`,
   [KeyValuePairFragment],
 );
-export type ActionMetadata = FragmentOf<typeof ActionMetadataFragment>;
+export interface ActionMetadata extends FragmentOf<typeof ActionMetadataFragment> {}
 
 export const UnknownPostActionFragment = graphql(
   `fragment UnknownPostAction on UnknownPostAction {

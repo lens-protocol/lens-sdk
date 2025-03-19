@@ -1,15 +1,20 @@
 import {
   type Account,
+  ArticleMetadataFragment,
+  AudioMetadataFragment,
   type FragmentOf,
+  ImageMetadataFragment,
   PublicClient,
+  TextOnlyMetadataFragment,
   UsernameFragment,
+  VideoMetadataFragment,
   evmAddress,
   graphql,
   testnet,
 } from '@lens-protocol/client';
 import { fetchAccount } from '@lens-protocol/client/actions';
 
-const MyAccountFragment = graphql(
+const AccountFragment = graphql(
   `
   fragment Account on Account {
     __typename
@@ -21,15 +26,52 @@ const MyAccountFragment = graphql(
   [UsernameFragment],
 );
 
+const PostMetadataFragment = graphql(
+  `fragment PostMetadata on PostMetadata {
+    __typename
+    ... on ArticleMetadata {
+      content
+    }
+    ... on AudioMetadata {
+      content
+    }
+    ... on TextOnlyMetadata {
+      content
+    }
+    ... on ImageMetadata {
+      content
+    }
+    ... on VideoMetadata {
+      content
+    }
+  }`,
+  [
+    ArticleMetadataFragment,
+    AudioMetadataFragment,
+    TextOnlyMetadataFragment,
+    ImageMetadataFragment,
+    VideoMetadataFragment,
+  ],
+);
+
+const PostFieldsFragment = graphql(
+  `fragment PostFields on Post {
+    metadata {
+      ...PostMetadata
+    }
+  }`,
+  [PostMetadataFragment],
+);
+
 declare module '@lens-protocol/client' {
-  export interface Account extends FragmentOf<typeof MyAccountFragment> {}
+  export interface Account extends FragmentOf<typeof AccountFragment> {}
+  export interface PostFields extends FragmentOf<typeof PostFieldsFragment> {}
+  export type PostMetadata = FragmentOf<typeof PostMetadataFragment>;
 }
 
 const client = PublicClient.create({
   environment: testnet,
-  fragments: {
-    Account: MyAccountFragment,
-  },
+  fragments: [AccountFragment, PostFieldsFragment],
 });
 
 const account: Account | null = await fetchAccount(client, {

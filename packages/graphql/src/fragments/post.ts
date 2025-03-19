@@ -156,7 +156,9 @@ export const PostMetadataFragment = graphql(
     UnknownPostMetadataFragment,
   ],
 );
-export type PostMetadata = FragmentOf<typeof PostMetadataFragment>;
+// The following type is purposefully named so that a PostMetadata type can be defined
+// by the consumer's code as module augmentation.
+export type FullPostMetadata = FragmentOf<typeof PostMetadataFragment>;
 
 export const PostOperationValidationPassedFragment = graphql(
   `fragment PostOperationValidationPassed on PostOperationValidationPassed {
@@ -553,7 +555,7 @@ const PostFieldsFragment = graphql(
     NftMetadataFragment,
   ],
 );
-export type PostFields = FragmentOf<typeof PostFieldsFragment>;
+export interface PostFields extends FragmentOf<typeof PostFieldsFragment> {}
 
 export type ReferencedPost = Prettify<
   {

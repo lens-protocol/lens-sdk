@@ -17,7 +17,7 @@ export const MediaAudioFragment = graphql(
     type
   }`,
 );
-export type MediaAudio = FragmentOf<typeof MediaAudioFragment>;
+export interface MediaAudio extends FragmentOf<typeof MediaAudioFragment> {}
 
 export const MediaImageFragment = graphql(
   `fragment MediaImage on MediaImage {
@@ -30,7 +30,7 @@ export const MediaImageFragment = graphql(
     height
   }`,
 );
-export type MediaImage = FragmentOf<typeof MediaImageFragment>;
+export interface MediaImage extends FragmentOf<typeof MediaImageFragment> {}
 
 export const MediaVideoFragment = graphql(
   `fragment MediaVideo on MediaVideo {
@@ -43,7 +43,7 @@ export const MediaVideoFragment = graphql(
     type
   }`,
 );
-export type MediaVideo = FragmentOf<typeof MediaVideoFragment>;
+export interface MediaVideo extends FragmentOf<typeof MediaVideoFragment> {}
 
 export const AnyMediaFragment = graphql(
   `fragment AnyMedia on AnyMedia {
