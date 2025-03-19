@@ -18,6 +18,12 @@ export type DateTime = Tagged<string, 'DateTime'>;
 export const dateTime = identity<DateTime>;
 
 /**
+ * A JSON string.
+ */
+export type JsonString = Tagged<string, 'JsonString'>;
+export const jsonString = identity<JsonString>;
+
+/**
  * Beautify the  readout of all of the members of that intersection.
  *
  * @see https://twitter.com/mattpocockuk/status/1622730173446557697
