@@ -1,10 +1,7 @@
 import { Role } from '@lens-protocol/graphql';
 import { type EvmAddress, type Result, type UUID, err, never, ok } from '@lens-protocol/types';
 import { UnexpectedError } from './errors';
-import type { IdTokenClaims } from './tokens';
-
-const ROLE_CLAIM = 'tag:lens.dev,2024:role';
-const SPONSORED_CLAIM = 'tag:lens.dev,2024:sponsored';
+import { type IdTokenClaims, ROLE_CLAIM, SPONSORED_CLAIM } from './tokens';
 
 export type AuthenticatedUser = {
   address: EvmAddress;

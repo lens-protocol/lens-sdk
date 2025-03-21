@@ -194,6 +194,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
       afterAll(() => {
         server.close();
       });
+
       it(`Then it should return a '${UnauthenticatedError.name}' to the original request caller`, async () => {
         const authenticated = await client.login({
           accountOwner: {

@@ -42,7 +42,7 @@ import {
   UnexpectedError,
   hasExtensionCode,
 } from './errors';
-import { decodeIdToken } from './tokens';
+import { decodeAccessToken, decodeIdToken } from './tokens';
 import { delay } from './utils';
 
 function takeValue<T>({
@@ -323,7 +323,6 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
       }
 
       const claims = decodeIdToken(credentials.idToken);
-
       if (claims.isErr()) {
         return claims.error.asResultAsync();
       }
@@ -471,7 +470,16 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
   protected override exchanges(): Exchange[] {
     return [
       authExchange(async (utils): Promise<AuthConfig> => {
-        let credentials = await this.getCredentials().unwrapOr(null);
+        let exp = 0;
+        let credentials = await this.getCredentials()
+          .andTee(async (value) => {
+            if (value) {
+              await decodeAccessToken(value.accessToken).andTee((claims) => {
+                exp = claims.exp;
+              });
+            }
+          })
+          .unwrapOr(null);
 
         return {
           addAuthToOperation: (operation) => {
@@ -480,6 +488,16 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
             return utils.appendHeaders(operation, {
               Authorization: `Bearer ${credentials.accessToken}`,
             });
+          },
+
+          willAuthError: (_) => {
+            if (!credentials) return false;
+            // Check if the token is about to expire in the next 30 seconds
+            const tokenExpiryTime = exp * 1000;
+            const currentTime = Date.now();
+            const bufferTime = 30_000;
+
+            return tokenExpiryTime <= currentTime + bufferTime;
           },
 
           didAuthError: (error) => hasExtensionCode(error, GraphQLErrorCode.UNAUTHENTICATED),
@@ -495,6 +513,10 @@ class SessionClient<TContext extends Context = Context> extends AbstractClient<
               switch (result.data.value.__typename) {
                 case 'AuthenticationTokens':
                   credentials = result.data?.value;
+
+                  await decodeAccessToken(credentials.accessToken).andTee((claims) => {
+                    exp = claims.exp;
+                  });
                   await this.credentials.set(result.data?.value);
                   break;
 
