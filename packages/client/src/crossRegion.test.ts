@@ -53,6 +53,7 @@ describe('Given an instance of the StorageClient (bound to staging)', { timeout:
       const response = await storageClient.uploadAsJson(updates, {
         acl: storage.immutable(CHAIN.id),
       });
+
       const result = await setAccountMetadata(sessionClient, {
         metadataUri: response.gatewayUrl,
       })
@@ -78,7 +79,6 @@ describe('Given an instance of the StorageClient (bound to staging)', { timeout:
         const response = await storageClient.updateJson(initialFileResponse.uri, updates, wallet, {
           acl,
         });
-        await response.waitForPropagation();
 
         const result = await setAccountMetadata(sessionClient, {
           metadataUri: response.gatewayUrl,
