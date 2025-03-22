@@ -1,11 +1,17 @@
-import { CurrentSessionQuery, HealthQuery, RefreshMutation, Role } from '@lens-protocol/graphql';
+import {
+  AuthenticateMutation,
+  CurrentSessionQuery,
+  HealthQuery,
+  RefreshMutation,
+  Role,
+} from '@lens-protocol/graphql';
 import { url, assertErr, assertOk, signatureFrom } from '@lens-protocol/types';
 import { HttpResponse, graphql, passthrough } from 'msw';
 import { setupServer } from 'msw/node';
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { currentSession } from './actions';
+import { currentSession, fetchAccount } from './actions';
 import { PublicClient } from './clients';
 import { GraphQLErrorCode, UnauthenticatedError, UnexpectedError } from './errors';
 import {
@@ -14,6 +20,7 @@ import {
   TEST_SIGNER,
   createGraphQLErrorObject,
   createPublicClient,
+  mockAccessToken,
   wallet,
 } from './test-utils';
 import { delay } from './utils';
@@ -124,6 +131,53 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
         assertOk(result);
         assertErr(await currentSession(authenticated.value));
         assertErr(await authenticated.value.getAuthenticatedUser());
+      });
+    });
+
+    describe('When the Access Token is about to expire (within 30 seconds)', () => {
+      const accessToken = mockAccessToken({
+        exp: Date.now() / 1000 + 10,
+      });
+      const server = setupServer(
+        graphql.mutation(
+          AuthenticateMutation,
+          async ({ request }) => {
+            const response = await fetch(request);
+            // biome-ignore lint/suspicious/noExplicitAny: keep it simple
+            const result = (await response.json()) as any;
+            result.data.value.accessToken = accessToken;
+            return HttpResponse.json(result);
+          },
+          {
+            once: true,
+          },
+        ),
+        // Pass through all other operations
+        graphql.operation(() => passthrough()),
+      );
+
+      beforeAll(() => {
+        server.listen();
+      });
+
+      afterAll(() => {
+        server.close();
+      });
+
+      it('Then it should preemptively refresh the token', async () => {
+        const authenticated = await client.login({
+          accountOwner: {
+            account: TEST_ACCOUNT,
+            owner: TEST_SIGNER,
+            app: TEST_APP,
+          },
+          signMessage: signMessageWith(wallet),
+        });
+        assertOk(authenticated);
+
+        const result = await fetchAccount(authenticated.value, { address: TEST_ACCOUNT });
+        assertOk(result);
+        expect(result.value?.operations).not.toBe(null);
       });
     });
 
