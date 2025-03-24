@@ -267,6 +267,7 @@ export const AccountManagerFragment = graphql(
       ...AccountManagerPermissions
     }
   }`,
+  [AccountManagerPermissionsFragment],
 );
 export type AccountManager = FragmentOf<typeof AccountManagerFragment>;
 

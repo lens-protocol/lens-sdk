@@ -5121,7 +5121,8 @@ type PostReaction {
   reactedAt: DateTime!
 
   """
-  This is the app which it was reacted on - note lens v2 legacy reactions may not have an app linked to it
+  This is the app which it was reacted on - note lens v2 legacy reactions may not have an app
+  linked to it
   """
   app: EvmAddress
 }
