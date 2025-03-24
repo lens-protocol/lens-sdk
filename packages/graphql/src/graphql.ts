@@ -90,7 +90,6 @@ import type {
   PostVisibilityFilter,
   SelfFundedFallbackReason,
   SimpleCollectValidationFailedReason,
-  SnsNotificationType,
   SponsorLimitType,
   SponsoredFallbackReason,
   SponsorshipLimitExclusionsOrderBy,
@@ -198,7 +197,7 @@ export const graphql = initGraphQLTada<{
     ServerAPIKey: ServerAPIKey;
     Signature: Signature;
     SimpleCollectValidationFailedReason: SimpleCollectValidationFailedReason;
-    SnsNotificationType: SnsNotificationType;
+    // SnsNotificationType: SnsNotificationType; intentionally not mapped since it grows often and not an input enum
     SponsoredFallbackReason: SponsoredFallbackReason;
     SponsorLimitType: SponsorLimitType;
     SponsorshipLimitExclusionsOrderBy: SponsorshipLimitExclusionsOrderBy;

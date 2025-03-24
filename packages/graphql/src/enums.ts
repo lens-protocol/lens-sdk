@@ -764,6 +764,10 @@ export enum NotificationOrderBy {
  * Enum for NotificationType.
  */
 export enum NotificationType {
+  ExecutedPostAction = 'EXECUTED_POST_ACTION',
+  ExecutedAccountAction = 'EXECUTED_ACCOUNT_ACTION',
+  GroupMembershipRequestApproved = 'GROUP_MEMBERSHIP_REQUEST_APPROVED',
+  GroupMembershipRequestRejected = 'GROUP_MEMBERSHIP_REQUEST_REJECTED',
   Reposted = 'REPOSTED',
   Quoted = 'QUOTED',
   Commented = 'COMMENTED',
@@ -893,6 +897,8 @@ export enum SponsorLimitType {
  * Enum for SponsoredFallbackReason.
  */
 export enum SponsoredFallbackReason {
+  CannotDelegate = 'CANNOT_DELEGATE',
+  RequiresSignature = 'REQUIRES_SIGNATURE',
   SignlessDisabled = 'SIGNLESS_DISABLED',
   SignlessFailed = 'SIGNLESS_FAILED',
 }
@@ -1143,39 +1149,4 @@ export enum FrameVerifySignatureResult {
   SignatureNotValid = 'SIGNATURE_NOT_VALID',
   DeadlineExpired = 'DEADLINE_EXPIRED',
   SignerAddressCannotUseAccount = 'SIGNER_ADDRESS_CANNOT_USE_ACCOUNT',
-}
-
-export enum SnsNotificationType {
-  MediaSnapshotSuccess = 'MEDIA_SNAPSHOT_SUCCESS',
-  MediaSnapshotError = 'MEDIA_SNAPSHOT_ERROR',
-  MetadataSnapshotSuccess = 'METADATA_SNAPSHOT_SUCCESS',
-  MetadataSnapshotError = 'METADATA_SNAPSHOT_ERROR',
-  RefreshMetadataSuccess = 'REFRESH_METADATA_SUCCESS',
-  RefreshMetadataError = 'REFRESH_METADATA_ERROR',
-  PostCreated = 'POST_CREATED',
-  PostEdited = 'POST_EDITED',
-  PostDeleted = 'POST_DELETED',
-  PostCollected = 'POST_COLLECTED',
-  PostActionCompleted = 'POST_ACTION_COMPLETED',
-  PostReactionAdded = 'POST_REACTION_ADDED',
-  PostReactionRemoved = 'POST_REACTION_REMOVED',
-  PostReported = 'POST_REPORTED',
-  AccountCreated = 'ACCOUNT_CREATED',
-  AccountMentioned = 'ACCOUNT_MENTIONED',
-  AccountFollowed = 'ACCOUNT_FOLLOWED',
-  AccountUnfollowed = 'ACCOUNT_UNFOLLOWED',
-  AccountFollowRulesUpdated = 'ACCOUNT_FOLLOW_RULES_UPDATED',
-  AccountBlocked = 'ACCOUNT_BLOCKED',
-  AccountUnblocked = 'ACCOUNT_UNBLOCKED',
-  AccountMetadataUpdated = 'ACCOUNT_METADATA_UPDATED',
-  AccountUsernameCreated = 'ACCOUNT_USERNAME_CREATED',
-  AccountUsernameAssigned = 'ACCOUNT_USERNAME_ASSIGNED',
-  AccountUsernameUnassigned = 'ACCOUNT_USERNAME_UNASSIGNED',
-  AccountContentConsumed = 'ACCOUNT_CONTENT_CONSUMED',
-  AccountManagerAdded = 'ACCOUNT_MANAGER_ADDED',
-  AccountManagerRemoved = 'ACCOUNT_MANAGER_REMOVED',
-  AccountManagerUpdated = 'ACCOUNT_MANAGER_UPDATED',
-  AccountOwnershipTransferred = 'ACCOUNT_OWNERSHIP_TRANSFERRED',
-  AccountReported = 'ACCOUNT_REPORTED',
-  MlProfileSignal = 'ML_PROFILE_SIGNAL',
 }

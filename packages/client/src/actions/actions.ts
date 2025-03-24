@@ -39,12 +39,14 @@ import type { UnauthenticatedError, UnexpectedError } from '../errors';
  *   post: postId('1234…'),
  *   params: {
  *     simpleCollect: {
- *       amount: {
- *         value: '100',
- *         currency: evmAddress('0x5678…')
- *       }
- *     }
- *   }
+ *       payToCollect: {
+ *         amount: {
+ *           value: '100',
+ *           currency: evmAddress('0x5678…'),
+ *         },
+ *       },
+ *     },
+ *   },
  * });
  * ```
  *
@@ -134,12 +136,14 @@ export function executePostAction(
  * ```ts
  * const result = await configureAccountAction(sessionClient, {
  *   action: {
- *     params: [{
- *       key: 'usd',
- *       value: '100'
- *     }],
- *     address: evmAddress('0x1234…'),
- *   }
+ *     unknown: {
+ *       address: evmAddress('0x1234…'),
+ *       params: [{
+ *         key: 'usd',
+ *         value: '100',
+ *       }],
+ *     },
+ *   },
  * });
  * ```
  *
