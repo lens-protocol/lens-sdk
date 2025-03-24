@@ -3448,7 +3448,7 @@ enum MediaImageType {
 }
 
 input MediaSnapshotNotificationAttributes {
-  source: EntityId
+  source: PrimitiveId
 }
 
 type MediaVideo {
@@ -3586,7 +3586,7 @@ enum MetadataLicenseType {
 }
 
 input MetadataSnapshotNotificationAttributes {
-  source: EntityId
+  source: PrimitiveId
 }
 
 type MintMetadata {
@@ -5410,6 +5410,19 @@ input PostsRequest {
 }
 
 union PrimitiveData = IntKeyValue | IntNullableKeyValue | AddressKeyValue | StringKeyValue | BooleanKeyValue | RawKeyValue | BigDecimalKeyValue
+
+input PrimitiveId @oneOf {
+  account: EvmAddress
+  graph: EvmAddress
+  feed: EvmAddress
+  usernameNamespace: EvmAddress
+  group: EvmAddress
+  post: PostId
+  app: EvmAddress
+  sponsorship: EvmAddress
+  accountAction: EvmAddress
+  postAction: EvmAddress
+}
 
 type Query {
   health: Boolean!
