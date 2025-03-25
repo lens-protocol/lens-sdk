@@ -1447,6 +1447,9 @@ input CreateGroupRequest {
   """The group metadata uri"""
   metadataUri: URI
 
+  """Will default to the person creating it if no owner is supplied"""
+  owner: EvmAddress
+
   """List of admins who can manage this group"""
   admins: [EvmAddress!]
 
@@ -2322,7 +2325,7 @@ input FollowersRequest {
   filter: FollowersFilter
 
   """The order by."""
-  orderBy: FollowersOrderBy! = DESC
+  orderBy: FollowersOrderBy! = ACCOUNT_SCORE
 }
 
 input FollowersYouKnowFilter {

@@ -214,7 +214,7 @@ export function fetchAccountsAvailable(
  */
 export function fetchAccountsBlocked(
   client: SessionClient,
-  request: AccountsBlockedRequest,
+  request: AccountsBlockedRequest = {},
 ): ResultAsync<Paginated<AccountBlocked>, UnexpectedError> {
   return client.query(AccountsBlockedQuery, { request });
 }
