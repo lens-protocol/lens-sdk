@@ -17,6 +17,7 @@ import { sendEip712Transaction } from 'viem/zksync';
 import type { SignMessage } from '../clients';
 import { SigningError, ValidationError } from '../errors';
 import { type OperationHandler, type OperationResult, isTransactionRequest } from '../types';
+import { hasHoistedAccount, isOnLensChain } from './types';
 
 async function sendTransaction(
   walletClient: WalletClient<Transport, chains.LensChain, Account>,
@@ -69,15 +70,19 @@ function sendTransactionWith(
  *
  * In case the result is a transaction request, it will be signed and sent using the provided wallet client.
  */
-export function handleOperationWith(
-  walletClient: WalletClient<Transport, chains.LensChain, Account>,
-): OperationHandler {
+export function handleOperationWith(walletClient: WalletClient): OperationHandler {
   return <T extends string, E extends string>(
     result: OperationResult<T, E>,
   ): ResultAsync<TxHash, SigningError | ValidationError<E>> => {
     if ('hash' in result) {
       return okAsync(result.hash);
     }
+
+    invariant(
+      isOnLensChain(walletClient),
+      `Unsupported chain ${walletClient.chain?.id}. Expected a Lens chain.`,
+    );
+    invariant(hasHoistedAccount(walletClient), 'Expected a WalletClient with a hoisted account.');
 
     if (isTransactionRequest(result)) {
       return sendTransactionWith(walletClient, result);
