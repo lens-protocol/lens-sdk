@@ -4,12 +4,16 @@ import {
   AccountPostReactionFragment,
   ActionMetadataFragment,
   AnyPostFragment,
+  Erc20AmountFragment,
   PaginatedResultInfoFragment,
   PostMetadataFragment,
   PostOperationValidationFailedFragment,
+  RawKeyValueFragment,
   SelfFundedTransactionRequestFragment,
+  SimpleCollectActionFragment,
   SponsoredTransactionRequestFragment,
   TransactionWillFailFragment,
+  UnknownPostActionFragment,
 } from './fragments';
 import { type RequestOf, graphql } from './graphql';
 
@@ -530,3 +534,52 @@ export const UpdatePostRulesMutation = graphql(
   [UpdatePostRulesResultFragment],
 );
 export type UpdatePostRulesRequest = RequestOf<typeof UpdatePostRulesMutation>;
+
+export const SimpleCollectPostActionExecutedFragment = graphql(
+  `fragment SimpleCollectPostActionExecuted on SimpleCollectPostActionExecuted {
+    __typename
+    executedBy {
+      ...Account
+    }
+    executedAt
+    action {
+      ...SimpleCollectAction
+    }
+  }`,
+  [AccountFragment, SimpleCollectActionFragment],
+);
+export type SimpleCollectPostActionExecuted = FragmentOf<
+  typeof SimpleCollectPostActionExecutedFragment
+>;
+
+export const TippingPostActionExecutedFragment = graphql(
+  `fragment TippingPostActionExecuted on TippingPostActionExecuted {
+    __typename
+    executedAt
+    amount {
+      ...Erc20Amount
+    }
+    executedBy {
+      ...Account
+    }
+  }`,
+  [AccountFragment, Erc20AmountFragment],
+);
+export type TippingPostActionExecuted = FragmentOf<typeof TippingPostActionExecutedFragment>;
+
+export const UnknownPostActionExecutedFragment = graphql(
+  `fragment UnknownPostActionExecuted on UnknownPostActionExecuted {
+    __typename
+    params {
+      ...RawKeyValue
+    }
+    executedBy {
+      ...Account
+    }
+    action {
+      ...UnknownPostAction
+    }
+  }`,
+  [AccountFragment, RawKeyValueFragment, UnknownPostActionFragment],
+);
+export type UnknownPostActionExecuted = FragmentOf<typeof UnknownPostActionExecutedFragment>;
