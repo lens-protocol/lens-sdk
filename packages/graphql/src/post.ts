@@ -370,7 +370,7 @@ export const PostReactionStatusFragment = graphql(
     postId
     account
     result
-    app @include(if: true)
+    app
   }`,
 );
 export type PostReactionStatus = FragmentOf<typeof PostReactionStatusFragment>;
