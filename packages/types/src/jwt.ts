@@ -12,6 +12,9 @@ export function compactJwt<T extends string = CompactJwt>(value: string): T {
  * The Access Token JWT.
  */
 export type AccessToken = Tagged<CompactJwt, 'AccessToken'>;
+/**
+ * @internal
+ */
 export const accessToken = compactJwt<AccessToken>;
 
 /**
@@ -19,9 +22,15 @@ export const accessToken = compactJwt<AccessToken>;
  */
 export type RefreshToken = Tagged<CompactJwt, 'RefreshToken'>;
 export const refreshToken = compactJwt<RefreshToken>;
+/**
+ * @internal
+ */
 
 /**
  * The ID Token JWT.
  */
 export type IdToken = Tagged<CompactJwt, 'IdToken'>;
+/**
+ * @internal
+ */
 export const idToken = compactJwt<IdToken>;

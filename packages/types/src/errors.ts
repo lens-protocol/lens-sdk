@@ -1,13 +1,23 @@
-import { type ResultAsync, errAsync } from 'neverthrow';
+import { type Result, type ResultAsync, err, errAsync } from 'neverthrow';
 
-/**
- * @internal
- */
 export class ResultAwareError extends Error {
+  /**
+   * @internal
+   */
   asResultAsync(): ResultAsync<never, typeof this> {
     return errAsync(this);
   }
 
+  /**
+   * @internal
+   */
+  asResult(): Result<never, typeof this> {
+    return err(this);
+  }
+
+  /**
+   * @internal
+   */
   static from<T extends typeof ResultAwareError>(this: T, message: string): InstanceType<T>;
   static from<T extends typeof ResultAwareError>(this: T, cause: unknown): InstanceType<T>;
   static from<T extends typeof ResultAwareError>(this: T, args: unknown): InstanceType<T> {
