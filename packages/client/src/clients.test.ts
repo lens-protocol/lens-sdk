@@ -47,7 +47,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
 
       assertOk(authenticated);
 
-      const user = await authenticated.value.getAuthenticatedUser();
+      const user = authenticated.value.getAuthenticatedUser();
       assertOk(user);
       expect(user.value).toMatchObject({
         role: Role.AccountOwner,
@@ -130,7 +130,7 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
         const result = await authenticated.value.logout();
         assertOk(result);
         assertErr(await currentSession(authenticated.value));
-        assertErr(await authenticated.value.getAuthenticatedUser());
+        assertErr(authenticated.value.getAuthenticatedUser());
       });
     });
 
