@@ -1,40 +1,74 @@
 import type { FragmentOf } from 'gql.tada';
-import { AccountFragment, PaginatedResultInfoFragment, ReferencedPostFragment } from './fragments';
+import {
+  AccountFragment,
+  AnyPostFragment,
+  Erc20AmountFragment,
+  GroupFragment,
+  PaginatedResultInfoFragment,
+  PostReactionFragment,
+  RawKeyValueFragment,
+  ReferencedPostFragment,
+  UnknownAccountActionFragment,
+} from './fragments';
 import { type RequestOf, graphql } from './graphql';
+import {
+  SimpleCollectPostActionExecutedFragment,
+  TippingPostActionExecutedFragment,
+  UnknownPostActionExecutedFragment,
+} from './post';
+
+const NotificationAccountFollowFragment = graphql(
+  `fragment NotificationAccountFollow on NotificationAccountFollow {
+    __typename
+    followedAt
+    account {
+      ...Account
+    }
+  }`,
+  [AccountFragment],
+);
+export type NotificationAccountFollow = FragmentOf<typeof NotificationAccountFollowFragment>;
 
 const FollowNotificationFragment = graphql(
   `fragment FollowNotification on FollowNotification {
     __typename
     id
     followers {
-      account {
-        ...Account
-      }
-      followedAt
+      ...NotificationAccountFollow
     }
   }`,
-  [AccountFragment],
+  [NotificationAccountFollowFragment],
 );
 export type FollowNotification = FragmentOf<typeof FollowNotificationFragment>;
 
-const ReactionNotificationFragment = graphql(
+const NotificationAccountPostReactionFragment = graphql(
+  `fragment NotificationAccountPostReaction on NotificationAccountPostReaction {
+    __typename
+    account {
+      ...Account
+    }
+    reactions {
+      ...PostReaction
+    }
+  }`,
+  [AccountFragment, PostReactionFragment],
+);
+export type NotificationAccountPostReaction = FragmentOf<
+  typeof NotificationAccountPostReactionFragment
+>;
+
+export const ReactionNotificationFragment = graphql(
   `fragment ReactionNotification on ReactionNotification {
     __typename
     id
     reactions {
-      account {
-        ...Account
-      }
-      reactions {
-        reactedAt
-        reaction
-      }
+      ...NotificationAccountPostReaction
     }
     post {
       ...ReferencedPost
     }
   }`,
-  [AccountFragment, ReferencedPostFragment],
+  [NotificationAccountPostReactionFragment, ReferencedPostFragment],
 );
 export type ReactionNotification = FragmentOf<typeof ReactionNotificationFragment>;
 
@@ -52,6 +86,7 @@ export type CommentNotification = FragmentOf<typeof CommentNotificationFragment>
 
 const NotificationAccountRepostFragment = graphql(
   `fragment NotificationAccountRepost on NotificationAccountRepost {
+    __typename
     repostId
     account {
       ...Account
@@ -101,8 +136,152 @@ const MentionNotificationFragment = graphql(
 );
 export type MentionNotification = FragmentOf<typeof MentionNotificationFragment>;
 
+const TippingAccountActionExecutedFragment = graphql(
+  `fragment TippingAccountActionExecuted on TippingAccountActionExecuted {
+    __typename
+    amount {
+      ...Erc20Amount
+    }
+    executedBy{
+      ...Account
+    }
+    executedAt
+  }`,
+  [AccountFragment, Erc20AmountFragment],
+);
+export type TippingAccountActionExecuted = FragmentOf<typeof TippingAccountActionExecutedFragment>;
+
+const UnknownAccountActionExecutedFragment = graphql(
+  `fragment UnknownAccountActionExecuted on UnknownAccountActionExecuted {
+    __typename
+    params {
+      ...RawKeyValue
+    }
+    executedBy {
+      ...Account
+    }
+    executedAt
+    action {
+      ...UnknownAccountAction
+    }
+  }`,
+  [AccountFragment, UnknownAccountActionFragment, RawKeyValueFragment],
+);
+export type UnknownAccountActionExecuted = FragmentOf<typeof UnknownAccountActionExecutedFragment>;
+
+const AccountActionExecutedFragment = graphql(
+  `fragment AccountActionExecuted on AccountActionExecuted {
+    ... on TippingAccountActionExecuted{
+      ...TippingAccountActionExecuted
+    }
+    ... on UnknownAccountActionExecuted {
+      ...UnknownAccountActionExecuted
+    }
+  }`,
+  [TippingAccountActionExecutedFragment, UnknownAccountActionExecutedFragment],
+);
+export type AccountActionExecuted = FragmentOf<typeof AccountActionExecutedFragment>;
+
+const AccountActionExecutedNotificationFragment = graphql(
+  `fragment AccountActionExecutedNotification on AccountActionExecutedNotification {
+    __typename
+    id
+    actions {
+      ...AccountActionExecuted
+    }
+  }`,
+  [AccountActionExecutedFragment],
+);
+export type AccountActionExecutedNotification = FragmentOf<
+  typeof AccountActionExecutedNotificationFragment
+>;
+
+const GroupMembershipRequestApprovedNotificationFragment = graphql(
+  `fragment GroupMembershipRequestApprovedNotification on GroupMembershipRequestApprovedNotification {
+    __typename
+    id
+    group {
+      ...Group
+    }
+    approvedBy {
+      ...Account
+    }
+  }`,
+  [AccountFragment, GroupFragment],
+);
+export type GroupMembershipRequestApprovedNotification = FragmentOf<
+  typeof GroupMembershipRequestApprovedNotificationFragment
+>;
+
+const GroupMembershipRequestRejectedNotificationFragment = graphql(
+  `fragment GroupMembershipRequestRejectedNotification on GroupMembershipRequestRejectedNotification {
+    __typename
+    id
+    group {
+      ...Group
+    }
+    rejectedBy {
+      ...Account
+    }
+  }`,
+  [AccountFragment, GroupFragment],
+);
+export type GroupMembershipRequestRejectedNotification = FragmentOf<
+  typeof GroupMembershipRequestRejectedNotificationFragment
+>;
+
+export const PostActionExecutedFragment = graphql(
+  `fragment PostActionExecuted on PostActionExecuted {
+    ... on SimpleCollectPostActionExecuted {
+      ...SimpleCollectPostActionExecuted
+    }
+    ... on TippingPostActionExecuted {
+      ...TippingPostActionExecuted
+    }
+    ... on UnknownPostActionExecuted {
+      ...UnknownPostActionExecuted
+    }
+  }`,
+  [
+    SimpleCollectPostActionExecutedFragment,
+    TippingPostActionExecutedFragment,
+    UnknownPostActionExecutedFragment,
+  ],
+);
+export type PostActionExecuted = FragmentOf<typeof PostActionExecutedFragment>;
+
+const PostActionExecutedNotificationFragment = graphql(
+  `fragment PostActionExecutedNotification on PostActionExecutedNotification {
+    __typename
+    id
+    post {
+      ...AnyPost
+    }
+    actions{
+      ...PostActionExecuted
+    }
+  }`,
+  [PostActionExecutedFragment, AnyPostFragment],
+);
+export type PostActionExecutedNotification = FragmentOf<
+  typeof PostActionExecutedNotificationFragment
+>;
+
 const NotificationFragment = graphql(
   `fragment Notification on Notification {
+    __typename
+    ... on AccountActionExecutedNotification {
+      ...AccountActionExecutedNotification
+    }
+    ... on GroupMembershipRequestApprovedNotification {
+      ...GroupMembershipRequestApprovedNotification
+    }
+    ... on GroupMembershipRequestRejectedNotification {
+      ...GroupMembershipRequestRejectedNotification
+    }
+    ... on PostActionExecutedNotification {
+      ...PostActionExecutedNotification
+    }
     ... on FollowNotification {
       ...FollowNotification
     }
@@ -123,6 +302,10 @@ const NotificationFragment = graphql(
     }
   }`,
   [
+    AccountActionExecutedNotificationFragment,
+    GroupMembershipRequestApprovedNotificationFragment,
+    GroupMembershipRequestRejectedNotificationFragment,
+    PostActionExecutedNotificationFragment,
     FollowNotificationFragment,
     ReactionNotificationFragment,
     CommentNotificationFragment,
@@ -133,6 +316,10 @@ const NotificationFragment = graphql(
 );
 
 export type Notification =
+  | AccountActionExecutedNotification
+  | GroupMembershipRequestApprovedNotification
+  | GroupMembershipRequestRejectedNotification
+  | PostActionExecutedNotification
   | FollowNotification
   | ReactionNotification
   | CommentNotification

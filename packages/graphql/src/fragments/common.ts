@@ -55,7 +55,7 @@ const BooleanKeyValueFragment = graphql(
 );
 export type BooleanKeyValue = FragmentOf<typeof BooleanKeyValueFragment>;
 
-const RawKeyValueFragment = graphql(
+export const RawKeyValueFragment = graphql(
   `fragment RawKeyValue on RawKeyValue {
     __typename
     key
