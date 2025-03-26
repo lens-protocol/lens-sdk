@@ -45,10 +45,10 @@ const NotificationAccountPostReactionFragment = graphql(
   `fragment NotificationAccountPostReaction on NotificationAccountPostReaction {
     __typename
     account {
-        ...Account
-      }
-      reactions {
-        ...PostReaction
+      ...Account
+    }
+    reactions {
+      ...PostReaction
     }
   }`,
   [AccountFragment, PostReactionFragment],
@@ -169,20 +169,28 @@ const UnknownAccountActionExecutedFragment = graphql(
 );
 export type UnknownAccountActionExecuted = FragmentOf<typeof UnknownAccountActionExecutedFragment>;
 
+const AccountActionExecutedFragment = graphql(
+  `fragment AccountActionExecuted on AccountActionExecuted {
+    ... on TippingAccountActionExecuted{
+      ...TippingAccountActionExecuted
+    }
+    ... on UnknownAccountActionExecuted {
+      ...UnknownAccountActionExecuted
+    }
+  }`,
+  [TippingAccountActionExecutedFragment, UnknownAccountActionExecutedFragment],
+);
+export type AccountActionExecuted = FragmentOf<typeof AccountActionExecutedFragment>;
+
 const AccountActionExecutedNotificationFragment = graphql(
   `fragment AccountActionExecutedNotification on AccountActionExecutedNotification {
     __typename
     id
     actions {
-      ... on TippingAccountActionExecuted{
-        ...TippingAccountActionExecuted
-      }
-      ... on UnknownAccountActionExecuted {
-        ...UnknownAccountActionExecuted
-      }
+      ...AccountActionExecuted
     }
   }`,
-  [TippingAccountActionExecutedFragment, UnknownAccountActionExecutedFragment],
+  [AccountActionExecutedFragment],
 );
 export type AccountActionExecutedNotification = FragmentOf<
   typeof AccountActionExecutedNotificationFragment
