@@ -1,5 +1,6 @@
 export * from './assertions';
 export * from './Deferred';
+export * from './identity';
 export * from './invariant';
 export * from './never';
 export * from './refinements';

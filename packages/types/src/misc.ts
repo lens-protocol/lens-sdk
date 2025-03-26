@@ -1,5 +1,5 @@
 import type { Tagged } from 'type-fest';
-import { identity } from './identity';
+import { tag } from './tag';
 
 /**
  * A void value.
@@ -15,13 +15,13 @@ export type Cursor = Tagged<string, 'Cursor'>;
  * A DateTime string in ISO 8601 format.
  */
 export type DateTime = Tagged<string, 'DateTime'>;
-export const dateTime = identity<DateTime>;
+export const dateTime = tag<DateTime>;
 
 /**
  * A JSON string.
  */
 export type JsonString = Tagged<string, 'JsonString'>;
-export const jsonString = identity<JsonString>;
+export const jsonString = tag<JsonString>;
 
 /**
  * Beautify the  readout of all of the members of that intersection.
