@@ -13,29 +13,34 @@ export type Credentials = {
   refreshToken: RefreshToken;
 };
 
-// TODO parse v3 then fallback to v2 shape
 const PersistedCredentialsSchema: z.ZodType<Credentials, z.ZodTypeDef, unknown> = z.object({
   accessToken: z.string().transform(accessToken),
   idToken: z.string().transform(idToken),
   refreshToken: z.string().transform(refreshToken),
 });
 
-export class CredentialsStorageSchema extends BaseStorageSchema<typeof PersistedCredentialsSchema> {
+class CredentialsStorageSchema extends BaseStorageSchema<typeof PersistedCredentialsSchema> {
   version = 3;
 
   constructor(key: string) {
     super(key, PersistedCredentialsSchema);
   }
 
-  protected override async migrate(storageItem: IStorageItem<Credentials>): Promise<Credentials> {
+  protected override async migrate(storageItem: IStorageItem<unknown>): Promise<Credentials> {
     if (storageItem.metadata.version === 2) {
-      // TODO: Migrate from version 2 to version 3
+      throw new Error('Migration from v2 to v3 is not supported');
     }
     return this.parseData(storageItem.data);
   }
 }
 
-export function createCredentialsStorage(storageProvider: IStorageProvider, namespace: string) {
-  const schema = new CredentialsStorageSchema(`lens.${namespace}.credentials`);
-  return Storage.createForSchema(schema, storageProvider);
+export class CredentialsStorage extends Storage<Credentials> {
+  protected constructor(provider: IStorageProvider) {
+    const schema = new CredentialsStorageSchema('lens.credentials');
+    super(schema, provider);
+  }
+
+  static from(provider: IStorageProvider): CredentialsStorage {
+    return new CredentialsStorage(provider);
+  }
 }
