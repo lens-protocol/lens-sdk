@@ -2635,7 +2635,7 @@ input GraphsRequest {
 type Group {
   address: EvmAddress!
   timestamp: DateTime!
-  feed: EvmAddress
+  feed: Feed
   metadata: GroupMetadata
   owner: EvmAddress!
   operations: LoggedInGroupOperations
