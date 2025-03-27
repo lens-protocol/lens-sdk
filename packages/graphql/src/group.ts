@@ -130,6 +130,9 @@ export type LeaveGroupResponse = FragmentOf<typeof LeaveGroupResponseFragment>;
 
 const LeaveGroupResultFragment = graphql(
   `fragment LeaveGroupResult on LeaveGroupResult {
+    ...on GroupOperationValidationFailed {
+      ...GroupOperationValidationFailed
+    }
     ...on LeaveGroupResponse {
       ...LeaveGroupResponse
     }
@@ -144,6 +147,7 @@ const LeaveGroupResultFragment = graphql(
     }
   }`,
   [
+    GroupOperationValidationFailedFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,
