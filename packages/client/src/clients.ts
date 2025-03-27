@@ -194,7 +194,7 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
         }
         return AuthenticationError.from(result.reason).asResultAsync();
       })
-      .andThen((tokens) => CredentialsStorage.from(this.context.storage).set(tokens))
+      .andThen((tokens) => this.createCredentialsStorage().set(tokens))
       .map((storage) => new SessionClient(storage, this))
       .mapErr((err) => UnexpectedError.from(err));
   }
@@ -236,15 +236,15 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
    *
    * @returns The session client if available.
    */
-  resumeSession(): ResultAsync<SessionClient<TContext>, UnauthenticatedError> {
-    return CredentialsStorage.from(this.context.storage)
+  resumeSession(): ResultAsync<SessionClient<TContext>, UnauthenticatedError | UnexpectedError> {
+    return this.createCredentialsStorage()
       .resume()
-      .orElse(() => ok(null))
-      .andThen((credentials) => {
-        if (!credentials) {
+      .mapErr((err) => UnexpectedError.from(err))
+      .andThen((storage) => {
+        if (storage.get() === null) {
           return new UnauthenticatedError('No credentials found').asResult();
         }
-        return ok(new SessionClient(credentials, this));
+        return ok(new SessionClient(storage, this));
       });
   }
 
@@ -288,6 +288,10 @@ export class PublicClient<TContext extends Context = Context> extends AbstractCl
     variables: TVariables,
   ): ResultAsync<TValue, UnexpectedError> {
     return this.resultFrom(this.urql.mutation(document, variables)).map(takeValue);
+  }
+
+  private createCredentialsStorage(): IStorage<Credentials> {
+    return CredentialsStorage.from(this.context.storage, this.context.environment.name);
   }
 }
 

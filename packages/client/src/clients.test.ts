@@ -76,6 +76,8 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
 
   describe('When resuming an authenticated session', () => {
     it('Then it should return a SessionClient instance associated with the credentials in the storage', async () => {
+      const client = createPublicClient();
+
       await client.login({
         accountOwner: {
           account: TEST_ACCOUNT,
@@ -93,6 +95,15 @@ describe(`Given an instance of the ${PublicClient.name}`, () => {
         signer: TEST_SIGNER,
         app: TEST_APP,
       });
+    });
+
+    it(`Then it should return an 'Err<never, ${UnauthenticatedError.name}>' if the session is not found in the storage`, async () => {
+      const client = createPublicClient();
+
+      const result = await client.resumeSession();
+
+      assertErr(result);
+      expect(result.error).toBeInstanceOf(UnauthenticatedError);
     });
   });
 
