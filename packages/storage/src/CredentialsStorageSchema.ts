@@ -35,12 +35,12 @@ class CredentialsStorageSchema extends BaseStorageSchema<typeof PersistedCredent
 }
 
 export class CredentialsStorage extends Storage<Credentials> {
-  protected constructor(provider: IStorageProvider) {
-    const schema = new CredentialsStorageSchema('lens.credentials');
+  protected constructor(provider: IStorageProvider, namespace: string) {
+    const schema = new CredentialsStorageSchema(`lens.${namespace}.credentials`);
     super(schema, provider);
   }
 
-  static from(provider: IStorageProvider): CredentialsStorage {
-    return new CredentialsStorage(provider);
+  static from(provider: IStorageProvider, namespace: string): CredentialsStorage {
+    return new CredentialsStorage(provider, namespace);
   }
 }

@@ -38,7 +38,7 @@ export interface IObservableStorageProvider extends IStorageProvider {
  * @internal
  */
 export interface IStorage<Data> {
-  set(data: Data): ResultAsync<IStorage<Data>, StorageError>;
+  set(data: Data): ResultAsync<IStorage<Data>, SchemaMismatchError | StorageError>;
   get(): Data | null;
   reset(): ResultAsync<IStorage<Data>, StorageError>;
   resume(): ResultAsync<IStorage<Data>, SchemaMismatchError | StorageError>;

@@ -4,19 +4,25 @@ import { assertErr, assertOk, never } from '@lens-protocol/types';
 import { InvariantError } from '@lens-protocol/types';
 import { Deferred } from '@lens-protocol/types';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
 import { BaseStorageSchema, type IStorageItem, SchemaMismatchError } from './BaseStorageSchema';
+import type { IStorageProvider } from './IStorage';
 import { InMemoryStorageProvider } from './InMemoryStorageProvider';
 import { Storage } from './Storage';
 import { mockStorageProvider } from './__helpers__/mocks';
 
+const schema = z.object({
+  name: z.string(),
+});
+
+const key = 'STORAGE_KEY';
+const storageSchema = new BaseStorageSchema(key, schema);
+
+function createStorage(provider: IStorageProvider) {
+  return Storage.create(storageSchema, provider);
+}
+
 describe(`Given a ${Storage.name} instance`, () => {
-  const schema = z.object({
-    name: z.string(),
-  });
-
-  const key = 'STORAGE_KEY';
-  const storageSchema = new BaseStorageSchema(key, schema);
-
   const data = { name: 'Pawel' };
   const metadata = {
     createdAt: Date.now(),
@@ -36,7 +42,7 @@ describe(`Given a ${Storage.name} instance`, () => {
     it('Then it should return the stored data', async () => {
       const mockedStorageProvider = mockStorageProvider(JSON.stringify(storageItem));
 
-      const result = await Storage.create(storageSchema, mockedStorageProvider)
+      const result = await createStorage(mockedStorageProvider)
         .resume()
         .map((storage) => storage.get());
 
@@ -48,7 +54,7 @@ describe(`Given a ${Storage.name} instance`, () => {
     it('Then it should return `null` if empty', async () => {
       const mockedStorageProvider = mockStorageProvider();
 
-      const result = await Storage.create(storageSchema, mockedStorageProvider)
+      const result = await createStorage(mockedStorageProvider)
         .resume()
         .map((storage) => storage.get());
 
@@ -128,7 +134,7 @@ describe(`Given a ${Storage.name} instance`, () => {
         }),
       );
 
-      const result = await Storage.create(storageSchema, mockedStorageProvider).resume();
+      const result = await createStorage(mockedStorageProvider).resume();
       assertErr(result);
 
       expect(result.error).toBeInstanceOf(SchemaMismatchError);
@@ -157,7 +163,7 @@ describe(`Given a ${Storage.name} instance`, () => {
         }),
       );
 
-      const result = await Storage.create(storageSchema, mockedStorageProvider).resume();
+      const result = await createStorage(mockedStorageProvider).resume();
 
       assertErr(result);
       expect(result.error).toBeInstanceOf(SchemaMismatchError);
@@ -210,13 +216,29 @@ describe(`Given a ${Storage.name} instance`, () => {
 
   describe(`When the '${Storage.prototype.set.name}' method gets invoked`, () => {
     it(`Then it should be immediately available in via the '${Storage.prototype.get.name}' method`, async () => {
-      const result = await Storage.create(storageSchema, new InMemoryStorageProvider())
+      const result = await createStorage(new InMemoryStorageProvider())
         .resume()
         .andTee((storage) => storage.set(data))
         .map((storage) => storage.get());
 
       assertOk(result);
       expect(result.value).toEqual(data);
+    });
+
+    it('Then it should run the schema validation on the data', async () => {
+      const result = await createStorage(new InMemoryStorageProvider())
+        .resume()
+        .andTee((storage) =>
+          storage.set({
+            name: '123',
+            something: 'else',
+            // biome-ignore lint/suspicious/noExplicitAny: it's a test!
+          } as any),
+        )
+        .map((storage) => storage.get());
+
+      assertOk(result);
+      expect(result.value).toEqual({ name: '123' });
     });
 
     describe('for previously empty storage', () => {
@@ -226,7 +248,7 @@ describe(`Given a ${Storage.name} instance`, () => {
 
         const mockedStorageProvider = mockStorageProvider();
 
-        await Storage.create(storageSchema, mockedStorageProvider)
+        await createStorage(mockedStorageProvider)
           .resume()
           .andTee((storage) => storage.set(data));
 
@@ -235,7 +257,7 @@ describe(`Given a ${Storage.name} instance`, () => {
           JSON.stringify({
             data: data,
             metadata: {
-              ...metadata,
+              version: metadata.version,
               createdAt: now,
               updatedAt: now,
             },
@@ -254,7 +276,7 @@ describe(`Given a ${Storage.name} instance`, () => {
         const newData = {
           name: 'Josh',
         };
-        await Storage.create(storageSchema, mockedStorageProvider)
+        await createStorage(mockedStorageProvider)
           .resume()
           .andTee((storage) => storage.set(newData));
 
@@ -263,7 +285,8 @@ describe(`Given a ${Storage.name} instance`, () => {
           JSON.stringify({
             data: newData,
             metadata: {
-              ...metadata,
+              version: metadata.version,
+              createdAt: metadata.createdAt,
               updatedAt: now,
             },
           }),
@@ -276,7 +299,7 @@ describe(`Given a ${Storage.name} instance`, () => {
     it('Then it should remove the storage data', async () => {
       const mockedStorageProvider = mockStorageProvider();
 
-      await Storage.create(storageSchema, mockedStorageProvider)
+      await createStorage(mockedStorageProvider)
         .resume()
         .andTee((storage) => storage.reset());
 
@@ -308,7 +331,7 @@ describe(`Given a ${Storage.name} instance`, () => {
 
       const deferred = new Deferred<unknown>();
 
-      await Storage.create(storageSchema, mockedStorageProvider)
+      await createStorage(mockedStorageProvider)
         .resume()
         .andTee((storage) => {
           storage.subscribe((newData, oldData) => deferred.resolve({ newData, oldData }));

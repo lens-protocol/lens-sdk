@@ -49,20 +49,20 @@ export class Storage<Data> implements IStorage<Data> {
     });
   }
 
-  set(data: Data): ResultAsync<Storage<Data>, StorageError> {
+  set(data: Data): ResultAsync<Storage<Data>, SchemaMismatchError | StorageError> {
     const metadata: StorageMetadata = {
       createdAt: this.storageItem?.metadata.createdAt ?? Date.now(),
       updatedAt: Date.now(),
       version: this.schema.version,
     };
 
-    const storageItem: IStorageItem<Data> = { data, metadata };
-
-    return safeJsonStringify(storageItem).asyncAndThen((json) => {
-      const promise = Promise.any([this.provider.setItem(this.schema.key, json)]);
-      return ResultAsync.fromPromise(promise, (err) => StorageError.from(err)).andThen(() => {
-        this.storageItem = storageItem;
-        return ok(this);
+    return this.schema.process({ data, metadata }).andThen((storageItem) => {
+      return safeJsonStringify(storageItem).asyncAndThen((json) => {
+        const promise = Promise.any([this.provider.setItem(this.schema.key, json)]);
+        return ResultAsync.fromPromise(promise, (err) => StorageError.from(err)).andThen(() => {
+          this.storageItem = storageItem;
+          return ok(this);
+        });
       });
     });
   }
