@@ -1067,10 +1067,6 @@ type AuthenticationTokens {
   idToken: IdToken!
 }
 
-input BanAccountGroupRuleConfig {
-  enable: AlwaysTrue
-}
-
 input BanGroupAccountsRequest {
   """The group you want to ban member on."""
   group: EvmAddress!
@@ -2826,7 +2822,6 @@ type GroupRule {
 
 input GroupRuleConfig {
   membershipApprovalRule: MembershipApprovalGroupRuleConfig
-  banAccountRule: BanAccountGroupRuleConfig
   tokenGatedRule: TokenGatedGroupRuleConfig
   simplePaymentRule: SimplePaymentGroupRuleConfig
   unknownRule: UnknownGroupRuleConfig
@@ -4473,7 +4468,6 @@ input NamespaceRuleConfig {
   usernamePricePerLengthRule: UsernamePricePerLengthNamespaceRuleConfig
   usernameLengthRule: UsernameLengthNamespaceRuleConfig
   usernameReservedRule: UsernameReservedNamespaceRuleConfig
-  usernameSimpleCharsetRule: Boolean
   unknownRule: UnknownNamespaceRuleConfig
 }
 
