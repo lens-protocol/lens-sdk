@@ -84,6 +84,9 @@ export type JoinGroupResponse = FragmentOf<typeof JoinGroupResponseFragment>;
 
 const JoinGroupResultFragment = graphql(
   `fragment JoinGroupResult on JoinGroupResult {
+    ...on GroupOperationValidationFailed {
+      ...GroupOperationValidationFailed
+    }
     ...on JoinGroupResponse {
       ...JoinGroupResponse
     }
@@ -98,6 +101,7 @@ const JoinGroupResultFragment = graphql(
     }
   }`,
   [
+    GroupOperationValidationFailedFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,
