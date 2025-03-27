@@ -586,7 +586,9 @@ export const GroupFragment = graphql(
   `fragment Group on Group {
     __typename
     address
-    feed
+    feed {
+      ...Feed
+    }
     timestamp
     owner
     banningEnabled
@@ -601,6 +603,6 @@ export const GroupFragment = graphql(
       ...LoggedInGroupOperations
     }
   }`,
-  [GroupMetadataFragment, GroupRulesFragment, LoggedInGroupOperationsFragment],
+  [FeedFragment, GroupMetadataFragment, GroupRulesFragment, LoggedInGroupOperationsFragment],
 );
 export type Group = FragmentOf<typeof GroupFragment>;

@@ -54,9 +54,22 @@ type AccountActionExecutedNotification {
   actions: [AccountActionExecuted!]!
 }
 
+input AccountActionExecutedNotificationAttributes {
+  account: EvmAddress
+  executingAccount: EvmAddress
+  action: EvmAddress
+  actionType: AccountActionType
+  app: EvmAddress
+}
+
 input AccountActionFilter @oneOf {
   address: EvmAddress
   tipping: AlwaysTrue
+}
+
+enum AccountActionType {
+  TIPPING
+  UNKNOWN
 }
 
 union AccountAvailable = AccountManaged | AccountOwned
@@ -1245,6 +1258,12 @@ input CreateAccountWithUsernameRequest {
 
   """The username you wish to mint with the account"""
   username: UsernameInput!
+
+  """
+  If you do not supply this it will use the onboarding or builder address, you can use this
+  if your server is onboarding users
+  """
+  owner: EvmAddress
 
   """Any account managers you wish to add to the account"""
   accountManager: [EvmAddress!]
@@ -2616,7 +2635,7 @@ input GraphsRequest {
 type Group {
   address: EvmAddress!
   timestamp: DateTime!
-  feed: EvmAddress
+  feed: Feed
   metadata: GroupMetadata
   owner: EvmAddress!
   operations: LoggedInGroupOperations
@@ -3856,7 +3875,7 @@ type Mutation {
   """
   Create an account with a given username.
   
-  You MUST be authenticated as Onboarding User to use this mutation.
+  You MUST be authenticated as onboarding user or builder to use this mutation.
   """
   createAccountWithUsername(request: CreateAccountWithUsernameRequest!): CreateAccountWithUsernameResult!
 
@@ -5006,10 +5025,25 @@ type PostActionExecutedNotification {
   post: Post!
 }
 
+input PostActionExecutedNotificationAttributes {
+  postId: PostId
+  executingAccount: EvmAddress
+  receivingAccount: EvmAddress
+  action: EvmAddress
+  actionType: PostActionType
+  app: EvmAddress
+}
+
 input PostActionFilter @oneOf {
   address: EvmAddress
   simpleCollect: AlwaysTrue
   tipping: AlwaysTrue
+}
+
+enum PostActionType {
+  SIMPLE_COLLECT
+  TIPPING
+  UNKNOWN
 }
 
 input PostActionsParams {
@@ -5026,6 +5060,13 @@ input PostBookmarksRequest {
   filter: PostBookmarksFilter
   pageSize: PageSize! = FIFTY
   cursor: Cursor
+}
+
+input PostCollectedNotificationAttributes {
+  postId: PostId
+  postAuthor: EvmAddress
+  collector: EvmAddress
+  app: EvmAddress
 }
 
 input PostContentUriRequest {
@@ -6201,6 +6242,8 @@ input SnsTopicInput @oneOf {
   postReactionAdded: PostReactionAddedNotificationAttributes
   postReactionRemoved: PostReactionRemovedNotificationAttributes
   postReported: PostReportedNotificationAttributes
+  postCollected: PostCollectedNotificationAttributes
+  postActionExecuted: PostActionExecutedNotificationAttributes
   accountCreated: AccountCreatedNotificationAttributes
   accountMentioned: AccountMentionedNotificationAttributes
   accountFollowed: AccountFollowedNotificationAttributes
@@ -6215,6 +6258,7 @@ input SnsTopicInput @oneOf {
   accountManagerUpdated: AccountManagerUpdatedNotificationAttributes
   accountOwnershipTransferred: AccountOwnershipTransferredNotificationAttributes
   accountReported: AccountReportedNotificationAttributes
+  accountActionExecuted: AccountActionExecutedNotificationAttributes
 }
 
 type SpaceMetadata {
