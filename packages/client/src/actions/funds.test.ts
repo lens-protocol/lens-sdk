@@ -206,7 +206,6 @@ describe('Given a Lens Account', () => {
             native: bigDecimal(1),
           })
             .andThen(handleOperationWith(wallet))
-            .andTee(console.log)
             .andThen(waitForTransactionReceipt);
 
           assertOk(result);
