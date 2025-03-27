@@ -1,4 +1,4 @@
-import { chains } from '@lens-network/sdk/viem';
+import { chains } from '@lens-chain/sdk/viem';
 import { http, createConfig, injected } from 'wagmi';
 
 export const config = createConfig({

@@ -1,5 +1,5 @@
 import 'viem/window';
-import { chains } from '@lens-network/sdk/viem';
+import { chains } from '@lens-chain/sdk/viem';
 import { createThirdwebClient } from 'thirdweb';
 import { viemAdapter } from 'thirdweb/adapters/viem';
 import { ethereum } from 'thirdweb/chains';

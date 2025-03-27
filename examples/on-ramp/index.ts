@@ -1,7 +1,7 @@
 import 'viem/window';
 
 import { openHalliday } from '@halliday-sdk/commerce';
-import { chains } from '@lens-network/sdk/viem';
+import { chains } from '@lens-chain/sdk/viem';
 import { PublicClient, testnet as protocolTestnet } from '@lens-protocol/client';
 import { type Address, createWalletClient, custom } from 'viem';
 
