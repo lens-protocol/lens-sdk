@@ -15,14 +15,12 @@ import {
 import { fetchAccount } from '@lens-protocol/client/actions';
 
 const AccountFragment = graphql(
-  `
-  fragment Account on Account {
+  `fragment Account on Account {
     __typename
     handle: username {
       ...Username
     }
-  }
-  `,
+  }`,
   [UsernameFragment],
 );
 

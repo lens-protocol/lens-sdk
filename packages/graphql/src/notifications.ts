@@ -9,7 +9,7 @@ import {
   ReferencedPostFragment,
   UnknownAccountActionFragment,
 } from './fragments';
-import { type RequestOf, graphql } from './graphql';
+import { type FragmentDocumentFor, type RequestOf, graphql } from './graphql';
 import {
   SimpleCollectPostActionExecutedFragment,
   TippingPostActionExecutedFragment,
@@ -266,8 +266,22 @@ export type PostActionExecutedNotification = FragmentOf<
   typeof PostActionExecutedNotificationFragment
 >;
 
-const NotificationFragment = graphql(
-  `fragment Notification on Notification {
+export type Notification =
+  | AccountActionExecutedNotification
+  | GroupMembershipRequestApprovedNotification
+  | GroupMembershipRequestRejectedNotification
+  | PostActionExecutedNotification
+  | FollowNotification
+  | ReactionNotification
+  | CommentNotification
+  | RepostNotification
+  | QuoteNotification
+  | MentionNotification;
+
+// mitigates error TS2589: Type instantiation is excessively deep and possibly infinite.
+const NotificationFragment: FragmentDocumentFor<Notification, 'Notification', 'Notification'> =
+  graphql(
+    `fragment Notification on Notification {
     __typename
     ... on AccountActionExecutedNotification {
       ...AccountActionExecutedNotification
@@ -300,31 +314,19 @@ const NotificationFragment = graphql(
       ...MentionNotification
     }
   }`,
-  [
-    AccountActionExecutedNotificationFragment,
-    GroupMembershipRequestApprovedNotificationFragment,
-    GroupMembershipRequestRejectedNotificationFragment,
-    PostActionExecutedNotificationFragment,
-    FollowNotificationFragment,
-    ReactionNotificationFragment,
-    CommentNotificationFragment,
-    RepostNotificationFragment,
-    QuoteNotificationFragment,
-    MentionNotificationFragment,
-  ],
-);
-
-export type Notification =
-  | AccountActionExecutedNotification
-  | GroupMembershipRequestApprovedNotification
-  | GroupMembershipRequestRejectedNotification
-  | PostActionExecutedNotification
-  | FollowNotification
-  | ReactionNotification
-  | CommentNotification
-  | RepostNotification
-  | QuoteNotification
-  | MentionNotification;
+    [
+      AccountActionExecutedNotificationFragment,
+      GroupMembershipRequestApprovedNotificationFragment,
+      GroupMembershipRequestRejectedNotificationFragment,
+      PostActionExecutedNotificationFragment,
+      FollowNotificationFragment,
+      ReactionNotificationFragment,
+      CommentNotificationFragment,
+      RepostNotificationFragment,
+      QuoteNotificationFragment,
+      MentionNotificationFragment,
+    ],
+  );
 
 export const NotificationsQuery = graphql(
   `query Notifications($request: NotificationRequest!) {

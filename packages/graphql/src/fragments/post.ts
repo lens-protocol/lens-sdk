@@ -559,10 +559,12 @@ export interface PostFields extends FragmentOf<typeof PostFieldsFragment> {}
 
 export type ReferencedPost = Prettify<
   {
+    __typename: 'Post';
     id: PostId;
     author: Account;
   } & PostFields
 >;
+
 // mitigates error TS7056: The inferred type of this node exceeds the maximum length
 // the compiler will serialize. An explicit type annotation is needed.
 export const ReferencedPostFragment: FragmentDocumentFor<ReferencedPost, 'Post', 'ReferencedPost'> =
@@ -596,8 +598,7 @@ export const PostFragment = graphql(
     commentOn {
       ...ReferencedPost
     }
-  }
-  `,
+  }`,
   [AccountFragment, PostFieldsFragment, ReferencedPostFragment],
 );
 export type Post = FragmentOf<typeof PostFragment>;
