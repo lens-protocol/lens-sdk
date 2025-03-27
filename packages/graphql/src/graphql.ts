@@ -30,6 +30,7 @@ import { type DocumentDecoration, type TadaDocumentNode, initGraphQLTada } from 
 import type { StandardData } from './common';
 import type {
   AccessConditionComparison,
+  AccountActionType,
   AccountFollowRuleType,
   AccountFollowRuleUnsatisfiedReason,
   AccountReportReason,
@@ -113,6 +114,7 @@ export const graphql = initGraphQLTada<{
   scalars: {
     AccessConditionComparison: AccessConditionComparison;
     AccessToken: AccessToken;
+    AccountActionType: AccountActionType;
     AccountFollowRuleType: AccountFollowRuleType;
     AccountFollowRuleUnsatisfiedReason: AccountFollowRuleUnsatisfiedReason;
     AccountReportReason: AccountReportReason;

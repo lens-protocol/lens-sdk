@@ -1,6 +1,7 @@
 import type { FragmentOf } from 'gql.tada';
 import { graphql } from '../graphql';
 import { AnyKeyValueFragment } from './common';
+import { NftMetadataFragment } from './post';
 
 export const AppMetadataFragment = graphql(
   `fragment AppMetadata on AppMetadata {
@@ -410,6 +411,9 @@ export const UsernameNamespaceFragment = graphql(
     metadata {
       ...UsernameNamespaceMetadata
     }
+    collectionMetadata {
+      ...NftMetadata
+    }
     owner
     rules {
       ...NamespaceRules
@@ -423,6 +427,7 @@ export const UsernameNamespaceFragment = graphql(
   }`,
   [
     UsernameNamespaceMetadataFragment,
+    NftMetadataFragment,
     NamespaceRulesFragment,
     LoggedInUsernameNamespaceOperationsFragment,
     UsernameNamespaceStatsFragment,
