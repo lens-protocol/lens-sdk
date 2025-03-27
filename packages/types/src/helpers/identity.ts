@@ -8,3 +8,8 @@
 export function identity<T>(value: T): T {
   return value;
 }
+
+/**
+ * Alias for the {@link identity} function.
+ */
+export const passthrough = identity;
