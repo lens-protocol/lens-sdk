@@ -45,10 +45,14 @@ type LoginResult = ResultAsync<AuthenticatedUser, LoginError>;
  * ```
  */
 export function useLogin(): UseAsyncTask<LoginParams, AuthenticatedUser, LoginError> {
+  const { afterLogin } = useLensContext();
   const publicClient = usePublicClient();
 
   return useAsyncTask(
     (params: LoginParams): LoginResult =>
-      publicClient.login(params).andThen((sessionClient) => sessionClient.getAuthenticatedUser()),
+      publicClient
+        .login(params)
+        .andTee(afterLogin)
+        .andThen((sessionClient) => sessionClient.getAuthenticatedUser()),
   );
 }

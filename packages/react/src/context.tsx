@@ -1,6 +1,6 @@
-import type { PublicClient } from '@lens-protocol/client';
+import type { PublicClient, SessionClient } from '@lens-protocol/client';
 import { invariant } from '@lens-protocol/types';
-import React, { type ReactNode, useContext, useEffect, useState } from 'react';
+import React, { type ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import { Provider as UrqlProvider } from 'urql';
 
 import type { AnyClient } from '@lens-protocol/client';
@@ -20,9 +20,11 @@ export type SessionState = {
 export type LensContextValue = {
   state: SessionState;
   resume: () => Promise<SessionState>;
+  afterLogin: (sessionClient: SessionClient) => Promise<void>;
+  afterLogout: () => Promise<void>;
 };
 
-function useLensContextValue(publicClient: PublicClient): LensContextValue {
+function useCreateLensContextValue(publicClient: PublicClient): LensContextValue {
   const [state, setState] = useState<SessionState>({
     resolved: false,
     client: publicClient,
@@ -30,7 +32,8 @@ function useLensContextValue(publicClient: PublicClient): LensContextValue {
 
   return {
     state,
-    resume: async () => {
+
+    resume: useCallback(async () => {
       const result = await publicClient.resumeSession();
 
       const newState = {
@@ -41,7 +44,15 @@ function useLensContextValue(publicClient: PublicClient): LensContextValue {
       setState(newState);
 
       return newState;
-    },
+    }, [publicClient]),
+
+    afterLogin: useCallback(async (sessionClient) => {
+      setState({ resolved: true, client: sessionClient });
+    }, []),
+
+    afterLogout: useCallback(async () => {
+      setState({ resolved: true, client: publicClient });
+    }, [publicClient]),
   };
 }
 
@@ -56,7 +67,7 @@ type LensContextProviderProps = {
  * @internal
  */
 export function LensContextProvider({ children, client }: LensContextProviderProps) {
-  const value = useLensContextValue(client);
+  const value = useCreateLensContextValue(client);
 
   return (
     <LensContext.Provider value={value}>
@@ -98,8 +109,9 @@ export function useSessionState({
   );
 
   useEffect(() => {
-    // If the session is already known, don't do anything.
+    // If the session is already known, just update the output.
     if (state.resolved) {
+      setOutput(ReadResult.Success(state.client));
       return;
     }
 

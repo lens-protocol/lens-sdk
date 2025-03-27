@@ -1,5 +1,4 @@
-import { type AuthenticatedUser, identity } from '@lens-protocol/client';
-import { fail } from '@lens-protocol/types';
+import type { AuthenticatedUser } from '@lens-protocol/client';
 
 import { useSessionState } from '../context';
 import type { ReadResult, SuspenseResult } from '../helpers';
@@ -44,12 +43,12 @@ export function useAuthenticatedUser(
   args: { suspense: boolean } = { suspense: false },
 ): ReadResult<AuthenticatedUser | null> | SuspenseResult<AuthenticatedUser | null> {
   const result = useSessionState(args);
-
+  console.log(result);
   if (result.data) {
     return {
       ...result,
       data: result.data.isSessionClient()
-        ? result.data.getAuthenticatedUser().match(identity, fail)
+        ? result.data.getAuthenticatedUser().unwrapOr(null)
         : null,
     };
   }
