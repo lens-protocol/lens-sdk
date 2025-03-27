@@ -10,6 +10,7 @@ import type { ResultAsync } from '@lens-protocol/types';
 
 import { useLensContext } from '../context';
 import { type UseAsyncTask, useAsyncTask } from '../helpers';
+import { usePublicClient } from './usePublicClient';
 
 export type { LoginParams, SignMessage };
 
@@ -21,6 +22,12 @@ type LoginResult = ResultAsync<AuthenticatedUser, LoginError>;
  * Log in to Lens.
  *
  * ```tsx
+ * import { evmAddress, useLogin } from '@lens-protocol/react';
+ *
+ * import { signMessageWith } from '@lens-protocol/react/viem';
+ * // OR
+ * import { signMessageWith } from '@lens-protocol/react/ethers';
+ *
  * const { execute } = useLogin();
  *
  * const result = await execute({
@@ -32,18 +39,16 @@ type LoginResult = ResultAsync<AuthenticatedUser, LoginError>;
  *   signMessage: signMessageWith(wallet),
  * });
  *
- * // …
- *
  * if (result.isOk()) {
- *   console.log(result.value); // Account
+ *   console.log(result.value); // AuthenticatedUser
  * }
  * ```
  */
 export function useLogin(): UseAsyncTask<LoginParams, AuthenticatedUser, LoginError> {
-  const { client } = useLensContext();
+  const publicClient = usePublicClient();
 
   return useAsyncTask(
     (params: LoginParams): LoginResult =>
-      client.login(params).andThen((sessionClient) => sessionClient.getAuthenticatedUser()),
+      publicClient.login(params).andThen((sessionClient) => sessionClient.getAuthenticatedUser()),
   );
 }

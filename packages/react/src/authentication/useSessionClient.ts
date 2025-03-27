@@ -19,6 +19,8 @@ export type UseSessionArgs = {
  * This signature supports React Suspense:
  *
  * ```tsx
+ * import { useSessionClient } from '@lens-protocol/react';
+ *
  * const { data } = useSessionClient({ suspense: true });
  * ```
  */
@@ -29,6 +31,8 @@ export function useSessionClient(args: UseSessionArgs): SuspenseResult<SessionCl
  * If the session is not available, it will attempt to resume it from storage.
  *
  * ```tsx
+ * import { useSessionClient } from '@lens-protocol/react';
+ *
  * const { data, loading } = useSessionClient();
  * ```
  */
@@ -42,7 +46,7 @@ export function useSessionClient(
   if (result.data) {
     return {
       ...result,
-      data: result.data.client.isSessionClient() ? result.data.client : null,
+      data: result.data.isSessionClient() ? result.data : null,
     };
   }
 

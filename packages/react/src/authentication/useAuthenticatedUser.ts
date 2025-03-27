@@ -1,4 +1,6 @@
-import type { AuthenticatedUser } from '@lens-protocol/client';
+import { type AuthenticatedUser, identity } from '@lens-protocol/client';
+import { fail } from '@lens-protocol/types';
+
 import { useSessionState } from '../context';
 import type { ReadResult, SuspenseResult } from '../helpers';
 
@@ -18,6 +20,8 @@ export type UseAuthenticatedUserArgs = {
  * This signature supports React Suspense:
  *
  * ```tsx
+ * import { useAuthenticatedUser } from '@lens-protocol/react';
+ *
  * const { data } = useAuthenticatedUser({ suspense: true });
  * ```
  */
@@ -29,6 +33,8 @@ export function useAuthenticatedUser(
  * Retrieve the {@link AuthenticatedUser} if available.
  *
  * ```tsx
+ * import { useAuthenticatedUser } from '@lens-protocol/react';
+ *
  * const { data, loading } = useAuthenticatedUser();
  * ```
  */
@@ -42,7 +48,9 @@ export function useAuthenticatedUser(
   if (result.data) {
     return {
       ...result,
-      data: result.data.resolved && result.data.user ? result.data.user : null,
+      data: result.data.isSessionClient()
+        ? result.data.getAuthenticatedUser().match(identity, fail)
+        : null,
     };
   }
 
