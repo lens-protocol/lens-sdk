@@ -1,7 +1,6 @@
 import type { FragmentOf } from 'gql.tada';
 import {
   AccountFragment,
-  AnyPostFragment,
   Erc20AmountFragment,
   GroupFragment,
   PaginatedResultInfoFragment,
@@ -255,13 +254,13 @@ const PostActionExecutedNotificationFragment = graphql(
     __typename
     id
     post {
-      ...AnyPost
+      ...ReferencedPost
     }
     actions{
       ...PostActionExecuted
     }
   }`,
-  [PostActionExecutedFragment, AnyPostFragment],
+  [PostActionExecutedFragment, ReferencedPostFragment],
 );
 export type PostActionExecutedNotification = FragmentOf<
   typeof PostActionExecutedNotificationFragment
