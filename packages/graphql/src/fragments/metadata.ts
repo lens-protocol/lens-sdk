@@ -60,7 +60,6 @@ export const ThreeDAssetFragment = graphql(
 );
 export type ThreeDAsset = FragmentOf<typeof ThreeDAssetFragment>;
 
-// TODO: Missing encryption in all metadata fragments
 export const ArticleMetadataFragment = graphql(
   `fragment ArticleMetadata on ArticleMetadata {
     __typename
