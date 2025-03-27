@@ -84,6 +84,9 @@ export type JoinGroupResponse = FragmentOf<typeof JoinGroupResponseFragment>;
 
 const JoinGroupResultFragment = graphql(
   `fragment JoinGroupResult on JoinGroupResult {
+    ...on GroupOperationValidationFailed {
+      ...GroupOperationValidationFailed
+    }
     ...on JoinGroupResponse {
       ...JoinGroupResponse
     }
@@ -98,6 +101,7 @@ const JoinGroupResultFragment = graphql(
     }
   }`,
   [
+    GroupOperationValidationFailedFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,
@@ -126,6 +130,9 @@ export type LeaveGroupResponse = FragmentOf<typeof LeaveGroupResponseFragment>;
 
 const LeaveGroupResultFragment = graphql(
   `fragment LeaveGroupResult on LeaveGroupResult {
+    ...on GroupOperationValidationFailed {
+      ...GroupOperationValidationFailed
+    }
     ...on LeaveGroupResponse {
       ...LeaveGroupResponse
     }
@@ -140,6 +147,7 @@ const LeaveGroupResultFragment = graphql(
     }
   }`,
   [
+    GroupOperationValidationFailedFragment,
     SponsoredTransactionRequestFragment,
     SelfFundedTransactionRequestFragment,
     TransactionWillFailFragment,
